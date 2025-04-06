@@ -1,188 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83950126C02;
-	Sun,  6 Apr 2025 11:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE7B145FE8;
+	Sun,  6 Apr 2025 11:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743938311; cv=none; b=bbhXezGbum+EqTNSljneoGe/u6EOSn73aiJWfmYPVQWOWvCyNHREm2/lLUbUnKMGcs4zi0WMoOM40MJQ28L+7yI6bHibDE0WFCJX36iXpBmjSqW9jq50mCTqnn12V05yuFjZ8c0EYVFJWX79VPJgKBRPOxHUcnuwE4Gj3j9l3oM=
+	t=1743938946; cv=none; b=uNirSw4GI5tz+ce9Ces7pi874x4URBOTnloARIYoW7tQqNORO33mCFGfoUPKHDV0BL0a2Rv9OX73mcuIcbyk3q2BHMyYm9I2ETQhPgUkGH9deNYkYvuMzU9iAemvQKdMnn/qWoEjxKD/vkENMDEoSYQXDdnPNXMTzCvBavuMDN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743938311; c=relaxed/simple;
-	bh=ACTsy/WilsbTvDenV6k21+r4RQebg/ehbTmpIRB/ixM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ns/6F++s3OLkN6J0GEiiVtv0zd0/BA+eXuez6Mv42FcgTe94SZHkthcU4Tk28nk/x0r5ifNN+uu9vwJXwPYX6eh+XfoiGMSLk1Me+L1TmSQAsiLeBKk7Gsw6gPwpHkwE3iIXFyWb0F+jyEmGIuW9wbrgDU1Xl8f3ZPv/P8cvAEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSoJOgs7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSoJOgs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CAD0C4CEE3;
-	Sun,  6 Apr 2025 11:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743938310;
-	bh=ACTsy/WilsbTvDenV6k21+r4RQebg/ehbTmpIRB/ixM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WSoJOgs7ccQNDti5E0TOFdW/KSFI0NWCnh2hpmCzEotV21EtGzaOuxhpiF2NdW/lX
-	 lzN1PGRUUUH5Rw2hmzK/Ag+I+4RotKIQuZycGkWT/BQDzHgd9kmqQ7O5tRCuveD40/
-	 20ggFW0xHIq63LSytttqedYtBN415t40iakD7imd+j3TGXeL6KTY/bYKYPbms+eC7s
-	 u1CqT3z7edn+cTUhGzWJpfgiY3H/kYT+Cz1J4KadttmY+H4DuKCXcxOFHJ0L/4RI++
-	 5O3t+RsdD2NAxrGQnJoXsUXELo1+3iMEGDQP4R7Szj8koKPaZ7w9ylmyDi0owO2fWk
-	 2wrgXV+9DA3bw==
-Date: Sun, 6 Apr 2025 12:18:25 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v5 05/11] iio: accel: adxl345: add freefall feature
-Message-ID: <20250406121825.3d4836b1@jic23-huawei>
-In-Reply-To: <CAFXKEHYMgv1-rt6Sc65fCoki14v==NqQTY6J3WnQBG+ASoLeaw@mail.gmail.com>
-References: <20250318230843.76068-1-l.rubusch@gmail.com>
-	<20250318230843.76068-6-l.rubusch@gmail.com>
-	<20250331112839.78c2bc71@jic23-huawei>
-	<CAFXKEHYMgv1-rt6Sc65fCoki14v==NqQTY6J3WnQBG+ASoLeaw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743938946; c=relaxed/simple;
+	bh=SeXebZxEhQ15JpusxB3sN3Pr/PFpR6JwIs1E3MUTMKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mj3xw1/vQYsKVeZH7XHR8oxmskpG9cxCK4P+SVVGxIWA8pbanxNi95GdnfieRq4W6jacPxmTzukRCE6Urh3XTEj4JLqeJM2kvHNi46rYyqv+UErLS6UErpvU2+XRX3UeRpAzsnJNer5XY+02AA6+ULziPdJ0SSveAnY2xG3p6zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
+X-QQ-mid: bizesmtp89t1743938916t77954ce
+X-QQ-Originating-IP: v5OIOCLctsBUbeHm0hxz4BSjuEmz9FqwX4x2qU4Kq9s=
+Received: from localhost.localdomain ( [36.152.24.149])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 06 Apr 2025 19:28:35 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 16350347360751056876
+EX-QQ-RecipientCnt: 4
+From: Xizhe Yin <xizheyin@smail.nju.edu.cn>
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	xizheyin <xizheyin@smail.nju.edu.cn>,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
+Date: Sun,  6 Apr 2025 19:26:05 +0800
+Message-ID: <07D9F73C7B35C74B+20250406112605.6152-1-xizheyin@smail.nju.edu.cn>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OYpbVsTx4C81TGrW4r/HTBiqiKQjdaOf16rxvmAsV6dGebVujdK2NTri
+	QxKqdlg/qPv8cImRJqfH16zqPkbh/N5vdvz09g9jc2gJVjwq4ykEDY9hXJ4+6b5NOTzMLEB
+	Erljoe7meI3x7/RAvJljVREiVOVc9jGr/CTLZWEhv27PCti7Ym2dB0qWRGu9eT66Wu5pjGm
+	iA4D8HDBPzc9q7otiai5S2omKS/O9uRWSiWcIGxDuQkEWLQ3BbpWjY/lgp1wUvXut6Mr/FN
+	sM/gVmRhQk4JxIEnk+yRgjXURjTKq2p+k9dnhY/78FSuvr5z5qOY5e5Axhit96CGMDEx36y
+	osQTbc6X511+meWC4ctPF8cr5i/f2WBLrvlUNMCcyLb58woOAFtXOWauDX2d5kW2zUiN9Jc
+	PjY1g+WXNrqNZXLQWg12wfkqjPHg15snc/Jc0wDaYd2XRcWEvCh4AubaWKiPtZ3opW2xAkA
+	wpHrEq8JNj+uhIE2QUdl9/M41hPUUvHk/BlkGT2w10VW+JsPnn1aZmiNXhkG+iPs7zuj32J
+	8m0bATMJLpoDyBJkeCtRt/8ZBoazZ6FhtyngheIUntWIM5qF1KToTuZJLENgDNwhOBASoxZ
+	FYdBKApwAmzu5iT+5nI4CVyGSkHwYSh1R84M3SyQCxvh/lH6qjUAVEPSTYfeHbv0SshWP53
+	AVV4zuIrAFkLD1rVMyGsAV5lxiageFrVTCRtqOtcLbnfO7LwkKEJgP2YXkOT7oZ9V0wpTdE
+	JbSoGA95G2QR8ARr1fLr7jWtWGa9Hf88b0c0OOnrNBmtECxQ8pLcQp6sJH1IbU0E8vzxDBq
+	EvvPviO/HLbPBCo5lWLrUoR6sasrMDNYDHTR59JCjXEPE+3Ub5eX9La842sHjs/uJiiANjN
+	r1wkUlb1nDQdgeB/bfhhbmIGQMxSbWyAdJ9Pv+kQZcJn9EhgntB8Zk8LgoG8/VNbEI1OZnH
+	ZGpurNrq7wJVzILJ7IW/UdgbQxO0wFTtRhTobuWIoMF1+eWzwMqvBBCvI
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Mon, 31 Mar 2025 19:23:22 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+From: xizheyin <xizheyin@smail.nju.edu.cn>
 
-> Hi Jonathan & IIO Mailing List'ers
->=20
-> On Mon, Mar 31, 2025 at 12:28=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
-rg> wrote:
-> >
-> > On Tue, 18 Mar 2025 23:08:37 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add the freefall detection of the sensor together with a threshold and
-> > > time parameter. A freefall event is detected if the measuring signal
-> > > falls below the threshold.
-> > >
-> > > Introduce a freefall threshold stored in regmap cache, and a freefall
-> > > time, having the scaled time value stored as a member variable in the
-> > > state instance.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> > Hi Lothar,
-> >
-> > Apologies for the slow review!  Just catching up after travel
-> > and I did it reverse order. =20
->=20
-> No problem a all, hope you had a great trip! I'm glad this goes for
-> another version. In the meanwhile I was messing with the zephyr driver
-> implementation for this sensor and had some findings and final
-> thoughts about the ADXL345.
->=20
-> First, set_measure_en() I use to enable/disable the measurement by
-> setting a bit in the POWER_CTL register using regmap_write(). This was
-> ok until adding the act/inact feature. For adding power modes to
-> inactivity, I'm going to set the link bit in the same POWER_CTL reg.
-> So you already guess, yet another call  to set_measure_en() simply
-> wipes this link bit out immediately. I'll probably replace
-> regmap_write() using regmap_update_bits() still in this series.
->=20
-> Second, while playing with the zephyr driver and another setup I
-> discovered, that probably the sensor is capable of mapping events to
-> both interrupt lines in parallel. Currently, either all events to to
-> INT1 or to INT2, not both. This affects actually 8 interrupt events:
-> data ready, single tap, double tap, activity, inactivity, free fall,
-> watermark, overrun. Actually they could individually be mapped either
-> to INT1 or INT2.
-> Initially I assumed they all need to go either to INT1 or INT2
-> altogether. I appologize for this, I was wrong due to the breakout
-> board I was using. That's a kind of crazy feature, and I think of
-> implement it perhaps in a follow up series. Anyway, I was curisous
-> about the approach, currently only can think of introducing 8x new DTS
-> properties. Are you aware of sensors with similar features, what is
-> usually the approach how to implement that? What is your oppinion on
-> this?
+Some comments in Rust files use raw URLs (http://example.com) rather
+than Markdown autolinks [text](URL). This inconsistency makes the
+documentation less uniform and harder to maintain.
 
-It's not a board wiring thing if both are available (unless we are
-dealing with the complexity of external hardware driven by the interrupts).
-It is a policy thing for the driver.  So all DT should tell us is what
-is wired.  Note this is very common on more complex sensors (take a look
-at all the ADIS IMUs for instance). In practice it hasn't often proved
-useful to route different interrupts to different pins so we haven't
-bothered.  Linux drivers tend to always check what the interrupt was
-anyway (to detect false interrupts, share lines etc) so once you are doing
-that there is little point in splitting the handler in two. For RTOS
-cases it may make more sense.
+This patch converts all remaining raw URLs in Rust code comments to use
+the Markdown autolink format, maintaining consistency with the rest of
+the codebase which already uses this style.
 
+Link: https://github.com/Rust-for-Linux/linux/issues/1153
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: xizheyin <xizheyin@smail.nju.edu.cn>
+---
+ rust/kernel/alloc/kbox.rs               | 2 +-
+ rust/kernel/block/mq/gen_disk.rs        | 2 +-
+ rust/kernel/std_vendor.rs               | 2 +-
+ rust/kernel/sync/arc.rs                 | 2 +-
+ rust/pin-init/examples/pthread_mutex.rs | 2 +-
+ rust/pin-init/src/lib.rs                | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
->=20
-> Third item, there are 4 FIFO modes: Bypass and Streaming are currently
-> used. There is another FIFO mode and further a Trigger mode i.e. only
-> when the sensor got triggered it fills up the FIFO with data (also
-> this is mappable by the INT1 or INT2 line then).
-
-ah. This tends to happen in devices that do things like impact detection.
-We have never really supported that properly (and the one driver that
-was in staging went away recently as it's now end of life and no
-one seemed to care).
-
-> What would be a way
-> to configure such feature? I know many of the Analog accelerometers
-> seem to have FIFO modes. Is this to be configured by DT properties?
-
-This is definitely policy so doesn't belong in DT at all.
-
-> What would be means to configure it? Also, this would be a separate
-> patch set.
-
-The closest we get to this is probably the complex stm32 triggering
-but that is not necessarily something I'd base such a feature on as
-it is really about interactions across a lot of different system
-elements even though it incorporates a grab N samples on event Y element.
-
-We'd need a way to add new richer description around the fifo + trigger.
-It's kind of a mixture of both because a trigger causing a bunch of
-scan's to be taken. In general that might be limited by the fifo or
-it might just be always take 'N' samples.
-
-Before spending too much time on this I'd consider whether there is
-a use case to justify the work.  They exist on paper, but we haven't
-yet had anyone actually implement it in a driver which makes me
-wonder if people care!
-
-Jonathan
-
->=20
-> Best,
-> L
->=20
-> > =20
-> > > +
-> > > +static int adxl345_set_ff_en(struct adxl345_state *st, bool cmd_en)
-> > > +{
-> > > +     unsigned int regval, ff_threshold;
-> > > +     const unsigned int freefall_mask =3D 0x02; =20
-> >
-> > Where did this mask come from?   Feels like it should be a define
-> > (just use ADXL345_INT_FREE_FALL probably)
-> > or if not that at lest use BIT(1) to make it clear it's a bit rather
-> > than the number 2.
-> > =20
-> > > +     bool en;
-> > > +     int ret;
-> > > +
-> > > +     ret =3D regmap_read(st->regmap, ADXL345_REG_THRESH_FF, &ff_thre=
-shold);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     en =3D cmd_en && ff_threshold > 0 && st->ff_time_ms > 0;
-> > > +
-> > > +     regval =3D en ? ADXL345_INT_FREE_FALL : 0x00;
-> > > +
-> > > +     return regmap_update_bits(st->regmap, ADXL345_REG_INT_ENABLE,
-> > > +                               freefall_mask, regval);
-> > > +} =20
-> >
-> > Jonathan =20
+diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
+index b77d32f3a58b..604d12c6f5bd 100644
+--- a/rust/kernel/alloc/kbox.rs
++++ b/rust/kernel/alloc/kbox.rs
+@@ -101,7 +101,7 @@
+ pub type KVBox<T> = Box<T, super::allocator::KVmalloc>;
+ 
+ // SAFETY: All zeros is equivalent to `None` (option layout optimization guarantee:
+-// https://doc.rust-lang.org/stable/std/option/index.html#representation).
++// <https://doc.rust-lang.org/stable/std/option/index.html#representation>).
+ unsafe impl<T, A: Allocator> ZeroableOption for Box<T, A> {}
+ 
+ // SAFETY: `Box` is `Send` if `T` is `Send` because the `Box` owns a `T`.
+diff --git a/rust/kernel/block/mq/gen_disk.rs b/rust/kernel/block/mq/gen_disk.rs
+index 14806e1997fd..cd54cd64ea88 100644
+--- a/rust/kernel/block/mq/gen_disk.rs
++++ b/rust/kernel/block/mq/gen_disk.rs
+@@ -129,7 +129,7 @@ pub fn build<T: Operations>(
+             get_unique_id: None,
+             // TODO: Set to THIS_MODULE. Waiting for const_refs_to_static feature to
+             // be merged (unstable in rustc 1.78 which is staged for linux 6.10)
+-            // https://github.com/rust-lang/rust/issues/119618
++            // <https://github.com/rust-lang/rust/issues/119618>
+             owner: core::ptr::null_mut(),
+             pr_ops: core::ptr::null_mut(),
+             free_disk: None,
+diff --git a/rust/kernel/std_vendor.rs b/rust/kernel/std_vendor.rs
+index 279bd353687a..abbab5050cc5 100644
+--- a/rust/kernel/std_vendor.rs
++++ b/rust/kernel/std_vendor.rs
+@@ -148,7 +148,7 @@ macro_rules! dbg {
+     };
+     ($val:expr $(,)?) => {
+         // Use of `match` here is intentional because it affects the lifetimes
+-        // of temporaries - https://stackoverflow.com/a/48732525/1063961
++        // of temporaries - <https://stackoverflow.com/a/48732525/1063961>
+         match $val {
+             tmp => {
+                 $crate::pr_info!("[{}:{}:{}] {} = {:#?}\n",
+diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+index 8484c814609a..350c380bb8d4 100644
+--- a/rust/kernel/sync/arc.rs
++++ b/rust/kernel/sync/arc.rs
+@@ -135,7 +135,7 @@ pub struct Arc<T: ?Sized> {
+     // meaningful with respect to dropck - but this may change in the future so this is left here
+     // out of an abundance of caution.
+     //
+-    // See https://doc.rust-lang.org/nomicon/phantom-data.html#generic-parameters-and-drop-checking
++    // See <https://doc.rust-lang.org/nomicon/phantom-data.html#generic-parameters-and-drop-checking>
+     // for more detail on the semantics of dropck in the presence of `PhantomData`.
+     _p: PhantomData<ArcInner<T>>,
+ }
+diff --git a/rust/pin-init/examples/pthread_mutex.rs b/rust/pin-init/examples/pthread_mutex.rs
+index 9164298c44c0..5ac22f1880d2 100644
+--- a/rust/pin-init/examples/pthread_mutex.rs
++++ b/rust/pin-init/examples/pthread_mutex.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR MIT
+ 
+-// inspired by https://github.com/nbdd0121/pin-init/blob/trunk/examples/pthread_mutex.rs
++// inspired by <https://github.com/nbdd0121/pin-init/blob/trunk/examples/pthread_mutex.rs>
+ #![allow(clippy::undocumented_unsafe_blocks)]
+ #![cfg_attr(feature = "alloc", feature(allocator_api))]
+ #[cfg(not(windows))]
+diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+index 05c44514765e..0806c689f693 100644
+--- a/rust/pin-init/src/lib.rs
++++ b/rust/pin-init/src/lib.rs
+@@ -1447,7 +1447,7 @@ macro_rules! impl_zeroable {
+     {<T: ?Sized + Zeroable>} UnsafeCell<T>,
+ 
+     // SAFETY: All zeros is equivalent to `None` (option layout optimization guarantee:
+-    // https://doc.rust-lang.org/stable/std/option/index.html#representation).
++    // <https://doc.rust-lang.org/stable/std/option/index.html#representation>).
+     Option<NonZeroU8>, Option<NonZeroU16>, Option<NonZeroU32>, Option<NonZeroU64>,
+     Option<NonZeroU128>, Option<NonZeroUsize>,
+     Option<NonZeroI8>, Option<NonZeroI16>, Option<NonZeroI32>, Option<NonZeroI64>,
+-- 
+2.49.0
 
