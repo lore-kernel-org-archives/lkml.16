@@ -1,86 +1,79 @@
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0527955E69;
-	Sun,  6 Apr 2025 18:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC86189903
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743963362; cv=none; b=h5yitPt3G2QykQrob7WXJK+/6RQzmslPIuKKHkPckowk8IEAmEImyhSvwMeB+TUFPDDTzNJpWKtBpBE7pzzM19QeOTHIgIwopSnUwWh9JxG66bpp8wMSOcx/+VP+FhSDnvqESjlJxn/IQJVZvkYpabwCTJM9lMvp6lXOJmuH+ZQ=
+	t=1743963389; cv=none; b=EsHR5SAiub6B1E7Fi83hyde0PeoTUqfSl1JYD8HjJSzXf9CjmTYd1X2hjmK3i5zHQYJWy+cWEqPz7i6ho8+SKls6iZtk1d2RQsjfqZW2EVlFR3dv+Cf2O9ZRcd7xY/B0QOILjinDiwstI299F5X3dNoH+rQ9Krm3CAQtgKYr5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743963362; c=relaxed/simple;
-	bh=Or+lF0/ZbsQ6jbELO4bHg88MpeiUXKXg0thJ3mseWi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FmuLJGvQ62xfedWef4w+5QE0aeHbj2SMmjm3UcTspNz6GUqHM0M5zMxYSaZ18Z7EFCiVvdbr2yTRv/38JAhQjYx6dET/kKfJB1jHDvDW00IzWAev7E5BdK+oQZ+xIGY2/ZSVQEVTBNKrwYbkWLMD2EA73khcavcSu9rfCosWLe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=WkqRMuJl; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1743963389; c=relaxed/simple;
+	bh=ksoIiuj6A0MyclOiN9aSsulnJVmUzD7Lz9V6oyIGZ24=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Is4hSZYuGROk6EfLxKrOLS7OXPsmvJIjeYEyadm41s2Ml1amOuxTUO8VeBfAviA/iQ+Q8EdJkv5x8wSzBkshYlFWp0PXJEl9o+og3IhVhhA8etI/R0yLKlYOXeFy3heizv/z8Cvg0BeH+CjTSDkPscH5MQi53h6/Yt3+PxziKxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RI0HJfeh; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="WkqRMuJl"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 1UO6uCEDqk6Kc1UO9uCYzb; Sun, 06 Apr 2025 20:06:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743962794;
-	bh=ZZuZBuWpQ4m4QhPze/IZCZP8nQ/j+5lRNXj0SrvdVBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=WkqRMuJlGbPB+qrqKCc9gws3bwnl5Sdqdeb6x61nRE/jrLiDqJG/pyPruUf+5RheZ
-	 OJdGRY5+yJqOLpmrRnM1kbfLAR+1IO0Vpi2mTgwZ5p08g3nz//7AFQ1eWZ/jqefpFu
-	 AzwaV2ynKksfXICF48gR4orUXXYxJeajWrNkBhc4sVK/Us8P847YKmCBx0kgTXvGKj
-	 6sScMbOKirunK4c9zsnQ0lfasMNK2wh5oHD68jQ61anspQygd/jts37FFa8UezjDTS
-	 3PMM1w2Jdq3/Pi7H07PtrRJbpzWXYP4GhcY/gP674tef8rP+cm6HLyxAhFXHW13/JK
-	 dJIR9o4HVYf2w==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sun, 06 Apr 2025 20:06:34 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <33bf15be-f99a-40c1-a97c-a51ca8fa4c9e@wanadoo.fr>
-Date: Sun, 6 Apr 2025 20:06:29 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RI0HJfeh"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743963382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S93UKdhObdvlpcU/FcRzIW0uhpMd7EvcOLuxG0UINpk=;
+	b=RI0HJfehh0GA78yb7DIYDAHCR7yGkWUf90gpLVs40PskfCgXEvxDu97Tm+0pBjoeRnmavN
+	9apFmBWXbLLTIV0I+lC094J0BbdCTA0vQoa5U2TBEO92dL2ag2NkKmYMp76R5cNnwIKCdL
+	hE4/vexq3n9ro30PqCJWSh6C/fbYcxI=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] KVM : selftests: arm64: Explicitly set the page attrs to Inner-Shareable
+Date: Sun,  6 Apr 2025 11:16:13 -0700
+Message-Id: <174396331752.3282387.4731776469161725499.b4-ty@linux.dev>
+In-Reply-To: <20250405001042.1470552-1-rananta@google.com>
+References: <20250405001042.1470552-1-rananta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] i2c: Fix reference leak in of_i2c_register_devices
-To: Sunny Patel <nueralspacetech@gmail.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250406134843.67702-1-nueralspacetech@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250406134843.67702-1-nueralspacetech@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Le 06/04/2025 à 15:48, Sunny Patel a écrit :
-> Fix a potential reference leak in of_i2c_register_devices where the
-> reference to the node is not released if device registration fails.
-> This ensures proper reference management and avoids memory leaks.
-
-There is no early exit path in the for_each_available_child_of_node() 
-block, so of_node_put((node) is called for all the nodes that are iterated.
-
-Can you elaborate and explain how the reference leak can occur?
-
-CJ
-
+On Sat, 05 Apr 2025 00:10:40 +0000, Raghavendra Rao Ananta wrote:
+> The series fixes a conflict in memory attributes in some
+> implementations,
+> such as Neoverse-N3, that causes a data abort in guest EL1 with FSC
+> 0x35 (IMPLEMENTATION DEFINED fault (Unsupported Exclusive or Atomic
+> access)).
 > 
-> Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
-> ---
->   drivers/i2c/i2c-core-of.c | 1 +
->   1 file changed, 1 insertion(+)
+> Patch-1 is a cleanup patch that replaces numbers (and comments) to
+> using proper macros for hardware configuration, such as registers and
+> page-table entries.
 > 
-> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> index 02feee6c9ba9..7c50905de8f1 100644
-> --- a/drivers/i2c/i2c-core-of.c
-> +++ b/drivers/i2c/i2c-core-of.c
-> @@ -107,6 +107,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->   				 "Failed to create I2C device for %pOF\n",
->   				 node);
->   			of_node_clear_flag(node, OF_POPULATED);
-> +			of_node_put(node);
->   		}
->   	}
->   
+> [...]
 
+I cleaned up the changelog on patch 2 per the discussion + added a note
+about the interaction with LPA2.
+
+Applied to fixes, thanks!
+
+[1/2] KVM: selftests: arm64: Introduce and use hardware-definition macros
+      https://git.kernel.org/kvmarm/kvmarm/c/d8d78398e550
+[2/2] KVM: selftests: arm64: Explicitly set the page attrs to Inner-Shareable
+      https://git.kernel.org/kvmarm/kvmarm/c/c8631ea59b65
+
+--
+Best,
+Oliver
