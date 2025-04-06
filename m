@@ -1,148 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6993182BD;
-	Sun,  6 Apr 2025 16:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58434178395;
+	Sun,  6 Apr 2025 16:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743957287; cv=none; b=IEyPLIDiLPeEWxxn7SsltMhF5Rwc/5i5dzUNrtdkdt0ZvoPaeZzK1cN9xVJ3pIfRY7Bx0pg+Tjtzn2QGmsARtcueuCsOTJQuRV5cs/9WNmVe+r/2J6PAulNpZL4LdMutOCt/GbovunKvCQWqu20ns/5sA0KroQ9ekMyp3P9tfZY=
+	t=1743957769; cv=none; b=GZ/Wh5wsjvVLLsVbkLkTneBDq8B2dFOo13V+SKqxhRCLcOysUi9k9p/kAmk5SC80YWfA2ZyCcVA7ipZ/YDqMtBJ2QFzsrkSK5oLXQ2w+npLrp9B26BqNqemOGDFmJwfqH2mLUmP7KpJCUYPwPbNmZPRMJML17nKwqh4R0Kj1oIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743957287; c=relaxed/simple;
-	bh=VXmaK1KEQ4OdnNW6qkbtDrEkJuNzVNaxsi9xvoHemA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9bA+JeNV3woQCzU4c6KPaAPteQ8MCmDc+FP8goamYe37309Q046LxeRMkTmvBIEUllAo67lO7eupoiaVePNNQXxOJSJKK0eW+KGLwrFP3hnrk6L+BNAxCNGyKY8zr3dAguq/Tljx1IpXYNNWttPGdEQ39RSg8fEIHdce6u1I2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHYEa8E+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHYEa8E+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE96C4CEE3;
-	Sun,  6 Apr 2025 16:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743957286;
-	bh=VXmaK1KEQ4OdnNW6qkbtDrEkJuNzVNaxsi9xvoHemA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sHYEa8E+WecBvlODItuw2b7YX/6tTcKkPkVY5c8hgfkEY8qrvZS4g0a3Ps36mtTc7
-	 C1ll8nDNb2+K9tEtN6sZSs+7NVh3o6k6Kg/4wianbIJby8nQu2r7eDW3P4ypSyCXGB
-	 +PTm6pWbv464BBckQVvKgFmhVS12NRwvpw2dOxLPxKRX/NeHfTRBeqj47VFsu/qaTq
-	 kDdF/2+c/Pr6gHEjMytyRvKIWHvox2DCJh1vPUVQTXmvT+5ihdqD2WA5RflpUqRy7u
-	 XiEBaOkZARTvBBRMrCpj6S6HvzxefWgH6WKx/07uPfbphejPBi1964kPEwB7U3GezU
-	 UycEnTm5Y3e0A==
-Date: Sun, 6 Apr 2025 19:34:30 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <ptyadav@amazon.de>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Changyuan Lyu <changyuanl@google.com>,
-	linux-kernel@vger.kernel.org, graf@amazon.com,
-	akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z_KtFnmExftpotmR@kernel.org>
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-10-changyuanl@google.com>
- <mafs05xjmqsqc.fsf@amazon.de>
- <20250403114209.GE342109@nvidia.com>
- <Z-6UA3C1TPeH_kGL@kernel.org>
- <20250403142438.GF342109@nvidia.com>
- <Z--sUYCvP3Q8nT8e@kernel.org>
- <20250404124729.GH342109@nvidia.com>
- <Z-_kSXrHWU5Bf3sV@kernel.org>
- <mafs0cydrq4wv.fsf@amazon.de>
+	s=arc-20240116; t=1743957769; c=relaxed/simple;
+	bh=weD6ltxNPcxizP1iukbR5APvJ4Dc3ZlN/zs6N0kWAMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jnQOcPC5aKYeiEjnzFhGjHeEjb1I+3gpi04PTad5IwirnkpxmCzNIlvevjozNDIdjNHOy4grvpgEekamiFYb2q5XGvkl5kE0/3SzN8Z7iTRxMS/s5qyQHoZQH5jjKYVw3Jay2tWAqtLT3R9Y9m5n/FE5R+RgyxWTf8wkRH7E+og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.199.70.239])
+	by APP-05 (Coremail) with SMTP id zQCowAAXUgrwrvJnPISqBg--.17438S2;
+	Mon, 07 Apr 2025 00:42:27 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: miriam.rachel.korenblit@intel.com,
+	kvalo@kernel.org
+Cc: johannes.berg@intel.com,
+	emmanuel.grumbach@intel.com,
+	golan.ben.ami@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] wifi: iwlwifi: mvm: Add error logging for iwl_finish_nic_init()
+Date: Mon,  7 Apr 2025 00:42:05 +0800
+Message-ID: <20250406164206.1120-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mafs0cydrq4wv.fsf@amazon.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAXUgrwrvJnPISqBg--.17438S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7try3ZF47Jw13WrW7WryxuFg_yoW8WF1UpF
+	4qgFW2krZ5Ka92ka48ta1SvF90ya1Fk39rKF92kws5urs7Jry5JF95XFyUta40grW8Xa4S
+	qF1jka4fCr1DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYEA2fyGc3xhwAAs6
 
-On Fri, Apr 04, 2025 at 04:15:28PM +0000, Pratyush Yadav wrote:
-> Hi Mike,
-> 
-> On Fri, Apr 04 2025, Mike Rapoport wrote:
-> 
-> [...]
-> > As for the optimizations of memblock reserve path, currently it what hurts
-> > the most in my and Pratyush experiments. They are not very representative,
-> > but still, preserving lots of pages/folios spread all over would have it's
-> > toll on the mm initialization. And I don't think invasive changes to how
-> > buddy and memory map initialization are the best way to move forward and
-> > optimize that. Quite possibly we'd want to be able to minimize amount of
-> > *ranges* that we preserve.
-> >
-> > So from the three alternatives we have now (xarrays + bitmaps, tables +
-> > bitmaps and maple tree for ranges) maple tree seems to be the simplest and
-> > efficient enough to start with.
-> 
-> But you'd need to somehow serialize the maple tree ranges into some
-> format. So you would either end up going back to the kho_mem ranges we
-> had, or have to invent something more complex. The sample code you wrote
-> is pretty much going back to having kho_mem ranges.
+The function iwl_pci_resume() calls the function iwl_finish_nic_init(),
+but does not check their return values.
 
-It's a bit better and it's not a part of FDT which Jason was so much
-against :)
+Log a detailed error message with the error code to aid in diagnosing
+root causes if encountering irreparable errors. While this does not fix
+the underlying problem, it avoids silent failures by making the failure
+visible in logs.
+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 8fb2aa282242..f577f8c1d5b0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1616,6 +1616,7 @@ static int _iwl_pci_resume(struct device *device, bool restore)
+ 	struct iwl_trans *trans = pci_get_drvdata(pdev);
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	bool device_was_powered_off = false;
++	int err;
  
-> And if you say that we should minimize the amount of ranges, the table +
-> bitmaps is still a fairly good data structure. You can very well have a
-> higher order table where your entire range is a handful of bits. This
-> lets you track a small number of ranges fairly efficiently -- both in
-> terms of memory and in terms of CPU. I think the only place where it
-> doesn't work as well as a maple tree is if you want to merge or split a
-> lot ranges quickly. But if you say that you only want to have a handful
-> of ranges, does that really matter?
-
-Until we all agree that we are bypassing memblock_reserve() and
-reimplementing memory map and free lists initialization for KHO we must
-minimize the amount of memblock_reserve() calls. And maple tree allows
-easily merge ranges where appropriate resulting in much smaller amount of
-ranges that kho_mem had.
+ 	/* Before you put code here, think about WoWLAN. You cannot check here
+ 	 * whether WoWLAN is enabled or not, and your code will run even if
+@@ -1647,7 +1648,9 @@ static int _iwl_pci_resume(struct device *device, bool restore)
+ 		 * won't really know how to recover.
+ 		 */
+ 		iwl_pcie_prepare_card_hw(trans);
+-		iwl_finish_nic_init(trans);
++		err = iwl_finish_nic_init(trans);
++		if (err)
++			pr_err("NIC initialization failed after power-off (error %d).", err);
+ 		iwl_op_mode_device_powered_off(trans->op_mode);
+ 	}
  
-> Also, I think the allocation pattern depends on which use case you have
-> in mind. For hypervisor live update, you might very well only have a
-> handful of ranges. The use case I have in mind is for taking a userspace
-> process, quickly checkpointing it by dumping its memory contents to a
-> memfd, and restoring it after KHO. For that, the ability to do random
-> sparse allocations quickly helps a lot.
-> 
-> So IMO the table works well for both sparse and dense allocations. So
-> why have a data structure that only solves one problem when we can have
-> one that solves both? And honestly, I don't think the table is that much
-> more complex either -- both in terms of understanding the idea and in
-> terms of code -- the whole thing is like 200 lines.
-
-It's more than 200 line longer than maple tree if we count the lines.
-My point is both table and xarrays are trying to optimize for an unknown
-goal. kho_mem with all it's drawbacks was an obvious baseline. Maple tree
-improves that baseline and it is more straightforward than the
-alternatives.
- 
-> Also, I think changes to buddy initialization _is_ the way to optimize
-> boot times. Having maple tree ranges and moving them around into
-> memblock ranges does not really scale very well for anything other than
-> a handful of ranges, and we shouldn't limit ourselves to that without
-> good reason.
-
-As I said, this means an alternative implementation of the memory map and
-free lists, which has been and remains quite fragile.
-So we'd better start with something that does not require that in the
-roadmap.
- 
-> -- 
-> Regards,
-> Pratyush Yadav
-
 -- 
-Sincerely yours,
-Mike.
+2.42.0.windows.2
+
