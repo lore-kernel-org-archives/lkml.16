@@ -1,31 +1,33 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F75E20125B;
-	Sun,  6 Apr 2025 11:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22FA2AEF5;
+	Sun,  6 Apr 2025 11:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743940670; cv=none; b=jdvcsno46/Fb4lbmbX6tjhTBmGwP+g40gefhjpCR5tZOhukG9AR0gkjZJdikh2c1RWV/doQ1gHnUFSDBbHsmhgv1p+m8p6sY3E+qGjhWgRh9z/rw5LrUq5V1/xy30Xzkayi5zb/j3Io+tq+KnUOC+NCuXJyQdRAqNX9UWw1Gfws=
+	t=1743940800; cv=none; b=QUYL1KqNlZT1ZCJAaxVxauVMm2KwFAXab71jDkVRQxxmBYorII4caEISYEjQezkzJt6QVa9TOsbDk7iUKJdJJy1VXIh3cF82sXzGX0R0RsomWQsmgg3+k97NiieGasTl5fuo0E02Vsn51wACx38V58JKst1HJ2LuF0QiagLekiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743940670; c=relaxed/simple;
-	bh=1qiIa1unk46NH8WusRPlYYJAwpi0rLRqMqi2/0K5qQI=;
+	s=arc-20240116; t=1743940800; c=relaxed/simple;
+	bh=7N8oo4TYDHzNq/47YKx06MEKsPixGmEO4o/eFLqLlI0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fbIAxeoig5WMFgsCwSlGJe8NRdyZ6g5zeCUIxbueCCEC9fksjby/PZ4EyV6B5Kbiiz1wfPzrkdrabpZy7gvOw3jZz6S1CibyjQnb43l8I9RGmlSrQtvLeH8gIdxB2Q3YKjzy+ZA5JHY3oW/wGRIMvikJOdE2xLlj1Xw0euEKxuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CvU4EqZO; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=GsEjb61lZOTgvIUiDj20YLuGx7gKzu8OeyzcC3MUgS0X0ol5NVUgbQQGfOF2NrDbm4zqMH0b+C6HjYrYqCtcytE+ABifH++ISYX6G9A2B+ZaqmZgD5nBBlaE14wNtnV5IVvoAXynMXgaHgGSkvXuRp7CdInXwUAYUpbfzAWLS2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b84bkGUX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CvU4EqZO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743940656; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=qqH4N2+CHgOqU/M5fIoD1f1hycV5QL3eTccuZsOVm14=;
-	b=CvU4EqZOm2Xzl6z3KyI/ngPYwUG0M6Hr0Pw3DfmJ3TCZIAecijcrAfjuRtAsCQmrj/BJrJ7E/CPc3+1p50NfaWl3gFUasK5bq/o7Q/dRKLVlrvxtryf2mou/XI+oBC0oiaHgC89FhsUXkrl0ZpKAwoPE3jYjEfNAYZ3pOljIY7U=
-Received: from 30.246.160.68(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WVZ69Fk_1743940654 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 06 Apr 2025 19:57:35 +0800
-Message-ID: <3af36c30-48e9-4182-ad09-bd28d3e4acb4@linux.alibaba.com>
-Date: Sun, 6 Apr 2025 19:57:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b84bkGUX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41BCC4CEE3;
+	Sun,  6 Apr 2025 11:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743940798;
+	bh=7N8oo4TYDHzNq/47YKx06MEKsPixGmEO4o/eFLqLlI0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b84bkGUXWuf2i+9SG9VAZtN98oUGA2lCRaS7DtWPegeH3fTiM2V+zCKZA5AB6U2LI
+	 v1mtAjSe9GqOei3PGMoPv24maEPjVselu8dfCLVAtt/yDU4feSCgVsVV4BABmBuTAA
+	 sqF5K7If3fWNICE4vRxcoic6+oTZLgXhU5YSq6NyD66JwJ9d8logz0BHZjQXNYrg4J
+	 s6RjN1pRU8gnZwnTGuVmfEFl77qLs2E776VzwIOzGQnwK656p6+iTbcRUnJp6Y2mgm
+	 wdzpwjYi2VqDDi5A30s2XbVmeC2fQ1vfsKIwxr7ksmjdzClyS5A0B84sGdky9idlay
+	 fGFaupSMYHZlQ==
+Message-ID: <eac877d0-2fd3-44cf-8917-910042cdcec9@kernel.org>
+Date: Sun, 6 Apr 2025 13:59:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,169 +35,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/pidfd: align stack to fix SP alignment
- exception
-To: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, baolin.wang@linux.alibaba.com,
- tianruidong@linux.alibaba.com, brauner@kernel.org, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250312061557.28532-1-xueshuai@linux.alibaba.com>
- <0a70f4ab-cd83-434d-8dd2-486d58e5599a@linux.alibaba.com>
- <20250404121759.GA28692@willie-the-truck>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250404121759.GA28692@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 1/5] dt-bindings: leds: add TI/National Semiconductor
+ LP5812 LED Driver
+To: Nam Tran <trannamatk@gmail.com>, pavel@kernel.org, lee@kernel.org,
+ krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org, corbet@lwn.net
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250405183246.198568-1-trannamatk@gmail.com>
+ <20250405183246.198568-2-trannamatk@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250405183246.198568-2-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 05/04/2025 20:32, Nam Tran wrote:
+> +properties:
+> +  compatible:
+> +    const: ti,lp5812
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      I2C slave address
+> +      lp5812/12- 0x1b
+
+Drop description, redundant.
+
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^led@[0-9a-b]$":
+> +    type: object
+> +    $ref: common.yaml#
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 0xb
+> +
+> +      chan-name:
+> +        $ref: /schemas/types.yaml#/definitions/string
+> +        description: LED channel name
+
+Isn't this existing label property? Or node name? You don't need this
+and instead whatever currently LED subsystem is expecting (label got
+discouraged so maybe there is something else now).
 
 
+There is no multi-led support in the device? Datasheet this can work as
+matrix and as direct drive of 4 LEDs, so binding looks incomplete. Not
+sure what you exactly miss here - check other recent devices with
+similar features.
 
-在 2025/4/4 20:18, Will Deacon 写道:
-> On Wed, Mar 19, 2025 at 10:59:57AM +0800, Shuai Xue wrote:
->> + ARM maintainers for review.
->>
->> 在 2025/3/12 14:15, Shuai Xue 写道:
->>> The pidfd_test fails on the ARM64 platform with the following error:
->>>
->>>       Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
->>>
->>> When exception-trace is enabled, the kernel logs the details:
->>>
->>>       #echo 1 > /proc/sys/debug/exception-trace
->>>       #dmesg | tail -n 20
->>>       [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
->>>       [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
->>>       [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
->>>       [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
->>>       [48628.713055] pc : 0000000000402100
->>>       [48628.713056] lr : 0000ffff98288f9c
->>>       [48628.713056] sp : 0000ffffde49daa8
->>>       [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
->>>       [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
->>>       [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
->>>       [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
->>>       [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
->>>       [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
->>>       [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
->>>       [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
->>>       [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
->>>       [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
->>>
->>> According to ARM ARM D1.3.10.2 SP alignment checking:
->>>
->>>> When the SP is used as the base address of a calculation, regardless of
->>>> any offset applied by the instruction, if bits [3:0] of the SP are not
->>>> 0b0000, there is a misaligned SP.
->>>
->>> To fix it, align the stack with 16 bytes.
->>>
->>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>> ---
->>>    tools/testing/selftests/pidfd/pidfd_test.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
->>> index c081ae91313a..ec161a7c3ff9 100644
->>> --- a/tools/testing/selftests/pidfd/pidfd_test.c
->>> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
->>> @@ -33,7 +33,7 @@ static bool have_pidfd_send_signal;
->>>    static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
->>>    {
->>>    	size_t stack_size = 1024;
->>> -	char *stack[1024] = { 0 };
->>> +	char *stack[1024] __attribute__((aligned(16))) = {0};
->>>    #ifdef __ia64__
->>>    	return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
-> 
-> The arm64 alignment requirement is correct, but I don't really grok what
-> this code is trying to do. If it's not using CLONE_VM, why bother passing
-> a separate stack? If it _is_ using CLONE_VM, then surely the stack needs
-> to be allocated somewhere other than the caller stack?
-> 
+> +
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led-controller@1b {
+> +            compatible = "ti,lp5812";
+> +            reg = <0x1b>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            led@0 {
+> +                    reg = <0x0>;
+> +                    chan-name = "a0";
 
-Hi, Will,
-
-Thank for you reply.
-
-> https://man7.org/linux/man-pages/man2/clone3.2.html
-clone3()
-        The stack for the child process is specified via cl_args.stack,
-        which points to the lowest byte of the stack area, and
-        cl_args.stack_size, which specifies the size of the stack in
-        bytes.  In the case where the CLONE_VM flag (see below) is
-        specified, a stack must be explicitly allocated and specified.
-        * Otherwise, these two fields can be specified as NULL and 0 *, which
-        causes the child to use the same stack area as the parent (in the
-        child's own virtual address space).
-
- From man-pages for clone3, I think you are right.
-As you pointed out, without CLONE_VM, the stack can indeed be set to NULL.
-However, when running the pidfd_test, issues arise:
-
-#./pidfd_test
-TAP version 13
-1..8
-# Parent: pid: 125004
-Bail out! pidfd_poll check for premature notification on child thread exec test: pidfd_clone failed (ret -1, errno 22)
-# Planned tests != run tests (8 != 0)
-# Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
+Mixed up indentation.
 
 
-Upon examining the git diff:
-
-#git diff
-diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-index 9a2d64901d59..c5991c0712c8 100644
---- a/tools/testing/selftests/pidfd/pidfd_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_test.c
-@@ -32,13 +32,10 @@ static bool have_pidfd_send_signal;
-
-  static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
-  {
--       size_t stack_size = 1024;
--       char *stack[1024] = { 0 };
--
-  #ifdef __ia64__
-         return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
-  #else
--       return clone(fn, stack + stack_size, flags | SIGCHLD, NULL, pidfd);
-+       return clone(fn, NULL, flags | SIGCHLD, NULL, pidfd);
-  #endif
-  }
-
-
-Also from man-pages of clone3, https://man7.org/linux/man-pages/man2/clone3.2.html
-
-    The clone() wrapper function
-
-        The stack argument specifies the location of the stack used by the
-        child process.  Since the child and calling process may share
-        memory, it is not possible for the child process to execute in the
-        same stack as the calling process.  *The calling process must
-        therefore set up memory space for the child stack and pass a
-        pointer to this space to clone()*.  Stacks grow downward on all
-        processors that run Linux (except the HP PA processors), so stack
-        usually points to the topmost address of the memory space set up
-        for the child stack.  Note that clone() does not provide a means
-        whereby the caller can inform the kernel of the size of the stack
-        area.
-
-Now, I am confused about the rules :(
-
-Upon reviewing the glibc code for handling this:
-https://elixir.bootlin.com/glibc/glibc-2.41.9000/source/sysdeps/unix/sysv/linux/aarch64/clone.S#L52
-
-It's evident that when the stack pointer is set to NULL, the aligned stack
-pointer remains zero, leading __clone to perform a syscall error,
-returning -EINVAL due to an invalid argument.
-
-In summary, memory space for the child's stack must be explicitly allocated,
-and a valid pointer must be passed to clone() regardless of the use of
-CLONE_VM.
-
-> Will
-
-Thanks.
-Shuai
-
+Best regards,
+Krzysztof
