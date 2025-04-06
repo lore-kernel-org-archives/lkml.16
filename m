@@ -1,79 +1,92 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F1A224F0
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 23:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C972413B2BB;
+	Sun,  6 Apr 2025 23:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743980944; cv=none; b=DOmS9flRH0KytefCVgbr6MieFTQM8ayupAxxD9ZtpGs1s6cOBm+5TslPuG1+aVxUWGtskH7dNbEGKmd8buxliXVbA9h2ruG5T/Vl73z8gYhQ8/2tGGhjX5KK8kCuvXWWGqXSWKYVB3aC1z8Fk/hphoO0CShSUnRGrFnzgXakABA=
+	t=1743982234; cv=none; b=a0lmUiIHj0eHWz+GyVyQrrRe8qXfeTyhUNcJZNre0UsSNiSyCeWIUwbRD5tMbzcFy32Gfmbz7c7h1GrG2DGYSgmYhGzP/dyZlslGEUoDkJkpBnYK9Wgtsg87UzIwhRrz2ZVqSTPhsanry+QDVb3Tyzj49pEGifI5qhecuDqZVJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743980944; c=relaxed/simple;
-	bh=nBx/MltWEgayUVotVSMqrSbGCkiOHklfegQP9SnZgEk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=h3+1TgW4lbDw6BrQhxszw45bKVo672QHnXTah1IyC3pc/eQhgzWWErMxUwPNoKcG6XejakLKK9Q+dfDgTLfpDzApwppapVQaTyrPO16v1qt+XK06WINH6ersRd08UjussaLOCYaFe8VdASVLFvU4vzevPRUfyTFpHgLq8jH07nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-84cdae60616so475453139f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 16:09:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743980942; x=1744585742;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+u0rYlPftXycLzardq4cSj1OE2iCZVoLU6ei3WvPyKI=;
-        b=pRGHaNs5E8BxxdGiaLsyJc7Nh4RiDQHjndgld0fDkwGxV59TWepwECO3a2AD+w8LjS
-         hvRE0mWeafKr0kOeCoJEKoUxDcAcGEK49moqAbZuLnBfiCYFR+rOfZavvfngsRPAzBcB
-         hGkF9U//ZW5QZ6HbFcv3P0syXHgKF0D8uD+HBt0ZuuJK/NYq1BRstgtkgPkx+8Rr7JqS
-         I3dJUlvrorMx+d1MVGsbYjw2kYgk6zFj50h6YQKrL5Zt08NbUxVTDXwmB1wRYwaQ8BAm
-         wF2Yv9L5QqZ4wXcS87gldhbYGnMTGR/3uQjxPi5sVSORyey4W1FXpjPnLBcjdawpgDk3
-         kySA==
-X-Forwarded-Encrypted: i=1; AJvYcCXW1LMENiAjHnT6TAurLpm7s0rE9L5pdohKVlWIXqJk4BY1W3ginQKs0HhQsDNMGKwGOMsq57xbEli1BgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg130e76elb8fegsVkZ1gPEqkK0jk63taoXBDBjBwsaJIRH/No
-	Xc16xllIuAxMCPud19z4I9PJYwR+wA6vEF+RuZl2Wos2CIk5lStEKMGx513ZWjzRk7Mlt08XUvV
-	DXhpjdEDKpz7tBWLnI8tAaSXvittto2e59sgesdEvMIDXxcDCVDlgClo=
-X-Google-Smtp-Source: AGHT+IHjPiOtD6eAAG4bJPmJWU+QCxmzHHl5XoGkvHZoAkjEA/DriSDK+8t1FrVUZldbqmOOLwht++CJOZIuegiF+zEKCHLUSsG7
+	s=arc-20240116; t=1743982234; c=relaxed/simple;
+	bh=84wt4z1+1E8lq8J9jxUEXgxYuX1t4mv37U2UCIYuh0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T6mC6sq3jFCwWUtf4u2TDVVTw5m861r3oY00WGS3AcIDE8MXbj+FrtQ841RMWV+MTUM1tm8KCemw7Lm+tEx+v0Mz3dVTCoEIwTFBaGQbgCWico3q2jXIhA/oKqIoqfpdUhDqq5JURsXbMjWyWxdxSMkX1Teg/+FeWVZOM6D0H9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZkJBQKQ5; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZkJBQKQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1743982226;
+	bh=84wt4z1+1E8lq8J9jxUEXgxYuX1t4mv37U2UCIYuh0U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZkJBQKQ5IApzGa93ap+6E2Fc/X3N47MiQA8KmPFZu/hlQNq4OBi7+zv9bekRzT89Z
+	 bznOwmWVx7on0gnTtjeSRqCxt2j6h247a520yemI7CvFwo12ucCAQZe9v79Glntkic
+	 wTdYPBA3XJpFvt7nmN5JiKwh9pbXxoup3oUXUs8afT+RVbt06YDM+oOKYGH98cM3H5
+	 Ej8hjUBeIK9st+1a9YRRH5P3ZqEsCSp7IfaT6weoqqRcpuOUd1A+ZrU+RXSEGWjUjR
+	 +RMGvxW+bGlks+k2IYCziwga/LJlh4NQ9wtJUuQk2SFRcZd6mek7kf1FLkl1IImGq4
+	 pUk5KMtvewPUg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZW7qj1P6Hz4xCy;
+	Mon,  7 Apr 2025 09:30:25 +1000 (AEST)
+Date: Mon, 7 Apr 2025 09:30:24 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: failure fetching the the tip tree
+Message-ID: <20250407093024.166acf4d@canb.auug.org.au>
+In-Reply-To: <20250407065432.0f5a8c30@canb.auug.org.au>
+References: <20250407065432.0f5a8c30@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a4d:b0:3d3:fdb8:1799 with SMTP id
- e9e14a558f8ab-3d6ec590c21mr75697825ab.22.1743980942635; Sun, 06 Apr 2025
- 16:09:02 -0700 (PDT)
-Date: Sun, 06 Apr 2025 16:09:02 -0700
-In-Reply-To: <67392d6d.050a0220.e1c64.000a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f3098e.050a0220.0a13.0276.GAE@google.com>
-Subject: Re: [syzbot] [fs?] BUG: unable to handle kernel NULL pointer
- dereference in filemap_read_folio (4)
-From: syzbot <syzbot+09b7d050e4806540153d@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, andrii@kernel.org, ast@kernel.org, 
-	eddyz87@gmail.com, hdanton@sina.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, shakeel.butt@linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/lmlAjqn9v+c=TvnIRttiuJF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-syzbot has bisected this issue to:
+--Sig_/lmlAjqn9v+c=TvnIRttiuJF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-commit ad41251c290dfe3c01472c94d2439a59de23fe97
-Author: Andrii Nakryiko <andrii@kernel.org>
-Date:   Thu Aug 29 17:42:28 2024 +0000
+Hi all,
 
-    lib/buildid: implement sleepable build_id_parse() API
+On Mon, 7 Apr 2025 06:54:32 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Fetching the tip tree
+> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git#master)
+> today produces this error:
+>=20
+> remote: fatal: bad tree object 7bbeab06d5538bd4ae6a29ef18c9ccd2499dfaeb
+> remote: aborting due to possible repository corruption on the remote side.
+> fatal: protocol error: bad pack header
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1601923f980000
-start commit:   a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1501923f980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1101923f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
-dashboard link: https://syzkaller.appspot.com/bug?extid=09b7d050e4806540153d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15743998580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10143404580000
+All good now, thanks.
+--=20
+Cheers,
+Stephen Rothwell
 
-Reported-by: syzbot+09b7d050e4806540153d@syzkaller.appspotmail.com
-Fixes: ad41251c290d ("lib/buildid: implement sleepable build_id_parse() API")
+--Sig_/lmlAjqn9v+c=TvnIRttiuJF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfzDpAACgkQAVBC80lX
+0Gx13Af/f2JKaz6iAoQPsm7ZmtvMiN/VV5EErGXqxwvmBNTAsefvc/ajZnRO1zVO
+NIJhiOxVNbWtQDeP5IY/2whPXHSFb50H1q/q1OCm28Z1bla0zX8Pe/EA0taR3GLv
+2rm27dKRzf5oPIdWKSwosKuCGakyKfCUYz9mz7Z9rzJzf39rpRu1ywlBcRI0UNpA
+3xgTri2HidkQ9YYiPPSPBmLap/Dm24WVJmER70hb6ZfDWvLzgKYiAKy0hqdWFnTr
+RKyuBXOvVLVFxl86engs2ZT4DKlY/Ebn0RKYSUj5q+i7jMHgcIBWoJeJKWc9oHTv
+V8GzwkYibk+ppjutqfkK0yZc0RtYkg==
+=pIAe
+-----END PGP SIGNATURE-----
+
+--Sig_/lmlAjqn9v+c=TvnIRttiuJF--
