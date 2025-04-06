@@ -1,261 +1,106 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA0F14831E;
-	Sun,  6 Apr 2025 21:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AEC1E502;
+	Sun,  6 Apr 2025 21:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743974689; cv=none; b=rLxCUTqLAV8sh6KDL1fQinEmSMF0vH3YxmY69Ev+zwS365lxIJKseKoss+verSZDOvaF/P75PCm3HO2+ADBbWLK2as4pF/gvJUtVGvBcLayJ70Iv4FXcfSI3a98rRchLcC6oXFxADRvAm5AYmqjIK+Thv8MYC/yjZCNu67A2k2U=
+	t=1743975134; cv=none; b=ckFco3BIf8MH+7A+vCWny32JwpjXPOIm/BNG0Opc4gVjsA8CsMGWHXJMPgmCaVeYRu+ERmZjlSnu9dZStT0BKbn+ADtkP/xbnSC+FlUKo+QQ9D5bsJzHmFIIlosJNHLlWqi7bgaECVWhcJkPagVHD8X7Ic6jV8Ma3mxS8RQod3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743974689; c=relaxed/simple;
-	bh=kcLBmHUDELpVIjBDW7WOFfPs229RgQceNLXEbd1UJOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CkEwiZbNGMWan3r+1lMGGL135ZwVVgLnwG38t4K/Aeisqa0B+xKhXxwoq08Q0IvWAQE5eyOEetLmr3fqF1grENGYd0TUl9QhTXhiKS1JNPqkGI8kOvzJYQeOxsw1Vqi8Ylofj4CU1kkstMfocd5FpgTJ6CucRi61aSwuGvwVdBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=hXR1Cj6J; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743975134; c=relaxed/simple;
+	bh=UXcjfQUPwnO0UgUsVEpN+23KbNnyrfUQcReYlaRDX/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ei/sPeG2GIgsycFrPWZcP8l457Ihfqw26CRiNiXJxGA/YxFaA5oi6f8BnwI/1Iqw5CTTSEjDMa6Dw8LHjicip/DTIQExAc8uiTjdhIp0xv/F2uCU7MuHBjoeVyaLDzRjo8CLIl34vk8w9XIQRJruPLlsVwyot0gXbvw5k82U94M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hgrde5Az; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="hXR1Cj6J"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 941EA103B92CE;
-	Sun,  6 Apr 2025 23:24:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743974677; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=AmDn6RQJ+QRV6q6JMcajnOpUP8bbZFJKY8h5RYYtrj0=;
-	b=hXR1Cj6JiEpHHtfFp5082ABIz3Ak8Om151NMhGXcN0eH+00EcXMRaWfTWSG4ICuq8+a6kk
-	PTS24XASiBCImp0rsWts4wT8v0c/Slugz744qxWJRN1sbi4+u6/4baMRPLwQd8522KXcNN
-	qo6OUWirQp7OJ3ZJHc2xC4X1VvNfUh6/Iu+Ex2LIK4o87Y2dDRieYlvDaDdFdMsh9eytzY
-	3R5MwONrRpoDy+r/VhjddzNeqj92p2pnTavGmB7kWO2N0y0/DerCac0yZShc+CzNarlZ5U
-	QfHW1q0jnpXP0b7+2htYYXjI4A1eYZZ4f1hJfC+v0s1Y6ANJ7Ahmt3nDB87Jvw==
-Date: Sun, 6 Apr 2025 23:24:31 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250406232431.48e837e0@wsk>
-In-Reply-To: <8f431197-474e-4cd5-9c3e-d573c3f3e6b5@lunn.ch>
-References: <20250331103116.2223899-1-lukma@denx.de>
-	<20250331103116.2223899-5-lukma@denx.de>
-	<8f431197-474e-4cd5-9c3e-d573c3f3e6b5@lunn.ch>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hgrde5Az"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso755564a91.3;
+        Sun, 06 Apr 2025 14:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743975133; x=1744579933; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UXcjfQUPwnO0UgUsVEpN+23KbNnyrfUQcReYlaRDX/I=;
+        b=Hgrde5AzgYwbN7Tf72T3RGxjM91zwj5AtufSksIFqPn2YLhtjhvBT0IN2+5FEl55P7
+         eMongdMjlHzNNH5kCJSvHUdPAneqpk4s5LMqUqtRRffVZYg6g7fJKvBJBBWxpqsPnkk+
+         RfI1E89ziTihrRLY+fjpBDJZdRxCCvFcXoOThdfaYSvrOyLKmomhevrzYPiM+htCgvX6
+         EgjFYp/o9rO8Z5YtdQOrqzGXsw/D1y/Yk7+BQo3/WJtTQdCNLh4zv/U1B65j/I6A3rsA
+         C5TcEvY3ml7ez3FLAIL3txkrixirMM30zX+SLTGb41VhKUVRrcvQ48Of6SgNT2PULU6r
+         /VmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743975133; x=1744579933;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UXcjfQUPwnO0UgUsVEpN+23KbNnyrfUQcReYlaRDX/I=;
+        b=BlWpIJZbXJ9pZvqjox4CAjBpBFGtjuRruUBwxfECfHt879rjElnX+SlHR+35tTSRRv
+         eY1ybbfcO9K5pa+8A0H7X1YlEVnQbb2rfeM/bvUlxq+qCXjnPqGWDopRoem2jODO/zzo
+         Zai1CctrjeclTlEhJb3YIYZKJ4ZzIZcACTsPuRtlDaocBCyvfI9Z8iJ5BtgH7vBMIZGR
+         /bW5WZ5iq/vxzhTeXG5epxEdtV0UuFpgOYOeHVWvutHyk4LEG6WYw/HlFLpuiB5w5MwD
+         m0ZSvAerSzf6R17DcSCGIU6/p8mdLAf2kv9kZcYzqqMh90LGzbDOBrA1PFxoeuV1dcE6
+         NL2w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5FKNz8o0UMnX+sbwnNFPNvygzp5/Cvtd3eBjLw4zKPhSVOPBCQ/4pbzQZ1ju7OG3Ms3xaX5dARcw=@vger.kernel.org, AJvYcCUA3qAARP6EoOsBU50JqUoYcIg1AKrBllwXF6Xt9mJ5eCdOo3gf52Y2jSb27/6Uif9HaDoyegv81DRUWpNL@vger.kernel.org, AJvYcCWxkEBDXhU+Hlgx+jVAmcavwJAUm2qp1aSC2p+al1eONIRRJrzmd9TWARlx8I+o5zA/CafYw/D5NFCavwP101c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/Sjd9aN1q0rz5rv3OI5WCFO3eh+Wo0ECqAR4JSGoktWv045iH
+	xjgA4OLUpoxnSKFVrAJPkFIqbMtOcTYLxU7Qg2dQk9P+Q5Zy1OQd9DkLx0gOoSbtQ4k3h+HetLS
+	CHEiUZPwbZYQQ5JrV91G9tf9gy7w=
+X-Gm-Gg: ASbGnctr+qB0SoEEYGp8vjEMa2c63QECA5vvJ+1N9Zd7NMgBjuWAA1A+18VKvNaoYD/
+	dEc7n1mS+4A8OXW9czUG0P5cM6sKmnHtZEkP4+kanbCEuRzRkCgnSZOPynjWqDxqZVzATi+yeBa
+	dTQkF4sksb/5ikUcoOhPvjEmHYiQ==
+X-Google-Smtp-Source: AGHT+IFQbYiouQ2/NbpP1ljrGW4rJS6JnT6dvQhKHgt0QsEm4616TsbK3MEaIjOU4GsviHk3ZR9spj/mYoxJr3F/ZsU=
+X-Received: by 2002:a17:90b:1d03:b0:2ff:6bcf:5411 with SMTP id
+ 98e67ed59e1d1-306a485aef9mr5781290a91.1.1743975132691; Sun, 06 Apr 2025
+ 14:32:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ACv8R=knW+t0ni5QKQO7U2=";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
-
---Sig_/ACv8R=knW+t0ni5QKQO7U2=
-Content-Type: text/plain; charset=UTF-8
+References: <399cceb4-dcf5-4af8-a8b7-6741e9b7e8ae@gmail.com>
+ <0cc991ff-e0e5-453c-91dd-84710bf7e028@gmail.com> <CANiq72=p4zjbvVKAR90wY2saFty6AS+-JCNWRvnFu7VeLzg43g@mail.gmail.com>
+ <D8ZV9SWWK1OG.1HLXBSCAR76CO@proton.me>
+In-Reply-To: <D8ZV9SWWK1OG.1HLXBSCAR76CO@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Apr 2025 23:31:59 +0200
+X-Gm-Features: ATxdqUHEJVg7rvB57HIIvKuiXqlFs1KJ3cq29SDoo0P-lZ704b83I5UzTDJ6_DU
+Message-ID: <CANiq72kTh94KiTuUkqJG4Focc-ChpyZruDqAaHo-g34=PbEcBg@mail.gmail.com>
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Manish Shakya <msh.shakya@gmail.com>, chrisi.schrefl@gmail.com, Jamie.Cunliffe@arm.com, 
+	a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	andrew@lunn.ch, ardb@kernel.org, bjorn3_gh@protonmail.com, 
+	boqun.feng@gmail.com, corbet@lwn.net, gary@garyguo.net, guptarud@gmail.com, 
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux@armlinux.org.uk, ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
+	stappers@stappers.nl, thesven73@gmail.com, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Sun, Apr 6, 2025 at 11:17=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> Maybe we should rename it to something more discouraging then. Eg
+> CONFIG_RUST_BUILD_ASSERT_DISABLE.
 
-> > +static void read_atable(struct switch_enet_private *fep, int index,
-> > +			unsigned long *read_lo, unsigned long
-> > *read_hi) +{
-> > +	unsigned long atable_base =3D (unsigned long)fep->hwentry;
-> > +
-> > +	*read_lo =3D readl((const void *)atable_base + (index << 3));
-> > +	*read_hi =3D readl((const void *)atable_base + (index << 3)
-> > + 4); +}
-> > +
-> > +static void write_atable(struct switch_enet_private *fep, int
-> > index,
-> > +			 unsigned long write_lo, unsigned long
-> > write_hi) +{
-> > +	unsigned long atable_base =3D (unsigned long)fep->hwentry;
-> > +
-> > +	writel(write_lo, (void *)atable_base + (index << 3));
-> > +	writel(write_hi, (void *)atable_base + (index << 3) + 4);
-> > +} =20
->=20
-> It would be nice to have the mtip_ prefix on all functions.
+To clarify: it doesn't disable them, but rather converts them to runtime ch=
+ecks.
 
-Ok.
+Perhaps it should be _ESCAPE_HATCH or _KEEP_DISABLED or _AT_RUNTIME or
+similar -- though changing it now may be even more confusing.
 
->=20
-> > +static int mtip_open(struct net_device *dev)
-> > +{
-> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
-> > +	struct switch_enet_private *fep =3D priv->fep;
-> > +	int ret, port_idx =3D priv->portnum - 1;
-> > +
-> > +	if (fep->usage_count =3D=3D 0) {
-> > +		clk_enable(fep->clk_ipg);
-> > +		netif_napi_add(dev, &fep->napi, mtip_rx_napi);
-> > +
-> > +		ret =3D mtip_alloc_buffers(dev);
-> > +		if (ret)
-> > +			return ret; =20
->=20
-> nitpick: You might want to turn the clock off before returning the
-> error.
+The description already mentions it should not happen, and that is an
+escape hatch, and the recommendation and the default is N. So if
+someone enables it in production, they really went out of their way to
+do so, and even then they are protected by the panics (that they
+shouldn't hit at all).
 
-Ok.
+Eventually, we may just want to remove it entirely if we never see a
+case failing and/or if we get proper support for those from upstream
+Rust for this.
 
->=20
-> > +	}
-> > +
-> > +	fep->link[port_idx] =3D 0;
-> > +
-> > +	/* Probe and connect to PHY when open the interface, if
-> > already
-> > +	 * NOT done in the switch driver probe (or when the device
-> > is
-> > +	 * re-opened).
-> > +	 */
-> > +	ret =3D mtip_mii_probe(dev);
-> > +	if (ret) {
-> > +		mtip_free_buffers(dev); =20
->=20
-> I've not checked. Does this do the opposite of netif_napi_add()?
-
-No, the netif_napi_add() is required here as well.
-
->=20
-> > +static void mtip_set_multicast_list(struct net_device *dev)
-> > +{
-> > +	unsigned int i, bit, data, crc;
-> > +
-> > +	if (dev->flags & IFF_PROMISC) {
-> > +		dev_info(&dev->dev, "%s: IFF_PROMISC\n",
-> > __func__); =20
->=20
-> You can save one level of indentation with a return here.
-
-Ok.
-
->=20
-> > +	} else {
-> > +		if (dev->flags & IFF_ALLMULTI) {
-> > +			dev_info(&dev->dev, "%s: IFF_ALLMULTI\n",
-> > __func__); =20
->=20
-> and other level here.
-
-Ok.
-
->=20
-> > +		} else {
-> > +			struct netdev_hw_addr *ha;
-> > +			u_char *addrs;
-> > +
-> > +			netdev_for_each_mc_addr(ha, dev) {
-> > +				addrs =3D ha->addr;
-> > +				/* Only support group multicast
-> > for now */
-> > +				if (!(*addrs & 1))
-> > +					continue; =20
->=20
-> You could pull there CRC caluclation out into a helper. You might also
-> want to search the tree and see if it exists somewhere else.
->=20
-
-The ether_crc_le(ndev->addr_len,=C2=B7ha->addr); could be the replacement.
-
-However, when I look on the code and compare it with fec_main.c's
-set_multicast_list() - it looks like a dead code.
-
-The calculated hash is not used at all (in fec_main.c it is written to
-some registers).
-
-I've refactored the code to do similar things, but taking into account
-already set switch setup (promisc must be enabled from the outset).
-
-> > +
-> > +				/* calculate crc32 value of mac
-> > address */
-> > +				crc =3D 0xffffffff;
-> > +
-> > +				for (i =3D 0; i < 6; i++) { =20
->=20
-> Is 6 the lengh of a MAC address? There is a #define for that.
-
-This is not needed and can be replaced with already present function.
-
->=20
-> > +					data =3D addrs[i];
-> > +					for (bit =3D 0; bit < 8;
-> > +					     bit++, data >>=3D 1) {
-> > +						crc =3D (crc >> 1) ^
-> > +						(((crc ^ data) &
-> > 1) ?
-> > +						CRC32_POLY : 0);
-> > +					}
-> > +				}
-> > +			}
-> > +		}
-> > +	}
-> > +}
-> > + =20
->=20
-> > +struct switch_enet_private *mtip_netdev_get_priv(const struct
-> > net_device *ndev) +{
-> > +	if (ndev->netdev_ops =3D=3D &mtip_netdev_ops)
-> > +		return netdev_priv(ndev);
-> > +
-> > +	return NULL;
-> > +}
-> > + =20
->=20
-> > +static int __init mtip_switch_dma_init(struct switch_enet_private
-> > *fep) +{
-> > +	struct cbd_t *bdp, *cbd_base;
-> > +	int ret, i;
-> > +
-> > +	/* Check mask of the streaming and coherent API */
-> > +	ret =3D dma_set_mask_and_coherent(&fep->pdev->dev,
-> > DMA_BIT_MASK(32));
-> > +	if (ret < 0) {
-> > +		dev_warn(&fep->pdev->dev, "No suitable DMA
-> > available\n"); =20
->=20
-> Can you recover from this? Or should it be dev_err()?
->=20
-
-It was my mistake - of course there shall be dev_err().
-
-> More later...
->=20
-> 	Andrew
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/ACv8R=knW+t0ni5QKQO7U2=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfy8Q8ACgkQAR8vZIA0
-zr2K6gf+IeVFnsg+cnEFsWjR/QZHoQEjkMHlOs/vdNba2jlurd4lPwjLvpxs75Lw
-o6ISVIdS1JlB/6kmNCSiL8Ktz0H77nfuz1IpJju2duk9TPTwq0/qoHbQqWaxWGVg
-1++fPBxV4EYRfR2I4JXTHTGuPVoREgsCTGcd2sF1JUX5RLxjYg8phEd+LV7TpZnT
-aIyh6gBIDZKfZ3hTpS73Dzkb+FIqt3EhRuPBX49Gq8ch69mXgEC9PXe0JTe5Xoww
-W1P9HKOuUptjr/i+g6V1sQ9t8IGzMxaVme2Ya/TlR4S11+uX4mLZUJGg3Bbi6wVT
-tKRaF1x3+3vfVWuSkSY+NiPr5q3aLw==
-=eAzq
------END PGP SIGNATURE-----
-
---Sig_/ACv8R=knW+t0ni5QKQO7U2=--
+Cheers,
+Miguel
