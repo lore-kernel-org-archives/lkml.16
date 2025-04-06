@@ -1,108 +1,139 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026E41E871;
-	Sun,  6 Apr 2025 14:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2698A20330;
+	Sun,  6 Apr 2025 14:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743950611; cv=none; b=JlfeJCxj25JlEnP2hI79z3ViCF9Q1FGn+J8eCiV7FoD+jFQxUIQj/ilszbiYkUCW/KzR8+nPKp9ecivAhcXQJhkoZY7EqbclI1z6Qn3LpY022JSU9AGYKqWaop7pwZqgLwKQUOe03ldBk6oGImNGscEhzmrldwAIGv4BLyqyCgc=
+	t=1743950953; cv=none; b=pWcsF9iAkoApjA9G2NIJKypAxEuHJKUHpkWYjMX6lSmnoDeITnNMsb04fRIOOhKJ5BTrkU7Hbe0c5eazKbVloOpjgD6vpDJBDfG/sPguun3/chDuhilLufjmiI2qHpkb/2c3G9lq9lIO/zQ4hmPoRlSgB1p23K5soM8ienv/USk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743950611; c=relaxed/simple;
-	bh=ZrDLaVqNjEamxChowvjj/WuCkkOsyZ1przBRWBbwp24=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFKNxWtGXiJtMDs6lGMapce2GTUtFgwSzO/tAsWCV7A4G2oRdyXk9AohjlPdj15QWwPbBldQJZX9jQE8gmntiVCCOnXBUZi7ChiYjsIeTQmVniYg3gPIg+TGv806pY54cMi4PP3Wk3A4GnBag1PKCfkmoousIxuIaEpI2ASEvug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hf3gx/dY; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743950953; c=relaxed/simple;
+	bh=tE3lC9OPXGFWS1kwcJCk6bHYTeEZVn7wMLR8hYx4LE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jHWCioms7fEMRbVMx87N34CDKv+g+34JsFz+C5PNVwDzOZnjpYvwBHHFsSBYduBMHk5uNO4sJSeqpykvf2nWu1yIRflsRZ8Z2KazopvcdPv0pNcZxos98NC2ydl/+1daS0BDXwz5EFQzx/fl+b/PhZK5c5os0kNolB4wceeWHRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=En8A0ggU; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jq/4MFd9; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hf3gx/dY"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-730517040a9so3968455b3a.0;
-        Sun, 06 Apr 2025 07:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743950609; x=1744555409; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdobnYSCTE78QqweiiGn675VY/sYpHVhEsu2M/NCVgA=;
-        b=hf3gx/dYGle1wFn7v3zNHfl4Rp0J3tPhDK/KjT5Br08dDyCuUEEup9cqa87nwERojk
-         /mukYTBesbWvyWe/thpXXWS5QVdW3zeTf4SzSXhpq0WTyodKOB4Kp7RdoMantsPIHfAC
-         lpu/0UF1GLXMibylTsrXXqJYMHl5tPI5XJLDLRkwuiGH0a6ojGdUufCdgHNGbrsa8Tv/
-         DSK1tCE8/lh+6vJOHZB3c0ubTDxsZSz/Zbwgb/Ruqj7N3Qiolsn8z3MLvsnWI1x92eYY
-         C4pud11ILvhGg9d6QvXJpRVqviblP2U98s2SOLQjimQcqVDX+D8JjA+sv9a1nIw5vdo7
-         xYxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743950609; x=1744555409;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WdobnYSCTE78QqweiiGn675VY/sYpHVhEsu2M/NCVgA=;
-        b=gqHEoQD//hL3Ht0jwh36VUEpyIjfHlloXBNYm7XNTP5oRTn5aStKRanZa2q/nx8Nb3
-         Dxk1GEvPuYcxELbaDAWT8REPUKv8dT46rN8zSYpsmJ2GOjHS6UykLVCc8bVl+31rXQ+r
-         pwNvcxSpKFjpzzRL0EJ/uhl7frFR1ilqyVLHsaR4Uf9qW6kK40ADvPzTxRKYMrlR5XKx
-         AraXDBxq9EMSVeTfMqew0WOaIKhBwQLRCTRUNltadBX8mJzVDJefk0xEUF4O0/x5vIE6
-         PHfFxjo/obIs2UntUK4vZ0W+Ywb6U/MNAw9c4yALssygyZXfFMk4ptCQxLMea0s+laWx
-         aIqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvgnGVQGDO3nbNWmOXA1SspfuLkIeJFQLGkrWKP0HSxkQrR5zy2AuLlHtibtKEhjtudrHQVXoicRYq3zc=@vger.kernel.org, AJvYcCV6G2mWJ7F96p1RERAxHaB/NyYNmoI7rXVRaQ+02jwPP6arbPnYzJhpbtlhpGoiMxXB+waZKSYzCjGGUDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCVhDGcNc3L2RYdUh4GB/H2E+CAaJ4xPaaYdH4VGHECpRUynyo
-	EiLp2183DCt6e3U5oYnf4ktmVzZa3WlFBND2/YFnzEJGlu2m/9iapfJTe8A6
-X-Gm-Gg: ASbGncvCwL7zMfOt5JJrMsf/TD1Aj2LPmNQhjhz2n5TaZ0o4fBdTs6uNudgDkK7bNL1
-	NeP4PzUpqqXIFC9Ut6V7mKeQRZiTkw1IfnXk/YWT3y0JetDSRgPD50qdLnZOMh1MqN82Fyo6NIY
-	JINVQLOWa1H6JIxl3K//vxFIHi9d8npfDEv1q4tcHrbDLUukdIA+oP8CC2N/nidufauwlNPPrI0
-	33DBRYubuU+oT/AOjkC8sO+Y4IfxSMymgmepVkulmdKjY+PoIR86Xyke6Wh+ZBALJm3OPv2xebW
-	NKKjtVGv3ExvUPcdHwb19Btb5Uje6P0OA8b0CrflvAXQpyVHN1ZDUp+Z3hO7QNwxgFc5
-X-Google-Smtp-Source: AGHT+IEDNZOBGCAOLggyB+ZkdxXOadqAyEbVhtde8FAn5W4eYDFkomDXnU0E0VunzK0C0hDDpNU1bg==
-X-Received: by 2002:a05:6a00:1902:b0:736:5753:12fd with SMTP id d2e1a72fcca58-739e47dbb37mr14005531b3a.4.1743950609030;
-        Sun, 06 Apr 2025 07:43:29 -0700 (PDT)
-Received: from tech-Alienware-m15-R6.. ([223.185.134.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f1c4bsm6729152b3a.70.2025.04.06.07.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 07:43:28 -0700 (PDT)
-From: Sunny Patel <nueralspacetech@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="En8A0ggU";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jq/4MFd9"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZVwG64vF5z9tLv;
+	Sun,  6 Apr 2025 16:49:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1743950942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ouSo7FlRFCn9kPXMwokD5Qs7NISOOu4zypPQBTuY4SI=;
+	b=En8A0ggUjT68sKruXxIgdm+Wz8dunHe0VfBFuXmWyLucfLQ+4d460RH9NVBkGAmF0ss6x/
+	SA8b//Pq0IqtceVtV5pdZmPf3YL8GydKDOnAjq81ABbJJnbpIdvqpWS+ExknfFEaY+B3m+
+	WxWbUnRY1/9YrfTfrnLMOWSN1ujPUOJ/rLu5sz3aHHLJWpAcvCPCAxK3hCyl2wilfSuU8E
+	dVfbxdK2Q9j+WK8YGNamEe8O3ZFt+aqBtGdgdqZCMTQoRhoF0BgC1drcBIJXgTmXhq40GR
+	3ir2rbk5dpSMdIJbEamfI4LkADhP+X3TjjVgdJIw2IQClVB9euPG66ncdbb2Dg==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1743950940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ouSo7FlRFCn9kPXMwokD5Qs7NISOOu4zypPQBTuY4SI=;
+	b=jq/4MFd9ypv83vVVduk1mXXb3uryRPKi9/b5jFpbp9qkvPYXxnytlXwldOu5il0GNzKFtl
+	ZzTxuhT/1jYuFbfD4n6Peg6EgZxnskuW5rwvAC+GsDsbk8Rc9iSZbJYEPwRq+O6WDj8Cb0
+	7M4+aICSNYep3EF1I8WMlG/7V3gvqWO3HPxD9QF4kzTj0WyMZG/vOd8hlC+Obr4ShvdCAD
+	88msxmiX6dzBPR1Ru0mCH7t7k00UBQ13SXLIPCr3LFvznC08U7cR355Q5py8mcNN57pZ8H
+	7F+Q3mT0JomFWGHlzZTf3e88CwLB50sswgwFeDuCr71NXCCEheVlnSovwLc6Rg==
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Sunny Patel <nueralspacetech@gmail.com>
-Subject: [PATCH] media: i2c: ov13858: Enable clock frequency macro
-Date: Sun,  6 Apr 2025 20:13:22 +0530
-Message-ID: <20250406144322.88464-1-nueralspacetech@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2 0/4] arm64: dts: renesas: r8a779g3: Add Retronix R-Car V4H Sparrow Hawk board support
+Date: Sun,  6 Apr 2025 16:45:20 +0200
+Message-ID: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: x5etaarnsacp4g3atghkao78dekbpsoz
+X-MBO-RS-ID: cce39108303713c226b
 
-Defines a macro `OV13858_MCLK` for the clock frequency (19200000 Hz).
-Replaces the hardcoded clock frequency value in the probe function.
+Add Retronix R-Car V4H Sparrow Hawk board based on Renesas R-Car V4H ES3.0
+(R8A779G3) SoC. This is a single-board computer with single gigabit ethernet,
+DSI-to-eDP bridge, DSI and two CSI2 interfaces, audio codec, two CANFD ports,
+micro SD card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe SSD,
+debug UART and JTAG.
 
-Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
+The board uses split clock for PCIe controller and device, which requires
+slight extension of rcar-gen4-pci-host.yaml DT schema, to cover this kind
+of description. The DWC PCIe controller driver already supports this mode
+of clock operation, hence no driver change is needed.
+
+Marek Vasut (4):
+  dt-bindings: PCI: rcar-gen4-pci-host: Document optional aux clock
+  dt-bindings: vendor-prefixes: Add Retronix Technology Inc.
+  dt-bindings: soc: renesas: Document Retronix R-Car V4H Sparrow Hawk
+    board support
+  arm64: dts: renesas: r8a779g3: Add Retronix R-Car V4H Sparrow Hawk
+    board support
+
+ .../bindings/pci/rcar-gen4-pci-host.yaml      |   9 +-
+ .../bindings/soc/renesas/renesas.yaml         |   7 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/renesas/Makefile          |   4 +
+ .../r8a779g3-sparrow-hawk-fan-pwm.dtso        |  43 ++
+ .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 685 ++++++++++++++++++
+ 6 files changed, 747 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+
 ---
- drivers/media/i2c/ov13858.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: "Rafał Miłecki" <rafal@milecki.pl>
+Cc: Aradhya Bhatia <a-bhatia1@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Junhao Xie <bigfoot@classfun.cn>
+Cc: Kever Yang <kever.yang@rock-chips.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 7a3fc1d28514..a1242a90cdc9 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -21,6 +21,8 @@
- #define OV13858_REG_SOFTWARE_RST	0x0103
- #define OV13858_SOFTWARE_RST		0x01
- 
-+#define OV13858_MCLK				19200000
-+
- /* PLL1 generates PCLK and MIPI_PHY_CLK */
- #define OV13858_REG_PLL1_CTRL_0		0x0300
- #define OV13858_REG_PLL1_CTRL_1		0x0301
-@@ -1664,7 +1666,7 @@ static int ov13858_probe(struct i2c_client *client)
- 	u32 val = 0;
- 
- 	device_property_read_u32(&client->dev, "clock-frequency", &val);
--	if (val != 19200000)
-+	if (val != OV13858_MCLK)
- 		return -EINVAL;
- 
- 	ov13858 = devm_kzalloc(&client->dev, sizeof(*ov13858), GFP_KERNEL);
 -- 
-2.43.0
+2.47.2
 
