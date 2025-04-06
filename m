@@ -1,122 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF26128819;
-	Sun,  6 Apr 2025 13:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308DB1A08B5;
+	Sun,  6 Apr 2025 13:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743947630; cv=none; b=FiGmF6cR6pPWFbvzEy6PNHIJot1iqJdcBcPChcrg+D11iXKl6vFUaKGnuTHOoL9px7AXnx0meIVL0x4gnJR7hfpNbahfVlwJH4muCJEHJtJlWFEC7x6SJFUax+xlc48MqR7dNywmA5kVNWkh+BnRJxSVyCLL5cQPai9b4pSr8ww=
+	t=1743947671; cv=none; b=qLSCajMCRDsznoMRh+ZZDxqrMbeRS5dQfJJ0QinfuQAD/qa5fFWVH9dZA9txdsd3pWsVbquBlc1cyC5+0GHqc5DDvmSLoDfUIfmquqBF1X+/I3zU09XQqoqttdqJ1lgMCFFFbYjJ+POGXrl2DOt0CAC9NzcynzciJsRiP3qKUUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743947630; c=relaxed/simple;
-	bh=aU5m++M1HhWT6yP7jA1QIy8LqTSXqwb1xgM+NT4RZEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zc8U/QOeYk22wcdRxYISnV3jCXxcW626jjVmPFplRidQlujtBVp48IWm5yHKrMPcZAcdk/yu07yc/kNrDpFmvphB2F+lKB4qEcM8fTcM0z93VARgjjfwH+ZOGPncZ3/GqVmNaGHIFJ5DHf7rnrQcBke3ujANlUGJMBySX2lU41Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNRKqjfX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNRKqjfX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C71C4CEE3;
-	Sun,  6 Apr 2025 13:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743947629;
-	bh=aU5m++M1HhWT6yP7jA1QIy8LqTSXqwb1xgM+NT4RZEM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RNRKqjfX/EQi7g93uoR2qm+OORLjx+7Eu5FEXnSVF+2tTasRWmy2RF1bhCa3ynZ02
-	 YMoDqBV1XvVcKU8OFiBLhsMP8zoFSsDGPflVcwF7a9DF/KWbSA2FfSJcFk7ApyQQof
-	 9uKtgvgaDTPgEmnYH9IutHFFvjes2hSI/7DBgipKvNtUqrkgFCghiICnCu93kgQBaO
-	 WU/Lywu6BlpPNFFvWD89YSzn4qxX6zRiF3rAe9M2J5WTYxVenlKukbIXxjbijlLD1b
-	 tkNpNI0QDLG/kMlNa67QI3/nJJO7Lx6Mvz/912G50nD9xDrhcv5aYS0Jspcz42b6a0
-	 1hSHKA5MCajKw==
-Message-ID: <99d75428-2882-47f4-a276-fbe753520dfb@kernel.org>
-Date: Sun, 6 Apr 2025 15:53:43 +0200
+	s=arc-20240116; t=1743947671; c=relaxed/simple;
+	bh=lj34e65Bv3wYeMSXJWTA50O/ZNHYr1A9EK7ERDF0Aqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NDI4uhhDEzFauI9kt+DR5QTCRCcPig5+qxtmH/FjyuVwaSkDFRDgw9ktIMykvmQA2VhLXBKYoPxL0XdJYaWhCf/fDS/eyFC0pFf5yTjVL6dZEkZsEeNO8LqTzFck0Jib2W9Gfo9nNrcDISBBkQChigGN5OxAGBvezofW0EhUOYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4DEEA2C0526E;
+	Sun,  6 Apr 2025 15:54:21 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0CAEF30E6F; Sun,  6 Apr 2025 15:54:26 +0200 (CEST)
+Date: Sun, 6 Apr 2025 15:54:26 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"Berg, Johannes" <johannes.berg@intel.com>,
+	"Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>,
+	"Berg, Benjamin" <benjamin.berg@intel.com>,
+	"Anjaneyulu, Pagadala Yesu" <pagadala.yesu.anjaneyulu@intel.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iwlwifi: mld: fix building with CONFIG_PM_SLEEP disabled
+Message-ID: <Z_KHkknIxQWzXhry@wunner.de>
+References: <20250325084340.378724-1-arnd@kernel.org>
+ <MW5PR11MB58106D6BC6403845C330C7AAA3A22@MW5PR11MB5810.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] ASoC: codecs: Add aw8898 amplifier driver
-To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Weidong Wang <wangweidong.a@awinic.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250406-aw8898-v1-0-58a2d554693f@lucaweiss.eu>
- <20250406-aw8898-v1-2-58a2d554693f@lucaweiss.eu>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250406-aw8898-v1-2-58a2d554693f@lucaweiss.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW5PR11MB58106D6BC6403845C330C7AAA3A22@MW5PR11MB5810.namprd11.prod.outlook.com>
 
-On 06/04/2025 15:03, Luca Weiss wrote:
-> +static const struct i2c_device_id aw8898_id[] = {
-> +	{ "aw8898" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, aw8898_id);
-> +
-> +static const struct of_device_id aw8898_of_match[] = {
-> +	{ .compatible = "awinic,aw8898" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, aw8898_of_match);
-> +
-> +static struct i2c_driver aw8898_driver = {
-> +	.driver = {
-> +		.name = "aw8898",
-> +		.of_match_table = of_match_ptr(aw8898_of_match),
+On Sun, Mar 30, 2025 at 04:49:38AM +0000, Korenblit, Miriam Rachel wrote:
+> > From: Arnd Bergmann <arnd@kernel.org>
+> > Sent: Tuesday, 25 March 2025 10:44
+> > 
+> > The newly added driver causes multiple build problems when CONFIG_PM_SLEEP
+> > is disabled:
+[...]
+> > --- a/drivers/net/wireless/intel/iwlwifi/mld/mac80211.c
+> > +++ b/drivers/net/wireless/intel/iwlwifi/mld/mac80211.c
+> > @@ -501,7 +501,7 @@ int iwl_mld_mac80211_start(struct ieee80211_hw *hw)
+> >  		iwl_mld_restart_cleanup(mld);
+> >  	}
+> > 
+> > -	if (!in_d3 || ret) {
+> > +	if (!in_d3) {
+> 
+> Then where do you handle the in_d3 && ret case?
 
+That seems to be a valid objection, yet Arnd's patch is now
+commit 44605365f935 in wireless.git:
 
-Drop of_match_ptr.
+https://git.kernel.org/wireless/wireless/c/44605365f935
 
-Best regards,
-Krzysztof
+I'm proposing this v2:
+
+https://lore.kernel.org/r/f435bd9c8186176ffa12fd3650fac71cacdeebe1.1743946314.git.lukas@wunner.de/
+
+If wireless.git/main is a rebasing branch, consider replacing the
+above-linked commit with the new version.  If it is not a rebasing
+branch, let me know and I'll send a patch reinstating only the ret
+in the if-condition.
+
+Thanks,
+
+Lukas
