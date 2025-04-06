@@ -1,214 +1,200 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC4026289;
-	Sun,  6 Apr 2025 18:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740D126289
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743965270; cv=none; b=GRHOMvjrLmZ3W1buPYc0r7Dqp4w13/Rezfi96wrSIu+KIAqpQ8K9OJkrmAZzVM5IOxtDpj+cccDw0uGmU2eyl2Xia60KimfCZtlhFLHrTR3AJYqW1V5AGEZHYh+dKif9Fk9esqkzNbhzkj8TFWC/oKZd3Aerdwox6a8w8NXLFLY=
+	t=1743965325; cv=none; b=TWQlR++UUSXxOFDkyNPluiJvgmMqiMcLsJ3+inU3SwNi6IDLOxqAS6AEfAa/9ZtxB/Hkc7g2F4P8tLbthhkRCmnTQSCptOhRjxZRPrbJxdVnpQ3W27a0GPh5LD7nQAMjXXGInA4YEerhvGh4YNZs972vht5J5YwkMU+twadDaI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743965270; c=relaxed/simple;
-	bh=sC8ADKYE4LqMAZaGEZtrB+odLVH2dvbkCgo4ZplTpWQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=OEmciL7ddtXGSEYUrBpcwM0qIWSEJCbKeuxlL7pkOReaY2P/JthKFiXJK71Kmrs0JyZQ6BKxk++gLU0MoPfi7CAlwVn2OJ3TGJYrjeTfZwj3OqsPxjVc1wrv8h/8zUi/Xu0qeApwR2RhK+Xzh801Q9qRk4yd/clU/Z9iYESsq/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B+/Us6MC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1743965325; c=relaxed/simple;
+	bh=u9Kf3qowMlxU8RQDK76OOlcQddRSMyRSS4Z1eabxKVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZ73aNaPBQX03fCax0Eob96PffOx22mWxn+xbhtqxe109av9gKmN/O3IQvJ5TevGr/3/gd7nKZbp9NxcCCT5jyC5vX7j83QJCqKZH0qPgYiWnNjrkzr7nDu2ToSl7Xz9+LbfbtB/wLFamyIPMob1+GG91xkA0B2jQtx9LliGnpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vJ3a7cFB; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B+/Us6MC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=sC8ADKYE4LqMAZaGEZtrB+odLVH2dvbkCgo4ZplTpWQ=; b=B+/Us6MCeUgYl2NwHEtiElsvWm
-	PYVq06rNiUiv1p9pE2QIZoBZKalePjQ8rFBUsPHciBhKxUZMjo2Yx1Gn99dHCIs00s7UW94zmhGqT
-	a5ui1ysD5U4EFjhSCsn1S+gevP/ja8lYJaK2u6ROk1+3t8SpoGeRC2T6eaDiz9s+oJgPwvoRTEjQ7
-	ssELgvXZJIFehmvLTigMOm+ZSx6GMEKV1dJ7B8fgZcJx0krBzDmhgqCKPfczdqPbFlnYu6NmQbTPv
-	21qsVSwsfrmghCoM82sgetD0r8SAcdvEXA2jjtTl0fWDQU8tYdQonKvjvX+ywRNInTOE3G6pfPS7r
-	DTOtjcHw==;
-Received: from [172.31.31.142] (helo=[127.0.0.1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1V1v-00000007lun-10GC;
-	Sun, 06 Apr 2025 18:47:39 +0000
-Date: Sun, 06 Apr 2025 19:47:41 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
- Claire Chang <tientzu@chromium.org>,
- linux-devicetree <devicetree@vger.kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- =?ISO-8859-1?Q?J=F6rg_Roedel?= <joro@8bytes.org>,
- iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- graf@amazon.de
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_1/3=5D_content=3A_Add_VIRTIO=5FF=5FSWIO?=
- =?US-ASCII?Q?TLB_to_negotiate_use_of_SWIOTLB_bounce_buffers?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250406114130-mutt-send-email-mst@kernel.org>
-References: <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org> <Z-99snVF5ESyJDDs@infradead.org> <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org> <20250404040838-mutt-send-email-mst@kernel.org> <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org> <20250404043016-mutt-send-email-mst@kernel.org> <F30D33D5-38CC-4397-8DC8-9EE1B0FEF40D@infradead.org> <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org> <20250404062409-mutt-send-email-mst@kernel.org> <7fd789b61a586417add2115f6752ebec5e7b81bf.camel@infradead.org> <20250406114130-mutt-send-email-mst@kernel.org>
-Message-ID: <A6E92E4B-488D-4D01-9D87-48DA81050AC2@infradead.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vJ3a7cFB"
+Date: Sun, 6 Apr 2025 14:48:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743965309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iogtLg1UXo9nSoVjAl3atukJO4dFMr2eGJKXZHkGJdg=;
+	b=vJ3a7cFBns37ZHcB7EIc48rRiHYiintoREHUWrqub8GKbtjwaIpjzij0XFKVokOa0cRZ2w
+	z56IYyoi/DUwviO4fqXaU+OaOiClMJfORrtlzqF2kZH6a9DSnS4zQOx9TulNhhpN3wiNfo
+	rfx7DJDZw5tbduokG8RNEaNz/wOVRrY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Alan Huang <mmpgouride@gmail.com>
+Cc: syzbot <syzbot+674ccd0645d379ed5f80@syzkaller.appspotmail.com>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bcachefs?] INFO: task hung in bch2_fs_read_only_work
+ (2)
+Message-ID: <r7w5gnzuvx372uqkzqk6lwy74kcg64uxaccwmwetdd6ubtmlye@3xwnqo7peqlk>
+References: <67f2bf20.050a0220.0a13.0270.GAE@google.com>
+ <777BAF56-3BB9-4602-806D-7EF157183BA5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <777BAF56-3BB9-4602-806D-7EF157183BA5@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 6 April 2025 19:28:08 BST, "Michael S=2E Tsirkin" <mst@redhat=2Ecom> wro=
-te:
->On Fri, Apr 04, 2025 at 12:15:52PM +0100, David Woodhouse wrote:
->> On Fri, 2025-04-04 at 06:37 -0400, Michael S=2E Tsirkin wrote:
->> > On Fri, Apr 04, 2025 at 11:15:33AM +0100, David Woodhouse wrote:
->> > > On Fri, 2025-04-04 at 10:27 +0100, David Woodhouse wrote:
->> > > > On 4 April 2025 09:32:39 BST, "Michael S=2E Tsirkin" <mst@redhat=
-=2Ecom>
->> > > > wrote:
->> > > > > On Fri, Apr 04, 2025 at 09:16:44AM +0100, David Woodhouse wrote=
-:
->> > > > > > On Fri, 2025-04-04 at 04:09 -0400, Michael S=2E Tsirkin wrote=
-:
->> > > > > > > On Fri, Apr 04, 2025 at 08:50:47AM +0100, David Woodhouse
->> > > > > > > wrote:
->> > > > > > > > What's annoying is that this should work out of the box
->> > > > > > > > *already* with
->> > > > > > > > virtio-mmio and a `restricted-dma-pool` =E2=80=94 for sys=
-tems which
->> > > > > > > > aren't
->> > > > > > > > afflicted by UEFI/ACPI/PCI as their discovery mechanisms=
-=2E
->> > > > > > >=20
->> > > > > > >=20
->> > > > > > > That specifically would be just a driver bugfix then?
->> > > > > >=20
->> > > > > > I actually think it works out of the box and there isn't even=
- a
->> > > > > > bug to
->> > > > > > fix=2E Haven't tested yet=2E
->> > > > > >=20
->> > > > > > The sad part is that the system does it all automatically *if=
-* it
->> > > > > > has
->> > > > > > CONFIG_DMA_RESTRICTED_POOL (e=2Eg=2E Linux) and the driver ne=
-ver even
->> > > > > > notices that the dma_ops it's using are the swiotlb ops using=
- the
->> > > > > > provided buffer=2E
->> > > > > >=20
->> > > > > > Which is *kind* of nice=2E=2E=2E except that when on a guest =
-OS which
->> > > > > > *isn't*
->> > > > > > Linux with CONFIG_DMA_RESTRICTED_POOL, the guest will just ig=
-nore
->> > > > > > the
->> > > > > > `restricted-dma-pool` node and try DMA to system memory anywa=
-y,
->> > > > > > which
->> > > > > > will fail=2E
->> > > > >=20
->> > > > > I mean, it's easy to misconfigure Linux, this is why we love it=
- ;)
->> > > > > Why
->> > > > > is this such a concern?
->> > > >=20
->> > > > Because it's incompatible=2E In the DT world, perhaps this new *n=
-on-
->> > > > optional* feature/restriction should have come with a new
->> > > > "compatible" string such as "virtio-mmio-restricted-dma"=2E
->> > > >=20
->> > > > Adding it without backwards compatibility wasn't ideal=2E
->> > > >=20
->> > > > > > That's why my proposal adds the negotiated VIRTIO_F_SWIOTLB
->> > > > > > feature, so
->> > > > > > that the device side can refuse, if the guest *isn't* agreein=
-g to
->> > > > > > use
->> > > > > > the bounce buffer in the situations where it must do so=2E
->> > > > >=20
->> > > > >=20
->> > > > > OTOH then setting this feature and if you make the device force=
- it,
->> > > > > you are breaking guests restricted-dma-pool which worked
->> > > > > previously, no?
->> > > >=20
->> > > > Yes=2E So a platform offering virtio-mmio with restricted DMA, if=
- the
->> > > > driver doesn't accept the offered VIRTIO_F_SWIOTLB, may want to
->> > > > accept that negotiation anyway, and *hope* that the driver/OS are
->> > > > going to use the buffer anyway=2E
->> > > >=20
->> > > > I just didn't want to make that same mistake again when formalisi=
-ng
->> > > > and documenting this, and especially when attempting to extend it=
- to
->> > > > PCI=2E
->> > >=20
->> > > Of course, the beauty of the restricted-dma-pool as supported by DT=
- is
->> > > that it's a *system* memory buffer, which is actually OK as long as
->> > > it's reserved address space and not just part of normal system memo=
-ry
->> > > that an unsuspecting guest might use for general purposes=2E So the
->> > > trusted part of the hypervisor (e=2Eg=2E pKVM) can *allow* the VMM =
-access
->> > > to that space=2E
->> > >=20
->> > > It doesn't *have* to be on-device=2E That just seemed like the more
->> > > natural way to do it for PCI=2E
->> > >=20
->> > > I suppose we *could* allow for the virtio-pci transport to do it th=
-e
->> > > same way as virtio-mmio though=2E The VIRTIO_PCI_CAP_SWIOTLB capabi=
-lity=C2=B9
->> > > could reference a range of system memory space, just like the
->> > > `restricted-dma-pool` property does=2E
->> > >=20
->> > > It's a weird abstraction especially for a physical PCI device to do
->> > > that because the system memory space is outside its ownership=2E Bu=
-t in a
->> > > physical device it could be writable, and you could consider it the
->> > > responsibility of the system firmware to configure it appropriately=
-, in
->> > > accordance with the IOMMU and other DMA restrictions of the platfor=
-m=2E
->> > >=20
->> > > That does solve it for the CoCo case without addressing the P2P sta=
-ging
->> > > case that Christoph mentions, though=2E
->> > >=20
->> > >=20
->> > > =C2=B9 I will rename it, Christoph, if it survives at all=2E Probab=
-ly
->> > > VIRTIO_F_RESTRICTED_DMA and VIRTIO_PCI_CAP_RESTRICTED_DMA but of co=
-urse
->> > > it depends on the semantics we conclude it should have=2E
->> >=20
->> > OK=2E So basically, all this does, is a promise by driver to only
->> > DMA into a range of memory?
->>=20
->> Basically, yes=2E
->>=20
->> > This part, I get=2E I wouldn't put it in a capability, just in config
->> > space then=2E
->>=20
->> Sure=2E=2E=2E but how? There are some things which are defined to be at=
- fixed
->> locations in config space, like the vendor/device IDs, COMMAND, STATUS,
->> BARs, etc=2E=2E
->>=20
->> And for the rest of the optional things which might be in config space
->> of a given device=2E=2E=2E isn't that exactly what capabilities are for=
-?
->
->
->Sorry I am unclear=2E Not the pci config space=2E The virtio config space=
-=2E
->After admin_queue_num ?
->
->
+On Mon, Apr 07, 2025 at 02:11:54AM +0800, Alan Huang wrote:
+> On Apr 7, 2025, at 01:51, syzbot <syzbot+674ccd0645d379ed5f80@syzkaller.appspotmail.com> wrote:
+> > 
+> > Hello,
+> > 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    a2392f333575 drm/panthor: Clean up FW version information ..
+> > git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17077c3f980000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8cceedf2e27e877d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=674ccd0645d379ed5f80
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > userspace arch: arm64
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fd894c580000
+> > 
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/7df8ceab3279/disk-a2392f33.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/42c5af403371/vmlinux-a2392f33.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/73599b849e20/Image-a2392f33.gz.xz
+> > mounted in repro: https://storage.googleapis.com/syzbot-assets/fd7871ac7900/mount_0.gz
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+674ccd0645d379ed5f80@syzkaller.appspotmail.com
+> > 
+> > INFO: task kworker/1:4:6586 blocked for more than 143 seconds.
+> >      Not tainted 6.14.0-rc7-syzkaller-ga2392f333575 #0
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > task:kworker/1:4     state:D stack:0     pid:6586  tgid:6586  ppid:2      task_flags:0x4208060 flags:0x00000008
+> > Workqueue: events_long bch2_fs_read_only_work
+> > Call trace:
+> > __switch_to+0x414/0x788 arch/arm64/kernel/process.c:701 (T)
+> > context_switch kernel/sched/core.c:5378 [inline]
+> > __schedule+0x1360/0x257c kernel/sched/core.c:6765
+> > __schedule_loop kernel/sched/core.c:6842 [inline]
+> > schedule+0xbc/0x238 kernel/sched/core.c:6857
+> > schedule_preempt_disabled+0x18/0x2c kernel/sched/core.c:6914
+> > rwsem_down_write_slowpath+0xd10/0x14c8 kernel/locking/rwsem.c:1176
+> > __down_write_common kernel/locking/rwsem.c:1304 [inline]
+> > __down_write kernel/locking/rwsem.c:1313 [inline]
+> > down_write+0xb4/0xc0 kernel/locking/rwsem.c:1578
+> 
+> state_lock
+> 
+> > bch2_fs_read_only_work+0x28/0x48 fs/bcachefs/super.c:393
+> > process_one_work+0x810/0x1638 kernel/workqueue.c:3238
+> > process_scheduled_works kernel/workqueue.c:3319 [inline]
+> > worker_thread+0x97c/0xeec kernel/workqueue.c:3400
+> > kthread+0x65c/0x7b0 kernel/kthread.c:464
+> > ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
+> > INFO: task syz.0.388:10111 blocked for more than 143 seconds.
+> >      Not tainted 6.14.0-rc7-syzkaller-ga2392f333575 #0
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > task:syz.0.388       state:D stack:0     pid:10111 tgid:10110 ppid:6583   task_flags:0x400140 flags:0x0000000d
+> > Call trace:
+> > __switch_to+0x414/0x788 arch/arm64/kernel/process.c:701 (T)
+> > context_switch kernel/sched/core.c:5378 [inline]
+> > __schedule+0x1360/0x257c kernel/sched/core.c:6765
+> > __schedule_loop kernel/sched/core.c:6842 [inline]
+> > schedule+0xbc/0x238 kernel/sched/core.c:6857
+> > __closure_sync+0x198/0x29c lib/closure.c:146
+> > closure_sync include/linux/closure.h:195 [inline]
+> 
+> sync with state_lock held
 
-Makes sense=2E Let me knock up a second RFC based on that, and test using =
-PRP0001 as a vehicle for `restricted-dma-pool` in an ACPI-afflicted guest=
-=2E
+we're trying to go read only before recovery's finished
+
+I just changed recovery to not run with state_lock held, this ought to
+be fixed now
+
+>  
+> > bch2_journal_flush_pins+0x1e0/0x348 fs/bcachefs/journal_reclaim.c:911
+> > bch2_journal_flush_all_pins fs/bcachefs/journal_reclaim.h:76 [inline]
+> > bch2_journal_replay+0x1c28/0x1f64 fs/bcachefs/recovery.c:442
+> > bch2_run_recovery_pass+0xe4/0x1d4 fs/bcachefs/recovery_passes.c:226
+> > bch2_run_recovery_passes+0x260/0x92c fs/bcachefs/recovery_passes.c:291
+> > bch2_fs_recovery+0x20e0/0x32ec fs/bcachefs/recovery.c:936
+> > bch2_fs_start+0x32c/0x570 fs/bcachefs/super.c:1041
+> > bch2_fs_get_tree+0xa50/0x11d4 fs/bcachefs/fs.c:2203
+> > vfs_get_tree+0x90/0x28c fs/super.c:1814
+> > do_new_mount+0x278/0x900 fs/namespace.c:3560
+> > path_mount+0x590/0xe04 fs/namespace.c:3887
+> > do_mount fs/namespace.c:3900 [inline]
+> > __do_sys_mount fs/namespace.c:4111 [inline]
+> > __se_sys_mount fs/namespace.c:4088 [inline]
+> > __arm64_sys_mount+0x4f4/0x5d0 fs/namespace.c:4088
+> > __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+> > invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+> > el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+> > do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+> > el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+> > el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+> > el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> > 
+> > Showing all locks held in the system:
+> > 1 lock held by khungtaskd/32:
+> > #0: ffff80008ff22620 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0xc/0x44 include/linux/rcupdate.h:336
+> > 1 lock held by udevd/6081:
+> > 2 locks held by getty/6220:
+> > #0: ffff0000d74fa0a0 (&tty->ldisc_sem){++++}-{0:0}, at: ldsem_down_read+0x3c/0x4c drivers/tty/tty_ldsem.c:340
+> > #1: ffff80009bf4e2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x41c/0x1228 drivers/tty/n_tty.c:2211
+> > 3 locks held by kworker/1:4/6586:
+> > #0: ffff0000c0029548 ((wq_completion)events_long){+.+.}-{0:0}, at: process_one_work+0x674/0x1638 kernel/workqueue.c:3212
+> > #1: ffff80009f6b7ba0 ((work_completion)(&c->read_only_work)){+.+.}-{0:0}, at: process_one_work+0x708/0x1638 kernel/workqueue.c:3212
+> > #2: ffff0000e7500278 (&c->state_lock){+.+.}-{4:4}, at: bch2_fs_read_only_work+0x28/0x48 fs/bcachefs/super.c:393
+> > 1 lock held by syz.0.388/10111:
+> > #0: ffff0000e7500278 (&c->state_lock){+.+.}-{4:4}, at: bch2_fs_start+0x50/0x570 fs/bcachefs/super.c:1010
+> > 2 locks held by kworker/1:5/11232:
+> > #0: ffff0001b3772798 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:598 [inline]
+> > #0: ffff0001b3772798 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock kernel/sched/sched.h:1521 [inline]
+> > #0: ffff0001b3772798 (&rq->__lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1852 [inline]
+> > #0: ffff0001b3772798 (&rq->__lock){-.-.}-{2:2}, at: __schedule+0x2e0/0x257c kernel/sched/core.c:6688
+> > #1: ffff0001b375d408 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x394/0x5e8 kernel/sched/psi.c:987
+> > 2 locks held by syz.3.1147/16990:
+> > 2 locks held by syz.4.1148/16993:
+> > #0: ffff0000fc500920 (&c->sb_lock){+.+.}-{4:4}, at: bch2_fs_alloc fs/bcachefs/super.c:833 [inline]
+> > #0: ffff0000fc500920 (&c->sb_lock){+.+.}-{4:4}, at: bch2_fs_open+0x1238/0x299c fs/bcachefs/super.c:2065
+> > #1: ffff0000fc5049b0 (&c->mark_lock){++++}-{0:0}, at: bch2_sb_replicas_to_cpu_replicas+0x198/0x290 fs/bcachefs/replicas.c:600
+> > 3 locks held by syz.5.1149/17000:
+> > 2 locks held by syz.2.1150/17009:
+> > 
+> > =============================================
+> > 
+> > 
+> > 
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > 
+> > If the report is already addressed, let syzbot know by replying with:
+> > #syz fix: exact-commit-title
+> > 
+> > If you want syzbot to run the reproducer, reply with:
+> > #syz test: git://repo/address.git branch-or-commit-hash
+> > If you attach or paste a git patch, syzbot will apply it before testing.
+> > 
+> > If you want to overwrite report's subsystems, reply with:
+> > #syz set subsystems: new-subsystem
+> > (See the list of subsystem names on the web dashboard)
+> > 
+> > If the report is a duplicate of another one, reply with:
+> > #syz dup: exact-subject-of-another-report
+> > 
+> > If you want to undo deduplication, reply with:
+> > #syz undup
+> > 
+> 
