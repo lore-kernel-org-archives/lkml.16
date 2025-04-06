@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DF854758
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 02:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62D012CD8B
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 02:40:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743907238; cv=none; b=fxPlqxqLTytrNguVKVRbeSeMMghuBIk+Ete/ja7gAe+QBgmx+4u7EbQhBNkeBz8nZjhuIYmY1X5h235WwAX1qAyFm9OHloyvSTuk+OU1xPPHz6ryKpy7rZvZ6WrpNAKMNiI68wC2Sanjx2t6+/VdfPbZge+9+B3/8xowtmvsoBo=
+	t=1743907239; cv=none; b=X8U9YSGrIDCAAq867HIJS06XH9qb9c5WOlMFstqb4p0JBVX2EaJLHXIM+QMdhF4c488bgQAUie2Cs3XP2jxQRiS+k3Ixw3uhvEYMH9lyMJStfHH8QdxS54UULuXr4IReMevq2V0+D7a3xtMBcjr4WtalVEne4OJkHOgqxC5+kH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743907238; c=relaxed/simple;
-	bh=LIiphxm2snpwj6pqMlmbdwc2xr+9l04Hum2MucikSlM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=grtUDR04xDLSsgBRtw55yKMqK4ouiRodY7c2vvvAoth5ZTZpbZQ1jfcKp6lIn7HUfmu56U9cQBOZVNQB+gUnPJ199D6Bs0LSle6niUmt0PU2E0uwg6k0g3W+NheQSzS0zB9zZ8gH87XZNI6O+N4tU16+VuwSNrYCpyjQtje5CYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/Wn9biM; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743907239; c=relaxed/simple;
+	bh=63QI201sgY1M7r1SkLAM/+CFB5wB+4V9arwwKPcMgHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LQ8r2hm3x1Jvm1G+GhWZjcGRRGHau3jNr6TIzpw+qVqewm1LWAV8UVNr+v4pa+MJN7LSQlOGSexOBerSQqKf1c4tH44X+ma0H3WtMlyPvsVnrJk2AnbULYkJOYWKyRzw0LbFUiPlia8olWfjdlna9dzVr7Jy3g/MEbOopnncjGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d2+CoHiU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/Wn9biM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d2+CoHiU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743907235;
+	s=mimecast20190719; t=1743907236;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Bk43KL+s2l5fV3lGaddeDBguiZ6SUsPQ8knSF6ClKoc=;
-	b=d/Wn9biM4RWT9f7n+3M1JcGuyJH5MpGpp6lnfdcyEl/qcg03OdyuxoNDwD7zoSrz0czrxa
-	7KigRnLbQnU3+iFO3LbrRpRJufN8NzjprhcLaa8DnYL0fPTWk91F6UTVxs7fJaegAuVFq5
-	2pJWGJPR/nC8uc3LlgAYBcn8Iyxmsyo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0rjm7dsKH5H2OCApAESFBB2zqcpPfQudn9jh6O3bk7c=;
+	b=d2+CoHiUJ47obuy9Nt+aVlAf5EjZgrhL2NPF7zq40eb/rfF4t/VdmlLNNmlD0j02H4t7Dp
+	vh0VLs6CozOZBmn5g6k8KpR1wpkOhArajHlUd/WZ48hECNwB1y8lF1wFede08n1lWETRxm
+	9mKwtvbLZVHt6fdWsi7T4Sn2GZ8Q3TA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-561-qdtT_OYuNF-o8UWDoInYEQ-1; Sat,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-AheAZiZhN52DQAQGWW7H3Q-1; Sat,
  05 Apr 2025 22:40:32 -0400
-X-MC-Unique: qdtT_OYuNF-o8UWDoInYEQ-1
-X-Mimecast-MFC-AGG-ID: qdtT_OYuNF-o8UWDoInYEQ_1743907225
+X-MC-Unique: AheAZiZhN52DQAQGWW7H3Q-1
+X-Mimecast-MFC-AGG-ID: AheAZiZhN52DQAQGWW7H3Q_1743907230
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E17219560BC;
-	Sun,  6 Apr 2025 02:40:24 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D9E41800EC5;
+	Sun,  6 Apr 2025 02:40:30 +0000 (UTC)
 Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.64.19])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0B85F180176A;
-	Sun,  6 Apr 2025 02:40:20 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA38A1801A6D;
+	Sun,  6 Apr 2025 02:40:27 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Johannes Weiner <hannes@cmpxchg.org>,
 	Michal Hocko <mhocko@kernel.org>,
@@ -55,9 +57,11 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH v3 0/2] memcg: Fix test_memcg_min/low test failures
-Date: Sat,  5 Apr 2025 22:40:08 -0400
-Message-ID: <20250406024010.1177927-1-longman@redhat.com>
+Subject: [PATCH v3 2/2] selftests: memcg: Increase error tolerance of child memory.current check in test_memcg_protection()
+Date: Sat,  5 Apr 2025 22:40:10 -0400
+Message-ID: <20250406024010.1177927-3-longman@redhat.com>
+In-Reply-To: <20250406024010.1177927-1-longman@redhat.com>
+References: <20250406024010.1177927-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,30 +71,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-v3:
- - Take up Johannes' suggestion of just skip the !usage case and
-   fix test_memcontrol selftest to fix the rests of the min/low
-   failures.
+The test_memcg_protection() function is used for the test_memcg_min and
+test_memcg_low sub-tests. This function generates a set of parent/child
+cgroups like:
 
-The test_memcontrol selftest consistently fails its test_memcg_low
-sub-test and sporadically fails its test_memcg_min sub-test. This
-patchset fixes the test_memcg_min and test_memcg_low failures by
-skipping the !usage case in shrink_node_memcgs() and adjust the
-test_memcontrol selftest to fix other causes of the test failures.
+  parent:  memory.min/low = 50M
+  child 0: memory.min/low = 75M,  memory.current = 50M
+  child 1: memory.min/low = 25M,  memory.current = 50M
+  child 2: memory.min/low = 0,    memory.current = 50M
 
-Note that I decide not to use the suggested mem_cgroup_usage() call
-as it is a real function call defined in mm/memcontrol.c which is not
-available if CONFIG_MEMCG isn't defined.
+After applying memory pressure, the function expects the following
+actual memory usages.
 
-Waiman Long (2):
-  mm/vmscan: Skip memcg with !usage in shrink_node_memcgs()
-  selftests: memcg: Increase error tolerance of child memory.current
-    check in test_memcg_protection()
+  parent:  memory.current ~= 50M
+  child 0: memory.current ~= 29M
+  child 1: memory.current ~= 21M
+  child 2: memory.current ~= 0
 
- mm/vmscan.c                                      |  4 ++++
- tools/testing/selftests/cgroup/test_memcontrol.c | 11 ++++++++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
+In reality, the actual memory usages can differ quite a bit from the
+expected values. It uses an error tolerance of 10% with the values_close()
+helper.
 
+Both the test_memcg_min and test_memcg_low sub-tests can fail
+sporadically because the actual memory usage exceeds the 10% error
+tolerance. Below are a sample of the usage data of the tests runs
+that fail.
+
+  Child   Actual usage    Expected usage    %err
+  -----   ------------    --------------    ----
+    1       16990208         22020096      -12.9%
+    1       17252352         22020096      -12.1%
+    0       37699584         30408704      +10.7%
+    1       14368768         22020096      -21.0%
+    1       16871424         22020096      -13.2%
+
+The current 10% error tolerenace might be right at the time
+test_memcontrol.c was first introduced in v4.18 kernel, but memory
+reclaim have certainly evolved quite a bit since then which may result
+in a bit more run-to-run variation than previously expected.
+
+Increase the error tolerance to 15% for child 0 and 20% for child 1 to
+minimize the chance of this type of failure. The tolerance is bigger
+for child 1 because an upswing in child 0 corresponds to a smaller
+%err than a similar downswing in child 1 due to the way %err is used
+in values_close().
+
+Before this patch, a 100 test runs of test_memcontrol produced the
+following results:
+
+     17 not ok 1 test_memcg_min
+     22 not ok 2 test_memcg_low
+
+After applying this patch, there were no test failure for test_memcg_min
+and test_memcg_low in 100 test runs.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index bab826b6b7b0..8f4f2479650e 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -495,10 +495,10 @@ static int test_memcg_protection(const char *root, bool min)
+ 	for (i = 0; i < ARRAY_SIZE(children); i++)
+ 		c[i] = cg_read_long(children[i], "memory.current");
+ 
+-	if (!values_close(c[0], MB(29), 10))
++	if (!values_close(c[0], MB(29), 15))
+ 		goto cleanup;
+ 
+-	if (!values_close(c[1], MB(21), 10))
++	if (!values_close(c[1], MB(21), 20))
+ 		goto cleanup;
+ 
+ 	if (c[3] != 0)
 -- 
 2.48.1
 
