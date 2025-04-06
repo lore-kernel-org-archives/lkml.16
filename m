@@ -1,130 +1,118 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAA0224FD
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904401CA81;
+	Sun,  6 Apr 2025 18:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743963832; cv=none; b=QW1p+PMkob3yI0yD+6HENbKHnSZB5MoL82vd/Cq84sVjcUIciGZsFqp9UvhMqXqZQLOkJ6L2tL3RT+dKLWIW5jbm/CewyvcLr73p5QiPNzLhFXf97mqZ74jv9iJ8wcwGDST8m+A7pSQVQyt3HJBijSn/FfobDuvXRyMha+AXCGo=
+	t=1743964073; cv=none; b=Ofz6AjogSilIyENWhYglR8tVf6c5ikqnSKhGJFCdEJ7JA02g9WPzHJX360MwjEdzj9Kj8y/cIvQE3wh7Bb+kObDcMQYPxGTf8XoNp8/83YGdjmuYffefMaAlrUa5SwH6xhL0gfGL5uB+umZZjdH1v73zvqWeSaDVz+5/tREdrFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743963832; c=relaxed/simple;
-	bh=IAzy0fh8K5Ij9hbamh80vAnFaq8nFygBt8h0leYVIkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jzsFyPwaHh76ej7Kk7y8Nc3hV+wnHjjtF3U44aZ3RkPB9lexAzeV2n/7yvM9YBpMAPuWYJb3np0kUrZzFEEvCYg/TIH7kSS8KtRNuICXOhKEJ7L0mpjMpFzD9GLx9YDieH5CDQreNFgqBzGWtbQD28l8QuuKKZZSeNpVb3FRmj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cEJxc9ln; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743964073; c=relaxed/simple;
+	bh=BwPpS2oKQ551zhCehJLMD0g2Y6WTyFi+ycutfIT+iJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fDzcIz6OVwy/HfDkHkq61pn4/pRU1W2VB5RtdiiIhY/pCtkAqkWyuh1bIOOAlmsZh6MqRMWdpPWiHdZJGtAmByjZYeCSyz+O53qwFh2sKO8Kp880sHZLUgHQY2aBAQ1eiAUojGzAleGBAj8zqlIqeOWOYnoH2HrgU6rqrPZLhgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BEsyaePT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cEJxc9ln"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223f4c06e9fso31332925ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 11:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743963830; x=1744568630; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+3W5JbOyIE71HVwKTUQkHyqilZi+aSbwXv3gNCNt8vU=;
-        b=cEJxc9lntGpyYbhlbgqgFWq9NRq/slvr98jMZ/veQwWwnBEJA/p8UvxfGeapC/VMuq
-         V+ZV9pevy47AvxA84ZiVLX5NLBS03ujz8iKysxiPcoqEk3CDvt//6wd8R2CpvY67jAam
-         ZyYyfmRNvbviYDpuoBjRIaIvrUgq/jAbRPxaYxenOEMiXgxrO5VPJcCNEWsi1FofKmhd
-         RHVm82lcl6vm8seK/REtKcNxW1YEp3geuWNgGF7Rzc7tjpP+rv7FocAr2fDSgjzZQuXn
-         QAlGQUP51cDwIpyGhDvtrJcAF2q2sQN7y2EOOPyWOTVvUrYXweoKhDCZN6xUMYdKH7Pd
-         Y2nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743963830; x=1744568630;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+3W5JbOyIE71HVwKTUQkHyqilZi+aSbwXv3gNCNt8vU=;
-        b=l8hUTOF0g9d5c5NZLbZXKYf9TAQRoNgv+M6wA1559anv1m0ya0RyrnpwUNL8MKuXV/
-         2h+SHmghzYHuRmixI/PLJUEQ/h8j3acChSkOceue32Nx1CsTPM926chl6olRbTT8bw4I
-         v01iiqQFRc8Gs5BUQTJ4VcYGUbSe9RBQBUBnRbYEpO7zkHjlxbvZgj5hnKsIa1DT4AKM
-         7LFvzXlnDH/3QIaL0hMJdqQ86hLVsC08Cs2BoWa9HBFxfynPYAzeVPjLxyYF5tQbANw7
-         KjsAwB642tRMyWxd45gWzuruJ88NbRUhnIa2ZMPoOlRikxfIcAlJp27X16cDhsgTD0xH
-         UqZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqyD4d6yQKr7npWu88FQ+GKiGv6lzCIS3O3Jksrl6sHJ7wLlZrwkIu0CiHYCKe5IM/0OYkhSPP8e+b+34=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQWp9FJPbgzecxOUKYz6BgPOAKSoyDOeCL32VyYg144i3j3Qa5
-	mVzrvjW7qQNxIcIg6wkataVslT9ss3V9jvMAB6OL1mOQGbIOOh5/YQ8J/tDnFGulSsq82XfclTs
-	=
-X-Gm-Gg: ASbGncvc4btFGoId0GLvxaiovOCjPpNyc/RRDnci3xI5THXxd0fiYKpn0XsE6lgoLIr
-	xN904nckQF7GwlQ2ZGg8DjZ/OOgu5pKxoJmdzKdPX/EHP+reLRg19cYJf/Vg6K/OW/iV0olGqar
-	hAzzpgwK0yRygtuGcxGCiFLuYcr0jT4ovB1K1G17i9F+87/dNpYfL5XL4rb0dBmaaJy89+OT1ck
-	d+be7uK05XWSxRwFih0v1eNfoAVYuDwmpuHRb2+RW/s101LkMnEqz35BEKj3f5u9fyxLsKBYWaK
-	Z4com3dUl69D28T8US66HXXWxxxFRR20gPE2EZljz/QNHffGo4wXfB4=
-X-Google-Smtp-Source: AGHT+IFdT0XFI03UAIeiotZXeIYigu0aV7BLlfFTU0OW0vocyL0gj4gwxcJDUVb4tfjT4ZP6NIWT6w==
-X-Received: by 2002:a17:903:41c7:b0:223:607c:1d99 with SMTP id d9443c01a7336-22a89992b46mr153666815ad.0.1743963829885;
-        Sun, 06 Apr 2025 11:23:49 -0700 (PDT)
-Received: from thinkpad ([120.60.71.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e161sm65969765ad.171.2025.04.06.11.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 11:23:49 -0700 (PDT)
-Date: Sun, 6 Apr 2025 23:53:41 +0530
-From: 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-To: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-Cc: Bart Van Assche <bvanassche@acm.org>, 
-	Arthur Simchaev <Arthur.Simchaev@sandisk.com>, "quic_cang@quicinc.com" <quic_cang@quicinc.com>, 
-	"quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>, "avri.altman@wdc.com" <avri.altman@wdc.com>, 
-	"peter.wang@mediatek.com" <peter.wang@mediatek.com>, "minwoo.im@samsung.com" <minwoo.im@samsung.com>, 
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, 
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Bean Huo <beanhuo@micron.com>, 
-	Keoseong Park <keosung.park@samsung.com>, Ziqi Chen <quic_ziqichen@quicinc.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Gwendal Grignou <gwendal@chromium.org>, 
-	Eric Biggers <ebiggers@google.com>, open list <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM/Mediatek SoC support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:ARM/Mediatek SoC support:Keyword:mediatek" <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
- support
-Message-ID: <ouxmroni4miwrzd24gvcvo3v5hqthodhhx3ohk4i37qryn4k2w@47s2a6nvxby6>
-References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
- <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
- <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
- <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
- <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
- <3d7b543c-1165-42e0-8471-25b04c7572ac@acm.org>
- <4cb20c80-9bb0-e147-e3c0-467f4c8828ba@quicinc.com>
- <989e695e-e6a4-4427-9041-e39ecf5b5674@acm.org>
- <yzy7oad77h744vf2bdylkm4fronemjwvrmlstnj6x5lzjxg672@zya6toqv4aeg>
- <1b87152e-ff0f-9c45-020d-4927ff3dbef8@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BEsyaePT"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536HqBUL027988;
+	Sun, 6 Apr 2025 18:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	scg6by3uhORaQLQQ1sXj4UbvlOlCJRzwMOkPbuIQYag=; b=BEsyaePT+RAAyArn
+	EWjiZHKMozMfRsB2forgIrgSd7wi1+BN6CXq+gfsrqFxCdaQkxTF4F3KcMxxpZml
+	l2RoWz0DicJGo7K79J6sPjRb5suYtbZpAgNZYvXxNkET0s3YZEflzJzX0iwY9SMi
+	de5lyWRc/1Pkxr3dSqqUC6tvV01C3DGkTRTroJ9r558tqO1hdwVmMwI6n3r8wDv0
+	ff2JcJFkbqBDsYLivbH0kOAFG+td3Zj/dL+FAQRepHlX/sTKRGcdDuWEyv8Ref2/
+	g4u5MUtQ/Gl3Z7zd7E1OLlJI1SwcdUdjvspVxlJ/QkEk7U7RXgB8pRn8BUrj/YA6
+	YPNQDQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbe26tv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 06 Apr 2025 18:27:29 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 536IRTRj032154
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 6 Apr 2025 18:27:29 GMT
+Received: from [10.216.38.226] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 6 Apr 2025
+ 11:27:24 -0700
+Message-ID: <a4dd9b12-982d-41c3-94bf-9dcd9e41c30c@quicinc.com>
+Date: Sun, 6 Apr 2025 23:57:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/2] scsi: ufs: Implement Quirks for Samsung UFS
+ Devices
+To: Manish Pandey <quic_mapa@quicinc.com>,
+        "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>,
+        "Martin K. Petersen"
+	<martin.petersen@oracle.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>
+CC: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_nitirawa@quicinc.com>, <quic_bhaskarv@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_cang@quicinc.com>,
+        <quic_nguyenb@quicinc.com>
+References: <20250404174539.28707-1-quic_mapa@quicinc.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250404174539.28707-1-quic_mapa@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b87152e-ff0f-9c45-020d-4927ff3dbef8@quicinc.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Eje0g8nowNYB3UETpOdBv18e1rOq6ELZ
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f2c791 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=2QxGnB5Srs7-xjjaHasA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: Eje0g8nowNYB3UETpOdBv18e1rOq6ELZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-06_05,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=973 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504060134
 
-On Wed, Apr 02, 2025 at 12:00:26PM -0700, Bao D. Nguyen wrote:
-> On 4/2/2025 12:49 AM, manivannan.sadhasivam@linaro.org wrote:
-> > Yeah, we should be cautious in changing the uAPI header as it can break the
-> > userspace applications. Annotating the members that need packed attribute seems
-> > like the way forward to me.
+
+
+On 4/4/2025 11:15 PM, Manish Pandey wrote:
+> Introduce quirks for Samsung UFS devices to modify the PA TX HSG1 sync
+> length and TX_HS_EQUALIZER settings on the Qualcomm UFS Host controller.
+For what purpose, these quirks are required ? Is there any problem 
+statement which you can mention first ?
 > 
-> Yes, I realized potential issue when Bart raised a concern.
+> Additionally, Samsung UFS devices require extra time in hibern8 mode
+> before exiting, beyond the standard handshaking phase between the host
+> and device. Introduce a quirk to increase the PA_HIBERN8TIME parameter
+> by 100 µs to ensure a proper hibernation process.
+> ---
+> Changes in V2
+> - Split patches to add PA_HIBERN8TIME quirk in ufshcd.c
 > 
-> > 
-> > Though, I'd like to understand which architecture has the alignment constraint
-> > in this structure. Only if an architecture requires 8 byte alignment for __be32
-> > would be a problem. That too only for osf7 and reserved. But I'm not aware of
-> > such architectures in use.
-> When using "__u64 value;" in place of osf3-6, I saw the compiler padded 4
-> bytes, so __packed was needed for me to get correct __u64 value. I thought
-> even the existing structure utp_upiu_query_v4_0 may need __packed on some
-> fields where the driver reads the returned data in order to be safe across
-> all architectures. However, without evidence of an actual failure, I didn't
-> touch the existing structure. Only raised potential issue for discussion.
+> ---
+> Manish Pandey (2):
+>    ufs: qcom: Add quirks for Samsung UFS devices
+>    scsi: ufs: introduce quirk to extend PA_HIBERN8TIME for UFS devices
+> 
+>   drivers/ufs/core/ufshcd.c   | 31 ++++++++++++++++++++++++++
+>   drivers/ufs/host/ufs-qcom.c | 43 +++++++++++++++++++++++++++++++++++++
+>   drivers/ufs/host/ufs-qcom.h | 18 ++++++++++++++++
+>   include/ufs/ufs_quirks.h    |  6 ++++++
+>   4 files changed, 98 insertions(+)
 > 
 
-If you change members to be 64bit, then for sure compiler will add padding to
-avoid holes. But I don't see any issue with the unchanged utp_upiu_query_v4_0
-structure.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
