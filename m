@@ -1,152 +1,115 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF70EACD;
-	Sun,  6 Apr 2025 02:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874F04409
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 03:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743907392; cv=none; b=rU6JGZPhqFbDEED1/ktU02I3tNWMy9+3PU6itkKJz9wGrtueqtAkdvEg1IrO3Cy2VAnq1vW9l/E5TxEn4GTUsxBlboVzlSP84Yk3NFiOA+FljkIkmfM5prnoobMbYa2gaFDwsWrbqIbeGYabcQNiuYOouS30VmpNI9RmblKt4Uo=
+	t=1743908801; cv=none; b=Hq4S218+WFiklWxn8V8IGJZMYGbtsxLz/woEaTvF0h4ePeh2aulN+mV1idEsdlNfmfZLFGhDwuFDSCdPhITMQaKeTMnm0/Gzi1FcyGsqipLKdTnnKjfZCZeX7Cud00CM85gwde9K95VU8lmpWe1yW2C8MjS5dPG6UBPae4NbBUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743907392; c=relaxed/simple;
-	bh=ZmbQUu1kZzJ0XG9DrLaTzSe6kJRoYKxfHJAfhUqeYPg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=NjrOns4Ku+fZVhkzo2WPnAaz84jBbok9Fe+Xc8ssiBHFpD0W0cMNcVuS79JifmDEiu/0ydSnQE1rW5snf2qJxHvNJMcXAwZRq48HOREmWMju4mtnH+Fs0ve/fXoJ2Bp/SBrXTMbRTY4lmFIzUQpQipYmn0sYR7aqQfSY31KBjcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFce+HNq; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743908801; c=relaxed/simple;
+	bh=4HbsiDgmo6GLdIcGu3CZ8K0E040QwwaFpz7U9jvr5Ak=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nuWqPGM3szkD2noImzxndw3nndwnvn5Nk0mwttNoiQS/Yn58ZLBoUmzb0LPkrxXt+sWCbDwLr2kyaTB0AXzj4xbaCIBMmj0tjIpbctsVdzMMS1Y1H30iRfmsKWtxcq1cbL5Dmd1kg/e+shgQlvb74FTqKDbIqNvY1EjQs7eX4tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UlhdsMVq; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFce+HNq"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5262475372eso1508673e0c.2;
-        Sat, 05 Apr 2025 19:43:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UlhdsMVq"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e8fc176825so28692146d6.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 20:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743907390; x=1744512190; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZmbQUu1kZzJ0XG9DrLaTzSe6kJRoYKxfHJAfhUqeYPg=;
-        b=KFce+HNqUUpI83saQNBYtrscxXrVwe9VTzcMxkRM4rCJL3tQS6Bja1j5Xl/68P72VE
-         3rJxBsmiELV0Yl3E+mdMNinAuVevBGQTFys5KjwmCbmAkod1axpy475GrJW4VdQvyxdE
-         qPkGZ4Z1jDBiJTibxxYfOAzNx5evdg3GCRWQXVY9fETd9cse/pJnzgiRSvh8bnmUSyJ4
-         aPUTXi/AIAIeUT6w9HxvLI3t+T14YSNe2dwjMHCvGzrb1Au3ZIozXwl/jEr5Ip0DM+05
-         brJ0jc5x7lCn+HZbM7cOopN2UA/tB9CsU+YCSn7Xr6hiy/4WbDIAc6/om0JXUScPJjzL
-         L6GQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743908797; x=1744513597; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkgkHgu9xBWFWEn4k7xx0pg+BPih4qLR9gYlPV5l01U=;
+        b=UlhdsMVqByfP8+A/9d+L6K+n8DrqiZKSuH6olwSq2AFIUsVqmJLVnUCBsNKC+Yo1Yv
+         IiopCnMwJiN1YqhylDeNVPnfUbRPafaUuhPBUugOpW23rnaYGDyDEAiHOiBI04E4y/+4
+         qhWcDqdYSuXTtppVUdNR0swoNpLCEwkuex3fbmzExT5RAzUBVp0SKfmK3i/F2VWsTjJf
+         VpdzyksSx63GYCETRKEIyO7FwTJSPK2pj2MimGyK52vETDaxF1Oj4wC7X9zqhmqsVA+T
+         k5ZlGeHJEV7RFk9WA0DrY+tfyV3I44Yz0ZBFo1nEZfd9aMk60M7141DZ7H7XDz+6Fns9
+         LcGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743907390; x=1744512190;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmbQUu1kZzJ0XG9DrLaTzSe6kJRoYKxfHJAfhUqeYPg=;
-        b=JM+lwgnkTIE7H2Uy/jfpt1nZliOE/Pnk8M6lCNGwjVoEUPtJdWsYkox6o528UhOeAX
-         MxOu0snYkFVbJwL/n2zVC1xTgeWPnK9Z9EkotisZj8WgwnTpAt437zRKuzUG8qSgyP2a
-         32AzLmakT7o4UHz0FGbYf/vpZeeNcmObSabwFbmiKGRmeeRDw7PBda0lsnjNXpp258ur
-         hyUf8olORJQyjDtOk2YOD4iFS+BnLNTEN3YCV+Pr/dD8dgMXFh3zRKXsBOlag+qJY0/V
-         Nk+LK1+ePBHrmgCjGufjiG85cSEvnSnSF7Roh6AIBmaap6AsV3X+LN4GK8m/cv1g0jIo
-         6vUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvJUlq4Acph0F62nFWQzRV128z2bnOCvN+LG4TWoGjss1NRBhQdQI9ZCK2ob3XwW53eagcsgPRH0bzWQ7c@vger.kernel.org, AJvYcCXBBdP1RS31ox+xAwqEdqkIik2tt65b29SzS4bL573osGGp9h/im7hrHDBfdPZKl7ep+3fn68aY06NOVKiGYA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8qxEwFiFpK4g+93NhNCDh0WE6AMUAWp0QJf7o2d6iqhOLSbB5
-	Jzh7fNPJmHCvnwm7Uz3+AAoQdrb5eV459GgKh78ua6VmDWc8k/ZRQi5xcELTZ4yeMb5QChJ3kEV
-	0vj2Ci5tRelExHHHzeWw+LLDaig8=
-X-Gm-Gg: ASbGncsmmZ277HDp67JOsMIdtssb39RP/K+4EAW/Y15EFeisvxLf3XvMk2BHk7DxPcq
-	uZDQpztIro8fZMTchRh23FygRKoJE4Vnv9+OI+uq0NGOWyx5KMS2sSQojvKgozeFVh7c9n1b2oL
-	1so/MgmhP+7nwqae1Sgz0SWCHvJKQ=
-X-Google-Smtp-Source: AGHT+IGW4Gslde0VIbih2ZVG6n9p42dvdWH7mmAQ3PQ6Nc7lvWKCaEagJyJ8o01q+sOKkswG/5k391LXfA1JVZ57NyE=
-X-Received: by 2002:a05:6122:7cd:b0:520:5a87:66eb with SMTP id
- 71dfb90a1353d-52765c51e8dmr5076057e0c.3.1743907389648; Sat, 05 Apr 2025
- 19:43:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743908797; x=1744513597;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkgkHgu9xBWFWEn4k7xx0pg+BPih4qLR9gYlPV5l01U=;
+        b=n1VLCVgWk4DwBkznVwQBR8W3+XWjh2Vn4cMU6rtc0tkI6VElsUEI5F6Ea4RMyRTtgv
+         weylH+oGSm6bGHDbjUbpFXGzO5C5trC5oSghe9AxH3SOOB4i+RP0UKbltPEu0iFyjQWQ
+         qQsgBj00nR/TSwGyYKjM0o7RcSNKTTrlxnsHlrDGRobU5CRrfzUXxnq1KZ5fbVKQlav6
+         IujpiEC1nzI7LYmG5oDRF5WYO6n/4XzHa0IfjxwqsEdZCN8YuxSM1gVEaJxFdnwxdRyv
+         2wiuydoAsV6cBUlCd+p/Ip7g0ITt7G3T+Xd8CSP2W9LlOY7XRcjBOcgPi05h4HaXwhsE
+         OJ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCULHdTrJwmd15ip325QepsMUXule+7mxPQw2gfnZdZI2RiK4sQ9UovRnrVG6vzBRRZ1pyiZSPrC/pYtUUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpuPbq50tQsXSt+4rQJVsvcQ+CaLxMVwJTbSiGGHy/56MgDpAZ
+	BAjdNj598Te3syttlV8qWmdBrQCKL3/v3zPd0wjgTa6ImspYoJXcS3Xb5ggqFWc=
+X-Gm-Gg: ASbGncu4jm+Syd7SPpSXDtkHPtTtjlCZsMyrcH1LF6BmJ9Bp/bldJ3hUkFLrX557fvQ
+	IdsW8DJOEpXPHhSC2Js2aH9NikN+DJXIt5T6zxsnfPekpBUhdhoadTdsld+5ZMLIzpVIjVvqatl
+	jhSOLUklojVGNOimOdED582Z2KHwQeLlRB6WkvKv2K+Hsxaa61cwDy3wWtu8WsDEkjMNS8Yj3yp
+	qSO7JnCL74MXFbu87KDwGQY32S8B6tW0YojZWpH/cJORMYG9RXOuS0Iiv3A2jfSgVhLyMUkhX+X
+	PZjixlfEbcG1anUaGNqyv+brLi4UkxkMAKaM/9YEjFiwzd0d/NVkIMTkH42W1M/P/azSe7pZ/wi
+	tDj5JdpRVbSXvb2gbnA==
+X-Google-Smtp-Source: AGHT+IGT0KD1rwqZMp8b71UN9yccwtiki6dXwmQJOHZ0zOU4Z7/WKqg/wmAry//YOfyNBfSg+DF1Ag==
+X-Received: by 2002:ad4:5d47:0:b0:6e8:f166:b1a0 with SMTP id 6a1803df08f44-6f01e78f95amr183606066d6.36.1743908797474;
+        Sat, 05 Apr 2025 20:06:37 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f14d4basm41678266d6.108.2025.04.05.20.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 20:06:36 -0700 (PDT)
+Date: Sat, 5 Apr 2025 23:06:35 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+    Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH 1/3] lib: Add mul_u64_add_u64_div_u64() and
+ mul_u64_u64_div_u64_roundup()
+In-Reply-To: <43q1qr20-9q83-74n7-no7p-n178p6s6p279@onlyvoer.pbz>
+Message-ID: <7647q75q-6374-108o-0r1n-277rn7np7101@onlyvoer.pbz>
+References: <20250405204530.186242-1-david.laight.linux@gmail.com> <20250405204530.186242-2-david.laight.linux@gmail.com> <43q1qr20-9q83-74n7-no7p-n178p6s6p279@onlyvoer.pbz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Hui Guo <guohui.study@gmail.com>
-Date: Sun, 6 Apr 2025 10:42:58 +0800
-X-Gm-Features: ATxdqUFnlm0gWvYpm4wP3t2xJvaWpr4YHzPnVx9o5rmH6Pk3s-1IQV0IkK6eOf4
-Message-ID: <CAHOo4gLPB_crF_TV3zXXNRJ7_DMaS-LGDPwnC0KeEAPA9Ofw+g@mail.gmail.com>
-Subject: WARNING in bch2_dev_free
-To: Kent Overstreet <kent.overstreet@linux.dev>, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Kernel Maintainers,
-we found a crash "WARNING in bch2_dev_free" in upstream, the detailed
-information is as follows:
+On Sat, 5 Apr 2025, Nicolas Pitre wrote:
 
-HEAD Commit: 9f867ba24d3665d9ac9d9ef1f51844eb4479b291
-kernel config: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/.config
+> On Sat, 5 Apr 2025, David Laight wrote:
+> 
+> > The existing mul_u64_u64_div_u64() rounds down, a 'rounding up'
+> > variant needs 'divisor - 1' adding in between the multiply and
+> > divide so cannot easily be done by a caller.
+> > 
+> > Add mul_u64_add_u64_div_u64(a, b, c, d) that calculates (a * b + c)/d
+> > and implement the 'round down' and 'round up' using it.
+> > 
+> > Update the x86-64 asm to optimise for 'c' being a constant zero.
+> > 
+> > For architectures that support u128 check for a 64bit product after
+> > the multiply (will be cheap).
+> > Leave in the early check for other architectures (mostly 32bit) when
+> > 'c' is zero to avoid the multi-part multiply.
+> > 
+> > Note that the cost of the 128bit divide will dwarf the rest of the code.
+> > This function is very slow on everything except x86-64 (very very slow
+> > on 32bit).
+> > 
+> > Add kerndoc definitions for all three functions.
+> > 
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> 
+> Reviewed-by: Nicolas Pitre <npitre@baylibre.com>
+> 
+> Sidenote: The 128-bits division cost is proportional to the number of 
+> bits in the final result. So if the result is 0x0080000000000000 then 
+> the loop will execute only once and exit early.
 
-console output:
-https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/0a9dd8e75f0f178fec81b7793432b6246c869988/repro.log
-repro report: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/0a9dd8e75f0f178fec81b7793432b6246c869988/repro.report
-syz reproducer:
-https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/0a9dd8e75f0f178fec81b7793432b6246c869988/repro.prog
-c reproducer: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/0a9dd8e75f0f178fec81b7793432b6246c869988/repro.cprog
+Just to clarify what I said: the 128-bits division cost is proportional 
+to the number of _set_ bits in the final result.
 
-Please let me know if there is anything I can help with.
-Best,
-Hui Guo
 
-This is the report log.
-=============================================================================================
-------------[ cut here ]------------
-WARNING: CPU: 2 PID: 39261 at fs/bcachefs/super.c:1229
-bch2_dev_free+0x27b/0x2d0
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:1229
-Modules linked in:
-CPU: 2 UID: 0 PID: 39261 Comm: syz.22.217 Not tainted
-6.14.0-13408-g9f867ba24d36 #1 PREEMPT(full)
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-RIP: 0010:bch2_dev_free+0x27b/0x2d0
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:1229
-Code: e3 02 89 de e8 76 7c 65 fd 84 db 0f 84 df fe ff ff e9 cd fe ff
-ff e8 a4 81 65 fd 90 0f 0b 90 e9 e6 fd ff ff e8 96 81 65 fd 90 <0f> 0b
-90 e9 b1 fd ff ff 4c 89 f7 e8 b5 44 c9 fd e9 07 fe ff ff e8
-RSP: 0018:ffffc900040ef210 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8453d31c
-RDX: ffff88802a070000 RSI: ffffffff8453d56a RDI: 0000000000000001
-RBP: ffff8880326c6000 R08: 00000000fffffffc R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880326c60c0
-R13: ffffc900040ef368 R14: 0000000000000000 R15: 0000000000000000
-FS: 00007fb1a3364640(0000) GS:ffff8880cf059000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc315791fc8 CR3: 0000000040d9c000 CR4: 0000000000350ef0
-Call Trace:
-<TASK>
-__bch2_dev_alloc+0xa56/0xe10
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:1398
-bch2_dev_alloc+0xba/0x170
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:1424
-bch2_fs_alloc+0x1b7d/0x2430
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:969
-bch2_fs_open+0x92c/0x1110
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/super.c:2219
-bch2_fs_get_tree+0x10d0/0x1770
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/bcachefs/fs.c:2172
-vfs_get_tree+0x93/0x340
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/super.c:1759
-do_new_mount data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:3879
-[inline]
-path_mount+0x6b0/0x1eb0
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:4206
-do_mount data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:4219
-[inline]
-__do_sys_mount data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:4430
-[inline]
-__se_sys_mount data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:4407
-[inline]
-__x64_sys_mount+0x27b/0x300
-data/ghui/docker_data/linux_kernel/upstream/linux/fs/namespace.c:4407
-do_syscall_x64 data/ghui/docker_data/linux_kernel/upstream/linux/arch/x86/entry/syscall_64.c:63
-[inline]
-do_syscall_64+0xcb/0x250
-data/ghui/docker_data/linux_kernel/upstream/linux/arch/x86/entry/syscall_64.c:94
-entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb1a259fdfe
-Code: 48 c7 c0 ff ff ff ff eb aa e8 5e 20 00 00 66 2e 0f 1f 84 00 00
-00 00 00 0f 1f 40 00 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d
-01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb1a3363da8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 000000000000fe88 RCX: 00007fb1a259fdfe
-RDX: 000000002000fec0 RSI: 000000002000ff00 RDI: 00007fb1a3363e00
-RBP: 00007fb1a3363e40 R08: 00007fb1a3363e40 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000002000fec0
-R13: 000000002000ff00 R14: 00007fb1a3363e00 R15: 000000002000ff40
-</TASK>
+Nicolas
