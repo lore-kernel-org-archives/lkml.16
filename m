@@ -1,234 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB7C4A24;
-	Sun,  6 Apr 2025 15:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA7E22068E
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 15:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743953959; cv=none; b=jvx2su/9HO/hDqFe/lSP0fAJtjZj08IZ8cWh0dko+aJwfTjlMY2NnuOMmsEp/2bwOy+wE7YBD4bNPflPYO6IuwqkuRiezOYFSz5zHIG+oEe1hMwevy9zMwRJC98Ewsk5c5UFijkeRb7VwXN5Jb1YrkFgPQzikRnJy3PNcZ6JHMQ=
+	t=1743954046; cv=none; b=bPUcjqdOxfr0F8rL1cYSPb2EzN6iGQSuSwlhX3xmRhNO5/sN4AngIrmnpiQl4hQNsgiV4YCpJx+I9KccV66Vf0P5fHwk0NQ/56QCs0L60oD0044uyOOAiAe/mBfMgiBhSg0K3ZaXyfDoVWlHHsIaSNEp6ZOwz2t9FCJhwRRuDaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743953959; c=relaxed/simple;
-	bh=qaTOlHXyrdaLUQyAB5aniUKDe97RBKP8b4s4Rj2LP0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Eqcx9opqq9IeHXzSuCHAA7/EnAdC2H2Z0KcYDin26pFkd4qoQrNrbZfyQhLMdVemSNV1hvhhmqEoAq20+ClcHF7guSYIh1iYpDLxZDEx9GcpKeOlvPaEpmgOZOyHGvOI/CXkBeSJEdonKRiNPu4syNJdutTsyUfEsYANRRTVREA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6x0zoLL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743954046; c=relaxed/simple;
+	bh=QPQgC7kvXKpnKQQ0zZIdhCNfWb/+UL0O59Sg480zvCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=daHXuTUakbTs72wxwdf2lKWSzUCoejXwbI9J9EWpoxfihz3nOnDS5kFJOWcsk6qOWjj4cX+gEOhdae7oa80gvGfxE5RM7poJPdjkTrVwGNDa41P0vVJaLlKtbgOZIztnSm4t5oPZbq76NeV3EksB69gbwYiHnIoEox84SBzj2g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H2hhBRMn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6x0zoLL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06313C4CEE3;
-	Sun,  6 Apr 2025 15:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743953959;
-	bh=qaTOlHXyrdaLUQyAB5aniUKDe97RBKP8b4s4Rj2LP0Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k6x0zoLL7w0SD5juotegtP/HV3nuIw5RxjN92SiUWB95pTvYUqM3jSni1tsDfwJIi
-	 tn3Jjzw5T5vJWtylrFl36e4/ipW5X646wbe9CwtylNF28qx9Q5SlHc6h+ngY/HgGwt
-	 pPbo4W4DLEEdcEzybdNt6Vjp3wWBpjMP/wfTZkXYl8qfMYSWe5IxGeeBgOkVWtwWa4
-	 HYbHSd/Xm14mKOVrOOWuUijU2q7eTfp6jM+43VHpjj2GYssIQhDI2nypwPqcD5T1Xw
-	 2mHfilGDgKNuzM4h61LIF6PNqgTCXwUnw05Qf+apIhthh+2VF/ZDDqvJBNqMwYmiTH
-	 RDO7NKuj1LkYg==
-Date: Sun, 6 Apr 2025 16:39:13 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Brajesh Patil <brajeshpatil11@gmail.com>
-Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
- linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: Re: [PATCH v1 1/1] iio: dummy: Add 3-axis compass (magnetometer)
- channels to the iio_simple_dummy
-Message-ID: <20250406163913.6a7234fb@jic23-huawei>
-In-Reply-To: <20250406133349.50633-1-brajeshpatil11@gmail.com>
-References: <20250406133349.50633-1-brajeshpatil11@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2hhBRMn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743954041;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vB1cPTM6kQM0IccundSU9yqiAslJfta8o011pO2Z12I=;
+	b=H2hhBRMn0xHNCWxqXR0nIdyRw7Co466K6daqZ7pjuPejbyjnsrPKooMtYO5mlElEIcAIa/
+	cuEWeu16Pj+lk/mQaMQ6gKfjktvDLi8Bcfx4b/Kz4hOmwR6H2Jinn7WyuM1ZbMF8aZCT/T
+	LjYQclC68d66WBvFpYCqn2duRpjx0KI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-sPFA_OIxN4yxJKXG_qFkhA-1; Sun, 06 Apr 2025 11:40:40 -0400
+X-MC-Unique: sPFA_OIxN4yxJKXG_qFkhA-1
+X-Mimecast-MFC-AGG-ID: sPFA_OIxN4yxJKXG_qFkhA_1743954039
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so29720595e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 08:40:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743954039; x=1744558839;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vB1cPTM6kQM0IccundSU9yqiAslJfta8o011pO2Z12I=;
+        b=RC9cmD2bCCJkKfBfJY6feOT411xRGRKrEoclt6tYpUINHAvwu2BDoekzknFw4NpKfe
+         uDe3Anr60BzisszvK5sJ2ED4qV6nUTyVf47Yl188r2Z1lvF8b8+HALB+geyuzDjF5FtG
+         dl/wVjS7yjdDVb1zRqA4Iwm5Tvsb6rB4Sq+tyU1msA+V9QVOUwO8lsBfAsNXPcAgYVJ7
+         7RUcj05YYjXWvTCnplCsSGumhpiAUxA7r98QQPvsTLeEO064c2fTf2tUvzL9iEcWj7QG
+         XFYkUlSV77cNVup+4f9p4fz7pSMckSOgw0DKGxxJ3QzlQB1xM5PuPl6RSg75/Q/U7rLw
+         t3OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOYdripkBxolbk7oi/bWjdt3gXNe9XXBgqMIH0oZe0vinSSAp9qUGyN/ur3sQNgb0ErF5JsunHZ47BiZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW91+Vjg8w5T6qeQQ06FiR2GPYFfE2WeuXU0jHNE2irbWiLe6B
+	/lCeMPXUeKo0y2ULtBgquEwbH7h+KeO+3Mv5ISMBTBMrNxKJrz0kXBO+lcdUk2qNua/osmlw0jN
+	BnVDvRl8gblmeAOjItkDLEMCDeArPxI1u4MKtzrm+nN1pAt0nGvNomJGvCs4IMQ==
+X-Gm-Gg: ASbGncturrRqnmw52j8s2RFFMEWTwf9c/rahxmd/CiryWjhxQSudjxaz/5iRX3Lhp84
+	kmZBiELMIYgmk07ddSJRI7jyD32EmF7846E3eskVHFwjxDcnA0xPUu2fL3ar7Ao7/0yj1mNLaTK
+	pNlyTMFMtwWZjsiGyWLo9JT2rfHRRDKmLmTEqRPffS8BoyLGBzLMJLhxVrmJerxA36zBoRoFGLp
+	p+0BV+qPOwvLoLE8CpF3Fyl8a0/bqD6MXls5HLnAjCZRzvupMqtd+2tHVV5liBAxQ2MR98SiTno
+	GhcTpKCMnA==
+X-Received: by 2002:a05:600c:3596:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-43ed0db35d6mr95618395e9.30.1743954038956;
+        Sun, 06 Apr 2025 08:40:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFN/IYHI1ly9zqzd/yipZ2IxNmlWWEkP3lQh8Sl8IvCxIbI13KHnpOGc/44mG1AnIZVtDsnLw==
+X-Received: by 2002:a05:600c:3596:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-43ed0db35d6mr95618065e9.30.1743954038489;
+        Sun, 06 Apr 2025 08:40:38 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec163107csm108121185e9.3.2025.04.06.08.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 08:40:36 -0700 (PDT)
+Date: Sun, 6 Apr 2025 11:40:33 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250406113926-mutt-send-email-mst@kernel.org>
+References: <20250402203621.940090-1-david@redhat.com>
+ <20250403161836.7fe9fea5.pasic@linux.ibm.com>
+ <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+ <20250404063619.0fa60a41.pasic@linux.ibm.com>
+ <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
 
-On Sun,  6 Apr 2025 19:03:49 +0530
-Brajesh Patil <brajeshpatil11@gmail.com> wrote:
-
-> This patch adds support for 3-axis magnetometer data (X, Y, Z) in the
-> iio_simple_dummy driver. It introduces three new IIO_MAGN channels and
-> populates them with dummy values for testing and prototyping purposes.
-
-Why?  This needs a description of what parts of the ABI or subsystem this
-exercises that were not previously covered by this driver.
-
-I don't want to go down the path of adding examples for all channel types as
-that would be a huge and not bring much benefit.
-
+On Fri, Apr 04, 2025 at 12:55:09PM +0200, David Hildenbrand wrote:
+> On 04.04.25 12:00, David Hildenbrand wrote:
+> > On 04.04.25 06:36, Halil Pasic wrote:
+> > > On Thu, 3 Apr 2025 16:28:31 +0200
+> > > David Hildenbrand <david@redhat.com> wrote:
+> > > 
+> > > > > Sorry I have to have a look at that discussion. Maybe it will answer
+> > > > > some my questions.
+> > > > 
+> > > > Yes, I think so.
+> > > > 
+> > > > > > Let's fix it without affecting existing setups for now by properly
+> > > > > > ignoring the non-existing queues, so the indicator bits will match
+> > > > > > the queue indexes.
+> > > > > 
+> > > > > Just one question. My understanding is that the crux is that Linux
+> > > > > and QEMU (or the driver and the device) disagree at which index
+> > > > > reporting_vq is actually sitting. Is that right?
+> > > > 
+> > > > I thought I made it clear: this is only about the airq indicator bit.
+> > > > That's where both disagree.
+> > > > 
+> > > > Not the actual queue index (see above).
+> > > 
+> > > I did some more research including having a look at that discussion. Let
+> > > me try to sum up how did we end up here.
+> > 
+> > Let me add some more details after digging as well:
+> > 
+> > > 
+> > > Before commit a229989d975e ("virtio: don't allocate vqs when names[i] =
+> > > NULL") the kernel behavior used to be in spec, but QEMU and possibly
+> > > other hypervisor were out of spec and things did not work.
+> > 
+> > It all started with VIRTIO_BALLOON_F_FREE_PAGE_HINT. Before that,
+> > we only had the single optional VIRTIO_BALLOON_F_STATS_VQ queue at the very
+> > end. So there was no possibility for holes "in-between".
+> > 
+> > In the Linux driver, we created the stats queue only if the feature bit
+> > VIRTIO_BALLOON_F_STATS_VQ was actually around:
+> > 
+> > 	nvqs = virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ) ? 3 : 2;
+> > 	err = virtio_find_vqs(vb->vdev, nvqs, vqs, callbacks, names, NULL);
+> > 
+> > That changed with VIRTIO_BALLOON_F_FREE_PAGE_HINT, because we would
+> > unconditionally create 4 queues. QEMU always supported the first 3 queues
+> > unconditionally, but old QEMU did obviously not support the (new)
+> > VIRTIO_BALLOON_F_FREE_PAGE_HINT queue.
+> > 
+> > 390x didn't particularly like getting queried for non-existing
+> > queues. [1] So the fix was not for a hypervisor that was out of spec, but
+> > because quering non-existing queues didn't work.
+> > 
+> > The fix implied that if VIRTIO_BALLOON_F_STATS_VQ is missing, suddenly the queue
+> > index of VIRTIO_BALLOON_F_FREE_PAGE_HINT changed as well.
+> > 
+> > Again, as QEMU always implemented the 3 first queues unconditionally, this was
+> > not a problem.
+> > 
+> > [1] https://lore.kernel.org/all/c6746307-fae5-7652-af8d-19f560fc31d9@de.ibm.com/#t
+> > 
+> > > 
+> > > Possibly because of the complexity of fixing the hypervisor(s) commit
+> > > a229989d975e ("virtio: don't allocate vqs when names[i] = NULL") opted
+> > > for changing the guest side so that it does not fit the spec but fits
+> > > the hypervisor(s). It unfortunately also broke notifiers (for the with
+> > > holes) scenario for virtio-ccw only.
+> > 
+> > Yes, it broke the notifiers.
+> > 
+> > But note that everything was in spec at that point, because we only documented
+> > "free_page_vq == 3" in the spec *2 years later*, in 2020:
+> > 
+> > commit 38448268eba0c105200d131c3f7f660129a4d673
+> > Author: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > Date:   Tue Aug 25 07:45:02 2020 -0700
+> > 
+> >       content: Document balloon feature free page hints
+> >       Free page hints allow the balloon driver to provide information on what
+> >       pages are not currently in use so that we can avoid the cost of copying
+> >       them in migration scenarios. Add a feature description for free page hints
+> >       describing basic functioning and requirements.
+> > At that point, what we documented in the spec *did not match reality* in
+> > Linux. QEMU was fully compatible, because VIRTIO_BALLOON_F_STATS_VQ is
+> > unconditionally set.
+> > 
+> > 
+> > QEMU and Linux kept using that queue index assignment model, and the spec
+> > was wrong (out of sync?) at that point. The spec got more wrong with
+> > 
+> > commit d917d4a8d552c003e046b0e3b1b529d98f7e695b
+> > Author: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > Date:   Tue Aug 25 07:45:17 2020 -0700
+> > 
+> >       content: Document balloon feature free page reporting
+> >       Free page reporting is a feature that allows the guest to proactively
+> >       report unused pages to the host. By making use of this feature is is
+> >       possible to reduce the overall memory footprint of the guest in cases where
+> >       some significant portion of the memory is idle. Add documentation for the
+> >       free page reporting feature describing the functionality and requirements.
+> > 
+> > Where we documented VIRTIO_BALLOON_F_REPORTING after the changes were added to
+> > QEMU+Linux implementation, so the spec did not reflect reality.
+> > 
+> > I'll note also cloud-hypervisor [2] today follows that model.
+> > 
+> > In particular, it *only* supports VIRTIO_BALLOON_F_REPORTING, turning
+> > the queue index of VIRTIO_BALLOON_F_REPORTING into *2* instead of documented
+> > in the spec to be *4*.
+> > 
+> > So in reality, we can see VIRTIO_BALLOON_F_REPORTING to be either 2/3/4, depending
+> > on the availability of the other two features/queues.
+> > 
+> > [2] https://github.com/cloud-hypervisor/cloud-hypervisor/blob/main/virtio-devices/src/balloon.rs
+> > 
+> > 
+> > > 
+> > > Now we had another look at this, and have concluded that fixing the
+> > > hypervisor(s) and fixing the kernel, and making sure that the fixed
+> > > kernel can tolerate the old broken hypervisor(s) is way to complicated
+> > > if possible at all. So we decided to give the spec a reality check and
+> > > fix the notifier bit assignment for virtio-ccw which is broken beyond
+> > > doubt if we accept that the correct virtqueue index is the one that the
+> > > hypervisor(s) use and not the one that the spec says they should use.
+> > 
+> > In case of virtio-balloon, it's unfortunate that it went that way, but the
+> > spec simply did not / does not reflect reality when it was added to the spec.
+> > 
+> > > 
+> > > With the spec fixed, the whole notion of "holes" will be something that
+> > > does not make sense any more. With that the merit of the kernel interface
+> > > virtio_find_vqs() supporting "holes" is quite questionable. Now we need
+> > > it because the drivers within the Linux kernel still think of the queues
+> > > in terms of the current spec, i.e. they try to have the "holes" as
+> > > mandated by the spec, and the duty of making it work with the broken
+> > > device implementations falls to the transports.
+> > > 
+> > 
+> > Right, the "holes" only exist in the input array.
+> > 
+> > > Under the assumption that the spec is indeed going to be fixed:
 > 
-> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+> For virito-balloon, we should probably do the following:
+> 
+> From 38e340c2bb53c2a7cc7c675f5dfdd44ecf7701d9 Mon Sep 17 00:00:00 2001
+> From: David Hildenbrand <david@redhat.com>
+> Date: Fri, 4 Apr 2025 12:53:16 +0200
+> Subject: [PATCH] virtio-balloon: Fix queue index assignment for
+>  non-existing queues
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/iio/dummy/iio_simple_dummy.c | 71 +++++++++++++++++++++++++++-
->  drivers/iio/dummy/iio_simple_dummy.h |  6 +++
->  2 files changed, 75 insertions(+), 2 deletions(-)
+>  device-types/balloon/description.tex | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
-> index 8575d4a08..713b764c9 100644
-> --- a/drivers/iio/dummy/iio_simple_dummy.c
-> +++ b/drivers/iio/dummy/iio_simple_dummy.c
-> @@ -222,7 +222,7 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
->          * Convenience macro for timestamps. 4 is the index in
->          * the buffer.
->          */
-> -       IIO_CHAN_SOFT_TIMESTAMP(4),
-> +	IIO_CHAN_SOFT_TIMESTAMP(DUMMY_INDEX_SOFT_TIMESTAMP),
->         /* DAC channel out_voltage0_raw */
->         {
->                 .type = IIO_VOLTAGE,
-> @@ -265,6 +265,48 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
->                 .num_event_specs = 1,
->  #endif /* CONFIG_IIO_SIMPLE_DUMMY_EVENTS */
->         },
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_X,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_X,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-
-shift = 0 is considered an obvious default so generally we don't bother
-setting it explicitly (it is set by the requirements of the C spec anyway)/
-
-> +		},
-> +	},
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_Y,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_Y,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-> +		},
-> +	},
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_Z,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_Z,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-> +		},
-> +	},
->  };
->  
->  static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
-> @@ -294,6 +336,22 @@ static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
->         case IIO_ACCEL:
->                 *val = st->accel_val;
->                 return IIO_VAL_INT;
-> +	case IIO_MAGN:
-> +		switch (chan->scan_index) {
-> +		case DUMMY_MAGN_X:
-> +			*val = st->buffer_compass[0];
-> +			break;
-> +		case DUMMY_MAGN_Y:
-> +			*val = st->buffer_compass[1];
-> +			break;
-> +		case DUMMY_MAGN_Z:
-> +			*val = st->buffer_compass[2];
-> +			break;
-> +		default:
-> +			*val = 99;
-> +			break;
-> +		}
-> +		return IIO_VAL_INT;
->         default:
->                 return -EINVAL;
->         }
-> @@ -378,6 +436,11 @@ static int iio_dummy_read_raw(struct iio_dev *indio_dev,
->                         default:
->                                 return -EINVAL;
->                         }
-> +		case IIO_MAGN:
-> +			// Just add some dummy values
-Comment syntax is old style /* Add some dummy values */ for
-most kernel code (and all IIO other than SPDX tags in cases where // must
-be used).
-
-> +			*val = 0;
-> +			*val2 = 2;
-> +			return IIO_VAL_INT_PLUS_MICRO;
->                 default:
->                         return -EINVAL;
->                 }
-> @@ -562,6 +625,10 @@ static int iio_dummy_init_device(struct iio_dev *indio_dev)
->         st->activity_running = 98;
->         st->activity_walking = 4;
-
-Something odd going on in email formatting here as your quoted lines are using
-spaces not tabs.
-
->  
-> +	st->buffer_compass[0] = 78;
-> +	st->buffer_compass[1] = 10;
-> +	st->buffer_compass[2] = 3;
+> diff --git a/device-types/balloon/description.tex b/device-types/balloon/description.tex
+> index a1d9603..a7396ff 100644
+> --- a/device-types/balloon/description.tex
+> +++ b/device-types/balloon/description.tex
+> @@ -16,6 +16,21 @@ \subsection{Device ID}\label{sec:Device Types / Memory Balloon Device / Device I
+>    5
+>  \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtqueues}
 > +
->         return 0;
->  }
->  
-> @@ -732,5 +799,5 @@ static struct iio_sw_device_type iio_dummy_device = {
->  module_iio_sw_device_driver(iio_dummy_device);
->  
->  MODULE_AUTHOR("Jonathan Cameron <jic23@kernel.org>");
-> -MODULE_DESCRIPTION("IIO dummy driver");
-> +MODULE_DESCRIPTION("IIO dummy driver -> IIO dummy modified by Me");
-Accidental send?
+> +\begin{description}
+> +\item[inflateq] Exists unconditionally.
+> +\item[deflateq] Exists unconditionally.
+> +\item[statsq] Only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> +\item[free_page_vq] Only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> +\item[reporting_vq] Only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
+> +\end{description}
+> +
+> +\begin{note}
+> +Virtqueue indexes are assigned sequentially for existing queues, starting
+> +with index 0; consequently, if a virtqueue does not exist, it does not get
+> +an index assigned. Assuming all virtqueues exist for a device, the indexes
+> +are:
+> +
+>  \begin{description}
+>  \item[0] inflateq
+>  \item[1] deflateq
+> @@ -23,12 +38,7 @@ \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtque
+>  \item[3] free_page_vq
+>  \item[4] reporting_vq
+>  \end{description}
+> -
+> -  statsq only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> -
+> -  free_page_vq only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> -
+> -  reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
+> +\end{note}
+>  \subsection{Feature bits}\label{sec:Device Types / Memory Balloon Device / Feature bits}
+>  \begin{description}
+> -- 
+> 2.48.1
+> 
+> 
+> If something along these lines sounds reasonable, I can send a proper patch to the
+> proper audience.
 
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/dummy/iio_simple_dummy.h b/drivers/iio/dummy/iio_simple_dummy.h
-> index 8246f25db..e05d8b5cc 100644
-> --- a/drivers/iio/dummy/iio_simple_dummy.h
-> +++ b/drivers/iio/dummy/iio_simple_dummy.h
-> @@ -12,6 +12,7 @@
->  struct iio_dummy_accel_calibscale;
->  struct iio_dummy_regs;
->  
-> +#define DUMMY_AXIS_XYZ 3
->  /**
->   * struct iio_dummy_state - device instance specific state.
->   * @dac_val:                   cache for dac value
-> @@ -39,6 +40,7 @@ struct iio_dummy_state {
->         int steps_enabled;
->         int steps;
->         int height;
-> +	u16 buffer_compass[DUMMY_AXIS_XYZ];
->  #ifdef CONFIG_IIO_SIMPLE_DUMMY_EVENTS
->         int event_irq;
->         int event_val;
-> @@ -107,6 +109,10 @@ enum iio_simple_dummy_scan_elements {
->         DUMMY_INDEX_DIFFVOLTAGE_1M2,
->         DUMMY_INDEX_DIFFVOLTAGE_3M4,
->         DUMMY_INDEX_ACCELX,
-> +	DUMMY_INDEX_SOFT_TIMESTAMP,
-Look at why we have timestamps at the end...
-(start with iio_push_to_buffers_with_timestamp)
 
-Jonathan
+Indeed, but do we want to add a note about previous spec versions
+saying something different? Maybe, with a hint how devices following
+old spec can be detected?
 
-> +	DUMMY_MAGN_X,
-> +	DUMMY_MAGN_Y,
-> +	DUMMY_MAGN_Z,
->  };
->  
->  #ifdef CONFIG_IIO_SIMPLE_DUMMY_BUFFER
+
+
+> -- 
+> Cheers,
+> 
+> David / dhildenb
 
