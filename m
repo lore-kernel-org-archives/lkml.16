@@ -1,98 +1,130 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0158314A4F9;
-	Sun,  6 Apr 2025 13:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4E114A4F9;
+	Sun,  6 Apr 2025 13:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743947366; cv=none; b=OcVilfP6M5sTfeVMCUWsmJpeM6XATMy85pgkbeysVTsxa5gc8XwJ1hrVAxh66NCHPQBvxXJUbZo8SZTa079DLSk/7t/Fvzl/ZA30a7fhf4i4RNkP94M1yEIaqODTJb+35w+yEaW6dFC2lOTPQvvwcUqSbWAsCkS2jTr3mXraRWw=
+	t=1743947555; cv=none; b=myTEe05zkrdaQKMYXy6jhx+n/Tow968KfAsxDGFUXRs+0lEO81ce6O8ZSRuVTGSUPuvYA29nAPmH4Ko7HBdgp+fWrrHSwn6G3/TxZPhLrTJ/w4KbpLgZyqOw4BBmSlHEwsjMgpDcQFoGmDpSDtzAs3Ph0BIeMtdA1CIDMRX3k1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743947366; c=relaxed/simple;
-	bh=ArgTWo4x2CFscJFkuLJcGxeqCgmy5qAUc5MwffAw1Cg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SI5D2zY/oood3C7KuGeNApvrydGCODLkspmKIjLqN8P+P9kJBje9imM7Sfz5TmOesik+dm+69JUvyo1UU/DlRDLEqu6P5UHUdA7dEddSZ59Gs1pW3p44QePskLOq/DWKdMbDRX08qN/5NfXselPzAHS6GWm8nuXFSDf2aQFAPTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lETP044n; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743947555; c=relaxed/simple;
+	bh=KH/CvhD067oY6QYkcfLPEwEU/9xRv2gVPQkTrkaeB/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nNvPeZsQCNdH0JiccqECxMMHAuDtp6GZp/d/5SqhCfWI7SxFM2dWMy9MAG/hTT7+2On+7JiPL6RS8epbiqnnXM8YO5KHkreoGedgJfthn0caKDadPyrjLy+U7GzEEP/LTJxFRvpE6SA1t4Ekyo/N0whQigM98QInSolldxe8OFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mv8kl5ze; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lETP044n"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso46460105ad.0;
-        Sun, 06 Apr 2025 06:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743947364; x=1744552164; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5XJJwHD/DSdygcA+azSZln/silKp7gLNndAvbGA0vLs=;
-        b=lETP044nP84Oq2C1DiI2O8NdeAXpebREuFsqf1f3PPChlQxjIKAeJNaaiF1+0WYr0l
-         v7sDYowkUu52Aeo5TOKUHIYdZXuD0/hfs/XIwt6RYtNW+WIGPO8Lx/ai8GiB8mWcAphC
-         wcXUUAJ/W/lT/trysyyY/0fRLqc6Jsa9oSQ1MjzOe5hsdvfSmVEio2yNUckh8ergKwm1
-         WENqTdJU6gBZCylgzjGU07zq5rTD8Y+QHC0/JPC74JNAWfL1VSvTWPzEW5Ta3tqFGRLI
-         33WMRGosDO1ssulDZTzxO4DXrB37StPViC/Z7fY/00tuaxJ3NAQnqu+8mlyo5y3ovq/T
-         ZcJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743947364; x=1744552164;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5XJJwHD/DSdygcA+azSZln/silKp7gLNndAvbGA0vLs=;
-        b=VAfyeSB6EJZnT9COrQP5aHdxSEbEba/Dj1tYfjPgFtsmCnMPUyEYaZMt2UyJFN3Vgf
-         ypcXnps2VfVuHNRtntAcVD9AlZHUSbIGVFqaj2i9TcpDya4coEiTKH5H/UDNCm7SJeLs
-         kAlfTbz9qxv4ODOw5o/AyLPO16KIMeaDdXV903udwKYt62AzojHRUDlTRwZrcCYuIb7S
-         OYxvS+dnnle8S4B289s2Hjd9WucVtl7AlW5t3WECLaSBjHuUHhXcgqWa15FRT0OWq7bp
-         jg5DHvR5fgD1rvBUjnT4DT23z9x5m03j6Ia/HKXLKS+wzQqcPhT8OJeP+TJmMVtlfrHi
-         4BPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXs+Dy43htf1rtGT94bD4eloAEfbTEdntXp+SBWFL1rDvllPNCz3REdod9JAGQLTzGarnEE8izLgEeZbTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo/gNVPU5beCbTheOcqkFYwoclNgYxLT1OU/letBzeNvnVs8Vk
-	8k79CUmpXENgYqFISTltlA6mJyMUIAJaTwdFkY5wJkDr8KAF0my9Y1eSOvzp
-X-Gm-Gg: ASbGnctdFIU1faIZzLOMNx11rQGQzjmi3yiJXsXqY4npyoY7l9MQUSqyMD9iW6DeMzh
-	UTap628DtfW/jkLOVM96Vryk/zYXKIpDzPEGbFcdH2sl7/fFIFBV1NSaazMBTormMhhVsIa/fAU
-	JWdO7wVEYqJPOMg3VmKozOmr3faSC7pF+kwdXMqp3kKePwlqBHcjwaSgaVkqN+CB9VKR6smCrJu
-	HaGlg6yN3xrV2bn0iFbktJQJn2OdR2p1URpqzrudu68Utmvl64j+yyfE4c6m21VN4aqXSZOBngd
-	erkq3hV2nl+J33QHESx9UyZJQUk420epOaRyIRmLPdW1RuW1GR3a8ZkosY/z+g5sc73U
-X-Google-Smtp-Source: AGHT+IHhxQyzcJjmfjcUf+7IIE5KBMswZTaMesP3rbbfL0Nt6hI5f/R0zPxqX37RyPVsPWjqzutlfQ==
-X-Received: by 2002:a17:903:2406:b0:21f:6d63:6f4f with SMTP id d9443c01a7336-229765a492amr188388945ad.2.1743947364113;
-        Sun, 06 Apr 2025 06:49:24 -0700 (PDT)
-Received: from tech-Alienware-m15-R6.. ([223.185.134.10])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc41ae31sm5709960a12.72.2025.04.06.06.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 06:49:23 -0700 (PDT)
-From: Sunny Patel <nueralspacetech@gmail.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sunny Patel <nueralspacetech@gmail.com>
-Subject: [PATCH] i2c: Fix reference leak in of_i2c_register_devices
-Date: Sun,  6 Apr 2025 19:18:43 +0530
-Message-ID: <20250406134843.67702-1-nueralspacetech@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mv8kl5ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F290FC4CEE3;
+	Sun,  6 Apr 2025 13:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743947554;
+	bh=KH/CvhD067oY6QYkcfLPEwEU/9xRv2gVPQkTrkaeB/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mv8kl5zeuWNYjRYOPgiclCA5wZ4xu7Yob2aWzifoJlVe+mM+d7WSvwlNp4KUP7RIY
+	 X1mgTQwmbTARzL23WPOETA9G7I9rxmBM73hJ6jlSJuvbBlah/YQkh1ojX7vAr6xVK1
+	 Z2JLfWZW0sKZYda+feBz6cUWWzjYIcZ8yJAvkhz9VUPgZM1PssZfURxht2l34qGKqb
+	 kWc+yb57sD9BxHdkzyTl08OpNJ5lWmtq7dX2O0+FrIzwBgiBpyMHF8vKwZc3Q8Yf/N
+	 b8q3LnX0jgNhT1E/jkrjk0Av6eGZV568k7NcR9ED4hrrDIl8Yl1noyIXTEbr6J0Oit
+	 IbxpBgAuG2p2w==
+Message-ID: <e1080a50-4728-456c-a1c1-88baaf083ecf@kernel.org>
+Date: Sun, 6 Apr 2025 15:52:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ASoC: dt-bindings: Document Awinic AW8898 amplifier
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Weidong Wang <wangweidong.a@awinic.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250406-aw8898-v1-0-58a2d554693f@lucaweiss.eu>
+ <20250406-aw8898-v1-1-58a2d554693f@lucaweiss.eu>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250406-aw8898-v1-1-58a2d554693f@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix a potential reference leak in of_i2c_register_devices where the
-reference to the node is not released if device registration fails.
-This ensures proper reference management and avoids memory leaks.
+On 06/04/2025 15:03, Luca Weiss wrote:
+> +    description:
+> +      Digital IO power supply
+> +
+> +  vdd-supply:
+> +    description:
+> +      Battery power supply
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
 
-Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
----
- drivers/i2c/i2c-core-of.c | 1 +
- 1 file changed, 1 insertion(+)
+Some or all of the supplies should be required.
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 02feee6c9ba9..7c50905de8f1 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -107,6 +107,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
- 				 "Failed to create I2C device for %pOF\n",
- 				 node);
- 			of_node_clear_flag(node, OF_POPULATED);
-+			of_node_put(node);
- 		}
- 	}
- 
--- 
-2.43.0
+> +  - "#sound-dai-cells"
+> +
+> +additionalProperties: false
 
+and this 'unevaluatedProperties: false' instead.
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+
+Best regards,
+Krzysztof
