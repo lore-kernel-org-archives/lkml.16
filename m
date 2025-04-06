@@ -1,33 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEAC14A4F9;
-	Sun,  6 Apr 2025 12:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E72BDDD3;
+	Sun,  6 Apr 2025 12:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743942113; cv=none; b=a69K13wVM25LKsqo1cF3CnXR3xJGDfH9bfIePbXVYGL8TgRVCznr9Ao5aF0UXthlCIziOz+LfYJ7IncJmjxciwrZqCnbFBxejfwfNlNYT9+8Z9o7dlKjY84D4k0HU4752UR9NobC6ChJSL8E3g5tE+X6xjGTl2EyqaaemZokts0=
+	t=1743942298; cv=none; b=uKgQHjKmfxefEYtef6zcCyCu0IP6+a7SklL/KLS4ZmiS4p32AnJ5b+T5vDppTnOGalavrT7kIvi9PXtwisI6oNIKF3QBVOkAiVF3VzFb/E/gd38UK8l8wzk4MLGsUUi1cE3vQzh4BqkDyJqtp+2TQbw0euXTHyPBSKyEVrIkkMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743942113; c=relaxed/simple;
-	bh=AY+s8uk+3zEBzpGaOEXfbqJ8aK9Dqgyl5lmPlL0ivo0=;
+	s=arc-20240116; t=1743942298; c=relaxed/simple;
+	bh=ulVKXkH/+RgxZcuZoOfE34OAlGrOQ0csu2idaaKJ3yk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tt1D/qgykNq/I/y8b3hS97o8EYqQNulTFYHVquaS1Gi+wvCkTfzWFbbTBNbboSPLHHKlpxLwnlGbxC56Lj9PpKos5e1bCHdI3Ejsfz0a0szGYzLYIg908J9fRBzlvUUb+4J/eBKNrpbmpJBgZdIZ8eUhLY26oXzmI0QqyQ6V96M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxAgbCgK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aKiMS3EERkcDgkUQvsTiD7jV/bXwn0yYwNBrbhiK0yGrI9pB05OcGTN1iZAQM2cKAvgHhqKmLHjGDPGHVxZKeCCxEHcuuSiyYoubW/D3KCSYKkBx0BDYPYFwySjdzYCAfjlY0QkwrqyXYTQWV+rrmZNyPBwGWRkGEDyF2Nnc5Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVyZ98ke; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxAgbCgK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EFBBC4CEE3;
-	Sun,  6 Apr 2025 12:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743942112;
-	bh=AY+s8uk+3zEBzpGaOEXfbqJ8aK9Dqgyl5lmPlL0ivo0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dxAgbCgKK6t2H0SjxgshKRvESDJ/4Ei3MdI607sU1vcJ9AD0evVsZiBSZALE0e26q
-	 5ONvSMDnFP1Sw2/SU/utMb19AGK5K/ttSkC4Z6x3VGfLiXYkeHl1b8sZAZm1Mc+FnX
-	 rPayO2jn0Tooxbmd6dmW6Pd0UdRJjjcdrkS2jahZwT2hc5dg4hhCBUnQ7JLXjvTkK/
-	 Nq3WGSWE8Ow9ZjErtWc9ZRMrI4uR0wI96ErLydk6od7MJDKJoOVTHVFL2gjoKhyLO4
-	 /XHZZpoAAVrDsrNOoOiBpZoKgfp5AkLKMDH1LNhMIWqbhu+QlHRHvGQNacI7t90nYP
-	 jYkEs+4xsuBAg==
-Message-ID: <e9265770-784a-4682-b3b3-bace88aef36c@kernel.org>
-Date: Sun, 6 Apr 2025 14:21:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVyZ98ke"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso2601085f8f.2;
+        Sun, 06 Apr 2025 05:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743942293; x=1744547093; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bvHQynmGZce7aRtQCozbzhFjGmq8v6e8Sgb2HdqSqLk=;
+        b=CVyZ98keelxgikc0dMvD7TGp1pevsJ3CAQX703dNGRloHiGdILKZ1bBNlUWME7ux8O
+         e5LsES09TK1hc71gh2oNjQnM+SnUBdsF2spSTfgosNX0RGjaxHLFbIs3nG9r0CQcbOR9
+         SyQca+QVrWlrd74exNCXfRHqrjfWUHtwOCiXKBEY44vu9fmLfQRn+O2vYuj08xsN4M0a
+         2WvGQP4gt0+L6Xhs/i0GQ2JuhzjG01mHEwprVNIwhq607pZEkclvpQ45TJICKtor3gTl
+         u+MFb6k07zmW7MDp/KTRSFV7MrY+DL1XRsDrOvx4Ogzr5mugdoNStLkjQqzGS0bWBJbP
+         8hhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743942293; x=1744547093;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bvHQynmGZce7aRtQCozbzhFjGmq8v6e8Sgb2HdqSqLk=;
+        b=YfRxF3hXdVN/FgxOWIt3wzNwE1UWR8dTEe+qt9MeelPLGEQEPX1LGGGOH9aGb68yv2
+         VY4OdmJ+XDqaOTGS8dJcCDKiTuf2BJSXb0jkMZlS+GYAd1GxJ+eRkY/oDi+3hFtRNFhG
+         l6cUudt1HQ2GvRphLP2xIyZn+IV4pfPiTEpKxYn8IADjrjS8dSnzZk+iWDdF9BKU6hl0
+         uMSuJrcYs8CUd1m5fFEhjhOGSNU1JTxWpbx77R2RrjMs51Lh+M7oXp24PV0pHEDRGo4Z
+         KeLh765Gk/24yqVVMRJRtCz4VdfSzS3BkWIlEuCIlpsOWkA8MTRVeTTvVCe7QWUTyMnH
+         HrWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYmYGgNFuMf95dE7csBmLkm974/L8a0oH1TbV1sCwOrNZpCdMAT7hvg9gk1mCHFB+15Qf2i5wO9TuqBzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7up1SJiIvQPyFqR10R/fJPbYDtk0aIDtYo1+mgNL7tAilA+qN
+	q8DwTi+7vn2C7d79jK2m9hJtBkJn7P81n/e7IvwXsDwHorKm/u1b
+X-Gm-Gg: ASbGnctv10fVv+ah4XV/jPMRUvazKx68Ai9ZcVkkNNGh10gAlwFkncuNMURRLCkM3Gz
+	Wjg7M12VjZDaQPnstanjogch3X4nvvezx/NntcjrmQB2/JKhExSccHZvdBzdJbcd544k1FM0J8I
+	R3TBS6yGZUunaFJYK1oBTer50JhRLn4/EsAJyvZavJwrgC2M3c5CRDxaDZyj0rJWfdeeQhHRT5m
+	MdJTY+mudGgro0rUuekRgPXdrBfyDpro5JcIFr+D8K15wFO/TS9+HnWHu8b1ep57g09mAJI1IQL
+	by54+EkEEYL0xRnP/kUK3S6M1eHCBEA7KdKAb6XZLrdmQ1um
+X-Google-Smtp-Source: AGHT+IGiqFoxkBvAoDfQ2waLeTQuZpil54oTVze6HjLwcmYRJposbGL7pjJ3RIYj36Zd9uFqShglVA==
+X-Received: by 2002:a5d:64cb:0:b0:391:3f64:ed00 with SMTP id ffacd0b85a97d-39d6fc4e930mr4807749f8f.26.1743942293390;
+        Sun, 06 Apr 2025 05:24:53 -0700 (PDT)
+Received: from [192.168.0.2] ([212.50.121.5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6321sm9121025f8f.44.2025.04.06.05.24.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Apr 2025 05:24:52 -0700 (PDT)
+Message-ID: <59e8de49-30d8-4df0-9135-ecd43efc3686@gmail.com>
+Date: Sun, 6 Apr 2025 15:25:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,142 +66,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg
- override handler
-To: Pengyu Luo <mitltlatltl@gmail.com>, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20250405174319.405975-1-mitltlatltl@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next v3] net: wwan: Add error handling for
+ ipc_mux_dl_acb_send_cmds().
+To: Wentao Liang <vulab@iscas.ac.cn>, loic.poulain@oss.qualcomm.com,
+ johannes@sipsolutions.net
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com,
+ kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ andrew+netdev@lunn.ch
+References: <20250405115236.2091-1-vulab@iscas.ac.cn>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250405174319.405975-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+In-Reply-To: <20250405115236.2091-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05/04/2025 19:43, Pengyu Luo wrote:
-> In downstream tree, many registers need to be overrided, it varies
-> from devices and platforms, not only HS trasmit amplitude(0x51),
-> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
+On 05.04.2025 14:52, Wentao Liang wrote:
+> The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+> but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+> This makes it difficult to detect command sending failures. A proper
+> implementation can be found in ipc_mux_dl_cmd_decode().
 > 
-> The device I plan to upstream also uses it, so I write the patch for
-> it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
+> Add error reporting to the call, logging an error message using dev_err()
+> if the command sending fails.
 > 
-> In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
-> in downstream, some crd, mtp, htk devices also use it, I have no
-> such device, don't set it for them.
-> 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->  .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
->  .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
-
-DTS is always separate patch.
-
->  2 files changed, 72 insertions(+), 19 deletions(-)
+>   drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-> index d90dc7b37..99f5fd32c 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-> @@ -673,9 +673,8 @@ cam_pwr_a_cs: cam-pwr-a-cs-state {
->  };
->  
->  &pm8550b_eusb2_repeater {
-> -	qcom,tune-usb2-disc-thres = /bits/ 8 <0x6>;
-> -	qcom,tune-usb2-amplitude = /bits/ 8 <0xf>;
-> -	qcom,tune-usb2-preem = /bits/ 8 <0x7>;
-> +	qcom,param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
-> +	qcom,host-param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
+> diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> index bff46f7ca59f..478c9c8b638b 100644
+> --- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> +++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> @@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
+>   			return;
+>   			}
+>   		trans_id = le32_to_cpu(cmdh->transaction_id);
+> -		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+> -					 trans_id, cmd_p, size, false, true);
+> +		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+> +					     trans_id, cmd_p, size, false, true))
+> +			dev_err(ipc_mux->dev,
+> +				"if_id %d: cmd send failed",
+> +				cmdh->if_id);
+>   	}
+>   }
 
-There are no such properties.
+Looks good. One nit pick. The full stop is not needed in the subject. 
+But I believe, this does not worth to resend the patch.
 
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-Maybe you need to update your dtschema and yamllint. Don't rely on
-distro packages for dtschema and be sure you are using the latest
-released dtschema.
-
->  	vdd18-supply = <&pm8550_l15>;
->  	vdd3-supply = <&pm8550_l5>;
->  };
-
-
-...
-
-> +
->  static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
->  {
->  	int num = rptr->cfg->num_vregs;
-> @@ -127,20 +189,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
->  static int eusb2_repeater_init(struct phy *phy)
->  {
->  	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
-> -	struct device_node *np = rptr->dev->of_node;
->  	struct regmap *regmap = rptr->regmap;
->  	const u32 *init_tbl = rptr->cfg->init_tbl;
-> -	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
-> -	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
-> -	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
->  	u32 base = rptr->base;
->  	u32 val;
->  	int ret;
->  
-> -	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
-> -	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
-> -	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
-
-NAK, that's an ABI break.
-
-
-Best regards,
-Krzysztof
+Reviewed-by: Sergey Ryazanov <ryazanov.s.a@gmail.com>
