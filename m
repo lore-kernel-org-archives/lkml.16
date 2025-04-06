@@ -1,220 +1,195 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8A91B6D11;
-	Sun,  6 Apr 2025 13:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBEB205E3F
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 13:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743946873; cv=none; b=ajc7vPjTPzDmKbFUSCA12m8ZEFR3sLnVyRkHfoa0KoutFLcxKCyFY1xXeWPKAX5v46fo2uTGVyk+PIJl0kM96qlF/n5iya65Xczs1fYsPeXp9b4/LtDG6mFErK3Ls3YtRHZ8CJy1kFDjHExxdZo36k2tTVejRsVECMdtRTpjfUs=
+	t=1743946978; cv=none; b=dbOOPxVee4/ZHELfavg8jl+0y14qfrkL3MhZGZbPmdpt6h2aQaP0EGGdIC1/lgRfIn+ynlStOs6Wihg+u/doBfI4jkTFHaNWcLoHwvVteYuafsPM8va4yfGCVvymX+LYlcdx4/LoS0g6HhmkEyk4U1UWuugTMt5bgtFv7AkHxI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743946873; c=relaxed/simple;
-	bh=n3PsmVxpGTJjdiSGMa7V3sbREy1N5myca5jeVf7zXKI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dDPq9PI/SFBCoVN5r1y4tCIHZPvrrpumYeeylRcIUU+xniIT+HfU+C9j1I3MKLL+ouz632F7uTVLv2n/wKlJQRIGXt3o6+GqFlh3TAp312urHkQq5XsXJjXrOlp4zXkoJvZZ2TjkEW7x4WcvoqBstu7mKISne5Jjei2xQ96j7+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=BBnYUunA; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743946978; c=relaxed/simple;
+	bh=PD9GNIrrnrt2kMfBmhXn7JrpnwAp6se47WiAoF1e78g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L9iti93/UaZ0elSxtfUXU9ho6rXB9nidSK5VT8ZLRd84tVdmqo3QIVDdBqb2eb3VcZ699HInKLXPtKc4dvrFUrQAc8mW0CHcDG2zhfj6LBWH7cw/SQyLLJoM7jFwta15w2DnhH4Lq8hBdSvQ1eRW3iqJ2yjjIUqEr3FCePCB+6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WyVbZWmx; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="BBnYUunA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WyVbZWmx"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso38026125e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 06:42:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Si/cVsUGXvzDhtSduZmcG+FZ4Sb8W8QmPh9TxHY2CC4=;
-  b=BBnYUunAJ1VZd7AQ5tlrxe0wz5H+gPTLAyjLnMeGm4iLmZkM2Cvm1P5p
-   nLb7chfKJ0EHqdRQa7OI0pIRnun5v8FnJHUAq5Krx9EFM1dPBfpmEx9pb
-   9i4GoldWfVFlN5qg3eOKE+zMteAtmlJLw+gAj70YmGZ4kZjSTBo8Sd/mo
-   I=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.15,193,1739833200"; 
-   d="scan'208";a="113563630"
-Received: from unknown (HELO hadrien) ([4.26.64.170])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 15:41:07 +0200
-Date: Sun, 6 Apr 2025 09:41:06 -0400 (EDT)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Brajesh Patil <brajeshpatil11@gmail.com>
-cc: linux-iio@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
-    linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: Re: [PATCH v1 1/1] iio: dummy: Add 3-axis compass (magnetometer)
- channels to the iio_simple_dummy
-In-Reply-To: <20250406133349.50633-1-brajeshpatil11@gmail.com>
-Message-ID: <99c44d74-1b8a-939c-d775-e41f8034ceb@inria.fr>
-References: <20250406133349.50633-1-brajeshpatil11@gmail.com>
+        d=linaro.org; s=google; t=1743946975; x=1744551775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eKSh/Lkr7vxqs+CQ/v3pTweJchjYC4e1pzyu9PYjl1w=;
+        b=WyVbZWmxpopzV59+JmmxRf4FhPw1bbZi2wpxhj7nBV3jfPbs2ffgDy/uKrAjc4ceVr
+         8q1t9jmWtlCpj9BjbTDyjSd6roO3do/JASDaY0U+oW/jzZrf7Lluwy8hwss9hloXxtEE
+         6SoHKtyur+iguKqYaPwk7fX9H17k3nXrZWFzUmFG+Pm7VH8CfCTgds2tgFGQvMUsx9VY
+         zhRNZgRjSTy8TaYHxkgmDbQr4/++JLGrsvviWRafFejbCMs9OhJwcYFy6ugIvh0whavX
+         LYv58WMCLZ0cpvJyqIvs6DZR3oGNvJpw7ArOHWwOJPASxs9tYssM/ij7m4g/+9Ydtw0K
+         m5jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743946975; x=1744551775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eKSh/Lkr7vxqs+CQ/v3pTweJchjYC4e1pzyu9PYjl1w=;
+        b=TYNuz3clmKrlS19GcnsoiLntVU2ZDvZ/ZjPpKoOiFRCgLnv4yGTyhjiUmK3q8y9Ole
+         rYiG8qWtRSz2naVCWlOfHRbcl5LkFvCutckuDaxjJdJOjx5MtsPjlggsLIlTvOpN69iQ
+         id/hyHrXvbUm+A+iA53qA3PI5cid4XDgKqx++o3CdXRlG0/N6r6uiTb34pSLQshbxYY1
+         ajjG7iso6UKbmZPiNXvFVKszya2MRvP6aB8YouhAhFZGyml3Aw+Ky6iJyYVkGBOsuinq
+         tNQaePTo0+PVv5SnQGbU8rw1d+BD/gWicqTgIkwo2ZRC/1+zRxdNzMZ8BCHtS/CyAdYy
+         mqiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjYSAFey//qdg3KwPDteNtRyUqi3aq5h2/KR/98cVoJhbMZ4m41Y3wv01VLQGQj07wSVTpievK3cIuyOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZWbCMjuKHQcsQlsUKHk8m5WPc3/9eCeP/2KF2czEJlIswJuUr
+	wJ+/xgnASEW8MbWUdgoIZ9w+0YzflZTagvdb0Tq5F1LzoQslx2lcGrRU7WhL3/M=
+X-Gm-Gg: ASbGnctkm2xv8dAmZxpAzoQjFg+hdyTlD3+Ykn/Di06acje/O/17aRs5dEp5bmZv/Su
+	mPuyRG2NwxTBxTxf03z5hAj0KbqHruRrNNxLLszWMg7H3r/JNNodryvWHb0SM3zlE/KzbzeOAuR
+	Q5nofJmvefgg4IAIWVTdzs/FFzxqWfpyXSQDzl7iUUI6D/wh0EUQhvUQhKu8XgTFks6JBs4OckX
+	3GlJ5vHbNXX5+Of9abHm5QYhvxyGNVS/KwaIR75z6ECRDgWB0bIvFuYq+8V3fVwjKKL74o4eqbH
+	G+4aHiepFqBfjv2ABUGhejPnTvnPbL7gyaT9U9Qqa5kOzNWjXUmrW9pB1saxDjhmi+SpPyDmaWy
+	GN2YZWxqL1w==
+X-Google-Smtp-Source: AGHT+IENivBk2jsjBaWq+wSNsl1e7Aq00Uqgt50LmnMarcev0yDMmtMA3gEheom2v6QN12Lg/N3F2g==
+X-Received: by 2002:a05:600c:350b:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-43ed0d6b07cmr67764825e9.20.1743946974670;
+        Sun, 06 Apr 2025 06:42:54 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea8d16d35sm117529675e9.0.2025.04.06.06.42.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Apr 2025 06:42:53 -0700 (PDT)
+Message-ID: <ae06a3a3-bf7b-41ba-9c2c-8754c5c7c8a2@linaro.org>
+Date: Sun, 6 Apr 2025 14:42:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/7] media: platform: qcom/iris: introduce optional
+ controller_rst_tbl
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org>
+ <BvlsGF1XePEGyPlecg4xIRy_z4TPBsWUwm6cTT4NIsOjkxTILIsopQ5js4omlx--7OLkNHUDehSVQ36pGvhkyA==@protonmail.internalid>
+ <20250305-topic-sm8x50-iris-v10-v2-4-bd65a3fc099e@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250305-topic-sm8x50-iris-v10-v2-4-bd65a3fc099e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On Sun, 6 Apr 2025, Brajesh Patil wrote:
-
-> This patch adds support for 3-axis magnetometer data (X, Y, Z) in the
-> iio_simple_dummy driver. It introduces three new IIO_MAGN channels and
-> populates them with dummy values for testing and prototyping purposes.
-
-Is this intended as a contribution for outreachy?  It is not working on a
-staging driver.
-
-julia
-
->
-> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+On 05/03/2025 19:05, Neil Armstrong wrote:
+> Introduce an optional controller_rst_tbl use to store reset lines
+> used to reset part of the controller.
+> 
+> This is necessary for the vpu3 support, when the xo reset line
+> must be asserted separately from the other reset line
+> on power off operation.
+> 
+> Factor the iris_init_resets() logic to allow requesting
+> multiple reset tables.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  drivers/iio/dummy/iio_simple_dummy.c | 71 +++++++++++++++++++++++++++-
->  drivers/iio/dummy/iio_simple_dummy.h |  6 +++
->  2 files changed, 75 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
-> index 8575d4a08..713b764c9 100644
-> --- a/drivers/iio/dummy/iio_simple_dummy.c
-> +++ b/drivers/iio/dummy/iio_simple_dummy.c
-> @@ -222,7 +222,7 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
->          * Convenience macro for timestamps. 4 is the index in
->          * the buffer.
->          */
-> -       IIO_CHAN_SOFT_TIMESTAMP(4),
-> +	IIO_CHAN_SOFT_TIMESTAMP(DUMMY_INDEX_SOFT_TIMESTAMP),
->         /* DAC channel out_voltage0_raw */
->         {
->                 .type = IIO_VOLTAGE,
-> @@ -265,6 +265,48 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
->                 .num_event_specs = 1,
->  #endif /* CONFIG_IIO_SIMPLE_DUMMY_EVENTS */
->         },
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_X,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_X,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-> +		},
-> +	},
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_Y,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_Y,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-> +		},
-> +	},
-> +	{
-> +		.type = IIO_MAGN,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_Z,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = DUMMY_MAGN_Z,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.shift = 0,
-> +		},
-> +	},
->  };
->
->  static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
-> @@ -294,6 +336,22 @@ static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
->         case IIO_ACCEL:
->                 *val = st->accel_val;
->                 return IIO_VAL_INT;
-> +	case IIO_MAGN:
-> +		switch (chan->scan_index) {
-> +		case DUMMY_MAGN_X:
-> +			*val = st->buffer_compass[0];
-> +			break;
-> +		case DUMMY_MAGN_Y:
-> +			*val = st->buffer_compass[1];
-> +			break;
-> +		case DUMMY_MAGN_Z:
-> +			*val = st->buffer_compass[2];
-> +			break;
-> +		default:
-> +			*val = 99;
-> +			break;
-> +		}
-> +		return IIO_VAL_INT;
->         default:
->                 return -EINVAL;
->         }
-> @@ -378,6 +436,11 @@ static int iio_dummy_read_raw(struct iio_dev *indio_dev,
->                         default:
->                                 return -EINVAL;
->                         }
-> +		case IIO_MAGN:
-> +			// Just add some dummy values
-> +			*val = 0;
-> +			*val2 = 2;
-> +			return IIO_VAL_INT_PLUS_MICRO;
->                 default:
->                         return -EINVAL;
->                 }
-> @@ -562,6 +625,10 @@ static int iio_dummy_init_device(struct iio_dev *indio_dev)
->         st->activity_running = 98;
->         st->activity_walking = 4;
->
-> +	st->buffer_compass[0] = 78;
-> +	st->buffer_compass[1] = 10;
-> +	st->buffer_compass[2] = 3;
+>   drivers/media/platform/qcom/iris/iris_core.h       |  1 +
+>   .../platform/qcom/iris/iris_platform_common.h      |  2 ++
+>   drivers/media/platform/qcom/iris/iris_probe.c      | 39 +++++++++++++++-------
+>   3 files changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
+> index 37fb4919fecc62182784b4dca90fcab47dd38a80..78143855b277cd3ebdc7a1e7f35f6df284aa364c 100644
+> --- a/drivers/media/platform/qcom/iris/iris_core.h
+> +++ b/drivers/media/platform/qcom/iris/iris_core.h
+> @@ -82,6 +82,7 @@ struct iris_core {
+>   	struct clk_bulk_data			*clock_tbl;
+>   	u32					clk_count;
+>   	struct reset_control_bulk_data		*resets;
+> +	struct reset_control_bulk_data		*controller_resets;
+>   	const struct iris_platform_data		*iris_platform_data;
+>   	enum iris_core_state			state;
+>   	dma_addr_t				iface_q_table_daddr;
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> index f6b15d2805fb2004699709bb12cd7ce9b052180c..fdd40fd80178c4c66b37e392d07a0a62f492f108 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> @@ -156,6 +156,8 @@ struct iris_platform_data {
+>   	unsigned int clk_tbl_size;
+>   	const char * const *clk_rst_tbl;
+>   	unsigned int clk_rst_tbl_size;
+> +	const char * const *controller_rst_tbl;
+> +	unsigned int controller_rst_tbl_size;
+>   	u64 dma_mask;
+>   	const char *fwname;
+>   	u32 pas_id;
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index aca442dcc153830e6252d1dca87afb38c0b9eb8f..4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -91,25 +91,40 @@ static int iris_init_clocks(struct iris_core *core)
+>   	return 0;
+>   }
+> 
+> -static int iris_init_resets(struct iris_core *core)
+> +static int iris_init_reset_table(struct iris_core *core,
+> +				 struct reset_control_bulk_data **resets,
+> +				 const char * const *rst_tbl, u32 rst_tbl_size)
+>   {
+> -	const char * const *rst_tbl;
+> -	u32 rst_tbl_size;
+>   	u32 i = 0;
+> 
+> -	rst_tbl = core->iris_platform_data->clk_rst_tbl;
+> -	rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
+> -
+> -	core->resets = devm_kzalloc(core->dev,
+> -				    sizeof(*core->resets) * rst_tbl_size,
+> -				    GFP_KERNEL);
+> -	if (!core->resets)
+> +	*resets = devm_kzalloc(core->dev,
+> +			       sizeof(struct reset_control_bulk_data) * rst_tbl_size,
+> +			       GFP_KERNEL);
+> +	if (!*resets)
+>   		return -ENOMEM;
+> 
+>   	for (i = 0; i < rst_tbl_size; i++)
+> -		core->resets[i].id = rst_tbl[i];
+> +		(*resets)[i].id = rst_tbl[i];
 > +
->         return 0;
->  }
->
-> @@ -732,5 +799,5 @@ static struct iio_sw_device_type iio_dummy_device = {
->  module_iio_sw_device_driver(iio_dummy_device);
->
->  MODULE_AUTHOR("Jonathan Cameron <jic23@kernel.org>");
-> -MODULE_DESCRIPTION("IIO dummy driver");
-> +MODULE_DESCRIPTION("IIO dummy driver -> IIO dummy modified by Me");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iio/dummy/iio_simple_dummy.h b/drivers/iio/dummy/iio_simple_dummy.h
-> index 8246f25db..e05d8b5cc 100644
-> --- a/drivers/iio/dummy/iio_simple_dummy.h
-> +++ b/drivers/iio/dummy/iio_simple_dummy.h
-> @@ -12,6 +12,7 @@
->  struct iio_dummy_accel_calibscale;
->  struct iio_dummy_regs;
->
-> +#define DUMMY_AXIS_XYZ 3
->  /**
->   * struct iio_dummy_state - device instance specific state.
->   * @dac_val:                   cache for dac value
-> @@ -39,6 +40,7 @@ struct iio_dummy_state {
->         int steps_enabled;
->         int steps;
->         int height;
-> +	u16 buffer_compass[DUMMY_AXIS_XYZ];
->  #ifdef CONFIG_IIO_SIMPLE_DUMMY_EVENTS
->         int event_irq;
->         int event_val;
-> @@ -107,6 +109,10 @@ enum iio_simple_dummy_scan_elements {
->         DUMMY_INDEX_DIFFVOLTAGE_1M2,
->         DUMMY_INDEX_DIFFVOLTAGE_3M4,
->         DUMMY_INDEX_ACCELX,
-> +	DUMMY_INDEX_SOFT_TIMESTAMP,
-> +	DUMMY_MAGN_X,
-> +	DUMMY_MAGN_Y,
-> +	DUMMY_MAGN_Z,
->  };
->
->  #ifdef CONFIG_IIO_SIMPLE_DUMMY_BUFFER
+> +	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, *resets);
+> +}
+> +
+> +static int iris_init_resets(struct iris_core *core)
+> +{
+> +	int ret;
+> +
+> +	ret = iris_init_reset_table(core, &core->resets,
+> +				    core->iris_platform_data->clk_rst_tbl,
+> +				    core->iris_platform_data->clk_rst_tbl_size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!core->iris_platform_data->controller_rst_tbl_size)
+> +		return 0;
+> 
+> -	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, core->resets);
+> +	return iris_init_reset_table(core, &core->controller_resets,
+> +				     core->iris_platform_data->controller_rst_tbl,
+> +				     core->iris_platform_data->controller_rst_tbl_size);
+>   }
+> 
+>   static int iris_init_resources(struct iris_core *core)
+> 
 > --
-> 2.43.0
->
->
+> 2.34.1
+> 
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
