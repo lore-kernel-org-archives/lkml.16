@@ -1,114 +1,208 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49A5188734;
-	Sun,  6 Apr 2025 21:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEE326289;
+	Sun,  6 Apr 2025 21:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743973741; cv=none; b=hfJ2VxYXAivaiIoMfLiKbDg1pHmWitPAzh90nWwCx8SM0Ws0RnyQJ8Co5qkOeXLGXUysvRIkLX83O7TEdVssAl6eycwJzVMo1RHyyvyFTLGOphjR+Osxel4wq5u9Z7ZUDwXk5/Q4aO/wgaNxdmmuT6yDdnJiNcHQ8CE/INAUd0s=
+	t=1743973999; cv=none; b=PwDpUoIQ0UQzEjxZ+7cFFuJnPgDCx1QQHj/NLgyDThezA+vaikB+vbX2hmejbLJyO2tX+Mzxns9IPXR/OgDF1H2Du+cDrxYufo8dbUwuDvlZkO9ymQ785+573ZEYvPKoRCwh4ZIZ4jz+jxRrCXiJ/nYwpbMgFPMdlvrBXC2wB/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743973741; c=relaxed/simple;
-	bh=gNVT4boTweoATyBcAwIKoTgbb0/FKU67SzYhH3omknQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=azT46GeG2sovW0RwNzVDXzom1+coHUVjsYJeoCKnBcjQrdjPlfF6mAcTxqlfHxgQT1nsV2FMsTc3QsyQQWhWzArj1TaWNRNWk5IBwh3NaEz/pfzAEuWj/onPg/3T/O/JQ/LYaypwrgkXQ7FFePOy0V+BgEhL8iJUcFZqNI3NaoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dux/K6Op; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743973999; c=relaxed/simple;
+	bh=bulRqcr47jc7VqE5WNZPcSb0IokI8W+YVgaj7tbjxrc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tHit7Qjhrh9ELZB+enUatMnEPPBwf6tyfJwcKNO5TVNXpv7oucWxOsGUalc+T8UNpguPPkAsdmX7RRBV+aNK2GU0tW63fGjKaKpGbLl4pyvKInE3LqGhULt+DuU62VLetZATTmYJo2iB2JA8hl7Apo5kIdB/y6IU5/ujbnwjOec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQQRNjNL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dux/K6Op"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5245e9a0628so75809e0c.0;
-        Sun, 06 Apr 2025 14:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743973737; x=1744578537; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uO0kiqoq6Pl2+MksHXiWbGo7Ymj7pCMwZir/Mc87ed8=;
-        b=dux/K6Op8ZoF1MGxdsDRoSXqCzPg8cXFOUi0YlZyyyjy7yI8ELgItd6XDx7r2cmGlk
-         QsUocC7K35VODvfiMVF6Zf1+HksTZgIxU3B6Utop33fUHvgU1JuJCo11BDcnXRDC2JbN
-         Q4z749aw0gJi1n47szXDLx978YDpGNoBTvOhDbEzHFeJrnk6ptv/yIwUaBj8q3S9ivn6
-         iyOPEqNFxR5/XinmpvGKy4gcVmj6UpcRbpFyNb/D0PXVwUWemfSbFWq1lQQ50UJ1PGTa
-         mFJHlJKT0OlJy89X3GaldUbOyoc7Ye0En5qWPrJA3atkU0CZNACRiTpXYMk23gSE6b+Z
-         ae+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743973737; x=1744578537;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uO0kiqoq6Pl2+MksHXiWbGo7Ymj7pCMwZir/Mc87ed8=;
-        b=l2kFMW1ETsOJtZaPB4+gK10zf6PToSR1OXXMHbgLrnHyPGTKak8DtCHZvQab9mJkX0
-         S+CY/Dn+2r31rf2hAJTnxI1OcIh8idsetDhRycCJK4/IH0POo/As+NpWAihph7rXtJUe
-         K5l01Llc51YZ54sShA6fuOFsI2Vr14jxQ7kUkqAdHbuyfhbeS26zemBdiqse/ikRb23U
-         zYzPOKefdetxJfxa3yiV48f5HGJCnPigg6CoLkm+j2Xsu6HWjsY7TLvUPSWmOlc3v0q7
-         YWHYNW5WMk3r3slGh8YDIFege0/rJ3XaRm9PGuOaRRQqwb1kO1MAfUAKtxbdfE5VVxsB
-         taCw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0W9DTVGQVY8RIOij+jZLA41eL5CLP8SFqr79pugMfdm6nKTH0+pNRIQm09CY9WD8J/Jc0MPMPJAhoCOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSi0+/DEfXx6eGvnAlsyAC8PZVuS9zc/OowwiNZnBDxTJmZvUV
-	5KVSlbiAYHlLNb9jeA0rQ2qsFTKff7eD7txU2gJ+o10ZQYboYoH9n1Qq
-X-Gm-Gg: ASbGncuL7Z20Goy4RAq1owU2bi70tKCNbr4stbgdY7uKclv/ahmTy2OY+iZmpgtRTvK
-	nqQJwUqXvZpEYIJVQJ2xjYU/yzuZHfdVWpp9eRZyRd+yvTybdx0ZrNUAu6HuowhmvgVN6LI+4/d
-	Lu2kRO7zFTZrWtPX/uGpb867sWdCSbiLFQftsuzRqlMNIaciA2OF17Pxz3O0Ql22BrPwvbsSeBr
-	oSU82G3iGP8PU88IOc9+oFGEecCXyx6C4qHUuRYf5xNwMGkv/zrzjzfky0cZuwSvslw8Orj3nsD
-	80cDVr+vJp41YSo5qxAsVdgWCHiCkn5SJbHE6hyt391VR3/BAgoc
-X-Google-Smtp-Source: AGHT+IGTpGiCEbxTarSt7y732oj9f2PCf4kNvnO3XFvF0pPA3Ka+/n2IuVGjqKpGPACv04v8yPFYeA==
-X-Received: by 2002:a05:6122:46a0:b0:520:3f83:fdca with SMTP id 71dfb90a1353d-527642fd2d7mr2662608e0c.0.1743973737408;
-        Sun, 06 Apr 2025 14:08:57 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5275afa73b5sm1615080e0c.41.2025.04.06.14.08.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 14:08:57 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de
-Cc: linux-sound@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] ASoC: imx-card: Adjust over allocation of memory in imx_card_parse_of()
-Date: Sun,  6 Apr 2025 16:08:54 -0500
-Message-Id: <20250406210854.149316-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQQRNjNL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D5478C4CEE3;
+	Sun,  6 Apr 2025 21:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743973998;
+	bh=bulRqcr47jc7VqE5WNZPcSb0IokI8W+YVgaj7tbjxrc=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=HQQRNjNLbDsEIf9G1ZxTGJbHEtDd70z+KepTyIlisqUP964c9zpUwE3GDFojA7jAG
+	 0s3OlEK0fQOUmfdEu60E5pyZgdPsjgjCq6D0oeOh+WgJFys/QqE1yEwIvQCJTTc4ZK
+	 7ypVofjrR6RAy3YBeedeN+AkTv47vAro4TbDb/AVbCRUP4zq1MD6ZUCELC1RimxiSE
+	 inI57rfzM4kiRDF/84gvSqfaK6ndzEnEvpvAhV89hF0iFOFwpMhdyfTPP4cBergqkH
+	 DNnoZ6VL0eSzIbxJPEmc2jWWqhEyyS37Zp+baOwn7f7tfskIQy/HFDh3+UEGSTiwAc
+	 vSCLP6rvUOrrA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27BBC36002;
+	Sun,  6 Apr 2025 21:13:18 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Sun, 06 Apr 2025 16:12:43 -0500
+Subject: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAEru8mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwMT3ZLU9KJE3YLikvyiVF3TpNQU4zRzI0NjSwMloJaCotS0zAqwcdG
+ xtbUAA397DF4AAAA=
+X-Change-ID: 20250404-tegra-pstore-5bed3f721390
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743973998; l=4405;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=8+6obcSKfeNBlTaNefo4ySU2Kjh+Hx6xO5b9LE4VbJk=;
+ b=Wma2bTDlc+b7ZVz6L59OvUcBddv6u31glDElqK3rt0iOwTPWBcDzQOuD1ooZRx+zEPh8hi3Lk
+ sPHdAr4G41UDYqlvejaX92VClrwW9ziwuvPWa57miDebehCn7LFNdPr
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-Incorrect types are used as sizeof() arguments in devm_kcalloc().
-It should be sizeof(dai_link_data) for link_data instead of
-sizeof(snd_soc_dai_link).
+From: Aaron Kling <webgeek1234@gmail.com>
 
-This is found by our static analysis tool.
+This allows using pstore on all such platforms. There are some
+differences per arch:
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+* Tegra132: Flounder does not appear to enumerate pstore and I do not
+  have access to norrin, thus Tegra132 is left out of this commit.
+* Tegra210: Does not support ramoops carveouts in the bootloader, instead
+  relying on a dowstream driver to allocate the carveout, hence this
+  hardcodes a location matching what the downstream driver picks.
+* Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
+  size in a node specifically named /reserved-memory/ramoops_carveout,
+  thus these cannot be renamed.
+* Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
+  compatible, however the dt still does not know the address, so keeping
+  the node name consistent on Tegra186 and newer.
+
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- sound/soc/fsl/imx-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+ 4 files changed, 61 insertions(+)
 
-diff --git a/sound/soc/fsl/imx-card.c b/sound/soc/fsl/imx-card.c
-index 3686d468506b..45e000f61ecc 100644
---- a/sound/soc/fsl/imx-card.c
-+++ b/sound/soc/fsl/imx-card.c
-@@ -544,7 +544,7 @@ static int imx_card_parse_of(struct imx_card_data *data)
- 	if (!card->dai_link)
- 		return -ENOMEM;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42dd03f5a1da5079971dc 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -2051,6 +2051,22 @@ pmu-denver {
+ 		interrupt-affinity = <&denver_0 &denver_1>;
+ 	};
  
--	data->link_data = devm_kcalloc(dev, num_links, sizeof(*link), GFP_KERNEL);
-+	data->link_data = devm_kcalloc(dev, num_links, sizeof(*link_data), GFP_KERNEL);
- 	if (!data->link_data)
- 		return -ENOMEM;
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ramoops_carveout {
++			compatible = "ramoops";
++			size = <0x0 0x200000>;
++			record-size = <0x00010000>;
++			console-size = <0x00080000>;
++			alignment = <0x0 0x10000>;
++			alloc-ranges = <0x0 0x0 0x1 0x0>;
++			no-map;
++		};
++	};
++
+ 	sound {
+ 		status = "disabled";
  
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 33f92b77cd9d9e530eae87a4bb8ba61993ceffeb..90ffea161a57a8986c2493573c73e3cf9e2c43c0 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -3105,6 +3105,22 @@ psci {
+ 		method = "smc";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ramoops_carveout {
++			compatible = "ramoops";
++			size = <0x0 0x200000>;
++			record-size = <0x00010000>;
++			console-size = <0x00080000>;
++			alignment = <0x0 0x10000>;
++			alloc-ranges = <0x0 0x0 0x1 0x0>;
++			no-map;
++		};
++	};
++
+ 	tcu: serial {
+ 		compatible = "nvidia,tegra194-tcu";
+ 		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index b6c84d195c0ef9ae90721fada09ffd46a9c11fa3..00ae127e8b8af3fe3b95d8ce5986d937a4fc6325 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -2025,6 +2025,19 @@ pmu {
+ 				      &{/cpus/cpu@2} &{/cpus/cpu@3}>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ramoops@b0000000 {
++			compatible = "ramoops";
++			reg = <0x0 0xb0000000 0x0 0x200000>;
++			record-size = <0x00010000>;
++			console-size = <0x00080000>;
++		};
++	};
++
+ 	sound {
+ 		status = "disabled";
+ 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+index 2601b43b2d8cadeb0d1f428018a82b144aa79392..36f35c6dc774d42aca8871dbfa0e0a16414cb860 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+@@ -5723,6 +5723,22 @@ psci {
+ 		method = "smc";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ramoops_carveout {
++			compatible = "ramoops";
++			size = <0x0 0x200000>;
++			record-size = <0x00010000>;
++			console-size = <0x00080000>;
++			alignment = <0x0 0x10000>;
++			alloc-ranges = <0x0 0x0 0x1 0x0>;
++			no-map;
++		};
++	};
++
+ 	tcu: serial {
+ 		compatible = "nvidia,tegra234-tcu", "nvidia,tegra194-tcu";
+ 		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
+
+---
+base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+change-id: 20250404-tegra-pstore-5bed3f721390
+
+Best regards,
 -- 
-2.34.1
+Aaron Kling <webgeek1234@gmail.com>
+
 
