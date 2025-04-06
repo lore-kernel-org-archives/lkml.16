@@ -1,80 +1,70 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4461D15A85E;
-	Sun,  6 Apr 2025 17:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5F5190485;
+	Sun,  6 Apr 2025 17:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743961170; cv=none; b=EaAYANBF9zIOWU/yborrcxcg50pSeeYv8mV1ZvVbyyaXWQYbHasZDttr9NvbuUY/KoCcfkS6swyOHbr37fUFIjLPLS3HXv9Cnn3+mcuhjW53lBxojzwzmCxrT4Yyc6QhCeFPukThSXjrHuRJD9k6NOT+BV8W5fScWlA9zTh1ef8=
+	t=1743961292; cv=none; b=jU/zYTFZMPYxROvo5zvJnF6t/KVtJeMKDWuaxDWCHFf4RhYIwpfkwMaGAUo9hkw69BkzZUDx1AeGPfQ0jdjuFCqyl07GSGvDPRbH9cp4cBR1OloB7rF2iZru645mn65bbLCvEYx2z7BBEUJeZXpYa+pp7jMjE7GDdOaH4F/SFQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743961170; c=relaxed/simple;
-	bh=pSisrNlHCEyGABubq1XV9Bh8BsRHi1pjWlMJ3o6Hrbw=;
+	s=arc-20240116; t=1743961292; c=relaxed/simple;
+	bh=G2395PngP8PsRzf5cZT+gxfYRLzzHwxQWLBxuqMtvvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnBxHX4J01X2C2evxGN/1qCsNYn59g7l2w0BYJI+qGQESMwOJ9Qz2sjSTiPZyB2FBnEWWP7MH2f0Su5CMafvaEd1AKA2bMy5V9SwPgwnsljSI1f6bDwEPBIdzzCsc31JiQsW+tgdUGQOc9OYw50A3m0KFfFc1TtVombu9LEIAQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/50PNZP; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=pF+F/R2Tie5sYS+OadLenHdvd5DbXXshTLqQwFypYFM6jmJn2lahNxoM3SAdQFYA1GVhjueOVhcfIRIbF5M0nGqhzoDRBl0GkrhONggDWgdjQV8CaN/VWQs/qNNeRd3mOKJkGVcdL2GJaKiVuD1yMOYuHVF7Lyf3XJyU9JNoEx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L33FozdD; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/50PNZP"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2255003f4c6so31713015ad.0;
-        Sun, 06 Apr 2025 10:39:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L33FozdD"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af55b7d56a1so2454267a12.2;
+        Sun, 06 Apr 2025 10:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743961168; x=1744565968; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743961289; x=1744566089; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=STtGZLctY6chK7NNX8djDqnb0wgdBzX+Yk6Hrx5EGn0=;
-        b=D/50PNZPJix7lv+Y6Dua7prANCU/+tDj4NuRhKjmjiDHBktljPG+npH6ALn2sXQ/qJ
-         Y+DoQOGqNmb/qyvt63zWv1U96XaBTMUnIr7XL+P+pPUfIcop4LEU4GBGlf47ylWoM69U
-         x8n1TcCUicCR7CNGv2LvjE/O+BG3rDwQwTl4gwctQImhrJOGrSgNkRFzmyKXfUbyWBhK
-         AUs/EmM46sKYrm6dWnbhF46+dESYqcSAFsowbTrnZbrWWCxp7nXyEn7B1mqn6n2JtNFK
-         W8ELo34+zK+Pb6QT8uBDY2xYS/dm3NsxD5n4Em88G2iN1jtsU3K+X4m5YIIvJGsaAKH4
-         3Etw==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxmLRtJEJyieHfXxKBBazkkTPndIt5Qq1s+Aw5ot+y8=;
+        b=L33FozdD12iM1/oGLwoZgPwdJ4rJG9KjB3oIogWBkxsul5c33tpNPcHcV8W1NaCyS2
+         nZS1k3gqJ2yEjpKbM0RyeCK9FHFLT/PdDAsmAjSl3Vr8AN//Mx4ldXpj46HP7rNlmd4n
+         xMwS0AZjSVQRr1cYchw8DhM+96AcCNu4/qf3vLOgfj6U4w1G5fjcKQgEDgMFCGJlIObr
+         s6bHJh95sRRCQLW5QeV/BUzR/37SqiN0JwI25BHGtECpGumpphTPn2NkwhaXUD9b6o2P
+         a6QULaVBW5zr3btf448kMoOsxJjqZ2oozJpj44qGTI9WRuzhbE6r0C/NbQCXr2wBBpmf
+         VGBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743961168; x=1744565968;
+        d=1e100.net; s=20230601; t=1743961289; x=1744566089;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=STtGZLctY6chK7NNX8djDqnb0wgdBzX+Yk6Hrx5EGn0=;
-        b=ZfT2xSm1y1vslRja46p59v90B8nNtvWuDll80daxyGYJN4Z6wjEzYUPWf3s+qSfqTZ
-         g9d4ettHeIrLbI15d7y772/rSqGd6Qq3xZPRZhd/KCsEOggMOgGilhqe/Xi8ckcPPK0J
-         Btsyu+DlOWoTUvK8s8xBns8VfQzixrqOx9u74qlJnDNhOYi7EFi9eExX2Tuge5UB3ISf
-         VWrrOJkf/pqjFyqvuSHsbhboPscjJs4JRAdGQotFyOA0fAOj+rOf5Z8zxwFWD6xef2T3
-         fKjAl+j5O53gMfH3OJSkyYnnKctyuWgoH7vMmfEWvjZuJ4Tz/CjKhTGJ2lST+k0mWTYw
-         TEJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhW7eebapp7OjpU8x3Dxn5RRnGiXhbmS54sx7cGo+Yn4qed7Ps0XlE9u818g8wnNG4hiKy91eqb8/xmj5p/dAuVTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt3MSUpcBTVCH83jpKiiHuJA4/1c2048p+v7mMdL7vbTPQGaih
-	iC1+zEhryaa7kfsV2RE/cCgktfRRqtqs5aLYYkPezP3oh8Si0gmv
-X-Gm-Gg: ASbGnctNqVwb3fjKezzAEDLstik8o48AYJIgi4GXEe3RJ589sx5i/+N4/HrmWjV9raG
-	w19AwbyDLR6VjFQ4/IZ43gg6Ak6jdAlSESZZldxNljH1fJU7RcrSY5iag0sbRQYKKpdtbmKt/2p
-	80cDp55uq6Kf0sRRPtOpRMpbpnQv1xnSSfuFXwWfmtPwq0gfVBDjT1pOwESWvNUiqyq/NTk/vnq
-	fBeO36XEJhXGzJM04Q/K/h4TZ+/7Hl82cNfBONkRq9kympEHri72alfKScyc9btLyvu3bqSvM0p
-	lBUDqm5880T8HaUQFY1KfirTne92gjFg9iJsg+ObNK9jSN++aNa2jXo+NA==
-X-Google-Smtp-Source: AGHT+IGpIwT/IkR8C6qOwpAkCnxQThqD5c0QmECnGDsdK1RYPJOBjOD9m/J0gRWXZet/Hv6n9KjDsg==
-X-Received: by 2002:a17:902:f610:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22a8a06b429mr131647885ad.23.1743961168513;
-        Sun, 06 Apr 2025 10:39:28 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c2791sm65946545ad.80.2025.04.06.10.39.27
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JxmLRtJEJyieHfXxKBBazkkTPndIt5Qq1s+Aw5ot+y8=;
+        b=rMwJyuRVlDcgIDS3JlPAoiO8UiXLUoV3b8WaqedJTurJ0vsngdRW4HEATWGnpIfuJZ
+         1DyM4MsVbPnU+H6VGeTGemcI6vizbzzAFCIgxn/7plAjfGpGKxeTlPPonpmuiLwCF6Y7
+         0n3+hk6CPOvFl+1g2o8zsN85ATX/TA19ieiwaIE8A76K5LJaAgIJ0ZBbSb4ZBvGj5px0
+         qcyo0kNNojpgZ2wCjah6CjUhSa4CBzucQdKChrjsXcQQLlvdMDXadnAhq119yXZa11or
+         whPEopIEYSAIm1LzT3RtMNdA0vBv99xN5hVGF691WEbBcE/c4l2EQbayFDAFcKp4fZg0
+         cCdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpDAI/7iYH6SC1ErGW5uMh8wy9YGtf6DHGpOLj+0AmHEn+q+ESnNrr2IvUiRDd7dt6IdgBjW62Mf3q4iU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOP0a4gLkcu4ooL6S/pQ+nkSWBwZ4KzH1fHFmxtE+sjwlRMF8R
+	3VrVZaXLriW82w966KRto+M4SuPfSTcizqapx4PiUt8NaztATl0T
+X-Gm-Gg: ASbGncueJGsNf7dVhir4A4svoZthu9xqxLNph+O/guMR8PpazfzCaGPF3uNENeIiv0z
+	CqYH3M7Ui6sJJPVpLAfFOFJjp8zHnjlz+CCRJYXgxJO7byNtGbj8r2IXbcqAZDC6ICaHOXpyHQr
+	ix0ClcSGpq5r+HPm0oy3f8hcAkdgwQS3t1ivcuQPyxO3dlViD/FN3Yl5qgolDQ9h2yMK/XIgjk+
+	1A5fb55FIwe2j+UyWcHv/0cPU+hj6beWgrChd4D6KBBjyNOUuut4Oc23qs8VRBGMzyhRc11XA6B
+	FXs4Y/g68rersJrzBNHKQNyMw6xqEcDPc6bJO+Mzx0UgSku+tOfterk=
+X-Google-Smtp-Source: AGHT+IHwY2vuse98936Fl6H6zUtJp8rDxk44jwOFGR0olWLhO2gXaZYHn5gUfApakL4mwJUnSqXvAw==
+X-Received: by 2002:a17:90b:1d43:b0:2fe:a8b1:7d8 with SMTP id 98e67ed59e1d1-306a4b6fd75mr13167733a91.25.1743961288843;
+        Sun, 06 Apr 2025 10:41:28 -0700 (PDT)
+Received: from localhost ([2804:30c:1f4f:6800:9245:316f:6226:cc1e])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3057ca7fb75sm7378808a91.22.2025.04.06.10.41.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 10:39:28 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 6 Apr 2025 10:39:27 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v6 3/4] tracing: Use vmap_page_range() to map memmap ring
- buffer
-Message-ID: <4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net>
-References: <20250402144903.993276623@goodmis.org>
- <20250402144953.754618481@goodmis.org>
+        Sun, 06 Apr 2025 10:41:26 -0700 (PDT)
+Date: Sun, 6 Apr 2025 14:42:32 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Brajesh Patil <brajeshpatil11@gmail.com>
+Cc: linux-iio@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
+	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Subject: Re: [PATCH v1 1/1] iio: dummy: Add 3-axis compass (magnetometer)
+ channels to the iio_simple_dummy
+Message-ID: <Z_K9CFItAcYS8r4a@debian-BULLSEYE-live-builder-AMD64>
+References: <20250406133349.50633-1-brajeshpatil11@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,28 +73,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402144953.754618481@goodmis.org>
+In-Reply-To: <20250406133349.50633-1-brajeshpatil11@gmail.com>
 
-On Wed, Apr 02, 2025 at 10:49:06AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+Hi Brajesh,
+
+On 04/06, Brajesh Patil wrote:
+> This patch adds support for 3-axis magnetometer data (X, Y, Z) in the
+> iio_simple_dummy driver. It introduces three new IIO_MAGN channels and
+> populates them with dummy values for testing and prototyping purposes.
 > 
-> The code to map the physical memory retrieved by memmap currently
-> allocates an array of pages to cover the physical memory and then calls
-> vmap() to map it to a virtual address. Instead of using this temporary
-> array of struct page descriptors, simply use vmap_page_range() that can
-> directly map the contiguous physical memory to a virtual address.
-> 
-> Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
-> 
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
 > ---
->  kernel/trace/trace.c | 33 ++++++++++++++++-----------------
-...
-> +	area = get_vm_area(size, VM_IOREMAP);
+>  drivers/iio/dummy/iio_simple_dummy.c | 71 +++++++++++++++++++++++++++-
+>  drivers/iio/dummy/iio_simple_dummy.h |  6 +++
+>  2 files changed, 75 insertions(+), 2 deletions(-)
+> 
 
-non-MMU builds (xtensa:nommu_kc705_defconfig):
+I'm pretty sure the changes introduced in the IIO dummy tutorial [1] were 
+for learning purposes only and not intended for upstreaming.
+I don't see a reason for updating the upstream dummy driver with those.
+It would also make the tutorial less interesting.
 
-kernel/trace/trace.o:(.init.literal+0x250): undefined reference to `get_vm_area'
+[1]: https://flusp.ime.usp.br/iio/experiment-one-iio-dummy/
 
-Guenter
+So NACK for this patch.
+
+Regards,
+Marcelo
