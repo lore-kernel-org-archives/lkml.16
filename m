@@ -1,244 +1,339 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2BE219FC;
-	Sun,  6 Apr 2025 08:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A4019D07C;
+	Sun,  6 Apr 2025 09:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743929296; cv=none; b=aMHzHDGihOxU4UkDAEbcoDovOdMryVPLpRAh51KuQH26Sfuj0jTqGisSyfflV0DXfbonQpZF3ynOSMCdeJSUDOSwVFU0HmyU5JCH/hcF8614Y+mqsyvbxS4vqsLTD0Ok6HegiWC1kZERKuMOJeLpeaBYE0uByh6BZR3wHQK0XDw=
+	t=1743930327; cv=none; b=R7/6E6AX53SuEouGZWKt+g1b2uy95qKUDBngecYeSYlOswbw1NSkwVRHDWYb31ik34u8R+ZulHqiPQowJUVmagxmfXESu9zgxbnNaOxSKeBtTQa3gSQHQEFobLhvqPDsejjhkvcaOGJWCb9AYoq7V97gZzbi0uN2pj5/lXKza3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743929296; c=relaxed/simple;
-	bh=cZogAL37BrditkuA6/iID0XEzaJF/kRmnZNyepXySaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=AtR45BjqweTjYL2SMCv7tqsjvGA0ulDXcqaiAF1SYvupVTiHDKcIWuAeJRXE4gMIjrxDEdd3x6TEWgvGdtHXggbZIH8BapK5IypNqsVZ/ovvXtWPmtvIGj4QMYlJWb7EmmgSHk5qxPF1dXrc87t0YF1eCZjkTQ9kWTkl9kOWT1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TGDTVr0H; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1743930327; c=relaxed/simple;
+	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bI+MNdaPw2MWkECiOgpcZ/V+cmjF7RacrQjH3fKslbhCraqq+rsP72ZWpfveGg5iRKRjHXH3VMQNdji6mRY+KtJt6YncvUbohMUeeNcU8Pb2Dhp0Wm9JE+UwIYcnAPQ7Yh5qZ71ukrFb8T2zuBEPGmVGlX1aV9qT+Xx6m1KWueg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwOrasoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TGDTVr0H"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 627AB2112533; Sun,  6 Apr 2025 01:48:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 627AB2112533
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743929289;
-	bh=wSGP4SJBUnsmhJUgOkT/omo/JNKbUWLMShPZLni6L/c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TGDTVr0Hz/oA1h9jG8IHPffo/IZu5+hU/tW/JAwhed5t0W3JgVP0wmStiPIyGqNMH
-	 BAMoymsQT2+0khy98J9tQa4mabz6WFvsg9HoPfPQSiDrBtus9hWBqpCp1lMDF19F0o
-	 hqsK3Xd12QC3Z85LngR/Ig6/bUGDSD8k7WJSOjkc=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v3] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-Date: Sun,  6 Apr 2025 01:48:08 -0700
-Message-Id: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwOrasoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C68C4AF09;
+	Sun,  6 Apr 2025 09:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743930326;
+	bh=8HppInsbIo8ANnv0KzVr7mCU0OkTEyE/7eBNjt7qig8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IwOrasoDeDzS3yUBfr8g94+5gZoiu+5AgF6rMrv7SteF7Bc8nm13Y7vRz3FvVjRf2
+	 T12ORznnepbij0kgIrpYgWtUJsBMGicgVNNZ9LKjXeav94jZ9oQXVEpfI5zX1EhFtD
+	 GpjiaDs0q/V1Il+bKxV0TH9E0j27Mz75wlFtjdeLGzfHXZZ3DkdvwXjFHOukKFtgy6
+	 lmrfugunHjzDBzTyORKeQroDL0gRpCwAZrdPMvVeXtteVwzf9ODeL/tvUTIgqIL/t1
+	 k6bDIJ3pzuMmDYykjX84dtvqtMI0dLdyTTzFtQBKjdx2Qco8cTpPYoaXRsXLP5pohA
+	 0vUcscdLjHqfQ==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso290417066b.1;
+        Sun, 06 Apr 2025 02:05:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUWLcmQ9o3vOXFOESGhnAPZuAlzr+v9M/GaaIWgEG5P8QmfZ+9qJ39TDL3ll8dx2Ccl7ptGMtunmkRZIrJC@vger.kernel.org, AJvYcCVXuHny/Pp79Wq58knUpmbCCRjKtXe56EWEochNIhsciImFnU8S6RwAA/ZeMa/pMMJ1SSbhWED5XOgWa6uxwRp+@vger.kernel.org, AJvYcCVmJGAO04tnBt/PnAriULN+BmGSDM/ltF1Dhy9xdzrFeqyVefkeEaK3Hn+QeDfFM/7OeI0veVKcQ50YsLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUvJD1sgNMPqF96KWf1qSZFPVkbJ0+vLIFSzfB/JLFX7HJ/437
+	H2yNV50jrawUK4/KnKHAoJar3XUrfy+1oJ242jAWVBhxoVWAikLAZ3l8Q9+NWFfgWRxLgtWZeWb
+	GnQEasvQRxtJIZg8SLU6CEcAHzOQ=
+X-Google-Smtp-Source: AGHT+IGnNuCrgMy9P3d6NcUjmzNvarGtmG4DsB2kEka2+JK8o2USJQLfNhexkE7Myk6TQhY8RdwX6T2Run352Tj2b/I=
+X-Received: by 2002:a17:907:7207:b0:ac7:95b0:d0fb with SMTP id
+ a640c23a62f3a-ac7d18ccf44mr582095566b.34.1743930325304; Sun, 06 Apr 2025
+ 02:05:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250403024645.4427-1-zhaoqunqin@loongson.cn> <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 6 Apr 2025 17:05:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
+X-Gm-Features: ATxdqUE_15XGhijQDn39K9ebew3z8rFKKC1Cu8MxG-GMMAfETFR9hD85GjMWF6E
+Message-ID: <CAAhV-H45vYe3Brgy=0_+ciTjcJ-+x3zwoeY-ym20o5PGGxvJCw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] crypto: loongson - add Loongson RNG driver support
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
+	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Allow the KVP daemon to log the KVP updates triggered in the VM
-with a new debug flag(-d).
-When the daemon is started with this flag, it logs updates and debug
-information in syslog with loglevel LOG_DEBUG. This information comes
-in handy for debugging issues where the key-value pairs for certain
-pools show mismatch/incorrect values.
-The distro-vendors can further consume these changes and modify the
-respective service files to redirect the logs to specific files as
-needed.
+Hi, Qunqin,
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
- Changes in v3:
- * remove timestamp from raw message
- * use i+1 instead of i while printing record array
- * add debug logs in delete operation
----
- Changes in v2:
- * log the debug logs in syslog(debug) instead of a seperate file that
-   we will have to maintain.
- * fix the commit message to indicate the same.
----
- tools/hv/hv_kvp_daemon.c | 71 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 63 insertions(+), 8 deletions(-)
+On Thu, Apr 3, 2025 at 10:46=E2=80=AFAM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+> Loongson's Random Number Generator is found inside Loongson security
+> engine.
+>
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> v7: Change the lsrng_ prefix to loongson_rng_
+> v6: Replace all "ls6000se" with "loongson"
+> v2-v5: None
+>
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   6 +
+>  drivers/crypto/loongson/Makefile       |   2 +
+>  drivers/crypto/loongson/loongson-rng.c | 190 +++++++++++++++++++++++++
+>  5 files changed, 200 insertions(+)
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index 19ab145f9..567ed81b0 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -855,5 +855,6 @@ config CRYPTO_DEV_SA2UL
+>
+>  source "drivers/crypto/aspeed/Kconfig"
+>  source "drivers/crypto/starfive/Kconfig"
+> +source "drivers/crypto/loongson/Kconfig"
+>
+>  endif # CRYPTO_HW
+> diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+> index fef18ffdb..643c3710b 100644
+> --- a/drivers/crypto/Makefile
+> +++ b/drivers/crypto/Makefile
+> @@ -50,3 +50,4 @@ obj-y +=3D hisilicon/
+>  obj-$(CONFIG_CRYPTO_DEV_AMLOGIC_GXL) +=3D amlogic/
+>  obj-y +=3D intel/
+>  obj-y +=3D starfive/
+> +obj-y +=3D loongson/
+> diff --git a/drivers/crypto/loongson/Kconfig b/drivers/crypto/loongson/Kc=
+onfig
+> new file mode 100644
+> index 000000000..4368701ad
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Kconfig
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +config CRYPTO_DEV_LOONGSON_RNG
+> +        tristate "Support for Loongson RNG Driver"
+> +        depends on MFD_LOONGSON_SE
+> +        help
+> +          Support for Loongson RNG Driver.
+> diff --git a/drivers/crypto/loongson/Makefile b/drivers/crypto/loongson/M=
+akefile
+> new file mode 100644
+> index 000000000..b8b013c86
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_CRYPTO_DEV_LOONGSON_RNG)  +=3D loongson-rng.o
+> diff --git a/drivers/crypto/loongson/loongson-rng.c b/drivers/crypto/loon=
+gson/loongson-rng.c
+> new file mode 100644
+> index 000000000..307014992
+> --- /dev/null
+> +++ b/drivers/crypto/loongson/loongson-rng.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019 HiSilicon Limited. */
+> +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> +
+> +#include <linux/crypto.h>
+> +#include <linux/err.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/list.h>
+> +#include <linux/mfd/loongson-se.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/random.h>
+> +#include <crypto/internal/rng.h>
+> +
+> +struct loongson_rng_list {
+> +       struct mutex lock;
+> +       struct list_head list;
+> +       int is_init;
+> +};
+> +
+> +struct lsrng {
+> +       bool is_used;
+> +       struct se_channel *se_ch;
+> +       struct list_head list;
+> +       struct completion rng_completion;
+> +};
+Since there are other comments that should be addressed, you can
+rename lsrng to loongson_rng to keep consistency.
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 04ba035d67e9..7a1b7b0a9233 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -83,6 +83,7 @@ enum {
- };
- 
- static int in_hand_shake;
-+static int debug_enabled;
- 
- static char *os_name = "";
- static char *os_major = "";
-@@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
- 	kvp_release_lock(pool);
- }
- 
-+static void kvp_dump_initial_pools(int pool)
-+{
-+	int i;
-+
-+	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
-+	       pool);
-+
-+	for (i = 0; i < kvp_file_info[pool].num_records; i++)
-+		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
-+		       pool, i + 1, kvp_file_info[pool].num_records,
-+		       kvp_file_info[pool].records[i].key,
-+		       kvp_file_info[pool].records[i].value);
-+}
-+
- static void kvp_update_mem_state(int pool)
- {
- 	FILE *filep;
-@@ -270,6 +285,8 @@ static int kvp_file_init(void)
- 			return 1;
- 		kvp_file_info[i].num_records = 0;
- 		kvp_update_mem_state(i);
-+		if (debug_enabled)
-+			kvp_dump_initial_pools(i);
- 	}
- 
- 	return 0;
-@@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
- 		 * Found a match; just move the remaining
- 		 * entries up.
- 		 */
-+		if (debug_enabled)
-+			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
-+			       __func__, pool, record[i].key, record[i].value);
- 		if (i == (num_records - 1)) {
- 			kvp_file_info[pool].num_records--;
- 			kvp_update_file(pool);
-@@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
- 		kvp_update_file(pool);
- 		return 0;
- 	}
-+
-+	if (debug_enabled)
-+		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
-+		       __func__, pool, key);
-+
- 	return 1;
- }
- 
- static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 				 const __u8 *value, int value_size)
- {
--	int i;
--	int num_records;
- 	struct kvp_record *record;
-+	int num_records;
- 	int num_blocks;
-+	int i;
-+
-+	if (debug_enabled)
-+		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
-+		       __func__, pool, key, value);
- 
- 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
--		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
-+		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
-+		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
-+		       key, value);
-+
-+		if (debug_enabled)
-+			syslog(LOG_DEBUG, "%s: Got a too long key or value: pool=%d, key=%s, val=%s",
-+			       __func__, pool, key, value);
- 		return 1;
-+	}
- 
- 	/*
- 	 * First update the in-memory state.
-@@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		 */
- 		memcpy(record[i].value, value, value_size);
- 		kvp_update_file(pool);
-+		if (debug_enabled)
-+			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
-+			       __func__, pool, key, value);
- 		return 0;
- 	}
- 
-@@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 		record = realloc(record, sizeof(struct kvp_record) *
- 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
- 
--		if (record == NULL)
-+		if (!record) {
-+			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
- 			return 1;
-+		}
- 		kvp_file_info[pool].num_blocks++;
- 
- 	}
-@@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
- 	memcpy(record[i].key, key, key_size);
- 	kvp_file_info[pool].records = record;
- 	kvp_file_info[pool].num_records++;
-+
-+	if (debug_enabled)
-+		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
-+		       __func__, pool, key, value);
-+
- 	kvp_update_file(pool);
- 	return 0;
- }
-@@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
- 	fprintf(stderr, "Usage: %s [options]\n"
- 		"Options are:\n"
- 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-+		"  -d, --debug-enabled    Enable debug logs(syslog debug by default)\n"
- 		"  -h, --help             print this help\n", argv[0]);
- }
- 
-@@ -1681,12 +1728,13 @@ int main(int argc, char *argv[])
- 	int daemonize = 1, long_index = 0, opt;
- 
- 	static struct option long_options[] = {
--		{"help",	no_argument,	   0,  'h' },
--		{"no-daemon",	no_argument,	   0,  'n' },
--		{0,		0,		   0,  0   }
-+		{"help",		no_argument,	   0,  'h' },
-+		{"no-daemon",		no_argument,	   0,  'n' },
-+		{"debug-enabled",	no_argument,	   0,  'd' },
-+		{0,			0,		   0,  0   }
- 	};
- 
--	while ((opt = getopt_long(argc, argv, "hn", long_options,
-+	while ((opt = getopt_long(argc, argv, "hnd", long_options,
- 				  &long_index)) != -1) {
- 		switch (opt) {
- 		case 'n':
-@@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
- 		case 'h':
- 			print_usage(argv);
- 			exit(0);
-+		case 'd':
-+			debug_enabled = 1;
-+			break;
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-@@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
- 	 */
- 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
- 
-+	if (debug_enabled)
-+		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
-+
- 	if (kvp_file_init()) {
- 		syslog(LOG_ERR, "Failed to initialize the pools");
- 		exit(EXIT_FAILURE);
--- 
-2.34.1
+Huacai
 
+> +
+> +struct loongson_rng_ctx {
+> +       struct lsrng *rng;
+> +};
+> +
+> +struct rng_msg {
+> +       u32 cmd;
+> +       union {
+> +               u32 len;
+> +               u32 ret;
+> +       } u;
+> +       u32 resved;
+> +       u32 out_off;
+> +       u32 pad[4];
+> +};
+> +
+> +static atomic_t rng_active_devs;
+> +static struct loongson_rng_list rng_devices;
+> +
+> +static void loongson_rng_complete(struct se_channel *ch)
+> +{
+> +       struct lsrng *rng =3D (struct lsrng *)ch->priv;
+> +
+> +       complete(&rng->rng_completion);
+> +}
+> +
+> +static int loongson_rng_generate(struct crypto_rng *tfm, const u8 *src,
+> +                         unsigned int slen, u8 *dstn, unsigned int dlen)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_rng_ctx(tfm);
+> +       struct lsrng *rng =3D ctx->rng;
+> +       struct rng_msg *msg;
+> +       int err, len;
+> +
+> +       do {
+> +               len =3D min(dlen, PAGE_SIZE);
+> +               msg =3D rng->se_ch->smsg;
+> +               msg->u.len =3D len;
+> +               err =3D se_send_ch_requeset(rng->se_ch);
+> +               if (err)
+> +                       return err;
+> +
+> +               wait_for_completion_interruptible(&rng->rng_completion);
+> +
+> +               msg =3D rng->se_ch->rmsg;
+> +               if (msg->u.ret)
+> +                       return -EFAULT;
+> +
+> +               memcpy(dstn, rng->se_ch->data_buffer, len);
+> +               dlen -=3D len;
+> +               dstn +=3D len;
+> +       } while (dlen > 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static int loongson_rng_init(struct crypto_tfm *tfm)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
+> +       struct lsrng *rng;
+> +       int ret =3D -EBUSY;
+> +
+> +       mutex_lock(&rng_devices.lock);
+> +       list_for_each_entry(rng, &rng_devices.list, list) {
+> +               if (!rng->is_used) {
+> +                       rng->is_used =3D true;
+> +                       ctx->rng =3D rng;
+> +                       ret =3D 0;
+> +                       break;
+> +               }
+> +       }
+> +       mutex_unlock(&rng_devices.lock);
+> +
+> +       return ret;
+> +}
+> +
+> +static void loongson_rng_exit(struct crypto_tfm *tfm)
+> +{
+> +       struct loongson_rng_ctx *ctx =3D crypto_tfm_ctx(tfm);
+> +
+> +       mutex_lock(&rng_devices.lock);
+> +       ctx->rng->is_used =3D false;
+> +       mutex_unlock(&rng_devices.lock);
+> +}
+> +
+> +static int no_seed(struct crypto_rng *tfm, const u8 *seed, unsigned int =
+slen)
+> +{
+> +       return 0;
+> +}
+> +
+> +static struct rng_alg loongson_rng_alg =3D {
+> +       .generate =3D loongson_rng_generate,
+> +       .seed =3D no_seed,
+> +       .base =3D {
+> +               .cra_name =3D "stdrng",
+> +               .cra_driver_name =3D "loongson_stdrng",
+> +               .cra_priority =3D 300,
+> +               .cra_ctxsize =3D sizeof(struct loongson_rng_ctx),
+> +               .cra_module =3D THIS_MODULE,
+> +               .cra_init =3D loongson_rng_init,
+> +               .cra_exit =3D loongson_rng_exit,
+> +       },
+> +};
+> +
+> +static void loongson_rng_add_to_list(struct lsrng *rng)
+> +{
+> +       mutex_lock(&rng_devices.lock);
+> +       list_add_tail(&rng->list, &rng_devices.list);
+> +       mutex_unlock(&rng_devices.lock);
+> +}
+> +
+> +static int loongson_rng_probe(struct platform_device *pdev)
+> +{
+> +       struct rng_msg *msg;
+> +       struct lsrng *rng;
+> +       int ret;
+> +
+> +       rng =3D devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
+> +       if (!rng)
+> +               return -ENOMEM;
+> +
+> +       init_completion(&rng->rng_completion);
+> +       rng->se_ch =3D se_init_ch(pdev->dev.parent, SE_CH_RNG, PAGE_SIZE,
+> +                               sizeof(struct rng_msg) * 2, rng, loongson=
+_rng_complete);
+> +       if (!rng->se_ch)
+> +               return -ENODEV;
+> +       msg =3D rng->se_ch->smsg;
+> +       msg->cmd =3D SE_CMD_RNG;
+> +       msg->out_off =3D rng->se_ch->off;
+> +
+> +       if (!rng_devices.is_init) {
+> +               ret =3D crypto_register_rng(&loongson_rng_alg);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "failed to register crypto(%d=
+)\n", ret);
+> +                       return ret;
+> +               }
+> +               INIT_LIST_HEAD(&rng_devices.list);
+> +               mutex_init(&rng_devices.lock);
+> +               rng_devices.is_init =3D true;
+> +       }
+> +
+> +       loongson_rng_add_to_list(rng);
+> +       atomic_inc(&rng_active_devs);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver loongson_rng_driver =3D {
+> +       .probe          =3D loongson_rng_probe,
+> +       .driver         =3D {
+> +               .name   =3D "loongson-rng",
+> +       },
+> +};
+> +module_platform_driver(loongson_rng_driver);
+> +
+> +MODULE_ALIAS("platform:loongson-rng");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+> +MODULE_DESCRIPTION("Loongson random number generator driver");
+> --
+> 2.45.2
+>
+>
