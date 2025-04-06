@@ -1,137 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEFC13AA2A
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 17:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9A9C8CE;
+	Sun,  6 Apr 2025 18:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743962241; cv=none; b=HIVOTajjd+gWI4jUkSwQXhDd7cIMZXGRKacqjSecj+GHXzRyjhgIO4fK32onROk03pc+yN+cJ8t7kGV8Dv/OHux5wFkLvpyN7zhH8T4MKNCsTkPQpqR5l9WI/gZm2bp17XOBEbl0vBRHxbF0XWSf3jl3HO3ce17N3w1d1S3PWAU=
+	t=1743962534; cv=none; b=YTR/LcC/79zcrV/5zJ26FsuL4ya3CX73C9M5PlJpXMYYZV6IsfHCNOW4idMnUIz5aTxKYak8IogpSdyCbKyCSDECwIl1KKx+Oi3aqMI+po6YaLiJy8E/wKRdfslwGe5aOppljURAw5auRY+stI6i/aho8MoaSPuFkse8w5s/JNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743962241; c=relaxed/simple;
-	bh=OqE+oQNqqW/uo/l6rUY1mrBoQW+pjWSU5EnkizFcvIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VwDPtI5CNUrHnJ0p3YPxw5hVKMeoBDdDXLkKhlXIIA05TWxzFqxajNkV5jqy70RcK/WzL61iR8BgnTxtv95LcAFWL+LCOiIyMWSjstcpjQs6fIafJGFw6U+kRLkWcIpOXB0/Wei3EYTiOrWoTpyVIS+8XQAZFNA7VJyyXSe6du8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYtRO7Jq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743962534; c=relaxed/simple;
+	bh=QaaVXr5vmbzzGB8LVkgnvkqyO3UdD+SEMR3QSy+BgNU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Y4bZOdGdrYZMCXdnOHcrX3HQ7veOUxUCs4vsOy205NuPBWMXsAILKptPX6wH1N6ozQY+5JGDTquxQ3dFWGZXRZwvRQQ0qFXf00xo7kUfPehNChDUday0GZLhoitfLXUNiZOCHXIsRfqlYICENmZtNTg3fK+QkLw5Kumj3G9JCmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eQgrto8X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EjuYjn8P; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYtRO7Jq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 936A5C4CEE3;
-	Sun,  6 Apr 2025 17:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743962240;
-	bh=OqE+oQNqqW/uo/l6rUY1mrBoQW+pjWSU5EnkizFcvIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cYtRO7JqCKERGxz8lFhQ2h8eJJUYEU4Bnm7uoRuXvsqLdWzuC9Cp/cL6XmU3CG5Nm
-	 k9/7zGq0xs8UzilFSJGRwpaNuSSOpbqBOHqSeB8zm3X48jdLwUUDpYT1dNqlLYSilQ
-	 ivD2tfHKoUowF7NcYaayLlFEYx80NgSLJtCv959GTuMmGuNkI/DkxpP1HmWYbyo4q/
-	 Ksfn1t9xhtnBB+TCjU8JpdWcAsRpGXkM6mbH+E8J3GBM4ESmQuhroNCh8hFOcBkWVo
-	 XUZUJQPFIAypGS6LXHMNXafaY+s2M3wtPS5UrdmwZPFzi0EdPRS9uQDFyiax0oCFa3
-	 W7A3SHB161VuA==
-Date: Sun, 6 Apr 2025 18:57:16 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools/include: make uapi/linux/types.h usable from
- assembly
-Message-ID: <Z_LAfEbDWjo3rTgo@finisterre.sirena.org.uk>
-References: <20250402-kselftest-vdso-fix-v1-1-71b68f1c27e3@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eQgrto8X";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EjuYjn8P"
+Date: Sun, 06 Apr 2025 18:02:00 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743962530;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qujhkEeCue36EqZBnlB+QQW2AvVUadjyFugCuhgUDA=;
+	b=eQgrto8XGxFXNSHhPND/l60udS3KV4DWp6S4xKW+KpkAlW2XklppZMdUml5xoXAmAfN5nm
+	zZgKcQiMinST3IAtzk8W/H1YPk8HB0qT2HuxcZPc6NxtL+rsMk3hUrvVujpSxo38bYrrxz
+	hwvlGDv0OlRyOZfjclwphPNryEia6sMlM7eCz/seFeAzq8LNtkmi13JbFwvMnq2MVA5ygC
+	YeK5z/szZn6OtqSkhbBc2zUpMS2kdqV1j1IGUCSyGMyE3ejXyAyRvgC6c2a2age+aZQuMT
+	EmCyZLZZdpZW49oVRlXlakzyGMoZgDimQoXYi21MgoKAB7T1AHfH3c2wUyACFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743962530;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qujhkEeCue36EqZBnlB+QQW2AvVUadjyFugCuhgUDA=;
+	b=EjuYjn8PdBerRlHm0mysFHIoCCIkLvZP4aEwXlARl5FNylsoJvK+i/CH+FM3FEzNGruG2y
+	tGb2mdfUM7DZowCg==
+From: "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpuid: Add AMX and SPEC_CTRL dependencies
+Cc: Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Sohil Mehta <sohil.mehta@intel.com>,
+ Tony Luck <tony.luck@intel.com>, "Ahmed S. Darwish" <darwi@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240924170128.2611854-1-ak@linux.intel.com>
+References: <20240924170128.2611854-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/Zo6fVCo17ebhilh"
-Content-Disposition: inline
-In-Reply-To: <20250402-kselftest-vdso-fix-v1-1-71b68f1c27e3@kernel.org>
-X-Cookie: Well begun is half done.
+Message-ID: <174396252153.31282.17024689977241698815.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/cpu branch of tip:
 
---/Zo6fVCo17ebhilh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     e37aa1211fbfeb9d5e79f4a4b0da898e6d0d53bb
+Gitweb:        https://git.kernel.org/tip/e37aa1211fbfeb9d5e79f4a4b0da898e6d0d53bb
+Author:        Andi Kleen <ak@linux.intel.com>
+AuthorDate:    Tue, 24 Sep 2024 10:01:28 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 06 Apr 2025 19:54:35 +02:00
 
-On Wed, Apr 02, 2025 at 09:21:57PM +0100, Mark Brown wrote:
-> From: Thomas Wei=DFschuh <thomas.weissschuh@linutronix.de>
->=20
-> The "real" linux/types.h UAPI header gracefully degrades to a NOOP when
-> included from assembly code.
->=20
-> Mirror this behaviour in the tools/ variant.
->=20
-> Test for __ASSEMBLER__ over __ASSEMBLY__ as the former is provided by the
-> toolchain automatically.
+x86/cpuid: Add AMX and SPEC_CTRL dependencies
 
-The issue the vDSO tests not building on at least arm64 that is fixed by
-this patch is still present in mainline, it would be great if we could
-get it fixed for -rc1.
+Add some missing dependencies to the CPUID dependency table:
 
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/lkml/af553c62-ca2f-4956-932c-dd6e3a126f58=
-@sirena.org.uk/
-> Fixes: c9fbaa879508 ("selftests: vDSO: parse_vdso: Use UAPI headers inste=
-ad of libc headers")
-> Signed-off-by: Thomas Wei=DFschuh <thomas.weissschuh@linutronix.de>
-> Link: https://patch.msgid.link/20250321-uapi-consistency-v1-1-439070118dc=
-0@linutronix.de
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> This is a fix for a build break in the vDSO selftests which was
-> introduced some time ago in the tip tree, Thomas posted the fix on 21st
-> March the day after I reported it but it's not been picked up and the
-> issue is now in mainline.  I'm sending it directly to try to avoid -rc1
-> being broken.
-> ---
->  tools/include/uapi/linux/types.h | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/tools/include/uapi/linux/types.h b/tools/include/uapi/linux/=
-types.h
-> index 91fa51a9c31d..85aa327245c6 100644
-> --- a/tools/include/uapi/linux/types.h
-> +++ b/tools/include/uapi/linux/types.h
-> @@ -4,6 +4,8 @@
-> =20
->  #include <asm-generic/int-ll64.h>
-> =20
-> +#ifndef __ASSEMBLER__
-> +
->  /* copied from linux:include/uapi/linux/types.h */
->  #define __bitwise
->  typedef __u16 __bitwise __le16;
-> @@ -20,4 +22,5 @@ typedef __u32 __bitwise __wsum;
->  #define __aligned_be64 __be64 __attribute__((aligned(8)))
->  #define __aligned_le64 __le64 __attribute__((aligned(8)))
-> =20
-> +#endif /* __ASSEMBLER__ */
->  #endif /* _UAPI_LINUX_TYPES_H */
->=20
-> ---
-> base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
-> change-id: 20250402-kselftest-vdso-fix-d97fb8b09020
->=20
-> Best regards,
-> --=20
-> Mark Brown <broonie@kernel.org>
->=20
+ - All the AMX features depend on AMX_TILE
+ - All the SPEC_CTRL features depend on SPEC_CTRL
 
---/Zo6fVCo17ebhilh
-Content-Type: application/pgp-signature; name="signature.asc"
+[ mingo: Keep the AMX part of the table grouped ... ]
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Ahmed S. Darwish <darwi@linutronix.de>
+Link: https://lore.kernel.org/r/20240924170128.2611854-1-ak@linux.intel.com
+---
+ arch/x86/kernel/cpu/cpuid-deps.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfywHkACgkQJNaLcl1U
-h9DjHggAg7YIgVkt5+VE8ImdhV1RfQVE9jRO/a6WFkFZCMt7BS0mKepCHtBJTMSa
-jjPLC6FoI8t/xIUctrqJucydEErrC1KJ4C+ok/emelfhiZmNPvJTpzNs10mtaC+g
-goY9uzkQrzwJqvya2+RJbUyGOuYYn9ms9BV9FxrA+E+CPMBNky5f0z3+bQfM3bSt
-jPIyXa3PeQX5X7BhBt+w8DEB53BNTbHYSKmTiDtOgcumw533fzT7YxBl1wRDMLS9
-bGTT3w5elVlEIohQ/rj7O2ZLiWK3cJWD9ZATOvdiCtp+u2v72/2APEVNbcl23l8E
-5H96rVnWaDmrhRbKI0PC+pzNVFTNKA==
-=v2QR
------END PGP SIGNATURE-----
-
---/Zo6fVCo17ebhilh--
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index a2fbea0..94c062c 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -82,8 +82,12 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_XFD,			X86_FEATURE_XSAVES    },
+ 	{ X86_FEATURE_XFD,			X86_FEATURE_XGETBV1   },
+ 	{ X86_FEATURE_AMX_TILE,			X86_FEATURE_XFD       },
++	{ X86_FEATURE_AMX_FP16,			X86_FEATURE_AMX_TILE  },
++	{ X86_FEATURE_AMX_BF16,			X86_FEATURE_AMX_TILE  },
++	{ X86_FEATURE_AMX_INT8,			X86_FEATURE_AMX_TILE  },
+ 	{ X86_FEATURE_SHSTK,			X86_FEATURE_XSAVES    },
+ 	{ X86_FEATURE_FRED,			X86_FEATURE_LKGS      },
++	{ X86_FEATURE_SPEC_CTRL_SSBD,		X86_FEATURE_SPEC_CTRL },
+ 	{}
+ };
+ 
