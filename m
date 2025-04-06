@@ -1,235 +1,93 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69F0218EA2
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 14:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930D621883F
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 14:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743948547; cv=none; b=XbxIx+EJ9bw02VZGrlPK/9S7T0o0Mp3HknhBnsqKFVb6+AQap1cH1Nlh77xMNMRuc88iqycdxlwsYIwMLePzeATe9tP6mNNCy5d92fZvDD+EfszlYkH/LJaxrxMjR1LNx3Ye/3pgjrNi/tX1J+V306K14+N+69ZwhGSR8UV1sa8=
+	t=1743948723; cv=none; b=O1lzUW+ej53y5xhnLDlmkqt7qd2oYtfCXOomGjKyZFhJtPOwKy5F9nsBkYPAjYJ53Pm6BqAzg4Nns17/M5Syk6Jh3mNQo8uVEGC56nv6h/f+Ny3Z0aL2DLUll/1+Qv3sNw7d/A8wBg6ibFqdchLNFTDPhvdR7l0cCDZs0+BhIGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743948547; c=relaxed/simple;
-	bh=m+4+9HmLA1W3Y+XP5CFi2fuTRL+IGVBbugonxbcYCbA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gwVGzWqsA/B9Q5xh3a49OLxC5W/JevcgE4mfbSM31EWdP9jMQU+Gv1idVSJMHPGLUmxhJgQzq8JUhmqE9k7Y2MJKv62adEklpvf5cGvhjnGQe54jI3uD0PGYdy6/l95H8zx6EHQqAJW73K0dJ9Pu9CSKdRsz3+5+HREL+zZDk4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b53875729so947347439f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 07:09:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743948545; x=1744553345;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dlnz3QUWVHoJAB4rH18Hc6CGYwZXQHnTUZNR/puT8KM=;
-        b=CdPUWOboQd5k4bmEKtiq4uXwlDGl0c7xXeyiWoLXdAk8ucdLjrpfHzv85HcmuIoEq9
-         hIGLaV8h42n4teKs8GQ0eQok02XrGPMktWGp5IrJBaLFoA/aQoeciefdNhABW13e3U7Z
-         q0gd0xgTsNiA8vD2KFunPXmYim+crjVQ24yKJbw2HAfc2lonMZNxR4aSuhN7iXKgtnGY
-         Snwv39mjxYg+73DUAZX9X43ITXx54pbq/sR+kObe6MZBJVBOqwY0l4K+isoSIELem9Ln
-         x9qBxD31XyfJ+ST1LcYZpv88t4rpiet5jisHnkPTJzZUcrERJNc2i9a4iXVHbAX0cIHw
-         B6LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEeNeQXg5z5xPnvC4MG5iXKta9YBrGJp8BSYBcc1j0PLc7LMp/odNOKMpmlwIOYqKHxPcP7j/ni4Eg/aA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6JE2hcE2nnhFHYyqWfDzV4efWPkL36QIzTZb49mwRFburvxgU
-	gRD0Q7iItuLMOborWzQL41HqpZ5+W43t5qVyyGobAstWkHCEPRgOJUvei51ayznGraCod1ij5Wd
-	GWR4A5SFJsXAcYXSNE1+FbkqBtWM2o2YPHhJ8oST6k9bq4A53sKn/mT4=
-X-Google-Smtp-Source: AGHT+IFVk6B3KojEZ3HHyDg7b7Q2KgR8+e22Z3aTgtBeq8fXrlmEnRT2d1Mw60kBpCc7sQyRFyMLKPSIDt3XS/IeWyV6D7w8upDr
+	s=arc-20240116; t=1743948723; c=relaxed/simple;
+	bh=lqZbfkbk0ZcA2LIuruKYg/F+tzBLHT//KF3zOSp5VXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NApXx5utw8Iw/j/kEwuE0GaagjrW0X5sQhzzBDubcYpzxoK4Zt99gcD2x6CyyJSu4spBbORSy/+tsJasGVjYP99TwVYlvd+o0ZVp1xfwZST532Q2HvkMaX+uXewpp+9xAQuh+g81C+9a6EL6ie/3QByIdUsSVM/Xz9pYl0L0ZM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DsXbdsi1; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DsXbdsi1"
+Date: Sun, 6 Apr 2025 10:11:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743948718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pWF83rzDf1eFbwOMCuQAlihrrS/Vai0y6L2bpP28ty8=;
+	b=DsXbdsi1+soakr/Bj8mmB2XEYgYjZuirj4x2fqzYuyKqzYnvdJhPZRCXllmqLVEpETamBb
+	LTaT0Ie3gaRtZZUfyLDYdsJiroLtG8UZKdjOEo3Q607mt4oLMD83sQ0N+3cPtPXRWcaLyN
+	MwsZ5/6n33LS+nwT/vyKBgLSiZQtmfA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Integral <integral@archlinuxcn.org>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: return early for negative values when parsing
+ BCH_OPT_UINT
+Message-ID: <hepk5mxy7zfr534i4mbqbjr3jzkqytbnfz66lelzcewwu5h47h@df7qq7laaypr>
+References: <20250406135929.178583-2-integral@archlinuxcn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24f:0:b0:3d3:dcfd:2768 with SMTP id
- e9e14a558f8ab-3d6e3eea7d0mr105686255ab.4.1743948544799; Sun, 06 Apr 2025
- 07:09:04 -0700 (PDT)
-Date: Sun, 06 Apr 2025 07:09:04 -0700
-In-Reply-To: <Z_KAmSNLsAhctKv8@smile.fi.intel.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f28b00.050a0220.0a13.026a.GAE@google.com>
-Subject: Re: [syzbot] [acpi?] KASAN: slab-use-after-free Read in software_node_notify_remove
-From: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
-To: andriy.shevchenko@linux.intel.com, dakr@kernel.org, djrscally@gmail.com, 
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, jgg@nvidia.com, 
-	kevin.tian@intel.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nicolinc@nvidia.com, rafael@kernel.org, 
-	sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com, 
-	yi.l.liu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250406135929.178583-2-integral@archlinuxcn.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On Sun, Apr 06, 2025 at 09:59:30PM +0800, Integral wrote:
+> Currently, when a negative integer is passed as an argument, the error
+> message incorrectly states "too big" due to the value being cast to an
+> unsigned integer:
+> 
+>     > bcachefs format --block_size=-1 bcachefs.img
+>     invalid option: block_size: too big (max 65536)
+> 
+> To resolve this issue, return early for negative values before calling
+> bch2_opt_validate().
+> 
+> Signed-off-by: Integral <integral@archlinuxcn.org>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: slab-use-after-free Read in set_secondary_fwnode
+No new -EINVAL in kernel code :)
 
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-R13: 0000000000000000 R14: 00007f0934da5fa0 R15: 00007ffe7c9dc778
- </TASK>
-iommufd_mock iommufd_mock0: Adding to iommu group 0
-==================================================================
-BUG: KASAN: slab-use-after-free in fwnode_is_primary drivers/base/core.c:5105 [inline]
-BUG: KASAN: slab-use-after-free in set_secondary_fwnode+0x89/0xd0 drivers/base/core.c:5167
-Read of size 8 at addr ffff8880358f0440 by task syz.0.19/6201
-
-CPU: 0 UID: 0 PID: 6201 Comm: syz.0.19 Not tainted 6.14.0-syzkaller-13525-g22ea69445c54 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- fwnode_is_primary drivers/base/core.c:5105 [inline]
- set_secondary_fwnode+0x89/0xd0 drivers/base/core.c:5167
- software_node_notify_remove+0x1a8/0x1e0 drivers/base/swnode.c:1112
- device_platform_notify_remove drivers/base/core.c:2387 [inline]
- device_del+0x594/0x9b0 drivers/base/core.c:3858
- device_unregister+0x20/0xc0 drivers/base/core.c:3896
- mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
- iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0934b8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f0935a12038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f0934da5fa0 RCX: 00007f0934b8d169
-RDX: 0000200000000200 RSI: 0000000000003ba0 RDI: 0000000000000003
-RBP: 00007f0935a12090 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-R13: 0000000000000000 R14: 00007f0934da5fa0 R15: 00007ffe7c9dc778
- </TASK>
-
-Allocated by task 6201:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x9d/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x236/0x370 mm/slub.c:4362
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- swnode_register+0x5a/0x540 drivers/base/swnode.c:790
- fwnode_create_software_node+0x199/0x1f0 drivers/base/swnode.c:949
- device_create_managed_software_node+0xd5/0x1f0 drivers/base/swnode.c:1060
- mock_dev_create drivers/iommu/iommufd/selftest.c:942 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:989 [inline]
- iommufd_test+0x3335/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 6201:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2389 [inline]
- slab_free mm/slub.c:4646 [inline]
- kfree+0x198/0x430 mm/slub.c:4845
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x22f/0x480 lib/kobject.c:737
- software_node_notify_remove+0x18d/0x1e0 drivers/base/swnode.c:1109
- device_platform_notify_remove drivers/base/core.c:2387 [inline]
- device_del+0x594/0x9b0 drivers/base/core.c:3858
- device_unregister+0x20/0xc0 drivers/base/core.c:3896
- mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
- iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff8880358f0400
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 64 bytes inside of
- freed 512-byte region [ffff8880358f0400, ffff8880358f0600)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x358f0
-head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b041c80 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b041c80 dead000000000100 dead000000000122
-head: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000002 ffffea0000d63c01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000004
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5211, tgid 5211 (udevd), ts 44437391568, free_ts 41364354329
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
- prep_new_page mm/page_alloc.c:1725 [inline]
- get_page_from_freelist+0x352b/0x36c0 mm/page_alloc.c:3652
- __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
- alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2459 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2623
- new_slab mm/slub.c:2676 [inline]
- ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
- __slab_alloc+0x58/0xa0 mm/slub.c:3952
- __slab_alloc_node mm/slub.c:4027 [inline]
- slab_alloc_node mm/slub.c:4188 [inline]
- __kmalloc_cache_noprof+0x26a/0x370 mm/slub.c:4357
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- kernfs_fop_open+0x3a3/0xdf0 fs/kernfs/file.c:623
- do_dentry_open+0xdec/0x1960 fs/open.c:956
- vfs_open+0x3b/0x370 fs/open.c:1086
- do_open fs/namei.c:3845 [inline]
- path_openat+0x2caf/0x35d0 fs/namei.c:4004
- do_filp_open+0x284/0x4e0 fs/namei.c:4031
- do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x249/0x2a0 fs/open.c:1455
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-page last free pid 5213 tgid 5213 stack trace:
- create_dummy_stack mm/page_owner.c:94 [inline]
- register_dummy_stack+0x8e/0xe0 mm/page_owner.c:100
- init_page_owner+0x3e/0x790 mm/page_owner.c:118
- invoke_init_callbacks mm/page_ext.c:148 [inline]
- page_ext_init+0x731/0x790 mm/page_ext.c:497
- mm_core_init+0x5b/0x70 mm/mm_init.c:2783
-
-Memory state around the buggy address:
- ffff8880358f0300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880358f0380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880358f0400: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                           ^
- ffff8880358f0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880358f0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         22ea6944 software node: Avoid use-after-free access in..
-git tree:       https://bitbucket.org/andy-shev/linux.git test-swnode
-console output: https://syzkaller.appspot.com/x/log.txt?x=1276f404580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
+> ---
+>  fs/bcachefs/opts.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/bcachefs/opts.c b/fs/bcachefs/opts.c
+> index e64777ecf44f..31f90c177c6c 100644
+> --- a/fs/bcachefs/opts.c
+> +++ b/fs/bcachefs/opts.c
+> @@ -360,9 +360,15 @@ int bch2_opt_parse(struct bch_fs *c,
+>  			return -EINVAL;
+>  		}
+>  
+> -		ret = opt->flags & OPT_HUMAN_READABLE
+> -			? bch2_strtou64_h(val, res)
+> -			: kstrtou64(val, 10, res);
+> +		if (*val != '-') {
+> +			ret = opt->flags & OPT_HUMAN_READABLE
+> +			    ? bch2_strtou64_h(val, res)
+> +			    : kstrtou64(val, 10, res);
+> +		} else {
+> +			prt_printf(err, "%s: must be a non-negative number", opt->attr.name);
+> +			return -EINVAL;
+> +		}
+> +
+>  		if (ret < 0) {
+>  			if (err)
+>  				prt_printf(err, "%s: must be a number",
+> -- 
+> 2.49.0
+> 
