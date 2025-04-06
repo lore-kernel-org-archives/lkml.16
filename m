@@ -1,124 +1,138 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FAE15B0EC
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964D741C71
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743967931; cv=none; b=p2ltgGHPUwfSZVt+SARDcNSrjKoA+cX9RnzkC0GCds8X+fhB9IurPlAxsf/aEOtfALbRQbC+uXMpVWfy4Ne7/KVCkAszHblNCqOJpdWOiRVZamgFCuTfsVqZdMd8P9aBugm0y5F6D1DtE1bGidml2C5FafoQd+Lnu3saiziLACI=
+	t=1743969027; cv=none; b=ea4cCmW+WK8ycQj55DzZHFT5J76Oa6efBwJQgrbkOckFAeMrbdlkVJEM4dQTInGC3ZaNHcuUZyZ2f4ReAaA708Ty8WjSf3H2qkFFY8N5UMh+PPMPiijrdPnYag1cpVnCRPAJtBDtU7uXu/Z9QWfYIOXvKa12zNqCbi4rSOTzrlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743967931; c=relaxed/simple;
-	bh=SnfA4AVX3p4bc8lGUpaXwk1FmeUn/qnNUjvdyAS6lvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g40oUi2k7AKQ90qY9BQnaBtLeVhn8Pa3LvpOaAoIfXz065fvk1psKlTYk7KPzmcSSkoyEpERQfcUZ8uc2GrQm92a+SrkZSy+pPQCuAX+/0OAPBduPjSY82d+io4ZKgMDF2sTy4lm3JI0gr2ibK7YMCt9mtDVtJJFk2TbORn95Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=K8X+r5nT; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743969027; c=relaxed/simple;
+	bh=VyGdiKrS4XUqc3JfCMhd+aDYYtmmzvodq0k8kmL/h3s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YCYrIkDnI2gVQXhKkBpChDGF20lnnMrhTijESoez1IvZvsEnwYsXf7DBgFll5qSpxhBpmVLR12NE/FCd9cUKM0X7K2lDGD8ABO9qRSCDGxZly5meyaKA1XmZNDcPcJavIfGeIziJJGzC22mcmJK+vhlG5illeojeLMU40/YMoVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vneop5+K; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="K8X+r5nT"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso697805666b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:32:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vneop5+K"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913290f754so444657f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:50:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743967927; x=1744572727; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HXc0QZV1tE7bS3mghgxMBPEGkzKyJZ5Nakgd1J5HNh4=;
-        b=K8X+r5nTTzEuKP35NpVA/M25Zw7hxJka7q2ZmWB9ic02/nMzQSP8WRi3hIqpIYCsMG
-         BFtzIhhsn3CAdDZHNT7RjmwsqVNP9eTj4j4A+Tf1OzXS42YjbYWOvyu4/79PKead3Vv3
-         U/n1RASlgguAMt2h3NgKouiPgKnFrhlZlhpsA=
+        d=linaro.org; s=google; t=1743969024; x=1744573824; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QeSqmbRMd7FAcGxEkpqJ7+o5KOI6K4uKw7Kmco+pkWo=;
+        b=Vneop5+K3pHqt0Ms32gmaQxH1UYpu2QT6TktA27V3F2U2kxC7lrmagsn3XPMxf/C5R
+         G+/6rZTu54AfkF3RJmGgmqJT10RxwkKe3esPzGEI89m9zNE355KczPFss3ycllU0gCpl
+         311nBZHGD4uaiBIsRBCzY/uOKSZmN7OUfdKIBmGOvjCTc3NuUGX826b39Fk5dEmlVekp
+         64wLm8xK5rdUD8U3vdSlbxFjo/OZJ0HiBL1Aa39lJotfQuGpT4c66MyikJkSuXhNFIFI
+         bg+MbiEHx78UhyxaZ9NbycMLvH6fuoQxn15sdWiPFALXizRH1TVJwm/2shupjK0A6oDv
+         sW8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743967927; x=1744572727;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743969024; x=1744573824;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HXc0QZV1tE7bS3mghgxMBPEGkzKyJZ5Nakgd1J5HNh4=;
-        b=u3Guluj1H1dDotpDwe0hHN9OVJHNmn6h2jfxIdIyRTmHBYz92CCkGxq1ty3SqlRr3p
-         jlpwjnXDGmL63MuIfW3Tmqx+eNgrOC1O8nvhTSiJgppGqD6nOPcYcm9qwbJHRm+v0v5J
-         BsyMMOkdTKlHzfzB8rgvN+jnAhwmc7V3leqWhdiZXSUTekshjg3h927OttRfIYy6GHNB
-         qlG4BDqbnOHhJzm3SN+KtfMFgfCSVCh3lXxbGOD5cWV3YDeXrflBgY4/ygXpfipjba8L
-         8lwqvw51DE8d8q7Llip6nL4V5rdvdcw7EOGd1h2EtWA/nEYpOs5HaFemYi1SQxS6qvwT
-         8gxg==
-X-Gm-Message-State: AOJu0YyBgRpTZfIRecEAU9fHcXhM7E7lGtTe429JKduVP1JT9cpiDK7x
-	dt7jmNylae+BCkax/FNZKCNriF05L44KU3nltOCwXdrpmkCOwV/GUYa0EVIs4V2cvoBHMTWRde3
-	MyE8=
-X-Gm-Gg: ASbGncvhRUJG3PsKLS+OdWqyyWSdINXoNA+J+bqqBYZoZKpHwAM9GaGCxuHtFy+5qho
-	3OwZO943jo1oxqxvNt+CiavU/9cpn456vjvnHyFpgG1Q/JP29D+cLp4sznLT7/ebIOgzkdFlb6P
-	43FJcr7ge+eb1ddPbuL3Q+PoNrLxgpWy9AW6kybLK59w35F1NwoIH6daYuur+t+1eONCaBu+DX1
-	P1VLwZCsDtZ1D54h+9Qc7OpqeFICLkjydYDh0NTf7mEPlK3TVJVYCs11rpQ6aRRpn7ehjN3DUri
-	ZxbKW1Fi48U/P6Krs2LxglVlhUmoMBs97dqiJq7WiFJtU/UYz2xWG43T4sGIhYkH6/a+Z9YKIQH
-	3cqq2dgoNThnbpsxm+0M=
-X-Google-Smtp-Source: AGHT+IEz8qJJGBbX+GZmtkU61DWqdFgZpNYNsvTABs+EOveIh8JRFDM7z8k4PPtlkIbdEvSiUJ7CYA==
-X-Received: by 2002:a17:907:a05:b0:ac7:3916:327e with SMTP id a640c23a62f3a-ac7d6f22f77mr830044866b.61.1743967927405;
-        Sun, 06 Apr 2025 12:32:07 -0700 (PDT)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013eb27sm618558166b.121.2025.04.06.12.32.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 12:32:06 -0700 (PDT)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso6676488a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:32:06 -0700 (PDT)
-X-Received: by 2002:a17:907:a05:b0:ac7:3916:327e with SMTP id
- a640c23a62f3a-ac7d6f22f77mr830042366b.61.1743967926185; Sun, 06 Apr 2025
- 12:32:06 -0700 (PDT)
+        bh=QeSqmbRMd7FAcGxEkpqJ7+o5KOI6K4uKw7Kmco+pkWo=;
+        b=vKKbSKoVxS5ZyvQtNJLBoeDoHupuCtVp3CnXJIaQP+2RA7nUS3hpXNO5l60bTpoJtz
+         By8WFI1R1k02nJ7MWrQGdVnYwC+T4JEnOa1I9ogmMQUJRJiMsEFJp6rbIzVNqxbz2TkM
+         t9sdu9veyHXcGNxr2W6ygtYcbUwG3O/5px9E8Rjepiaq2RzDcw8pucZGKep9DxJrxk6o
+         tNqTPV6kIgDYIlr87mQWvfrjSqfQ6eewUtq9kJtDFrA1RcBR3UdHW5OigNSVIuCIbZyH
+         9+CA+zTEcrwpRBGEoyjapUlPMDEvb7Y8Zuytc/GhtCGyDceCEREmx+3V4j6h0djVb6FT
+         lKgg==
+X-Gm-Message-State: AOJu0Yw9pUFI73I3rYD5TjP5X/4J/NAqnyRGWb2wr8gN0T6jfR1BqYiu
+	Wl5jSZGtlgOdx9lI+ludBpeqUsN0Z8R30YIiDzf+cr1ynr4LwWTu9lS3iZLxMWQ=
+X-Gm-Gg: ASbGnctzMKCPzALCtzYeLMMIgrt2NgZZ/NwMJMA6QZVxvmiErIUkeXzJSEQDJYMD5+t
+	5M1woBV0MHUs7mtPGbFMCtD6ayblpo5JTND+/FeRIo2btKmG5L1CWBP/c6kv5bf+z05MyyhHj9+
+	6kv76uIKC5oAKEC4FxMFrmGgApUzNUxRo3zAz73v+ko33lLIM+tBR965Q1YTD5KTaDroe7jdxHJ
+	cHp+ko3UED7S+YhwF9ZwKsIYdpJQ1Q6pMxZAUgKJVLjs74At1QOPqLlLBED0pP7Tz2jgiHaOcWM
+	xtSCKdH2/uDMu43bqVIsi30W9vx+55Mf1vwzUYS9E/59c8Le4rNzfQd1JnIua2rTjKVZxXSbiA=
+	=
+X-Google-Smtp-Source: AGHT+IEQJBuuorWHy6t16RjU3wja4hwTE5P0PZNYO4s+k8FV6tYMGpmeqiXYjqWfBjll7mALW4WHfw==
+X-Received: by 2002:a05:600c:3147:b0:43d:77c5:9c0e with SMTP id 5b1f17b1804b1-43ecf83e90cmr31081595e9.1.1743969023560;
+        Sun, 06 Apr 2025 12:50:23 -0700 (PDT)
+Received: from [192.168.1.26] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm10053842f8f.43.2025.04.06.12.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 12:50:23 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/8] mfd: Fix wakeup source leaks on device unbind
+Date: Sun, 06 Apr 2025 21:50:08 +0200
+Message-Id: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202504061053.F27227CA@keescook> <CAHk-=whVfxi4KRu-H=tsgSdoGdDz1bvu0_miJT0BTgAf4igpdg@mail.gmail.com>
-In-Reply-To: <CAHk-=whVfxi4KRu-H=tsgSdoGdDz1bvu0_miJT0BTgAf4igpdg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 6 Apr 2025 12:31:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whrP0CLrx_7-A_3bZgyS4ihVYiuh817Vk-3xa6jG3sVLA@mail.gmail.com>
-X-Gm-Features: ATxdqUH_pJYVj-8ouA718OAlUUl8Jg9550P8_geCIbtJw0QorlqJPLFSM9dMY04
-Message-ID: <CAHk-=whrP0CLrx_7-A_3bZgyS4ihVYiuh817Vk-3xa6jG3sVLA@mail.gmail.com>
-Subject: Re: [GIT PULL] string fixes for v6.15-rc1
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Collingbourne <pcc@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPDa8mcC/x2M0QoCIRAAf0X2+RZUKrJfiXvYdK3FMlHuOpD79
+ 5MeB2amQ+Mq3OCmOlRepck3DzCTAv+i/GSUMBistmd90hf8xIBhiJ7xR4nTUvDNlJDclZwj/zC
+ RYNSlcpTtf77P+34AJ5K3nGkAAAA=
+X-Change-ID: 20250406-mfd-device-wakekup-leak-a98a99acb1fa
+To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1528;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=VyGdiKrS4XUqc3JfCMhd+aDYYtmmzvodq0k8kmL/h3s=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8trykqvvP0MeExx8f7I2VyTLhDDfbkcKeZUnr
+ /Q4x3sGCU6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/La8gAKCRDBN2bmhouD
+ 17lyD/9YZdvMvrNO7nul6MaM+6o9GIq2Q6sre+/2sscOZcsLadYoeU8DDcJsd2QBG4eafOS7Glu
+ YAaYdyQos1LmjXQ8NwWYf7WGvk2p+gCK44Vj9S1rrwXId9TKUGj9iK5OtYgCU9ojNHiRSpZHFMW
+ 5DiYtJ96qJpo0EM+8ywVXI/i/Yx8TF5wBCiY2gHLWkuVcwyHmvbebmWG+fK5SK9T0r79+k/ov3a
+ xL2vS6lHjPZ8oPABkOIye6ir76PcuVLMdwPA+bnTrCEw9HK4s1Qh1If9rLq1wJMwkdle1WAonlo
+ 6M9ZPKyHMEjNmef3BmGYpzCN0cGdaT4mMlGyojyoaOJO1BPdykihJqTATaBvtMzp+3z3OU+gi5g
+ TBysuSNWsdIA8qwSw2I+BAoAxh/NUZZOHLN6uE3bznoylVJJ7CcHLjg38XNyLIpyhpUtjkzjfFl
+ bzJ9nu9EWdsRgVq4WmMgBKua7MElTTwX0+cxqPi173hJHys4jYzdoIJTQ7UGApugSC4Ee912OI+
+ wYn4qx7SIoKwHXEvFJiDejHOzaopA0Z2WxXzYUGgSII2oMnZTt4MBPiNTXrPzzA750WloqOwsny
+ CvXFO1GBV96WVCPdqy1+chcfTjlrrKE1Hhg6JBCyC8huY3eIqO2PltKrxXgYaRTc0PFgPwafwZB
+ NljYubvzHADQTDw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Sun, 6 Apr 2025 at 12:04, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> When the function implementation is the stupid version, there is *no*
-> advantage to a function call.
+Device can be unbound, so driver must also release memory for the wakeup
+source.  Use devm for driver already having devm interface and manually
+disable wakeup for drivers still having remove() callback to keep
+consistent ordering of cleanups.
 
-Side note: the reason we don't do -freestanding is that some functions
-we really *really* want the compiler to optimize away the function
-entirely.
+I did not update the drivers with suppress_bind_attrs and no error paths
+after device_init_wakeup() because it would not bring any benefits.
 
-Things like regular 'strlen()' are commonly used on compile-time fixed
-strings. It needs to be dealt with by the compiler.
+Best regards,
+Krzysztof
 
-Same goes for the basic memcpy and memset functions.
+---
+Krzysztof Kozlowski (8):
+      mfd: 88pm886: Fix wakeup source leaks on device unbind
+      mfd: as3722: Fix wakeup source leaks on device unbind
+      mfd: max14577: Fix wakeup source leaks on device unbind
+      mfd: max77541: Fix wakeup source leaks on device unbind
+      mfd: max77705: Fix wakeup source leaks on device unbind
+      mfd: max8925: Fix wakeup source leaks on device unbind
+      mfd: rt5033: Fix wakeup source leaks on device unbind
+      mfd: sprd-sc27xx: Fix wakeup source leaks on device unbind
 
-So what the kernel really wants is basically "-freestanding" but with
-a very targeted set of functions still dealt with by the compiler -
-not ever because they should be turned into function calls, but
-because they can be simplified to some entirely different form at
-compile time.
+ drivers/mfd/88pm886.c         | 6 +++++-
+ drivers/mfd/as3722.c          | 4 +++-
+ drivers/mfd/max14577.c        | 1 +
+ drivers/mfd/max77541.c        | 2 +-
+ drivers/mfd/max77705.c        | 4 +++-
+ drivers/mfd/max8925-i2c.c     | 1 +
+ drivers/mfd/rt5033.c          | 6 +++++-
+ drivers/mfd/sprd-sc27xx-spi.c | 5 ++++-
+ 8 files changed, 23 insertions(+), 6 deletions(-)
+---
+base-commit: a4cda136f021ad44b8b52286aafd613030a6db5f
+change-id: 20250406-mfd-device-wakekup-leak-a98a99acb1fa
 
-(There are a _couple_ of other cases, but not many: we end up having
-things like "constant prefix matching" patterns, where we want the
-compiler to not only notice that 'strlen()' on a constant string is
-just a compile-time constant value, but then also want to simplify
-'strncmp()' or 'memcmp()' with a small constant size to basically be a
-much simpler thing)
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-But we do not want the compiler to create out-of-line function calls
-for code that wasn't a function call to begin with.  That's pretty
-much the exact *opposite* of what we actually want.
-
-We did try "-freestanding" at some point, because it's the obvious way
-to avoid the compiler messing this very basic thing up, but those
-"just deal with simple cases directly" are really really important.
-
-I wish there was a version of -freestanding that did that "only
-simplify calls" version, not the "recognize patterns and turn them
-into calls that didn't exist".
-
-            Linus
