@@ -1,203 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8875519067C
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DD05695
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743964975; cv=none; b=Fx0ej185DOqs/Cbrh3lxuLumqELg2saVAD7M9+Ih+p9wzQ/J39sqIXPcF3Eoh0qmy91OGJktSjJyLFZvNZbbZzROmLLHEw617vrDe4miA3WTcYDL7LZWYQJSr6h3OCoxysn4gigmpA/FISbgapiloTYTNo6esoW/h3/1u8UWDh8=
+	t=1743965240; cv=none; b=aPLxQNTcgORXHNFF2zQ7KO0EiFdTs0DRLh7OeoQGayoEHJKjjShMguGvZHFtOiO9EXxtLqM6UJStHXTJv/1Ge2UFpE7TsGP78yWjwN22yARIMfibgdOn46ZFjJh4CTRrWOMJmMm3vRQ0Tnb42zgj5J7O8MZjOSM1JbL4QtPjVGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743964975; c=relaxed/simple;
-	bh=jkthnwIu4x2ab3rryn7gQmfrXQCW9AmPrBXkvq286QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ECJ4il33pZ31WJ6Tj3S3EcfHhpX1e+Dn6Cpf8vpFrWHziniYtm/kx54X28kSKurmjjdBeUZ2pNIPfkDbAF9qDolZPby1OTslh6WkGKXd03mTkVMjVX/hUkEgjfMSDLL8vdrKDENNJuCAwSObv2wXmqWDuX+wWTE/vr13EbSPIg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VjpPXUk1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743965240; c=relaxed/simple;
+	bh=3SE6SWvcKLkq6FS1QcFUPgYFr/y2zDeedEUjnFn6kx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QL/9gWu44ha3PaDwVl5+BOhWb8EvxEP9WsR8zWwifCxs3zRLhihWsl4lopqdnXeXsfNrCTKpyJGs7P0fPUBcteECo8dbswwwSOiFex04mmrnqiY3QXl5p1tXQ4z4lrKucREpQ2Ghy0mUb0dQmH0SALru3s3PxGL13i07XfuJOeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxdbX8Uy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VjpPXUk1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743964972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4c8B490RwiITrJ+PXzql/YyOvDN55S409ylH6Wlhgw=;
-	b=VjpPXUk1nQ2CTaffUFO2o4RDCWb6n3bXhXuhb46eAX5S/6PMBZ9g2RYHcU4S/4Qe2hQ260
-	Me8MiDIYE26mvfeUrNdq714DXiDhZIDH5KnF5H4CrSYmYO8bzNfQzs4XA21jtMV2awUodu
-	nA5TgcXYiz3A5KgX3BLwYNDiKowx3Zs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-683-gK4FABgMOYCCVlgCyLrNbQ-1; Sun, 06 Apr 2025 14:42:49 -0400
-X-MC-Unique: gK4FABgMOYCCVlgCyLrNbQ-1
-X-Mimecast-MFC-AGG-ID: gK4FABgMOYCCVlgCyLrNbQ_1743964969
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d51bd9b45so25047575e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 11:42:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743964969; x=1744569769;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f4c8B490RwiITrJ+PXzql/YyOvDN55S409ylH6Wlhgw=;
-        b=FlEIe2yEv51+fh0iRX6B2ANhhplsc4BiE/Wh5aea6FtuLliEwZIZw+8ufjlH0cSLyW
-         wl4Qs2My8UAwJiaSy45RQy0MaA+WdO6h9VB+WD9OEqBts8wjSfAUZD5pVjOKdG9BlRMF
-         mJ9EACkLCVJxFIdHxtuv01NaWUudcd1oV7B6C8qXULZJrcSYDm1eZjg0VOZtfiYHuheg
-         2Io2pjRcIgGR2VVWYA4CX3hBP+GwiZ7b+fSZjYXWYM49muU8dhbj8lSnQhIOpEgXUYvf
-         y9ldJhV8EzLzo2f6bzwGtx+uPrpeEeyWJCosmzTh4NDT78lb70MXZVAyeP/u+exl7WSh
-         mSZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXy1r2X8k2on+yeeF7JD79YAkcbbUaTdrgC0XAFnsaKQQuVEdCMk0R6Lr7KnYfExtAnIpZoNGzPiHIGiQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjHGHW4KYP6JjtxT5BbjlV3XOu5e7W35PFzJafT7OHIit2XaHh
-	yNk0MtLo/Iy1+/+2Ce7+xY3zhd6IyKJo2pj8OA/pwBwD3nKEYJ4P4RiiJr6mt4Oi50pHW3P42yU
-	i7yz3HgWeeaXTJCSiUcF9pTXypN/DI9rVqT+3CrWNQnRbRZIPSB+3Kvy2l1d0Pw==
-X-Gm-Gg: ASbGncuc5JhafsOf/CJksjTyRJRGgKBsDYlfj/b7nrjKE8LNGXj3rwTa5cE23uw7FtU
-	k4Qi+Vm+CYpVn9SDgA8qqWZ/UHGZxRqMy+kwMYoHOhGzO8gKwzzkCh45Zrt8slwPHgJyKRdDt0s
-	X2GCkU/iRYJxGPEAWvhtvxkQzOMmPL9bPXYfjLdEcv8I0GpeB/FcfuqcA/uEfga3uLklbPO95jy
-	K5VyMaqy4t0i7VdcJHV7VTVLXN12bTC5R7yae6nXXO3tt6jRsa3tNnazNq1QKS5npSrQod8Qfs7
-	TX0kihuRTA==
-X-Received: by 2002:a05:600c:1c02:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-43ecf9c3318mr77649445e9.26.1743964968811;
-        Sun, 06 Apr 2025 11:42:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJ7Ob0gGk+5s+Q1YLlqY/Rv4sutBh4ToTvYFi5jKg1vPDkOglX+EoRqjaRhaLmLLp6Pxa/Tg==
-X-Received: by 2002:a05:600c:1c02:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-43ecf9c3318mr77649235e9.26.1743964968402;
-        Sun, 06 Apr 2025 11:42:48 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300968cfsm10197854f8f.16.2025.04.06.11.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 11:42:47 -0700 (PDT)
-Date: Sun, 6 Apr 2025 14:42:44 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250406144025-mutt-send-email-mst@kernel.org>
-References: <20250402203621.940090-1-david@redhat.com>
- <20250403161836.7fe9fea5.pasic@linux.ibm.com>
- <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
- <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxdbX8Uy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63559C4CEE3;
+	Sun,  6 Apr 2025 18:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743965240;
+	bh=3SE6SWvcKLkq6FS1QcFUPgYFr/y2zDeedEUjnFn6kx4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KxdbX8UycLWum2jDOKNBqtwJxveyX+Jtj/dUOzDMjmgAJ8mGY3Kb7wd8yonOL8tu3
+	 CXP36R1HkDJI/DgrzXyewXBcSlDd6g5Y6iXARy358LowJPM8bq6I3aVY8bMDDaFJ+f
+	 1iVS4odRYBhOkzv02fH1BkwGyX1i6ZUh9vtq36GKOimGYs/R1y40dxHM+qncgjvffk
+	 fh9AgFCY4iyaIVIV0PbP3tlw5mjkmWWL1pKckyLahwY7wzOIO9kmOZBazXOpuFEQ1m
+	 91Csao2ZFxGXTdTI9b+C2RWkc8P0wKQZjyMtAlc7XXdbZcDBOwJdFmkxAeqcFu2rbf
+	 gLUXAurs2KQDg==
+Date: Mon, 7 Apr 2025 00:17:14 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: SoundWire fixes for v6.15
+Message-ID: <Z/LMMl6/SMB8Mm9q@vaman>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TY1dHV31jzGlHtKq"
+Content-Disposition: inline
+
+
+--TY1dHV31jzGlHtKq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 04, 2025 at 03:48:49PM +0200, David Hildenbrand wrote:
-> On 04.04.25 15:36, Halil Pasic wrote:
-> > On Fri, 4 Apr 2025 12:55:09 +0200
-> > David Hildenbrand <david@redhat.com> wrote:
-> > 
-> > > For virito-balloon, we should probably do the following:
-> > > 
-> > >   From 38e340c2bb53c2a7cc7c675f5dfdd44ecf7701d9 Mon Sep 17 00:00:00 2001
-> > > From: David Hildenbrand <david@redhat.com>
-> > > Date: Fri, 4 Apr 2025 12:53:16 +0200
-> > > Subject: [PATCH] virtio-balloon: Fix queue index assignment for
-> > >    non-existing queues
-> > > 
-> > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > > ---
-> > >    device-types/balloon/description.tex | 22 ++++++++++++++++------
-> > >    1 file changed, 16 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/device-types/balloon/description.tex b/device-types/balloon/description.tex
-> > > index a1d9603..a7396ff 100644
-> > > --- a/device-types/balloon/description.tex
-> > > +++ b/device-types/balloon/description.tex
-> > > @@ -16,6 +16,21 @@ \subsection{Device ID}\label{sec:Device Types / Memory Balloon Device / Device I
-> > >      5
-> > >    \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtqueues}
-> > > +
-> > > +\begin{description}
-> > > +\item[inflateq] Exists unconditionally.
-> > > +\item[deflateq] Exists unconditionally.
-> > > +\item[statsq] Only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
-> > > +\item[free_page_vq] Only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
-> > > +\item[reporting_vq] Only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
-> > 
-> > s/is set/is negotiated/?
-> > 
-> > I think we should stick to "feature is offered" and "feature is
-> > negotiated".
-> > 
-> > > +\end{description}
-> > > +
-> > > +\begin{note}
-> > > +Virtqueue indexes are assigned sequentially for existing queues, starting
-> > > +with index 0; consequently, if a virtqueue does not exist, it does not get
-> > > +an index assigned. Assuming all virtqueues exist for a device, the indexes
-> > > +are:
-> > > +
-> > >    \begin{description}
-> > >    \item[0] inflateq
-> > >    \item[1] deflateq
-> > > @@ -23,12 +38,7 @@ \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtque
-> > >    \item[3] free_page_vq
-> > >    \item[4] reporting_vq
-> > >    \end{description}
-> > > -
-> > > -  statsq only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
-> > > -
-> > > -  free_page_vq only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
-> > > -
-> > > -  reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
-> > > +\end{note}
-> > >    \subsection{Feature bits}\label{sec:Device Types / Memory Balloon Device / Feature bits}
-> > >    \begin{description}
-> > 
-> > Sounds good to me! But I'm still a little confused by the "holes". What
-> > confuses me is that i can think of at least 2 distinct types of "holes":
-> > 1) Holes that can be filled later. The queue conceptually exists, but
-> >     there is no need to back it with any resources for now because it is
-> >     dormant (it can be seen a hole in comparison to queues that need to
-> >    materialize -- vring, notifiers, ...)
-> > 2) Holes that can not be filled without resetting the device: i.e. if
-> >     certain features are not negotiated, then a queue X does not exist,
-> >     but subsequent queues retain their index.
-> 
-> I think it is not about "negotiated", that might be the wrong terminology.
-> 
-> E.g., in QEMU virtio_balloon_device_realize() we define the virtqueues
-> (virtio_add_queue()) if virtio_has_feature(s->host_features).
-> 
-> That is, it's independent of a feature negotiation (IIUC), it's static for
-> the device --  "host_features"
+Hello Linus,
 
+Please pull to receive a solitary one line fix for asoc driver to
+missing config option. This is coming thru soundwire tree due to
+dependency of patches pulled in last cycle.
 
-No no that is a bad idea. Breaks forward compatibility.
+The following changes since commit 08ae0d61c3d79bb5d52ae30ad4fc12442e966a23:
 
-Oh my. I did not realize. It is really broken hopelessly.
+  soundwire: take in count the bandwidth of a prepared stream (2025-03-11 0=
+1:51:58 +0530)
 
-Because, note, the guest looks at the guest features :)
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
+undwire-6.15-rc1-fixes
 
-Now I am beginning to think we should leave the spec alone
-and fix the drivers ... Ugh ....
+for you to fetch changes up to fcc0f16923621e670d5ccf486160e4a1b960b17f:
 
+  ASoC: SOF: Intel: Let SND_SOF_SOF_HDA_SDW_BPT select SND_HDA_EXT_CORE (20=
+25-03-31 12:27:26 +0530)
 
+----------------------------------------------------------------
+soundwire fix for 6.15-rc1
 
+ - Fix to add missing config symbol CONFIG_SND_HDA_EXT_CORE required for
+   asoc driver CONFIG_SND_SOF_SOF_HDA_SDW_BPT
 
-> 
-> Is that really "negotiated" or is it "the device offers the feature X" ?
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
+----------------------------------------------------------------
+Bard Liao (1):
+      ASoC: SOF: Intel: Let SND_SOF_SOF_HDA_SDW_BPT select SND_HDA_EXT_CORE
 
+ sound/soc/sof/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+Thanks
+--=20
+~Vinod
+
+--TY1dHV31jzGlHtKq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmfyzDIACgkQfBQHDyUj
+g0cm4Q/8DYc4+J/TZqHEn8i76GosB4LcqggWnaU1HC/ihTB0qN8NBDLCJVSyOB/7
+HI7O858KK9GjubXYyqhSbAzE8BJb4nOAjpLJTHehsE6JYmdwe68iPF3uE2c1yf5o
+JuzLPjfVQD+wtrlero0u/VBnCEpmdF5U4m4M/RnvkKbLtjDo7qWihcvtMV9MxvCA
+9DTvxbcCtLXlcUo25kN4TZvVSpsdDsQ5zU0c2my/T7S6Y7AHDca4lTr7gCdy8neP
+P2BqIcCI5TOFnMBGaXPTArpBamRqRW5+OCHwODYGngCoYnFvK4PpqbMaJY6gLziS
+3Qg1sNH+V7rCppA2mpGMWLQTQnKb2TjPnUAUvZ/8hp7DUhxwy/gwb3WLdpQ7/LwE
+RUT3GtbGcUpgKZYR3P2j2FBIClg/L0Y3YHVvCpCY23j7QWf9SIjVQG6W2m8r3VvC
+lgesohXL0sXeXhOK11GRcA/aL28vQZviZXXppT7NgG0Rby1phCDqthTJksCIdn+8
+jaFtJHrdiUjrIgrMRbw51jj6n4xOGrVjvYbG4/z/DhTigJttGBvUP53PoiL3OWUA
+PCu+JuRQzoKLYZrS+v+hBpbVuZOwcxApTV9j6PysvdpsjvB7e/t9vmg2sHOjCKnt
+r9BPBBW+OBDj4PrddJnEv5pOWp5HtAVJynNPDlADR1Trcn1mwms=
+=yh1M
+-----END PGP SIGNATURE-----
+
+--TY1dHV31jzGlHtKq--
