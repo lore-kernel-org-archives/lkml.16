@@ -1,31 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E56120E6FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4FE1AAE28;
 	Sun,  6 Apr 2025 13:09:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743944974; cv=none; b=tzQAhEO3nNyv42FJTbMjnYEH4EBbpsdAfduF995ti7Ou3ntiKT7gC7fZrQtXcImIwbKou7Lh9Q1IABcjTc/kuGAS8asWkiezc84BSniIPEvDQKLUAh7RyEx5lCiFqZO75KA+zdgvHSxGXV9h8v/rtyCoc40sTCL+GGEXIiZl+3A=
+	t=1743944975; cv=none; b=mfGJvRbmvEgdbwGQ95xIeTvKSISWK4PxMyvsD8dXWBzHbIGQVWAzfHM/ddw/2BbKQDGo+eUDO/KJb/C8JEuj6Re9738tw80J5veGZpP3vgkcQp5YScSu4IYEGCL6Vmauuqd2gm+lIUdAzgwyVRfzirgItt7bhWpxJg2lERUE3To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743944974; c=relaxed/simple;
-	bh=13RE6hOUkBqpr+oWU0X4GFlgowxwfHS6noOIRF1dxL0=;
+	s=arc-20240116; t=1743944975; c=relaxed/simple;
+	bh=1kwR/uAn6H4VvkHuCFbYQOlgki326S4VL3CqoDsXu8c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CQaXVFgHheXb0LJTy2an4TlsaMTKY4wzMaNoH665c4MYl3BK1pfeEWakwMt4x2Mp7QVEcP301mRPW3F3C2KsV10Y7V/c60/FBNB2RgGFyIB/a1tVvVwX8YBqoLfYZV3Fsx3Edly0mHB2yGo8EdmuIsU2nJG1zbpJpdazFAMrD/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=hWf5HCX/; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=K8fgIWUehY91VMN1d6CuG5ZjXicxBdk/mX2HWf+UvANp9A0qKYipDXjRgGPU0LUVQS8B3RIm6rl2zXkkQgw3FsdUV2GgEUtVGeyhD787f9kV8rCrsUuNvAmrdmfjlpXhwzTpQPOctWlTPC455DgDRb4ZRafefHoFKqwHlVzLZQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=KHiAD7Tg; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="hWf5HCX/"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="KHiAD7Tg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1743944609; bh=13RE6hOUkBqpr+oWU0X4GFlgowxwfHS6noOIRF1dxL0=;
+	t=1743944609; bh=1kwR/uAn6H4VvkHuCFbYQOlgki326S4VL3CqoDsXu8c=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=hWf5HCX/hpiGPOGvRMdVrGdN5nzt1RDEGIFcjSi8abB3p6z0PHpnxwQvcgByCkym1
-	 mb2GE3ZPlA0c98b0fASPhWNO9P6xR9HQtmcogC/nbDtbMm9MR5hTFnPIympC0bSpP4
-	 0kBf6l1h8PKq1aUdpwlI9yZR/EInG+Tt1hBa8yHU=
+	b=KHiAD7Tg6ZsoEhcII5ZBIfRjzIUU5FJ6ku4B4+7mO4WxFteHZd/EjGV1/t5nrRTky
+	 ePIEyuSZumbr1XbKSf77ht1ekY6D6KXvtKXhWYQjVypJ65TRoWv1IZ+g8SZg2BrZa8
+	 5layR7c5sEd3LSpKUZ3qyE5T0uFiCusPGTdH7Rq8=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Sun, 06 Apr 2025 15:03:17 +0200
-Subject: [PATCH 3/3] arm64: dts: qcom: sdm632-fairphone-fp3: Add AW8898
- amplifier
+Date: Sun, 06 Apr 2025 15:03:15 +0200
+Subject: [PATCH 1/3] ASoC: dt-bindings: Document Awinic AW8898 amplifier
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +33,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-aw8898-v1-3-58a2d554693f@lucaweiss.eu>
+Message-Id: <20250406-aw8898-v1-1-58a2d554693f@lucaweiss.eu>
 References: <20250406-aw8898-v1-0-58a2d554693f@lucaweiss.eu>
 In-Reply-To: <20250406-aw8898-v1-0-58a2d554693f@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -48,62 +47,111 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1175; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=13RE6hOUkBqpr+oWU0X4GFlgowxwfHS6noOIRF1dxL0=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBn8nug3hQ/lmKr99ZB1IyoVoHBk2fQV0Jhx3Twc
- 94SoNwwq26JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ/J7oAAKCRBy2EO4nU3X
- Vh6jEACx7+3OmTqOwvUCEy68KIg0LQXEaR5xfQ2/ClQEJpE5goWzSBCvn7D7cAJ6Ax3HMduCk3i
- FXeUnF78F/3LdJDxPLia0nodi3J0VLmgVGzMsV1oRgXBs0SjABBvB9C9SGvTvQvuUml1vrpF7jV
- Fafjj9Z0A2ge6RWJCLKFelReKAug+ojtoGH/OrTAqnqg0MGLL36JUAyb1WLDvu6sENKclKtSNcw
- J/VzhMcbGweNJONyJqKwIv5W4xItLVdWs5qSM9Qta0rzRTQiK2Ojr+mF22hlhkTMyBJbUyLP70X
- m8HTFjaWLatRJL+eyKwJECVNmAi5ruJDMGSNvymxRORoxKc23w32rEayzTjDVKL2QW4CeuoBwSh
- UkihasT5zhk2fz99lu0AKcvxjXwmPQJufiW+W/hvSOhj7blOqS1BDkJlFVGZDEETxX/xol9y86P
- XZ+mws7AGLwwlGHIVMfq+qua19SB1iBp3j7I5MBcMxplx1sSgb3UkrZk34cS/mrKZleYzngsHmf
- ug9BBVpLkIZsA53EqYbHlh+LOaNeB7WsLoco2Ct8FkVF4O/U03OTgXknZc7TY0vwv2tLBXeiZaY
- JEQb7rzo7lgQaILjazWPpsFbSBdfw2z/4o+lF6bdZz+kdQJKSFRW78K/pSYANgnJq9D+QPwhNr/
- QTLH8YKfz5E8jyQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2275; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=1kwR/uAn6H4VvkHuCFbYQOlgki326S4VL3CqoDsXu8c=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBn8nueWUb8ZHMAmSblTKg1FNqhsg1jZqo3Hn50d
+ W9wAUIncPiJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ/J7ngAKCRBy2EO4nU3X
+ ViKYEADSVFFYvPUx4Kf7C9YFS1pA5P7DHMFI8IsL6j8xOHF8dVJZzzCxWfe5pirS7BPu29xDlm2
+ GqOR8ewoubITxIzDahtM98oVHdKNRTj/P8VK/hEIJERH7xNjYsnKzO/NIaKEq2/m7RvgGFfjSlj
+ HFQQ+lJ5A0LDDc9I0XgvAYtEwJV/H29F90CZHxlEqEH2TGrjcwYKiWCRUHTDkQVahiDRCOm4FFC
+ +13dO3lqgpPhAlw2vtgrnABe/enchmLp6vFprsAvgRY2STpRSYNPQdIpiCoBrxoDm034VtQiQtu
+ hehF5qtLvR70y/2qu8R2tC+OpIiyvlosuCg+EvYoRXauFvmP6TdBDWpCc0EowAc7S+kpEwgC3FI
+ uDDlyqMC+c5gZTl6YMar0mIECC+Ts3MHf6WQNuJvMYi0ScSRzw7mzE0ZDR0P1FFhTA4XcJfCWFr
+ xImIgfx6woMc6/pq/dDZ+2NjEC1GrxCx3T0OrEpfX/jbVR4UnDVwyOvfd6lQ1/Xs0XJLnaOH8JG
+ EG5/p4At8TfPeZ0CZbnWFby5LTQecNl97e4AqC3yMXBquFUYAj+TtxqE+ke1vMUpX75zqAQLjmb
+ ps2XoZSMlofZlE5GsF4Y1GdAsWNUsXvYvFW4G4sSjx5GJcpiZ9wtl4NuP3yjg1B2BdjHfzcNPnf
+ TF3N5zPb+sRpBDw==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Add a node for the amplifier found on Fairphone 3, receiving sound via
-I2S from the SoC and being connected to the speaker.
+Add the bindings for the Awinic AW8898 amplifier.
 
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../devicetree/bindings/sound/awinic,aw8898.yaml   | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-index 31ed26c31e6ea381a8942ccf569513df3300cdeb..ef6f8c2bb4a5eb8e93aba0a4cbfce5f8ae2ba21a 100644
---- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-@@ -81,6 +81,26 @@ nfc@28 {
- 	};
- };
- 
-+&i2c_6 {
-+	status = "okay";
+diff --git a/Documentation/devicetree/bindings/sound/awinic,aw8898.yaml b/Documentation/devicetree/bindings/sound/awinic,aw8898.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..2be084e77253410fd66ded5242fc75174dbfc4f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/awinic,aw8898.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/awinic,aw8898.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	aw8898: audio-amplifier@34 {
-+		compatible = "awinic,aw8898";
-+		reg = <0x34>;
++title: Awinic AW8898 Audio Amplifier
 +
-+		reset-gpios = <&tlmm 21 GPIO_ACTIVE_LOW>;
-+		interrupts-extended = <&tlmm 20 IRQ_TYPE_LEVEL_HIGH>;
++maintainers:
++  - Luca Weiss <luca@lucaweiss.eu>
 +
-+		dvdd-supply = <&pm8953_l5>;
-+		vddio-supply = <&pm8953_l5>;
-+		vdd-supply = <&vph_pwr>;
++description:
++  The AW8898 is an I2S/TDM input, high efficiency digital Smart K audio
++  amplifier with an integrated 9.5V smart boost converter, sound quality
++  enhancement algorithms and speaker protection.
 +
-+		#sound-dai-cells = <0>;
-+	};
++allOf:
++  - $ref: dai-common.yaml#
 +
-+	/* Fairphone 3+ only: Speaker amp TAS2557 @ 4c */
-+};
++properties:
++  compatible:
++    const: awinic,aw8898
 +
- &lpass {
- 	firmware-name = "qcom/msm8953/fairphone/fp3/adsp.mbn";
- 
++  reg:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  dvdd-supply:
++    description:
++      Digital power supply
++
++  vddio-supply:
++    description:
++      Digital IO power supply
++
++  vdd-supply:
++    description:
++      Battery power supply
++
++  "#sound-dai-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++  - "#sound-dai-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        audio-codec@34 {
++            compatible = "awinic,aw8898";
++            reg = <0x34>;
++            reset-gpios = <&tlmm 21 GPIO_ACTIVE_LOW>;
++            interrupts-extended = <&tlmm 20 IRQ_TYPE_LEVEL_HIGH>;
++            dvdd-supply = <&pm8953_l5>;
++            vddio-supply = <&pm8953_l5>;
++            vdd-supply = <&vph_pwr>;
++            #sound-dai-cells = <0>;
++        };
++    };
 
 -- 
 2.49.0
