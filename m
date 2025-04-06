@@ -1,41 +1,49 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD7423CB
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 17:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA0835280
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 17:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743960397; cv=none; b=kd+vPHIYBadtBmyojdFndxYKzX7+MLv4Xwan3rMRK2ls0ao/Uudfmn/Nn2/hHfaFv1CPlsHbLZS6iaulM72qvSnKotDBWM0Elk30Qx3ciR/FU04xa/Hovi28n4Qw4IziB2OnQxKNSDBwkwwFnF/OuFudY2yTbEBm+/qbLfQ58Ss=
+	t=1743960512; cv=none; b=Utc0dPZKQ9NP9qHGYnEgaeGEpLRJOPSpuupcopEAD91EMpnKaFt1uA4G6Dp71JZ+XiMj8c/f92BBru6bbvN+GWBc4K/kQvkcHEXJuMC5HeAAzzJoQ7mAfilJTEx0s1UXntXRUtPQwIaoEKiFuL+JaI6ykYXiBuefwMroWZaGxmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743960397; c=relaxed/simple;
-	bh=IQD2uMYm0VdicIsri6U+XrvP/ma6PNlN1XAS6ghLTRQ=;
+	s=arc-20240116; t=1743960512; c=relaxed/simple;
+	bh=58mtqSTGdgNysZaZJX7gbCy7325pGGcOPw98Ok5a05s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvRBV9TSDPC/U9wNao3jznZa5tVjg4yH3yZGAjcTe0ZpHK2c23hrodCcf0ARI99NdBvSBu/OX8DwI13iKujfv/id/G0rDkVVJAexeeNUYFGebgL8lQ5KbHNEXK9YrKK3eaOV1SyuGcc/nZlzwfCspcVsfrnsUduMAqoXhJ/zQfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rlhP0s4V; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQBv1sR/m512FTNxGt4bXxuavb0IxZ8imz5LOoPmaMnx7CLf0HLSZxiS2G08deJNrk21BwCdDQklMpyjoqgjygiOvPHbrLPWD/OoHG1I7TjhgN9umZV5/TLZMhuXUshOry7AChMzEJAPQFS+vhqzOEAHp2n71irVqsaUKYErHn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfN9vnz7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rlhP0s4V"
-Date: Sun, 6 Apr 2025 13:26:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743960383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YgAXDMjAExFolysJWmD+ac3Y9JLrzwMRq++noKLcT/k=;
-	b=rlhP0s4VPfnYsLdJ05OboGkIbDweX2sD/0msBaj32wIvVyS4sPsFFJhmU7AfKELVo0Okc0
-	p7zLyY5c3p1XLhJYQWn1mDXg2lCsm7wSrdJF086871wC4cGUzqcyXUEvNovO9/K9IJEr5k
-	2ZXFVWsMGvbMZ/g2n7/hH3zfR+brF4g=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Integral <integral@archlinuxcn.org>
-Cc: kent.overstreet@gmail.com, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] bcachefs: early return for negative values when
- parsing BCH_OPT_UINT
-Message-ID: <khrsd3ey6hiedccufg2xhy734vdxzagg4eym3gotjxaizgrx7x@7bo4fpsj7n7f>
-References: <hepk5mxy7zfr534i4mbqbjr3jzkqytbnfz66lelzcewwu5h47h@df7qq7laaypr>
- <20250406145327.191479-2-integral@archlinuxcn.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfN9vnz7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A9CC4CEE3;
+	Sun,  6 Apr 2025 17:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743960512;
+	bh=58mtqSTGdgNysZaZJX7gbCy7325pGGcOPw98Ok5a05s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PfN9vnz7ygbTzSU5lvomEV+7w81NKGKUpG75BD99DiZIVomzjzT02Mn7lHW8VttS/
+	 DeLT7AfByymCYaxNHfXgNwken8bIjTpZ5cB4+lg7WE4L5nxTIDnHByPwOVYuUK0bZH
+	 +7yaYoVk+Pgww4HtTM7Do3GHV+kTqnYd0OLYp2gK4gu+U5746+PAosEfrLlLBUgE9x
+	 9dYQo7eRQ0y3vC295VL5Rg+ruFZFTVcC7cxfB1uA794YEJd3pa8Zzh/7gcfuhZxErT
+	 cKWEW01Qr+x346OdNB50QtZAKnAh5h3Fa7hRWdFnPdrzh0Mg/UR+r5P+0qvJEfbiQ+
+	 BmjFIBWekRvfA==
+Date: Sun, 6 Apr 2025 19:28:25 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Dan Carpenter <error27@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1] x86/mm/pat: (un)track_pfn_copy() fix + improvements
+Message-ID: <Z_K5uW2eu7GInRxs@gmail.com>
+References: <20250404124931.2255618-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,65 +52,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250406145327.191479-2-integral@archlinuxcn.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250404124931.2255618-1-david@redhat.com>
 
-On Sun, Apr 06, 2025 at 10:53:28PM +0800, Integral wrote:
-> Currently, when passing a negative integer as argument, the error
-> message is "too big" due to casting to an unsigned integer:
-> 
->     > bcachefs format --block_size=-1 bcachefs.img
->     invalid option: block_size: too big (max 65536)
-> 
-> When negative value in argument detected, return early before
-> calling bch2_opt_validate().
-> 
-> A new error code `BCH_ERR_option_negative` is added.
-> 
-> Signed-off-by: Integral <integral@archlinuxcn.org>
 
-Applied
+* David Hildenbrand <david@redhat.com> wrote:
 
-> ---
->  fs/bcachefs/errcode.h |  1 +
->  fs/bcachefs/opts.c    | 12 +++++++++---
->  2 files changed, 10 insertions(+), 3 deletions(-)
+> We got a late smatch warning and some additional review feedback.
 > 
-> diff --git a/fs/bcachefs/errcode.h b/fs/bcachefs/errcode.h
-> index c4eb0ed9838d..e3c85288fd6d 100644
-> --- a/fs/bcachefs/errcode.h
-> +++ b/fs/bcachefs/errcode.h
-> @@ -213,6 +213,7 @@
->  	x(EINVAL,			inode_unpack_error)			\
->  	x(EINVAL,			varint_decode_error)			\
->  	x(EINVAL,			erasure_coding_found_btree_node)	\
-> +	x(EINVAL,			option_negative)			\
->  	x(EOPNOTSUPP,			may_not_use_incompat_feature)		\
->  	x(EROFS,			erofs_trans_commit)			\
->  	x(EROFS,			erofs_no_writes)			\
-> diff --git a/fs/bcachefs/opts.c b/fs/bcachefs/opts.c
-> index e64777ecf44f..1bf2580ab735 100644
-> --- a/fs/bcachefs/opts.c
-> +++ b/fs/bcachefs/opts.c
-> @@ -360,9 +360,15 @@ int bch2_opt_parse(struct bch_fs *c,
->  			return -EINVAL;
->  		}
->  
-> -		ret = opt->flags & OPT_HUMAN_READABLE
-> -			? bch2_strtou64_h(val, res)
-> -			: kstrtou64(val, 10, res);
-> +		if (*val != '-') {
-> +			ret = opt->flags & OPT_HUMAN_READABLE
-> +			    ? bch2_strtou64_h(val, res)
-> +			    : kstrtou64(val, 10, res);
-> +		} else {
-> +			prt_printf(err, "%s: must be a non-negative number", opt->attr.name);
-> +			return -BCH_ERR_option_negative;
-> +		}
-> +
->  		if (ret < 0) {
->  			if (err)
->  				prt_printf(err, "%s: must be a number",
-> -- 
-> 2.49.0
-> 
+> 	smatch warnings:
+> 	mm/memory.c:1428 copy_page_range() error: uninitialized symbol 'pfn'.
+
+> -	if (!(src_vma->vm_flags & VM_PAT))
+> +	if (!(src_vma->vm_flags & VM_PAT)) {
+> +		*pfn = 0;
+>  		return 0;
+> +	}
+
+>  static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
+>  		struct vm_area_struct *src_vma, unsigned long *pfn)
+>  {
+> +	*pfn = 0;
+>  	return 0;
+>  }
+
+That's way too ugly. There's nothing wrong with not touching 'pfn' in 
+the error path: in fact it's pretty standard API where output pointers 
+may not get set on errors.
+
+If Smatch has a problem with it, Smatch should be fixed, or the false 
+positive warning should be worked around by initializing 'pfn' in the 
+callers.
+
+Thanks,
+
+	Ingo
