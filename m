@@ -1,70 +1,134 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14ED1C6B4
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 03:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04ECA1BC4E;
+	Sun,  6 Apr 2025 03:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743909846; cv=none; b=IIERdlwdHDE1bhE5jFlXV1X2vJuwGBa9W7N3AOvicBYJGCru6azs9dNGg+Cv+LkG3xsRErQvR5lT49tv10I4XqxjI740kgk9emjKh5f6HMPWkjb/tPGs6rGLJSMcKiQefjJ0L/V59YagT8M99Oe0IXz8jW3kSDBDV+RgtbvAKnM=
+	t=1743910117; cv=none; b=WskxKOtSfrB2Bad0jLKTi45k05IeTd9y4Benjxj3vZjABBidT6LX93ZGlLPdmEV1fmqH6WhmCRIb9QOtCA9Ke5KwmbilbEKhrnNzWGgWH//nGhw4ji7PxHGdrxIsuFBbkCNQjObk4dUf9GWN5NDy2wPwXuNCJlhnhSvqtaigMVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743909846; c=relaxed/simple;
-	bh=ABLXLllwFo/q16PrmgXnzzFTa5COJm9krUHgWX+eBbo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Pkx9dDI0hIXJpW0Wgfu/oeTrZwpuyWJ3nkXTFc7ZXm4/7EndCu48SzzJkw6ms/oN6nbD4kYfmOuPO0DzkT1ipj7eKCavK+JnhF4/xvI7xtoYmudq1loB0Ic/4CKgN9rJtImzQtQEuFGGP97zUGATxRD1aSuXr5NF8kNYMueHv1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85e4f920dacso323788039f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 20:24:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743909844; x=1744514644;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yA+ww64jfHA1eAzMas24tic/XtRIkt+SowuHPK1+LmE=;
-        b=ua8MWLRki/DLZZATIDSsiFVSsiQmR3pxKRcURUk7ShQ7UOp7PCpfd0AR0RJCHm9Zgp
-         BPZ0k4fEhxdZrnB0P8ustQVWB1Gs/8xFhSY/YP7880uRDrlGMkela23aQtgJqf7ymPxs
-         6LpLNLMwyiDrnLhuuXKOrXuIXwNzvP8hzp3ZZl3v9RHCNQjnScLExFc+jxYe8M2tX1Ry
-         ngSYZpGCtZ/vzZH7AVhdZxeFMP8tIeV1zh5ZHIgC4J4yFJ9WbqZJ7jWtd9tTSscRaqsm
-         +q6pu9SepSHmN9yxcj4DEZphUo0o9d8dVUAmvB+Ypgmr2ShjAhG4w8aE52t9GKyT5RB2
-         SkXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxyIngy/n4NAc8KN0rf06aCFhT1ik3SMEeLAAaru/QE5Kl9zRD8mQTC3+epxhmUJVwt59f1YU46bUfeEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx92dmlWwgnQdTQzbXj/uQ6VxqC7XCgY09rWo7AsLTtGPjR7oE/
-	rxNY/CTZSoodZi9NKQ0t5782oSAYzWZIsyOahkUFTHjzziQs4K8ULM//pt6HA1sPOUKJxeDZnuW
-	Oxk6T1A49cNiRZ1yPP5UMtjE+oafAZL+Omem3kTtZuZjQMfarTsB/1aE=
-X-Google-Smtp-Source: AGHT+IGfCYBk66E5EOY9j6AlLnDFR67m7Aw1kxdODmlW2KlJYdLCEk9b7N7etmMawBLx8dJ2V83Q5cONLA8Jl/5NtJPBG7PCM0p+
+	s=arc-20240116; t=1743910117; c=relaxed/simple;
+	bh=t/Yg3BNAcvcTml8PVZNIk3Fl7fuRGg+0g9S82GAcBjI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lBrS/Sb5WiLJNA+tLQksb5iqf7bDw8ysRmpgMSjT850Qu3Fuqnwd46HkYxrt/0CQYKR1Wgmea0bHM69VhwW4sdt3Z89onOH2br6bxMKxRG3atH1EvuEIq850tjLsnOkupmQfPZL6EaFJZSYLbBuwg+QgT3PRPviapmlY44mqI7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=em6MfLL3; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="em6MfLL3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743910115; x=1775446115;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=arGBmDCcstDUnG73wpr7EPbld6FjR9TUCSNWc075De4=;
+  b=em6MfLL3m0gryeabb0LtA315De7ydKHUSeHjvmE0/Htr8Pkh4LOHCnUo
+   fxMlo34CKLKhq64EzLyE3TbSbrvFAZKB6HsM8VXtWbWdF42ucITOPjtJ6
+   +zna40DQFPWeIXLU10xHGrt2KDMY/oSBSBC2xHpJRs0Wa5u9CypKVsr6S
+   E=;
+X-IronPort-AV: E=Sophos;i="6.15,192,1739836800"; 
+   d="scan'208";a="477873759"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 03:28:31 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:39330]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.57:2525] with esmtp (Farcaster)
+ id 47ea4d36-8342-4c3b-89d1-b9a7a7c9070b; Sun, 6 Apr 2025 03:28:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 47ea4d36-8342-4c3b-89d1-b9a7a7c9070b
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 6 Apr 2025 03:28:30 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.50) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 6 Apr 2025 03:28:27 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <guohui.study@gmail.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <syzkaller-bugs@googlegroups.com>, <willemb@google.com>
+Subject: Re: general protection fault in addrconf_add_ifaddr
+Date: Sat, 5 Apr 2025 20:28:06 -0700
+Message-ID: <20250406032819.65634-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <CAHOo4gK+tdU1B14Kh6tg-tNPqnQ1qGLfinONFVC43vmgEPnXXw@mail.gmail.com>
+References: <CAHOo4gK+tdU1B14Kh6tg-tNPqnQ1qGLfinONFVC43vmgEPnXXw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4401:10b0:3d3:dece:3dab with SMTP id
- e9e14a558f8ab-3d6e52f625cmr61663985ab.1.1743909843830; Sat, 05 Apr 2025
- 20:24:03 -0700 (PDT)
-Date: Sat, 05 Apr 2025 20:24:03 -0700
-In-Reply-To: <tencent_58BA62BBDD331C9E981BDB4B611B6725A508@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f1f3d3.050a0220.0a13.0259.GAE@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in mremap
-From: syzbot <syzbot+5250c4727db03e3436cc@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D044UWA004.ant.amazon.com (10.13.139.7) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hello,
+From: Hui Guo <guohui.study@gmail.com>
+Date: Sun, 6 Apr 2025 10:31:00 +0800
+> Hi Kernel Maintainers,
+> we found a crash "general protection fault in addrconf_add_ifaddr" (it
+> is a KASAN and makes the kernel reboot) in upstream, we also have
+> successfully reproduced it manually:
+> 
+> HEAD Commit: 9f867ba24d3665d9ac9d9ef1f51844eb4479b291
+> kernel config: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/.config
+> 
+> console output:
+> https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/b4f94e7f408c53ff0bac07a7b69ecfe48ab5575d/repro.log
+> repro report: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/b4f94e7f408c53ff0bac07a7b69ecfe48ab5575d/repro.report
+> syz reproducer:
+> https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/b4f94e7f408c53ff0bac07a7b69ecfe48ab5575d/repro.prog
+> c reproducer: https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/main/9f867ba24d3665d9ac9d9ef1f51844eb4479b291/b4f94e7f408c53ff0bac07a7b69ecfe48ab5575d/repro.cprog
+> 
+> Please let me know if there is anything I can help with.
+> Best,
+> Hui Guo
+> 
+> This is the crash log I got by reproducing the bug based on the above
+> environment，
+> I have piped this log through decode_stacktrace.sh to better
+> understand the cause of the bug.
+[...]
+> [ 90.201985][T12032] Oops: general protection fault, probably for
+> non-canonical address 0xdffffc0000000198: 0000 [#1] SMP KASAN NOPTI
+> [ 90.204525][T12032] KASAN: null-ptr-deref in range
+> [0x0000000000000cc0-0x0000000000000cc7]
+> [ 90.206275][T12032] CPU: 3 UID: 0 PID: 12032 Comm: syz.0.15 Not
+> tainted 6.14.0-13408-g9f867ba24d36 #1 PREEMPT(full)
+> [ 90.208522][T12032] Hardware name: QEMU Standard PC (i440FX + PIIX,
+> 1996), BIOS 1.15.0-1 04/01/2014
+> [90.210452][T12032] RIP: 0010:addrconf_add_ifaddr
+> (/data/ghui/docker_data/linux_kernel/upstream/linux/./include/net/netdev_lock.h:30
+> /data/ghui/docker_data/linux_kernel/upstream/linux/./include/net/netdev_lock.h:41
+> /data/ghui/docker_data/linux_kernel/upstream/linux/net/ipv6/addrconf.c:3157)
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Thanks for the report.
 
-patch is already applied
+netdev_lock_ops() needs to be moved:
 
-
-Tested on:
-
-commit:         f4d2ef48 Merge tag 'kbuild-v6.15' of git://git.kernel...
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
-dashboard link: https://syzkaller.appspot.com/bug?extid=5250c4727db03e3436cc
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1529dd98580000
-
+---8<---
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index c3b908fccbc1..9c52ed23ff23 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3154,12 +3154,13 @@ int addrconf_add_ifaddr(struct net *net, void __user *arg)
+ 
+ 	rtnl_net_lock(net);
+ 	dev = __dev_get_by_index(net, ireq.ifr6_ifindex);
+-	netdev_lock_ops(dev);
+-	if (dev)
++	if (dev) {
++		netdev_lock_ops(dev);
+ 		err = inet6_addr_add(net, dev, &cfg, 0, 0, NULL);
+-	else
++		netdev_unlock_ops(dev);
++	} else {
+ 		err = -ENODEV;
+-	netdev_unlock_ops(dev);
++	}
+ 	rtnl_net_unlock(net);
+ 	return err;
+ }
+---8<---
