@@ -1,72 +1,40 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0B01474A9;
-	Sun,  6 Apr 2025 17:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23384224FD
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 17:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743960535; cv=none; b=g58WzjqEYFHtW+4duDK5vbGLdePqY2xPmBdAI6y1MGmG3te1uOdajgSj0GMVFQ7aW4YbU8WCZK8q5jYUxm8BNrjcvw7ZkWoonykfSbVwsdGw0IsV3f620QXjboGoqinBSWDVM8iiF6JUB8mqmaqZVOM19GR3KqQPJI5/e5vS4sE=
+	t=1743960932; cv=none; b=MUU3RYArww+aa2ZB+wRn7by2km4y45pZz93zwGASldcspcD+xn6Q4i7cZCWtsWN9VPybO5WUqKlZVLeaG7hB7Bg/AxroVDRhIgFbZWMLKBYK0xtSBk40Q/QTrdO1OgOtaG9K/gcn998OQ6uYtAStw3Y+ATy3Nk5EtSuPfiAjuZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743960535; c=relaxed/simple;
-	bh=URzcgJhSpfLInZMMyrMpW/e7W+8FfnsY/G6MjxzpGmg=;
+	s=arc-20240116; t=1743960932; c=relaxed/simple;
+	bh=92qJqoVZTJVQujxtrIm9byz8jxkfU+wopu23VnfZoPA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAZ4dX1HRoP+jBbagejeUG1OI7ZIFDYuOan/nyfqflulmotnBIeNnDQsqaATRzi1yOG3vuw0RgfFrcbqIuTjT8Zb+uoPCkRUhguGi892N5bg+6a0JnqtEosLEk3uYAEO5EMSJeMUTCOClfmtLLH+FMjATNBGFpr2LYr5VIcmvsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdyR4ckB; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFzmjX8QJBgKeMqvR/tQLOMlnwZypQ7ZU1bs/63j3HZGVOwMk9DyWYM/cVY0HN4ckB2P60qjNdhieWHmDorta8gA+Ot3JBn0GwJvo7xa+0QKv34nxiLDoYzkEp39SPYQ1jCzkI1UO+pkFWVu8WJscJEY+FxEenEqIU/uRZg0Ou8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=neMmzBVl; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdyR4ckB"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22438c356c8so33844085ad.1;
-        Sun, 06 Apr 2025 10:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743960532; x=1744565332; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e/5RFZliJG0ZG+62Z3/jm5yPeEZQcNzb0cHk62JRo8A=;
-        b=SdyR4ckBdrQpAuFykSMRM+Li/VuVRVUtqyJmkZkMcjUSLReJwdILjv06f9o7KHZhOI
-         0pgYlqpaxMv5IvpxSKCTj77iVkX528PsLPpUXLYCdw71T/+I++A8Ku/pqlBGCvAbmjhQ
-         Bwroph8xju0jwYevQs3nwCTzDV6wOf0yXi3K7LOhB/tnEHYsCdvQg5DpY6KEOqqUya8p
-         q+l21IuEaR9mlPdbgusFwY3cBRnCWcxcmWaFTXSB0iTvyz6b6ddfGLZ7YIpjEpC1mAo9
-         YsMYZEkDcLmA8kQd5lCMGu983dRbcyKC7oApja+HwDbAadxLxwFRIiB51rczKFUlXKAe
-         qxhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743960532; x=1744565332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e/5RFZliJG0ZG+62Z3/jm5yPeEZQcNzb0cHk62JRo8A=;
-        b=g4D/XIZG1cxQ0XqrkvngS2vQQTBMbM+8g+JUCaqTwoV0b4vZ6unjGupj8YRLHuAoHC
-         M+om560nFZpj86bl9t44TAGizA+Roq3vQcb/jWnWdYvaD3xImxxua8/Khb70eJT0orGd
-         Ug4IxkeSwYUtODRE08pRYuy9HOqBgACKp3pJoITwVcEySk01oChPTRsra4Tt4VOJpP/c
-         yO3qnlc+tA+n8zcvgfYM5h53PTI938TY2jb2vHVVBY9Wavt6gghUL9PhJmAKbAO8Vhk5
-         pwc9hgBY8Dry3KtCJyYZdnzL1z9BO5nT5x7eFPWlv2dSDlzwNl/uubrMUvgML/JfxABt
-         r2ow==
-X-Forwarded-Encrypted: i=1; AJvYcCXR70IK5GEcOXj7J24s1J+L7x6I5sDwWP9AzbdlYiVFhQxGUmaJrY0eaHqnaH8Ei8+fzyx6Dyqy8eWALA==@vger.kernel.org, AJvYcCXqz53U+b3FVx9JjEd59hK+kV8+QUWoZBrzg/Ss+2Ktl1Kevcah1vuEZChmdcNHo44cxvqajLU5vhAPPVfF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3TJTv42lumup35Q3iWqffNw7nxXDWbkQHFYvy+BGiKSQWJjNU
-	Tv20spM+r8gd9MP4tWsWKmoXFo1uqZkrGVGYBIjzIAE6PJ9bm2DcRLnqIg==
-X-Gm-Gg: ASbGnctfaOmgkxjqwSt75J76eZ+H9NyeR8cXCCU9UYDs2jpnDMMmNbUh2p7iWUtFf+t
-	p9Obpf4szwVRJG49LKoHpm9wcJbIGhNRCIOl4juSGJUMwlS8ah1AnKAGkgbT9t7+FvFkcttVPfj
-	rJpmbo5tBVyzWE19FjQnW9mAsWMryYsn7WeTfzlJg7hZf18Ka8dxBSG/oJHuslTKgmbvQyFob8g
-	iY4no+p0BTwXxURDkW/9uK4VPbcX0LI/5rsMwk/LtduTS53pOsizLAPVQmC45IT2T386ZbfTmLe
-	QkdhXsAPKRebcNa3JC1xUhPlif1HJyXCfXEARjg0kIK0Oxly55BZ68BP/Q==
-X-Google-Smtp-Source: AGHT+IH8L5HaU9UrU+YowTmkLvGrlkQalpizP6ejoOQtI09SyUHhu/xLB13z3lYX7gusvSJ7YmOedA==
-X-Received: by 2002:a17:903:1111:b0:224:5b4:b3b9 with SMTP id d9443c01a7336-22a8a8c9e71mr133720775ad.33.1743960531561;
-        Sun, 06 Apr 2025 10:28:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c30cbsm66037085ad.101.2025.04.06.10.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 10:28:51 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 6 Apr 2025 10:28:50 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: "William A. Kennington III" <william@wkennington.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] hwmon: (pmbus): Introduce page_change_delay
-Message-ID: <295ea363-dbeb-43c6-b8b3-3992776b84c0@roeck-us.net>
-References: <20250403211246.3876138-1-william@wkennington.com>
- <20250404193103.4174977-1-william@wkennington.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="neMmzBVl"
+Date: Sun, 6 Apr 2025 13:35:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743960928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f4qfx8DHHSDnNQLtzm2SGLL+CYaWWhf/6Fc09qy8pKE=;
+	b=neMmzBVlZkrz+uCrdNYKL8hXqIz5kHoBcDmDZImuUTBd/2fH0+Psb8TLbSfIMd3/WY0t4j
+	tY06G6K3b4+n6wQxO5IuN0aRBTDGUPTmD3c1b3FEUJDKTKrerKpdj2wPkmIS7kg0kgMZo5
+	gRrRpctMAGQ/Y73cE3HN2MaqiyoZSsA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Integral <integral@archlinuxcn.org>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] bcachefs: split error messages of invalid
+ compression into two lines
+Message-ID: <i2tzjbfyzxdymkbebyla3oqo5krj3mknpixtb54ojnaeqpg57t@vbiexo6jmkig>
+References: <20250406152659.205997-2-integral@archlinuxcn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,24 +43,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404193103.4174977-1-william@wkennington.com>
+In-Reply-To: <20250406152659.205997-2-integral@archlinuxcn.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 04, 2025 at 12:31:03PM -0700, William A. Kennington III wrote:
-> We have some buggy pmbus devices that require a delay after performing a
-> page change operation before trying to issue more commands to the
-> device.
+On Sun, Apr 06, 2025 at 11:26:59PM +0800, Integral wrote:
+> When an invalid compression type or level is passed as an argument
+> to `--compression`, two error messages are squashed into one line:
 > 
-> This allows for a configurable delay after page changes, but not
-> affecting other read or write operations.
+>     > bcachefs format --compression=lzo bcachefs-comp.img
+>     invalid option: invalid compression typecompression: parse error
 > 
-> This makes a slight behavioral tweak to the existing delay logic, where
-> it considers the longest of delays between operations, instead of always
-> chosing the write delay over the access delay.
+>     > bcachefs format --compression=lz4:16 bcachefs-comp.img
+>     invalid option: invalid compression levelcompression: parse error
 > 
-> Signed-off-by: William A. Kennington III <william@wkennington.com>
+> To resolve this issue, add a newline character at the end of the
+> first error message to separate them into two lines.
+> 
+> Signed-off-by: Integral <integral@archlinuxcn.org>
 
-I tried to apply your patch, but it fails. Please rebase to the upstream
-kernel and resubmit.
+Applied
 
-Thanks,
-Guenter
+I've also been working on consistent indentation for multiline error/log
+messages, so that we can see grouping better.
+
+If you want to add that, the new helper is
+
+  printbuf_indent_add_nextline()
+
+With that we can initialize a printbuffer and at the same time set it so
+that lines after the first are two space indented.
+
+> ---
+>  fs/bcachefs/compress.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
+> index 28ed32449913..d68c3c7896a3 100644
+> --- a/fs/bcachefs/compress.c
+> +++ b/fs/bcachefs/compress.c
+> @@ -714,7 +714,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+>  
+>  	ret = match_string(bch2_compression_opts, -1, type_str);
+>  	if (ret < 0 && err)
+> -		prt_str(err, "invalid compression type");
+> +		prt_str(err, "invalid compression type\n");
+>  	if (ret < 0)
+>  		goto err;
+>  
+> @@ -729,7 +729,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+>  		if (!ret && level > 15)
+>  			ret = -EINVAL;
+>  		if (ret < 0 && err)
+> -			prt_str(err, "invalid compression level");
+> +			prt_str(err, "invalid compression level\n");
+>  		if (ret < 0)
+>  			goto err;
+>  
+> -- 
+> 2.49.0
+> 
