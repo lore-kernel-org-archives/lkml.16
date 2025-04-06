@@ -1,107 +1,120 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF1D1CA81;
-	Sun,  6 Apr 2025 18:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4ED1CA81;
+	Sun,  6 Apr 2025 18:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743963706; cv=none; b=pfgOdnlZd+oGhl5hqy8gpy9/iUB+ANwslUDI+qSVYzFsWNUzadDrnsqOU68GsEehpThuEhXRqkWqcPsYao089uOMOvikEkv0kEmzgkRTVZ4hQmdHC8kd9AhkQjn4172SDvbYhQCOgvudJqDtLt4KX+H2E8lkkPa457P9ts5R/bQ=
+	t=1743963735; cv=none; b=AjFCfqDPunRSo4Z1CfylYuyz7lv7y+5Td+xpzoKuAUIq4GSeHxHm5/0b0VdHu5phMuUDqNsQ6J9BJTN1NI5QdlUA9xXWQIEFC2+DqNkqEYs30O0LFi8QKqD1fUUWO7cB0srOnor/SgdK2zpvhmtePd2xOuz+tyr2ROduUWk9Xks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743963706; c=relaxed/simple;
-	bh=LaZfxkSb5FyHIDc0qBbJvYi6Ow3SxwYSODg56DGNs/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FFIAXMvjq1uc0TnbpEAI62mPwDUSBWsbDoOtK1beap9P2lgWLGpyl0Tq6MnzdD1LtAxP6L8enFBs5ZWW9y0dmGe1x66Xpy2Rf36aQATfYLn+Ji9wKu3H1YDS1jiitLsbENJ1+DVqwDm/TL+I9CZmjhCh485S7FbWX+X0TO3HtEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523ed8ac2a3so1619835e0c.3;
-        Sun, 06 Apr 2025 11:21:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743963700; x=1744568500;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=68f5FHAmZta1ghAPpoGBWcTGk+bj6/niB8/w0no43ik=;
-        b=bwcyCTP3sKHfJYh93EcMnBfX6DQj1heEdGKGeSyY78SMQEqGGifk6t6kUr+8fTov5A
-         DUGXYTum4uB/ePwecJdVpaQ5jUqDp/R3UJDcNFG93Tc2rE/N08INeCeL2LzV5FX8jx+v
-         5nJgjDQuWrP9wEzrYoOC2RS7+uyFwipI4fHUQUmsVzCRyZE1b6NeJiiGff8XLADHPi1v
-         soOzaDVx4/gGIZAc8hDlbzWfi0tqepgCdkV/iWMKrl5Ny/HVEE/n9k2Kxb7HjKq1v2fe
-         SQk8n+TBbl7S6ov/Gt8ssIW4fj6jVe83RKCtFKtoEq7pVfrExDiE12qxIQ2vC9CuBSO4
-         4+/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUl2nreSFpYvFVcag+qsGOCBtXMmQiIgq87lD2C0GB5+sOXLnedNERowV2LigWVQrdRuNctlvzds2mSk+Y=@vger.kernel.org, AJvYcCX/jE9gOp3mmLNfXW3nIJYNRpa4u0Zp+aaJfc5TJoUAI9fLD5sgv03uWimRXZFLv4YND/HlQR6U5FXUkg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB6y8IzxEAazKD52X+Jck/UImqwAScgXGCI12WMZ/icpNP1qB0
-	QrIWCvjMl6yZ7dvyRxDYLgY4gA8UuWi8fWyjON1ALOEWxXLhMtJZjzUWeKJ5
-X-Gm-Gg: ASbGncscaE9sQiJJJEZbNI1lgmaCwg7FaCurcVWFzdPSEiVzk9iyNMtEuD83hIj5nSv
-	lzChXfGk4q/ITaTj7F0NWm9NxtV6kDiJwt3cvB9PatOE2Eep6eZr+Hqd5zdLqpnd/rL+ae35CMx
-	SV4QDiWkwVd5Eu8dFgjGOrXrX2LhJyCACAPg6CkGv6H12WIAbfk8pRjI8g/pYNnYogImiRgoRHs
-	2cpKUDqV69kfcZQyFCf0AIAjq2uVOeXGpVNno8cfvrEt4WXJFU4qbSHOQvFa3zzptesXtuKdZIt
-	3EQGFrdbuOGs2RyuoBeKXm2AQT+VR4Yc6mkC3/KuuJRX9mLKD7cdN570QJ+n24lUeVhMYLksQi+
-	jcDJhWM4=
-X-Google-Smtp-Source: AGHT+IEGMn1pA1cYGHfXOyh1Rv4Go1MzRnm0Tp01LMUfGqfn8A1AvnWKfI8TNdqS3MmXOdAaPqpbQg==
-X-Received: by 2002:a05:6122:6593:b0:516:230b:eec with SMTP id 71dfb90a1353d-52765c89280mr6513732e0c.5.1743963700058;
-        Sun, 06 Apr 2025 11:21:40 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5275ae64302sm1575418e0c.24.2025.04.06.11.21.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 11:21:39 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1713291241.2;
-        Sun, 06 Apr 2025 11:21:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLx19QPiWTie+UOV5HTLJgB2eYVAZ0tcd+sWNlbBb/+PlVBVBe6hDHBCZ8FifkbawbMpaHLy8DamfCyo4=@vger.kernel.org, AJvYcCXaBPsUzN/VC1NcFhHl/3xKXVsD6XoY0RtMbCA/QvEjfDKeTRuPZGzapB53zT+ZcOdC9pxbGBMS1Dc1RQ==@vger.kernel.org
-X-Received: by 2002:a05:6102:3f8f:b0:4c1:7ece:88d9 with SMTP id
- ada2fe7eead31-4c856a2c5b1mr7651241137.21.1743963699239; Sun, 06 Apr 2025
- 11:21:39 -0700 (PDT)
+	s=arc-20240116; t=1743963735; c=relaxed/simple;
+	bh=g2RETw/Z4oprQEQecoLsQYOib0vL9w+4xAUlZqp5lSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lf9LyOHAJWjIPgZ/ZG5aXXgAdkOaK43scqyz2Y+9cHkS0Shk+jDWyc0VbCU6L5wanFXaUGqGioynC259I7+0jSgbUW0lP3DyVaKfap42D2oGjhf9X9LpHBtsLSECpyDaz7hhU5NZSKFCYkzKIEFZsHAuCouHLHTQo0Okz6zXPFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+dl7Ude; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+dl7Ude"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFB0C4CEE3;
+	Sun,  6 Apr 2025 18:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743963734;
+	bh=g2RETw/Z4oprQEQecoLsQYOib0vL9w+4xAUlZqp5lSg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V+dl7Udemgbo0GBnmy06bawFgYyaMF/GMgvalYuTCkdbTPkqSt/SGX98lZn3QeeFo
+	 q9vlk8lTyD8r0m9KYYwuQvXuu8Mmv0v0cet/5B6sqAqN/3CPbdTv+IYHycmujY7iIp
+	 ZQjnKWE3ki1SPSPyvMYfxbh7dYILC4Wnyu1sM0hiN5dENLAE+ahBGu63nGHETZbju9
+	 R1xHi2cwTiJvtSCUmGrX7Gj4lmnXkb0O91rqenFIowywc3dPvQaw/kZ9K795ruJLLE
+	 1CxSqILC2tX63droV/SiEoJRy6KoebiuCiei+E53MkoU5kzTI81rKgqwDhyUIrQn2z
+	 vh8war2ShlBaQ==
+Message-ID: <3b00b19b-729c-48f9-b069-124272778ac0@kernel.org>
+Date: Sun, 6 Apr 2025 20:22:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324173242.1501003-1-arnd@kernel.org> <20250324173242.1501003-2-arnd@kernel.org>
-In-Reply-To: <20250324173242.1501003-2-arnd@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 6 Apr 2025 20:21:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWpbrLms_0Ukfdz2Me_VJxP48X1YgSCt9hEc=T2AZWjtg@mail.gmail.com>
-X-Gm-Features: ATxdqUHj902URW2CruvbnJIkEHk8_NegI2tcXrNlPqQrXtXbUGHKxRBOcRDA6dY
-Message-ID: <CAMuHMdWpbrLms_0Ukfdz2Me_VJxP48X1YgSCt9hEc=T2AZWjtg@mail.gmail.com>
-Subject: Re: [PATCH 02/10] ASN.1: add module description
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 17/32] mfd: sec: rework platform data and regmap
+ instantiating
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+ <20250403-s2mpg10-v3-17-b542b3505e68@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250403-s2mpg10-v3-17-b542b3505e68@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Arnd,
+On 03/04/2025 10:59, André Draszik wrote:
+> Instead of a large open-coded switch statement, just add both regmap
+> config and device type to the OF match data. This allows us to have all
+> related information in one place, and avoids a long switch() statement.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+> ---
+> v2: fix typo in platform data for "samsung,s2mps14-pmic"
+> ---
 
-On Mon, 24 Mar 2025 at 18:35, Arnd Bergmann <arnd@kernel.org> wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> This is needed to avoid a build warning:
->
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/asn1_decoder.o
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thank, this fixes build issues in the m68k defconfigs
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-> --- a/lib/asn1_decoder.c
-> +++ b/lib/asn1_decoder.c
-> @@ -518,4 +518,5 @@ int asn1_ber_decoder(const struct asn1_decoder *decoder,
->  }
->  EXPORT_SYMBOL_GPL(asn1_ber_decoder);
->
-> +MODULE_DESCRIPTION("Decoder for ASN.1 BER/DER/CER encoded bytestream");
->  MODULE_LICENSE("GPL");
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
