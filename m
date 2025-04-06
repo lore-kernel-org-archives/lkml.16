@@ -1,112 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C0951C5A;
-	Sun,  6 Apr 2025 18:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A711F482F2
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743964482; cv=none; b=bACgt+f7tIZb37MKH1nyPlCW3hXFv5D+khadWNqFZ030mVH6sz8Zgo62pnOAEvDZCbfvb7RFB4U2/1IhRCeGImUskEOjEI6ttcVnFS4T12ZgereChczfPXSXXFfZbXUsxFxnAEYoQKnL/hQCeoduAEPA30yo0NLZCcYQNuILlA8=
+	t=1743964527; cv=none; b=cjpJjXtHPGrCr7A9gOzhleo9HqC36RNHJcj9vbPKqHwVxEc7gbKpN3zW8gZnpKxAtItsUkem/GD+U/Ln5KiE8f9ek1O9pyYX6jJ5ETrk7eT0LfISGZNnsDe7zYoc3R1Uk0CtnRGpz1SVqMdFku97SgqsaUS0z8oiVNjdtkqkLBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743964482; c=relaxed/simple;
-	bh=+ah9gkt4OLRzfM3VmfsCMpCre3Srvx/jd9o1dKRMM5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L/cJhn+aZf4FyN72fT06cfL3Dx2g1icnCb8v9RqmJwXYstLBcMCDB6h5YW4tmILtHnoi6sxz6w0iIHMoQavc9owFgLorF9VfT2PkXYyAm+FQ/YCAn8i/N8viKrn1Dyt/2SCl7Mw+o1KkM1OLo4A348zpysgz7GUkIWlNEB3hkNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkv8C1jR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743964527; c=relaxed/simple;
+	bh=xVF3x3UkSJDIxlowMV/5yJWg5CVdZ5Rp/WZSsw2+4XY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i3gytJJPYO9J+wx4C0NdrN/FD5jZx/JolBZ/WvobTn7xmx0OiBbz4SCXWiiQYv/cemem0s+3XMib47JNISbf8PMD2z8g9DjNA1mqNaYQ4fTYD9aalow7H9NqNnaoFQTwxpvDQaGJueykQgySTBxAa+BJSg+RdTRybMAKhZ/iINY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TOu04ogp; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkv8C1jR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D077FC4CEE3;
-	Sun,  6 Apr 2025 18:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743964481;
-	bh=+ah9gkt4OLRzfM3VmfsCMpCre3Srvx/jd9o1dKRMM5I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fkv8C1jRx3ZWR9X7F0v2dgUReM3In0Khh/GlEyTy4RGChXP5pOGy183IbsoNsc0ry
-	 JjI3rhgGiRtd9+8P/8TigpHLN9NBcIqS+kJZGJF7fc8XS2IYfZNGHSaN5cSK+5kxfZ
-	 +P2WCY0LdI2rxH5FY8+rWi2E4CGFjgVJoiijObL2RYFn56kddGPDde0YguwKlvovMn
-	 r2FNjS32WHe96DgK/ildb3D/WE8YjxUIzqH6qkYsFj+0lKwb4xB+7oz+SqkDRhf4ax
-	 +ifax5EvStwbnXPSjnQNJ8MM+gjie9yAOrbS1OgOWQ2gsMPhGjUSoe//Rl2emlCGLc
-	 RAL2ezU+aVNmQ==
-Message-ID: <557692d2-17d9-4547-93f4-797ab342a541@kernel.org>
-Date: Sun, 6 Apr 2025 20:34:35 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOu04ogp"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-aee773df955so2868003a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 11:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743964525; x=1744569325; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JG00idBbiuZzkIUnOfUDwBMjIfIGhLtfrBRZuXQ2YbM=;
+        b=TOu04ogpGZucH3zRsGvcLUQQKn4G3sZlm3cBv1EG4svsZ6PY0UvU0LO5MXWC86erHM
+         FqU/3lurbBpSPOtzSGUw/2duANc2J+UCVh+gIcYqcjNFqTy1K8Uk1kHVNYmstVfGic/P
+         OoFCM+s3vPXSKbtyH8yBb+Osw1ylR/iFzA8OaxceQTNnNTg5hftYQnHymuxcFRkuohrN
+         C4n5lbTrMjcbu1/R71Pk5GSdexzfLT7VzZz0QvsXEoFFz+Dv6v7NGsuCoNwvNIy3lKPf
+         XoTdK4BhOAZ6u83mjFCVD05fuemh5jrNHgX15cwvRzLA+W1KvXa/3xQATdGyf3ng5p4V
+         MwkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743964525; x=1744569325;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JG00idBbiuZzkIUnOfUDwBMjIfIGhLtfrBRZuXQ2YbM=;
+        b=AqOYt/x1tFr0pTkixvYskRwtV8fIuhoz9g1K8MhPuxGLb3YT4HowFuyS/ogPZ7c4rh
+         dTJ1Mqz81jBu0Rv/Q0cFnsEG2zqv9nQ9IAVVRk4E9ipl9cv9aRhG+QKKwLfqFoZf4CBj
+         ET0bCMgddcZcOvfybQF9FszGRh/OIwRrYIyFhzgD7WqBtch54Jmh+xUer21MxBpVUbJG
+         aIHtcftViYvJsVPMIdHjjXcwI74AngPavmCH2hoADEoaRd0G3g18XXUHx/cboIe4PhXP
+         SetP6VK2jb6eyfB2VoNgGrwOTKx7ZAyLxdHNlIJK+SjOUxzBei0dwt+ngX+n4dXpyAP/
+         //cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUE/GJcScgeyO8AvxK656paacrm+25vDtCr/zXnZq/+UyRDWfK9shvMgZVBTRR8yVCETe/kQaj2JsyQUO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYN3RfVUVySCdj9dOzH4kp9BmYxZu+ub83UT9GhvxAGX+9kwIZ
+	3WRcBSk8KPIAqBXKUNm+MOrM0TknWQAAQyLtQBzzsJ42ThI/M0Rg98icnMrjdw==
+X-Gm-Gg: ASbGncsdJd8OBtpAee4OlVvvHNXXejMnpKqma32RZLMz38HEx15MW7Vspsp8zQ/IDY8
+	3O06xetJUIzL1FTNgBGl+2Wl+yBSSqnJsIglxLAAqO+P1MNvH0HigpJm/EKZripoLUC38HWL023
+	2xmKXknNRrslbrHS190K2u5BG5FrEjov+K9Z3KryHgkiNUNYrW7tr4FkFSc8DQAGUlGOde3mMGg
+	th6mQB/aRcdfjcs4tk9PUS6w71qS2NUzNVPjnCX41m7cY2ot8N9jPRgf6Cx8yX/HXErzYuB45Ib
+	BddvlQH8FjgAapUtpNniJU36pnFehVWv3aK/VgVAOseCCZRcOd+4fiY=
+X-Google-Smtp-Source: AGHT+IGOGFfSBcmfodUPLiDGYIY4DGC8r1k7PhYjbfzDdhTnlzgvWrXr4fTTmrOrq1dg8IG68Osutg==
+X-Received: by 2002:a17:902:d482:b0:223:4d5e:76a6 with SMTP id d9443c01a7336-22a89a241d6mr131992235ad.1.1743964524915;
+        Sun, 06 Apr 2025 11:35:24 -0700 (PDT)
+Received: from thinkpad ([120.60.71.192])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866080csm66260455ad.125.2025.04.06.11.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 11:35:24 -0700 (PDT)
+Date: Mon, 7 Apr 2025 00:05:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Manish Pandey <quic_mapa@quicinc.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
+	quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com, quic_cang@quicinc.com, 
+	quic_nguyenb@quicinc.com
+Subject: Re: [PATCH V2 2/2] scsi: ufs: introduce quirk to extend
+ PA_HIBERN8TIME for UFS devices
+Message-ID: <hcguawgzuqgi2cyw3nf7uiilahjsvrm37f6zgfqlnfkck3jatv@xgaca3zgts2u>
+References: <20250404174539.28707-1-quic_mapa@quicinc.com>
+ <20250404174539.28707-3-quic_mapa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 29/32] rtc: s5m: switch to devm_device_init_wakeup
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
- <20250403-s2mpg10-v3-29-b542b3505e68@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250403-s2mpg10-v3-29-b542b3505e68@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250404174539.28707-3-quic_mapa@quicinc.com>
 
-On 03/04/2025 10:59, André Draszik wrote:
-> To release memory allocated by device_init_wakeup(true), drivers have
+On Fri, Apr 04, 2025 at 11:15:39PM +0530, Manish Pandey wrote:
+> Some UFS devices need additional time in hibern8 mode before exiting,
+> beyond the negotiated handshaking phase between the host and device.
+> Introduce a quirk to increase the PA_HIBERN8TIME parameter by 100 µs
+> to ensure proper hibernation process.
+> 
 
+This commit message didn't mention the UFS device for which this quirk is being
+applied.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+> ---
+>  drivers/ufs/core/ufshcd.c | 31 +++++++++++++++++++++++++++++++
+>  include/ufs/ufs_quirks.h  |  6 ++++++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 464f13da259a..2b8203fe7b8c 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -278,6 +278,7 @@ static const struct ufs_dev_quirk ufs_fixups[] = {
+>  	  .model = UFS_ANY_MODEL,
+>  	  .quirk = UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
+>  		   UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE |
+> +		   UFS_DEVICE_QUIRK_PA_HIBER8TIME |
+>  		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS },
+>  	{ .wmanufacturerid = UFS_VENDOR_SKHYNIX,
+>  	  .model = UFS_ANY_MODEL,
+> @@ -8384,6 +8385,33 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
+>  	return ret;
+>  }
+>  
+> +/**
+> + * ufshcd_quirk_override_pa_h8time - Ensures proper adjustment of PA_HIBERN8TIME.
+> + * @hba: per-adapter instance
+> + *
+> + * Some UFS devices require specific adjustments to the PA_HIBERN8TIME parameter
+> + * to ensure proper hibernation timing. This function retrieves the current
+> + * PA_HIBERN8TIME value and increments it by 100us.
+> + */
+> +static void ufshcd_quirk_override_pa_h8time(struct ufs_hba *hba)
+> +{
+> +	u32 pa_h8time = 0;
 
-Best regards,
-Krzysztof
+Why do you need to initialize it?
+
+> +	int ret;
+> +
+> +	ret = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
+> +			&pa_h8time);
+> +	if (ret) {
+> +		dev_err(hba->dev, "Failed to get PA_HIBERN8TIME: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	/* Increment by 1 to increase hibernation time by 100 µs */
+
+From where the value of 100us adjustment is coming from?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
