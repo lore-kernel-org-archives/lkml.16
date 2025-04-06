@@ -1,290 +1,125 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B591023AD
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 11:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA401C27;
+	Sun,  6 Apr 2025 11:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743939451; cv=none; b=qThMuLZ/r2TSYVK7HjlIexwPLFxOEHOT/+S0nFzPYQGhW1gYhfWyWOoHUcH1iTT4BIvPYXf5B29qVnON9KhqKmNKn7UkpOIJmmNvi72/nLC68J+FX1JJ9sDUvpH1j+0yZQ5H/QanpHMrI/+NvMu66mqtpPKnPgRv+vhPmiJSdz4=
+	t=1743939772; cv=none; b=Rq7ziq61fqlXoOH4NYLpt9kVZPS3QfIR1N95KnkR0rb18rX/STMLCSYy/J6pOr0SrtX+QeWnwzVkeqegC7IWCdD9ok439vhs2ANnUeZ8mrjMDU8yjb5vOa7JwdLSAsw6rAu127G/9djvhY2VMRUsa6rW9pDd9kZynpoyvnVHGZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743939451; c=relaxed/simple;
-	bh=VGD20U7ax2wOW3rHPq72VdiKTz2nxDr05hz2h0YXGA0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=d4PJU643G2JeMZj6y5TWYOFiKRm41tePocNYaU5spYimXm/yM2FpV1rIUbSX6j/QnasBReFlWz4GGJ+Db8X0fpQq/Q8/AiNBWvX6bzuESaYAeHb7hMT2mxErtJaAvZsIy1yvlbXMZxmMzM07/1FFl+yXAfIPUuRztc7xHkiZIH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d443811f04so33638965ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 04:37:29 -0700 (PDT)
+	s=arc-20240116; t=1743939772; c=relaxed/simple;
+	bh=obzEVyCvowXtHk1jUxYd1vnwIcYOWBlko+ODBM5lKc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H+PuTHcTd13XQe3JHIkszz/YEOqm09sL5MVZoCJd0JIqvp0puUmulWIn8aA+qqYGciheUno5bGiKjWjLlTOIrtgCABqWBKx+wOcTmJKlO3EvR30rDhAhRACvCWXbQhvoTTQi9GzdPSrlWA2YdCRk/8FAlZUsQua883dOyfZ+Tdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mk0fAykA; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk0fAykA"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1027135a91.1;
+        Sun, 06 Apr 2025 04:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743939770; x=1744544570; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2CQcHyKdo7NqukG4kbe23C6EitoDV0EvE3RGNL0StOg=;
+        b=Mk0fAykAw/tishi7MgzCznmPYVHq0zh4QJVKVLaNAAisiDw65NScD0YGDJIw2FGq1o
+         GFtDgbnd5fFOO9ASnpIO05ZtePR3RnnH6pFOJM4SX8QI1ZIljFQJIpW3gTC9ZzHmzuwo
+         0EyhXP4zqHeg+doXvZK9kMjpRe+XMlV5WsH7eniydDc2sqCaUHnh5GnxiyGcR+u3x5ex
+         cx0YV7t8jnnaxdQ6JhITP1pa8a0ETmu+3msPeBeaofDtJygjk8dumPkn+lzwl1ujA+qd
+         i6LEX/qi8guo1X2qGYr63QVFY0rgS/swsq+9gLXkeliNHqU8VjaKr16JfWnjulfDb1ms
+         addg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743939449; x=1744544249;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AEojaYndoAuY2o0ZRhBirwtVGpDwZvQB7MK1WgQiq5I=;
-        b=A45KyBLzM/tUGe1mDma2azQ6sjn2ZMU3kXZAUGLw8XlPr6tcLf4Al7tGZyb25FlTHH
-         G+Z7cSZ5rVOpVJupxBf6DS8DswoRV1ghdngdERNiqgCw4IAjZxGIJ9EjIas1/R3yL+rW
-         X2DCQPLoXYzNJbqrlHGf8K67ykzEHgil7O3kKMZg1SYL2UBOpBl0msYV8GRoRgHXFObO
-         tgLzQwiqyMXEamQ0C7Pyeifx53EOKCRGrKc93NWvW0Rbc2/3VlNDJmM90Zm0LWFFoiss
-         gbKx7qiLYIydJ+VLx9eCVoGseR8SJinU/fMO9cRwjOGEa6XyQoh7Xr/fvVrImvp2GGJM
-         rBDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWj3sGG4Be+2hXTJmhPid2MEPdGn6GsGxTVIf8cXdLWydUGbt/bNWj1+Jh0LbqIjeTwLF3/QRm0N4zobYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAE3rxOBRPy3abdFBCi0swA/9sVmcl0ONHsvprGoRE0RLjpZsJ
-	YTnfxjonSEWvt1qyDJQfjMNGA8PjQEXX7+qmS2DxhuJ/kLLRxhR5x9suXDXkvbtUH4Ott1Chlfg
-	/JtVHY8DygkvrfFweTPNFbqtBHbM58JFM1X/4+Vu3OLNEW5l2V3GEQQA=
-X-Google-Smtp-Source: AGHT+IEbBW1rCb8PuLTeVS+n9Vkoy1dBUqoqfgUNLTBUaxhDrq43L6GjOLSmb0wx8H0nwYBJhXNprvtO4YpD9qA7JTDl6Eebamar
+        d=1e100.net; s=20230601; t=1743939770; x=1744544570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2CQcHyKdo7NqukG4kbe23C6EitoDV0EvE3RGNL0StOg=;
+        b=oMVO4Iov2qYf2lS5AyaAD+5d1xBAGe659yEsOgMy98TsIsqNZeygFlKSR09LvtYM1V
+         xnokkFDF7gqCS0BSn5I+6wOHYnDD6hzG192DHIrZmGf66loabCkMO4KBRBxukaTQf3yQ
+         7bLOwxCtxWA5hHcLlDHlQK4n5AercbqkUSbZq3MkqOa3yUgXGorpMRmJuDRzjWWGKnL6
+         monnDkQQxDc4wZPkR2HWQ+xG52cdNOtRFlbUt+PkK3OvLABjoU+axtOUBV8uCFmKngBG
+         yFMHMddNsH+tak2sbrK6LqTooWbi7n3ABPz3M/mHIARorrkFQqpWWqQ8TUMBkAvOX9aC
+         3AKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQexS1mFW+5TGXH44tTwCPRwhy1cia4kSVaI168SFtrCNZgk4b2qjLfRUjkbpo6cfrQjVAtnruZlF3+tE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyTRX3gws/oIbgu/WNgnfDaagefIBuCJhQ/xNvjgDjGFRz7xFb
+	oZLtn9KKb+VYi2YvKPPwR2aqVPCblZ1g098XUCV7OTM/K//gCRVsgZTSZrFvX5VTmEChi9d0M4+
+	5Z5vS4Bg4wsbijreGgmAbVNRMQ9A=
+X-Gm-Gg: ASbGncttdDguUbvdkb3oW2OL33XTfjnwqznFxvCqjL+Cwwbh17u5s7q02dAt31OddEp
+	ENwVkISck8LZHj5vg7EBPE14CHeyOeYgHC/azugtFZnCND8I10gb16vcYHqm5KWWndVmO9BaHbm
+	RULg5Q5Dba+7la2n2Cz69Ss9rELg==
+X-Google-Smtp-Source: AGHT+IGbusvYvppjE3d+kCJR6enaryQVigrFFBAk1qzQdMM8bxxcfglN8lkQjYwuZxIZt1MxaP0O1xq7sRdthGXnR1E=
+X-Received: by 2002:a17:903:2f07:b0:223:397e:a55b with SMTP id
+ d9443c01a7336-22a8a065747mr48250385ad.4.1743939770057; Sun, 06 Apr 2025
+ 04:42:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12cc:b0:3d4:3fbf:967d with SMTP id
- e9e14a558f8ab-3d6e3f01680mr89965095ab.7.1743939448819; Sun, 06 Apr 2025
- 04:37:28 -0700 (PDT)
-Date: Sun, 06 Apr 2025 04:37:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f26778.050a0220.0a13.0265.GAE@google.com>
-Subject: [syzbot] [acpi?] KASAN: slab-use-after-free Read in software_node_notify_remove
-From: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
-To: andriy.shevchenko@linux.intel.com, dakr@kernel.org, djrscally@gmail.com, 
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, jgg@nvidia.com, 
-	kevin.tian@intel.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nicolinc@nvidia.com, rafael@kernel.org, 
-	sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com, 
-	yi.l.liu@intel.com
+References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
+ <CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com> <tencent_3DAE6B923FC67B543D90D970@qq.com>
+In-Reply-To: <tencent_3DAE6B923FC67B543D90D970@qq.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Apr 2025 13:42:38 +0200
+X-Gm-Features: ATxdqUESt_7N6TJlvXmHSe3qN_0X-vLxHhE7nI9ofDpu1e-RxfsBzSBjAPXH5EY
+Message-ID: <CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
+To: =?UTF-8?B?5bC554aZ5ZaG?= <xizheyin@smail.nju.edu.cn>
+Cc: rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Miguel Ojeda <ojeda@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sun, Apr 6, 2025 at 1:13=E2=80=AFPM =E5=B0=B9=E7=86=99=E5=96=86 <xizheyi=
+n@smail.nju.edu.cn> wrote:
+>
+> Thank you very much for the reminder, I will resend a new patch as reques=
+ted.
+> But it seems to me that this patch makes sense to a certain extent for th=
+e improvement of the raw links in the doc, which might make the document lo=
+ok better.
+> Do you think it's necessary to keep it, or do you have a better suggestio=
+n? :)
 
-syzbot found the following issue on:
+(Please do not send HTML -- it will not reach the mailing list)
 
-HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15a807cf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=24f9c4330e7c0609
-dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109077b0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13717c3f980000
+You're welcome!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e4bfa652b34a/disk-acc4d5ff.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3d19beb8bb92/vmlinux-acc4d5ff.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e7298ccc6331/bzImage-acc4d5ff.xz
+Personally, I think it depends on the URL and the context -- let me
+give clarify below.
 
-The issue was bisected to:
+The `[...](...)` notation is "heavier", i.e. makes it harder to read
+in plain-text form, which many people use in the kernel, i.e. they
+will not read the rendered form. That is why we typically move the
+links below and just use `[...]` instead if we really want to use a
+"title" rather than the raw URL.
 
-commit 9eb59204d5197b4add63968c8c5b7633631f9a5a
-Author: Yi Liu <yi.l.liu@intel.com>
-Date:   Fri Mar 21 17:19:37 2025 +0000
+Moreover, if a raw URL already says what it is itself, then there is
+less reason to use a title. So, for instance, a URL like:
 
-    iommufd/selftest: Add set_dev_pasid in mock iommu
+    https://rust-for-linux.com/contributing
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=160ec7cf980000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=150ec7cf980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=110ec7cf980000
+already says everything it needs to say. However, a URL that uses e.g.
+opaque IDs into a database may not give you any information until you
+click on them.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
-Fixes: 9eb59204d519 ("iommufd/selftest: Add set_dev_pasid in mock iommu")
+So, for both reasons, I think the following is not an improvement, in
+both plain-text and rendered forms:
 
-R10: 0000000000000002 R11: 0000000000000246 R12: 00007ffcce8ad2dc
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-iommufd_mock iommufd_mock0: Adding to iommu group 0
-==================================================================
-BUG: KASAN: slab-use-after-free in software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
-Read of size 1 at addr ffff88807fe41108 by task syz-executor390/5849
+    -//! Reference: <https://docs.kernel.org/core-api/rbtree.html>
+    +//! Reference: [kernel documentation:
+Rbtree](https://docs.kernel.org/core-api/rbtree.html)
 
-CPU: 1 UID: 0 PID: 5849 Comm: syz-executor390 Not tainted 6.14.0-syzkaller-12456-gacc4d5ff0b61 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- software_node_notify_remove+0x1bc/0x1c0 drivers/base/swnode.c:1108
- device_platform_notify_remove drivers/base/core.c:2387 [inline]
- device_del+0x594/0x9b0 drivers/base/core.c:3858
- device_unregister+0x20/0xc0 drivers/base/core.c:3896
- mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
- iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7feea50b36e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcce8ad2c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007ffcce8ad2e0 RCX: 00007feea50b36e9
-RDX: 0000200000000200 RSI: 0000000000003ba0 RDI: 0000000000000003
-RBP: 0000000000000002 R08: 00007ffcce8ad066 R09: 00000000000000a0
-R10: 0000000000000002 R11: 0000000000000246 R12: 00007ffcce8ad2dc
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+By the way, the last changes, i.e.
 
-Allocated by task 5849:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x9d/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x236/0x370 mm/slub.c:4362
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- swnode_register+0x5a/0x540 drivers/base/swnode.c:790
- fwnode_create_software_node+0x199/0x1f0 drivers/base/swnode.c:949
- device_create_managed_software_node+0xd5/0x1f0 drivers/base/swnode.c:1060
- mock_dev_create drivers/iommu/iommufd/selftest.c:942 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:989 [inline]
- iommufd_test+0x3335/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+    -//! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
+    +//! see [rust-lang/rust/blob/master/COPYRIGHT].
 
-Freed by task 5849:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2389 [inline]
- slab_free mm/slub.c:4646 [inline]
- kfree+0x198/0x430 mm/slub.c:4845
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x22f/0x480 lib/kobject.c:737
- software_node_notify_remove+0x159/0x1c0 drivers/base/swnode.c:1106
- device_platform_notify_remove drivers/base/core.c:2387 [inline]
- device_del+0x594/0x9b0 drivers/base/core.c:3858
- device_unregister+0x20/0xc0 drivers/base/core.c:3896
- mock_dev_destroy drivers/iommu/iommufd/selftest.c:960 [inline]
- iommufd_test_mock_domain drivers/iommu/iommufd/selftest.c:1022 [inline]
- iommufd_test+0x3715/0x56a0 drivers/iommu/iommufd/selftest.c:1866
- iommufd_fops_ioctl+0x4fc/0x610 drivers/iommu/iommufd/main.c:419
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+wouldn't work anyway, or am I missing something? (Even if it did, we
+should avoid changing vendored files, by the way).
 
-The buggy address belongs to the object at ffff88807fe41000
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 264 bytes inside of
- freed 512-byte region [ffff88807fe41000, ffff88807fe41200)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7fe40
-head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b041c80 0000000000000000 dead000000000001
-raw: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b041c80 0000000000000000 dead000000000001
-head: 0000000000000000 0000000080100010 00000000f5000000 0000000000000000
-head: 00fff00000000002 ffffea0001ff9001 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000004
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5226, tgid 5226 (udevd), ts 58838564258, free_ts 55546510086
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
- prep_new_page mm/page_alloc.c:1725 [inline]
- get_page_from_freelist+0x352b/0x36c0 mm/page_alloc.c:3652
- __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
- alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2459 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2623
- new_slab mm/slub.c:2676 [inline]
- ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
- __slab_alloc+0x58/0xa0 mm/slub.c:3952
- __slab_alloc_node mm/slub.c:4027 [inline]
- slab_alloc_node mm/slub.c:4188 [inline]
- __kmalloc_cache_noprof+0x26a/0x370 mm/slub.c:4357
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- kernfs_fop_open+0x3a3/0xdf0 fs/kernfs/file.c:623
- do_dentry_open+0xdec/0x1960 fs/open.c:956
- vfs_open+0x3b/0x370 fs/open.c:1086
- do_open fs/namei.c:3845 [inline]
- path_openat+0x2caf/0x35d0 fs/namei.c:4004
- do_filp_open+0x284/0x4e0 fs/namei.c:4031
- do_sys_openat2+0x12b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x249/0x2a0 fs/open.c:1455
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-page last free pid 5223 tgid 5223 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0xde8/0x10a0 mm/page_alloc.c:2680
- mm_free_pgd kernel/fork.c:793 [inline]
- __mmdrop+0xb9/0x490 kernel/fork.c:939
- mmdrop include/linux/sched/mm.h:55 [inline]
- mmdrop_sched include/linux/sched/mm.h:83 [inline]
- mmdrop_lazy_tlb_sched include/linux/sched/mm.h:110 [inline]
- finish_task_switch+0x304/0x870 kernel/sched/core.c:5275
- context_switch kernel/sched/core.c:5385 [inline]
- __schedule+0x1b90/0x5240 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x163/0x360 kernel/sched/core.c:6860
- schedule_hrtimeout_range_clock+0x193/0x360 kernel/time/sleep_timeout.c:216
- ep_poll fs/eventpoll.c:2107 [inline]
- do_epoll_wait+0xe2c/0x1100 fs/eventpoll.c:2523
- __do_sys_epoll_wait fs/eventpoll.c:2531 [inline]
- __se_sys_epoll_wait fs/eventpoll.c:2526 [inline]
- __x64_sys_epoll_wait+0x259/0x2b0 fs/eventpoll.c:2526
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88807fe41000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88807fe41080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88807fe41100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                      ^
- ffff88807fe41180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88807fe41200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+Miguel
