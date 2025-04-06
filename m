@@ -1,114 +1,154 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9A9C8CE;
-	Sun,  6 Apr 2025 18:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FA7C8CE;
+	Sun,  6 Apr 2025 18:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743962534; cv=none; b=YTR/LcC/79zcrV/5zJ26FsuL4ya3CX73C9M5PlJpXMYYZV6IsfHCNOW4idMnUIz5aTxKYak8IogpSdyCbKyCSDECwIl1KKx+Oi3aqMI+po6YaLiJy8E/wKRdfslwGe5aOppljURAw5auRY+stI6i/aho8MoaSPuFkse8w5s/JNQ=
+	t=1743963041; cv=none; b=G1MLFzcrc5JoKd2qjOwyIRY6ZcKQ8brIJj2CoJH5wmyIQq3BGa8EAjSAu5D3VgXJlOfZ4UmVoJT7vvyH73kjKvzwwpocRjCZEbzsAVisnU9/I3xEVyujMmptPcRbTfyN8Vj7i0GQMNk0DSNZRmOS+FakE7fOUmgG1MR2Rtv4+R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743962534; c=relaxed/simple;
-	bh=QaaVXr5vmbzzGB8LVkgnvkqyO3UdD+SEMR3QSy+BgNU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Y4bZOdGdrYZMCXdnOHcrX3HQ7veOUxUCs4vsOy205NuPBWMXsAILKptPX6wH1N6ozQY+5JGDTquxQ3dFWGZXRZwvRQQ0qFXf00xo7kUfPehNChDUday0GZLhoitfLXUNiZOCHXIsRfqlYICENmZtNTg3fK+QkLw5Kumj3G9JCmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eQgrto8X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EjuYjn8P; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743963041; c=relaxed/simple;
+	bh=xAi8IWjQ5lnxzvNs2hBOLffbnbOjTT3CiChzZc7QPzk=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=VeTvBEAifpOWqE8L7Vil6qRqzdlHcHhwhoZWms5ad23daxvUcMMOoL5shWCC7Zv37EV0ug+gI99l/l4PO5aIuUB2pPHy5docKwLvhFCwBAk4KiEPKA4n80c5/ItbUVBCKQP1BZLB+ZrFk4cZlKmtnSpDTuCcdBr+GTDJbHqwOIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=aHWWTBMf; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eQgrto8X";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EjuYjn8P"
-Date: Sun, 06 Apr 2025 18:02:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743962530;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qujhkEeCue36EqZBnlB+QQW2AvVUadjyFugCuhgUDA=;
-	b=eQgrto8XGxFXNSHhPND/l60udS3KV4DWp6S4xKW+KpkAlW2XklppZMdUml5xoXAmAfN5nm
-	zZgKcQiMinST3IAtzk8W/H1YPk8HB0qT2HuxcZPc6NxtL+rsMk3hUrvVujpSxo38bYrrxz
-	hwvlGDv0OlRyOZfjclwphPNryEia6sMlM7eCz/seFeAzq8LNtkmi13JbFwvMnq2MVA5ygC
-	YeK5z/szZn6OtqSkhbBc2zUpMS2kdqV1j1IGUCSyGMyE3ejXyAyRvgC6c2a2age+aZQuMT
-	EmCyZLZZdpZW49oVRlXlakzyGMoZgDimQoXYi21MgoKAB7T1AHfH3c2wUyACFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743962530;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qujhkEeCue36EqZBnlB+QQW2AvVUadjyFugCuhgUDA=;
-	b=EjuYjn8PdBerRlHm0mysFHIoCCIkLvZP4aEwXlARl5FNylsoJvK+i/CH+FM3FEzNGruG2y
-	tGb2mdfUM7DZowCg==
-From: "tip-bot2 for Andi Kleen" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpuid: Add AMX and SPEC_CTRL dependencies
-Cc: Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Sohil Mehta <sohil.mehta@intel.com>,
- Tony Luck <tony.luck@intel.com>, "Ahmed S. Darwish" <darwi@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240924170128.2611854-1-ak@linux.intel.com>
-References: <20240924170128.2611854-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="aHWWTBMf"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 1URtuNKRAgxs71URwu8qOr; Sun, 06 Apr 2025 20:10:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743963030;
+	bh=FMcqQ3hkFh8qYYDl8Bm9WQ67CvkgwTUHqVnt0jyw3KA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=aHWWTBMfVBort1LDm0osb5MjbFRAw7w1nCBpZIKTlh5A0PAerTli5oyelg2RfR97G
+	 a3olTNkm2byFHQPNRt7BwuOvKLXB8ABkdiXL7NLH3ZUAzGqMvz3eVAByXwJicizSHy
+	 1Y8JS7dLK9AZFKsfndJ2EQfbVOakDhy8QdQVulawx79qELsfrN3M/hXfPgi2CyR8bv
+	 kNe263bY1dxkCU1FBgtcZo8yhx0fgyhRe8uv+nXOH4Z8Y3RWf6O7z6rguzpCP2CbWo
+	 bW0OWXuNAOCL9k7Wk8cbjx+a9t03p1z97/4mNp86GtBkbWHcle6VHWxNc1tGfBhkSu
+	 tv0hVIS4c1sSQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 06 Apr 2025 20:10:30 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <c51bbf38-0c6a-418f-b1e2-763d621186ff@wanadoo.fr>
+Date: Sun, 6 Apr 2025 20:10:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174396252153.31282.17024689977241698815.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] PCI: tegra194: Fix debugfs directory creation when
+ CONFIG_PCIEASPM is disabled
+References: <20250406134355.49036-1-18255117159@163.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: 18255117159@163.com
+Cc: bhelgaas@google.com, christophe.jaillet@wanadoo.fr, jonathanh@nvidia.com,
+ kw@linux.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
+In-Reply-To: <20250406134355.49036-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+Le 06/04/2025 à 15:43, Hans Zhang a écrit :
+> Previously, the debugfs directory was unconditionally created in
+> tegra_pcie_config_rp() regardless of the CONFIG_PCIEASPM setting.
+> This led to unnecessary directory creation when ASPM support was disabled.
+> 
+> Move the debugfs directory creation into init_debugfs() which is
+> conditionally compiled based on CONFIG_PCIEASPM. This ensures:
+> - The directory is only created when ASPM-related debugfs entries are
+>    needed.
+> - Proper error handling for directory creation failures.
+> - Avoids cluttering debugfs with empty directories when ASPM is disabled.
+> 
+> Signed-off-by: Hans Zhang <18255117159-9Onoh4P/yGk@public.gmane.org>
+> ---
+> Changes since v1:
+> https://lore.kernel.org/linux-pci/20250405145459.26800-1-18255117159-9Onoh4P/yGk@public.gmane.org
+> 
+> - The first version was committed incorrectly because the judgment
+>    parameter in "debugfs_remove_recursive" was not noticed.
+> ---
+>   drivers/pci/controller/dwc/pcie-tegra194.c | 27 +++++++++++++---------
+>   1 file changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 5103995cd6c7..f048b2342af4 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -711,16 +711,27 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
+>   	dw_pcie_writel_dbi(pci, PCIE_PORT_AFR, val);
+>   }
+>   
+> -static void init_debugfs(struct tegra_pcie_dw *pcie)
+> +static int init_debugfs(struct tegra_pcie_dw *pcie)
 
-Commit-ID:     e37aa1211fbfeb9d5e79f4a4b0da898e6d0d53bb
-Gitweb:        https://git.kernel.org/tip/e37aa1211fbfeb9d5e79f4a4b0da898e6d0d53bb
-Author:        Andi Kleen <ak@linux.intel.com>
-AuthorDate:    Tue, 24 Sep 2024 10:01:28 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 06 Apr 2025 19:54:35 +02:00
+I would keep it a void function.
+If devm_kasprintf() fails, which is unlikely, then the module should 
+still work correctly. So just a return; should be fine IMHO.
 
-x86/cpuid: Add AMX and SPEC_CTRL dependencies
+Usually, errors related to debugfs are silently ignored as is does not 
+prevent this to work.
 
-Add some missing dependencies to the CPUID dependency table:
+CJ
 
- - All the AMX features depend on AMX_TILE
- - All the SPEC_CTRL features depend on SPEC_CTRL
+>   {
+> -	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
+> +	struct device *dev = pcie->dev;
+> +	char *name;
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	pcie->debugfs = debugfs_create_dir(name, NULL);
+> +
+> +	debugfs_create_devm_seqfile(dev, "aspm_state_cnt", pcie->debugfs,
+>   				    aspm_state_cnt);
+> +
+> +	return 0;
+>   }
+>   #else
+>   static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
+>   static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
+>   static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
+> -static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
+> +static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
+>   #endif
+>   
+>   static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
+> @@ -1634,7 +1645,6 @@ static void tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
+>   static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+>   {
+>   	struct device *dev = pcie->dev;
+> -	char *name;
+>   	int ret;
+>   
+>   	pm_runtime_enable(dev);
+> @@ -1664,14 +1674,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+>   		goto fail_host_init;
+>   	}
+>   
+> -	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
+> -	if (!name) {
+> -		ret = -ENOMEM;
+> +	ret = init_debugfs(pcie);
+> +	if (ret < 0)
+>   		goto fail_host_init;
+> -	}
+> -
+> -	pcie->debugfs = debugfs_create_dir(name, NULL);
+> -	init_debugfs(pcie);
+>   
+>   	return ret;
+>   
+> 
+> base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
 
-[ mingo: Keep the AMX part of the table grouped ... ]
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Ahmed S. Darwish <darwi@linutronix.de>
-Link: https://lore.kernel.org/r/20240924170128.2611854-1-ak@linux.intel.com
----
- arch/x86/kernel/cpu/cpuid-deps.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index a2fbea0..94c062c 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -82,8 +82,12 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_XFD,			X86_FEATURE_XSAVES    },
- 	{ X86_FEATURE_XFD,			X86_FEATURE_XGETBV1   },
- 	{ X86_FEATURE_AMX_TILE,			X86_FEATURE_XFD       },
-+	{ X86_FEATURE_AMX_FP16,			X86_FEATURE_AMX_TILE  },
-+	{ X86_FEATURE_AMX_BF16,			X86_FEATURE_AMX_TILE  },
-+	{ X86_FEATURE_AMX_INT8,			X86_FEATURE_AMX_TILE  },
- 	{ X86_FEATURE_SHSTK,			X86_FEATURE_XSAVES    },
- 	{ X86_FEATURE_FRED,			X86_FEATURE_LKGS      },
-+	{ X86_FEATURE_SPEC_CTRL_SSBD,		X86_FEATURE_SPEC_CTRL },
- 	{}
- };
- 
