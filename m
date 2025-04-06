@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B63642AA5;
-	Sun,  6 Apr 2025 18:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A776851C5A;
+	Sun,  6 Apr 2025 18:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743964383; cv=none; b=sPm1BvkDXyOekPXQfJ7+SHV3xbgqATooQo76UOuu7V0XkCAn4teqJ+qyDk+MupqvqbTo1SNXb0QNTiFDkkLuSoAPCe3NqOK9npwQTGr05u8Oi9GVG4TnJdK8H2sY1jAumHgzqQYYuDFMa2XA59PthvPLQ8TQFyeTaZ+zdwtM4UQ=
+	t=1743964386; cv=none; b=V0FzEQSlGE5f3v+94pugEX0uLuKWhceb6vmkO2nXgOocbS71pGPiU9AjsiKmdLwrvewJHEmGAnGFPYD52vzrkx7md1b42/VDLBWcT02ixwoB/WHuiWfEXGcKBXulGgKXfw1NVEaYxuctfSXsEQ75CvcjGnYLoNHEIyw5jivzGzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743964383; c=relaxed/simple;
-	bh=OfSH4FxnB/ZF80PgTthrUKPbgfJkKBhDrIvTP1GnLYA=;
+	s=arc-20240116; t=1743964386; c=relaxed/simple;
+	bh=LoukVe85IChN1j67HpCL5pFFjUj+SXLNYllT3iwkSrE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=TEMDxxIjIFV+PQDnj5MiKxwTetQgmJh/JtOHi1l8DVRwsVvNhffcKfQi3RmFC9QbCGITeUXMi/xuM2WWhM3D8ogfSEKuQKR8dhEdStG6z5DTJ650huR+YWwl6GKfTO1S+TeGVQQhG0GcpBquNCwaoUTMmhmwNMA5a2j/y2KIUEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Qvi2EgC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s+95Lu+J; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=I2ws44I4mzk+81dLCaOrGPQxF+9wfesz82HiAIYPY8OFI73mEowb+9u8RY/pDhV5+ZzkBFlR7Ssb66o+3SItehWrJ8zlWuSBV1GhluQHyTJceEveqLHsaykpf9Ur2pTWPy6nlKmlx1NIHGkySDBqCMRkNRuZkQyM9zVSAYGpjJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4rczCELy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rafsjn5M; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Qvi2EgC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s+95Lu+J"
-Date: Sun, 06 Apr 2025 18:32:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4rczCELy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rafsjn5M"
+Date: Sun, 06 Apr 2025 18:33:01 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743964379;
+	s=2020; t=1743964381;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=92IlUscCN7p9N1agEf0jenO8KPe7XF7lQgAeQbHGGog=;
-	b=0Qvi2EgChmp0QUd/CSFqb6T5Zj7fgv6eIxdDwRNfyyM533HhpGFtlz5ZoLWlmyikbciVGB
-	93JSAqKknsqHMbB1LlFXy59m+dFBYQpSbFFrOi6sS3ZVIpyTfstJFuHJ6JaofhbCGdt3+0
-	LEzzUzOXeWSZ99zbTbEssA7JgJIhK8f3RaViklo/lnsHTZrCKGg1hILk0K7T/XP6P30Uiq
-	9q6v092r35HJU0T3rw9n1ic/foYN6AhD7BJXfj1n/hDPHRka+/3Q0bZplloRMf5dMVSx53
-	4Qld9QobRZNu7uDcddeJleqhJ0UjDA1Ht3I3bksHn88uiCm0/IVvVm0ubdf7vw==
+	bh=cCPTo2nXJmAC2PS9ibj0u2zrR/Pqlc5a3/+W5x6xhJw=;
+	b=4rczCELywP0xX89JezwC2mk6T9VEDgKeiuwFBPfVm2eFjefWEnf2lf+ImndE9CkCTeKBAM
+	2crsfAYSpXvC2UDantXrwxTK77o63MPhZERaPkmltC/iqdwwOBlUsdxEvrdnLJZTV+sNl/
+	Eynk51VcwZwUQkc2W7PZlG+XpEHGCeV1XsfOOO6zDC543Ata0XAteLpFpQBCT2iS9a8D/D
+	4yjvOJMl7YtjqLzJXFJMpMGBgodpU7SuLj37WG8d+tGvx0HCccI3c+wNsRkhenBsrC5d39
+	tyIWTfHGZcPBzqwSA5genvNyoi4pqm5/UzrvgdL9T1yGA7+9XErDtEg/7pqRSA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743964379;
+	s=2020e; t=1743964381;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=92IlUscCN7p9N1agEf0jenO8KPe7XF7lQgAeQbHGGog=;
-	b=s+95Lu+JfustJakjWPDBwAz06NzkgVHyzOtzabTUlItXMYTYY4Xm0whXaUDEF+OasZX5PL
-	GXAiq0IPcd3GB3DA==
+	bh=cCPTo2nXJmAC2PS9ibj0u2zrR/Pqlc5a3/+W5x6xhJw=;
+	b=Rafsjn5M5dCn5wEmhOJjO2bHQpqu6eb0SoNWuPhGJHcnc0fuJKc9Y4NFVaw4c/l2OuKFA+
+	mOCqnUZxS5nN9KDw==
 From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/boot] x86/boot: Move the early kernel mapping code into startup/
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+Subject: [tip: x86/boot] x86/boot: Move the EFI mixed mode startup code back
+ under arch/x86, into startup/
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
  David Woodhouse <dwmw@amazon.co.uk>, "H. Peter Anvin" <hpa@zytor.com>,
- Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ Kees Cook <keescook@chromium.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250401133416.1436741-13-ardb+git@google.com>
-References: <20250401133416.1436741-13-ardb+git@google.com>
+In-Reply-To: <20250401133416.1436741-11-ardb+git@google.com>
+References: <20250401133416.1436741-11-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174396437915.31282.2236991262430723770.tip-bot2@tip-bot2>
+Message-ID: <174396438105.31282.2243827952440371468.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,528 +70,576 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/boot branch of tip:
 
-Commit-ID:     1c1f4adbb07ee6ead77050a0322fedfd19bc2861
-Gitweb:        https://git.kernel.org/tip/1c1f4adbb07ee6ead77050a0322fedfd19bc2861
+Commit-ID:     4f2d1bbc2c92a32fd612e6c3b51832d5c1c3678e
+Gitweb:        https://git.kernel.org/tip/4f2d1bbc2c92a32fd612e6c3b51832d5c1c3678e
 Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Tue, 01 Apr 2025 15:34:22 +02:00
+AuthorDate:    Tue, 01 Apr 2025 15:34:20 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 06 Apr 2025 20:15:15 +02:00
+CommitterDate: Sun, 06 Apr 2025 20:15:14 +02:00
 
-x86/boot: Move the early kernel mapping code into startup/
+x86/boot: Move the EFI mixed mode startup code back under arch/x86, into startup/
 
-The startup code that constructs the kernel virtual mapping runs from
-the 1:1 mapping of memory itself, and therefore, cannot use absolute
-symbol references. Move this code into a separate source file under
-arch/x86/boot/startup/ where all such code will be kept from now on.
+Linus expressed a strong preference for arch-specific asm code (i.e.,
+virtually all of it) to reside under arch/ rather than anywhere else.
 
-Since all code here is constructed in a manner that ensures that it
-tolerates running from the 1:1 mapping of memory, any uses of the
-RIP_REL_REF() macro can be dropped, along with __head annotations for
-placing this code in a dedicated startup section.
+So move the EFI mixed mode startup code back, and put it under
+arch/x86/boot/startup/ where all shared x86 startup code is going to
+live.
 
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: David Woodhouse <dwmw@amazon.co.uk>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250401133416.1436741-13-ardb+git@google.com
+Link: https://lore.kernel.org/r/20250401133416.1436741-11-ardb+git@google.com
 ---
- arch/x86/boot/startup/Makefile     |   2 +-
- arch/x86/boot/startup/map_kernel.c | 232 ++++++++++++++++++++++++++++-
- arch/x86/kernel/head64.c           | 228 +----------------------------
- 3 files changed, 234 insertions(+), 228 deletions(-)
- create mode 100644 arch/x86/boot/startup/map_kernel.c
+ arch/x86/boot/startup/Makefile           |   3 +-
+ arch/x86/boot/startup/efi-mixed.S        | 253 ++++++++++++++++++++++-
+ drivers/firmware/efi/libstub/Makefile    |   1 +-
+ drivers/firmware/efi/libstub/x86-mixed.S | 253 +----------------------
+ 4 files changed, 256 insertions(+), 254 deletions(-)
+ create mode 100644 arch/x86/boot/startup/efi-mixed.S
+ delete mode 100644 drivers/firmware/efi/libstub/x86-mixed.S
 
 diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 34b324c..0142306 100644
+index 03519ef..73946a3 100644
 --- a/arch/x86/boot/startup/Makefile
 +++ b/arch/x86/boot/startup/Makefile
-@@ -15,7 +15,7 @@ KMSAN_SANITIZE	:= n
- UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT	:= n
+@@ -1,3 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
  
--obj-$(CONFIG_X86_64)		+= gdt_idt.o
-+obj-$(CONFIG_X86_64)		+= gdt_idt.o map_kernel.o
- 
++KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
++
  lib-$(CONFIG_X86_64)		+= la57toggle.o
- lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
-diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
++lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
+diff --git a/arch/x86/boot/startup/efi-mixed.S b/arch/x86/boot/startup/efi-mixed.S
 new file mode 100644
-index 0000000..ba856be
+index 0000000..e04ed99
 --- /dev/null
-+++ b/arch/x86/boot/startup/map_kernel.c
-@@ -0,0 +1,232 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/x86/boot/startup/efi-mixed.S
+@@ -0,0 +1,253 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2014, 2015 Intel Corporation; author Matt Fleming
++ *
++ * Early support for invoking 32-bit EFI services from a 64-bit kernel.
++ *
++ * Because this thunking occurs before ExitBootServices() we have to
++ * restore the firmware's 32-bit GDT and IDT before we make EFI service
++ * calls.
++ *
++ * On the plus side, we don't have to worry about mangling 64-bit
++ * addresses into 32-bits because we're executing with an identity
++ * mapped pagetable and haven't transitioned to 64-bit virtual addresses
++ * yet.
++ */
 +
-+#include <linux/init.h>
 +#include <linux/linkage.h>
-+#include <linux/types.h>
-+#include <linux/kernel.h>
-+#include <linux/pgtable.h>
++#include <asm/desc_defs.h>
++#include <asm/msr.h>
++#include <asm/page_types.h>
++#include <asm/pgtable_types.h>
++#include <asm/processor-flags.h>
++#include <asm/segment.h>
 +
-+#include <asm/sections.h>
-+#include <asm/setup.h>
-+#include <asm/sev.h>
++	.text
++	.code32
++#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
++SYM_FUNC_START(efi32_stub_entry)
++	call	1f
++1:	popl	%ecx
 +
-+extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
-+extern unsigned int next_early_pgt;
++	/* Clear BSS */
++	xorl	%eax, %eax
++	leal	(_bss - 1b)(%ecx), %edi
++	leal	(_ebss - 1b)(%ecx), %ecx
++	subl	%edi, %ecx
++	shrl	$2, %ecx
++	cld
++	rep	stosl
 +
-+#ifdef CONFIG_X86_5LEVEL
-+unsigned int __pgtable_l5_enabled __ro_after_init;
-+unsigned int pgdir_shift __ro_after_init = 39;
-+EXPORT_SYMBOL(pgdir_shift);
-+unsigned int ptrs_per_p4d __ro_after_init = 1;
-+EXPORT_SYMBOL(ptrs_per_p4d);
++	add	$0x4, %esp		/* Discard return address */
++	movl	8(%esp), %ebx		/* struct boot_params pointer */
++	jmp	efi32_startup
++SYM_FUNC_END(efi32_stub_entry)
 +#endif
 +
-+#ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
-+unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
-+EXPORT_SYMBOL(page_offset_base);
-+unsigned long vmalloc_base __ro_after_init = __VMALLOC_BASE_L4;
-+EXPORT_SYMBOL(vmalloc_base);
-+unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
-+EXPORT_SYMBOL(vmemmap_base);
++/*
++ * Called using a far call from __efi64_thunk() below, using the x86_64 SysV
++ * ABI (except for R8/R9 which are inaccessible to 32-bit code - EAX/EBX are
++ * used instead).  EBP+16 points to the arguments passed via the stack.
++ *
++ * The first argument (EDI) is a pointer to the boot service or protocol, to
++ * which the remaining arguments are passed, each truncated to 32 bits.
++ */
++SYM_FUNC_START_LOCAL(efi_enter32)
++	/*
++	 * Convert x86-64 SysV ABI params to i386 ABI
++	 */
++	pushl	32(%ebp)	/* Up to 3 args passed via the stack */
++	pushl	24(%ebp)
++	pushl	16(%ebp)
++	pushl	%ebx		/* R9 */
++	pushl	%eax		/* R8 */
++	pushl	%ecx
++	pushl	%edx
++	pushl	%esi
++
++	/* Disable paging */
++	movl	%cr0, %eax
++	btrl	$X86_CR0_PG_BIT, %eax
++	movl	%eax, %cr0
++
++	/* Disable long mode via EFER */
++	movl	$MSR_EFER, %ecx
++	rdmsr
++	btrl	$_EFER_LME, %eax
++	wrmsr
++
++	call	*%edi
++
++	/* We must preserve return value */
++	movl	%eax, %edi
++
++	call	efi32_enable_long_mode
++
++	addl	$32, %esp
++	movl	%edi, %eax
++	lret
++SYM_FUNC_END(efi_enter32)
++
++	.code64
++SYM_FUNC_START(__efi64_thunk)
++	push	%rbp
++	movl	%esp, %ebp
++	push	%rbx
++
++	/* Move args #5 and #6 into 32-bit accessible registers */
++	movl	%r8d, %eax
++	movl	%r9d, %ebx
++
++	lcalll	*efi32_call(%rip)
++
++	pop	%rbx
++	pop	%rbp
++	RET
++SYM_FUNC_END(__efi64_thunk)
++
++	.code32
++SYM_FUNC_START_LOCAL(efi32_enable_long_mode)
++	movl	%cr4, %eax
++	btsl	$(X86_CR4_PAE_BIT), %eax
++	movl	%eax, %cr4
++
++	movl	$MSR_EFER, %ecx
++	rdmsr
++	btsl	$_EFER_LME, %eax
++	wrmsr
++
++	/* Disable interrupts - the firmware's IDT does not work in long mode */
++	cli
++
++	/* Enable paging */
++	movl	%cr0, %eax
++	btsl	$X86_CR0_PG_BIT, %eax
++	movl	%eax, %cr0
++	ret
++SYM_FUNC_END(efi32_enable_long_mode)
++
++/*
++ * This is the common EFI stub entry point for mixed mode. It sets up the GDT
++ * and page tables needed for 64-bit execution, after which it calls the
++ * common 64-bit EFI entrypoint efi_stub_entry().
++ *
++ * Arguments:	0(%esp)	image handle
++ * 		4(%esp)	EFI system table pointer
++ *		%ebx	struct boot_params pointer (or NULL)
++ *
++ * Since this is the point of no return for ordinary execution, no registers
++ * are considered live except for the function parameters. [Note that the EFI
++ * stub may still exit and return to the firmware using the Exit() EFI boot
++ * service.]
++ */
++SYM_FUNC_START_LOCAL(efi32_startup)
++	movl	%esp, %ebp
++
++	subl	$8, %esp
++	sgdtl	(%esp)			/* Save GDT descriptor to the stack */
++	movl	2(%esp), %esi		/* Existing GDT pointer */
++	movzwl	(%esp), %ecx		/* Existing GDT limit */
++	inc	%ecx			/* Existing GDT size */
++	andl	$~7, %ecx		/* Ensure size is multiple of 8 */
++
++	subl	%ecx, %esp		/* Allocate new GDT */
++	andl	$~15, %esp		/* Realign the stack */
++	movl	%esp, %edi		/* New GDT address */
++	leal	7(%ecx), %eax		/* New GDT limit */
++	pushw	%cx			/* Push 64-bit CS (for LJMP below) */
++	pushl	%edi			/* Push new GDT address */
++	pushw	%ax			/* Push new GDT limit */
++
++	/* Copy GDT to the stack and add a 64-bit code segment at the end */
++	movl	$GDT_ENTRY(DESC_CODE64, 0, 0xfffff) & 0xffffffff, (%edi,%ecx)
++	movl	$GDT_ENTRY(DESC_CODE64, 0, 0xfffff) >> 32, 4(%edi,%ecx)
++	shrl	$2, %ecx
++	cld
++	rep	movsl			/* Copy the firmware GDT */
++	lgdtl	(%esp)			/* Switch to the new GDT */
++
++	call	1f
++1:	pop	%edi
++
++	/* Record mixed mode entry */
++	movb	$0x0, (efi_is64 - 1b)(%edi)
++
++	/* Set up indirect far call to re-enter 32-bit mode */
++	leal	(efi32_call - 1b)(%edi), %eax
++	addl	%eax, (%eax)
++	movw	%cs, 4(%eax)
++
++	/* Disable paging */
++	movl	%cr0, %eax
++	btrl	$X86_CR0_PG_BIT, %eax
++	movl	%eax, %cr0
++
++	/* Set up 1:1 mapping */
++	leal	(pte - 1b)(%edi), %eax
++	movl	$_PAGE_PRESENT | _PAGE_RW | _PAGE_PSE, %ecx
++	leal	(_PAGE_PRESENT | _PAGE_RW)(%eax), %edx
++2:	movl	%ecx, (%eax)
++	addl	$8, %eax
++	addl	$PMD_SIZE, %ecx
++	jnc	2b
++
++	movl	$PAGE_SIZE, %ecx
++	.irpc	l, 0123
++	movl	%edx, \l * 8(%eax)
++	addl	%ecx, %edx
++	.endr
++	addl	%ecx, %eax
++	movl	%edx, (%eax)
++	movl	%eax, %cr3
++
++	call	efi32_enable_long_mode
++
++	/* Set up far jump to 64-bit mode (CS is already on the stack) */
++	leal	(efi_stub_entry - 1b)(%edi), %eax
++	movl	%eax, 2(%esp)
++
++	movl	0(%ebp), %edi
++	movl	4(%ebp), %esi
++	movl	%ebx, %edx
++	ljmpl	*2(%esp)
++SYM_FUNC_END(efi32_startup)
++
++/*
++ * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
++ *			       efi_system_table_32_t *sys_table)
++ */
++SYM_FUNC_START(efi32_pe_entry)
++	pushl	%ebx				// save callee-save registers
++
++	/* Check whether the CPU supports long mode */
++	movl	$0x80000001, %eax		// assume extended info support
++	cpuid
++	btl	$29, %edx			// check long mode bit
++	jnc	1f
++	leal	8(%esp), %esp			// preserve stack alignment
++	xor	%ebx, %ebx			// no struct boot_params pointer
++	jmp	efi32_startup			// only ESP and EBX remain live
++1:	movl	$0x80000003, %eax		// EFI_UNSUPPORTED
++	popl	%ebx
++	RET
++SYM_FUNC_END(efi32_pe_entry)
++
++#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
++	.org	efi32_stub_entry + 0x200
++	.code64
++SYM_FUNC_START_NOALIGN(efi64_stub_entry)
++	jmp	efi_handover_entry
++SYM_FUNC_END(efi64_stub_entry)
 +#endif
 +
-+static inline bool check_la57_support(void)
-+{
-+	if (!IS_ENABLED(CONFIG_X86_5LEVEL))
-+		return false;
++	.data
++	.balign	8
++SYM_DATA_START_LOCAL(efi32_call)
++	.long	efi_enter32 - .
++	.word	0x0
++SYM_DATA_END(efi32_call)
++SYM_DATA(efi_is64, .byte 1)
 +
-+	/*
-+	 * 5-level paging is detected and enabled at kernel decompression
-+	 * stage. Only check if it has been enabled there.
-+	 */
-+	if (!(native_read_cr4() & X86_CR4_LA57))
-+		return false;
-+
-+	__pgtable_l5_enabled	= 1;
-+	pgdir_shift		= 48;
-+	ptrs_per_p4d		= 512;
-+	page_offset_base	= __PAGE_OFFSET_BASE_L5;
-+	vmalloc_base		= __VMALLOC_BASE_L5;
-+	vmemmap_base		= __VMEMMAP_BASE_L5;
-+
-+	return true;
-+}
-+
-+static unsigned long sme_postprocess_startup(struct boot_params *bp,
-+					     pmdval_t *pmd,
-+					     unsigned long p2v_offset)
-+{
-+	unsigned long paddr, paddr_end;
-+	int i;
-+
-+	/* Encrypt the kernel and related (if SME is active) */
-+	sme_encrypt_kernel(bp);
-+
-+	/*
-+	 * Clear the memory encryption mask from the .bss..decrypted section.
-+	 * The bss section will be memset to zero later in the initialization so
-+	 * there is no need to zero it after changing the memory encryption
-+	 * attribute.
-+	 */
-+	if (sme_get_me_mask()) {
-+		paddr = (unsigned long)__start_bss_decrypted;
-+		paddr_end = (unsigned long)__end_bss_decrypted;
-+
-+		for (; paddr < paddr_end; paddr += PMD_SIZE) {
-+			/*
-+			 * On SNP, transition the page to shared in the RMP table so that
-+			 * it is consistent with the page table attribute change.
-+			 *
-+			 * __start_bss_decrypted has a virtual address in the high range
-+			 * mapping (kernel .text). PVALIDATE, by way of
-+			 * early_snp_set_memory_shared(), requires a valid virtual
-+			 * address but the kernel is currently running off of the identity
-+			 * mapping so use the PA to get a *currently* valid virtual address.
-+			 */
-+			early_snp_set_memory_shared(paddr, paddr, PTRS_PER_PMD);
-+
-+			i = pmd_index(paddr - p2v_offset);
-+			pmd[i] -= sme_get_me_mask();
-+		}
-+	}
-+
-+	/*
-+	 * Return the SME encryption mask (if SME is active) to be used as a
-+	 * modifier for the initial pgdir entry programmed into CR3.
-+	 */
-+	return sme_get_me_mask();
-+}
-+
-+unsigned long __init __startup_64(unsigned long p2v_offset,
-+				  struct boot_params *bp)
-+{
-+	pmd_t (*early_pgts)[PTRS_PER_PMD] = early_dynamic_pgts;
-+	unsigned long physaddr = (unsigned long)_text;
-+	unsigned long va_text, va_end;
-+	unsigned long pgtable_flags;
-+	unsigned long load_delta;
-+	pgdval_t *pgd;
-+	p4dval_t *p4d;
-+	pudval_t *pud;
-+	pmdval_t *pmd, pmd_entry;
-+	bool la57;
-+	int i;
-+
-+	la57 = check_la57_support();
-+
-+	/* Is the address too large? */
-+	if (physaddr >> MAX_PHYSMEM_BITS)
-+		for (;;);
-+
-+	/*
-+	 * Compute the delta between the address I am compiled to run at
-+	 * and the address I am actually running at.
-+	 */
-+	phys_base = load_delta = __START_KERNEL_map + p2v_offset;
-+
-+	/* Is the address not 2M aligned? */
-+	if (load_delta & ~PMD_MASK)
-+		for (;;);
-+
-+	va_text = physaddr - p2v_offset;
-+	va_end  = (unsigned long)_end - p2v_offset;
-+
-+	/* Include the SME encryption mask in the fixup value */
-+	load_delta += sme_get_me_mask();
-+
-+	/* Fixup the physical addresses in the page table */
-+
-+	pgd = &early_top_pgt[0].pgd;
-+	pgd[pgd_index(__START_KERNEL_map)] += load_delta;
-+
-+	if (IS_ENABLED(CONFIG_X86_5LEVEL) && la57) {
-+		p4d = (p4dval_t *)level4_kernel_pgt;
-+		p4d[MAX_PTRS_PER_P4D - 1] += load_delta;
-+
-+		pgd[pgd_index(__START_KERNEL_map)] = (pgdval_t)p4d | _PAGE_TABLE;
-+	}
-+
-+	level3_kernel_pgt[PTRS_PER_PUD - 2].pud += load_delta;
-+	level3_kernel_pgt[PTRS_PER_PUD - 1].pud += load_delta;
-+
-+	for (i = FIXMAP_PMD_TOP; i > FIXMAP_PMD_TOP - FIXMAP_PMD_NUM; i--)
-+		level2_fixmap_pgt[i].pmd += load_delta;
-+
-+	/*
-+	 * Set up the identity mapping for the switchover.  These
-+	 * entries should *NOT* have the global bit set!  This also
-+	 * creates a bunch of nonsense entries but that is fine --
-+	 * it avoids problems around wraparound.
-+	 */
-+
-+	pud = &early_pgts[0]->pmd;
-+	pmd = &early_pgts[1]->pmd;
-+	next_early_pgt = 2;
-+
-+	pgtable_flags = _KERNPG_TABLE_NOENC + sme_get_me_mask();
-+
-+	if (la57) {
-+		p4d = &early_pgts[next_early_pgt++]->pmd;
-+
-+		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
-+		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
-+		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
-+
-+		i = physaddr >> P4D_SHIFT;
-+		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-+		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-+	} else {
-+		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
-+		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
-+		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
-+	}
-+
-+	i = physaddr >> PUD_SHIFT;
-+	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-+	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-+
-+	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
-+	/* Filter out unsupported __PAGE_KERNEL_* bits: */
-+	pmd_entry &= __supported_pte_mask;
-+	pmd_entry += sme_get_me_mask();
-+	pmd_entry +=  physaddr;
-+
-+	for (i = 0; i < DIV_ROUND_UP(va_end - va_text, PMD_SIZE); i++) {
-+		int idx = i + (physaddr >> PMD_SHIFT);
-+
-+		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
-+	}
-+
-+	/*
-+	 * Fixup the kernel text+data virtual addresses. Note that
-+	 * we might write invalid pmds, when the kernel is relocated
-+	 * cleanup_highmap() fixes this up along with the mappings
-+	 * beyond _end.
-+	 *
-+	 * Only the region occupied by the kernel image has so far
-+	 * been checked against the table of usable memory regions
-+	 * provided by the firmware, so invalidate pages outside that
-+	 * region. A page table entry that maps to a reserved area of
-+	 * memory would allow processor speculation into that area,
-+	 * and on some hardware (particularly the UV platform) even
-+	 * speculative access to some reserved areas is caught as an
-+	 * error, causing the BIOS to halt the system.
-+	 */
-+
-+	pmd = &level2_kernel_pgt[0].pmd;
-+
-+	/* invalidate pages before the kernel image */
-+	for (i = 0; i < pmd_index(va_text); i++)
-+		pmd[i] &= ~_PAGE_PRESENT;
-+
-+	/* fixup pages that are part of the kernel image */
-+	for (; i <= pmd_index(va_end); i++)
-+		if (pmd[i] & _PAGE_PRESENT)
-+			pmd[i] += load_delta;
-+
-+	/* invalidate pages after the kernel image */
-+	for (; i < PTRS_PER_PMD; i++)
-+		pmd[i] &= ~_PAGE_PRESENT;
-+
-+	return sme_postprocess_startup(bp, pmd, p2v_offset);
-+}
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 5b993b5..9afb123 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -47,235 +47,9 @@
-  * Manage page tables very early on.
-  */
- extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
--static unsigned int __initdata next_early_pgt;
-+unsigned int __initdata next_early_pgt;
- pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
- 
--#ifdef CONFIG_X86_5LEVEL
--unsigned int __pgtable_l5_enabled __ro_after_init;
--unsigned int pgdir_shift __ro_after_init = 39;
--EXPORT_SYMBOL(pgdir_shift);
--unsigned int ptrs_per_p4d __ro_after_init = 1;
--EXPORT_SYMBOL(ptrs_per_p4d);
--#endif
--
--#ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
--unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
--EXPORT_SYMBOL(page_offset_base);
--unsigned long vmalloc_base __ro_after_init = __VMALLOC_BASE_L4;
--EXPORT_SYMBOL(vmalloc_base);
--unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
--EXPORT_SYMBOL(vmemmap_base);
--#endif
--
--static inline bool check_la57_support(void)
--{
--	if (!IS_ENABLED(CONFIG_X86_5LEVEL))
--		return false;
--
--	/*
--	 * 5-level paging is detected and enabled at kernel decompression
--	 * stage. Only check if it has been enabled there.
--	 */
--	if (!(native_read_cr4() & X86_CR4_LA57))
--		return false;
--
--	RIP_REL_REF(__pgtable_l5_enabled)	= 1;
--	RIP_REL_REF(pgdir_shift)		= 48;
--	RIP_REL_REF(ptrs_per_p4d)		= 512;
--	RIP_REL_REF(page_offset_base)		= __PAGE_OFFSET_BASE_L5;
--	RIP_REL_REF(vmalloc_base)		= __VMALLOC_BASE_L5;
--	RIP_REL_REF(vmemmap_base)		= __VMEMMAP_BASE_L5;
--
--	return true;
--}
--
--static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
--						    pmdval_t *pmd,
--						    unsigned long p2v_offset)
--{
--	unsigned long paddr, paddr_end;
--	int i;
--
--	/* Encrypt the kernel and related (if SME is active) */
--	sme_encrypt_kernel(bp);
--
--	/*
--	 * Clear the memory encryption mask from the .bss..decrypted section.
--	 * The bss section will be memset to zero later in the initialization so
--	 * there is no need to zero it after changing the memory encryption
--	 * attribute.
--	 */
--	if (sme_get_me_mask()) {
--		paddr = (unsigned long)&RIP_REL_REF(__start_bss_decrypted);
--		paddr_end = (unsigned long)&RIP_REL_REF(__end_bss_decrypted);
--
--		for (; paddr < paddr_end; paddr += PMD_SIZE) {
--			/*
--			 * On SNP, transition the page to shared in the RMP table so that
--			 * it is consistent with the page table attribute change.
--			 *
--			 * __start_bss_decrypted has a virtual address in the high range
--			 * mapping (kernel .text). PVALIDATE, by way of
--			 * early_snp_set_memory_shared(), requires a valid virtual
--			 * address but the kernel is currently running off of the identity
--			 * mapping so use the PA to get a *currently* valid virtual address.
--			 */
--			early_snp_set_memory_shared(paddr, paddr, PTRS_PER_PMD);
--
--			i = pmd_index(paddr - p2v_offset);
--			pmd[i] -= sme_get_me_mask();
--		}
--	}
--
--	/*
--	 * Return the SME encryption mask (if SME is active) to be used as a
--	 * modifier for the initial pgdir entry programmed into CR3.
--	 */
--	return sme_get_me_mask();
--}
--
--/* Code in __startup_64() can be relocated during execution, but the compiler
-- * doesn't have to generate PC-relative relocations when accessing globals from
-- * that function. Clang actually does not generate them, which leads to
-- * boot-time crashes. To work around this problem, every global pointer must
-- * be accessed using RIP_REL_REF(). Kernel virtual addresses can be determined
-- * by subtracting p2v_offset from the RIP-relative address.
++	.bss
++	.balign PAGE_SIZE
++SYM_DATA_LOCAL(pte, .fill 6 * PAGE_SIZE, 1, 0)
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index d23a1b9..2f17339 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -85,7 +85,6 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o string.o intrinsics.o systable.o \
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= kaslr.o arm64.o arm64-stub.o smbios.o
+ lib-$(CONFIG_X86)		+= x86-stub.o smbios.o
+-lib-$(CONFIG_EFI_MIXED)		+= x86-mixed.o
+ lib-$(CONFIG_X86_64)		+= x86-5lvl.o
+ lib-$(CONFIG_RISCV)		+= kaslr.o riscv.o riscv-stub.o
+ lib-$(CONFIG_LOONGARCH)		+= loongarch.o loongarch-stub.o
+diff --git a/drivers/firmware/efi/libstub/x86-mixed.S b/drivers/firmware/efi/libstub/x86-mixed.S
+deleted file mode 100644
+index e04ed99..0000000
+--- a/drivers/firmware/efi/libstub/x86-mixed.S
++++ /dev/null
+@@ -1,253 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2014, 2015 Intel Corporation; author Matt Fleming
+- *
+- * Early support for invoking 32-bit EFI services from a 64-bit kernel.
+- *
+- * Because this thunking occurs before ExitBootServices() we have to
+- * restore the firmware's 32-bit GDT and IDT before we make EFI service
+- * calls.
+- *
+- * On the plus side, we don't have to worry about mangling 64-bit
+- * addresses into 32-bits because we're executing with an identity
+- * mapped pagetable and haven't transitioned to 64-bit virtual addresses
+- * yet.
 - */
--unsigned long __head __startup_64(unsigned long p2v_offset,
--				  struct boot_params *bp)
--{
--	pmd_t (*early_pgts)[PTRS_PER_PMD] = RIP_REL_REF(early_dynamic_pgts);
--	unsigned long physaddr = (unsigned long)&RIP_REL_REF(_text);
--	unsigned long va_text, va_end;
--	unsigned long pgtable_flags;
--	unsigned long load_delta;
--	pgdval_t *pgd;
--	p4dval_t *p4d;
--	pudval_t *pud;
--	pmdval_t *pmd, pmd_entry;
--	bool la57;
--	int i;
 -
--	la57 = check_la57_support();
+-#include <linux/linkage.h>
+-#include <asm/desc_defs.h>
+-#include <asm/msr.h>
+-#include <asm/page_types.h>
+-#include <asm/pgtable_types.h>
+-#include <asm/processor-flags.h>
+-#include <asm/segment.h>
 -
--	/* Is the address too large? */
--	if (physaddr >> MAX_PHYSMEM_BITS)
--		for (;;);
+-	.text
+-	.code32
+-#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
+-SYM_FUNC_START(efi32_stub_entry)
+-	call	1f
+-1:	popl	%ecx
 -
+-	/* Clear BSS */
+-	xorl	%eax, %eax
+-	leal	(_bss - 1b)(%ecx), %edi
+-	leal	(_ebss - 1b)(%ecx), %ecx
+-	subl	%edi, %ecx
+-	shrl	$2, %ecx
+-	cld
+-	rep	stosl
+-
+-	add	$0x4, %esp		/* Discard return address */
+-	movl	8(%esp), %ebx		/* struct boot_params pointer */
+-	jmp	efi32_startup
+-SYM_FUNC_END(efi32_stub_entry)
+-#endif
+-
+-/*
+- * Called using a far call from __efi64_thunk() below, using the x86_64 SysV
+- * ABI (except for R8/R9 which are inaccessible to 32-bit code - EAX/EBX are
+- * used instead).  EBP+16 points to the arguments passed via the stack.
+- *
+- * The first argument (EDI) is a pointer to the boot service or protocol, to
+- * which the remaining arguments are passed, each truncated to 32 bits.
+- */
+-SYM_FUNC_START_LOCAL(efi_enter32)
 -	/*
--	 * Compute the delta between the address I am compiled to run at
--	 * and the address I am actually running at.
+-	 * Convert x86-64 SysV ABI params to i386 ABI
 -	 */
--	load_delta = __START_KERNEL_map + p2v_offset;
--	RIP_REL_REF(phys_base) = load_delta;
+-	pushl	32(%ebp)	/* Up to 3 args passed via the stack */
+-	pushl	24(%ebp)
+-	pushl	16(%ebp)
+-	pushl	%ebx		/* R9 */
+-	pushl	%eax		/* R8 */
+-	pushl	%ecx
+-	pushl	%edx
+-	pushl	%esi
 -
--	/* Is the address not 2M aligned? */
--	if (load_delta & ~PMD_MASK)
--		for (;;);
+-	/* Disable paging */
+-	movl	%cr0, %eax
+-	btrl	$X86_CR0_PG_BIT, %eax
+-	movl	%eax, %cr0
 -
--	va_text = physaddr - p2v_offset;
--	va_end  = (unsigned long)&RIP_REL_REF(_end) - p2v_offset;
+-	/* Disable long mode via EFER */
+-	movl	$MSR_EFER, %ecx
+-	rdmsr
+-	btrl	$_EFER_LME, %eax
+-	wrmsr
 -
--	/* Include the SME encryption mask in the fixup value */
--	load_delta += sme_get_me_mask();
+-	call	*%edi
 -
--	/* Fixup the physical addresses in the page table */
+-	/* We must preserve return value */
+-	movl	%eax, %edi
 -
--	pgd = &RIP_REL_REF(early_top_pgt)->pgd;
--	pgd[pgd_index(__START_KERNEL_map)] += load_delta;
+-	call	efi32_enable_long_mode
 -
--	if (IS_ENABLED(CONFIG_X86_5LEVEL) && la57) {
--		p4d = (p4dval_t *)&RIP_REL_REF(level4_kernel_pgt);
--		p4d[MAX_PTRS_PER_P4D - 1] += load_delta;
+-	addl	$32, %esp
+-	movl	%edi, %eax
+-	lret
+-SYM_FUNC_END(efi_enter32)
 -
--		pgd[pgd_index(__START_KERNEL_map)] = (pgdval_t)p4d | _PAGE_TABLE;
--	}
+-	.code64
+-SYM_FUNC_START(__efi64_thunk)
+-	push	%rbp
+-	movl	%esp, %ebp
+-	push	%rbx
 -
--	RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 2].pud += load_delta;
--	RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 1].pud += load_delta;
+-	/* Move args #5 and #6 into 32-bit accessible registers */
+-	movl	%r8d, %eax
+-	movl	%r9d, %ebx
 -
--	for (i = FIXMAP_PMD_TOP; i > FIXMAP_PMD_TOP - FIXMAP_PMD_NUM; i--)
--		RIP_REL_REF(level2_fixmap_pgt)[i].pmd += load_delta;
+-	lcalll	*efi32_call(%rip)
 -
--	/*
--	 * Set up the identity mapping for the switchover.  These
--	 * entries should *NOT* have the global bit set!  This also
--	 * creates a bunch of nonsense entries but that is fine --
--	 * it avoids problems around wraparound.
--	 */
+-	pop	%rbx
+-	pop	%rbp
+-	RET
+-SYM_FUNC_END(__efi64_thunk)
 -
--	pud = &early_pgts[0]->pmd;
--	pmd = &early_pgts[1]->pmd;
--	RIP_REL_REF(next_early_pgt) = 2;
+-	.code32
+-SYM_FUNC_START_LOCAL(efi32_enable_long_mode)
+-	movl	%cr4, %eax
+-	btsl	$(X86_CR4_PAE_BIT), %eax
+-	movl	%eax, %cr4
 -
--	pgtable_flags = _KERNPG_TABLE_NOENC + sme_get_me_mask();
+-	movl	$MSR_EFER, %ecx
+-	rdmsr
+-	btsl	$_EFER_LME, %eax
+-	wrmsr
 -
--	if (la57) {
--		p4d = &early_pgts[RIP_REL_REF(next_early_pgt)++]->pmd;
+-	/* Disable interrupts - the firmware's IDT does not work in long mode */
+-	cli
 -
--		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
--		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
--		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+-	/* Enable paging */
+-	movl	%cr0, %eax
+-	btsl	$X86_CR0_PG_BIT, %eax
+-	movl	%eax, %cr0
+-	ret
+-SYM_FUNC_END(efi32_enable_long_mode)
 -
--		i = physaddr >> P4D_SHIFT;
--		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
--		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
--	} else {
--		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
--		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
--		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
--	}
+-/*
+- * This is the common EFI stub entry point for mixed mode. It sets up the GDT
+- * and page tables needed for 64-bit execution, after which it calls the
+- * common 64-bit EFI entrypoint efi_stub_entry().
+- *
+- * Arguments:	0(%esp)	image handle
+- * 		4(%esp)	EFI system table pointer
+- *		%ebx	struct boot_params pointer (or NULL)
+- *
+- * Since this is the point of no return for ordinary execution, no registers
+- * are considered live except for the function parameters. [Note that the EFI
+- * stub may still exit and return to the firmware using the Exit() EFI boot
+- * service.]
+- */
+-SYM_FUNC_START_LOCAL(efi32_startup)
+-	movl	%esp, %ebp
 -
--	i = physaddr >> PUD_SHIFT;
--	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
--	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+-	subl	$8, %esp
+-	sgdtl	(%esp)			/* Save GDT descriptor to the stack */
+-	movl	2(%esp), %esi		/* Existing GDT pointer */
+-	movzwl	(%esp), %ecx		/* Existing GDT limit */
+-	inc	%ecx			/* Existing GDT size */
+-	andl	$~7, %ecx		/* Ensure size is multiple of 8 */
 -
--	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
--	/* Filter out unsupported __PAGE_KERNEL_* bits: */
--	pmd_entry &= RIP_REL_REF(__supported_pte_mask);
--	pmd_entry += sme_get_me_mask();
--	pmd_entry +=  physaddr;
+-	subl	%ecx, %esp		/* Allocate new GDT */
+-	andl	$~15, %esp		/* Realign the stack */
+-	movl	%esp, %edi		/* New GDT address */
+-	leal	7(%ecx), %eax		/* New GDT limit */
+-	pushw	%cx			/* Push 64-bit CS (for LJMP below) */
+-	pushl	%edi			/* Push new GDT address */
+-	pushw	%ax			/* Push new GDT limit */
 -
--	for (i = 0; i < DIV_ROUND_UP(va_end - va_text, PMD_SIZE); i++) {
--		int idx = i + (physaddr >> PMD_SHIFT);
+-	/* Copy GDT to the stack and add a 64-bit code segment at the end */
+-	movl	$GDT_ENTRY(DESC_CODE64, 0, 0xfffff) & 0xffffffff, (%edi,%ecx)
+-	movl	$GDT_ENTRY(DESC_CODE64, 0, 0xfffff) >> 32, 4(%edi,%ecx)
+-	shrl	$2, %ecx
+-	cld
+-	rep	movsl			/* Copy the firmware GDT */
+-	lgdtl	(%esp)			/* Switch to the new GDT */
 -
--		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
--	}
+-	call	1f
+-1:	pop	%edi
 -
--	/*
--	 * Fixup the kernel text+data virtual addresses. Note that
--	 * we might write invalid pmds, when the kernel is relocated
--	 * cleanup_highmap() fixes this up along with the mappings
--	 * beyond _end.
--	 *
--	 * Only the region occupied by the kernel image has so far
--	 * been checked against the table of usable memory regions
--	 * provided by the firmware, so invalidate pages outside that
--	 * region. A page table entry that maps to a reserved area of
--	 * memory would allow processor speculation into that area,
--	 * and on some hardware (particularly the UV platform) even
--	 * speculative access to some reserved areas is caught as an
--	 * error, causing the BIOS to halt the system.
--	 */
+-	/* Record mixed mode entry */
+-	movb	$0x0, (efi_is64 - 1b)(%edi)
 -
--	pmd = &RIP_REL_REF(level2_kernel_pgt)->pmd;
+-	/* Set up indirect far call to re-enter 32-bit mode */
+-	leal	(efi32_call - 1b)(%edi), %eax
+-	addl	%eax, (%eax)
+-	movw	%cs, 4(%eax)
 -
--	/* invalidate pages before the kernel image */
--	for (i = 0; i < pmd_index(va_text); i++)
--		pmd[i] &= ~_PAGE_PRESENT;
+-	/* Disable paging */
+-	movl	%cr0, %eax
+-	btrl	$X86_CR0_PG_BIT, %eax
+-	movl	%eax, %cr0
 -
--	/* fixup pages that are part of the kernel image */
--	for (; i <= pmd_index(va_end); i++)
--		if (pmd[i] & _PAGE_PRESENT)
--			pmd[i] += load_delta;
+-	/* Set up 1:1 mapping */
+-	leal	(pte - 1b)(%edi), %eax
+-	movl	$_PAGE_PRESENT | _PAGE_RW | _PAGE_PSE, %ecx
+-	leal	(_PAGE_PRESENT | _PAGE_RW)(%eax), %edx
+-2:	movl	%ecx, (%eax)
+-	addl	$8, %eax
+-	addl	$PMD_SIZE, %ecx
+-	jnc	2b
 -
--	/* invalidate pages after the kernel image */
--	for (; i < PTRS_PER_PMD; i++)
--		pmd[i] &= ~_PAGE_PRESENT;
+-	movl	$PAGE_SIZE, %ecx
+-	.irpc	l, 0123
+-	movl	%edx, \l * 8(%eax)
+-	addl	%ecx, %edx
+-	.endr
+-	addl	%ecx, %eax
+-	movl	%edx, (%eax)
+-	movl	%eax, %cr3
 -
--	return sme_postprocess_startup(bp, pmd, p2v_offset);
--}
+-	call	efi32_enable_long_mode
 -
- /* Wipe all early page tables except for the kernel symbol map */
- static void __init reset_early_page_tables(void)
- {
+-	/* Set up far jump to 64-bit mode (CS is already on the stack) */
+-	leal	(efi_stub_entry - 1b)(%edi), %eax
+-	movl	%eax, 2(%esp)
+-
+-	movl	0(%ebp), %edi
+-	movl	4(%ebp), %esi
+-	movl	%ebx, %edx
+-	ljmpl	*2(%esp)
+-SYM_FUNC_END(efi32_startup)
+-
+-/*
+- * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
+- *			       efi_system_table_32_t *sys_table)
+- */
+-SYM_FUNC_START(efi32_pe_entry)
+-	pushl	%ebx				// save callee-save registers
+-
+-	/* Check whether the CPU supports long mode */
+-	movl	$0x80000001, %eax		// assume extended info support
+-	cpuid
+-	btl	$29, %edx			// check long mode bit
+-	jnc	1f
+-	leal	8(%esp), %esp			// preserve stack alignment
+-	xor	%ebx, %ebx			// no struct boot_params pointer
+-	jmp	efi32_startup			// only ESP and EBX remain live
+-1:	movl	$0x80000003, %eax		// EFI_UNSUPPORTED
+-	popl	%ebx
+-	RET
+-SYM_FUNC_END(efi32_pe_entry)
+-
+-#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
+-	.org	efi32_stub_entry + 0x200
+-	.code64
+-SYM_FUNC_START_NOALIGN(efi64_stub_entry)
+-	jmp	efi_handover_entry
+-SYM_FUNC_END(efi64_stub_entry)
+-#endif
+-
+-	.data
+-	.balign	8
+-SYM_DATA_START_LOCAL(efi32_call)
+-	.long	efi_enter32 - .
+-	.word	0x0
+-SYM_DATA_END(efi32_call)
+-SYM_DATA(efi_is64, .byte 1)
+-
+-	.bss
+-	.balign PAGE_SIZE
+-SYM_DATA_LOCAL(pte, .fill 6 * PAGE_SIZE, 1, 0)
