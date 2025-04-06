@@ -1,106 +1,220 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355E214A4F9;
-	Sun,  6 Apr 2025 13:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8A91B6D11;
+	Sun,  6 Apr 2025 13:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743946568; cv=none; b=iPN8wVz+7xKpZE1zoFj5qI37eRc3SNDQaiZWnIQrsNUDmYwiRKklnOjaMkANz7xC+1mbNZCakLMnq5RemRSF62bQw2Ep1jLsnRlDEN8T1aDbO//uF8zRShJcjy4oSWGGb99WY9QLOidvTW9y79VpruJfyUlCny5er+lyRrajsgo=
+	t=1743946873; cv=none; b=ajc7vPjTPzDmKbFUSCA12m8ZEFR3sLnVyRkHfoa0KoutFLcxKCyFY1xXeWPKAX5v46fo2uTGVyk+PIJl0kM96qlF/n5iya65Xczs1fYsPeXp9b4/LtDG6mFErK3Ls3YtRHZ8CJy1kFDjHExxdZo36k2tTVejRsVECMdtRTpjfUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743946568; c=relaxed/simple;
-	bh=u53yL0a/1/RYDTw+aARftjh8UkdlgZkXzY2Gi3tTFs0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OXznSwYHgZp+NMym8ssxgxPmwcwbD9goVVGJdfrzJ3RXAnXUJ+h1IJcF+/hsJrg8Ok/nXFonZYHirFAD6fbR+rzNYARU68R4vf9a/NNh/zSFRtkusAGuywFUKH7gOIvzszBFyC5HL3BpSB3BbO20hAZ22RW347TKPrFXYVrOSHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e5BJJhS8; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743946873; c=relaxed/simple;
+	bh=n3PsmVxpGTJjdiSGMa7V3sbREy1N5myca5jeVf7zXKI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dDPq9PI/SFBCoVN5r1y4tCIHZPvrrpumYeeylRcIUU+xniIT+HfU+C9j1I3MKLL+ouz632F7uTVLv2n/wKlJQRIGXt3o6+GqFlh3TAp312urHkQq5XsXJjXrOlp4zXkoJvZZ2TjkEW7x4WcvoqBstu7mKISne5Jjei2xQ96j7+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=BBnYUunA; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5BJJhS8"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so28100455e9.2;
-        Sun, 06 Apr 2025 06:36:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="BBnYUunA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743946565; x=1744551365; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RMBZuLcEi1BVATpyEBDSQRvEoX2RBDn8k/CK1srt6Gg=;
-        b=e5BJJhS8rv+ROI5g8k0ttNpcESaV37n6VhOvmqa8Yl9W6MZ3o8nfep3jbIHbO6f2Y4
-         TqdFwkuTyrbEL4xB5chgtIuWZ/bBbnkk6FIdQGCJHID/3UUZLkEcrwzO2if/D/2OCDm/
-         B54qfB1GtmKRkY5enL78YasauUiGqkoEKtyuqwhZp/umdbpNepG/am39+CiRdHZKKm/8
-         I9qNKM6GYI2Ds8K8PPIPewHjizm2zdiFKyLTAWsJrNV/AD0WWjNXW75iFz6zVO4uASJh
-         mhIqD7v2mZUELBHmxVbNmRCuTd79fHkXHGmTSpVO1atoLRORohBcwl8UuZm3F1XTQ/0y
-         qjBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743946565; x=1744551365;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RMBZuLcEi1BVATpyEBDSQRvEoX2RBDn8k/CK1srt6Gg=;
-        b=cYZAcfWkAICEmLyXwEb/eW+Ha6SCw/SJXEBd4FLwdGvY3/IyV0S3aGRn2K298938mt
-         +DH7dgR1RTHK8vLfy9OFnrW3Bd+LiOUiY8ZrS8bkh94nU6gz4AAOpv0zvhSmQXLl+N2R
-         6aT1NKG+eDnGNIzMyqYB0lU0ia0HBQ/tiHYnhJFLQ0qF0mdpdVNL99url5J1sW+Y85lT
-         l88k0DLZRM6bMYlq+Gktx+P/ckad9rJtZatxOQlxwQkVhPW2orpfp4CiTyiyPBzPlr8K
-         uB0xVIduBQFDDSgap21V52EbS/yPKOUpkMUYA8yHn2bGP5Yqw8hGCq640yeRXtHFLOf/
-         JixA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEkZkeg1Q+trAVmkYQQiXskhDkDZZ0TbOUzgH6TWAzPVVk82J3TJegrNsURFerA2tvcbxZszj4nTV2Utw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5r2Z2LJ2UGQsEpYj3BhJlzP2wKj3f7YjnuDml9lzgH4v2s7sa
-	Npe2C5McRdxVY3nFMrS9pHXGo6Q72wHO9qEZ0CC0GjSscVjJaZF7
-X-Gm-Gg: ASbGncsNkBkuaK1uOBBYyS2ANSMMo/UzYqYa8uN6odeizWMahs0qD6mc1t1VxpLow+2
-	MYtIcVvCJkn7M81WaH6d83TjFM4gFFAgWjpO2MpSj59sOpadgieOitLgar/d5xU41bn45BH6q5W
-	tnAVMX1zkxYjCK3M2/7b5ISZitEjhyzUrYEgh5pCuzGoMIbN8wrq9VTOfZpEdCXQDHJUWO9kLIO
-	Yfse7JQxrtipowv3IQgI221ENpdT4iJ7cy4r7N25PdJXxdSWr12icwrakb0Jlh0b3bhZJvkIiys
-	HYNYem83DrZYCHa53wPjmbw15DNtYIMtGr8vsfe7aaLSGw==
-X-Google-Smtp-Source: AGHT+IGaLSX5abguqVbP+J6yIKq+sGqu7t/mSZeOJdHosj/2KCuKMRBbvEKTP1d8iNP8JedYaFysdA==
-X-Received: by 2002:a05:600c:3d94:b0:43c:fceb:91f with SMTP id 5b1f17b1804b1-43ed0bc8d58mr87064365e9.11.1743946565281;
-        Sun, 06 Apr 2025 06:36:05 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:e805:af55:cd2d:e06f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec36699e0sm100652575e9.35.2025.04.06.06.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 06:36:04 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: linux-input@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] HID: thrustmaster: fix memory leak in thrustmaster_interrupts()
-Date: Sun,  6 Apr 2025 14:35:51 +0100
-Message-Id: <20250406133551.4576-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Si/cVsUGXvzDhtSduZmcG+FZ4Sb8W8QmPh9TxHY2CC4=;
+  b=BBnYUunAJ1VZd7AQ5tlrxe0wz5H+gPTLAyjLnMeGm4iLmZkM2Cvm1P5p
+   nLb7chfKJ0EHqdRQa7OI0pIRnun5v8FnJHUAq5Krx9EFM1dPBfpmEx9pb
+   9i4GoldWfVFlN5qg3eOKE+zMteAtmlJLw+gAj70YmGZ4kZjSTBo8Sd/mo
+   I=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,193,1739833200"; 
+   d="scan'208";a="113563630"
+Received: from unknown (HELO hadrien) ([4.26.64.170])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 15:41:07 +0200
+Date: Sun, 6 Apr 2025 09:41:06 -0400 (EDT)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Brajesh Patil <brajeshpatil11@gmail.com>
+cc: linux-iio@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+    linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Subject: Re: [PATCH v1 1/1] iio: dummy: Add 3-axis compass (magnetometer)
+ channels to the iio_simple_dummy
+In-Reply-To: <20250406133349.50633-1-brajeshpatil11@gmail.com>
+Message-ID: <99c44d74-1b8a-939c-d775-e41f8034ceb@inria.fr>
+References: <20250406133349.50633-1-brajeshpatil11@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-In thrustmaster_interrupts(), the allocated send_buf is not 
-freed if the usb_check_int_endpoints() check fails, leading 
-to a memory leak. 
 
-Fix this by ensuring send_buf is freed before returning in 
-the error path.
 
-Fixes: 50420d7c79c3 ("HID: hid-thrustmaster: Fix warning in thrustmaster_probe by adding endpoint check")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/hid/hid-thrustmaster.c | 1 +
- 1 file changed, 1 insertion(+)
+On Sun, 6 Apr 2025, Brajesh Patil wrote:
 
-diff --git a/drivers/hid/hid-thrustmaster.c b/drivers/hid/hid-thrustmaster.c
-index 3b81468a1df2..0bf70664c35e 100644
---- a/drivers/hid/hid-thrustmaster.c
-+++ b/drivers/hid/hid-thrustmaster.c
-@@ -174,6 +174,7 @@ static void thrustmaster_interrupts(struct hid_device *hdev)
- 	u8 ep_addr[2] = {b_ep, 0};
- 
- 	if (!usb_check_int_endpoints(usbif, ep_addr)) {
-+		kfree(send_buf);
- 		hid_err(hdev, "Unexpected non-int endpoint\n");
- 		return;
- 	}
--- 
-2.39.5
+> This patch adds support for 3-axis magnetometer data (X, Y, Z) in the
+> iio_simple_dummy driver. It introduces three new IIO_MAGN channels and
+> populates them with dummy values for testing and prototyping purposes.
 
+Is this intended as a contribution for outreachy?  It is not working on a
+staging driver.
+
+julia
+
+>
+> Signed-off-by: Brajesh Patil <brajeshpatil11@gmail.com>
+> ---
+>  drivers/iio/dummy/iio_simple_dummy.c | 71 +++++++++++++++++++++++++++-
+>  drivers/iio/dummy/iio_simple_dummy.h |  6 +++
+>  2 files changed, 75 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
+> index 8575d4a08..713b764c9 100644
+> --- a/drivers/iio/dummy/iio_simple_dummy.c
+> +++ b/drivers/iio/dummy/iio_simple_dummy.c
+> @@ -222,7 +222,7 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
+>          * Convenience macro for timestamps. 4 is the index in
+>          * the buffer.
+>          */
+> -       IIO_CHAN_SOFT_TIMESTAMP(4),
+> +	IIO_CHAN_SOFT_TIMESTAMP(DUMMY_INDEX_SOFT_TIMESTAMP),
+>         /* DAC channel out_voltage0_raw */
+>         {
+>                 .type = IIO_VOLTAGE,
+> @@ -265,6 +265,48 @@ static const struct iio_chan_spec iio_dummy_channels[] = {
+>                 .num_event_specs = 1,
+>  #endif /* CONFIG_IIO_SIMPLE_DUMMY_EVENTS */
+>         },
+> +	{
+> +		.type = IIO_MAGN,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_X,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = DUMMY_MAGN_X,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.shift = 0,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_MAGN,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Y,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = DUMMY_MAGN_Y,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.shift = 0,
+> +		},
+> +	},
+> +	{
+> +		.type = IIO_MAGN,
+> +		.modified = 1,
+> +		.channel2 = IIO_MOD_Z,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = DUMMY_MAGN_Z,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.shift = 0,
+> +		},
+> +	},
+>  };
+>
+>  static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
+> @@ -294,6 +336,22 @@ static int __iio_dummy_read_raw(struct iio_dev *indio_dev,
+>         case IIO_ACCEL:
+>                 *val = st->accel_val;
+>                 return IIO_VAL_INT;
+> +	case IIO_MAGN:
+> +		switch (chan->scan_index) {
+> +		case DUMMY_MAGN_X:
+> +			*val = st->buffer_compass[0];
+> +			break;
+> +		case DUMMY_MAGN_Y:
+> +			*val = st->buffer_compass[1];
+> +			break;
+> +		case DUMMY_MAGN_Z:
+> +			*val = st->buffer_compass[2];
+> +			break;
+> +		default:
+> +			*val = 99;
+> +			break;
+> +		}
+> +		return IIO_VAL_INT;
+>         default:
+>                 return -EINVAL;
+>         }
+> @@ -378,6 +436,11 @@ static int iio_dummy_read_raw(struct iio_dev *indio_dev,
+>                         default:
+>                                 return -EINVAL;
+>                         }
+> +		case IIO_MAGN:
+> +			// Just add some dummy values
+> +			*val = 0;
+> +			*val2 = 2;
+> +			return IIO_VAL_INT_PLUS_MICRO;
+>                 default:
+>                         return -EINVAL;
+>                 }
+> @@ -562,6 +625,10 @@ static int iio_dummy_init_device(struct iio_dev *indio_dev)
+>         st->activity_running = 98;
+>         st->activity_walking = 4;
+>
+> +	st->buffer_compass[0] = 78;
+> +	st->buffer_compass[1] = 10;
+> +	st->buffer_compass[2] = 3;
+> +
+>         return 0;
+>  }
+>
+> @@ -732,5 +799,5 @@ static struct iio_sw_device_type iio_dummy_device = {
+>  module_iio_sw_device_driver(iio_dummy_device);
+>
+>  MODULE_AUTHOR("Jonathan Cameron <jic23@kernel.org>");
+> -MODULE_DESCRIPTION("IIO dummy driver");
+> +MODULE_DESCRIPTION("IIO dummy driver -> IIO dummy modified by Me");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iio/dummy/iio_simple_dummy.h b/drivers/iio/dummy/iio_simple_dummy.h
+> index 8246f25db..e05d8b5cc 100644
+> --- a/drivers/iio/dummy/iio_simple_dummy.h
+> +++ b/drivers/iio/dummy/iio_simple_dummy.h
+> @@ -12,6 +12,7 @@
+>  struct iio_dummy_accel_calibscale;
+>  struct iio_dummy_regs;
+>
+> +#define DUMMY_AXIS_XYZ 3
+>  /**
+>   * struct iio_dummy_state - device instance specific state.
+>   * @dac_val:                   cache for dac value
+> @@ -39,6 +40,7 @@ struct iio_dummy_state {
+>         int steps_enabled;
+>         int steps;
+>         int height;
+> +	u16 buffer_compass[DUMMY_AXIS_XYZ];
+>  #ifdef CONFIG_IIO_SIMPLE_DUMMY_EVENTS
+>         int event_irq;
+>         int event_val;
+> @@ -107,6 +109,10 @@ enum iio_simple_dummy_scan_elements {
+>         DUMMY_INDEX_DIFFVOLTAGE_1M2,
+>         DUMMY_INDEX_DIFFVOLTAGE_3M4,
+>         DUMMY_INDEX_ACCELX,
+> +	DUMMY_INDEX_SOFT_TIMESTAMP,
+> +	DUMMY_MAGN_X,
+> +	DUMMY_MAGN_Y,
+> +	DUMMY_MAGN_Z,
+>  };
+>
+>  #ifdef CONFIG_IIO_SIMPLE_DUMMY_BUFFER
+> --
+> 2.43.0
+>
+>
