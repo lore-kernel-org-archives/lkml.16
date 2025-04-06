@@ -1,130 +1,97 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CA21A5B8E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416A7158874
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743971191; cv=none; b=Ou20ySfut7OxcrKRLKScjaF+lOxqzJLJOR6YLFYMKePdFlhfkwziijqa43TPC7duGcZpmu+n7AVxIWnHGk1oV1lQJji8iB34z0HMY6XYivHrRl+WKGpdZ4kE6l6TvO4M3F1+jG4hPcNEEfWHfnrhf97Nrvim37c3TZwhlQ72xys=
+	t=1743971257; cv=none; b=lmoKpee72+AJPsimg+SIZqA1ikOvLdnUaYjPnr0iIHU0jdjHVde5mTLJTqtYa+7w7gllKCrFos5DglUtkqywVjMhSJ5rfSQr2x2Uan8ngFd3NdnNd0ZSzQAoYcI6L6tJF6REn4F7XYyR+Z8xkGLlUv9f+I2NNAe+5kp6CbnnIqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743971191; c=relaxed/simple;
-	bh=08+tqfAB1Sd57oWzPVazTtvjR2adNb2Tmjo9iIOlBjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ecVAvm4iMo5XQl2s+AE4IyhO0EECgM8DXfapxob8Wv+1Rh7yd4tzYgvpvdz+CG5EOw9HR5+j1Ud8DA9LP8szNxqR1SLoMPUujj+94hJmqyakiWzXDN2LFiqOsOB9xC1ykSptupnNPWi5snvK+LOf3gnB7qSnLaIqRBFkYLHJicE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jme3Wz73; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743971257; c=relaxed/simple;
+	bh=2trunEferEiekSmXIbrvzSG43Kp36B1WcqzsiY1pYL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YOXEDdS50qtjmpIywDTDt3P9znJH2pOeWJ0VzMvb0S+VKtHlEWl0q1nlCtyB/vNvLeOk4AAFmxHgRESzZAfPMdbrMk3csr6nC0zrQckG778R7wFoWoTzl8h1KZGqPtrTYT5zqv+GINOOhAQc7d5TQ6zWFHawgdoqMcjbykdK/Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C1g2Iqka; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jme3Wz73"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536IrGg9029813
-	for <linux-kernel@vger.kernel.org>; Sun, 6 Apr 2025 20:26:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=UjGwNH6c05e2ZJVyDxHhI0Wz
-	SpJhkNhQNLiWVKWtit4=; b=jme3Wz73pGBnVPz9xxvf3BndomAwtGrT41KUZrFn
-	a/bY0uXX2DhhFLvBbxjV09Xx50nfeSq5YZW1IwlYe5S3nAdnflBvInjMY18BZact
-	9iNjktSyC5TeSb9FnGJxv3RrP9nRsRl85+DkAIcjoqOEow0v0La7aO+iNyTLo7eF
-	j49cLVexYSYSLTawBzvd4YCTsYYtjsIffF8iHe6ze0tSufkwsVeC6eHyP3l7pTCy
-	b49giFZM72EY6krXk1OBSp2Vcao1GU7q+yEpPE2nmI5ZR0t7zV0I/iyCjUbbGMzv
-	HkG3goKEvBYXV38HXCLnjJ4SYDxdhFfkDQ0K+kPNZX9EUQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpm28yf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 20:26:28 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c57f80d258so1273689485a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:26:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C1g2Iqka"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39127effa72so351345f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743971254; x=1744576054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+eeXc831jTE7R3MUTxvHjz8t/oVP2t92OuvIkna8W9M=;
+        b=C1g2IqkagIiWlTmspCU0t3MlTgpv+m3xtPybyXYYY0U8/yqEAePsmCvohjYPhE0k8i
+         ySzOADRcZ0GY55if2xiWLOtFPTxrH63DeREXSwcRwAExCf5kmnvel2qj5H2m2eX4lDhq
+         2Wv3yBambRhYdKuBc43NsHKOI6hypi73UCFRkdqOFHW+g15b6qYNKEYmXUcRRNKL9tQ1
+         Hc1btS6Ll6/T1nS3G/V6iK6rKK6wI3z2Geo2j4WebgKuYtXfZgXnN3CSTiHNnYWMg31x
+         pmsLrdgNufBEttqnNC7cN9N+VyFQxfKRYGLOLNZwcgqpibDZVktenmQ5qWW9LazMAA9z
+         3pYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743971187; x=1744575987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UjGwNH6c05e2ZJVyDxHhI0WzSpJhkNhQNLiWVKWtit4=;
-        b=GFZl5jx+D1XZKkZcmeB5FwtK5261UQzSN+1UCZJakE2jzSAIObT3flN5tGmMWtlLSw
-         KOn0NdHhjmRUGXF/wiUw0baaRglngp9hGCwquvJTZU9MUZDRJhM1UhyEdRAtp+1AOxxe
-         Ff3pw/WdIk2nSQ03kyjvtWddZaUkypw7ZpY4SIll04sYaey7fqpiUuNIPY/VM4pa6/aD
-         EvPRvuh5o4Q8Oe3dniuidYE7IviZHD99n0WA+QE9myyYvOlfoqIY/UlwZ9mX6I151GNl
-         c0YGXJnzdRAQnv+a+okm6E7mWywSP4RMz84sgi7+mUbRBePWdp1vm32ePrh9ag9e7ykc
-         sWuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWymyA7fQZnSNwROW3yX4eoxD81NXM38P0KXpFNd0OQwEqBZ65cYokhax+sN+Yz192DUWCyRkwGbwtnt28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqiNnAfZEFMxbYUT1h+cwJCbvNOJveYrPKXx2nnb/iSsIb8c49
-	lk9gN7KF0+rsEboZepvC/FZnVYx8OaudqP42OkUt6vuC9AJIZx7P49+GSZGxy1rZplc1alsIkV/
-	sfQ6nb/UqsLoQ3YyATdqTuy7g7vMZc2sjZFc+g+X/CfVRFYJ2/7Nqy85sPp9X1xQ=
-X-Gm-Gg: ASbGncvcrFInBDmf/C7sK7rra1jf3jCsgLRaONdIf0+iCiL+8jT5Q/fFQNOO6Ah4jQl
-	rWa1/uPhyO+TCYcYtZB+GVDuy1hxeMg66PogU9aP86CmI7Pbjg0B/u17n7kTd9ZstVJxfx3PIWZ
-	pfGzG5u1GXpk+E4F3Toh1odDZnIOt9yEgyQ44tqhTxcouAtbAz//2a9wclUyQlbwldZaKwT4vsy
-	M91z6Vms+rraEaXNqJTCKcO15QklhEUDKdYcEbENGJKt1KoXypCN8K0E4pBLoz0rM4ecfmDVVs8
-	1UJEiDbNc45TbJ+GplWWTxeo0upqfojmgvt9a7c6yyQCOPQjA72JRQ04xcISh6g2biIq+yjiQky
-	5UFM=
-X-Received: by 2002:a05:620a:430c:b0:7c5:5cd6:5cea with SMTP id af79cd13be357-7c774d2cb64mr1319172385a.15.1743971187497;
-        Sun, 06 Apr 2025 13:26:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOUC8/sge2Zws3JbtbtlXIqzr1w+PRoazsYS05/FRkX06ItoCneX0X4IELGp4ykgdikcb+3w==
-X-Received: by 2002:a05:620a:430c:b0:7c5:5cd6:5cea with SMTP id af79cd13be357-7c774d2cb64mr1319170885a.15.1743971187219;
-        Sun, 06 Apr 2025 13:26:27 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e671b8csm1078793e87.223.2025.04.06.13.26.23
+        d=1e100.net; s=20230601; t=1743971254; x=1744576054;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+eeXc831jTE7R3MUTxvHjz8t/oVP2t92OuvIkna8W9M=;
+        b=krgfo6ut6W3Cg9UueVFM7ucvE7MxjUXEd9D7v977i2kIb/MfFLrEx+cmoQTuu071lM
+         PETeZ1f0CiyeIVp3nyR3eeeAxDzanRzUBlasrZnVqsHyQn3zYvafH3zxfLwE9Dvz8G5T
+         fq4ero7snhFosMw7pVkmX60N8Yq/oyKoBTrKjYBUTRQWPtr9dFRauYsGVS7cxnO1KAEk
+         HcRFNeRKEfUIdi5UkQyl9w8wqHZgA50DSyWgq3anaAafU4dwT9QXJ8RoalNqBjoLZyLg
+         tR5aiPHkiLhhM9Tx+A32V308CMMvVa9mSHBXqnWrizIAQ5d73fyo9V2N7mOzbYv0+mZL
+         plGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUazOnR0hjd12e6Mlmfd7BVItJK5ct08aIVjL9+N4pyE8ivxRkZajfuYHsABykH/PnyT3EQX1GlBEQmUhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjN8Uv9otLOdUoagjhaBcpin8pY9aM6Hw3SnV5a8GjAfPLEFmn
+	PeGOyHl/rYXPlTxU6Z7tUk2qDCs1bMfP0VGZ6VJAs9mz5E3pkWgyDCY9YrQLvYU=
+X-Gm-Gg: ASbGnctO1YtyC4oRfVe6mwBLE4vb5m9pWMZM5j4sMA+pdsauNrwuXkrUj348pA9LjLX
+	jtEXF5UVN4Jl7uwEn6BK2g/u7y90fbO8Wacm1Pcm1LWiJYe7O44ZIdhY3Zrk4+zvjYiX7tlfR2f
+	YHy0Z7OmGdnU1r7sQcpK4n04LR+xhL70gnFt5Q8ivNWDcNepCJ+p+Pe/4XhIXk6+JtyYZwyvS42
+	45Zd2hrKELCeibROUQIoCblBKLJWfcwTgfVO43e7K3mLXbsYMPEGv+aZ3iytEoLBKG0dcuZSEQw
+	Bbf98z5m0nnRTq1f7bW4j1qr8ao51OQUGoif7PVugf/GMOxqzonsyA==
+X-Google-Smtp-Source: AGHT+IFoPbEvAK3UvI53U2L+ZD0sPGTteZiiWX2CiOJzo0vzUR9TlCHv4Yl0XzwNrZIEdAf11Yyewg==
+X-Received: by 2002:a05:600c:3592:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-43ecfa18f83mr33929465e9.7.1743971253632;
+        Sun, 06 Apr 2025 13:27:33 -0700 (PDT)
+Received: from shite.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1663053sm112207355e9.15.2025.04.06.13.27.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 13:26:24 -0700 (PDT)
-Date: Sun, 6 Apr 2025 23:26:21 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ayushi Makhija <quic_amakhija@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com
-Subject: Re: [PATCH v3 08/10] drm/bridge: anx7625: enable HPD interrupts
-Message-ID: <srobukvnruqkgwbtfeoc4aiam2zw7j4oe2eyoqd24fn54m7s7v@v4roslimt7gn>
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
- <20250404115539.1151201-9-quic_amakhija@quicinc.com>
+        Sun, 06 Apr 2025 13:27:33 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] power: supply: collie: Fix wakeup source leaks on device unbind
+Date: Sun,  6 Apr 2025 22:27:29 +0200
+Message-ID: <20250406202730.55096-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404115539.1151201-9-quic_amakhija@quicinc.com>
-X-Proofpoint-GUID: NZ2mZujkfdxtBkWmyAnW0K_tE9sBLfty
-X-Proofpoint-ORIG-GUID: NZ2mZujkfdxtBkWmyAnW0K_tE9sBLfty
-X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f2e374 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=dfltxrk8hYN0BGuGiOAA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-06_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=638 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504060149
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 05:25:37PM +0530, Ayushi Makhija wrote:
-> When device enters the suspend state, it prevents
-> HPD interrupts from occurring. To address this,
-> add an additional PM runtime vote in hpd_enable().
-> This vote is removed in hpd_disable().
+Device can be unbound, so driver must also release memory for the wakeup
+source.
 
-Please re-wrap the commit message according to the recommendations. With
-that fixed:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/power/supply/collie_battery.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-> 
-> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-> ---
->  drivers/gpu/drm/bridge/analogix/anx7625.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-
+diff --git a/drivers/power/supply/collie_battery.c b/drivers/power/supply/collie_battery.c
+index 68390bd1004f..3daf7befc0bf 100644
+--- a/drivers/power/supply/collie_battery.c
++++ b/drivers/power/supply/collie_battery.c
+@@ -440,6 +440,7 @@ static int collie_bat_probe(struct ucb1x00_dev *dev)
+ 
+ static void collie_bat_remove(struct ucb1x00_dev *dev)
+ {
++	device_init_wakeup(&ucb->dev, 0);
+ 	free_irq(gpiod_to_irq(collie_bat_main.gpio_full), &collie_bat_main);
+ 	power_supply_unregister(collie_bat_bu.psy);
+ 	power_supply_unregister(collie_bat_main.psy);
 -- 
-With best wishes
-Dmitry
+2.45.2
+
