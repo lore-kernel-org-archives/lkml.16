@@ -1,64 +1,64 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CAB1B4223
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83066218584
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743969035; cv=none; b=nSpTrTNts1hyFzelVuQvPbFVa5J4sjXsiwNlaFYasmkCpXkh01Plct86bxNHyXzvQPcm/mIlIGzI4vTTXfzPnaeCfd6kCz/shO0gVgGxddImxCAeQD3wTX/d70XKOo6gXKHwgIkComTgiFyFLI1QPQN9kg5pLHih775+JO94BHc=
+	t=1743969037; cv=none; b=nQKIQwtXFGMA3wLKbO92JvgOzsYynsZRwfb+qpNY70Zd5831ZLnDzGv5FLuOUtUHnSwW/o8aWSz7NE2Y3MymMWbRxj3lq6jXyzmlYavhdY+oW01YbOnR8hnZqV61QZ0m6rl6bGbO+BsBjSx8aMkHpVwiDUuaIFEI1PvUjPrVrLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743969035; c=relaxed/simple;
-	bh=a9qheLkJ9G/a0gSpyASbiRRdDdncTZ0T8HcY8kFp15I=;
+	s=arc-20240116; t=1743969037; c=relaxed/simple;
+	bh=JGGWrG4absQUDWmRbcKC4qXfgvzU72WUJzF0YeEqSjc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M6V756yFtK9P8d210l3p/2sv50/s13eBj3sgkuo8fMJmBoo0hZLITzWKqNZgncP1HZfO0NEPu7XlJKuF1/0Ot+PE3j1HAou2jH+Zy/3UYb8SOv8b0Pyb/WQq4BhWJwaCasR1qugLaOea6aZfdeZKGq4ztclpsI0mtQRb/ESnQ2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GXwX43MG; arc=none smtp.client-ip=209.85.221.47
+	 In-Reply-To:To:Cc; b=qE4LhM9mcaAKZNh5sIMz+HhrSsLaGN+4klftqbris3GLzO4HID7sLsfc4pKC7fZdLltSzQjy+SCz4dHiIKd1JLYd4havByJ7o088jy6sXvW8BAQk5ZCH7IOqbHjQks8HJHXUC1SZz3ITVHJQVLFUapVX3fnY4s7OhvtS9H3TVZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mZdYI48t; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXwX43MG"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so498308f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:50:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZdYI48t"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so3217795e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743969031; x=1744573831; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743969034; x=1744573834; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZDkiZVmg4AIfX8pESt1JXnk8CGq+bjZDxSINRLpNjsQ=;
-        b=GXwX43MGn+irBKyMc0jT5DBkrgmAjgNtlRXt8b73D0BjzzJI7793qLLuIqoy9Qp7lC
-         LbZ6qvBgCg0fleuN/x6KGA492igoT//xaJ+G1wKCruEZoWVncBb1F2js/G61gFXXHjmJ
-         G4m7ZYNNsmgWtK4a2g95ARRjRm+DDy0J/+N/gdbExgBaGmdPhqbK0iUXlLN2yOD6Np1G
-         ZFAkvDdC4Bt3BeBDhn7OS7drhQ3tkGcD2vWQLmyBuW5fw+Lm2KOxHg26ExcIKwx4F5ud
-         kj6PpQtQLopBGRDDS3cVo0+hWf2fmKx3NrlHzxHEUkruyNBzh95oRlUNzVM6/Q0kBaY6
-         bQJw==
+        bh=6V7osuV6lovwu0xN384fR/yvO6h1FfTw5XdE2hnaBMI=;
+        b=mZdYI48t3V22asfGDRK9Pl5/ic7LEjlyZyqSPcfFF8gILgNCpFajKXCawf6NjrkHmG
+         rj0JpWtw76bf9mFC6Xhn0SVFBgX2rtIkivpQTfVguWGym4Y2neprwThoQUkkUdhzMt6s
+         MR+xPAz4fF6FPGdOTaeZBSwAm1waD5PheRI2dOW24cgkozAgwURS8qNiaQ810UwMY+W9
+         fI8jzGPXktM0PaSUbT62WLFsMfvaCEG7vl3+XkO8WTwxlEfF4IJ22h9QFSOHrSvy2872
+         NS7P2AjeYvog90w3EzEa/M/uhQfUWVAupGsOrXNHHOAa9YPSpEzqzJ7VoGqJtzeKUQ3s
+         pjGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743969031; x=1744573831;
+        d=1e100.net; s=20230601; t=1743969034; x=1744573834;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZDkiZVmg4AIfX8pESt1JXnk8CGq+bjZDxSINRLpNjsQ=;
-        b=ZnfQnw+OZXTQ3GfauJNkdPK0oPGWHyRyjkWq58gFQ2o+M4j4PCvAceLLaDL8G0+DkJ
-         UhF5i2j76LKSXHQlewIelLJoDb3PdEHjtItU/pTco79LAXF7ki14knJmCUJ6lfnhPvAY
-         H2V2kwxrm7iqPd12gjLf43u/7rETEcxK1gJGAnASkQS8/sj2icZE7oN72jH+UKVeu3ia
-         2RHecGdKU/nL/izM0Y4s4rwBIXo/r7lnH0Xqx17Ni45qL9L/85qzOgeydHa25Pts54ac
-         KqkGQAdx8CxkOfJfhAS6EmkV/QK4c9eOt49pvCeXRt+43pDyVhrN9INKB8y79BJyxYXO
-         MSLg==
-X-Gm-Message-State: AOJu0YwwZnzwfs4ihwZ/X88d64d3ZC0FsRzREFrygtIUCxuZmJNL4vQa
-	yAtNu7lqyNEZZupyfqJJVVMsrRKC69xs1XRXK/itDLXaRvTRKsqxFtG5nCpTgmQ=
-X-Gm-Gg: ASbGncv4WoIhaoVlIzokd0BWsdDxuIOWnkOoIPxFezgT0wTuSXlVnVDaxxp2ZWtrEg1
-	onHkG3+1b2WQHRM+oBZhObO+W2zkHOGkk9NjQTSRzwJaem/2x5HrI8QKmC1IeowyYWg9EPF7aQD
-	7SkpCVBfWhSVwl/WeCMVGaY3kCAzrF4ATHmmHSaxispTPiQumPUwR6AnNxSskzYEoGlm8+FT0pU
-	aIoK0iRidvmZMeOzCnu/8X7bah6+EgkC8F7tw6nzJllfF1SQufhQES7Kb+6gAC8YT3tqi6Sx6AA
-	+gMLgod76G2By5ErZDasvRG9cACdjBnbfl4dCRFEGhB/rtT+pAxa1yEKYy6/V1U=
-X-Google-Smtp-Source: AGHT+IHLrtMclK8VcZgIu5o7LMvtyM3oVnyeACZFIOpwCRqYoq9QiN4CsiiISvWSu47uMhHgmdiXmA==
-X-Received: by 2002:a05:600c:35c2:b0:43b:c962:ad29 with SMTP id 5b1f17b1804b1-43ecf81e058mr30045245e9.1.1743969031565;
-        Sun, 06 Apr 2025 12:50:31 -0700 (PDT)
+        bh=6V7osuV6lovwu0xN384fR/yvO6h1FfTw5XdE2hnaBMI=;
+        b=n8AFYXrcHjWHaZAtiSMborBet2YJb6ubaEj2IKMXOi2GFvyHL+4otnYbt/gCbt3EhZ
+         ztFTzf2PsivRYvgL1jzyrI15OwdAp6fA5ILExinHcsZJJfZVKjlZx8JWfIured1/UjAE
+         K+CCzN7STNW1DN0Wn8ecYGIinAedFOxlGrejghRiv/gJLIo18aYn3QBK7PKEZAsNjx6Y
+         cunBEuv+yf+L66/UKqE4eYD8IsK2dvLGp6PLaOGJEoNuGNN3amhlos8tTQxvyqJAq4gJ
+         NuW18dW5vCI2v81MN1B7a+QOZRv6eDqqIZ6jNY1MJ8Ch9+GVQiayLuGaoGd8PEXqe+vO
+         IkZQ==
+X-Gm-Message-State: AOJu0Yw2KZsXtLEpS86jvQEZGXK1YV65ZBFxP6Mm0OKRmsUNUXko36lD
+	Y5EtWS2Uf+XIaimefj6eqbgFmzZMOTesWhHNPFCTMYgspc5bUDNB/MFllJjm2qw=
+X-Gm-Gg: ASbGncvQJ5NhthAbybWA14pZrej8wKBGfWPK1xRW7dKwwRRA8QqoGHqSMlxe2C2+M/I
+	QEBV3JYbqG7EW3Bi/9TMdp/WQQaVw5vFn+cT5LMCuFDdwX9FjgA4mn1tLkT20PwtHkHbPg/MfaD
+	5EKq7xnuv+UYhgKWcIptj1BKIfL+JMPvI4FlJ1ZZaMmMT2uPyF7WE1gJ64quT+mr7yrieB43R0b
+	BF0XkQro7W2N9hINZHQIlKrIN6u8sYiW2UL656vAi+y68ecahKb+HZ2D8qLezZDRyGG7vzoo0+Q
+	yAhFMf7cjjaRbHKKgqw0RedMskRhm+sfzP7l93qUqHXTFTSFQpCVjTkb7za19ts=
+X-Google-Smtp-Source: AGHT+IGgzNK2npnlRNa+wPYD4/voMS34S6t/YpwmY2KhFc8g7SgC0GLpOsJxH1fI5JY5ItovfSkDAA==
+X-Received: by 2002:a5d:59ac:0:b0:391:2a9a:47a6 with SMTP id ffacd0b85a97d-39cb3595265mr3076887f8f.4.1743969033715;
+        Sun, 06 Apr 2025 12:50:33 -0700 (PDT)
 Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm10053842f8f.43.2025.04.06.12.50.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm10053842f8f.43.2025.04.06.12.50.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 12:50:31 -0700 (PDT)
+        Sun, 06 Apr 2025 12:50:33 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Sun, 06 Apr 2025 21:50:12 +0200
-Subject: [PATCH 4/8] mfd: max77541: Fix wakeup source leaks on device
+Date: Sun, 06 Apr 2025 21:50:13 +0200
+Subject: [PATCH 5/8] mfd: max77705: Fix wakeup source leaks on device
  unbind
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-mfd-device-wakekup-leak-v1-4-318e14bdba0a@linaro.org>
+Message-Id: <20250406-mfd-device-wakekup-leak-v1-5-318e14bdba0a@linaro.org>
 References: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
 In-Reply-To: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
 To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>, 
@@ -79,21 +79,21 @@ To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=785;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=810;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=a9qheLkJ9G/a0gSpyASbiRRdDdncTZ0T8HcY8kFp15I=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8tr4AV7Y4qG43E9u6J2PWTGEE8to4nntaI6ya
- qZwORfWCa6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/La+AAKCRDBN2bmhouD
- 1wxND/9qo7JsMiyvaVPUtWqdVDMzJMgEyq9td+m7R0bAAg+rPqBziSVJyoxvfPavvBlhMh5iLxP
- 3OAD+AKBqJKONv15meWcd8JAuoIOrdMK2XNAWXRe9DubIpaSHi+HhA0yTgrlN59FWZEbKyOY7va
- cE/xYgiVIii/ojRkSubeakK6A1bhzBL3FruTCCFyy08Hw4szbsbJytcDClDYHaIPch0ZKsBQbIr
- XGvpIR7oaeyr3C1WGi78Cc9pM+eV8N8NEij5c0Sgw2/GbWxkua+kfP1uDxpLGbql9XSLxwTGdXK
- 2xquKOg2y4tSwFXd1sf2JogrpGJoPpSnzOoPd5SGBw0d0rv59LbzMDK/6ZV0F3PtHml5tqxbRKj
- 4+/PDN50j7o5vDxY8o5kj98fi3DRjLO8CH8E6lnALMqeW4TxXVFXbwzawNmn9u3xf12mOcaKhZu
- 5YQ4kBZLHgB0UCWi/6HSOAixoTKLNrZGSWwOdQpJzWtRf1jRW1wwSD9eH6R3JEAOkUPWwZL2mGe
- 7d9lzPlClC1dHit7y6sjk6RsATVuvzqx279+owl0N3fg9+e9OxQKxeknPV7+/XMGAavzbK4qAzK
- ys5Nok0FktnYBhFf5OLe5EEkJNdBlx4xF6XaomkXyx/ybK60Z/nT6MNq91NVVH3CnRiFpJmB+X2
- aB2ny2dvLWgKBMw==
+ bh=JGGWrG4absQUDWmRbcKC4qXfgvzU72WUJzF0YeEqSjc=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8tr5H5hFgsx7YapzOJe/iMliWoB0ayQn2moZK
+ T4gYym7oxKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/La+QAKCRDBN2bmhouD
+ 17RJD/98Z5aTZjNuITrUPDHZaMEx/JdRNkIfLvJ5ErWEr/bWhuoqlmLUb01B/5FGEdNcfA8AXBB
+ Y3axWMt+mob9U7FDmqQlpCyRb8OwYun4twwoFsMhaksJ7gZ9l2rwxSwfkgRA+3xzanjZVxbu+15
+ DcX54i72iRLw+wB2Sinl7kHj8of1v0pbdUnZyKK9oZA++US7AE9b8G3VN91aPOBmflRQMLOQAqW
+ qPC4dPTvIdgbw/R0h+ckmUnQCpM+QQEAUQRuLpJpHhM++lAK0cy64+TmjG7/HCXyq9RpUeaou7A
+ P4bV7y0q64n6H1tSxyd3nOfVS6mvOnrxutnRnsWsKsbF3Ubncss7GXs6ccVrI87OFRs2mrlXmDi
+ 2T1gwmpzNf97fSGv8iL1NfcuBfTZoIGLvrN7ARoqH9R4pGPiQUr8GIjwNXiTcEOC8aFPyENsI1U
+ kAiTF0mhgDHsZcB8in45OZQLgzkcMSDe6bYzErvuViNGdYJHcCNW6W4cL8Br4Qr6q49NfnXFfUO
+ L87YB7u+M+rNYhlNKau6vQbo9XP/70WE493fZey/7Y7qEQp427LsVuRJPCkfQgCrY85hwGBMwfE
+ bzee13woXUu8R9Qp9gVqism7dNOLxZmqjdTtF10CMTiucvUimJpjacJd/r66mMeplithOMGkHUy
+ Y2s6kublX5R/1bw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
@@ -102,22 +102,24 @@ source.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/mfd/max77541.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/max77705.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/max77541.c b/drivers/mfd/max77541.c
-index d77c31c86e4356f5c19eb0e1d958d1e2f360f4cb..f91b4f5373ce938ccdab2d473039540aeb408b1d 100644
---- a/drivers/mfd/max77541.c
-+++ b/drivers/mfd/max77541.c
-@@ -152,7 +152,7 @@ static int max77541_pmic_setup(struct device *dev)
+diff --git a/drivers/mfd/max77705.c b/drivers/mfd/max77705.c
+index 60c457c21d952c2ad485f29619e014f5b85a2087..6b263bacb8c28d980e890777452db58be84d7338 100644
+--- a/drivers/mfd/max77705.c
++++ b/drivers/mfd/max77705.c
+@@ -131,7 +131,9 @@ static int max77705_i2c_probe(struct i2c_client *i2c)
  	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to initialize IRQ\n");
+ 		return dev_err_probe(dev, ret, "Failed to register child devices\n");
  
--	ret = device_init_wakeup(dev, true);
+-	device_init_wakeup(dev, true);
 +	ret = devm_device_init_wakeup(dev);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Unable to init wakeup\n");
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to init wakeup\n");
  
+ 	return 0;
+ }
 
 -- 
 2.45.2
