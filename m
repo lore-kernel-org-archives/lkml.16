@@ -1,63 +1,63 @@
 Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB13433AC;
-	Sun,  6 Apr 2025 22:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E31221735;
+	Sun,  6 Apr 2025 22:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743977707; cv=none; b=OJ/NSaZYLkWCKyqjP6y/vEitEYUxyxq6W6NHrEs6np19W5qv4Hnw2xkj5bU2fK1xy6u/dXkSu45gIrNrj+DhprRUMZdgolOjXWUpF9FJPWouz1/H5EgofrUx8DG+Mhd9gEkZZ2zf+DX0D5qJyJSSfEZ7nJD2YpDBG0KcOdc7X9k=
+	t=1743977709; cv=none; b=f3HKz43UBwJG69CM5iE1OpDCeD7coYwW4tLyKiNSIrThN3o6EEf2joFtXBcHbQug1Y6UEVIzGj/DvqEkOD9R4LvPt2gEqagWccDhB5YjMKlBN3EDQbfrnfuEIYN8RD84eKjseSj4MaJmiM5ed/4YyT5/6JpW42YtSkaJOO6QEJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743977707; c=relaxed/simple;
-	bh=fSMSFG9kDFrHSt4RVbL06Jajh5DKC96E3IHlxO2ncBs=;
+	s=arc-20240116; t=1743977709; c=relaxed/simple;
+	bh=5UYlusK9SsEebsrJ4FFWg5Z8bzYzQNkVa7MxT3MQmEQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gx3vxJ1nbN68lpqlN1nQDyB8qraE7EtfXl1jeBm6lCgZqXsY6pW+XoS7z4yRTeRlz56pplWnYAEBWIcsmzxgt2Ivjl+i8vsn+IV61wiZ+8En+uVzDG85SsHtzxw8ix/Q35x8vGivJVeu+PTfXIUdUWLNcm8JY2tS7aJczdkhNvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DLBDHSe2; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=eUqBcxmRojyciYwdwtM+jFOz2BgQcC53sRAkaY0EZom66MMTplzxNCZ8elkI4/VtS3evUi6uRSln3wtJKbvC97+PDpEkedSyaYkvKaQFyd2Q4hbPiPrLblpnCEZe05yxBBY7tHj7Bd/5aNKmP2upcZ4kljK3+YNJAHbXyNnjqeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDemkutA; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLBDHSe2"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so37474765e9.3;
-        Sun, 06 Apr 2025 15:15:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDemkutA"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so31146725e9.1;
+        Sun, 06 Apr 2025 15:15:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743977703; x=1744582503; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743977706; x=1744582506; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ayn/+ArG131gi18wLCzFlJOt7i4mpT3rXpgfAV6sJtQ=;
-        b=DLBDHSe20x3qQs6qc9s4piJHMw0WDogWbH72/kOPfFxY8T1IqGJhesIkIMco/rS/n8
-         Boi5+Kp5/6BQJmmA9n74twSn2vM+VJ272EQKuU22GPc+T/j0Mwvu2qBqN4adO+hqSzO6
-         ytit1lK5Jg93aNPM2QsZucnzdJRSFC92BoVDLUc/lpYqWohpxGkFuj19OQ2Vdpb3WbO2
-         ylERECQQXkNe3cQXCinOMuwO4qwKqeqPITWI2WfpuDFWs7ox4Ap88Nh5rA+s2KJEX3iN
-         0QD/dhWukY1bOAhBL0ZjW/nJxRHeS5AE8ldCVUOt2DdB0zrPdh+0SYiah767GKqsigpU
-         MDRw==
+        bh=dHvlV+lAo07PEsn7Y5rgyOxBhBSPObcKBZUiEs7jo8c=;
+        b=NDemkutAjLXvnRG8O5sqT5hVCo67l9IU1WNq8NWSkYNytZXGu8TiNGJBYRMVyycYcf
+         ipBtDsWT6UTBOOETwc5zdWy5lZpMWSLCDs+KcQT/RDPrQUrXZAoL06cNdwEVhy0z8cry
+         d5rqjjR2qsQlra1LTJMNSo4baAi5Q8tz8R7DxlHwVgHqouDi4YKGScjEj1mislAVTJ4c
+         ZVzHoeT6IJfmvFZk4tIjTXdz9oFp+xXmadsbhPrR1bvtJPwxOO/VBm0WceL4CoXansGo
+         QTABg6ASDPQqXMVHYxg1vX8oyGJVVxh/X+iaE8huRD06Q2o+Z68cXMgBwET+8RIh8Od+
+         iA4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743977703; x=1744582503;
+        d=1e100.net; s=20230601; t=1743977706; x=1744582506;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ayn/+ArG131gi18wLCzFlJOt7i4mpT3rXpgfAV6sJtQ=;
-        b=ESqn53QXgROC/8MIJvHpM30vQ8QB6ivUSWlDYBXq2KHSnxzw4CjAV7h31iBCcHrrG0
-         0WzNjg/xGtfO5YTZMyZMA2EQZRNBdkmF7dNS3yvSLK0hNSt97OJ512oMNHHhBCmY8qi7
-         l/vzlQYE9xH2cU0AHXCMQzQjRS/haQWV6mxEBOs3/2o8wJ0whvn4Z+Pna/+4DPyo+qL7
-         uN3m4J+Xh8GUIUNWq84UFm9GBYPIzp86A6LOFUn90fGW+imLwLUMYRgqXBS2xQXlZaxR
-         uKiikNNH7S0MHlf4qLX7bbYiKziYpn9/Z5MI3NYWL95DTdvHk6B+E9JNtsyvH3H5H4sd
-         hPTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU72WAz9rWEPxHIqEmc5x4alGvZPDE+kWW+nKziveMPQpi26I5/Z5JM1jgwja21wcT4VHbFPxwlrADt@vger.kernel.org, AJvYcCUcXsWcIxkIFdy5ix4jQs5FVCv+S7vxQPVdc2U1cls9kuJLWbKPjiBqz7cHbX7R9PMSmJ6j90+nF+cHD2mT@vger.kernel.org, AJvYcCUpfSPgoW+7XVC+nn36w4nq6MUNr/apNevYBeB7aWYoJ90RuIo1puAO/5NT5cRHYSJk1o2YhdXk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhrbeTQzEatkkveJ924H0ewoXDN86XOnKd2Cl0lfrZ1eMsWQUM
-	tccYpxC4m8zHsJ3diPbLjlbPzUiwhfApZ0UXQbFFRwlJk+Ckmshv
-X-Gm-Gg: ASbGncv3WeVeAFfX0lsXt4PECVLqi9P8+Yb8XElFgj74spdUxar/AcVguMJqQJ/uuie
-	nz8rb/X5JJOOwdk8/L3DFGHo9lPhjLQ77jPrvnkqIMQevFYHeLN5TB20dDhxxVBhxiiW484JfBu
-	8NeNDM5MnWLYQw3M9xTR7xOsoDCOwM8vbT+YV7KQ8/2McK8vz+yOzyCWzsEvGV+HlbarPrjfi4Y
-	mWhJAaOpXdCrijV6OVE/DDWYTfEJgrR26U522gpnna/HgvudIMeAOiO+DS5KdGpYwVy/2e2QZkY
-	6I94kRNU6ImQS29x74PYny4kRyBLevkwBud7FPmZ7mVolAavRMBDgcO77SGTOqp3uf7sz2BDGVo
-	Czx5Uk/a4IvKJiQ==
-X-Google-Smtp-Source: AGHT+IENfMJTLXOWwcQUAP+VYmlM77Qj1I7980ItCU7kcoUNHVy1gAOdc18HDYP2esin/LYBB6Ur7g==
-X-Received: by 2002:a05:600c:1c07:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-43ecf84287dmr98127335e9.4.1743977703199;
-        Sun, 06 Apr 2025 15:15:03 -0700 (PDT)
+        bh=dHvlV+lAo07PEsn7Y5rgyOxBhBSPObcKBZUiEs7jo8c=;
+        b=pDHomGqGWUSAqSp1qY3jdF+rA66ftjWQzmb3L/G6Ab3m4/gKFvp0ImX3EEQEhbym3K
+         47pCkO8mId1s+ab0sIrEK3xmL30BPs2nXfcgWV0eHZD4uyWHKuaWdPAbqC0Um4dFhomf
+         I8YYCwwqaYBDNeesD3BWy5Zjrh8FBOhfBefEWaS1JT5VoXujymMtBsLYPqUyxhZ9OX5g
+         wTppIDzv9SM2cvIzisAc0lcb5ZS2d6h7JdECj5hkkYcaXmonuKmwY2FWMSm3XJxs351U
+         KgPn5f+XeHm81ABnODiE/6NUEtzK13H5Kg1v++tFYBSf0+Aoxx3MLxfFkF9K/rRApuZl
+         hjUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVf5j3FDhnE6LJzZo0BrBmcgIvlvEeJTy9gvfRcLzHDlJYjI1+7GXgtOgfwgmVrk7rfF3IYsULLwg3ckuah@vger.kernel.org, AJvYcCWL7tCJ3noyo0yYdvfkzlTSl84RTTSgW3dmTGMCTGSBnRgDJaBoye67egFoGtweNv878oEsq+H5sDYe@vger.kernel.org, AJvYcCXThcDyRUEI4pBNTZFJptzs50n0MXm/g/i/234kQAShyVceMh/4z8M2Z/o18PjIRC8LCv8s7iQz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+0naPj2Zq8zDyzG9fq3MR1FIgM3hYGAchVab7oG42Kq+Lah73
+	85aCLugy+/nYnwuQQ00mhXeKhMw2TmAr3J4+zRNIrjumCO2T9+Ck
+X-Gm-Gg: ASbGncuOaH+Mn2YlyqreUFZ+unr3AfWFLSitnH/Q2N6ejLuqeHQ4GILFA6GqJThkW+O
+	TOgOjm+DNXYfVO08kyMBTpwjZwrwrR84n2LjRA2wvWfyYQORz0B3gAFNKu4A16S+obJupMreEXr
+	6rZ0xre2azV39qSq+p32JkzW9wGEaB5Gg38nTOCluX1nt+/LflTI+/+FDTkd1UARVebeEl+m7zK
+	NETGFcufYjcmFDrbQfQrp/z9K2cm8mdPCCxcbfir+G7nrEm76UZ1Rbllq8vDwlcs1hY0koLW/Cy
+	8ql7Ct7RxqN1k7uUnT2xWS/ZVZBpWnAfMFda0CFSr/GLmpVTizlKlH4ccGr6rbvkxe33eXBB7px
+	tiZSOhFahojFyC4x2bfVJYIQs
+X-Google-Smtp-Source: AGHT+IFRTaVaadmWLO6m7IMNHXw2Yzhsjhiip2R7g0xWIMlaJ4D41OkBeAWnSLDQM4PNIiZljl1KyQ==
+X-Received: by 2002:a05:600c:1e1b:b0:43d:16a0:d98d with SMTP id 5b1f17b1804b1-43eceee3375mr103173255e9.15.1743977705889;
+        Sun, 06 Apr 2025 15:15:05 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec366aa29sm111517055e9.39.2025.04.06.15.15.02
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec366aa29sm111517055e9.39.2025.04.06.15.15.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 15:15:02 -0700 (PDT)
+        Sun, 06 Apr 2025 15:15:05 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -80,9 +80,9 @@ To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	"Lei Wei (QUIC)" <quic_leiwei@quicinc.com>
-Subject: [RFC PATCH net-next v2 03/11] net: phy: introduce phy_interface_copy helper
-Date: Mon,  7 Apr 2025 00:13:56 +0200
-Message-ID: <20250406221423.9723-4-ansuelsmth@gmail.com>
+Subject: [RFC PATCH net-next v2 05/11] net: phylink: add phylink_release_pcs() to externally release a PCS
+Date: Mon,  7 Apr 2025 00:13:58 +0200
+Message-ID: <20250406221423.9723-6-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250406221423.9723-1-ansuelsmth@gmail.com>
 References: <20250406221423.9723-1-ansuelsmth@gmail.com>
@@ -94,34 +94,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce phy_interface_copy helper as a shorthand to copy the PHY
-interface bitmap to a different location.
+Add phylink_release_pcs() to externally release a PCS from a phylink
+instance. This can be used to handle case when a single PCS needs to be
+removed and the phylink instance needs to be refreshed.
 
-This is useful if a PHY interface bitmap needs to be stored in a
-different variable and needs to be reset to an original value saved in a
-different bitmap.
+On calling phylink_release_pcs(), the PCS will be removed from the
+phylink internal PCS list and the phylink supported_interfaces value is
+reparsed with the remaining PCS interfaces.
+
+Also a phylink resolve is triggered to handle the PCS removal.
+
+It's also added to phylink a flag to make phylink resolve reconfigure
+the interface mode (even if it didn't change). This is needed to handle
+the special case when the current PCS used by phylink is removed and a
+major_config is needed to propagae the configuration change. With this
+option enabled we also force mac_config even if the PHY link is not up
+for the in-band case.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- include/linux/phy.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/phy/phylink.c | 58 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/phylink.h   |  2 ++
+ 2 files changed, 59 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index a2bfae80c449..65c520e556aa 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -173,6 +173,11 @@ static inline void phy_interface_or(unsigned long *dst, const unsigned long *a,
- 	bitmap_or(dst, a, b, PHY_INTERFACE_MODE_MAX);
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index f889fced379d..e6bb6e5cb63e 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -90,6 +90,7 @@ struct phylink {
+ 
+ 	bool link_failed;
+ 	bool major_config_failed;
++	bool reconfig_interface;
+ 	bool mac_supports_eee_ops;
+ 	bool mac_supports_eee;
+ 	bool phy_enable_tx_lpi;
+@@ -901,6 +902,55 @@ static void phylink_resolve_an_pause(struct phylink_link_state *state)
+ 	}
  }
  
-+static inline void phy_interface_copy(unsigned long *dst, const unsigned long *src)
++/**
++ * phylink_release_pcs - Removes a PCS from the phylink PCS available list
++ * @pcs: a pointer to the phylink_pcs struct to be released
++ *
++ * This function release a PCS from the phylink PCS available list if
++ * actually in use. It also refreshes the supported interfaces of the
++ * phylink instance by copying the supported interfaces from the phylink
++ * conf and merging the supported interfaces of the remaining available PCS
++ * in the list and trigger a resolve.
++ */
++void phylink_release_pcs(struct phylink_pcs *pcs)
 +{
-+	bitmap_copy(dst, src, PHY_INTERFACE_MODE_MAX);
-+}
++	struct phylink *pl;
 +
- static inline void phy_interface_set_rgmii(unsigned long *intf)
++	ASSERT_RTNL();
++
++	pl = pcs->phylink;
++	if (!pl)
++		return;
++
++	list_del(&pcs->list);
++	pcs->phylink = NULL;
++
++	/* Check if we are removing the PCS currently
++	 * in use by phylink. If this is the case,
++	 * force phylink resolve to reconfigure the interface
++	 * mode and set the phylink PCS to NULL.
++	 */
++	if (pl->pcs == pcs) {
++		mutex_lock(&pl->state_mutex);
++
++		pl->reconfig_interface = true;
++		pl->pcs = NULL;
++
++		mutex_unlock(&pl->state_mutex);
++	}
++
++	/* Refresh supported interfaces */
++	phy_interface_copy(pl->supported_interfaces,
++			   pl->config->supported_interfaces);
++	list_for_each_entry(pcs, &pl->pcs_list, list)
++		phy_interface_or(pl->supported_interfaces,
++				 pl->supported_interfaces,
++				 pcs->supported_interfaces);
++
++	phylink_run_resolve(pl);
++}
++EXPORT_SYMBOL_GPL(phylink_release_pcs);
++
+ static unsigned int phylink_pcs_inband_caps(struct phylink_pcs *pcs,
+ 				    phy_interface_t interface)
  {
- 	__set_bit(PHY_INTERFACE_MODE_RGMII, intf);
+@@ -1694,6 +1744,10 @@ static void phylink_resolve(struct work_struct *w)
+ 		if (pl->phydev)
+ 			link_state.link &= pl->phy_state.link;
+ 
++		/* Force mac_config if we need to reconfig the interface */
++		if (pl->reconfig_interface)
++			mac_config = true;
++
+ 		/* Only update if the PHY link is up */
+ 		if (pl->phydev && pl->phy_state.link) {
+ 			/* If the interface has changed, force a link down
+@@ -1728,7 +1782,8 @@ static void phylink_resolve(struct work_struct *w)
+ 		phylink_apply_manual_flow(pl, &link_state);
+ 
+ 	if (mac_config) {
+-		if (link_state.interface != pl->link_config.interface) {
++		if (link_state.interface != pl->link_config.interface ||
++		    pl->reconfig_interface) {
+ 			/* The interface has changed, force the link down and
+ 			 * then reconfigure.
+ 			 */
+@@ -1738,6 +1793,7 @@ static void phylink_resolve(struct work_struct *w)
+ 			}
+ 			phylink_major_config(pl, false, &link_state);
+ 			pl->link_config.interface = link_state.interface;
++			pl->reconfig_interface = false;
+ 		}
+ 	}
+ 
+diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+index 7d69e6a44f68..09e19859a71c 100644
+--- a/include/linux/phylink.h
++++ b/include/linux/phylink.h
+@@ -708,6 +708,8 @@ void phylink_disconnect_phy(struct phylink *);
+ int phylink_set_fixed_link(struct phylink *,
+ 			   const struct phylink_link_state *);
+ 
++void phylink_release_pcs(struct phylink_pcs *pcs);
++
+ void phylink_mac_change(struct phylink *, bool up);
+ void phylink_pcs_change(struct phylink_pcs *, bool up);
+ 
 -- 
 2.48.1
 
