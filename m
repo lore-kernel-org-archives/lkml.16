@@ -1,165 +1,170 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F1C1A8F71;
-	Sun,  6 Apr 2025 11:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF5D1C3BE3;
+	Sun,  6 Apr 2025 11:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743937712; cv=none; b=D0XOkkOvTYwy6YmfU9SU75spO8uQ9l99lhfjzmDKuWk/XIY5+aCO4Fp16Jq7tpSqoovl3uglse5jTwygzTp26Wt82pAilPNlxo5SeV45irirnrj/70IIOopHHmwrxG4PGWBhDa6GICBKT8Qsb/H07dd/rV9hwsj0rfYPtVN+D2w=
+	t=1743937715; cv=none; b=kxrEIbtKQpkf0NSNLv9UlnIAyLtuZcNoYmwKaYgXfDWkEuKgcyzTCmNErwNg2Q7vxG8AXNxDbEES9/UfIONquQt0tEDf5uIOJYYbgWbixvXTa5/HX/keV18nhy1IN+f2SpGNu2MCWmOiEZSHkH/sg7Iww2O0F6EhhcH4aVLRnWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743937712; c=relaxed/simple;
-	bh=6a2SqOzeUTikL1/knW0fkq98y/PJNGZ74paZcZmiTdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l9O4gu6MtbRrnlXsTxj6fCyVXhdcs71FLclHKzv/c7HRk9taCJW6t7zzMfLfj4fhHHh8LheQKgEpkFQKcAwNEdduEQHsrZPk5kOGUS7p58W4Ck5NVaRbZDHfarEJZEP2KPAArJjKGe+oduboES3YSbSkAYSPKDMJ3FNROoBacnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fb6Q0laT; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743937715; c=relaxed/simple;
+	bh=oBmAzxjhp7mJqD6p6LasQZgVUcBakosqINxBsK7ZtXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nPkR8FmvPaZz1Gxzfr6iXLc26xgxLtKUFrrRgfuwdisy7g5keYq+g1wkuGVdmTkUleq1niKL526VrEtQwBlpnaAmsoa087FgMd5mH+hGToKA0eus3s0Sowoe6pHfQYIju/uZFeKNXeZgG9EhqRkPy+o2pe4NZEQfGjAzep6y3Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxrpw9x/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fb6Q0laT"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2295d78b433so31440655ad.2;
-        Sun, 06 Apr 2025 04:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743937709; x=1744542509; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qAnlAjbRZrY9tqq/RwMiZo/ti1onLK9/fDvfoBU2v7M=;
-        b=fb6Q0laT1Fm7x8wwjgs+cuRb0nr0V6fVxNYLDASHKwC/aABDomaw/mNRdBrjcDgzYY
-         AV+sSqENZwgREeKMIOPQZfvYh3CdfGo09WdM/AzAwoSNEXqlNYXRzSAM/3XwQpVnScs/
-         DrtPaJxVcVDXYahvrstSzcGnjpUmCcx6GlJb4G3qJ00hfiHofpiyAi5boQ87QwynAQb8
-         skPwP7to93jt6M2mhSrrxMUBt2Ei8VlXjSjCKjk/1SS8x3fr5mEEmdmnFP1O2YJ7w7+k
-         jgC6uKXx8mhtHEptM13uMd2xXRHbnE4d1l8wJH79NHuoaAc9q9ejiMdCPgjD7sn4LAUS
-         p6Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743937709; x=1744542509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qAnlAjbRZrY9tqq/RwMiZo/ti1onLK9/fDvfoBU2v7M=;
-        b=lkiTL1vXjNb38FjXVA7DDHSLoloANBylyJbPUEojnx3XAQiVGBniIRSQ0miz00uY3o
-         jOZJSDpd3ZkoVerak+TBvySONbCpJ3uEf7k98+qQJ904iYp6A4L+Qubu3pCVEfKKqZJH
-         /oczFWCkP6A5msm6dpM724XNZit4ZR0sKxE2cVZ/JEg2uL9K8OOaRXXQEETFyv8OJRf6
-         tygPb4L3Hh8MCppdSQQIIY55RvksCzEDSoIzRjF30GIYu4AoWf+m+LJbsjzX78ZKUGMk
-         G9iqb5EJMnM1WA9kP3CEYTZLG8ghua92RDtwuUZWg2PCVbjwSLHPa4IkpvTUr14fngaO
-         dkIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0TpOyw1cnd7a5XrY9x5KrNzd03aL0/ZsQrBE6wrq0cg1ZOwvQzIcDhETvlJRUC3TXJnWMY1/xUCxo2/eGwQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhnX2+InYxxUpOaHiBsTzvAwOPPTNRckpwXr3B1ykmr5EQotTg
-	kTaLNMlqIdWKPQtbJMaOV8kIwzdxkGrfuNmdXEGHdXWFQg8NDViN9xJC21hQ
-X-Gm-Gg: ASbGncsuQY6QWn0GZZ72UsCnQvQGMvDEgmEPwdVonl3emunXde9mUrU0vGywpLkaxhu
-	uICh17c17jyztSKJp+nhQ6xX2Pyp8vfKPt03mZA15U2jaGQi5Es4zFBlUQ9evhXVDMEF3kAAbx0
-	HEpzQZGPuIy6Skct8bRdUkW1vXGq99kNOg+x3E5k121VNmscuI/+dQ3Tj35WKqHquR5qbuFU2p7
-	1FjSAugQsF3gHo04RruxWSbTzCmHmcS2kgtOKvb8cegswuFq4PFlPMwJTIkXP8yuWYwnki5JLKW
-	fB9r10wtBuxf/akDfVw/Ukz1cpYfZg127VWFuQpqeG+6bZdILuqJBQ1LgulXcUdksGx7xl4fGBX
-	0FwtymHsh3BUtnOzaYdIBEw==
-X-Google-Smtp-Source: AGHT+IHGPUwgpSv2QCpVIqKwzkDIjaH35+jacop/mgxP8m+CIoBMk6VKXXKV7KOkPyaR5H1EbOlUAQ==
-X-Received: by 2002:a17:902:e552:b0:21f:3e2d:7d42 with SMTP id d9443c01a7336-22a8a06a041mr121699845ad.23.1743937709469;
-        Sun, 06 Apr 2025 04:08:29 -0700 (PDT)
-Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785adb04sm62080215ad.15.2025.04.06.04.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 04:08:29 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	pmladek@suse.com
-Subject: [PATCH v1 2/2] rust: task: add Rust version of might_sleep()
-Date: Sun,  6 Apr 2025 20:07:18 +0900
-Message-ID: <20250406110718.126146-3-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250406110718.126146-1-fujita.tomonori@gmail.com>
-References: <20250406110718.126146-1-fujita.tomonori@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxrpw9x/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150E4C4CEEA;
+	Sun,  6 Apr 2025 11:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743937714;
+	bh=oBmAzxjhp7mJqD6p6LasQZgVUcBakosqINxBsK7ZtXs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qxrpw9x/zFnW1kQVc8EhU1TdH52+BExKfz5WOlP2aKjGoydpOuPDG0d4q17bZVeG3
+	 1XDbxZqu3pK0ztfe+buvsXyHyWeNq0S+Lu34mg+origft2rJzxnujIOHlBB4eFsKG0
+	 vcdgGSium+SHE4uimHqLuOoU6pdHxzhk0VQl/ZQ2f1QMpyqYbINM9isEk0mZb9AH1M
+	 G8sKM5ry4aOyfJjZEVL6fb9iAZB5aESPrnvePl1Y8C1gfe2YMxARUWH0ZUw/J2QUPa
+	 f0dPoUV2RiQqQoILvap/5Fr3kG/k2Z/u39NIbOPuOZQuWeqTzdIlWK08+48xfNskoX
+	 QCO98XgGNVm3w==
+Date: Sun, 6 Apr 2025 12:08:25 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ lars@metafoo.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, javier.carrasco.cruz@gmail.com,
+ mazziesaccount@gmail.com, subhajit.ghosh@tweaklogic.com,
+ muditsharma.info@gmail.com, arthur.becker@sentec.com,
+ ivan.orlov0322@gmail.com, Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH 2/3] iio: light: add support for veml6046x00 RGBIR color
+ sensor
+Message-ID: <20250406120825.41b2575c@jic23-huawei>
+In-Reply-To: <Z_I-qwzUrTNz1DZp@mail.your-server.de>
+References: <20250316113131.62884-1-ak@it-klinger.de>
+	<20250316113131.62884-3-ak@it-klinger.de>
+	<20250317115005.72a539a0@jic23-huawei>
+	<Z_I-qwzUrTNz1DZp@mail.your-server.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Adds a helper function equivalent to the C's might_sleep(), which
-serves as a debugging aid and a potential scheduling point.
+On Sun, 6 Apr 2025 10:43:23 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-Note that this function can only be used in a nonatomic context.
+> Hi Jonathan,
+>=20
+> I need to pick up the meaning of scale once again for clarification.
+>=20
+> Jonathan Cameron <jic23@kernel.org> schrieb am Mo, 17. M=C3=A4r 11:50:
+> > On Sun, 16 Mar 2025 12:31:30 +0100
+> > Andreas Klinger <ak@it-klinger.de> wrote:
+> >  =20
+> > > +static int veml6046x00_get_scale(struct veml6046x00_data *data,
+> > > +				 int *val, int *val2) =20
+> >=20
+> > How is this related to integration time?  I'd normally expect
+> > to see that read in here somewhere as well as doubling integration
+> > time tends to double scale. =20
+>=20
+> In the documentation file "sysfs-bus-iio" it says:
+> "
+> What:           /sys/.../iio:deviceX/in_illuminanceY_raw
+> [...]
+> Description:
+>                 Illuminance measurement, units after application of scale
+>                                 and offset are lux.
+> "
+>=20
+> This means that the scale should be the real factor and not the gain mult=
+iplied
+> by photodiode size (PDDIV) as i implemented it so far.
+>=20
+> This means also that doubling integration time should halve the scale. The
+> higher raw value should lead to the same lux value.
 
-This will be used by Rust version of read_poll_timeout().
+Sounds correct.
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/helpers/task.c |  6 ++++++
- rust/kernel/task.rs | 26 ++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+>=20
+> The documentation of the sensor (veml6046x00.pdf) provides us the calcula=
+tion
+> between raw green values and lux.
+> Wouldn't it be better to give the user the real factor to be able to get =
+lux?
 
-diff --git a/rust/helpers/task.c b/rust/helpers/task.c
-index 31c33ea2dce6..2c85bbc2727e 100644
---- a/rust/helpers/task.c
-+++ b/rust/helpers/task.c
-@@ -1,7 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/kernel.h>
- #include <linux/sched/task.h>
- 
-+void rust_helper_might_resched(void)
-+{
-+	might_resched();
-+}
-+
- struct task_struct *rust_helper_get_current(void)
- {
- 	return current;
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 9e6f6854948d..1f0156b38ab5 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -380,3 +380,29 @@ fn eq(&self, other: &Kuid) -> bool {
- }
- 
- impl Eq for Kuid {}
-+
-+/// Annotation for functions that can sleep.
-+///
-+/// Equivalent to the C side [`might_sleep()`], this function serves as
-+/// a debugging aid and a potential scheduling point.
-+///
-+/// This function can only be used in a nonatomic context.
-+#[track_caller]
-+#[inline]
-+pub fn might_sleep() {
-+    #[cfg(CONFIG_DEBUG_ATOMIC_SLEEP)]
-+    {
-+        let loc = core::panic::Location::caller();
-+        // SAFETY: FFI call.
-+        unsafe {
-+            crate::bindings::__might_sleep_precision(
-+                loc.file().as_ptr().cast(),
-+                loc.file().len() as i32,
-+                loc.line() as i32,
-+            )
-+        }
-+    }
-+
-+    // SAFETY: FFI call.
-+    unsafe { crate::bindings::might_resched() }
-+}
--- 
-2.43.0
+Absolutely.  That's the expectation if we are providing illuminance_raw and
+illuminance_scale.
+
+>=20
+> The fact that only the green channel can be used for calculation could be
+> documented in the driver.
+
+Ah. One of these devices.  Hmm. Why do people pretend they can get from
+Green to illuminance.  That has to assume 'white light'.
+I get grumpy about this, but if it is the best we can do I guess we have
+to live with it (I might not be consistent on this).
+
+>=20
+> Then i found the "in_illuminance_hardwaregain" property. It seems that th=
+is is
+> exactly what the combination of gain and PDDIV is used for.
+>=20
+> So what is the scale at the moment could become the hardwaregain and the =
+scale
+> the factor from raw value to lux.
+
+If it is useful to export it separately that works, however it's not typica=
+lly
+the control attribute - those tend to be read only because, without access =
+to
+datasheets simple software has no idea how to control them.
+
+The alternative is the GTS helpers that attempt to figure out the best
+way to meet the user requirements in setting the integration time and ampli=
+fier
+gain when a scale is requested.
+
++CC Matti who is the expert on those.
+
+
+>=20
+>=20
+> To sum up the suggested interface under /sys/bus/iio/devices/iio\:deviceX=
+ would
+> be something like:
+>=20
+> in_illuminance_hardwaregain --> set and get gain and PDDIV on the sensor
+
+This is usually the read only one as it reflects things that aren't
+easy for a userspace program / user to tune.  They typically want to control
+integration time because it reflects noise level and scale because they want
+to avoid saturation etc and because we need it to get to the actual value
+in lux.
+
+>=20
+> integration_time            --> set and get integration time on the sensor
+driving these directly is fine.
+>=20
+> integration_time_available  --> show available integration time values
+>=20
+> scale                       --> (only) get real calculation value, taken =
+from
+>                                 sensor documenation, e.g. 1.3440
+This should remain a main control attribute.
+>=20
+> scale_available             --> not existing anymore
+This gets tricky but the GTS helpers will calculate it for you I think.
+
+Jonathan
+
+>=20
+>=20
+> What do you think?
+>=20
+> Andreas
+>=20
 
