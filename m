@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094051A5BA6;
-	Sun,  6 Apr 2025 12:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC9C20FA86;
+	Sun,  6 Apr 2025 12:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743941299; cv=none; b=IiLv+vlZFH3w4aO5F8R+miXG/SkafFXAeGHLqUdzOx/+PY+vkEnxBK0hnHM7Qw7CHpbSCbAnxrARXDds411jBm5LFQebuPQsbLmRBTtD5IfX4W9F4n7cHi8s+XEbFhqKFgTdbTPxdHWwjxxNw+G4zO+TdS7z5y60TsacxcObEcw=
+	t=1743941424; cv=none; b=VU5CYyGydk/2ksGyd26UINzcqyGXPRQLOQ+/FSioItPKxB4Z5amMqmLuUrTBE8raKr7b1nDVeegi9uNAnWVVjZg0lGtsUGrn9Q4QXNoKfi78zj7YnIeEpP7ki2FFuEi6cUEMBz9k91ayoGdgfEW1E72NQ7U+gjBVdO1QL9zYPN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743941299; c=relaxed/simple;
-	bh=q906i6obTio2b46mqbSb4jzWO7GgK8exn993sMTYMtA=;
+	s=arc-20240116; t=1743941424; c=relaxed/simple;
+	bh=DsRkNjsY5+T8gT1hnVCbvgLxu+0fbNqwPrZwcAUeAL4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GOxeNWqDnrgxW2jl/BfWneuiJ27mD31enF7rl1NSlo2Yxw/sCQwIFLtNnPMdZPbeKaJNOIYeYVzGndhAWBan3LIIb2eSdZ1E8lxCntBVWD2WeFNxr0mkiM9W4yr94UOEmS+B8A3Au9WYhkhpMO+zH3E3Tv6lni6FgrnvYDOBHTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRTyXgcU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EOMl+MT/H731/Q2UBbF5cHt8TDsjmB2dXyh0aBmF/28GHuQLTipJetmT8vZ5xSqDIh+AVR4+WnixRUDM8jkAJoxJQG9cNbiRqSsmXM8kMQJMEi9DF6IAJ9GcAFQwek/+SpZrGpoTQ9Bf+Mnu/7aZwQl0JAbFzQla6Q5ovxYWsCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaBGSByI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRTyXgcU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB8F6C4CEE3;
-	Sun,  6 Apr 2025 12:08:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaBGSByI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A17D0C4CEE3;
+	Sun,  6 Apr 2025 12:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743941298;
-	bh=q906i6obTio2b46mqbSb4jzWO7GgK8exn993sMTYMtA=;
+	s=k20201202; t=1743941423;
+	bh=DsRkNjsY5+T8gT1hnVCbvgLxu+0fbNqwPrZwcAUeAL4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mRTyXgcUkl6F9QjD/4KG4fA46qLlKPEpMK/iT5XFuysyHGRomaormScyk0k0QeZfq
-	 wrhF8H8meNcw+xdnHf4lZ4vFdNnvhdvjQI8tu2+ACzdv6FE+HmMgWLZ+wMtF0pD92Q
-	 pg5aP5k7p2Cvwk7ciFlVMKqiJmyro5V0S25X/oHlWfwlFXDusAtf4vNg60rhJgsH0t
-	 VnA9nrikOOdm4opFUJL2SCdTU3/tE2a4wyXtwnrxPKx6xEPp5i+Suetnm1t3PSawfi
-	 SqqlSd0lVzf5NpJiEnnS00qiKq9wymL3bsTHpbTxWyP46DoGQMNe+tnDgX1HnR5Y1c
-	 /MgprV3B9m+YA==
-Message-ID: <707dc912-12d2-4b50-b934-0c1d1f5efe6b@kernel.org>
-Date: Sun, 6 Apr 2025 14:08:14 +0200
+	b=uaBGSByIryyRFIcC3iKrXiRyRVm6V0Ix3pUjA8d9KIv0bDeT6nrOWyPvwAiWcEM4N
+	 LCQtK2/4h2VqpdDctKzSNZqn9aQavIWMx4zsabcSKGtHDiKJ1JZha2a6OOVf+IJkN8
+	 Rv6cZBjybQSNLrH2rhhz3/OGwpJC8AgXigPuJS+U9V94rVdLszIcPyWKi3M/c+QgGs
+	 h8JAfhfiGfgSUsqf03jtPIe0I7sOPUwLIPdRgpvrfYACNnY47Jx4HDP7gEW0TwhjGH
+	 aJjn9zKac7HXcV9qFlwfJFpa+2DcIYMV3Yji1jogQ0tpAPn/9JTbcMj1wgJU/CyhiJ
+	 1pIGkl3U+2r+Q==
+Message-ID: <21095cf1-45b2-4c41-933a-a0a4afc2cabb@kernel.org>
+Date: Sun, 6 Apr 2025 14:10:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,13 +35,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] docs: ABI: Document LP5812 LED sysfs interfaces
-To: Nam Tran <trannamatk@gmail.com>, pavel@kernel.org, lee@kernel.org,
- krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org, corbet@lwn.net
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250405183246.198568-1-trannamatk@gmail.com>
- <20250405183246.198568-4-trannamatk@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: Add VCP support for mt8196
+To: =?UTF-8?B?WGlhbmd6aGkgVGFuZyAo5ZSQ55u45b+XKQ==?=
+ <Xiangzhi.Tang@mediatek.com>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "andersson@kernel.org" <andersson@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ =?UTF-8?B?SGFpbG9uZyBGYW4gKOiMg+a1t+m+mSk=?= <Hailong.Fan@mediatek.com>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ =?UTF-8?B?SmppYW4gWmhvdSAo5ZGo5bu6KQ==?= <Jjian.Zhou@mediatek.com>
+References: <20250402092134.12293-1-xiangzhi.tang@mediatek.com>
+ <20250402092134.12293-2-xiangzhi.tang@mediatek.com>
+ <860ae623-f33f-4cfe-be08-6bb6524ecf94@kernel.org>
+ <625410299fd45188759d3b1fe205e6c42af0bbda.camel@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,211 +103,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250405183246.198568-4-trannamatk@gmail.com>
+In-Reply-To: <625410299fd45188759d3b1fe205e6c42af0bbda.camel@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 05/04/2025 20:32, Nam Tran wrote:
-> The LP5812 is a 4 × 3 matrix RGB LED driver
-> with autonomous animation engine control.
-> 
-> The driver provides interfaces to configure
-> LED modes manual/autonomous, set PWM/DC values,
-> and manage autonomous animation engines.
-> 
-> Signed-off-by: Nam Tran <trannamatk@gmail.com>
-> ---
->  .../ABI/testing/sysfs-bus-i2c-devices-lp5812  | 150 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 151 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> new file mode 100644
-> index 000000000000..e745f0f936c5
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
-> @@ -0,0 +1,150 @@
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_enable
+On 06/04/2025 08:46, Xiangzhi Tang (唐相志) wrote:
+> On Wed, 2025-04-02 at 13:11 +0200, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On 02/04/2025 11:19, Xiangzhi Tang wrote:
+>>> +
+>>> +description:
+>>> +  The MediaTek VCP enables the SoC control the MediaTek Video
+>>> Companion Risc-V coprocessor.
+>>
+>> Wrap at coding style.
+>> Thanks comment, I will fix it on v1 version.
+>>
+Please kindly trim the replies from unnecessary context. It makes it
+much easier to find new content.
 
-I do not see reason for such ABI. If you want to disable, just unbind it.
-
-> +Date:		April 2025
-
-Not possible...
-
-> +KernelVersion:	6.14
-
-You cannot go to the past. 6.14 was released. This will be v6.16 or later.
-
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Enables or disables the LP5812 device. (RW)
-> +        0 - Disable
-> +        1 - Enable
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/dev_config
-
-Looks like wrong path here and everywhere else. I think other name it as
-led driver, e.g.
-Documentation/ABI/testing/sysfs-class-led-driver-lm3533
-
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Configures drive mode and scan order. (RW)
-> +        Some valid values: tcmscan:4:0:1:2:3 (default), tcmscan:3:0:1:2, mixscan:2:2:0:3, mixscan:3:0:1:2:3
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_command
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Issues device-level commands. (WO)
-> +        Valid values: "update", "start", "stop", "pause", "continue"
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_reset
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Triggers a software reset of the device. (WO)
-> +        1 - resets device
-> +        0 - does not reset device
-
-I do not see kernel exposing it for other devices, drop.
-
-
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/fault_clear
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Clears fault status. (WO)
-> +        1 - clears fault status
-> +        0 - does not clear fault status
-> +
-> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/tsd_config_status
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Report the current thermal shutdown config status. (RO)
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/enable
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Enables or disables the specified LED channel. (RW)
-> +        1 - Enable
-> +        0 - Disable
-
-No, you already have standard ABI for this. I also already told you that
-you cannot duplicate existing kernel interface.
-
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/mode
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Selects LED operation mode. (RW)
-> +        Valid values: "manual", "autonomous"
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/manual_dc
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        DC current level in manual mode. (RW)
-> +        Valid values: 0 - 255
-
-NAK, duplicating existing brightness.
-
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/manual_pwm
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        PWM duty cycle in manual mode. (RW)
-> +        Valid values: 0 - 255
-> +> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_dc
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        DC current level used in autonomous mode. (RW)
-> +        Valid values: 0 - 255
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_dc
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        DC current level used in autonomous mode. (RW)
-> +        Valid values: 0 - 255
-
-Also duplicating brigthness.
-
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/pwm_dimming_scale
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        PWM dimming scale type. (RW)
-> +        Valid values: "linear", "exponential"
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/pwm_phase_align
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Configures PWM phase alignment. (RW)
-> +        Valid values: "forward", "middle", "backward"
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_animation
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Controls AEU configuration and playback. (RW)
-> +        Format: (aeu number):(start pause time):(stop pause time):(playback time)
-> +        with aeu number 1, 2, 3; playback time 0 - 15
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/aep_status
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Shows current animation pattern status, value from 0 to 7. (RO)
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/auto_pwm_val
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        Shows the pwm value in autonomous mode when pause the animation, value from 0 to 255. (RO)
-> +
-> +What:		/sys/bus/i2c/devices/.../led_<id>/lod_lsd
-> +Date:		April 2025
-> +KernelVersion:	6.14
-> +Contact:	Nam Tran <trannamatk@gmail.com>
-> +Description:
-> +        0 0 mean no lod and lsd fault detected, 1 1 mean lod and lsd fault detected (RO)
-> +
-> +
-> +
-> +
-> +
-> +
-
-Why so many blank lines? Drop
-
+Anyway, not sure what you are referring to, but this was not fully
+tested and I still expect all my comments to be addressed.
 
 Best regards,
 Krzysztof
