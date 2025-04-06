@@ -1,100 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9520133987
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 12:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEAC14A4F9;
+	Sun,  6 Apr 2025 12:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743942071; cv=none; b=ICT2wstKW7noNF8c6PA2Ja2P9Vx9fdkP4xs/SRpbp/3Fgdo7KqmH/MWdtmHc+QhVrs2jlo/Ilz+wPKdpmelfHft2SmsIYewC1fIerbbAZvmvk89ZrMdmurH9riSJGcDYeG3fWpDNJyq2ut7sQh0JkrtnsmgpSl57JK9Jf07O1A0=
+	t=1743942113; cv=none; b=a69K13wVM25LKsqo1cF3CnXR3xJGDfH9bfIePbXVYGL8TgRVCznr9Ao5aF0UXthlCIziOz+LfYJ7IncJmjxciwrZqCnbFBxejfwfNlNYT9+8Z9o7dlKjY84D4k0HU4752UR9NobC6ChJSL8E3g5tE+X6xjGTl2EyqaaemZokts0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743942071; c=relaxed/simple;
-	bh=94r3x+l1sntU7hyQZLefUw+fmCmV/lAdFdDZcKB88T0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UlMD60tGeRODLZ16Y+GLRohwrtY1FOOrEh26i6UUvjUftZgUEbJ8zZA/O0cWTgQT7ILuyPnWzZ3vrzpxMtGh7HmA6ZW8rmvp7/HvN0xLaElk+GTxoqz0XEBn9IngkQyklwWicsawYmq6hwt88CW5zMc3cAyhs5VZVbqT7epdWpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IUd7NkOR; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743942113; c=relaxed/simple;
+	bh=AY+s8uk+3zEBzpGaOEXfbqJ8aK9Dqgyl5lmPlL0ivo0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tt1D/qgykNq/I/y8b3hS97o8EYqQNulTFYHVquaS1Gi+wvCkTfzWFbbTBNbboSPLHHKlpxLwnlGbxC56Lj9PpKos5e1bCHdI3Ejsfz0a0szGYzLYIg908J9fRBzlvUUb+4J/eBKNrpbmpJBgZdIZ8eUhLY26oXzmI0QqyQ6V96M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxAgbCgK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IUd7NkOR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743942069; x=1775478069;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=94r3x+l1sntU7hyQZLefUw+fmCmV/lAdFdDZcKB88T0=;
-  b=IUd7NkOR24+gMHXZqigvuXoo1O6wxElAh248yzyKl8vo0AlsgT+FbIYC
-   usCG6oAZULdOtK0URW9PO40WXPXxqKuKDCFYQpqfUcr0vHtB8xnuHHB0c
-   cTCUX4OeMcERzGV1i3h71m0CEvmAJ+OvaT7EUyyepzpTXB5BtVXBCawsQ
-   gQUg1qO3np0G/YVI8LTkdWudTarv0VczZXg44KV6eIYjrKSp5FDhMSVck
-   2hBz9jySRfg9oVL8Y5rWfsfRn7ZnbxdbxpJ4/ncXzHNI1zDTNW7gvxfQc
-   qChMm/Ykk39b0akOBqo+CiJVkgl0BOEYKfyWFopEUrSpsLwTf+ql6F2uJ
-   w==;
-X-CSE-ConnectionGUID: zrLNguBkT9mNdtHjb/dYxQ==
-X-CSE-MsgGUID: xo1y/JlvRYWDq6a/aKgirg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45239007"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="45239007"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 05:21:09 -0700
-X-CSE-ConnectionGUID: ZCzvXK5JTZ+NGnu81Y+6rA==
-X-CSE-MsgGUID: QY+N0yGBQOmBvRdn2epQIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128222214"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 06 Apr 2025 05:21:06 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1Ozo-0002aN-1j;
-	Sun, 06 Apr 2025 12:21:04 +0000
-Date: Sun, 6 Apr 2025 20:20:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: drivers/iommu/dma-iommu.c:1776:2-3: Unneeded semicolon
-Message-ID: <202504062027.LGAqKFlO-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxAgbCgK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EFBBC4CEE3;
+	Sun,  6 Apr 2025 12:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743942112;
+	bh=AY+s8uk+3zEBzpGaOEXfbqJ8aK9Dqgyl5lmPlL0ivo0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dxAgbCgKK6t2H0SjxgshKRvESDJ/4Ei3MdI607sU1vcJ9AD0evVsZiBSZALE0e26q
+	 5ONvSMDnFP1Sw2/SU/utMb19AGK5K/ttSkC4Z6x3VGfLiXYkeHl1b8sZAZm1Mc+FnX
+	 rPayO2jn0Tooxbmd6dmW6Pd0UdRJjjcdrkS2jahZwT2hc5dg4hhCBUnQ7JLXjvTkK/
+	 Nq3WGSWE8Ow9ZjErtWc9ZRMrI4uR0wI96ErLydk6od7MJDKJoOVTHVFL2gjoKhyLO4
+	 /XHZZpoAAVrDsrNOoOiBpZoKgfp5AkLKMDH1LNhMIWqbhu+QlHRHvGQNacI7t90nYP
+	 jYkEs+4xsuBAg==
+Message-ID: <e9265770-784a-4682-b3b3-bace88aef36c@kernel.org>
+Date: Sun, 6 Apr 2025 14:21:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg
+ override handler
+To: Pengyu Luo <mitltlatltl@gmail.com>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20250405174319.405975-1-mitltlatltl@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250405174319.405975-1-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f4d2ef48250ad057e4f00087967b5ff366da9f39
-commit: 6aa63a4ec947f350d1a2f9f6aba8591a2455d192 iommu: Sort out domain user data
-date:   12 days ago
-config: arm64-randconfig-r053-20250406 (https://download.01.org/0day-ci/archive/20250406/202504062027.LGAqKFlO-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+On 05/04/2025 19:43, Pengyu Luo wrote:
+> In downstream tree, many registers need to be overrided, it varies
+> from devices and platforms, not only HS trasmit amplitude(0x51),
+> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
+> 
+> The device I plan to upstream also uses it, so I write the patch for
+> it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
+> 
+> In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
+> in downstream, some crd, mtp, htk devices also use it, I have no
+> such device, don't set it for them.
+> 
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>  .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
+>  .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504062027.LGAqKFlO-lkp@intel.com/
+DTS is always separate patch.
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/iommu/dma-iommu.c:1776:2-3: Unneeded semicolon
-   drivers/iommu/dma-iommu.c:1788:2-3: Unneeded semicolon
+>  2 files changed, 72 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> index d90dc7b37..99f5fd32c 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+> @@ -673,9 +673,8 @@ cam_pwr_a_cs: cam-pwr-a-cs-state {
+>  };
+>  
+>  &pm8550b_eusb2_repeater {
+> -	qcom,tune-usb2-disc-thres = /bits/ 8 <0x6>;
+> -	qcom,tune-usb2-amplitude = /bits/ 8 <0xf>;
+> -	qcom,tune-usb2-preem = /bits/ 8 <0x7>;
+> +	qcom,param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
+> +	qcom,host-param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
 
-vim +1776 drivers/iommu/dma-iommu.c
+There are no such properties.
 
-  1766	
-  1767	static size_t cookie_msi_granule(const struct iommu_domain *domain)
-  1768	{
-  1769		switch (domain->cookie_type) {
-  1770		case IOMMU_COOKIE_DMA_IOVA:
-  1771			return domain->iova_cookie->iovad.granule;
-  1772		case IOMMU_COOKIE_DMA_MSI:
-  1773			return PAGE_SIZE;
-  1774		default:
-  1775			unreachable();
-> 1776		};
-  1777	}
-  1778	
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
+Maybe you need to update your dtschema and yamllint. Don't rely on
+distro packages for dtschema and be sure you are using the latest
+released dtschema.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  	vdd18-supply = <&pm8550_l15>;
+>  	vdd3-supply = <&pm8550_l5>;
+>  };
+
+
+...
+
+> +
+>  static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+>  {
+>  	int num = rptr->cfg->num_vregs;
+> @@ -127,20 +189,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+>  static int eusb2_repeater_init(struct phy *phy)
+>  {
+>  	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
+> -	struct device_node *np = rptr->dev->of_node;
+>  	struct regmap *regmap = rptr->regmap;
+>  	const u32 *init_tbl = rptr->cfg->init_tbl;
+> -	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
+> -	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
+> -	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
+>  	u32 base = rptr->base;
+>  	u32 val;
+>  	int ret;
+>  
+> -	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
+> -	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
+> -	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
+
+NAK, that's an ABI break.
+
+
+Best regards,
+Krzysztof
