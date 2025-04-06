@@ -1,159 +1,203 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B672E62C;
-	Sun,  6 Apr 2025 18:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8875519067C
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 18:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743964946; cv=none; b=EZiaFQedTNWqpk4EvDDfInWrHMCW/b73DBlHzJDgyRLIWMZQBDmFJAKlWYfWJSiN3BJoIYfIxJtOEZVLhquai/EAKw84d2eDCBRLLUvvQaBuU3OdTQBztSzvGU8bsacPv5gdxiPDYcii0ZRvnRYloSPf3lmVgU2FF5Xuq72C670=
+	t=1743964975; cv=none; b=Fx0ej185DOqs/Cbrh3lxuLumqELg2saVAD7M9+Ih+p9wzQ/J39sqIXPcF3Eoh0qmy91OGJktSjJyLFZvNZbbZzROmLLHEw617vrDe4miA3WTcYDL7LZWYQJSr6h3OCoxysn4gigmpA/FISbgapiloTYTNo6esoW/h3/1u8UWDh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743964946; c=relaxed/simple;
-	bh=z7IyGIugvU25wFZxIBRUUQmzKyoNvqA3uTExL14tq/Q=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PVebdhILyKzP0RK6cZFFnnlOYt24gMoFRI5qBk/rM0fGfLuxDTlklaCPyosBJajnmC3W4Pdyg7x/4ZFhegAg0oN+WkSDsX3r1f7MpGLWOmJMWrxWAUNX4OMGNBpF1j1PhLQx6Y2QELXq3SmhpziGJ0rtsi23XjkOh0j8B6k1l5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kcp+bOoR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uhtDH5k9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743964975; c=relaxed/simple;
+	bh=jkthnwIu4x2ab3rryn7gQmfrXQCW9AmPrBXkvq286QM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ECJ4il33pZ31WJ6Tj3S3EcfHhpX1e+Dn6Cpf8vpFrWHziniYtm/kx54X28kSKurmjjdBeUZ2pNIPfkDbAF9qDolZPby1OTslh6WkGKXd03mTkVMjVX/hUkEgjfMSDLL8vdrKDENNJuCAwSObv2wXmqWDuX+wWTE/vr13EbSPIg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VjpPXUk1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kcp+bOoR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uhtDH5k9"
-Date: Sun, 06 Apr 2025 18:42:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743964943;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VjpPXUk1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743964972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dmj+zo6C3P/pSg/s1RkYC7RWN47ojlSz5x1oHCbh38s=;
-	b=kcp+bOoRh1/W1Eg1W3Qf/Nv2mI0opUBOrg7J7S3/VjqSnK6kEvxQdzjRz8IaWMe9DhFnnR
-	tyZg3OEiTtoQixTE8gZp2r2uLvHZSrx6jdANDMLt9ZiPjvyZ6vxedTAuD41kruyZ9abMcE
-	GOhDT2oJbtewaeFvH3prZc3B+vPd6zS7u6b+N+9uOketNzj06/peW7D3U5OoBcxsjbf1aj
-	643D7qgR02V+NTHJIhsmTLvgXmQIWMEXsrb3GnwfiZERPqrG+byhVT85nvaraVxEairy50
-	z4orXIckL7ild6mKIHKLQSiP+RmsjmsA3ld1ZTxfyBQnIC1c3lWXojnYhxPZOQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743964943;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dmj+zo6C3P/pSg/s1RkYC7RWN47ojlSz5x1oHCbh38s=;
-	b=uhtDH5k9RSF+A2+oeAMD0xlNQrUBl94qDXkqNWQdnRvlDLrs8mcYtGOdAzFASsgjDsAUmu
-	eX/LCRyUzFfjxGBw==
-From: "tip-bot2 for Gabriel Shahrouzi" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Fix WARN_ON(!ctx) in __free_event() for
- partial init
-Cc: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com,
- Gabriel Shahrouzi <gshahrouzi@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Kan Liang <kan.liang@linux.intel.com>, Oleg Nesterov <oleg@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250405203036.582721-1-gshahrouzi@gmail.com>
-References: <20250405203036.582721-1-gshahrouzi@gmail.com>
+	bh=f4c8B490RwiITrJ+PXzql/YyOvDN55S409ylH6Wlhgw=;
+	b=VjpPXUk1nQ2CTaffUFO2o4RDCWb6n3bXhXuhb46eAX5S/6PMBZ9g2RYHcU4S/4Qe2hQ260
+	Me8MiDIYE26mvfeUrNdq714DXiDhZIDH5KnF5H4CrSYmYO8bzNfQzs4XA21jtMV2awUodu
+	nA5TgcXYiz3A5KgX3BLwYNDiKowx3Zs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-683-gK4FABgMOYCCVlgCyLrNbQ-1; Sun, 06 Apr 2025 14:42:49 -0400
+X-MC-Unique: gK4FABgMOYCCVlgCyLrNbQ-1
+X-Mimecast-MFC-AGG-ID: gK4FABgMOYCCVlgCyLrNbQ_1743964969
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d51bd9b45so25047575e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 11:42:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743964969; x=1744569769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f4c8B490RwiITrJ+PXzql/YyOvDN55S409ylH6Wlhgw=;
+        b=FlEIe2yEv51+fh0iRX6B2ANhhplsc4BiE/Wh5aea6FtuLliEwZIZw+8ufjlH0cSLyW
+         wl4Qs2My8UAwJiaSy45RQy0MaA+WdO6h9VB+WD9OEqBts8wjSfAUZD5pVjOKdG9BlRMF
+         mJ9EACkLCVJxFIdHxtuv01NaWUudcd1oV7B6C8qXULZJrcSYDm1eZjg0VOZtfiYHuheg
+         2Io2pjRcIgGR2VVWYA4CX3hBP+GwiZ7b+fSZjYXWYM49muU8dhbj8lSnQhIOpEgXUYvf
+         y9ldJhV8EzLzo2f6bzwGtx+uPrpeEeyWJCosmzTh4NDT78lb70MXZVAyeP/u+exl7WSh
+         mSZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXy1r2X8k2on+yeeF7JD79YAkcbbUaTdrgC0XAFnsaKQQuVEdCMk0R6Lr7KnYfExtAnIpZoNGzPiHIGiQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjHGHW4KYP6JjtxT5BbjlV3XOu5e7W35PFzJafT7OHIit2XaHh
+	yNk0MtLo/Iy1+/+2Ce7+xY3zhd6IyKJo2pj8OA/pwBwD3nKEYJ4P4RiiJr6mt4Oi50pHW3P42yU
+	i7yz3HgWeeaXTJCSiUcF9pTXypN/DI9rVqT+3CrWNQnRbRZIPSB+3Kvy2l1d0Pw==
+X-Gm-Gg: ASbGncuc5JhafsOf/CJksjTyRJRGgKBsDYlfj/b7nrjKE8LNGXj3rwTa5cE23uw7FtU
+	k4Qi+Vm+CYpVn9SDgA8qqWZ/UHGZxRqMy+kwMYoHOhGzO8gKwzzkCh45Zrt8slwPHgJyKRdDt0s
+	X2GCkU/iRYJxGPEAWvhtvxkQzOMmPL9bPXYfjLdEcv8I0GpeB/FcfuqcA/uEfga3uLklbPO95jy
+	K5VyMaqy4t0i7VdcJHV7VTVLXN12bTC5R7yae6nXXO3tt6jRsa3tNnazNq1QKS5npSrQod8Qfs7
+	TX0kihuRTA==
+X-Received: by 2002:a05:600c:1c02:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-43ecf9c3318mr77649445e9.26.1743964968811;
+        Sun, 06 Apr 2025 11:42:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJ7Ob0gGk+5s+Q1YLlqY/Rv4sutBh4ToTvYFi5jKg1vPDkOglX+EoRqjaRhaLmLLp6Pxa/Tg==
+X-Received: by 2002:a05:600c:1c02:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-43ecf9c3318mr77649235e9.26.1743964968402;
+        Sun, 06 Apr 2025 11:42:48 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300968cfsm10197854f8f.16.2025.04.06.11.42.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 11:42:47 -0700 (PDT)
+Date: Sun, 6 Apr 2025 14:42:44 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250406144025-mutt-send-email-mst@kernel.org>
+References: <20250402203621.940090-1-david@redhat.com>
+ <20250403161836.7fe9fea5.pasic@linux.ibm.com>
+ <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+ <20250404063619.0fa60a41.pasic@linux.ibm.com>
+ <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174396494203.31282.1919457781258540750.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Fri, Apr 04, 2025 at 03:48:49PM +0200, David Hildenbrand wrote:
+> On 04.04.25 15:36, Halil Pasic wrote:
+> > On Fri, 4 Apr 2025 12:55:09 +0200
+> > David Hildenbrand <david@redhat.com> wrote:
+> > 
+> > > For virito-balloon, we should probably do the following:
+> > > 
+> > >   From 38e340c2bb53c2a7cc7c675f5dfdd44ecf7701d9 Mon Sep 17 00:00:00 2001
+> > > From: David Hildenbrand <david@redhat.com>
+> > > Date: Fri, 4 Apr 2025 12:53:16 +0200
+> > > Subject: [PATCH] virtio-balloon: Fix queue index assignment for
+> > >    non-existing queues
+> > > 
+> > > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > > ---
+> > >    device-types/balloon/description.tex | 22 ++++++++++++++++------
+> > >    1 file changed, 16 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/device-types/balloon/description.tex b/device-types/balloon/description.tex
+> > > index a1d9603..a7396ff 100644
+> > > --- a/device-types/balloon/description.tex
+> > > +++ b/device-types/balloon/description.tex
+> > > @@ -16,6 +16,21 @@ \subsection{Device ID}\label{sec:Device Types / Memory Balloon Device / Device I
+> > >      5
+> > >    \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtqueues}
+> > > +
+> > > +\begin{description}
+> > > +\item[inflateq] Exists unconditionally.
+> > > +\item[deflateq] Exists unconditionally.
+> > > +\item[statsq] Only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> > > +\item[free_page_vq] Only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> > > +\item[reporting_vq] Only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
+> > 
+> > s/is set/is negotiated/?
+> > 
+> > I think we should stick to "feature is offered" and "feature is
+> > negotiated".
+> > 
+> > > +\end{description}
+> > > +
+> > > +\begin{note}
+> > > +Virtqueue indexes are assigned sequentially for existing queues, starting
+> > > +with index 0; consequently, if a virtqueue does not exist, it does not get
+> > > +an index assigned. Assuming all virtqueues exist for a device, the indexes
+> > > +are:
+> > > +
+> > >    \begin{description}
+> > >    \item[0] inflateq
+> > >    \item[1] deflateq
+> > > @@ -23,12 +38,7 @@ \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtque
+> > >    \item[3] free_page_vq
+> > >    \item[4] reporting_vq
+> > >    \end{description}
+> > > -
+> > > -  statsq only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> > > -
+> > > -  free_page_vq only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> > > -
+> > > -  reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
+> > > +\end{note}
+> > >    \subsection{Feature bits}\label{sec:Device Types / Memory Balloon Device / Feature bits}
+> > >    \begin{description}
+> > 
+> > Sounds good to me! But I'm still a little confused by the "holes". What
+> > confuses me is that i can think of at least 2 distinct types of "holes":
+> > 1) Holes that can be filled later. The queue conceptually exists, but
+> >     there is no need to back it with any resources for now because it is
+> >     dormant (it can be seen a hole in comparison to queues that need to
+> >    materialize -- vring, notifiers, ...)
+> > 2) Holes that can not be filled without resetting the device: i.e. if
+> >     certain features are not negotiated, then a queue X does not exist,
+> >     but subsequent queues retain their index.
+> 
+> I think it is not about "negotiated", that might be the wrong terminology.
+> 
+> E.g., in QEMU virtio_balloon_device_realize() we define the virtqueues
+> (virtio_add_queue()) if virtio_has_feature(s->host_features).
+> 
+> That is, it's independent of a feature negotiation (IIUC), it's static for
+> the device --  "host_features"
 
-Commit-ID:     0ba3a4ab76fd3367b9cb680cad70182c896c795c
-Gitweb:        https://git.kernel.org/tip/0ba3a4ab76fd3367b9cb680cad70182c896c795c
-Author:        Gabriel Shahrouzi <gshahrouzi@gmail.com>
-AuthorDate:    Sat, 05 Apr 2025 16:30:36 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 06 Apr 2025 20:30:28 +02:00
 
-perf/core: Fix WARN_ON(!ctx) in __free_event() for partial init
+No no that is a bad idea. Breaks forward compatibility.
 
-Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
-occur immediately after the child event is allocated. Ensure that
-child_event->ctx is non-NULL before any subsequent error path within
-inherit_event calls free_event(), satisfying the assumptions of the
-cleanup code.
+Oh my. I did not realize. It is really broken hopelessly.
 
-Details:
+Because, note, the guest looks at the guest features :)
 
-There's no clear Fixes tag, because this bug is a side-effect of
-multiple interacting commits over time (up to 15 years old), not
-a single regression.
 
-The code initially incremented refcount then assigned context
-immediately after the child_event was created. Later, an early
-validity check for child_event was added before the
-refcount/assignment. Even later, a WARN_ON_ONCE() cleanup check was
-added, assuming event->ctx is valid if the pmu_ctx is valid.
-The problem is that the WARN_ON_ONCE() could trigger after the initial
-check passed but before child_event->ctx was assigned, violating its
-precondition. The solution is to assign child_event->ctx right after
-its initial validation. This ensures the context exists for any
-subsequent checks or cleanup routines, resolving the WARN_ON_ONCE().
+Now I am beginning to think we should leave the spec alone
+and fix the drivers ... Ugh ....
 
-To resolve it, defer the refcount update and child_event->ctx assignment
-directly after child_event->pmu_ctx is set but before checking if the
-parent event is orphaned. The cleanup routine depends on
-event->pmu_ctx being non-NULL before it verifies event->ctx is
-non-NULL. This also maintains the author's original intent of passing
-in child_ctx to find_get_pmu_context before its refcount/assignment.
 
-[ mingo: Expanded the changelog from another email by Gabriel Shahrouzi. ]
 
-Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lore.kernel.org/r/20250405203036.582721-1-gshahrouzi@gmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 128db74..9af9726 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
- 	if (IS_ERR(child_event))
- 		return child_event;
- 
-+	get_ctx(child_ctx);
-+	child_event->ctx = child_ctx;
-+
- 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
- 	if (IS_ERR(pmu_ctx)) {
- 		free_event(child_event);
-@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
- 		return NULL;
- 	}
- 
--	get_ctx(child_ctx);
--
- 	/*
- 	 * Make the child state follow the state of the parent event,
- 	 * not its attr.disabled bit.  We hold the parent's mutex,
-@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
- 		local64_set(&hwc->period_left, sample_period);
- 	}
- 
--	child_event->ctx = child_ctx;
- 	child_event->overflow_handler = parent_event->overflow_handler;
- 	child_event->overflow_handler_context
- 		= parent_event->overflow_handler_context;
+> 
+> Is that really "negotiated" or is it "the device offers the feature X" ?
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+
