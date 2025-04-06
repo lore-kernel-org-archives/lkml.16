@@ -1,85 +1,93 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C472A8C1;
-	Sun,  6 Apr 2025 20:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332472A8C1;
+	Sun,  6 Apr 2025 20:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743972878; cv=none; b=XFkHRSfDYeRFsRxf2GapO+oP7+ap+LfbH+aGNqX59ycE46UlqtDTHJRra4O/Nu9GGGaVhE3AXJ3PW6pY/p63V09qigcmvqaTAnGIe7Cp18aqLUPgU+ErsJEfBCiHfTs830hihjg1fmP+GTEV+cVGtFB5jPpK98qaWMGoOeqMG70=
+	t=1743972930; cv=none; b=j92a2s7N4IPj5gmoK+kjzUyfWFRjJjJ3ljPL5mtI5Sda9wBlYXitbnLmxzlmXVKBvd3aoNhgtchNAXMQWA1b3czY88kSvjfALla0D6iND6VBSWFh9ge9iG59kIdposlZZnXvYw3WkLzmMtKvq/hOQQDxliCc8G7i10dl5Trmc8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743972878; c=relaxed/simple;
-	bh=3u5D7QMdelDpQ5v2tzGaK5MeEw9WB/xTKNmlFuHNTis=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=K768PpfO2ztMhAm5ARzzBTTpMeByhIbxIhVXxVHCc5HfA1oKLYCUddwEeI9b76StpxzfpwI0JDgN4KpCXvIskgRqJXvi8efsVR3U/dD1Z6UDwHj6jlzbnWhLLaoEXUyuuOrI+TqpLPGxvAkHh/K1CJCAUJGAr0u4R63bDXK4g5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IgKAVIbO; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1743972930; c=relaxed/simple;
+	bh=jWdQxL4tiW+qSHnkQphZb/Zp5cQSwhzY2xtPrVC3GWE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ltg/+hVboJpX164MDlCWvj0E90t9PKeeap3F2yxGejsITQaQG3SlMZ81h0Fzv6S6rhuZfqlT0VMWL50R0AEzxQBvFgDzYKeAA6wnSKS575zyf6L0ldSDPe9gciHUIep2yhk6ZFPBbs34bbIdv3vIzzA8oAujr8s/koxHwFWj3JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=SG3AWJGl; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IgKAVIbO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1743972874;
-	bh=3u5D7QMdelDpQ5v2tzGaK5MeEw9WB/xTKNmlFuHNTis=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IgKAVIbOY2O3iE64zRTYDjrS+bEU8sURYNsXFaDz2GAXsaGqAgpYZfsTKs/BsURDs
-	 /3eNJU0EHSAOt7YqWL/X/t07ckAAbtLGm/p23c0BrXaNLBump/QDfxv26CuMFxfgap
-	 aCjAJv9+e1fEqG6hBRiX7nI9y/NxPH7bc3lxSCyPWiwRgrBvE5bdtmfOf7wD0wExk9
-	 b05rXJ5qlQVpbEs1MOjOEgKNF7aMaZiemzsd72diFPDsa5y+8A9WU4abJ6Jfo10wOP
-	 UkxqrWGT17q9NfbEQLrj+qGqgbTT+gbBnay5FPx2adkQ9JvV2Vekg0G1jFd0fDGKPr
-	 6nGoStNXbOunw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZW4Ms4Cffz4wyh;
-	Mon,  7 Apr 2025 06:54:33 +1000 (AEST)
-Date: Mon, 7 Apr 2025 06:54:32 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: failure fetchign the the tip tree
-Message-ID: <20250407065432.0f5a8c30@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="SG3AWJGl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1743972926; bh=jWdQxL4tiW+qSHnkQphZb/Zp5cQSwhzY2xtPrVC3GWE=;
+	h=From:Subject:Date:To:Cc;
+	b=SG3AWJGl4UCZj5poyNEUtGVzmPjS8Z1uAjvISmrjipNFyRUrxiheXaZS2YBGXywek
+	 fDwAi242mk0UGaCCJzO5I3kDNd1Wkt7V6AI47kLUdZwQY6Ptnq0vzKCTEkFaq9z35f
+	 LfPSFol1Nj0SUTyV5Y6xiqWDMwqJ/U3Zr2D0zybQ=
+From: Luca Weiss <luca@lucaweiss.eu>
+Subject: [PATCH 0/2] Add interconnect nodes and paths for MSM8953 SoC
+Date: Sun, 06 Apr 2025 22:55:02 +0200
+Message-Id: <20250406-msm8953-interconnect-v1-0-a23e22e236e0@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1=gDHofyclz.xA82aVnHFgR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACbq8mcC/x3Myw5AMBBG4VeRWWsyrsGriAX1l1kY0opIxLtrL
+ L/FOQ8FeEGgLnnI45Igu0ZkaUJ2HXWBkTmacs4rLrk2W9iatiqM6Alvd1XY08Bxxi0ah2mimB4
+ eTu5/2w/v+wGr+7Q9ZgAAAA==
+X-Change-ID: 20250406-msm8953-interconnect-ef0109e8febb
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Vladimir Lypak <vladimir.lypak@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=707; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=jWdQxL4tiW+qSHnkQphZb/Zp5cQSwhzY2xtPrVC3GWE=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBn8uoq9h70vV5OPX88cyIjjjTYTKq8XihZFUn/x
+ YI2zhndcQ6JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ/LqKgAKCRBy2EO4nU3X
+ Vv9sD/kBgKhGOAV/rOtwBE55cyyss3AFX+12gXgk/vGNsEBtS56Nj9aZF2q7+WOcTC/wEGJZWRE
+ 2d57t6D1RLgwAbxGncXLLp/xU0yRsNqJ80DrIuygHN/EkTnNwPUz6LDwN2WlQfJ69o5uGm9doxh
+ Jgrtyd2c+IzQLi5WqM+pWxvxPnvbt4Qyko6fU9UO4+HloUmReNUgYBb6ET2kQZ4JfRZsTWqLBxA
+ O7AP5Hu6W7rqe1eEbg0nQ72OilBBDdLo+gNmFXHLAZTaAoSoccyYZ+pKSYzc8/myWCsk6+qWQCi
+ DOAogTHNxphbWAuMjFIn8OZ+W5y97Jq9Ool1/ByGn8obrO3pzPaNovyU5Ne06aYSyIvQRJescZg
+ oemCGCAkxTPRwQqrh0u0KZ+5qHiP8nMsXkXxDXyy9gttlKd6/XbJx8Eqq8yKym63m9kCnmYO9fY
+ RBV+hz3xe8+M69oPITMOvgMpaZknp3lvTEVpHdBPASYBr1TmpXIfdDpI1hueoyrvC3mvUyLwstw
+ vNVkWNrTwVUMAvQPJyiE2AIKoLbfwL7hVVKXj1qu+0QMtaZqmY1XEcAwmvYhfpNpWfcoHOwl1Eh
+ 3px23JBHzKVnIRUA46sZfMiNoQ72yspWOEWr/NR6vB0pht7+T2q7QCTq7IKaNiwZTeDXrnrKmAB
+ Szpw2uC+nQ17smQ==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
---Sig_/1=gDHofyclz.xA82aVnHFgR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Since the interconnect driver for msm8953 is already upstream, let's add
+the nodes which are required for it to enable interconnect on MSM8953.
 
-Hi all,
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+Luca Weiss (1):
+      dt-bindings: msm: qcom,mdss: Document interconnect paths
 
-Fetching the tip tree
-(https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git#master)
-today produces this error:
+Vladimir Lypak (1):
+      arm64: dts: qcom: msm8953: Add interconnects
 
-remote: fatal: bad tree object 7bbeab06d5538bd4ae6a29ef18c9ccd2499dfaeb
-remote: aborting due to possible repository corruption on the remote side.
-fatal: protocol error: bad pack header
+ .../devicetree/bindings/display/msm/qcom,mdss.yaml | 12 +++
+ arch/arm64/boot/dts/qcom/msm8953.dtsi              | 96 ++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
+---
+base-commit: 3bcfefea9711deb32db207977d531d720d32a0a5
+change-id: 20250406-msm8953-interconnect-ef0109e8febb
 
---=20
-Cheers,
-Stephen Rothwell
+Best regards,
+-- 
+Luca Weiss <luca@lucaweiss.eu>
 
---Sig_/1=gDHofyclz.xA82aVnHFgR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfy6ggACgkQAVBC80lX
-0Gw51Qf+Kg1l4JlYgyWD3mViEFvmX1wNQpVHEYdVM7edsK3YQabhclQD4CXcEUrj
-3L25yog60ErJ7sLo2fJh+FFxb4XqDno16nplnSkUIBohgLsLI5n6fWmUPhovEG5E
-W+f70itkm1Oe729hwiMBYal3atuhoUr7Mgum56GOcmhmkqIByXUh++MkxjsGyrD8
-4i9lyIRmlWn5dmm3A6d1euJVYOdFAxholFuTx9enzv1Yx2bxivK/7vuCH1MD1+FJ
-bPfMKKVDEDD2hzFGEumykcVmJcz0vw4c+mwSDoIIQK182E7ACKvsXjgAXWnXqBeX
-b2kV4T1EZCC4G6w11wOurNzFhidbhA==
-=ndCK
------END PGP SIGNATURE-----
-
---Sig_/1=gDHofyclz.xA82aVnHFgR--
