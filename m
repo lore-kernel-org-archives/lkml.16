@@ -1,119 +1,297 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D6C204C28;
-	Sun,  6 Apr 2025 12:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094051A5BA6;
+	Sun,  6 Apr 2025 12:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743940811; cv=none; b=IeENIf/yxbW2JBkJ75KmJwteaEwuLKKnXYjm5Z1179nBEEloa7jYn7sA970H0yovRDpZK7Vx8lhfTmUKusC7wvCBTswIMUIR0Hw9quuAykQA+ye+bFHaPleu3M0FJm+Z6D38beydd5WBfLPqh2tSDJidB63V4SjJ6Jp8eNfh0DM=
+	t=1743941299; cv=none; b=IiLv+vlZFH3w4aO5F8R+miXG/SkafFXAeGHLqUdzOx/+PY+vkEnxBK0hnHM7Qw7CHpbSCbAnxrARXDds411jBm5LFQebuPQsbLmRBTtD5IfX4W9F4n7cHi8s+XEbFhqKFgTdbTPxdHWwjxxNw+G4zO+TdS7z5y60TsacxcObEcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743940811; c=relaxed/simple;
-	bh=e34UQPwgoaLbxbO0d1Z3Vpvdu/N7oezyi3BKw6TVUEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BitKrtpxAlaKVaLuo4UHI/fPM5EeywvmBmcYgkEctsjertINQtqd5dtYQcnVgxP3vVSBAh9Y4QTB1kENXXtzRO1rZC7uuhvRCT5radFrN0f5W1M22KtvE/HivgI9mzWs7xhOJTVgBXXEBFah/q9Hb2XL+ySjf5PBz/YHd7wN/a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tq4plMZ9; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743941299; c=relaxed/simple;
+	bh=q906i6obTio2b46mqbSb4jzWO7GgK8exn993sMTYMtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOxeNWqDnrgxW2jl/BfWneuiJ27mD31enF7rl1NSlo2Yxw/sCQwIFLtNnPMdZPbeKaJNOIYeYVzGndhAWBan3LIIb2eSdZ1E8lxCntBVWD2WeFNxr0mkiM9W4yr94UOEmS+B8A3Au9WYhkhpMO+zH3E3Tv6lni6FgrnvYDOBHTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRTyXgcU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tq4plMZ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743940809; x=1775476809;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=e34UQPwgoaLbxbO0d1Z3Vpvdu/N7oezyi3BKw6TVUEI=;
-  b=Tq4plMZ9da8okdLJQZWQBWpqnSyiMHyMCAQrOhmeacphrpb/zkeB0IVv
-   rqe+MgAuOQyBnzhk3Dyx33Sqc2o5YfqFN7EpbD0oMVEgpNOxIzZ2ighlK
-   J+ss27hy0B9zmk4QGv5IXfKTB8KB4CumzyoPSfcssN2W11769VsUJE113
-   DWTvhfP7RN/W+vkT+Gj4qZ833M5CWxNFPj9bzT5Vcej61YRnzaNMQk6B/
-   f5KCZGEbE6gTfXlf8q6fXXNflm/5+JNz6kAczBI7AT+gfjl5n0D7pVz+J
-   bBsraMS0PBcDpcp2oj1lA46+mbBUbO7NQt2T6YwNOI/Woe9FBmzCgUqHF
-   w==;
-X-CSE-ConnectionGUID: XaLraHhkSH2j2qzZkFdOUw==
-X-CSE-MsgGUID: /LzzVoUHRgi5PpqZYlh29A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="70704211"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="70704211"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 05:00:08 -0700
-X-CSE-ConnectionGUID: Cr/JKSWvSwGOYAVHkQi2fg==
-X-CSE-MsgGUID: Hgfyj8b1RNaWDkouvkjcug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="132842866"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Apr 2025 05:00:05 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1OfT-0002Zr-0L;
-	Sun, 06 Apr 2025 12:00:03 +0000
-Date: Sun, 6 Apr 2025 19:59:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexandre Courbot <acourbot@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
-Cc: oe-kbuild-all@lists.linux.dev, Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH v2] rust: alloc: implement `extend` for `Vec`
-Message-ID: <202504061937.dH9ikiZo-lkp@intel.com>
-References: <20250405-vec_extend-v2-1-e4a85af43cb3@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRTyXgcU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB8F6C4CEE3;
+	Sun,  6 Apr 2025 12:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743941298;
+	bh=q906i6obTio2b46mqbSb4jzWO7GgK8exn993sMTYMtA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mRTyXgcUkl6F9QjD/4KG4fA46qLlKPEpMK/iT5XFuysyHGRomaormScyk0k0QeZfq
+	 wrhF8H8meNcw+xdnHf4lZ4vFdNnvhdvjQI8tu2+ACzdv6FE+HmMgWLZ+wMtF0pD92Q
+	 pg5aP5k7p2Cvwk7ciFlVMKqiJmyro5V0S25X/oHlWfwlFXDusAtf4vNg60rhJgsH0t
+	 VnA9nrikOOdm4opFUJL2SCdTU3/tE2a4wyXtwnrxPKx6xEPp5i+Suetnm1t3PSawfi
+	 SqqlSd0lVzf5NpJiEnnS00qiKq9wymL3bsTHpbTxWyP46DoGQMNe+tnDgX1HnR5Y1c
+	 /MgprV3B9m+YA==
+Message-ID: <707dc912-12d2-4b50-b934-0c1d1f5efe6b@kernel.org>
+Date: Sun, 6 Apr 2025 14:08:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405-vec_extend-v2-1-e4a85af43cb3@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] docs: ABI: Document LP5812 LED sysfs interfaces
+To: Nam Tran <trannamatk@gmail.com>, pavel@kernel.org, lee@kernel.org,
+ krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org, corbet@lwn.net
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250405183246.198568-1-trannamatk@gmail.com>
+ <20250405183246.198568-4-trannamatk@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250405183246.198568-4-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Alexandre,
+On 05/04/2025 20:32, Nam Tran wrote:
+> The LP5812 is a 4 × 3 matrix RGB LED driver
+> with autonomous animation engine control.
+> 
+> The driver provides interfaces to configure
+> LED modes manual/autonomous, set PWM/DC values,
+> and manage autonomous animation engines.
+> 
+> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> ---
+>  .../ABI/testing/sysfs-bus-i2c-devices-lp5812  | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> new file mode 100644
+> index 000000000000..e745f0f936c5
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+> @@ -0,0 +1,150 @@
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_enable
 
-kernel test robot noticed the following build warnings:
+I do not see reason for such ABI. If you want to disable, just unbind it.
 
-[auto build test WARNING on a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11]
+> +Date:		April 2025
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexandre-Courbot/rust-alloc-implement-extend-for-Vec/20250405-215300
-base:   a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-patch link:    https://lore.kernel.org/r/20250405-vec_extend-v2-1-e4a85af43cb3%40nvidia.com
-patch subject: [PATCH v2] rust: alloc: implement `extend` for `Vec`
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250406/202504061937.dH9ikiZo-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504061937.dH9ikiZo-lkp@intel.com/reproduce)
+Not possible...
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504061937.dH9ikiZo-lkp@intel.com/
+> +KernelVersion:	6.14
 
-All warnings (new ones prefixed by >>):
+You cannot go to the past. 6.14 was released. This will be v6.16 or later.
 
->> warning: this `.into_iter()` call is equivalent to `.iter_mut()` and will not consume the `slice`
-   --> rust/kernel/alloc/kvec.rs:486:18
-   |
-   486 |                 .into_iter()
-   |                  ^^^^^^^^^ help: call directly: `iter_mut`
-   |
-   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#into_iter_on_ref
-   = note: `-W clippy::into-iter-on-ref` implied by `-W clippy::all`
-   = help: to override `-W clippy::all` add `#[allow(clippy::into_iter_on_ref)]`
---
->> warning: this `.into_iter()` call is equivalent to `.iter()` and will not consume the `slice`
-   --> rust/kernel/alloc/kvec.rs:533:27
-   |
-   533 |         self.extend(other.into_iter().cloned(), flags)
-   |                           ^^^^^^^^^ help: call directly: `iter`
-   |
-   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#into_iter_on_ref
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Enables or disables the LP5812 device. (RW)
+> +        0 - Disable
+> +        1 - Enable
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/dev_config
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Looks like wrong path here and everywhere else. I think other name it as
+led driver, e.g.
+Documentation/ABI/testing/sysfs-class-led-driver-lm3533
+
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Configures drive mode and scan order. (RW)
+> +        Some valid values: tcmscan:4:0:1:2:3 (default), tcmscan:3:0:1:2, mixscan:2:2:0:3, mixscan:3:0:1:2:3
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_command
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Issues device-level commands. (WO)
+> +        Valid values: "update", "start", "stop", "pause", "continue"
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_reset
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Triggers a software reset of the device. (WO)
+> +        1 - resets device
+> +        0 - does not reset device
+
+I do not see kernel exposing it for other devices, drop.
+
+
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/fault_clear
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Clears fault status. (WO)
+> +        1 - clears fault status
+> +        0 - does not clear fault status
+> +
+> +What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/tsd_config_status
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Report the current thermal shutdown config status. (RO)
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/enable
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Enables or disables the specified LED channel. (RW)
+> +        1 - Enable
+> +        0 - Disable
+
+No, you already have standard ABI for this. I also already told you that
+you cannot duplicate existing kernel interface.
+
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/mode
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Selects LED operation mode. (RW)
+> +        Valid values: "manual", "autonomous"
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/manual_dc
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        DC current level in manual mode. (RW)
+> +        Valid values: 0 - 255
+
+NAK, duplicating existing brightness.
+
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/manual_pwm
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        PWM duty cycle in manual mode. (RW)
+> +        Valid values: 0 - 255
+> +> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_dc
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        DC current level used in autonomous mode. (RW)
+> +        Valid values: 0 - 255
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_dc
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        DC current level used in autonomous mode. (RW)
+> +        Valid values: 0 - 255
+
+Also duplicating brigthness.
+
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/pwm_dimming_scale
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        PWM dimming scale type. (RW)
+> +        Valid values: "linear", "exponential"
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/pwm_phase_align
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Configures PWM phase alignment. (RW)
+> +        Valid values: "forward", "middle", "backward"
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/autonomous_animation
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Controls AEU configuration and playback. (RW)
+> +        Format: (aeu number):(start pause time):(stop pause time):(playback time)
+> +        with aeu number 1, 2, 3; playback time 0 - 15
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/aep_status
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Shows current animation pattern status, value from 0 to 7. (RO)
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/auto_pwm_val
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        Shows the pwm value in autonomous mode when pause the animation, value from 0 to 255. (RO)
+> +
+> +What:		/sys/bus/i2c/devices/.../led_<id>/lod_lsd
+> +Date:		April 2025
+> +KernelVersion:	6.14
+> +Contact:	Nam Tran <trannamatk@gmail.com>
+> +Description:
+> +        0 0 mean no lod and lsd fault detected, 1 1 mean lod and lsd fault detected (RO)
+> +
+> +
+> +
+> +
+> +
+> +
+
+Why so many blank lines? Drop
+
+
+Best regards,
+Krzysztof
