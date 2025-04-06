@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCF91CA81;
-	Sun,  6 Apr 2025 17:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DC71487F6
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 17:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743959859; cv=none; b=XHTW+4zOxgbIk/E2T1400Qa5dbMjR8XNxveGKPtvNMo2v/NfTRTUAWDmRqMWlVhBJR2iPp77LwfQ9osrvXnva3yJ0mloy0esP32SX1eAtwwJPpjmDoYtgh6HmliHOm0BAMdhAXscs4g/GWORQfzlMbJKnjus9xGDyNE+Eo/KqWE=
+	t=1743960100; cv=none; b=MLnsoAIEW+MGpcVEG2wowkIDnCNf8ifMbMhg1Cg66FPoj1IQKM9sAtGXfRN5q7DTqvKxATODe4m+yDXyw6/6N1whspn9g5C1XpIHWyUaaHTJJWF0Gs2xZghVFj0EsxFWcqV/BObzqnd6B0ADLxtl6r27qOHCttNCzYk7cY29U3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743959859; c=relaxed/simple;
-	bh=yK1e0myiFTb+uJXfZR0VyuGCt6MMn7FjTJOXv1FdeHI=;
+	s=arc-20240116; t=1743960100; c=relaxed/simple;
+	bh=TLDCz0ijceRvrDZBjTDRhs68DEmOTUvRPjZfCHwJkCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I67CEmYpa7hm/dbDo+qoCngoF/B1QpmYPXJ6m1kkPvpWvSak0fPSv3nTFNBZnogGrnFiOPKWGkVSmk7L1gUEDNmZk4ZDkjIJ+JgGinBpjOsOKMkmp2iFzG6vb3a0qvk8occ3P8NynEfQpKOi/KKrftVTSpG+/8HbVYAWpC4FmSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWb04Fxa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NppqbnY/fyffM5cX8MuO7OcUcqN6k7mgd1C8VL5/QT6BhvXgiUNlR9Edt9gYxtD5bsOWTPoHQ7ew7sOPxnu6SC8wp4riJCxvd+rpSZl9ssy/TsYMN7voOFOHt5vzusXeh6FX2J7sF0qlcbtB0CHjqsxu+W0ep8XXjg5VToh7j+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7VGGs2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWb04Fxa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EBBFC4CEE3;
-	Sun,  6 Apr 2025 17:17:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7VGGs2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F753C4CEE3;
+	Sun,  6 Apr 2025 17:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743959858;
-	bh=yK1e0myiFTb+uJXfZR0VyuGCt6MMn7FjTJOXv1FdeHI=;
+	s=k20201202; t=1743960100;
+	bh=TLDCz0ijceRvrDZBjTDRhs68DEmOTUvRPjZfCHwJkCA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fWb04FxaJge/33W4VTTInpdz5RXtuzLHMzvAVv4MVe+Gaq5xgogS9FCn2NzUNngxS
-	 M5XFyAsWetmOhaY4IIFHAIwsVl1CYWY96aDoxdK0pPo1f6PUQpPxLtYvfBZIJ2XrWV
-	 9bwXeFz6pdOo6LGkhrlXyulJq+MhtTTBNHGTq3YHQzIjcYPNCPXutGd3nXqhZZb5V0
-	 wUIvc9KFoxQr6NoPNpXFHSshskeby54iO0LvLr8lwGWTktZPtus/lhs7sPyDQ2C3jF
-	 0j8WfTMJBePIRSMdsdORzW7KkGbyE5rneLARcYqJXAzmw2a+C5sX6glQNJIbvJM7cj
-	 KQefFb4MD1/vg==
-Date: Sun, 6 Apr 2025 19:17:34 +0200
+	b=t7VGGs2lsugmRJa1bU+IT59OkXpCFEw/PjL0KmVWbedYwWHPw6UwMuPY2Y59KW7tx
+	 W4qd9OyxB+hXvfTVbTE7rQThNkJqEH5YvNTdUwCYMxXUM0pcnoBG3FsLNT3rLv41mx
+	 sE+/6aBipGHZJh+CoxruDBy69jReoe5Vr9k0uuq7fFKKRpbmPKqZemiv0qFvx2EcVt
+	 6Ud6P93lDkzCn08/sMxNiwyAfGkyYg792avQba340dGV78WSNeTKrWyX/MJmAcQaj6
+	 aI86YDZRLrfyytdm7qVKiMsVa/NDXjuINXOcyqolOV/mcywcIQmNTHHZyCFO6v9UyX
+	 XYxC/ztLmAzFA==
+Date: Sun, 6 Apr 2025 19:21:35 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	kernel test robot <lkp@intel.com>, oe-kbuild@lists.linux.dev,
-	Dan Carpenter <error27@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, x86@kernel.org
-Subject: Re: [PATCH v3] x86/mm/pat: Fix VM_PAT handling when fork() fails in
- copy_page_range()
-Message-ID: <Z_K3LkhQH05fP1T9@gmail.com>
-References: <g5vxcrmdjjsvrjeo5k6uzwypctv2mvbteoommwwpv6sfjpbcyd@lackqksyahfs>
- <94c35e89-f915-4122-b1a0-436893201373@stanley.mountain>
- <a33df3aa-7f37-4d1b-bde8-642115dd1441@redhat.com>
- <e75ca8d9-0386-4de6-bee9-e6044b001a30@lucifer.local>
- <92c40df4-2e93-40ca-929e-a0b50ab2b631@redhat.com>
- <18abdf06-9d45-42bf-b666-af1a416bf2a6@redhat.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2] x86/idle: Remove MFENCEs for X86_BUG_CLFLUSH_MONITOR
+Message-ID: <Z_K4HzutEoEQFSco@gmail.com>
+References: <20250402172458.1378112-1-andrew.cooper3@citrix.com>
+ <1640cf43-8125-a562-91f9-9b306b863dc7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,53 +47,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <18abdf06-9d45-42bf-b666-af1a416bf2a6@redhat.com>
+In-Reply-To: <1640cf43-8125-a562-91f9-9b306b863dc7@gmail.com>
 
 
-* David Hildenbrand <david@redhat.com> wrote:
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-> On 04.04.25 14:20, David Hildenbrand wrote:
-> > On 04.04.25 13:52, Lorenzo Stoakes wrote:
-> > > On Thu, Apr 03, 2025 at 10:59:12PM +0200, David Hildenbrand wrote:
-> > > > On 03.04.25 17:14, Dan Carpenter wrote:
-> > > > > Sorry, I've been having trouble with my email recently...  I replied
-> > > > > earlier but my email got eaten on the way out.
-> > > > > 
-> > > > > What happened here is that the zero day bot emails go to me first and
-> > > > > then I review them or forward them depending on if they're a real
-> > > > > issue or not.
-> > > > > 
-> > > > > Here it's a false postive because it's set and used if the
-> > > > > (src_vma->vm_flags & VM_PFNMAP) flag is set.  Smatch doesn't parse
-> > > > > this correctly.  I've been meaning to fix this in Smatch for a
-> > > > > while.
-> > > > 
-> > > > There is a slight complication (on top of the VM_PFNMAP checks):
-> > > > 
-> > > > If "src_vma->vm_flags & VM_PAT" we
-> > > > * set pfn
-> > > > * set dst_vma->vm_flags |= VM_PFNMAP
-> > > > 
-> > > > Then, we only consume the pfn if "dst_vma->vm_flags & VM_PFNMAP"
-> > > > 
-> > > > While we won't be using the uninitialized pfn (good), we'd still pass an
-> > > > uninitialized pfn, which IIRC is UB; likely nothing happens on GCC clang,
-> > > > but we better handle it.
-> > > > 
-> > > > So that should better be changed; I'll send a fix.
-> > > 
-> > > Maybe just worth setting pfn = 0 _as well_ in the caller, belts + braces maybe?
-> > 
-> > I'm planning on doing the following, just didn't get to testing it:
-> > 
+> There is another instance of the same sequence in arch/x86/kernel/smpboot.c:
 > 
-> Ah, now I get your comment. Yeah, we could just set pfn=0 in the caller as
-> well to make smatch completely happy I guess.
+> 		/*
+> 		 * The CLFLUSH is a workaround for erratum AAI65 for
+> 		 * the Xeon 7400 series.  It's not clear it is actually
+> 		 * needed, but it should be harmless in either case.
+> 		 * The WBINVD is insufficient due to the spurious-wakeup
+> 		 * case where we return around the loop.
+> 		 */
+> 		mb();
+> 		clflush(md);
+> 		mb();
+> 		__monitor(md, 0, 0);
+> 		mb();
+> 		__mwait(eax_hint, 0);
 
-Yeah, that's far cleaner than these rather ugly code constructs in the 
-error paths. It's a pretty standard API where output pointers may not 
-get touched on errors - if Smatch has a problem with it, fix Smatch or 
-the callers.
+True, but I wouldn't touch that - the shutdown path is not a 
+performance critical code path in any fashion, and it's often
+difficult to debug on real hardware, so the cost/benefit factor
+is abnormally high.
 
 Thanks,
 
