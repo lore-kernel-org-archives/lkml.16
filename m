@@ -1,102 +1,80 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.62.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232F42A83;
-	Sun,  6 Apr 2025 11:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E5D23AD;
+	Sun,  6 Apr 2025 11:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.62.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743940554; cv=none; b=qTL11babrAMSFkyssxvkaNfJ5CSYujM/LrGkD9A5+4hJWi/8h0LamQOK3A5Us0fBpO55AOYrZUhhf5ES3XssSPEJeBamAVAkwKssdlsF5lXXGKGtrsggWDDlHNgeBXQxsqF6JppaC02N4aYReRjYp3e7RN5zhOFfFpjJRDCXc8U=
+	t=1743940603; cv=none; b=Bmco+UrR/3SzpJXhN65coNF7scv8l4wTRHpMWcjSG5UUXf18dZVmnz6Q965umgS2y3YCYVEbeG7mZsB4n4TnQe23d2gJOWghG3CH7nPCoqk5uEFz2ARrjJudyLaKavnglkkN990KFv3qWgdg1zV0tpFJK5HHtmLlsKBL1FypeAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743940554; c=relaxed/simple;
-	bh=suNOTfr/YNZFN6fKHQkFgzEELmU+EjwrNjediZCA8Zg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Afi19qYUc+3Cot+wtZCZj2xfDsokK6Vn8tkNI5fJ/CuH8/CHyovkikwfXiLQm4ReoZa+jRUjTGKe7ORNH1QNLF7YYURt/heewTJZ/OkO9zQQChT5MPV2AI2IgF9yw+uFz1iNXTzlvv/XV2nl7nnbfWBoxxkosPgGLcwroZWPOj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXN1yvj2; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXN1yvj2"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1028685a91.1;
-        Sun, 06 Apr 2025 04:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743940552; x=1744545352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ILU70+EHjIDSIaY7WTl47NE2TYxzfvxbyces6ACAA0s=;
-        b=LXN1yvj2X1zfla841vlGanLp9Bn3i8DzQutg95/Vo7tjvWJwZW42pKqlW3Y5F6dRP+
-         zXhIU2QjmeboaEkrj4+8aya9W2tuzWT6wGLjNNx6C7nJfe082fKBMKzg4oDdJ+LiRl1Q
-         oM2F8YKnl3X3CdXVvVf/m1UPn7mv/3uNetRe9qdWR8wCR19V2WD7wbgy3UaezVwqw5t2
-         60zlQMMa48qP4GrV1RqkbQUii6NYTNQRHSDq+9+aAPZpDVIGjA0QixquLFdFNaDftOgN
-         /zULyvD2tVpe92jI8GYJKUEaWXSsbPbm7aca0583dhaKEwRGpMa5c6xGDFtqsltpPu82
-         AUTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743940552; x=1744545352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ILU70+EHjIDSIaY7WTl47NE2TYxzfvxbyces6ACAA0s=;
-        b=SOBTNUxBzB+Uh7OF7CI0geLHTRfPL+fcR8NR8zAGPYIMnRsv6mDbWPC5kRXcDVLPVZ
-         beq6LMQjDXRnGSnmDRRCilnxagUDoXIwUVBRA0OHEz5M8yFsRug30p6m1QsP5hEjIF5N
-         fgjWG5spu+k1wrlbtnrKqLXK2P9GfumQ9wASWQYInrFPp2rB2uwrPtamGFhAgSRoXCFL
-         vMbRH1Jds+2QNObHt/dEhmdbNJ5t/xwlWGL+JTPqwiVUIiXOSupzr7XQ2KY4rc5VTDaQ
-         xJLmmiVXncbZcH25zaRrufBJNY52odVZIl1qZ4zt4FHIWtpCm1IHUjr0DMVPKaT/VkWP
-         zXNA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8L0lABUdkeml9TEpF2rYfGYZFQ6RDQSmuK5nhi32LZjijCu/tMiUtLPCg4kWevd4c+XasWwx+1Ebd8p8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVA9dfY2EZ6rpLNmVnNS6WY/lQLEp/bFEDAAnrSk1TGxkJd0v0
-	VgW4wZq9CYjeliBjp5aggW6fyylgDvOomgs1SPggtpv4SU0ETaYXfWFPbmygIhk9AApl4MhnoHL
-	scGzQXOcvbyd7wI1Zy+JKY/ULyTQ=
-X-Gm-Gg: ASbGncvMNb7CNWFrv6F9xRIWzEg6ZU6hjrPvgu1sV+nvCcAo97ZwTnIOYvy6I7rfCYH
-	KqkhKmSPiNb5/T56KZ9bcctZTUiectRFe+1Xdy9Q6sEDkZS214FQD6+b+wzbBd7dEdVjNAIw2Ys
-	sBZzHoO8tonhKpJcZhpXRQk93G/g==
-X-Google-Smtp-Source: AGHT+IEWWHws8/u9BPGK306cCUzGQimILJG9TjNpwQv1ItukQ3vuptggNaYfLMXH6nG/4rCWuMevtKHZp8S1bwZlBp4=
-X-Received: by 2002:a17:90b:4f4a:b0:2fa:6055:17e7 with SMTP id
- 98e67ed59e1d1-306a49ab484mr4889067a91.8.1743940552537; Sun, 06 Apr 2025
- 04:55:52 -0700 (PDT)
+	s=arc-20240116; t=1743940603; c=relaxed/simple;
+	bh=BxdzTW8ib3V+3KbWH6xF+U5AcyodTwlXgouajQjRFYI=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=scmjffmQqc1A2C4n18LYk7eVB4vbr0ikJsvvy1FJ/QZvmd5QIRxv4u5jm+ALhL9e6Af/Wz2/Ol7XN+TxkLzra1qiF4pcsbsHN8hzi3Yy2bweuZ3koq8ReKrxRZ4xc9hui9R/DtqDUz4fhvEmMTru01pxw1c7fxNz7JWmFUhSFuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; arc=none smtp.client-ip=114.132.62.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
+EX-QQ-RecipientCnt: 4
+X-QQ-GoodBg: 1
+X-BAN-DOWNLOAD: 1
+X-BAN-SHARE: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-FEAT: D4aqtcRDiqSwD4GVK8+FEJnPlruXmtq4qU5krjXbf14=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: g5/04QnXxyKpuFGe5poaA+oaNEJlsNa8O24RLm1E1Bs=
+X-QQ-STYLE: 
+X-QQ-mid: v4gz7a-0t1743940567t8733394
+From: "=?utf-8?B?5bC554aZ5ZaG?=" <xizheyin@smail.nju.edu.cn>
+To: "=?utf-8?B?TWlndWVsIE9qZWRh?=" <miguel.ojeda.sandonis@gmail.com>
+Cc: "=?utf-8?B?cnVzdC1mb3ItbGludXg=?=" <rust-for-linux@vger.kernel.org>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?TWlndWVsIE9qZWRh?=" <ojeda@kernel.org>
+Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <07D9F73C7B35C74B+20250406112605.6152-1-xizheyin@smail.nju.edu.cn>
-In-Reply-To: <07D9F73C7B35C74B+20250406112605.6152-1-xizheyin@smail.nju.edu.cn>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Apr 2025 13:55:39 +0200
-X-Gm-Features: ATxdqUF7FSGJ78e5lilCw9AhK2qJ8vjfdbkqRP7h0m0ytM0AaqL23Nd7kfEQHTw
-Message-ID: <CANiq72n5C4YA_=HYuSKZnhYJJ8Fnby7n8ME9u=P3=Ycu7hnonw@mail.gmail.com>
-Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
-To: Xizhe Yin <xizheyin@smail.nju.edu.cn>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Benno Lossin <benno.lossin@proton.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Sun, 6 Apr 2025 19:56:07 +0800
+X-Priority: 1
+Message-ID: <tencent_4FDA7C47625666C054E0F8D7@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
+	<CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com>
+	<tencent_3DAE6B923FC67B543D90D970@qq.com>
+	<CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
+In-Reply-To: <CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
+X-QQ-ReplyHash: 3557925258
+X-BIZMAIL-ID: 3044392774991309998
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Sun, 06 Apr 2025 19:56:08 +0800 (CST)
+Feedback-ID: v:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MpO6L0LObisWYwfrzyo9jhYgQzsb451TfQm71Y6r4aQxtEMqRfA99HoY
+	cdKWfIKCiPeUzhFg7K/Zakdq5KoLEbrBNzoFomJlbAGUs+hLkN7jI/m+A76EeOwupsXNkrY
+	VZ1zCdgh97GbDaMk0vrGYE6HP+wIk90CughPm2X+uT7wCM4WFjubKuMoLl+XWbYWVOboo1d
+	YyKhIktWDRRFlLX1b/bOXNmCkyvxQ2ObIX1N3Vk+O/O6hEARTFMFMqSJagV53X3YwI+E7fa
+	XVKH+jj0Z29FgywgaYWWPoDNJRIHlYc843bRHaOfHCVyx8T1lmSfNapG2o4nKaT2pnaATl2
+	lo+KN9wBWo16kQNMyqKH/0LnmjQ8jlg5h7hAaTAWOXeeOXzc0UbzAhbAaWOQU93PcgYzhDI
+	PO7/1gxyXOd+eZsWDyQEtoG5SgRjsjbRVXjepGGNu0hToHOmQ1Oxc3KgKegEltkrHusnT6G
+	nT4M2kFCSx7P04+giYFKLrT6tVxgPAHRG/pqP83nbiYAyEOdq+sugGDBbm11sWhC7vCcghw
+	FImg/k9TV0Ngwe0SLzL2pwdGeJJPnDH4E/hO4fYLU49z8K97gR8mjEGuSVmBUKXpcBCMSkv
+	WTqu23U8hY1Tky9Cc2imTAdMcidQYYS/fB0mXNs9H0i0F77guM5gXseDwqZ3uIy7XUdQ98l
+	iJ1IEjq6Z24NGtl4MWoMByngdcT5YVlV38+pJjsWRuOhOQk2VocVfxsQMowmKALQ8LO73Ni
+	YdOoNjjVYFKFS5O+fjtxDRu8mGWjgiO69o0OQuXJfFU/rUAFeldCAFPENDT1DLgr/4O8nYS
+	M+dHNlE945LF6E4Gh9nsRYmNhnfCl4EMLBRzUOZZX+pnVjauKJlhXjqPT5CHYmAt6G16Y5w
+	fO6pse0d5SVWAg3aCvKYP9y0uYhFPOeOsb8UY8/K+YHkkuRvxifDr7FCs+G7K8/mTqwjOLM
+	DoFK0TMOC8PSDUMIYm1RcFKzyZJXYmz0pik8BdVbiFUhdBwOYJ/xSOq57
+X-QQ-RECHKSPAM: 0
 
-On Sun, Apr 6, 2025 at 1:28=E2=80=AFPM Xizhe Yin <xizheyin@smail.nju.edu.cn=
-> wrote:
->
-> than Markdown autolinks [text](URL). This inconsistency makes the
+VGhhbmsgeW91IGZvciB0aGUgZGV0YWlsZWQgZXhwbGFuYXRpb24sIEkgY29tcGxldGVseSB1
+bmRlcnN0YW5kIGl0Lg0KSSBqdXN0IHNlbnQgYSBuZXcgcGF0Y2ggd2hpY2ggdXNlcyBhdXRv
+bGluayBpbiBjb21tZW50cy4gaWYgeW91IGhhdmUgdGltZSB5b3UgY2FuIHJldmlldyBpdC4N
+Cg0KQmVzdCB3aXNoZXMNCnhpemhl
 
-The commit message here needs an update. But, yeah, the contents look
-like what I meant, thanks! :)
-
-I think there is another in rust/kernel/block/mq/gen_disk.rs and one
-in scripts/generate_rust_target.rs.
-
-Also, the changes in `*_vendor.rs` files should probably be skipped,
-since we try to keep those as close to upstream as possible.
-
-Please Cc also others that may maintain particular files, e.g. Benno
-for pin-init (you can use `scripts/get_maintainer.pl`):
-
-    https://rust-for-linux.com/contributing#submitting-changes-to-existing-=
-code
-    https://rust-for-linux.com/contributing#submitting-patches
-
-Finally, please increment the version number of the patch series when
-sending a new version (e.g. `git format-patch -v3`).
-
-Thanks!
-
-Cheers,
-Miguel
