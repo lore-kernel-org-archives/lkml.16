@@ -1,278 +1,279 @@
-Received: from b224-13.smtp-out.eu-central-1.amazonses.com (b224-13.smtp-out.eu-central-1.amazonses.com [69.169.224.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2052.outbound.protection.outlook.com [40.107.212.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3E717F7;
-	Sun,  6 Apr 2025 05:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.169.224.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743918195; cv=none; b=nQ/JJ3hapZyIYdVzWnBqx5Inxo9b5RPncHdt3WmizZDnRhFDBevXI9xq1OESj5c4VKhEHzsD3Lrgdo0sZQyQULqu7+Hmx/fq6FP30WU+Pqnn4JxNdC0WP5gpJCxoTlGC62XiKbmGPA8GZMkISoK7RL5Bd31K33YC7p6jb0KhZpw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743918195; c=relaxed/simple;
-	bh=X132Zuzj+UyFTooiYzFIYSnK9nlTk5dnLjrsA+EU9Us=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIVoKvxNgaWAJ+2qXYYgiCdLOBM1tkoT5FoscKgtpjJo4HnWHWSJyGKeQXuVSOrzTAR4WMABYVpFcRSPoSczHJ4Krk5AQxDJt1mbvwjU82TH9nVvG9vt6/zHYrgdkg97UxR7dHvI5dFVVrMTi68gQVWEkwi+JTC0+iAw9wgIHO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de; spf=pass smtp.mailfrom=mail.riscv-rocks.de; dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b=MsiYGGkA; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=lNrjeoLb; arc=none smtp.client-ip=69.169.224.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riscv-rocks.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.riscv-rocks.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EBD84E1C;
+	Sun,  6 Apr 2025 06:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743920614; cv=fail; b=pbYblLz6tTU0CZUNLuukrdtSNUfKdoXW7stM3xPXaaN6QoqRQZLcpEnP25s8sanvZg0EkPNFctIYhZP3Qf4vEgcGGGpdCYjsPKL1NGm1afN1nttIXO8lGws9nqZ2SayuUI+i3drCFH+7E3tLwi2wfXidClH4WrcEufR9apvlxJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743920614; c=relaxed/simple;
+	bh=qyrx5i6/tegLboESH07t8dDPmp+7f5vLJ3yC1517B1Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oCLHiiR74F+rLeVO3SdCZGf41ZL/4EAd96AogeZ6ofG5LI8ileMptjhyElhZ857A/E1VDtD3JfnqQmmDGrmQkV8yiMtWjtIVO6nYgRrPOEOBRB8CW3tQyjIeBp9/PSi8jZVEYcPaSW8GLi6VYnvVpBSz33NHsCdAlpFUmeDt6l0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Vr7WupmE; arc=fail smtp.client-ip=40.107.212.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="MsiYGGkA";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="lNrjeoLb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=2kaovp6zxy5nzp5wqunvdq5vkiqbeqln; d=riscv-rocks.de; t=1743918190;
-	h=Date:From:To:Cc:Subject:Message-ID:Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To;
-	bh=X132Zuzj+UyFTooiYzFIYSnK9nlTk5dnLjrsA+EU9Us=;
-	b=MsiYGGkApY/79G2FW1zdUQd6ZxL4CdW7Bohu6wgAg3tAeyTHaLBtQP1e25SE7I5I
-	c0bJcrF6tVFVylqx7HLFLqmqGlbxBdF36cWClcww54CYJPb8yBzYGOozJ/4aXGGkleG
-	8SAbJLn0XcdBl41Exrd547aGDFgc12Ijnpb398TaeUio6k65VN2WvRk08CYdFUlX81r
-	RBa77RbhAdxWJRM8rSHJ0YiuODqCyNGUpM62OyC7kHBetvp7EGgDN0Jg1gQjn1gWETK
-	/HB5BmgisKzOEL+HKyM4BlpCvpWhjspAW+QI8OkvacitqdAmOwC+nfRYV9fqUtdFKg5
-	jfEdwb/e5Q==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=54ecsf3zk7z4mwxwwox7z7bg6e5gwjsz; d=amazonses.com; t=1743918190;
-	h=Date:From:To:Cc:Subject:Message-ID:Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Feedback-ID;
-	bh=X132Zuzj+UyFTooiYzFIYSnK9nlTk5dnLjrsA+EU9Us=;
-	b=lNrjeoLbHWa+/UmyIiKsKhRAzepE4PlUAKmhVZdAHtbTXkbB3IzWtEfMtEYK1hbk
-	/XlWhYczbvGtxXXW5YE050YlDc+WLgqhIwYjNQw9TR7qlolBHDzwE0WScD9zr2jkN/A
-	MAaeY+5lXkGS/INqCQxR3uGGQu68dS6eRFL/wOvU=
-Date: Sun, 6 Apr 2025 05:43:10 +0000
-From: Damian Tometzki <damian@riscv-rocks.de>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kbuild updates for v6.15-rc1
-Message-ID: <01070196099fd059-e8463438-7b1b-4ec8-816d-173874be9966-000000@eu-central-1.amazonses.com>
-Reply-To: Damian Tometzki <damian@riscv-rocks.de>
-Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Vr7WupmE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UEN7taDbHhjWWu9pDtpITY6BE6eNb1h9EpAuyqIedyc85hHmChdk+RX5H420tpU9sCfikBJa9ruIZBP1XEwfeoXahgrgf8fF9dcMZM7oyXoyPxllamMuMauSNJNSUvvym3l465s9fiKoz4/acMI25f1d3CQxypU/jGlKdk4nePKu4oO4JiS+Bjp4jrUxoD90z7lPtmYaIa++kVl4FXCbaEt2ZhSgTJp8btDKA+nHS8DLgdLOKzEK5FQT8yCkKGmT+ioH5MwBs+kxsxogJhsTB7ud0zfJyEX70BY5s85Fy30Z7qlRvAX9exrvvCGia4fAtrehIZqW3TERO7Psuo+Lrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qyrx5i6/tegLboESH07t8dDPmp+7f5vLJ3yC1517B1Q=;
+ b=ZCbo9PMLRDSlrBZVm4ONUVC5Lgrq0Fx83jJoQMz5gVuwDF2tLz5PGDxDs4UkA4bILFWJbhNvH5613s7YNIVvdweKO38x6ksYJorgR/p139sXbfMneMWMQ1Ykq2JdjIZZKxdNF0YQ0z/TarzXhdeLD7Q32aobwy823ySMp7TvA/VDxeOhVAShZrY1/FK889K7KFAioTUHupo4lzbJTCsEQeBIxEa1gM1kcJRnHd66/X6NE3z4Q1lmWTzZs2ZdqPn36a1V+r170f6y0ACGIiU8GD+6cMgGp4rPwYojbdnrsXIRboPcgjqtv5ETDfsBy7x5dyud9Z+DcTeJr8pZfxBF5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qyrx5i6/tegLboESH07t8dDPmp+7f5vLJ3yC1517B1Q=;
+ b=Vr7WupmE7oNxgIq0JpceZaKIDIBxXtuNAPdo+66kyjRSRbxkm9CAlAMWK+AW7He2B8t2r22UpRTNM+Ixdh3dhDECLBi+S6hJo872lDKfV9no/HTKet7zv8BRlgaOkSURt6lr4tk8LxCAO9iaQAdMZyo+PLofCFbHg2U4WdeDeAU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN7PR12MB7835.namprd12.prod.outlook.com (2603:10b6:806:328::22)
+ by PH7PR12MB6720.namprd12.prod.outlook.com (2603:10b6:510:1b3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.45; Sun, 6 Apr
+ 2025 06:23:28 +0000
+Received: from SN7PR12MB7835.namprd12.prod.outlook.com
+ ([fe80::ea3a:4720:99cb:32d8]) by SN7PR12MB7835.namprd12.prod.outlook.com
+ ([fe80::ea3a:4720:99cb:32d8%7]) with mapi id 15.20.8606.028; Sun, 6 Apr 2025
+ 06:23:26 +0000
+Message-ID: <f127d8bf-4767-4203-8db3-c8ea80541917@amd.com>
+Date: Sun, 6 Apr 2025 14:23:19 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use of
+ SWIOTLB bounce buffers
+To: David Woodhouse <dwmw2@infradead.org>, "Michael S. Tsirkin"
+ <mst@redhat.com>
+Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
+ Claire Chang <tientzu@chromium.org>,
+ linux-devicetree <devicetree@vger.kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?J=C3=B6rg_Roedel?=
+ <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org, graf@amazon.de
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+ <20250402112410.2086892-2-dwmw2@infradead.org>
+ <1966cbf1-a430-480e-a78d-3d6bbcb4ada4@amd.com>
+ <20250403033230-mutt-send-email-mst@kernel.org>
+ <59be937432fe73b5781ecb04aad501ae5a11be23.camel@infradead.org>
+ <20250403040643-mutt-send-email-mst@kernel.org>
+ <0261dfd09a5c548c1a0f56c89c7302e9701b630d.camel@infradead.org>
+ <c7c5e449-3df1-4162-b5ef-c9e05945d22b@amd.com>
+ <fe9b1c4603f95d31933d22305a55b9f682ba76ec.camel@infradead.org>
+Content-Language: en-US
+From: Zhu Lingshan <lingshan.zhu@amd.com>
+In-Reply-To: <fe9b1c4603f95d31933d22305a55b9f682ba76ec.camel@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR02CA0126.apcprd02.prod.outlook.com
+ (2603:1096:4:188::11) To SN7PR12MB7835.namprd12.prod.outlook.com
+ (2603:10b6:806:328::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
-User-Agent: Mutt
-X-Operating-System: Linux Fedora release 42 (Adams) (Kernel 6.14.0)
-Organization: Linux hacker
-Feedback-ID: ::1.eu-central-1.yMcBPu/jK26Vj3HVmCFyFk75QMsS8V3QY5HbXP/Qrys=:AmazonSES
-X-SES-Outgoing: 2025.04.06-69.169.224.13
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB7835:EE_|PH7PR12MB6720:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b923038-3184-4cc2-ddd8-08dd74d38a69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VXJWZjBmOVdjZG5iczhRTndMK2s2MjNKbVFQOXVEVDZpTzI2b3gyL0tMZmd3?=
+ =?utf-8?B?NjlSRGYxZUtzUjJaQlRyWlV6c1JwMVQxQUNEQkxwdlZCZTAxalVyTWU1M25r?=
+ =?utf-8?B?dDRieG53ZFBQcUoydWxDdmduU3JZMmN0TXI1dUhQQXVsM21FVE1UUkdIOVB4?=
+ =?utf-8?B?T05XRVczUzU4ZXhybXkrZUJHZlVFNE9kV09kOWZjOS9KdFJDMS9TZkh6QXk5?=
+ =?utf-8?B?RG5VMys2RWhhSk1NbkxGWXM5QmpxY04ya2drQ3ZRYkhpbHE0K09vK1VLZ2hj?=
+ =?utf-8?B?c3YycGp6V1JqdGwyQ3hTeTJYL1lBT1gybzM0VWN6aUdzYmU2WGZqWWZUWm9K?=
+ =?utf-8?B?dGZMN3Fqb1lEcE9jK3hXTitMRURrU0xuTy9oNmxPRm1XVm5lUnRhMzlUT1Jt?=
+ =?utf-8?B?RFJlNlZNREoyTC9IVkZHSElMRmFUc2d3bmMwczNBRy9kZkdzVlJiK3dHOHY0?=
+ =?utf-8?B?U2FWMGJpS25OVnEyNlNYOHlhN1IzU0lBL3o3SFRxUktvSE1QRHRrdi8zbVhF?=
+ =?utf-8?B?S2U4eThuRk9jWkhpditFZUJCTHZBVFJKRmNlRGNxWmZ3cURFeTBsVW9Nazd5?=
+ =?utf-8?B?dmtTb0hIQ1lUOGZRZEc1OGI1NllKN1Z6Wk5BYm5XVGpqd2NYNUJJRU82VE0y?=
+ =?utf-8?B?TDlVWm1MdDErNm9ENm1KUlhtQ2k5R0ZGRkYybFc5OXpCdWJqc0Z1U1F1Z0pq?=
+ =?utf-8?B?U3cxR1FRbjJja3dGemxxM2U1bk9FeEZXZjRMQmt2dk1QZDVWRnBYOWRMZllT?=
+ =?utf-8?B?OWR1UENyWGEyUlVtY0FRQ2ZBYVBIS3crMGV4UEdEUk9vSy95enhJc0xMYzAw?=
+ =?utf-8?B?VTlZekhGaWF6cy9zZFcxeFp3cDUveFVNYnRiUVIyUVJxNG01a2ZYWnYrSldX?=
+ =?utf-8?B?RHRvS0JjZjQyMS9INGJPY0lZc1VxQ0U5RFBqTmZQRzdCTEhjTTZnQStQeEtX?=
+ =?utf-8?B?cVBvSUI0TjJZNFJQM1V6YjJUaHBBejdxMFhocGtxZWE4YWFqUmRQanZob3U4?=
+ =?utf-8?B?UVZybUVESnRRVHRNREczN2IyNUdvamRXeHNzMk11ci9UNzZlUGZ6TmthaE1W?=
+ =?utf-8?B?OG9hVXBWUjlNQlgwL3lnVHZYV09zWFRjazV4aGpkbDRWVzluYVBQUnpPRGM0?=
+ =?utf-8?B?ZDlJRCtISVNOMFl3Y1pRcS8wSkFMcHhsSlp2RXl4My9HMUlKNkZuY3FaMFlE?=
+ =?utf-8?B?VVU5Y1lrSTVJU0lqbVRaenM0TERVWkg4a2RCdnlSN0Y4LzFLaDM0WEZ3YmtI?=
+ =?utf-8?B?M1g1ZHRIRTd2Wml6NW1jdzRGOUpMODJBYVcycUhId3RJdGllR0V0WW5aM3R2?=
+ =?utf-8?B?R0Y5WDlzSVY2VWdlRTMyT2E5akk4YnVhWU9BcmU1YlYrU0c5NTlUUDgvWFdE?=
+ =?utf-8?B?R09PRGNnbm1PcnVYaFY4TnpnUkluVEF2aFVkaHFUTW01RE5uS0luMWNjSEsw?=
+ =?utf-8?B?RDhDOGVmY3BoaGZITnhaVVVFUnorTmZxc05vazlwd1hoYUhTRmNFVWhXcno1?=
+ =?utf-8?B?NEptNEhwL0Vwa05kVlViUktMNGRlK3BSYVE0TWo4TFcyRVdXNFVxaCtZb2Zk?=
+ =?utf-8?B?UGhFR1ExTEtvRGRiNVR3ZE10M0ZOTmtUeXZGU2ZLZlNHYTQzNFRFS0FaTzV6?=
+ =?utf-8?B?bDIvdG9OMk5DVFgvZnM4UWZDbGlIR3NQZEYxY3E5SnZ5OWhOcUxFK2FqZWxh?=
+ =?utf-8?B?TVhnYmF0QkpOK3RZZjkwZC85U0FHVVFobmQzTWVYdkpSdW5Obmg0QklPQ1RP?=
+ =?utf-8?B?VkJBbnh2QTRVZU50ZmRzYTVSTmEyUHNjalhHc2locHluNkRySXdWNENMNzhE?=
+ =?utf-8?B?MUVHOWRnbGFwdmhlVWVEWVNSc1lmbE4yb3A4RzYya1pIdFRseUtUYXg0dXhs?=
+ =?utf-8?Q?7bcCxZIetwl7Y?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Sm53QlBkMzFnWUpWeTh2WWF0Y1ZUZjd0NzZLZkxueStZdmZITmhNL2QyNVFL?=
+ =?utf-8?B?aHNmb3Z6VkVaTm1OSWRtRGo0UFl3VWhJNmdmbnV1K1FGZ1dTUXdqQkpRbDdj?=
+ =?utf-8?B?V0FDdVhWTndheHJjRC9WOEZMTldURnppcDd2aUlNM3dDUk4rdUIxaXJTdnpO?=
+ =?utf-8?B?M0hHQ2lqYmNRTXlJNTZJdnpZV0V0ODY5MUpBVnRWKzcrRW03eUNFQVBaTTJU?=
+ =?utf-8?B?TjdSbWZtL2d2Wm9kMFIwMldIdU5SRzEvblMzajlYN1lKRW1uWlM3ekM1VTZq?=
+ =?utf-8?B?VzY0T3dEWUVsNEppcWxFYzJGT01wZ1lRVlRZaVFXL0l4UzBsdEg4NXY2ZS8w?=
+ =?utf-8?B?RlkrOGdCb05nMjNhOC9SVUlRcjRzaklzZkZ5Y3dGR0dzUXZaSjZxZnJwb1hP?=
+ =?utf-8?B?bHdoWThzSlQyMCtOdzFRQ21nQS82SjZYcEJrS1dXQ3lBd216ZzVqTDBhZ3Zw?=
+ =?utf-8?B?ekJDbUtGc1dJcDNWUWg2VkNnc3RkZHpZZWVEUk1GZkxtTDl4OS9hWDMvbVBE?=
+ =?utf-8?B?WUs5dFV0OHNkMjFHcVhROWlwNHlzRW1PQ0Rjd2Q3Skp2bVJqempjUjhZS1ps?=
+ =?utf-8?B?NVNNaGwvUm9NSWpvZFUyZjBpN1Bvb2lLcWVHMFVJQjcxVTRJTmJJZmU4TDZF?=
+ =?utf-8?B?aXp2L1NyYlFmZ1grZUUrZVQvTjZIdFJabDJxbGF2d1VTT3pYNjNxUHRKb3A0?=
+ =?utf-8?B?aFhxY2l5WExCcXBWaWYrUGcwSDdham1MVEc0TkcwdFVlVWVrdS9BTzdKakoy?=
+ =?utf-8?B?VnVHSlpXSVp5ekRxZzcrV1FzRGpaQW5DK3JDdTB5ODQ2cWFMYnErVWZEdkgw?=
+ =?utf-8?B?c1BQNW5ySjhNWm5nMUZIK2lWNUh4UW1jRjFYSjg3Z3hETlJ4cGZ5TUltK0k0?=
+ =?utf-8?B?cGxVdUxGM1lGNU80NHQvbk1mNmVzcm1jMmVOMUVnLyt3NU12TzBzRWdWWlE1?=
+ =?utf-8?B?VzJJRmR3WW1sQWJwVTlTbXFBNGFja0pNKytoNGN3bUpOaU9BMWhsN3dmU0tr?=
+ =?utf-8?B?MmdsbThjWi9oK2Znc25qZThGS3NETDJ1dXVpTkQ0TzdRa003SjFFQmlnRGFm?=
+ =?utf-8?B?Vm1Dc3MyWlJicWJ5dkNRYzByTDNmRm9aaGtkbndUZlhybDVaWkw4OVNlR1Fy?=
+ =?utf-8?B?SEdibmdWaU5sdzFGV1RjTU9UZDIxQmVmZ3JjRG10Z1RYVlVmdzY2cU1ZK3JT?=
+ =?utf-8?B?K2pIVnRkQUdvYWxkR3pZWmVjWWZhYS9oNkF2SFVNZ01QeHVFVGhKUis4ZVNq?=
+ =?utf-8?B?WWNrNXVxSzJNOE5VQU9iN0p3K1h2RW01OXdaK1ZZQ3VDRWFweW0wdW1GbXVy?=
+ =?utf-8?B?dTJ2UHVBVlRKc0lPS2R2WXNkajNjT3dha0VEMFFOL1NKaDF6akNzRE1NUzNG?=
+ =?utf-8?B?SXlVR0JlWVVESDJKWTFVRkkwNGY2VkNZUHFQSlFQcU9BdmVGanhtV2NtUXd2?=
+ =?utf-8?B?MHd0b2pxZUZiemtRazZxcmF5R3U3b1g3Y2NWSWJQRDFSekx6eHBtK2JpcUln?=
+ =?utf-8?B?dDB3Z2dSMDl4UStkaXlMMnpjTU9BN0UzYnIwVGxXZzNrNlBmSXJTYXBrd1pr?=
+ =?utf-8?B?ZDdDRjNJYjg2bktxdmIwKzYvQ2tYdTZzc1NTVTZmN0dMUjFpcFNxSXBiU3J5?=
+ =?utf-8?B?Ri9NVXhwbytvek5vRHhlaVRrWGFWYzNPZUZUemJFdlBxTEYwcTJCbnMvL1ZY?=
+ =?utf-8?B?RkxXYVJEQ2U0Wm9mbFp3VWtCNUk1SlFqbkcrc0tXeFg5NFNzbDRlS1Z6Z2FS?=
+ =?utf-8?B?THFpb3l0QVJ2S2owbXIrZ2RpdWlXcXlaS0FCaER6UkRWUFk0WGNKdVlxelQy?=
+ =?utf-8?B?U3ZtZkg2YmVNZVdpN2c3VS9NYi93RnNXRkc0N1A4dHFmSmFBZ3E2ais1cG1E?=
+ =?utf-8?B?SGZVTFlZb1JyenNRK01qVFdRUUVTcmZDcmRDa0JhYVkrdkt5UEFWZXV0MEJY?=
+ =?utf-8?B?THlRRmd4azg5TTQxeGpNWFhQWVdUd05Za0MrUnU3Z2xDYlE2MS9ZVlBTMnF3?=
+ =?utf-8?B?NlNUK3loZ1JucXh1N3pkOEc4Sk5SU21rZXZYc1RKZ1d3a1QzQkFXTjhwOGVm?=
+ =?utf-8?B?eFZFbmpBdDdhYS8yNmlVUmlyWFlGZ2xidUtoSDFSRFJ1ZUlickFreENWQTkw?=
+ =?utf-8?Q?xMkslLTWyAzGDnOdrK7H6tQZK?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b923038-3184-4cc2-ddd8-08dd74d38a69
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2025 06:23:26.8583
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Xo63ZFiqOXthwU28Y3nS3EtooXHQdhNT9iRkCfuuibziIF076eO1XbNHk+3cNoNUlKfCqpSNFMoWDtiIClBeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6720
 
-On Sun, 06. Apr 07:04, Masahiro Yamada wrote:
-> Hello Linus,
-> 
-> Please pull Kbuild updates for v6.15-rc1.
-> 
-> You will get a merge conflict in rust/Makefile.
-> You can find the resolution in linux-next.
-> 
-> Thank you
-> 
-> 
-> 
-> The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
-> 
->   Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-> tags/kbuild-v6.15
-> 
-> for you to fetch changes up to a7c699d090a1f3795c3271c2b399230e182db06e:
-> 
->   kbuild: rpm-pkg: build a debuginfo RPM (2025-04-06 06:22:01 +0900)
-> 
-> ----------------------------------------------------------------
-> Kbuild updates for v6.15
-> 
->  - Improve performance in gendwarfksyms
-> 
->  - Remove deprecated EXTRA_*FLAGS and KBUILD_ENABLE_EXTRA_GCC_CHECKS
-> 
->  - Support CONFIG_HEADERS_INSTALL for ARCH=um
-> 
->  - Use more relative paths to sources files for better reproducibility
-> 
->  - Support the loong64 Debian architecture
-> 
->  - Add Kbuild bash completion
-> 
->  - Introduce intermediate vmlinux.unstripped for architectures that need
->    static relocations to be stripped from the final vmlinux
-> 
->  - Fix versioning in Debian packages for -rc releases
-> 
->  - Treat missing MODULE_DESCRIPTION() as an error
-> 
->  - Convert Nios2 Makefiles to use the generic rule for built-in DTB
-> 
->  - Add debuginfo support to the RPM package
-> 
-> ----------------------------------------------------------------
-> Alexandru Gagniuc (1):
->       kbuild: deb-pkg: don't set KBUILD_BUILD_VERSION unconditionally
-> 
-> Ard Biesheuvel (4):
->       kbuild: link-vmlinux.sh: Make output file name configurable
->       kbuild: Introduce Kconfig symbol for linking vmlinux with relocations
->       kbuild: Create intermediate vmlinux build with relocations preserved
->       x86: Get rid of Makefile.postlink
-> 
-> Daniel Gomez (1):
->       kconfig: merge_config: use an empty file as initfile
-> 
-> Jeff Johnson (1):
->       modpost: require a MODULE_DESCRIPTION()
-> 
-> Kefan Liu (1):
->       Documentation/kbuild: Fix indentation in modules.rst example
-> 
-> Kris Van Hees (1):
->       kbuild: exclude .rodata.(cst|str)* when building ranges
-> 
-> Krzysztof Kozlowski (1):
->       docs: kconfig: Mention IS_REACHABLE as way for optional dependency
-> 
-> Masahiro Yamada (17):
->       kbuild: remove EXTRA_*FLAGS support
->       gen_compile_commands.py: remove code for '\#' replacement
->       genksyms: factor out APP for the ST_NORMAL state
->       kconfig: do not clear SYMBOL_VALID when reading include/config/auto.conf
->       kconfig: remove unnecessary cast in sym_get_string()
->       modpost: introduce get_basename() helper
->       modpost: use strstarts() to clean up parse_source_files()
->       kbuild: move -fzero-init-padding-bits=all to the top-level Makefile
->       kbuild: remove KBUILD_ENABLE_EXTRA_GCC_CHECKS support
->       kbuild: add Kbuild bash completion
->       Revert "kheaders: Ignore silly-rename files"
->       kbuild: do not generate .tmp_vmlinux*.map when CONFIG_VMLINUX_MAP=y
->       kbuild: deb-pkg: fix versioning for -rc releases
->       kbuild: deb-pkg: remove "version" variable in mkdebian
->       kbuild: deb-pkg: add comment about future removal of KDEB_COMPRESS
->       kbuild: pacman-pkg: hardcode module installation path
->       nios2: migrate to the generic rule for built-in DTB
-> 
-> Miguel Ojeda (2):
->       kbuild: rust: add rustc-min-version support function
->       rust: kbuild: skip `--remap-path-prefix` for `rustdoc`
-> 
-> Sami Tolvanen (1):
->       gendwarfksyms: Add a separate pass to resolve FQNs
-> 
-> Seyediman Seyedarab (1):
->       kbuild: fix argument parsing in scripts/config
-> 
-> Thomas Wei�schuh (4):
->       kbuild: implement CONFIG_HEADERS_INSTALL for Usermode Linux
->       kbuild, rust: use -fremap-path-prefix to make paths relative
->       x86: drop unnecessary prefix map configuration
->       kbuild: make all file references relative to source root
-> 
-> Uday Shankar (2):
->       scripts: make python shebangs specific about desired version
->       kbuild: rpm-pkg: build a debuginfo RPM
-> 
-> WangYuli (1):
->       kbuild: deb-pkg: add debarch for ARCH=loongarch64
-> 
-> Xi Ruoyao (1):
->       kbuild: add dependency from vmlinux to sorttable
-> 
-> Xin Li (Intel) (1):
->       kbuild: Add a help message for "headers"
-> 
->  .gitignore                                   |   1 +
->  Documentation/dev-tools/checkpatch.rst       |  18 --
->  Documentation/kbuild/bash-completion.rst     |  65 ++++
->  Documentation/kbuild/index.rst               |   2 +
->  Documentation/kbuild/kconfig-language.rst    |  29 +-
->  Documentation/kbuild/makefiles.rst           |  17 +-
->  Documentation/kbuild/modules.rst             |   2 +-
->  Documentation/kbuild/reproducible-builds.rst |  17 --
->  MAINTAINERS                                  |   1 +
->  Makefile                                     |  23 +-
->  arch/Kconfig                                 |   7 +
->  arch/arm64/Makefile                          |   2 +-
->  arch/mips/Kconfig                            |   1 +
->  arch/mips/Makefile                           |   4 -
->  arch/mips/Makefile.postlink                  |   2 +-
->  arch/nios2/Kbuild                            |   2 +-
->  arch/nios2/boot/dts/Makefile                 |   4 +-
->  arch/nios2/kernel/prom.c                     |   2 +-
->  arch/nios2/platform/Kconfig.platform         |  11 +-
->  arch/riscv/Kconfig                           |   1 +
->  arch/riscv/Makefile                          |   2 +-
->  arch/riscv/Makefile.postlink                 |  11 +-
->  arch/riscv/boot/Makefile                     |   5 +-
->  arch/s390/Kconfig                            |   1 +
->  arch/s390/Makefile                           |   2 +-
->  arch/s390/Makefile.postlink                  |   4 +-
->  arch/x86/Kconfig                             |   1 +
->  arch/x86/Makefile                            |   6 -
->  arch/x86/Makefile.postlink                   |  40 ---
->  arch/x86/boot/Makefile                       |   1 -
->  arch/x86/boot/compressed/Makefile            |  10 +-
->  kernel/gen_kheaders.sh                       |   1 -
->  lib/Kconfig.debug                            |   7 +-
->  rust/Makefile                                |   8 +-
->  scripts/Makefile.build                       |   4 -
->  scripts/Makefile.compiler                    |   4 +
->  scripts/Makefile.extrawarn                   |   3 -
->  scripts/Makefile.lib                         |   8 -
->  scripts/Makefile.vmlinux                     |  34 ++-
->  scripts/bash-completion/make                 | 451 ++++++++++++++++++++++++++++
->  scripts/checkpatch.pl                        |  14 -
->  scripts/clang-tools/gen_compile_commands.py  |   8 +-
->  scripts/config                               |  26 +-
->  scripts/gendwarfksyms/die.c                  |   2 +-
->  scripts/gendwarfksyms/dwarf.c                | 154 +++++-----
->  scripts/gendwarfksyms/gendwarfksyms.h        |   2 +
->  scripts/gendwarfksyms/types.c                |   2 +-
->  scripts/generate_builtin_ranges.awk          |   5 +
->  scripts/genksyms/lex.l                       |   6 +-
->  scripts/kconfig/confdata.c                   |  19 +-
->  scripts/kconfig/merge_config.sh              |   4 +-
->  scripts/kconfig/symbol.c                     |   2 +-
->  scripts/link-vmlinux.sh                      |  24 +-
->  scripts/mod/modpost.c                        |  45 ++-
->  scripts/mod/modpost.h                        |   1 +
->  scripts/mod/sumversion.c                     |  17 +-
->  scripts/package/PKGBUILD                     |   6 +-
->  scripts/package/debian/rules                 |  10 +-
->  scripts/package/kernel.spec                  |  46 ++-
->  scripts/package/mkdebian                     |  23 +-
->  scripts/package/mkspec                       |  10 +
->  scripts/show_delta                           |   2 +-
->  scripts/tracing/draw_functrace.py            |   2 +-
->  63 files changed, 892 insertions(+), 352 deletions(-)
->  create mode 100644 Documentation/kbuild/bash-completion.rst
->  delete mode 100644 arch/x86/Makefile.postlink
->  create mode 100644 scripts/bash-completion/make
-> 
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
-Hi together, 
+On 4/3/2025 4:57 PM, David Woodhouse wrote:
+> On Thu, 2025-04-03 at 16:34 +0800, Zhu Lingshan wrote:
+>> On 4/3/2025 4:22 PM, David Woodhouse wrote:
+>>> On Thu, 2025-04-03 at 04:13 -0400, Michael S. Tsirkin wrote:
+>>>> On Thu, Apr 03, 2025 at 08:54:45AM +0100, David Woodhouse wrote:
+>>>>> On Thu, 2025-04-03 at 03:34 -0400, Michael S. Tsirkin wrote:
+>>>>>> Indeed I personally do not exactly get why implement a virtual system
+>>>>>> without an IOMMU when virtio-iommu is available.
+>>>>>>
+>>>>>> I have a feeling it's about lack of windows drivers for virtio-iommu
+>>>>>> at this point.
+>>>>> And a pKVM (etc.) implementation of virtio-iommu which would allow the
+>>>>> *trusted* part of the hypervisor to know which guest memory should be
+>>>>> shared with the VMM implementing the virtio device models?
+>>>> Is there a blocker here?
+>>> Only the amount of complexity in what should be a minimal Trusted
+>>> Compute Base. (And ideally subject to formal methods of proving its
+>>> correctness too.)
+>>>
+>>> And frankly, if we were going to accept a virtio-iommu in the TCB why
+>>> not just implement enough virtqueue knowledge to build something where
+>>> the trusted part just snoops on the *actual* e.g. virtio-net device to
+>>> know which buffers the VMM was *invited* to access, and facilitate
+>>> that?
+>> you trust CPU  and its IOMMU, and the virtio-iommu is provided by the hypervisor,
+>> emulated by the CPU. If you don't trust virtio-iommu, then you should not trust
+>> the bounce buffer, because it is unencrypted, more like a security leak.
+>>
+>> Actually everything is suspicious even the CPU, but you have to trust a TCB and
+>> try to minimize the TCB. I remember there is an attestation mechanism to help
+>> examine the infrastructure.  We need a balance and a tradeoff.
+> In the pKVM model, we have a minimal trusted part of the hypervisor,
+> which some are calling a "lowvisor", which enforces the property that
+> even the rest of Linux/KVM and the VMM are not able to access arbitrary
+> guest memory.
+>
+> For true PCI passthrough devices, hardware has a two-stage IOMMU which
+> allows the guest to control which parts of its memory are accessible by
+> the devices.
+>
+> The problem is those device models which are emulated in the VMM,
+> because the VMM no longer has blanket access to the guest's memory.
+>
+> The simplest answer is just for the device models presented by the VMM
+> to *not* do DMA access to guest system memory. Stick a bounce-buffer on
+> the device itself, and do I/O through that.
+>
+> Yes, as you say, we have to trust the CPU and its IOMMU. And the
+> microcode and low-level firmware, etc.
+>
+> But we do *not* trust most of Linux/KVM and the VMM. We only trust up
+> to the pKVM "lowvisor" level. So if there is going to be a virtio-
+> iommu, that's where it would have to be implemented. Otherwise, the VMM
+> is just saying to the lowvisor, "please grant me access to <this> guest
+> page because...erm... I said so". Which is not quite how the trust
+> model is supposed to work.
+>
+> As noted in the original cover letter to this series, there are other
+> options too. We could implement enlightenments in the guest to
+> share/unshare pages, and corresponding dma_ops which simply invoke
+> those hypercalls. That's a bit less complexity in the TCB, but does end
+> up with a set of guest enlightenments which need to be supported in the
+> core of every operating system.
+>
+> Compared with the option of a simple device driver for a device which
+> conceptually doesn't do DMA at all.
+Hello David,
 
-i got the following error after this pull request.
+I see you want to limit the device DMA range for security reasons,
+a possible solution is not to do DMA at all, and provide a bounce
+buffer from the device side. However, such a bounce buffer resides on the
+device is unencrypted, means itself is insecure.
 
- MODPOST Module.symvers
-ERROR: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
-make[3]: *** [/home/damian/kernel/linux/scripts/Makefile.modpost:147: Module.symvers] Error 1
-make[2]: *** [/home/damian/kernel/linux/Makefile:1956: modpost] Error 2
-make[1]: *** [/home/damian/kernel/linux/Makefile:248: __sub-make] Error 2
-make[1]: Leaving directory '/home/damian/kernel/build'
-make: *** [Makefile:248: __sub-make] Error 2
+I have a rough proposal, first here are some assumptions:
+1) we trust the guest because it belongs to the tenant, and we can not change any guest drivers, only the tenants upgrade guest kernel.
+2) we only trust a minimal TCB, even don't trust most of the hypervisor code.
+3) an emulated device is a part of the hypervisor.
+4) even when the host / hypervisor compromised, we still want to secure the guest data.
+5) virtio devices and virtio driver exchange data through the virtqueues, means virtio devices initiate DMA against queue buffers.
 
--- 
-VG
-Damian Tometzki
+So here is a draft design:
+1) queue buffer encryption, per queue or per device.
+2) this feature is controlled by a feature bit.
+3) driver initializes(writing to a device side specific registers / fields ) an encryption algorithm and keys before DRIVER_OK, can be null, means unencrypted.
+The device side registers are WRITE ONLY, means can be overwritten in the worst case, but can not be hacked.
+4) Write side(the producer, an example is the driver fills data in available queue buffers) encrypts, and the read side(the consumer) deciphers.
+5) provide multiple encryption algorithm for different type of workloads and resource expenditure.
+
+The pros:
+1) a natural design, proven to work for many years.
+2) even when host / hypervisor compromised, the DMA buffers are still encrypted and secure.
+3) don't need to change any virtio-iommu implementation
+4) compatible and actually orthogonal to CoCo, no conflictions.
+5) this solution works for both emulated and real pass-through devices.
+6）unlike TDX-IO, this is an implementation in virtio devices, so this design does not conflict with any existing use cases, supports live migration.
+
+The cons:
+1) need to change driver, but new features always need new implementations in the driver code.
+2) consume more CPU cycles, but bounce buffers also need to cost more CPU resource, and CoCo attestation costs more CPU cycles.
+
+So, does this low hanging fruit sounds good to you? This is just my brainstorming and a rough proposal.
+Please let me know your thoughts.
+
+Thanks
+Zhu Lingshan
+     
+>
+>
+
