@@ -1,99 +1,82 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from ombertech.com (ombertech.com [74.48.158.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26AEF9EC
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 06:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657F51361
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 06:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.48.158.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743920729; cv=none; b=pEZ7sg6CE4/ylsXiSxzXv40k6rnc0fSzEWLL//KMKmWt4fMIdPjQjbnCKuZbbFJ9kxd4Pwtxo3RGM7yNy1KH4tfYHlsJ+q4zTj+i9f5lsPcFpqxwQ64Bh165HmIxkShf8gjXyHBLEz8SVpYAK4wDy+whx9Mp9pF90x4zhBHZUSA=
+	t=1743921956; cv=none; b=VRzsQr0UXFfa2MZ0L/5sB8TRaowaaPUG4WTAcpYgKA+p5kaxcV0jupokuSezWuYASYA0O1Y5sjUN3D09+qULp3Az+WrKLBVC3bFabV8nSnZgmwjmaQ77GG2qBUpbJCyvezAAA0moJbIm9HRnjNmAYWX7j9RDhlWsZeunCIM0czI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743920729; c=relaxed/simple;
-	bh=k5TN1QfbnuKAa7k5GjF7mtqWFNBT+NG7z8QAuY++6mM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=p/W4FIhHT9Euk9cCp3+7tQtvJXr5AE6HqFe90moRB/zZbd+LBivZq8uhDzETj49OZ5cCgqp+cq4o2ngnq0Wu5KN/d4lEBUbX7LYOB0Qgss3kBc5j/wqSthRaTSLqiyul2wAk9e58dp2d7oStG2yOqfp065PRLDbcHt4/h7DodLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=m0WxbH3L; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1743921956; c=relaxed/simple;
+	bh=/lMhX1Zvl7sFMi25eUiNBDFsOaCCotlUKk7SgyHPKp4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=P5ZEF67XNJKr4V/Ci6ppDE8CjXVL6Zp/janWb9adIpdunFP+tKUhf0xIEwxMB96qeZdbCWyIAc7qOH3A5ImYQt9S2vzNq7zu7Wz/y8UOtdwGs+KfNv0XWFSG+INEdSJjlWVKrxfJdWmP6tlc7+x4ltUhrkP2FmOycpd47X604Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com; spf=pass smtp.mailfrom=ombertech.com; dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b=f1jyzhxN; arc=none smtp.client-ip=74.48.158.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ombertech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="m0WxbH3L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1743920413;
-	bh=2qcf4GYZAvRhQYw5kTpGJMsX1msIyfD84M8VRVxJieQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m0WxbH3LMc8sm3YSySHIFOm08GmCXd4XlqXVnQogNjC04iyFVp0qPt3x25rFLUhqD
-	 05VrUA4AAx1wYc4EEEu5X158iwB17vD7XyzJM8oKNV25gvOhGObeDeZBcOGCsDEx7X
-	 RRq92q+yqvKMWwdTWOViqFPC5ENQWsjIM/GZL2w8=
-Received: from localhost.localdomain ([116.148.99.229])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id 50B15ED2; Sun, 06 Apr 2025 14:20:11 +0800
-X-QQ-mid: xmsmtpt1743920411tiiabvk4c
-Message-ID: <tencent_474AC55ADEE443D037337A9ED09422D8C408@qq.com>
-X-QQ-XMAILINFO: N9ponxXGLTJpktUrAobHCnlgpz7wC8z4PwrlKldDpds2YgJ5qWVld6sLwlKR32
-	 UH+UF6W4W5XB4/a95tAZWeeQCR1PLOk7Dv7/OBfOC6bGpgNn/3L5M8/dViaWoCAFzpEuXdqeOMsi
-	 EjTJBAY6xVI3Gxs/iDDDhxJOsYUobLWZJaIRKbnJUzDhrjQ5kA0/WZXNd6Oj5gVmHLsNTpQK/qZv
-	 zAbdYuQCLvSIMFq/xugZtpu1MDIw2MiyRHbesboQktk5skgcbOQ0FZqAG+9rbPlXgw07mh6AbpwC
-	 Y5vFogBPyWELMTI0xjYqf/2/VQ+rAfql3g70Hx8K3i6AwYMjL1FqffYiJc4u8iK8orMP1btoDmZC
-	 PUrFuQ2OjZtm39HhnVwAd7waNIzZOciL45EZzcuCPQ2ukylgLI5Tt5BbLp3niJzc9Eepph+vOOi2
-	 G4aosBjBzXab63wF6hhsPWNlU0oxsRO/9gdXFsPA2SgoJXYCs2xHzwsd8J9VzAzG72xduOc/Dg0p
-	 qto9lERE8BoI4GxLt1RPugBbbCW09nNXKDmnbQFMrSzOR+ZYHL352n9jGU97utIPJqTkr/84GHFB
-	 Agf/JiARL+srnX+lFWo4LJiVYEo3FzuByU9gg0xOd0OytnedQfZZ1D3mHs/kiAEa2foQ6bywecps
-	 6TwT1FTkAYaq35WlIRLZTuh1a+hzyyAXscmcaRBLvTb6HKean3XUdTB2Hnk4K3z/enjAba7CPpam
-	 D5oQdoW4aGzPxnO7aOMoBHhUWfa1ZPoAiGbf4+94zFWkWsyeUna/1IyOhobnSrK1JYukSK1WvNzY
-	 T1W9Rlyz83f3oETOMn5kz67gxJUgW+k5nPvsDGHtg1g+DlIRCKGxADx98adt9SrVoUQaWJJQohZ/
-	 YcXLaoMjd0olVSX1ScPKZdOYfPOoyO/QCuRr6PJfOpki1PEi5mmqAyRKDrMuiNU9gqxqr3WJnKjN
-	 00/4brab3WeEzLUC0H7FpmqYnPSiDLkAYkfQJsF+PovRosFBROX0XinPR930RQfleCCQSIiqI=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: zhoumin <teczm@foxmail.com>
-To: akpm@linux-foundation.org
-Cc: dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org,
-	teczm@foxmail.com,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] kobject_uevent: add uevent_helper exist check
-Date: Sun,  6 Apr 2025 14:19:15 +0800
-X-OQ-MSGID: <20250406061915.1464984-1-teczm@foxmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250405155207.aac347bcdc56e43cb0cae3cb@linux-foundation.org>
-References: <20250405155207.aac347bcdc56e43cb0cae3cb@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b="f1jyzhxN"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ombertech.com; s=2022;
+	t=1743921663; bh=/lMhX1Zvl7sFMi25eUiNBDFsOaCCotlUKk7SgyHPKp4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f1jyzhxNLyfffCQqMHcIETi/GF1JyD3/drBQXggZ2u5kVEP3snp0360IqOvMcFfdq
+	 6A9iC3AyrwK1CIJ9nzbN0/NxO3bu4W1h1/zJ/1nNUADGybM3JnFxyTE+azLyMDmWpY
+	 w5uTbrirEl6Zx7cqL4ZBibneMt72hDAw/vAeEg8GC9EAVNF6ezh8gUFCUE1PI3Cvul
+	 3fAuVQf7P0pv821Lo9pkzOIrZrBVTgpY+D/hm7jHwryupzr3ogs56xBYeXuaO9jklr
+	 9X0vh54I0Zg36NoHD7txQmTJCYbh4BkAONyqPRQgVp4SFheBTX7/mEyI+JIrEGOl8e
+	 bb3Aa+i4fAnwg==
+Received: from 192.168.1.100 (unknown [1.145.161.245])
+	by ombertech.com (Postfix) with ESMTPSA id D0E865CBF2;
+	Sun,  6 Apr 2025 06:41:00 +0000 (UTC)
+Date: Sun, 6 Apr 2025 17:46:33 +1000
+From: Kevin Koster <lkml@ombertech.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+Message-Id: <20250406174633.2c581923c145687476191753@ombertech.com>
+In-Reply-To: <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+	<20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew,
+On Sun, 6 Apr 2025 16:40:49 +1000
+Kevin Koster <lkml@ombertech.com> wrote:
+> On Sat, 5 Apr 2025 11:32:26 +0200
+> Borislav Petkov <bp@alien8.de> wrote:
+> > On Sat, Apr 05, 2025 at 01:03:06PM +1100, Kevin Koster wrote:
+> > > On Sat, 19 Oct 2024 08:29:04 +0200
+> > > Oerg866 <oerg866@googlemail.com> wrote:
+> > > > Starting with v6.7-rc1, the kernel was no longer able to boot on
+> > > > early i486-class CPUs.
+> > > 
+> > > Thanks for this patch! It solves my problem with kernel 6.12.11
+> > > rebooting at start-up on 486 CPUs, which had me puzzled. (tested
+> > > on AM486DX2-66 and CX486DX4-100)
+> > > 
+> > > Is there a reason why the patch wasn't accepted?
+> > 
+> > Yes, too many patches, too little time. :-(
+> > 
+> > Anyway, does the one below - only build-tested - work for both y'all
+> > too?
+> 
+> On my AM486DX2-66 it gets past the immediate reboot problem but gets
+> an Oops and kernel panic here:
 
-Thank you for your feedback.
-
-> Is there any measurable reduction in boot time?
-
-This depends on the number of uevent and the performance of the device. 
-In fact, I found this issue during a project to optomize boot time,
-and on my embedded device, it can be optimized by at least 2 seconds.
-
-> Cached in a static variable.  So if a uevent helper later becomes
-> available, we won't know that and a reboot will be needed?
-
-The static variable is used to avoid repeatedly checking for uevent_helper 
-after the rootfs is mounted and uevent_helper is detected.
-
-As for the uevent before the rootfs is mounted, that is another issue.
-Whether I submit this patch or not, system always miss these uevent, because
-queue is not used to handle this currently. In fact, I have also noticed
-this problem, but based on experience, this seems to cause no issue.
-
-> I wonder if this is the official/preferred way of detecting the
-presence of a file.
-
-For only checking file existence, kern_path is a sufficiently simple
-approach, you can find it in many kernel lookup functions.
-
-Let me know if you have further suggestions.
-
-Best regards,  
-zhoumin
-
+But if I move "cpuid_1_eax = native_cpuid_eax(1);" to after the
+microcode_loader_disabled() check in amd.c, like in the first patch, it
+boots fine!
