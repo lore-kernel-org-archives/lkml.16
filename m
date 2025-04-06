@@ -1,116 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B001D42A83
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 12:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F8819EED3;
+	Sun,  6 Apr 2025 12:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743943135; cv=none; b=ehqYg1vBe6oTRSDVcIvEYgswLC6VEm5f+kWhTOzbPUDtJPD8XcRmKj2mhNfeh3hCE5SSlpGXliVAMuyY1lZFIOw6mXxBskBClGvanJnRQdCl+4pFCsc95KUGutWBsJLfb+GD3ZUsiHExD30e/RgDD3YChzNrstA2QM/p/cnAo9g=
+	t=1743943583; cv=none; b=I8T2hZhAZs2xYtqH8h1wK+6+C55t3GQtZjerLmLHm6OPPJwE6PeSZvPu8jMrgQsRw5VaHntaqL+yL5zRIVlxE4JcZ1YX0VyhDJvNFI6C9DrLuQF9YfED5mux/3KmuKzIj1OkPUqpxodyNja9Zhme+m41JFqcSBAovF95Y7YktTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743943135; c=relaxed/simple;
-	bh=+2E+eVLYZOMNqHXv4RRjlCbqLiaqWjfxeKW9hsWQd7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G17ELQZ3sIV1JVoVMLAvghlRRPqcBPR65iEeShqoJR0zV7u6rvxKAGW2hawm0lBbytqZZ3gtciro6IWQC30KgDbC8slVQ7opYjxG1aH8Y6WqlvOhKWWknpSZU+nDfFcwRXkQZGx89LYamvZQMT+b5m6X9ycL2YPGGpYUAQ1soro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HkaNPmsF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743943583; c=relaxed/simple;
+	bh=gDRUi0NI8kQYwmKuZl0m+Ur9O2Fc5C+GFVFGTF5IwGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c1Pj2JJ9XuBBluNZB6eycoAIoQbk66/MFXwbLTP4VV5yKnt+r2MAdysaCF12DC76/7EXDpfnO2FkR9jOHkUz1yEnn45ijHx+TY0dNVOivBsuRzHNgeNbJEGrgFnjYraSPSEop1vuwoMmL3QFtebIKlpkuPsgEG5PheZy1r3iIvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7N0QPC8; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HkaNPmsF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743943133; x=1775479133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=+2E+eVLYZOMNqHXv4RRjlCbqLiaqWjfxeKW9hsWQd7Y=;
-  b=HkaNPmsFQlDhIfJE761WtlZiwcsBFSt8w8Hxe5WQexZNwX7s3Z8lU8CO
-   YgyZ3CR8ZE/Pzqck5oLFVLKljWdhiyGuCr/JHFFoCThaEfbZRtA6MwnA7
-   4Eyfugvs8VrY3xt894YhnAXEsjvRrYGcGRbLcqqN/NPlHbNsEv0ir1Ljp
-   XoOC6XF+gLeM8gC6V7HYargR/YFl/PbXeATi7jlHOFFSHS6AuDOVmVvdc
-   ITvl+A9zpE4TCkYYqV2Wvwmh7ci52M040hvuAnxnAxHUh/l5iutp7vA/5
-   CvIvf2xC0T870KVsxGk4qUP35fUM89XwnLLgfBRySQcsENrhWXrUC+M+M
-   g==;
-X-CSE-ConnectionGUID: stLaK1+ZQcGaM+2WzvAjsw==
-X-CSE-MsgGUID: MWgB77qqQEmpqraGsatNBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="56702671"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="56702671"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 05:38:53 -0700
-X-CSE-ConnectionGUID: /cgXgdIbSSGK6jDSKJ6EkA==
-X-CSE-MsgGUID: Ablh1bFsTk6b02xq5rRXEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="127686342"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 05:38:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1PGy-00000009kMh-2zom;
-	Sun, 06 Apr 2025 15:38:48 +0300
-Date: Sun, 6 Apr 2025 15:38:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v1 1/1] sched/fair: Mark some static const with
- __maybe_unused
-Message-ID: <Z_J12Fr-0wYQvEAV@smile.fi.intel.com>
-References: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
- <52d144d1-ffda-4b41-9ed5-2a4fcd4f08d7@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7N0QPC8"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac25520a289so599712166b.3;
+        Sun, 06 Apr 2025 05:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743943580; x=1744548380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ircvmU6AcvisynzACHzv5i+leKz+5HUrSfkvcOot0M=;
+        b=D7N0QPC8PPlL3wwltBnQBUAWIr57TvR9nnyHuFV4q5zWda63KXAi+mU1YMWSUgrlLO
+         eJyiN+2aeuYReKEwHoIANmGJ146KSwv2yHjiToRPqqgUiHoiDccPJPCTrznUc6ZyYGjq
+         ykdAr06WLoNPjx7yQ0P66bx3EOIbnUm0P9+rSkP9ltaYrxkdCSf8UUZVfMZWYY2Q6Rll
+         TvF6BvNRrJff1XB9idB24G5Gnx7/I/OJ6IzPCZYJ1R+/G5bML6yq6zMLCFSqRiW+BXZH
+         i3DP8vExjM9VdUJcklXjXGk0LQH584w4NgadHPNAh5gPBbAKdOgwmDse4M+JfMt/n77L
+         /IgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743943580; x=1744548380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ircvmU6AcvisynzACHzv5i+leKz+5HUrSfkvcOot0M=;
+        b=McDM13t/658+xzFqkuJaKVagV6X3FKdIot1A41sdO70r/Lak2gZPINJYh7FHgub+JN
+         OFNo2kPalHlnvUha/LAzdd+WorafdvyPMKAYGk6XApd8bnIDsGH35DOkq4g1MoCw9k2t
+         PZyP+7zdOWMnMXifDuJjchvWi1Nddu5DDoYqOmxoPudciQgTXwQGSQshMJDFq9GNOxo/
+         NqBc8xGg+NDyhDRTIOzx6Czh/F3C1Qn38vl/9joeW6SW1sifZ7gabk4PbP4XPL/Vtors
+         s5tByUkE0Is4bT7kfVvU7JfVDEOGhidz1Nac7jbTWxFp5cfBrOpH2lveMEfLlztIBLQY
+         SgKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkYoQWwJGUfwnuP8ntNV28AOh5W3cfkL1syG1j8kfty5FqTVgzMX3fmG/rl4uNrHdP6fqAwfyj1Uo1QKM=@vger.kernel.org, AJvYcCWIW/qcwXh0fPp+r/2OfPciXnlpGy0wApy9PhfwFrDQw7OgJ/P4XPogN6uPUuSgQ+KsuYZNMtMw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl9ps9ShXNQjD0zl7o1qFL+aT2MR8FU+RnyEABVgJA14xIndjF
+	cMDy0IMdYt/zZFeQJD58WDo151J7Sw8OIPZ8zsGNhsWUpet+XvIuVqwIMLxK+VWKm+nZdCKdlbk
+	TcqLCPwac05LmWnJcVDW4YCWe3IsaIBL9wmE7XSix
+X-Gm-Gg: ASbGncu6ENuh6jd40/gwZD1wrYroFM7mTDcLHOOtxHRaYd9q/HppNURgwC7u5Lnuzll
+	Rrua67GdrfraV8DNNfLqJDPJU0HbSG6XZHa4F1cfLfYCqEKQwBgziB7shAt66Hr6dpKR2FGqSXg
+	VX5+b2jNqhCrVVhOgtDYe0ujkl
+X-Google-Smtp-Source: AGHT+IGitcGraUpEzeGPayo9yp88AFDu4vcwiHo9XtmluhHdkA/424R1XEhpG0A0l6iLG8NPlldSEUx5kp3+sw1SFDQ=
+X-Received: by 2002:a17:907:72c3:b0:ac7:9acf:4ef with SMTP id
+ a640c23a62f3a-ac7d6e9fe06mr730495366b.56.1743943579980; Sun, 06 Apr 2025
+ 05:46:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <52d144d1-ffda-4b41-9ed5-2a4fcd4f08d7@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250402092500.514305-1-chenhuacai@loongson.cn>
+ <87jz81uty3.ffs@tglx> <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
+ <87bjt9wq3b.ffs@tglx>
+In-Reply-To: <87bjt9wq3b.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sun, 6 Apr 2025 20:46:12 +0800
+X-Gm-Features: ATxdqUHAzOTUEtG6B6EooHmEZYykWnMr9U5FR11OuJop70kp4nyf68vPoNg1nrY
+Message-ID: <CAAhV-H6r_iiKauPB=7eWhyTetvsTvxt5O9HtmmKb72y62yvXnA@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set IRQ_TYPE_EDGE_BOTH
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 05, 2025 at 11:16:19AM +0200, Arnd Bergmann wrote:
-> On Fri, Apr 4, 2025, at 18:52, Andy Shevchenko wrote:
-> > GCC considers that some static const defined in the lockdep_internals.h
-> > are unused, which prevents `make W=1` and CONFIG_WERROR=y builds:
-> >
-> > kernel/locking/lockdep_internals.h:69:28: error: 
-> > ‘LOCKF_USED_IN_IRQ_READ’ defined but not used 
-> > [-Werror=unused-const-variable=]
-> >    69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =
-> >       |                            ^~~~~~~~~~~~~~~~~~~~~~
-> > kernel/locking/lockdep_internals.h:63:28: error: 
-> > ‘LOCKF_ENABLED_IRQ_READ’ defined but not used 
-> > [-Werror=unused-const-variable=]
-> >    63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =
-> >       |                            ^~~~~~~~~~~~~~~~~~~~~~
-> > kernel/locking/lockdep_internals.h:57:28: error: ‘LOCKF_USED_IN_IRQ’ 
-> > defined but not used [-Werror=unused-const-variable=]
-> >    57 | static const unsigned long LOCKF_USED_IN_IRQ =
-> >       |                            ^~~~~~~~~~~~~~~~~
-> > kernel/locking/lockdep_internals.h:51:28: error: ‘LOCKF_ENABLED_IRQ’ 
-> > defined but not used [-Werror=unused-const-variable=]
-> >    51 | static const unsigned long LOCKF_ENABLED_IRQ =
-> >       |                            ^~~~~~~~~~~~~~~~~
-> >
-> > Fix this by marking them with __maybe_unused.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I posted as different patch for this a while ago:
-> 
-> https://lore.kernel.org/lkml/20250225200830.4031742-1-arnd@kernel.org/
-> 
-> Either of the two should be fine here, though I still like my
-> version a bit better.
+On Sun, Apr 6, 2025 at 6:18=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> On Sun, Apr 06 2025 at 17:46, Huacai Chen wrote:
+> > On Thu, Apr 3, 2025 at 11:48=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >> But it won't trigger on both. So no, you cannot claim that this fixes
+> >> anything.
+> > Yes, it won't trigger on both (not perfect), but it allows drivers
+> > that request "both" work (better than fail to request), and there are
+>
+> By some definition of 'work'. There is probably a good technical reason
+> why those drivers expect EDGE_BOTH to work correctly and otherwise fail
+> to load.
+The real problem we encounter is the MMC driver. In
+drivers/mmc/core/slot-gpio.c there is
+devm_request_threaded_irq(host->parent, irq,
+                        NULL, ctx->cd_gpio_isr,
+                        IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+IRQF_ONESHOT,
+                        ctx->cd_label, host);
 
-I'm not a fan of __maybe_unused, I just didn't come up with better idea,
-you did. So, I also prefer your version. Can anybody apply that patch
-from Arnd, please?
+"IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING" is an alias of
+"IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING", and
+"IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING" is
+"IRQ_TYPE_EDGE_BOTH".
 
--- 
-With Best Regards,
-Andy Shevchenko
+Except MMC, "grep IRQ_TYPE_EDGE_BOTH drivers" can give some more examples.
 
+Huacai
 
+>
+> You completely fail to explain, why this hack actually 'works' and what
+> the implications are for such drivers.
+>
+> > other irqchip drivers that do similar things.
+>
+> Justifying bogosity with already existing bogosity is not a technical
+> argument.
+>
+> Thanks,
+>
+>         tglx
