@@ -1,125 +1,122 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA401C27;
-	Sun,  6 Apr 2025 11:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAE326289
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 11:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743939772; cv=none; b=Rq7ziq61fqlXoOH4NYLpt9kVZPS3QfIR1N95KnkR0rb18rX/STMLCSYy/J6pOr0SrtX+QeWnwzVkeqegC7IWCdD9ok439vhs2ANnUeZ8mrjMDU8yjb5vOa7JwdLSAsw6rAu127G/9djvhY2VMRUsa6rW9pDd9kZynpoyvnVHGZE=
+	t=1743940007; cv=none; b=CFJRdcgonanRbh4x+4p7Uv7GP/GaHTiFNPLBw00DfCjGemrskDGhzJZkeVhjhXMwt/cDlXrCBxqNx0ZTsi4EQVNHkBact19G22En7kkLsYY5vfWHRWGHWVtNxsws0fD8M04vFH7FEjmbA6OTC/UU2zxTl/geYvXQRzvwCFuGveo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743939772; c=relaxed/simple;
-	bh=obzEVyCvowXtHk1jUxYd1vnwIcYOWBlko+ODBM5lKc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H+PuTHcTd13XQe3JHIkszz/YEOqm09sL5MVZoCJd0JIqvp0puUmulWIn8aA+qqYGciheUno5bGiKjWjLlTOIrtgCABqWBKx+wOcTmJKlO3EvR30rDhAhRACvCWXbQhvoTTQi9GzdPSrlWA2YdCRk/8FAlZUsQua883dOyfZ+Tdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mk0fAykA; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743940007; c=relaxed/simple;
+	bh=qqe6Zi6MQG+sA1pxEyvmzL5igGv8DBuT289dblK3TGs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SLaNIUL0GPrC5MNKcwsQ4fRJpJGaMs4NGALPnrJt76q5y2FOlILbZLb9j5A5Wtxr/jlYMb9nc3+d6M4Cs/MH6mWFbI4pDn7k0wDI4qyt/tIDN8fOsfXPMzDFB97DIeT2EqgKGF5Gn5Pzd535PWuigCDAJBOWqyDnHd3LdtE7E0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OMxbjjzX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KtW31cbm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk0fAykA"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1027135a91.1;
-        Sun, 06 Apr 2025 04:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743939770; x=1744544570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2CQcHyKdo7NqukG4kbe23C6EitoDV0EvE3RGNL0StOg=;
-        b=Mk0fAykAw/tishi7MgzCznmPYVHq0zh4QJVKVLaNAAisiDw65NScD0YGDJIw2FGq1o
-         GFtDgbnd5fFOO9ASnpIO05ZtePR3RnnH6pFOJM4SX8QI1ZIljFQJIpW3gTC9ZzHmzuwo
-         0EyhXP4zqHeg+doXvZK9kMjpRe+XMlV5WsH7eniydDc2sqCaUHnh5GnxiyGcR+u3x5ex
-         cx0YV7t8jnnaxdQ6JhITP1pa8a0ETmu+3msPeBeaofDtJygjk8dumPkn+lzwl1ujA+qd
-         i6LEX/qi8guo1X2qGYr63QVFY0rgS/swsq+9gLXkeliNHqU8VjaKr16JfWnjulfDb1ms
-         addg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743939770; x=1744544570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2CQcHyKdo7NqukG4kbe23C6EitoDV0EvE3RGNL0StOg=;
-        b=oMVO4Iov2qYf2lS5AyaAD+5d1xBAGe659yEsOgMy98TsIsqNZeygFlKSR09LvtYM1V
-         xnokkFDF7gqCS0BSn5I+6wOHYnDD6hzG192DHIrZmGf66loabCkMO4KBRBxukaTQf3yQ
-         7bLOwxCtxWA5hHcLlDHlQK4n5AercbqkUSbZq3MkqOa3yUgXGorpMRmJuDRzjWWGKnL6
-         monnDkQQxDc4wZPkR2HWQ+xG52cdNOtRFlbUt+PkK3OvLABjoU+axtOUBV8uCFmKngBG
-         yFMHMddNsH+tak2sbrK6LqTooWbi7n3ABPz3M/mHIARorrkFQqpWWqQ8TUMBkAvOX9aC
-         3AKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQexS1mFW+5TGXH44tTwCPRwhy1cia4kSVaI168SFtrCNZgk4b2qjLfRUjkbpo6cfrQjVAtnruZlF3+tE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyTRX3gws/oIbgu/WNgnfDaagefIBuCJhQ/xNvjgDjGFRz7xFb
-	oZLtn9KKb+VYi2YvKPPwR2aqVPCblZ1g098XUCV7OTM/K//gCRVsgZTSZrFvX5VTmEChi9d0M4+
-	5Z5vS4Bg4wsbijreGgmAbVNRMQ9A=
-X-Gm-Gg: ASbGncttdDguUbvdkb3oW2OL33XTfjnwqznFxvCqjL+Cwwbh17u5s7q02dAt31OddEp
-	ENwVkISck8LZHj5vg7EBPE14CHeyOeYgHC/azugtFZnCND8I10gb16vcYHqm5KWWndVmO9BaHbm
-	RULg5Q5Dba+7la2n2Cz69Ss9rELg==
-X-Google-Smtp-Source: AGHT+IGbusvYvppjE3d+kCJR6enaryQVigrFFBAk1qzQdMM8bxxcfglN8lkQjYwuZxIZt1MxaP0O1xq7sRdthGXnR1E=
-X-Received: by 2002:a17:903:2f07:b0:223:397e:a55b with SMTP id
- d9443c01a7336-22a8a065747mr48250385ad.4.1743939770057; Sun, 06 Apr 2025
- 04:42:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OMxbjjzX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KtW31cbm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743940003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o7S/wiaEjaLl4Hv30YoGRRVs9Yys2GtJ8UB6Hqcas3A=;
+	b=OMxbjjzXJaPO9OxLKCD4wOvRFqdlejj0E38+HwaqPoXt9WGcUNCqGZzzdGOFnWcZl9EZy6
+	XHxpvj0nuOJjLkOcKjnqbw02/tCwwVQP6WSn7xWv/ikRPguNe/3j+Q5nFToA3Hbh9re2IJ
+	5j275DIwBW499HI1pxaaQ9cicCb27AuV28Ar8w5wuR+iFSl/c3kBNq7560We5G9Y+wC2Av
+	OtfvQAZkhPgdSX4daRRtx0VOqU9bBne3MBAckD0czcIzZHFbOERuIbr/lGI6oBafQ+VeZ1
+	1w6SE0ysqMyL+kIDi4Yr1HHFvBmIALYhP4ZNE0gtsyJ8jHeXIkKfkdTey5jffg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743940003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o7S/wiaEjaLl4Hv30YoGRRVs9Yys2GtJ8UB6Hqcas3A=;
+	b=KtW31cbmapYQlGQu+4GnEFrLBgVZ8wzictKTSdbYfeERFJIVr9X+A7V8aro9xpiX8AlCmj
+	AP6pYOXeSiX35jCg==
+To: I Hsin Cheng <richard120310@gmail.com>,
+ syzbot+d5e61dcfda08821a226d@syzkaller.appspotmail.com
+Cc: anna-maria@linutronix.de, frederic@kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, Alexander
+ Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
+ Vyukov <dvyukov@google.com> 
+Subject: Re: [RFC PATCH RESEND] timerqueue: Complete rb_node initialization
+ within timerqueue_init
+In-Reply-To: <20250405080533.519290-1-richard120310@gmail.com>
+References: <67e52451.050a0220.2f068f.0027.GAE@google.com>
+ <20250405080533.519290-1-richard120310@gmail.com>
+Date: Sun, 06 Apr 2025 13:46:43 +0200
+Message-ID: <878qodwlzw.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
- <CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com> <tencent_3DAE6B923FC67B543D90D970@qq.com>
-In-Reply-To: <tencent_3DAE6B923FC67B543D90D970@qq.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Apr 2025 13:42:38 +0200
-X-Gm-Features: ATxdqUESt_7N6TJlvXmHSe3qN_0X-vLxHhE7nI9ofDpu1e-RxfsBzSBjAPXH5EY
-Message-ID: <CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
-To: =?UTF-8?B?5bC554aZ5ZaG?= <xizheyin@smail.nju.edu.cn>
-Cc: rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Sun, Apr 6, 2025 at 1:13=E2=80=AFPM =E5=B0=B9=E7=86=99=E5=96=86 <xizheyi=
-n@smail.nju.edu.cn> wrote:
->
-> Thank you very much for the reminder, I will resend a new patch as reques=
-ted.
-> But it seems to me that this patch makes sense to a certain extent for th=
-e improvement of the raw links in the doc, which might make the document lo=
-ok better.
-> Do you think it's necessary to keep it, or do you have a better suggestio=
-n? :)
+On Sat, Apr 05 2025 at 16:05, I. Hsin Cheng wrote:
+> The children of "node" within "struct timerqueue_node" may be uninit
+> status after the initialization. Initialize them as NULL under
+> timerqueue_init to prevent the problem.
 
-(Please do not send HTML -- it will not reach the mailing list)
+Which problem?
 
-You're welcome!
+It's completely sufficient to use RB_INIT_NODE() on initialization.
 
-Personally, I think it depends on the URL and the context -- let me
-give clarify below.
+As you did not provide a link and no explanation, I had to waste some
+time to search though the syzbot site and looked at the actual issue:
 
-The `[...](...)` notation is "heavier", i.e. makes it harder to read
-in plain-text form, which many people use in the kernel, i.e. they
-will not read the rendered form. That is why we typically move the
-links below and just use `[...]` instead if we really want to use a
-"title" rather than the raw URL.
+BUG: KMSAN: uninit-value in rb_next+0x200/0x210 lib/rbtree.c:505
+ rb_next+0x200/0x210 lib/rbtree.c:505
+ rb_erase_cached include/linux/rbtree.h:124 [inline]
+ timerqueue_del+0xee/0x1a0 lib/timerqueue.c:57
+ __remove_hrtimer kernel/time/hrtimer.c:1123 [inline]
+ __run_hrtimer kernel/time/hrtimer.c:1771 [inline]
+ __hrtimer_run_queues+0x3b7/0xe40 kernel/time/hrtimer.c:1855
+ hrtimer_interrupt+0x41b/0xb10 kernel/time/hrtimer.c:1917
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1038 [inline]
+ __sysvec_apic_timer_interrupt+0xa7/0x420 arch/x86/kernel/apic/apic.c:1055
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0x7e/0x90 arch/x86/kernel/apic/apic.c:1049
 
-Moreover, if a raw URL already says what it is itself, then there is
-less reason to use a title. So, for instance, a URL like:
+So this code removes a queued timer from the RB tree and that KMSAN
+warning happens in rb_next(), which is invoked from rb_erase_cached().
 
-    https://rust-for-linux.com/contributing
+The issue happens in lib/rbtree.c:505
 
-already says everything it needs to say. However, a URL that uses e.g.
-opaque IDs into a database may not give you any information until you
-click on them.
+505:    while (node->rb_left)
+506:          node = node->rb_left;
 
-So, for both reasons, I think the following is not an improvement, in
-both plain-text and rendered forms:
+which is walking the tree down left. So that means it hits a pointer
+which points to uninitialized memory.
 
-    -//! Reference: <https://docs.kernel.org/core-api/rbtree.html>
-    +//! Reference: [kernel documentation:
-Rbtree](https://docs.kernel.org/core-api/rbtree.html)
+All timers are queued with rb_add_cached(), which calls rb_link_node()
+and that does:
 
-By the way, the last changes, i.e.
+    node->rb_left = node->rb_right = NULL;
 
-    -//! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
-    +//! see [rust-lang/rust/blob/master/COPYRIGHT].
+Which means there can't be a timer enqueued in the RB tree which has
+rb_left/right uninitialized.
 
-wouldn't work anyway, or am I missing something? (Even if it did, we
-should avoid changing vendored files, by the way).
+So how does this end up at uninitialized memory? There are two
+obvious explanations:
 
-Cheers,
-Miguel
+    1) A stray pointer corrupts the RB tree
+
+    2) A queued timer has been freed
+
+So what would this "initialization" help? Nothing at all.
+
+We are not adding some random pointless initialization to paper
+over a problem which is absolutely not understood.
+
+Thanks,
+
+        tglx
+
+
