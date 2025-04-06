@@ -1,224 +1,133 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94961218ACC
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 13:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08C142A83;
+	Sun,  6 Apr 2025 13:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743945440; cv=none; b=Xq9/vM5V39oIqd5PkvkHMDieAfVpzERXmNC+s2rjGGC6y3Ll3O8JOsvf30TsD/F3wSjAz3/2ULYKJdWnTtzhOIF0HU52tCf9ovyiM9TXBye1W2dWz1w+vKOdC8Fku1kNKkAxXG1/IWwaGFiTBU/DLNyINxuArePLoQ8a+uWhLrs=
+	t=1743945711; cv=none; b=b8pJbKTnnFIjrYbR1vAURSIjBOp227fKmzRToqDYofdqf7R4EipgAVpX20XQ7rkEMvrA4UPBqCokBnIOjwvHz85JZD+sKqeceJEdSuEk5EHj6z8V+BzaRaEsTZQyTI1E8ri/qFTnRO7TZLXKU1CzJ/6bYXTci6VyCcjIqqjTPVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743945440; c=relaxed/simple;
-	bh=urMQ00gZZ7JrEgVrvpkFN0umP4B0/aw0G3tsO79ob6E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IF0pSyy36W6CSl/iB8ud+XHK8cbrLYorWXIVKWDayO8+ineubAgD0dVPJJfa88oyH6/5WyZ/YJXZOzeZEBnNivPdfZHPPbY/WVxtBYuDIo2zaTOhT+bvnsS7jGMmAqGv0/pUtWUmyZaZd0jjbpKWGKOlxTQ/U9HPMEMU1OMUBo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LpKhn/9D; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743945711; c=relaxed/simple;
+	bh=zTNfeivIEWeB/M6GhlSV/pUKytPsSpCbfrPiWp9Y2HI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GeVxO4I7E9soFc9LE6QzW9FhKZRnAm9/j75OPDu5zmZjalqK0JLAYNSRd0aFZqLfh2ij25mlkyDU1mrVUyuq1lLXiF4gcvG3lb8ich6koEVb6Vyr0dAhrJVLHHN9XOwewpYzjDoBuENo1gQSFX6aSLF96KR2+aB46cfvq4LY/g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFpZJz6U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LpKhn/9D"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743945436;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wE0vIhT17gdRjzWiLk98s997NPXVl9LLMvXAAAFDDCE=;
-	b=LpKhn/9DgfRoFWPjX2g95e0SyU2eDrmWD5HwgSA8ISXz5x5Ls9t0KmZltJlyuyzeIufD4e
-	vUsuRxhCXjxyRyLf5aQ6mSXblpEbRp/lIgc/FrcFGdacWen0aeLM+RuTOHDXcXvAFZeCJO
-	4d1BcaZ2RXkvT7FlDbLsVb/2Hd85eNw=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v12 5/5] drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
-Date: Sun,  6 Apr 2025 18:46:42 +0530
-Message-Id: <20250406131642.171240-6-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
-References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFpZJz6U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23181C4CEE3;
+	Sun,  6 Apr 2025 13:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743945711;
+	bh=zTNfeivIEWeB/M6GhlSV/pUKytPsSpCbfrPiWp9Y2HI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aFpZJz6UGxLU3myo3bIa+q0RouY9tpiVkBd8T6FiFvWjRnWcfSYWgUJtGLlsJ5OT+
+	 B3iBm8vgs16M86Qg9yytycqdz9AM/a4MPS+8pUPSahGhfWywBg82XpQz3PeU7FNCYy
+	 0IeWJRFymRWvNqTzLiIborBOadlQQtDuosiHd/juJry6ZCnzykSxNpW5qlLJazlCbc
+	 Jcj0JdrLvsrVHVEdoXqXwlFASrrJZuOfZdHM3c26M1RBrRLvUYZCnDwf6mBIuiUamt
+	 WpVZ+3NEuQWErop6pVwuF+R7hkDS3T14I72uqMf56NRda6n8mDHU61xasCwfHlH27O
+	 4VW9eptDeYTVA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54991d85f99so4607984e87.1;
+        Sun, 06 Apr 2025 06:21:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVxwnKKbdRASaVGSzE37oZd0tCi5e97TVtl6RFpK3RfiHLDVn8p2LO1AaRXXtHt8YVthM4US6BAtnmJJ2Q=@vger.kernel.org, AJvYcCWIIyqzyT+9B4nqvIuWOgynkTsakCu14lMlmRphmN2T8SStFHGjCW7X5edfEiux16bFBFk4E8zcZ66gzGfKtg==@vger.kernel.org, AJvYcCXW8UO0Rs7YV85KuGigCvddRH5FZMSzBEgJxDin5RnUUCM5sJcEUTjcfBfmgGDXx+Y2rbkyheZj/Pqpo1bJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM/nLZbZxxNdtloQyjE+MmFRpl8HV/z7RbV8uz07ZfA8oQJ/Jl
+	htYMingOz2lBtVG8ais2Xu8bhzOe53NnMuBqRqQYGSEsEb6Azaf+BISl4BFBGH3WWBLi30tviWO
+	O9sgg5C6QIk6aecizAY9yN7v3GNA=
+X-Google-Smtp-Source: AGHT+IFNDXzr9hs4vw9S61miB6pkLcxLyV2mIohX3MBPX4KqVSwl6e9m5RFhXoLvVbZizwWbO17Zc1DxUFi/Q5Tqqr8=
+X-Received: by 2002:a05:6512:340d:b0:549:9643:68d0 with SMTP id
+ 2adb3069b0e04-54c1ca86841mr4357622e87.17.1743945709846; Sun, 06 Apr 2025
+ 06:21:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250320232757.2283956-2-samitolvanen@google.com>
+In-Reply-To: <20250320232757.2283956-2-samitolvanen@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 6 Apr 2025 22:21:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8t-O2Y-47MEQA2cPYKq2NB+FURbZ8zJKWgT0grG90rQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFiUVPy_g6yejilb8bFsi5t1TaoLTJnmDeq8YAMXTg6rlhuRGpWbTH7mNE
+Message-ID: <CAK7LNAQ8t-O2Y-47MEQA2cPYKq2NB+FURbZ8zJKWgT0grG90rQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Require pahole >v1.29 with GENDWARFKSYMS and BTF
+ on X86
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Pisati <paolo.pisati@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+On Fri, Mar 21, 2025 at 8:28=E2=80=AFAM Sami Tolvanen <samitolvanen@google.=
+com> wrote:
+>
+> With CONFIG_GENDWARFKSYMS, __gendwarfksyms_ptr variables are added
+> to the kernel in EXPORT_SYMBOL() to ensure DWARF type information
+> is available for exported symbols in the TUs where they're actually
+> exported. These symbols are dropped when linking vmlinux, but
+> dangling references to them remain in DWARF.
+>
+> With CONFIG_DEBUG_INFO_BTF enabled on X86, pahole versions
+> before commit 9810758003ce ("btf_encoder: Verify 0 address
+> DWARF variables are in ELF section") place these symbols in the
+> .data..percpu section, which results in an "Invalid offset" error in
+> btf_datasec_check_meta() during boot, as all the variables are at
+> zero offset and have non-zero size. If CONFIG_DEBUG_INFO_BTF_MODULES
+> is enabled, this also results in a failure to load modules with:
+>
+>   failed to validate module [$module] BTF: -22
+>
+> The pahole commit that adds 0 address DWARF variable verification
+> was merged after v1.29 was released, so later versions of pahole
+> shouldn't have this issue. Require pahole >v1.29 when GENDWARFKSYMS
+> is enabled with DEBUG_INFO_BTF on X86.
+>
+> Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-The cdns-dsi controller requires that it be turned on completely before
-the input DPI's source has begun streaming[0]. Not having that, allows
-for a small window before cdns-dsi enable and after cdns-dsi disable
-where the previous entity (in this case tidss's videoport) to continue
-streaming DPI video signals. This small window where cdns-dsi is
-disabled but is still receiving signals causes the input FIFO of
-cdns-dsi to get corrupted. This causes the colors to shift on the output
-display. The colors can either shift by one color component (R->G, G->B,
-B->R), or by two color components (R->B, G->R, B->G).
+The issue occurs with
+47dcb534e253 ("btf_encoder: Stop indexing symbols for VARs"),
+then fixed by  9810758003ce ("btf_encoder: Verify 0 address
+DWARF variables are in ELF section")
 
-Since tidss's videoport starts streaming via crtc enable hooks, we need
-cdns-dsi to be up and running before that. Now that the bridges are
-pre_enabled before crtc is enabled, and post_disabled after crtc is
-disabled, use the pre_enable and post_disable hooks to get cdns-dsi
-ready and running before the tidss videoport to get pass the color shift
-issues.
 
-[0]: See section 12.6.5.7.3 "Start-up Procedure" in J721E SoC TRM
-     TRM Link: http://www.ti.com/lit/pdf/spruil1
+Perhaps, does it make sense to do this?
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 64 ++++++++++---------
- 1 file changed, 35 insertions(+), 29 deletions(-)
+ depends on !X86 || !DEBUG_INFO_BTF || (PAHOLE_VERSION > 129 ||
+PAHOLE_VERSION < 128)
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index b022dd6e6b6e..47435f2624a8 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -670,13 +670,28 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 	return MODE_OK;
- }
- 
--static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
--					   struct drm_atomic_state *state)
-+static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
-+						struct drm_atomic_state *state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
- 	u32 val;
- 
-+	/*
-+	 * The cdns-dsi controller needs to be disabled after it's DPI source
-+	 * has stopped streaming. If this is not followed, there is a brief
-+	 * window before DPI source is disabled and after cdns-dsi controller
-+	 * has been disabled where the DPI stream is still on, but the cdns-dsi
-+	 * controller is not ready anymore to accept the incoming signals. This
-+	 * is one of the reasons why a shift in pixel colors is observed on
-+	 * displays that have cdns-dsi as one of the bridges.
-+	 *
-+	 * To mitigate this, disable this bridge from the bridge post_disable()
-+	 * hook, instead of the bridge _disable() hook. The bridge post_disable()
-+	 * hook gets called after the CRTC disable, where often many DPI sources
-+	 * disable their streams.
-+	 */
-+
- 	val = readl(dsi->regs + MCTL_MAIN_DATA_CTL);
- 	val &= ~(IF_VID_SELECT_MASK | IF_VID_MODE | VID_EN | HOST_EOT_GEN |
- 		 DISP_EOT_GEN);
-@@ -688,15 +703,6 @@ static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
- 	if (dsi->platform_ops && dsi->platform_ops->disable)
- 		dsi->platform_ops->disable(dsi);
- 
--	pm_runtime_put(dsi->base.dev);
--}
--
--static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
--						struct drm_atomic_state *state)
--{
--	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
--	struct cdns_dsi *dsi = input_to_dsi(input);
--
- 	dsi->phy_initialized = false;
- 	dsi->link_initialized = false;
- 	phy_power_off(dsi->dphy);
-@@ -774,8 +780,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
- 	dsi->link_initialized = true;
- }
- 
--static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
--					  struct drm_atomic_state *state)
-+static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
-+					      struct drm_atomic_state *state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -792,6 +798,21 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	u32 tmp, reg_wakeup, div, status;
- 	int nlanes;
- 
-+	/*
-+	 * The cdns-dsi controller needs to be enabled before it's DPI source
-+	 * has begun streaming. If this is not followed, there is a brief window
-+	 * after DPI source enable and before cdns-dsi controller enable where
-+	 * the DPI stream is on, but the cdns-dsi controller is not ready to
-+	 * accept the incoming signals. This is one of the reasons why a shift
-+	 * in pixel colors is observed on displays that have cdns-dsi as one of
-+	 * the bridges.
-+	 *
-+	 * To mitigate this, enable this bridge from the bridge pre_enable()
-+	 * hook, instead of the bridge _enable() hook. The bridge pre_enable()
-+	 * hook gets called before the CRTC enable, where often many DPI sources
-+	 * enable their streams.
-+	 */
-+
- 	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
- 		return;
- 
-@@ -811,8 +832,8 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	mode = &crtc_state->adjusted_mode;
- 	nlanes = output->dev->lanes;
- 
--	cdns_dsi_hs_init(dsi);
- 	cdns_dsi_init_link(dsi);
-+	cdns_dsi_hs_init(dsi);
- 
- 	/*
- 	 * Now that the DSI Link and DSI Phy are initialized,
-@@ -941,19 +962,6 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
- }
- 
--static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
--					      struct drm_atomic_state *state)
--{
--	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
--	struct cdns_dsi *dsi = input_to_dsi(input);
--
--	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
--		return;
--
--	cdns_dsi_init_link(dsi);
--	cdns_dsi_hs_init(dsi);
--}
--
- static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
- 					       struct drm_bridge_state *bridge_state,
- 					       struct drm_crtc_state *crtc_state,
-@@ -1048,9 +1056,7 @@ cdns_dsi_bridge_atomic_reset(struct drm_bridge *bridge)
- static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
- 	.attach = cdns_dsi_bridge_attach,
- 	.mode_valid = cdns_dsi_bridge_mode_valid,
--	.atomic_disable = cdns_dsi_bridge_atomic_disable,
- 	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
--	.atomic_enable = cdns_dsi_bridge_atomic_enable,
- 	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
- 	.atomic_check = cdns_dsi_bridge_atomic_check,
- 	.atomic_reset = cdns_dsi_bridge_atomic_reset,
--- 
-2.34.1
 
+
+> ---
+>  kernel/module/Kconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
+> index d7762ef5949a..7c75832aa1af 100644
+> --- a/kernel/module/Kconfig
+> +++ b/kernel/module/Kconfig
+> @@ -192,6 +192,10 @@ config GENDWARFKSYMS
+>         depends on !DEBUG_INFO_REDUCED && !DEBUG_INFO_SPLIT
+>         # Requires ELF object files.
+>         depends on !LTO
+> +       # Requires pahole commit 9810758003ce ("btf_encoder: Verify 0 add=
+ress
+> +       # DWARF variables are in ELF section") on X86 to avoid conflicts =
+with
+> +       # __gendwarfksyms_ptr symbols.
+> +       depends on !X86 || !DEBUG_INFO_BTF || PAHOLE_VERSION > 129
+>         help
+>           Calculate symbol versions from DWARF debugging information usin=
+g
+>           gendwarfksyms. Requires DEBUG_INFO to be enabled.
+>
+> base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+> --
+> 2.49.0.395.g12beb8f557-goog
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
