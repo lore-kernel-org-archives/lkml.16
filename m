@@ -1,121 +1,107 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438AC33991
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D189B136337;
+	Sun,  6 Apr 2025 19:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743966266; cv=none; b=rHBHzUTM/s12fBoNM8fhqeWkCx5sGEwTvtAVVVk3xaMW+aFBY4C2xP72uXPAUIDniL/QdJZH5oy9pZqIizPXXWOCylieXcXzzgbSUq5UfOxV7SU7rL4i4waGMcfrIs485tuOaJsNpECWE5DxmLkP9KkcXjBs8Y1Jf+2pQ56NyAo=
+	t=1743966337; cv=none; b=Ms01elLxQerFwx0IQzpgUJmpYyGpFxC2O5CplKXSa4h3AHRXYHhipizqlPBFIq9aXBcec1/B7FXzWUWoepld9MzfSXaUYig3IUZPFebzB2pvgjh7PI0+VKBWRAPztCagdVe/B24ZesZUeczGBKVgtuHNFWLQbCFoH2S7t2gYzLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743966266; c=relaxed/simple;
-	bh=pdyeFSXyF80p2wcG/rvIzmUa3/BuhjSNWLfNCTX1yz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XRVOAw8t1JI7yt1GwVEm3GnoFH1FF4EeoBYSI1lj41kNr6UNXYaNLv+0G+ob1nEJJ/yQDn/Sk7xAwTF9zeC9VOVLlqmFk6TJFtCaZcbZz9ZD6gIWydHjkBiWn7fSiKDRfocKsIf+G8xwbqkjTrUrGhxrll6EoNvcnkKpkSOUzdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HbiCpsAe; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743966337; c=relaxed/simple;
+	bh=rnkEiCJKsYL4L4KIERR35DcMdP+U5Cb/7LPs+8u2Kmg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=nzHecYPSutwOevTjbwrrli8o+locfL7Tlm4lYieSpOIwaBu8nIDNvNiV0ykBtTTn8maDnJMaavPDyJUHh/ZYvrBnER9X78JFhMvFJguur/Kf1rwxgNAxRUUMipUEbrj2pkZmdnEQ3af8EswvvIxKXHtTllLchP9MucJeGOV03ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEgetoRA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HbiCpsAe"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac3b12e8518so691838666b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743966262; x=1744571062; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rZAdZl8Dd5Nt+AmHaPGfqPYrp12wnf/Y8GSjdpHpchU=;
-        b=HbiCpsAe9XGU+wMyoN2LiB+GzEeag5Uszg5EEBxGv/vH2Mb56YMy6hVraNuuFeBtza
-         62aCiTaABWZ4PhQv/CaPlQuuTzc4jz4C+EiP6QW/RjEaRIIQGd+HbDmSgtRX2CVC6X8b
-         ndFhGv+WYcz1rPtKG8l5r5Fmdtvb/aQWsAv8c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743966262; x=1744571062;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rZAdZl8Dd5Nt+AmHaPGfqPYrp12wnf/Y8GSjdpHpchU=;
-        b=D/T2ZXgDcgJRkcma+PiBckDtIypebgEqvwVMJrE6FHruU+a8FJNkr7qsmFxc8dDysu
-         +wOjO7QsUaSwP7OPzIqWXQcGZoR4zZvADmQqTNgAMA1MH0NpBle1jCGfLD+3XwE5Cooh
-         JnhLgdJ9iao1FJEZQJmENi5Jl5Q8M3Gq763159AXtkiapzsjkX0S6YqZyLzWXUsjBvT1
-         1RCa5OwX4a9baThv85mePk7Fsyy4oZfjAKkYcokueDiYorKrdxK1Vb2KO3FgXv6ocPOd
-         bTEwQigCVDcK7JlKX/zoVw2/R5N7XkTVIRoulwQpDlYeMs3OmQV4MmClyly9I2/o4fha
-         qh7Q==
-X-Gm-Message-State: AOJu0Yy4YkWEdjl7js23PNlwxB+hufsPdcw8HW6X5qm8Y6XLXqLlilmJ
-	3hdF+MweVoheLwRB5D0cJjnasISTOgIlezRSpElLl+b1YDXZ4QhAmtdBl9tyge4MzdrFHFj9kpq
-	ajUU=
-X-Gm-Gg: ASbGncuy2ANEZvwpug6wfugYNZABXbn3ragxLZFbpDGyBUSYWvEtYTCKops7nBh24EZ
-	LdgvTNTrEVtxdeAqMSG3+L6/87lq4Y+N+cHxBO+SWyttRu216qrNxpitQIrwp8iodnA0U2OAbGX
-	vuB3G6TGFvWpt53+IXWkmnmXGGfZjKpnYhqj8U/UoKKhdKmKPihMWdqswaV83Np4UJLE0fWzWQB
-	v90Y7Hli9/QG0MjdKet2lM7B3Fa8EeSwRw8Plk3lGxp2oAKe2IQmy279plXvVvtuPdmuxoosI0v
-	O5RuRmRy8Bqpeu4xmb8bJ876iRXlzSWlr3+kAc+LMvAlI6/P42nxvUR2jYauHuRPxgkbjA/r1KF
-	kzc/y9ASAnU3pOf6NhS8=
-X-Google-Smtp-Source: AGHT+IGf3z+IOQw18qqbhnmIeZnV6N0uPPx0lSG0JvYMarupZBItnB3abaPabfytNRvz0CntIBCU1Q==
-X-Received: by 2002:a17:907:2d87:b0:ac7:391b:e68b with SMTP id a640c23a62f3a-ac7d1c1dfb0mr873463466b.61.1743966262237;
-        Sun, 06 Apr 2025 12:04:22 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a405fsm5626450a12.75.2025.04.06.12.04.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 12:04:21 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2c663a3daso706194466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:04:21 -0700 (PDT)
-X-Received: by 2002:a17:906:38c2:b0:ac7:ecea:8472 with SMTP id
- a640c23a62f3a-ac7ecea8580mr421913366b.26.1743966260962; Sun, 06 Apr 2025
- 12:04:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEgetoRA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5436BC4CEE3;
+	Sun,  6 Apr 2025 19:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743966337;
+	bh=rnkEiCJKsYL4L4KIERR35DcMdP+U5Cb/7LPs+8u2Kmg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=MEgetoRABXiGBI8iLCN4iqCkS3CnZi4wD337DOwVSvD+u7ipNbXsX1aesG7vIqew4
+	 kzrKxaIbPfbyXBUaTwz4W27XhTa3yR7Lc5GDAzUdeGbHhyEV5NR7KFcmjaQDHJACdv
+	 R/7uCE9/UrIr9XSfonoxLGws/HnCI54fQvbNKiFz2SWox9jV+XX+qDwSCAsvtCLy2m
+	 PMblPJBf/EJkN3iD3jteT2dRX6tA0ho+H8+9OSG87KiucdwxsEkP6ABCZ4t9wcFQs2
+	 LKZhVP433Qvqxes12HJATFiXuu8RmyTGntcmQ9xJE3+GUP2LZqDyvYg1isNeAqQ9Gt
+	 ZdEDBaiqFCxng==
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-601c46a92d1so2599987eaf.1;
+        Sun, 06 Apr 2025 12:05:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWrbaCSsVeNBZXuUfh46R1coCnpCI0m8eA1U0jTmj5ezzmkoACZf0SIOMqXUoIuRh/tQ6WjNyVUobKzDr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwThvA2GsXb1tUf2g+fJXbD7IXuShOSH1lDFFf+WKQQvN6DnCNp
+	9psMqvaUypxHqKWydR7NJHsi0W6Snre5JWTo0rlHCwteSRz4wecKbPTuHzYiKmdkQehEmcjRePU
+	t/CcDGYPFx2DZsFVVOFRS1mHqjFE=
+X-Google-Smtp-Source: AGHT+IGeqJ/kpKrkViGuXRHU6jvWv5c/6t97ulleEBO0GwGB/4C0aFnVw8Xw+elF+yna0YpSdXzg4TWXidO0YLh8CFI=
+X-Received: by 2002:a05:6820:1b88:b0:604:1:3736 with SMTP id
+ 006d021491bc7-6041665464bmr5346676eaf.7.1743966336700; Sun, 06 Apr 2025
+ 12:05:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202504061053.F27227CA@keescook>
-In-Reply-To: <202504061053.F27227CA@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 6 Apr 2025 12:04:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whVfxi4KRu-H=tsgSdoGdDz1bvu0_miJT0BTgAf4igpdg@mail.gmail.com>
-X-Gm-Features: ATxdqUFvIrnn0sLprtozpL3oMfX3Mv-v3p1AFV33Gzw-RIeKAnQyu49vt-NR7RY
-Message-ID: <CAHk-=whVfxi4KRu-H=tsgSdoGdDz1bvu0_miJT0BTgAf4igpdg@mail.gmail.com>
-Subject: Re: [GIT PULL] string fixes for v6.15-rc1
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Peter Collingbourne <pcc@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Will Deacon <will@kernel.org>
+From: Len Brown <lenb@kernel.org>
+Date: Sun, 6 Apr 2025 15:05:25 -0400
+X-Gmail-Original-Message-ID: <CAJvTdK=2NjoVYPFO3EbKgmdrhmgDx9Q-0Zk0tYHhaBEgNzdfJw@mail.gmail.com>
+X-Gm-Features: ATxdqUHDkNRoKEL4NOcWhCBUr6QX138uta2Jo1h4T0u2gx3hpFrKsShwnJoGLEE
+Message-ID: <CAJvTdK=2NjoVYPFO3EbKgmdrhmgDx9Q-0Zk0tYHhaBEgNzdfJw@mail.gmail.com>
+Subject: [GIT PULL] turbostat-2025.05.06 for Linux-6.15-merge
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 6 Apr 2025 at 10:54, Kees Cook <kees@kernel.org> wrote:
->
-> - Add wcslen() to support more Clang libcalls (Nathan Chancellor)
+Hi Linus
 
-Oh Christ.
+Please pull these turbostat-2025.05.06 patches.
 
-Does clang not know how expensive function calls can be?
+thanks!
+Len Brown, Intel Open Source Technology Center
 
-I really think the right fix here would have been to say "don't do
-that", rather than make that function available.
 
-When the function implementation is the stupid version, there is *no*
-advantage to a function call.
+The following changes since commit 2c4627c8ced77855b106c7104ecab70837d53799:
 
-In user mode, if you have
+  tools/power turbostat: version 2025.02.02 (2025-02-02 10:54:23 -0600)
 
- (a) long strings
+are available in the Git repository at:
 
- (b) you use some optimized vectorized string library
+  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git
+tags/turbostat-2025.05.06
 
- (c) you don't have the problems with function calls being potentially
-expensive due to return prediction CPU workarounds
+for you to fetch changes up to 03e00e373cab981ad808271b2650700cfa0fbda6:
 
-this compiler optimization may make sense.
+  tools/power turbostat: v2025.05.06 (2025-04-06 14:49:20 -0400)
 
-But in the kernel, it *never* makes sense, because none of those three
-issues are ever true.
+----------------------------------------------------------------
+Turbostat 2025.05.06
 
-So this change is just *stupid*.
+Support up to 8192 processors
+Add cpuidle governor debug telemetry, disabled by default
+Update default output to exclude cpuidle invocation counts
+Bug fixes
 
-And I'm not pulling stupid code. The one-liner rto just disable an
-optimization that isn't an optimization is the right thing to do.
+----------------------------------------------------------------
+Artem Bityutskiy (2):
+      tools/power turbostat: Fix names matching
+      tools/power turbostat: Add idle governor statistics reporting
 
-And if LTO has problems with that, then LTO needs to be fixed, dammit.
-It's stupid without LTO, it's doubly stupid with extra
-"optimizations".
+Justin Ernst (1):
+      tools/power turbostat: Increase CPU_SUBSET_MAXCPUS to 8192
 
-               Linus
+Len Brown (6):
+      tools/power turbostat: Clustered Uncore MHz counters should
+honor show/hide options
+      tools/power turbostat: report CoreThr per measurement interval
+      tools/power turbostat: Document GNR UncMHz domain convention
+      tools/power turbostat: re-factor sysfs code
+      tools/power turbostat: disable "cpuidle" invocation counters, by default
+      tools/power turbostat: v2025.05.06
+
+Zhang Rui (2):
+      tools/power turbostat: Allow Zero return value for some RAPL registers
+      tools/power turbostat: Restore GFX sysfs fflush() call
+
+ tools/power/x86/turbostat/turbostat.8 |  16 +++-
+ tools/power/x86/turbostat/turbostat.c | 162 ++++++++++++++++++++++++++--------
+ 2 files changed, 135 insertions(+), 43 deletions(-)
