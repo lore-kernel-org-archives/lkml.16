@@ -1,108 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03C0380;
-	Sun,  6 Apr 2025 09:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310E7224F6
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 09:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743931706; cv=none; b=ju9yykiUnEkXqN85zm58Oc29Lo1OwBoi8EInA2MvUVmQcCEq2R+YDaSgimtBH7izjm0b+phUUNF5Lhl019sI1fs0VLlm3sIM4CRwQivMBnehifbW+PQWlpTIRr7B9WkWszm7R3UnmWSflYFh+EFnEx99WmxXtz9zLN0XSzjOWHU=
+	t=1743931799; cv=none; b=Dx+gSgPqxOSkUct2HS0SuB5o7xwykcUNagBL7mxS70GzrN0Fpb677C25AhoHrCxiZuAIDZc/RiTo3rDI2Gq4L44iOkM7jn80jqOHMt43BjPe6V9an0KnVl8Xd3h5+ZGAE/HWRSJtCJRXjX9QY62Q7nxLwfPwAcM8P00pb0uCfTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743931706; c=relaxed/simple;
-	bh=tv/XKtzE84bfEwG93vmPkQR34gA4snTu06MHF+O50a0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VIlGT0rCyDfZmSyliF+rpktV3MXlch0n0gdXkMZnBumSEynMNkiVhRaSSRhlBBoHXH44DSdLJ5Tk9C+kgeJSnYKZX+8R45QCpkE6sLn7IzQZxurGfEcA/MOlHTuE0cYqpJWgNqa4llFUaqG4OQjC116qWgPX8kczXcrCi1bbtbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXUe2Wr4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743931799; c=relaxed/simple;
+	bh=lVZDTWTndSvR7acYrAMa5htsvgw4dq61FbKqgoBF8SM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=b+FMfzjIaO+fqyEAtE2iv/rdr2v4hiYm2ils3HHjGur5FFWXIO9/jHSmFy5tYriDUeW63IaSs+We7ZEzi9aFx75MwXHOd9SCmHSD2HPeZ98Rp62TUCO8SPEAFrzTHXB3eNaFZP9FNZyvoT8K+bc7jc5KuDwOXeiaC89WayUiYjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mxiyJqHe; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXUe2Wr4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94B89C4CEE3;
-	Sun,  6 Apr 2025 09:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743931706;
-	bh=tv/XKtzE84bfEwG93vmPkQR34gA4snTu06MHF+O50a0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nXUe2Wr49C2PKBjf3LbSQUSjcb7AiZGOmBcOKp+KX0nXFE9ZiQd+zhuphTgngPCkd
-	 XKTmfsw21URdz5chZHPwpoczRTnl9aYYwUmhYFH/RJfQkj5LUOuekqNCsH9AMx0zBO
-	 Is97X+hsAJVkNAsSlUVT2j/6/nkdYY9UTat92KFE3ccOgMtByHNbQbdt1OPT5wi/8k
-	 sV/64sK50L5s2cY12EoNAjaT3sSRwscN9PNOlYeh8EHIZPYiDsQU7KZ7PW+pK1JQQw
-	 144xxa0jque5kBBuNWWbk4Yk95quUaHE3KN/Gm4S3hus6AWdDhN87SV6+RuZqeD/77
-	 arlt47b44PuwA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH] MAINTAINERS: configfs: add Andreas Hindborg as maintainer
-In-Reply-To: <Z_GSpcn3bMRStzf4@google.com> (Joel Becker's message of "Sat, 05
-	Apr 2025 13:29:25 -0700")
-References: <bHDR61l3TdaMVptxe5z4Q_3_EsRteMfNoygbiFYZ8AzNolk9DPRCG2YDD3_kKYP6kAYel9tPGsq9J8x7gpb-ww==@protonmail.internalid>
-	<Z-aDV4ae3p8_C6k7@infradead.org> <87frix5dk3.fsf@kernel.org>
-	<20250403-sauer-himmel-df90d0e9047c@brauner>
-	<Z--Ae5-C8xlUeX8t@infradead.org>
-	<20250404-komodowaran-erspielen-cc2dcbcda3e3@brauner>
-	<SA4Crt0QV7AKViqF1UCGYRtpvL-BX9dKVY0rAB0VrZuyA6IY2KBUfS8JJ3sNGn46Fb9SoqIQUPA-p2h1HfvvUQ==@protonmail.internalid>
-	<Z_GSpcn3bMRStzf4@google.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Sun, 06 Apr 2025 11:28:15 +0200
-Message-ID: <871pu5vdu8.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mxiyJqHe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743931797; x=1775467797;
+  h=date:from:to:cc:subject:message-id;
+  bh=lVZDTWTndSvR7acYrAMa5htsvgw4dq61FbKqgoBF8SM=;
+  b=mxiyJqHeAwC2o4dXMRp1JgNnyXBs+sYeP5r5pKhSHuXSj2B1KOYncOvU
+   SN7jlvp1dtnp3mTgdKfk8UMWrAzYqF+hQ1KOZcZz+O38Ocfg4JMlM1uPt
+   wxSmA8XXMihMRSB1qSZZEvhcfk7Mk052O9DZk1ReFNl8fe+PZ5PtVZ0O9
+   0cQw8IzARjsVXkNn6/okGvquYSjMlVxAmC3hihgMVcFVsBZu9pgdIww8T
+   hShe+hJmcWF5qsR4T65Xe3wrJEANjZjwQFphOXszQHOiHekrutKSxQfIr
+   1ld0C5jP8tze8lHiVDYgrTRCnh0g86v/3aQWtsUWkRtn8wBjwUyTVD9Bt
+   g==;
+X-CSE-ConnectionGUID: UX+W2bvATVm4Lr6kiPKGNQ==
+X-CSE-MsgGUID: hFn1SJpNR6O3baoH5cjf/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="62724616"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="62724616"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 02:29:56 -0700
+X-CSE-ConnectionGUID: k+5McNTaSFe244SeG1NtXg==
+X-CSE-MsgGUID: +uO9Hxk2QqeJLqrAEMyMkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="127570847"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 06 Apr 2025 02:29:55 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1MK8-0002Wd-1k;
+	Sun, 06 Apr 2025 09:29:52 +0000
+Date: Sun, 06 Apr 2025 17:29:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 932a6b5136fa402524ffb6f865118eb489bbe68b
+Message-ID: <202504061721.9sSin3qv-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-Hi Joel,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: 932a6b5136fa402524ffb6f865118eb489bbe68b  Merge branch into tip/master: 'x86/nmi'
 
-"Joel Becker" <jlbec@evilplan.org> writes:
+elapsed time: 1442m
 
-> On Fri, Apr 04, 2025 at 10:42:29AM +0200, Christian Brauner wrote:
->> On Thu, Apr 03, 2025 at 11:47:23PM -0700, Christoph Hellwig wrote:
->> > On Thu, Apr 03, 2025 at 01:27:27PM +0200, Christian Brauner wrote:
->> > > There's no need to get upset. Several people pointed out that Joel
->> > > Becker retired and since he hasn't responded this felt like the right
->> > > thing to do. Just send a patch to add him back. I see no reason to not
->> > > have Andreas step up to maintain it.
->> >
->> > Removing someone just because they have retired feels odd, but hey who
->> > am I to complain.  I did reach out to him when giving maintainership
->> > and he replied although it did indeed take a while.
->>
->> I mean, we can surely put Joel back in. My take would be to remove
->> that person from the maintainer entry because people will get confused
->> when they don't receive a reply. But I'm totally fine if we should leave
->> Joel in.
->
-> Howdy folks,
->
-> I do apologize for my delayed responses.  I try to review patches as I
-> find them, but I haven't yet set up a dedicated tree -- a bit out of
-> practice.
+configs tested: 131
+configs skipped: 2
 
-How would you like the maintainer entry to look:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- - Are you OK with me taking up maintenance of configfs?
-   - If yes,
-     - would you like to be added as a reviewer?
-     - would you prefer to be listed as co-maintainer?
-   - If no,
-     - would you have me as a co-maintainer?
-     - or would you have me as a reviewer?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250405    gcc-14.2.0
+arc                   randconfig-002-20250405    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                        clps711x_defconfig    clang-21
+arm                       imx_v6_v7_defconfig    clang-16
+arm                        multi_v7_defconfig    gcc-14.2.0
+arm                       omap2plus_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250405    clang-18
+arm                   randconfig-002-20250405    gcc-7.5.0
+arm                   randconfig-003-20250405    gcc-8.5.0
+arm                   randconfig-004-20250405    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250405    clang-19
+arm64                 randconfig-002-20250405    gcc-8.5.0
+arm64                 randconfig-003-20250405    gcc-8.5.0
+arm64                 randconfig-004-20250405    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250405    gcc-14.2.0
+csky                  randconfig-002-20250405    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250405    clang-21
+hexagon               randconfig-002-20250405    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250405    gcc-12
+i386        buildonly-randconfig-002-20250405    clang-20
+i386        buildonly-randconfig-003-20250405    clang-20
+i386        buildonly-randconfig-004-20250405    clang-20
+i386        buildonly-randconfig-005-20250405    clang-20
+i386        buildonly-randconfig-006-20250405    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250405    gcc-14.2.0
+loongarch             randconfig-002-20250405    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       m5249evb_defconfig    gcc-14.2.0
+m68k                        mvme16x_defconfig    gcc-14.2.0
+m68k                           virt_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                         db1xxx_defconfig    clang-15
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250405    gcc-12.4.0
+nios2                 randconfig-002-20250405    gcc-6.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250405    gcc-11.5.0
+parisc                randconfig-002-20250405    gcc-9.3.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      mgcoge_defconfig    clang-21
+powerpc               mpc834x_itxgp_defconfig    clang-14
+powerpc                 mpc837x_rdb_defconfig    gcc-14.2.0
+powerpc                      ppc44x_defconfig    clang-21
+powerpc                     rainier_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250405    gcc-8.5.0
+powerpc               randconfig-002-20250405    gcc-8.5.0
+powerpc               randconfig-003-20250405    gcc-8.5.0
+powerpc64             randconfig-001-20250405    clang-21
+powerpc64             randconfig-002-20250405    clang-21
+powerpc64             randconfig-003-20250405    clang-18
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250405    clang-21
+riscv                 randconfig-002-20250405    clang-16
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250405    clang-15
+s390                  randconfig-002-20250405    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                        apsh4ad0a_defconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250405    gcc-14.2.0
+sh                    randconfig-002-20250405    gcc-14.2.0
+sh                          urquell_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250405    gcc-11.5.0
+sparc                 randconfig-002-20250405    gcc-10.3.0
+sparc                       sparc32_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250405    gcc-9.3.0
+sparc64               randconfig-002-20250405    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250405    clang-17
+um                    randconfig-002-20250405    clang-21
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250405    gcc-12
+x86_64      buildonly-randconfig-002-20250405    clang-20
+x86_64      buildonly-randconfig-003-20250405    clang-20
+x86_64      buildonly-randconfig-004-20250405    clang-20
+x86_64      buildonly-randconfig-005-20250405    gcc-12
+x86_64      buildonly-randconfig-006-20250405    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250405    gcc-11.5.0
+xtensa                randconfig-002-20250405    gcc-13.3.0
 
-I set up a tree according to the patch I submitted. I did not switch out
-linux-next yet, but I was about to send a request to do that. I will
-stall that pending your response on the above.
-
-> The Rust patches gave me pause.  I have no context to review them --
-> even the little Rust I am familiar with looks nothing like the complex
-> stuff the kernel bindings are doing.  For that part, all I can do is
-> hope someone other than I knows what the Rust should be doing.
-
-That job is part of what I just signed up for, so we have that covered.
-If you do not want/need my help in maintaining the C part of configfs,
-we can add a sub-entry for the rust parts.
-
-
-Best regards,
-Andreas Hindborg
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
