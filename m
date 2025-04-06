@@ -1,68 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDECA1AA7A6;
-	Sun,  6 Apr 2025 19:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94EE1BBBD4;
+	Sun,  6 Apr 2025 19:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743969084; cv=none; b=YahPjB/6l4eXwEjOqIMEYEDgZeK2TT3VVML22Fzaomh2wShIn+sxeDn9iTuMRNgT8zJ11uV2kGm7YfdYzjzYddu9Um+chkjw17/GjtvAHdDU5tlWIm1nDFy/KCI69dZp4PIIYQkNItfa5DjeYxsUbg3OfKDxk9gLsU+W2ecAxq8=
+	t=1743969087; cv=none; b=uJsXU3KPeMaHL4RHmF7j2rn3eBcYI1Icp4a4CfZLGbHhwexXK/d/lNh7zoZcTjAgo0ouy7QbYXlt0tv+6/NmcFMZegFzo7l0yiTRPaSzbU/xTtaKpGyHPVgjp9Ge/ryZq1X5sPyFdKmQ7aRc5qxJ5dtVovqTE3WLqGC3YEFFhKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743969084; c=relaxed/simple;
-	bh=DJRbLvaS+Yx7WeurDiWaVkXeNcU8Jcjof+rGjjRRLkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOeJNs0r+/FHAzdQOe2S5OjyhYK8ND0PXi3x+Jggr6niG8O4Q8qco+vuUv1jbsS9y00l/DSRRu+1cPB3ejnQS1hU53MIQBNz2jwMa+/gzXJPQVEm6dLg0vk0KXXPWUfBK9oRAo6Zx5TkH/XYihHbKSQ25cDKGJBDNo3saowj3TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjyllOh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743969087; c=relaxed/simple;
+	bh=Bpf6ZJ3/ONL24038t3AjsemuCc9/tLqbyRJHezzefss=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CzkPuCpyato0i18G/1pN1dS2vmgPh4F08tvs8jMPmnPnlZ00FtIth42UTWhYZExHwOLXEmg92f081crgOJ3QpkzzzGJLbOqapzMbvVC9X4blLOSIjIhOYLjOgH6++zxwdkcVKkZ2XK9yIcy+OH/KUZ4ft5mhIcp009XbIuCc9Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1HCZpn+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjyllOh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F583C4CEEB;
-	Sun,  6 Apr 2025 19:51:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1HCZpn+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A29C4CEE3;
+	Sun,  6 Apr 2025 19:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743969084;
-	bh=DJRbLvaS+Yx7WeurDiWaVkXeNcU8Jcjof+rGjjRRLkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IjyllOh17cv8Qu4bSNk2AaTdxoBMnL6bd+3tv8SOZkjZvfiJVICLT4Gkso8l1iGTi
-	 lRThR64gvF+QS39VgwNt3EhYT7NYB5tv9IOmgMoZPY6qapNjIY1AcrxAp1VbSFuci7
-	 wbcgdpy4gOQ08gLAmWlbaY8lun+Ma4y15npUNgvdLqo68Yn13+oI7QYVSE3M/GfQoT
-	 xkyYJClI+rj1yeO3VeDqKs30g5jTGpwBxwyOM6Yl7aaz5tx6fcJaVUzI0RL1W1YVBX
-	 PGMwEMsS0quRcVde/HuWaqU2ftNOarwP2TgXYKKUI/XR6QNtfwBsPVI144ho47UMlk
-	 bE+2+B/okSTGQ==
-Date: Sun, 6 Apr 2025 21:51:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Penglei Jiang <superman.xpt@gmail.com>, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
-Subject: Re: [PATCH] anon_inode: use a proper mode internally
-Message-ID: <20250406-angucken-ankommen-6974c000f0fb@brauner>
-References: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
- <CAGudoHErv6sX+Tq=NNLL3b61Q70TeZxi93Nx_MEcMrQSg47JGA@mail.gmail.com>
- <20250406-reime-kneifen-11714c0a421d@brauner>
+	s=k20201202; t=1743969087;
+	bh=Bpf6ZJ3/ONL24038t3AjsemuCc9/tLqbyRJHezzefss=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=F1HCZpn+LVy5tk8hb+ixJGcEV0wZ6fvbMtNlzwdL0Eey7mhA/VG/Umw9TUkwNkvck
+	 JItaVXggXGMRWwDaMCIZEWuiVDQeIBQcH48IkKrlfZGOvocQXdB5mmlC6ORvGl1rmq
+	 cyrv3e4P3CU0el+G3QGRHCJa1pSickfki2Svh6+7gYea1yXXjPXLiXiFW0PWDu37Ao
+	 gs9jTX/qtFE+SAOBz+/JcvIY/pJ//MjZBc/4zjM+rzJhYhynf5jvvN0ErVm0AOmUKO
+	 yoAABdrGVBMQhnNKFZ7Up9CsCXFNOg9KsTco/lzaPkG23ius1I/8ERdCIGB42tTHQu
+	 u/LSMIMnQaHPw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33EAF380AAF5;
+	Sun,  6 Apr 2025 19:52:06 +0000 (UTC)
+Subject: Re: [GIT PULL] turbostat-2025.05.06 for Linux-6.15-merge
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJvTdK=2NjoVYPFO3EbKgmdrhmgDx9Q-0Zk0tYHhaBEgNzdfJw@mail.gmail.com>
+References: <CAJvTdK=2NjoVYPFO3EbKgmdrhmgDx9Q-0Zk0tYHhaBEgNzdfJw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJvTdK=2NjoVYPFO3EbKgmdrhmgDx9Q-0Zk0tYHhaBEgNzdfJw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-2025.05.06
+X-PR-Tracked-Commit-Id: 03e00e373cab981ad808271b2650700cfa0fbda6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 710329254dc303cd3b2df1a24674adecb1189385
+Message-Id: <174396912478.3949691.16565957433822707597.pr-tracker-bot@kernel.org>
+Date: Sun, 06 Apr 2025 19:52:04 +0000
+To: Len Brown <lenb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250406-reime-kneifen-11714c0a421d@brauner>
 
-> Anyway, I'm finishing the patch and testing tomorrow and will send out
-> with all the things I mentioned (unless I find out I'm wrong).
+The pull request you sent on Sun, 6 Apr 2025 15:05:25 -0400:
 
-Found my notes about this. I knew I had notes about this somewhere...
-It isn't possible to execute anoymous inodes because you cannot open
-them. That includes stuff like:
+> git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git tags/turbostat-2025.05.06
 
-execveat(fd_anon_inode, "", NULL, NULL, AT_EMPTY_PATH)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/710329254dc303cd3b2df1a24674adecb1189385
 
-Look, anonymous inodes have inode->f_op set to no_open_fops which sets
-no_open() which returns ENXIO. That means any call to do_dentry_open()
-which is the endpoint of the do_open_execat() will fail. There's no
-chance to execute an anonymous inode. Unless a given subsystem overrides
-it ofc.
+Thank you!
 
-I still agree that we need to be more coherent about this and we need to
-improve various semantical quirks I pointed out. But the exec problem
-isn't really an issue so the patch itself still seems correct to me.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
