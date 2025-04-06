@@ -1,130 +1,93 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AD81B6556
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9E8CA6B;
+	Sun,  6 Apr 2025 20:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743969717; cv=none; b=UqmN6Y6e93bZv8Xv9qW2X2U94E1Cw+Uqg7S4/G//mvkJGD4JDxcVSX6faUaR1zXot20st8HJ78bfRC9rkztxmwFL9FdKQrXon+cZXJ7mQkbt7fCWMAchImEercWtq06YBHNvXMxLJB9GZ6E0d/NZM1HnQH5ZTLJNeV+rEgiYeYI=
+	t=1743969975; cv=none; b=HJCAwTFqMIuL29lPxGYSX5+wXkaKiVZfAwNsVn4NN1Ab4YIkXnw+Mv7rJ11i6QCQ7UTSvdW4Yy1C6bSoNXH2EN9OgjmDT+I0zIOyOm/jX4ypWQbsK9OtcdoGgRvbloWjIOjqC3InEHqPM4mPLz/r0TqkL4rlf3gAWAqAtl/4hGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743969717; c=relaxed/simple;
-	bh=l7CRhFlZ6pn6hdkl7kstlhIYoNXxtom6dCRCabxrvMU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fbJAvjAe2FLa+Lm5hIx56WfSdW+zWdcjqgskBfvKnmPMSOClUSsSPtwoZpv7Ht8l4kC2TB+KbRQDwdF60fbQXX/7u250zSyIqMywZX5nKP1Hd5P20tlNRYRFXUecQiUY0rkJkiFWBM+0Xw06uU1lI7ZO49g93y6gh5KD2o861js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BiKIhLGy; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743969975; c=relaxed/simple;
+	bh=kqXpkAZobw0z/QtawS9MtkY6Uld0bwSNru6iFQNPH2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCrghP+VNzLoyHhnmxbv6M9KB9fKxeWNkpvflvVQV3ZlazWulo45S56QCirGHV+pYGDFqZwHSlkVko7PLONLfrlN3gY/8GMqSm+RrFtAV0CX7RpDKu82TdxHHW8Du4+xOHLHzCKjmKdicpnBKOG+g+VSswJFGaFA0JkhUS0uwx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QKqcwRS8; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BiKIhLGy"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39127effa72so350094f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743969713; x=1744574513; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ux2yY1RchxKGuIqfE/2wQobUJuq5g/5pfkTf4qTXwDE=;
-        b=BiKIhLGy9tI1I+L510O0dm/UGF5E5mhM3xxrtL/nZrqQbmuvckexqPbeJDZ0rnChbl
-         aJsWipiuHgznhVX0+lr8BEp9XvDbSxFIybuDzkFzv0Krf/kMilZCJGgqmM6XiSXxF+GT
-         E63zBNmtfmvmmgPHCgIcERL/Sl/acryadiyyEQFheia393X5GaqsSOpCO3NEaciir7/f
-         +jl6P81cVR+i5+wwFneHkU6E43JXmfGdpUzVfgN9nFoWqtaJmYHTRTJEJNuyCzuV74Zh
-         ozxjsPvDI5/wp9d/Gl/x8QF/ot6VUkvGNfPoXkTYAm8we2SJ+HK35GJt1CMXPep2Jl0f
-         +0LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743969713; x=1744574513;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ux2yY1RchxKGuIqfE/2wQobUJuq5g/5pfkTf4qTXwDE=;
-        b=kIY2g5MSsEbbojma75bP1n59koiiDDC4VZ++9MqmIw+clyWQXVreBxMyFzULoYT9tk
-         J74dUF8BPd+l1WNMMFjXEvK96grlMgo6Qu5vQJxacMP3aT52Q2IGM6Xn8ceMAF65PAAs
-         4Uhu74bgzQC1EK3jqaZgfQBuJaog4LMH4PM2eF2W/pSazjoqLurlKJjZKiYLzX0y00Dp
-         gi63853CIIc/9Kz6zXWnwPfKTgosKoXJkYkr4leBGkfZWkJ/yy67UttjAnFFEdnV3WI5
-         VY9mj3yrF4Uz2n+tJFt8gDL4geQ9rluh1qrTG/0Ms7yZKCiM4WP68GdJTYSSj77tU37w
-         zoQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/4d4LVluIkbJKWx5kcmAx0ZTLZxSFQSLjwbB1BDruymxwL/ADAjMdOd82vmHu80QSSo2B5gRgVNuNDHE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFmzvAcI47M4aIg255n9HIxAU8AmFQqUPazETmpPC6EqjbFY4i
-	qdjOxo4mIgwLQ7QAEE9znBWNRgalNoE4/884M0FPVauIWDcpPkmd9f9jU7r6aDw+7DFIExCEqOR
-	k
-X-Gm-Gg: ASbGncvfhfIMv419h6I1W1B8o1dMGum6aLV6yE6Pn3OGXjR4B48mu2AaEkW/SBxBeeY
-	Xh0C70k95FjDEzgb2yzNaSMjF4ZDAzRFL31yU75Rb4QJxnpx1EP/o+Im9XQzHiXuUM2YkGxt0sO
-	sEMC1Bxqoixt1rq4A+dE9w86F309UWht/Iw1+axmUIhXKh28n0jyNA2wgomrxE5Spn/04WdnC0+
-	LkgRR9EAg+ig8EceNKL8Fe7NEjFn2LqevkpQy1fpgbnjIF2jk3Xh/r5AIC0tjSDRch/fF9noiDE
-	nfQ2i2rTJW7FKH+Hq3z5eb9U7VfuN1zWF1xzP/CHp8xrA2JyHKHZbf6EKW9PSZ44ORAnEOYh8g=
-	=
-X-Google-Smtp-Source: AGHT+IEJ+Ef3Oex5pdoKvNGE2jNPnyAvjiCvNX7k53N0P6w5OL4ACrTa/WVrbC1VAnfl97pDetAO6A==
-X-Received: by 2002:a5d:6d81:0:b0:38f:27d3:1b44 with SMTP id ffacd0b85a97d-39cb357b616mr2957681f8f.2.1743969713594;
-        Sun, 06 Apr 2025 13:01:53 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d98bsm10199924f8f.76.2025.04.06.13.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 13:01:53 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Sun, 06 Apr 2025 22:01:44 +0200
-Subject: [PATCH 3/3] iio: imu: st_lsm6dsx: Fix wakeup source leaks on
- device unbind
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QKqcwRS8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743969973; x=1775505973;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kqXpkAZobw0z/QtawS9MtkY6Uld0bwSNru6iFQNPH2w=;
+  b=QKqcwRS8ztAzS4jWh6thV0XTtwUn30nvrP9pWfQ/XLPEqgXk/sLZXCjJ
+   ZcmaIJAkbQatnPgGDFqQMG1yF2siPbusfCdqFtBFR44n4YJZkzUuNuB0u
+   /sSE3P8Zf5MI37ht/HfX9so/3SsQaX/1R5M3G+s+DyNVZp50awHp7Lpt2
+   XfiQ4FOWe3z206iVFhF/WCW7W8HubDLBzv7AvsYLx03wiGejNXNMpSpxs
+   Rcy4a2E+pXGcX4ZwJwJqyHcKbAGDbIDvWVb20baWajsjDSC71CNGIdmmI
+   1E+0mpZ68haxF4KK8PSw96M+K1EJvIkk/rIyHmRfNn0qZQdkI9PY9yntQ
+   g==;
+X-CSE-ConnectionGUID: z04YZDcNQ7qd5o7dILvv7w==
+X-CSE-MsgGUID: HNl4tYJbQVKP5UqgjkJ6HQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="45363115"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="45363115"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 13:06:12 -0700
+X-CSE-ConnectionGUID: LJOtVJ0oQNGznx11Hc0yAQ==
+X-CSE-MsgGUID: 5j4nyi6LTGmCAgWCMBGe+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="132981261"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 13:06:12 -0700
+Date: Sun, 6 Apr 2025 13:06:11 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+	linux-block@vger.kernel.org
+Subject: Re: lockdep warnings from upstream build
+Message-ID: <Z_Les3Izgqkg85_x@agluck-desk3>
+References: <Z_HArDcN1zdd9wdt@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-b4-device-wakeup-leak-iio-v1-3-2d7d322a4a93@linaro.org>
-References: <20250406-b4-device-wakeup-leak-iio-v1-0-2d7d322a4a93@linaro.org>
-In-Reply-To: <20250406-b4-device-wakeup-leak-iio-v1-0-2d7d322a4a93@linaro.org>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1002;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=l7CRhFlZ6pn6hdkl7kstlhIYoNXxtom6dCRCabxrvMU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8t2qifPOWPOc85NGw1m7yDEGSug8i9ONXMKX5
- 5gP53XtWDiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/LdqgAKCRDBN2bmhouD
- 1+B4D/0eXUZVxZoiPcZjMLxa3FH+U7uhxJSCqoHJdSpdEtOM4g0uDEfsauINOXiir8KF2EspHqx
- nkVH6hoL3EaHuDsWeD8bjY+PNKS3sThCakly4LNMYHyPCd9Hw6ikDYNkk3IIAMigdi0g9VUvBh8
- A1NZIeM2OwUbGz01zpelL3sXyRjgDxQY6d0BlX4iTPnAiqmdIq5pTVDmp+v7qZd5owzwKwYqvN2
- OCom9ADN+y/ham4MXhB7UFJoUKyrQcH7EKiqUCZHEGKCC7z25oZl26FaJCieR09OMf384mizQ7n
- zGGGFJ5Ik4Y9vMcQ6qMmM0GglVdV2VgYrHKob4im82KXGwWNcVIKS2a6KA+MGiv1riFAUOPDHzj
- h93xmc6Zfx594JWNbGfOHU7+n+zgbzGDO3KFe25OQLRHsWKNpUGOSgfTV1EVzL10JB8v1iWMvAR
- 5E/NTLjRjTwTqfqb/2M5DMEsJ4EAZi7EugacBRC8h0CFI1dJYLPtVg6Lk1R/98F/DFqe1VZhj5p
- Lg/dHImuAp5oCNfiLULw8w7XbBvIHYPeLFABam1fdzfllND6QIUUN1VX6wrr40uhxvJANSrJfL3
- 2Pc4yd55QRMjpKsKeX69vo2wtceyXiLQ5TzD53RWM1brIXiYa1zb191VmBV6xp2Glo0pnt68BgT
- ThIX3TfHGrgd1Tg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_HArDcN1zdd9wdt@agluck-desk3>
 
-Device can be unbound, so driver must also release memory for the wakeup
-source.
+On Sat, Apr 05, 2025 at 04:45:50PM -0700, Luck, Tony wrote:
+> Several email threads on this over the past few days, but none
+> seem to be getting much attention:
+> 
+> https://lore.kernel.org/all/?q=%22%28%26q-%3Eelevator_lock%29%7B%2B.%2B.%7D-%7B4%3A4%7D%2C+at%3A+elv_iosched_store%22
+> 
+> Since tomorrow is "-rc1" day I thought I'd add my lockdep splat to the
+> mix.
+> 
+> System is a 2-socket Icelake. Kernel built from:
+> 
+> f4d2ef48250a ("Merge tag 'kbuild-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild")
+> 
+> Though I saw the same thing a few days ago, so the problem was
+> introduced much earlier in the merge window.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Bisecting leads to this:
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 4fdcc2acc94ed0f594116b9141ce85f7c4449a58..96c6106b95eef60b43eb41fef67889d44d5836db 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -2719,8 +2719,11 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
- 	}
- 
- 	if (device_property_read_bool(dev, "wakeup-source") ||
--	    (pdata && pdata->wakeup_source))
--		device_init_wakeup(dev, true);
-+	    (pdata && pdata->wakeup_source)) {
-+		err = devm_device_init_wakeup(dev);
-+		if (err)
-+			return dev_err_probe(dev, err, "Failed to init wakeup\n");
-+	}
- 
- 	return 0;
- }
+ffa1e7ada456 ("block: Make request_queue lockdep splats show up earlier")
 
--- 
-2.45.2
+Which may be doing what it says on the tin. But, I don't think I've
+ever seen the "type 1 splats" on this machine even though every kernel
+I build has lockdep enabled.
 
+So it this showing up a real problem that happens to be very difficult
+to hit? Or has it introduced a false positive?
+
+-Tony
