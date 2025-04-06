@@ -1,103 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485F079CF;
-	Sun,  6 Apr 2025 13:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21C821348;
+	Sun,  6 Apr 2025 13:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743945195; cv=none; b=XsQ66SVaJVZ+tAZNMRVailszvKokAL7eDvaOnGAYrvYRurmi0lC8QRKxqwnDRUni4B+4zdSblNM6iZ6qZgFC3GkXL8XBqGlDk4K8LObz0A2C9YhEw2rk1Vo4ukqjGuKb1LRhhgkg7jqecJypYBBzAbb2JuoMtun/JmMdgrMbskg=
+	t=1743945354; cv=none; b=Yv85ZmN5C7yp++UMPDSar5wom3CHWBU8z1hLmYroUYuDGqmGuXpNDLb1y5SFjS3p5enmFx6V+jJkt5q3Myk/NrQfg5ys1/zjza7IfY3wq+0HA48UMthJ8Jot8e9zvZ+3xAHURSCKtjr+2LDYAa5Td2sWOEtZHH0/OiMTtywX+mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743945195; c=relaxed/simple;
-	bh=Ej2Hq7jpSOIG7V6PCnu6LxemPiYhAtlxrkIWOUAG6UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eoPBRVRWm/I9a7xvugMTWsJeh322IhAO2Xjb51n18S5OgRyGRzgg+3u+VG2fesH1tEzOXGi5zG0GTWx1742MczRrVNp97bdgJDnwjFG5n3TQsg/cQtRx6KxHZvGJ8bz1NEEgmHWGUj+xrq94CapZXTXBUA1o+J/0qdrBOB2Zw6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3uUTHYI; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743945354; c=relaxed/simple;
+	bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hbh/v1M4syvGnNpkkHL8nLbUyye0MNnBjkcrFiNkJ0vFcvzzOo2H4u7NzP00qJqfq6yxBEr/Curj7hrAynEux6dcTs4Xb8h/ln3zTNNwjrdbpdJmT8cp4b7oiAL0FQsyCxiVMq1KZLVOlp7r477Yt2r5b3BLrYFYE1AOtgVNIs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kj3cy5hm; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3uUTHYI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743945193; x=1775481193;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ej2Hq7jpSOIG7V6PCnu6LxemPiYhAtlxrkIWOUAG6UY=;
-  b=U3uUTHYIxUXTuHT8y1l7M+dH/T7zrI5+LnEwQG5zJ0460+oR18jiDhM3
-   m3oZOUWQVxa5cXGs6CBWoi45KHELHJ5piax4TwgwYME3D70BccWw63X0F
-   gANVEWCYLKR+PwqkJ5ubvXxu6iDTesDvBiZdBgtFW72eTl0LAs7LPmltF
-   DqwjP19JGoYfrUKvTNrwpDNxImVd9haDxgfZGzv3iKAFogtkEyLdBLynY
-   1Mg6uUj1GO3bYv2deAoSiVkaxpKQLRW/SeGHtoU9zobi/vjGfI72PYYZn
-   4MItEj1VMzTbpK0mX4rl9kep1lvi3qX4JjW1Xz0/1YTMy57aLT98pwMK0
-   w==;
-X-CSE-ConnectionGUID: sGv3FeLHTc2vYIMHFRxg2w==
-X-CSE-MsgGUID: qSI+SCBYS/aOC4LLsLAySA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="48987472"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="48987472"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 06:13:12 -0700
-X-CSE-ConnectionGUID: TDuQPgYhRYSZ8dgoaSFKIA==
-X-CSE-MsgGUID: ktbfnMUaQCWrkrOy7iYplw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="158688730"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 06:13:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1Po9-00000009ksD-1l2a;
-	Sun, 06 Apr 2025 16:13:05 +0300
-Date: Sun, 6 Apr 2025 16:13:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
-Cc: dakr@kernel.org, djrscally@gmail.com, gregkh@linuxfoundation.org,
-	heikki.krogerus@linux.intel.com, jgg@nvidia.com,
-	kevin.tian@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
-	rafael@kernel.org, sakari.ailus@linux.intel.com,
-	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
-Subject: Re: [syzbot] [acpi?] KASAN: slab-use-after-free Read in
- software_node_notify_remove
-Message-ID: <Z_J94Up33luYw6Xg@smile.fi.intel.com>
-References: <67f26778.050a0220.0a13.0265.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj3cy5hm"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240b4de10eso7124205ad.1;
+        Sun, 06 Apr 2025 06:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743945352; x=1744550152; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
+        b=Kj3cy5hmoYOdgI7Ki6jObaD4ByVXnQ6p1WsfufOd774BdTUckPMWQ3SkPM3546dYKr
+         aBqfoYAWx5eX5dPuQIydSEIwF7thft48l+W2xhnAhElRgSuYQ4MVhvSJnrhPAaVkU6G5
+         j5O1kDwT45buFglv2yQYEnaQ4yFnwyiTSfjPm0gdKcw1uDJxvYgCqK61IzuvYUhc1nL7
+         UtMD2fFEuaFRI8ZRb/dL01uwIPh3Di/Hg7/4Jphe/9KqpznCPZOxyqf0neFAmDvaBeUg
+         7Y5J4+yO+TfmOL11k1X6gB8frU1JJ1ch1ww8mpdh8UG16hiOM2afMPnzF3wSFM/W6LX1
+         ZDJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743945352; x=1744550152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
+        b=PHpQFEAQvvouWsCs6mWdm2I5xBHLdPzQHV3u0zKwF1MivxinK0+opBTzO93LmDXUPD
+         y8y+4dNRAINC7ZUir7i34g+5mihk1QNASWFgvQ/xyU/woXeT9a2ENERNHQ610NC7ogb+
+         wyFI7hOdIMm//zy3L8IPfza4PKF58+nUxz7p0K0w/5T9aYFcuhkHE3rXvxMs6/2yUxFV
+         GZe+LTEyoHbQ1qPFCMGknC2/41Ouj9WNDuENyJoT7CgLCwncqJaGbrKGOLP82PoNEXTh
+         n6Y9EKid9VAeyCkhSzeKuex9dPGLq7gbaggByDRzWQFcoCz/eXfU4B9He8h0BF8pjeb0
+         wwuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZTfus12X6KEU2g2Ma9w+TRKRsE7kLGdsirIbr/8eaiuArLFHHM4T3qjUtcqU16LwMKXPDsBvKYnum2HQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaXLY5Fbqp4UtJLja05eaQYvXPeg0eM+okaZj6FCORkNpZTwMR
+	qvl+CBk/e4cSo5NA2ETnbI3XPPf/gDKwBEzvOGIo8k0q4ztZrwGqKXafQCBvaBeQYq5gLiKyoXv
+	KQMpN9D/zUQs3m8atRbmE4muJtl8=
+X-Gm-Gg: ASbGncubtOjgls1lAD9VVGEeK/eOrADPzBf32S4KgGDQL5IVGoyjgDmTtEPE/M8sojX
+	2V4iHkYC5tiqsWYxIBA/N43/6p1dBoZwOyfB+GGBffSSwkpYKfzSsy7BtWv6GrdMknr34OJ1yIN
+	ppFuoGSRZzsc+6E/5tH4BSJ8kp5Q==
+X-Google-Smtp-Source: AGHT+IE66LbNMGTzh7l4BnJkPePaFBEgdyDbrqvGEbpMM8l0ljxHmQ3JKNpqbmoR516pPyo1zi/jEcUl7UZLm71jU1c=
+X-Received: by 2002:a17:90b:1b11:b0:305:5f20:b28c with SMTP id
+ 98e67ed59e1d1-306a48a5bebmr5175613a91.5.1743945351829; Sun, 06 Apr 2025
+ 06:15:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67f26778.050a0220.0a13.0265.GAE@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
+ <CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com>
+ <tencent_3DAE6B923FC67B543D90D970@qq.com> <CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
+ <tencent_4FDA7C47625666C054E0F8D7@qq.com> <tencent_2441D11C4D8973701A185871@qq.com>
+In-Reply-To: <tencent_2441D11C4D8973701A185871@qq.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Apr 2025 15:15:39 +0200
+X-Gm-Features: ATxdqUGd468m3qog8EE8Em0XzKuoaq96kK4ejJDgOX5tIIKOrOwwQLKMpdf3i_o
+Message-ID: <CANiq72=1ukM1T-2n3Z-4piNLLmRGxuhi91V38yDnfz1J5or8QQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
+To: =?UTF-8?B?5bC554aZ5ZaG?= <xizheyin@smail.nju.edu.cn>
+Cc: rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Miguel Ojeda <ojeda@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 06, 2025 at 04:37:28AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=15a807cf980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=24f9c4330e7c0609
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109077b0580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13717c3f980000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/e4bfa652b34a/disk-acc4d5ff.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/3d19beb8bb92/vmlinux-acc4d5ff.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/e7298ccc6331/bzImage-acc4d5ff.xz
+On Sun, Apr 6, 2025 at 2:27=E2=80=AFPM =E5=B0=B9=E7=86=99=E5=96=86 <xizheyi=
+n@smail.nju.edu.cn> wrote:
+>
+> I submitted the v3 version of the patch, sorry for the trouble. After thi=
+s submission, I am familiar with some of the process, but I believe I need =
+to spend more time reading through the documentation.
 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+Thanks, and no need to apologize!
 
-#syz test: git@bitbucket.org:andy-shev/linux.git test-swnode
+> By the way, where can I see the latest emails? I'm interested in this pro=
+ject and would like to keep up to date with the latest progress.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Please see https://lore.kernel.org/rust-for-linux/
 
-
+Cheers,
+Miguel
