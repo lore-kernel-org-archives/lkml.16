@@ -1,122 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAE326289
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 11:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232F42A83;
+	Sun,  6 Apr 2025 11:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743940007; cv=none; b=CFJRdcgonanRbh4x+4p7Uv7GP/GaHTiFNPLBw00DfCjGemrskDGhzJZkeVhjhXMwt/cDlXrCBxqNx0ZTsi4EQVNHkBact19G22En7kkLsYY5vfWHRWGHWVtNxsws0fD8M04vFH7FEjmbA6OTC/UU2zxTl/geYvXQRzvwCFuGveo=
+	t=1743940554; cv=none; b=qTL11babrAMSFkyssxvkaNfJ5CSYujM/LrGkD9A5+4hJWi/8h0LamQOK3A5Us0fBpO55AOYrZUhhf5ES3XssSPEJeBamAVAkwKssdlsF5lXXGKGtrsggWDDlHNgeBXQxsqF6JppaC02N4aYReRjYp3e7RN5zhOFfFpjJRDCXc8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743940007; c=relaxed/simple;
-	bh=qqe6Zi6MQG+sA1pxEyvmzL5igGv8DBuT289dblK3TGs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SLaNIUL0GPrC5MNKcwsQ4fRJpJGaMs4NGALPnrJt76q5y2FOlILbZLb9j5A5Wtxr/jlYMb9nc3+d6M4Cs/MH6mWFbI4pDn7k0wDI4qyt/tIDN8fOsfXPMzDFB97DIeT2EqgKGF5Gn5Pzd535PWuigCDAJBOWqyDnHd3LdtE7E0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OMxbjjzX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KtW31cbm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743940554; c=relaxed/simple;
+	bh=suNOTfr/YNZFN6fKHQkFgzEELmU+EjwrNjediZCA8Zg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Afi19qYUc+3Cot+wtZCZj2xfDsokK6Vn8tkNI5fJ/CuH8/CHyovkikwfXiLQm4ReoZa+jRUjTGKe7ORNH1QNLF7YYURt/heewTJZ/OkO9zQQChT5MPV2AI2IgF9yw+uFz1iNXTzlvv/XV2nl7nnbfWBoxxkosPgGLcwroZWPOj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXN1yvj2; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OMxbjjzX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KtW31cbm"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743940003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o7S/wiaEjaLl4Hv30YoGRRVs9Yys2GtJ8UB6Hqcas3A=;
-	b=OMxbjjzXJaPO9OxLKCD4wOvRFqdlejj0E38+HwaqPoXt9WGcUNCqGZzzdGOFnWcZl9EZy6
-	XHxpvj0nuOJjLkOcKjnqbw02/tCwwVQP6WSn7xWv/ikRPguNe/3j+Q5nFToA3Hbh9re2IJ
-	5j275DIwBW499HI1pxaaQ9cicCb27AuV28Ar8w5wuR+iFSl/c3kBNq7560We5G9Y+wC2Av
-	OtfvQAZkhPgdSX4daRRtx0VOqU9bBne3MBAckD0czcIzZHFbOERuIbr/lGI6oBafQ+VeZ1
-	1w6SE0ysqMyL+kIDi4Yr1HHFvBmIALYhP4ZNE0gtsyJ8jHeXIkKfkdTey5jffg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743940003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o7S/wiaEjaLl4Hv30YoGRRVs9Yys2GtJ8UB6Hqcas3A=;
-	b=KtW31cbmapYQlGQu+4GnEFrLBgVZ8wzictKTSdbYfeERFJIVr9X+A7V8aro9xpiX8AlCmj
-	AP6pYOXeSiX35jCg==
-To: I Hsin Cheng <richard120310@gmail.com>,
- syzbot+d5e61dcfda08821a226d@syzkaller.appspotmail.com
-Cc: anna-maria@linutronix.de, frederic@kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, Alexander
- Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
- Vyukov <dvyukov@google.com> 
-Subject: Re: [RFC PATCH RESEND] timerqueue: Complete rb_node initialization
- within timerqueue_init
-In-Reply-To: <20250405080533.519290-1-richard120310@gmail.com>
-References: <67e52451.050a0220.2f068f.0027.GAE@google.com>
- <20250405080533.519290-1-richard120310@gmail.com>
-Date: Sun, 06 Apr 2025 13:46:43 +0200
-Message-ID: <878qodwlzw.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXN1yvj2"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so1028685a91.1;
+        Sun, 06 Apr 2025 04:55:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743940552; x=1744545352; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ILU70+EHjIDSIaY7WTl47NE2TYxzfvxbyces6ACAA0s=;
+        b=LXN1yvj2X1zfla841vlGanLp9Bn3i8DzQutg95/Vo7tjvWJwZW42pKqlW3Y5F6dRP+
+         zXhIU2QjmeboaEkrj4+8aya9W2tuzWT6wGLjNNx6C7nJfe082fKBMKzg4oDdJ+LiRl1Q
+         oM2F8YKnl3X3CdXVvVf/m1UPn7mv/3uNetRe9qdWR8wCR19V2WD7wbgy3UaezVwqw5t2
+         60zlQMMa48qP4GrV1RqkbQUii6NYTNQRHSDq+9+aAPZpDVIGjA0QixquLFdFNaDftOgN
+         /zULyvD2tVpe92jI8GYJKUEaWXSsbPbm7aca0583dhaKEwRGpMa5c6xGDFtqsltpPu82
+         AUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743940552; x=1744545352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ILU70+EHjIDSIaY7WTl47NE2TYxzfvxbyces6ACAA0s=;
+        b=SOBTNUxBzB+Uh7OF7CI0geLHTRfPL+fcR8NR8zAGPYIMnRsv6mDbWPC5kRXcDVLPVZ
+         beq6LMQjDXRnGSnmDRRCilnxagUDoXIwUVBRA0OHEz5M8yFsRug30p6m1QsP5hEjIF5N
+         fgjWG5spu+k1wrlbtnrKqLXK2P9GfumQ9wASWQYInrFPp2rB2uwrPtamGFhAgSRoXCFL
+         vMbRH1Jds+2QNObHt/dEhmdbNJ5t/xwlWGL+JTPqwiVUIiXOSupzr7XQ2KY4rc5VTDaQ
+         xJLmmiVXncbZcH25zaRrufBJNY52odVZIl1qZ4zt4FHIWtpCm1IHUjr0DMVPKaT/VkWP
+         zXNA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8L0lABUdkeml9TEpF2rYfGYZFQ6RDQSmuK5nhi32LZjijCu/tMiUtLPCg4kWevd4c+XasWwx+1Ebd8p8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVA9dfY2EZ6rpLNmVnNS6WY/lQLEp/bFEDAAnrSk1TGxkJd0v0
+	VgW4wZq9CYjeliBjp5aggW6fyylgDvOomgs1SPggtpv4SU0ETaYXfWFPbmygIhk9AApl4MhnoHL
+	scGzQXOcvbyd7wI1Zy+JKY/ULyTQ=
+X-Gm-Gg: ASbGncvMNb7CNWFrv6F9xRIWzEg6ZU6hjrPvgu1sV+nvCcAo97ZwTnIOYvy6I7rfCYH
+	KqkhKmSPiNb5/T56KZ9bcctZTUiectRFe+1Xdy9Q6sEDkZS214FQD6+b+wzbBd7dEdVjNAIw2Ys
+	sBZzHoO8tonhKpJcZhpXRQk93G/g==
+X-Google-Smtp-Source: AGHT+IEWWHws8/u9BPGK306cCUzGQimILJG9TjNpwQv1ItukQ3vuptggNaYfLMXH6nG/4rCWuMevtKHZp8S1bwZlBp4=
+X-Received: by 2002:a17:90b:4f4a:b0:2fa:6055:17e7 with SMTP id
+ 98e67ed59e1d1-306a49ab484mr4889067a91.8.1743940552537; Sun, 06 Apr 2025
+ 04:55:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <07D9F73C7B35C74B+20250406112605.6152-1-xizheyin@smail.nju.edu.cn>
+In-Reply-To: <07D9F73C7B35C74B+20250406112605.6152-1-xizheyin@smail.nju.edu.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Apr 2025 13:55:39 +0200
+X-Gm-Features: ATxdqUF7FSGJ78e5lilCw9AhK2qJ8vjfdbkqRP7h0m0ytM0AaqL23Nd7kfEQHTw
+Message-ID: <CANiq72n5C4YA_=HYuSKZnhYJJ8Fnby7n8ME9u=P3=Ycu7hnonw@mail.gmail.com>
+Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
+To: Xizhe Yin <xizheyin@smail.nju.edu.cn>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Benno Lossin <benno.lossin@proton.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 05 2025 at 16:05, I. Hsin Cheng wrote:
-> The children of "node" within "struct timerqueue_node" may be uninit
-> status after the initialization. Initialize them as NULL under
-> timerqueue_init to prevent the problem.
+On Sun, Apr 6, 2025 at 1:28=E2=80=AFPM Xizhe Yin <xizheyin@smail.nju.edu.cn=
+> wrote:
+>
+> than Markdown autolinks [text](URL). This inconsistency makes the
 
-Which problem?
+The commit message here needs an update. But, yeah, the contents look
+like what I meant, thanks! :)
 
-It's completely sufficient to use RB_INIT_NODE() on initialization.
+I think there is another in rust/kernel/block/mq/gen_disk.rs and one
+in scripts/generate_rust_target.rs.
 
-As you did not provide a link and no explanation, I had to waste some
-time to search though the syzbot site and looked at the actual issue:
+Also, the changes in `*_vendor.rs` files should probably be skipped,
+since we try to keep those as close to upstream as possible.
 
-BUG: KMSAN: uninit-value in rb_next+0x200/0x210 lib/rbtree.c:505
- rb_next+0x200/0x210 lib/rbtree.c:505
- rb_erase_cached include/linux/rbtree.h:124 [inline]
- timerqueue_del+0xee/0x1a0 lib/timerqueue.c:57
- __remove_hrtimer kernel/time/hrtimer.c:1123 [inline]
- __run_hrtimer kernel/time/hrtimer.c:1771 [inline]
- __hrtimer_run_queues+0x3b7/0xe40 kernel/time/hrtimer.c:1855
- hrtimer_interrupt+0x41b/0xb10 kernel/time/hrtimer.c:1917
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1038 [inline]
- __sysvec_apic_timer_interrupt+0xa7/0x420 arch/x86/kernel/apic/apic.c:1055
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0x7e/0x90 arch/x86/kernel/apic/apic.c:1049
+Please Cc also others that may maintain particular files, e.g. Benno
+for pin-init (you can use `scripts/get_maintainer.pl`):
 
-So this code removes a queued timer from the RB tree and that KMSAN
-warning happens in rb_next(), which is invoked from rb_erase_cached().
+    https://rust-for-linux.com/contributing#submitting-changes-to-existing-=
+code
+    https://rust-for-linux.com/contributing#submitting-patches
 
-The issue happens in lib/rbtree.c:505
+Finally, please increment the version number of the patch series when
+sending a new version (e.g. `git format-patch -v3`).
 
-505:    while (node->rb_left)
-506:          node = node->rb_left;
+Thanks!
 
-which is walking the tree down left. So that means it hits a pointer
-which points to uninitialized memory.
-
-All timers are queued with rb_add_cached(), which calls rb_link_node()
-and that does:
-
-    node->rb_left = node->rb_right = NULL;
-
-Which means there can't be a timer enqueued in the RB tree which has
-rb_left/right uninitialized.
-
-So how does this end up at uninitialized memory? There are two
-obvious explanations:
-
-    1) A stray pointer corrupts the RB tree
-
-    2) A queued timer has been freed
-
-So what would this "initialization" help? Nothing at all.
-
-We are not adding some random pointless initialization to paper
-over a problem which is absolutely not understood.
-
-Thanks,
-
-        tglx
-
-
+Cheers,
+Miguel
