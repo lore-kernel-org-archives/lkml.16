@@ -1,126 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5029742AA5;
-	Sun,  6 Apr 2025 18:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A846C482F2;
+	Sun,  6 Apr 2025 18:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743964237; cv=none; b=NVRuVVlJ25yRASX55JGNP0kg2xYqkRaQwDVklfb9lr23pRN+T0uCtGB/OX9+vXelul3ZAL7IHn8qUWt5A2m1ROUmC92peSMRmXO82H5oVJiFouIkJgDprW9zQKr/vnJT3who440IsE6ydqPQWdibfjqk+/rrYP075zxtUyggXqc=
+	t=1743964384; cv=none; b=RlpCh76wrcG+jqakCiskKHQBJsGN+qVkW/enmM3a8FHozz8CpKdYR4T8RkLIsTI5y4BSeyTLLS8tgWWPX7ggOwA7gltZMh7Mhm2/gNYW+HCh/Zixu1p879pfuxkJ+pS0u7Lo+Q7aUkZt+8P2JcboU0zcQY623FEb4u0zZNoEhN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743964237; c=relaxed/simple;
-	bh=Mb+3+lFO7O0k+Q67FsmWRlgugLRno3Z7bhI9KUzzbdQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GrheN+CzRhmbQzTiRmRnkzQMdt5q6MMcCupFRvN1y9+Tq2OwTbuhvjV4eqzyX1rpxH0U9aRVqHl9tDUW3tLUCZxTd8fDJt/HuH33M2a2mcc2rpRHPhcrdJ+2eh0hq4eoOW7Vl5DLDI3CT3KwQCzgR528o02DPuQjFIx7NOlGTz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLlKND+q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743964384; c=relaxed/simple;
+	bh=x6Ayw8L8ZP60aZPv5QH8Khfcj66Lmwhfo0ItobWxbdk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cOo6WfDbEdlZ3sjNvXdTpM4pUb4jPd+VE4QgVSJF1ue3+iMKp3t3ewrEnQZyHmRed6WKWhl6nQIucxxx0/eFYezp7puZYZ75gAXQt82Id3Ly1AkB6vVDSYUnkv8Ut9JqfdDJcbNW4qGro3FY5j1o/viCcl2eY41V3wgHN/P4Qvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZAJeNn8f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=545mBrFz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLlKND+q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2D5C4CEE3;
-	Sun,  6 Apr 2025 18:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743964237;
-	bh=Mb+3+lFO7O0k+Q67FsmWRlgugLRno3Z7bhI9KUzzbdQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QLlKND+qzRO6gM0XRkL9CXQlKl0we0+nAxZWpyhmR0HvxTGNEpup2f0AFleBm0gU2
-	 PHXz6iBJgdodawPLMslE/y5WCLKTm74nz4E1fZG83uDoYWL6DiAMjWvSFJ6uAHwFP4
-	 a7DhBMJGJIndt40wdE1pTMIVvcpoeoPAGjbz46LnoEiVUd74rTAymtVGowMisa5mtv
-	 uz9onndgJ0VuMIiHvMWH+KOOuupSYQlloosq7ivaT2xx/mZQXB1I5+SXWeNiD5gnHW
-	 Kld9Un/r7QjziW/mp1s93Su9Sge+VXSehC6nBNyAWSvl9gqBt1w8d+0/2xhd+jgfnw
-	 +Ci24NZLBcwAw==
-Message-ID: <718c954a-055f-4fda-aaf5-1e7e6167f715@kernel.org>
-Date: Sun, 6 Apr 2025 20:30:30 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZAJeNn8f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="545mBrFz"
+Date: Sun, 06 Apr 2025 18:33:00 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743964380;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tyz2uYt2pM28Tu4JsFFpPTG9zEJEPw/Qlsjh1Do73js=;
+	b=ZAJeNn8f2xvuoPIC2j5MgUP68bl8VA+b8Gy05XN8kfvt1w4Ryv2sW/vVvROvUl68bWfASE
+	SEeeAQd3S5ZX2fF+z8KxPwL4eMlxcPu7sKGlG0vyJm1MLZxEfu+J+wDj0U+mBVkMZyXXX7
+	GyHXUXg/Bcwov5TOWHMW0SQaCFJvuKeScQsWA/uUOq3jlMj7WtuS30Z/8eTTFOCiHf4gz+
+	ztqvryDzovXXfv9n+3d4eswjFnwhCQIWVUEVzFV+EaNj7eU42qWh0c5NIZsDVE+aJkATDc
+	+g57qNEyw7eXtiTtO5TqaoWsf3ta4iMif99QN/e4ZTrDSWi3DsYAZVJY74ISXg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743964380;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tyz2uYt2pM28Tu4JsFFpPTG9zEJEPw/Qlsjh1Do73js=;
+	b=545mBrFzsYzHeqna36niRQLJWgow84CGDAqJhdjg/i2VsEbAsKp5VbQqAACChmB00QFCrO
+	EREKW4KnTRoH2IDg==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/boot: Move the early GDT/IDT setup code into startup/
+Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ David Woodhouse <dwmw@amazon.co.uk>, "H. Peter Anvin" <hpa@zytor.com>,
+ Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250401133416.1436741-12-ardb+git@google.com>
+References: <20250401133416.1436741-12-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 26/32] rtc: s5m: prepare for external regmap
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
- <20250403-s2mpg10-v3-26-b542b3505e68@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250403-s2mpg10-v3-26-b542b3505e68@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174396438008.31282.5734460975851851027.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 03/04/2025 10:59, André Draszik wrote:
-> The Samsung S2MPG10 PMIC is not connected via I2C as this driver
-> assumes, hence this driver's current approach of creating an I2C-based
-> regmap doesn't work for it, and this driver should use the regmap
-> provided by the parent (core) driver instead for that PMIC.
-> 
-> To prepare this driver for s2mpg support, restructure the code to only
-> create a regmap if one isn't provided by the parent.
-> 
-> No functional changes, since the parent doesn't provide a regmap for
-> any of the PMICs currently supported by this driver. Having this change
-> separate will simply make the addition of S2MPG10 support more
-> self-contained, without additional restructuring.
-> 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> ---
+The following commit has been merged into the x86/boot branch of tip:
 
+Commit-ID:     cc34e658c6db493c1524077e95b42d478de58f2b
+Gitweb:        https://git.kernel.org/tip/cc34e658c6db493c1524077e95b42d478de58f2b
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Tue, 01 Apr 2025 15:34:21 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 06 Apr 2025 20:15:14 +02:00
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+x86/boot: Move the early GDT/IDT setup code into startup/
 
-Best regards,
-Krzysztof
+Move the early GDT/IDT setup code that runs long before the kernel
+virtual mapping is up into arch/x86/boot/startup/, and build it in a way
+that ensures that the code tolerates being called from the 1:1 mapping
+of memory.
+
+This allows the RIP_REL_REF() macro uses to be dropped, and removes the
+need for emitting the code into the special .head.text section.
+
+Also tweak the sed symbol matching pattern in the decompressor to match
+on lower case 't' or 'b', as these will be emitted by Clang for symbols
+with hidden linkage.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250401133416.1436741-12-ardb+git@google.com
+---
+ arch/x86/boot/compressed/Makefile |  2 +-
+ arch/x86/boot/startup/Makefile    | 15 +++++-
+ arch/x86/boot/startup/gdt_idt.c   | 82 ++++++++++++++++++++++++++++++-
+ arch/x86/kernel/head64.c          | 74 +---------------------------
+ 4 files changed, 98 insertions(+), 75 deletions(-)
+ create mode 100644 arch/x86/boot/startup/gdt_idt.c
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 37b85ce..0fcad7b 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -73,7 +73,7 @@ LDFLAGS_vmlinux += -T
+ hostprogs	:= mkpiggy
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+ 
+-sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(_text\|__start_rodata\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
++sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
+ 
+ quiet_cmd_voffset = VOFFSET $@
+       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+index 73946a3..34b324c 100644
+--- a/arch/x86/boot/startup/Makefile
++++ b/arch/x86/boot/startup/Makefile
+@@ -1,6 +1,21 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
++KBUILD_CFLAGS		+= -D__DISABLE_EXPORTS -mcmodel=small -fPIC \
++			   -Os -DDISABLE_BRANCH_PROFILING \
++			   $(DISABLE_STACKLEAK_PLUGIN) \
++			   -fno-stack-protector -D__NO_FORTIFY \
++			   -include $(srctree)/include/linux/hidden.h
++
++# disable ftrace hooks
++KBUILD_CFLAGS	:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS))
++KASAN_SANITIZE	:= n
++KCSAN_SANITIZE	:= n
++KMSAN_SANITIZE	:= n
++UBSAN_SANITIZE	:= n
++KCOV_INSTRUMENT	:= n
++
++obj-$(CONFIG_X86_64)		+= gdt_idt.o
+ 
+ lib-$(CONFIG_X86_64)		+= la57toggle.o
+ lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
+diff --git a/arch/x86/boot/startup/gdt_idt.c b/arch/x86/boot/startup/gdt_idt.c
+new file mode 100644
+index 0000000..b382d5d
+--- /dev/null
++++ b/arch/x86/boot/startup/gdt_idt.c
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/linkage.h>
++#include <linux/types.h>
++
++#include <asm/desc.h>
++#include <asm/setup.h>
++#include <asm/sev.h>
++#include <asm/trapnr.h>
++
++/*
++ * Data structures and code used for IDT setup in head_64.S. The bringup-IDT is
++ * used until the idt_table takes over. On the boot CPU this happens in
++ * x86_64_start_kernel(), on secondary CPUs in start_secondary(). In both cases
++ * this happens in the functions called from head_64.S.
++ *
++ * The idt_table can't be used that early because all the code modifying it is
++ * in idt.c and can be instrumented by tracing or KASAN, which both don't work
++ * during early CPU bringup. Also the idt_table has the runtime vectors
++ * configured which require certain CPU state to be setup already (like TSS),
++ * which also hasn't happened yet in early CPU bringup.
++ */
++static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
++
++/* This may run while still in the direct mapping */
++static void startup_64_load_idt(void *vc_handler)
++{
++	struct desc_ptr desc = {
++		.address = (unsigned long)bringup_idt_table,
++		.size    = sizeof(bringup_idt_table) - 1,
++	};
++	struct idt_data data;
++	gate_desc idt_desc;
++
++	/* @vc_handler is set only for a VMM Communication Exception */
++	if (vc_handler) {
++		init_idt_data(&data, X86_TRAP_VC, vc_handler);
++		idt_init_desc(&idt_desc, &data);
++		native_write_idt_entry((gate_desc *)desc.address, X86_TRAP_VC, &idt_desc);
++	}
++
++	native_load_idt(&desc);
++}
++
++/* This is used when running on kernel addresses */
++void early_setup_idt(void)
++{
++	void *handler = NULL;
++
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
++		setup_ghcb();
++		handler = vc_boot_ghcb;
++	}
++
++	startup_64_load_idt(handler);
++}
++
++/*
++ * Setup boot CPU state needed before kernel switches to virtual addresses.
++ */
++void __init startup_64_setup_gdt_idt(void)
++{
++	void *handler = NULL;
++
++	struct desc_ptr startup_gdt_descr = {
++		.address = (__force unsigned long)gdt_page.gdt,
++		.size    = GDT_SIZE - 1,
++	};
++
++	/* Load GDT */
++	native_load_gdt(&startup_gdt_descr);
++
++	/* New GDT is live - reload data segment registers */
++	asm volatile("movl %%eax, %%ds\n"
++		     "movl %%eax, %%ss\n"
++		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
++
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
++		handler = vc_no_ghcb;
++
++	startup_64_load_idt(handler);
++}
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index fa9b633..5b993b5 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -512,77 +512,3 @@ void __init __noreturn x86_64_start_reservations(char *real_mode_data)
+ 
+ 	start_kernel();
+ }
+-
+-/*
+- * Data structures and code used for IDT setup in head_64.S. The bringup-IDT is
+- * used until the idt_table takes over. On the boot CPU this happens in
+- * x86_64_start_kernel(), on secondary CPUs in start_secondary(). In both cases
+- * this happens in the functions called from head_64.S.
+- *
+- * The idt_table can't be used that early because all the code modifying it is
+- * in idt.c and can be instrumented by tracing or KASAN, which both don't work
+- * during early CPU bringup. Also the idt_table has the runtime vectors
+- * configured which require certain CPU state to be setup already (like TSS),
+- * which also hasn't happened yet in early CPU bringup.
+- */
+-static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
+-
+-/* This may run while still in the direct mapping */
+-static void __head startup_64_load_idt(void *vc_handler)
+-{
+-	struct desc_ptr desc = {
+-		.address = (unsigned long)&RIP_REL_REF(bringup_idt_table),
+-		.size    = sizeof(bringup_idt_table) - 1,
+-	};
+-	struct idt_data data;
+-	gate_desc idt_desc;
+-
+-	/* @vc_handler is set only for a VMM Communication Exception */
+-	if (vc_handler) {
+-		init_idt_data(&data, X86_TRAP_VC, vc_handler);
+-		idt_init_desc(&idt_desc, &data);
+-		native_write_idt_entry((gate_desc *)desc.address, X86_TRAP_VC, &idt_desc);
+-	}
+-
+-	native_load_idt(&desc);
+-}
+-
+-/* This is used when running on kernel addresses */
+-void early_setup_idt(void)
+-{
+-	void *handler = NULL;
+-
+-	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
+-		setup_ghcb();
+-		handler = vc_boot_ghcb;
+-	}
+-
+-	startup_64_load_idt(handler);
+-}
+-
+-/*
+- * Setup boot CPU state needed before kernel switches to virtual addresses.
+- */
+-void __head startup_64_setup_gdt_idt(void)
+-{
+-	struct desc_struct *gdt = (void *)(__force unsigned long)gdt_page.gdt;
+-	void *handler = NULL;
+-
+-	struct desc_ptr startup_gdt_descr = {
+-		.address = (unsigned long)&RIP_REL_REF(*gdt),
+-		.size    = GDT_SIZE - 1,
+-	};
+-
+-	/* Load GDT */
+-	native_load_gdt(&startup_gdt_descr);
+-
+-	/* New GDT is live - reload data segment registers */
+-	asm volatile("movl %%eax, %%ds\n"
+-		     "movl %%eax, %%ss\n"
+-		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
+-
+-	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
+-		handler = &RIP_REL_REF(vc_no_ghcb);
+-
+-	startup_64_load_idt(handler);
+-}
