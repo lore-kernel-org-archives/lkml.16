@@ -1,94 +1,137 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A6518E25;
-	Sun,  6 Apr 2025 00:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D9B610D;
+	Sun,  6 Apr 2025 00:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743898620; cv=none; b=PIiSTBayJe6lyBAeTMrzkCdXVEwwQ2Sc82obW07yyEKf9QFRx2hAJGLJqjGn2StRd1QhfksBzYasqfY7NlXF8P98GJHtIGPZiGjdDFpaC1hJ1G7BANw6btZoK21E//2YtfrFOOFaD9AQsXYdxmwVD7qYi2BWmkC7wk+1W5ya8oE=
+	t=1743900502; cv=none; b=nJr9OVKUHRTJ2CTSKMHF8CIT8hKunF/urehXfL/Ivx8OrMJ9HgiD1q4QOD68/5G/Mu7y2tnWhP8h92mQV3p4LgAhT/JDMuQl0W2GE2JDUnNVrnzvfDpuF77AG4166RQNGv+Jrj87N8uIt7EID0l65cQ67idoa8dtqspCKvLhWuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743898620; c=relaxed/simple;
-	bh=1gU66AhCVQ458knRRqYdIvSsqU5W4dAUpbGEMUZD95M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=hOVlO5W9wUxU6m/7X9aroMNJiTTjXN8Za1eWAN19DNeTWU+7itkAoL5KANIATBVRNP6AZLR4CbkSWcMLfYvcK2etK4aWhRByOQvUX8AWpTVC5qHvmh+A7R7snTe0ZsXogijvpGGH/OYi5lIfqMP96tUxUDstU3AwFbecj1xdJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RMRG2WJI; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743900502; c=relaxed/simple;
+	bh=YtY8yKPGTxpv3/8LUl6pWN1bg8RbIw7n5Q9ES0ZaE5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nM2C4riUlK79SUj+bXwNozsdtM0a31EaJtc5zeTOFeV6r4LRtFSS/4jFBQO2Kq8XvNDk9UhyN4ITZGO6Hj/kjEJqiVxR/MkysFaAE/YoDZIuPnJ11ISCsHkmCY4NurGVT731r1CO0PuPaBhR29H/UgiMRe9Ui5kCADWlo6O8+Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MoB+DQ7V; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RMRG2WJI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A6D71433E8;
-	Sun,  6 Apr 2025 00:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743898609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ROu6wF0yx4tuSS3BhfWfPZ8/7j4ZcyS0KOFip7yllzk=;
-	b=RMRG2WJIUh8Tkbsv3CMh3RIqOjXbovdt9DJmokY1EztSPfEr/qURcRQZUGiycQUbaR0b9q
-	YoEA2qxhJOdA4TB6OHjcri/uNJX2S7IDdpihCz4S6blh6fEiundnK5sRmOlV5nthBiukDu
-	uIzfJWKrBFt+v0Yfzw2q4tG6RXsbpow0qJbqIfn7u7Mz0eYeFWhTtkSnZg/TspTwBQ14FG
-	bWWabd+C1dqZ41uG+0LjJ1TfnUCB1hUukzIHk1hf8Yjuowgdbyr34I9o5hAHMFNI0St1P/
-	uOX6WxhBn0SiBvEKhEy7OhRcOEXF88b426lDEW+/cGjDdD1Y1V7DWz+VXdhfTg==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MoB+DQ7V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743900500; x=1775436500;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YtY8yKPGTxpv3/8LUl6pWN1bg8RbIw7n5Q9ES0ZaE5k=;
+  b=MoB+DQ7VfmmX9oT1KSAaNP575sZnIS3UEFHPSvyDsz3Pv9JINc10lp3/
+   sCesGt9VvCBZBiq0dEpLQtoWWD5Q8oegMuSZUui+4wYJl82BwV89YWt/u
+   RYyU6v2uYLXEkbpdxrC3ddTiRmflY+dBorlZHOrHBGxVqLJtRsAQwyJBQ
+   Xl38fWFKxysAYrEJd1AiduwZS3ZWtW4OQgKdASXjpQGbhJm8HTTCnijHv
+   RMCBwdYV6oyvi7km2KooJk/NMfLQZ50BcddA9G2i/Gkq2Z56SPAVIY3uf
+   ZD4/NupCtODn8p/+akhT/lhsG2ZgwJ1YwLNzRCVMqWu71m6zQOHVmRwBF
+   A==;
+X-CSE-ConnectionGUID: bFzB9honSVKcTwnxunihAQ==
+X-CSE-MsgGUID: LF5qSLEwQka3LOjRrbZScw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45199358"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="45199358"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 17:48:19 -0700
+X-CSE-ConnectionGUID: vtCmNRHnSni3xq2chpYLJQ==
+X-CSE-MsgGUID: BQdb/O19SvWkgWn0wVHYIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="127499624"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 05 Apr 2025 17:48:16 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1EBJ-0002NH-1g;
+	Sun, 06 Apr 2025 00:48:13 +0000
+Date: Sun, 6 Apr 2025 08:48:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, manivannan.sadhasivam@linaro.org,
+	thierry.reding@gmail.com, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jonathanh@nvidia.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, Hans Zhang <18255117159@163.com>
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+Message-ID: <202504060814.4HRuwajf-lkp@intel.com>
+References: <20250405145459.26800-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 06 Apr 2025 02:16:41 +0200
-Message-Id: <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Jingbao Qiu"
- <qiujingbao.dlmu@gmail.com>
-Cc: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <unicorn_wang@outlook.com>, <dlan@gentoo.org>, <linux-pwm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800
- SoC
-From: "Thomas Bonnefille" <thomas.bonnefille@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
- <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
-In-Reply-To: <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleehjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepggfgtgffkffvvefuhffofhgjsehtqhertdertdejnecuhfhrohhmpedfvfhhohhmrghsuceuohhnnhgvfhhilhhlvgdfuceothhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteeuvdelhfetudejvedtffegveejteeuvdduheethffgueetfeehgfdutdeftdetnecukfhppedvrgdtudemtggsudelmeelledvieemfhektddtmeduuddumegtughfjeemgeeghehfmeeisgejheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeelledvieemfhektddtmeduuddumegtughfjeemgeeghehfmeeisgejhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepthhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehqihhujhhinhhgsggrohdrughlmhhusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvl
- hdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepughlrghnsehgvghnthhoohdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: thomas.bonnefille@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250405145459.26800-1-18255117159@163.com>
 
-Hello,
+Hi Hans,
 
-On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
->> [...]
->> +	if ((state & BIT(pwm->hwpwm)) && enable)
->> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
->> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
->> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
->
-> This looks strange. If BIT(hwpwm) is already set, set it again?!
-> Also if you used the caching implemented in regmap, you don't need to
-> make this conditional.
->
+kernel test robot noticed the following build errors:
 
-I was testing the series and noticed indeed an issue in this driver at
-those lines. If PWM_CV1800_OE isn't set by something else than the
-kernel it will never be set and so, there will never be a PWM outputted.
+[auto build test ERROR on a8662bcd2ff152bfbc751cab20f33053d74d0963]
 
-Using :
-    if (!(state & BIT(pwm->hwpwm)) && enable)
-Solved the issue but as Uwe said you can probably rely on regmap caching
-to avoid this condition.
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/pci-tegra194-Fix-debugfs-cleanup-for-CONFIG_PCIEASPM/20250405-230047
+base:   a8662bcd2ff152bfbc751cab20f33053d74d0963
+patch link:    https://lore.kernel.org/r/20250405145459.26800-1-18255117159%40163.com
+patch subject: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+config: arm-randconfig-002-20250406 (https://download.01.org/0day-ci/archive/20250406/202504060814.4HRuwajf-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504060814.4HRuwajf-lkp@intel.com/reproduce)
 
->
-> ...
->=20
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504060814.4HRuwajf-lkp@intel.com/
 
-Do you plan on sending a new iteration some day ? I may have some time
-to continue the upstreaming process if you need to.
+All errors (new ones prefixed by >>):
 
-Thank you for this series !
-Thomas
+   drivers/pci/controller/dwc/pcie-tegra194.c: In function 'tegra_pcie_dw_remove':
+>> drivers/pci/controller/dwc/pcie-tegra194.c:2301:18: error: passing argument 1 of 'deinit_debugfs' from incompatible pointer type [-Werror=incompatible-pointer-types]
+      deinit_debugfs(pcie->debugfs);
+                     ^~~~
+   drivers/pci/controller/dwc/pcie-tegra194.c:732:20: note: expected 'struct tegra_pcie_dw *' but argument is of type 'struct dentry *'
+    static inline void deinit_debugfs(struct tegra_pcie_dw *pcie) { return; }
+                       ^~~~~~~~~~~~~~
+   drivers/pci/controller/dwc/pcie-tegra194.c: In function 'tegra_pcie_dw_shutdown':
+   drivers/pci/controller/dwc/pcie-tegra194.c:2420:18: error: passing argument 1 of 'deinit_debugfs' from incompatible pointer type [-Werror=incompatible-pointer-types]
+      deinit_debugfs(pcie->debugfs);
+                     ^~~~
+   drivers/pci/controller/dwc/pcie-tegra194.c:732:20: note: expected 'struct tegra_pcie_dw *' but argument is of type 'struct dentry *'
+    static inline void deinit_debugfs(struct tegra_pcie_dw *pcie) { return; }
+                       ^~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/deinit_debugfs +2301 drivers/pci/controller/dwc/pcie-tegra194.c
+
+  2292	
+  2293	static void tegra_pcie_dw_remove(struct platform_device *pdev)
+  2294	{
+  2295		struct tegra_pcie_dw *pcie = platform_get_drvdata(pdev);
+  2296	
+  2297		if (pcie->of_data->mode == DW_PCIE_RC_TYPE) {
+  2298			if (!pcie->link_state)
+  2299				return;
+  2300	
+> 2301			deinit_debugfs(pcie->debugfs);
+  2302			tegra_pcie_deinit_controller(pcie);
+  2303			pm_runtime_put_sync(pcie->dev);
+  2304		} else {
+  2305			disable_irq(pcie->pex_rst_irq);
+  2306			pex_ep_event_pex_rst_assert(pcie);
+  2307		}
+  2308	
+  2309		pm_runtime_disable(pcie->dev);
+  2310		tegra_bpmp_put(pcie->bpmp);
+  2311		if (pcie->pex_refclk_sel_gpiod)
+  2312			gpiod_set_value(pcie->pex_refclk_sel_gpiod, 0);
+  2313	}
+  2314	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
