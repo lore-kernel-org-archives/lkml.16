@@ -1,88 +1,115 @@
-Received: from wiki.archlinuxcn.org (wiki.archlinuxcn.org [104.245.9.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B2033DF;
-	Sun,  6 Apr 2025 14:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.245.9.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9972628D;
+	Sun,  6 Apr 2025 14:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743948112; cv=none; b=CmHWSUSzN49LWwjj+jWnDkxYPckWo1ojFKENU8CLyRrnIhOnZwklWBZno5VW2z0456T+jJM0MuS1+7ImxMOdjOuPt/mqSirF+fsM4GH/QDBkGfqQMcyIH9hpv5ZOq0Cg/Q3xcFyx10vHkb3M28K496R3JXcrznjeWX+r21vXx4Q=
+	t=1743948321; cv=none; b=jClRMfe+5ULDE5po+Mjb3lTdnBMBkMN0m7c3nzesd00p7nRPeiE674V7o9+2FRBlYSaj6uGsz8dSzwtDdXwXvJcx4Xr8iFZp1fBA8JLl4shP2qVAo3lHW8TTurOY0iMgTNyP2Euek5Lwy6fP11qKx6Oc2yaMTaC57YL+xZlwpYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743948112; c=relaxed/simple;
-	bh=HWQMVf432WjBTrh2hTZl6Ux9m4pnXLYvV3GaU57JdAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sla5P8aCbO3apO8852Avv4JeQGU4Nqd/0B3pPesNAtk0zkH1BXt/0kmMXRltDmjrZcF2f2Vc5eP7UADeTf4sYRC78r0vPuUB4Sw4vjnIe3/nbK9gG2IFXF9Pje4B4w0/mBYEgUsJ7HkdGJ0MAssolRk2Apt+ur5UCGaxlB56Ya8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=archlinuxcn.org; spf=pass smtp.mailfrom=archlinuxcn.org; dkim=pass (2048-bit key) header.d=archlinuxcn.org header.i=@archlinuxcn.org header.b=EhkoSA5W; arc=none smtp.client-ip=104.245.9.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=archlinuxcn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinuxcn.org
+	s=arc-20240116; t=1743948321; c=relaxed/simple;
+	bh=ZCCRAb4KMYzgp3EMJ/Pxq9e9DFVpjj2851qwNuswykA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fl1KvO0sHevvCseky3NoRWVZqIvTI8xDa1JfjEZsRdjrwfi8v5CPhga2uAKCrEO2ioRfIJb102xvW0fx4kUUd4Dl0/2GkyMkpkto48cVKoZ3pAJdp91WNFPaMEJoBGdbRKO3PWlF4XZ1gGZqU9K4LSF0awb2evYIY4XLwC7dkaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=So95ZiPN; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=archlinuxcn.org header.i=@archlinuxcn.org header.b="EhkoSA5W"
-DKIM-Signature: a=rsa-sha256; bh=NoNx0hah2eI/83or9DwDO279ssc3irPpedpGkRkA2Ok=;
- c=relaxed/relaxed; d=archlinuxcn.org;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
- i=@archlinuxcn.org; s=default; t=1743948089; v=1; x=1744380089;
- b=EhkoSA5W1VSq0VRzknMRS/LefNNExbunC/QBOVIpsdyNqmXoFB7Ex8sGHMxiHBBcFyyDVPYG
- j+IpEoIx0h37L45wG+1OMAWECUAhiLazZweLT8E1iNF5c/VjSk02VoBqvupGE6EucNSw21RmBom
- JHwdmFtA6EI6dRs4jjemr6B4dbw/hhlOpjs2FEWhXpNCjskn3NKG8l3RqLDbnLuu6ILndCpVKMP
- +FY+aKFB6mz+9TpqUIAT06J+X85/uRAKhuxs/p5KYtvJ35V4b0oqAOwNpGvKMGO+0TKyeMHNu6V
- pwczjhWf2OeQuiPJ55i6bf0U0YoYx5kVVVSiBjM2DOXdQ==
-Received: by wiki.archlinuxcn.org (envelope-sender
- <integral@archlinuxcn.org>) with ESMTPS id 32ceeaf9; Sun, 06 Apr 2025
- 22:01:29 +0800
-From: Integral <integral@archlinuxcn.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
-	Kent Overstreet <kent.overstreet@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Integral <integral@archlinuxcn.org>
-Subject: [PATCH] bcachefs: return early for negative values when parsing BCH_OPT_UINT
-Date: Sun,  6 Apr 2025 21:59:30 +0800
-Message-ID: <20250406135929.178583-2-integral@archlinuxcn.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="So95ZiPN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743948320; x=1775484320;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZCCRAb4KMYzgp3EMJ/Pxq9e9DFVpjj2851qwNuswykA=;
+  b=So95ZiPNKJYHw0pLz7xoLtLAv/mQhnhp50BMo2M3rs8rOG2SIa7xxqXY
+   sULZCMf5N+HcMiuJUmBEdrT+IO8IawmqB5AlolwiMVMH+GD2pzG6mGgX7
+   Ua1UHGjH5l0nMdVxNc8b1YS89+cYRJgf+IUq3Mz6+HTJjxVl3DCPFNwqK
+   qgKzhRdGpbRVu4uDsfgwQsSqeFgqiSIlZ2a3yYEJ1kclh7zhvy7f8u5xi
+   UJ21VsIx21DPQhDQ4rAGTnhbNz9odt3u1KCpjd4YZYAHvFuFsG41NVZbW
+   /TcjoFrMxrsUvNKAdlW2svZvhdNR1JRpaw5I4fRCltSQ0GSRf5dkRX+Yp
+   Q==;
+X-CSE-ConnectionGUID: 3Ogauv+lRD6jApQ+pnQtMA==
+X-CSE-MsgGUID: 9HBfFx5wQeCzQ9lQ24Lwww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="49123972"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="49123972"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 07:05:19 -0700
+X-CSE-ConnectionGUID: rOn/9yUsRqWGX9gxQ0OM3g==
+X-CSE-MsgGUID: ExaKapijTb+IoTkicbV8Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="127684948"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 06 Apr 2025 07:05:17 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1Qcc-0002d1-0R;
+	Sun, 06 Apr 2025 14:05:14 +0000
+Date: Sun, 6 Apr 2025 22:04:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dzmitry Sankouski <dsankouski@gmail.com>
+Subject: Re: [PATCH v3] hwmon: (max77705) add initial support
+Message-ID: <202504062145.xBDNEwqG-lkp@intel.com>
+References: <20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005@gmail.com>
 
-Currently, when a negative integer is passed as an argument, the error
-message incorrectly states "too big" due to the value being cast to an
-unsigned integer:
+Hi Dzmitry,
 
-    > bcachefs format --block_size=-1 bcachefs.img
-    invalid option: block_size: too big (max 65536)
+kernel test robot noticed the following build warnings:
 
-To resolve this issue, return early for negative values before calling
-bch2_opt_validate().
+[auto build test WARNING on a4cda136f021ad44b8b52286aafd613030a6db5f]
 
-Signed-off-by: Integral <integral@archlinuxcn.org>
----
- fs/bcachefs/opts.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Dzmitry-Sankouski/hwmon-max77705-add-initial-support/20250405-233235
+base:   a4cda136f021ad44b8b52286aafd613030a6db5f
+patch link:    https://lore.kernel.org/r/20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005%40gmail.com
+patch subject: [PATCH v3] hwmon: (max77705) add initial support
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250406/202504062145.xBDNEwqG-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504062145.xBDNEwqG-lkp@intel.com/reproduce)
 
-diff --git a/fs/bcachefs/opts.c b/fs/bcachefs/opts.c
-index e64777ecf44f..31f90c177c6c 100644
---- a/fs/bcachefs/opts.c
-+++ b/fs/bcachefs/opts.c
-@@ -360,9 +360,15 @@ int bch2_opt_parse(struct bch_fs *c,
- 			return -EINVAL;
- 		}
- 
--		ret = opt->flags & OPT_HUMAN_READABLE
--			? bch2_strtou64_h(val, res)
--			: kstrtou64(val, 10, res);
-+		if (*val != '-') {
-+			ret = opt->flags & OPT_HUMAN_READABLE
-+			    ? bch2_strtou64_h(val, res)
-+			    : kstrtou64(val, 10, res);
-+		} else {
-+			prt_printf(err, "%s: must be a non-negative number", opt->attr.name);
-+			return -EINVAL;
-+		}
-+
- 		if (ret < 0) {
- 			if (err)
- 				prt_printf(err, "%s: must be a number",
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504062145.xBDNEwqG-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/hwmon/max77705-hwmon.c:66:35: warning: 'max77705_hwmon_regmap_config' defined but not used [-Wunused-const-variable=]
+      66 | static const struct regmap_config max77705_hwmon_regmap_config = {
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/max77705_hwmon_regmap_config +66 drivers/hwmon/max77705-hwmon.c
+
+    65	
+  > 66	static const struct regmap_config max77705_hwmon_regmap_config = {
+    67		.name = "max77705_hwmon",
+    68		.reg_bits = 8,
+    69		.val_bits = 16,
+    70		.rd_table = &max77705_hwmon_readable_table,
+    71		.max_register = MAX77705_FG_END,
+    72		.val_format_endian = REGMAP_ENDIAN_LITTLE
+    73	};
+    74	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
