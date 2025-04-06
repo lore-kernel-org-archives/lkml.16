@@ -1,129 +1,199 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8A02AEF5;
-	Sun,  6 Apr 2025 04:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B078818C01D;
+	Sun,  6 Apr 2025 04:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743913624; cv=none; b=J7JcYFiNfGx24uUpjruR2odbD0Rt1V5vHgAFXKMIzs7FgC0KYs6dJpUHE0sd5OX4NQNSz8Ud0TqBRknpKpc9f8csHGi2DeR5DGOMvrJ7rGeyR8G0PpzcQT3TZHfQEoCC/BttsXfcXW1YSEJ1D+T3tIUejhOsW3ysKZ8QB5Fq34g=
+	t=1743913659; cv=none; b=oDmJYgcxwyU6DPngKsMO0FvNknOBh8aXtu9quelT1VAWXHllcnXhcRhf8U+OQLKN79FK1hprYJmQkzis3k/9RnHEQZMS8qKE3IMcR0Igj9eug9BJ8KcnGNkjp3fZ/xTtZWTA9ch7cYZ9qaKH6jvpnfrXDMaEwGa3wOXmJoS1OsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743913624; c=relaxed/simple;
-	bh=+RqTH+WwDC/q3Tesjnz+n8In0t2ukkDocy2CyRC65Zs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GAd19fdoz69tJaEhwOYpGI8gg9TsPrk86JNLQpSh0uAHmMurxHBW0epja56xKUTbYGFVDaXrbP3S68Fq/ugaE3H5EeIxDUgtwHgSKSLGjwCxJ7yCupQbJ5wx3t2XtnQhHfr/PqNgZPCg5Gil55x/Di58Jfp/0aCG1SW4l56jPhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=YofjdEWw; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1743913659; c=relaxed/simple;
+	bh=O7btUqfuVN1YAH6kub7YKm5WCHvlzLjyS/fJH/XHq3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mtNIeGXMZwm4PC15/TRu/wRRkeVOLbQ80NwCR7Xo5bqu9P6Wj7twGi0O6ukeKUDlZmEebhLW8WuGyzKnjokJsQ0nnSFGw8iCXkWKM71lLf7/ahyFMojSv61F5Do9Uh2vUttQ6+nvrD4fZ2j2B8B7JKmp5kxoHNDtXsHqD7u4gb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V2ygRcaX; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YofjdEWw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743913623; x=1775449623;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=C8jroJ36qQUTrzsnbdQAdnYICUTvU857L8wJQ/dSBCA=;
-  b=YofjdEWwV+JAqxaVyRolKmV/NqANEssLfmbrRk2rN3dlervODgejevEp
-   kt0xyYyT8p0D009bTk2pdN7NJoF44gL2e79D3hj4QjSUTdor0usIZrrZ4
-   KK0VcGCOCoHBGwJ1ow/XNjoaj5tAGGayGNoB6qy8w2vhgA4hllOLACygG
-   M=;
-X-IronPort-AV: E=Sophos;i="6.15,192,1739836800"; 
-   d="scan'208";a="733225926"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 04:26:59 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:33208]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.14.132:2525] with esmtp (Farcaster)
- id 5d617adf-83b7-4a91-bb31-67a1b4467eca; Sun, 6 Apr 2025 04:26:57 +0000 (UTC)
-X-Farcaster-Flow-ID: 5d617adf-83b7-4a91-bb31-67a1b4467eca
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 6 Apr 2025 04:26:57 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.50) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 6 Apr 2025 04:26:54 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <syzbot+be6f4b383534d88989f7@syzkaller.appspotmail.com>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<syzkaller-bugs@googlegroups.com>, <kuniyu@amazon.com>
-Subject: Re: [syzbot] [net?] possible deadlock in ipv6_sock_ac_close (4)
-Date: Sat, 5 Apr 2025 21:26:42 -0700
-Message-ID: <20250406042646.72721-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67f08cd7.050a0220.0a13.0228.GAE@google.com>
-References: <67f08cd7.050a0220.0a13.0228.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V2ygRcaX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743913656; x=1775449656;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O7btUqfuVN1YAH6kub7YKm5WCHvlzLjyS/fJH/XHq3g=;
+  b=V2ygRcaX9duJ96iOWr6bbaOPVnJDAbomg9sTx1HM3H/KXxTwgnePzDuq
+   0qlTqo4SlAfxQTtzVvvZ0XJ+SoJCZ+ZlRRNx/Y0y4w9Wxu983Fv9+nkQr
+   wSLJNqpjo1oZGuFPdsYdTus4ahibB5tP7M8waqpU3Tf/aYv0odm1VpvP7
+   zDiUI2/POg1Fefi8uq65OYc/w8Z5mRXp8gZG94LchJdsDzOKdIStSvNmn
+   y3aF4SdcKTWBAadEnrH7Pm7PrbPGq+8CDKK4Pi1hOrZDLMeuvOVkOYTJD
+   sZnLCNY+pE9aPOzMu9PLBk3hoeiK7/tdtlvRnOVjFtKMLbAEB13OctR5c
+   A==;
+X-CSE-ConnectionGUID: cr4CTfudQuaPAUlnsRVjLQ==
+X-CSE-MsgGUID: OrSakB0XRhmo7sb133eYqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45451990"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="45451990"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 21:27:35 -0700
+X-CSE-ConnectionGUID: 5gbXp1nST4GLoL1QIFuW8Q==
+X-CSE-MsgGUID: l4qFjh0ZR4OocMypNpzb2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="127956790"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Apr 2025 21:27:31 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1HbV-0002RD-1V;
+	Sun, 06 Apr 2025 04:27:29 +0000
+Date: Sun, 6 Apr 2025 12:27:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v3 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+Message-ID: <202504061257.GMkEJUOs-lkp@intel.com>
+References: <20250406024010.1177927-2-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC004.ant.amazon.com (10.13.139.225) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250406024010.1177927-2-longman@redhat.com>
 
-From: syzbot <syzbot+be6f4b383534d88989f7@syzkaller.appspotmail.com>
-Date: Fri, 04 Apr 2025 18:52:23 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    e48e99b6edf4 Merge tag 'pull-fixes' of git://git.kernel.or..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=12afa7cf980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-> dashboard link: https://syzkaller.appspot.com/bug?extid=be6f4b383534d88989f7
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140a294c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1486994c580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/b03407c4ab24/disk-e48e99b6.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/03f6746c0414/vmlinux-e48e99b6.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/4b3909ad8728/bzImage-e48e99b6.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+be6f4b383534d88989f7@syzkaller.appspotmail.com
-[...]
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
+Hi Waiman,
 
-#syz test
+kernel test robot noticed the following build errors:
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 323892066def..87e7d8043322 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -235,7 +235,7 @@ static struct lock_class_key af_family_kern_slock_keys[AF_MAX];
-   x "AF_RXRPC" ,	x "AF_ISDN"     ,	x "AF_PHONET"   , \
-   x "AF_IEEE802154",	x "AF_CAIF"	,	x "AF_ALG"      , \
-   x "AF_NFC"   ,	x "AF_VSOCK"    ,	x "AF_KCM"      , \
--  x "AF_QIPCRTR",	x "AF_SMC"	,	x "AF_XDP"	, \
-+  x "AF_QIPCRTR",	x "43"		,	x "AF_XDP"	, \
-   x "AF_MCTP"  , \
-   x "AF_MAX"
- 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 3e6cb35baf25..3760131f1484 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -362,6 +362,9 @@ static void smc_destruct(struct sock *sk)
- 		return;
- }
- 
-+static struct lock_class_key smc_key;
-+static struct lock_class_key smc_slock_key;
-+
- void smc_sk_init(struct net *net, struct sock *sk, int protocol)
- {
- 	struct smc_sock *smc = smc_sk(sk);
-@@ -375,6 +378,8 @@ void smc_sk_init(struct net *net, struct sock *sk, int protocol)
- 	INIT_WORK(&smc->connect_work, smc_connect_work);
- 	INIT_DELAYED_WORK(&smc->conn.tx_work, smc_tx_work);
- 	INIT_LIST_HEAD(&smc->accept_q);
-+	sock_lock_init_class_and_name(sk, "slock-AF_SMC", &smc_slock_key,
-+				      "sk_lock-AF_SMC", &smc_key);
- 	spin_lock_init(&smc->accept_q_lock);
- 	spin_lock_init(&smc->conn.send_lock);
- 	sk->sk_prot->hash(sk);
+[auto build test ERROR on tj-cgroup/for-next]
+[also build test ERROR on akpm-mm/mm-everything linus/master v6.14 next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Waiman-Long/mm-vmscan-Skip-memcg-with-usage-in-shrink_node_memcgs/20250406-104208
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+patch link:    https://lore.kernel.org/r/20250406024010.1177927-2-longman%40redhat.com
+patch subject: [PATCH v3 1/2] mm/vmscan: Skip memcg with !usage in shrink_node_memcgs()
+config: arc-randconfig-002-20250406 (https://download.01.org/0day-ci/archive/20250406/202504061257.GMkEJUOs-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504061257.GMkEJUOs-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504061257.GMkEJUOs-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   mm/vmscan.c: In function 'shrink_node_memcgs':
+>> mm/vmscan.c:5929:46: error: invalid use of undefined type 'struct mem_cgroup'
+    5929 |                 if (!page_counter_read(&memcg->memory))
+         |                                              ^~
+
+
+vim +5929 mm/vmscan.c
+
+  5890	
+  5891	static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+  5892	{
+  5893		struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
+  5894		struct mem_cgroup_reclaim_cookie reclaim = {
+  5895			.pgdat = pgdat,
+  5896		};
+  5897		struct mem_cgroup_reclaim_cookie *partial = &reclaim;
+  5898		struct mem_cgroup *memcg;
+  5899	
+  5900		/*
+  5901		 * In most cases, direct reclaimers can do partial walks
+  5902		 * through the cgroup tree, using an iterator state that
+  5903		 * persists across invocations. This strikes a balance between
+  5904		 * fairness and allocation latency.
+  5905		 *
+  5906		 * For kswapd, reliable forward progress is more important
+  5907		 * than a quick return to idle. Always do full walks.
+  5908		 */
+  5909		if (current_is_kswapd() || sc->memcg_full_walk)
+  5910			partial = NULL;
+  5911	
+  5912		memcg = mem_cgroup_iter(target_memcg, NULL, partial);
+  5913		do {
+  5914			struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
+  5915			unsigned long reclaimed;
+  5916			unsigned long scanned;
+  5917	
+  5918			/*
+  5919			 * This loop can become CPU-bound when target memcgs
+  5920			 * aren't eligible for reclaim - either because they
+  5921			 * don't have any reclaimable pages, or because their
+  5922			 * memory is explicitly protected. Avoid soft lockups.
+  5923			 */
+  5924			cond_resched();
+  5925	
+  5926			mem_cgroup_calculate_protection(target_memcg, memcg);
+  5927	
+  5928			/* Skip memcg with no usage */
+> 5929			if (!page_counter_read(&memcg->memory))
+  5930				continue;
+  5931	
+  5932			if (mem_cgroup_below_min(target_memcg, memcg)) {
+  5933				/*
+  5934				 * Hard protection.
+  5935				 * If there is no reclaimable memory, OOM.
+  5936				 */
+  5937				continue;
+  5938			} else if (mem_cgroup_below_low(target_memcg, memcg)) {
+  5939				/*
+  5940				 * Soft protection.
+  5941				 * Respect the protection only as long as
+  5942				 * there is an unprotected supply
+  5943				 * of reclaimable memory from other cgroups.
+  5944				 */
+  5945				if (!sc->memcg_low_reclaim) {
+  5946					sc->memcg_low_skipped = 1;
+  5947					continue;
+  5948				}
+  5949				memcg_memory_event(memcg, MEMCG_LOW);
+  5950			}
+  5951	
+  5952			reclaimed = sc->nr_reclaimed;
+  5953			scanned = sc->nr_scanned;
+  5954	
+  5955			shrink_lruvec(lruvec, sc);
+  5956	
+  5957			shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
+  5958				    sc->priority);
+  5959	
+  5960			/* Record the group's reclaim efficiency */
+  5961			if (!sc->proactive)
+  5962				vmpressure(sc->gfp_mask, memcg, false,
+  5963					   sc->nr_scanned - scanned,
+  5964					   sc->nr_reclaimed - reclaimed);
+  5965	
+  5966			/* If partial walks are allowed, bail once goal is reached */
+  5967			if (partial && sc->nr_reclaimed >= sc->nr_to_reclaim) {
+  5968				mem_cgroup_iter_break(target_memcg, memcg);
+  5969				break;
+  5970			}
+  5971		} while ((memcg = mem_cgroup_iter(target_memcg, memcg, partial)));
+  5972	}
+  5973	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
