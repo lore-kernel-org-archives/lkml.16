@@ -1,51 +1,45 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992CC33CA;
-	Mon,  7 Apr 2025 07:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B4021D3D1;
+	Mon,  7 Apr 2025 07:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010140; cv=none; b=Ix4TP6JpQPkOkkX3DS3FbWWdkEzkZRcyRocQMkkKqYH8oo0+Qa0fMrkbeKOy56sR0xQy+H7/9M/a76ZGOVV6qlCtqoOge0Fy9HBNAPANb9nVTbR32B6hD+GaHREIa6QPsliNxKrzyWO9Ie4N30s60mp1QKb98fyEjJmuUntBZ/8=
+	t=1744010141; cv=none; b=KAC60OExMyPbzC8gJrHs5WcPfSlIYUojKBAi54CT+oNIAvcI+zEX6lhcC0JS+cg8ykJprawPaNfxyDUVmyJdsQACOl7G0Pt8cBc92dAjys/qp6VwSiHBscxdcAJFeeMBmvHRGx8GYPCrCtsdPIFbwdB2cyf9rLzSda8EMXc6CIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010140; c=relaxed/simple;
-	bh=aV+OM30NsD1e5RDVkL6nJ9ny7KHTplFE3n3NrsR0Xsk=;
+	s=arc-20240116; t=1744010141; c=relaxed/simple;
+	bh=f6FP6yoJSx0/Rb4wSm5gI2FsFZ0Wdrxkdi/BLO5s/f8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=f/bHQ/Wssu4nsyJ+Vv/pwdwrLd12UxOyz25fMjpftshj4PFi2g9LQkVM7n+scFVbapfFq55FDnxWPLzm8qto5V258TeMgg251tBhnsYIaPdvVsviGK2nTldDEJ3HrhEB3mSN093PYy3H24uUxNULH2WARbN7Ils3PmQOamIFrpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XR1zCoOb; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version:Content-Type; b=UV42HezCSXIBJHTEsHlLvOs47YNAE7bACU1x8TBUZIHtlbCVDcu2X+99xBdutTjy27mbTkjR9g3BUszs9Xca4xCcKjkXBU6vYATVUNdQZzic7sn4PKy86DqdwW3CgkVCQ5otW8Ih4eUzZubi7wHtHwKNfpwyfkp9WGpFpcgncYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BGFezA8n; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XR1zCoOb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 958A544341;
-	Mon,  7 Apr 2025 07:15:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BGFezA8n"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E592544333;
+	Mon,  7 Apr 2025 07:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744010129;
+	t=1744010132;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a9JaBGMTvb/hYdR9v/xSYDOC5vbqVFIgbLcpRT30azE=;
-	b=XR1zCoObjM/6L9ZAQT5P66rnf8wNnoiQWu7VeLQKYAyekbF1ApgeQ6BWIzmdGa2RVyTH49
-	v7Zw1qYD749WcPLoSklgxIq9hZ6LAS0GSFFVYQ5LO0UCLs9lY7LkM5vNPDMHJQczLsKXVA
-	6+3v6JehYuGhsJyDEaM+tVirhOBv/KkNWUjBw/8yW92jR5SwLLHU+2wqzpWMt6OJVJ9l/K
-	5chll1oDEaqpiM0jmKz+m3bHopg1RNy9ayHCeEndR6D/OWjCK8hbdnH9zaKWMYtiRiK3wH
-	wUGJcdnLiRgo5OlkecwVlLFxkfVyHitMyR6647jBQyTLjmx9iXfsg7+hdjaaLg==
+	bh=1mq0cKrEu/AdyuV9FD6tDt/Sm8vJBsOcghCm2NXRd/A=;
+	b=BGFezA8nPRx3KzbnQi283cljlKc89nvrvF7aAJBisnkUE3/V+XL3jErPyZ9oIIlOhJSZ22
+	JZ1kMDo7bWcSrBkeQ521ZuZOpGXTrOoLS17CWZ39A1shsSwVx850I2QM0DbI2Q7tX3A4L3
+	p86dAZuB55w5wAaXC5dRg5NBlOeQvRXUsDXNbHTyCMvYHShkrdg6bEckMbhyjztYeCTyNu
+	0kwerge2E/E6HesJ0JIuReEaU1EG3NbrNWrDoRnUwnU9zI6Gov77xVzBKev9MqfL0jhET2
+	JZypXkMYKoe77OzWdof5HDDPVKf/8PF8eZ18L7SJUO/NhepFURaE145MUj5+gQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>, 
- Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Mark Brown <broonie@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-In-Reply-To: <99eef91c334f3f2314c2f5671e1eb55211a5ff19.1743150196.git.geert+renesas@glider.be>
-References: <99eef91c334f3f2314c2f5671e1eb55211a5ff19.1743150196.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] mtd: nand: Drop explicit test for built-in
- CONFIG_SPI_QPIC_SNAND
-Message-Id: <174401012746.998658.11206994348683987630.b4-ty@bootlin.com>
-Date: Mon, 07 Apr 2025 09:15:27 +0200
+To: maximlevitsky@gmail.com, richard@nod.at, vigneshr@ti.com, 
+ Wentao Liang <vulab@iscas.ac.cn>
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20250402075624.3261-1-vulab@iscas.ac.cn>
+References: <20250402075624.3261-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH] mtd: rawnand: Add status chack in r852_ready()
+Message-Id: <174401013184.998658.14198639159193393153.b4-ty@bootlin.com>
+Date: Mon, 07 Apr 2025 09:15:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,27 +50,23 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev
 X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledvrddukeegrddutdekrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrddukeegrddutdekrdefpdhhvghloheplgduledvrdduieekrddurddutdeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepqhhuihgtpghmuggrlhgrmhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehquhhitggpvhgrrhgruggrsehquhhitghinhgtr
- dgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvvegjfhfukfffgggtgffosehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheeifffhueelgfdtleetgfelvefggfehudelvdehuddulefgheelgfehieevvdegnecukfhppeelvddrudekgedruddtkedrfeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrfedphhgvlhhopegludelvddrudeikedruddruddtiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepvhhulhgrsgesihhstggrshdrrggtrdgtnhdprhgtphhtthhopehmrgigihhmlhgvvhhithhskhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvl
+ hesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrth
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, 28 Mar 2025 09:24:01 +0100, Geert Uytterhoeven wrote:
-> If CONFIG_SPI_QPIC_SNAND=m, but CONFIG_MTD_NAND_QCOM=n:
+On Wed, 02 Apr 2025 15:56:23 +0800, Wentao Liang wrote:
+> In r852_ready(), the dev get from r852_get_dev() need to be checked.
+> An unstable device should not be ready. A proper implementation can
+> be found in r852_read_byte(). Add a status check and return 0 when it is
+> unstable.
 > 
->     ERROR: modpost: "qcom_nandc_unalloc" [drivers/spi/spi-qpic-snand.ko] undefined!
->     ...
 > 
-> Fix this by dropping the explicit test for a built-in
-> CONFIG_SPI_QPIC_SNAND completely.  Kbuild handles multiple and mixed
-> obj-y/obj-m rules for the same object file fine.
-> 
-> [...]
 
 Applied to mtd/fixes, thanks!
 
-[1/1] mtd: nand: Drop explicit test for built-in CONFIG_SPI_QPIC_SNAND
-      commit: 36c6468724aa98d33fea9a1d7e07ddda6302f5d4
+[1/1] mtd: rawnand: Add status chack in r852_ready()
+      commit: b79fe1829975556854665258cf4d2476784a89db
 
 Patche(s) should be available on mtd/linux.git and will be
 part of the next PR (provided that no robot complains by then).
