@@ -1,134 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0581B35959
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F5D70821;
+	Mon,  7 Apr 2025 13:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032797; cv=none; b=OXdq+iUlLybG1qi9zJlx4bJ5mqrm0J5mBa/KBf6ZJ4hhvB3xL1UJxjb9hmy3kSppT9zYPgFZ75urei3kjWt4b+0FQBV997paTWghINp1Gb89Jks2EnrpoMJ0P5DhhFcqGMYznfG9RFSUGAkgImKM/zBVy9cWBY66vhokIxoKHfM=
+	t=1744032834; cv=none; b=ZbsG+hF4e9qHQNkRq8JF2n/WqGlO9jzOcagaflHCIsWweavXV7Shy80OjYR2b4PC3UIGHY09wQZoHQtr1I0aS8hM1TMaTnSIq4Q0j0sQy30CUqR07VQ4erdUROaFvuOLiplFP+vijiXJcQmeBCPtmyQ2bAoauT9iUnPUlrm4yJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032797; c=relaxed/simple;
-	bh=or+KEFGTrsg1nsPIdmkEwhSXILQOsSETwxadfTI6AhY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PpPds090EIhUaWB4NPvlyLcPfu9nJJ76D1uCPn/tbnEA8+nfuONb+b5+D8BNB3G96E0Ow2CSdpLPNeeBO2MNJJ/3hth5KIz/vyqmynl8UgTLcuerZdfA8ysCH1SFJqjDACGlTkpfdp2rBc2PcJwVmhwyfnV1VdsVdI6DuKTqXJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M+cUpgQI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744032834; c=relaxed/simple;
+	bh=ssre7dWOLUmh0P2Cs+wzRbF6w6XvOb41xRSZRe5iru4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGkQtMso8a1ubIxURhXxW1zJ6nOErYHZoqAK4PgQs/Lnc0tbIXs2yX+Z5bax0/5zkseoi1U/+LMQlHGE8lReoMDZ5pqfaMvZZp/nMSBxxADrs2uSVLL2pSfrRq+Mpkx7sXXs3t7ltmCIVM7qkZICB6JEHv8ZwjJ9cQZSZ8Oz/6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOD2OUUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M+cUpgQI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744032794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afbb7WkLp8lyjypZ4x8CYxgmQXgkeIvIjBj+73twv/o=;
-	b=M+cUpgQI4xg/zzIb6FMTFaWpEnqBbJ5pKEcqrw7sALn2f7UVO8/qXt5fPFbIsBG3kB0lp7
-	UfFZjZC60iaaW/OEIkr3EU/ZpIavws7Lf8HEFci18C7q4hYKDAVwrnVcSasSl9/NYxlJQT
-	a9b7Kz/0b0XVlJhcIuY/6Ghb6SKJ2VQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-BDHha0BEPSaj4WStc3TZcA-1; Mon, 07 Apr 2025 09:33:13 -0400
-X-MC-Unique: BDHha0BEPSaj4WStc3TZcA-1
-X-Mimecast-MFC-AGG-ID: BDHha0BEPSaj4WStc3TZcA_1744032792
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913d8d7c3eso2369750f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:33:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744032792; x=1744637592;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=afbb7WkLp8lyjypZ4x8CYxgmQXgkeIvIjBj+73twv/o=;
-        b=gRiXlDfTNxbT9HxGUrgGQXrzdPIxzdxCUUPk/cRQqtLcDchvrb+0EedWNBSiadLAMg
-         JpMspYEdpnQ8iDy14DZ44TJzQe5n6smLKSlCdCQkboHoXBRTnZRw2xqldAyQLEBnmJ4M
-         UsmU1o5XCByIh32sx5QBGJEdTm0ghWan5D/uD04JopMPmwpc5tz0Gp7gqFbIrATeKveK
-         qtoZZtkjDApl7Do2d4iZzyu084fYVB1ChMFiat6htgullWqAnScZC3SdiX72BaqV2HfZ
-         uUOKqawjbnzHYicBAaUxibygy+LE/g04k1HRzLYW1h02fyLD+lUpzLsjR0gpfS+C9Q9Y
-         Qp3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWdj44sv4q1cC26vzMikky7y2sJiJ0T2/yshGs2KTKZ5ug4+3d/LwN3vy0ShTpAWxGoujY18be90dYS5L0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBFXCGMWdx0k9cx8K+wH95fcwjTgZwAd0FqX1SP+N9PBphlj8C
-	k2DtjXGHA+m3RuylSS90ha2FAN7tNrRgTeHRKsXVpXkpsTT22Yz5EalYqSfovfdxmfbm9gTosk/
-	bohjO8i4gDwaUm8/Oh0QogfI9CuNHuArG/M/2bN7UxbWvHQe3x9o5ElyeEIuq8g==
-X-Gm-Gg: ASbGncuainebna7gBV1Z5wwpwYt9vGC4BQ+Wcx/gPdn20odulze31DEc1jtr17M575/
-	o5PPdgREEJY2LuLY0wcuqVRu8B7/qiv9Dp1i8j3huA87rR3I264tt3nvj4KEoS8nT2y0Mp5jTVe
-	70SElPfZSmhaJkSjIql0YySi3MjhlzvhQLtunh5SgrtvtawYD7K8YlByzkr3FWwJ0cA2u4iwrGQ
-	AmRDA+VBlUAoHCCouBFvEiSjnI/TGo9Kr65LB+ofCS16kGugellf+eAsmNAZGwVERQrPnJTZW5T
-	I/gAqIcB+KoPmy8YIMY=
-X-Received: by 2002:a5d:5f85:0:b0:391:4559:876a with SMTP id ffacd0b85a97d-39d0de66a76mr10099033f8f.46.1744032792512;
-        Mon, 07 Apr 2025 06:33:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE21qC+qO+axlamg3PP6rk4oRrAkKrbz3ds7kuXha7eToDMkVaV6kV/fgeW4vqYEdmW3QBD9A==
-X-Received: by 2002:a5d:5f85:0:b0:391:4559:876a with SMTP id ffacd0b85a97d-39d0de66a76mr10099001f8f.46.1744032792149;
-        Mon, 07 Apr 2025 06:33:12 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6a1esm12135521f8f.45.2025.04.07.06.33.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 06:33:11 -0700 (PDT)
-Message-ID: <a1661517-536b-49bb-95af-8cf7baf91b39@redhat.com>
-Date: Mon, 7 Apr 2025 15:33:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOD2OUUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0D8C4CEDD;
+	Mon,  7 Apr 2025 13:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744032833;
+	bh=ssre7dWOLUmh0P2Cs+wzRbF6w6XvOb41xRSZRe5iru4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XOD2OUUE14ZD12QKEVuKWuwPlqp/0AY5e6g8sKCeqWexPoLyt8YvEj/iTQbjx4BkC
+	 MawxETjkipSyXYV5bVlYihf2p9GfLjlLpLXK5Hd/eqJDm/lQUKYJuIMF8fpeGAfZVy
+	 fcndhWqNm0gDI8/D8h/BaqlYCdCXCC6B0+Lp0x4IBJBhvgTrANos8WTcbYLYUTbFDn
+	 lltgYGXBMCvwVb21VDprak18EGyTxVnMAFJ7c7uNeuj1HGR8VXltSv34Z7un9JhruV
+	 hJuxCM2Sg0Nh7lY9qNtyHhF6hG0HPZN/k2tcLCXJE5heEco7qncQcBykzgNjUHSxC+
+	 pfvNxbsaNF72g==
+Date: Mon, 7 Apr 2025 14:33:49 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Message-ID: <df350510-64c9-46b4-9f82-ebd6b04bba36@sirena.org.uk>
+References: <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
+ <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
+ <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+ <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+ <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk>
+ <CAMRc=MeFqvJ3g3GhrZzto+jfgCUhtcRRyWqx51gCkKhYUqtsGg@mail.gmail.com>
+ <c16d3116-256d-470d-96dd-7f3dbe3334c3@sirena.org.uk>
+ <CAMRc=MeYcgje7dFq8WDiTB8mTQ1COv3a_6xhAGkTukD_V25Wgw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] media: uvcvideo: Fix Fix deferred probing error
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
-References: <20250313-uvc-eprobedefer-v3-0-a1d312708eef@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250313-uvc-eprobedefer-v3-0-a1d312708eef@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Ricardo,
-
-On 13-Mar-25 13:20, Ricardo Ribalda wrote:
-> uvc_gpio_parse() can return -EPROBE_DEFER when the GPIOs it depends on
-> have not yet been probed.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-
-Thank you for your continued work on the UVC driver,
-I've have merged this series into:
-
-https://gitlab.freedesktop.org/linux-media/users/uvc/-/commits/next/
-
-now.
-
-Regards,
-
-Hans
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ojbQ9hm3JBD68YmZ"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeYcgje7dFq8WDiTB8mTQ1COv3a_6xhAGkTukD_V25Wgw@mail.gmail.com>
+X-Cookie: Meester, do you vant to buy a duck?
 
 
+--ojbQ9hm3JBD68YmZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Apr 07, 2025 at 03:29:09PM +0200, Bartosz Golaszewski wrote:
 
-> ---
-> Changes in v3:
-> - Remove duplicated error messages in uvc_probe()
-> - Link to v2: https://lore.kernel.org/r/20250303-uvc-eprobedefer-v2-0-be7c987cc3ca@chromium.org
-> 
-> Changes in v2:
-> - Add follow-up patch for using dev_err_probe
-> - Avoid error_retcode style
-> - Link to v1: https://lore.kernel.org/r/20250129-uvc-eprobedefer-v1-1-643b2603c0d2@chromium.org
-> 
-> ---
-> Ricardo Ribalda (2):
->       media: uvcvideo: Fix deferred probing error
->       media: uvcvideo: Use dev_err_probe for devm_gpiod_get_optional
-> 
->  drivers/media/usb/uvc/uvc_driver.c | 38 ++++++++++++++++++++++++++------------
->  1 file changed, 26 insertions(+), 12 deletions(-)
-> ---
-> base-commit: f4b211714bcc70effa60c34d9fa613d182e3ef1e
-> change-id: 20250129-uvc-eprobedefer-b5ebb4db63cc
-> 
-> Best regards,
+> Basically: we may set the GPIO to 1 but it was already enabled and we
+> tell consumers the regulator was just enabled when it wasn't OR we set
+> the GPIO to 0 and tell consumers the regulator was disabled when there
+> are still users of this GPIO so it's not true either.
 
+> AFAICT, it's used in a few places to put the regulator consumer in
+> reset if the power was *actually* disabled.
+
+Yes, and also do things like not bother to reinitialise the hardware if
+we kept the power on.
+
+> I'll think about how that could be improved.
+
+Thanks.
+
+--ojbQ9hm3JBD68YmZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz1D0ACgkQJNaLcl1U
+h9C+hAf/a+/V8JHF8pKou/Z+4lrcWYnx+fX2dcyamBw3RYIvfUVccE16nx8gOy7K
+ODu79W+H3Lv3CAh/cvE3FqRjeI20iogPs3gPOsLEnlr0Ebrb+wj3ZlPHiuCwo53g
+TGGV9dk9ot+7aFjKOlwgTnR3nP2o+8qbR4tnxKCtVFjyUWCh9WTjdaHrzlIA17by
+/QmNE7bKA/AjE2OpZihbagALdOeSu7YUrhPHaeAp53lWnt4Y7tiqq6PTNhu1dB6+
+1KYpcALfpoWIhmPZUkqceNdEf0ETSCPq5uJowqnb2nq/y1RPVH53xeE/ss+SJdk9
+D/f76w+JXJ280iVtjp8uiBkA41lp1Q==
+=oaLP
+-----END PGP SIGNATURE-----
+
+--ojbQ9hm3JBD68YmZ--
