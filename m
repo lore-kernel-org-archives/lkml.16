@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB85122D4C6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5B222D786
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069255; cv=none; b=Qdh37UKXgQzg+4RT4ySQelIJY4xvq7hFKMiddrWd+em3RURnX95/icmY7lwtUIRtUTVB+I0/7Nn2vYdm0K17TI868rK+mml7GqvlYJOne2hD0HpyAgaWXLzijdMX2qhGBmA93WMIENliWyKBGZ8+6KAFek8c8MiwYUlMPR1C7r0=
+	t=1744069256; cv=none; b=D+b5esFW2l6Nq8iSwIBAs1xMdLz2XGh4eCRsihA7mcaHEvw5VIzy2kyyGPeWs9ycM4/QjXSckTBZIra+wrT4rVePL7lXrJv5uRPGTdSmtVQuH05YqIZTB2V2TaafA2AtTOViH2uCJaS+5liI/MJ9nA/QX8TSXDAnuKyTJ+Jn+Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069255; c=relaxed/simple;
-	bh=1icKE0bniMiuJhJCyj7+IYsrPql8p3uvDM3vCIF6VoQ=;
+	s=arc-20240116; t=1744069256; c=relaxed/simple;
+	bh=VfHjgFdJazMMHE4237qTcYtk4/5M6s7Jls2ygjhzuhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I7Ti6CPjRk8irV8nZM+QWPGcBpjVzdwzLyT093M65Biw+xGp9jzACF/8c5hx5GsvBoNCb6RPi/SWXgRkPzUWUvPvxMvriOrIwtngLaACvNkSiXOXPHXwlZSwZPxwgvCfLYZfuiSqL7FErlCRJh4jElP3i08Lb8Jfb1YGaGQQlEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ja69zNJt; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=R3QvuGunMweHw5skpikYv8Ghxeh3XbDEtLkKeGwqLdx5MlrTlsj/y6JC7GIjSpoyomogilqH8nmFJBqg5GDj4gEYYrCg3OJYWvTW8z2qJ2ZXWawiupFv6zDXqx95x1UH/Rr4Z5heevoSqGNeqfE2sA9Vt9JvItf5kyXEtApcu3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YD5fsmcI; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ja69zNJt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YD5fsmcI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744069254; x=1775605254;
+  t=1744069255; x=1775605255;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1icKE0bniMiuJhJCyj7+IYsrPql8p3uvDM3vCIF6VoQ=;
-  b=Ja69zNJteHQBu2GbUXGShfX5QYl6O/eJhOdIpDkTsJsjncHqx+sSzQ8R
-   9r0HG/JcV33gK5Tb0HZrtOdy2sLUbavSq4P3zo+cemaEAsPNCFLYgACVu
-   Q74syiS/I8ziDHADB+/ZvC88NHx/uIayzNhzru8cu89e0Modw8BLJpzAW
-   qL6/D7J66aYJubay2U9xanpGdxD/QGXueiMS3anPyJBahUilB6i5fScLx
-   0cvdzlbBbdxYynievQlCoOc84JjQo5BVEs3ufgVElbnPjVfH2gjObfcyM
-   pEhoQMLtbCK4Z6axHwUWstNg1SDp/EqJCJaUFWcI9DO2TM583+2S3zdim
-   g==;
-X-CSE-ConnectionGUID: iYbNwgMCQpKgOwbUtiWk8g==
-X-CSE-MsgGUID: jPJ71MLFSkGwhxdRL7EXfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193194"
+  bh=VfHjgFdJazMMHE4237qTcYtk4/5M6s7Jls2ygjhzuhE=;
+  b=YD5fsmcI1JimB4dX9phiXQ3tC8tscIxHNc9KgjSzD4AWzv6WunroZbgV
+   mttNhjoUNmjJi93iQ4567gclo20X+FFuOWRB5hQtAEz95Rw24Wuq3OnSj
+   G5KqP8FmP9PLyuIl+Z7QKy+nbk4GnZpji2mKFi2JxdLpA27bIcWc6z4Td
+   aYrYIMdPkc6sDOgf2LeJAsGG5xrCTRFMJMxfdlri5Xj+LbGOYBitUvhal
+   pHPZ9f9g8XokyjQYxPixkDKgCzE/k4Drs0RrQu6c4qTN8m0Lt+LeHfpRO
+   /NlZUq/P24+YQu0bLab9gbSBZgLdjVJjt8b7mIPrV8oYDiLHBaOWRaNTe
+   Q==;
+X-CSE-ConnectionGUID: lVYzGzxvRkaO7iQ5jKh83Q==
+X-CSE-MsgGUID: VkdM+GzHSw+gLQor+JHECQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193201"
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="48193194"
+   d="scan'208";a="48193201"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:50 -0700
-X-CSE-ConnectionGUID: 6w+55wZxQ6u9aSJ2wQfPRQ==
-X-CSE-MsgGUID: arwLGiF2RuOu/F4pxhPYiQ==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:51 -0700
+X-CSE-ConnectionGUID: 6t46yy/eQMyJZyQ/RpVa7g==
+X-CSE-MsgGUID: ar7dh7HIRLOECgKO229nEg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="165315479"
+   d="scan'208";a="165315483"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:49 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:50 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 11/26] fs/resctrl: Add support for additional monitor event display formats
-Date: Mon,  7 Apr 2025 16:40:13 -0700
-Message-ID: <20250407234032.241215-12-tony.luck@intel.com>
+Subject: [PATCH v3 12/26] fs/resctrl: Add hook for architecture code to set monitor event attributes
+Date: Mon,  7 Apr 2025 16:40:14 -0700
+Message-ID: <20250407234032.241215-13-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250407234032.241215-1-tony.luck@intel.com>
 References: <20250407234032.241215-1-tony.luck@intel.com>
@@ -70,155 +70,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a type field to both the mon_evt and mon_data structures.
+Architecture code knows whether an event can be read from any CPU, or
+from a CPU on a specific domain. It also knows what format to use
+when printing each event value.
 
-Legacy monitor events are still all displayed as an unsigned decimal
-64-bit integer.
-
-Add an additional format of fixed-point with 18 binary places displayed
-as a floating point value with six decimal places.
+Add a hook to set mon_event.any_cpu and mon_event.type.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- include/linux/resctrl_types.h |  8 ++++++++
- fs/resctrl/internal.h         |  4 ++++
- fs/resctrl/ctrlmondata.c      | 23 ++++++++++++++++++++++-
- fs/resctrl/monitor.c          |  3 +++
- fs/resctrl/rdtgroup.c         |  1 +
- 5 files changed, 38 insertions(+), 1 deletion(-)
+ include/linux/resctrl.h |  3 +++
+ fs/resctrl/monitor.c    | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
-index 898068a99ef7..fbd4b55c41aa 100644
---- a/include/linux/resctrl_types.h
-+++ b/include/linux/resctrl_types.h
-@@ -58,6 +58,14 @@ enum resctrl_event_id {
- #define QOS_NUM_MBM_EVENTS	(QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_TOTAL_EVENT_ID + 1)
- #define MBM_EVENT_IDX(evt)	((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 0fce626605b9..8ac77b738de5 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -418,6 +418,9 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ void resctrl_online_cpu(unsigned int cpu);
+ void resctrl_offline_cpu(unsigned int cpu);
  
-+/*
-+ * Event value display types
-+ */
-+enum resctrl_event_type {
-+	EVT_TYPE_U64,
-+	EVT_TYPE_U46_18,
-+};
++int resctrl_set_event_attributes(enum resctrl_event_id evt,
++				 enum resctrl_event_type type, bool any_cpu);
 +
- static inline bool resctrl_is_mbm_event(int e)
- {
- 	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
-diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
-index 74a77794364d..4a840e683e96 100644
---- a/fs/resctrl/internal.h
-+++ b/fs/resctrl/internal.h
-@@ -71,6 +71,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
-  * struct mon_evt - Entry in the event list of a resource
-  * @evtid:		event id
-  * @name:		name of the event
-+ * @type:		format for display to user
-  * @configurable:	true if the event is configurable
-  * @any_cpu:		true if this event can be read from any CPU
-  * @list:		entry in &rdt_resource->evt_list
-@@ -79,6 +80,7 @@ struct mon_evt {
- 	enum resctrl_event_id	evtid;
- 	enum resctrl_res_level	rid;
- 	char			*name;
-+	enum resctrl_event_type	type;
- 	bool			configurable;
- 	bool			any_cpu;
- 	struct list_head	list;
-@@ -89,6 +91,7 @@ struct mon_evt {
-  * @list:            List of all allocated structures.
-  * @rid:             Resource id associated with the event file.
-  * @evtid:           Event id associated with the event file.
-+ * @type:            Format for display to user
-  * @sum:             Set when event must be summed across multiple
-  *                   domains.
-  * @domid:           When @sum is zero this is the domain to which
-@@ -104,6 +107,7 @@ struct mon_data {
- 	struct list_head list;
- 	unsigned int rid;
- 	enum resctrl_event_id evtid;
-+	enum resctrl_event_type type;
- 	unsigned int sum;
- 	unsigned int domid;
- 	bool any_cpu;
-diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-index cd77960657f0..5ea8113c96ac 100644
---- a/fs/resctrl/ctrlmondata.c
-+++ b/fs/resctrl/ctrlmondata.c
-@@ -562,6 +562,27 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 	resctrl_arch_mon_ctx_free(r, evtid, rr->arch_mon_ctx);
- }
- 
-+#define NUM_FRAC_BITS	18
-+#define FRAC_MASK	GENMASK(NUM_FRAC_BITS - 1, 0)
-+
-+static void show_value(struct seq_file *m, enum resctrl_event_type type, u64 val)
-+{
-+	u64 frac;
-+
-+	switch (type) {
-+	case EVT_TYPE_U64:
-+		seq_printf(m, "%llu\n", val);
-+		break;
-+	case EVT_TYPE_U46_18:
-+		frac = val & FRAC_MASK;
-+		frac = frac * 1000000;
-+		frac += 1ul << (NUM_FRAC_BITS - 1);
-+		frac >>= NUM_FRAC_BITS;
-+		seq_printf(m, "%llu.%06llu\n", val >> NUM_FRAC_BITS, frac);
-+		break;
-+	}
-+}
-+
- int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- {
- 	struct kernfs_open_file *of = m->private;
-@@ -633,7 +654,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 	else if (rr.err == -EINVAL)
- 		seq_puts(m, "Unavailable\n");
- 	else
--		seq_printf(m, "%llu\n", rr.val);
-+		show_value(m, md->type, rr.val);
- 
- out:
- 	rdtgroup_kn_unlock(of->kn);
+ /**
+  * resctrl_arch_rmid_read() - Read the eventid counter corresponding to rmid
+  *			      for this resource and domain.
 diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index 1cf0b085e07a..1efad57d1d85 100644
+index 1efad57d1d85..5846a13c631a 100644
 --- a/fs/resctrl/monitor.c
 +++ b/fs/resctrl/monitor.c
-@@ -847,16 +847,19 @@ static struct mon_evt all_events[QOS_NUM_EVENTS] = {
- 		.name	= "llc_occupancy",
- 		.evtid	= QOS_L3_OCCUP_EVENT_ID,
- 		.rid	= RDT_RESOURCE_L3,
-+		.type	= EVT_TYPE_U64,
- 	},
- 	[QOS_L3_MBM_TOTAL_EVENT_ID] = {
- 		.name	= "mbm_total_bytes",
- 		.evtid	= QOS_L3_MBM_TOTAL_EVENT_ID,
- 		.rid	= RDT_RESOURCE_L3,
-+		.type	= EVT_TYPE_U64,
- 	},
- 	[QOS_L3_MBM_LOCAL_EVENT_ID] = {
- 		.name	= "mbm_local_bytes",
- 		.evtid	= QOS_L3_MBM_LOCAL_EVENT_ID,
- 		.rid	= RDT_RESOURCE_L3,
-+		.type	= EVT_TYPE_U64,
+@@ -863,6 +863,18 @@ static struct mon_evt all_events[QOS_NUM_EVENTS] = {
  	},
  };
  
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 97c2ba8af930..bd41f7a0f416 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -2927,6 +2927,7 @@ static struct mon_data *mon_get_kn_priv(int rid, int domid, struct mon_evt *mevt
- 	priv->sum = do_sum;
- 	priv->evtid = mevt->evtid;
- 	priv->any_cpu = mevt->any_cpu;
-+	priv->type = mevt->type;
- 	list_add_tail(&priv->list, &kn_priv_list);
- 
- 	return priv;
++int resctrl_set_event_attributes(enum resctrl_event_id evt,
++				 enum resctrl_event_type type, bool any_cpu)
++{
++	if (evt >= QOS_NUM_EVENTS)
++		return -ENOENT;
++
++	all_events[evt].type = type;
++	all_events[evt].any_cpu = any_cpu;
++
++	return 0;
++}
++
+ int rdt_lookup_evtid_by_name(char *name)
+ {
+ 	int evt;
 -- 
 2.48.1
 
