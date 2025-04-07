@@ -1,51 +1,83 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40E2288A5;
-	Mon,  7 Apr 2025 04:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB94213254;
+	Mon,  7 Apr 2025 04:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743998658; cv=none; b=ftDWYt8HagxtAiYDfumBQmNu79njeD6pcHS0ZwHypecjuJR6fzmGzg1B7PDDe6kqSGXcr1YqBui554fVz7A+OiYpQfTthybQvKP9aIELh/1/69mKsI9hZdrCWdkgL/FPKXxYxqNnNMZsVq7ZD+Z+WIKrudgKEclkRqCNj12xlZ0=
+	t=1743998674; cv=none; b=ZHHqwYJp2rhTJ74dGnY56BDLOT/gLgRghMb9KbDp7o/ZK9hUas0JPnSjBLFS3Ef0OqeLwcHcHwXkrwhX07zp0RehFQG2uqLmR/pTINCXV+hlP9bEjcKX28RGUl4eevDtneuWB/fhIcS4CvFlcfA4bn1TrE0a30TbxPp1Jrk+2kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743998658; c=relaxed/simple;
-	bh=VM/og/6XH+FOo7D67EndDs1WE/rzLn8BFLNpxXdlQIY=;
+	s=arc-20240116; t=1743998674; c=relaxed/simple;
+	bh=m6Xuj0TJRW756Jn/RBGPzGsbpImEdtEG9o3zvOpUzyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLcPZ5DewdUeZSA9XQZWYckLXq2Nf/JDFiGmrSGk62atruArshyZyQRwXoiVNEPyogvz72XVDeRSKp98i36WDFyZa6GdbEmk9CQ7Hs4ihvYy1vqJv5xoFhYpSQl1dyERH/8Y+4GAIioruGfnjhzQ04FL4UeV7srT/8cYVzIFvWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=az52eJGC; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPuJQTctd8NvPpWAiRjIslVEh43Ex2X5sVS5VKwKVbRHs9nfpHbfuhpeqY0L8mYF+210UIv00+rT1cLOdXl/gNdqXrRmQ7Rfu2VtSB2LubG9MO3b67IK7GZB9gdJDtgUvEm8j3+1LohEhH/KLluvdJw2TegGKgfzHl7jMQi3TF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wf9Wjbkc; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="az52eJGC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ba762y6cM1tm8SLlWPO9vBwiqhYzKrzCmC+4ExJ9nuM=; b=az52eJGCie8uw57DU3q+ZJXBUP
-	kil8pJ3KG2x7dxer5cBr6od6JB+/QHiDBDYr04482hX2kyUb6Fx20RjI4DEk+2cGl/wdbm8Dcfvmm
-	J4sdzVWLKvNzHkikL7hdB76P5Q6pK09C+dJz9214TVdRyqtcXpmPZQjKPVDQXyxFQo6S2xDRA0clR
-	9wmOZm9fTMqJWKzSuFQr3P34xH9gZMkY55LU9kuSZVBjsJwXYaYLXc4se5Ytfn1SeY7W4DkjZ280a
-	yjS/jkmTjOvr8YF7xKM5LKCMw3mzSSPXet6Rqk3Hes7Qdo7Ee7DYtTCcsaqKcd/H3o79xkumW6U1J
-	8cXVv+Wg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u1diL-00DMUa-31;
-	Mon, 07 Apr 2025 12:04:03 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Apr 2025 12:04:01 +0800
-Date: Mon, 7 Apr 2025 12:04:01 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
-	jarkko@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v7 3/6] crypto: loongson - add Loongson RNG driver support
-Message-ID: <Z_NOsSBRWUEToa7_@gondor.apana.org.au>
-References: <20250403024645.4427-1-zhaoqunqin@loongson.cn>
- <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wf9Wjbkc"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ed0cc5eca4so52372586d6.1;
+        Sun, 06 Apr 2025 21:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743998672; x=1744603472; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fOq1SITZwZx53Waxl1kAcNYG/rxGN0T4WohynMVLlhw=;
+        b=Wf9WjbkcCXQHS6+HadNVXSvDAo9E0LbOAORfzsz4eNefTQXgIOYJiLdO1LFNnQImHW
+         UtFBT2Tx8DAPkfMYpJFSg2Y+HRGx5Q3VzP66Kw4Xh8gpz9DuUt/nqL4Fc0Q5/TgbKGD2
+         QBLuQp2nh1GnbUsvOPrwmvVCLFrn19QQSOH/lE4zEcYxXtSl/pKz5aVIc/pVVYP0M93r
+         02Hp5MnSKsAKYzK7f0IUcaFpA3vgrY0hQ7q1Ks1EwhaeDDj0OHFZqvZloqVlK80XMeTJ
+         a0eS8CwiYWSMPZ/pjyTWHtb7WFpLUIhVrLTMk7qSMvOjgGBsU+NCQP09XVCostSp4a39
+         XQ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743998672; x=1744603472;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fOq1SITZwZx53Waxl1kAcNYG/rxGN0T4WohynMVLlhw=;
+        b=aJ7pqm9KXAC2KXcMvp7oOWPBQ4jIYUC6hbLwFcQENllg+Co1RFmSdsfr6RzH+ZJ7PB
+         9czKkK/HLpfSx9DZZ3oufXcaPTOozu4vkbtwBQBLlG3odmZVzdgCWlOCQNL3npYMBg/F
+         dazvpiKkOdE6Ot6yK462sM4nVEGGM/eaXO05kyGfJyV6meigSWrPdR0CF/YA7Xj7Opbm
+         LGLXAgGX75m+XFakQBuBQYStoZtU1ukyw2eWEPsZqJFbCTUdPEGo5h6RHkxbPFF3Mozt
+         zw/67/qdkRJoSTXwvOutXs8RnVZ+pTl1n3x5qGWR+SUgGhk5b7+xXdP7zrZeZlxmCczC
+         jnVA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3sqc6buOiDSQrQhYHW1SeolAxBwalZpas2WJyXLUHwho+bEbyiaNCbIAZv5ifLSIqjxQ6Wq6SDKbqHr3d@vger.kernel.org, AJvYcCV4UYoRP5gbWwjs62vW/WI62UAZ2X9Eyn24uCqOzfgLfI+jnhMKy1R3xsHUWlkW0Kt1PTSfoWApuw8u@vger.kernel.org, AJvYcCWo1kWnTxW26FBYZGcvfYLqX8l6oGjMK4QBN734DDCNlH0F40kemxyVKNb3fNMQuqd/v4im1G3Ag583@vger.kernel.org, AJvYcCXD07UulJPTscrrSRbJHBaDddodqoeJomtMh6F69MXfR6QqBwJDZkMp/L6r1o0PoXGigVrQealHFXR1BcQ=@vger.kernel.org, AJvYcCXxKRXatiBGnq+ENWWtPgmZIajU23kBCnhV/GYbas4M1HrX7bCN7NQK42OGE249qwpKlyj8eJRLOTJf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCws+58sJ95a1essJbmGDQmaPh3Gep0zn1tj1o/xnFIDIpsUcR
+	Qu9+/h2LuU2lyZCKdfDZXVTKV6Yyil6VKJCdm0nJceQJV1VSNbpG
+X-Gm-Gg: ASbGncsLb2G5U9vD2xgrglIhQP/p/UcmesA3vOCiJEsVpci6Jt/GA+QOkYmhvd0tsWl
+	H5W4AxlSNs1hGVyvFhlsd0tnjzLw+9zasjWsjQpRNYX8YHNirDjr57K3I27bAMtZtWlhnrjbM81
+	sUW5xgBmeHJhMdSRk0sDotUxsIKijyTbtZNxxRg8yRlDfrqvj7J3YCN/Hg9CEekTR12HVmDDENX
+	tYs1U13EGTaTJkpeWcwnIYVprM2U+0ITY2jcDeh71drLH0DJyhENM1WeMONRxtV6P+cFd+KPg8L
+	Z2ljBpbbT3MkGVxbqPTb
+X-Google-Smtp-Source: AGHT+IEFWeaPs0k9l/nRl6SOPQWLI77kf3bipNHxa565PpRnQyV/lSkvI2bJRICX3oG/ZiqYwkUBpw==
+X-Received: by 2002:a05:6214:1c07:b0:6ea:c5be:f21b with SMTP id 6a1803df08f44-6eff5515024mr175586886d6.13.1743998671997;
+        Sun, 06 Apr 2025 21:04:31 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76ea7ee17sm542867685a.92.2025.04.06.21.04.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 21:04:31 -0700 (PDT)
+Date: Mon, 7 Apr 2025 12:03:56 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, ghost <2990955050@qq.com>, 
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Chao Wei <chao.wei@sophgo.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 5/9] dt-bindings: hwmon: Add Sophgo SG2044 external
+ hardware monitor support
+Message-ID: <wqbglycwmrfqxr7cus4vpaksobxvubozx44giwtfnv3ikwvpqn@kszl3yo6mcry>
+References: <20250407010616.749833-1-inochiama@gmail.com>
+ <20250407010616.749833-6-inochiama@gmail.com>
+ <20250407020517-GYA13159@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,19 +86,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403024645.4427-4-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250407020517-GYA13159@gentoo>
 
-On Thu, Apr 03, 2025 at 10:46:42AM +0800, Qunqin Zhao wrote:
-> Loongson's Random Number Generator is found inside Loongson security
-> engine.
+On Mon, Apr 07, 2025 at 02:05:17AM +0000, Yixun Lan wrote:
+> Hi Inochi:
+> 
+> On 09:06 Mon 07 Apr     , Inochi Amaoto wrote:
+> > The MCU device on SG2044 exposes the same interface as SG2042, which is
+> > already supported by the kernel.
+> > 
+> > Add compatible string for monitor device of SG2044.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml  | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml b/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml
+> > index f0667ac41d75..b76805d39427 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml
+> > +++ b/Documentation/devicetree/bindings/hwmon/sophgo,sg2042-hwmon-mcu.yaml
+> > @@ -11,7 +11,11 @@ maintainers:
+> >  
+> >  properties:
+> >    compatible:
+> > -    const: sophgo,sg2042-hwmon-mcu
+> > +    oneOf:
+> > +      - items:
+> > +          - const: sophgo,sg2044-hwmon-mcu
+> > +          - const: sophgo,sg2042-hwmon-mcu
+> > +      - const: sophgo,sg2042-hwmon-mcu
+> 
+> the compatible added here but not used in dts (or driver), e.g 9/9 patch
+> I'd personally prefer to add it when actually being used
+> (so it can be validated in the real use cases..)
+> 
 
-Is this a hardware RNG or a pseudo RNG? If it's pseudo, it should
-provide a means of reseeding.
+The dts patch is blocked by the dependency (in most case, it is
+the clk). I choose to sumbit these binding patch as they can be
+reviewed in early stage so I can throw the dts patch only when
+the clk is ready.
 
-If it's a hardware RNG it should register with hwrng.
+In fact, these binding changes are trivial so I think it is okay
+to go with the initial patch.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> another concern is whether better to just use 'enum'? (maybe not)
+> but I got your idea to fallback to compatible of sophgo,sg2042-hwmon-mcu..
+> 
+> same with mmc, i2c..
+> 
+
+I do not think it is a good idea to use enum. It lost the fallback
+info.
+
+Regards,
+Inochi
