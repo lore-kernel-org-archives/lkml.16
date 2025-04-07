@@ -1,166 +1,173 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E161F582C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EAF1F582C;
+	Mon,  7 Apr 2025 15:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744038853; cv=none; b=KdvIc4WpaWz0B0YqgTfY4miTf5qnUHUXw/EvTeNJ3fX6aWGSW7B3nQRhMbBday/Z57PdFhydMYVre6RNYY6XJ0Lr4dFZYhAcc68IKoJ66pZMY+aQCPcL0tOZ/+P09Q/fVsuTVnZt9bNOb3+SQwKSpUuVUM+e8oOSUkQT2z4lS5Y=
+	t=1744038887; cv=none; b=TrNxjOyyoWiKv1z2e9NKWOv+HRA3k2mo4zaU33L61rgCxvzMMk8NVdp1DNeImXc+R0LYtzRNa2gvKteM3gNSzhonpoh4piwtUCZh7xqywVHdU8wHjozxRpG6LtsyhZzJniX3nSw+WktHp6HdCTXbCLMlUNj7bdBk1J5SUKqFFhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744038853; c=relaxed/simple;
-	bh=VRb1hLaWt2WaPvMOGkwBaKEZsdN5qjvLhw2FlIjd7v0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjC7pnj0pp/4WTXLdMrOkzaTx1pJm3JKkJTpTShe1uk7EwlcwZEmQ2ILrCgVAeIpp5e3DjHAJBYViqSQk1K1hnkJu6I7mASCS8q6HrYpXxMmVkSR/E3+b+SJ8cPl4EoPxvqpqIyhrZL068hjHa9oDMn81WVt1RZvlBdiegIHLaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgG9Ep/n; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744038887; c=relaxed/simple;
+	bh=R7dIKDlAXXIkueZ+e/t+5gOmT9XoywQLk9xPz/ZXP6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pf7g/+9FzDmgnujeSMRrL8ZuwJ92vYVQCkjNVV+O2/8kCYH+CDHQzItiGzwww90lte1TmZAPNUCCie9G0uR9HDswIRnatBhLfbl5Uf0rf2+drhVOqL4GhrDV61t7IsdUF/TXFM5g19DQKM6v4bNiHVLPFH4/4Mlt962fCeFXByg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kKCzY6Il; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgG9Ep/n"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af51e820336so4185570a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744038851; x=1744643651; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nJcQMlxagZdmN1tNEb0GJjXz4sD05V5goeJcE+Q67Ew=;
-        b=AgG9Ep/nZhDeG0FQpNQI1vnDL4YWkmAeNiACvm5Cu0sUKyDg1EOzg4ijO23xJVtyjC
-         ylb6BvQQgJWqRWafcmq+NLcElqGk7toktGIAtXFBl8l1Q0AKScd99QDCjbRA+QMNjgZS
-         4Y+ob6ir8t522gESd2rXy8tqlrUPyquoROTCwYw1q3SmIWTKhDRm6phNcRQnIu6ELHLQ
-         MeEoOZeCKBcv/ClR4dZ1z8wkGHZYMjFVgMKJWrulJJ2dwiz13cA6NhXQTB/iEOI4eQGe
-         8w6rdxIwrZ6L8LX93X9BSEMGSsEzHfxxU7hkz2hZi3TFh1bZnoBluDuWnc6+pm4Nj6NV
-         P6Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744038851; x=1744643651;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nJcQMlxagZdmN1tNEb0GJjXz4sD05V5goeJcE+Q67Ew=;
-        b=KaSDKm4C1beU4lRRjqU1eRt0MbK9QEr3srdqm4HVSzTEN9tyAYf30xnhqF7VYKk1hE
-         CRcZ7I5VMyiTQ59tSneZIWT81o6OGm2MGDcRJyhrFaYsMt+zQf6oMmlo+IRwAWbBzjcB
-         OnFjPW7vcIVouvbpq8FygwEnodGdtq2gVZIUXziXewVLYX72agYkOB4jn90vPbu65DX7
-         wm3u8A1BYb3djoC4VOITs7axWlf3VJWaaIVBNOtOScIK4opnEOC/h22855a8LHLXK17c
-         Lo2B0A/SD/+YSlqGwx6Xw0/9iE7mkEWnzKo0diL32OtcOQN2zjvYuPNQw+5H0ZFZfPPO
-         Y7/w==
-X-Gm-Message-State: AOJu0YzgwXLT4lR4IYqMidyTM3eskdrtZSwC5LZ5hnSfVqOZZKTdBqJT
-	QAMwxs90n5bfacywz8H3f7feJzmHcC5xbi5vmJnrjQDFEPztNolYIwXWTQ==
-X-Gm-Gg: ASbGncudh8lvEPTy1ziErF3LDNSkUKqf/w1Hm4BMO1cJkSz2xln4uKRk5akDo9HfsAg
-	kZN5Fzk+WX9JuenvXGD55yvAmjMHmxLHucI0fzF0sItJdjVYs/YF4OGdWTipj8xbCV1mXY2irlF
-	wfT9JWeWgUXXQa81k63H1MYmtX0+0NS9RW9eZes4mTfAxZqdgnnG57KF58a8yYUQSN0/vDYEADx
-	MVxQbraqzAqft5+4xNolQS9B9bcUWFHnBpd88iPcpHOQ2/CGAz2vtpzUJYrDs9xhhwgEcpg1aRw
-	5h+pv3TnyCvBfBF7PoAm7MAdBLftGTl/KZckk+eQyr6OQ9JrqvbOYsL6Ig==
-X-Google-Smtp-Source: AGHT+IGz4bT2DSQAveyWtbRMYccxore0huJtq8sc+JCHUUh2qKm++8SerbdE3mJlAYoSxmb/QDxT0g==
-X-Received: by 2002:a17:90b:3503:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-306af7303c1mr14402094a91.9.1744038850955;
-        Mon, 07 Apr 2025 08:14:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca47f57sm10257350a91.11.2025.04.07.08.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 08:14:10 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 7 Apr 2025 08:14:09 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 6.15-rc1
-Message-ID: <75ec6d07-24f3-47b1-9632-ff53ef12c1ab@roeck-us.net>
-References: <CAHk-=wgv_rS5dT8QY7Yh3V5UGup4BLHYToXNKWoH3C9+3YhY9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kKCzY6Il"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744038886; x=1775574886;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R7dIKDlAXXIkueZ+e/t+5gOmT9XoywQLk9xPz/ZXP6U=;
+  b=kKCzY6Ilrf2zX3j6l3pfSX8QGxcU/4F3GcNFcUOf6ilKgN8JFAxkfyGV
+   +xjNpZq1CAr7DBqVeD3MGzNG82tMaA5bxgyaTdj/fXxS4HB90aIcmlkz9
+   LdDK5ZKF4Tnoxuum/PNaOUQ7Cv30xxe4EP6KZa3xjPEnx+2c/5XRUt5CZ
+   81cTez2ZIKTLa/Y4uznfX555Z93P4/LZkpqxrABhSS6EGMgBhZUk4ld6n
+   7Brpj3tGNIzGtvj7hhniBQttm/wAIXtIeagkvLxPKYi2eNb02mkNcqGNV
+   CeruCM9ki0CZPAQHAkkre83hhXTVa4gu1Ah62UqzlMXY9eEhP3BK2DdPH
+   w==;
+X-CSE-ConnectionGUID: D1HYJKfnRL+ymfpl/YkfDA==
+X-CSE-MsgGUID: lsrZiq97T0Gq6+eXlLOVYA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45567954"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45567954"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:14:45 -0700
+X-CSE-ConnectionGUID: rBrQmG8kSRaDo1uLnTNRHw==
+X-CSE-MsgGUID: eKpg1ryjRj6ASOkWW/BRqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127962510"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 07 Apr 2025 08:14:44 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 194EEF0; Mon, 07 Apr 2025 18:14:42 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Eddie James <eajames@linux.ibm.com>,
+	Lee Jones <lee@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pavel Machek <pavel@kernel.org>
+Subject: [PATCH v3 1/1] leds: pca955x: Avoid potential overflow when filling default_label
+Date: Mon,  7 Apr 2025 18:13:26 +0300
+Message-ID: <20250407151441.706378-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgv_rS5dT8QY7Yh3V5UGup4BLHYToXNKWoH3C9+3YhY9w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 06, 2025 at 01:32:47PM -0700, Linus Torvalds wrote:
-> It's been two weeks, and the merge window is now over.
-> 
-> As expected, this was one of the bigger merge windows, almost
-> certainly just because we had some pent-up development due to the
-> previous releases being impacted by the holiday season.
-> 
+GCC compiler (Debian 14.2.0-17) is not happy about printing
+into a too short buffer (when build with `make W=1`):
 
-Build results:
-	total: 161 pass: 155 fail: 6
-Failed builds:
-	alpha:allmodconfig
-	csky:allmodconfig
-	openrisc:allmodconfig
-	parisc:allmodconfig
-	x86_64:allyesconfig
-	xtensa:allmodconfig
-Qemu test results:
-	total: 634 pass: 625 fail: 9
-Failed tests:
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:ext2
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:erofs
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:f2fs
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:ext2
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:erofs
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:f2fs
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:btrfs
-	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:cd
-	xtensa:de212:kc705-nommu:nommu_kc705_defconfig
-Unit test results:
-	pass: 595857 fail: 0
+  drivers/leds/leds-pca955x.c:554:33: note: ‘snprintf’ output between 2 and 12 bytes into a destination of size 8
 
-Most (but not all) of the problems have been reported, and fixes are
-pending.
+Indeed, the buffer size is chosen based on some assumptions,
+while in general the assigned value might not fit (GCC can't
+prove it does).
 
-Build failures:
+Fix this by changing the bits field in the struct pca955x_chipdef to u8,
+with a positive side effect of the better memory footprint, and convert
+loop iterator to be unsigned. With that done, update format specifiers
+accordingly.
 
-In file included from drivers/net/wireless/intel/iwlwifi/mld/tests/utils.c:18:
-drivers/net/wireless/intel/iwlwifi/mld/tests/../iface.h:169:5: warning: "CONFIG_PM_SLEEP" is not defined, evaluates to 0 [-Wundef]
-  169 | #if CONFIG_PM_SLEEP
+In one case join back string literal as it improves the grepping over the code
+based on the message and remove duplicating information (the driver name is
+printed as pert of the dev_*() output [1]) as we touch the same line anyway.
 
-drivers/net/wireless/intel/iwlwifi/mld/mac80211.c: In function 'iwl_mld_mac80211_start':
-drivers/net/wireless/intel/iwlwifi/mld/mac80211.c:504:20: warning: 'ret' is used uninitialized [-Wuninitialized]
-  504 |         if (!in_d3 || ret) {
+Link: https://lore.kernel.org/r/4ac527f2-c59e-70a2-efd4-da52370ea557@dave.eu/ [1]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-drivers/net/wireless/intel/iwlwifi/mld/mac80211.c:1982:12: error: 'iwl_mld_resume' defined but not used [-Werror=unused-function]
- 1982 | static int iwl_mld_resume(struct ieee80211_hw *hw)
-      |            ^~~~~~~~~~~~~~
+v3: reworked again to satisfy both compilers (LKP)
+v2: updated format specifier once again (LKP)
 
-drivers/net/wireless/intel/iwlwifi/mld/mac80211.c:1960:1: error: 'iwl_mld_suspend' defined but not used [-Werror=unused-function]
- 1960 | iwl_mld_suspend(struct ieee80211_hw *hw, struct cfg80211_wowlan *wowlan)
-      | ^~~~~~~~~~~~~~~
+ drivers/leds/leds-pca955x.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-drivers/net/wireless/intel/iwlwifi/mld/mac80211.c:1946:13: error: 'iwl_mld_set_wakeup' defined but not used [-Werror=unused-function]
- 1946 | static void iwl_mld_set_wakeup(struct ieee80211_hw *hw, bool enabled)
-      |             ^~~~~~~~~~~~~~~~~~
+diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+index e9cfde9fe4b1..24a40a1cdb15 100644
+--- a/drivers/leds/leds-pca955x.c
++++ b/drivers/leds/leds-pca955x.c
+@@ -73,7 +73,7 @@ enum pca955x_type {
+ };
+ 
+ struct pca955x_chipdef {
+-	int			bits;
++	u8			bits;
+ 	u8			slv_addr;	/* 7-bit slave address mask */
+ 	int			slv_addr_shift;	/* Number of bits to ignore */
+ 	int			blink_div;	/* PSC divider */
+@@ -142,13 +142,13 @@ struct pca955x_platform_data {
+ };
+ 
+ /* 8 bits per input register */
+-static inline int pca955x_num_input_regs(int bits)
++static inline u8 pca955x_num_input_regs(u8 bits)
+ {
+ 	return (bits + 7) / 8;
+ }
+ 
+ /* 4 bits per LED selector register */
+-static inline int pca955x_num_led_regs(int bits)
++static inline u8 pca955x_num_led_regs(u8 bits)
+ {
+ 	return (bits + 3)  / 4;
+ }
+@@ -581,14 +581,14 @@ static int pca955x_probe(struct i2c_client *client)
+ 	struct led_classdev *led;
+ 	struct led_init_data init_data;
+ 	struct i2c_adapter *adapter;
+-	int i, bit, err, nls, reg;
++	u8 i, nls, psc0;
+ 	u8 ls1[4];
+ 	u8 ls2[4];
+ 	struct pca955x_platform_data *pdata;
+-	u8 psc0;
+ 	bool keep_psc0 = false;
+ 	bool set_default_label = false;
+ 	char default_label[8];
++	int bit, err, reg;
+ 
+ 	chip = i2c_get_match_data(client);
+ 	if (!chip)
+@@ -610,16 +610,15 @@ static int pca955x_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
+-	dev_info(&client->dev, "leds-pca955x: Using %s %d-bit LED driver at "
+-		 "slave address 0x%02x\n", client->name, chip->bits,
+-		 client->addr);
++	dev_info(&client->dev, "Using %s %u-bit LED driver at slave address 0x%02x\n",
++		 client->name, chip->bits, client->addr);
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+ 	if (pdata->num_leds != chip->bits) {
+ 		dev_err(&client->dev,
+-			"board info claims %d LEDs on a %d-bit chip\n",
++			"board info claims %d LEDs on a %u-bit chip\n",
+ 			pdata->num_leds, chip->bits);
+ 		return -ENODEV;
+ 	}
+@@ -694,8 +693,7 @@ static int pca955x_probe(struct i2c_client *client)
+ 			}
+ 
+ 			if (set_default_label) {
+-				snprintf(default_label, sizeof(default_label),
+-					 "%d", i);
++				snprintf(default_label, sizeof(default_label), "%u", i);
+ 				init_data.default_label = default_label;
+ 			} else {
+ 				init_data.default_label = NULL;
+-- 
+2.47.2
 
-Triggered by commit d1e879ec600f9 ("wifi: iwlwifi: add iwlmld sub-driver").
-The code was not build tested with CONFIG_PM disabled.
-
-Building x86_64:allyesconfig ... failed
---------------
-Error log:
-x86_64-linux-ld: kernel image bigger than KERNEL_IMAGE_SIZE
-
-No idea what to do here. Increase KERNEL_IMAGE_SIZE ? Disable some options ?
-
-Building xtensa:allmodconfig ... failed
-
-ERROR: modpost: "__divdi3" [drivers/gpu/drm/xe/xe.ko] undefined!
-ERROR: modpost: "__udivdi3" [drivers/gpu/drm/xe/xe.ko] undefined!
-
-Commit 9c44fd5f6e8a ("drm/xe: Add migrate layer functions for SVM support")
-didn't watch out for 64-bit divide operations.
-
-Building xtensa:de212:kc705-nommu:nommu_kc705_defconfig ... failed
-------------
-Error log:
-kernel/trace/trace.o:(.init.literal+0x250): undefined reference to `get_vm_area'
-
-get_vm_area() is undefined for non-mmu buids. Triggered by commit 394f3f02de53
-("tracing: Use vmap_page_range() to map memmap ring buffer").
-
-====================
-Runtime failures:
-
-mipsel64:boston:
-	Triggered by "PCI: Perform reset_resource() and build fail list in sync"
-	and "PCI: Rework optional resource handling" which don't take particulars
-	of that platform into account.
