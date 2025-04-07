@@ -1,83 +1,151 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFB7221D9A;
-	Mon,  7 Apr 2025 07:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9F47E110
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010401; cv=none; b=gDl6HxJzR4P3FZ+VN7hhgg+CMpuEHAW3lEHpp1g7ItLc9Um+I+TIxyJY9dxGeN4oQeJUg8azBq1BjMQL6NVhQLBdyZ0oGn+LhNkhrwT6mG7uDs4BmqiXHMz6qZUdUJ7weQGlpZCP5YowK2SIBTZjWZ18VD+gJnzfp5HJlKxj/G4=
+	t=1744010420; cv=none; b=iIHz7O1QOOkXyY4RId6SUa+4rAumXA0h67R3ozE4j1AUyqnPyUXrJwOlKzd2zsTKsxhQGT5Ro1LFHDmyvCce59PPV3rZ+47gY+qkT9bG5Y8OGUbh9mvmxOmzCl6BSkpcx4fLYnZQxr1B99GAfEFzmouInkoiGgRHlw9z/usOuU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010401; c=relaxed/simple;
-	bh=lndtBobJoLesrhzrh5xgstIcOeftXPA6n5ZNo0kL1oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=moKGl21POG62dMaslSzCk/O17AM0haTWor08bK4HCDqxDadX+LqYaeaSKpu+BSDt0rxwmuYMMSdV76WoUgewmexWy0dbF43ZY1j1KEuhX7G7YMk/1sm8tGzeMvlk5MBlDJxYQGtQCmb+uGrSy9hAEF+S0EEP46D3VigJh6NKOfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uTwd8qGM; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1744010420; c=relaxed/simple;
+	bh=vB97Q1YPbq16AwOxn+yN6Er1uY//wlkJ2Wtv7a3Qbug=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pgojmtyI/DHn7skIaNvU5qkZuCQX5XivJKHPAI6ibgGbiS1YW+sg1xB0h/dtD5xu/fK/h6OWI+z0MNtVwELS2jqy6Y+T67lGr0hho4u90fo5vfOArxnNAlK1Q82YKusZNWq9NzDKVOhEwOkMfKjMWbEOidpAMu9jKQq2YXz7Pt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GV3ZwaPw; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uTwd8qGM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5G6EkzTo88uUPXRsiiqM7dcsCQlZ75x+RO778RUeMzk=; b=uTwd8qGM8sI/tZqcX7GEER8IbR
-	DoBYD9mzg3r5VeUXdcY36G3gx7ii5JJ/dKvHaRRhXCjTAlmy7XY4vSU7QGpxBjJItUPHmER5bdOrM
-	GhzmA1WoEJOaT7o6CyNiX3V0FCwNkQ434WNKjCph6GPGrjeRIvVDztBTvqupIgrK99y65suw12uX2
-	zW4kyacCjD0fO7iJtaK+qvOLFUzdHznuOfrKYO5fOj1FdD+sQUXmihRkXtuaG2eQxMonhnA4Q/zA+
-	EPNtPy+EGTPfjcEZIWDfZc8w83hRrFn5MxlXwvmIKNOS3Fv5M+QRdExoAf9Pcg/S8sfCEeA2IKJ+6
-	vKurhswQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1gly-0000000Girh-0KBx;
-	Mon, 07 Apr 2025 07:19:58 +0000
-Date: Mon, 7 Apr 2025 00:19:58 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	virtio-comment@lists.linux.dev, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <Z_N8nk_CpD4v9-VE@infradead.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <Z-43svGzwoUQaYvg@infradead.org>
- <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
- <Z-99snVF5ESyJDDs@infradead.org>
- <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
- <20250404040838-mutt-send-email-mst@kernel.org>
- <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GV3ZwaPw"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso25286425e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010417; x=1744615217; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NZkA1+Q3u+jEfVBi0l7ljj4vwe6IMZ6cjm27iXV9wpo=;
+        b=GV3ZwaPw3Hk+auH+WqV5uLeWRsnQddF7ajTcaT67jdpyZX7/oukOgxB13wC4YPSRtX
+         T2El5GbD3/o6iGfJ9x5cAkqw75hoG4+7vk9VOt0fG3B9uTU4WrmltT6rCoM0yS9NMkWN
+         Ra2apicd36+bONy3Ij9pGVsIzMr0FkiBAS30l+c0KYCnBBYW0SAth7WlGFwMk8yBzDZy
+         L9fmkTpYWUZKaxitEIW7tuEbWqHFV5iynAccV3W44kkZ3hiS1+NoIIVR4T2eFZeaS03W
+         WJ5YFKo85lPobx/QV+ewuaQTCRTDRthKwT5Eib1rv3w0raJppAQWnUFXYdm5RZb6fRKS
+         oW2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010417; x=1744615217;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NZkA1+Q3u+jEfVBi0l7ljj4vwe6IMZ6cjm27iXV9wpo=;
+        b=bYonk1MEaRroEXgHhlbd9m9FUVZlgNK1O0rRiv9fGPgZJNM/ktcOS92fkcVInlDfUf
+         qAQWfX5Mpm6ROgzXmjIZ9IbzysJGyUhYy27H3u60P4fumS6NJyzftWUuQAznMOiaYmZ4
+         bqWjZ8rVAZMaUhyGvZ5hqELIRAJt+A/nc8xwtnJRHjeL64s9hmhvNCiwF3+EOPgFmm+P
+         7FIUi3vvl2dzCOaMcKsIfhO6PZ+1BTUP7IzmrF5pCk3gtc16uMzpbQ+8FgfrTtRgj4UX
+         3ulkwVzPrhIVzK3Hhy+ZUXPeViZGbTyYTnkZPR+Ka4FLtkpTPhbEM4HpPiHzbT2m3pKZ
+         1OVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzVsX3qoKIVK3IvP1iMvZRc+MM/viS6rN1ckHSEiWFV1XaqkeGH/v14qjQfa21RTb4Qs4QzhkJCk89x9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtoPOK2LRbUqnfCzPr8XdTiu+UxOrybDFFx4/4vPpVSAPSgHTB
+	d6MtR7LMh9ctm+WSF672MxyxKc073xnJforQ9XqP0wPZktb9fRoxo7wBKI0jlh4=
+X-Gm-Gg: ASbGncskKHTblyzJRlXEpV/fSIGL1WHY2DiL9cKezR2vGy6FCq5RCPVC0x3EV5wsetY
+	G/hNFIbLwNdHUEquFX+ZRXV/yv4gLyAfk8Wuw2BWV33o6kuJydD/pgnNrFwy17xSu0hipm0pSZf
+	Ep5qPMmXe6a38nzEtLuXFvi/6aI0iF6Ix3vvVjU8nph+ZpAXgif0uYdxoPn0zkSqq8DwjsT6+tM
+	CIxmc6YiJHSfapKVHCYy+I2TlyoNYk+6dNDdauTrszaHC5uf7jJLYm8SdAksBaMwCIv+jn3gNzw
+	bU8hIUoIjgf1CD6eU3EzYv37ai3i2oUaQ/XGlg==
+X-Google-Smtp-Source: AGHT+IHpPjFFlJDSkBPgrO6I41uexMOHig1BRBPlRgzV6SsR14UibMi/3rCWV6DQ/1uJeGXoDG6rTg==
+X-Received: by 2002:a05:600c:4ecc:b0:43d:2313:7b49 with SMTP id 5b1f17b1804b1-43ecf85f4d2mr100415065e9.12.1744010416824;
+        Mon, 07 Apr 2025 00:20:16 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec3669002sm121751175e9.33.2025.04.07.00.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:20:16 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Apr 2025 09:20:15 +0200
+Subject: [PATCH] m68k: coldfire: gpio: use new line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAK5882cC/x3MQQqAIBBA0avErBswpbSuEi2ixhoikzEiiO6et
+ HyL/x9IJEwJuuIBoYsTHyGjKguY1jEshDxng1a6VkY3uEQ+ppUjJjpRLtwbt6F1rbdWO+Otg5x
+ GIc/3v+2H9/0A+d+MBmYAAAA=
+To: Greg Ungerer <gerg@linux-m68k.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1765;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=xpjlcs0Z+gAlZJFbn5AlXbcR6QRO7s3gx9jjA4Yf1Zg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83ywLwPBxfPzoX+y2laB9IHxbDRLfAaKx6afO
+ m3U3MGsITSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N8sAAKCRARpy6gFHHX
+ chzFD/9187tA+35Bnp9Rx8W4LxG/AeuKg9A73cy0c8KWQhWSdM7ri1UlLP1a9NbaUQtyH0By9oC
+ 2APZ0yRzXqSfFYP9fK9ZpYEkio/d8gepkwbFdcq1RTKbdManuCywpeHrTFSgCeRle93oLeV2ofV
+ 4Fnaam5T5+Zc9A7UFqUOqM7xd0fJ+Ra9pfRuZSYTKPp3vf1mfRPSsjePo629D3APbon9HuQV8rn
+ eLMrSdZXM8UcgnJE2V60b/O3ANrlia6TT69eCm/giNkX+WCMV05mE/keSk+H7TUea4EH+efyZtR
+ 5Ycvv0s4Bi/+hI+/0Nh5gygp7khgI07qS9KZd3ygckstGgN/MirZNmYDK0OAZclCtRBGonphGOC
+ TbXVVwoU81g20JSUbSMLZyC48lU7atrB9mUelvCzhINdJ8MkFHsG+aPRNuZiyAX2BVWjCDy5OSe
+ ttX7s70dOMQVlCvDk1hogR1MYfXblwVVsk/2oQ1REV+JpRFaR0HnJRpklfVNFfkdGvPfJ6XdFxV
+ x8GqV+b5JdJCeOxqkRt1lmXLxPXSl+AA29VwFzNiTcGgMY0ZO/LZ+8lLv6g45e6D6azdn/HQjz2
+ z70FQNuZ99Uzf0Uo0Nb8qLBv03mX+x4EP1Cu8gH06P23VusZFg0pK4/dFo+xSeZbDhkMg5ikjT/
+ d0J+f7HA6IKvfxw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Fri, Apr 04, 2025 at 09:16:44AM +0100, David Woodhouse wrote:
-> The sad part is that the system does it all automatically *if* it has
-> CONFIG_DMA_RESTRICTED_POOL (e.g. Linux) and the driver never even
-> notices that the dma_ops it's using are the swiotlb ops using the
-> provided buffer.
-> 
-> Which is *kind* of nice... except that when on a guest OS which *isn't*
-> Linux with CONFIG_DMA_RESTRICTED_POOL, the guest will just ignore the
-> `restricted-dma-pool` node and try DMA to system memory anyway, which
-> will fail.
-> 
-> That's why my proposal adds the negotiated VIRTIO_F_SWIOTLB feature, so
-> that the device side can refuse, if the guest *isn't* agreeing to use
-> the bounce buffer in the situations where it must do so.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That all assumes the indirect DMA is a device "feature".  It's not.
-It is a limitation placed on the guest system.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of
+converting all GPIO drivers to using the new API. This series converts
+all m68k board-file level controllers.
+---
+ arch/m68k/coldfire/gpio.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/arch/m68k/coldfire/gpio.c b/arch/m68k/coldfire/gpio.c
+index ca26de257871..30e5a4ed799d 100644
+--- a/arch/m68k/coldfire/gpio.c
++++ b/arch/m68k/coldfire/gpio.c
+@@ -123,10 +123,12 @@ static int mcfgpio_direction_output(struct gpio_chip *chip, unsigned offset,
+ 	return __mcfgpio_direction_output(offset, value);
+ }
+ 
+-static void mcfgpio_set_value(struct gpio_chip *chip, unsigned offset,
+-			      int value)
++static int mcfgpio_set_value(struct gpio_chip *chip, unsigned int offset,
++			     int value)
+ {
+ 	__mcfgpio_set_value(offset, value);
++
++	return 0;
+ }
+ 
+ static int mcfgpio_request(struct gpio_chip *chip, unsigned offset)
+@@ -158,7 +160,7 @@ static struct gpio_chip mcfgpio_chip = {
+ 	.direction_input	= mcfgpio_direction_input,
+ 	.direction_output	= mcfgpio_direction_output,
+ 	.get			= mcfgpio_get_value,
+-	.set			= mcfgpio_set_value,
++	.set_rv			= mcfgpio_set_value,
+ 	.to_irq			= mcfgpio_to_irq,
+ 	.base			= 0,
+ 	.ngpio			= MCFGPIO_PIN_MAX,
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250326-gpiochip-set-rv-m68k-789f77283f78
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
