@@ -1,99 +1,188 @@
-Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7915C1D5ADB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85831CAA64;
+	Mon,  7 Apr 2025 14:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035324; cv=none; b=dfi+degpf96R+chWbQEaHsTMoBay07OVYcTPn3WJcV32Jm8hcRwFO2RmMWSx1g00+gprhyv8tcpMwKeHgGpDh7GQeWBQ4wjJDivdpDBTHcVEu9VTEtn4/U4eI76FR4VqWuyfVy3B+pzYoRoVl0aKJAefNFIKIi26DMPC06jOmsM=
+	t=1744035328; cv=none; b=LpRuwgdsKQlJ6/9fFvylRJkvI/cqqVpxAovtVHqMvlHhAfAbwJRwrL6++gqd192EZFF7QQu+mEs/tJQdJTGQYbKrkvL2uoqUwTaoS9Y4z+1Mx6HZaM4142hKTL4MVDwMWZz0H83yCnYhNaXkaKS9rUDXbOEzOup8OV6NQS2XWBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035324; c=relaxed/simple;
-	bh=FGMzFht7sYyJH3fHbO3rJ9gt4mL0Jp0IXQJkLSJxcR4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qh2va+QjY1yD3JL9UpGsX1ZvTXHw3e2VPMqwuN/OHaUL/4Pvs5RwYx0paBSBr0dcTNbAH/dm0/z9sd+gdrYOtLhcEMwhYXcpNtrRJkA/QnYtXblJ2gRytBgqGsgwLXPWhXWl209Dg5uiKddJscnPHVIXqKRRc+ewbojsuG2TzxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=C2xvzMbN; arc=none smtp.client-ip=17.58.6.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744035328; c=relaxed/simple;
+	bh=h7tZEGSxemwigHFhyUa/B9x+zMVaRAshCmUPXzxcECY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U53Ugrf+6GE6+EVigYONjAyiye0HAW2K2/F4ZNVH/ipNr9qdum2N+mL6Tn6Yaj35Ei4wwFKc4/rfE5IbGtiQ0jY3AVLDRTG7+rNxApalwXM1wmZvlG5GdGuR8jP48es4WJNdOOygF7Eb/nYTRcW+Xo1OmDzeG9x01/2dSuRv5U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZELgm49; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="C2xvzMbN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=zIc+teFC5HxNtKRb6tabwtXjk4yww4FlTdpPz50t3m0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=C2xvzMbNvtwax7t9LF+4nxhbQbUlxdpR3+oGqpUDK0tksWhu1H+vsR8YNHFU1oys/
-	 EiKfMaONtRsHbr/tzFazKW3o7Pq0RswuRO15/BDrpIz1OlXqeyVn3aqdFlTTL1ny+u
-	 f4DHUOZZGIyvsmpUNhBa2BwmauPte9OFOS+GOXuz+pfMIX/KdPr7IQTCdphTM3lL2o
-	 YtOOjZSiIv8f9Sh7OEE8xDv4MOgMJjMC6YrvuOThOSsUEhRyt7PL0TUukKAnOvA8WM
-	 j0tqdE91G044XNB2LjFN2K2WrLA2nLsi2Gj4nFV8YBtZS4yZuIjrJXaB9rnXSRu9WX
-	 idK1B2bxgpxyw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id 03A7634BA628;
-	Mon,  7 Apr 2025 14:15:18 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 07 Apr 2025 22:14:56 +0800
-Subject: [PATCH 1/2] PCI: of: Fix OF device node refcount leakage in API
- of_irq_parse_and_map_pci()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZELgm49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E59EAC4CEE7;
+	Mon,  7 Apr 2025 14:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744035328;
+	bh=h7tZEGSxemwigHFhyUa/B9x+zMVaRAshCmUPXzxcECY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pZELgm49eXVhKxLNk+B3kfRXF9wQPL71zTGe6jrNF5Xe5IYi+lFR8P6vQzBADDSBb
+	 qtbO7E3buBLowbmncXPkzj7P7Rk8Ig3RnoWDL4ZFYm6aPHjDYahwET5lkbGgHM+8cC
+	 Pb890PGZ/oklAS8en2NVjouHL0r0H15iyBGM0TLrLR80+p2w1H8a4wGMHj4GAi7CFF
+	 tB3ns56NIcg5B/owwEVAFj8OuYFn148JVkMrZLePOOFwdpPat07A/rT2GXP3dZB5zM
+	 lM/oPGaYRRpPfs4yNvSWjfzXXX1KfRajiSwoU2+FNJWj+p4x1CTaINw313vmpo69Bd
+	 cbj7YL4sAv24w==
+Date: Mon, 7 Apr 2025 16:15:24 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
+	lennart@poettering.net
+Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
+ systemd-nspawn on my system
+Message-ID: <20250407-unmodern-abkam-ce0395573fc2@brauner>
+References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-fix_of_pci-v1-1-a14d981fd148@quicinc.com>
-References: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
-In-Reply-To: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
- Lizhi Hou <lizhi.hou@amd.com>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: v1g6p036Y7IArCEH4aHH1TM5eRGRHLxg
-X-Proofpoint-ORIG-GUID: v1g6p036Y7IArCEH4aHH1TM5eRGRHLxg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504070100
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Mon, Apr 07, 2025 at 12:14:01PM +0500, Mikhail Gavrilov wrote:
+> Hi,
+> I use Fedora. On Fedora systemd-nspawn is used for creating a clean
+> build environment for packaging.
+> I noted that on fresh kernels I can't build packages any more because
+> the command "mock -r fedora-rawhide-i386 --rebuild" is stuck.
+> I started debugging and found that systemd-nspawn was hanging.
+> Sending SysRq for  displaying list of blocked (D state) tasks gave me
+> this trace:
+> [  743.382717] sysrq: Show Blocked State
+> [  743.383154] task:systemd-nspawn  state:D stack:27120 pid:4609
+> tgid:4609  ppid:4435   task_flags:0x400140 flags:0x00000002
+> [  743.383164] Call Trace:
+> [  743.383167]  <TASK>
+> [  743.383171]  __schedule+0x895/0x1bf0
+> [  743.383178]  ? __pfx___schedule+0x10/0x10
+> [  743.383182]  ? __pfx_do_raw_spin_trylock+0x10/0x10
+> [  743.383187]  ? __raw_spin_unlock_irqrestore+0x5d/0x80
+> [  743.383191]  ? rcu_is_watching+0x12/0xc0
+> [  743.383195]  ? schedule+0x1d5/0x260
+> [  743.383199]  schedule+0xd4/0x260
+> [  743.383202]  fuse_get_req+0x92d/0x1060 [fuse]
+> [  743.383218]  ? rcu_is_watching+0x12/0xc0
+> [  743.383222]  ? __pfx_fuse_get_req+0x10/0x10 [fuse]
+> [  743.383233]  ? rcu_is_watching+0x12/0xc0
+> [  743.383236]  ? __pfx_autoremove_wake_function+0x10/0x10
+> [  743.383240]  ? rcu_is_watching+0x12/0xc0
+> [  743.383243]  ? is_bpf_text_address+0x64/0x100
+> [  743.383247]  ? __pfx_stack_trace_consume_entry+0x10/0x10
+> [  743.383252]  __fuse_simple_request+0x8f/0xab0 [fuse]
+> [  743.383263]  ? kernel_text_address+0x145/0x160
+> [  743.383268]  ? __kernel_text_address+0x12/0x40
+> [  743.383272]  fuse_getxattr+0x2cd/0x3e0 [fuse]
+> [  743.383287]  ? __pfx_fuse_getxattr+0x10/0x10 [fuse]
+> [  743.383299]  ? rcu_is_watching+0x12/0xc0
+> [  743.383304]  ? rcu_is_watching+0x12/0xc0
+> [  743.383307]  ? is_bpf_text_address+0x64/0x100
+> [  743.383310]  ? lock_release+0xb7/0xf0
+> [  743.383314]  ? is_bpf_text_address+0x6e/0x100
+> [  743.383318]  ? kernel_text_address+0x145/0x160
+> [  743.383323]  fuse_xattr_get+0x64/0x90 [fuse]
+> [  743.383333]  __vfs_getxattr+0xf0/0x150
+> [  743.383338]  ? __pfx___vfs_getxattr+0x10/0x10
+> [  743.383344]  get_vfs_caps_from_disk+0x138/0x450
+> [  743.383349]  ? __pfx_get_vfs_caps_from_disk+0x10/0x10
+> [  743.383353]  ? rcu_is_watching+0x12/0xc0
+> [  743.383356]  ? handle_path+0x27c/0x6b0
+> [  743.383360]  ? lock_release+0xb7/0xf0
+> [  743.383363]  ? handle_path+0x281/0x6b0
+> [  743.383368]  audit_copy_inode+0x339/0x4f0
+> [  743.383372]  ? __pfx_audit_copy_inode+0x10/0x10
+> [  743.383376]  ? path_lookupat+0x16a/0x670
+> [  743.383381]  filename_lookup+0x391/0x550
+> [  743.383386]  ? __pfx_filename_lookup+0x10/0x10
+> [  743.383394]  ? audit_alloc_name+0x398/0x490
+> [  743.383398]  ? __audit_getname+0x10b/0x160
+> [  743.383402]  ? getname_flags.part.0+0x1a5/0x510
+> [  743.383406]  user_path_at+0x9e/0xe0
+> [  743.383411]  __x64_sys_mount_setattr+0x247/0x340
+> [  743.383415]  ? __pfx___x64_sys_mount_setattr+0x10/0x10
+> [  743.383418]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
+> [  743.383422]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
+> [  743.383426]  ? ktime_get_coarse_real_ts64+0x41/0xd0
+> [  743.383431]  do_syscall_64+0x97/0x190
+> [  743.383437]  ? rcu_is_watching+0x12/0xc0
+> [  743.383440]  ? rcu_read_unlock+0x17/0x60
+> [  743.383444]  ? lock_release+0xb7/0xf0
+> [  743.383448]  ? handle_mm_fault+0x4e5/0xa60
+> [  743.383451]  ? exc_page_fault+0x7e/0x110
+> [  743.383456]  ? rcu_is_watching+0x12/0xc0
+> [  743.383458]  ? exc_page_fault+0x7e/0x110
+> [  743.383462]  ? do_user_addr_fault+0x8cb/0xe70
+> [  743.383466]  ? irqentry_exit_to_user_mode+0xa2/0x290
+> [  743.383469]  ? rcu_is_watching+0x12/0xc0
+> [  743.383472]  ? irqentry_exit_to_user_mode+0xa2/0x290
+> [  743.383475]  ? trace_hardirqs_on_prepare+0xdf/0x120
+> [  743.383480]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  743.383483] RIP: 0033:0x7fac4ff0419e
+> [  743.383499] RSP: 002b:00007ffc843092f8 EFLAGS: 00000246 ORIG_RAX:
+> 00000000000001ba
+> [  743.383504] RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007fac4ff0419e
+> [  743.383507] RDX: 0000000000009000 RSI: 00007fac503472a8 RDI: 000000000000000b
+> [  743.383509] RBP: 00007ffc843093a0 R08: 0000000000000020 R09: 00007fac4fff6ac0
+> [  743.383512] R10: 00007ffc84309340 R11: 0000000000000246 R12: 0000000000000009
+> [  743.383514] R13: 000056069822b629 R14: 000056069822b635 R15: 0000000000000007
+> [  743.383519]  </TASK>
+> 
+> > sudo /usr/bin/systemd-nspawn -q --ephemeral -D /var/lib/mock/fedora-rawhide-x86_64/root
+> [sudo] password for mikhail:
+> ^CShort read while reading whether to enable FUSE.
+> mikhail@primary-ws ~ [1]>
+> 
+> And started bisecting the issue and the first bad commit is
+> 474f7825d5335798742b92f067e1d22365013107.
+> 
+> Author: Christian Brauner <brauner@kernel.org>
+> Date:   Tue Jan 28 11:33:40 2025 +0100
+> 
+>     fs: add copy_mount_setattr() helper
+> 
+>     Split out copy_mount_setattr() from mount_setattr() so we can use it in
+>     later patches.
+> 
+>     Link: https://lore.kernel.org/r/20250128-work-mnt_idmap-update-v2-v1-2-c25feb0d2eb3@kernel.org
+>     Reviewed-by: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+>     Signed-off-by: Christian Brauner <brauner@kernel.org>
+> 
+> Unfortunately I can't test the revert of this commit because of conflicts.
+> 
+> > git revert -n 474f7825d5335798742b92f067e1d22365013107
+> Auto-merging fs/namespace.c
+> CONFLICT (content): Merge conflict in fs/namespace.c
+> error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
+> hint: after resolving the conflicts, mark the corrected paths
+> hint: with 'git add <paths>' or 'git rm <paths>'
+> hint: Disable this message with "git config set advice.mergeConflict false"
+> 
+> My machine spec: https://linux-hardware.org/?probe=619658e7cf
+> And I attached below my build config and full kernel log.
+> 
+> Christian, can you look please?
 
-Successful of_irq_parse_pci() invocation will increase refcount of
-OF device node @oirq.np, but API of_irq_parse_and_map_pci() does not
-decrease the refcount before return, so cause @oirq.np refcount leakage.
+I'm a bit confused by your git bisect log and the dmesg output you're
+showing. The dmesg output suggests you did actually test on:
 
-Fix by using OF __free() to decrease the refcount.
+[    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEMPT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Rob Herring (Arm) <robh@kernel.org>
----
- drivers/pci/of.c | 2 ++
- 1 file changed, 2 insertions(+)
+But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+according to:
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index ab7a8252bf4137a17971c3eb8ab70ce78ca70969..0a5cba7df1bc918dc537d187c145b9fd73c520b7 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -576,6 +576,7 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
-  */
- int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
- {
-+	struct device_node *np __free(device_node) = NULL;
- 	struct of_phandle_args oirq;
- 	int ret;
- 
-@@ -583,6 +584,7 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
- 	if (ret)
- 		return 0; /* Proper return code 0 == NO_IRQ */
- 
-+	np = oirq.np;
- 	return irq_create_of_mapping(&oirq);
- }
- EXPORT_SYMBOL_GPL(of_irq_parse_and_map_pci);
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.
+git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
 
--- 
-2.34.1
-
+Which is way before -rc1. Where you testing on actual v6.15-rc1 released
+yesterday or were you testing on
+1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
+actual v6.15-rc1 as I suspect this is caused by faulty locking in
+clone_private_mount() which I fixed.
