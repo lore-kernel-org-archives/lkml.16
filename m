@@ -1,87 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ombertech.com (ombertech.com [74.48.158.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A86224236;
-	Mon,  7 Apr 2025 22:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE6333E1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 22:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.48.158.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744064103; cv=none; b=Agvf+iZgGcnrAr+qrIbpZGW/BvkoVP5Nw/2aS4or2cHOI/yOFY+izZ4+xCR/w3ZsuRB65lkx1I52SiY4zl2LmCSHoUGaIQKlqawHlLl6hWnRus2DsOUj8p5wnElRmPd2mSPxnOPE9MJn4FyO+aCaWbx0ZHWC6YceQYENhS6yPRg=
+	t=1744064379; cv=none; b=lJfYIT7loLcnIdebsK5QOR0vnLBwpDTng+P1RKGQ4PESCP+7FBTPnm37bLHaGGCzyq6gsM5UZTSxyrLuvLnPgf3zBeGeqku7fL2gXDd110uL2itKKWp8tC2kXNmKls1F2Bz6IiH7V01hMiNcRcaoSf7gysqpMPZDJXRe/CNMlCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744064103; c=relaxed/simple;
-	bh=VSVFpQj3hn1f1mOYrZD1BOgazgCdpZCs00LueNXdzzQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JOVeEZ+o9H03NF9PpaLXBFeg3eQ2D+HxvJgVL4ew0uqAEkqE2B+wZciZhwEmVrssjBNeS8tMF5sGhcyg6/u+SNyhNVoDBYSTFTTaJWNzhz1/wWBkbS34MrKN21YHiXVsKemrT+8SEZvrzbGHVPm8zoAMT2P9m4460BISLWsna4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJuWELVU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744064379; c=relaxed/simple;
+	bh=9RYcwfi9OWFIA4tTmXrTgshenclo4cCNO7OnCXuKIvU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rzYaQsfPVkiS3cgwfmfIi0zjP7j7WO/bnJyjkzf1Qf9F3eC2ExjmWBpGIR0ZsW0zl+569RwZMxnYidtCVMrJMVsOeDl0t/erzT3xi4Dry8gV68nVbWRnar57tZ2kLIoe4rq9FCg85GIFZXdA9Y7rmXkNcsF1veNqB2OYj4VzLfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com; spf=pass smtp.mailfrom=ombertech.com; dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b=FzFmP1jn; arc=none smtp.client-ip=74.48.158.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ombertech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJuWELVU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690FBC4CEDD;
-	Mon,  7 Apr 2025 22:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744064102;
-	bh=VSVFpQj3hn1f1mOYrZD1BOgazgCdpZCs00LueNXdzzQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XJuWELVUhqQI8860xY5NNgWNmLZ/iEIuwT3i4O4xBmSd+gEver/RHjgXSMdguCUwo
-	 /HOlrnvMI6jEUOAxTwJTMfNTOzN38f0kCUyEwyPLMBZMrdehC6SfR+qRPowJoaDre3
-	 bXTlmo3tACC/54sWNlCYN9n+5ktc3PLUTSzE0UY4dKnmL3Ait/lDs7Oh8MfANZu+mz
-	 87HptC9AAu6YTDk6jjYu2xxBbV6hyznNjX05DQYx54Tm8fkyXx+6Rw/FkWBXmGI51D
-	 17M37eFe5Lh23GhWllcKmr5NgezNU6aMI0grfKKSP/WdtbPne3MKh/DyUIDnAvASeb
-	 pKy3IlIe4BkNg==
-From: Mark Brown <broonie@kernel.org>
-To: linus.walleij@linaro.org, brgl@bgdev.pl, krzk@kernel.org, 
- lgirdwood@gmail.com, andriy.shevchenko@intel.com, 
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
-References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
-Subject: Re: [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
-Message-Id: <174406410013.1124451.2033233013803863409.b4-ty@kernel.org>
-Date: Mon, 07 Apr 2025 23:15:00 +0100
+	dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b="FzFmP1jn"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ombertech.com; s=2022;
+	t=1744064082; bh=9RYcwfi9OWFIA4tTmXrTgshenclo4cCNO7OnCXuKIvU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FzFmP1jn1nudEZu0+LYTYzg3lwRbj4fFqoi13uDrIRAfL2MjztjZymkfGvCvj21Kl
+	 ay/FceA35SN0XlZY4Wvixpb+HgPkaWb4Rie4BgdidCJf7A64EXShQr4IDXP80DcBh8
+	 gAPvG2xJdLjxhVQeNGagoJ7YdcLo4SKEp34vg5LbKSWJyu75P2JcT510wRzCcJebF4
+	 A11dgxft1h1fqTO1TzUAnnxjYD9QAfYRmEcoB4OecwsGRHlOOIZplT5RenmwJkiZm8
+	 x3T/xNb47IB3AfcICP1s+jJEOtI4Teo4Qp6EBevCUtlTg7WnjX6lsE1LWejryWz5T4
+	 yMhB2Yd5z4qkg==
+Received: from 192.168.1.100 (unknown [1.145.134.47])
+	by ombertech.com (Postfix) with ESMTPSA id 0D3B1603CC;
+	Mon,  7 Apr 2025 22:14:39 +0000 (UTC)
+Date: Tue, 8 Apr 2025 09:20:16 +1000
+From: Kevin Koster <lkml@ombertech.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, Ingo Molnar
+ <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+Message-Id: <20250408092016.27c8ec942a82459e1a9b9997@ombertech.com>
+In-Reply-To: <A08760B5-0E1A-4D21-8621-73516D1D67F0@zytor.com>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+	<20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+	<20250406174633.2c581923c145687476191753@ombertech.com>
+	<20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+	<20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
+	<20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+	<20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+	<A08760B5-0E1A-4D21-8621-73516D1D67F0@zytor.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, 27 Mar 2025 08:49:44 +0800, Peng Fan (OSS) wrote:
-> This is prepare patch for switching s5m8767 regulator driver to
-> use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
-> "active low" polarity for the DVS and DS line. But per datasheet,
-> they are actually active high. So add polarity quirk for it.
-> 
-> 
+On Mon, 07 Apr 2025 07:38:59 -0700
+"H. Peter Anvin" <hpa@zytor.com> wrote:
+> Can you please not post stack traces without any symbol information
+> either internal or external? It is just random hex digits in the
+> absence of a System.map or vmlinux file.
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-
-Thanks!
-
-[1/2] gpiolib: of: Add polarity quirk for s5m8767
-      (no commit info)
-[2/2] regulator: s5m8767: Convert to GPIO descriptors
-      commit: 16b19bfd80402bb98135c4b65344e859883766ec
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+OK, I'll replace them with "[snip stack trace]" in future unless asked
+for the System.map file too.
