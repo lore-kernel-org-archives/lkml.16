@@ -1,132 +1,152 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.124.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6AC226CE6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37AF0227BA1;
+	Mon,  7 Apr 2025 07:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.124.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011480; cv=none; b=h3/RQRBgU2oZREyKl6lJ6gyixvyfhthsQPOu+rrtoGOtV1ueMr0wlAkRHK3Uh3HQlgjLT35krqNWJF/gaDi0NARj7jI31YU7OaSVS33XDzMRiRXtKKFYGXKprESP/Y0KenYwQ/JzvGiU40x82H4wzkhn39Vif5j1yt5yGAnI87Q=
+	t=1744011482; cv=none; b=byoLSdn+++4TKvzxwl7xFZXvNUbW2AcHhimfvkdM3KpaW7jM2eu+Pt9imKwk6Na9dB8CrCPUBreGt9Tgg/EVEIDPvQTyp5Pi9qnP+iDLu6yDbSwSArZyHd2KlaQcV9z0tdRDFRXNpp1ixpSwck533fu70VfxYEnH1rGpbjuQUQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011480; c=relaxed/simple;
-	bh=wbpn05YOBnvAIAEQiPQ/6y1/bXax+ql2ksAKoSkC61U=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AjDeTp+eytdTdA9Dd5NYN1b0hs9A8gtcc/DESPVITsjY2tbS/rYb21QRJvZZ6r8yV6E0V92jwRXXrKPSPb31RnrognMZgoAP/pc459CozQDxETxGji5pnGXN0YwGzvcrGNqLX07fk4I23htVhB5ov6QslPsLMzL5W6DxP2pENsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cu7WTj0T; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744011482; c=relaxed/simple;
+	bh=aOUxpTx+k+5fk5OYmSww98phSSuRsLaGNQ+0Q/iRm8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RwUfDjRi+9jfL/qAYJHwhFkaw7UmpN0UIu/f6Lruokil/0qK13nhewUQI36gISfkmRQZEXoA+vbsmU2XGTc5l7smCh2TbNEvOyd1hKmf8RpymoSC/XW5KA/MELHuu9+eCOhILmQ4ATwDVQ/PjboXQmYrhqFsJdW8cIt1BUgbVLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=l5RoOhen; arc=none smtp.client-ip=114.132.124.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cu7WTj0T"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso43280755e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744011477; x=1744616277; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T/iUB0JBxFkjp2l/okcxobSe1sYUcwQcPDba5DDM9oY=;
-        b=cu7WTj0TyOdy/bX5huGIqakvw0r0K0p8nILUQIvdPL0NMfGUh9pr7nXyBwnybLQNIW
-         IHlHvcpJmsj4QIh3PS9ywIjVv/yMMOk3d8mSurbEhcNYUKKlUz4xwtU7AhpifzdZlnoL
-         SxhOSCMVOEqvxNlMp6RD8N/vK9LxLVL455DWLjyvrf3ZjwjpBGr3uQwbSMXTZeFLnL7z
-         S/B6UcoEBjkEwB+pfEXJcqy3M8/OEG3Gd1ppLzGovVWyIQgfzfDaB29A4C5RwtCARb3m
-         mUdjMuS6cZWWEG7evG9jVf0I5MUlJ04Ki0S+uabYlQEYapWsi7sJNkO2+fN6JYkai4lj
-         j+QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744011477; x=1744616277;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/iUB0JBxFkjp2l/okcxobSe1sYUcwQcPDba5DDM9oY=;
-        b=LMKCN7lChWD1eczSlW+I3JYsaV0CVA6ci5GOWsPBc7BUPJg6Uth0b7+2rpXfb/K2kW
-         03lxF6ulJpejlDKqXdDp6HXLR3TCuq+UOqTrMuG09hSu2h6EwlNA+RxJm3RCceseXq7c
-         H26AhHOkKJUWStSt7Ss6p0AyluV9h/Smpu+MYN8DRyEtt6km0eWstmKXSNZxhVy6NSvU
-         mGFdzZ/Op0GscEEnjz9nLsIHZZlYfRX8/9YOQm0/Bj1tG2W3Mh5ty4V4iu6Am5XUh3c/
-         Vat7d9QEBUxJpI5EWzfA3AZKkbs7dMNpa1M2xYC/TNRBwOYhIJvBEOddS41RLqPr9OID
-         mCag==
-X-Gm-Message-State: AOJu0Yz0mU3fkUayw5kmMdaiWV2qUTtUmxjMqSnAQzuIL78JZx5Zs0zP
-	NmAmcGT7PMkEslKktGZJyDxTST6SqD0K0a01zlRyaDH7cPnoOEznmXEvzbjJ8Sg=
-X-Gm-Gg: ASbGncv/BZ58vbN1ghHfonln6A5LJH0rh6qGvZu2wRSoV03CeNOTFT/fEHJsfWNZIxT
-	zOjvVSY8PxTQhuqEY2mvXRi3cKQqVm0puCwkxDIS6P2iQMLTTUnSHazYENqOTm3/BgfbPUscE3x
-	bfiuK+7yDxIkSRn6n1jZn2RexsbLzMNQMeAlxCV0/Wj/O2f0j4EDuZqgGQYk08AUfpCjbK4aJdy
-	VVo8zopS8kiN39Mcp3Q6MwQ3g7Cs8QLYTxrYRTphjRMp32wxpSqM9VgFGYqsGIGa4iRIqf5Labs
-	Kd252WhB6p7WSmz8mbD905qDL4AzD4YC07oEGoioYKApaxX4inRYYCCMcMadrum8fCF9ELyf/K+
-	Fq7etZ69m
-X-Google-Smtp-Source: AGHT+IEDc/bRsFcizrk4e4TwMWtU8c1AL1TwXJ0IcJRIR1rjn42XqoKfWILEntbQHzwjOQZAQgc+Vg==
-X-Received: by 2002:a05:600c:1e27:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-43ee0615d04mr74241945e9.4.1744011477415;
-        Mon, 07 Apr 2025 00:37:57 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec1692ba4sm123138995e9.16.2025.04.07.00.37.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 00:37:56 -0700 (PDT)
-Message-ID: <c14389a1-1904-450f-98c5-a55351518ed7@linaro.org>
-Date: Mon, 7 Apr 2025 09:37:56 +0200
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="l5RoOhen"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744011454;
+	bh=nCPkl2VraY01qejRiFzb+h6eDDwwwG21C+d7Srnl4uE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=l5RoOhenl4hqc8wzdxZeKwb+vDXPtWL3CXJjX312BctMKZhSWPAvQ3L2MbpexH0Mm
+	 X0Zoegsv5XMFGY6vyHb2i8wGC5fDV9tJ3VDNd37byxum2l7CJzGoRXpFG8awvPHuzQ
+	 E9YnIJAfmwLQvPKR9shG5IBv4cxgMsBDeNMfL/T4=
+X-QQ-mid: bizesmtpip3t1744011412tc3d219
+X-QQ-Originating-IP: 02OFKp1UY6jex5kRH9rXwrmPpRDfOW7UJZq8ASGN5EQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 07 Apr 2025 15:36:50 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4522790010008692420
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com
+Cc: guanwentao@uniontech.com,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	macro@orcam.me.uk,
+	niecheng1@uniontech.com,
+	tsbogend@alpha.franken.de,
+	zhanjun@uniontech.com
+Subject: [PATCH 4/6] MIPS: dec: Remove dec_irq_dispatch()
+Date: Mon,  7 Apr 2025 15:36:20 +0800
+Message-ID: <9A0AC98FE53685E8+20250407073622.495364-4-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
+References: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: timer: Add NXP System Timer Module
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
- Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com,
- krzysztof.kozlowski@linaro.org, S32@nxp.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>
-References: <20250402090714.3548055-1-daniel.lezcano@linaro.org>
- <20250402090714.3548055-2-daniel.lezcano@linaro.org>
- <2503deb2-b993-7fd1-adf3-cafa1e7bd2f4@oss.nxp.com>
- <67daf656-0e08-471d-afce-22ba8f2fa1f2@linaro.org>
-Content-Language: en-US
-In-Reply-To: <67daf656-0e08-471d-afce-22ba8f2fa1f2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OYpbVsTx4C81075+4uUd+cpuLNkcU8AJSwwchmSUAyTC0HB46zeQF1Sr
+	C+SAB3SkaXQ5lkAtYofK8OMu113e+cwOw/f0zHjt5H21ooZwjKzPboBX2E3nHpLRp0eHLMW
+	arzjB+Cbfuvtq06J61iZhnkpOimpYzPIxBlm1XSHUcNUqWaJcy/IszyWXAfnmXAhaKTjKhm
+	CVyINRQlbUQRY/QRUu4WSVlO9Vzh29jgKxrDNL1kO3YT65RMvtRp4lP7yIyKlUChUqm5whB
+	EIU/NgUoZAaLdqAlc4k2P7oXn3BPqUFQ+h5JZUHL09csMCiJ1fvyEoQ8t8Kj+xhnFJQp7bt
+	4pPe0QgLpM6igspkpGTPro3kyQd8bzrMh9OzVXYHf9mStAFNp6cl1o1wmxQnyjKDPqfO9L9
+	CEQgeeaCrFxmGDFAcFmBc6wOJmdWEztf0KsJHgwTr+WH6JTE+Yo52KiNx4iUBEKX/WnNxs3
+	px9H7S1zQBL6Zj3DutSgUrdWQv1M/0vxt09eGYuvTu985LipcmYmgUiasXFmngW6bo2+ZqL
+	ManpwKShtzxBwxh8L24ooF5Jw56TLWq2M+hHr9GYr1Jnc2MWMjmYgaK/1GTonMJeX8KmsH4
+	vB39b2yE75xtIaiLnSNnjoqHE688K1AAbPAuT6j/V+ZOlKBgrhsj2iEZYHuDI0wVgPn4s9g
+	4sWKFbTx+/Xw/nJA7KcRluWO+Zd5+1vQPcIwbK0JH7ALHbt2O3VCm6O3r0lqZlCSlRPR87F
+	G2kYfmeF1gAzE7a2kCURkFSAz7rn0OESt5DkKj1BqTUKrhdbX52JXD9OTze6Ht41QH/dsRW
+	g9Yt65LscLd7unMXMlk0YWKRIdJ5mdlMiGCjJBAT8t9LEk+OEnzn0eLoQ2QGKPolviTLaCF
+	O5GbgP4iAC0y1U/WzRzkU5DUkwskevZtphiX3JMTL728sVlNB/ZMV5TEZxnybtCTfHlTtWo
+	5nCBz/zeHnT26XrXcozA1o0q6LfwWZD9ZbjXuY+v5ZkyBMMyR8aGzCLAKBMiNAqoNBoPINy
+	tMr1udN48O0TSxcIyRzpH16ogrklk=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On 03/04/2025 17:21, Daniel Lezcano wrote:
-> On 03/04/2025 08:33, Ghennadi Procopciuc wrote:
->> On 4/2/2025 12:07 PM, Daniel Lezcano wrote:
->> [ ... ]
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +    timer@4011c000 {
->>> +        compatible = "nxp,s32g2-stm";
->>> +        reg = <0x4011c000 0x3000>;
->>> +        interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->>> +        clocks = <&clks 0x3b>;
->>> +    };
->>
->> The S32G reference manual specifies two clocks for the STM module: one
->> for the registers and another for the counter itself. Shouldn't both
->> clocks be represented in the bindings?
-> 
-> AFAICS, there are two clocks as described in the documentation for the 
-> s32g2 page 843, section 23.7.3 Timer modules.
-> 
-> The module and the register clock are fed by the XBAR_DIV3_CLK which is 
-> an system clock always-on.
-> 
-> page 1994, 40.5.4 Clocking, the documentation says: "This module has no 
-> clocking considerations."
-> 
->  From my understanding, we should not describe the XBAR_DIV3_CLK as it 
-> is a system clock.
+Commit 187933f23679 ("[MIPS] do_IRQ cleanup") introduced dec_irq_dispatch()
+function. But Subsequent to commit 8f99a1626535 ("MIPS: Tracing: Add
+IRQENTRY_EXIT section for MIPS"), the dec_irq_dispatch() function is
+rendered superfluous. Remove it to eradicate compilation warnings.
 
-Can you clarify for the STM if you still want to change the binding ?
+[ Quoting Maciej W. Rozycki: ]
 
+    It always has been, since its inception, see commit 187933f23679
+  ("[MIPS] do_IRQ cleanup").
 
+    Up to commit 8f99a16265353 ("MIPS: Tracing: Add IRQENTRY_EXIT section
+  for MIPS") `do_IRQ' used to be a macro, that's why.  At the time `do_IRQ'
+  was converted to a macro `dec_irq_dispatch' was created and previously
+  this place used to call `do_IRQ' too.
+
+    This cleanup should have been made along with commit 8f99a16265353, so
+  it's pretty old a technical debt being sorted here.
+
+[ Fix follow error with gcc-14 when -Werror: ]
+
+arch/mips/dec/setup.c:780:25: error: no previous prototype for ‘dec_irq_dispatch’ [-Werror=missing-prototypes]
+  780 | asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
+      |                         ^~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[7]: *** [scripts/Makefile.build:207: arch/mips/dec/setup.o] Error 1
+make[6]: *** [scripts/Makefile.build:465: arch/mips/dec] Error 2
+make[5]: *** [scripts/Makefile.build:465: arch/mips] Error 2
+make[5]: *** Waiting for unfinished jobs....
+make[4]: *** [Makefile:1992: .] Error 2
+make[3]: *** [debian/rules:74: build-arch] Error 2
+dpkg-buildpackage: error: make -f debian/rules binary subprocess returned exit status 2
+make[2]: *** [scripts/Makefile.package:126: bindeb-pkg] Error 2
+make[1]: *** [/mnt/83364c87-f5ee-4ae8-b862-930f1bd74feb/Projects/CommitUpstream/LinuxKernel/Temp/linux/Makefile:1625: bindeb-pkg] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=187933f23679c413706030aefad9e85e79164c44
+Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8f99a162653531ef25a3dd0f92bfb6332cd2b295
+Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502220019210.65342@angie.orcam.me.uk/
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/mips/dec/int-handler.S | 2 +-
+ arch/mips/dec/setup.c       | 6 ------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/arch/mips/dec/int-handler.S b/arch/mips/dec/int-handler.S
+index 011d1d678840..a0b439c90488 100644
+--- a/arch/mips/dec/int-handler.S
++++ b/arch/mips/dec/int-handler.S
+@@ -277,7 +277,7 @@
+ 		 srlv	t3,t1,t2
+ 
+ handle_it:
+-		j	dec_irq_dispatch
++		j	do_IRQ
+ 		 nop
+ 
+ #if defined(CONFIG_32BIT) && defined(CONFIG_MIPS_FP_SUPPORT)
+diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
+index 6b100c7d0633..affae92f1918 100644
+--- a/arch/mips/dec/setup.c
++++ b/arch/mips/dec/setup.c
+@@ -771,9 +771,3 @@ void __init arch_init_irq(void)
+ 			pr_err("Failed to register halt interrupt\n");
+ 	}
+ }
+-
+-asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
+-{
+-	do_IRQ(irq);
+-	return 0;
+-}
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.49.0
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
