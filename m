@@ -1,540 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B0C227E93
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354CF2309A3;
+	Mon,  7 Apr 2025 09:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017338; cv=none; b=HBxuIuRLDHBbiIDFuMviyJoZ2KkeuxgnzhjhR0fLdLzSALqL0LlN7qbnOVFPKZxAbE7gr+bUOGhmQPJGknYePWoCnbxOvmsg0kM5jO+6oxSR+XH0Kh6yV9SGMPtLX2frVhflYgTocLWG8iC/7vdbaov6A9oqJkoKujUMIuH/eyk=
+	t=1744017348; cv=none; b=hH5CLq5YwC/iU5KsKyV+/26N5IDp3Cm8m5MPUPoKIYJ00ud9wYFt/7+Fv3mHzZ7CqiUsGYi+I+lD6Vy/p4tstP6oxYf9fynq5kEFOdCl5fOcyssVGGibJX+JDd3VHPEyg68NRzlHr2TTrNj9x6UHnVxovDDFZNpvazT4nf1tSEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017338; c=relaxed/simple;
-	bh=vkIOP21MUIJznM1KY56aLpvuGdnHAmb/lfcrehSmatM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sSpI3xuPMRTtBl6VAjewPrXH+31OWAdVr/sHF3MiVNRlkZzPSjEvRok5fmxmSyxZ1yJtgRlfzywCqd06QgYWZKD5/fDrt7hjjxV3n2s/BmhpxhOI/Et9DhBCoLHM2pPdIzndXdWI0kawecDZELsY8t5uIOnA/OaueHT8rnvZFTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g5t2jlqF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744017348; c=relaxed/simple;
+	bh=ND5TFDjwajhpW3p14uRN8gBouffujWQSboBCcOhvDB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTmjpwwDSsl6l1bcfC9ekImkP78PwSZC8DuBja61Ef8mm1EjNtGdZwd0nPsBFZBU3s1+ea3su69hreuTNTYK3gNqxG+J8FjGHBOBm5uoPpk6lyXJVs0iyCwFhVQxgUfq5uoNo9OdgoBqljOLeMPTyjEOAtYKzceaA+3fsxh/Xk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gWQqKVXA; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g5t2jlqF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744017335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8j+hBXLrPgXDf1GbnRIzC5P3klRBjOmEFQwTO3qECCM=;
-	b=g5t2jlqFB3N+8k47brCeDwUQ+LgRVJqde/31YJHL+FtbH1ZN3+R9bLwDf4QJpvjtSn2aPX
-	AvsZhTGZn1eVwcuTlXeAXeBSKIukxPkzHjz1HF1cLfcblrtCUy/OZZa6WKDeMocnEVsODG
-	itabGpTVmtdjIAgfUe1ZMLGA+EeEvRg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-300-vgjuCGOlOJCMjn5b6mpz3Q-1; Mon,
- 07 Apr 2025 05:15:29 -0400
-X-MC-Unique: vgjuCGOlOJCMjn5b6mpz3Q-1
-X-Mimecast-MFC-AGG-ID: vgjuCGOlOJCMjn5b6mpz3Q_1744017328
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 896911800349;
-	Mon,  7 Apr 2025 09:15:27 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.40])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 87FA61801A6D;
-	Mon,  7 Apr 2025 09:15:23 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-afs@lists.infradead.org,
-	openafs-devel@openafs.org,
-	linux-kernel@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH net-next 05/12] rxrpc: rxgk: Provide infrastructure and key derivation
-Date: Mon,  7 Apr 2025 10:14:36 +0100
-Message-ID: <20250407091451.1174056-6-dhowells@redhat.com>
-In-Reply-To: <20250407091451.1174056-1-dhowells@redhat.com>
-References: <20250407091451.1174056-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gWQqKVXA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ofqWwqYhXMMlq9izH/X2Vybg9guxywDxyDKd2Dx3UiE=; b=gWQqKVXAMd8yKk5YBfYHP8zEkI
+	vzJHXkuDQWitK/baGDY1h7cbxIaGjM1d+Sn59xfQp2R0n36Z2LKWbjq/QUep+k1dchsKnkA4mqqSk
+	MLCiavZQM1PGpkgxshtqMpZqQsxMlM9nkhRM1+AyhpdfaxbiyvumrD3TmhcEuOFp9kIpYx72LmCvt
+	l/8JZquo6wT0nZFH5lKmhoY30BtmcaNnnXNOKJJ3leYs+/4cgieFpeG47l3SAYLiqResroUBXDnCX
+	x/yCb1VIhwYFYq9ovuhn8NuO6ZOXcUespBWbVPEPhgT8/YXXUznrHpfjRI6hRVvC5r6/q1CUxXC4i
+	PuhrNIqg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1ia2-0000000H9UD-25Dq;
+	Mon, 07 Apr 2025 09:15:46 +0000
+Date: Mon, 7 Apr 2025 02:15:46 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/6] Allow file-backed or shared device private pages
+Message-ID: <Z_OXwvGS3o70YxpA@infradead.org>
+References: <cover.24b48fced909fe1414e83b58aa468d4393dd06de.1742099301.git-series.apopple@nvidia.com>
+ <Z9e7Vye7OHSbEEx_@infradead.org>
+ <Z-NjI8DO6bvWphO3@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-NjI8DO6bvWphO3@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Provide some infrastructure for implementing the RxGK transport security
-class:
+On Wed, Mar 26, 2025 at 02:14:59AM +0000, Matthew Wilcox wrote:
+> So, there's no need to put DEVICE_PRIVATE pages in the page cache.
+> Instead the GPU will take a copy of the page(s).  We agreed that there
+> will have to be some indication (probably a folio flag?) that the GPU has
+> or may have a copy of (some of) the folio so that it can be invalidated
+> if the page is removed due to truncation / eviction.
 
- (1) A definition of an encoding type, including:
-
-	- Relevant crypto-layer names
-	- Lengths of the crypto keys and checksums involved
-	- Crypto functions specific to the encoding type
-	- Crypto scheme used for that type
-
- (2) A definition of a crypto scheme, including:
-
-	- Underlying crypto handlers
-	- The pseudo-random function, PRF, used in base key derivation
-	- Functions for deriving usage keys Kc, Ke and Ki
-	- Functions for en/decrypting parts of an sk_buff
-
- (3) A key context, with the usage keys required for a derivative of a
-     transport key for a specific key number.  This includes keys for
-     securing packets for transmission, extracting received packets and
-     dealing with response packets.
-
- (3) A function to look up an encoding type by number.
-
- (4) A function to set up a key context and derive the keys.
-
- (5) A function to set up the keys required to extract the ticket obtained
-     from the GSS negotiation in the server.
-
- (6) Miscellaneous functions for context handling.
-
-The keys and key derivation functions are described in:
-
-	tools.ietf.org/html/draft-wilkinson-afs3-rxgk-11
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-crypto@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- net/rxrpc/Kconfig       |  23 ++++
- net/rxrpc/Makefile      |   3 +-
- net/rxrpc/ar-internal.h |   3 +
- net/rxrpc/rxgk_common.h |  48 +++++++
- net/rxrpc/rxgk_kdf.c    | 287 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 363 insertions(+), 1 deletion(-)
- create mode 100644 net/rxrpc/rxgk_common.h
- create mode 100644 net/rxrpc/rxgk_kdf.c
-
-diff --git a/net/rxrpc/Kconfig b/net/rxrpc/Kconfig
-index a20986806fea..f60b81c66078 100644
---- a/net/rxrpc/Kconfig
-+++ b/net/rxrpc/Kconfig
-@@ -67,6 +67,29 @@ config RXKAD
- 
- 	  See Documentation/networking/rxrpc.rst.
- 
-+config RXGK
-+	bool "RxRPC GSSAPI security"
-+	select CRYPTO_KRB5
-+	select CRYPTO_MANAGER
-+	select CRYPTO_KRB5ENC
-+	select CRYPTO_AUTHENC
-+	select CRYPTO_SKCIPHER
-+	select CRYPTO_HASH_INFO
-+	select CRYPTO_HMAC
-+	select CRYPTO_CMAC
-+	select CRYPTO_SHA1
-+	select CRYPTO_SHA256
-+	select CRYPTO_SHA512
-+	select CRYPTO_CBC
-+	select CRYPTO_CTS
-+	select CRYPTO_AES
-+	select CRYPTO_CAMELLIA
-+	help
-+	  Provide the GSSAPI-based RxGK security class for AFS.  Keys are added
-+	  with add_key().
-+
-+	  See Documentation/networking/rxrpc.rst.
-+
- config RXPERF
- 	tristate "RxRPC test service"
- 	help
-diff --git a/net/rxrpc/Makefile b/net/rxrpc/Makefile
-index 0981941dea73..3eda77a0266b 100644
---- a/net/rxrpc/Makefile
-+++ b/net/rxrpc/Makefile
-@@ -40,6 +40,7 @@ rxrpc-y := \
- rxrpc-$(CONFIG_PROC_FS) += proc.o
- rxrpc-$(CONFIG_RXKAD) += rxkad.o
- rxrpc-$(CONFIG_SYSCTL) += sysctl.o
--
-+rxrpc-$(CONFIG_RXGK) += \
-+	rxgk_kdf.o
- 
- obj-$(CONFIG_RXPERF) += rxperf.o
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 6b27295495f5..81bacac94430 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -558,6 +558,9 @@ struct rxrpc_connection {
- 			struct rxrpc_crypt csum_iv;	/* packet checksum base */
- 			u32	nonce;		/* response re-use preventer */
- 		} rxkad;
-+		struct {
-+			u64	start_time;	/* The start time for TK derivation */
-+		} rxgk;
- 	};
- 	struct sk_buff		*tx_response;	/* Response packet to be transmitted */
- 	unsigned long		flags;
-diff --git a/net/rxrpc/rxgk_common.h b/net/rxrpc/rxgk_common.h
-new file mode 100644
-index 000000000000..da1464e65766
---- /dev/null
-+++ b/net/rxrpc/rxgk_common.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* Common bits for GSSAPI-based RxRPC security.
-+ *
-+ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <crypto/krb5.h>
-+#include <crypto/skcipher.h>
-+#include <crypto/hash.h>
-+
-+/*
-+ * Per-key number context.  This is replaced when the connection is rekeyed.
-+ */
-+struct rxgk_context {
-+	refcount_t		usage;
-+	unsigned int		key_number;	/* Rekeying number (goes in the rx header) */
-+	unsigned long		flags;
-+#define RXGK_TK_NEEDS_REKEY	0		/* Set if this needs rekeying */
-+	unsigned long		expiry;		/* Expiration time of this key */
-+	long long		bytes_remaining; /* Remaining Tx lifetime of this key */
-+	const struct krb5_enctype *krb5;	/* RxGK encryption type */
-+	const struct rxgk_key	*key;
-+
-+	/* We need up to 7 keys derived from the transport key, but we don't
-+	 * actually need the transport key.  Each key is derived by
-+	 * DK(TK,constant).
-+	 */
-+	struct crypto_aead	*tx_enc;	/* Transmission key */
-+	struct crypto_aead	*rx_enc;	/* Reception key */
-+	struct crypto_shash	*tx_Kc;		/* Transmission checksum key */
-+	struct crypto_shash	*rx_Kc;		/* Reception checksum key */
-+	struct crypto_aead	*resp_enc;	/* Response packet enc key */
-+};
-+
-+/*
-+ * rxgk_kdf.c
-+ */
-+void rxgk_put(struct rxgk_context *gk);
-+struct rxgk_context *rxgk_generate_transport_key(struct rxrpc_connection *conn,
-+						 const struct rxgk_key *key,
-+						 unsigned int key_number,
-+						 gfp_t gfp);
-+int rxgk_set_up_token_cipher(const struct krb5_buffer *server_key,
-+			     struct crypto_aead **token_key,
-+			     unsigned int enctype,
-+			     const struct krb5_enctype **_krb5,
-+			     gfp_t gfp);
-diff --git a/net/rxrpc/rxgk_kdf.c b/net/rxrpc/rxgk_kdf.c
-new file mode 100644
-index 000000000000..b18a9f16247f
---- /dev/null
-+++ b/net/rxrpc/rxgk_kdf.c
-@@ -0,0 +1,287 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* RxGK transport key derivation.
-+ *
-+ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/key-type.h>
-+#include <linux/slab.h>
-+#include <keys/rxrpc-type.h>
-+#include "ar-internal.h"
-+#include "rxgk_common.h"
-+
-+#define round16(x) (((x) + 15) & ~15)
-+
-+/*
-+ * Constants used to derive the keys and hmacs actually used for doing stuff.
-+ */
-+#define RXGK_CLIENT_ENC_PACKET		1026U // 0x402
-+#define RXGK_CLIENT_MIC_PACKET          1027U // 0x403
-+#define RXGK_SERVER_ENC_PACKET          1028U // 0x404
-+#define RXGK_SERVER_MIC_PACKET          1029U // 0x405
-+#define RXGK_CLIENT_ENC_RESPONSE        1030U // 0x406
-+#define RXGK_SERVER_ENC_TOKEN           1036U // 0x40c
-+
-+static void rxgk_free(struct rxgk_context *gk)
-+{
-+	if (gk->tx_Kc)
-+		crypto_free_shash(gk->tx_Kc);
-+	if (gk->rx_Kc)
-+		crypto_free_shash(gk->rx_Kc);
-+	if (gk->tx_enc)
-+		crypto_free_aead(gk->tx_enc);
-+	if (gk->rx_enc)
-+		crypto_free_aead(gk->rx_enc);
-+	if (gk->resp_enc)
-+		crypto_free_aead(gk->resp_enc);
-+	kfree(gk);
-+}
-+
-+void rxgk_put(struct rxgk_context *gk)
-+{
-+	if (gk && refcount_dec_and_test(&gk->usage))
-+		rxgk_free(gk);
-+}
-+
-+/*
-+ * Transport key derivation function.
-+ *
-+ *      TK = random-to-key(PRF+(K0, L,
-+ *                         epoch || cid || start_time || key_number))
-+ *      [tools.ietf.org/html/draft-wilkinson-afs3-rxgk-11 sec 8.3]
-+ */
-+static int rxgk_derive_transport_key(struct rxrpc_connection *conn,
-+				     struct rxgk_context *gk,
-+				     const struct rxgk_key *rxgk,
-+				     struct krb5_buffer *TK,
-+				     gfp_t gfp)
-+{
-+	const struct krb5_enctype *krb5 = gk->krb5;
-+	struct krb5_buffer conn_info;
-+	unsigned int L = krb5->key_bytes;
-+	__be32 *info;
-+	u8 *buffer;
-+	int ret;
-+
-+	_enter("");
-+
-+	conn_info.len = sizeof(__be32) * 5;
-+
-+	buffer = kzalloc(round16(conn_info.len), gfp);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	conn_info.data = buffer;
-+
-+	info = (__be32 *)conn_info.data;
-+	info[0] = htonl(conn->proto.epoch);
-+	info[1] = htonl(conn->proto.cid);
-+	info[2] = htonl(conn->rxgk.start_time >> 32);
-+	info[3] = htonl(conn->rxgk.start_time >>  0);
-+	info[4] = htonl(gk->key_number);
-+
-+	ret = crypto_krb5_calc_PRFplus(krb5, &rxgk->key, L, &conn_info, TK, gfp);
-+	kfree_sensitive(buffer);
-+	_leave(" = %d", ret);
-+	return ret;
-+}
-+
-+/*
-+ * Set up the ciphers for the usage keys.
-+ */
-+static int rxgk_set_up_ciphers(struct rxrpc_connection *conn,
-+			       struct rxgk_context *gk,
-+			       const struct rxgk_key *rxgk,
-+			       gfp_t gfp)
-+{
-+	const struct krb5_enctype *krb5 = gk->krb5;
-+	struct crypto_shash *shash;
-+	struct crypto_aead *aead;
-+	struct krb5_buffer TK;
-+	bool service = rxrpc_conn_is_service(conn);
-+	int ret;
-+	u8 *buffer;
-+
-+	buffer = kzalloc(krb5->key_bytes, gfp);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	TK.len = krb5->key_bytes;
-+	TK.data = buffer;
-+
-+	ret = rxgk_derive_transport_key(conn, gk, rxgk, &TK, gfp);
-+	if (ret < 0)
-+		goto out;
-+
-+	aead = crypto_krb5_prepare_encryption(krb5, &TK, RXGK_CLIENT_ENC_RESPONSE, gfp);
-+	if (IS_ERR(aead))
-+		goto aead_error;
-+	gk->resp_enc = aead;
-+
-+	if (crypto_aead_blocksize(gk->resp_enc) != krb5->block_len ||
-+	    crypto_aead_authsize(gk->resp_enc) != krb5->cksum_len) {
-+		pr_notice("algo inconsistent with krb5 table %u!=%u or %u!=%u\n",
-+			  crypto_aead_blocksize(gk->resp_enc), krb5->block_len,
-+			  crypto_aead_authsize(gk->resp_enc), krb5->cksum_len);
-+		return -EINVAL;
-+	}
-+
-+	if (service) {
-+		switch (conn->security_level) {
-+		case RXRPC_SECURITY_AUTH:
-+			shash = crypto_krb5_prepare_checksum(
-+				krb5, &TK, RXGK_SERVER_MIC_PACKET, gfp);
-+			if (IS_ERR(shash))
-+				goto hash_error;
-+			gk->tx_Kc = shash;
-+			shash = crypto_krb5_prepare_checksum(
-+				krb5, &TK, RXGK_CLIENT_MIC_PACKET, gfp);
-+			if (IS_ERR(shash))
-+				goto hash_error;
-+			gk->rx_Kc = shash;
-+			break;
-+		case RXRPC_SECURITY_ENCRYPT:
-+			aead = crypto_krb5_prepare_encryption(
-+				krb5, &TK, RXGK_SERVER_ENC_PACKET, gfp);
-+			if (IS_ERR(aead))
-+				goto aead_error;
-+			gk->tx_enc = aead;
-+			aead = crypto_krb5_prepare_encryption(
-+				krb5, &TK, RXGK_CLIENT_ENC_PACKET, gfp);
-+			if (IS_ERR(aead))
-+				goto aead_error;
-+			gk->rx_enc = aead;
-+			break;
-+		}
-+	} else {
-+		switch (conn->security_level) {
-+		case RXRPC_SECURITY_AUTH:
-+			shash = crypto_krb5_prepare_checksum(
-+				krb5, &TK, RXGK_CLIENT_MIC_PACKET, gfp);
-+			if (IS_ERR(shash))
-+				goto hash_error;
-+			gk->tx_Kc = shash;
-+			shash = crypto_krb5_prepare_checksum(
-+				krb5, &TK, RXGK_SERVER_MIC_PACKET, gfp);
-+			if (IS_ERR(shash))
-+				goto hash_error;
-+			gk->rx_Kc = shash;
-+			break;
-+		case RXRPC_SECURITY_ENCRYPT:
-+			aead = crypto_krb5_prepare_encryption(
-+				krb5, &TK, RXGK_CLIENT_ENC_PACKET, gfp);
-+			if (IS_ERR(aead))
-+				goto aead_error;
-+			gk->tx_enc = aead;
-+			aead = crypto_krb5_prepare_encryption(
-+				krb5, &TK, RXGK_SERVER_ENC_PACKET, gfp);
-+			if (IS_ERR(aead))
-+				goto aead_error;
-+			gk->rx_enc = aead;
-+			break;
-+		}
-+	}
-+
-+	ret = 0;
-+out:
-+	kfree_sensitive(buffer);
-+	return ret;
-+aead_error:
-+	ret = PTR_ERR(aead);
-+	goto out;
-+hash_error:
-+	ret = PTR_ERR(shash);
-+	goto out;
-+}
-+
-+/*
-+ * Derive a transport key for a connection and then derive a bunch of usage
-+ * keys from it and set up ciphers using them.
-+ */
-+struct rxgk_context *rxgk_generate_transport_key(struct rxrpc_connection *conn,
-+						 const struct rxgk_key *key,
-+						 unsigned int key_number,
-+						 gfp_t gfp)
-+{
-+	struct rxgk_context *gk;
-+	unsigned long lifetime;
-+	int ret = -ENOPKG;
-+
-+	_enter("");
-+
-+	gk = kzalloc(sizeof(*gk), GFP_KERNEL);
-+	if (!gk)
-+		return ERR_PTR(-ENOMEM);
-+	refcount_set(&gk->usage, 1);
-+	gk->key		= key;
-+	gk->key_number	= key_number;
-+
-+	gk->krb5 = crypto_krb5_find_enctype(key->enctype);
-+	if (!gk->krb5)
-+		goto err_tk;
-+
-+	ret = rxgk_set_up_ciphers(conn, gk, key, gfp);
-+	if (ret)
-+		goto err_tk;
-+
-+	/* Set the remaining number of bytes encrypted with this key that may
-+	 * be transmitted before rekeying.  Note that the spec has been
-+	 * interpreted differently on this point...
-+	 */
-+	switch (key->bytelife) {
-+	case 0:
-+	case 63:
-+		gk->bytes_remaining = LLONG_MAX;
-+		break;
-+	case 1 ... 62:
-+		gk->bytes_remaining = 1LL << key->bytelife;
-+		break;
-+	default:
-+		gk->bytes_remaining = key->bytelife;
-+		break;
-+	}
-+
-+	/* Set the time after which rekeying must occur */
-+	if (key->lifetime) {
-+		lifetime = min_t(u64, key->lifetime, INT_MAX / HZ);
-+		lifetime *= HZ;
-+	} else {
-+		lifetime = MAX_JIFFY_OFFSET;
-+	}
-+	gk->expiry = jiffies + lifetime;
-+	return gk;
-+
-+err_tk:
-+	rxgk_put(gk);
-+	_leave(" = %d", ret);
-+	return ERR_PTR(ret);
-+}
-+
-+/*
-+ * Use the server secret key to set up the ciphers that will be used to extract
-+ * the token from a response packet.
-+ */
-+int rxgk_set_up_token_cipher(const struct krb5_buffer *server_key,
-+			     struct crypto_aead **token_aead,
-+			     unsigned int enctype,
-+			     const struct krb5_enctype **_krb5,
-+			     gfp_t gfp)
-+{
-+	const struct krb5_enctype *krb5;
-+	struct crypto_aead *aead;
-+
-+	krb5 = crypto_krb5_find_enctype(enctype);
-+	if (!krb5)
-+		return -ENOPKG;
-+
-+	aead = crypto_krb5_prepare_encryption(krb5, server_key, RXGK_SERVER_ENC_TOKEN, gfp);
-+	if (IS_ERR(aead))
-+		return PTR_ERR(aead);
-+
-+	*_krb5 = krb5;
-+	*token_aead = aead;
-+	return 0;
-+}
+Sounds like layout leases used for pnfs.
 
