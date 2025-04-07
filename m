@@ -1,99 +1,143 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896B521B9F7;
-	Mon,  7 Apr 2025 20:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D30224240
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744059462; cv=none; b=IsoiieLXfoj/wEUAvkXS/ivv28t6PvIzaZBVDIi9BC4fvekwdWu5ceWH9q91RuYqrZUA79lepCCQqVJO6Xowd+ioVv+qcl1IXL4TF+KYcmYruCDZ8VYY0CDDskDFH88TTFsQENdmCeaIbJpxO6lOHNk8iNjJywceAhthnITCNq0=
+	t=1744059467; cv=none; b=kX09exg1HDLqbchRxzRJH/aH4lqBhl8+GMAlD/K9ZW0MuhzmlC1UsB0wuHmpvyxuHdZhV1kcSFrakVStkmsrVVk3QYvOQ5E5aMrbRRd7I/1Kffa5BscH+aJe0TKcRzehiPrSYkEuIrgXBEazj6k6v3DlkZBL0vreruoYIcJdYIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744059462; c=relaxed/simple;
-	bh=Mbyrz1Qi5XQlFpRS8zL5PVOBby94colqqkS/+3hWAH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gVRBNc7OgiybTIfZOrN/mYWCl/tplaETWPqkSNeSbYI0iCMbI8dNoYpWIirNdys2/ygvUc7sV4ItWHISYc7Io7Ss6fhaW5mZDAVT/XL7oPnKe1Fc0r9Bms/ynrHWg/YnN/+fsExySzvlzK6bCwIRfmmLfvHFkHQpfHPTcsBrrXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=b9+0eRem; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744059467; c=relaxed/simple;
+	bh=79PDk3ouoTDCbg9EC4eLer8PC7RI3PbFhi2CX7eUjt4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nyjAq68Bh8bPTtcnv5vVPNRdDqSnayrXrdionqt014pqx9acORptEQkUUCgZLwtHiwzUtpeLEFkqZDDo3wUpydq18c4QJtnqSw0E/uxTWnz9E0ugu2sJdJcV+WHY6TkKwY79p3HnrVGRUdFQZ1VZkdvIMbyAO3oJN2cB4czar9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JDhgumvW; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b9+0eRem"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=FIFzgxgJF3inGAo4BQdXx/+2ik1F0587zeNPteUhJtk=; b=b9+0eRemltOMVqPX+0y1eN3GdM
-	ESLSwdeF0F5WgO05UZl7OHBAglXKWDyr4Hjrf8Iyu8k6DvMz8Jmp2x0vn7W8pawWl2voe79VRIgVZ
-	8S7B9Yec9Ff5IRC0MnfjQ+e69v0D5SU7NpRBHjEw6yvypM6S4es/9EJfF+hbWyhf7s40=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u1tX1-008J05-O3; Mon, 07 Apr 2025 22:57:23 +0200
-Date: Mon, 7 Apr 2025 22:57:23 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 02/28] mfd: zl3073x: Register itself as devlink device
-Message-ID: <262753b0-817a-436c-bfcc-62c375e4bbf6@lunn.ch>
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-3-ivecera@redhat.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JDhgumvW"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bd78e695dso1388446a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 13:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1744059465; x=1744664265; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1P1bB50EoqnLQLyqYMszDdM6AI6/6Y+zrQz9fxoUI6k=;
+        b=JDhgumvWeWhmg6TVNh1dfBEbL0jCaisNolTLMxvRav5LetDhTw1TnaFLXWZ+d/aQx3
+         3NZmXeJtcaNTiSf40zD5F4bG0dLjd4gJN0gezxGL5Yu3xs7JRfZxZ/0peaLQ8zhTB32G
+         4VgNNb12kl9meW0WTMgo4cmNUtt0/HElbwrAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744059465; x=1744664265;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1P1bB50EoqnLQLyqYMszDdM6AI6/6Y+zrQz9fxoUI6k=;
+        b=pt5nbQEyOEgePFJ4/6XfjDPVA8zOpYs/aLu0DqpyYpjNTPIjXNDPBX7SjhRqoSp9cA
+         QjF/E3umA+Eo58JrumgAZgTjHUdgVaG5eTjcFgcNSW+rJIifZq43wxyuni2vAGOEbcE1
+         YlBVM5IEgIvgkyfRGHzopA4DGZLupIB3Ry/qr74cw3LE0UAmDJlslQTTkChnCul/6VyY
+         hW2y5FDewbk6c89TwAPuwVs2ogwUWj0xDd9nz6KQZ4G63P/Nx4RC3TVHAfRAY7xVjCYy
+         Xt7my+UxhhSjCK6Ww1+n1zr6aX0nRAMP6Oo2HB6SG9zNtUEwjs/jW8cc3cncF1oOCaSR
+         9uIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVErvZCyM8+GoKTMsalcO3asWEzAZXIYp19BAWe+nyofLNKD2MjLl50AYgtUflkW/nGC8ZXjaPChfHUsZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZKZVD9THKpcBFoPbeGMCsNSWQZ/Rc1gzftI4fLH9xWupk8eAg
+	FBdSd10VdBAVnrBeXQjjwXF/Dm7pzqY5Sy6/aD4GGDr75edTJyjL+n4QyPgxMQ==
+X-Gm-Gg: ASbGncsSO8uQLMLlD8Y1T522svqhZMSppwsaIXXElCEtrs3AIdy2Q1sYRKR4cErrSwh
+	X0J7/LBOAY5sYKRbN+om6/GFVXvUeTjtZKjyHlAuIVBgDMowVa09lm7MBOKgS3aagfVxMqGkHGp
+	j3EWnuYXXnw03huBcjfIt1Rdm/cnLWLdTrT0YS55WD5Te+s39ObWY0bcv+g9MoEWKyOYANhYfJJ
+	/t5wfpdViS00zDYfIz6xYh/VNe3YiCiKER+YjP3w2NsbHupSFkodVRB4rdIWK4iy/QUZk2I9ZV5
+	7vsbyWF9aX1s5XR4gAEsbxZwYRpfYIok7IrUDAMDwYCA9WqjFpQB+loaLLdUb0BHW26OUV99ew0
+	MXemNSnq/hXAlSA==
+X-Google-Smtp-Source: AGHT+IEgB2cpBsVgFxIZDN4uHbzal3DgE5qQcSbB5Pp7Ye6e6rk2ZIUvtGVUOARB/OFjKfpS9l0J5g==
+X-Received: by 2002:a05:6830:4413:b0:72a:449e:2b6e with SMTP id 46e09a7af769-72e40d1f54dmr6733882a34.5.1744059464658;
+        Mon, 07 Apr 2025 13:57:44 -0700 (PDT)
+Received: from [10.69.70.230] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e652545c1sm92973a34.51.2025.04.07.13.57.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 13:57:44 -0700 (PDT)
+Message-ID: <9088acd0-4650-4b10-88f9-6b6c0b1f9978@broadcom.com>
+Date: Mon, 7 Apr 2025 13:57:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407172836.1009461-3-ivecera@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: Add support for bcm74110
+To: Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org,
+ robh@kernel.org, jassisinghbrar@gmail.com,
+ bcm-kernel-feedback-list@broadcom.com
+References: <20250404222058.396134-1-justin.chen@broadcom.com>
+ <20250404222058.396134-2-justin.chen@broadcom.com>
+ <b32aa644-6984-476b-abc0-a5416f551bba@kernel.org>
+Content-Language: en-US
+From: Justin Chen <justin.chen@broadcom.com>
+In-Reply-To: <b32aa644-6984-476b-abc0-a5416f551bba@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 07:28:29PM +0200, Ivan Vecera wrote:
-> Use devlink_alloc() to alloc zl3073x_dev structure and register
-> the device as a devlink device. Follow-up patches add support for
-> devlink device info reporting and devlink flash interface will
-> be later used for flashing firmware and configuration.
+
+On 4/6/25 5:27 AM, Krzysztof Kozlowski wrote:
+> On 05/04/2025 00:20, justin.chen@broadcom.com wrote:
+>> +
+>> +maintainers:
+>> +  - Justin Chen <justin.chen@broadcom.com>
+>> +  - Florian Fainelli <florian.fainelli@broadcom.com>
+>> +
+>> +description: Broadcom mailbox hardware first introduced with 74110
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - brcm,bcm74110-mbox
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    minItems: 1
 > 
-> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> ---
->  drivers/mfd/Kconfig        |  3 +++
->  drivers/mfd/zl3073x-core.c | 27 +++++++++++++++++++++++++--
->  2 files changed, 28 insertions(+), 2 deletions(-)
+> Third version of patchset, third entirely different code.
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 30b36e3ee8f7f..a838d5dca4579 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2424,11 +2424,13 @@ config MFD_UPBOARD_FPGA
->  
->  config MFD_ZL3073X_CORE
->  	tristate
-> +	select NET_DEVLINK
->  	select MFD_CORE
->  
->  config MFD_ZL3073X_I2C
->  	tristate "Microchip Azurite DPLL/PTP/SyncE with I2C"
->  	depends on I2C
-> +	depends on NET
->  	select MFD_ZL3073X_CORE
->  	select REGMAP_I2C
->  	help
-> @@ -2441,6 +2443,7 @@ config MFD_ZL3073X_I2C
->  
->  config MFD_ZL3073X_SPI
->  	tristate "Microchip Azurite DPLL/PTP/SyncE with SPI"
-> +	depends on NET
+> Decide finally what is the hardware and send binding matching it.
+> Hardware did not change last one week three times.
+> 
+> Drop minItems or explain why this is flexible on the same SoC or between
+> boards using same SoC. You can always point me to upstream DTS, which
+> would solve many questions.
+> 
 
-It seems odd that the SPI and I2C drivers need net? It is the core
-which is doing devlink stuff.
+We do not have an upstream DTS. We have a scripting engine that 
+generates a DTS and we distribute DTBs to our customers. The example 
+from v2 of my patch was copied from said generated DTS.
 
-	Andrew
+Apologies as I navigate through the different yaml keywords here. The HW
+isn't changing, I am just struggling with representing the HW using the
+different keywords. And the different implications of using said keywords.
+
+Here is what I have for v4.
+      items:
+        - description: RX doorbell and watermark interrupts
+        - description: TX doorbell and watermark interrupts
++    description:
++      RX interrupts are required to notify the host of pending messages. TX
++      interrupts are optional. The TX doorbell interrupt is not used by the
++      host, but watermark interrupts may be used to notify a host 
+waiting on
++      a full out queue.
+
+Thanks,
+Justin
+
+>> +    items:
+>> +      - description: RX doorbell and watermark interrupts
+>> +      - description: TX doorbell and watermark interrupts
+>> +
+> 
+> 
+> Best regards,
+> Krzysztof
+
