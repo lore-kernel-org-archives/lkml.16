@@ -1,48 +1,156 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385A61F4CAD;
-	Mon,  7 Apr 2025 14:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262D81F584F;
+	Mon,  7 Apr 2025 14:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036289; cv=none; b=hTp9rqzd0EHadFDiMWRJP0E4JC1HA9y07Plo4TyDUaUJ+95YsDOP4yxOrpfsCcjp8cN5+yZTude2iaSQQ1pLyTRy9ixbqYdu7GeE2eJy7FLLGD909QDoX6JoK5faEmce6PlFj6Oz+EsTTZfsKUXmkFvDvY4F5aqfL4A224pGoos=
+	t=1744036303; cv=none; b=BEqdV8ZcGrtpu+vyt95UHwtVoyhZ6WUJAZsAnocqOlGTzhhzhMNzq77wHRI/QMMfV0I2ukXCkpGYAYzGhPcpmxEAWueBPUYCIIUa/V5mMDLeZv5d58zl3i2w47GXWA7UWnubHBxZCcdp7w6ELugLFrzumkfIufm6KYyPknmG3QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036289; c=relaxed/simple;
-	bh=TI2+s/JnZ8DjT+9G+x/pMG8Q9zFhE72iryPhllYsy6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l5ML70Aoi1C8qpObjdJRl+VP6ezY7dAPDCCkAqzVOq6vRuKGtZbyxNFtmLMtJUp+yCfKuhmO2yvogwwYleYbnP20PtBMotGJBtgzOZ8br/JPU2dS0DvBdkyXX2K1o2uJNPtX8e4Es2vE9ViPH7pAgC+6UAIJNJSe2st3lYdbuI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id E68A867373; Mon,  7 Apr 2025 16:31:21 +0200 (CEST)
-Date: Mon, 7 Apr 2025 16:31:21 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: shaopeijie@cestc.cn
-Cc: kbusch@kernel.org, sagi@grimberg.me, axboe@kernel.dk, hch@lst.de,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	gechangzhong@cestc.cn, zhang.guanghui@cestc.cn,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2] nvme-tcp: Fix netns UAF introduced by commit
- 1be52169c348
-Message-ID: <20250407143121.GA11876@lst.de>
-References: <bd5f2f8a-94f0-43b0-af02-565422d12032@cestc.cn> <20250403144748.3399661-1-shaopeijie@cestc.cn>
+	s=arc-20240116; t=1744036303; c=relaxed/simple;
+	bh=qu1e18I6RTvaxyeLAbVG8ox7hMPhV/hopmth1TihXIE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=KoFx5V6H6+nP28Du8y6CZdVOHx8TBVHypqn1ohnCbrFaJLB1jAWH7dCJd4hajAxxPfANAiER4G/PhisW9hJuC+n57aXz5DkJ7O0G7QehAH1FCScJcvQIhVfoLClZJ6uOppLoUzYrhZaR2NDQjBn86W6CaUE3IspH8hf/7M3vkbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ULHIa4J2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hECGIQY7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ULHIa4J2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hECGIQY7"
+Date: Mon, 07 Apr 2025 14:31:35 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744036300;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=quO60zMfqZZo8Nd+WpA+nvKfkDwquj/mnL60vKMj0Kg=;
+	b=ULHIa4J226zf5NztiZYDp5p1cy7OMauf7L0Wr4j1pMNvx5lxL03nh2YNmSxJeVlkfgqTbT
+	P3WJbo2E2mH62DiDrutmWEPkRK8AqBBiMH8JAEAYAGOfL/TutV4wbrVLX4VK4fbjHx7nV+
+	HzS1odsLFzmUXlB/956sqa6/xJFtVfc2xMeHSTsu1u1xAUSOyqUcmIN+IwsofQNUd19q4D
+	gYWFWYJYfB25bNYno5bN2NeDIA0AeAEETuLd+tKX/hne6k3pRkpuywFifO7dyInK2MhNTN
+	Q26kWlQyqTZeN3sXhVwfTh8VLV8nERZn1zyrO5C20DAcFrOvXpbARn+dIpE6yA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744036300;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=quO60zMfqZZo8Nd+WpA+nvKfkDwquj/mnL60vKMj0Kg=;
+	b=hECGIQY7C4zV+AH2DEFOjNRjhYTmPcfplxYCKflaaiTpLuzl2RC6vQjwV8gfqcg/+AKpW3
+	0DSZSH5JEd68wZAg==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/msi] genirq/msi: Rename msi_[un]lock_descs()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Jonathan Cameron <Jonathan.Cameron@huwei.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319105506.864699741@linutronix.de>
+References: <20250319105506.864699741@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403144748.3399661-1-shaopeijie@cestc.cn>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-ID: <174403629525.31282.2054616009551828048.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-I had another look at this patch, and it feels wrong to me.  I don't
-think we are supposed to create sockets triggered by activity in
-a network namespace in the global namespace even if they are indirectly
-created through the nvme interface.  But maybe I'm misunderstanding
-how network namespaces work, which is entirely possible.
+The following commit has been merged into the irq/msi branch of tip:
 
-So to avoid the failure I'd be tempted to instead revert commit
-1be52169c348 until the problem is fully sorted out.
+Commit-ID:     0ee2572d7b843cd7015720eda2e876ecedcdb4bc
+Gitweb:        https://git.kernel.org/tip/0ee2572d7b843cd7015720eda2e876ecedcdb4bc
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 19 Mar 2025 11:57:01 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 07 Apr 2025 16:24:56 +02:00
+
+genirq/msi: Rename msi_[un]lock_descs()
+
+Now that all abuse is gone and the legit users are converted to
+guard(msi_descs_lock), rename the lock functions and document them as
+internal.
+
+No functional change.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Link: https://lore.kernel.org/all/20250319105506.864699741@linutronix.de
+
+
+
+---
+ include/linux/msi.h |  8 ++++----
+ kernel/irq/msi.c    | 16 ++++++++++------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 4e43991..8c0ec9f 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -229,11 +229,11 @@ struct msi_dev_domain {
+ 
+ int msi_setup_device_data(struct device *dev);
+ 
+-void msi_lock_descs(struct device *dev);
+-void msi_unlock_descs(struct device *dev);
++void __msi_lock_descs(struct device *dev);
++void __msi_unlock_descs(struct device *dev);
+ 
+-DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, msi_lock_descs(_T->lock),
+-		    msi_unlock_descs(_T->lock));
++DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, __msi_lock_descs(_T->lock),
++		    __msi_unlock_descs(_T->lock));
+ 
+ struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
+ 				       enum msi_desc_filter filter);
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 1d30e47..49c08cc 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -343,26 +343,30 @@ int msi_setup_device_data(struct device *dev)
+ }
+ 
+ /**
+- * msi_lock_descs - Lock the MSI descriptor storage of a device
++ * __msi_lock_descs - Lock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
+  */
+-void msi_lock_descs(struct device *dev)
++void __msi_lock_descs(struct device *dev)
+ {
+ 	mutex_lock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_lock_descs);
++EXPORT_SYMBOL_GPL(__msi_lock_descs);
+ 
+ /**
+- * msi_unlock_descs - Unlock the MSI descriptor storage of a device
++ * __msi_unlock_descs - Unlock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
+  */
+-void msi_unlock_descs(struct device *dev)
++void __msi_unlock_descs(struct device *dev)
+ {
+ 	/* Invalidate the index which was cached by the iterator */
+ 	dev->msi.data->__iter_idx = MSI_XA_MAX_INDEX;
+ 	mutex_unlock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_unlock_descs);
++EXPORT_SYMBOL_GPL(__msi_unlock_descs);
+ 
+ static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int domid,
+ 				      enum msi_desc_filter filter)
