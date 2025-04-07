@@ -1,100 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53572C6A3;
-	Mon,  7 Apr 2025 14:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50E91B87CE;
+	Mon,  7 Apr 2025 14:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744034555; cv=none; b=bgJNmLQmsuq74JC2B0vkjHteTqRsEZvDJ4XkAzQZX0nYYtGb3Q/aA3sBjtkdF6bH9UbT71Syocjvk8BES82dXQ0kSHvrREdCic2kxlB72J+8ukbV9sBqHTr6weTAzCUvEMGB9Swk1JDORZ1sPJRuj/5ZpaqDVvGtCjMfR7GqCRc=
+	t=1744034568; cv=none; b=UJ3G2awKvqRSVZUkzS9U3drJ4sUa6l77124dW6G0DN5OuQmbFwQotiVbeoIs5WfPrBOrXw7jIJsUi56yktfPozX8YLFYG+rYrQ9KSd008rBX8hKv9RPM6oPkf4JDqGRO+i47v7wZ7gSbBDBEIszly0jVnmsHtQ535pCIdyXjPZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744034555; c=relaxed/simple;
-	bh=W3SHYCW2Ors5dixyvIPe8YB5LgdUl989Vud2NXgXX8o=;
+	s=arc-20240116; t=1744034568; c=relaxed/simple;
+	bh=VlnB1YXWS5O4F3ARNUCiMdlsg4JVJ9h2WQuVh6h1KeM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AV3azzfdZvqw2tHl/XwU900SOlCC7YvMXqs7r/KpzvTZJErAOQmtwnFCOiQ7byj0E8r+6qgCxeO239vQEojvrNfXaWm+0YwuyqKt0H9628Y1xQ6wBLD5Gze27qysiEkjBXBqTgQw1rOGJHeaX1hAojfdd/bLoX2+l0BbjD/rATw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oh6ZWDP9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cJgg91K7K0Rruli8BVBR7HDkhPSBkmac3V6Y9UblkFGZsI3icQN8spmMl3ndOrVk4Z4gs7m4RsztCenWVpDDQQR599DpYU9hxQKwkSnedDHW2bovSGf/ohkwxD+e9bhXs64P9rdMLA7IaVwnEQEnI+5sG+HOEI1HeulbBMlBPyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDPGs8hh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oh6ZWDP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 108F3C4CEDD;
-	Mon,  7 Apr 2025 14:02:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDPGs8hh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727E4C4CEE7;
+	Mon,  7 Apr 2025 14:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744034553;
-	bh=W3SHYCW2Ors5dixyvIPe8YB5LgdUl989Vud2NXgXX8o=;
+	s=k20201202; t=1744034568;
+	bh=VlnB1YXWS5O4F3ARNUCiMdlsg4JVJ9h2WQuVh6h1KeM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Oh6ZWDP9gO1f5r6MxG/QQ4EWDh52V6RzQQ4W7G/Wc2DM7wj67nRy0OXFJbv5EybBe
-	 3E8lu4uRJh1oVrYXIzz8yV2GKMlDPbPy54XIRlSDZE4covfbvrht5pFYl27TMhAKgs
-	 KfQtzOwxVM+MCBPE6AjTY3U3+OKA7H20Mc9YLqJUADIOHD6Ais16TqBgY4N/Bt0An5
-	 W1NnfOgXPvjITsah7honbXqtG+6fz5TDUHnkJy5E0kcn1cpJ8TJCgHQWAqD3PdXEfk
-	 Jp8I1XN7InWFptl0b/MMeQ7KFCkdDDNhSgjMqxOGL9Z1cV5qU8QmVj68Cx69PAOViN
-	 o5zvSOgAi1mKw==
-Date: Mon, 7 Apr 2025 09:02:32 -0500
-From: Rob Herring <robh@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	b=QDPGs8hhPWPp7SZy2qJI4GyM6iu8eJWJKPRzhkf0Wyo3/9U1TFc1XMP9ISn1+GptU
+	 wWYdUpmWjEtXD2mc/ANf6f245z3zhapUvlVcySFN6htJPBSAdu2xDZ7/N6o4/dfPrE
+	 i57miIGPYI8yvAbeEQRY5pcpx9AXWqjMb2LZKqeFAbFAWy+MzesopqIlXUPnHLWL1N
+	 Zsc12Hz7+ZwYa2kihEuTxTBREFsBV70LmAY9DitzwobRBiSf1SXAlGHIUSQ29foCtK
+	 Rl5ArISqbP97JTn/wxscP0H8vRQ+BijQJqyqyAOyVWAdbY585xWfSDMRbib+K6t8kb
+	 JehuuDjyx7tTQ==
+Date: Mon, 7 Apr 2025 15:02:43 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	ghost <2990955050@qq.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 7/9] dt-bindings: i2c: dw: Add Sophgo SG2044 SoC I2C
- controller
-Message-ID: <20250407140232.GA2165777-robh@kernel.org>
-References: <20250407010616.749833-1-inochiama@gmail.com>
- <20250407010616.749833-8-inochiama@gmail.com>
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/2] Add support for ADP5055 triple buck regulator.
+Message-ID: <f970a0ae-18db-4506-9f92-d4484ac079f0@sirena.org.uk>
+References: <20250407-upstream-adp5055-v4-0-61dd82369ff2@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RMLSE6u+AWDcZBYs"
+Content-Disposition: inline
+In-Reply-To: <20250407-upstream-adp5055-v4-0-61dd82369ff2@analog.com>
+X-Cookie: Meester, do you vant to buy a duck?
+
+
+--RMLSE6u+AWDcZBYs
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407010616.749833-8-inochiama@gmail.com>
 
-On Mon, Apr 07, 2025 at 09:06:12AM +0800, Inochi Amaoto wrote:
-> Add compatible string for Sophgo SG2044 SoC I2C controller which can be
-> used specifically for the SG2044 SoC.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  .../devicetree/bindings/i2c/snps,designware-i2c.yaml          | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> index bc5d0fb5abfe..677b39865af0 100644
-> --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> @@ -38,6 +38,10 @@ properties:
->            - const: snps,designware-i2c
->        - description: Baikal-T1 SoC System I2C controller
->          const: baikal,bt1-sys-i2c
-> +      - description: Sophgo SoCs I2C controller
-> +        items:
-> +          - const: sophgo,sg2044-i2c
-> +          - const: snps,designware-i2c
+On Mon, Apr 07, 2025 at 12:07:49PM +0800, Alexis Czezar Torreno wrote:
 
-This is not a great pattern we've started. T-HEAD, Ocelot, and this 
-should all be combined into 1 enum. The description here is not that 
-useful.
+> Changes in v4:
+> - adp5055-regulator.c
+>    - Removed custom adp5055_is_enabled function and let core handle it
 
->        - description: T-HEAD TH1520 SoCs I2C controller
->          items:
->            - const: thead,th1520-i2c
-> -- 
-> 2.49.0
-> 
+The custom enable and disable functions are still there?
+
+--RMLSE6u+AWDcZBYs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz2wMACgkQJNaLcl1U
+h9CTiAf8DTjZx0ncV61oGe2IKc0tYtsQNqyC/XL5thlQABIU0uk5KpETiUNpjKYf
+Gvx0SnBr15FjSV61QxfCB8pOiGWDvET9Ak7GLrUKn8zFSpZVqgUOsFiiqqFIhmZ2
+zBFTpZ++P6oqfFPFmOUh4fwAUzm8MlIyV4Btlt83FPqTP2nfgqGEUnpFBPdO9jjE
+M/xGL2/Loq9dzyc0lCelx0UmlB0zVc1+5NaToqKYT9yWI4An+3Va+DUYIBUFgOhD
+qVFzZHilUte7tV2WlY7/lvABEldJ4UYPlekAfh2bu5vIqABErsXZpjUkOz5g6sGN
+8efx4tGD4drZFKTdsHP38LIlaI0+nA==
+=MCrc
+-----END PGP SIGNATURE-----
+
+--RMLSE6u+AWDcZBYs--
