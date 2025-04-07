@@ -1,85 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08818261565;
-	Mon,  7 Apr 2025 18:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77ED82550D1;
+	Mon,  7 Apr 2025 18:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051202; cv=none; b=O27Th+oSNEyTAs7GhBVHBGcNryBv7KIEksCx06RW62kG9IZMmal4GQnqQlBhvpB98V9Rc7QrCEiX5XoUcXdosFfTUDoYDpVsX2IpAS+j90WY+RCeR356fKZBsDwgHRhioA9nIYqm9laUfDDnhEZN7PakuIRVubWb7KwY0hcyLUA=
+	t=1744051238; cv=none; b=Lup4f+hRuKBCw3nSTIHKHyVO4Km3UrjwKdm6atRqpCQd028Pz3WhNf+SxPevUPbnAMSamba+bO3ZbdqcMxhsWHbrXABPTN6EccbxVCtixFd5PSu+X3Ni2mBS2R50lU25AUQbXi7C3h7BoICAMExg4JlzkvgUQPRr1+y8P/W8yQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051202; c=relaxed/simple;
-	bh=BqAYBDV85npiuG9lUU6aZSMxUQypt9VFmCg1ipp2j7w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CROxuHzqXOKBrDdbi6Sye1h5RDt/ADNOcvPfyyW/nTDZ3Zhwl+ayNkIOk4T6t+aNO1VpNac3cR38PSGdzGnsuiBdWqnw82YS3GrpvkFkEb2mgtct9ajxe2+iP0QOZrMAjRwX4ZQDMFiaAYWJu/FSbwOCfvka5SPgk3JU2gIWMd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6x3QZ0B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051238; c=relaxed/simple;
+	bh=KVvTyyF0VkafWFfOugua/YDD0iLrXHMzMWGuCOsrYSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RQugTYZ7unLP0YaJTqRdajapxPq4wEvXhffo5AKHvu7vkfS0TS+hQryhSyP1fi6rR0zX4AjZ8z9FLvpNUQEG9TEho4iwBgdgbluNg8hG6bs22k0JGnlpIL+jhpEmEt/yxuImaM6BCngF7BkdiNjYWpaseRr1cfmSckO4sj8I4bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDe7pOnG; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6x3QZ0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6050EC4CEDD;
-	Mon,  7 Apr 2025 18:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051201;
-	bh=BqAYBDV85npiuG9lUU6aZSMxUQypt9VFmCg1ipp2j7w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=c6x3QZ0BwKoxZD6akefXms+h1fypLN5lMIPrt0sDhIxCfxWTlzVR5tYnXEEE6tnOS
-	 qv8kysHeTGITEKiYRIk9xsm6cTQmvdgN+uehYm/niLVMeKFiCjbaAr+iwIZZUE1rN2
-	 LxWivKUSaXJiU3yPRrSL8VULxbx88lzeMG1q0agfOxncWL/WOaIYIHHIF4qIox80TO
-	 6SnO4SjzojsAO1O6nULIhndkElXEZnuwQRO+u/WhBNg+E2UN7U/m+0GXm9+4YVT4ob
-	 53549X+KUPkp16Gr9UURw0pj+QU+YeQCscyIsz+yvAhmkW/KZdI+Lsl1/hYxKO/byJ
-	 fKZKXMDDkwkIw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB818380CEEF;
-	Mon,  7 Apr 2025 18:40:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDe7pOnG"
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-e6df32ad351so3867835276.2;
+        Mon, 07 Apr 2025 11:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744051235; x=1744656035; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/KJ1Yxh0RTA5B17N4EwbA//OrbDLUv7EVB4eL3fHgUo=;
+        b=dDe7pOnGefynPP4DrcE7D5MGivvfnvbWok0qT64HCzgLODhPBiyp0z7Lds5tYJjayf
+         n1U8GnruNI9s+9eKDq15Dvhkn2Zn5E9i8vNRbydtkMDFvwKMiZSEXx35TKOqLTn9qAEz
+         6eq8qrhtG8V8PvvrrOPeB/c0/mb0Ly2rdRjmudYZfFGSYl8xJEeFU/CXOghvU028R2Gb
+         VgZ8OIhMDypQsrBdVwKPbH1i7ZWlWD+QZAg+exz/maz6m2A3OsdhFMqWUiPvWr9hsdRA
+         QKepbqiEl+Bev0fvI2HQOgsY6x3DMrNgbEzoj3DWaFfA5gQwLenZWa6aSU8HJ6t7+7Bo
+         omqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744051235; x=1744656035;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/KJ1Yxh0RTA5B17N4EwbA//OrbDLUv7EVB4eL3fHgUo=;
+        b=S304U+/NT8+nPnsXy8RrIdAaMVgZIxm/tcCMXwDGk5oPWhu2l+fHy6h5uNHPaROAZU
+         Y2JZRcqVugCvcT0MOQl7GTOBdYVVEYP7KvtYD7uorJfRhTu8ow7Ufw1AqwviUuoC2+xf
+         9ULCfPJxjdmtLkxJRnYEcZIKwbHWw8H1k+vVeLoT+gxIxQ0kDTZfiSLzbmuOVNxLIQco
+         ft5u5xyrv3x/stnLh4D11e+qm2s7ycpkQg9M/9bPJPZ9jboSj/TIZRxaMtFPe1UinLeH
+         jFqQfP6r86FsdJPVX6HN0Z1XMOsbgaF/acczgFEBxLrzt7B3q4anzruZyWXk8fe/hkcE
+         TocA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+n60672H/G6yOf6i0/u8rRKhoY/Idmf92nR3gb1r55COnV+XyY8MncDLGy356CXZGQaQGFWxe@vger.kernel.org, AJvYcCWQqVeaiyX9IgoLHSU8c3smjlxuOPdolXb1ShMu43Uhylkm2GlkiWbQJ2C8BXegxT3+JJrnERP0xSfqY2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTmK9KbRt0P1SBcv+h59qfc1SES93M2lmGgDAv+IyKfzsC4AoC
+	qpkOw10OyRqlsIupXhwe1L0lr/D9TmyigzbGgZxMUG9WiAliSGwMn4LwkZsy
+X-Gm-Gg: ASbGnct14TjN0QdEQ/Bi40N1w8V8PVlTvEI2J3vwcKoPH2NVuoa6cvn1hSXI77KRwoQ
+	x2Uv61qxR3xRNKt7vGvGVbOupfUyhzpl+XTcFR/5WUDImwbmGKv6uG3hVr3xOsLle2c5WCk13U9
+	byONA+utmECFMxBCI/dgtmaoYoiVrlCKEznDnPomm8m1pthW199kGuZe4+30A0lMrHU5dv6WfCw
+	MahqvvBhWo6JTA9ATKr/kWeFdD43d3oaJXGGTbQlIKkwaY5phLXTLH6OYehS+H6V+DnVf9N7bkJ
+	70kW+jO5DUwDUtzP0X0RcG7e+9KgFC2Sk3vsEO74++Nqx9UWNt3W7FMI6TvAX6MmyIg=
+X-Google-Smtp-Source: AGHT+IEA/4VSGPViRd6mU6bh7fnFDXSOD8VnOzbhsOivdiFta/wUWZmqwIG46N9Ui62wNQSHOr70hA==
+X-Received: by 2002:a05:6902:a86:b0:e6d:ddb7:357c with SMTP id 3f1490d57ef6-e6e1c457da3mr23929156276.48.1744051235400;
+        Mon, 07 Apr 2025 11:40:35 -0700 (PDT)
+Received: from [10.102.6.66] ([208.97.243.82])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e6e1c22c23csm2145425276.42.2025.04.07.11.40.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 11:40:35 -0700 (PDT)
+Message-ID: <70d1fca7-5549-4b3f-b376-38443ca3a171@gmail.com>
+Date: Mon, 7 Apr 2025 14:40:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: hold instance lock during NETDEV_CHANGE
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174405123877.1227543.13613718146765643033.git-patchwork-notify@kernel.org>
-Date: Mon, 07 Apr 2025 18:40:38 +0000
-References: <20250404161122.3907628-1-sdf@fomichev.me>
-In-Reply-To: <20250404161122.3907628-1-sdf@fomichev.me>
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- andrew+netdev@lunn.ch, kuniyu@amazon.com, vladimir.oltean@nxp.com,
- ecree.xilinx@gmail.com, lukma@denx.de, m-karicheri2@ti.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cratiu@nvidia.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 net-next 0/3] Add support for mdb offload failure
+ notification
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
+ Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250404212940.1837879-1-Joseph.Huang@garmin.com>
+ <20250407102941.4331a41e@kernel.org>
+ <af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
+ <20250407113758.2fee3e4a@kernel.org>
+Content-Language: en-US
+From: Joseph Huang <joseph.huang.2024@gmail.com>
+In-Reply-To: <20250407113758.2fee3e4a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri,  4 Apr 2025 09:11:22 -0700 you wrote:
-> Cosmin reports an issue with ipv6_add_dev being called from
-> NETDEV_CHANGE notifier:
+On 4/7/2025 2:37 PM, Jakub Kicinski wrote:
+> On Mon, 7 Apr 2025 14:15:31 -0400 Joseph Huang wrote:
+>> - Should the re-post be v3 (no change) or v4 (bump)?
 > 
-> [ 3455.008776]  ? ipv6_add_dev+0x370/0x620
-> [ 3455.010097]  ipv6_find_idev+0x96/0xe0
-> [ 3455.010725]  addrconf_add_dev+0x1e/0xa0
-> [ 3455.011382]  addrconf_init_auto_addrs+0xb0/0x720
-> [ 3455.013537]  addrconf_notify+0x35f/0x8d0
-> [ 3455.014214]  notifier_call_chain+0x38/0xf0
-> [ 3455.014903]  netdev_state_change+0x65/0x90
-> [ 3455.015586]  linkwatch_do_dev+0x5a/0x70
-> [ 3455.016238]  rtnl_getlink+0x241/0x3e0
-> [ 3455.019046]  rtnetlink_rcv_msg+0x177/0x5e0
+> Doesn't matter much, but probably v4 is less confusing.
 > 
-> [...]
+>> - Do I re-post after 6.15 is released? Around what time frame (so that I
+>> can set a reminder)?
+> 
+> No, no, I mean very soon. Like tomorrow. The merge window is when
+> maintainers merge their tress up, rather than when we merge code
+> from contributors. It's a bit confusing. Merge window open ==
+> normal contribution closed, and vice versa.
 
-Here is the summary with links:
-  - [net] net: hold instance lock during NETDEV_CHANGE
-    https://git.kernel.org/netdev/net/c/04efcee6ef8d
+Got it. Thanks for the clarification. Will re-post tomorrow.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Joseph
