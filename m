@@ -1,125 +1,199 @@
-Received: from mx3.securetransport.de (mx3.securetransport.de [116.203.31.6])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011036.outbound.protection.outlook.com [52.103.67.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A12C1B040D;
-	Mon,  7 Apr 2025 14:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.31.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036005; cv=none; b=QfMVaXf5y23fRvM2VPK0nLI8zn4HiC9XDlIpVt3/8pRg4isyMI40eP232OBOoojBf53wKjoNXVNKxoDhRBUIsjsyNPYr9HVmPIvcnmxZ2m9Nx8qNF4YCzZHvDpBHO54MxMTe1P0U/MxlG9s2OKCEBuBGBTQADOfvGKpWoAa33OU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036005; c=relaxed/simple;
-	bh=i5QeRTJ4wZvcsOVrDCD4cxOIezlH5OfoOAm/7+gDxZU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EPaicFGoo7/NMWzQw+wF17QJ+D9vnpGlg5SBLLz7cUP5JMn0FcibxWsZFqvBfitPNpYHQznHhC6PerPgT0u/OdxiImCCHjKeQzgAvKkmkBYWqAzZ2TuibzC4hQWbrBMKkRlcIqWjRrIIB2bMbbuiPfLrgCkX8zFBhrzzdbQHfFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=QzZ0HwG0; arc=none smtp.client-ip=116.203.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A81250F8;
+	Mon,  7 Apr 2025 14:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744036044; cv=fail; b=KtEN8Ekl8Tk3oQb0sudPkgiusPxrOQEJg0YiITBoEY71lGzsKcYj9id+v0SuebWrdKnKgHY0U1SYM8eV204fjoM9ggNPSZf35ac9sQaXHzqpJyzTUaoEAij4caUPnlrYl7Y0FJ35ZaWbseWIF4z8BcggQhQ8T6LUN+qm5nuSlB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744036044; c=relaxed/simple;
+	bh=UOlYJfwYRpTbDtL+IM+KdYL198oOVNaNj+tRtbGae1o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=agxPsBW23BZcgwJijyu4ShG4Z8eT3PoPbC7PtdhVjqSM0vHgLpgancciFLu9RkP063+2Z9W55GQ0iX1dV+3swmF2Mm9PFkyC0wCNxJ0nBNPHsWAj8hikz5CjdfQOZOyorhz+ej9Q9ZHGWhJw+yUwvBtjTc2nB9vW7u4XiaNbfpc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=hlLXgiRo; arc=fail smtp.client-ip=52.103.67.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="QzZ0HwG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
-	s=dhelectronicscom; t=1744035433;
-	bh=Tw+jh4xG+pO+8sA5mfFF2qIiv6zO55JdMVdaA4kMzwY=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=QzZ0HwG0iOvqjM+JZS7JJtNsFvHpsFyoKr00R+5kU3/W5n/5DpEITnRnrhdCOczJn
-	 n0oKJOQ+TWjnEKjw7nIP2CKUf94apFGKMT90p1QrZ+RwxaCG0uo7yJk+d6OGCHs4L3
-	 VGaYrYw1RciiKbE8ZkXmeIwbu2xWHRRizMcjtEK217FkkmJbXcfT/BFKl0jP5yBob7
-	 kRiu+2bTob2atF9GhXPU8ixpofS4WwejMgQ+qaDoxhVM065L0uJV5BGpK7Ku6t+MPZ
-	 TIOYAUWa/bn1UJxys2ngVmzWcrPIoOXeHOujawt2I2P/IrnLYWpDeKSFucqhYFrWQD
-	 5OuiX9gFGiDbg==
-X-secureTransport-forwarded: yes
-From: Johann Neuhauser <jneuhauser@dh-electronics.com>
-Complaints-To: abuse@cubewerk.de
-To: Mark Brown <broonie@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>
-Subject: RE: [PATCH 0/3] regulator: userspace-consumer: Add regulator event
- uevents
-Thread-Topic: [PATCH 0/3] regulator: userspace-consumer: Add regulator event
- uevents
-Thread-Index: AQHbpWdCFTa8WJXI70ea5+K9p5nNDrOTmnmAgARlZbA=
-Date: Mon, 7 Apr 2025 14:17:10 +0000
-Message-ID: <a18c4ad3b9f647c08d71b4550b5f1cf9@dh-electronics.com>
-References: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
- <b5fa7d1a-16bf-4031-8990-f559cf589b67@sirena.org.uk>
-In-Reply-To: <b5fa7d1a-16bf-4031-8990-f559cf589b67@sirena.org.uk>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="hlLXgiRo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cWa4ni5lM89ftFBolIU/UplGFGmx2MhlajtiJ6vYKwi5dS3cLBBGpXD9ACK7VRPOwtBi5nWzZTsfTdk9ltBchkG1zN2XNk90k+tgIwqBsyjHxZPGxmqU+s+Lp/Gm4CJhpLlWLIO4iBlVcMOnh7Tn8Asiemytcsd1OEhaoUh7pQKRR/erzAw/6VrBnOGvW5zoq9SL4TjX+9kDhd+gAbLNJLWO3XdcpSajj9/Sz6UnU+NcfzJC/JfdgrptTyUDf2e0HqMDxq+lY8J6tWIJtwQ8fRlpoTO3vC41h0ZsbzR83OLkzplJgpmswcfzALdpy5RGrq//KnJdYtY+roulrHWC/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v0dM5yvqiFsDFIaJ9rroDlt2+tktDTqoYmy+5vh66OA=;
+ b=Fzv2q3axntzxCgQM0cKvKNJFyWG8XhnDw9BR8bS7377PN594IINwZlHSrwWqgFLkRh3qzkheOyAv8eQkPATGQ2OVQifrXGIK8FF6g6PTK2VHx8t4xB68kbKVHZodP5GxChfZdYIPp1aeLqyDxir6TMd6ufLT6a50feINwnQbmOOVOnvgh+aT2eJgsa3UwxuLf+mg3rZ+MX5ybB0bwzspTv4SQhCbxO/d8ygh1CE+4bUSyDTa4q9LoXvmd9ikODHDpCqKQrqE+0Ul8M1vZ1dfvQ2AukqfHnNV5R5QWzkBAuDRHEawLfKOE12f6r/b3t3fzGtaHDwXdEdJIsXTsnfjeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v0dM5yvqiFsDFIaJ9rroDlt2+tktDTqoYmy+5vh66OA=;
+ b=hlLXgiRoxxMB14+ORVXjN+nXuTL0KyUQ8qYElPKPXdGDweHN/Q8MVJWCGrEUSVCdLhHvq7Q68EVlSpHgHv5pCCnK5nkDMhlU/wzowv83AsZi3eMcwG1ZGQ2H2YRv2koKrO2MYQ7y1Z7ADl4VCh18xx8EL+KRBmEkBd4bPNxxaUNoZJZSGTimKoCad4/wWKNpp01LmVe2SRkznZjWImVVS0mxqZd35roHUaoxOclDMDTGrx3cnNSL6qEL1YH87DaDoX+A5q77iUmWoKribx0JbPYll8KLkdkmFY/Q2u2yO94b+1LKuaPqEXXrg972fXxjKa2cHAkl14ZiIUlEYo95mQ==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN0PR01MB5859.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:66::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 14:27:13 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
+ 14:27:13 +0000
+Message-ID:
+ <PN3PR01MB9597227004F9472689FA6395B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 7 Apr 2025 19:57:08 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Use proper printk format in appletbdrm
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
+ Petr Mladek <pmladek@suse.com>, Sven Peter <sven@svenpeter.dev>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Maxime Ripard <mripard@kernel.org>, "airlied@redhat.com"
+ <airlied@redhat.com>, Simona Vetter <simona@ffwll.ch>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ "apw@canonical.com" <apw@canonical.com>, "joe@perches.com"
+ <joe@perches.com>, "dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+ "lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+ Kees Cook <kees@kernel.org>, "tamird@gmail.com" <tamird@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ Hector Martin <marcan@marcan.st>,
+ "asahi@lists.linux.dev" <asahi@lists.linux.dev>
+References: <PN3PR01MB9597596DA5DA9FC02825CF0FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z_PZXPAklfkMlx6O@smile.fi.intel.com>
+ <PN3PR01MB9597E19A55EAFC3E7B191F5FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z_PfwShQX95IyHWR@smile.fi.intel.com>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <Z_PfwShQX95IyHWR@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN4P287CA0083.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:26b::11) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <8f6cfdff-001c-4823-985c-ee227e7c0813@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB5859:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7262930e-7fae-418b-08b2-08dd75e04a37
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|19110799003|6090799003|5072599009|8060799006|15080799006|7092599003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RmpIQTBtZXlJd083NDdybDVmMFRiM2RTd1FMTkZuNmxTdGZ5TGlZZHBySW9u?=
+ =?utf-8?B?VmRDL1czSWVUaVZuWldHeUxQSllZVlVWdHlUMHV1VEVrWDZYMXBvS0FpeDN6?=
+ =?utf-8?B?RXlUMHV6bWEwdjN6eE5zUXV5ZTErSFhBTFhBeEU2ZmNNUk5tR2o4Q2pCeGxt?=
+ =?utf-8?B?dWNnNGQ2emVCWkx2Q0l1aldrV3AwTWxuZStYckxkbmtRMlVtQUdEdDIxdTZP?=
+ =?utf-8?B?U2h0VUdkQnFrczZLcTFseVBrVWI4VzJNNEFmYUtyR25IOFF3MSs5ekZsTmh4?=
+ =?utf-8?B?YWt4MUV5UytabUt0Mk1EVmpiTVYwOUJxQk1yV0pUb3J3dFBCYjBiNGtGUC83?=
+ =?utf-8?B?YWR4QTdmMU1SMTNKeVZpYmNRYkNYQWlVN0hXSnJrc0pGWWVTTCtFM1Mzc1Vt?=
+ =?utf-8?B?bGN4WHlQalNwM1V3WmNhUTNORXFZaWJmZTJpaTExdHVONVBWSEdXYzBtOExm?=
+ =?utf-8?B?bFpaYkpnT3hwaE8yWThEQTVtUFBCb0gxREJCSzdkTFE2WnErK1FNUmdDU25o?=
+ =?utf-8?B?VTJzaHJyNUFNckp0dkNDVEdVN3crWjd4ODNPcjlVMnY2cERvb0xxSDlsWnN0?=
+ =?utf-8?B?QWJSa3E5Tng1d3BMUHkyd1Y4dUhSV0hqMDljMEFLVXJ2YWhiTlV5d042WjRM?=
+ =?utf-8?B?Ym0wUGFoN1VSYkhQaGc4ZGMyclFZc040YVdOVnBCdThyMWtNTStJbVQ1NW9Z?=
+ =?utf-8?B?ZEQyV0JnZnRuTDVSUytGOU9sQ3JzOGNvYVZxUEM4WkFGVkF3TzdLUFRKbHJh?=
+ =?utf-8?B?LzVnZ0JZNG43OGJFMmF2V2tIZURsQmtrK0UvRWpFcDF2T3Vzbk5WbVVsVERS?=
+ =?utf-8?B?OWFRdW1TZHY0a1BvbjNRLy9BRER3aHJkZ21Sa2JlS3hRWkpyYnFENENEaWl6?=
+ =?utf-8?B?dG9UWTd4ZCttQzN6bEQwTEtxY1FIWFJ5Z0dxVVpKeTdPeXpsRHZsWUpWS1ZS?=
+ =?utf-8?B?RnkzejJkUGRLWkhqUG5qbFc1VmU2NGtha2crcTFQd3VHTkVQUE9xV3o2RTlP?=
+ =?utf-8?B?RHVaQTV1OU9iWTRlSkRtLzNvRFdVOEVlYXNWN2U2bG4wQUw4V1lsbTdnNXNu?=
+ =?utf-8?B?Qlk0VmsyVGNyNFhnZkRKR2xHb244VkFzZ3JMVFc3djQ0S3lOYmhONytoRFd6?=
+ =?utf-8?B?RzREL01MbThXbkFSWS82Titrb0hDdzl0bXFtS1h1am94a1QxNlVMZFlrdE05?=
+ =?utf-8?B?NjJXcjhGVXJQT1JDczhJek1rT3htVWpUZWQvcG1nSHM0NlJzcEVNZWt2Ykth?=
+ =?utf-8?B?Qnl5U1RQalpzai9CRTFBdVI3WFZkeE1iWkJEZStxMUcwMFV2aXB0TkF2Y3dw?=
+ =?utf-8?B?OU1XOWpJZVN6T0RLREFzUEMyZUdVc0RPcU9MV3RINEVkSjNaQXVlSDN3NE1p?=
+ =?utf-8?B?QVhDekVWTjROc1JhVXIvMlcweGpucXRKdGs1RllaQUgxcDB4MU92TjFNN0tm?=
+ =?utf-8?B?UTZOZTVyUFlkcGFPOFV2RllraVhsMmZlMUtUOEdwUE8xNlBoaFZzdEpRUTFE?=
+ =?utf-8?B?TG01SWp1NTZnZldGWU5lYU5VeG4vMzYxeU9BdEVPdk84NTZKSStwVWZQL3I3?=
+ =?utf-8?B?S1NGQT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RmI5ZGpFU2VUcktvMHg3ejFMUGpnZlhYMjROZ3FBZ3MwSjFZc2p5dmQ1S2F0?=
+ =?utf-8?B?QjlvSnZqeTllOXdCOTdpS0JaUGRSc1NRajF2b2V6a0NvajBIN0MyRWZIK25R?=
+ =?utf-8?B?WC9GQ0JGRDFLUHdLYlhMWUJiN1BpelNJU3BvWFl1dzQyMWhpaU9VRHdvWCt1?=
+ =?utf-8?B?NUJjY1EyKzFTbGZUNlZlQUhJWjZRT1JoVVNjL2RzY1Ercjdla2JBMUVZMjR2?=
+ =?utf-8?B?S2xFSlYwTHV1SXk5UzRHUEE0UHY0TjUxSDFVNGRFa0pzYnBwdFFxQnN4N0Rq?=
+ =?utf-8?B?NnJFWHJqOVVNaVkzbEFEYzNWOVFyRXlWYkhSZTlNRmlYSmlmMURyY2p3c1d1?=
+ =?utf-8?B?NEFNZm96VHRuY08wTVdHbGdYbnljblBTekgvdElQVXFyK3BwSlVMWVcrVjVG?=
+ =?utf-8?B?aUFYaXphRUZvd2J5VExCTWN3eHZKMmtQMFFzc3hoNjI3dXJCbzF4OTNyeGJa?=
+ =?utf-8?B?YmVFd1RWc1VjYjNzckRIRG1aUW9DRG9vQjhpbEhHV2xLbVFKck03L00xNVkw?=
+ =?utf-8?B?Zzc2MXBHNzc4S1NzWTVEbHpjZEdCUVpDa1pnNFVvN0xjR0UvaEtmMDFlbGgv?=
+ =?utf-8?B?N09aSnhnUDFuSXU3MXJ4Vk55V2RYQ0JHcUZlWVdJQ29DMFg3dHFHYkZhenh6?=
+ =?utf-8?B?cnRuWm1kMTFnbURsTCt1WXJYOGVEZU13R1RRNTNscTVRVjhPME9uV1BweG9q?=
+ =?utf-8?B?bGttY09VZDNsOVg1T0RyMGxBbDA5bUJXanBXTzFIQWNQa1VGWVg4Rmk1aDMw?=
+ =?utf-8?B?Q1NSVzRocWY3UDNVa0xrZzdoZ2M1eW11RmxwelAzeFBzVVdvVForTmRxRkdY?=
+ =?utf-8?B?NWdJdlJMcEF0ZFB2cHkxT1U4czFkSGVuSC9aWnViNGsyR092R3BsR2JhenB6?=
+ =?utf-8?B?YW9sNEhNSVpXMkprNmJkd0lVbGhNOHlXdFNwcmI4Z0ZBTHB6cnRwSUhPNFBh?=
+ =?utf-8?B?YkxYYWVTMWFRdjBDU1F2Kyt3RnBrZnVPcmhSeVo3bzBuY3l6Tk42MjJlTXUx?=
+ =?utf-8?B?a01ydFUrV084VEdlemVjUzYwbkZhdXlDWllvRnFpb2ZBakpoejdxdzVVSW1B?=
+ =?utf-8?B?NjF6YnFDcG9udnY5MFdNTHp2aXZoZWpkSm53WmQ1ZW9BY2psY1hpMlpLd1Ja?=
+ =?utf-8?B?Z1R0SU1CVWF3bHZSY3RteERCcWFRcGozYzRzbWM4K2RJVUJIQ1NHeS8vQ1VC?=
+ =?utf-8?B?bjU4alh2cnV2ZCtVQXBOci92cUUzbHJheEZrZlJmd2MyVUxNNE9HbCtKUnBS?=
+ =?utf-8?B?WHRJZlpIWUF5bVI3S1ZJTHU3MmRKNXlYODhrTVB1SzhjN0Vza1NZdm5lOHlT?=
+ =?utf-8?B?NmZtenNEVmdEanZyc2NLWGZqNy9uWkFtSUUxL0ZCcEFmaG9OZlJlZFY2ZnBi?=
+ =?utf-8?B?Q0VRRVJ3WW5qM1VNTlNTRjRWUjhZbHJ0VWc5TXRwL3lOcmpvWnFYckdrenNN?=
+ =?utf-8?B?bG4ralFnWGJYQjJtMkZRWXhpWjBibWV3RldMTTRHbnR1bnJFaTBRa3NvTm1D?=
+ =?utf-8?B?OHpTbCtLaFQ1SXIwYWxhRGszRUlEcGZtRjJXdXFIbVZQdW4yemlHR2pGMitW?=
+ =?utf-8?B?RW9JZTFoUkcwTFBRVC9KSytUaXI0ditmZzNWb2o5ZnE1SkhIcXkxNitjNkpQ?=
+ =?utf-8?B?Mmc2RGtaMXBqTUxEU0RpMXdBR1M2Q2RKa1VEWllud0FNeWJOMXNlczNxUFhH?=
+ =?utf-8?B?STQ0SFVPcjltYWI0QytrTnBOcnZHYkliUmxpdkhDRHQrekY1VnRRSkJhdG9y?=
+ =?utf-8?Q?kSbo5ODH0SqqvQqES/ShdeRNFfxO54wVT2igWro?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7262930e-7fae-418b-08b2-08dd75e04a37
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 14:27:13.6919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB5859
 
-From: Mark Brown <broonie@kernel.org>
-Sent: Friday, April 4, 2025 7:03 PM
->
->On Fri, Apr 04, 2025 at 03:40:06PM +0200, Johann Neuhauser wrote:
->> This series adds support for regulator event reporting via uevents to th=
-e
->> userspace-consumer regulator driver. The goal is to provide userspace wi=
-th
->> a straightforward mechanism to monitor and respond to important regulato=
-r
->> events such as overcurrent conditions, voltage changes, and enable/disab=
-le
->> transitions.
->
->This sounds like you're trying to use userspace-consumer in production
->rather than as a test bodge...   what's the actual use case here?
 
-Hi Mark,
 
-Thank you for your feedback and question.
+On 07-04-2025 07:52 pm, Andy Shevchenko wrote:
+> On Mon, Apr 07, 2025 at 02:17:00PM +0000, Aditya Garg wrote:
+>>> On 7 Apr 2025, at 7:26 PM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+>>> On Mon, Apr 07, 2025 at 07:05:13PM +0530, Aditya Garg wrote:
+>>>> The vsprint patch was originally being sent as a seperate patch [1], and
+>>>> I was waiting it to be taken up. But as suggested by Petr, I'm sending
+>>>> them via DRM.
+>>>
+>>> Your message is detached from the thread, make sure you use proper tools, e.g.
+>>
+>> It's not a problem with tools, it's a problem with my email provider.
+>>
+>> Microsoft now supports only oauth2 for SMTP, which git send-email doesn't
+>> support. I had done a few tests using msmtp with git send-email, but msmtp
+>> also had this detached from thread bug, since it doesn't read the message id
+>> specified by git send-email. I've been using macOS mail for a long time for
+>> kernel patches, but since it was a pain to reboot to macOS every time for
+>> this. So I just tried using thunderbird in Linux this time. Now this time, it
+>> was a configuration issue in thunderbird, in which it was making a copy of
+>> the sent email in my sent folder, resulting in 2 copies there. I replied to
+>> the copied one by mistake. I've finally fixed this issue as well, so should
+>> be good in future.
+> 
+> There is a project called email-oauth2-proxy, which makes it transparent, so
+> just take your time and configure your box or find another email provider.
 
-We have a hardware setup where the USB-A port is directly connected (D+/D-
-lines) to the SoC, while its VBUS line is driven by an external I=B2C-based=
- PMIC.
-If a connected USB device attempts to draw more than approximately 800mA,
-the PMIC detects an overcurrent condition, automatically disables the outpu=
-t,
-and communicates an overcurrent event via the regulator framework.
+I already have a way to get oauth2 tokens for Outlook, something similar to this.
 
-Currently, the generic USB HCD drivers lack a built-in mechanism for handli=
-ng
-or recovering from such regulator-related events, particularly for reportin=
-g or
-re-enabling regulator outputs after an OC condition occurs. The DA8xx OHCI
-driver is one exception, as it indeed provides such functionality, but
-integrating similar support into the generic USB HCD drivers seemed unlikel=
-y to
-be accepted upstream.
+> The above is not an excuse to break the process.
 
-I came across the userspace-consumer driver and believed it could help mana=
-ge
-this specific scenario. With this driver, I was able to manually toggle the
-regulator off and back on, successfully clearing the error state. However, =
-the
-driver lacked proper event reporting, making it difficult to identify when =
-the
-regulator had entered an error state. Therefore, I proposed adding regulato=
-r
-event reporting to enable userspace to detect these regulator events via ud=
-ev
-rules and subsequently restore regular USB power operation.
-
-While I was aware that using the userspace-consumer driver might be seen as
-somewhat of a workaround for special cases, I did not fully consider that i=
-t
-was intended primarily as a temporary testing solution and perhaps not suit=
-able
-for this kind of production usage. I'd be grateful for any suggestions or a=
-dvice you
-might have on the appropriate approach or alternative solutions you could
-recommend for upstream integration.
-
-Thanks for again your input and guidance!
-
-Best regards,
-Johann
+It was an honest mistake, and I just said I managed to fix it and should be good in the future right?
+> 
+>>> `git format-patch --thread --cover-letter -v3 ...` gives the correct result.
+> 
 
