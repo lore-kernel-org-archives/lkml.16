@@ -1,94 +1,194 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2C223715;
-	Mon,  7 Apr 2025 18:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861D265CAA;
+	Mon,  7 Apr 2025 18:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051707; cv=none; b=IfWrinAw19PdYLYFLAFxMZ1OYeai38NgxcJWgHJnvkgkFQguQPJCn8QEccLu7thvdEhQEmdjBTcJiKoeV6ZSIgMe/R1Fn2Gbv2tuaNTyydoNSGRC7zq/Zp2cnOHCe8CLKcCcRekl/ToEP3lg36UkZDW2s1DzcOuI5yqPVbXIOM0=
+	t=1744051719; cv=none; b=ua7afTlOpq0KIi1n+f4B6rtdJ0f0A+5ornRtujzJKFbmH4QeC2tViz3bZePXVs7K+7dESLp9iuvn6VXpNjthdY2EiuGRXiwi3M+j8chIqY8VF0v1ny2sgPlbtUkdz93jhNm1HH7p8CRNt25O0+Sxxryn7ZHG+wjFVT0+KB1yiMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051707; c=relaxed/simple;
-	bh=WXWBXg7Mxphp/ZcQx+1HGg2KHbspvDldDkveLIdFIX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fkmfBXMbVN0Yu+UrNj/sfpdzFvhQWx6qTWtfaKRg/Ew0P1FPiMXU2iL2M18PkRpPl0ZRX0Ct73n1/SyBWNMKXY8ijF5NcvLc7RpmGt4wsoFpZEzZ9+qIRnQMMtRWVak97N/nYI5yCyyr9bz4Y7skZDmIH+gRXOyZ6F4rJttcIq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr5UMU39; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051719; c=relaxed/simple;
+	bh=BLCsZfMlmMhyQ/8BEjb8uHOKjFKoD5yX+WqdA4NIZ/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gDKsfa9KtSVGQBvVq0G+Yc9X56lSCKtj8xM0M8PgiJMmaNVvRsU35xcLLdQdT2rU31Ae0UsmmsMuOzmpYUed7Q9FaB090Cz6HrwJwEI4UZak0Bq+oUWdinIWJFRtwA/4u8Uc/Xrw03umUWaUE9ja5BhkRQR569o0awAZI1C0Bnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJe6Z253; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr5UMU39"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EF5C4CEDD;
-	Mon,  7 Apr 2025 18:48:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJe6Z253"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246DAC4CEDD;
+	Mon,  7 Apr 2025 18:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051706;
-	bh=WXWBXg7Mxphp/ZcQx+1HGg2KHbspvDldDkveLIdFIX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wr5UMU39sO6Wo5hAa5DBkFozW402JKSyFJqViy+kN5Dh57rUYZZleQlCPhnGcIHXq
-	 TmjoJqBi4TmXdTK+vg/kuHwZHzz6hUEAIZYXNzrmbOMuWjJvHzm+cTlkF+VEfA7vTC
-	 zIKizWQ0aeMrS/sTFt+Ga0DTrBG9FmiOvFxJnxhfH7tqHYe43EEt1Huy0vtSc9P6Ri
-	 PKEqca1Jh1p9Y4koTH16WKKb3e/le7c8hFsak5tYlVbxifERaCnsou6GQrc493ey0/
-	 BqDkjogR+c1htFcP/8L51vfnaMZPK9vPKIMq5U0Uhprx9qxDhDAYqux9NQoye7SbmX
-	 ceOuP0m1jN8mA==
-Date: Mon, 7 Apr 2025 19:48:22 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] regulator: hi6421v600: Truncate long strings for
- trailing NUL
-Message-ID: <da71edb5-8333-4700-bcac-cc4bdfacd0bd@sirena.org.uk>
-References: <20250310222408.work.339-kees@kernel.org>
- <202504071134.1AAF30CAF5@keescook>
+	s=k20201202; t=1744051719;
+	bh=BLCsZfMlmMhyQ/8BEjb8uHOKjFKoD5yX+WqdA4NIZ/I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EJe6Z253AA/oSHZLuPl/J6JKpsmnk+AzVN/N793dskIFALKNAJwpmE7CAlA4wCn6H
+	 mpfrn/09SS9/uCN8t9ewYdJc7qT/zWUoULKuGrTCW1K5Hc8ul6nbFVZdyrhEk0Acre
+	 k5IgujQ15xryG5GlS6Wb9N8TtmSTWgtNoLvWBeh3GT6XY0Y0/tyJlNIhv1gJsOfFwg
+	 NSTlmrj0bhIckM0u8FDMy+tkDoCwixx7HTthQJnUAWHrrBjuksbQ5OnH0D7ehCjiHv
+	 17nv+eG/lFmw4Mx1Tj3TUxsAvb22LV2tCzhy+vuNwDftIOheoYgzvWVHNFOLK6gJZ/
+	 U7XtJWgS9Qjkg==
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c7b2c14455so3192429fac.2;
+        Mon, 07 Apr 2025 11:48:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV12ZzyXm3FqhPYGVOlDSTFd940wDQXd1nMyDWOIvxuweSMB6fJrggTF5sjwIw9XZlCyufbURtGTeGX6KU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMEnsuGcFusgOHMTsVfQWGVn09vbx4mxpUXH9Xrga52oMifTdb
+	fKInnc1E9zDQF1YxHfFbnB4nFdKrEzdb8wtPN3JzJkZ+vW1D+BVd9TbFOEH/RU/QWF1aeaeOIDn
+	5mGaeApR8VUTHmqoG5sSckgBIsLk=
+X-Google-Smtp-Source: AGHT+IFrqlHqRYH87UcQwF4jmAs00nMOADUhfEmbJ0+JBk41kaHnZhqMrZQ7+hARpldminEFJC2jf/8TlhdhVZVtJMo=
+X-Received: by 2002:a05:6870:ecab:b0:2bd:456c:923 with SMTP id
+ 586e51a60fabf-2cc9e59c5fcmr7891241fac.11.1744051718492; Mon, 07 Apr 2025
+ 11:48:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Mp9tbpEoV+X1gcVS"
-Content-Disposition: inline
-In-Reply-To: <202504071134.1AAF30CAF5@keescook>
-X-Cookie: Meester, do you vant to buy a duck?
-
-
---Mp9tbpEoV+X1gcVS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <4651448.LvFx2qVVIh@rjwysocki.net> <8560367.NyiUUSuA9g@rjwysocki.net>
+In-Reply-To: <8560367.NyiUUSuA9g@rjwysocki.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 7 Apr 2025 20:48:26 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH1BaGEagIbW7krbv_XHndcRweKBMxNf5P6IVT2_wOv-gox_ZQ12i4ef3E
+Message-ID: <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to ->update_limits()
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 11:35:33AM -0700, Kees Cook wrote:
-> On Mon, Mar 10, 2025 at 03:24:09PM -0700, Kees Cook wrote:
+On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Since cpufreq_update_limits() obtains a cpufreq policy pointer for the
+> given CPU and reference counts the corresponding policy object, it may
+> as well pass the policy pointer to the cpufreq driver's ->update_limits()
+> callback which allows that callback to avoid invoking cpufreq_cpu_get()
+> for the same CPU.
+>
+> Accordingly, redefine ->update_limits() to take a policy pointer instead
+> of a CPU number and update both drivers implementing it, intel_pstate
+> and amd-pstate, as needed.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> > GCC 15's -Wunterminated-string-initialization saw that these strings
-> > were being truncated. Adjust the initializer so that the needed final
-> > NUL character will be present.
+Hi Srinivas,
 
-> Friendly ping on this patch. Who can pick this up?
+If you have any concerns regarding this patch, please let me know
+(note that it is based on the [05/10]).
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
-
---Mp9tbpEoV+X1gcVS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0HfYACgkQJNaLcl1U
-h9BDKwf9GIS0wm69aFKwCYCEHzmUyEMCsWc3FkSj7LdyIo7YlbKYxpZEAMp8YORn
-YNyEgEEzXhsGV/WCdzgN8b+UlrHf0EBJ+bs9DUIC7JcaTZUw6v4jhkh2omO87pw1
-JsAWaAahKJYna4noOx0RtmTogltXZWqcoXpnePK3wgRGo/4DC+wTbKG6kTUONUJ6
-2kdHU2q0KSJy4TBXlhl4AmG0o9ycy2PKdi8Hs1xTUD7U8rqIQmu9UjNzcdhAu/Ub
-0JBLsZe7s69v585jJjh6ii2URbspiBVcuN9NEigFLP5f/Oxf8Mhm3jIbmVsFHgqV
-wS7oxe7YC+8GvV1mKBUPA/0J7N839w==
-=b0+I
------END PGP SIGNATURE-----
-
---Mp9tbpEoV+X1gcVS--
+> ---
+>  drivers/cpufreq/amd-pstate.c   |    7 ++-----
+>  drivers/cpufreq/cpufreq.c      |    2 +-
+>  drivers/cpufreq/intel_pstate.c |   29 ++++++++++++++++++-----------
+>  include/linux/cpufreq.h        |    2 +-
+>  4 files changed, 22 insertions(+), 18 deletions(-)
+>
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -821,19 +821,16 @@
+>         schedule_work(&sched_prefcore_work);
+>  }
+>
+> -static void amd_pstate_update_limits(unsigned int cpu)
+> +static void amd_pstate_update_limits(struct cpufreq_policy *policy)
+>  {
+> -       struct cpufreq_policy *policy __free(put_cpufreq_policy) =3D cpuf=
+req_cpu_get(cpu);
+>         struct amd_cpudata *cpudata;
+>         u32 prev_high =3D 0, cur_high =3D 0;
+>         bool highest_perf_changed =3D false;
+> +       unsigned int cpu =3D policy->cpu;
+>
+>         if (!amd_pstate_prefcore)
+>                 return;
+>
+> -       if (!policy)
+> -               return;
+> -
+>         if (amd_get_highest_perf(cpu, &cur_high))
+>                 return;
+>
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2741,7 +2741,7 @@
+>                 return;
+>
+>         if (cpufreq_driver->update_limits)
+> -               cpufreq_driver->update_limits(cpu);
+> +               cpufreq_driver->update_limits(policy);
+>         else
+>                 cpufreq_policy_refresh(policy);
+>  }
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -1353,14 +1353,9 @@
+>                 cpufreq_update_policy(cpu);
+>  }
+>
+> -static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
+> +static void __intel_pstate_update_max_freq(struct cpufreq_policy *policy=
+,
+> +                                          struct cpudata *cpudata)
+>  {
+> -       struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> -
+> -       policy =3D cpufreq_cpu_get(cpudata->cpu);
+> -       if (!policy)
+> -               return false;
+> -
+>         guard(cpufreq_policy_write)(policy);
+>
+>         if (hwp_active)
+> @@ -1370,16 +1365,28 @@
+>                         cpudata->pstate.max_freq : cpudata->pstate.turbo_=
+freq;
+>
+>         refresh_frequency_limits(policy);
+> +}
+> +
+> +static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
+> +{
+> +       struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> +
+> +       policy =3D cpufreq_cpu_get(cpudata->cpu);
+> +       if (!policy)
+> +               return false;
+> +
+> +       __intel_pstate_update_max_freq(policy, cpudata);
+>
+>         return true;
+>  }
+>
+> -static void intel_pstate_update_limits(unsigned int cpu)
+> +static void intel_pstate_update_limits(struct cpufreq_policy *policy)
+>  {
+> -       struct cpudata *cpudata =3D all_cpu_data[cpu];
+> +       struct cpudata *cpudata =3D all_cpu_data[policy->cpu];
+> +
+> +       __intel_pstate_update_max_freq(policy, cpudata);
+>
+> -       if (intel_pstate_update_max_freq(cpudata))
+> -               hybrid_update_capacity(cpudata);
+> +       hybrid_update_capacity(cpudata);
+>  }
+>
+>  static void intel_pstate_update_limits_for_all(void)
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -399,7 +399,7 @@
+>         unsigned int    (*get)(unsigned int cpu);
+>
+>         /* Called to update policy limits on firmware notifications. */
+> -       void            (*update_limits)(unsigned int cpu);
+> +       void            (*update_limits)(struct cpufreq_policy *policy);
+>
+>         /* optional */
+>         int             (*bios_limit)(int cpu, unsigned int *limit);
+>
+>
+>
+>
