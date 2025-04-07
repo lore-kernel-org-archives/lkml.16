@@ -1,80 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50E91B87CE;
-	Mon,  7 Apr 2025 14:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C61E19D8A0;
+	Mon,  7 Apr 2025 14:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744034568; cv=none; b=UJ3G2awKvqRSVZUkzS9U3drJ4sUa6l77124dW6G0DN5OuQmbFwQotiVbeoIs5WfPrBOrXw7jIJsUi56yktfPozX8YLFYG+rYrQ9KSd008rBX8hKv9RPM6oPkf4JDqGRO+i47v7wZ7gSbBDBEIszly0jVnmsHtQ535pCIdyXjPZw=
+	t=1744034590; cv=none; b=c38nUZCrUEBBUbGDmxFx6UdqDJbm3ZNi3Fw3WPUIUX1ca2UZL+vMF+Y7Rgl4C5OKoFagQZ1syr/Tn3OwbB/F9TrkYBANnzgWfCINDHcEH5tDUrLop9zW3UsPNjmCCH6nnTiRPBxUdlDfO0F5VRELgKs20jIZjsQ582esOVVPEgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744034568; c=relaxed/simple;
-	bh=VlnB1YXWS5O4F3ARNUCiMdlsg4JVJ9h2WQuVh6h1KeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJgg91K7K0Rruli8BVBR7HDkhPSBkmac3V6Y9UblkFGZsI3icQN8spmMl3ndOrVk4Z4gs7m4RsztCenWVpDDQQR599DpYU9hxQKwkSnedDHW2bovSGf/ohkwxD+e9bhXs64P9rdMLA7IaVwnEQEnI+5sG+HOEI1HeulbBMlBPyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDPGs8hh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744034590; c=relaxed/simple;
+	bh=KPF2la8YsglBTuMvLbWhTYCt+BK0GVxaMR8VNCYLl+o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hr6sHtsvP3AN8LB6HTCetw91hF9IlRPwGVS65TFoGflfUXOwrSPwzdVUNpsdr3aPJu+qkeFVAPjSu+8Xh2ZIE8tQmsqbT3S8p0B4E90T60FsPtYyVXFCQTb0zt8mm5YkK8Ef5QUFaw6n7kGx1QHC9lbz0MqrGrSNwbkkF0IOzDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AuO/IiLC; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDPGs8hh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727E4C4CEE7;
-	Mon,  7 Apr 2025 14:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744034568;
-	bh=VlnB1YXWS5O4F3ARNUCiMdlsg4JVJ9h2WQuVh6h1KeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QDPGs8hhPWPp7SZy2qJI4GyM6iu8eJWJKPRzhkf0Wyo3/9U1TFc1XMP9ISn1+GptU
-	 wWYdUpmWjEtXD2mc/ANf6f245z3zhapUvlVcySFN6htJPBSAdu2xDZ7/N6o4/dfPrE
-	 i57miIGPYI8yvAbeEQRY5pcpx9AXWqjMb2LZKqeFAbFAWy+MzesopqIlXUPnHLWL1N
-	 Zsc12Hz7+ZwYa2kihEuTxTBREFsBV70LmAY9DitzwobRBiSf1SXAlGHIUSQ29foCtK
-	 Rl5ArISqbP97JTn/wxscP0H8vRQ+BijQJqyqyAOyVWAdbY585xWfSDMRbib+K6t8kb
-	 JehuuDjyx7tTQ==
-Date: Mon, 7 Apr 2025 15:02:43 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 0/2] Add support for ADP5055 triple buck regulator.
-Message-ID: <f970a0ae-18db-4506-9f92-d4484ac079f0@sirena.org.uk>
-References: <20250407-upstream-adp5055-v4-0-61dd82369ff2@analog.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AuO/IiLC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 920864429F;
+	Mon,  7 Apr 2025 14:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744034586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0WrqoE2Jvp8HrYqDXCtaMpBnF0ILCPR74SbQnJiE/tU=;
+	b=AuO/IiLCH1azcsZvITOvx+a21+oD/X1FMVcvU1+Dl+Fhe+1avrUWZsoCL/MS1zeiV+vOuc
+	il4AAWGeMn8CIVFtYofoe5ZYlXST2b+ebhZMeE64tCuwkJ2eG8JNkqesOm9sNNyZbQuUio
+	fsxkZEt1K+oRqcyH3d1ZZEqNUM/6FU6pASHNa62tFSLw7x8n8uYY4ESpvTamUaTKYXqEfb
+	8ACGNI4HjFSvxHlx7sORuHfWOq7xbakW3Pwx+0pcONOj3BQWIhqateFaZc4hOgblqwDGnJ
+	AiVtIaW3HqwVj4iZ+yCsiWeD0cB8Ce/3dbapE/uOPkroodfGtbyE5PPzidNrvA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
+Date: Mon, 07 Apr 2025 16:02:59 +0200
+Message-Id: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RMLSE6u+AWDcZBYs"
-Content-Disposition: inline
-In-Reply-To: <20250407-upstream-adp5055-v4-0-61dd82369ff2@analog.com>
-X-Cookie: Meester, do you vant to buy a duck?
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABPb82cC/x3MWwqDMBBG4a3IPDeQTtVetiJFQvpHB2waJqkI4
+ t4b+vg9nLNThgoyPZqdFKtk+cQKPjXkZxcnGHlVE1vu7JlbE+DKVzG+na5YljGVZMLterG+d/f
+ WM9UyKYJs/+tAEcVEbIWex/EDPnw2SG8AAAA=
+X-Change-ID: 20250124-feature_marvell_ptp-f8730c6a94c2
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
+ Richard Cochran <richardcochran@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Kory Maincent <kory.maincent@bootlin.com>, 
+ Russell King <rmk+kernel@armlinux.org.uk>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtfeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugefgudfftefhtdeghedtieeiueevleeludeiieetjeekteehleehfeetuefggeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepr
+ ghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgutghotghhrhgrnhesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
+Add PTP basic support for Marvell 88E151x PHYs.
 
---RMLSE6u+AWDcZBYs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (1):
+      net: phy: Move Marvell PHY drivers to its own subdirectory
 
-On Mon, Apr 07, 2025 at 12:07:49PM +0800, Alexis Czezar Torreno wrote:
+Russell King (1):
+      net: phy: Add Marvell PHY PTP support
 
-> Changes in v4:
-> - adp5055-regulator.c
->    - Removed custom adp5055_is_enabled function and let core handle it
+ MAINTAINERS                                        |   2 +-
+ drivers/net/phy/Kconfig                            |  23 +-
+ drivers/net/phy/Makefile                           |   5 +-
+ drivers/net/phy/marvell/Kconfig                    |  35 +
+ drivers/net/phy/marvell/Makefile                   |   7 +
+ drivers/net/phy/{ => marvell}/marvell-88q2xxx.c    |   0
+ drivers/net/phy/{ => marvell}/marvell-88x2222.c    |   0
+ drivers/net/phy/{ => marvell}/marvell10g.c         |   0
+ .../net/phy/{marvell.c => marvell/marvell_main.c}  |  18 +-
+ drivers/net/phy/marvell/marvell_ptp.c              | 725 +++++++++++++++++++++
+ drivers/net/phy/marvell/marvell_ptp.h              |  26 +
+ drivers/net/phy/marvell/marvell_tai.c              | 279 ++++++++
+ drivers/net/phy/marvell/marvell_tai.h              |  36 +
+ 13 files changed, 1128 insertions(+), 28 deletions(-)
+---
+base-commit: e9363f5834ade5fa092751ed42080edfdf4ff93e
+change-id: 20250124-feature_marvell_ptp-f8730c6a94c2
 
-The custom enable and disable functions are still there?
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
---RMLSE6u+AWDcZBYs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz2wMACgkQJNaLcl1U
-h9CTiAf8DTjZx0ncV61oGe2IKc0tYtsQNqyC/XL5thlQABIU0uk5KpETiUNpjKYf
-Gvx0SnBr15FjSV61QxfCB8pOiGWDvET9Ak7GLrUKn8zFSpZVqgUOsFiiqqFIhmZ2
-zBFTpZ++P6oqfFPFmOUh4fwAUzm8MlIyV4Btlt83FPqTP2nfgqGEUnpFBPdO9jjE
-M/xGL2/Loq9dzyc0lCelx0UmlB0zVc1+5NaToqKYT9yWI4An+3Va+DUYIBUFgOhD
-qVFzZHilUte7tV2WlY7/lvABEldJ4UYPlekAfh2bu5vIqABErsXZpjUkOz5g6sGN
-8efx4tGD4drZFKTdsHP38LIlaI0+nA==
-=MCrc
------END PGP SIGNATURE-----
-
---RMLSE6u+AWDcZBYs--
