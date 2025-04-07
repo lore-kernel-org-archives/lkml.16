@@ -1,166 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E98C215079;
-	Mon,  7 Apr 2025 16:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B457211704;
+	Mon,  7 Apr 2025 16:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044436; cv=none; b=uRyVsYhOFUY6e4BkWufRh7grUkklsCH3yERq0cffVPTbuEbrO34gb/gf6P4ZgDh6Xhw6Ul69f5NLIb2ooXePQHkLOFzT1nICaUML1aghfiDbKyEV4H+9MNV56ZK0FNM7TVp61yPgxlynGvreyqAuQ+BxUvZonEvzqKf5ndqA8G8=
+	t=1744044524; cv=none; b=ionsBwo64AuUJctps8AsHGm4MS0Gazhk4TdnaZ8mEl5hyj0EXqJkr5bqOy64dw3y9bbuygwbH36reOosQ2c/HBx+O2FajGKIyBZDbBovNw8e3kFuexvmAxfco9tpy2Rewj1TgIyniz17fSAffz8kEoSypQMKDzWhZpDJaKz17As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044436; c=relaxed/simple;
-	bh=d/9rF2v6gxz+aVjjloTd50bAqLAn569sdN/hKyUhniA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sAffc7/MaB8h9oVid+spP9sowiKCUiBzIXVPrPiYwAAtP6trHn3vsQNPLWX3XZMHrt2PiTQrfPvebvAHZizyt1h/Vlgd2KDxGBevmvcFsy8axP4pw8eMHGZjop+3Phe+9kBmdW4EUM9TH1/ZYjqDyGalJxThxLJzcIxTVqbx6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YK7Ze1ul; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744044524; c=relaxed/simple;
+	bh=bmjI2mo1WVbWDZeX2Qfbgg6QuEIqWPvfMO/E2wzuVoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5GuFmVo/dW3JJmYGTPkPQ82QU9VeTbPppZt13/iJ+mV2SGBLY66En+DOqQKK9Hu1mEmaUKNYSisPOKuwYINdK9ZEsFeq4qw5rBJhr5POmD8vdADUpqHeKDWUneH97yQMFcW+zNZ/tfV/xwk3ymjLxRvaillw2lmPoBrKD+18Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0XOd+2y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YK7Ze1ul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744044434; x=1775580434;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=d/9rF2v6gxz+aVjjloTd50bAqLAn569sdN/hKyUhniA=;
-  b=YK7Ze1ulO3IPQJIf1oveqFe8p2IG/YiclFxHNSbFlgcWECdQV31TO0HU
-   5CGp7fVZ8/7oVnpr3HR8tTRuKpgw7/zxf0KISObSVDTK1ronrgWpQnSL7
-   JHM6+ambKdgIDL+XQMkc188fwPg1AW0sHLA7c5xSLLehtVLPS/oaNJXic
-   a3rnZMCJjMyrhFmxBjRJXHz2wjL7jnp0iq1DjAJ3C1kmLILSet70IuFaK
-   Z7RNx3v2+BHV78iKU/w1OB9pM2sxGwEgky0jPk3EZCtfwR9QjupNg+tRB
-   8v1rn+kkelZTCp81bvVCP+No9ZKCApIjFz1w42kqK+w8KpjdTFTASU2vQ
-   A==;
-X-CSE-ConnectionGUID: YKW7OwGrSCChaKFcr57O+w==
-X-CSE-MsgGUID: P6pQb+gtToKAn45TPgM4Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45533291"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45533291"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:47:13 -0700
-X-CSE-ConnectionGUID: dEMeJzZ7RJaZ+YDO48bYaw==
-X-CSE-MsgGUID: yioqSJnkQC+IzOwpsUAeHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127767783"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:47:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 7 Apr 2025 19:46:59 +0300 (EEST)
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-    Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-    Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-    Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-    Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, 
-    Douglas Anderson <dianders@chromium.org>, 
-    Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Anusha Srivatsa <asrivats@redhat.com>, 
-    Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
-    =?ISO-8859-15?Q?Herv=E9_Codina?= <herve.codina@bootlin.com>, 
-    Hui Pu <Hui.Pu@gehealthcare.com>, 
-    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-    dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
-    LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev, 
-    imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-    linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-    linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 02/34] platform: arm64: acer-aspire1-ec: convert to
- devm_drm_bridge_alloc() API
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-2-42113ff8d9c0@bootlin.com>
-Message-ID: <a9000632-a6d1-d369-c317-9ee73aa645dc@linux.intel.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com> <20250407-drm-bridge-convert-to-alloc-api-v1-2-42113ff8d9c0@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0XOd+2y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090B7C4CEDD;
+	Mon,  7 Apr 2025 16:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744044524;
+	bh=bmjI2mo1WVbWDZeX2Qfbgg6QuEIqWPvfMO/E2wzuVoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X0XOd+2yo1YmafQv5UKRqkKILylyFSgn3Iz4xMRW+j1EKQW9ycTJEh32M2mW7hgem
+	 zlcNS1fNF2EbOMESsE8UXs+DnHYN87ZwI3oo2q76ugoXNSuzIgw4UyAB67LhQfpPb6
+	 uU91fR/fLX7P25na3pCXCaG5l6fpHgH9PkiujMlHb6ywGAxcyGIPV+kqNbMM87ZOTC
+	 X/fu8nxWevwkXZnKeMrsQENqEoSrapThGfd6o8Ke/uQeTGpu3gO5nvnx5Uxn60NNY3
+	 11d2pBYMao5tJ1RQTeTiKbkbfqyDNfhUoa2WJuXxHf7w01xKypRW3qwb9MccO3Xi60
+	 0fBpFZrKfGooA==
+Date: Mon, 7 Apr 2025 09:48:42 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] crypto: x86/chacha - Remove SIMD fallback path
+Message-ID: <20250407164842.GC2536@sol.localdomain>
+References: <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
+ <20250403021453.GA2872965@google.com>
+ <Z-344xAsx1uTE9OK@gondor.apana.org.au>
+ <20250403032008.GA129577@sol.localdomain>
+ <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
+ <20250403035934.GB129577@sol.localdomain>
+ <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1316811861-1744044419=:936"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Apr 03, 2025 at 12:14:50PM +0800, Herbert Xu wrote:
+> On Wed, Apr 02, 2025 at 08:59:34PM -0700, Eric Biggers wrote:
+> >
+> > But in a lot of cases there is also no reason to even add that restriction.  I'm
+> > not sure why you're so eager to make the library functions harder to use.
+> 
+> I have no intention of making any changes to siphash.  It doesn't
+> even use SIMD.
+> 
+> All I want to do is get rid of the crypto_simd_usable() fallback
+> paths that we currently have in arch/x86/crypto.  This code is
+> never used in hardirq context (and should never be).
+> 
+> For example:
+> 
+> ---8<---
+> Get rid of the fallback path as SIMD is now always usable in softirq
+> context.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
 
---8323328-1316811861-1744044419=:936
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+It looks like this broken patch already got applied for some reason.
 
-On Mon, 7 Apr 2025, Luca Ceresoli wrote:
+First, there doesn't seem to be agreement yet that the library functions should
+have requirements on the calling context.
 
-> This is the new API for allocating DRM bridges.
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->=20
-> ---
->=20
-> Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/arm64/acer-aspire1-ec.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/arm64/acer-aspire1-ec.c b/drivers/platform/=
-arm64/acer-aspire1-ec.c
-> index 958fe1bf5f85bb69ac7962f217de9f0b40cde9a1..438532a047e68799ac53a16a4=
-c813fc16be997b9 100644
-> --- a/drivers/platform/arm64/acer-aspire1-ec.c
-> +++ b/drivers/platform/arm64/acer-aspire1-ec.c
-> @@ -452,9 +452,9 @@ static int aspire_ec_probe(struct i2c_client *client)
->  =09int ret;
->  =09u8 tmp;
-> =20
-> -=09ec =3D devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> -=09if (!ec)
-> -=09=09return -ENOMEM;
-> +=09ec =3D devm_drm_bridge_alloc(dev, struct aspire_ec, bridge, &aspire_e=
-c_bridge_funcs);
-> +=09if (IS_ERR(ec))
-> +=09=09return PTR_ERR(ec);
-> =20
->  =09ec->client =3D client;
->  =09i2c_set_clientdata(client, ec);
-> @@ -497,7 +497,6 @@ static int aspire_ec_probe(struct i2c_client *client)
->  =09fwnode =3D device_get_named_child_node(dev, "connector");
->  =09if (fwnode) {
->  =09=09INIT_WORK(&ec->work, aspire_ec_bridge_update_hpd_work);
-> -=09=09ec->bridge.funcs =3D &aspire_ec_bridge_funcs;
->  =09=09ec->bridge.of_node =3D to_of_node(fwnode);
->  =09=09ec->bridge.ops =3D DRM_BRIDGE_OP_HPD;
->  =09=09ec->bridge.type =3D DRM_MODE_CONNECTOR_USB;
+Second, your patch made unrelated changes that deleted the checks for SSSE3
+support.  Thus dropping support for CPUs that don't support SSSE3.
 
-Hi Luca,
-
-It took a while to locate where the code for the new helper is. I suggest=
-=20
-if you need send another version of the series directly linking to the=20
-commit in the cover letter so that it won't take multiple hoops to find it=
-=20
-if one wants to review the code and is not having all drm trees easily at=
-=20
-hand. Here it is for the benefit of other pdx86 people:
-
-https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b71=
-5ea3d1ba537ef2da95eec
-
-
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
-I assume you want this to go through the drm tree where the helper already=
-=20
-is?
-
---=20
- i.
-
---8323328-1316811861-1744044419=:936--
+- Eric
