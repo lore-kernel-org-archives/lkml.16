@@ -1,60 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7CA1A8F60
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8241A8F60;
+	Mon,  7 Apr 2025 02:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743991932; cv=none; b=OspcmGZloXuEx+rGSEsAGZ2pSBjn/m446OVgK+frHUaqjqipWGMrn2jhWj180vcpbG1JYb/bkaFbUuXz61aMpej3WThHFG5twjf4Fnd605oIunxpW6/ylDr3ArHgxQTOymn7DrrjTbbROjSd0NcchiaOm/XrI95IdmBRkhpUsx0=
+	t=1743992002; cv=none; b=E6wOvKGtqSzGjWzq/v7OMh9H/OMsVvVsTYp5EiJQLRIEFyuBcVpO9UhssaSSDe3B11CXYK1/OBMCXDHQ9PDAmBdf+BKTKcjn6x+iGo2uqa9Xjkw2zsteXYM6mnonRYnsuGU2L4vuzN6R0NpVf5nGNueIG7RepQoThTTSN8fwSCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743991932; c=relaxed/simple;
-	bh=1jdeWWXi13/hetboFMdwN4rP37Vc8xsYW3UO4jUkNMg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tV7c5ArHAaqwCSxf3/90tLNe/Zktrgq+t+zkk8HRAAieKHBIGSCcn5GewizfVsgY1ijyL8mAiH98btwFbxhYurxBeJjhgN98PFS9OVbVJFvI9jqJjW9jJJQLrmoP29cIhJ7bB6ZpczgiRkTNOdXoXkAnbT124I3A9MHxuimVfKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qRmooqh4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743992002; c=relaxed/simple;
+	bh=o4z3lShe5fWdIHOHh/S+LH5XWcmb3GCdzef4vuTNzr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sIBmN08Z8IcQ1FXVBv9ULFcajzXXTaBHSFbn91hqbZtiwksJOSxRxwNkMf3B3sXQAa64DEUib+3SMp23GRqb6HFKe80Zqo2puiPosp3xlXQ0pdcVCx+tziItYQuT3Vz2+3vivLOtDD2JyknTwkjmyNFRJfJkFWNhWBcQ654D/Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwX7Cit3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qRmooqh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3C8C4CEE3;
-	Mon,  7 Apr 2025 02:12:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwX7Cit3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49FA3C4CEE7;
+	Mon,  7 Apr 2025 02:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743991931;
-	bh=1jdeWWXi13/hetboFMdwN4rP37Vc8xsYW3UO4jUkNMg=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=qRmooqh4tXcuuYlmRgwMi6zXJwwT4oD4y8uH0EaqLDvjR1hV4dDQU84OAT4ejYMi2
-	 CWsSBna9YNnYktXP7E6UAcMDgD2tbLDY/DjBCsPah0pCLaz4MdVdbaQ9rx0z22965M
-	 VhMgZNcLts5o6zAOdbcB/EmwK+fNu9bLOA/Z8sT9l14oMfOec8F9dZOV6FTJZHH7Mz
-	 KH8yaEgXI5W4ZMk0h0frgdhCa6NI/EoEtbXTajud1y6DiBKvadygnwbGEqQ8g3esl4
-	 tKgIQgz9RQpG5fevzRtK145Y6pC6arxis8VhCjBDbzIwk7gvpJg1bL1NnyDLQahRqx
-	 DApj0nw4+wq+g==
-Message-ID: <2d4c2367-57bf-42bd-9841-9cc2536f9e0f@kernel.org>
-Date: Mon, 7 Apr 2025 10:12:08 +0800
+	s=k20201202; t=1743992001;
+	bh=o4z3lShe5fWdIHOHh/S+LH5XWcmb3GCdzef4vuTNzr0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cwX7Cit32NcnoA4V0nWHvtDo6VEeOxOMtuNZdyDm76v6LLAm4m6m2wlED28x19Br+
+	 7txtKy6jywWU/sn/V9b8ZYXwq5vFHQ6WlVph5+VxqAFGzUIUMYwK+eZwHLhrpg+QIj
+	 lLbssbxGLatk252iUDug1V4N1xvf7CcLWUecnuefwOOtT+yinw8D7tXQq7cei4lOdP
+	 7LwnqdUO/4KT1WTI3tsCffK5XKzL2ChOv7EnnIv8Y5PJxYzG02HrzbDbUPGPan6Gim
+	 EipdknXnZ2O1vs3n8Q81yDJ2kKVUzLXu7hKrQLNiRVhTeEt8EtHbNiji5mxSXJUefO
+	 p+GNL4M6VbcbQ==
+Date: Mon, 7 Apr 2025 10:11:54 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: mchehab@kernel.org, yujiaoliang@vivo.com, hverkuil@xs4all.nl,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] media: dvb: Add error checking for bcm3510_writeB()
+Message-ID: <20250407101154.191f87cd@sal.lan>
+In-Reply-To: <20250401041141.2016-1-vulab@iscas.ac.cn>
+References: <20250401041141.2016-1-vulab@iscas.ac.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs-tools: apportion atomic write's total
- delay to its operations
-To: Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-References: <20250331202835.4057396-1-daeho43@gmail.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250331202835.4057396-1-daeho43@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/1/25 04:28, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> To utilize the delay option of atomic write more useful, need to
-> apportion it to each operation of it.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+Em Tue,  1 Apr 2025 12:11:41 +0800
+Wentao Liang <vulab@iscas.ac.cn> escreveu:
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+> In  bcm3510_bert_reset(), the function performed multiple writes
+> without checking the return value of bcm3510_writeB(). This could
+> result in silent failures if the writes failed, leaving the BER
+> counter in an undefined state.
 
-Thanks,
+Did you actually had an issue here with a real hardware? If do, please
+describe what happened.
+
+> 
+> Add error checking for each bcm3510_writeB call and propagate any
+> errors immediately. This ensures proper error handling and prevents
+> silent failures during BER counter initialization.
+> 
+> Fixes: 55f51efdb696 ("[PATCH] dvb: flexcop: add BCM3510 ATSC frontend support for Air2PC card")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/media/dvb-frontends/bcm3510.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
+> index d935fb10e620..fc5853fc9595 100644
+> --- a/drivers/media/dvb-frontends/bcm3510.c
+> +++ b/drivers/media/dvb-frontends/bcm3510.c
+> @@ -270,10 +270,18 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
+>  	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
+>  		return ret;
+>  
+> -	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
+> -	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
+> -	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
+> -	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
+> +	b.BERCTL_fa.RESYNC = 0;
+> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
+> +		return ret;
+> +	b.BERCTL_fa.RESYNC = 1;
+> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
+> +		return ret;
+> +	b.BERCTL_fa.RESYNC = 0;
+> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
+> +		return ret;
+> +	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
+> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
+> +		return ret;
+>  
+>  	/* clear residual bit counter TODO  */
+>  	return 0;
