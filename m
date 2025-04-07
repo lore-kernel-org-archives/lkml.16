@@ -1,101 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE667DA7F;
-	Mon,  7 Apr 2025 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D637DA7F;
+	Mon,  7 Apr 2025 10:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744020124; cv=none; b=Ebm5eWJi2vqUjqluFqaEuTers8FXpUehOnhIpipe40KoyGK64X+lhUt/kRZ3DBaIy1VNorDMAhjed80qHN77HVSOblNnz+X7oR1EaA9XFm5GASraBNc85sF/iyR+GIOzFLgKfQTAeZfpXJ1pNgmQF+lmwF2JIlY3aYGYT0fD1rk=
+	t=1744020147; cv=none; b=l/fOOw+A6XZrPawt3R4TQXp//+FExPp+2Dm2pHuiHRYpJv6juItc5ay/GKleA7+U6oSYGltNUfG38zBt2wf2ZvLPORtGikkPofvMCcsAvOagQVAX3UhDuRiwFkE3qV41sxUq8Rqdc79MGfP/I4yq3kfp7mOzCpv6Z+jtz2bkTqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744020124; c=relaxed/simple;
-	bh=rKZ/6WAjoBuHXoOD4i+p9W+oq/5Mz26bPr4EKFlhYz8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dp0jCHy0FApCzjmO9j1W1LJlzNLl/j+AIJGFueDa9jgJEbfxiMcI5ltSjGgkViKUM4G6L7ruBXSwNBJUjfuhXkgE2z9nX+epHqcxU7rw689q5IU+SNHkQLY2JWpUh0zGR5qoE7UrPCnGO1QsHHGG9BGztqD+DsOfyXAvhsB+FlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGL2FK0r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744020147; c=relaxed/simple;
+	bh=cz0sFymjpfC/h77fzceNQsL/NvczhkEObHLXu7XO1kY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BU4k1B/FZkjpvIp9MhoVLG7YXbXR6FZRxKnTSahXYGt1uJZ7NtHZNJT4fjpDE6CClQhpEupRDf8wLG8i6XCr9qqHCbJt6lGjTrzepazOf3mTbaRGvaaa2QW7KXouWtgSRBj4NVEVnIGQNx1KWy4eNs8TDb19/R4mNwMIRhrG8bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7bKih9w; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGL2FK0r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB9DC4CEDD;
-	Mon,  7 Apr 2025 10:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744020124;
-	bh=rKZ/6WAjoBuHXoOD4i+p9W+oq/5Mz26bPr4EKFlhYz8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EGL2FK0rSI0J2kiHNBlNlYgkE9ZkJGI4ta8fvRDqgqxTDTaqfB2OcvTpPdOuZjWEB
-	 Wi6F6M40jZUfL/w0qT/dgciRRJajlEMvlVhxiQz/bUFdn49aMd3RwlbKV7MxIIKcUL
-	 flOCqE7ByDM/wiyPpjyQDsXzGQJGbZ9aNzE20Hg+S2DZzCkwKaX1woFY7NzTs7OoDC
-	 RfWZfzthwcaQi0HWZq2Bz5wJOMm9u7P49znUlT8fkrCaLrnCQBokwH9wHMifyE8cQO
-	 h/f1t4+jEs1qL6+xfIf99P6mg6b22eciBRsFRb0x1maWgXR655oPlT4AhaELm7rbUH
-	 fvcHdHADPMyrw==
-Message-ID: <5555c2e5-029f-4c77-8c6b-3ded2b2f9d33@kernel.org>
-Date: Mon, 7 Apr 2025 11:01:57 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7bKih9w"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2240b4de12bso53283595ad.2;
+        Mon, 07 Apr 2025 03:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744020145; x=1744624945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CsXm6MV5K5BRVbJnpoBwjC4UXp/lFGi2onPtWmwIMd4=;
+        b=E7bKih9wB9GqlTpqgpLdAP6R2hTPWqinhTiCoKqCfGGcVZzR+as+9rnM76HIz8K1vk
+         oBjypiDEfsQ0hZAvzl/Gf0XaC2p7Y4TP22RPZ9ORurBxlL44Ynqs2rMlXZAUzlD79wes
+         THti9atmUmHlAUuc+s0pDv+y+vcNqMVmDs4hkNxRg2HGJ+JV19E9kTgu0QvqKY1+J+ON
+         sRgvNmwGFDzpdlhBsoczJdc4NsLUNKSS4YqvQvfMSi7AHqkpKj58Uii2E0rhx5BTsgDt
+         5xD1MTAHRN4NOkaon7Uuf32Xz8cJM250C1HtKyRFNwERHx8PX4AK/cLdduJawutCvjsg
+         GMcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744020145; x=1744624945;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CsXm6MV5K5BRVbJnpoBwjC4UXp/lFGi2onPtWmwIMd4=;
+        b=J+ydsLBTXnoBxdSAnbe32dAPGG8M6L17/FQXyJV5y4QM+HOgyx16uc8n1wmVtXGHAk
+         Nw5X1NtrihLM/NV3XnEXEFPz98fZId+FBtSYoCm4TaYbeKfQJdkpXN0dWKpvWXFIjhem
+         W5Wo+aV1QyNEL/XGoB+yQ6psfeT/Dg5CQLWJZq+qCQDNcf3kLDeQq0sU3U8ZpVuVLgos
+         s9hBJUeIgS1Vv9JO07t5b1pGFmO1myKTKcMJ64m8qDZ1zcM1M0hMQitDd1uTQCyYELct
+         mw3vfLr8n5mbg3W8keMMRHydIxV+6v2e64S1O1T+7FMeiMEpLpZtLz6Y5n+CE8idcdPV
+         PJFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoAFp6PBP0SECpThR7suYO5uJNc5c9TdkrWs9C+rkr7fq/wiD9A2sbK8HhNxqBr17/ir0=@vger.kernel.org, AJvYcCUyB7A7XUjsfnirx4TQBMtX+CNHMAIalzk6hHLp1XkPATVt/nawnHDs24sQESb9PetPdh97XDIVhVAFlty2VPAN@vger.kernel.org, AJvYcCXF80BFat9kuAIfPvJ1Gph3D7gp4wON8pozghR1M9vPDKTv9yhH1h4Sa4gmQ1fp0vD4HUWWJYz2Fo3TsWDQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLtOqX7u7/vZ+jXNiHVTBUgDOFRhwR81Ek/oXOhGZURRdUhoJB
+	lgD+jwIcr+oP+ciGHDS/LM4ZWG0RnOBCusRahm2+Qi9F7m7a1KOa
+X-Gm-Gg: ASbGncuChG9CvXW73cZi+KWkXNFjrq/+iVDm7aUPmzbM2JUGrjG8WY+INyVHM5QtduG
+	cvBg8vZGxjlcMl1D0jpy6yXA43qSSOtrkQxMxPbUsedOkxarCgsttNcCpeRMHnFMvJN2MPtt/3X
+	a8nLrZryi7GgCXwzZJ0CIPmv+2vp7pBy9fvK2PtbzGNKjnT1xbeNjfGM38IxHv1bAO9iGsWxAEQ
+	CwNX9mFGpHRSDiyrdE7vIQvKyfshA7RqzMuhNqkpmUm/tvFvP8jude2jM79/vB0YSjSr3/HOPNc
+	smqulsR5gSQmPHuV5/MMPeh7B2LVBlbANN3HO1J7HAlUXoVR9KJ0TPlSl7bb1cy5RTxrqN+Dqny
+	/UaNu7g3VcI5wUkImyfz6AzIaHG8=
+X-Google-Smtp-Source: AGHT+IHKvXzsKCjD5FaoB2Koj4MfcM40WxteginhUmUPXspchTARG5Gc585RciLftr+zvxDdSPOxfw==
+X-Received: by 2002:a17:902:d489:b0:21f:f3d:d533 with SMTP id d9443c01a7336-22a8a042586mr129525155ad.2.1744020144746;
+        Mon, 07 Apr 2025 03:02:24 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bfe40sm77080215ad.72.2025.04.07.03.02.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 03:02:24 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: andrii.nakryiko@gmail.com
+Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re:[PATCH v2] selftests/bpf: close the file descriptor to avoid resource leaks
+Date: Mon,  7 Apr 2025 15:31:27 +0530
+Message-ID: <20250407100132.439412-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAE2+fR992BprqDXkZTqi3Mgtq9WErSFvOtxvc16ZT9ufiBLNNQ@mail.gmail.com>
+References: <CAE2+fR992BprqDXkZTqi3Mgtq9WErSFvOtxvc16ZT9ufiBLNNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Some small preparations around CAMSS D-PHY / C-PHY
- support
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Robert Foss
- <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Barnabas Czeman <barnabas.czeman@mainlining.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
- Caleb Connolly <caleb.connolly@linaro.org>, David Heidelberg
- <david@ixit.cz>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241209-camss-dphy-v1-0-5f1b6f25ed92@fairphone.com>
- <D82FU3SIX5RZ.1Y525GJO0UOAA@fairphone.com>
- <eb06daf1-3cc3-4b31-a0bf-bc450cd0f041@linaro.org>
- <7bt-fuRycoJhLN28Wf0QCaz_rljIKilGsNyYSzjHz9Ig8AOEs94AlKMko__dGbNp1SgGCdHvaVZ6tU_9hCvj3Q==@protonmail.internalid>
- <D8IDHJAC4BJ1.WNTMQEJXD2R2@fairphone.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bod@kernel.org>
-In-Reply-To: <D8IDHJAC4BJ1.WNTMQEJXD2R2@fairphone.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17/03/2025 07:45, Luca Weiss wrote:
-> On Wed Feb 26, 2025 at 3:47 PM CET, Bryan O'Donoghue wrote:
->> On 26/02/2025 14:13, Luca Weiss wrote:
->>> Hi all,
->>>
->>> On Mon Dec 9, 2024 at 1:01 PM CET, Luca Weiss wrote:
->>>> Since the hardware blocks on the SoCs generally support both D-PHY and
->>>> C-PHY standards for camera, but the camss driver currently is only
->>>> supporting D-PHY, do some preparations in order to add C-PHY support at
->>>> some point.
->>>>
->>>> Make the dt bindings explicit that the hardware supports both (except
->>>> for MSM8916) but also add a check to the driver that errors out in case
->>>> a dt tries to use C-PHY since that's not supported yet.
->>>>
->>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>>> ---
->>>> Luca Weiss (2):
->>>>         media: dt-bindings: media: camss: Restrict bus-type property
->>>>         media: qcom: camss: Restrict endpoint bus-type to D-PHY
->>>
->>> This series is still pending, both patches got reviews and no pending
->>> comments from what I can see.
->>>
->>> Would be nice to get it in for 6.15.
->>>
->> Yes this should be merged.
->>
->> Thanks for following up.
-> 
-> Hi Bryan, hi Hans,
-> 
-> 6.15 merge window is approaching fast, I wonder if this series was
-> missed still.
-> 
-As soon as possible.
+Static Analyis for bench_htab_mem.c with cppcheck:error
+tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
+error: Resource leak: fd [resourceLeak]
+tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
+error: Resource leak: tc [resourceLeak]
 
+fix the issue  by closing the file descriptor (fd & tc) when
+read & fgets operation fails.
+
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 ---
-bod
+ tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 3 +--
+ tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+index 926ee822143e..297e32390cd1 100644
+--- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
++++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+@@ -279,6 +279,7 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
+ 	}
+ 
+ 	got = read(fd, buf, sizeof(buf) - 1);
++	close(fd);
+ 	if (got <= 0) {
+ 		*value = 0;
+ 		return;
+@@ -286,8 +287,6 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
+ 	buf[got] = 0;
+ 
+ 	*value = strtoull(buf, NULL, 0);
+-
+-	close(fd);
+ }
+ 
+ static void htab_mem_measure(struct bench_res *res)
+diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+index 0b9bd1d6f7cc..10a0ab954b8a 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
++++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+@@ -37,8 +37,10 @@ configure_stack(void)
+ 	tc = popen("tc -V", "r");
+ 	if (CHECK_FAIL(!tc))
+ 		return false;
+-	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
++	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
++		pclose(tc);
+ 		return false;
++	}
+ 	if (strstr(tc_version, ", libbpf "))
+ 		prog = "test_sk_assign_libbpf.bpf.o";
+ 	else
+-- 
+2.43.0
+
