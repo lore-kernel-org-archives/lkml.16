@@ -1,246 +1,96 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C2C225A38
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9575B23A6
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014570; cv=none; b=Iw3WtbexzSeH7fKec0lNI9IvrttmvFc0qTFHlPz9JPD2KzqXujytJ3yrByrFzTgVI2FiHqeSIdcWKK+hiK2b4A6QMHg14w9tV6JlOF8Nxh5pswNFNKCwKxJUS35uEvo2emzIY56p4hms8AY3mwCDhxyVL2aNhXZ0Z6EwbwliYcQ=
+	t=1744014622; cv=none; b=H+PLG+lIAIrBjO1Hc7eVQ8gmjay36ppqddz/aoCqP6fpYlK+fozg+dGKCtO/ge3a6j2lCF965SXVL7IInpxEGu8Z+APQZniI23w+yWS7+luGs6YnULJisIRmaGKH+YIYQ2vEqoKQVLSX9hb/UD0wqpbdfHz26NUJQ6qy9Pri+F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014570; c=relaxed/simple;
-	bh=8Kfv/G+iVQ/sM6Lau2tiEbUkEO834j3Q9kf5WBpyi/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V61+R2WGdcLQ1HlJhc8P6XUGWnlaNTuWoiCwlzc32gPri+/h9Cwv1cHHtoTMThXJu82vgUDq6GEzsLvRhmIyQWG81YWm64haSpyWaZcmbYt6bXOjn46ZkZ2Yho8iI78bGiASCfjy3xRt8/elZc9atGnZJ0CACnI+EueA3UXUQYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=RYJIU2hF; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1744014622; c=relaxed/simple;
+	bh=aLj7wvc4aRbVmLmOqIT/Boj8QXP71Joc96dlj/7+Z4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o3GUZvkmTMvpG4zw2/yB2ezpy6uepvSLRmT4P/As9SyIEW2jiJM8Hgkkw1Ui1jHusc6QTzULMWqPJKDn2vsouaFlS6wObJ5UuY5LsNU28a6erScfbaP1Z0s+riYHMd3V8QZc2gGXHwp6fwlt7LSx3wUZns/FQwSxKFg2zqFtflk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hUITWEUF; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RYJIU2hF"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-227914acd20so44634965ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1744014568; x=1744619368; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSdAs2f+FX9mxAdk7Px3JSEdrERFGwDr3y7nuD5w7Os=;
-        b=RYJIU2hFLTeRYvnGplZB3TLvgq5oikg2vtHmvkRam5ORhQ7AwS6NT2SK1sOEz7P9US
-         lbr6hWrc2s1CGYZXteZKNu3YJ0Ygu/N0U0ZSP0fKQI1W2K+Z+SGol3arG1L10csLhox/
-         t3oyYSNTU1sLorr/xMNSUnprzO8xsQiiC4PeE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744014568; x=1744619368;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hSdAs2f+FX9mxAdk7Px3JSEdrERFGwDr3y7nuD5w7Os=;
-        b=JuqPk7VCf0T1nLXERHqSkAEmbrBvQMp/OLluRA5G6JpoJhM+MqE/H2esZ8DcTT0z+0
-         bR+rQye2sR8h4+SgGJncvmBDCn0Cv1s3IKtNF8K8Q4It9YJI/60nmUoQojj7JzXwPO8T
-         30y9ZzdUVpjXG8vDWLeO+cer4GoeWxapU73fXQXckg+uVZPoe/ENIX2F2WXA3L4V+v+3
-         BjMXxhsu7dRDpX+nl1pWkMerh7xLCLT6GZWwkLp/3sPml5D7noSLRhPYgmBO385K4EFN
-         8LX1fxiQnUtFLEMP2+TlSi1v3tSlcIXrXTnPSodPC0pa5oNoNNx+CWmugS6iFjnqs8Hv
-         u+Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUYuQvlzpYHbngKxRSVos/a+4cHHkguYngiMit0Fpk+ED67TSiyoXt2FclMeCJv7BEE+OYRfi5sJ5pmcWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygOuJKvHjundixampQCd3ybCzon48dWV6nHPNkvFoA3QnYW5PL
-	CRVDCVRXUjoRyVFh23DOh5eUMvQ/+NJTL9Na/h8ZzvZ+NCoXH8eUx0c6b6gobUQ=
-X-Gm-Gg: ASbGnctxxRz68uQN7vD9ghW95JR4rmt3mAb5oh1yAqwxm+s9tuBi3l9DESd2iEsBsFl
-	0OKWqUyAw8EdkAfDsfGTqkDZ7Anw/0C63MkwB8rU9G7J9Fpe5HrywO48wpNdVSLzZpzK5q+PY8d
-	Rc3RkrsofrQid/ZyPyx9HeMubXBOZwChm122oAoRYkp3JoZZeEb7xmHV1NfYzPoP5v5FyT9rUGi
-	JoCqJDYgU+jwTbM2nqjn1eWYiaTlB0as+3To3UjNXyPffd2N55zmcMOXUrnC3+yEVLLdzobiQpY
-	UC4ly/icOVQP2fPNYbYoPg21THjXlzALRSLLG5NxUejsbbyNdw==
-X-Google-Smtp-Source: AGHT+IF0CSzr5MZm3MP3ECWI39e3e76OnxJJystHy5NBHpjYzkDs4iGYAsXV3wu+sJhREp3R/IAdWg==
-X-Received: by 2002:a17:902:d487:b0:224:3994:8a8c with SMTP id d9443c01a7336-229765bd473mr177056685ad.8.1744014567961;
-        Mon, 07 Apr 2025 01:29:27 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2297865e093sm75458025ad.132.2025.04.07.01.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:29:27 -0700 (PDT)
-From: Roger Pau Monne <roger.pau@citrix.com>
-To: Juergen Gross <jgross@suse.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	xen-devel@lists.xenproject.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hUITWEUF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744014606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9YMRGIFJnLx4JH/mAcbrqwA3HkZ8jRCw13qcVKYMT8Q=;
+	b=hUITWEUFkJiXKzBiqjgbNCKsXh5LuM3w4UQ67FMGEyZqQXuT7fB8asLkgLFoLPIxOyQ0d5
+	aYAynOaGvC7HNO+t8t4aA+nrLkHP7PQDuaWcF9RV6BWIO5TQkLqiahU+7v2FStwI27StCX
+	1ya3kuJze61BM/rPDzumn38z8Kx+sLQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH v3] x86/xen: fix balloon target initialization for PVH dom0
-Date: Mon,  7 Apr 2025 10:28:37 +0200
-Message-ID: <20250407082838.65495-1-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.48.1
+Subject: [PATCH] HID: appletb-kbd: Use secs_to_jiffies() instead of msecs_to_jiffies()
+Date: Mon,  7 Apr 2025 10:29:30 +0200
+Message-ID: <20250407082930.742229-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-PVH dom0 re-uses logic from PV dom0, in which RAM ranges not assigned to
-dom0 are re-used as scratch memory to map foreign and grant pages.  Such
-logic relies on reporting those unpopulated ranges as RAM to Linux, and
-mark them as reserved.  This way Linux creates the underlying page
-structures required for metadata management.
+Use secs_to_jiffies() instead of msecs_to_jiffies() and avoid scaling
+the module params 'appletb_tb_idle_timeout' and 'appletb_tb_dim_timeout'
+to milliseconds. secs_to_jiffies() expands to simpler code and reduces
+the size of 'hid-appletb-kbd.ko'.
 
-Such approach works fine on PV because the initial balloon target is
-calculated using specific Xen data, that doesn't take into account the
-memory type changes described above.  However on HVM and PVH the initial
-balloon target is calculated using get_num_physpages(), and that function
-does take into account the unpopulated RAM regions used as scratch space
-for remote domain mappings.
+Reformat the code to silence multiple checkpatch warnings.
 
-This leads to PVH dom0 having an incorrect initial balloon target, which
-causes malfunction (excessive memory freeing) of the balloon driver if the
-dom0 memory target is later adjusted from the toolstack.
+No functional changes intended.
 
-Fix this by using xen_released_pages to account for any pages that are part
-of the memory map, but are already unpopulated when the balloon driver is
-initialized.  This accounts for any regions used for scratch remote
-mappings.  Note on x86 xen_released_pages definition is moved to
-enlighten.c so it's uniformly available for all Xen-enabled builds.
-
-Take the opportunity to unify PV with PVH/HVM guests regarding the usage of
-get_num_physpages(), as that avoids having to add different logic for PV vs
-PVH in both balloon_add_regions() and arch_xen_unpopulated_init().
-
-Much like a6aa4eb994ee, the code in this changeset should have been part of
-38620fc4e893.
-
-Fixes: a6aa4eb994ee ('xen/x86: add extra pages to unpopulated-alloc if available')
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-Changes since v2:
- - For x86: Move xen_released_pages definition from setup.c (PV specific)
-   to enlighten.c (shared between all guest modes).
+ drivers/hid/hid-appletb-kbd.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Changes since v1:
- - Replace BUG_ON() with a WARN and failure to initialize the balloon
-   driver.
----
- arch/x86/xen/enlighten.c | 10 ++++++++++
- arch/x86/xen/setup.c     |  3 ---
- drivers/xen/balloon.c    | 34 ++++++++++++++++++++++++----------
- 3 files changed, 34 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index 43dcd8c7badc..1b7710bd0d05 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -70,6 +70,9 @@ EXPORT_SYMBOL(xen_start_flags);
-  */
- struct shared_info *HYPERVISOR_shared_info = &xen_dummy_shared_info;
- 
-+/* Number of pages released from the initial allocation. */
-+unsigned long xen_released_pages;
-+
- static __ref void xen_get_vendor(void)
- {
- 	init_cpu_devs();
-@@ -466,6 +469,13 @@ int __init arch_xen_unpopulated_init(struct resource **res)
- 			xen_free_unpopulated_pages(1, &pg);
+diff --git a/drivers/hid/hid-appletb-kbd.c b/drivers/hid/hid-appletb-kbd.c
+index d4b95aa3eecb..2f78db891cb9 100644
+--- a/drivers/hid/hid-appletb-kbd.c
++++ b/drivers/hid/hid-appletb-kbd.c
+@@ -172,7 +172,8 @@ static void appletb_inactivity_timer(struct timer_list *t)
+ 		if (!kbd->has_dimmed) {
+ 			backlight_device_set_brightness(kbd->backlight_dev, 1);
+ 			kbd->has_dimmed = true;
+-			mod_timer(&kbd->inactivity_timer, jiffies + msecs_to_jiffies(appletb_tb_idle_timeout * 1000));
++			mod_timer(&kbd->inactivity_timer,
++				jiffies + secs_to_jiffies(appletb_tb_idle_timeout));
+ 		} else if (!kbd->has_turned_off) {
+ 			backlight_device_set_brightness(kbd->backlight_dev, 0);
+ 			kbd->has_turned_off = true;
+@@ -188,7 +189,8 @@ static void reset_inactivity_timer(struct appletb_kbd *kbd)
+ 			kbd->has_dimmed = false;
+ 			kbd->has_turned_off = false;
  		}
- 
-+		/*
-+		 * Account for the region being in the physmap but unpopulated.
-+		 * The value in xen_released_pages is used by the balloon
-+		 * driver to know how much of the physmap is unpopulated and
-+		 * set an accurate initial memory target.
-+		 */
-+		xen_released_pages += xen_extra_mem[i].n_pfns;
- 		/* Zero so region is not also added to the balloon driver. */
- 		xen_extra_mem[i].n_pfns = 0;
+-		mod_timer(&kbd->inactivity_timer, jiffies + msecs_to_jiffies(appletb_tb_dim_timeout * 1000));
++		mod_timer(&kbd->inactivity_timer,
++			jiffies + secs_to_jiffies(appletb_tb_dim_timeout));
  	}
-diff --git a/arch/x86/xen/setup.c b/arch/x86/xen/setup.c
-index c3db71d96c43..3823e52aef52 100644
---- a/arch/x86/xen/setup.c
-+++ b/arch/x86/xen/setup.c
-@@ -37,9 +37,6 @@
- 
- #define GB(x) ((uint64_t)(x) * 1024 * 1024 * 1024)
- 
--/* Number of pages released from the initial allocation. */
--unsigned long xen_released_pages;
--
- /* Memory map would allow PCI passthrough. */
- bool xen_pv_pci_possible;
- 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 163f7f1d70f1..ee165f4f7fe6 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -675,7 +675,7 @@ void xen_free_ballooned_pages(unsigned int nr_pages, struct page **pages)
- }
- EXPORT_SYMBOL(xen_free_ballooned_pages);
- 
--static void __init balloon_add_regions(void)
-+static int __init balloon_add_regions(void)
- {
- 	unsigned long start_pfn, pages;
- 	unsigned long pfn, extra_pfn_end;
-@@ -698,26 +698,38 @@ static void __init balloon_add_regions(void)
- 		for (pfn = start_pfn; pfn < extra_pfn_end; pfn++)
- 			balloon_append(pfn_to_page(pfn));
- 
--		balloon_stats.total_pages += extra_pfn_end - start_pfn;
-+		/*
-+		 * Extra regions are accounted for in the physmap, but need
-+		 * decreasing from current_pages to balloon down the initial
-+		 * allocation, because they are already accounted for in
-+		 * total_pages.
-+		 */
-+		if (extra_pfn_end - start_pfn >= balloon_stats.current_pages) {
-+			WARN(1, "Extra pages underflow current target");
-+			return -ERANGE;
-+		}
-+		balloon_stats.current_pages -= extra_pfn_end - start_pfn;
- 	}
-+
-+	return 0;
  }
  
- static int __init balloon_init(void)
- {
- 	struct task_struct *task;
-+	int rc;
+@@ -407,7 +409,8 @@ static int appletb_kbd_probe(struct hid_device *hdev, const struct hid_device_id
+ 	} else {
+ 		backlight_device_set_brightness(kbd->backlight_dev, 2);
+ 		timer_setup(&kbd->inactivity_timer, appletb_inactivity_timer, 0);
+-		mod_timer(&kbd->inactivity_timer, jiffies + msecs_to_jiffies(appletb_tb_dim_timeout * 1000));
++		mod_timer(&kbd->inactivity_timer,
++			jiffies + secs_to_jiffies(appletb_tb_dim_timeout));
+ 	}
  
- 	if (!xen_domain())
- 		return -ENODEV;
- 
- 	pr_info("Initialising balloon driver\n");
- 
--#ifdef CONFIG_XEN_PV
--	balloon_stats.current_pages = xen_pv_domain()
--		? min(xen_start_info->nr_pages - xen_released_pages, max_pfn)
--		: get_num_physpages();
--#else
--	balloon_stats.current_pages = get_num_physpages();
--#endif
-+	if (xen_released_pages >= get_num_physpages()) {
-+		WARN(1, "Released pages underflow current target");
-+		return -ERANGE;
-+	}
-+
-+	balloon_stats.current_pages = get_num_physpages() - xen_released_pages;
- 	balloon_stats.target_pages  = balloon_stats.current_pages;
- 	balloon_stats.balloon_low   = 0;
- 	balloon_stats.balloon_high  = 0;
-@@ -734,7 +746,9 @@ static int __init balloon_init(void)
- 	register_sysctl_init("xen/balloon", balloon_table);
- #endif
- 
--	balloon_add_regions();
-+	rc = balloon_add_regions();
-+	if (rc)
-+		return rc;
- 
- 	task = kthread_run(balloon_thread, NULL, "xen-balloon");
- 	if (IS_ERR(task)) {
+ 	kbd->inp_handler.event = appletb_kbd_inp_event;
 -- 
-2.48.1
+2.49.0
 
