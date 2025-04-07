@@ -1,85 +1,91 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A8D1B042E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F186F1B042E;
+	Mon,  7 Apr 2025 18:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051578; cv=none; b=tGCSycEAYj24dvrV3SK1jA8iuS2OPrOPfDv+GPlqVBhucpyWvqQf1C1E0vuBNKj1+cOrGyOXOQ5vU1PhDuIyHooI6tgo0EbLqZmeQoFTBWywxtS5XNdqfsH3Q8PKkLZogPsJkSYCpq0+2s/DQYGMGyGsVuP+2sgsaYM+VtZfqDw=
+	t=1744051590; cv=none; b=W03jblO/G/lXA7HtbYwoBd1n+o0a4oKwNo6cNEUvnmitHUdUdrCeVnT7irYR1T6sx1pbG/Hfjpg/8KUg/0HIlu/7eiIxORT58pbpJ7TB32Cj+2aDUqVfSzpixmKIu5UEHHJUTGJ9DV5WgvHovbrASkgwbcyWmW9Mtmd7dVqb6gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051578; c=relaxed/simple;
-	bh=NW8SNkBC+lnA6Mzu4/dOLLMXDoCcHH2kYMdqGrM6xhM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VI70AGTrv3x95tUCNiGefyTZgKD2rPtNKx6WY7FOcPN/MRVydSPzf1HwDYkDyqY5UiJZ+0Z6Nwhu/1/zNJXqmUd9Fq6Os2FthNZdSaV+GWhBnmrz7Gi1WDBX/xlpiD5yoKvTE+o7BQxitNlbZOQUtEUvzQkKnIJuXDYLierMsUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRgC4ySx; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744051590; c=relaxed/simple;
+	bh=t93cdI/wL24j2HR4ce39FZz6lJqa0QJlRalczKG2iHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jRtBdAYrua0wPcu67kvORdjiXEDiCdJFFWH1wwoKhGD3r+n0L/VsrLdN+N5HAFOicX1ub66PC6KKOFfNnsxK9LY0DhhAkeN01oqJaQEWMER3Tq11Enk0upatqhVcpwskCdK/1UPRMKYCbRlIRZmo6yDD5P2FfPv7oFXijEC0QPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upzcL7hy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRgC4ySx"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f6ca9a3425so55720977b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744051576; x=1744656376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHBVItkFP8JokejqK+7zcI5BSfS0WcrvkgqQS6ipqsA=;
-        b=gRgC4ySxl5yyqoqGkSshRDkwDIM6SJFrvLTyheM2vIdWVrhg7F2PNTUYDDHda9loz6
-         8skT1IxTrKJs08oohRKiT87iX4t4Ib0OF11UHuT27m1oIsY65+N9p2Eo9PYvx4oRui9Q
-         YDga5nJpeiLTP7komDfY5RZ+m6KkutfkiUIqfJuuJ3mUx8/1NOAhe+UKDpNl2u0KGodm
-         lqwnYbxovDfxPLcnN+cE0io+MAlO+YzonwbUS4SVKwWKz+vC8JY8/J0xRE5Zf72W1BQO
-         SPU3hrVFEv/CA62/kQtkAA4Yo2/GO42TX6YziM02CoKrn0eUDKVNWmTiht1gd8KD3oRR
-         NOgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744051576; x=1744656376;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZHBVItkFP8JokejqK+7zcI5BSfS0WcrvkgqQS6ipqsA=;
-        b=cD6fbp7Os2TiDnvYbnWncJ+279pTTEi3ARBKZJSh7toRHfpozLyYw5Qn3QwvSPPqtM
-         DScy/YmF4eUn6eY2RR2AoGwnXLBuguXOir4+QDpPsq/leIvFANi2CiEi/uznHxFjq/3B
-         SIAwHA6eL8mXmrT3lcT1HBPXhrwAABpn9r+kI8/UL0jKS5dF5LNIXW/wuTYLqefnjS5P
-         MJ/pKfajHzLTNtsuxy55QDxupv3HlHucM+ZUGBwzycJ3eyTIsLsjL3jGE5H+wihbzmM/
-         M0RmQ1u/i8tFQ6gxBO64sNDAIGCHXSRUwjWvg1sB5BQVTKelpw64h20X+q6c2hyqgwdi
-         ZdNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4iaCxfUXXJlSynjZgo8oak7aL0I7LWTgiNlIRetVNDbNi0a0fw2G+XrD/5IARiYgoBVpuMbIdLp4U0Yo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiUWQa7fAY/hdjwOINN72FXHEfIRdnypgWfRKztIhxXxhLrtMy
-	Uocc8ykCKfc3E/JAr8lQG7njfGC2lOxNF4ij+vLThXD8Aq7hGJoQN8j6yA==
-X-Gm-Gg: ASbGncv1E2X/Fc6zIUHf7hMdIT1pYkWF6KFgnJXxgY+5osNRe8M2KQkRqWYb4l5g0GW
-	+JNHemJWXZLYwo9Lm5KMgNJ7BzVUNIqKOWufN5+5oQwQm9So54+1mMKEmYZ4hqDxa5r3opeBQ41
-	Np+9LpuM/5A3SS9KZll4JdkUqS8D1e92ziLUuxEhqARw1hpylMbVpPms+G0HvetEHG5dZh2WWjW
-	/XEwqbsHff4WSaEHpTIpLKUVmxLq7U3AEZRsJMbMPsDWGCEkUEezjL3CeQHLMatJaFFHOfUczlU
-	Q/tE2ScOg818H9VeQYTqKaEuwLdpoN6GFxucDWjKnXlm
-X-Google-Smtp-Source: AGHT+IHbJ06pq/E2ugjcshaj60ukdclUMvAOFl2fu2a8Qdq4Vl7FLX2T5QPRP7eA/xApIF54E80ENQ==
-X-Received: by 2002:a05:690c:f09:b0:6f9:7920:e813 with SMTP id 00721157ae682-703f4126b38mr153227147b3.4.1744051575616;
-        Mon, 07 Apr 2025 11:46:15 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:73::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1fefcb9sm26610907b3.125.2025.04.07.11.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:46:15 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] test
-Date: Mon,  7 Apr 2025 11:46:12 -0700
-Message-ID: <20250407184613.986462-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250407184327.31779-1-joshua.hahnjy@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upzcL7hy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59521C4CEDD;
+	Mon,  7 Apr 2025 18:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744051589;
+	bh=t93cdI/wL24j2HR4ce39FZz6lJqa0QJlRalczKG2iHE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=upzcL7hygJ/keMMrQfuERZ7goqYflE9P2ZNFyBvMwS++4GRb3FsbSPrc8ij6Il9mj
+	 h/iUwF5PfmCV7Uy/m3OY+WnepzR9VBlmyzXRX8wYKLF68DoTIJIKpCvq9+KHN/hutb
+	 ZPKeQRsnqXmUH4A49TYmoxucX1yPwpYtXLqZ1dQ5tdwhe9luhudB2O01dTRHiDvdA5
+	 FZHzjguUtWd1tvyhky5O9Y3G21VywD6t9vYee21/qvxhM0xIai3rp1saQFuY9BPvUQ
+	 V2pm9bs+ZdxNau5iAG4YX7e7/J28He7y+R19cdT/8z6IriHEfE/+AfFCoEVt3cHkKG
+	 1LUtbbqogcZFg==
+Date: Mon, 7 Apr 2025 19:46:20 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/5] iio: adc: ad7380: add ad7389-4 support
+Message-ID: <20250407194620.7d5e92df@jic23-huawei>
+In-Reply-To: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
+References: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon,  7 Apr 2025 14:43:27 -0400 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+On Tue, 01 Apr 2025 17:50:07 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-I'm really sorry about this, I was making some changes to my environment.
-I saw that there was no To: target but missed that there were still some Cc
-targets. I'll be more careful in the future.
+> While developing this driver, we glossed over AD7389-4 since we didn't
+> have hardware to test it. However, it should be trivial enough to add
+> support without testing. It is basically the same as AD7380-4 but
+> instead of no internal reference, it has no external reference. And we
+> already have support for chips with internal reference only (ADAQ).
+> 
+> We have the typical DT bindings/driver/documentation patches for it plus
+> a few patches to shuffle around the existing code for supporting chips
+> with internal-reference-only to make it generic enough to support this
+> chip as well.
+Series applied to the togreg branch of iio.git (which I just rebased on rc1)
+Will initially push out as testing though to let 0-day have a first poke
+at it.
 
-Joshua
+Thanks,
+
+Jonathan
+
+> 
+> ---
+> David Lechner (5):
+>       dt-bindings: iio: adc: ad7380: add AD7389-4
+>       iio: adc: ad7380: rename internal_ref_only
+>       iio: adc: ad7380: move internal reference voltage to chip_info
+>       iio: adc: ad7380: add ad7389-4
+>       Documentation: iio: ad7380: add AD7389-4
+> 
+>  .../devicetree/bindings/iio/adc/adi,ad7380.yaml    | 11 +++++
+>  Documentation/iio/ad7380.rst                       |  7 +++
+>  drivers/iio/adc/ad7380.c                           | 50 +++++++++++++++++++---
+>  3 files changed, 61 insertions(+), 7 deletions(-)
+> ---
+> base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
+> change-id: 20250401-iio-ad7380-add-ad7389-4-1f6d3d7dc749
+> 
+> Best regards,
+
