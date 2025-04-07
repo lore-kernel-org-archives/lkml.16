@@ -1,215 +1,737 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21124110D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498D924888D;
+	Mon,  7 Apr 2025 12:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030182; cv=none; b=GJErnipD25CyS3kxIHplQXfiRKqgUzoX3yRVhwL7ngiXpHb0DRWknnkV0RarvskCz9G8MTj1idd8KgpZL8Z3kiVvoFy9Xze97nebw71VpmM8s/NjPd7stHej+LQ7y6Q4PgZk/aQUuRScPoczDY0tjEhEAz/ZoA9DKKozZ6CMV6s=
+	t=1744030194; cv=none; b=eOBnzD6IbI4c7sAwDT9P94FQF8MiHTllWWuQEY02ESUEyGUK7+XApWNiJbiAuEVhPcIDSn4sebfbyaCb941QWf6R/sD9ju+OTsqL7IHKEcp6cNiiEz6ZToBt6ZrS0rzunjFJHEu9MsGvNAEzB2ov5Tls10jawQMlU1WI6ABZwyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030182; c=relaxed/simple;
-	bh=5Rjt0OmOgyBh0Hk9qKotl7Tw8k0MIV3Ui8TfkTavLRc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rxJHf5qbqBmmBlxSffP72ELO2tW5FCczrk79yydI/iNcctU5nXVfAZwOHUwbeAwRC9HpDow8k5M1nEbL/BN62XwNaPmHy9Z5v2k7mexjbpqYZ4xy4vX9wKTIJnATEhiLtrAm6Ph847JEDfoYQDVeRAV+BN6U0aAaD5Mjan0nloU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oU5PXqDW; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744030194; c=relaxed/simple;
+	bh=rczLqmgzVEJDTbv03/ZXtLz1y9KEhnpHc8FuYBa/GyA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DQluYdD5nKL544M0yvaq1j+4OVEn/OqHS5IW74q2uQhaBAmDpgF0pKQukDS/VOo18mGh98/oAuSAcP23j88lMphixly60sQ8xeVgUOXmz3/pthykJ+jZeLB+IrzwTofADfFlVgHzzb2KdS5zNE20AfsOnGTeL/VTI1n5/mcR9cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=L8yv3B5S; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oU5PXqDW"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a59so45777691fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744030178; x=1744634978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cG8Bhzh73CareWikA5dmwBfOw2vAqPOPb9zdHSUnIjw=;
-        b=oU5PXqDWcEMJ9U9C5nhuIuBWipWV4ck9VrbPmBiIjTQdYYDiVRtB2RevUJc8uPSrss
-         sWc50/eQ7tb/u36jy8/rc/vbcJG+gVIHOSmzyL4XMeB14QVL+NpuYx9t6S3N1zssjGs2
-         QKlV0nsYLiOKfI1/32vbyADpcHp/mNQv2ncQI9JdFDuhzlUal/UlXV6Ch+9LbjEx9/fe
-         MAv750DMedC0jN08BbCYnW9YkvV/0hdmfPmCDWiLv1GODldPFa3vvqpkisxtv+gds/cM
-         wpFJuRP3iPMzPr2vRQDksXtu5CfiVpWrgMjw2e+9a6Ze0KfcPvFR9+9XJ+M5EVjZRwxP
-         +pOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744030178; x=1744634978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cG8Bhzh73CareWikA5dmwBfOw2vAqPOPb9zdHSUnIjw=;
-        b=Lvsk+M/PGShXnhwbFYShjQoAwFSimvkT6aFOIG6pNz0iMtd1fJbLbzEk0TPv37FHf0
-         UeKDL//TGRAE3AZ/7ZNZTBzNH8JIu2Xpiu3JFXNkkIhVarx8kf6N27QGH5R98JyBXqnJ
-         rAp49pQuFfCbiZSRRfae+X7R7ReEY+Sb42G5ofTFsMWv/t6wzxCxq4UEjD/EAGrnb5De
-         Nm+n2J61nGeYvnzjpW88qSKcptC61dsxvUAOxcsyuVP+Gf7UPoahv7BiLOZFHtz1yjQS
-         BW2c+cm3JRA+29ve8OTqbzxv59BRpyiSeppIbikzDTib0kLWCdcUU5eUXnewGQX1I5DN
-         O02w==
-X-Forwarded-Encrypted: i=1; AJvYcCXDEFdicJFdC/DM3ZIeGZmITn50bEnItlDbOAUb2GDutfkZB8CYslYNiOwHMQA215mTwVvpytlm5Wdp/Cg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdpnXEpoAGI2gahGMznnQ1RJw4WoH6ZvJLOWWB9vh/knqtmSfg
-	E8KNAW2LdYoSHlh1l6KYLqYXeCjaaUMcq7JIvESpg7VSnVbNdi9a3jcQUaoS0xPbEoPCE7TDSYd
-	3XM5SWNpgBlL2IeQD/KgVi7Rv0hKOUXFcE5ghqA==
-X-Gm-Gg: ASbGncsSxQFApmR4PQWSVm9EZ1EsjzklYJaAd+/dvVcUA6OUcRDcxVMEt2Er/0tBYkG
-	qPnvhMmyIYU5O15n8RT+k75w1MUaBJoghEhkMRMD27i8wAKT/lKVGO3dQJ/fmKUmg8XSJEpATeS
-	NWHqO0t6XAbnqjx1Aj17YFS0hhqECLMCkRC/Ax7q+23Nx+CYER2cgwQmAFgg==
-X-Google-Smtp-Source: AGHT+IFyk5MBLzW+HJxDNWm25Qd2OJklXuf9B/7SyoM0ktCHQBbFPpai+73EoGhyTZSFIUdntbI2hMp+pXO45Mpy6DE=
-X-Received: by 2002:a05:651c:989:b0:30b:a185:47d8 with SMTP id
- 38308e7fff4ca-30f0be05e8fmr31888031fa.4.1744030178422; Mon, 07 Apr 2025
- 05:49:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="L8yv3B5S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=zmvbF+0Mf+JIQ1Lm1SAlzZRlkj0yKojM2KBxWe2iqdE=; b=L8yv3B5Sj9M0FRlLtVoa6dp6Zl
+	UOUrhHss5PcvPKquqaKrFX/DKtq9LICiMVSbjQznIB2lzvxNAGCV2zWEWMiuwxNc/80THMVr1gjvk
+	dKGBgUkz/Kkg1NSDV3+VnLMjzef4Pe5PjL7ln+vfklZuwED2bQeXryPOti+SjxV4vwkAuu1CBSNMT
+	y0s6zWxdclg6XhZAkY2qsKZTsockXSyLKM/YpZiL4ReBBVzbKwNUZ3ITvz9Iz1nWoGP84XUvMJo3P
+	s9IdH8e0Y3Nn/RYgffNQaPvdWgf/1WTz622RFuYisGTSa9aLWIxk7UFOw9bFxCWIXEQsKczS3c2we
+	+q4URulg==;
+Received: from [122.175.9.182] (port=42615 helo=cypher.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u1lv7-0000000047R-3HIK;
+	Mon, 07 Apr 2025 18:19:46 +0530
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nm@ti.com,
+	ssantosh@kernel.org,
+	tony@atomide.com,
+	richardcochran@gmail.com,
+	glaroque@baylibre.com,
+	schnelle@linux.ibm.com,
+	m-karicheri2@ti.com,
+	rdunlap@infradead.org,
+	diogo.ivo@siemens.com,
+	basharath@couthit.com,
+	parvathi@couthit.com,
+	horms@kernel.org,
+	jacob.e.keller@intel.com,
+	m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com,
+	afd@ti.com,
+	s-anna@ti.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v4 08/11] net: ti: prueth: Adds support for RX interrupt coalescing/pacing
+Date: Mon,  7 Apr 2025 18:19:01 +0530
+Message-Id: <20250407124904.1051462-9-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250407102528.1048589-1-parvathi@couthit.com>
+References: <20250407102528.1048589-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
- <Z-5BHzTEed607Afz@smile.fi.intel.com> <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
- <Z-5uJxij4jmhint3@smile.fi.intel.com> <CAMRc=MdPiz_YD451Arrm4mT-SwU_OdK1U-WozPxsvt11mHsLZQ@mail.gmail.com>
- <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com>
-In-Reply-To: <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Apr 2025 14:49:27 +0200
-X-Gm-Features: ATxdqUHDB8wRBWK_IOb2X8iX7ngS4W9_fJCR7LfAjHD5CevMDBBHFxmwamyJr2g
-Message-ID: <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Thu, Apr 3, 2025 at 3:22=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Apr 03, 2025 at 02:23:24PM +0200, Bartosz Golaszewski wrote:
-> > On Thu, Apr 3, 2025 at 1:17=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > > But this encourages people to get sloppy and just ignore
-> > > > > > error pointers returned from gpiod_get()?
-> > > > >
-> > > > > From where did you come to this conclusion, please? We have many =
-subsystems
-> > > > > that ignore invalid resource on the release stage, starting from =
-platform
-> > > > > device driver core.
-> > > >
-> > > > The fact that many people do something does not mean it's correct.
-> > >
-> > > And it doesn't tell it is incorrect either. We are going to conclude =
-that there
-> > > are pros and cons on each of the approaches, but I don't see much a p=
-oint in
-> > > yours, sorry.
-> >
-> > My point is:
->
-> I understand your point, but I disagree with the omni appliance of 3.
->
-> > You get a descriptor with gpiod_get_optional(). You can get three
-> > types of a pointer back:
-> >
-> > 1. Valid descriptor: you can use it in all GPIO consumer functions.
-> > 2. NULL-pointer: you can still use it in all GPIO consumer functions.
-> > They will act as if they succeeded. This is expected as this is how
-> > the "optional" functionality is implemented. Had it been written in
-> > rust, we'd do it better but we use the tools we have. It's very much a
-> > "valid" value to pass to gpiod routines.
-> > 3. IS_ERR() value. If you try to pass it to any of the GPIO consumer
-> > functions, they will return it back to you and print a warning. Why?
-> > Because it's an invalid object. And there's no reason to make
-> > gpiod_put() an exemption.
->
-> No, the release is special as it's used in error paths and there often
-> it is simpler for all just to ignore invalid pointers rather then put
-> a burden on the driver developers. The gpiod_set_*() and gpiod_get_*() ov=
-er
-> _assumed requested_ descriptor of course should fail any attempt to be su=
-pplied
-> with an invalid pointer.
->
-> > You never could have used an IS_ERR()
-> > correctly. Look at what devres does - if it got an IS_ERR(), it never
-> > schedules a release action.
->
-> This is again unrelated. devres is an upper layer and we don't care about=
- its
-> implementation which is logically correct since we assume to put on the l=
-ist
-> only _valid_ resources.
->
->
-> > > > Many other subsystem scream loudly when that happens, so I would be=
- ok
-> > > > with adding a big WARN_ON(IS_ERR(desc)).
-> > >
-> > > I disagree. This is not that case where passing an error pointer shou=
-ld be
-> > > an issue.
-> > >
-> > > > > > Also: all other calls error out on IS_ERR(desc) so why would we=
- make it an
-> > > > > > exception?
-> > > > >
-> > > > > Because it's _release_ stage that participates in the cleaning up=
- of
-> > > > > the allocated resources in error paths. It's a common approach in
-> > > > > the kernel. I would rather ask what makes GPIOLIB so special abou=
-t it?
-> > > >
-> > > > Just because it's the release stage, does not mean you shouldn't ca=
-re
-> > > > about the correctness of the consumer code. Passing an IS_ERR(descr=
-)
-> > > > to any of the GPIO APIs can happen if the user ignores an error
-> > > > returned by gpiod_get(). That's not alright.
-> > >
-> > > Have you ever seen such a code in the cases when it's okay (like in p=
-latform
-> > > device driver users)? I do not. So, the above is based on the hypothe=
-tical
-> > > assumption that somebody will make silly things. If you _really_ care=
- about
-> > > checking the error, add __must_check to the respective functions.
-> >
-> > They already have but people do the following (like in the affected SPI=
- driver):
-> >
-> > struct driver_data *data =3D kzalloc();
-> >
-> > Then elsewhere:
-> >
-> > data->gpiod =3D gpiod_get();
-> > if (IS_ERR(data->gpiod))
-> >     return PTR_ERR(data->gpiod);
-> >
-> > The data struct now contains the IS_ERR() value. I don't think it
-> > makes any sense for it to carry it around and I don't want to enable
-> > it.
->
-> It's up to the driver developer.
->
-> Again, if you want the result of gpiod_get() to be tested, mark it so.
-> That's why I think your initial point is mistargetting.
->
+From: Murali Karicheri <m-karicheri2@ti.com>
 
-It's already annotated, I said it before.
+Changes for supporting RX interrupt pacing feature using eCAP peripheral
+available in PRU-ICSS.
 
-> Ask yourself, why we don't fail kfree() on a NULL object? (from kfree() p=
-.o.v.
-> it's an invalid one) Or if you want to be more precise in analogue with t=
-he
-> gpiod_get_optional(), consider
->
->         p =3D kmalloc(0);
->         kfree(p);
->
-> and this is valid code despite p being not NULL!
+Instead of interrupting the CPU for every packet received, the firmware
+running on the PRU-ICSS will interrupt the CPU based on the configured
+time period, if interrupt pacing is enabled.
 
-We're discussing an interface returning an object, not a simple buffer
-so it's a bad example. Try feeding an IS_ERR() to regmap_exit() or
-numerous other deinit functions and tell me if that works.
+The time period can be configured using ethtool.
 
-I explained why I believe this change is wrong and I will allow myself
-to not accept it unless Linus is very positively in favor.
+RX pacing/coalescing is implemented Using eCAP timer events to give CPU
+breathing space from ISR to perform other critical tasks.
 
-Bartosz
+The changes include new eCAP driver module which will initialization and
+configures the ICSS eCAP HW.
+
+Makefile and Kernel config has been updated to compile the eCAP driver
+and to insert the module.
+
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+---
+ drivers/net/ethernet/ti/Kconfig               |  12 +
+ drivers/net/ethernet/ti/Makefile              |   2 +
+ drivers/net/ethernet/ti/icssm/icssm_ethtool.c |  38 +++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.c  |  25 +-
+ drivers/net/ethernet/ti/icssm/icssm_prueth.h  |   3 +
+ .../net/ethernet/ti/icssm/icssm_prueth_ecap.c | 312 ++++++++++++++++++
+ .../net/ethernet/ti/icssm/icssm_prueth_ecap.h |  47 +++
+ drivers/net/ethernet/ti/icssm/icssm_switch.h  |  23 ++
+ 8 files changed, 461 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.c
+ create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.h
+
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index ab20f22524cb..94383712d48a 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -229,6 +229,18 @@ config TI_ICSS_IEP
+ 	  To compile this driver as a module, choose M here. The module
+ 	  will be called icss_iep.
+ 
++config TI_PRUETH_ECAP
++	tristate "TI PRUETH ECAP driver"
++	depends on TI_PRUSS
++	default TI_PRUSS
++	help
++	  This enables support for the PRU-ICSS Enhanced Capture (eCAP) driver
++	  used for rx interrupt pacing support in PRU Driver/firmwares
++	  (Dual EMAC, HSR, PRP).
++
++	  To compile this driver as a module, choose M here. The module
++	  will be called prueth_ecap.
++
+ config TI_PRUETH
+ 	tristate "TI PRU Ethernet EMAC driver"
+ 	depends on PRU_REMOTEPROC
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 852640ce2b15..dce14a30d4ac 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -49,3 +49,5 @@ icssg-y := icssg/icssg_common.o \
+ 	   icssg/icssg_ethtool.o
+ 
+ obj-$(CONFIG_TI_ICSS_IEP) += icssg/icss_iep.o
++
++obj-$(CONFIG_TI_PRUETH_ECAP) += icssm/icssm_prueth_ecap.o
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+index e4b2a0b7d275..31d6908dd1b1 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+@@ -8,6 +8,7 @@
+ #include <linux/if_bridge.h>
+ #include <linux/if_vlan.h>
+ #include "icssm_prueth.h"
++#include "icssm_prueth_ecap.h"
+ #include "icssm_vlan_mcast_filter_mmap.h"
+ #include "../icssg/icss_iep.h"
+ 
+@@ -301,6 +302,40 @@ static int icssm_emac_get_ts_info(struct net_device *ndev,
+ 	return 0;
+ }
+ 
++static int icssm_emac_get_coalesce(struct net_device *ndev,
++				   struct ethtool_coalesce *coal,
++				   struct kernel_ethtool_coalesce *kernel_coal,
++				   struct netlink_ext_ack *extack)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++	struct prueth_ecap *ecap;
++
++	ecap = prueth->ecap;
++	if (IS_ERR(ecap))
++		return -EOPNOTSUPP;
++
++	return ecap->get_coalesce(emac, &coal->use_adaptive_rx_coalesce,
++				  &coal->rx_coalesce_usecs);
++}
++
++static int icssm_emac_set_coalesce(struct net_device *ndev,
++				   struct ethtool_coalesce *coal,
++				   struct kernel_ethtool_coalesce *kernel_coal,
++				   struct netlink_ext_ack *extack)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++	struct prueth_ecap *ecap;
++
++	ecap = prueth->ecap;
++	if (IS_ERR(ecap))
++		return -EOPNOTSUPP;
++
++	return ecap->set_coalesce(emac, coal->use_adaptive_rx_coalesce,
++				  coal->rx_coalesce_usecs);
++}
++
+ /* Ethtool support for EMAC adapter */
+ const struct ethtool_ops emac_ethtool_ops = {
+ 	.get_drvinfo = icssm_emac_get_drvinfo,
+@@ -315,5 +350,8 @@ const struct ethtool_ops emac_ethtool_ops = {
+ 	.get_rmon_stats = icssm_emac_get_rmon_stats,
+ 	.get_eth_mac_stats = icssm_emac_get_eth_mac_stats,
+ 	.get_ts_info = icssm_emac_get_ts_info,
++	.supported_coalesce_params = ETHTOOL_COALESCE_RX_USECS,
++	.get_coalesce = icssm_emac_get_coalesce,
++	.set_coalesce = icssm_emac_set_coalesce,
+ };
+ EXPORT_SYMBOL_GPL(emac_ethtool_ops);
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+index 39ca83c6614f..8c6270c5cb87 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+@@ -30,6 +30,7 @@
+ 
+ #include "icssm_prueth.h"
+ #include "icssm_vlan_mcast_filter_mmap.h"
++#include "icssm_prueth_ecap.h"
+ #include "../icssg/icssg_mii_rt.h"
+ #include "../icssg/icss_iep.h"
+ 
+@@ -1207,8 +1208,10 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ {
+ 	struct prueth_emac *emac = netdev_priv(ndev);
+ 	struct prueth *prueth = emac->prueth;
++	struct prueth_ecap *ecap;
+ 	int ret;
+ 
++	ecap = prueth->ecap;
+ 	/* set h/w MAC as user might have re-configured */
+ 	ether_addr_copy(emac->mac_addr, ndev->dev_addr);
+ 
+@@ -1218,6 +1221,9 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ 	icssm_prueth_emac_config(emac);
+ 
+ 	icssm_emac_set_stats(emac, &emac->stats);
++	/* initialize ecap for interrupt pacing */
++	if (!IS_ERR(ecap))
++		ecap->init(emac);
+ 
+ 	if (!prueth->emac_configured) {
+ 		icssm_iptp_dram_init(emac);
+@@ -2163,12 +2169,25 @@ static int icssm_prueth_probe(struct platform_device *pdev)
+ 		goto netdev_exit;
+ 	}
+ 
++	/* Make rx interrupt pacing optional so that users can use ECAP for
++	 * other use cases if needed
++	 */
++	prueth->ecap = icssm_prueth_ecap_get(np);
++	if (IS_ERR(prueth->ecap)) {
++		ret = PTR_ERR(prueth->ecap);
++		if (ret != -EPROBE_DEFER)
++			dev_info(dev,
++				 "No ECAP. Rx interrupt pacing disabled\n");
++		else
++			goto iep_put;
++	}
++
+ 	/* register the network devices */
+ 	if (eth0_node) {
+ 		ret = register_netdev(prueth->emac[PRUETH_MAC0]->ndev);
+ 		if (ret) {
+ 			dev_err(dev, "can't register netdev for port MII0");
+-			goto iep_put;
++			goto ecap_put;
+ 		}
+ 
+ 		prueth->registered_netdevs[PRUETH_MAC0] =
+@@ -2204,6 +2223,10 @@ static int icssm_prueth_probe(struct platform_device *pdev)
+ 		unregister_netdev(prueth->registered_netdevs[i]);
+ 	}
+ 
++ecap_put:
++	if (!IS_ERR(prueth->ecap))
++		icssm_prueth_ecap_put(prueth->ecap);
++
+ iep_put:
+ 	icss_iep_put(prueth->iep);
+ 
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+index 8a5f1647466a..dc6284441f6d 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+@@ -12,6 +12,7 @@
+ #include <linux/types.h>
+ #include <linux/pruss_driver.h>
+ #include <linux/remoteproc/pruss.h>
++#include <linux/netdevice.h>
+ 
+ #include "icssm_switch.h"
+ #include "icssm_prueth_ptp.h"
+@@ -396,6 +397,7 @@ struct prueth {
+ 	struct regmap *mii_rt;
+ 	struct icss_iep *iep;
+ 
++	struct prueth_ecap *ecap;
+ 	const struct prueth_private_data *fw_data;
+ 	struct prueth_fw_offsets *fw_offsets;
+ 
+@@ -405,6 +407,7 @@ struct prueth {
+ 
+ 	unsigned int eth_type;
+ 	size_t ocmc_ram_size;
++	struct mutex mlock; /* serialize access */
+ 	u8 emac_configured;
+ 	u8 base_mac[ETH_ALEN];
+ };
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.c b/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.c
+new file mode 100644
+index 000000000000..7603188103c3
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.c
+@@ -0,0 +1,312 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* PRUETH Ecap driver for Interrupt pacing support. eCAP is used by
++ * firmware to implement Rx Interrupt pacing for PRUETH driver using
++ * ECAP1 and ECAP2.  Firmware uses ECAP as a timer to implement
++ * interrupt pacing logic. For HSR/PRP, the interrupt pacing can
++ * be enabled/disabled for both ports together as there is a common
++ * control for both ports, where as for Dual EMAC, interrupt pacing
++ * can be enabled or disabled independently for both Ethernet ports.
++ * SRAM memory location stores the configuration for interrupt pacing
++ * such as enable/disable flag and timeout values.
++ *
++ * TODO: This is marked as a HACK driver since the correct solution
++ * is to move the initialization of the ECAP registers to firmware.
++ * Driver has nothing to do ECAP as it is used by firmware and it
++ * is expected that firmware does the initialization.
++ *
++ * Copyright (C) 2018-2020 Texas Instruments Incorporated - https://www.ti.com
++ *	Murali Karicheri <m-karicheri2@ti.com>
++ */
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
++#include "icssm_switch.h"
++#include "icssm_prueth_ecap.h"
++
++/* ECAP registers */
++#define ECAP_CAP1			8
++#define ECAP_CAP2			0xC
++#define ECAP_ECCTL2			0x2A
++
++#define ECAP_ECCTL2_TSCTRSTOP_MASK	BIT(4)
++#define ECAP_ECCTL2_CAP_APWM_MASK	BIT(9)
++
++#define ECAP_ECCTL2_INIT_VAL		(ECAP_ECCTL2_TSCTRSTOP_MASK | \
++					 ECAP_ECCTL2_CAP_APWM_MASK)
++#define ECAP_CAP2_MAX_COUNT		0xFFFFFFFF
++
++/* TODO: Driver assumes that ECAP runs at 200Mhz clock. But on some
++ * platforms, PRU ICSS clock rate may be changed by user in which case
++ * the pacing logic will not work as expected. Update the driver and
++ * firmware if ECAP/PRUSS clock rate is ever changed. Based on this
++ * assumption each tick is 5 nsec. i.e 1000/200
++ */
++#define ECAP_TICK_NSEC			5
++
++/* in usec */
++/* Duration of 3 frames of 1528 bytes each. If we go beyond this,
++ * receive buffer overflow may happen assuming 4 MTU buffer. So
++ * set this as the limit
++ */
++#define MAX_RX_TIMEOUT_USEC		(123 * 3)
++
++/* Dual EMAC defaults */
++static struct rx_int_pacing_offsets pacing_offsets_defaults[PRUETH_NUM_MACS] = {
++	{ INTR_PAC_STATUS_OFFSET_PRU0, INTR_PAC_TMR_EXP_OFFSET_PRU0,
++	  INTR_PAC_PREV_TS_OFFSET_PRU0 },
++	{ INTR_PAC_STATUS_OFFSET_PRU1, INTR_PAC_TMR_EXP_OFFSET_PRU1,
++	  INTR_PAC_PREV_TS_OFFSET_PRU1 },
++};
++
++static int icssm_prueth_ecap_config_pacing(struct prueth_emac *emac,
++					   u32 use_adaptive,
++					   u32 new_timeout_val)
++{
++	struct rx_int_pacing_offsets *offsets;
++	struct prueth *prueth = emac->prueth;
++	u8 val = INTR_PAC_DIS_ADP_LGC_DIS;
++	struct prueth_ecap *ecap;
++	void __iomem *sram;
++	u32 pacing_ctrl;
++	int port;
++
++	ecap = prueth->ecap;
++	sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
++	port = (emac->port_id == PRUETH_PORT_MII0) ?
++				PRUETH_MAC0 : PRUETH_MAC1;
++	offsets = &ecap->int_pacing_offsets[port];
++	pacing_ctrl = offsets->rx_int_pacing_ctrl;
++
++	if (!new_timeout_val) {
++		/* disable pacing */
++		writeb_relaxed(val, sram + pacing_ctrl);
++		/* Timeout separate */
++		ecap->timeout[port] = new_timeout_val;
++		return 0;
++	}
++
++	if (use_adaptive)
++		val = INTR_PAC_ENA_ADP_LGC_ENA;
++	else
++		val = INTR_PAC_ENA_ADP_LGC_DIS;
++
++	if (!ecap->timeout[port]) {
++		/* disable to enable transition */
++		writeb_relaxed(INTR_PAC_DIS_ADP_LGC_DIS, sram + pacing_ctrl);
++		/* For EMAC set timeout for specific port and for
++		 * LRE for both ports
++		 */
++		if (PRUETH_IS_EMAC(prueth)) {
++			if (!port) {
++				offsets =
++					&ecap->int_pacing_offsets[PRUETH_MAC0];
++				writel_relaxed(new_timeout_val *
++						NSEC_PER_USEC / ECAP_TICK_NSEC,
++						sram +
++						offsets->rx_int_pacing_exp);
++				writel_relaxed(INTR_PAC_PREV_TS_RESET_VAL,
++					       sram +
++					       offsets->rx_int_pacing_prev);
++				ecap->timeout[PRUETH_MAC0] = new_timeout_val;
++			} else {
++				offsets =
++					&ecap->int_pacing_offsets[PRUETH_MAC1];
++				writel_relaxed(new_timeout_val *
++						NSEC_PER_USEC / ECAP_TICK_NSEC,
++						sram +
++						offsets->rx_int_pacing_exp);
++				writel_relaxed(INTR_PAC_PREV_TS_RESET_VAL,
++					       sram +
++					       offsets->rx_int_pacing_prev);
++				ecap->timeout[PRUETH_MAC1] = new_timeout_val;
++			}
++		}
++	} else {
++		/* update */
++		if (PRUETH_IS_EMAC(prueth)) {
++			if (!port) {
++				offsets =
++					&ecap->int_pacing_offsets[PRUETH_MAC0];
++				writel_relaxed(new_timeout_val *
++						NSEC_PER_USEC / ECAP_TICK_NSEC,
++						sram +
++						offsets->rx_int_pacing_exp);
++				ecap->timeout[PRUETH_MAC0] = new_timeout_val;
++			} else {
++				offsets =
++					&ecap->int_pacing_offsets[PRUETH_MAC1];
++				writel_relaxed(new_timeout_val *
++						NSEC_PER_USEC / ECAP_TICK_NSEC,
++						sram +
++						offsets->rx_int_pacing_exp);
++				ecap->timeout[PRUETH_MAC1] = new_timeout_val;
++			}
++		}
++	}
++
++	writeb_relaxed(val, sram + pacing_ctrl);
++
++	return 0;
++}
++
++/**
++ * icssm_prueth_ecap_init - ecap driver init
++ *
++ * @emac: EMAC data structure
++ *
++ */
++static void icssm_prueth_ecap_init(struct prueth_emac *emac)
++{
++	struct prueth *prueth = emac->prueth;
++
++	if (!prueth->emac_configured || PRUETH_IS_EMAC(prueth))
++		icssm_prueth_ecap_config_pacing(emac, 0, 0);
++}
++
++static int icssm_prueth_ecap_get_coalesce(struct prueth_emac *emac,
++					  u32 *use_adaptive_rx_coalesce,
++					  u32 *rx_coalesce_usecs)
++{
++	struct rx_int_pacing_offsets *pacing_offsets;
++	struct prueth *prueth = emac->prueth;
++	struct prueth_ecap *ecap;
++	void __iomem *sram;
++	int port;
++	u32 val;
++
++	ecap = prueth->ecap;
++	sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
++	port = (emac->port_id == PRUETH_PORT_MII0) ?
++			PRUETH_MAC0 : PRUETH_MAC1;
++	pacing_offsets = &ecap->int_pacing_offsets[port];
++	val = readb_relaxed(sram + pacing_offsets->rx_int_pacing_ctrl);
++	*use_adaptive_rx_coalesce = (val == INTR_PAC_ENA_ADP_LGC_ENA);
++	*rx_coalesce_usecs = ecap->timeout[port];
++
++	return 0;
++}
++
++static int icssm_prueth_ecap_set_coalesce(struct prueth_emac *emac,
++					  u32 use_adaptive_rx_coalesce,
++					  u32 rx_coalesce_usecs)
++{
++	struct prueth *prueth = emac->prueth;
++	int ret;
++
++	if (rx_coalesce_usecs  > MAX_RX_TIMEOUT_USEC)
++		return -EINVAL;
++
++	mutex_lock(&prueth->mlock);
++	/* Start or restart the pacing timer. */
++	ret = icssm_prueth_ecap_config_pacing(emac, use_adaptive_rx_coalesce,
++					      rx_coalesce_usecs);
++	mutex_unlock(&prueth->mlock);
++
++	return ret;
++}
++
++void icssm_prueth_ecap_put(struct prueth_ecap *ecap)
++{
++	device_lock(ecap->dev);
++	ecap->client_np = NULL;
++	device_unlock(ecap->dev);
++	put_device(ecap->dev);
++}
++EXPORT_SYMBOL_GPL(icssm_prueth_ecap_put);
++
++struct prueth_ecap *icssm_prueth_ecap_get(struct device_node *np)
++{
++	struct platform_device *pdev;
++	struct device_node *ecap_np;
++	struct prueth_ecap *ecap;
++
++	ecap_np = of_parse_phandle(np, "ti,ecap", 0);
++	if (!ecap_np || !of_device_is_available(ecap_np))
++		return ERR_PTR(-ENODEV);
++
++	pdev = of_find_device_by_node(ecap_np);
++	of_node_put(ecap_np);
++
++	if (!pdev)
++		/* probably IEP not yet probed */
++		return ERR_PTR(-EPROBE_DEFER);
++
++	ecap = platform_get_drvdata(pdev);
++	if (!ecap)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	device_lock(ecap->dev);
++	if (ecap->client_np) {
++		device_unlock(ecap->dev);
++		dev_err(ecap->dev, "ECAP is already acquired by %s",
++			ecap->client_np->name);
++		return ERR_PTR(-EBUSY);
++	}
++	ecap->client_np = np;
++	device_unlock(ecap->dev);
++	get_device(ecap->dev);
++
++	return ecap;
++}
++EXPORT_SYMBOL_GPL(icssm_prueth_ecap_get);
++
++static int icssm_prueth_ecap_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct prueth_ecap *ecap;
++	struct resource *res;
++	int i;
++
++	ecap = devm_kzalloc(dev, sizeof(*ecap), GFP_KERNEL);
++	if (!ecap)
++		return -ENOMEM;
++
++	ecap->dev = dev;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	ecap->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ecap->base))
++		return -ENODEV;
++
++	/* Initialize the ECAP timer. It is a common timer used
++	 * by firmware for rx interrupt pacing.
++	 */
++	writew_relaxed(ECAP_ECCTL2_INIT_VAL, ecap->base + ECAP_ECCTL2);
++	writel_relaxed(ECAP_CAP2_MAX_COUNT, ecap->base + ECAP_CAP1);
++	writel_relaxed(ECAP_CAP2_MAX_COUNT, ecap->base + ECAP_CAP2);
++
++	/* initialize SRAM memory offsets for rx pace time control */
++	for (i = 0; i < PRUETH_NUM_MACS; i++)
++		ecap->int_pacing_offsets[i] = pacing_offsets_defaults[i];
++	ecap->get_coalesce = icssm_prueth_ecap_get_coalesce;
++	ecap->set_coalesce = icssm_prueth_ecap_set_coalesce;
++	ecap->init = icssm_prueth_ecap_init;
++
++	dev_set_drvdata(dev, ecap);
++
++	return 0;
++}
++
++static const struct of_device_id prueth_ecap_of_match[] = {
++	{ .compatible = "ti,pruss-ecap", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, prueth_ecap_of_match);
++
++static struct platform_driver prueth_ecap_driver = {
++	.driver = {
++		.name = "prueth-ecap",
++		.of_match_table = prueth_ecap_of_match,
++	},
++	.probe = icssm_prueth_ecap_probe,
++};
++module_platform_driver(prueth_ecap_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("TI PRUETH ECAP driver for Rx Interrupt pacing");
++MODULE_AUTHOR("Murali Karicheri <m-karicheri2@ti.com>");
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.h b/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.h
+new file mode 100644
+index 000000000000..d422756bc27f
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth_ecap.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Texas Instruments ICSS Enhanced Capture (eCAP) Driver
++ *
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ */
++#ifndef __NET_TI_PRUETH_ECAP_H
++#define __NET_TI_PRUETH_ECAP_H
++
++#include "icssm_prueth.h"
++
++/* SRAM offsets for firmware pacing timer configuration */
++struct rx_int_pacing_offsets {
++	u32 rx_int_pacing_ctrl;
++	u32 rx_int_pacing_exp;
++	u32 rx_int_pacing_prev;
++};
++
++struct prueth_ecap {
++	struct device *dev;
++	void __iomem *base;
++	struct device_node *client_np;
++	struct rx_int_pacing_offsets int_pacing_offsets[PRUETH_NUM_MACS];
++	u32 timeout[PRUETH_NUM_MACS];
++	void (*init)(struct prueth_emac *emac);
++	int (*get_coalesce)(struct prueth_emac *emac,
++			    u32 *use_adaptive_rx_coalesce,
++			    u32 *rx_coalesce_usecs);
++	int (*set_coalesce)(struct prueth_emac *emac,
++			    u32 use_adaptive_rx_coalesce,
++			    u32 rx_coalesce_usecs);
++};
++
++#if IS_ENABLED(CONFIG_TI_PRUETH_ECAP)
++struct prueth_ecap *icssm_prueth_ecap_get(struct device_node *np);
++void icssm_prueth_ecap_put(struct prueth_ecap *ecap);
++#else
++static inline struct prueth_ecap *icssm_prueth_ecap_get(struct device_node *np)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void icssm_prueth_ecap_put(struct prueth_ecap *ecap)
++{};
++#endif
++
++#endif /* __NET_TI_PRUETH_ECAP_H */
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_switch.h b/drivers/net/ethernet/ti/icssm/icssm_switch.h
+index 0053191380b7..cb5ddd536747 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_switch.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_switch.h
+@@ -259,4 +259,27 @@
+ #define P0_COL_BUFFER_OFFSET	0xEE00
+ #define P0_Q1_BUFFER_OFFSET	0x0000
+ 
++/* Below Rx Interrupt pacing defines. */
++/* shared RAM */
++/* 1 byte for pace control */
++#define INTR_PAC_STATUS_OFFSET                       0x1FAF
++#define INTR_PAC_STATUS_OFFSET_PRU1                  0x1FAE
++#define INTR_PAC_STATUS_OFFSET_PRU0                  0x1FAF
++/* Interrupt Pacing disabled, Adaptive logic disabled */
++#define INTR_PAC_DIS_ADP_LGC_DIS                     0x0
++/* Interrupt Pacing enabled, Adaptive logic disabled */
++#define INTR_PAC_ENA_ADP_LGC_DIS                     0x1
++/* Interrupt Pacing enabled, Adaptive logic enabled */
++#define INTR_PAC_ENA_ADP_LGC_ENA                     0x2
++
++/* 4 bytes | previous TS from eCAP TSCNT for PRU 0 */
++#define INTR_PAC_PREV_TS_OFFSET_PRU0                 0x1FB0
++/* 4 bytes | timer expiration value for PRU 0 */
++#define INTR_PAC_TMR_EXP_OFFSET_PRU0                 0x1FB4
++/* 4 bytes | previous TS from eCAP TSCNT for PRU 1 */
++#define INTR_PAC_PREV_TS_OFFSET_PRU1                 0x1FB8
++/* 4 bytes | timer expiration value for PRU 1 */
++#define INTR_PAC_TMR_EXP_OFFSET_PRU1                 0x1FBC
++#define INTR_PAC_PREV_TS_RESET_VAL                   0x0
++
+ #endif /* __ICSS_SWITCH_H */
+-- 
+2.34.1
+
