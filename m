@@ -1,127 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8559D230BCD;
-	Mon,  7 Apr 2025 09:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529DE23372D;
+	Mon,  7 Apr 2025 09:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019649; cv=none; b=n9SZP3URSJwPol0BP/ezfAHpQiUh9umb798rsXJmItFMetf0GJviJy/UjcgqeD4KnJ8kXl1Yaii9L32CnHv8tNYB2xpBTSI20itYM2Map5UO/HTu3l+yPWulNMyTfCr8/MPN/qHG/peQIO/peHY6eGbq2qOdZTXYEv3eI4E1mUg=
+	t=1744019649; cv=none; b=N5fNbyLeGrIUBtDvDPmLk7DcZtW0plQKbFw6urYJGzH4Yq9xAgdOfxyRTg8590ktneYuNnwM67TMpSFnXwVlmYPsP/xYhRs9S32PsHHt8XJRkIpL/KN0KJdNWhjxJiUNF+Jj6xeYlQaje8xJwMpRTL8JK/JzitTWheX4sNfRgPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744019649; c=relaxed/simple;
-	bh=XFvfvv7QetTQVtT65VitPXl9f9r55NGlzqiql5VK65o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c8xbr1nwSSsXLRhD0VM3wS1q8Ag+rXtDbTOpqLQ4bn4wwG/lBZcJ4E0GylSt1a5qbNf02rqYiNLK4hVR2RlzOSKo1EfcUPUO/6ObFqD9bI9aNk7NsPgg/fBxsFJps8Qno36PmM06k26ULfwagcAFkJlBsNGcmFhf0/ZZPOI46sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A5DC4CEDD;
-	Mon,  7 Apr 2025 09:54:05 +0000 (UTC)
-Message-ID: <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
-Date: Mon, 7 Apr 2025 11:54:04 +0200
+	bh=/62GKGmmu3E9YZWHOM6Xl3Z0iVTLdRYw5PPueeHH5Dg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NP4O+FjyrCU5WkembweZO05p0zwU40IcOyp5tJ3H0u26/KSEc1dxtEysItnFtZNDI7TJFOkHwW/zhVQB/gM6NGQ3mxS7zMfPrTgWqJVxSnkHPYkNQySD769PFBgM3SYi0AEQhwit1ll3Vr6iTgX61Q1OBcdQk5UKXYaJr0h4QgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWW1g7qZ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWW1g7qZ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227d6b530d8so33591965ad.3;
+        Mon, 07 Apr 2025 02:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744019647; x=1744624447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O8diRuAQehXi7R+D5qp01L9GbmQB2F98eyfpHLigrsU=;
+        b=jWW1g7qZi8bAlcPd31sLQt6Ib7Ve4MRbkCbN+3CmqOdrbNKGT64XITBS/MdgX3oD08
+         sExi1nvxknXBLtGovey/rcZ8imvQZEQc/iXL5w+afyIB2nhNdIosG3tSVKjW8YvTnrHE
+         OlNEfZT+89qzolyM0jApTMEXyDzQsLmX06aIfo8rKYHHY8F9zvqoC8WREOlPdTM9bOiE
+         oVQgJYFVMJLHTxpNrHsAHUW/WO9LIs8WAKtDbQcyO3AHHh1nWsJ4Iz01IS1qkx4HZuU6
+         NyyAmhfYZWGZUOVHwfe4X1RIuQ6n/JyjR7n/AWZ6tDn/dB8pnJ8QkpZvi9Y1evWMYl8j
+         hg2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744019647; x=1744624447;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O8diRuAQehXi7R+D5qp01L9GbmQB2F98eyfpHLigrsU=;
+        b=v9A0iYT1Vc9ZVt+8jDvYfHsI8X30P+mPifi72rwL0/EJeG1iKXevnLl01FIrXvkMhi
+         IGvmmIn5v3Prj7nPujE0I9eSHXJ+bjdP2HCeHRGo/Zn0F6TetiMQTC/QX9zEnFhQ3fwo
+         KG7ioOwLBMFNmdf1q+L47rESwOYB+lHy0hmmm3Ha9WpRqtXV/3Hr3hD0Ta4I1sqFtX7H
+         nTygRk2nctB5sOIxOYIfbzr7AJbDkHqGBQiRVT33Tiz+2Iq+FmIrNSJPYC/ID9MEuxje
+         csnt4IscO72MjYH6vc9HVOkz3V9MP7xLc1QNM48JzXlZ9DQnGFXHh1Fsj6iIGnmWx0aR
+         CiUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnB5277Rg5MzH9czlwj4q8c6OIdcNhuoTRnKouJmklUeTk32RS+okVJjBW0AxVV3rBN9d1Mp9PpTRPHQ==@vger.kernel.org, AJvYcCXHRb0uK6XvUo+yBuur3fu8KO4dANKIHjLOe0SpvyuKULt1BtfCSYY0J2mR/UYGc8CNdigM3qNzWqPHXslO@vger.kernel.org, AJvYcCXZmgv0e2C++sbzFnny5qnfZWGiXMze9eMhmOjezeD2m6vusAaQxaiYEg04I8MUIRJ1f4POV4/pajd4qSc=@vger.kernel.org, AJvYcCXdP/oGt69JMH4ZoWWExyAtQG+Czn+ZD2PjfXElYMYyo0HJnBxUUcq/yMwZhcGvDo6EbRNN5BNZ0mwF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyECW4TMR7koTRjh7qZs4DTR7kLr23l5dTY0sQOMwSPik22RSmc
+	71lVz4j4gX4w0I4ZhJzak2LjlcALoGkuB8YkQCIvfKMaTSYrEfJetlpB/HWNxbI=
+X-Gm-Gg: ASbGncvByYk0DLR9/I/QF6YUJPSf1lUv1lFQWDO4dZmc7XetmQ/EPT8Cde5Py/4uzRQ
+	kHMmpB1yGrY13RRbuqOpYN7Ut8ayt5FsPLCPYuRTWBrHpZ8iIUAyWm5NYv8MMmuwSL3hS3rMiEN
+	LKzXSj98d8kwpA1HDEcEc/YVJlfLqg876IYU2ATH2KToZb6PElh+WYpim8lCuQyJKcAUxkwWUHZ
+	+ccqy2V1u/FNJq8Xj/GSKDfRbqci1jdbSEagDn7k2hYg7Yc1vKn17VqTfYdxJsDFNtixw4nQ9wE
+	a/H+8cxPivGvlRISkbC4wT9rMtMP/8X1cXlyLO63sIs=
+X-Google-Smtp-Source: AGHT+IEZza3sL31uGEXE9GqOZmRwDZovRtw/5y2xgKCiRmfb48lzBMArT3fRLQbnoTwMSm5KJMfMfw==
+X-Received: by 2002:a17:903:18d:b0:225:abd2:5e4b with SMTP id d9443c01a7336-22a8a05e84fmr162795925ad.16.1744019647625;
+        Mon, 07 Apr 2025 02:54:07 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bfddfsm77213805ad.66.2025.04.07.02.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 02:54:07 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Jianhua Lu <lujianhua000@gmail.com>,
+	Lee Jones <lee@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Helge Deller <deller@gmx.de>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH 3/4] backlight: ktz8866: improve current sinks setting
+Date: Mon,  7 Apr 2025 17:51:18 +0800
+Message-ID: <20250407095119.588920-4-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250407095119.588920-1-mitltlatltl@gmail.com>
+References: <20250407095119.588920-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
- V4L2_EVENT_SRC_CH_COLORSPACE
-To: Ming Qian <ming.qian@oss.nxp.com>, mchehab@kernel.org
-Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17/01/2025 07:19, Ming Qian wrote:
-> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
-> indicates colorspace change in the stream.
-> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
-> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
-> 
-> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-> ---
->  Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
->  .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
->  include/uapi/linux/videodev2.h                           | 1 +
->  3 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
-> index 8db103760930..91e6b86c976d 100644
-> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
-> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
-> @@ -369,6 +369,15 @@ call.
->  	loss of signal and so restarting streaming I/O is required in order for
->  	the hardware to synchronize to the video signal.
->  
-> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
-> +      - 0x0002
-> +      - This event gets triggered when a colorsapce change is detected at
+I polled all registers when the module was loading, found that
+current sinks have already been configured. Bootloader would set
+when booting. So checking it before setting the all channels.
 
-colorsapce -> colorspace
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+ drivers/video/backlight/ktz8866.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-> +	an input. This can come from a video decoder. Applications will query
-
-It can also come from a video receiver. E.g. an HDMI source changes colorspace
-signaling, but not the resolution.
-
-> +	the new colorspace information (if any, the signal may also have been
-> +	lost)
-
-Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
-change, not CH_COLORSPACE.
-
-> +
-> +	For stateful decoders follow the guidelines in :ref:`decoder`.
-
-I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
-then only the colorspace changed and there is no need to reallocate buffers.
-
-I also wonder if the description of CH_RESOLUTION should be enhanced to explain
-that this might also imply a colorspace change. I'm not sure what existing codec
-drivers do if there is a colorspace change but no resolution change.
-
-I'm a bit concerned about backwards compatibility issues: if a userspace application
-doesn't understand this new flag and just honors CH_RESOLUTION, then it would
-never react to just a colorspace change.
-
-Nicolas, does gstreamer look at these flags?
-
-Regards,
-
-	Hans
-
-> +
->  Return Value
->  ============
->  
-> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-> index 35d3456cc812..ac47c6d9448b 100644
-> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
-> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
->  replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
->  
->  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
-> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
->  
->  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
->  
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index c8cb2796130f..242242c8e57b 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
->  };
->  
->  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
-> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
->  
->  struct v4l2_event_src_change {
->  	__u32 changes;
+diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
+index 017ad80dd..b67ca136d 100644
+--- a/drivers/video/backlight/ktz8866.c
++++ b/drivers/video/backlight/ktz8866.c
+@@ -46,6 +46,8 @@
+ #define LCD_BIAS_EN 0x9F
+ #define PWM_HYST 0x5
+ 
++#define CURRENT_SINKS_MASK GENMASK(5, 0)
++
+ struct ktz8866_slave {
+ 	struct i2c_client *client;
+ 	struct regmap *regmap;
+@@ -65,6 +67,12 @@ static const struct regmap_config ktz8866_regmap_config = {
+ 	.max_register = REG_MAX,
+ };
+ 
++static inline void ktz8866_read(struct ktz8866 *ktz, unsigned int reg,
++				unsigned int *val)
++{
++	regmap_read(ktz->regmap, reg, &val);
++}
++
+ static void ktz8866_write(struct ktz8866 *ktz, unsigned int reg,
+ 			  unsigned int val)
+ {
+@@ -112,11 +120,18 @@ static void ktz8866_init(struct ktz8866 *ktz)
+ {
+ 	unsigned int val = 0;
+ 
+-	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val))
++	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val)) {
+ 		ktz8866_write(ktz, BL_EN, BIT(val) - 1);
+-	else
+-		/* Enable all 6 current sinks if the number of current sinks isn't specified. */
+-		ktz8866_write(ktz, BL_EN, BIT(6) - 1);
++	} else {
++		/*
++		 * Enable all 6 current sinks if the number of current
++		 * sinks isn't specified and the bootloader didn't set
++		 * the value.
++		 */
++		ktz8866_read(ktz, BL_EN, &val);
++		if (!(val && CURRENT_SINKS_MASK))
++			ktz8866_write(ktz, BL_EN, CURRENT_SINKS_MASK);
++	}
+ 
+ 	if (!of_property_read_u32(ktz->client->dev.of_node, "kinetic,current-ramp-delay-ms", &val)) {
+ 		if (val <= 128)
+-- 
+2.49.0
 
