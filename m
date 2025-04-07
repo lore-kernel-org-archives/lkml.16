@@ -1,127 +1,72 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3B81FCFE5;
-	Mon,  7 Apr 2025 14:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4B81FDE00
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035901; cv=none; b=qodRuxbWEjGsQKdkQe961Wy6a0NILzDSNSDK59OFijU7vSfvLtDZgPxDDyQte2BVAKpToVdNRAnXdBuPqF5jf/c9FGOplZCwpdnEfJvM2Q8lox6psgItj03qe7JQ/QDdSVc1NgLwylL0asjRRJPYfkdDuPfro88NkLr+wA2sfQ0=
+	t=1744035904; cv=none; b=rjhbSrrrCOHD6ryliwDlMg04lGwXOK/5Q4Q+LDoBX36YTODC+6f8BkJbOJ6CIrAnVRtkyWRBpC93zRIZRjlFGYcpwqz6LnlQ/10vFQuDRNJbogONMWHtWmb5V17EicSt78+uo4TsKMYyoo09tM1tPtYftq6rohXyuRQVGg+Uh7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035901; c=relaxed/simple;
-	bh=vMW4yGY+YD5FnRKJBkfMdaUUiNsz76gb9IT81o4FNpY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XVomMgTjJIi+camQSSCx4GO0GkqjuWsdJrRhP26RFaTgf6shKj4b3SWGI5KhxJ+93wA8BfHn1vnOV3fnqi7msrCBlcpjGnzIl/92nTFH4rb0MRFJ49wjJVmbQXK3Hsw2MpDRmuuub1k/+HOMPTuIL8OYvueIk6FS8xnJazBKi0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CwCBPxkn; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CwCBPxkn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E5393442C5;
-	Mon,  7 Apr 2025 14:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744035898;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7MGAYVLqc2j0NmWCZPylg2j6LPz+kdlLwuJ4SwaUzNQ=;
-	b=CwCBPxknCpBx5cIrtpubrSAfK33aBLF2jlMVJ19BjMNJ/tIS/k3u2mRx8PMFpTrkvBWpE3
-	Y/CwuCk14R8/BNpiH5tnniyEb1Iw2FXRJod7ZNWyC+8bwhvCEyJXoQx02Yx94E+rDkJHLl
-	+l5rNRUycwFcOIEbT4IOorLiOBJSupRgetkTfmaogI9xy3Dd8a3CBA+7++2jyAZcVWkd/u
-	6x4hylqY1nDAr13iFhmgwATQNpXjItIOJvj3hYHhNPtVm8dx3C9tiCOyELO3Drph164jeK
-	YbQ3YWF3RBnj+QJQUb19X5sChauuFLRzSnHyiM4j1HxcAjqYokOZmiuwQeotJQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 07 Apr 2025 16:23:33 +0200
-Subject: [PATCH 18/34] drm/msm/hdmi: convert to devm_drm_bridge_alloc() API
+	s=arc-20240116; t=1744035904; c=relaxed/simple;
+	bh=Bzr+yAT5FWXC67pNcy4DdnOEcNRHfP3unZIeNg0Lls8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gxj7cWZtd59IOof01VOE8AuXf4WMX+XipVeHzBZDm9wfjWyap7mcJY4Bs8DTyejDRQpCu+wZ8KRNaabSBSHXAwtQSJtSCBhCrQw8o2fcZqOXL+o4aET+ibxVujNdfVJ+IoYExZtdeV6IH9Lu7POLvSS/XTjoQI51tneXpVxPwSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d44b221f0dso90499595ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:25:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744035902; x=1744640702;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XqylPtsJUGhPnDo877vCDGCeTK9eTWpi2VA5wUt1hxk=;
+        b=R+ZIAdgaFlB4kTPNF9YopIHBpuLGOahkcU2Ie7+RnuY/GfKqSvdwN4xaBynDBUn48c
+         Dvfpw8OCUhcSrDaKV3Se4fREAdmpQqECD58iKfIGdsc0lDDb3F2FbqkkMD8yj300Ga3C
+         EYZOvaEnzv72Y1sddBC0o5nnsAZ6jCvBVtHxeBYF8KdPGaJy40FAxqvbwgJVwRxCJDTV
+         DZ7/Ftq868yC+dD5BgmZM6OawBDne5PTD2ytlvJDtHDEsaS1lsH02q47gOncGPyFCAVU
+         veigIgq/lHHOWOqUZ4c0KQssE4abcgGx1E6d0Pw6F8nhHY0lVZgAV9UC1DhDzXFEegWl
+         k4qw==
+X-Forwarded-Encrypted: i=1; AJvYcCWI27RkjZsSl6mWT9abN0Q/hUlC6BRGpmn6y6xrUXUTI6rE2ZwYM0b+Ys3Kz2juZxwlJB3GoM3aSVFFRGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq5beXHdNnHSz6Zm5GBRKHQNE/bfF0DMlP5GuwC8FrhcrblH4J
+	1xEBSIFej1obt/UGEKPuBWmX84jRV6IBoT30KPUeOMSKoidUZAeds21iofeUPshnX7RsnzFZ2fJ
+	IYF81Bd6ko0EdHV/8aaaWVteFnuOOEJtAid2+OXyvYHd7TXW4QOalFMw=
+X-Google-Smtp-Source: AGHT+IE+CDycwgO/6G3EPIE0hT1ZFJznfTWuSqkY0aiAwqTMSDuWhisnHSKLp+mYWuCkfjfMTgBml3N7diPwWBcZZhI+/n83hKbl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-18-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Douglas Anderson <dianders@chromium.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedugeenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeghedprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvr
- hhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+X-Received: by 2002:a92:cd87:0:b0:3d3:d07d:20a3 with SMTP id
+ e9e14a558f8ab-3d6e533d0aemr118537635ab.10.1744035902466; Mon, 07 Apr 2025
+ 07:25:02 -0700 (PDT)
+Date: Mon, 07 Apr 2025 07:25:02 -0700
+In-Reply-To: <7bcb21c4-4ce1-43fd-8adc-c22684cbf0e7@kernel.dk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f3e03e.050a0220.107db6.059e.GAE@google.com>
+Subject: Re: [syzbot] [io-uring?] INFO: task hung in io_wq_put_and_exit (4)
+From: syzbot <syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is the new API for allocating DRM bridges.
+Hello,
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
----
+Reported-by: syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com
+Tested-by: syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com
 
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
----
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Tested on:
 
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-index 4a5b5112227f516dfc4279d0f319ec1e5b17f240..7b325ab0bb1f1e9434c3979f34fb0a8f94aad660 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-@@ -324,16 +324,15 @@ int msm_hdmi_bridge_init(struct hdmi *hdmi)
- 	struct hdmi_bridge *hdmi_bridge;
- 	int ret;
- 
--	hdmi_bridge = devm_kzalloc(hdmi->dev->dev,
--			sizeof(*hdmi_bridge), GFP_KERNEL);
--	if (!hdmi_bridge)
--		return -ENOMEM;
-+	hdmi_bridge = devm_drm_bridge_alloc(hdmi->dev->dev, struct hdmi_bridge, base,
-+					    &msm_hdmi_bridge_funcs);
-+	if (IS_ERR(hdmi_bridge))
-+		return PTR_ERR(hdmi_bridge);
- 
- 	hdmi_bridge->hdmi = hdmi;
- 	INIT_WORK(&hdmi_bridge->hpd_work, msm_hdmi_hotplug_work);
- 
- 	bridge = &hdmi_bridge->base;
--	bridge->funcs = &msm_hdmi_bridge_funcs;
- 	bridge->ddc = hdmi->i2c;
- 	bridge->type = DRM_MODE_CONNECTOR_HDMIA;
- 	bridge->ops = DRM_BRIDGE_OP_HPD |
+commit:         881bc75c io_uring/kbuf: reject zero sized provided buf..
+git tree:       git://git.kernel.dk/linux.git syztest
+console output: https://syzkaller.appspot.com/x/log.txt?x=17420070580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a3f7ddbc4e0c74f1
+dashboard link: https://syzkaller.appspot.com/bug?extid=58928048fd1416f1457c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
--- 
-2.49.0
-
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
