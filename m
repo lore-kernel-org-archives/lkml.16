@@ -1,107 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054E519995B;
-	Mon,  7 Apr 2025 23:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA3314F123;
+	Mon,  7 Apr 2025 23:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069967; cv=none; b=VZAPshlmQY8XD3ojb5TmHGpEW0khFH6nREXLXEKmuV274QKQqTycBGXSL9RIwQxjgzmdWuQepiobDonKlSqJ67c9k0t7zRkhY5OwkB58CE20Z4iWX0dgcUP8Sozh6c/FMpuGtuFkd1TlTGZqGdGWsPQjHnhndtNNoaEE5FmHerU=
+	t=1744070333; cv=none; b=ZR9TdY2aPPtW41fa8tFqd8VjML74QAFPFopHw3PeNJ5pDs6ccg3yEszJ48fy6TckYkVOAzvekxQlvYQR+Whckdz17mq3nt2zwhWgHyfWUyxRYPyjPTDzUSxd8yERGQOQbfDvmZyAw1qX/BwW5jkk3MAWFQv+MjKiewl0ftzSdj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069967; c=relaxed/simple;
-	bh=GR2ivJYaDHAoq9H+EecLpwXwevmHqfY1EKcUe/k5xPE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FdDJkg+ekf0AiYsk57aMbbVogTobiV9sr9qsIOIYj1Np3/MQvp3URMdbI1liNlpqwa5Lc5JDzsEXnK8EjeDgGdCXpkBp5NNO23vAXbK6zbxeGYaPRcJLyJZstz8HmJfRP06NZcW9f91HQ9sRLHJc8qYRzFbee6CUN41PKm4zpHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jI01xcVX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744070333; c=relaxed/simple;
+	bh=uiy2OmMU8PLT3kHqxOZNBjuXy5CRQaTqhVlYxOMTB5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=JxCFhdGpoQqkvRBoxBuNtLvu7sRKOL4A5X2JrFaYfzgm32AJZ+7/vHA428bkPZub1y3Rpt1EffgRFimMMNRD+/5WlPS5z8mWlcGALnK3djk70VlqHHfGkQ06ceJXu/7rbNNPcK5LotSbHoSH5xHH+GfdHQlmbOKAQ5S0S+8hsEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JxOBTACx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jI01xcVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526B8C4CEE9;
-	Mon,  7 Apr 2025 23:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744069966;
-	bh=GR2ivJYaDHAoq9H+EecLpwXwevmHqfY1EKcUe/k5xPE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jI01xcVXPhD3nFaKgAjNMPhdi+JboTmK57Ujodp4JCxgUJqT5YRtPf6gaKZgudRbE
-	 b7wk4FUTNI9/jdjkysIgZ5GKLAC2Yd9caoI7/gsWNBoKKErQ0lFGnGcOpjeNKMPukQ
-	 d2RDvnb5ecBRbnvNe+YgzIs7v+8C5GR7/eyIcN1jua0HZsX0UokmqXp7tqhNOLjiVl
-	 vz6r48MsuFg3cZgutwKsQO7WLESSjwEpGo99STS10HpFtWD9ffT1kt20henEp8qzB2
-	 1MX4aVCIKlWGJ/Ma7jaPlzx+6HNC6ZcUACyI6FEF1KWr3lCswHL/DXEjmcWii69UMu
-	 pQB11zt0gHkgQ==
-Message-ID: <d3218307-51fd-4731-b2aa-06ce4735d90c@kernel.org>
-Date: Tue, 8 Apr 2025 08:52:44 +0900
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JxOBTACx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744070325;
+	bh=U9DpWsV3eaR7hzXy7iqaRb/N/5grlljJth/VtH22R4I=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JxOBTACxBSCcg91sM2HAHc/TnYyBSkFoYfHnjKmMpq47ICZ2uwFCQSlgL7lKB96yP
+	 UmSj3sRW/QpPSRJg3s71r1nln35u5Q/Pan/+CNVZ1Aiuiw5kLYTOKtmWOL0bc2UOJO
+	 CsxZzvwQwEUScRHgMu4Co7syWnMVKhHcq6DccnQSJs6vW3EmncPXhmaAK7ckB6vGKg
+	 c1YqUFoGQQRvb1eN6tBWkRCKmxIXSXFypZwYjV+wttGhMC5HRmI35qolgKGmJogweJ
+	 RsCy0EKXJS84r/smJYD0wmK42/vdoCTd24N3NEVX6x6JgHT8SfM9NWH4O2lA8821Tv
+	 JxlgzYgPHa2Fw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWmPx0y1dz4x2g;
+	Tue,  8 Apr 2025 09:58:45 +1000 (AEST)
+Date: Tue, 8 Apr 2025 09:58:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Brady Norander <bradynorander@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20250408095844.29c9e584@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
- consistently
-To: Igor Pylypiv <ipylypiv@google.com>, Niklas Cassel <cassel@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250403212924.306782-1-ipylypiv@google.com>
- <Z-_JExGDyO9pVTON@ryzen> <Z_AweMPLRJgBIBF3@google.com>
- <Z_OSQzA04-5v7SR0@ryzen> <Z_QXAA5Mq1kFP4Ao@google.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <Z_QXAA5Mq1kFP4Ao@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/rM=dx1DF4P2_yvQvX5OTK1j";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 2025/04/08 3:18, Igor Pylypiv wrote:
-> On Mon, Apr 07, 2025 at 10:52:19AM +0200, Niklas Cassel wrote:
->> On Fri, Apr 04, 2025 at 12:18:16PM -0700, Igor Pylypiv wrote:
->>>
->>> Agree. ATA Status Return sense data descriptor for ATA PASS-THOUGH commands
->>> already contains the ATA LBA in bytes [6..11] so it seems redundant to
->>> also include the same in the Information sense data descriptor.   
->>
->> Damien and I talked about this.
->>
->> Since this patch only affects non-PT commands, what it this patch actually
->> solving?
-> 
-> For ATA PASS-THROUGH + fixed format sense data + NCQ autosense, this patch
-> eliminates reduntant writes to set the INFORMATION field and the VALID bit.
-> 
-> First write: scsi_set_sense_information() sets the INFORMATION field
-> to ATA LBA (which is incorrect for ATA PASS-THROUGH).
-> 
-> Second write: ata_scsi_set_passthru_sense_fields() sets the INFORMATION
-> field to ATA ERROR/STATUS/DEVICE/COUNT(7:0) as per SAT spec.
-> 
-> User space should not see an issue because second write overwrites
-> the incorrect data from the first write. I think we should still fix
-> this in case someone updates the code to remove the second write in
-> the future.
+--Sig_/rM=dx1DF4P2_yvQvX5OTK1j
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-OK. This now makes more sense. Please add all this description to the commit
-message to clarify WHAT you are fixing, and clearly explain how the first
-(useless) INFORMATION field write is removed.
+Hi all,
 
+In commit
 
->> So unless SCSI core does some specific handling based on the INFORMATION
->> field (and AFAICT, SCSI core only looks at SK/ASC/ASCQ), I can't see how
->> this patch can actually solve anything.
-> 
-> +1 the patch does not seem to solve any issues for non-PT commands besides
-> a spec compliance which is not visible to a user.
+  2b727b3f8a04 ("ASoC: dwc: always enable/disable i2s irqs")
 
-If the above sequence applies to both passthrugh and regular IOs, then there is
-no spec violation since the second write does set the INFORMATION filed to a
-correct value.
+Fixes tag
 
-> Deleting ata_scsi_set_sense_information() should work as well. If SCSI core
-> does not use the INFORMATION field perhaps there is no need to set it at all?
-> This will eliminate the reduntant writes for ATA PASS-THROUGH as well.
+  Fixes: a42e988b626 ("ASoC: dwc: add DMA handshake control")
 
-I do not think the scsi core use that field at all. But libata should still
-behave correctly and act as a spec compliant SAT. So if SAT says that this field
-should be set, then let's initialize it. If SAT says otherwise, let's do that.
-I have not checked SAT specs. Have you ?
+has these problem(s):
 
+  - SHA1 should be at least 12 digits long
+    This can be fixed for the future by setting core.abbrev to 12 (or
+    more) or (for git v2.11 or later) just making sure it is not set
+    (or set to "auto").
 
--- 
-Damien Le Moal
-Western Digital Research
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rM=dx1DF4P2_yvQvX5OTK1j
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0ZrQACgkQAVBC80lX
+0GzqgQf+LTFraCC+qJ6kIgqiVfCMZZE5zh3MpDy6RWTIBXb2PqKAeISOW45o3rhu
+wTxENnqqVjQbIXnofxJZ/1wgw68vTLodJCxJXK3lda3gt+bVIZ636ccStS9K7+Bz
+GnP4pVt1k/GHashrNf7UC4sJtWRi6bXRJzxGNTKbn25W7Kqmo/nh8oxMd1jP7N6F
+l9cSFf2o7XYwPqFC0aRWDvdF09H4uBHDzKAFbKqo9wUL3i9Yj1QfG71z22DVYeR3
+Sq+aKDyjknzSMauw/U0zn6qfw7P9eFRrBBlGG8cEmGQlg9IG/PQxtj+m9w7FqON1
+wUsTyy6VhkWBZiS47HmPTJ5NOJFQJw==
+=5rIB
+-----END PGP SIGNATURE-----
+
+--Sig_/rM=dx1DF4P2_yvQvX5OTK1j--
