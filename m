@@ -1,254 +1,231 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3970191
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 00:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E5B191;
+	Mon,  7 Apr 2025 00:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743984474; cv=none; b=D5pKNnvTvWVCzEJexXucEtPscres/REQcEewJx1lYv3XvZyMrPykVUogHcPdIbiH+bR+qEVHN638q5VsYqIjOZDZMzktYGOzPIaEProsEv50uynbO470BjovJmT59/oytovKYCnUhjXKdaKJWInMQRELkd31jjfWhY/TrWcgTIk=
+	t=1743984656; cv=none; b=kKH4XQ6BDUnhAaDalEYO5kmXP+fXMIad92GMNO+Yw/uuyfRuamH6IdArx1HU/MN9+ZrusaFfMfpV5dlJT4XFVB3QnOcxgzxxwYfPHpu94hivAgX3z5Iw3Y+LwZdMFdkzPKVGTtBfp8IVAY3ySIctoBTCRXXZ+QXWGzwxb+B/MvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743984474; c=relaxed/simple;
-	bh=xSLbhtqT9jWsODyv/HtzXfPET67fr4XVb0hYkeLY//g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UR7odiOx0Y09aXhWdt0VUtj5HKWI1VY5/NFiJheHvFYaNnK6IhlJznc6uQLQ+mCfQc/X++9YHth6GMUFh0SEgivwH8/4lntumjyYrCURddD7tQ5fXQhY9pcqpf3nlndYA5wSMIZj7l8FZNEafB31x8Drn/uOj1fW3OByNotWung=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1g8M+RN; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743984656; c=relaxed/simple;
+	bh=9un9VmFkdH9K3+ubLeKF5bvDTRpmsxY+GE0bjL8Hmpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AJdAdqMpVy5HcTBt3CFKegq57898816CNM6ontAJGFBlAt2cq1bCDPG8mQubhMt0hvsfSyKDeo2+dzn8XiUYENP2BeSO9sh0fL5VmAkO/pnSZXi7IeWtsOxAM1g0Wjb9NmSWibgWwy/tbzWHzwkZbeet7r8h8AupCsTQCDRDw4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIBRtGCN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1g8M+RN"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso7223598a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 17:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743984471; x=1744589271; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K/SS26Kqy8ljIl0w5DW1FHiwgX3UcillFs8vuEaBkTM=;
-        b=c1g8M+RNemoc9tsTVAlChBv0gigYSOmGitXp1LmEjikV0d3cITiuGav6sIpHPZIslW
-         n3mosVk6ye+0lpHsAlcv9GWE358FpSbr+BqigzHUQaIfQ+2DHCe7IPgRcTX8wuLZWkpI
-         5RVEguuJ6U1G6al52yx0hf2iBUGRx/sBJC7DIvJ28vjcM+e7zDrN9hZ9Ibya5yJzrSgp
-         yBWXnWAoMx6ZY5UrL6pYGCkwVmclzGu1mk4LejL3zsAAlF2XfXvWxBAfoRX14q4/BXK+
-         PgvffPTeX9RRqRVXSgQAydcH4haIKHX3uGMhWYth2CgiZ4d+2FMRGnFvU//RZDIXcrJk
-         Tmqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743984471; x=1744589271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K/SS26Kqy8ljIl0w5DW1FHiwgX3UcillFs8vuEaBkTM=;
-        b=owwPdFDVffeaf0ZtOM2o2p0trSBnfEK6mrW7vi6vuyuVpVUtXmliksLO2NUmRv+YCL
-         NNc21bhku+VkvyxaHoilRHoA1ugKNfyxneenCXZuSChezF7CZcfO4uk4hfFWuvfFpjMC
-         v7EsH10P1OHBD7Wn39e9QvjisdPV8SOmUN4S+8QAPdHm56r8pwJBbHb5bra4dLTmDuDM
-         hRX5WyOd36gHOc+mkgSy4unTH4Drhf6oNhU/Pe7m+wM1acFaddYxS8ytHnsQEsJCNuuX
-         Hq8qNQmc4dSdzWPipQQNQaL750tejfQJ9MJlEG4NqlFOw+JKVECbWVOlcN8O3M29sKGH
-         9n0w==
-X-Gm-Message-State: AOJu0YxfydSsMT64i9dsyEfUZ8qdyYftF9Osud/VHcgST1i7rV2qYr3V
-	4X7r6hyEFCqFLI1EksXmvUKq3GYDahaxn/6RK0yD8cdv0P2YV3O64owkOe74tPcYiN2bYEOFevv
-	DNcSrlAwmSB0W/28siqLg61GAVUM=
-X-Gm-Gg: ASbGncsxzbGaVbCQaBxl4qthZSuKbNJcdNufqFA8WNAGbBclHD+LihiCileTOq4aS4D
-	V8nAE0F+P665xUxMwzLwLYI3RnYuxSQ2XbK8E/wx+AvDGXNf3UJ5SxmQJk8YsZQyzgzho7QSqMt
-	OpzjlLPtspxuYemkMuSiW4xLBqeg==
-X-Google-Smtp-Source: AGHT+IHcXndvEkoU7KQ5ppK3Sbf1myOMR28+dVxSzHwMaCrO4RQdHty3cD254sALRVfEZm050YOp1llteGNTHXNEdTU=
-X-Received: by 2002:a05:6402:3592:b0:5e7:8501:8c86 with SMTP id
- 4fb4d7f45d1cf-5f0b3e490a7mr9224825a12.22.1743984470772; Sun, 06 Apr 2025
- 17:07:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIBRtGCN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6E4C4CEE3;
+	Mon,  7 Apr 2025 00:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743984655;
+	bh=9un9VmFkdH9K3+ubLeKF5bvDTRpmsxY+GE0bjL8Hmpg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SIBRtGCNSzbEd33ko9d2X0/uxOvR8U0MQins8rNMCDytJ9wCsp9UkzDnM/T5XQhR5
+	 WgYYtjdqKCoFlQkGx+x0Jt2ZkDki9JlwQEJWwpFkbq3p2aPZ3Qbu4wYuIGdoBHc4c7
+	 dP3zkQtVYLgml/OrOQYrvfTeOw7dj8lpzA6u+Lob2fQcrXTb23Ko9sg3KdlAr/qB3J
+	 FPmY5JGLvynnlQ178BUiwpe9DoEspq3SdXw8Ausz2LgcGq44S6064bu/QWlZlq7anQ
+	 AH60SRSXr248euDum6TKPqHanXdmGSpL6aRWAYpV/wu+wCVXv3yHhU1jG0hy1RQY0e
+	 Q6uT1w+MGXYTQ==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	stable@vger.kernel.org,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH v5] KEYS: Add a list for unreferenced keys
+Date: Mon,  7 Apr 2025 03:10:45 +0300
+Message-Id: <20250407001046.19189-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <20250403211514.985900-8-paulmck@kernel.org> <CAGudoHF5H0NhCu-mCjtd1SGRc5P=8X7jmTaP9k12zZixX1-9LA@mail.gmail.com>
- <276d81e0-3867-471a-8e99-b7582378dd64@paulmck-laptop>
-In-Reply-To: <276d81e0-3867-471a-8e99-b7582378dd64@paulmck-laptop>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Mon, 7 Apr 2025 02:07:38 +0200
-X-Gm-Features: ATxdqUGU55mO6Y3iq5YKO74o-5Q0_2tFB5WIvBJKyfCAdnBpExlglMEUN9ym6zw
-Message-ID: <CAGudoHFH=U4eb=t50nr55kTaamsaKHdwPeZZCtJ7JXtYYy7-KQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 8/9] ratelimit: Reduce ratelimit's false-positive misses
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Andrew Morton <akpm@linux-foundation.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 6, 2025 at 7:41=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
-> wrote:
->
-> On Sat, Apr 05, 2025 at 11:17:00AM +0200, Mateusz Guzik wrote:
-> > On Thu, Apr 3, 2025 at 11:15=E2=80=AFPM Paul E. McKenney <paulmck@kerne=
-l.org> wrote:
-> > >
-> > > The current ratelimit implementation can suffer from false-positive
-> > > misses.  That is, ___ratelimit() might return zero (causing the calle=
-r
-> > > to invoke rate limiting, for example, by dropping printk()s) even whe=
-n
-> > > the current burst has not yet been consumed.  This happens when one C=
-PU
-> > > holds a given ratelimit structure's lock and some other CPU concurren=
-tly
-> > > invokes ___ratelimit().  The fact that the lock is a raw irq-disabled
-> > > spinlock might make low-contention trylock failure seem unlikely, but
-> > > vCPU preemption, NMIs, and firmware interrupts can greatly extend the
-> > > trylock-failure window.
-> > >
-> > > Avoiding these false-positive misses is especially important when
-> > > correlating console logged hardware failures with other information.
-> > >
-> > > Therefore, instead of attempting to acquire the lock on each call to
-> > > ___ratelimit(), construct a lockless fastpath and only acquire the lo=
-ck
-> > > when retriggering (for the next burst) or when resynchronizing (due t=
-o
-> > > either a long idle period or due to ratelimiting having been disabled=
-).
-> > > This reduces the number of lock-hold periods that can be extended
-> > > by vCPU preemption, NMIs and firmware interrupts, but also means that
-> > > these extensions must be of much longer durations (generally moving f=
-rom
-> > > milliseconds to seconds) before they can result in false-positive dro=
-ps.
-> > >
-> > > In addition, the lockless fastpath gets a 10-20% speedup compared to
-> > > the old fully locked code on my x86 laptop.  Your mileage will of cou=
-rse
-> > > vary depending on your hardware, workload, and configuration.
->
-> Thank you for digging into this!!!
->
-> > First a nit: the func returns an int with 1 or 0, perhaps one extra
-> > patch to make it bool can be squeezed in here?
->
-> I can do that.  Patch below.
->
+From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
-thanks
+Add an isolated list of unreferenced keys to be queued for deletion, and
+try to pin the keys in the garbage collector before processing anything.
+Skip unpinnable keys.
 
-> > One of the previous patches fixes a bug on 32-bit archs.
-> >
-> > Maybe it will sound silly, but my suggestion below hinges on it: is
-> > this patchset written with 32-bit kernels in mind?
->
-> Yes, that bug fix is reflected in the lockless-fastpath patch.  It no
-> longer treats ->begin=3D=3D0 as special.  The reason that this is 32-bit
-> specific is that at 1000HZ, a 32-bit counter wraps every 50 days or so,
-> which is well within the range of possible uptimes.  Wrapping for 64-bit
-> counter takes way longer.
->
-> > If not, I wonder if the 32-bit stuff can stay with the locked variant
-> > and the 64-bit can get a lockless fast path which issues 8-byte
-> > cmpxchg on the event count + (to be introduced) sequence counter.
-> >
-> > I think that would be significantly easier to reason about as it would
-> > guarantee no changes are made if someone is reconfiguring the struct,
-> > while providing the same win from single-threaded standpoint.
-> >
-> > I think you know what you mean, but just in case here is a pseudocode
-> > draft of the fast path:
-> >
-> > #define RATELIMIT_NEED_INIT BIT(31)
-> > #define RATELIMIT_IN_FLUX BIT(0)
-> >
-> > struct ratelimit_state_change {
-> >         int             events_left;
-> >         unsigned int    seq;
-> > };
-> >
-> > struct ratelimit_state {
-> >         raw_spinlock_t  lock;
-> >
-> >         int             interval;
-> >         int             burst;
-> >         int             missed;
-> >         struct ratelimit_state_change rsc;
-> >         unsigned long   begin;
-> > };
-> >
-> > seq =3D READ_ONCE(rs->rsc.seq);
-> > smp_rmb();
-> > if (seq & (RATELIMIT_NEED_INIT | RATELIMIT_IN_FLUX))
-> >         goto bad;
-> > begin =3D READ_ONCE(rs->begin);
-> > burst =3D READ_ONCE(rs->burst);
-> > interval =3D READ_ONCE(rs->interval);
-> > events_left =3D READ_ONCE(rs->rsc.events_left;
-> > smp_rmb();
-> > /* checks if we can cmpxchg go here */
-> > ....
-> > /* now the work */
-> > struct ratelimit_state_change new =3D {
-> >         .events_left =3D events_left - 1;
-> >         .seq =3D seq;
-> > }
-> > if (try_cmpxchg64_relaxed(&rs->rsc, ......)) {
-> >         return true; /* succeeded */
-> > }
-> > /* ... retry based on what we got, most likely only ->events_left has c=
-hanged */
-> >
-> > On the stock kernel the struct is 32 bytes. I'm combining flags and
-> > the new seq field to avoid growing it.
-> >
-> > This does cut down on available seq size, but it should be plenty as
-> > is. This also means the slowpath will have to be careful to not
-> > blindly ++ it to not walk into flags, but I think that's easier to
-> > handle that races. ;)
->
-> In theory, something sort of like this that used a 16-byte cmpxchg
-> and packed the ->begin, ->rs_n_left, and ->flags fields together could
-> simplify this quite a bit.  But not every system has a 16-byte cmpxchg
-> on the on hand and packing into 8 bytes (let alone a 32-bit system's 4
-> bytes) would require painful tradeoffs.  But in practice...
->
+Use this list for blocking the reaping process during the teardown:
 
-well cmpxchg16b has atrocious performance and I would not recommend ;)
+1. First off, the keys added to `keys_graveyard` are snapshotted, and the
+   list is flushed. This the very last step in `key_put()`.
+2. `key_put()` reaches zero. This will mark key as busy for the garbage
+   collector.
+3. `key_garbage_collector()` will try to increase refcount, which won't go
+   above zero. Whenever this happens, the key will be skipped.
 
-> > That said this is merely a suggestion, I'm not going to push for it.
-> >
-> > I recognize this swaps atomic_dec into an cmpxchg loop which in
-> > principle will have worse throughput in face of multiple CPUs messing
-> > with it. However, the fast path in both your and my variant issues
-> > loads prior to the atomic op which already do most of the damage, so I
-> > don't think this bit matters that much.
->
-> ...as you say, the full-load throughput of cmpxchg() is lacking compared
-> to that of atomic_dec_return().  And large systems might have serious
-> ___ratelimit() call rates.  Worse yet, the forward-progress properties
-> of cmpxchg() are lacking compared to those of atomic_dec_return(), so I
-> am not at all sold on this packing approach, even for systems providing
-> 16-byte cmpxchg operations.
->
+Cc: stable@vger.kernel.org # v6.1+
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+---
+v5:
+- Rebased on top of v6.15-rc
+- Updated commit message to explain how spin lock and refcount
+  isolate the time window in key_put().
+v4:
+- Pin the key while processing key type teardown. Skip dead keys.
+- Revert key_gc_graveyard back key_gc_unused_keys.
+- Rewrote the commit message.
+- "unsigned long flags" declaration somehow did make to the previous
+  patch (sorry).
+v3:
+- Using spin_lock() fails since key_put() is executed inside IRQs.
+  Using spin_lock_irqsave() would neither work given the lock is
+  acquired for /proc/keys. Therefore, separate the lock for
+  graveyard and key_graveyard before reaping key_serial_tree.
+v2:
+- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
+  function.
+---
+ include/linux/key.h      |  7 ++-----
+ security/keys/gc.c       | 21 +++++++++++++++++++++
+ security/keys/internal.h |  2 ++
+ security/keys/key.c      | 11 ++++-------
+ 4 files changed, 29 insertions(+), 12 deletions(-)
 
-Well in my proposal this is 8-byte cmpxchg, not 16 with the sequence
-counter validating the rest of the state has not changed.
+diff --git a/include/linux/key.h b/include/linux/key.h
+index ba05de8579ec..c50659184bdf 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -195,10 +195,8 @@ enum key_state {
+ struct key {
+ 	refcount_t		usage;		/* number of references */
+ 	key_serial_t		serial;		/* key serial number */
+-	union {
+-		struct list_head graveyard_link;
+-		struct rb_node	serial_node;
+-	};
++	struct list_head	graveyard_link; /* key->usage == 0 */
++	struct rb_node		serial_node;
+ #ifdef CONFIG_KEY_NOTIFICATIONS
+ 	struct watch_list	*watchers;	/* Entities watching this key for changes */
+ #endif
+@@ -236,7 +234,6 @@ struct key {
+ #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
+ #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
+ #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
+-#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
+ 
+ 	/* the key type and key description string
+ 	 * - the desc is used to match a key against search criteria
+diff --git a/security/keys/gc.c b/security/keys/gc.c
+index 4a7f32a1208b..e32534027494 100644
+--- a/security/keys/gc.c
++++ b/security/keys/gc.c
+@@ -193,6 +193,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 	struct rb_node *cursor;
+ 	struct key *key;
+ 	time64_t new_timer, limit, expiry;
++	unsigned long flags;
+ 
+ 	kenter("[%lx,%x]", key_gc_flags, gc_state);
+ 
+@@ -210,17 +211,36 @@ static void key_garbage_collector(struct work_struct *work)
+ 
+ 	new_timer = TIME64_MAX;
+ 
++	spin_lock_irqsave(&key_graveyard_lock, flags);
++	list_splice_init(&key_graveyard, &graveyard);
++	spin_unlock_irqrestore(&key_graveyard_lock, flags);
++
++	list_for_each_entry(key, &graveyard, graveyard_link) {
++		spin_lock(&key_serial_lock);
++		kdebug("unrefd key %d", key->serial);
++		rb_erase(&key->serial_node, &key_serial_tree);
++		spin_unlock(&key_serial_lock);
++	}
++
+ 	/* As only this function is permitted to remove things from the key
+ 	 * serial tree, if cursor is non-NULL then it will always point to a
+ 	 * valid node in the tree - even if lock got dropped.
+ 	 */
+ 	spin_lock(&key_serial_lock);
++	key = NULL;
+ 	cursor = rb_first(&key_serial_tree);
+ 
+ continue_scanning:
++	key_put(key);
+ 	while (cursor) {
+ 		key = rb_entry(cursor, struct key, serial_node);
+ 		cursor = rb_next(cursor);
++		/* key_get(), unless zero: */
++		if (!refcount_inc_not_zero(&key->usage)) {
++			key = NULL;
++			gc_state |= KEY_GC_REAP_AGAIN;
++			goto skip_dead_key;
++		}
+ 
+ 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
+ 			if (key->type == key_gc_dead_keytype) {
+@@ -273,6 +293,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 		spin_lock(&key_serial_lock);
+ 		goto continue_scanning;
+ 	}
++	key_put(key);
+ 
+ 	/* We've completed the pass.  Set the timer if we need to and queue a
+ 	 * new cycle if necessary.  We keep executing cycles until we find one
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 676d4ce8b431..4e3d9b322390 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -69,6 +69,8 @@ extern spinlock_t key_graveyard_lock;
+ extern struct rb_root	key_user_tree;
+ extern spinlock_t	key_user_lock;
+ extern struct key_user	root_key_user;
++extern struct list_head	key_graveyard;
++extern spinlock_t	key_graveyard_lock;
+ 
+ extern struct key_user *key_user_lookup(kuid_t uid);
+ extern void key_user_put(struct key_user *user);
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 23cfa62f9c7e..7511f2017b6b 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -22,6 +22,8 @@ DEFINE_SPINLOCK(key_serial_lock);
+ 
+ struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
+ DEFINE_SPINLOCK(key_user_lock);
++LIST_HEAD(key_graveyard);
++DEFINE_SPINLOCK(key_graveyard_lock);
+ 
+ unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
+ unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
+@@ -658,14 +660,9 @@ void key_put(struct key *key)
+ 				key->user->qnbytes -= key->quotalen;
+ 				spin_unlock_irqrestore(&key->user->lock, flags);
+ 			}
+-			smp_mb(); /* key->user before FINAL_PUT set. */
+-			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
+-			spin_lock(&key_serial_lock);
+-			rb_erase(&key->serial_node, &key_serial_tree);
+-			spin_unlock(&key_serial_lock);
+-			spin_lock(&key_graveyard_lock);
++			spin_lock_irqsave(&key_graveyard_lock, flags);
+ 			list_add_tail(&key->graveyard_link, &key_graveyard);
+-			spin_unlock(&key_graveyard_lock);
++			spin_unlock_irqrestore(&key_graveyard_lock, flags);
+ 			schedule_work(&key_gc_work);
+ 		}
+ 	}
+-- 
+2.39.5
 
-> Yes, if a given ratelimit_state structure is mostly throttling, the
-> load-only fastpath is there, but the quadratic overload behavior of
-> cmpxchg() would apply during the non-throttling phases.
->
-
-It is indeed non-ideal, but if you really need good perf here, then I
-would argue literally just one instance of the counter is already bad.
-
-> Never say never, of course, but we would need to see real issues
-> with the atomic_dec_return() approach before it would make sense
-> to take on the packing approach.
->
-
-I claim my proposal is simpler to reason about as you get an invariant
-nobody changes the event count from under you and they always operate
-on a fully populated state.
-
-All that said, this was a suggestion on the side which requires work
-to implement.
-
-On the other hand your variant is already written and I'm by no means
-trying to block it. I am not in position to ACK it either and afaics
-ratelimit is virtually unmaintained anyway. I guess it's your call
-what to do with it.
