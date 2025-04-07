@@ -1,131 +1,77 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE62227E96
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7935222687B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012452; cv=none; b=ixQY/oAXRaoGanraeo7dljIrNsIpmBVKHoqbbXl0uFp257+lpUAuw5B9FJjVyb2TA87m7IYC7Zw7HfNwPJKU/SwaUWh4qRmYHtKjS9SCAgBuaJA6SAa93KT8yaJhbe/EmSAq16SphX0p44v5N732/2JWZ6hAXg+rxqK1me+KnRY=
+	t=1744012478; cv=none; b=O8Ww47xJit7rBjpgDSCGNBUoXXsQEV0Hr3NP9QAQsr71xE6V53EGi/K/Kyu+ReHGFRhN/fEdJzkyrZyzOaHVbBddBS7ucaig07TrBOXE07xSPR8t9j5EDr1vhDDJbHq/AxcAX1XnNDGjBYf2qrqvy+O67Bv1MEPZHA5Ridmb5uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012452; c=relaxed/simple;
-	bh=CIvTP/MtFKlZ44qkNUVxMOzv+BaCzXjhTrSxyHWhQJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RINTS//srvTS3tzpz8ggklDeaGHOnDGbbdfQ+Wrn07/86TvOlZNvGt3OLLh6Gm4bHGFEUZRROHwFVDTWuncEhaBknUQ/iYS5Mg1lnAnOcnjlFKDCHoYI2vVrDu5wgMll7CxRRIPNWhTks8+9d+yLrKtyehSAZutNLiQmS7IWx1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gY9vH3Rq; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gY9vH3Rq"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3913b539aabso2258885f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744012448; x=1744617248; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hWxLTEfGg4dc1Gy9lnOUuyFlka68Uiuevn5CcOM/QrM=;
-        b=gY9vH3RqdQR+gB31TeRw9A4NMKK4R3ko1BGYlzuJt71XNoeAmw+yVis7vxE7clYIX7
-         K8FLRG621Tl9wxo4pULgNMDj5aS8hRxljj0KKnmvRqRpJVJzj9vPr+xXZFfRW+dbPsXc
-         UPX/wIqJpVv9C1lF5idpaltVzoMLYRuhyLfStO6LLeg6sBuTNby27ccQ09a+uoY84OmT
-         orCiCGIqRns6tTuP5ByttYjUZDMztsypTQCvFM8EUT0GINoq7WMglffZLpZPitzsLZCu
-         ZTtlGuGVHqVdSK/KMmj/AFhfj03ge6bAXFgmO4N/5oQtePoVkJUA7UP0NC4SO8CKXJuL
-         1FYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744012448; x=1744617248;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hWxLTEfGg4dc1Gy9lnOUuyFlka68Uiuevn5CcOM/QrM=;
-        b=e76bTebOg2jJ///nPzTcH7XrT3GHwvpgsSUPB0SFZoLqSEZ3UpVXhw1JT87CWRzoc6
-         FWSUKsV0adrV39umPJUsqO6Vchbd1NKQqivCMAl/LO/Ln2yXN3k2//6espCR9KUm+jw0
-         vGkJWkE9piq63u+tHWAryGpokT18/maEnavSpk+p/1WppCLfZYDD7dmxRpqGbj/ZEpwO
-         x89itl1FSHcfOYHD/DdbNogUgi6xcVgkj2uvGcb96fNQ32mEBfDKYcG07u6gQqDgLsr7
-         pFXlxLI4gp2+nQAE8QMY6ZzuRi4FDH+USk7IokpYlwhGwUsNTt+sLySKdt+MDxmpXU3Y
-         wSXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ljYLNL1tQZMFi0xR/ze2StT6TDdQuyLe4RC4Olf+2ptMcTWCv9ux+gcwy1ffoqXovHqng2PFVXY3RQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv9FZGZv4Sg0vOEiRb4MeNMoISC1IKIqUJBVsfrxF6idQQGcR9
-	i8CaKfTrBszfYMuKx4MwnbmGFeVh/ZMKoQehiKeGJ5geuYGhb1s4rQ+NVwfc5Qw=
-X-Gm-Gg: ASbGnctrzc1rCBoiY09ed4Tbd4nK2d9LIoGxVPfQL3/B00G/m5QGFczt/g/6ZSV4TV9
-	6iDbHNgcCbDGvuo7OwhcF8qMftrTu9D69C/mmugqYoUYk1Na7MPcgItg+YB/VUVi0VVsPlwdELl
-	dLa4VZ4iKW7lKm6b1SotAN8RJqy3zFQbMBp/jeIvomcvhNhqgjL1erA3vadFcrNUuhWnyBPCH21
-	1sVeW8UgnTcS8oNH0lAuSB55McRibVgGbwA8oOEzY1ntblZWZfKNwPtDOF1FrdVny0d+IXxDsbL
-	osM1uIwCVvhEASGFbpjb2ceFFDARXLFUjXc2nn+IZv3M
-X-Google-Smtp-Source: AGHT+IHuTVRTtHbtmx6FjkvlzIbJVnydF8KMECgaQSarUJ94LjdvsgdrKIpoRqGzKFTua17ynl8uDg==
-X-Received: by 2002:a5d:5983:0:b0:399:6dc0:f15b with SMTP id ffacd0b85a97d-39cba93cd69mr8684049f8f.48.1744012448217;
-        Mon, 07 Apr 2025 00:54:08 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a9bcfsm11494514f8f.33.2025.04.07.00.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:54:07 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Manikandan Muralidharan <manikandan.m@microchip.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Sander Vanheule <sander@svanheule.net>,
-	Bert Vermeulen <bert@biot.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] dt-bindings: gpio: Correct indentation and style in DTS example
-Date: Mon,  7 Apr 2025 09:54:05 +0200
-Message-ID: <174401244312.28249.6012698269615129555.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
-References: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1744012478; c=relaxed/simple;
+	bh=3w2pbTsXuYmgwYq1pS1VftJm5W19cRoO89+5tbh2YyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pKD5dG5VoCRKxQXb1uBvgvaNg2q6aTqrGpNIym9O3DajCJLLKOUM/W2nNd8t13ghyCExTInPhQcKcFwWhSikKY0/oOUh8NIqGaDMPiqAaXO/QJyT9JgkiS+Mvo0yzHlDA+Mncu7y0a+oAHDbWj9kCOTNHDToypmYBvTDofe/xr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowABHtkKzhPNnqjDWBg--.33106S2;
+	Mon, 07 Apr 2025 15:54:27 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: jpoimboe@kernel.org,
+	peterz@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] objtool: Remove unneeded semicolon
+Date: Mon,  7 Apr 2025 15:54:05 +0800
+Message-Id: <20250407075405.2777365-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABHtkKzhPNnqjDWBg--.33106S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw4xWF1rWr1rZwb_yoWxAFX_Cw
+	1vgFs7WFZ5uFZFyr1UA3409w1vq3WrXws2gw47ZFsxJa45Ca1qgF97uF4DCwnIyry0vFZx
+	Cas5AryjkwsF9jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+	ZFpf9x0JUVT5LUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ tools/objtool/builtin-check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, 24 Mar 2025 13:53:26 +0100, Krzysztof Kozlowski wrote:
-> DTS example in the bindings should be indented with 2- or 4-spaces and
-> aligned with opening '- |', so correct any differences like 3-spaces or
-> mixtures 2- and 4-spaces in one binding.  While re-indenting, drop
-> unused labels.
-> 
-> No functional changes here, but saves some comments during reviews of
-> new patches built on existing code.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] dt-bindings: gpio: Correct indentation and style in DTS example
-      commit: f4271a891dca46ecf6813273ed63e502862f45da
-
-Best regards,
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 80239843e9f0..d86d0154ced8 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -241,7 +241,7 @@ static void save_argv(int argc, const char **argv)
+ 			ERROR_GLIBC("strdup(%s)", argv[i]);
+ 			exit(1);
+ 		}
+-	};
++	}
+ }
+ 
+ void print_args(void)
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.25.1
+
