@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23302063FF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3C12066C4
 	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041476; cv=none; b=I+n/q1SaGfljGe657H/SymIZeATvNhdAfj9IgsQxp6UD99hBSMEXaO0laaYDaYMDffZTQj6flcBrFIFtUIdr0KF64cu4RXyW6Bz8UinK/T1EywHxrRZfOxOw0wO2FKaEYe9/HbBkXH23g910VblSr5vBDFYZnT+6js+87qD2cr0=
+	t=1744041477; cv=none; b=LmBDyDAh+mqpZRMWD0lXepYXvSWQmWLeL6eFF1v6jaUycnyKXiiY4oJMBZFCU6Mw25TT9cFvJf/1wUcIQGOSLl/UHZsMCIDwF5tKhL7P7KUJq1P8iyiEnD9AbI1BdTx3/5FO6gmiVqXgZ7o3Rkxc/kZaG8FfE1sEIxfGVswhkb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041476; c=relaxed/simple;
-	bh=LaZS6UPiImzSyxqxJCcwrXkWJyg0hTcn7pnVQilLcwk=;
+	s=arc-20240116; t=1744041477; c=relaxed/simple;
+	bh=HFlqT1mLvmo+UShZEWo/EejFFqRQ7TcsnK9RJNrJVVA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NAnlY89cVEDMBHk8g4KlVTrroKUTsxNepLixpQbpoWfkMOOnjteH5iJwqH+rGd0lBN+VqFGfwHQ+k5RslTuZmsMtUfte9sNAWKqKQCZFhUQNClqBbEkF2sXScW5KBqjbPH5Cs7o5YkLzhxiuQ1qFNi8Ok/YTdYi1gY40s2RVDgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aIHV2yLW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8+SSnLGM; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=FlTwoDajsGSbgQmhWTD1Sse3gOYlwDWB7kByWy7C1TiDtugTPaDgEgdu1xMvBHasQmJR0g1G8NDqB/2wYH3KVqKME4R0sSQpX0X59rxwtRiGTNiVeRT5SxgaYOmJyezN5uBqcI73+949YzeSNWNz5O/V/hYVbc5xhlxrUzm5Xos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=esJZ1ATU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CHJNaFwU; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aIHV2yLW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8+SSnLGM"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="esJZ1ATU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CHJNaFwU"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1744041471;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8ADpzXL+em4lIAaBMKlTSOE1lA/L53fXWSsZH7Iu6lc=;
-	b=aIHV2yLWQvA8C+gn0aTfvag3wc+rrbX8nXaKQUP1o8YSox7v0hoTk7tMBM8zSOK8LoD7OT
-	NBKTkPiAmTTulBuhXFBjspt+9jdt6QXf3aftjBnRN6WKpdaO1IOVaIUKEQ/xZv9WOK86wl
-	LuhqRvr3YoOv5BdiprgcZDyF9wXj2Z/4vzbyyJsdxlbZhmAd4x0rgC7XBOu98NoiNetw2X
-	CWDCON8jH5Xe7vKkU/f9sp2jNsXGPsmgbByvq3at+NBpMmW1Au9lzxgsghdTR5860nZwBB
-	v79IE+4VKXdP2m31mwaFohzjQ1QBQMrZKclGYpftscqQSKpNsVB4O1Pu0swOYQ==
+	bh=qsSIweOJOeVPMO/KHuLxj3Vruac4eGemiYIOVUirD2Y=;
+	b=esJZ1ATUDLbWNi7l0vsd31MIjY/FGG3YHZ3st2w+DxQfMzMYXN39FOj2MOLQsv/LIRDHZC
+	LQYgoAsJg/YDQtqRFNFX+/PfX3B8dkMETqfuvJDo7WjA1WFwR/KFykYWNsQ+F5lRtEnnth
+	mGkFgmOThVt824jl/1hvItPeEwxXLheF3xKjx1tZvtXqftma6noBuTvD/1H7ponAipD2yX
+	q/hJiAPlYEvxq2kl5h9IuBwm1K2ejUDxZTh/tfEfMJfbwktzC73ZEGdYgE776l5kKJgYv1
+	h+2AAsBQFRF/OjL86yma3QcojWT25PMejSpFflIRsDQZY721F3kO897xrp8dcA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1744041471;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8ADpzXL+em4lIAaBMKlTSOE1lA/L53fXWSsZH7Iu6lc=;
-	b=8+SSnLGMQoCC+6/mMxGYE9vjMLeavfaVL/i4BoheZNKJ2n1yZHev1QqBZfu3BZn1u6Eww2
-	AHj08e1cxgnjLpDQ==
+	bh=qsSIweOJOeVPMO/KHuLxj3Vruac4eGemiYIOVUirD2Y=;
+	b=CHJNaFwU7431HncEDzvSoEcHXJrsY3We+CwURrsTX9bZNuhdk56vOaqWjSX7uN6p5Bmj+6
+	5kkNcVuEDpRW36Cw==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v11 07/19] futex: Create private_hash() get/put class
-Date: Mon,  7 Apr 2025 17:57:30 +0200
-Message-ID: <20250407155742.968816-8-bigeasy@linutronix.de>
+Subject: [PATCH v11 09/19] futex: Decrease the waiter count before the unlock operation.
+Date: Mon,  7 Apr 2025 17:57:32 +0200
+Message-ID: <20250407155742.968816-10-bigeasy@linutronix.de>
 In-Reply-To: <20250407155742.968816-1-bigeasy@linutronix.de>
 References: <20250407155742.968816-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,68 +63,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Peter Zijlstra <peterz@infradead.org>
+To support runtime resizing of the process private hash, it's required
+to not use the obtained hash bucket once the reference count has been
+dropped. The reference will be dropped after the unlock of the hash
+bucket.
+The amount of waiters is decremented after the unlock operation. There
+is no requirement that this needs to happen after the unlock. The
+increment happens before acquiring the lock to signal early that there
+will be a waiter. The waiter can avoid blocking on the lock if it is
+known that there will be no waiter.
+There is no difference in terms of ordering if the decrement happens
+before or after the unlock.
 
-This gets us:
+Decrease the waiter count before the unlock operation.
 
-  fph =3D futex_private_hash(key) /* gets fph and inc users */
-  futex_private_hash_get(fph)   /* inc users */
-  futex_private_hash_put(fph)   /* dec users */
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/futex/core.c  | 12 ++++++++++++
- kernel/futex/futex.h |  8 ++++++++
- 2 files changed, 20 insertions(+)
+ kernel/futex/core.c    | 2 +-
+ kernel/futex/requeue.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 56a5653e450cb..6a1d6b14277f4 100644
+index 6a1d6b14277f4..5e70cb8eb2507 100644
 --- a/kernel/futex/core.c
 +++ b/kernel/futex/core.c
-@@ -107,6 +107,18 @@ late_initcall(fail_futex_debugfs);
+@@ -537,8 +537,8 @@ void futex_q_lock(struct futex_q *q, struct futex_hash_=
+bucket *hb)
+ void futex_q_unlock(struct futex_hash_bucket *hb)
+ 	__releases(&hb->lock)
+ {
+-	spin_unlock(&hb->lock);
+ 	futex_hb_waiters_dec(hb);
++	spin_unlock(&hb->lock);
+ }
 =20
- #endif /* CONFIG_FAIL_FUTEX */
+ void __futex_queue(struct futex_q *q, struct futex_hash_bucket *hb,
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index 992e3ce005c6f..023c028d2fce3 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -456,8 +456,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
+s1,
+ 			ret =3D futex_get_value_locked(&curval, uaddr1);
 =20
-+struct futex_private_hash *futex_private_hash(void)
-+{
-+	return NULL;
-+}
-+
-+bool futex_private_hash_get(struct futex_private_hash *fph)
-+{
-+	return false;
-+}
-+
-+void futex_private_hash_put(struct futex_private_hash *fph) { }
-+
- /**
-  * futex_hash - Return the hash bucket in the global hash
-  * @key:	Pointer to the futex key for which the hash is calculated
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index 77d9b3509f75c..bc76e366f9a77 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -206,10 +206,18 @@ extern struct futex_hash_bucket *futex_hash(union fut=
-ex_key *key);
- extern void futex_hash_get(struct futex_hash_bucket *hb);
- extern void futex_hash_put(struct futex_hash_bucket *hb);
+ 			if (unlikely(ret)) {
+-				double_unlock_hb(hb1, hb2);
+ 				futex_hb_waiters_dec(hb2);
++				double_unlock_hb(hb1, hb2);
 =20
-+extern struct futex_private_hash *futex_private_hash(void);
-+extern bool futex_private_hash_get(struct futex_private_hash *fph);
-+extern void futex_private_hash_put(struct futex_private_hash *fph);
-+
- DEFINE_CLASS(hb, struct futex_hash_bucket *,
- 	     if (_T) futex_hash_put(_T),
- 	     futex_hash(key), union futex_key *key);
+ 				ret =3D get_user(curval, uaddr1);
+ 				if (ret)
+@@ -542,8 +542,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
+s1,
+ 				 * waiter::requeue_state is correct.
+ 				 */
+ 			case -EFAULT:
+-				double_unlock_hb(hb1, hb2);
+ 				futex_hb_waiters_dec(hb2);
++				double_unlock_hb(hb1, hb2);
+ 				ret =3D fault_in_user_writeable(uaddr2);
+ 				if (!ret)
+ 					goto retry;
+@@ -556,8 +556,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
+s1,
+ 				 *   exit to complete.
+ 				 * - EAGAIN: The user space value changed.
+ 				 */
+-				double_unlock_hb(hb1, hb2);
+ 				futex_hb_waiters_dec(hb2);
++				double_unlock_hb(hb1, hb2);
+ 				/*
+ 				 * Handle the case where the owner is in the middle of
+ 				 * exiting. Wait for the exit to complete otherwise
+@@ -674,8 +674,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
+s1,
+ 		put_pi_state(pi_state);
 =20
-+DEFINE_CLASS(private_hash, struct futex_private_hash *,
-+	     if (_T) futex_private_hash_put(_T),
-+	     futex_private_hash(), void);
-+
- /**
-  * futex_match - Check whether two futex keys are equal
-  * @key1:	Pointer to key1
+ out_unlock:
+-		double_unlock_hb(hb1, hb2);
+ 		futex_hb_waiters_dec(hb2);
++		double_unlock_hb(hb1, hb2);
+ 	}
+ 	wake_up_q(&wake_q);
+ 	return ret ? ret : task_count;
 --=20
 2.49.0
 
