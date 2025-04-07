@@ -1,146 +1,122 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D911C36;
-	Mon,  7 Apr 2025 03:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C423079FD;
+	Mon,  7 Apr 2025 03:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743996665; cv=none; b=c1oxu2o2A4OXqX1bAcNR0D3/M3T9tj9ivX6kcqjq0R9N/2XABGITWgFd6zTDLHP7f5BeeLAvnHoMSdtsL//8wClVMXOEiaC5QBRjQZgVbWSgZNypxZUFc7uUJ7EY/CODRMxqIgMdmiZ+MpkDmtyQSp3/pPMuUnjvCj2LUOUqvXU=
+	t=1743997076; cv=none; b=nCVYCwt4DtFT3hfPCO5gt028eYZ7H4yw7pvibxVTX+NK1j2Cqo/+oyPwEiFVrdQiFvP3xyyMOgzOyAdDJ72B5GkY/zClmjpj/ZH8VC1+s1uZsNjfn9mJ1tB5Y40r24d/fi84ktNi4exym5z2/n9cwZ3iApPmoyO/mYvGt6KwSNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743996665; c=relaxed/simple;
-	bh=F4YPuhYwwH5EPtzJdyUauY3TMCnUWvTAe9kMB/iwmNo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JX9JFro39Be/JnwiexhLnvpLS7pO3S2g3o6x5n8vkyq6jvEVA4SPW411gFBNjBlW91/IyEE56RbDAD9MTHZfWnx6n6SPMt9DZyD7hWCvUVj87J/i1diWMRPDaV+uUXfyUHVmM8vQH0qq+Np9dHruu9K+6qT1VKRc6WyCQDJcZSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=oTfKK+4m; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1743997076; c=relaxed/simple;
+	bh=PyuwHWmTOOmVj1ltBrX/9lsDSMce3Xq03MY1eBoT2Ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLpv0EXzqC9A9e2/yEJlJA01UtskE9fTWL68BmRXmWYZT5c613Ge5XizaD14OfEiZnvbR/VhStTDkJ+EUc785B46f0/Kd4w7U5Hog7TEimXZPHbmfN3ROyXaOJnNnpreaq/4MM6JKULBN0Go1p9ZmYza6WIMsGcl5AV5tNgg41s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IsdxRras; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="oTfKK+4m"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5373Ur4T2397097, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1743996653; bh=F4YPuhYwwH5EPtzJdyUauY3TMCnUWvTAe9kMB/iwmNo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=oTfKK+4mjg6OZkCIZi2ZTyxJ8H4WQGfe1BHn7O0vvi/8Y5yDfwlwZc1VdLsLWoIqZ
-	 o/qHE1/YkOuL1LEW+UOyNE9FyWtaYrFOoLnLtCOZglyCAQuRmAg7KwkOMlwgTb0lCr
-	 UEdbGeqS1NnT9uC+ix8jmTTZtpn3b3mPE7sQnwkrKA93r7lSviilYrPjzBy/F8Xv4U
-	 auTfDhfHqG6tGCPx2a8HdaywF1+0DfBdQJeZNS/fRHCxtP8JGIqbfmvSeAOc+i8+8R
-	 HU7bJD8lnRaHoqmWt4RhhdKZn3mMTL89lybli4eJBN4kNZeoXwd0H4Wd7lQLu1H/Zf
-	 KJZoa8RpIirEQ==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5373Ur4T2397097
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 11:30:53 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 7 Apr 2025 11:30:52 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 7 Apr 2025 11:30:51 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Mon, 7 Apr 2025 11:30:51 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Zhen XIN <zhen.xin@nokia-sbell.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>
-Subject: RE: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-Thread-Topic: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-Thread-Index: AQHbo+jJuNfRBVSN0k+LjlPmG1YP3LOXjoew
-Date: Mon, 7 Apr 2025 03:30:51 +0000
-Message-ID: <9d908c7c77684260818470225b8a0980@realtek.com>
-References: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
-In-Reply-To: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IsdxRras"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=j5LtAP9dH0se3Aa+dj5UG/sESuo0SmU97FCP6hGcPME=; b=IsdxRras8/9Ro0ZiSNQ4QHrRBI
+	lTpxyE5+DAGAeVziAF+y2ckcROmb7slyNm9SmC6bhaIx1lAMp45YpRHlODod6TmLrAJDNpKzwmU4b
+	h56EaQ75YFS2cbHbMsDTxfAj+Y8+Blqy5ck2OGO08qO6UtQonZVP9cZR05k3OJQrl4Auyqk7XWXCN
+	mA8tnqY7yyh1yZCvUvKges+sUq4lrsJ65l9hAJh0qAkKRvn8ZhUpcd+R31KjfUY5Rts4izoE72opK
+	cYDaGv/5CL7gw71FGPphOepmPjY5QUZeuErWt+IDW+YMeQDGIfUqb9H1gw2v48zUVs32a8mAN9Ek/
+	cfI7YOgw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u1dIl-00DMJi-0A;
+	Mon, 07 Apr 2025 11:37:36 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Apr 2025 11:37:35 +0800
+Date: Mon, 7 Apr 2025 11:37:35 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Zixun LI <admin@hifiphile.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: atmel - add CRYPTO_ALG_KERN_DRIVER_ONLY flag to
+ atmel-aes, atmel-sha, atmel-tdes drivers
+Message-ID: <Z_NIf4EEeLRv4fFT@gondor.apana.org.au>
+References: <20250319150657.2698916-1-zli@ogga.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319150657.2698916-1-zli@ogga.fr>
 
-Hi Martin,
+On Wed, Mar 19, 2025 at 04:06:56PM +0100, Zixun LI wrote:
+> 
+> diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
+> index 90dcae7049b7..8a6ee5ac9956 100644
+> --- a/drivers/crypto/atmel-aes.c
+> +++ b/drivers/crypto/atmel-aes.c
+> @@ -1948,7 +1948,8 @@ static struct skcipher_alg aes_xts_alg = {
+>  	.base.cra_driver_name	= "atmel-xts-aes",
+>  	.base.cra_blocksize	= AES_BLOCK_SIZE,
+>  	.base.cra_ctxsize	= sizeof(struct atmel_aes_xts_ctx),
+> -	.base.cra_flags		= CRYPTO_ALG_NEED_FALLBACK,
+> +	.base.cra_flags		= CRYPTO_ALG_NEED_FALLBACK |
+> +						  CRYPTO_ALG_KERN_DRIVER_ONLY,
 
-I replied original mail, because I think discussion would be clearer.
+This should be indented like this:
 
-Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
-> Rtl8732ds doesn't work in AP-Mode due to the missing tx status for manage=
-ment frames
-> This patch enables tx status report for all tx skbs
->=20
-> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/sdio.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wire=
-less/realtek/rtw88/sdio.c
-> index e024061bdbf7..84f71e13b5ae 100644
-> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
-> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
-> @@ -1186,7 +1186,7 @@ static int rtw_sdio_request_irq(struct rtw_dev *rtw=
-dev,
->  }
->=20
->  static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
-> -                                       struct sk_buff *skb)
-> +                                       struct sk_buff *skb, enum rtw_tx_=
-queue_type queue)
+	.base.cra_flags		= CRYPTO_ALG_NEED_FALLBACK |
+				  CRYPTO_ALG_KERN_DRIVER_ONLY,
+
+> diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
+> index 3622120add62..40f6ed5b20ee 100644
+> --- a/drivers/crypto/atmel-sha.c
+> +++ b/drivers/crypto/atmel-sha.c
+> @@ -1254,7 +1254,8 @@ static int atmel_sha_cra_init(struct crypto_tfm *tfm)
+>  static void atmel_sha_alg_init(struct ahash_alg *alg)
 >  {
->         struct rtw_sdio_tx_data *tx_data =3D rtw_sdio_get_tx_data(skb);
->         struct ieee80211_tx_info *info =3D IEEE80211_SKB_CB(skb);
-> @@ -1195,7 +1195,7 @@ static void rtw_sdio_indicate_tx_status(struct rtw_=
-dev *rtwdev,
->         skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
->=20
->         /* enqueue to wait for tx report */
-> -       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
-> +       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS && queue <=3D RT=
-W_TX_QUEUE_VO) {
+>  	alg->halg.base.cra_priority = ATMEL_SHA_PRIORITY;
+> -	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC;
+> +	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC |
+> +							   CRYPTO_ALG_KERN_DRIVER_ONLY;
 
-Is this because you have seen "failed to get tx report"?
-Have you tried to increasing RTW_TX_PROBE_TIMEOUT?
+	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC |
+				   CRYPTO_ALG_KERN_DRIVER_ONLY;
 
-If it still can't get TX report, we might take this workaround with comment=
-s
-to mention why we need it. Or a local variable with proper naming to point =
-out
-this, like
+> @@ -2043,7 +2044,8 @@ static void atmel_sha_hmac_cra_exit(struct crypto_tfm *tfm)
+>  static void atmel_sha_hmac_alg_init(struct ahash_alg *alg)
+>  {
+>  	alg->halg.base.cra_priority = ATMEL_SHA_PRIORITY;
+> -	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC;
+> +	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC |
+> +							   CRYPTO_ALG_KERN_DRIVER_ONLY;
 
-	bool queue_has_no_tx_report =3D queue > RTW_TX_QUEUE_VO;
+	alg->halg.base.cra_flags = CRYPTO_ALG_ASYNC |
+				   CRYPTO_ALG_KERN_DRIVER_ONLY;
 
+> diff --git a/drivers/crypto/atmel-tdes.c b/drivers/crypto/atmel-tdes.c
+> index 099b32a10dd7..3a6a890172cd 100644
+> --- a/drivers/crypto/atmel-tdes.c
+> +++ b/drivers/crypto/atmel-tdes.c
+> @@ -898,7 +898,8 @@ static int atmel_tdes_init_tfm(struct crypto_skcipher *tfm)
+>  static void atmel_tdes_skcipher_alg_init(struct skcipher_alg *alg)
+>  {
+>  	alg->base.cra_priority = ATMEL_TDES_PRIORITY;
+> -	alg->base.cra_flags = CRYPTO_ALG_ASYNC;
+> +	alg->base.cra_flags = CRYPTO_ALG_ASYNC |
+> +						  CRYPTO_ALG_KERN_DRIVER_ONLY;
 
-By the way, USB behavior is very like to SDIO, but TX report seems to work =
-well.=20
+This fits on one line, no need to split.
 
->                 rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
->                 return;
->         }
-> @@ -1227,10 +1227,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_d=
-ev *rtwdev,
->                 return;
->         }
->=20
-> -       if (queue <=3D RTW_TX_QUEUE_VO)
-> -               rtw_sdio_indicate_tx_status(rtwdev, skb);
-> -       else
-> -               dev_kfree_skb_any(skb);
-> +       rtw_sdio_indicate_tx_status(rtwdev, skb, queue);
-
-I think this change is reasonable, since skb via all kinds of queues could=
-=20
-set IEEE80211_TX_CTL_REQ_TX_STATUS.
-
->  }
->=20
->  static void rtw_sdio_tx_handler(struct work_struct *work)
-> --
-> 2.25.1
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
