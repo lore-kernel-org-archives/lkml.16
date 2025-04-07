@@ -1,86 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709A2225A34;
-	Mon,  7 Apr 2025 06:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0D6145355
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744009145; cv=none; b=FL3m/gppMdWmVv3kjRnn8thlIAWRcu3LyT0qU0vvHb38vGSOVkVy2/9WMmaiRZdM3spiHRFl7HNyCuuqPePiXtK5RizWXgZMpb3yx5UzgP/ted2gfT9DpFxiWJwt3tq3fFIts4T90x4NgLLLnllbNnchQjnXTAwkLGHFDpbxogs=
+	t=1744009197; cv=none; b=OxBJe3TaLiwCe5nCIcAJFi8PNwCNDsAdUYhqLm9Cpgu4EhKej2rC/pGjBnyspQfVjR732dagoFzUuq/0bTaua7/otgYshJL19IQt0CZSLVqWzTmxTVy1/QLLfe0mkw1lFo5pYZuVN+mGNnhqMG0LKRlmPzNq99B74lp0NBkV3z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744009145; c=relaxed/simple;
-	bh=Uk8IEJjSk6lDLTgiBkYUJt4GuvbJc5JKYcglOwe3qY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tUgW0GhFjmkomLkFwxBCePvSx0y1X4yLRime2hUIfdlDKFbymdtnWyu6Hnf03FphfFXhy/GObmkulm/+2FMtwssYAp0Z2ECJpeEbLUPg48ECC/sgT0v20blP+C3Z17Z95gCstecLlCpNHFHzuKO41AuBotKShjxG1r9ezr3gd1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RxSxXE56; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744009197; c=relaxed/simple;
+	bh=zclVBcAH8FQLUCLJiKJqGovQwhajw/4BLJO78dfjJIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=it0jsTBe/lcSlxyZQj9kvKksz3RdUfNpvNFKHievt48bZ7wdR0vl2mswFmXQ9+/eE6vEo6MiKQ3g7xS/xRVfNgneLv16ynIPYhDlu5acx9HqaP2UQGa4ghxnr8nUeB8MlcnHUozmng692U2sJnYz4ZMA6pQXZv/bhLZj3kBo1F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EBYumcHB; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RxSxXE56"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CE64C4CEDD;
-	Mon,  7 Apr 2025 06:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744009144;
-	bh=Uk8IEJjSk6lDLTgiBkYUJt4GuvbJc5JKYcglOwe3qY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RxSxXE56MDJE8vtcJ0H7OR9N0MjXRsra/eRHC8S1WxM2K4Pct6HI/HRHnLK6zUNY7
-	 8KIkFavKw9ZE1HxlmGNCFi/e4Q3WVdHN/AQAK9bhpCjTCE7eVVbc7fQw0iDuMod5db
-	 xcpGN0pT1VXE3HZ++qgo1CrS39ghMCsFGF0GdxYc=
-Date: Mon, 7 Apr 2025 08:57:35 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5] staging: rtl8723bs: Add error handling for sd_read()
-Message-ID: <2025040745-penny-graffiti-9ae7@gregkh>
-References: <20250406023513.2727-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EBYumcHB"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30f30200b51so563831fa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744009193; x=1744613993; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zclVBcAH8FQLUCLJiKJqGovQwhajw/4BLJO78dfjJIU=;
+        b=EBYumcHBZISJ6GwoSlWwc7yNxjOhT8JscNt0IjjkDiEBKgpib4lAoW0TUNBkQp1aVd
+         xM2SBXI5qs+CL7o2zvxEOu5+qNI4esIbeQPPjG5kuhr+pCb0F/SEaYcy/qx6Sqgk1+Yh
+         l1dh27sytKwYAVaiyUOaTYw0/73UMXAOq2xsjOXqTjp7vSj/wF8IqPlPSbIbv5uOjwb4
+         i7inJ3++M3isx0zkK9UPJhfic7SO2vsEVHm/KlpuGVj9g5SP0O/OXLk2HL9LdOSrZTiH
+         xY7LqjOSTMtS9p8HDJtC/nFLBeZr/Ds+QDX0mdAuAD84jfTOIDbDGGh3J8FhFHKqP4T3
+         mRZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744009193; x=1744613993;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zclVBcAH8FQLUCLJiKJqGovQwhajw/4BLJO78dfjJIU=;
+        b=c/LZ+PuHfv6/sc45j3QN+3DZRWco6Mha530P+HQmoBgOT8mkziM30/3zn3mRuCR0Wh
+         yll5vPK1n2zlZ1FkdgqLM2UYXqPLo7A/sejWLXVAPc4C6w6K9mzYf0hRGh0O92nUZlYJ
+         iisMALiTJfuUAQpeDQYesvGBc8oGyJ08EEJOB1kcqwAvZoHUujZXezQz6hCRWPA9c9mO
+         5izSP3SiQO1+bT3vgXUFERgUR0A42w4xvk1U1hUa8WcKELa3uLjFfkIiaUIpeOHbttka
+         NS0JV0YyFqsIWmZI89/2VN8OJLyN2MJXyT81LG879aGa9H1Z5mZkRwk5wQ+9UEDM2meF
+         21PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkm8oTjNjH6T10Vvd+vBxTz9jRFIb6Dx+PGj9xT+9/vCphlRVfeQYikcoN8skG5gIf2l2Xx4RGO48jTv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMAl+L6rQnrBpfzs8KU+LT/jSn+AxponU6VFgnbdk9UISBhU2x
+	Y/xJdoOyR+yhNeCg2Q74Ay6wv+XLRm4QDNpg+d29yUXBSm6VS0f8J8aSSMPpzJlQclOYhxQ3S7N
+	KmF2I/OwhgtEzy6OPnnXlhrrEZltoipUeA8ctxA==
+X-Gm-Gg: ASbGncuMZ4aLrB/non4v/WXag6s4GOt0RBy4KcAa9VorOPHB11cFzVBRe/g65bKX0ft
+	uk/mVTOnvTsOazBotbr2+zbUrV9MYU7DQBEzQRjy5EDxos+slw5MtmBXUby3iuBojcz5e8lrMCD
+	eg9BZI91EKDjhQfsdwyG8kOj5D38FxgRnx6PYh4P/6XfmHcHk9gGOpjQ4vSQ==
+X-Google-Smtp-Source: AGHT+IGv1uriNC7HzAl+L8w0q6fWjV1SIj4jMIhKs+aiDpdh7nDo2D+RjAXdjN+uWj4LcQxS1M6SDdv0uiDwrLRQ5uE=
+X-Received: by 2002:a05:6512:3501:b0:549:5802:b32d with SMTP id
+ 2adb3069b0e04-54c232bf59bmr2983829e87.3.1744009193191; Sun, 06 Apr 2025
+ 23:59:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250406023513.2727-1-vulab@iscas.ac.cn>
+References: <20250306084552.15894-1-brgl@bgdev.pl>
+In-Reply-To: <20250306084552.15894-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 7 Apr 2025 08:59:41 +0200
+X-Gm-Features: ATxdqUHWFAXkM7nuErogQ0GJfGARsg3Weoa-64QKGoAPzT9SjUAGTJTgsj9Xz7g
+Message-ID: <CAMRc=MfFnK_nLPa9vnAiqF64=7Z10bme4xFyOwL-D20FQxDkyg@mail.gmail.com>
+Subject: Re: [PATCH] irqchip: davinci: remove leftover header
+To: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 06, 2025 at 10:35:13AM +0800, Wentao Liang wrote:
-> The sdio_read32() calls sd_read(), but does not handle the error if
-> sd_read() fails. This could lead to subsequent operations processing
-> invalid data. A proper implementation can be found in sdio_readN().
-
-Great, why not use that instead?
-
-> Add error handling for the sd_read() to free tmpbuf and return error
-> code if sd_read() fails. This ensure that the memcpy() is only performed
-> when the read operation is successful.
-> 
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Cc: stable@vger.kernel.org # v4.12+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+On Thu, Mar 6, 2025 at 9:45=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Commit fa8dede4d0a0 ("irqchip: remove davinci aintc driver") removed the
+> davinci aintc driver but left behind the associated header. Remove it
+> now.
+>
+> Fixes: fa8dede4d0a0 ("irqchip: remove davinci aintc driver")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
-> v5: Fix error code
-> v4: Add change log and fix error code
-> v3: Add Cc flag
-> v2: Change code to initialize val
-> 
->  drivers/staging/rtl8723bs/hal/sdio_ops.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> index 21e9f1858745..d79d41727042 100644
-> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> @@ -185,7 +185,12 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
->  			return SDIO_ERR_VAL32;
->  
->  		ftaddr &= ~(u16)0x3;
-> -		sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		err = sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		if (err) {
-> +			kfree(tmpbuf);
-> +			return SDIO_ERR_VAL32;
 
-Why isn't the error that you get from the lower levels being returned
-here instead?  Throwing that away feels wrong, don't you think?
+Gentle ping.
 
-thanks,
-
-greg k-h
+Bartosz
