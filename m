@@ -1,153 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7DF2135C1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D912F212F8A;
+	Mon,  7 Apr 2025 03:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743995035; cv=none; b=i3Bjh5waXUzHnbU+/9s/DNdj20Yc8qDu6yKZKZyiUD5cyTrw95t6zSr/cBfM/cnP9+3LNwS/p8oSbvEXhxUpLvRRkNOdgALKCvrOYGzhCRSuQHs/CMwjW2xxYHVSiCyu8tWhVdNc7vXxc6X3hBTC/45fTWxQWqeMXPN3AfhqmAA=
+	t=1743995184; cv=none; b=rD6EmVgzPBchO2+JRLtsAg9H6fOVE2KBbQwlO/+HLXJyuDTv23dMCfKZtENvcdhcB2O7QVGi0znNxGV16ThYcy9s7HysljKBqUa0eOYllHU6btSVp8UJsVw/xfFOURh7f0NL7PPsl9U83+04rJdayEQxV0bJS7KTrwgSZmQvYrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743995035; c=relaxed/simple;
-	bh=W4d6eMuOsoigxHaayWrDjD0luwkLz5SkUS2Jq1yPQek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=Sy//cY2ySX84mpeWUjZhnJjsk6ZUOqXuLcqr4WFcp1RUtbh1t81CN0sDM8n+4uD9E74w45c37haVYdwJ7XYghBieQ4kY25sl+GOVPCDE/mhEbCJPV4691Y279pGrGFWZqsi8axCo5MjVRnoOr4FlitxAEtFne/dXQQv7mV282qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A/tnNizp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743995184; c=relaxed/simple;
+	bh=/wb7EDPZuLlPLl9Q+LhNHF1Q9Bp6fgQ8+43O6aKa+Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zt6XEOfjepBCKll/AaZyzWrEHamo/GxjNhOX3AsXbKmSQIdQJN0fFsgTxH98q2JKYpyEWmNYHoP7cHE6y4X5J+LwyVmYsS0DCoLp5WyZ4E+d2/ZrrACHybSNQHrcALwLy8w1VZYK6X9H1ygGF95ASs8x2qIeCXUQaBJZOimjiAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIBlcF9O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A/tnNizp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743995032;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AQ/UrRbnj3b02IVX/znAR8Dzkmamadv/LnZeVQ24gFU=;
-	b=A/tnNizpVacWzJ78IOw/HUXUO1yR16CY9VhExiRgprRgZrNVSaQeETnVJr1n97YPmbS/2P
-	K9P+8y+EPbGDX9Vzm1nm+OZrjxaHqgouPMTO+NSwPrxNesrzp0rjCO+4JD0L1B6FvaFwXb
-	b/g03lgtfVuoUnQKEVUd4PEj7Vi4hZc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-_D5q2rZONMCapjucfqhvkg-1; Sun,
- 06 Apr 2025 23:03:49 -0400
-X-MC-Unique: _D5q2rZONMCapjucfqhvkg-1
-X-Mimecast-MFC-AGG-ID: _D5q2rZONMCapjucfqhvkg_1743995028
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1AA4B1800361;
-	Mon,  7 Apr 2025 03:03:48 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.15])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CB5CC1801A6D;
-	Mon,  7 Apr 2025 03:03:42 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	osalvador@suse.de,
-	david@redhat.com,
-	mingo@kernel.org,
-	yanjun.zhu@linux.dev,
-	linux-kernel@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 3/3] mm/gup: remove gup_fast_pgd_leaf() and clean up the relevant codes
-Date: Mon,  7 Apr 2025 11:03:06 +0800
-Message-ID: <20250407030306.411977-4-bhe@redhat.com>
-In-Reply-To: <20250407030306.411977-1-bhe@redhat.com>
-References: <20250407030306.411977-1-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIBlcF9O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB61BC4CEE3;
+	Mon,  7 Apr 2025 03:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743995183;
+	bh=/wb7EDPZuLlPLl9Q+LhNHF1Q9Bp6fgQ8+43O6aKa+Ag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uIBlcF9OHqkecTKw7PX4U2PZa2gaQr/6pdSNQsDO8HiIM3oC3W+R6ofuDjT4XvP3e
+	 KG9Y2BPUmD0AMdQNdR4b7exWNW4c1t/5zZHAe4RV7d7PRHKA52iN0dz2MomJSyc4ib
+	 kih0xao8dW4cEWpqKvTywVjUq4nueAx8pTJsabrcPTZ1ESTBe1Z22SpWjfF8w1nDrh
+	 hQ3pBffWFADBHw9471ifGjPSNfgu6yL8FsJJaIRsKHs42JUlT1ZH0tJ1jgzocD9xuu
+	 JHl5FdzLocnEK6JXCQ2YWmElEOp7jk58p26LN143dS52ePkhdsjlnMlKbll9vg7NSH
+	 YXW5qO4IbmI4A==
+Date: Mon, 7 Apr 2025 11:06:13 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: "=?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <nfraprado@collabora.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas.schier@linux.dev>, kernel@collabora.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH RFC 0/2] Add Kconfig pages and cross-references to
+ Documentation
+Message-ID: <20250407110347.087497be@sal.lan>
+In-Reply-To: <6b019d76-1a8f-4e8d-8b9b-05094a014689@notapiano>
+References: <20250404-kconfig-docs-v1-0-4c3155d4ba44@collabora.com>
+	<8734eogfqw.fsf@trenco.lwn.net>
+	<6b019d76-1a8f-4e8d-8b9b-05094a014689@notapiano>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-In the current kernel, only pud huge page is supported in some
-architectures. P4d and pgd huge pages haven't been supported yet.
-And in mm/gup.c, there's no pgd huge page handling in the
-follow_page_mask() code path. Hence it doesn't make sense to only
-have gup_fast_pgd_leaf() in gup_fast code path.
+Em Fri, 4 Apr 2025 12:24:27 -0400
+N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> escreveu:
 
-Here remove gup_fast_pgd_leaf() and clean up the relevant codes.
+> On Fri, Apr 04, 2025 at 08:31:35AM -0600, Jonathan Corbet wrote:
+> > N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> writes:
+> >  =20
+> > > This series adds Kconfig pages (patch 1) to the Documentation, and
+> > > automarkups CONFIG_* text as cross-references to those pages (patch 2=
+).
+> > >
+> > > There is a huge change in build time with this series, so we'd either
+> > > have to so some optimization and/or put this behind a flag in make so=
+ it
+> > > is only generated when desired (for instance for the online
+> > > documentation):
+> > >
+> > >   (On an XPS 13 9300)
+> > >  =20
+> > >   Before:
+> > >  =20
+> > >   real	6m43.576s
+> > >   user	23m32.611s
+> > >   sys	1m48.220s
+> > >  =20
+> > >   After:
+> > >  =20
+> > >   real	11m56.845s
+> > >   user	47m40.528s
+> > >   sys	2m27.382s
+> > >
+> > > There are also some issues that were solved in ad-hoc ways (eg the
+> > > sphinx warnings due to repeated Kconfigs, by embedding the list of
+> > > repeated configs in the script). Hence the RFC. =20
+> >=20
+> > I'm still digging out from LSFMM, so have only glanced at this ... I can
+> > see the appeal of doing this, but nearly doubling the docs build time
+> > really isn't going to fly.  Have you looked to see what is taking all of
+> > that time?  The idea that it takes as long to process KConfig entries as
+> > it does to build the entire rest of the docs seems ... a bit wrong. =20
+>=20
+> I have not yet. Thought I'd get some feedback before looking into the
+> performance. But I agree with the sentiment.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: David Hildenbrand <david@redhat.com>
----
- mm/gup.c | 49 +++----------------------------------------------
- 1 file changed, 3 insertions(+), 46 deletions(-)
+My feeling is that the issue is using :glob" and a lot of wildcards
+inside Sphinx. Instead, you should use something similar to what
+I've done to get *.[ch] for the new kernel-doc.py implementation.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 5b3ac5a867a3..c9237db3cdb3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -3172,46 +3172,6 @@ static int gup_fast_pud_leaf(pud_t orig, pud_t *pudp, unsigned long addr,
- 	return 1;
- }
- 
--static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
--		unsigned long end, unsigned int flags, struct page **pages,
--		int *nr)
--{
--	int refs;
--	struct page *page;
--	struct folio *folio;
--
--	if (!pgd_access_permitted(orig, flags & FOLL_WRITE))
--		return 0;
--
--	BUILD_BUG_ON(pgd_devmap(orig));
--
--	page = pgd_page(orig);
--	refs = record_subpages(page, PGDIR_SIZE, addr, end, pages + *nr);
--
--	folio = try_grab_folio_fast(page, refs, flags);
--	if (!folio)
--		return 0;
--
--	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
--	}
--
--	if (!pgd_write(orig) && gup_must_unshare(NULL, flags, &folio->page)) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
--	}
--
--	if (!gup_fast_folio_allowed(folio, flags)) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
--	}
--
--	*nr += refs;
--	folio_set_referenced(folio);
--	return 1;
--}
--
- static int gup_fast_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr,
- 		unsigned long end, unsigned int flags, struct page **pages,
- 		int *nr)
-@@ -3306,12 +3266,9 @@ static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
- 		next = pgd_addr_end(addr, end);
- 		if (pgd_none(pgd))
- 			return;
--		if (unlikely(pgd_leaf(pgd))) {
--			if (!gup_fast_pgd_leaf(pgd, pgdp, addr, next, flags,
--					       pages, nr))
--				return;
--		} else if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
--					       pages, nr))
-+		BUILD_BUG_ON(pgd_leaf(pgd));
-+		if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
-+					pages, nr))
- 			return;
- 	} while (pgdp++, addr = next, addr != end);
- }
--- 
-2.41.0
+Placing it as an extension on a similar way to what i did with
+get_abi.py would likely help as well.
 
+> > I wonder what it would take to create a Sphinx extension that would
+> > simply walk the source tree and slurp up the KConfig entries directly?
+> > That would be nicer than adding a separate script in any case. =20
+>=20
+> That is what is currently done for the ABI, AFAIK, so definitely seems do=
+able.
+
+Yes, doing that via an extension is doable. If done right, it can also be
+fast.
+
+> The key difference between the ABI approach and this here, is that my goa=
+l was
+> to reflect the Kconfig file hierarchy in the Documentation. So each Kconf=
+ig
+> file gets its own documentation page, while the ABI approach collects the
+> contents of all ABI files into just a few documentation pages (stable, te=
+sting,
+> etc). (So there's a non-constant number of .rst files, which means they h=
+ave to
+> be generated and can't be a sphinx plugin in this approach).
+
+Actually, get-api.py (the new version, merged for 6.15) generates a dict
+just once. Then, Sphinx rst files filters part of the doc, but I see your
+point: for every entry, we would need a .rst file if we follow the same
+approach.
+
+That's said, it may have a way to tell Sphinx to threat Kconfig files
+on a similar way it handles ".txt" and ".rst" files. Something like the
+extension to handle markdown works:
+
+	https://www.sphinx-doc.org/en/master/usage/markdown.html
+
+Another alternative would be to use:
+
+	https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-incl=
+ude_patterns
+
+but this would require Sphinx 5.1, which is above our current minimal
+version. That's said, nothing prevents to only enable generating such
+documentatation if the Sphinx version supports it.
+
+
+> I went for this approach because the filesystem hierarchy seemed the most
+> logical way to group the Kconfig symbols. Also Kconfig files have directi=
+ves like
+> 'menu' that should be present in the documentation in the same order they=
+ appear
+> in the file to fully describe dependencies of the symbols, and having all=
+ of
+> that in the same page seems like it would be confusing. But given the pot=
+ential
+> benefits it's worth a try for sure.
+>=20
+> Now that I think about it, seems quite likely that a lot of the time spen=
+t comes
+> from creating a subshell and running the script for every Kconfig file. So
+> making a single script or sphinx extension that itself handles iterating =
+over
+> all the files would likely greatly reduce the run time. I'll test that.
+>=20
+> Thanks,
+> N=C3=ADcolas
+>=20
+> >=20
+> > I'll try to look closer, but I'll remain a bit distracted for a little
+> > while yet.
+> >=20
+> > Thanks,
+> >=20
+> > jon =20
