@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E7E23BCED;
-	Mon,  7 Apr 2025 12:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24771B4223
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029275; cv=none; b=EI4dxaG+Ipdmrxj2t8LDCF53nfsxHHrKUBBrw8W9TeVvtHfCAO2hIIA3vgH2SWEUH8PjJMwpLbvMgbW5IP5lmE9DvPDEZvNtFkxNuEz9c7nG7ssj35J6Zod4eMaszDXPY6LH2WOffenNDNrYtO7M4IaAzhXbup/gBcn/xL4tXdQ=
+	t=1744029310; cv=none; b=Dov3yMFIeprNd11Wf7xZx0K99gBrvUigbqrAA4iEK040D5wlKDc0HtCNgiq9bo/Gz6bDBOijf3JXDjtWOdrs2hukyVWNI7ZCmNoPTx0rgnXRLxjmKabmyF2I/WztGLIB4MezwrHEt8tUymNUIbEFCPVaa7ebTDS8i6ovAdHsSmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029275; c=relaxed/simple;
-	bh=81O8Kfs9Kl3ByB4JJQKPJiUtwEnEXTyQvJsxew6T6zU=;
+	s=arc-20240116; t=1744029310; c=relaxed/simple;
+	bh=LZtCZhrq/j20h74c70XZWF4FnHaFn9BU+I9ulwZRlIk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5Pe+X8S7C+JXfhHV6d88iNv4Ui8sxUUPbwyfng+gzxEuMCL0tFtdFpZCw5qsN4Qkp+VPU3NcOB0S0qR/1WGA2mxTbzaZlFFSdKXfCsroCrHCQ7cO4LOEisC8TYXqP8mgfHD7lvFHAI9vw32YaBSnEi+qHuq/pFEOLntSdVsDvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTTA0U/S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e21pOJr7lxUOJiSZDfo/QnZvT0bPZ2A7N3Y0fCGeyiwFKpsas/zNPCKa0iiJ7JxmY1X0RPIYgFsZTPLzB8hQ8hMH0qwm3jnCYlCtKUh658HNJCXTTbWUKouYlpKSsLT9gJO4r/GHcV+A/zI9Ad1kzeFLceyCXdCjKfQWDO7dvkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIOkmgSj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTTA0U/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A674C4CEDD;
-	Mon,  7 Apr 2025 12:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIOkmgSj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87FBC4CEDD;
+	Mon,  7 Apr 2025 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744029274;
-	bh=81O8Kfs9Kl3ByB4JJQKPJiUtwEnEXTyQvJsxew6T6zU=;
+	s=k20201202; t=1744029309;
+	bh=LZtCZhrq/j20h74c70XZWF4FnHaFn9BU+I9ulwZRlIk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UTTA0U/SG+M07Ucyfn5N8gZvwdgX4P7wb8qIjF4F4TnPKQmqRWhlcXm+QqfwW0zCQ
-	 CEdL14aGClRpBViIchPbJn7Vhi8oy4aqrwT0bEuFT4xRr6pLlLJAdPJC9V33251/Au
-	 TN2xd7bD20Dhrue2eArrIUqSo5+feEWgpprFerM6pGR26hgL/mncFz0KaAYGBVl/9F
-	 bNBeVXEin9qDjWqzW0hZUBz3laHUtIw8ULxejyxa9dyXZmzl8rAnfUMTYAWsn6S3Wb
-	 56uV2mgjR5gv1+uhYLbH/UNjCo/iUTa3s8KvJ5aYvYk5vo0I+Sye9LOvbz+NPssmCJ
-	 cFtNGNwypn2Lg==
-Date: Mon, 7 Apr 2025 13:34:29 +0100
-From: Mark Brown <broonie@kernel.org>
-To: ChiYuan Huang <cy_huang@richtek.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Otto lin <otto_lin@richtek.com>, Allen Lin <allen_lin@richtek.com>,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-Message-ID: <17e8e4a6-135f-46b4-89d8-3ea0d3bf6e76@sirena.org.uk>
-References: <cover.1743774849.git.cy_huang@richtek.com>
- <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
- <4e966f68-527e-4e2c-9043-0795ff094031@sirena.org.uk>
- <Z/Mf1VQ1Ay/Fw3kh@git-send.richtek.com>
+	b=cIOkmgSjS30KJqPARWW8wI/QfKkbDqug8EKl/sn2KOMlp+S9T6P6c+75Px3KoMPpF
+	 RQC2KtREWv5PLx7XF/pjDjGO6QfIBMIpnze7biNKnnELJh65QYmRVVM0s1lXHDfE1h
+	 6/lfiZpqmt+iJLO2dKAU33/oQfpFiP+d5rCeG5yJpWpxChVPm8TBFElkYDn1Tz6Q9A
+	 bhq1HgY2p17LMqfpzgB4rqPa2OKQInBbAv+IkHl0blDSz9rnl4nomW6q4cll58oBSr
+	 i0mXxjivDMu2/F/3kwJC8Td9dzsbQ7RYsAXaxJXgvCOXo5TPsZ2CzDPYGCwQW0nfcG
+	 OJAxlk/8GXwqg==
+Date: Mon, 7 Apr 2025 14:35:06 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
+	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com, 
+	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
+	lumag@kernel.org, quic_abhinavk@quicinc.com, maarten.lankhorst@linux.intel.com, 
+	tzimmermann@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] drm/ci: Add jobs to run KUnit tests
+Message-ID: <20250407-laughing-mauve-cricket-86e1e0@houat>
+References: <20250327160117.945165-1-vignesh.raman@collabora.com>
+ <20250327160117.945165-4-vignesh.raman@collabora.com>
+ <20250328-idealistic-invisible-unicorn-961d67@houat>
+ <11f27552-9fac-4d96-980c-dcfcb093fa54@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,47 +47,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bv6CX8lyqjhHM+CU"
+	protocol="application/pgp-signature"; boundary="ev2lugbvzjpsenvx"
 Content-Disposition: inline
-In-Reply-To: <Z/Mf1VQ1Ay/Fw3kh@git-send.richtek.com>
-X-Cookie: Meester, do you vant to buy a duck?
+In-Reply-To: <11f27552-9fac-4d96-980c-dcfcb093fa54@collabora.com>
 
 
---bv6CX8lyqjhHM+CU
-Content-Type: text/plain; charset=us-ascii
+--ev2lugbvzjpsenvx
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 3/3] drm/ci: Add jobs to run KUnit tests
+MIME-Version: 1.0
 
-On Mon, Apr 07, 2025 at 08:44:05AM +0800, ChiYuan Huang wrote:
-> On Fri, Apr 04, 2025 at 04:03:57PM +0100, Mark Brown wrote:
+On Tue, Apr 01, 2025 at 07:47:16AM +0530, Vignesh Raman wrote:
+> On 28/03/25 20:40, Maxime Ripard wrote:
+> > On Thu, Mar 27, 2025 at 09:31:12PM +0530, Vignesh Raman wrote:
+> > > Add jobs to run KUnit tests using tools/testing/kunit/kunit.py tool.
+> > >=20
+> > > Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> > > ---
+> > >   drivers/gpu/drm/ci/gitlab-ci.yml |  1 +
+> > >   drivers/gpu/drm/ci/kunit.sh      | 34 +++++++++++++++++++++++++++++=
++++
+> > >   drivers/gpu/drm/ci/kunit.yml     | 19 ++++++++++++++++++
+> > >   3 files changed, 54 insertions(+)
+> > >   create mode 100755 drivers/gpu/drm/ci/kunit.sh
+> > >   create mode 100644 drivers/gpu/drm/ci/kunit.yml
+> > >=20
+> > > diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gi=
+tlab-ci.yml
+> > > index 9e61b49e9960..90ae57ca86a1 100644
+> > > --- a/drivers/gpu/drm/ci/gitlab-ci.yml
+> > > +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+> > > @@ -109,6 +109,7 @@ include:
+> > >     - drivers/gpu/drm/ci/build.yml
+> > >     - drivers/gpu/drm/ci/test.yml
+> > >     - drivers/gpu/drm/ci/check-devicetrees.yml
+> > > +  - drivers/gpu/drm/ci/kunit.yml
+> > >     - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/la=
+b-status.yml'
+> > > diff --git a/drivers/gpu/drm/ci/kunit.sh b/drivers/gpu/drm/ci/kunit.sh
+> > > new file mode 100755
+> > > index 000000000000..197b19d05fba
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/ci/kunit.sh
+> > > @@ -0,0 +1,34 @@
+> > > +#!/bin/bash
+> > > +# SPDX-License-Identifier: MIT
+> > > +
+> > > +set -euxo pipefail
+> > > +
+> > > +case "${KERNEL_ARCH}" in
+> > > +    "arm")
+> > > +        QEMU_PKG=3D"qemu-system-arm"
+> > > +        GCC_ARCH=3D"arm-linux-gnueabihf"
+> > > +        ;;
+> > > +    "arm64")
+> > > +        QEMU_PKG=3D"qemu-system-aarch64"
+> > > +        GCC_ARCH=3D"aarch64-linux-gnu"
+> > > +        ;;
+> > > +    "x86_64")
+> > > +        QEMU_PKG=3D"qemu-system-x86"
+> > > +        GCC_ARCH=3D"x86_64-linux-gnu"
+> > > +        ;;
+> > > +    *)
+> > > +        echo "Unsupported architecture: ${KERNEL_ARCH}"
+> > > +        exit 1
+> > > +        ;;
+> > > +esac
+> > > +
+> > > +export ARCH=3D"${KERNEL_ARCH}"
+> > > +export CROSS_COMPILE=3D"${GCC_ARCH}-"
+> > > +
+> > > +apt-get update -qq && apt-get install -y --no-install-recommends "${=
+QEMU_PKG}"
+> >=20
+> > Thanks for working on that.
+> >=20
+> > I'm a bit concerned about using making it entirely debian specific here.
+> > Between the call to apt, the gcc triplet and the qemu package name, this
+> > not really a script to run kunit tests, but to run them on Debian :)
+> >=20
+> > We should make it pretty explicit and / or just assume the runner has
+> > the right packages and call kunit directly.
+>=20
+> Agree. This script is debian specific. I will move the debian bits to yaml
+> job and make the script generic.
 
-> > What's going on with the runtime PM stuff here?  Especially for the DAPM
-> > widget usually the ASoC core will be able to keep devices runtime PM
-> > enabled so long as they are in use so I'd expect this not to have any
-> > impact.  Why not just use a normal DAPM widget?
+Using LLVM there is probably more convenient, since you don't have to
+deal with the triplet at all when cross-compiling.
 
-> That's because The RG 0x01 'RT9123_REG_AMPCTRL' is mixed with other volatile
-> status bitfield like as 'SW_RST', 'SYS_STATE'. That's why I use pm_runtime to
-> make sure the RG can really be accessed at that time. Actually, the
-> mixed RG bitfield  for 'RW' and 'RO' is a bad design.
+Maxime
 
-You need some comments explaining what's going on here.  If the volatile
-fields are read only shouldn't you be OK, so long as the register is not
-cached you should be able to do a read modify write fine?  Unless the
-status bits are clear on read.
-
---bv6CX8lyqjhHM+CU
+--ev2lugbvzjpsenvx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfzxlQACgkQJNaLcl1U
-h9Bj8wf+MuvOpgGLzuxJ2zgFZYqQIWbkfQ/xyJKwdXkIab8aukkw5vy9JzFozl4n
-wjbf5U+oaNzMzXUHJ9Ky5FRc6pz1W3KEHuowYJY/tho+5V/RMDL1Nju3IWuNqy0f
-KTOG5cHyKSR6F5IesQ8PQQnnUl9amHHGuwIgHigYIiX7C9GsREIswNPdBVjYoZxU
-eryX9WMVvdJR+dsrl6J4T+CtVhmScR5dR51TdZpROdh2km0cSvrQjx1hntpf6ImM
-q53PwCzcxRvVcDAHwNk//8/1aYRMbkNuaz7eNo4CfJGe5vyDXnGtKAJjuphLb7b6
-LL6zcDVeJbvvUPYA7Fdehfh9pWxtjg==
-=CXgY
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/PGeQAKCRDj7w1vZxhR
+xTDVAQC6xt/UjwNMMbl0m9/DXn6O8sgVlF4vAhcWSdDj/qwGBAEApIfgtZr0Nhap
+1GKn9Vr5iwAy2gwMeaAcAju62Wf1hwY=
+=ix8r
 -----END PGP SIGNATURE-----
 
---bv6CX8lyqjhHM+CU--
+--ev2lugbvzjpsenvx--
