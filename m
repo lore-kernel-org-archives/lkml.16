@@ -1,204 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAE12F28;
-	Mon,  7 Apr 2025 16:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58306207DE5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043140; cv=none; b=PB5WmUGvG4KzxBeVzv5Fzd4ctKdTJ8SI07msbhhLDkLzv9mx5jX2XJ9G/cdLeOx9sUPJnN84A5HDi/KcU4rERUv2ELP/Ulc/zr6+qKRUsVG7YcsTsfuLEeBp5gdPKIxaeMw7JPFO1wsPbMP0m4Omu4HYeovhfG7llY+r1aRHtJI=
+	t=1744043163; cv=none; b=rNadAxzzidDsaTHmLCF4zZm+uvkAasWYHlesmdOZ8ZxF3QbKX0XPOyw+fFvt+QjqzFx97Ll/U1/zudoG007eCG/TARmFhc87N7Hw2PB+OQcqOCsgWL/mp5X4s/my/Z4cyKicchw3bVx6RC6JAZUQ4aYmpxpYHaUPOwKm+5zmGj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043140; c=relaxed/simple;
-	bh=+94DxqlitMbLGB+wlBBsY6tpDWszgaemr9JBqu5sx9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zh1K23Gd+J7WKvXMwGlAV55NqYbWXmCKkosadLGPQzx8kgKWThCx4Kjpd1QWSu4PVG+kLOz/h5sj5HNLnO+q6sJD6pzzNR6DfHj+GHfk7vyBDk+VcY+vZLq209Q9m+9PoC2XC9AnXpFuMunDQ1I8EBI3INgA5yPtywg7WG4G9AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QaTx24va; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744043163; c=relaxed/simple;
+	bh=GMvaB3Mzb4QuxEqJ77ptGlToNSrLtUC7nn+mY9oNs94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GcjfVqaLQMp1GP/hctXtoGbArMOcys29tpZi1PVUCQrfR9ehxWvuAHF7Ldao3hbLqRG8R+yzVBgx4Tb/lrpmLGNronO6qGQPDSUw52dyGLa75cofzPnBNe5zM7WpzfNnQbdLfw9RA9d3JTmFQB6f4IwSs4ekbaJhBbn6Zkp26f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BEzljU0P; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QaTx24va"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F24C4CEEA;
-	Mon,  7 Apr 2025 16:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744043140;
-	bh=+94DxqlitMbLGB+wlBBsY6tpDWszgaemr9JBqu5sx9o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QaTx24vau/y+2epVhQFbs+0pPGYp7fzQLmHDCI4y3eS71ZWAMos3FS3SrOezyovB3
-	 9aUdecMvGLbNsRNdflLkKrYUVCKpLDWbqDpei/rRVCNIR0iF3dg3/WFLK/vsi1fLdk
-	 IQ6Wyh9ke+Swtiv4SKvbIN3aJQ+YwJXUpxyCgH9HyDogmXCZtuEuVrzZTG6AGQmsE/
-	 80LdPgX4ZKK7fRUvCzwcBju8Qk5DLRfWoFUQaRrNTkhRr/iSwj0yICTMDXNFqSZj4I
-	 yfAhQfQD1zuiOT9N3Q0NUu4p9gueqwaI2bHIudE5FVqDqhfia4oLXTRPIoGEsLz7OU
-	 EVGf77dC9VonA==
-From: Mario Limonciello <superm1@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H . Peter Anvin" <hpa@zytor.com>,
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list),
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 2/2] x86/CPU/AMD: Print the reason for the last reset
-Date: Mon,  7 Apr 2025 11:25:25 -0500
-Message-ID: <20250407162525.1357673-2-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250407162525.1357673-1-superm1@kernel.org>
-References: <20250407162525.1357673-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BEzljU0P"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8f7019422so41266346d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1744043160; x=1744647960; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+iCbhKN/vcDN+xhzXNKoawXibM8X0AG5KtFkzYcV9TI=;
+        b=BEzljU0P+1J2qYRt5ZjzzhsUAzbCPxZj9HMuMV0Y+AGVW3zYemgEkl7LFdssaBQgP9
+         IBgjTcfbxLsjwYaLL98VrqeDgFM4753fTj4yewr8IrJV9KDZKS/LbXuAsJwNTKHQw8d4
+         KyWQLCv5fU7iIo6bGYMuXdBgGthxlrsoX4dRyoBzg+MgVI8vRBG6fCfiZu29lPw7HJ5+
+         /LBlTko+INhtqOKllKeog96oEkFnjTidqonNlsRWweqQFBUZiAhA4HKDEJMZQo5gw+1H
+         dLXt27ThzXgy5wfeOwmmvf9PmXOpedrbnt6gLBzOxLxRF8wNHyfhy1DxUAeV47HOqR2g
+         NFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744043160; x=1744647960;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+iCbhKN/vcDN+xhzXNKoawXibM8X0AG5KtFkzYcV9TI=;
+        b=ptukBYy2D5XNswb5XqL/A132CAqOdhR4JK/SqvdD5+JWRJ9qf/5VTnNYHvvv4PtAb5
+         L4tolG5RRlt0Yy/Bc6H9KqBqQ0OiU3cF1inhpTS7eLKSq7mPyb+POvFhv+rJtY0oE9ny
+         bxdpDS7JSGwTKF/5U19Uv5BXR4+NUKFFKiW0G2DsUx3Raf5agJpTX9xSW5s7waIMFn11
+         IGwEchJWLPsX4kQJvezfb4BM458aH15yWwYiayaRQfSTdjgzBCzsN9QeuOgSJCrRSB82
+         M2GgHuzKK7JcVFsrWMjC8vCuWlSjQzBU4mUdONOl4vHib3YB6fAYYtMncdWSuJYo3mRY
+         dvyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeI4vL+iafh9ZQ/87VE+TEZmKMLr7vWKlj7wZNSzqA9PBGBhkbWHfbgh3qM5poO0kvzy/DO2cbfgozEkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhnMjDggNv5QQ6XhW8eCwSZh8M5DlK9YRHTpvSaRklHSd3YNEm
+	U+RvvU90aePCieHg9EPKer1X0afLtet1ZMK/MW9V47Aip0Ion9huZq48kXGtRYQ=
+X-Gm-Gg: ASbGncvv1sjw1Ow1XXxuVZJBNFlEs0TXldBNtdducMs26qifQtubz0QAVlti6RGSkrf
+	zWTskW7xniHUwf26z7cdEG/VMO5CjDQxIr2x/sWY4NY6eG6SCpzPZhyMmQ/3L7Nxvp+NHdzsUSe
+	xaZeaC7ncf6MSEKVpxY2t9nelryspwDSmfsf+p7Xu7BBzuNFtyI5dGzvvn67f0zCaI+dk5d9HxR
+	Gua0xTuFl050/ZTKwoORqrGdzMcJbPE6ylmDD1kAzNoMuAfe3PrJR0RnICrDFZ/6gGzcNC5OvTb
+	45vdtSr9A/ucJ2yvHSFcpSU2Wc5eqRIsP+FNPSwbvjPOKSDPsZvY3DnUN3NFVh/oZniQjxfEOYJ
+	RSfowy9FxThKRU76/zJMrAPQ=
+X-Google-Smtp-Source: AGHT+IEg3Lx6+oE5FhUSj9L70cdQ4V88WkIK1cwdCX/+smOJLjX9bN7bqLLW99Cz3jwxXg7No7sDEQ==
+X-Received: by 2002:a05:6214:2aa1:b0:6e4:3eb1:2bde with SMTP id 6a1803df08f44-6f00dfd7017mr269610496d6.19.1744043159997;
+        Mon, 07 Apr 2025 09:25:59 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f138c5bsm60200316d6.72.2025.04.07.09.25.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 09:25:59 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u1pIN-00000007DAh-0BNd;
+	Mon, 07 Apr 2025 13:25:59 -0300
+Date: Mon, 7 Apr 2025 13:25:59 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: luoqing <l1138897701@163.com>
+Cc: luoqing@kylinos.cn, Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rdma: infiniband: Added __alloc_cq request value Return
+ value non-zero value determination
+Message-ID: <20250407162559.GA1562048@ziepe.ca>
+References: <20250407093341.3245344-1-l1138897701@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407093341.3245344-1-l1138897701@163.com>
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+On Mon, Apr 07, 2025 at 05:33:41PM +0800, luoqing wrote:
+> From: luoqing <luoqing@kylinos.cn>
+> 
+> When the kernel allocates memory for completion queue object ib_cq on the specified
+> InfiniBand device dev and ensures that the allocated memory is cleared to zero,
+> if the ib_cq object is not initialized to 0, a non-null value is still returned,
+> and the kernel should exit and give a warning.
+> Avoid kernel crash when this memory is initialized.
 
-The following register contains bits that indicate the cause for the
-previous reset.
+?? This doesn't make any sense.
 
-        PMx000000C0 (FCH::PM::S5_RESET_STATUS)
+> ib_mad_init_device
+> 	-->ib_mad_port_open
+> 		-->__ib_alloc_cq
+> 			-->rdma_zalloc_drv_obj(dev, ib_cq);
 
-This is useful for debug. The reasons for reset are broken into 6 high
-level categories. Decode it by category and print during boot.
+rdma_zalloc_drv_obj() must return memory that is validly castable to
+the struct ib_cq.
 
-Specifics within a category are split off into debugging documentation.
+> When ib_cq is zero, the return value of cq is ZERO_SIZE_PTR ((void *)16) and is not non-null
+> cq = rdma_zalloc_drv_obj(dev, ib_cq);
 
-The register is accessed indirectly through a "PM" port in the FCH. Use
-MMIO access in order to avoid restrictions with legacy port access.
+It looks to me like the driver returned the wrong size for the ib_cq
+in the ops->size_ib_cq. It is not allowed to be 0 if the driver is
+supporting cq.
 
-Use a late_initcall() to ensure that MMIO has been set up before trying
-to access the register.
+Arguably we should check that the size_* pointers have the requirement
+minimum size when registering the driver.
 
-This register was introduced with AMD Family 17h, so avoid access on
-older families. There is no CPUID feature bit for this register.
+Allocation time is too late.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- .../admin-guide/amd/amd-reboot-reason.csv     | 21 ++++++++
- Documentation/admin-guide/amd/debugging.rst   | 22 ++++++++
- arch/x86/kernel/cpu/amd.c                     | 50 +++++++++++++++++++
- 3 files changed, 93 insertions(+)
- create mode 100644 Documentation/admin-guide/amd/amd-reboot-reason.csv
-
-diff --git a/Documentation/admin-guide/amd/amd-reboot-reason.csv b/Documentation/admin-guide/amd/amd-reboot-reason.csv
-new file mode 100644
-index 0000000000000..c31c7a0464c38
---- /dev/null
-+++ b/Documentation/admin-guide/amd/amd-reboot-reason.csv
-@@ -0,0 +1,21 @@
-+Bit, Type, Reason
-+0, Pin, Thermal trip (BP_THERMTRIP_L)
-+1, Pin, Power button
-+2, Pin, SHUTDOWN# pin
-+4, Remote, Remote ASF power off command
-+9, Internal, Thermal trip (internal)
-+16, Pin, User reset (BP_SYS_RST_L)
-+17, Software, PCI reset (PMIO 0xC4)
-+18, Software, CF9 reset (0x04)
-+19, Software, CF9 reset (0x06)
-+20, Software, CF9 reset (0x0E)
-+21, Sleep, Power state or ACPI state transition
-+22, Pin, Keyboard reset (KB_RST_L)
-+23, Internal, Internal CPU shutdown
-+24, Hardware, Failed boot timer
-+25, Hardware, Watchdog timer
-+26, Remote, Remote ASF reset command
-+27, Internal, Data fabric sync flood event due to uncorrected error
-+29, Internal, MP1 Watchdog timer timeout
-+30, Internal, Parity error
-+31, Internal, SW sync flood event
-\ No newline at end of file
-diff --git a/Documentation/admin-guide/amd/debugging.rst b/Documentation/admin-guide/amd/debugging.rst
-index 5a721ab4fe013..2a966f0ead26a 100644
---- a/Documentation/admin-guide/amd/debugging.rst
-+++ b/Documentation/admin-guide/amd/debugging.rst
-@@ -268,3 +268,25 @@ EPP Policy
- The ``energy_performance_preference`` sysfs file can be used to set a bias
- of efficiency or performance for a CPU.  This has a direct relationship on
- the battery life when more heavily biased towards performance.
-+
-+Random reboot issues
-+====================
-+When a random reboot occurs, the high-level reason for the reboot is stored
-+in a register that will persist onto the next boot.
-+
-+There are 6 classes of reasons for the reboot:
-+ * Software induced
-+ * Power state transition
-+ * Pin induced
-+ * Hardware induced
-+ * Remote reset
-+ * Internal CPU event
-+
-+.. csv-table::
-+   :header-rows: 1
-+   :widths: 1, 1, 1
-+   :file: ./amd-reboot-reason.csv
-+
-+This information is read by the kernel at bootup and is saved into the
-+kernel ring buffer. When a random reboot occurs this message can be helpful
-+to determine the next component to debug such an issue.
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 79569f72b8ee5..bb187c46a6a71 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1231,3 +1231,53 @@ void amd_check_microcode(void)
- 	if (cpu_feature_enabled(X86_FEATURE_ZEN2))
- 		on_each_cpu(zenbleed_check_cpu, NULL, 1);
- }
-+
-+#define PIN_RESET	(BIT(0) | BIT(1) | BIT(2) | BIT(16) | BIT(22))
-+#define REMOTE_RESET	(BIT(4) | BIT(26))
-+#define INTERNAL_RESET	(BIT(9) | BIT(23) | BIT(27) | BIT(29) | BIT(30) | BIT(31))
-+#define SW_RESET	(BIT(17) | BIT(18) | BIT(19) | BIT(20))
-+#define HW_RESET	(BIT(24) | BIT(25))
-+#define SLEEP_RESET	(BIT(21))
-+
-+static inline char *get_s5_reset_reason(u32 value)
-+{
-+	if (value & SW_RESET)
-+		return "software";
-+	if (value & SLEEP_RESET)
-+		return "power state transition";
-+	if (value & PIN_RESET)
-+		return "pin state change";
-+	if (value & HW_RESET)
-+		return "hardware";
-+	if (value & REMOTE_RESET)
-+		return "remote power event";
-+	if (value & INTERNAL_RESET)
-+		return "internal CPU error";
-+	return "unknown reason";
-+}
-+
-+static __init int print_s5_reset_status_mmio(void)
-+{
-+	void __iomem *addr;
-+	u32 value;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_ZEN))
-+		return 0;
-+
-+	/*
-+	 * FCH::PM::S5_RESET_STATUS
-+	 * PM Base = 0xFED80300
-+	 * S5_RESET_STATUS offset = 0xC0
-+	 */
-+	addr = ioremap(0xFED803C0, sizeof(value));
-+	if (!addr)
-+		return 0;
-+	value = ioread32(addr);
-+	iounmap(addr);
-+
-+	pr_info("System reset was due to %s (0x%08x)\n",
-+		get_s5_reset_reason(value), value);
-+
-+	return 0;
-+}
-+late_initcall(print_s5_reset_status_mmio);
--- 
-2.43.0
-
+Jason
