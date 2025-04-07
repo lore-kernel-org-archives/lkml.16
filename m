@@ -1,109 +1,111 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8852139DC;
-	Mon,  7 Apr 2025 20:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3844D2206B6;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056190; cv=none; b=QZPXI41MdTVvq7Ssb/FHohxF2psBzkwMtvjfPlaW+l5VxVq+fxASigHn4FaCqIEeju9A3hjg8kE33zYAdJCgE11uxKRkB3qpbkvJIff4EzDYQi9zvUXA3xpGTxO9WY5MI90SWIe6zLXP+5Ra5p8zZX8xQrS8tqQw9EXzUSt15NQ=
+	t=1744056197; cv=none; b=ki0MiJN2JmuKNh+1PITDewnSqc00blkW4/0Yvw+6kKfo/89o8rMM5g01gRzl4ywPUSWN1KxZTkgRQHOce7VWpzaWHgO/VpTW4yQTzRMyXD3peT+2qjj6TDmk30pLgbT0AO4sVNPov3oH4XPC88227cMQh6f4yg+PLPDRu1NxyCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056190; c=relaxed/simple;
-	bh=ducg16hfR8hZueXDsQDQPB98oESAhaelf79Gxs3b3Nc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cz2Zp4B3/fWDnwOOGEcNa89Bxbnf8coZKS5DDAFfiG4QibL5T08yMeUdBtq7AQq6tBSmtz8Tybm10zPn5a9b20YkFH23joAfOP5BZfhEWoMQiF8rg/OT/PYuAznEDiT6+BDZEn6aj4yi1l9HLdg87BF0VDwvjd4IpafTH4MYHJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jO/s3FtH; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744056197; c=relaxed/simple;
+	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GL+orTKJhXN97UAvC/sgDjV9dMvLacD2Y2pYC/XiEcBM/fDV0g7ShqjdaTaUhFnSqqsxLysboQ9L7/+1cEBx00t8RyJuUcl91sbmdSeVZyprKmnVVEMnYOxMuxUPH3w16iri7/qo8UnnnnfPVGY5XgA49uRls86mPlYUY87knF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTDEVXji; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO/s3FtH"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c77a5747e0so2618995fac.2;
-        Mon, 07 Apr 2025 13:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744056188; x=1744660988; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g/HVQqx7ACy8Wke2eXLxg0sKouM8xAKI7gwGAUQ/F7s=;
-        b=jO/s3FtH2f1zbvV4T0yDgQ/hRkuUDxJfwe73UVW7FdoBsqieA9niYnO8+MqnrvDqHI
-         Ct5ObN0w9eB0cvZt/FM33WChSp0T8H9Yx8qzkjZGLa99b0t5sUqg7uwR81h7HNmiPSDJ
-         f1N03aBhbKs5T5VjiSHBoXQPDPw0XGxtU8oOPyS+YZkCZD8sWH8v6nLbNoJ04NU/Y7Ue
-         ogVKrLH7G8DhHYMy4cxzwk5PvN9pViUQtdEaFkmShUtlOsKBDTLeMUHzl4PdwJC+eDcr
-         3irFfb1xr/os8ylLd5gmQeZ2uQmHLeZGBGPOjENOxUoMeuZZr9JuAIZ3mx3x8GcKUQ14
-         Qo5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744056188; x=1744660988;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g/HVQqx7ACy8Wke2eXLxg0sKouM8xAKI7gwGAUQ/F7s=;
-        b=FYoC6DdfAenrllJhtMtfI+IUQgM6IkXmEsHs+YiaRCMMTinW7SE7xBPVGSL0KX6Hwf
-         OASrAtAuIvgy09SPEZBrWOAmIME5qCs77rfC3drUS6WJPkkk8aWjEzVZ2uyNipoOI5Le
-         fuhkyCfUt2yVuShDXqLeIrw/fZ0G0EhKSJlKAGAbenifmcv2pGMkA7lcU7gFwOd9b9qV
-         f7c1OvajCu7fOrs/65bqwp5w82qyjU9IZq9dLCAs46U33kA+g/ljq5jNhVF3vpVBCXhR
-         mxBu6lsL/LK5kU/Y6ebvjarhAL0ApX6M0AvXi/WEr1fFXrL5uqnzI/0ZinzZfb5KhOi+
-         JicQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUre+iSZZfAd26M1qO1Lty+InJ/hFByenGQQO0vZI20Xm6NmIHgotcPANxDOrjkcW+ii7fRubLBbUfX0rM=@vger.kernel.org, AJvYcCWLoxdPM0LaOuEIHFIhdHJ2e8vytuYKng0PSPfS6JiP+tauc4BOTgcQpzfNRsuvXmbz2WAiPGjRSxBMahMq6tI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaFHowruG9OjmEG1nBRtUwBOUXGOMUAqWA0RBgryElxL+xhtKI
-	KfnhqhJPdDVpeJO8Gt6pkftmGbE3Zjk8IweCg9/UxXlnFuZuOjxu
-X-Gm-Gg: ASbGncuDIT4OPf3+7klmluN22jXseXZE//9xB/Tl2t7soqPOcsi/wx7ylbQhrfj/WzU
-	jGhtzKTmnji9npJJoq1A6hd13YdNYaNXnL4u6c6lFxmDknEvUyijL3N/uwXi5VfqJ7HOLJqTema
-	QZZMlH9mT2+SbLelobp8J08hnAVJKDUxpJVFf8dB731Ivg1Usg6rG3L6CDu+O3SgxJQ4rrlfBqO
-	+viVeODke1buKibKivvOG0yj0KlsYKKmj9mZBBjA8ygzct2si+2rUhc7C266swKFlxcVO9cjoP0
-	T2iJh3ueC9UiduDC4C2CGdJDgMtY5algpmLIyVzp2kLExsL1F+acACf9KzQvqWmrXhZw6wUaw+t
-	XIXSbIYVxEzYspqbn
-X-Google-Smtp-Source: AGHT+IEEJurb5ksp2fl+uD+idand6jtxtZrvPetDZX8MmlzKvRN2A/ZVHQqQepzpL/TrEfq200nwbg==
-X-Received: by 2002:a05:6870:e38e:b0:29d:c832:7ef6 with SMTP id 586e51a60fabf-2cd331bc71cmr5607523fac.39.1744056186749;
-        Mon, 07 Apr 2025 13:03:06 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-72e651a0ee7sm73360a34.38.2025.04.07.13.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 13:03:06 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: liam.howlett@oracle.com
-Cc: a.hindborg@kernel.org,
-	akpm@linux-foundation.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	andrewjballance@gmail.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	brauner@kernel.org,
-	dakr@kernel.org,
-	dingxiangfei2009@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	maple-tree@lists.infradead.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	wedsonaf@gmail.com
-Subject: Re: [RFC PATCH 2/2] rust: add maple tree abstractions
-Date: Mon,  7 Apr 2025 15:02:50 -0500
-Message-ID: <20250407200250.1671534-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cons6o6begjlf4eu3wvhplimbrjtns553nugtblki7u23a3u3p@efca7vmgmr6w>
-References: <cons6o6begjlf4eu3wvhplimbrjtns553nugtblki7u23a3u3p@efca7vmgmr6w>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTDEVXji"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B5DDDC4CEE9;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744056196;
+	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=tTDEVXjiTaRg82h666TCev6oxyYBA3yNSMqXz9fKJ9VD03cxgpQxeGWjDbEc/fWX0
+	 A4LdGH2kXT+I/jyDDQn5jBVg94xPRluaFfFX/m4gSGfOgGO91DWgCMIKE4QswKfUGJ
+	 F0tmdkY9HEsHjuJikB9RcjIZ36qoe6affu/v+EAFEhkVcERilMPidqWFul/o9QJZjY
+	 rjtVSYNE6xjcxfqLZ3bU4DoHze5QBMhDKuOqzhO97aSXZwOnm7jP+BceLLo102j1Q2
+	 A14dfkCCCeEm6rz7TRHAKdrY/Hfq45WHdiaK7wo4/jvQ73dXep+Z7e+9L4wy/VfISZ
+	 wDGguTS8N9QCA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB2C369A1;
+	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
+From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
+Date: Mon, 07 Apr 2025 22:02:12 +0200
+Subject: [PATCH v15 1/4] dt-bindings: marvell: Document PXA1908 SoC and
+ samsung,coreprimevelte
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250407-pxa1908-lkml-v15-1-e83ef101f944@skole.hr>
+References: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+In-Reply-To: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ soc@lists.linux.dev, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1205;
+ i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
+ bh=0HZYngyzaREGDzMJHsAvgTM3SsJmtfsUf/jVpOGt2SA=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDOlf9Bu3P7002btD6MyP5Ezu7c0/nsW96K749Oy29v7ki
+ JX++8sedJSyMIhxMciKKbLk/ne8xvtZZOv27GUGMHNYmUCGMHBxCsBEgmIZGY58lVa8/3Plnflb
+ NBbGLr9zMr+3THq/ONOCa+eXfdpSf6GZkeGgwoNX0o/Zvt9efsbgkG5E1+rZ4hkfpaTCDbzmFd6
+ 7t4gXAA==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
+X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
+ auth_id=191
+X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Reply-To: duje.mihanovic@skole.hr
 
-On Mon, Apr 07, 2025 at 09:59:21AM -0400, Liam R. Howlett wrote:
-> * Andrew Ballance <andrewjballance@gmail.com> [250405 02:03]:
-> > maple trees are sparse array like data structure that maps
-> > non-overlapping ranges to pointers.
-> 
-> Why do you think the maple tree is a spare array like data structure?
-> 
+From: Duje Mihanović <duje.mihanovic@skole.hr>
 
-I called the maple tree "sparse array like" because indexes that have
-no entry map to null and there can be gaps between ranges. I did not
-mean to imply that a maple tree was literally a sparse array. 
+Add dt bindings for the Marvell PXA1908 SoC and the Samsung Galaxy Core
+Prime VE LTE phone (model number SM-G361F) using the SoC.
 
-Would you like me to reword this?
+The SoC comes with 4 Cortex-A53 cores clocked up to ~1.2GHz and a
+Vivante GC7000UL GPU. The phone also has a 4.5" 480x800 touchscreen, 8GB
+eMMC and 1GB of LPDDR3 RAM.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+index 4c43eaf3632e4ec8e7d9aeac62f7204e2af4405a..f73bb8ec3a1a1b9594eb059b72d95dcbf8c87c6b 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -35,6 +35,11 @@ properties:
+           - enum:
+               - dell,wyse-ariel
+           - const: marvell,mmp3
++      - description: PXA1908 based boards
++        items:
++          - enum:
++              - samsung,coreprimevelte
++          - const: marvell,pxa1908
+ 
+ additionalProperties: true
+ 
+
+-- 
+2.49.0
+
+
