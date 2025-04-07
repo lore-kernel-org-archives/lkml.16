@@ -1,88 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E9B1B042E;
-	Mon,  7 Apr 2025 03:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329552144D1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743997089; cv=none; b=btgJsRm8pTuEHLzV4XoUuANiA58JkqLAS7FrFQ68hHyKWFC0ae9IWwC5/mljPi7lJQEwNY6f9Enc3glu1ZJhrSskqCOv+FYeW+a2O+diHs5qr0VJFOxC6ZA0YwI4hIpSgakUn7MVFGe2AkI4BLonKLXrADOpoArwlgqlz0aBxxk=
+	t=1743997133; cv=none; b=qRtI3duCQVFwhq+Xo46NOescGW8LS453jjlRpX+zglx+YpNPN7yldSOpUKhlTjUU9XU+1HG0XUzBvSPgFUYtMS7PvAy1LFep9K1Zkkwi9JsVdqPSpDIrEm9GgZy0Wm01b0zZeHP9XJy1hzN/5BCtjLbL/qx1XNtLngInaZSVTgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743997089; c=relaxed/simple;
-	bh=8qencRNmZDgG+9U6EkM/h4JauXYlhWogl6srWsrJpds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XzAi3JKONg1em5iWE+EQQTiMXLbOnUK2aZrOVHMD8mnVuogPtZw5mzd1Chduq77GDpJ+3NvY6uUmbc0HUIv3dLIXB+fief0XE1ICGJg+ytlUGPPULVxBEA3MnyR+X3LxiQyKDUtTiOBpXifO+d2DSu/fap/E8AtkyN3C9JaZhzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HnP71YQt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743997133; c=relaxed/simple;
+	bh=jZgaX4jmVsHYBspYE/CHJXeQ6ix47dfRPbg7bvlz8mc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Yg5VRFQET2Yhg4hI6VXz1WzBJrM4rbyxFDz+HznwKnz10VHjRzkktfUMvm2/vkHzqjDjU5RXJo78KoVFWH1PcwBuiy78Mi77ffP7JYNfHWfJQCYcvKSe57jLgVkEFjJU8+0mc2WBbZbFpO+T1bWElb44/WggCaSiuMUYajG87gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PSH08hLe; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HnP71YQt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743997089; x=1775533089;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8qencRNmZDgG+9U6EkM/h4JauXYlhWogl6srWsrJpds=;
-  b=HnP71YQtCeRk1VUQIf1ncOisAjMar9Rv2+q2yaQ+vdOr3/CL1BVNiq1B
-   wBE4rOW8QRe/uztnTHXwYuzlgU2cTjYOrd75+5RcZyGF5/475RPaNVwQG
-   35R6JDFAcs9CCBbUBSKwkZKw8C3foo6umUuZhqo1T8e2BHpCfdUSnOaSX
-   gi7kZ6vIPif+2CDfZwxmmGE1KmEjPNWJ7ZfJcK5fMfUV2RYnLKghNraEq
-   LMQk3f2kyg5S6W3RqQU3Ix+Jq+7DbiLdUaO7xJAI0lQRELo4wye9nR/Kb
-   WDizBLNamEcO/csVYff5XbVJZ0MLNw2A5vQd0rc3b/SgKKkenf72T/Gv/
-   A==;
-X-CSE-ConnectionGUID: fAKLeZv1QTiF3Iv6saXF8w==
-X-CSE-MsgGUID: NACh4JOYTxieOBvFNteCGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="55550554"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="55550554"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 20:38:08 -0700
-X-CSE-ConnectionGUID: wgUIx/3zSni/jjWHS3eELw==
-X-CSE-MsgGUID: GpfUPQYCRY6HooUPVR78XA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128329325"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.247.168.206]) ([10.247.168.206])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 20:38:01 -0700
-Message-ID: <ff11bfee-b78e-4074-8bc6-d7826ad4d8be@linux.intel.com>
-Date: Mon, 7 Apr 2025 11:37:57 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PSH08hLe"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743997119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TLwyuuy4aI3x0fwEsZllh/AdDqppEyi7Fwatm110DFQ=;
+	b=PSH08hLemfgJhQFFxmJBpvROYAqZI7MpC0rqfgqbjIl/TN2RjSOOeCFfB3+Dj9AxbpiuFz
+	NStsFT5lv9y3NH8iMn4jclT9WIIvS++m29FPMag/+cSWo4E4waLDoaP40Pj9R54ZF8/++d
+	YhT2CFggqgP3BzLRBbwh/UR46tcv7kU=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] irqbypass: Use xarray to track producers and
- consumers
-To: Sean Christopherson <seanjc@google.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Paolo Bonzini <pbonzini@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>,
- Yong He <alexyonghe@tencent.com>
-References: <20250404211449.1443336-1-seanjc@google.com>
- <20250404211449.1443336-8-seanjc@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250404211449.1443336-8-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
+Date: Mon, 7 Apr 2025 11:37:56 +0800
+Cc: bingbu.cao@linux.intel.com,
+ Christoph Hellwig <hch@lst.de>,
+ Matthew Wilcox <willy@infradead.org>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org,
+ linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org,
+ opensource.kernel@vivo.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
+References: <20250327092922.536-1-link@vivo.com>
+ <20250404090111.GB11105@lst.de>
+ <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+ <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
+ <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
+ <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
+ <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
+To: Huan Yang <link@vivo.com>
+X-Migadu-Flow: FLOW_OUT
 
 
 
-On 4/5/2025 5:14 AM, Sean Christopherson wrote:
-> Track IRQ bypass produsers and consumers using an xarray to avoid the O(2n)
-produsers -> producers
+> On Apr 7, 2025, at 11:21, Huan Yang <link@vivo.com> wrote:
+>=20
+>=20
+> =E5=9C=A8 2025/4/7 10:57, Muchun Song =E5=86=99=E9=81=93:
+>>=20
+>>> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
+>>>=20
+>>>=20
+>>> =E5=9C=A8 2025/4/4 18:07, Muchun Song =E5=86=99=E9=81=93:
+>>>>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> =
+wrote:
+>>>>>=20
+>>>>>=20
+>>>>>=20
+>>>>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
+>>>>>>=20
+>>>>>> After the btrfs compressed bio discussion I think the hugetlb =
+changes that
+>>>>>> skip the tail pages are fundamentally unsafe in the current =
+kernel.
+>>>>>>=20
+>>>>>> That is because the bio_vec representation assumes tail pages do =
+exist, so
+>>>>>> as soon as you are doing direct I/O that generates a bvec =
+starting beyond
+>>>>>> the present head page things will blow up.  Other users of =
+bio_vecs might
+>>>>>> do the same, but the way the block bio_vecs are generated are =
+very suspect
+>>>>>> to that.  So we'll first need to sort that out and a few other =
+things
+>>>>>> before we can even think of enabling such a feature.
+>>>>>>=20
+>>>>> I would like to express my gratitude to Christoph for including me =
+in the
+>>>>> thread. I have carefully read the cover letter in [1], which =
+indicates
+>>>>> that an issue has arisen due to the improper use of `vmap_pfn()`. =
+I'm
+>>>>> wondering if we could consider using `vmap()` instead. In the HVO =
+scenario,
+>>>>> the tail struct pages do **exist**, but they are read-only. I've =
+examined
+>>>>> the code of `vmap()`, and it appears that it only reads the struct =
+page.
+>>>>> Therefore, it seems feasible for us to use `vmap()` (I am not a =
+expert in
+>>>>> udmabuf.). Right?
+>>>> I believe my stance is correct. I've also reviewed another thread =
+in [2].
+>>>> Allow me to clarify and correct the viewpoints you presented. You =
+stated:
+>>>>   "
+>>>>    So by HVO, it also not backed by pages, only contains folio =
+head, each
+>>>>    tail pfn's page struct go away.
+>>>>   "
+>>>> This statement is entirely inaccurate. The tail pages do not cease =
+to exist;
+>>>> rather, they are read-only. For your specific use-case, please use =
+`vmap()`
+>>>> to resolve the issue at hand. If you wish to gain a comprehensive =
+understanding
+>>> I see the document give a simple graph to point:
+>>>=20
+>>>  +-----------+ ---virt_to_page---> +-----------+   mapping to   =
++-----------+
+>>>  |           |                                     |     0     | =
+-------------> |     0     |
+>>>  |           | +-----------+                +-----------+
+>>>  |           |                                      |     1     | =
+-------------> |     1     |
+>>>  |           | +-----------+                +-----------+
+>>>  |           |                                      |     2     | =
+----------------^ ^ ^ ^ ^ ^
+>>>  |           | +-----------+                      | | | | |
+>>>  |           |                                      |     3     | =
+------------------+ | | | |
+>>>  |           | +-----------+                        | | | |
+>>>  |           |                                      |     4     | =
+--------------------+ | | |
+>>>  |    PMD    | +-----------+                          | | |
+>>>  |   level   |                                   |     5     | =
+----------------------+ | |
+>>>  |  mapping  | +-----------+                             | |
+>>>  |           |                                     |     6     | =
+------------------------+ |
+>>>  |           | +-----------+                              |
+>>>  |           |                                     |     7     | =
+--------------------------+
+>>>  |           |                                    +-----------+
+>>>  |           |
+>>>  |           |
+>>>  |           |
+>>>  +-----------+
+>>>=20
+>>> If I understand correct, each 2-7 tail's page struct is freed, so if =
+I just need map page 2-7, can we use vmap do
+>>>=20
+>>> something correctly?
+>> The answer is you can. It is essential to distinguish between virtual
+>=20
+> Thanks for your reply, but I still can't understand it. For example, I =
+need vmap a hugetlb HVO folio's
+>=20
+> 2-7 page:
+>=20
+> struct page **pages =3D kvmalloc(sizeof(*pages), 6, GFP_KENREL);
+>=20
+> for (i =3D 2; i < 8; ++i)
+>=20
+>     pages[i] =3D folio_page(folio, i);    //set 2-7 range page into =
+pages,
+>=20
+> void *vaddr =3D vmap(pages, 6, 0, PAGE_KERNEL);
+>=20
+> For no HVO pages, this can work. If HVO enabled, do "pages[i] =3D =
+folio_page(folio, i);" just
+>=20
+> got the head page? and how vmap can correctly map each page?
 
-> insertion time associated with walking a list to check for duplicate
-> entries, and to search for an partner.
->
-> At low (tens or few hundreds) total producer/consumer counts, using a list
-> is faster due to the need to allocate backing storage for xarray.  But as
-> count creeps into the thousands, xarray wins easily, and can provide
-> several orders of magnitude better latency at high counts.  E.g. hundreds
-> of nanoseconds vs. hundreds of milliseconds.
->
-[...]
+Why do you think folio_page(folio, i) (i =E2=89=A0 0) returns the head =
+page?
+Is it speculation or tested? Please base it on the actual situation
+instead of indulging in wild thoughts.
+
+Thanks,
+Muchun.
+
+>=20
+> Please correct me. :)
+>=20
+> Thanks,
+>=20
+> Huan Yang
+>=20
+>> address (VA) and physical address (PA). The VAs of tail struct pages
+>> aren't freed but remapped to the physical page mapped by the VA of =
+the
+>> head struct page (since contents of those tail physical pages are the
+>> same). Thus, the freed pages are the physical pages mapped by =
+original
+>> tail struct pages, not their virtual addresses. Moreover, while it
+>> is possible to read the virtual addresses of these tail struct pages,
+>> any write operations are prohibited since it is within the realm of
+>> acceptability that the kernel is expected to perform write operations
+>> solely on the head struct page of a compound head and conduct read
+>> operations only on the tail struct pages. BTW, folio infrastructure
+>> is also based on this assumption.
+>>=20
+>> Thanks,
+>> Muchun.
+>>=20
+>>> Or something I still misunderstand, please correct me.
+>>>=20
+>>> Thanks,
+>>>=20
+>>> Huan Yang
+>>>=20
+>>>> of the fundamentals of HVO, I kindly suggest a thorough review of =
+the document
+>>>> in [3].
+>>>>=20
+>>>> [2] =
+https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com=
+/#t
+>>>> [3] Documentation/mm/vmemmap_dedup.rst
+>>>>=20
+>>>>> [1] =
+https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m05=
+5b34978cf882fd44d2d08d929b50292d8502b4
+>>>>>=20
+>>>>> Thanks,
+>>>>> Muchun.
+
+
