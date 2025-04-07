@@ -1,285 +1,166 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC868245033;
-	Mon,  7 Apr 2025 11:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9B245007;
+	Mon,  7 Apr 2025 11:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026597; cv=none; b=JLMZVNumzyDY91cI4nk8em2HA14Tsot8r6mbbc7AndqsYEgPqes/zTV7cgUbYgWvYx9llf4ljLcZ75AXvygCq2wNKdqv4PcAGZDfPzX+6C7LaS85Z4s7tgQ/J+6h9g7nk9wW8vNAT2TCTTUX/27Zy/7tQSxDSDEF7E0JxebAvrU=
+	t=1744026625; cv=none; b=FBWDUlG8KBN17b63TetI3obSD/2behXzrNmnu5PKvTS8Pw3vlMBaaNXnOQ4MFlZL6DjDTTgpHjQ9J76Qe9YLTlJF3NQQUyNSLY/BmIVua0a6PIL1SVwl+W91PK0pQV3B11BD182sAixYchnS9uUhFXbfeEe51ST6YDAV7I6OyPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026597; c=relaxed/simple;
-	bh=csLriWO2+XLkdCPaqGXZjhRUaOBU2yrk3lcSTqZgE/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ND+PqXDYqekVqAuuuzB2VOyxXfPZrFU3Z7EiV6g8B4ZqOwKBVFLkAfu12dZLe5koSuaWHINE/OnnxWMoTdyU5IxdrkCxb111GFap00VwI1YrvW1y8pHQWZCdVqY4xe8C03TFbqDNnUxo8WdXMe1crKzcsRETnXQsrfuKZ46RqLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=D4PyGRg7; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="D4PyGRg7"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id D97971FC2D;
-	Mon,  7 Apr 2025 13:49:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744026593;
-	bh=rCiPsC+vVOS+/aYj7VaKLA5x7Mrjmc5bupY3BCVpqN0=; h=From:To:Subject;
-	b=D4PyGRg7YN759oFlzGrAdZyZX4Hf8BstRS2HpqYoKyLUEiehqUygcVHtVNyvDjTCY
-	 STJr08vPQjerL3H2QFq/rCuIGeM2ANdSIcRfkfqGJXmBa7MZjdKswWkKtFFi50X3O9
-	 VzURF+y3CmMhof4wB/dAI+o899fINriQrgl/IAPWOsoLEn8/FoJP0A6kM75hcqPYFq
-	 H29tLPqSlBiKqvLIjgKsNHuY6DBAAH5aEUDnUc3dupFlTdTHNT7rLAn85cnFno2kCp
-	 qNU1YCsIktbXNgeoPNbmTy7+pQYfUXfsqn1LNp2p824iZsh5SQvA2X2oIYbmM1d3Kd
-	 6Pxk933PmDP5A==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] power: reset: add Toradex Embedded Controller
-Date: Mon,  7 Apr 2025 13:49:47 +0200
-Message-Id: <20250407114947.41421-3-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407114947.41421-1-francesco@dolcini.it>
-References: <20250407114947.41421-1-francesco@dolcini.it>
+	s=arc-20240116; t=1744026625; c=relaxed/simple;
+	bh=SBJ+XKatKMigaFjkefrUBkQQ75OwEkiHbOg7E9kxTUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WReFOzbhrh/atUlJIdhcz/rXYHjTxknC4pVDwc+jYqS1d547baWmmMS+tHfriCfmiYMUIajQN5Oci7FsVio0QIbBUi38lTa6/qSxtU17xGXP9BvLSkV9WzOvj90y9Rwtik4unqid6GHTz3nZReqdn69ax4lRck6OvCCYLOG8/HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5240b014f47so1885587e0c.1;
+        Mon, 07 Apr 2025 04:50:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744026620; x=1744631420;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i4+pLFMxzNKF7wuYEtBPsrpqj7a4qDgMwXzKwK/DCEs=;
+        b=V1z8G0huK/WdVg2Z92QORzeNVH5FtYQAu4oYo4lKBB9hBmEpTF+GV2MnR7+zGp1K/e
+         D4Pl7/8iw5hDtGvoWTUXOX4ZbKKoZQ9sGxRm10hPrwJQELoZ4tTAeUr6veQHFiAqKlhV
+         oeVkB6HJofBdMMiTIOq71P0Yt1o+zSIJVP5DxLxKZkyJO5h6jOFk71kj8zAXJ6MKi+pV
+         msF8C+mlXVlWDku5PFE86ykHtaON+07cyPDIBT59wm/TAvxFUmkGkJXcHmpI9mTEhVGO
+         gj8SjTu6IZOg5ee8VbjjlrTkljB2SLEcPLQcybGrT90oqiByFMCgrR1fODHSVnlTmaH3
+         1gOg==
+X-Forwarded-Encrypted: i=1; AJvYcCW18L385voJTHQ6cCnb9NfPCO0vRPW4lsEdL+oMXDYHkASr7mOGEXYdlEKIsuS4R5nZSsKMw6DMxXhKRXw=@vger.kernel.org, AJvYcCXHHKN/7ozYMy+aOAh5OQLZMXqrO0ZMjqeKsSEs6gKWOeU3e5s5bv2mEui7zzj5D4dt8F8SRzmdiX5mNlDufixUS/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPMdljDYsmmtw6ES8wddJMei5GfZbf3tBQKZ2eirHlxtXMyQVI
+	PWdoRZt4qcBuLBcGTBuu1suoixeujREEz9cKBnPIkaqCXWAoJgU+odMV9vou
+X-Gm-Gg: ASbGncvpN78djszIrsYXfitPHGTVtglkm5gq3XMch2psN7rA35jIlj3vBMjdFWIQVn5
+	4VpOb63SlRPEavAFyEQNn84uQYHbXojvCg1lMXCHJh4tAAS6Wq5fdDpI55xqyfM6BVvi1bAGoSs
+	IrL1Xko0Y/n+S96AbfPvj7mkJa348sZ/zg15WnKaIlCDzpTEO/euUYZiLVwwio3HNYnnOaWn30E
+	WE9fzebC+yoQUtQI6eYbG1ykMZ7rZYCHQ/rMu0V/o3qBBrACEgM6ge6ir4hVKXeSRNasbFgarqD
+	ukj+Ta7hDeRR78uQiXJ/HSw3m884N4Bun5eTgLFWKifIISg8FLpJi0hCk2rCsh+J0RIV3lWUG2J
+	ajnUmp7/9BmDmEgx7Sg==
+X-Google-Smtp-Source: AGHT+IE3W3F9VA8JhK75TlcsKzRw1dbSRwp3sk1z8hFq2mzXqSVOaA+kE2EqBvulq+Oog/J5uTux0Q==
+X-Received: by 2002:a05:6122:168c:b0:51f:405e:866e with SMTP id 71dfb90a1353d-5276444bd32mr7512188e0c.1.1744026620304;
+        Mon, 07 Apr 2025 04:50:20 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5275ade8fd9sm1830042e0c.5.2025.04.07.04.50.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 04:50:19 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86715793b1fso1785131241.0;
+        Mon, 07 Apr 2025 04:50:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqFGW58Z9d1lTx8sk+x3RyNtPrh211nea3OIOxcxT8t+dy6iK4UVuXJmeCQqrgKT+0Kxn628vFFFsvbU+sRG/Q2Ig=@vger.kernel.org, AJvYcCWrkaDA/7jxQCjjoTjeKSAFf3IwhJL500p2XBe0i7Y8zhqaHguqRza8gP8+KtXk0xz1FO/dUeD4X2XgMJI=@vger.kernel.org
+X-Received: by 2002:a05:6102:f86:b0:4bb:eb4a:f9f2 with SMTP id
+ ada2fe7eead31-4c8553aea85mr9265953137.9.1744026619724; Mon, 07 Apr 2025
+ 04:50:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250228182928.2645936-1-fvdl@google.com> <20250228182928.2645936-3-fvdl@google.com>
+In-Reply-To: <20250228182928.2645936-3-fvdl@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Apr 2025 13:50:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVWviQ7O9yBFE3f=ev0eVb1CnsQvR6SKtEROBbM6z7g3w@mail.gmail.com>
+X-Gm-Features: ATxdqUH7PH4vq6Q_RgYLRrVLiKbH_NIvyy9Ay2B6TtCJJJg26LiT8zWJ4O0OrhI
+Message-ID: <CAMuHMdVWviQ7O9yBFE3f=ev0eVb1CnsQvR6SKtEROBbM6z7g3w@mail.gmail.com>
+Subject: Re: [PATCH v5 02/27] mm, cma: support multiple contiguous ranges, if requested
+To: Frank van der Linden <fvdl@google.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, yuzhao@google.com, usamaarif642@gmail.com, 
+	joao.m.martins@oracle.com, roman.gushchin@linux.dev, ziy@nvidia.com, 
+	david@redhat.com, Arnd Bergmann <arnd@arndb.de>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Hi Frank,
 
-Toradex SMARC iMX8MP and SMARC iMX95 SoM modules use a small Embedded
-Controller (EC) to manage power and reset functions and related SMARC
-signals.
+On Fri, 28 Feb 2025 at 19:30, Frank van der Linden <fvdl@google.com> wrote:
+> Currently, CMA manages one range of physically contiguous memory.
+> Creation of larger CMA areas with hugetlb_cma may run in to gaps
+> in physical memory, so that they are not able to allocate that
+> contiguous physical range from memblock when creating the CMA
+> area.
+>
+> This can happen, for example, on an AMD system with > 1TB of memory,
+> where there will be a gap just below the 1TB (40bit DMA) line. If
+> you have set aside most of memory for potential hugetlb CMA allocation,
+> cma_declare_contiguous_nid will fail.
+>
+> hugetlb_cma doesn't need the entire area to be one physically
+> contiguous range. It just cares about being able to get physically
+> contiguous chunks of a certain size (e.g. 1G), and it is fine
+> to have the CMA area backed by multiple physical ranges, as
+> long as it gets 1G contiguous allocations.
+>
+> Multi-range support is implemented by introducing an array of
+> ranges, instead of just one big one. Each range has its own bitmap.
+> Effectively, the allocate and release operations work as before,
+> just per-range. So, instead of going through one large bitmap, they
+> now go through a number of smaller ones.
+>
+> The maximum number of supported ranges is 8, as defined in
+> CMA_MAX_RANGES.
+>
+> Since some current users of CMA expect a CMA area to just use one
+> physically contiguous range, only allow for multiple ranges if a
+> new interface, cma_declare_contiguous_nid_multi, is used. The other
+> interfaces will work like before, creating only CMA areas with
+> 1 range.
+>
+> cma_declare_contiguous_nid_multi works as follows, mimicking the
+> default "bottom-up, above 4G" reservation approach:
+>
+> 0) Try cma_declare_contiguous_nid, which will use only one
+>    region. If this succeeds, return. This makes sure that for
+>    all the cases that currently work, the behavior remains
+>    unchanged even if the caller switches from
+>    cma_declare_contiguous_nid to cma_declare_contiguous_nid_multi.
+> 1) Select the largest free memblock ranges above 4G, with
+>    a maximum number of CMA_MAX_RANGES.
+> 2) If we did not find at most CMA_MAX_RANGES that add
+>    up to the total size requested, return -ENOMEM.
+> 3) Sort the selected ranges by base address.
+> 4) Reserve them bottom-up until we get what we wanted.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Frank van der Linden <fvdl@google.com>
 
-This driver implements power-off and reboot handlers, communicating with
-the EC via I2C to issue the appropriate power management commands.
+Thanks for your patch, which is now commit c009da4258f9885c
+("mm, cma: support multiple contiguous ranges, if requested")
+in v6.15-rc1.
 
-During probe, the driver logs the Embedded Controller ID (unique ID for
-each SMARC board supported) in hex format along with the firmware version.
+After this patch, the printed base address becomes zero on several
+Renesas arm32/arm64 platforms:
 
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- MAINTAINERS                           |   1 +
- drivers/power/reset/Kconfig           |  13 +++
- drivers/power/reset/Makefile          |   1 +
- drivers/power/reset/tdx-ec-poweroff.c | 150 ++++++++++++++++++++++++++
- 4 files changed, 165 insertions(+)
- create mode 100644 drivers/power/reset/tdx-ec-poweroff.c
+  - Koelsch (R-Car M2-W):
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e6903d2bb741..c6966ced8cea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24411,6 +24411,7 @@ M:	Emanuele Ghidoli <ghidoliemanuele@gmail.com>
- M:	Francesco Dolcini <francesco@dolcini.it>
- S:	Maintained
- F:	Documentation/devicetree/bindings/power/reset/toradex,smarc-ec.yaml
-+F:	drivers/power/reset/tdx-ec-poweroff.c
- 
- TORTURE-TEST MODULES
- M:	Davidlohr Bueso <dave@stgolabs.net>
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 60bf0ca64cf3..e71f0af4e378 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -216,6 +216,19 @@ config POWER_RESET_ST
- 	help
- 	  Reset support for STMicroelectronics boards.
- 
-+config POWER_RESET_TORADEX_EC
-+	tristate "Toradex Embedded Controller power-off and reset driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  This driver supports power-off and reset for SMARC Toradex SoMs,
-+	  for example the SMARC iMX8MP and SMARC iMX95, using Toradex
-+	  Embedded Controller (EC).
-+
-+	  Say Y here if you have a Toradex SMARC SoM.
-+
-+	  If unsure, say N.
-+
- config POWER_RESET_TPS65086
- 	bool "TPS65086 restart driver"
- 	depends on MFD_TPS65086
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 10782d32e1da..1b9b63a1a873 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_REGULATOR) += regulator-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
- obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
-+obj-$(CONFIG_POWER_RESET_TORADEX_EC) += tdx-ec-poweroff.o
- obj-$(CONFIG_POWER_RESET_TPS65086) += tps65086-restart.o
- obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
-diff --git a/drivers/power/reset/tdx-ec-poweroff.c b/drivers/power/reset/tdx-ec-poweroff.c
-new file mode 100644
-index 000000000000..3302a127fce5
---- /dev/null
-+++ b/drivers/power/reset/tdx-ec-poweroff.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Toradex Embedded Controller driver
-+ *
-+ * Copyright (C) 2025 Toradex
-+ *
-+ * Author: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#define EC_CHIP_ID_REG                  0x00
-+#define EC_CHIP_ID_SMARC_IMX95          0x11
-+#define EC_CHIP_ID_SMARC_IMX8MP         0x12
-+
-+#define EC_VERSION_REG_MAJOR            0x01
-+#define EC_VERSION_REG_MINOR            0x02
-+#define EC_ID_VERSION_LEN               3
-+
-+#define EC_CMD_REG                      0xD0
-+#define EC_CMD_POWEROFF                 0x01
-+#define EC_CMD_RESET                    0x02
-+
-+#define EC_REG_MAX                      0xD0
-+
-+static const struct regmap_range volatile_ranges[] = {
-+	regmap_reg_range(EC_CMD_REG, EC_CMD_REG),
-+};
-+
-+static const struct regmap_access_table volatile_table = {
-+	.yes_ranges	= volatile_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(volatile_ranges),
-+};
-+
-+static const struct regmap_range read_ranges[] = {
-+	regmap_reg_range(EC_CHIP_ID_REG, EC_VERSION_REG_MINOR),
-+};
-+
-+static const struct regmap_access_table read_table = {
-+	.yes_ranges	= read_ranges,
-+	.n_yes_ranges	= ARRAY_SIZE(read_ranges),
-+};
-+
-+static const struct regmap_config regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= EC_REG_MAX,
-+	.cache_type	= REGCACHE_RBTREE,
-+	.rd_table	= &read_table,
-+	.volatile_table = &volatile_table,
-+};
-+
-+static int tdx_ec_cmd(struct regmap *regmap, u8 cmd)
-+{
-+	int err = regmap_write(regmap, EC_CMD_REG, cmd);
-+
-+	if (err)
-+		dev_err(regmap_get_device(regmap), "Failed to send command 0x%02X: %d\n", cmd, err);
-+
-+	return err;
-+}
-+
-+static int tdx_ec_power_off(struct sys_off_data *data)
-+{
-+	struct regmap *regmap = data->cb_data;
-+	int err;
-+
-+	err = tdx_ec_cmd(regmap, EC_CMD_POWEROFF);
-+
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static int tdx_ec_restart(struct sys_off_data *data)
-+{
-+	struct regmap *regmap = data->cb_data;
-+	int err;
-+
-+	err = tdx_ec_cmd(regmap, EC_CMD_RESET);
-+
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static int tdx_ec_register_power_off_restart(struct device *dev, struct regmap *regmap)
-+{
-+	int err;
-+
-+	err = devm_register_sys_off_handler(dev, SYS_OFF_MODE_RESTART,
-+					    SYS_OFF_PRIO_FIRMWARE,
-+					    tdx_ec_restart, regmap);
-+	if (err)
-+		return err;
-+
-+	return devm_register_sys_off_handler(dev, SYS_OFF_MODE_POWER_OFF,
-+					     SYS_OFF_PRIO_FIRMWARE,
-+					     tdx_ec_power_off, regmap);
-+}
-+
-+static int tdx_ec_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	u8 reg_val[EC_ID_VERSION_LEN];
-+	struct regmap *regmap;
-+	int err;
-+
-+	regmap = devm_regmap_init_i2c(client, &regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	err = regmap_bulk_read(regmap, EC_CHIP_ID_REG, &reg_val, EC_ID_VERSION_LEN);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "Cannot read id and version registers\n");
-+
-+	dev_info(dev, "Toradex Embedded Controller id %x - Firmware %u.%u\n",
-+		 reg_val[0], reg_val[1], reg_val[2]);
-+
-+	err = tdx_ec_register_power_off_restart(dev, regmap);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "Cannot register system restart handler\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id __maybe_unused of_tdx_ec_match[] = {
-+	{ .compatible = "toradex,smarc-ec" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, of_tdx_ec_match);
-+
-+static struct i2c_driver tdx_ec_driver = {
-+	.probe			= tdx_ec_probe,
-+	.driver			= {
-+		.name		= "toradex-smarc-ec",
-+		.of_match_table = of_tdx_ec_match,
-+	},
-+};
-+module_i2c_driver(tdx_ec_driver);
-+
-+MODULE_AUTHOR("Emanuele Ghidoli <emanuele.ghidoli@toradex.com>");
-+MODULE_DESCRIPTION("Toradex SMARC Embedded Controller driver");
-+MODULE_LICENSE("GPL");
+      -cma: Reserved 64 MiB at 0x7c000000 on node -1
+      +cma: Reserved 64 MiB at 0x00000000
+
+   - Salvator-XS (R-Car H3 ES2.0):
+
+      -cma: Reserved 128 MiB at 0x0000000078000000 on node -1
+      +cma: Reserved 128 MiB at 0x0000000000000000
+
+  - Gray Hawk Single (R-Car V4H):
+
+      -cma: Reserved 128 MiB at 0x00000000b8000000 on node -1
+      +cma: Reserved 128 MiB at 0x0000000000000000
+
+None of these have actual RAM at address zero.  As I haven't noticed
+any other impact on system operation, I do not know if this is purely
+a cosmetic issue, or if it can cause real problems.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.39.5
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
