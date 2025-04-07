@@ -1,112 +1,76 @@
-Received: from server4.hayhost.am (server4.hayhost.am [2.56.206.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728EB20A5CB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.56.206.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F55C20E6FD;
+	Mon,  7 Apr 2025 16:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044258; cv=none; b=Jozk7+QPbcz4D0XYxE5AzBu60deBKpaWv3wXMCUpE3qIB9dcNUUv4adUGQWjzUtUvXlO1pcAVMp1TVJa80mcUAEqwmlZ34G250RpdPU2NPt1PAdkr34EgMvyPSnahLwFA6TDslfCTdZdIgtcJjbUn9LXH2KB2MtKWjvCwGwIoWs=
+	t=1744044270; cv=none; b=OC2h4SwEkYVtwAmfbXE/gIBjqp4LCx2XCwZk4bX9DrIUWACZSs5qExHziLDZ53pqsqimRGLHSwkKnB0tOP3HSbXrYhzFTmjiLPYAzdtQTwdeSe1jIlZMTXH7mPwd0FBJKdRvtsFq/mPySE28Ig2wX5xbaC7H7sOroEksEXob1fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044258; c=relaxed/simple;
-	bh=b890hTciczeQEKKYTzkqwPoz9VZzrnBug0lJh6V8AIY=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=gIVqAAHJEBVgrIqKgUocfTnEewE/anYjhZvVzE53utq3WpsOXpr+pzhX9FQ6O31yET7uxpta2aC/KtHqKBsVRktq9+lygQprBw8daecp0poQeeVXUjNUo/vxup4u+Ki+950W8c/96XcB6csr+GN6F0JAbRJb2sTgIIlrv1X6GhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am; spf=pass smtp.mailfrom=beldev.am; dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b=1s1Uznkl; arc=none smtp.client-ip=2.56.206.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beldev.am
+	s=arc-20240116; t=1744044270; c=relaxed/simple;
+	bh=U4QP9GpHrMLxSbhKQjhxSGJni9KV11P9PQ+zwNhKAy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oUYpfF2fpsg84yGyvTn+O2KLhDVQ8Lwc8ZkYzMdeP24Ia/UYFz+Dnv6sT0B+EzJXTPyr1jW30H9cvka+rC6vi9Oer9tJ722gNpRc6ZRLVl++5GwHa8LssuHw4WG74CIoPl2phiDrmxTuB1IGbov5EjIYSk5heHSpfOSvsCoJXmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/9nqidF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b="1s1Uznkl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=beldev.am;
-	s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
-	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=T72k/24DD9l/9ol7Qak+3wwHRfLCHCmxeIZJ1DWlpls=; b=1s1Uznklw5dmbDf15DWYF8RdUL
-	wpbmNH/6slW94Tb0jqJvMMp2+Ii4BgM8VM+1P872CZnjYAkNgx8oEu2e0WdaxLsOTfMFG+0DDhMAV
-	UqhqFTmxBE0i0698VaXxvXQ6oBxDz6K+p6IuS843pQKfD7Mw4tGEBett9bAbby/7tH9faAgoh0n2L
-	tIQWBaVxT3t2NAlv69aBrLeKuABYDh/HQ6FFruiwAHOorg6OA5wKrjo1cigwdOoLAjqtTgzw7s+SY
-	ygPJS4Suias6SmgxYpcDfpEi+EmmYFKm0p67IcaWiJm2wW7xgbfEZufYnsHZDJZsuiga6uOysPJqP
-	O+dFgeMA==;
-Received: from [::1] (port=53900 helo=server4.hayhost.am)
-	by server4.hayhost.am with esmtpa (Exim 4.98.1)
-	(envelope-from <igor.b@beldev.am>)
-	id 1u1pa7-000000006MP-1ay0;
-	Mon, 07 Apr 2025 20:44:19 +0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/9nqidF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4DEC4CEDD;
+	Mon,  7 Apr 2025 16:44:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744044270;
+	bh=U4QP9GpHrMLxSbhKQjhxSGJni9KV11P9PQ+zwNhKAy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P/9nqidFoAXn3MHMFqSLV++sf67bHM3Cb6Ewz2bBl4x+R2f6v7qiLw/kEaQXlhiUU
+	 RaEVd6XoPE+0cnP89g+1GgK88idM8DEjiQikUx6ZOr/9HNA2sqy0T/wdog2W0XRCou
+	 oFYIn0CQY4JrC7QqpeIC2sNzmzRqHuYfHFWowDtKDkBJtie5Oa9CpLzefmajT9i0gM
+	 puX8p9PY5a6cQQPEl+ECBFiTtg7WBDcrB50AG4fqaJCfFOLZe39ZyeyhSsWzQxUdhF
+	 vT5q2T8pAo8MQnAXY3lOuRcnHJKeR2b13WDTksZjyggjpEJY+xHHfOGQ5TCg2xfIDr
+	 1Z38YBA1omLlw==
+Date: Mon, 7 Apr 2025 18:44:24 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
+ SEV-SNP
+Message-ID: <Z_QA6GwqoxdW6D0e@gmail.com>
+References: <20250404082921.2767593-5-ardb+git@google.com>
+ <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 07 Apr 2025 20:44:17 +0400
-From: Igor Belousov <igor.b@beldev.am>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: vitaly.wool@konsulko.se, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v2] mm: add zblock allocator
-In-Reply-To: <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
-References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
- <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
- <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
- <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.6.9
-Message-ID: <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
-X-Sender: igor.b@beldev.am
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server4.hayhost.am
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - beldev.am
-X-Get-Message-Sender-Via: server4.hayhost.am: authenticated_id: igor.b@beldev.am
-X-Authenticated-Sender: server4.hayhost.am: igor.b@beldev.am
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
 
-Hi Nhat,
 
-2025-04-07 19:51 skrev Nhat Pham:
-> On Mon, Apr 7, 2025 at 2:00 AM Igor Belousov <igor.b@beldev.am> wrote:
->> 
->> 
->> >>> Do you have zswap/zswapped meminfo metrics from these tests?
->> >> Yep, and those look somewhat similar:
->> >>  - zblock:
->> >> Zswap:            234128 kB
->> >> Zswapped:         733216 kB
->> >> -  zsmalloc:
->> >> Zswap:            286080 kB
->> >> Zswapped:         774688 kB
->> >
->> > I tested the kernel build on a 4-core virtual machine with allocated 4
->> > GB RAM running on a Ryzen 9.
->> >
->> > The results are the following:
->> [...]
->> 
->> Now what's funny is that when I tried to compare how 32 threaded build
->> would behave on a 8-core VM I couldn't do it because it OOMs with
->> zsmalloc as zswap backend. With zblock it doesn't, though, and the
->> results are:
->> real    12m14.012s
->> user    39m37.777s
->> sys     14m6.923s
->> Zswap:            440148 kB
->> Zswapped:         924452 kB
->> zswpin 594812
->> zswpout 2802454
->> zswpwb 10878
->> 
->> /Igor
+* Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
+
+> On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+> > If the GHCB is available, we should always prefer it.
 > 
-> May I ask what compression algorithm you are using?
+> I believe we should consider the cost of code duplication in this
+> situation.
+> 
+> If the non-early version is only used in the kexec path, it will not be
+> tested as frequently and could be more easily broken. I think it would be
+> acceptable for kexec to be slightly slower if it results in more
+> maintainable code.
 
-It's LZ4 for all the test runs.
+Absolutely so.
 
-> And does the zswpwb come from zswap shrinker?
+Thanks,
 
-Haven't looked into that, to be honest.
-
-/Igor
+	Ingo
