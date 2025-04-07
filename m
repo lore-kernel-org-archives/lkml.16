@@ -1,142 +1,185 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED0C22618F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856D4227EBB
 	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010663; cv=none; b=UJmABdUd3fOVl2ZXlkh6D1Dpsw84de5uENkt6Z3sMg2a2Q5Kx+rt4O4MVpUKLvWReO0wlugPPepOc7cRmf7CqDQCHxGMSFsDOZDNa7Szi3cp2Fv0C69gjhCXZXA9cgKrvgGVLcg2FmO/XGKUmssl6x+t4SRg63Nb7Hc39bJT3lQ=
+	t=1744010663; cv=none; b=qFssfNQ/s1eLHJ6vibWZLQGTQfkg7bFm3XETjNwd/slOvc0ICIriCWgYeQAblSRIsW1DBIj7liSNF3RgnofiM2ubZqdLzFgnMSolbzXEW7/ZC2a+g/I6BKx11H0+klNtfC7fOKv06OuZMQlteu4WKQJhuF6yyuk/c1HZdNyEULs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744010663; c=relaxed/simple;
-	bh=J7f2eUTApbiWEcedhWmYKxUPKehC9pqeBkajVKzZWqM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mIVmvdaBpcVlRpqoxTf6ctHr4RSSw3fJ8DeYitH7przrlUr8a9v+V/DrqMWpBgCTSMOU4LWfKRELdl7KdiElQb+201dsklSBgO4X+/ZfS1mrq1egUlNBExR2tdgLmTiQIqgmPdFFaEagZ0p0QoRNKI/S4FZFtoJ4WXF8lh1M1To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ri7GuhxH; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=g2jh8qxFjNVmTT054dLE7NXTT/LDZW8VfnPhvGKcqR0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tYBchEm2AgLVFdziE2pbVEQPPhEkmY+EhjFzb0/P4qA3E+gxOihfD+JMz/8r5BTiQhlQePJPZ/FrJ7C11rMQuqPSQW3dA/f/2c8A0Z0mefjNNMu41NOXUKyH44Amy5y598+iiHVMfZAfA774T7siHB9HoCPzH/X1+OS2Cyxj+qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=biHz2azs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w/lDg+UF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=biHz2azs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w/lDg+UF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ri7GuhxH"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso2940493f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010660; x=1744615460; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H8ZsxLGWS4jokMHzGTeIU5UFzwoJYJnzajiKuQ0WlY0=;
-        b=ri7GuhxHg+7WwsXH7x/LwveYcx+j65PrEIOiMQXr2tR84zuz99VWTqy6pcb/p8trOt
-         mK7XElHddFWs7IatO0gbxwHvLIyd5X7+q9vmXmmsvSKYdsHNoVA6SmT/zfnR2bOyc4GD
-         mj8X2imr/lKyZWwQTAxgWAt27WGvGS03/U2KNeKEkl2NGF526LTSTIqMlVy/RjOzYzVy
-         TAW1Pj9uahac8aucFohjoHcHBRvYtcVkf0IXNZj54ySG2VRtH7xmRe8x2/rfVuhZu5rS
-         JBIJ0yfsqZ9b3BDC4+H3XvfGq7xc4PkLnhpfiQ3/g/iP9bj6GLhyJMRxh1EUcUZ6ilCQ
-         TiVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744010660; x=1744615460;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H8ZsxLGWS4jokMHzGTeIU5UFzwoJYJnzajiKuQ0WlY0=;
-        b=dAkAnyHMJqSNtn+JPfYS0P9WGbSSdTJcIrNnYqXqoyfuJqdL6/Pk5Xv/GpXn/QRXrn
-         qMPwjwCKcklmWL/Lwc4ZeDvHkSONHhXGPj2vnm+1xfy0eayto0wbrHSYC0V3OO6nRlHb
-         RJCAVYM0UHUH45WTpEc0KwAbgirDoj0LgpVcwuLGGfeM/t3ohctxsmS66vojUo52POFj
-         kkTJWiN34CkwQMX5Yhw7yzEyHCEMbgZUCOrj5ZlTMTBkd/drs/ivO2DNu6QI2hhs8NLM
-         VxGu9Ain5MbjEqlTNeUxe7YQQsCfJgWPI6paScVoHaPqoBoy0hRWKg/ipNJvW9VVt7bw
-         r5wQ==
-X-Gm-Message-State: AOJu0YxdhA1eO4Rr6SnHcBAoThkrg+1hL1feJpFy6O1iTLhBB0RtSNG/
-	+V6haxKU113x46E8sR8ZaGHeuncDJ1Uqy/y8e+QzcGKMHNwWM5nZHJqwynn1WzY=
-X-Gm-Gg: ASbGnctFC7dsMBFSd5hmxRDuOjn2+gwROIi3JKiSti/mtg2KuGzrP5HOXodx2WR7cbq
-	YuXq6CQWob3yGoQIKKI3IT9AGnLZttZR5txKm3SQzGigOC08kvymR26VBTVoXLiOHrSv4aq2+DQ
-	NZ5n70MS8wWfEIvfjf3vYv+8pkW3EWOAwZdfEVKis9Ja226NwqVU+6mhXtSvDrI3MAvSZ5um3b5
-	c4sa9STikMeTg8Ef3snqVqbjM5s7jYHCPNYf+gtf6TiSReKnd4h7A5Tbm/AqfLMCjMzAmZ+gChL
-	36z6BpNUEtO3o/k2/WmxYQW9repL8ldJvae0Ug==
-X-Google-Smtp-Source: AGHT+IEHDmnu8o2tM9N5GgWCGN1d01t9y2nKlBwNOJafY9H4tnxyVKYzGqxLBk349w1BiP4YorcOCQ==
-X-Received: by 2002:a5d:5f8a:0:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-39d6fce113emr5809650f8f.38.1744010659698;
-        Mon, 07 Apr 2025 00:24:19 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bf193sm119855255e9.24.2025.04.07.00.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:24:19 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 07 Apr 2025 09:24:14 +0200
-Subject: [PATCH 2/3] mfd: tps65010: use new GPIO line value setter
- callbacks
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="biHz2azs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w/lDg+UF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="biHz2azs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w/lDg+UF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B1D042119D;
+	Mon,  7 Apr 2025 07:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744010659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
+	b=biHz2azsqZ0hQvKLst7BgyWtUUHbAkWAD5h6NSruBvJtfEtq8AEQOeMh4ZWHuYcQL23c6W
+	hvuTebhYywxB7/4ydEQoeQWTUncuXYgFI6j1XW66vqzfbhl1C+Ah4k+DWscpmXGhnk3bwd
+	N5TnKN3/k+/bnk+e/EG5ju0/lnfmaL8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744010659;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
+	b=w/lDg+UFFS5Wb05qV7wCjYsIh/81zGaXhyVymeIf7+CM6MJ5X0wqMaE8/ddtAFsgW8SFbp
+	YaIaoQKn8+eh78AA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=biHz2azs;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="w/lDg+UF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744010659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
+	b=biHz2azsqZ0hQvKLst7BgyWtUUHbAkWAD5h6NSruBvJtfEtq8AEQOeMh4ZWHuYcQL23c6W
+	hvuTebhYywxB7/4ydEQoeQWTUncuXYgFI6j1XW66vqzfbhl1C+Ah4k+DWscpmXGhnk3bwd
+	N5TnKN3/k+/bnk+e/EG5ju0/lnfmaL8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744010659;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
+	b=w/lDg+UFFS5Wb05qV7wCjYsIh/81zGaXhyVymeIf7+CM6MJ5X0wqMaE8/ddtAFsgW8SFbp
+	YaIaoQKn8+eh78AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 26FD313A4B;
+	Mon,  7 Apr 2025 07:24:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jkYwCKN982ccFwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 07 Apr 2025 07:24:19 +0000
+Date: Mon, 07 Apr 2025 09:24:18 +0200
+Message-ID: <87ecy41ljx.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: phasta@kernel.org,
+	Philipp Stanner <phasta@mailbox.org>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Clemens
+ Ladisch <clemens@ladisch.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark
+ Brown <broonie@kernel.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Bard Liao
+ <yung-chuan.liao@linux.intel.com>,
+	Peter Ujfalusi
+ <peter.ujfalusi@linux.intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Maxim Mikityanskiy <maxtram95@gmail.com>,
+	Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>,
+	He Lugang <helugang@uniontech.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Tang Bin <tangbin@cmss.chinamobile.com>,
+	linux-parisc@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/11] sound: Replace deprecated PCI functions
+In-Reply-To: <01627e70902d331f7a9e8c08bd5c78dc6991ea74.camel@mailbox.org>
+References: <20250404121911.85277-2-phasta@kernel.org>
+	<87plhs2g4h.wl-tiwai@suse.de>
+	<01627e70902d331f7a9e8c08bd5c78dc6991ea74.camel@mailbox.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-gpiochip-set-rv-mfd-v1-2-43f4d86d01d1@linaro.org>
-References: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
-To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1365;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=dQlwl5PHLnR5U3eeEdKnSpeQk4aB5gzzRzjEGZ9SUOs=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn832gn8MmFWMAXd4hoFe2Z1lYY2mUhkyK72lTZ
- AD1zYT1cKaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N9oAAKCRARpy6gFHHX
- cvjfD/wPlFmkqP7wkuSptD71j/OYnTX51KWKxAYbW22mJ/257F6DjNpbwMoEudW0FozI0jjdi/I
- tXMK+YHhq3uyreCGTNP9a6DNtfLgRNVJvLvspntlrfliQrzcVXxnt0Hrzw/dFrU2mtd070IfJzb
- ABClbELM7fVdQHHMYSa1oc9lYbFOIdXv0uDNM0x+iC42FYyz1OEW4bt8uumtW5gbSAxUigUdckX
- LYYdIyG2dTC3865pgZ1GurJFf12gLO9cIBUDmp9hpNLgSku/EOP/YSiZ8mUO1VJutUeQPGZEZMX
- VkI9S77Kmd5la0ukUGae7tW4JPtlFdq9ELfNdvJeLj0TYyZt7SFheAzFvIr9sGEQu/tVKbgS/7B
- CsgQhZ9WIwx6peZASqJTBpkAgXaPZyGaz/vXeGp1IzYd1MrEP6Z4YGP1r6tZIK4pdvqcuEPM8Vv
- wA4hOIvBOA39HwaSvvUpw3kFjjlNrhJ8q10WQ3VMIFU7jld3qaAoY5jK8sw3xhWLyyhR4PolBKy
- bMLMYSLag86n6eM4T62fKU97pUWng+hk34IGp/lYmEKsyeQ5kPBQwAtgAT5e+mYx6x/DvVNRwW5
- 80t5sR95joX1LhXOXRNNLuZK7l0y7qfCED6cTLZMuleOCl86VSNp89yulpL1ox2uIPREUrW4djN
- dhIRxwWKaY0TF9A==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: B1D042119D
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[suse.de,perex.cz,suse.com,ladisch.de,gmail.com,kernel.org,linux.dev,linux.intel.com,renesas.com,uniontech.com,baylibre.com,loongson.cn,cmss.chinamobile.com,vger.kernel.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, 04 Apr 2025 15:49:36 +0200,
+Philipp Stanner wrote:
+> 
+> On Fri, 2025-04-04 at 15:47 +0200, Takashi Iwai wrote:
+> > On Fri, 04 Apr 2025 14:19:01 +0200,
+> > Philipp Stanner wrote:
+> > > 
+> > > pcim_iomap_table() and pcim_iomap_regions() have been deprecated by
+> > > the
+> > > PCI subsystem. In sound/, they can easily be replaced with
+> > > pcim_iomap_region().
+> > > 
+> > > This series was around some time in late summer last year as a
+> > > single
+> > > patch. I lost track of it for a while, but Takashi Iwai (AFAIR)
+> > > requested that I split it by component.
+> > > 
+> > > So that's being done here. Feel free to squash the patches as you
+> > > like.
+> > 
+> > Thanks for the patches.  I suppose those are no urgent fixes, and can
+> > be postponed for 6.16?  If so, I'll pick them up after 6.15-rc1 merge
+> > window is closed.
+> 
+> Sure, those are just improvements that aren't urgent.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Now all patches applied to for-next branch.  Thanks.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/mfd/tps65010.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/tps65010.c b/drivers/mfd/tps65010.c
-index 00fb12c4f491..5f1d1e061192 100644
---- a/drivers/mfd/tps65010.c
-+++ b/drivers/mfd/tps65010.c
-@@ -446,7 +446,7 @@ static irqreturn_t tps65010_irq(int irq, void *_tps)
-  * offsets 4..5 == LED1/nPG, LED2 (we set one of the non-BLINK modes)
-  * offset 6 == vibrator motor driver
-  */
--static void
-+static int
- tps65010_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- {
- 	if (offset < 4)
-@@ -455,6 +455,8 @@ tps65010_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 		tps65010_set_led(offset - 3, value ? ON : OFF);
- 	else
- 		tps65010_set_vib(value);
-+
-+	return 0;
- }
- 
- static int
-@@ -619,7 +621,7 @@ static int tps65010_probe(struct i2c_client *client)
- 		tps->chip.parent = &client->dev;
- 		tps->chip.owner = THIS_MODULE;
- 
--		tps->chip.set = tps65010_gpio_set;
-+		tps->chip.set_rv = tps65010_gpio_set;
- 		tps->chip.direction_output = tps65010_output;
- 
- 		/* NOTE:  only partial support for inputs; nyet IRQs */
-
--- 
-2.45.2
-
+Takashi
