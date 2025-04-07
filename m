@@ -1,146 +1,110 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDB5185920
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD8822D791
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010487; cv=none; b=jAa/2/7USQoLl8gVWLo4Eg+CWHeqtIMhKpxikvBMrMkkC+wj3fZAU2f7t5d+hfWt3uIL4QnVUJFSv6TR4lyOwtSipQpq3E2ONcIRjJ1TR4Ko5MCAZDLkoDeKeH/amUjwooQvhj78K2moavOl+BkGOa3MMJy1w5lJ2817JMsaY7Y=
+	t=1744010496; cv=none; b=S50w9FO8Fmhu4TEYHY+MqjL6OgtA4qm/81JwCy1Q+BMwfrTG6ojw7HrbFvjx33fg6+zSK++FG7UNRaKrSmHRea6OJkd+N+qfv4pjnuw9dXtHTmLzBkoUzrjAYfXyTrPwyjC/CF6mOT8Bz2oQMoxHURDPOYEX8pbpriDgvSVDlbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010487; c=relaxed/simple;
-	bh=a+X2xbpBMey7kHH4SZHjVwfqMfk31JwTN71fTF53W5Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mJNlVQqVwYLFivkzn2VuM5BclXLdYylkgQj2RzYGkXoO1R7LuPZmE+d0JVqQfjuHTxH2MQ5McGg24JCUtYOH1HhwVM8Ioq4IZlQ6qfWAkZ3lPRFItGc8ORiiOqVQQn7qYRJ889uDehdI+9TkEjOBle+f7LR7tff5oH7wRRodQTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=l5XYa4Ye; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744010496; c=relaxed/simple;
+	bh=4qx9srvVw5/073OAlAi2thUlYG31LR/V0K21OZO/4rI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nVyl4N80t5pjPYFRHoUlfI8fPpgI8CCIOqGun5kxTCaakD1bcVlUt7baKdsKzlqUsxt/XbqcdRwuWL9NguQmOwlNLN4QhE70Mrhx4cLfbT9GtaIeczl0+vfQu6gmkfny8wNaXam4Ng9Km4b6gHSpqfk8FBTRpQK/dS0vI4G6ogw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XPCSjXZ6; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="l5XYa4Ye"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so39825465e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010484; x=1744615284; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vtgBZ7eU2RyQ7K9QClD4KK4V7G50PAjgBWwYE6tDnr4=;
-        b=l5XYa4Ye9XNYijVUo/jis9T3jp2c660XZ+HkwMH+gg+yjSEN2fYvRyHWvvVg4iKEnQ
-         sOQdCb0r7PxyO3wKGHTHM0bU4yRIO4mv3UqmF+NBaR9eDcaiFxY1Do1LjYCRs+V3eA2u
-         L3sFuXVNCL8aLBHt1w+AFGtqegMF8X7SKOEzn7B8Ir0KeypRYiDMyjWEvPLWOXucX9Jb
-         kRYV9oUBmiT4OUXZO8BfmzLL86q5MaHk6Mx5ncqduzN2d9vuefDEiWZrcEMysiuxd/vF
-         F9MKrYjQhi29wgRkqfOrq/rU0/Dp2AqHPhqYE7SLP2tE4JBILfKbKwXLNZ5OvR2VNvDU
-         1PrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744010484; x=1744615284;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vtgBZ7eU2RyQ7K9QClD4KK4V7G50PAjgBWwYE6tDnr4=;
-        b=w0JtfIKwdANc28lL7TfF7ZWBxAHc4KdQ4052hfCJBeyISs79AkyGn8ZQPBiwp/3kzx
-         VMUrQPycFmD1rKNIfto98wrTczrh7vAKdAq24X5VXV2LswH825DpYLMN2pumWFR8UF4I
-         rA1BQ41tA8fl5PeWuebVNNESalTYP5encrGk8ssVV6u81TyB3tOuQgzAjMhjSxivTS2e
-         zaa7Y9bste7mhpPHglVmqor+jvb36YnBU9ZO+c+wkpwzDZRnVQ/rMb0znpHE5ZbDsWma
-         G10gBcG3sNAC6J3Ke2Dt6EybXLI5TeZgreKcWFGRc2hZPOvDO6qizj2x/J6M0Mn5cwgK
-         9avw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOTsaG2szkn/4qY0D6sa8wnI14ZGz2TExEWx9xWeeNr5ZHIjUW5oWCNi4Sw/B8yAtoPxzteo6iaXrCvpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa3mmBTAYb4VKlUhoSojzd8JgAcJQ9qrf5Ebc97dzx8C+Fpky9
-	5+uPKDBNvDJ+vPXLobxyhnTqySmh8/Kx9YfldrzEweOS3Q+nex7oBCh9/DeIZbE=
-X-Gm-Gg: ASbGncsTwQOGPk0L1VgQM13xx1d5u0xzyp5PxwaHh/iud9a++Iy9oixVFVCUQGZpkkc
-	2rt1A8Ee6saZzTyGtrZA5fX3UYlHxFsdh0Uk8m1wchmvh1v2qI0ZcitjVOeIRKIRfR65WsObjvG
-	SCgGgkFivXN002CU+P9Q5ddQU88aH3gi8mrY9Q5m6zUtu5h1XU6aY1ngQSq0ivoaT9P+CCA1yTc
-	ErVRvEQMWzUhGld8JDK3gojTynEDV6kC9HFTyHkwg+n3P0EmFbS0dNWLSBXg9A1aI/C9Uv9Mlbg
-	fZVPHHvhwfww/7Y4TRIC1MDlRbrDF9fFv5tHzQ==
-X-Google-Smtp-Source: AGHT+IEFfF6NsFb+iD2Dwb5PIsfcjTtavnPo1FW572AhfERUhpnGldlTQTty75Rd5V3CGThwZu431g==
-X-Received: by 2002:a05:600c:4449:b0:43c:fe9f:ab90 with SMTP id 5b1f17b1804b1-43ecfa18d6amr74518805e9.28.1744010484347;
-        Mon, 07 Apr 2025 00:21:24 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bbd9csm119983655e9.20.2025.04.07.00.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:21:23 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 07 Apr 2025 09:21:20 +0200
-Subject: [PATCH 2/2] memory: omap-gpmc: remove GPIO set() and
- direction_output() callbacks
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XPCSjXZ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744010493; x=1775546493;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4qx9srvVw5/073OAlAi2thUlYG31LR/V0K21OZO/4rI=;
+  b=XPCSjXZ6FyFd5WkmLwBI3gls9ttYBikGsXT7J6CW2yur9b5AAcMVH0Bf
+   eh4S7qjgJzVdwH8/+JS3eFHmiU9DZkta75+mWxDaTlBY5vx0HwX53PUi4
+   tpCbZwXBaLOgz9/8C4Chu4pC0laA4VzEH7hOTiPKHTtYn8zpGEHrVmau9
+   uThgevH3G2oXd3tQUfMuo9O2X1f8Ova2KBJjsN4JwCUnoNL12uAyWMr/K
+   gHVhnLh4Ia51uZHRVw66qUMUJCxVgZESTqXdYk2uCHISEKw808JfD9Xkx
+   +FRCZtriFkEzFhU5xbCB8hWY4M+otgoo7iMMgIJ01f4Be+q1dfgrclAm/
+   g==;
+X-CSE-ConnectionGUID: lOHDhflfQeiaMSQrzo6Hbw==
+X-CSE-MsgGUID: hajhqCGoSd2alikR7yQ/3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="62776509"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="62776509"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 00:21:32 -0700
+X-CSE-ConnectionGUID: FalYELIfTy28RPnuAw+9nA==
+X-CSE-MsgGUID: 0V7vV61KQVaaXUii0bRFFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="127862657"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 07 Apr 2025 00:21:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 596EC340; Mon, 07 Apr 2025 10:21:28 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	dm-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] dm table: Fix W=1 build warning when mempool_needs_integrity is unused
+Date: Mon,  7 Apr 2025 10:21:26 +0300
+Message-ID: <20250407072126.3879086-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-gpiochip-set-rv-memory-v1-2-5ab0282a9da7@linaro.org>
-References: <20250407-gpiochip-set-rv-memory-v1-0-5ab0282a9da7@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-memory-v1-0-5ab0282a9da7@linaro.org>
-To: Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1429;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=jArihSAhBxkP93ay/ZjcYrFJIACv3IqWH8LZYxUU1yI=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83zxZ31S8gqjE6RumdrktJc88LidiJj2N2ODy
- PHjicRRsMaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N88QAKCRARpy6gFHHX
- ctBlEACgHv2EfbXGd6EpZZRTqnj38TMqOfFUzwWMCCrTlcfcRnT54k3uqFNxJhTNeordcuXHUxP
- H3t5PtMye9H/3zNS/z1vF6QxBbk0iX93iIoapVmHYGr8q/1vf5uguVbh+rbmGngIfp4zGLO6bqJ
- MjvrcDkZ2uVd7pS+gVGe7nN2Nby0yZVBcMw6fcYLcHUmmt+hMHzvdYPeX/WEqlJYh8Qg1FIk/jA
- eAdjOZoMy8p8ccg4W+fN1KkJskmsr+WvvDujB1ElpsPDKZe8a6GpNKKHqjYIuECh6WPpTU/2gUy
- 5ohToPPkGrrjRdG1QYNlVMGoYzSOhCPolc5jdjIfvTXw/RVpM1sXqRodWv30w0b7tKNkSNzCZW+
- YQ+LzxNQ+FMRUeEXE7MiPiyUF5837ryugHAvKuucndYp7iLBhgO0RTypz0x74/vvZwhuCdBR0iU
- mFiyIcY4jqZMFF8asaURPotDzhHOugldYONXW10Vt9DDzLG6jRdRQd/XMT1F3E9YrztTkgb4SvA
- wh4lX2tS4jhk9o4gKjZSDvuA2aylctO3chJKWQA7IpUpRYhfLqgkgm8lsvGfPsU48VgQ+QU+f7X
- arm0viz+ZZTgdsILX9vUwDpG5FPdSBcMkEkNoEC8L0FOXrg42PZAurLO9Hy6+wdtzb2DKFRI9g7
- pC3+JklCL61b41g==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The mempool_needs_integrity is unused. This, in particular, prevents
+kernel builds with Clang, `make W=1` and CONFIG_WERROR=y:
 
-This driver implements an input-only GPIO controller. There's no need to
-implement the set() and direction_output() callbacks in this case, the
-GPIO core will handle it.
+drivers/md/dm-table.c:1052:7: error: variable 'mempool_needs_integrity' set but not used [-Werror,-Wunused-but-set-variable]
+ 1052 |         bool mempool_needs_integrity = t->integrity_supported;
+      |              ^
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Fix this by removing the leftover.
+
+Fixes: 105ca2a2c2ff ("block: split struct bio_integrity_payload")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/memory/omap-gpmc.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ drivers/md/dm-table.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index d4fe4c5a57e7..a61e71c31f20 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -2385,17 +2385,6 @@ static int gpmc_gpio_direction_input(struct gpio_chip *chip,
- 	return 0;	/* we're input only */
- }
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 35100a435c88..53759dbbe9d6 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1049,7 +1049,6 @@ static int dm_table_alloc_md_mempools(struct dm_table *t, struct mapped_device *
+ 	unsigned int min_pool_size = 0, pool_size;
+ 	struct dm_md_mempools *pools;
+ 	unsigned int bioset_flags = 0;
+-	bool mempool_needs_integrity = t->integrity_supported;
  
--static int gpmc_gpio_direction_output(struct gpio_chip *chip,
--				      unsigned int offset, int value)
--{
--	return -EINVAL;	/* we're input only */
--}
--
--static void gpmc_gpio_set(struct gpio_chip *chip, unsigned int offset,
--			  int value)
--{
--}
--
- static int gpmc_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	u32 reg;
-@@ -2417,8 +2406,6 @@ static int gpmc_gpio_init(struct gpmc_device *gpmc)
- 	gpmc->gpio_chip.ngpio = gpmc_nr_waitpins;
- 	gpmc->gpio_chip.get_direction = gpmc_gpio_get_direction;
- 	gpmc->gpio_chip.direction_input = gpmc_gpio_direction_input;
--	gpmc->gpio_chip.direction_output = gpmc_gpio_direction_output;
--	gpmc->gpio_chip.set = gpmc_gpio_set;
- 	gpmc->gpio_chip.get = gpmc_gpio_get;
- 	gpmc->gpio_chip.base = -1;
+ 	if (unlikely(type == DM_TYPE_NONE)) {
+ 		DMERR("no table type is set, can't allocate mempools");
+@@ -1074,8 +1073,6 @@ static int dm_table_alloc_md_mempools(struct dm_table *t, struct mapped_device *
  
-
+ 		per_io_data_size = max(per_io_data_size, ti->per_io_data_size);
+ 		min_pool_size = max(min_pool_size, ti->num_flush_bios);
+-
+-		mempool_needs_integrity |= ti->mempool_needs_integrity;
+ 	}
+ 	pool_size = max(dm_get_reserved_bio_based_ios(), min_pool_size);
+ 	front_pad = roundup(per_io_data_size,
 -- 
-2.45.2
+2.47.2
 
