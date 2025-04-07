@@ -1,148 +1,122 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBFB254851;
-	Mon,  7 Apr 2025 19:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1694A25D525
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052550; cv=none; b=rZ49V1jcVeSM/yyUDXk9bMbhapUVDqd1b3PQDbTnbvzP/FScJTlgdqQXyAxJa7aGmURh3a1VoKhgVllOqa53b8zgOWoxDgJ8njF3v51o2a5bN+yjT2NuJHZYPTPrs6Wws/SU97R3oRJrqOwt8cCfUZ0rqzZ4T8hX0U/2wrUCV2w=
+	t=1744052561; cv=none; b=JSrhn8+TWqQgc+WJwrYKwNtqeGlCXXBlpnyjYMuDdwAwZImuP/v6jDj0jN3gyQx59fxw2UCB0ccWnxqXli2WpQhI4GI2Skw4T399HHNMwW/xJeS8cfgpFXSsCstvI0sd9qGPssZo6XMCfulKXa91pnOVrmB5sQ4gent2ElrNxuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052550; c=relaxed/simple;
-	bh=yC6QZ/8jVM9KGam6L49RetYOUxCetakx6TQbeX39JKc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VNMReDrugZb030ydyausKPYeNsCPWRRRQHX3q5rJMj9sEBKOLFFaCovQN1yiYsy3zff8tMEo96ugX62aeylFQ4qDV4NEFeHIyPO0q85JFWe7LJVqURPGWwYuP6oISQVHW2c+sVZtvs4yui4tgyIXxuBwsXZ7p8HOz7fyMJbc8tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=KDfXqTAF; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1744052561; c=relaxed/simple;
+	bh=svc4DcTkLa9xLLdF7y21glNY6sBMo2gsG0Mc+7dkW78=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uD/3jHqIaqAy/mxwT0Iu2EBu1BgVCB/kluAsjpS5NHEo/S77gCtGb0AU8CVlMFPbBDPcZCtLZZG4N7fmRP7sMDjxUJEOPqT5fRK4yhQW+iQviUPoBlYFExpMPgKt3IlN11txE+XJVAgMaaLEU8HInZw//ah6h3m764ecDaF+tbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IpoS32TM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DLkd2VJ7; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="KDfXqTAF"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1u1rjh-00Cluc-P9; Mon, 07 Apr 2025 21:02:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From;
-	bh=KVp3ZQyloTuaLdQygQMAf/QKWBZdcAiGhMuu41ke8zs=; b=KDfXqTAFYtd1CycSD/yrGuxMFd
-	6keGPaUtFoWvl1mnGl64rwW2xmdVb7Jjvilc4nYtxokgHygmeNSsPOTcmRdTf0Q3+4ZvG0zOWixBt
-	4+bPlFYCbLfJiC7cKpQzmxVgaf4Ga0DBvwGTRb0zltTq14WNLfjYlxWGhTjCDs9LYFyC0ncsUSwiz
-	M4OoB89KuKrIpIxQrQKMut4BklWnSAEAhl1RHHIm8GZpikTon2f3hc1PtMcfZlZivfCxIOyqNUG9x
-	sRnGtJPf53QrRA44sjiKqF8jRKXhvRU9W5uJ0XGJldRL+doLZdtkLsPKHdTwEKrQgG2ged0FR8JWH
-	61quWWHw==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1u1rjg-0001CO-MP; Mon, 07 Apr 2025 21:02:20 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1u1rjN-009Ivh-O1; Mon, 07 Apr 2025 21:02:01 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Mon, 07 Apr 2025 21:01:02 +0200
-Subject: [PATCH net-next] net: Drop unused @sk of
- __skb_try_recv_from_queue()
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IpoS32TM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DLkd2VJ7"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id DB938138134B;
+	Mon,  7 Apr 2025 15:02:37 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Mon, 07 Apr 2025 15:02:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744052557;
+	 x=1744138957; bh=bCo1qyJ6rZTiBfA+a51RdFo714rHFIPWspJfKngp7mU=; b=
+	IpoS32TM2GnPNE8jNWp6Yxp5PoAZZ1OMYqFmOP/lmXEjsxbNamh0lZ6yrpD2dVKA
+	WWCQweWeVuhzc2Pg+9QRByz5/uvT/HZFFnnbBmTXTbLIQICIPl1CSxG+3fkV4CKB
+	8LRFcmpLsPg2E8Gpz24O/EEnrNGZMU2MAOsutpv+5xWiaDbNXmr62KdUIaQixDeQ
+	tjuey6T7gZuL6Bo10i6c2EZyVYK1+2NKjiDOqEfrQRRg3wN61TeisjQ6oWMmkHey
+	eN93pUPLtd0cDZUzYNzDSKXBIV16Oq/S1kZAR1NHg4bzgLTxdz3mi5p/l4vayKCF
+	Urjo5NqY4U6twx007ihGuQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744052557; x=
+	1744138957; bh=bCo1qyJ6rZTiBfA+a51RdFo714rHFIPWspJfKngp7mU=; b=D
+	Lkd2VJ7beZ5HHqDsQ69haYdUKdbhUW+vTzPtKMLui8vsiN6c4aYYQRsPeB8wTqVH
+	la+9NpAwsbslNrHrISasLf4EfN2/VTZCQhMolxHV2e4gMQKdSgfI7bdryGkZLEUv
+	kfRdnQ7rmk18ZCRjTPWOic/G71fPAEkHrJqzsiRtwfHudOcV9pqG1t209zuQmE2t
+	ZJRJcdIF8huxbtRBGvh4KTY+YBqTwz7MSS3il8zgo0G55eXGe5YL5HOe9xvmJUpW
+	YzUddTCmWDZCUP2S2+1Bm44irlAGBOBKuzdc3xhiNmlgwqJ6uzumj/4bv7TIlE71
+	Oqs9ed3kNfsARPKR8F40g==
+X-ME-Sender: <xms:TSH0Z3QKE0m2joPGDvtjPwxtKcFqHlhBx5FzewDaUBacNWue_5v7pA>
+    <xme:TSH0Z4zHZbuNI-fk5frE4xc_deIbcX55RkINwLJnm1PCdJGFN9PXamLCgUY8hQJho
+    64Lq_GHYAYdHo3WHz8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtleekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhgurhgvrdhprhiihiifrg
+    hrrgesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhr
+    ghdruhhkpdhrtghpthhtoheprhhosggvrhhtrdhjrghriihmihhksehfrhgvvgdrfhhrpd
+    hrtghpthhtoheprghltghhrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhrgho
+    jhhirghnrdiihhhurghnghesghhmrghilhdrtghomhdprhgtphhtthhopehkrhiikheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepshhsthgrsggvlhhlihhniheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
+    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepgigvnhdquggvvhgvlheslhhishht
+    shdrgigvnhhprhhojhgvtghtrdhorhhg
+X-ME-Proxy: <xmx:TSH0Z80WDpD9n7QYR6u06DYm7i-oCpVlSUDHOOTFSl2Doc_16VEgNw>
+    <xmx:TSH0Z3BPWw4u6xEYbpDDusC3mTnWnkIL6Q2Ui596DKGEn1dWCpl7sQ>
+    <xmx:TSH0Zwg3w70j6V51hHBnHO1aAGRspv6bll-Ld8ZdSy2exAP4xSLCIg>
+    <xmx:TSH0Z7o61lvIp-0iMWrlAHHPrn-sjT0O_REA_Kzy-5lQGQOLO8DfFQ>
+    <xmx:TSH0ZwtbPXSiP36-fUYJ42TP6UKSmhyfmOU7arb2HfwqrRW6bUUo3x5T>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2F08D2220073; Mon,  7 Apr 2025 15:02:37 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: T689809fba064b46a
+Date: Mon, 07 Apr 2025 21:02:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrew Davis" <afd@ti.com>, "Andre Przywara" <andre.przywara@arm.com>,
+ "Russell King" <linux@armlinux.org.uk>, "Daniel Mack" <daniel@zonque.org>,
+ "Haojian Zhuang" <haojian.zhuang@gmail.com>,
+ "Robert Jarzmik" <robert.jarzmik@free.fr>,
+ "Alexey Charkov" <alchark@gmail.com>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>,
+ "Stefano Stabellini" <sstabellini@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Message-Id: <d4a4f00f-ef52-4635-bd81-659e8dcf9fde@app.fastmail.com>
+In-Reply-To: <20250407185650.411887-1-afd@ti.com>
+References: <20250407185650.411887-1-afd@ti.com>
+Subject: Re: [PATCH v5 0/5] Switch more ARM plats to sys-off handler API
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
-X-B4-Tracking: v=1; b=H4sIAO0g9GcC/x3MQQqDMBBA0avIrDuQhkTQq5QuQjLq0DqGiZaAe
- PcGl2/x/wmFlKnA2J2g9OPCmzQ8Hx3EJchMyKkZrLHeONNj/FKQI2PSLWMOGlYsHxyi9a53yQ/
- RQ2uz0sT1/r5AaEehusP7uv69hwFQcQAAAA==
-X-Change-ID: 20250406-cleanup-drop-param-sk-9c25464d59c5
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- David Ahern <dsahern@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
 
-__skb_try_recv_from_queue() deals with a queue, @sk is never used.
-Remove sk from function parameters, adapt callers.
+On Mon, Apr 7, 2025, at 20:56, Andrew Davis wrote:
+> Hello all,
+>
+> Continuing the quest to remove the legacy pm_power_off() global
+> function handler. Remove uses from arch/arm/ using the helper
+> register_platform_power_off().
+>
+> These have been sent for several cycles without feedback, not
+> sure if there are anymore active platform maintainers who
+> can take these individually, maybe these remaining could
+> go in directly though the arm-soc tree?
 
-No functional change intended.
+Sure, can you send them to soc@lists.linux.dev in a few
+days, with any final Acks you may get? That way it ends up
+in patchwork and I can trivially pick them up.
 
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- include/linux/skbuff.h | 3 +--
- net/core/datagram.c    | 5 ++---
- net/ipv4/udp.c         | 8 ++++----
- 3 files changed, 7 insertions(+), 9 deletions(-)
+Since it's only a few one-line changes that all do the
+same thing, you can also combine them into a single patch.
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index b974a277975a8a7b6f40c362542e9e8522539009..f1381aff0f896220b2b6bc706aaca17b8f28fd8b 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4105,8 +4105,7 @@ static inline void skb_frag_list_init(struct sk_buff *skb)
- int __skb_wait_for_more_packets(struct sock *sk, struct sk_buff_head *queue,
- 				int *err, long *timeo_p,
- 				const struct sk_buff *skb);
--struct sk_buff *__skb_try_recv_from_queue(struct sock *sk,
--					  struct sk_buff_head *queue,
-+struct sk_buff *__skb_try_recv_from_queue(struct sk_buff_head *queue,
- 					  unsigned int flags,
- 					  int *off, int *err,
- 					  struct sk_buff **last);
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index f0693707aece46bb5ffd2143a0773d54c234999c..f0634f0cb8346d69923f65183dbdf000b6993cf9 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -163,8 +163,7 @@ static struct sk_buff *skb_set_peeked(struct sk_buff *skb)
- 	return skb;
- }
- 
--struct sk_buff *__skb_try_recv_from_queue(struct sock *sk,
--					  struct sk_buff_head *queue,
-+struct sk_buff *__skb_try_recv_from_queue(struct sk_buff_head *queue,
- 					  unsigned int flags,
- 					  int *off, int *err,
- 					  struct sk_buff **last)
-@@ -261,7 +260,7 @@ struct sk_buff *__skb_try_recv_datagram(struct sock *sk,
- 		 * However, this function was correct in any case. 8)
- 		 */
- 		spin_lock_irqsave(&queue->lock, cpu_flags);
--		skb = __skb_try_recv_from_queue(sk, queue, flags, off, &error,
-+		skb = __skb_try_recv_from_queue(queue, flags, off, &error,
- 						last);
- 		spin_unlock_irqrestore(&queue->lock, cpu_flags);
- 		if (error)
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 2742cc7602bb58535e8ef217d9ffc3fea7ff9297..1696cc5a2dcdc4f9c40c65b4d61c722a1cd9ca9a 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1942,8 +1942,8 @@ struct sk_buff *__skb_recv_udp(struct sock *sk, unsigned int flags,
- 		error = -EAGAIN;
- 		do {
- 			spin_lock_bh(&queue->lock);
--			skb = __skb_try_recv_from_queue(sk, queue, flags, off,
--							err, &last);
-+			skb = __skb_try_recv_from_queue(queue, flags, off, err,
-+							&last);
- 			if (skb) {
- 				if (!(flags & MSG_PEEK))
- 					udp_skb_destructor(sk, skb);
-@@ -1964,8 +1964,8 @@ struct sk_buff *__skb_recv_udp(struct sock *sk, unsigned int flags,
- 			spin_lock(&sk_queue->lock);
- 			skb_queue_splice_tail_init(sk_queue, queue);
- 
--			skb = __skb_try_recv_from_queue(sk, queue, flags, off,
--							err, &last);
-+			skb = __skb_try_recv_from_queue(queue, flags, off, err,
-+							&last);
- 			if (skb && !(flags & MSG_PEEK))
- 				udp_skb_dtor_locked(sk, skb);
- 			spin_unlock(&sk_queue->lock);
-
----
-base-commit: 61f96e684edd28ca40555ec49ea1555df31ba619
-change-id: 20250406-cleanup-drop-param-sk-9c25464d59c5
-
-Best regards,
--- 
-Michal Luczaj <mhal@rbox.co>
-
+     Arnd
