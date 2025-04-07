@@ -1,62 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727821F7074;
-	Mon,  7 Apr 2025 14:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D551F76C0;
+	Mon,  7 Apr 2025 14:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036306; cv=none; b=Zh1FmUcCiTr0e4Hq2vzwIH/qg9Ig9c2+C4ZW2HwYTSRQe/qx+lbIODCl75CG+Yw1k3Byn4li7pxoFrkgAP9FU8h3faQCRbdUFsYthG8dVBQH+xrhkau7Ca/EFUKYEOmShHeTxLu2f8mykSHA/M6kT37P9m1sNK+uT9dr2OLgbSA=
+	t=1744036307; cv=none; b=AFDc6dTdSegUR3LWb0cihKSZbOuM+7xZiOyfjOooYqdMvq3V7efMtNbPDIiDIZ3Tg6tgIg5Xbo9CKaiDdyUoeSJAp5830pH90HXXJi79eYWZLFtFktzsH22Dg7wCrm09776YE4UbNhi0awSShffTcb88mmu9LrfBA+GxbLrvONw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036306; c=relaxed/simple;
-	bh=xtC38VNFjGnBv35rtCHxRQk571av8U4QAUU8aMxRmSU=;
+	s=arc-20240116; t=1744036307; c=relaxed/simple;
+	bh=OJFPleKG+faoB8AqRW9IAlbv/ZpT62wCGqi4wruK4xg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=difSyC1hVZSHXqgfYEPQ55t5FCaFhlfAQA+k/13Hc2klBYbNWfXcBWEFF9pzN/Ag3iG+cJX1x5xLuvCpsheGyIbLLW8+0ZVaCnXaptMJGhGU9bzz5Epbz08fKKiMUiaxwPUym4p0WKT+d/nyGWx+1o3Zp0cMtXoXzKPcZMBNbHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fs+Dk7x4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DqiuLFuC; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ndZbBdPnc3i6E9RPfDp+081c4tkfXO9bkxPziwusFnmC5+q9liDTGgZo11x8ht34x3wabQldkpkGI7lJYBW0boUlcjB4ZaHp/5oCZ6wfc7gLcUdMofV5M7lkEj5axT1F/6FkzSr1fJIQybfpNVe6F2UllBZ1mI9mrpDNbYZaE8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c4v8K67h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qv9kESTT; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fs+Dk7x4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DqiuLFuC"
-Date: Mon, 07 Apr 2025 14:31:42 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c4v8K67h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qv9kESTT"
+Date: Mon, 07 Apr 2025 14:31:43 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744036302;
+	s=2020; t=1744036303;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U4DoqFUtEsMYGftQ5MxbLYVY3yucC5AiaraooiUzd+g=;
-	b=Fs+Dk7x4YCX5VpwoIa5i/7qloAJqabIM/x4aKfJkK2BxnoqVRhW+Ovs/YKbCv7LEtkazaS
-	MPQ1aSx+xVtLD98kb1Fy5EAX10ESQzSWF9QndoHakH0KgWbNJvG0Vd64N6CicaOmQkIMoy
-	oAygvEJK//qBbkJH0m8Me0S9sZqzgQ8Ks1TWYmnl3yaFdPL9EOtJHc47YTfnCHlqNyQXk1
-	lG6yN94bvY9WtHgoONetkb7u2czEQTDHBO7lNeApZ6DbHGFfZjgtGaUdjJcLUxXJKPxfu6
-	YH9rxPxlIWgZmJ4sefnIMKzDK65VYyaVEX6/LBgOIepW07nyH/zpz58g/4nT2Q==
+	bh=TUUOtPKD5SS9sUddMuKWxcHe4sZQiAobRXFRbOsAntQ=;
+	b=c4v8K67hLF5GKinPypNZ9+6Njz1lfg24FyluDlIs6bYnbix16iOxvR0DTiDPLGceCXCTYp
+	R+mrkYmH4JMbcaadj3I5MKwKHUM5P8v4NIMm4KVUOuvd5EU9tivJU2hHNS430pxRU7xj1r
+	uaFlB0JwUiRuPJovXBYzHm/E3WfuGerWkCF6xbfxXuv5JSK+Nt1wdRiBSu5/9YCe7W7z3s
+	Brx3Gp8BtJcXj+3fTWJdNvGShCYqkV8goUFhfOGeY0bsDVQBhCECYNX6yczjGpPiuZ9U2i
+	Yu+wUAUuxtc1aQYMCXwXAS6NSIDU5+lM/sBqKjmmxZfKf/VdgimlYA7r6ZYTFg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744036302;
+	s=2020e; t=1744036303;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U4DoqFUtEsMYGftQ5MxbLYVY3yucC5AiaraooiUzd+g=;
-	b=DqiuLFuC2OAMEAkA7kGy+kcbopyyJL3ujRDnLtCrDkU+bpcVFT0NJEvktMcIW6btgc6BoI
-	h3XU4GD3/TP6rrDQ==
+	bh=TUUOtPKD5SS9sUddMuKWxcHe4sZQiAobRXFRbOsAntQ=;
+	b=qv9kESTT3rknkWsc6Cvj0RJol4j9LZBbZl9SlbrGePMyZsg84Mw4Dx57YuV/4+pOfbXB1+
+	8xbYxuMnUIyokdAw==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] PCI/MSI: Provide a sane mechanism for TPH
-Cc: Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250319105506.683663807@linutronix.de>
-References: <20250319105506.683663807@linutronix.de>
+Subject: [tip: irq/msi] PCI: hv: Switch MSI descriptor locking to guard()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319105506.624838146@linutronix.de>
+References: <20250319105506.624838146@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174403630200.31282.18344821353173189297.tip-bot2@tip-bot2>
+Message-ID: <174403630303.31282.7040370239515737751.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,116 +69,62 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     5062a44c220028d59e70e80f939f3b277d90366a
-Gitweb:        https://git.kernel.org/tip/5062a44c220028d59e70e80f939f3b277d90366a
+Commit-ID:     159e0676bcb0c14960aef912fbe95b0858243d51
+Gitweb:        https://git.kernel.org/tip/159e0676bcb0c14960aef912fbe95b0858243d51
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 19 Mar 2025 11:56:57 +01:00
+AuthorDate:    Wed, 19 Mar 2025 11:56:55 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 07 Apr 2025 16:24:56 +02:00
 
-PCI/MSI: Provide a sane mechanism for TPH
+PCI: hv: Switch MSI descriptor locking to guard()
 
-The PCI/TPH driver fiddles with the MSI-X control word of an active
-interrupt completely unserialized against concurrent operations issued
-from the interrupt core. It also brings the PCI/MSI-X internal cached
-control word out of sync.
+Convert the code to use the new guard(msi_descs_lock).
 
-Provide a function, which has the required serialization and keeps the
-control word cache in sync.
-
-Unfortunately this requires to look up and lock the interrupt descriptor,
-which should be only done in the interrupt core code. But confining this
-particular oddity in the PCI/MSI core is the lesser of all evil. A
-interrupt core implementation would require a larger pile of infrastructure
-and indirections for dubious value.
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Acked-by: Wei Liu <wei.liu@kernel.org>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lore.kernel.org/all/20250319105506.683663807@linutronix.de
-
+Link: https://lore.kernel.org/all/20250319105506.624838146@linutronix.de
 
 
 
 ---
- drivers/pci/msi/msi.c | 47 ++++++++++++++++++++++++++++++++++++++++++-
- drivers/pci/pci.h     |  9 ++++++++-
- 2 files changed, 56 insertions(+)
+ drivers/pci/controller/pci-hyperv.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index 50f3daf..4027abc 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -913,6 +913,53 @@ void pci_free_msi_irqs(struct pci_dev *dev)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ac27bda..e1eaa24 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3975,24 +3975,18 @@ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
+ {
+ 	struct irq_data *irq_data;
+ 	struct msi_desc *entry;
+-	int ret = 0;
+ 
+ 	if (!pdev->msi_enabled && !pdev->msix_enabled)
+ 		return 0;
+ 
+-	msi_lock_descs(&pdev->dev);
++	guard(msi_descs_lock)(&pdev->dev);
+ 	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_ASSOCIATED) {
+ 		irq_data = irq_get_irq_data(entry->irq);
+-		if (WARN_ON_ONCE(!irq_data)) {
+-			ret = -EINVAL;
+-			break;
+-		}
+-
++		if (WARN_ON_ONCE(!irq_data))
++			return -EINVAL;
+ 		hv_compose_msi_msg(irq_data, &entry->msg);
  	}
+-	msi_unlock_descs(&pdev->dev);
+-
+-	return ret;
++	return 0;
  }
  
-+#ifdef CONFIG_PCIE_TPH
-+/**
-+ * pci_msix_write_tph_tag - Update the TPH tag for a given MSI-X vector
-+ * @pdev:	The PCIe device to update
-+ * @index:	The MSI-X index to update
-+ * @tag:	The tag to write
-+ *
-+ * Returns: 0 on success, error code on failure
-+ */
-+int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
-+{
-+	struct msi_desc *msi_desc;
-+	struct irq_desc *irq_desc;
-+	unsigned int virq;
-+
-+	if (!pdev->msix_enabled)
-+		return -ENXIO;
-+
-+	guard(msi_descs_lock)(&pdev->dev);
-+	virq = msi_get_virq(&pdev->dev, index);
-+	if (!virq)
-+		return -ENXIO;
-+	/*
-+	 * This is a horrible hack, but short of implementing a PCI
-+	 * specific interrupt chip callback and a huge pile of
-+	 * infrastructure, this is the minor nuissance. It provides the
-+	 * protection against concurrent operations on this entry and keeps
-+	 * the control word cache in sync.
-+	 */
-+	irq_desc = irq_to_desc(virq);
-+	if (!irq_desc)
-+		return -ENXIO;
-+
-+	guard(raw_spinlock_irq)(&irq_desc->lock);
-+	msi_desc = irq_data_get_msi_desc(&irq_desc->irq_data);
-+	if (!msi_desc || msi_desc->pci.msi_attrib.is_virtual)
-+		return -ENXIO;
-+
-+	msi_desc->pci.msix_ctrl &= ~PCI_MSIX_ENTRY_CTRL_ST;
-+	msi_desc->pci.msix_ctrl |= FIELD_PREP(PCI_MSIX_ENTRY_CTRL_ST, tag);
-+	pci_msix_write_vector_ctrl(msi_desc, msi_desc->pci.msix_ctrl);
-+	/* Flush the write */
-+	readl(pci_msix_desc_addr(msi_desc));
-+	return 0;
-+}
-+#endif
-+
- /* Misc. infrastructure */
- 
- struct pci_dev *msi_desc_to_pci_dev(struct msi_desc *desc)
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index b81e99c..39f368d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1064,6 +1064,15 @@ int pcim_request_region_exclusive(struct pci_dev *pdev, int bar,
- 				  const char *name);
- void pcim_release_region(struct pci_dev *pdev, int bar);
- 
-+#ifdef CONFIG_PCI_MSI
-+int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag);
-+#else
-+static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
  /*
-  * Config Address for PCI Configuration Mechanism #1
-  *
