@@ -1,81 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8DE23AD
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFEC22A7EC;
+	Mon,  7 Apr 2025 09:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017151; cv=none; b=iDk8N3v2zzBd/n1+Yl1UcdO4eZMBXLTEJtdbENmy34r29Za3QUA4o7lwmqomnYJPxB4aBpPIV4obobGmfZznbt0NaXgC3AAe23f1nExAZ5+s+6a8geZUmYizy0S59GbsCv3VhD3G7JxnAOhlojnclJanK47GNkBkYP1fjL/Va+g=
+	t=1744017164; cv=none; b=ffMQYx9mr+hZH32pRATvlGuScCDAqXKrIpt7wslflBt8O38LPn9onoS+dyuPb3n9syrraHlM6+jMR3zCAXXQDp4D7Izfs4MCJRZ9WmOTS7XvfyNVieKpH67Hp5Gd7F7mUdCFBxy4WdFHwvdVNx9Efmp/E/OAtTzrxIlsjEZC6gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017151; c=relaxed/simple;
-	bh=QqcgnYbc64ABiFa7PpiP90t8g/PUReKKfwUWK5UDtO0=;
+	s=arc-20240116; t=1744017164; c=relaxed/simple;
+	bh=vqpVaxHXc7PLd5O0C9EcLS336Tg/Cor6GujYWsntLqQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C7XLlGruwzW4rvDHWJyrqwHFxJ5Ggcrg2/ijPK3C62ounEx6vBlIeSvxfV1tPPLgrfVIJFkwahBzX8AfUmwBcimuZSlrwEqTtKMhZcM55uJwgAGmghdVfoFN5jv44t0MghXuWrZGiu6vOmaPSepfV56OLpV4Ak4f8skCl/f5M9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MlaF36dY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rAA8QH40Z0J+BrKuJtMQS73userAUw5aWl0/Os7G3inZi1f1Sum3Z6JmveNaMCx07dO2iuksnn+gxNXWcu/wXy6BoNfremx7zZD8OZXXOHpOpsuYhX3vsm4kvhBGh266rTlgSLRzpcr8S2MOpewO6SmxxEP6X2D8ynwW4l+v/kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLm1UH3g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MlaF36dY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744017149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b+QgqHBJKeKPJpZKiVrtUQ7XxmYxjnt7PV0YU2Xe9Ro=;
-	b=MlaF36dYwKzWvP5OQaJxxGL1prrEJNgt8wp9+OZPd/3wOyPnZ4o4NmW2GdzE5MA3igVXCQ
-	S91l29WB8V6JFxQW//KrkoVkFgx829RSoSHSGQoUqO8BEq1H57Xs1l5xY+Bz3Yt/UepR2i
-	ne6AHBF23uSJhgyH8I/WKDxAZgQbas4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-65-AsyzGEslMyqPaZSPh0ulkA-1; Mon, 07 Apr 2025 05:12:27 -0400
-X-MC-Unique: AsyzGEslMyqPaZSPh0ulkA-1
-X-Mimecast-MFC-AGG-ID: AsyzGEslMyqPaZSPh0ulkA_1744017147
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac804089b99so74819866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:12:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744017147; x=1744621947;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+QgqHBJKeKPJpZKiVrtUQ7XxmYxjnt7PV0YU2Xe9Ro=;
-        b=GEPvPZMYMsPZP2YQ+QbG5LsFY8J0Flm5g1hrts+4gZkhOfFEQyrXMspHVDfggZGKY1
-         m9ChqQaC7Fl1P4CgUPeDyNlzdQm5A9J+819rMk2vPHGk5qtKXRgEIEDiwBjpFk7GcEzL
-         9Et/qjdVhTfEAImGq6jLEmJ3y+k5NP6mX8fwbKNqgQBt2JxAEkZE0bJ6hSwIAlXDN5Do
-         Q6X2tGGz/TDgCUCuXUQT4ExeHk0iOp7NOFeBOwQJOXVyiyfRE2VkPXvcfQ9NiPSN80dM
-         z2IJgyAs4weP8rOx/p21+CAdKSxETNml5OgGFwyFgpJjVxjy9n2o+LK6Tyw1LyipUnCR
-         YvUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW78ajBBUrXNIotJGwa1xd2iF8Y4/dDMKs8N2vN5/kmw4jZ27BMGoNSC6a727TpFcYM3pNCO2JyCxGa1vI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuMarjI18l2ENUZUq6nRQpB7ZFfgwSKytUNmt2IqByzFkEZCJq
-	n9t5HkvA1McbW5TyVs6TCnbzcebwVWlBbZ84dGxj3OUihooJ5hMjnZdg6Czw4DcKV/5LC+/LVhB
-	UkyxeXQrgky/g3pkfe7XtgSkKcw4D5ObbY6nP0q3cXuX3AJZBEsdQoIbFDAZEoQ==
-X-Gm-Gg: ASbGncvWslMiF2Xll8mh+LqCxGsDxZUuqQ7kQNTYNPjveT4CjquSU25kGqeMrvC6tJJ
-	I1QRXdkYcHPxLXnPil3lto5o2PepEsH8ZllShmJKw21kSwOzzYkAuB94LwT9rmid0w+uhDjIZ24
-	UgFDUnxIt5iup64eSPIYyJ/vqQRvZnUXxaqd7DbaULL7EnQcSpjCBbF0goAyx6NSoyDmyYeibzR
-	F9RRpcEVRPFkCgduTyTvF0v6pQKOWR7Y2TPshMvEteOoyY7HQg8BRfkpNM0+UJ+zFbyCkKmrkKM
-	WMXguq/Io/r/H+ZkgE4d0YAEO290Z9xjX3kUPT1DaUEBOjQ=
-X-Received: by 2002:a17:907:2d94:b0:ac2:26a6:febf with SMTP id a640c23a62f3a-ac7b712907bmr1442455466b.20.1744017146638;
-        Mon, 07 Apr 2025 02:12:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEm1rZUXB12vt8Se6sBgBy4VPKdiBjpKzOKKDr0v9jlpJYU9ZFOVAiulvwKNd78yZa0v4y2yA==
-X-Received: by 2002:a17:907:2d94:b0:ac2:26a6:febf with SMTP id a640c23a62f3a-ac7b712907bmr1442452766b.20.1744017146233;
-        Mon, 07 Apr 2025 02:12:26 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.37.215.184])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f0a0f3sm6700245a12.43.2025.04.07.02.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 02:12:25 -0700 (PDT)
-Date: Mon, 7 Apr 2025 11:12:21 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Harshit Agarwal <harshit@nutanix.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] sched/deadline: Fix race in push_dl_task
-Message-ID: <Z_OW9a_U4WQFWEBH@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250317022325.52791-1-harshit@nutanix.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLm1UH3g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79B84C4CEDD;
+	Mon,  7 Apr 2025 09:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744017163;
+	bh=vqpVaxHXc7PLd5O0C9EcLS336Tg/Cor6GujYWsntLqQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aLm1UH3gQlo5+sE76VMhgUbvEtQzNiO5R4nD2VKuYSKdv8XLOqPip8+bDGJ42s2b/
+	 5ktxospmg9fuV5LyR8XWc3AJooQqQsYivPdKyocnclkht64YCEVATbv1oW2E4Fhldx
+	 r+IQXm513rp4cFQHLlXVhLuTwQAHhYgFzxevivP0bo4W95dpB+FSGk+wyIZLJ/jeTR
+	 JZ4W4XlG+4EshZn3xs/BPELuQZYyRd6/kr+Pkl7fd22+TIId0C1Z4WIovd0iq40TRy
+	 B2G6gkN5p+Ee1U1kQ6H5N9g5eMDKRiLlOQoofTtCgaojiGCCEwXTdTjuc0TmdiNoaX
+	 8M/3wg3+dwxBw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u1iXA-000000006Q3-3NIW;
+	Mon, 07 Apr 2025 11:12:49 +0200
+Date: Mon, 7 Apr 2025 11:12:48 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: camss NULL-deref on power on with 6.12-rc2
+Message-ID: <Z_OXELLDIfQII6wV@hovoldconsulting.com>
+References: <Zwjw6XfVWcufMlqM@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,135 +48,145 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250317022325.52791-1-harshit@nutanix.com>
+In-Reply-To: <Zwjw6XfVWcufMlqM@hovoldconsulting.com>
 
-Hi,
+On Fri, Oct 11, 2024 at 11:33:30AM +0200, Johan Hovold wrote:
 
-I think I like this version better, but others feel free to disagree. :)
-
-A few comments inline below.
-
-On 17/03/25 02:23, Harshit Agarwal wrote:
-> This fix is the deadline version of the change made to the rt scheduler
-> titled: "sched/rt: Fix race in push_rt_task".
-> Here is the summary of the issue:
-
-I would probably remove the paragraph above and simply describe what the
-issues is like you do below.
-
-> When a CPU chooses to call push_dl_task and picks a task to push to
-> another CPU's runqueue then it will call find_lock_later_rq method
-> which would take a double lock on both CPUs' runqueues. If one of the
-> locks aren't readily available, it may lead to dropping the current
-> runqueue lock and reacquiring both the locks at once. During this window
-> it is possible that the task is already migrated and is running on some
-> other CPU. These cases are already handled. However, if the task is
-> migrated and has already been executed and another CPU is now trying to
-> wake it up (ttwu) such that it is queued again on the runqeue
-> (on_rq is 1) and also if the task was run by the same CPU, then the
-> current checks will pass even though the task was migrated out and is no
-> longer in the pushable tasks list.
-> Please go through the original change for more details on the issue.
+> This morning I hit the below NULL-deref in camss when booting a 6.12-rc2
+> kernel on the Lenovo ThinkPad X13s.
 > 
-> In this fix, after the lock is obtained inside the find_lock_later_rq we
-
-Please use imperative mode
-
-https://elixir.bootlin.com/linux/v6.13.7/source/Documentation/process/submitting-patches.rst#L94
-
-> ensure that the task is still at the head of pushable tasks list. Also
-> removed some checks that are no longer needed with the addition this new
-> check.
-> However, the check of pushable tasks list only applies when
-> find_lock_later_rq is called by push_dl_task. For the other caller i.e.
-> dl_task_offline_migration, we use the existing checks.
+> I booted the same kernel another 50 times without hitting it again it so
+> it may not be a regression, but simply an older, hard to hit bug.
 > 
-> Signed-off-by: Harshit Agarwal <harshit@nutanix.com>
-> Cc: stable@vger.kernel.org
-> ---
-> Changes in v2:
-> - As per Juri's suggestion, moved the check inside find_lock_later_rq
->   similar to rt change. Here we distinguish among the push_dl_task
->   caller vs dl_task_offline_migration by checking if the task is
->   throttled or not.
-> - Fixed the commit message to refer to the rt change by title.
-> - Link to v1:
->   https://lore.kernel.org/lkml/20250307204255.60640-1-harshit@nutanix.com/
-> ---
->  kernel/sched/deadline.c | 66 ++++++++++++++++++++++++++---------------
->  1 file changed, 42 insertions(+), 24 deletions(-)
+> Hopefully you can figure out what went wrong from just staring at the
+> oops and code.
+
+Hit the NULL-pointer dereference during boot that I reported back in
+October again today with 6.15-rc1.
+
+The camss_find_sensor_pad() function was renamed in 6.15-rc1, but
+otherwise it looks identical.
+
+Johan
+
+
+[    5.740833] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
+[    5.741162] Mem abort info:
+[    5.741435]   ESR = 0x0000000096000004
+[    5.741707]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    5.741980]   SET = 0, FnV = 0
+[    5.742249]   EA = 0, S1PTW = 0
+[    5.742253]   FSC = 0x04: level 0 translation fault
+[    5.742255] Data abort info:
+[    5.742257]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    5.743264]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    5.743267]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    5.743269] user pgtable: 4k pages, 48-bit VAs, pgdp=000000010fb98000
+[    5.743272] [0000000000000030] pgd=0000000000000000, p4d=0000000000000000
+[    5.744064] Internal error: Oops: 0000000096000004 [#1]  SMP
+
+[    5.744645] CPU: 3 UID: 0 PID: 442 Comm: v4l_id Not tainted 6.15.0-rc1 #106 PREEMPT
+[    5.744647] Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET87W (1.59 ) 12/05/2023
+[    5.744649] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    5.744651] pc : camss_find_sensor_pad+0x20/0x74 [qcom_camss]
+[    5.744661] lr : camss_get_pixel_clock+0x18/0x64 [qcom_camss]
+[    5.744666] sp : ffff800082dfb8e0
+[    5.744667] x29: ffff800082dfb8e0 x28: ffff800082dfbc68 x27: ffff143e80404618
+[    5.744671] x26: 0000000000000000 x25: 0000000000000000 x24: ffff143e9398baa8
+[    5.744675] x23: ffff800082dfb998 x22: ffff143e9398d9a0 x21: ffff800082dfb9a8
+[    5.744678] x20: 0000000000000002 x19: 0000000000020001 x18: 0000000000000020
+[    5.744682] x17: 3030613563613a33 x16: ffffac4db3ccf814 x15: 706e65672f6b6e69
+[    5.744686] x14: 0000000000000000 x13: ffff143e80b39180 x12: 30613563613a333a
+[    5.744690] x11: ffffac4db50a8920 x10: 0000000000000000 x9 : 0000000000000000
+[    5.744693] x8 : ffffac4db4992000 x7 : ffff800082dfb8e0 x6 : ffff800082dfb870
+[    5.744697] x5 : ffff800082dfc000 x4 : ffff143e9398cc70 x3 : ffff143e9398cb40
+[    5.744701] x2 : ffff143e9398be00 x1 : ffff143e9398d9a0 x0 : 0000000000000000
+[    5.744704] Call trace:
+[    5.744706]  camss_find_sensor_pad+0x20/0x74 [qcom_camss] (P)
+[    5.744711]  camss_get_pixel_clock+0x18/0x64 [qcom_camss]
+[    5.744716]  vfe_get+0xb8/0x504 [qcom_camss]
+[    5.744724]  vfe_set_power+0x30/0x58 [qcom_camss]
+[    5.744731]  pipeline_pm_power_one+0x13c/0x150 [videodev]
+[    5.744745]  pipeline_pm_power.part.0+0x58/0xf4 [videodev]
+[    5.744754]  v4l2_pipeline_pm_use+0x58/0x94 [videodev]
+[    5.744762]  v4l2_pipeline_pm_get+0x14/0x20 [videodev]
+[    5.744771]  video_open+0x78/0xf4 [qcom_camss]
+[    5.744776]  v4l2_open+0x80/0x120 [videodev]
+[    5.755711]  chrdev_open+0xb4/0x204
+[    5.755716]  do_dentry_open+0x138/0x4d0
+[    5.756271]  vfs_open+0x2c/0xe8
+[    5.756274]  path_openat+0x2b8/0x9fc
+[    5.756276]  do_filp_open+0x8c/0x144
+[    5.756277]  do_sys_openat2+0x80/0xdc
+[    5.756279]  __arm64_sys_openat+0x60/0xb0
+[    5.757830]  invoke_syscall+0x48/0x110
+[    5.757834]  el0_svc_common.constprop.0+0xc0/0xe0
+[    5.758369]  do_el0_svc+0x1c/0x28
+[    5.758372]  el0_svc+0x48/0x114
+[    5.758889]  el0t_64_sync_handler+0xc8/0xcc
+[    5.759184]  el0t_64_sync+0x198/0x19c
+[    5.759475] Code: f9000bf3 52800033 72a00053 f9402420 (f9401801)
+ 
+ 
+> [    5.657860] ov5675 24-0010: failed to get HW configuration: -517
+> [    5.676183] vreg_l6q: Bringing 2800000uV into 1800000-1800000uV
 > 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 38e4537790af..2366801b4557 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -2621,6 +2621,25 @@ static int find_later_rq(struct task_struct *task)
->  	return -1;
->  }
->  
-> +static struct task_struct *pick_next_pushable_dl_task(struct rq *rq)
-> +{
-> +	struct task_struct *p;
-> +
-> +	if (!has_pushable_dl_tasks(rq))
-> +		return NULL;
-> +
-> +	p = __node_2_pdl(rb_first_cached(&rq->dl.pushable_dl_tasks_root));
-> +
-> +	WARN_ON_ONCE(rq->cpu != task_cpu(p));
-> +	WARN_ON_ONCE(task_current(rq, p));
-> +	WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
-> +
-> +	WARN_ON_ONCE(!task_on_rq_queued(p));
-> +	WARN_ON_ONCE(!dl_task(p));
-> +
-> +	return p;
-> +}
-> +
->  /* Locks the rq it finds */
->  static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq)
->  {
-> @@ -2648,12 +2667,30 @@ static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq)
->  
->  		/* Retry if something changed. */
->  		if (double_lock_balance(rq, later_rq)) {
-> -			if (unlikely(task_rq(task) != rq ||
-> +			/*
-> +			 * We had to unlock the run queue. In the meantime,
+> [    6.517689] qcom-camss ac5a000.camss: Adding to iommu group 22
+> 
+> [    6.589201] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
+> [    6.589625] Mem abort info:
+> [    6.589960]   ESR = 0x0000000096000004
+> [    6.590293]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    6.590630]   SET = 0, FnV = 0
+> [    6.591619]   EA = 0, S1PTW = 0
+> [    6.591968]   FSC = 0x04: level 0 translation fault
+> [    6.592298] Data abort info:
+> [    6.592621]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> [    6.593112]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [    6.593450]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [    6.593783] user pgtable: 4k pages, 48-bit VAs, pgdp=000000010daef000
+> [    6.594139] [0000000000000030] pgd=0000000000000000, p4d=0000000000000000
+> [    6.594214] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
 
-Maybe rephrase as "doble_lock_balance might have released rq->lock ...".
-
-> +			 * task could have migrated already or had its affinity
-> +			 * changed.
-> +			 * It is possible the task was scheduled, set
-> +			 * "migrate_disabled" and then got preempted, so we must
-> +			 * check the task migration disable flag here too.
-> +			 * For throttled task (dl_task_offline_migration), we
-> +			 * check if the task is migrated to a different rq or
-> +			 * is not a dl task anymore.
-> +			 * For the non-throttled task (push_dl_task), the check
-> +			 * to ensure that this task is still at the head of the
-> +			 * pushable tasks list is enough.
-
-Maybe you can make a bullet point list out of this comment so that it's
-even easier to associate it to the conditions below?
-
-> +			 */
-> +			if (unlikely(is_migration_disabled(task) ||
->  				     !cpumask_test_cpu(later_rq->cpu, &task->cpus_mask) ||
-> -				     task_on_cpu(rq, task) ||
-> -				     !dl_task(task) ||
-> -				     is_migration_disabled(task) ||
-> -				     !task_on_rq_queued(task))) {
-> +				     (task->dl.dl_throttled &&
-> +				      (task_rq(task) != rq ||
-> +				       task_on_cpu(rq, task) ||
-> +				       !dl_task(task) ||
-> +				       !task_on_rq_queued(task))) ||
-> +				     (!task->dl.dl_throttled &&
-> +				      task != pick_next_pushable_dl_task(rq)))) {
-> +
-
-Thanks!
-Juri
-
+> [    6.594868] CPU: 0 UID: 0 PID: 557 Comm: v4l_id Not tainted 6.12.0-rc2 #165
+> [    6.594871] Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET87W (1.59 ) 12/05/2023
+> [    6.594872] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    6.594874] pc : camss_find_sensor+0x20/0x74 [qcom_camss]
+> [    6.594885] lr : camss_get_pixel_clock+0x18/0x60 [qcom_camss]
+> [    6.594889] sp : ffff800082d538f0
+> [    6.594890] x29: ffff800082d538f0 x28: ffff800082d53c70 x27: ffff670cc0404618
+> [    6.594893] x26: 0000000000000000 x25: 0000000000000000 x24: ffff670cd33173d0
+> [    6.594895] x23: ffff800082d539a8 x22: ffff670cd33192c8 x21: ffff800082d539b8
+> [    6.594898] x20: 0000000000000002 x19: 0000000000020001 x18: 0000000000000000
+> [    6.594900] x17: 0000000000000000 x16: ffffbf0bffbecdd0 x15: 0000000000000001
+> [    6.594902] x14: ffff670cc5c95300 x13: ffff670cc0b38980 x12: ffff670cc5c95ba8
+> [    6.594905] x11: ffffbf0c00f73000 x10: 0000000000000000 x9 : 0000000000000000
+> [    6.594907] x8 : ffffbf0c0085d000 x7 : 0000000000000000 x6 : 0000000000000078
+> [    6.594910] x5 : 0000000000000000 x4 : ffff670cd3318598 x3 : ffff670cd3318468
+> [    6.594912] x2 : ffff670cd3317728 x1 : ffff800082d539b8 x0 : 0000000000000000
+> [    6.594915] Call trace:
+> [    6.594915]  camss_find_sensor+0x20/0x74 [qcom_camss]
+> [    6.594920]  camss_get_pixel_clock+0x18/0x60 [qcom_camss]
+> [    6.594924]  vfe_get+0xb8/0x504 [qcom_camss]
+> [    6.594931]  vfe_set_power+0x30/0x58 [qcom_camss]
+> [    6.594936]  pipeline_pm_power_one+0x13c/0x150 [videodev]
+> [    6.594951]  pipeline_pm_power.part.0+0x58/0xf4 [videodev]
+> [    6.594960]  v4l2_pipeline_pm_use+0x58/0x94 [videodev]
+> [    6.594969]  v4l2_pipeline_pm_get+0x14/0x20 [videodev]
+> [    6.594978]  video_open+0x78/0xf4 [qcom_camss]
+> [    6.594982]  v4l2_open+0x80/0x120 [videodev]
+> [    6.594991]  chrdev_open+0xb4/0x204
+> [    6.594996]  do_dentry_open+0x138/0x4d0
+> [    6.595000]  vfs_open+0x2c/0xe4
+> [    6.595003]  path_openat+0x2b4/0x9fc
+> [    6.595005]  do_filp_open+0x80/0x130
+> [    6.595007]  do_sys_openat2+0xb4/0xe8
+> [    6.595010]  __arm64_sys_openat+0x64/0xac
+> [    6.595012]  invoke_syscall+0x48/0x110
+> [    6.595016]  el0_svc_common.constprop.0+0xc0/0xe0
+> [    6.595018]  do_el0_svc+0x1c/0x28
+> [    6.595021]  el0_svc+0x48/0x114
+> [    6.595023]  el0t_64_sync_handler+0xc0/0xc4
+> [    6.595025]  el0t_64_sync+0x190/0x194
+> [    6.595028] Code: 52800033 72a00053 d503201f f9402400 (f9401801)
+> [    6.595029] ---[ end trace 0000000000000000 ]---
