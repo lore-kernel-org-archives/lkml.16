@@ -1,198 +1,136 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5C12066EF;
-	Mon,  7 Apr 2025 16:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6342B209F50;
+	Mon,  7 Apr 2025 16:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042379; cv=none; b=rYNc9thr+jqiL4J4z/WzJH3fFSQOT/V/SdkFziXeqWYa2oZJrfkXyOKfEegxbApiuhgF/hCqHND53E/mj1cKSjSBOVKhQo7gjOr243xvStR690LwOEV86ERh8Lx7kX3hszfI7Fbi3CZ7c3Fn3GPZLBELM+nu01trspWd8YgxXnM=
+	t=1744042382; cv=none; b=A1/tsQXVcbswjJGAt5UKxLl2k5ntmdKcf5wzbxGeLNQtHjE6Dx8jyS/vEF+o9L1QgSUVf8OBVKVa65UJq8tcMsnmclvu3H9TXuX2gdTXYnjS6IhoIwhHafVE9FH7sRJH+na5A17CHvMN6RpRxQ855ZWDBCHrxPyo+eJsh3yyyTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042379; c=relaxed/simple;
-	bh=ZAPVS+gOYLQX255ZJo3mBjglhSU+jqR3+Ldyi1Zahx4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JWbrjaTtEGWPf5XuN1twphQAyMEpVh7zSxMTrIy8wzo+wQ5yrHTPH16Jr9+KpGb5XYgiHgOvIQeYAk7XX722kUpYAAzPC1QugduYLpDfdRzi+v6huha3otpDICtqw7PWyuMOw1sSuTdX04RGh80Lhg/nSnGp1Gl5JaOIMZaectQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=br8R2GIP; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744042382; c=relaxed/simple;
+	bh=7NRQROoGi6xdqbP2R4M0Uz5Zs5B5LfACyW4gQA73b3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TNekyyAZR6IMhxySsWtLRQA7/V/pzzpEE+utlzQigvuGytGFwmB2y+YIrJRfNkJn5vJuib7tCxt+ODD/YvdmirXbBrsMyX4RzCIjILsOs98qA5fCKeEA2Fk8Zb1+KFVFUumRDXcWYnYEiL8U+F06qJi+YbsLlc6Fl6ots8O6fmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gd1xcb9s; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="br8R2GIP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so19051795e9.0;
-        Mon, 07 Apr 2025 09:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744042375; x=1744647175; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RLDy66M+skbjiXw8NJvCe4Orr2lfF4gig4D2dSbfbp0=;
-        b=br8R2GIP0a7oAf5WXMEeWvenVzchBIlZfjYEizMdgoF09oza5Q9M8CXPyvLF/JUywd
-         BJNGdlUuZCsloA9+KKV5j/fO3SHNTz37EEOctCyPQN+mxBCARySvAikbTF1LqYOB89Gg
-         rN77s9LYMt8wuB4I5GkwY5IZrs174F3QoUH2X0foH4onyPHvt87mtAJjaXdq3L1Tbm1B
-         r7Ip0CTjh2ddL0IhIiaW6/v4WfiwdIgEqKDdVR+Yr7yFHQjNgU2GnkwPIMtazpylfZvU
-         7JiWtxP6cQdnIK/zkXmz0pTp4kHeKwH/ZQf6kbh6t3Iejma6Y11NzKNKqLfSCQEOGVvc
-         ABsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744042375; x=1744647175;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RLDy66M+skbjiXw8NJvCe4Orr2lfF4gig4D2dSbfbp0=;
-        b=Zl30XFq+uIYj1urdxDptsYWwFzm3EAeF6aAXBl9w7mWI11fWgyjZscLili9lD2hU8P
-         4LmXe1DEzvzKu6g4YLENgslFbznCKUImWOM6gNXN94A801pbr4YCEYXqjfLlnPHDRuau
-         SaFUYwDaUJ3PWrN2Mlqbcn1Of6rJ/nfYTTH1EtdGUOMeKz90TPOGaAwu5/BNS2sGZ56P
-         GFUZqtm1AsJSt1JwYmcm3yaDd9cu47XTRQm8SR81oVBCR4escl7VVYIPialCFiHbPbhg
-         ryrxYLrxDyy6Jc3trJL+h1ffgF+ZZare9zV/lQJxw3IWv+J3AfcxyK0yar5Pq9fJVeRB
-         JEwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwHIai3kuvETI9CpbSRUenC0r8bFhLkL9UwjYnEDc6D4qEmrZU6rJNQ7LDtR03rkN3LM8L2iGZ+s0=@vger.kernel.org, AJvYcCXOUXHac0SoV8DdzcqGjuesAo6fTbWZkNz3nuZv3OYq5rq3OtZefNQZsTAKlnHpKV1YJzRirn+mBI7p1+wA@vger.kernel.org
-X-Gm-Message-State: AOJu0YziU0k1b5pjLddaGKxLBKDD0Ay3fYW8sdjIfjZTbzVfBi37XQwM
-	dBYOGiZYTOxE9GQvnY0FZk8HUXBBNYg9tC8xC+MyXZrhcaZBYQbz
-X-Gm-Gg: ASbGncuoWSZuunmxuxaco6BQB3eRvwGOT/Otz31qIwix6zEbv9RPagVuHQUTzrjY/Os
-	nPU+QAEqCCrrccLNNZ55XyhdapMdEO1nWs+wsqoBbC9kgSw/8LUgG/P/+z4yTFbi2zx6/jAID0y
-	nD/W1zv7Jq0OEoPA9+6ZFbxfg2DoS5pe17I6unq6BqD+plp6SL47nGw+oQaYFcsSZi04Akoz2Fx
-	MZP8f8vOUgk+JWIyLZqFnsD2Ylr0Wgxy3mEa9IEvZDZFshSDIf2wWwOjCUJUeDg1h170uhZvhvc
-	xz7bCTN97mlbDYxq5eZIqMuLD6IMaqnr4eGx39eyMewgqqL3IQ77wtkB6nh64qUCCLHMlzbL0Vr
-	HJebMbayct3gPgwUf
-X-Google-Smtp-Source: AGHT+IGavjcD1KAEWkLQOWDLjtHgtYaw58xAL940PRwvs9hdMB5w+SN/KBABwEIWKBrtqylQIiLSzg==
-X-Received: by 2002:a05:600c:3b94:b0:43d:649:4e50 with SMTP id 5b1f17b1804b1-43f0ab8c6d2mr14232785e9.13.1744042375344;
-        Mon, 07 Apr 2025 09:12:55 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226f2bsm12663765f8f.96.2025.04.07.09.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:12:54 -0700 (PDT)
-Message-ID: <3ac77217946c26069be967065b316c63e12d626b.camel@gmail.com>
-Subject: Re: [PATCH v3 3/5] iio: backend: add support for data source get
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen	 <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Olivier
- Moysan	 <olivier.moysan@foss.st.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 07 Apr 2025 17:12:55 +0100
-In-Reply-To: <20250407-wip-bl-ad3552r-fixes-v3-3-61874065b60f@baylibre.com>
-References: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
-	 <20250407-wip-bl-ad3552r-fixes-v3-3-61874065b60f@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gd1xcb9s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744042381; x=1775578381;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7NRQROoGi6xdqbP2R4M0Uz5Zs5B5LfACyW4gQA73b3s=;
+  b=gd1xcb9sceHKV+ia6Mi/EXhj6m+ETKX+JhlA058L5xNxRz4iejyPsOMj
+   jmGIvc4rgTZMviMDgpNL7J2prLiz3jPDT7aJM9FXR/ELPXBNSIPupddmO
+   /9iKO0YxvIUtwWMnSQwfmR/Yg1u+k5RW1fWJXortSdolR0Pwlk/pqEBSa
+   rRQQGNKps8dYeks9uMHozJcj9aKmeX0/abMGPTxKFfxvHmgqzBMi7hjYi
+   SyuIYuz9lV6b6AzqKeabTuD+1wB92BL29cukmILDJbWPmPK0fy/xYCc68
+   is1WhTl5yspO8gWqOzg5D2Q5zMYOG95ifM2pws5EGn536X7YvOYdWtgIZ
+   w==;
+X-CSE-ConnectionGUID: 8sFRIKQdR4aTGrbpRVH1Ww==
+X-CSE-MsgGUID: AJLOdWowQHuWio7EwfHnBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="33043296"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="33043296"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:13:00 -0700
+X-CSE-ConnectionGUID: pybg/E1uQ0KgOcJ41PlKUA==
+X-CSE-MsgGUID: ginmmX3CSqO1+aY969XI7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="158990716"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 07 Apr 2025 09:12:58 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1p5j-0003aN-2J;
+	Mon, 07 Apr 2025 16:12:55 +0000
+Date: Tue, 8 Apr 2025 00:11:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: ds4520: don't check the 'ngpios' property in the
+ driver
+Message-ID: <202504072320.SjnRj58d-lkp@intel.com>
+References: <20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org>
 
-On Mon, 2025-04-07 at 10:52 +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add backend support for getting the data source used.
->=20
-> The ad3552r HDL implements an internal ramp generator, so adding the
-> getter to allow data source get/set by debugfs.
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
+Hi Bartosz,
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+kernel test robot noticed the following build warnings:
 
-> =C2=A0drivers/iio/industrialio-backend.c | 28 +++++++++++++++++++++++++++=
-+
-> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 5 +++++
-> =C2=A02 files changed, 33 insertions(+)
->=20
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
-o-
-> backend.c
-> index
-> a43c8d1bb3d0f4dda4277cac94b0ea9232c071e4..c1eb9ef9db08aec8437d0d00cf77914=
-ad661
-> 1b72 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -380,6 +380,34 @@ int iio_backend_data_source_set(struct iio_backend *=
-back,
-> unsigned int chan,
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL_NS_GPL(iio_backend_data_source_set, "IIO_BACKEND");
-> =C2=A0
-> +/**
-> + * iio_backend_data_source_get - Get current data source
-> + * @back: Backend device
-> + * @chan: Channel number
-> + * @data: Pointer to receive the current source value
-> + *
-> + * A given backend may have different sources to stream/sync data. This
-> allows
-> + * to know what source is in use.
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_data_source_get(struct iio_backend *back, unsigned int c=
-han,
-> +				enum iio_backend_data_source *data)
-> +{
-> +	int ret;
-> +
-> +	ret =3D iio_backend_op_call(back, data_source_get, chan, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (*data >=3D IIO_BACKEND_DATA_SOURCE_MAX)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_data_source_get, "IIO_BACKEND");
-> +
-> =C2=A0/**
-> =C2=A0 * iio_backend_set_sampling_freq - Set channel sampling rate
-> =C2=A0 * @back: Backend device
-> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
-> index
-> e45b7dfbec35c094942a3034fc6057a7960b9772..e59d909cb65924b4872cadd4b7e5e89=
-4c13c
-> 189f 100644
-> --- a/include/linux/iio/backend.h
-> +++ b/include/linux/iio/backend.h
-> @@ -84,6 +84,7 @@ enum iio_backend_interface_type {
-> =C2=A0 * @chan_disable: Disable one channel.
-> =C2=A0 * @data_format_set: Configure the data format for a specific chann=
-el.
-> =C2=A0 * @data_source_set: Configure the data source for a specific chann=
-el.
-> + * @data_source_get: Data source getter for a specific channel.
-> =C2=A0 * @set_sample_rate: Configure the sampling rate for a specific cha=
-nnel.
-> =C2=A0 * @test_pattern_set: Configure a test pattern.
-> =C2=A0 * @chan_status: Get the channel status.
-> @@ -115,6 +116,8 @@ struct iio_backend_ops {
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_backend_da=
-ta_fmt *data);
-> =C2=A0	int (*data_source_set)(struct iio_backend *back, unsigned int chan=
-,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum iio_backend_data_sourc=
-e data);
-> +	int (*data_source_get)(struct iio_backend *back, unsigned int chan,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum iio_backend_data_source *da=
-ta);
-> =C2=A0	int (*set_sample_rate)(struct iio_backend *back, unsigned int chan=
-,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 sample_rate_hz);
-> =C2=A0	int (*test_pattern_set)(struct iio_backend *back,
-> @@ -176,6 +179,8 @@ int iio_backend_data_format_set(struct iio_backend *b=
-ack,
-> unsigned int chan,
-> =C2=A0				const struct iio_backend_data_fmt *data);
-> =C2=A0int iio_backend_data_source_set(struct iio_backend *back, unsigned =
-int chan,
-> =C2=A0				enum iio_backend_data_source data);
-> +int iio_backend_data_source_get(struct iio_backend *back, unsigned int c=
-han,
-> +				enum iio_backend_data_source *data);
-> =C2=A0int iio_backend_set_sampling_freq(struct iio_backend *back, unsigne=
-d int
-> chan,
-> =C2=A0				=C2=A0 u64 sample_rate_hz);
-> =C2=A0int iio_backend_test_pattern_set(struct iio_backend *back,
+[auto build test WARNING on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-ds4520-don-t-check-the-ngpios-property-in-the-driver/20250407-150804
+base:   0af2f6be1b4281385b618cb86ad946eded089ac8
+patch link:    https://lore.kernel.org/r/20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39%40linaro.org
+patch subject: [PATCH] gpio: ds4520: don't check the 'ngpios' property in the driver
+config: arm-randconfig-002-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072320.SjnRj58d-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504072320.SjnRj58d-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504072320.SjnRj58d-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/gpio/gpio-ds4520.c:43:17: warning: variable 'ngpio' is uninitialized when used here [-Wuninitialized]
+      43 |         config.ngpio = ngpio;
+         |                        ^~~~~
+   drivers/gpio/gpio-ds4520.c:28:11: note: initialize the variable 'ngpio' to silence this warning
+      28 |         u32 ngpio;
+         |                  ^
+         |                   = 0
+   1 warning generated.
+
+
+vim +/ngpio +43 drivers/gpio/gpio-ds4520.c
+
+659ad5f7efece8 Okan Sahin 2023-07-29  22  
+659ad5f7efece8 Okan Sahin 2023-07-29  23  static int ds4520_gpio_probe(struct i2c_client *client)
+659ad5f7efece8 Okan Sahin 2023-07-29  24  {
+659ad5f7efece8 Okan Sahin 2023-07-29  25  	struct gpio_regmap_config config = { };
+659ad5f7efece8 Okan Sahin 2023-07-29  26  	struct device *dev = &client->dev;
+659ad5f7efece8 Okan Sahin 2023-07-29  27  	struct regmap *regmap;
+659ad5f7efece8 Okan Sahin 2023-07-29  28  	u32 ngpio;
+659ad5f7efece8 Okan Sahin 2023-07-29  29  	u32 base;
+659ad5f7efece8 Okan Sahin 2023-07-29  30  	int ret;
+659ad5f7efece8 Okan Sahin 2023-07-29  31  
+659ad5f7efece8 Okan Sahin 2023-07-29  32  	ret = device_property_read_u32(dev, "reg", &base);
+659ad5f7efece8 Okan Sahin 2023-07-29  33  	if (ret)
+659ad5f7efece8 Okan Sahin 2023-07-29  34  		return dev_err_probe(dev, ret, "Missing 'reg' property.\n");
+659ad5f7efece8 Okan Sahin 2023-07-29  35  
+659ad5f7efece8 Okan Sahin 2023-07-29  36  	regmap = devm_regmap_init_i2c(client, &ds4520_regmap_config);
+659ad5f7efece8 Okan Sahin 2023-07-29  37  	if (IS_ERR(regmap))
+659ad5f7efece8 Okan Sahin 2023-07-29  38  		return dev_err_probe(dev, PTR_ERR(regmap),
+659ad5f7efece8 Okan Sahin 2023-07-29  39  				     "Failed to allocate register map\n");
+659ad5f7efece8 Okan Sahin 2023-07-29  40  
+659ad5f7efece8 Okan Sahin 2023-07-29  41  	config.regmap = regmap;
+659ad5f7efece8 Okan Sahin 2023-07-29  42  	config.parent = dev;
+659ad5f7efece8 Okan Sahin 2023-07-29 @43  	config.ngpio = ngpio;
+659ad5f7efece8 Okan Sahin 2023-07-29  44  
+659ad5f7efece8 Okan Sahin 2023-07-29  45  	config.reg_dat_base = base + DS4520_IO_STATUS0;
+659ad5f7efece8 Okan Sahin 2023-07-29  46  	config.reg_set_base = base + DS4520_PULLUP0;
+659ad5f7efece8 Okan Sahin 2023-07-29  47  	config.reg_dir_out_base = base + DS4520_IO_CONTROL0;
+659ad5f7efece8 Okan Sahin 2023-07-29  48  
+659ad5f7efece8 Okan Sahin 2023-07-29  49  	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &config));
+659ad5f7efece8 Okan Sahin 2023-07-29  50  }
+659ad5f7efece8 Okan Sahin 2023-07-29  51  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
