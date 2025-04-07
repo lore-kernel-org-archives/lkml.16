@@ -1,80 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D10617BA6;
-	Mon,  7 Apr 2025 00:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47123C2EF;
+	Mon,  7 Apr 2025 00:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743986284; cv=none; b=NyE9n+1zVIEM+8lUkrrRE2LRfspBuKJ9Hh3GptMpm/S/uey+egMTFUJGulDqVAB7W7ZNshJtZvocH5c16WgP9cnpQXXJyQwUyzeJJGqZm/18lrimiqavztBvHT4EOTrzdrDrKp2NP7lgYgK20+hflm5ZXVv4M8Hs+vAHEmwXR7c=
+	t=1743986489; cv=none; b=iAZwYwXUkkWqMe6sD3+9JgzHnUc3b2XhcPCgojy32mczj0dM1vpaYIjKD88p0YZWiXhakKklOEPzAnURsArKvAOXVX22AsCU4pmhseLhVWbAWis1x4fqMXnJN+/Q9ZvRTtl1SOcrPk6wWjISBGzUvUJ5O3YCsyPWNm1V/fgUrF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743986284; c=relaxed/simple;
-	bh=+tGXeQSrGysEIhdSdet8JZyBaFEsGB0pL87dtXIb7C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGDSDUswBpBepyxE1PFFXWdgLGkA9B99GQf7T+UxHD9p2Tx0lBGgVyllEDh86cNg+UKRoSB2oIIcmELWqCDGfMLxFZOev8Gnq+n486hFhexxerjjjncxPMl8yZw19cXH+xtfZYziSZoCeFQeO9mqPbgRo+xQl6m+UR2RdvGCE8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3htmVgT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743986489; c=relaxed/simple;
+	bh=CC4Ef5cjDbsSYbVqDqbwFx1wQVUkjDiV8sSkqGPJeWY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s1IcRyVdxcLz3KUYfJl9whptvSkIB98sN8nItDadgn8IReHkpJDPwaIgrVelu4XknTkdUeSpTMGzNlzE0B6KIyldJ+TBfVLnqU3tEsikfxHfCvG78hAzTv7f4KgiGMhzaV1rg8TeZluDNnq4pY2mZybVoCEyCt/2vY4wp1QWJm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cnHoVhSV; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3htmVgT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951DEC4CEE3;
-	Mon,  7 Apr 2025 00:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743986284;
-	bh=+tGXeQSrGysEIhdSdet8JZyBaFEsGB0pL87dtXIb7C4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k3htmVgTTtO5WvTkiJ7wTcC5GGl2CSWO8A4OFSoU48qIrDChQIHKBEYQjrkai7gVY
-	 xHzIliy1a8laJ+mV+OhziG8nyxvAJ4gjq79WePg0zh+xosbDoyaHLH3tf+fsYAq2NJ
-	 dtjgVmmmjkDZg1DgrBZfGFZvcX4Oax6GpK43YbaWi+Vn2WRDzAKFYP07r72CXNFn2m
-	 /GolUpaFTRku9B2o0e8J94eGypjYJpZMp21+5UnNdRgMWjVDjrD1cJSk3CIV861hvy
-	 qlDkQA3NIZiN/pjzOi+iWieh0qMO4mUYEVN29VP1ObTXx9+fWhjrcJcnn/lnq0mFU3
-	 uVcsPUmO1oibg==
-Date: Mon, 7 Apr 2025 03:37:59 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>, stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v5] KEYS: Add a list for unreferenced keys
-Message-ID: <Z_MeZ-dC7ugzdkkn@kernel.org>
-References: <20250407001046.19189-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnHoVhSV"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2cc57330163so2170525fac.2;
+        Sun, 06 Apr 2025 17:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743986487; x=1744591287; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CC4Ef5cjDbsSYbVqDqbwFx1wQVUkjDiV8sSkqGPJeWY=;
+        b=cnHoVhSVpUB5qFHeGIZooI4MD+jIFDYyslVNtinpzngIBIDBY2Sz0M7lxM6Nas62/f
+         X3yAOxLe0zwCQLLNFCEBO7Ld/ajslqVnOjvZo9lvceXG9ZV/g42GlF3yJUhKdMJ4T3Ko
+         l6ZuR2TRYJNqvBcUZfgpn9oR2ma2iFkfrw/Lo2gjCo7LH8rwZFogoSPV//C8WCKHVBPb
+         kVBitQy0JhnWIHpwOL3S/N9JSv3L/AlzUymKkhfG2VOXJqM+C2vhVBocBVa2CpQuCt9N
+         uzEH4wIc2rDCK1msaI6fGyVYazjKl+RDgGvY4TB/NQb+hoeg3NCBzjGapcNWhEC4Nbp/
+         2rJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743986487; x=1744591287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CC4Ef5cjDbsSYbVqDqbwFx1wQVUkjDiV8sSkqGPJeWY=;
+        b=BvKkEImnqinPH28OdsTGyv58E0UlyqSZk7+GtazqSa4rSRJQLkoQ1WDFZZHLV3gY0z
+         pLGu8VmypzbFv3YLsZhJEQToqvR1GhD7ZAkQ4XywyECQmvrEh3bL95iwRAXTQkJ69XsY
+         qt57+BLyO06t2Bv+2FG9UvfNZeUaJPJJGg7HuhxjxLbxledkPKdLkCABtXgXzWvnhBho
+         YeuzE6/ifjBerUVZGPDbtH0Mm6nthDhLg+9tSRDJalAZ6aRMdyUqjzhCoScut6e8+b59
+         07XLuj2oXPTyYHLOBTi+W7EzP9MvmNjen2knfWLv4nMbmIb0tANGiadxwCy1TrBqrNyY
+         EBCg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6nmHpHbsvmKM2Dqc1L6MeWeXfK/dQ75iYoj4ztMHkuc2rzy+fFtrhDfdYYiFkAUjaronR4EjXvLVzUYuL@vger.kernel.org, AJvYcCWsJOVmjvln1H2dNuV3O6tVYpBPSX7FN85wGaAT2VV5f8nooIxQ1+76kttvhMeh03aknwuU9en2At55ITUo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwPHoJx8MEkSN/TlN6cpPOZt9AzBIof8Fafd86fXSPWfy4o5S7
+	8QpifPyYEBCITWOcLg4cBQZkwaaWx5YyXIb4ruopl93GIr8fs2nl+irqPGse0LzWdCzdnAEljnP
+	1JZDQ2fI25y8hpyqseZGyt9YAyQY=
+X-Gm-Gg: ASbGnctUGTTNGArRg1vJMgcNXG7b8ARfM800ua2UnHXD5f+E5bPHaAsCOMAQ9Qt6yAC
+	dOO2KC9G69dKiyoSkC7vEAG18GF8Fw5QkqIspItMDmlkkVI63g6Kg+yMYXfYushTIsVEEiVRWp4
+	BDb53PiMDXNcrJWKM/VckD5ZDavw==
+X-Google-Smtp-Source: AGHT+IHSVndkLtJqE5Jjssk3DBIW4fmoqBFpyiA0afpVlSNevi1mSiuOqziwLt3ODMR1p1dvelaGWTIEclYqWARes0c=
+X-Received: by 2002:a05:6870:569e:b0:2a3:832e:5492 with SMTP id
+ 586e51a60fabf-2cc9e7fcd76mr6355789fac.25.1743986487188; Sun, 06 Apr 2025
+ 17:41:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407001046.19189-1-jarkko@kernel.org>
+References: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
+ <CAGudoHErv6sX+Tq=NNLL3b61Q70TeZxi93Nx_MEcMrQSg47JGA@mail.gmail.com>
+ <20250406-reime-kneifen-11714c0a421d@brauner> <20250406-angucken-ankommen-6974c000f0fb@brauner>
+In-Reply-To: <20250406-angucken-ankommen-6974c000f0fb@brauner>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Mon, 7 Apr 2025 02:41:13 +0200
+X-Gm-Features: ATxdqUH1guGfzORNPTtqmHATa3-5D6zjUekE_ynbWy6nR08MFRThLuRMdyDc5ss
+Message-ID: <CAGudoHF5E=PSkJ6Gf7jOeU9Ry72QyNkanqQzMdmy_Kraj=SL+w@mail.gmail.com>
+Subject: Re: [PATCH] anon_inode: use a proper mode internally
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Penglei Jiang <superman.xpt@gmail.com>, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 03:10:45AM +0300, Jarkko Sakkinen wrote:
-> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> 
-> Add an isolated list of unreferenced keys to be queued for deletion, and
-> try to pin the keys in the garbage collector before processing anything.
-> Skip unpinnable keys.
-> 
-> Use this list for blocking the reaping process during the teardown:
-> 
-> 1. First off, the keys added to `keys_graveyard` are snapshotted, and the
->    list is flushed. This the very last step in `key_put()`.
-> 2. `key_put()` reaches zero. This will mark key as busy for the garbage
->    collector.
-> 3. `key_garbage_collector()` will try to increase refcount, which won't go
->    above zero. Whenever this happens, the key will be skipped.
-> 
-> Cc: stable@vger.kernel.org # v6.1+
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+On Sun, Apr 6, 2025 at 9:51=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> > Anyway, I'm finishing the patch and testing tomorrow and will send out
+> > with all the things I mentioned (unless I find out I'm wrong).
+>
+> Found my notes about this. I knew I had notes about this somewhere...
+> It isn't possible to execute anoymous inodes because you cannot open
+> them. That includes stuff like:
+>
+> execveat(fd_anon_inode, "", NULL, NULL, AT_EMPTY_PATH)
+>
+> Look, anonymous inodes have inode->f_op set to no_open_fops which sets
+> no_open() which returns ENXIO. That means any call to do_dentry_open()
+> which is the endpoint of the do_open_execat() will fail. There's no
+> chance to execute an anonymous inode. Unless a given subsystem overrides
+> it ofc.
+>
+> I still agree that we need to be more coherent about this and we need to
+> improve various semantical quirks I pointed out. But the exec problem
+> isn't really an issue so the patch itself still seems correct to me.
 
-Rebase went wrong:
+Ok, that makes sense. Thanks for the explanation.
 
-https://lore.kernel.org/keyrings/20250407003622.22139-1-jarkko@kernel.org/T/#u
-
-BR, Jarkko
+--=20
+Mateusz Guzik <mjguzik gmail.com>
