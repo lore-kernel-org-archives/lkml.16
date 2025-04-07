@@ -1,120 +1,96 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841A526A0E4;
-	Mon,  7 Apr 2025 18:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB292550C8;
+	Mon,  7 Apr 2025 18:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049735; cv=none; b=IGMEw8z9E6wvLBiZVtVemc7PKwb6hUwyd3qkx0uNciSSbOMYpoWbDSGzyLUBhv9e9Ly1+bBINqwQW4SEeDwKrHNUgRAjMAMSmjjrGj7VK6v2m78zOs6O/Jw0EiNVVG5d0xwFgqtQy0OLzxSh+fXAULbkzZ7Z+p0IiXeY3uyrC+E=
+	t=1744049741; cv=none; b=HO2ndch1i8ofcTFd5rCo8NqAgEB9atWCZ0lgpGOcO5uIiWgs7vYeqKALbuujXccKRLFVuDBzYmt0fV08LCW1F9g9vdvIiLG01KpCLm7ZWUCDrLzuy5gOdzB24TvEClRGStE7arq7ENhxvR2sTLz5/xpPXUoN/VghHVZL5cbFoY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049735; c=relaxed/simple;
-	bh=0DGW2GtE/wbTFy6zNvPW1hLpO8FevOBzZbFxsl4xPjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cb/F3/4ST82D2Dyjt7BWZGJoWlD6BOKA7E8qBus0EDJREsg9e7IQrd3W4LzNXIfqWpP0oz6ViESAa45BHmKMXWjM7TliwLke/466x/GADmv4WSRaBTHqyRAtM+4Ha5dwzO0JvgRZK+mfTWo7vFKEPpbVpvsus1pguHQH7pAu4Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncetSlKo; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744049741; c=relaxed/simple;
+	bh=DI7Ikjnz7qphhOm+1QNPRAjBorGDkMix9z/wDK3t8A8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DjU/j94wPILtIFNsQJKCjAZsX17tfd33u2FS1CpC+CjZMq0y8F+ITWDS2ZVIjvqWdNzijPK/ev3pOlb9fO4qUewPn8ezfgqO4KQPTdgi6nATkWTyVruH3kHnfHpIv/D/pGpgxjwjcYapBWFoSUBCdXfkc/GNsmonuSTzWlLUFF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZzJx7kh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncetSlKo"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6ff07872097so42695127b3.3;
-        Mon, 07 Apr 2025 11:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049732; x=1744654532; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W+y7j0d94ESJiQTrZdM7W+yXTrmSLOAkjPT20fXhISA=;
-        b=ncetSlKoAU6LPDlx3wYCW5Fe02RWX7yhDHhFRsnDBSb3lhPuVoY0p3zSoUUN0RdM18
-         QQO2/omYiPD4cNFNmtiF+3PBXXD4n4s7xPkAzpL/RUdgPVSxcu4SWiR5nZDnIsh61AGE
-         XjENQ868zn+mfS+jXYCM+s13SJCvk5s4nnfUajK8Tcq0qAGxOpdQRoY/njXrnOW3MfgT
-         ndA/iaZJYcdn5kY6obNyyXd7DzEGstpkMLdi4OcxxHrh5xUTSQmnYeLyOPpG7x2wbDLF
-         1F8JKno9jm7zgIoVATu1EPDiFHqQnw14SaPEkb9YurmbTksQkA8kRSG1jQv1JmtyAKm+
-         0LjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049732; x=1744654532;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+y7j0d94ESJiQTrZdM7W+yXTrmSLOAkjPT20fXhISA=;
-        b=qZhwTGwl743jab2YK4sbsODgmo6R2po/RoGSaUfG7ZTElqVcDBuy+EeRkmE3RBc7iM
-         fQaUfkWiPvPxkoRiZwu7Chd/e7qICyy76pZff0ONC34P6/E8PO3doD+4EswyVnf5zqwA
-         h6YYEMUaFMr4iGZjLxE2P/MQLkngRO/SODxuDOfVqmyBBlpX7nsakVGhXAxBn4oHyHYf
-         fs6YYk5Oze9wrVMWe+ZCKnmgrKLM7/8bopVeuyLqqlVlMOdh9GJAoIBKxSsD9h2L0xJ7
-         3toFaYH29cKsEDxcloNc7fa5kayqcotGyDgvptgq99ULKWTXMCIVzLXF+tnUFxDN+uaf
-         Hzsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmn5TiM5Jp8D8jXYiMDFB57uWHs3En1FTDxoUadWKx/m3cpxqpi0tUfFLLRZEVGW+2vaG67mtYPgE3J0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnxuBHQoqcsjLc45rYm7r5yCn3VbYfJA88Bf7HOs9jrJNW1+Zk
-	/FI3m+1gWNYj6B9MdQL7qhQE9dLAUHmrK5512jbyS1soMhgrk+Bb
-X-Gm-Gg: ASbGncvnY3RsSBgouO0ALOJqan3RydLZ9Lnmjjj8L0+L2IkaWDPStuset/sJqwrdDl6
-	5dO/IvxDLr9+3sUziqFgb1Fu6VpWF3oW7Q14nZ6YLgUrCwkqicWRs5Nl+LX8h9Ex423kokn44X5
-	EEl7tBpT4yAds9hdSMIb7E7YmtEETdpjNOiehDzZ4rDX8IKaeAAw3lMqDKe1tTKrO/hPs/EBBLW
-	kUq04xBev2UVN10VouXib95wcqxJ9WRV5caZ/Urri/s41ZMFS+L4vvT9mLK3VT1elFAZ7RkCwrb
-	7S5o6RIX9In/83Vcn3xcXtaEMmZ4o8FRB0Yo2LoOoQbV26+l/1SNxV0qso3tfYP+QhhcDhmRwXH
-	PLQ==
-X-Google-Smtp-Source: AGHT+IF2uFzNJUA+HFuJSyLd8tdsQvhlIigDoTzGOxEQtLXp81AorTYnwP7QptlT3IUmR4B0WPnQ9w==
-X-Received: by 2002:a05:690c:2506:b0:6fb:9389:3cde with SMTP id 00721157ae682-703e14f8287mr237326997b3.3.1744049732407;
-        Mon, 07 Apr 2025 11:15:32 -0700 (PDT)
-Received: from [10.102.6.66] ([208.97.243.82])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1fa6f24sm26502997b3.98.2025.04.07.11.15.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 11:15:32 -0700 (PDT)
-Message-ID: <af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
-Date: Mon, 7 Apr 2025 14:15:31 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZzJx7kh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F86CC4CEDD;
+	Mon,  7 Apr 2025 18:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744049741;
+	bh=DI7Ikjnz7qphhOm+1QNPRAjBorGDkMix9z/wDK3t8A8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RZzJx7khFJF+UER0IYc2H05MxbPM21V6Ni5h0/26HjXZ3B/236tce4zHify2Ui5n1
+	 v9WQJZ9nEE7c/eB4T0Ofg24Rfkt8ayK3ulltgMHeDPRmDrCalbFj601lOXLKryhkUB
+	 7sLgFtjHLJk3kaM7wiZ8/Xk5Ds+oOF/d5P3cPpuWWBB3jIc7JmbVVkjIm/PM1lAzTk
+	 4hsZNa4MlboxrXF4U7DkWy21IYaIIUzrotdJZtuo2dgIKD2L+5rSoAtaxX1w3CG6nZ
+	 M733lnanS42GIGUagEyKhceLckBC7ka05bxpkD4VGxVcjwPXRf8zQ/QWj3ilB+OdUT
+	 dhMKzZwIiFfaw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Alexander Stein <alexander.stein@mailbox.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mark.tomlinson@alliedtelesis.co.nz,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 1/4] usb: host: max3421-hcd: Add missing spi_device_id table
+Date: Mon,  7 Apr 2025 14:15:31 -0400
+Message-Id: <20250407181536.3183979-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 net-next 0/3] Add support for mdb offload failure
- notification
-To: Jakub Kicinski <kuba@kernel.org>, Joseph Huang <Joseph.Huang@garmin.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
- Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250404212940.1837879-1-Joseph.Huang@garmin.com>
- <20250407102941.4331a41e@kernel.org>
-Content-Language: en-US
-From: Joseph Huang <joseph.huang.2024@gmail.com>
-In-Reply-To: <20250407102941.4331a41e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.235
+Content-Transfer-Encoding: 8bit
 
-On 4/7/2025 1:29 PM, Jakub Kicinski wrote:
-> On Fri, 4 Apr 2025 17:29:32 -0400 Joseph Huang wrote:
->> Currently the bridge does not provide real-time feedback to user space
->> on whether or not an attempt to offload an mdb entry was successful.
->>
->> This patch set adds support to notify user space about failed offload
->> attempts, and is controlled by a new knob mdb_offload_fail_notification.
->>
->> A break-down of the patches in the series:
->>
->> Patch 1 adds offload failed flag to indicate that the offload attempt
->> has failed. The flag is reflected in netlink mdb entry flags.
->>
->> Patch 2 adds the new bridge bool option mdb_offload_fail_notification.
->>
->> Patch 3 notifies user space when the result is known, controlled by
->> mdb_offload_fail_notification setting.
-> 
-> You submitted this during the merge window, when the net-next tree
-> was closed. See:
-> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
-> Could you repost so that the series will be re-enqueued?
-> 
-> Thanks!
+From: Alexander Stein <alexander.stein@mailbox.org>
 
-Sure thing!
+[ Upstream commit 41d5e3806cf589f658f92c75195095df0b66f66a ]
 
-A couple of questions:
+"maxim,max3421" DT compatible is missing its SPI device ID entry, not
+allowing module autoloading and leading to the following message:
+ "SPI driver max3421-hcd has no spi_device_id for maxim,max3421"
 
-- Should the re-post be v3 (no change) or v4 (bump)?
-- Do I re-post after 6.15 is released? Around what time frame (so that I 
-can set a reminder)?
+Fix this by adding the spi_device_id table.
 
-Thanks,
-Joseph
+Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
+Link: https://lore.kernel.org/r/20250128195114.56321-1-alexander.stein@mailbox.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/max3421-hcd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
+index 44a35629d68c6..db1b73486e90b 100644
+--- a/drivers/usb/host/max3421-hcd.c
++++ b/drivers/usb/host/max3421-hcd.c
+@@ -1956,6 +1956,12 @@ max3421_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct spi_device_id max3421_spi_ids[] = {
++	{ "max3421" },
++	{ },
++};
++MODULE_DEVICE_TABLE(spi, max3421_spi_ids);
++
+ static const struct of_device_id max3421_of_match_table[] = {
+ 	{ .compatible = "maxim,max3421", },
+ 	{},
+@@ -1965,6 +1971,7 @@ MODULE_DEVICE_TABLE(of, max3421_of_match_table);
+ static struct spi_driver max3421_driver = {
+ 	.probe		= max3421_probe,
+ 	.remove		= max3421_remove,
++	.id_table	= max3421_spi_ids,
+ 	.driver		= {
+ 		.name	= "max3421-hcd",
+ 		.of_match_table = of_match_ptr(max3421_of_match_table),
+-- 
+2.39.5
+
