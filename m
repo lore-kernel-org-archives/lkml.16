@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B457211704;
-	Mon,  7 Apr 2025 16:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC34121147D;
+	Mon,  7 Apr 2025 16:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044524; cv=none; b=ionsBwo64AuUJctps8AsHGm4MS0Gazhk4TdnaZ8mEl5hyj0EXqJkr5bqOy64dw3y9bbuygwbH36reOosQ2c/HBx+O2FajGKIyBZDbBovNw8e3kFuexvmAxfco9tpy2Rewj1TgIyniz17fSAffz8kEoSypQMKDzWhZpDJaKz17As=
+	t=1744044547; cv=none; b=p+a5zaYZ45Wi+iXc0Qzpd0Lah4owv3VNF6FZ/leDmvU+mBwm+EBgvBAnZn0CC6ihniyv+9v9N/dMQ9x3XdI8P1pD2SSrHv8qzRufmzdMmgMctsbYl3sOHGwMoQMzsgVtaC3POJZKukHZ+ChZ3Xk+Q8T9jxA5aoxUxJU2Pbp5tBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044524; c=relaxed/simple;
-	bh=bmjI2mo1WVbWDZeX2Qfbgg6QuEIqWPvfMO/E2wzuVoY=;
+	s=arc-20240116; t=1744044547; c=relaxed/simple;
+	bh=Mo1OFtMzcDJIdxM0+OZ6cHwpURehbkEEK2v2x8Ci1Q0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5GuFmVo/dW3JJmYGTPkPQ82QU9VeTbPppZt13/iJ+mV2SGBLY66En+DOqQKK9Hu1mEmaUKNYSisPOKuwYINdK9ZEsFeq4qw5rBJhr5POmD8vdADUpqHeKDWUneH97yQMFcW+zNZ/tfV/xwk3ymjLxRvaillw2lmPoBrKD+18Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0XOd+2y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rkFWcjFW13yQeNmBJo3X9ql6HOJD4XSB2UkLDlZD3nrrYirINGK0BKq74vrq7QtfmIa5tDFF4EtO7ARAs+jSAIPZSpvyR4XVV7xMkFn6sNXrG+1CxLkxTXBtsydm5i7satsYIgqr5lL25dCC7X7wUUqERC/HY30MFXRFUQn+p+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iT8lzWk7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0XOd+2y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090B7C4CEDD;
-	Mon,  7 Apr 2025 16:48:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iT8lzWk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33675C4CEDD;
+	Mon,  7 Apr 2025 16:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744044524;
-	bh=bmjI2mo1WVbWDZeX2Qfbgg6QuEIqWPvfMO/E2wzuVoY=;
+	s=k20201202; t=1744044547;
+	bh=Mo1OFtMzcDJIdxM0+OZ6cHwpURehbkEEK2v2x8Ci1Q0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X0XOd+2yo1YmafQv5UKRqkKILylyFSgn3Iz4xMRW+j1EKQW9ycTJEh32M2mW7hgem
-	 zlcNS1fNF2EbOMESsE8UXs+DnHYN87ZwI3oo2q76ugoXNSuzIgw4UyAB67LhQfpPb6
-	 uU91fR/fLX7P25na3pCXCaG5l6fpHgH9PkiujMlHb6ywGAxcyGIPV+kqNbMM87ZOTC
-	 X/fu8nxWevwkXZnKeMrsQENqEoSrapThGfd6o8Ke/uQeTGpu3gO5nvnx5Uxn60NNY3
-	 11d2pBYMao5tJ1RQTeTiKbkbfqyDNfhUoa2WJuXxHf7w01xKypRW3qwb9MccO3Xi60
-	 0fBpFZrKfGooA==
-Date: Mon, 7 Apr 2025 09:48:42 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] crypto: x86/chacha - Remove SIMD fallback path
-Message-ID: <20250407164842.GC2536@sol.localdomain>
-References: <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
- <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
- <20250402171930.GD1235@sol.localdomain>
- <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
- <20250403021453.GA2872965@google.com>
- <Z-344xAsx1uTE9OK@gondor.apana.org.au>
- <20250403032008.GA129577@sol.localdomain>
- <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
- <20250403035934.GB129577@sol.localdomain>
- <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
+	b=iT8lzWk7CbdXINHOXKDP7w992v0qdICkqSUEpgHxGwiE3p3hwmz+nax9Exh4b90Rl
+	 CgCcwsfkiNJnpfzDNbcb+o993dst/v2bdB8mRuJKrTrp57Fv0HuOf/vN+rOMB1mKar
+	 kZs0OYGrAafbWwa2rYN8cEZVrXxVhu4Hl6pA5ePxJRRWc0LcgOSuzNAY4fKe3i0+JB
+	 RBDxSXHUs6wDtZDqosPhmduYSMezbH/qJqFngaJTFtQMJA7KMwn44t++rYss2rGXpq
+	 K9DTKcQgRZKJmwJ/qfpODR5XtUIneruAg9OByNoySDX8EzQrXKcXW3CmTQltoxWVo+
+	 Dq1cKiHVwzOwg==
+Date: Mon, 7 Apr 2025 09:49:04 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Alex Elder <elder@kernel.org>, Sumit Garg <sumit.garg@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	alx@kernel.org
+Subject: Re: [PATCH] EISA: Increase length of device names
+Message-ID: <202504070948.B71965DC7@keescook>
+References: <20250310222424.work.107-kees@kernel.org>
+ <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,36 +46,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
+In-Reply-To: <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
 
-On Thu, Apr 03, 2025 at 12:14:50PM +0800, Herbert Xu wrote:
-> On Wed, Apr 02, 2025 at 08:59:34PM -0700, Eric Biggers wrote:
-> >
-> > But in a lot of cases there is also no reason to even add that restriction.  I'm
-> > not sure why you're so eager to make the library functions harder to use.
+On Sat, Mar 15, 2025 at 09:27:36AM -0500, Alex Elder wrote:
+> On 3/10/25 5:24 PM, Kees Cook wrote:
+> > GCC 15's -Wunterminated-string-initialization warned about truncated
+> > name strings. Instead of marking them with the "nonstring" attribute[1],
+> > increase their length to correctly include enough space for the
+> > terminating NUL character, as they are used with %s format specifiers.
+> > 
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > Cc: Alex Elder <elder@kernel.org>
 > 
-> I have no intention of making any changes to siphash.  It doesn't
-> even use SIMD.
-> 
-> All I want to do is get rid of the crypto_simd_usable() fallback
-> paths that we currently have in arch/x86/crypto.  This code is
-> never used in hardirq context (and should never be).
-> 
-> For example:
-> 
-> ---8<---
-> Get rid of the fallback path as SIMD is now always usable in softirq
-> context.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
+> This was interesting, but based on the bug text I suspect you
+> meant to address this to Alejandro Colomar, <alx@kernel.org>.
 
-It looks like this broken patch already got applied for some reason.
+I think you got tagged because of the Reviewed-by on commit d69d80484598
+("driver core: have match() callback in struct bus_type take a const *")
+which touched include/linux/eisa.h.
 
-First, there doesn't seem to be agreement yet that the library functions should
-have requirements on the calling context.
+> For what it's worth, it looks fine to me.
 
-Second, your patch made unrelated changes that deleted the checks for SSSE3
-support.  Thus dropping support for CPUs that don't support SSSE3.
+Thanks!
 
-- Eric
+-- 
+Kees Cook
