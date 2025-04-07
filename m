@@ -1,135 +1,120 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A6413B2A4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A131D54EE
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045230; cv=none; b=LtZB6oHL+4Q5coWnKosn3DXBgwys7rY9pjxnMgqNtFTG5L+nZ2Y7tWVIOcSt+XbwzUCZl72btKBLB7Gt9nRr1GqyMx/uNt0V5PysuLMZPX74mWrCdkl5Abkk9qu3vhTGsZPZ6xTgP/OyHNczOYJJSyULO1jZn5R4ttqoJsOVpcg=
+	t=1744045255; cv=none; b=tDEO/r5aOi7jzaAtIT/FoBVG70SwJYkHXAa8e1ExJzj5DEODwGPYKfajXu96CVpGV/B+c/YLXMX0+pNXDFBiOUnlOXI8BH0otDptC0MxnddmN7xPPvC3pAMAsHOrtoBijMxKB6XgHOfr5TGydzEBv0XZUBb2ItvFbDRruFjbFn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045230; c=relaxed/simple;
-	bh=lKAOHcFYo8EsD/tPI8lLppLVgny007wif1MAWivMJng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TPDXxBvO6TTU9D1TpijrYXa0RBgnuzkWImeFczyeHWfH1/RhJN2ADzhGDruLYwJxQ5Cs/NTks7y66JRhgyf3RAMpCsYk24FmhjvL92yGPGW3m2U6rrrIvntei6wJUetv3RX21iOfpE8a2v6WTQO/Zt3LclVEEbmUwYVqoD6D/UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=my6CmnNh; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744045255; c=relaxed/simple;
+	bh=ulG/3ksGQhOb6YzURseStzy1EXvhbkyKTyfVCaK8SyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KGda3diG2YJcgPw2yzQF7gUV4dviICdLIH4Z676OVHc6rJqcbZX4DnYzWP4OgOERCP5PfVfmRd0bfze62lZg9asGld1kjqlNBWA3D6Nq74brP6s92M64dJSs8Y7Py/Vdy5R9oWuUdv47xIUTqvbJCTbvkFpIB5GpxI/YQx0PwDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rl99jLRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="my6CmnNh"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f0c30a1cb6so9024976d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 10:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744045228; x=1744650028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8/YiCViv84RBjl9Cx+39gU1ba6ZB3RtC4V/ULgvWih8=;
-        b=my6CmnNhPRz013bU63Ifjk+nm8liEV+LIdCmnA3F2V6tdHRbNcKvtOJFreUDKshX/z
-         S3uZRGYa21VCzzm8Yk5TyOP8dmDcEswa/qHkHceo9nPpTJ9LiBapdcEErrdxytDdtjEV
-         /Siq2SJBD46U4NHeudmSED2XBGXy1yN09cddorNZ6gDFJqZhDC8pG3vvG5NMjkAZTsvS
-         nct5LOUmrPGc2LcyRSBtzas8/S3wX/M4Q1n8xKx+z+3sYJTgLCmJnZJearSXQvO0/MN5
-         bCmgCOniKInSTX5DYp/yK7szRw86/HhzxSJaGWJ/TWRkJEPVjFMOLkHMmJ5KW4aXzOe2
-         ahLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744045228; x=1744650028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8/YiCViv84RBjl9Cx+39gU1ba6ZB3RtC4V/ULgvWih8=;
-        b=YluETIDuNB/WooOktrvBacKzGclhseY68+aI1NOK1ICNj71eVQWMDONdgVmtgkxqqu
-         y4lwvViTKQANs1izwdowwvPIKj8VlgdcIwc8J7kJ3jZhYaO0curOWeeRK16QtCNeSNrZ
-         mnXSyIVp3i/QfQy02hbW2cMXcQLcjfwoNQj0/2G/wwS7joxFmW2fXaTEh8As1tx3FcoY
-         9Fwl4HKWedIOzeE7lcsvEZ8tNPVEYMBXbjM2CSauqvRJDBTZ1CtG+ESge2hC/dcZHURO
-         m6/F9ZXXvb/Jx1DTEQuOyuzO+pTgY7I4mGgSwy5fu/7L1P97wxFSPPDfn3DkBLgXLUBZ
-         brTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVj8bXyosr9UJ5+2/o/2ZHm1PuaFiHyl71WLbpUNM8h25rFuYU36sDLDAqPRCgqavCeoZww5SaWhA4KF4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYFmyQjEaNhlb1BE/Lar967vu6A2fQoM2RqaND5yd+odknp5tu
-	pUisL28xVlECeSNQ1pyAJdUB1lsK7KervmKUWIZLE2Q3HPq+lf60whZY7zbsZmsKRVC/N6SB0es
-	1UYVNN7zjq0p5z1AHT96O0m1CmVk=
-X-Gm-Gg: ASbGncuND50Hz1eAcz4JHeUAVJ479k6XlYx2RWybsmJT9kWsUZg/aZk6bw5zWWNFEaU
-	9KEP1V/K4pZ6+Pb1rveUwkshI1El8yO49xpNyCec/DGXVA/6LqNZet9pyE2Ow8ye4DAwSuiD3um
-	VCUIXP/w/HZEXcfkTJeqTs6AY6BeDH4exoNE23sHaL8pNyFmx62jXwUmlpiw==
-X-Google-Smtp-Source: AGHT+IEoSeUdMCryKXSbayP1c+WC2bqZA8FDGNrNRXTbmKGhcK6mNdY5gvJclkhUu41WW3Zv8yZKRT5UMbGHv2f98Q0=
-X-Received: by 2002:a05:6214:4116:b0:6e8:ddf6:d136 with SMTP id
- 6a1803df08f44-6f064b76a4dmr191213426d6.45.1744045227894; Mon, 07 Apr 2025
- 10:00:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rl99jLRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8695DC4CEE7;
+	Mon,  7 Apr 2025 17:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744045254;
+	bh=ulG/3ksGQhOb6YzURseStzy1EXvhbkyKTyfVCaK8SyI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Rl99jLRXVvyQYdmBMGBK9z1gdjO2frTv9eX6gSEEGwkjjbnqvl+fHkv6tbaZnukN9
+	 D9bCJVnjq0AvSCN0Aq4xHHMG7pSeX5GuwskelskKNxuu6Zpp1FL0fW5If9kth3MMI+
+	 bqfmkhJ7oYxjvHhNGxmWI54LgNYjRrNvI5ZgG/bD0orzRO3ZMS76Qf8O4LpHuVvKP4
+	 q7U7c4/bnNsFhpS1uwEObZoiSHzB6Z60TAiCJEHMA++f3XCr60vEb1QItdWA8bHc7o
+	 MQzTnAnnxBjcVUCe4Lx1Z/nGhwceLpCt20+OgEIuvl7fvd61dcZc4fn7rkK+6HCG0E
+	 hLjD452BLHr7A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 35B4DCE089F; Mon,  7 Apr 2025 10:00:54 -0700 (PDT)
+Date: Mon, 7 Apr 2025 10:00:54 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel <linux-kernel@vger.kernel.org>, frederic@kernel.org,
+	jpoimboe@kernel.org, peterz@infradead.org
+Subject: Re: [GIT PULL] Generic entry for ARM
+Message-ID: <4157fe23-8be8-4fd1-a69a-c59383b9516d@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <CACRpkdZCiiMTwf7eGJJ9aCKFOC3_xTGv1JKQUijjyp+_++cZ_A@mail.gmail.com>
+ <1277cefd-b080-42a5-bfe5-57296e7ccc3e@paulmck-laptop>
+ <CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
- <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am> <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
- <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com> <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
-In-Reply-To: <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Mon, 7 Apr 2025 10:00:16 -0700
-X-Gm-Features: ATxdqUG2qMakDUGu0RhSQrsGq7xAj_E9lQta4YxEQ2uMX-OLhskupLrQ1JiEEiE
-Message-ID: <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: add zblock allocator
-To: Igor Belousov <igor.b@beldev.am>
-Cc: vitaly.wool@konsulko.se, Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	Shakeel Butt <shakeel.butt@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
 
-On Mon, Apr 7, 2025 at 9:44=E2=80=AFAM Igor Belousov <igor.b@beldev.am> wro=
-te:
->
-> Hi Nhat,
->
-> 2025-04-07 19:51 skrev Nhat Pham:
-> > On Mon, Apr 7, 2025 at 2:00=E2=80=AFAM Igor Belousov <igor.b@beldev.am>=
- wrote:
-> >>
-> >>
-> >> >>> Do you have zswap/zswapped meminfo metrics from these tests?
-> >> >> Yep, and those look somewhat similar:
-> >> >>  - zblock:
-> >> >> Zswap:            234128 kB
-> >> >> Zswapped:         733216 kB
-> >> >> -  zsmalloc:
-> >> >> Zswap:            286080 kB
-> >> >> Zswapped:         774688 kB
-> >> >
-> >> > I tested the kernel build on a 4-core virtual machine with allocated=
- 4
-> >> > GB RAM running on a Ryzen 9.
-> >> >
-> >> > The results are the following:
-> >> [...]
-> >>
-> >> Now what's funny is that when I tried to compare how 32 threaded build
-> >> would behave on a 8-core VM I couldn't do it because it OOMs with
-> >> zsmalloc as zswap backend. With zblock it doesn't, though, and the
-> >> results are:
-> >> real    12m14.012s
-> >> user    39m37.777s
-> >> sys     14m6.923s
-> >> Zswap:            440148 kB
-> >> Zswapped:         924452 kB
-> >> zswpin 594812
-> >> zswpout 2802454
-> >> zswpwb 10878
-> >>
-> >> /Igor
-> >
-> > May I ask what compression algorithm you are using?
->
-> It's LZ4 for all the test runs.
+On Mon, Mar 31, 2025 at 11:48:40PM +0200, Linus Walleij wrote:
+> On Wed, Mar 12, 2025 at 7:00 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> 
+> > Once you are confident that you have all the needed "noinstr"
+> > and "__always_inline" instances in place, could you please add
+> > ARCH_WANTS_NO_INSTR to the list of "select" clauses for "config ARM"
+> > in arch/arm/Kconfig?
+> 
+> I would love to do that, I'm just not sure what this really entails.
 
-Can you try zstd and let me know how it goes :)
+I freely confess that I have only seen this done, not done it myself.
 
->
-> > And does the zswpwb come from zswap shrinker?
->
-> Haven't looked into that, to be honest.
+> Surely this patchset tags a noinstr on every entry point from
+> exceptions and syscall software interrupts.
+> Documentation/core-api/entry.rst is pretty good at explaining this.
+> 
+> But what makes me uncertain are things that are tagged
+> "notrace", such as void notrace cpu_init(void) - surely we
+> don't trace, but should that be "noinstr"? It's even marked
+> "notrace" but not "noinstr" in arm64.
 
-Can you check:
+I know that __always_inline does the trick, but I am not sure about
+notrace (my guess is "no" on notrace).  I added the objtool maintainers
+on CC.
 
-/sys/module/zswap/parameters/shrinker_enabled
+No argument on the usefulness of documentation.  ;-)
 
->
-> /Igor
+							Thanx, Paul
+
+> cpu_init() is called from e.g.:
+> asmlinkage void secondary_start_kernel(struct task_struct *task)
+> OK should this also be noinstr? Or is that just implied because
+> of asmlinkage?
+> 
+> <linux/compiler_types.h> will resolve to:
+> 
+> #if defined(CC_USING_HOTPATCH)
+> #define notrace                 __attribute__((hotpatch(0, 0)))
+> #elif defined(CC_USING_PATCHABLE_FUNCTION_ENTRY)
+> #define notrace                 __attribute__((patchable_function_entry(0, 0)))
+> #else
+> #define notrace                 __attribute__((__no_instrument_function__))
+> #endif
+> 
+> which I read as three different ways of saying "don't patch here".
+> 
+> Which is confusingly similar or identical to what noinstr does, I do see that
+> noinstr pushes the code to separate section but that in turn might
+> be what __attribute__((__no_instrument_function__)) and
+> friends does?
+> 
+> Are they equivalent?
+> 
+> sched_clock_noinstr() is tagged noinstr and sched_clock() is
+> tagged notrace, so there must be a difference here.
+> 
+> secondary_start_kernel() is tagged "notrace" on arm64 but
+> not on arm, should it be tagged "noinstr" or "notrace"?
+> 
+> This kind of stuff makes me uncertain about how this is to be
+> done. A "noinstr vs notrace" section in Documentation/core-api/entry.rst
+> would help a lot I think!
+> 
+> Yours,
+> Linus Walleij
