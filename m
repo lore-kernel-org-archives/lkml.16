@@ -1,93 +1,105 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8964421C19E;
-	Mon,  7 Apr 2025 23:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3019E20966B;
+	Mon,  7 Apr 2025 23:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067039; cv=none; b=ZreuOrKxCXhYz8wCMDWAGMTmVqUmB+ybWkUHwnQb/9b0tNntmOxBgWfvdJZhwRwMtgKA9mkbUusxgh0zgg+v2vmTbBf0WrkNi5zbXyOuun4vaIPoxfTxBtU3gTA9uzEd83vNe42ZBOnygUMBeLnPuygK/vScsVYFc0Cw+HlVggY=
+	t=1744067098; cv=none; b=BQLYOYGaALGb0sN5wV2eIYri6BCkb3haTa/brwGtg4MHSNCaGgUDS+n354NF8TWTlyKae8fORpugHgw+S0PVo9T7Z1o4quZElOZHIrDB1xdjxU4shAfmAtPz5aYSlo3rzlO3skynZxWbELDIFzKNHnFlL3VQiZeHELS2qwOVUrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067039; c=relaxed/simple;
-	bh=O3Cf9PgyHCa15CTeS4JLKK7LTfvTs++ESgNxy36Bzzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J4Afp/mCofVj84YhR9ajD8JwBYajAOpp3Ndc5JmkNjt7pW7VRMVA1MBI6Dfssw0pXloJzaKHw1bIZ1YfIn4rEJupfcdDLUUoeTn+jUuiTW4s1BAmdV8v9WizcnY6FobRY7f7qNSVecmGvTY9+C3XNN94TGKw109xZ2DIi728Rf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixcNC0Rg; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744067098; c=relaxed/simple;
+	bh=0zaMJuW2E2sX2GTgnWPvgAAilohNggh6HJKl9fIlzHE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MLOC5nUUWhi6/R3nXgDHtdR1uB95NGFUW0CeUDhMkOYsCKvmUwEFnxQSAyB+t98/Ug0GkmRj/V7nwq2cUk+iMxIfplyekXYG+9KZklLOiCyvgfx5rUk8bjcmPolc67jc72B4napkHKBf4ogZorrs8RpsFP6CP3LnNBsltKQTsq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lLkhpptg; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixcNC0Rg"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso55934826d6.2;
-        Mon, 07 Apr 2025 16:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744067036; x=1744671836; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pB3YyC3lg92dsQDu2Vh7F7+riGLIxr8jqmJlW8qtJFw=;
-        b=ixcNC0Rgir+fCD6Wr3Z92jHw4KCvBtByQvfBVh8B1CAaEC/XY1MgQlMICZZtkjHA59
-         OPdzDEjApopVxZ2NaUHbpWmpAksZ1PyVCAiKEDkd04TFicgciV8jjxpYDlsDQLWIPnC4
-         dUprfzAGyUBcaC4VXU3kXItzfkW6Fuh+u3RciYlHbZ+NykB+ZeMLcXHZUAs7pK5b04ep
-         wiVzjr7qdhkdMs77zj+CUyyK+xeqHPL5SN5eU8UVT+LE8qWB04djpmVX+Up4PT58huuh
-         xyeTFPysO4zvQgMoya4ymB+n635ErwKNK7arueM9cVSd5vNx1HbvnLioKD49SGzIIUbh
-         9phg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744067036; x=1744671836;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pB3YyC3lg92dsQDu2Vh7F7+riGLIxr8jqmJlW8qtJFw=;
-        b=X2Ipsw4Blm2nU1TcSZRoQRkRIBglOzN+BhKTZmG/1CfYc1l9XKGwvSBrfps1VkSZTs
-         2nx/VEjtPw3fBhkgLu2zzwvx5eGaFcj0XvTZOJQWSa+N/Uqd3k1u7IUlCuB1Xufvi9L3
-         0K66mAVLgzSFw6nnaZCkcjtsCE5lp2n8s643wI1pUdXVQK4Jp14h/Frs8I9vE3ae+OBQ
-         p3BxKI3BZnJqvDQX9WoYyQlFIJCRKwi4dA/NbiqRW4L11Fe6xLLZSfGaZT0Ajlt2Dxpo
-         OU9CPxMB/PM2dLtTvz7oMTc8/h9tcjfOnHEA8dYedxuVceBfIQ0fCciVM8DrUUPtVRFq
-         qrdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPNl5qPzxA2dgH8Zno01MrBXzeRyY03fuPrX1YvU+6DosJ2UjbbfL7PcsBP1z2EnAlMZLbse7SUppnhIM5@vger.kernel.org, AJvYcCUpEtzudeHw+j44NYaZ2kx98lrupf8mdV41+d/yrXGvzDLmIEOfjRGD4a8OCcexgbFdW5ojLQBtMNYSdoNWiwE=@vger.kernel.org, AJvYcCXWu5syQWNLVFXbsMC53PZIIHhbwc0cdF8XP1yYNZP1S1rekJ9YDSjM6FDn31WM1sv/1rr3DfexXRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfyg2yOmjIT0OceZafX4ZePGOUF49lCVeG2Pw0ALms+pIH6Lqn
-	CAl4zrYHWfhTH4XWPQgs9ryS0qMIxQnetM/rknNXfMAWcvG2LA01
-X-Gm-Gg: ASbGncszbOyU2GamyRgPQn9hgXO0h7n536PecDiBpNUS8S2BWmeNlxjTBcuPE3nUp+d
-	rh5fmp8TINzTvbliTUG2JqyjwEs6vuakp1ohlTNrQHwljBZZuhSnmUgehHzHjX8QQ4NY1uPBsIX
-	jVPFkqoJqDV+xTZslIs5FD95vFGSTdozCc4GuVoc9DJkC3CTpO1SgaEtgrS2rPkCnicIRabWbLS
-	fCL49ggY8Cb+9pDhuHR0ZBGHWntDu/+pI8aByVat/VER91fEIE0Acv36QD2S/WUFxj8eRPG7m8L
-	RQgiqA+5pmUit8BAHf3C3qoGNWgzofpm010jSAw6nIy21Q==
-X-Google-Smtp-Source: AGHT+IGRh6q4nlQ8y3Y9jq1CRRkrjO0aDfKO5qHIs+ZCmg9yhyOY7oHV+KQAoWlwYDMWk9ci68IKrQ==
-X-Received: by 2002:ad4:5e8c:0:b0:6e8:ebfa:42f9 with SMTP id 6a1803df08f44-6f0b7412fc3mr169437916d6.16.1744067036291;
-        Mon, 07 Apr 2025 16:03:56 -0700 (PDT)
-Received: from [192.168.38.58] ([24.35.8.11])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f138d68sm64577546d6.75.2025.04.07.16.03.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 16:03:55 -0700 (PDT)
-Message-ID: <c62e514b-08ef-4887-bc8e-fc77bcf3b0fa@gmail.com>
-Date: Mon, 7 Apr 2025 19:03:54 -0400
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lLkhpptg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744067088; x=1744326288;
+	bh=0zaMJuW2E2sX2GTgnWPvgAAilohNggh6HJKl9fIlzHE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=lLkhpptgkYKd2q6rpOEbE5VGo/V+n50UjQgv72FwAgmU5nDsHcmcHpv1KzL1+7jQI
+	 buGrXQqOY6FuPFTPqSOpBl4qqsinu/lWOV3JMTvRc+4oItCZWl+SOmGue8gPjrzxu/
+	 xyRjLRw505GapDMbWj//8IXtGda5gMdwgATO7WMf+Dtnu23zNGIwKKIjTHQ+nfB6ZV
+	 OjkyiArjc6H8UYtByPa3cnVFPv4Ry+L1xy+pdAJxt6nfFdilvepuzKwb7kPBR8EYsV
+	 vYG+qO22LmFvlqvlQcoe390M4W2ijbSzvuz7HeOTI3tZLPqkiY2C37WXE8/BGrMSIc
+	 yWJLC8GEkIsDQ==
+Date: Mon, 07 Apr 2025 23:04:42 +0000
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+From: Denis Mukhin <dmkhn@proton.me>
+Cc: Denis Mukhin <dmukhin@ford.com>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] x86/early_printk: add MMIO-based UARTs
+Message-ID: <vCbvBjUt9kPZhYP0tXAoVKrIn5hk5ON-HEqi2OjnCECThGJ73vh7S4qAKspAlxtgBAHFv1Sc_k6Hmdeq_nYXReITCt2FNRy1wWZR-udke9c=@proton.me>
+In-Reply-To: <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
+References: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com> <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
+Feedback-ID: 123220910:user:proton
+X-Pm-Message-ID: 364800189e164472cd92cc200173e0051292a8cd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
-To: Benno Lossin <benno.lossin@proton.me>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: chrisi.schrefl@gmail.com, Jamie.Cunliffe@arm.com, a.hindborg@kernel.org,
- alex.gaynor@gmail.com, aliceryhl@google.com, andrew@lunn.ch,
- ardb@kernel.org, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
- corbet@lwn.net, gary@garyguo.net, guptarud@gmail.com,
- linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@armlinux.org.uk, ojeda@kernel.org, rust-for-linux@vger.kernel.org,
- stappers@stappers.nl, thesven73@gmail.com, tmgross@umich.edu
-References: <D90J8JOGEBWI.4P0BAZG2R4G7@proton.me>
-Content-Language: en-US
-From: Manish Shakya <msh.shakya@gmail.com>
-In-Reply-To: <D90J8JOGEBWI.4P0BAZG2R4G7@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
+On Monday, April 7th, 2025 at 9:38 AM, Andy Shevchenko <andriy.shevchenko@i=
+ntel.com> wrote:
 
-On 4/7/25 12:04 PM, Benno Lossin wrote:
-> I suspect that most of the people sadly don't read the description.
->
-I must admit I didn't read the description. I was trying to get as much 
-as info. Since it was my first time building kernel with rust support.
+>=20
+>=20
+> On Mon, Mar 24, 2025 at 05:55:40PM -0700, Denis Mukhin wrote:
+>=20
+> > During the bring-up of an x86 board, the kernel was crashing before
+> > reaching the platform's console driver because of a bug in the firmware=
+,
+> > leaving no trace of the boot progress.
+> >=20
+> > It was discovered that the only available method to debug the kernel
+> > boot process was via the platform's MMIO-based UART, as the board lacke=
+d
+> > an I/O port-based UART, PCI UART, or functional video output.
+> >=20
+> > Then it turned out that earlyprintk=3D does not have a knob to configur=
+e
+> > the MMIO-mapped UART.
+> >=20
+> > Extend the early printk facility to support platform MMIO-based UARTs
+> > on x86 systems, enabling debugging during the system bring-up phase.
+> >=20
+> > The command line syntax to enable platform MMIO-based UART is:
+> > earlyprintk=3Dmmio,membase[,{nocfg|baudrate}][,keep]
+> >=20
+> > Note, the change does not integrate MMIO-based UART support to:
+> > arch/x86/boot/early_serial_console.c
+> >=20
+> > Also, update kernel parameters documentation with the new syntax and
+> > add missing 'nocfg' setting to PCI serial cards description.
+>=20
+>=20
+> Just for your information: Have you seen this rather old series of mine?
+>=20
+> https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot-e=
+arlyprintk
+
+This is a nice cleanup!
+Thanks for sharing.
+
+Sorry, I haven't seen the series above, I had to write a patch (which was m=
+onths ago).
+It's just I could not post it on the mailing list until recently.
+
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
+
+Thanks,
+Denis
