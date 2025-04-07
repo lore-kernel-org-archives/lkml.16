@@ -1,153 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665120896C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABF41CAA89
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043385; cv=none; b=Xx/pcTgy5sdLZM/fNKqWRp897I1dARkQYjjBYnIs6OJUjsiy9tPspSuEr6QhseN54tHjqNCSbHbElQg2PLtn92PdjLxp3VpqNd24qiuneG7VGl+kvqI31sk0SR9NWmCwtgZ01ohQky67T4RnzDFkgymZU090KfDvS8oelAdPlN0=
+	t=1744043399; cv=none; b=vBTQtfIfkC+iL5kmZknLDJQPTQWuvDXHVzVoelyrna6jl5pZWtZgE55+pSlsLY/N62LJefLJbbMMqvuQoh12L5OAJHpYTget06HVmq3KjHqprpqgxlMrizg3ifN9DbfIg/YTiLoHos5vcAphctbDaxgdG+ayWir2fwakWZ/ekH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043385; c=relaxed/simple;
-	bh=yXMQBu0GyLTPoE3gkFmC2nns5przlZL4HLcX1yZT9K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efbKaQY30FInCDOkftHYVcydt+IHB2qNnNq2/3RrkK6kdDSJtTcZkVXUFwPQ28nuZhMmhbvcEVLkIpj48RncuTm4I8CUtRf6XtUh1Jg/FU0MCfWnLBdV27dsohB6ewgt8xun4QIqyLq1/ixrnKfPE1hWJUp65OuuFNzsTzi+1dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3wgLohg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744043399; c=relaxed/simple;
+	bh=Qne4eWZwEXtSMD2/rxGqDKbbUMbFF6b80iWm1yWBJ04=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=mN1c5uLfexTcjgHTbPOMKkxahkpBRpCLbyelIFtMcjh+CrMquANEQMBZD64nPR3pKhW9njwgNyGaUBytsX5S1eVfdOJOEx+WWShp/Vz9ld9Jnx6Sq5Xhwq9gGeYmNvEkUOkxjb82oQPWDCcyZbFc7lb0f5NZ1Fhp2wMJJRAXclo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=IP4dwv/F; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3wgLohg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C86C4CEDD;
-	Mon,  7 Apr 2025 16:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744043385;
-	bh=yXMQBu0GyLTPoE3gkFmC2nns5przlZL4HLcX1yZT9K8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Y3wgLohgM6p0/u1FBKyY9LdGDuYN7o1z8zqPiEkjSgLE99KhL9PIqpau83C0DpkM8
-	 jpscPof6Lsskj18VSPotDeh349sBQKzsns2ItNlumNcqQzR4MUXEoh/WigKWzVScLy
-	 iOVuj55ZjVytajnAzA0MU53rvuWJ6eiE+uFF7rWTTgQMYv3mQ0Cj3DpzC9PhDmZPyS
-	 OpG9bZWSV22orn98bUFmRt1N+hVfTiAuCyUOcHUYMiuI7UBS0AF/bhBZc+V+sgIDng
-	 8WETA3tjW6rXJ78YldVvLUAuM1kysmp6m2v7eDcXupuQJgYEt4mq0e7yeQQGizcm+Y
-	 jGGYiRpphGs2g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id BF5DBCE089F; Mon,  7 Apr 2025 09:29:44 -0700 (PDT)
-Date: Mon, 7 Apr 2025 09:29:44 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-team@meta.com" <kernel-team@meta.com>,
-	kernel test robot <lkp@intel.com>,
-	"Feng, Kenneth" <Kenneth.Feng@amd.com>,
-	"Koenig, Christian" <Christian.Koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH RFC 4/9] drm/amd/pm: Avoid open-coded use of
- ratelimit_state structure's internals
-Message-ID: <bcf4ab09-5b87-404c-9231-567a10fd9764@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <20250403211514.985900-4-paulmck@kernel.org>
- <BL1PR12MB5144A3990501E76BB96F9557F7AA2@BL1PR12MB5144.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="IP4dwv/F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1744043386;
+	bh=I+FxG1gHAelGVqFBfkieGZpkydYf2q1/HP45s5HvRZM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IP4dwv/F5Fr60AV3MfwCiQY+YAMfCoezZczMT0bOfqzpEpG+B63KGyVVHH3Os4pGj
+	 TwiYUN+cvUiLOzXV//QxXfdED/2JWwnRe41A03bs1n4coZTv17U6xuAewN+5O0ioi8
+	 Jfr6XIua0xrf5EayUryqaxiq0HsP3Tqps3r6Pa5Y=
+Received: from localhost.localdomain ([116.148.99.229])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 5DD3CE78; Tue, 08 Apr 2025 00:23:29 +0800
+X-QQ-mid: xmsmtpt1744043009tnd7z03gz
+Message-ID: <tencent_4EBF99084F5A4A0D6C6AA5282D4FF23E6807@qq.com>
+X-QQ-XMAILINFO: OQ59tfF64tJLDJjfAnNfYV+AuLoyzO91kjIbgdmyFI6ZXeHOgVOnhWb0wAVzDb
+	 tUTKnrOa3S2+3DVmlIgrr6uzEjufj2m7FMDKtPgyt41qpLRTjpZueYbPkCOy6TRtFtjnh5/Bu+gx
+	 dT5VRlOUBCRXzF3zDpDnfPVvPVG9qrFwea9jqSJj+pULJ+hT1kLXesbkmr44/ICxpLNG69lClb+m
+	 yVJ2wmNyID3nzc4EHq45GHDWwT1kR5tOzf9KjFEfPqBE8iudOdUhcOBYclB+QGW35sNLoMsY+dKe
+	 AfU+8+1QSruROL/1bH8CiWtjpmfIHq9+Y01uUleTYSbxmhrMxS5zYYE8Ca+A0lw9UJw9hIlTTY/c
+	 cIcVyntT+O3REUtTHrjdtEFDKztk+bl2rY0z2RSDDzXMLIdO31jtW0conXGHW4ZSVCC6nObA2Uap
+	 tQOEr4Q3AXh/0M/zHMUWDvvg6lEwyxBi6mTbSNT/2nSSv/bRfUnDjohPdy+hnc2qlWeomQSQuJMX
+	 kNy5PStVr/ZxArOvoy69pb4n62jNsbDPb6cIXqQSNCyg1uzaDdAY/5rnX2DVLJL23AJH5uzAtt8Y
+	 5PI7vWUKCJUK4OWbmX5T4cVOU3wW1h8qAQeynAVilNLND2PWJCoeOcnehozSVRbATw0yEMvRTiC4
+	 YffNFyzHoyG1fWAHs59s/lcZMFzYnSNbyK7ulzBi33+ghI22hH90Btcfp0+FZGmLSS8IS8Wa4w5l
+	 li7j6h3vqGDR0LCjc/8CHdFNXg+JHNXMFg5tjPpnX6bWNa73YNHK8jS4ahx5ng+sb6H43UsOv1rl
+	 d6ffQWtDswy/1ZsRa7nXXuTfif5/E1PrPOtirwaFn2OXXyHwQV4JEscJTBw/zWNLchJMkpxxyZfT
+	 7kYiPIi6VqlJ8keWnTGp+DANFLKV0E3DrWW/W0ffCR1esABrtvx5DF8cSXyyv8bGfe3CehJCZ7k7
+	 vY8fXQTvxfpxaj4Kq0LOEt6pu1yiNE
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: zhoumin <teczm@foxmail.com>
+To: gregkh@linuxfoundation.org
+Cc: dakr@kernel.org,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	rafael@kernel.org,
+	teczm@foxmail.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] kobject_uevent: add uevent_helper exist check
+Date: Tue,  8 Apr 2025 00:22:34 +0800
+X-OQ-MSGID: <20250407162234.182798-1-teczm@foxmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2025040743-kick-computing-0ecd@gregkh>
+References: <2025040743-kick-computing-0ecd@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BL1PR12MB5144A3990501E76BB96F9557F7AA2@BL1PR12MB5144.namprd12.prod.outlook.com>
 
-On Mon, Apr 07, 2025 at 02:35:59PM +0000, Deucher, Alexander wrote:
-> [Public]
-> 
-> > -----Original Message-----
-> > From: Paul E. McKenney <paulmck@kernel.org>
-> > Sent: Thursday, April 3, 2025 5:15 PM
-> > To: linux-kernel@vger.kernel.org
-> > Cc: kernel-team@meta.com; Paul E. McKenney <paulmck@kernel.org>; kernel
-> > test robot <lkp@intel.com>; Feng, Kenneth <Kenneth.Feng@amd.com>; Deucher,
-> > Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
-> > <Christian.Koenig@amd.com>; Xinhui Pan <Xinhui.Pan@amd.com>; David Airlie
-> > <airlied@gmail.com>; Simona Vetter <simona@ffwll.ch>; amd-
-> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org
-> > Subject: [PATCH RFC 4/9] drm/amd/pm: Avoid open-coded use of ratelimit_state
-> > structure's internals
+> > But I propose we should make call_usermodehelper_exec fail earlier, link
+> > this:
+> > --- a/lib/kobject_uevent.c
+> > +++ b/lib/kobject_uevent.c
+> > @@ -610,7 +610,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
 > >
-> > The amdgpu_set_thermal_throttling_logging() function directly accesses the
-> > ratelimit_state structure's ->missed field, which work, but which also makes it more
-> > difficult to change this field.  Therefore, make use of the ratelimit_state_reset_miss()
-> > function instead of directly accessing the ->missed field.
+> > #ifdef CONFIG_UEVENT_HELPER
+> > /* call uevent_helper, usually only enabled during early boot */
+> > - if (uevent_helper[0] && !kobj_usermode_filter(kobj)) {
+> > + if (uevent_helper[0] && !usermodehelper_disabled && !kobj_usermode_filter(kobj)) {
+> > struct subprocess_info *info;
 > >
-> > Nevertheless, open-coded use of ->burst and ->interval is still permitted, for
-> > example, for runtime sysfs adjustment of these fields.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202503180826.EiekA1MB-
-> > lkp@intel.com/
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> 
-> Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> 
-> Feel free to take this via whatever tree makes sense for the larger series.  Otherwise, let me know, and I will pick it up.
+> > retval = add_uevent_var(env, "HOME=/");
+ 
+> Why? Will this actually change the speed of anything?
 
-Thank you, and yes, this does depend on a patch that is earlier in
-this series, so I will be happy to carry it.
+While the actual speed improvement may be minimal(may vary depending on
+device performance and how many uevents are triggered before rootfs mount),
+I just think executing add_uevent_var(), call_usermodehelper_setup(), and
+call_usermodehelper_exec() is unnecessary in these cases. We can simply
+return early. If you consider this change unnecessary, I'll respectfully
+close this discussion and focus on other areas where more significant
+improvements might be achieved. 
 
-							Thanx, Paul
+---
+Appendix: QEMU Test Logs
+In my current QEMU test environment, this code path executes
+2,127 times before rootfs mount. Sample events collected via debug logs:
+	pr_emerg("action:%s devpath:%s\n", action_string, devpath);
 
-> Alex
-> 
-> 
-> > Cc: Kenneth Feng <kenneth.feng@amd.com>
-> > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > Cc: "Christian König" <christian.koenig@amd.com>
-> > Cc: Xinhui Pan <Xinhui.Pan@amd.com>
-> > Cc: David Airlie <airlied@gmail.com>
-> > Cc: Simona Vetter <simona@ffwll.ch>
-> > Cc: <amd-gfx@lists.freedesktop.org>
-> > Cc: <dri-devel@lists.freedesktop.org>
-> > ---
-> >  drivers/gpu/drm/amd/pm/amdgpu_pm.c | 11 ++---------
-> >  1 file changed, 2 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-> > b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-> > index e8ae7681bf0a3..6adf4e8822108 100644
-> > --- a/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-> > +++ b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-> > @@ -1663,7 +1663,6 @@ static ssize_t
-> > amdgpu_set_thermal_throttling_logging(struct device *dev,
-> >       struct drm_device *ddev = dev_get_drvdata(dev);
-> >       struct amdgpu_device *adev = drm_to_adev(ddev);
-> >       long throttling_logging_interval;
-> > -     unsigned long flags;
-> >       int ret = 0;
-> >
-> >       ret = kstrtol(buf, 0, &throttling_logging_interval); @@ -1674,18 +1673,12
-> > @@ static ssize_t amdgpu_set_thermal_throttling_logging(struct device *dev,
-> >               return -EINVAL;
-> >
-> >       if (throttling_logging_interval > 0) {
-> > -             raw_spin_lock_irqsave(&adev->throttling_logging_rs.lock, flags);
-> >               /*
-> >                * Reset the ratelimit timer internals.
-> >                * This can effectively restart the timer.
-> >                */
-> > -             adev->throttling_logging_rs.interval =
-> > -                     (throttling_logging_interval - 1) * HZ;
-> > -             adev->throttling_logging_rs.begin = 0;
-> > -             adev->throttling_logging_rs.printed = 0;
-> > -             adev->throttling_logging_rs.missed = 0;
-> > -             raw_spin_unlock_irqrestore(&adev->throttling_logging_rs.lock,
-> > flags);
-> > -
-> > +             ratelimit_state_reset_interval(&adev->throttling_logging_rs,
-> > +                                            (throttling_logging_interval - 1) * HZ);
-> >               atomic_set(&adev->throttling_logging_enabled, 1);
-> >       } else {
-> >               atomic_set(&adev->throttling_logging_enabled, 0);
-> > --
-> > 2.40.1
-> 
+[    0.263272] action:add devpath:/bus/faux
+[    0.264278] action:add devpath:/bus/faux/drivers/faux_driver
+[    0.267476] action:add devpath:/bus/platform
+[    0.267559] action:add devpath:/bus/auxiliary
+[    0.267669] action:add devpath:/bus/memory
+[    0.268789] action:add devpath:/devices/system/memory/memory8
+[    0.269501] action:add devpath:/devices/system/memory/memory9
+[    0.269664] action:add devpath:/devices/system/memory/memory10
+[    0.269793] action:add devpath:/devices/system/memory/memory11
+[    0.269889] action:add devpath:/devices/system/memory/memory12
+[    0.270008] action:add devpath:/devices/system/memory/memory13
+[    0.270108] action:add devpath:/devices/system/memory/memory14
+[    0.270208] action:add devpath:/devices/system/memory/memory15
+[    0.270297] action:add devpath:/devices/system/memory/memory16
+[    0.270409] action:add devpath:/devices/system/memory/memory17
+...
+[    1.068185] action:add devpath:/devices/virtual/tty/tty58
+[    1.069597] action:add devpath:/devices/virtual/tty/tty59
+[    1.070887] action:add devpath:/devices/virtual/tty/tty60
+[    1.071801] action:add devpath:/devices/virtual/tty/tty61
+[    1.073554] action:add devpath:/devices/virtual/tty/tty62
+[    1.075086] action:add devpath:/devices/virtual/tty/tty63
+...
+[    3.519928] action:add devpath:/devices/platform/gpio-keys/input/input0/event0
+[    3.521347] action:remove devpath:/devices/virtual/devlink/amba:9030000.pl061--platform:gpio-keys
+[    3.523161] action:bind devpath:/devices/platform/gpio-keys
+[    3.523831] action:add devpath:/bus/platform/drivers/gpio-keys
+[    3.529957] action:add devpath:/bus/amba/drivers/amba-proxy
+
+Best regards,
+
+zhoumin
+
