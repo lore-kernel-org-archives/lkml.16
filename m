@@ -1,106 +1,106 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66F222FF2B;
-	Mon,  7 Apr 2025 11:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E96823DE;
+	Mon,  7 Apr 2025 11:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025152; cv=none; b=RpAtjYkHcguWxb56Pe2W9wQ3iU43vTu1TtSqdjGrdr5cxdaO7LgvcrV7GlQfGDGEjqDaN2CGl4flFYVW7p8C1t3MqwphRi5enXW+xG/+vwJGwOobyB2UwH7eqmOZrPgPPznIO4MiEAPU8pg9WeQwrnFTl5X8KKyXvJqDoItUO+M=
+	t=1744025152; cv=none; b=mif4rSg0TKIOwSoLTQszjfIvb+4BRse+W90q43X2Sa9YGYfMbm1kJJAQaRPNVF71Pnrv5euFvBliFqSR41ZWW4PqqAWTq2efXZCRH+DSyJjMm1cVYlWF0tnwjartmNTcc1D7ZD3Q5PsJOglOvfj75tQs0iAJ0BD3LUVg/zl2zL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744025152; c=relaxed/simple;
-	bh=9lfVYwaGB5Ix4SRhjWAJHjlYC3VmoMPXG7TqKuhJoN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DcGsICAgiQ0te27gZaNd5ovAkggMYRCmbTNIZzgzHOIVrdMCoJk9LGwOpC7CMkrtr2TrNgbBxbbj/2nCvwAOpffE7b9NKxHanCbVAgyln5tfbQ160+oDpe5r1u9PxcUilUJn49QCcyni7wd7I1jzHNc5/BbBsBRcGCikCWcOSNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWRhc1vd6z4f3m6j;
-	Mon,  7 Apr 2025 19:25:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2DB601A01A5;
-	Mon,  7 Apr 2025 19:25:45 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP4 (Coremail) with SMTP id gCh0CgCH6181tvNniAYcIw--.43994S3;
-	Mon, 07 Apr 2025 19:25:44 +0800 (CST)
-Message-ID: <2e030fad-7f46-6fab-faa3-9727835f02ee@huaweicloud.com>
-Date: Mon, 7 Apr 2025 19:25:41 +0800
+	bh=BCuSCWOwFUWbO+XDwPmD2ImUDpAzKHSxQ1lnkPkMPMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oFfPeSfmzomy1a/fLuW2Y6NtctS4O0046jumTglHiXCZX4HMev2nRceoG60yXLrA6eJzCdAylWYuINI2T5nQFJUWo1qv3AAjcwcc/XK/SG5Twy5qYhQdgZwMk0rJziveKBUvIuvIkW6jzAFdFUh09+5CWe30muJZwH0KghHRQUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdC4ZxUA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdC4ZxUA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B3DC4CEDD;
+	Mon,  7 Apr 2025 11:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744025152;
+	bh=BCuSCWOwFUWbO+XDwPmD2ImUDpAzKHSxQ1lnkPkMPMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AdC4ZxUAXHZd8mh8kDreiJy8CQtH8sIPk1CItKc3FH29LuIJECbarERXftciSArLj
+	 yxNw0yxWo+pt/RmzK0kvfhLE+hMkrF8PlGjtJuydcr9AUFVXZAtMk3OnlLg55nNCqp
+	 5M/UtgHayCzmr/3L3/4J3A2KGoY9KLh2WeKeFnt7404Lw7cSS+55LBQWiZ8q8jQiUs
+	 7B7M/SLVBtrt3St+JxacBcpcK/O19LhBalbZ8bbwoEhg2k4YQnZWuFO0tqEGYY9PuW
+	 86ycj32YeG/lDaXABY5LRNn2I/1sNw4+iuvADZ5XRr4yDr0bnpmZpNA9d52UfoWPYH
+	 U1Y7hcEOv4p9w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u1kc2-0000000022g-0fBB;
+	Mon, 07 Apr 2025 13:25:58 +0200
+Date: Mon, 7 Apr 2025 13:25:58 +0200
+From: Johan Hovold <johan@kernel.org>
+To: srinivas.kandagatla@linaro.org
+Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, johan+linaro@kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] ASoC: q6apm: add q6apm_get_hw_pointer helper
+Message-ID: <Z_O2RhwYp6iy02cM@hovoldconsulting.com>
+References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
+ <20250314174800.10142-3-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 1/4] block: factor out a helper to set logical/physical
- block size
-To: Bart Van Assche <bvanassche@acm.org>, linan666@huaweicloud.com,
- axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, hare@suse.de,
- martin.petersen@oracle.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, wanghai38@huawei.com
-References: <20250304121918.3159388-1-linan666@huaweicloud.com>
- <20250304121918.3159388-2-linan666@huaweicloud.com>
- <2ca75746-c630-4a15-bf5d-e9cb10b6e83c@acm.org>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <2ca75746-c630-4a15-bf5d-e9cb10b6e83c@acm.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH6181tvNniAYcIw--.43994S3
-X-Coremail-Antispam: 1UD129KBjvdXoWruFWUKrWUGry5uF4UZw13urg_yoW3KwbEq3
-	Z7JFs2yr42vF1Sv3WxCF4ftFWrKa10gr9rZa1UGw47X3s5JF4kGF1kt398WFZ8XayrZr9Y
-	gr1ku3y8Gw4aqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbqxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwACI402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQV
-	y7UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314174800.10142-3-srinivas.kandagatla@linaro.org>
 
-Hi, Bart:
+Hi Srini,
 
-Apologies for the delayed response.
-
-在 2025/3/4 22:32, Bart Van Assche 写道:
-> On 3/4/25 4:19 AM, linan666@huaweicloud.com wrote:
->> +EXPORT_SYMBOL(blk_set_block_size);
+On Fri, Mar 14, 2025 at 05:47:57PM +0000, Srinivas Kandagatla wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> This function is exported without documenting what the requirements are
-> for calling this function? Yikes.
+> Implement an helper function in q6apm to be able to read the current
+> hardware pointer for both read and write buffers.
 > 
+> This should help q6apm-dai to get the hardware pointer consistently
+> without it doing manual calculation, which could go wrong in some race
+> conditions.
+ 
+> +int q6apm_get_hw_pointer(struct q6apm_graph *graph, int dir)
+> +{
+> +	struct audioreach_graph_data *data;
+> +
+> +	if (dir == SNDRV_PCM_STREAM_PLAYBACK)
+> +		data = &graph->rx_data;
+> +	else
+> +		data = &graph->tx_data;
+> +
+> +	return (int)atomic_read(&data->hw_ptr);
+> +}
+> +EXPORT_SYMBOL_GPL(q6apm_get_hw_pointer);
 
-Thank you for your reply, I'll add more
-documentation in the next version.
+> @@ -553,6 +567,8 @@ static int graph_callback(struct gpr_resp_pkt *data, void *priv, int op)
+>  		rd_done = data->payload;
+>  		phys = graph->tx_data.buf[hdr->token].phys;
+>  		mutex_unlock(&graph->lock);
+> +		/* token numbering starts at 0 */
+> +		atomic_set(&graph->tx_data.hw_ptr, hdr->token + 1);
+>  
+>  		if (upper_32_bits(phys) == rd_done->buf_addr_msw &&
+>  		    lower_32_bits(phys) == rd_done->buf_addr_lsw) {
 
+			graph->result.opcode = hdr->opcode;
+                        graph->result.status = rd_done->status;
+                        if (graph->cb)
+                                graph->cb(client_event, hdr->token, data->payload, graph->priv);
+                } else {
+                        dev_err(dev, "RD BUFF Unexpected addr %08x-%08x\n", rd_done->buf_addr_lsw,
+                                rd_done->buf_addr_msw);
+                }
 
-> Is my understanding correct that it is only safe to apply changes made with 
-> blk_set_block_size() by calling
-> queue_limits_commit_update_frozen()?
-> 
+I just hit the following error on the T14s with 6.15-rc1 that I've never
+seen before and which looks like it could be related to this series:
 
-Exported func blk_set_block_size() is only used in RAID, with expected
-usage similar to queue_limits_stack_bdev(): callers must ensure no pending
-IO and use queue_limits_start_update/queue_limits_commit_update to prevent
-concurrent modifications.
+	q6apm-dai 6800000.remoteproc:glink-edge:gpr:service@1:dais: RD BUFF Unexpected addr ffe0d200-00000001
 
-> Thanks,
-> 
-> Bart.
-> 
-> 
-> .
+Any ideas about what may be causing this?
 
--- 
-Thanks,
-Nan
-
+Johan
