@@ -1,113 +1,108 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0306B635;
-	Mon,  7 Apr 2025 00:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EED191;
+	Mon,  7 Apr 2025 01:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743987233; cv=none; b=q9pvwFhr4eW+1rrv9ZHdK0uHcqLCta+RWGn6loAZxnAbY3qldUd2AsZeVtqqeB6qJOBOfKbUnuun+VTMSBSqq9zwFWPmlUuS6CAPcieXXGlYeCzznUHDUDmcdTXAlUZvsFuygbgCiA45g94ANujEVBkA1/OyBPzN+8Xev26uBNo=
+	t=1743987643; cv=none; b=Y3TUKzxffjVCppN8RXMPXbJCsM2QgxlsnIIo+VPSqVnWEHB8VySI5m80ZS5nHzVRRhFPJysHwEmbke+UmIBySdeM6rYk1ttw6qCZZeyzQ/IPyQvnU+idkJpk++SUvc64rxdWDwTawF5DkXwMxUB9x1F3/UJq9T/OZOV0xrdwyCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743987233; c=relaxed/simple;
-	bh=+z+6RvwAvk13OKStinfuWh26FMpU43Q7rwCeXtF8zDc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZSnvUy7aUl+rXqdv+4YcwNXKCUZpIKdIRIn7IsC+mSSTcVeg5ZRvfcrZ0K+Ww4NbKVSthfjwnPaaOUB0q/1vKhKvATbyfTyfoRA7ODsfiIaVr8dBFbaron1Zhebv+4QHcJY0La252DSIFSrh8oV5oxzMIzf49hD18qP8MlMa3Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=XhqPwRvR; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743987643; c=relaxed/simple;
+	bh=cr6IxjTU0dcg6yUzRHjmcq+R1dBR+HO/jS4n7WU70P4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNa5bbY6h6YRj/kZzDHWXJistIfEwMfGHJGnTnudbzrOAOFZbvc7Ikk5nc1DOT5hri9+EJ9VY/vRGWEuxMs8RLRSTuZbPaLOXDOShkwwDPJ7ow/8aFSaRFhSoibK5Juk+90X76G5PSYrweLiXXkddUXnuuo1Y1bZHjsBXFFrXgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MbuGEUiB; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="XhqPwRvR"
-Message-ID: <78346ff0-d5ee-48f0-ac4d-762a5ec18eb7@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743987228;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qqzKPwjBEqTWc3+AHr/Ab/QHxnuhXQXBI13sdLNF00Q=;
-	b=XhqPwRvRf0YcBHYX9HDnwKhSVrrxPJSKO4ltQKkHQ4k9BaJ3nr7IYuBpZm2mZvNr6EIjsU
-	Q5whO0c435pZIawkpnEraWXxlI+vdzR/JCda5MOx42+Frzhj3Ea1fUFiMTr31ZVul/doHY
-	IxtOTJTbkAScsqs/V4av6Fpcusb3xy86Qr75BAFPcP6l+gWssJfTRZZSJWKheVztXGkrzE
-	w6C8vfsGN4lultLoMFQUaMGM4pr0lZmXeeg5To6Pxp2pxW+/ZEKBNJ1753oA9bcN9tAqWT
-	+YCx2AowlfsbMoqNrVFSAYgGzkgVTiBI+I0XFNd/fIAp1hZ2UsGMoBMDAM8d2w==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=myrrhperiwinkle@qtmlabs.xyz
-Date: Mon, 7 Apr 2025 07:53:42 +0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MbuGEUiB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743987642; x=1775523642;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cr6IxjTU0dcg6yUzRHjmcq+R1dBR+HO/jS4n7WU70P4=;
+  b=MbuGEUiB0y6iw9JQYNt4nH+9jnZXlP8kCtbagEVBxKifm3ChsY5o7/7r
+   75x03/LkAIIeBIRvgOwQgWqexLxnvtVMFBZDZ3hTQXGERxD+63wlik5po
+   yCqy1Uvr6HInXnU6x4oip95dKhfpcCC3aRUwjIzmOpTT8kewDtoEU/Uob
+   GU+lXaXanpDfWHmtsfidodZnhjkDTmcgaccT9dEhmJmaY5wqau9UxK+s2
+   bJE1mE4xTir8djbZapmFd/LBzBgP1biRqgCGi24CSP8RK1MEXsZWsCBHI
+   afoLcfqJImNc4r55FZ1KNDJVi3tShKlWTV4y7Xi2M9/gl8e2RGL9uKnl7
+   A==;
+X-CSE-ConnectionGUID: X5y4t9NJSKyIAHB7wcgCxw==
+X-CSE-MsgGUID: KQZprNPBSGWWj8j6chu4XQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="49009267"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="49009267"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 18:00:41 -0700
+X-CSE-ConnectionGUID: vW8hNn6VQjii1q+eq/ctTQ==
+X-CSE-MsgGUID: /ym4VWfJS/yIKIX45rghaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="128655367"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.247.168.206]) ([10.247.168.206])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 18:00:34 -0700
+Message-ID: <84d44db2-6327-43db-93c9-61823f4d90aa@linux.intel.com>
+Date: Mon, 7 Apr 2025 09:00:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
-Subject: Re: [PATCH v3] x86/e820: Fix handling of subpage regions when
- calculating nosave ranges
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Roberto Ricci <io@r-ricci.it>
-References: <20250406-fix-e820-nosave-v3-1-f3787bc1ee1d@qtmlabs.xyz>
- <Z_LGqgUhDrTmzj5r@gmail.com> <Z_LJv9gATY6nk4Yu@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>
+Cc: "Gao, Chao" <chao.gao@intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+ "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "Chatre, Reinette" <reinette.chatre@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>
+References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
+ <20250402001557.173586-2-binbin.wu@linux.intel.com>
+ <2047f2964fa713f70823b9293bf1ffd65ac44fa8.camel@intel.com>
 Content-Language: en-US
-In-Reply-To: <Z_LJv9gATY6nk4Yu@gmail.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <2047f2964fa713f70823b9293bf1ffd65ac44fa8.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
 
-On 4/7/25 01:36, Ingo Molnar wrote:
 
-> * Ingo Molnar<mingo@kernel.org> wrote:
+
+On 4/3/2025 6:19 AM, Huang, Kai wrote:
+> On Wed, 2025-04-02 at 08:15 +0800, Binbin Wu wrote:
+>> +::
+>> +
+>> +		/* KVM_EXIT_TDX_GET_QUOTE */
+>> +		struct tdx_get_quote {
+>> +			__u64 ret;
+>> +			__u64 gpa;
+>> +			__u64 size;
+>> +		};
+>> +
+> The shared buffer pointed by the @gpa also has a format defined in the GHCI
+> spec.  E.g., it has a 'status code' field.  Does userspace VMM need to setup
+> this 'status code' as well?
+
+Yes.
 >
->> * Myrrh Periwinkle<myrrhperiwinkle@qtmlabs.xyz> wrote:
->>
->>> The current implementation of e820__register_nosave_regions suffers from
->>> multiple serious issues:
->>>   - The end of last region is tracked by PFN, causing it to find holes
->>>     that aren't there if two consecutive subpage regions are present
->>>   - The nosave PFN ranges derived from holes are rounded out (instead of
->>>     rounded in) which makes it inconsistent with how explicitly reserved
->>>     regions are handled
->>>
->>> Fix this by:
->>>   - Treating reserved regions as if they were holes, to ensure consistent
->>>     handling (rounding out nosave PFN ranges is more correct as the
->>>     kernel does not use partial pages)
->>>   - Tracking the end of the last RAM region by address instead of pages
->>>     to detect holes more precisely
->>>
->>> Cc:stable@vger.kernel.org
->>> Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
->> So why is this SHA1 indicated as the root cause? AFAICS that commit
->> does nothing but cleanups, so it cannot cause such regressions.
-> BTW.:
+> I recall that we used to set the GET_QUOTE_IN_FLIGHT flag in Qemu but not sure
+> whether it is still true?
+It's still true.
+
 >
->   A) "It was the first random commit that seemed related, sry"
->   B) "It's a 15 years old bug, but I wanted to indicate a fresh, 8-year old bug to get this into -stable. Busted!"
+> I am thinking if Qemu needs to set it, then we need to expose the structure of
+> the shared buffer to userspace too.
 
-You got me :) How did you know that this is a 15 years old bug? 
-(although I didn't think the age of the bug a patch fixes would affect 
-its chances of getting to -stable)
-
-This specific revision was picked since it's the latest one that this 
-patch can be straightforwardly applied to (there is a (trivial) merge 
-conflict with -stable, though).
-
-Later, I managed to track the buggy logic back to 1c10070a55a3 ("i386: 
-do not restore reserved memory after hibernation"), which I believe is 
-the very first occurrence of this bug. If you prefer, I can send a v4 
-with a more correct Fixes: tag (or feel free to do so yourself when 
-applying this patch).
-
-> ... are perfectly fine answers in my book. :-)
->
-> I'm glad about the fixes, I'm just curious how the Fixes tag came about.
->
-> Thanks,
->
-> 	Ingo
-
-Regards,
-
-Myrrh
-
+For the structure of the shared buffer, since KVM doesn't care about it.
+IMHO, it's not necessary to define the structure in KVM and userspace can
+define the structure according to GHCI directly.
