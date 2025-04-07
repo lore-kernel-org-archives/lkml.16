@@ -1,647 +1,208 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E5D2135B3
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D358C2C9A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743994501; cv=none; b=tHQfLEhEXfXF3Jr7nTIDQ+fudTH1lkubD5JD+Xuka35Cos7TwHPVz1CiwRhba9iW3zvUhsGjIQ7gXpv09hwMw5rOmd4b42pS5h0yF7I2cGSxkZvcDWpsZ0QdCW4dvxjNYuia24slw9IBCqFOvbk6ehwaV+/hzFGjZQ7gpsjhEZU=
+	t=1743994684; cv=none; b=jqjb373W7uWM5QhpYCaFx9ZpqonyGmFFxZNIX1SuuVPkoFn/eGMmAsLx4E5EThN0mI9Qmzq59ENw9WSnZtW6df6mwkv/3gLap5BMUXw/GKqMKp4KusT9aXVv6rElqFrjdG/KQ/o4+XIE6Q+hdjLfM4zjW2Vues866SHdIIqM9Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743994501; c=relaxed/simple;
-	bh=fgNOo1RBDGsDwaNmxIhAID/iWNiPamzWQDxl+5zrnkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LMRPNpobZfKmmk1MNnc8GAeMKMwkKQzt2CzFvH9hTRjTPv1cd+7sVvANIzPm0VIp/er9ULhCSgZNxOdGBJShzy6/uWQMe9Juu+TQ4IyoHa6csIxRfAact0uElrciilGJ/8NA1/8X94+0S0llBXQ+4HrgofmiSug5DYZssBkDnlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIErUaBJ; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743994684; c=relaxed/simple;
+	bh=VogXSBrD8SHVxGlYf3YrlP5FJMI+kcWpXjacNnKAoqw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LDxH41aF06MbNvLbqkUP5OkahpYKrrhdTPA0OH6jk1R+MHNFofPFvWsTzTgKM9jbhcxAyFo8qUsGjoZWYbhA/puS+r/1rjOV9nJSAO2RWMc+GawyilfMo2cOYPLGtfzfQ+6riD5XdDwtfIxKoNtgABx9dnpNrawIVZ6R0Hm9S6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NNqMJer0; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIErUaBJ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso7370910a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 19:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743994497; x=1744599297; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bl6aLTFU+MzMGcQGZ+J3WrHMYXUZpVFn3O0zDOI2smo=;
-        b=VIErUaBJwGo0NMV3fLWo41kIfZhMjLac7ZBRyCkph1ujEi/+jwUq6m/td6XYzzQ3HD
-         nEujiwhlnbIzyuj6uEAMfXGASRWyFb6RS/5J4zfd/v0poYIfjbNt6aL4mtC7WSBa1tBf
-         6MqS92H5hzAhiXqeADmPRzeS3UhgVIRcaJqwjJaxob3kUNMO9+BLODjQkWNLlalKYONX
-         NxTG4fyb3D4u17XFqwZQPbovjyWKiZAIKtyrCo0jT66AwYlFjU51r7IR6Kpj/+IU4z+9
-         s4+1kbtZXE85tEGrBCLibnQ3f82b9FLqzk+K2/jlhPUM23YAk0x6BIwUbiNFfsAaVcdh
-         dz8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743994497; x=1744599297;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Bl6aLTFU+MzMGcQGZ+J3WrHMYXUZpVFn3O0zDOI2smo=;
-        b=WNh/tzNEjKx3TKkkZVm3bgrxT+l3SY5Yhl02eU/FnPONeI5ta+Og12Nbj1TZC/PsBj
-         qa20B05LGXgxi1A62GUzvhTGAOHpSyikg2f5Sa7NgDs08/01wWWt/xZ1c9XmoWAuiOsX
-         A9ysLPMk0+UR6vdAcwQb9pZB9qHKIw/bKTCEXB4VcZymPPI5YIYkg43EzmtNrscBtCT5
-         BySBozbe5BfCTnmWGbXDN1E7Fl6u46WY1zS9UxHRuacxZ+Upefaf2fO/YZa/iwzYe++Y
-         cjAWAR9HS9mqSLNKXvSNtn2Puq02GX/ynf+K7of+FwXaUYl/V82HDlEOyUq0mXjQLT1D
-         eadw==
-X-Forwarded-Encrypted: i=1; AJvYcCVki5LdcoSuTjnLGGfQMUnntsEwbJ2atyc411+q53jQu2dw3ocIGDTJCzl36YcSr0HKDzB6w1BpJ5DpgF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdc+ymMBOzO+aPTRNDsNdvLjvfC24iMloVarbCMiPtWx/XvNAZ
-	VsEWBP6GLg2yTgg5jEMMxPpWuqhhmwmPfnVKQnos1GRh6BSyVo4h
-X-Gm-Gg: ASbGncukQQliymvhHO8tBMropSNrIxJcc3vEUi8ej9ykfgOq7oxxrMMAVsG7HA1ojKe
-	ze2Y4xjiN1RqBTHcE+267o/Ha3vUWYMJbcdNRtmTPBcHizR3/vgNqz+weW4DrigQ6RVwh/UP9Bl
-	KpkEPzWrTNW7AQV07aHRn+4Xa7rZ3jTtt7DJuF5Bdi1nm9efqO/nKMf7IIQQVd78NwcO7oTFPLx
-	XSc//pkmsjZi75fJxM80IOPJOubxp1aVA//RpGEJv6R3tNuDSTeNbySjremJEwDpJRmTKWlDJsN
-	3hFETZwIx5cT/qRzyBWIZFPuK/fXIskLIPAM+6gghd7f
-X-Google-Smtp-Source: AGHT+IG6VJPOQELgVQs5gKuf++fq8aYY/Q8dCrFAAzQ/YMedhN7VVD7vW16xy6SI86TkSh8Jg46EjQ==
-X-Received: by 2002:a05:6402:280b:b0:5e6:44d9:57f7 with SMTP id 4fb4d7f45d1cf-5f0b3e4732amr8812253a12.26.1743994497443;
-        Sun, 06 Apr 2025 19:54:57 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f088084e49sm5881725a12.50.2025.04.06.19.54.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Apr 2025 19:54:56 -0700 (PDT)
-Date: Mon, 7 Apr 2025 02:54:56 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tools/testing/selftests: assert that anon merge
- cases behave as expected
-Message-ID: <20250407025455.67nhchndedotn57g@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
- <e9e016392b6ceb5c58a868439fd7039e31bfda18.1742245056.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NNqMJer0"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743994678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZBuX9pTkYEYQIsGttm8YDZUcTpLqDztcPCUqME/aBCU=;
+	b=NNqMJer0m9dJRGlkPVa7Uctlck1sAw997K2mD9x+TyavG6JzsL0AcggRwKsdQsUmoOYaLj
+	Q52AiJUZ01CVfwXjWJeu3sLUAU3ovtaldVFlrie4RtLBrCgWJiLCGllF9xNkW0rksJ0OD8
+	eUiqvMAS3SdXCsGAkLwU2m1lCuVvwvc=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9e016392b6ceb5c58a868439fd7039e31bfda18.1742245056.git.lorenzo.stoakes@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
+Date: Mon, 7 Apr 2025 10:57:13 +0800
+Cc: bingbu.cao@linux.intel.com,
+ Christoph Hellwig <hch@lst.de>,
+ Matthew Wilcox <willy@infradead.org>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org,
+ linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org,
+ opensource.kernel@vivo.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
+References: <20250327092922.536-1-link@vivo.com>
+ <20250404090111.GB11105@lst.de>
+ <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+ <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
+ <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
+To: Huan Yang <link@vivo.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 17, 2025 at 09:15:05PM +0000, Lorenzo Stoakes wrote:
->Prior to the recently applied commit that permits this merge,
->mprotect()'ing a faulted VMA, adjacent to an unfaulted VMA, such that the
->two share characteristics would fail to merge due to what appear to be
->unintended consequences of commit 965f55dea0e3 ("mmap: avoid merging cloned
->VMAs").
->
->Now we have fixed this bug, assert that we can indeed merge anonymous VMAs
->this way.
->
->Also assert that forked source/target VMAs are equally
->rejected. Previously, all empty target anon merges with one VMA faulted and
->the other unfaulted would be rejected incorrectly, now we ensure that
->unforked merge, but forked do not.
->
->Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->---
-> tools/testing/selftests/mm/.gitignore     |   1 +
-> tools/testing/selftests/mm/Makefile       |   1 +
-> tools/testing/selftests/mm/merge.c        | 454 ++++++++++++++++++++++
-> tools/testing/selftests/mm/run_vmtests.sh |   2 +
-> 4 files changed, 458 insertions(+)
-> create mode 100644 tools/testing/selftests/mm/merge.c
->
->diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
->index c5241b193db8..91db34941a14 100644
->--- a/tools/testing/selftests/mm/.gitignore
->+++ b/tools/testing/selftests/mm/.gitignore
->@@ -58,3 +58,4 @@ hugetlb_dio
-> pkey_sighandler_tests_32
-> pkey_sighandler_tests_64
-> guard-regions
->+merge
->diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
->index 8270895039d1..ad4d6043a60f 100644
->--- a/tools/testing/selftests/mm/Makefile
->+++ b/tools/testing/selftests/mm/Makefile
->@@ -98,6 +98,7 @@ TEST_GEN_FILES += hugetlb_madv_vs_map
-> TEST_GEN_FILES += hugetlb_dio
-> TEST_GEN_FILES += droppable
-> TEST_GEN_FILES += guard-regions
->+TEST_GEN_FILES += merge
-> 
-> ifneq ($(ARCH),arm64)
-> TEST_GEN_FILES += soft-dirty
->diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
->new file mode 100644
->index 000000000000..9cc61bdbfba8
->--- /dev/null
->+++ b/tools/testing/selftests/mm/merge.c
->@@ -0,0 +1,454 @@
->+// SPDX-License-Identifier: GPL-2.0-or-later
->+
->+#define _GNU_SOURCE
->+#include "../kselftest_harness.h"
->+#include <stdio.h>
->+#include <stdlib.h>
->+#include <unistd.h>
->+#include <sys/mman.h>
->+#include <sys/wait.h>
->+#include "vm_util.h"
->+
->+FIXTURE(merge)
->+{
->+	unsigned int page_size;
->+	char *carveout;
->+	struct procmap_fd procmap;
->+};
->+
->+FIXTURE_SETUP(merge)
->+{
->+	self->page_size = psize();
->+	/* Carve out PROT_NONE region to map over. */
->+	self->carveout = mmap(NULL, 12 * self->page_size, PROT_NONE,
->+			      MAP_ANON | MAP_PRIVATE, -1, 0);
->+	ASSERT_NE(self->carveout, MAP_FAILED);
->+	/* Setup PROCMAP_QUERY interface. */
->+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
->+}
->+
->+FIXTURE_TEARDOWN(merge)
->+{
->+	ASSERT_EQ(munmap(self->carveout, 12 * self->page_size), 0);
->+	ASSERT_EQ(close_procmap(&self->procmap), 0);
->+}
->+
->+TEST_F(merge, mprotect_unfaulted_left)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	char *ptr;
->+
->+	/*
->+	 * Map 10 pages of R/W memory within. MAP_NORESERVE so we don't hit
->+	 * merge failure due to lack of VM_ACCOUNT flag by mistake.
->+	 *
->+	 * |-----------------------|
->+	 * |       unfaulted       |
->+	 * |-----------------------|
->+	 */
->+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+	/*
->+	 * Now make the first 5 pages read-only, splitting the VMA:
->+	 *
->+	 *      RO          RW
->+	 * |-----------|-----------|
->+	 * | unfaulted | unfaulted |
->+	 * |-----------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
->+	/*
->+	 * Fault in the first of the last 5 pages so it gets an anon_vma and
->+	 * thus the whole VMA becomes 'faulted':
->+	 *
->+	 *      RO          RW
->+	 * |-----------|-----------|
->+	 * | unfaulted |  faulted  |
->+	 * |-----------|-----------|
->+	 */
->+	ptr[5 * page_size] = 'x';
->+	/*
->+	 * Now mprotect() the RW region read-only, we should merge (though for
->+	 * ~15 years we did not! :):
->+	 *
->+	 *             RO
->+	 * |-----------------------|
->+	 * |        faulted        |
->+	 * |-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
->+
->+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
->+}
->+
->+TEST_F(merge, mprotect_unfaulted_right)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	char *ptr;
->+
->+	/*
->+	 * |-----------------------|
->+	 * |       unfaulted       |
->+	 * |-----------------------|
->+	 */
->+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+	/*
->+	 * Now make the last 5 pages read-only, splitting the VMA:
->+	 *
->+	 *      RW          RO
->+	 * |-----------|-----------|
->+	 * | unfaulted | unfaulted |
->+	 * |-----------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
->+	/*
->+	 * Fault in the first of the first 5 pages so it gets an anon_vma and
->+	 * thus the whole VMA becomes 'faulted':
->+	 *
->+	 *      RW          RO
->+	 * |-----------|-----------|
->+	 * |  faulted  | unfaulted |
->+	 * |-----------|-----------|
->+	 */
->+	ptr[0] = 'x';
->+	/*
->+	 * Now mprotect() the RW region read-only, we should merge:
->+	 *
->+	 *             RO
->+	 * |-----------------------|
->+	 * |        faulted        |
->+	 * |-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
->+
->+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
->+}
->+
->+TEST_F(merge, mprotect_unfaulted_both)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	char *ptr;
->+
->+	/*
->+	 * |-----------------------|
->+	 * |       unfaulted       |
->+	 * |-----------------------|
->+	 */
->+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+	/*
->+	 * Now make the first and last 3 pages read-only, splitting the VMA:
->+	 *
->+	 *      RO          RW          RO
->+	 * |-----------|-----------|-----------|
->+	 * | unfaulted | unfaulted | unfaulted |
->+	 * |-----------|-----------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
->+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
->+	/*
->+	 * Fault in the first of the middle 3 pages so it gets an anon_vma and
->+	 * thus the whole VMA becomes 'faulted':
->+	 *
->+	 *      RO          RW          RO
->+	 * |-----------|-----------|-----------|
->+	 * | unfaulted |  faulted  | unfaulted |
->+	 * |-----------|-----------|-----------|
->+	 */
->+	ptr[3 * page_size] = 'x';
->+	/*
->+	 * Now mprotect() the RW region read-only, we should merge:
->+	 *
->+	 *             RO
->+	 * |-----------------------|
->+	 * |        faulted        |
->+	 * |-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
->+
->+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
->+}
->+
->+TEST_F(merge, mprotect_faulted_left_unfaulted_right)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	char *ptr;
->+
->+	/*
->+	 * |-----------------------|
->+	 * |       unfaulted       |
->+	 * |-----------------------|
->+	 */
->+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+	/*
->+	 * Now make the last 3 pages read-only, splitting the VMA:
->+	 *
->+	 *             RW               RO
->+	 * |-----------------------|-----------|
->+	 * |       unfaulted       | unfaulted |
->+	 * |-----------------------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
->+	/*
->+	 * Fault in the first of the first 6 pages so it gets an anon_vma and
->+	 * thus the whole VMA becomes 'faulted':
->+	 *
->+	 *             RW               RO
->+	 * |-----------------------|-----------|
->+	 * |       unfaulted       | unfaulted |
-                   ^^^
 
-According to your previous comment convention, the comment here describe the
-result after ptr[0] = 'x'.
 
-faulted is the correct description here?
+> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
+>=20
+>=20
+> =E5=9C=A8 2025/4/4 18:07, Muchun Song =E5=86=99=E9=81=93:
+>>=20
+>>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
+>>>>=20
+>>>> After the btrfs compressed bio discussion I think the hugetlb =
+changes that
+>>>> skip the tail pages are fundamentally unsafe in the current kernel.
+>>>>=20
+>>>> That is because the bio_vec representation assumes tail pages do =
+exist, so
+>>>> as soon as you are doing direct I/O that generates a bvec starting =
+beyond
+>>>> the present head page things will blow up.  Other users of bio_vecs =
+might
+>>>> do the same, but the way the block bio_vecs are generated are very =
+suspect
+>>>> to that.  So we'll first need to sort that out and a few other =
+things
+>>>> before we can even think of enabling such a feature.
+>>>>=20
+>>> I would like to express my gratitude to Christoph for including me =
+in the
+>>> thread. I have carefully read the cover letter in [1], which =
+indicates
+>>> that an issue has arisen due to the improper use of `vmap_pfn()`. =
+I'm
+>>> wondering if we could consider using `vmap()` instead. In the HVO =
+scenario,
+>>> the tail struct pages do **exist**, but they are read-only. I've =
+examined
+>>> the code of `vmap()`, and it appears that it only reads the struct =
+page.
+>>> Therefore, it seems feasible for us to use `vmap()` (I am not a =
+expert in
+>>> udmabuf.). Right?
+>> I believe my stance is correct. I've also reviewed another thread in =
+[2].
+>> Allow me to clarify and correct the viewpoints you presented. You =
+stated:
+>>   "
+>>    So by HVO, it also not backed by pages, only contains folio head, =
+each
+>>    tail pfn's page struct go away.
+>>   "
+>> This statement is entirely inaccurate. The tail pages do not cease to =
+exist;
+>> rather, they are read-only. For your specific use-case, please use =
+`vmap()`
+>> to resolve the issue at hand. If you wish to gain a comprehensive =
+understanding
+>=20
+> I see the document give a simple graph to point:
+>=20
+>  +-----------+ ---virt_to_page---> +-----------+   mapping to   =
++-----------+
+>  |           |                                     |     0     | =
+-------------> |     0     |
+>  |           | +-----------+                +-----------+
+>  |           |                                      |     1     | =
+-------------> |     1     |
+>  |           | +-----------+                +-----------+
+>  |           |                                      |     2     | =
+----------------^ ^ ^ ^ ^ ^
+>  |           | +-----------+                      | | | | |
+>  |           |                                      |     3     | =
+------------------+ | | | |
+>  |           | +-----------+                        | | | |
+>  |           |                                      |     4     | =
+--------------------+ | | |
+>  |    PMD    | +-----------+                          | | |
+>  |   level   |                                   |     5     | =
+----------------------+ | |
+>  |  mapping  | +-----------+                             | |
+>  |           |                                     |     6     | =
+------------------------+ |
+>  |           | +-----------+                              |
+>  |           |                                     |     7     | =
+--------------------------+
+>  |           |                                    +-----------+
+>  |           |
+>  |           |
+>  |           |
+>  +-----------+
+>=20
+> If I understand correct, each 2-7 tail's page struct is freed, so if I =
+just need map page 2-7, can we use vmap do
+>=20
+> something correctly?
 
->+	 * |-----------------------|-----------|
->+	 */
->+	ptr[0] = 'x';
->+	/*
->+	 * Now make the first 3 pages read-only, splitting the VMA:
->+	 *
->+	 *      RO          RW          RO
->+	 * |-----------|-----------|-----------|
->+	 * |  faulted  |  faulted  | unfaulted |
->+	 * |-----------|-----------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
->+	/*
->+	 * Now mprotect() the RW region read-only, we should merge:
->+	 *
->+	 *             RO
->+	 * |-----------------------|
->+	 * |        faulted        |
->+	 * |-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
->+
->+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
->+}
->+
->+TEST_F(merge, mprotect_unfaulted_left_faulted_right)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	char *ptr;
->+
->+	/*
->+	 * |-----------------------|
->+	 * |       unfaulted       |
->+	 * |-----------------------|
->+	 */
->+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+	/*
->+	 * Now make the first 3 pages read-only, splitting the VMA:
->+	 *
->+	 *      RO                RW
->+	 * |-----------|-----------------------|
->+	 * | unfaulted |       unfaulted       |
->+	 * |-----------|-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
->+	/*
->+	 * FAult in the first of the last 6 pages so it gets an anon_vma and
-            ^
+The answer is you can. It is essential to distinguish between virtual
+address (VA) and physical address (PA). The VAs of tail struct pages
+aren't freed but remapped to the physical page mapped by the VA of the
+head struct page (since contents of those tail physical pages are the
+same). Thus, the freed pages are the physical pages mapped by original
+tail struct pages, not their virtual addresses. Moreover, while it
+is possible to read the virtual addresses of these tail struct pages,
+any write operations are prohibited since it is within the realm of
+acceptability that the kernel is expected to perform write operations
+solely on the head struct page of a compound head and conduct read
+operations only on the tail struct pages. BTW, folio infrastructure
+is also based on this assumption.
 
-s/A/a/
+Thanks,
+Muchun.
 
->+	 * thus the whole VMA becomes 'faulted':
->+	 *
->+	 *      RO                RW
->+	 * |-----------|-----------------------|
->+	 * | unfaulted |        faulted        |
->+	 * |-----------|-----------------------|
->+	 */
->+	ptr[3 * page_size] = 'x';
->+	/*
->+	 * Now make the last 3 pages read-only, splitting the VMA:
->+	 *
->+	 *      RO          RW          RO
->+	 * |-----------|-----------|-----------|
->+	 * | unfaulted |  faulted  |  faulted  |
->+	 * |-----------|-----------|-----------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
->+	/*
->+	 * Now mprotect() the RW region read-only, we should merge:
->+	 *
->+	 *             RO
->+	 * |-----------------------|
->+	 * |        faulted        |
->+	 * |-----------------------|
->+	 */
->+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
->+
->+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
->+}
->+
->+TEST_F(merge, forked_target_vma)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	pid_t pid;
->+	char *ptr, *ptr2;
->+	int i;
->+
->+	/*
->+	 * |-----------|
->+	 * | unfaulted |
->+	 * |-----------|
->+	 */
->+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+
->+	/*
->+	 * Fault in process.
->+	 *
->+	 * |-----------|
->+	 * |  faulted  |
->+	 * |-----------|
->+	 */
->+	ptr[0] = 'x';
->+
->+	pid = fork();
->+	ASSERT_NE(pid, -1);
->+
->+	if (pid != 0) {
->+		wait(NULL);
->+		return;
->+	}
->+
->+	/* Child process below: */
->+
->+	/* Reopen for child. */
->+	ASSERT_EQ(close_procmap(&self->procmap), 0);
->+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
->+
->+	/* unCOWing everything does not cause the AVC to go away. */
-           ^^^
+>=20
+> Or something I still misunderstand, please correct me.
+>=20
+> Thanks,
+>=20
+> Huan Yang
+>=20
+>> of the fundamentals of HVO, I kindly suggest a thorough review of the =
+document
+>> in [3].
+>>=20
+>> [2] =
+https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com=
+/#t
+>> [3] Documentation/mm/vmemmap_dedup.rst
+>>=20
+>>> [1] =
+https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m05=
+5b34978cf882fd44d2d08d929b50292d8502b4
+>>>=20
+>>> Thanks,
+>>> Muchun.
+>>>=20
+>>=20
 
-Before ptr[i] = 'x', we have unCOWed pages in vma. What we are doing here is
-COWing, right?
-
->+	for (i = 0; i < 5 * page_size; i += page_size)
->+		ptr[i] = 'x';
->+
->+	/*
->+	 * Map in adjacent VMA in child.
->+	 *
->+	 *     forked
->+	 * |-----------|-----------|
->+	 * |  faulted  | unfaulted |
->+	 * |-----------|-----------|
->+	 *      ptr         ptr2
->+	 */
->+	ptr2 = mmap(&ptr[5 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
->+	ASSERT_NE(ptr2, MAP_FAILED);
->+
->+	/* Make sure not merged. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
->+}
->+
->+TEST_F(merge, forked_source_vma)
->+{
->+	unsigned int page_size = self->page_size;
->+	char *carveout = self->carveout;
->+	struct procmap_fd *procmap = &self->procmap;
->+	pid_t pid;
->+	char *ptr, *ptr2;
->+	int i;
->+
->+	/*
->+	 * |............|-----------|
->+	 * | <unmapped> | unfaulted |
->+	 * |............|-----------|
-
-I am not sure "unmapped" is correct here. The range has already been mapped by
-FIXTURE_SETUP(merge).
-
->+	 */
->+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr, MAP_FAILED);
->+
->+	/*
->+	 * Fault in process.
->+	 *
->+	 * |............||-----------|
->+	 * | <unmapped> ||  faulted  |
->+	 * |............||-----------|
-                         ^
-
-Extra line here?
-
->+	 */
->+	ptr[0] = 'x';
->+
->+	pid = fork();
->+	ASSERT_NE(pid, -1);
->+
->+	if (pid != 0) {
->+		wait(NULL);
->+		return;
->+	}
->+
->+	/* Child process below: */
->+
->+	/* Reopen for child. */
->+	ASSERT_EQ(close_procmap(&self->procmap), 0);
->+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
->+
->+	/* unCOWing everything does not cause the AVC to go away. */
-
-Same as above.
-
->+	for (i = 0; i < 5 * page_size; i += page_size)
->+		ptr[i] = 'x';
->+
->+	/*
->+	 * Map in adjacent VMA in child, ptr2 before ptr, but incompatible.
->+	 *
->+	 *      RWX      forked RW
->+	 * |-----------|-----------|
->+	 * | unfaulted |  faulted  |
->+	 * |-----------|-----------|
->+	 *      ptr2        ptr
->+	 */
->+	ptr2 = mmap(&carveout[6 * page_size], 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC,
->+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
->+	ASSERT_NE(ptr2, MAP_FAILED);
->+
-
-I think pt2 is after ptr. Do I miss something?
-
->+
->+	/* Make sure not merged. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
->+
->+	/*
->+	 * Now mprotect forked region to RWX so it becomes the source for the
->+	 * merge to unfaulted region:
->+	 *
->+	 *      RWX      forked RWX
->+	 * |-----------|-----------|
->+	 * | unfaulted |  faulted  |
->+	 * |-----------|-----------|
->+	 *      ptr2        ptr
->+	 */
->+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC), 0);
->+	/* Again, make sure not merged. */
->+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
->+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
->+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
->+}
->+
->+TEST_HARNESS_MAIN
->diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
->index 9aff33b10999..0b2f8bb91433 100755
->--- a/tools/testing/selftests/mm/run_vmtests.sh
->+++ b/tools/testing/selftests/mm/run_vmtests.sh
->@@ -421,6 +421,8 @@ CATEGORY="madv_guard" run_test ./guard-regions
-> # MADV_POPULATE_READ and MADV_POPULATE_WRITE tests
-> CATEGORY="madv_populate" run_test ./madv_populate
-> 
->+CATEGORY="vma_merge" run_test ./merge
->+
-
-./run_vmtests.sh -h would show a list of categories. 
-
-How about add the new category "vma_merge" into the list.
-
-> if [ -x ./memfd_secret ]
-> then
-> (echo 0 > /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
->-- 
->2.48.1
->
-
--- 
-Wei Yang
-Help you, Help me
