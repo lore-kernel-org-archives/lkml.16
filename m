@@ -1,106 +1,71 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0EA19F40A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AB5217F32
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014790; cv=none; b=sxFq/DqoZwsCPDREYif9Sny/PiPT0cIERwFZOAZT8O6cPVJ/RW25VmMCWf+BI9DTiaXKGG6fUASIP/2AVXiPl6orMdNquNJg95n2dchkNF4eIp+IUN2x8AiHHCk23vVESUUMvRULNdSYFhNXGnqHoq5N7/4VTjiMx4Bwj4UJiWc=
+	t=1744014852; cv=none; b=lWDdUuMBTMVwaKT5P/BtJzrVoZ9x0Y/lvDDZCWm3a/WBzASn0cqG3SD3dwMIE+GDHn7/5GgOxAzRos1m+HKd6OWBgUj7lj5LHsijaJ49Dzbyc59XrSpW1qLOhxFmp0C1gSI6MQeaUjBTjcoW8iAzYrwNDZn4cim8PCQbKnF3+CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014790; c=relaxed/simple;
-	bh=0MJ7kNuETLjZlpYnEIkw7jNM8In9lI+eax564Kt2b3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QPWqIAthurij8+MJVv63XOMKDWdRwwF0Lc3PpyrKp7K8w7I1BUd9wATFsXtRbL+W5+P9tE3GyLc1cK3Enkx+CqTc24Nt0nm0Hi01PfLk6I3KNTkgwh5/hjna26tdYli0xX+yDtRB8DGQp9F44jOGeRId22bC3gAXX3Oq+3+P1ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mt+vLAzd; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744014852; c=relaxed/simple;
+	bh=m/TaOChonZ35mMesQTACEd12fQdLgAjVQLkMrkfFWuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gZbDF086sTZFMMSYOc899/hMLWdOPRSCSXzmesNu82nj+8w59b4gtHmvjI731wFFeF2VIKLDzpJeHBZpqVm5TjCdVko7JzLV7MgP1WqjxvXxNzkRWIepLahl22ucQgkYvEDkKZr20aUYyoeredoUhKGED7PEdxErR3vbncrd0Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6cWTHmw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mt+vLAzd"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2264c9d0295so324255ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744014788; x=1744619588; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jcXjjA+jirbGtlXlcOVxvxixEqyX9/ZtaNYQ+3n7vks=;
-        b=Mt+vLAzdLAVjPBPep3lija0ZbWpVydjPxs/u/UQEa29Uz/dfb51UKWLQIbToTiK17j
-         2V8hfwJ2m8c8+fsCT34NqdeWlXNXfXVKxdEtdX/oFhWfNZ+I4aVWLR/XickqxemgxW6i
-         3alP5R8ToTaiR8PtXUbYkApOPHKI4iCSwTW+XiogMwNQEEudckiiy22T/fPdKKMJEdcZ
-         fyLGwa4zDW71X9ihBAcuIxneto8IEnzGXJ7arhzF3WUoJWtooBXh26D+BfwT9Y73ZNa9
-         yJMjr4TArAS2IABFZN6vwOxfFFXU8EUqJ0kikvhsDX9dR+yX8fUyr9aW7vArKHRvu9cq
-         MaKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744014788; x=1744619588;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jcXjjA+jirbGtlXlcOVxvxixEqyX9/ZtaNYQ+3n7vks=;
-        b=Hf06+Rs//OpnZaEkIkVL9EZJuDpC0Lny2Dd4P8p9WV1FNhr9dcnU6lqvCxbsFl+1jr
-         wvBXlYrjgEAzM1zTYW1GFKqSK5DPFP9Efalcu0ImLRi/RLxaGdCj0M+/NAQc4fqVEFY1
-         1vGFgwKxn6feVsCfCNPzzEs+qQvfl1tqfg4l/TYlvU0BcJfBqjpHSAvCh4yWwb0gt3PG
-         8h5qYLxZHn1oCqPI5GYOH2oqCOFrMy2Lz3x91k1nvX9FMgrTEa6FxsJP9E5+V4NHFjvl
-         fT7SViHe5g87bs8vq6LpOqyOu1h5h7G2lzOCqgvV+jQCaaPMQ/DNSlk0/DqYrAQz6IA5
-         THDw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+zW11P6ePZBLkx4zQDv6pxrT7ndcncXxmCWpthWIXsmQuqB5RTX2ykPVG6nHOhcyF1He5GCEkSa7Q8F0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDarLh4sXdIJXi25J8Ig2Qy2epP1lVK6sNExcSSUcKOk6CNvDZ
-	0U1RtqBwvPI4AXIsPG/jk8i1hI2wWKlACf9mwS9VyAcFCMYq0rsr+huytYEtOg==
-X-Gm-Gg: ASbGnctrrdmUEYqOe3SZl1eYnUJjFS+rulh7zDZc8cjMhssXF5XeQd+chmMuX+523LZ
-	1AQv31CR24re8Cp2IU+UUgxY8PEgjyOsOZf7fCjz6GWWRiJuPemLVjsuLrDn1lMfHULSRNzhpsH
-	MPvibIhwcXd5A6RIvf39N87VuljM9rVETW7bXc/5NBhNH9v8hu6u+UOatz6UCuApiO851ZqLxpZ
-	pEvvkjaDN18p36t/XOVzRTLK0Usi12vj44jZ2QZpMrhaRyb3F1O79LKdJufrUwgl74MX7FN+DU0
-	MdjiblOukoHgDCUFVHUjWq5Uch14FmJapjCiCVGvOrNA8rOAPlmpj4FGgxRbSiMwfijIYKwDsH2
-	9Pr1LGzKZKburjg==
-X-Google-Smtp-Source: AGHT+IGgoaBTlg9BjbIvqCWdACY/aXtozoW3tXEbZzO1wBZolldhDpZWuJ7yv4qhtjzddz/sud5TLQ==
-X-Received: by 2002:a17:903:c4a:b0:215:aca2:dc04 with SMTP id d9443c01a7336-22a95eb8d41mr3228575ad.26.1744014788291;
-        Mon, 07 Apr 2025 01:33:08 -0700 (PDT)
-Received: from google.com (188.152.87.34.bc.googleusercontent.com. [34.87.152.188])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c385csm75476405ad.81.2025.04.07.01.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:33:07 -0700 (PDT)
-Date: Mon, 7 Apr 2025 08:32:59 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: will@kernel.org, robin.murphy@arm.com, jgg@nvidia.com, joro@8bytes.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
- arm_smmu_make_s2_domain_ste()
-Message-ID: <Z_ONu4pIDyiWr2DK@google.com>
-References: <cover.1741150594.git.nicolinc@nvidia.com>
- <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6cWTHmw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78DE3C4CEDD;
+	Mon,  7 Apr 2025 08:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744014851;
+	bh=m/TaOChonZ35mMesQTACEd12fQdLgAjVQLkMrkfFWuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c6cWTHmw7f5XXfltKBE1jrGo1cNC8PSjkk2XvPWeG/EBvlfRoITRizDQrLDYP7jfW
+	 xdZNKF3h4AATXCPhOBXORzamzvaswh/w5Ue+MKPeLwtwb19WGFQ70MafvErw77VP5j
+	 2J3n5a8KlHo9c4UiAgG8BcU8tfQoFbFRa22ewRkwKWl+jyo+JGNgfmTou/Tptkk3xi
+	 /1Hz3NYNi09JsqjvUxafUNPEkJ0qp1tmup1aV21LKQE/bYxPiq5e24zdRbfQKhKaF5
+	 HAkEK1z+0ovGjxDjyuISMPcgvNGsD3fClcwVW++2TsHYTnFZYXRIpwjZzA+m9tTXW/
+	 v2gfsICJUlgog==
+From: Maxime Ripard <mripard@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Joel Selvaraj <jo@jsfamily.in>,
+	Douglas Anderson <dianders@chromium.org>,
+	Anusha Srivatsa <asrivats@redhat.com>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] drm/panel: Use refcounted allocation in place of devm_kzalloc()
+Date: Mon,  7 Apr 2025 10:34:06 +0200
+Message-ID: <174401483592.120970.11262671520967808365.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
+References: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 04, 2025 at 09:04:00PM -0800, Nicolin Chen wrote:
-> An stage-2 STE requires a vmid that has been so far allocated per domain,
-> so arm_smmu_make_s2_domain_ste() has been extracting the vmid from the S2
-> domain.
+On Tue, 01 Apr 2025 12:03:43 -0400, Anusha Srivatsa wrote:
+> Start converting drivers to use the API - devm_drm_panel_alloc().
 > 
-> To share an S2 parent domain across vSMMUs in the same VM, a vmid will be
-> no longer allocated for nor stored in the S2 domain, but per vSMMU, which
-> means the arm_smmu_make_s2_domain_ste() can get a vmid either from an S2
-> domain (non nesting parent) or a vSMMU.
+> This series addresses only 10 drivers. There are 98 more to go. Sending this
+> series to mostly get feedback. if any change is required, it will be
+> incorporated in the next version and in the next series that will
+> address the remaining drivers.
 > 
-> Allow to pass in vmid explicitly to arm_smmu_make_s2_domain_ste(), giving
-> its callers a chance to pick the vmid between a domain or a vSMMU.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> [...]
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+Applied to misc/kernel.git (drm-misc-next).
 
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h         | 2 +-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 6 ++++--
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c    | 3 ++-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c         | 6 +++---
->  4 files changed, 10 insertions(+), 7 deletions(-)
-> 
-
-Thanks
+Thanks!
+Maxime
