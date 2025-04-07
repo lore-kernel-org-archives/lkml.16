@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087FC211A39;
-	Mon,  7 Apr 2025 06:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210B3225797;
+	Mon,  7 Apr 2025 06:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008783; cv=none; b=auLnCVDb9QBuS3y/0tu1WjOyeCNRVQa5SkQSA/ocbGE6gjhF8vf1sMctTuCdQnV5AAEJqyiPr4iZ8eKRY1l6DTaFarU7rEiDOm1eyuV79XQumgsR16SYo2NVIAcG3IG9ziEmI7Y2jjAHD8lIP/OJQqR/STy8mU/NRYiqj3cFMRY=
+	t=1744008785; cv=none; b=VmLCYHNgsr25Wn3hJBU4ztAF4GZ0/SAbAb5mfVf7Uh4sBpQUa1g7cqR3ibtKJocRVhzXT6SO1x6DYQyxmKSQ/MUZan8NRb8Xn/7vtKn3w0vC/Djw/GdXF6ihonAooftYWYzZ6ibwJRQxVzcQ6XoweHUwnmUOZsLp009M0k3gci4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008783; c=relaxed/simple;
-	bh=IbF3dpnbmDMqynvxHeCn++RKSL483IkiGlufXOYi80g=;
+	s=arc-20240116; t=1744008785; c=relaxed/simple;
+	bh=X+BMimOr27k+/lCB8IAFuJEQitOZeP8NtZG5I0zUYoE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=khjRjMmR6dTCu4nPrKRY5hmk/CpfvywCSKPW8O8DFqyxcTuJbz223cz7nS6Pc3M3RdB6sV7HoAEmIUaeQKUqSI7royOT0O9kOesk6vlMqrnPNdOayize7Gcw/FcPESNfJ6a6pnUDLQVzUjcwsCSNt9j/gO9anGYEji0jIKd6YUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jt4tp3Gd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=npUPD208; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=IDfJ+2xtdVNKxQY61myhXtuBKQmRwJD9ryzSpky1iBZGKPwe5ffCtyA8otk/zmQftetYWHQApL3mV1VySRzBaQ/7dJcmKxmaiINbKRucrL9UE0DF5EjWjU6Bhzicm/iw5qO5pfhMEzmrqQHWc/Qmg68dczBPvGaoBbLMcYxBDyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QC/CgySL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jsIPwuO0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jt4tp3Gd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="npUPD208"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QC/CgySL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jsIPwuO0"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008779;
+	s=2020; t=1744008782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/CF9Pf6s9VZiCzyI0O7TZZkfoFNszIhPXCLoc65GcE=;
-	b=Jt4tp3GdDcN9ha6tI+qm0VijAzPG7lwxdW5//SjYJE7yZMZCoVxkw/x9aqZPxyPcNjPwdc
-	gNVC69CkL24iP9QzSn00F3HB6oWH/kIz8sU4W4mP/TA/Nea9onCQ/KP3akpiLpAgwDS6ot
-	8fFOV2jc/u4fa4Nw/kcxTbk/KufqBJwRHS08RGCtLXNwwCrUkbpINI1jaHe2XMi5Ewdc8k
-	BJbm3hY+firmisF7Cawzz2iTkqQGu1aZzVVRQEP8rQbG5kSx+ouEP8qL3xp5lv5L22ToN5
-	kc1KIYPRemnvjD/KTxqm0bXZj10mwb2ZH4+MGnW9QRSNEDYk61M/5VEpYunEFA==
+	bh=wtICgEwn39BNK2RVwM0gACpiOULlMkuI9K6OeLRKX6w=;
+	b=QC/CgySLPb8G0uPvTHftXR63Js/yqF8ZwbcOXYN4by83lAtfR7GOMG1/FJMdzsu+q6j4X2
+	HpJ8oulmT5f3HuRXhlwjEvcuPr8a+mxHYNVfmJlhiWbGrS0CcmhXx0jv+xxpbKtBaFz8TL
+	csMM7Rdw3B7ZhP+73FP9AjLRKw7FNmHbOMgJHYOBwqZ0YU+nehK4Gqwzy5jLVsN4ZCLPhs
+	dkjHY2Emvcy1v25aSunqTjV8JkLnHUd7ecTdF6LbTURGZfex3zHsdQarvu/1oGKQ6CdOyN
+	lQwj7aNSCpjclWAn6Ua0vUq+wjQc0aoYBLAHfn32FLtB4fH4E4DnZ2uLBpaWGQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008779;
+	s=2020e; t=1744008782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D/CF9Pf6s9VZiCzyI0O7TZZkfoFNszIhPXCLoc65GcE=;
-	b=npUPD208aRLvMjW5QCqty4uLxh4FLzgqgzurOU30fsAVRi1nyl1sd5VI6RfD2L0Qhhuhte
-	KeIqoh5iNXrmMAAQ==
-Date: Mon, 07 Apr 2025 08:52:24 +0200
-Subject: [PATCH v2 01/32] selftests: harness: Add harness selftest
+	bh=wtICgEwn39BNK2RVwM0gACpiOULlMkuI9K6OeLRKX6w=;
+	b=jsIPwuO06RW3ZllBgG2wUUQt1igUNC7Sf9FXXabJm7I83Elv1Xbg4IkAc3EeKBZ/PJDQa7
+	XieX5GHxKs0WeBDQ==
+Date: Mon, 07 Apr 2025 08:52:29 +0200
+Subject: [PATCH v2 06/32] selftests: harness: Remove dependency on
+ libatomic
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-1-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-6-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,280 +58,42 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=8071;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1409;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=IbF3dpnbmDMqynvxHeCn++RKSL483IkiGlufXOYi80g=;
- b=SBsBbKZurUN3do7JpyLZaXjULL+AKmFtwrlo6Q6lwCeqgRZkDsLu+WTysEfeB3zXkQOGVGFrO
- WAuxHvgWN91AhQKCtG0yPU2CRI06CPFh52X3V5IIAOlC+Xehir9Ixv1
+ bh=X+BMimOr27k+/lCB8IAFuJEQitOZeP8NtZG5I0zUYoE=;
+ b=mpooDyXjTAA/0FPKJ3eg/h9ao9poICLHIrFGQxe/S2CvGJJdFmljNPx04hlh4b71+4eDX4RNT
+ E792W+2GTa5AiiV6fnEp0nkC9twKOHrm6z4O35YZVn/BYBBXUwDhc++
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Add a selftest for the harness itself so any changes can be validated.
+__sync_bool_compare_and_swap() is deprecated and requires libatomic on
+GCC. Compiler toolchains don't necessarily have libatomic available, so
+avoid this requirement by using atomics that don't need libatomic.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/Makefile                   |   1 +
- tools/testing/selftests/kselftest/.gitignore       |   1 +
- tools/testing/selftests/kselftest/Makefile         |   6 +
- .../testing/selftests/kselftest/harness-selftest.c | 129 +++++++++++++++++++++
- .../selftests/kselftest/harness-selftest.expected  |  62 ++++++++++
- .../selftests/kselftest/harness-selftest.sh        |  14 +++
- 6 files changed, 213 insertions(+)
+ tools/testing/selftests/kselftest_harness.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c77c8c8e3d9bdd8047c9cb7722c3830447e504e5..3ce071eefa86af59aadd1df7972fdf3bf6e01d52 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -48,6 +48,7 @@ TARGETS += ipc
- TARGETS += ir
- TARGETS += kcmp
- TARGETS += kexec
-+TARGETS += kselftest
- TARGETS += kvm
- TARGETS += landlock
- TARGETS += lib
-diff --git a/tools/testing/selftests/kselftest/.gitignore b/tools/testing/selftests/kselftest/.gitignore
-new file mode 100644
-index 0000000000000000000000000000000000000000..9aab194e8ea25a2c5ccc116f9f728b8afd0c51c4
---- /dev/null
-+++ b/tools/testing/selftests/kselftest/.gitignore
-@@ -0,0 +1 @@
-+/harness-selftest
-diff --git a/tools/testing/selftests/kselftest/Makefile b/tools/testing/selftests/kselftest/Makefile
-new file mode 100644
-index 0000000000000000000000000000000000000000..2f2933553dbc47014d9dfe0b4bd8ad3bc36e38c2
---- /dev/null
-+++ b/tools/testing/selftests/kselftest/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+TEST_GEN_PROGS_EXTENDED := harness-selftest
-+TEST_PROGS := harness-selftest.sh
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/kselftest/harness-selftest.c b/tools/testing/selftests/kselftest/harness-selftest.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..8d39e7a0b99c41a5d33edfe2dbf875cac04c098d
---- /dev/null
-+++ b/tools/testing/selftests/kselftest/harness-selftest.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <stdio.h>
-+
-+#ifndef NOLIBC
-+#include <sys/resource.h>
-+#include <sys/prctl.h>
-+#endif
-+
-+/* Avoid any inconsistencies */
-+#define TH_LOG_STREAM stdout
-+
-+#include "../kselftest_harness.h"
-+
-+TEST(standalone_pass) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 0);
-+	EXPECT_EQ(0, 0);
-+	TH_LOG("after");
-+}
-+
-+TEST(standalone_fail) {
-+	TH_LOG("before");
-+	EXPECT_EQ(0, 0);
-+	EXPECT_EQ(0, 1);
-+	ASSERT_EQ(0, 1);
-+	TH_LOG("after");
-+}
-+
-+TEST_SIGNAL(signal_pass, SIGUSR1) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 0);
-+	TH_LOG("after");
-+	kill(getpid(), SIGUSR1);
-+}
-+
-+TEST_SIGNAL(signal_fail, SIGUSR1) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 1);
-+	TH_LOG("after");
-+	kill(getpid(), SIGUSR1);
-+}
-+
-+FIXTURE(fixture) {
-+	pid_t testpid;
-+};
-+
-+FIXTURE_SETUP(fixture) {
-+	TH_LOG("setup");
-+	self->testpid = getpid();
-+}
-+
-+FIXTURE_TEARDOWN(fixture) {
-+	TH_LOG("teardown same-process=%d", self->testpid == getpid());
-+}
-+
-+TEST_F(fixture, pass) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 0);
-+	TH_LOG("after");
-+}
-+
-+TEST_F(fixture, fail) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 1);
-+	TH_LOG("after");
-+}
-+
-+TEST_F_TIMEOUT(fixture, timeout, 1) {
-+	TH_LOG("before");
-+	sleep(2);
-+	TH_LOG("after");
-+}
-+
-+FIXTURE(fixture_parent) {
-+	pid_t testpid;
-+};
-+
-+FIXTURE_SETUP(fixture_parent) {
-+	TH_LOG("setup");
-+	self->testpid = getpid();
-+}
-+
-+FIXTURE_TEARDOWN_PARENT(fixture_parent) {
-+	TH_LOG("teardown same-process=%d", self->testpid == getpid());
-+}
-+
-+TEST_F(fixture_parent, pass) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 0);
-+	TH_LOG("after");
-+}
-+
-+FIXTURE(fixture_setup_failure) {
-+	pid_t testpid;
-+};
-+
-+FIXTURE_SETUP(fixture_setup_failure) {
-+	TH_LOG("setup");
-+	self->testpid = getpid();
-+	ASSERT_EQ(0, 1);
-+}
-+
-+FIXTURE_TEARDOWN(fixture_setup_failure) {
-+	TH_LOG("teardown same-process=%d", self->testpid == getpid());
-+}
-+
-+TEST_F(fixture_setup_failure, pass) {
-+	TH_LOG("before");
-+	ASSERT_EQ(0, 0);
-+	TH_LOG("after");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	/*
-+	 * The harness uses abort() to signal assertion failures, which triggers coredumps.
-+	 * This may be useful to debug real failures but not for this selftest, disable them.
-+	 */
-+	struct rlimit rlimit = {
-+		.rlim_cur = 0,
-+		.rlim_max = 0,
-+	};
-+
-+	prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-+	setrlimit(RLIMIT_CORE, &rlimit);
-+
-+	return test_harness_run(argc, argv);
-+}
-diff --git a/tools/testing/selftests/kselftest/harness-selftest.expected b/tools/testing/selftests/kselftest/harness-selftest.expected
-new file mode 100644
-index 0000000000000000000000000000000000000000..1aa6461db90d4e7cc0679f19b69aadf4032875ec
---- /dev/null
-+++ b/tools/testing/selftests/kselftest/harness-selftest.expected
-@@ -0,0 +1,62 @@
-+TAP version 13
-+1..9
-+# Starting 9 tests from 4 test cases.
-+#  RUN           global.standalone_pass ...
-+# harness-selftest.c:16:standalone_pass:before
-+# harness-selftest.c:19:standalone_pass:after
-+#            OK  global.standalone_pass
-+ok 1 global.standalone_pass
-+#  RUN           global.standalone_fail ...
-+# harness-selftest.c:23:standalone_fail:before
-+# harness-selftest.c:25:standalone_fail:Expected 0 (0) == 1 (1)
-+# harness-selftest.c:26:standalone_fail:Expected 0 (0) == 1 (1)
-+# standalone_fail: Test terminated by assertion
-+#          FAIL  global.standalone_fail
-+not ok 2 global.standalone_fail
-+#  RUN           global.signal_pass ...
-+# harness-selftest.c:31:signal_pass:before
-+# harness-selftest.c:33:signal_pass:after
-+#            OK  global.signal_pass
-+ok 3 global.signal_pass
-+#  RUN           global.signal_fail ...
-+# harness-selftest.c:38:signal_fail:before
-+# harness-selftest.c:39:signal_fail:Expected 0 (0) == 1 (1)
-+# signal_fail: Test terminated by assertion
-+#          FAIL  global.signal_fail
-+not ok 4 global.signal_fail
-+#  RUN           fixture.pass ...
-+# harness-selftest.c:49:pass:setup
-+# harness-selftest.c:58:pass:before
-+# harness-selftest.c:60:pass:after
-+# harness-selftest.c:54:pass:teardown same-process=1
-+#            OK  fixture.pass
-+ok 5 fixture.pass
-+#  RUN           fixture.fail ...
-+# harness-selftest.c:49:fail:setup
-+# harness-selftest.c:64:fail:before
-+# harness-selftest.c:65:fail:Expected 0 (0) == 1 (1)
-+# harness-selftest.c:54:fail:teardown same-process=1
-+# fail: Test terminated by assertion
-+#          FAIL  fixture.fail
-+not ok 6 fixture.fail
-+#  RUN           fixture.timeout ...
-+# harness-selftest.c:49:timeout:setup
-+# harness-selftest.c:70:timeout:before
-+# timeout: Test terminated by timeout
-+#          FAIL  fixture.timeout
-+not ok 7 fixture.timeout
-+#  RUN           fixture_parent.pass ...
-+# harness-selftest.c:80:pass:setup
-+# harness-selftest.c:89:pass:before
-+# harness-selftest.c:91:pass:after
-+# harness-selftest.c:85:pass:teardown same-process=0
-+#            OK  fixture_parent.pass
-+ok 8 fixture_parent.pass
-+#  RUN           fixture_setup_failure.pass ...
-+# harness-selftest.c:99:pass:setup
-+# harness-selftest.c:101:pass:Expected 0 (0) == 1 (1)
-+# pass: Test terminated by assertion
-+#          FAIL  fixture_setup_failure.pass
-+not ok 9 fixture_setup_failure.pass
-+# FAILED: 4 / 9 tests passed.
-+# Totals: pass:4 fail:5 xfail:0 xpass:0 skip:0 error:0
-diff --git a/tools/testing/selftests/kselftest/harness-selftest.sh b/tools/testing/selftests/kselftest/harness-selftest.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..bf691adf0b41aaedb2fbc5f06add9fd1d5689044
---- /dev/null
-+++ b/tools/testing/selftests/kselftest/harness-selftest.sh
-@@ -0,0 +1,14 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Selftest for kselftest_harness.h
-+#
-+
-+DIR="$(dirname $(readlink -f "$0"))"
-+
-+TMPFILE="$(mktemp)"
-+trap 'rm "$TMPFILE"' EXIT
-+
-+$DIR/harness-selftest > "$TMPFILE"
-+
-+diff -u "$DIR"/harness-selftest.expected "$TMPFILE"
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 222a4f51a8d704c41597e09a241ad887ef787139..7ec4f66d0e3d7f129f6c2a45ff58310dabe5d03f 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -439,12 +439,12 @@
+ 		} \
+ 		if (child == 0) { \
+ 			if (_metadata->setup_completed && !fixture_name##_teardown_parent && \
+-					__sync_bool_compare_and_swap(teardown, false, true)) \
++					!__atomic_test_and_set(teardown, __ATOMIC_RELAXED)) \
+ 				fixture_name##_teardown(_metadata, self, variant->data); \
+ 			_exit(0); \
+ 		} \
+ 		if (_metadata->setup_completed && fixture_name##_teardown_parent && \
+-				__sync_bool_compare_and_swap(teardown, false, true)) \
++				!__atomic_test_and_set(teardown, __ATOMIC_RELAXED)) \
+ 			fixture_name##_teardown(_metadata, self, variant->data); \
+ 		munmap(teardown, sizeof(*teardown)); \
+ 		if (self && fixture_name##_teardown_parent) \
 
 -- 
 2.49.0
