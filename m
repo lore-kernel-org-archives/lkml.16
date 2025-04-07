@@ -1,173 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571852236FC;
-	Mon,  7 Apr 2025 18:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC8B219A75
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051480; cv=none; b=o3lbufi/CcBNY3E29Oz+bVANl5gNJt3B94IaxB0JCS1bdqP/wxxxNd39aZLjkxCjasH6POJjrnPPtRA79WTT/WPoRa6oMfs8WkEKpkMf2hkLb/5LAboEf14b92/axLlvPiAPVAs0xzTJqw0/HguZeHedp5nRd4vBIGypqmwiBT8=
+	t=1744051522; cv=none; b=aErx+z8KHiBvM9Kj3yAAC/iZFESw/ET1Vzc0ohMlFDfXd6giNlZD+oTuv9hS3zDOvX4HhtOo7Wloros+Bs1LCFTGGu2o+mkn2glccNb0ceNTd9G1/k90X1OGh2iG3Yt4Fq63+dR+tBoDlyHjGyG0zGxKweO8XSO+3oQlvEMwiaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051480; c=relaxed/simple;
-	bh=RqSC3Srh3U89lKqqWS+lHg9U3+jo4ZP+CbHYE7BdyKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lJLw1ptgNl4/dbj6urMBNb+3ebWkLpr3UrQ7idjDfy1KD+lU87A40oorsu0B1NKVxlW9ETuxTWs0Lx01hO27S2JldDqekn+jIX3ohynO+c967BOSJQ1U8Kape1gT0WX9WgeejJ5WRDl+m7miSmG1dFd5JH6OdGLzXZ9WA5OL/Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/S7fgZq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051522; c=relaxed/simple;
+	bh=PgikKRs46m9TKHYsWtcHGXIrCkcscWlTAKZRcjtqc58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VhITC7ukXgdWbiJMjOB0yG0zSACB+cefx8iskVlsz/tqgXR5pE7KPQBUqeIyQByKpMJQ0hkS5CmcNMX8SjPBPSy8B93EZVFGevqZPQDWd6t8DXUAuFVp5gZVHtA2bw2cRO/JpC89+pLhIzc124OPum52ZlN5ZBnkiIEtDjtvd5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RKhKlcM+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/S7fgZq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E64C4CEDD;
-	Mon,  7 Apr 2025 18:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051479;
-	bh=RqSC3Srh3U89lKqqWS+lHg9U3+jo4ZP+CbHYE7BdyKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=n/S7fgZqKKuR9mnct7HEK/26N+EKZzoPoPB80PH2Cs9Fk+i/WyY8uHyR3gHuWO/zM
-	 mXjjay9eDCstWsPcyaIrwoMnWXO1sEJkD9znKBxZFjUpzsFAqHwGfSbkGYkGBj+JdP
-	 LJC16/Gl/7Wd+ZzyipXzgGF6tXMrMKwUJC0lFMpMzOVCvkbXsXNBRxwDK4cq3X4xfW
-	 0LKoF7gIxNh0RTfG0K1iMw61TWhrAPjBTPuBUIlQWghoZl+qg5SgrIn7PrQyKfXAUP
-	 UC5Uj+9+aUlf3csIY9Yo8Olw0kKLtLFe3KKg+nfv9K/3lxW6hSEihFiEWOAOtl7Q60
-	 4M0d8ASqeheGg==
-Date: Mon, 7 Apr 2025 19:44:31 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
-Message-ID: <20250407194431.44b03a77@jic23-huawei>
-In-Reply-To: <99d1d972-d9a5-4ca3-811a-b22083bea4e6@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
-	<20250331122247.05c6b09d@jic23-huawei>
-	<a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
-	<20250405184346.3c4b1234@jic23-huawei>
-	<99d1d972-d9a5-4ca3-811a-b22083bea4e6@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RKhKlcM+"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dqlI013398
+	for <linux-kernel@vger.kernel.org>; Mon, 7 Apr 2025 18:45:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CaTgF4a/34uclFeoWrPsrCmEq+pEEC8fdHAghCe2wqE=; b=RKhKlcM+kETrjZEK
+	ii/p/I2zsOR5eV4qkbUZayHag9cccq8DlQ/ss0XDIHXyPLFijVzbVwboYSRHn/bF
+	/4Bhh6C2OG9jyIEvc53xmttfM8K28dpYWCS8tCmSgevphF5IlTKsCk996YV7Ef+R
+	V+u90ApRTSnVZl5H1/XxkDiOCwo1iw3S0Ss5EDGtRuOCOQS8l02hi3HUOzgGM3JB
+	dF/9SyViyYyzIdmZt2wodBhJTwbpDqW1fLdGK7YjfZLTXVHSJmbVIW9gKIzLDIU2
+	B6qanyKB/lWWlOeRkXYuSAX5w82eImG3NTKhl84G248pmuRHmedw+mAo2kcMTC7y
+	I/hHlQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1d4w5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 18:45:19 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-afd3f1adff7so1512262a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:45:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744051518; x=1744656318;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CaTgF4a/34uclFeoWrPsrCmEq+pEEC8fdHAghCe2wqE=;
+        b=AOehCELGlHALvIj2LGo1dZS/1UWjmD6wvDmd7cNttkxtmm9k15PjEAHRt3fWidbn45
+         dr7tOjfLM+v/HghRl5QsWVMdCHZhYh6eHklmEvmBzXRbMBESgRUYpFo4SX5v21hkLnyp
+         Wt4GJhcmCiJP4s4oN+gnwdQjJ69Vcjl8vh5Mcxu7xGLKhFk4/dz7tWkthlAjck6VI44C
+         s8SH4uKaT14SkIMI/B+3geAcimqTSKcUAHDPPL3plVH4JihUP7bJhYpP/x10QvFZHhX5
+         zPR+iZB5xVNtfAOeDZvNUmZV/njThdHr7+TgLeTW/umtVP3pytCWD6f7aiXDvrv7zg/V
+         2YOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVS8wdUFupZ5vjuAUEff1bnm7W1CGaaOgrtFVtVtecNgVZJ4xpeQIX48nd3b/ooenh0nIZiMUcY078sglU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFb7AcRBPOzO63Y8koKJuCX4hG6imCeFnimOC2FBQXrfxWeZXr
+	0LN4QVazOQkHRdtA39BOuGB2gFElduNj0oBU/iEac50+fBppKuqcnSsGLgVy0KVa3mOmdXqpVp4
+	L2mIcfyDRieHxIq6KqB+9+em0CarIX/ZUk5HRDeHNWLq492QfEWooPUc/om+Va0E=
+X-Gm-Gg: ASbGncufvEYc88X5dRlW3yLi9+vSou99j/pYUgBcEywhEQKCeylB2P0CnCq2h4XbEfg
+	/rZz9uvO0LUOR9xuZqTK0G9Vx8j3ELCEDeodezz3LJH5JoWYoxFLya+HUm9Bng6y056MB16NkiX
+	BJe+pPmslo1FqCc8e1JLbg3KF3DldbIlNDwsVE8ViP7MPITZjAK5QYwA68E89HO+H6f8X9W1b4s
+	QFx5cN0X1s3okXy1Fy3rTp8MXPm6jVL3a4JzC4efgyGOBpFsJg8NuvOPfyq+JKyWwOVUGON7q0d
+	3ADvTff30J4jQ2QB5ANURvXLuOlPo++ZxmV6Yx7/Y3gSm/IMJU0PHO/g3TM+OOczW/y6serrHr+
+	i2FQA9Pob
+X-Received: by 2002:a17:90b:6cf:b0:306:b593:455e with SMTP id 98e67ed59e1d1-306d0be3b60mr680201a91.1.1744051517638;
+        Mon, 07 Apr 2025 11:45:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH27ifd9SidaNf0mMnrpXJ3YfkJFEZ9H05V+CJJvNNT8LXGl1cdmrGIclx6qauZey72sUoYvQ==
+X-Received: by 2002:a17:90b:6cf:b0:306:b593:455e with SMTP id 98e67ed59e1d1-306d0be3b60mr680176a91.1.1744051517273;
+        Mon, 07 Apr 2025 11:45:17 -0700 (PDT)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb90bedsm9449695a91.43.2025.04.07.11.45.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 11:45:17 -0700 (PDT)
+Message-ID: <620d7c53-e8eb-4816-a9c2-d4bcd44b5d96@oss.qualcomm.com>
+Date: Mon, 7 Apr 2025 11:45:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] wifi: ath12k: core.h: Avoid
+ -Wflex-array-member-not-at-end warnings
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+        ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <Z8-Snz86Xfwdlyd7@kspp> <202504071138.98D5B6E@keescook>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <202504071138.98D5B6E@keescook>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: T_xO6EFqn5ai6j4GWhYYS5R9D4vKZk-a
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f41d3f cx=c_pps a=rz3CxIlbcmazkYymdCej/Q==:117 a=e70TP3dOR9hTogukJ0528Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=uvMg_fejPkrpZwH_nmEA:9 a=QEXdDO2ut3YA:10
+ a=bFCP_H2QrGi7Okbo017w:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: T_xO6EFqn5ai6j4GWhYYS5R9D4vKZk-a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_05,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504070129
 
-On Mon, 7 Apr 2025 09:10:05 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-
-> On 05/04/2025 20:43, Jonathan Cameron wrote:
-> > On Tue, 1 Apr 2025 15:33:15 +0300
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >   
-> >> On 31/03/2025 14:22, Jonathan Cameron wrote:  
-> >>> On Mon, 31 Mar 2025 11:03:58 +0300
-> >>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >>>      
-> >>>> The ROHM BD79104 ADC has identical SPI communication logic as the
-> >>>> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
-> >>>> started when the CS is pulled low, and channel selection is done by
-> >>>> writing the channel ID after two zero bits. Data is contained in
-> >>>> big-endian format in the last 12 bits.  
-> >>>
-> >>> Nicely found match.  Sometimes these are tricky to spot.
-> >>>      
-> >>>>
-> >>>> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
-> >>>> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
-> >>>> the driver expects finding these from the device-tree, instead of having
-> >>>> the "vref" only as TI's driver.
-> >>>>
-> >>>> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
-> >>>> have two voltage inputs as well. Pins are called Va (analog reference)
-> >>>> and Vd (digital supply pin) - but I keep the existing driver behaviour
-> >>>> for the TI's IC "as is", because I have no HW to test changes, and
-> >>>> because I have no real need to touch it.
-> >>>>
-> >>>> NOTE II: The BD79104 requires SPI MODE 3.
-> >>>>
-> >>>> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
-> >>>> this board I had to drop the SPI speed below the 20M which is mentioned
-> >>>> in the data-sheet [2]. This, however, may be a limitation of the EVK
-> >>>> board, not the component itself.
-> >>>>
-> >>>> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
-> >>>>
-> >>>> [2]:
-> >>>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
-> >>>>     
-> >>> Prefer Datasheet tags with # [1]
-> >>> after them for the cross references.
-> >>>
-> >>> Those belong here in the tag block (no blank lines)  
-> >>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>  
-> >>>
-> >>> One request for an additional cleanup precursor patch given you are
-> >>> touching the relevant code anyway.   It's a small one that you can
-> >>> test so hope you don't mind doing that whilst here.
-> >>>
-> >>> I'm relying on the incredibly small chance anyone has a variable
-> >>> regulator wired up to the reference that they are modifying at runtime.
-> >>> I have seen that done (once long ago on a crazy dev board for a really
-> >>> noisy humidity sensor) when the reference was VDD but not on a separate
-> >>> reference pin.  That means we almost certainly won't break the existing
-> >>> parts and can't have a regression on your new one so we should be fine
-> >>> to make the change.  
-> >>
-> >> The change you ask for is indeed small. I have no real objections
-> >> against implementing it (and I actually wrote it already) - but I am
-> >> still somewhat hesitant. As you say, (it seems like) the idea of the
-> >> original code is to allow changing the vref at runtime. It looks to me
-> >> this might've been intentional choice. I am not terribly happy about
-> >> dropping the working functionality, when the gained simplification isn't
-> >> particularly massive.  
-> > 
-> > Hmm. I suspect this was added at my request (or copied from where I requested
-> > it)  Back when we did this there was no advantage in doing it at probe
-> > as it was just a question of store a value or store a pointer we had
-> > to get anyway.  So I tended to advocate what I now think was a bit silly,
-> > that someone elses board might have it changing...
-> > 
-> > User space wise, what code checks for random scaling changes?  So it
-> > was best effort at best anyway!  
+On 4/7/2025 11:39 AM, Kees Cook wrote:
+> On Tue, Mar 11, 2025 at 12:02:15PM +1030, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Move the conflicting declaration to the end of the structure. Notice
+>> that `struct ieee80211_chanctx_conf` is a flexible structure --a
+>> structure that contains a flexible-array member.
+>>
+>> Fix 30 of the following warnings:
+>>
+>> drivers/net/wireless/ath/ath12k/core.h:298:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Ah, right. I suppose this should've been accompanied with scale setting 
-> which could've changed the regulator voltage - and I have no idea if 
-> such hardware would make any sense.
-
-In theory possible but I suspect expensive as a controllable precision
-reference would be needed (a DAC probably wouldn't have enough current?)
-
+> Hi, just checking in on this patch. Is some adjustment needed for this
+> to land?
 > 
-> The slim chance I can imagine is that the reference voltage can't be 
-> set/known at probe time.
+> Thanks!
 
-Agreed. It can in theory happen and did on one ancient board I had
-where the reference voltage was wired to a pair of devices and one
-had a higher minimum voltage than the other. That was pre DT times though
-and I suspect now we'd just put the voltage that works for both in DT.
+There is an alternate solution which should land in the next iteration of
+linux-next (I just enabled the post-merge-window flow from ath-next)
 
-> 
-> >> Because of this, I am thinking of adding the patch dropping the
-> >> functionality as an RFC. Leaving that floating on the list for a while
-> >> would at least have my ass partially covered ;)
-> >>
-> >> I'd rather not delayed the support for the BD79104 though. So - would it
-> >> be okay if I didn't implement the clean-up as a precursory patch, but
-> >> did it as a last patch of the series? That will make it a tad more
-> >> complex to review, but it'd allow taking the BD79104 changes in while
-> >> leaving the RFC to float on a list. (Also, I'm not sure if you can push
-> >> an RFC in next without taking it in for the cycle?)  
-> > 
-> > I'll probably just merge it even as an RFC :)  That way it's my
-> > fault if we break someone and they shout!  
-> 
-> That's fine for me. Well, doing it this way around (as a last patch) 
-> should ease reverting, should it be needed.
-Absolutely.
+https://lore.kernel.org/all/20250321-ath12k-dont-put-chanctx-in-arvif-v1-1-c8e93061952b@quicinc.com/
 
-> 
-> Yours
-> 	-- Matti
-
+/jeff
