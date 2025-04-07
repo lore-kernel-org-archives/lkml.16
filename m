@@ -1,122 +1,179 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1694A25D525
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9925D545;
+	Mon,  7 Apr 2025 19:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052561; cv=none; b=JSrhn8+TWqQgc+WJwrYKwNtqeGlCXXBlpnyjYMuDdwAwZImuP/v6jDj0jN3gyQx59fxw2UCB0ccWnxqXli2WpQhI4GI2Skw4T399HHNMwW/xJeS8cfgpFXSsCstvI0sd9qGPssZo6XMCfulKXa91pnOVrmB5sQ4gent2ElrNxuU=
+	t=1744052570; cv=none; b=iEKDxol4rVbK/6imeVkZxQ/Xr/PgUE8/NE73/nMlL9tfh5YGX+apBuqZA3InhW5c70xNo/Ezkbf6BEmKPi79lDKpdXVMGzJqM7ie3TrtJO/IxB4J7p1cFMjWz+UXSw85Q4c1y6U3mVlXLfMeAe3NvdQsdII8X2z5lLHkP6uST2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052561; c=relaxed/simple;
-	bh=svc4DcTkLa9xLLdF7y21glNY6sBMo2gsG0Mc+7dkW78=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=uD/3jHqIaqAy/mxwT0Iu2EBu1BgVCB/kluAsjpS5NHEo/S77gCtGb0AU8CVlMFPbBDPcZCtLZZG4N7fmRP7sMDjxUJEOPqT5fRK4yhQW+iQviUPoBlYFExpMPgKt3IlN11txE+XJVAgMaaLEU8HInZw//ah6h3m764ecDaF+tbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IpoS32TM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DLkd2VJ7; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744052570; c=relaxed/simple;
+	bh=b/MXUmcAbF/lysUWjr8HjXUt9a43+bWo9N2Fk7BZ/x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YO/C8n0yXeEUsbfSBiwB1dQKczUw8NzAR9V2kiG0D7tkKt/HDRdJLkkticjWnTHvIWqt/SP5HIXhgCA+OVi50l3lAmhAuOQYq9RT9JMltNizoeo8twZxVemu4DokSnHYo2/WDjteKLP3AMcEfo9KNmk+RmBBmDmhvs0TEiza/sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKuHHoBt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IpoS32TM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DLkd2VJ7"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id DB938138134B;
-	Mon,  7 Apr 2025 15:02:37 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Mon, 07 Apr 2025 15:02:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744052557;
-	 x=1744138957; bh=bCo1qyJ6rZTiBfA+a51RdFo714rHFIPWspJfKngp7mU=; b=
-	IpoS32TM2GnPNE8jNWp6Yxp5PoAZZ1OMYqFmOP/lmXEjsxbNamh0lZ6yrpD2dVKA
-	WWCQweWeVuhzc2Pg+9QRByz5/uvT/HZFFnnbBmTXTbLIQICIPl1CSxG+3fkV4CKB
-	8LRFcmpLsPg2E8Gpz24O/EEnrNGZMU2MAOsutpv+5xWiaDbNXmr62KdUIaQixDeQ
-	tjuey6T7gZuL6Bo10i6c2EZyVYK1+2NKjiDOqEfrQRRg3wN61TeisjQ6oWMmkHey
-	eN93pUPLtd0cDZUzYNzDSKXBIV16Oq/S1kZAR1NHg4bzgLTxdz3mi5p/l4vayKCF
-	Urjo5NqY4U6twx007ihGuQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744052557; x=
-	1744138957; bh=bCo1qyJ6rZTiBfA+a51RdFo714rHFIPWspJfKngp7mU=; b=D
-	Lkd2VJ7beZ5HHqDsQ69haYdUKdbhUW+vTzPtKMLui8vsiN6c4aYYQRsPeB8wTqVH
-	la+9NpAwsbslNrHrISasLf4EfN2/VTZCQhMolxHV2e4gMQKdSgfI7bdryGkZLEUv
-	kfRdnQ7rmk18ZCRjTPWOic/G71fPAEkHrJqzsiRtwfHudOcV9pqG1t209zuQmE2t
-	ZJRJcdIF8huxbtRBGvh4KTY+YBqTwz7MSS3il8zgo0G55eXGe5YL5HOe9xvmJUpW
-	YzUddTCmWDZCUP2S2+1Bm44irlAGBOBKuzdc3xhiNmlgwqJ6uzumj/4bv7TIlE71
-	Oqs9ed3kNfsARPKR8F40g==
-X-ME-Sender: <xms:TSH0Z3QKE0m2joPGDvtjPwxtKcFqHlhBx5FzewDaUBacNWue_5v7pA>
-    <xme:TSH0Z4zHZbuNI-fk5frE4xc_deIbcX55RkINwLJnm1PCdJGFN9PXamLCgUY8hQJho
-    64Lq_GHYAYdHo3WHz8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtleekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhgurhgvrdhprhiihiifrg
-    hrrgesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhr
-    ghdruhhkpdhrtghpthhtoheprhhosggvrhhtrdhjrghriihmihhksehfrhgvvgdrfhhrpd
-    hrtghpthhtoheprghltghhrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhrgho
-    jhhirghnrdiihhhurghnghesghhmrghilhdrtghomhdprhgtphhtthhopehkrhiikheskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepshhsthgrsggvlhhlihhniheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrd
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepgigvnhdquggvvhgvlheslhhishht
-    shdrgigvnhhprhhojhgvtghtrdhorhhg
-X-ME-Proxy: <xmx:TSH0Z80WDpD9n7QYR6u06DYm7i-oCpVlSUDHOOTFSl2Doc_16VEgNw>
-    <xmx:TSH0Z3BPWw4u6xEYbpDDusC3mTnWnkIL6Q2Ui596DKGEn1dWCpl7sQ>
-    <xmx:TSH0Zwg3w70j6V51hHBnHO1aAGRspv6bll-Ld8ZdSy2exAP4xSLCIg>
-    <xmx:TSH0Z7o61lvIp-0iMWrlAHHPrn-sjT0O_REA_Kzy-5lQGQOLO8DfFQ>
-    <xmx:TSH0ZwtbPXSiP36-fUYJ42TP6UKSmhyfmOU7arb2HfwqrRW6bUUo3x5T>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2F08D2220073; Mon,  7 Apr 2025 15:02:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKuHHoBt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A283C4CEDD;
+	Mon,  7 Apr 2025 19:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744052570;
+	bh=b/MXUmcAbF/lysUWjr8HjXUt9a43+bWo9N2Fk7BZ/x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DKuHHoBtemrJGN7x4S5oEc6HTjYwNK5EeCEgTP0fjHDv58jNQ+nOOWhYqlZSa1FKS
+	 wi/bninK4zyZoajNsDxcm3aAk6wHSfwg4QBtFZTq+aSllD9IcQYaFXXcHcJwaw77rn
+	 qnML7crgeQFJdX8LriJdxs6BFg6ADV8cfMMQNfMfqOzFRmBf4RZwdbRb1o8w6rCVrI
+	 WDfB5igRXqCZZ8PSGehRlOKh+wC22wsKqU5/eDTb3TGY5wkLjLq0uOZWsoPMh/9Kb5
+	 Tw/ZNA73fIV+h8UQeJkoaR9uT5T8+ptYaIc5WN9m6UhI96wCPUCp0CNkDK3aLeGYzI
+	 N5cVEkN+tWZFw==
+Date: Mon, 7 Apr 2025 12:02:47 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: mac80211: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071200.565181DC1@keescook>
+References: <Z-SQdHZljwAgIlp9@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T689809fba064b46a
-Date: Mon, 07 Apr 2025 21:02:15 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andrew Davis" <afd@ti.com>, "Andre Przywara" <andre.przywara@arm.com>,
- "Russell King" <linux@armlinux.org.uk>, "Daniel Mack" <daniel@zonque.org>,
- "Haojian Zhuang" <haojian.zhuang@gmail.com>,
- "Robert Jarzmik" <robert.jarzmik@free.fr>,
- "Alexey Charkov" <alchark@gmail.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Stefano Stabellini" <sstabellini@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Message-Id: <d4a4f00f-ef52-4635-bd81-659e8dcf9fde@app.fastmail.com>
-In-Reply-To: <20250407185650.411887-1-afd@ti.com>
-References: <20250407185650.411887-1-afd@ti.com>
-Subject: Re: [PATCH v5 0/5] Switch more ARM plats to sys-off handler API
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-SQdHZljwAgIlp9@kspp>
 
-On Mon, Apr 7, 2025, at 20:56, Andrew Davis wrote:
-> Hello all,
->
-> Continuing the quest to remove the legacy pm_power_off() global
-> function handler. Remove uses from arch/arm/ using the helper
-> register_platform_power_off().
->
-> These have been sent for several cycles without feedback, not
-> sure if there are anymore active platform maintainers who
-> can take these individually, maybe these remaining could
-> go in directly though the arm-soc tree?
+On Wed, Mar 26, 2025 at 05:40:36PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warnings:
+> 
+> net/mac80211/spectmgmt.c:151:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> net/mac80211/spectmgmt.c:155:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  net/mac80211/spectmgmt.c | 55 ++++++++++++++++++++--------------------
+>  1 file changed, 27 insertions(+), 28 deletions(-)
+> 
+> diff --git a/net/mac80211/spectmgmt.c b/net/mac80211/spectmgmt.c
+> index c6015cd00372..7422888d3640 100644
+> --- a/net/mac80211/spectmgmt.c
+> +++ b/net/mac80211/spectmgmt.c
+> @@ -147,14 +147,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
+>  	struct ieee80211_local *local = sdata->local;
+>  	u32 control_freq, center_freq1, center_freq2;
+>  	enum nl80211_chan_width chan_width;
+> -	struct {
+> -		struct ieee80211_he_operation _oper;
+> -		struct ieee80211_he_6ghz_oper _6ghz_oper;
+> -	} __packed he;
+> -	struct {
+> -		struct ieee80211_eht_operation _oper;
+> -		struct ieee80211_eht_operation_info _oper_info;
+> -	} __packed eht;
+> +	DEFINE_RAW_FLEX(struct ieee80211_he_operation, he, optional,
+> +			sizeof(struct ieee80211_he_6ghz_oper));
+> +	struct ieee80211_he_6ghz_oper *_6ghz_oper =
+> +				(struct ieee80211_he_6ghz_oper *)he->optional;
+> +	DEFINE_RAW_FLEX(struct ieee80211_eht_operation, eht, optional,
+> +			sizeof(struct ieee80211_eht_operation_info));
+> +	struct ieee80211_eht_operation_info *_oper_info =
+> +			(struct ieee80211_eht_operation_info *)eht->optional;
 
-Sure, can you send them to soc@lists.linux.dev in a few
-days, with any final Acks you may get? That way it ends up
-in patchwork and I can trivially pick them up.
+These are both packed, so any alignment issues with the trailing
+structures would be pre-existing.
 
-Since it's only a few one-line changes that all do the
-same thing, you can also combine them into a single patch.
+>  	const struct ieee80211_eht_operation *eht_oper;
+>  
+>  	if (conn->mode < IEEE80211_CONN_MODE_HE) {
+> @@ -167,38 +167,38 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
+>  	center_freq2 = chandef->center_freq2;
+>  	chan_width = chandef->width;
+>  
+> -	he._oper.he_oper_params =
+> +	he->he_oper_params =
+>  		le32_encode_bits(1, IEEE80211_HE_OPERATION_6GHZ_OP_INFO);
+> -	he._6ghz_oper.primary =
+> +	_6ghz_oper->primary =
+>  		ieee80211_frequency_to_channel(control_freq);
+> -	he._6ghz_oper.ccfs0 = ieee80211_frequency_to_channel(center_freq1);
+> -	he._6ghz_oper.ccfs1 = center_freq2 ?
+> +	_6ghz_oper->ccfs0 = ieee80211_frequency_to_channel(center_freq1);
+> +	_6ghz_oper->ccfs1 = center_freq2 ?
+>  		ieee80211_frequency_to_channel(center_freq2) : 0;
+>  
+>  	switch (chan_width) {
+>  	case NL80211_CHAN_WIDTH_320:
+> -		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
+> -		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -16 : 16;
+> -		he._6ghz_oper.control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
+> +		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
+> +		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -16 : 16;
+> +		_6ghz_oper->control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
+>  		break;
+>  	case NL80211_CHAN_WIDTH_160:
+> -		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
+> -		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -8 : 8;
+> +		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
+> +		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -8 : 8;
+>  		fallthrough;
+>  	case NL80211_CHAN_WIDTH_80P80:
+> -		he._6ghz_oper.control =
+> +		_6ghz_oper->control =
+>  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_160MHZ;
+>  		break;
+>  	case NL80211_CHAN_WIDTH_80:
+> -		he._6ghz_oper.control =
+> +		_6ghz_oper->control =
+>  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_80MHZ;
+>  		break;
+>  	case NL80211_CHAN_WIDTH_40:
+> -		he._6ghz_oper.control =
+> +		_6ghz_oper->control =
+>  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_40MHZ;
+>  		break;
+>  	default:
+> -		he._6ghz_oper.control =
+> +		_6ghz_oper->control =
+>  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_20MHZ;
+>  		break;
+>  	}
+> @@ -206,15 +206,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
+>  	if (conn->mode < IEEE80211_CONN_MODE_EHT) {
+>  		eht_oper = NULL;
+>  	} else {
+> -		eht._oper.params = IEEE80211_EHT_OPER_INFO_PRESENT;
+> -		eht._oper_info.control = he._6ghz_oper.control;
+> -		eht._oper_info.ccfs0 = he._6ghz_oper.ccfs0;
+> -		eht._oper_info.ccfs1 = he._6ghz_oper.ccfs1;
+> -		eht_oper = &eht._oper;
+> +		eht->params = IEEE80211_EHT_OPER_INFO_PRESENT;
+> +		_oper_info->control = _6ghz_oper->control;
+> +		_oper_info->ccfs0 = _6ghz_oper->ccfs0;
+> +		_oper_info->ccfs1 = _6ghz_oper->ccfs1;
+> +		eht_oper = eht;
+>  	}
+>  
+> -	if (!ieee80211_chandef_he_6ghz_oper(local, &he._oper,
+> -					    eht_oper, chandef))
+> +	if (!ieee80211_chandef_he_6ghz_oper(local, he, eht_oper, chandef))
+>  		chandef->chan = NULL;
+>  }
 
-     Arnd
+The leading "_" on the identifiers is a little weird, but it retains the
+original convention. Conversions looks correct.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-- 
+Kees Cook
