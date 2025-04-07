@@ -1,123 +1,119 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364991DE4C8
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDEB5206F15
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042743; cv=none; b=eVAkqIKKnd/Zac1+fBRilSd8ip9Igd9wYW33OYBMJgZ0oigJyDSuUsXg4y0rlVumDVyFwnQAGStN6YDblXvJBS5d6UwOyBs+jId3XlhA4XEDYlLfNWhfIL/tdAlCgLkr1ZeIWVST81czB2O0hCdk+lKIoA7iO1tm7c8MkpfG+lA=
+	t=1744042772; cv=none; b=A8jbedohoCAruJUuC0gkGL1oLr9ko8iv0RIijl17NEjYoT7FV1wpdCk3AzLVONq3W9BrKUgEpi3OVqbT0/g8pwM1dggknGHRjemT9xGMcqaUTAj7rz5fq68kx4PCrbPsI1ykCbXCdDBVnnqdCGb5q9WGfPWXlt1+cppg0Qb54ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042743; c=relaxed/simple;
-	bh=oQfeLGLwN0ia9mkF/LrZhoiRwa+hmOwNqpU0xO/chsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gm2I89YzArJPMCYvNI2+fGd2c3gSOS2kWmE7lqQNdPLQrlVIiSYBpnOSfvvhk8dj5ac07k7M5Xq9UeyEf8nfxrTeyZNhfkIj3Yn5qnFdPqkIuNxQQrFKUd+XDaphJQ7nRtzNFgny0PZoO/mJvI7ucRQMfDsB4343VpbEenFYXBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=hgBbv+tn; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="hgBbv+tn"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ac56756f6so3927023f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744042739; x=1744647539; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FlvRbUOqYjIG9Hb+k1k+g6fdWn9FeWH5VnocqRc/bEs=;
-        b=hgBbv+tnGW2Hf+TMWrtQEODiGSglq6jGf9+7Y1Gycp6G4O7jzt6JO/fF7WJ5+dHBJE
-         YfOpDUxFiIqHxEhHdxmp6x8F4ESdRjp0bQqBSCmvM5MeKUybnM1lr95MmMhVrFqZALWE
-         gwsjKtsG7zE9TgORbAprhJXQoUv+ILeE9f6A5SdJkkwdZjaPCGf5wR6inFvdLYuDAx6w
-         1o19DFH92b3dXNTz08eWIweW4F/w+NcelHOzdkncik5fxzhF3k0f0MWLDiksEoj0z04H
-         +yiAp8xANdFRLQOLN4k1zqZOJcRrypNgHw3TK8s7tSvOwNUEZR/I6lPXtRCVG/S2bHJR
-         k3ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744042739; x=1744647539;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FlvRbUOqYjIG9Hb+k1k+g6fdWn9FeWH5VnocqRc/bEs=;
-        b=q181Lyo7m78kBI152MSwUtTP6ih0EA1FGvfr9YcWEe20XryOrNNE3P6GM+qbhrJMEz
-         hqYG5xiWmLtGL/3tIJ+iblol3igXw4frXJoUVdMz8kFIY60dXuzSZgZPJkuKJaHDm9/M
-         ZNGl9vLgwQaNkCu4wYinaS9cIGhVHCrIBuTdUeqSuVnQtxyzCbtFbVG+rE0yu/bMc4Vt
-         8QNYehcyg7hipU2PGddXgdNxgeX3g16h6lCdYha+1zqdbeu28buVTiFmSGDwB/7NT1BY
-         kViesnpo1lNhWeipGvlaaZEpQqQpitH2mt8rcqNNtFFyNFh5RB80o8/CyxbZ98WAK896
-         BJaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUl2A7+GPo99P54ZkWfm/csXs1pcjxTJLuYZhKoDSnBDRYyKrf7ON4ImiJH6vmhvSMsrPhF3PWtL6wngk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk318/rrKdyLJ/zlx9d9xdFt2mO/8YDBsxfEbFq2/MqjLoUSPK
-	tIlAZU7KUwdLZIZL/uVM95udfqe+8JxScg0geOKW77Rp40d36lM1SppJ8L17+dM=
-X-Gm-Gg: ASbGncuhPlZsmNoPq892VnHwJ1CHOUdWhD8763SNMb/7VElZJgxTmF5+Wfg3HvCm6X2
-	FJsPQcct4hX1mRSmgMYhCTKduIjFYk0yqi1hSARxvb/+BsiVjPkRvyhc020sjvZ5JKEq1mJe909
-	aKCIbuViRMKKoEBa9yjy0gUypJz9nBvfWa2J9ceb7ndBVnri+Lu83NU3DDyX3ZlZvSC9uZ9q+5v
-	rk7nLfQUaU+p9AQ1G0u7YBr3Y58/AI5YIF5LicNkLPDygP/UDk3bD/RYVzHizRLWjSfXP2FCu8a
-	q6lIR3okyjtH65P9vVTqUwPeRiQ4YcCgtD0wmWQrx+7QdPeaILwjiQDrcQqx5kqOOIHTEU3nInM
-	DidBz8rovZ7sTTIzG8GpyqKslzKWQs2l+t/grEg==
-X-Google-Smtp-Source: AGHT+IGAiFgCHKC4NxdMI0XYxiblAlo6teR2sZ4ryX4FXGKNTm7nHjhUAQ7KJxNf9HDeA8CDyhXndw==
-X-Received: by 2002:a05:6000:2285:b0:391:3049:d58d with SMTP id ffacd0b85a97d-39cadc85ab6mr11452084f8f.0.1744042739225;
-        Mon, 07 Apr 2025 09:18:59 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226da7sm12857720f8f.98.2025.04.07.09.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:18:58 -0700 (PDT)
-Date: Mon, 7 Apr 2025 17:18:56 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: Jianhua Lu <lujianhua000@gmail.com>, Lee Jones <lee@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
-	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 4/4] backlight: ktz8866: add definitions to make it more
- readable
-Message-ID: <Z_P68OP1c8XcbXle@aspen.lan>
-References: <20250407095119.588920-1-mitltlatltl@gmail.com>
- <20250407095119.588920-5-mitltlatltl@gmail.com>
+	s=arc-20240116; t=1744042772; c=relaxed/simple;
+	bh=4UC/rgfRBB7IjSpqVVak6OnBM5vwAuWy08QCMNXJA7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aksDVUcywSSGIaLtrdu76fpEOn8RuZT7YLaZocjk8hhpZT5UVLT5vkBg1OEpXkfCAREEi0VVDHo7+LZAESCrznuzRUr80ejVK4DUXDEfgDfVPbMhWcHcadogFO5h/aK+NIZgPC3ratXLlrR73CAXL46kTqp1vgDAk6jNS3v3NfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10A2B106F;
+	Mon,  7 Apr 2025 09:19:31 -0700 (PDT)
+Received: from [10.163.47.133] (unknown [10.163.47.133])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DAEE03F694;
+	Mon,  7 Apr 2025 09:19:25 -0700 (PDT)
+Message-ID: <027cc666-a562-46fa-bca5-1122ea00ec0e@arm.com>
+Date: Mon, 7 Apr 2025 21:49:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095119.588920-5-mitltlatltl@gmail.com>
-
-On Mon, Apr 07, 2025 at 05:51:19PM +0800, Pengyu Luo wrote:
-> LSB, MSB and their handling are slightly confused, so improve it.
->
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
->  drivers/video/backlight/ktz8866.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
-> index b67ca136d..5364ecfc0 100644
-> --- a/drivers/video/backlight/ktz8866.c
-> +++ b/drivers/video/backlight/ktz8866.c
-> @@ -24,7 +24,9 @@
->  #define DEVICE_ID 0x01
->  #define BL_CFG1 0x02
->  #define BL_CFG2 0x03
-> +/* least significant byte */
->  #define BL_BRT_LSB 0x04
-> +/* most significant byte */
-
-I'm not convinced these comments are necessary.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
+ operations
+To: Lance Yang <ioworker0@gmail.com>, Xavier <xavier_qy@163.com>
+Cc: akpm@linux-foundation.org, baohua@kernel.org, catalin.marinas@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ ryan.roberts@arm.com, will@kernel.org
+References: <20250407092243.2207837-1-xavier_qy@163.com>
+ <20250407112922.17766-1-ioworker0@gmail.com>
+ <5e3f976f.bca1.19610528896.Coremail.xavier_qy@163.com>
+ <CAK1f24=hwXCg6K8a=qoWi2DGEWFGBcenSGRoKXtJEo=iR4DtDw@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAK1f24=hwXCg6K8a=qoWi2DGEWFGBcenSGRoKXtJEo=iR4DtDw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
->  #define BL_BRT_MSB 0x05
->  #define BL_EN 0x08
->  #define LCD_BIAS_CFG1 0x09
-> @@ -47,6 +49,8 @@
->  #define PWM_HYST 0x5
->
->  #define CURRENT_SINKS_MASK GENMASK(5, 0)
-> +#define LOWER_BYTE GENMASK(2, 0)
+Hi Xavier,
 
-I like using masks and FIELD_GET() but this is not a byte. These are
-the least significant bits.
+On 07/04/25 7:01 pm, Lance Yang wrote:
+> On Mon, Apr 7, 2025 at 8:56 PM Xavier <xavier_qy@163.com> wrote:
+>>
+>>
+>>
+>> Hi Lance,
+>>
+>> Thanks for your feedback, my response is as follows.
+>>
+>> --
+>> Thanks,
+>> Xavier
+>>
+>>
+>>
+>>
+>>
+>> At 2025-04-07 19:29:22, "Lance Yang" <ioworker0@gmail.com> wrote:
+>>> Thanks for the patch. Would the following change be better?
+>>>
+>>> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+>>> index 55107d27d3f8..64eb3b2fbf06 100644
+>>> --- a/arch/arm64/mm/contpte.c
+>>> +++ b/arch/arm64/mm/contpte.c
+>>> @@ -174,6 +174,9 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>>>
+>>>                if (pte_young(pte))
+>>>                        orig_pte = pte_mkyoung(orig_pte);
+>>> +
+>>> +              if (pte_young(orig_pte) && pte_dirty(orig_pte))
+>>> +                      break;
+>>>        }
 
+Quite the coincidence, I was thinking of doing exactly this some days 
+back and testing it out : ) Can you do a microanalysis whether this gets 
+us a benefit or not? This looks like an optimization on paper but may 
+not be one after all because CONT_PTES is only 16 and a simple loop 
+without extra if-conditions may just be faster.
 
-Daniel.
+>>>
+>>>        return orig_pte;
+>>> --
+>>>
+>>> We can check the orig_pte flags directly instead of using extra boolean
+>>> variables, which gives us an early-exit when both dirty and young flags
+>>> are set.
+>> Your way of writing the code is indeed more concise. However, I think
+>>   using boolean variables might be more efficient. Although it introduces
+>>   additional variables, comparing boolean values is likely to be more
+>>   efficient than checking bit settings.
+>>
+>>>
+>>> Also, is this optimization really needed for the common case?
+>> This function is on a high-frequency execution path. During debugging,
+>>   I found that in most cases, the first few pages are already marked as
+>>   both dirty and young. But currently, the program still has to complete
+>>   the entire loop of 16 ptep iterations, which seriously reduces the efficiency.
+> 
+> Hmm... agreed that this patch helps when early PTEs are dirty/young, but
+> for late-ones-only cases, it only introduces overhead with no benefit, IIUC.
+> 
+> So, let's wait for folks to take a look ;)
+> 
+> Thanks,
+> Lance
+> 
+>>>
+>>> Thanks,
+>>> Lance
+> 
+
