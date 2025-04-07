@@ -1,170 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040EB22A1F1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29291448D5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014879; cv=none; b=fAcwqhDvm9K8RTH6PLdH6pOk8IkhuWTXFn7duT/+xz0v4341bCR0bnZMbWFC0AW1GqCY4AiWwzL3hQyKanQQjuE1bT68EmPiT6EnDh6pzCnUOVRMKDZUFBuRz5lBnzC3CX+H7TxwtOk9lFUMcWaEn+wj98EKOg3nz2mAuWkI/z4=
+	t=1744014920; cv=none; b=ETHSkzihTSZPAjmFJW7+rcMKGDiUlWUUqXTxojAtwavUCuaWYQ/8b5G5pF8WXBNK4HIZP/GwJI3b5CyLJxNDNFAf+IxW2l+MzNCN7gEI04s3gi/S4zok24eTEgHcY5VVGWVUyno9TNgpV7BEjs+/mKfu4cU+gmEUehe5hFv74sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014879; c=relaxed/simple;
-	bh=sLck2J+6PcjmSINGrDUpZvijf9T2VzrBWCePSK/Qvj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DwxixZVEL89lQFFLcQtp+Ms52CPI4ZjaybpgpewPwyaRFlCT0vjNFn/Ga7vDXJ8To9RmKeb5bDVy2bw1lIeNLyyPNlZ95NVpF3d+nGsFOpN/JWGkHRgQR6GTD/q0sxJ4knELFNm9B2Dn9Tdzwi9fN7gtAt48SEasK6lg30fbMjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QpdX44Lg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744014920; c=relaxed/simple;
+	bh=VGnJbls21FxlehnH3heGoHh8JevfhhSo2Ba/4QGlDUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aFns9goFXRNIxsfHyE7psoBKFIlmA7CbcZMyiXLR93KSaSMj8hxh7LpckUNB4QJ2d29u5SSLKoUIVPTzzZ/zJy/GwdZJsPU3tStIcBNUMyPoZQyPebmPJgrFi2G/Pn9KlDl0zoLseUMjNbmnVIcSUgnp2hmnoqEzxVkiEuih6aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WdB7BFhi; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpdX44Lg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744014876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RyTmsi9BhA0X2tfDIhwHRBuV/xgf5KDyDiyovwov3BE=;
-	b=QpdX44LgbzIPJTqRMIvF5PZ7fFBPXIgzvk6qPV4RxuarKW7iXOq4pvWTSW/Zej43/XdUdF
-	iNixCp2vkg5yQHU6fkczUuFRTPEqUxtcgcUyqhCIsd+iMKFv4NM+bESdAVyCUJ84U+ha/H
-	PspcaSKa/V/UJyKByhlhRLO3/94cYOs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-_5u0o2lKO16vjU9iMFoadA-1; Mon, 07 Apr 2025 04:34:35 -0400
-X-MC-Unique: _5u0o2lKO16vjU9iMFoadA-1
-X-Mimecast-MFC-AGG-ID: _5u0o2lKO16vjU9iMFoadA_1744014874
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eed325461so6101735e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:34:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744014874; x=1744619674;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RyTmsi9BhA0X2tfDIhwHRBuV/xgf5KDyDiyovwov3BE=;
-        b=YN5ZENLmUKiRlW0xxXdW31xVymoOCwbIf8WKPDnFbbKYrMDqGf50iffnAdiqCiXGRQ
-         wICsHSFY+6Q8CIEnOV7lIKRwDT5DI4HVG1iJ+4UddEOqnokUR+H3PBNs0Ki9yz5Cb5rp
-         4Zf489fLcSQfKMtHoDRcXbyM/PewGtDruaN3/7GQfO3mSFCzIoAdyms+KpsTyGVYeznJ
-         cCuW7KMeVJUURTptU+gOSfo9D+TVTsvvGEtrS787V1UvVYCSlrRmE0eoplcNUxmaRrow
-         883A6xRnf2jSS52xh+jBKyTaMNMdyZGJ9/Wg8MkjPp89iCsF1Ea5i5zXjhF5CitGBWP2
-         ZGlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGSunLmNwCTpCYGFHfqqcdPtq9TLMs4ajLk5aU/4hqCMdp7tQo7pZ6lZ5aOlo0WgmklaiJr1QB8GBp+ro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZojc2yTKJp0WBv+gMmmUVTu5QfyjjVdLrgHSEd+jaCN/NquXd
-	WItE5AdJSX1+tzzaf4CHq8ieghbrLEOv8Ha19ySmXMbLSBbA4pBtV0r2z/ALg7gMMVBT1EFfbKJ
-	mliCMS836BpBi9kead7Wuvwt+EZ81lBrt5PCyz/l8g+BFmw2sUj2vXrSZogxZGg==
-X-Gm-Gg: ASbGncuQHAIIZSrsClVZOUSDAj4kRkfY8Y8H45alobvMnoKvV9A2DIxw7nc4BGAp2Kc
-	oDntuFEyrtrQoxTb3UBfldO/Pj1aLI8CWQXzFh+sT7BKGxZTrWMdkR5uLlDGcewKvMJ47IZsy3V
-	H36hBF/nqh+dgt94dKYN0vNjflQStIcgvi7H9z4T9lUDDvXzlBngXFpoCZC0VTTa7WFlFTBz1gz
-	mhwLsK0vje+9o3zBfJ3S61hwr7CHVs+bUGmqik2aTKN5EUpkqwiyUa+kOIdp4sEXA7eA21mBBIO
-	MG5KHZlJsQ==
-X-Received: by 2002:a05:600c:1e13:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43ecf8e72d6mr114694615e9.18.1744014874155;
-        Mon, 07 Apr 2025 01:34:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+83STYsHXI3xn6x5xnem+/h77ehJWni3dU6P1EgXI8aWI6y/h2doOJ2sCUgok7+DS4MLeKg==
-X-Received: by 2002:a05:600c:1e13:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43ecf8e72d6mr114694305e9.18.1744014873776;
-        Mon, 07 Apr 2025 01:34:33 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630f21sm126976935e9.8.2025.04.07.01.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:34:33 -0700 (PDT)
-Date: Mon, 7 Apr 2025 04:34:29 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407042058-mutt-send-email-mst@kernel.org>
-References: <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
- <20250407034901-mutt-send-email-mst@kernel.org>
- <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WdB7BFhi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744014914; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Udd0Kb0rIbcEFFzCXIlMyfGS8vlMEao8bdeGZFHIkGA=;
+	b=WdB7BFhim82djbLH7L42EVOK/gxo2QeZRAKpCDEJ5tH1TUBAUHWLgO6UjgjPGIC+RiLOQxDEaQFvqkMOJ9N6rsHK6NfS9Np9tIiVrweBsiewJf+Z5MDFijWVnyaNQxw+n/iTtIIfFPe4asL5fJc3KNj6rS7OiJfvtieLMkPq8cA=
+Received: from 30.74.144.125(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WVrTlum_1744014912 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Apr 2025 16:35:13 +0800
+Message-ID: <635fb13b-0e22-4e3d-a9ab-971f301a7d99@linux.alibaba.com>
+Date: Mon, 7 Apr 2025 16:35:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests: mincore: fix tmpfs mincore test failure
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
+ <99a3e190d38b08a2b96ede952a29893bffdb3432.1742960003.git.baolin.wang@linux.alibaba.com>
+ <9000c5c1-34be-4bc9-b1c0-11548264eaa6@redhat.com>
+ <cefb4920-36ad-404f-b058-f50eea52c418@linux.alibaba.com>
+ <662ad650-8c68-40ef-a109-2e489658880d@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <662ad650-8c68-40ef-a109-2e489658880d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 10:17:10AM +0200, David Hildenbrand wrote:
-> On 07.04.25 09:52, Michael S. Tsirkin wrote:
-> > On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
-> > > > 
-> > > > Not perfect, but AFAIKS, not horrible.
-> > > 
-> > > It is like it is. QEMU does queue exist if the corresponding feature
-> > > is offered by the device, and that is what we have to live with.
-> > 
-> > I don't think we can live with this properly though.
-> > It means a guest that does not know about some features
-> > does not know where to find things.
+
+
+On 2025/4/7 15:49, David Hildenbrand wrote:
+> On 07.04.25 05:49, Baolin Wang wrote:
+>>
+>>
+>> On 2025/4/1 20:54, David Hildenbrand wrote:
+>>> On 26.03.25 04:38, Baolin Wang wrote:
+>>>> When running mincore test cases, I encountered the following failures:
+>>>>
+>>>> "
+>>>> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 
+>>>> (0)
+>>>> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in 
+>>>> memory
+>>>> check_tmpfs_mmap: Test terminated by assertion
+>>>>             FAIL  global.check_tmpfs_mmap
+>>>> not ok 5 global.check_tmpfs_mmap
+>>>> FAILED: 4 / 5 tests passed
+>>>> "
+>>>>
+>>>> The reason for the test case failure is that my system automatically
+>>>> enabled
+>>>> tmpfs large folio allocation by adding the
+>>>> 'transparent_hugepage_tmpfs=always'
+>>>> cmdline. However, the test case still expects the tmpfs mounted on
+>>>> /dev/shm to
+>>>> allocate small folios, which leads to assertion failures when
+>>>> verifying readahead
+>>>> pages.
+>>>>
+>>>> To fix this issue, remount tmpfs to a new test directory and set the
+>>>> 'huge=never'
+>>>> parameter to avoid allocating large folios, which can pass the test.
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>> ---
+>>>>    .../selftests/mincore/mincore_selftest.c      | 25 
+>>>> +++++++++++++++++--
+>>>>    1 file changed, 23 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/mincore/mincore_selftest.c
+>>>> b/tools/testing/selftests/mincore/mincore_selftest.c
+>>>> index e949a43a6145..e8d7a3a4739f 100644
+>>>> --- a/tools/testing/selftests/mincore/mincore_selftest.c
+>>>> +++ b/tools/testing/selftests/mincore/mincore_selftest.c
+>>>> @@ -12,6 +12,7 @@
+>>>>    #include <unistd.h>
+>>>>    #include <stdlib.h>
+>>>>    #include <sys/mman.h>
+>>>> +#include <sys/mount.h>
+>>>>    #include <string.h>
+>>>>    #include <fcntl.h>
+>>>> @@ -283,7 +284,7 @@ TEST(check_file_mmap)
+>>>>        free(vec);
+>>>>    }
+>>>> -
+>>>> +#define INPUT_MAX 80
+>>>>    /*
+>>>>     * Test mincore() behavior on a page backed by a tmpfs file.  
+>>>> This test
+>>>>     * performs the same steps as the previous one. However, we don't
+>>>> expect
+>>>> @@ -291,6 +292,9 @@ TEST(check_file_mmap)
+>>>>     */
+>>>>    TEST(check_tmpfs_mmap)
+>>>>    {
+>>>> +    char tmpfs_template[] = "/tmp/check_tmpfs_XXXXXX";
+>>>> +    const char *tmpfs_loc = mkdtemp(tmpfs_template);
+>>>> +    char testfile[INPUT_MAX];
+>>>>        unsigned char *vec;
+>>>>        int vec_size;
+>>>>        char *addr;
+>>>> @@ -300,6 +304,10 @@ TEST(check_tmpfs_mmap)
+>>>>        int i;
+>>>>        int ra_pages = 0;
+>>>> +    ASSERT_NE(NULL, tmpfs_loc) {
+>>>> +        TH_LOG("Can't mkdir tmpfs dentry\n");
+>>>> +    }
+>>>> +
+>>>>        page_size = sysconf(_SC_PAGESIZE);
+>>>>        vec_size = FILE_SIZE / page_size;
+>>>>        if (FILE_SIZE % page_size)
+>>>> @@ -311,7 +319,18 @@ TEST(check_tmpfs_mmap)
+>>>>        }
+>>>>        errno = 0;
+>>>> -    fd = open("/dev/shm", O_TMPFILE | O_RDWR, 0600);
+>>>> +    /* Do not use large folios for tmpfs mincore testing */
+>>>> +    retval = mount("tmpfs", tmpfs_loc, "tmpfs", 0,
+>>>> "huge=never,size=4M");
+>>>> +    ASSERT_EQ(0, retval) {
+>>>> +        TH_LOG("Unable to mount tmpfs for testing\n");
+>>>> +    }
+>>>> +
+>>>> +    retval = snprintf(testfile, INPUT_MAX, "%s/test_file", tmpfs_loc);
+>>>> +    ASSERT_GE(INPUT_MAX, retval) {
+>>>> +        TH_LOG("Unable to create a tmpfs for testing\n");
+>>>> +    }
+>>>> +
+>>>> +    fd = open(testfile, O_CREAT|O_RDWR, 0664);
+>>>>        ASSERT_NE(-1, fd) {
+>>>>            TH_LOG("Can't create temporary file: %s",
+>>>>                strerror(errno));
+>>>> @@ -363,6 +382,8 @@ TEST(check_tmpfs_mmap)
+>>>>        munmap(addr, FILE_SIZE);
+>>>>        close(fd);
+>>>>        free(vec);
+>>>> +    umount(tmpfs_loc);
+>>>> +    rmdir(tmpfs_loc);
+>>>>    }
+>>>>    TEST_HARNESS_MAIN
+>>>
+>>> Is there anything that cleans up the mount in case something goes wrong
+>>> (we run into an assertion), or will the directory+mount stick around
+>>> forever?
+>>
+>> Good point, will cleanup the mount in the next version.
+>>
+>>>
+>>> But I also wonder whether check_tmpfs_mmap() should be changed to live
+>>> with the fact that readahead ("faultaround") could now happen. What's
+>>> the reason for not doing that?
+>>
+>>   From this test case's description, it doesn't expect any readahead.
 > 
-> Please describe a real scenario, I'm missing the point.
-
-
-OK so.
-
-Device has VIRTIO_BALLOON_F_FREE_PAGE_HINT and VIRTIO_BALLOON_F_REPORTING
-Driver only knows about VIRTIO_BALLOON_F_REPORTING so
-it does not know what does VIRTIO_BALLOON_F_FREE_PAGE_HINT do.
-How does it know which vq to use for reporting?
-It will try to use the free page hint one.
-
-
-
-> Whoever adds new feat_X *must be aware* about all previous features,
-> otherwise we'd be reusing feature bits and everything falls to pieces.
-
-
-The knowledge is supposed be limited to which feature bit to use.
-
-
-
-> > 
-> > So now, I am inclined to add linux code to work with current qemu and
-> > with spec compliant one, and add qemu code to work with current linux
-> > and spec compliant one.
-> > 
-> > Document the bug in the spec, maybe, in a non conformance section.
+> Yes, but why are we testing for that *at all*? We don't make such 
+> assumptions/tests for anon memmory ("no faultaround happened").
 > 
-> I'm afraid this results in a lot of churn without really making things
-> better.
+> Why not simply remove the "We expect only that page to be fetched into 
+> memory." documentation + checking?
 
-> IMHO, documenting things how they actually behave, and maybe moving towards
-> fixed queue indexes for new features is the low hanging fruit.
-
-I worry about how to we ensure that?
-If old code is messed up people will just keep propagating that.
-I would like to fix old code so that new code is correct.
-
-> 
-> As raised, it's not just qemu+linux, it's *at least* also cloud-hypervisor.
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-
-There's a slippery slope here in that people will come to us
-with buggy devices and ask to change the spec.
-
-
-
-
--- 
-MST
-
+OK. I'm fine with dropping the readahead check. Thanks.
