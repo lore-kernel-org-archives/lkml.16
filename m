@@ -1,49 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE742288D6;
-	Mon,  7 Apr 2025 08:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC92288CB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015905; cv=none; b=cpZD0fmyB8nw70nMpiOnoxMqdmSgVB++wjEjDK3gP8/nh8BQi1HfRV5y5sFpBJIC8K+4D4zKhRcBlkvTSQA9J3GpgctHJCn0KUUirFWyrGeRhKeYQJ4Ghjs3RiGPfAg20I7/FIRMVqt4izJuv6YK+QsucybG8j4MAtaXyFYI5qg=
+	t=1744015907; cv=none; b=ashp3vcJtXBF5EzJ9P6rI0No6UIHE9UD4f10tvKHuMlrAuZXt9812tRjYKnJK+LpPGxHnqP374OFriqu2mWova/d6SjXGmGh0z9R+tNSvkmi7S/GgIxXnL/JreImYJVKCM11PuhvCkkRb4I1vxjOxQbxxJS//y3hAtW1hCDueVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015905; c=relaxed/simple;
-	bh=/cZ4bLwYN3F5IlIV369ScToRFFo5Y2ZC1Fw5hv9absI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d4no9Oot/sNaUe44auBC76GivwNcQOGCZ4qTk/B5O8ZHhtTIKyJiideSM2DY9voBdqaTby69hjLsdNmc7y9AYA3x/6QjxJgfW1WxA5BmhbRf+KWJuDjk3TD2CGdm+eN/HWMXI9abKFZglmiBG1s9STxTaZu6GNwm61ibsD3SIZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqCUj+ND; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744015907; c=relaxed/simple;
+	bh=JzUuLgQjqzsuDFsOmyFLNHi+3ZA2NXJNSaqGAaMZIJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b2hPR71YWR/zEMrjwA0it/73IzCOFPeFdTHVRN6P5uZIXDfbtOFQIy4qyVZbssAiqsFtY1URCNvPkgazkUrw9rQ9EfDJFDEsY+Dgcwo/UYPnN3ghtbgylQMtKDGEF8msTI2nrUh8BFw8JwmNoZH65Po24jsZgcgoW9E3DIbG29M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hudHDkwz; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqCUj+ND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F07C4CEDD;
-	Mon,  7 Apr 2025 08:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744015904;
-	bh=/cZ4bLwYN3F5IlIV369ScToRFFo5Y2ZC1Fw5hv9absI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TqCUj+NDK/sbQgrGvHdijroyFHd81/aqWTTu5eeUBozVH4GcbdydFZQJuS5Ia0DEw
-	 uPONKsVeV68lNlbzcmJCNkPTgnjqVfIpSqrQxNgrGqAE0FRlFGaK/UUC5FkQ56bOjF
-	 0TB64KilrZMePFrtgHf0l5xFZaYxPUHXxpcuq56/fRH9/3/mHJawMp0zx/Q6ahD7pk
-	 A+kXwAcLFUGsbapMDA5etFa7tS9FRsZiUa5cPwbXXnMsk+sOe5yCGo+7Q6UGLx640C
-	 DulE/aHTL6f8pivUIKxhX4Ds5hSXNx6k44KfIlDRkywB3UaO/VtdrYLNyCKEYhCPAU
-	 akFF+SoEduXvg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1u1iCs-000000005YX-2yRE;
-	Mon, 07 Apr 2025 10:51:50 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Robert Foss <rfoss@kernel.org>,
-	Todor Tomov <todor.too@gmail.com>,
-	Bryan ODonoghue <bryan.odonoghue@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	linux-media@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Depeng Shao <quic_depengs@quicinc.com>
-Subject: [PATCH] media: qcom: camss: csid: suppress CSID log spam
-Date: Mon,  7 Apr 2025 10:51:25 +0200
-Message-ID: <20250407085125.21325-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hudHDkwz"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af28bc68846so3628448a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744015904; x=1744620704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1uyJxUSjwirFDuWmm3Ov2pKSAd0ErZhNjYPXSZRPwMg=;
+        b=hudHDkwzHMFKEzT7mdhekPHwsOQAsrP6Ny/5DVlghsRkOSCgd+KdTm8xlEVMHpA35l
+         W36haTVziOQCALDdix5wP1dDRAZLH++YGAB2PVpUpxBXCH9zj+GafFSCPYUWV+RtHa1R
+         8x+z41ht6Yqil3o9RLDC42HNfiHlO667FLVQFcgF+TOxW6m8KC6/tBYhtuL77nGqAH1y
+         z/1EZfdPcqsqQUDnKu8k/ZyI4ujT9lM/0B++iBy5lPlzEvV2flgPJrOZrsFO4bkl0D0T
+         0bd6jxcSIinf85j5ctJyPX8eb3s4jZrH2m12ebvna/fsJP9o8Ceq4GzuHSMfT0YEVPLu
+         YMCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744015904; x=1744620704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1uyJxUSjwirFDuWmm3Ov2pKSAd0ErZhNjYPXSZRPwMg=;
+        b=siGA7Vp93iy89l/r7UP43gXgyD7iob/eaEODO+F36bD95bpfq7C0iP0qkIcygoTCxs
+         rC7i0eRr53IxIhoqse1NxIjOVG6PcpY1E2dF17vHK7w9qMgpF3TPv7cLHSXqPKKAhgJT
+         yW479H5QUI8yL/uHAgB+z69iTQJ8Sl+U2mXImbP2sxKRSmiyqivzr4NKtm9EpopZa7Aa
+         PdfcKLHLBYnNyxRSbbPce6Smz99uVtpUEiFuV3XmBYnYa6UCFc3tGBZY2QM0kg1RIrNk
+         GKxj8h0FCfaF5PyBNlNN4fQnb5JcE5E3HyHpovdmMKB8pI/+V0NApMu9apyQ4mdntmFU
+         HJPw==
+X-Gm-Message-State: AOJu0YzuRbgagS5EoqnlTwBnz6pwfTb9Hs8A+/BlsrVLV0YWbsmLc1JR
+	AKO/vHS8dHTq/L1Skbqk3NkCfAviX8ClVwoK1QBVfdWA9Ro8nASOmS/v2Ye07QX81vikINsahom
+	L
+X-Gm-Gg: ASbGncvuc+7FqHZcU2RDDIEntKYD0RfxAptjR18GK8B5g/vC52vDPz5ph0P22iiXjem
+	HI4XK4e7vuVdHCjLQ9r5ZKlglMYhQV7XeDFvRibrnUEkvOBz6JXXWcReB6vmmu3gMvSsOqPKCFr
+	xcv4CMgWR3rAtyBQQAHaeXBXdkNza95NkZowApvdBQmq2vutnAqgyENuVa1r5J+z+f+8srWGb2t
+	0uFXs6ZCyAfAcUmfNlhR1AOwZK842GLXFTG0bLF533nl/X6UGKjfosTApkiEHyjxzcyJFWmjJcG
+	N4IZo18eaoe6Zc50rntjvNaJ9/EUNxMpJz9GElLUv3fDRDc1v0aB1rZCkLqNVnHwT/w=
+X-Google-Smtp-Source: AGHT+IGW7/HQcOSrWsFxMUBwQZEFvu6hcIo8WL0C16qqewIUDvPZ3V176EqIWn668YLPeuSi7WpN/A==
+X-Received: by 2002:a17:902:f64d:b0:220:f87d:9d5b with SMTP id d9443c01a7336-22a8a867cfdmr200793525ad.24.1744015904387;
+        Mon, 07 Apr 2025 01:51:44 -0700 (PDT)
+Received: from always-zbook.bytedance.net ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787727eesm75759455ad.224.2025.04.07.01.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:51:44 -0700 (PDT)
+From: zhenwei pi <pizhenwei@bytedance.com>
+To: linux-kernel@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	viktor.soderqvist@est.tech,
+	zhenwei pi <pizhenwei@bytedance.com>,
+	zhenwei pi <zhenwei.pi@linux.dev>
+Subject: [PATCH] selftests: mptcp: add comment for getaddrinfo
+Date: Mon,  7 Apr 2025 16:51:22 +0800
+Message-ID: <20250407085122.1203489-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,43 +78,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A recent commit refactored the printing of the CSID hardware version, but
-(without it being mentioned) also changed the log level from debug to
-info.
+mptcp_connect.c is a startup tutorial of MPTCP programming, however
+there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
+getaddrinfo MPTCP support.
 
-This results in repeated log spam during use, for example, on the Lenovo
-ThinkPad X13s:
-
-	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-
-Suppress the version logging by demoting to debug level again.
-
-Fixes: f759b8fd3086 ("media: qcom: camss: csid: Move common code into csid core")
-Cc: Depeng Shao <quic_depengs@quicinc.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
+Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
 ---
- drivers/media/platform/qcom/camss/camss-csid.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
-index d08117f46f3b..5284b5857368 100644
---- a/drivers/media/platform/qcom/camss/camss-csid.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid.c
-@@ -613,8 +613,8 @@ u32 csid_hw_version(struct csid_device *csid)
- 	hw_gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
- 	hw_rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
- 	hw_step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
--	dev_info(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
--		 csid->id, hw_gen, hw_rev, hw_step);
-+	dev_dbg(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
-+		csid->id, hw_gen, hw_rev, hw_step);
- 
- 	return hw_version;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index c83a8b47bbdf..6b9031273964 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -179,6 +179,18 @@ static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
+ 	}
  }
+ 
++/* There is a lack of MPTCP support from glibc, these code leads error:
++ *	struct addrinfo hints = {
++ *		.ai_protocol = IPPROTO_MPTCP,
++ *		...
++ *	};
++ *	err = getaddrinfo(node, service, &hints, res);
++ *	...
++ * So using IPPROTO_TCP to resolve, and use TCP/MPTCP to create socket.
++ *
++ * glibc starts to support MPTCP since v2.42.
++ * Link: https://sourceware.org/git/?p=glibc.git;a=commit;h=a8e9022e0f82
++ */
+ static void xgetaddrinfo(const char *node, const char *service,
+ 			 const struct addrinfo *hints,
+ 			 struct addrinfo **res)
 -- 
-2.49.0
+2.34.1
 
