@@ -1,139 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E246520FAAC
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3393A1A8F60
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743991830; cv=none; b=D3o2QKrfIPgF6Eq+9bj9Dz9BRFm8aMUCBzrRzNJBXNmikJ5JaTvXVOoVb6HJP3n7/9T4WvTRzfutZkB6vY2fGX1HpmT+b3jf/Fy7shPTqUgAYgct8nBpLAfXt7R10PbhVqGsZ/WS6fOSReo1tZQpLLn7yX0MJiL0ZClW+4MemMA=
+	t=1743991874; cv=none; b=KW5N5Pm6z6eCZpOXkwNbT/IJiMjqu3U7e3ZaB2sIVbGEf2hqNf150KNZ2MCOOlhwrBWX5CBF8nWPEk92vaSZIJD9WhdVqibyWet/POLHy+snxpHh7j+pmZcV/Y4IRPPsq+pwIgTOJgkWEz1Zg5MzE+Qbdw4bvICAmWq4yk3XGz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743991830; c=relaxed/simple;
-	bh=XfcLzj4u9hEabd0szkloLzxLYdzD/t+nSwjBELOsAWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fqf9m2IRIMTBsZmQy+RvOpXNbZI05iGcnbrvzaiy6gJybj8djFaduiRMziVrNGW/7hyJwufpIQ2bZqJ3P8RGyv2SayJhjIhtw27F8sQB1ybP03nkfJNecnYkKp7Z51l1gKvYaXeJnF64hIU9w7MBNk9gHkrDEOMBVHvd7dl85Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/jSChcO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743991874; c=relaxed/simple;
+	bh=DU2v1Weg3kqbG34VlRjX5pwsMXKz6VDkV0AjhbIo3fY=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TZPZ8MqXr7LjnsJwLahZFU6BH6gkL+V5PZLcm8VJ7mmezs6rnWQjNCiaaEpBv4wLBOBs+AiOjV+sOToHPiFuZZNo7dJRz4iCHPDW+f/WJHLeX2Jh4CaTu9OxIClLOfI7qA402/p99NxrXxE3TBSLJlihrWaFbNgfrH6aEjqRzRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMr+NpO7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/jSChcO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743991829; x=1775527829;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XfcLzj4u9hEabd0szkloLzxLYdzD/t+nSwjBELOsAWM=;
-  b=K/jSChcOIAOFVCbexhzkhPnQbkHQIgFDkps8kcWkR8H2nU/9lfRV3pEx
-   NDevq8dut+YFOn03vtlVakh7T46bXZhpnBbw16X8QyEHb95KFOpAfN1PN
-   C/wLtHQoXg+09I4M2Q6WpzV0Psv5ACWkChO89YQL2CikdozEQKUWY6hwD
-   XfTkMu9ZvGFAWPfsLUzbdmcnQrCfS3hiBipEHE9ZROgtIEJ65d+3PrLlh
-   4B3B3t+3iHQ9EtZTkr+XUgY/cw9eWwyia+ALfn/mWrsUPqEKpzFeVU8CT
-   w9NqEtnuh3BtFkNGY3urSSSX/3TTclbkugte99mDzqLP+xxtnr1hscai0
-   g==;
-X-CSE-ConnectionGUID: WjZ5QxE8S9qU3yphgZjeqA==
-X-CSE-MsgGUID: rBQeSdp6Twyy2ants5elkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67834845"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="67834845"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 19:10:28 -0700
-X-CSE-ConnectionGUID: gTwHepnPQy+/87yJ/JnJNg==
-X-CSE-MsgGUID: /vCHT+ryR/ijaSKwWumzNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128331273"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 06 Apr 2025 19:10:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1bwO-0002t9-1m;
-	Mon, 07 Apr 2025 02:10:24 +0000
-Date: Mon, 7 Apr 2025 10:10:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Mark Brown <broonie@kernel.org>
-Subject: sound/soc/soc-ops-test.c:520:1: warning: the frame size of 1304
- bytes is larger than 1280 bytes
-Message-ID: <202504071003.NtmGvvqC-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMr+NpO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F73C4CEE3;
+	Mon,  7 Apr 2025 02:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743991873;
+	bh=DU2v1Weg3kqbG34VlRjX5pwsMXKz6VDkV0AjhbIo3fY=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=sMr+NpO7Kv1pPnomvFzVvSJ7uuWF6cslbsJW/pPoaR7xQH5Ms5/bc16oFY1TPDDZ9
+	 6Qc8ZTX+rVi2o6W862HD6PXV1QruDs69HAsm6PqU43nIIX2ONTEIm5UQtBcxjGbT0M
+	 CpGBQBAKqeqy86+xk6wWdV5Bp+MMGqe2NcpJ3jXBFCuoTyUJHH8oImwc8Xz7N3dBCz
+	 nVqKF/85R/FIHKgr+DZbAku0DgyDLkA97hpmYbhVEiFryLBXvKvCAAM5d4S2RGCgaV
+	 bIUtVFj1FvdYAnAT2xQnD3qROpf73zIl1A5IOfI9q93ME7ej0RUFXROaJu1/nTq5kn
+	 0BL9asl2YrFIg==
+Message-ID: <87056483-6cf8-4b2e-82f1-dcda31a28afd@kernel.org>
+Date: Mon, 7 Apr 2025 10:11:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, pilhyun.kim@sk.com
+Subject: Re: [PATCH v5] f2fs: prevent the current section from being selected
+ as a victim during GC
+To: "yohan.joung" <yohan.joung@sk.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250403232107.2960-1-yohan.joung@sk.com>
+ <Z_A5SWl1ueMTZxV0@google.com>
+ <7059eada-a51d-4f68-b62a-0f2c89c9b01c@kernel.org>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <7059eada-a51d-4f68-b62a-0f2c89c9b01c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0af2f6be1b4281385b618cb86ad946eded089ac8
-commit: 7a24b876ad8cdd56457e881d384a038922b508c3 ASoC: ops-test: Add some basic kunit tests for soc-ops
-date:   3 weeks ago
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250407/202504071003.NtmGvvqC-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504071003.NtmGvvqC-lkp@intel.com/reproduce)
+On 4/7/25 10:08, Chao Yu wrote:
+> On 4/5/25 03:55, Jaegeuk Kim wrote:
+>> Hi Yohan,
+>>
+>> I modified this patch after applying the clean up by
+>>
+>> https://lore.kernel.org/linux-f2fs-devel/20250404195442.413945-1-jaegeuk@kernel.org/T/#u
+>>
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -486,6 +486,11 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+>>
+>>         free_i->free_sections++;
+>>
+>> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
+>> +               sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+>> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
+>> +               sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+> 
+> Reviewed-by: Chao Yu <chao@kernel.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504071003.NtmGvvqC-lkp@intel.com/
+Oh, can we add Fixes line to make it to be merged into stable kernel?
 
-All warnings (new ones prefixed by >>):
+Thanks,
 
-   sound/soc/soc-ops-test.c: In function 'soc_ops_test_access':
->> sound/soc/soc-ops-test.c:520:1: warning: the frame size of 1304 bytes is larger than 1280 bytes [-Wframe-larger-than=]
-     520 | }
-         | ^
+> 
+> Thanks,
+> 
+>> +
+>>  unlock_out:
+>>         spin_unlock(&free_i->segmap_lock);
+>>  }
+>>
+>> On 04/04, yohan.joung wrote:
+>>> When selecting a victim using next_victim_seg in a large section, the
+>>> selected section might already have been cleared and designated as the
+>>> new current section, making it actively in use.
+>>> This behavior causes inconsistency between the SIT and SSA.
+>>>
+>>> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
+>>> Call trace:
+>>> dump_backtrace+0xe8/0x10c
+>>> show_stack+0x18/0x28
+>>> dump_stack_lvl+0x50/0x6c
+>>> dump_stack+0x18/0x28
+>>> f2fs_stop_checkpoint+0x1c/0x3c
+>>> do_garbage_collect+0x41c/0x271c
+>>> f2fs_gc+0x27c/0x828
+>>> gc_thread_func+0x290/0x88c
+>>> kthread+0x11c/0x164
+>>> ret_from_fork+0x10/0x20
+>>>
+>>> issue scenario
+>>> segs_per_sec=2
+>>> - seg#0 and seg#1 are all dirty
+>>> - all valid blocks are removed in seg#1
+>>> - gc select this sec and next_victim_seg=seg#0
+>>> - migrate seg#0, next_victim_seg=seg#1
+>>> - checkpoint -> sec(seg#0, seg#1)  becomes free
+>>> - allocator assigns sec(seg#0, seg#1) to curseg
+>>> - gc tries to migrate seg#1
+>>>
+>>> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>> ---
+>>>  fs/f2fs/segment.h | 9 ++++++++-
+>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>>> index 0465dc00b349..0773283babfa 100644
+>>> --- a/fs/f2fs/segment.h
+>>> +++ b/fs/f2fs/segment.h
+>>> @@ -474,8 +474,15 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+>>>  		next = find_next_bit(free_i->free_segmap,
+>>>  				start_segno + SEGS_PER_SEC(sbi), start_segno);
+>>>  		if (next >= start_segno + usable_segs) {
+>>> -			if (test_and_clear_bit(secno, free_i->free_secmap))
+>>> +			if (test_and_clear_bit(secno, free_i->free_secmap)) {
+>>>  				free_i->free_sections++;
+>>> +
+>>> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
+>>> +					sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+>>> +
+>>> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
+>>> +					sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+>>> +			}
+>>>  		}
+>>>  	}
+>>>  skip_free:
+>>> -- 
+>>> 2.33.0
+> 
 
-
-vim +520 sound/soc/soc-ops-test.c
-
-   475	
-   476	static void soc_ops_test_access(struct kunit *test)
-   477	{
-   478		struct soc_ops_test_priv *priv = test->priv;
-   479		const struct access_test_param *param = test->param_value;
-   480		struct snd_kcontrol kctl = {
-   481			.private_data = &priv->component,
-   482			.private_value = (unsigned long)&param->mc,
-   483		};
-   484		struct snd_ctl_elem_value result;
-   485		unsigned int val;
-   486		int ret;
-   487	
-   488		ret = regmap_write(priv->component.regmap, 0x0, param->init);
-   489		KUNIT_ASSERT_FALSE(test, ret);
-   490		ret = regmap_write(priv->component.regmap, 0x1, param->init);
-   491		KUNIT_ASSERT_FALSE(test, ret);
-   492	
-   493		result.value.integer.value[0] = param->lctl;
-   494		result.value.integer.value[1] = param->rctl;
-   495	
-   496		ret = param->put(&kctl, &result);
-   497		KUNIT_ASSERT_EQ(test, ret, param->ret);
-   498		if (ret < 0)
-   499			return;
-   500	
-   501		ret = regmap_read(priv->component.regmap, 0x0, &val);
-   502		KUNIT_ASSERT_FALSE(test, ret);
-   503		KUNIT_EXPECT_EQ(test, val, (param->init & ~param->lmask) | param->lreg);
-   504	
-   505		ret = regmap_read(priv->component.regmap, 0x1, &val);
-   506		KUNIT_ASSERT_FALSE(test, ret);
-   507		KUNIT_EXPECT_EQ(test, val, (param->init & ~param->rmask) | param->rreg);
-   508	
-   509		result.value.integer.value[0] = 0;
-   510		result.value.integer.value[1] = 0;
-   511	
-   512		ret = param->get(&kctl, &result);
-   513		KUNIT_ASSERT_GE(test, ret, 0);
-   514	
-   515		KUNIT_EXPECT_EQ(test, result.value.integer.value[0], param->lctl);
-   516		if (param->layout != SOC_OPS_TEST_SINGLE)
-   517			KUNIT_EXPECT_EQ(test, result.value.integer.value[1], param->rctl);
-   518		else
-   519			KUNIT_EXPECT_EQ(test, result.value.integer.value[1], 0);
- > 520	}
-   521	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
