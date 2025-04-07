@@ -1,152 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81E31FF7BE;
-	Mon,  7 Apr 2025 15:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D263F1FF7B9
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040209; cv=none; b=cDeW53tPuz3z2ftjt3Rqr3bQCMUrbhCz46E3rQ7zN5yhhIJytQEXLWL1zVO5B/Zyn4qvYW6UwzU6BnSflLmWFSIEuO5RLpkdGEcalcanbVHcbO3uQNoQ5pZtohkzqcm5KXOtykKnXD20A+2cpf4xwv0gXE1RDyn0CN3zd58iRO4=
+	t=1744040225; cv=none; b=WvQqsgFXQovUW5GbLQVpo67Jw0ONv/qOiAUK9URLw0CsCC45Acv7c3zRyhOC/QOyIk2X6oGhPKLsgUY9NsG7Amgo0mnGQXRO2Piv7YBEmR6ffmKWn8y5XiwgCAKIQ4dZieQwHZXXTlWPlNaCVIfVZ9e6oo1uOeKCiTZi50zPrNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040209; c=relaxed/simple;
-	bh=G+sqUQNrBPH4I/W5mHr1fMjnSyEYSDrtCw2osviFCmU=;
+	s=arc-20240116; t=1744040225; c=relaxed/simple;
+	bh=rCQcg6yyF7kniuKX843J+ZjI6DR0Er7uUAVQn7o4iEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jaO+NGJ9eIaYznS1tU6KS2FgFmi1/IH4sIXye1gDtqEmo9CBqAHKMy5M9R9Z3W73EGgPAmk7PowYMTdoBb3scqrhWjvZNGbOI344mNQ3lqCV3lokgnDKl7ChOnHduiNAt8wnEr0QueDVqiTzaN4BiLR10Texnl6XLx1wVysFcyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YaoLbDHw; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AjRXEjXFrvH+O/xkQqU7K0FIEAVqiZJvDYhOTBnM3yT7M9ARd9h58U/DBHBjHKeeRG9bX8MbehnGPPHTYtOzF2C2q779/j0bbIKsjXkPWAbqgmBgTWu1M2djCZt81YeAQJRFpAef6WdmFZ5UqVUZHvzIEiy/Sshm4G66D5zyJrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wDR1xPbR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YaoLbDHw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744040208; x=1775576208;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=G+sqUQNrBPH4I/W5mHr1fMjnSyEYSDrtCw2osviFCmU=;
-  b=YaoLbDHw2UkbPC2EXNlkH6HEoyIsOj/+nZF8ZFSSB6WC7Z/X3r/TDS1k
-   GOYGF4At4/XXBDvpSXOujnIs6JQx3hc7fTOsRtgYLTltHp+FTBsqjMeZx
-   LmWduuyQnBH8vQ58lYPaWgMLI9hvwR1hKN6tMHLuPuTBELNqRr3MitsEs
-   rZMuFYbe/BdolRj5PtTyR7mDGG7THwsWqQEtjev9JxV1PAfZ2+u4WXp6P
-   O7AtdDTNh66JDNJI92NfnqzxdH2iSRQYYB5R9HN2JIWYGqTY0thWr4yKs
-   95DSCCaE8U7RohIMhSrpHWN7C4IZrC6EW0Kbjxa+PkxvzObt7dH8FY5e6
-   A==;
-X-CSE-ConnectionGUID: JXqsM2+fQ5OYN/+MEP7jdg==
-X-CSE-MsgGUID: Zuy6ZnylTJyZx2Cqu2FAzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="70811280"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="70811280"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:36:46 -0700
-X-CSE-ConnectionGUID: rNN1lCbSQX+WW/v4pCR9wA==
-X-CSE-MsgGUID: R72zNQsnQ/GnEwWrCsQ2wA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132128993"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:36:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1oWT-0000000A6zT-16Go;
-	Mon, 07 Apr 2025 18:36:29 +0300
-Date: Mon, 7 Apr 2025 18:36:28 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
- for x86
-Message-ID: <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-12-herve.codina@bootlin.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wDR1xPbR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4600CC4CEDD;
+	Mon,  7 Apr 2025 15:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744040225;
+	bh=rCQcg6yyF7kniuKX843J+ZjI6DR0Er7uUAVQn7o4iEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wDR1xPbREGqnj38US78Hk428icCQmacjxdgj+xWubK/USWHP5QOBC3BMw184GSjix
+	 spS8ksKIjZ3b/DXqFWQZYlH/ht9HoDStWzfJESERZMtZdw+q4WfZ6rPO+HEqd2f9KB
+	 TK+0sWHYbUJzrwiL0//3n1RawhiWb6+9PKDA3+Hs=
+Date: Mon, 7 Apr 2025 17:35:35 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: zhoumin <teczm@foxmail.com>
+Cc: dakr@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, rafael@kernel.org,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] kobject_uevent: add uevent_helper exist check
+Message-ID: <2025040743-kick-computing-0ecd@gregkh>
+References: <2025040731-eternity-statutory-4a80@gregkh>
+ <tencent_019E709405D8474A5D5A21E429D046331808@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407145546.270683-12-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <tencent_019E709405D8474A5D5A21E429D046331808@qq.com>
 
-On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
-> PCI drivers can use a device-tree overlay to describe the hardware
-> available on the PCI board. This is the case, for instance, of the
-> LAN966x PCI device driver.
+On Mon, Apr 07, 2025 at 11:18:12PM +0800, zhoumin wrote:
+> Hi Greg
 > 
-> Adding some more nodes in the device-tree overlay adds some more
-> consumer/supplier relationship between devices instantiated from this
-> overlay.
+> I appreciate your patience in addressing this.
 > 
-> Those fw_node consumer/supplier relationships are handled by fw_devlink
-> and are created based on the device-tree parsing done by the
-> of_fwnode_add_links() function.
+> > > The kernel creates uevent_helper process for every uevent sent,
+> > > even if the uevent_helper does not exist. Before the rootfs is
+> > > mounted, a large number of events are generated. This change
+> > > introduces uevent_helper existence check to prevent unnecessary
+> > > operations.
 > 
-> Those consumer/supplier links are needed in order to ensure a correct PM
-> runtime management and a correct removal order between devices.
+> > What problem is this causing? What changed to make this actually be a
+> problem?
 > 
-> For instance, without those links a supplier can be removed before its
-> consumers is removed leading to all kind of issue if this consumer still
-> want the use the already removed supplier.
+> I think calling uevent_helper before rootfs mount is pointless and waste
+> time, because uevent_helper does not exist at that stage. For example,
+> fs_initcall(chr_dev_init),subsys_initcall(usb_init) and etc, these module
+> run before rootfs_initcall and will trigger kobject_uevent when
+> uevent_helper isn't ready.
 > 
-> The support for the usage of an overlay from a PCI driver has been added
-> on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
-> host bridge node").
+> However, I've discovered this issue was already addressed by commit:
+> <b234ed6d629420827e2839c8c8935be85a0867fd> ("init: move
+> usermodehelper_enable() to populate_rootfs()")
 > 
-> In the past, support for fw_devlink on x86 had been tried but this
-> support has been removed in commit 4a48b66b3f52 ("of: property: Disable
-> fw_devlink DT support for X86"). Indeed, this support was breaking some
-> x86 systems such as OLPC system and the regression was reported in [0].
+> Due to my device running an outdated kernel version, this change wasn't
+> immediately apparent to me.
+
+Ah, great, let's just stick with the change that we already have.
+
+> But I propose we should make call_usermodehelper_exec fail earlier, link
+> this:
+> --- a/lib/kobject_uevent.c
+> +++ b/lib/kobject_uevent.c
+> @@ -610,7 +610,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
 > 
-> Instead of disabling this support for all x86 system, use a finer grain
-> and disable this support only for the possible problematic subset of x86
+>  #ifdef CONFIG_UEVENT_HELPER
+>         /* call uevent_helper, usually only enabled during early boot */
+> -       if (uevent_helper[0] && !kobj_usermode_filter(kobj)) {
+> +       if (uevent_helper[0] && !usermodehelper_disabled && !kobj_usermode_filter(kobj)) {
+>                 struct subprocess_info *info;
+> 
+>                 retval = add_uevent_var(env, "HOME=/");
 
-> system mixing ACPI and device-tree at boot time (i.e. OLPC and CE4100).
+Why?  Will this actually change the speed of anything?
 
-This is incorrect, they never had ACPI to begin with. Also there is third
-platform that are using DT on x86 core — SpreadTrum based phones.
+> > Signed-off-by: zhoumin
+> 
+> > Please use your name here, not an alias.
+> 
+> This is the Pinyin spelling of my Chinese name.
 
-And not sure about AMD stuff (Geode?).
+No reason you can not just use the Chinese spelling of your name either :)
 
-> [0] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/
+thanks,
 
-Can you make this to be a Link tag?
-
-Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
-
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+greg k-h
