@@ -1,121 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF330225764
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D267F225764
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015763; cv=none; b=uhLAGLd3TuIUHsYNKmxybWvEfzzfMmdNSvPsK7aZlKidOxkdluLRj0soTbleBzh9FxSw8ep7xebpdl/979081xXEwcrxDj7R9tro8PpP491oZcnI0Ihm5N77r4Ei1zc19F29s75lm6ov+uwI/opLAfjR0dXr4WlbgBu3RU9bBZc=
+	t=1744015804; cv=none; b=rT5Yb+iEfCNzHbfmMH6cqifqd2ICqHoauriVKyHUJ/+fJTuhNMY4xgsG37lncK0diZVCipv2EHh3WB11tN/ueGyAXgEo4pb1o5Wz+gXr722y3XAp8sX8/544El4Q7lTUgFHlkL3jiNIDjYeSPbAgxpREQAbPYHgdulxwIY+04oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015763; c=relaxed/simple;
-	bh=IZtLDURYDTq0b32MVRHTcY8RDwEllmanE9uQZcvW3gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SkDmRHpBRyeEp4pVWeSyLNToFkg5OWnk0L4sUPUtgr79kC0eRtgRx5RenpmRmiUpUJrw8Vg7rYC3gqww+n4lujJWoTX97T/fJbObWQdo0UOhwXDlEAkivL7zjVX1zhSeP2YRSnQ8PbZGH1g21BGc+Zz37Bh77DmvLj8tABatVjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPh2MDY2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744015804; c=relaxed/simple;
+	bh=0dysb/j8QCvtqSojYzmzZc4MuE8IlG7SThXAVqAXz34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=txGuWfmfsQ7ngZHcNEKYmxx1SnYHq6fuOknUIZqY2usUS0f6ZzXdN1YydxwLoX1PvwWcPMfH1HQIlnJ/xUrDAVoLQuU0HwMSBHQ4+nyCvdoShqs7RqNNZEH7WclD1FRMegoFWrI9KIKca8tDT01owAhNrbVz7sJwUrEhLQojMbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CVVDZL/g; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPh2MDY2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744015760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hpu5KqbXEO7FQHIb0ETZFO78MX8aCe7lEYNvf8XqmxY=;
-	b=EPh2MDY295e/BmrhhJRCOQ0326XjOmpeysTfkGxk/ZLFfM9a1XYWS2j6P45SFr7wz/DHsQ
-	Wxuo7XbOf66qAxyN6Ld6iq1tSpGFw/rv1KgZaeYDNh7otX4hPvq/my1UynsfkNYu5YCDEG
-	AN33p+zTJuK1iU18rTdybczgFpTTRAg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-464-3QL7E-KJNny9LLFx5SZVrw-1; Mon, 07 Apr 2025 04:49:19 -0400
-X-MC-Unique: 3QL7E-KJNny9LLFx5SZVrw-1
-X-Mimecast-MFC-AGG-ID: 3QL7E-KJNny9LLFx5SZVrw_1744015758
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d01024089so34896705e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:49:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CVVDZL/g"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dmD8009207
+	for <linux-kernel@vger.kernel.org>; Mon, 7 Apr 2025 08:50:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	A7W/suLq2UM8HkanTs1604dpOyHgBjMoRJIiCRyj9+s=; b=CVVDZL/gws/Rm+jT
+	YWCrTw9nhBzrno64L/nvG3wxIxarrWOLWV/RhmuPrTZ4uA/GkKdNvaDa25pR5lVT
+	WIi1R+8kUyxISodhlpcpZwEVdKIGZTbOCjNoM1bWOTznfU1IaBj7lNsy1ecjOnTB
+	wMv+bUs4AM/UyiLPhVuvWE3xV9VXuCFGhgkSWYdvGscXy1oGaoT5Pd4D55dGoyrq
+	OwkC/NYXb/HZ5nWb3bBxknxfBtzRjwy6Nub+5Zvz9dTMiABGhd3lxUpKGLeqEl4y
+	MDxoOChXlFyEhwHTM7OskUXKfWQTreg851nWAjUkGAgBDWAsxYIPdwgaABaG0Lqr
+	LYHTmQ==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbubmfg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:50:01 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e906c7cd2bso8636516d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:50:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744015758; x=1744620558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hpu5KqbXEO7FQHIb0ETZFO78MX8aCe7lEYNvf8XqmxY=;
-        b=Bm6QSsk2D2kOdUQxRl08TnM1o+uRbp4mQ3oRTwkFM1MqzK2AgercnJIpiIXc8Sv9O8
-         FCfowEGcxD7dY4vRnsW8Tl6s/YyV+eW6qkzt1owuhlmYjZZ+YncP3cB2VGJPC2jNs6fL
-         Kre3ExTfcwvX2x3Vn6ic3FeLSKNAkIWiAckgjEJYa4MbZ9wN89yka0yPAAx8dqyEDGoA
-         ohVvsPmi2AO3N9YZvmzFbalaw0InOlEfXaLDXKkq650GOgXPv42GPMYsb6EY6BUDftVw
-         aiOmgb1Dcm1JHocLBoPYLWyt4Vza7mfUlHWAvr6nDaQVCqObCifap/GKHxcKbl2KApUo
-         Y/hA==
-X-Forwarded-Encrypted: i=1; AJvYcCXO2pxG3sdJdcsZdyWdIZAGZnqKsHRPD0vBfOBAYvZ59AFmaXO7RlhSZnohlqFWn4rBzM36TPJhlzojnlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyATGGK4GUKu3F6dNo4nDJZyfoWfm3mQWRwdUnDhmXT4SnciuTR
-	w1kuT9pH+BPXZaW4UQJFzQ6R0fpTBj6Dk9s9W5J1p86VeGDjxjjiOkog8rrtYbINed0SRQVAGp1
-	KQpdwNaGikwbihRug/KrA0Hj72Zufjr0LnverWLaEpdYXgYvGL1senfBWK+G7yg==
-X-Gm-Gg: ASbGnctauNdfsa8dZg8rQi///9LkSuq8jsns3Q1ZdaAw7SgrzQxC+TaKyKUghT6BrWc
-	drRgBNxupvaBxrzCyaJwSiwrNcswutpkqPVCc/1mAxXUYTseBtLKKAXOAkv5VCMEFqJGPpp56ZO
-	rKQUJyfoX86HI1C3s68VV0N9Pl4oAo04MfCAOeVvoLQFXaGU8r+ioJwkUo6FCYCwHScnhDPcyY3
-	vgmesmlosCJZA71+0cPE+Llh/1jGNa7TzoT6XBLxbIVSLOM9JcX92O9SrBnHMjpz9qcM+hlRBlX
-	3NCP765aWg==
-X-Received: by 2002:a05:600c:3306:b0:43d:fa59:be38 with SMTP id 5b1f17b1804b1-43ee2aff1a0mr38130095e9.32.1744015758297;
-        Mon, 07 Apr 2025 01:49:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNYPVVGEAhzNqS2UPVe5mcCou0C3HnRif0zA9AGHI8Xqo5GZ7Z22p9jJeCaR5blASlwYtuCg==
-X-Received: by 2002:a05:600c:3306:b0:43d:fa59:be38 with SMTP id 5b1f17b1804b1-43ee2aff1a0mr38129915e9.32.1744015757955;
-        Mon, 07 Apr 2025 01:49:17 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7586sm11552495f8f.38.2025.04.07.01.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:49:17 -0700 (PDT)
-Date: Mon, 7 Apr 2025 04:49:14 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407044743-mutt-send-email-mst@kernel.org>
-References: <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
- <20250407034901-mutt-send-email-mst@kernel.org>
- <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
- <20250407042058-mutt-send-email-mst@kernel.org>
- <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
+        d=1e100.net; s=20230601; t=1744015800; x=1744620600;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7W/suLq2UM8HkanTs1604dpOyHgBjMoRJIiCRyj9+s=;
+        b=aERTMPOzZ6EWXysWeBaiLuIBOzZcxqsCCnkYkjzeyetA4M/lXHHZ2w7i6pgWlGVMxj
+         8Gg/N0RsrGeAQmpmBY9dnqOeyOlKOq4c7cA5Kce3JyurWgK827UiEyMVOpdpZq8pSS1R
+         l4PV2rdsxYAA8hfSrXz6MAJMvsVka8fmhLTwJCxe+G1XbeHPbattTbaV5+E04+DVy2lo
+         04af6rK8BWExsmeaRNV4FldyidWhjiE4eHcwXu2EwDS4BEeay6Ie7VyAJ3mZwdEZSQ2Y
+         GzLi3E8xEtr+TVWe3z7xicTtM4YQskLkngqJoTjyhbFLEsEBuQPMWIrd3DTM0FMiYuXp
+         u4tA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBHAPNJriW6m1PLtbyUQDv/74Z9kOdX+vUjbb2Fr5M8xUFeAys0Zhab3zkzRWgcLU+T1GKR5iXxWpb2po=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDMLL61FHsugphxRBHC0zKvp4qiIYSKf8Pmcqs/wL1FuNNqss6
+	f7BaM15OULE7lYwm9gKlkKNhNfqXvb5QRrYfiRh56uC+bAQKIiyJ0cLbBH3ZVDXMeZM5TGyAtx3
+	R8Rf0Mt2iJkCAvH2XKOQb5hrqRrbd+rrbIZABp0tE6OgeX6hnOq0uDzqqD93Iv1E=
+X-Gm-Gg: ASbGnctLz/Vf1zReI69bMktnydTpR/cRBTzjqC/7URHMVLri2IyWDohuyCrtMa+W7di
+	7Lanu/+xRk4O577q6ExiTZtN69Ug2xIIgdNrD6yrZLRZB4WTcE97Vvf/4nVGGqntMAgAhNEAJCO
+	Sl/ZJ7tywnC3F0R0RY7o1ojhudFzXMZBGLCuUd1vBlulzz7x3owtyFrrE1vXtA1jDMdr72JxlRB
+	1dDj0g/Qsy64B1MaBlC0dkiKhmk+qxk4XNJ3gyNawVbVaogFDFcVCjxb4e84a8jBgwpgUCd9JJ5
+	LekczXPlU1Tx6vH15qjDICALPmbGBpq5otdju+PcFtpHLLcr/Rp8Auek8BTi4XcdjncSMw==
+X-Received: by 2002:a05:620a:454e:b0:7c0:c42a:707d with SMTP id af79cd13be357-7c774def534mr617001585a.15.1744015800115;
+        Mon, 07 Apr 2025 01:50:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHM3ImiIeUKkCnXzozuTunhbkQzhWJNYwKRsFjSxrcYnNZn6j0yjPM2Ovp2gCk1ymCBdM3FPw==
+X-Received: by 2002:a05:620a:454e:b0:7c0:c42a:707d with SMTP id af79cd13be357-7c774def534mr617000985a.15.1744015799813;
+        Mon, 07 Apr 2025 01:49:59 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a55aasm6468304a12.78.2025.04.07.01.49.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 01:49:59 -0700 (PDT)
+Message-ID: <9583f74f-2dce-4535-bdff-92b1da1566b5@oss.qualcomm.com>
+Date: Mon, 7 Apr 2025 10:49:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: msm8953: Add interconnects
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Vladimir Lypak <vladimir.lypak@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250406-msm8953-interconnect-v1-0-a23e22e236e0@lucaweiss.eu>
+ <20250406-msm8953-interconnect-v1-2-a23e22e236e0@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250406-msm8953-interconnect-v1-2-a23e22e236e0@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: BMPsIJZihEW6rQS7SQ7ucCb1kwb6WW_R
+X-Proofpoint-ORIG-GUID: BMPsIJZihEW6rQS7SQ7ucCb1kwb6WW_R
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f391b9 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=dlmhaOwlAAAA:8 a=Dw-YgVe96UOjDrfUO-cA:9 a=QZKuY7mROTJmt8fO:21
+ a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=y4cfut4LVr_MrANMpYTh:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504070062
 
-On Mon, Apr 07, 2025 at 10:44:21AM +0200, David Hildenbrand wrote:
-> > 
-> > 
-> > 
-> > > Whoever adds new feat_X *must be aware* about all previous features,
-> > > otherwise we'd be reusing feature bits and everything falls to pieces.
-> > 
-> > 
-> > The knowledge is supposed be limited to which feature bit to use.
+On 4/6/25 10:55 PM, Luca Weiss wrote:
+> From: Vladimir Lypak <vladimir.lypak@gmail.com>
 > 
-> I think we also have to know which virtqueue bits can be used, right?
+> Add the nodes for the bimc, pcnoc, snoc and snoc_mm. And wire up the
+> interconnects where applicable.
 > 
+> Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> [luca: Prepare patch for upstream submission]
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
 
-what are virtqueue bits? vq number?
+[...]
 
+> +			interconnects = <&snoc_mm MAS_MDP RPM_ACTIVE_TAG
+> +					 &bimc SLV_EBI RPM_ACTIVE_TAG>,
+> +					<&bimc MAS_APPS_PROC RPM_ACTIVE_TAG
+> +					 &pcnoc SLV_DISP_SS_CFG RPM_ACTIVE_TAG>;
 
--- 
-MST
+RPM_ACTIVE_TAG is akin to QCOM_ICC_TAG_ACTIVE_ONLY, keep it on the CPUs
+and on the cpu-cfg paths, use RPM_ALWAYS_TAG otherwise
 
+Konrad
