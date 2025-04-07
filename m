@@ -1,133 +1,92 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E001494CF;
-	Mon,  7 Apr 2025 08:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C87211460
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015735; cv=none; b=XEdcGT6UD7HvMV8kRRi76/iDHCWggj6Cx6qKgiylAeF5hPHb+12unkZsk6lJYGNLg/aSX8WNGbKP+oNeMdGilPxLIG8bl9aQQJYn7e88gjtlfsR39MIoy3rzoRV8gWXTBLjwiFXJN+7vXLt/S2Tsp03KsRtJfUmTDnvB+rui1kk=
+	t=1744015752; cv=none; b=EwLPvzYe/wNPlu1Wmdc6Gh1Ex9sCL+CLR+n3lFgkirB/6p/h8ip39WLvCKfKJDhEguiTpnbvS5um/uc3bQYdWtCTnM2UVhzccSuSZE+QoT0AC+N+1ZfhfJRubFp9VpmoTXg2Y5OqX3DDBLFcgG3utt4RwC2GbrAlGVVI4KhTLAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015735; c=relaxed/simple;
-	bh=72umYHellYaKBHhkLItMF10xOjMbeF9Ggf7D76vY7B0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Mdb4LTPfyPxpyVEJWLOf2qh7rOUKr90N2v9H/UgsQG/MSmH5aOhcYCXqhIDs9mg7qYP9XIZdTxlLwsCyT7bUulCiHvNPW8yOkyYJ8YP2ZZNDgVe5YF045nxqXrBCUdg95E/dCnFRn0GUR2EXk9ngIpKxqvhGn/w4hmYVWDjgZw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWdH8mHz; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744015752; c=relaxed/simple;
+	bh=B9s3+XIfej7okK4vYfrCqfccezv34+jSd9MAmtp/xls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6xKACX5XZEoYcsWlECaNmJigJYBdtucNwLqW05NMl/Oo1ABJRpYEfnLyXvHTIId8zcbi6Zpq69uYsT8fSlHbjuS53FWUcFTL27lHFD9amPhmO9cZp8Rbmo59smpFa//hNghqebi6l9p+h9SYKWtM38a+4yyc/ajIQvE/qHS7wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5zqE+Oa; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWdH8mHz"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso44009785e9.3;
-        Mon, 07 Apr 2025 01:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744015731; x=1744620531; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ETW6l3iz7iXkgvHcK9RtSNHV8piZ5NQWh2YAPd/r8ew=;
-        b=DWdH8mHzaJQa2lo+nNcdOv5W4wUmmOey0wHE1cO/HQzZq1QX3qwiV1kIf12+AdK3GC
-         4QlHR/JQ3acI5gBEuLDFSV8Ty1GpHPJO8H6qh7DXHrYk5fYoUyPVO36DczA9Bd1bSNZf
-         l/08E+n9jeXomjTThuJF68QggZY1G8v8dvNyAqQYIkExybVADXQ/IFA3Rhsl4Leu6YY2
-         F/KSZwXSd9T9YyPHlk3CAvA45WhMj/Vix2XTG5t2npI10i1kql1jYPC45AAAWWgdYUgY
-         llIdzmUONURGp5h9yGmYpDwuNwc/bRK6QP1uKqNuZ/6g1vtUtzij/xsh5/JugkZruXuc
-         tEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744015731; x=1744620531;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ETW6l3iz7iXkgvHcK9RtSNHV8piZ5NQWh2YAPd/r8ew=;
-        b=VDJc4837QdLHC6INM5SqdAdayR3KWUnbaWAdfQghBI71ZQ+E6ozwdrsFsnkGgCgd+M
-         OlB5p7+8v/awo5S+IhYdb7Udd9hXNH/+RgrSyKsLB6G+H5nYUvVYlF1rbDemY7KkK2Gd
-         o8jlAmXK8JphoVSd2pq2vHebDXC6ICGiq3b+suKa+zVH7RN6NmTnsi4phqKd/XphhENn
-         jxLc0oWMLac07QpjG736nfJpoAQIfFelVezqbIZa8wzwfI0Ad3xna1p4EJAxnSusOnC7
-         0m9Dyf8xc8gs3QAVAPP6PxXRR+ELdBb4JXOSd1fGaqvq7hWvDIpFiFMxzc8bTwKd4wmC
-         mlaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcuUncPu/LDfchp5wMMqfCuQIad5pWhoYlGgnMqaFrwZu/o3NKR4nBfn07FJJGTParhCdDRdcq@vger.kernel.org, AJvYcCXqVCwnLlKe7tVWs99kNyL2tZ1FST7wtAKE6S4M+GG8bDgryXRBV7/Fmmz3wUJoq8QN9Ug7/nHoTqg259U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEYuiBlZ34d/vE3XEBKUCHFmyUPyCwoOADo3RV07L3PEjfzeI5
-	23vRhF72AOHUnQty4ZdaqHvnHQkt43emEJYFjt1gShpFpdOCxe1G
-X-Gm-Gg: ASbGnctpAifhJWVh6Eo+0iS69Gojyz8o/MxTvKLoFxCSSsYTzzyRVlrqMTYFZT2vFzp
-	vvBGffcO3+ilPfwPsJFS/vsFJNz1cUg0tbdnkTL6gWJmbDNGgfp7kWrDrIlr1wvl8ytwJ9moqY8
-	YGv6u1uITQt1ycXK3KDcPd8+C9u8UDToz/khxZemYnXtt8G3SD+wikXcW/bhAOOAzelousChqne
-	kOI58CjoTibFn/KE3844six+tGzl9EgaA5Bn2B5H5g51Iwtepyux4d00wdbiTOPL1TKckYiJpel
-	iTNE0TqXrTnxcj1Po6JGFFD6EnWNSeqiF3N2gJajHGleXgQOYLcGZmXQ123+qQgdDv1bQzB9IWx
-	kSf/u1rqDbXjNDQmDTlVv089CjLHUER5U
-X-Google-Smtp-Source: AGHT+IEmR58OqtA7yslcFQwqx1FxAvmlaq6osCPJB4WDTae12eKXli6ScxQuK1Lct+W8+ncDM1/mYQ==
-X-Received: by 2002:a5d:6d84:0:b0:391:20ef:6300 with SMTP id ffacd0b85a97d-39d6fd18c1fmr6079508f8f.37.1744015730496;
-        Mon, 07 Apr 2025 01:48:50 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364ec90sm122839435e9.27.2025.04.07.01.48.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 01:48:50 -0700 (PDT)
-Subject: Re: [PATCH] sfc: Add error handling for
- devlink_info_serial_number_put()
-To: Wentao Liang <vulab@iscas.ac.cn>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-net-drivers@amd.com,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- "Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-References: <20250401130557.2515-1-vulab@iscas.ac.cn>
-From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <be202919-4fd6-bc22-ab43-09c952db1959@gmail.com>
-Date: Mon, 7 Apr 2025 09:48:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5zqE+Oa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744015750; x=1775551750;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=B9s3+XIfej7okK4vYfrCqfccezv34+jSd9MAmtp/xls=;
+  b=l5zqE+OahThq4YADMKQOuNsmJIiwvUaIVS2uBImvWd4PX1o3xQMQ5X/f
+   96NZxWRVeB6t1ZeO94YFuxv2ml6YwKPVJ7SAM3DH1s1md3/fVoO2HRc12
+   Pz4dwGiI0A/k29VaOh4VbeJ38jeUmndFlKeHOGuU0PFDKzcaE0oCE/TzZ
+   UPBUK2FrwXH59uAYZfsv7llrx1A6Du+N9YSxHLIF2aMQkMvNGC2iCPpu5
+   E9qhsKhQ58/Jys1hyPGC0tztXFuNaJOkZOyUSPBbJav4LOBlnwoyrDBqN
+   Ku5hXGr0fUCCmEp9xfYxSOGw5wxm1hw7k7gKBt9BtbONx9KA20qeB+QBT
+   Q==;
+X-CSE-ConnectionGUID: fZ9Kz6nKRZWTgZV8iIaLWg==
+X-CSE-MsgGUID: MmrpPs2xQba/VKMkX+5Nyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="55575712"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="55575712"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:49:08 -0700
+X-CSE-ConnectionGUID: BhwjL6KpSjOzhxDRYde87g==
+X-CSE-MsgGUID: og5y1HNCSxC/neCN1hA9Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="127775164"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:49:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1iAB-0000000A0Yy-1PdI;
+	Mon, 07 Apr 2025 11:49:03 +0300
+Date: Mon, 7 Apr 2025 11:49:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v4] locking/mutex: Mark devm_mutex_init() as __must_check
+Message-ID: <Z_ORf1lLqs7UuWY2@smile.fi.intel.com>
+References: <20250407-must_check-devm_mutex_init-v4-1-587bacc9f6b3@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250401130557.2515-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407-must_check-devm_mutex_init-v4-1-587bacc9f6b3@weissschuh.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 01/04/2025 14:05, Wentao Liang wrote:
-> In  efx_devlink_info_board_cfg(), the return value of
-> devlink_info_serial_number_put() needs to be checked.
-> This could result in silent failures if the function failed.
+On Mon, Apr 07, 2025 at 09:46:47AM +0200, Thomas Weißschuh wrote:
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using the devm
+> variant of it. Tomorrow it may even leak something. Enforce all callers
+> checking the return value through the compiler.
 > 
-> Add error checking for efx_devlink_info_board_cfg() and
-> propagate any errors immediately to ensure proper
-> error handling and prevents silent failures.
+> As devm_mutex_init() itself is a macro, it can not be annotated
+> directly. Annotate __devm_mutex_init() instead.
+> Unfortunately __must_check/warn_unused_result don't propagate through
+> statement expression. So move the statement expression into the argument
+> list of the call to __devm_mutex_init() through a helper macro.
 
-Looking at the rest of the file, all the calls to
- devlink_info_*_put() in this driver ignore the return value, not
- just this one.  I think this may have been an intentional decision
- to only report errors in getting the info from FW, which seems
- reasonable to me.
-If not, then all the calls need fixing, not just this one.
-CCing Alejandro, original author of this code, for his opinion.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
--ed
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> Fixes: 14743ddd2495 ("sfc: add devlink info support for ef100")
-> Cc: stable@vger.kernel.org # v6.3+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/net/ethernet/sfc/efx_devlink.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/sfc/efx_devlink.c b/drivers/net/ethernet/sfc/efx_devlink.c
-> index 3cd750820fdd..17279bbd81d5 100644
-> --- a/drivers/net/ethernet/sfc/efx_devlink.c
-> +++ b/drivers/net/ethernet/sfc/efx_devlink.c
-> @@ -581,12 +581,14 @@ static int efx_devlink_info_board_cfg(struct efx_nic *efx,
->  {
->  	char sn[EFX_MAX_SERIALNUM_LEN];
->  	u8 mac_address[ETH_ALEN];
-> -	int rc;
-> +	int rc, err;
->  
->  	rc = efx_mcdi_get_board_cfg(efx, (u8 *)mac_address, NULL, NULL);
->  	if (!rc) {
->  		snprintf(sn, EFX_MAX_SERIALNUM_LEN, "%pm", mac_address);
-> -		devlink_info_serial_number_put(req, sn);
-> +		err = devlink_info_serial_number_put(req, sn);
-> +		if (err)
-> +			return err;
->  	}
->  	return rc;
->  }
-> 
 
