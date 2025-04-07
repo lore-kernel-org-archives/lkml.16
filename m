@@ -1,84 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5D12153E8;
-	Mon,  7 Apr 2025 17:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045897; cv=none; b=ajDr1XJaKSudkPjD3h++fWluYrkth/JbswDLFaFQU6xQk+w3aLtoiYu/8j9WGov9zthbUL2TeTA7F8ObDM6GpIPWT8UOt+0B37ZDeZo9lJ3nm6Xae0ioGbDV4X+J1bwDwUPlku/OOfSrnyDD9pgrsQYRuupS1cmiOsEEfOC37ig=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045897; c=relaxed/simple;
-	bh=h8hkQ+a9L7QH3qLMb+9zOBt+y/DMLfKrkg17g1TKfMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bfih0yihE1DiGJ3e8SLHqdZkr3j+8bxD7OZW4eXs133SgTr0Vx8Rn4fTYP/ihbOY1PgUzs5J432w6iY1Huxizd21fxSY0RqfSlH7mcFLB4ikeJpQC4esNJKgpTkmhPnHsFqu2MRw2dLK4gPEG0HXI3y3ZAigXDupd2MFB97X8Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDhbcY2h; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246712116FD;
+	Mon,  7 Apr 2025 17:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744045942; cv=fail; b=VqUnWaCSEIQhpPEAEyCsYM/MU4ixwOAssAXIPgHVyQgeKNdoRHMWcknC8hotG/h0gxudOHMxyUnTnxYScZoX6MQKOqZctSh51JAR3G1jU6QyqD32Qw93fIKuuJM1p/KqhlvMrQxJ3nRz0qxXg9bmicdJuINkbfcuaI6KddoEJvw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744045942; c=relaxed/simple;
+	bh=tQHRf2EBMVAN+TgRI1VXrtLS1mSWkQVmGSAfNBQhw6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BP8PO6aDrusnC9UBrGL4ggfNsGmKKLmh8tiwZ2RsfYPQrLPQtSRB48cGBXtiCemuPi1aDsGn+863hfgDMy80tWSyPJ+Fo38EdqjQB7AdobJ458UTkf7971xf9D4WEzhj9bFN6aXmfEy7m7eN8htVnVHV+zgMAdP2Bk3ZyFSku20=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Pp1y04bh; arc=fail smtp.client-ip=40.107.223.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDhbcY2h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6013DC4CEDD;
-	Mon,  7 Apr 2025 17:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744045896;
-	bh=h8hkQ+a9L7QH3qLMb+9zOBt+y/DMLfKrkg17g1TKfMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QDhbcY2hM1rGBBGrb6cP46UmsPPEIV4S2yLOnM2DgvyB9+dSSV4buTNHTEbQJM6sD
-	 C6nnlX6+w/kAKjUN6fyI8dFldTvvCc93/PCFJBN7wfngkSOYs30a0WSWTtoJjj1FEd
-	 2tov0j51zksxuhDAHjUxrw65Y0zsQsbT4st48vC2CCElGkAB3oCE//6hFQ76ECA1Jb
-	 fQDEcUeV2YLnqR948sSMXInMLrAFX4jnkkMAE4a9vtBVbdn9gWFZDkVxOGfllJyur7
-	 nxjSUQJ/KtarNGssQwnwAvBB5IxIzjuFxul90M4tdG6OOw/XReErskuksUrUeCBC1s
-	 4sp2iwxnL/u3w==
-Date: Mon, 7 Apr 2025 18:11:32 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/2] gpio: provide gpiod_is_equal()
-Message-ID: <8377e050-59d2-4de5-8fd5-bbc26bb72b71@sirena.org.uk>
-References: <20250407-gpiod-is-equal-v1-0-7d85f568ae6e@linaro.org>
- <20250407-gpiod-is-equal-v1-1-7d85f568ae6e@linaro.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Pp1y04bh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wiCz1F3uGWcVI+CcnurRkek1Avj5Iq8Xn3EQ/U2wquFa8ErMtjsJ+Hi9rXmsIN6Hq+hkeP5ZrLvJ9LLmSo42BxTDXac0zVhUBslZ1baLoH2cCESvlUCoMcdgCpLfN55+dsJLF1c/KnKD2CXOlGPDzcrdznGs6rNiV22847trOgpRwqNKe5NhAopC/65iZdAZiqItoZACbUraj6o0kc4nsypyqxsEeXG16Puchgbd9lRxUcILiQqO8zIFaQ74SZKuWYtKFBcaUCA3mlUldOFCnOt15STxR2G7+uk6rzmoJCCylHzkHnpWwtT7ZebEnGbUnNvxqUw7Zj24xQ/w2JSNCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=J01HHs5XYJEdNEiiGffIx9TTd/0fo3NtB91Oy2N8Ogg=;
+ b=OBA2NnqjinwMQLwAXljE8KE12NckKWJN04QNtcXaIogvqACLBDzolPNp/Y/HCDjO2b51Jp51OuYNUMJteZ/KQV0Nt/5Fen+DBCzqOZ1QHZVASPirNE2VKfsClcBZQf7fx5dZxBb6YKanGxiaGc7nlMI8Slc80bun9fVuKZVCi+5wDsA6MEJyiINjP+OUC8fAG1vH1e+VSb2BwlGVfSSwskAXszsBzNfWawvm78DaEjhxOjQ66xtvH6+1NvvWlZLJrZKRYpkO3UrtWOBfpymNnA7ay9049iRokJQNnN5+rKaQKjSZ9mBCJbbKo3vjXMHh6gyOqvmPyBIldOuBZWU0QA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J01HHs5XYJEdNEiiGffIx9TTd/0fo3NtB91Oy2N8Ogg=;
+ b=Pp1y04bh2P63aiDSgJAI6Nm4Asmu+l+DkF1JMIo3RopXFAJS+SIMF5XuBc2ZxGF3bpEDxtUmHopsVvqv55p5srxiQ6kpwzF++d4WrRsVHscXiMpMfEcgdCQRrVq0OdIV+aVbymTm0jXsxtENvZfh7XE5p/CAxd2O04+negzynyaj5cOWgVTE2xXpJAWnA3SFfAT8nXtiWkjPDDL/mh3jpHQaYgdBLxjaAEB/k5njpT+ReEQGwk/5AOjw0SNysED42+y2/cw+ZAFCtvo45wUULeGcLIBUfVkjQN0My1xfxklIQUBte89AKMeFlanm733sIdTVt0KNKt9+Y9R7kl907g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CY8PR12MB7416.namprd12.prod.outlook.com (2603:10b6:930:5c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Mon, 7 Apr
+ 2025 17:12:10 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
+ 17:12:10 +0000
+Date: Mon, 7 Apr 2025 14:12:09 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	linux-kbuild@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2 0/4] kbuild: resurrect generic header check facility
+Message-ID: <20250407171209.GJ1557073@nvidia.com>
+References: <20250402124656.629226-1-jani.nikula@intel.com>
+ <CAK7LNAS6o_66bUB6-qj6NnaTRNKvu5ycxOP+kGfizYVBNjZAyw@mail.gmail.com>
+ <878qoczbhn.fsf@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878qoczbhn.fsf@intel.com>
+X-ClientProxiedBy: BN0PR04CA0113.namprd04.prod.outlook.com
+ (2603:10b6:408:ec::28) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="q1RStVzK84G9v1DD"
-Content-Disposition: inline
-In-Reply-To: <20250407-gpiod-is-equal-v1-1-7d85f568ae6e@linaro.org>
-X-Cookie: Meester, do you vant to buy a duck?
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY8PR12MB7416:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e913cf4-b757-4bff-4c3f-08dd75f75538
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?R2z1MDYGFBKa8hBqJM5LpOFDVb4AEfQijMU0RWBcnQGb2S9cigmf8ZK09a1X?=
+ =?us-ascii?Q?VijBw9t9q1jsd2CkMucsFPgVP6LxgBC33GQ7q6gVq3umFAeMgXglBNCIEyZt?=
+ =?us-ascii?Q?ktw4b0fclKSFZ5aFWwtlCQBCSxPfeFJSjGnwevTncbB2bgY4hPF6O79cBON4?=
+ =?us-ascii?Q?WCsklv9lBik0lSrRoQGmBF2DbLANVj7Hik8DFg6nDtxuZGdsg2XlI3AiU+U/?=
+ =?us-ascii?Q?ro6azSBL6J4LxyQnhE8H3K++pk8HmwyqTF8LK9pxMqpTeOxOhuSDZ0Vf9ndd?=
+ =?us-ascii?Q?M4YEWIbut75qWe/QLz2nYexZiHUfN9nlYx69HtrFDE1XV8rzaA19C8YVXiTd?=
+ =?us-ascii?Q?pestEEJ+FP7jOdwWhrCwCw5KaLYkhRFa9D8I3ooWPjhkI/tV6IOtwdY55xL2?=
+ =?us-ascii?Q?5GJatfHkAioCR9556UqJRqDZyAwlPPZeiy9AktXMUZn3Js9LogrGrd70P018?=
+ =?us-ascii?Q?qHv3X1H7HW0emHmzMDXXrVCSiJ7aTd9eKKRhiZdDEGGguFYMv+1d8Lv85pvy?=
+ =?us-ascii?Q?HA/MwUivlmgTu1Vn2nL1ydar9ikyy13maxZ4qGVKWrDING7j2Nkm5FeM1XPT?=
+ =?us-ascii?Q?mK9ddU5VHemSXj8vKHKAsJEPQid+UrtVFurHr1KjoOPQaEe077GdYYedW/a5?=
+ =?us-ascii?Q?awCm+LV6aw9QHs6YF674UTxnu5SDEVOfqDsnU1grw/RhO7mHn1066UazE89o?=
+ =?us-ascii?Q?lOp+spiQCbN5G+G9hWnZ8s+8fwQojHbI6yJ2rhb7qVkIXqUEsE/tx4kTFVeb?=
+ =?us-ascii?Q?DqCQbNxNk+e96E05o9/We3y5QbdQe6MYizrwnPiE4cIFqRL9lkFfFuo9wmOz?=
+ =?us-ascii?Q?6khiaNqVa6kk6t5pVAOl1oLHri1dluE2IFDCEi7kybv2dbYy4d1OQExI3GEB?=
+ =?us-ascii?Q?FGCIuHenYcKORw5tOQyp81SN9TOmbz+JRTMchxim8COxkLCJKgiQlcopwydT?=
+ =?us-ascii?Q?yDEa8HZcaLDdlj3tJBJs3Cc1Wpi7LHp4X2Ob8k0tSEL8dmFpzi+hjTYX3xoh?=
+ =?us-ascii?Q?c7VUudTnmKTIaheje89u4R7S4lzE74QW0+ma4yO81U9tv462n/TfWB7EFSi/?=
+ =?us-ascii?Q?oYojqqhV4fHy7LYKKdRsgejw+9aVljvsdtJeaheWOj4W5O91U/plu/VLarm6?=
+ =?us-ascii?Q?T44fjVlj9bBQ7yW4670KiWBlwAVUND+PugPFKgrBOpY0vGEb5OPP5lFxkLWQ?=
+ =?us-ascii?Q?nD9LxOWtuDyzekv7PVMRqvMp4ePTDws9Fd92HMNhOPrEseG6oZLNI03s00uX?=
+ =?us-ascii?Q?5NV9dStSlK0rgoxzSVj++THjafvMxQZfzG+ks9QiQGfQRtPHwN73tWgjqz0R?=
+ =?us-ascii?Q?oUtPZgyziaeJLqOo3uUfgNPA7vex6dVuHlMdsEbbrSkUAl4r/2w8FJMSAqpJ?=
+ =?us-ascii?Q?X8voSABAYZYZ5Xcecqu+sduSHiYcByXNsAtypmv5sJAuOOKo5TE9mEWZtITV?=
+ =?us-ascii?Q?FFSyBKHWNz8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ulQhb0zeVRkni7qOhVo+clldN4ciXfBm91uigCQJQEFz9VEawQTFMClO2uFh?=
+ =?us-ascii?Q?qRERyjL8v52rw44UBI95pFPAudhKPjubKbuGXqZHg+nWIp7Hf9XwrGkWPDm1?=
+ =?us-ascii?Q?nPCNfXXFvokTpIQPkMYBbThFyPxLwdlWhY6h8BFndv6RmeBnJO81gVQ9c4IW?=
+ =?us-ascii?Q?H0aJCbuYakPXY+esSc+CJfJKH6hseRbqB18z1edSOAI4N/x6neDYec8Ej/jm?=
+ =?us-ascii?Q?fOyXxRnEOOhHPJR+/Iite02ciVr6fPyT2i2Lnnx9Mpv91N0/c7yfee75MgG2?=
+ =?us-ascii?Q?+CzqrQ7dN0GaIV1IMl1Op7Up4OHQmM23nVj+pNo3x33inyzEcYNmpRm7oKRM?=
+ =?us-ascii?Q?NHySgfAJI0X5M1d84EsPh37vEmhCWHDqUWdvLU7+/2oBk15vHa6bl3A/0VNU?=
+ =?us-ascii?Q?CIKda5qbkc+OlNiIX+1oP1fhmxks+bVv78bk1fTvXNOR+VKfylxYKgbwDEAM?=
+ =?us-ascii?Q?JJnbYCMEJ5XG/OwpzmOSkaDI18dufNaHtclfaF5zSj8p5l7ii2PfRflF8u9j?=
+ =?us-ascii?Q?IBguaibTEVba573uq5ffR+u/GxaaCvrLuDbwIdWyWTneUCGKPgz5V6JJLI6l?=
+ =?us-ascii?Q?12ZzzPBtkqKngHOqStJVR1g0h36pFQcs/1UsNBONDDu4O5zq6LwF6hVwD6Ge?=
+ =?us-ascii?Q?glGoRppYf/2UqFQh8MTXm9R0Vbfp+chJoXJZ8Rsm5aOPYdoePokzZHbjMGvr?=
+ =?us-ascii?Q?Z9M/2Zk7RfDtNqNEW7istZvLAvuOGCO4gV2/KDurqgD7xTD2lFLijEEzAks8?=
+ =?us-ascii?Q?uFF5HfXdwKvuEee/LIv2dGongGzCmx0AkutBjJzIGk0AFfKSQXQp1OHuTioO?=
+ =?us-ascii?Q?xL0fFAjBLu90NoOPRXuvCndMjglCiweacfc8fiTO0d9vc5SpVbZwhZwenPhc?=
+ =?us-ascii?Q?MH8dxAl9vlqT6X+wnZOXqECn8hkfR+b9RHG5NoJja/weWb+Dg684oKQlq5+i?=
+ =?us-ascii?Q?ox+698NULY7M+/wItEfOJeaMEYH8sNc1cr611p4xTNbY30CL1bl0IaqjSINJ?=
+ =?us-ascii?Q?gkFGbM6xKCLBKMF0o2lq3O74vrr1R2o+dWdvN4rgmibskfpBtcdN7lIRXGog?=
+ =?us-ascii?Q?Jwjh5kqY6ENPplifcmQOCxVCWkEJptwu42WuuG2IKJK17lL4QV2tulLhfifr?=
+ =?us-ascii?Q?kofu+shBb2BbDM4yrByPRWpgMyhLWD7G2VoNFhCEZSQRxaKhKwHEioc9kNbQ?=
+ =?us-ascii?Q?HBYJBUP2M3ePjy42VQqpP+8N2dnBDRDRhdBUrVSrHOsawLEK6h9gCuDcS1tT?=
+ =?us-ascii?Q?oCidpHekhbmSgzcZr39Jjh7BIddGpsoUWPyV/n9LdfwM3l/E7qRPKKQda6IT?=
+ =?us-ascii?Q?Nb6wkCrNdESofpqiceX36OtF2e4nQVT4ynR6a5Y/vLRM8ACc3GQtL6/GXvVN?=
+ =?us-ascii?Q?S7hORi5o3femwKLaKHosuiVU4YAMcMIvJbXdf9irIEXXDEReOtm/EJFodwIB?=
+ =?us-ascii?Q?nlEWuSIBl/s+UcqCs0cSJSuUnSlMQ6MICL0AVwYBtMDmHrp5upaY0LfPna5j?=
+ =?us-ascii?Q?99eLZ5Nu/zy7KT5yrTfesZKBoZsIgvHGrmEgieX2kzvMI9vl52wKryVBpdNu?=
+ =?us-ascii?Q?5gFZT+lHPpmZEOHIa60hR3m9VLOLXZWLg9i1WwKz?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e913cf4-b757-4bff-4c3f-08dd75f75538
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 17:12:10.5457
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xiqZWPd8xRvavfkUorHa9UNaHpXPOGjX/+9gcKN1p07zrFuXEzgF6Mjol2KqtUtF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7416
 
+On Mon, Apr 07, 2025 at 10:17:40AM +0300, Jani Nikula wrote:
 
---q1RStVzK84G9v1DD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Even with Jason's idea [1], you *still* have to start small and opt-in
+> (i.e. the patch series at hand). You can't just start off by testing
+> every header in one go, because it's a flag day switch. 
 
-On Mon, Apr 07, 2025 at 09:08:14AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> There are users in the kernel that directly compare raw GPIO descriptor
-> pointers in order to determine whether they refer to the same physical
-> GPIO pin. This accidentally works like this but is not guaranteed by any
-> API contract. Let's provide a comparator function that hides the actual
-> logic.
+You'd add something like 'make header_check' that does not run
+automatically. Making it run automatically after everything is fixed
+to keep it fixed would be the flag day change. It is how we have
+managed to introduce other warning levels in the past.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+If you added the infrastructure there is a whole list of people on
+kernel-janitors that would probably help with the trivial cleanups to
+make it run clean.
 
---q1RStVzK84G9v1DD
-Content-Type: application/pgp-signature; name="signature.asc"
+> With this type of antagonistic rather than encouraging attitude towards
+> contributions, there's just no way I can justify to myself (or my
+> employer) spending more time on what looks like a wild goose chase. I
+> have zero confidence that no matter what I do I'd get approval from you.
 
------BEGIN PGP SIGNATURE-----
+I think you've been given a clear direction on what would be accepted
+and have the option to persue it. Claiming that is "antagonistic"
+seems unnecessary.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0B0MACgkQJNaLcl1U
-h9AUnwf9Ema+8JLpJP+dNVdaXS4dwd4zlNxa4z+B/dMkxz7AnATG7MHBmuBhBnfl
-Ly9wxIwoaVA/Y7RQp3W/V4x2lirJelRg8au/qzx07jxF5quyWvNCGUbodwzj3hN1
-73rClWlh6wy5C9nUN/MpuIyF71fNywJwaGNX2W8XfdPr7p6jj6oZDcl8nYvt0hs0
-ZLqlJ4Q5RvAwT0wx/iVKUA7HzMyQSYYC4498YPVmYTxJtkrd46u7m2os/BS8+VwM
-7Y4tXv4xU3Hsv7Hr/m35GBkZKJ+CwHh35aCvrZVKnMg7pprA0wiUAwKkOqvnPn7y
-QcA0lWwu8q/JKdATu3eEz5ZV/5qi0g==
-=F6hV
------END PGP SIGNATURE-----
+> And this is the primary reason subsystems and drivers hack up stuff in
+> their little corners of the kernel instead of sticking their necks out
+> and trying to generalize anything.
 
---q1RStVzK84G9v1DD--
+Seems to me like this is the usual case of generalizing being actually
+hard, you almost always have to actually do more work to succeed.
+
+Jason
