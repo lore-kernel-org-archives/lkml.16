@@ -1,126 +1,215 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CCB217679;
-	Mon,  7 Apr 2025 17:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1921146F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744048697; cv=none; b=QzGBf1FgDAoDs2UFw5Z2Qfdw72Z/6pXtlnaD/dKQajaNeNml2eEHp3ArbX5HlpjPEq7Pv/wysli3F71IPN2/TUBKj5qaFUcR74WgcpaMKeSA0jzf65Q2y8CYENah8nRjwAHAqWQh2Ht14hznWAg0ZIH1/9lMxQONnmBrfaoTKxs=
+	t=1744048851; cv=none; b=RtF6QVQbfF6nDEbWFou6McO84oEhRYX97ohkP4WIHIyWcv1J3ab5cspjUSf2SCGHauuEsWWvsZgskE8CU0FuWeL1Ks8b374KLIL6v66C4goCNcbvoV+TIgmRm0Z8nhDbRGLWbXTgxpwjR415jf7IhI55HWtezXFSUxrRH4x/8iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744048697; c=relaxed/simple;
-	bh=sBIyosl71LpJQSqFXDho9ZkMcYvbSRj90i95hQpHG38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qt6tqcjwVH4abuukt/7C6t+zxXRLKYQhLZcc+wVC+Rx3ShCO37gbMMDtjkRR8SyiIE5xT6V/yAr3mLiJMP5yWkCg/xLu8ro0ZcXbCRFOJBmrXFj9M6yrIsRF8F1t8iLsG74kIBkAKeDLJB0+auT5hvqW1ltoNIZ2fMb0rOqCuw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=WlGmVHMV; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744048851; c=relaxed/simple;
+	bh=b6XYIgMFh9ekMaYW7dpUg8Z3Mcn8xba2wZJsMqEEfPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nc/NsQ+x/R5a2aGF7N8T5Esq3zz0URUbhVOZX9ZhbKwiCuqaWYPJ8TRg6DGcfI2oGAP3lY6ndkOW3JUTSPdUF0+I4n7eB1x/rzWxUiETl++VyC90vJj+Z5TGmAkaYU2kehZOxxTwnEjccYFg8KJIA6GNLejM3kSDE23NnKjO/vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QEPXk48X; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WlGmVHMV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FQZF3bHFrRzkhV+LKvF3d5dfM2bWmbi8UIfdjStHGX4=; b=WlGmVHMVJCxY5iiYt0wYPPv9S/
-	K+r0x/7QswlLVAvAjukNFL5ndYGtlZ1/u8epQ0A4/lD0fy1PuATaJtDAUOKSTPMVB3m9d8mqIKVjQ
-	jKN2HY2tLwGol6pm30f/jJ8D2W2NJXhjUoaM+zpHzzGpGA+RYhI+qVYQCTb85DINqdSiXuOlDyhut
-	RWlHSwmJVAo/P+ipwBWUGibW6T4f1tJuG6S02ymjq8HT9Hasq+o7ilZgM8ppJa52emVHbWU7Cp5f2
-	uutqqPomR9ipCpMvz5CIlO1TzpnSQ9Wb7PWqVOuqjvJIt5Y+T66c8eqehUGEvO+OrHR6oApwIZXip
-	cYrIt12Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56466)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u1qjN-0005nL-0u;
-	Mon, 07 Apr 2025 18:57:57 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u1qjG-0000aL-28;
-	Mon, 07 Apr 2025 18:57:50 +0100
-Date: Mon, 7 Apr 2025 18:57:50 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-Message-ID: <Z_QSHpvSK7I--xPq@shell.armlinux.org.uk>
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QEPXk48X"
+Message-ID: <46dc6803-47f0-4434-9794-08307604e450@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744048846;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LYQgn5/fy4dHXJLjzY7D/eH42PtSSXiU5EQQrf/mBGI=;
+	b=QEPXk48XAIJwFjsEkynJHh8BkD7K6R7O3WxD+ynoOmVgsn3k4PmYUCzmmB8MkHr7AN0G6g
+	Edf5aQOyIkfIPSNRLd6br718NyzzNT5EVVzm3orqZ8iTpgHbKEiiBu/nFsKZuKQaEa/BU7
+	EJ/AhQ9vJrNKR2TUnoIDZwg0gn/FJ7c=
+Date: Mon, 7 Apr 2025 23:29:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 12/18] drm/bridge: cdns-dsi: Drop checks that shouldn't
+ be in .mode_valid()
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-12-4a093eaa5e27@ideasonboard.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-12-4a093eaa5e27@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 07, 2025 at 01:03:17PM +0100, Prabhakar wrote:
-> +static struct clk *renesas_gbeth_find_clk(struct plat_stmmacenet_data *plat_dat,
-> +					  const char *name)
-> +{
-> +	for (unsigned int i = 0; i < plat_dat->num_clks; i++)
-> +		if (!strcmp(plat_dat->clks[i].id, name))
-> +			return plat_dat->clks[i].clk;
-> +
-> +	return NULL;
-> +}
+Hi Tomi,
 
-In addition to Jakub's request, I'll ask that you hold off for a week
-because I have the following that I'd like to submit:
+On 02/04/25 19:00, Tomi Valkeinen wrote:
+> The docs say about mode_valid():
+> 
+> "it is not allowed to look at anything else but the passed-in mode, and
+> validate it against configuration-invariant hardware constraints"
+> 
+> We're doing a lot more than just looking at the mode. The main issue
+> here is that we're doing checks based on the pixel clock, before we know
+> what the pixel clock from the crtc actually is.
+> 
+> So, drop the checks from .mode_valid(). This also allows us to remove
+> the 'mode_valid_check' parameter from internal functions, and the
+> related code.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 44 ++++++++------------------
+>  1 file changed, 14 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index e85c8652c96e..cf783680b1b4 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -469,25 +469,17 @@ static unsigned int dpi_to_dsi_timing(unsigned int dpi_timing,
+>  
+>  static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>  			     const struct drm_display_mode *mode,
+> -			     struct cdns_dsi_cfg *dsi_cfg,
+> -			     bool mode_valid_check)
+> +			     struct cdns_dsi_cfg *dsi_cfg)
+>  {
+>  	struct cdns_dsi_output *output = &dsi->output;
+>  	u32 dpi_hsa, dpi_hbp, dpi_hfp, dpi_hact;
+>  	bool sync_pulse;
+>  	int bpp;
+>  
+> -	if (mode_valid_check) {
+> -		dpi_hsa = mode->hsync_end - mode->hsync_start;
+> -		dpi_hbp = mode->htotal - mode->hsync_end;
+> -		dpi_hfp = mode->hsync_start - mode->hdisplay;
+> -		dpi_hact = mode->hdisplay;
+> -	} else {
+> -		dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
+> -		dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+> -		dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
+> -		dpi_hact = mode->crtc_hdisplay;
+> -	}
+> +	dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
+> +	dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+> +	dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
+> +	dpi_hact = mode->crtc_hdisplay;
+>  
+>  	memset(dsi_cfg, 0, sizeof(*dsi_cfg));
+>  
+> @@ -518,8 +510,7 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>  static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+>  			      struct cdns_dsi_cfg *dsi_cfg,
+>  			      struct phy_configure_opts_mipi_dphy *phy_cfg,
+> -			      const struct drm_display_mode *mode,
+> -			      bool mode_valid_check)
+> +			      const struct drm_display_mode *mode)
+>  {
+>  	struct cdns_dsi_output *output = &dsi->output;
+>  	unsigned long long dlane_bps;
+> @@ -549,11 +540,11 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+>  	if (dsi_htotal % lanes)
+>  		adj_dsi_htotal += lanes - (dsi_htotal % lanes);
+>  
+> -	dpi_hz = (mode_valid_check ? mode->clock : mode->crtc_clock) * 1000;
+> +	dpi_hz = mode->crtc_clock * 1000;
+>  	dlane_bps = (unsigned long long)dpi_hz * adj_dsi_htotal;
+>  
+>  	/* data rate in bytes/sec is not an integer, refuse the mode. */
+> -	dpi_htotal = mode_valid_check ? mode->htotal : mode->crtc_htotal;
+> +	dpi_htotal = mode->crtc_htotal;
+>  	if (do_div(dlane_bps, lanes * dpi_htotal))
+>  		return -EINVAL;
+>  
+> @@ -569,27 +560,25 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+>  
+>  static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+>  			       const struct drm_display_mode *mode,
+> -			       struct cdns_dsi_cfg *dsi_cfg,
+> -			       bool mode_valid_check)
+> +			       struct cdns_dsi_cfg *dsi_cfg)
+>  {
+>  	struct cdns_dsi_output *output = &dsi->output;
+>  	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
+>  	unsigned int nlanes = output->dev->lanes;
+> -	int mode_clock = (mode_valid_check ? mode->clock : mode->crtc_clock);
+>  	unsigned long req_hs_clk_rate;
+>  	int ret;
+>  
+> -	ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg, mode_valid_check);
+> +	ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = phy_mipi_dphy_get_default_config(mode_clock * 1000,
+> +	ret = phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
+>  					       mipi_dsi_pixel_format_to_bpp(output->dev->format),
+>  					       nlanes, phy_cfg);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode, mode_valid_check);
+> +	ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -635,8 +624,7 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+>  	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+>  	struct cdns_dsi *dsi = input_to_dsi(input);
+>  	struct cdns_dsi_output *output = &dsi->output;
+> -	struct cdns_dsi_cfg dsi_cfg;
+> -	int bpp, ret;
+> +	int bpp;
+>  
+>  	/*
+>  	 * VFP_DSI should be less than VFP_DPI and VFP_DSI should be at
+> @@ -654,10 +642,6 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+>  	if ((mode->hdisplay * bpp) % 32)
+>  		return MODE_H_ILLEGAL;
+>  
+> -	ret = cdns_dsi_check_conf(dsi, mode, &dsi_cfg, true);
+> -	if (ret)
+> -		return MODE_BAD;
+> -
+>  	return MODE_OK;
+>  }
+>  
+> @@ -996,7 +980,7 @@ static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+>  	adjusted_crtc_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+>  	adjusted_crtc_mode->flags |= DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC;
+>  
+> -	return cdns_dsi_check_conf(dsi, mode, dsi_cfg, false);
+> +	return cdns_dsi_check_conf(dsi, mode, dsi_cfg);
 
-bbc73b8b6dfd net: stmmac: provide stmmac_pltfr_find_clk()
+With this patch, the driver shifts to using the crtc_* values during the
+check phase, and then, it is brought back to using non crtc_* values in
+the next patch.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index c73eff6a56b8..43c869f64c39 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -709,6 +709,17 @@ devm_stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- #endif /* CONFIG_OF */
- EXPORT_SYMBOL_GPL(devm_stmmac_probe_config_dt);
+Should this patch just drop the cdns_dsi_check_conf() check from
+.mode_valid() instead, and let the next patch phase out the
+mdoe_valid_check parameter as the driver simultaneously shifts to using
+the non crtc_* values throughout?
 
-+struct clk *stmmac_pltfr_find_clk(struct plat_stmmacenet_data *plat_dat,
-+                                 const char *name)
-+{
-+       for (int i = 0; i < plat_dat->num_clks; i++)
-+               if (strcmp(plat_dat->clks[i].id, name) == 0)
-+                       return plat_dat->clks[i].clk;
-+
-+       return NULL;
-+}
-+EXPORT_SYMBOL_GPL(stmmac_pltfr_find_clk);
-+
-...
-
-which will avoid glue drivers duplicating this functionality. This will
-be part of the first sets of patches I'm going to be submitting.
-
-Thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Regards
+Aradhya
+
