@@ -1,162 +1,108 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0842C3597A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6ED35968
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012793; cv=none; b=ZumW3zL/H1TdfPcEOzEjh2cupetLAPWrBf/+r7Iec354z0QQ9+2Y684C0/wdhMYB9lRotwxPFdSlKYrDd16jV8Xwm6a5c3Bdb2ok74apuqi+MRRmODFmPzvIIfs1FJstoPd/OvrSchabnh13vYx9uaASMP8r5hRbp23Hdl5Xip0=
+	t=1744012823; cv=none; b=NB2/b7tmE81UMJBP8raACOy+3OMtLzjBIz8oyFzzREbw4SiPhSaHdcA0xgDeyoJMH7fowktYsr8bfRqtOtHF0sCC+VSyfnIaKKFCvqZCllLL/XL+Xks9G9SBzfE1VFT9DPu5OPn0Lr+fD6Cm6ZAtu9itXZ2HLz7jmGAlPu1rJPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012793; c=relaxed/simple;
-	bh=fGvzMoP8xL3O3EdSKYPzV0pTCk7PJyLucUIFI4nau+c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NSb/64+sSPX+Rc6oCchKUKbObcsZUz3GR6Krco6yjRI2nyIQoKaz6tdeWMg/w4WEMRuqsP/JWD293zfSinSZsKb6fVKRSkFj9yMnEJp/uRvIg+GXOjD/hFTMD698h6HtVsYEvzCsk9Fz2uosI5b55bYaKMBaqSSadf1gUu9NDDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzzBa5sZ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744012823; c=relaxed/simple;
+	bh=3MSWCyW5uI5Z9ZGyZVx2/95ay1GhUkLkvBEaHMuEqJU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Hn+jRktH28uO/FZyFhebWiMz4QBjRfjtf+kb0EYrjQIeEdPxoDk/JB8qZ4ELGeNwFSygh23sZYdAPJ3woHwnaxzKE3WNWNcZFtqOZQaCLjbQPaxAUp+xQza9VKVeeqd+9v4OrdYKmxPdgleJDDs1CZheD6AXANJpBGbuM7igy6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eVFwLXdX; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzzBa5sZ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224191d92e4so35453625ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744012791; x=1744617591; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jHCGoqHBzpIdEU6c96dPPdkpFb/y3mZAbOJiJJ57gYo=;
-        b=KzzBa5sZxLv3FP0hhHH/j+qPmMtXioIiHgT95VIt9GAyriv1xokc7uz22ZatA0zq/l
-         IvYrGMOiCoBOCwQyKmRq/KwrOTzYXswmPUz+JlZ53kjU4k05uM8wNZ9zzadER4hWMGlX
-         FwiIDkHStjZydayyNq1HroF19dxXDz1s1yF+4uxQSPJquus7bo9P2GwkWF0Z8XKTo+iD
-         6H8IkEf/EzvUGzjW/JAxvnYYnDVRwRYP46tNfih6s7GSud2L7UvPEaVv0Wou8lsfFkkz
-         78qgtENcUxiHQFWDuTJGPg0+DZ72rA5wZVbg4SK4F9KDkM5Oe5WEZeZHIo94tm39fDD5
-         PAXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744012791; x=1744617591;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jHCGoqHBzpIdEU6c96dPPdkpFb/y3mZAbOJiJJ57gYo=;
-        b=K5hXlTLZlpn8AI1r6I9TMC/Q79gthdLCa+jK7x9KlNnQL5FKJaLzWk4gjUlCxv4uvB
-         /zc2+wNb6tO9sxlr/B4In6MNjRQmj5+prEd8CmBZgU/6tb6t1CHwca1818zXRy2Ib3Rb
-         CftASxLlBIQ4VXeL+9fXuY7CbtY2+d2eoFBdV88FYHWOgrMWIgA62xLLBgYMgS2P4tbQ
-         qTEnyBVg1hjXERmG0J4bXzBfMNmRpvXAqUDRQHZnwKUTX86s5WfH6FFrTj9GTqNQH2SG
-         MLwoDP9iUgmq11h7nnHApDxrQFfphca+kvL3vWapX5IM4pOors8q4+XO8iHsObmLNNBs
-         JaOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEqzlurD+TvF3BaXShrkEhHp2TQFjU+I8msjXKd2zX2cXHVKsBpqj432pdqGTWLnDPCL228LWulBrZMtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCLZljQ3ISuvMo4c3juBXnG2l0HxC5fpJ1Ui3rUsMP7woLzRH5
-	SBFFzXW8ajcZ4W9U9k2QJALuZMoSe7bzl816Gf5+PNPD7+JGWHZHGKVNpg==
-X-Gm-Gg: ASbGncvQEWAyO9GJZqbXiyN7Hhah1gb9yEEnXRXc/18lc7MpRSGFLg+GXl3mi3SHXOc
-	j+nuIn5TxkZH22LOeZLS47Z8RF9qGYqiSI3oWuDgfpdAAQh4RcUXAOlhB2WgxEEi61W4CU0AmpN
-	k1zHLYWcaqWZRnzlUjLCqXOzyuuc4/Y49CGt02yyC45cb6JE72L8NIKOG+PwPIwd+KBWYqw2LYg
-	jYrbAyD6RT0FQ41ZNF2vawjlRDvnbQM7fZRN5Qg44KIdihoL29EnYoLr9QeaEXtTY9FNQqy6oA9
-	COlZBeObkjC0Uuv3A8dT6fuEL/KptepNVnbBP7MhEcYhTXNqfW8W6GLpeMqRuqxYp0D5
-X-Google-Smtp-Source: AGHT+IGzyuInDZv9TFbIGdTJf3z2Mmyb5DI+ZYc2OErxs5yInuxDIM5hgs4/dF9aBoyig1PmN467Iw==
-X-Received: by 2002:a17:903:32cb:b0:224:18bb:44c2 with SMTP id d9443c01a7336-22a8a045ff0mr131372215ad.6.1744012791242;
-        Mon, 07 Apr 2025 00:59:51 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c0153sm74635035ad.65.2025.04.07.00.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:59:50 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 515A880580;
-	Mon,  7 Apr 2025 16:08:47 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: tudor.ambarus@linaro.org,
-	pratyush@kernel.org,
-	mwalle@kernel.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: [PATCH v2 3/3] mtd: spi-nor: macronix: Add fixups for MX25L3255E
-Date: Mon,  7 Apr 2025 15:54:00 +0800
-Message-Id: <20250407075400.1113177-4-linchengming884@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250407075400.1113177-1-linchengming884@gmail.com>
-References: <20250407075400.1113177-1-linchengming884@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eVFwLXdX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E61B244371;
+	Mon,  7 Apr 2025 08:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744012818;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3MSWCyW5uI5Z9ZGyZVx2/95ay1GhUkLkvBEaHMuEqJU=;
+	b=eVFwLXdXTJXwPIFhA7cVn/m2T20j4rpfa2ue6EFts15Kbbhw7S/fhPvB8CeQGjHsQo5M89
+	W8FnhtVKz+GkrA4Xa30uH7+aI//BmWK+BVBbp//WK+VewDCqMls9z7xyNINscH9fU4h3bU
+	kYCkdaMYFA1F5+B8HOsuDHRmVRybyP9Flzjjpdto5D7WhK2wF5mN11a7CeFoSSaFpKaq7i
+	COjlGUHB9QEKMXbaN4bX9Ue8pw/1w6FRlJEay8s8g+BjxxNu6uzY3l6RvAtOqKty/n7HAW
+	YNpMdm2HQhj+FjQzqPNPHA+qG4uDtnnYzzxvUhKHyfc/tsHL3EevLvKlm879dg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Md Sadre Alam <quic_mdalam@quicinc.com>,  Mark Brown
+ <broonie@kernel.org>,  Varadarajan Narayanan <quic_varada@quicinc.com>,
+  Sricharan Ramabadhran <quic_srichara@quicinc.com>,  Arnd Bergmann
+ <arnd@arndb.de>,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-qpic: fix common module build
+In-Reply-To: <20250407072745.186831-1-arnd@kernel.org> (Arnd Bergmann's
+	message of "Mon, 7 Apr 2025 09:27:14 +0200")
+References: <20250407072745.186831-1-arnd@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 07 Apr 2025 10:00:16 +0200
+Message-ID: <875xjgflkf.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelieegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedruddtkedrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrfedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepqhhuihgtpghmuggrlhgrmhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ ehquhhitggpvhgrrhgruggrsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghsrhhitghhrghrrgesqhhuihgtihhntgdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggv
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+Hi Arnd,
 
-SFDP of MX25L3255E is JESD216, which does not include the Quad
-Enable bit Requirement in BFPT. As a result, during BFPT parsing,
-the quad_enable method is not set to spi_nor_sr1_bit6_quad_enable.
-Therefore, it is necessary to correct this setting by late_init.
+On 07/04/2025 at 09:27:14 +02, Arnd Bergmann <arnd@kernel.org> wrote:
 
-In addition, MX25L3255E also supports 1-4-4 page program in 3-byte
-address mode. However, since the 3-byte address 1-4-4 page program
-is not defined in SFDP, it needs to be configured in late_init.
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When the NAND driver is a loadable module, and the SPI driver is
+> turned off, the common part is not built:
+>
+> ERROR: modpost: "qcom_nandc_unalloc" [drivers/spi/spi-qpic-snand.ko] unde=
+fined!
+> ERROR: modpost: "qcom_write_reg_dma" [drivers/spi/spi-qpic-snand.ko] unde=
+fined!
+> ERROR: modpost: "qcom_read_reg_dma" [drivers/spi/spi-qpic-snand.ko] undef=
+ined!
+> ERROR: modpost: "qcom_nandc_dev_to_mem" [drivers/spi/spi-qpic-snand.ko] u=
+ndefined!
+> ERROR: modpost: "qcom_nandc_alloc" [drivers/spi/spi-qpic-snand.ko] undefi=
+ned!
+> ERROR: modpost: "qcom_submit_descs" [drivers/spi/spi-qpic-snand.ko] undef=
+ined!
+> ERROR: modpost: "qcom_clear_read_regs" [drivers/spi/spi-qpic-snand.ko] un=
+defined!
+> ERROR: modpost: "qcom_clear_bam_transaction" [drivers/spi/spi-qpic-snand.=
+ko] undefined!
+> ERROR: modpost: "qcom_read_data_dma" [drivers/spi/spi-qpic-snand.ko] unde=
+fined!
+> ERROR: modpost: "qcom_write_data_dma" [drivers/spi/spi-qpic-snand.ko] und=
+efined!
+>
+> Simplify the Makefile to just build the common bits for either of the two,
+> so it will be built-in whenever one of them is, or otherwise a loadable
+> module if needed.
+>
+> Fixes: 7304d1909080 ("spi: spi-qpic: add driver for QCOM SPI NAND flash I=
+nterface")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
----
- drivers/mtd/spi-nor/macronix.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Thanks for the fix, I just applied Geert's identical patch this morning,
+I was waiting for -rc1 to synchronize everything again:
+https://lore.kernel.org/linux-mtd/174401012746.998658.11206994348683987630.=
+b4-ty@bootlin.com/T/#t
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index 07e0bd0b70a0..4bbd3b651cec 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -58,6 +58,31 @@ macronix_qpp4b_post_sfdp_fixups(struct spi_nor *nor)
- 	return 0;
- }
- 
-+static int
-+mx25l3255e_late_init_fixups(struct spi_nor *nor)
-+{
-+	/*
-+	 * SFDP of MX25L3255E is JESD216, which does not include the Quad
-+	 * Enable bit Requirement in BFPT. As a result, during BFPT parsing,
-+	 * the quad_enable method is not set to spi_nor_sr1_bit6_quad_enable.
-+	 * Therefore, it is necessary to correct this setting by late_init.
-+	 */
-+	nor->params->quad_enable = spi_nor_sr1_bit6_quad_enable;
-+
-+	/*
-+	 * In addition, MX25L3255E also supports 1-4-4 page program in 3-byte
-+	 * address mode. However, since the 3-byte address 1-4-4 page program
-+	 * is not defined in SFDP, it needs to be configured in late_init.
-+	 */
-+	struct spi_nor_flash_parameter *params = nor->params;
-+
-+	params->hwcaps.mask |= SNOR_HWCAPS_PP_1_4_4;
-+	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_4_4],
-+				SPINOR_OP_PP_1_4_4, SNOR_PROTO_1_4_4);
-+
-+	return 0;
-+}
-+
- static const struct spi_nor_fixups mx25l25635_fixups = {
- 	.post_bfpt = mx25l25635_post_bfpt_fixups,
- 	.post_sfdp = macronix_qpp4b_post_sfdp_fixups,
-@@ -67,6 +92,10 @@ static const struct spi_nor_fixups macronix_qpp4b_fixups = {
- 	.post_sfdp = macronix_qpp4b_post_sfdp_fixups,
- };
- 
-+static const struct spi_nor_fixups mx25l3255e_fixups = {
-+	.late_init = mx25l3255e_late_init_fixups,
-+};
-+
- static const struct flash_info macronix_nor_parts[] = {
- 	{
- 		.id = SNOR_ID(0xc2, 0x20, 0x10),
-@@ -199,6 +228,7 @@ static const struct flash_info macronix_nor_parts[] = {
- 	}, {
- 		/* MX25L3255E */
- 		.id = SNOR_ID(0xc2, 0x9e, 0x16),
-+		.fixups = &mx25l3255e_fixups,
- 	},
- 	/*
- 	 * This spares us of adding new flash entries for flashes that can be
--- 
-2.25.1
+Sorry for the delay.
 
+Thanks,
+Miqu=C3=A8l
