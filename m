@@ -1,125 +1,197 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E19B1B87CE;
-	Mon,  7 Apr 2025 14:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141551C0DED;
+	Mon,  7 Apr 2025 14:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744034619; cv=none; b=YhiusNlpa9lruvkylJeCH8j6rtlTHk6kNQ/tpTbkl+Lzu5b5BvqPIu/4kKBmZrp2n9EPVWF7nwC5glWzOuNHGE8iIc5x4CjjQ4AJ9IYUdp+LJ/urWhJFiQBNip0msw255o0YyP5cee/Zeufzr1rvMQhp4F177REfME8CAvqJ6H0=
+	t=1744034621; cv=none; b=Ge1qygES9WyqyyDIjN9boa2+LNWr6rJsQIwp28Fl+YL1St0YMuE65fvkJ1zNDQ7Kp13cB9cv0pQ1xgO7yqUXiAe2yaxgIV4y+i8UfgII1EtuWHjrtZ8yn2lLQ0jHL42PPYzD7xx5dgRsmspotnlSDvSo4T05rwcxTgCBFIYPF2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744034619; c=relaxed/simple;
-	bh=LwpFHqtTF6aiM+1soPf8ma0ZkEP2mzQ1iN1O5ga09M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SoKZAzSxpyXi6K/mK1ClctWGRkxEJcYn0Lqp7jtgzQMTwguD5SX9iY+eWbww8DK8bd4HZYDGeb2MemFW82XKTccC9Qwz5T0qdTBesy5+PUOROJtP2p2BaQnXuFL4cphnyPdsq9g8QvgUBHxgU5RiWlknRUe3Jdxg3tk2RDiMFGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XbK+zNlm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744034621; c=relaxed/simple;
+	bh=AVcNJrpPYIGA36U5G5+x66QY97yrjXIuXHF9RC3zkQU=;
+	h=From:Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:
+	 References:In-Reply-To; b=UYxnvr8x4iB0aR+VXqbLscxvtWOCsNsNmvD9Zyq4fmHBb3W5iEl4htufSSQUaWrGv/z8Y6jrjOMntAf87S41RlSw56P/UVBjMLVEEEwbROY9tzQeIk+bxK8NhzKv9JfgFx0zRukiAb3OcPZ9AUzrfBRZUVqLRmwP7xhVm7bSlEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTOGSyT/; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XbK+zNlm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744034614;
-	bh=LwpFHqtTF6aiM+1soPf8ma0ZkEP2mzQ1iN1O5ga09M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XbK+zNlmEYMyXgy9EE+nYDPMS6CNvfQvS4m8Ns622tsZ+iUYZZUmQVKBc+XlC+Ex0
-	 LaVUBaVnuHyN4MmHQRM5lw75L9OtxOhDCkjuYODTe+qjTI/m5+AMTxT0Gka7jc0QE8
-	 IifRhyjZZYK5QvnI+mMIhrnYhTnAo9KP5sABY5mQ6fcU6WPvsT9xj3IKWxPUaa7KsX
-	 WNf9C7FVgUYYMwv/V1hMAOJBiisS+blTU874Zclxv4aFp9RB6gJyAyCkEp32WSgf2b
-	 YGO6OexvWQ9aiFyaesw8sjta8FGk9hz0lRUCH2EruQhXMFQ6T/BIolXXN9TstLXeHQ
-	 P+ItjRt/WHB3Q==
-Received: from notapiano (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D60C917E02BE;
-	Mon,  7 Apr 2025 16:03:28 +0200 (CEST)
-Date: Mon, 7 Apr 2025 10:03:26 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: James.Bottomley@hansenpartnership.com, akpm@linux-foundation.org,
-	anton.ivanov@cambridgegreys.com, corbet@lwn.net,
-	davem@davemloft.net, dmaengine@vger.kernel.org, ebiggers@kernel.org,
-	edumazet@google.com, horms@kernel.org, jaegeuk@kernel.org,
-	jarkko@kernel.org, jic23@kernel.org, johannes@sipsolutions.net,
-	kernel@collabora.com, keyrings@vger.kernel.org, kuba@kernel.org,
-	lars@metafoo.de, linux-doc@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mm@kvack.org,
-	linux-sound@vger.kernel.org, linux-um@lists.infradead.org,
-	maxime.chevallier@bootlin.com, mchehab@kernel.org,
-	netdev@vger.kernel.org, pabeni@redhat.com, perex@perex.cz,
-	richard@nod.at, tiwai@suse.com, tytso@mit.edu, vkoul@kernel.org,
-	workflows@vger.kernel.org, zohar@linux.ibm.com
-Subject: Re: [PATCH] docs: Remove literal markup from Documentation/ paths
-Message-ID: <9bc7b77b-73a7-4d6d-9187-ac452f8cad23@notapiano>
-References: <20250404-doc-paths-unliteral-v1-1-74718785444e@collabora.com>
- <811c4103-08b1-4288-9a15-bd9795bc59f4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTOGSyT/"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso28997265e9.3;
+        Mon, 07 Apr 2025 07:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744034617; x=1744639417; darn=vger.kernel.org;
+        h=in-reply-to:references:to:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IIlvgpw9XtwUaSV8K9n4TGTxcXwBT3cWEpS99F1AqXk=;
+        b=cTOGSyT//VtSI/F/VDzpu6k18jHZjzkq99gQqti0cNmF8k5YUdANodwdQNv+A3nkPN
+         bwJ/9srMfXNouZ9RcyxH6Yx+cjlVvHcQLtIx/tXxPIhJH/zhNxFCgCAWBmfxfOLbEDjy
+         Y6GUU5VI2RNfMB5ru6svXc/d6y/NS5oFRf5VXAWTq6tAc2EEYpLGoTHPJeico14kfmJy
+         Vo1Wp5dIp0ySlMIOZSM7NlYoBHDxWPDAtZoWopiz0S/CBg+ihTmWbZDDSm2LWEE847ri
+         doKn2ixjqDYA51eepLCq2iP0Z7pkVVvNPwgNIH9HoqY/WcF+L2dIyersUjzU+d9tQ8Ar
+         Ea5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744034617; x=1744639417;
+        h=in-reply-to:references:to:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IIlvgpw9XtwUaSV8K9n4TGTxcXwBT3cWEpS99F1AqXk=;
+        b=rKNC3Fr9ItIg9OYD42lZvniiZpZ4kf3wreoHJBCwD+b9/8R0FZIMIjYeIyOmPrhcj/
+         U/ejyoo2b8e75huRESCNMmqtc2I79SDaHft7TKafzeUT6w0IwOFvtSmxEf37/tINFaGB
+         MGi+pKbMB6ClYQY4QycllDlDkD7OWZzLYGuhsU07H2GMiqDZUmf/zoXFX9UaGGzkTZgC
+         fVdfmSJbyg+xpA3bTAqttYePb0pc351BSNX/dQ9e5Oe1oxNnOc+hI1bIFbwVXM5IkvOG
+         j30fIRs8zMXVOmBkqA7kJkjQpPfLJCGfhA/P4egiSIsDmTdn+LQpREA1DdbT/jpVo2Iw
+         Ks7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUkGSkL5t1sYZCAMNdSWBhlSptL6ToPFy2+giBbkP5IhMP7FZ94irqT7Ibq3U8jY3pHTPvRC9VcI7EXiAhP@vger.kernel.org, AJvYcCV/SX/4k6dIdVVHn3zC+BJopba4hD4HrDdFkC4bsWWFAMg+AcOqgeJEQILkQyLAtOG/2QJyBSTi5sWb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzClPokvAhDXsuGAOdK4W1t2cwofzl1bVPLc0sAKd/cyBZQMtsM
+	iz2FxRG9OZ2Fd0j+2cn1Uah+8ycBbhNRjztxxNIK06Fx71xtYQA7
+X-Gm-Gg: ASbGncvd6jdUQuaKiWcU1Gt93vT25EwzAoPBYa68Nnrybix7QTKZ2tH+rvrhqRT/6eP
+	xDveH0RRyXeOsCHl6zcdn86ljIygQLE7+I3uXCpySlppAOzvU9+PDh0fUcFeYx3NveNNlPv7Q0k
+	gQAp3RJy+L5YfUt+520TLy+zD/mGO519LAGxY3ngLRwTffBdaE+iyv1TsaJ25IiMnf2VIi0p54s
+	Y2OFDhWiEtsRP7lyoY5G4Gj2EIHFvI1J1LHvJSTHilC5a46+PKj3HqPufJd81vvMl05m/4QGvsV
+	w0io0j1BXymoQYnEtyAtoEHtk7sbRwauWCSCA/iEs7O4T6puOvV0QSosuA16MvI4wIgbUg==
+X-Google-Smtp-Source: AGHT+IEn+6ojavR6tMMafF+SmH0WwvgludvtbX1hi0lpL0Cl0TXhJ1J3Nf3kTI2WVfqKrE0IPj037Q==
+X-Received: by 2002:a5d:648b:0:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39cb35aa6ffmr10795285f8f.34.1744034615187;
+        Mon, 07 Apr 2025 07:03:35 -0700 (PDT)
+Received: from localhost (a109-49-32-45.cpe.netcabo.pt. [109.49.32.45])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c30226b23sm12049412f8f.86.2025.04.07.07.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 07:03:34 -0700 (PDT)
+From: Rui Miguel Silva <rmfrfs@gmail.com>
+X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <811c4103-08b1-4288-9a15-bd9795bc59f4@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 07 Apr 2025 15:03:33 +0100
+Message-Id: <D90GO8QLAESS.PN6CB62OS6OY@linaro.com>
+Cc: <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>, "Bartosz
+ Golaszewski" <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] staging: greybus: use new GPIO line value setter
+ callbacks
+To: "Alex Elder" <elder@riscstar.com>, "Bartosz Golaszewski"
+ <brgl@bgdev.pl>, "Rui Miguel Silva" <rmfrfs@gmail.com>, "Johan Hovold"
+ <johan@kernel.org>, "Alex Elder" <elder@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Linus Walleij" <linus.walleij@linaro.org>
+References: <20250407-gpiochip-set-rv-greybus-v1-1-9d4f721db7ca@linaro.org>
+ <184ecf87-823a-42ef-9903-a21c787e0c5d@riscstar.com>
+In-Reply-To: <184ecf87-823a-42ef-9903-a21c787e0c5d@riscstar.com>
 
-On Sat, Apr 05, 2025 at 10:17:16AM +0900, Akira Yokosawa wrote:
-> Hi,
-> 
-> Nícolas F. R. A. Prado wrote:
-> > Given that the automarkup Sphinx plugin cross-references
-> > "Documentation/*.rst" strings in the text to the corresponding
-> > documents, surrounding those strings with the literal markup (``) not
-> > only adds unnecessary markup in the source files, but actually prevents
-> > the automatic cross-referencing to happen (as it doesn't happen in
-> > literal blocks).
-> > 
-> > Remove all the occurrences of the literal markup in
-> > "Documentation/*.rst" paths, except when the actual source file is being
-> > referred. Also change the surrounding text when needed so it reads well
-> > both in the source and the web page (eg. 'see file Doc...' -> 'see
-> > Doc...').
-> > 
-> > Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> > ---
-[..]
-> >  
-> >  2) All new ``Kconfig`` options have help text.
-> >  
-> > @@ -47,7 +48,7 @@ Provide documentation
-> >  2) All new ``/proc`` entries are documented under ``Documentation/``
-> >  
-> >  3) All new kernel boot parameters are documented in
-> > -   ``Documentation/admin-guide/kernel-parameters.rst``.
-> > +   Documentation/admin-guide/kernel-parameters.rst.
-> 
-> Hmm, this item is asking "Have you documented the new params in that
-> particular file?", so I don't think this change should be made.
+Hi Bartosz,
+Thanks for the patch.
 
-Right, that makes sense. I'll drop this and the below change for v2.
+On Mon Apr 7, 2025 at 2:49 PM WEST, Alex Elder wrote:
 
-Thanks,
-Nícolas
+> On 4/7/25 2:14 AM, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>=20
+>> struct gpio_chip now has callbacks for setting line values that return
+>> an integer, allowing to indicate failures. Convert the driver to using
+>> them.
+>>=20
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Here is the commit that enabled these:
+>    98ce1eb1fd87e gpiolib: introduce gpio_chip setters that return values
+>
+> This looks good.  Thank you.
+>
+> Reviewed-by: Alex Elder <elder@riscstar.com>
 
-> 
-> >  
-> >  4) All new module parameters are documented with ``MODULE_PARM_DESC()``
-> >  
-> > @@ -58,7 +59,7 @@ Provide documentation
-> >     linux-api@vger.kernel.org.
-> >  
-> >  6) If any ioctl's are added by the patch, then also update
-> > -   ``Documentation/userspace-api/ioctl/ioctl-number.rst``.
-> > +   Documentation/userspace-api/ioctl/ioctl-number.rst.
-> 
-> Ditto.
-> 
->         Thanks, Akira
-> 
-> >  
-> >  Check your code with tools
-> >  ==========================
-> 
+Agree with Alex.
+LGTM.
+
+Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
+
+Cheers,
+   Rui
+>
+>> ---
+>>   drivers/staging/greybus/gpio.c | 16 +++++++++-------
+>>   1 file changed, 9 insertions(+), 7 deletions(-)
+>>=20
+>> diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gp=
+io.c
+>> index 16bcf7fc8158..f81c34160f72 100644
+>> --- a/drivers/staging/greybus/gpio.c
+>> +++ b/drivers/staging/greybus/gpio.c
+>> @@ -185,8 +185,8 @@ static int gb_gpio_get_value_operation(struct gb_gpi=
+o_controller *ggc,
+>>   	return 0;
+>>   }
+>>  =20
+>> -static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>> -					u8 which, bool value_high)
+>> +static int gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>> +				       u8 which, bool value_high)
+>>   {
+>>   	struct device *dev =3D &ggc->gbphy_dev->dev;
+>>   	struct gb_gpio_set_value_request request;
+>> @@ -195,7 +195,7 @@ static void gb_gpio_set_value_operation(struct gb_gp=
+io_controller *ggc,
+>>   	if (ggc->lines[which].direction =3D=3D 1) {
+>>   		dev_warn(dev, "refusing to set value of input gpio %u\n",
+>>   			 which);
+>> -		return;
+>> +		return -EPERM;
+>>   	}
+>>  =20
+>>   	request.which =3D which;
+>> @@ -204,10 +204,12 @@ static void gb_gpio_set_value_operation(struct gb_=
+gpio_controller *ggc,
+>>   				&request, sizeof(request), NULL, 0);
+>>   	if (ret) {
+>>   		dev_err(dev, "failed to set value of gpio %u\n", which);
+>> -		return;
+>> +		return ret;
+>>   	}
+>>  =20
+>>   	ggc->lines[which].value =3D request.value;
+>> +
+>> +	return 0;
+>>   }
+>>  =20
+>>   static int gb_gpio_set_debounce_operation(struct gb_gpio_controller *g=
+gc,
+>> @@ -457,11 +459,11 @@ static int gb_gpio_get(struct gpio_chip *chip, uns=
+igned int offset)
+>>   	return ggc->lines[which].value;
+>>   }
+>>  =20
+>> -static void gb_gpio_set(struct gpio_chip *chip, unsigned int offset, in=
+t value)
+>> +static int gb_gpio_set(struct gpio_chip *chip, unsigned int offset, int=
+ value)
+>>   {
+>>   	struct gb_gpio_controller *ggc =3D gpiochip_get_data(chip);
+>>  =20
+>> -	gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+>> +	return gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+>>   }
+>>  =20
+>>   static int gb_gpio_set_config(struct gpio_chip *chip, unsigned int off=
+set,
+>> @@ -555,7 +557,7 @@ static int gb_gpio_probe(struct gbphy_device *gbphy_=
+dev,
+>>   	gpio->direction_input =3D gb_gpio_direction_input;
+>>   	gpio->direction_output =3D gb_gpio_direction_output;
+>>   	gpio->get =3D gb_gpio_get;
+>> -	gpio->set =3D gb_gpio_set;
+>> +	gpio->set_rv =3D gb_gpio_set;
+>>   	gpio->set_config =3D gb_gpio_set_config;
+>>   	gpio->base =3D -1;		/* Allocate base dynamically */
+>>   	gpio->ngpio =3D ggc->line_max + 1;
+>>=20
+>> ---
+>> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+>> change-id: 20250331-gpiochip-set-rv-greybus-cd2365755186
+>>=20
+>> Best regards,
+
+
+
