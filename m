@@ -1,67 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00F224886B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65627225A40;
+	Mon,  7 Apr 2025 23:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069266; cv=none; b=PLC+vCIDYFl5vzEhhwP7BXUujZaNVC9ru1AgcKN7er9pc0xab6KF5pLaoz8vc6Fxc/IdaY8CWi5PGPasPLik08cp7b2mj1DDO8HZh9zQiSw2zkoKZPxgkilzlGNTf0Uphcko9sLH/TmAoskjeCQdpMxotJIg0Ad9x+tQh5wd70I=
+	t=1744069348; cv=none; b=c6UtkUTfBaJO5AYR4+UHutsoKV7OwtGpcLBd/XUnQYr1bzsJStKty9HmoF3AiSVYPpRJfl4mOsXQSnm8kW4BQg9P05aPP3neuLLKkG/lNvQLX3Who1S/cYi7qDeTFs7co3AJdUOrkzE1TudcJFMaz28NEOifYp59EgBOhqRA6Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069266; c=relaxed/simple;
-	bh=yr5nHpaopd1NZz+g077gSUSbgIi4RWyZKVBYkSkwieQ=;
+	s=arc-20240116; t=1744069348; c=relaxed/simple;
+	bh=dBGQq1Pd6BCPNuVeF0eBxyPWwJHVwMcLmBXDM7kyFz4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P71amORK7ulP8rSbFRmHtwnyDztl+wqvcDa4ps6pV5j/8A/BQ/HELQyipC/j0FoEJw8a3XAqWFNUqVnBL00yBwYB9L8J617y7UsuVa6ukfRZJ1Xfv/9CovemAI0Kzbqce3oa/36rIoxQJKJaacmFin0y2Tmvyr0J4BpirPX+3tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QlIznT5e; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=anQa9uH+D7B+EWAe3DFDJVZKUPXKelc5Bxc7w1bIC5FLt0LkHf6Bh5vsJnnwsVsxGpXjFpLhkp+y4/3dHhXu33PMO1g78k+qxugAsJvWH3iFEUzecOaOHQIzFA+6q1uCt4wAScuB3gfKhZOf3IeoBbigAm2RhKSVeDYPXq0bAE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcKZnDfC; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QlIznT5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744069265; x=1775605265;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yr5nHpaopd1NZz+g077gSUSbgIi4RWyZKVBYkSkwieQ=;
-  b=QlIznT5eaPS9orEvr0xw+eH7YtSwEbkJqPrHpDI6Sq4fmiWO6FUMa9OE
-   67LGI2/a4H16DGnjWyAMSyOHGW2HCGTN+SBbk+7UalR6RYnBZA4h24Ti8
-   EH7Pedp78EeeFS4BjexR6PymOnrLFyaqvvmSGIGlh+NI9xo2ywjvVLlv1
-   /lTxetcfk9hSRmhmioBUayuYq04gA4qM+lOgQC68IO/hZuj83Pq0vOYJ2
-   AawJMVEEjYlmI1bYmZqcbCyJbFLH+YQzZon53T2j3OOCT36pZFR9zuPWZ
-   NYCzmgT0J/tqoO40/nXvWXMUvLp9PVMuf5Te9xaYGAYTGiCyd64qAgNM4
-   w==;
-X-CSE-ConnectionGUID: pACSuUvvSIW4ZzpbfHblQg==
-X-CSE-MsgGUID: rU9jSnq3Qea4f/6Iybxtrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193306"
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="48193306"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:59 -0700
-X-CSE-ConnectionGUID: g6//5lGvSuqmbgGvUV8Onw==
-X-CSE-MsgGUID: pFmv8TNbTkaH0x04cfURpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="165315535"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:58 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 26/26] x86/resctrl: Update Documentation for package events
-Date: Mon,  7 Apr 2025 16:40:28 -0700
-Message-ID: <20250407234032.241215-27-tony.luck@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407234032.241215-1-tony.luck@intel.com>
-References: <20250407234032.241215-1-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcKZnDfC"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6feab7c5f96so47626957b3.3;
+        Mon, 07 Apr 2025 16:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744069345; x=1744674145; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XfUGs0YddbsQ4nD768mNJH2PaDd6ou20rVgkj7mY+Lk=;
+        b=mcKZnDfCsH/s1EdAQwrRx6Y9wI0PoBxm1hsYTSZJR8mtQvOK83DbmMeBIYBoNJD4wj
+         yjsxp0LnGpeFBhWcNjiKrZ+f8WVVjztqKn6Du9vhiL7DEBG48Tuq6vUywnH6PzIb83lY
+         CBV/Q6p5uAFONV4eSZSArScCD4weCauqnNzF13JW0OtxBRKhddvnbeVBwXz0UuU+hkrk
+         JHsC6yf3p2qt5fVxN/gZBtNNxMR5SplT+t/+q41XZK5YHDi+isqrg8FvbomrHtD6O7QI
+         pzHhU5ePuSwqCqZNzDMaT0QDjL4vIuO9AM7Q2IXjwj4n1pE2EVm3HKywm1hdW1mZw2+q
+         BpxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744069345; x=1744674145;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XfUGs0YddbsQ4nD768mNJH2PaDd6ou20rVgkj7mY+Lk=;
+        b=lb6j4VirFDptu+BeShPWO7ie870N9OokdAQur93X4E3EBUQ4pYxzogycNPl68Zl+Sv
+         46Dta2i4rDaIQVBFoOialmt3cJqirpuWMZS2zy//aNrll9buhjN1FF6h0V+ZpYoH/K95
+         jgTGeXmoGccHL2j5jylQY5pOoPRRb/QIw3R5JFNSuT/jqLkto+OODZeo3zlTpTqG61WO
+         L4CDYYPHgJOwD8W1rc2M+8jcq/CWoxlUhBy+nVdIaTRd/Ao2+ZLOvoTcHopbJ1/3u8vH
+         o4aDdrCXiZU5bsvBnFcaLcs7wrVnKmqswW/4e9bVNsip07VGKrUHTe2RwfQQOprg3ZKH
+         rveA==
+X-Forwarded-Encrypted: i=1; AJvYcCURetcbxioT3fCvhCB1EQiLVnrZv8TfOySPPE9bsWG1WEI4H43K8lYa1AhAcSTDPUKh8OEyLk1IXAg=@vger.kernel.org, AJvYcCVUJ4G4LUw3IHrxzGsccmQ2ieW7qXScIvlm62e4c4MONXS+70RC28kFmErER5j+koc87EOXe7IE@vger.kernel.org, AJvYcCX16fXnkAmvKb8E8osXPlMs7mmeoazcVLYsw8dxqQBBbcPGR8nohfHcuLwH5QDKLfG2K350arcpQxrJ7dz4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzthWf8QGbF48Sydbt8u1hP0lTubLcAMDuLzDRpRTqKaKCEfL7o
+	gLNcBFxJKXjkjIvJyn9KaqngDIN2vaKi9Egx+9hjJ9H3mEhYT1Ha
+X-Gm-Gg: ASbGncugidutNgUV3qd1NIroWKzDM42ronsFEY8C1OnAgitheFhoOpr6jLHm1PANsG9
+	SajsWM02PIu9HHwYVXZohvfxvxTvbGIISEiJesPPIEo97X47Jd7miLiiGdo2nRYbAlvXrYxSWdL
+	/KpAiBn8BkskkWIHLL2m0HykOQhbc6+1w87FB90GYc5Wk5IDDBAhCNKM6oFOt5XglH5wj578Ee2
+	84iUdjh9a7DtM1LiEqQY+6U0m8ZUP/HuctzWRWo2w1zzWhH+sbmKz42UPd8R5S2+mkHADmlgVrl
+	b+1AQbQgDXD4dULEThKeiBKZH/9wvgUP
+X-Google-Smtp-Source: AGHT+IHmylSLqkbMnakEdnta4Mc1w3JFTnb3aV7dqAhsLXyWaelffY0XhjOBtjJGz+rADBjFj72DYg==
+X-Received: by 2002:a05:690c:ecf:b0:6ef:69b2:eac with SMTP id 00721157ae682-703e1500617mr242935697b3.4.1744069345103;
+        Mon, 07 Apr 2025 16:42:25 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1e5c6f5sm27876857b3.37.2025.04.07.16.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 16:42:24 -0700 (PDT)
+From: Nhat Pham <nphamcs@gmail.com>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	yosry.ahmed@linux.dev,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	len.brown@intel.com,
+	chengming.zhou@linux.dev,
+	kasong@tencent.com,
+	chrisl@kernel.org,
+	huang.ying.caritas@gmail.com,
+	ryan.roberts@arm.com,
+	viro@zeniv.linux.org.uk,
+	baohua@kernel.org,
+	osalvador@suse.de,
+	lorenzo.stoakes@oracle.com,
+	christophe.leroy@csgroup.eu,
+	pavel@kernel.org,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [RFC PATCH 02/14] mm: swap: add an abstract API for locking out swapoff
+Date: Mon,  7 Apr 2025 16:42:03 -0700
+Message-ID: <20250407234223.1059191-3-nphamcs@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250407234223.1059191-1-nphamcs@gmail.com>
+References: <20250407234223.1059191-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,79 +97,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Each "mon_data" directory is now divided between L3 events and package
-events.
+Currently, we get a reference to the backing swap device in order to
+lock out swapoff and ensure its validity. This is no longer sufficient
+and/or doable when the swap entries are decoupled from their backing
+stores - a swap entry might not have any backing swap device at all.
 
-The "info/PERF_PKG_MON" directory contains parameters for perf events.
+In preparation for this decoupling work, abstract away the swapoff
+locking out behavior into a generic API (whose implementation will
+eventually differ between the old and the new swap implementation).
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 ---
- Documentation/filesystems/resctrl.rst | 38 ++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 10 deletions(-)
+ include/linux/swap.h | 12 ++++++++++++
+ mm/memory.c          | 13 +++++++------
+ mm/shmem.c           |  7 +++----
+ mm/swap_state.c      | 10 ++++------
+ 4 files changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
-index 6768fc1fad16..b89a188b0321 100644
---- a/Documentation/filesystems/resctrl.rst
-+++ b/Documentation/filesystems/resctrl.rst
-@@ -167,7 +167,7 @@ with respect to allocation:
- 			bandwidth percentages are directly applied to
- 			the threads running on the core
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index b13b72645db3..e479fd31c6d6 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -706,5 +706,17 @@ static inline bool mem_cgroup_swap_full(struct folio *folio)
+ }
+ #endif
  
--If RDT monitoring is available there will be an "L3_MON" directory
-+If RDT L3 monitoring is available there will be an "L3_MON" directory
- with the following files:
++static inline bool trylock_swapoff(swp_entry_t entry,
++				struct swap_info_struct **si)
++{
++	return get_swap_device(entry);
++}
++
++static inline void unlock_swapoff(swp_entry_t entry,
++				struct swap_info_struct *si)
++{
++	put_swap_device(si);
++}
++
+ #endif /* __KERNEL__*/
+ #endif /* _LINUX_SWAP_H */
+diff --git a/mm/memory.c b/mm/memory.c
+index fb7b8dc75167..e92914df5ca7 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4305,6 +4305,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 	struct swap_info_struct *si = NULL;
+ 	rmap_t rmap_flags = RMAP_NONE;
+ 	bool need_clear_cache = false;
++	bool swapoff_locked = false;
+ 	bool exclusive = false;
+ 	swp_entry_t entry;
+ 	pte_t pte;
+@@ -4365,8 +4366,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 	}
  
- "num_rmids":
-@@ -261,6 +261,17 @@ with the following files:
- 		bytes) at which a previously used LLC_occupancy
- 		counter can be considered for re-use.
+ 	/* Prevent swapoff from happening to us. */
+-	si = get_swap_device(entry);
+-	if (unlikely(!si))
++	swapoff_locked = trylock_swapoff(entry, &si);
++	if (unlikely(!swapoff_locked))
+ 		goto out;
  
-+If RDT PERF monitoring is available there will be an "L3_PERF_PKG" directory
-+with the following files:
-+
-+"num_rmids":
-+		The guaranteed number of hardware countes supporting RMIDs.
-+		If more "CTRL_MON" + "MON" groups than this number are created,
-+		the system may report that counters are "unavailable" when read.
-+
-+"mon_features":
-+		Lists the perf monitoring events that are enabled on this system.
-+
- Finally, in the top level of the "info" directory there is a file
- named "last_cmd_status". This is reset with every "command" issued
- via the file system (making new directories or writing to any of the
-@@ -366,15 +377,22 @@ When control is enabled all CTRL_MON groups will also contain:
- When monitoring is enabled all MON groups will also contain:
+ 	folio = swap_cache_get_folio(entry, vma, vmf->address);
+@@ -4713,8 +4714,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		if (waitqueue_active(&swapcache_wq))
+ 			wake_up(&swapcache_wq);
+ 	}
+-	if (si)
+-		put_swap_device(si);
++	if (swapoff_locked)
++		unlock_swapoff(entry, si);
+ 	return ret;
+ out_nomap:
+ 	if (vmf->pte)
+@@ -4732,8 +4733,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		if (waitqueue_active(&swapcache_wq))
+ 			wake_up(&swapcache_wq);
+ 	}
+-	if (si)
+-		put_swap_device(si);
++	if (swapoff_locked)
++		unlock_swapoff(entry, si);
+ 	return ret;
+ }
  
- "mon_data":
--	This contains a set of files organized by L3 domain and by
--	RDT event. E.g. on a system with two L3 domains there will
--	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
--	directories have one file per event (e.g. "llc_occupancy",
--	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
--	files provide a read out of the current value of the event for
--	all tasks in the group. In CTRL_MON groups these files provide
--	the sum for all tasks in the CTRL_MON group and all tasks in
--	MON groups. Please see example section for more details on usage.
-+	This contains a set of directories, one for each instance
-+	of an L3 cache, or of a processor package. The L3 cache
-+	directories are named "mon_L3_00", "mon_L3_01" etc. The
-+	package directories "mon_PERF_PKG_00", "mon_PERF_PKG_01" etc.
-+
-+	Within each directory there is one file per event. In
-+	the L3 directories: "llc_occupancy", "mbm_total_bytes",
-+	and "mbm_local_bytes".	In the PERF_PKG directories: "core_energy",
-+	"activity", etc.
-+
-+	In a MON group these files provide a read out of the current
-+	value of the event for all tasks in the group. In CTRL_MON groups
-+	these files provide the sum for all tasks in the CTRL_MON group
-+	and all tasks in MON groups. Please see example section for more
-+	details on usage.
-+
- 	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
- 	directories for each node (located within the "mon_L3_XX" directory
- 	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 1ede0800e846..8ef72dcc592e 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2262,8 +2262,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	if (is_poisoned_swp_entry(swap))
+ 		return -EIO;
+ 
+-	si = get_swap_device(swap);
+-	if (!si) {
++	if (!trylock_swapoff(swap, &si)) {
+ 		if (!shmem_confirm_swap(mapping, index, swap))
+ 			return -EEXIST;
+ 		else
+@@ -2411,7 +2410,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	}
+ 	folio_mark_dirty(folio);
+ 	swap_free_nr(swap, nr_pages);
+-	put_swap_device(si);
++	unlock_swapoff(swap, si);
+ 
+ 	*foliop = folio;
+ 	return 0;
+@@ -2428,7 +2427,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		folio_unlock(folio);
+ 		folio_put(folio);
+ 	}
+-	put_swap_device(si);
++	unlock_swapoff(swap, si);
+ 
+ 	return error;
+ }
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index ca42b2be64d9..81f69b2df550 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -419,12 +419,11 @@ struct folio *filemap_get_incore_folio(struct address_space *mapping,
+ 	if (non_swap_entry(swp))
+ 		return ERR_PTR(-ENOENT);
+ 	/* Prevent swapoff from happening to us */
+-	si = get_swap_device(swp);
+-	if (!si)
++	if (!trylock_swapoff(swp, &si))
+ 		return ERR_PTR(-ENOENT);
+ 	index = swap_cache_index(swp);
+ 	folio = filemap_get_folio(swap_address_space(swp), index);
+-	put_swap_device(si);
++	unlock_swapoff(swp, si);
+ 	return folio;
+ }
+ 
+@@ -439,8 +438,7 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	void *shadow = NULL;
+ 
+ 	*new_page_allocated = false;
+-	si = get_swap_device(entry);
+-	if (!si)
++	if (!trylock_swapoff(entry, &si))
+ 		return NULL;
+ 
+ 	for (;;) {
+@@ -538,7 +536,7 @@ struct folio *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	put_swap_folio(new_folio, entry);
+ 	folio_unlock(new_folio);
+ put_and_return:
+-	put_swap_device(si);
++	unlock_swapoff(entry, si);
+ 	if (!(*new_page_allocated) && new_folio)
+ 		folio_put(new_folio);
+ 	return result;
 -- 
-2.48.1
+2.47.1
 
