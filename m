@@ -1,92 +1,152 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5F21D3D1;
-	Mon,  7 Apr 2025 07:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D2B2288F9
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010234; cv=none; b=rKaj0+kpBm5jaWFVifuaS/kIp5kFZfSy9UvOZSOAVSDPy+9bcd104Yzb2kj5jvpZCy49N0FbP+bJMk0TkuuPAefXDUz7tZYuvNnMgzM0sNixZDurlFujJAiFJYEoIMFBWL5dRLgIIAfs/LYi1r3xaigaiZ4+S320gGx4p/wUQsc=
+	t=1744010238; cv=none; b=dZq8oRpvG9EBfffmZp0uHT+/85YDTUMuhFQzEOx0geyGoCSTxgqM94sJyaLsYNLSK65FUs/QvFuSYQsIDz9XrCjrHtDNU68WZcDC2za+cCRSn2Lr+Hqe537oM8q0SlNoWFKjZsUvfCkTIEuEYaAYt9g3lWW5Ee1Un/PfQxRfuDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010234; c=relaxed/simple;
-	bh=zKwzOYh8aAJuS+S3TkD57w5LMO2QhltXuYUO7CZQNWM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SDi3Vopa1uJtxzDkSezu3Q3jqsdiYBwS2yiOo/Y5WEZCeYv9ahrc9V732xcJS40DTFFZrqkKE0Fiey7oVooIvwwLBnLDQ5VaupUCoQGX4XNVqRZsosvw+n0DxZcgXxaT2V56wVEOz7dh9wj3WMDItu3fOAy8HoY9hVIk0OJRN/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RXDCWCMN; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744010238; c=relaxed/simple;
+	bh=1O8lqW8cS1dNqbfy6OMrbFG9L0GlTpQ+kAMyz+Y1LR0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TCkDO8rmb68hVXAfezCW5DiORjbvrinHmNZfxkQZ7pO9uOrDFldNZ1YN7y53i7cC0cmvxd+OhE+jlgkOr3lVuHQYJGHF4NjCmnQvD92GWbU7ZxZkMqR0Qan+w1PTiweAh1MVQhk5v071419jU/RVOiBYOtlhgXfhd6mnnbL7nWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SXahJSac; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RXDCWCMN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 84A8820579;
-	Mon,  7 Apr 2025 07:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744010224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zKwzOYh8aAJuS+S3TkD57w5LMO2QhltXuYUO7CZQNWM=;
-	b=RXDCWCMNUclxLzRL6AiK1Fmxi79I2R8O37PVEhcp5lNPDKqaT2r42YJRp2/v6lyOzf7QvT
-	Poqw1OEyv/XO2jhlihzZshc2WMeMl7V4OOVUlEQNW5c7VVdVuhAEUy4ZkefKIl9703X1Lx
-	aAi1UzRmliogVdI/Dzk5IgeFfmxAWEkSE9Kw0iXCYDiRyFV4nqEO1cGUZiFM0IWD5b7G5o
-	DU2u9aAZF+fuxVjmSuQ9BSlPVAT+BkcQ53Xvf2ODYFcAKdiGeaAGrYC4gKCtMlUnUXrwXJ
-	ZKOPY2qIfBOv/d9TlmMIKVrLwer5cQD1ax7aZq/lwXkJYaybnVH5MuItoHd4cA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,  Tudor Ambarus
- <tudor.ambarus@linaro.org>,  Pratyush Yadav <pratyush@kernel.org>,
-  Michael Walle <michael@walle.cc>,  <linux-mtd@lists.infradead.org>,
-  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-  <linux-kernel@vger.kernel.org>,  Steam Lin <stlin2@winbond.com>,  Jean
- Delvare <jdelvare@suse.de>,  kernel test robot <lkp@intel.com>,
-  stable@vger.kernel.org
-Subject: Re: [PATCH] mtd: spinand: Fix build with gcc < 7.5
-In-Reply-To: <20250401133637.219618-1-miquel.raynal@bootlin.com> (Miquel
-	Raynal's message of "Tue, 1 Apr 2025 15:36:37 +0200")
-References: <20250401133637.219618-1-miquel.raynal@bootlin.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 07 Apr 2025 09:16:59 +0200
-Message-ID: <87ikngh250.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SXahJSac"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913d129c1aso2695469f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010235; x=1744615035; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fJ5k9V1gZZBaoixqt8Dqhche1ximAkFV+Q8ydYzr4lM=;
+        b=SXahJSacAdCF0QL1Y7mi05opQvJLK1XNfktIWE0ClizuYk9wH0VmlJ8OZkTQDmu617
+         MKuD5iHlullw7amlsouTK52DaeDQGboS/vlnhKFkx5AehWGTmf3w2dCJ6JXBGiuQVI+u
+         o9fwjSJOS8bpQa6ne+VY4BZYlhK/9QnxwsyQZmWmFGgm0qZCdgCozg+0aBwsZ3z6SIax
+         /PlSI94TfRW5K2fTlJ5TYZQY983VxeoeXHkYVA22crYcF/fWhs5Mj1a7Rga75jrVcglB
+         eU8jvilnr5uIRVp6ob6YCwTvaRtcJZ+sAjQU+zcfVf0SL4k19kjM5sa2CiVPFpSMJG0a
+         +B0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010235; x=1744615035;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fJ5k9V1gZZBaoixqt8Dqhche1ximAkFV+Q8ydYzr4lM=;
+        b=vixJWbuPEWeooHZSLiXjQmtgucUDoRuE4IyUgCBvM5GfEI8Z8mtGakwTwXWNZD4h8j
+         s6EmT441tXYizXIJw7prQMnEFlWNDw/JRam9dUikR3OYKTdbglUpW2EHAIpHn4T8CFPS
+         AoN+QsAydVccxUuCKFAgOyx9GEBQz6V9tvTauX/OeN4I9wsfsxTqPtCPPc29cPAqGetv
+         25JAz8WeLtN2cbi045O2MaIRojr2/DHuEEN6LJHxfQzupSt2hgdzRZsOTVrVnkIxT+5D
+         b8YQ9DvGbs/5NCCF/TxBGQ3Hw75IHpavrAwQE1V6Qwo7T++Eh8/BlkoAb+B8qf/CazdX
+         wOEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuslZsdl+nh7We8Uxygav5ICfaBgEKD9YOfnOQe89cMhQLMQKB97qwHbvh4pMBx0fx3YxXjI0lVgfrYl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg0ED0Y/h0YggaRBtza0uQMtRi+qHL0kKbAPCcaAZO5HPNZgE0
+	wSQGDzGFor9Nyv7ZTVhvlMWe4zmd1vgWOv9oHyswD7StMbea2hh8+dYsqa4aLzs=
+X-Gm-Gg: ASbGncu/4s2Yw+DB/hLRO7/p9J7va1mH6GX4wSnt8v5NaRZUg5s4MByM9bHyDLmIuyd
+	JaP88hDSeWfkQKKHm4xLg4U4FU1cdBv6nBWP0oe0mTLzTEIkhGNC00vLN5y53RpNEjo5dq30bVr
+	TbV18CulgmLLslP74GOCH8LmsPM6c/eQ4gFuz2zH0oVtE2YQcJHRNvXQFHXkC8aK5ZmwtzayB5g
+	0xvOCmFhRqpjK33OByDG0/NiB2FroLv9tXf17tSwdzLAUXi6gwm9T85ce0yJ+JTf+abKk9RFiq6
+	QjE+LV9eZaGU51TjtsVQkff9M6O4jFwq1qT5uV7d5iLO4bjH
+X-Google-Smtp-Source: AGHT+IEpoa/PZ2AejlY650G8XiTE+W12xCG7yD0eGrhUNC7DsoqDYf34mekXbyvr4lJDgzHkjgQCZw==
+X-Received: by 2002:a05:6000:4211:b0:391:2a79:a110 with SMTP id ffacd0b85a97d-39cba967942mr8565795f8f.29.1744010235273;
+        Mon, 07 Apr 2025 00:17:15 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096ed7sm10922620f8f.8.2025.04.07.00.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:17:14 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Apr 2025 09:17:14 +0200
+Subject: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedruddtkedrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrfedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhitghhrggvlhesfigrlhhlvgdrtggtpdhrtghpt
- hhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAPl782cC/x3MPQqAMAxA4atIZgNp/cWriIPEqBnU0moRxLtbH
+ L/hvQeCeJUAXfaAl6hBjz3B5BnwOu6LoE7JYMlWVBQGF6cHr+owyIk+olrG7bpxpJpa07BhKiH
+ Vzsus93/uh/f9ANmrOb5pAAAA
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1998;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=HUva6KxkFsPb6XhDalpn8pFG6qq9F7QxSjA+2auuqw0=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83v6pQEaPrRb+WyfidLqHn+m4WTU6ulxgomxY
+ LWL9BPGC1WJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N7+gAKCRARpy6gFHHX
+ cgVHD/9TVSPUw0US9f5r+ibdGFf5bnBluIH6R0yTN83DJJx/xGcBBT34JhNgD//8U2QvVoWREFE
+ TIfsKr/XgPxjgylbOtA1AS12IQC6aG20ipMfo2ILXFw7cn05vM7xwI0ANyqkYLyth3wd1dnHqOV
+ tEYFHwJqrpgjgkb0mzaQdtDCe3OepC2dL2zPcNgJzto/3CXdZNZAIAB+C/P/8odckguo2I1jqKZ
+ t9cdVEIHgUHnrU648QNijPK7IFS96QUVRwR9E40PXVXlRTgpnvBhpcTt5LhMh38LDs8M3qCTcvo
+ L4rPCJLzTVnpEOXNOtKZxqpZ7olnqlWL8J7K3xxOFzOgDX5s69eqj+oToGAgawq0Hu/ClR5n3Zo
+ QYWujeEt9Dge1iX5BDOfveBas/dKjLtUJO3Tq2QGre+H068fGZSLsQsCpCRv5FNOIL011ZUF1bE
+ lniRd8Xp8TjwAeMqZK8kbPVFb+VAs/f6E26GWpY+eDdf/DnhQ1LvuXdRT/F/zxQSGJ69rUBSzBs
+ NVAQRN52mIsmxCBC17aawjIMxsM/aW+fpnnEMIuEvZrg8p5I0KmabYnY29i5i0bIR3HtdXv++51
+ H9lm46t+g4pPvMYWHb7dEkYiXlCLkFALjoJZfGrdF5GzZuWf3u12pgUQJAyiJugH3AkYkUiJ5Dd
+ DNhdPNUw0eZejdw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hello,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 01/04/2025 at 15:36:37 +02, Miquel Raynal <miquel.raynal@bootlin.com> wr=
-ote:
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-> __VA_OPT__ is a macro that is useful when some arguments can be present
-> or not to entirely skip some part of a definition. Unfortunately, it
-> is a too recent addition that some of the still supported old GCC
-> versions do not know about, and is anyway not part of C11 that is the
-> version used in the kernel.
->
-> Find a trick to remove this macro, typically '__VA_ARGS__ + 0' is a
-> workaround used in netlink.h which works very well here, as we either
-> expect:
-> - 0
-> - A positive value
-> - No value, which means the field should be 0.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202503181330.YcDXGy7F-lkp@i=
-ntel.com/
-> Fixes: 7ce0d16d5802 ("mtd: spinand: Add an optional frequency to read fro=
-m cache macros")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Peter: I know you've not been very active recently. If you prefer to
+just Ack it and let me take it through the GPIO tree, please do.
+---
+ drivers/i2c/muxes/i2c-mux-ltc4306.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Applied on top of mtd/fixes with an unrelated conflict resolved.
+diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+index 8a87f19bf5d5..c688af270a11 100644
+--- a/drivers/i2c/muxes/i2c-mux-ltc4306.c
++++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
+@@ -85,13 +85,13 @@ static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 	return !!(val & BIT(1 - offset));
+ }
+ 
+-static void ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
+-			     int value)
++static int ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			    int value)
+ {
+ 	struct ltc4306 *data = gpiochip_get_data(chip);
+ 
+-	regmap_update_bits(data->regmap, LTC_REG_CONFIG, BIT(5 - offset),
+-			   value ? BIT(5 - offset) : 0);
++	return regmap_update_bits(data->regmap, LTC_REG_CONFIG,
++				  BIT(5 - offset), value ? BIT(5 - offset) : 0);
+ }
+ 
+ static int ltc4306_gpio_get_direction(struct gpio_chip *chip,
+@@ -164,7 +164,7 @@ static int ltc4306_gpio_init(struct ltc4306 *data)
+ 	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
+ 	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
+ 	data->gpiochip.get = ltc4306_gpio_get;
+-	data->gpiochip.set = ltc4306_gpio_set;
++	data->gpiochip.set_rv = ltc4306_gpio_set;
+ 	data->gpiochip.set_config = ltc4306_gpio_set_config;
+ 	data->gpiochip.owner = THIS_MODULE;
+ 
 
-Thanks,
-Miqu=C3=A8l
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250331-gpiochip-set-rv-i2c-mux-a060817c1c04
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
