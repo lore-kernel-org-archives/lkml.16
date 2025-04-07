@@ -1,71 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B37C223322;
-	Mon,  7 Apr 2025 18:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5DE21B9E5;
+	Mon,  7 Apr 2025 18:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050945; cv=none; b=GvoevEdMmjr3l0ZRyWyBtEUwks8UbJ8YNohGRCjzqnBspVulv7MkvI91OxpHwtAkqKeZdNRzRxwoLr6+4V8/V8uppYumCxrCyVaorIhqb/yQp4whGUuJtt359+VWIC1s9GH/1DxCG7U0kDBq1JnxAO71l4W2b7FWpK+62wIeljU=
+	t=1744050963; cv=none; b=r6AWSRyNoB+d4F1TbsgZR297Y7NrZ+r3FkH76OPR7tRrFXAxiSjufPuzPUmTTSmH9b+3uFkuMqVFZlnZs606HmEr3C6+OnHmeNdvUFeDcV6jRBNLttsdeLgk7Cop8fnPHERo9kQG9Jtj4epQhnDDpcydawoQ/U97Ibxhcp3BxRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050945; c=relaxed/simple;
-	bh=QiTncCnd55Ia4eac1kyaB9blDFvntz5XPVt6W64q1n0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iRTjNeJuWEMHVawEY7Ir88oz8GPWgumxUD0EX0hOiKOPagtuGg5zyJUFxYGs3K/pFtJ1ZvgoJDU0BkMol5Ko/rZ/iopf2PGjOYkCv2qSY8apT8GfLre+XOVThwGL4YA8PcyjvHq5r13K57jzaPltNnAQB/REREdN7lLKy1SI3OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=kwvaeD/a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744050963; c=relaxed/simple;
+	bh=FAngIXAfAwypXmVFLK8q6zc9p67d9ME54sZbS/9rGGA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pyqXRzTNnZXz9bl02anUzTuysRptEsrIJ3lmrWTlAS2+s7HShbVarM4lJVd1OhsSjF2oN3EH7Jb0FE0jsMcOjG3U5rAoY0oiI7JRHDBsdHY9d34+MZ14qG+dba//RyfbsIZ3iNuRH0Ez4Gd76kBbgndRdtndwbrxSobC5AMIKUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kxCEMxmT; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="kwvaeD/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B551C4CEDD;
-	Mon,  7 Apr 2025 18:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744050944;
-	bh=QiTncCnd55Ia4eac1kyaB9blDFvntz5XPVt6W64q1n0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kwvaeD/akigjGI7ZXDY52hZRNE3FRFEN6Uc6iHtJlTKxoE0UMkjLxBOD/fgvDHGq1
-	 W4Ni/q9ZjLctOHi6rmPtAnUuHHHe57o4rpfiv0IL8Pp6Z02ulY8lFGXBs6yBBc7eYu
-	 XifDovhU5NidAqljsBlmq7svSzYrmQnQBYrtwkdo=
-Date: Mon, 7 Apr 2025 11:35:43 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Hugh Dickins
- <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>, Guenter Roeck
- <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>, Jeremy Fitzhardinge
- <jeremy@goop.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
-Subject: Re: [PATCH v1 0/4] mm: Fix apply_to_pte_range() vs lazy MMU mode
-Message-Id: <20250407113543.6a43461e397d58471e407323@linux-foundation.org>
-In-Reply-To: <cover.1744037648.git.agordeev@linux.ibm.com>
-References: <cover.1744037648.git.agordeev@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kxCEMxmT"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537IZvjl953482
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 13:35:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744050957;
+	bh=6NrD7pxPpm9iiKfFH1QAdQ/4I9hvw0T4+kT3T1ctvYE=;
+	h=From:To:CC:Subject:Date;
+	b=kxCEMxmTzAuVee11tkjG8vHVgUfInpG1b6XZqwnf5oyrSx3Cax4SELnfvhtvMaPTS
+	 6hjPWfoatUfzmf7zyiaLrsjUm6n60VfBP3BADaHvZi4i7YNErc+lJaErN8rF4bGgkk
+	 pFNK+8EGhA2BYYfR59Bwt0cYIX2wbi4HbUxNBglI=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537IZv68001094
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 13:35:57 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 13:35:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 13:35:57 -0500
+Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537IZuQn072942;
+	Mon, 7 Apr 2025 13:35:56 -0500
+From: Andrew Davis <afd@ti.com>
+To: Pavel Machek <pavel@kernel.org>, Lee Jones <lee@kernel.org>
+CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis
+	<afd@ti.com>
+Subject: [PATCH 1/6] leds: lp8860: Use regmap_multi_reg_write for EEPROM writes
+Date: Mon, 7 Apr 2025 13:35:50 -0500
+Message-ID: <20250407183555.409687-1-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon,  7 Apr 2025 17:11:26 +0200 Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+This helper does the same thing as manual looping, use it instead.
 
-> This series is an attempt to fix the violation of lazy MMU mode context
-> requirement as described for arch_enter_lazy_mmu_mode():
-> 
->     This mode can only be entered and left under the protection of
->     the page table locks for all page tables which may be modified.
-> 
-> On s390 if I make arch_enter_lazy_mmu_mode() -> preempt_enable() and
-> arch_leave_lazy_mmu_mode() -> preempt_disable() I am getting this:
->
-> ...
->
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/leds/leds-lp8860.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-Could you please reorganize this into two series?  One series which
-should be fast-tracked into 6.15-rcX and one series for 6.16-rc1?
+diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+index 995f2adf85696..2b1c68e609495 100644
+--- a/drivers/leds/leds-lp8860.c
++++ b/drivers/leds/leds-lp8860.c
+@@ -103,12 +103,7 @@ struct lp8860_led {
+ 	struct regulator *regulator;
+ };
+ 
+-struct lp8860_eeprom_reg {
+-	uint8_t reg;
+-	uint8_t value;
+-};
+-
+-static struct lp8860_eeprom_reg lp8860_eeprom_disp_regs[] = {
++static const struct reg_sequence lp8860_eeprom_disp_regs[] = {
+ 	{ LP8860_EEPROM_REG_0, 0xed },
+ 	{ LP8860_EEPROM_REG_1, 0xdf },
+ 	{ LP8860_EEPROM_REG_2, 0xdc },
+@@ -238,7 +233,7 @@ static int lp8860_brightness_set(struct led_classdev *led_cdev,
+ static int lp8860_init(struct lp8860_led *led)
+ {
+ 	unsigned int read_buf;
+-	int ret, i, reg_count;
++	int ret, reg_count;
+ 
+ 	if (led->regulator) {
+ 		ret = regulator_enable(led->regulator);
+@@ -266,14 +261,10 @@ static int lp8860_init(struct lp8860_led *led)
+ 	}
+ 
+ 	reg_count = ARRAY_SIZE(lp8860_eeprom_disp_regs);
+-	for (i = 0; i < reg_count; i++) {
+-		ret = regmap_write(led->eeprom_regmap,
+-				lp8860_eeprom_disp_regs[i].reg,
+-				lp8860_eeprom_disp_regs[i].value);
+-		if (ret) {
+-			dev_err(&led->client->dev, "Failed writing EEPROM\n");
+-			goto out;
+-		}
++	ret = regmap_multi_reg_write(led->eeprom_regmap, lp8860_eeprom_disp_regs, reg_count);
++	if (ret) {
++		dev_err(&led->client->dev, "Failed writing EEPROM\n");
++		goto out;
+ 	}
+ 
+ 	ret = lp8860_unlock_eeprom(led, LP8860_LOCK_EEPROM);
+-- 
+2.39.2
 
-And in the first series, please suggest whether its patches should be
-backported into -stable and see if we can come up with suitable Fixes:
-targets?
-
-Thanks.
