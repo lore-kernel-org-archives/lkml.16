@@ -1,151 +1,178 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA3D2E628;
-	Mon,  7 Apr 2025 10:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E955322B581
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 10:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744020946; cv=none; b=JnPWYkJVS4mVBZ93H61A92N+PLr9J/Pabh08yuUKsbPSUR3Bf6BrfngDCGXXolcO2ooPC4g4s+bp2PcX/Mbw1oKgshXp8AJw50ow9TpxsxIPE9b64d603uz8E62zujJ0ssg6SrlgGP6g49S2zWX1EO3R+uFalQ64rtUuSqmCux8=
+	t=1744021030; cv=none; b=iSacqAVCEk/XMp+PrNj+dxFowuo6nJOthuZ27vPFamPwBc94sgKt7yzuUs1Icmb7qfzg0I5Q9PPtIxFyKTKbuV4JLt1aSyP8CMCbE7xQYaRTpGvis6+Z6MeyjySNu1JclxrYkgdVxzzatb86MjyirqgNV/Fg6fUESzK15kqaiGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744020946; c=relaxed/simple;
-	bh=9eS9ezE6nh3MaPNTOipDBVMFwr7xraog6zifkWPaG7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oQgMjEVSvh2CnNVftkGqdm+Jaz3bRPrjsTjaFvjkFVyDSWhh9FmRY5/O3S8o5Bn04kLXocliNDmK23dviI194GOhwCW7bREFsn//P64nCtjZUKp3LuR8Pe8ojxIpmu+p+HQq1Je3VECtSnuxiYTACYLGrv1HvfhxQ+ojTEZ67ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=drjT/U5b; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744021030; c=relaxed/simple;
+	bh=GNn1TexJEZuCnIlB9DobcuoMATd8tMoDoJ6BdlvbUdg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=locF3q3VjmTcdB2XTiLQBDBaHEeZAiUi+i4lpLMeJKtgFZTPBXtPh+VUgdqDhdP/B2LT4ZTcNbUdZh5ayysNDl8yaKh/sZU76+aFvxVpxGLCBXDe/y1+Pc5O9kKHO2XRr1eo7vHpYzRsnyLHxMxNC2EtSbDI73zgscCztHAozBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aw1fWeeT; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="drjT/U5b"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dkMn022387;
-	Mon, 7 Apr 2025 10:15:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cC7dQ/4Rpl+FzxIxIIoDZjdcvC0HIZnYG6XWQRhxNQM=; b=drjT/U5bgEZiythJ
-	T6Zea4PTqEsPwW4sCnbXGTiwAaJI6hGY+BeN6ggqyh/yEu8w2/OPe91S3Ra3Kx8Q
-	QKFdoDl3+XDhOE0XWDEkEySzl+K+pSuUUK6WSLEbFNFsoxFPHr7JpTx/pHd28LGb
-	MzFbU7L+p3MQpmK/9v6tXVBPl1yllhbha+2tVxKT4zbwIENVOE2lnCng7wjACRKs
-	BfIiVxLYrJOz9qVSMKcMEnYVXgWp6pu7JWWsQ3kG3wggW94NhEFr9CW+5eI6jXJo
-	K0tSxKMZ25/O0LOAzwbqc5t3PxV05rQje0vRVnNTg38KsTrThAnRrdI5GYx+JGYC
-	jrj7yg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrbvug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 10:15:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537AFcU2019519
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 7 Apr 2025 10:15:38 GMT
-Received: from [10.64.69.186] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
- 03:15:36 -0700
-Message-ID: <84fd283a-ca87-4689-8955-855f7275d6d1@quicinc.com>
-Date: Mon, 7 Apr 2025 18:15:18 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aw1fWeeT"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so2411818f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 03:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744021027; x=1744625827; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N2fP1YHFmp/HGjFNVfs7/1JEZzFvuzBBPnLWd33Tb24=;
+        b=aw1fWeeTo4vajAfKd8SIPxYdWySlvyAx04CoTHB6FshIkXoCHWMbzmC3/EDuQlzUIH
+         i9cIrOs9ZHczmd1kFITuDLBETiqnkrwbFDpEKlmOV9XsGu9S1sCshNcbd+rwj4D/2rPH
+         G1usB61FtzBX5oYKMJASWBkKtgYfH+28bb1JSl/Duf3im3cJWfv5ME14aBt7eXN9vdUj
+         qlp9e0b+v6gFxnZY8m4V2E2SLyHgcsj2A4tRHUdUfyIaxnmtHQo3x91scCmngT3NrTjY
+         wRfrJARYh1+7833jLNOb3v8DUPDlimI3rNbk1Lw2j6lfFcpWwsObD5c70opH4DBUtDu3
+         p/+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744021027; x=1744625827;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N2fP1YHFmp/HGjFNVfs7/1JEZzFvuzBBPnLWd33Tb24=;
+        b=eszq+luK7Fs44mMKRtOXuNObQDmilt+B+lsK4bBxggBqxiPcJY4UQvZ+kDEazgZiSW
+         oaVKSbG1PtSoESLC6ojHef3qmxPG5BJBh6c6tuIPSt6zQz1htlA7PGClAJLwx6x92DEc
+         gN3GqmSnsNTsrBsrXfPStUCKs3x288VQMStKfqwdwYjUtHSsAPGnOQP067zCUKkNMbu0
+         G0wHkX6ikoa+eniH5U0zDrPOoOp/5+S11DBA1JEywlPe4cQWbpNbrIbjS9UGt4YFVUGv
+         pvuZdfhMkY4I7mkrAFwATS+i0d4RZdD1xeGa29gC5oXUq2F/P4mnws220WDhqA/gLayg
+         Drmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOyPyWAYH1tCVzLMMstmnN672aajf/wRXqMVg48IPRjHyo93mFCLvI0fKo69y7iNhWvrSgSSd3ddcKFsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjXBFuFxT6BzcfwUYf81Zy0PPdpS4bcjCiE/kAiO3R++Ayfjxb
+	7L0S73VdZSS5S6OdDQQER6E++YRh1u1VB6NbbTCsicp207Q3Wr4hqja7e6yec9g=
+X-Gm-Gg: ASbGncvfLARNgR9arAnrFIPocu3KZqTxw6EVDwp+R6i+yh0vOyWRE9tRCJLC2/wBrvT
+	F5JMQg6F6j64M8MujMgiH4ZW3Eg3u2KNsOuD5ENzxkrlJR6LuuT6+BkmgkpvCU5ESkrBqPB7CoZ
+	tKUAPM0Wt3IJZOtCEstc4Hs1YthRq/Z9hS+n2Sn3VI+F3g3i36h064jSSoxIl5WHszRVxIDui/r
+	0nWAOelXzRzj/VL0mav7kiilN9ohQEBFeWlIqBNdp3nBAlHkHwk6UJBcTlLyrZ5X1/NfEBOMNkD
+	+q9r5AFiO1XnCGXuYGKJg7q4G3cJN6FHbvdJ70flJVG8KDu8AUlvYOLrvhIbiKVs7uXhFIlyFK4
+	v
+X-Google-Smtp-Source: AGHT+IGIXK/iFLrHvP61E4Fkey99jVc8hyaezo7l5By+jHeGlefj153g4e4ytn2994OOWpRLeeAI8Q==
+X-Received: by 2002:a5d:648e:0:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39d0836e58emr10124465f8f.2.1744021027161;
+        Mon, 07 Apr 2025 03:17:07 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a67a1sm11476831f8f.24.2025.04.07.03.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 03:17:06 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Mon, 07 Apr 2025 12:17:03 +0200
+Subject: [PATCH RFT v3 1/3] ufs: core: drop last_intr_status/ts stats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] media: qcom: camss: Add sa8775p camss TPG support
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Robert Foss
-	<rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
- <012b0381-a5d1-49bc-aa59-aae0d35aa034@linaro.org>
-Content-Language: en-US
-From: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <012b0381-a5d1-49bc-aa59-aae0d35aa034@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oHsdj4GrodkDQnrDNYRqnzt2c2VBHhz8
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f3a5cc cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=yDHa7VgQrPWfl1kdwn4A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: oHsdj4GrodkDQnrDNYRqnzt2c2VBHhz8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1011 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070073
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-topic-ufs-use-threaded-irq-v3-1-08bee980f71e@linaro.org>
+References: <20250407-topic-ufs-use-threaded-irq-v3-0-08bee980f71e@linaro.org>
+In-Reply-To: <20250407-topic-ufs-use-threaded-irq-v3-0-08bee980f71e@linaro.org>
+To: Alim Akhtar <alim.akhtar@samsung.com>, 
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3212;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=GNn1TexJEZuCnIlB9DobcuoMATd8tMoDoJ6BdlvbUdg=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn86YgUVRzFgefMJeY504oYTCo5UkEMgaFG/EpAK+7
+ SrqFBGmJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/OmIAAKCRB33NvayMhJ0Rz+EA
+ DDap+KSM52ODSn68mtQIDfr1KTot3nWq4xdcRddXxRhbm2zFwDYHL9hVh5Gn15NvC4KIHa3XlYhk0/
+ NN8SZ9HFhbxsIXFjCkR4/o+EziL+R11x1Dx+vl0CW92ru6cOauSHVcEPeL2uHO8pzwZNMAHAt14P9d
+ VhQcFqsfFlZ97xgHteaidJEr7SzbNsxH1eQOsPiX9LuCEJspCdjMbcNeJE4B1azO43sFKZVCxxgzQB
+ xnD9NIPCqb89O0Tk8ZYVSqOCLgTBOgSjXXFuZe3hP3wGG6BuMPDobmX7KtKE0rXt2WRyICRBzUDb76
+ eca6wcE18zAwrEf9U6YQ+c2lElPS6pzkv6vVJF2PKKxdq0aMts75nBJmq/rMQ8WAMf9LpPJaFXpKCf
+ 9LtDMUkXNkPcXRU6ASUFr1TgxYEgj+UKhQ373IrjlW2lOOYfeGy/VxpXYNycvDkvuWmj/DM1zo/8kH
+ MnHUyO0jL9CJZ/LSQLz2ghf9dpf6p0qSxuNDxKgfhpA9tMP+pR7gqLmp0e5qdPIPYKtyieAoUudo63
+ w89vwSjCyychP4wghz9dPs2p3EaId2Zw5D9cXTEiwd7zkZ41r0wOQ22J1xxuV52KpuQd5nZeKL+h6U
+ FLvd9C3TRlzIhEmBrREXYBVmrX2VDmDhc5YsS7mhIn/A+N/q59QkTKmSR9Qg==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On 2025/2/11 18:19, Bryan O'Donoghue wrote:
-> On 11/02/2025 10:07, Wenmeng Liu wrote:
->> SA8775P is a Qualcomm SoC. This series adds driver changes to
->> bring up the TPG interfaces in SA8775P.
->>
->> We have tested this on qcs9100-ride board with 'Test Pattern Generator'.
->> Unlike CSID TPG, this TPG can be seen as a combination of CSIPHY and 
->> sensor.
->>
->> Tested with following commands:
->> - media-ctl --reset
->> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=0
->> - media-ctl -V '"msm_tpg0":0[fmt:SRGGB10/4608x2592 field:none]'
->> - media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4608x2592 field:none]'
->> - media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4608x2592 field:none]'
->> - media-ctl -l '"msm_tpg0":1->"msm_csid0":0[1]'
->> - media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
->> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=9
->> - yavta -B capture-mplane -n 5 -f SRGGB10P -s 4608x2592 /dev/video0
->>    --capture=7
->>
->> Used following tools for the sanity check of these changes.
->>
->> - make -j32 W=1
->> - ./scripts/checkpatch.pl
->>
->> ---
->> This patch series depends on patch series:
->> https://lore.kernel.org/linux-media/20250210162843.609337-1-quic_vikramsa@quicinc.com/
->> ---
->>
->> ---
->> Wenmeng Liu (3):
->>        media: qcom: camss: Add support for TPG common
->>        media: qcom: camss: Add link support for TPG common
->>        media: qcom: camss: tpg: Add TPG support for SA8775P
->>
->>   drivers/media/platform/qcom/camss/Makefile         |   2 +
->>   drivers/media/platform/qcom/camss/camss-csid-690.c |  15 +
->>   drivers/media/platform/qcom/camss/camss-csid.c     |  44 +-
->>   drivers/media/platform/qcom/camss/camss-tpg-gen1.c | 245 +++++++
->>   drivers/media/platform/qcom/camss/camss-tpg.c      | 737 
->> +++++++++++++++++++++
->>   drivers/media/platform/qcom/camss/camss-tpg.h      | 130 ++++
->>   drivers/media/platform/qcom/camss/camss.c          | 113 ++++
->>   drivers/media/platform/qcom/camss/camss.h          |   5 +
->>   8 files changed, 1282 insertions(+), 9 deletions(-)
->> ---
->> base-commit: c1696380f08cf7cc68560a11f2e8c51cb24aa7ba
->> change-id: 20250211-sa8775p_tpg-7de227a82eb4
->>
->> Best regards,
-> 
-> Great to see this work.
-> 
-> I think the TPG should be another type of PHY.
-> 
-> ---
-> bod
+In order to prepare introduction of a threaded interrupt handler,
+drop last_intr_status & last_intr_ts drop the ufs_stats struct,
+and the associated debug code.
 
-Hi bryan,
+Suggested-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ drivers/ufs/core/ufshcd.c | 11 +++--------
+ include/ufs/ufshcd.h      |  5 -----
+ 2 files changed, 3 insertions(+), 13 deletions(-)
 
-Do you mean to handle TPG like CSIPHY and embed it into the CSIPHY driver?
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 0534390c2a35d0671156d79a4b1981a257d2fbfa..5e73ac1e00788f3d599f0b3eb6e2806df9b6f6c3 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -643,9 +643,6 @@ static void ufshcd_print_host_state(struct ufs_hba *hba)
+ 		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt=%d\n",
+ 		div_u64(hba->ufs_stats.last_hibern8_exit_tstamp, 1000),
+ 		hba->ufs_stats.hibern8_exit_cnt);
+-	dev_err(hba->dev, "last intr at %lld us, last intr status=0x%x\n",
+-		div_u64(hba->ufs_stats.last_intr_ts, 1000),
+-		hba->ufs_stats.last_intr_status);
+ 	dev_err(hba->dev, "error handling flags=0x%x, req. abort count=%d\n",
+ 		hba->eh_flags, hba->req_abort_count);
+ 	dev_err(hba->dev, "hba->ufs_version=0x%x, Host capabilities=0x%x, caps=0x%x\n",
+@@ -6984,14 +6981,12 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  */
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ {
+-	u32 intr_status, enabled_intr_status = 0;
++	u32 last_intr_status, intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+ 
+-	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	hba->ufs_stats.last_intr_status = intr_status;
+-	hba->ufs_stats.last_intr_ts = local_clock();
++	last_intr_status = intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+ 
+ 	/*
+ 	 * There could be max of hba->nutrs reqs in flight and in worst case
+@@ -7015,7 +7010,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x (0x%08x, 0x%08x)\n",
+ 					__func__,
+ 					intr_status,
+-					hba->ufs_stats.last_intr_status,
++					last_intr_status,
+ 					enabled_intr_status);
+ 		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+ 	}
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index e3909cc691b2a854a270279901edacaa5c5120d6..fffa9cc465433604570f91b8e882b58cd985f35b 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -501,8 +501,6 @@ struct ufs_event_hist {
+ 
+ /**
+  * struct ufs_stats - keeps usage/err statistics
+- * @last_intr_status: record the last interrupt status.
+- * @last_intr_ts: record the last interrupt timestamp.
+  * @hibern8_exit_cnt: Counter to keep track of number of exits,
+  *		reset this after link-startup.
+  * @last_hibern8_exit_tstamp: Set time after the hibern8 exit.
+@@ -510,9 +508,6 @@ struct ufs_event_hist {
+  * @event: array with event history.
+  */
+ struct ufs_stats {
+-	u32 last_intr_status;
+-	u64 last_intr_ts;
+-
+ 	u32 hibern8_exit_cnt;
+ 	u64 last_hibern8_exit_tstamp;
+ 	struct ufs_event_hist event[UFS_EVT_CNT];
 
-thanks
-Wenmeng
+-- 
+2.34.1
+
