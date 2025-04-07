@@ -1,91 +1,68 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2078.outbound.protection.outlook.com [40.107.101.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA75D229B10
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D1722B8C3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744023766; cv=fail; b=k3eNdzI9lqf1uW4uobmL/QzUMz86Y5PELyvqORqkyMdqSxR8X0E9PpTghM65iyfHoyKYH8BgRvFzr9aNCi3wPh7bIkEUvRTw+MthDkYHqB1GM75Xw5uW6UO0/zhfsDZhyspDmRm9kABI9i4PdECY/gN/YcxvEar+kHIEEQaY3Ew=
+	t=1744023815; cv=fail; b=t/5eFhIwRdKaKYkBU3EkWg5sQErnXp2EqiGRo2WR5hCYm4eInoQ9EGgXNa6tJbQ1v4vIpT2urEzISQUCAmHBhRibhUWCN6ktBpCY0QE1HuD1f0N9lwXX7Wie+jAs5cvtccBJzJSzChd+FLU1JKZYpFBncLznaxVEn0/zrqWhuS8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744023766; c=relaxed/simple;
-	bh=Bx6Y4hXkUideNpTFBtPVjBUoU7LjqAXshCAkSfq01+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YvaPXFlz7kE5HBitY9ItCIn+DNFPtnLFFRcut1SZWrbqao71B45vtWsH8u/ZZLs70K/2W2fKNTsOvHg8afTJR8JSP15J4eRUglJ8ZJjFVPHjEfzEq4bbvtOdWfQJzXnyUhZdj7E2ckpDe/peMoexgLqgwpW1nAIirWtYzsma7Z8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aRX689Z3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gRJgM1XT; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1744023815; c=relaxed/simple;
+	bh=QWIppXXuHhYC0LOijT734AhNV/UMkKA6f4lPt4D4Ptw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fi/qPCsVZ7gevKirEbJJ3poTvaOwiQllFprF1dm63exC9j5NpeD9GDqwcX8d02Q2mKERCdQ+9LOxI7kGWoELm6ArG/SHnXJUTalXEdSGe+X/MtSnmaDcsoRdqYmnvmZGwmhX4hAgXh2fu82qSGR7zpia+Ek2ZIEWx9YGwGqeWlE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M9YUZNO0; arc=fail smtp.client-ip=40.107.101.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aRX689Z3";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gRJgM1XT"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5376Y4iF029143;
-	Mon, 7 Apr 2025 11:02:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=q3IXLkJjgDZtRgiUf/
-	NJEBFnmUCRWW+Lq1C3mL9w8oQ=; b=aRX689Z3QSo8YY9s3slZnTkoGRvJVHSrNr
-	Xh0EwZ04WxyTkzjM+Ad7fuKQsb7cpLkfDA7tZwA/ckz2BXP1ZBhsiCXYG0LBOEaj
-	mQuL0KeH9beDc1O5NcV6rSus1Naplsf2EiA7RV5FOnQMa8i2v7Kq3kmgY/nqvpdt
-	mt+UdhL6rtbfYHtyq3Cwv5CZ5o+v/SZw63cEZQrCpU5zYfD8f7F1/bp9dMR5qcZP
-	uHRtaw+wtmb92ZPRl+hA9iGZrne9KPNwEicDcK5M6I1iUXvJV3BBi6chh47JKj+5
-	HrsjI1RasDDHrNMcE7/sKYbmwlltfXyRNnuP8awbscN6WtesJH/Q==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tu41ab0p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 07 Apr 2025 11:02:06 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 537AbIQw001286;
-	Mon, 7 Apr 2025 11:02:06 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2173.outbound.protection.outlook.com [104.47.59.173])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45tty7mq7x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 07 Apr 2025 11:02:05 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M9YUZNO0"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mj2iG4HGb1QnkeZkZ0CcYqbx9r3uPHHrig0jEVhYBZ61SjO3Wqk+Qi74ril+4m0ZQz0oRLR4sRUj+BbeTHD1beQ4DlXrGqWZgwLG8QZ1f7HujMhNNjZZDTK26D/FG7dxExHU7pri7Eai56yCzPkE83sa4yNF90dnWIVDRsDjthIoDaCGocYObMa6rlKMiVjh1H5IdSNyb1JW3iBr/gEGLPxp8ODk1lLPVNXZLDGFk3ZrgJbnNAUx1wGRtnU0JWythC8/6Bfp6yhYVxCmvnIgtkCn1vRfmYoZGiX9O+7qJAnPsbnlyHIdgyKaOqMTbh0h6bJNa94RJ1rN8vcO6aSn6Q==
+ b=YMXDJKs1xUxnAcYIH8jZwz3Mn4OeUD4FuSc52kS6emXy4w/eCC7Euw1L9OwmOLCtMIT+a5BO0q+TUYfDLBktiEE+e3cHRTwxyVTZ7qg4isgB2HjGL6FoYhJU8Y1I4R7bhq8dWUodq3YpxL3fV/VbfNDwZhfToT04Zlm0Qs7tQ20STBtLxJnaIuV7XgX1/6kJ0Eoqg8P+KwTo7qfcuQEizOlAiOemJ5qQqbiiVDcjSHrA2Pjsn3tBZjEuHcVNYVwtVJZxFqcPzN2XbgTHE1UFjQLuHPElXqsVgoENLt4anoqAsZV+6w5r1MLEFNhAHcKFBriPKS/rq3pJmkAygleCKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q3IXLkJjgDZtRgiUf/NJEBFnmUCRWW+Lq1C3mL9w8oQ=;
- b=ZswTaxttUDkQZUxcLMc4jjZAttNh1mr2GWvHm7wRPF3cY7lpc1+0p2nIHZwu0J7V6FWDTqDluGvZ6uP7BJaem/g8qHPD7dpECCxCpDuJofrQeqgcCD2fcqjgxAVjutiZPNzYlypLG4/x7TV1lWfbi6HWRiP1KyAMxShYy8b5U4F1hHLi3OVlvn3rfFsTUJ5i2b58kjfqUlfOOwC5UUT+3oj4LGb++xRwMJZ28DMxncQ01wFRsuJZxOrAIej2PlTvJQtXV05OcodcCCIHrYS4MEONL44HGBhdAb+c6Gtpi7F3Q9cBGU6bjqUnorfcWU2AJN/aHSxtxB5cf/Bul0dnWQ==
+ bh=9id0xPgofjByflHh0AZrLg2rBHmqEES3j34YZ2qHerU=;
+ b=VBnaWyKCZwqax3M2rKdGOVU9xRbp2oXd7N8hdkwroVlN7wnBBckzxtMTRk2AO5JnBEDbmH0a9K+afcTrn+a3lLIlkKX0xtZ16xjxl4nxebQH6BhUSynfqNVqX/WdUoQCbx/6Uu6xXZ7x3RZgN65sOShareuQ52MVxRPyqx//AbqELo5Y4g/COw9SpG+XJqW8Ls+t1LkJ0CrC4joKAEg/d+89jIXx6JO0s9bTzrcoM1OSFYcKgR7Gjw1RQboxGbNNQ8sG/KJ9kji8fvp+SKmrZsH313H0KTlGyTNJ6/dFGFCyj31v49kY1GZwaGgyysw0Ep3YstjAOrQqxJ6alSQbNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q3IXLkJjgDZtRgiUf/NJEBFnmUCRWW+Lq1C3mL9w8oQ=;
- b=gRJgM1XTFkLgwAtTfaEhlSCRTFAicxS+oA5pA263mzOhkGjlr+uAj/O9efm1zRP2LDXgN5VNvyCGce6kDYKPTjd0O2qH0YMgRteH4xfmFKh2+JiwJcst59ddVcuwTYJjIJkDT0aiA9ERX4AbZHv2UEJXRZq3d5GVqQrohAbInhA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS0PR10MB8055.namprd10.prod.outlook.com (2603:10b6:8:1fc::7) with
+ bh=9id0xPgofjByflHh0AZrLg2rBHmqEES3j34YZ2qHerU=;
+ b=M9YUZNO0RfM9uD0UpJHjN9puJa1qaRoUaH3mwLjf/Sia1M9w2id6KCR3+8uFv/8HS4FFhw3g7nrOutXSUWoIHSQIfBCuL6XMk7zRHBk4mRNaVdXUKIx0iWMZKXEYhXeFIZPdNjXO3lnRU2s0YrP//COJqyriAN1sWYVrN47xnoY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ0PR12MB6966.namprd12.prod.outlook.com (2603:10b6:a03:449::14)
+ by SA3PR12MB8047.namprd12.prod.outlook.com (2603:10b6:806:31b::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
- 2025 11:02:03 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8606.033; Mon, 7 Apr 2025
- 11:02:03 +0000
-Date: Mon, 7 Apr 2025 12:02:00 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Wei Yang <richard.weiyang@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tools/testing/selftests: assert that anon merge
- cases behave as expected
-Message-ID: <4a8a1163-a7f9-4368-98e1-f79b0411aac4@lucifer.local>
-References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
- <e9e016392b6ceb5c58a868439fd7039e31bfda18.1742245056.git.lorenzo.stoakes@oracle.com>
- <20250407025455.67nhchndedotn57g@master>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407025455.67nhchndedotn57g@master>
-X-ClientProxiedBy: LO2P265CA0091.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8::31) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Mon, 7 Apr
+ 2025 11:03:32 +0000
+Received: from SJ0PR12MB6966.namprd12.prod.outlook.com
+ ([fe80::6688:276b:7e47:17d5]) by SJ0PR12MB6966.namprd12.prod.outlook.com
+ ([fe80::6688:276b:7e47:17d5%5]) with mapi id 15.20.8583.045; Mon, 7 Apr 2025
+ 11:03:31 +0000
+Message-ID: <432f63d5-cf96-4041-97b0-4f218876b9f4@amd.com>
+Date: Mon, 7 Apr 2025 16:33:23 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: pcp: scale batch to reduce number of high order pcp
+ flushes on deallocation
+To: "Huang, Ying" <ying.huang@linux.alibaba.com>,
+ Nikhil Dhama <nikhil.dhama@amd.com>
+Cc: akpm@linux-foundation.org, bharata@amd.com, huang.ying.caritas@gmail.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ mgorman@techsingularity.net, raghavendra.kodsarathimmappa@amd.com,
+ oe-lkp@lists.linux.dev, lkp@intel.com
+References: <875xjmuiup.fsf@DESKTOP-5N7EMDA>
+ <20250407063259.49271-1-nikhil.dhama@amd.com>
+ <87r024o1zt.fsf@DESKTOP-5N7EMDA>
+Content-Language: en-US
+From: Nikhil Dhama <nikdhama@amd.com>
+In-Reply-To: <87r024o1zt.fsf@DESKTOP-5N7EMDA>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0085.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9a::21) To SJ0PR12MB6966.namprd12.prod.outlook.com
+ (2603:10b6:a03:449::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,705 +70,245 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS0PR10MB8055:EE_
-X-MS-Office365-Filtering-Correlation-Id: a79d77fb-bc53-4c3d-9715-08dd75c3a0d3
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB6966:EE_|SA3PR12MB8047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 630854ad-fe68-4959-1582-08dd75c3d561
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CMXYLe00bGTPZg0EOpyn2o4rRwszpSoG4u+PvJ4yGWaaubkIWCsuWmJyei3+?=
- =?us-ascii?Q?ISdtsoCevseB9xKnkeVGAm/sU7UCqQpsK2SkXoGQWjmvbSLl0hbpPVaPU198?=
- =?us-ascii?Q?kV0X3/gH0dHXEyfOsr0ObT1PSt5nYI7Kqm9gLl5q/RsGwYFoyfmC2+kSIzqW?=
- =?us-ascii?Q?HEn0+KDIxTj4RPPuSQFtDva7OIq6zN7iCQ2U5RbdYI47/vO0LBhOOFZynPxv?=
- =?us-ascii?Q?TUS+4JpJhCwx+gs0GhiWcppT/0Y2GG2FSrZqfCyEHN6JC8o5ynAOCG7iLlb7?=
- =?us-ascii?Q?bPvghOOuqTx32SGwRlDN70NAE0SUOV9/MnwiyxfSH5hSZIi3mwVarvBCB+30?=
- =?us-ascii?Q?wSMBBBSQ/+ZtVrgdwN313gvkn/nuK0iVHsqqLc78Q5wv3NE3Sj7IHgpkiNuv?=
- =?us-ascii?Q?GVz1uAsx/Wdg+9jTt7yGioNm7OPEH870jeUFOzodByB+Sgz2y1Lm1OAyVx+h?=
- =?us-ascii?Q?EtXMhQfrfodrO+uZim7XM5y1bYBFXtPUcj1Ff/UxOpr8e260ZbXUOKy6bS29?=
- =?us-ascii?Q?UVe7L05MRguVAJM/9Z4pAxkjl5zspn4AVoG9g6tpuG6nQdvlNnjq1GVVnAsg?=
- =?us-ascii?Q?buEln72IUsHirvF7S7X4JhnrN+2z+CIuTdIrClW22nue867xSfD91xoP6Uue?=
- =?us-ascii?Q?wQ1Ln5pffFMqJhwQUQ3HAQMNTRGQqittovpRplEiK4SBpBLL9ckUMOIzyd2z?=
- =?us-ascii?Q?x4ibJgOuxGF/vJs6g6pyHnr8JAwza5xc9/0i2/ZF8YlFRbcZb8zb4WmVDNC4?=
- =?us-ascii?Q?KHKX/QZSw1VH2gbll1SNopXflVUOpbb1gURcSLT3pac3WytS81NjAkCZDvrw?=
- =?us-ascii?Q?neWWmWTxA0usfeglwOu2MACKA9j6YHjzuLqFWwKtdIRBR/ikecnUr0FaSu/T?=
- =?us-ascii?Q?ITvYJ1FKkhdV8rzZUctlnfivKpxt1tzZXDaVMZmWEHiBzz4znJVZWUTKL8vQ?=
- =?us-ascii?Q?ulPYG31fU66qObLZlH0Lk5Tu5IJemkSOtQfoCzr4PQuGdqSXC+G7QnIl8i+s?=
- =?us-ascii?Q?YsiP3UoXVnlJ4a5fMZYVPfAb7afUNQodhinX9miCpoawPGA2iSKOMOd3MHkw?=
- =?us-ascii?Q?wWZqWE9IYrSEow/s9ayN2/wNk8xUXvaW+kK9fJg7TJLonyNZEbJjTcj354v6?=
- =?us-ascii?Q?PcKpkXFyKqrrF5brzG25PqYMqWVayzuBDTpNvC5iur79NhL6ICCC9R8/tbY5?=
- =?us-ascii?Q?h27diBHze6mPANeQ/AIZUB314CHCbF7ag5oHZ1G3Rc50Q1hbFOWke4+w67wj?=
- =?us-ascii?Q?dLUXuwBFkV8pZVWN0gDKruSkjDo9CppLNeMTJgmKr6vL95QdicTNGCos5g+L?=
- =?us-ascii?Q?fmFc6OXVBB5nNJ7xJ/5WHvIBHKVl+gl3f+Mew3ALp7DjAsMK6QLLqCvjFTgg?=
- =?us-ascii?Q?+MR7Sy1szOVxcTJEBYinCsjT9lNi?=
+	=?utf-8?B?ODlnTmFPM1AyK1ZnamlrbE1ONzlYTWEwc0orWUR2UzlUZ0MwQnJhUm04QXQ2?=
+ =?utf-8?B?TGFTZ0tyOWt3d2djdzhsVVBTZU1xejN1WUpLdEo0SzUwQmNHV2ZtUlg0aktM?=
+ =?utf-8?B?eDRWVUFsbE5mQ2lRVlZUSEduZmtHc0h0TElwOHcxWCtIa2YyVkxKRmN1N0Vh?=
+ =?utf-8?B?VlpuTE10MWd5bk5GV1J2UjRlVVZaQUZLR05jWnU5TTdiN1BzNGlXUWptenho?=
+ =?utf-8?B?OXpFS2lBTDVZUVFrbVFWTUpYNEZINUphSzh1NkRXRCswV2xES0VVbTYxT3lu?=
+ =?utf-8?B?dWJMamtLTzhxR2ZqNEtyY1Zjem9CNWtkRnhXSnFxRzBrQTJneFp6YUQvUWhV?=
+ =?utf-8?B?TkEyUEp3VERERmE0VzlIdjVGdW9lcjhFK2k0Y2ptWlhEMFc1MEdXYjVoYTdF?=
+ =?utf-8?B?bjBrc2dvdzRpNEVWY0JIY0JxbWVBbmhENEVvU2svRVFrYjllUS9UbzFrR2Fl?=
+ =?utf-8?B?Zy9LRnh5d2JkWHQ4T0tucUtwQWZJRktNNXlJdmt3aTVOOFNZdkZ5TDVIdmhk?=
+ =?utf-8?B?UzhackZJMkxOUDlwci82S0RkdE1TQUdJSU5ENWVheUkrenpIVFlCNlBSYmwz?=
+ =?utf-8?B?LzB0VFNNY1VPZ0tHdC80dXd4MXZERTNCV2orQTAvQWtBRVpXTTkyRnZpZzRp?=
+ =?utf-8?B?VHJnNTZrd29wMTNhZnA5YVlwK016enNzS1VsU2hMQ3Q4TmVHWllicHl5NkFj?=
+ =?utf-8?B?R2xDaUZ4d2tFSTlKUmZBUEhjcWF3bmxucm1DaVFCb1VhSlhXMjkrQXN6YU5j?=
+ =?utf-8?B?NUQ0OFdsdTVQd3dCK3I2b092ZlJBc21xOWhObDNxVlNNZFN1ZDRIN21QWlR3?=
+ =?utf-8?B?T3hFL3Zha1ljcnQyNmRzcE9HMTBmVkJIZ2o4Rllpem1TUjF4WG4rb2xsNWo5?=
+ =?utf-8?B?N3lFalhtTkN2dTJ2bVdlc2JvbWRTUmdBRGZ5VFV4aS9hcjA5dlFUcGdTdGxy?=
+ =?utf-8?B?TzZncFVHdWpnUDR2Q1gwTCtFMXpkNVA1aUkwMHkxQ0VLSTEwUEVKZHhpZ0tw?=
+ =?utf-8?B?eEUxQWtVNDdXT3VFNzhCaUJpeGJ1eUE0aTV0a3ZPbGplWXZ0cXRmNGNGS0Ju?=
+ =?utf-8?B?aVoxd280blYvRjkvM3ZOTXVYMStzcm1qNVQwMWk1RWxZSmJsWkpQZjN6WGlE?=
+ =?utf-8?B?Si9PRGRFZFIxUGI5Z3Z6Z2hJQTIzNUdOU3ZzZ2dQeDlLNVVtdnVsWHJxOTg1?=
+ =?utf-8?B?Zm5qOGt5QTduMkhvS1Vkek1DdlZoWDFBM2NhTzhDWE85Q2NoQ1J2QytGZEZI?=
+ =?utf-8?B?UzBrbVFOQlBpVzhqQkNham50TDc3Kzl6aUFHMzJwSzl6cklqbTB2WUZidVkr?=
+ =?utf-8?B?YkRJRHNSaUJjcFByVk1xcGp6d0trZmNUdTJjclZpSDhaOEk2SUpCZ2RxZTlU?=
+ =?utf-8?B?SVIzbVArUGtuaGtQbkhUQ3ZRbmpHYUlPMjJnWkZvWnVSd1VXY0M2QndDVFZN?=
+ =?utf-8?B?UHZSMjhZaVora1NzVHFtOUtTSm0zSmtvbGMvSnJ1KzFITWN1aGFybU5iY2lz?=
+ =?utf-8?B?QThQWkFWM0EyREc2di9KbTViVWpJSVB6UEhiQXc5ZUFMejQ0dW1xWktGUWZv?=
+ =?utf-8?B?b3dBbklGZEpKQUFPeHh6dzAzbE9WR2tCazFjdldLOUNWZWJ0SitFTmxNTDZv?=
+ =?utf-8?B?RVpaeCtjUkx0Lyt3NnliSDlaWGdHZzA5czlqYXlzbyt0Wjg2ZCtvbU9lbW9C?=
+ =?utf-8?B?bGxzVGRuSE00WkhSTVdOcTMyRTltZ3lSSzl1aUEzR0dNVWJrY0lyMGxOVVVV?=
+ =?utf-8?B?VXIzMUIxTDRPc1lDTWhIUXp6U0QyT0ZHckMrNVZuTk9OV2lWZGtiQ0Z3WGIr?=
+ =?utf-8?B?UTR4dFU5VzhWbHFRb0VIalJ1OHFUNUZTNXFmWXlrMW1hQ0w0V2J5YmkzeUR1?=
+ =?utf-8?Q?P1JiSFwhb9zTh?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB6966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QeuAdO8G9Vr9XFifrAQOCIkFF0s3mpc7IWMhQKUd94EQdaiwz7QdHXTu36jQ?=
- =?us-ascii?Q?x969M8zFEMsoaGlTmmEIem5mowoaMQE8ThlI1LeeG3IMbvEELZ0E03QL0gve?=
- =?us-ascii?Q?zFSlsH1lmE4LSBedC0D6R1M/tVuvST9IkY4UXNJcojxyK/y71J2kmrSrSN6Q?=
- =?us-ascii?Q?1P0cUujTT5JAxyepWYG8HL3WBWcC4at9rmeaitcq/nUCSQ1fVTl3sVyaomdN?=
- =?us-ascii?Q?INdO3oVMX1rOp3S42fIyreX0X0MINruc6LMlwoT4DhPxcFaseRDf+4135MU9?=
- =?us-ascii?Q?J8a5NmYePFiwxdFYg9xjF3JRQjjON2Lz4OZ3KCd2w9rQ0d+DnDCUikTVc8dO?=
- =?us-ascii?Q?MAD7Qyt2wuT7gp/JcKT7xz8RK1fYRwTCVUmiSEL/Eyco9sJex87u3htLUmCJ?=
- =?us-ascii?Q?vjYv+R3AxH1QB7TKDK/FaT1a7FnGQ28f57vBtUodk8pjU/lIjhptCU4qGNX0?=
- =?us-ascii?Q?tCPhj8mEnJlx7av2kbFOwfyzKvnrUpKPqnx1NSL084ixZ/ZVEpbea/20Tlcg?=
- =?us-ascii?Q?mYFzKLM+RlswYEOj7NZ0OrRg3n8xHxntxJiBpxdYMlaWz43jW6Ppr4aZF3CF?=
- =?us-ascii?Q?H+zZ98b6+FXVsrXv9r+POwWWDJedG2flag6nmwsCpQ5bGKTjO+u29lPmqfMy?=
- =?us-ascii?Q?PiFwRDjNXuC8s6jgPlHEW4zDS336iG/lviaUYfIUuY+728hXO5lsKdq+mlVK?=
- =?us-ascii?Q?EM/Gisi+YjoYbEHK2b2tVmM396Vbew8CiJHlpp1wg6wgNy/653IyyW2KP4qZ?=
- =?us-ascii?Q?L5w4d8IENnl3SA5Q+1Kxks88dWLhmS1PhY06zYfUpI5IAwkkQYihdO4jAt0V?=
- =?us-ascii?Q?FlKM0y/EO+tdSX9w2aWiYJsP6Z6rGcUsitcATKKBsUHei3C/4yRxkh7pN+uM?=
- =?us-ascii?Q?gb08XlgEz7hwBTpyjPpQ73MfRpjp+F7nWyWIz6+MKjzdyL7qcTD5KlXbNgUL?=
- =?us-ascii?Q?vTn3DlhlQc++l/KrdQPHVd4Rei07sB7/YdERWtyoEIUBqpbzB+S7g3bumD5v?=
- =?us-ascii?Q?0f5YABpS8ZEtfcpFXf2fMnesKcTHCWwk8EYTJo0UsYY9D/9eGDUx0oFUFLvx?=
- =?us-ascii?Q?F6rnfodb/5tLtA0374l6JnM+myMpdHN0cUIT7GkXXjLbztqytIYoGu5MVczz?=
- =?us-ascii?Q?jTumZZj/mQfvvj7hueLLm76qo6CyYlY+nYfyMnLqeWYspwbygLndK5fhTDOq?=
- =?us-ascii?Q?ayHiIeauu/biQ9BbsKvOh34tWJJk7DQfg0J8/dshXdHlycte4qXOG4/I+Lgo?=
- =?us-ascii?Q?lSehVxv7HJ4emVCBcHlucYtJP9hT+edVc5C/QxrA9sivzVczBSgxzVtgTLdr?=
- =?us-ascii?Q?I7MAeFh43hshmxJzre7rFe73GCiYnGcp/VkXVECUwWRXviVyHGI0WZuKsqEQ?=
- =?us-ascii?Q?u7J8kZM5ddZtBxEThVmuSRSasDhE+uBtMnxIBfiVzU18dyqcz4rGAP1r5Xpn?=
- =?us-ascii?Q?treGXr2On6SNkfbK49UZKsfxAb05kJfDun2A1Nmamw2mrYnQkj2fn6RWpqnX?=
- =?us-ascii?Q?qa90IF9oPhVjFlmOxkiQC6Vi9ln+7V7o1wbI0N2sLEbiiCMLsp7j6j55bqA8?=
- =?us-ascii?Q?BvnJ0AypinjCsWXcMdk1HqaUWls+ZnjxdNwayPI5d7UdB3UybvrcdLKp8zqv?=
- =?us-ascii?Q?hQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	jrBODNA1UkISe8eXMeyhgSq+AiHA4cwKnAIPCtJ2auFhfJZ+/HDtAnbcaGqmpsW6MxL4rJ+2Z4H+jzAySa3D6aEeppxE8LlAYHaao4zpNoenwJx7peObV7ymeRmiFO3AQ4lox3cS4W14prniho12tLhWpddzrWGD6NvXNIP/XFHuL3sECaWXRDoJe7Cz+jXOs49oXSRU0QzlwoH5laJaSbyPZ0pGEQvanF8G9qEHUbLmcE2hSJZnafIMEtx/HU1ZEnD984Lx56g35Aut44UDBAu9aBA0sCBPvzGby2UcNMzsFgLeKPzUt3QYLqjs9hYpV14gdt9L+Zj9q+9/Af+69qotazqTQGeWZBcRgsR5yBRHDOlgHh3WcEsgYp0CqPGDzEXN7AyUVg5i2NUct/jUiXW9cgbCTv7NQUqxu8UNyVIBmAi7E3L/3BQpBYUxaxasQbf8YCqmV+aI142nn1jjn24mIuI/jDsPOzpyS8bE5J5YiX3h1TFftfxt0hDlOlJeV6D1Du89fzB5TU2R6+imXo86LCIeYhzWGIpe4/hCK9LtkqdgGS9mp8jV+w+XtR4HeM8ZlXIkOhsqmndU2LBaoTffywDwn2x+9jwh5OjJYm0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a79d77fb-bc53-4c3d-9715-08dd75c3a0d3
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+	=?utf-8?B?eHRpeU9rNUdZYWx3bExvdEM4V1FjeWJzZ1RTR2llRlhZZlpCdWRLTkR5SUpq?=
+ =?utf-8?B?azZwZUo1K0xTR0F4WDVta2VudE9keDlzbnY2T3k3SjRFbzRYb1A2alVxTkVF?=
+ =?utf-8?B?dnAwTzBoZWFyS2lHYUNYNjFoNFZhQUlDSXFBUlFEeFJzUTRTckJrWDZONkZ6?=
+ =?utf-8?B?eE1sM0RFQlBsc3hEL0ZJZU5TUmZmcGV1MjFhN2pSUnFrd1AvUWpsNlRSbjJs?=
+ =?utf-8?B?UUJmNEJhTXRWd1hqRTNERkw1NlYvK09mRHhDL05DYmdZdnBuWFV3d3cyUjR4?=
+ =?utf-8?B?WDExek1UME5qdzlxMGMvT1N5Mi80QmRscDRlV0IvaWtRVHlSaHYrWVNMYmFo?=
+ =?utf-8?B?N0lSZVJ5VjdYQVJXN1V2citwQTZzY09TMW9BNy91V3FVdlRsY2txL2xCN2RE?=
+ =?utf-8?B?OU5OQ0ZVMWE2aFM3TW5vTlhPTjQzVDFsWlRzMkN3d0VxZ3lJcGM4N0VrV3FM?=
+ =?utf-8?B?REY0OUtuNDFwY28xR0lBQXpnSFd6WmJtM3RIMnRKcWh0bml3TVg3TlJYNzZh?=
+ =?utf-8?B?djAwUTFsK1d6MEdDbzM4aDExNWlzZHdoUnlwZW11SnYzUnB4TVBIT3NVSCth?=
+ =?utf-8?B?cC96YTV0cCtvWlY2T3V0OU02eWVqS2ZpZDNnaExOQWs5b3UvUlJoUWU0NDk3?=
+ =?utf-8?B?RWM5cFlteCsvWjhJWTRDL2hDMUdsWjJvdDJhTnV1SzN1aTFmems1NjM3WFl2?=
+ =?utf-8?B?Q3JRY204bi9zYmdsTGYwQTVnY2s4OVRqeU92Z1Via3RQZ3MxUWV1UzJnSEN4?=
+ =?utf-8?B?b2ZtcUtqM3RlQmJMa1ozQzUya3FjbEI1Smltelk4VzVQd2dtMVVEcWtLV0xZ?=
+ =?utf-8?B?eEhpbk02dnEya2hCTnpWbUZVUWJUV092YVVscGxBRXJJb25LSVRHZzlKYXFy?=
+ =?utf-8?B?TkowVUJDSE01RkdVTHFoQ3hrU0J3NGZkSTlaRzYzK2NRcnN5VXR1NnNCYnFW?=
+ =?utf-8?B?YmRzd0hyaTN3TUFIZFVEdDNTWGszVHdDUzU0QWhCa0oyVXY4SlVmS3pTc1Q2?=
+ =?utf-8?B?eU1nQXpFZVZGQmxPTnJ2MGJVdm9UN1ZhOVU1YlBqRDdYQkM5ZTBZTGhjVTRu?=
+ =?utf-8?B?VFpMbmFXS0hpKzVTRkQ1ZUFFYXdxakJHcXNpTUdlRm1oSkU5eW03MzEvMlRv?=
+ =?utf-8?B?MFRma05mZzB6NktUb0FHUk5TbUgwbVdOS1Vjb0U5SUtVbnQ5L2FmaDk1b2Zr?=
+ =?utf-8?B?cGZxTzBEa3Uva05JZmtCaExEdXp5V2RyREE0VlhreCs5azhHM1VDZGEvb09t?=
+ =?utf-8?B?YXU2aWs0WjBXUFd2YXc4T1o3RDYraDljQmZHYTU0U3h6MmpLejNUTEFxS2Jq?=
+ =?utf-8?B?ZE40YUtGb1QvUVgwdDZidlMwVEtTM1BLZ3hWSTJ6YXdEUTNWNFdhalVlcm1N?=
+ =?utf-8?B?WDhVT2w5dmpzK3B4aEsvalhrcHI2bHp2SVlvdXBtOHE2VnVDNzQxNTlHZ0Vn?=
+ =?utf-8?B?MzNZYkUzbU03UHk4QmtoQW8xcGNGcldnQm0vV0VtazVHK3BtRzF4a3NZVjlR?=
+ =?utf-8?B?R255YytQYVlOMEJ5RXdibURpVzlSMjR0dWpVc2F6cmNGUlA3eHJOUkRWQldv?=
+ =?utf-8?B?SXhRQyszZFZQMGZhMTgzU3pad2I4eVRPZWI3ZVBWQUlmSENoZGRIb0MyOXJM?=
+ =?utf-8?B?bTRKdlRnOUduamdQdzkwelp1Zyt4aUg0bG5Lb1NQR3VCY2JqSWt2Q0tVaUEr?=
+ =?utf-8?B?RENqMUdZQVJpalllcWhCT1krVm8vcGl1OFhsaUlPM1FrbU9IbkpidzJ4NFJL?=
+ =?utf-8?B?aURIMm5RcHVIcWViTktBUWYyWFh5WDQ1VTBndUlBUDUzMHBSbWErUHRRa3Zw?=
+ =?utf-8?B?b3QxNDRUUDZ5cEhpaTNWR1p3V05ZNlg1SG5uVVA3SGtsU01hb0NxRTFIQURl?=
+ =?utf-8?B?UmZNL1Z3UTVZdHlCcWtwSFhMOTlXMCs5T1lsR3NCbTFXeldqM21xTi9GVmhw?=
+ =?utf-8?B?ZXdOZlF2WUFBdjRPdXNqaVFjWDB1RzljUTE5Nk5NWDVFS0xyT04yU21KQ3VV?=
+ =?utf-8?B?SkVweG1mRFFxSURWK1daZGZvWmZSVm9TRW5zU0dvYUYrUWpNTzJRcWZjNWR1?=
+ =?utf-8?B?VWc2djhVakhpZndDWmhoRlBKRE1VSklWWnpscGRYWTdYc3dMeXlnUFNCb01O?=
+ =?utf-8?Q?FhGtBihpoz0eKovLB92ynvEVR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 630854ad-fe68-4959-1582-08dd75c3d561
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB6966.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 11:02:03.6024
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 11:03:31.8889
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xKAepdQEvco9p2d3K/SHDbPVr5yQIxwil8jCwLxygZUWrQz/ovam/BSEyYz/RfftKGPJKcPMZYnliwNHqJLVO1U+uturITQwZedLcf/DwKk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8055
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504070078
-X-Proofpoint-ORIG-GUID: JT7pxpWuFaZllnl4m9XDHqnV2E4771D-
-X-Proofpoint-GUID: JT7pxpWuFaZllnl4m9XDHqnV2E4771D-
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vz1uqjL6rgu/OZj77ZXBL9HbnTzFwbirmaG5I9geq07vxv8BBG6mwNfJF80DouUSE+V6sAtmzG1/+jQmx3T48A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8047
 
-I know you mean well Wei,
 
-But drive-by extremely pedantic review on minor details isn't really
-useful. I can't tell you not to do this, but I can at least ask. I don't
-think this is a great use of either of our time.
 
-Thanks.
-
-On Mon, Apr 07, 2025 at 02:54:56AM +0000, Wei Yang wrote:
-> On Mon, Mar 17, 2025 at 09:15:05PM +0000, Lorenzo Stoakes wrote:
-> >Prior to the recently applied commit that permits this merge,
-> >mprotect()'ing a faulted VMA, adjacent to an unfaulted VMA, such that the
-> >two share characteristics would fail to merge due to what appear to be
-> >unintended consequences of commit 965f55dea0e3 ("mmap: avoid merging cloned
-> >VMAs").
-> >
-> >Now we have fixed this bug, assert that we can indeed merge anonymous VMAs
-> >this way.
-> >
-> >Also assert that forked source/target VMAs are equally
-> >rejected. Previously, all empty target anon merges with one VMA faulted and
-> >the other unfaulted would be rejected incorrectly, now we ensure that
-> >unforked merge, but forked do not.
-> >
-> >Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> >---
-> > tools/testing/selftests/mm/.gitignore     |   1 +
-> > tools/testing/selftests/mm/Makefile       |   1 +
-> > tools/testing/selftests/mm/merge.c        | 454 ++++++++++++++++++++++
-> > tools/testing/selftests/mm/run_vmtests.sh |   2 +
-> > 4 files changed, 458 insertions(+)
-> > create mode 100644 tools/testing/selftests/mm/merge.c
-> >
-> >diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-> >index c5241b193db8..91db34941a14 100644
-> >--- a/tools/testing/selftests/mm/.gitignore
-> >+++ b/tools/testing/selftests/mm/.gitignore
-> >@@ -58,3 +58,4 @@ hugetlb_dio
-> > pkey_sighandler_tests_32
-> > pkey_sighandler_tests_64
-> > guard-regions
-> >+merge
-> >diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-> >index 8270895039d1..ad4d6043a60f 100644
-> >--- a/tools/testing/selftests/mm/Makefile
-> >+++ b/tools/testing/selftests/mm/Makefile
-> >@@ -98,6 +98,7 @@ TEST_GEN_FILES += hugetlb_madv_vs_map
-> > TEST_GEN_FILES += hugetlb_dio
-> > TEST_GEN_FILES += droppable
-> > TEST_GEN_FILES += guard-regions
-> >+TEST_GEN_FILES += merge
-> >
-> > ifneq ($(ARCH),arm64)
-> > TEST_GEN_FILES += soft-dirty
-> >diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
-> >new file mode 100644
-> >index 000000000000..9cc61bdbfba8
-> >--- /dev/null
-> >+++ b/tools/testing/selftests/mm/merge.c
-> >@@ -0,0 +1,454 @@
-> >+// SPDX-License-Identifier: GPL-2.0-or-later
-> >+
-> >+#define _GNU_SOURCE
-> >+#include "../kselftest_harness.h"
-> >+#include <stdio.h>
-> >+#include <stdlib.h>
-> >+#include <unistd.h>
-> >+#include <sys/mman.h>
-> >+#include <sys/wait.h>
-> >+#include "vm_util.h"
-> >+
-> >+FIXTURE(merge)
-> >+{
-> >+	unsigned int page_size;
-> >+	char *carveout;
-> >+	struct procmap_fd procmap;
-> >+};
-> >+
-> >+FIXTURE_SETUP(merge)
-> >+{
-> >+	self->page_size = psize();
-> >+	/* Carve out PROT_NONE region to map over. */
-> >+	self->carveout = mmap(NULL, 12 * self->page_size, PROT_NONE,
-> >+			      MAP_ANON | MAP_PRIVATE, -1, 0);
-> >+	ASSERT_NE(self->carveout, MAP_FAILED);
-> >+	/* Setup PROCMAP_QUERY interface. */
-> >+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
-> >+}
-> >+
-> >+FIXTURE_TEARDOWN(merge)
-> >+{
-> >+	ASSERT_EQ(munmap(self->carveout, 12 * self->page_size), 0);
-> >+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-> >+}
-> >+
-> >+TEST_F(merge, mprotect_unfaulted_left)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	char *ptr;
-> >+
-> >+	/*
-> >+	 * Map 10 pages of R/W memory within. MAP_NORESERVE so we don't hit
-> >+	 * merge failure due to lack of VM_ACCOUNT flag by mistake.
-> >+	 *
-> >+	 * |-----------------------|
-> >+	 * |       unfaulted       |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+	/*
-> >+	 * Now make the first 5 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RO          RW
-> >+	 * |-----------|-----------|
-> >+	 * | unfaulted | unfaulted |
-> >+	 * |-----------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Fault in the first of the last 5 pages so it gets an anon_vma and
-> >+	 * thus the whole VMA becomes 'faulted':
-> >+	 *
-> >+	 *      RO          RW
-> >+	 * |-----------|-----------|
-> >+	 * | unfaulted |  faulted  |
-> >+	 * |-----------|-----------|
-> >+	 */
-> >+	ptr[5 * page_size] = 'x';
-> >+	/*
-> >+	 * Now mprotect() the RW region read-only, we should merge (though for
-> >+	 * ~15 years we did not! :):
-> >+	 *
-> >+	 *             RO
-> >+	 * |-----------------------|
-> >+	 * |        faulted        |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
-> >+
-> >+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, mprotect_unfaulted_right)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	char *ptr;
-> >+
-> >+	/*
-> >+	 * |-----------------------|
-> >+	 * |       unfaulted       |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ptr = mmap(&carveout[page_size], 10 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+	/*
-> >+	 * Now make the last 5 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RW          RO
-> >+	 * |-----------|-----------|
-> >+	 * | unfaulted | unfaulted |
-> >+	 * |-----------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[5 * page_size], 5 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Fault in the first of the first 5 pages so it gets an anon_vma and
-> >+	 * thus the whole VMA becomes 'faulted':
-> >+	 *
-> >+	 *      RW          RO
-> >+	 * |-----------|-----------|
-> >+	 * |  faulted  | unfaulted |
-> >+	 * |-----------|-----------|
-> >+	 */
-> >+	ptr[0] = 'x';
-> >+	/*
-> >+	 * Now mprotect() the RW region read-only, we should merge:
-> >+	 *
-> >+	 *             RO
-> >+	 * |-----------------------|
-> >+	 * |        faulted        |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ), 0);
-> >+
-> >+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, mprotect_unfaulted_both)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	char *ptr;
-> >+
-> >+	/*
-> >+	 * |-----------------------|
-> >+	 * |       unfaulted       |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+	/*
-> >+	 * Now make the first and last 3 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RO          RW          RO
-> >+	 * |-----------|-----------|-----------|
-> >+	 * | unfaulted | unfaulted | unfaulted |
-> >+	 * |-----------|-----------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-> >+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Fault in the first of the middle 3 pages so it gets an anon_vma and
-> >+	 * thus the whole VMA becomes 'faulted':
-> >+	 *
-> >+	 *      RO          RW          RO
-> >+	 * |-----------|-----------|-----------|
-> >+	 * | unfaulted |  faulted  | unfaulted |
-> >+	 * |-----------|-----------|-----------|
-> >+	 */
-> >+	ptr[3 * page_size] = 'x';
-> >+	/*
-> >+	 * Now mprotect() the RW region read-only, we should merge:
-> >+	 *
-> >+	 *             RO
-> >+	 * |-----------------------|
-> >+	 * |        faulted        |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-> >+
-> >+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, mprotect_faulted_left_unfaulted_right)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	char *ptr;
-> >+
-> >+	/*
-> >+	 * |-----------------------|
-> >+	 * |       unfaulted       |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+	/*
-> >+	 * Now make the last 3 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *             RW               RO
-> >+	 * |-----------------------|-----------|
-> >+	 * |       unfaulted       | unfaulted |
-> >+	 * |-----------------------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Fault in the first of the first 6 pages so it gets an anon_vma and
-> >+	 * thus the whole VMA becomes 'faulted':
-> >+	 *
-> >+	 *             RW               RO
-> >+	 * |-----------------------|-----------|
-> >+	 * |       unfaulted       | unfaulted |
->                    ^^^
+On 4/7/2025 1:08 PM, Huang, Ying wrote:
+> Nikhil Dhama <nikhil.dhama@amd.com> writes:
 >
-> According to your previous comment convention, the comment here describe the
-> result after ptr[0] = 'x'.
+>> On 4/3/2025 7:06 AM, Huang, Ying wrote:
+>>
+>>> Nikhil Dhama <nikhil.dhama@amd.com> writes:
+>>>
+>>>> On 3/30/2025 12:22 PM, Huang, Ying wrote:
+>>>>
+>>>>> Hi, Nikhil,
+>>>>>
+>>>>> Nikhil Dhama <nikhil.dhama@amd.com> writes:
+>>>>>
+>>>>>> In old pcp design, pcp->free_factor gets incremented in nr_pcp_free()
+>>>>>> which is invoked by free_pcppages_bulk(). So, it used to increase
+>>>>>> free_factor by 1 only when we try to reduce the size of pcp list or
+>>>>>> flush for high order.
+>>>>>> and free_high used to trigger only for order > 0 and order <
+>>>>>> costly_order and free_factor > 0.
+>>>>>>
+>>>>>> and free_factor used to scale down by a factor of 2 on every successful
+>>>>>> allocation.
+>>>>>>
+>>>>>> for iperf3 I noticed that with older design in kernel v6.6, pcp list was
+>>>>>> drained mostly when pcp->count > high (more often when count goes above
+>>>>>> 530). and most of the time free_factor was 0, triggering very few
+>>>>>> high order flushes.
+>>>>>>
+>>>>>> Whereas in the current design, free_factor is changed to free_count to keep
+>>>>>> track of the number of pages freed contiguously,
+>>>>>> and with this design for iperf3, pcp list is getting flushed more
+>>>>>> frequently because free_high heuristics is triggered more often now.
+>>>>>>
+>>>>>> In current design, free_count is incremented on every deallocation,
+>>>>>> irrespective of whether pcp list was reduced or not. And logic to
+>>>>>> trigger free_high is if free_count goes above batch (which is 63) and
+>>>>>> there are two contiguous page free without any allocation.
+>>>>>> (and with cache slice optimisation).
+>>>>>>
+>>>>>> With this design, I observed that high order pcp list is drained as soon
+>>>>>> as both count and free_count goes about 63.
+>>>>>>
+>>>>>> and due to this more aggressive high order flushing, applications
+>>>>>> doing contiguous high order allocation will require to go to global list
+>>>>>> more frequently.
+>>>>>>
+>>>>>> On a 2-node AMD machine with 384 vCPUs on each node,
+>>>>>> connected via Mellonox connectX-7, I am seeing a ~30% performance
+>>>>>> reduction if we scale number of iperf3 client/server pairs from 32 to 64.
+>>>>>>
+>>>>>> So, though this new design reduced the time to detect high order flushes,
+>>>>>> but for application which are allocating high order pages more
+>>>>>> frequently it may be flushing the high order list pre-maturely.
+>>>>>> This motivates towards tuning on how late or early we should flush
+>>>>>> high order lists.
+>>>>>>
+>>>>>> for free_high heuristics. I tried to scale batch and tune it,
+>>>>>> which will delay the free_high flushes.
+>>>>>>
+>>>>>>
+>>>>>>                        score   # free_high
+>>>>>> -----------           -----   -----------
+>>>>>> v6.6 (base)           100             4
+>>>>>> v6.12 (batch*1)        69           170
+>>>>>> batch*2                69           150
+>>>>>> batch*4                74           101
+>>>>>> batch*5               100            53
+>>>>>> batch*6               100            36
+>>>>>> batch*8               100             3
+>>>>>>
+>>>>>> scaling batch for free_high heuristics with a factor of 5 or above restores
+>>>>>> the performance, as it is reducing the number of high order flushes.
+>>>>>>
+>>>>>> On 2-node AMD server with 384 vCPUs each,score for other benchmarks with
+>>>>>> patch v2 along with iperf3 are as follows:
+>>>>> Em..., IIUC, this may disable the free_high optimizations.  free_high
+>>>>> optimization is introduced by Mel Gorman in commit f26b3fa04611
+>>>>> ("mm/page_alloc: limit number of high-order pages on PCP during bulk
+>>>>> free").  So, this may trigger regression for the workloads in the
+>>>>> commit.  Can you try it too?
+>>>>>
+>>>> Hi, I ran netperf-tcp as in commit f26b3fa04611 ("mm/page_alloc: limit
+>>>> number of high-order pages on PCP during bulk free"),
+>>>>
+>>>> On a 2-node AMD server with 384 vCPUs, results I observed are as follows:
+>>>>
+>>>>                                    6.12                     6.12
+>>>>                                 vanilla   freehigh-heuristicsopt
+>>>> Hmean     64         732.14 (   0.00%)        736.90 (   0.65%)
+>>>> Hmean     128       1417.46 (   0.00%)       1421.54 (   0.29%)
+>>>> Hmean     256       2679.67 (   0.00%)       2689.68 (   0.37%)
+>>>> Hmean     1024      8328.52 (   0.00%)       8413.94 (   1.03%)
+>>>> Hmean     2048     12716.98 (   0.00%)      12838.94 (   0.96%)
+>>>> Hmean     3312     15787.79 (   0.00%)      15822.40 (   0.22%)
+>>>> Hmean     4096     17311.91 (   0.00%)      17328.74 (   0.10%)
+>>>> Hmean     8192     20310.73 (   0.00%)      20447.12 (   0.67%)
+>>>>
+>>>> It is not regressing for netperf-tcp.
+>>> Thanks a lot for your data!
+>>>
+>>> Think about this again.  Compared with the pcp->free_factor solution,
+>>> the pcp->free_count solution will trigger free_high heuristics more
+>>> early, this causes performance regression in your workloads.  So, it's
+>>> reasonable to raise the bar to trigger free_high.  And, it's also
+>>> reasonable to use a stricter threshold, as you have done in this patch.
+>>> However, "5 * batch" appears too magic and adapt to one type of machine.
+>>>
+>>> Let's step back to do some analysis.  In the original pcp->free_factor
+>>> solution, free_high is triggered for contiguous freeing with size
+>>> ranging from "batch" to "pcp->high + batch".  So, the average value is
+>>> about "batch + pcp->high / 2".  While in the pcp->free_count solution,
+>>> free_high will be triggered for contiguous freeing with size "batch".
+>>> So, to restore the original behavior, it seems that we can use the
+>>> threshold "batch + pcp->high_min / 2".  Do you think that this is
+>>> reasonable?  If so, can you give it a try?
+>> Hi,
+>>
+>> I have tried your suggestion as setting threshold to "batch + pcp->high_min / 2",
+>> scores for different benchmarks on the same machine
+>> (2-Node AMD server with 384 vCPUs each) are as follows:
+>>
+>>                        iperf3    lmbench3            netperf         kbuild
+>>                                 (AF_UNIX)      (SCTP_STREAM_MANY)
+>>                       -------   ---------      -----------------     ------
+>> v6.6  vanilla (base)    100          100                  100          100
+>> v6.12 vanilla            69          113                 98.5         98.8
+>> v6.12 avg_threshold     100        110.3                100.2         99.3
+>>
+>> and for netperf-tcp, it is as follows:
+>>
+>>                                    6.12                     6.12
+>>                                 vanilla   avg_free_high_threshold
+>> Hmean     64         732.14 (   0.00%)        730.45 (  -0.23%)
+>> Hmean     128       1417.46 (   0.00%)       1419.44 (   0.14%)
+>> Hmean     256       2679.67 (   0.00%)       2676.45 (  -0.12%)
+>> Hmean     1024      8328.52 (   0.00%)       8339.34 (   0.13%)
+>> Hmean     2048     12716.98 (   0.00%)      12743.68 (   0.21%)
+>> Hmean     3312     15787.79 (   0.00%)      15887.25 (   0.63%)
+>> Hmean     4096     17311.91 (   0.00%)      17332.68 (   0.12%)
+>> Hmean     8192     20310.73 (   0.00%)      20465.09 (   0.76%)
+> Thanks a lot for test and results!
 >
-> faulted is the correct description here?
+> It looks good to me.  Can you submit a formal patch?
 
-My 'previous comment convention'? What? You mean my describing what
-happens?
-
-Yes this is incorrect, this should read 'faulted' in the RW section. I will
-fix if I respin.
-
->
-> >+	 * |-----------------------|-----------|
-> >+	 */
-> >+	ptr[0] = 'x';
-> >+	/*
-> >+	 * Now make the first 3 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RO          RW          RO
-> >+	 * |-----------|-----------|-----------|
-> >+	 * |  faulted  |  faulted  | unfaulted |
-> >+	 * |-----------|-----------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Now mprotect() the RW region read-only, we should merge:
-> >+	 *
-> >+	 *             RO
-> >+	 * |-----------------------|
-> >+	 * |        faulted        |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-> >+
-> >+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, mprotect_unfaulted_left_faulted_right)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	char *ptr;
-> >+
-> >+	/*
-> >+	 * |-----------------------|
-> >+	 * |       unfaulted       |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ptr = mmap(&carveout[2 * page_size], 9 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+	/*
-> >+	 * Now make the first 3 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RO                RW
-> >+	 * |-----------|-----------------------|
-> >+	 * | unfaulted |       unfaulted       |
-> >+	 * |-----------|-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 3 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * FAult in the first of the last 6 pages so it gets an anon_vma and
->             ^
->
-> s/A/a/
-
-Right, I'll fix that if I respin.
-
->
-> >+	 * thus the whole VMA becomes 'faulted':
-> >+	 *
-> >+	 *      RO                RW
-> >+	 * |-----------|-----------------------|
-> >+	 * | unfaulted |        faulted        |
-> >+	 * |-----------|-----------------------|
-> >+	 */
-> >+	ptr[3 * page_size] = 'x';
-> >+	/*
-> >+	 * Now make the last 3 pages read-only, splitting the VMA:
-> >+	 *
-> >+	 *      RO          RW          RO
-> >+	 * |-----------|-----------|-----------|
-> >+	 * | unfaulted |  faulted  |  faulted  |
-> >+	 * |-----------|-----------|-----------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[6 * page_size], 3 * page_size, PROT_READ), 0);
-> >+	/*
-> >+	 * Now mprotect() the RW region read-only, we should merge:
-> >+	 *
-> >+	 *             RO
-> >+	 * |-----------------------|
-> >+	 * |        faulted        |
-> >+	 * |-----------------------|
-> >+	 */
-> >+	ASSERT_EQ(mprotect(&ptr[3 * page_size], 3 * page_size, PROT_READ), 0);
-> >+
-> >+	/* Assert that the merge succeeded using PROCMAP_QUERY. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 9 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, forked_target_vma)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	pid_t pid;
-> >+	char *ptr, *ptr2;
-> >+	int i;
-> >+
-> >+	/*
-> >+	 * |-----------|
-> >+	 * | unfaulted |
-> >+	 * |-----------|
-> >+	 */
-> >+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+
-> >+	/*
-> >+	 * Fault in process.
-> >+	 *
-> >+	 * |-----------|
-> >+	 * |  faulted  |
-> >+	 * |-----------|
-> >+	 */
-> >+	ptr[0] = 'x';
-> >+
-> >+	pid = fork();
-> >+	ASSERT_NE(pid, -1);
-> >+
-> >+	if (pid != 0) {
-> >+		wait(NULL);
-> >+		return;
-> >+	}
-> >+
-> >+	/* Child process below: */
-> >+
-> >+	/* Reopen for child. */
-> >+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-> >+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
-> >+
-> >+	/* unCOWing everything does not cause the AVC to go away. */
->            ^^^
->
-> Before ptr[i] = 'x', we have unCOWed pages in vma. What we are doing here is
-> COWing, right?
-
-Nope, it's the other way round, as commented. A 'CoW' page is one marked
-for copy-on-write right? we now make it just a normal mapping by writing to
-it.
-
->
-> >+	for (i = 0; i < 5 * page_size; i += page_size)
-> >+		ptr[i] = 'x';
-> >+
-> >+	/*
-> >+	 * Map in adjacent VMA in child.
-> >+	 *
-> >+	 *     forked
-> >+	 * |-----------|-----------|
-> >+	 * |  faulted  | unfaulted |
-> >+	 * |-----------|-----------|
-> >+	 *      ptr         ptr2
-> >+	 */
-> >+	ptr2 = mmap(&ptr[5 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-> >+	ASSERT_NE(ptr2, MAP_FAILED);
-> >+
-> >+	/* Make sure not merged. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
-> >+}
-> >+
-> >+TEST_F(merge, forked_source_vma)
-> >+{
-> >+	unsigned int page_size = self->page_size;
-> >+	char *carveout = self->carveout;
-> >+	struct procmap_fd *procmap = &self->procmap;
-> >+	pid_t pid;
-> >+	char *ptr, *ptr2;
-> >+	int i;
-> >+
-> >+	/*
-> >+	 * |............|-----------|
-> >+	 * | <unmapped> | unfaulted |
-> >+	 * |............|-----------|
->
-> I am not sure "unmapped" is correct here. The range has already been mapped by
-> FIXTURE_SETUP(merge).
-
-This is pointless and actually misleading pedantry.
-
-For the purposes of what we are doing here, this is unmapped. Do you truly
-think mentioning a PROT_NONE mapping here would be useful, meaningful, or
-add anything but noise?
-
->
-> >+	 */
-> >+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr, MAP_FAILED);
-> >+
-> >+	/*
-> >+	 * Fault in process.
-> >+	 *
-> >+	 * |............||-----------|
-> >+	 * | <unmapped> ||  faulted  |
-> >+	 * |............||-----------|
->                          ^
->
-> Extra line here?
-
-Eh? I don't understand what you mean... you mean an extra '-'? This is to
-fit both unfaulted/faulted in the same size SACII 'VMA', a convention I've
-kept (hopefully) consistently...
-
->
-> >+	 */
-> >+	ptr[0] = 'x';
-> >+
-> >+	pid = fork();
-> >+	ASSERT_NE(pid, -1);
-> >+
-> >+	if (pid != 0) {
-> >+		wait(NULL);
-> >+		return;
-> >+	}
-> >+
-> >+	/* Child process below: */
-> >+
-> >+	/* Reopen for child. */
-> >+	ASSERT_EQ(close_procmap(&self->procmap), 0);
-> >+	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
-> >+
-> >+	/* unCOWing everything does not cause the AVC to go away. */
->
-> Same as above.
-
-And you're equally wrong here.
-
-I appreciate it's confusing and perhaps a poor way of expressing it, but
-I'm not sure there's a gloriously wonderful means of doing so that will
-bring clarity to everybody, as is the nature of mm. I do my best.
-
->
-> >+	for (i = 0; i < 5 * page_size; i += page_size)
-> >+		ptr[i] = 'x';
-> >+
-> >+	/*
-> >+	 * Map in adjacent VMA in child, ptr2 before ptr, but incompatible.
-> >+	 *
-> >+	 *      RWX      forked RW
-> >+	 * |-----------|-----------|
-> >+	 * | unfaulted |  faulted  |
-> >+	 * |-----------|-----------|
-> >+	 *      ptr2        ptr
-> >+	 */
-> >+	ptr2 = mmap(&carveout[6 * page_size], 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC,
-> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
-> >+	ASSERT_NE(ptr2, MAP_FAILED);
-> >+
->
-> I think pt2 is after ptr. Do I miss something?
-
-Yup, didn't update the comments but clearly updated the method. I'll update
-if there's a respin.
-
->
-> >+
-> >+	/* Make sure not merged. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
-> >+
-> >+	/*
-> >+	 * Now mprotect forked region to RWX so it becomes the source for the
-> >+	 * merge to unfaulted region:
-> >+	 *
-> >+	 *      RWX      forked RWX
-> >+	 * |-----------|-----------|
-> >+	 * | unfaulted |  faulted  |
-> >+	 * |-----------|-----------|
-> >+	 *      ptr2        ptr
-> >+	 */
-> >+	ASSERT_EQ(mprotect(ptr, 5 * page_size, PROT_READ | PROT_WRITE | PROT_EXEC), 0);
-> >+	/* Again, make sure not merged. */
-> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
-> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
-> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 5 * page_size);
-> >+}
-> >+
-> >+TEST_HARNESS_MAIN
-> >diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-> >index 9aff33b10999..0b2f8bb91433 100755
-> >--- a/tools/testing/selftests/mm/run_vmtests.sh
-> >+++ b/tools/testing/selftests/mm/run_vmtests.sh
-> >@@ -421,6 +421,8 @@ CATEGORY="madv_guard" run_test ./guard-regions
-> > # MADV_POPULATE_READ and MADV_POPULATE_WRITE tests
-> > CATEGORY="madv_populate" run_test ./madv_populate
-> >
-> >+CATEGORY="vma_merge" run_test ./merge
-> >+
->
-> ./run_vmtests.sh -h would show a list of categories.
->
-> How about add the new category "vma_merge" into the list.
-
-Probably unintended but this sounds pretty rude, especially when you are
-performing unrequested, rather pedantic, 'drive-by' review like this.
-
-A polite way of putting it would be 'perhaps additionally update the usage
-to add vma_merge to the list?'.
-
-Again, this is not very important, sure if I respin I'll do it.
-
->
-> > if [ -x ./memfd_secret ]
-> > then
-> > (echo 0 > /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
-> >--
-> >2.48.1
-> >
->
-> --
-> Wei Yang
-> Help you, Help me
+Thank you Huang Ying,  Yes,  I have submitted a formal patch with this.
+Patch v3: 
+https://lore.kernel.org/linux-mm/20250407105219.55351-1-nikhil.dhama@amd.com/
+---
+Thanks,
+Nikhil Dhama
