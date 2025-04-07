@@ -1,123 +1,120 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12B125485D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4C3255244
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031791; cv=none; b=b+vPrVhiQFwWyix3k6JK/9rzVFNUu0wqpeCVgmgSQ8U9mhU9xC4a8RSfFJ3Wc5e/7EJHQl7bYc5vtEVmBM7/v9aEXf91tnnKy8+jUQLYaUkcMI6tGc0R6J067JEr6rcHZG4y/TN2Bk/5SV20tt5IWqFK14tvduotITG1313gsZg=
+	t=1744031801; cv=none; b=OEntqlFeNfDHD6V3esf9mMmgZJqYQbQ/HbO+PMbar5YpoYFgbZkh+0AouM3DI7wZPpAmcsFGbx84VXbFwF3RKKqnQ2R2Y4Omzie6jh/E+/xF7h2cNSe/DExtb33sqJinUILd00J2rI0xXladpCJoS8BHdtvruWENulljef640U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031791; c=relaxed/simple;
-	bh=MMib6p3C8hdkHHOTCHHMLVyLdbmrWgElC71/JAQpy/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P5ESV0C0nN3qMPOqjeT6YGEdfryW3m6ar+5jGxN2j2hKe94PpulJRZRF61T1IoW6MNVjKqufmToC53Xzf+L1JrtS3XMLud9uM5zn5CUtFndkseu7Z9zhzpd0m0Aq/zVe/mgvcjnSlFdA4M4C9hDgpshGhihwFHJqFyFw18Xv9pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lPSAIYD5; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744031801; c=relaxed/simple;
+	bh=sFiXCOjce2Arik6LJN+4blzXwIJFWZxpXEbeG/RlRZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mx4pyV8xGQEev58uJA5RFmmJYrTZsYmAnktqG+g1fkKbAKHOTx2H3wO6EX2fvoJL+9jUI0/EZToeM9+jNAcSioqqFri6B6eYemzJVybXhMubLqKdTSfA3bw71EXT7Iq2UnAfxsgtv+xD9mtFyhiEic97ySPVEFsJ+P242/FmIXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I9klFOGN; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPSAIYD5"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af9a6958a08so264107a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744031788; x=1744636588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n7cCR1MuP2kYdCb0YqxaqR0Dqkjekp9ngJLjuSiWMX4=;
-        b=lPSAIYD5HyCbjZZ+fjX0ik/KI3xA9znTu+KhTf6s5syCi8nSaFQJjEjFHGzNAxYEaP
-         KR9pIduj2ZCTXWb08StNKVIXBWy4mnA6v0QXgqGUYE2fTL8Uu01j8y8ZypwWryUW98hK
-         jixvXY09H7kUPQwWIIvinY0IlQgvWBi6TniGDxCq9atD9zrUsmQQDC5eeeoGX7wmnUQz
-         ReCqfmK8hWk3gD0tIo8pe5AyrLqmVjE0O4IGAE97kOgJaZmDvhxv4A8XEkZixwgv93rv
-         OqVZSkmmzeQnAwx7sYEN56Qvx/L8CFYWEI8TPQBvMxMCU8GVlSJWtYKsoPd0UX4olBUO
-         jLww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744031788; x=1744636588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n7cCR1MuP2kYdCb0YqxaqR0Dqkjekp9ngJLjuSiWMX4=;
-        b=gDI5nlW6wn3oWGmxjkxV8KU5wSYc1NUqP+mq0kWnEnbx3U2MvUtBVl+l1PwhHijsPd
-         5A6lVa6Eh6o4CRjJ9yZU/yxfH5gUAP+GJH7k5w0ADxOg0RYw5nVlf0pykhPmEBu0tZlQ
-         C88JNMzRHji7st123JIxm95s0I68KnzG3CR5uzHm8QPqmQi4zA/5lUNQ8rMVEIE440ey
-         t3YzY5OK5cRczYTMc0S6AWFDV9FotPIm1FjYDsxRzizVuq3Z1ylhGNk16HaMSodlcqfZ
-         LBLihPXHgMqX8tULVHBZyOEvcsbMTv603ihCKk960w4QIZeZAWcsJkVjBY2PY0wB5UsN
-         jTIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtKdH92WzAUc6tGkDfApyEUIheOyQbEkFJUx9ndmb3bVzUWlqFJd4Io0HSv/vUlzR0uizFgdz34S7bV0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/OPZzJXljoP89uuZhAL9KQa9YdMnkFQLJ1lSmnnHMSDx/mDlx
-	RGNwGR2OGuuyvJtVWXA6gZGDgcxdr7Tg+sB0/3ACe4efLkeck4UhuAI8klCqGQT+9uus4Jayngn
-	+GY97U3iorQddC/HxAEHnMgUA9YY=
-X-Gm-Gg: ASbGncv2bUaCFC9mGHG8ZfgbDr4iaC/hBrfe7uRzzIlIWJzztA3wSk+V3slvHpig4s9
-	GYCg5AdcpkF7bVA9UdH3t5FrhwLlFNoDlDbHpvpXIFlUKQ5otYQlrWqtHVa1lZnQ0wvE0tAyd7Q
-	/nn/FMFnPwaphU+LtZXkUDxV3Juw==
-X-Google-Smtp-Source: AGHT+IGWsGXh2awIMFrukeFB4nL/EgfghTCD3qed+lyorBMGb+RwsVzpe4gd5IAuVIA6p04Z35Ji0j4QKUKfQ397qF8=
-X-Received: by 2002:a17:90b:4ac7:b0:2ff:4be6:c5e2 with SMTP id
- 98e67ed59e1d1-306a49aafa0mr5487508a91.7.1744031788284; Mon, 07 Apr 2025
- 06:16:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I9klFOGN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744031800; x=1775567800;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=sFiXCOjce2Arik6LJN+4blzXwIJFWZxpXEbeG/RlRZA=;
+  b=I9klFOGNpFOTAth5ikpIiA8s6bjsaSinP4y+HfnJxdPZ9R95QoKN10mT
+   bnXXImJJt+LZyekOHAAM2aQNvvjtErNSW+nTzYQWiA+z74LDyyud3xUJT
+   mrb2Synbxsz489dSG4a32VpF+R51fmGBDpy8GmW72gNvgAgZo9D7EkFQF
+   Lx7wfl8w8aVclUe7yzNRsUVCUGj2ZIH+g5fGG3gMC61Wkw0Dz5ZzR+nZ+
+   eb4zZAsokchrWXCi4m757PsXaHUFfrLFQZOeoKjUOVRQfJeeLPx8BAgSo
+   F3Ql4YZh7T2fj++x0htRM+Q7AH/QTUKvHCbt0wNyJsg882IyhMalIwY1J
+   g==;
+X-CSE-ConnectionGUID: Tv/0LaQJTF6ULH7M4TpGUw==
+X-CSE-MsgGUID: z/paNY3WTqGTwEDc5XY7Ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44560189"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="44560189"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 06:16:39 -0700
+X-CSE-ConnectionGUID: nm+WR+MkQ0690w1hCuAelQ==
+X-CSE-MsgGUID: 6J8LletqQjut895dvahgAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="132088892"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 07 Apr 2025 06:16:37 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1mL5-0003Qd-1S;
+	Mon, 07 Apr 2025 13:16:35 +0000
+Date: Mon, 7 Apr 2025 21:15:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: include/linux/hrtimer.h:348:9: sparse: sparse: dereference of
+ noderef expression
+Message-ID: <202504072155.5UAZjYGU-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407071627.1666-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250407071627.1666-1-vulab@iscas.ac.cn>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 7 Apr 2025 09:16:16 -0400
-X-Gm-Features: ATxdqUH55S0TFCTeQ1RCmu6WBynu-cBG5VFi3Gz6QmQJXLT7nDsvMJiHqxjBnk4
-Message-ID: <CADnq5_MuOUbnxw3qNcUsvvAKVWL-Bx+_2n81bWPXgz4D5fuAeg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Add error check for avi and vendor
- infoframe setup function
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com, 
-	alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, 
-	airlied@gmail.com, simona@ffwll.ch, hamza.mahfooz@amd.com, 
-	chiahsuan.chung@amd.com, sunil.khatri@amd.com, alex.hung@amd.com, 
-	aurabindo.pillai@amd.com, hersenxs.wu@amd.com, mario.limonciello@amd.com, 
-	mwen@igalia.com, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Apr 7, 2025 at 8:52=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wro=
-te:
->
-> The function fill_stream_properties_from_drm_display_mode() calls the
-> function drm_hdmi_avi_infoframe_from_display_mode() and the
-> function drm_hdmi_vendor_infoframe_from_display_mode(), but does
-> not check its return value. Log the error messages to prevent silent
-> failure if either function fails.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0af2f6be1b4281385b618cb86ad946eded089ac8
+commit: 04257da0c99c9d4ff7c5bb93046482e1f7d34938 hrtimers: Make callback function pointer private
+date:   2 days ago
+config: powerpc-randconfig-r112-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072155.5UAZjYGU-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce: (https://download.01.org/0day-ci/archive/20250407/202504072155.5UAZjYGU-lkp@intel.com/reproduce)
 
-This description doesn't seem to match the code change below.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504072155.5UAZjYGU-lkp@intel.com/
 
-Alex
+sparse warnings: (new ones prefixed by >>)
+   drivers/tty/serial/xilinx_uartps.c: note: in included file (through include/linux/pm.h, include/linux/device.h, include/linux/platform_device.h):
+>> include/linux/hrtimer.h:348:9: sparse: sparse: dereference of noderef expression
+>> include/linux/hrtimer.h:348:9: sparse: sparse: dereference of noderef expression
 
->
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/=
-gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 0396429a64be..d6feafb8fa3d 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -6152,8 +6152,8 @@ static void fill_stream_properties_from_drm_display=
-_mode(
->
->         if (stream->signal =3D=3D SIGNAL_TYPE_HDMI_TYPE_A) {
->                 err =3D drm_hdmi_avi_infoframe_from_display_mode(&avi_fra=
-me, (struct drm_connector *)connector, mode_in);
-> -                if (err < 0)
-> -                        dev_err(connector->dev, "Failed to setup avi inf=
-oframe: %zd\n", err);
-> +               if (err < 0)
-> +                       dev_err(connector->dev, "Failed to setup avi info=
-frame: %zd\n", err);
->                 timing_out->vic =3D avi_frame.video_code;
->                 err =3D drm_hdmi_vendor_infoframe_from_display_mode(&hv_f=
-rame, (struct drm_connector *)connector, mode_in);
->                 if (err < 0)
-> --
-> 2.42.0.windows.2
->
+vim +348 include/linux/hrtimer.h
+
+4346f65426cbce Oliver Hartkopp 2008-04-30  327  
+8f02e3563bb582 Nam Cao         2024-10-31  328  /**
+8f02e3563bb582 Nam Cao         2024-10-31  329   * hrtimer_update_function - Update the timer's callback function
+8f02e3563bb582 Nam Cao         2024-10-31  330   * @timer:	Timer to update
+8f02e3563bb582 Nam Cao         2024-10-31  331   * @function:	New callback function
+8f02e3563bb582 Nam Cao         2024-10-31  332   *
+8f02e3563bb582 Nam Cao         2024-10-31  333   * Only safe to call if the timer is not enqueued. Can be called in the callback function if the
+8f02e3563bb582 Nam Cao         2024-10-31  334   * timer is not enqueued at the same time (see the comments above HRTIMER_STATE_ENQUEUED).
+8f02e3563bb582 Nam Cao         2024-10-31  335   */
+8f02e3563bb582 Nam Cao         2024-10-31  336  static inline void hrtimer_update_function(struct hrtimer *timer,
+8f02e3563bb582 Nam Cao         2024-10-31  337  					   enum hrtimer_restart (*function)(struct hrtimer *))
+8f02e3563bb582 Nam Cao         2024-10-31  338  {
+2ea97b76d6712b Thomas Gleixner 2025-02-07  339  #ifdef CONFIG_PROVE_LOCKING
+8f02e3563bb582 Nam Cao         2024-10-31  340  	guard(raw_spinlock_irqsave)(&timer->base->cpu_base->lock);
+8f02e3563bb582 Nam Cao         2024-10-31  341  
+8f02e3563bb582 Nam Cao         2024-10-31  342  	if (WARN_ON_ONCE(hrtimer_is_queued(timer)))
+8f02e3563bb582 Nam Cao         2024-10-31  343  		return;
+8f02e3563bb582 Nam Cao         2024-10-31  344  
+8f02e3563bb582 Nam Cao         2024-10-31  345  	if (WARN_ON_ONCE(!function))
+8f02e3563bb582 Nam Cao         2024-10-31  346  		return;
+2ea97b76d6712b Thomas Gleixner 2025-02-07  347  #endif
+8f02e3563bb582 Nam Cao         2024-10-31 @348  	timer->function = function;
+8f02e3563bb582 Nam Cao         2024-10-31  349  }
+8f02e3563bb582 Nam Cao         2024-10-31  350  
+
+:::::: The code at line 348 was first introduced by commit
+:::::: 8f02e3563bb5824eb01c94f2c75f1dcee2d05625 hrtimers: Introduce hrtimer_update_function()
+
+:::::: TO: Nam Cao <namcao@linutronix.de>
+:::::: CC: Thomas Gleixner <tglx@linutronix.de>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
