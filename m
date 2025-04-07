@@ -1,149 +1,222 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2063.outbound.protection.outlook.com [40.107.93.63])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8917E238D39
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010568; cv=fail; b=RLrMyUKogJkqfljXe3QOj/gu8IsmKG/ofpkrG+1z2vrQhf1TVDG14BKyvG2ptClzFEviGXTUDHk30M5s7z9neBsbV0XpKXqf2bz4PCFF8iapGuFRCYoWMZxjtz8UYCHbpTAuAoaYEidVHFYroqJA/f7cet31DDTJ4Hs+U6Cc45I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010568; c=relaxed/simple;
-	bh=98wMF23K9ZGDmTkZKuDE0Dc74/Y2cLLK+yrFgSTEzRw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V5LCKt9owiGm84EkXbx05ARdVJiL/Bymcb9m06tPe229QaAyK7d7DPr4THTOJLRyLkuwKBcoxXwziI1xnz75YjdqUiq1YABDrOhI9HDm+Zp4YDEmTHtmlN+gy8T+GTKqjjVd52ApFNDWazOlWScePiVqAweCLbdM0TBIa7hDY9w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZxZRW+Uo; arc=fail smtp.client-ip=40.107.93.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DEE227BAD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744010594; cv=none; b=Teqr7sAxOdAFv4UNL0z6pMBcBZ5tFkCIyPIRB2ztqDVF8jQRUtICdYM8Iw8hwLd1Ai/6y5To0inRLCmdMU5oCYu7jx9ZPKlsfyaWTEKNoBhdHM38hptsfRrvvA5FB0XX97zH0GGHo2K8svLOa0spOT9yeyMN+mb7PDDGkwNX72c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744010594; c=relaxed/simple;
+	bh=upyhCOYZ+EYKRXyq5a0qgVqW7CLAlo5jRW5LwQsIBho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bdi3AUpXBIj1dlXJjCUJzTtNw3rYBoCg/p44/kYHzAwi2hoBvLw4tOc5hZX+4ECJH5pHoC6gToh4651xt0EKkI9exf69W0lKFIRfNMuhyLLg3ewzC/k8g8V5cH8gGMLIM9zqb9ZZLhnjvLgmu0DTkpSSsVOAtWRrFnKTN72DW+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OnmGa2ML; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZxZRW+Uo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F+WMD05DeASTEKNvqTeRUYMNFrVkARlRjGg3m95XezZz+vO9WefIFdXGwo1hxEBlDKozUw/ZmDsS/FwXDYceXyCN4oRy1y2sK9nWC0ID/M4h3OEX7miWy8fl9q9JmLETR+bJzfcZ2mKoAIGAOtX/uwSbxZ5Swmv8dmt1x3LaBAdnxK3iukomesMO61W9w9Qn/DQduBoVQfOo1Efga8AUhNhU9uygFARBDoui+di138eL2yOdiK5RRyp/JMMQYuxzgVYdZcFwhelF5+qsIQhUOaz1mlR/8Wzf9EaNiH8qYbHTPhEdHPg0vc+G9NYuGHqKUJbqmcB+LtGsp7wEHQzJYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UrhcJYR5TfBcpoRDDdHq3uB44D+yT6JByeryw4OlMGo=;
- b=ZDu09Mv5hwUu3jKhVG098/lrONlB+szx0EyrXG+LNotPTg4n3dNkwJkTLUmYBSZEKAZ6PG/b9f9J7Nn1Sv6fxds3eChPhZuXntNPXUYTN+bbkGIiUN02ij+N1Guna8m67d96zOLDMYKn4OCcD1LiI8ITPEspuOhDIcVGLlu+ZC2wY7sKfhPvrJ3d4bXV7kENC/6NuW4Bsga5TSlxsQHZBCE2HVWGQPitgJenjC7zLwXpT85wIE9aSPoUDo8Y2oNAaqZddVV6qJPMoxTO2U10Du2R5Bn0eJOk5QLtMeqCrXLlOYiKO1EFM4iZuBXcBIjPCvA/xBU9virCaSj93jaBcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UrhcJYR5TfBcpoRDDdHq3uB44D+yT6JByeryw4OlMGo=;
- b=ZxZRW+Uo9TZVb6D0gCxT56RNbAPL+mEDp42crKaKfY9mCVXF3DlavrCx8ST4Wl70YLWOZMjVH1bLMwAsIq9OmQyoP3aNbd6cHHm7hJD4bgHZ7nC843bpfeDVdienDmosEshJV4Wslu3bBWB7RYfSMnIsu3M5W/WnkCdk1m3wDN4=
-Received: from PH8P221CA0010.NAMP221.PROD.OUTLOOK.COM (2603:10b6:510:2d8::14)
- by SA1PR12MB7442.namprd12.prod.outlook.com (2603:10b6:806:2b5::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
- 2025 07:22:41 +0000
-Received: from CY4PEPF0000FCC0.namprd03.prod.outlook.com
- (2603:10b6:510:2d8:cafe::62) by PH8P221CA0010.outlook.office365.com
- (2603:10b6:510:2d8::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.32 via Frontend Transport; Mon,
- 7 Apr 2025 07:22:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCC0.mail.protection.outlook.com (10.167.242.102) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Mon, 7 Apr 2025 07:22:41 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 02:22:37 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-CC: <vbabka@suse.cz>, <kent.overstreet@linux.dev>, <kuba@kernel.org>,
-	<harry.yoo@oracle.com>, <kees@kernel.org>, <shivankg@amd.com>
-Subject: [PATCH] slub_kunit: Add missing MODULE_DESCRIPTION() to fix modpost warning
-Date: Mon, 7 Apr 2025 07:21:54 +0000
-Message-ID: <20250407072153.871265-1-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnmGa2ML"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744010591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=B1r1HdCpUvaOVezHtcC5BkAJFkP4kose+uh9bQkuCLw=;
+	b=OnmGa2MLlPoN1P9EtE3YuQyJDF35Uek+vLxwDQe/ilTtckO2mo/wZkTBEnphcEoGr4g0gK
+	GW5d1BxYRHhOhyYc1C+hbP3DGi5JswEJEL54jLVLFhvNL5JEAKfOeKGcaf72Ct/FokwuXj
+	JQ1sgYwKL5gja5XC6KxPK3bMjay+1KA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-GZG6sgu6MAOElte-UAt6QA-1; Mon, 07 Apr 2025 03:23:10 -0400
+X-MC-Unique: GZG6sgu6MAOElte-UAt6QA-1
+X-Mimecast-MFC-AGG-ID: GZG6sgu6MAOElte-UAt6QA_1744010589
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39143311936so1612434f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:23:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010589; x=1744615389;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B1r1HdCpUvaOVezHtcC5BkAJFkP4kose+uh9bQkuCLw=;
+        b=pMyOcc/PBXwgIYD4nMIsQOco4AXHETh5xUJPeqNAjqBME3BYtCos0PkT/S0wsyLgjp
+         GQg5Ng3f0E6M+2OirWGuYlZxlFo2aKheGcpDe86E1kQUPXKD6c7r9Zqc+KheHye+rHML
+         WT+UA2uPIpoiL9FHPfL/a52gYlysfb0iWZMsQ5QU0zTDumV3sZLSpBqIzNq/1zzc7dy4
+         RGU47IppkLt50FkJdE9qN3jW1nNj40ebnyHkTsT2uHx9SQUXvvu0OsF+Boq3F9U36OQ8
+         FDoaqQZyi2G123LyUsKSKv6x5MSG87sC2rmBQ3/LorDEkM6+p4OQ4HT7hoKstQEyms+z
+         BroA==
+X-Gm-Message-State: AOJu0YznSWSHz3PCRFESTGu421zFoQ3Z0s2PaZ05ojWIfgEPLvaoprA8
+	uPiPtViRjc97FW3wfu4LqVREFpu4ODgeWhxWayXFgdePMwSz8XsM1YDY6HaZ1OQGmUybU9HYKj0
+	jdZzRbysU6TBYeCRJSjTaPsu4tjWTSQKTs3jqeKJIrIY4G+cV6z5nS5T69h3lNw==
+X-Gm-Gg: ASbGncs/80IcRkZpkjow0nVcKDkk5xPCYckESr8sY6W96ITshozw3KiV58UuV32iTAE
+	xt9ASqKGHoKe1MerngpzAklNYhgnIqKJ/OmklbJNxx/MzAf45Jl5v9qJdVdpyVD/2hBqMsKRcmO
+	jIAVHXnXvhOrnC0+cWU2DynDQmRBoQsQdroCt9Nhci1bx1cC4WCvJZRpvRNhWHHNOvCS7qQjCud
+	y238SGzQOtVirGhtJdqVnMmxiGosnh2l0XBEZuemtD3jCdtyuP/a20WqsgfgBQ/daizZEkGEoLE
+	Z+u5w2yV4Z0JA51hQa0+H3R4g/Gp/VJ/y1+QCMQHbb/I
+X-Received: by 2002:a5d:584a:0:b0:399:737f:4de3 with SMTP id ffacd0b85a97d-39cba932615mr10061503f8f.29.1744010588688;
+        Mon, 07 Apr 2025 00:23:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG93YWXHmFqAA3JO4w4gCfmqvjlqC2Zq7r66rDIM3d2tH7YV1GTDfICSd4EgnjSn0QEymmjfw==
+X-Received: by 2002:a5d:584a:0:b0:399:737f:4de3 with SMTP id ffacd0b85a97d-39cba932615mr10061479f8f.29.1744010588280;
+        Mon, 07 Apr 2025 00:23:08 -0700 (PDT)
+Received: from [192.168.3.141] (p5b0c6a16.dip0.t-ipconnect.de. [91.12.106.22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm11093637f8f.43.2025.04.07.00.23.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 00:23:07 -0700 (PDT)
+Message-ID: <630caa8e-2ee2-4895-9e4e-8bf2fa079100@redhat.com>
+Date: Mon, 7 Apr 2025 09:23:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC0:EE_|SA1PR12MB7442:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebc7c3ea-ca3f-4cd6-a1cb-08dd75a4fbd1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oYWN4CamrJPOnF0KR8JQlcgBe1pEfqsUb7rGomjTXFdLfL0tggPXtxZPKyE2?=
- =?us-ascii?Q?s/dWP9ry9yTVOHdO/YTXlehgQ5W++Bf55oBlVLidw6r6c7yJg6g2q9WDeYpT?=
- =?us-ascii?Q?G3/QNWGPfer/hIDDijdofBLNPRTmI/yWRXm8Gt573H6R5a8PlzbolMnMbd2D?=
- =?us-ascii?Q?VC7yyDvaSGw2lXaTwSlqN0lZSE2cx4Mgz1HulKsK7sLE39z8XoOEC8QRFXJD?=
- =?us-ascii?Q?kWngnGRvZhaXQKIqOUE3tvwywHpz4KiHuVybbvyOEiKDatxnQOC0aAEMyFq5?=
- =?us-ascii?Q?rfeTk5uH3aae8HrlpXr5F7V1zbg0jy/Bn1iEYCloyP2/DJpkFz2AaKqHqD+w?=
- =?us-ascii?Q?pj/Q2ElXG04EbmYX+UAh34nB6OciJ7nOYYEsDpGqat1R39YFUMYUXkYQYgIX?=
- =?us-ascii?Q?iFSQfsc3QE9J8kjFZ1vvchj2GU0xWzaIkWXZJv0sMuyLbBXMWX1i3cvynwoy?=
- =?us-ascii?Q?vCt8mZX0MsESMbbr6z4owmkcu7T9S8/I0Ci/thrpB0M1L9vT35LYf2FyRtp0?=
- =?us-ascii?Q?RkyJMmGAAfeupZejgheFBf655hG9mUeBeXfo40F8YUSxk4pelZ5LepwFJwsT?=
- =?us-ascii?Q?ADBBC3pxoZco+ULVJMLFvdhIMuzVdgM24ignPqCuvmPn/xN1M8gv8luepm6b?=
- =?us-ascii?Q?VGK+uKIyIA1gUaiuHGQDdpFwfc4OqfHsYCODp3R0ufkdqGubpa2g2/g086tb?=
- =?us-ascii?Q?ZAlicK+2gHRdnGPUqo917AE9KO3RaNq6TMv2VVgHybTP6s03flGxHGyuXB+u?=
- =?us-ascii?Q?9/Wxft8UtLGYMJOKvs8X0Yo7yRUkBDSantVe2rhqDjAIVbhtHEorFx3T4veC?=
- =?us-ascii?Q?4lrOiafBfmzWM0kcTsYe1DYjJ6IMAy5SNdevMlYKMtZnr00ABMMShZ7tXLZ2?=
- =?us-ascii?Q?DQU2Fpp9sbIxtC/u6AML1cgrWlPt48cRuhe14X8GtDfydj2vJ9alYiRdzUUg?=
- =?us-ascii?Q?BqD03tPk56Axkc82++3E0E9HjB4k2eob5zsum/ndRjNTv93o+0exa4xB5IXS?=
- =?us-ascii?Q?3Y/OwxF2YXXGObuSmnxbl3N27MX6LhJmZyJMCbhJRyR55VZPRW7lB1t9h53x?=
- =?us-ascii?Q?mcpWOJVzBPloHZDY6zyXViPDdeGhgYQLr9OwlzkALDYI5H77r+rR4/A/w2O4?=
- =?us-ascii?Q?ErgWRXfsSZ0E2B7InAplHVUZQFk9bN1U++r4NLHd7EuDxYp/r0A6kgAvZAs6?=
- =?us-ascii?Q?3MbhpjZ9Chi5Ck647bKAnzD9MxX7vGWUwADyYtYoKs8fW1beBe68Tngx7E7O?=
- =?us-ascii?Q?ZAQc+VkMjNEPaytk3S66zJ8G2WzOZFeNXNohqJZ4cLxJtDkG0x8yOFON8KbA?=
- =?us-ascii?Q?i7/EbBZi6f7jL/pXkC5lY6GknaNNn2ZVuOjBKJCh3iBxD6tmAaxWGXb36SQA?=
- =?us-ascii?Q?3BliL7dIwd7+PShNNh8E9fStAZx1tZuOoV6qrXU8uT+NhUQ9nvF0CARgb53s?=
- =?us-ascii?Q?INorkHvrguJq3m4kD1J0ZNWuLE7cjIOp1qPk3BHPNS74zzSLLxAJoQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 07:22:41.4821
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebc7c3ea-ca3f-4cd6-a1cb-08dd75a4fbd1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC0.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7442
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] x86/mm/pat: (un)track_pfn_copy() fix + improvements
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ kernel test robot <lkp@intel.com>, Dan Carpenter <error27@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Rik van Riel <riel@surriel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250404124931.2255618-1-david@redhat.com>
+ <Z_K5uW2eu7GInRxs@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z_K5uW2eu7GInRxs@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fix a modpost warning due to the missing MODULE_DESCRIPTION() macro in
-slub_kunit.c:
+On 06.04.25 19:28, Ingo Molnar wrote:
+> 
+> * David Hildenbrand <david@redhat.com> wrote:
+> 
+>> We got a late smatch warning and some additional review feedback.
+>>
+>> 	smatch warnings:
+>> 	mm/memory.c:1428 copy_page_range() error: uninitialized symbol 'pfn'.
+> 
+>> -	if (!(src_vma->vm_flags & VM_PAT))
+>> +	if (!(src_vma->vm_flags & VM_PAT)) {
+>> +		*pfn = 0;
+>>   		return 0;
+>> +	}
+> 
+>>   static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
+>>   		struct vm_area_struct *src_vma, unsigned long *pfn)
+>>   {
+>> +	*pfn = 0;
+>>   	return 0;
+>>   }
+> 
+> That's way too ugly. There's nothing wrong with not touching 'pfn' in
+> the error path: in fact it's pretty standard API where output pointers
+> may not get set on errors.
 
-  WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
+We're not concerned about the error path, though.
 
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- lib/tests/slub_kunit.c | 2 ++
- 1 file changed, 2 insertions(+)
+> 
+> If Smatch has a problem with it, Smatch should be fixed, or the false
+> positive warning should be worked around by initializing 'pfn' in the
+> callers.
 
-diff --git a/lib/tests/slub_kunit.c b/lib/tests/slub_kunit.c
-index d47c472b0520..f1bc30be6503 100644
---- a/lib/tests/slub_kunit.c
-+++ b/lib/tests/slub_kunit.c
-@@ -323,6 +323,8 @@ static struct kunit_suite test_suite = {
- 	.init = test_init,
- 	.test_cases = test_cases,
- };
-+
- kunit_test_suite(test_suite);
- 
-+MODULE_DESCRIPTION("KUnit tests for SLUB allocator");
- MODULE_LICENSE("GPL");
+We could adjust the documentation of track_pfn_copy, to end up with the
+following:
+
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index e2b705c149454..b50447ef1c921 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -1511,8 +1511,9 @@ static inline void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
+  
+  /*
+   * track_pfn_copy is called when a VM_PFNMAP VMA is about to get the page
+- * tables copied during copy_page_range(). On success, stores the pfn to be
+- * passed to untrack_pfn_copy().
++ * tables copied during copy_page_range(). Will store the pfn to be
++ * passed to untrack_pfn_copy() only if there is something to be untracked.
++ * Callers should initialize the pfn to 0.
+   */
+  static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
+                 struct vm_area_struct *src_vma, unsigned long *pfn)
+@@ -1522,7 +1523,9 @@ static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
+  
+  /*
+   * untrack_pfn_copy is called when a VM_PFNMAP VMA failed to copy during
+- * copy_page_range(), but after track_pfn_copy() was already called.
++ * copy_page_range(), but after track_pfn_copy() was already called. Can
++ * be called even if track_pfn_copy() did not actually track anything:
++ * handled internally.
+   */
+  static inline void untrack_pfn_copy(struct vm_area_struct *dst_vma,
+                 unsigned long pfn)
+diff --git a/mm/memory.c b/mm/memory.c
+index 2d8c265fc7d60..1a35165622e1c 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1361,7 +1361,7 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
+         struct mm_struct *dst_mm = dst_vma->vm_mm;
+         struct mm_struct *src_mm = src_vma->vm_mm;
+         struct mmu_notifier_range range;
+-       unsigned long next, pfn;
++       unsigned long next, pfn = 0;
+         bool is_cow;
+         int ret;
+
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
