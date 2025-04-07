@@ -1,150 +1,127 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461FC146593;
-	Mon,  7 Apr 2025 13:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B2018132A;
+	Mon,  7 Apr 2025 13:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033247; cv=none; b=m/oGt7pC4WHh4dmN7OhZTiBdWSOnJDoybLBu4ArPBC4qOJOc/bH4zLdtrZrTZ2niPF3Z4h1rDk5VS5H7T0hYdE5NE9osSgG+Hlp9FbaW4bZpNtBVlEIVD44e/DzEZH/F5Ai4AD2TGg7VjRFvbj2ZKkfqnbQ2wCA7Mobz+bQbLRI=
+	t=1744033259; cv=none; b=dzXC5o3ljOjN75MuMMhc2YNZVEjG7eYgMiyg8WHdqBLBJLlYhr972uAM/nMqK99BlPf493ob6J3N43TOvIMfwhwTJT9QQIHcURofHKyH9DOx9kT0JUvv3C2qhMjE0hJ0iMu1xosZcbfuZNFxssZ8lA0sYlu56cepeHr35Hnrqd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033247; c=relaxed/simple;
-	bh=yhJDUT6i8ppDfwz9xG5uv5Ef5Hweg7g9o6Vj3vOKbH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BoD1sNPQO7r1Ip/kHoETI3b/DiJfaqTRZu57dWmfg5TFcXkz02jvn7sFMy/WFquBYMJqm7SHT4vtUXceGF7pR/L2Mqdqu3zsgquN1gnOyRFAEuYedCyZsjcgRC4BcVtjWSQteEaD70iQqxTlp+c9cvz9Ijpdye29BVpWsu+LkAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ce8vo0fX; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ce8vo0fX"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Deacr933749
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:40:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744033236;
-	bh=PPo/y7Y2uwnTf2TG0pRIGClz00gQc/+SAgwtVytYIHI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Ce8vo0fX2XRuVFzukO87i1a/1oT4B5+pvWA8fHIAKszpHeV3+JkRynjhb/rmn0ZzP
-	 Xzpb9F/8BUfo/zolaWVd1/aCF9Zn4PJ9P+vgWJ9RyMi450wfTfRprMYQKXMsseJUGU
-	 X6qw5HG3HKzIwIOn0+JTvbk/n9DwpQQAmToN9W7M=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537DeaGp076347
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 08:40:36 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 08:40:35 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 08:40:35 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537DeZtD067930;
-	Mon, 7 Apr 2025 08:40:35 -0500
-Message-ID: <4343a30e-074d-4d5f-8539-0ce9200d473c@ti.com>
-Date: Mon, 7 Apr 2025 08:40:35 -0500
+	s=arc-20240116; t=1744033259; c=relaxed/simple;
+	bh=01EglMpD15y2ymKpcfvYYvSAPDlSLNVF+4BeO1FGO+0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EZDFVX/wJnWOHq6V7J/jkgq1l67TUQZSMTbW8Io++0tuVrx/ACDlAxn0iIdLAy/GTrz5DxmRoNv9Zv6r3TzS+BEmbS5jLJglJSPKgMLuUSgW1GFw+03wVd9XXfibOqDiUu7Q0pnHQjDRLkT5VAp4KEhIRUH81GnMw2GCky9RGaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso5955281a12.2;
+        Mon, 07 Apr 2025 06:40:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744033256; x=1744638056;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S2AqJDaf6lftoEu9Q+iVLTJdgR0Iz9hzEE7Xh9FUmiQ=;
+        b=bXdEWrC7xcYAnXYQGa1weRg4jZPB68naB2VpKHxzLpSH+OhAZtzHtIqeKNtgFfKrZW
+         5rpwJjwK3JxVn9jaNsJWZjO9HUs7pAXmmR66VrMunHkp04fnRGu+RTwyvkkuNBlzxhtn
+         Y5zISkT8qUWEtQIGlTauWj8A+B1yPNFJbnvGhjqIUYvTcnnNwsEcPiSteEP0g+leBuHy
+         IrrOvQKT0qTsnCo3tflq5gHuYO+G/6j0JeXqNL04m0EzoJm4I3II6TvqwYk5ngr9Ow/9
+         k2d6evfG5PlNkx31CQh97033on+dzFpXWLkUlm9pXUq45CLvOPW1Zlm/w7bO5KpUaJ5l
+         d+nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO+Ym0w3b/SJ5EIdkrjyJ0Et7hxhKTtiaeaOhELu069UcK/2qcocWD7eQrIUH7HCYrz26yl89DE6Bu+gU=@vger.kernel.org, AJvYcCWo2l7Xru1HR0eNFplqlbS30Y/ol9ecXXojjEUrq97D75vmK8McIhpyq9mUAUMaXgc+EJmX1Q+E3KXPwfF7LOYsWLLI@vger.kernel.org, AJvYcCXpgbNpOOe+x5sWxVZb5KpgN8tv8kl9xkCD0R3TyuUlbv5AUaW20ijqIHRXa3fgVg9tK+EK9Qg0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdPG+WBgPEooTyp/riw3zWsm5IUx8jLL7eLQWJASWki0hwlsG6
+	pK2pc8YQyATQcJ2XqEUWmTeOcgLESg6rYUnLmv+VjjtLQt337TS8
+X-Gm-Gg: ASbGncvvkNsSc73UtHeR/T4qAzjoMWy1MMGCnlLLVmgDFXUwES99Kpb+pqgNivRa3Fs
+	Fjg0re/q+PXHEiWSzpjXDU8NgZwPx1mY6yuGKHcNOehFzmmrRXk8MsuSrrdZwYYEjFShCGl9h+f
+	pf/be4DNDuOra4LNNSXwXEIXl7G16Q2ds65+4+W9i4QW5uYlyIApTb/c+3qGWXfvkQ4m2CjPmpT
+	uUAWdI1DbXiNBSqw4JIE4SBpTNJbjouWgvfAREGXKWefH2AiLLNv3q85bsRvWbMoPxdRr8ZmeBY
+	ya5+uxqd1QxhCn37eIDKIuYk7qMextKlvFA=
+X-Google-Smtp-Source: AGHT+IFmsL1euGq4gGWgwaUT0FPZda09D+NQbhymvNQBlBKHS3i0t1fPWGZou8NTao96N1nDJ/xr6Q==
+X-Received: by 2002:a05:6402:5112:b0:5ec:c919:1b7c with SMTP id 4fb4d7f45d1cf-5f0b3b630fbmr10172486a12.5.1744033256115;
+        Mon, 07 Apr 2025 06:40:56 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:5::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f088084dedsm6930393a12.49.2025.04.07.06.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 06:40:55 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH net-next v2 0/2] trace: add tracepoint to
+ tcp_sendmsg_locked
+Date: Mon, 07 Apr 2025 06:40:42 -0700
+Message-Id: <20250407-tcpsendmsg-v2-0-9f0ea843ef99@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 04/26] remoteproc: k3-{m4/dsp}: Align internal rproc
- data structure with R5
-To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250317120622.1746415-1-b-padhi@ti.com>
- <20250317120622.1746415-5-b-padhi@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250317120622.1746415-5-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-B4-Tracking: v=1; b=H4sIANrV82cC/23NsQ6DIBRG4Vch/ywNoNaWqe/ROCBc9Q5FA8TYG
+ N+9iXPnk3znQKbElGHFgUQbZ14irDCVgJ9dnEhygBUwyrTKmEYWv2aK4ZMn2YzKmfretTp0qAT
+ WRCPvF/ZGpCIj7QV9JTBzLkv6XpdNX/0fuGmp5eC8amrfPr1/vAIN7OJtSRP68zx/LUjRR68AA
+ AA=
+X-Change-ID: 20250224-tcpsendmsg-4f0a236751d7
+To: David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1287; i=leitao@debian.org;
+ h=from:subject:message-id; bh=01EglMpD15y2ymKpcfvYYvSAPDlSLNVF+4BeO1FGO+0=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn89XmAJAEDlARnpLVgNYtcLThbvasYRmS1mvsS
+ K9tUWxDKr+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/PV5gAKCRA1o5Of/Hh3
+ bWbREACuCoecsHYgStRm61a6ly1WdmfIF/Q2d9e/MqwAohn2ZaaMDwRLJUdepJ0jQh46XB1nPIZ
+ A6tLmxuK2nYceZ9J1CwOcCP8Xy96QflFgN98iymoqJgrydu9q6CBFYfXgrH0as78ITpFTXhbCCB
+ BwvxNt3PfT82cmZmVRkw/eGJq/F3ZDO6yXUQ1RyZAgB6YHoUzlDmeC+Vk+xpl1f2dlmo6l5R1nb
+ Baql/UaiI5jGu1/wWSMfi5QM89EYoUqtOBl/mEde8KOi7fdFeo+xpgRIW6ew+dhx3HX53mGrI7g
+ Aw+U2yuIKY7tpSYzgYLafVHym8zlO/AslDL/sjEOxe3B9twGBB/Fd6RHn6a/ilcb3KEK6AoPSHA
+ YLBwbrslqF1QbbNY0Jkqtqno25EVkDgwBv/K5W7V7dx8i16yM8H/vAjJC9fTOLXxnpVNsFWqpgJ
+ /7kmNxd9rr1UpeKjZJdC3tax5LsGn8Mi7OmpC71KyCwbSNNdSMkrAYOzRrlDzjoh7EF9hezhIeh
+ k8e5VWOR85k/LI8IKgS1QaitysCQkl1gfrAuijTj+bpoA/iRhkdoONtuGsuqcHgTbAeiji8ARko
+ 3WwGNUPGS0K5/bQQI3UHZtZdcbCkd/5i+wrWmgWIr/r8Ms+PcuLveGm720p2AZ0K5+RXbImZIGz
+ 98eh7gQu5yWBW3A==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On 3/17/25 7:06 AM, Beleswar Padhi wrote:
-> Introduce a void pointer in the k3_{m4/dsp}_rproc internal data
-> structure which can be used to point to any private data needed by the
-> driver. Currently, the M4/DSP drivers do not have any private data, so
-> the pointer can be left pointing to NULL. Additionally, add a pointer to
-> the rproc struct within k3_m4_rproc internal struct. This is done to
-> align the data structures with R5 driver which can be factored out at a
-> later stage.
-> 
+Meta has been using BPF programs to monitor tcp_sendmsg() for years,
+indicating significant interest in observing this important
+functionality. Adding a proper tracepoint provides a stable API for all
+users who need visibility into TCP message transmission.
 
-This does two things, even if trivial things, just make this into two patches.
+David Ahern is using a similar functionality with a custom patch[1]. So,
+this means we have more than a single use case for this request, and it
+might be a good idea to have such feature upstream.
 
-Andrew
+Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
 
-> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
-> ---
->   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 2 ++
->   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 5 +++++
->   2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> index a695890254ff..31e43e49f1e4 100644
-> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> @@ -76,6 +76,7 @@ struct k3_dsp_dev_data {
->    * @ti_sci_id: TI-SCI device identifier
->    * @mbox: mailbox channel handle
->    * @client: mailbox client to request the mailbox channel
-> + * @priv: Remote processor private data
->    */
->   struct k3_dsp_rproc {
->   	struct device *dev;
-> @@ -91,6 +92,7 @@ struct k3_dsp_rproc {
->   	u32 ti_sci_id;
->   	struct mbox_chan *mbox;
->   	struct mbox_client client;
-> +	void *priv;
->   };
->   
->   /**
-> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> index a16fb165fced..d0ee7a8d460d 100644
-> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> @@ -50,6 +50,7 @@ struct k3_m4_rproc_mem_data {
->   /**
->    * struct k3_m4_rproc - k3 remote processor driver structure
->    * @dev: cached device pointer
-> + * @rproc: remoteproc device handle
->    * @mem: internal memory regions data
->    * @num_mems: number of internal memory regions
->    * @rmem: reserved memory regions data
-> @@ -60,9 +61,11 @@ struct k3_m4_rproc_mem_data {
->    * @ti_sci_id: TI-SCI device identifier
->    * @mbox: mailbox channel handle
->    * @client: mailbox client to request the mailbox channel
-> + * @priv: Remote processor private data
->    */
->   struct k3_m4_rproc {
->   	struct device *dev;
-> +	struct rproc *rproc;
->   	struct k3_m4_rproc_mem *mem;
->   	int num_mems;
->   	struct k3_m4_rproc_mem *rmem;
-> @@ -73,6 +76,7 @@ struct k3_m4_rproc {
->   	u32 ti_sci_id;
->   	struct mbox_chan *mbox;
->   	struct mbox_client client;
-> +	void *priv;
->   };
->   
->   /**
-> @@ -578,6 +582,7 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
->   	rproc->recovery_disabled = true;
->   	kproc = rproc->priv;
->   	kproc->dev = dev;
-> +	kproc->rproc = rproc;
->   	platform_set_drvdata(pdev, rproc);
->   
->   	kproc->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes in v2:
+- Change to a full tracepoint inside tcp_sendmsg_locked(), heavily
+  inspired in David's patch
+- Link to v1: https://lore.kernel.org/r/20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org
+
+---
+Breno Leitao (2):
+      net: pass const to msg_data_left()
+      trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+
+ include/linux/socket.h     |  2 +-
+ include/trace/events/tcp.h | 24 ++++++++++++++++++++++++
+ net/ipv4/tcp.c             |  2 ++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+---
+base-commit: 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+change-id: 20250224-tcpsendmsg-4f0a236751d7
+
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
+
