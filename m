@@ -1,183 +1,244 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2045.outbound.protection.outlook.com [40.107.94.45])
+Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69C41C5F06;
-	Mon,  7 Apr 2025 19:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744054070; cv=fail; b=JILtzCyILH5lJjMPMa7lnf8U9p2CFPk1fBDGqJYjqXz6alZUF1rsKuTNraWUEIM0XIbLA1QRhbF2JU6hDnQ6vfN1uRJ9Xilv3HKKk3a7QB3W5iCf9k5QxTUKNeQIc7qHEwl0X18B0+C5KZWXeK5+KPoviIKVQHk/Xr56U+Lup2k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744054070; c=relaxed/simple;
-	bh=+9HO6Y1vtLkpV4QmOcFjlzVL1bgq0IY+z41KFsDOrWk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UkgkqHbRqu/QveNchAJREGNW5Yj+YWWVlFyVhb43Pmvh5JRo0/m7e7iqVVlLMtFJw8eBEKlyTsVFxg8MyZ/mBKYWbIfroxpXtJ0STmWKojnPZAXLbKxhQf+e3vn4wdIyrof+wuZVm3EhmsMR8ME+1DGSDs2dHx9savwiJeZwTXw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2tnUR53V; arc=fail smtp.client-ip=40.107.94.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334BD1FF5F7;
+	Mon,  7 Apr 2025 19:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744054196; cv=none; b=njTLQEswtlFNCHe7A2xdEgI57YZoGgbnFVIAT87gmtqCI1JB6rtYyPh8b4dRuryHD4feL5fM7leWzpLeJp+XDV9GqJfxjIOCycPvcuygfdt+ofC599L+clWGg7KZI4IQU8odoS9OtysEsIcZzNSzXaqP5fOg+CtPm1hQB6lmS20=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744054196; c=relaxed/simple;
+	bh=QxbJUQj494NJu8ZjgJ05X2q3+gIgGLIBqzCnPxe0YBw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wo84BRp0LV/HOS6qVyIcLVXYQfloMAc/L/tQmgbwfOaVZ+7VYTHL54wEciZHPvMwzShfOReXYD5JAV5coy5j2z0Ur37AZiA1Rb7iW7HTJ48O12EC0xsSCIdslRSuOzxRoDKl5hXw7lQ4OE0xdKaAQ22HnMJj5A/GIsx6c9sBLR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=LlKTXg+d; arc=none smtp.client-ip=168.119.26.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2tnUR53V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mEr1qUmH9RXHXhAdCwWK7uRqkzczBToHXgU1Ekv5SWr3Y+6qxNR12RsYFLb9Ialpq7uCembSUcOmDDDSEE4/dDYNvQjwd8eXbrbY9lzxrBsSaljLf7kuUY4zPB+70TGYiI3xU2kFyVBYp/jgRRSVrAw3qsgAo2y1MxJqk7EvlUXUzsKIupnF14NkfrnLtjO+Z1Pyah6oE6BYEebzFcajJkl70JL90DTQtBHFH0LtQcWids343VXL7eQ4a9REGSPZtvv8qARiO98O6WcWtnKY5MX9TVbSaU3HWnDdIkZ5ErJbiYiL0xTlHzR42SFfjVth12ku/bahMW5GIb6ixZZVaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iyTOje+2N7tC0HjSB6zH58cfpLSFFHr703iEqTT3tPQ=;
- b=enzylHlqAbxPMboGO6BaWeQc+zLpml3StXrFz4va1nX4CB3x7kn1QunyQjO/dXNIJctqe09V1fx2w+PGpXFUxerSgDBpq0yzol+ECuTkg7y/5eu+MpO7cAHDjLLto6cdWqeNj2qQrSX90oBpOlHzLbA564zRi0Aq3bFsZJtK9K9ANA4s8ord76S+ZYboHgsxRkHVIAThmsLytPwIGGw2jaU4Md6jrFN0k0KL+5WlU4WmxhQTYpN1qeSdxh+MEjhIXNSpguD9n0ctYQF8zENLLIoRuONLDboh4D3OboOeMPwCDlakkxgFBV6e32Nn/P8hnJGgaNdIeOT2/FIZ78JdSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iyTOje+2N7tC0HjSB6zH58cfpLSFFHr703iEqTT3tPQ=;
- b=2tnUR53VCqaVEYOFiB8pFJ6Id38rCYdtLtWyOHUt3P0ei/3AnAZgdqcwyrjk8G5NeqLavAMv43Embz4w3LgWqmE9xCpEeKPioApt9hLOC+Easke/kLgqewdtcHA3pGqDIUcBqFXGG/UPzSZ2w4bqczdHYsnv6bWd+nJmkFnF63A=
-Received: from CYZPR05CA0014.namprd05.prod.outlook.com (2603:10b6:930:89::6)
- by SA3PR12MB7783.namprd12.prod.outlook.com (2603:10b6:806:314::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
- 2025 19:27:46 +0000
-Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
- (2603:10b6:930:89:cafe::f5) by CYZPR05CA0014.outlook.office365.com
- (2603:10b6:930:89::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.19 via Frontend Transport; Mon,
- 7 Apr 2025 19:27:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Mon, 7 Apr 2025 19:27:45 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 14:27:44 -0500
-From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To: <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, Robert Richter
-	<rrichter@amd.com>
-Subject: [PATCH] cxl/core/regs.c: Skip Memory Space Enable check for RCD and RCH Ports
-Date: Mon, 7 Apr 2025 19:27:34 +0000
-Message-ID: <20250407192734.70631-1-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="LlKTXg+d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
+	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=O40M1F4FENumpeawEN/zW0HV0k/GzWMb+PW3MS2kdeI=; b=LlKTXg+dXXhUmVPx2ZyqdR1/3W
+	dAq7E8QCV8RWayeTm/0ESqnhvcMKoys7h6YK0dWBvztEzbOpkwm3AM0qSCUES7j+vjOGhGL3CycUG
+	j3vwSJC7liLPPL+PFrZE/QAIEuwd7MNC6nvJxxxKqb0G+Z/gVcmBXdF8K1Vy+BbZwNEfMP6zR92Q4
+	h84rzZChgAWx8HoKjK5LeuEl3gUTypBP+CaQKau6Wp6yOxulbt/LaaWMGKwCcHqQrWVxQ5vkp2Nwv
+	L9scyRvxvqXTkHYamJD+YYB4rRpS6nj6kgYapvIiUcueXenErGHJJjMOKD/Pko5aLZHxlvZBm6R/h
+	24ZeZNzQ==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <git@apitzsch.eu>)
+	id 1u1rrg-000MKL-05;
+	Mon, 07 Apr 2025 21:10:36 +0200
+Received: from [92.206.190.59] (helo=framework.lan)
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <git@apitzsch.eu>)
+	id 1u1rrf-000OkW-1w;
+	Mon, 07 Apr 2025 21:10:35 +0200
+Message-ID: <29677b7d5ceb07693d0b530c88a5aa9bde6c04dd.camel@apitzsch.eu>
+Subject: Re: [PATCH RESEND 0/4] media: i2c: imx214: Problem with CCS PLL
+ calculator
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Ricardo Ribalda <ribalda@kernel.org>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 07 Apr 2025 21:10:34 +0200
+In-Reply-To: <4c62bb9d5575e9075b39500917e09687d37cf7ca.camel@apitzsch.eu>
+References: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
+		 <Z87I2xh0HY-YD_tZ@kekkonen.localdomain>
+	 <4c62bb9d5575e9075b39500917e09687d37cf7ca.camel@apitzsch.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|SA3PR12MB7783:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8ef20cd-db3d-4307-5ddf-08dd760a4648
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eafsp9V0JHhIhmJwtZroFL2fzGUhNB7LhQUZpy11aYvXoSVevFLM2DwSrZoC?=
- =?us-ascii?Q?PEVHbuWY3ROhBo4qWT9BvIuUsmMMmhysO3CZ5Y5sPXdaXatdm8Q+Sd2ayEh+?=
- =?us-ascii?Q?cjktXFZueOhbKECPbXR2RTCX6DA5z5mFGuseLs2khQvoiqBEpx02R1fnXk2R?=
- =?us-ascii?Q?KbnTWKmz6llM3Wwvawa0+GhEeE3sYjD+/UtEIRAeW3NESM0MQ0ZLzgB3TlKi?=
- =?us-ascii?Q?wrkLFP1Ls05VvQJ4WrGSFkSIX9v4be/KAHjT2H1smb8jUFneX3sHqr/3dnnY?=
- =?us-ascii?Q?aNK/Gayeh0LE1AvDcW6hEi8TSzDXtGB+awR7Q0X7Oc9lmc/lnrBVCun884f8?=
- =?us-ascii?Q?/0PMdZCcEKDnZ2JQYXxlGs/1eBciADl7v8ICGrjFo93IBmYjTMf7YIE3vswh?=
- =?us-ascii?Q?DRTqKmpnHjKL/G8ejML5AHQUfeNs1bGtTOCGvU849yitM4VDqYiywrE3zhUD?=
- =?us-ascii?Q?O0FEovLbnZWY0dDZV7xZXjAn7UWbkIxLMUN5hL8UxRxT8abB7DcxWFQZFW8X?=
- =?us-ascii?Q?LRzUup3ZZt7eJj1sququDEjs0j7FBDnSVs42lRQh133xAEXcGOKcbpLGtdWb?=
- =?us-ascii?Q?HdIZuyYyrHy2EuNr/OvV77iT1aiiSeZNG8BHg4CG7WzwfalxEc7uv8vGDW8B?=
- =?us-ascii?Q?wbWVq3Xh8gEBHNbtYpwwakjaDefSNQetBV1QX+aYTqSuoXo7bIJA6mxplUXz?=
- =?us-ascii?Q?ZOLlAWExZUo6iMXLwKCQld8pGyksjgsuOAklLIFLkJEWzLtCFpBUOWyJvx/t?=
- =?us-ascii?Q?0hQTYfarcISATOLyl8254QgzPurnFp0gRkl6vZxefIQnx/5ICvV8Vj8UcUXQ?=
- =?us-ascii?Q?4uQZi4FMFpqCjK6ChsEsdwfOgrepYeLLuWg5aA0tF/W+5upSWiugnene87fd?=
- =?us-ascii?Q?MUxOOqIkImLusDGpXGsMZPvJ4oFa5i86rUXzw4kGTyaIp+iy6izndAwcnaBn?=
- =?us-ascii?Q?BcyZwefeEeCo4lc7DL+dAXB3laAxZ0oLm0MMYDMPABExV3D2YnRD2QmqopI6?=
- =?us-ascii?Q?VAXsEIiYGW7AU6SxFoVCrlujrSfnI5ncyRruFEIH6849CPUFZaRvm0BbT4fU?=
- =?us-ascii?Q?dFU59ZXtU3rBwP10l9GjapjNDMsWNcFuhRP2nIPWXbm1/RlmBlP1LstYU9GK?=
- =?us-ascii?Q?D6+KH0+hRdiHjlwiVdEviB1S3Gl+y0pOdqouWJQE/N7fAygHeNWqkrabgOzS?=
- =?us-ascii?Q?W4s4auEKNLEfkavZVgw3HI3aj1HFHvfVSzNWwEBsltywYJIfn9UVBppZUNEb?=
- =?us-ascii?Q?XNfFedL/yE5m1ZBfM/VR/10sTjubbfPAY3SC9W+0mHumJbq9cshfG+8vVCZp?=
- =?us-ascii?Q?Jhzdta5pT3ZOkol6n5tNVz5O/scCfnDnQuHe8GZl00wy/er8/ZgMkMvK/3Td?=
- =?us-ascii?Q?AmR9Ih61jW5dW7hAsvCHyjli88nk+mOE0cl1X4mElyEVTrFHOfs821oLmZoQ?=
- =?us-ascii?Q?WY6Xqhtai8m6tsUh0rOuB/KFSmKUpPcxG3hURAFvvQoVMS9yWW5L+Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 19:27:45.5814
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8ef20cd-db3d-4307-5ddf-08dd760a4648
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7783
+X-Authenticated-Sender: andre@apitzsch.eu
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27601/Mon Apr  7 10:42:24 2025)
 
-According to CXL r3.2 section 8.2.1.2, the PCI_COMMAND register fields,
-including Memory Space Enable bit, have no effect on the behavior of an
-RCD Upstream Port. Retaining this check may incorrectly cause
-cxl_pci_probe() to fail on a valid RCD upstream Port.
+Am Montag, dem 10.03.2025 um 23:35 +0100 schrieb Andr=C3=A9 Apitzsch:
+> Hi Sakari,
+>=20
+> Am Montag, dem 10.03.2025 um 11:11 +0000 schrieb Sakari Ailus:
+> > Hi Andr=C3=A9,
+> >=20
+> > On Sat, Mar 08, 2025 at 10:47:54PM +0100, Andr=C3=A9 Apitzsch via B4
+> > Relay
+> > wrote:
+> > > The imx214 driver currently supports only a 24MHz external clock.
+> > > But
+> > > there are devices, like Qualcomm-MSM8916-based phones, which
+> > > cannot
+> > > provide this frequency. To make the sensor usable by those
+> > > devices,
+> > > add
+> > > support for 23.88MHz clock.
+> > >=20
+> > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > > ---
+> > > Andr=C3=A9 Apitzsch (4):
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Calculate link bit=
+ rate from clock
+> > > frequency
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Prepare for variab=
+le clock frequency
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Read clock frequen=
+cy from device tree
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Add support for 23=
+.88MHz clock
+> > >=20
+> > > =C2=A0drivers/media/i2c/imx214.c | 188
+> > > +++++++++++++++++++++++++++++++++++----------
+> > > =C2=A01 file changed, 146 insertions(+), 42 deletions(-)
+> >=20
+> > Thanks for the patches.
+> >=20
+> > Do you think the driver could use the CCS PLL calculator? The PLL
+> > appears to be compliant. The AR0234 driver will do the same. (The
+> > sensor might just work with the CCS driver, too, but that's another
+> > discussion.)
+> >=20
+> Using the CCS PLL calculator seems quite complicated compared to
+> switching to the CCS driver. That's why I looked at the later first.
+> But for it to work, quirks already need to be applied in
+> ccs_power_on(), to disable writing to COMPRESSION_MODE, and in
+> ccs_identify_module(), to change the MODULE_MANUFACTURER_ID register.
+>=20
+> I'll check if CCS PLL calculator could be used.
+>=20
+> Best regards,
+> Andr=C3=A9
 
-While the specification is explicit only for RCD Upstream Ports, this
-check is solely for accessing the RCRB, which is always mapped through
-memory space. Therefore, its safe to remove the check entirely. In
-practice, firmware reliably enables the Memory Space Enable bit for
-RCH Downstream Ports and no failures have been observed.
+Hi Sakari,
 
-Removing the check simplifies the code and avoids unnecessary
-special-casing, while relying on BIOS/firmware to configure devices
-correctly. Moreover, any failures due to inaccessible RCRB regions
-will still be caught either in __rcrb_to_component() or while
-parsing the component register block.
+the CCS PLL calculator seems to work (up to one problem) and to be a
+more elegant way forward.
+The problem is, that the pixel rate is too small by a factor of 10 and
+I cannot figure out why. Any help would be appreciated.
 
-The following failure was observed in dmesg when the check was present:
-	cxl_pci 0000:7f:00.0: No component registers (-6)
+My devices uses a clock-frequency of 24000000 and a link-frequency of
+600000000. There are four data lanes.
+The calculator returns a pixel rate of 480.000.000. The expected value
+is 4800.000.000.
 
-Fixes: d5b1a27143cb ("cxl/acpi: Extract component registers of restricted hosts from RCRB")
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
----
- drivers/cxl/core/regs.c | 4 ----
- 1 file changed, 4 deletions(-)
+You can find the PLL input parameters in [1] and the generated debug
+output below.
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 117c2e94c761..5ca7b0eed568 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -581,7 +581,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	resource_size_t rcrb = ri->base;
- 	void __iomem *addr;
- 	u32 bar0, bar1;
--	u16 cmd;
- 	u32 id;
- 
- 	if (which == CXL_RCRB_UPSTREAM)
-@@ -603,7 +602,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 	}
- 
- 	id = readl(addr + PCI_VENDOR_ID);
--	cmd = readw(addr + PCI_COMMAND);
- 	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
- 	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
- 	iounmap(addr);
-@@ -618,8 +616,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
- 			dev_err(dev, "Failed to access Downstream Port RCRB\n");
- 		return CXL_RESOURCE_NONE;
- 	}
--	if (!(cmd & PCI_COMMAND_MEMORY))
--		return CXL_RESOURCE_NONE;
- 	/* The RCRB is a Memory Window, and the MEM_TYPE_1M bit is obsolete */
- 	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
- 		return CXL_RESOURCE_NONE;
--- 
-2.17.1
+Best regards,
+Andr=C3=A9
 
+[1] https://github.com/a-andre/linux/blob/58e10a814985f700579847ac7c99468a6=
+5cb55bb/drivers/media/i2c/imx214.c#L1116-L1196
+
+$ dmesg | grep imx
+[   17.851215] imx214 4-0010: vt_lanes: 4
+[   17.851245] imx214 4-0010: op_lanes: 4
+[   17.851254] imx214 4-0010: binning: 1x1
+[   17.851262] imx214 4-0010: min / max op_pre_pll_clk_div: 1 / 15
+[   17.851272] imx214 4-0010: pre-pll check: min / max op_pre_pll_clk_div: =
+1 / 15
+[   17.851281] imx214 4-0010: mul 50 / div 1
+[   17.851290] imx214 4-0010: pll_op check: min / max op_pre_pll_clk_div: 1=
+ / 15
+[   17.851300] imx214 4-0010: op_pre_pll_clk_div 1
+[   17.851308] imx214 4-0010: more_mul_max: max_op_pll_multiplier check: 24
+[   17.851317] imx214 4-0010: more_mul_max: max_pll_op_clk_freq_hz check: 1
+[   17.851325] imx214 4-0010: more_mul_max: max_op_sys_clk_div check: 1
+[   17.851333] imx214 4-0010: more_mul_max: min_pll_multiplier check: 1
+[   17.851341] imx214 4-0010: more_mul_min: min_op_pll_op_clk_freq_hz check=
+: 1
+[   17.851349] imx214 4-0010: more_mul_min: min_op_pll_multiplier check: 1
+[   17.851357] imx214 4-0010: more_mul_factor: 1
+[   17.851365] imx214 4-0010: more_mul_factor: min_op_sys_clk_div: 1
+[   17.851373] imx214 4-0010: final more_mul: 1
+[   17.851381] imx214 4-0010: op_sys_clk_div: 1
+[   17.851389] imx214 4-0010: op_pix_clk_div: 10
+[   17.851398] imx214 4-0010: min_vt_div: 10
+[   17.851406] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_hz: 10
+[   17.851414] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
+[   17.851422] imx214 4-0010: max_vt_div: 40
+[   17.851486] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_hz: 40
+[   17.851502] imx214 4-0010: min_sys_div: 2
+[   17.851510] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: 2
+[   17.851518] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_hz: 2
+[   17.851526] imx214 4-0010: min_sys_div: one or even: 2
+[   17.851534] imx214 4-0010: max_sys_div: 4
+[   17.851541] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: 4
+[   17.851549] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_hz: 4
+[   17.851557] imx214 4-0010: pix_div 3 too small or too big (5--10)
+[   17.851568] imx214 4-0010: ext_clk_freq_hz		24000000
+[   17.851578] imx214 4-0010: vt_pre_pll_clk_div		1
+[   17.851587] imx214 4-0010: vt_pll_multiplier		50
+[   17.851595] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
+[   17.851603] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
+[   17.851612] imx214 4-0010: vt_sys_clk_div		2
+[   17.851620] imx214 4-0010: vt_pix_clk_div		5
+[   17.851629] imx214 4-0010: vt_sys_clk_freq_hz	600000000
+[   17.851637] imx214 4-0010: vt_pix_clk_freq_hz	120000000
+[   17.851645] imx214 4-0010: op_sys_clk_div		1
+[   17.851653] imx214 4-0010: op_pix_clk_div		10
+[   17.851661] imx214 4-0010: op_sys_clk_freq_hz	1200000000
+[   17.851669] imx214 4-0010: op_pix_clk_freq_hz	120000000
+[   17.851677] imx214 4-0010: pixel rate in pixel array:	480000000
+[   17.851685] imx214 4-0010: pixel rate on CSI-2 bus:	480000000
+[   17.851694] imx214 4-0010: flags lane-speed
+[   17.869313] imx214 4-0010: vt_lanes: 4
+[   17.869342] imx214 4-0010: op_lanes: 4
+[   17.869352] imx214 4-0010: binning: 1x1
+[   17.869361] imx214 4-0010: min / max op_pre_pll_clk_div: 1 / 15
+[   17.869372] imx214 4-0010: pre-pll check: min / max op_pre_pll_clk_div: =
+1 / 15
+[   17.869382] imx214 4-0010: mul 50 / div 1
+[   17.869391] imx214 4-0010: pll_op check: min / max op_pre_pll_clk_div: 1=
+ / 15
+[   17.869400] imx214 4-0010: op_pre_pll_clk_div 1
+[   17.869409] imx214 4-0010: more_mul_max: max_op_pll_multiplier check: 24
+[   17.869417] imx214 4-0010: more_mul_max: max_pll_op_clk_freq_hz check: 1
+[   17.869426] imx214 4-0010: more_mul_max: max_op_sys_clk_div check: 1
+[   17.869435] imx214 4-0010: more_mul_max: min_pll_multiplier check: 1
+[   17.869443] imx214 4-0010: more_mul_min: min_op_pll_op_clk_freq_hz check=
+: 1
+[   17.869451] imx214 4-0010: more_mul_min: min_op_pll_multiplier check: 1
+[   17.869460] imx214 4-0010: more_mul_factor: 1
+[   17.869468] imx214 4-0010: more_mul_factor: min_op_sys_clk_div: 1
+[   17.869476] imx214 4-0010: final more_mul: 1
+[   17.869483] imx214 4-0010: op_sys_clk_div: 1
+[   17.869491] imx214 4-0010: op_pix_clk_div: 10
+[   17.869501] imx214 4-0010: min_vt_div: 10
+[   17.869509] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_hz: 10
+[   17.869517] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
+[   17.869525] imx214 4-0010: max_vt_div: 40
+[   17.869533] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_hz: 40
+[   17.869541] imx214 4-0010: min_sys_div: 2
+[   17.869549] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: 2
+[   17.869557] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_hz: 2
+[   17.869565] imx214 4-0010: min_sys_div: one or even: 2
+[   17.869572] imx214 4-0010: max_sys_div: 4
+[   17.869580] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: 4
+[   17.869588] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_hz: 4
+[   17.869596] imx214 4-0010: pix_div 3 too small or too big (5--10)
+[   17.869607] imx214 4-0010: ext_clk_freq_hz		24000000
+[   17.869616] imx214 4-0010: vt_pre_pll_clk_div		1
+[   17.869624] imx214 4-0010: vt_pll_multiplier		50
+[   17.869633] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
+[   17.869642] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
+[   17.869651] imx214 4-0010: vt_sys_clk_div		2
+[   17.869659] imx214 4-0010: vt_pix_clk_div		5
+[   17.869667] imx214 4-0010: vt_sys_clk_freq_hz	600000000
+[   17.869675] imx214 4-0010: vt_pix_clk_freq_hz	120000000
+[   17.869684] imx214 4-0010: op_sys_clk_div		1
+[   17.869692] imx214 4-0010: op_pix_clk_div		10
+[   17.869699] imx214 4-0010: op_sys_clk_freq_hz	1200000000
+[   17.869707] imx214 4-0010: op_pix_clk_freq_hz	120000000
+[   17.869716] imx214 4-0010: pixel rate in pixel array:	480000000
+[   17.869724] imx214 4-0010: pixel rate on CSI-2 bus:	480000000
+[   17.869732] imx214 4-0010: flags lane-speed
