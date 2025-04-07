@@ -1,177 +1,134 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246712116FD;
-	Mon,  7 Apr 2025 17:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045942; cv=fail; b=VqUnWaCSEIQhpPEAEyCsYM/MU4ixwOAssAXIPgHVyQgeKNdoRHMWcknC8hotG/h0gxudOHMxyUnTnxYScZoX6MQKOqZctSh51JAR3G1jU6QyqD32Qw93fIKuuJM1p/KqhlvMrQxJ3nRz0qxXg9bmicdJuINkbfcuaI6KddoEJvw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045942; c=relaxed/simple;
-	bh=tQHRf2EBMVAN+TgRI1VXrtLS1mSWkQVmGSAfNBQhw6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BP8PO6aDrusnC9UBrGL4ggfNsGmKKLmh8tiwZ2RsfYPQrLPQtSRB48cGBXtiCemuPi1aDsGn+863hfgDMy80tWSyPJ+Fo38EdqjQB7AdobJ458UTkf7971xf9D4WEzhj9bFN6aXmfEy7m7eN8htVnVHV+zgMAdP2Bk3ZyFSku20=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Pp1y04bh; arc=fail smtp.client-ip=40.107.223.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523742153E8;
+	Mon,  7 Apr 2025 17:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744045952; cv=none; b=eGVYVsKPLMTZErlLLPIvgDpU6ckt4jlMxTFvuwvvKScz9VSeDjIIAeXk7v/MrhKTLgFFOc2nwSnhpOLTS77iJNxG0KUsv4bKP5ZsLVO6dQY9ntF34nkTxtVAPsMMdpEXfiyqrNQDdsPoeh9nNZt8TYC+6XcrEQZq4O0E7E+hK/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744045952; c=relaxed/simple;
+	bh=iExc9V1RZNbH82yR4R3zK7vVNa7a3hCQ5/uCwMnbJY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwMjpK5hoOGN6vlvaQAVwYJJq5jeh4SyNfXIUoAMol5gF/Q2T4IECYux+t7vb+JrSeryERUfnermn1ahqYJBro28fJfcf0th+3Axm1B0KlAKTRwp648NHHBwicVU79mGXGfImlLltmSQIT/FoY1IUZgdCuIyob1pIATnr1uFyeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIWbhSNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Pp1y04bh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wiCz1F3uGWcVI+CcnurRkek1Avj5Iq8Xn3EQ/U2wquFa8ErMtjsJ+Hi9rXmsIN6Hq+hkeP5ZrLvJ9LLmSo42BxTDXac0zVhUBslZ1baLoH2cCESvlUCoMcdgCpLfN55+dsJLF1c/KnKD2CXOlGPDzcrdznGs6rNiV22847trOgpRwqNKe5NhAopC/65iZdAZiqItoZACbUraj6o0kc4nsypyqxsEeXG16Puchgbd9lRxUcILiQqO8zIFaQ74SZKuWYtKFBcaUCA3mlUldOFCnOt15STxR2G7+uk6rzmoJCCylHzkHnpWwtT7ZebEnGbUnNvxqUw7Zj24xQ/w2JSNCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J01HHs5XYJEdNEiiGffIx9TTd/0fo3NtB91Oy2N8Ogg=;
- b=OBA2NnqjinwMQLwAXljE8KE12NckKWJN04QNtcXaIogvqACLBDzolPNp/Y/HCDjO2b51Jp51OuYNUMJteZ/KQV0Nt/5Fen+DBCzqOZ1QHZVASPirNE2VKfsClcBZQf7fx5dZxBb6YKanGxiaGc7nlMI8Slc80bun9fVuKZVCi+5wDsA6MEJyiINjP+OUC8fAG1vH1e+VSb2BwlGVfSSwskAXszsBzNfWawvm78DaEjhxOjQ66xtvH6+1NvvWlZLJrZKRYpkO3UrtWOBfpymNnA7ay9049iRokJQNnN5+rKaQKjSZ9mBCJbbKo3vjXMHh6gyOqvmPyBIldOuBZWU0QA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J01HHs5XYJEdNEiiGffIx9TTd/0fo3NtB91Oy2N8Ogg=;
- b=Pp1y04bh2P63aiDSgJAI6Nm4Asmu+l+DkF1JMIo3RopXFAJS+SIMF5XuBc2ZxGF3bpEDxtUmHopsVvqv55p5srxiQ6kpwzF++d4WrRsVHscXiMpMfEcgdCQRrVq0OdIV+aVbymTm0jXsxtENvZfh7XE5p/CAxd2O04+negzynyaj5cOWgVTE2xXpJAWnA3SFfAT8nXtiWkjPDDL/mh3jpHQaYgdBLxjaAEB/k5njpT+ReEQGwk/5AOjw0SNysED42+y2/cw+ZAFCtvo45wUULeGcLIBUfVkjQN0My1xfxklIQUBte89AKMeFlanm733sIdTVt0KNKt9+Y9R7kl907g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY8PR12MB7416.namprd12.prod.outlook.com (2603:10b6:930:5c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Mon, 7 Apr
- 2025 17:12:10 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
- 17:12:10 +0000
-Date: Mon, 7 Apr 2025 14:12:09 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	linux-kbuild@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v2 0/4] kbuild: resurrect generic header check facility
-Message-ID: <20250407171209.GJ1557073@nvidia.com>
-References: <20250402124656.629226-1-jani.nikula@intel.com>
- <CAK7LNAS6o_66bUB6-qj6NnaTRNKvu5ycxOP+kGfizYVBNjZAyw@mail.gmail.com>
- <878qoczbhn.fsf@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878qoczbhn.fsf@intel.com>
-X-ClientProxiedBy: BN0PR04CA0113.namprd04.prod.outlook.com
- (2603:10b6:408:ec::28) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIWbhSNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7AFC4CEDD;
+	Mon,  7 Apr 2025 17:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744045951;
+	bh=iExc9V1RZNbH82yR4R3zK7vVNa7a3hCQ5/uCwMnbJY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MIWbhSNnWQLiZ/9F0PpvV82WY2PkfOoRwpyStw9ZwlWqZwT5Cszu8+rH4Wbqa/O1+
+	 u6hIbES7fW2u7uodDtT/2aaB41G02QhMZ00McS0hvNxTr7/UUl2fLvgpK58PM/Mx/P
+	 dpM8JQuVP7Gkm5whPPMGbpSCESKjZ5WrW75WkTyu6dYXHyic4po5Ky58g4EA41sxyh
+	 /YnLtQzpEa/KBA4VM5zBvIHiRQ5K+COLNCSXbaewHkaW2xcGf/0oj14YjFpBBzRQ+L
+	 IIHFW30PmF1L+Os8AzH2HrKlvoevb8fUFq+cVESIRT6Y45CAfluCHCToVnbEgv7a91
+	 h+5sWqvCNMCvA==
+Date: Mon, 7 Apr 2025 10:12:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Alejandro Colomar <alx@kernel.org>, Alex Elder <elder@riscstar.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Alex Elder <elder@kernel.org>, Sumit Garg <sumit.garg@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] EISA: Increase length of device names
+Message-ID: <202504070957.A97CCC289B@keescook>
+References: <20250310222424.work.107-kees@kernel.org>
+ <3c6bc732-bd90-4a29-bcbc-f545b0ed79ad@riscstar.com>
+ <y5hkfx6tld2khsv2rb7w3k5hlkhfjfn7ndwwj5g75hkdebvjat@mypbmvg5brfi>
+ <alpine.DEB.2.21.2504021652130.53907@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY8PR12MB7416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e913cf4-b757-4bff-4c3f-08dd75f75538
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?R2z1MDYGFBKa8hBqJM5LpOFDVb4AEfQijMU0RWBcnQGb2S9cigmf8ZK09a1X?=
- =?us-ascii?Q?VijBw9t9q1jsd2CkMucsFPgVP6LxgBC33GQ7q6gVq3umFAeMgXglBNCIEyZt?=
- =?us-ascii?Q?ktw4b0fclKSFZ5aFWwtlCQBCSxPfeFJSjGnwevTncbB2bgY4hPF6O79cBON4?=
- =?us-ascii?Q?WCsklv9lBik0lSrRoQGmBF2DbLANVj7Hik8DFg6nDtxuZGdsg2XlI3AiU+U/?=
- =?us-ascii?Q?ro6azSBL6J4LxyQnhE8H3K++pk8HmwyqTF8LK9pxMqpTeOxOhuSDZ0Vf9ndd?=
- =?us-ascii?Q?M4YEWIbut75qWe/QLz2nYexZiHUfN9nlYx69HtrFDE1XV8rzaA19C8YVXiTd?=
- =?us-ascii?Q?pestEEJ+FP7jOdwWhrCwCw5KaLYkhRFa9D8I3ooWPjhkI/tV6IOtwdY55xL2?=
- =?us-ascii?Q?5GJatfHkAioCR9556UqJRqDZyAwlPPZeiy9AktXMUZn3Js9LogrGrd70P018?=
- =?us-ascii?Q?qHv3X1H7HW0emHmzMDXXrVCSiJ7aTd9eKKRhiZdDEGGguFYMv+1d8Lv85pvy?=
- =?us-ascii?Q?HA/MwUivlmgTu1Vn2nL1ydar9ikyy13maxZ4qGVKWrDING7j2Nkm5FeM1XPT?=
- =?us-ascii?Q?mK9ddU5VHemSXj8vKHKAsJEPQid+UrtVFurHr1KjoOPQaEe077GdYYedW/a5?=
- =?us-ascii?Q?awCm+LV6aw9QHs6YF674UTxnu5SDEVOfqDsnU1grw/RhO7mHn1066UazE89o?=
- =?us-ascii?Q?lOp+spiQCbN5G+G9hWnZ8s+8fwQojHbI6yJ2rhb7qVkIXqUEsE/tx4kTFVeb?=
- =?us-ascii?Q?DqCQbNxNk+e96E05o9/We3y5QbdQe6MYizrwnPiE4cIFqRL9lkFfFuo9wmOz?=
- =?us-ascii?Q?6khiaNqVa6kk6t5pVAOl1oLHri1dluE2IFDCEi7kybv2dbYy4d1OQExI3GEB?=
- =?us-ascii?Q?FGCIuHenYcKORw5tOQyp81SN9TOmbz+JRTMchxim8COxkLCJKgiQlcopwydT?=
- =?us-ascii?Q?yDEa8HZcaLDdlj3tJBJs3Cc1Wpi7LHp4X2Ob8k0tSEL8dmFpzi+hjTYX3xoh?=
- =?us-ascii?Q?c7VUudTnmKTIaheje89u4R7S4lzE74QW0+ma4yO81U9tv462n/TfWB7EFSi/?=
- =?us-ascii?Q?oYojqqhV4fHy7LYKKdRsgejw+9aVljvsdtJeaheWOj4W5O91U/plu/VLarm6?=
- =?us-ascii?Q?T44fjVlj9bBQ7yW4670KiWBlwAVUND+PugPFKgrBOpY0vGEb5OPP5lFxkLWQ?=
- =?us-ascii?Q?nD9LxOWtuDyzekv7PVMRqvMp4ePTDws9Fd92HMNhOPrEseG6oZLNI03s00uX?=
- =?us-ascii?Q?5NV9dStSlK0rgoxzSVj++THjafvMxQZfzG+ks9QiQGfQRtPHwN73tWgjqz0R?=
- =?us-ascii?Q?oUtPZgyziaeJLqOo3uUfgNPA7vex6dVuHlMdsEbbrSkUAl4r/2w8FJMSAqpJ?=
- =?us-ascii?Q?X8voSABAYZYZ5Xcecqu+sduSHiYcByXNsAtypmv5sJAuOOKo5TE9mEWZtITV?=
- =?us-ascii?Q?FFSyBKHWNz8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ulQhb0zeVRkni7qOhVo+clldN4ciXfBm91uigCQJQEFz9VEawQTFMClO2uFh?=
- =?us-ascii?Q?qRERyjL8v52rw44UBI95pFPAudhKPjubKbuGXqZHg+nWIp7Hf9XwrGkWPDm1?=
- =?us-ascii?Q?nPCNfXXFvokTpIQPkMYBbThFyPxLwdlWhY6h8BFndv6RmeBnJO81gVQ9c4IW?=
- =?us-ascii?Q?H0aJCbuYakPXY+esSc+CJfJKH6hseRbqB18z1edSOAI4N/x6neDYec8Ej/jm?=
- =?us-ascii?Q?fOyXxRnEOOhHPJR+/Iite02ciVr6fPyT2i2Lnnx9Mpv91N0/c7yfee75MgG2?=
- =?us-ascii?Q?+CzqrQ7dN0GaIV1IMl1Op7Up4OHQmM23nVj+pNo3x33inyzEcYNmpRm7oKRM?=
- =?us-ascii?Q?NHySgfAJI0X5M1d84EsPh37vEmhCWHDqUWdvLU7+/2oBk15vHa6bl3A/0VNU?=
- =?us-ascii?Q?CIKda5qbkc+OlNiIX+1oP1fhmxks+bVv78bk1fTvXNOR+VKfylxYKgbwDEAM?=
- =?us-ascii?Q?JJnbYCMEJ5XG/OwpzmOSkaDI18dufNaHtclfaF5zSj8p5l7ii2PfRflF8u9j?=
- =?us-ascii?Q?IBguaibTEVba573uq5ffR+u/GxaaCvrLuDbwIdWyWTneUCGKPgz5V6JJLI6l?=
- =?us-ascii?Q?12ZzzPBtkqKngHOqStJVR1g0h36pFQcs/1UsNBONDDu4O5zq6LwF6hVwD6Ge?=
- =?us-ascii?Q?glGoRppYf/2UqFQh8MTXm9R0Vbfp+chJoXJZ8Rsm5aOPYdoePokzZHbjMGvr?=
- =?us-ascii?Q?Z9M/2Zk7RfDtNqNEW7istZvLAvuOGCO4gV2/KDurqgD7xTD2lFLijEEzAks8?=
- =?us-ascii?Q?uFF5HfXdwKvuEee/LIv2dGongGzCmx0AkutBjJzIGk0AFfKSQXQp1OHuTioO?=
- =?us-ascii?Q?xL0fFAjBLu90NoOPRXuvCndMjglCiweacfc8fiTO0d9vc5SpVbZwhZwenPhc?=
- =?us-ascii?Q?MH8dxAl9vlqT6X+wnZOXqECn8hkfR+b9RHG5NoJja/weWb+Dg684oKQlq5+i?=
- =?us-ascii?Q?ox+698NULY7M+/wItEfOJeaMEYH8sNc1cr611p4xTNbY30CL1bl0IaqjSINJ?=
- =?us-ascii?Q?gkFGbM6xKCLBKMF0o2lq3O74vrr1R2o+dWdvN4rgmibskfpBtcdN7lIRXGog?=
- =?us-ascii?Q?Jwjh5kqY6ENPplifcmQOCxVCWkEJptwu42WuuG2IKJK17lL4QV2tulLhfifr?=
- =?us-ascii?Q?kofu+shBb2BbDM4yrByPRWpgMyhLWD7G2VoNFhCEZSQRxaKhKwHEioc9kNbQ?=
- =?us-ascii?Q?HBYJBUP2M3ePjy42VQqpP+8N2dnBDRDRhdBUrVSrHOsawLEK6h9gCuDcS1tT?=
- =?us-ascii?Q?oCidpHekhbmSgzcZr39Jjh7BIddGpsoUWPyV/n9LdfwM3l/E7qRPKKQda6IT?=
- =?us-ascii?Q?Nb6wkCrNdESofpqiceX36OtF2e4nQVT4ynR6a5Y/vLRM8ACc3GQtL6/GXvVN?=
- =?us-ascii?Q?S7hORi5o3femwKLaKHosuiVU4YAMcMIvJbXdf9irIEXXDEReOtm/EJFodwIB?=
- =?us-ascii?Q?nlEWuSIBl/s+UcqCs0cSJSuUnSlMQ6MICL0AVwYBtMDmHrp5upaY0LfPna5j?=
- =?us-ascii?Q?99eLZ5Nu/zy7KT5yrTfesZKBoZsIgvHGrmEgieX2kzvMI9vl52wKryVBpdNu?=
- =?us-ascii?Q?5gFZT+lHPpmZEOHIa60hR3m9VLOLXZWLg9i1WwKz?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e913cf4-b757-4bff-4c3f-08dd75f75538
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 17:12:10.5457
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xiqZWPd8xRvavfkUorHa9UNaHpXPOGjX/+9gcKN1p07zrFuXEzgF6Mjol2KqtUtF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7416
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2504021652130.53907@angie.orcam.me.uk>
 
-On Mon, Apr 07, 2025 at 10:17:40AM +0300, Jani Nikula wrote:
+On Thu, Apr 03, 2025 at 12:23:31AM +0100, Maciej W. Rozycki wrote:
+> On Sat, 15 Mar 2025, Alejandro Colomar wrote:
+> 
+> > > > GCC 15's -Wunterminated-string-initialization warned about truncated
+> > > > name strings. Instead of marking them with the "nonstring" attribute[1],
+> > > > increase their length to correctly include enough space for the
+> > > > terminating NUL character, as they are used with %s format specifiers.
+> > 
+> > It might be interesting to mention where they are used with %s.
+> 
+>  Indeed.  I seem to be missing something here as I can't see an issue in 
+> reality:
+> 
+> # cat /proc/ioports | sed -n '/EISA/,$p'
+> 0c80-0c83 : 486EI EISA System Board
+> 5000-50ff : DEC FDDIcontroller/EISA Adapter
+>   5000-503f : defxx
+>   5040-5043 : defxx
+> 5400-54ff : DEC FDDIcontroller/EISA Adapter
+> 5800-58ff : DEC FDDIcontroller/EISA Adapter
+> 5c00-5cff : DEC FDDIcontroller/EISA Adapter
+>   5c80-5cbf : defxx
+> 6000-60ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
+> 6400-64ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
+> 6800-68ff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
+> 6c00-6cff : Network Peripherals NP-EISA-3E Enhanced FDDI Inte
+> 8000-80ff : 3Com 3C509-Combo Network Adapter
+>   8000-800f : 3c579-eisa
+> 8400-84ff : 3Com 3C509-Combo Network Adapter
+> 8800-88ff : 3Com 3C509-Combo Network Adapter
+> 8c00-8cff : 3Com 3C509-Combo Network Adapter
+> # 
+> 
+> nor why incrementing the length specifically to 51 (where eisa.ids names 
+> are up to 73 characters; one of the longer entries can be seen truncated 
+> above) is going to change anything here.  Overall since the string length 
+> is fixed I'd expect just using `%.50s' instead.
 
-> Even with Jason's idea [1], you *still* have to start small and opt-in
-> (i.e. the patch series at hand). You can't just start off by testing
-> every header in one go, because it's a flag day switch. 
+These are produced from:
 
-You'd add something like 'make header_check' that does not run
-automatically. Making it run automatically after everything is fixed
-to keep it fixed would be the flag day change. It is how we have
-managed to introduce other warning levels in the past.
+        seq_printf(m, "%*s%0*llx-%0*llx : %s\n", ..., r->name);
 
-If you added the infrastructure there is a whole list of people on
-kernel-janitors that would probably help with the trivial cleanups to
-make it run clean.
+which is struct resource::name, which is unbounded.
 
-> With this type of antagonistic rather than encouraging attitude towards
-> contributions, there's just no way I can justify to myself (or my
-> employer) spending more time on what looks like a wild goose chase. I
-> have zero confidence that no matter what I do I'd get approval from you.
+> 
+> > > For what it's worth, it looks fine to me.
+> > 
+> > LGTM too.  Assuming that changing the size of the arrays doesn't break
+> > something else, it looks good.
+> 
+>  ISTM increasing to 74 instead might make more sense (I don't know what 
+> the actual maximum size was according to the ECU standard, but it might 
 
-I think you've been given a clear direction on what would be accepted
-and have the option to persue it. Claiming that is "antagonistic"
-seems unnecessary.
+The only mention of names I could find in the EISA spec just says,
+"The NAME field contains text that describes the board. The MFR field
+contains the full name of the board manufacturer." This is in the
+configuration files, though, so it seems unbounded.
 
-> And this is the primary reason subsystems and drivers hack up stuff in
-> their little corners of the kernel instead of sticking their necks out
-> and trying to generalize anything.
+I suspect the right choice is to use eisa.ids as the length guide, as
+you suggest.
 
-Seems to me like this is the usual case of generalizing being actually
-hard, you almost always have to actually do more work to succeed.
+> not be that we'll ever add any new entries to our list), once the origin 
+> of the problem is known, though I think we need to evaluate what effect 
+> such a change will have on the size of the compiled kernel.
 
-Jason
+I also see this hard limit of 50 in the Makefile:
+
+# Ugly hack to get DEVICE_NAME_SIZE value...
+DEVICE_NAME_SIZE = 50
+
+$(obj)/eisa-bus.o: $(obj)/devlist.h
+
+quiet_cmd_eisaid = GEN     $@
+      cmd_eisaid = sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^"]\{1,$(DEVICE_NAME_SIZE)\}\).*"/EISA_DEVINFO ("\1", "\2"),/' $< > $@
+
+The 50 was chosen seemingly at random in commit ca52a49846f1 ("driver
+core: remove DEVICE_NAME_SIZE define").
+
+I think that limit can be removed entirely.
+
+-- 
+Kees Cook
