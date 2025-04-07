@@ -1,131 +1,109 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3F21ADC7;
-	Mon,  7 Apr 2025 18:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050514; cv=pass; b=k6jB1rQlyzJmnvxaej8eBHxNaVE4mp6awlDbXCqDW8IqHCVfsLz2eyg6yfLauHgINOJpefm8B8nNwivogLf7rJkfXydQcVvX3MO8Y0M9OsfYSxwXO5wqdfwdzJwcaRtCFQBU7dovNVKnUK+Viq/nlzWt5XAAZfcsNlOUFbtq/Nc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050514; c=relaxed/simple;
-	bh=EZzj8GfhRs6Y/tesFsPnu/VT+y24dgG6LsFxA2u6yE4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WWnlSb0Oy/614u+Rpx3Ab15EY3Cfo5QqcpFm7DdZyqArO2AFCuhaueDlZKpZPM6GL6gBJYCIFl0pw1degqOaWetv1ZIdIImiNCZ6S3ECoPWTBe3GLnZEKNXI7SDiaucQ0jjbu7kVVt6kialtiPcLSgGbIU9XLJpefriF0OMKZf8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=mzIasaPF; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=iFnOqnCz; arc=pass smtp.client-ip=85.215.255.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8391625D903;
+	Mon,  7 Apr 2025 18:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744050515; cv=none; b=XyuFP3cvfosS+YVsmG9KCxyksTmEP/AMEy9WDisG9g6N/zFi9zuYOWy+I2ryCQyyVMm+wr5RB8KkJ/1Zh9vAykspj987sjHhFQQSnH/LcsQ6PAVMKRetBj+3QraqC92hdBQxlpCdOprwlPhB0MifrTacDNZnm9MYcE9Ja2OTg10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744050515; c=relaxed/simple;
+	bh=t9TUQsEt5Q9gIOtHF38LsFjD/8E4Sfx5Y8wLVTNcThA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dYHH3m0LzDkh8oR2Q2uF1EptJmFRijT9zh/2tWOHQw87+26eT7tzHXGtCIPoSIJOtBem6NzxGmQMUgLxUbeAyvvIIT3u6oIdRpTg/t/3/q6khQKtES+RsLaKt69mVVLsj15/vnA8iifHLuZ+4Dj8hpsXZJH7hGd4aGZ8+hrJ57U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9OFDeBF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="mzIasaPF";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="iFnOqnCz"
-ARC-Seal: i=1; a=rsa-sha256; t=1744050146; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=LwjfKUrCTR/Fcjo/lU1bbGqOwEwlC5AV15VUnae6+42bhL9TvkRH8CJ7JsFYA3/FWf
-    LGYeNLx6SjPL1LMJJO1Qse/FApn3aeo/YVoZ9pkpQFamWRVtUouOneAbe7fML+XTGdHn
-    HqYiUxggL+UC+PdT9ufC1JSlG2xKOODDweK656DU7sjcQ57X+zmmeon8Lpk8Ah8osXIh
-    PhZkDxpfkLslVJTAD0GLrmYo0tTTBfjQevtM9eNrMoypYkyqVg6MPfyq90lAvF/Crz1f
-    /5e1fdF27wTDD9fqb2XsrOhlTFSmw28D/Bqjj5oLQcLsNYPA1ZAtQukuCJOrSfPx1koH
-    v1hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744050146;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=pFmcDmSQKkM+CI9mfKoKWcBh+gkKTmyRWMx+39HmNqk=;
-    b=hokXuCPCOtSP5fQ1XMPh4SiGxtEBhijJzvC4WG0jilTqD4Bfzq2u38guB0Tbn+SpNf
-    JzVZSL/XY3US+K61QMA/zHAl+mzxA1307eLtpJqj93P3HaHR7M4c9znqi5YrJnQ1Zsj3
-    1n9d0hbR2fxO5PQcKVwav1JZQ1gJqGklk6jk4Ra9sUPe7hfaOQ3L9pVfSf8DPCeY/wDs
-    gHrq6LPk0iArcIs3G3aLJ1y+ky5oQELig1dGovP3yr8iFZuvoukFdDTVEr9DcUTwi7/N
-    YDbT0ikw1qhohcl3Y0ZEz/et/8r1PiIA9E2Xrk9twGTAZHj+O3YKrYDbbcw9/KbRpCAk
-    tJxg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744050146;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=pFmcDmSQKkM+CI9mfKoKWcBh+gkKTmyRWMx+39HmNqk=;
-    b=mzIasaPFbqz86bcyWDskLkYhzrEhmww6nELJcxxE7vnwDa8Za5aJBHwTkyNQw0N0nn
-    EHOQUYCQWZtYL5uNFuGIScSjuqRsQY84BYTI9Ce+5YElORujJjP7Su22QR8Mw+WMaVVR
-    JXc5XtYCVUofgGjArUjOQad3qbsqJHCrKxB1L86eR98sapLec1ban9rnGmQtq54AfHO4
-    XFzMN0hNcQJJm0cEBJPC71KCy9qyFRI+dyYsQkeFI3accVoax3gQcVUSv0EevKHxXlRZ
-    jBqcmSITMXrKwfcP72NpWveZmi4S50S0RuBYmerjGgN0hN9S/2tkeRzg9xtN4WTP+gop
-    1rZg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744050146;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=pFmcDmSQKkM+CI9mfKoKWcBh+gkKTmyRWMx+39HmNqk=;
-    b=iFnOqnCzgFJYkqRFYF2Hajo3SaNW07a6LniQLxxDUUsSYhlJVQvpCtmZvD+3xZPtJS
-    dzmBhvGjf+P8ZSLoMvDA==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b35137IMQyOr
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 7 Apr 2025 20:22:26 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1u1r73-0003yQ-05;
-	Mon, 07 Apr 2025 20:22:25 +0200
-Received: (nullmailer pid 15065 invoked by uid 502);
-	Mon, 07 Apr 2025 18:22:24 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RESEND net-next v5 3/4] net: phy: realtek: use __set_bit() in rtl8211f_led_hw_control_get()
-Date: Mon,  7 Apr 2025 20:21:42 +0200
-Message-Id: <20250407182155.14925-4-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407182155.14925-1-michael@fossekall.de>
-References: <20250407182155.14925-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9OFDeBF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F100CC4CEDD;
+	Mon,  7 Apr 2025 18:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744050515;
+	bh=t9TUQsEt5Q9gIOtHF38LsFjD/8E4Sfx5Y8wLVTNcThA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V9OFDeBFLFfhzZFtHLwRrBF+XIHuHUCJNloCXOSafflkYLjxTNErR3QE7PpyAY8G0
+	 oM2oUFEtOllLn1NmB94n+hwstzCt2bOjDdX4VoiNKrddcnGmpdic4Cz/yRHmZz7QFc
+	 nCV3LLR4sNHud4N5meQyEh4q/sqCRWb0MfYBfQJfGpCIUWfMxn5bwk4SXtJd6J3JUw
+	 aR/ehGVeCa9HHrNClCq/RiWWv0uF8aWPxcQHFcevsDGPoj6uDyrPXI6snymjBf6Iqy
+	 gZQbkx+HkYWYDZVHi4aCERl+bUd3HyzdPdHZGznnlN+O7pikgis3pUDMtrdLddifCU
+	 mObCa+3aPlJLQ==
+Date: Mon, 7 Apr 2025 11:28:32 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: James Smart <james.smart@broadcom.com>,
+	Ram Vegesna <ram.vegesna@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with
+ strscpy()
+Message-ID: <202504071126.37117C5D@keescook>
+References: <20250226185531.1092-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226185531.1092-2-thorsten.blum@linux.dev>
 
-rtl8211f_led_hw_control_get() does not need atomic bit operations,
-replace set_bit() by __set_bit().
+On Wed, Feb 26, 2025 at 07:55:26PM +0100, Thorsten Blum wrote:
+> strncpy() is deprecated for NUL-terminated destination buffers; use
+> strscpy() instead.
+> 
+> Compile-tested only.
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/scsi/elx/libefc_sli/sli4.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/elx/libefc_sli/sli4.c b/drivers/scsi/elx/libefc_sli/sli4.c
+> index 5e7fb110bc3f..d9a231fc0e0d 100644
+> --- a/drivers/scsi/elx/libefc_sli/sli4.c
+> +++ b/drivers/scsi/elx/libefc_sli/sli4.c
+> @@ -3804,7 +3804,7 @@ sli_cmd_common_write_object(struct sli4 *sli4, void *buf, u16 noc,
+>  	wr_obj->desired_write_len_dword = cpu_to_le32(dwflags);
+>  
+>  	wr_obj->write_offset = cpu_to_le32(offset);
+> -	strncpy(wr_obj->object_name, obj_name, sizeof(wr_obj->object_name) - 1);
+> +	strscpy(wr_obj->object_name, obj_name);
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- drivers/net/phy/realtek/realtek_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Standard question for these kinds of conversions: Why is it safe that
+this is not NUL padded? I haven't found where this buffer is being
+zeroed out, but it probably is (given the "- 1" on the length), but
+without run-time testing, this needs much more careful analysis.
 
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index e60c18551a4e..0fcc57ad777f 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -577,17 +577,17 @@ static int rtl8211f_led_hw_control_get(struct phy_device *phydev, u8 index,
- 	val &= RTL8211F_LEDCR_MASK;
- 
- 	if (val & RTL8211F_LEDCR_LINK_10)
--		set_bit(TRIGGER_NETDEV_LINK_10, rules);
-+		__set_bit(TRIGGER_NETDEV_LINK_10, rules);
- 
- 	if (val & RTL8211F_LEDCR_LINK_100)
--		set_bit(TRIGGER_NETDEV_LINK_100, rules);
-+		__set_bit(TRIGGER_NETDEV_LINK_100, rules);
- 
- 	if (val & RTL8211F_LEDCR_LINK_1000)
--		set_bit(TRIGGER_NETDEV_LINK_1000, rules);
-+		__set_bit(TRIGGER_NETDEV_LINK_1000, rules);
- 
- 	if (val & RTL8211F_LEDCR_ACT_TXRX) {
--		set_bit(TRIGGER_NETDEV_RX, rules);
--		set_bit(TRIGGER_NETDEV_TX, rules);
-+		__set_bit(TRIGGER_NETDEV_RX, rules);
-+		__set_bit(TRIGGER_NETDEV_TX, rules);
- 	}
- 
- 	return 0;
+-Kees
+
+>  	wr_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+>  
+>  	bde = (struct sli4_bde *)wr_obj->host_buffer_descriptor;
+> @@ -3833,7 +3833,7 @@ sli_cmd_common_delete_object(struct sli4 *sli4, void *buf, char *obj_name)
+>  			 SLI4_SUBSYSTEM_COMMON, CMD_V0,
+>  			 SLI4_RQST_PYLD_LEN(cmn_delete_object));
+>  
+> -	strncpy(req->object_name, obj_name, sizeof(req->object_name) - 1);
+> +	strscpy(req->object_name, obj_name);
+>  	return 0;
+>  }
+>  
+> @@ -3856,7 +3856,7 @@ sli_cmd_common_read_object(struct sli4 *sli4, void *buf, u32 desired_read_len,
+>  		cpu_to_le32(desired_read_len & SLI4_REQ_DESIRE_READLEN);
+>  
+>  	rd_obj->read_offset = cpu_to_le32(offset);
+> -	strncpy(rd_obj->object_name, obj_name, sizeof(rd_obj->object_name) - 1);
+> +	strscpy(rd_obj->object_name, obj_name);
+>  	rd_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+>  
+>  	bde = (struct sli4_bde *)rd_obj->host_buffer_descriptor;
+> -- 
+> 2.48.1
+> 
+
 -- 
-2.39.5
-
+Kees Cook
