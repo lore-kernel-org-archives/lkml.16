@@ -1,95 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C610A2163A4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946D12116FD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046815; cv=none; b=YGPnbemF8PeySE7ZaNAkpFt67Z+LKNgoF69Ri0LRxMMlDq+Xv+SjD9QlmNBICw8hbZ4+fx8t90sRrUYF1N+xq2lP/P3Q/2kYRRo9sl+2bzSskEqE8GOqSGo+9Obdv5FvlShOtD7l8mJQ/FqgHo8B4Kq/iaGE5wA8ZegES5oLcH0=
+	t=1744046840; cv=none; b=N9Sx8P37/P+9P4jYPRd2C0L4292CC0Um5c29dF0kREDr1xh0ldoXoAOgbMpO+dJu2eW4V89Ut8AMqBLKkdVJDalsm0BEWAHi3C05kSg8oTPUpu22+sQoY85UopFeBbjK69s8Z7EbEY3gdANaFPAy3e4VxtUFH2Y4xAq9B8voS1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046815; c=relaxed/simple;
-	bh=yp6ISIWr8empZJZm6Z4F5lpdHQEM5y/1Vf9ItJrdlJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SV9VJO8DyjfRmDMUZZbDcLKPVlL0tUf+06z5R5uFkgfiZO1wZ1wKoV2+fzZ0GbDK/Gi1Y8cMnvchLy5qVONZs/Jch/eQNDXpFsQsb6v7qJmjeqPCtKzdKJmTRhvO9ey+sHYg2iFWXrkR+mxdeNaCXTEQZjRVEFq0dq8OYztGH7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FAYpiYzB; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744046840; c=relaxed/simple;
+	bh=tjiGdsQp446cAAljbjHrCNcoZko0oAthJ7ARyT3rwro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p+ulX+hMbgd5bbEisSC4wvOaHpvpHpBBZp3NAmzI7Yg/JWfBv1MemLM0KKaH4WGkSSVQABc3CNl8K5W9YB8T7ficxQPxd76gj35Bvr+ulY42Y38Z6UGsTR316AW1V4p5ncYq2KhB0Sv+Swm7apDpmv0s22DxI0sdzUMBhgKkYyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CVBDKLHD; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FAYpiYzB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744046814; x=1775582814;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yp6ISIWr8empZJZm6Z4F5lpdHQEM5y/1Vf9ItJrdlJ0=;
-  b=FAYpiYzB/KSWdyxHn+HmXnZ+5UX/MlI7PjD4b3WCUfefQpLyXmTllsiK
-   es+bKt3l+ys2yA5qmKT9OglHtdcc8KOsO1NNj3G5gTP4GdJFjTa8AHhLJ
-   3kjzTjJxb3c9DoShh29XdH+dz3swSe9i5SFMYpx4UsAUhp1wCiK41lMqk
-   ML8gxrV2U7DuDaSAsLO34Y+LV0xvwPh2brhPikGT9YjjO3OFWj8hCmka3
-   5U1+Y1D5crKuxS+oXrMKaJ7g85bsoFsV/AQ78neXOIUJ/BCPTGAhMbWKX
-   P2WfM5OougBOiDDt21WnqwiQdXcD5kwwR53sIgxdCmpQK5QLzV0iaRy2X
-   g==;
-X-CSE-ConnectionGUID: KANmeUd1QjO+9ZiVbuhQ9Q==
-X-CSE-MsgGUID: YnVwgzsdRhm/JjP0fRPXRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45160065"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45160065"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:26:54 -0700
-X-CSE-ConnectionGUID: u4jOUj7tRVmMvNaRtDk7nQ==
-X-CSE-MsgGUID: u8Z/PO4wR9iARtGYqw+ydg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127773678"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 07 Apr 2025 10:26:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 07EF6F0; Mon, 07 Apr 2025 20:26:49 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v1 1/1] x86/early_printk: Fix comment for "pciserial" case
-Date: Mon,  7 Apr 2025 20:26:49 +0300
-Message-ID: <20250407172649.792996-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CVBDKLHD"
+Message-ID: <54304499-c5ce-4a6e-9fe8-ce7844379cdd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744046836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7BoZUSQTLENy9wH34VHXkqxJQv7Mux8ViHjIKiftxO4=;
+	b=CVBDKLHDxSI5+1SVXXzPderrRjq5PdrIwteBlnwDoptDqGlM0nxRosoQQcrkCu7PcEF9YY
+	P4AkB6KGUv6C5EZ06H81Y29LowCJKhj9i1v3ajS043cy+Faf/6v2O6xT4BEpTRSdV5/2Q9
+	D03p9gEnaUsRuGNigGcBmY9JKpbeD78=
+Date: Mon, 7 Apr 2025 22:56:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 07/18] drm/bridge: cdns-dsi: Fail if HS rate changed
+ when validating PHY config
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-7-4a093eaa5e27@ideasonboard.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-7-4a093eaa5e27@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-The comment seem contains the copy'n'paste error when mentioning "serial"
-instead of "pciserial" (with double quotes). Fix this. With that, move
-it upper, so we don't calculate buf twice.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/kernel/early_printk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
-index dc053641698c..4a9ba7cb7e5a 100644
---- a/arch/x86/kernel/early_printk.c
-+++ b/arch/x86/kernel/early_printk.c
-@@ -442,9 +442,9 @@ static int __init setup_early_printk(char *buf)
- 		}
- #ifdef CONFIG_PCI
- 		if (!strncmp(buf, "pciserial", 9)) {
--			early_pci_serial_init(buf + 9);
-+			buf += 9; /* Keep from match the above "pciserial" */
-+			early_pci_serial_init(buf);
- 			early_console_register(&early_serial_console, keep);
--			buf += 9; /* Keep from match the above "serial" */
- 		}
- #endif
- 		if (!strncmp(buf, "vga", 3) &&
+On 02/04/25 19:00, Tomi Valkeinen wrote:
+> The phy_validate() can change the HS clock rate we passed to it in the
+> PHY config, depending on what the HW can actually do. The driver just
+> ignores this at the moment, but if the actual HS clock rate is different
+> than the requested one, the pipeline will fail as all the DSI timing
+> calculations will be incorrect.
+> 
+> There are ways to improve DSI operation for various clock rates, but for
+> now, just add a check to see if the rate changed, and return an error if
+> that happens.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+
 -- 
-2.47.2
+Regards
+Aradhya
 
