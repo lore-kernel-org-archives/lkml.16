@@ -1,132 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117F200BB3;
-	Mon,  7 Apr 2025 15:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFAB200BA9;
+	Mon,  7 Apr 2025 15:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040372; cv=none; b=ruFPVXY2idlpM8ZSu6GWuaAjA5OLBqYhOncQHGzkNbjrB0ID7DWhYlKQeiB8mLiX5Cs084p8NNOqc3xxPqBHUjNzemPfvXAXo+MdNNlQs2ZnD10cctD3a7FCDCWIaEz2xuY0qACeAhWx1WiFFCtE1ydzVSuXpmrq4y3xzto2Q0I=
+	t=1744040453; cv=none; b=keLyWKf8XJMNLigOPqm/SVC6smErikj9X9nUaxpjo+U1PHIW1Oq6UTfKxhwmBpsiCTPygSzdOQC+l5FR8HcG+VuieDAWHPIpz5ysag+TvQTqZDBViOerza1nsRZGJuD6Ge9v9Z5IaKmW9tRBGOOCHPfArso9AP+bDc0WFws0aL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040372; c=relaxed/simple;
-	bh=M3y8hJh48p4El0IfUM4vjOfPCS0bV3egS3RqF+kA6FE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g1ZxwabH3npwJKr/2nzN0lJQWmbB4qSNTmXLSy07+MQXRCvmrBfQePnwoADO2xXNSfHh9mNQ7N86ibHP28xn/nE17zAII0KojcaV5JFroirjEIYyqldo3knBYY8WM/oAB76OZCo1dpCFM4PQEbrK79rxVeZKFxv+YRN/X/3ZmgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBxrsI2W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744040453; c=relaxed/simple;
+	bh=YV6q4DU/TzjXug7xwkUcpIGhmfVKBbrnpQR1f68Rq2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVTO/y3GmMYaV05U5rAS3KZeMF8PBwukiN3IOE1eIiaGy/DL3kXqmR/M9SWevX3ddxPa2Djw3tbjLxb+YxfRgBL+it7LpdDVz3QSDdcmdwkE05pvbv4BZLRTzAYsIVpcnMEVizhs+zMdBwkfP6WeqtRPkPgF/O4Br35SftPJzjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LAdjKIvb; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBxrsI2W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A8FC4CEDD;
-	Mon,  7 Apr 2025 15:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744040371;
-	bh=M3y8hJh48p4El0IfUM4vjOfPCS0bV3egS3RqF+kA6FE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aBxrsI2W50l74Pn58A5m09CxNRjYDxThYlA4abxzg1FuCkQLDYCef4ag7qNVKeB2q
-	 n+/KNjBJIssz7yA7e0Ieog2KN+tRSmsFZIfWa8Mj2c8yuTgw7E6hz75Nw/R+4tAOZi
-	 W435MIUXI+JJrfusrjiVxUvWoSCFUzlrNKpA1yEarvidLHwyPmuclXz/kc75tYBkFi
-	 jgxMLeI7Zj7fNBoDSdJGiskOBrYUwFV7Ccv7lJ6I2Nz0OmXsq34Gdoacw668icvxy4
-	 3H5sAdM69wef4rmbPYWGJFWf9aCf9Yf1qory0BOxvQmA96BnHPwZ+iTTfkd2xqoiha
-	 UL9F3Sg0MeyWA==
-Message-ID: <6f11921a-4ee8-4f40-9131-529f548f681a@kernel.org>
-Date: Mon, 7 Apr 2025 16:39:26 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LAdjKIvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744040452; x=1775576452;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YV6q4DU/TzjXug7xwkUcpIGhmfVKBbrnpQR1f68Rq2U=;
+  b=LAdjKIvbYpmSmoiP3+PM1UcJK39/MUyz8BB3wGsJ5Upg9vxjsEHdWFbm
+   evpyj4acHyZu5KqERuPLXWNgjiTY8ZSoRenQK3+2NTPOn2qhfaExvqlgp
+   dC0b/md0wHFlotu8DJf3rY6Ym+Ti+IR7FI7EgnaMJ3iCrHuye2/FDbZv0
+   +ADkjJyO5A5Oj71yGHu2yH49Q5smqlUCtf7l1HynqupqVIOdKvlD2Ya4m
+   NeMBQfR8o+hRind8LoRdfylY4FbrWaojU83+CZtJxvc4oG1Jwg2sJQgct
+   EeCYZGvWF/JwSewzt58Fnd7VWvhH2VDRmj94yPMN68zLgffXGr6pbNXKU
+   g==;
+X-CSE-ConnectionGUID: BxqUjtbXT/OfKu4sCvwBvQ==
+X-CSE-MsgGUID: KRv/ZGQuTCSzspz3qvurlQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45603380"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45603380"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:40:51 -0700
+X-CSE-ConnectionGUID: lAjlpR38SVmSojvCK9H2Pw==
+X-CSE-MsgGUID: Q3qlp6hHR6aZBR6VAO0MDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="132715896"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:40:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u1oab-0000000A73r-3sQr;
+	Mon, 07 Apr 2025 18:40:45 +0300
+Date: Mon, 7 Apr 2025 18:40:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Marek Vasut <marek.vasut@gmail.com>, stable@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
+Message-ID: <Z_Px_ajf96J_LlcD@smile.fi.intel.com>
+References: <20250326173838.4617-1-francesco@dolcini.it>
+ <174368202234.27533.1000100252310062471.b4-ty@linaro.org>
+ <Z-6TGnGUEd4JkANQ@black.fi.intel.com>
+ <CAMRc=Me15MyNJiU9E-E2R9yHZ4XaS=zAuETvzKFh8=K0B4rKPw@mail.gmail.com>
+ <02cab60d-9748-4227-a4aa-33373ea0be38@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] media: venus: pm_helpers: use opp-table for the
- frequency
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Renjiang Han <quic_renjiang@quicinc.com>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com>
- <20241219-add-venus-for-qcs615-v6-2-e9a74d3b003d@quicinc.com>
- <fde279ad-27ed-4947-a408-23139bcd270a@oss.qualcomm.com>
- <351a9654-ffa1-4727-b772-95d4ed113c81@quicinc.com>
- <ac145c57-1db3-4747-88e2-02825f958d5a@oss.qualcomm.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bod@kernel.org>
-In-Reply-To: <ac145c57-1db3-4747-88e2-02825f958d5a@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <02cab60d-9748-4227-a4aa-33373ea0be38@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 09/01/2025 13:05, Konrad Dybcio wrote:
-> On 2.01.2025 6:38 AM, Renjiang Han wrote:
->>
->> On 12/23/2024 10:17 PM, Konrad Dybcio wrote:
->>> On 19.12.2024 6:41 AM, Renjiang Han wrote:
->>>> The frequency value in the opp-table in the device tree and the freq_tbl
->>>> in the driver are the same.
->>>>
->>>> Therefore, update pm_helpers.c to use the opp-table for frequency values
->>>> for the v4 core.
->>>> If getting data from the opp table fails, fall back to using the frequency
->>>> table.
->>>>
->>>> Signed-off-by: Renjiang Han<quic_renjiang@quicinc.com>
->>>> ---
->>>>    drivers/media/platform/qcom/venus/pm_helpers.c | 53 +++++++++++++++++++-------
->>>>    1 file changed, 39 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->>>> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..b61c0ad152878870b7223efa274e137d3636433b 100644
->>>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->>>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->>>> @@ -43,14 +43,20 @@ static int core_clks_enable(struct venus_core *core)
->>>>        const struct venus_resources *res = core->res;
->>>>        const struct freq_tbl *freq_tbl = core->res->freq_tbl;
->>>>        unsigned int freq_tbl_size = core->res->freq_tbl_size;
->>>> +    struct device *dev = core->dev;
->>>> +    struct dev_pm_opp *opp;
->>>>        unsigned long freq;
->>>>        unsigned int i;
->>>>        int ret;
->>>>    -    if (!freq_tbl)
->>>> -        return -EINVAL;
->>>> -
->>>> -    freq = freq_tbl[freq_tbl_size - 1].freq;
->>>> +    opp = dev_pm_opp_find_freq_ceil(dev, &freq);
->>>> +    if (IS_ERR(opp)) {
->>>> +        if (!freq_tbl)
->>>> +            return -EINVAL;
->>>> +        freq = freq_tbl[freq_tbl_size - 1].freq;
->>>> +    } else {
->>>> +        dev_pm_opp_put(opp);
->>>> +    }
->>> I'm not super convinced how this could have ever worked without
->>> scaling voltage levels, by the way. Perhaps this will squash some
->>> random bugs :|
->>>
->>> Konrad
->>   Thanks for your comment.
->>   The default value of freq is 0, and then dev_pm_opp_find_freq_ceil is
->>   used to match freq to the maximum value in opp-table that is close to
->>   0. The frequency values ​​in opp-table and freq_tbl are the same, and
->>   dev_pm_opp_find_freq_ceil is used to assign the minimum value in
->>   opp-table to freq. So the logic is the same as before. I'm not sure if
->>   I've answered your concern.
+On Mon, Apr 07, 2025 at 05:11:14PM +0200, Emanuele Ghidoli wrote:
+> On 03/04/2025 15:56, Bartosz Golaszewski wrote:
+> > On Thu, Apr 3, 2025 at 3:54 PM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> >>
+> >> +Cc: Geert
+> >>
+> >> On Thu, Apr 03, 2025 at 02:07:05PM +0200, Bartosz Golaszewski wrote:
+> >>> On Wed, 26 Mar 2025 18:38:38 +0100, Francesco Dolcini wrote:
+> >>
+> >>>> If an input changes state during wake-up and is used as an interrupt
+> >>>> source, the IRQ handler reads the volatile input register to clear the
+> >>>> interrupt mask and deassert the IRQ line. However, the IRQ handler is
+> >>>> triggered before access to the register is granted, causing the read
+> >>>> operation to fail.
+> >>>>
+> >>>> As a result, the IRQ handler enters a loop, repeatedly printing the
+> >>>> "failed reading register" message, until `pca953x_resume` is eventually
+> >>>> called, which restores the driver context and enables access to
+> >>>> registers.
+
+[...]
+
+> >>> Applied, thanks!
+> >>
+> >> Won't this regress as it happens the last time [1]?
+> >>
+> >> [1]: https://lore.kernel.org/linux-gpio/CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com/
+> >>
+> > 
+> > Ah, good catch. I'm wondering what the right fix here is but don't
+> > really have any ideas at the moment. Any hints are appreciated.
+> > 
+> > For now, I'm dropping it.
+> > 
+> > Bart
 > 
-> We talked offline, but for the record: my concern here was about
-> clk_set_rate() not scaling RPM/h voltage corners, which this patch
-> fixes
+> I’ve found another possible solution: disable the PCA953x IRQ in
+> pca953x_suspend() and re-enable it in pca953x_resume().
+> This would prevent the ISR from being triggered while the regmap is in
+> cache-only mode.
+> The wake-up capability is preserved, since an IRQ can still wake the system
+> even when disabled with disable_irq(), as long as it has wake enabled.
+
+Can you enable IRQ debugfs and dump the state of the wake* nodes for the
+respective interrupts? In this case we will be 100% sure it works as expected.
+
+> This should avoid introducing regressions and still handle Geert’s use case
+> properly.
 > 
-> Konrad
+> Andy, Bart, Geert - what do you think?
 
-Konrad is this an RB from you, do you have any other concerns with this 
-code ?
+Sounds okay, but please double check the above.
 
-Dikshita, Vikash ?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I'll give it a test myself ASAP but any other comments or R/B would be 
-helpful.
 
----
-bod
