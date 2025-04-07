@@ -1,111 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780F615382E;
-	Mon,  7 Apr 2025 12:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E55242930;
+	Mon,  7 Apr 2025 12:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029016; cv=none; b=bwgO097SaigNZQgq6q1nldw1IPapNs1p8h3BVBMbQrrme5yrERnajZ/VDQfiqF9z50yVXKFcCBBHr1hyG77rzCz6NL0fHlz0QpaL+MwC2TOhezWe/iFZ8Y/EXLlBKlLLuS7MC6aUrdxzQJZ4MCHSt7tlWSqwSxWFDJj3o1rSl4M=
+	t=1744029089; cv=none; b=VXWFKB5J2SUjFDwf2KSBNTVdIbun/owVKzDJAye6/+TC/fTUr2iKoMoue59PACe+VLy3wikMm76fq1HQjPzcHw+ogUiKuoEs9sSVIcVwYcTSUzP2x/Xx7XebuzcSRidqVJar6MwX2vjAiD+ZrPv1nt4g18ceIRbUvuJWoYRMmcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029016; c=relaxed/simple;
-	bh=LCZhVuuf9dPJmAeyfXfPhtBN3F11jxmZsGmjqMucLSQ=;
+	s=arc-20240116; t=1744029089; c=relaxed/simple;
+	bh=mWLxrmUWg2QbduQqGeynDbNIO+EvNnvSdkJRvmJ0LSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=miJLnXymFVh/yKO/R6S4jAMAuogvbzoHCBdOC77iTU8p4FrbMmUkNo3mXZJ/rY1i9l+rNfsgymj1fk4KMs6/uqmdpZXRNdi+SI4Wp3Kt6HxqOx72xp5E9OzS2Z3Q184OUEjfkHmLTFuk696ETWXrYwiCriHg85Ww/5x4c1q8M58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1516F106F;
-	Mon,  7 Apr 2025 05:30:16 -0700 (PDT)
-Received: from bogus (unknown [10.57.41.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 100F53F694;
-	Mon,  7 Apr 2025 05:30:05 -0700 (PDT)
-Date: Mon, 7 Apr 2025 13:30:03 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
-	Conor Dooley <conor@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-mips@vger.kernel.org, imx@lists.linux.dev,
-	linux-rockchip@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains
- constraints
-Message-ID: <20250407-aloof-fox-of-relaxation-62963a@sudeepholla>
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org>
- <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6jaoiD9ETCtHs23/scy/B2M+ppd3j2FDOxZ17aV8Hq5FmZD1blstnD3qFIStSB/nvkCoF+BHv+7ZgjFx1EJDTPfNLaQe+e8ukRL/TfgvqZJ2/TYZSqcQK1GWW1g5hzfee1jKGbVJWk6ronSXXHUySA+rBtjLRM9PAZRB4iNpJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/PTyzE6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/PTyzE6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C4DC4CEDD;
+	Mon,  7 Apr 2025 12:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744029088;
+	bh=mWLxrmUWg2QbduQqGeynDbNIO+EvNnvSdkJRvmJ0LSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A/PTyzE6r+rflOEinzc+cMW6/l5y6kQp7OPqVae68mCaiQ7GTyDb4zFGqxCCtqRZO
+	 fw/C8hh2QgUFKSMOQ8ohXgqw80kg60aFnnFLFZE+m8+ky7HhqMeVKSRzRWWQCifsyU
+	 Jxpc4nhL7K6QJmT3Lf5Hvcv3xbQREuJ9DtXwf0fLhUdPtuHqQaHZxbirTjHu0/yqht
+	 P5UzN7Ow+wjCcHsVirpm0CpaLg49nUKa5S33ljVugn50Rpkc/HB9fru2GPZPDr1lwt
+	 Lh/xjP0WKNTBqjf8TOIGCHz6ff+MztzPzfvrc0UR/DdLyfQuekYirLw0xobYwDtkAf
+	 hGK2L5T4ojH1A==
+Date: Mon, 7 Apr 2025 14:31:24 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Longbin Li <looong.bin@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, ghost <2990955050@qq.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add pwm controller for
+ SG2044
+Message-ID: <jq55x7uhftvejninh56tzk32jtmmwa5wxzna5uxbkk5woi7zi5@6wrg2ctmyg7b>
+References: <20250407072056.8629-1-looong.bin@gmail.com>
+ <20250407072056.8629-2-looong.bin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7u4pfjk7u4y7yhpc"
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
+In-Reply-To: <20250407072056.8629-2-looong.bin@gmail.com>
 
-On Fri, Apr 04, 2025 at 12:36:33PM +0200, Ulf Hansson wrote:
-> On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrote:
-> >
-> > The "power-domains" and "power-domains-names" properties are missing any
-> > constraints. Add the constraints and drop the generic descriptions.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> >  1 file changed, 2 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > index 6f74ebfd38df..5bd5822db8af 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > @@ -313,19 +313,15 @@ properties:
-> >      maxItems: 1
-> >
-> >    power-domains:
-> > -    description:
-> > -      List of phandles and PM domain specifiers, as defined by bindings of the
-> > -      PM domain provider (see also ../power_domain.txt).
-> > +    maxItems: 1
-> 
-> There are more than one in some cases. The most is probably three, I think.
->
 
-+1, there are users using "perf" and "psci" together now.
+--7u4pfjk7u4y7yhpc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add pwm controller for
+ SG2044
+MIME-Version: 1.0
 
--- 
-Regards,
-Sudeep
+Hello,
+
+On Mon, Apr 07, 2025 at 03:20:38PM +0800, Longbin Li wrote:
+> diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml=
+ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> index bbb6326d47d7..e0e91aa237ec 100644
+> --- a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> @@ -17,7 +17,9 @@ allOf:
+>=20
+>  properties:
+>    compatible:
+> -    const: sophgo,sg2042-pwm
+> +    enum:
+> +      - sophgo,sg2042-pwm
+> +      - sophgo,sg2044-pwm
+
+Given that the sg2044 has more registers (to e.g. implement different
+polarity), but the sg2042 registers are identical, I wonder if the 2044
+device should use:
+
+	compatible =3D "sophgo,sg2044-pwm", "sophgo,sg2042-pwm";
+
+Note, I'm unsure here, only providing input to people who are more
+knowledgeable in DT that I am.
+
+Best regards
+Uwe
+
+--7u4pfjk7u4y7yhpc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfzxZoACgkQj4D7WH0S
+/k73JAf/YF3lOc8ZTYHAVl5pC0RWr/ZB8pp9gKCGzYHdGYbogEGAgSewARKopzQ+
+ZEPmNeXoVEglTRPxfWXl0aDImSXG/NbOeA449I7kmpecXGHEX/iqwexGYR1kvNxh
+Yg8jl+bl2dxh/m+jw/KoCi2rpyq9jverosDJ0r3y/aum7lqd6LB8IPx1zsxcaQN9
+xXAuXOE4UnKaUSTZfRBqiwUvY0N62kg4/o/wFERPSdyKS3Tjfb7m8sTVy0rBoGEY
+s8SvRNjcapE/sSWqPsREl2XdULCQHlJ6CCMXk10oMisXB65FouAzb80ghiZ8WU+6
+0h9ascRYWtiItrTm/D854ODd/FgwmA==
+=GmB3
+-----END PGP SIGNATURE-----
+
+--7u4pfjk7u4y7yhpc--
