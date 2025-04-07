@@ -1,383 +1,117 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0D81F8758
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E859A1F8BBC;
+	Mon,  7 Apr 2025 15:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039050; cv=none; b=XVyESRpbzWjlNltPrPCUx0EmnbUcMcTKGen+rnpaOLIV26BUK7dEAjD9iacqFaNxyYZ+3nu+mzOHDYR8dVnRydnP0WWIfhP4V3acbnP6JXYtifaCBoBpCRwp1HirSmby1p53aEBX5rOLe2P8QmTHIeLmHvsdjGKpsnIBK2WTayQ=
+	t=1744039059; cv=none; b=ezs4ecL33J1VueEKn2uJJk7VEotVGnirOeJVXdfC/lQpbnGvHUF15ykYYuHjPFXf4GzcuUi1SIbgdIWdsSQ+2Yij2yFPG0cYVikMcSf2dcaNt5yfDaR8BgifPjPrTzR7vQ4ZBVBizfPTh6oUNBicYEuPqPtTknStnr2p74aHbmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039050; c=relaxed/simple;
-	bh=FgGFkvM/ECGwvSRBJ3r5FjilqzfkrJcBce7/X6Gx1fM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HpVSkBZ7+OgVu4GVtfuFSoXQEJ9CGXAd946R2liUjgdN1hwyij/Lz+FibEUagh/aACJ2L82e4ExE8YJKLCz/UrTkq0Pt2SdeGIJyH6FbT3p8WZgC6HPihqVUZ0poIJlbYvUgoZvU978e4kKXJvFFnO7VFOqUBC/L7IhDa0vYNIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=OcDPPBat; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1744039059; c=relaxed/simple;
+	bh=PslDmB+xXRuJt9oVyCJAThWQ5Sbb1YZU0r34pKry31k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YI5HgVAEFkx5XedswTdEGWZWS+K8oX5ryYDxVYR+58W/aoSM0wz+0zrXV+zDP83sps0WamYAo9+MxuYF6m+FnS/v6HDjcy6FDSez0eDUAQ65JVoWHnnYdS4lvxyfoe/xkRkEGoC/nNOUjn+rDziz/MTC45Mj+NebFTrDxzLNS/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lLdcR7HN; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="OcDPPBat"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5b8d13f73so469271785a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1744039047; x=1744643847; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ePiwJtWqlANqnCk2rR6tEp8SjDwgJ0HyiP7oZXjHj8o=;
-        b=OcDPPBatfzn6Zzvx/nDnHQIVBEqqHVhqzVRM/9wt67uYbZogdyUMJ5ciHrE+75Vpgt
-         R51JRp0+FBVPHB5bnQ5v3y2MC5oyXRUlnmd83af4o19m/1nKlO6tEVFPgkjLqRcTmiUI
-         3VXuNkglwxcJ3mMj7ZPK5T3zpCissXtZXng+gALTrU2eGySw7c1qs+9rFdDy8pdt9lrR
-         blYe7Jpg6swXstQSCjEIHAycaK0OIbPFPefQGWG4XbFheGj3J5cHEKKmGWJraAnSUk8v
-         Zn+VBLcSsQDlmdx4KUCIUu+cRhRbYwe5IJTUM9sjWCYi/q1Htt8YfHhGnP9AABLF82NN
-         az6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744039047; x=1744643847;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ePiwJtWqlANqnCk2rR6tEp8SjDwgJ0HyiP7oZXjHj8o=;
-        b=XpRn3K9OjUb13b54Nu2YmXCgbbB/rVL8yc6WxieDZxNrvDV6la+M3fXHzFboSn7Ktl
-         e8K7CfBSzLMnZb012nU4Et+1gJq6dll9tz+xOiAne6OqcZSWgY87qVNc2O713MFWK+Zp
-         /foGaf9nlG6G69uh52Bfn+V21cSPccQi6Rs341Jq3B+2NGzg5IuvQxoO+K3SzBrtuK0n
-         yZXRJSwuIFk7X1176z7f4ul7FCsZVqX7xP+93llvCTd0uJ5vndJsSe5dZ9kYU+9Odebl
-         nD7uBnkoWqhhYKjbrO5hzJoGBYrxWkzWkR2Csr8PIkv7KweERKNTeykTv+592/YZUGS0
-         x0bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg5o7rDWxVqqs6FPgp9ftY88uSTOk7Un2Qd0QlcK42ZAazPXgFDwkdLAuz5tM1ML+rysGc+SCuIiC6EHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkag4AD+aYqGAvwpke18vshfjxne4NnxM0JTSEQi9b8IPxK5Po
-	gJ0pu4vhp2txPJ5d1cESF7N5hT3eDY9i06sjOr6eB8p4notYfFBcFigNDOcOc3s=
-X-Gm-Gg: ASbGncukQaNVS103/vwDjrsi98oWSP8/IfDo+vnA2FKCgyKC7smvOXiW+ZAbIewc/gm
-	vYXrBxlcgQc6PAA0lKLYQ4EFdVhD7fXfzPS+w9c2RXXHh9Y9VG1QKzCFxPVrW1iVzzCw2hU/vIM
-	NoWoWzBAW2SRxDwfI6CbnDurqfWrAEWSmSrVHjtR+1kPlQbRSQPNAjeRKJPKWeACmVn2jxQzxze
-	1etZwGWvNnQ54zGKzx9/6S73eOwa0LwWadfwnslgZ+aTzXED48RWC9175K1pIxcFNh4gn+nLacS
-	aM5SA0MP+muRQSnYEMkO/90MjzoZc1+pFlSs+jpLySAqxD1M2w==
-X-Google-Smtp-Source: AGHT+IFMZnMbTyTQh098Zt7F9FsPuh2cDoKqbCbOEQoYMRNbuRJjmQBNxdpIsF9J7BtIACIamCOHKg==
-X-Received: by 2002:a05:620a:40c5:b0:7c5:9ac7:2ccc with SMTP id af79cd13be357-7c775b15514mr1550295185a.55.1744039046981;
-        Mon, 07 Apr 2025 08:17:26 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:11:e976::c41? ([2606:6d00:11:e976::c41])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea58d63sm610314885a.87.2025.04.07.08.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 08:17:26 -0700 (PDT)
-Message-ID: <f4eec2aa4856edbbb2f1e9248dffd9aff62c1a80.camel@ndufresne.ca>
-Subject: Re: [PATCH 4/5] media: vcodec: Implement manual request completion
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Sebastian Fricke <sebastian.fricke@collabora.com>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Laurent Pinchart	
- <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Hans Verkuil <hverkuil@xs4all.nl>, Tiffany Lin
- <tiffany.lin@mediatek.com>, Andrew-CT Chen	 <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,  Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	kernel@collabora.com
-Date: Mon, 07 Apr 2025 11:17:25 -0400
-In-Reply-To: <20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-4-5e277a3d695b@collabora.com>
-References: 
-	<20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-0-5e277a3d695b@collabora.com>
-	 <20250314-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v1-4-5e277a3d695b@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLdcR7HN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744039058; x=1775575058;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PslDmB+xXRuJt9oVyCJAThWQ5Sbb1YZU0r34pKry31k=;
+  b=lLdcR7HNBKPe9NE9bjFLVic+KdDj3jQig0gKMe3As0FdWc8wMh1LK9+0
+   9diiUoXj7fA9ouvq4aaWGQqY1ob3OZ7BRpsjzuTE9CY2keomKJabcCjCk
+   nzXuiZYfJbo09WCKe7xDszmXR0gaX2barW3TH0WFnSLa5HayWIVsXDhxR
+   KOfMWH2B2rWhMSK6Y6hHZ8gyhInyF6fsrrBE98LXrcue6dVAjqvByDOf5
+   6oU/myhP9/jxC88pfWYSyU9wiw5CarjMK+P0oWRH2bFoyuB2T+gcTxD83
+   2DQOULbBlbSxnTlMg+qtWRCcXBobC4FGmjA7vjjGiAPathx9+5gSVPyrD
+   w==;
+X-CSE-ConnectionGUID: QZjZWV4wRCq5ZR0yirHesg==
+X-CSE-MsgGUID: Gjgrttn3Qc+wW8QZkElQGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56069866"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="56069866"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:17:37 -0700
+X-CSE-ConnectionGUID: Q9eEfbCtQner0+TLJmb8Tg==
+X-CSE-MsgGUID: /e5hd6FESmOlGWRlOu5MBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="158973456"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:17:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1oE0-0000000A6hm-3YVn;
+	Mon, 07 Apr 2025 18:17:24 +0300
+Date: Mon, 7 Apr 2025 18:17:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 01/16] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <Z_PshFwFJQ0z8JOU@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407145546.270683-2-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Le vendredi 14 mars 2025 =C3=A0 14:26 +0100, Sebastian Fricke a =C3=A9crit=
-=C2=A0:
-> Rework how requests are completed in the MediaTek VCodec driver, by
-> implementing the new manual request completion feature, which allows to
-> keep a request open while allowing to add new bitstream data.
-> This is useful in this case, because the hardware has a LAT and a core
-> decode work, after the LAT decode the bitstream isn't required anymore
-> so the source buffer can be set done and the request stays open until
-> the core decode work finishes.
->=20
-> Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
-> ---
-> =C2=A0.../mediatek/vcodec/common/mtk_vcodec_cmn_drv.h=C2=A0=C2=A0=C2=A0 |=
- 13 ++++++
-> =C2=A0.../mediatek/vcodec/decoder/mtk_vcodec_dec.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 4 +-
-> =C2=A0.../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c=C2=A0=C2=A0 | 52 +=
-+++++++++++++++++++++
-> =C2=A0.../mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h=C2=A0=C2=A0 |=C2=
-=A0 4 ++
-> =C2=A0.../vcodec/decoder/mtk_vcodec_dec_stateless.c=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 46 +++++++++----------
-> =C2=A05 files changed, 94 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn=
-_drv.h b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-> index 6087e27bd604d24e5d37b48de5bb37eab86fc1ab..81ec5beecfaed239ed70bee34=
-60aae27e476231c 100644
-> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_cmn_drv.h
-> @@ -105,6 +105,19 @@ enum mtk_instance_state {
-> =C2=A0	MTK_STATE_ABORT =3D 4,
-> =C2=A0};
-> =C2=A0
-> +/**
-> + * enum mtk_request_state - Stages of processing a request
-> + * MTK_REQUEST_RECEIVED: Hardware prepared for the LAT decode
-> + * MTK_REQUEST_DONE_WITH_BITSTREAM: LAT decode finished, the bitstream i=
-s not
-> + *				=C2=A0=C2=A0=C2=A0 needed anymore
-> + * MTK_REQUEST_COMPLETE: CORE decode finished
-> + */
-> +enum mtk_request_state {
-> +	MTK_REQUEST_RECEIVED =3D 0,
-> +	MTK_REQUEST_LAT_DONE =3D 1,
-> +	MTK_REQUEST_CORE_DONE =3D 2,
-> +};
-> +
-> =C2=A0enum mtk_fmt_type {
-> =C2=A0	MTK_FMT_DEC =3D 0,
-> =C2=A0	MTK_FMT_ENC =3D 1,
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_de=
-c.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> index 98838217b97d45ed2b5431fdf87c94e0ff79fc57..036ad191a9c3e644fe99b4ce2=
-5d6a089292f1e57 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> @@ -889,8 +889,10 @@ void vb2ops_vdec_stop_streaming(struct vb2_queue *q)
-> =C2=A0					src_buf->vb2_buf.req_obj.req;
-> =C2=A0				v4l2_m2m_buf_done(src_buf,
-> =C2=A0						VB2_BUF_STATE_ERROR);
-> -				if (req)
-> +				if (req) {
-> =C2=A0					v4l2_ctrl_request_complete(req, &ctx->ctrl_hdl);
-> +					media_request_manual_complete(req);
-> +				}
-> =C2=A0			}
-> =C2=A0		}
-> =C2=A0		return;
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_de=
-c_drv.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv=
-.c
-> index 9247d92d431d8570609423156b989878f7901f1c..d9c7aaec0c4515cb73b80c913=
-b1ad5b08392dd18 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c
-> @@ -26,6 +26,58 @@
-> =C2=A0#include "mtk_vcodec_dec_pm.h"
-> =C2=A0#include "../common/mtk_vcodec_intr.h"
-> =C2=A0
-> +const char *state_to_str(enum mtk_request_state state)
-> +{
-> +	switch (state) {
-> +	case MTK_REQUEST_RECEIVED:
-> +		return "RECEIVED";
-> +	case MTK_REQUEST_LAT_DONE:
-> +		return "LAT_DONE";
-> +	case MTK_REQUEST_CORE_DONE:
-> +		return "CORE_DONE";
-> +	default:
-> +		return "UNKNOWN";
-> +	}
-> +}
-> +
-> +int mtk_vcodec_complete(struct mtk_vcodec_dec_ctx *ctx, enum mtk_request=
-_state state,
-> +			enum vb2_buffer_state buffer_state, struct media_request *src_buf_req=
-)
-> +{
-> +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
-> +
-> +	mutex_lock(&ctx->lock);
-> +
-> +	if (ctx->req_state >=3D state) {
-> +		mutex_unlock(&ctx->lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (ctx->req_state) {
-> +	case MTK_REQUEST_RECEIVED:
-> +		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-> +		src_buf =3D v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
-> +		v4l2_m2m_buf_done(src_buf, buffer_state);
-> +		ctx->req_state =3D MTK_REQUEST_LAT_DONE;
-> +		if (state =3D=3D MTK_REQUEST_LAT_DONE)
-> +			break;
-> +		fallthrough;
-> +	case MTK_REQUEST_LAT_DONE:
-> +		dst_buf =3D v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
-> +		v4l2_m2m_buf_done(dst_buf, buffer_state);
-> +		media_request_manual_complete(src_buf_req);
-> +		ctx->req_state =3D MTK_REQUEST_CORE_DONE;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	mtk_v4l2_vdec_dbg(3, ctx, "Switch state from %s to %s.\n",
-> +			=C2=A0 state_to_str(ctx->req_state), state_to_str(state));
-> +	ctx->req_state =3D state;
-> +	mutex_unlock(&ctx->lock);
-> +	return 0;
-> +}
-> +
-> =C2=A0static int mtk_vcodec_get_hw_count(struct mtk_vcodec_dec_ctx *ctx, =
-struct mtk_vcodec_dec_dev *dev)
-> =C2=A0{
-> =C2=A0	switch (dev->vdec_pdata->hw_arch) {
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_de=
-c_drv.h b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv=
-.h
-> index ac568ed14fa257d25b533b6fd6b3cd341227ecc2..21c2301363d0151ba3cf384a2=
-a32fff9f5d46034 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.h
-> @@ -185,6 +185,7 @@ struct mtk_vcodec_dec_ctx {
-> =C2=A0	struct mtk_q_data q_data[2];
-> =C2=A0	int id;
-> =C2=A0	enum mtk_instance_state state;
-> +	enum mtk_request_state req_state;
+On Mon, Apr 07, 2025 at 04:55:30PM +0200, Herve Codina wrote:
+> From: Saravana Kannan <saravanak@google.com>
+> 
+> From: Saravana Kannan <saravanak@google.com>
 
-As you discovered before I came to do that final review, this is the
-wrong version of the patchset. The request state must be per-request.
-Looking forward your v2.
+No need to have this in the commit message.
 
-Nicolas
+> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
+> 
+> While the commit fixed fw_devlink overlay handling for one case, it
+> broke it for another case. So revert it and redo the fix in a separate
+> patch.
 
-> =C2=A0
-> =C2=A0	const struct vdec_common_if *dec_if;
-> =C2=A0	void *drv_handle;
-> @@ -326,6 +327,9 @@ wake_up_dec_ctx(struct mtk_vcodec_dec_ctx *ctx, unsig=
-ned int reason, unsigned in
-> =C2=A0	wake_up_interruptible(&ctx->queue[hw_id]);
-> =C2=A0}
-> =C2=A0
-> +int mtk_vcodec_complete(struct mtk_vcodec_dec_ctx *ctx, enum mtk_request=
-_state state,
-> +			enum vb2_buffer_state buffer_state, struct media_request *src_buf_req=
-);
-> +
-> =C2=A0#define mtk_vdec_err(ctx, fmt, args...)=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 \
-> =C2=A0	mtk_vcodec_err((ctx)->id, (ctx)->dev->plat_dev, fmt, ##args)
-> =C2=A0
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_de=
-c_stateless.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_d=
-ec_stateless.c
-> index afa224da0f4165cf5701d6861f1f787c6317bfe4..9187d7bcfc8aea17f3fc98d94=
-419777d8026db51 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_state=
-less.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_state=
-less.c
-> @@ -247,7 +247,6 @@ static const struct v4l2_frmsize_stepwise stepwise_fh=
-d =3D {
-> =C2=A0static void mtk_vdec_stateless_cap_to_disp(struct mtk_vcodec_dec_ct=
-x *ctx, int error,
-> =C2=A0					=C2=A0=C2=A0 struct media_request *src_buf_req)
-> =C2=A0{
-> -	struct vb2_v4l2_buffer *vb2_dst;
-> =C2=A0	enum vb2_buffer_state state;
-> =C2=A0
-> =C2=A0	if (error)
-> @@ -255,17 +254,7 @@ static void mtk_vdec_stateless_cap_to_disp(struct mt=
-k_vcodec_dec_ctx *ctx, int e
-> =C2=A0	else
-> =C2=A0		state =3D VB2_BUF_STATE_DONE;
-> =C2=A0
-> -	vb2_dst =3D v4l2_m2m_dst_buf_remove(ctx->m2m_ctx);
-> -	if (vb2_dst) {
-> -		v4l2_m2m_buf_done(vb2_dst, state);
-> -		mtk_v4l2_vdec_dbg(2, ctx, "free frame buffer id:%d to done list",
-> -				=C2=A0 vb2_dst->vb2_buf.index);
-> -	} else {
-> -		mtk_v4l2_vdec_err(ctx, "dst buffer is NULL");
-> -	}
-> -
-> -	if (src_buf_req)
-> -		v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-> +	mtk_vcodec_complete(ctx, MTK_REQUEST_CORE_DONE, state, src_buf_req);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static struct vdec_fb *vdec_get_cap_buffer(struct mtk_vcodec_dec_ct=
-x *ctx)
-> @@ -308,6 +297,7 @@ static void vb2ops_vdec_buf_request_complete(struct v=
-b2_buffer *vb)
-> =C2=A0	struct mtk_vcodec_dec_ctx *ctx =3D vb2_get_drv_priv(vb->vb2_queue)=
-;
-> =C2=A0
-> =C2=A0	v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->ctrl_hdl);
-> +	media_request_manual_complete(vb->req_obj.req);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void mtk_vdec_worker(struct work_struct *work)
-> @@ -358,12 +348,17 @@ static void mtk_vdec_worker(struct work_struct *wor=
-k)
-> =C2=A0	else
-> =C2=A0		mtk_v4l2_vdec_err(ctx, "vb2 buffer media request is NULL");
-> =C2=A0
-> +	mutex_lock(&ctx->lock);
-> +	ctx->req_state =3D MTK_REQUEST_RECEIVED;
-> +	mutex_unlock(&ctx->lock);
-> +
-> =C2=A0	ret =3D vdec_if_decode(ctx, bs_src, NULL, &res_chg);
-> +
-> =C2=A0	if (ret && ret !=3D -EAGAIN) {
-> =C2=A0		mtk_v4l2_vdec_err(ctx,
-> -				=C2=A0 "[%d] decode src_buf[%d] sz=3D0x%zx pts=3D%llu ret=3D%d res_c=
-hg=3D%d",
-> +				=C2=A0 "[%d] decode src_buf[%d] sz=3D0x%zx pts=3D%llu res_chg=3D%d r=
-et=3D%d",
-> =C2=A0				=C2=A0 ctx->id, vb2_src->index, bs_src->size,
-> -				=C2=A0 vb2_src->timestamp, ret, res_chg);
-> +				=C2=A0 vb2_src->timestamp, res_chg, ret);
-> =C2=A0		if (ret =3D=3D -EIO) {
-> =C2=A0			mutex_lock(&ctx->lock);
-> =C2=A0			dec_buf_src->error =3D true;
-> @@ -372,18 +367,15 @@ static void mtk_vdec_worker(struct work_struct *wor=
-k)
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	state =3D ret ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE;
-> +	if (ret !=3D -EAGAIN)
-> +		mtk_vcodec_complete(ctx, MTK_REQUEST_LAT_DONE, state, src_buf_req);
-> +
-> =C2=A0	if (!IS_VDEC_LAT_ARCH(dev->vdec_pdata->hw_arch) ||
-> =C2=A0	=C2=A0=C2=A0=C2=A0 ctx->current_codec =3D=3D V4L2_PIX_FMT_VP8_FRAM=
-E) {
-> -		v4l2_m2m_buf_done_and_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx, state=
-);
-> -		if (src_buf_req)
-> -			v4l2_ctrl_request_complete(src_buf_req, &ctx->ctrl_hdl);
-> -	} else {
-> -		if (ret !=3D -EAGAIN) {
-> -			v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
-> -			v4l2_m2m_buf_done(vb2_v4l2_src, state);
-> -		}
-> -		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
-> +		mtk_vcodec_complete(ctx, MTK_REQUEST_CORE_DONE, state, src_buf_req);
-> =C2=A0	}
-> +
-> +	v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void vb2ops_vdec_stateless_buf_queue(struct vb2_buffer *vb)
-> @@ -731,9 +723,15 @@ static int fops_media_request_validate(struct media_=
-request *mreq)
-> =C2=A0	return vb2_request_validate(mreq);
-> =C2=A0}
-> =C2=A0
-> +static void fops_media_request_queue(struct media_request *mreq)
-> +{
-> +	media_request_mark_manual_completion(mreq);
-> +	v4l2_m2m_request_queue(mreq);
-> +}
-> +
-> =C2=A0const struct media_device_ops mtk_vcodec_media_ops =3D {
-> =C2=A0	.req_validate	=3D fops_media_request_validate,
-> -	.req_queue	=3D v4l2_m2m_request_queue,
-> +	.req_queue	=3D fops_media_request_queue,
-> =C2=A0};
-> =C2=A0
-> =C2=A0static void mtk_vcodec_add_formats(unsigned int fourcc,
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
