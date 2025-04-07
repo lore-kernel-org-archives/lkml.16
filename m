@@ -1,171 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726E0221574
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E8922839A;
+	Mon,  7 Apr 2025 17:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046987; cv=none; b=uInnNET9Tqh9uBVD8J8ZXBecZiZPWAIGqf5MZi6DrsDGlDElFIEnnLQcIXoq5xldXe5j+fbNSixosOOPXff7dtbBYUwZC6ewgc/sBEF4JixuqYSV5Tm7UQsdn8rgjhMbtsBCepapx+9Um8EU3pgvECVYnK1tbV+siZbIeLdHwwg=
+	t=1744046991; cv=none; b=g5W0iZX9C+RZaPacGJZSALOWPIkkwYGOtJjzZ8MPD94FmoGKMCNzgJRI84bTKFQnrv4X2oO4vF+EDdQSEFUoDMRYrzjupSCvJEwHA9gSXsKghvUO4i0QXiiwvZc04/Vc0vDx2Zf8SnS8zv69RZw2koSVprhAgF/SW0bELXrNiPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046987; c=relaxed/simple;
-	bh=IZDE0Uw0REW2EC3YQAqzGRfFqccTqKOe6rIV8GxvYuo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JHQqzYnvF3zoESu6KpMig777CGy+9HEULl1eU0WhrBweaw7DRFzd/LE9IqN4ViQlIwB2xoWA/0HMuguqUp/inejldofIR8/3n2giAHMnSWlDi7Q2Q6qJVNfYHKRzH3xY3Jvty+GXA3s7bxPjXw02bH/U+Ssn/Gl0Mit+QUjjBbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KAzfNZht; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744046991; c=relaxed/simple;
+	bh=4psbfQ0+xtdgkMP8AkN/dMbVmSHGCs80nffXYJ4DnTI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PZCXrHs5cef/VwkJLi0TSLvSUTI0Yfo9EFGM6VbVcVu8Wa5ms121W5tdxITI/cIG/hgFNqLHPV2LmQzqYNW/COw6gNNDHMMz8yGkNlX1DehDFzcLUxJmotG/CMmdG8vPZ5gGJ8oyaXaCZ49xnDuXEs9m0fwQLl9XtybXBH8doU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RU4Tf64N; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KAzfNZht"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744046984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ytfag6avHkUgxMB2gcbfrMctmdRXvNMuEhL6eCeBh8c=;
-	b=KAzfNZhtTrN5bSsxDno1X4QovADiq1oGopieq1NQDJZQ2qO9HjfdVk8rO6X8wAQiVuFsJg
-	xtDE8l46c/+k/ih9banYidBYLCJyRzr6LK1maeah6T/7dgsjDI1uBVYe+nZJuuLRDFkt5x
-	1zqBosR1DllS44WobKvh7Dxj3TsvyD4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-bek0G_IQM-mH5jKEpyPM1w-1; Mon,
- 07 Apr 2025 13:29:43 -0400
-X-MC-Unique: bek0G_IQM-mH5jKEpyPM1w-1
-X-Mimecast-MFC-AGG-ID: bek0G_IQM-mH5jKEpyPM1w_1744046981
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4296195608B;
-	Mon,  7 Apr 2025 17:29:40 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 19686180A803;
-	Mon,  7 Apr 2025 17:29:34 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Michal Schmidt <mschmidt@redhat.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 09/28] mfd: zl3073x: Add clock_id field
-Date: Mon,  7 Apr 2025 19:28:36 +0200
-Message-ID: <20250407172836.1009461-10-ivecera@redhat.com>
-In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
-References: <20250407172836.1009461-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RU4Tf64N"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso29694875e9.0;
+        Mon, 07 Apr 2025 10:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744046988; x=1744651788; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4QfAVWYxeBG/ZP6eGSXkzfSFJe0M/8UDNl8FMmsW9Ss=;
+        b=RU4Tf64N9sw2kfyAHNz4oLg/2VB3UVI1lZUyBUjbJwNNpNEuBwkOqqy+Xmh+SnZwHm
+         YD7vxset0LC8LI7TQGCHdvUWVo7AwkzkM57ts2RMOp9ki1knH0oCmQDCiky5+ZgFQcpd
+         Tu7BpXSViwAaHWaBOisRySsKhbpCsMbbdl5bjcpmctjtSFZeMj5v6dtgIwlyopvDpdyQ
+         IQ1qkjNrnVMFPwyOExtL4rwKGo8iq3iIUntwInzCceB9vM1KR4QDaBHMUSwEcrBWGppu
+         uzmjmArUMgKOucB46kuurrdB8ZJNbfEyDfmFrSGYXwbHLyywfK0FZVAgxJ17zLaQuTmJ
+         vHAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744046988; x=1744651788;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4QfAVWYxeBG/ZP6eGSXkzfSFJe0M/8UDNl8FMmsW9Ss=;
+        b=H7gnjOHw0XECMro1YHDKkPaczBa2h7Ia7TUcJREHJ221eAKLVHOUvpv2fJI2NOX+vx
+         NtNauj7GPvrpN0yg/kIa7q/Mepb7EQFgSEO5GiExMP+nWRop5RmZPvdNcb/SSNT87kCn
+         SqeTprZCoFyGKsooK0i7IyWX3fy42zk+gxRz1ETry3oltslmwJzW0Kn1C19nR9Qy8yus
+         auuZtSg2pnUl/v6gPSGPjfgzALlPT1SjXGL6AtL1QXrfzwshW7rjmoFRQNLC50lgW1FD
+         UWr+oz4/g+xBHkcqjx8vNwE7Vu1bVPmjxZtrajHR7ISUu4xL/CwsxP3ZSP79L1wBnNf1
+         nT7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUQqEO2ly9mPXTNMvE/D1d+kCSJsWMcyzdVfdppxIbDIAB597BEnryw8uGkXG6ncLNY6NUxDAun+6RjpeD+@vger.kernel.org, AJvYcCVIFaoO/5sdV7UI8GcKqNKF39xpF+LX4p1YgMDRb+1gmJiIGGT0AX7mIbhOHwIGfRRDsa+HIW8b@vger.kernel.org, AJvYcCXx70B6fNj7xD7ii4NNBezUpOzEVscaf0fCDXKf5Whsa+AlT/9JHwJ3f1o5YK7tX93WjCi9r12Ozjb6iR/3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZpQSGg6LMUK9Twnrmi8eF8uYxd2YVq3YXhh65TDt5xeKGfBGy
+	P1cvJPshZYvI+mJmsjgyGsvmIJ4ODzVxlTepyBkCzikyh4gADd+x
+X-Gm-Gg: ASbGncv1FM/+mqdrLrz/UebN1qPBWyycSVqDrNJkZeFG0038STYl5si7uLBD7LKLhd6
+	HLGO+uPflb4cCYpPC1M2XH9bS+YijKEeXSuXr7023VAyVD+tsTIVA5zwOmkB8yg0RP3wuEhsjo0
+	2cCVmqaNDYOlv7gGOHmrD1w4gHGUfBP87s5Dc9nNU1NDXjSag9ZD4TUF/w47mZsJREhyRu6Oz+H
+	6Rkma9uBBgQnHL599O/w9pTT3lCCAODin6oquHoH7SVy1w2fToYdPFDn9x/VvomtJu6axoKy8nl
+	gYzIPMiI3BPwrVenwtfpD2g45yomHsHppyUev2pp1LQqnQ2vVqkjgnN0ImZ8bgxIcZCT0DgnCSY
+	OEIAqikua/g==
+X-Google-Smtp-Source: AGHT+IGUbfih/iQ+l6sjRy87j7KU4X6gtlajZs7U5kLH/vsvvC6ZHonIgU2tfATxdwusWZ6tk4rfUg==
+X-Received: by 2002:a05:600c:b89:b0:439:8e95:796a with SMTP id 5b1f17b1804b1-43f0e5ecd21mr3000325e9.13.1744046987794;
+        Mon, 07 Apr 2025 10:29:47 -0700 (PDT)
+Received: from [192.168.0.33] (85.219.19.182.dyn.user.ono.com. [85.219.19.182])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea8d16049sm128812205e9.0.2025.04.07.10.29.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 10:29:47 -0700 (PDT)
+Message-ID: <eb465a29-623b-48e4-b795-201a30ae9260@gmail.com>
+Date: Mon, 7 Apr 2025 19:29:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+To: Christian Brauner <brauner@kernel.org>,
+ Cengiz Can <cengiz.can@canonical.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Salvatore Bonaccorso <carnil@debian.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org,
+ dutyrok@altlinux.org, syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
+ stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20241019191303.24048-1-kovalev@altlinux.org>
+ <Z9xsx-w4YCBuYjx5@eldamar.lan>
+ <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
+ <2025032402-jam-immovable-2d57@gregkh>
+ <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
+ <2025032404-important-average-9346@gregkh>
+ <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
+ <20250407-biegung-furor-e7313ca9d712@brauner>
+ <20250407-kumpel-klirren-ad0db3c77321@brauner>
+Content-Language: en-US
+From: Attila Szasz <szasza.contact@gmail.com>
+In-Reply-To: <20250407-kumpel-klirren-ad0db3c77321@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Later commits that add support for DPLL functionality need a clock ID
-for DPLL device registration. To generate such ID use chip ID read
-during device initialization for this. For the case where are
-multiple zl3073x based chips the chip ID is shifted and lower
-bits are filled by an unique value. For I2C case it is I2C device
-address and for SPI case it is chip-select value.
+Christian,
 
-Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/mfd/zl3073x-core.c  | 5 ++++-
- drivers/mfd/zl3073x-i2c.c   | 3 ++-
- drivers/mfd/zl3073x-spi.c   | 3 ++-
- drivers/mfd/zl3073x.h       | 2 +-
- include/linux/mfd/zl3073x.h | 1 +
- 5 files changed, 10 insertions(+), 4 deletions(-)
+It was Greg who moved this CVE under the kernel.org CNA territory:
 
-diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-index feb139b550571..5570de58c46e4 100644
---- a/drivers/mfd/zl3073x-core.c
-+++ b/drivers/mfd/zl3073x-core.c
-@@ -424,7 +424,7 @@ struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
- 
--int zl3073x_dev_init(struct zl3073x_dev *zldev)
-+int zl3073x_dev_init(struct zl3073x_dev *zldev, u8 dev_id)
- {
- 	u16 id, revision, fw_ver;
- 	struct devlink *devlink;
-@@ -448,6 +448,9 @@ int zl3073x_dev_init(struct zl3073x_dev *zldev)
- 			return rc;
- 	}
- 
-+	/* Use chip ID and given dev ID as clock ID */
-+	zldev->clock_id = ((u64)id << 8) | dev_id;
-+
- 	dev_info(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n",
- 		 id, revision, fw_ver);
- 	dev_info(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
-diff --git a/drivers/mfd/zl3073x-i2c.c b/drivers/mfd/zl3073x-i2c.c
-index 8c8b2ba176766..ae7079d9359c1 100644
---- a/drivers/mfd/zl3073x-i2c.c
-+++ b/drivers/mfd/zl3073x-i2c.c
-@@ -41,7 +41,8 @@ static int zl3073x_i2c_probe(struct i2c_client *client)
- 
- 	i2c_set_clientdata(client, zldev);
- 
--	return zl3073x_dev_init(zldev);
-+	/* Initialize device and use I2C address as dev ID */
-+	return zl3073x_dev_init(zldev, client->addr);
- }
- 
- static void zl3073x_i2c_remove(struct i2c_client *client)
-diff --git a/drivers/mfd/zl3073x-spi.c b/drivers/mfd/zl3073x-spi.c
-index a6b9a366a7585..6877ca1664111 100644
---- a/drivers/mfd/zl3073x-spi.c
-+++ b/drivers/mfd/zl3073x-spi.c
-@@ -42,7 +42,8 @@ static int zl3073x_spi_probe(struct spi_device *spidev)
- 
- 	spi_set_drvdata(spidev, zldev);
- 
--	return zl3073x_dev_init(zldev);
-+	/* Initialize device and use SPI chip select value as dev ID */
-+	return zl3073x_dev_init(zldev, spi_get_chipselect(spidev, 0));
- }
- 
- static void zl3073x_spi_remove(struct spi_device *spidev)
-diff --git a/drivers/mfd/zl3073x.h b/drivers/mfd/zl3073x.h
-index 582cb40d681d3..04612313d32a9 100644
---- a/drivers/mfd/zl3073x.h
-+++ b/drivers/mfd/zl3073x.h
-@@ -6,7 +6,7 @@
- #include <linux/mfd/zl3073x.h>
- 
- struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev);
--int zl3073x_dev_init(struct zl3073x_dev *zldev);
-+int zl3073x_dev_init(struct zl3073x_dev *zldev, u8 dev_id);
- void zl3073x_dev_exit(struct zl3073x_dev *zldev);
- const struct regmap_config *zl3073x_get_regmap_config(void);
- 
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-index 436f79f2fda63..a18eddbc03709 100644
---- a/include/linux/mfd/zl3073x.h
-+++ b/include/linux/mfd/zl3073x.h
-@@ -9,6 +9,7 @@
- struct zl3073x_dev {
- 	struct device		*dev;
- 	struct regmap		*regmap;
-+	u64			clock_id;
- 	struct mutex		lock;
- };
- 
--- 
-2.48.1
+https://lore.kernel.org/lkml/2025032402-jam-immovable-2d57@gregkh/
 
+This thread was kicked into gear by Salvatore from Debian, who asked 
+whether there was a mainline fix. There wasn’t one upstream, I think, 
+primarily due to your assessment.
+
+Meanwhile, the distros wanted to protect their users and fix that gaping 
+64k heap buffer overflow with a one-liner boundary check. Canonical did. 
+I believe they wanted to help Debian do the same.
+
+They assigned a CVE -with the ID you are seeing- for Canonical Ubuntu Linux:
+
+https://github.com/CVEProject/cvelist/commit/a56d5efc25a561c94ccf296fceaab2a01dc4bc01
+
+It seems Debian initially dropped the config option altogether — a 
+reasonable decision I personally agree with — but later reverted the 
+change after someone from SuSE pointed out that it’s still required for 
+PowerPC, PPC64, and apparently some Apple hardware:
+https://salsa.debian.org/kernel-team/linux/-/commit/180f39f01cb9175dc77e8a5e27b78b5d1537752e#note_598347
+
+Still, I think the distros were just trying to do their jobs. Something 
+that it seems we might both agree on.
+
+On 4/7/25 19:15, Christian Brauner wrote:
+> On Mon, Apr 07, 2025 at 12:59:18PM +0200, Christian Brauner wrote:
+>> On Sun, Apr 06, 2025 at 07:07:57PM +0300, Cengiz Can wrote:
+>>> On 24-03-25 11:53:51, Greg KH wrote:
+>>>> On Mon, Mar 24, 2025 at 09:43:18PM +0300, Cengiz Can wrote:
+>>>>> In the meantime, can we get this fix applied?
+>>>> Please work with the filesystem maintainers to do so.
+>>> Hello Christian, hello Alexander
+>>>
+>>> Can you help us with this?
+>>>
+>>> Thanks in advance!
+>> Filesystem bugs due to corrupt images are not considered a CVE for any
+>> filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
+>> namespace. That includes delegated mounting.
+>>
+>> Now, quoting from [1]:
+>>
+>> "So, for the record, the Linux kernel in general only allows mounts for
+>> those with CAP_SYS_ADMIN, however, it is true that desktop and even
+>> server environments allow regular non-privileged users to mount and
+>> automount filesystems.
+>>
+>> In particular, both the latest Ubuntu Desktop and Server versions come
+>> with default polkit rules that allow users with an active local session
+>> to create loop devices and mount a range of block filesystems commonly
+>> found on USB flash drives with udisks2. Inspecting
+>> /usr/share/polkit-1/actions/org.freedesktop.UDisks2.policy shows:"
+>>
+>> So what this saying is:
+>>
+>> A distribution is shipping tooling that allows unprivileged users to mount
+>> arbitrary filesystems including hpfsplus. Or to rephrase this: A
+>> distribution is allowing unprivileged users to mount orphaned
+>> filesystems. Congratulations on the brave decision to play Russian
+>> Roulette with a fully-loaded gun.
+>>
+>> The VFS doesn't allow mounting arbitrary filesystems by unprivileged
+>> users. Every FS_REQUIRES_DEV filesystem requires global CAP_SYS_ADMIN
+>> privileged at which point you can also do sudo rm -rf --no-preserve-root /
+>> or a million other destructive things.
+>>
+>> The blogpost is aware that the VFS maintainers don't accept CVEs like
+>> this. Yet a CVE was still filed against the upstream kernel. IOW,
+>> someone abused the fact that a distro chose to allow mounting arbitrary
+>> filesystems including orphaned ones by unprivileged user as an argument
+>> to gain a kernel CVE.
+>>
+>> Revoke that CVE against the upstream kernel. This is a CVE against a
+>> distro. There's zero reason for us to hurry with any fix.
+> Before that gets misinterpreted: This is not intended to either
+> implicitly or explicitly imply that patch pickup is dependend on the
+> revocation of this CVE.
+>
+> Since this isn't a valid CVE there's no reason to hurry-up merging this
+> into mainline within the next 24 hours. It'll get there whenever the
+> next fixes pr is ready.
+>
+>> [1]: https://ssd-disclosure.com/ssd-advisory-linux-kernel-hfsplus-slab-out-of-bounds-write/
