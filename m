@@ -1,67 +1,33 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D914215F5C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BF5214A7C;
+	Mon,  7 Apr 2025 18:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744048875; cv=none; b=ST3Du+HR1QZItgqD4rgYWCq2aEZCh0CWCB3ICIN8P+oAkaGY33pv8fWE+jBA8eLQ6vIoFoB4nokRmx8e/qIF5raaGOoknxkp0WQ5guPFmbgagfV+4Q/FVpMPnN39j26ZhQBg7z50dNldsHNJdUWHVW+X7aFm6+AjcXgSAlTHDWw=
+	t=1744048893; cv=none; b=P6V3nddE9DgKoN9yORXIvFEAn8XZ2Pj1wLpjotEY6bhEmOttFi1MdY3FUA9vuZ+Xons7PNrK4aayU0hVqD/a5QYVfRp0TT4CYhr6JKb+YsuyyygquDnv9MpMU6bzlkps7uwnvEx12AJ9SlKqaU6XI21SQsHhp6HcywB5YkbVNM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744048875; c=relaxed/simple;
-	bh=/sCS8P3oFfkM8Y2joQwtk/+GhkDfttep80wMIA9Oi6I=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MHrTVJqTaxa29B39U4lbEqQlPu/FMvy1beyWwDxmF3W+Uv+BGoN+bZyxnW0rmer0roD6evxgGgXplBcXRmUVeSBXTvlsi/zPlbKeshH4CmSiJ0+8fhfbv5hoGY6wZXWKFRCxDp7HqksMB5ChvyqIVM+mOA4dS7eHQcOJDeVKTvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UaAlCC/s; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744048893; c=relaxed/simple;
+	bh=AUXsGZjrzl+9uecU7aWyoMTviryGOEav0GotuZj779s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qhy1Wjj8fJupahN66QcRAltVX41E0RNhRXC2VGSLPdbQqvl9WAXAJtziiBZFd/iAynauCTF3umOPfTPJrCW36klU39aleZZy3AXvr/1gn6/ubPKwoDtceBb0by3R1hvgU/wghxpg69uKEthqdETuh4ka5Mvt0ClBkf2oX1T4eog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DL1kOCSa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UaAlCC/s"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3914a5def6bso2764494f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744048871; x=1744653671; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dQN6XEoSUCzS4EezoIiiguwwZ733hElp98GvikZveLg=;
-        b=UaAlCC/ssZRpuNqnybDl1wxtEI3s4qVn/UvY8jRV7ExlXN+0QFhpLs41mGwToOvvnI
-         NbtBUXIlHKMxeMVaa86iOzapveOJ3xvyuxuRM87ZrpWvkOGlKTz6l7XMLXJo6kwXsMmx
-         ufSH20gDsA7Ga5Iw7yrp71qtKJ0+xmB0YePw9JD0SoTeGi/8RY0AcAdtvl/B/YH/vq1n
-         w5ueJNP6B7KnvH5nkRev5W7+Bnxl88vuDarQsEiJ0GJOVeGp0aIN7vF1PGdVhUYzCWN7
-         pwAFQXFeWCL0XH6mX+CL0Re9PGKxKx9tvBJoJO03CdC9HAXLy7i14jl6Gbma5YBcqSyf
-         rYrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744048871; x=1744653671;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dQN6XEoSUCzS4EezoIiiguwwZ733hElp98GvikZveLg=;
-        b=R0FG/QUkXDvQ7sHzPhybvh2sf2tjHhJsFDyIdVP4EW+K/3GLNW5oGy0ebC7DTakmXS
-         RFTBfAS4Pl8lW/6vkBuojRlFf1rS4R0AwOwX6jXG12aTXKJf93N47JeTJ1ZD9Eb0w4GS
-         gvGEJ9BgBQVD7ELtZ0xW+DUM/hA1YCspEjXgOrHeH0NRTcmwAQ/nix4IBd0U2kpIKVkp
-         hoRcIZQagbgLBmp9jGYWkXE0ECUXm5df/qx4mB7NazfDv+NfGwzCbIO6SfxZ3I9kofmZ
-         yu/fcur81rMxySZunMGdTFfsJoeKi+aHSCAHK1HOU/DThat+zrk5zr2lkibJPwk4etWS
-         pFiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsh9J1hBqUXD5VfZ0qzOOIA/UwIeMQ9WxhJy93j1uOGV86bP+5eYvTZFWeqMqxmzTlM3KyvwRsT2LG5c0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRFBsnhhkgQeWW4iMadHmOjqoxI6kIO3UldGZkM0tc3wFolbba
-	hyAMvToNqayMvNhQMxUr9ij0zmoE/TIii+2Ud8BayNQ3/zgWqy46ur8wY4y0D4E=
-X-Gm-Gg: ASbGncspafNwZKOJ9BlvNoWqM/N5PVePRaasVKokUBTlhnLtP/7FJECldz92e/PVh2k
-	qQfiGY7cA/VIb6tVCm4D+S7XhjfgcF8Yy0zXkY/6PzMywYJGu2yXdxVdVXxgB6i6rFh65/JM74T
-	PgQOvwtDz3wA3ywim1ECGo4q7pA08/5At5HUyQ/6xIGFbiBSDey0ntpuoJ6aVzmgdRtvZc3fkf8
-	Zg4qX3h2ZmE9IQaO4jIzRTietH7qJnG8PSHWsOg3Yh6w5sTe0iAzoHaOF5+BeoyauvaBSq3eFMy
-	aMPG4Z0Kjr+SNwgNYIoZvxiLgfDvpZIawRbW8HCjAdVvjcAhu14wM0xhUkFNUutnkplnNZ/t2EA
-	FejnAOFFZA0WUO+HCDhRaSQ==
-X-Google-Smtp-Source: AGHT+IFF2Y1FxHLGIXFsVRY7QrXVRey4g/u9EJsx9mznd/SmL2dCJdrLW+gsYJud45OzuRqxEedf1A==
-X-Received: by 2002:a05:6000:1a8d:b0:391:487f:282a with SMTP id ffacd0b85a97d-39cba93cdd3mr11366157f8f.50.1744048870736;
-        Mon, 07 Apr 2025 11:01:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:f2a4:b974:cba3:a605? ([2a01:e0a:3d9:2080:f2a4:b974:cba3:a605])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6321sm12508357f8f.44.2025.04.07.11.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 11:01:10 -0700 (PDT)
-Message-ID: <f0821547-8f0e-4235-b196-1c8a680fa5c0@linaro.org>
-Date: Mon, 7 Apr 2025 20:01:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DL1kOCSa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B72C4CEDD;
+	Mon,  7 Apr 2025 18:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744048892;
+	bh=AUXsGZjrzl+9uecU7aWyoMTviryGOEav0GotuZj779s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DL1kOCSad7g7MNV8DsE7AIC7tK4dQRwqxjyv4JZHCEr6rKczG77O6kU3eUTM3oBI6
+	 JFkG4r+0MksLamtd+dr1/1qAOE7Eq9FzOIpxp9bQuolXrz/Hw8UiTZtTvoYoDysnMn
+	 32lpDFOGsquZHgsSgsS5m6qe3wKiPrGsZyrgslyVICNYC82i0HC2czmCWzhX2+fbZ1
+	 HPPrvV/lgsEIvKIudDkOso+vGACWt3RPbKkaaoa2uBVKanlACdv61sEdjQqbSQio9T
+	 ucAAZbUWUvEMqCYBpqBP584bo21W4PNuf4cJ2io/+zDQsPNJgbNuMlbxLv0IdKwL0n
+	 BQdr9RoG5iiJg==
+Message-ID: <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
+Date: Mon, 7 Apr 2025 20:01:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,106 +35,307 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3 5/5] media: platform: qcom/iris: add sm8650 support
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 15/28] dt-bindings: dpll: Add device tree bindings for
+ DPLL device and pin
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
- <6zCwYEsWlyaz8z8Elw573sfjWDZBB46nc0IA4Eu_-pKdy3O1WzYh2sr0jdSPRr0uBHqfgMaK3WC5d9sN6-O6cA==@protonmail.internalid>
- <20250407-topic-sm8x50-iris-v10-v3-5-63569f6d04aa@linaro.org>
- <ecb193d1-2bf1-4d99-b9c6-9b5cde1e936e@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <ecb193d1-2bf1-4d99-b9c6-9b5cde1e936e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407173149.1010216-6-ivecera@redhat.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407173149.1010216-6-ivecera@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07/04/2025 17:52, Bryan O'Donoghue wrote:
-> On 07/04/2025 16:24, Neil Armstrong wrote:
->> Add support for the SM8650 platform by re-using the SM8550
->> definitions and using the vpu33 ops.
->>
->> The SM8650/vpu33 requires more reset lines, but the H.284
-> 
-> h264.
-> 
->> decoder capabilities are identical.
->>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->>   .../platform/qcom/iris/iris_platform_common.h      |  1 +
->>   .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
->>   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->>   3 files changed, 69 insertions(+)
->>
->> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
->> index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
->> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
->> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
->> @@ -35,6 +35,7 @@ enum pipe_type {
->>
->>   extern struct iris_platform_data sm8250_data;
->>   extern struct iris_platform_data sm8550_data;
->> +extern struct iris_platform_data sm8650_data;
->>
->>   enum platform_clk_type {
->>       IRIS_AXI_CLK,
->> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> index 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
->> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
->> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
->>
->>   static const char * const sm8550_clk_reset_table[] = { "bus" };
->>
->> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
->> +
->> +static const char * const sm8650_controller_reset_table[] = { "xo" };
-> 
-> 
-> At the risk of asking a stupid question, where are these resets in your dts ?
-> 
-> You're missing core here ?
-> 
-> 20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
+On 07/04/2025 19:31, Ivan Vecera wrote:
+> This adds DT bindings schema for DPLL (device phase-locked loop)
 
-This one if for sm8550, this very patch is adding support for sm8650 which needs core & xo in addition to bus
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Neil
+A nit, subject: drop second/last, redundant "device tree bindings for".
+The "dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+> device and associated pin. The schema follows existing DPLL core API
+
+What is core API in terms of Devicetree?
+
+> and should be used to expose information that should be provided
+> by platform firmware.
+> 
+> The schema for DPLL device describe a DPLL chip that can contain
+> one or more DPLLs (channels) and platform can specify their types.
+> For now 'pps' and 'eec' types supported and these values are mapped
+> to DPLL core's enums.
+
+Describe entire hardware, not what is supported.
 
 > 
+> The DPLL device can have optionally 'input-pins' and 'output-pins'
+> sub-nodes that contain pin sub-nodes.
+> 
+> These pin sub-nodes follows schema for dpll-pin and can contain
+> information about the particular pin.
+
+Describe the hardware, not the schema. We can read the contents of
+patch. What we cannot read is the hardware and why you are making all
+these choices.
+
+> 
+> The pin contains the following properties:
+> * reg - pin HW index (physical pin number of given type)
+> * label - string that is used as board label by DPLL core
+> * type - string that indicates pin type (mapped to DPLL core pin type)
+> * esync-control - boolean that indicates whether embeddded sync control
+>                   is allowed for this pin
+> * supported-frequencies - list of 64bit values that represents frequencies
+>                           that are allowed to be configured for the pin
+
+Drop. Describe the hardware.
+
+
+> 
+> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+
+Did this really happen?
+
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 > ---
-> bod
+>  .../devicetree/bindings/dpll/dpll-device.yaml | 84 +++++++++++++++++++
+>  .../devicetree/bindings/dpll/dpll-pin.yaml    | 43 ++++++++++
+>  MAINTAINERS                                   |  2 +
+>  3 files changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
 
+Filenames matching compatibles... unless this is common schema, but
+commit description did not mention it.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/dpll/dpll-device.yaml b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
+> new file mode 100644
+> index 0000000000000..e6c309abb857f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dpll/dpll-device.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Digital Phase-Locked Loop (DPLL) Device
+> +
+> +maintainers:
+> +  - Ivan Vecera <ivecera@redhat.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  Digital Phase-Locked Loop (DPLL) device are used for precise clock
+> +  synchronization in networking and telecom hardware. The device can
+> +  have one or more channels (DPLLs) and one or more input and output
+> +  pins. Each DPLL channel can either produce pulse-per-clock signal
+> +  or drive ethernet equipment clock. The type of each channel is
+> +  indicated by dpll-types property.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^dpll(@.*)?$"
+> +
+> +  "#address-cells":
+> +    const: 0
+> +
+> +  "#size-cells":
+> +    const: 0
+
+Why do you need these cells?
+
+> +
+> +  num-dplls:
+> +    description: Number of DPLL channels in this device.
+
+Why this is not deducible from compatible?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +
+> +  dpll-types:
+> +    description: List of DPLL types, one per DPLL instance.
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +    items:
+> +      enum: [pps, eec]
+
+Why this is not deducible from compatible?
+
+> +
+> +  input-pins:
+> +    type: object
+> +    description: DPLL input pins
+> +    unevaluatedProperties: false
+
+So this is all for pinctrl? Or something else? Could not figure out from
+commit msg. This does not help me either.
+
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+
+Why?
+
+> +      "#size-cells":
+> +        const: 0
+
+Why? I don't see these being used.
+
+> +
+> +    patternProperties:
+> +      "^pin@[0-9]+$":
+> +        $ref: /schemas/dpll/dpll-pin.yaml
+> +        unevaluatedProperties: false
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  output-pins:
+> +    type: object
+> +    description: DPLL output pins
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^pin@[0-9]+$":
+> +        $ref: /schemas/dpll/dpll-pin.yaml
+> +        unevaluatedProperties: false
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +dependentRequired:
+> +  dpll-types: [ num-dplls ]
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/dpll/dpll-pin.yaml b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+> new file mode 100644
+> index 0000000000000..9aea8ceabb5af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dpll/dpll-pin.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: DPLL Pin
+> +
+> +maintainers:
+> +  - Ivan Vecera <ivecera@redhat.com>
+> +
+> +description: |
+> +  Schema for defining input and output pins of a Digital Phase-Locked Loop (DPLL).
+> +  Each pin can have a set of supported frequencies, label, type and may support
+> +  embedded sync.
+> +
+> +properties:
+> +  reg:
+> +    description: Hardware index of the pin.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  esync-control:
+> +    description: Indicates whether the pin supports embedded sync functionality.
+> +    type: boolean
+> +
+> +  label:
+> +    description: String exposed as the pin board label
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +
+> +  supported-frequencies:
+> +    description: List of supported frequencies for this pin, expressed in Hz.
+> +    $ref: /schemas/types.yaml#/definitions/uint64-array
+
+Use common property suffixes and drop ref.
+
+> +
+> +  type:
+> +    description: Type of the pin
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [ext, gnss, int, mux, synce]
+> +
+> +
+
+Just one blank line
+
+
+I bet that half of my questions could be answered with proper hardware
+description which is missing in commit msg and binding description.
+Instead your commit msg explains schema which makes no sense - I
+mentioned, we can read the schema.
+> +required:
+> +  - reg
+Best regards,
+Krzysztof
