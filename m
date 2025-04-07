@@ -1,40 +1,80 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F73225388;
-	Mon,  7 Apr 2025 08:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88098225388
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014867; cv=none; b=KkKZRbAY4hRa0dplPO1IFvnvy2aT8XmeJS5mc4xz76oEQmG2hhCgMqdFG/B+dKie1ITjGPuXisMQ+OoqKcygFheGv5bbGnUWm86Kej4cNjnilVuku5lzDbKzdbqZye+qrdRuAMTM42/d1DN4IpY+QKOQwH0Iv0G9LSG5o1pKurI=
+	t=1744014873; cv=none; b=K0dw/Him53vGMg6Q3O/WNA7c0HnJL8qHJT79FLT1sNc1MPwTKV0cdwdFY3OZzgLSScoRmwmJjsKniV8uQoA/T8zusXh0Dcix+9H1GkiMrHmIcxRzRZf2kEmJMPXUdu9dIh6PLuAK7xa/Z6cZ51RGXeElCVvQFxzfIKlyITVkh4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014867; c=relaxed/simple;
-	bh=Vhw4ZA9Ps2+xZXL2K1IJGg3PZdoZzGEMNfgJtyFl5LU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MxAcq8xoOlsrUHxHrCEG0wGrKjJVuhC8FBw3rYAWjaynl/6QYgonnE1lhlFb1CXURyUtrzyJ2WUKyxIi2R3VlpuMvTIaoGvWRWYJwMO7yqt0KwtLw2eqFXJtoKwaiiUxDbO/cH5UJmXISZ1maJ6t9Un3Tr24LRKD8TFb31HDL40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=qmXG5bxb; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744014873; c=relaxed/simple;
+	bh=A6qh3Sgw7ouHvHGBVuDPdJ17QgVL3yJ+i8GQjDO+UXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=frYWHTmkZavNSlSXE0q+2wzbWhsPCjseCVnxMyCJJYEV6nz3an1/0RCozL04+wsVdhOxuueeX0txofRccPElB9dbxZFn8EZU0GSUh95j2luy7yWYgVNSwTY4ArjSB1jNxMj5LkQlXG/fuJOBfcDW0kBwf8Vii7IlO7JSk+qqU5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p3ZDc9J5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eCG5Timy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p3ZDc9J5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eCG5Timy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="qmXG5bxb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744014852; x=1744619652; i=markus.elfring@web.de;
-	bh=Dg+LGVaxeCMjrxNASaMRgp1m7d5it9SLyoZVjKU62jc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qmXG5bxbKO7ypkQJt1m69ZkaibGHfDtDrfBsZkbKAPVRch/M25tf+hcOY37/XaNe
-	 wa+eNmegJZKqeZLKiPvnKHrYgqSdAtwN8VmXxhZN0N2BQovO9ZwY4pgI5W9cz0+US
-	 2uH7V57MvngGrwpQnc3jMZ1nH3F+8p4cTHieJ4J94OAmQQfK+DhXmA7jS5RJlI+5F
-	 gUq2KU4UV9iKr2YZrvkd3uXpfPRpu9pNr5b+MctVKVA4pVKbXIrKdMuy85ZUsbzPz
-	 3xN1kfghklWH174ii4wMRaciboFrCornfBqJgkN7FLKk6GZ/8bTCtH7f+U8fpoiz8
-	 Fi/tKheFUy4FxauFdA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.4]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MQ8ao-1tfnMp3iBE-00V9MC; Mon, 07
- Apr 2025 10:34:11 +0200
-Message-ID: <0d6e4dcc-2646-4694-9961-70049a71e7c1@web.de>
-Date: Mon, 7 Apr 2025 10:34:08 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p3ZDc9J5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eCG5Timy";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p3ZDc9J5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eCG5Timy"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9C4BC1F38D;
+	Mon,  7 Apr 2025 08:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744014869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
+	b=p3ZDc9J58BpkE3PjiND2CoE8vvcUgVl2js9A1++CsgCyRSZ3IrFEi+GAL9nPLtMAdZEOd6
+	cjzTd9i5wVeG8kVaa4+45GAO9itAoR1eYPnVYDOv+beGned6IAJoJPsIiquZd5fPoZAF9B
+	ZOQag8KOsQoppwKXc57tqE+NmyBbaTE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744014869;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
+	b=eCG5Timy1vcrphnKlLEONd0X0ZdtNUETWamDJw6Zad+2n/O/FVrQ29UaFNUdDqWvy2Lqpg
+	qrV5VbzergPSJLAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744014869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
+	b=p3ZDc9J58BpkE3PjiND2CoE8vvcUgVl2js9A1++CsgCyRSZ3IrFEi+GAL9nPLtMAdZEOd6
+	cjzTd9i5wVeG8kVaa4+45GAO9itAoR1eYPnVYDOv+beGned6IAJoJPsIiquZd5fPoZAF9B
+	ZOQag8KOsQoppwKXc57tqE+NmyBbaTE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744014869;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
+	b=eCG5Timy1vcrphnKlLEONd0X0ZdtNUETWamDJw6Zad+2n/O/FVrQ29UaFNUdDqWvy2Lqpg
+	qrV5VbzergPSJLAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87B8913691;
+	Mon,  7 Apr 2025 08:34:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wC3UIBWO82fwLwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 07 Apr 2025 08:34:29 +0000
+Message-ID: <bb3d1391-d155-4e83-9103-818cd1a82c66@suse.cz>
+Date: Mon, 7 Apr 2025 10:34:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,61 +82,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Aya Levin <ayal@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
-References: <20250405100017.77498-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH] net/mlx5: Fix null-ptr-deref in
- mlx5_create_inner_ttc_table()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250405100017.77498-1-bsdhenrymartin@gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.15-rc1
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Damian Tometzki <damian@riscv-rocks.de>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>
+References: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
+ <01070196099fd059-e8463438-7b1b-4ec8-816d-173874be9966-000000@eu-central-1.amazonses.com>
+ <CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:vgSH9jAK64S+GlMEqzoxCCM8UxsPHwh7N4T7u/tAoAQtYmLNIpy
- f2ifI6mm5og7E5nuypepEbcvk70nFvzNeyjFVpOftRzBdoTyobTtYPdjAKzZ1eotnTHh/K7
- xkQOBcLWVci1r/x+FtgJvGuM2nzCJsoe6Al+Ug8u8GYgN4hQc0hz8IhuJyqwNCokEM+uvZj
- 8XAeDOEeZr9FLwhxY9deA==
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.80
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JwUTb7aw1zw=;ebFimREAd4AzF8Qlft3eYkX4n87
- S7IEpwvP0PkAm/7psp69QlWYonf1n5Bilzqxc7IP6TGSHeOZBJHJDnhrZhTbRISlvQIbyaYB7
- S8nqTEb6azesLdGbOY6jmfZeKCt69CYkTl+hGakREm3V33Kg5BcPF8MVwS7k60wngzIJhZOg9
- yO6jJe8/QN7IzVxVzLpD/vxX+4rhIcpriF2tIxHStVZe/Sc1w7vs5pxgzVJQgJrDjMKtWhbkY
- UHUS4zLDBb91dtVSv0zdC779kjwiHs8AIcZYG+DbxuKB6XYCGl88SfytL6hSo2Iv953mWrask
- 5M7tz7no7JvAkOQD2JlGftiYVQpBUSYCHViNuVbJeY1yEDkmwmDj7fe7YYDNOkUiW4X1WBO9K
- S5+bHShmblrAxm74Op8g6He+8WtZYWQdm4khyfJ/hJ8vFkTuiAAKmCYGxqfxMJ8cqdF429BlX
- NR6n/bfCULwrj2Y4EgS1KgZ87hdkqwkI37gdtTOfsds4Pp6d0BtP69NPpcLCDd64yUtOedl31
- NkvvsDuBWWDfjXJTgISXao08G98IzwwvlyihA3eV/rLETCiaixjFwUVM9o5aEYEyM3neDgrBF
- DClNdoYkkh7kJ8AAqfGE7KxhO2ggIo7uaukB5e75bX7zmT+Ul4HsKdnQ89hNIGX7kXmuvZZTj
- EEoKp9rtjbcneyk1JdtJxc8qEqPUwvqUMXJTcxo6Z0Z6Q/y+OUCDdkxkLzF0oVjvCvFv4yQIf
- FIUlUniRMxT66h1wyeX3AGABU6JSVoVllX+V/V4j2wy3M9+E4ALhFM9ZdG6/9rp8uR3H7VP/d
- kwgFWi99iv0Sp/WH2wm/MYTAU4O7BRnNOYWdNug3GcGr0vYd1YQ6iko9e3HZAD7iKNrXl4FGY
- 5MBaany6Wl8UdQ7lB22b22rd4xJCaoS6nlQ13AqLhbYuR1wXBrbVX7qnKHX4XSbgVoVADRhsL
- M3+8g/8KZE24CP/J1VamdpkzlRugpoJb3H8aX7yQMk0OsRcnjdl4Y17yqBkDYwav/DfW5kXgy
- fl3FJAHYzdvcCXXeA7Xmi7PJX+hgL5zp4B5RIQhch9PuYLWNfk26n1EvaSlPnciFJ1QXh2KaZ
- aBG9sO9QAFPIxpYBWgm1GLakGy0UAnPGiJ9qcQ6KlQb0iQfOhbR5AY4aqgUW4OT52SjGAZpKB
- pnZi1k4hnJIkP3ojy7Fqe97nPuCbcz9tAZHKtDlRfYVQx379F5pZwUhgWO5eXYMcpH8CitXzH
- 7fhT9V5X1A8Q+Ry2O3PkwPsKxUTF131U24rpv27jonTfnX2ZapHteUMzo1wVSnQ4MMWo5qdkl
- V5pXH0n0zUbYfVD4y52JjVIO4qj+WzZGyfii4EC5vxmc5YFzYRcDSfaC5QZeqPH+otvpRqP5d
- w91xsC1tnpF16mmWJGGfhtfDneEMvWz81DT1JC/eemBLV9v5LN8kWJtp53l4oM0hJetbzIq/k
- ndz/PIiTe785u/qD1u9NvQxLS8TMRIOtmHcZKWPKN0qWNnng23g3RG3eVBIhGDO9D1YEAiQ==
 
-> Add NULL check for mlx5_get_flow_namespace() returns in
-> mlx5_create_inner_ttc_table() to prevent NULL pointer dereference.
+On 4/6/25 18:50, Linus Torvalds wrote:
+> On Sat, 5 Apr 2025 at 22:43, Damian Tometzki <damian@riscv-rocks.de> wrote:
+>>
+>> i got the following error after this pull request.
+>>
+>>  MODPOST Module.symvers
+>> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
+>> make[3]: *** [/home/damian/kernel/linux/scripts/Makefile.modpost:147: Module.symvers] Error 1
+>> make[2]: *** [/home/damian/kernel/linux/Makefile:1956: modpost] Error 2
+>> make[1]: *** [/home/damian/kernel/linux/Makefile:248: __sub-make] Error 2
+>> make[1]: Leaving directory '/home/damian/kernel/build'
+>> make: *** [Makefile:248: __sub-make] Error 2
+> 
+> I think I'll downgrade the error() to a warn() again, and make
+> SLUB_TINY depend on !COMPILE_TEST.
 
-* You would like to adjust the error handling in some function implementations
-  from a common subdirectory.
-  How do you think about to offer such changes in a corresponding patch series?
+Ack, thanks.
 
-* Can any other summary phrase variant become more desirable accordingly?
+> And I'm not even convinced we should require module descriptions for
+> silly test modules, but whatever.
+> 
+> We'll see if something else pops up, but making the lack of a module
+> description a fatal error was clearly not right as-is.
+> 
+>               Linus
+> 
+> [*] In fact, I'm not convinced SLUB_TINYT ever makes sense at all, but
+> that may be too unrelated to this to worry about.
 
-* Would any blank lines become also desirable after added statements?
-
-
-Regards,
-Markus
+Back when it was introduced, it allowed removing SLAB without breaking some
+particular small systems, so I'd say it was worth it :) But since the
+savings are mostly coming from not allocating for performance rather than
+the disabled code size, we could probably easily turn it to a non-intrusive
+boot option and not regress anyone.
