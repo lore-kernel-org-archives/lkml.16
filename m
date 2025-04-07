@@ -1,146 +1,201 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B712A20D4EE;
-	Mon,  7 Apr 2025 16:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CBDB209F59;
+	Mon,  7 Apr 2025 16:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043654; cv=none; b=BfvqpXI30V4noA+czgeA2GEMcI7Q7BU5tGaexJHg4zw8VOdksagIf815m81WHakOI2ClgoIp8EXUEvxi/j5n5oCIcQTKDKbhahrImSTqcwTerlVL/LtywJXDFqr+1bZPZ6PHmWnoZClHUxPdnaml835mr/6vB5sY3Ly+3GCQgus=
+	t=1744043665; cv=none; b=Pxg2Zktc5ay9sO/xVAnkT5TMPTH+Ie6+3i3ImvcHeFucYQ//+Y+DdRMv6RYJoRKOGIpYO3r4CxukMXq94Xiz6r7JLZ/4wmqmtf54ola9qRQm7UfA1+MJAuUoe8WCwTBZNqbnIi8ollXJTGivp5S5mAJzkTJ+2mes7b8Tm1S14yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043654; c=relaxed/simple;
-	bh=dyaLNe+v+VR4r+EBOlsgK7a1g25zkXO9JHxa/rJMmoI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bz5nACmLur2mz+v091WpIhDL5kejHvpISv6L7bP3du/dFbb9Cn5mC06VqnWiv4C2TBqVHvbu65N7InDT961dZqJ+cDBVIk51DYhPihSenWlCVjtyVDOTzUJVsMUWLZWmfzkw8zQjSyx0zeSezhrZoaftQuqoIGQirhplfL0Bc6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AyOZgjiK; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AyOZgjiK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C7AAF20579;
-	Mon,  7 Apr 2025 16:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744043651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FsMOy7QRYRved35PCqQuHrlR3pOYMkBV4GzXKflkZTo=;
-	b=AyOZgjiKxPkYfk6DG/FW6H/Di8ZUYWAokF3yYnkHRRWslbgAJNtQj+DZ9o7ZGGvnsWqSw7
-	Mp1epUZ4psulceBqDV6dde9bBxTYn6p7j4mnDFBpUZIBQ9qoa/gfP1M9Rnv9mvwEIgJqT6
-	i9pxyLrOUD2RX1tOJuOcxUmH88x7AV6R2umo2deLb8n6mN7V5K0QRywOqcGsXzhZSBHS50
-	VjaX+StzFYzNS5NSFQHjTDUNEJVv07tETB+W2eigUlidZD5urp1O7cC9zTqFo3PF4XoTIT
-	QKq8GzUyBOfiNPWoIHryQjHwEJfGtmjw/0gq9ZloTy0ffQbxVd+RrBQaYQuVug==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 07 Apr 2025 18:34:01 +0200
-Subject: [PATCH v2 3/3] drm/panel: simple: add Tianma P0700WXF1MBAA panel
+	s=arc-20240116; t=1744043665; c=relaxed/simple;
+	bh=mQLvDq/c/f6VeVn9jAgvnWRwlfEnoMdYJpZMSAGn4EY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JiuoIbV8BrUNIwQjVx9IKLwfRScLa2O8unk/dnBff5p638x591OP+2TeKQ5z6+vM/5fQ+wK7/FFjd5Jok3jlQtE5bmaGLgCXLxPWRe8UeA7UUGqipgM3bOVkCxS+7QdSU42bCfHxjOG+UnpgjUXnRjNBGZllacC/y3CMhtvH5w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D9F3106F;
+	Mon,  7 Apr 2025 09:34:24 -0700 (PDT)
+Received: from [10.57.17.31] (unknown [10.57.17.31])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 231A03F694;
+	Mon,  7 Apr 2025 09:34:18 -0700 (PDT)
+Message-ID: <95c06abf-591f-4dd0-b1fd-296b0d5ae924@arm.com>
+Date: Mon, 7 Apr 2025 17:34:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-tianma-p0700wxf1mbaa-v2-3-ede8c5a3f538@bootlin.com>
-References: <20250407-tianma-p0700wxf1mbaa-v2-0-ede8c5a3f538@bootlin.com>
-In-Reply-To: <20250407-tianma-p0700wxf1mbaa-v2-0-ede8c5a3f538@bootlin.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- "Pu, Hui" <Hui.Pu@gehealthcare.com>, dri-devel@lists.freedesktop.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepthhhihgvrhhrhidrrhgvughinhhgsehgmhgrihhlr
- dgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshgrmhesrhgrvhhnsghorhhgrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 17/45] arm64: RME: Handle realm enter/exit
+To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250213161426.102987-1-steven.price@arm.com>
+ <20250213161426.102987-18-steven.price@arm.com>
+ <80983793-5df7-4828-96e8-90540e7d9183@redhat.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <80983793-5df7-4828-96e8-90540e7d9183@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add the Tianma P0700WXF1MBAA 7" 1280x800 LVDS RGB TFT LCD panel.
+On 04/03/2025 01:03, Gavin Shan wrote:
+> On 2/14/25 2:13 AM, Steven Price wrote:
+>> Entering a realm is done using a SMC call to the RMM. On exit the
+>> exit-codes need to be handled slightly differently to the normal KVM
+>> path so define our own functions for realm enter/exit and hook them
+>> in if the guest is a realm guest.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>> Changes since v6:
+>>   * Use vcpu_err() rather than pr_err/kvm_err when there is an associated
+>>     vcpu to the error.
+>>   * Return -EFAULT for KVM_EXIT_MEMORY_FAULT as per the documentation for
+>>     this exit type.
+>>   * Split code handling a RIPAS change triggered by the guest to the
+>>     following patch.
+>> Changes since v5:
+>>   * For a RIPAS_CHANGE request from the guest perform the actual RIPAS
+>>     change on next entry rather than immediately on the exit. This allows
+>>     the VMM to 'reject' a RIPAS change by refusing to continue
+>>     scheduling.
+>> Changes since v4:
+>>   * Rename handle_rme_exit() to handle_rec_exit()
+>>   * Move the loop to copy registers into the REC enter structure from the
+>>     to rec_exit_handlers callbacks to kvm_rec_enter(). This fixes a bug
+>>     where the handler exits to user space and user space wants to modify
+>>     the GPRS.
+>>   * Some code rearrangement in rec_exit_ripas_change().
+>> Changes since v2:
+>>   * realm_set_ipa_state() now provides an output parameter for the
+>>     top_iap that was changed. Use this to signal the VMM with the correct
+>>     range that has been transitioned.
+>>   * Adapt to previous patch changes.
+>> ---
+>>   arch/arm64/include/asm/kvm_rme.h |   3 +
+>>   arch/arm64/kvm/Makefile          |   2 +-
+>>   arch/arm64/kvm/arm.c             |  19 +++-
+>>   arch/arm64/kvm/rme-exit.c        | 171 +++++++++++++++++++++++++++++++
+>>   arch/arm64/kvm/rme.c             |  19 ++++
+>>   5 files changed, 208 insertions(+), 6 deletions(-)
+>>   create mode 100644 arch/arm64/kvm/rme-exit.c
+>>
+> 
+> With below nitpicks addressed:
+> 
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
+>> new file mode 100644
+>> index 000000000000..aae1adefe1a3
+>> --- /dev/null
+>> +++ b/arch/arm64/kvm/rme-exit.c
+>> @@ -0,0 +1,171 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2023 ARM Ltd.
+>> + */
+>> +
+>> +#include <linux/kvm_host.h>
+>> +#include <kvm/arm_hypercalls.h>
+>> +#include <kvm/arm_psci.h>
+>> +
+>> +#include <asm/rmi_smc.h>
+>> +#include <asm/kvm_emulate.h>
+>> +#include <asm/kvm_rme.h>
+>> +#include <asm/kvm_mmu.h>
+>> +
+>> +typedef int (*exit_handler_fn)(struct kvm_vcpu *vcpu);
+>> +
+> 
+> Duplicated to exit_handler_fn, defined in handle_exit.c, need move the
+> definition to header file.
 
-Reuse the timings of the TM070JDHG34-00 as they are identical, even though
-they are described differently by the datasheet as noted in the
-comment. Power up/down timing are slightly different, so add a new struct
-panel_desc for that.
+While I get this is duplication, I'm a little reluctant to move it to a
+header file because this is completely internal to each C file (the
+xxx_exit_handler[] arrays are both static). If either side wants to e.g.
+add an extra argument there shouldn't be a requirement to reflect that
+change in the other.
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+Specifically I'm wondering if we're going to ever need to pass an RMI
+return status into the rme-exit callbacks at some point.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 3496ed3e62056938ccc0ed2389ea46eed8d17ea2..0bc20547fc3b3b7164e7f5743d30332c479414b5 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -4418,10 +4418,10 @@ static const struct panel_desc tianma_tm070jvhg33 = {
- };
- 
- /*
-- * The datasheet computes total blanking as back porch + front porch, not
-- * including sync pulse width. This is for both H and V. To make the total
-- * blanking and period correct, subtract the pulse width from the front
-- * porch.
-+ * The TM070JDHG34-00 datasheet computes total blanking as back porch +
-+ * front porch, not including sync pulse width. This is for both H and
-+ * V. To make the total blanking and period correct, subtract the pulse
-+ * width from the front porch.
-  *
-  * This works well for the Min and Typ values, but for Max values the sync
-  * pulse width is higher than back porch + front porch, so work around that
-@@ -4430,6 +4430,10 @@ static const struct panel_desc tianma_tm070jvhg33 = {
-  *
-  * Exact datasheet values are added as a comment where they differ from the
-  * ones implemented for the above reason.
-+ *
-+ * The P0700WXF1MBAA datasheet is even less detailed, only listing period
-+ * and total blanking time, however the resulting values are the same as
-+ * the TM070JDHG34-00.
-  */
- static const struct display_timing tianma_tm070jdhg34_00_timing = {
- 	.pixelclock = { 68400000, 71900000, 78100000 },
-@@ -4462,6 +4466,24 @@ static const struct panel_desc tianma_tm070jdhg34_00 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct panel_desc tianma_p0700wxf1mbaa = {
-+	.timings = &tianma_tm070jdhg34_00_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 150, /* 149.76 */
-+		.height = 94, /* 93.60 */
-+	},
-+	.delay = {
-+		.prepare = 18,		/* Tr + Tp1 */
-+		.enable = 152,		/* Tp2 + Tp5 */
-+		.disable = 152,		/* Tp6 + Tp4 */
-+		.unprepare = 120,	/* Tp3 */
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct display_timing tianma_tm070rvhg71_timing = {
- 	.pixelclock = { 27700000, 29200000, 39600000 },
- 	.hactive = { 800, 800, 800 },
-@@ -5247,6 +5269,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "tfc,s9700rtwv43tr-01b",
- 		.data = &tfc_s9700rtwv43tr_01b,
-+	}, {
-+		.compatible = "tianma,p0700wxf1mbaa",
-+		.data = &tianma_p0700wxf1mbaa,
- 	}, {
- 		.compatible = "tianma,tm070jdhg30",
- 		.data = &tianma_tm070jdhg30,
+>> +static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +
+>> +    vcpu_err(vcpu, "Unhandled exit reason from realm (ESR: %#llx)\n",
+>> +         rec->run->exit.esr);
+>> +    return -ENXIO;
+>> +}
+>> +
+>> +static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
+>> +{
+>> +    return kvm_handle_guest_abort(vcpu);
+>> +}
+>> +
+>> +static int rec_exit_sync_iabt(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +
+>> +    vcpu_err(vcpu, "Unhandled instruction abort (ESR: %#llx).\n",
+>> +         rec->run->exit.esr);
+>> +    return -ENXIO;
+>> +}
+>> +
+>> +static int rec_exit_sys_reg(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +    unsigned long esr = kvm_vcpu_get_esr(vcpu);
+>> +    int rt = kvm_vcpu_sys_get_rt(vcpu);
+>> +    bool is_write = !(esr & 1);
+>> +    int ret;
+>> +
+>> +    if (is_write)
+>> +        vcpu_set_reg(vcpu, rt, rec->run->exit.gprs[0]);
+>> +
+>> +    ret = kvm_handle_sys_reg(vcpu);
+>> +
+>> +    if (ret >= 0 && !is_write)
+>> +        rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+>> +
+> 
+> Unncessary blank line and the conditon isn't completely correct:
+> kvm_handle_sys_reg()
+> should return 0 if the requested emulation fails, even it always returns
+> 1 for now.
 
--- 
-2.49.0
+It shouldn't matter, but like you say it's not technically the correct
+condition so I'll fix this up.
+
+Thanks,
+Steve
+
+>     ret = kvm_handle_sys_reg(vcpu);
+>     if (ret > 0 && !is_write)
+>         rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+> 
+>> +    return ret;
+>> +}
+>> +
+> 
+> [...]
+> 
+> Thanks,
+> Gavin
+> 
 
