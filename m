@@ -1,120 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B86F1F4170;
-	Mon,  7 Apr 2025 15:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5534F1F4170
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744038549; cv=none; b=bBb651asd9flboNp+F3WStB5oyjsVB5CGjREC8G1bEnLi34Btr7O0Xongb/LWxXYK509ARVoi+fYQUBjXhvgssiAlqURbv4wL6h6VoVHYBWghw/0xFNaZgWWxpXCsorLjzfxniEZ71+v2onjQzHGWfO9hO+w43ojngQ2sppeO5Y=
+	t=1744038571; cv=none; b=sEoXCY73Hdciu1Z7lARRvRGnCyG+gwKBkBUlRvUD93V24nz9I4+UXLyuOWjyWF9J+691oHLJkcWvZPCxNCFVNp827j9quuTikmGh823/Y4LgtUVBjhXS47mw0M6T2rd+L7JLM7qQw/+1NvyuMj/PW9GBFojgWb1mtcaHD/cvJW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744038549; c=relaxed/simple;
-	bh=YCN6WWntTK6lFqj7CR9ERNx4EvAMb5MyGa6XF4ejXew=;
+	s=arc-20240116; t=1744038571; c=relaxed/simple;
+	bh=QFbdEg3bdlWihK/atjI8KG/ClwBZaCMNkaOsxbUVO+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1+15Nqo4qbRsLCrMKPn1+f/c+vTXR+hF3wmxagxBsDQyJ+bvk3gh7GFw52fSxzoXqwSNiBje8mthRKasuHCLFkd+neXFa+fzf6WQoF86V16cUfUiarZP1+GpBU7mGKLYC0ftgajhUH9LXhRE7oWAJHHvNqsLjsBz6HETwtADMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmHQ9Jht; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVT2LETAKd4X4hCzV02NKeHg/9KlICRH0MCxEvaU92F01pVElMLpaFIcOOv3VoYtZrqITZafR9kwF0o9jCC3C3HZN4pR5AzZhBHKEqbz0JW1nAuqP5L5mFGU5zscFZbeY59SP9rHt9MSemRrXs1qmAkilUNmkrRs6f+5amY6KYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I+1Lg9hf; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmHQ9Jht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27326C4CEDD;
-	Mon,  7 Apr 2025 15:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744038549;
-	bh=YCN6WWntTK6lFqj7CR9ERNx4EvAMb5MyGa6XF4ejXew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JmHQ9JhtTbpijlJah3VpV202LCTUUuC6ouIesZq3krOs90WB057LCk7tzixUDZpZP
-	 G3TYYn+3hq7XlKF3n5T1uIMpmxBgmPZCee8mvDcKdi87XfmezetXD7HXpS6RmU95FC
-	 AOf+3l+nWDJE7A5lO4yBVb7ck9vqSnNZcYoEojgmhr311sF0g5L5ZYKaiLFHjOyp4v
-	 jZB/2NGyAZ/0IOkWaN0HdiaCShC7nx8piihMs/1GtixSRe7CF5koiZc7HpsAL5wFjR
-	 eFmUfHsgaBduh7yNjbpB32W6H2GlEN7yF4I5melxkL3FoDxcDFxee//QptZGwhvN6I
-	 jQj+GkxrNKREg==
-Date: Mon, 7 Apr 2025 16:09:04 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: jean-baptiste.maneyrol@tdk.com, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: imu: icm42600: add interrupt
- naming support
-Message-ID: <20250407-uncolored-eastcoast-df8b67507382@spud>
-References: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
- <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-1-72ed5100da14@tdk.com>
- <20250404-entering-rebel-fee1d02020b3@spud>
- <6012032b-d202-430f-9077-0869be27b481@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I+1Lg9hf"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf257158fso31390515e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744038567; x=1744643367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bmsPW/IuCIMhHuegXao26Op7RdiU2z6+4rii+HhvEQg=;
+        b=I+1Lg9hfWBw12c27jKDKxe8T8gp+B2cGHFG/o0bCIvffuVNXj6/A8PwBlYD0pdkat6
+         3Bpixa+esmZ2xR0IQ/zFFrcEjM/vApTI4Z3+DSr+YUhLYdpXga2D7U76qAfnCPMmdr48
+         37NVsWMM/ORr4VOvj+oqM8/4vKlw5qO4VxJviQxlVj//DnGdsZ3Y64SD1bxxd/NLImRX
+         9H1pKivyrIZ+5tAcViaPxM7PjesJ3+c4GcIb6saAkW/RGAPsuDMLsWQdvAodiCQLgIFO
+         Lavu7L7nuNUNpDd0Yb1VBK0DcoETjqJvAKuKv+WVYwlu5Ci3JWSwKO2yAUFa386lQY+Y
+         ZtnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744038567; x=1744643367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bmsPW/IuCIMhHuegXao26Op7RdiU2z6+4rii+HhvEQg=;
+        b=B4hvyhZtjYl/A/P8AVDn/I6ahdpGOKrkFAPpGkLIBJmPah0V4ziDw8mYWsJe0aMuwm
+         PrXFC4sMLJ4Eib1EV88HtXnRyV2wcadKCFF3gsY2rfso2YBqh2HBRSstRtILj7U8B3z/
+         IHVEFCPK/8VkrviXqTK0Qwar0kl0120pFr9g6Ds5lRDVXpeuGB3nFLKH8M43hVOsDM8f
+         VExoNG/viigdEGnANjJkDmXRsiW37O0XTdYmADzfZ9I0yuotbwTa+nTYaYcKUPZO4LWO
+         wg7L0uaz1/n/dM8X2rVR7bH6hYRXZr3rQHxdKywnsMWrZfK9jOHWuLfRzBbnzUoKc4Lv
+         5aJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgTk4MgcVkinnga7QrmPiup9Ib1agMNk+S/nV1juF//ghUYeQ6D7J+bGUflN8HL8tHe3RBE/fCkuqBgYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqXQv+Wy31k05NUR0xbALDx+g9Wef7qPEIZ+4uh+2gaQ6RUGWb
+	a4WqE+2pvV4n5aJpcE+sN9TRQOhJkiIcYzi71cj5CyyfzAlFeODCiJ6sxho3B6Y=
+X-Gm-Gg: ASbGncvbB0wHvWVclmUxUoSKAD6g+h4fxDYfN3Mdx6iUi20d8ZeAN45tGVDS+zcmSVT
+	loiixrn6vOSWKQDYHOtu32VrV8nAzL/p1XZDiF/+hHqIa9dw6ga36c/iaALq+YdsOiotjbHcM6A
+	mhjmDMtKq2KT6LykRDyvUw4Mna/LQhiwwh39m3OoERPdF4UIDU4rv+wHEtFAaSWTuPxsq+7jDpE
+	D8KAmpkc7DqAvnpwRGChIiJL1pjy0h5dHB3Obh6NirXxAAYnlv0/AkwtDC8Crk0eaS0rsjHxD6X
+	k3Oev+uDM6VPahjay5Ks2/15WoDdDl8I1DZhMpHg0UDKNwA=
+X-Google-Smtp-Source: AGHT+IFKtcPtXIriIebz2GLDNpcyLtI8/d7dTMWyJquEPgAhC6jN+Ozp3zBNOoKwt9alXNTrbKHNiA==
+X-Received: by 2002:a05:600c:4fc6:b0:43b:cd0d:9466 with SMTP id 5b1f17b1804b1-43ecf86ab8cmr107340865e9.9.1744038567238;
+        Mon, 07 Apr 2025 08:09:27 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1660bcesm135136305e9.10.2025.04.07.08.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 08:09:26 -0700 (PDT)
+Date: Mon, 7 Apr 2025 17:09:24 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: alyssa@rosenzweig.io,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
+	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+	Kees Cook <kees@kernel.org>, tamird@gmail.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>
+Subject: Re: [PATCH v3 2/3] printf: add tests for generic FourCCs
+Message-ID: <Z_PqpEDTC0RPiPez@pathway.suse.cz>
+References: <8153cb02-d8f1-4e59-b2d5-0dfdde7a832e@live.com>
+ <PN3PR01MB9597E8833F0DCE0C7C360135B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB959799C9C343A7F08E04158BB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7asBmwWHhG6hyXv0"
-Content-Disposition: inline
-In-Reply-To: <6012032b-d202-430f-9077-0869be27b481@kernel.org>
-
-
---7asBmwWHhG6hyXv0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <PN3PR01MB959799C9C343A7F08E04158BB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 
-On Fri, Apr 04, 2025 at 07:21:13PM +0200, Krzysztof Kozlowski wrote:
-> On 04/04/2025 18:53, Conor Dooley wrote:
-> > On Fri, Apr 04, 2025 at 05:52:02PM +0200, Jean-Baptiste Maneyrol via B4=
- Relay wrote:
-> >> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> >>
-> >> Add interrupt-names field for specifying interrupt used.
-> >> Only INT1 is supported by the driver currently.
->=20
->=20
-> Please run scripts/checkpatch.pl and fix reported warnings. After that,
-> run also `scripts/checkpatch.pl --strict` and (probably) fix more
-> warnings. Some warnings can be ignored, especially from --strict run,
-> but the code here looks like it needs a fix. Feel free to get in touch
-> if the warning is not clear.
->=20
-> >> ---
-> >>  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml          | 8=
- ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm4=
-2600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.y=
-aml
-> >> index 7e4492bbd0278a336587dc5ac04da7153453da29..f19cdfd7450e04e7c984dc=
-987f3c23f5ad89a248 100644
-> >> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.ya=
-ml
-> >> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.ya=
-ml
-> >> @@ -41,6 +41,12 @@ properties:
-> >>    interrupts:
-> >>      maxItems: 1
-> >> =20
-> >> +  interrupt-names:
-> >> +    enum:
-> >> +      - INT1
-> >=20
-> > An enum with one entry is just a const.
->=20
-> It's not one entry and that's the problem. Instead it should be items
-> with one const.
+On Mon 2025-04-07 19:12:39, Aditya Garg wrote:
+> 
+> 
+> On 07/04/25 7:07 pm, Aditya Garg wrote:
+> > From: Aditya Garg <gargaditya08@live.com>
+> > 
+> > This patch adds support for kunit tests of generic 32-bit FourCCs added to
+> > vsprintf.
+> > 
+> > Acked-by: Tamir Duberstein <tamird@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> > ---
+> 
+> Petr are you fine with this here?
 
-That was kinda meant to be a comment about the general problem of people
-using single-item enums, given the other comment I made about there
-being more than one interrupt the result was always going to end up
-being an items list with more than one possibility anyway.
+Yes, looks good:
 
---7asBmwWHhG6hyXv0
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
 
------BEGIN PGP SIGNATURE-----
+Best Regards,
+Petr
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/PqkAAKCRB4tDGHoIJi
-0tUAAQDnPBGo3ZLIl58q2uan56d9y6zlQnIczrevbPVjOmZS5wEAmZJkq2KFcx2f
-nfUuELW4uizmXX+xIkiiNvk/8tnnNgY=
-=EJj/
------END PGP SIGNATURE-----
-
---7asBmwWHhG6hyXv0--
