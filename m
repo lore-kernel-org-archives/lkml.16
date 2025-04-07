@@ -1,194 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861D265CAA;
-	Mon,  7 Apr 2025 18:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315E2571D2;
+	Mon,  7 Apr 2025 18:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051719; cv=none; b=ua7afTlOpq0KIi1n+f4B6rtdJ0f0A+5ornRtujzJKFbmH4QeC2tViz3bZePXVs7K+7dESLp9iuvn6VXpNjthdY2EiuGRXiwi3M+j8chIqY8VF0v1ny2sgPlbtUkdz93jhNm1HH7p8CRNt25O0+Sxxryn7ZHG+wjFVT0+KB1yiMg=
+	t=1744051742; cv=none; b=uRLnyzWJfCzO0Xi47GURedO5WV+y3zmT/jod+IQRy3Qcrjxn08+3aa0Xi2eFIwmFxGcsMGP/JfkRyTXuXOA94Bd9ykWWqhKIpk79CiNYHMJ+RZfYuRzWT7piOpRaNT5DqDCwhjuyau2SKWlN3X1VsTd+skYRft6EOhqFvLmgmF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051719; c=relaxed/simple;
-	bh=BLCsZfMlmMhyQ/8BEjb8uHOKjFKoD5yX+WqdA4NIZ/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gDKsfa9KtSVGQBvVq0G+Yc9X56lSCKtj8xM0M8PgiJMmaNVvRsU35xcLLdQdT2rU31Ae0UsmmsMuOzmpYUed7Q9FaB090Cz6HrwJwEI4UZak0Bq+oUWdinIWJFRtwA/4u8Uc/Xrw03umUWaUE9ja5BhkRQR569o0awAZI1C0Bnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJe6Z253; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051742; c=relaxed/simple;
+	bh=XJBBZbjJ7YLAsq+ynvqXWj2U8yQIx7KVxRbf4FSRfo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3mMUsH0Ta4qfFDBZO8FcM66iJypI9Ek1M/5WJtS4gI35K6KsjY+Ua3dn+QAfi08FjE86Twmla+dcmhNuWp3yypNYSiU/D9NpFxT+qAyMIvGhmGBO2XiSiOSTaQg3/9i//Jr4QebHNU3WDnplos34nn78uhUvx4OWq2xiBrIZYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnX5z7NF; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJe6Z253"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246DAC4CEDD;
-	Mon,  7 Apr 2025 18:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051719;
-	bh=BLCsZfMlmMhyQ/8BEjb8uHOKjFKoD5yX+WqdA4NIZ/I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EJe6Z253AA/oSHZLuPl/J6JKpsmnk+AzVN/N793dskIFALKNAJwpmE7CAlA4wCn6H
-	 mpfrn/09SS9/uCN8t9ewYdJc7qT/zWUoULKuGrTCW1K5Hc8ul6nbFVZdyrhEk0Acre
-	 k5IgujQ15xryG5GlS6Wb9N8TtmSTWgtNoLvWBeh3GT6XY0Y0/tyJlNIhv1gJsOfFwg
-	 NSTlmrj0bhIckM0u8FDMy+tkDoCwixx7HTthQJnUAWHrrBjuksbQ5OnH0D7ehCjiHv
-	 17nv+eG/lFmw4Mx1Tj3TUxsAvb22LV2tCzhy+vuNwDftIOheoYgzvWVHNFOLK6gJZ/
-	 U7XtJWgS9Qjkg==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c7b2c14455so3192429fac.2;
-        Mon, 07 Apr 2025 11:48:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV12ZzyXm3FqhPYGVOlDSTFd940wDQXd1nMyDWOIvxuweSMB6fJrggTF5sjwIw9XZlCyufbURtGTeGX6KU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMEnsuGcFusgOHMTsVfQWGVn09vbx4mxpUXH9Xrga52oMifTdb
-	fKInnc1E9zDQF1YxHfFbnB4nFdKrEzdb8wtPN3JzJkZ+vW1D+BVd9TbFOEH/RU/QWF1aeaeOIDn
-	5mGaeApR8VUTHmqoG5sSckgBIsLk=
-X-Google-Smtp-Source: AGHT+IFrqlHqRYH87UcQwF4jmAs00nMOADUhfEmbJ0+JBk41kaHnZhqMrZQ7+hARpldminEFJC2jf/8TlhdhVZVtJMo=
-X-Received: by 2002:a05:6870:ecab:b0:2bd:456c:923 with SMTP id
- 586e51a60fabf-2cc9e59c5fcmr7891241fac.11.1744051718492; Mon, 07 Apr 2025
- 11:48:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnX5z7NF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744051741; x=1775587741;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XJBBZbjJ7YLAsq+ynvqXWj2U8yQIx7KVxRbf4FSRfo0=;
+  b=CnX5z7NF4fknJpUWD7anu233w/xuFJ1/0RAtXBTl4NvyEceD29HXFawh
+   QiY4cv0G+Ygv0Pa8iJTZCG+ZIar10Kuqt6ZafBNcj0xHEry58G6qeJsvd
+   BZOnBKTq/1T93k50PFGpje7rxjp5FWDx1Ynd/wOeQr9wusmWliCYQ9lGO
+   MfFNYNoamDbVjHdnMSI0FxxVwmYe4FLq0mS8H0HAa34BooiETgqRtPL0R
+   gLoYV2Em3k1e6OP5cTs+TyeoMqKUcr+p60clHI7BGlnkbFVM/JL+AfRz/
+   z4LK/VXS4fxMN5X/wjegIIpFUs2jYUEJihBndctaJa+lDg05Ivee38Fct
+   g==;
+X-CSE-ConnectionGUID: yS/FLCQASwatbl/V+sifHA==
+X-CSE-MsgGUID: 0Zw4Z8ieTCqrtddsR5IWpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45167726"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45167726"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:49:00 -0700
+X-CSE-ConnectionGUID: gGwWYoGRQhG7e8jP45MWWg==
+X-CSE-MsgGUID: /WK4fOOdS7qJWPeRZOD6OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="133011605"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:48:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1rWh-0000000AAQj-0BdE;
+	Mon, 07 Apr 2025 21:48:55 +0300
+Date: Mon, 7 Apr 2025 21:48:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
+Message-ID: <Z_QeFmdDH1ls-cRI@smile.fi.intel.com>
+References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
+ <Z_QbFgSFMv58-QmM@smile.fi.intel.com>
+ <CAJZ5v0hFNqUTVn4wVqigzhHTnmPU63+Z8iFwv++=gx8P7A-cow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4651448.LvFx2qVVIh@rjwysocki.net> <8560367.NyiUUSuA9g@rjwysocki.net>
-In-Reply-To: <8560367.NyiUUSuA9g@rjwysocki.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 7 Apr 2025 20:48:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH1BaGEagIbW7krbv_XHndcRweKBMxNf5P6IVT2_wOv-gox_ZQ12i4ef3E
-Message-ID: <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
-Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to ->update_limits()
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hFNqUTVn4wVqigzhHTnmPU63+Z8iFwv++=gx8P7A-cow@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
-t> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Since cpufreq_update_limits() obtains a cpufreq policy pointer for the
-> given CPU and reference counts the corresponding policy object, it may
-> as well pass the policy pointer to the cpufreq driver's ->update_limits()
-> callback which allows that callback to avoid invoking cpufreq_cpu_get()
-> for the same CPU.
->
-> Accordingly, redefine ->update_limits() to take a policy pointer instead
-> of a CPU number and update both drivers implementing it, intel_pstate
-> and amd-pstate, as needed.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Mon, Apr 07, 2025 at 08:44:20PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Apr 7, 2025 at 8:36 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Apr 07, 2025 at 08:17:17PM +0200, Rafael J. Wysocki wrote:
+> > > On Mon, Mar 31, 2025 at 6:32 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > Add a note to the fwnode.h that the header should not be used
+> > > > directly in the leaf drivers, they all should use the higher
+> > > > level APIs and the respective headers.
+> > >
+> > > This sounds like a solution to a problem, but the problem statement is missing.
+> >
+> > > What's your motivation?
+> >
+> > Found a few drivers that are mistakenly include fwnode.h while they meant to
+> > have either of.h or more likely property.h.
+> 
+> I see.
+> 
+> I would then say
+> 
+> "This header file provides low-level data types and definitions for
+> firmware and device property providers.  The respective API header
+> files supplied by them should contain all of the requisite data types
+> and definitions for end users, so including it directly should not be
+> necessary."
+> 
+> And I would mention that the purpose is to give guidance to driver
+> writers to avoid repeating a common mistake.
 
-Hi Srinivas,
+A-ha, thanks for the suggestion, since there is also a v2, which almost
+the same, I will incorporate it into v3.
 
-If you have any concerns regarding this patch, please let me know
-(note that it is based on the [05/10]).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> ---
->  drivers/cpufreq/amd-pstate.c   |    7 ++-----
->  drivers/cpufreq/cpufreq.c      |    2 +-
->  drivers/cpufreq/intel_pstate.c |   29 ++++++++++++++++++-----------
->  include/linux/cpufreq.h        |    2 +-
->  4 files changed, 22 insertions(+), 18 deletions(-)
->
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -821,19 +821,16 @@
->         schedule_work(&sched_prefcore_work);
->  }
->
-> -static void amd_pstate_update_limits(unsigned int cpu)
-> +static void amd_pstate_update_limits(struct cpufreq_policy *policy)
->  {
-> -       struct cpufreq_policy *policy __free(put_cpufreq_policy) =3D cpuf=
-req_cpu_get(cpu);
->         struct amd_cpudata *cpudata;
->         u32 prev_high =3D 0, cur_high =3D 0;
->         bool highest_perf_changed =3D false;
-> +       unsigned int cpu =3D policy->cpu;
->
->         if (!amd_pstate_prefcore)
->                 return;
->
-> -       if (!policy)
-> -               return;
-> -
->         if (amd_get_highest_perf(cpu, &cur_high))
->                 return;
->
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2741,7 +2741,7 @@
->                 return;
->
->         if (cpufreq_driver->update_limits)
-> -               cpufreq_driver->update_limits(cpu);
-> +               cpufreq_driver->update_limits(policy);
->         else
->                 cpufreq_policy_refresh(policy);
->  }
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -1353,14 +1353,9 @@
->                 cpufreq_update_policy(cpu);
->  }
->
-> -static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
-> +static void __intel_pstate_update_max_freq(struct cpufreq_policy *policy=
-,
-> +                                          struct cpudata *cpudata)
->  {
-> -       struct cpufreq_policy *policy __free(put_cpufreq_policy);
-> -
-> -       policy =3D cpufreq_cpu_get(cpudata->cpu);
-> -       if (!policy)
-> -               return false;
-> -
->         guard(cpufreq_policy_write)(policy);
->
->         if (hwp_active)
-> @@ -1370,16 +1365,28 @@
->                         cpudata->pstate.max_freq : cpudata->pstate.turbo_=
-freq;
->
->         refresh_frequency_limits(policy);
-> +}
-> +
-> +static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
-> +{
-> +       struct cpufreq_policy *policy __free(put_cpufreq_policy);
-> +
-> +       policy =3D cpufreq_cpu_get(cpudata->cpu);
-> +       if (!policy)
-> +               return false;
-> +
-> +       __intel_pstate_update_max_freq(policy, cpudata);
->
->         return true;
->  }
->
-> -static void intel_pstate_update_limits(unsigned int cpu)
-> +static void intel_pstate_update_limits(struct cpufreq_policy *policy)
->  {
-> -       struct cpudata *cpudata =3D all_cpu_data[cpu];
-> +       struct cpudata *cpudata =3D all_cpu_data[policy->cpu];
-> +
-> +       __intel_pstate_update_max_freq(policy, cpudata);
->
-> -       if (intel_pstate_update_max_freq(cpudata))
-> -               hybrid_update_capacity(cpudata);
-> +       hybrid_update_capacity(cpudata);
->  }
->
->  static void intel_pstate_update_limits_for_all(void)
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -399,7 +399,7 @@
->         unsigned int    (*get)(unsigned int cpu);
->
->         /* Called to update policy limits on firmware notifications. */
-> -       void            (*update_limits)(unsigned int cpu);
-> +       void            (*update_limits)(struct cpufreq_policy *policy);
->
->         /* optional */
->         int             (*bios_limit)(int cpu, unsigned int *limit);
->
->
->
->
+
