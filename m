@@ -1,152 +1,104 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4461EE032;
-	Mon,  7 Apr 2025 18:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248B3254AE7;
+	Mon,  7 Apr 2025 18:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050965; cv=none; b=iU6L/YGbwcoabMErzk0Ecxsxf4dwRB83FL4EX5Ze2qE9JDW0uKRpe3UOM7JuVV6iW24rhRDe6dVqRLHSPajk7NlapMhSxVaosBD6vdmy7NkBwH1H58TriiUmiTJOrjjkSeOjVr0BxmRV0SJIoyIOJSUNQn1U562GwmbXRMeblqo=
+	t=1744050974; cv=none; b=hJLg62bQAgH0R/rCBqL6JHeFR6YbSeLIn0GuHYjr1rwdjmWaFcBh2mE1Uvf0XiQaXCN0yo74eezz4WeiAUVgSQlxOHy0d1MuYZNKP71EPTXwinKvsZLzEXblBKC9NNfT7sFoPWsCkFeHPf7VsB4t5iJfoWRTFXCRx4CDokWhl8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050965; c=relaxed/simple;
-	bh=bMxXoiE+eJAEt/5PwHru0vdvI38WprYZMOGMUOGOGZU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H7cYyU5nwh1IeA7DikBhlxMgoF9i0gm5JmN8KIJBp/5WCvIWwt9VsDkBQnyTwlIbelWaqvZOAjYqRYBtTytcIx/w4J59d/FUmfIja1RsqdVv3LnePIN7Jx9tKG+JmK2m2V6vMjXkrHqzS59lLByK8+Ln+82d6SMw5Czo9yxXR/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BmK+KE7V; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744050974; c=relaxed/simple;
+	bh=Huf+fB0OWTt8HKqf6bIgXiTDuhBI+Xm6QC5tveP53G0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JXk+JPF3rnYe705innLZq5Nkh3aY4pSEWe/DXgEmwkGcB34xxY3hAxdR2cqpt/eo9PMuRql+DRFKOhtlGobUCCV/kMV/ZXpK286aqEiiIUttroYmXwtI33UFgLQTBeqwNcq69M7q/R/pV4rMPi/NLddhSBSmju9MmDyPdhLX/o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CMCLsbyi; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BmK+KE7V"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537IZwW5997340
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 13:35:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744050958;
-	bh=5Wu2AGD7mR1nC5GTLElqyptrWvLPJ9nc+YdXo8Wv1ZQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=BmK+KE7VWuo1DTNomYHdVkPlRuRFCHTohO8PX96q7mcr+NrtFIywlvHzAgpCWwn+U
-	 WN+Dtnezzh1kE5eIiJc0G6qvzqCtARGue3RQ7pcn2VMkCiWz80aFR52tx+HqTJXQ3C
-	 7/yN7rMfkuFIM3STDEgMOeYvrmKjBBa6Z5NH46/U=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537IZwKS048425
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 13:35:58 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 13:35:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 13:35:57 -0500
-Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537IZuQp072942;
-	Mon, 7 Apr 2025 13:35:57 -0500
-From: Andrew Davis <afd@ti.com>
-To: Pavel Machek <pavel@kernel.org>, Lee Jones <lee@kernel.org>
-CC: <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrew Davis
-	<afd@ti.com>
-Subject: [PATCH 3/6] leds: lp8860: Remove default regs when not caching
-Date: Mon, 7 Apr 2025 13:35:52 -0500
-Message-ID: <20250407183555.409687-3-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250407183555.409687-1-afd@ti.com>
-References: <20250407183555.409687-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CMCLsbyi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744050973; x=1775586973;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Huf+fB0OWTt8HKqf6bIgXiTDuhBI+Xm6QC5tveP53G0=;
+  b=CMCLsbyiBxz8Y6KlTfZQBgiZYimYxFjPf/nK49bcVzMdGvf7ng2/dhB5
+   5m6YPXoocOuQZ2n5BrDIyap63fNTjXkjxD5AMrXMjf8852M69W/lPbz+v
+   POxC3JHbEotlab3Q6U4uJO65OqJgBponbSszg+c08NpUDB5NMCYhtoXhC
+   lJQ02aqfxjskKNkNNtx8+mGNHLb2Y+6Dy/v2igKHzEYOfr8QccJ+J+3Zw
+   p1ghienEDlVCqcGOh05bzGruRQpAUDXbLD0o1d/AOZ2EOQIndyApfiYI/
+   ICe9TzS5HMrK359sbkiVhFIaikT9tnXbhgn36ebUa5egiD+kM9gudR7bN
+   Q==;
+X-CSE-ConnectionGUID: IIx6SHHXQ0OVscdLndzeiQ==
+X-CSE-MsgGUID: 9yg1wn1eQju5/ikAl/u1tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49248764"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="49248764"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:36:12 -0700
+X-CSE-ConnectionGUID: eoC9EKxPRy2Sffy+6ED+Dw==
+X-CSE-MsgGUID: umNgzXgPT/+heAPDoiFQvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="159034031"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:36:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1rKI-0000000AADm-3pe8;
+	Mon, 07 Apr 2025 21:36:06 +0300
+Date: Mon, 7 Apr 2025 21:36:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
+Message-ID: <Z_QbFgSFMv58-QmM@smile.fi.intel.com>
+References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-If we are not using regmap caches, then the value will be read
-in every time, having a default value does not change anything in
-that case. Remove the unused defaults.
+On Mon, Apr 07, 2025 at 08:17:17PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Mar 31, 2025 at 6:32 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > Add a note to the fwnode.h that the header should not be used
+> > directly in the leaf drivers, they all should use the higher
+> > level APIs and the respective headers.
+> 
+> This sounds like a solution to a problem, but the problem statement is missing.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- drivers/leds/leds-lp8860.c | 52 --------------------------------------
- 1 file changed, 52 deletions(-)
+> What's your motivation?
 
-diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-index 2d91f476f0b79..4cd1b960d504f 100644
---- a/drivers/leds/leds-lp8860.c
-+++ b/drivers/leds/leds-lp8860.c
-@@ -292,61 +292,11 @@ static int lp8860_init(struct lp8860_led *led)
- 	return ret;
- }
- 
--static const struct reg_default lp8860_reg_defs[] = {
--	{ LP8860_DISP_CL1_BRT_MSB, 0x00},
--	{ LP8860_DISP_CL1_BRT_LSB, 0x00},
--	{ LP8860_DISP_CL1_CURR_MSB, 0x00},
--	{ LP8860_DISP_CL1_CURR_LSB, 0x00},
--	{ LP8860_CL2_BRT_MSB, 0x00},
--	{ LP8860_CL2_BRT_LSB, 0x00},
--	{ LP8860_CL2_CURRENT, 0x00},
--	{ LP8860_CL3_BRT_MSB, 0x00},
--	{ LP8860_CL3_BRT_LSB, 0x00},
--	{ LP8860_CL3_CURRENT, 0x00},
--	{ LP8860_CL4_BRT_MSB, 0x00},
--	{ LP8860_CL4_BRT_LSB, 0x00},
--	{ LP8860_CL4_CURRENT, 0x00},
--	{ LP8860_CONFIG, 0x00},
--	{ LP8860_FAULT_CLEAR, 0x00},
--	{ LP8860_EEPROM_CNTRL, 0x80},
--	{ LP8860_EEPROM_UNLOCK, 0x00},
--};
--
- static const struct regmap_config lp8860_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
- 
- 	.max_register = LP8860_EEPROM_UNLOCK,
--	.reg_defaults = lp8860_reg_defs,
--	.num_reg_defaults = ARRAY_SIZE(lp8860_reg_defs),
--};
--
--static const struct reg_default lp8860_eeprom_defs[] = {
--	{ LP8860_EEPROM_REG_0, 0x00 },
--	{ LP8860_EEPROM_REG_1, 0x00 },
--	{ LP8860_EEPROM_REG_2, 0x00 },
--	{ LP8860_EEPROM_REG_3, 0x00 },
--	{ LP8860_EEPROM_REG_4, 0x00 },
--	{ LP8860_EEPROM_REG_5, 0x00 },
--	{ LP8860_EEPROM_REG_6, 0x00 },
--	{ LP8860_EEPROM_REG_7, 0x00 },
--	{ LP8860_EEPROM_REG_8, 0x00 },
--	{ LP8860_EEPROM_REG_9, 0x00 },
--	{ LP8860_EEPROM_REG_10, 0x00 },
--	{ LP8860_EEPROM_REG_11, 0x00 },
--	{ LP8860_EEPROM_REG_12, 0x00 },
--	{ LP8860_EEPROM_REG_13, 0x00 },
--	{ LP8860_EEPROM_REG_14, 0x00 },
--	{ LP8860_EEPROM_REG_15, 0x00 },
--	{ LP8860_EEPROM_REG_16, 0x00 },
--	{ LP8860_EEPROM_REG_17, 0x00 },
--	{ LP8860_EEPROM_REG_18, 0x00 },
--	{ LP8860_EEPROM_REG_19, 0x00 },
--	{ LP8860_EEPROM_REG_20, 0x00 },
--	{ LP8860_EEPROM_REG_21, 0x00 },
--	{ LP8860_EEPROM_REG_22, 0x00 },
--	{ LP8860_EEPROM_REG_23, 0x00 },
--	{ LP8860_EEPROM_REG_24, 0x00 },
- };
- 
- static const struct regmap_config lp8860_eeprom_regmap_config = {
-@@ -354,8 +304,6 @@ static const struct regmap_config lp8860_eeprom_regmap_config = {
- 	.val_bits = 8,
- 
- 	.max_register = LP8860_EEPROM_REG_24,
--	.reg_defaults = lp8860_eeprom_defs,
--	.num_reg_defaults = ARRAY_SIZE(lp8860_eeprom_defs),
- };
- 
- static int lp8860_probe(struct i2c_client *client)
+Found a few drivers that are mistakenly include fwnode.h while they meant to
+have either of.h or more likely property.h.
+
+...
+
+> > + * Note, this header is not meant to be used by the leaf drivers.
+> > + * It provides the low level data types and definitions for the firmware
+> > + * and device property providers. The respective API headers should
+> > + * guarantee all the required data types and definitions without including
+> > + * this header directly.
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
