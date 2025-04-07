@@ -1,227 +1,273 @@
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011027.outbound.protection.outlook.com [52.103.67.27])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E97146593;
-	Mon,  7 Apr 2025 13:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033044; cv=fail; b=Y6PHTw2hqKbgnawlfA8IhTSuLyNPrmV9OfBSBXdwCW6tAeVkwoSgfMBw85MOgw14hOuvc/AT5trGaAXTR5XLrOEwG8qZXNe/D42shEfgjoSSd2kGOd1N+VgVqwRc54HIHT8mMfXkEa19WCZaJmjCDeAsv9CvUVTXKFs9SIL0OFA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033044; c=relaxed/simple;
-	bh=kcIO/dO/pnLLRTBEZKSEbOwcH4qvWP0niI1c45yx+Bg=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=u85TjjsAXqtClvkO4koWYj9+dC0gERUaZHVfTXpFvI/svCISUN4yklnszFuyDJPN68sUoTu8U1/eS6k4Djn+Cezm8tqmPZ50nZ11GG68MJ3TsTsbccmYz4ZeMdHtn/zYGsih4eMDXoLg1J6pPe3gXjiFFeonzy8qaWWWILvjI24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=SgWvmS8w; arc=fail smtp.client-ip=52.103.67.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409335959;
+	Mon,  7 Apr 2025 13:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744033077; cv=none; b=noT+N1yyNbutTRPHIHypa8LH4WyQ0kja+cSql5SLOkwz3r3HbTHK03FK7hMQvVz5aCSRAuTHdSpmtP/DxDoB/Od7hjTJG5PfvAr99HHaT0EUK7e/y1XKJDZawsAogkaOBhnmd/NQ/7Tke1NBg31YcLJx4hw+ZreI5MKgOCupwBg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744033077; c=relaxed/simple;
+	bh=f5GDDJgSRxiOFPVGid4NO407JXRs2uJDGQUIqHYt6so=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Mgv5B1RBL9Ijtd2eesa8uBlx3z/1jT8BKSrgwDmr8M7CmL21zZ3sYZThO46i1obNP/VelWKKRlF63Li7T0W5jq5UbmchOkgjbjsHzs1eqBtu2XHrIDlSXQs5tpFtE3N9PJUQvER2jVGfvHhRUTbXQElpDshjyZAAMoX5dfixrZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k3KcTo4B; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="SgWvmS8w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X84+/YWvKjgoa+xm3vINYidqpavE7o73eYcDBsikR1aMvag+/UkBIj7+Ck5r27QTpZm1u99FdnewhAEq6oVE4JXway127OoPGlu9cxs8sayUWtf/sfJW8ggaa8S8rSOBBIge00utk9+CTmJvZ3XPMKSccDQJXz+uAWVTxd5uO4ksGe/sQXwL+DKeTUrvwjkomfvSb8pXrfTuOwjbUyqeK9j6YtbyuEE9VbPf7O5bb451/lVicGI8DH6El947XSOBrKWb5tJYJ4GxgMUsmlYPDoTXGnFbwZ8aNwdpNrUz4sbrM/BSmC9ID+dQghnkTwkKY7jxBKGJcz7D9POFqChGtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QfNeWfrMMaGwq416VG2bniGNOJIbQQt7ZtmJ1bM4fIc=;
- b=q8yG/uhL7hxlgf5T7Bvdm9rsIh3ErTPgLy2AsfK3oAOd+5EpJvTXgPRbQj5wKwz10TM6Hvp8o4f3teXz3WyFu5f8BfEt7RoOXvehFM+HlwD5tdGkevs6aHP9P1FGR0XDQgkFuNGof7iQe0QvQAbk62aOYzyQVDGzfVWXyBazJ8AFXEyJIokRPSkbvtaPM8ka67ZSkzGni0R8Gnpwc/WTcIxwhB7DMI2hQPegEG115OXKbIAGvM3sYjX7suYzVtlS2Uez8aqc3xw5iJCSkweky9Si8KkihhyaYFc6nRsCr8BKki1Hz9z/zOPf7P4U3/FZzNAmvGzx7tP+IxNu4CqiYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QfNeWfrMMaGwq416VG2bniGNOJIbQQt7ZtmJ1bM4fIc=;
- b=SgWvmS8w5qFM8zmPefMIBNBmJGqivQRVllaVRBlcDn4RaX9JeZ+wwlP8WWMaIpqI9RbRGBvVDkAR7dsfSWf597LC+MTcXjVHOlXspm0KEmOEcFctKVmFZ4EqwdeQtxGJOqoFxdAcIk4L/yMxgP2OGJ8VsnbwpY8Ratk8YyZ7T7BlNZXkm2XXoGD9T5Hff7+SNyo215CpJXZRkTjycQwWjkwLCcbkchgdaKMFI3srW07ddHq02TLmeW9vL5sK/MqRAcwAyUP9giHjdkIHPE2ir6GU57s6K/4jOIH8tLkvDL97x3ZEFg8fIIwzVDogmsM/p1sifKb0w2xdVEVqsv4z4Q==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN3PR01MB6823.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:94::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
- 2025 13:37:10 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 13:37:10 +0000
-Message-ID:
- <PN3PR01MB9597E8833F0DCE0C7C360135B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 7 Apr 2025 19:07:06 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v3 2/3] printf: add tests for generic FourCCs
-From: Aditya Garg <gargaditya08@live.com>
-To: alyssa@rosenzweig.io, Petr Mladek <pmladek@suse.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
- Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
- airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
- Steven Rostedt <rostedt@goodmis.org>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
- apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
- lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- Hector Martin <marcan@marcan.st>,
- Asahi Linux Mailing List <asahi@lists.linux.dev>
-References: <8153cb02-d8f1-4e59-b2d5-0dfdde7a832e@live.com>
-Content-Language: en-US
-In-Reply-To: <8153cb02-d8f1-4e59-b2d5-0dfdde7a832e@live.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0053.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:98::14) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <618b20cf-1418-4c5d-9b9a-544d97a76401@live.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k3KcTo4B"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Dbi0U874366
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 08:37:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744033064;
+	bh=zyBUYRmfceZIhDmuxqW+GqAdGByCBZdWwRne1MIXY3Y=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=k3KcTo4BZOY8hRS3CuO4Kw2kcKmi39Uw4dRYd/Nes3Q5UoFQF6aEQrxLy8toRSTRU
+	 E4dmffQBf4qtnGGa+T7t798cRdpuA+px/VA2ZC/35fLqv9i+FX1GFK2YEsOvPlccOg
+	 4yG+EyvjhoOQDZjOEFuCWsMwAuyNhbXl49SNrWT4=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537DbiaE007681
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 08:37:44 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 08:37:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 08:37:44 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537Dbhea062869;
+	Mon, 7 Apr 2025 08:37:43 -0500
+Message-ID: <3117c242-02ec-4607-90c1-2bf771be5ea0@ti.com>
+Date: Mon, 7 Apr 2025 08:37:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN3PR01MB6823:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d97ebba-4192-42dd-3ef4-08dd75d94c3b
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|7092599003|6090799003|5072599009|19110799003|15080799006|461199028|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y3pwSlJ2OC9IckVmNE8yUVBFYmY3bE96QXpGZ3Uzd3hmK3BGMDBPczdqMjZl?=
- =?utf-8?B?azVsN0tuY0pWTmlsSElTOTZNb0UxVmRWNEdrRWV1R2VyM1hieDdtYlRYZ0o1?=
- =?utf-8?B?aHh0cmNrak0zTythWWI5NktEckNKVkFFZDYwV1p2eTkvL3AxRUpRZFlyNlJN?=
- =?utf-8?B?bWNRclRtZURkcEJpc3VnSW9PMEZBRjdheWFTeGRIVnEvc2Y1SXkrMVRMUE1m?=
- =?utf-8?B?SWZSYUdBRWVXbkd3b1QxVWNiVG8yYTRxZ0pnYno0UTR4eTUvUWZ3RGpmQnpS?=
- =?utf-8?B?N2N5aWx0TkN2bDBnckdzVTZCVGIwWEJqQ3ZnYm1saWhESmNsMWtIU0JROVhU?=
- =?utf-8?B?OCsvbnJYQUVIZGEvb3NVTzFEcmtZeVVwT0VLKzVycTZ5QUFnditUUzMzdzRW?=
- =?utf-8?B?SVV1TnI0WU5TbURSSG14R0FhRFY3dk11WFptNk55dmlieG1OMVpub3JFbU9S?=
- =?utf-8?B?UU5xS2NnTEZVVDVWRVpqUEVWRnRZV0lLRDAraUhmNEl0dGJueE1nODFrdkwv?=
- =?utf-8?B?SkpJUVJoR2FCZzFWOHNSeUJWSXhUbkxvKzAvdjFNalpmbG5mUWIrMGFWOURB?=
- =?utf-8?B?dlhQUEllZW1FUkdJTlVIbEtxcklKRGk1cWlOK1BUQi91c3NWZk10Vi9YYTdu?=
- =?utf-8?B?Y3JDdTROeGNUL01rWk1ZUXVHNTRadUFUUFRjdDdYdzVPMlovNWUzL3ByWFNq?=
- =?utf-8?B?NkhrUW5VVHFqQVMvWjVmV2JKbnNXT3ZuOFFPMTNXYkNmVmZJcHB3N1FTMXV1?=
- =?utf-8?B?REsrT2pRU1BVenRGNTlIWVpZZndqY0t5VFlXNWNwZEo5aDZ2alg4cWIvRWxS?=
- =?utf-8?B?eHJRTFVGVWd6bTJCN1JVWGRJaktwV2tyS21VcEptZTVCT1QxZ3c3bzBGOEc1?=
- =?utf-8?B?U2lnUnZKb3NEVmVXWFF4eXg1Wmd6VUh4T1JyVUlyN2Z4djh1OTNaQ25zYnFY?=
- =?utf-8?B?Sy9oU0h0UlZqSy9lNjAvMWw3aTVxMVdNc3JxQWJjMmpLZm1HZmpvSWFnWXdm?=
- =?utf-8?B?ZzhlNmdwZzdWQSs5ZzRPSjVsZWN6U2NsdS8rQkllaVhBTUN4R1F5MG11Rzgr?=
- =?utf-8?B?c29Qdi9QOGpSaGpOUFNNUllFb0lwL3J5TEI1VXVUamYyWmhZNVhPZnhLNTNx?=
- =?utf-8?B?bEJibDBlZ0ppcFdCczh0RVR5ejlMNEs1dngxNE9NQU4vV0ovVDF3UXBrNTlr?=
- =?utf-8?B?YmtjOTg3OExzWElIWEo3TTRMT3UwcHplUFg2Skt5c1lSRk9OaW5TUUVVZmRV?=
- =?utf-8?B?TmhxZXlUcTdDeWh2SVJyOE9mZ2wwMVpiUExOQyt0VFFRdnR5V2t0WTJVMTdU?=
- =?utf-8?B?a0JRUitWQkNlTE9tQ0E1amJobjEvaEJ5RDlESkVWN0ZJaFQwMFk2eTJ1N1NI?=
- =?utf-8?B?Rk1ZQ1JNbyt0ZmN5N3p1U1RISWl6YVVPd1VSOUt1SUF3KzZJUWxJR1B2NGU5?=
- =?utf-8?B?UkVjQTN2UUEzRGkxZDBJanpOeWJZMmlrT3phZCtKODJqeVcxU1k4bjVleDBI?=
- =?utf-8?Q?qvcdAyxSa+ZWK1vZ3d9FOh+0OtD?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NWhMVVZHSklmRkZBaFJUYVJWWXBxVUhUUWl3eXVvQXVZMDg2L3QrYUVmSjZD?=
- =?utf-8?B?SzdpVDhlWWFoSmNPSkgxekhVdlc5czFFeFpLTXdaTjlzdHB5cWZGTnRDRjF3?=
- =?utf-8?B?bkIwWTJudGFRRG04V05vdm1RY0hpY1BBR29KOW95dzF3dkdwbThUZGplbHhH?=
- =?utf-8?B?V2kvWnE1akRHZUtvVGk3QWNWZ0ZGZGJCdzBtTTZETWVRT1NNSWVXeUo5Y3I3?=
- =?utf-8?B?M1ZDQjhsUmk0TzlXQjhTTUFDSkZhZnlkRFc4b2tCMko1K2FvVXg0Sk1vc2hY?=
- =?utf-8?B?Y1FQOW13MTQwTmRSbXBBeFdMQlJwRURXOFoyRG85YmI3VDV2WTI0aEw2Yjgx?=
- =?utf-8?B?b0FPMVBndWUxYk1nVjlTOVpJMUtiS2h6MHFPUkU0T090bVRPb1F0QzhNVTZn?=
- =?utf-8?B?Nys0NWYxNW5oZEhyenN5S0t5Rk5vbDErN1JIUmk2ZmtsS1RLTWx6ajZ0aU1N?=
- =?utf-8?B?QjliZlpMNGcxa2JLbitJZGhyRkdTVmpiQ0hZL2dOZzlFTm9lT1VCc2JOZ1pJ?=
- =?utf-8?B?V1JPdGYxVFJqOHNuRDBpTVRkRlRHNk5hVGk2WGpIam1xY2I5QVVmNzZiUFdJ?=
- =?utf-8?B?Q2JTSXBqVTRWQXhnbTJUaUFpeHIwR29zYWxBZ0dSNkJxdnNyQlgwVE04aDdF?=
- =?utf-8?B?TmJUeERTZ3cwNGNESlNXRjc5NTdJa0dOdDBuVk5vbWhHNW85U3F6bG8vNnZ4?=
- =?utf-8?B?b3h3UDZ2WldtK09CWDBWOWRITVk5NzRNdHB3WnpUaTVPQlZhajhNbCtKdXNB?=
- =?utf-8?B?aDZXVGR5Q1FISVdHZkJhSWZGWUFiT0ZmY2NnYlFqMVZSb1lQbW9EeEpGcm11?=
- =?utf-8?B?N1BUWWhCS0E2TU5IQUpqbVU3a3JvOE5FMVlJTTZvMmhIbFVObkVuU2ZLclhk?=
- =?utf-8?B?Q3czQjhYKzdhc1pmczZJbTBmQkJxY0JVczlWSTAvU3BKbGllR3dGL2ZtRVE4?=
- =?utf-8?B?eGlGUURHbmlobUozRlZSODQ5QlIraXlGajEyYk5xTWtUU3FkbUlzaVJrSktj?=
- =?utf-8?B?SHl3VzI1ZkFNYnh5M2NiWklFN2ZNbzZCaTk4V3ZRZ3ZQRmdBRnQ2WmFnRDF6?=
- =?utf-8?B?RXM3Tk9RZnc3cm8zMnRVVUtIV2xxK1BjMFdqZjdRY0x2YXA1aU5vUFFFUWRP?=
- =?utf-8?B?NkxWdXpGdmNiOHNERmx5ZVd1UkZ3bUZ5b2VRK0R4aGljWXJ2MTlFSVBXZyth?=
- =?utf-8?B?VGVWSWc1M1U4WGVjNTN6ZGRsR1NzM1FRb0o1VCtiRUpkeGxleDF4bWpqSEIy?=
- =?utf-8?B?RDF3SzJuSnJTZjE1dmp5YUdZZ1dUUWJwU1pyRkFpRWFnU1UvRkRxaDBZejBU?=
- =?utf-8?B?aXQ1bHZmMjlmOTNsamJxeHFKNDdjWlV1cnRDbi9leStQWjEwZGR2ZEV1V29D?=
- =?utf-8?B?WTU5NjVJZUxGMHU0cWtOREE5aThoWVJpTk9qMEFqQXV1SG05Q1lxb0Z4YTYz?=
- =?utf-8?B?RGNubEJiM0JMdURudXZRaGFzR1RsN2h1TWtrVUltWXpuZ3MxNkVRMXdiYUtx?=
- =?utf-8?B?UnQ1KzdUVko0bWRoaHE1Y0NISzIrWi9vSjRGTXNIRGZuUkFwdG1KUkF6VXli?=
- =?utf-8?B?MHhqb0VvOTRDeXFubXhVWHJmcXNKRGpTcHJOZTRMVEFEMHZZT3lyV0c1UmNH?=
- =?utf-8?B?amN4VlVXY2hINjhITlE2WGZzL2VGRnhNeVJnVUs0QzB1TUtsdVdoaEVFRXdC?=
- =?utf-8?B?SlpTNGNFQWYySDNWeHNHR004UWJZZFBTSDcyYmliV1duc0IxZEVTeEtIanJw?=
- =?utf-8?Q?Y1WHt2XTw3E/XY0lsyLe8ceiDS5Q6wBTh0VMhln?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d97ebba-4192-42dd-3ef4-08dd75d94c3b
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:37:10.5635
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB6823
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 03/26] remoteproc: k3-r5: Use k3_r5_rproc_mem_data
+ structure for memory info
+To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
+        <mathieu.poirier@linaro.org>
+CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250317120622.1746415-1-b-padhi@ti.com>
+ <20250317120622.1746415-4-b-padhi@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250317120622.1746415-4-b-padhi@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Aditya Garg <gargaditya08@live.com>
+On 3/17/25 7:05 AM, Beleswar Padhi wrote:
+> The ti_k3_r5_remoteproc.c driver previously hardcoded device memory
+> region addresses and names. Change this to use the k3_r5_rproc_mem_data
+> structure to store memory information. This aligns with K3 DSP and M4
+> drivers, and can be refactored out later.
+> 
+> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+> ---
 
-This patch adds support for kunit tests of generic 32-bit FourCCs added to
-vsprintf.
+Reviewed-by: Andrew Davis <afd@ti.com>
 
-Acked-by: Tamir Duberstein <tamird@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
- lib/tests/printf_kunit.c | 39 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 7 deletions(-)
-
-diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-index 2c9f6170b..b1fa0dcea 100644
---- a/lib/tests/printf_kunit.c
-+++ b/lib/tests/printf_kunit.c
-@@ -701,21 +701,46 @@ static void fwnode_pointer(struct kunit *kunittest)
- 	software_node_unregister_node_group(group);
- }
- 
-+struct fourcc_struct {
-+	u32 code;
-+	const char *str;
-+};
-+
-+static void fourcc_pointer_test(struct kunit *kunittest, const struct fourcc_struct *fc,
-+				size_t n, const char *fmt)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < n; i++)
-+		test(fc[i].str, fmt, &fc[i].code);
-+}
-+
- static void fourcc_pointer(struct kunit *kunittest)
- {
--	struct {
--		u32 code;
--		char *str;
--	} const try[] = {
-+	static const struct fourcc_struct try_cc[] = {
- 		{ 0x3231564e, "NV12 little-endian (0x3231564e)", },
- 		{ 0xb231564e, "NV12 big-endian (0xb231564e)", },
- 		{ 0x10111213, ".... little-endian (0x10111213)", },
- 		{ 0x20303159, "Y10  little-endian (0x20303159)", },
- 	};
--	unsigned int i;
-+	static const struct fourcc_struct try_ch[] = {
-+		{ 0x41424344, "ABCD (0x41424344)", },
-+	};
-+	static const struct fourcc_struct try_cn[] = {
-+		{ 0x41424344, "DCBA (0x44434241)", },
-+	};
-+	static const struct fourcc_struct try_cl[] = {
-+		{ (__force u32)cpu_to_le32(0x41424344), "ABCD (0x41424344)", },
-+	};
-+	static const struct fourcc_struct try_cb[] = {
-+		{ (__force u32)cpu_to_be32(0x41424344), "ABCD (0x41424344)", },
-+	};
- 
--	for (i = 0; i < ARRAY_SIZE(try); i++)
--		test(try[i].str, "%p4cc", &try[i].code);
-+	fourcc_pointer_test(kunittest, try_cc, ARRAY_SIZE(try_cc), "%p4cc");
-+	fourcc_pointer_test(kunittest, try_ch, ARRAY_SIZE(try_ch), "%p4ch");
-+	fourcc_pointer_test(kunittest, try_cn, ARRAY_SIZE(try_cn), "%p4cn");
-+	fourcc_pointer_test(kunittest, try_cl, ARRAY_SIZE(try_cl), "%p4cl");
-+	fourcc_pointer_test(kunittest, try_cb, ARRAY_SIZE(try_cb), "%p4cb");
- }
- 
- static void
--- 
-2.43.0
-
+>   drivers/remoteproc/ti_k3_r5_remoteproc.c | 65 ++++++++++++++++++++----
+>   1 file changed, 56 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> index 525f26996b56..29205d9e21af 100644
+> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> @@ -84,18 +84,44 @@ enum cluster_mode {
+>   	CLUSTER_MODE_SINGLECORE
+>   };
+>   
+> +/**
+> + * struct k3_r5_mem_data - memory definitions for a R5
+> + * @name: name for this memory entry
+> + * @dev_addr: device address for the memory entry
+> + */
+> +struct k3_r5_mem_data {
+> +	const char *name;
+> +	const u32 dev_addr;
+> +};
+> +
+> +/**
+> + * struct k3_r5_dev_data - device data structure for a R5
+> + * @mems: pointer to memory definitions for a R5
+> + * @num_mems: number of memory regions in @mems
+> + * @boot_align_addr: boot vector address alignment granularity
+> + * @uses_lreset: flag to denote the need for local reset management
+> + */
+> +struct k3_r5_dev_data {
+> +	const struct k3_r5_mem_data *mems;
+> +	u32 num_mems;
+> +	u32 boot_align_addr;
+> +	bool uses_lreset;
+> +};
+> +
+>   /**
+>    * struct k3_r5_soc_data - match data to handle SoC variations
+>    * @tcm_is_double: flag to denote the larger unified TCMs in certain modes
+>    * @tcm_ecc_autoinit: flag to denote the auto-initialization of TCMs for ECC
+>    * @single_cpu_mode: flag to denote if SoC/IP supports Single-CPU mode
+>    * @is_single_core: flag to denote if SoC/IP has only single core R5
+> + * @core_data: pointer to R5-core-specific device data
+>    */
+>   struct k3_r5_soc_data {
+>   	bool tcm_is_double;
+>   	bool tcm_ecc_autoinit;
+>   	bool single_cpu_mode;
+>   	bool is_single_core;
+> +	const struct k3_r5_dev_data *core_data;
+>   };
+>   
+>   /**
+> @@ -151,6 +177,7 @@ struct k3_r5_core {
+>    * @rmem: reserved memory regions data
+>    * @num_rmems: number of reserved memory regions
+>    * @reset: reset control handle
+> + * @data: pointer to R5-core-specific device data
+>    * @tsp: TI-SCI processor control handle
+>    * @ti_sci: TI-SCI handle
+>    * @ti_sci_id: TI-SCI device identifier
+> @@ -166,6 +193,7 @@ struct k3_r5_rproc {
+>   	struct k3_r5_mem *rmem;
+>   	int num_rmems;
+>   	struct reset_control *reset;
+> +	const struct k3_r5_dev_data *data;
+>   	struct ti_sci_proc *tsp;
+>   	const struct ti_sci_handle *ti_sci;
+>   	u32 ti_sci_id;
+> @@ -1207,31 +1235,32 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
+>   static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+>   					       struct k3_r5_rproc *kproc)
+>   {
+> -	static const char * const mem_names[] = {"atcm", "btcm"};
+> +	const struct k3_r5_dev_data *data = kproc->data;
+>   	struct device *dev = &pdev->dev;
+>   	struct k3_r5_core *core = kproc->priv;
+>   	struct resource *res;
+>   	int num_mems;
+>   	int i;
+>   
+> -	num_mems = ARRAY_SIZE(mem_names);
+> -	kproc->mem = devm_kcalloc(dev, num_mems, sizeof(*kproc->mem), GFP_KERNEL);
+> +	num_mems = kproc->data->num_mems;
+> +	kproc->mem = devm_kcalloc(kproc->dev, num_mems, sizeof(*kproc->mem),
+> +				  GFP_KERNEL);
+>   	if (!kproc->mem)
+>   		return -ENOMEM;
+>   
+>   	for (i = 0; i < num_mems; i++) {
+>   		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -						   mem_names[i]);
+> +						   data->mems[i].name);
+>   		if (!res) {
+>   			dev_err(dev, "found no memory resource for %s\n",
+> -				mem_names[i]);
+> +				data->mems[i].name);
+>   			return -EINVAL;
+>   		}
+>   		if (!devm_request_mem_region(dev, res->start,
+>   					     resource_size(res),
+>   					     dev_name(dev))) {
+>   			dev_err(dev, "could not request %s region for resource\n",
+> -				mem_names[i]);
+> +				data->mems[i].name);
+>   			return -EBUSY;
+>   		}
+>   
+> @@ -1245,7 +1274,8 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+>   		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
+>   							 resource_size(res));
+>   		if (!kproc->mem[i].cpu_addr) {
+> -			dev_err(dev, "failed to map %s memory\n", mem_names[i]);
+> +			dev_err(dev, "failed to map %s memory\n",
+> +				data->mems[i].name);
+>   			return -ENOMEM;
+>   		}
+>   		kproc->mem[i].bus_addr = res->start;
+> @@ -1258,7 +1288,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+>   		 * addresses 0 and 0x41010000 (same as the bus address on AM65x
+>   		 * SoCs) based on loczrama setting
+>   		 */
+> -		if (!strcmp(mem_names[i], "atcm")) {
+> +		if (!strcmp(data->mems[i].name, "atcm")) {
+>   			kproc->mem[i].dev_addr = core->loczrama ?
+>   							0 : K3_R5_TCM_DEV_ADDR;
+>   		} else {
+> @@ -1268,7 +1298,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+>   		kproc->mem[i].size = resource_size(res);
+>   
+>   		dev_dbg(dev, "memory %5s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+> -			mem_names[i], &kproc->mem[i].bus_addr,
+> +			data->mems[i].name, &kproc->mem[i].bus_addr,
+>   			kproc->mem[i].size, kproc->mem[i].cpu_addr,
+>   			kproc->mem[i].dev_addr);
+>   	}
+> @@ -1323,6 +1353,7 @@ static int k3_r5_cluster_rproc_init(struct platform_device *pdev)
+>   		kproc->priv = core;
+>   		kproc->dev = cdev;
+>   		kproc->rproc = rproc;
+> +		kproc->data = cluster->soc_data->core_data;
+>   		core->kproc = kproc;
+>   
+>   		kproc->ti_sci = devm_ti_sci_get_by_phandle(cdev, "ti,sci");
+> @@ -1764,11 +1795,24 @@ static int k3_r5_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +static const struct k3_r5_mem_data r5_mems[] = {
+> +	{ .name = "atcm", .dev_addr = 0x0 },
+> +	{ .name = "btcm", .dev_addr = K3_R5_TCM_DEV_ADDR },
+> +};
+> +
+> +static const struct k3_r5_dev_data r5_data = {
+> +	.mems = r5_mems,
+> +	.num_mems = ARRAY_SIZE(r5_mems),
+> +	.boot_align_addr = 0,
+> +	.uses_lreset = true,
+> +};
+> +
+>   static const struct k3_r5_soc_data am65_j721e_soc_data = {
+>   	.tcm_is_double = false,
+>   	.tcm_ecc_autoinit = false,
+>   	.single_cpu_mode = false,
+>   	.is_single_core = false,
+> +	.core_data = &r5_data,
+>   };
+>   
+>   static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
+> @@ -1776,6 +1820,7 @@ static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
+>   	.tcm_ecc_autoinit = true,
+>   	.single_cpu_mode = false,
+>   	.is_single_core = false,
+> +	.core_data = &r5_data,
+>   };
+>   
+>   static const struct k3_r5_soc_data am64_soc_data = {
+> @@ -1783,6 +1828,7 @@ static const struct k3_r5_soc_data am64_soc_data = {
+>   	.tcm_ecc_autoinit = true,
+>   	.single_cpu_mode = true,
+>   	.is_single_core = false,
+> +	.core_data = &r5_data,
+>   };
+>   
+>   static const struct k3_r5_soc_data am62_soc_data = {
+> @@ -1790,6 +1836,7 @@ static const struct k3_r5_soc_data am62_soc_data = {
+>   	.tcm_ecc_autoinit = true,
+>   	.single_cpu_mode = false,
+>   	.is_single_core = true,
+> +	.core_data = &r5_data,
+>   };
+>   
+>   static const struct of_device_id k3_r5_of_match[] = {
