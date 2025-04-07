@@ -1,183 +1,342 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1A629B0;
-	Mon,  7 Apr 2025 18:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049110; cv=fail; b=SrgcZ22s5uXzBRY9WDG+K87wl1JO3ULNs045/fvR6Zlf/OHGfdqkVtGd0dy1AVvoRUeEheMPF0H5aNGkkYMDjmnSBNFdowesXD+P7h5FnhKdCV5yk8v57lYl0W1OEfXCd6RevDyLu4kNthAiJNXzpNOA8bn9Fts5nlHqv10FWdY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049110; c=relaxed/simple;
-	bh=OYiPBucOJiUfT2MOIwdI4jdRBPWoysNvtDNCUi5IICE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=b12PpHHCuMrJiAQERIZOJcGhvD8T+J3+5O9T8czxT7jQ3maeQC6bz4TdaYL4ZQxRtKojKhZFU3T7R+ouklg3Hwjv2rBp/d5VEKfVDIDFoELbvpzKby+PwVyCuH9sf/q7DqZxQtleQ3aZl4sbtDmMoeccoTGGc+uS18ffVixEb/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JEKlZeQX; arc=fail smtp.client-ip=40.107.94.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JEKlZeQX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QIea3/kljquSzmUgxjH0BsMEWSn67P5IBhiBbtHcQfLCLY+CQud9FEaeWo3hg+u2kNA4cXu84/8GEJpjba6/M38KD39gvUvmiKd9ByP0qgUvYV5wooVAT6Y03q3v3EwSJVmR3AxAn0gm57wwZESGPvDx8sB4JhbfhCZBPDqOvyUMHCAYbFvgm1/q+Y2wt9R/9hDCrCjD7loM5O1IbbrAgYVadiGOxauV04wi67lqBZywTCqntiQwRiKlIo+Tn1mHDDoKO8T8gisS3bBmGybQQ1cswxBLL16oX6MkLeMGRKXTxII7bg9o0uJ6yltwxp/z0KBgbfXSaJ89KFzOvjIjKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SWshpPCG1IihApF1kktUt+ajZ3Xr4HopyfyQYN0pwyU=;
- b=bgTlfHIBNL5QjMfjefUfUcQJJ9as6O7jPFFZVObZgVNYkY3eeul1Mhni+2Oe7Pn8+FZrJB4obF2SS/jcroHYIbjkyJp/ef5eIsyLDqz9LKCu3OlLbaIOjZekDJG1FwdEWaNDBN8NVuCZ2vpQ3hghfT6qbz5e/21QYRqzKih2e/03Xh44g3LryxPqpHUonL2hbHJcdPRHfhWpYellFfcfCg66k7COEETfPLMVaNcsJw1W7j2/so/li96NFniCPehP4ipYCaIL/84KOaTRLoT8oL0AU4rgXb0GqIGr5Ol5qP3N+ZwlRXlgnI2HGyOH2egbCNwyoyZhIiBDcPAnNzF1/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SWshpPCG1IihApF1kktUt+ajZ3Xr4HopyfyQYN0pwyU=;
- b=JEKlZeQX8ps/O8cvxxwtzUayEhum0Qfaj75qXUXFZUCMH8hAj+kLdl8CEEjMLMdDePqd8ZrF8BtZVh0yhc6Ytoncuc0rcSfKW83IeKt+VcoF56a50VgqdYjyoj84vUWNbU4Bopn+rcLRXGTxKQQQbfsNWv4/RLlxawrc9RBhuyY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
- 2025 18:05:04 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 18:05:03 +0000
-Message-ID: <9f689ba2-add6-cca2-e7b3-fa0393fe2b98@amd.com>
-Date: Mon, 7 Apr 2025 13:05:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
- SEV-SNP
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
- Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
-References: <20250404082921.2767593-5-ardb+git@google.com>
- <20250404082921.2767593-8-ardb+git@google.com>
- <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
- <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
- <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
- <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0104.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c5::14) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE54B219A68;
+	Mon,  7 Apr 2025 18:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049112; cv=none; b=mZqfp8uHt300oV672ShLPbp7S9WDme4hxeq8rJoY3RgpLSATIe4sdCSfdG2aeuztqi3E39m+xFPz4gWv7wCJilAPovTTFy+anzC/6xcGI+S2RYn0oQLdCt5IKLi6HlvJOTgJU7us+vL+bWvvE5KI332JEYL4kpJo+vCY0ijqMpU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049112; c=relaxed/simple;
+	bh=GWY+4jbGf74Lr4jGPW9p9agatnx3TjXPtC6JeVX+bvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELiQbTn5KVu4159NjJRIpidII1CB6UcTs5DnFZvWgCiOooKUaQI8WktcU8NtgaZzmrtvRf+SzeMWa/RGIGXJZLblX4jUGzLoqzM7RFdGZSOam218mVWXpWs9g+XlwYpc3BzkgJqCVqy93c6bT6T3jwaRlz48T+Q2eDVcHmF6Dlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: dN8wMzzLSlK5zr4RfyOsRg==
+X-CSE-MsgGUID: zDICQ2MaQnGxOlqv2DhjyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45619736"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45619736"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:05:09 -0700
+X-CSE-ConnectionGUID: F0Zc/u4LRZCvaUc6K5OZDQ==
+X-CSE-MsgGUID: 46ux0XD4S32SPynHnnNvfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="151218455"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:05:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u1qqF-0000000A9jI-24aI;
+	Mon, 07 Apr 2025 21:05:03 +0300
+Date: Mon, 7 Apr 2025 21:05:03 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 01/28] mfd: Add Microchip ZL3073x support
+Message-ID: <Z_QTzwXvxcSh53Cq@smile.fi.intel.com>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-2-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|DM4PR12MB6591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b460669-6c17-43a5-dfde-08dd75feb8aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ymk4bS9XVWozMGRQejF2a1R1MUNLVnBKTUVZbVpUaDJ6TlFNbStac2pKdUt2?=
- =?utf-8?B?a2xIUnhINUxKcGoxejlGVGVhYW5rcHlGSVRKNXUwakpzR1hkcHg5R2FZSjVz?=
- =?utf-8?B?MEhjcTdvS1NrTU1BQjBDdEhJdXN5SXhnT2RmeG0yUUsyUEVDVERjMHZZUTBi?=
- =?utf-8?B?RlZGdWxBL0swc2tXSU81b0YwdGtDMFNNYWw5V0RaenBVZFF4R1Mwd2JYMmJ4?=
- =?utf-8?B?OWh1UzZ0Wm1pZ1p1R0taZllRdVdjOWh6OG1vWktUSjdTSW4wRmxMdWdxNkdv?=
- =?utf-8?B?ZGtJU0lzZWdsbXViQ0V3eko1aU03MWlOaFkyRmNsci9OTGg3bXhnZ3R6K3ZH?=
- =?utf-8?B?TFd1U2Z5T1hNdHpzWTFPRnhhdXMrZlZSTml2ZTRFSzdoNkFvOVJvYmU4R3FP?=
- =?utf-8?B?YlNDN0o0Qjk0Um5OYlF3NmM0WjlwSjRJK3BuOTZMeVloTmxGWVNEWWEyVTVL?=
- =?utf-8?B?YVJ6VVFDOWIyK2RSeDlOQW45OExzRkRhUmYwVktxSGxZQW8rRkt5bzBvN0ps?=
- =?utf-8?B?ODQwTHlvRHFWd2w2bEZBM2JWQmlDRWhlMTNSRmJYYlpWbFl2WWVnbTBMa0hk?=
- =?utf-8?B?WUd4QWJOY0xiakV1b3JuSFBDcXNyMVNVZTZjYUdNaGo4eWhCdStCWGozNHF6?=
- =?utf-8?B?YTlnVUJyUG1IbmRKUGVaTWVCT2x0TnN0T2tMWjczRXBGVFhGY1hPcnhQaEFS?=
- =?utf-8?B?b1ExVS9WcTBvaE1EUHJzUVZMUUVaZVEvNWhRVnFud09vbUNmaXdwNEpaRTAx?=
- =?utf-8?B?Q1BIbHQ1VFBkaXZXbkdYbFNPaUl6ajF0NnJmQ3hYdDBENmtPRXdpNmRvM1Va?=
- =?utf-8?B?VWlZZUFacS9RMUZ1TFdodVNFcGU2akRucEd4VzcvcHI5RkJqa3JRSVk2Mnp5?=
- =?utf-8?B?dXc1TUhnUEEyeGRJcWRWNk5tSkZ4UHhFTjd5ZzFZdThMUGRlZ2I5aHFTMTZp?=
- =?utf-8?B?ZW04RVJQN2J1d0UxWEZnR08zaExDd21FK01OU1dDK0UrOVJaYk9WdTUycm9H?=
- =?utf-8?B?aGI3MEN5S3V1a0tSbmw5T0tZNkhjK00rVHRUU3hKdUVFVFFKOU9LRDhnMTZw?=
- =?utf-8?B?NkZibUIrbHcvT0cwWStnMG0rbld0clJjNnR5NDcxSHFuTlNCT2N4U2FZcWQy?=
- =?utf-8?B?bnNLOHNzWmkwSXpUMHhRVE5PSFRxQ0liOHFMT3pTblBtSllyeGtrTXQyeVVB?=
- =?utf-8?B?bzhOWVlkbG5vU0M1SVlqSEVpa1BPdE9wUnJuTGFETjV1Z3c0UXRkemVvNnBx?=
- =?utf-8?B?dGxHN0VBVmlxRnFRZEZncWZWaEcxa3hOK0tyYUdKdnVQSFVOQUViUzBENEZw?=
- =?utf-8?B?Z05oektrejRQRzQyaFNqeEtrV2pJT01MU2FONGVuRkJaSWZraHZFdllBREFk?=
- =?utf-8?B?bUdPYnVlcjJGVTVEUkJsR081OHljQm1HUFdESWxzM240MStWVFlYSDF4eC9W?=
- =?utf-8?B?RUtQN25wRmFUUm1PUVpqWGVFQlhvalVlb3FkUC82WVVkaURsdUVXSG5UZmgr?=
- =?utf-8?B?VHhSaXU3VVJYVnJlak1Pb1d4azdVRzcwL2tUL3Y3YjZycWp4dkkwY0JCUUVr?=
- =?utf-8?B?VTBWM0hNWlovK3JrNWpwSG5GdUtKWGVvcnBnd3NqOS9PTnRZRVN4R0M5QjMr?=
- =?utf-8?B?M3dJS2kwSmdwaDhLaWJMTWhYbUdSK1d6U1l5UTNPd2R6bWtPbTZFOWxzcmV0?=
- =?utf-8?B?dWp6Z1drS3ZwcnlTek42dVZ0STdNTnJ4ZldBU3RpdlBZR2s3UDB6dVZQekFi?=
- =?utf-8?B?M1JPOG9uSWRISU9wMlR3dW1KMmVYNEJpY25qRUxmZEhKZ2J3VE5SbnQzbGxj?=
- =?utf-8?B?S04xdisrUW1DaU1rV3RFZENoY1Z4QXpmR0prMVRObThGVEdyM04wK284QS9j?=
- =?utf-8?Q?vukxJceDO1qxP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QUJtYytVSnBZYkFqTkxtNUhPclR0ZkRhMHpud2J2d3MrdzNlRFpaQkRtcWNK?=
- =?utf-8?B?alRJdkREb1VyUjg2U25pa1B3dFQvQUc4bXBabzYxaVk3ajNFemluNjNEZHVL?=
- =?utf-8?B?cGJWbDhjYXZmYVM4Vkd0RDVOc1VUQkR5VThORnBYalp3cjc1ZmxXT2RHOFpX?=
- =?utf-8?B?Y1hLZHJDRFB3aEtsSHhIODBwbkZCNXJhYzZCVmY1OHVmeXdpbVZESnJPb3E4?=
- =?utf-8?B?a3Zld1NJZFNaMDhza0FjOGlyZ2ZJdFhnRXVVNDBLc3l1QjBDVGZ0WTlIbW5C?=
- =?utf-8?B?bTl5cjZoN3pzdE90UThMSWZ6RzVWaTN5WUdzdVZNVkNMblhRVHQvdmM0ektK?=
- =?utf-8?B?OXlZQ0VPeTFQb1pxSGU5Vk8rc2dSQjRoaVhOdmlVK29nSWxxN0hKcFdOZGxP?=
- =?utf-8?B?NEp5RDZEL284NVVQcDBhYlNIUE9LVHE4Zlh4Zmp4RGgySG85elA1MzNKNldk?=
- =?utf-8?B?ZXJNc3NocFBEbVNjY3dxTVBFNUU0MDIremZ4c1UxQ2V2VG9UL2R1Q2kvTHFK?=
- =?utf-8?B?SUNxR0x4Ry9YSmxaSHJOQy9UeG5MNTU1cXZ0cGl3eGFodE9lWW9IenloUW54?=
- =?utf-8?B?VGt2SGc5b1NtZTUzcjVpUkRmTEpEWlFMM3dCRXJ2Z2ZrK1ZJRGx1SWk1T05Y?=
- =?utf-8?B?ZHRjQkNRN2RQdGpzeWJTYVhoZ2o5eGhvaS92WGd0VkxseDU0WFFkYUpCSlhV?=
- =?utf-8?B?YUJnNlhncmc0eEkyMU5KUGFUZElaSnhzM1Y5M2l2QjBsV0kxL1RyeFcwemFy?=
- =?utf-8?B?TDYrSVY2eGp0K0E3MkZ3NFdQa2o5a0hIalBxTUl0bmh6Ni9aeHVzdWE2bnZH?=
- =?utf-8?B?RXQzc2pvSXRWeVRsSkVwdHlGbHNPNC95b0w1MjdyeFZHNTZybmc3TmdHOUlS?=
- =?utf-8?B?Z2pIMVdYZFJpNVFFcEVOTnYrZWRZYmxaZlEyaTdkZzdodWFmN091YktDL0Ey?=
- =?utf-8?B?cEw4dzlTVnQreS84UFRwMHNjSTZqVlJYWjBnbU1JS3BaSU9uNlNIZ3ZtRTRj?=
- =?utf-8?B?WlVBNWVzWUUzTGFyS1R2eUErZmpQc2RIUE1KMjk4Zm16VHBGbzB2SXhEMzVT?=
- =?utf-8?B?NVNTc1AvTW82cHZSRTl4OHB4SExvWnBTbm9uOXVVdm1BMzJLdS9LRUVaVHZ1?=
- =?utf-8?B?NWNXczZXT24wWWwyamJ2dXdvZ2N3MHhWMFByQkhhVUpPWW15NVo2cGxTOTI5?=
- =?utf-8?B?NmdRYWRzMkVrSUxHNVVicjczWXo2c3FlQTdhTGxSd2xLbnluQTZqL2IrMG5x?=
- =?utf-8?B?SFRBTmNwdWVwOVdKTVpFYzJmbzJHTjlHV21zSnRQOUtLN1dtSmFZWXExOVhJ?=
- =?utf-8?B?bG8rOTN2RWdEdGRWVFlTeTRyQTJxbTNwR1VQVE9SVkhrTTVCUEtTQ2lnbWZo?=
- =?utf-8?B?Zmk5YS9iSGNsczBSa3RQMm9uN1FyT0QrZmw5ckJFZ0psZTJJOU9JeXhsa2xP?=
- =?utf-8?B?L1BxcWxlcFp4dSt5NytUcVdMTjRZeCs0akQ0L0RxVWN6VTMwUXhMaS9ZZlJy?=
- =?utf-8?B?eWY3WFh2cVlvRDZsVHRUZHJTaVJvOXgrNzZxMDVkR0c3RVBJeFAxNjRlK3Zn?=
- =?utf-8?B?NXZKMTdZTmNDSjR4VlFrSXNaTGpaM0JGa0dPdDJUNzlia3VsRXRkR0xzVFBT?=
- =?utf-8?B?SzI5TnJ6QlJ2REZTTVRLM3g2RGhCMFFaTHRLMmpPTllSUERlYkpmRXFONGFo?=
- =?utf-8?B?aWhuVGlBS2xuWXd3Uk5pam85YzNhYk0rYmpBaGJrQ01aMHBlZXBjVlNocGlm?=
- =?utf-8?B?QTVHRnhjUFAzZEIveTU5cmFYdHIwc0F2MTNqYjA3amZUR3RHSjdFR2pETUV6?=
- =?utf-8?B?eEdvRmtEeEE3ZW9kY2VHNDU1dVhySVlpQi9lZEpYeTJDQTg5MFhaeGZyeVAw?=
- =?utf-8?B?R1lTRGpXNGRWSmtzdkpzN21WUnlBNWU1K3hNcS96Wm9pQlcrUzdNc3hQNURM?=
- =?utf-8?B?WWhMUnNoMFRoUXV0MzkrTENrUmdwTmdrNjJiOEtXWmtjR1ljQ3g4WGoybUdx?=
- =?utf-8?B?Q3VWZFQzM01EenV4ZWRLK01MVTdhakZES3Nla3k5RG02SFlLTTVrd2c2ZVNi?=
- =?utf-8?B?VUN0WnFuV0Y0YlJDWmRaWjZVdjZ0MzI4SE5nOXF2YmZncnNZdno4bmdpbWd2?=
- =?utf-8?Q?OlHG84u0jQBulgTcHx/BKoI4w?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b460669-6c17-43a5-dfde-08dd75feb8aa
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 18:05:03.8654
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T35fUZdaZDjrSBnWfta6VgM3Mi0hgRSXWdShn/3TnRxK/+4LpWonTvLGDDzKDWHmqsSsRBpEgWCo5WFuf0ra4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407172836.1009461-2-ivecera@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 4/7/25 04:25, Kirill A. Shutemov wrote:
-> On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
->> If the GHCB is available, we should always prefer it.
+On Mon, Apr 07, 2025 at 07:28:28PM +0200, Ivan Vecera wrote:
+> This adds base MFD driver for Microchip Azurite ZL3073x chip family.
+> These chips provide DPLL and PHC (PTP) functionality and they can
+> be connected over I2C or SPI bus.
 > 
-> I believe we should consider the cost of code duplication in this
-> situation.
+> The MFD driver provide basic communication and synchronization
+> over the bus and common functionality that are used by the DPLL
+> driver (later in this series) and by the PTP driver (will be
+> added later).
 > 
-> If the non-early version is only used in the kexec path, it will not be
-> tested as frequently and could be more easily broken. I think it would be
-> acceptable for kexec to be slightly slower if it results in more
-> maintainable code.
-> 
+> The chip family is characterized by following properties:
+> * 2 separate DPLL units (channels)
+> * 5 synthesizers
+> * 10 input pins (references)
+> * 10 outputs
+> * 20 output pins (output pin pair shares one output)
+> * Each reference and output can act in differential or single-ended
+>   mode (reference or output in differential mode consumes 2 pins)
+> * Each output is connected to one of the synthesizers
+> * Each synthesizer is driven by one of the DPLL unit
+.
+The comments below are applicable to entire series, take your time and fix
+*all* stylic and header issues before sending v2.
 
-Is accept_memory() in the decompressor or efistub only used in the kexec
-path?
+...
 
-Thanks,
-Tom
++ array_size.h
++ bits.h
+
++ device/devres.h
+
+> +#include <linux/module.h>
+
+This file uses *much* amore than that.
+
++ regmap.h
+
+
+> +#include "zl3073x.h"
+
+...
+
+> +/*
+> + * Regmap ranges
+> + */
+> +#define ZL3073x_PAGE_SIZE	128
+> +#define ZL3073x_NUM_PAGES	16
+> +#define ZL3073x_PAGE_SEL	0x7F
+> +
+> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
+> +	{
+> +		.range_min	= 0,
+
+Are you sure you get the idea of virtual address pages here?
+
+> +		.range_max	= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
+> +		.selector_reg	= ZL3073x_PAGE_SEL,
+> +		.selector_mask	= GENMASK(3, 0),
+> +		.selector_shift	= 0,
+> +		.window_start	= 0,
+> +		.window_len	= ZL3073x_PAGE_SIZE,
+> +	},
+> +};
+
+...
+
+> +struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev)
+> +{
+> +	struct zl3073x_dev *zldev;
+> +
+> +	return devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
+> +
+> +int zl3073x_dev_init(struct zl3073x_dev *zldev)
+> +{
+> +	devm_mutex_init(zldev->dev, &zldev->lock);
+
+Missing check.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_init, "ZL3073X");
+> +
+> +void zl3073x_dev_exit(struct zl3073x_dev *zldev)
+> +{
+> +}
+> +EXPORT_SYMBOL_NS_GPL(zl3073x_dev_exit, "ZL3073X");
+
+What's the point in these stubs?
+
+...
+
+> +#include <linux/i2c.h>
+
+> +#include <linux/kernel.h>
+
+No usual driver should include kernel.h, please follow IWYU principle.
+
+> +#include <linux/module.h>
+
+Again, this is just a random list of headers, see above and follow the IWYU
+principle.
+
+> +#include "zl3073x.h"
+
+...
+
+> +static const struct i2c_device_id zl3073x_i2c_id[] = {
+> +	{ "zl3073x-i2c", },
+
+Redundant inner comma.
+
+> +	{ /* sentinel */ },
+
+No comma for the sentinel.
+
+> +};
+
+...
+
+> +static const struct of_device_id zl3073x_i2c_of_match[] = {
+> +	{ .compatible = "microchip,zl3073x-i2c" },
+> +	{ /* sentinel */ },
+
+No comma.
+
+> +};
+
+> +static int zl3073x_i2c_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	const struct i2c_device_id *id;
+> +	struct zl3073x_dev *zldev;
+
+> +	int rc = 0;
+
+Useless assignment.
+
+> +	zldev = zl3073x_dev_alloc(dev);
+> +	if (!zldev)
+> +		return -ENOMEM;
+> +
+> +	id = i2c_client_get_device_id(client);
+> +	zldev->dev = dev;
+> +
+> +	zldev->regmap = devm_regmap_init_i2c(client,
+> +					     zl3073x_get_regmap_config());
+
+It's perfectly a single line.
+
+> +	if (IS_ERR(zldev->regmap)) {
+> +		rc = PTR_ERR(zldev->regmap);
+> +		dev_err(dev, "Failed to allocate register map: %d\n", rc);
+> +		return rc;
+
+		return dev_err_probe(...);
+
+> +	}
+> +
+> +	i2c_set_clientdata(client, zldev);
+> +
+> +	return zl3073x_dev_init(zldev);
+> +}
+
+...
+
+> +static void zl3073x_i2c_remove(struct i2c_client *client)
+> +{
+
+> +	struct zl3073x_dev *zldev;
+> +
+> +	zldev = i2c_get_clientdata(client);
+
+Just make it one line definition + assignment.
+
+> +	zl3073x_dev_exit(zldev);
+
+This is a red flag and because you haven't properly named the calls (i.e. devm
+to show that they are only for probe stage and use managed resources) this is
+not easy to catch.
+
+> +}
+> +
+> +static struct i2c_driver zl3073x_i2c_driver = {
+> +	.driver = {
+> +		.name = "zl3073x-i2c",
+> +		.of_match_table = of_match_ptr(zl3073x_i2c_of_match),
+
+Please, never use of_match_ptr() or ACPI_PTR() in a new code.
+
+> +	},
+> +	.probe = zl3073x_i2c_probe,
+> +	.remove = zl3073x_i2c_remove,
+> +	.id_table = zl3073x_i2c_id,
+> +};
+
+> +
+
+Redundant blank line.
+
+> +module_i2c_driver(zl3073x_i2c_driver);
+
+...
+
+> +#include <linux/kernel.h>
+
+Just no. You should know what you are doing in the driver.
+
+> +#include <linux/module.h>
+
+> +#include <linux/of.h>
+
+Just no. Use agnostic APIs.
+
+> +#include <linux/spi/spi.h>
+> +#include "zl3073x.h"
+
+...
+
+> +static const struct spi_device_id zl3073x_spi_id[] = {
+> +	{ "zl3073x-spi", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
+> +
+> +static const struct of_device_id zl3073x_spi_of_match[] = {
+> +	{ .compatible = "microchip,zl3073x-spi" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, zl3073x_spi_of_match);
+
+Move the above closer to its user.
+
+...
+
+> +static int zl3073x_spi_probe(struct spi_device *spidev)
+
+Usual name is spi for the above, it's shorter and allows to tidy up the code.
+
+And below same comments as for i2c part of the driver.
+
+...
+
+> +#ifndef __ZL3073X_CORE_H
+> +#define __ZL3073X_CORE_H
+
+> +#include <linux/mfd/zl3073x.h>
+
+How is it used here, please?
+
+> +struct zl3073x_dev *zl3073x_dev_alloc(struct device *dev);
+> +int zl3073x_dev_init(struct zl3073x_dev *zldev);
+> +void zl3073x_dev_exit(struct zl3073x_dev *zldev);
+> +const struct regmap_config *zl3073x_get_regmap_config(void);
+> +
+> +#endif /* __ZL3073X_CORE_H */
+
+...
+
+> +#ifndef __LINUX_MFD_ZL3073X_H
+> +#define __LINUX_MFD_ZL3073X_H
+
+> +#include <linux/device.h>
+> +#include <linux/regmap.h>
+
+Ditto. Two unused headers and one which must be included is missed.
+
+> +struct zl3073x_dev {
+> +	struct device		*dev;
+> +	struct regmap		*regmap;
+> +	struct mutex		lock;
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
