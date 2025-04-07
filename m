@@ -1,132 +1,157 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F25A50
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 00:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6934A04;
+	Mon,  7 Apr 2025 00:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743985679; cv=none; b=eHzkuoSaSiPF10FUGQHEkorI+nd05aanGUE2aB39uJ4BFh4+5cTEMzKMrQibnEJclErUqzS5yJdMKIFSyUK9n6y8I23XUg6qKpThih+gWfVTMdHUbYy6CQJVbIHVPkQcB0StzwvuM0VZAjq7JmZXvu2DRtypkUiSLWsN8NZ9Ll8=
+	t=1743986037; cv=none; b=NlLZTta92lFq/nFufcOCI3v7oHKlpbIbNbXJJctMz057uW6jnPW0MNUNZlq3ZYqKsx8UjEady+lSSGfaHrTX21UGfUN5vHp/y7IMVskmmdvuV3JVBn7dRhjgvwAy0xSjkYqP1T15dk8wxPoRQgLP//ZrviKwPX7o0vZ2+mMDaOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743985679; c=relaxed/simple;
-	bh=/FBJUEuiNZnf6+4wQekulaqENCuepfWHig7ltnni628=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Tm8O4rrv+8d1mG3Je7FqBUh9cQBo64RueSBUM2C0mRaB2trtVXN7eHUXi9Zu8K0mMFHHcO3Al1NEeG3yNfBkT3HzmRP+JRZ/nqHLQgkwi16CBo5iFLnFmSv59PaYQwCusiI+29TvuV0oyIXjSSe/wFw/uxKHTdhTnXZG3f9GvUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fz4UAwZx; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743986037; c=relaxed/simple;
+	bh=YKkc3sQ/4L552d8qUaKPTIAMhzZq6WvaxTu60Lnsawk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=q3psxrMHOWsGvyRG1RmZNuO/KgEoaFuxH6FeWXseyjPU53/Hi6B/xgbdxkWAhF2+falmXj7fAkm4X8yAKYBxKafHhT49rdUT4rq/GwH/fEiWN5UkxgaQMwTN9HBnwnIdASDn2YTve+AjhZt6bJ3z3iCOYzH0UxNyTcQs0t5RXRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYQrUKzQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz4UAwZx"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab78e6edb99so550194366b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 17:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743985676; x=1744590476; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v0Kj8uLmrietvObdF0qp86X5EUoKWCpxBDnwabchfu0=;
-        b=fz4UAwZx2lUDhHOMkwdShKwb6kEfRHnFuxdVQWqLM7UxcgJMdyU7xcf7kdCeGewsEb
-         F0HDfVpk6d/gkT6r620oNbkv4e/o4161oM90kBcFvmEuQpgTyyBhPi3f3MXXrW9/os9A
-         yAqf4zcF8hS3CKtapwoDT5AL69WcEwgaecp043qjcJ5aMhDsICMl7tqtGkmB0LujhCK9
-         uQ7d55xP9VsD9280kIMb5h5O5FOmkrRJWMv2P0CL3G7Kt+i256UmJd9oX5YaNH8l6R2g
-         RHe2LF3jNh9qlV7qCuBZnGFLhTNKxsA5KV8bv52IS8el30e8iKOYT18HQIggFw7VLCeI
-         fMDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743985676; x=1744590476;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v0Kj8uLmrietvObdF0qp86X5EUoKWCpxBDnwabchfu0=;
-        b=lZecriwOZroE9aMAoXXrOP8kdcUxrYQzJp6pSTZPFpUWuRTHH1Ek1InHKIf5Sbdvky
-         jHtf53Yd0Pv562tdjvh+uj78yfnbUVjvL77D/H+ogwgmvo1VA8JHSEGnLr5eRwc+wYGH
-         YTQdlU7uqexfzUHuOXsn1zhmBGDHBbjVrXjUqb9ZsvPVUd6mG+GLusIZ6oui9n5eMK+M
-         yIelhFFQfXSKDXjUtxHrKhQeYzDkdqI8J06qVKHWENO59hRoO5IJEmmQwcMTnz4JuQE6
-         lV3Axi9mIDKAWpmNftGx+GkcB/GBptQcpKU0JpqYM6d/Q0pr8lHo+5Jpv4vGcvV74DQd
-         XzHw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0MMUvvFi9u6oBCjx4wq3BoPGoONDBxIA4v7Ml4V7G0NvuF1XPcaAB/tHrj/uFpANhIeBEuLY8UmVvBr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEQVPlIdPtELc0zs0fV+nFtprbbDI8rPurTwNWv4DzJSQr2wKd
-	FkD6LjK3ON5FpEV38tnNRtEkha/7YYPK30EMXjMaYzcMvhI3QM7T71kwCksu
-X-Gm-Gg: ASbGncv9dxtK3dTfZHaSek9kv477LeigT/gtlUD9f4IwfUD3i+46X6oB03N7AtjL3U/
-	vAbV4oAMnG5oZqbGpfHmLq8kqvozBD9Aa0QoFLVOtSAXKVXqnsgjyCW0yvDcAbUexB7OXdbFYpy
-	szFip5VX3/zjwjhjOe2yBHrPsJkmynafx11FcWm/QkuwwbBpMdn3+INn0RSWA+95sOnezW5gLik
-	F/7av3ZvjZIAqF9Wxfd2LkscHQTOHJFkD3w/qLhfSECm3yjplwKl4e+oG6aJz7L4d0s34X/8Krc
-	uS/Z5sxXKibgQXgIBlkefT1YXBggcquWWw4iKmjcYo0LcLVx
-X-Google-Smtp-Source: AGHT+IEWd6+xIkKF3Jfn6HvYe3Wp3/JAclOqHUw1FW5NG1aE1ovoFcH3tcF//AH1B2uB6HLE8nEvKQ==
-X-Received: by 2002:a17:907:3e0f:b0:ac7:b621:7635 with SMTP id a640c23a62f3a-ac7d6d8f3d7mr990391866b.36.1743985675875;
-        Sun, 06 Apr 2025 17:27:55 -0700 (PDT)
-Received: from ubuntu ([105.112.123.29])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c2ce0sm657201266b.178.2025.04.06.17.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 17:27:55 -0700 (PDT)
-Date: Mon, 7 Apr 2025 00:27:53 +0000
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Julia Lawall <julia.lawall@inria.fr>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	outreachy@lists.linux.dev
-Cc: andy@kernel.org, dan.carpenter@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: rtl8723bs: Use % 4096u instead of & 0xfff
-Message-ID: <Z/McCdceSpyL2A2p@ubuntu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYQrUKzQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 598DBC4CEE3;
+	Mon,  7 Apr 2025 00:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743986036;
+	bh=YKkc3sQ/4L552d8qUaKPTIAMhzZq6WvaxTu60Lnsawk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OYQrUKzQ1RIBYp/uDc2apiy5EEbvGf8ejCwVwXpy0lr6cA13cR4nK4rVkLQfLKTKQ
+	 XCqo9jz1X1Jyy92KOKhXzgJC/3y2TtiwHjs9J0Y5WsaE5IOqUruvTWMclkjvQdTosc
+	 PuhHMf6jvSRnot9F7jrLqU4DapR4p4IrR+y3dX9OARPURYIlFmUrXlXAW3ms0fG922
+	 WOt4OulUbHbzstkCSSYQl19bmgTDufPn6ebwFbPTF39oXrVS+s4/yJOaOGHn8jfqOE
+	 /GBUyMjkzg9ww7hjXmQfpTi+bhoqzzaLpIXNmjlmKUsPAjbTDW3FnjqbEyb5vAlT6j
+	 bI63r8JrhAwDQ==
+Date: Mon, 7 Apr 2025 09:33:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ linux-mm@kvack.org
+Subject: Re: [PATCH v4 1/2] mm/memblock: Add reserved memory release
+ function
+Message-Id: <20250407093351.5514960330bebbe07b707431@kernel.org>
+In-Reply-To: <20250405023018.g2ae52nrz2757b3n@master>
+References: <173989132750.230693.15749600013776132201.stgit@devnote2>
+	<173989133862.230693.14094993331347437600.stgit@devnote2>
+	<20250405023018.g2ae52nrz2757b3n@master>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The sequence number is constrained to a range of [0, 4095], which
-is a total of 4096 values. The bitmask operation using `0xfff` is
-used to perform this wrap-around. While this is functionally correct,
-it obscures the intended semantic of a 4096-based wrap.
+On Sat, 5 Apr 2025 02:30:18 +0000
+Wei Yang <richard.weiyang@gmail.com> wrote:
 
-Using a modulo operation with `4096u` makes the wrap-around logic
-explicit and easier to understand. It clearly signals that the sequence
-number cycles though a range of 4096 values.
+> On Wed, Feb 19, 2025 at 12:08:58AM +0900, Masami Hiramatsu (Google) wrote:
+> >From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> >Add reserve_mem_release_by_name() to release a reserved memory region
+> >with a given name. This allows us to release reserved memory which is
+> >defined by kernel cmdline, after boot.
+> >
+> >Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> >Cc: Andrew Morton <akpm@linux-foundation.org>
+> >Cc: linux-mm@kvack.org
+> >---
+> > Changes in v4:
+> >  - Use free_reserved_area() according to Mike's comment.
+> > Changes in v2:
+> >  - Rename reserved_mem_* to reserve_mem_*.
+> >---
+> > include/linux/mm.h |    1 +
+> > mm/memblock.c      |   66 +++++++++++++++++++++++++++++++++++++++++++---------
+> > 2 files changed, 55 insertions(+), 12 deletions(-)
+> >
+> >diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >index 7b1068ddcbb7..1ee9e7447485 100644
+> >--- a/include/linux/mm.h
+> >+++ b/include/linux/mm.h
+> >@@ -4123,6 +4123,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+> > void vma_pgtable_walk_end(struct vm_area_struct *vma);
+> > 
+> > int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
+> >+int reserve_mem_release_by_name(const char *name);
+> > 
+> > #ifdef CONFIG_64BIT
+> > int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
+> >diff --git a/mm/memblock.c b/mm/memblock.c
+> >index 95af35fd1389..8cd95f60015d 100644
+> >--- a/mm/memblock.c
+> >+++ b/mm/memblock.c
+> >@@ -16,6 +16,7 @@
+> > #include <linux/kmemleak.h>
+> > #include <linux/seq_file.h>
+> > #include <linux/memblock.h>
+> >+#include <linux/mutex.h>
+> > 
+> > #include <asm/sections.h>
+> > #include <linux/io.h>
+> >@@ -2283,6 +2284,7 @@ struct reserve_mem_table {
+> > };
+> > static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+> > static int reserved_mem_count;
+> >+static DEFINE_MUTEX(reserve_mem_lock);
+> > 
+> 
+> This looks break the memblock tests in tools/testing/memblock.
+> 
+> memblock.c:2289:8: warning: type defaults to ‘int’ in declaration of ‘DEFINE_MUTEX’ [-Wimplicit-int]
+>  2289 | static DEFINE_MUTEX(reserve_mem_lock);
+>       |        ^~~~~~~~~~~~
+> memblock.c:2289:1: warning: parameter names (without types) in function declaration
+>  2289 | static DEFINE_MUTEX(reserve_mem_lock);
+>       | ^~~~~~
+> memblock.c: In function ‘reserve_mem_find_by_name’:
+> memblock.c:2332:9: warning: implicit declaration of function ‘guard’ [-Wimplicit-function-declaration]
+>  2332 |         guard(mutex)(&reserve_mem_lock);
+>       |         ^~~~~
 
-The use of `4096u` also guarantees that the modulo operation is performed
-with unsigned arithmetic, preventing potential issues with signed types.
+Hmm, this means the memblock test builds the kernel source code in user
+space. I think we need to add linux/mutex.h under tools/testing/memblock.
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-David Laight <david.laight.linux@gmail.com>
+But this is fragile by design. As I did for lib/bootconfig and
+tools/bootconfig, you should use __KERNEL__ and makes it not depending on
+the kernel header files because it does not expected to be used in user
+space.
+Even if I added mutex.h, it stopped with another reason.
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
-Changes in v2:
-	- Changed the commit message to a more descriptive message which
-	makes it clear why the patch does the change.
-	- Changed the subject title to include `4096u` to show that an unsigned
-	module is used.
-Changes in v1:
-	- Added more patch recipients.
+test -L linux/memblock.h || ln -s ../../../../include/linux/memblock.h linux/memblock.h
+test -L asm/asm.h || ln -s ../../../arch/x86/include/asm/asm.h asm/asm.h
+test -L asm/cmpxchg.h || ln -s ../../../arch/x86/include/asm/cmpxchg.h asm/cmpxchg.h
+cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o main.o main.c
+test -L memblock.c || ln -s ../../../mm/memblock.c memblock.c
+cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o memblock.o memblock.c
+memblock.c: In function 'memblock_add_range.isra':
+memblock.c:685:17: warning: 'end_rgn' may be used uninitialized [-Wmaybe-uninitialized]
+  685 |                 memblock_merge_regions(type, start_rgn, end_rgn);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+memblock.c:591:42: note: 'end_rgn' was declared here
+  591 |         int idx, nr_new, start_rgn = -1, end_rgn;
+      |                                          ^~~~~~~
+cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o lib/slab.o lib/slab.c
+cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o mmzone.o mmzone.c
+cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o slab.o ../../lib/slab.c
+../../lib/slab.c:6:10: fatal error: urcu/uatomic.h: No such file or directory
+    6 | #include <urcu/uatomic.h>
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [<builtin>: slab.o] Error 1
 
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 297c93d65315..f534bf2448c3 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 
- 			if (psta) {
- 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;
- 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
- 
- 				SetSeqNum(hdr, pattrib->seqnum);
-@@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
- 						pattrib->ampdu_en = false;/* AGG BK */
- 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;
- 
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&4096u;
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					}
- 				}
+Thank you,
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
