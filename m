@@ -1,91 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB2120CCF8;
-	Mon,  7 Apr 2025 16:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552E820DD50
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042350; cv=none; b=M9ZbWhae/OJ3WuxbLTrKDBfNXCczmTEYHQfcnBqgrXg5z4b0ls/VyuxoL5iMSuFGDQrYZM1z+BIscg0j9kmXTXYiNMzRtyIsQY7ikvHaO/Mg12HQlrfNLxEZahQpM/x2+OP8N8Joy4ATM4OadPssJPH+AwPGYGyQ5drUtmFB5Cg=
+	t=1744042355; cv=none; b=WPinPddwzjRQaWW3f/gPj1D2oUd7Hrclo7DoILo7JNUQpg3KLm9t+vC4vjTTDqH4CJWZqGbj6zufz2SOshJp21y03kl27Wmh0ygsulvj9dlNfo0FJhWU0Y7LjyslHJ9kqjsK6yRugOIGlYa8MeHZCIaCdN+QCcRh9pIDKKvbiVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042350; c=relaxed/simple;
-	bh=ZhcEgSkIjIj3Vo45+CiP4hMyAehrqvrICfatFI2WOa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tx96ptlw5QsElCha/P+UKBuauktHfEpc/llXAKS/yJq5tXes2nc8MOC52UiooguN7w2ObkVW6cyy9n+WHJH73kyn2lI+mN3rXeHVqyy+T1X1km34QGvQgrNFNYNQMa/7KbXGUy2K7hyY/XJ760DxPiP29XCVMcmG3gmCdXh/I1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKlDq8cY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744042355; c=relaxed/simple;
+	bh=aeXoYDUiqYVh8riiO+qrRPkNrhwg7wWaEps1LPUw6iI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oWMvvtmeqdAdVvVgyHYDMJwZ5++2sQ81MSKF51+YSGJAWxYmvACOwB884Nadvgee9L4DVZRc9wpLbsUKNzpC7xbNkzSnW4b5LdDwmcB1N3982Bn5UuJizAzoPYDVJNHr1xVfqRUJ/yqqdBF9aCeVC3ziUhn1LWL8INGQrtuFHHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AdywWim0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKlDq8cY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1E1C4CEE7;
-	Mon,  7 Apr 2025 16:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744042349;
-	bh=ZhcEgSkIjIj3Vo45+CiP4hMyAehrqvrICfatFI2WOa0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VKlDq8cYEKSYp409LSqkqy9s+TvD1c29fcW83SpsYSCkMnDTYgM4XwrQDm3Xew+Is
-	 nGOc48qE5UJQ0D4E8JRVMkqBImptAuFHccRNGD6N5OddlFepZFCTu2OEdfNsETo7Om
-	 nCmz61wuA9GdDkvofS1gMwr05XXmEy5KCSeJmjbFj6E0BhbQyNL7j0HCOUaKQitv7/
-	 raSX2ma9h+kNoKcK+06R+sa58Os3E529klf7qaOfwPasIyg6dcjwYZQaC9sUeMqv9M
-	 Vdm3zvR3PYxLR6p+HQ30dJV20x2PdZ86xYMwfpckJlNOESw72O5NmL8Tumix4kA8qz
-	 G7SZmL5IBC9HA==
-Date: Mon, 7 Apr 2025 17:12:25 +0100
-From: Simon Horman <horms@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AdywWim0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744042350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vPw9iIKKVoxSBOjo4kon0A1v1BpjuVHehJXapeZHSJ4=;
+	b=AdywWim0K1JAGWbCcggqZYQcjsb0+MR+tlThbTrxt+1s5hxZXyPKveu0lOP5ji0neAZZ8u
+	6BIP1RUR9EXP2Fzmk6yXmxrbFHTO6izlqDm1IgqShsfMgbfOQyBe+qxeTZQY3JeKHz4zrF
+	Dckw+fo37MjSIz6urpK2/ouZhPYwxQ8=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-q7NAXPOcNfWWPZBVqJJoKw-1; Mon,
+ 07 Apr 2025 12:12:26 -0400
+X-MC-Unique: q7NAXPOcNfWWPZBVqJJoKw-1
+X-Mimecast-MFC-AGG-ID: q7NAXPOcNfWWPZBVqJJoKw_1744042344
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 232E01955DC6;
+	Mon,  7 Apr 2025 16:12:24 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.40])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8ECA7180A803;
+	Mon,  7 Apr 2025 16:12:20 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
 	Christian Brauner <brauner@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, linux-afs@lists.infradead.org,
-	openafs-devel@openafs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 10/12] afs: Use rxgk RESPONSE to pass token for
- callback channel
-Message-ID: <20250407161225.GQ395307@horms.kernel.org>
-References: <20250407091451.1174056-1-dhowells@redhat.com>
- <20250407091451.1174056-11-dhowells@redhat.com>
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 09/13] rxrpc: Allow the app to store private data on peer structs
+Date: Mon,  7 Apr 2025 17:11:22 +0100
+Message-ID: <20250407161130.1349147-10-dhowells@redhat.com>
+In-Reply-To: <20250407161130.1349147-1-dhowells@redhat.com>
+References: <20250407161130.1349147-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407091451.1174056-11-dhowells@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 07, 2025 at 10:14:41AM +0100, David Howells wrote:
-> Implement in kafs the hook for adding appdata into a RESPONSE packet
-> generated in response to an RxGK CHALLENGE packet, and include the key for
-> securing the callback channel so that notifications from the fileserver get
-> encrypted.
-> 
-> This will be necessary when more complex notifications are used that convey
-> changed data around.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Provide a way for the application (e.g. the afs filesystem) to store
+private data on the rxrpc_peer structs for later retrieval via the call
+object.
 
-...
+This will allow afs to store a pointer to the afs_server object on the
+rxrpc_peer struct, thereby obviating the need for afs to keep lookup tables
+by which it can associate an incoming call with server that transmitted it.
 
-> diff --git a/fs/afs/cm_security.c b/fs/afs/cm_security.c
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Simon Horman <horms@kernel.org>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
+---
+ net/rxrpc/oob.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-...
+diff --git a/net/rxrpc/oob.c b/net/rxrpc/oob.c
+index b2330d642d8d..66c05c68e2e9 100644
+--- a/net/rxrpc/oob.c
++++ b/net/rxrpc/oob.c
+@@ -274,7 +274,7 @@ enum rxrpc_oob_type rxrpc_kernel_query_oob(struct sk_buff *oob,
+ 	switch (type) {
+ 	case RXRPC_OOB_CHALLENGE:
+ 		*_peer		= sp->chall.conn->peer;
+-		*_peer_appdata	= 0; /* TODO: retrieve appdata */
++		*_peer_appdata	= sp->chall.conn->peer->app_data;
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+@@ -349,7 +349,7 @@ void rxrpc_kernel_query_challenge(struct sk_buff *challenge,
+ 	struct rxrpc_skb_priv *sp = rxrpc_skb(challenge);
+ 
+ 	*_peer		= sp->chall.conn->peer;
+-	*_peer_appdata	= 0; /* TODO: retrieve appdata */
++	*_peer_appdata	= sp->chall.conn->peer->app_data;
+ 	*_service_id	= sp->hdr.serviceId;
+ 	*_security_index = sp->hdr.securityIndex;
+ }
 
-> +/*
-> + * Create an YFS RxGK GSS token to use as a ticket to the specified fileserver.
-> + */
-> +static int afs_create_yfs_cm_token(struct sk_buff *challenge,
-> +				   struct afs_server *server)
-> +{
-
-...
-
-> +	if ((unsigned long)xdr - (unsigned long)appdata != adatasize)
-> +		pr_err("Appdata size incorrect %zx != %zx\n",
-> +		       (unsigned long)xdr - (unsigned long)appdata, adatasize);
-
-Hi David,
-
-x86_32 allmodconfig W=1 builds complain that:
-
-warning: format ‘%zx’ expects argument of type ‘size_t’, but argument 2 has type ‘long unsigned int’ [-Wformat=]
-
-...
