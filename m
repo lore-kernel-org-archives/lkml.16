@@ -1,106 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5801225FA38;
-	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08818261565;
+	Mon,  7 Apr 2025 18:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051178; cv=none; b=b27A9NGD6S0RLkOdAKD0p+mZ076mkW6XxOt3mX8FREzxm88yfv/Thwqa8YEle8R9DkPwoSGQe2BoLCtQM7YQlVkoP9ipxGP0L85f0aoEtTYyocpBK5ecxhA8R7Yb2YaSotUSqAIoJRiSVCYB2nqjyNaMdVjCXee3GJYs12PMgQw=
+	t=1744051202; cv=none; b=O27Th+oSNEyTAs7GhBVHBGcNryBv7KIEksCx06RW62kG9IZMmal4GQnqQlBhvpB98V9Rc7QrCEiX5XoUcXdosFfTUDoYDpVsX2IpAS+j90WY+RCeR356fKZBsDwgHRhioA9nIYqm9laUfDDnhEZN7PakuIRVubWb7KwY0hcyLUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051178; c=relaxed/simple;
-	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RTQvybjxeS3dt2onYcW9G2e0O2kv0apOsVDhSRUo8VJJ+bJ4PEx8kJHAXm6ByVYtdZPf8gt+xREJrPrxNaRw8rSV0rEZYpOBKNxDQPO3ZKj1wL4eQo7iQxbhi+d8lZveLLGpLgFF2OOZe53ZSNatM/lx0PmamCFW5w2as7v2ULk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arFXIKZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051202; c=relaxed/simple;
+	bh=BqAYBDV85npiuG9lUU6aZSMxUQypt9VFmCg1ipp2j7w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CROxuHzqXOKBrDdbi6Sye1h5RDt/ADNOcvPfyyW/nTDZ3Zhwl+ayNkIOk4T6t+aNO1VpNac3cR38PSGdzGnsuiBdWqnw82YS3GrpvkFkEb2mgtct9ajxe2+iP0QOZrMAjRwX4ZQDMFiaAYWJu/FSbwOCfvka5SPgk3JU2gIWMd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6x3QZ0B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arFXIKZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41D1C4CEDD;
-	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6x3QZ0B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6050EC4CEDD;
+	Mon,  7 Apr 2025 18:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051177;
-	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=arFXIKZA9VCS2brkxZJUTn7YyPSvWytivwyTvyMlTXOiZdn1DfXL2T9jkGH6fztBi
-	 hnKcsF0bAr+tBA7v8TPaWzcS+u6xzN/sa8pFk8/UPVwgaaybDk0KQ0l0o0FAU7QsBq
-	 fghq56XwRgZ6rVbW22jGMQgoDSotfSSekHQV2WGuiaz7JQa/UAzdkcfsZPvslMIEB9
-	 bV0rRCi0WuO7t9sLFrSkm8RX9JBF7ohec66F7cgx3I6D3a9JWfgMGkQBnd8CgtQiSB
-	 /cFy7ueImq3lKm/NRlh2J5uu4Brzes+mNmB/eru8AVV/ndag+iMGui8oyuPiUC01IJ
-	 as1yGmblcd4ag==
-Date: Mon, 7 Apr 2025 11:39:34 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] wifi: ath12k: core.h: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202504071138.98D5B6E@keescook>
-References: <Z8-Snz86Xfwdlyd7@kspp>
+	s=k20201202; t=1744051201;
+	bh=BqAYBDV85npiuG9lUU6aZSMxUQypt9VFmCg1ipp2j7w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=c6x3QZ0BwKoxZD6akefXms+h1fypLN5lMIPrt0sDhIxCfxWTlzVR5tYnXEEE6tnOS
+	 qv8kysHeTGITEKiYRIk9xsm6cTQmvdgN+uehYm/niLVMeKFiCjbaAr+iwIZZUE1rN2
+	 LxWivKUSaXJiU3yPRrSL8VULxbx88lzeMG1q0agfOxncWL/WOaIYIHHIF4qIox80TO
+	 6SnO4SjzojsAO1O6nULIhndkElXEZnuwQRO+u/WhBNg+E2UN7U/m+0GXm9+4YVT4ob
+	 53549X+KUPkp16Gr9UURw0pj+QU+YeQCscyIsz+yvAhmkW/KZdI+Lsl1/hYxKO/byJ
+	 fKZKXMDDkwkIw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB818380CEEF;
+	Mon,  7 Apr 2025 18:40:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8-Snz86Xfwdlyd7@kspp>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: hold instance lock during NETDEV_CHANGE
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174405123877.1227543.13613718146765643033.git-patchwork-notify@kernel.org>
+Date: Mon, 07 Apr 2025 18:40:38 +0000
+References: <20250404161122.3907628-1-sdf@fomichev.me>
+In-Reply-To: <20250404161122.3907628-1-sdf@fomichev.me>
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+ andrew+netdev@lunn.ch, kuniyu@amazon.com, vladimir.oltean@nxp.com,
+ ecree.xilinx@gmail.com, lukma@denx.de, m-karicheri2@ti.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cratiu@nvidia.com
 
-On Tue, Mar 11, 2025 at 12:02:15PM +1030, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct ieee80211_chanctx_conf` is a flexible structure --a
-> structure that contains a flexible-array member.
-> 
-> Fix 30 of the following warnings:
-> 
-> drivers/net/wireless/ath/ath12k/core.h:298:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Hello:
 
-Hi, just checking in on this patch. Is some adjustment needed for this
-to land?
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thanks!
-
--Kees
-
-> ---
->  drivers/net/wireless/ath/ath12k/core.h | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+On Fri,  4 Apr 2025 09:11:22 -0700 you wrote:
+> Cosmin reports an issue with ipv6_add_dev being called from
+> NETDEV_CHANGE notifier:
 > 
-> diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
-> index 3fac4f00d383..d6b4c4d2c400 100644
-> --- a/drivers/net/wireless/ath/ath12k/core.h
-> +++ b/drivers/net/wireless/ath/ath12k/core.h
-> @@ -295,7 +295,6 @@ struct ath12k_link_vif {
->  	int txpower;
->  	bool rsnie_present;
->  	bool wpaie_present;
-> -	struct ieee80211_chanctx_conf chanctx;
->  	u8 vdev_stats_id;
->  	u32 punct_bitmap;
->  	u8 link_id;
-> @@ -303,6 +302,13 @@ struct ath12k_link_vif {
->  	struct ath12k_rekey_data rekey_data;
->  
->  	u8 current_cntdown_counter;
-> +
-> +	/* Must be last - ends in a flexible-array member.
-> +	 *
-> +	 * FIXME: Driver should not copy struct ieee80211_chanctx_conf,
-> +	 * especially because it has a flexible array. Find a better way.
-> +	 */
-> +	struct ieee80211_chanctx_conf chanctx;
->  };
->  
->  struct ath12k_vif {
-> -- 
-> 2.43.0
+> [ 3455.008776]  ? ipv6_add_dev+0x370/0x620
+> [ 3455.010097]  ipv6_find_idev+0x96/0xe0
+> [ 3455.010725]  addrconf_add_dev+0x1e/0xa0
+> [ 3455.011382]  addrconf_init_auto_addrs+0xb0/0x720
+> [ 3455.013537]  addrconf_notify+0x35f/0x8d0
+> [ 3455.014214]  notifier_call_chain+0x38/0xf0
+> [ 3455.014903]  netdev_state_change+0x65/0x90
+> [ 3455.015586]  linkwatch_do_dev+0x5a/0x70
+> [ 3455.016238]  rtnl_getlink+0x241/0x3e0
+> [ 3455.019046]  rtnetlink_rcv_msg+0x177/0x5e0
 > 
+> [...]
 
+Here is the summary with links:
+  - [net] net: hold instance lock during NETDEV_CHANGE
+    https://git.kernel.org/netdev/net/c/04efcee6ef8d
+
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
