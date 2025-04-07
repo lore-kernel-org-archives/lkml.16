@@ -1,50 +1,83 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070902BAF4;
-	Mon,  7 Apr 2025 14:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5B841C85
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035319; cv=none; b=BAuB/pUhUgIx1UM7hbQxcVuVb/+WpQu6XZvCAy6i5H/S7E8/6WqiUKG4dOd9QBFPC5RAvFyasuhzeaRlnu3FygQWPp/rUM48oVWmWIXFeUUzWkfvo/K6/EravLn/Z8regOydYc2v3Ez+Ullj9i04Lxvu+mRHD5Iie2m60BPUQ28=
+	t=1744035320; cv=none; b=p4XSR3mLKQj1xxqnVyF/vhMfaovMuytC9fYnm2ekhEXg7plJJ15Up0qsOMRKYH8mJmw6fuibS70IfcRYF5YmpKLEDwsPrJhNK2nejbeaCvGBtCexJ12LLcYykpn1tfy24Ctkj0FQEhu/KiUm0hVeX+ACFu18L/eNh+0LYR33IYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035319; c=relaxed/simple;
-	bh=jmRe4AEApQULrs3bNjFMB9TRFmOHumBSMwnhP64rRyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=doCQrLOjZEixfoiQU5/avB6wY4mlVpeEGwa4lQmPltzunP1HG1YUnELG/99FtuPZr24uZTwKBfrxYC/4QuFMVHK4zGDdtbc4xTrQlFIi8o05twRz7FJvNPDZo7cL6X7oJFlpe5A9wEcV+PkCxFfGaRl+EG/6j6qzEdaIulmTFtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:3b93:9152:d50e:6d45])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id DE86E479B8;
-	Mon,  7 Apr 2025 14:06:09 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:3b93:9152:d50e:6d45) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-Cc: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-ppp@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot]
-Date: Mon,  7 Apr 2025 16:06:03 +0200
-Message-ID: <20250407140603.91155-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <67ae3912.050a0220.21dd3.0021.GAE@google.com>
-References: <67ae3912.050a0220.21dd3.0021.GAE@google.com>
+	s=arc-20240116; t=1744035320; c=relaxed/simple;
+	bh=e+e+vr278szPyF9gqwUUwXgvTwdrbh/bn3cWb/Ho4uA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LdJjzMROWAMFdo2/vU8AzpGRKz6WQv5RWXgqcbUfnk9oqMAhIlP4UpKDDukMGFySM2ds5bKqqbj0/vXlfpxLWVA4VFgjqGGAgcxVMuVjAYUHWaqNtv1L8XUOIs7qI5hTH5gade/eZzSDoRqRiMT1R3sEpSofgXsQTn3SrNePbLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=obmqWVdM; arc=none smtp.client-ip=17.58.6.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="obmqWVdM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=5+F78xouqk0u9NB2GFe7jEG2o1X2pXJr1k7TYzIRk98=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=obmqWVdMRf23SxD7kfn5L3r5PnBeSs/v3sW+3K9WwRuv5c8bf3CnL6FfPAI66E37E
+	 JUouqNy607oCMGRllo20t6vruuKZlzsCzJP7X7u9qICxPl2ok0tpXE+/KrKROY5vtV
+	 RmC+en8qIki9jZWFrtrHgezxB+F2oMh8rPCTBFmK7BuLUdVLc0ictdjlERsiAxOLqM
+	 ohc0kdO7/9E12wga0SsYX3DQohFf3RfDjDiyyTzdWoMOyffUNRunm5xrjTffrQ2buz
+	 ybMFoWW11AeH6ycPAYq0UpKoH/y1uNZoTfARbq1viiYuBnAV1jAScjfhlf7TAP7ihm
+	 GdiYxi06TzOtA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id D722F34BA950;
+	Mon,  7 Apr 2025 14:15:13 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH 0/2] PCI: of: Fix OF device node refcount leakages
+Date: Mon, 07 Apr 2025 22:14:55 +0800
+Message-Id: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174403477041.13227.827809552128555155@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN/d82cC/x2MQQqAIBAAvyJ7TjDRgr4SIalr7UVFIQLx70nHY
+ ZhpULEQVthYg4IPVUpxwDwxcPcZL+TkB4MUUgslVh7oNSmY7IhLYZX2zsnFahhBLjjsP9uP3j+
+ zekXlXAAAAA==
+X-Change-ID: 20250407-fix_of_pci-20b45dcc26b5
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+ Lizhi Hou <lizhi.hou@amd.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: HwJcR_D7fSmD09yDX6a1bRhjsmqzFvvy
+X-Proofpoint-ORIG-GUID: HwJcR_D7fSmD09yDX6a1bRhjsmqzFvvy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=623 clxscore=1011 bulkscore=0 adultscore=0 phishscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504070100
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-#syz test: https://github.com/ArnaudLcm/linux bounds-checking-txmung
+This patch series is to fix OF device node refcount leakage for
+ - of_irq_parse_and_map_pci()
+ - of_pci_prop_intr_map()
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Zijun Hu (2):
+      PCI: of: Fix OF device node refcount leakage in API of_irq_parse_and_map_pci()
+      PCI: of: Fix OF device node refcount leakages in of_pci_prop_intr_map()
+
+ drivers/pci/of.c          |  2 ++
+ drivers/pci/of_property.c | 20 +++++++++++---------
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+---
+base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+change-id: 20250407-fix_of_pci-20b45dcc26b5
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
