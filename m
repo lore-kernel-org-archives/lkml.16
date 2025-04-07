@@ -1,117 +1,227 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFBB22B8AB;
-	Mon,  7 Apr 2025 13:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A69F22C336
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031198; cv=none; b=IJH7sCaA57hyx2tFLg6eGzMorZmJWh27b2QdGZuLesrBP8DpzTnz0uryIkXM1qw+4GIdXU/X8J5SqumISpT+gBD62rXa2Irc+yLwjHsF1hSRefm4KcJ2UqiXo0gEPG0H2nqLnGrr5sSbG90yvTdv6Gji/8by19esYMYKE73NpNU=
+	t=1744031219; cv=none; b=oUZfPxTJm6covc7C0I6l7KTztGnDRps9R1nbdYiK4HElW0DQjHOLAxd+x6UydbUB1wPI/ZZToA1dq1H0J5N/qW6e8BuZBOgXxzSsnu20OOeOe38BLlsUMud2ucgYIaYPECXK44nbSird2BunujEzoJlxtsUTWpqas0gvoQ+BTCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031198; c=relaxed/simple;
-	bh=4il+HotzhlVVEHUZXJvUut3Fviv7uoztwUZyBpLG0wY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QL/5wpWBacvuojToshzqR1KaVe8etghM6nOwRPplGyQitwrrWzxv4KyAuOlD3hgui6jVW/dCSSap7mOWK5oz7dHsQJIy2mD1UWEWhr4hGOKMEgdiK1Nu9qjphkY0O13hqx3wtY5eJkFoC+EL5eF2sAgQhasUC5JqWZXCc1R6pOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QeQkPxBC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gD2vDOTh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744031219; c=relaxed/simple;
+	bh=vr0jEtZFdrPsAy/VXdEI/gqaP7QiRfNc5r74JhFqoBE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g9dt1wz+yum6BepPaq7Lqbpj5lsj88IYFp+WVB5BwytVKydtx/VRGf3mbZkOAiKaFWapcE3MLUZZkVRB/Y+kSL8xBg2wry8rlNP236DL7jzk7WMSsH92cR4wXmDoBrRAj9PHRnCgj31j8RCPaxUbTisTmmRPiEpmiJ9uOA8fHq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M3+dZQIj; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QeQkPxBC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gD2vDOTh"
-Date: Mon, 07 Apr 2025 13:06:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744031187;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5EZ/1gJ5T5oT17yvV4r2Fbnb/Lj+dlo7WNR85K2DgTQ=;
-	b=QeQkPxBCNKqZyTkYSxcYhzaAZrX48MsHIxRIh0pm1W1MHLwoTBfL9w//+hQ9M1iL2sCnlm
-	6c0EpI5tou/CtrPSNqVKe/BPVR+73vf+ODZu4ZFj4RaSPoaD+ynkhu+t3eS2Q3GEQEP/KS
-	ybd386GYL+mym49P+UGuk+DTbWGHBWLQCIjHyOnrCZFrGEXqi0PkRvmIxY+ErUPPUbyNzX
-	c8h0P3Lh36aAqmKQKIRf+ztSIznSJH4f1ySbcimRjVxr8fhYpil2FfB8l/m7PgamSV0RHw
-	JvmHEWErRPS/l/Pa/i7e67GX9TmvhOtXBDUvdP1ve28a0LOnU464UBnFx6RkNQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744031187;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5EZ/1gJ5T5oT17yvV4r2Fbnb/Lj+dlo7WNR85K2DgTQ=;
-	b=gD2vDOThS/FQ5xzcs9t+LFjmQvPCEmwzKrsLqhNVO8J3XkUpqYmAqKrL0I64PTTTsZHkBn
-	HBZXcrm8Oz5RNMDg==
-From: "tip-bot2 for Boris Ostrovsky" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/microcode] x86/microcode/AMD: Clean the cache if update did
- not load microcode
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250327230503.1850368-3-boris.ostrovsky@oracle.com>
-References: <20250327230503.1850368-3-boris.ostrovsky@oracle.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M3+dZQIj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1029A4431B;
+	Mon,  7 Apr 2025 13:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744031214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qZzEpXou+AnhtOZHF+fZbUGpxS1z0rrUBz2Hb+aqexE=;
+	b=M3+dZQIjgWJUArt1u1Mxl3AJJJXGCow6nahEZWzPUHh090N9DjV8e+ozObJHO3QEHPHY3T
+	3INYdCUxVwGxntjjnqoSfScmUSYc/nj1SXnQxZB1LnPzqTMFl9Y2/duDrvt7LF0XWJlyDI
+	g9Zw7cxUZSetDgCuRmxIlbBS8yNZAGlomR0m09VKHSSmEhGkd07EUmJI2Mp6XuDlHpGXy3
+	0TccT4XdVFSyJhSZSPwfci4pTWk2Hsv5bk+mGW0NBH80xwPLQRSN74tBIv6uhELeKKCdx/
+	ZOy7hRcDuuZHUIGIFIvmcFe9EbeEbgJrNyTFSkDw/bWBG51pUx204GcL64bH1Q==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Mon, 07 Apr 2025 15:06:49 +0200
+Subject: [PATCH RESEND v3] mux: mmio: Add suspend and resume support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174403118308.31282.8495809232181072693.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-mux-mmio-resume-support-v3-1-cb88abc04db7@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAOjN82cC/42OMQ+CMBSE/4rp7DOlLUScHGR10NE4tPiQJrYlL
+ RAM4b9bujnpeHfvvnszCeg1BnLYzMTjqIN2Ngq+3ZC6lfaJoB9RE0aZoEXGwQwTGKMdeAyDQQh
+ D1znfg2i4YpILyZkksa1kQFBe2rpd+4F5WK016jw2ekqjN3KprtX5RO7Rb3XonX+nX8YspT9nx
+ wwoiJzlqsmLeCyPyrn+pe2udiZRR/YniUEGuBdlQctSUS6+ScuyfAC4JiQeLQEAAA==
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, gregory.clement@bootlin.com, 
+ richard.genoud@bootlin.com, u-kumar1@ti.com, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Davis <afd@ti.com>, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiveefueeiveffvedvfeetvdfhkeeuudefkeeuffefgfekudelheeiffduveeikeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuhdqkhhumhgrrhdusehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvl
+ hesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgurdhgvghnohhuugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehpvggurgesrgigvghnthhirgdrshgvpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrfhgusehtihdrtghomh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-The following commit has been merged into the x86/microcode branch of tip:
+The status of each mux is read during suspend and stored in the private
+memory of the mux_chip.
+Then the state is restored during the resume.
 
-Commit-ID:     321550859f3bd64f547d0b4e9fbd97bd539ef47c
-Gitweb:        https://git.kernel.org/tip/321550859f3bd64f547d0b4e9fbd97bd539ef47c
-Author:        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-AuthorDate:    Thu, 27 Mar 2025 19:05:03 -04:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 07 Apr 2025 14:46:56 +02:00
-
-x86/microcode/AMD: Clean the cache if update did not load microcode
-
-If microcode did not get loaded there is no reason to keep it in the cache.
-Moreover, if loading failed it will not be possible to load an earlier version
-of microcode since the failed revision will always be selected from the cache
-on the next reload attempt.
-
-Since the failed revisions is not easily available at this point just clean the
-whole cache. It will be rebuilt later if needed.
-
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20250327230503.1850368-3-boris.ostrovsky@oracle.com
+Reviewed-by: Andrew Davis <afd@ti.com>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- arch/x86/kernel/cpu/microcode/amd.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+This is the third version, I just rebased the series on v6.14-rc1.
+---
+Changes in v3:
+- rebased on v6.14-rc1.
+- Take Reviewed-by: Andrew Davis. 
+- Link to v2: https://lore.kernel.org/r/20240613-mux-mmio-resume-support-v2-1-e8496099b034@bootlin.com
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index b61028c..57bd61f 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1171,11 +1171,18 @@ static void microcode_fini_cpu_amd(int cpu)
- 	uci->mc = NULL;
- }
+Changes in v2:
+- Remove all modifications done in the mux subsystem
+- Add a mux_mmio_set()
+- Read the status of muxes during suspend and store in the private memory
+  of the mux_chip.
+- Use this status to restore muxes during resume.
+- Link to v1: https://lore.kernel.org/r/20240613-mux-mmio-resume-support-v1-0-4525bf56024a@bootlin.com
+---
+ drivers/mux/mmio.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 73 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
+index 30a952c34365..30b84382637f 100644
+--- a/drivers/mux/mmio.c
++++ b/drivers/mux/mmio.c
+@@ -15,11 +15,25 @@
+ #include <linux/property.h>
+ #include <linux/regmap.h>
  
-+static void finalize_late_load_amd(int result)
++struct mux_mmio {
++	struct regmap_field **fields;
++	unsigned int *hardware_states;
++};
++
++static int mux_mmio_get(struct mux_control *mux, int *state)
 +{
-+	if (result)
-+		cleanup();
++	struct mux_mmio *mux_mmio = mux_chip_priv(mux->chip);
++	unsigned int index = mux_control_get_index(mux);
++
++	return regmap_field_read(mux_mmio->fields[index], state);
 +}
 +
- static struct microcode_ops microcode_amd_ops = {
- 	.request_microcode_fw	= request_microcode_amd,
- 	.collect_cpu_info	= collect_cpu_info_amd,
- 	.apply_microcode	= apply_microcode_amd,
- 	.microcode_fini_cpu	= microcode_fini_cpu_amd,
-+	.finalize_late_load	= finalize_late_load_amd,
- 	.nmi_safe		= true,
- };
+ static int mux_mmio_set(struct mux_control *mux, int state)
+ {
+-	struct regmap_field **fields = mux_chip_priv(mux->chip);
++	struct mux_mmio *mux_mmio = mux_chip_priv(mux->chip);
++	unsigned int index = mux_control_get_index(mux);
  
+-	return regmap_field_write(fields[mux_control_get_index(mux)], state);
++	return regmap_field_write(mux_mmio->fields[index], state);
+ }
+ 
+ static const struct mux_control_ops mux_mmio_ops = {
+@@ -37,8 +51,8 @@ static int mux_mmio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+-	struct regmap_field **fields;
+ 	struct mux_chip *mux_chip;
++	struct mux_mmio *mux_mmio;
+ 	struct regmap *regmap;
+ 	int num_fields;
+ 	int ret;
+@@ -69,12 +83,20 @@ static int mux_mmio_probe(struct platform_device *pdev)
+ 	}
+ 	num_fields = ret / 2;
+ 
+-	mux_chip = devm_mux_chip_alloc(dev, num_fields, num_fields *
+-				       sizeof(*fields));
++	mux_chip = devm_mux_chip_alloc(dev, num_fields, sizeof(struct mux_mmio));
+ 	if (IS_ERR(mux_chip))
+ 		return PTR_ERR(mux_chip);
+ 
+-	fields = mux_chip_priv(mux_chip);
++	mux_mmio = mux_chip_priv(mux_chip);
++
++	mux_mmio->fields = devm_kmalloc(dev, num_fields * sizeof(*mux_mmio->fields), GFP_KERNEL);
++	if (IS_ERR(mux_mmio->fields))
++		return PTR_ERR(mux_mmio->fields);
++
++	mux_mmio->hardware_states = devm_kmalloc(dev, num_fields *
++						 sizeof(*mux_mmio->hardware_states), GFP_KERNEL);
++	if (IS_ERR(mux_mmio->hardware_states))
++		return PTR_ERR(mux_mmio->hardware_states);
+ 
+ 	for (i = 0; i < num_fields; i++) {
+ 		struct mux_control *mux = &mux_chip->mux[i];
+@@ -104,9 +126,9 @@ static int mux_mmio_probe(struct platform_device *pdev)
+ 			return -EINVAL;
+ 		}
+ 
+-		fields[i] = devm_regmap_field_alloc(dev, regmap, field);
+-		if (IS_ERR(fields[i])) {
+-			ret = PTR_ERR(fields[i]);
++		mux_mmio->fields[i] = devm_regmap_field_alloc(dev, regmap, field);
++		if (IS_ERR(mux_mmio->fields[i])) {
++			ret = PTR_ERR(mux_mmio->fields[i]);
+ 			dev_err(dev, "bitfield %d: failed allocate: %d\n",
+ 				i, ret);
+ 			return ret;
+@@ -130,13 +152,55 @@ static int mux_mmio_probe(struct platform_device *pdev)
+ 
+ 	mux_chip->ops = &mux_mmio_ops;
+ 
++	dev_set_drvdata(dev, mux_chip);
++
+ 	return devm_mux_chip_register(dev, mux_chip);
+ }
+ 
++static int mux_mmio_suspend_noirq(struct device *dev)
++{
++	struct mux_chip *mux_chip = dev_get_drvdata(dev);
++	struct mux_mmio *mux_mmio = mux_chip_priv(mux_chip);
++	unsigned int state;
++	int ret, i;
++
++	for (i = 0; i < mux_chip->controllers; i++) {
++		ret = mux_mmio_get(&mux_chip->mux[i], &state);
++		if (ret) {
++			dev_err(dev, "control %u: error saving mux: %d\n", i, ret);
++			return ret;
++		}
++
++		mux_mmio->hardware_states[i] = state;
++	}
++
++	return 0;
++}
++
++static int mux_mmio_resume_noirq(struct device *dev)
++{
++	struct mux_chip *mux_chip = dev_get_drvdata(dev);
++	struct mux_mmio *mux_mmio = mux_chip_priv(mux_chip);
++	int ret, i;
++
++	for (i = 0; i < mux_chip->controllers; i++) {
++		ret = mux_mmio_set(&mux_chip->mux[i], mux_mmio->hardware_states[i]);
++		if (ret) {
++			dev_err(dev, "control %u: error restoring mux: %d\n", i, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static DEFINE_NOIRQ_DEV_PM_OPS(mux_mmio_pm_ops, mux_mmio_suspend_noirq, mux_mmio_resume_noirq);
++
+ static struct platform_driver mux_mmio_driver = {
+ 	.driver = {
+ 		.name = "mmio-mux",
+ 		.of_match_table	= mux_mmio_dt_ids,
++		.pm = pm_sleep_ptr(&mux_mmio_pm_ops),
+ 	},
+ 	.probe = mux_mmio_probe,
+ };
+
+---
+base-commit: aa1ea32fb8882552bd404d29a021d0e24cab38b1
+change-id: 20240613-mux-mmio-resume-support-4f3b2a34a32a
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
