@@ -1,138 +1,133 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E6E14AA9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89062213256;
+	Mon,  7 Apr 2025 03:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743998247; cv=none; b=CVQgqxIIFVTo2SO3fQa+QLsROMihbx3AVs8DDu8IMBLxYqQV7aYU2iQRP1/8/jhW6227ILFobA4konoMGMBv1yU8ZopAinyRf8KRGXGe4pKPYSbXkNsnLRytEXkCiP5G788hqHdwxiTbLw5o74zzexnS0vR/mZUUzoMtr5e1GtE=
+	t=1743998265; cv=none; b=OZrO5mNdcfZudds+GXSR7/ivoK0BST8k8M4DkOeHhyOxb4eDXDkCYHJwzJibwV1S/gzxTwJd5sWOPrgBX3BKfhruqWeVwiMchNJIOhsE7zUx4El587colKVtSgdpbExy4ED80Vhv6hNwkExF41CPDE8q+2YIJNdDQwR3DYW9f0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743998247; c=relaxed/simple;
-	bh=wGLK6m9CzNM2EuVft9Fawq866DDFGdirphfng8/RcDI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SpahIdPdCzsmHo/L05/3YUTVhQqnV0RNVAWxu7sttOxTWY2z6m8OrMvvDsfB3t08QmEV7G2GCebFs8PMThOuDEsNNNnNge7q1sGXJLTB9bswZndYlS1GrcujIamy/LnnCPrzz4GCNrOnyBF+l9LwM6IDRP5/iqpopfHSXf4l7u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d6c613bd79so41985175ab.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 20:57:25 -0700 (PDT)
+	s=arc-20240116; t=1743998265; c=relaxed/simple;
+	bh=Zl7zJlRHgV736TLgTKSkNSPMJeMp081ivuzgtiRLpB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1GneEsxBWHEsTrTx864ZG+MLGYuG32oXhRoGL46RPhEI01zfp7AsmDvNlJwPTbmhVSnm4ZUMPtaofTkl+zsqMHS59hkxTmIOEkBL60+SGzPri0iXSL3ObA3vjskfu+Nkfr1ag6ThBghQklnC45pIfs4NIBv8VsbkwjLoWDZ1Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P1Xs6AV8; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1Xs6AV8"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c081915cf3so510581185a.1;
+        Sun, 06 Apr 2025 20:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743998262; x=1744603062; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R/CY5XdipwMeKeAFsG+OcOmPd/+b3qIxz+N90akQpaE=;
+        b=P1Xs6AV8Dy7rloJWg3JSNzrT1AjaKHs6PzCCrbSFJsC5uv6d34CFozMXztH7Cgaieu
+         /1tPSF8KJLbE8lyiz2NRXc9+QWpf6QB0Oa7ZXDQ0U6LFaAAtEhVD8tkTt7Haow5cGm+u
+         4I4DwSEE0TaIgdEN02BvuEalhKyZxFFVjMMG/ZWIGcatZK00VePgfrvHFsW09deBFJ6+
+         d4AVQuSnuG2dSh12Hn9XWt/3zpj5GBV+qsTKn/PoJVEajHTLD3rHqY99lT/rjGpL5Qj2
+         yWi0wD0XaV1xGurogbSGPxp1o1vfr2Ec/bDzBM7Kc8GbTpg4gOH184Vj+YLB/jwOh7uX
+         ssjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743998244; x=1744603044;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hKzLutUCNaIzSgschoETKEDm1mOKKBzsstahLbLQNSY=;
-        b=AgrFILoaNndx8JT65cxya3yJm2vQPRR0FAEQNn4PaevnogbyHEojSEFi9bi913d6G/
-         xyFdUjZTzJPGLOn62bOthNzR/vwT21D1DoXQXUWCM/DBTcD5K8veBIUwi0ekoehmbWNK
-         Uo6RqDRkf6yFJfFda7LqxvklY7uwJtzTsJR6KnxbRGtmvi1cAn1Z/dxQ0RE711HjrtAU
-         3WnVvspTFMvh6TILtLkiAZm2MynaNwg8QHsaii/QAS/jcPTrsDrlpXkAOIksNm0Qw71S
-         Rp5P+PYFtKnylmplS50tb+DI50JCDTerbMVndE1wH1Vi0YgSWmdZDShDmBdCAFVlhGRC
-         +IdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2gYfePb1eFZQgPyXIyD66ah+9DSWhA91f1J3lVmG+okmZmQK5ZnVbcwI9izqRCZ2jdHRHK8g9dKgNJDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoJ96LkaFKWtuTu8s7NbU6zlPB9jSSp02yWW3GGmI2MozttpXj
-	9KpHE4xL517vHJ8RZJ+w9mxR4VVlllRDyC4uLe0ckYUaHZ0iIeoF05juD0bKDibKepQoOPemVMh
-	xsV4Yo8ZFg1/qhzfgo+lM/0rMzV4j7GjRKIrWr68HSaOyXPYs7B9B6So=
-X-Google-Smtp-Source: AGHT+IEj3DJK9Q0Ai2Iz8F3ii81wS4KN558dK+KHwRRLf4upHyxOti907c8PHes02vpuNfEMXs1iY0RRwrtIV6biPBFkndXpyY64
+        d=1e100.net; s=20230601; t=1743998262; x=1744603062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R/CY5XdipwMeKeAFsG+OcOmPd/+b3qIxz+N90akQpaE=;
+        b=vKYG+Xb6qtcf8g8H6fpZifND9gOYDUVfC6B+4altGZxMQJtdZ+vVCXwhgmnkKJR7S3
+         /DACFOzxwTPDar3oVmOM0ehMjpynYHF9/F0lZZYKYQEyzJkdlfKXyQfblpuUnoKfrfXI
+         eAkcdmLsKrAjRWq3RnkEyYST3NWJ7XKwjYI9LtJG42clpfVjNb6r+3JVMY0m+HDGN1G1
+         fsC3LQZx1dddxN1aW2WzTRO6nlzps63hcJOvySRQCnh60PHWiMrn9m3jt0pNBozHaryT
+         RHf1YXRLR5T7xBRKWVkH1xXz331sUceMfPjIec7YrPjreBhe97R8m4Reht03yO/Qra4q
+         kjHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdP2bPmD5tsBfR+CR5x4+HO45BorK6BZtLHexFyQOczZP8C6yDKl42CbHvRkbqqJUdf2WjLDT9fvAfb8jb@vger.kernel.org, AJvYcCWveuQ8g9PuVXe8jzv6nm9KJb9ghZ3TJ2BvrOI2jP87RU1tIvfCT+Fxpbum7PbIGy3MzlprVFUhqU2Z5nY=@vger.kernel.org, AJvYcCXLqVN1vo51zkxFuuXfzF2AtFf8fLIx2lifKi62UtJ9FU8gpZ5oV2Q9sJCCC8xDHzOfeKgLbKBmInL8@vger.kernel.org, AJvYcCXTbbvp+O2BvAvlA2dsOPwJCuEER3VBlOg77xeyCMDMk7zSyDcDbYwSssrcdouYeQRxzqf879ur2f3r@vger.kernel.org, AJvYcCXWXoCVR/6m0yaYrdmYYP1JGun49eLb76WA1rm9gBwiwIzszFy5+JdIpEB9Y7AF0EJb+X6XoBVP9zz1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAN/c0I1CLSIPbnmxzgCG56trv9jOTfuS70ZJXtlRfRd9Na+5U
+	4Yl5rlipjxORUZ1SkoE8odczbU3eflrRVdgVSAUg5aPnNM6tRwXN
+X-Gm-Gg: ASbGncvrVHPGhjeTAF5v/909DT2s08kuwWebU0h6uXovVQYdf2g3hsZhMx8TUR8GOK8
+	r+4PWqXw373QxWZ3BaeNaZdG0ch2G+nfxxio8yAX06XzyBb6yCNe4RUwP7LNFkqUQkApUi2EYkQ
+	uyT38vADe7AXX9T93hMAJ0uIK0QmNl/9SRo9vObZJBqg8ykCW4BK5icHq0NdIxm2jOw4z6w4Z50
+	n7HT5ZDynQfjyKrzU7TNXr0cfLtwFRIe/O/X0U0AaLDVjcSeoAiUSnVeLThJz7NOPjHvZthauen
+	EiyGvbwIODJNxTNdWZPs
+X-Google-Smtp-Source: AGHT+IG7S6m/etaeZaD9RBkFsyIrUD+K4SGfOdf76m1VNO2dvIgZVgFhj9vXuuhtf1aG6Yd6cTKDpw==
+X-Received: by 2002:a05:620a:1a18:b0:7c5:674c:eecc with SMTP id af79cd13be357-7c774d718bfmr1429782085a.32.1743998262320;
+        Sun, 06 Apr 2025 20:57:42 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76e75a605sm545114585a.29.2025.04.06.20.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 20:57:41 -0700 (PDT)
+Date: Mon, 7 Apr 2025 11:57:07 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Yixun Lan <dlan@gentoo.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, ghost <2990955050@qq.com>, 
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Chao Wei <chao.wei@sophgo.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 9/9] riscv: dts: sophgo: Add initial device tree of
+ Sophgo SRD3-10
+Message-ID: <geunb7qwiniferytaufnekojx2eoq6g5scu6mddwf7gkspxucs@yynb6kfbspje>
+References: <20250407010616.749833-1-inochiama@gmail.com>
+ <20250407010616.749833-10-inochiama@gmail.com>
+ <20250407020945-GYA13182@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:338d:b0:3d3:ff09:432c with SMTP id
- e9e14a558f8ab-3d6e3eea064mr121332535ab.4.1743998244558; Sun, 06 Apr 2025
- 20:57:24 -0700 (PDT)
-Date: Sun, 06 Apr 2025 20:57:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f34d24.050a0220.0a13.027c.GAE@google.com>
-Subject: [syzbot] [ext4?] [overlayfs?] WARNING in file_seek_cur_needs_f_lock
-From: syzbot <syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, amir73il@gmail.com, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407020945-GYA13182@gentoo>
 
-Hello,
+On Mon, Apr 07, 2025 at 02:09:45AM +0000, Yixun Lan wrote:
+> 
+> On 09:06 Mon 07 Apr     , Inochi Amaoto wrote:
+> > Sophgo SG2044 SRD3-10 board bases on Sophgo SG2044 SoC.
+> > This board includes 5 uart ports, 5 pcie x8 slots, 1 1G Ethernet port,
+> > 1 microSD slot.
+> > 
+> > Add initial device tree of this board with uart support.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  arch/riscv/boot/dts/sophgo/Makefile           |    1 +
+> >  arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi   | 3002 +++++++++++++++++
+> >  arch/riscv/boot/dts/sophgo/sg2044-reset.h     |  128 +
+> >  .../boot/dts/sophgo/sg2044-sophgo-srd3-10.dts |   32 +
+> >  arch/riscv/boot/dts/sophgo/sg2044.dtsi        |   86 +
+> >  5 files changed, 3249 insertions(+)
+> >  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
+> >  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-reset.h
+> >  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+> >  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044.dtsi
+> > 
+> ..
+> > diff --git a/arch/riscv/boot/dts/sophgo/sg2044-reset.h b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
+> > new file mode 100644
+> > index 000000000000..94ed1e3777c3
+> > --- /dev/null
+> > +++ b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
+> > @@ -0,0 +1,128 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> > +/*
+> > + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
+> you might want to use your gmail suffix? IIRC your outlook account
+> isn't preferable? besides, it's better cosistent with your signed-off
+> 
 
-syzbot found the following issue on:
+Yeah, I forgot to change the copyright since this patch is wrote 
+several months ago. I will update the copyright for this patch. 
 
-HEAD commit:    16cd1c265776 Merge tag 'timers-cleanups-2025-04-06' of git..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12e7923f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c79406130aa88d22
-dashboard link: https://syzkaller.appspot.com/bug?extid=4036165fc595a74b09b2
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f9bd98580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1571c7e4580000
+Thanks for reminder.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a4435e7379c4/disk-16cd1c26.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5a00533ae7ab/vmlinux-16cd1c26.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2069327dcea6/bzImage-16cd1c26.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5824 at fs/file.c:1201 file_seek_cur_needs_f_lock+0x141/0x190 fs/file.c:1201
-Modules linked in:
-CPU: 0 UID: 0 PID: 5824 Comm: syz-executor625 Not tainted 6.14.0-syzkaller-13546-g16cd1c265776 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:file_seek_cur_needs_f_lock+0x141/0x190 fs/file.c:1201
-Code: 31 ff 89 c3 89 c6 e8 0e 9e 7f ff 84 db 74 15 e8 25 a3 7f ff bb 01 00 00 00 89 d8 5b 5d 41 5c c3 cc cc cc cc e8 10 a3 7f ff 90 <0f> 0b 90 eb e0 e8 05 a3 7f ff 31 db 89 d8 5b 5d 41 5c c3 cc cc cc
-RSP: 0018:ffffc90002f07df8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff823b9ae2
-RDX: ffff888031808000 RSI: ffffffff823b9b00 RDI: 0000000000000001
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: bfffffffffffffff
-R13: 0000000000000005 R14: 00000ffffffff000 R15: 00000ffffffff000
-FS:  00005555717cf380(0000) GS:ffff8881249b3000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000001000 CR3: 0000000026d60000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- generic_file_llseek_size+0x153/0x480 fs/read_write.c:178
- ext4_llseek+0x180/0x2f0 fs/ext4/file.c:941
- vfs_llseek+0x9a/0xe0 fs/read_write.c:387
- ovl_llseek+0x15c/0x2c0 fs/overlayfs/file.c:277
- vfs_llseek fs/read_write.c:387 [inline]
- ksys_lseek+0xf0/0x1b0 fs/read_write.c:400
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fdc41bae4a9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc49e17ef8 EFLAGS: 00000246 ORIG_RAX: 0000000000000008
-RAX: ffffffffffffffda RBX: 0000200000000140 RCX: 00007fdc41bae4a9
-RDX: 0000000000000001 RSI: 0000000000000005 RDI: 0000000000000003
-RBP: 00007fdc41c21610 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc49e180c8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regards,
+Inochi
