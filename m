@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790802066E2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C563F2066F4
 	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041478; cv=none; b=jZ895LC0tgCwbj3qS6yCMRItF3GE4U3I94WmpEonhk/KyMp5tvCz+lnhzD1kcjXf6svvjJQ4ft4e3cyls6KwCvQLeCHIn8GT6HMD3EJgmry3VF71nyqyI/1oV1eAzZSt9Oa8ezJ0Zx0OUC8eyQ66jkNMoGRgQk4U2rWOeghAPeE=
+	t=1744041479; cv=none; b=dhwX8IiF1ey7DHxD3djEnRN+DqLIXiuQes5G524LFrzUzqfDDtRu8y2QRRqW9nxnl/uqiGGeMRfhros3mhc1J/IX1fhj03DYLl8AX5WnzbrmXXKg6erlt77Ny2e0AkeHpIBgXlgtdFu5OXwkjVUe0KIssHJ9eppdHDtfFRba07o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041478; c=relaxed/simple;
-	bh=uNKXtN/Oti6VPo0i3+DKitBDeiUel4Dv4EiBlqrOt8c=;
+	s=arc-20240116; t=1744041479; c=relaxed/simple;
+	bh=Tz3tKtMfkavplRfjYzFXa6eDnDp9KlBblyszTAglji4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AvHthc0qnJ5Rvqg1wl9yEQu+vEI8WAqjnmgASJHDmererlfjQseBR3PRKUUG9wXwrJ9aRByRCHCGvYJT/gd6ZTr51njxmo6Y/me1BzPQEeMN1okOpsIf6s983jfTqwcCI4F7MpGo2Szt+mWhTK82h0HqzHGrkbrOBG9KfK/7BcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=akCVSZMh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jezvN3Fw; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=bcTVsPt7cH0LvK2gJxCNtAAr7TT4SOp5JQzi7OMHf39+s4SUCscQgQ8w87VMHIADfG6uOMT60tfw1TysbJzqHdm4j24ko7CVtGz1MWbhCgyEX1Qsiv+Kz2dxWXVizK/uHzIM/+9dt7tTLoPzbs22w7r8daMWxKIRkldYorf+uzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O3qVRdjX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bZyz/ryo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="akCVSZMh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jezvN3Fw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O3qVRdjX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bZyz/ryo"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744041472;
+	s=2020; t=1744041473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Vw2oDPbAa79dvzKpop78kz6urdk4j35vNzZsC8gnXa0=;
-	b=akCVSZMhuacwzGc0obpZIST4paU7XbsExDAqCIO0n0iwn+8r+l9/u9zMqlLCPsJ/4yg/Kx
-	JtZa6NJX6fVvzF5d/VavlTETeZ8I9G59seKzPqZ2R8BnaXBe7QjeatVPJYjSDCvPMxjhBg
-	timTMjLQ60DlZYy/dLu6eJpjgku4SPD3YjcyZv03dSGyo2qabQZCwadLxMlYCcTornIJWB
-	2agzavOPpInyyvtWxLNUFA4dx4vxGcMq1GpdqBKR7gJ8zK5PphYMRSeLeD8pzFyiiS0rF0
-	zcbT3UUKnrzSvxw+1+8EDB3n7OY4CP6XStoxeBXnqyJEm18kmUCGQBApc+fA4Q==
+	bh=EYDmteyotmxSvdzWVDZHQvIyBpNiHBANshGe93sbcrI=;
+	b=O3qVRdjXDkiCjekkN3MDGSb38nSqU5bGzS9uOw2fBwf2/+lKl+ACHk0Ju9NpZTAxOeSrAy
+	T5ewq+7eUr2GOGdiXYu51khCQ3rv7U5HE4sMDXBXyuUJ2zLmpBniH2lOIx+BwyCi1jlJ+3
+	cHXZCePfOYXHVv9KCga4YpUKqWtMsJ0z++d9/6PqLybCmMMI53GY9lrhDaeq9LBKtStJny
+	kMd8uUiJBRgaaStAM2xNNh/Sw8bndTCpEevHSCIzOvrarEWXiV03/jxs8/Ib3FmJeBe9gN
+	JRDx1VqrL4zVcHR3+OSN4oZg0N/z10pA7RxMmus9nHZy9Tgv3JIz08n24TDx5w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744041472;
+	s=2020e; t=1744041473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Vw2oDPbAa79dvzKpop78kz6urdk4j35vNzZsC8gnXa0=;
-	b=jezvN3FwxgU2mlLG5phv4FaY8fOBiO9CLiOH8tAgYacpYu3TkRj04EpbMhCpJTPI7A5QLd
-	69dEuDjXvzNKPOBg==
+	bh=EYDmteyotmxSvdzWVDZHQvIyBpNiHBANshGe93sbcrI=;
+	b=bZyz/ryo00RUcLryearQqZmIHoQE5mbcceAR20KBtm0bsVFpYC4w149rKXspjNkR6ZHzC5
+	TdSkkf6cbpNw2ACQ==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v11 12/19] futex: Add basic infrastructure for local task local hash.
-Date: Mon,  7 Apr 2025 17:57:35 +0200
-Message-ID: <20250407155742.968816-13-bigeasy@linutronix.de>
+Subject: [PATCH v11 14/19] futex: Allow to resize the private local hash.
+Date: Mon,  7 Apr 2025 17:57:37 +0200
+Message-ID: <20250407155742.968816-15-bigeasy@linutronix.de>
 In-Reply-To: <20250407155742.968816-1-bigeasy@linutronix.de>
 References: <20250407155742.968816-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,527 +63,514 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The futex hash is system wide and shared by all tasks. Each slot
-is hashed based on futex address and the VMA of the thread. Due to
-randomized VMAs (and memory allocations) the same logical lock (pointer)
-can end up in a different hash bucket on each invocation of the
-application. This in turn means that different applications may share a
-hash bucket on the first invocation but not on the second and it is not
-always clear which applications will be involved. This can result in
-high latency's to acquire the futex_hash_bucket::lock especially if the
-lock owner is limited to a CPU and can not be effectively PI boosted.
+The mm_struct::futex_hash_lock guards the futex_hash_bucket assignment/
+replacement. The futex_hash_allocate()/ PR_FUTEX_HASH_SET_SLOTS
+operation can now be invoked at runtime and resize an already existing
+internal private futex_hash_bucket to another size.
 
-Introduce basic infrastructure for process local hash which is shared by
-all threads of process. This hash will only be used for a
-PROCESS_PRIVATE FUTEX operation.
+The reallocation is based on an idea by Thomas Gleixner: The initial
+allocation of struct futex_private_hash sets the reference count
+to one. Every user acquires a reference on the local hash before using
+it and drops it after it enqueued itself on the hash bucket. There is no
+reference held while the task is scheduled out while waiting for the
+wake up.
+The resize process allocates a new struct futex_private_hash and drops
+the initial reference. Synchronized with mm_struct::futex_hash_lock it
+is checked if the reference counter for the currently used
+mm_struct::futex_phash is marked as DEAD. If so, then all users enqueued
+on the current private hash are requeued on the new private hash and the
+new private hash is set to mm_struct::futex_phash. Otherwise the newly
+allocated private hash is saved as mm_struct::futex_phash_new and the
+rehashing and reassigning is delayed to the futex_hash() caller once the
+reference counter is marked DEAD.
+The replacement is not performed at rcuref_put() time because certain
+callers, such as futex_wait_queue(), drop their reference after changing
+the task state. This change will be destroyed once the futex_hash_lock
+is acquired.
 
-The hashmap can be allocated via
-        prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, num)
+The user can change the number slots with PR_FUTEX_HASH_SET_SLOTS
+multiple times. An increase and decrease is allowed and request blocks
+until the assignment is done.
 
-A `num' of 0 means that the global hash is used instead of a private
-hash.
-Other values for `num' specify the number of slots for the hash and the
-number must be power of two, starting with two.
-The prctl() returns zero on success. This function can only be used
-before a thread is created.
+The private hash allocated at thread creation is changed from 16 to
+  16 <=3D 4 * number_of_threads <=3D global_hash_size
+where number_of_threads can not exceed the number of online CPUs. Should
+the user PR_FUTEX_HASH_SET_SLOTS then the auto scaling is disabled.
 
-The current status for the private hash can be queried via
-        num =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-
-which return the current number of slots. The value 0 means that the
-global hash is used. Values greater than 0 indicate the number of slots
-that are used. A negative number indicates an error.
-
-For optimisation, for the private hash jhash2() uses only two arguments
-the address and the offset. This omits the VMA which is always the same.
-
-[peterz: Use 0 for global hash. A bit shuffling and renaming. ]
+[peterz: reorganize the code to avoid state tracking and simplify new
+object handling, block the user until changes are in effect, allow
+increase and decrease of the hash].
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/futex.h      |  26 ++++-
- include/linux/mm_types.h   |   5 +-
- include/uapi/linux/prctl.h |   5 +
- init/Kconfig               |   5 +
- kernel/fork.c              |   2 +
- kernel/futex/core.c        | 206 +++++++++++++++++++++++++++++++++----
- kernel/futex/futex.h       |  10 ++
- kernel/sys.c               |   4 +
- 8 files changed, 242 insertions(+), 21 deletions(-)
+ include/linux/futex.h    |   3 +-
+ include/linux/mm_types.h |   4 +-
+ kernel/futex/core.c      | 290 ++++++++++++++++++++++++++++++++++++---
+ kernel/futex/requeue.c   |   5 +
+ 4 files changed, 281 insertions(+), 21 deletions(-)
 
 diff --git a/include/linux/futex.h b/include/linux/futex.h
-index b70df27d7e85c..bbc897e54c864 100644
+index 0e147819ae153..0cb4c6d512dfb 100644
 --- a/include/linux/futex.h
 +++ b/include/linux/futex.h
-@@ -4,11 +4,11 @@
+@@ -85,7 +85,8 @@ void futex_hash_free(struct mm_struct *mm);
 =20
- #include <linux/sched.h>
- #include <linux/ktime.h>
-+#include <linux/mm_types.h>
-=20
- #include <uapi/linux/futex.h>
-=20
- struct inode;
--struct mm_struct;
- struct task_struct;
-=20
- /*
-@@ -77,7 +77,22 @@ void futex_exec_release(struct task_struct *tsk);
-=20
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 	      u32 __user *uaddr2, u32 val2, u32 val3);
--#else
-+int futex_hash_prctl(unsigned long arg2, unsigned long arg3);
-+
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
-+void futex_hash_free(struct mm_struct *mm);
-+
-+static inline void futex_mm_init(struct mm_struct *mm)
-+{
-+	mm->futex_phash =3D  NULL;
-+}
-+
-+#else /* !CONFIG_FUTEX_PRIVATE_HASH */
-+static inline void futex_hash_free(struct mm_struct *mm) { }
-+static inline void futex_mm_init(struct mm_struct *mm) { }
-+#endif /* CONFIG_FUTEX_PRIVATE_HASH */
-+
-+#else /* !CONFIG_FUTEX */
- static inline void futex_init_task(struct task_struct *tsk) { }
- static inline void futex_exit_recursive(struct task_struct *tsk) { }
- static inline void futex_exit_release(struct task_struct *tsk) { }
-@@ -88,6 +103,13 @@ static inline long do_futex(u32 __user *uaddr, int op, =
-u32 val,
+ static inline void futex_mm_init(struct mm_struct *mm)
  {
- 	return -EINVAL;
+-	mm->futex_phash =3D  NULL;
++	rcu_assign_pointer(mm->futex_phash, NULL);
++	mutex_init(&mm->futex_hash_lock);
  }
-+static inline int futex_hash_prctl(unsigned long arg2, unsigned long arg3)
-+{
-+	return -EINVAL;
-+}
-+static inline void futex_hash_free(struct mm_struct *mm) { }
-+static inline void futex_mm_init(struct mm_struct *mm) { }
-+
- #endif
 =20
- #endif
+ #else /* !CONFIG_FUTEX_PRIVATE_HASH */
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 56d07edd01f91..a4b5661e41770 100644
+index a4b5661e41770..32ba5126e2214 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -31,6 +31,7 @@
- #define INIT_PASID	0
-=20
- struct address_space;
-+struct futex_private_hash;
- struct mem_cgroup;
-=20
- /*
-@@ -1031,7 +1032,9 @@ struct mm_struct {
- 		 */
+@@ -1033,7 +1033,9 @@ struct mm_struct {
  		seqcount_t mm_lock_seq;
  #endif
--
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
-+		struct futex_private_hash	*futex_phash;
-+#endif
+ #ifdef CONFIG_FUTEX_PRIVATE_HASH
+-		struct futex_private_hash	*futex_phash;
++		struct mutex			futex_hash_lock;
++		struct futex_private_hash	__rcu *futex_phash;
++		struct futex_private_hash	*futex_phash_new;
+ #endif
 =20
  		unsigned long hiwater_rss; /* High-watermark of RSS usage */
- 		unsigned long hiwater_vm;  /* High-water virtual memory usage */
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 15c18ef4eb11a..3b93fb906e3c5 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -364,4 +364,9 @@ struct prctl_mm_map {
- # define PR_TIMER_CREATE_RESTORE_IDS_ON		1
- # define PR_TIMER_CREATE_RESTORE_IDS_GET	2
-=20
-+/* FUTEX hash management */
-+#define PR_FUTEX_HASH			78
-+# define PR_FUTEX_HASH_SET_SLOTS	1
-+# define PR_FUTEX_HASH_GET_SLOTS	2
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/init/Kconfig b/init/Kconfig
-index dd2ea3b9a7992..b308b98d79347 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1699,6 +1699,11 @@ config FUTEX_PI
- 	depends on FUTEX && RT_MUTEXES
- 	default y
-=20
-+config FUTEX_PRIVATE_HASH
-+	bool
-+	depends on FUTEX && !BASE_SMALL && MMU
-+	default y
-+
- config EPOLL
- 	bool "Enable eventpoll support" if EXPERT
- 	default y
-diff --git a/kernel/fork.c b/kernel/fork.c
-index c4b26cd8998b8..831dfec450544 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1305,6 +1305,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm=
-, struct task_struct *p,
- 	RCU_INIT_POINTER(mm->exe_file, NULL);
- 	mmu_notifier_subscriptions_init(mm);
- 	init_tlb_flush_pending(mm);
-+	futex_mm_init(mm);
- #if defined(CONFIG_TRANSPARENT_HUGEPAGE) && !defined(CONFIG_SPLIT_PMD_PTLO=
-CKS)
- 	mm->pmd_huge_pte =3D NULL;
- #endif
-@@ -1387,6 +1388,7 @@ static inline void __mmput(struct mm_struct *mm)
- 	if (mm->binfmt)
- 		module_put(mm->binfmt->module);
- 	lru_gen_del_mm(mm);
-+	futex_hash_free(mm);
- 	mmdrop(mm);
- }
-=20
 diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index afc66780f84fc..479a629b9aeea 100644
+index a8ede52bf7e63..220ddc7620e49 100644
 --- a/kernel/futex/core.c
 +++ b/kernel/futex/core.c
-@@ -39,6 +39,7 @@
- #include <linux/memblock.h>
+@@ -40,6 +40,7 @@
  #include <linux/fault-inject.h>
  #include <linux/slab.h>
-+#include <linux/prctl.h>
+ #include <linux/prctl.h>
++#include <linux/rcuref.h>
 =20
  #include "futex.h"
  #include "../locking/rtmutex_common.h"
-@@ -55,6 +56,12 @@ static struct {
- #define futex_queues   (__futex_data.queues)
+@@ -57,7 +58,9 @@ static struct {
  #define futex_hashmask (__futex_data.hashmask)
 =20
-+struct futex_private_hash {
-+	unsigned int	hash_mask;
-+	void		*mm;
-+	bool		custom;
-+	struct futex_hash_bucket queues[];
-+};
-=20
- /*
-  * Fault injections for futexes.
-@@ -107,9 +114,17 @@ late_initcall(fail_futex_debugfs);
-=20
- #endif /* CONFIG_FAIL_FUTEX */
-=20
--struct futex_private_hash *futex_private_hash(void)
-+static struct futex_hash_bucket *
-+__futex_hash(union futex_key *key, struct futex_private_hash *fph);
-+
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
-+static inline bool futex_key_is_private(union futex_key *key)
- {
--	return NULL;
-+	/*
-+	 * Relies on get_futex_key() to set either bit for shared
-+	 * futexes -- see comment with union futex_key.
-+	 */
-+	return !(key->both.offset & (FUT_OFF_INODE | FUT_OFF_MMSHARED));
- }
+ struct futex_private_hash {
++	rcuref_t	users;
+ 	unsigned int	hash_mask;
++	struct rcu_head	rcu;
+ 	void		*mm;
+ 	bool		custom;
+ 	struct futex_hash_bucket queues[];
+@@ -129,11 +132,14 @@ static inline bool futex_key_is_private(union futex_k=
+ey *key)
 =20
  bool futex_private_hash_get(struct futex_private_hash *fph)
-@@ -117,21 +132,8 @@ bool futex_private_hash_get(struct futex_private_hash =
-*fph)
- 	return false;
+ {
+-	return false;
++	return rcuref_get(&fph->users);
  }
 =20
--void futex_private_hash_put(struct futex_private_hash *fph) { }
--
--/**
-- * futex_hash - Return the hash bucket in the global hash
-- * @key:	Pointer to the futex key for which the hash is calculated
-- *
-- * We hash on the keys returned from get_futex_key (see below) and return =
-the
-- * corresponding hash bucket in the global hash.
-- */
--struct futex_hash_bucket *futex_hash(union futex_key *key)
-+void futex_private_hash_put(struct futex_private_hash *fph)
+ void futex_private_hash_put(struct futex_private_hash *fph)
  {
--	u32 hash =3D jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
--			  key->both.offset);
--
--	return &futex_queues[hash & futex_hashmask];
++	/* Ignore return value, last put is verified via rcuref_is_dead() */
++	if (rcuref_put(&fph->users))
++		wake_up_var(fph->mm);
  }
 =20
  /**
-@@ -144,6 +146,84 @@ struct futex_hash_bucket *futex_hash(union futex_key *=
-key)
- void futex_hash_get(struct futex_hash_bucket *hb) { }
- void futex_hash_put(struct futex_hash_bucket *hb) { }
-=20
-+static struct futex_hash_bucket *
-+__futex_hash_private(union futex_key *key, struct futex_private_hash *fph)
+@@ -143,8 +149,23 @@ void futex_private_hash_put(struct futex_private_hash =
+*fph)
+  * Obtain an additional reference for the already obtained hash bucket. The
+  * caller must already own an reference.
+  */
+-void futex_hash_get(struct futex_hash_bucket *hb) { }
+-void futex_hash_put(struct futex_hash_bucket *hb) { }
++void futex_hash_get(struct futex_hash_bucket *hb)
 +{
-+	u32 hash;
-+
-+	if (!futex_key_is_private(key))
-+		return NULL;
++	struct futex_private_hash *fph =3D hb->priv;
 +
 +	if (!fph)
-+		fph =3D key->private.mm->futex_phash;
-+	if (!fph || !fph->hash_mask)
-+		return NULL;
-+
-+	hash =3D jhash2((void *)&key->private.address,
-+		      sizeof(key->private.address) / 4,
-+		      key->both.offset);
-+	return &fph->queues[hash & fph->hash_mask];
++		return;
++	WARN_ON_ONCE(!futex_private_hash_get(fph));
 +}
 +
-+struct futex_private_hash *futex_private_hash(void)
++void futex_hash_put(struct futex_hash_bucket *hb)
 +{
-+	struct mm_struct *mm =3D current->mm;
++	struct futex_private_hash *fph =3D hb->priv;
++
++	if (!fph)
++		return;
++	futex_private_hash_put(fph);
++}
+=20
+ static struct futex_hash_bucket *
+ __futex_hash_private(union futex_key *key, struct futex_private_hash *fph)
+@@ -155,7 +176,7 @@ __futex_hash_private(union futex_key *key, struct futex=
+_private_hash *fph)
+ 		return NULL;
+=20
+ 	if (!fph)
+-		fph =3D key->private.mm->futex_phash;
++		fph =3D rcu_dereference(key->private.mm->futex_phash);
+ 	if (!fph || !fph->hash_mask)
+ 		return NULL;
+=20
+@@ -165,21 +186,119 @@ __futex_hash_private(union futex_key *key, struct fu=
+tex_private_hash *fph)
+ 	return &fph->queues[hash & fph->hash_mask];
+ }
+=20
++static void futex_rehash_private(struct futex_private_hash *old,
++				 struct futex_private_hash *new)
++{
++	struct futex_hash_bucket *hb_old, *hb_new;
++	unsigned int slots =3D old->hash_mask + 1;
++	unsigned int i;
++
++	for (i =3D 0; i < slots; i++) {
++		struct futex_q *this, *tmp;
++
++		hb_old =3D &old->queues[i];
++
++		spin_lock(&hb_old->lock);
++		plist_for_each_entry_safe(this, tmp, &hb_old->chain, list) {
++
++			plist_del(&this->list, &hb_old->chain);
++			futex_hb_waiters_dec(hb_old);
++
++			WARN_ON_ONCE(this->lock_ptr !=3D &hb_old->lock);
++
++			hb_new =3D __futex_hash(&this->key, new);
++			futex_hb_waiters_inc(hb_new);
++			/*
++			 * The new pointer isn't published yet but an already
++			 * moved user can be unqueued due to timeout or signal.
++			 */
++			spin_lock_nested(&hb_new->lock, SINGLE_DEPTH_NESTING);
++			plist_add(&this->list, &hb_new->chain);
++			this->lock_ptr =3D &hb_new->lock;
++			spin_unlock(&hb_new->lock);
++		}
++		spin_unlock(&hb_old->lock);
++	}
++}
++
++static bool __futex_pivot_hash(struct mm_struct *mm,
++			       struct futex_private_hash *new)
++{
 +	struct futex_private_hash *fph;
 +
-+	fph =3D mm->futex_phash;
-+	return fph;
++	WARN_ON_ONCE(mm->futex_phash_new);
++
++	fph =3D rcu_dereference_protected(mm->futex_phash,
++					lockdep_is_held(&mm->futex_hash_lock));
++	if (fph) {
++		if (!rcuref_is_dead(&fph->users)) {
++			mm->futex_phash_new =3D new;
++			return false;
++		}
++
++		futex_rehash_private(fph, new);
++	}
++	rcu_assign_pointer(mm->futex_phash, new);
++	kvfree_rcu(fph, rcu);
++	return true;
 +}
 +
-+struct futex_hash_bucket *futex_hash(union futex_key *key)
++static void futex_pivot_hash(struct mm_struct *mm)
 +{
-+	struct futex_hash_bucket *hb;
++	scoped_guard(mutex, &mm->futex_hash_lock) {
++		struct futex_private_hash *fph;
 +
-+	hb =3D __futex_hash(key, NULL);
-+	return hb;
++		fph =3D mm->futex_phash_new;
++		if (fph) {
++			mm->futex_phash_new =3D NULL;
++			__futex_pivot_hash(mm, fph);
++		}
++	}
 +}
 +
-+#else /* !CONFIG_FUTEX_PRIVATE_HASH */
+ struct futex_private_hash *futex_private_hash(void)
+ {
+ 	struct mm_struct *mm =3D current->mm;
+-	struct futex_private_hash *fph;
++	/*
++	 * Ideally we don't loop. If there is a replacement in progress
++	 * then a new private hash is already prepared and a reference can't be
++	 * obtained once the last user dropped it's.
++	 * In that case we block on mm_struct::futex_hash_lock and either have
++	 * to perform the replacement or wait while someone else is doing the
++	 * job. Eitherway, on the second iteration we acquire a reference on the
++	 * new private hash or loop again because a new replacement has been
++	 * requested.
++	 */
++again:
++	scoped_guard(rcu) {
++		struct futex_private_hash *fph;
+=20
+-	fph =3D mm->futex_phash;
+-	return fph;
++		fph =3D rcu_dereference(mm->futex_phash);
++		if (!fph)
++			return NULL;
 +
-+static struct futex_hash_bucket *
-+__futex_hash_private(union futex_key *key, struct futex_private_hash *fph)
-+{
-+	return NULL;
-+}
++		if (rcuref_get(&fph->users))
++			return fph;
++	}
++	futex_pivot_hash(mm);
++	goto again;
+ }
+=20
+ struct futex_hash_bucket *futex_hash(union futex_key *key)
+ {
++	struct futex_private_hash *fph;
+ 	struct futex_hash_bucket *hb;
+=20
+-	hb =3D __futex_hash(key, NULL);
+-	return hb;
++again:
++	scoped_guard(rcu) {
++		hb =3D __futex_hash(key, NULL);
++		fph =3D hb->priv;
 +
-+struct futex_hash_bucket *futex_hash(union futex_key *key)
-+{
-+	return __futex_hash(key, NULL);
-+}
-+
-+#endif /* CONFIG_FUTEX_PRIVATE_HASH */
-+
-+/**
-+ * __futex_hash - Return the hash bucket
-+ * @key:	Pointer to the futex key for which the hash is calculated
-+ * @fph:	Pointer to private hash if known
-+ *
-+ * We hash on the keys returned from get_futex_key (see below) and return =
-the
-+ * corresponding hash bucket.
-+ * If the FUTEX is PROCESS_PRIVATE then a per-process hash bucket (from the
-+ * private hash) is returned if existing. Otherwise a hash bucket from the
-+ * global hash is returned.
-+ */
-+static struct futex_hash_bucket *
-+__futex_hash(union futex_key *key, struct futex_private_hash *fph)
-+{
-+	struct futex_hash_bucket *hb;
-+	u32 hash;
-+
-+	hb =3D __futex_hash_private(key, fph);
-+	if (hb)
-+		return hb;
-+
-+	hash =3D jhash2((u32 *)key,
-+		      offsetof(typeof(*key), both.offset) / 4,
-+		      key->both.offset);
-+	return &futex_queues[hash & futex_hashmask];
-+}
-+
- /**
-  * futex_setup_timer - set up the sleeping hrtimer.
-  * @time:	ptr to the given timeout value
-@@ -985,6 +1065,13 @@ static void exit_pi_state_list(struct task_struct *cu=
-rr)
++		if (!fph || futex_private_hash_get(fph))
++			return hb;
++	}
++	futex_pivot_hash(key->private.mm);
++	goto again;
+ }
+=20
+ #else /* !CONFIG_FUTEX_PRIVATE_HASH */
+@@ -664,6 +783,8 @@ int futex_unqueue(struct futex_q *q)
+ 	spinlock_t *lock_ptr;
+ 	int ret =3D 0;
+=20
++	/* RCU so lock_ptr is not going away during locking. */
++	guard(rcu)();
+ 	/* In the common case we don't take the spinlock, which is nice. */
+ retry:
+ 	/*
+@@ -1065,6 +1186,10 @@ static void exit_pi_state_list(struct task_struct *c=
+urr)
  	struct futex_pi_state *pi_state;
  	union futex_key key =3D FUTEX_KEY_INIT;
 =20
 +	/*
-+	 * Ensure the hash remains stable (no resize) during the while loop
-+	 * below. The hb pointer is acquired under the pi_lock so we can't block
-+	 * on the mutex.
++	 * The mutex mm_struct::futex_hash_lock might be acquired.
 +	 */
-+	WARN_ON(curr !=3D current);
-+	guard(private_hash)();
++	might_sleep();
  	/*
- 	 * We are a ZOMBIE and nobody can enqueue itself on
- 	 * pi_state_list anymore, but we have to be careful
-@@ -1160,13 +1247,96 @@ void futex_exit_release(struct task_struct *tsk)
- 	futex_cleanup_end(tsk, FUTEX_STATE_DEAD);
- }
-=20
--static void futex_hash_bucket_init(struct futex_hash_bucket *fhb)
-+static void futex_hash_bucket_init(struct futex_hash_bucket *fhb,
-+				   struct futex_private_hash *fph)
+ 	 * Ensure the hash remains stable (no resize) during the while loop
+ 	 * below. The hb pointer is acquired under the pi_lock so we can't block
+@@ -1261,7 +1386,51 @@ static void futex_hash_bucket_init(struct futex_hash=
+_bucket *fhb,
+ #ifdef CONFIG_FUTEX_PRIVATE_HASH
+ void futex_hash_free(struct mm_struct *mm)
  {
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
-+	fhb->priv =3D fph;
-+#endif
- 	atomic_set(&fhb->waiters, 0);
- 	plist_head_init(&fhb->chain);
- 	spin_lock_init(&fhb->lock);
- }
-=20
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
-+void futex_hash_free(struct mm_struct *mm)
-+{
-+	kvfree(mm->futex_phash);
-+}
-+
-+static int futex_hash_allocate(unsigned int hash_slots, bool custom)
-+{
-+	struct mm_struct *mm =3D current->mm;
-+	struct futex_private_hash *fph;
-+	int i;
-+
-+	if (hash_slots && (hash_slots =3D=3D 1 || !is_power_of_2(hash_slots)))
-+		return -EINVAL;
-+
-+	if (mm->futex_phash)
-+		return -EALREADY;
-+
-+	if (!thread_group_empty(current))
-+		return -EINVAL;
-+
-+	fph =3D kvzalloc(struct_size(fph, queues, hash_slots), GFP_KERNEL_ACCOUNT=
-);
-+	if (!fph)
-+		return -ENOMEM;
-+
-+	fph->hash_mask =3D hash_slots ? hash_slots - 1 : 0;
-+	fph->custom =3D custom;
-+	fph->mm =3D mm;
-+
-+	for (i =3D 0; i < hash_slots; i++)
-+		futex_hash_bucket_init(&fph->queues[i], fph);
-+
-+	mm->futex_phash =3D fph;
-+	return 0;
-+}
-+
-+static int futex_hash_get_slots(void)
-+{
+-	kvfree(mm->futex_phash);
 +	struct futex_private_hash *fph;
 +
-+	fph =3D current->mm->futex_phash;
-+	if (fph && fph->hash_mask)
-+		return fph->hash_mask + 1;
-+	return 0;
-+}
-+
-+#else
-+
-+static int futex_hash_allocate(unsigned int hash_slots, bool custom)
-+{
-+	return -EINVAL;
-+}
-+
-+static int futex_hash_get_slots(void)
-+{
-+	return 0;
-+}
-+#endif
-+
-+int futex_hash_prctl(unsigned long arg2, unsigned long arg3)
-+{
-+	int ret;
-+
-+	switch (arg2) {
-+	case PR_FUTEX_HASH_SET_SLOTS:
-+		ret =3D futex_hash_allocate(arg3, true);
-+		break;
-+
-+	case PR_FUTEX_HASH_GET_SLOTS:
-+		ret =3D futex_hash_get_slots();
-+		break;
-+
-+	default:
-+		ret =3D -EINVAL;
-+		break;
++	kvfree(mm->futex_phash_new);
++	fph =3D rcu_dereference_raw(mm->futex_phash);
++	if (fph) {
++		WARN_ON_ONCE(rcuref_read(&fph->users) > 1);
++		kvfree(fph);
 +	}
-+	return ret;
 +}
 +
- static int __init futex_init(void)
- {
- 	unsigned long hashsize, i;
-@@ -1185,7 +1355,7 @@ static int __init futex_init(void)
- 	hashsize =3D 1UL << futex_shift;
-=20
- 	for (i =3D 0; i < hashsize; i++)
--		futex_hash_bucket_init(&futex_queues[i]);
-+		futex_hash_bucket_init(&futex_queues[i], NULL);
-=20
- 	futex_hashmask =3D hashsize - 1;
- 	return 0;
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index 26e69333cb745..899aed5acde12 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -118,6 +118,7 @@ struct futex_hash_bucket {
- 	atomic_t waiters;
- 	spinlock_t lock;
- 	struct plist_head chain;
-+	struct futex_private_hash *priv;
- } ____cacheline_aligned_in_smp;
-=20
- /*
-@@ -204,6 +205,7 @@ futex_setup_timer(ktime_t *time, struct hrtimer_sleeper=
- *timeout,
- 		  int flags, u64 range_ns);
-=20
- extern struct futex_hash_bucket *futex_hash(union futex_key *key);
-+#ifdef CONFIG_FUTEX_PRIVATE_HASH
- extern void futex_hash_get(struct futex_hash_bucket *hb);
- extern void futex_hash_put(struct futex_hash_bucket *hb);
-=20
-@@ -211,6 +213,14 @@ extern struct futex_private_hash *futex_private_hash(v=
-oid);
- extern bool futex_private_hash_get(struct futex_private_hash *fph);
- extern void futex_private_hash_put(struct futex_private_hash *fph);
-=20
-+#else /* !CONFIG_FUTEX_PRIVATE_HASH */
-+static inline void futex_hash_get(struct futex_hash_bucket *hb) { }
-+static inline void futex_hash_put(struct futex_hash_bucket *hb) { }
-+static inline struct futex_private_hash *futex_private_hash(void) { return=
- NULL; }
-+static inline bool futex_private_hash_get(void) { return false; }
-+static inline void futex_private_hash_put(struct futex_private_hash *fph) =
-{ }
-+#endif
++static bool futex_pivot_pending(struct mm_struct *mm)
++{
++	struct futex_private_hash *fph;
 +
- DEFINE_CLASS(hb, struct futex_hash_bucket *,
- 	     if (_T) futex_hash_put(_T),
- 	     futex_hash(key), union futex_key *key);
-diff --git a/kernel/sys.c b/kernel/sys.c
-index c434968e9f5dd..d446d8ecb0b33 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -52,6 +52,7 @@
- #include <linux/user_namespace.h>
- #include <linux/time_namespace.h>
- #include <linux/binfmts.h>
-+#include <linux/futex.h>
++	guard(rcu)();
++
++	if (!mm->futex_phash_new)
++		return true;
++
++	fph =3D rcu_dereference(mm->futex_phash);
++	return rcuref_is_dead(&fph->users);
++}
++
++static bool futex_hash_less(struct futex_private_hash *a,
++			    struct futex_private_hash *b)
++{
++	/* user provided always wins */
++	if (!a->custom && b->custom)
++		return true;
++	if (a->custom && !b->custom)
++		return false;
++
++	/* zero-sized hash wins */
++	if (!b->hash_mask)
++		return true;
++	if (!a->hash_mask)
++		return false;
++
++	/* keep the biggest */
++	if (a->hash_mask < b->hash_mask)
++		return true;
++	if (a->hash_mask > b->hash_mask)
++		return false;
++
++	return false; /* equal */
+ }
 =20
- #include <linux/sched.h>
- #include <linux/sched/autogroup.h>
-@@ -2820,6 +2821,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, ar=
-g2, unsigned long, arg3,
- 			return -EINVAL;
- 		error =3D posixtimer_create_prctl(arg2);
- 		break;
-+	case PR_FUTEX_HASH:
-+		error =3D futex_hash_prctl(arg2, arg3);
-+		break;
- 	default:
- 		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
- 		error =3D -EINVAL;
+ static int futex_hash_allocate(unsigned int hash_slots, bool custom)
+@@ -1273,16 +1442,23 @@ static int futex_hash_allocate(unsigned int hash_sl=
+ots, bool custom)
+ 	if (hash_slots && (hash_slots =3D=3D 1 || !is_power_of_2(hash_slots)))
+ 		return -EINVAL;
+=20
+-	if (mm->futex_phash)
+-		return -EALREADY;
+-
+-	if (!thread_group_empty(current))
+-		return -EINVAL;
++	/*
++	 * Once we've disabled the global hash there is no way back.
++	 */
++	scoped_guard(rcu) {
++		fph =3D rcu_dereference(mm->futex_phash);
++		if (fph && !fph->hash_mask) {
++			if (custom)
++				return -EBUSY;
++			return 0;
++		}
++	}
+=20
+ 	fph =3D kvzalloc(struct_size(fph, queues, hash_slots), GFP_KERNEL_ACCOUNT=
+);
+ 	if (!fph)
+ 		return -ENOMEM;
+=20
++	rcuref_init(&fph->users, 1);
+ 	fph->hash_mask =3D hash_slots ? hash_slots - 1 : 0;
+ 	fph->custom =3D custom;
+ 	fph->mm =3D mm;
+@@ -1290,26 +1466,102 @@ static int futex_hash_allocate(unsigned int hash_s=
+lots, bool custom)
+ 	for (i =3D 0; i < hash_slots; i++)
+ 		futex_hash_bucket_init(&fph->queues[i], fph);
+=20
+-	mm->futex_phash =3D fph;
++	if (custom) {
++		/*
++		 * Only let prctl() wait / retry; don't unduly delay clone().
++		 */
++again:
++		wait_var_event(mm, futex_pivot_pending(mm));
++	}
++
++	scoped_guard(mutex, &mm->futex_hash_lock) {
++		struct futex_private_hash *free __free(kvfree) =3D NULL;
++		struct futex_private_hash *cur, *new;
++
++		cur =3D rcu_dereference_protected(mm->futex_phash,
++						lockdep_is_held(&mm->futex_hash_lock));
++		new =3D mm->futex_phash_new;
++		mm->futex_phash_new =3D NULL;
++
++		if (fph) {
++			if (cur && !new) {
++				/*
++				 * If we have an existing hash, but do not yet have
++				 * allocated a replacement hash, drop the initial
++				 * reference on the existing hash.
++				 */
++				futex_private_hash_put(cur);
++			}
++
++			if (new) {
++				/*
++				 * Two updates raced; throw out the lesser one.
++				 */
++				if (futex_hash_less(new, fph)) {
++					free =3D new;
++					new =3D fph;
++				} else {
++					free =3D fph;
++				}
++			} else {
++				new =3D fph;
++			}
++			fph =3D NULL;
++		}
++
++		if (new) {
++			/*
++			 * Will set mm->futex_phash_new on failure;
++			 * futex_private_hash_get() will try again.
++			 */
++			if (!__futex_pivot_hash(mm, new) && custom)
++				goto again;
++		}
++	}
+ 	return 0;
+ }
+=20
+ int futex_hash_allocate_default(void)
+ {
++	unsigned int threads, buckets, current_buckets =3D 0;
++	struct futex_private_hash *fph;
++
+ 	if (!current->mm)
+ 		return 0;
+=20
+-	if (current->mm->futex_phash)
++	scoped_guard(rcu) {
++		threads =3D min_t(unsigned int,
++				get_nr_threads(current),
++				num_online_cpus());
++
++		fph =3D rcu_dereference(current->mm->futex_phash);
++		if (fph) {
++			if (fph->custom)
++				return 0;
++
++			current_buckets =3D fph->hash_mask + 1;
++		}
++	}
++
++	/*
++	 * The default allocation will remain within
++	 *   16 <=3D threads * 4 <=3D global hash size
++	 */
++	buckets =3D roundup_pow_of_two(4 * threads);
++	buckets =3D clamp(buckets, 16, futex_hashmask + 1);
++
++	if (current_buckets >=3D buckets)
+ 		return 0;
+=20
+-	return futex_hash_allocate(16, false);
++	return futex_hash_allocate(buckets, false);
+ }
+=20
+ static int futex_hash_get_slots(void)
+ {
+ 	struct futex_private_hash *fph;
+=20
+-	fph =3D current->mm->futex_phash;
++	guard(rcu)();
++	fph =3D rcu_dereference(current->mm->futex_phash);
+ 	if (fph && fph->hash_mask)
+ 		return fph->hash_mask + 1;
+ 	return 0;
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index b0e64fd454d96..c716a66f86929 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -87,6 +87,11 @@ void requeue_futex(struct futex_q *q, struct futex_hash_=
+bucket *hb1,
+ 		futex_hb_waiters_inc(hb2);
+ 		plist_add(&q->list, &hb2->chain);
+ 		q->lock_ptr =3D &hb2->lock;
++		/*
++		 * hb1 and hb2 belong to the same futex_hash_bucket_private
++		 * because if we managed get a reference on hb1 then it can't be
++		 * replaced. Therefore we avoid put(hb1)+get(hb2) here.
++		 */
+ 	}
+ 	q->key =3D *key2;
+ }
 --=20
 2.49.0
 
