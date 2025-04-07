@@ -1,56 +1,56 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2F322AE68;
-	Mon,  7 Apr 2025 07:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DC522AE76;
+	Mon,  7 Apr 2025 07:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010283; cv=none; b=MFtpy7b1U/E0CR0aZo51QR0VRVNo374MHk2cLyrYFF3CtZsUFM57o/TR331ztpdqat8Zemi47lHz4BKwt8tBcHNd/5qZW3tjHN7+N1OXVaLp5eITXbZkkyx5A3R9UeExL8mO6vee6JreTHJqwS1YIHtmLGzNxckkAtLMoYL6j2Y=
+	t=1744010285; cv=none; b=CRlXpUrzZg9v5J0HhH9e8xoRLDDVITZZnlv/CjejbeXtqJ1aXYLY0uodffC8RkjOzz+GROwkSOTD+TikHQ4iN3L8G9daxgmDTvfnLaC1FF60ZcA1TaxWq3VHRsNKLmNUpMs/b4HbGt0cvMCbsHV/HkrSpLRzPTNgmRubuAHQYhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010283; c=relaxed/simple;
-	bh=ccE5e48+JeVlXnRwwYcDOPr4CJxZzvtrZbKeQV867vk=;
+	s=arc-20240116; t=1744010285; c=relaxed/simple;
+	bh=6EXxpCbapBoN57dAJRHeYJrimOx3QJPKEcmhW+Lskuw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oyhu8zOsJKL89ckJm0wLbZ+hbdGdJw+Ggy4buKFae2rxToGJ6lPRHUmMCzj56juIAH3DPRR9+2VHtPPo5oUocY8X6M0bpLWb12QjTqqaw9EDj1atXS4tl2nODw/IIL3FKjYKxgMo0e/pIE+SFKJpalndKRsu7yQCAJR1q8WgEjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=HUC/jHK8; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=U0OqGBtyhzC2oELqYNK5S+0RPipAgRcOjyryXD9XTDuGqlCoh4i0zxlSoLUEdkug0rM54HeYYR2qwn1ZCnUr2xd2SfhwFJM7dh30smRB3Q6W8TXndhx1xetbaouE+MI6Co+b62AlDKdD8CTtwzdljTUv03wA3VL4/NR9ohz3GHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=UbfjnRyh; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="HUC/jHK8"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="UbfjnRyh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=2HsI7Mvqhlkg1D4i/gRhR4oTLdzatJEvGabIM6WMsGo=; b=HUC/jHK8rkiyZZglx3C3N65Ku7
-	uc0G3l3HH+hpj8E658nWnEgQLfrXbpASIBJPvqD3lL7KQieTfGwGFT83Y+ugEJ/6F/Shiw/xqV/nW
-	nY9sZgww2KpuODcaWifcbE/z0S3yJwUwiMkkElBDEFlXYqllReELfIOhDNeWGchiwbZX8OJV6bmBk
-	q7FgijtxRKioiUHymz6yQjTFjfParmu7YxB9LlQnvW14rzaqzpe9YOnnkT0EstyHX/bBY/7uqMbOr
-	fDKyXASGegdgpCuzMM8antOk/DWgIg4sdu9svyFDdcWVkeIMyT/jI/l7CcPi0t1Tk1YMPaPbLg+LR
-	F4r0LLEg==;
+	bh=4VmBqyKq+yIiEc8KQ9+sRwBtfBe5CRaZLqUvC30Bq0U=; b=UbfjnRyhnyK7j21mLA41RABWbI
+	E1b5z1vi32IAOPu08i7tpzQbGlRg3aETD4y8Ulwg5GRUVmrq7ANyJOiq6CB7yS7EgGWXnoU5opwz1
+	Cs/q3hDnT8lOZILMhHP19TILENOa5rllsJCa1xH0RefE5eEijt2a8bj4f+BzTyTIVc6jOtyMbJa7x
+	mnPA5/TSazHjHE6qVkoHjWVXfJhsicNbabOsEEeMNLzR2SoRu+CYWXAI998WPmZcb8p8EeOXV8CJZ
+	TWWsiIEyFT4eobtUNr3yujPnz0Mab43mxO84aMKhaYaUtfvP1gb7LdNP6dtpsae/4p+v7odsCvCPl
+	Zlscb4Ag==;
 Received: from i53875b95.versanet.de ([83.135.91.149] helo=phil..)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1u1gjw-0000tP-3F; Mon, 07 Apr 2025 09:17:52 +0200
+	id 1u1gjx-0000tP-GN; Mon, 07 Apr 2025 09:17:53 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: linux-rockchip@lists.infradead.org,
-	Dragan Simic <dsimic@manjaro.org>
+	Marcin Juszkiewicz <mjuszkiewicz@redhat.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	devicetree@vger.kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	stable@vger.kernel.org,
-	Alexey Charkov <alchark@gmail.com>,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Remove overdrive-mode OPPs from RK3588J SoC dtsi
-Date: Mon,  7 Apr 2025 09:17:41 +0200
-Message-ID: <174401024394.372530.11791471652987821644.b4-ty@sntech.de>
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Enable HDMI features on NanoPC-T6
+Date: Mon,  7 Apr 2025 09:17:44 +0200
+Message-ID: <174401024395.372530.10209184803682823778.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <eeec0d30d79b019d111b3f0aa2456e69896b2caa.1742813866.git.dsimic@manjaro.org>
-References: <eeec0d30d79b019d111b3f0aa2456e69896b2caa.1742813866.git.dsimic@manjaro.org>
+In-Reply-To: <20250325-nanopc-t6-hdmi-v1-0-299a2ed45878@redhat.com>
+References: <20250325-nanopc-t6-hdmi-v1-0-299a2ed45878@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,21 +61,24 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Mon, 24 Mar 2025 12:00:43 +0100, Dragan Simic wrote:
-> The differences in the vendor-approved CPU and GPU OPPs for the standard
-> Rockchip RK3588 variant [1] and the industrial Rockchip RK3588J variant [2]
-> come from the latter, presumably, supporting an extended temperature range
-> that's usually associated with industrial applications, despite the two SoC
-> variant datasheets specifying the same upper limit for the allowed ambient
-> temperature for both variants.  However, the lower temperature limit is
-> specified much lower for the RK3588J variant. [1][2]
+On Tue, 25 Mar 2025 20:51:45 +0100, Marcin Juszkiewicz wrote:
+> This patchset follows other SBCs and enables second HDMI output and then
+> enables HDMI audio on both ports.
+> 
+> Tested with 1920x1080@60 and 3440x1440@60 displays. Worked nice, audio
+> played on both monitors.
+> 
+> Would be nice to have an option for more than 60Hz (larger screen can do
+> 75Hz) but I assume that this will come one day.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: Remove overdrive-mode OPPs from RK3588J SoC dtsi
-      commit: e0bd7ecf6b2dc71215af699dffbf14bf0bc3d978
+[1/2] arm64: dts: rockchip: enable HDMI1 on FriendlyElec NanoPC-T6
+      commit: fc1f5f5bcac7df327a20f4bfbd4872e17d38601d
+[2/2] arm64: dts: rockchip: enable HDMI sound on FriendlyElec NanoPC-T6
+      commit: c0898e6881f964ca831c407c7019cd7f307d4368
 
 Best regards,
 -- 
