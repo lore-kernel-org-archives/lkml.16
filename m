@@ -1,95 +1,131 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82BC12CDAE;
-	Mon,  7 Apr 2025 01:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35D6156CA;
+	Mon,  7 Apr 2025 01:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743988178; cv=none; b=jXCo6pden7wv8EfW9VdPV94Lov8KJxcoo14s+QVwOze4mNq4w8GGd3hFoQSYpfKAsxaGlcxvZ2H3OKR6vTcj6uaROLe+ipQqyX2qgLfDcq+TGq4Z8FXbaWib1uw3Lbf9QFOoEz4duCLWI6T19LzF7ZUXCfSyGnrqQ3nBIrgqNm0=
+	t=1743988372; cv=none; b=jhbdUoH+pzSsKcIVqc9nJuxamQ9hEp8AIxYmFqpoRZgg7zoHcduF/5eS3xA5nH5FiRV9czJehCIuPceYNwt53LxyjiqLqVI/j7XIg4ao9ha+f8TB+C8qi0E/QExAAMjrg9/n8klRnIA/IFkFF0XXi6TmRR3RhVO1Hnm3pyk0GXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743988178; c=relaxed/simple;
-	bh=qFpJkpO6DX3BTQg+eiAtTfhhkQ3s3RXSaTPwP48oVPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZIYO7Fqe4143OO8fxq5tDoFFkc34SGbmWOS3EFvloLAmrn8Y7cW0k5wQu+reUf8zcotLk5go1DPPGsa2z83ZJxvEfBkkTwKipSk4QqsIo5u8O/9PsyRm3XqYF/zFGp/LSDfmdArDREsCxiw3XF9pd23cvKyAzvkTtcJsSOOVxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+iUWVe6; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743988372; c=relaxed/simple;
+	bh=ZYzr+FqZYrRy/4+P/uV64hlkjjle67btzPkMq2koLmU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XvacL6UcUwNChu1fSHwaO/U3lk7CxkqUmiKMux+njmlKT+IksKEH3MaeWsok4Y0LA96WdI7TS1D4Ih2MIC/t4zoVvl3K+DDR6OwUCh67HHEDnf90vxF7qwUaSmWzhMd4uEdWvyIqijEEZTK/2o9zpd3VuVn+ui92NDcPSdCVIoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=YCDy/MjD; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+iUWVe6"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-477282401b3so40455931cf.1;
-        Sun, 06 Apr 2025 18:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743988176; x=1744592976; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hTaxpP+0BisXpBWkHEPT5jUCMTocLUlCjk3pVjz+dsA=;
-        b=j+iUWVe6j7LFZ3xU6i1TU9QcGtmD2hG6RuMJqwFBoi0TMGvskZcqxoKRpejFEZ4ey1
-         Z0EHc7QaPhcm/Pn8Qch0plbG3PKkbvZ+TxcrvvvkqwgQ19TCfFecbW3qBVie6Iy7NY/W
-         k0pM+70aYfdoDZKN0RM64X/9V3yu7D3p3hN5bfy5lwwlMIFeoQfVgC3uzmogtSQgrF2h
-         Dq/omhczqYBqnCt1PpE2tmG3vxxhDRRsU/8igSNcEWb1qmUUnWIMc6Zsq4bAS4gBQEgw
-         ILuocmjZLJd8rYCotY97maeNtqehqSrnnYpVlEqiB1xI3Ll+YoFrpyOHvHOsu+oDCOUk
-         oWYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743988176; x=1744592976;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hTaxpP+0BisXpBWkHEPT5jUCMTocLUlCjk3pVjz+dsA=;
-        b=leTqD/yO094z6s3dhQwkyTMJGjKcWmAltqxPdgLYSUEFzu9dBQ6xD63g/pGQDawOK0
-         9WpUIoHLviYUvkkApUoI9K+9qFjG8ZAbxvhfzIs0ZcGoQr98WxlqNPMv0sFpNqjkiXb4
-         V9SaBR00NlMGPQ4xahm/Fqo3YvJcGW4QZFRrcP9UAIc3GtXyNaPEDL2ItPSNCLEZx6+l
-         0S0Fxk2yuErCwjFgM7RZQerMMAKeWAb0KyFnLuX081uL8A62ggKjr1ynO6YoAzGXCn/S
-         GCdKNkLtDBPUb3NWVWLw7oV/50q8BF4Wq+FLFmfjh/ERYa6wcwU0+Q44Mt2IUswI9kxl
-         jDlw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Au7voQnh3QBqZYO9ZqJlhe+0/2wiJfLPXENtaRH1mm/kdtxVsprAWDr3i830n1ICDyNnXGcR5yseXcND@vger.kernel.org, AJvYcCVYJwf62ldAtiqAQlL4ut3+YCB2m68wtroMRly0KDGzJtSoRm46PXFyhti1V18LTVY73npM958efpWU@vger.kernel.org, AJvYcCVanqDUqr325+OidOPFR4dOHsYy2KwaUiqNxLb4D+x92wXcA6Lm+bV5aioG0bXYP6eySwsqlNtccKbu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY1tyNdptXfucPFAaVzGQFpI2k9d+f57ohotw4WeLZVF30jhmJ
-	4eWnvC1nHyFdkqpFT1N/iBl1cW4OzFkRnIXOZsoR1WrB1OwKkw1k
-X-Gm-Gg: ASbGncuQ56QWn6cwZlB3GDB9R8zA8w7BEVs0ZzX2bBMxe6MR7QHCxF7vwamd6cyZzRU
-	J6pLpXQhgTMX2j2CWtHQsqS1IFm5TmURnQnvrCTS5fDDlL/cb2kmJgQ4m9QQ8M8L6P6g9Vq1v31
-	3JYjPXIF8RF2D8Be3dDd7QmwXsXrjnhcgqEOU6RwgadOyiINrtaJwbF9kPSeZOgxkDnIP3P9bu+
-	1z+ALOoLA01bcy4PMoRtQEmgs/vU0+5r/gOV7hB4AkTivWIJpGDLuHv3PI5LlpEa5NStigPfB3Z
-	sMaG8mJ+vjMkA65g2PiY
-X-Google-Smtp-Source: AGHT+IEmKlIM4zH7lzG9UIKklSuD+qJQ6td8rm/OkZNC5rmvxg8J4PmWcLtB3/5GZa2BN0aYjGS/Gg==
-X-Received: by 2002:a05:622a:180a:b0:476:80ce:a61f with SMTP id d75a77b69052e-479310eacfcmr110677731cf.39.1743988175814;
-        Sun, 06 Apr 2025 18:09:35 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4791b1444d2sm53175581cf.76.2025.04.06.18.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 18:09:35 -0700 (PDT)
-Date: Mon, 7 Apr 2025 09:09:01 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	sophgo@lists.linux.dev, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Yangyu Chen <cyy@cyyself.name>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 1/3] dt-bindings: soc: sophgo: add RTC support for
- Sophgo CV1800 series
-Message-ID: <vxjtdvy5vxhmqldgvt4mgeuor36gdjriiai7y3rej3tevuwisa@wpupxzhvc3tt>
-References: <20250309202629.3516822-1-alexander.sverdlin@gmail.com>
- <20250309202629.3516822-2-alexander.sverdlin@gmail.com>
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="YCDy/MjD"
+Message-ID: <292f6f59-5657-474f-b521-ef1816a5daf2@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743988368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uRI0KShiU3baxIxpYDwSDBNuSOTJd8Wkm1ByxUCwEx8=;
+	b=YCDy/MjD0BScjdD2XTPYTwbdYnECHlgWoN6/Iu0jeqKtmEr6mVDj6136jwktGDFzg6fXpb
+	ZZYa7wziYnoSMU0Wl9/HOETGI7bh+omNaP7qCBFZgmRw6LC/0Dv7hJ5H6RDgbGZfmjwZ7O
+	5vgJOvkkn5Kzt8oqgfWGy45rt+u8vwUHCJEZ4yO0/jegWCPmvVHaD1/mjgi0/ujrpvIJqO
+	rqn25LwJdzgTFNL+6kHxygMMXBwXDwpvb2m+k5fgO473ZUUXjeZJ3bkInB2dVLQByQBSD0
+	3a5C/5o25m1puzWNaApALILMuRJHcmeGVmwRnCD6VaKUldTXIys+ta8qyV7TaA==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=myrrhperiwinkle@qtmlabs.xyz
+Date: Mon, 7 Apr 2025 08:12:42 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250309202629.3516822-2-alexander.sverdlin@gmail.com>
+Subject: Re: [PATCH v3] x86/e820: Fix handling of subpage regions when
+ calculating nosave ranges
+From: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Roberto Ricci <io@r-ricci.it>
+References: <20250406-fix-e820-nosave-v3-1-f3787bc1ee1d@qtmlabs.xyz>
+ <Z_LGqgUhDrTmzj5r@gmail.com> <Z_LJv9gATY6nk4Yu@gmail.com>
+ <78346ff0-d5ee-48f0-ac4d-762a5ec18eb7@qtmlabs.xyz>
+Content-Language: en-US
+In-Reply-To: <78346ff0-d5ee-48f0-ac4d-762a5ec18eb7@qtmlabs.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: /
 
-On Sun, Mar 09, 2025 at 09:26:23PM +0100, Alexander Sverdlin wrote:
-> From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> 
-> Add RTC devicetree binding for Sophgo CV1800 series SoC. The device is
-> called RTC, but contains control registers of other HW blocks in its
-> address space, most notably of Power-on-Reset (PoR) module, DW8051 IP
-> (MCU core), accompanying SRAM, hence putting it in SoC subsystem.
-> 
+On 4/7/25 07:53, Myrrh Periwinkle wrote:
 
-I think this is a mfd device, so why not moving this into mfd subsystem?
+> On 4/7/25 01:36, Ingo Molnar wrote:
+>
+>> * Ingo Molnar<mingo@kernel.org> wrote:
+>>
+>>> * Myrrh Periwinkle<myrrhperiwinkle@qtmlabs.xyz> wrote:
+>>>
+>>>> The current implementation of e820__register_nosave_regions suffers 
+>>>> from
+>>>> multiple serious issues:
+>>>>   - The end of last region is tracked by PFN, causing it to find holes
+>>>>     that aren't there if two consecutive subpage regions are present
+>>>>   - The nosave PFN ranges derived from holes are rounded out 
+>>>> (instead of
+>>>>     rounded in) which makes it inconsistent with how explicitly 
+>>>> reserved
+>>>>     regions are handled
+>>>>
+>>>> Fix this by:
+>>>>   - Treating reserved regions as if they were holes, to ensure 
+>>>> consistent
+>>>>     handling (rounding out nosave PFN ranges is more correct as the
+>>>>     kernel does not use partial pages)
+>>>>   - Tracking the end of the last RAM region by address instead of 
+>>>> pages
+>>>>     to detect holes more precisely
+>>>>
+>>>> Cc:stable@vger.kernel.org
+>>>> Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry 
+>>>> *entry' local variable names")
+>>> So why is this SHA1 indicated as the root cause? AFAICS that commit
+>>> does nothing but cleanups, so it cannot cause such regressions.
+>> BTW.:
+>>
+>>   A) "It was the first random commit that seemed related, sry"
+>>   B) "It's a 15 years old bug, but I wanted to indicate a fresh, 
+>> 8-year old bug to get this into -stable. Busted!"
+>
+> You got me :) How did you know that this is a 15 years old bug? 
+> (although I didn't think the age of the bug a patch fixes would affect 
+> its chances of getting to -stable)
+>
+> This specific revision was picked since it's the latest one that this 
+> patch can be straightforwardly applied to (there is a (trivial) merge 
+> conflict with -stable, though).
+>
+> Later, I managed to track the buggy logic back to 1c10070a55a3 ("i386: 
+> do not restore reserved memory after hibernation"), which I believe is 
+> the very first occurrence of this bug. If you prefer, I can send a v4 
+> with a more correct Fixes: tag (or feel free to do so yourself when 
+> applying this patch).
 
-Regards,
-Inochi
+I did some more digging and it seems like the buggy logic actually 
+appeared all the way back in e8eff5ac294e ("[PATCH] Make swsusp avoid 
+memory holes and reserved memory regions on x86_64") back when x86_64 
+was a separate port, which was copied later by the i386 port in the 
+commit I mentioned above, which would make this a 19 year old bug 
+instead of 15.
+
+>
+>> ... are perfectly fine answers in my book. :-)
+>>
+>> I'm glad about the fixes, I'm just curious how the Fixes tag came about.
+>>
+>> Thanks,
+>>
+>>     Ingo
+>
+> Regards,
+>
+> Myrrh
+>
