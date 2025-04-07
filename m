@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B04A22D7B2;
-	Mon,  7 Apr 2025 06:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFA122D7B1;
+	Mon,  7 Apr 2025 06:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008800; cv=none; b=DZwFg3q+ligmlmmstwqA7DNrTZHsg1c61RNSEEh2HFuZyDiXxUefPs/V6FWY3C3NlqQg9wYg436VCtwNRgbCqBO7ZDpSAiia/En6u+Vo2Qfx3y4mCtXwPiRKwME9YMApL5hVHz2l/0WxSdjThf1l1TWCVuK2/gH0J7ujWw046GI=
+	t=1744008800; cv=none; b=Ka0fy3WtFioxsPk8eUVL2zY6JUGIK1H1NTXTBYi9+Pqsqhtz9y2+MXDmnxrWh9r0Zp6akkoVgH7HgduoT1RBeMGm0WKn1Rrb4/8HCzew1tpJoXXdll2Dzf+8MSH8dFlS5UL7jbwygNuZD76LKqAiSk3BSKeRRMPtXN8z6Wq8Hnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744008800; c=relaxed/simple;
-	bh=1m4pGrKjarsVyBk2sHbIz0kz1QLrAgcqnYe0JpUbZkA=;
+	bh=kr1493r0mCxh9Smwnzq2sT4EOgraIN/H6Zk+RSFwpBw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lH+RFSbNrOTijuHU66lRgzovl95GpHi7q6GvS8RKk1NTDlAPk9qQ9/RazNsVudG1XJcsq99lEm1oIZHds5GAp0U9xWnzHoRiwgLima7a9n8OZmqXeJadeN61BlQQz11FQmVcdOA2ClSQVj9VvZUGlUFy55SyHQfacEzwTb6J5nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mkb5WT+Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QZWUTXSj; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=mLZEkIJgNy3fmj+qC4bM3GUGcPCNVfy46DDVy11qmXvReu0b8RtIoaiw5jBykzcl7XxQRBEnQsRQ+wvx/jo5iBu8C/RO4IJvjaky+LAGX9xw9+u7nzaq2NLhoZn8oMzQAAnrxpbJ8NDI0M25SWxgYuj7Xyhzz/+fM23yqu6YdkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DaPb9ygV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X24OgPGa; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mkb5WT+Y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QZWUTXSj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DaPb9ygV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X24OgPGa"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008796;
+	s=2020; t=1744008795;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0hGEGPrYAeGEEY4KfXy0LyZoEFXiYSsEkS/Ru5j/+Io=;
-	b=Mkb5WT+YUXsT/8FtcHbecxTApa0LVrVumSyNF2ddzkoDb6a76Rqms1Ow/ee1RZjkkS+16K
-	u6Yuk23PdLEWsYsj2NfrFboHJHncaAR+gLnjlvcoFSv80vLBhIHQN335zzdCvSGOOWextH
-	p7GD1FYakO6AsMlZCWf4snM5GYaGiswMvyRZXkjR8hUiOQARfl2G4PC6gJApRyKYNf1MGh
-	+ttf8h4OzWdHupbGYWNyCYPm6jA40U2fL18S61XNw5L9L7q2YCf/o2N1fbArEk8AmzcnU5
-	im4fjC1zoBCKMenCdUQzuON/w3kHkW+wiOgizJtLI8JNSj4RATcg0P2NlnGjYA==
+	bh=R9tNYn1A7xCJCEfyuN7DqxsUEM5cT1Wf6v4wfadNgQw=;
+	b=DaPb9ygVoceu7y23NxtPhtA/1626L9zDd6Ge4IcjV3uuQ0EG9uc6Ib0x0vNreccd0JRo5N
+	R1BDHL3FTsBfaMDdYHMffDpYiPPBFyJYnqkbF0x4ubiuaJ97VVcb6oX2VQK4kSVsVE5mul
+	DDWCra8q8kcd2Gz/DLDJiH8/qF13mKXl96+zo2yhH583vzKPZ/NXnul1eOzzdRl29jX/aj
+	uegW80nPYoWn7xKUUBAFiEAB0ANfh155cTrQv3jlpsRvM8DIZP8Z3AhNUTdsU/BmWHWEaM
+	rmKvoOwIV0vJSReBsiRXElg071AtUFscW7CxxYR+xyKYZ1NLCqNqPAmIX5+e2g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008796;
+	s=2020e; t=1744008795;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0hGEGPrYAeGEEY4KfXy0LyZoEFXiYSsEkS/Ru5j/+Io=;
-	b=QZWUTXSj1lfBXo5lr71SoE9ResbdyhCYHc0UahaVHh3rWVoE/wSj6uBKtR/apJvLTvRjzD
-	fz1vKkZdRc0ap2Bw==
-Date: Mon, 07 Apr 2025 08:52:52 +0200
-Subject: [PATCH v2 29/32] selftests/nolibc: rename vfprintf test suite
+	bh=R9tNYn1A7xCJCEfyuN7DqxsUEM5cT1Wf6v4wfadNgQw=;
+	b=X24OgPGaw6uBBnj+2v9K590oczvbjqMFJvA9AKQ+CFLgExmmscTruzMxX6ZIxspAejPle8
+	eqf8O8YU0Xqz+6AQ==
+Date: Mon, 07 Apr 2025 08:52:50 +0200
+Subject: [PATCH v2 27/32] tools/nolibc: add snprintf() and friends
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-29-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-27-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,47 +57,88 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1295;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1911;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=1m4pGrKjarsVyBk2sHbIz0kz1QLrAgcqnYe0JpUbZkA=;
- b=jK4ZmALcMJeh5JmuULzDop3M2vDXEc2vzdzs7aK+yBMOlg+bb4hg5LRVK6XDmm1oSLKmfhLXe
- GEaC/2qMZQADrB8p5eTQzPIgK1CmR2KtkNFvsYupfMWTzRfBg4nUvlK
+ bh=kr1493r0mCxh9Smwnzq2sT4EOgraIN/H6Zk+RSFwpBw=;
+ b=T169iwSDEAw6NBOfISyp8FfGy70pTOpo2d0vbbH4ooZWXmB2gSDkpeRZS7m3SVrgxlcN+2R+s
+ GKaaqWzQRNRDEC3ug+KAPNi8BwbFnGRewrekivT5jyR6DvLMlgmIcZu
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-With the addition of snprintf() and its usage in nolibc-test, the name of
-the "vfprintf" test suite is not accurate anymore.
-
-Rename the suite to be more generic.
+Add more of the printf() functions.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Acked-by: Willy Tarreau <w@1wt.eu>
 ---
- tools/testing/selftests/nolibc/nolibc-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/include/nolibc/stdio.h | 55 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index 8fb241af33cbba2ceb1303bf41582d51f70df68e..6dfa94df37547dae46ab19195a763fe22b065bab 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1390,7 +1390,7 @@ static int test_scanf(void)
- 	return 0;
+diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
+index b17b473bd8751a6283309178b4848e61e1683305..46bd90f96d654fadda20292baddc98358a3afc62 100644
+--- a/tools/include/nolibc/stdio.h
++++ b/tools/include/nolibc/stdio.h
+@@ -389,6 +389,61 @@ int dprintf(int fd, const char *fmt, ...)
+ 	va_start(args, fmt);
+ 	ret = vdprintf(fd, fmt, args);
+ 	va_end(args);
++
++	return ret;
++}
++
++static int __nolibc_sprintf_cb(intptr_t _state, const char *buf, size_t size)
++{
++	char **state = (char **)_state;
++
++	memcpy(*state, buf, size);
++	*state += size;
++	return 0;
++}
++
++static __attribute__((unused, format(printf, 3, 0)))
++int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
++{
++	char *state = buf;
++	int ret;
++
++	ret = __nolibc_printf(__nolibc_sprintf_cb, (intptr_t)&state, size, fmt, args);
++	if (ret < 0)
++		return ret;
++	buf[(size_t)ret < size ? (size_t)ret : size - 1] = '\0';
++	return ret;
++}
++
++static __attribute__((unused, format(printf, 3, 4)))
++int snprintf(char *buf, size_t size, const char *fmt, ...)
++{
++	va_list args;
++	int ret;
++
++	va_start(args, fmt);
++	ret = vsnprintf(buf, size, fmt, args);
++	va_end(args);
++
++	return ret;
++}
++
++static __attribute__((unused, format(printf, 2, 0)))
++int vsprintf(char *buf, const char *fmt, va_list args)
++{
++	return vsnprintf(buf, SIZE_MAX, fmt, args);
++}
++
++static __attribute__((unused, format(printf, 2, 3)))
++int sprintf(char *buf, const char *fmt, ...)
++{
++	va_list args;
++	int ret;
++
++	va_start(args, fmt);
++	ret = vsprintf(buf, fmt, args);
++	va_end(args);
++
+ 	return ret;
  }
  
--static int run_vfprintf(int min, int max)
-+static int run_printf(int min, int max)
- {
- 	int test;
- 	int ret = 0;
-@@ -1551,7 +1551,7 @@ static const struct test test_names[] = {
- 	{ .name = "startup",    .func = run_startup    },
- 	{ .name = "syscall",    .func = run_syscall    },
- 	{ .name = "stdlib",     .func = run_stdlib     },
--	{ .name = "vfprintf",   .func = run_vfprintf   },
-+	{ .name = "printf",     .func = run_printf     },
- 	{ .name = "protection", .func = run_protection },
- 	{ 0 }
- };
 
 -- 
 2.49.0
