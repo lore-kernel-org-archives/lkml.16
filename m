@@ -1,131 +1,120 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD1E225388;
-	Mon,  7 Apr 2025 08:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014985; cv=pass; b=AzMyFpr7+0LuPi1mOdah880hb0RaacKnAYZQYO7Mb7RLyosczwxRgp+6onAg6H310r9IdK503HwQApXBSjivDY8q6lr7aibZZTLgKAqeOxnul8uY++9QM0o7CjyidNs23unBeZ+6amfVVZKps6iDHQqzxzXQNhmKJuyBenqDuVc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014985; c=relaxed/simple;
-	bh=kromgZXIv13kuVYm/VYq9Vqu5/atevF4A48Q60kqXWo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dCT/7FUECIIleWbyd3JijusIglARKYUvgJdIt6aBlWGi+llia3MiqDl/dS9wZMtE4KAxqpuy2KHCsBuQoCDL1UxzrOG1Zr2RAk1zkTj5o0LaSdi7c+7/cnCWcnjIC9wbR9CW/hHU7B6nDvwJEz98GIwH0EiABXr2OtmBrtID9CY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=syv7AMso; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=PWbDy5LH; arc=pass smtp.client-ip=81.169.146.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917FF22689C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744015045; cv=none; b=j8dlVrYbhyzfHRRLd5o9lw4Sg+efSDvmundj2seEuWL5RIHH4GKVo4vYOFyFZ6A7sI+euGX3GvJa/NoKtFyuaQDvWmpwcqMJPHmt+1YBdOHNIbEZyIonQdcZaY/ptGOn30VwLkADNsIhNdtanfb5jacoHleLC6I4oK1pvVighyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744015045; c=relaxed/simple;
+	bh=r9MKe/SVH5Cpaz/tNBI5uI7KSiWB2m0t/5DQuFADqN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=smarIw3I3pwqy9I7JuuRM9snFTGbyMLH1Ngl6ThGdCAdPt9KPbNJzwdD21UX6R8+nQKM/ve+aTxeFXarAQldNlwWw2W+EKzSngjNmI3hf01umIHDffBF02Gj5r2RccUToWFpp0kIVpzRAVkuFZmKKeVeoXfvtyi3Yhe/aiTkTLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VfhuKKF0; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="syv7AMso";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="PWbDy5LH"
-ARC-Seal: i=1; a=rsa-sha256; t=1744014802; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=ar/samsZZ9TJLPgT2eaggsLuoFDEY8sucy5XZhtj4ykVNPFL8v3mTq7MtIq6BizGYI
-    mm0HvsKeaGhFbhcOzkSjXbN/h1lT0Ygc4JAt34w39HeJsyThSB7Q/RVQ9QN6C36WiRdK
-    n+ss8sUg3YMIPGIpMUEOscYmucSKadPwMFGwKe9lsgXRrldF+nkooVRzILgyg53c+Gaz
-    5sLbZorSDHRvTlpSdNvQwpj3Q1TNMMXcCkBxA7NI9KZRpv0pW+g/boFUjDW0H7UNywFT
-    VcHRDyymH/jQO8kdC0Mk9Ow1A4Ytqe5cCkUTdF4LRWo8lYXaljstbWu/ASrU8IMSVBxl
-    2oFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744014802;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=Loa+HXQddwUp8ekjKdhDfBU3F6SSrLNWEPxiN6o32Mk=;
-    b=sxZJ0QnUpW5ROFW3a3Fo+E5vsG8L0Qq4O1JGsRT+LYPQGYnzLtcDTp6pT+9R0IPBxj
-    LEV5uzwibn73Qkd2tkB5Wl90DaP8PrfZ50ykCM97rnWEjJ2/ClgC32ch2x9NhqXwY44r
-    ON7ZRkvWTvIy24WHq3E0Alz4NR5Ynyj69mqRv4TbQ/fHuHczLLD7RgktyZDopkr4l6Ul
-    spFrSHl3zIisCGfj7ug0itrIhDuHsGFcpqy+PLeR+I5Pc9/gw+XG+NXFav/zfgnYW3uk
-    wxdXgGPjhFjSsrkga0DbGA94w/3Sx0pv5ZEuHYR+2Vhn31uvwOEsHyxwGuWq/k78g2HI
-    C/tA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744014802;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=Loa+HXQddwUp8ekjKdhDfBU3F6SSrLNWEPxiN6o32Mk=;
-    b=syv7AMso8I3WJrb2Q7eJX1DJHV+DHZeijOR5kI3keqLzbsEPX4iL5aS+rRRw2SH99l
-    ntZhieKXa7W6T9QZJ+2rLfZPdobdhEOzMuK0+uk8uStQWr+7yDzdwIMhjg0UcrKoY0ik
-    JGpH/JBPdJN3WSZVDy9d0c04ZeNYq/inKZUOldjadqS8kHg764UhIBbC81nDpqtmXbJo
-    1RQwb5UeG9LwYI9NWIpUbMV1JcUc4nKpoPtgPQX+55swIJRn7FC6zEhCMQEJ6dzu1NRv
-    0awzaiOWsfgfnEBlh8CDiW1ht61OpLgP9FeShkJJ/Mcl+HsDOLQAnH+zMzCCa4M8sk5k
-    /t3w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744014802;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=Loa+HXQddwUp8ekjKdhDfBU3F6SSrLNWEPxiN6o32Mk=;
-    b=PWbDy5LHEYN0+YxRVU2VwcIj5wnZHhlMeHUu7f/Z8f6piinZTmSjDbEcqzedfxM28S
-    lMrahhtzIY69RlNo7vBA==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b1101378XLK0t
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 7 Apr 2025 10:33:21 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Arthur Kiyanovski <akiyano@amazon.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] eth: nfp: remove __get_unaligned_cpu32 from netronome drivers
-Date: Mon,  7 Apr 2025 10:33:06 +0200
-Message-Id: <20250407083306.1553921-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VfhuKKF0"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2264c9d0295so324955ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744015043; x=1744619843; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PM1xp6gzVd/l23ioaAQhkaBubnLpRRJNpYojAABDe0E=;
+        b=VfhuKKF0VF5NV8pmqp3gn4ZiuVWu7z2Q7x4sv8PtHaQkh30dsCYr5KrAzp/j5oASnh
+         AndhI0IEbBPgO/mrPmhq2aX22wwb91nnKZcC2lKN5YFad/+NVuwYHD4IuYrHetetROsh
+         TvSBGbXKl8GZ1rdTPE3DLQj3MkVR+aeztcHV/mYUu6Hpptf1z7ZHhJmknxqSKJtfWQF4
+         BB0sfZrHLInVRNV06AY59R9tXKJP5jtiYzs/7uIMn4dOJacAZxxwCydA4NYT1wTF8VSD
+         akeVFufUUqNxKRcSwVX4nS8vPcxsR6dVcXa7GpcAesKj2MrkgI9cyBPMEfMLizpRKk+p
+         6Z3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744015043; x=1744619843;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PM1xp6gzVd/l23ioaAQhkaBubnLpRRJNpYojAABDe0E=;
+        b=lucl5YuSVETVf+JjmG1gQJNHoPrMhIBFtCn4aRCmbO9VRFaVuksspdFrjRPQjMFkY/
+         0fz/bULoHpFvqRSicgd3OvNGHEkZCJqQsBziV2hkRfILpkTC5E6lEp5+oHyhPqE4a539
+         oUzQ4uo/EX6eaoZo+17rEZ8kjLmGh1d8XKyz1tf30S+RL3VjOnlaPN1D8uUSn/tEBtox
+         2+hICMXc59hmcjumoHFzmNEkT6BidxdAqNEUvK7YuTXIN0N7P2FEmTOIfAdinJC+zZwk
+         FWQ8HZab4CcItICgbSctfsLZVxk/rWmWYo0QHAs7MXzN8+2VHIHadx4E/c9dWWQhRE0Q
+         bA6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXSg0B4QvWTDapKOz2dyaTxVWGS4n6F4wV6NsZz7oLj0k0h5JpeMtT5prVzPp336iA2N4AC5O3P6+ZGDt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2prHVdXhxAC1TLD3/IwoyWx/cQUrGB69DaOln1zZ4iZTtn0Uk
+	R0TcPvPTUeoGXpfe8RRlOFUt/c8gWh2Jp9/Kre+jGTXAa1H54f1azhCR6KQVfA==
+X-Gm-Gg: ASbGncsEx1rSf8Dy/K2ACrMNFFoYNPXUE3f4Zp/8JKD8Ybna19WKqsZbecFhb9CHSb7
+	MyAFMs/0AGJA2k2Gp/9OddnS+RKJV17I/N12ssZCvuIRAHQRjYGZwJf7rp/MQ2hZEo7p+1n7X5C
+	DRNrNzNa364u9sIyPyu+DIomEDpFI91ziFNLFiKMqfLzkAD4I7vmnxbjvXRVIDJi34dm7hNIylw
+	PchwgZZZVToDPeGROGJqBwU2cgINoDfip0Ck6jbc7xvLZEodfw8IBUHIfex0XIRoNrCrs6FVSt4
+	eeadd8SbNLO43WpgTuMrQ04PnKguP4CqXHa4O64PMRhB/XwvrJuyHT1gF++oBoi6Goe73Hk4K9E
+	eFLo=
+X-Google-Smtp-Source: AGHT+IFEcecwODNx4wiqbqJKpBlZrrA4mcqLS8OyyMt6tYMj4vc7ksfjibFdVhVKjFGu4nMmJA0OlA==
+X-Received: by 2002:a17:903:2308:b0:215:8232:5596 with SMTP id d9443c01a7336-22a95e638e2mr3367595ad.16.1744015042625;
+        Mon, 07 Apr 2025 01:37:22 -0700 (PDT)
+Received: from google.com (188.152.87.34.bc.googleusercontent.com. [34.87.152.188])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d19c5sm7904646b3a.20.2025.04.07.01.37.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:37:22 -0700 (PDT)
+Date: Mon, 7 Apr 2025 08:37:14 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"jgg@nvidia.com" <jgg@nvidia.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
+ arm_smmu_make_s2_domain_ste()
+Message-ID: <Z_OOukRG0foehmV6@google.com>
+References: <cover.1741150594.git.nicolinc@nvidia.com>
+ <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+ <a95b39a55c324907a7001d3a2cdf076b@huawei.com>
+ <Z8iNfnZ9N5Lczxmq@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8iNfnZ9N5Lczxmq@Asurada-Nvidia>
 
-The __get_unaligned_cpu32 function is deprecated. So, replace it with
-the more generic get_unaligned and just cast the input parameter.
+On Wed, Mar 05, 2025 at 09:44:30AM -0800, Nicolin Chen wrote:
+> On Wed, Mar 05, 2025 at 08:50:17AM +0000, Shameerali Kolothum Thodi wrote:
+> > > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > index bd9d7c85576a..e08c4ede4b2d 100644
+> > > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > > @@ -887,7 +887,7 @@ struct arm_smmu_entry_writer_ops {
+> > >  void arm_smmu_make_abort_ste(struct arm_smmu_ste *target);
+> > >  void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
+> > >  				 struct arm_smmu_master *master,
+> > > -				 struct arm_smmu_domain *smmu_domain,
+> > > +				 struct arm_smmu_domain *smmu_domain,
+> > > u16 vmid,
+> > >  				 bool ats_enabled);
+> > 
+> > Now that vmid is an input, do we need some kind of validation here as
+> > at least vmid = 0 is reserved I guess for bypass STEs.
+> 
+> Perhaps it should do a WARN_ON_ONCE(!vmid), as it doesn't make
+> sense for a caller to make an S2-bypass STE with this function.
+> 
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
----
- drivers/net/ethernet/netronome/nfp/nfd3/dp.c | 2 +-
- drivers/net/ethernet/netronome/nfp/nfdk/dp.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
++1, a warning should suffice as the caller isn't expected to call this
+with vmid = 0. For the s2 bypass case, we already set vmid field to 0 in
+make_cdtable_ste for clients who *really* want the vmid = 0.
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfd3/dp.c b/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-index f1c6c47564b1..08086eb76996 100644
---- a/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfd3/dp.c
-@@ -779,7 +779,7 @@ nfp_nfd3_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
- 		case NFP_NET_META_CSUM:
- 			meta->csum_type = CHECKSUM_COMPLETE;
- 			meta->csum =
--				(__force __wsum)__get_unaligned_cpu32(data);
-+				(__force __wsum)get_unaligned((u32 *)data);
- 			data += 4;
- 			break;
- 		case NFP_NET_META_RESYNC_INFO:
-diff --git a/drivers/net/ethernet/netronome/nfp/nfdk/dp.c b/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-index ebeb6ab4465c..ab3cd06ed63e 100644
---- a/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfdk/dp.c
-@@ -779,7 +779,7 @@ nfp_nfdk_parse_meta(struct net_device *netdev, struct nfp_meta_parsed *meta,
- 		case NFP_NET_META_CSUM:
- 			meta->csum_type = CHECKSUM_COMPLETE;
- 			meta->csum =
--				(__force __wsum)__get_unaligned_cpu32(data);
-+				(__force __wsum)get_unaligned((u32 *)data);
- 			data += 4;
- 			break;
- 		case NFP_NET_META_RESYNC_INFO:
--- 
-2.34.1
+> Thanks
+> Nicolin
+> 
 
+Thanks
+Praan
