@@ -1,39 +1,42 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F63327701
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12194253359;
+	Mon,  7 Apr 2025 13:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032115; cv=none; b=AfE3R0ap2M1uWPti468QEaR+0vi9aZetmPsNkuPW82qp7BzUJEhGmkhiZFIqWT2UvmqK6QxTEV3pNVD0GPhZ4tnX9d6zfQaVsGK+lphUHfZm5iJU1iPZy5AR4vOq1gLY3B1qQ13ZMZPo4hw1L0T4VeiE77BSxwiXhjtuQfspHgE=
+	t=1744032125; cv=none; b=op3aPT3bM4UzYbsYkPtij5aDyOs+z1WUtxn2BXrKp7/Owe0pZkvWZb3PCKrBtWAF19eMm7fGgtD7s5C725Dttq5xK0xG9WkuyEZ8IdVIxcN1ggeCmdICtzsg0QI+qFjEc6ONYt6376Ah6MjoT5/VBGz+AfJneB6Ofs5skyuJgbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032115; c=relaxed/simple;
-	bh=tEm0yoPL7HsFyKoB6Jrai42U3hj3XKias8jVPJ1EmCk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tRbt9CYfc/qGenyK7p7/eosY1Dh4JSPvMMKvaCLBDfaU/tvsdbaBGCMODzgrCxVNQRKSmVzFP+dX8NQs9Kn0V87h1W0qC28bXrsUIebXgCFyZItMcYDBza0ldFb+v0dMBe+UC/oIDzU7oo3C1w1JWRirrUyAXqVHX+3btBIUGbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=a52iuZhe; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1744032125; c=relaxed/simple;
+	bh=JaSD1slroXG8EfiX5HR0eSyQaxOR5hoY6v6GGmonORU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=esT8swZkv50fASjcgQa/+3NYuF4ZCF9KUK+LcXithCzLtATYdVxAGUmC9hVG8Mtv9jhzorPm6EJY8wgthtxZ7WVm+OMwQrl1wF+skTLLogSDn4Asm28miAf5X9DGIj27t4zPwo9dtDJQCUVojLsLdvAJqg4L/UbmzgmNrTerZaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1KQEh8R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="a52iuZhe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=fJOGxITqQFCDxTSOtWfmRrQRp3EbeOYAMMzg7l9NGuU=; b=a52iuZheeGkohGMz
-	UvhNZAI7Mn8b1sszpZvwect7dyU8YNmTUzOqQtQkC0HhrykNLDcm5vHlv+csyQMhwEAtw1oe1gnkS
-	dzaAtEwKMt4YFUalXoMfqS1hoy80kcd2ovcUTgij9nDFSoXnDb4G2GS7PEXt4CiNvma/P23a7iLSO
-	wbyDd32oveN0tmEYdGwTEQu81Lod48+EdMJsGaj2RhPqAvKIa9/FEKEVxoL6ChFtmmF98rnIl3WuJ
-	RzOfB36TvShvFyR8/wqslXnyFliNn9AJAfqL9f5b8u0bUG5xsU4ZaKCBUzuV7cOYFnI8ap0WCIOOu
-	4tTU3/bwaksuCrm3kQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u1mQ4-009V33-1k
-	for linux-kernel@vger.kernel.org;
-	Mon, 07 Apr 2025 13:21:44 +0000
-Date: Mon, 7 Apr 2025 13:21:44 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: linux-kernel@vger.kernel.org
-Subject: gcc ICE while building landlock
-Message-ID: <Z_PRaKx7q70MKgCA@gallifrey>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1KQEh8R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E6AC4CEE7;
+	Mon,  7 Apr 2025 13:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744032124;
+	bh=JaSD1slroXG8EfiX5HR0eSyQaxOR5hoY6v6GGmonORU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h1KQEh8RWl7GMy1SAP0XKZi/pgV8Cg6mxJVtZt8juDl3uknq8f0P7G5VKbmR5rKBv
+	 hIXPGqp5mmGjqr+B9+f87Yg/8dSGqde5HvQnlkTpMo5+xhQk1sf/YvZvct53zt+9zn
+	 WeP/+SV/ShRDtxj+7MaP+yoK/BI1ftms/po5VSJSLJIzDXtddagqWYqHwSLy9f3iBW
+	 xfxrmr+waXw5Py4N1sC4qiaBC1G/u6av+rF9g2UcHiTy6ZU1Mirh3L4n/ISCQBxmF2
+	 CWOWQX7e22rja/jYhZYZHLAGe62pTyF14Sn0LRGhu/iDIZik+TE+6G5GvqX+OAAwvA
+	 L4znjFY5GEpBw==
+Date: Mon, 7 Apr 2025 15:21:59 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Xiangsheng Hou <xiangsheng.hou@mediatek.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, eperezma@redhat.com, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, benliang.zhao@mediatek.com, bin.zhang@mediatek.com
+Subject: Re: [RESEND] virtiofs: add filesystem context source name check
+Message-ID: <20250407-handgefertigt-duzen-d92bfc181937@brauner>
+References: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,495 +45,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 13:16:59 up 334 days, 31 min,  1 user,  load average: 0.02, 0.02,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
 
-Hi,
-  On 6.15-rc1 (with a few more code deletion patches on top),
-I'm seeing an ICE while building landlock with an allyesconfig
-on Fedora 42 x86-64 gcc:
+On Mon, Apr 07, 2025 at 07:50:49PM +0800, Xiangsheng Hou wrote:
+> In certain scenarios, for example, during fuzz testing, the source
+> name may be NULL, which could lead to a kernel panic. Therefore, an
+> extra check for the source name should be added.
 
-make -j 32 KCFLAGS=3D"-Wno-error=3Dunterminated-string-initialization -Wno-=
-error=3Dsequence-point -Wno-error=3Dunterminated-string-initialization"
+Oha, that's not great and easily reproducible:
 
-*** WARNING *** there are active plugins, do not report this as a bug unles=
-s you can reproduce it without enabling any plugins.
-Event                            | Plugins
-PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-PLUGIN_FINISH_DECL               | randomize_layout_plugin
-PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layout_p=
-lugin
-PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=80=
-=99:
-security/landlock/fs.c:1745:61: internal compiler error: in count_type_elem=
-ents, at expr.cc:7095
- 1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-      |                                                             ^
-Please submit a full bug report, with preprocessed source.
-See <http://bugzilla.redhat.com/bugzilla> for instructions.
-Preprocessed source stored into /tmp/ccz1wjwI.out file, please attach this =
-to your bugreport.
-make[4]: *** [scripts/Makefile.build:203: security/landlock/fs.o] Error 1
-make[3]: *** [scripts/Makefile.build:461: security/landlock] Error 2
-make[2]: *** [scripts/Makefile.build:461: security] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/discs/fast/kernel/Makefile:2006: .] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+[13344.588906] Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN
+[13344.602350] KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+[13344.610367] CPU: 8 UID: 0 PID: 1427 Comm: anon_inode_test Not tainted 6.15.0-rc1-gb96146cd957f #21 PREEMPT(undef)
+[13344.617410] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)/Incus, BIOS unknown 2/2/2022
+[13344.621368] RIP: 0010:strcmp+0x5b/0xb0
+[13344.624462] Code: fa 48 c1 e8 03 83 e2 07 42 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 6b ff 4c 8d 66 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 24 41 3a 6c 24 ff 74 ae 19 c0
+[13344.635506] RSP: 0018:ffffc900050dfd28 EFLAGS: 00010246
+[13344.638112] RAX: 0000000000000000 RBX: ffff8881918158a9 RCX: fffff52000a1bf86
+[13344.640726] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8881918158a8
+[13344.643279] RBP: 0000000000000069 R08: 0000000000000000 R09: fffffbfff2aa7c82
+[13344.646722] R10: ffffc900050dfd58 R11: 0000000000000000 R12: 0000000000000001
+[13344.648844] R13: dffffc0000000000 R14: ffff8881e2110ce0 R15: dffffc0000000000
+[13344.651382] FS:  00007f891cf53740(0000) GS:ffff88843fd42000(0000) knlGS:0000000000000000
+[13344.654257] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[13344.656296] CR2: 000055dfec6997d8 CR3: 00000001cbf21006 CR4: 0000000000770ef0
+[13344.658863] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[13344.661325] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[13344.662722] PKRU: 55555554
+[13344.663266] Call Trace:
+[13344.663776]  <TASK>
+[13344.664303]  virtio_fs_get_tree+0xc4/0x1060
+[13344.665237]  ? rcu_is_watching+0x12/0xb0
+[13344.666047]  ? cap_capable+0x170/0x320
+[13344.666802]  vfs_get_tree+0x87/0x2f0
+[13344.667540]  vfs_cmd_create+0xb2/0x240
+[13344.668317]  __x64_sys_fsconfig+0x629/0x9f0
+[13344.669143]  ? vfs_cmd_create+0x240/0x240
+[13344.669956]  ? rcu_is_watching+0x12/0xb0
+[13344.670738]  ? syscall_trace_enter+0x129/0x230
+[13344.671617]  do_syscall_64+0x74/0x190
+[13344.672354]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
 
-=46rom the top of the dumped .out file - happy to share the lot
-and config if someone thinks it might help; not tried
-anything else yet.
+This needs to be backported to all LTS kernels.
 
-Dave
-
-// Target: x86_64-redhat-linux
-// Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,=
-c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=3D/usr --mandir=3D/=
-usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttp://bugzilla.r=
-edhat.com/bugzilla --enable-shared --enable-threads=3Dposix --enable-checki=
-ng=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --d=
-isable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-buil=
-d-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libs=
-tdcxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enabl=
-e-plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-15.=
-0.1-build/gcc-15.0.1-20250329/obj-x86_64-redhat-linux/isl-install --enable-=
-offload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --wit=
-hout-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3D=
-generic --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux --with-build-co=
-nfig=3Dbootstrap-lto --enable-link-serialization=3D1
-// Thread model: posix
-// Supported LTO compression algorithms: zlib zstd
-// gcc version 15.0.1 20250329 (Red Hat 15.0.1-0) (GCC)
-//
-// *** WARNING *** there are active plugins, do not report this as a bug un=
-less you can reproduce it without enabling any plugins.
-// Event                            | Plugins
-// PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-// PLUGIN_FINISH_DECL               | randomize_layout_plugin
-// PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layou=
-t_plugin
-// PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-// PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-// security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=
-=80=99:
-// security/landlock/fs.c:1745:61: internal compiler error: in count_type_e=
-lements, at expr.cc:7095
-//  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-//       |                                                             ^
-// Please submit a full bug report, with preprocessed source.
-// See <http://bugzilla.redhat.com/bugzilla> for instructions.
-
-// /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -nostdinc -I ./arch/x=
-86/include -I ./arch/x86/include/generated -I ./include -I ./include -I ./a=
-rch/x86/include/uapi -I ./arch/x86/include/generated/uapi -I ./include/uapi=
- -I ./include/generated/uapi -iplugindir=3D/usr/lib/gcc/x86_64-redhat-linux=
-/15/plugin -D __KERNEL__ -D CC_USING_FENTRY -D RANDSTRUCT -D LATENT_ENTROPY=
-_PLUGIN -D STACKLEAK_PLUGIN -D KBUILD_MODFILE=3D"security/landlock/landlock=
-" -D KBUILD_BASENAME=3D"fs" -D KBUILD_MODNAME=3D"landlock" -D __KBUILD_MODN=
-AME=3Dkmod_landlock -include ./include/linux/compiler-version.h -include ./=
-include/linux/kconfig.h -include ./include/linux/compiler_types.h -MMD secu=
-rity/landlock/.fs.o.d security/landlock/fs.c -iplugindir=3D/usr/lib/gcc/x86=
-_64-redhat-linux/15/plugin -quiet -dumpdir security/landlock/ -dumpbase fs.=
-c -dumpbase-ext .c -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mn=
-o-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup =
--march=3Dx86-64 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -mstack-pr=
-otector-guard-reg=3Dgs -mstack-protector-guard-symbol=3D__ref_stack_chk_gua=
-rd -mindirect-branch=3Dthunk-extern -mindirect-branch-register -mindirect-b=
-ranch-cs-prefix -mfunction-return=3Dthunk-extern -mharden-sls=3Dall -mrecor=
-d-mcount -mfentry -O2 -Werror -Wall -Wundef -Werror=3Dimplicit-function-dec=
-laration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-prot=
-otypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-=
-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger=
--than=3D2048 -Wno-main -Wdangling-pointer=3D0 -Wvla -Wno-pointer-sign -Wcas=
-t-function-type -Wstringop-overflow=3D0 -Warray-bounds=3D0 -Walloc-size-lar=
-ger-than=3D18446744073709551615EiB -Wimplicit-fallthrough=3D5 -Werror=3Ddat=
-e-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenu=
-m-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wunused-const-v=
-ariable=3D0 -Wno-packed-not-aligned -Wformat-overflow=3D0 -Wformat-truncati=
-on=3D0 -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initi=
-alizers -Wno-type-limits -Wno-shift-negative-value -Wno-maybe-uninitialized=
- -Wno-sign-compare -Wno-unused-parameter -Wno-error=3Dunterminated-string-i=
-nitialization -Wno-error=3Dsequence-point -Wno-error=3Dunterminated-string-=
-initialization -std=3Dgnu11 -p -fshort-wchar -funsigned-char -fno-common -f=
-no-PIE -fno-strict-aliasing -fcf-protection=3Dbranch -falign-jumps=3D1 -fal=
-ign-loops=3D1 -fno-asynchronous-unwind-tables -fno-jump-tables -fpatchable-=
-function-entry=3D64,64 -fno-delete-null-pointer-checks -fno-allow-store-dat=
-a-races -fno-reorder-blocks -fno-ipa-cp-clone -fno-partial-inlining -fstack=
--protector-strong -ftrivial-auto-var-init=3Dpattern -fzero-init-padding-bit=
-s=3Dall -fno-stack-clash-protection -fzero-call-used-regs=3Dused-gpr -fno-i=
-nline-functions-called-once -fmin-function-alignment=3D64 -fstrict-flex-arr=
-ays=3D3 -fno-strict-overflow -fstack-check=3Dno -fconserve-stack -fplugin=
-=3D./scripts/gcc-plugins/randomize_layout_plugin.so -fplugin=3D./scripts/gc=
-c-plugins/latent_entropy_plugin.so -fplugin=3D./scripts/gcc-plugins/stackle=
-ak_plugin.so -fplugin-arg-stackleak_plugin-track-min-size=3D100 -fplugin-ar=
-g-stackleak_plugin-arch=3Dx86 -fsanitize=3Dkernel-address -fasan-shadow-off=
-set=3D0xdffffc0000000000 -fsanitize=3Dbounds-strict -fsanitize=3Dshift -fsa=
-nitize=3Dinteger-divide-by-zero -fsanitize=3Dbool -fsanitize=3Denum -fsanit=
-ize-coverage=3Dtrace-pc -fsanitize-coverage=3Dtrace-cmp --param=3Dasan-inst=
-rumentation-with-call-threshold=3D10000 --param=3Dasan-stack=3D1 --param=3D=
-asan-instrument-allocas=3D1 --param=3Dasan-globals=3D1 --param=3Dasan-kerne=
-l-mem-intrinsic-prefix=3D1 -o - -frandom-seed=3D0 -fdump-noaddr
-
-// Target: x86_64-redhat-linux
-// Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,=
-c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=3D/usr --mandir=3D/=
-usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttp://bugzilla.r=
-edhat.com/bugzilla --enable-shared --enable-threads=3Dposix --enable-checki=
-ng=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --d=
-isable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-buil=
-d-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libs=
-tdcxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enabl=
-e-plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-15.=
-0.1-build/gcc-15.0.1-20250329/obj-x86_64-redhat-linux/isl-install --enable-=
-offload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --wit=
-hout-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3D=
-generic --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux --with-build-co=
-nfig=3Dbootstrap-lto --enable-link-serialization=3D1
-// Thread model: posix
-// Supported LTO compression algorithms: zlib zstd
-// gcc version 15.0.1 20250329 (Red Hat 15.0.1-0) (GCC)
-//
-// *** WARNING *** there are active plugins, do not report this as a bug un=
-less you can reproduce it without enabling any plugins.
-// Event                            | Plugins
-// PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-// PLUGIN_FINISH_DECL               | randomize_layout_plugin
-// PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layou=
-t_plugin
-// PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-// PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-// security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=
-=80=99:
-// security/landlock/fs.c:1745:61: internal compiler error: in count_type_e=
-lements, at expr.cc:7095
-//  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-//       |                                                             ^
-// Please submit a full bug report, with preprocessed source.
-// See <http://bugzilla.redhat.com/bugzilla> for instructions.
-
-// /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -nostdinc -I ./arch/x=
-86/include -I ./arch/x86/include/generated -I ./include -I ./include -I ./a=
-rch/x86/include/uapi -I ./arch/x86/include/generated/uapi -I ./include/uapi=
- -I ./include/generated/uapi -iplugindir=3D/usr/lib/gcc/x86_64-redhat-linux=
-/15/plugin -D __KERNEL__ -D CC_USING_FENTRY -D RANDSTRUCT -D LATENT_ENTROPY=
-_PLUGIN -D STACKLEAK_PLUGIN -D KBUILD_MODFILE=3D"security/landlock/landlock=
-" -D KBUILD_BASENAME=3D"fs" -D KBUILD_MODNAME=3D"landlock" -D __KBUILD_MODN=
-AME=3Dkmod_landlock -include ./include/linux/compiler-version.h -include ./=
-include/linux/kconfig.h -include ./include/linux/compiler_types.h -MMD secu=
-rity/landlock/.fs.o.d security/landlock/fs.c -iplugindir=3D/usr/lib/gcc/x86=
-_64-redhat-linux/15/plugin -quiet -dumpdir security/landlock/ -dumpbase fs.=
-c -dumpbase-ext .c -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mn=
-o-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup =
--march=3Dx86-64 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -mstack-pr=
-otector-guard-reg=3Dgs -mstack-protector-guard-symbol=3D__ref_stack_chk_gua=
-rd -mindirect-branch=3Dthunk-extern -mindirect-branch-register -mindirect-b=
-ranch-cs-prefix -mfunction-return=3Dthunk-extern -mharden-sls=3Dall -mrecor=
-d-mcount -mfentry -O2 -Werror -Wall -Wundef -Werror=3Dimplicit-function-dec=
-laration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-prot=
-otypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-=
-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger=
--than=3D2048 -Wno-main -Wdangling-pointer=3D0 -Wvla -Wno-pointer-sign -Wcas=
-t-function-type -Wstringop-overflow=3D0 -Warray-bounds=3D0 -Walloc-size-lar=
-ger-than=3D18446744073709551615EiB -Wimplicit-fallthrough=3D5 -Werror=3Ddat=
-e-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenu=
-m-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wunused-const-v=
-ariable=3D0 -Wno-packed-not-aligned -Wformat-overflow=3D0 -Wformat-truncati=
-on=3D0 -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initi=
-alizers -Wno-type-limits -Wno-shift-negative-value -Wno-maybe-uninitialized=
- -Wno-sign-compare -Wno-unused-parameter -Wno-error=3Dunterminated-string-i=
-nitialization -Wno-error=3Dsequence-point -Wno-error=3Dunterminated-string-=
-initialization -std=3Dgnu11 -p -fshort-wchar -funsigned-char -fno-common -f=
-no-PIE -fno-strict-aliasing -fcf-protection=3Dbranch -falign-jumps=3D1 -fal=
-ign-loops=3D1 -fno-asynchronous-unwind-tables -fno-jump-tables -fpatchable-=
-function-entry=3D64,64 -fno-delete-null-pointer-checks -fno-allow-store-dat=
-a-races -fno-reorder-blocks -fno-ipa-cp-clone -fno-partial-inlining -fstack=
--protector-strong -ftrivial-auto-var-init=3Dpattern -fzero-init-padding-bit=
-s=3Dall -fno-stack-clash-protection -fzero-call-used-regs=3Dused-gpr -fno-i=
-nline-functions-called-once -fmin-function-alignment=3D64 -fstrict-flex-arr=
-ays=3D3 -fno-strict-overflow -fstack-check=3Dno -fconserve-stack -fplugin=
-=3D./scripts/gcc-plugins/randomize_layout_plugin.so -fplugin=3D./scripts/gc=
-c-plugins/latent_entropy_plugin.so -fplugin=3D./scripts/gcc-plugins/stackle=
-ak_plugin.so -fplugin-arg-stackleak_plugin-track-min-size=3D100 -fplugin-ar=
-g-stackleak_plugin-arch=3Dx86 -fsanitize=3Dkernel-address -fasan-shadow-off=
-set=3D0xdffffc0000000000 -fsanitize=3Dbounds-strict -fsanitize=3Dshift -fsa=
-nitize=3Dinteger-divide-by-zero -fsanitize=3Dbool -fsanitize=3Denum -fsanit=
-ize-coverage=3Dtrace-pc -fsanitize-coverage=3Dtrace-cmp --param=3Dasan-inst=
-rumentation-with-call-threshold=3D10000 --param=3Dasan-stack=3D1 --param=3D=
-asan-instrument-allocas=3D1 --param=3Dasan-globals=3D1 --param=3Dasan-kerne=
-l-mem-intrinsic-prefix=3D1 -o - -frandom-seed=3D0 -fdump-noaddr
-// Target: x86_64-redhat-linux
-// Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,=
-c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=3D/usr --mandir=3D/=
-usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttp://bugzilla.r=
-edhat.com/bugzilla --enable-shared --enable-threads=3Dposix --enable-checki=
-ng=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --d=
-isable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-buil=
-d-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libs=
-tdcxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enabl=
-e-plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-15.=
-0.1-build/gcc-15.0.1-20250329/obj-x86_64-redhat-linux/isl-install --enable-=
-offload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --wit=
-hout-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3D=
-generic --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux --with-build-co=
-nfig=3Dbootstrap-lto --enable-link-serialization=3D1
-// Thread model: posix
-// Supported LTO compression algorithms: zlib zstd
-// gcc version 15.0.1 20250329 (Red Hat 15.0.1-0) (GCC)
-//
-// *** WARNING *** there are active plugins, do not report this as a bug un=
-less you can reproduce it without enabling any plugins.
-// Event                            | Plugins
-// PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-// PLUGIN_FINISH_DECL               | randomize_layout_plugin
-// PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layou=
-t_plugin
-// PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-// PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-// security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=
-=80=99:
-// security/landlock/fs.c:1745:61: internal compiler error: in count_type_e=
-lements, at expr.cc:7095
-//  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-//       |                                                             ^
-// Please submit a full bug report, with preprocessed source.
-// See <http://bugzilla.redhat.com/bugzilla> for instructions.
-
-// /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -nostdinc -I ./arch/x=
-86/include -I ./arch/x86/include/generated -I ./include -I ./include -I ./a=
-rch/x86/include/uapi -I ./arch/x86/include/generated/uapi -I ./include/uapi=
- -I ./include/generated/uapi -iplugindir=3D/usr/lib/gcc/x86_64-redhat-linux=
-/15/plugin -D __KERNEL__ -D CC_USING_FENTRY -D RANDSTRUCT -D LATENT_ENTROPY=
-_PLUGIN -D STACKLEAK_PLUGIN -D KBUILD_MODFILE=3D"security/landlock/landlock=
-" -D KBUILD_BASENAME=3D"fs" -D KBUILD_MODNAME=3D"landlock" -D __KBUILD_MODN=
-AME=3Dkmod_landlock -include ./include/linux/compiler-version.h -include ./=
-include/linux/kconfig.h -include ./include/linux/compiler_types.h -MMD secu=
-rity/landlock/.fs.o.d security/landlock/fs.c -iplugindir=3D/usr/lib/gcc/x86=
-_64-redhat-linux/15/plugin -quiet -dumpdir security/landlock/ -dumpbase fs.=
-c -dumpbase-ext .c -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mn=
-o-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup =
--march=3Dx86-64 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -mstack-pr=
-otector-guard-reg=3Dgs -mstack-protector-guard-symbol=3D__ref_stack_chk_gua=
-rd -mindirect-branch=3Dthunk-extern -mindirect-branch-register -mindirect-b=
-ranch-cs-prefix -mfunction-return=3Dthunk-extern -mharden-sls=3Dall -mrecor=
-d-mcount -mfentry -O2 -Werror -Wall -Wundef -Werror=3Dimplicit-function-dec=
-laration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-prot=
-otypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-=
-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger=
--than=3D2048 -Wno-main -Wdangling-pointer=3D0 -Wvla -Wno-pointer-sign -Wcas=
-t-function-type -Wstringop-overflow=3D0 -Warray-bounds=3D0 -Walloc-size-lar=
-ger-than=3D18446744073709551615EiB -Wimplicit-fallthrough=3D5 -Werror=3Ddat=
-e-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenu=
-m-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wunused-const-v=
-ariable=3D0 -Wno-packed-not-aligned -Wformat-overflow=3D0 -Wformat-truncati=
-on=3D0 -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initi=
-alizers -Wno-type-limits -Wno-shift-negative-value -Wno-maybe-uninitialized=
- -Wno-sign-compare -Wno-unused-parameter -Wno-error=3Dunterminated-string-i=
-nitialization -Wno-error=3Dsequence-point -Wno-error=3Dunterminated-string-=
-initialization -std=3Dgnu11 -p -fshort-wchar -funsigned-char -fno-common -f=
-no-PIE -fno-strict-aliasing -fcf-protection=3Dbranch -falign-jumps=3D1 -fal=
-ign-loops=3D1 -fno-asynchronous-unwind-tables -fno-jump-tables -fpatchable-=
-function-entry=3D64,64 -fno-delete-null-pointer-checks -fno-allow-store-dat=
-a-races -fno-reorder-blocks -fno-ipa-cp-clone -fno-partial-inlining -fstack=
--protector-strong -ftrivial-auto-var-init=3Dpattern -fzero-init-padding-bit=
-s=3Dall -fno-stack-clash-protection -fzero-call-used-regs=3Dused-gpr -fno-i=
-nline-functions-called-once -fmin-function-alignment=3D64 -fstrict-flex-arr=
-ays=3D3 -fno-strict-overflow -fstack-check=3Dno -fconserve-stack -fplugin=
-=3D./scripts/gcc-plugins/randomize_layout_plugin.so -fplugin=3D./scripts/gc=
-c-plugins/latent_entropy_plugin.so -fplugin=3D./scripts/gcc-plugins/stackle=
-ak_plugin.so -fplugin-arg-stackleak_plugin-track-min-size=3D100 -fplugin-ar=
-g-stackleak_plugin-arch=3Dx86 -fsanitize=3Dkernel-address -fasan-shadow-off=
-set=3D0xdffffc0000000000 -fsanitize=3Dbounds-strict -fsanitize=3Dshift -fsa=
-nitize=3Dinteger-divide-by-zero -fsanitize=3Dbool -fsanitize=3Denum -fsanit=
-ize-coverage=3Dtrace-pc -fsanitize-coverage=3Dtrace-cmp --param=3Dasan-inst=
-rumentation-with-call-threshold=3D10000 --param=3Dasan-stack=3D1 --param=3D=
-asan-instrument-allocas=3D1 --param=3Dasan-globals=3D1 --param=3Dasan-kerne=
-l-mem-intrinsic-prefix=3D1 -o - -frandom-seed=3D0 -fdump-noaddr
-// Target: x86_64-redhat-linux
-// Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,=
-c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=3D/usr --mandir=3D/=
-usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttp://bugzilla.r=
-edhat.com/bugzilla --enable-shared --enable-threads=3Dposix --enable-checki=
-ng=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --d=
-isable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-buil=
-d-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libs=
-tdcxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enabl=
-e-plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-15.=
-0.1-build/gcc-15.0.1-20250329/obj-x86_64-redhat-linux/isl-install --enable-=
-offload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --wit=
-hout-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3D=
-generic --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux --with-build-co=
-nfig=3Dbootstrap-lto --enable-link-serialization=3D1
-// Thread model: posix
-// Supported LTO compression algorithms: zlib zstd
-// gcc version 15.0.1 20250329 (Red Hat 15.0.1-0) (GCC)
-//
-// *** WARNING *** there are active plugins, do not report this as a bug un=
-less you can reproduce it without enabling any plugins.
-// Event                            | Plugins
-// PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-// PLUGIN_FINISH_DECL               | randomize_layout_plugin
-// PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layou=
-t_plugin
-// PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-// PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-// security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=
-=80=99:
-// security/landlock/fs.c:1745:61: internal compiler error: in count_type_e=
-lements, at expr.cc:7095
-//  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-//       |                                                             ^
-// Please submit a full bug report, with preprocessed source.
-// See <http://bugzilla.redhat.com/bugzilla> for instructions.
-
-// /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -nostdinc -I ./arch/x=
-86/include -I ./arch/x86/include/generated -I ./include -I ./include -I ./a=
-rch/x86/include/uapi -I ./arch/x86/include/generated/uapi -I ./include/uapi=
- -I ./include/generated/uapi -iplugindir=3D/usr/lib/gcc/x86_64-redhat-linux=
-/15/plugin -D __KERNEL__ -D CC_USING_FENTRY -D RANDSTRUCT -D LATENT_ENTROPY=
-_PLUGIN -D STACKLEAK_PLUGIN -D KBUILD_MODFILE=3D"security/landlock/landlock=
-" -D KBUILD_BASENAME=3D"fs" -D KBUILD_MODNAME=3D"landlock" -D __KBUILD_MODN=
-AME=3Dkmod_landlock -include ./include/linux/compiler-version.h -include ./=
-include/linux/kconfig.h -include ./include/linux/compiler_types.h -MMD secu=
-rity/landlock/.fs.o.d security/landlock/fs.c -iplugindir=3D/usr/lib/gcc/x86=
-_64-redhat-linux/15/plugin -quiet -dumpdir security/landlock/ -dumpbase fs.=
-c -dumpbase-ext .c -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mn=
-o-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup =
--march=3Dx86-64 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -mstack-pr=
-otector-guard-reg=3Dgs -mstack-protector-guard-symbol=3D__ref_stack_chk_gua=
-rd -mindirect-branch=3Dthunk-extern -mindirect-branch-register -mindirect-b=
-ranch-cs-prefix -mfunction-return=3Dthunk-extern -mharden-sls=3Dall -mrecor=
-d-mcount -mfentry -O2 -Werror -Wall -Wundef -Werror=3Dimplicit-function-dec=
-laration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-prot=
-otypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-=
-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger=
--than=3D2048 -Wno-main -Wdangling-pointer=3D0 -Wvla -Wno-pointer-sign -Wcas=
-t-function-type -Wstringop-overflow=3D0 -Warray-bounds=3D0 -Walloc-size-lar=
-ger-than=3D18446744073709551615EiB -Wimplicit-fallthrough=3D5 -Werror=3Ddat=
-e-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenu=
-m-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wunused-const-v=
-ariable=3D0 -Wno-packed-not-aligned -Wformat-overflow=3D0 -Wformat-truncati=
-on=3D0 -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initi=
-alizers -Wno-type-limits -Wno-shift-negative-value -Wno-maybe-uninitialized=
- -Wno-sign-compare -Wno-unused-parameter -Wno-error=3Dunterminated-string-i=
-nitialization -Wno-error=3Dsequence-point -Wno-error=3Dunterminated-string-=
-initialization -std=3Dgnu11 -p -fshort-wchar -funsigned-char -fno-common -f=
-no-PIE -fno-strict-aliasing -fcf-protection=3Dbranch -falign-jumps=3D1 -fal=
-ign-loops=3D1 -fno-asynchronous-unwind-tables -fno-jump-tables -fpatchable-=
-function-entry=3D64,64 -fno-delete-null-pointer-checks -fno-allow-store-dat=
-a-races -fno-reorder-blocks -fno-ipa-cp-clone -fno-partial-inlining -fstack=
--protector-strong -ftrivial-auto-var-init=3Dpattern -fzero-init-padding-bit=
-s=3Dall -fno-stack-clash-protection -fzero-call-used-regs=3Dused-gpr -fno-i=
-nline-functions-called-once -fmin-function-alignment=3D64 -fstrict-flex-arr=
-ays=3D3 -fno-strict-overflow -fstack-check=3Dno -fconserve-stack -fplugin=
-=3D./scripts/gcc-plugins/randomize_layout_plugin.so -fplugin=3D./scripts/gc=
-c-plugins/latent_entropy_plugin.so -fplugin=3D./scripts/gcc-plugins/stackle=
-ak_plugin.so -fplugin-arg-stackleak_plugin-track-min-size=3D100 -fplugin-ar=
-g-stackleak_plugin-arch=3Dx86 -fsanitize=3Dkernel-address -fasan-shadow-off=
-set=3D0xdffffc0000000000 -fsanitize=3Dbounds-strict -fsanitize=3Dshift -fsa=
-nitize=3Dinteger-divide-by-zero -fsanitize=3Dbool -fsanitize=3Denum -fsanit=
-ize-coverage=3Dtrace-pc -fsanitize-coverage=3Dtrace-cmp --param=3Dasan-inst=
-rumentation-with-call-threshold=3D10000 --param=3Dasan-stack=3D1 --param=3D=
-asan-instrument-allocas=3D1 --param=3Dasan-globals=3D1 --param=3Dasan-kerne=
-l-mem-intrinsic-prefix=3D1 -o - -frandom-seed=3D0 -fdump-noaddr
-// Target: x86_64-redhat-linux
-// Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,=
-c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=3D/usr --mandir=3D/=
-usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttp://bugzilla.r=
-edhat.com/bugzilla --enable-shared --enable-threads=3Dposix --enable-checki=
-ng=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --d=
-isable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-buil=
-d-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libs=
-tdcxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enabl=
-e-plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-15.=
-0.1-build/gcc-15.0.1-20250329/obj-x86_64-redhat-linux/isl-install --enable-=
-offload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --wit=
-hout-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3D=
-generic --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux --with-build-co=
-nfig=3Dbootstrap-lto --enable-link-serialization=3D1
-// Thread model: posix
-// Supported LTO compression algorithms: zlib zstd
-// gcc version 15.0.1 20250329 (Red Hat 15.0.1-0) (GCC)
-//
-// *** WARNING *** there are active plugins, do not report this as a bug un=
-less you can reproduce it without enabling any plugins.
-// Event                            | Plugins
-// PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-// PLUGIN_FINISH_DECL               | randomize_layout_plugin
-// PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layou=
-t_plugin
-// PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-// PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-// security/landlock/fs.c: In function =E2=80=98hook_file_ioctl_common=E2=
-=80=99:
-// security/landlock/fs.c:1745:61: internal compiler error: in count_type_e=
-lements, at expr.cc:7095
-//  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
-//       |                                                             ^
-// Please submit a full bug report, with preprocessed source.
-// See <http://bugzilla.redhat.com/bugzilla> for instructions.
-
-// /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -nostdinc -I ./arch/x=
-86/include -I ./arch/x86/include/generated -I ./include -I ./include -I ./a=
-rch/x86/include/uapi -I ./arch/x86/include/generated/uapi -I ./include/uapi=
- -I ./include/generated/uapi -iplugindir=3D/usr/lib/gcc/x86_64-redhat-linux=
-/15/plugin -D __KERNEL__ -D CC_USING_FENTRY -D RANDSTRUCT -D LATENT_ENTROPY=
-_PLUGIN -D STACKLEAK_PLUGIN -D KBUILD_MODFILE=3D"security/landlock/landlock=
-" -D KBUILD_BASENAME=3D"fs" -D KBUILD_MODNAME=3D"landlock" -D __KBUILD_MODN=
-AME=3Dkmod_landlock -include ./include/linux/compiler-version.h -include ./=
-include/linux/kconfig.h -include ./include/linux/compiler_types.h -MMD secu=
-rity/landlock/.fs.o.d security/landlock/fs.c -iplugindir=3D/usr/lib/gcc/x86=
-_64-redhat-linux/15/plugin -quiet -dumpdir security/landlock/ -dumpbase fs.=
-c -dumpbase-ext .c -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mn=
-o-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-rax-setup =
--march=3Dx86-64 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -mstack-pr=
-otector-guard-reg=3Dgs -mstack-protector-guard-symbol=3D__ref_stack_chk_gua=
-rd -mindirect-branch=3Dthunk-extern -mindirect-branch-register -mindirect-b=
-ranch-cs-prefix -mfunction-return=3Dthunk-extern -mharden-sls=3Dall -mrecor=
-d-mcount -mfentry -O2 -Werror -Wall -Wundef -Werror=3Dimplicit-function-dec=
-laration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=3Dstrict-prot=
-otypes -Wno-format-security -Wno-trigraphs -Wno-frame-address -Wno-address-=
-of-packed-member -Wmissing-declarations -Wmissing-prototypes -Wframe-larger=
--than=3D2048 -Wno-main -Wdangling-pointer=3D0 -Wvla -Wno-pointer-sign -Wcas=
-t-function-type -Wstringop-overflow=3D0 -Warray-bounds=3D0 -Walloc-size-lar=
-ger-than=3D18446744073709551615EiB -Wimplicit-fallthrough=3D5 -Werror=3Ddat=
-e-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenu=
-m-conversion -Wextra -Wunused -Wno-unused-but-set-variable -Wunused-const-v=
-ariable=3D0 -Wno-packed-not-aligned -Wformat-overflow=3D0 -Wformat-truncati=
-on=3D0 -Wno-stringop-truncation -Wno-override-init -Wno-missing-field-initi=
-alizers -Wno-type-limits -Wno-shift-negative-value -Wno-maybe-uninitialized=
- -Wno-sign-compare -Wno-unused-parameter -Wno-error=3Dunterminated-string-i=
-nitialization -Wno-error=3Dsequence-point -Wno-error=3Dunterminated-string-=
-initialization -std=3Dgnu11 -p -fshort-wchar -funsigned-char -fno-common -f=
-no-PIE -fno-strict-aliasing -fcf-protection=3Dbranch -falign-jumps=3D1 -fal=
-ign-loops=3D1 -fno-asynchronous-unwind-tables -fno-jump-tables -fpatchable-=
-function-entry=3D64,64 -fno-delete-null-pointer-checks -fno-allow-store-dat=
-a-races -fno-reorder-blocks -fno-ipa-cp-clone -fno-partial-inlining -fstack=
--protector-strong -ftrivial-auto-var-init=3Dpattern -fzero-init-padding-bit=
-s=3Dall -fno-stack-clash-protection -fzero-call-used-regs=3Dused-gpr -fno-i=
-nline-functions-called-once -fmin-function-alignment=3D64 -fstrict-flex-arr=
-ays=3D3 -fno-strict-overflow -fstack-check=3Dno -fconserve-stack -fplugin=
-=3D./scripts/gcc-plugins/randomize_layout_plugin.so -fplugin=3D./scripts/gc=
-c-plugins/latent_entropy_plugin.so -fplugin=3D./scripts/gcc-plugins/stackle=
-ak_plugin.so -fplugin-arg-stackleak_plugin-track-min-size=3D100 -fplugin-ar=
-g-stackleak_plugin-arch=3Dx86 -fsanitize=3Dkernel-address -fasan-shadow-off=
-set=3D0xdffffc0000000000 -fsanitize=3Dbounds-strict -fsanitize=3Dshift -fsa=
-nitize=3Dinteger-divide-by-zero -fsanitize=3Dbool -fsanitize=3Denum -fsanit=
-ize-coverage=3Dtrace-pc -fsanitize-coverage=3Dtrace-cmp --param=3Dasan-inst=
-rumentation-with-call-threshold=3D10000 --param=3Dasan-stack=3D1 --param=3D=
-asan-instrument-allocas=3D1 --param=3Dasan-globals=3D1 --param=3Dasan-kerne=
-l-mem-intrinsic-prefix=3D1 -o - -frandom-seed=3D0 -fdump-noaddr
-
-=2E...
-
-Dave
---=20
- -----Open up your eyes, open up your mind, open up your code -------  =20
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \=20
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+> Signed-off-by: Xiangsheng Hou <xiangsheng.hou@mediatek.com>
+> ---
+>  fs/fuse/virtio_fs.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 2c7b24cb67ad..53c2626e90e7 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -1669,6 +1669,9 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
+>  	unsigned int virtqueue_size;
+>  	int err = -EIO;
+>  
+> +	if (!fsc->source)
+> +		return invalf(fsc, "No source specified");
+> +
+>  	/* This gets a reference on virtio_fs object. This ptr gets installed
+>  	 * in fc->iq->priv. Once fuse_conn is going away, it calls ->put()
+>  	 * to drop the reference to this object.
+> -- 
+> 2.46.0
+> 
