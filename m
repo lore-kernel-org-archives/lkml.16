@@ -1,212 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9E1218AC7;
-	Mon,  7 Apr 2025 21:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095051A08BC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060845; cv=none; b=EfVE5ZtKbUpeY7Ah4WU4mIkM6ICDsn+sbITn6Nw5xYzKVL33Lg9EwYPJeYSRY2fr4e98Vksuu3Zd6AkuUJPr3X2lA9YRsbjOKF5vGKNXb5N3obXTVnRVAnYquSpVv9fC5KfsRxhTYpo6iP8IRkVcARfmP1JoSlgAuD4sR91FWc0=
+	t=1744060930; cv=none; b=YODA9STjUh/L1YqTIGpSGGJR/ujmZRKoZ9/XJtwH1hNdP1XfbfiS7+Q+1MamSgeR2G22ov6S9ZmvD7qBk3hSI6KJhXNarF+5Rz5xo/kbbq33kTI/JpzRY/WZLxhRXAAVTiSH+nQNpCJ43UpBwjTd1ni9//7KJ4T0sQpvdaO9vek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744060845; c=relaxed/simple;
-	bh=EK5DbQDCfWudKq25hayyLCM9CHKKTOxpNscsok0J8IQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dg/rSBgbqQWlinkrgxpR+qW/CBoBrlPKv/y5rW/0A0wdWAssVnAn6P2ZFRnzeWI2w5MR1V4NGUzZVrkjKjtAt6ZqAmrEhYlbQI5o7hH9k7b5XKJqadtCSaR3Q9Y6Q9lV3hXDGREJfW3uPSWwVeZd9g1iSvgQi5xEMDgqyY1IfUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWdOAxp5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744060930; c=relaxed/simple;
+	bh=YH2klgv1+YNmSwKYe294v1zMFm+mJ3i/FYBHzY7qVpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mSPW0NfiSOuVYWWGxz8bxOkFBfKJzJZ619G3bhAOO7qw1tABHp9ZvHG+4+S6eDSxRcA73QsXexPGIyi2qIpgQuLz7neSF/tQdQdyzfIpyC1SzU34GXqGQmAU6FSXLNF9zN5y3Ji5216Xzc5qZc0Lb+lFotpTh5NSETy7/nr20dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NPkWt9uM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWdOAxp5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF78C4CEDD;
-	Mon,  7 Apr 2025 21:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744060845;
-	bh=EK5DbQDCfWudKq25hayyLCM9CHKKTOxpNscsok0J8IQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gWdOAxp58qBqTNH5/uLEPagtqX6njXoQN2I94OT9XeDpBKNs8qRSWTVAQ/P2G/j6X
-	 GYx5G28mKG90XLkE7qzDY67kUdC7FQeAjFdCvUvRRAu/3k8ka0oToXIDRqxtjUtZ3x
-	 9aybsl/5RTUaZ0an9R77hAE2MIbUPXs5H1KnS5phYVXHUgKp+ogCGxrLlRcsCduVgG
-	 afwY3O1u4Y1BNgiTzassBh6LOQ7GEUU+nTRuBgiJQy++oLcJzKobV51FDcTbLrbCHS
-	 S5XxhI5CA8rvX9BaXOvIX5KxcS6gTQeik/F5T5BLyT2kU8/kojuta3UBJqj/F6vieZ
-	 GfKbTeoEfVTTA==
-Date: Mon, 7 Apr 2025 23:20:41 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Alex Elder <elder@kernel.org>, Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] EISA: Increase length of device names
-Message-ID: <b4bzeghwifymbahgtjrehyulb3ezljaexwwqsjnj4utk2koroz@zsru65co3ufp>
-References: <20250407172926.it.281-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NPkWt9uM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744060928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvQBB32oIWPf4vbhux4hr6gO5yAT1ux/syBLJoggcGc=;
+	b=NPkWt9uMVbiM8MqCAwVTPbBuWlPtPKQISp7jmYqX9JT9lsWFyquAENOrPonuM/lKIUcL0I
+	KhKpiyOSoox5N9rGOF/JMXa9EwcFgNfdOaf0rNETNJMl1HhtvPhVSmyt15/eeSz8Chm7OP
+	FSFgOMZJAnNKnVEPRh8lJTAJSJNOHmw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-cE3b0L5DOp61xUvvCScDnA-1; Mon,
+ 07 Apr 2025 17:22:06 -0400
+X-MC-Unique: cE3b0L5DOp61xUvvCScDnA-1
+X-Mimecast-MFC-AGG-ID: cE3b0L5DOp61xUvvCScDnA_1744060925
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03B78180899B;
+	Mon,  7 Apr 2025 21:22:05 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.90.98])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B23C8180B487;
+	Mon,  7 Apr 2025 21:22:03 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH 1/3] cgroup/cpuset: Always use cpu_active_mask
+Date: Mon,  7 Apr 2025 17:21:03 -0400
+Message-ID: <20250407212127.1534285-2-longman@redhat.com>
+In-Reply-To: <20250407212127.1534285-1-longman@redhat.com>
+References: <20250407212127.1534285-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zfmjv7bhmf4xtvt6"
-Content-Disposition: inline
-In-Reply-To: <20250407172926.it.281-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+The current cpuset code uses both cpu_active_mask and cpu_online_mask
+and it can be confusing which one should be used if we need to update
+the code.
 
---zfmjv7bhmf4xtvt6
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Alex Elder <elder@kernel.org>, Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] EISA: Increase length of device names
-References: <20250407172926.it.281-kees@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250407172926.it.281-kees@kernel.org>
+The top_cpuset is always synchronized to cpu_active_mask and we should
+avoid using cpu_online_mask as much as possible. An active CPU is always
+an online CPU, but not vice versa. cpu_active_mask and cpu_online_mask
+can differ during hotplug operations.
 
-Hi Kees,
+A CPU is marked active at the last stage of CPU bringup (CPUHP_AP_ACTIVE).
+It is also the stage where cpuset hotplug code will be called to update
+the sched domains so that the scheduler can move a normal task to a
+newly active CPU or remove tasks away from a newly inactivated CPU. The
+online bit is set much earlier in the CPU bringup process and cleared
+much later in CPU teardown.
 
-On Mon, Apr 07, 2025 at 10:29:35AM -0700, Kees Cook wrote:
-> GCC 15's -Wunterminated-string-initialization warned about truncated
-> name strings. Instead of marking them with the "nonstring" attribute[1],
-> increase their length to correctly include enough space for the
-> terminating NUL character, as they are used with %s format specifiers
-> when showing resource allocations in /proc/ioports:
->=20
->         seq_printf(m, "%*s%0*llx-%0*llx : %s\n", ..., r->name);
->=20
-> The strings in eisa.ids have a max length of 73, and the 50 limit was an
-> arbitrary limit that was removed back in 2008 with commit ca52a49846f1
-> ("driver core: remove DEVICE_NAME_SIZE define"). Change the limit to 74
-> so nothing is truncated any more.
->=20
-> Additionally fix the Makefile to use "if_changed" instead of "cmd"
-> to detect changes to the command line used to generate the target,
-> otherwise devlist.h won't be rebuilt.
->=20
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Alejandro Colomar <alx@kernel.org>
+If cpu_online_mask is used while a hotunplug operation is happening in
+parallel, we may leave an offline CPU in cpu_allowed or have a higher
+chance of leaving an offline CPU in some other masks.  Avoid this
+problem by always using cpu_active_mask in the cpuset code and leave
+a comment as to why the use of cpu_online_mask is discouraged.
 
-Acked-by: Alejandro Colomar <alx@kernel.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/cgroup/cpuset.c | 32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
-> Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: Sumit Garg <sumit.garg@kernel.org>
->=20
->  v2: crank length to 74 for full coverage and fix Makefile too
->  v1: https://lore.kernel.org/lkml/20250310222424.work.107-kees@kernel.org/
-> ---
->  drivers/eisa/Makefile   | 11 ++++-------
->  drivers/eisa/eisa-bus.c |  2 +-
->  include/linux/eisa.h    |  5 ++++-
->  3 files changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
-> index a1dd0eaec2d4..f0d6cf7d1f32 100644
-> --- a/drivers/eisa/Makefile
-> +++ b/drivers/eisa/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for the Linux device tree
-> =20
-> -obj-$(CONFIG_EISA)	        +=3D eisa-bus.o
-> +obj-$(CONFIG_EISA)	        +=3D devlist.h eisa-bus.o
->  obj-${CONFIG_EISA_PCI_EISA}     +=3D pci_eisa.o
-> =20
->  # virtual_root.o should be the last EISA root device to initialize,
-> @@ -9,14 +9,11 @@ obj-${CONFIG_EISA_PCI_EISA}     +=3D pci_eisa.o
->  obj-${CONFIG_EISA_VIRTUAL_ROOT} +=3D virtual_root.o
-> =20
-> =20
-> -# Ugly hack to get DEVICE_NAME_SIZE value...
-> -DEVICE_NAME_SIZE =3D 50
-> -
->  $(obj)/eisa-bus.o: $(obj)/devlist.h
-> =20
->  quiet_cmd_eisaid =3D GEN     $@
-> -      cmd_eisaid =3D sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^=
-"]\{1,$(DEVICE_NAME_SIZE)\}\).*"/EISA_DEVINFO ("\1", "\2"),/' $< > $@
-> +      cmd_eisaid =3D sed -e '/^\#/D' -e 's/^\([[:alnum:]]\{7\}\) \+"\([^=
-"]*                        \)  "/EISA_DEVINFO ("\1", "\2"),/' $< > $@
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 306b60430091..583f20942802 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -192,6 +192,20 @@ static inline void notify_partition_change(struct cpuset *cs, int old_prs)
+ 		WRITE_ONCE(cs->prs_err, PERR_NONE);
+ }
+ 
++/*
++ * The top_cpuset is always synchronized to cpu_active_mask and we should avoid
++ * using cpu_online_mask as much as possible. An active CPU is always an online
++ * CPU, but not vice versa. cpu_active_mask and cpu_online_mask can differ
++ * during hotplug operations. A CPU is marked active at the last stage of CPU
++ * bringup (CPUHP_AP_ACTIVE). It is also the stage where cpuset hotplug code
++ * will be called to update the sched domains so that the scheduler can move
++ * a normal task to a newly active CPU or remove tasks away from a newly
++ * inactivated CPU. The online bit is set much earlier in the CPU bringup
++ * process and cleared much later in CPU teardown.
++ *
++ * If cpu_online_mask is used while a hotunplug operation is happening in
++ * parallel, we may leave an offline CPU in cpu_allowed or some other masks.
++ */
+ static struct cpuset top_cpuset = {
+ 	.flags = BIT(CS_ONLINE) | BIT(CS_CPU_EXCLUSIVE) |
+ 		 BIT(CS_MEM_EXCLUSIVE) | BIT(CS_SCHED_LOAD_BALANCE),
+@@ -355,18 +369,18 @@ static inline bool partition_is_populated(struct cpuset *cs,
+  * appropriate cpus.
+  *
+  * One way or another, we guarantee to return some non-empty subset
+- * of cpu_online_mask.
++ * of cpu_active_mask.
+  *
+  * Call with callback_lock or cpuset_mutex held.
+  */
+-static void guarantee_online_cpus(struct task_struct *tsk,
++static void guarantee_active_cpus(struct task_struct *tsk,
+ 				  struct cpumask *pmask)
+ {
+ 	const struct cpumask *possible_mask = task_cpu_possible_mask(tsk);
+ 	struct cpuset *cs;
+ 
+-	if (WARN_ON(!cpumask_and(pmask, possible_mask, cpu_online_mask)))
+-		cpumask_copy(pmask, cpu_online_mask);
++	if (WARN_ON(!cpumask_and(pmask, possible_mask, cpu_active_mask)))
++		cpumask_copy(pmask, cpu_active_mask);
+ 
+ 	rcu_read_lock();
+ 	cs = task_cs(tsk);
+@@ -2263,7 +2277,7 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
+ 	bool force = false;
+ 	int old_prs = cs->partition_root_state;
+ 
+-	/* top_cpuset.cpus_allowed tracks cpu_online_mask; it's read-only */
++	/* top_cpuset.cpus_allowed tracks cpu_active_mask; it's read-only */
+ 	if (cs == &top_cpuset)
+ 		return -EACCES;
+ 
+@@ -3082,7 +3096,7 @@ static void cpuset_attach_task(struct cpuset *cs, struct task_struct *task)
+ 	lockdep_assert_held(&cpuset_mutex);
+ 
+ 	if (cs != &top_cpuset)
+-		guarantee_online_cpus(task, cpus_attach);
++		guarantee_active_cpus(task, cpus_attach);
+ 	else
+ 		cpumask_andnot(cpus_attach, task_cpu_possible_mask(task),
+ 			       subpartitions_cpus);
+@@ -4026,7 +4040,7 @@ void __init cpuset_init_smp(void)
+  *
+  * Description: Returns the cpumask_var_t cpus_allowed of the cpuset
+  * attached to the specified @tsk.  Guaranteed to return some non-empty
+- * subset of cpu_online_mask, even if this means going outside the
++ * subset of cpu_active_mask, even if this means going outside the
+  * tasks cpuset, except when the task is in the top cpuset.
+  **/
+ 
+@@ -4040,7 +4054,7 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 
+ 	cs = task_cs(tsk);
+ 	if (cs != &top_cpuset)
+-		guarantee_online_cpus(tsk, pmask);
++		guarantee_active_cpus(tsk, pmask);
+ 	/*
+ 	 * Tasks in the top cpuset won't get update to their cpumasks
+ 	 * when a hotplug online/offline event happens. So we include all
+@@ -4054,7 +4068,7 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 		 * allowable online cpu left, we fall back to all possible cpus.
+ 		 */
+ 		cpumask_andnot(pmask, possible_mask, subpartitions_cpus);
+-		if (!cpumask_intersects(pmask, cpu_online_mask))
++		if (!cpumask_intersects(pmask, cpu_active_mask))
+ 			cpumask_copy(pmask, possible_mask);
+ 	}
+ 
+-- 
+2.48.1
 
-LGTM.
-
-
-Have a lovely night!
-Alex
-
-> =20
->  clean-files :=3D devlist.h
-> -$(obj)/devlist.h: $(src)/eisa.ids include/linux/device.h
-> -	$(call cmd,eisaid)
-> +$(obj)/devlist.h: $(src)/eisa.ids include/linux/device.h FORCE
-> +	$(call if_changed,eisaid)
-> diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
-> index cb586a362944..edceea083b98 100644
-> --- a/drivers/eisa/eisa-bus.c
-> +++ b/drivers/eisa/eisa-bus.c
-> @@ -21,7 +21,7 @@
-> =20
->  struct eisa_device_info {
->  	struct eisa_device_id id;
-> -	char name[50];
-> +	char name[EISA_DEVICE_INFO_NAME_SIZE];
->  };
-> =20
->  #ifdef CONFIG_EISA_NAMES
-> diff --git a/include/linux/eisa.h b/include/linux/eisa.h
-> index f98200cae637..21a2ecc1e538 100644
-> --- a/include/linux/eisa.h
-> +++ b/include/linux/eisa.h
-> @@ -28,6 +28,9 @@
->  #define EISA_CONFIG_ENABLED         1
->  #define EISA_CONFIG_FORCED          2
-> =20
-> +/* Chosen to hold the longest string in eisa.ids. */
-> +#define EISA_DEVICE_INFO_NAME_SIZE 74
-> +
->  /* There is not much we can say about an EISA device, apart from
->   * signature, slot number, and base address. dma_mask is set by
->   * default to parent device mask..*/
-> @@ -41,7 +44,7 @@ struct eisa_device {
->  	u64                   dma_mask;
->  	struct device         dev; /* generic device */
->  #ifdef CONFIG_EISA_NAMES
-> -	char		      pretty_name[50];
-> +	char		      pretty_name[EISA_DEVICE_INFO_NAME_SIZE];
->  #endif
->  };
-> =20
-> --=20
-> 2.34.1
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-<https://www.alejandro-colomar.es:8443/>
-<http://www.alejandro-colomar.es:8080/>
-
---zfmjv7bhmf4xtvt6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmf0QaIACgkQ64mZXMKQ
-wqm+cg//eBHFhFkJxZKPzp1DP08oDoARdnRx7YJtuMdGmYw0voAl3GIJOzibTcXL
-rpVp3Vl+025WtUrgw95fXld35NmXUqFhvY7i16SQEuziKBCHZusCP9iJSQFktNUh
-/F7i8+y4IGx8WryzMm6jWrFqXXNQNm1WzDH9s3LnWImUslV1cgol47+TESfR4LL+
-H/rzraDFuZHZzdD+P7jUicgxL9lXw8Z84GOSouUkA6VcIvIQjKfiTi2duDNPnK4I
-D/jenrpXs3SFhEBw86Eu4MS7kfkecFsePrLgFL6z+gDPkTAf0Jx79XqZlpBbI9aN
-tgW2EuIiOLfL+FcEOSkqRFesFxgDCjT2JcmmyO8cAU0xjPc4KcFFVU8I2054UYPv
-lpE6XrfciBM1MmE9KPvI1WfuetWfTMv/DE8TqAMgs3+l67EauRZnJqFfYVtih7//
-uoUrUmtCCcGUUjXKB/Wm7+I4Bd2GEsZ9ENGva9nxkoYzAyH7VmvhRiKxqUvlZ44D
-yeAG4jOoroSYIjb7f8B4gy7RBqtq6kw3I8YpUojUy7CaXEuIGhES7h8DOSAl/FtJ
-D7g0EwmBvxKobHD7NBaMjRMzY/lhF7tVEd+UzD2zlf/M5Cdy7Yzft5nSfCv0ge/Q
-OAgf0hZe+djDfQ0SiwI/BlCpQLCv9sR5xPqyR1FY7aVR1E199mA=
-=ntgs
------END PGP SIGNATURE-----
-
---zfmjv7bhmf4xtvt6--
