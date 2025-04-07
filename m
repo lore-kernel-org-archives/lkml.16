@@ -1,161 +1,328 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46224A04;
-	Mon,  7 Apr 2025 13:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB3F2405F1;
+	Mon,  7 Apr 2025 13:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031401; cv=none; b=T6iU0y2FzwyM4qGa7tXpOD/lu1MjhrCHlj29zitmPFRREXsGzJecbSRmYpt7DzeFLCvnzG8w5FZMUzS3h3cRgm3ZdV/6jfm9gtkp7xregbPIRpCsNyNJBZx9Y5LanRB/IATDfJ194h8cVh5e1HgTT19Um6grar3S47MElp+Jepw=
+	t=1744031400; cv=none; b=Bn8j9CDdL6Ozr/bvGax3nA56vsryLR5HJS3xb8sCB6ji4Fcruq2YtemNbLEzlZvIo4rpi/NsxwPFFOGd/mKWOlSbBClfJonW3rWDUG9n0ZLUO6S3qXAzS1dhDwmdD90mYdCKVsAvNUAkdq9nnVgaTqaioo1yqHIxr99qwbRkILE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031401; c=relaxed/simple;
-	bh=9MC8INLcpsg0XXiU5MvT3qHFLKectbQWdkzXQ2sDKZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TVhY7Iz0xGNRA4Zf0Z3m6lboQMeleiiZqBLAi7BhXwP65m1X9siVxQPcuZ8SMvsMijlXSLBRXBr/QDoVWQuWipidQPohyj5DMXy63JzO2/9JSb0JCr+7xZs2BNGm9mmXXXx8KPZ2A2G9aYiXxXRY17YAPwTu0DCzNdHP17eWAIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1794792241.1;
-        Mon, 07 Apr 2025 06:09:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744031397; x=1744636197;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VMbt/iLjQgXAqzYY3Q4wO5RPHa7TGoR9HHOAkNd8J4I=;
-        b=SEa1MpvHjQ/FTcuWiq6iKhEk9eLc7yswrnd2V7NxHjN6riuk4kLanPr3KvOKW5z9L/
-         PqBq8Vtb9lOTcHGoScPxpyDZM7Jsl0rmlINB7Le7LzbYZlVPeQwR43ooBcfPMBRwlg5m
-         IFASpMpU2JvW6cHLLqvBUiy6/mEvDVmDO7nb/rrOXJCagkmWBF+REer32YJp3zJLLBBT
-         odhL0PmUtRDi/ynJGUYTRrloil2eg+V/1nzE87vvmk3O8hfDamt3GZ5XbNxfUgwX9CSh
-         tQA2ArGeTEUQXSftFpWTnFspwWoZjbXEYWJg8IprtloFwwqULW6ynCxKaM6EmIhnWXqN
-         QP3w==
-X-Forwarded-Encrypted: i=1; AJvYcCU+h7hrKFxAFWiNRCYFZtBKFsItW4eeUbbWYKjQC7X5qzL74LCLA+YAoVEEpu3xUY302TWUK/e1AvwzoDayy+ngG3Y=@vger.kernel.org, AJvYcCVK3Q0j0B8a+attqOw4I/d31pYqWQp/RlAGacv9UcBsLRlx8Bp6pyX5DcAFCWVA6VykHKBAlaTP1fHkPQE=@vger.kernel.org, AJvYcCWxtds4OqyhQAjiaTB52aCsuUh3t3K8tmJL12I9rr2WwndKP3/ya/Rx51opnd/0/TxQpcFvYs33/EtXSBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTCr6rdk9OAqZb7uBbMP4SV8xzfVCwGFDPPn7tsxHF9iPjF+ij
-	o1h3ACoJihXwVIdV5fea+uyIXnHYPjD31b0v5vImEV2wbF+DgZLqCMBDiB18
-X-Gm-Gg: ASbGncvRcs1znuI2/P7Pb6J3NPWQRHjjV07l0rMqTUH5Z6e4lWGR9gCLr+PWhtmTYGn
-	R5HHDjRmRa5FbauA84ZF4AUa16/MaZ90TGaqU/+dcAyTG19eq/ZpisQau8d+WgxYCINX28mGXOO
-	UYVDltuk9ihgFR+J51xPFnl4MoNFBn8hWYeoGjZme0kd6ppqR5C8kU5AE5PKsTbpPpV6Q7FqElZ
-	awvCBQwP+W29XsDCo5BdV3C3zbjt4YvadTgeZJNHLWDhanMpFQu4QL/0Fm/uRNqcNLJjz4yDUxy
-	Aeb8z4qyZfQ0xogHRl0CcLYp+Gj9QyzbHzBWNX67Xq6e8l5NDE/N2Zwyh+2iOi0SVnll6s+n8ya
-	JnUDdszA=
-X-Google-Smtp-Source: AGHT+IGOD5dmsQ8m21gwcytd5EDiwEi/MRy59TrjZo5ewTnhrPnXxN4LDlLWEzDzJ9v6HGzPsg6MwA==
-X-Received: by 2002:a05:6102:334d:b0:4c3:6393:83f4 with SMTP id ada2fe7eead31-4c856889f09mr8839975137.2.1744031397316;
-        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8738b28b561sm1718557241.23.2025.04.07.06.09.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86feb848764so1783246241.0;
-        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWfc9+wu8uYzXb7+PprHVIwQ6DAGR717mxKz6gf8Z9Dd46hvCFE0eW69FjH2+7eJyrg6aKIXk9GO6P+LxLOE497Lzg=@vger.kernel.org, AJvYcCXCFYEgDup4/bWxWEOsMjlEgYkYVCoLRuWse8tmTSrkKaB/5kPScn0XSKEpjRZm9Vr0V4oqy+l2MTkwlFk=@vger.kernel.org, AJvYcCXUyvAy63If8kMUWNvyG3UJj8Gs8DGYpQ6DGvmTVvLIHz9OYj2cOxnFBPuGazrc2UctixzyKtPhz8PG6SY=@vger.kernel.org
-X-Received: by 2002:a05:6102:2c8c:b0:4c1:9159:859c with SMTP id
- ada2fe7eead31-4c856907033mr8729050137.15.1744031396980; Mon, 07 Apr 2025
- 06:09:56 -0700 (PDT)
+	s=arc-20240116; t=1744031400; c=relaxed/simple;
+	bh=lrEQ3fr+h9CURtK/FYz3Ba3eDcS304hMn4rCuayzuFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OcJerPYhFEs770hojJH7pWEs+GQIe7GiqRNpvwIL3q9UwfBueSN6zR64AF6AKATgI9/eSGNsyLz0DOfzuXdVEBjpttEBBUIdKIdd6dqyM4C8Sp5OTjTPeAdLJzkORpkbQAdrX0aDjCAWD9E65qWXnLoRdUFKSD2RzQmnDU2Iz4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeSF7Zo5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeSF7Zo5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F204C4CEDD;
+	Mon,  7 Apr 2025 13:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744031399;
+	bh=lrEQ3fr+h9CURtK/FYz3Ba3eDcS304hMn4rCuayzuFA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jeSF7Zo5CK4pyTsgDM4KiUW2HeZ6FYWOJfDP2WNoXJb5lZdDkjPW0q1P8Yh9Fiwfs
+	 EFMIgtQwk2zKQ6ASkYrDdm9lyVrEXOQv6LsgShVPS+Fw91cqdzSbesvFQoIKD+bjWV
+	 jqAk1vumbUn+lbxhc6lDaQGSgaDELXP3LHfCba0ga1kDn1XlBkH1VAAMH/sLuMRDvy
+	 qWXVzzVPmB8E5B89dih1K27xjsIA5uQf6T8DAJ6Rz0s7kn4IhEe2W87xI6QnBMzqmq
+	 Sy1Dcojs0vgzDBNEVt5nZwEXqPtHViFbr0s9OhqGsHEIAU5eagtT1GueEYpkTKR5T9
+	 BeGA+vIR3k5iQ==
+Message-ID: <d26b9775-0f85-48a7-ba52-093484ada382@kernel.org>
+Date: Mon, 7 Apr 2025 15:09:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250124-alsa-hdmi-codec-eld-v1-0-bad045cfaeac@linaro.org> <20250124-alsa-hdmi-codec-eld-v1-2-bad045cfaeac@linaro.org>
-In-Reply-To: <20250124-alsa-hdmi-codec-eld-v1-2-bad045cfaeac@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Apr 2025 15:09:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWjc1rE54KZ39XmVbjvGa4rYeaSjAMgMQfs6gFKpRbhZg@mail.gmail.com>
-X-Gm-Features: ATxdqUGyXl6MbUhtXCef-j2gYLh_XFf9jBcdhmDTWPqF69APCxPPQvz1cfXCg4M
-Message-ID: <CAMuHMdWjc1rE54KZ39XmVbjvGa4rYeaSjAMgMQfs6gFKpRbhZg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ASoC: hdmi-codec: dump ELD through procfs
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/11] ASoC: dt-bindings: mediatek,mt8196-afe: add
+ audio AFE document
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20250407120708.26495-1-darren.ye@mediatek.com>
+ <20250407120708.26495-10-darren.ye@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407120708.26495-10-darren.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Dmitry,
+On 07/04/2025 14:06, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+> 
+> Add mt8196 audio AFE document.
+> 
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> ---
+>  .../bindings/sound/mediatek,mt8196-afe.yaml   | 233 ++++++++++++++++++
 
-On Fri, 24 Jan 2025 at 22:14, Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
-> Use freshly added API and add eld#n files to procfs for the ASoC cards
-> utilizing HDMI codec. This simplifies debugging of the possible ASoC /
-> HDMI / DisplayPort audio issues.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Bindings are before their users. Order your patches correctly (see DT
+submitting patches).
 
-Thanks for your patch, which is now commit 0ecd24a6d8b251eb ("ASoC:
-hdmi-codec: dump ELD through procfs") in v6.15-rc1.
+>  1 file changed, 233 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
+> new file mode 100644
+> index 000000000000..44f8847b13a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-afe.yaml
 
-This causes the following failure on Salvator-XS:
+Filename matching compatible.
 
-    ------------[ cut here ]------------
-    proc_dir_entry 'card0/eld#0' already registered
-    WARNING: CPU: 3 PID: 93 at fs/proc/generic.c:377 proc_register+0x12c/0x1b8
-    CPU: 3 UID: 0 PID: 93 Comm: kworker/u33:5 Not tainted
-6.14.0-rc1-arm64-renesas-00004-g0ecd24a6d8b2 #2923
-    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-    Workqueue: events_unbound deferred_probe_work_func
-    pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-    pc : proc_register+0x12c/0x1b8
-    lr : proc_register+0x12c/0x1b8
-    sp : ffff800081ac38d0
-    x29: ffff800081ac38d0 x28: ffff0004c2f7b398 x27: ffff8000813fca80
-    x26: ffff0004c2f3b8c0 x25: ffff8000814b3660 x24: ffff0004c2f3b840
-    x23: 0000000000000005 x22: ffff0004c2ce7b2c x21: 0000000000000005
-    x20: ffff0004c2ce7a80 x19: ffff0004c2ce7a48 x18: 0000000000000006
-    x17: 0000000000000000 x16: 0000000000000068 x15: 0769076707650772
-    x14: 0720077907640761 x13: ffff800081380a30 x12: 00000000000005ca
-    x11: 00000000000001ee x10: ffff8000813d8a30 x9 : ffff800081380a30
-    x8 : 00000000ffffefff x7 : ffff8000813d8a30 x6 : 80000000fffff000
-    x5 : 00000000000001ef x4 : 0000000000000000 x3 : 0000000000000000
-    x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0004c0870000
-    Call trace:
-     proc_register+0x12c/0x1b8 (P)
-     proc_create_data+0x3c/0x60
-     snd_info_register+0xcc/0x12c
-     snd_info_register+0x30/0x12c
-     snd_info_card_register+0x1c/0x94
-     snd_card_register+0x1a4/0x1e4
-     snd_soc_bind_card+0x7dc/0xab4
-     snd_soc_register_card+0xec/0x100
-     devm_snd_soc_register_card+0x48/0x98
-     audio_graph_parse_of+0x1c4/0x1f8
-     graph_probe+0x6c/0x80
-     platform_probe+0x64/0xbc
-     really_probe+0xb8/0x294
-     __driver_probe_device+0x74/0x124
-     driver_probe_device+0xd4/0x158
-     __device_attach_driver+0xd4/0x154
-     bus_for_each_drv+0x84/0xe0
-     __device_attach+0x9c/0x188
-     device_initial_probe+0x10/0x18
-     bus_probe_device+0xa0/0xa4
-     deferred_probe_work_func+0x80/0xb4
-     process_one_work+0x144/0x280
-     worker_thread+0x2c4/0x3cc
-     kthread+0x128/0x1e0
-     ret_from_fork+0x10/0x20
-    ---[ end trace 0000000000000000 ]---
-    asoc-audio-graph-card sound: ASoC: failed to register soundcard -12
-    asoc-audio-graph-card sound: probe with driver
-asoc-audio-graph-card failed with error -12
 
-And:
+> @@ -0,0 +1,233 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/mediatek,mt8196-afe.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Audio Front End PCM controller for MT8196
+> +
+> +maintainers:
+> +  - Darren Ye <darren.ye@mediatek.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-afe-pcm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
 
-     ALSA device list:
-    -  #0: rcar-sound
-    +  No soundcards found.
+Blank line
 
-So the card it tried to register is the first one?
+> +  memory-region:
+> +    maxItems: 1
+> +    description: |
+> +      Shared memory region for AFE memif.  A "shared-dma-pool".
+> +      See dtschema reserved-memory/shared-dma-pool.yaml for details.
 
-Reverting the commit fixes the issue.
+Drop description
 
-Gr{oetje,eeting}s,
+Blank line
 
-                        Geert
+> +  mediatek,cksys:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: The phandle of the mediatek clk systemd controller
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+For what purpose? this should be answered here. Anyway you clocks for
+handling clocks of clk controller.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +
+> +  mediatek,vlpcksys:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: The phandle of the mediatek vlpcksys controller
+
+Blank line. For what purpose?
+
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: audio hopping clock gate
+> +      - description: audio f26m clock gate
+> +      - description: audio apll1 clock gate
+> +      - description: audio apll2 clock gate
+> +      - description: audio apll1 tuner gate
+> +      - description: audio apll2 tuner gate
+> +      - description: mux for audio vlp int
+> +      - description: mux for audio vlp engen1
+> +      - description: mux for audio vlp engen2
+> +      - description: mux for audio h
+> +      - description: vlp clock 26m
+> +      - description: audio mainpll divide 4
+> +      - description: mux for audio apll1
+> +      - description: audio apll1
+> +      - description: mux for audio apll2
+> +      - description: audio apll2
+> +      - description: audio apll1 divide 4
+> +      - description: audio apll2 divide 4
+> +      - description: mux for i2sin0 mck
+> +      - description: mux for i2sin1 mck
+> +      - description: mux for fmi2s mck
+> +      - description: mux for tdmout mck
+> +      - description: auido apll12 divide for i2sin0
+> +      - description: auido apll12 divide for i2sin1
+> +      - description: auido apll12 divide for fmi2s
+> +      - description: auido apll12 divide for tdmout mck
+> +      - description: auido apll12 divide for tdmout bck
+> +      - description: audio adsp clk
+> +      - description: 26m clock
+
+Do not come with entirely different ordering than existing variants.
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aud_hopping_clk
+
+Look how this is called in upstream.
+
+> +      - const: aud_f26m_clk
+> +      - const: aud_apll1_clk
+> +      - const: aud_apll2_clk
+> +      - const: aud_apll_tuner1_clk
+> +      - const: aud_apll_tuner2_clk
+> +      - const: vlp_mux_audio_int
+> +      - const: vlp_mux_aud_eng1
+> +      - const: vlp_mux_aud_eng2
+> +      - const: vlp_mux_audio_h
+> +      - const: vlp_clk26m_clk
+> +      - const: ck_mainpll_d4_d4
+> +      - const: ck_mux_aud_1
+> +      - const: ck_apll1_ck
+> +      - const: ck_mux_aud_2
+> +      - const: ck_apll2_ck
+> +      - const: ck_apll1_d4
+> +      - const: ck_apll2_d4
+> +      - const: ck_i2sin0_m_sel
+> +      - const: ck_i2sin1_m_sel
+> +      - const: ck_fmi2s_m_sel
+> +      - const: ck_tdmout_m_sel
+> +      - const: ck_apll12_div_i2sin0
+> +      - const: ck_apll12_div_i2sin1
+> +      - const: ck_apll12_div_fmi2s
+> +      - const: ck_apll12_div_tdmout_m
+> +      - const: ck_apll12_div_tdmout_b
+> +      - const: ck_adsp_sel
+> +      - const: ck_clk26m_clk
+
+The same.
+
+> +
+> +  mediatek,etdm4-out-ch:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Number of ETDM4 output channels.
+> +    minimum: 1
+> +    maximum: 8
+> +
+> +  mediatek,etdm4-in-ch:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Number of ETDM4 input channels.
+> +    minimum: 1
+> +    maximum: 8
+
+Why is this binding so different than existing ones? I expect uniformity
+not rework of all properties every time you upstream new device.
+
+> +
+> +  mediatek,etdm4-out-sync:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      ETDM4 output and input enable synchronization.
+> +    enum:
+> +      - 0 # Enable controlled by itself
+> +      - 1 # Enable synchronization with ETDM4 input.
+> +
+> +  mediatek,etdm4-in-sync:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      ETDM4 input and outpuot enable synchronization.
+> +    enum:
+> +      - 0 # Enable controlled by itself
+> +      - 1 # Enable synchronization with ETDM4 output.
+> +
+> +
+> +
+
+Hm? But why? One blank line is enough.
+
+> +  mediatek,etdm4-ip-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: ETDM IP mode.
+> +    enum:
+> +      - 0 # One ip multi-ch mode
+> +      - 1 # Multi-ip 2ch mode
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - mediatek,cksys
+> +  - mediatek,vlpcksys
+> +  - power-domains
+> +  - memory-region
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        afe: mt8196-afe-pcm@1a110000 {
+
+Look at other bindings.
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+
+Best regards,
+Krzysztof
