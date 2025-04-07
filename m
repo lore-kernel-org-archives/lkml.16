@@ -1,234 +1,201 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from FR6P281CU001.outbound.protection.outlook.com (mail-germanywestcentralazon11020088.outbound.protection.outlook.com [52.101.171.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD4E14A4C6;
-	Mon,  7 Apr 2025 11:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744024689; cv=none; b=gji2GxkvAPQXmXpGMOT865ngHNv/tC7Gk9Iqr0SRnkFJvIBS5dmbBNvZizPa4bTh8uw3IbVCC7gV2wEpI2i/dvcg6iLn5lR3M4TUCcEfqOjn732Kd4pS399o8qstqJSHObO8ncPOK8b+8Mh9KqqzX8OXLjh3XbhEgH4TExjgMt4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744024689; c=relaxed/simple;
-	bh=UCEmJY7Zjz4J2QoCKJBUp4D4kTm6iW9Va93AWo2Fc+A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EEnwyUgKvmyu18nFLkmS7Pozzm/y1LfaM5F46hGqiVIfGLLA93OWzOavwn2yq25sSD+xx/az5RrlTrqkN0UoUuh5OJqDlG29uDqe+cfM3QmMkemkK10ZhTZwCcMomHPorCJYtjzZwfubh9KnbxgQaQUIUuA5SCQ8rjd9+dGF+LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+u1B4+d; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D85B22155E;
+	Mon,  7 Apr 2025 11:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.171.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744024772; cv=fail; b=ilJBBZZaV9tZWfU/9gcZWjBJRdD51Naz5+KqNEl8V+q1wS7p/mlMI7jKjvVDtMIPwBOAd7L277Wpba8GQnQB3AS/YxlKksUNfgjgOpjI4y+lfN+pFvm9evzp4nkineLxpRZXzoQjKd8al5bZGM7kIgurbCo0Tdac4Y/vJa+ZH9c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744024772; c=relaxed/simple;
+	bh=jPHHCJAKdDtuYirkbtmhw6PHtExaEnYLqwpT1u5kljI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cH5iGYHMGUEN6XbHfw/YMSdmPIKfI/IgBtHr5C+YO8RqHeC3dMWaVKcLyfEBds9NrpiTswn7KYvmUjelPnEi/EQ6UZP1XtC2FzhLNNiROpAGhgM1pWfyi7fJoNj+f9sBCJcMSMp3IstyDfu+sRRCHi5bO6rWddtymbE/PHYy740=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de; spf=pass smtp.mailfrom=cyberus-technology.de; dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b=o/DkYWjM; arc=fail smtp.client-ip=52.101.171.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cyberus-technology.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyberus-technology.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+u1B4+d"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39ac56756f6so3597839f8f.2;
-        Mon, 07 Apr 2025 04:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744024685; x=1744629485; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=774VQpLsZnSdE97pQVpnDZjYZ2xUJioVrWYHdhSNOTw=;
-        b=i+u1B4+dSionnXf6lu1sHh6ZJFXg9VWju8yshIlk2VD8t9gUf1rhcdBDsnr+8lzWjh
-         tBQ3Ooby/jB505AByqFCbCZUoope7Se8KFNuAQAoma1qLKXonKncLQL8t9mPVsCwEw1k
-         kYMwN6C258gtfa5GV5A66umeizQr9O82hvlNReV1bSJpHOYQtY6i9ja4ktCtsiAAcSED
-         HQFR52ETV6mnj5fYZuJfBAcU+ikU+JsW3zH5Uk5CpCoGX82xs8DyrPYokWsIcneWOC+e
-         pCxjsvC7yJnI54j87BtJFC4MduodxkntoAhXCcYbIzF4A1eDTpxlxFd1DHOqzC4HB9q6
-         LOHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744024685; x=1744629485;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=774VQpLsZnSdE97pQVpnDZjYZ2xUJioVrWYHdhSNOTw=;
-        b=OjobNwiWSMLnwuqUM6iK6JMpNUQicrCuzxZmco6uGWELZ3VQXAiDe/StDbwhR0Eo4B
-         FWRoI2JgOwzET5tNUVvFuk1aOXACXbQbEd3S4emDNyxWAUIkY6phkHijqe0XuYQ/n0BN
-         4593wyQcb9+98vY39b0L6NN70pTjdAnSnHDE1+RM7S+vpFHcPIXo9ZHipC3/sVl5JqSq
-         8i139A7fW/Cg4pq5hQD2gS5cs5KXeonVUzzSbPntQTiJrbSl//0CdygU+BgeJxzf0QRl
-         MZ/iS/liuz2zf/JmaXu+QEEUSMNgmxK5wl/SmJ1u8Lju2U/VYvxHadmanS6WX9vTaSRk
-         nM0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW9RMFL0CP2dKz9o51iqQ32Sdn5fQPISp1Cmf6QtYzRzrPU/jU3PHInXYQSWm2bje0fwO8tJkq7ITx09JQ3DF0LxuoR@vger.kernel.org, AJvYcCWL9pH2fGONLOsHSsRm6Uj3mC5SosdAz6fA11mBJ3eTNa4JQOE5O9ddAVvfFF6sX8Ncz1w=@vger.kernel.org, AJvYcCWir/LTypVg89XfUve1OwIkh0PT3mt++eoUZiRxCkvcsqQSzuxO90qH9aLJNpEQVsNLjsMN4fwpoNAJaLKJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwejbqyTmMzsvIzRPo8E14t3cWByrSAPNuMIrL363q4mLpomEJ
-	DS8z6LsYaEOAxHF6/9wDeV/rUrIFSKUDJ9tQ6lhQcngxhA7FASTB
-X-Gm-Gg: ASbGncvNwe+5Ba/pYsGCMDAHZHqTqysjJL4xoAF1Zg93WNA0KyGx0xSFRzJ83vJzmkE
-	KcaFmeK8caq1ZuFMAPlSW0qkbrxciQSbcJTpkID1anSwJKOb3prPHgDHwDy0UNSeSM8rl/dlpeb
-	gZuDzMDSo8e1PVyOC+YYxfr4Cu5r3hVXYpXQcHtGRB04nFk63iz04RIPW6aBljo4ekn5Gn1bXdD
-	AzTmE4svzmPvT+O+6BeJCXLUxgEo5rgBNWsotiKPWrtwYU36gkeVyNvwNujB0bllIYiuIEc/AVv
-	neYcknKqgaeRAsPPugpQ9ZuIqtvCQoU=
-X-Google-Smtp-Source: AGHT+IEaFLh3EOIY/E+PfZ/MhrnUJEv38IcKnti2qpn2wYNALBkUBvazUymb10VNKcFYQGE3DIw7pA==
-X-Received: by 2002:a05:6000:4022:b0:39c:140b:feec with SMTP id ffacd0b85a97d-39cb36b28b5mr10122375f8f.7.1744024685417;
-        Mon, 07 Apr 2025 04:18:05 -0700 (PDT)
-Received: from krava ([173.38.220.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c302269a2sm11862603f8f.91.2025.04.07.04.18.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 04:18:02 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 7 Apr 2025 13:17:59 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
-Subject: Re: [PATCH RFCv3 00/23] uprobes: Add support to optimize usdt probes
- on x86_64
-Message-ID: <Z_O0Z1ON1YlRqyny@krava>
-References: <20250320114200.14377-1-jolsa@kernel.org>
- <CAEf4BzY2zKPM9JHgn_wa8yCr8q5KntE5w8g=AoT2MnrD2Dx6gA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="o/DkYWjM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vgP2VeoPVV2PiynTMoApdtYr1oesOaEYRQVkiH08pK8p2WVhno3K+6lYVQHKqkzvmq/BzTOH4R6CQBpKuMuzHAXYnVe+C5an+jkNAegSJzxprafM+mmKst1NutsurtlPAO+f7SjiHdoode9qVPu4prBmYrpdmv+BgD1OV72Cc01tXR59F0LmpALZaT+HOnAJVvr5tMVqamvWzT/NOZ5lvTs/Nrm6QhyeF84brMbK1cRNYUxu3ZtL0SqxvfW+OcrszPZ6SxfiimLdC2JnWIdvIR+44hSWLXOPvH+bcScLUlvz1MfPRTMsyQBu/9URmu5gfVdth9xrSKz5kRHC60QPhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jPHHCJAKdDtuYirkbtmhw6PHtExaEnYLqwpT1u5kljI=;
+ b=jSeUL9SSyJd2JFyoeAGpV/xNE7OB6PgSIACoI4SzkKg2a8W5CSdLDZ5fwVePhTvAcyH4TqKRLJ6e6CCBF1GRSbgZNYVLBwLphhF61eB/jTm/o4BJTCnMfu1g8ZGaQd1+i3UUXchAUnSOKpUhakaZxi5gF6KCMGCxA+g7Il0KVVtemzhA86K+0t6xxKzL9Ah+F2r49o81t0Hl4NhfBeJ6okgfaNGcLsbIS9nNGa/wBcOtmsTOeAiEIqpkd4hSOD1uQ3+1XA+4p2gNlPSbpGEH6+Bt4vCAu75OQFjoQT2Y6aFCCLnF26C/yr6/K0XXLAP4NrclmMTe7LFD+Pi+uvm8Zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cyberus-technology.de; dmarc=pass action=none
+ header.from=cyberus-technology.de; dkim=pass header.d=cyberus-technology.de;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberus-technology.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jPHHCJAKdDtuYirkbtmhw6PHtExaEnYLqwpT1u5kljI=;
+ b=o/DkYWjMJw4xACyCDHfLfF38vJTn81gFivyk8yDBmj/nJ0Z5bLxNFrdGWiihv5M8h0mQBXa7a9tsV0T79HTDSimV8LOW/ZryosELLDiM69kuKDaaTx5a5reaNo2v2809W80oFEkswOhIwbSlPKWM6MgC68AjcejDZNN14cGJh9q/kWRah1jUFuoiI+q/fysWuGkIE5KxJjewY6+ovNvUuVaKXpgLwEiR+tQuuvfUB01+8Ipe05W30lf36iDCObQ55cdK7ppfkXP73vegy/nDhsjhODYGgFcYnnCpQgNyYSexNJ5aHsGzF8lmG4gxs7ONaitipBw7TcZZrHpu+bNf4w==
+Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:38::7) by
+ BEUP281MB3414.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:9e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.34; Mon, 7 Apr 2025 11:19:27 +0000
+Received: from FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::bf0d:16fc:a18c:c423]) by FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::bf0d:16fc:a18c:c423%5]) with mapi id 15.20.8606.033; Mon, 7 Apr 2025
+ 11:19:27 +0000
+From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To: "hch@lst.de" <hch@lst.de>
+CC: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"rafael@kernel.org" <rafael@kernel.org>, "viro@zeniv.linux.org.uk"
+	<viro@zeniv.linux.org.uk>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "hsiangkao@linux.alibaba.com"
+	<hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH] initrd: support erofs as initrd
+Thread-Topic: [PATCH] initrd: support erofs as initrd
+Thread-Index: AQHbmc5FhigEqeqdAEenfkqes+M237N9CO4AgAAHcoCAAINRgIAabvuAgAAnjwA=
+Date: Mon, 7 Apr 2025 11:19:27 +0000
+Message-ID:
+ <a1c9c97458a86e35df3f6626c9b7c8be4448a9f0.camel@cyberus-technology.de>
+References: <20250320-initrd-erofs-v1-1-35bbb293468a@cyberus-technology.de>
+		 <20250321050114.GC1831@lst.de>
+		 <582bc002-f0c8-4dbb-8fa5-4c10a479b518@linux.alibaba.com>
+		 <933797c385f2e222ade076b3e8fc5810fa47f5bd.camel@cyberus-technology.de>
+	 <20250407085751.GA27074@lst.de>
+In-Reply-To: <20250407085751.GA27074@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cyberus-technology.de;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: FR2P281MB2329:EE_|BEUP281MB3414:EE_
+x-ms-office365-filtering-correlation-id: 2f1c232e-4014-4c63-596c-08dd75c60efc
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VmZ2S0xCZDU4STdKUmdrODNPT2I3WHVPNjVjTEUzUEt0N2s2UXZYd09tSkFy?=
+ =?utf-8?B?c0x0MmhtWWFZNWRvcXdzVWRBQTF3QlYwdjZ6TWtKMEl6Q0ZHVjVKV2VBMllj?=
+ =?utf-8?B?Rkh6dXEzS1owSncwZ0ZxQjIwZnZ3WUJqaEs5WkUwVDNSMnNYSGdxTVNyZDAr?=
+ =?utf-8?B?S2w4OHUwbTRTUlE3QkNnU1c2SER5bEhrb2ttaGhSam55dWpuZEdsZnAvUUlE?=
+ =?utf-8?B?QmhOVGdhRVpFVEFwaHFsMmRSbVhQSDRjTEJlc2lVbWViYjJHckt2K1ZqV1Y0?=
+ =?utf-8?B?WU1WZzFyWE43TzdORlJaMEFtaU12UnErOVEwL0gvQ1BGdlpRNWZ6YUp3SHJo?=
+ =?utf-8?B?S0hqNXlvMVlIb2JDVzh5QUZtd3V4bWVWTHNYQm02a2ZpUmFnZXFIS04ySVdl?=
+ =?utf-8?B?MnIrS0xVeGk5NjRONGVUWWxUTHdvbFRpdThjWkRFWkhTQm40Rmg1eHZkOHAw?=
+ =?utf-8?B?U3BlSy9QTy9SUEhTTnBzejkyZ3ZNV0NKeGhtTk5UMERGL282TDRQL1lNT010?=
+ =?utf-8?B?TTNYU3JhUU5mOFg3eHpMOUw3aHo1eC9hTkwvSUIzbm5TUWZwWm1hbTlDbENp?=
+ =?utf-8?B?NUQrM2N0ZjZ1M1gzL24yYyt0My9pNFZlYVFFTmk5VFpkeW1sQWNEOG95b3Ew?=
+ =?utf-8?B?amJMdEdkdW1ubEJtYjd0dzI2MGdueXVsd1pGdFc4MzY5TjlUVzNBaEovdnl6?=
+ =?utf-8?B?cGpOaE1HTWlLY0h1bzlFbVpSWldxMlNMMXZac0dFQytqaE5IL0tDTy84OVVE?=
+ =?utf-8?B?UUpQSzhSUmFvMzMvVnQwNGJPODQ4MitDdlAxMjRYdEJvMlA0V2tkSWxySUFk?=
+ =?utf-8?B?ZnR1eGlBNTM0K0dUS3FzelRXR0prSlpMRXVBZWx1Q0VEejMvME9VOHZGajdT?=
+ =?utf-8?B?TGlJUnp4WnQvTlNSOE1xaExzOGRSbTFPUWhzY2Y2RHJRZEQ1WisvbVdGWmo2?=
+ =?utf-8?B?THo1K1ArbWJJQytHblErSnN1UzYxU2RieDB4dTlDZGFudTBySHJCRUtNNXNm?=
+ =?utf-8?B?Yk5pVHJOaFJKTnpNcU1lejZnRGJyWkFraHVLMWpZMnh3Z0h3NElSUmJIbkdx?=
+ =?utf-8?B?a1RpY3V0QWZiYnQ1SExKajgxZXErbkdva1AvUTZIUjVDT2Y0RHo0b21MSHJQ?=
+ =?utf-8?B?cXF0VENXSzdxSGRveDJmcGVNVHN1QjJSSUNqRVhhNEJkdU5DR0ZtMVZzMys0?=
+ =?utf-8?B?dWsxSTFrTUtwVkxtZkdBbW1RV2V0VmRzUGJ1cytJcE0rcnJZZjZ3cGJuYmcr?=
+ =?utf-8?B?QW92Z3Rhd2dxbVhqenNBWkJCaEE3dFpuZ0hOUXJWN0RzSFdOVnpzL1ozZGxk?=
+ =?utf-8?B?aFZiQ3pxMHBveE9Wb3llV2Y0NkRXNWpXbmFSSkNYQ2c5Nm8xaWZFd1NlNjZR?=
+ =?utf-8?B?dGJ6OG16TXlYMGFQQjRmYjJRcDlnUEM5bi9UNnZtRHh5ZFBQWlRhRUZFSXhJ?=
+ =?utf-8?B?aUxTSEpzZ3pKaDNVTnZGK3pVV2I4ZXBPcGVGRW9vVCtVN2RHekduV09VWmxx?=
+ =?utf-8?B?RjJkUFRHQnN0MFZ0VmZTazVSZkxJS0NrLy9xdmpWNUNsSHZQQVFocWpLM3J5?=
+ =?utf-8?B?bU1uWUw4NSt1NVU3VWdrOWFTMWdhU1BqR0xtbE4rUDVZaGJFNXZmQkJoanhy?=
+ =?utf-8?B?d0MxZENkZ0pSUXVIMVhCcVh4aHdVNWxHQWpReHJ2VWJHa0lxZ016K0xwK3g4?=
+ =?utf-8?B?R2FEVksrNVF2cG9hV091WDUzTWNCa0lLSTUrSThBa0hkdnpqMWF0dlRLREhL?=
+ =?utf-8?B?eldaUWx6VFBQZGNKNzJwTUF2RUNvY3FlYlB1eWpDTDE1QnVpeWJzbFNKYWRl?=
+ =?utf-8?B?SjJvUElDS093ZGgrcFhoVHVxZTV3dFZMdTlDbGlTWms5NTBjYXpRVkc4TkFy?=
+ =?utf-8?B?VGd5RE1WN001NEdsZDhMWlkwUFkzbnQ5TUV3V21jajZweHA1dDBmKzM2VEtX?=
+ =?utf-8?B?OW5PTkhmZ1poRG9WTUczUmJ1elQzTkNORTZBbFB4WjJEdUgyUVdyOEtGcThX?=
+ =?utf-8?Q?2r4E+LydHSuIby9VcfX0GvY8TAqjVc=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aGxvV3JxZFhscmpPallXdmxSUjV4U29sMHhyS1NhcjRVNHpBUEh4MVV4R2dI?=
+ =?utf-8?B?TDN0RTgvTVR0elJvY0lTT1FxS1diZHd6TVd4K05EbU02RVBKWDhNSG9xTHJh?=
+ =?utf-8?B?QWJzNW1jN3hMNjU2WWRaTXZuWjdPWkZ1MlUrL0ZNc0prS0RpU0R2aGhyRDAv?=
+ =?utf-8?B?MExmTWpwVWlDaW9zMkd1a0FsempvVDVuZkt4RjZMQkVVckl4Q1pHZXNZNzA1?=
+ =?utf-8?B?c1lvRFpwUEcyR1FQTXd4dTlzUjlvMm8xUEdXcFNlQ1pHK0MrMjg1NEN1aklQ?=
+ =?utf-8?B?VnNiY2hRY29SUXRDa3gwL2VQTEs5dHNPOEQwaHNhWE9zSFY3OWRxNjNubk9W?=
+ =?utf-8?B?REtiQzFXOFRueXN0ekJydnN3OTdlWG5UUmNnTVpQbDBtbEV6cWIwaE9nU2xy?=
+ =?utf-8?B?OWxMRWhvRVVQSnY0dGlDSGJlVkd2UGJPRjhOeUFYbk0wbnpoUndhUW8rOHhX?=
+ =?utf-8?B?MmxYaXYwU1dWeEJBR1RIQXdKakRwUEFpcnJOMjQxdEZBTkJSY2E5SjNtZUc4?=
+ =?utf-8?B?Tit4cUhRTnFsbVlNVWN1K1F2ODFLZEhuakN1NjN0UzhtQ2NOeS85WUJMMFpX?=
+ =?utf-8?B?T3YzakV5WVB1WlJQa0hPTkU0ZVVPaitXS1JhUENtTW04bTBSd3RWNXpMVTZk?=
+ =?utf-8?B?YXVaRURGMnR1eDJyWUcyVm5qQ0lDNTlvaFZpallIbGEwRlNSLzM1NVd3aTB2?=
+ =?utf-8?B?eDBDNjhIdEVvOThFcTRGaGxDMEVLTSs4TDgxZW1HcjR1L0g4cDYySTNDczA3?=
+ =?utf-8?B?aVBWWUM3amJpYlY0R1oxVDNwMXpjTzkzZUZtdVJtMFlYNnNTUllxTGhteWpi?=
+ =?utf-8?B?cjN3MEZ4TWNaN3VhekovYmdVZW1aSTlwTTBYV0VVNjQwNVNFcVJUcWJ4NjhJ?=
+ =?utf-8?B?K3dBZ25nbnNrUkNYVTcrVFk2bGJlR1phWElMLzZsTHdUSWRqWi90dXhQa3RX?=
+ =?utf-8?B?UFlPZ3k2aVJVT0Y0TXo4RXRyKzhCRXVSdTRJNGdEQUNCR0Y0Z3RWckhRZ2ta?=
+ =?utf-8?B?Ym1HeVBsZ05mbXRrdUljZktJMVduT3lNVTFtOElsSFpmQWJyUTFUajRvRkxQ?=
+ =?utf-8?B?S29Pc2pqSm1YOUF1ZXl6OUVPUzFIMituVlg0ay9TN1R0SGt4YVBYSGlReXFj?=
+ =?utf-8?B?QjdvMXVJeHFFVXJhV0JwQ0tzWGtnejI4QVRhT3lpa3FUczUzNzdrOGpUUlR0?=
+ =?utf-8?B?blc4eXFpanNMSnpOTnRETW5GdnRwUjBqNE5jSjlmS0M2aTNKMm45MENwK1lB?=
+ =?utf-8?B?a3JCUitEYXkyai9VZGR2eEMvSUxXSHJDQ2J2ZXhWZW5Oam1lV3VnZ1BaTU1P?=
+ =?utf-8?B?QkFiMU8xWUVSN3ljdURTL1VJd05XU2FFa25pUTlzWWtNV2x1dWdNVzE5VU5a?=
+ =?utf-8?B?U3p4WW1UQ2tNd3piYUw2azZPNE1yQVBjazM4MzV0OEtRTnFXM2FVd2ptNjha?=
+ =?utf-8?B?OFl3UFN4MEcwYVdxbEhVTjhMTkplYUNEcDkzdlhlTU03VDBTdVM0SmMwdjBw?=
+ =?utf-8?B?bjN1Q3FIbWdlRDdRUVRZQjFTS3hVQjZnMEk3M01JdHdVMmR1TjRGZTJCZjA0?=
+ =?utf-8?B?Z2QvWnVHMkZXZ0dwWkFLc2tiWFJoT0VKWUVJc0JRNzVrOTM3dEhScHNUb3hJ?=
+ =?utf-8?B?NG9vNk51WFVsaXUwZ090NktPQm9qL0haWjZDOUszZUFJZ0JLZWlpQktwY1J0?=
+ =?utf-8?B?WjUxcXFVbFB4WmJkQjFxSGVTS1NwajlBQW5JRmRkTDhRUWUzbUNXN3JzOWFm?=
+ =?utf-8?B?YXp5aCtOV2FUYlpjUm8vYUdESHZ2cDg3L2NhMC9WdXdtYmloZWtaODJaNEh0?=
+ =?utf-8?B?WTVQSnIxVk95YTI3ZEVlQ2hwdkpuNGtJMEIzZzhQcFJTT1BhanBBcDFaRU45?=
+ =?utf-8?B?aVphNSthemI0OGNBR0JmSlZuTitkc2YrRExLWEJ5d01sbytsWGY0QVFZQ3F3?=
+ =?utf-8?B?c3BDT091ei9jbXJNZmdqZTF2Y0pWeUZreDdIR2poam90Q3BPMlFiVW5MSGRn?=
+ =?utf-8?B?TVNpbjlzeGc3dXI3bWVsMkdCODlib1J6eVB1VjI3eVZaYkQwb2xHd01VN2NQ?=
+ =?utf-8?B?UzdhQURTaUp4dlFVNUp3L2lyekQ4MzNTbndyL1h5cVJlNmxJRyt6Q2pyWENR?=
+ =?utf-8?B?ZXYxTUZCblFMS1YvRVpKNU5ZV3lxYUpyY2dCNC90RWxQaFVQaUxoL1hHUThR?=
+ =?utf-8?Q?KLXFydY3FqvhcHd0naIqZX40ublJFfwPLRqrzx07HIeR?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A8954341400CC7428E1D4DC13CF1B614@DEUP281.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzY2zKPM9JHgn_wa8yCr8q5KntE5w8g=AoT2MnrD2Dx6gA@mail.gmail.com>
+X-OriginatorOrg: cyberus-technology.de
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: FR2P281MB2329.DEUP281.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f1c232e-4014-4c63-596c-08dd75c60efc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 11:19:27.1301
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f4e0f4e0-9d68-4bd6-a95b-0cba36dbac2e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +EsRh76Oc+Ur23wQSmZMlAwl7ymIQyfn31Sq43d5OwDB/SMvLvcwHBna/cP9o5fDWCOy35S6w1ngAuncU9vbrclscbj5hZcNBmPqrHlZcl2ArhhWN8uZYZVpsricXSz8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEUP281MB3414
 
-On Fri, Apr 04, 2025 at 01:36:13PM -0700, Andrii Nakryiko wrote:
-> On Thu, Mar 20, 2025 at 4:42 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > hi,
-> > this patchset adds support to optimize usdt probes on top of 5-byte
-> > nop instruction.
-> >
-> > The generic approach (optimize all uprobes) is hard due to emulating
-> > possible multiple original instructions and its related issues. The
-> > usdt case, which stores 5-byte nop seems much easier, so starting
-> > with that.
-> >
-> > The basic idea is to replace breakpoint exception with syscall which
-> > is faster on x86_64. For more details please see changelog of patch 8.
-> >
-> > The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> > original instructions) in a loop and counts how many of those happened
-> > per second (the unit below is million loops).
-> >
-> > There's big speed up if you consider current usdt implementation
-> > (uprobe-nop) compared to proposed usdt (uprobe-nop5):
-> >
-> > current:
-> >         usermode-count :  152.604 ± 0.044M/s
-> >         syscall-count  :   13.359 ± 0.042M/s
-> > -->     uprobe-nop     :    3.229 ± 0.002M/s
-> >         uprobe-push    :    3.086 ± 0.004M/s
-> >         uprobe-ret     :    1.114 ± 0.004M/s
-> >         uprobe-nop5    :    1.121 ± 0.005M/s
-> >         uretprobe-nop  :    2.145 ± 0.002M/s
-> >         uretprobe-push :    2.070 ± 0.001M/s
-> >         uretprobe-ret  :    0.931 ± 0.001M/s
-> >         uretprobe-nop5 :    0.957 ± 0.001M/s
-> >
-> > after the change:
-> >         usermode-count :  152.448 ± 0.244M/s
-> >         syscall-count  :   14.321 ± 0.059M/s
-> >         uprobe-nop     :    3.148 ± 0.007M/s
-> >         uprobe-push    :    2.976 ± 0.004M/s
-> >         uprobe-ret     :    1.068 ± 0.003M/s
-> > -->     uprobe-nop5    :    7.038 ± 0.007M/s
-> >         uretprobe-nop  :    2.109 ± 0.004M/s
-> >         uretprobe-push :    2.035 ± 0.001M/s
-> >         uretprobe-ret  :    0.908 ± 0.001M/s
-> >         uretprobe-nop5 :    3.377 ± 0.009M/s
-> >
-> > I see bit more speed up on Intel (above) compared to AMD. The big nop5
-> > speed up is partly due to emulating nop5 and partly due to optimization.
-> >
-> > The key speed up we do this for is the USDT switch from nop to nop5:
-> >         uprobe-nop     :    3.148 ± 0.007M/s
-> >         uprobe-nop5    :    7.038 ± 0.007M/s
-> >
-> >
-> > rfc v3 changes:
-> > - I tried to have just single syscall for both entry and return uprobe,
-> >   but it turned out to be slower than having two separated syscalls,
-> >   probably due to extra save/restore processing we have to do for
-> >   argument reg, I see differences like:
-> >
-> >     2 syscalls:      uprobe-nop5    :    7.038 ± 0.007M/s
-> >     1 syscall:       uprobe-nop5    :    6.943 ± 0.003M/s
-> >
-> > - use instructions (nop5/int3/call) to determine the state of the
-> >   uprobe update in the process
-> > - removed endbr instruction from uprobe trampoline
-> > - seccomp changes
-> >
-> > pending todo (or follow ups):
-> > - shadow stack fails for uprobe session setup, will fix it in next version
-> > - use PROCMAP_QUERY in tests
-> > - alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
-> 
-> All the pending TODO stuff seems pretty minor. So is there anything
-> else holding your patch set from graduating out of RFC status?
-> 
-> David's uprobe_write_opcode() patch set landed, so you should be ready
-> to rebase and post a proper v1 now, right?
-> 
-> Performance wins are huge, looking forward to this making it into the
-> kernel soon!
-
-I just saw notification that those changes are on the way to mm tree,
-I have the rebase ready, want to post it this week, could be v1 ;-)
-
-jirka
-
-
-> 
-> >
-> > thanks,
-> > jirka
-> >
-> >
-> > Cc: Eyal Birger <eyal.birger@gmail.com>
-> > Cc: kees@kernel.org
-> > ---
-> > Jiri Olsa (23):
-> >       uprobes: Rename arch_uretprobe_trampoline function
-> >       uprobes: Make copy_from_page global
-> >       uprobes: Move ref_ctr_offset update out of uprobe_write_opcode
-> >       uprobes: Add uprobe_write function
-> >       uprobes: Add nbytes argument to uprobe_write_opcode
-> >       uprobes: Add orig argument to uprobe_write and uprobe_write_opcode
-> >       uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
-> >       uprobes/x86: Add uprobe syscall to speed up uprobe
-> >       uprobes/x86: Add mapping for optimized uprobe trampolines
-> >       uprobes/x86: Add support to emulate nop5 instruction
-> >       uprobes/x86: Add support to optimize uprobes
-> >       selftests/bpf: Use 5-byte nop for x86 usdt probes
-> >       selftests/bpf: Reorg the uprobe_syscall test function
-> >       selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
-> >       selftests/bpf: Add uprobe/usdt syscall tests
-> >       selftests/bpf: Add hit/attach/detach race optimized uprobe test
-> >       selftests/bpf: Add uprobe syscall sigill signal test
-> >       selftests/bpf: Add optimized usdt variant for basic usdt test
-> >       selftests/bpf: Add uprobe_regs_equal test
-> >       selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
-> >       selftests/bpf: Add 5-byte nop uprobe trigger bench
-> >       seccomp: passthrough uprobe systemcall without filtering
-> >       selftests/seccomp: validate uprobe syscall passes through seccomp
-> >
-> >  arch/arm/probes/uprobes/core.c                              |   2 +-
-> >  arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
-> >  arch/x86/include/asm/uprobes.h                              |   7 ++
-> >  arch/x86/kernel/uprobes.c                                   | 540 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/syscalls.h                                    |   2 +
-> >  include/linux/uprobes.h                                     |  19 +++-
-> >  kernel/events/uprobes.c                                     | 141 +++++++++++++++++-------
-> >  kernel/fork.c                                               |   1 +
-> >  kernel/seccomp.c                                            |  32 ++++--
-> >  kernel/sys_ni.c                                             |   1 +
-> >  tools/testing/selftests/bpf/bench.c                         |  12 +++
-> >  tools/testing/selftests/bpf/benchs/bench_trigger.c          |  42 ++++++++
-> >  tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh     |   2 +-
-> >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 453 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
-> >  tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
-> >  tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  41 ++++++-
-> >  tools/testing/selftests/bpf/sdt.h                           |   9 +-
-> >  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
-> >  tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
-> >  20 files changed, 1338 insertions(+), 127 deletions(-)
+SGkhDQoNCk9uIE1vbiwgMjAyNS0wNC0wNyBhdCAxMDo1NyArMDIwMCwgaGNoQGxzdC5kZSB3cm90
+ZToNCj4gT24gRnJpLCBNYXIgMjEsIDIwMjUgYXQgMDE6MTc6NTRQTSArMDAwMCwgSnVsaWFuIFN0
+ZWNrbGluYSB3cm90ZToNCj4gPiBPZiBjb3Vyc2UgdGhlcmUgYXJlIHNvbWUgc29sdXRpb25zIHRv
+IHVzaW5nIGVyb2ZzIGltYWdlcyBhdCBib290IG5vdzoNCj4gPiBodHRwczovL2dpdGh1Yi5jb20v
+Y29udGFpbmVycy9pbml0b3ZlcmxheWZzDQo+ID4gDQo+ID4gQnV0IHRoaXMgYWRkcyB5ZXQgYW5v
+dGhlciBzdGVwIGluIHRoZSBhbHJlYWR5IGNvbXBsZXggYm9vdCBwcm9jZXNzIGFuZCBmZWVscw0K
+PiA+IGxpa2UgYSBoYWNrLiBJdCB3b3VsZCBiZSBuaWNlIHRvIGp1c3QgdXNlIGVyb2ZzIGltYWdl
+cyBhcyBpbml0cmQuIFRoZSBvdGhlcg0KPiA+IGJ1aWxkaW5nIGJsb2NrIHRvIHRoaXMgaXMgYXV0
+b21hdGljYWxseSBzaXppbmcgL2Rldi9yYW0wOg0KPiA+IA0KPiA+IGh0dHBzOi8vbGttbC5vcmcv
+bGttbC8yMDI1LzMvMjAvMTI5Ng0KPiA+IA0KPiA+IEkgZGlkbid0IHBhY2sgYm90aCBwYXRjaGVz
+IGludG8gb25lIHNlcmllcywgYmVjYXVzZSBJIHRob3VnaHQgZW5hYmxpbmcgZXJvZnMNCj4gPiBp
+dHNlbGYgd291bGQgYmUgbGVzcyBjb250cm92ZXJzaWFsIGFuZCBpcyBhbHJlYWR5IHVzZWZ1bCBv
+biBpdHMgb3duLiBUaGUNCj4gPiBhdXRvc2l6aW5nIG9mIC9kZXYvcmFtIGlzIHByb2JhYmx5IG1v
+cmUgaW52b2x2ZWQgdGhhbiBteSBSRkMgcGF0Y2guIEknbQ0KPiA+IGhvcGluZw0KPiA+IGZvciBz
+b21lIGlucHV0IG9uIGhvdyB0byBkbyBpdCByaWdodC4gOikNCj4gDQo+IEJvb3RpbmcgZnJvbSBl
+cm9mcyBzZWVtcyBwZXJmZWN0bHkgZmluZSB0byBtZS7CoCBCb290aW5nIGZyb20gZXJvZnMgb24N
+Cj4gYW4gaW5pdHJkIGlzIG5vdC7CoCBUaGVyZSBpcyBubyByZWFzb24gdG8gZmFrZSB1cCBhIGJs
+b2NrIGRldmljZSwganVzdA0KPiBoYXZlIGEgdmVyc2lvbiBvZiBlcm9mcyB0aGF0IGRpcmVjdGx5
+IHBvaW50cyB0byBwcmUtbG9hZGVkIGtlcm5lbA0KPiBtZW1vcnkgaW5zdGVhZC7CoCBUaGlzIGlz
+IGEgYml0IG1vcmUgd29yaywgYnV0IGEgbG90IG1vcmUgZWZmaWNpZW50DQo+IGluIHRoYXQgaXQg
+cmVtb3ZlcyB0aGUgYmxvY2sgcGF0aCBmcm9tIHRoZSBJL08gc3RhY2ssIHJlbW92ZXMgdGhlIGJv
+b3QNCj4gdGltZSBjb3B5IGFuZCBhbGxvd3MgZm9yIG11Y2ggbW9yZSBmbGV4aWJsZSBtZW1vcnkg
+bWFuYWdlbWVudC4NCg0KQ2FuIHlvdSBiZSBtb3JlIHNwZWNpZmljIGluIGhvdyB0aGF0IHdvdWxk
+IGxvb2sgbGlrZSBpbiBwcmFjdGljZT8gVGhlDQppbmZyYXN0cnVjdHVyZSBmb3IgaW5pdHJkcyBp
+cyB1bml2ZXJzYWxseSBhdmFpbGFibGUgYW5kIHdoYXQgeW91IGFyZSBwcm9wb3NpbmcNCnNvdW5k
+cyBsaWtlIGFkZGluZyBhIG5ldyBtZWNoYW5pc20gZW50aXJlbHk/DQoNCkp1bGlhbg0KDQpQUy4g
+U29ycnkgZm9yIHRoZSByZS1zZW5kLiBJIGFjY2lkZW50YWxseSBzZW50IGEgSFRNTCBtYWlsLiA6
+KA0K
