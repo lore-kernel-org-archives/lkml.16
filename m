@@ -1,92 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C87211460
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF330225764
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015752; cv=none; b=EwLPvzYe/wNPlu1Wmdc6Gh1Ex9sCL+CLR+n3lFgkirB/6p/h8ip39WLvCKfKJDhEguiTpnbvS5um/uc3bQYdWtCTnM2UVhzccSuSZE+QoT0AC+N+1ZfhfJRubFp9VpmoTXg2Y5OqX3DDBLFcgG3utt4RwC2GbrAlGVVI4KhTLAs=
+	t=1744015763; cv=none; b=uhLAGLd3TuIUHsYNKmxybWvEfzzfMmdNSvPsK7aZlKidOxkdluLRj0soTbleBzh9FxSw8ep7xebpdl/979081xXEwcrxDj7R9tro8PpP491oZcnI0Ihm5N77r4Ei1zc19F29s75lm6ov+uwI/opLAfjR0dXr4WlbgBu3RU9bBZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015752; c=relaxed/simple;
-	bh=B9s3+XIfej7okK4vYfrCqfccezv34+jSd9MAmtp/xls=;
+	s=arc-20240116; t=1744015763; c=relaxed/simple;
+	bh=IZtLDURYDTq0b32MVRHTcY8RDwEllmanE9uQZcvW3gk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6xKACX5XZEoYcsWlECaNmJigJYBdtucNwLqW05NMl/Oo1ABJRpYEfnLyXvHTIId8zcbi6Zpq69uYsT8fSlHbjuS53FWUcFTL27lHFD9amPhmO9cZp8Rbmo59smpFa//hNghqebi6l9p+h9SYKWtM38a+4yyc/ajIQvE/qHS7wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5zqE+Oa; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SkDmRHpBRyeEp4pVWeSyLNToFkg5OWnk0L4sUPUtgr79kC0eRtgRx5RenpmRmiUpUJrw8Vg7rYC3gqww+n4lujJWoTX97T/fJbObWQdo0UOhwXDlEAkivL7zjVX1zhSeP2YRSnQ8PbZGH1g21BGc+Zz37Bh77DmvLj8tABatVjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPh2MDY2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5zqE+Oa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744015750; x=1775551750;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=B9s3+XIfej7okK4vYfrCqfccezv34+jSd9MAmtp/xls=;
-  b=l5zqE+OahThq4YADMKQOuNsmJIiwvUaIVS2uBImvWd4PX1o3xQMQ5X/f
-   96NZxWRVeB6t1ZeO94YFuxv2ml6YwKPVJ7SAM3DH1s1md3/fVoO2HRc12
-   Pz4dwGiI0A/k29VaOh4VbeJ38jeUmndFlKeHOGuU0PFDKzcaE0oCE/TzZ
-   UPBUK2FrwXH59uAYZfsv7llrx1A6Du+N9YSxHLIF2aMQkMvNGC2iCPpu5
-   E9qhsKhQ58/Jys1hyPGC0tztXFuNaJOkZOyUSPBbJav4LOBlnwoyrDBqN
-   Ku5hXGr0fUCCmEp9xfYxSOGw5wxm1hw7k7gKBt9BtbONx9KA20qeB+QBT
-   Q==;
-X-CSE-ConnectionGUID: fZ9Kz6nKRZWTgZV8iIaLWg==
-X-CSE-MsgGUID: MmrpPs2xQba/VKMkX+5Nyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="55575712"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="55575712"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:49:08 -0700
-X-CSE-ConnectionGUID: BhwjL6KpSjOzhxDRYde87g==
-X-CSE-MsgGUID: og5y1HNCSxC/neCN1hA9Ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="127775164"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:49:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1iAB-0000000A0Yy-1PdI;
-	Mon, 07 Apr 2025 11:49:03 +0300
-Date: Mon, 7 Apr 2025 11:49:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4] locking/mutex: Mark devm_mutex_init() as __must_check
-Message-ID: <Z_ORf1lLqs7UuWY2@smile.fi.intel.com>
-References: <20250407-must_check-devm_mutex_init-v4-1-587bacc9f6b3@weissschuh.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPh2MDY2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744015760;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hpu5KqbXEO7FQHIb0ETZFO78MX8aCe7lEYNvf8XqmxY=;
+	b=EPh2MDY295e/BmrhhJRCOQ0326XjOmpeysTfkGxk/ZLFfM9a1XYWS2j6P45SFr7wz/DHsQ
+	Wxuo7XbOf66qAxyN6Ld6iq1tSpGFw/rv1KgZaeYDNh7otX4hPvq/my1UynsfkNYu5YCDEG
+	AN33p+zTJuK1iU18rTdybczgFpTTRAg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-464-3QL7E-KJNny9LLFx5SZVrw-1; Mon, 07 Apr 2025 04:49:19 -0400
+X-MC-Unique: 3QL7E-KJNny9LLFx5SZVrw-1
+X-Mimecast-MFC-AGG-ID: 3QL7E-KJNny9LLFx5SZVrw_1744015758
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d01024089so34896705e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:49:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744015758; x=1744620558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hpu5KqbXEO7FQHIb0ETZFO78MX8aCe7lEYNvf8XqmxY=;
+        b=Bm6QSsk2D2kOdUQxRl08TnM1o+uRbp4mQ3oRTwkFM1MqzK2AgercnJIpiIXc8Sv9O8
+         FCfowEGcxD7dY4vRnsW8Tl6s/YyV+eW6qkzt1owuhlmYjZZ+YncP3cB2VGJPC2jNs6fL
+         Kre3ExTfcwvX2x3Vn6ic3FeLSKNAkIWiAckgjEJYa4MbZ9wN89yka0yPAAx8dqyEDGoA
+         ohVvsPmi2AO3N9YZvmzFbalaw0InOlEfXaLDXKkq650GOgXPv42GPMYsb6EY6BUDftVw
+         aiOmgb1Dcm1JHocLBoPYLWyt4Vza7mfUlHWAvr6nDaQVCqObCifap/GKHxcKbl2KApUo
+         Y/hA==
+X-Forwarded-Encrypted: i=1; AJvYcCXO2pxG3sdJdcsZdyWdIZAGZnqKsHRPD0vBfOBAYvZ59AFmaXO7RlhSZnohlqFWn4rBzM36TPJhlzojnlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyATGGK4GUKu3F6dNo4nDJZyfoWfm3mQWRwdUnDhmXT4SnciuTR
+	w1kuT9pH+BPXZaW4UQJFzQ6R0fpTBj6Dk9s9W5J1p86VeGDjxjjiOkog8rrtYbINed0SRQVAGp1
+	KQpdwNaGikwbihRug/KrA0Hj72Zufjr0LnverWLaEpdYXgYvGL1senfBWK+G7yg==
+X-Gm-Gg: ASbGnctauNdfsa8dZg8rQi///9LkSuq8jsns3Q1ZdaAw7SgrzQxC+TaKyKUghT6BrWc
+	drRgBNxupvaBxrzCyaJwSiwrNcswutpkqPVCc/1mAxXUYTseBtLKKAXOAkv5VCMEFqJGPpp56ZO
+	rKQUJyfoX86HI1C3s68VV0N9Pl4oAo04MfCAOeVvoLQFXaGU8r+ioJwkUo6FCYCwHScnhDPcyY3
+	vgmesmlosCJZA71+0cPE+Llh/1jGNa7TzoT6XBLxbIVSLOM9JcX92O9SrBnHMjpz9qcM+hlRBlX
+	3NCP765aWg==
+X-Received: by 2002:a05:600c:3306:b0:43d:fa59:be38 with SMTP id 5b1f17b1804b1-43ee2aff1a0mr38130095e9.32.1744015758297;
+        Mon, 07 Apr 2025 01:49:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNYPVVGEAhzNqS2UPVe5mcCou0C3HnRif0zA9AGHI8Xqo5GZ7Z22p9jJeCaR5blASlwYtuCg==
+X-Received: by 2002:a05:600c:3306:b0:43d:fa59:be38 with SMTP id 5b1f17b1804b1-43ee2aff1a0mr38129915e9.32.1744015757955;
+        Mon, 07 Apr 2025 01:49:17 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7586sm11552495f8f.38.2025.04.07.01.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:49:17 -0700 (PDT)
+Date: Mon, 7 Apr 2025 04:49:14 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250407044743-mutt-send-email-mst@kernel.org>
+References: <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com>
+ <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+ <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+ <20250407042058-mutt-send-email-mst@kernel.org>
+ <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407-must_check-devm_mutex_init-v4-1-587bacc9f6b3@weissschuh.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
 
-On Mon, Apr 07, 2025 at 09:46:47AM +0200, Thomas Weißschuh wrote:
-> Even if it's not critical, the avoidance of checking the error code
-> from devm_mutex_init() call today diminishes the point of using the devm
-> variant of it. Tomorrow it may even leak something. Enforce all callers
-> checking the return value through the compiler.
+On Mon, Apr 07, 2025 at 10:44:21AM +0200, David Hildenbrand wrote:
+> > 
+> > 
+> > 
+> > > Whoever adds new feat_X *must be aware* about all previous features,
+> > > otherwise we'd be reusing feature bits and everything falls to pieces.
+> > 
+> > 
+> > The knowledge is supposed be limited to which feature bit to use.
 > 
-> As devm_mutex_init() itself is a macro, it can not be annotated
-> directly. Annotate __devm_mutex_init() instead.
-> Unfortunately __must_check/warn_unused_result don't propagate through
-> statement expression. So move the statement expression into the argument
-> list of the call to __devm_mutex_init() through a helper macro.
+> I think we also have to know which virtqueue bits can be used, right?
+> 
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+what are virtqueue bits? vq number?
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+MST
 
