@@ -1,173 +1,99 @@
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D6923BD1C;
-	Mon,  7 Apr 2025 19:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E32253B56;
+	Mon,  7 Apr 2025 19:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744055986; cv=none; b=XlnabX7sUIWjlAocoGMetOc3tmekbFSHNYbPx5i81Ub7z+CuIJLcWNlBax1hW3HvKNkP0UgMpCMmx0y79mgvv89/BsDifMFvkZq5KHVmummXPb8XMKKRKi1q3vQSFAghyE2gisAp5JKxdCDklUrtFvH1g/SyZOZXpZ6Ax1vMsdA=
+	t=1744055990; cv=none; b=R+0kbEq7GCiYdJC1IWPnQv+ns72WXWCWNclbAoYG7jDJCTH5zmK7GxjkuE3yuUZVRPnQrcX2a4E54NCTQubAIB2FAkUCSWAChMmUWYTvG2BXhAv3R4d+b8o0gW8YnA005UX/WO3V7+QLE6Nja3KTQCVVOrDWQki9GdQggxqOFgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744055986; c=relaxed/simple;
-	bh=h1VyZ44tkwkZ9BYMdSWJcuMFfRfJlNycn1ZZ3RGmpfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=inc3QkwPV7TDdHBLCS0/kCncOP3tz/bop2U1e7geh+5PltD3Ii6Kp/QeDs6bSqGagZUlLq61Oj5JN3+Cu4LCVCMbuGyPNQhWkb/p61Z8fs8/j4jfWGrrtULZsYp7Jxxx1/ZrOTNMDcKkC7PctPm3ViUGLNowiN6uALhP5AFTFuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lWCFu5Oa; arc=none smtp.client-ip=80.12.242.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1744055990; c=relaxed/simple;
+	bh=fG/JotKUwrRStewHDslmD7KAYdZmrjaakxc3PwvYuig=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hSES2ke1LnHJj/dQ7dd424vmgW9tztJthjFMts88Vr4Alo1GJ0gcWUn3G555gSHZS2Z00sW99geAimilKND2/lj2fEiRk6pwwq3Zu5N8N8dbmIpbVTQulOQPyoDlgl+gLWiBad5g5TVNNXC0KlEthrV9RM3+G4QbivsBUI2hi2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIVEKfCP; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lWCFu5Oa"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 1sciuA5a8cIMB1sclu6ec5; Mon, 07 Apr 2025 21:59:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744055957;
-	bh=/4c4JTnHqkb3zAW3+wg0tavQK5en0rFfkh7J4+tv+sc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=lWCFu5OavlE5trg+UvMOzz+qTahIlH8ly+lu9DnV5SFyUN9JBa+k4E1gwjnpvsMTE
-	 qkc6TslmAHIKtMvwXyHkE0nqTsR+E19w/iJOj1i2/xK7F5IE8yZKjz+M6d+Ilv+j1E
-	 4F336AkWsyQlmlndReYSE5VF63nOtY5lHA7UmqRx5o2TfZZOUgGCCrl0FVRM0OYCOc
-	 coNE4OF4C9owj0NlCJ7CIRlL8gT+vmniz0e+bqAOQDygwoAh9hVJ0qtdJcznH0N3lm
-	 fX9KkDqN0eCbDvSX0aLzEZ/hi99m9k7bGokzQ9n+Xb7KSiV9YloFt9HH4DHpngbnJG
-	 WXi9zihNrnCgw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 07 Apr 2025 21:59:17 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <525551ae-fab0-40df-9190-81701f3480e8@wanadoo.fr>
-Date: Mon, 7 Apr 2025 21:59:31 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIVEKfCP"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c1419f73eso3008149a34.1;
+        Mon, 07 Apr 2025 12:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744055988; x=1744660788; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W5HVrCjT0rbXRAZpGIjJMIUCrhaf+V5aTTeFWXjljB4=;
+        b=cIVEKfCPUIDtQFEMQPyr/dQObuovZCfOLow9KJ2fvqoP/55AtUe54jAmb0T2gkoY4x
+         F/uP7uiOQ6mvEBQPWWccTOhSF5TcLjiMjMLfpMefdGq0trmpz1E9h1z05AI50ujwkCAb
+         Tbn2W+OhWJdFkmpwZUEnixqjf8wprhL0pv1GxxgUtW7ak2yAXv0eyvJ6Vs11zLWz/rXa
+         q//0z2egYLkJQRkOm/CcXWS6I1Uz8w+ZxGRIcNRJzklja0w1D1edplV0o2K6g1iBcCNt
+         0ZRgKZ1bvux7c2iC0eQ6p7b13N0cp0pRCsuCfgF2PCxivjuSfayRF1KXGG6xpR/lgzmf
+         3sVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744055988; x=1744660788;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W5HVrCjT0rbXRAZpGIjJMIUCrhaf+V5aTTeFWXjljB4=;
+        b=GRVFqSm6z6C4PqW+u5zB7u2PvzxtYTynR/jbD1gMLasE6CahBFrRLzvET8gfYFS8xm
+         PWR6zwrL44xXK4UA91r+wRbfN7PySJZk8KFOKAeJFQ9v5VxWEIOcG5OPzAnScjN3fLK/
+         kLHp1zzukNHt17pp8orgPmT52keEzoB4Tl3lYL9806Qgw2tzsGOukC+ce1YdAs3SaRKG
+         BorIFAVMhvEiWqgGtAllmd7Hx1HBsWkrXNPOd4Bsb35cYFf1U/LOMkYKAsQwSfaFlXgL
+         egjwlIMgr5WB/+OHjaB8LOOTFBn8qW9rxj4jYZQsp6q5ctCXGE0AuORbC/oAwctoNjDd
+         ge2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV+q81aht+B0ed7ARSl0Z5hpO8+2WyZIiIgUMG2ON51f1IdN5/6IpW+H4qTMh/QMyVrj6yrzYyPtsGc8V8=@vger.kernel.org, AJvYcCW0M0O253GEtTb9BTgF5ib8BmnJZL22MlqKSFsdWC2mkvRuH8r/IE+mM4rN+53ym1fV6UvjHbh8kylRGzK6D1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzibbRsGadPrIT6rg/SeWoSaZQeTaLfEWmb9E/zH0kFvAlO6Bvx
+	+ultrf/+yXmbpjcCHE88FVb7XtLXNOSIMVe/0xAV8NF7IFu8XWHM
+X-Gm-Gg: ASbGncszqTYtufwaMG/rC4IRtlt7ALA52KcpHL+5FJwvByeIUn+QSNPsrYrbzLKUcRh
+	p5YTzOD4tDjvREwJXygo19Gu1OtNcvd5xGBDl0obmYgPeVj1P+zdVt3W/fwPl7DxCdth58207wI
+	sfRpwHndFQOlzFxJzOafWfFnIA/oW0ZBCWBoIaHpMIEcI/XyF4dT00mqzBdyiPMn5W9LuRG0tAY
+	7wYSUpRx4X9dYUIBurdTqy/4f4kAnQhsKp8iJEbevU8KdYh+TK4Rt7mbQu15qs/qJ6Fh5pl7oL8
+	vuZShWl6iQWzhkC3GLSDqtYh8x+GqVzr4l6fwYDzxPIqmN8R3hXZwoXkyYnJdYG+vUVL51KqM06
+	Z8bjm5VyrKe0YSLTI
+X-Google-Smtp-Source: AGHT+IES4Ldx5nS67QIlJrHGyF55/l5wh0DjOa58vveqXFlQYR5XXUkpxN7lfM18rO0Cj0ndNlFqXQ==
+X-Received: by 2002:a9d:5f18:0:b0:72a:97c2:3f91 with SMTP id 46e09a7af769-72e64a72099mr461993a34.6.1744055987736;
+        Mon, 07 Apr 2025 12:59:47 -0700 (PDT)
+Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
+        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-72e6527249esm68060a34.68.2025.04.07.12.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 12:59:47 -0700 (PDT)
+From: Andrew Ballance <andrewjballance@gmail.com>
+To: tamird@gmail.com
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	andrewjballance@gmail.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	gary@garyguo.net,
+	linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu
+Subject: Re: [PATCH v3 3/4] rust: alloc: refactor `Vec::truncate` using `dec_len`
+Date: Mon,  7 Apr 2025 14:58:21 -0500
+Message-ID: <20250407195821.1670860-1-andrewjballance@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250407-vec-set-len-v3-3-c5da0d03216e@gmail.com>
+References: <20250407-vec-set-len-v3-3-c5da0d03216e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- mchehab@kernel.org, robh@kernel.org, sakari.ailus@linux.intel.com,
- sylvain.petinot@foss.st.com
-References: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
- <20250404-b4-vd55g1-v5-2-98f2f02eec59@foss.st.com>
- <33abd6fc-9ab3-497e-b421-0816a32b8141@wanadoo.fr>
- <27a0989a-8cb6-4b21-b94b-8cec86f2c6d1@foss.st.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <27a0989a-8cb6-4b21-b94b-8cec86f2c6d1@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 07/04/2025 à 11:07, Benjamin Mugnier a écrit :
-> Hi Christophe
+On Mon, Apr 07, 2025 at 10:52:33AM -0400, Tamir Duberstein wrote:
+> Use `checked_sub` to satisfy the safety requirements of `dec_len` and
+> replace nearly the whole body of `truncate` with a call to `dec_len`.
 > 
-> Thank you for your review.
-> 
-> On 4/4/25 18:09, Christophe JAILLET wrote:
->> Le 04/04/2025 à 16:50, Benjamin Mugnier a écrit :
->>> The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
->>> resolution with RAW8 and RAW10 bytes per pixel.
->>> The driver supports :
->>> - Auto exposure from the sensor, or manual exposure mode
->>> - HDR subtraction mode, allowing edge detection and background removal
->>> - Auto exposure cold start, using configuration values from last stream
->>> to start the next one
->>> - LED GPIOs for illumination
->>> - Most standard camera sensor features (hblank, vblank, test patterns,
->>> again, dgain, hflip, vflip, auto exposure bias, etc.)
->>> Add driver source code to MAINTAINERS file.
->>
->> Hi, a few nitpicks below, should they make sense.
->>
->> ...
->>
->>> +static int vd55g1_prepare_clock_tree(struct vd55g1 *sensor)
->>> +{
->>> +    struct i2c_client *client = sensor->i2c_client;
->>> +    /* Double data rate */
->>> +    u32 mipi_freq = sensor->link_freq * 2;
->>> +    u32 sys_clk, mipi_div, pixel_div;
->>> +    int ret = 0;
->>> +
->>> +    if (sensor->xclk_freq < 6 * HZ_PER_MHZ ||
->>> +        sensor->xclk_freq > 27 * HZ_PER_MHZ) {
->>> +        dev_err(&client->dev,
->>> +            "Only 6Mhz-27Mhz clock range supported. Provided %lu MHz\n",
->>> +            sensor->xclk_freq / HZ_PER_MHZ);
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    if (mipi_freq < 250 * HZ_PER_MHZ ||
->>> +        mipi_freq > 1200 * HZ_PER_MHZ) {
->>> +        dev_err(&client->dev,
->>> +            "Only 250Mhz-1200Mhz link frequency range supported.
->>> Provided %lu MHz\n",
->>> +            mipi_freq / HZ_PER_MHZ);
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    if (mipi_freq <= 300 * HZ_PER_MHZ)
->>> +        mipi_div = 4;
->>> +    else if (mipi_freq <= 600 * HZ_PER_MHZ)
->>> +        mipi_div = 2;
->>> +    else
->>> +        mipi_div = 1;
->>> +
->>> +    sys_clk = mipi_freq * mipi_div;
->>> +
->>> +    if (sys_clk <= 780 * HZ_PER_MHZ)
->>> +        pixel_div = 5;
->>> +    else if (sys_clk <= 900 * HZ_PER_MHZ)
->>> +        pixel_div = 6;
->>> +    else
->>> +        pixel_div = 8;
->>> +
->>> +    sensor->pixel_clock = sys_clk / pixel_div;
->>> +    /* Frequency to data rate is 1:1 ratio for MIPI */
->>> +    sensor->data_rate_in_mbps = mipi_freq;
->>> +
->>> +    return ret;
->>
->> Could be return 0, and ret could be removed.
-> 
-> Yes, I replaced all valid return paths by return 0.
-> 
->>
->>> +}
->>
->> ...
->>
->>> +static int vd55g1_enable_streams(struct v4l2_subdev *sd,
->>> +                 struct v4l2_subdev_state *state, u32 pad,
->>> +                 u64 streams_mask)
->>> +{
->>> +    struct vd55g1 *sensor = to_vd55g1(sd);
->>> +    struct i2c_client *client = v4l2_get_subdevdata(&sensor->sd);
->>> +    int ret = 0;
->>
->> Un-needed init, it is set just the line after.
-> 
-> I always wonder if it is worth removing the initialization if it is
-> redundant. I find myself spending time debugging issues happening
-> because I modified the flow of a function and now the return value
-> needs to be initialized.
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-On obvious cases, like this one, personally I prefer omitting the 
-initialization, as already done in vd55g1_new_format_change_controls() 
-or vd55g1_init_state() below.
+This looks cleaner than  my version.
 
-But time is more important than these few bytes that will be optimized 
-by the compiler anyway.
-
-So if it may save some of your time, I think that consistently 
-initializing it is certainly the way to go.
-
-Just my 2c.
-
-CJ
-
-> You're absolutely correct in these initializations being unnecessary
-> though, and I removed them for v6, but I'll gladly take your thinking on
-> my comment :)
-> 
+Reviewed-by: Andrew Ballance <andrewjballance@gmail.com>
 
