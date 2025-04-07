@@ -1,61 +1,57 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB3E255228
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE1B2627EC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051281; cv=none; b=rs/QPNUMODaxNaN10XDSLpPcKtzrGi4JpaH+ESGrlQRIEHgfXcIN0+9+gt2NSrOWM2nm42RtSTOv4wb7suXQRWEc4ElLqFcamnw0dnZq5g+oz/6yONONK9anR8Q4KjQWAheKlqLJ402gie+t89zTnliLvYjc1DL8Tm+DKy0DRA8=
+	t=1744051282; cv=none; b=J2FBc4VQO545YIv8O5CqVOHOdv1mgUtQ9JGV2b8hDHNvEGqiUgLXaYfmItptR6V6JynlsYYFSBJB3/fdPzaXvpFJjkYKFeeOUQdN2SelPgPNylHbW/cLgJsYmjPv2MwdhgHEgTgkCLObym9G2FS6XkJoUz9E2nqQDFaaZSajlrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051281; c=relaxed/simple;
-	bh=Qxg4nJNmnL+WHwyGUB0NZL2Gq++DeskjEe8zUOX7DGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J/AJcHS6Vf7UUQBKITuyRX6RpxhmbZ2Jb+k08H6UrX8WrynDy6x1KLshM+jT9HAhx27DwhDoQok7AYAOZ7DOrkX4nglN356qx+XFZkz+iGr6YzVpeqUY1OQqRkwiQEr7UA2AdhgjQl8KVdwJYFkRC/tMvP/oqt3U1aNE8E+0Jgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Le3wEsMy; arc=none smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1744051282; c=relaxed/simple;
+	bh=tRGcU2i7aqw4l8nQ7EzAyqdXpq8hy6b09ApF652UD/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mMCQsurzkQnLEP1rwzvhNOUQNL7z4SGnO5TUfXvOwDw8s1Uhov4BQRb4CF0fHf5FHLg7xDf3ps22ExzfNvxI273o0JcH1r+/ltbfsoPze/yxI210uPVzfh9m+alXXzfK7jtH9aI5c4Tu8pF3cNDn7oA3I3MuZy54Rcw+eZqTXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=A36EC/nA; arc=none smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Le3wEsMy"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537H0iZX003422;
-	Mon, 7 Apr 2025 18:41:09 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A36EC/nA"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537H14DM030104;
+	Mon, 7 Apr 2025 18:41:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=BEyay
-	AD0n5OcCAz/yUgOyP7rLNtsr3FbNg29L/u+Tug=; b=Le3wEsMy5235U8G+otW6r
-	CMSpM0WxFMzUXv+eQ9tDaGvKVSJmJYfWh9ew+qDmUU1DP3gRK1xkWcx8wOgo9zf2
-	yPHJhNFIh9IVIxm2NLajqXSsSWLVePC9ecTC95t6+1q/wFLqoW4P1i9h/3LMonWr
-	uYGdcjY+BXGzSie8vNADxUb53gDYfQIKZg/LpLGei7GffzOUsyYezVtmpUl7n2Bq
-	06N0uepefw16NizkdirvQYtSVd14TA4kZjp4FuPcfRIMXtBnimM+dsmcMi+6PY5K
-	aI8CXYLoWGi8meWxQP8rwktTUp4j3GkrJJFl/LokC8JyF/UC4YVGiP3qLxWlWuvH
-	w==
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=d310ikd89G+gbTQSRrHJzJfvumiNO
+	ph1kCFZWsXtYfs=; b=A36EC/nAsh6F3og3cn/5CN1leIUaaTUQkePI6aLnev6rB
+	9lg87M53oIk8ykPNiTiNINmzg0pUhqKgoxMMSFkydlAV4EElCEYAoMsYY9eQRAJI
+	s7hSjTvqdn4DIu9pks6rIAqOMInxRvZBurzCzxlu0XEW94Iot5FXXTIhqan/siCr
+	qeK4/dUNGmGAriAVKVijLrP7ZDtzHSFFOKIFX+Vp/Xpsv7FM3Ytmi0MIunnAmA+k
+	sl68CF5uqKmYzIwdIVnG1f0oEq6oP0kFdX9r4ktgF83jJPFariJhzbTLFHsGf3nK
+	+RW8Yw3P9aA+EE9XC4NqgAglIqxBf3G2cYadCNx9Q==
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tv4su9ux-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tua2ua1s-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 07 Apr 2025 18:41:09 +0000 (GMT)
+	Mon, 07 Apr 2025 18:41:06 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 537I0VB1023792;
-	Mon, 7 Apr 2025 18:41:08 GMT
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 537IHKwv023888;
+	Mon, 7 Apr 2025 18:41:06 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyefwt8-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyefwrc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 07 Apr 2025 18:41:08 +0000
+	Mon, 07 Apr 2025 18:41:06 +0000
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 537IY5DZ038909;
-	Mon, 7 Apr 2025 18:41:08 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 537IY5DP038909;
+	Mon, 7 Apr 2025 18:41:05 GMT
 Received: from sidhakum-ubuntu.osdevelopmeniad.oraclevcn.com (sidhakum-ubuntu.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.108])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45ttyefwqr-6;
-	Mon, 07 Apr 2025 18:41:08 +0000
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45ttyefwqr-1;
+	Mon, 07 Apr 2025 18:41:05 +0000
 From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
 To: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org
 Cc: linux-mm@kvack.org, akpm@linux-foundation.org, liam.howlett@oracle.com,
         willy@infradead.org, Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Subject: [PATCH v4 5/6] maple_tree: add sufficient height
-Date: Mon,  7 Apr 2025 18:41:01 +0000
-Message-ID: <20250407184102.2155415-6-sidhartha.kumar@oracle.com>
+Subject: [PATCH v4 0/6] Track node vacancy to reduce worst case allocation counts
+Date: Mon,  7 Apr 2025 18:40:56 +0000
+Message-ID: <20250407184102.2155415-1-sidhartha.kumar@oracle.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250407184102.2155415-1-sidhartha.kumar@oracle.com>
-References: <20250407184102.2155415-1-sidhartha.kumar@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,168 +66,183 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bu
  mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2504070130
-X-Proofpoint-ORIG-GUID: auY2qp1JnqR0C1Y8Ld-Vefhdvcmn2wNM
-X-Proofpoint-GUID: auY2qp1JnqR0C1Y8Ld-Vefhdvcmn2wNM
+X-Proofpoint-GUID: WGytaEv1HOj9_eciWWorzZCH0HmC2KpR
+X-Proofpoint-ORIG-GUID: WGytaEv1HOj9_eciWWorzZCH0HmC2KpR
 
-In order to support rebalancing and spanning stores using less than the
-worst case number of nodes, we need to track more than just the vacant
-height. Using only vacant height to reduce the worst case maple node
-allocation count can lead to a shortcoming of nodes in the following
-scenarios.
+v3[3] -> v4:
+  - fix bug reported by Vasily Gorbik by fixing condition for
+    mast_overflow() and add test case for this condition. This fix
+    was also tested on s390 by Vasily.
 
-For rebalancing writes, when a leaf node becomes insufficient, it may be
-combined with a sibling into a single node. This means that the parent node
-which has entries for this children will lose one entry. If this parent node
-was just meeting the minimum entries, losing one entry will now cause this
-parent node to be insufficient. This leads to a cascading operation of
-rebalancing at different levels and can lead to more node allocations than
-simply using vacant height can return.
+  - cleanup new_height variable usage in mas_spanning_rebalance()
+    and add an additional test to make sure mt_height() is correct
+    after a rebalance causes a tree's height to decrease per Liam.
 
-For spanning writes, a similar situation occurs. At the location at
-which a spanning write is detected, the number of ancestor nodes may
-similarly need to rebalanced into a smaller number of nodes and the same
-cascading situation could occur.
+v2[2] -> v3:
+  - add r-b to patches 1,4, and 6
+  
+  - update function parameter comments in patch 2 
 
-To use less than the full height of the tree for the number of
-allocations, we also need to track the height at which a non-leaf node
-cannot become insufficient. This means even if a rebalance occurs to a
-child of this node, it currently has enough entries that it can lose one
-without any further action. This field is stored in the maple write state
-as sufficient height. In mas_prealloc_calc() when figuring out how many
-nodes to allocate, we check if the vacant node is lower in the tree
-than a sufficient node (has a larger value). If it is, we cannot use the
-vacant height and must use the difference in the height and sufficient
-height as the basis for the number of nodes needed.
+  - remove line that sets mas->depth in patch 2
 
-An off by one bug was also discovered in mast_overflow() where it is
-using >= rather than >. This caused extra iterations of the
-mas_spanning_rebalance() loop and lead to unneeded allocations. A test
-is also added to check the number of allocations is correct.
+  - remove redundant code for checking for a spanning write in patch 3
 
-Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
----
- include/linux/maple_tree.h       |  4 +++-
- lib/maple_tree.c                 | 19 ++++++++++++++++---
- tools/testing/radix-tree/maple.c | 28 ++++++++++++++++++++++++++++
- 3 files changed, 47 insertions(+), 4 deletions(-)
+  - rewrite commit message of patch 5 for additonal context and clarity
 
-diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
-index 7d777aa2d9ed..37dc9525dff6 100644
---- a/include/linux/maple_tree.h
-+++ b/include/linux/maple_tree.h
-@@ -464,6 +464,7 @@ struct ma_wr_state {
- 	void *entry;			/* The entry to write */
- 	void *content;			/* The existing entry that is being overwritten */
- 	unsigned char vacant_height;	/* Depth of lowest node with free space */
-+	unsigned char sufficient_height;/* Depth of lowest node with min sufficiency + 1 nodes */
- };
- 
- #define mas_lock(mas)           spin_lock(&((mas)->tree->ma_lock))
-@@ -499,7 +500,8 @@ struct ma_wr_state {
- 		.mas = ma_state,					\
- 		.content = NULL,					\
- 		.entry = wr_entry,					\
--		.vacant_height = 0					\
-+		.vacant_height = 0,					\
-+		.sufficient_height = 0					\
- 	}
- 
- #define MA_TOPIARY(name, tree)						\
-diff --git a/lib/maple_tree.c b/lib/maple_tree.c
-index acecd4e8a6a0..98b06709d864 100644
---- a/lib/maple_tree.c
-+++ b/lib/maple_tree.c
-@@ -2741,7 +2741,7 @@ static inline bool mast_sufficient(struct maple_subtree_state *mast)
-  */
- static inline bool mast_overflow(struct maple_subtree_state *mast)
- {
--	if (mast->bn->b_end >= mt_slot_count(mast->orig_l->node))
-+	if (mast->bn->b_end > mt_slot_count(mast->orig_l->node))
- 		return true;
- 
- 	return false;
-@@ -3552,6 +3552,13 @@ static bool mas_wr_walk(struct ma_wr_state *wr_mas)
- 		if (mas->end < mt_slots[wr_mas->type] - 1)
- 			wr_mas->vacant_height = mas->depth + 1;
- 
-+		if (ma_is_root(mas_mn(mas))) {
-+			/* root needs more than 2 entries to be sufficient + 1 */
-+			if (mas->end > 2)
-+				wr_mas->sufficient_height = 1;
-+		} else if (mas->end > mt_min_slots[wr_mas->type] + 1)
-+			wr_mas->sufficient_height = mas->depth + 1;
-+
- 		mas_wr_walk_traverse(wr_mas);
- 	}
- 
-@@ -4187,13 +4194,19 @@ static inline int mas_prealloc_calc(struct ma_wr_state *wr_mas, void *entry)
- 			ret = 0;
- 		break;
- 	case wr_spanning_store:
--		WARN_ON_ONCE(ret != height * 3 + 1);
-+		if (wr_mas->sufficient_height < wr_mas->vacant_height)
-+			ret = (height - wr_mas->sufficient_height) * 3 + 1;
-+		else
-+			ret = delta * 3 + 1;
- 		break;
- 	case wr_split_store:
- 		ret = delta * 2 + 1;
- 		break;
- 	case wr_rebalance:
--		ret = height * 2 + 1;
-+		if (wr_mas->sufficient_height < wr_mas->vacant_height)
-+			ret = (height - wr_mas->sufficient_height) * 2 + 1;
-+		else
-+			ret = delta * 2 + 1;
- 		break;
- 	case wr_node_store:
- 		ret = mt_in_rcu(mas->tree) ? 1 : 0;
-diff --git a/tools/testing/radix-tree/maple.c b/tools/testing/radix-tree/maple.c
-index e37a3ab2e921..2c0b38301253 100644
---- a/tools/testing/radix-tree/maple.c
-+++ b/tools/testing/radix-tree/maple.c
-@@ -36326,6 +36326,30 @@ static inline void check_spanning_store_height(struct maple_tree *mt)
- 	mas_unlock(&mas);
- }
- 
-+/*
-+ * Test to check the path of a spanning rebalance which results in
-+ * a collapse where the rebalancing of the child node leads to
-+ * insufficieny in the parent node.
-+ */
-+static void check_collapsing_rebalance(struct maple_tree *mt)
-+{
-+	int i = 0;
-+	MA_STATE(mas, mt, ULONG_MAX, ULONG_MAX);
-+
-+	/* create a height 6 tree */
-+	while (mt_height(mt) < 6) {
-+		mtree_store_range(mt, i, i + 10, xa_mk_value(i), GFP_KERNEL);
-+		i += 9;
-+	}
-+
-+	/* delete all entries one at a time, starting from the right */
-+	do {
-+		mas_erase(&mas);
-+	} while (mas_prev(&mas, 0) != NULL);
-+
-+	mtree_unlock(mt);
-+}
-+
- /* callback function used for check_nomem_writer_race() */
- static void writer2(void *maple_tree)
- {
-@@ -36496,6 +36520,10 @@ void farmer_tests(void)
- 	check_spanning_store_height(&tree);
- 	mtree_destroy(&tree);
- 
-+	mt_init_flags(&tree, MT_FLAGS_ALLOC_RANGE);
-+	check_collapsing_rebalance(&tree);
-+	mtree_destroy(&tree);
-+
- 	mt_init_flags(&tree, MT_FLAGS_ALLOC_RANGE);
- 	check_null_expand(&tree);
- 	mtree_destroy(&tree);
+
+v1[1] -> v2:
+  - fix comment for vacant_height which refers to depth per Wei 
+
+  - add a patch to reorder switch case statements in mas_prealloc_calc and
+    mas_wr_store_entry
+
+  - use sufficient height in spanning stores
+
+  - modify patch 2 to use a counter to track ascending the tree rather
+    than overloading mas->depth to have this function.
+
+================ overview ========================
+Currently, the maple tree preallocates the worst case number of nodes for
+given store type by taking into account the whole height of the tree. This
+comes from a worst case scenario of every node in the tree being full and
+having to propagate node allocation upwards until we reach the root of the
+tree. This can be optimized if there are vacancies in nodes that are at a
+lower depth than the root node. This series implements tracking the level
+at which there is a vacant node so we only need to allocate until this
+level is reached, rather than always using the full height of the tree.
+The ma_wr_state struct is modified to add a field which keeps track of the
+vacant height and is updated during walks of the tree. This value is then
+read in mas_prealloc_calc() when we decide how many nodes to allocate.
+
+For rebalancing and spanning stores, we also need to track the lowest
+height at which a node has 1 more entry than the minimum sufficient number
+of entries. This is because rebalancing can cause a parent node to become
+insufficient which results in further node allocations. In this case, we
+need to use the sufficient height as the worst case rather than the vacant
+height.
+
+patch 1-2: preparatory patches
+patch 3: implement vacant height tracking + update the tests
+patch 4: support vacant height tracking for rebalancing writes
+patch 5: implement sufficient height tracking
+patch 6: reorder switch case statements
+
+================ results =========================
+Bpftrace was used to profile the allocation path for requesting new maple
+nodes while running stress-ng mmap 120s. The histograms below represent
+requests to kmem_cache_alloc_bulk() and show the count argument. This
+represnts how many maple nodes the caller is requesting in
+kmem_cache_alloc_bulk()
+
+command: stress-ng --mmap 4 --timeout 120
+
+mm-unstable 
+
+@bulk_alloc_req:
+[3, 4)                 4 |                                                    |
+[4, 5)             54170 |@                                                   |
+[5, 6)                 0 |                                                    |
+[6, 7)            893057 |@@@@@@@@@@@@@@@@@@@@                                |
+[7, 8)                 4 |                                                    |
+[8, 9)           2230287 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[9, 10)            55811 |@                                                   |
+[10, 11)           77834 |@                                                   |
+[11, 12)               0 |                                                    |
+[12, 13)         1368684 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                     |
+[13, 14)               0 |                                                    |
+[14, 15)               0 |                                                    |
+[15, 16)          367197 |@@@@@@@@                                            |
+
+
+@maple_node_total: 46,630,160
+@total_vmas: 46184591
+
+mm-unstable + this series
+
+@bulk_alloc_req:
+[2, 3)               198 |                                                    |
+[3, 4)                 4 |                                                    |
+[4, 5)                43 |                                                    |
+[5, 6)                 0 |                                                    |
+[6, 7)           1069503 |@@@@@@@@@@@@@@@@@@@@@                               |
+[7, 8)                 4 |                                                    |
+[8, 9)           2597268 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[9, 10)           472191 |@@@@@@@@@                                           |
+[10, 11)          191904 |@@@                                                 |
+[11, 12)               0 |                                                    |
+[12, 13)          247316 |@@@@                                                |
+[13, 14)               0 |                                                    |
+[14, 15)               0 |                                                    |
+[15, 16)           98769 |@                                                   |
+
+
+@maple_node_total: 37,813,856
+@total_vmas: 43493287
+
+This represents a ~19% reduction in the number of bulk maple nodes allocated.
+
+For more reproducible results, a historgram of the return value of
+mas_prealloc_calc() is displayed while running the maple_tree_tests
+whcih have a deterministic store pattern
+
+mas_prealloc_calc() return value mm-unstable
+1   :                                                    (12068)
+3   :                                                    (11836)
+5   : *****                                              (271192)
+7   : ************************************************** (2329329)
+9   : ***********                                        (534186)
+10  :                                                    (435)
+11  : ***************                                    (704306)
+13  : ********                                           (409781)
+
+mas_prealloc_calc() return value mm-unstable + this series
+1   :                                                    (12070)
+3   : ************************************************** (3548777)
+5   : ********                                           (633458)
+7   :                                                    (65081)
+9   :                                                    (11224)
+10  :                                                    (341)
+11  :                                                    (2973)
+13  :                                                    (68)
+
+do_mmap latency was also measured for regressions:
+command: stress-ng --mmap 4 --timeout 120
+
+mm-unstable:
+avg = 7162 nsecs, total: 16101821292 nsecs, count: 2248034
+
+mm-unstable + this series:
+avg = 6689 nsecs, total: 15135391764 nsecs, count: 2262726
+
+
+stress-ng --mmap4 --timeout 120
+
+with vacant_height:
+stress-ng: info:  [257]                   21526312 Maple Tree Read                0.176 M/sec
+stress-ng: info:  [257]                  339979348 Maple Tree Write               2.774 M/sec
+
+without vacant_height:
+stress-ng: info:  [8228]                   20968900 Maple Tree Read                0.171 M/sec
+stress-ng: info:  [8228]                  312214648 Maple Tree Write               2.547 M/sec
+
+This respresents an increase of ~3% read throughput and ~9% increase in write throughput.
+
+[1]: https://lore.kernel.org/lkml/20241114170524.64391-1-sidhartha.kumar@oracle.com/T/
+[2]: https://lore.kernel.org/lkml/20250221163610.578409-1-sidhartha.kumar@oracle.com/
+[3]: https://lore.kernel.org/lkml/20250227204823.758784-1-sidhartha.kumar@oracle.com/
+Sidhartha Kumar (6):
+  maple_tree: convert mas_prealloc_calc() to take in a maple write state
+  maple_tree: use height and depth consistently
+  maple_tree: use vacant nodes to reduce worst case allocations
+  maple_tree: break on convergence in mas_spanning_rebalance()
+  maple_tree: add sufficient height
+  maple_tree: reorder mas->store_type case statements
+
+ include/linux/maple_tree.h       |   4 +
+ lib/maple_tree.c                 | 189 ++++++++++++++++++-------------
+ tools/testing/radix-tree/maple.c | 126 +++++++++++++++++++--
+ 3 files changed, 233 insertions(+), 86 deletions(-)
+
 -- 
 2.43.0
 
