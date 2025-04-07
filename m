@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95736225419;
-	Mon,  7 Apr 2025 23:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0B420966B;
+	Mon,  7 Apr 2025 23:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069834; cv=none; b=QjXenET8smcAVcueH9VvKLOGXwSPrnT/EXWoiUj9XyAFJ2cwGHvyRFsFXI3WCHOpBlVg0tDGeCpxR/cfAtODw25Vugj7ueT7dIR+vvAfLFeFXeqLgp/2SYRMv9CzsNsIK18zczvzs1KvBmBvUEWGjwS3RxH9Z7sDR0Ec8v3DB9E=
+	t=1744069930; cv=none; b=vDNPgZx7GMO4Wg+UgnBK3MR5lhyFCophofcQ7EwxitItJojB8VSIvZ/k6wtYaqPtdS22w/99qkT2P2EZN4r8ZJDJV6hwk8zhFMctEevpva1Ml5P07SeYnHLsZyzxwvAlgkYb19qPDn0fpm3J47K1nCylBV6P6KgMKN8cKl87b2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069834; c=relaxed/simple;
-	bh=C91TU6EiUXUNu4pLkJLVbWTW2q/Tk5LKELt/9k63UA4=;
+	s=arc-20240116; t=1744069930; c=relaxed/simple;
+	bh=zCMgZMzN0sTQTH/EOoR7qctgb3Y/xzBu3/1USlzvvnk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHfSN6OMtFIRt8i95aSKWUm8fPnzE0zZsH8LsQ5mMsdTFjdrD17WEssRPBYpWGDgRQkb0q0oMw76qgXqLaEhj4VsacPnIgJIW5jHR01NN+cTk0oJMXfX1rYaJU+zHS1p0JMmzkzj0/Gifu+A40sZE0m44ca4sG5cYOrp2iG/IXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdTVhS5Z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKY56+kus3WOuDUw3VKukcSDUrsiAj8tn7Re+8hHfsY3Kcp3xhXbNov4wiKzkclvBU8LIEd443Ni5hD7I9CdaViYuDJ4Dy6xzfawq5edBYYFqXUBZY4Tiy7h5BC96ZzdchIhVxkTpwEeDWAETAnTkfl4Kn3E5/afPiqJZEUN80c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzkhOp3d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdTVhS5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1E8C4CEDD;
-	Mon,  7 Apr 2025 23:50:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzkhOp3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EAEC4CEDD;
+	Mon,  7 Apr 2025 23:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744069834;
-	bh=C91TU6EiUXUNu4pLkJLVbWTW2q/Tk5LKELt/9k63UA4=;
+	s=k20201202; t=1744069929;
+	bh=zCMgZMzN0sTQTH/EOoR7qctgb3Y/xzBu3/1USlzvvnk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rdTVhS5ZF/q6VWszeFbbLbHPed6Ap/IcFPv6CxsDSjmCGcUNsMcss9fMKz35lKM4r
-	 gUYc8CUOwsFMhpig1Pib33mNQ489qn1dxjZxElN87LCE/M0k5SjHwWevgNGtIN08kW
-	 OL/s1N7bZNiBZaI4T83DibO+THYU/FHWHoOc1avJ7EOcqBnLTxjmTgNDc0DF414qP5
-	 aFU3+h2P05ujvoagU9cgbYofsebjs52hkmGYDvS6QBgeDY2MfuU2RAfZbcIFwm+b5O
-	 CgHcrdXvHIKYSNGrotA7bG7FGZbgln3w7Rxlo7f3ZI+PaojoncZyjuihh/dTYfqSJX
-	 wDRsljzjVTS4g==
-Date: Mon, 7 Apr 2025 18:50:32 -0500
+	b=kzkhOp3dcc7z2eli6QTtyAHZFCzcPV+ppFrEmsQxxjkB9ey0+tlwbMAto/MjLA0qe
+	 jn/JGOKntKv0+sPl5d4PBKCSqfd2UvYbVUvyuRf642LppxS7cToOgFq3EmW4j1SGIf
+	 VA9j5GtYM7BF2k+dzw4u3f/GGfH7Ju3nqP/8SMM7NWj3mgt+tt96sfEISaP1htbuBY
+	 YqavkZrfZxRylrO8iZv++66hS+jYM0ST/S/l00lobtG2bvgft5P0j0JYU6GFjCMBx4
+	 MxdAsI3BQN2mV/qzIRKybw64/bko/EZewX+F/iisPkzBDxnV1zUd9GPv1VNGKDClpL
+	 jvguydmTrM+Mg==
+Date: Mon, 7 Apr 2025 18:52:08 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Joy Zou <joy.zou@nxp.com>, dmaengine@vger.kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: dma: fsl-edma: increase maxItems of
- interrupts and interrupt-names
-Message-ID: <174406980425.184285.7437048033861841180.robh@kernel.org>
-References: <20250407-edma_err-v2-0-9d7e5b77fcc4@nxp.com>
- <20250407-edma_err-v2-1-9d7e5b77fcc4@nxp.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Bai Ping <ping.bai@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH RESEND v1 1/1] dt-bindings: timer: nxp,sysctr-timer: Add
+ i.MX94 support
+Message-ID: <174406992731.197552.9902534650678941011.robh@kernel.org>
+References: <20250407151340.2779124-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,32 +46,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-edma_err-v2-1-9d7e5b77fcc4@nxp.com>
+In-Reply-To: <20250407151340.2779124-1-Frank.Li@nxp.com>
 
 
-On Mon, 07 Apr 2025 12:46:35 -0400, Frank Li wrote:
-> From: Joy Zou <joy.zou@nxp.com>
+On Mon, 07 Apr 2025 11:13:39 -0400, Frank Li wrote:
+> Add compatible string "nxp,imx94-sysctr-timer" for the i.MX94 chip, which
+> is backward compatible with i.MX95. Set it to fall back to
+> "nxp,imx95-sysctr-timer".
 > 
-> The edma controller support optional error interrupt, so update interrupts
-> and interrupt-names's maxItems.
-> 
-> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  Documentation/devicetree/bindings/dma/fsl,edma.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> RESET collect Conor Dooley's ack
+> ---
+>  .../devicetree/bindings/timer/nxp,sysctr-timer.yaml   | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
-Missing tags:
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
-
+Applied, thanks!
 
