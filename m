@@ -1,207 +1,132 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0631448D5;
-	Mon,  7 Apr 2025 07:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6AC226CE6
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011477; cv=none; b=PrXQgLQ7zBhKi9mI9KpY1LGGXgGQQjhZ6hrrLNUFM+r79IHPH2S9U9/9oD3gNcYVlWtFmsUfWtSk6gtO+7xqlbdRABMrycNjOeLwTYEYk1Rqlpi2MEPuztpyBVdk3/o3KS258w9PML8YHkikPqE9XjMsOJ8SfNS/4HQOr4jFFVo=
+	t=1744011480; cv=none; b=h3/RQRBgU2oZREyKl6lJ6gyixvyfhthsQPOu+rrtoGOtV1ueMr0wlAkRHK3Uh3HQlgjLT35krqNWJF/gaDi0NARj7jI31YU7OaSVS33XDzMRiRXtKKFYGXKprESP/Y0KenYwQ/JzvGiU40x82H4wzkhn39Vif5j1yt5yGAnI87Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011477; c=relaxed/simple;
-	bh=/O6Rbhr6AzoHMZf+3CoXgWuQVv4trTtl/NYJeoc+md8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdmKTFPU1EQfqxeSJOUOvz3z0bWPU2YkvHYmh72ET1ZXrLIPm7Aj9v12q1rFglQPacbmM8rZYlkczumquE1Uyt7vrhJ72r0kwMWmOjC9AXvP98ZMcIJoLPn5f2rwErKf4JXDjU/X87Jz79pIu9PrCdhbR7x8goxdQLCyCG2B7j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dHcmbjUa; arc=none smtp.client-ip=114.132.67.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744011480; c=relaxed/simple;
+	bh=wbpn05YOBnvAIAEQiPQ/6y1/bXax+ql2ksAKoSkC61U=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AjDeTp+eytdTdA9Dd5NYN1b0hs9A8gtcc/DESPVITsjY2tbS/rYb21QRJvZZ6r8yV6E0V92jwRXXrKPSPb31RnrognMZgoAP/pc459CozQDxETxGji5pnGXN0YwGzvcrGNqLX07fk4I23htVhB5ov6QslPsLMzL5W6DxP2pENsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cu7WTj0T; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dHcmbjUa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744011451;
-	bh=SBqHbmT8GZqmsXFKwL7S/7VVJLbOp2xAK/sZMZYxjeo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dHcmbjUapNWvjgvDJ6WyKK95WL/R1BCNL+yf010+sKGJCFojIiCBbnF6A+AKRVDz2
-	 Anccf3Mo01nm2NkgDeDWyWOzV1tCLcWQNLsOPXDLfERqD2W98pc91I8t1K9Le4jPPZ
-	 6HoBb+lK90Y32v0Aixc3PJsuDZxe2zSYr6yaXx3c=
-X-QQ-mid: bizesmtpip3t1744011407t9be885
-X-QQ-Originating-IP: iSfGfpxYd9FTrfg41x2/1UisvpU3DSv0Zk6FQk+jQqc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Apr 2025 15:36:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5477581190852730679
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: guanwentao@uniontech.com,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	macro@orcam.me.uk,
-	niecheng1@uniontech.com,
-	tsbogend@alpha.franken.de,
-	zhanjun@uniontech.com
-Subject: [PATCH 3/6] MIPS: dec: Create reset.h
-Date: Mon,  7 Apr 2025 15:36:19 +0800
-Message-ID: <8E88DD5074AF3B33+20250407073622.495364-3-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
-References: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cu7WTj0T"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso43280755e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:37:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744011477; x=1744616277; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=T/iUB0JBxFkjp2l/okcxobSe1sYUcwQcPDba5DDM9oY=;
+        b=cu7WTj0TyOdy/bX5huGIqakvw0r0K0p8nILUQIvdPL0NMfGUh9pr7nXyBwnybLQNIW
+         IHlHvcpJmsj4QIh3PS9ywIjVv/yMMOk3d8mSurbEhcNYUKKlUz4xwtU7AhpifzdZlnoL
+         SxhOSCMVOEqvxNlMp6RD8N/vK9LxLVL455DWLjyvrf3ZjwjpBGr3uQwbSMXTZeFLnL7z
+         S/B6UcoEBjkEwB+pfEXJcqy3M8/OEG3Gd1ppLzGovVWyIQgfzfDaB29A4C5RwtCARb3m
+         mUdjMuS6cZWWEG7evG9jVf0I5MUlJ04Ki0S+uabYlQEYapWsi7sJNkO2+fN6JYkai4lj
+         j+QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744011477; x=1744616277;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T/iUB0JBxFkjp2l/okcxobSe1sYUcwQcPDba5DDM9oY=;
+        b=LMKCN7lChWD1eczSlW+I3JYsaV0CVA6ci5GOWsPBc7BUPJg6Uth0b7+2rpXfb/K2kW
+         03lxF6ulJpejlDKqXdDp6HXLR3TCuq+UOqTrMuG09hSu2h6EwlNA+RxJm3RCceseXq7c
+         H26AhHOkKJUWStSt7Ss6p0AyluV9h/Smpu+MYN8DRyEtt6km0eWstmKXSNZxhVy6NSvU
+         mGFdzZ/Op0GscEEnjz9nLsIHZZlYfRX8/9YOQm0/Bj1tG2W3Mh5ty4V4iu6Am5XUh3c/
+         Vat7d9QEBUxJpI5EWzfA3AZKkbs7dMNpa1M2xYC/TNRBwOYhIJvBEOddS41RLqPr9OID
+         mCag==
+X-Gm-Message-State: AOJu0Yz0mU3fkUayw5kmMdaiWV2qUTtUmxjMqSnAQzuIL78JZx5Zs0zP
+	NmAmcGT7PMkEslKktGZJyDxTST6SqD0K0a01zlRyaDH7cPnoOEznmXEvzbjJ8Sg=
+X-Gm-Gg: ASbGncv/BZ58vbN1ghHfonln6A5LJH0rh6qGvZu2wRSoV03CeNOTFT/fEHJsfWNZIxT
+	zOjvVSY8PxTQhuqEY2mvXRi3cKQqVm0puCwkxDIS6P2iQMLTTUnSHazYENqOTm3/BgfbPUscE3x
+	bfiuK+7yDxIkSRn6n1jZn2RexsbLzMNQMeAlxCV0/Wj/O2f0j4EDuZqgGQYk08AUfpCjbK4aJdy
+	VVo8zopS8kiN39Mcp3Q6MwQ3g7Cs8QLYTxrYRTphjRMp32wxpSqM9VgFGYqsGIGa4iRIqf5Labs
+	Kd252WhB6p7WSmz8mbD905qDL4AzD4YC07oEGoioYKApaxX4inRYYCCMcMadrum8fCF9ELyf/K+
+	Fq7etZ69m
+X-Google-Smtp-Source: AGHT+IEDc/bRsFcizrk4e4TwMWtU8c1AL1TwXJ0IcJRIR1rjn42XqoKfWILEntbQHzwjOQZAQgc+Vg==
+X-Received: by 2002:a05:600c:1e27:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-43ee0615d04mr74241945e9.4.1744011477415;
+        Mon, 07 Apr 2025 00:37:57 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec1692ba4sm123138995e9.16.2025.04.07.00.37.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 00:37:56 -0700 (PDT)
+Message-ID: <c14389a1-1904-450f-98c5-a55351518ed7@linaro.org>
+Date: Mon, 7 Apr 2025 09:37:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: timer: Add NXP System Timer Module
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
+ Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com,
+ krzysztof.kozlowski@linaro.org, S32@nxp.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250402090714.3548055-1-daniel.lezcano@linaro.org>
+ <20250402090714.3548055-2-daniel.lezcano@linaro.org>
+ <2503deb2-b993-7fd1-adf3-cafa1e7bd2f4@oss.nxp.com>
+ <67daf656-0e08-471d-afce-22ba8f2fa1f2@linaro.org>
+Content-Language: en-US
+In-Reply-To: <67daf656-0e08-471d-afce-22ba8f2fa1f2@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OYM3GZRvbPalw4TdM5yejJtM1kimv19+1FBmCojg/eMifuVgoo/rLvDG
-	Q5+5n4cPgB7AUbdEweWmW+uyg1x99q84awkA5R7n3TPPN1AuE6Nnr7/bIVC4p9IDNpWjlBk
-	vIlN4S93fPi4dhnq/c/WYCdpyfS0tP5N5iAkt7hHafAx2f9wk3aGxbIuWgeLKDpruRtnSwA
-	W0yWNSVxuGnp4sMVW1OFGh3ItUO5+tyD9P9wesWmVq+pPoOiSSFXa1ViCGXwq8+wD+1tI3U
-	ScyTWmj+Bmh/BhwrDElDJ+PyH6uSjpa19uFCEHputuS/Zom1hoPzv+7sfPq6Eb2DkGtc/Fy
-	nKlHcbL3iKS5AJdqg1m32m59I7Y/55bVJL4Ci4tRANAeJYDeTBYOlQnx5wcBOyWn4AI4vMm
-	qQ6kZfih3dThu1ap7E0zUv9nfcOAkyBDmz00/PmF3i7x8pNMy+8lWsbPq4BtkU6bjU6HdZx
-	N5u8VpBr37CxjUkDGEbFts/Do5hLcPUkLAt2Xbu132AWr3GEXII43s8bksL3CmL0+nszUdz
-	ziO7cvrDJAI+6jV3laJBKn3UM9IPxLF16+28ArKSo9AZHJJ5+SzXmOJdXRxgzKGQkvkqOWn
-	SNDmAvjn8XaxSmtiQRTJWJhlPldEkAYwiF5VqDS+HSRKXSnKkVrjNUR/WLFQTZqHteNpW8k
-	3bW281GbMOnaIgji3qVJc2KE/Qz2/RNntf/Yn+Qu+F8tsJv6aepU61O9wQYFFTiofMQpmT1
-	HN8qI37rVoahf6DlSVlvSlqRiO3++UpoSvHg6R6f6iWzhi59liUEXkU6pKjKLzXXb3grH+R
-	Nba0bCPAKKtjpWsiDbiTfWvjvjVgMz2wQFgPr3+dRGaqBRK1/XjqkzhBLPg6KK+gCwGbuPP
-	NLMWC4YhOJfMSYWOntRxsF52FpxHOkaZwMY2rEjqY5l9+Uv8eQtogVonTByG0I8p2BDSX9Z
-	e3LKNOqRiRZGdBrDEyJuSsg/HZNXUmAORpZAGuQrAHtq5GT0KtHcFutrsTl4aC9Kbk+P13y
-	iwnbHO9g==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
 
-Declare externally used functions in reset.c to resolve compilation
-warnings.
+On 03/04/2025 17:21, Daniel Lezcano wrote:
+> On 03/04/2025 08:33, Ghennadi Procopciuc wrote:
+>> On 4/2/2025 12:07 PM, Daniel Lezcano wrote:
+>> [ ... ]
+>>> +examples:
+>>> +  - |
+>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +
+>>> +    timer@4011c000 {
+>>> +        compatible = "nxp,s32g2-stm";
+>>> +        reg = <0x4011c000 0x3000>;
+>>> +        interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+>>> +        clocks = <&clks 0x3b>;
+>>> +    };
+>>
+>> The S32G reference manual specifies two clocks for the STM module: one
+>> for the registers and another for the counter itself. Shouldn't both
+>> clocks be represented in the bindings?
+> 
+> AFAICS, there are two clocks as described in the documentation for the 
+> s32g2 page 843, section 23.7.3 Timer modules.
+> 
+> The module and the register clock are fed by the XBAR_DIV3_CLK which is 
+> an system clock always-on.
+> 
+> page 1994, 40.5.4 Clocking, the documentation says: "This module has no 
+> clocking considerations."
+> 
+>  From my understanding, we should not describe the XBAR_DIV3_CLK as it 
+> is a system clock.
 
-Fix follow errors with gcc-14 when -Werror:
+Can you clarify for the STM if you still want to change the binding ?
 
-arch/mips/dec/reset.c:22:17: error: no previous prototype for ‘dec_machine_restart’ [-Werror=missing-prototypes]
-   22 | void __noreturn dec_machine_restart(char *command)
-      |                 ^~~~~~~~~~~~~~~~~~~
-arch/mips/dec/reset.c:27:17: error: no previous prototype for ‘dec_machine_halt’ [-Werror=missing-prototypes]
-   27 | void __noreturn dec_machine_halt(void)
-      |                 ^~~~~~~~~~~~~~~~
-arch/mips/dec/reset.c:32:17: error: no previous prototype for ‘dec_machine_power_off’ [-Werror=missing-prototypes]
-   32 | void __noreturn dec_machine_power_off(void)
-      |                 ^~~~~~~~~~~~~~~~~~~~~
-arch/mips/dec/reset.c:38:13: error: no previous prototype for ‘dec_intr_halt’ [-Werror=missing-prototypes]
-   38 | irqreturn_t dec_intr_halt(int irq, void *dev_id)
-      |             ^~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[7]: *** [scripts/Makefile.build:207: arch/mips/dec/reset.o] Error 1
-make[7]: *** Waiting for unfinished jobs....
 
-In passing, also correct the include file ordering in setup.c as it
-doesn't merit a separate commit.
-
-Link: https://lore.kernel.org/all/Z8A0JeFYfBxXOFCD@alpha.franken.de/
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/mips/dec/prom/init.c         |  3 +--
- arch/mips/dec/reset.c             |  2 ++
- arch/mips/dec/setup.c             |  9 ++-------
- arch/mips/include/asm/dec/reset.h | 20 ++++++++++++++++++++
- 4 files changed, 25 insertions(+), 9 deletions(-)
- create mode 100644 arch/mips/include/asm/dec/reset.h
-
-diff --git a/arch/mips/dec/prom/init.c b/arch/mips/dec/prom/init.c
-index 8d74d7d6c05b..a8393052a443 100644
---- a/arch/mips/dec/prom/init.c
-+++ b/arch/mips/dec/prom/init.c
-@@ -18,7 +18,7 @@
- #include <asm/processor.h>
- 
- #include <asm/dec/prom.h>
--
-+#include <asm/dec/reset.h>
- 
- int (*__rex_bootinit)(void);
- int (*__rex_bootread)(void);
-@@ -88,7 +88,6 @@ static void __init which_prom(s32 magic, s32 *prom_vec)
- 
- void __init prom_init(void)
- {
--	extern void dec_machine_halt(void);
- 	static const char cpu_msg[] __initconst =
- 		"Sorry, this kernel is compiled for a wrong CPU type!\n";
- 	s32 argc = fw_arg0;
-diff --git a/arch/mips/dec/reset.c b/arch/mips/dec/reset.c
-index 3df01f1da347..ee1ad38f4a69 100644
---- a/arch/mips/dec/reset.c
-+++ b/arch/mips/dec/reset.c
-@@ -10,6 +10,8 @@
- 
- #include <asm/addrspace.h>
- 
-+#include <asm/dec/reset.h>
-+
- typedef void __noreturn (* noret_func_t)(void);
- 
- static inline void __noreturn back_to_prom(void)
-diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
-index 87f0a1436bf9..6b100c7d0633 100644
---- a/arch/mips/dec/setup.c
-+++ b/arch/mips/dec/setup.c
-@@ -18,10 +18,10 @@
- #include <linux/memblock.h>
- #include <linux/param.h>
- #include <linux/percpu-defs.h>
-+#include <linux/pm.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
--#include <linux/pm.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -48,14 +48,9 @@
- #include <asm/dec/kn02ca.h>
- #include <asm/dec/kn03.h>
- #include <asm/dec/kn230.h>
-+#include <asm/dec/reset.h>
- #include <asm/dec/system.h>
- 
--
--extern void dec_machine_restart(char *command);
--extern void dec_machine_halt(void);
--extern void dec_machine_power_off(void);
--extern irqreturn_t dec_intr_halt(int irq, void *dev_id);
--
- unsigned long dec_kn_slot_base, dec_kn_slot_size;
- 
- EXPORT_SYMBOL(dec_kn_slot_base);
-diff --git a/arch/mips/include/asm/dec/reset.h b/arch/mips/include/asm/dec/reset.h
-new file mode 100644
-index 000000000000..c1557b88264c
---- /dev/null
-+++ b/arch/mips/include/asm/dec/reset.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Reset a DECstation machine.
-+ *
-+ * File created to eliminate warnings; copyright from reset.c.
-+ *
-+ * Copyright (C) 199x  the Anonymous
-+ * Copyright (C) 2001, 2002, 2003  Maciej W. Rozycki
-+ */
-+
-+#ifndef __ASM_DEC_RESET_H
-+
-+#include <linux/interrupt.h>
-+
-+extern void __noreturn dec_machine_restart(char *command);
-+extern void __noreturn dec_machine_halt(void);
-+extern void __noreturn dec_machine_power_off(void);
-+extern irqreturn_t dec_intr_halt(int irq, void *dev_id);
-+
-+#endif /* __ASM_DEC_RESET_H */
 -- 
-2.49.0
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
