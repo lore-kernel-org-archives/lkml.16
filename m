@@ -1,52 +1,153 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1042322B;
-	Mon,  7 Apr 2025 06:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C5F79F2;
+	Mon,  7 Apr 2025 06:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008680; cv=none; b=B6rrxZu7u5YCMtzetStoO9r13krJmV5EVJy422PaZxTv3FD57JBGlANF1fSC2xJvEE4YzyKhFdKbqaqHfjVjWvYtOEWFft2K3I0fA1Auprs0e6L+jagSgY4O48TeUf0FdjfhpdQIKWinhO0aEudS+y4n8sbGksHhk706TVYIi40=
+	t=1744008782; cv=none; b=UNBlJNIXK0uDmOoO/RymH9daHGdGgtndo8Clk2dv0HEyYYsWlddXvnKlkBdee5eLCia5WhQf8FD8rXiA0RP24EtpI2An+lLrS6rmuyMrgG8zP1NSMcWCo9xcLebzn1t9bl0hy9BfNJa34XEuo6RpNW/Ml0Icw0DfqZSl5K2bAg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008680; c=relaxed/simple;
-	bh=tzBmK7cmEirE67951CjBYF7TlBQ2fFR57orfuBTWVgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgRMw79NHr6UQlk4I6FgqyRvEXtplcsk37ckB9aZBClFKWb/xGBNogUa3Gtp9I3hXm9uY/BJ7vkWE4A/OL2WV01MSBQli197X92l24E7hN73nBWLJujomvjbDm3LSuILvW7pxYibNnYc+bIreStrqClEOm3gUEQxpCM+dSpAgeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 540DE68BFE; Mon,  7 Apr 2025 08:51:11 +0200 (CEST)
-Date: Mon, 7 Apr 2025 08:51:11 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, alx@kernel.org, brauner@kernel.org,
-	djwong@kernel.org, dchinner@redhat.com, linux-man@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, martin.petersen@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC] statx.2: Add stx_atomic_write_unit_max_opt
-Message-ID: <20250407065111.GA18891@lst.de>
-References: <20250319114402.3757248-1-john.g.garry@oracle.com> <20250320070048.GA14099@lst.de> <c656fa4d-eb76-4caa-8a71-a8d8a2ba6206@oracle.com> <20250320141200.GC10939@lst.de> <7311545c-e169-4875-bc6c-97446eea2c45@oracle.com> <20250323064029.GA30848@lst.de> <5485c1ad-8a20-40bc-aa75-68b820de5e1c@oracle.com> <20250404090601.GA12163@lst.de> <aab0aa19-f279-42b4-9ab7-0cc6e2fa3b9f@oracle.com>
+	s=arc-20240116; t=1744008782; c=relaxed/simple;
+	bh=823hn4kF+TmT6mhyvYDlHv6Q2PBnPjxDFSElLhmSbSA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sCHbmT9P0e4nFoakA2uH7VRnJURBLf4GSC56bY6gq6Z/CH290EQOLcfDc1bMwE4P3zVRrB3gjAKZBQKdGije3lLasdACZa+Su/IPc0HemeMs26rPkMKxyDfgv3TtJ8Lv90Zi+onpqL6B+gzBHs8DdAxsoxG/qDdPy8e7RxCscsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vPnMC/9q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/z3q4XOh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vPnMC/9q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/z3q4XOh"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744008778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0n+MQkWCoxXIU++myAQD9Cw9NTJxgIiaTF0JdVnLQYg=;
+	b=vPnMC/9qgmEgqsWDAf2usmc59ePw8/glFsSkz57Dg1QxCXTHIwCDizhfYq8LngnSK8KwMd
+	toSLUo83ifm8du28HrHVHj5UlLeIvtbEfXXASxLz8ErsZdYjYi6kXVcrjLV4KYXBEd+xum
+	NPeJdJfnDj7ktjqD5FsrHEgLvswkvc8oZlGzcOcT28YbmEo2cGpeQ9dmbsRaKPu8WG7T2Q
+	qly4m9i9bP+cOvpXjiQnbO2db6OLwIBCgZOyYlT+juBNSdaxl6rv+4cG+2kfJpj3qKFD6A
+	qM8QEKe02qbOa14C8QjxpaHmsFSImxV6OomApNk0rlD3NH6zGZ3mTZCbAwHltg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744008778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0n+MQkWCoxXIU++myAQD9Cw9NTJxgIiaTF0JdVnLQYg=;
+	b=/z3q4XOhOguJbo5DrNNLB+vWjR6zrxaEcT2GDdTi5UOJUUVWz0T/yIvfIIxzsA+rVnfsGh
+	598Vjis7NrH47jCQ==
+Subject: [PATCH v2 00/32] kselftest harness and nolibc compatibility
+Date: Mon, 07 Apr 2025 08:52:23 +0200
+Message-Id: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aab0aa19-f279-42b4-9ab7-0cc6e2fa3b9f@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACd282cC/4XNywrCMBCF4VcpWRvJrba48j2ki1wmdrCkksRSK
+ X1307oTxOU/MN9ZSIKIkMi5WkiECROOoYQ4VMT2OtyAoitNBBM145LRMA5oLL0nGHyGlGmvY4C
+ UaGuEba22ShpPyvsjgsd5p69d6R5THuNrX5r4dv2ggsvf6MQpoxKgPSnVmJr5y4DhmeMYcD462
+ HZ2RDL1B9HO6sY6ITmIL6Rb1/UNpAZJuwkBAAA=
+X-Change-ID: 20250130-nolibc-kselftest-harness-8b2c8cac43bf
+To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=4338;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=823hn4kF+TmT6mhyvYDlHv6Q2PBnPjxDFSElLhmSbSA=;
+ b=5oTYwn4cicS9k4jt5RNgna82VOM1mHhhIkB7gPg6abgFXFk+1MfUEtvvEpp11aSDKHpwkDr8S
+ ZgYf+ismBSoAVwjTXe5PA96O9rJGeorMm/mnF80QhR5TR8zYZ2seWlJ
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Fri, Apr 04, 2025 at 10:23:09AM +0100, John Garry wrote:
->> that optimized case will not involve the usual hardware offload.
->>
->>
-> stx_atomic_write_unit_max_opt it is then.
->
-> Or stx_atomic_write_unit_max_optimal or stx_atomic_write_unit_max_fast. Or 
-> similar..
+Nolibc is useful for selftests as the test programs can be very small,
+and compiled with just a kernel crosscompiler, without userspace support.
+Currently nolibc is only usable with kselftest.h, not the more
+convenient to use kselftest_harness.h
+This series provides this compatibility by adding new features to nolibc
+and removing the usage of problematic features from the harness.
 
-As we've used opt in various other ABIs I'd stick to that.
+The first half of the series are changes to the harness, the second one
+are for nolibc. Both parts are very independent and should go through
+different trees.
+The last patch is not meant to be applied and serves as test that
+everything works together correctly.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Rebase unto v6.15-rc1
+- Rename internal nolibc symbols
+- Handle edge case of waitpid(INT_MIN) == ESRCH
+- Fix arm configurations for final testing patch
+- Clean up global getopt.h variable declarations
+- Add Acks from Willy
+- Link to v1: https://lore.kernel.org/r/20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de
+
+---
+Thomas Weißschuh (32):
+      selftests: harness: Add harness selftest
+      selftests: harness: Use C89 comment style
+      selftests: harness: Ignore unused variant argument warning
+      selftests: harness: Mark functions without prototypes static
+      selftests: harness: Remove inline qualifier for wrappers
+      selftests: harness: Remove dependency on libatomic
+      selftests: harness: Implement test timeouts through pidfd
+      selftests: harness: Don't set setup_completed for fixtureless tests
+      selftests: harness: Always provide "self" and "variant"
+      selftests: harness: Move teardown conditional into test metadata
+      selftests: harness: Add teardown callback to test metadata
+      selftests: harness: Stop using setjmp()/longjmp()
+      selftests: harness: Guard includes on nolibc
+      tools/nolibc: handle intmax_t/uintmax_t in printf
+      tools/nolibc: use intmax definitions from compiler
+      tools/nolibc: use pselect6_time64 if available
+      tools/nolibc: use ppoll_time64 if available
+      tools/nolibc: add tolower() and toupper()
+      tools/nolibc: add _exit()
+      tools/nolibc: add setpgrp()
+      tools/nolibc: implement waitpid() in terms of waitid()
+      Revert "selftests/nolibc: use waitid() over waitpid()"
+      tools/nolibc: add dprintf() and vdprintf()
+      tools/nolibc: add getopt()
+      tools/nolibc: allow different write callbacks in printf
+      tools/nolibc: allow limiting of printf destination size
+      tools/nolibc: add snprintf() and friends
+      selftests/nolibc: use snprintf() for printf tests
+      selftests/nolibc: rename vfprintf test suite
+      selftests/nolibc: add test for snprintf() truncation
+      tools/nolibc: implement width padding in printf()
+      HACK: selftests/nolibc: demonstrate usage of the kselftest harness
+
+ tools/include/nolibc/Makefile                      |    1 +
+ tools/include/nolibc/getopt.h                      |  101 ++
+ tools/include/nolibc/nolibc.h                      |    1 +
+ tools/include/nolibc/stdint.h                      |    4 +-
+ tools/include/nolibc/stdio.h                       |  127 +-
+ tools/include/nolibc/string.h                      |   17 +
+ tools/include/nolibc/sys.h                         |  105 +-
+ tools/testing/selftests/Makefile                   |    1 +
+ tools/testing/selftests/kselftest/.gitignore       |    1 +
+ tools/testing/selftests/kselftest/Makefile         |    6 +
+ .../testing/selftests/kselftest/harness-selftest.c |  129 ++
+ .../selftests/kselftest/harness-selftest.expected  |   62 +
+ .../selftests/kselftest/harness-selftest.sh        |   14 +
+ tools/testing/selftests/kselftest_harness.h        |  181 +-
+ tools/testing/selftests/nolibc/Makefile            |   13 +-
+ tools/testing/selftests/nolibc/harness-selftest.c  |    1 +
+ tools/testing/selftests/nolibc/nolibc-test.c       | 1729 +-------------------
+ tools/testing/selftests/nolibc/run-tests.sh        |    2 +-
+ 18 files changed, 635 insertions(+), 1860 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250130-nolibc-kselftest-harness-8b2c8cac43bf
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
