@@ -1,123 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAADC226CF8;
-	Mon,  7 Apr 2025 12:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C9022CBD7
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744027731; cv=none; b=LZG2ZKwVzAI5Hss9tig8D+tnRC06k7ivqtOmMHALj/efmy5HKx/s2gvg5UR8GjwvrSl8/fBHtUZcM9lkxAznaYNuiFtu4qIWUy4oK08n29WG/CRg3wMd54Fs3PTgtPq5fL/B4A6fFZ9JrF344yNdfJWcBI1Ve9xlTaw3tgAytPM=
+	t=1744027754; cv=none; b=VywNzZr6ZQhPTVQ252P6x768fUkjAMRhDukozLrTf/soER1FLHpLKdi698uqty0oH+wbxYr8ZA2eYttRDWufRVo2+ldDIeqQZnUMpzwpl8KAFOtMW4m4FHa4ECoGoS4yDfOFK5iww5HLF5bTFZB+2lxMBUHcB+D6HpYLadazsHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744027731; c=relaxed/simple;
-	bh=UZnv5Rm+14QbI32ATi83bgsLO1QK5w/4fgnuv7LgFP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OKOHLVwvSvr0zwotha2i5ZjODzZntuqRNsQTZAdu+QANTdfcwleSuhD2v8q6W9q1iSfoxo8YFxpRIkoPlCFniwWTrWJy0Y2CW92/6g9VkXKDynVa5VXO5QRmLIrqGzL1suak2aJrrRb0vqin/ocGx+vQiXxrwRS6CX2dTise3yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kAmHA8/Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744027754; c=relaxed/simple;
+	bh=sBCQHBDcAUpG17ddyItmIuUCIWSKR3D3zFJjSYLtoVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GbXz6uF3GJMnXoftM6XZ4tbyGkJKqUCSDNx7+KJVOpMfE8e5dYSjYuk+xovtfardRRbBGya4im7s0DYFxIlPcdwKUE144upvS7DWqe5R8dDcRck7F+fcqOS1TywSqxIBDxItesy4OtUVQsSuzAOmbodrFHpwlXl9scsjeundI4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O1QJa5vY; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kAmHA8/Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3A6C4CEDD;
-	Mon,  7 Apr 2025 12:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744027731;
-	bh=UZnv5Rm+14QbI32ATi83bgsLO1QK5w/4fgnuv7LgFP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kAmHA8/ZHeDE3gqd6toeq3JVk+vEF1VPW99d/ohcxC2MRlOGGuIyoFgBFgTEp6zX9
-	 PHZbnPTwjfer5BmiRJYO1XauotoDHB8POI7ds/ywDnciH7shYWw8pGEy6Uq4DIaZt2
-	 WpzdAc6sGApd5Qs5VPUeKh2LXCtB8zdl660wQrDz9Lp87YT+5W1tsOC2XfobvB+bmJ
-	 yg5fss5Eza1mouID3pgY0/0v1aoI0w3bgo/FrLiVvpEaqTzcB0XS7xJFeV3HyedLAj
-	 A0wXia88hkaHuM5tF/Z0Auq/pG8237B+XuRTR9oFkihKKnAjW/vcx9YKWwfoA2wj3T
-	 0qCQFC/uKCrVw==
-Date: Mon, 7 Apr 2025 15:08:46 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v7] KEYS: Add a list for unreferenced keys
-Message-ID: <Z_PATvNUE-qBDEEV@kernel.org>
-References: <20250407023918.29956-1-jarkko@kernel.org>
- <CGME20250407102514eucas1p1b297b7b6012a5ece4ccdca8e0e2c7956@eucas1p1.samsung.com>
- <32c1e996-ac34-496f-933e-a266b487da1a@samsung.com>
- <Z_O1v8awuTeJ9qfS@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1QJa5vY"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so41102351fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744027749; x=1744632549; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/LHFPsYBw0bwDf6dVcpDSJnHybANIimgmPtryFgNPA=;
+        b=O1QJa5vY6mTfmLs4ycXkNd6aOG9TDOigmEPs4fGrs6HMlbtovJIojTYeLGjotYTCEi
+         Nu6iahUJ6uSbz3VOCihPxCibWBcX53WqJWABSHx51ja9uZWjhVGK6+c2s0Xf84/jo0TL
+         sIeRlZwEVDfcRnGsdTgXbAu5wIYRW02VQofWNVlYgUYF6FGFvJhvX+ny1je2EkvMmMDK
+         3k3b7uqj4/3izloAXQNSCGOrJnl5C3ximExbC/8fyjr8Nqn5qhZWy6YgwdiPPH4QXdRB
+         NbqhoiRDg1WssFrf8I/vOaF897YXt9zSMnkgOYRqlCGfaF2uukSl0YqXO1xA2WFFmNgR
+         v+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744027749; x=1744632549;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m/LHFPsYBw0bwDf6dVcpDSJnHybANIimgmPtryFgNPA=;
+        b=uN8BXNWpyFrZUXKXRU9IvWym60Ei+cuzkFEzxbFmq8fwCfL5ukyzQTEHC+aZdlaLqy
+         aHNil3XH1ZTvxyi3TfleirUGw7k2EAYW54Q40vTH7Vq+eU4Ie6DOn2C+Nvlzi0fUfOTR
+         k8tn4r5Q5BWPEHbaeW/WrYsIfqUzbi/vdj5qn6GDFLMFJl4j4cUwOQr05ONNJLUqCJ9O
+         vU4ZZ2x2kGwTXwZIK4nCZ6NN4SduUFSfY2X+g21eRJf4g33nEe11vqOjASPnMeDMyVvV
+         bX1cq2iaCxw6wXCPeeFtSGBB8sFyJ2DFsNhsKvEvoRDVLyIk52AUtlA9BTR8ZdfzWUMH
+         8hBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjvyd8nsOjkfXpWdVaPOcnZ5eJD8lqI76EE5E4TVGIQWkl1TobpKyDB2+L1371e0yInud4WuFysgphako=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC4VY9EkFl8p+XRuyEph7RuG+6bzyvtJrXtUUQrBxamLQQvcaR
+	/p6i1GzNWOMSWL88fCnh/nvR1UYXZz2ZyZXOJWMjl76cRJDWteTKExRkmaNrfaVqolCPnpFRHBQ
+	PTzFs2hkqQT2IkvHswjytaGTzKy7kSjtC9ziJEg==
+X-Gm-Gg: ASbGncv/UEqbHu1rYTY4s2CUyKZ8spHupQ4SJdhxWFT9UkVm0flOULJeuG+U9FlwPQj
+	6ranR5QSP91EwghaFsNsN61QTar0cbjGu48McdOtS1zt2ziNUOe8RWiU6rjLbnZIof04E7kFcoe
+	wjRjb2bEU9lhf4nCZd6eWIJ5X5JU4ws71UZN7QzbO80A==
+X-Google-Smtp-Source: AGHT+IE7avfocEmD5lqNIyS63JcSTkkwf3BvTJpAGhR9l+oQoFSuLjrFiN2oMnoA2mOmJOAmlfiARgKB+FZMo6LuuCU=
+X-Received: by 2002:a2e:bc1b:0:b0:308:f580:729e with SMTP id
+ 38308e7fff4ca-30f0a180dd0mr35506541fa.27.1744027749231; Mon, 07 Apr 2025
+ 05:09:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_O1v8awuTeJ9qfS@kernel.org>
+References: <cover.1740504232.git.nicolinc@nvidia.com> <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
+In-Reply-To: <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Mon, 7 Apr 2025 20:08:57 +0800
+X-Gm-Features: ATxdqUE-WE2mGG2qPqESoLiVUp7LnTlD7II4G1YhfYdYp1Eq06d5HdYvjf8h2-k
+Message-ID: <CABQgh9Fuh2HdBH7pyAteawZBpa55ZzfR9dv2K4RF=Ps4yhREbw@mail.gmail.com>
+Subject: Re: [PATCH v8 12/14] iommu/arm-smmu-v3: Introduce struct arm_smmu_vmaster
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, 
+	joro@8bytes.org, suravee.suthikulpanit@amd.com, robin.murphy@arm.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org, 
+	mshavit@google.com, shameerali.kolothum.thodi@huawei.com, smostafa@google.com, 
+	ddutile@redhat.com, yi.l.liu@intel.com, praan@google.com, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 07, 2025 at 02:23:49PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Apr 07, 2025 at 12:25:11PM +0200, Marek Szyprowski wrote:
-> > On 07.04.2025 04:39, Jarkko Sakkinen wrote:
-> > > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> > >
-> > > Add an isolated list of unreferenced keys to be queued for deletion, and
-> > > try to pin the keys in the garbage collector before processing anything.
-> > > Skip unpinnable keys.
-> > >
-> > > Use this list for blocking the reaping process during the teardown:
-> > >
-> > > 1. First off, the keys added to `keys_graveyard` are snapshotted, and the
-> > >     list is flushed. This the very last step in `key_put()`.
-> > > 2. `key_put()` reaches zero. This will mark key as busy for the garbage
-> > >     collector.
-> > > 3. `key_garbage_collector()` will try to increase refcount, which won't go
-> > >     above zero. Whenever this happens, the key will be skipped.
-> > >
-> > > Cc: stable@vger.kernel.org # v6.1+ Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> > This patch landed in today's linux-next as commit b0d023797e3e ("keys: 
-> > Add a list for unreferenced keys"). In my tests I found that it triggers 
-> > the following lockdep issue:
-> > 
-> > ================================
-> > WARNING: inconsistent lock state
-> > 6.15.0-rc1-next-20250407 #15630 Not tainted
-> > --------------------------------
-> > inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-> > ksoftirqd/3/32 [HC0[0]:SC1[1]:HE1:SE0] takes:
-> > c13fdd68 (key_serial_lock){+.?.}-{2:2}, at: key_put+0x74/0x128
-> > {SOFTIRQ-ON-W} state was registered at:
-> >    lock_acquire+0x134/0x384
-> >    _raw_spin_lock+0x38/0x48
-> >    key_alloc+0x2fc/0x4d8
-> >    keyring_alloc+0x40/0x90
-> >    system_trusted_keyring_init+0x50/0x7c
-> >    do_one_initcall+0x68/0x314
-> >    kernel_init_freeable+0x1c0/0x224
-> >    kernel_init+0x1c/0x12c
-> >    ret_from_fork+0x14/0x28
-> > irq event stamp: 234
-> > hardirqs last  enabled at (234): [<c0cb7060>] 
-> > _raw_spin_unlock_irqrestore+0x5c/0x60
-> > hardirqs last disabled at (233): [<c0cb6dd0>] 
-> > _raw_spin_lock_irqsave+0x64/0x68
-> > softirqs last  enabled at (42): [<c013bcd8>] handle_softirqs+0x328/0x520
-> > softirqs last disabled at (47): [<c013bf10>] run_ksoftirqd+0x40/0x68
-> 
-> OK what went to -next went there by accident and has been removed,
-> sorry. I think it was like the very first version of this patch.
-> 
-> Thanks for informing anyhow!
+Hi, Nico
 
+On Wed, 26 Feb 2025 at 01:35, Nicolin Chen <nicolinc@nvidia.com> wrote:
+>
+> Use it to store all vSMMU-related data. The vsid (Virtual Stream ID) will
+> be the first use case. Since the vsid reader will be the eventq handler
+> that already holds a streams_mutex, reuse that to fenche the vmaster too.
+>
+> Also add a pair of arm_smmu_attach_prepare/commit_vmaster helpers to set
+> or unset the master->vmaster point. Put these helpers inside the existing
+> arm_smmu_attach_prepare/commit().
+>
+> For identity/blocked ops that don't call arm_smmu_attach_prepare/commit(),
+> add a simpler arm_smmu_master_clear_vmaster helper to unset the vmaster.
+>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Pranjal Shrivastavat <praan@google.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
 
-Testing branch: https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/?h=keys-graveyard
+>
+> +int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
+> +                                   struct arm_smmu_nested_domain *nested_domain)
+> +{
+> +       struct arm_smmu_vmaster *vmaster;
+> +       unsigned long vsid;
+> +       int ret;
+> +
+> +       iommu_group_mutex_assert(state->master->dev);
+> +
+> +       /* Skip invalid vSTE */
+> +       if (!(nested_domain->ste[0] & cpu_to_le64(STRTAB_STE_0_V)))
+> +               return 0;
 
-I updated my next this morning so should be fixed soon...
+Why this is removed in v9 and 6.15-rc1?
 
-> 
-> BR, Jarkko
+I tested 6.15-rc1 the qemu failed to boot with qemu branch:
+for_iommufd_veventq-v8
+"failed to attach the bypass pagetable"
 
-BR, Jarkko
+After adding this "skip check" back, the qemu works again.
+
+Do we need to add this back?
+
+Thanks
