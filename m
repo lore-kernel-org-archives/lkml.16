@@ -1,98 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B414A21;
-	Mon,  7 Apr 2025 13:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D601ADC78;
+	Mon,  7 Apr 2025 13:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744034301; cv=none; b=qlK7yTYUqnb+K5fFGMmLlR2rs1/alUKkDCQ20HPWQxaFVRA+Cx+BCQqILR9TexLWRhGGEMSSv+xvVDdGh2KXom+Vda0tOD3DNkY6lsUry5A0OehDT1dzjcv6r/qNoxC0UWgs/guIHmzDjuDJ/ubcNQfsw/jxi05tIeh8sp4RyZE=
+	t=1744034346; cv=none; b=nxwqptKe2MbAQQn+nuvxC8m5dAzz0HGMkflECni42IGgKwyPBmdqPQHLU9DJrFzAY21yIznv8AB/ftRV/wpwSnJ00mgfevV4/vCEySvh2849F68Px1Mo3/v2u7/uE7lIoadQzSMf8NIAV78755cNwViCoe2M+9auzXO9JzTUIiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744034301; c=relaxed/simple;
-	bh=9LcCqgFye581untHJfCQUR7Br3ttqzyaascOgr5Ojt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UB0TgGcxiSaGtpi/t+//U6t82mU4HE8Guy6lBJXHbJzyMm5HOiXOfs33WF0WBFLK4nhpWWSEVuWrw2UPPJ6rcDBrJFeZrtwzJVpZ3pP92ANMllAUIKkaBdB9I/ldKwVpsOywyCEfPQsyEAqr5cgvRIgCD0V+qPHkqUa9+rk7+FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZbTfmyP; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZbTfmyP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744034300; x=1775570300;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9LcCqgFye581untHJfCQUR7Br3ttqzyaascOgr5Ojt0=;
-  b=iZbTfmyPACn8pyW8Yz44aQd9Yp7SfRrwd0yDTzYEIFdqZjMizv5znI2l
-   KL7D+P9/ZlBPEA7/WdAot5wQwvaO+j7XEqSxOoYf4S0L+eIpjKk7/+k8H
-   mWDY0zSncardgmQY6WQp/QNwKmpfELt2DLvIEun9Y0+z/0qVHXMZhsIvA
-   qgMuzhOMZhK7GbdntMAv6bz8VgomS+77SYvpHQIywNTTttsFW75uUDn0T
-   gQPwcjyAw+2yFPjaiWySO7ucwYSsX/SdEHPWIJ4Qo/wtypfJRudZ5H8g4
-   F4/4WdVULaPX5804+2x+tuHIhRDEmBxVCFaby19cOvwb/+fvhlUTdL/eN
-   w==;
-X-CSE-ConnectionGUID: AGJiJPVxT7OBhXwuRXHrYw==
-X-CSE-MsgGUID: ksUE/jl6RNC5f/bdfIwTJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56789209"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="56789209"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 06:58:19 -0700
-X-CSE-ConnectionGUID: n5f30ISiQgG7Dcd58pI+XA==
-X-CSE-MsgGUID: IBgiIsYwTyaAZ8r7djSHAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="151153788"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa002.fm.intel.com with SMTP; 07 Apr 2025 06:58:18 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 07 Apr 2025 16:58:16 +0300
-Date: Mon, 7 Apr 2025 16:58:16 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] usb: typec: tipd: Fix wakeup source leaks on device
- unbind
-Message-ID: <Z_PZ-KHlY-T9YMc6@kuha.fi.intel.com>
-References: <20250406204051.63446-1-krzysztof.kozlowski@linaro.org>
- <20250406204051.63446-2-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1744034346; c=relaxed/simple;
+	bh=tyW251slBoQIpZUCApqgn8GWnpEiTP8f166g2a7Y2tg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dlq65s1wJlNOfL4CuUR0IBVPp302WR2z/vGorV6kf76czeXdE2hP2Qy49+GgsgOVenmQSpooW3H1mgZrMuueZStQr+FuLd6Wfur8cZNIJl6sb2YJHtNw3rue3au3zdOJgkNp/Y8voDKXuijeDtCcpDxGXErmR85UbX2zjxJj1pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowADHbf4W2vNnBtfhBg--.19415S2;
+	Mon, 07 Apr 2025 21:58:50 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/x86: thinkpad-acpi: Add error check for tpacpi_check_quirks()
+Date: Mon,  7 Apr 2025 21:58:08 +0800
+Message-ID: <20250407135808.2486-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250406204051.63446-2-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHbf4W2vNnBtfhBg--.19415S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Xw1kXr1xKryDGrW3ur13CFg_yoW8Jr48pr
+	W7CFWIyrW5Ga1qv3WUJw4Y9FW5A3yS93yxGr97Cw1Yv345KryrCry5JayayF4DGrWrGa17
+	XF1xt3W5Aw4kZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUejjgDU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUFA2fzu7haQQAAsD
 
-On Sun, Apr 06, 2025 at 10:40:51PM +0200, Krzysztof Kozlowski wrote:
-> Device can be unbound, so driver must also release memory for the wakeup
-> source.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
+to be checked. The battery should not be hooked if there is no matched
+battery information in quirk table.
 
-The same comment here - this should be tagged as a fix.
+Add an error check and return -ENODEV immediately if the device fail
+the check.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Fixes: 1a32ebb26ba9 ("platform/x86: thinkpad_acpi: Support battery quirk")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v2: Fix double assignment error.
 
-> ---
->  drivers/usb/typec/tipd/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/tipd/core.c b/drivers/usb/typec/tipd/core.c
-> index 7ee721a877c1..dcf141ada078 100644
-> --- a/drivers/usb/typec/tipd/core.c
-> +++ b/drivers/usb/typec/tipd/core.c
-> @@ -1431,7 +1431,7 @@ static int tps6598x_probe(struct i2c_client *client)
->  
->  	tps->wakeup = device_property_read_bool(tps->dev, "wakeup-source");
->  	if (tps->wakeup && client->irq) {
-> -		device_init_wakeup(&client->dev, true);
-> +		devm_device_init_wakeup(&client->dev);
->  		enable_irq_wake(client->irq);
->  	}
->  
-> -- 
-> 2.45.2
+ drivers/platform/x86/thinkpad_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 2cfb2ac3f465..93eaca3bd9d1 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9973,7 +9973,9 @@ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
+ 
+ 	tp_features.battery_force_primary = tpacpi_check_quirks(
+ 					battery_quirk_table,
+-					ARRAY_SIZE(battery_quirk_table));
++					ARRAY_SIZE(battery_quirk_table))
++	if (!tp_features.battery_force_primary)
++		return -ENODEV;
+ 
+ 	battery_hook_register(&battery_hook);
+ 	return 0;
 -- 
-heikki
+2.42.0.windows.2
+
