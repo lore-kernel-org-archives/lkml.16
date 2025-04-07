@@ -1,166 +1,141 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCE921ABA3;
-	Mon,  7 Apr 2025 18:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049207; cv=fail; b=CPvqqxfyYQNXUPfkwNwxE+y6UHGy7AwaaSmhnIgqFV+jALvNfxLk6dxEvNT3CoiiX4DuSFa+r96bZmVa4fGPutHkFpakL0OJMlIFHDJeBfPvA2Xhd/90yzguYlWSAQ53mmW6tSo+Z4zhLaQ1G2N9zFfIhYW6sKBeMDJbxqmZ8m4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049207; c=relaxed/simple;
-	bh=tgZW5xof6KZj/guGB8xK5XoEzMJcGFnWQKCq3KHXUcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mCxtuSqNfLr5DeeyPe04Js/KOKmhWObF8uOEm++lDe2V8KNGw5miwCEtFgBWPVIIfHTZiDPJbUE4SFnpWKN12DIJN2CvQDBi8xcVJKYfsgi2X1OMA7vZb2ud5csGFwIMavUhVMCobVMaIEsms8SQ1TwyMwpaThMDcPVP6CTkz2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=M2hGFULZ; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CD21C9E0
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049211; cv=none; b=X/5ICNJncW+DIzr5R/dkS7TyJyKbpXmxfohUcso+Q1EG3f1DDGci8S0hX+4Ypm7/M+sgxXGRsIYuIqHzPSaUKT83O3D9+ddPeIk16a8JakoJzEPdt2WImbP1ohPv5T2qrFxJc79ZU84kEDkFI4/Q11fk9FeEX+Ik05aeJdkme9Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049211; c=relaxed/simple;
+	bh=/QL2Deg67baZmAbZ/a+IO0SqdLa/xoFdNNCtzMrZm1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nu+jpRFEuK9I1OufuZ7ENHRs9LjCSCw9nqMChTtsDBkaJ6NZ7CW712r3YqH793Rw1CNnMIklUtTzhbW4yMDqC3J/PBMYYBWOTnxQ4825VoU8UbvanHyMOva18QTn+UcTFDlJYWlxT83Q1iWm93af86Y2XAo59iD6AGThnonskJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UGC1U56a; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="M2hGFULZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LpB2I6NZHbp7N3jb9A6rxmZzrrt200bEeiWMfmWVOXWnypYHaoYqAIhg45+aI7cAh0MXNJQ5Ptr3TSCsl2nkKiP8+yMDMLoK8klbnHGyRdVHBnq4zM+hCzpHKfGggwynncTfeaA/Qi1WLn0h0zCS4zSSoZX2hgqsWxUpHQYOF8YNgJ7rSt4HlPazc48H7sF0SOvv+2EKibgJS7+82iOMsHfqhGosAERYi05GLpIYkow6QEkkou8779UUoKJUCiMHvZu1xwXNasW0JAv+7d1tvLgb/mBBsAksy12t80tEgqjt/KmtnLwAC4e8XWbQ7JA7R9PTgL49SuBZUz/udI3lnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bv/VSvO0A/uHmy+f8cQ1LyV1x003bRiS4HcyM31PzqI=;
- b=nIeznmJV3aGPWMke8TqVlrZaqVJmbFh5Ww6CAmW9DglYS7P1lmdVMhPyJaESzd0YQx+cBzhTeXpgswMWvyf3nwOrQBu7pzbW1Fp4bJGTtEtZHZBLzIGGQ/lXApVOLgRhyoPcA0VFvvdgZDjfLQhMldkQUgIx0R+/TE3tHZKU70vqU34TQLbVHJsRomOf/Cru0eDyWl74yrr5+mbuciMm9pshsM2Jqxd7jaBNnBjIrApIU7mhecXLaBTvIJhdU5t1gHnSozIrl712AkTNT+/3kzmCtLX0YPjWgpczN2eE/aJj8TP1rv36QPQf7BEKd05TDku+89aNAUPXqd+RPpo6Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bv/VSvO0A/uHmy+f8cQ1LyV1x003bRiS4HcyM31PzqI=;
- b=M2hGFULZcKvPqxFoc728Nm1qh5MD6sLFnzZGNcjy0t1fImYhL5ZN9+0PDriYXCNpbYMOLMf3tA7eyrgBddAwx/2dE8zI1SGm5c5E0RV0IhcUrbslwplVoSdhOgXd7i++bTd0Ct8RAC4MCleeQh7H43sXo9fzzvnAWAR6b4Lyt1QXU7hlNV7vCNp0jj73Od7nWOQQR5tNIOn8Utb0osY6aa+3kZ75gF9r6PZg8BL3lREDMmXYfjrplYQO7Yub09UWPbmCgGSPdRalMUybWAQAZ5rVCFblUA5e3ctZ4SychUmYrKpwoxESadNbQDP7N3i720gSDVd5xX6N54QnWXtOqQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM4PR12MB6182.namprd12.prod.outlook.com (2603:10b6:8:a8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
- 2025 18:06:40 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
- 18:06:39 +0000
-Date: Mon, 7 Apr 2025 15:06:38 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Yishai Hadas <yishaih@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] RDMA/mlx5: convert timeouts to secs_to_jiffies()
-Message-ID: <20250407180638.GA1759834@nvidia.com>
-References: <20250219-rdma-secs-to-jiffies-v1-0-b506746561a9@linux.microsoft.com>
- <20250219-rdma-secs-to-jiffies-v1-2-b506746561a9@linux.microsoft.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219-rdma-secs-to-jiffies-v1-2-b506746561a9@linux.microsoft.com>
-X-ClientProxiedBy: BN9PR03CA0096.namprd03.prod.outlook.com
- (2603:10b6:408:fd::11) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGC1U56a"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f2f391864so2605321f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744049207; x=1744654007; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qrEaB9L3JJCWImgpqc6St8J9YBdrcTfemPWf3LmUw3I=;
+        b=UGC1U56a/NQiCAK4n8mq4SgrojErRKE3i0wC0JTujs0mxW76d3gXC8E6McutzRPFNh
+         rJnpbQ9YmPj1IQ/b7C8b8XPAJyuK8KGIE9wNr1LugEGSgBwbqHTFB5uzY88gGpEecsUk
+         /9IjonHoUOBn5/fOa5S8BEc5S78nfjIVmAeuMEB9uwoqyKKCUSj6LGRqWk6uzPtf4MmY
+         tMv7aYqbl61FF7bQkjeNW16NFJNRQAgPLG0kgKMxp4gvbQtc1RJ3a7V1ulfq3/ENZHCP
+         IjtllP/OcvLCz/j/AOkFu65mtriGP3qj8ApETnWPiErNhfkihcVH+3ih/SRjYLAOeU69
+         diWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744049207; x=1744654007;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qrEaB9L3JJCWImgpqc6St8J9YBdrcTfemPWf3LmUw3I=;
+        b=Yw+iFx0LKSOxBbTIEvyk4mlqvgV/7TiRy7TXyJI0NmM9sHQ+E83Zn6s3+11AJZwK5T
+         FXaLQsmhj16WsRZfx2JrFT4JgmdYKR+YQoUiDDgS0yWGsimCQR/xoaQc4dG1vzBHyAT2
+         FMaPFISSc0pg9TS3BF1NHnZmR0NQgYDeNHy6GyUHRmX/iDobt1BQeuTUplIGE+p4enzK
+         WpndrhVxGq3HCsrSk9wgvsQcqCUkSZ6CteOGDR6ZHkbDj7GAwiSXQfyTOhq6VfvUIjb0
+         TawXhJUmRuSLx/aqX129nDscT/3CkMlXdg4ZWqEV/+hqvU20GCuwbvjb0Q7CPDXV49NU
+         yWLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQjp1MbGmEROjvkUZVgor6b6vQk9qHhvRHOrfEfl+TnRUpXyOA9aU63HwLyDIoNz63/UJ5bkpwLYXXQx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzau+s6gWnbp5LomxWsEADHfnpKMNTCSpUoB+Ej6hQCKkZiOmcL
+	Ls7ob4fGiZAvu5YPgk1BI6txbvtqC7AhYGoaLfyZgaDgX2FaSfRq
+X-Gm-Gg: ASbGncsmH3LNObg56c+Na5bHO2u2FIov84sJVTpvt2ZGxX8tHwWcGZ5Z0cjTIlauVkj
+	GB2s1MscVPVtATXIgouw/ALWqpbZzYIe2dNYH21r74xLk4S315DbZtjTVFsOkihN8TJAgZDVPKa
+	IQdRBPEwBpYjwedLBszkoSVehGWROdPNZn0K2BUKN2OzEmdaEgwmsiE5H3BnDjSS4bKJgAdRAiX
+	8CWL+eeW2zKWF/GDxrsr0mCXtPbBGcDKzOWAQm+LARz7eQrOPbbzORd2Alx5QHbwtGZ+P/CF8Ko
+	ye/i6JlfRoWfkXJ8cqyaQqcOv696so/VXKfPW+yGlB5IHTTlid1WNqxVx6AhyDMmqNIkaz4XjMa
+	8EZVKgkM=
+X-Google-Smtp-Source: AGHT+IFTFEHCvLaGHp3dLmSDqBIEvCaNTT+cXX7kVGMx3xEmdqHdogSDXb/eN7l4LEq4MVLdCLQc8w==
+X-Received: by 2002:a05:6000:18af:b0:39c:2688:6904 with SMTP id ffacd0b85a97d-39d0de62689mr11800118f8f.39.1744049207297;
+        Mon, 07 Apr 2025 11:06:47 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b72d5sm12601873f8f.47.2025.04.07.11.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 11:06:46 -0700 (PDT)
+Date: Mon, 7 Apr 2025 19:06:45 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Abraham Samuel Adekunle
+ <abrahamadekunle50@gmail.com>, julia.lawall@inria.fr,
+ outreachy@lists.linux.dev, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, dan.carpenter@linaro.org
+Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+Message-ID: <20250407190645.285fa924@pumpkin>
+In-Reply-To: <Z_PE8usXhpLJ4sTd@smile.fi.intel.com>
+References: <Z/NxGilPLPy7KSQ3@ubuntu>
+	<2025040757-clergyman-finalist-0c63@gregkh>
+	<2025040752-unrefined-labored-8c8c@gregkh>
+	<20250407132115.11ded3d9@pumpkin>
+	<Z_PE8usXhpLJ4sTd@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6182:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd7a98d3-eabc-4573-d8ee-08dd75fef1de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ssLW02WCgfIKDe3XQjJGebOl5okdeYH44lKsNKVNFJaKr6dHPHWgtckE+npb?=
- =?us-ascii?Q?1ULCOJmgEfFejcx9we+7Lc5Sv79rqsecmZK+kIg300USARLaVbvE2IW0Zi65?=
- =?us-ascii?Q?d+chlcqrIimao9PiUE8Ka1e39NHV/P8NU4XLexhlf+UlMlFrw0cwu6e9gujb?=
- =?us-ascii?Q?c63mrFkAQavitf/9qYGTNvjDJnu6VOI74k8sMv37qm2RCyZDD1UneAel21qa?=
- =?us-ascii?Q?JDff9WtP42UJX3D4JLhBkA8HP0jf/ZWlDZBAALeIdVW7BhEwFTlpBXHKoPwC?=
- =?us-ascii?Q?a2auoGwv7Yn4WxRCvCm8SLzvje8X0a7cUBHBXhEvyAF7Lw7+2Ses3MIIIL7w?=
- =?us-ascii?Q?HorqQsSkVNGw7CtULw4O1QGKcK8N7UU13yfkYkU4zsINwJleXzHXMMA+ux4b?=
- =?us-ascii?Q?6yrjZ2vXkcURiLVMtJzEAAB0jhOPXIjjKkrxDhNKcDGumGecKp/yhcCNMz5I?=
- =?us-ascii?Q?yW1M2aa+X5zRNeZ3R0UFSDoES0y0b8VsUim5Hrxx+GbjSI3AnJA4Ej3nGIh5?=
- =?us-ascii?Q?uBMHxkR2pxGlZPPA0dDLxQVvLZkNsPOgPf34MzRjwofgzfwXH10WuItt8Yho?=
- =?us-ascii?Q?n/UG0LTIs0byYXzPaIZH5Qw2R5FZhITPpCdObbULYRG4cQgCxdwEI1Yq/j+S?=
- =?us-ascii?Q?t6KC9cRcUUEHVUq6XoEmF3R62tfq9HHS6wG2fUI/rl0L7KEBXqWylCZQ9Og4?=
- =?us-ascii?Q?ww/lU0+ruLT//nM5/MxoT0J7A3C8/4sMYUnDzGghj0nwlZXjwhs7U4P1x0LV?=
- =?us-ascii?Q?665Rej3hDp+bU99IxedoNiHVAs4c2tCcoA+uV+AKqLEqAobkLPicl2UhiwtJ?=
- =?us-ascii?Q?QMNwEMADsYjZ+bOWvK/x+FM1BgIcKzkc509wp5+ZOtWrZu2iQBPFBpaAhuHC?=
- =?us-ascii?Q?tUL0SQM+fEUGJxlRoZ886biysU+fBoKjTPaBg7Fi6JpUOYcTLI26bBTzjOGT?=
- =?us-ascii?Q?A1XiqoZWB4seXuftee79kKXISFAkO+024Ojc0iA6HqpLi34LAtoec6XzHXiC?=
- =?us-ascii?Q?c1ZfRuXvrqXHOMApgCH+PupDPiVYsPDrYewLB3wzFQl1cXkLAZu5eIYxSX8C?=
- =?us-ascii?Q?CQs7RuOxliG+XLXIrRDn7tnxYdxaCjFdutXPfRGQRtRyDKkcShR3dKQq1Rus?=
- =?us-ascii?Q?G4icuqrErY/LMTTQK3NpYkYn5fxP1dpfiBgGyo6NVKy1VfDLjxX3BrvtN/rr?=
- =?us-ascii?Q?+1oL8P1bk0fr7rnqamYRM1Zl3XI3rXYj6E+ksTZP8CMPYS+E6IbTM1I6v0E8?=
- =?us-ascii?Q?WJfkY0iR950yGu8DmZ/EPcmNG2o3OQtsi+3ULe1OhZgqCwsYOruPBIy1FUwp?=
- =?us-ascii?Q?/Nf8nQ4w2HzW36dZicg0HqQ0En1LQYQpb6aXOmACgPFgSlESsUHT/tWV/tKc?=
- =?us-ascii?Q?dESP5yJ1RBhd9pRATzxBu8gfitto?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Mpoh7q4JRAgqrxDVbeS3OLDwtE7Rd1q5V6dEoIlbDGP6drblgJ7sSEKcJ0qc?=
- =?us-ascii?Q?hTZVm5Q073gB6ihFyWZ6DJWMp+cPVAAVbnKCFx7hfsGOMCtfPUq2vr7jRt3m?=
- =?us-ascii?Q?kBaBQsEjcxEMbRyY3yLYhL6NTGnh01qYDe/PEpA8+xCGnL59rHhBQAo+ITTR?=
- =?us-ascii?Q?zscLX8BkhbiG66XcO7oiSySV+uv+w8Mq9X5rSKdYjht6N7M/Dfi/Uw7jAV2s?=
- =?us-ascii?Q?xASWjiRnULQLw5qF0ASWo+4iJ4MSj5WIV8Cg2VCTa/nn6kwR6U0IkcvLm0DP?=
- =?us-ascii?Q?kL7pz+9sneIgqlR7oSBmBIsS0EV/5VzPw8Nqc9pR280Xxz8PSRNBifs+4KbD?=
- =?us-ascii?Q?dUhZoHTz2wS0ah7okD86IknwrH1h1xweI/+Q6LVjmtomKcw+R2VFf62G8p3I?=
- =?us-ascii?Q?CGu7YDCcyD15mZi5iQ1gzLwWnn5Uf7QEitKxuL7t81pSfqFaTxF9sPkRvHit?=
- =?us-ascii?Q?vl67gWpNfr+wQHjpJhXHYIozNoRVpyEw167U18/L9extTfFTdI7eM4SKQm4C?=
- =?us-ascii?Q?C0hLCJLWOAa5kJIjmcRK9EBvfpTeEPNDlJEfqjlz/QdD66XwaQLW46wBEOKa?=
- =?us-ascii?Q?umQe9ivuQLXnZlEk9guV8JuQEdvqA2UCnRsrxnf/J4VWvabR2PeZ5LZfMYh5?=
- =?us-ascii?Q?i3OPZElQ6UfxtKJ0mJOGU2v/qwWOifGy5jFo5zY3uMX/64Td/s2ZGVl8RErf?=
- =?us-ascii?Q?fwGJbLGz0eYiyJp7cqLw8PGHF9ydsQL/CsD7wi/7fPE84j32Q9OO8JWaj9Qc?=
- =?us-ascii?Q?691k3TLDSyejogMSYAzYdrRNvl42e0lZmRJwy/5pFnJbkPtbf4ZJNwPMB+YP?=
- =?us-ascii?Q?noHcANkzKBwQ1QRC/XYjBzCzrmUdp+Z7OxrpGMQtc1QCTh6YiifhvsPLem1u?=
- =?us-ascii?Q?xizaQ48cYKhVZxojoZ5n7uEU2rlzSazNNxRsXBY+jhu3VZcQVSyLXhRlmSQI?=
- =?us-ascii?Q?0fDC7075SxkbRSqqIME4R5o+rOnq/C3ePAfEG5V7FLZNzE4FsOwWG1BxmM9L?=
- =?us-ascii?Q?vLg89hPC4vddgSo7ZUDni3S1M/2ijTngW26ujQ2KDqcD6wCeFF5PlT266O8E?=
- =?us-ascii?Q?eEnjxIBcaV/kQJs9nRbh5jTluOyZhfiUTwAGbE2wBAHpHrjer5DLCOSm8OU/?=
- =?us-ascii?Q?Jftxmn0iuHCoUEyLELwQndVS7za321d2cFrUwnFU2jM6hWnjxHKUpcEvEhF/?=
- =?us-ascii?Q?0g2TPDgOqWUSZbAl+edVwtopbivIX1V8Atu36MmHG0xBMsTHHB/s1oraE4rp?=
- =?us-ascii?Q?awy/Rd9P0UsZFqre+rfXYmbfRSJzf5VQJHjyoWf8MX3Hu40XSBOCdVyoM/A2?=
- =?us-ascii?Q?w6Ti8y3C84usG9n9hWyXcPUOXXxQ7PYxKCX9EsFDN/D41l9d2fwSxZbRVKTX?=
- =?us-ascii?Q?nBklP7wnlWT+2iNOd7Dh+XTBGdB/NGGfnnEZ/hqCHixm3Y37Pc0610wgOXl8?=
- =?us-ascii?Q?U4n1JkjGF7tffsm0on39G64agJgkO8qMuG8bUl7q0Jbl9KGG8sO+ZLGkhRyP?=
- =?us-ascii?Q?eV7ByQC58MUsELMEoU0A01TX1Z1hqBWayJmb4HYLWfD+5VE/gcVrN8TK6uvF?=
- =?us-ascii?Q?1nqwDZMaUAnrYz+yabr4/h+IoF8aTw6lW0G5I/1c?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd7a98d3-eabc-4573-d8ee-08dd75fef1de
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 18:06:39.9296
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nCOPaS1k0smy5SxQquTXQ81p7MVg9ej8dDAkeWhg8FA3tNJqKxX+Cx2tTSCQAMpQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6182
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 19, 2025 at 09:36:40PM +0000, Easwar Hariharan wrote:
-> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-> secs_to_jiffies().  As the value here is a multiple of 1000, use
-> secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication.
-> 
-> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-> the following Coccinelle rules:
-> 
-> @depends on patch@
-> expression E;
-> @@
-> 
-> -msecs_to_jiffies(E * 1000)
-> +secs_to_jiffies(E)
-> 
-> -msecs_to_jiffies(E * MSEC_PER_SEC)
-> +secs_to_jiffies(E)
-> 
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  drivers/infiniband/hw/mlx5/mr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On Mon, 7 Apr 2025 15:28:34 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
 
-Applied just this patch, Ye's version of mlx4 is more complete.
+> On Mon, Apr 07, 2025 at 01:21:15PM +0100, David Laight wrote:
+> > On Mon, 7 Apr 2025 08:53:30 +0200
+> > Greg KH <gregkh@linuxfoundation.org> wrote:  
+> > > On Mon, Apr 07, 2025 at 08:36:35AM +0200, Greg KH wrote:  
+> > > > On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote:    
+> 
+> <snip>
+> 
+> > > > > -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+> > > > > +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;    
+> > > > 
+> > > > I do not see a modulo operation here, only another & operation.
+> > > >     
+> > > > >  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+> > > > >  
+> > > > >  				SetSeqNum(hdr, pattrib->seqnum);
+> > > > > @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+> > > > >  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+> > > > >  						pattrib->ampdu_en = false;/* AGG BK */
+> > > > >  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> > > > > -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> > > > > +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;    
+> > > > 
+> > > > This also looks odd, nothing is being "AND" here, it's an address value
+> > > > being set (and an odd one at that, but that's another issue...)    
+> > > 
+> > > Sorry, no, I was wrong, it is being & here, but not %.  My fault,
+> > > the lack of spaces here threw me.  
+> > 
+> > It is still wrong '& 0xfff' => '% 4096u'.  
+> 
+> Why?
 
-Thanks
-Jason
+Do some math :-)
+
+> > But it is all rather pointless especially if you can't test it.  
+> 
+> > Plausibly more useful would be to find ALL of the uses of 0xfff/4096 (I suspect
+> > there is an array lurking somewhere) and change them to use the same constant.
+> > But you need to be able to test the changes - or at least discover that
+> > they make absolutely no difference to the generated object code.  
+> 
+> The problem with &, it's not non-power-of-2 tolerable solution. Also using
+> hexadecimal there is not so helpful as when we are talking about sequences
+> (or indices in the circular buffer), the decimal makes more sense.
+> 
+
+Except that you either want your circular buffer size to be a power of 2
+or reduce with a conditional (eg: if (++x == SIZE) x = 0;) not a divide.
+
+	David
+
+
