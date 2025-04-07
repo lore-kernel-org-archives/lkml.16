@@ -1,58 +1,62 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9952C23BCEB;
-	Mon,  7 Apr 2025 07:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7194C227B95;
+	Mon,  7 Apr 2025 07:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010605; cv=none; b=UoN/6i/eBWBRBFlobNZ0yflSM3BzESH9krqJoJw8QJHB9PcxurI0AUD9f5l+Qmge7ZjBBxGItiDyQuAfUIsF+nlPmQg3RMBco1UUu1nXdYESMq2dW/6mHQ7W+nPgJAgnO1AhgsgSH96Ru3kKnlB82mOQosJiZ1ESQmQULVZDXew=
+	t=1744010621; cv=none; b=SCeCJUazsTvBh0MlptzxYNBsLwOrLk+8xytb5YF07JT/jUSMgSbF0JNE1rRFx6KZTIJfivZNx5EUNFN7EVwkMapypScCSib8VSnD2EON8iHwV/WS69ahayztdmTY04NYkqJKbS/p3V2d+1Jsf01g+NHfkZQaww3y6kBprwkhjEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010605; c=relaxed/simple;
-	bh=LXtR31hhNj5bSGd9vha9UPMijN0OPoRfHKxac3WDpOw=;
+	s=arc-20240116; t=1744010621; c=relaxed/simple;
+	bh=B75HXc0thdOwdIF/EGzdkMXXWZJN8Y18zVZgbubkOnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2hLw83qkJEFXpkEq5+kfN1upDcL6GNgYj9PRjJnbqG0H9MXtHpoM1BzB4F8KCrTfJYoZy6pTEniBR8l2xY/1lT8O9b+aYC1O8bSz/lh6EuYTOrNbcThrCuSnJmzZ+EPUj1sTBwmHplTTAnuztNY4wkjoCIYBCI4WSTSuGPhFcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c1AStlZT; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=thaT58J90RUHXJ5nUH1bAiHxxo766/WM/+jPB7F/uZf1ES++kKzqOlMAEKePMYGFsnU5AYlIFYAMhFDjPUHvcI9y8YEJDptIa6NcCWC3I1WEhpcI0jKvFHcDOD16BUb+ZR008qKoy4w1h/Fpjkdg1VnYg5Xw7VlzvCtmVQ+1W0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=lq3Af87W; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c1AStlZT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RtX1WX80CFak6EApQVjWRkMwAtvEofuse/CA/YuUqWA=; b=c1AStlZTOHcJSKZ5DIgrNVYaFl
-	29IgsOtrUBoZqrFgEnPCPNc8gO1qpkme3YUtGKJKSl0u16VGMx+aetmrIYV573jbVnDozKj8cywSu
-	+gkHWhmj7hxQqI9zrtZqX37kllFvDbSwN+EUNRsDkEBJ8GKVvZwPN5EIh5itAhDUU54WcrCIOTavw
-	7KbX2TmPp3CkZ6DT3NKy5cdD8kFCY9SnnTX4gkyvsQGAvqfkhWigtgRP8+5cPWsn5tP08r/3UfYNh
-	ffI07Nwf0Zpy53iGaIDnX7kvZJX+bt0VCO9X5ILLfmk5uB+GIPfkYGXBYrqwrh5zWwD+/IMPoN+El
-	0pv6prtg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1gpH-0000000GkJ9-076G;
-	Mon, 07 Apr 2025 07:23:23 +0000
-Date: Mon, 7 Apr 2025 00:23:22 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	virtio-comment@lists.linux.dev, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <Z_N9aqdeb9i0F9bl@infradead.org>
-References: <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
- <Z-99snVF5ESyJDDs@infradead.org>
- <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
- <20250404040838-mutt-send-email-mst@kernel.org>
- <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
- <20250404043016-mutt-send-email-mst@kernel.org>
- <F30D33D5-38CC-4397-8DC8-9EE1B0FEF40D@infradead.org>
- <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="lq3Af87W"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 6320B1F91A;
+	Mon,  7 Apr 2025 09:23:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1744010608;
+	bh=zX3SXc9F5y9akHBalpx7JJ69F5zZLipJTmxPwy4j2uA=;
+	h=Received:From:To:Subject;
+	b=lq3Af87W53fGWbfZKcvotScickDanNLw7phSBvWfVDpC6qnYeKFfSeyzAwajL5VSK
+	 P2EZYKKQ+aUOzSMnx3ZS7cwPbLj3yupC+QdfPUbd/vOYUsliKLl3l7K/HSFpDYb0HM
+	 Zmblnh85Ule4w24dU3wpwgQPOlBnxErplu970LypcB3adKqJaPgJ7kkGW3tSA8FHWo
+	 DPWkayO7avEgjDY30vN5JT7Yf69yC8eHcindRRgMOjfZNM8yr6HxtBR+HEkLLmU6u9
+	 Z3o/oqtlKT45GG+pLjLqmyiNY0ozlycr9FBk7QaB7TwTxFD2UqXoErLlQHSW5PV/dX
+	 vBB6ZXYAVRxXw==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 1F94E7F8D5; Mon,  7 Apr 2025 09:23:28 +0200 (CEST)
+Date: Mon, 7 Apr 2025 09:23:28 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sherry Sun <sherry.sun@nxp.com>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Hongxing Zhu <hongxing.zhu@nxp.com>,
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Message-ID: <Z_N9cO64FZwONcK9@gaggiata.pivistrello.it>
+References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+ <20231213092850.1706042-3-sherry.sun@nxp.com>
+ <20250404094130.GA35433@francesco-nb>
+ <DB9PR04MB8429588E7CF00BDC9CDA863F92AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,24 +65,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <DB9PR04MB8429588E7CF00BDC9CDA863F92AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
 
-On Fri, Apr 04, 2025 at 11:15:33AM +0100, David Woodhouse wrote:
-> Of course, the beauty of the restricted-dma-pool as supported by DT is
-> that it's a *system* memory buffer, which is actually OK as long as
-> it's reserved address space and not just part of normal system memory
-> that an unsuspecting guest might use for general purposes. So the
-> trusted part of the hypervisor (e.g. pKVM) can *allow* the VMM access
-> to that space.
+On Mon, Apr 07, 2025 at 07:18:32AM +0000, Sherry Sun wrote:
 > 
-> It doesn't *have* to be on-device. That just seemed like the more
-> natural way to do it for PCI.
+> 
+> > -----Original Message-----
+> > From: Francesco Dolcini <francesco@dolcini.it>
+> > Sent: Friday, April 4, 2025 5:42 PM
+> > To: Sherry Sun <sherry.sun@nxp.com>
+> > Cc: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > bhelgaas@google.com; krzysztof.kozlowski+dt@linaro.org;
+> > conor+dt@kernel.org; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx <linux-
+> > imx@nxp.com>; linux-pci@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+> > 
+> > Hello
+> > 
+> > On Wed, Dec 13, 2023 at 05:28:48PM +0800, Sherry Sun wrote:
+> > > Add wake-gpios property that can be used to wakeup the host processor.
+> > >
+> > > Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> > > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > index 81bbb8728f0f..fba757d937e1 100644
+> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > @@ -72,6 +72,12 @@ properties:
+> > >        L=operation state) (optional required).
+> > >      type: boolean
+> > >
+> > > +  wake-gpios:
+> > > +    description: If present this property specifies WAKE# sideband signaling
+> > > +      to implement wakeup functionality. This is an input GPIO pin for the
+> > Root
+> > > +      Port mode here. Host drivers will wakeup the host using the IRQ
+> > > +      corresponding to the passed GPIO.
+> > > +
+> > 
+> > From what I know it is possible to share the same WAKE# signal for multiple
+> > root ports. Is this going to work fine with this binding? Same question on the
+> > driver.
+> > 
+> > We do have design exactly like that, so it's not a theoretical question.
+> > 
+> The current design doesn't support such case, maybe some changes in the
+> driver could achieve that (mark the wake-gpio as GPIOD_FLAGS_BIT_NONEXCLUSIVE
+> and the interrupt as IRQF_SHARED, etc.).
 
-It isn't very natural.  For actual PCI devices it is a lot less efficient
-compared to bounce buffering in special host memory.  For virtual device
-that's not the case, but at least for Linux guest it still makes the setup
-a lot more complicated as we can't just reuse the restricted-dma-pool
-but need a new version of it that uses MMIO helpers and device specific
-setup code.
+Can you consider implementing this?
+
+> But usually each RC has its own WAKE# pin assigned. We have not come across a
+> case where multiple RC share the same WAKE# pin.
+
+We do have such design, with an NXP iMX95 SoC, available now.
+
+Francesco
 
