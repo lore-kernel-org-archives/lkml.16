@@ -1,89 +1,67 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F133195980;
-	Mon,  7 Apr 2025 14:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C259D1CAA70;
+	Mon,  7 Apr 2025 14:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035128; cv=none; b=HTHkR3DlpOTByMh/9Xf9l1QEKcwysURDRn8xl0YsIosgg8KUcPkw6mLwC/icJpW0zd79/97XszgzXbRsBosG8f0bPMPzNW094G/i7wpKRM9XT1Mj/cpUfr4oprgjNWZM0aomdSHyDmaArdO2R47PxB5rkznQ3kUO7Ufe1ibVVnc=
+	t=1744035230; cv=none; b=p5NZdgUTT6bPBGu6Q6h9kA/NS3jF3fOwy8iyH/FHYReVRVddz8D/egQngDb83oSefTIAZNfcpPYYHCUx9LCmLp1d5Db/NFv7wFNFWLP0dUkdviJhWgxamLjnzLGsJhf3UgvHrIuCTxCPv4v5Xdj99JpnSCBZYQDPvqOKga5RFcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035128; c=relaxed/simple;
-	bh=BM5cV4bBXrRvHTbU7sz/LUIUOjziIRu1j9LSZS//g88=;
+	s=arc-20240116; t=1744035230; c=relaxed/simple;
+	bh=ahGOKRGJmVuL3rnUqzbdjyTJAQIanf1NZjaOE+zSZes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q237In4ex+1s8puVHg6jTcRqpfRZN9uyZxQePz12ehwiJZYcrdwlR0Q0lyzXvplLUuqP45oYPvIr75Lk7e8S0tJhOkBr4foOJzmcJa3ZbRZxhjBVSPVO39qlfcKSMRb+djBa+tgmJlb4gngBeENeFGD6FsI3TAhx8vO38Xzx3Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+yFOOio; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAnpJRwW4yt6wvq2aUc8MwY5SiaFgD/N13H7MLJpTNlks1mwXUnpaV7AqKAdmyzwRDypMJCXMrjzb1tVHasC/5qfSpa2dYdBye0pGfodeAa3SzQDz0nzMFRrvgpb/y8LAxaNWVW7MgZT4l5dwBRHc5s0NIsDhvlXojnTfit+4PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osk59fOa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+yFOOio"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af93cd64ef3so2860485a12.2;
-        Mon, 07 Apr 2025 07:12:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744035126; x=1744639926; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmtDaVACLlSu94GW/amGh9wB9MWFIy2Gxw81cDDDK4A=;
-        b=X+yFOOiooRaYQm2sKTYKEIFMGo4WfAYY98jTrA+lkGEfPdy8Ky+fxKDK6LuvEYs4c+
-         8/MXQGCCe+y+cT5ABp3ocdmzvGrAYm3pvqZH1uHAjxriu1jRKtR8v+aff0ESdIjhhur3
-         /uoJ4Rw1LnfjCaPGXvC0AzAo4mwja1jj3tThmzw1YCIUTqwib9mnGdfjJgiLvI22ZS51
-         CEa3wv+qazuH1CqIVX2oo4pWWVjb9olg73SpfkOtqoOVIBn4IRBLIPAi5bYUDbHniiro
-         fFTHxeUINzW0WLBam5Ibgicr4xGgWpRokDXGXh4EnS32qJ6iFYZ9PpVuc0081JvMzTgs
-         qWZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744035126; x=1744639926;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pmtDaVACLlSu94GW/amGh9wB9MWFIy2Gxw81cDDDK4A=;
-        b=MX3yTtevrESt+GCZP0O3guBUtoz8cTHAF3GsB/+aZG/w4HhOGGh+p6EndWkAT8CVMW
-         tkqVKykOkyOwZzDwITJJSOAYGC8lNvDvvuCjT010qErRZ0q/lmRPlpcb+Pe0vnKSGYKo
-         BLL7vGKrNDumjcRvhOXf6M3KUO3l1y9RhGuKKpWYwWq8UYR0aN3yYYTLpy6Lt3Y/mYT9
-         pEbYOeeMVGoChtlLAN/Jn5wMGpP7VRrz1FUZtaJtUWzydQAiqpgGbLWHAocyVuCiKuqF
-         PD9D7JfWq2IMinE3XkCI4UVlDHbH51Rw8iIcfhX1kQICvKY6Zv0rUCbYBcqu53mA9Brm
-         vhhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVz+RNv6uSwMH/MexSUSBg9/gFqmALiHNJZCbeUz7+NaSNrI4w8KCgBkfCIa2ebdJ1s2cN7d72H@vger.kernel.org, AJvYcCXOa6/XdqbAlcDv9e/Mze36jH/aQFQ8tK/Gc4x4p2JMo1XyL4YQtZvcGEZqdv/KzPNDxDAIvk0wpykSPLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvrw++COZIiNy2oG5Nw05QvJXMtOwWu/YmXZcNwhbFrWxeHudg
-	Svgc3p4VN4lEP+r2zto6A1XTT4oYO4Dp4G0MtU95peAFf6/iYHE=
-X-Gm-Gg: ASbGncsJtSRt+o0t2UuTafEDJJ9OxlMbn1LA9JISNo5soKFUZ6kc916Wvq+8qlaGO/V
-	TiIqHtEB8KWupVmYzBNvMN33TZLRBLNx5vp5Q1JH8+joi0p/zIIOde0tBx1eiPxTFJzMkoCsjiE
-	bpBS5vr9KMX/nLKaNDxKlyCA3ep+isZ5aNYo2A4Zdn107dc3tqXpL/9K5P0L4XRvJQdu8zizhPf
-	pwuQnFoneArsBS/YhwQRWKceADpoKbko8po8APcXDp8HZSodDc7OczvbjgqW82b5rilpMw0vWi9
-	PYh6WF/DcxXGHUUuaTIDYWfwcgrtCg0Bhz+DekJOlBj1
-X-Google-Smtp-Source: AGHT+IHvhv5UUYDWcqF+cM5R69UNg07/j0fxkjqP4eIQvIrI9zOpS3f8WzeG+b0JrqNCswA2NlRY1w==
-X-Received: by 2002:a17:902:ef03:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-22a8a06cc5dmr160510185ad.27.1744035125271;
-        Mon, 07 Apr 2025 07:12:05 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-229785ad9c3sm81324745ad.30.2025.04.07.07.12.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 07:12:04 -0700 (PDT)
-Date: Mon, 7 Apr 2025 07:12:03 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com,
-	davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
-	horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pabeni@redhat.com, sdf@fomichev.me, syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] net: get ops lock under dev valid
-Message-ID: <Z_PdMxDnE1j4sFks@mini-arch>
-References: <67f36908.050a0220.0a13.027f.GAE@google.com>
- <tencent_ABAECE4C9727C606CDD2D6C67209852EC406@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osk59fOa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61733C4CEE7;
+	Mon,  7 Apr 2025 14:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744035230;
+	bh=ahGOKRGJmVuL3rnUqzbdjyTJAQIanf1NZjaOE+zSZes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Osk59fOafMhVKJyIc3lhaBtEhZ1E+eyNpYibhPmolxY9yHL6hdpODTieP4Q9XtglN
+	 bkfRhuGlDD+9zzCPjs3oIQUlH9L/kjmKdDBRmKbMxUwREyiELDmQrdH720kZTyxBQu
+	 UDMf8rg7ZM4u3436PtEPaHWmJIUiuW0t5RxZ6LzKooGc6mB0VmR+iiW+4QnLic91U8
+	 VRXAe4rgJmkZ231me51Y+r4EgW5S5JASYmaaK5Endvt1HJlUpLpZJTnGffYYAx6JQB
+	 Vtk2QO7tOpoBRvbBRXvLJdMXStl8+kuWOOWSivNXTzjrZnsLXwITp/zvZMeRhrKsem
+	 GoN4v7FDE44Gw==
+Date: Mon, 7 Apr 2025 09:13:49 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, tglx@linutronix.de,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, krzk+dt@kernel.org,
+	alex@ghiti.fr, aou@eecs.berkeley.edu, tim609@andestech.com,
+	daniel.lezcano@linaro.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] dt-bindings: riscv: add Andes QiLai SoC and the
+ Voyager board bindings
+Message-ID: <174403522889.2246903.6406254978033445523.robh@kernel.org>
+References: <20250407104937.315783-1-ben717@andestech.com>
+ <20250407104937.315783-3-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_ABAECE4C9727C606CDD2D6C67209852EC406@qq.com>
+In-Reply-To: <20250407104937.315783-3-ben717@andestech.com>
 
-On 04/07, Edward Adam Davis wrote:
-> Make sure that dev is not NULL before locking ops. 
+
+On Mon, 07 Apr 2025 18:49:30 +0800, Ben Zong-You Xie wrote:
+> Add DT binding documentation for the Andes QiLai SoC and the
+> Voyager development board.
 > 
-> Fixes: 8965c160b8f7 ("net: use netif_disable_lro in ipv6_add_dev")
-> Reported-by: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> ---
+>  .../devicetree/bindings/riscv/andes.yaml      | 25 +++++++++++++++++++
+>  MAINTAINERS                                   |  5 ++++
+>  2 files changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/riscv/andes.yaml
+> 
 
-I think this happened first?
-https://lore.kernel.org/netdev/Z_Pb9dku3R1wdTEp@mini-arch/T/#m733abfc2e974bf96cfdebc8a47aa58f39bf76b82
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
