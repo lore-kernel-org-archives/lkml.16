@@ -1,120 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A131D54EE
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF39215760
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045255; cv=none; b=tDEO/r5aOi7jzaAtIT/FoBVG70SwJYkHXAa8e1ExJzj5DEODwGPYKfajXu96CVpGV/B+c/YLXMX0+pNXDFBiOUnlOXI8BH0otDptC0MxnddmN7xPPvC3pAMAsHOrtoBijMxKB6XgHOfr5TGydzEBv0XZUBb2ItvFbDRruFjbFn8=
+	t=1744045258; cv=none; b=IBNfnLK7xECDC0kRTyLVsYpckeY26BXcwZZkFOA1UZmHF05O1jo5z6M82+5kWiY8lt47rFNXM9r9rnmuoxi2JT+3XQ9kIA9S61jgmQ0DwlOKIxryRj3eOBOx6MuPzPInYeHBluGmjtRaZ86Fp3ch/RREdP1YB3dqjl2VNOu9lZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045255; c=relaxed/simple;
-	bh=ulG/3ksGQhOb6YzURseStzy1EXvhbkyKTyfVCaK8SyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGda3diG2YJcgPw2yzQF7gUV4dviICdLIH4Z676OVHc6rJqcbZX4DnYzWP4OgOERCP5PfVfmRd0bfze62lZg9asGld1kjqlNBWA3D6Nq74brP6s92M64dJSs8Y7Py/Vdy5R9oWuUdv47xIUTqvbJCTbvkFpIB5GpxI/YQx0PwDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rl99jLRX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744045258; c=relaxed/simple;
+	bh=8EEyvQc+5pIBnE2p/7oYhHwo0mC7KQRRPdeL6ZI6qiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OpQAj6788TDffSia/B3yjRPi6y8nrWxm9/rZYcQwBxN7bZCDP9y/c9q29RfJ+1f6iVQJQXMcUFNxNQ72gGXRglbLswnJI3VbkBo7fQtUDBKDI6BJn2J8V5TGJJHbHRNnGDNZw8AwXgYwmuDwRXJnAyswbo+Wvms0LKpvP3pxsh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X97KDpLR; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rl99jLRX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8695DC4CEE7;
-	Mon,  7 Apr 2025 17:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744045254;
-	bh=ulG/3ksGQhOb6YzURseStzy1EXvhbkyKTyfVCaK8SyI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Rl99jLRXVvyQYdmBMGBK9z1gdjO2frTv9eX6gSEEGwkjjbnqvl+fHkv6tbaZnukN9
-	 D9bCJVnjq0AvSCN0Aq4xHHMG7pSeX5GuwskelskKNxuu6Zpp1FL0fW5If9kth3MMI+
-	 bqfmkhJ7oYxjvHhNGxmWI54LgNYjRrNvI5ZgG/bD0orzRO3ZMS76Qf8O4LpHuVvKP4
-	 q7U7c4/bnNsFhpS1uwEObZoiSHzB6Z60TAiCJEHMA++f3XCr60vEb1QItdWA8bHc7o
-	 MQzTnAnnxBjcVUCe4Lx1Z/nGhwceLpCt20+OgEIuvl7fvd61dcZc4fn7rkK+6HCG0E
-	 hLjD452BLHr7A==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 35B4DCE089F; Mon,  7 Apr 2025 10:00:54 -0700 (PDT)
-Date: Mon, 7 Apr 2025 10:00:54 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel <linux-kernel@vger.kernel.org>, frederic@kernel.org,
-	jpoimboe@kernel.org, peterz@infradead.org
-Subject: Re: [GIT PULL] Generic entry for ARM
-Message-ID: <4157fe23-8be8-4fd1-a69a-c59383b9516d@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CACRpkdZCiiMTwf7eGJJ9aCKFOC3_xTGv1JKQUijjyp+_++cZ_A@mail.gmail.com>
- <1277cefd-b080-42a5-bfe5-57296e7ccc3e@paulmck-laptop>
- <CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X97KDpLR"
+Message-ID: <1aec6dab-ed03-4ca3-8cd1-9cfbb807be10@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744045243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oLDAmjclRasSVpfEYONAaYZO702FQiJJq0bMQnxY2As=;
+	b=X97KDpLRfMghEYf9sxoBxmw793lbUNyIZX2MhCZr0epog6FScf9fPv/rbXMCRI4WlxGsF1
+	ACaKep6rqwnu785TYkn30Pqnpl9BJRWA+kOGZfrTVeDuXFPVxZz98GZ//C62FkDo4bfBee
+	qs640GM1x6TnhIGk7qK8bfPHB7/TZxI=
+Date: Mon, 7 Apr 2025 13:00:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
+Subject: Re: [RFC net-next PATCH 00/13] Add PCS core support
+To: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
+Cc: Kory Maincent <kory.maincent@bootlin.com>, netdev@vger.kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+ upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Clark Wang <xiaoning.wang@nxp.com>,
+ Claudiu Beznea <claudiu.beznea@microchip.com>,
+ Claudiu Manoil <claudiu.manoil@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
+ Ioana Ciornei <ioana.ciornei@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
+ Joyce Ooi <joyce.ooi@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Li Yang <leoyang.li@nxp.com>, Madalin Bucur <madalin.bucur@nxp.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>,
+ Naveen N Rao <naveen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Robert Hancock <robert.hancock@calian.com>,
+ Saravana Kannan <saravanak@google.com>, Shawn Guo <shawnguo@kernel.org>,
+ UNGLinuxDriver@microchip.com, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ Wei Fang <wei.fang@nxp.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linuxppc-dev@lists.ozlabs.org
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250407182738.498d96b0@kmaincent-XPS-13-7390>
+ <720b6db8-49c5-47e7-98da-f044fc38fc1a@linux.dev>
+ <CA+_ehUyAo7fMTe_P0ws_9zrcbLEWVwBXDKbezcKVkvDUUNg0rg@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <CA+_ehUyAo7fMTe_P0ws_9zrcbLEWVwBXDKbezcKVkvDUUNg0rg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 31, 2025 at 11:48:40PM +0200, Linus Walleij wrote:
-> On Wed, Mar 12, 2025 at 7:00 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+On 4/7/25 12:46, Christian Marangi (Ansuel) wrote:
+> Il giorno lun 7 apr 2025 alle ore 18:33 Sean Anderson
+> <sean.anderson@linux.dev> ha scritto:
+>>
+>> On 4/7/25 12:27, Kory Maincent wrote:
+>> > On Thu,  3 Apr 2025 14:18:54 -0400
+>> > Sean Anderson <sean.anderson@linux.dev> wrote:
+>> >
+>> >> This series adds support for creating PCSs as devices on a bus with a
+>> >> driver (patch 3). As initial users,
+>> >>
+>> >> - The Lynx PCS (and all of its users) is converted to this system (patch 5)
+>> >> - The Xilinx PCS is broken out from the AXI Ethernet driver (patches 6-8)
+>> >> - The Cadence MACB driver is converted to support external PCSs (namely
+>> >>   the Xilinx PCS) (patches 9-10).
+>> >>
+>> >> The last few patches add device links for pcs-handle to improve boot times,
+>> >> and add compatibles for all Lynx PCSs.
+>> >>
+>> >> Care has been taken to ensure backwards-compatibility. The main source
+>> >> of this is that many PCS devices lack compatibles and get detected as
+>> >> PHYs. To address this, pcs_get_by_fwnode_compat allows drivers to edit
+>> >> the devicetree to add appropriate compatibles.
+>> >
+>> > I don't dive into your patch series and I don't know if you have heard about it
+>> > but Christian Marangi is currently working on fwnode for PCS:
+>> > https://lore.kernel.org/netdev/20250406221423.9723-1-ansuelsmth@gmail.com
+>> >
+>> > Maybe you should sync with him!
+>>
+>> I saw that series and made some comments. He is CC'd on this one.
+>>
+>> I think this approach has two advantages:
+>>
+>> - It completely solves the problem of the PCS being unregistered while the netdev
+>>   (or whatever) is up
+>> - I have designed the interface to make it easy to convert existing
+>>   drivers that may not be able to use the "standard" probing process
+>>   (because they have to support other devicetree structures for
+>>   backwards-compatibility).
+>>
 > 
-> > Once you are confident that you have all the needed "noinstr"
-> > and "__always_inline" instances in place, could you please add
-> > ARCH_WANTS_NO_INSTR to the list of "select" clauses for "config ARM"
-> > in arch/arm/Kconfig?
-> 
-> I would love to do that, I'm just not sure what this really entails.
+> I notice this and it's my fault for taking too long to post v2 of the PCS patch.
+> There was also this idea of entering the wrapper hell but I scrapped that early
+> as I really feel it's a workaround to the current problem present for
+> PCS handling.
 
-I freely confess that I have only seen this done, not done it myself.
+It's no workaround. The fundamental problem is that drivers can become
+unbound at any time, and we cannot make consumers drop their references.
+Every subsystem must deal with this reality, or suffer from
+user-after-free bugs. See [1-3] for discussion of this problem in
+relation to PCSs and PHYs, and [4] for more discussion of my approach.
 
-> Surely this patchset tags a noinstr on every entry point from
-> exceptions and syscall software interrupts.
-> Documentation/core-api/entry.rst is pretty good at explaining this.
-> 
-> But what makes me uncertain are things that are tagged
-> "notrace", such as void notrace cpu_init(void) - surely we
-> don't trace, but should that be "noinstr"? It's even marked
-> "notrace" but not "noinstr" in arm64.
+[1] https://lore.kernel.org/netdev/YV7Kp2k8VvN7J0fY@shell.armlinux.org.uk/
+[2] https://lore.kernel.org/netdev/20220816163701.1578850-1-sean.anderson@seco.com/
+[3] https://lore.kernel.org/netdev/9747f8ef-66b3-0870-cbc0-c1783896b30d@seco.com/
+[3] https://lpc.events/event/17/contributions/1627/
 
-I know that __always_inline does the trick, but I am not sure about
-notrace (my guess is "no" on notrace).  I added the objtool maintainers
-on CC.
+> And the real problem IMHO is that currently PCS handling is fragile and with too
+> many assumptions. With Daniel we also discussed backwards-compatibility.
+> (mainly needed for mt7621 and mt7986 (for mediatek side those are the 2
+> that slipped in before it was correctly complained that things were
+> taking a bad path)
+> 
+> We feel v2 permits correct support of old implementations.
+> The ""legacy"" implementation pose the assumption that PCS is never removed
+> (unless the MAC driver is removed)
+> That fits v2 where a MAC has to initially provide a list of PCS to
+> phylink instance.
 
-No argument on the usefulness of documentation.  ;-)
+And what happens when the driver is unbound from the device and suddenly
+a PCS on that list is free'd memory but is in active use by a netdev?
 
-							Thanx, Paul
+> With this implementation, a MAC can manually parse whatever PCS node structure
+> is in place and fill the PCS.
+> 
+> As really the "late" removal/addition of a PCS can only be supported with fwnode
+> implementation as dedicated PCS driver will make use of that.
 
-> cpu_init() is called from e.g.:
-> asmlinkage void secondary_start_kernel(struct task_struct *task)
-> OK should this also be noinstr? Or is that just implied because
-> of asmlinkage?
+I agree that a "cells" approach would require this, but
+
+- There are no in-tree examples of where this is necessary
+- I think this would be easy to add when necessary
+
+> I honestly hope we can skip having to enter the wrapper hell.
+
+Unfortunately, this is required by the kernel driver model :l
+
+> Anyway I also see you made REALLY GOOD documentation.
+
+Thanks. One of my peeves is subsystems that have zero docs...
+
+> Would be ideal to
+> collaborate for that. Anyway it's up to net maintainers on what path to follow.
 > 
-> <linux/compiler_types.h> will resolve to:
-> 
-> #if defined(CC_USING_HOTPATCH)
-> #define notrace                 __attribute__((hotpatch(0, 0)))
-> #elif defined(CC_USING_PATCHABLE_FUNCTION_ENTRY)
-> #define notrace                 __attribute__((patchable_function_entry(0, 0)))
-> #else
-> #define notrace                 __attribute__((__no_instrument_function__))
-> #endif
-> 
-> which I read as three different ways of saying "don't patch here".
-> 
-> Which is confusingly similar or identical to what noinstr does, I do see that
-> noinstr pushes the code to separate section but that in turn might
-> be what __attribute__((__no_instrument_function__)) and
-> friends does?
-> 
-> Are they equivalent?
-> 
-> sched_clock_noinstr() is tagged noinstr and sched_clock() is
-> tagged notrace, so there must be a difference here.
-> 
-> secondary_start_kernel() is tagged "notrace" on arm64 but
-> not on arm, should it be tagged "noinstr" or "notrace"?
-> 
-> This kind of stuff makes me uncertain about how this is to be
-> done. A "noinstr vs notrace" section in Documentation/core-api/entry.rst
-> would help a lot I think!
-> 
-> Yours,
-> Linus Walleij
+> Just my 2 cent on the PCS topic.
+
+--Sean
