@@ -1,94 +1,66 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0585221729;
-	Mon,  7 Apr 2025 20:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE56121D5AF;
+	Mon,  7 Apr 2025 20:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744059225; cv=none; b=X3VecWdtjRICpZPs1IKqzRk8qfFzt3aEAQRIjyTDcO6NVO7MHrlFbpIYTaO0ALeDF4rEdzlnVyxWRHWe+gYaWlFP2viSmf/17RxvxPWPFd41blbsZLmW+x2dsvHfCLSBw47kC6bLPBN/5d/czuY48kAafwOA/WdSN7qtjhCbwwo=
+	t=1744059381; cv=none; b=uTLEejTUOuepknueLLnJwyFkAWTjMTIpWpBEsX5RO8daCyhUvBhRNeLGcQrAYiA43gwaWyCQ4xIlfx0a7HOpD80DGQ0UkK2BtMdNs91WvRVXIzguIJJhOuwawLUVXZqwg15yfWwgfWQftvqNW9O7ve6Xgq1tJFRx59mibVOP0tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744059225; c=relaxed/simple;
-	bh=ONyrYfJdstF09oesH8qf4tZareb3hyXSOEj90mpSUt0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LLVpHVHhygWZ8oVjTKg3/rQ15687gFvSTSdOjqfqezWTm0Up/VEFhX7KjB4MUrTAn7cvgBiK0F7IXY32uJP1KMoyc2YqUmebqoj8EbZ83Ur/PXM++jKeg47SeFX7XiwZSsAeeNCiNSu2QPthRNON9AQFEePW8j/37SjptDD1P5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=azMaEq7i; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744059381; c=relaxed/simple;
+	bh=RO7w2J6nAsfI/DwvkstqI7+SgGlQhV7BLLe0jHCLBy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajjF81C2gdkVoPQOB+CEl1D8mUDjscUbB5ujNE0zvS4I3KQ6ayzgC7o0OfFEzRbGogrYV5SAImstz5n6nBYSscN2oaXtCi6SGzQs/7gWmKu2BLm8e0MPzlOtmt/w13m/0jL7+e4ivsY+Qm2s7m8EImizUcJPpBKu93LxelN2z8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uvk33lDi; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="azMaEq7i"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744059210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D/9NxyHKb0L4iiKZ01cs/8rSz9fvN+ya3tGixgSTi3Y=;
-	b=azMaEq7icYQRXd6FGqsEZPS2hzwa0KuSEQGVq38nc2ef6PzSq5qy3ULGCb2jv1EqxFa0bN
-	Z4DbI0QCrUzF7O0+wPPkgCADYf7qITM0T0w0UCzMsldkzFRGSE0npNCoW2AUR5icfYx1mT
-	s+gbLpKeJT8OEJcZS/jGZmt11ULSqiw=
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvk33lDi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QnrWz52DdRgvqwK1WLvja1IK58llQGZZoh3Yy09j65w=; b=uvk33lDiVmEiX3Vp0yZtD2zb+O
+	u9xMm1aOBGGvQuD535znuOw7TfMj7VtMDLJRlqzBBHzt9LCWktI09BuIRv+IcKBtrZ7ut3ZL19Qhx
+	4Fun5d4CUsU7ZjA7opKlh0Ctiu2WYit2Kqj34/BxqKLAVaLuvaFSn8ZChr+di7w+CL3nEl81rU/94
+	Zc9kNNiiN5iareMTUpefV81hby1gYApNyn+sAh2mnX7lzD8xTkcwz2M8U+rF6+wsEkRWSphbuTCto
+	JqycVCem5Rqq+TMK6DD1HLCohp66z8x9bmstUIZhF3AdMCuR+o3exCLw0MZyRBFuZhI9/yU75ST9L
+	I13aC5sA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1tVt-0000000DhOr-3XX9;
+	Mon, 07 Apr 2025 20:56:14 +0000
+Date: Mon, 7 Apr 2025 21:56:13 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Michal Hocko <mhocko@kernel.org>
+Subject: Re: [RFC PATCH 2/2] MAINTAINERS: add MM subsection for the page
+ allocator
+Message-ID: <Z_Q77Xi-_zeSYyrJ@casper.infradead.org>
+References: <20250407200508.121357-3-vbabka@suse.cz>
+ <20250407200508.121357-4-vbabka@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with
- strscpy()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <202504071330.90FC6D8@keescook>
-Date: Mon, 7 Apr 2025 22:53:17 +0200
-Cc: James Smart <james.smart@broadcom.com>,
- Ram Vegesna <ram.vegesna@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-hardening@vger.kernel.org,
- linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <60521C02-BD56-4BAD-AB32-561F7A1AAA6A@linux.dev>
-References: <20250226185531.1092-2-thorsten.blum@linux.dev>
- <202504071126.37117C5D@keescook>
- <67E5FE26-F258-4690-A466-236A7E7484E8@linux.dev>
- <202504071330.90FC6D8@keescook>
-To: Kees Cook <kees@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407200508.121357-4-vbabka@suse.cz>
 
-On 7. Apr 2025, at 22:30, Kees Cook wrote:
-> On Mon, Apr 07, 2025 at 09:01:53PM +0200, Thorsten Blum wrote:
->> On 7. Apr 2025, at 20:28, Kees Cook wrote:
->>> On Wed, Feb 26, 2025 at 07:55:26PM +0100, Thorsten Blum wrote:
->>>> strncpy() is deprecated for NUL-terminated destination buffers; use
->>>> strscpy() instead.
->>>> 
->>>> Compile-tested only.
->>>> 
->>>> Link: https://github.com/KSPP/linux/issues/90
->>>> Cc: linux-hardening@vger.kernel.org
->>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>>> ---
->>> 
->>> Standard question for these kinds of conversions: Why is it safe that
->>> this is not NUL padded? I haven't found where this buffer is being
->>> zeroed out, but it probably is (given the "- 1" on the length), but
->>> without run-time testing, this needs much more careful analysis.
->> 
->> I think this was submitted before I started to explain this better.
->> 
->> 'wr_obj' is the zeroed out 'buf' returned from sli_config_cmd_init().
-> 
-> I don't see how dma->virt and buf are associated?
+On Mon, Apr 07, 2025 at 10:05:10PM +0200, Vlastimil Babka wrote:
+> Extra reviewers would be welcome, including/not limited the people I
+> Cc'd based on my recollection and get_maintainers --git
+> Also if I missed any related file please lmk. Thanks.
 
-Since dma is NULL, sli_config_cmd_init() returns config->payload.embed
-early (it doesn't get to return dma->virt) and before we have
-
-    memset(buf, 0, SLI4_BMBX_SIZE);
-    config = buf;
-
-and SLI4_BMBX_SIZE is 256 which matches the size of sli4_cmd_sli_config.
-
-It's not very obvious tbh.
-
+I appreciate the offer.  I feel entirely unqualified to review patches
+to the page allocator, although I'll probably end up touching it quite
+a lot when we move to separately allocated folios.
