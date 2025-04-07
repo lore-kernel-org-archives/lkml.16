@@ -1,261 +1,261 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4818E21D3E9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047494; cv=fail; b=PwBx6sr3i/zW8t3qWqDnnKH/C3ftBamShGsx3QOeJAU6nrStE9MR2vu2/ApDDCntWBrHVohJVZNr2CXkGNYLprNY6wFJU28a3IiP+UQNbjI1HpRpcFFtdog9K/ZmKN1zUiHlp1c/0RGF4RuLlsOgrHtGARK1qyOc0+ThxLSoPfQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047494; c=relaxed/simple;
-	bh=0rk3R9SZ+AXNmTy8D21OmTkESyjvQg71OQKf90faPW8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WkJD9csSRtfAj27mTUUFVtzS4joxkGA8rmLqHcox1rqGEr78X8Vb3vi/i3FxY6JlQ4q4AJSsL741eIo4IUxKD0OxiNYdjFJM5ic+1kRgvKdbtS3CCizG1bsPT9/CHKVgCoYH+HxsSjhIfLv/zn2G1IUimND9n/EPuc3o8JsQEHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cgXAbbfq; arc=fail smtp.client-ip=40.107.92.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B06521660D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744047583; cv=none; b=DnrfA365Gf6hWGNWHrEgFt2EJ4HA9AAzo2954lA5qdgYdOk0gHsNk1tJ2ZGfy+Bm7Iyt5vRAYmCHA4MJZOE5D9eXLVH9h0PaENTrzAlKdFWwR1pzYyyEzjdQvbEJl+P8SFsn6KIDF/1WOs5x3zIUui1fAVgE6COHKB8DE3Qa4Kg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744047583; c=relaxed/simple;
+	bh=gk7Pms5ggU4Mz+jBefE6aQUbZOdAXgc3uKZ/o8JLcRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T/x8SRcROQD0UzdDMZHcILZ7YyOFCFd3JOgfvqEz8NGgrXX++LiyuhX8ygg29ZAJRoAnFFT8lVjz+kD/uwbKL5hgJ8KodJDTqoB4/sOWxWbKWx1gUY/b6mYhE74N3oAVVfHrIcbuWQWXcAUdUDMFHLlCLLe4pWb4BVqUrehT/Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bokn3DaP; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cgXAbbfq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D3UP8fikSUI3wSlsciU+bzo7DknIwJ4CXxIctvYRopgapfgkUFKQk+y4JgF2shCOlPknUir25kZZSSoAEVcnckOu5XQJy0vQ8go0LlfkH9Q6llndkWpWOygoJyEQRQNKQkwHnqOxvzgv4OJGf5T1RVJxD/pnORIimx0Nj+b1AKGILqf+RCrY8/N9hGRGEgqwr1S2g/UDweaStTZNw6l2s0NWK142r+WYSrwFvHF9dJP9ujlSw/n02pU2f1uN7QBhxiaaF252yPQRnsEEt3+xEoe0ieqA1v9JQ4I04nMp8h+F4i14k2ubneIwKupZdsNqCBcQRl/+WByxf0htVxCLXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dzu4iNpyeuOBW8qNSg9xV+4SnO95FhoMf0dI192aRfA=;
- b=k+IDQuCVORZvBJ/i26s2p4sehncXTt5l3F4FLYtx17kuTqfwnCH4IfhZ5gISyv3oZ7ETb/QLif1T8eh7vYGOzkv9SNBeN3T1mUl1tk/wMeDHZzj+WFG5tCo2ZDxAC8XLgUBEMAaGRCuoXydUl/elZqXyWz0YcNTsav3tSzEhhcWw8M7aG0CY4fY8n4DkNMMdMfwwmxzKKyP6lym2qiyruLHIZu9ZB2i0N+bIKvMDN5Ep26n22NPtIt2LRSZVnLkrTflVyN3exz7GqD+D+OBBfrLsgLLdn9wJBjI9EjgrKeCUgxbC2jXzTmTPzsDK04c6O2SAVUHyidHTerF4UCU8Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dzu4iNpyeuOBW8qNSg9xV+4SnO95FhoMf0dI192aRfA=;
- b=cgXAbbfqJTk8t8noIX3sRfTIV7QSXxtxqr0b4RWw2p+PcRJ0d5DL6OXH/vNbHhGW1ua6qIabCFGsq9hvRZ50nh+iOsFnjtwnzpzejc7N8a190rt6n8F/nMos+yEVMKWuqoCZemUgfgzQmA5jVfe9aQeqO+pxpNw7kVyNalQou4E=
-Received: from DM6PR01CA0017.prod.exchangelabs.com (2603:10b6:5:296::22) by
- PH7PR12MB6668.namprd12.prod.outlook.com (2603:10b6:510:1aa::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Mon, 7 Apr
- 2025 17:38:08 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:5:296:cafe::82) by DM6PR01CA0017.outlook.office365.com
- (2603:10b6:5:296::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.34 via Frontend Transport; Mon,
- 7 Apr 2025 17:38:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Mon, 7 Apr 2025 17:38:08 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 12:38:03 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-	<iommu@lists.linux.dev>
-CC: <Vasant.Hegde@amd.com>, Dheeraj Kumar Srivastava
-	<dheerajkumar.srivastava@amd.com>
-Subject: [PATCH v5 8/8] iommu/amd: Add documentation for AMD IOMMU debugfs support
-Date: Mon, 7 Apr 2025 23:05:00 +0530
-Message-ID: <20250407173500.1827-9-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250407173500.1827-1-dheerajkumar.srivastava@amd.com>
-References: <20250407173500.1827-1-dheerajkumar.srivastava@amd.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bokn3DaP"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2241c95619eso8378245ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 10:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744047581; x=1744652381; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PDFKuqPeswYIIkk2eM8stbEtqZO/k06yxbdJkpWX+KA=;
+        b=bokn3DaPFVsvsfbqw29TvH/CT81hG8/ft1va6APxQ2x+bPYxr6shlKypVHWJRb4ri4
+         IMk9giv55sOfq2QD2cuexvIuI9MfVPDF8ddbnZjtTnAVV3ueGA3kLrT052tBF9R6muFv
+         qKFlTdDKdRI6gLdokPe31Lk6PcvkPgfMGzpNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744047581; x=1744652381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PDFKuqPeswYIIkk2eM8stbEtqZO/k06yxbdJkpWX+KA=;
+        b=f8WZZAu7DH03Ule2fZIsnK9QRQXGYP0MmfP/cmxA4MgZHFd50dp/eMuiLAsh/61wVl
+         W5G93HvgushBComDo1Y6q3Rfty6jHkoDZq+VzpFqz5Uyqtk2QmvE9jT3KxJzpNErapPJ
+         hVhuCXTziFIQb6y83j+9DxXKYEpD7T1xyg+6HbC1b/9i5zFIhEZ/kRRkGB1DZJTEUIsS
+         7meNb1ymqlEnjAXK8VRZbIKG3ZBNN60VOi27rDBx/V8hZYgNTPfbXOA+9EcqD1nYNmKD
+         mDAZkbEu+g0pkmbYG6y801W45Al/SB8f1vpLzO/haMj2DcuTEYnUvgbM+rUFzKtotRpc
+         e88A==
+X-Forwarded-Encrypted: i=1; AJvYcCUnW/gUlBbceMW/35e5gMkpJz1BR9cSZTjrsaa7tyyUW6Nk8WLfurqIRbn2hbfyKyYqzEkYiR4tBY0f2ZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlWKmMdoycKGD08fOEMA/l+9wADAIDjrwc/SzCujqUDroSYjPz
+	vTXKnpOyRXoOjc5gEBvYeAX+ndKZGuLVlE3ASMMD/M1Ku8xontyiC1VL6G3QTrVHmFC6um88W2I
+	NKA==
+X-Gm-Gg: ASbGncsOmoU9EscW1frpwFQXvzCmiyv0jPs3Yb4pIdSqhLKHseDwjcS+hRQJRYgoCfc
+	R90Ar/iCvvN8C7cvj7BNV/rNCaY3vrFRQxHJ2kybJD3ymVe9nrzhzdVV3KYoTUQHBmEgbpUESwn
+	am36rJ9l9GXnoHR9EJnE4S7OeP5ouxmFcPUWxhoxgUOnOyPHnxnZGvv0BtM7ll5WjOD5wcNWfIn
+	j82cTB71xmBfU0ivizd81TmphjeQ4m9TUK7bigcGHdsN2n9nEeDxNhbrMuXySTCfVwRWtO1a2yt
+	jjK/8QmiRmuDRFLwTMfSuZV4vBTeC8stNJ1e1Kmt8mqMKazIb60gBLDueeuYNqD+cmm53/58htQ
+	8gAhHf72dWptH
+X-Google-Smtp-Source: AGHT+IE3AjYGaT1TldrXXrBL5LdsM3sIvev6cMhtBws4Ks+aMw5EpqJssAvWkDWATQODI9z9QYc/EA==
+X-Received: by 2002:a17:902:f609:b0:215:a96d:ec36 with SMTP id d9443c01a7336-22a8a0584ebmr72269795ad.5.1744047581098;
+        Mon, 07 Apr 2025 10:39:41 -0700 (PDT)
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com. [209.85.215.172])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ad9b7sm84093525ad.24.2025.04.07.10.39.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 10:39:39 -0700 (PDT)
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af5cdf4a2f8so3395950a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 10:39:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJn2sSwm0h1V1Tieos9wXWjWHuLS3G2UTvoZttl3UXXUwscDe1GANPnI9dh9Bp6hyk656Q05rsapSq3Qk=@vger.kernel.org
+X-Received: by 2002:a17:90a:f945:b0:2f6:dcc9:38e0 with SMTP id
+ 98e67ed59e1d1-306a4758cf3mr22729577a91.0.1744047578869; Mon, 07 Apr 2025
+ 10:39:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|PH7PR12MB6668:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56cedbbf-7fbc-4a9e-d044-08dd75faf5fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?x6/6WorvsLE2MfY/KwcBN6bMucp1RNZPvREg6jgysa1rgtgOW2CNQ5ZW31Oz?=
- =?us-ascii?Q?BtIS8dXtMQWbcnx1aIlQ3f3DVlmlrkUGydJDy/p790Ww2LqUElswLb522sz+?=
- =?us-ascii?Q?NfLKi+E/aiIgFSo8mrYSA4V+fsdPh4iQWidwYPnlzsoUMKe0m9CkbArDNtO6?=
- =?us-ascii?Q?yxhTsDlTrZeWEBRvnIRvzl0UFObvv3M5v7y1Bmo3nPqok79ldrx8tFyrA5Qo?=
- =?us-ascii?Q?MUWbseawCtMnKBoIIKj40Ydh5vdPMk42p0kog1MFjptPllTZHlyacGZQUWdW?=
- =?us-ascii?Q?9anrLsMaLYolaWTCUriYUcZ+WfI5XczTa3El1IxT76Ky6WSGUF/1w4roSl3u?=
- =?us-ascii?Q?7mOiNtW8XlOrpu3shdxnURUqgxJCOMPD0R372KgXXqeSt2dPD0afBHx/xD53?=
- =?us-ascii?Q?HT1nJ0+Bi9w6t851aJV86KtXEwktoO8mc+gVw3YUL0OC7arlbQv11ttJXCoN?=
- =?us-ascii?Q?0teca7yjOPC88GNOTD+eW5di8QzQcAzqbeUj7te3/0GY1qCY/JjpdgLOi1wX?=
- =?us-ascii?Q?uD4+7QmN3pGdDltdCPBjkVD+SsoBeVr+3XtbqqYA2Z27rpeRSgObaD9Kfe7w?=
- =?us-ascii?Q?7jDbE0f7WNv49KXvfNEYV2RCZhr7HoYsmeRoEpIzUTI78HRd+7q3QoWgtd/+?=
- =?us-ascii?Q?9Bd6e9w7eOX08C1Kh1yVo463rCiaxXbnaPRCq2N31of9n3Z+iO3De8cff0q9?=
- =?us-ascii?Q?/aIEtN1a3HbPn6dgiWl93s+Hrk+vrvdcCeVN16JbohWS3ITyIKtlmnMBcfoq?=
- =?us-ascii?Q?yWXb8bMLSzlCgO9Rr1OQWcrNXDSL7KjfeH78SfKXL1r4X5QxqoJ7zQsVna+Y?=
- =?us-ascii?Q?hrncnnat2HcR24r1HvwSeVvfIw67ptacdMsxA9LJ5aZryAzIyhCPrHyqTTKe?=
- =?us-ascii?Q?9dFYd7DzK77dW3hG11fQ8oCQ0fPKsQNCp734x9Lh4Ll/O+XOKc8CSZCyYfe0?=
- =?us-ascii?Q?PNiN19/gmhuEogJzdhEIw2cal/VYGMj5xvkX/Nkeg9zRINhNw2vAYd+jS8k8?=
- =?us-ascii?Q?9/CkKMibMnk7rbuu3fVnYXJSvCpL1UGspqIAiMo2sugn1UfF2vYmB8BJ9+EL?=
- =?us-ascii?Q?tQ1DOScKJAexS0+/f9F4JOEw2qHdhkX6ZDD6hp4UpLAD0fjDXjyywyRCjpqv?=
- =?us-ascii?Q?opU+xxBgOHQcsQie1hBxaJnVAXb/s5eWzoXkp+m41vpQPN1HAZwoFA0IYLNp?=
- =?us-ascii?Q?pk4TRedEWhcHDNPnxPKfz9mjG2UeDBBBAd3OxGeDhybPWpi6b1LN/wtzFBC3?=
- =?us-ascii?Q?rctt6wZGEyFl90uPZojs64b5SHrqsNFqy0qGg5vXnTgcQ9fSCQHATl04Og9F?=
- =?us-ascii?Q?JMpzPDrA+Vk5/VssDylhZ7RDLgqzcSKY8jiybNocPlh89BC6owvsDn7bxw4T?=
- =?us-ascii?Q?EgI8HVTZa3he7JLSBQtv8LVKDjip7TXA5jl0VMIqzPF3B7BvGk78NkbSuTa8?=
- =?us-ascii?Q?lO67AMPUrUmd1GRg7omKKoQkgXjlD3h7E6eKevzExSEebyqLe6G20rfLdh4z?=
- =?us-ascii?Q?7/A06esiMjSU8V0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 17:38:08.4931
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56cedbbf-7fbc-4a9e-d044-08dd75faf5fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6668
+References: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com> <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com> <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com> <20250407042058-mutt-send-email-mst@kernel.org>
+ <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com> <20250407044743-mutt-send-email-mst@kernel.org>
+ <b331a780-a9db-4d76-af7c-e9e8e7d1cc10@redhat.com> <20250407045456-mutt-send-email-mst@kernel.org>
+ <a86240bc-8417-48a6-bf13-01dd7ace5ae9@redhat.com> <33def1b0-d9d5-46f1-9b61-b0269753ecce@redhat.com>
+ <88d8f2d2-7b8a-458f-8fc4-c31964996817@redhat.com>
+In-Reply-To: <88d8f2d2-7b8a-458f-8fc4-c31964996817@redhat.com>
+From: Daniel Verkamp <dverkamp@chromium.org>
+Date: Mon, 7 Apr 2025 10:39:09 -0700
+X-Gmail-Original-Message-ID: <CABVzXAmMEsw70Tftg4ZNi0G4d8j9pGTyrNqOFMjzHwEpy0JqyA@mail.gmail.com>
+X-Gm-Features: ATxdqUEz43TGWrMKYfRndFlXjP-cvulXZBTkkQ4WcXYsTky_PROiRhjDfo9dcJs
+Message-ID: <CABVzXAmMEsw70Tftg4ZNi0G4d8j9pGTyrNqOFMjzHwEpy0JqyA@mail.gmail.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+To: David Hildenbrand <david@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org, 
+	Cornelia Huck <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Wei Wang <wei.w.wang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation describing how to use AMD IOMMU debugfs support to
-dump IOMMU data structures - IRT table, Device table, Registers (MMIO and
-Capability) and command buffer.
+On Mon, Apr 7, 2025 at 6:13=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 07.04.25 11:13, David Hildenbrand wrote:
+> > On 07.04.25 11:11, David Hildenbrand wrote:
+> >> On 07.04.25 10:58, Michael S. Tsirkin wrote:
+> >>> On Mon, Apr 07, 2025 at 10:54:00AM +0200, David Hildenbrand wrote:
+> >>>> On 07.04.25 10:49, Michael S. Tsirkin wrote:
+> >>>>> On Mon, Apr 07, 2025 at 10:44:21AM +0200, David Hildenbrand wrote:
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>
+> >>>>>>>> Whoever adds new feat_X *must be aware* about all previous featu=
+res,
+> >>>>>>>> otherwise we'd be reusing feature bits and everything falls to p=
+ieces.
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> The knowledge is supposed be limited to which feature bit to use.
+> >>>>>>
+> >>>>>> I think we also have to know which virtqueue bits can be used, rig=
+ht?
+> >>>>>>
+> >>>>>
+> >>>>> what are virtqueue bits? vq number?
+> >>>>
+> >>>> Yes, sorry.
+> >>>
+> >>> I got confused myself, it's vq index actually now, we made the spec
+> >>> consistent with that terminology. used to be number/index
+> >>> interchangeably.
+> >>>
+> >>>> Assume cross-vm as an example. It would make use of virtqueue indexe=
+s 5+6
+> >>>> with their VIRTIO_BALLOON_F_WS_REPORTING.
+> >>>
+> >>>
+> >>> crossvm guys really should have reserved the feature bit even if they
+> >>> did not bother specifying it. Let's reserve it now at least?
+> >>
+> >> Along with the virtqueue indices, right?
+> >>
+> >> Note that there was
+> >>
+> >> https://lists.gnu.org/archive/html/qemu-devel/2023-05/msg02503.html
+> >>
+> >> and
+> >>
+> >> https://groups.oasis-open.org/communities/community-home/digestviewer/=
+viewthread?GroupId=3D3973&MessageKey=3Dafb07613-f56c-4d40-8981-2fad1c723998=
+&CommunityKey=3D2f26be99-3aa1-48f6-93a5-018dce262226&hlmlt=3DVT
+> >>
+> >> But it only was RFC, and as the QEMU implementation didn't materialize=
+,
+> >> nobody seemed to care ...
+> >
+> > Heh, but that one said:
+> >
+> > +\item[ VIRTIO_BALLOON_F_WS_REPORTING(6) ] The device has support for
+> > Working Set
+> >
+> > Which does not seem to reflect reality ...
 
-Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
----
- Documentation/ABI/testing/debugfs-amd-iommu | 114 ++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-amd-iommu
+Please feel free to disregard these features and reuse their bits and
+queue indexes; as far as I know, they are not actually enabled
+anywhere currently and the corresponding guest patches were only
+applied to some (no-longer-used) ChromeOS kernel trees, so the
+compatibility impact should be minimal. I will also try to clean up
+the leftover bits on the crosvm side just to clear things up.
 
-diff --git a/Documentation/ABI/testing/debugfs-amd-iommu b/Documentation/ABI/testing/debugfs-amd-iommu
-new file mode 100644
-index 000000000000..7d6cf1f602ed
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-amd-iommu
-@@ -0,0 +1,114 @@
-+What:		/sys/kernel/debug/iommu/amd/iommu<x>/mmio
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This is an input read/write access file. In this file, the user input
-+		mmio register offset for iommu<x> to print corresponding mmio register
-+		of iommu<x>.
-+
-+		Example:
-+		$ echo "0x18" > /sys/kernel/debug/iommu/amd/iommu00/mmio
-+		$ cat /sys/kernel/debug/iommu/amd/iommu00/mmio
-+
-+		Output:
-+		Offset:0x18 Value:0x000c22000003f48d
-+
-+What:		/sys/kernel/debug/iommu/amd/iommu<x>/capability
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This is an input read/write access file. In this file, the user input
-+                capability register offset for iommu<x> to print corresponding capability
-+		register of iommu<x>.
-+
-+		Example:
-+		$ echo "0x10" > /sys/kernel/debug/iommu/amd/iommu00/capability
-+		$ cat /sys/kernel/debug/iommu/amd/iommu00/capability
-+
-+		Output:
-+		Offset:0x10 Value:0x00203040
-+
-+What:		/sys/kernel/debug/iommu/amd/iommu<x>/cmdbuf
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This file is an output read only file that contains iommu<x> command
-+		buffer entries.
-+
-+		Examples:
-+		$ cat /sys/kernel/debug/iommu/amd/iommu<x>/cmdbuf
-+
-+		Output:
-+		CMD Buffer Head Offset:339 Tail Offset:339
-+		  0: 00835001 10000001 00003c00 00000000
-+		  1: 00000000 30000005 fffff003 7fffffff
-+		  2: 00835001 10000001 00003c01 00000000
-+		  3: 00000000 30000005 fffff003 7fffffff
-+		  4: 00835001 10000001 00003c02 00000000
-+		  5: 00000000 30000005 fffff003 7fffffff
-+		  6: 00835001 10000001 00003c03 00000000
-+		  7: 00000000 30000005 fffff003 7fffffff
-+		  8: 00835001 10000001 00003c04 00000000
-+		  9: 00000000 30000005 fffff003 7fffffff
-+		 10: 00835001 10000001 00003c05 00000000
-+		 11: 00000000 30000005 fffff003 7fffffff
-+		[...]
-+
-+What:		/sys/kernel/debug/iommu/amd/devid
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This is an input read/write file that takes device id user input.
-+		This input can be used for dumping iommu data structures like
-+		interrupt remapping table, device table etc.
-+
-+		Example:
-+		1.
-+		$ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
-+		$ cat /sys/kernel/debug/iommu/amd/devid
-+
-+		Output:
-+		0000:01:00.0
-+
-+		2.
-+		$ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
-+		$ cat /sys/kernel/debug/iommu/amd/devid
-+
-+		Output:
-+		0000:01:00.0
-+
-+What:		/sys/kernel/debug/iommu/amd/devtbl
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This is an output read only file that contains device table entry for
-+		the device id input given in /sys/kernel/debug/iommu/amd/devid.
-+
-+		Example:
-+		$ cat /sys/kernel/debug/iommu/amd/devtbl
-+
-+		Output:
-+		DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
-+		0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-+
-+What:		/sys/kernel/debug/iommu/amd/irqtbl
-+Date:		January 2025
-+Contact:	Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-+Description:
-+		This is an output read only file that contains IRT table valid entries
-+		for the device id input given in /sys/kernel/debug/iommu/amd/devid.
-+
-+		Example:
-+		$ cat /sys/kernel/debug/iommu/amd/irqtbl
-+
-+		Output:
-+		DeviceId 0000:01:00.0
-+		IRT[0000] 0000000000000020 0000000000000241
-+		IRT[0001] 0000000000000020 0000000000000841
-+		IRT[0002] 0000000000000020 0000000000002041
-+		IRT[0003] 0000000000000020 0000000000008041
-+		IRT[0004] 0000000000000020 0000000000020041
-+		IRT[0005] 0000000000000020 0000000000080041
-+		IRT[0006] 0000000000000020 0000000000200041
-+		IRT[0007] 0000000000000020 0000000000800041
-+		[...]
--- 
-2.25.1
+> I dug a bit more into cross-vm, because that one seems to be the only
+> one out there that does not behave like everybody else I found (maybe goo=
+d,
+> maybe bad :) ).
+>
+>
+> 1) There was temporarily even another feature (VIRTIO_BALLOON_F_EVENTS_VQ=
+)
+> and another queue.
+>
+> It got removed from cross-vm in:
+>
+> commit 9ba634b82b55ba762dc8724676b2cf9419460145
+> Author: Daniel Verkamp <dverkamp@chromium.org>
+> Date:   Thu Jul 11 11:29:52 2024 -0700
+>
+>      devices: virtio-balloon: remove event queue support
+>
+>      VIRTIO_BALLOON_F_EVENTS_VQ was part of a proposed virtio spec change=
+.
+>
+>      It is not currently supported by upstream Linux, so removing this sh=
+ould
+>      have no effect except for guest kernels that had CHROMIUM patches
+>      applied.
+>
+>      The virtqueue indexes for the ws-related queues are decremented to f=
+ill
+>      the hole left by the removal of the event VQ; these are non-standard=
+ as
+>      well, so they do not have virtqueue indexes assigned in the virtio s=
+pec,
+>      but the proposed spec extension did actually use vq indexes 5 and 6.
+>
+>      BUG=3Db:214864326
+>
+>
+> 2) cross-vm is aware of the upstream Linux driver
+>
+> They thought your fix would go upstream; it didn't.
+>
+> commit a2fa119e759d0238a42ff15a9aff0dfd122afebd
+> Author: Daniel Verkamp <dverkamp@chromium.org>
+> Date:   Wed Jul 10 16:16:28 2024 -0700
+>
+>      devices: virtio-balloon: warn about queue index mismatches
+>
+>      The Linux kernel virtio-balloon driver spec non-compliance related t=
+o
+>      queue numbering is being fixed; add some diagnostics to our device t=
+hat
+>      help to check if everything is working as expected.
+>
+>      <https://lore.kernel.org/virtualization/CACGkMEsg0+vpav1Fo8JF1isq4Ef=
+8t4_CFN1scyztDO8bXzRLBQ@mail.gmail.com/T/>
+>
+>      Additionally, replace the num_expected_queues() function with per-qu=
+eue
+>      checking to avoid the need for the duplicate feature checks and queu=
+e
+>      count calculation; each pop_queue() call will be checked using the `=
+?`
+>      operator and return a more useful error message if a particular queu=
+e is
+>      missing.
+>
+>      BUG=3DNone
+>      TEST=3Dcrosvm run --balloon-page-reporting ...
+>
+>
+> IIRC, in that commit they switched to the "spec" behavior.
+>
+> That's when they started hard-coding the queue indexes.
+>
+> CCing Daniel. All Linux versions should be incompatible with cross-vmm re=
+garding free page reporting.
+> How is that handled?
 
+In practice, it only works because nobody calls crosvm with
+--balloon-page-reporting (it's off by default), so the balloon device
+does not advertise the VIRTIO_BALLOON_F_PAGE_REPORTING feature.
+
+(I just went searching now, and it does seem like there is actually
+one user in Android that does try to enable page reporting[1], which
+I'll have to look into...)
+
+In my opinion, it makes the most sense to keep the spec as it is and
+change QEMU and the kernel to match, but obviously that's not trivial
+to do in a way that doesn't break existing devices and drivers.
+
+[1]: https://cs.android.com/android/platform/superproject/main/+/main:packa=
+ges/modules/Virtualization/android/virtmgr/src/crosvm.rs;l=3D1079;drc=3Dcaf=
+f2827914c0918260ff76cd55f6e3dc6323d51
