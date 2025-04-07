@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68E8217F55
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E0324EF73
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047175; cv=none; b=eJi0kk3Pk18KSeN8Ooczp6wWT/WfUSZRvWZoiCSqtuQenxYxvkBgmk1jhrmPoYBmdjnglIrq15PeD8D5KRV0CHaU/ze14dnjn7SfaRnGjmEhtuOFj9/co5VKLVlYXigMe9A+aCAa7+GqpJArIxYHl35F6oiUeLM+l8NvvbjoCqw=
+	t=1744047180; cv=none; b=VP+0svYFMzsIIrQHEEHWWHU/rM4OwPvAf8PHXfpted0IX4vUfnBF55nOdZFtTH76Vu00XHMA5s4xRsuu6u+thtWuTLj9g691zC4QwlYte3OGQkuUGOBv/e0aIIkv9rzothJ+okhLbzETruqGAQDRF822cbq1ZJD5h2Kpz9U+b6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047175; c=relaxed/simple;
-	bh=bjhEBABbFfyeL3ryhS1ZcBP1MBr6Yd+wbkegepdkE2s=;
+	s=arc-20240116; t=1744047180; c=relaxed/simple;
+	bh=/KCV+k19D/ZEilHrdhSH00/mLdriTfar57/idijqgys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DOHU1FQ6lrQSygstmubmaUgJOmHCuuzo6JUutDTAtQdnUDamqZJRn9AOiK99SvPHmilm3BH+TAYqOgLE+Lb5mZs1VaeWjU5PDZpLw9nt4vYiMthR8kmgehl2RmxfGxxBBv6/28iELDT06mEgsJkR4+aso0+Kb249m2EstfVGfE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XIymoSgT; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=YG87XxfUvfOXUMc3BA6n9F5JX0c8cW1achbL0Dcw0NYKS9S4E4tpLsEEJMIdgRvOmbttaqtQVDPDXJv+52STdijKloT4JC/rdPIxcrmLXiXeopuIQlOieXXvGazgf0ljRFUmHqL2W7hhMl1SyltH2weAksCgSuk5qUForSdHEKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Guo1yGQu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIymoSgT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Guo1yGQu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744047173;
+	s=mimecast20190719; t=1744047176;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BZh2K3E3QGemkZ831hKXCiq0LiByQJrgxf/Rwqw+Kco=;
-	b=XIymoSgTX5oaI0PnyngkdCH5sgOv6+NjpQg7KQDDvcdHOJQjFNSG3hDblTNsHdAdaNJOlx
-	iOUFpqS7nlTEjUkcKQmMUhLlHNSCZB0oIpyR/LzIZcKfPVYN5dLUvnnXqnbbhVoYhqK8ci
-	R79owvU0pltfTv5S+SHFoxrUQpzmn50=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=otJF277m8loBQ1n+65+voNXR2haFn/JCnsEQVYJTyYs=;
+	b=Guo1yGQu/kgtMmc17KmBXGyndGlXCFQshetEFt9JPS/fIkqeKvcXZTbQdT4pmQcHa3Giy4
+	ogqLXVxH5EMuvH47TgyP/fsr1NzuMT0HEIvv12BFmsuM2hx0l5dL0cMxrbarAr2tx6GUeE
+	MxFPSPjh8k/zJ6JVhTxtzOiCXjzkXzw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-8dXyNwatN2aaKvH06GtA5w-1; Mon,
- 07 Apr 2025 13:32:49 -0400
-X-MC-Unique: 8dXyNwatN2aaKvH06GtA5w-1
-X-Mimecast-MFC-AGG-ID: 8dXyNwatN2aaKvH06GtA5w_1744047166
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-C64szBcENQGLYe0u3vFJoA-1; Mon,
+ 07 Apr 2025 13:32:55 -0400
+X-MC-Unique: C64szBcENQGLYe0u3vFJoA-1
+X-Mimecast-MFC-AGG-ID: C64szBcENQGLYe0u3vFJoA_1744047173
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CE9171809CA5;
-	Mon,  7 Apr 2025 17:32:46 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE3D21956050;
+	Mon,  7 Apr 2025 17:32:52 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 430071955BC0;
-	Mon,  7 Apr 2025 17:32:40 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 636A21956094;
+	Mon,  7 Apr 2025 17:32:47 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
 Cc: Michal Schmidt <mschmidt@redhat.com>,
@@ -59,9 +59,9 @@ Cc: Michal Schmidt <mschmidt@redhat.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 18/28] dpll: zl3073x: Read optional pin properties from firmware
-Date: Mon,  7 Apr 2025 19:31:48 +0200
-Message-ID: <20250407173149.1010216-9-ivecera@redhat.com>
+Subject: [PATCH 19/28] dpll: zl3073x: Implement input pin selection in manual mode
+Date: Mon,  7 Apr 2025 19:31:49 +0200
+Message-ID: <20250407173149.1010216-10-ivecera@redhat.com>
 In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
 References: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
@@ -73,185 +73,172 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The firmware (DT, ACPI...) can specify properties for particular
-pins. Input pins are stored in 'input-pins' sub-node and output
-pins in 'output-pins'. Each pin is represented by separate node
-in 'input-pins' or 'output-pins'.
+Implement input pin state setting if the DPLL is running in manual mode.
+The driver indicates manual mode if the DPLL mode is one of ref-lock,
+forced-holdover, freerun and NCO (numerically controlled oscillator).
 
-The properties that are supported:
-* reg - integer that specifies pin index
-* label - string that is used by driver as board label
-* type - string that indicates pin type
+Use these modes to implement input pin state change between connected
+and disconnected states. When the user set the particular pin as
+connected the driver marks this input pin as forced reference and
+switches the DPLL mode to ref-lock. When the use set the pin as
+disconnected the driver switches the DPLL to freerun or forced holdover
+mode. The switch to holdover mode is done if the DPLL has holdover
+capability (e.g is currently locked with holdover acquired).
 
 Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/dpll/dpll_zl3073x.c | 102 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 98 insertions(+), 4 deletions(-)
+ drivers/dpll/dpll_zl3073x.c | 114 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 111 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dpll/dpll_zl3073x.c b/drivers/dpll/dpll_zl3073x.c
-index 3ff53a333a6e9..cf2cdd6dec263 100644
+index cf2cdd6dec263..ad2a8d383daaf 100644
 --- a/drivers/dpll/dpll_zl3073x.c
 +++ b/drivers/dpll/dpll_zl3073x.c
-@@ -73,10 +73,12 @@ ZL3073X_REG8_IDX_DEF(dpll_ref_prio,		0x652,
-  * struct zl3073x_dpll_pin_info - DPLL pin info
-  * @props: DPLL core pin properties
-  * @package_label: pin package label
-+ * @fwnode: pin firmware node
+@@ -274,6 +274,68 @@ zl3073x_dpll_selected_ref_get(struct zl3073x_dpll *zldpll, u8 *ref)
+  *
+  * Return 0 in case of success or negative value otherwise.
   */
- struct zl3073x_dpll_pin_info {
- 	struct dpll_pin_properties	props;
- 	char				package_label[8];
-+	struct fwnode_handle		*fwnode;
- };
- 
- /**
-@@ -482,6 +484,62 @@ static const struct dpll_device_ops zl3073x_dpll_device_ops = {
- 	.mode_get = zl3073x_dpll_mode_get,
- };
- 
-+/**
-+ * zl3073x_dpll_pin_fwnode_get - get fwnode for given pin
-+ * pin: pointer to pin structure
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() on the returned
-+ * fwnode pointer.
-+ *
-+ * Returns the firmware node for the given pin if it is present or
-+ * NULL if it is missing.
-+ */
-+static struct fwnode_handle *
-+zl3073x_dpll_pin_fwnode_get(struct zl3073x_dpll_pin *pin)
++static int
++zl3073x_dpll_selected_ref_set(struct zl3073x_dpll *zldpll, u8 ref)
 +{
-+	struct zl3073x_dpll *zldpll = pin_to_dpll(pin);
-+	struct fwnode_handle *pins_node, *pin_node;
-+	const char *node_name;
-+	u8 idx;
++	struct zl3073x_dev *zldev = zldpll->mfd;
++	u8 mode, mode_refsel;
++	int rc;
 +
-+	if (zl3073x_dpll_is_input_pin(pin))
-+		node_name = "input-pins";
-+	else
-+		node_name = "output-pins";
++	mode = zldpll->refsel_mode;
 +
-+	/* Get node containing input or output pins */
-+	pins_node = device_get_named_child_node(zldpll->mfd->dev, node_name);
-+	if (!pins_node) {
-+		dev_dbg(zldpll->mfd->dev, "'%s' sub-node is missing\n",
-+			node_name);
-+		return NULL;
++	switch (mode) {
++	case DPLL_MODE_REFSEL_MODE_REFLOCK: /* Manual mode with ref selected */
++		if (ref == ZL3073X_REF_NONE) {
++			switch (zldpll->lock_status) {
++			case DPLL_LOCK_STATUS_LOCKED_HO_ACQ:
++			case DPLL_LOCK_STATUS_HOLDOVER:
++				/* Switch to forced holdover */
++				mode = DPLL_MODE_REFSEL_MODE_HOLDOVER;
++				break;
++			default:
++				/* Switch to freerun */
++				mode = DPLL_MODE_REFSEL_MODE_FREERUN;
++				break;
++			}
++			/* Keep selected reference */
++			ref = zldpll->forced_ref;
++		} else if (ref == zldpll->forced_ref) {
++			/* No register update - same mode and same ref */
++			return 0;
++		}
++		break;
++	case DPLL_MODE_REFSEL_MODE_FREERUN: /* Manual mode without no ref */
++	case DPLL_MODE_REFSEL_MODE_HOLDOVER:
++		if (ref == ZL3073X_REF_NONE)
++			/* No register update - keep current mode */
++			return 0;
++
++		/* Switch to reflock mode and update ref selection */
++		mode = DPLL_MODE_REFSEL_MODE_REFLOCK;
++		break;
++	default:
++		/* For other modes like automatic or NCO ref cannot be selected
++		 * manually
++		 */
++		return -EOPNOTSUPP;
 +	}
 +
-+	/* Get pin HW index */
-+	idx = zl3073x_dpll_pin_index_get(pin);
++	/* Build mode_refsel value */
++	mode_refsel = FIELD_PREP(DPLL_MODE_REFSEL_MODE, mode) |
++		      FIELD_PREP(DPLL_MODE_REFSEL_REF, ref);
 +
-+	/* Enumerate pin nodes and find the requested one */
-+	fwnode_for_each_child_node(pins_node, pin_node) {
-+		u32 reg;
++	/* Update dpll_mode_refsel register */
++	rc = zl3073x_write_dpll_mode_refsel(zldev, zldpll->id, mode_refsel);
++	if (rc)
++		return rc;
 +
-+		if (fwnode_property_read_u32(pin_node, "reg", &reg))
-+			continue;
++	/* Store new mode and forced reference */
++	zldpll->refsel_mode = mode;
++	zldpll->forced_ref = ref;
 +
-+		if (idx == reg)
-+			break;
-+	}
-+
-+	/* Release pin parent node */
-+	fwnode_handle_put(pins_node);
-+
-+	dev_dbg(zldpll->mfd->dev, "Firmware node for %s%u%c %sfound\n",
-+		zl3073x_dpll_is_input_pin(pin) ? "REF" : "OUT", idx / 2,
-+		zl3073x_dpll_is_p_pin(pin) ? 'P' : 'N',
-+		pin_node ? "" : "NOT ");
-+
-+	return pin_node;
++	return rc;
 +}
 +
- /**
-  * zl3073x_dpll_pin_info_package_label_set - generate package label for the pin
-  * @pin: pointer to pin
-@@ -548,8 +606,10 @@ zl3073x_dpll_pin_info_package_label_set(struct zl3073x_dpll_pin *pin,
-  * zl3073x_dpll_pin_info_get - get pin info
-  * @pin: pin whose info is returned
-  *
-- * The function allocates pin info structure, generates package label
-- * string according pin type and its order number.
-+ * The function looks for firmware node for the given pin if it is provided
-+ * by the system firmware (DT or ACPI), allocates pin info structure,
-+ * generates package label string according pin type and its order number
-+ * and optionally fetches board label from the firmware node if it exists.
-  *
-  * Returns pointer to allocated pin info structure that has to be freed
-  * by @zl3073x_dpll_pin_info_put by the caller and in case of error
-@@ -558,14 +618,16 @@ zl3073x_dpll_pin_info_package_label_set(struct zl3073x_dpll_pin *pin,
- static struct zl3073x_dpll_pin_info *
- zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
+ static int
+ zl3073x_dpll_connected_ref_get(struct zl3073x_dpll *zldpll, u8 *ref)
  {
-+	struct zl3073x_dev *zldev = pin_to_dev(pin);
- 	struct zl3073x_dpll_pin_info *pin_info;
-+	const char *pin_type;
+@@ -396,6 +458,48 @@ zl3073x_dpll_input_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
+ 	return 0;
+ }
  
- 	/* Allocate pin info structure */
- 	pin_info = kzalloc(sizeof(*pin_info), GFP_KERNEL);
++static int
++zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
++					 void *pin_priv,
++					 const struct dpll_device *dpll,
++					 void *dpll_priv,
++					 enum dpll_pin_state state,
++					 struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll *zldpll = dpll_priv;
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	u8 new_ref;
++	int rc;
++
++	switch (zldpll->refsel_mode) {
++	case DPLL_MODE_REFSEL_MODE_REFLOCK:
++	case DPLL_MODE_REFSEL_MODE_FREERUN:
++	case DPLL_MODE_REFSEL_MODE_HOLDOVER:
++		if (state == DPLL_PIN_STATE_CONNECTED) {
++			/* Choose the pin as new selected reference */
++			new_ref = zl3073x_dpll_pin_index_get(pin);
++		} else if (state == DPLL_PIN_STATE_DISCONNECTED) {
++			/* No reference */
++			new_ref = ZL3073X_REF_NONE;
++		} else {
++			NL_SET_ERR_MSG_MOD(extack,
++					   "Invalid pin state for manual mode");
++			return -EINVAL;
++		}
++
++		rc = zl3073x_dpll_selected_ref_set(zldpll, new_ref);
++		break;
++	default:
++		/* In other modes we cannot change input reference */
++		NL_SET_ERR_MSG(extack,
++			       "Pin state cannot be changed in current mode");
++		rc = -EOPNOTSUPP;
++		break;
++	}
++
++	return rc;
++}
++
+ static int
+ zl3073x_dpll_output_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
+ 					  void *pin_priv,
+@@ -472,6 +576,7 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
+ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
+ 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
++	.state_on_dpll_set = zl3073x_dpll_input_pin_state_on_dpll_set,
+ };
+ 
+ static const struct dpll_pin_ops zl3073x_dpll_output_pin_ops = {
+@@ -627,11 +732,14 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
  	if (!pin_info)
  		return ERR_PTR(-ENOMEM);
  
--	/* Set pin type */
-+	/* Set default pin type */
- 	if (zl3073x_dpll_is_input_pin(pin))
+-	/* Set default pin type */
+-	if (zl3073x_dpll_is_input_pin(pin))
++	/* Set default pin type and capabilities */
++	if (zl3073x_dpll_is_input_pin(pin)) {
  		pin_info->props.type = DPLL_PIN_TYPE_EXT;
- 	else
-@@ -577,6 +639,34 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
- 	/* Generate package label for the given pin */
- 	zl3073x_dpll_pin_info_package_label_set(pin, pin_info);
- 
-+	/* Get firmware node for the given pin */
-+	pin_info->fwnode = zl3073x_dpll_pin_fwnode_get(pin);
-+	if (!pin_info->fwnode)
-+		/* Return if it does not exist */
-+		return pin_info;
-+
-+	/* Look for label property and store the value as board label */
-+	fwnode_property_read_string(pin_info->fwnode, "label",
-+				    &pin_info->props.board_label);
-+
-+	/* Look for pin type property and translate its value to DPLL
-+	 * pin type enum if it is present.
-+	 */
-+	if (!fwnode_property_read_string(pin_info->fwnode, "type", &pin_type)) {
-+		if (!strcmp(pin_type, "ext"))
-+			pin_info->props.type = DPLL_PIN_TYPE_EXT;
-+		else if (!strcmp(pin_type, "gnss"))
-+			pin_info->props.type = DPLL_PIN_TYPE_GNSS;
-+		else if (!strcmp(pin_type, "int"))
-+			pin_info->props.type = DPLL_PIN_TYPE_INT_OSCILLATOR;
-+		else if (!strcmp(pin_type, "synce"))
-+			pin_info->props.type = DPLL_PIN_TYPE_SYNCE_ETH_PORT;
-+		else
-+			dev_warn(zldev->dev,
-+				 "Unknown or unsupported pin type '%s'\n",
-+				 pin_type);
+-	else
++		pin_info->props.capabilities =
++			DPLL_PIN_CAPABILITIES_STATE_CAN_CHANGE;
++	} else {
+ 		pin_info->props.type = DPLL_PIN_TYPE_GNSS;
 +	}
-+
- 	return pin_info;
- }
  
-@@ -584,11 +674,15 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
-  * zl3073x_dpll_pin_info_put - free pin info
-  * @pin_info: pin info to free
-  *
-- * The function deallocates given pin info structure.
-+ * The function deallocates given pin info structure and firmware node handle.
-  */
- static void
- zl3073x_dpll_pin_info_put(struct zl3073x_dpll_pin_info *pin_info)
- {
-+	/* Put firmware handle if it is present */
-+	if (pin_info->fwnode)
-+		fwnode_handle_put(pin_info->fwnode);
-+
- 	/* Free the pin info structure itself */
- 	kfree(pin_info);
- }
+ 	pin_info->props.phase_range.min = S32_MIN;
+ 	pin_info->props.phase_range.max = S32_MAX;
 -- 
 2.48.1
 
