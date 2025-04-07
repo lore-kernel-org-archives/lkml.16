@@ -1,121 +1,103 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A77120966B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E942144A1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067514; cv=none; b=kqI2ejy1OwzlhglnkX1nlmLWoGtNjs81r6GypcRKve3wTrQh1OdcxPjEX4Hm25wz3bffTZRKZNMyu381UD2LI4EmGjCWkr/0kT3awq4gILQgeDPuHmDSy3kvjPg1VZpJjJT9/7ydoDdPqYbvRn41M1Md0ThbEi2NHlZmxe3veEs=
+	t=1744067663; cv=none; b=UTHornOa23GzOefM0+W7u8yD+TX/cxEsEqvSwY7oN9FmKz8C4lGumyYbWeHFJBgpTtQ97iP0RyOrprzBM10DqEPM3wPcUbcjICp/9WCOxoUfVBMBlppmTP2Idv4XLLnIQyYSFsVWFOVGI6whZ72k9R1hfzblwZKtEYb0YdYyhJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067514; c=relaxed/simple;
-	bh=DyfkzHNaCLk5BrsigApA5Tn7gIVqUxs4a11J1ccvnzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TjQ3FyPG8hgfbVY6KWLwswiL89buBGMimiABSp6iX9vEYX884moonxgleyNNr7OaRGZ4j3B1d/lgOuWya1WiRiZ799qW//X+YX4krlXCEKCDM+HW4XrC5GrkNW5PPHg5Mg1bw1/nOEaotLh+6yStgZS+9EQvXhasaGzATvsO2C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=EzScG7cA; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744067663; c=relaxed/simple;
+	bh=FVWh5NPkxLNXUaVX+AXOHfYXjVGZbj/Zpz0e7/c3jUA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=l6NwrDEDDNKqTnLmqdTOy6uARDLMR3Gaf+E320TPMJT60TcmEncgpmmKO8pGSgWaT2RntqXQa1TtjQ3cPmIN9Yi9B/LHHTN2gKWUITpiSu7eRckBzNmQdXMhauaV+mun1vSVG4xyH1fuQPX5POSRrMogmUHdVfSxPMHgfzYuH40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUuPrtdp; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="EzScG7cA"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id 1scCu2O71f1UX1vd9ursow; Mon, 07 Apr 2025 23:11:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1vd8ubnoNRlrs1vd9uvXX6; Mon, 07 Apr 2025 23:11:51 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=67f45bb7
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=GjqoV8KzObx_hdbUdTgA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bjzMiuiu1gDDSU1k3HJRMsaY2GZgvKUeAPV/ny0Wq8E=; b=EzScG7cAEgnu2cdpTOmdg7caQQ
-	fxF2AG47Ar1p6wFmllJ169cyzE3+q08mQozTXWCv8X9HkLBOHyY6nYOm9vO5R7rHfbGHo8chsSDBh
-	tx91fpo7KHqOuaj2p6lkDpVZkrPhwg/ejue89YTmxOBaivQNyiaWrqdn7JFHgEbV5L1tUXp/umEl8
-	09lXe0MgJegNBWfe/eMk1BLY68tlHzFxzd+DIcp+c9kVfJ/GVX9P0o1Yhs6c3GGUZ9aUUcxAUiAGz
-	Q/p+0/bjtZ4dwI1kh7WwDpWHqy6BE8NDt+XXsYQAbUpN4lXoPEQYCAACkKDhAp+7iQ0sO+5/IhYTf
-	Zqlr7cnQ==;
-Received: from [201.172.174.147] (port=34070 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u1vd8-00000003Pbm-0muh;
-	Mon, 07 Apr 2025 18:11:50 -0500
-Message-ID: <95ae8a4e-c8d5-441e-84b9-b27655f68641@embeddedor.com>
-Date: Mon, 7 Apr 2025 17:11:41 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUuPrtdp"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac7bd86f637so888027166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744067660; x=1744672460; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iwVSTTQToz1Si8xB4Dm4R1UDLYWcbQsamHW0cZfFfXw=;
+        b=cUuPrtdpNu96PCLXA1QYT2gwK3lx7rjgkinh01jk/FTw0eLhoqulth0lTWQfU662Q1
+         Vp7Sln/n92jpNEGlI5/UPxFer7mrDvmAnqApDFeyCpu9+nHHY3uZ0TUDtyrUOpBZ/kwh
+         j7vfL5ZASnqQGIh+Gb+crXED4XBmAI/5rOyY1Nqm0t4IM6juShqua3vKSrGk6A2V1Z/i
+         dADZ5CASD0/Qc0PD9W/SIvVEzsgnzj3Glmb+NuX6xjwIMwsfM5mCOls6lKrhd85rLyaG
+         1INNoNn5HdJOkK2BcVfOkV7OVUkSat7VmyTIjdMLXkfG3adeByihJWZKBIN22XoaKJ1A
+         WJ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744067660; x=1744672460;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iwVSTTQToz1Si8xB4Dm4R1UDLYWcbQsamHW0cZfFfXw=;
+        b=ftR6tqm/Zh7pesVO7MOBELNJaC5AqzD1diVzfWsOyryqiTlmtpEeqSAEp0XpoZiqK/
+         qI6gIeb4RbzfCnJslZTdQelWkQ2waYQY98RTj/3i3IzaPvuzRo7IGxIJueOMIZs4GLde
+         RqU9gV65App6ISJQCyEIChbZdxj7f97T/dkl3ThXqV0B3jxd++utCkr/LRUiCS1VqMXn
+         msRJ8oZhLqadVQmTOxp0NGBHTEN6S7Yu/46BsZinJY/S/SeNiA+FXz5SrBC1+SmwgyyS
+         7SxGrOZdUooTZ0Q+C1+opa9juVpiLXafz/+cQf6JzqBc0A+uzf7lnxd1OQimtE0+Cqcq
+         NdBw==
+X-Gm-Message-State: AOJu0Ywhds8/Vv7a4sPsTaNFmvGFyYUMlKaO6h+YY1Ff/x0Xpr4Rgmnb
+	jZiyLRjl1LoIVeFqTtqqwoIvu0OcuXA8FlZ/JPHrjcI26U2B2hXf
+X-Gm-Gg: ASbGncvowbMAMcy+iJXQPASS6M1meJluQ3lzjCWb+x7TFUI4ppgloTlrx8l10JQQm0u
+	yepu09DeX5yuoqVpi0mCgEk7gb0XjIxQbtubLo2EYIIRJyOPEDHtRrqtAIvwXfyfFD0mcGENFrl
+	NCyibCFFYE5rdQObZZ4PJUfdpXRSyH21iuxSj8zSUMJngO18eB2aKV3vB9/yzkN9NUHuYspTi7n
+	caKnKyjXhUcJxV5sGcV+kZLh9739r002PlxXm416BL10KHwLj85YryJmh7Myw4uztwQqX78QmWB
+	gIu0NgzyvSdsI8iVTDSP6LaGDWXD6BZarsEBKBDtrhPxzCeDbO41Skc=
+X-Google-Smtp-Source: AGHT+IEu793rfnRUE6OyaAQJX6Ur7iItwmF1zYiZiKf8alvcfaUjAZHFb3sd5MfyDjl+mS4XpRHKfA==
+X-Received: by 2002:a17:907:a0d:b0:abf:6a8d:76b8 with SMTP id a640c23a62f3a-ac81a5bd06amr104421266b.11.1744067659718;
+        Mon, 07 Apr 2025 16:14:19 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c1085sm805151966b.183.2025.04.07.16.14.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 07 Apr 2025 16:14:19 -0700 (PDT)
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	willy@infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-mm@kvack.org,
+	Wei Yang <richard.weiyang@gmail.com>
+Subject: [RESEND Patch v2 0/3] maple_tree: Fix the replacement of a root leaf node
+Date: Mon,  7 Apr 2025 23:13:51 +0000
+Message-Id: <20250407231354.11771-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] w1: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z_QpOlDTvyfRs4Su@kspp> <202504071326.564A591@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504071326.564A591@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u1vd8-00000003Pbm-0muh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:34070
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPAxx8T2Lz0sIlCY1X9+84Gy2c0w4ACrXxfcqsgAWG2pnQGXsypk2zCg81dVuxkQCc+OaC8n8JagqMPmORzDvW5Zn02j3u9ISRNesyX5PjNVGGfvgB5z
- nHUOjqaIDZDZB8GntTc0JZmbzC0zRO4QkV7egATjc21lYjwP1JScI2TaRtQxnzmwootPWkHKQ1xrkITnzUY1HrYmH7RbENC28gtpct4JO0pIAsmwb78fB1De
 
+On destroy we should set each node dead. But current
+code miss this when the maple tree has only the root node.
 
+The reason is mt_destroy_walk() leverage mte_destroy_descend() to set
+node dead, but this is skipped since the only root node is a leaf.
 
-On 07/04/25 14:26, Kees Cook wrote:
-> On Mon, Apr 07, 2025 at 01:36:26PM -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with these changes, fix the following warnings:
->>
->> drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->> drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->> Changes in v2:
->>   - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
-> 
-> Thanks! You didn't want to use object assignments? Those are type
-> checked. :)
+Patch 1 fixes this.
 
-Mmh... you're so persuasive :p - OK, I'll respin!
+When adding a test case, I found we always get the new value even we leave the
+old root node not dead. It turns out we always re-walk the tree in mas_walk().
+It looks like a typo on the status check of mas_walk().
 
-> 
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> 
+Patch 2 fixes this.
 
-Thanks!
---
-Gustavo
+Patch 3 add a test case to assert retrieving new value when overwriting the
+whole range to a tree with only root node.
+
+Wei Yang (3):
+  maple_tree: Fix mt_destroy_walk() on root leaf node
+  maple_tree: restart walk on correct status
+  maple_tree: assert retrieving new value on a tree containing just a
+    leaf node
+
+ lib/maple_tree.c                 |  3 ++-
+ tools/testing/radix-tree/maple.c | 24 ++++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+-- 
+2.34.1
+
