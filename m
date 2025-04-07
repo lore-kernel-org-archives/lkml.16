@@ -1,34 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B461F791A;
-	Mon,  7 Apr 2025 14:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2A11F63DD;
+	Mon,  7 Apr 2025 14:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035885; cv=none; b=dD3FGbubekT00d5i5sgmUWgUxeLR1yNOKALovYv8RKEtP7vjP59c3U6wbx1r9NWdWHaBhuKR3FEvXy139PhYTuhqE9sbJ69+ztFOgV15Ok48zLFOry3FeynFpJ51Vq6IMvMyMC+komF8IbOX0Kz7JggbKeYDHDWUegJ4V6KGV3g=
+	t=1744035885; cv=none; b=iLmFc6qVlgjuHghuFLZV1YqEEOdPrtbEbQO2vAGBzCCH2XPEAdX6MNcQKsJXBBmGbyBk/VeabXPJcwPw578vhytVnNLPGh89dv8fgtHK/7AlOMRMyxCQMYs2wErYbRm+djv3onNQnFzFtHs7/0tz8uWNg5qsLnXghDHU9bxEh8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744035885; c=relaxed/simple;
-	bh=EAt+xOboHgCqzw9Hqy/p3L9s5zpHb/iNh2px5rOmrj8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=svyngwLHUHYqR4UNnBom6vLcFulHBh+qBDI+V51iCCEryfBo5JULh99aCWAPAKABZi7+bt7BaGzOSGQkQHWVbEAxyh4xa6z4ZbUZdLgqL4nGoK0RfTXmPbeFMJghO49ktmO0iuL++poyci7dJlDMOM0wtvGuGHMKF4000kcl8kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpNsXdIw; arc=none smtp.client-ip=10.30.226.201
+	bh=xUERWjhVygQSEdW8chIcQBLblVgXTj0G7Izb92f1TKk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=n/+xx2/UFVHF52F0I6yme03JSd77srC2Bz6T79TtDt5u8z8rJeqTdeF3HevgGILqqpnuDJ/JlRbRj/mcdAKxnCYz6QpIh/cNh1MIARsIRgDIZdU50da9qIBWze0/XlWqPk/2acie7eplurdT5xmcuFhwQJD2u8LuUmfjUAebCW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o0FfAszI; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpNsXdIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9CEC4CEEE;
-	Mon,  7 Apr 2025 14:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744035884;
-	bh=EAt+xOboHgCqzw9Hqy/p3L9s5zpHb/iNh2px5rOmrj8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=HpNsXdIwKSTT3SZiYMAu/0oXURLj8UY+VsfcqH//35ltCjiXZDHdEdYGXUqn4ki+8
-	 UskggJb84gR8iVDvK4kZTK3g70OpgLZUPAlqZN3AQ23FOLkls0+EeV91FVaX1P36T2
-	 5wNFooatXUJxxBm8rCkwD3Ih22q+2/FNSQMvnQa4Hk2WPvp6dni+9/fxZX+Q0qIQsa
-	 EBY5n4PBSjxybkd2NL0FvRADVBYtN2bdnUE6juP9dwrfJgkJD3AlOtWCMPHIAAbb1w
-	 AWLBipRgdBdby/HU011swRIgS/M707iz7U9BUIwSwD1t+q9x34sNhflmPnBIWk8iii
-	 lXlRw43Dy3mYA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 07 Apr 2025 10:24:42 -0400
-Subject: [PATCH] nfs: don't negate the op_status in nfs4_flexfiles_io_event
- tracepoints
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o0FfAszI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E24E6442B9;
+	Mon,  7 Apr 2025 14:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744035881;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6HA7/sDL4FYVwc4Od7+7q5E7fLZvI9fOGo2Vc3YR5Sg=;
+	b=o0FfAszIHLipUj12POofZu/gwb+aJcvzkARUhm5e6EIQGsmA3I7DHij/hjsNeNsKEr4jL5
+	qjOOkdYghybGegJjgbnYtSbda5OIT8///KzIV0HvCwFILg9H2OzrlyCm5b6eszp9zBmY3e
+	N5Q/TLIVjTmB/qHULQW0aMoJ3K324BywXWvwmNKzpax+PXUM+PKbzaWomHrifk2SNbEW/M
+	+erS7Qm830OzCLBLvnl/mB11c8ElGnB+xSRyaU7OI7Z1iUORS91UtY9Q8zOWJR0WDGufsW
+	FS4h9LarICIYChGu/eLGmmYveskEW/Jq8g/K7fLEZBPyVl3n0uIh5SCJBxCPtQ==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Mon, 07 Apr 2025 16:23:28 +0200
+Subject: [PATCH 13/34] drm/bridge: ti-sn65dsi86: convert to
+ devm_drm_bridge_alloc() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,59 +42,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-nfs-testing-v1-1-2e637737ce76@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACng82cC/x3MQQqAIBBA0avIrBNUMqurRIuo0WZj4UgE4t2Tl
- m/xfwHGRMgwiwIJH2K6YoPuBOznFgNKOprBKGNVr5yMnmVGzhSDHLTRzo8TorHQijuhp/e/LWu
- tH5riES9dAAAA
-X-Change-ID: 20250407-nfs-testing-61217f89ee25
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
+Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
+References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=964; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=EAt+xOboHgCqzw9Hqy/p3L9s5zpHb/iNh2px5rOmrj8=;
- b=kA0DAAgBAA5oQRlWghUByyZiAGfz4CyiD1K5F8cHzYAPi4T+FXPTQlf5ZbTy2lqjXCjmS5qWn
- okCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJn8+AsAAoJEAAOaEEZVoIVzkkP/jc2
- FxRNVc9dnAAyazVZQMxswo0tnzRpfRsUJcQ6hMPRjOTzvt3pXtl7bVrnMht/tOTyX6qhUHWJjHn
- zfSOmd/IpbYTXeNv7AsVnEwm9AWRkChYcjGUCuVZ0z9uKi9pWYr1XvKDnN8nFKC0yNcj88gZWnf
- NtSmeQ8WWvQHUsOLKGuEYcOOcVIvx6+aorYicgroXIgzR+wPXjKEZSlOb+0gGulIa/FtX1RIPf6
- wOgG0l4Bh0V87WAimTDSImD4iuSnYkkIHu8FJG99ei94ouwA4Kiee4fU7+oH0DGkSkbWGL8Ivqo
- BlAeVRDipF7lkc0VxuZOwpXZyNk9KJZeVwwKIFg0NTi0uDH5ujvrutgJUU6gVGtBUxUh8QjespQ
- /ZF/OBqWN9aDVRU7NAW3Kt01S/Rmr6Is29cBC2wngsWDZo9DZ9yHF2xqhzRaq5LlLkEL3g1hXyo
- n3mUTQJy8z2epyA/rSADyX/B8IWfrdUEHqL5ALFJbKK5acxdaLgl0Basi0ZgRNdaCa7gCPARc2u
- g0sacjlUF7AFvoaOQuWmXpIfWCs8CyS+/zPQDIA/kH6EAslluP7tXA1Kou2LEmAbua3+W5LckH3
- cDdzptLsuzZgoySyJxMFyP5Qyx+a4FkQgPr1x8/swrmpUfLJl2nkKtVzshOQrxn9hCA5XR1pXuH
- hdIe1
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedutdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvr
+ hhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-In particular, doing this makes NFS4ERR_NXIO look like -ENXIO when
-the tracepoints fire.
+This is the new API for allocating DRM bridges.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- fs/nfs/nfs4trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index bc67fe6801b138204641319ecaf1115aac76af62..eb7d625d45e83f025ef96952660dded85aa0ca89 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -2089,7 +2089,7 @@ DECLARE_EVENT_CLASS(nfs4_flexfiles_io_event,
- 		TP_printk(
- 			"error=%ld (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
- 			"offset=%llu count=%u stateid=%d:0x%08x dstaddr=%s",
--			-__entry->error,
-+			__entry->error,
- 			show_nfs4_status(__entry->error),
- 			MAJOR(__entry->dev), MINOR(__entry->dev),
- 			(unsigned long long)__entry->fileid,
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index f72675766e01108d72033b8b83c25d3e4d8fd1a7..60224f476e1d048c693ab36a0a79b6897c6101a8 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -1317,7 +1317,6 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
+ 	if (ret)
+ 		return ret;
+ 
+-	pdata->bridge.funcs = &ti_sn_bridge_funcs;
+ 	pdata->bridge.of_node = np;
+ 	pdata->bridge.type = pdata->next_bridge->type == DRM_MODE_CONNECTOR_DisplayPort
+ 			   ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
+@@ -1907,9 +1906,9 @@ static int ti_sn65dsi86_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
+-	pdata = devm_kzalloc(dev, sizeof(struct ti_sn65dsi86), GFP_KERNEL);
+-	if (!pdata)
+-		return -ENOMEM;
++	pdata = devm_drm_bridge_alloc(dev, struct ti_sn65dsi86, bridge, &ti_sn_bridge_funcs);
++	if (IS_ERR(pdata))
++		return PTR_ERR(pdata);
+ 	dev_set_drvdata(dev, pdata);
+ 	pdata->dev = dev;
+ 
 
----
-base-commit: e63b29244e588206f4d417ae27dc04bf1d58b982
-change-id: 20250407-nfs-testing-61217f89ee25
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.49.0
 
