@@ -1,82 +1,115 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F205E42A97
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2907B42A97;
+	Mon,  7 Apr 2025 09:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744018165; cv=none; b=UWB5aqXPFPWjoI3ltzU9KhzMWU4GtvZTWhd5+v5J6MO75kdkilNNi8JEukz9YromXT6Dg/V+tK+lx9464P5v3GvJYLNDaaaFvP8HxxNcSY+mtiOctfOJeEh1bDdFJ1bBR4JUTMcbMNBxLvCN9/UVxKWcxmRXWIFOQJEQ6egm+1E=
+	t=1744018170; cv=none; b=lmnnBS7TKYFE41bOzG6ISnMOWPAqwYpgU7NMOHl764m40WKN3EBpiWmNAQrP3cF+bZ0MreoWuEb7pDXgSd+FTsGP+ycM+1WzrjzPFVTYjpvnOH1Nqvn8g64qu2ZGByJnDvEUNHwRcho2Jasex1rOI0eWpU/zwZWE8C2byx3y0MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744018165; c=relaxed/simple;
-	bh=z7t6QH+N2XUYtmtRBR++y9Nz0dDyYYhT9cPaHlAhx5w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ireqvwvjAO9UDxfucgVpHQmk3YN5cmKwKqF18l1t9dSzXOpFdQ+uK/ehDjPoIclNpTO4Nl292p3pTt/tBFP0waw7Zu8wlglbaMSnFnq0S07ReuMPrfnvoLyY226pPdF5GFZKeZzUQbbd1dHOAEjdlLXdJCgFRHhaXkqoeUV1XMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAC39g7kmvNng3XXBg--.11322S2;
-	Mon, 07 Apr 2025 17:29:10 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	matchstick@neverthere.org,
-	arnd@arndb.de,
-	dominik.karol.piatkowski@protonmail.com,
-	nathan@kernel.org,
-	niharchaithanya@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] staging: gpib: fmh_gpib: Remove unnecessary .owner assignment
-Date: Mon,  7 Apr 2025 17:26:32 +0800
-Message-Id: <20250407092632.2952200-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744018170; c=relaxed/simple;
+	bh=rHD1uqSjci+TtcrTXRPq07cH2uvgYPBnxO+ciNXB6R4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cpQvhOlmqdsvg6r+gCxkDteuQbX5kMlh+63THXsuEiRiV0azEI4S9MvdpNRGbCBEwEn9RfvWkEWHPJotZprkrQLwFCTPWK4YhfknGrNtjuRNk9Gl9VOyTMZZq1Kha1UKKjrl7elimgfHYwh5+deCGmlMk5z3ukKc2lhXZxLJwTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIQERI21; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIQERI21"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499659e669so4310416e87.3;
+        Mon, 07 Apr 2025 02:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744018167; x=1744622967; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5pT9qPTRONy87iUjfoBKw47SxzMUIpI9ld9jYPqDiOs=;
+        b=VIQERI21v1dlcZps7EuzduGEQc2yxuLgEm3HDOKFbOtkl4dRVjYFhmC26N5PJfdeLD
+         AU8nyRAb52dbUm16f4nFrYHrXiL/Z269nVg+KAB8xkRY8vJZckpcK7felJvD4wi9euYn
+         4N5+b6s/pJxbC0JWfhP5HuRruU79gHDzEOjz5pULjVRDNNZTQEr0sPe+SWSO0QfFvf6z
+         qGACB1GOUQ6Sl3euKbJ/NUj9qkRPJBtbCNnOCtz4k23XtIVR6CN81RWF8kSf1N00/lTc
+         E4eIA2PBu3563rr3s+Eyq752QIG8xMCk42atC1NzWWDyJRj9RVixvMMKSKAIqLWcHY05
+         nIqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744018167; x=1744622967;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pT9qPTRONy87iUjfoBKw47SxzMUIpI9ld9jYPqDiOs=;
+        b=KCTfNOWtuBJGMotd5/huBYnIzGjfIvSYOSXv2D9uuNKE/mayeqAx5u+bZXbIdhru5O
+         nfJ4IjTEqZKIBNRAcf6cLKeG9GFd3yipvOiOJxdCcmmRC1owThXhK22uJggUmMajcFWO
+         O6rvUQJJw0gEZBn50Qhv5+KP2lbld/Nl833W0M7avFtoJB/iO4ACNDRDKpSX8xMNNoCC
+         V6ZtutZYcaee8cqIOioTfay+TpOsUhcTOCqeUYz9kNS0IL3QQFqJEblotopkUeHs4JBl
+         aZwdVi5gmF96qvyX74Pg1TDk3DMRecZle+8Cad4dnZQen8Zw12uHIIHlKkediFsstFlA
+         0Ffg==
+X-Forwarded-Encrypted: i=1; AJvYcCU16Re0Cu7WOJHA0TJ34vEnmYHUfgCR2x4p7j5rL8Jdw9TxkIXkX8bbdI4I5e88f18KfXEY0G4+HSovF3M=@vger.kernel.org, AJvYcCUKUIwJlMbSijonhxOwV4AkjimiymNx3jeHdt+kXXv2vfU9hRZqQyRIMvk39b/8XZymhCWVnt4J8iU8VQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7h9eOHSqip63T58IFgNQkzWB/GIOfW5PXGrV2Sr0C7BBEta36
+	ZQjJxLsE9oSEvcIfkBLqMRYVoAxlU4TFiVTi8E/QDWFLEc+j0gQF
+X-Gm-Gg: ASbGncuJiQn78gftr8YiHxEHtS7KzdfUruaWThRBpBLFgURw6nEClVrW3iQ0m49gDjR
+	Fz07apGQ3Fn1jsuEqoz9gwrwXb+GjmH8WGmuZBBC9DBoNcK2u3sAwd1k6mf5LRWvkIUB4GjfuTv
+	NePpwYYjDhQ8XbGI8A4JCHmZl2oCz1WCQcaSP0K3dm3lGzdHwhnO7s6AI7rijRhtRhGnestUCce
+	rbC7C0FoEsWcuB6P+Rjj1rzhZ2nDRvHTyqRfYjeirCMBfKBHafII1DT9ZhLA4JckMvcelY4dvEP
+	L2bxKVU23BzS3f3PrHPBT5I+qMAnWMvtImSjQLvCeCnXQY+uQGl6ZlOtP6vKA4v6
+X-Google-Smtp-Source: AGHT+IGevxOSETj/50TdherB8at+IXx/g8mMt/wv+Q4C4RedgnKKQM3QuJtVg24cql3ZX4dZtV+nrQ==
+X-Received: by 2002:a05:6512:a90:b0:549:7d6e:fe84 with SMTP id 2adb3069b0e04-54c2280c8c8mr3043734e87.53.1744018166800;
+        Mon, 07 Apr 2025 02:29:26 -0700 (PDT)
+Received: from [172.27.62.62] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e635be1sm1231014e87.147.2025.04.07.02.29.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 02:29:26 -0700 (PDT)
+Message-ID: <2bfd9684-7ef0-40b0-b35d-abb0a3453935@gmail.com>
+Date: Mon, 7 Apr 2025 12:29:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC39g7kmvNng3XXBg--.11322S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1UXw13tw4fCw4Duw43trb_yoW3trc_C3
-	40gF1xJF1xGay2v3WYq3W5ur92kFn8Xr4ftr1jqFZxAw43Xr4UArn5uFyYq3sxJFWUKFyU
-	Cr40qwsxuw13tjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUe2-eDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] net/mlx5e: fix potential null dereference in
+ mlx5e_tc_nic_create_miss_table
+To: Charles Han <hanchunchao@inspur.com>, saeedm@nvidia.com,
+ tariqt@nvidia.com, leon@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, lariel@nvidia.com, paulb@nvidia.com, maord@nvidia.com
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <0e08292e-9280-4ef6-baf7-e9f642d33177@gmail.com>
+ <20250407072032.5232-1-hanchunchao@inspur.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250407072032.5232-1-hanchunchao@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Remove .owner field if calls are used which set it automatically.
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/staging/gpib/fmh_gpib/fmh_gpib.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-index 53f4b3fccc3c..12d9e83e3156 100644
---- a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-+++ b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-@@ -1631,7 +1631,6 @@ MODULE_DEVICE_TABLE(of, fmh_gpib_of_match);
- static struct platform_driver fmh_gpib_platform_driver = {
- 	.driver = {
- 		.name = DRV_NAME,
--		.owner = THIS_MODULE,
- 		.of_match_table = fmh_gpib_of_match,
- 	},
- 	.probe = &fmh_gpib_platform_probe
--- 
-2.25.1
+On 07/04/2025 10:20, Charles Han wrote:
+> mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
+> without NULL check may lead to NULL dereference.
+> Add a NULL check for ns.
+> 
+> Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> index 9ba99609999f..c2f23ac95c3d 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> @@ -5216,6 +5216,10 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
+>   	ft_attr.level = MLX5E_TC_MISS_LEVEL;
+>   	ft_attr.prio = 0;
+>   	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
+> +	if (!ns) {
+> +		netdev_err(priv->mdev, "Failed to get flow namespace\n");
+> +		return -EOPNOTSUPP;
+> +	}
+>   
+>   	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
+>   	if (IS_ERR(*ft)) {
 
+Same question here, did it fail for you, or just saw it while reading 
+the code?
