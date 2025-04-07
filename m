@@ -1,105 +1,138 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2A83C0B;
-	Mon,  7 Apr 2025 06:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2137221F3C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007450; cv=none; b=PEv0759mqsnqS71yjd9BCHWHMNAM3afRgrZoSriKzkY0WwoQBZL2JHng2LkXGqeuxrJ+WxMrjlbINSThqJXhr47DwvEBn39IxqnOW7UexT2aQXi3tAVhOSvmhsifujmie0gO2+JMEUAqmRR8GrRLe43bw3e8d3ZAmSiPBxnc8vY=
+	t=1744007459; cv=none; b=BsFztV5Ip9kLEpgKK+bB1mQNhY7wl6Hz2yq/0KCdnty9oMqwaMDfd/m0XlNdP+akU6bYFdtK4P/ZaIRIHztRJbiLk+qqWFVHNHgADVOT6BSPUfQUdW/q/MzmrPMB0d28l+0+QYL3gMeW3kXuJ+FlecNrreCsaP8dMqdeA5/UcCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007450; c=relaxed/simple;
-	bh=Mbsqq+6fCCPLoE8/BcquABwEHP6K3EYwcjR7Z+gthvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rm2t49/XqUyS7IlCSLacROzfyUfiDhyD740tpu6OTw/50S0YfJ+kUsOJFiLteNRSn820dSiwbEqKinjR3zVxXrwZubGrnszLanOaqvFfmVpJy5NJf6tXLCrkv2SJDrY09aW1dH0u/26ksctNIQ5Y/Yri7QWojLen0+6m3iQmW/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=T67kECPf; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1744007459; c=relaxed/simple;
+	bh=AmxwkfNWnTqg4Gr3/bu+ich7qIKM/RNuPTFe3HF24B4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HF7fIqUd09HRsuXffQ2x6ylArUv5uvLmsbigr788q8eyAVmbY++fjDjLbIyKO0zY2VvWKS6ccJ02qRGAlmZKyFUSTE7nS09PGjZ/yuEyrkbpORuylyUrK6l1JLkJCGa5zq1borMYbL7fv/tY9CjK8acXlHc85lIahMtL6vOy4eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XT13x3I9; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="T67kECPf"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id CB416635B040;
-	Mon, 07 Apr 2025 08:20:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1744006859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=vjO3TAnFOqalGZ8xSYfbpH7cqt+Bfn6P2ZGcPBU9VrA=;
-	b=T67kECPfT42QpBEFPxPp59Fv0xiLmj2hM27rMbf3PfIKcxYgnmWvIuC9rghujRZRFdM0Lg
-	OXW+pL+q8oqvHeq1MxJ33fg7ygvcgVzndpV6ERoQYM+RUooRVmY8vFRu0DRzGp9UfDT57I
-	jR5vQAtmHZab6o88WIQahsLsJEnageU=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: objtool warning in ice_free_prof_mask
-Date: Mon, 07 Apr 2025 08:20:45 +0200
-Message-ID: <4970551.GXAFRqVoOG@natalenko.name>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XT13x3I9"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abec8b750ebso678682366b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744007455; x=1744612255; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6CZ+9nJvtU7EchwepTb4lUMtEiDIUa7OIoD5xm6M59Q=;
+        b=XT13x3I99MyNqpZCujbbA65pPtHEQhPmNsq0RH+tlykhSHNhFi3LpfxSEa6MbRr/u2
+         IOL5FrlWo0cZhA3TxYTmq1S6jhIPlsaUo7+XSFbc7pJ46Br67vMqvNZ/W6xRye6FeuHa
+         01goLB6YT/s3EAtePecGrcGtLLd8CVZ8LhnhU60LvJPbqlk+bLTOUJLfK4UhMHDukOZT
+         1H6wdrG1BluqQgt7zglClkThfih6edk380Qwfk6SK2ICaZ0fmF4wfLtJHx/j0ITxsfHK
+         Pe0qN7Uv7pxkYAjVHL1uwwtKPb6R3nif04a7WZ1eAIRQXmSNCp/l55/jSj7QIRBumgzZ
+         uGIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744007455; x=1744612255;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6CZ+9nJvtU7EchwepTb4lUMtEiDIUa7OIoD5xm6M59Q=;
+        b=bkd07mJSltOKLSkDRM3q2IxvtGyGQ4IBx5EhL3ol89WZDcNSDQHDXxMEDzMlsU/zIw
+         aFYQUo2nNiEe6ZtzzwJczwykcJ/TQJGzeFDT3WuYLNEr40cSuiLoara/xgaZ5SkvWmu/
+         BoexmOBABZP/Gcj9DQaThSAN8axvvfV3JV5BC0TN+Qj9DmGxW47NcSyQIJjCAdV7AVW0
+         3Cg2+AQQpCuiAulC38vXpsRAEUJybdexZhfYWrApkaUJHAOvewsPaZujkbhpesvLfhL6
+         p8HBKPuLQz9MeqpJVZH61ryx3l5iskQ1tQafOqakJhxilVgA3bhuzgSCwpAI/mPo0I6a
+         6Quw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWocvbSlYaoahzWddUpfkHBAiPRqMz114IeKu2ErxbFYHzC3o5h8iwG2ZyK7T1oN83xJXu6oDFewXCRA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwizwizZac0mF5MpYPSC2nexoy4Dq5C4PUZCP/TAc3T1j4FiNJL
+	p73b/WVhTKimNFo7kkS7VOgHcxqv40iPQrDPeTCrwqGQQ+Nd3N7b
+X-Gm-Gg: ASbGncvYjVIbFklrSev4wn5/B0hvo9fFnaYDdZB5sFR2Zd8zj/mATgAzeK1hu7+1Lob
+	eYxsQsTzPXBbniftmTI7bjqIVmCJlyMgbju0ppubCcvdOHNiy7PzwfEQ4wo02KA1wNkAiblM/lp
+	uvoF3ntMog5pZOdmoiuw8qDfOYPH3AkBOAzkNWZpj/HKdvDgTAUUf0isNuCYeV0v0SP8Jrg/9NO
+	0zQJXWJImxtASB8ufH/HEYRO0PLQM6i9RIl+cASGF6MX7h/FjcGegNxjy6oZQxap9zOtyz+ANWG
+	Cz4Ahabs9chpyWDTri93nnclJzxoCwVJHAi6tD6m3bfxC9iN
+X-Google-Smtp-Source: AGHT+IF/44BzJTOSL5Y5td5z/Uyw0Rj7IdwztQAzzywUWn7ts4FkRQirCuBekw6dxMQ5yjBEXdnh8w==
+X-Received: by 2002:a17:907:2d11:b0:ac3:413b:69c7 with SMTP id a640c23a62f3a-ac7e76232e7mr470437466b.39.1744007454655;
+        Sun, 06 Apr 2025 23:30:54 -0700 (PDT)
+Received: from ubuntu ([105.112.123.29])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9ae46sm705764166b.60.2025.04.06.23.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 23:30:54 -0700 (PDT)
+Date: Mon, 7 Apr 2025 06:30:50 +0000
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: gregkh@linuxfoundation.org, julia.lawall@inria.fr,
+	outreachy@lists.linux.dev
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dan.carpenter@linaro.org, andy@kernel.org,
+	david.laight.linux@gmail.com
+Subject: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+Message-ID: <Z/NxGilPLPy7KSQ3@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1916258.tdWV9SEqCh";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---nextPart1916258.tdWV9SEqCh
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org
-Subject: objtool warning in ice_free_prof_mask
-Date: Mon, 07 Apr 2025 08:20:45 +0200
-Message-ID: <4970551.GXAFRqVoOG@natalenko.name>
-MIME-Version: 1.0
+The sequence number is constrained to a range of [0, 4095], which
+is a total of 4096 values. The bitmask operation using `0xfff` is
+used to perform this wrap-around. While this is functionally correct,
+it obscures the intended semantic of a 4096-based wrap.
 
-Hello.
+Using a modulo operation with `4096u` makes the wrap-around logic
+explicit and easier to understand. It clearly signals that the sequence
+number cycles though a range of 4096 values.
+It also makes the code robust against potential changes of the 4096
+upper limit, especially when it becomes a non power of 2 value while
+the AND(&) works solely for power of 2 values.
 
-With v6.15-rc1, CONFIG_OBJTOOL_WERROR=y and gcc 14.2.1 the following happens:
+The use of `4096u` also guarantees that the modulo operation is performed
+with unsigned arithmetic, preventing potential issues with signed types.
 
-```
-drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0() falls through to next function ice_free_flow_profs.cold()
-drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0.cold() is missing an ELF size annotation
-```
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+---
+Changes in v3:
+	- Added more description to the commit message
+	- Removed blank line in tag block.
+	-  Added more patch recipients.
+Changes in v2:
+	- Changed the commit message to a more descriptive message which
+	makes it clear why the patch does the change.
+	- Changed the subject title to include `4096u` to show that an unsigned
+	module is used.
+Changes in v1:
+	- Added more patch recipients.
 
-If I mark ice_write_prof_mask_reg() as noinline, this warning disappears.
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Any idea what's going wrong?
-
-Thank you.
-
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 297c93d65315..f534bf2448c3 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 
+ 			if (psta) {
+ 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+-				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
++				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;
+ 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+ 
+ 				SetSeqNum(hdr, pattrib->seqnum);
+@@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+ 						pattrib->ampdu_en = false;/* AGG BK */
+ 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
++						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;
+ 
+ 						pattrib->ampdu_en = true;/* AGG EN */
+ 					} else {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
++						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&4096u;
+ 						pattrib->ampdu_en = true;/* AGG EN */
+ 					}
+ 				}
 -- 
-Oleksandr Natalenko, MSE
---nextPart1916258.tdWV9SEqCh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmfzbr0ACgkQil/iNcg8
-M0vZkhAA1tXUFHurvbvtwTDQNNs1ru9REB1w9TKVmN62Dgv9US35rAtlFot4wulq
-43xzWuIcgR6OrHd9/39OZ9BJE2RVzOBIcBHYexgXCnX9BkH0A+y9LobJA8cMrLt+
-bp/TNhJqxbobWt+YPLAWgIujNANpeepexdN/oJoW857M1dj2QQmLLHkPdAGyOhTv
-jXPA+Ul+TJm4PN+u/q3WdWpUZHhXrWn5ICfyx+dzYqoYRpgQD84B/YMUasqA2R5d
-ClWK5PTQq80ynDVdVLh1KKb3gXBornnQumLcalZijIz/Mwc8ELLfjt9Xv2XNdS5n
-vlCw49IH2rvU+1zYhMx4DLkVh3n22pyL+Msp3UQt8klFlQ88ko8aK9Gh2Y5q+BLr
-oHMokSoj92aZKjznihYWdsBst/QpFOmGTMOEtD0cHtxobZVfQnfHfd/i4yLPHWwS
-ouogXxD5lx0Kx8SS4unDa4UtNP4ZQHcOmUt4l2EYeI0rnwus0NBDWGb7jdGgtuU7
-1IJcJ+zs9uCEELgLDuPV67Q+2WBhqebZlJZC48vgLV47AuZ+r2XQP8BDl2F0Bh6J
-cIDAiz07u3LBAaPByYdTQY0YZVr8z79MvNpGxKwNXt2LYE1yksOgpzmeUsYp+Mjb
-gGBSJckC6a4KwNCG/i2gaYB/65jUaBVypebWMEGnDvF4qSLhFDw=
-=UuCv
------END PGP SIGNATURE-----
-
---nextPart1916258.tdWV9SEqCh--
-
-
+2.34.1
 
