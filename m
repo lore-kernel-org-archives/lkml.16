@@ -1,120 +1,116 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22941E871
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A021E4BE;
+	Mon,  7 Apr 2025 13:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030836; cv=none; b=iNI19iJ7cO0p4vHhg8rZVTBPOMuurNtxSYc+926Y7N8n3pGySOsKXRzrVwnw6OZDiYFnsaDQe4L27K3W0eT/G3mATyOjUGZ9fTh1A2dzSPin8YX7pU1ICIcAp47N10iIx0e+cNKv664PSLVKMxToMfBTh2Bv5V1it3i1vtBwMBU=
+	t=1744030872; cv=none; b=mr/rDd4gNi+EomQKhdCNQZanW0Lud3/FFm25n16sCGJeVH4z437UT3CL6YndKnVC/gNPdwYLnDOjn2r637Wt9OKis1xXKWBkt4ld1O2l0JEGNR4WzZxxzviTAYVp00/lOk9uZijOSolhuBkbUaqcpwg8yzs3GKc9uKklUjQAqKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030836; c=relaxed/simple;
-	bh=4NPyf6Ab1VM5I9gb9TUPJo7YffJdWthSv6pwiFj1bHI=;
+	s=arc-20240116; t=1744030872; c=relaxed/simple;
+	bh=swQ42VWSGclVMOp1KzNKztiNW8v5JoW4Me8J1MRpsEk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nlTp1dzTZIttlOBGMYQJEmEC6oTONf7Wr/EjvXxIro/lbEObjHl8xsn1diRUMkxWe8juQ7KF7iTnlGJnKbbLBJ6wVvQNcDqM0+rIpp+X1sobLsLK7+pJi7YMtDfiyBpK4jx5ThlP/rpQvTnWu/kSUIj3J28loB3EJg6wqcUxHU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OUHbhmSR; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 To:Cc:Content-Type; b=HgLPN6HZBt29NXEPFK44yBucPd6UmRb5la2aCfWU3Ya0N8qerhZMNhCS7QitKf360312Zj3ewbzMh7ma6NOa41ybqxAGbuqhgoY1KaMoggjclbq6z6X7QpUC3EKsQrU/dAJtbh1J6mmVmZKgz6XtoeyGbJ0eIy5JpEejq2G/1Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2egSpxc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OUHbhmSR"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6041e84715eso1331043eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744030834; x=1744635634; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4NPyf6Ab1VM5I9gb9TUPJo7YffJdWthSv6pwiFj1bHI=;
-        b=OUHbhmSRh4dOtaleifG3n2mFAvEzoQOlwvE8yNka+2diGrAsW0wFLhMFnjfrHsCAXl
-         IzcRA3Xd5os8aE7Zs9abiH6gJ1FJwqt/ztPZK5czPmeD1sIzGKJuqrHgJspTB3JBBn8C
-         hCXkxV8hy5hj5nyNYZpvczt3Zo5OWZt306Nv2rgUvG4ReB2lGqJw12Y0oVmSTIFrSUfr
-         SFs7HhMaMOh4mfG98+LqAJRmah6pwGUmh8bWVqgks2NobUvoDt8/ivZXueno4F9akaDU
-         Hchp4ZnWE378zLiUvTQV8OJgQ8aTnDDAFEOtyp3fSkc4Y9vDK3ILDO2mMjMLbTbRUub/
-         D6nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744030834; x=1744635634;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4NPyf6Ab1VM5I9gb9TUPJo7YffJdWthSv6pwiFj1bHI=;
-        b=XXu53nFK8Z+LLNo4MV3DFj2EaTfTzHzcc4HktzF/D4WVwYTIoSoDyjiPIJfRY8HHFE
-         QT7mUH1IQliznQP2vmi9pOK3fRcpvDOq8FhOKmQmHzuttuHU9fqXjtVDo5VgwJQQ1i04
-         vbcRkU9ucFrPpSElnG4h6xrgEO6Ytlh0JUgJh5qQVDOj6zY/suOw7K80zaF3OlazQdRs
-         GYA7kfwesEoelR0n4Vt0zW4Qd+CHnK7x0Z0kfkNsyg0skTNHcRiWJlHvV9JSoH0RksUF
-         SvpSGJow5U3m7NXo1c30mrV5WuGoZKguvLjibQLpEIByXNPxiGSBEJfNNWKaggxYgkUx
-         lSEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTySGE+vWw1LtTqh9j7UenvRxjN28y8zm15pq4UWo4ckb4MNBRKipZCnaXMzVrtQDjX14uyRfX68aQgpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd67pM5TS9A/+EL4JKHI7vVI3VR3cKIxO7GUIV/r6uwAFKfWXC
-	ofrXmdn2RTFjvD6l1aCKdb6gMqzDHLvgjAs1vaIOYAz0cZRR184dmmTjPfvvcuUZr0urGyyEFJE
-	XWkPu6HlQLIJNCaVXj+ihf8w6qjrV0RVgK3SvYQ==
-X-Gm-Gg: ASbGncuk2nIsXXoXbk38wLGMQVQZeZpAgxw7SA2cKEFtKyTOJZ9yvGNWSGHg6cEUXnX
-	KWQ/YDMnpistKoqi+N6/r4ijA64/nZ2tDb14VuJbTOqqhccIdkvwDKnnLvVe4JotR5eA2n/SNds
-	D88BhKG0WW+oJ9tTrnov4P+iwDGfRq
-X-Google-Smtp-Source: AGHT+IGUMt5w+ucLL4Obxt0SSzw21tJii4m0qT64R9zF1VPyv5ecYKFAOH1yOAgukB8jXcNDRujKwD/jT9J8D/s9RC8=
-X-Received: by 2002:a05:6820:1ad6:b0:604:d2b:c585 with SMTP id
- 006d021491bc7-604165c24acmr5931841eaf.3.1744030833836; Mon, 07 Apr 2025
- 06:00:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2egSpxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A021BC4CEE7;
+	Mon,  7 Apr 2025 13:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744030871;
+	bh=swQ42VWSGclVMOp1KzNKztiNW8v5JoW4Me8J1MRpsEk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=t2egSpxcxXzT9tJtfEQmMOGg6OQY5+lxpuaVn6dDpt6iyukYKop2yQ++1ra5/dR8R
+	 K3F4IPyzIF8kjwElfk0g4Z+wM4DhhRdLWqdqPuR0z8LX9aaR5SwCq3Gem8uWiuTtpW
+	 TTx+TTHiVnU5stjWUvB8qe3H/Zjy0GORQ1ezhPut2puu6XPJaumCCqpLUxDQ/xgngF
+	 kyl0Oow8eQD7tuq1Z65Qw8zrkOWTc152qNOQSomIIh5ItBE5PeaZHzlwR2o/i+xJ3e
+	 MEiNfOizPSvp4USA7Zlb/uH5wQi+R2hjbmK+1jxcCf3S8qKMJlcxOQON8V80jEho6T
+	 jHD6bKYuVo4MA==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2cc44c72959so2602823fac.0;
+        Mon, 07 Apr 2025 06:01:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/HDpHrknJRgaCku7e9jfj19534DDwU5HniEndGaCL2CoGHHRf1T6da+ctTfJC+tuT73mfUxwgVmY2zjzH@vger.kernel.org, AJvYcCWU46WU/O7PjIcwUGNi/nDocS8qzpEMqGlkxiFKAEiVSngrEL5Mk1m6kdbHQ5PMJIqRwjAj0burVBWxqeU/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKFK4Noh+mNI6buEbSWNVdIfnQFV5Fl7k8sHREHP8oSShRFSWJ
+	avjd7wReP+cR1UuA+hrIO+WYcqjLRic4lNi7M7sVi3fivCtBFpSrtoGkvvn5ub2s43bQWjqR1O8
+	3bh3f9IerE0l44OGmnbGVPLzW4PM=
+X-Google-Smtp-Source: AGHT+IFUsthTvsXxiDkToDYnoQrtj8Lsz+y/Ya181Sq6lQZJ8XX2jRuW3mVWIFagWVO0JNGF3otHDzyd7JbslhrnCpk=
+X-Received: by 2002:a05:6871:71c5:b0:2a7:d8cb:5284 with SMTP id
+ 586e51a60fabf-2cca188c89amr6866768fac.7.1744030870944; Mon, 07 Apr 2025
+ 06:01:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com> <Z-51629pjyiZUIVy@smile.fi.intel.com>
- <CAEEQ3w=xVNuSN-4tHx6ir-i+huN8m1JXgJz672=WHAVBqcP+TA@mail.gmail.com> <Z--yqlI0cRnixWpy@smile.fi.intel.com>
-In-Reply-To: <Z--yqlI0cRnixWpy@smile.fi.intel.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Mon, 7 Apr 2025 21:00:22 +0800
-X-Gm-Features: ATxdqUH2rkCMsQpp9gGxDJ3YFHW6sJInIkL65BBneWufeRCJ-WFejeeX8mWjm-8
-Message-ID: <CAEEQ3wmMymsLZGvomkUth_rczdUaHxeDjCV8Vm6P44RpjVzZQA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de, 
-	namcao@linutronix.de, benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250407102345.50130-1-ailiop@suse.com>
+In-Reply-To: <20250407102345.50130-1-ailiop@suse.com>
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Mon, 7 Apr 2025 22:00:59 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd_i4V-BRXBtke4Ditp+siT3O=6atuTQ+Ffu8F9xtrNDCQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEtyhybxEwFYz0exRofUqyuLhFreYCQiqYGbMQJ7frJrHmvmOpQcFFxX0c
+Message-ID: <CAKYAXd_i4V-BRXBtke4Ditp+siT3O=6atuTQ+Ffu8F9xtrNDCQ@mail.gmail.com>
+Subject: Re: [PATCH] exfat: enable request merging for dir readahead
+To: Anthony Iliopoulos <ailiop@suse.com>
+Cc: Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Mon, Apr 7, 2025 at 7:23=E2=80=AFPM Anthony Iliopoulos <ailiop@suse.com>=
+ wrote:
+>
+> Directory listings that need to access the inode metadata (e.g. via
+> statx to obtain the file types) of large filesystems with lots of
+> metadata that aren't yet in dcache, will take a long time due to the
+> directory readahead submitting one io request at a time which although
+> targeting sequential disk sectors (up to EXFAT_MAX_RA_SIZE) are not
+> merged at the block layer.
+>
+> Add plugging around sb_breadahead so that the requests can be batched
+> and submitted jointly to the block layer where they can be merged by the
+> io schedulers, instead of having each request individually submitted to
+> the hardware queues.
+>
+> This significantly improves the throughput of directory listings as it
+> also minimizes the number of io completions and related handling from
+> the device driver side.
+>
+> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> ---
+>  fs/exfat/dir.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+> index 3103b932b674..a46ab2690b4d 100644
+> --- a/fs/exfat/dir.c
+> +++ b/fs/exfat/dir.c
 
-On Fri, Apr 4, 2025 at 6:21=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi Anthony,
+> @@ -621,6 +621,7 @@ static int exfat_dir_readahead(struct super_block *sb=
+, sector_t sec)
+>  {
+>         struct exfat_sb_info *sbi =3D EXFAT_SB(sb);
+>         struct buffer_head *bh;
+> +       struct blk_plug plug;
+>         unsigned int max_ra_count =3D EXFAT_MAX_RA_SIZE >> sb->s_blocksiz=
+e_bits;
+>         unsigned int page_ra_count =3D PAGE_SIZE >> sb->s_blocksize_bits;
+>         unsigned int adj_ra_count =3D max(sbi->sect_per_clus, page_ra_cou=
+nt);
+> @@ -644,8 +645,10 @@ static int exfat_dir_readahead(struct super_block *s=
+b, sector_t sec)
+>         if (!bh || !buffer_uptodate(bh)) {
+>                 unsigned int i;
+It is better to move plug declaration here.
+Thanks!
 >
-> On Fri, Apr 04, 2025 at 10:31:25AM +0800, yunhui cui wrote:
-> > On Thu, Apr 3, 2025 at 7:50=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Apr 03, 2025 at 02:36:16PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
-> > >
-> > > A couple of more questions here:
-> > > 1) what is the DW IP version and where did you get the PSLVERR_RESP_E=
-N
-> > > parameter from?
-> > > 2) what is the setting of the UART_16550_COMPATIBLE parameter?
-> >
-> > 1): Refer to: https://www.synopsys.com/dw/ipdir.php?c=3DDW_apb_uart
->
-> I don't understand this. I asked about version of the IP, I have datashee=
-ts
-> already for many of them, I can't find PSLVERR_RESP_EN there, that's why =
-the
-> question.
-
-You can check the link:
-https://iccircle.com/static/upload/img20240313113905.pdf for the
-relevant introduction.
-
->
-> > 2): data->uart_16550_compatible =3D=3D 0
->
-> Thanks!
->
+> +               blk_start_plug(&plug);
+>                 for (i =3D 0; i < ra_count; i++)
+>                         sb_breadahead(sb, (sector_t)(sec + i));
+> +               blk_finish_plug(&plug);
+>         }
+>         brelse(bh);
+>         return 0;
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.49.0
 >
->
-
-Thanks,
-Yunhui
