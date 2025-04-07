@@ -1,141 +1,141 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CD21C9E0
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D22206AB;
+	Mon,  7 Apr 2025 18:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049211; cv=none; b=X/5ICNJncW+DIzr5R/dkS7TyJyKbpXmxfohUcso+Q1EG3f1DDGci8S0hX+4Ypm7/M+sgxXGRsIYuIqHzPSaUKT83O3D9+ddPeIk16a8JakoJzEPdt2WImbP1ohPv5T2qrFxJc79ZU84kEDkFI4/Q11fk9FeEX+Ik05aeJdkme9Q=
+	t=1744049211; cv=none; b=KG/odXORa9RFQ2D2Ao+BiQPCjMCxXMaHAr2L10RifACgiYPaUi8t7hger/I9DZ3oMV+tWHxOqcU1NDmpENWasuH7ocOIj7416anlmMhyUwZ7/+oP7PDePgHWKvLphc1i/A6k8AL1J4iQWTxBSPK9VWZQ66NKz/tU45MbsiBj1s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744049211; c=relaxed/simple;
-	bh=/QL2Deg67baZmAbZ/a+IO0SqdLa/xoFdNNCtzMrZm1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nu+jpRFEuK9I1OufuZ7ENHRs9LjCSCw9nqMChTtsDBkaJ6NZ7CW712r3YqH793Rw1CNnMIklUtTzhbW4yMDqC3J/PBMYYBWOTnxQ4825VoU8UbvanHyMOva18QTn+UcTFDlJYWlxT83Q1iWm93af86Y2XAo59iD6AGThnonskJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UGC1U56a; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=FsmCeWazI64tSkrlujtg9O9Kb5UT2thJSPKLzmk6DEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ik7Ziw3jw3XdItsLVBpVAnTtF9bSCy0zW/GXn3Le/DJ06s9Gbn/NcOBvhKNSoRv8IULh0wby15pyOz3blVJEiFZGGDt/r53M2Qn/HFeSA78FP1FaxmzvHg3Uz734jxJLDKyikNhwgltZ2mGQF3BnBYlnU5Gl0PdG6ZKGGpbJTxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO28sFEA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGC1U56a"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f2f391864so2605321f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049207; x=1744654007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qrEaB9L3JJCWImgpqc6St8J9YBdrcTfemPWf3LmUw3I=;
-        b=UGC1U56a/NQiCAK4n8mq4SgrojErRKE3i0wC0JTujs0mxW76d3gXC8E6McutzRPFNh
-         rJnpbQ9YmPj1IQ/b7C8b8XPAJyuK8KGIE9wNr1LugEGSgBwbqHTFB5uzY88gGpEecsUk
-         /9IjonHoUOBn5/fOa5S8BEc5S78nfjIVmAeuMEB9uwoqyKKCUSj6LGRqWk6uzPtf4MmY
-         tMv7aYqbl61FF7bQkjeNW16NFJNRQAgPLG0kgKMxp4gvbQtc1RJ3a7V1ulfq3/ENZHCP
-         IjtllP/OcvLCz/j/AOkFu65mtriGP3qj8ApETnWPiErNhfkihcVH+3ih/SRjYLAOeU69
-         diWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049207; x=1744654007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qrEaB9L3JJCWImgpqc6St8J9YBdrcTfemPWf3LmUw3I=;
-        b=Yw+iFx0LKSOxBbTIEvyk4mlqvgV/7TiRy7TXyJI0NmM9sHQ+E83Zn6s3+11AJZwK5T
-         FXaLQsmhj16WsRZfx2JrFT4JgmdYKR+YQoUiDDgS0yWGsimCQR/xoaQc4dG1vzBHyAT2
-         FMaPFISSc0pg9TS3BF1NHnZmR0NQgYDeNHy6GyUHRmX/iDobt1BQeuTUplIGE+p4enzK
-         WpndrhVxGq3HCsrSk9wgvsQcqCUkSZ6CteOGDR6ZHkbDj7GAwiSXQfyTOhq6VfvUIjb0
-         TawXhJUmRuSLx/aqX129nDscT/3CkMlXdg4ZWqEV/+hqvU20GCuwbvjb0Q7CPDXV49NU
-         yWLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQjp1MbGmEROjvkUZVgor6b6vQk9qHhvRHOrfEfl+TnRUpXyOA9aU63HwLyDIoNz63/UJ5bkpwLYXXQx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzau+s6gWnbp5LomxWsEADHfnpKMNTCSpUoB+Ej6hQCKkZiOmcL
-	Ls7ob4fGiZAvu5YPgk1BI6txbvtqC7AhYGoaLfyZgaDgX2FaSfRq
-X-Gm-Gg: ASbGncsmH3LNObg56c+Na5bHO2u2FIov84sJVTpvt2ZGxX8tHwWcGZ5Z0cjTIlauVkj
-	GB2s1MscVPVtATXIgouw/ALWqpbZzYIe2dNYH21r74xLk4S315DbZtjTVFsOkihN8TJAgZDVPKa
-	IQdRBPEwBpYjwedLBszkoSVehGWROdPNZn0K2BUKN2OzEmdaEgwmsiE5H3BnDjSS4bKJgAdRAiX
-	8CWL+eeW2zKWF/GDxrsr0mCXtPbBGcDKzOWAQm+LARz7eQrOPbbzORd2Alx5QHbwtGZ+P/CF8Ko
-	ye/i6JlfRoWfkXJ8cqyaQqcOv696so/VXKfPW+yGlB5IHTTlid1WNqxVx6AhyDMmqNIkaz4XjMa
-	8EZVKgkM=
-X-Google-Smtp-Source: AGHT+IFTFEHCvLaGHp3dLmSDqBIEvCaNTT+cXX7kVGMx3xEmdqHdogSDXb/eN7l4LEq4MVLdCLQc8w==
-X-Received: by 2002:a05:6000:18af:b0:39c:2688:6904 with SMTP id ffacd0b85a97d-39d0de62689mr11800118f8f.39.1744049207297;
-        Mon, 07 Apr 2025 11:06:47 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b72d5sm12601873f8f.47.2025.04.07.11.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:06:46 -0700 (PDT)
-Date: Mon, 7 Apr 2025 19:06:45 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Abraham Samuel Adekunle
- <abrahamadekunle50@gmail.com>, julia.lawall@inria.fr,
- outreachy@lists.linux.dev, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, dan.carpenter@linaro.org
-Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
-Message-ID: <20250407190645.285fa924@pumpkin>
-In-Reply-To: <Z_PE8usXhpLJ4sTd@smile.fi.intel.com>
-References: <Z/NxGilPLPy7KSQ3@ubuntu>
-	<2025040757-clergyman-finalist-0c63@gregkh>
-	<2025040752-unrefined-labored-8c8c@gregkh>
-	<20250407132115.11ded3d9@pumpkin>
-	<Z_PE8usXhpLJ4sTd@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO28sFEA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C91AC4CEDD;
+	Mon,  7 Apr 2025 18:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744049211;
+	bh=FsmCeWazI64tSkrlujtg9O9Kb5UT2thJSPKLzmk6DEE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PO28sFEASTjc/GPxdXf8NPgHhYFf1cZNqdcAyoDf6GZ6T8o5PFCCND+Q9K5IXtu3i
+	 /IuOFLVARRWl2BAq9piwymt0SbC5pLKLdwi+65s8YjAWdu7ZodDkBzNswb2CX+BQfE
+	 koLcOyqOn5pPv+2vqnzk5agz7+AZPDf5QY2fXziceHjWu/v/JXcO4lT2YcTZwVUhHP
+	 dcGHsCRChK2X1LivG4RzZJMjaPAUR7/5XXKodVOzPfbSviebZZkbyKbBLmpYMhlrRM
+	 XIj2IlNLFcHFX8C0k7r9AuxG1OsKRIYQ5Lg8Ec6K93NWIgrEz6nqYjCkeIC6ZFxyXO
+	 tgxGcw4OsOS4A==
+Message-ID: <09e09598-945b-4f26-a5f4-9f1a17a709c4@kernel.org>
+Date: Mon, 7 Apr 2025 20:06:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/28] dpll: zl3073x: Read optional pin properties from
+ firmware
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407173149.1010216-9-ivecera@redhat.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407173149.1010216-9-ivecera@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 7 Apr 2025 15:28:34 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+On 07/04/2025 19:31, Ivan Vecera wrote:
+> +
+> +	if (zl3073x_dpll_is_input_pin(pin))
+> +		node_name = "input-pins";
+> +	else
+> +		node_name = "output-pins";
+> +
+> +	/* Get node containing input or output pins */
+> +	pins_node = device_get_named_child_node(zldpll->mfd->dev, node_name);
+> +	if (!pins_node) {
+> +		dev_dbg(zldpll->mfd->dev, "'%s' sub-node is missing\n",
+> +			node_name);
+> +		return NULL;
+> +	}
+> +
+> +	/* Get pin HW index */
+> +	idx = zl3073x_dpll_pin_index_get(pin);
+> +
+> +	/* Enumerate pin nodes and find the requested one */
+> +	fwnode_for_each_child_node(pins_node, pin_node) {
+> +		u32 reg;
+> +
+> +		if (fwnode_property_read_u32(pin_node, "reg", &reg))
+> +			continue;
+> +
+> +		if (idx == reg)
+> +			break;
 
-> On Mon, Apr 07, 2025 at 01:21:15PM +0100, David Laight wrote:
-> > On Mon, 7 Apr 2025 08:53:30 +0200
-> > Greg KH <gregkh@linuxfoundation.org> wrote:  
-> > > On Mon, Apr 07, 2025 at 08:36:35AM +0200, Greg KH wrote:  
-> > > > On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote:    
-> 
-> <snip>
-> 
-> > > > > -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-> > > > > +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;    
-> > > > 
-> > > > I do not see a modulo operation here, only another & operation.
-> > > >     
-> > > > >  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
-> > > > >  
-> > > > >  				SetSeqNum(hdr, pattrib->seqnum);
-> > > > > @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
-> > > > >  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
-> > > > >  						pattrib->ampdu_en = false;/* AGG BK */
-> > > > >  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-> > > > > -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> > > > > +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;    
-> > > > 
-> > > > This also looks odd, nothing is being "AND" here, it's an address value
-> > > > being set (and an odd one at that, but that's another issue...)    
-> > > 
-> > > Sorry, no, I was wrong, it is being & here, but not %.  My fault,
-> > > the lack of spaces here threw me.  
-> > 
-> > It is still wrong '& 0xfff' => '% 4096u'.  
-> 
-> Why?
+Where do you drop the reference to pin_node?
 
-Do some math :-)
-
-> > But it is all rather pointless especially if you can't test it.  
-> 
-> > Plausibly more useful would be to find ALL of the uses of 0xfff/4096 (I suspect
-> > there is an array lurking somewhere) and change them to use the same constant.
-> > But you need to be able to test the changes - or at least discover that
-> > they make absolutely no difference to the generated object code.  
-> 
-> The problem with &, it's not non-power-of-2 tolerable solution. Also using
-> hexadecimal there is not so helpful as when we are talking about sequences
-> (or indices in the circular buffer), the decimal makes more sense.
-> 
-
-Except that you either want your circular buffer size to be a power of 2
-or reduce with a conditional (eg: if (++x == SIZE) x = 0;) not a divide.
-
-	David
+> +	}
+> +
+> +	/* Release pin parent node */
+> +	fwnode_handle_put(pins_node);
+> +
 
 
+
+Best regards,
+Krzysztof
