@@ -1,135 +1,260 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2F4209F2D;
-	Mon,  7 Apr 2025 16:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EB6209F2D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043579; cv=none; b=kbB5PSPKckyHl5Nv59NI0vrN8qamLfh9zJTg7YAIqRPXm3BoaFnlhhjMIITY5VbGYGcZak+ODgsE158U+D77nSNVTPb7L4ued0ORgIS9uzsLOdeCFR2hp5K7x0pizUcGjR0W1iLAnFp2B1RhK9lp2M4IpiG+0xTq5IrKotBT3Mk=
+	t=1744043614; cv=none; b=BOSCHlzHuvCBWge3kRU1Cbt3iHCRjmKKjJXwpov+UH7admMQRWhVH6vdDfc/Q3IyTPfVI8/l2c9Kx0CzooE077OK43tGUXyMAG79VM0eTZIPuGCy2++XluPzvc+eiM+mXXyyBIAKeteBoAIWmgaUxMbAQ1EyYUVNbGbKGUj6ku8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043579; c=relaxed/simple;
-	bh=LGtX53OtMpXApFpTQkQiQKYlJ7eOPTUUkrl2g7LUHY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NjE2VI5Bgs3Rph15owU4eWpekaNDyP3gWXTfuFZFfgu+0YYp85eHaOVpgTXpidf8PDhGS9mtWe4qH9A6YFOoVvXysVXxLSIzvmxJqn6/7Hjnk5lWivg0wyL86UaGKRLOg/82J0gsf80Gyiz4bsEDabhRAEAmsZvsLWhoBsOYk9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=eAadvGkK; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744043614; c=relaxed/simple;
+	bh=YXRWwW4vlzu8WA5a88I8BNiS3h5BN0NTX2i2xJHNRJs=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pxriSok59J0Mlka6AuwjYmkBylIcA7aISQ1pM7fRRreRrypxRukUOIyt1RvbGNwNNcxbhSLcScgFwR49mLdON8UMkRoJtv/GfiO2s5HJh2j8Zt9AO7pkR7gz5f/6h9WuXdkOQ8wHmnvC1MV+J9L+HR1SgtnWQEiehl90bDZTkXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=KstR5fEK; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eAadvGkK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=wNe0DF/LSdewm7FfMvCiB9sCaLK1XEWV69yNTkeFdCY=; b=eAadvGkKwDaGFwzVAfZgmBIWwW
-	Y9hQNLkP/FZfiulkoe190VKWRvC/akqaNkPa9GsFodQzdsST8RK7WKf/ivfPRHxinulMruyzWhRUa
-	sJECwSZdHnkeOwKG6yOa3EarsmUAQsJb0o04H6CORPNIJWGinwlmiu1hXT9IR/Hz0QkImzVpfSH+i
-	mVYn8cAL3f0WvTKUt+wGGjc50ccumWkO6+xHhupjl8+ZyfdBEs+XGpHvRRyoA3cSYru6uZpVdUYpz
-	322hNaGPZ2ZNr3UUhFYlnwUF/R3XY6h0J+wM49PApDNK6ZGIfvCGmSrzCJuDDehbovvUYSVgVrVY1
-	65I27c6A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57108)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u1pOw-0005hu-2i;
-	Mon, 07 Apr 2025 17:32:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u1pOt-0000X8-2n;
-	Mon, 07 Apr 2025 17:32:43 +0100
-Date: Mon, 7 Apr 2025 17:32:43 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
- <Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
- <20250407182028.75531758@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="KstR5fEK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744043609; x=1744302809;
+	bh=eGhpFSfp8IDtOcU8Vt56NnogzL2MpRZJSwnCmPQzDsI=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=KstR5fEK4d0RH6h+pb5SHzihbXZejTpO/Fz/8hxQPkLdhRb7yCkioDvmEp4bxK/Gt
+	 6i8pZLCG9MixMnDMwjUF3wJ2rDu9MUduCojME0Ibr917Z6r2YHHjw0fDgkWU5v79sI
+	 5q168watwnSI6YZ+Tpyfg8luqAdmyib9U0zmD4YHc7HImISpmBg9+6z+eJQFoCt7Rb
+	 rVJME7KnbK0NFBd9MNVzTE2/C1Q9ubYdrq3ZKG7SjA99WoaH/kZCp29aeuk+wZyz9b
+	 gb8si3YUiMWpEK5Y0tz2GVIJ7ME+kqrgINna3cjf1+qs1bj6MM/n9XM7VWzRMBYGZa
+	 nJ9H7zpK0ksHQ==
+Date: Mon, 07 Apr 2025 16:33:25 +0000
+To: Alexandre Courbot <acourbot@nvidia.com>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] rust: alloc: implement `extend` for `Vec`
+Message-ID: <D90JUX1YE0MR.25XH5EZLUCDBM@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 5e2a0271e4b9da2f0d02b6d83a9321af56701945
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407182028.75531758@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 06:20:28PM +0200, Kory Maincent wrote:
-> On Mon, 7 Apr 2025 17:02:28 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Mon, Apr 07, 2025 at 04:02:59PM +0200, Kory Maincent wrote:
-> > > Add PTP basic support for Marvell 88E151x PHYs.
-> > > 
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
-> > 
-> > Is the PTP selection stuff actually sorted now? Last time I tested it
-> > after it having been merged into the kernel for a while, it didn't work,
-> > and I reported that fact. You haven't told me that you now expect it to
-> > work.
-> 
-> The last part of the series, the PTP selection support wasn't merged when you
-> tested it, although the default PTP choice that causes your regression was
-> merged.
-> Now it is fully merged, even the ethtool support.
-> https://lore.kernel.org/netdev/mjn6eeo6lestvo6z3utb7aemufmfhn5alecyoaz46dt4pwjn6v@4aaaz6qpqd4b/
-> 
-> The only issue is the rtln warning from the phy_detach function. About it, I
-> have already sent you the work I have done throwing ASSERT_RTNL in phy_detach.
-> Maybe I should resend it as RFC.
-> 
-> > I don't want this merged until such time that we can be sure that MVPP2
-> > platforms can continue using the MVPP2 PTP support, which to me means
-> > that the PTP selection between a MAC and PHY needs to work.
-> 
-> It should works, the default PTP will be the MAC PTP and you will be able to
-> select the current PTP between MAC and PHY with the following command:
-> # ethtool --set-hwtimestamp-cfg eth0 index 0 qualifier precise
-> Time stamping configuration for eth0:
-> Hardware timestamp provider index: 0
-> Hardware timestamp provider qualifier: Precise (IEEE 1588 quality)
-> Hardware Transmit Timestamp Mode:
-> 	off
-> Hardware Receive Filter Mode:
-> 	none
-> Hardware Flags: none
-> # ethtool --set-hwtimestamp-cfg eth0 index 1 qualifier precise
-> Time stamping configuration for eth0:
-> Hardware timestamp provider index: 1
-> Hardware timestamp provider qualifier: Precise (IEEE 1588 quality)
-> Hardware Transmit Timestamp Mode:
-> 	off
-> Hardware Receive Filter Mode:
-> 	none
-> Hardware Flags: none
-> 
-> You can list the PTPs with the dump command:
-> # ethtool --show-time-stamping "*"
-> 
-> You will need to stop phc2sys and ptp4l during these change as linuxptp may
-> face some issues during the PTP change.
+On Sun Apr 6, 2025 at 3:01 PM CEST, Alexandre Courbot wrote:
+> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> index ae9d072741cedbb34bed0be0c20cc75472aa53be..b3c4227e232cca3b5c17930ab=
+c63810240b9c4da 100644
+> --- a/rust/kernel/alloc/kvec.rs
+> +++ b/rust/kernel/alloc/kvec.rs
+> @@ -454,30 +454,86 @@ pub fn reserve(&mut self, additional: usize, flags:=
+ Flags) -> Result<(), AllocEr
+>      }
+>  }
+> =20
+> +impl<T, A: Allocator> Vec<T, A> {
+> +    /// Extends the vector by the elements of `iter`.
+> +    ///
+> +    /// This uses [`Iterator::size_hint`] to optimize memory reallocatio=
+ns, but will work even with
+> +    /// imprecise implementations - albeit in a non-optimal way.
+> +    ///
+> +    /// This method returns an error if a memory reallocation required t=
+o accommodate the new items
+> +    /// failed. In this case, callers must assume that some (but not all=
+) elements of `iter` might
+> +    /// have been added to the vector.
 
-I'm preferring to my emails in connection with:
+I would add that items that haven't been added to the vector remain in
+the iterator. Do note that some iterators drops the items when the
+iterator is dropped. But if not, one can still access them later:
 
-https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
+    let vec1 =3D vec![...];
+    let mut vec2 =3D KVec::new();
+    let mut iter =3D vec1.iter();
+    if let Err(_) =3D vec2.extend(&mut iter) {
+        // can access remaining items:
+        for item in iter {
+            pr_info!("item: {item:?}\n");
+        }
+    }
 
-when I tested your work last time, it seemed that what was merged hadn't
-even been tested. In the last email, you said you'd look into it, but I
-didn't hear anything further. Have the problems I reported been
-addressed?
+> +    ///
+> +    /// # Note on optimal behavior and correctness
+> +    ///
+> +    /// The efficiency of this method depends on how reliable the [`Iter=
+ator::size_hint`]
+> +    /// implementation of the `iter` is.
+> +    ///
+> +    /// It performs optimally with at most a single memory reallocation =
+if the lower bound of
+> +    /// `size_hint` is the exact number of items actually yielded.
+> +    ///
+> +    /// If `size_hint` is more vague, there may be as many memory reallo=
+cations as necessary to
+> +    /// cover the whole iterator from the successive lower bounds return=
+ed by `size_hint`.
+> +    ///
+> +    /// If `size_hint` signals more items than actually yielded by the i=
+terator, some unused memory
+> +    /// might be reserved.
+> +    ///
+> +    /// Finally, whenever `size_hint` returns `(0, Some(0))`, the method=
+ assumes that no more items
+> +    /// are yielded by the iterator and returns. This may result in some=
+ items not being added if
+> +    /// there were still some remaining.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Why do this? Can't we just call `next` and see if that is `None` too?
+You could use `Peekable` [1] to call `peek` instead, then the logic
+below shouldn't be too complex.
+
+[1]: https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.peekabl=
+e
+
+> +    ///
+> +    /// In the kernel most iterators are expected to have a precise and =
+correct `size_hint`
+> +    /// implementation, so this should nicely optimize out for these cas=
+es.
+> +    pub fn extend<I>(&mut self, iter: I, flags: Flags) -> Result<(), All=
+ocError>
+> +    where
+> +        I: IntoIterator<Item =3D T>,
+> +    {
+> +        let mut iter =3D iter.into_iter();
+> +
+> +        loop {
+> +            let low_bound =3D match iter.size_hint() {
+> +                // No more items expected, we can return.
+> +                (0, Some(0)) =3D> break,
+> +                // Possibly more items but not certain, tentatively add =
+one.
+> +                (0, _) =3D> 1,
+> +                // More items pending, reserve space for the lower bound=
+.
+> +                (low_bound, _) =3D> low_bound,
+> +            };
+> +
+> +            self.reserve(low_bound, flags)?;
+> +
+> +            // Number of items we actually added.
+> +            let added_items =3D self
+> +                .spare_capacity_mut()
+> +                .iter_mut()
+> +                // Take a mutable reference to the iterator so we can re=
+use it in the next
+> +                // iteration of the loop if needed.
+> +                .zip(&mut iter)
+> +                .fold(0, |count, (dst, src)| {
+> +                    dst.write(src);
+> +
+> +                    count + 1
+> +                });
+> +
+> +            // SAFETY:
+> +            // - `self.len() + added_items <=3D self.capacity()` due to =
+the call to `reserve` above,
+
+In my mind this precondition holds, since
+
+    self.spare_capacity_mut().len() + self.len() =3D=3D self.capacity()
+
+and
+
+    added_items <=3D self.spare_capacity_mut().len()
+
+But I guess we haven't written the first one down anywhere.
+
+> +            // - items `[self.len()..self.len() + added_items - 1]` are =
+initialized.
+> +            unsafe { self.set_len(self.len() + added_items) };
+> +
+> +            // `size_hint` was incorrect and our iterator ended before i=
+ts advertized lower bound.
+> +            if added_items < low_bound {
+> +                break;
+> +            }
+> +        }
+> +
+> +        Ok(())
+> +    }
+> +}
+> +
+>  impl<T: Clone, A: Allocator> Vec<T, A> {
+>      /// Extend the vector by `n` clones of `value`.
+>      pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> R=
+esult<(), AllocError> {
+> -        if n =3D=3D 0 {
+> -            return Ok(());
+> -        }
+> -
+> -        self.reserve(n, flags)?;
+> -
+> -        let spare =3D self.spare_capacity_mut();
+> -
+> -        for item in spare.iter_mut().take(n - 1) {
+> -            item.write(value.clone());
+> -        }
+> -
+> -        // We can write the last element directly without cloning needle=
+ssly.
+> -        spare[n - 1].write(value);
+> -
+> -        // SAFETY:
+> -        // - `self.len() + n < self.capacity()` due to the call to reser=
+ve above,
+> -        // - the loop and the line above initialized the next `n` elemen=
+ts.
+> -        unsafe { self.set_len(self.len() + n) };
+> -
+> -        Ok(())
+> +        self.extend(core::iter::repeat_n(value, n), flags)
+
+`repeat_n` is not stable in 1.78.0, so you need to add `iter_repeat_n`
+to the allowed features.
+
+---
+Cheers,
+Benno
+
+>      }
+> =20
+>      /// Pushes clones of the elements of slice into the [`Vec`] instance=
+.
+> @@ -496,18 +552,7 @@ pub fn extend_with(&mut self, n: usize, value: T, fl=
+ags: Flags) -> Result<(), Al
+>      /// # Ok::<(), Error>(())
+>      /// ```
+>      pub fn extend_from_slice(&mut self, other: &[T], flags: Flags) -> Re=
+sult<(), AllocError> {
+> -        self.reserve(other.len(), flags)?;
+> -        for (slot, item) in core::iter::zip(self.spare_capacity_mut(), o=
+ther) {
+> -            slot.write(item.clone());
+> -        }
+> -
+> -        // SAFETY:
+> -        // - `other.len()` spare entries have just been initialized, so =
+it is safe to increase
+> -        //   the length by the same number.
+> -        // - `self.len() + other.len() <=3D self.capacity()` is guarante=
+ed by the preceding `reserve`
+> -        //   call.
+> -        unsafe { self.set_len(self.len() + other.len()) };
+> -        Ok(())
+> +        self.extend(other.iter().cloned(), flags)
+>      }
+> =20
+>      /// Create a new `Vec<T, A>` and extend it by `n` clones of `value`.
+>
+> ---
+> base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+> change-id: 20250405-vec_extend-4321251acc21
+>
+> Best regards,
+
+
