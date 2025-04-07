@@ -1,49 +1,33 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106F022DF8D;
-	Mon,  7 Apr 2025 13:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1A822D4EF;
+	Mon,  7 Apr 2025 13:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031079; cv=none; b=InUfI3RJcwDdFL58ktbPWSqM2aqrnLBhtsL+jVr//nuVekU6a54qV4BT2hzCaXlrr6QgfzxA55d8SrK2vlfOPFp9AfxHVc5udaaWHfoNS87l7vZHDQoURbbX/gjmG45ea3BeE0l+rcg7GqaQ93HNZfYJR2Fqd8D+wop46zqpqwo=
+	t=1744031096; cv=none; b=olx5LKPzGVvLi/vcoZpzTB75+zisktFxWEUKpsX+10xMIy0TpVTa2lHDgO49mvf7+cLaxPhOAm9QAJAtwjg2XD2ZyKaS9jxIIv7ynqgpo2tKDcTrhDiS6Ygw3xv3uGpf/4BCid+y5LxuaRDRBdBxphgN/GAq5prOIU5KMS4hrEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031079; c=relaxed/simple;
-	bh=yO0QcwSH/o7bkZ78kL/jBlLQeXd4gTVtT6Z2+xZ9XEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KskWls5UJlGG0a9cP6/iGcD0xFFTjsENcOovh8x7BqWEJxSVMxMWlC3Q1e7dWEhEul4gxyyMvtyb2tragCofaLYkuTDw0DDaqwNWAw8DfT2e2Q3idtEYbDDXeeQ1eOBnin+mfafJaivHgMs/yNQAHQI81VGrlyVeJjpbKZrI5o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HVAGxptd; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744031096; c=relaxed/simple;
+	bh=6LzS3DspmqdNUubz8lMmXOKFGB9bxKOcNKhA5QoTcdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ksv0v/aK79+ry8cWBR6xzIXCxsg4o0HXH9q4pdxb+TOSl2X/51hz7zbuHi1vUgMNM2PlklhK2Q6RpzqfdkI47vl+fJWGiGsgqa5LcuJigGXyO7v5r3fJwto5XP9di3PdsTJLkF3FYW990IvwfdpZvXjv6iMqZRgbogaT3FYK/hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMvBFSGM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HVAGxptd"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537D4RWs926660
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:04:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744031067;
-	bh=KpvxecfJA8vYdTJ6rgupPMOhaWUXnGN0z8+UAf98wgg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=HVAGxptdzhhsVArQmRGJ+X2fbZs8Y6caKUtLFYhz1ZFLjzLXjZ6PeVtrQDMjtAgbp
-	 J5neAgjraOmgD1tNMRM+pfZpV9377vNEZV/DduOwuyQ11QiutRbgCzLXw+Ha+tAyBF
-	 Uzv+q3TPzeBUkOUGWqIwim4VmWZzVI/DOkCEwmBc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537D4RQY011878
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 08:04:27 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 08:04:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 08:04:26 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537D4NQN041833;
-	Mon, 7 Apr 2025 08:04:23 -0500
-Message-ID: <0e299cf4-da72-4ce1-b2c8-a625fe74040b@ti.com>
-Date: Mon, 7 Apr 2025 18:34:22 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMvBFSGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10C8C4CEE9;
+	Mon,  7 Apr 2025 13:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744031095;
+	bh=6LzS3DspmqdNUubz8lMmXOKFGB9bxKOcNKhA5QoTcdU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aMvBFSGMPmEW/SjpC+iDJ3tLZiObx4MXAAP7Yc2c8wDZcoBuoa/G8CVv5bVSGKn8e
+	 NLksswWUa4Ni+9k61AygTrXvQlFoSG0jkkrpr8icE/+HKhV7EVWUs/lbDbq2BgNmvt
+	 hm9StvTH+yvU5+nV3DRPGTWk76eJjWYC4Omy9eNZ5tkdP0L3t22a9MG7ZwXDzPx0OI
+	 SQ98wVjSKj+Z6ithx02LihU5JevIG065YCIVC/4zCMbkeFlFb6Q9qX8OANg/iSzvjn
+	 XMUSJHNCivO01UTCO+vIPcH66BlQxaB+BxA2dJQZmViprsda/vBXKqYGO10DeFLqOe
+	 8+ea7viCRH0ag==
+Message-ID: <1945935b-9597-476a-93f2-c0527ab77344@kernel.org>
+Date: Mon, 7 Apr 2025 15:04:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,125 +35,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/26] Refactor TI K3 R5, DSP and M4 Remoteproc Drivers
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
-CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250317120622.1746415-1-b-padhi@ti.com>
+Subject: Re: [PATCH v2 00/11] ASoC: mediatek: Add support for MT8196 SoC
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20250407120708.26495-1-darren.ye@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250317120622.1746415-1-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250407120708.26495-1-darren.ye@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 07/04/2025 14:06, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+> 
+> This series of patches adds support for Mediatek AFE of MT8196 SoC.
+> Patches are based on broonie tree "for-next" branch.
+> 
+> Changes since v1:
+>   - modify mtk_memif_set_channel and mtk_afe_pcm_pointer interfaces
+>     are improved to support mt8196.
+>   - remove duplicate definitions in the mt8196 common header file.
+>   - cm logic is merge into the afe platform driver.
+>   - modify afe clk to return judgment logic and remove useless clk sources.
+>   - refactor the mt8196 adda dai driver.
+>   - remove the gpio module and use SND_SOC_DAPM_PINCTRL to manage it.
+>   - removes CONNSYS_I2S related functions that are not supported in i2s dai driver.
+>   - fixed mt8196-afe.yaml and mt8196-mt6681.yaml syntax issues.
+>   - modify log printing in all modules.
+You just sent it today and immediately sent (20 minutes later) v2 with
+so many changes?
 
-On 17/03/25 17:35, Beleswar Padhi wrote:
-> This series refactors a lot of functions & callbacks from
-> ti_k3_dsp_remoteproc.c, ti_k3_r5_remoteproc.c and ti_k3_m4_remoteproc.c
-> drivers. This is a consolidated and final series as part of the
-> refactoring of K3 remoteproc drivers. Below is the breakdown:
-> 1. PATCHES #1-#5 does the pre-cleanup and aligns R5, DSP, M4 data structures.
-> 2. PATCHES #6-#8 fixes important bugs in R5 and DSP drivers before refactoring
-> them into a common driver.
-> 3. PATCHES #9-#26 does the actual refactoring from into ti_k3_common.c driver.
+Give people chance to review. One big patchset every few days.
 
-
-Requesting review on this patchset.
-
-Thanks,
-Beleswar
-
->
-> NOTE:
-> This series supersedes below series:
-> https://lore.kernel.org/all/20250219091042.263819-1-b-padhi@ti.com/
-> https://lore.kernel.org/all/20250103101231.1508151-1-b-padhi@ti.com/
-> https://lore.kernel.org/all/20250108063727.1416324-1-b-padhi@ti.com/
->
-> Testing Done:
-> 1. Tested boot of R5Fs, C66x DSPs, C71x DSPs across Jacinto J7* devices in
-> remoteproc mode and IPC-Only mode.
-> 2. Tested boot of M4F core _only_ in _AM62xx SK_ board in Remoteproc mode and
-> IPC-Only mode.
-> 3. Tested Core stop and detach operations from sysfs for R5Fs, C66x DSPs, C71x DSPs
-> 4. Tested device removal paths by executing 'modprobe -r ti_k3_dsp_remoteproc'
-> and 'modprobe -r ti_k3_r5_remoteproc'.
-> 5. Tested usecases where firmware not available at device probe time, but
-> later in sysfs, able to load firmware into a remotecore and start it. [R5Fs]
-> 6. Tested that each patch in this series generates no new warnings/errors.
->
-> v9: Changelog:
-> 1. Added R5 cleanup & refactoring along with existing DSP, M4 refactoring into this series. [Andrew]
-> 2. Dropped Mailbox level IPC checks across R5, DSP, M4 drivers in IPC-only mode. [Andrew]
->
-> Link to v8:
-> https://lore.kernel.org/all/20250103101231.1508151-1-b-padhi@ti.com/
->
-> v8: Changelog:
-> 1. Broken down refactoring into patches, each patch dealing with one function
-> for ease in review. [Andrew]
->
-> Links to older versions:
-> v7: https://lore.kernel.org/all/20240202175538.1705-1-hnagalla@ti.com/
-> v6: https://lore.kernel.org/all/20230913111644.29889-1-hnagalla@ti.com/
-> v5: https://lore.kernel.org/all/20230808044529.25925-1-hnagalla@ti.com/
-> v4: https://lore.kernel.org/all/20230801141117.2559-1-hnagalla@ti.com/
-> v3: https://lore.kernel.org/all/20230302171450.1598576-1-martyn.welch@collabora.com/
-> v2:
-> https://lore.kernel.org/all/20230301111323.1532479-4-martyn.welch@collabora.com/
-> v1: https://lore.kernel.org/all/20220110040650.18186-1-hnagalla@ti.com/
->
-> Thanks,
-> Beleswar
->
-> Beleswar Padhi (24):
->    remoteproc: k3-r5: Re-order internal memory initialization function
->    remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
->    remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
->    remoteproc: k3-{m4/dsp}: Align internal rproc data structure with R5
->    remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
->    remoteproc: k3-r5: Refactor sequential core power up/down operations
->    remoteproc: k3: Refactor shared data structures
->    remoteproc: k3: Refactor mailbox rx_callback functions into common
->      driver
->    remoteproc: k3: Refactor .kick rproc ops into common driver
->    remoteproc: k3: Refactor rproc_reset() implementation into common
->      driver
->    remoteproc: k3: Refactor rproc_release() implementation into common
->      driver
->    remoteproc: k3: Refactor rproc_request_mbox() implementations into
->      common driver
->    remoteproc: k3: Refactor .prepare rproc ops into common driver
->    remoteproc: k3: Refactor .unprepare rproc ops into common driver
->    remoteproc: k3: Refactor .start rproc ops into common driver
->    remoteproc: k3: Refactor .stop rproc ops into common driver
->    remoteproc: k3: Refactor .attach rproc ops into common driver
->    remoteproc: k3: Refactor .detach rproc ops into common driver
->    remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
->    remoteproc: k3: Refactor .da_to_va rproc ops into common driver
->    remoteproc: k3: Refactor of_get_memories() functions into common
->      driver
->    remoteproc: k3: Refactor mem_release() functions into common driver
->    remoteproc: k3: Refactor reserved_mem_init() functions into common
->      driver
->    remoteproc: k3: Refactor release_tsp() functions into common driver
->
-> Siddharth Vadapalli (2):
->    remoteproc: k3-r5: Drop check performed in
->      k3_r5_rproc_{mbox_callback/kick}
->    remoteproc: k3-dsp: Drop check performed in
->      k3_dsp_rproc_{mbox_callback/kick}
->
->   drivers/remoteproc/Makefile               |   4 +-
->   drivers/remoteproc/ti_k3_common.c         | 552 +++++++++++++
->   drivers/remoteproc/ti_k3_common.h         | 113 +++
->   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 618 +--------------
->   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 583 +-------------
->   drivers/remoteproc/ti_k3_r5_remoteproc.c  | 898 +++++++---------------
->   6 files changed, 1021 insertions(+), 1747 deletions(-)
->   create mode 100644 drivers/remoteproc/ti_k3_common.c
->   create mode 100644 drivers/remoteproc/ti_k3_common.h
->
+Best regards,
+Krzysztof
