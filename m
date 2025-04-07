@@ -1,145 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9721225390;
-	Mon,  7 Apr 2025 06:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD98219E0;
+	Mon,  7 Apr 2025 06:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007552; cv=none; b=tSmgvJxOSmmrmbna8sk0H7BZIpM+ivHSfdMlnfSDZUcQOqYHOuGybWddfhSJkTq7C3/EBZa0E0k72IzwRZdGpK/8U9FJKY+61KtOj0kKHb6227Bcj4oMSoaVWn7zM8MeFDZKSKtVaz6NOpsLXSlf+7hKm2sKXj3bt869BKulmRE=
+	t=1744007556; cv=none; b=oZ/EfX4z1tSfJQu3JdmYmoZPH9NbvnxmyTCLM2P5ZNIxPWbnPsjUv+s4VQpP108kJCh4kWJczYpKpG/5tKjvYrRfxn6Z+2gpJpbsk1h6eJvNeImOg+ewQssSllYUKFLQ3c3j+wvWe0/9DSXjQKE0ZuaFzTEiYBt5uAuC3GuWbZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007552; c=relaxed/simple;
-	bh=gTratXnbj5KxD1AOYDpsXH7eQtuPd31z5buflZddPPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNQSQL5tZQ5BUr4NN108eowNdVM1Jm4VSWOqlwTibkNtdqny4ro1Xw/DEq/nHm5v0KAl1SCeNy0HY3JVUX3cCXAbrapMu7O372tLrV4BXRfkL/K6ap7Vksp/EjOvaLXcGFgho9z+sXHCBm3SG+CBNp4CftZIYjvOGZZ+AkLbhks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVrhxln9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744007556; c=relaxed/simple;
+	bh=rgWmwjZniGKCkXyoowbdyQSPJAgjIxa6HwiniR6YaQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hHPrNsuUcpguiLF7hXbYklbQH0iYxCaOp9vIVi756nkzMTt82EniPRuEw28Fuva8AQQcyfNk5eUxcKKthbneamazEPuoDUPKPu/3U8fEsF7bVEtLbwmdY6J1oQP39cwLKMcjjCtv8YsAx9SdGr/OyX3t21Mp8R45xrOfBpaBMm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9VCdnuw; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVrhxln9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90442C4CEDD;
-	Mon,  7 Apr 2025 06:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744007551;
-	bh=gTratXnbj5KxD1AOYDpsXH7eQtuPd31z5buflZddPPQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FVrhxln96ar4ccBf9aqcKxCUYPpKe69ZckpMZPum6jh0GXI8Jvtvmf6fIVbqpbSva
-	 BXZIzI84EbfZho5tzD9bNd7imnZ5nSa/8pvQBsQWd5Bw1k/BsSCzvfyWY/nbURndL8
-	 SGhd8G0I4Sm/0F9Dcr7lOuKYTRZtMrQqJmg8XcJG9J9REJoJAitnrZ9yMA8QCZZpqj
-	 WyGiopnhAvcekHJHxd6IX0LFuPeI7m/32FwVbSbo7y7+9tjNR3pBmoSq70gU+Q7iL/
-	 a09pX6nd/NABqdwTv5nJB6APX2Z+lqLg7EW33X38WKt5cC/UPE1j5uazgd7nrrCbvQ
-	 gbE4XXK559STA==
-Message-ID: <4dcbcf57-de98-4bdd-a688-6156d5eba98c@kernel.org>
-Date: Mon, 7 Apr 2025 08:32:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9VCdnuw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264aefc45dso49798295ad.0;
+        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744007554; x=1744612354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
+        b=A9VCdnuwZW4Q1NG49habGkgwf9CUuw2TiVd+pUvcSbyZ5cQ09Hp3czpHV1jZQJIDKI
+         zrWW59vIvpLIq3hWHJUE8pce7EPPjQ24VzQg4Q863rgAvcbk/cwu3JfPCVp67kg6GV2G
+         wEyqVxvUpdH5kEx9t95KHFm11D2hQQFaMzfSbGjrnLgA19ofq6XeTAGNxIJSnj+ykr26
+         mpykPLJYSd8fydQbCFlugoFlmHt3/a3u5BfQrJHGt0tnU+EvTg7I2uVL37ZXk+Kuv/GY
+         2hhRAL2nitnsVCMXekymusE0xn9s3S1zwMCjAyxkb2dM+yCx5f7lMd9ISx6QX2jFLi/c
+         teWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744007554; x=1744612354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
+        b=RGBKSwe+Q1Go5+3nw7li7Wbyet8F6k8HmvJ//A7N12V9b7LnL0ekgnh8Xo+EEmXhzE
+         wU8xdtYBHBgIFTLsQGOR3Fyz9TrN/QZFbqmuNxWq6p/Qk1nwESn4U8XhydAU7yCFu/ap
+         Q8QwezRxuJBwKR76IOcbMNy2/nj4lD1+OPALwwk/V5E0dkkt6q2alq7OvlSYRY9LW1IU
+         2dg5N0gfyGSZGZWtrzPzCeKKOmDEciAH8A3FEQUIdpXkWuyPyjDiVYP8AWbb/Lruwg7i
+         MGCeOTre+VoQ/aE0lKdqYO4OgGdSExi2XNqbq2X0dKk8v5GHWOb/UQ37DnSLDln2/msV
+         Fscg==
+X-Forwarded-Encrypted: i=1; AJvYcCVViiG+CzSj8IjIj32KewlkEc+zmMDDFIHPBocTFqVkUU5bjAvdKM0TL3gczjM3hnuAlmU530ZJcwYeKps=@vger.kernel.org, AJvYcCWobK6IRSql+6aWIv75uVyqVpMChUbGLQdFaoCYihM1HkeVbdVJ50tOtaOgK4H4jHdTsT9FKzN92qsP40KhT3Hhag==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpUqZvVNo+tlkk9uKzPAgETJQvXQDwmLbcWdW0Q9W2Op7QcrEK
+	+iX9QKv8J+YAp53H7Bp8NCGDAqu9kzpJb6WrzIrWpiYwW19Cdvu/
+X-Gm-Gg: ASbGnctZOBKCrECLcFczCkcQ93S3/mInx8RpsuJjxgbel3frK/aWhgfteUnjWtx+ix2
+	Cjl42vcUmm90NlEQm6uFD2Z+sJUFXo2VztqPhtNS1un/ER0ZWKmW3M4pokSLGKnAhZ1Vtp8JgTv
+	SuBcjNw1w1BmxJCAyZ32N/kXu3zvpba1LHQQUfHT+AqwPrIF8CLKglO7htksMqzVLMpMbBy/Yc7
+	Lme77kar/ok2SqcnXDLXHpi+Ly33pBnvXE/Yvp2c+DQI1ucrbbjRszFc26K7B9vodM5dKO2h8EQ
+	np1gTLKoX/xznBYj824KKsuVQ1gjxHNwi/GFq+PtkA0BBsFLV8ax8lyTXkw=
+X-Google-Smtp-Source: AGHT+IHqfdC2hAwF+iHvluludcTR0crAZTyeQqY1dFdw+RUMqBj5erLa4Mr2mQeYTN3YlEylkAXOrA==
+X-Received: by 2002:a17:902:cec2:b0:223:2aab:4626 with SMTP id d9443c01a7336-22a8a84ea52mr138936315ad.11.1744007554389;
+        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
+Received: from localhost.localdomain ([103.221.69.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d980598csm7694095b3a.77.2025.04.06.23.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 23:32:33 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-amlogic@lists.infradead.org (open list:AMLOGIC DDR PMU DRIVER),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING AND DEBUGGING),
+	linux-perf-users@vger.kernel.org (open list:ARM PMU PROFILING AND DEBUGGING),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v1] perf/amlogic: Replace smp_processor_id() with raw_smp_processor_id() in meson_ddr_pmu_create()
+Date: Mon,  7 Apr 2025 12:02:03 +0530
+Message-ID: <20250407063206.5211-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND,V1,01/12] dt-bindings: mediatek: Add mediatek,
- mt8196-jpgdec compatible
-To: =?UTF-8?B?S3lyaWUgV3UgKOWQtOaZlyk=?= <Kyrie.Wu@mediatek.com>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "mchehab@kernel.org" <mchehab@kernel.org>,
- "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
- "tzungbi@chromium.org" <tzungbi@chromium.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kyrie.wu@mediatek.corp-partner.google.com"
- <kyrie.wu@mediatek.corp-partner.google.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <20250110012749.30072-1-kyrie.wu@mediatek.com>
- <20250110012749.30072-2-kyrie.wu@mediatek.com>
- <e6019aea-b097-4a24-afd2-e1d638a5a8a7@kernel.org>
- <545fcf458d79e1ad1e4a9f1b6b81f32504a6886a.camel@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <545fcf458d79e1ad1e4a9f1b6b81f32504a6886a.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 07/04/2025 08:24, Kyrie Wu (吴晗) wrote:
-> On Fri, 2025-01-10 at 08:40 +0100, Krzysztof Kozlowski wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> On 10/01/2025 02:27, kyrie.wu wrote:
->>> Add mediatek,mt8196-jpgdec compatible to binding document.
->>>
->>> Signed-off-by: kyrie.wu <kyrie.wu@mediatek.com>
->>> ---
->>
->> No, why are you resending without improving anything here?
->>
->> You got comments. Respond to them, implement them, not resend same
->> stuff.
->>
->> NAK
->>
->> Best regards,
->> Krzysztof
-> 
-> Dear Krzysztof,
-> 
-> Thanks for your kind reminder. I made a mistake in the V1, so I
-> resended it. I will correct all the comments in the V2.
+The Amlogic DDR PMU driver meson_ddr_pmu_create() function incorrectly uses
+smp_processor_id(), which assumes disabled preemption. This leads to kernel
+warnings during module loading because meson_ddr_pmu_create() can be called
+in a preemptible context.
 
-You got review within 30 minutes on v1. You did not respond and the
-*next* day (or after some hours) you resent it ignoring that review, so
-you totally ignored it.
+Following kernel warning and stack trace:
+[   31.745138] [   T2289] BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/2289
+[   31.745154] [   T2289] caller is debug_smp_processor_id+0x28/0x38
+[   31.745172] [   T2289] CPU: 4 UID: 0 PID: 2289 Comm: (udev-worker) Tainted: GW 6.14.0-0-MANJARO-ARM #1 59519addcbca6ba8de735e151fd7b9e97aac7ff0
+[   31.745181] [   T2289] Tainted: [W]=WARN
+[   31.745183] [   T2289] Hardware name: Hardkernel ODROID-N2Plus (DT)
+[   31.745188] [   T2289] Call trace:
+[   31.745191] [   T2289]  show_stack+0x28/0x40 (C)
+[   31.745199] [   T2289]  dump_stack_lvl+0x4c/0x198
+[   31.745205] [   T2289]  dump_stack+0x20/0x50
+[   31.745209] [   T2289]  check_preemption_disabled+0xec/0xf0
+[   31.745213] [   T2289]  debug_smp_processor_id+0x28/0x38
+[   31.745216] [   T2289]  meson_ddr_pmu_create+0x200/0x560 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745237] [   T2289]  g12_ddr_pmu_probe+0x20/0x38 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745246] [   T2289]  platform_probe+0x98/0xe0
+[   31.745254] [   T2289]  really_probe+0x144/0x3f8
+[   31.745258] [   T2289]  __driver_probe_device+0xb8/0x180
+[   31.745261] [   T2289]  driver_probe_device+0x54/0x268
+[   31.745264] [   T2289]  __driver_attach+0x11c/0x288
+[   31.745267] [   T2289]  bus_for_each_dev+0xfc/0x160
+[   31.745274] [   T2289]  driver_attach+0x34/0x50
+[   31.745277] [   T2289]  bus_add_driver+0x160/0x2b0
+[   31.745281] [   T2289]  driver_register+0x78/0x120
+[   31.745285] [   T2289]  __platform_driver_register+0x30/0x48
+[   31.745288] [   T2289]  init_module+0x30/0xfe0 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
+[   31.745298] [   T2289]  do_one_initcall+0x11c/0x438
+[   31.745303] [   T2289]  do_init_module+0x68/0x228
+[   31.745311] [   T2289]  load_module+0x118c/0x13a8
+[   31.745315] [   T2289]  __arm64_sys_finit_module+0x274/0x390
+[   31.745320] [   T2289]  invoke_syscall+0x74/0x108
+[   31.745326] [   T2289]  el0_svc_common+0x90/0xf8
+[   31.745330] [   T2289]  do_el0_svc+0x2c/0x48
+[   31.745333] [   T2289]  el0_svc+0x60/0x150
+[   31.745337] [   T2289]  el0t_64_sync_handler+0x80/0x118
+[   31.745341] [   T2289]  el0t_64_sync+0x1b8/0x1c0
 
-All this was 3 months ago.
+Changes replaces smp_processor_id() with raw_smp_processor_id() to
+ensure safe CPU ID retrieval in preemptible contexts.
 
-Best regards,
-Krzysztof
+Cc: Jiucheng Xu <jiucheng.xu@amlogic.com>
+Fixes: 2016e2113d35 ("perf/amlogic: Add support for Amlogic meson G12 SoC DDR PMU driver")
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ drivers/perf/amlogic/meson_ddr_pmu_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+index 07446d784a1a..c1e755c356a3 100644
+--- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
++++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+@@ -511,7 +511,7 @@ int meson_ddr_pmu_create(struct platform_device *pdev)
+ 
+ 	fmt_attr_fill(pmu->info.hw_info->fmt_attr);
+ 
+-	pmu->cpu = smp_processor_id();
++	pmu->cpu = raw_smp_processor_id();
+ 
+ 	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, DDR_PERF_DEV_NAME);
+ 	if (!name)
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.49.0
+
