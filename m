@@ -1,273 +1,192 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010015.outbound.protection.outlook.com [52.103.68.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409335959;
-	Mon,  7 Apr 2025 13:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033077; cv=none; b=noT+N1yyNbutTRPHIHypa8LH4WyQ0kja+cSql5SLOkwz3r3HbTHK03FK7hMQvVz5aCSRAuTHdSpmtP/DxDoB/Od7hjTJG5PfvAr99HHaT0EUK7e/y1XKJDZawsAogkaOBhnmd/NQ/7Tke1NBg31YcLJx4hw+ZreI5MKgOCupwBg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033077; c=relaxed/simple;
-	bh=f5GDDJgSRxiOFPVGid4NO407JXRs2uJDGQUIqHYt6so=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Mgv5B1RBL9Ijtd2eesa8uBlx3z/1jT8BKSrgwDmr8M7CmL21zZ3sYZThO46i1obNP/VelWKKRlF63Li7T0W5jq5UbmchOkgjbjsHzs1eqBtu2XHrIDlSXQs5tpFtE3N9PJUQvER2jVGfvHhRUTbXQElpDshjyZAAMoX5dfixrZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k3KcTo4B; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5048513C8E8;
+	Mon,  7 Apr 2025 13:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744033096; cv=fail; b=VX5EgrmSifSWxEclG1cS763/HQ6emxgzDt6oPj4fI2zsn7JJLKYdVH9C1wGEePlZPUIzd1To2GqwSq/5F0jBKz43f+EYWskJaUOzbXo73TMgpSa5qdoEVKjr096lxbz8BCQ5uNiIwqCZJAHfSMQRWthf7/LerfTQwDVUi2RErZQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744033096; c=relaxed/simple;
+	bh=jIUBED+pO8R9lW2lVzL2HvgmzKpBpS9oBtNIqrykJzE=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=N7ChpO7eDhnTh7oFnRq3HcdBEhnalnchk4MZeAjvfwbRYOdvbzSO4D3LunmVDB5elEDFsczwlbZFoFto0w3Yvrx7C+CBJI+WPx7mRw2RvRScjo1KX+QGOoM++MyKcoifgQAiT3DBcFFXMzfZyMzYbsiVLzXTdpOLlApzXiweW2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=g5QYR7Sx; arc=fail smtp.client-ip=52.103.68.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k3KcTo4B"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Dbi0U874366
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744033064;
-	bh=zyBUYRmfceZIhDmuxqW+GqAdGByCBZdWwRne1MIXY3Y=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=k3KcTo4BZOY8hRS3CuO4Kw2kcKmi39Uw4dRYd/Nes3Q5UoFQF6aEQrxLy8toRSTRU
-	 E4dmffQBf4qtnGGa+T7t798cRdpuA+px/VA2ZC/35fLqv9i+FX1GFK2YEsOvPlccOg
-	 4yG+EyvjhoOQDZjOEFuCWsMwAuyNhbXl49SNrWT4=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537DbiaE007681
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 08:37:44 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 08:37:44 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 08:37:44 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537Dbhea062869;
-	Mon, 7 Apr 2025 08:37:43 -0500
-Message-ID: <3117c242-02ec-4607-90c1-2bf771be5ea0@ti.com>
-Date: Mon, 7 Apr 2025 08:37:43 -0500
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="g5QYR7Sx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aC9Le8BQ+l63vIOCRk6IRayyx04ZAd8p9bDaYG4UQGM54l+Ih46CJyh0bBKdc9DODdG2V7t2azMj/A93hBCY6A+54LgLow6onXgbBiESkgapnU8OvsYE7Hc6gsL26oSUh5LvVEY5UCLPSM3IHwSVqfcwrpqWAnlggb57RRQWH0XZX9n55hT7jtjdfrPWK5nML8PkHsaNGT9+Mfrzmdpx3PqTL6ZshDxoj73kAGEOv4xweqsuNtYXW3H0PdDuNQKNzyAitAS0Q1jx0KdIeQ2S1jB9dyAYFIEjnDpgqKyOgogPnro6s0RGhcRr8MY4evlbDFCIYkWRrJ4ACEX+oNP8OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XQeZ+h7jk0KS4dpMaymYhL5l8BSaREklpUecC5FBtUI=;
+ b=n9VSFm+aBr27xIQ9Q+3+j25KwUt7MXpGKfP2MFyETVYAKNGePReYMyOMUfg/ioDM9cSHSqmFdUfPfvoI9vs98R/qYUS83YS54ixWWeB8s8DVmCIwAtokn3t6IceqMDN8Ce84VkfqhIBobG6VHpkt0N8z++KVD8Qh4NMQO0k/6To4kgUq2Y4PxVog2f3zPdrGTE4n0qoMvdsWfJTtUu8hXa1ziysCWta+kVccoOEy0I1v5hEvqPXQNzqvmjRU1Z3B4df98zGn/10+X2e7hmP9SfTz6A1Y0gZ1Wn0Ir0ER0cqb58KJTGiXdJk6kTt5hZQddjB4XkvSP/ylzcsP/T2SWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XQeZ+h7jk0KS4dpMaymYhL5l8BSaREklpUecC5FBtUI=;
+ b=g5QYR7Sx3d6R3/LAkEGTdJXHnA246M18bYbnm4Z9lUUwHpnmlarIllZQF6/zKOdHh5vMQK8lFKrSfeo1QGHNOThtR+9t6EqhCnQKUzOs5n4HCJUTu8qMbOrEKWPvhBXynuDZ2o3z0tvnCdn9gWLHnHO9oZW0hqIhwqhz/mqt7YV4buMrNw8kRHJ2ZJGMFKzHBRZ5tTn1Kx8gFiZFy8/mJrhwfdohwKUCvWMXJunF3PPhZ/nzbSFloMeOSm2pnJBDuXMEDt+LamK5BDNbXAPjYW3BB96rr3tBd2LhyE5ke7AlDDAJDEUa3XoGROvzYuQkQbo70zUSpMCfdxf16aBghQ==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN3PR01MB6823.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:94::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 13:37:58 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
+ 13:37:58 +0000
+Message-ID:
+ <PN3PR01MB9597A66B39FF5824E3718EC3B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 7 Apr 2025 19:07:54 +0530
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3 3/3] drm/appletbdrm: use %p4cl instead of %p4cc
+From: Aditya Garg <gargaditya08@live.com>
+To: alyssa@rosenzweig.io, Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+ airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ Hector Martin <marcan@marcan.st>,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>
+References: <8153cb02-d8f1-4e59-b2d5-0dfdde7a832e@live.com>
+Content-Language: en-US
+In-Reply-To: <8153cb02-d8f1-4e59-b2d5-0dfdde7a832e@live.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::22) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <58537fd7-eb7f-488c-a315-ffab4414ec2b@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 03/26] remoteproc: k3-r5: Use k3_r5_rproc_mem_data
- structure for memory info
-To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250317120622.1746415-1-b-padhi@ti.com>
- <20250317120622.1746415-4-b-padhi@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250317120622.1746415-4-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN3PR01MB6823:EE_
+X-MS-Office365-Filtering-Correlation-Id: 238c263d-d9bb-4553-4fcc-08dd75d968de
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|7092599003|6090799003|5072599009|19110799003|15080799006|461199028|440099028|3412199025|41001999003|12091999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VmxraHBKeGtmMmRPSzNiNGZOS051eGVZSndSeWZWeisrTUZsbnBvRDBHZEFV?=
+ =?utf-8?B?VHM2SnZ6eGtRQ1lYYlVpWkE2MUtCdEdjdDIzbzFCYlF2eTRXOU1pd1hFM2ZL?=
+ =?utf-8?B?RHVqcHBtS1pEMkNIYkRhN1ZxZGYwcmp0NWlidnRReFlUaUpGRFN4Z1NIV2hD?=
+ =?utf-8?B?SGp6UXhSaDVWQXZZbHRsRVRhbjRqWVQ5VmphSWRZVld1K2xTZWVOajZnQTBF?=
+ =?utf-8?B?c2pZR0d4WFk0WjlFUHoySFJ3amwyUys0OFEyM01CbmNYbzZVS3hBR1ZIUmw3?=
+ =?utf-8?B?SnRqT0ZWOTY0U3h1dFF3K1ZCOEVMMVVtb3l5UEEyejRNQmh2WXlaS3ozVUJq?=
+ =?utf-8?B?VGlsd0hzL2RjbUFoZDVCTjM5WUxWUFc0TnBQVi8zRk5LM0xnbXhZTVFoTHFI?=
+ =?utf-8?B?cjArdUg0cG5XOGpjWFAwT0R6UWoxYWF0cFhiTjU5UnhvMmQvbnpLbmNoWE5T?=
+ =?utf-8?B?S0NTVFN2T0hmNFg5aUZzWDRVNVJkU3kwd2R3RWlEUWdLdEpEeDV0aDBZRGpS?=
+ =?utf-8?B?amd4d1JiL0paUTZ3eW9QRS83TWpYeVRvL1BaYkJhL0dlbm9uS2o1Y1ZWTmRV?=
+ =?utf-8?B?WGhZaXlpMUs4b21PU3BUdFg1WXV3L0x6a1p6dWZ2eG9SUjlXMGZ5am4yOTFR?=
+ =?utf-8?B?c1VFR3dyZ0lPV0kyWGxzUzNvQ01tTVBKMHJhSnhTUEp0U3pacHRlZHB5SDQw?=
+ =?utf-8?B?SW5EVU43L1BBZ2h4RU56QXlNQ1FsUjRHalV1Y1R2bWY2UGFtRGhobW1pZnRH?=
+ =?utf-8?B?ZWZaQWUvRmI3WnJjbVRZaGZpdTkwd0lscDloUE90d1NNOHNqaG8rQk9Gck5X?=
+ =?utf-8?B?cHorZmpYRmdOZGdtbXJSN0w0MXQ0YnRpaGprNWVFS3hZeW01ckdTRC9idyty?=
+ =?utf-8?B?ZERMRnVpYi9pTkZKRHBqNUNLcFkrNks0bE1VYm4zaDZ0dThhUHhhWktrRTFF?=
+ =?utf-8?B?OHkwMzdrTExPLzVDd0pNSVhldTZRY2ladWVpNVFaWjR2c29sU2Q1S2MzSm0r?=
+ =?utf-8?B?NjVBaDlkUnoyN01QMnh3UXVTNGZ1ejRmTkxQQjc1ZGVDWG9CdXRQVWtqb2dB?=
+ =?utf-8?B?WDdPQzdCNVBXREVLZ1lHOFc5RGF6UDg2VVFuRGdvbEZSZlo0aHcwK1c3VHhQ?=
+ =?utf-8?B?dXlHb1JKKytBcGwvMjBnZ3pKUndFSm9sbmtoN2JlK0RhWTExN0VHVit0MnRp?=
+ =?utf-8?B?aTNHL21rOHV6UHY4ZU9IK2krQk9uZUliczhFU21Qb0VubUo4dndvQkJ0eGZU?=
+ =?utf-8?B?LzhVQVgvSkhHU3BkSFh6ZXF0UW1UVVd0SmpSbFRMU1FENm01MXFYTm9mc3Rx?=
+ =?utf-8?B?NkhWcEk4cndWVXVPVGtQMW5CRy9Rc3Yrd0dlVUNQM3VQMkNHSDFOWWFIcjNW?=
+ =?utf-8?B?WEx1VG93Umd5YUlTSjNYcFcwU3ZIS3NYd0FCYitVbXpzR2xXNGFvUlVMbDlV?=
+ =?utf-8?B?OU9laXdLd2RFQ254ZjcxczBCT3lCaktvL0lNalZPZS9FWmpIQVJVQ3JNeUhq?=
+ =?utf-8?B?WC93TXNWdWo3MU1hUElWUWFpc05RbkRrS055K1JkWHVxZ2w3Rlo0WTJRYlJm?=
+ =?utf-8?Q?ycQx+0Lb8uT1ao4gBnWVphchl02YlNXReXa3uHQUcHTRI9?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d2JMUFJxQWMxK1hyRkZUQ2h0NTNkZC8wMTBaOWRsMlRmR1RtbDkrUlNtVVVh?=
+ =?utf-8?B?V3pJOEtHZisvaEc2N1dqZWRibW1ZM2RjdGVaS0lnbzdraVlkWE5idzJON3Mw?=
+ =?utf-8?B?S0NjTmhlN25vdjBLQjVYUnpCNXd6ZUg1eDA4OVozRTF5SnBRallWcG91RHFx?=
+ =?utf-8?B?Ym5ReXZnVkxFd3lpcWNWT0tVbjU5c2tJekhLQWMwR09UZTJwRWJLS3hqU0l0?=
+ =?utf-8?B?TGF3YnI0Q1Y3VDd3OGNqNEhtcGtERlFLK0hES2VMVjllV3d0VFJLTDlsS2s4?=
+ =?utf-8?B?eE9UYitlcmdqU3lySDBsMWFIcENUWUlqZ0w2dU9CQWhQREpZeGNlcGNkeVFU?=
+ =?utf-8?B?VVRzTG9ZWE1EcHdVYVh3ZDNMdzBhTDdvZ011clRaZjQ5aHZrZ0pYL1U5bXNH?=
+ =?utf-8?B?U0k1RkJGR3BxdnRWRVcwbi84cW5KSzFZNVFLMUZzRmpWd0pXbTJWV2dXUlpt?=
+ =?utf-8?B?Ynlwd2FjVEo3aG9CZkE4UXUvUHJvbkIxWWVrRG9KVmZRZGNaK3N4NjVXMzF5?=
+ =?utf-8?B?SDV1K3RZWWtKM0R4Z0pNcXQycEFiL0hJZWNnRGorVVlNNW1lSFRINGF0UDAx?=
+ =?utf-8?B?aEY1Q2xCeVgvRm8zb3gyOVdHc0VCS3R3T1d1VkgxN2NkS0N3YU5oNzNFd2Zx?=
+ =?utf-8?B?SXZERE0rOUdPeHliNWhMTllGOTRHVnNjMzBlMGhWYVd4b3ZwczZuaEZEU25t?=
+ =?utf-8?B?Y2JjZ3BmM2JVL0htWE1BVU1XTExvWTFGcjhsSXNoTG5ZUENIWklrOVZrWW1X?=
+ =?utf-8?B?MFN5dkxDK0xUN25VZ1VtcGNrbjBGMHl6UXhPaElwbnlzMGZHZXc5L2syU2k3?=
+ =?utf-8?B?WXNjNEJISTJxVFZad2xXdDVNT0RIV2VXMnBod3Y2NENOb2hjVHMrQ0x2OUN6?=
+ =?utf-8?B?STlNUDRpalN2MW1iVFUweUMvK1RXOWRQMm1vSXhGZkY3VGRTZWl3NTdTQnlq?=
+ =?utf-8?B?N2tsUy9xZ1ZkV3BTdDdtOUV6MThxSlpac2hJdlBFbXVkUmRKWkpnbzl0cEg0?=
+ =?utf-8?B?QkR2VnhqWlZGVDF6ZkwzVys4UHdGU3NYMzR2bnV4eTFQTVAvWGlSR0REYVVE?=
+ =?utf-8?B?U0ZMR28vLzIzVDFJNytFeEZ6YnRXc2ZJc1lhdGxZVjlPQW5OWXZuQUk0bTlP?=
+ =?utf-8?B?OGRYRC9ZK2Qxa2tPUHozdnpUTy9HN0g1RnpyZEFmRkU0eXN6UVVVZlFBeWcv?=
+ =?utf-8?B?ZUtKKzVKemFHU3AvVGg5a1ZjYys2YU1RSnpCNW9uSThVTCt5YzJTVERnZ1dx?=
+ =?utf-8?B?RjhmQXI1VnlzQWtxS2FqdHhuc1dSWm9Feno1R1crYkZpdnd0YTRWNW9wUVZG?=
+ =?utf-8?B?S0pNUlNYYVA0NktFRHZ2NklUelFKRlNJSlJ2R04wNkVkRlR6Z3ZFN3RGK1Fj?=
+ =?utf-8?B?UXRCU3MrbEUxWDEyKytmNVJKVWxLR2VobGdIV1QyVDZyTlVwUmNEWVRNSWtC?=
+ =?utf-8?B?U1FIUkxWRGhQVjJlRzRNRjdOT0k2Z0w0NHBzakJ6RVRBZ0pkUzVtSGlpRFIv?=
+ =?utf-8?B?T3pyUjh6c0RDKzRadTF3RjhQYjFDV1JFK1VNSC85RWtEMENMMkJ1S1J4WkJk?=
+ =?utf-8?B?Uklwdk1jeDVWWTNFYzJlLzQ0SVczT2pNdXE5VFZpSE11eGU2dm5JMGhZVnV0?=
+ =?utf-8?B?djdzRDhYWXExZlcxa3dsVG5LckQrWlFLditMZjF5NmY5N3dRbm4yOStNN3VH?=
+ =?utf-8?B?aFUwbUlBdmljTmpzK0RsKzk4dU1adDhUM0NjU2JDalUycTQ3TVcwZU1NWXBh?=
+ =?utf-8?Q?ra3XNoaaG+7thSb74MQD9V5/WRPOtzpgLHL5ff5?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 238c263d-d9bb-4553-4fcc-08dd75d968de
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 13:37:58.6267
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB6823
 
-On 3/17/25 7:05 AM, Beleswar Padhi wrote:
-> The ti_k3_r5_remoteproc.c driver previously hardcoded device memory
-> region addresses and names. Change this to use the k3_r5_rproc_mem_data
-> structure to store memory information. This aligns with K3 DSP and M4
-> drivers, and can be refactored out later.
-> 
-> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
-> ---
+From: Aditya Garg <gargaditya08@live.com>
 
-Reviewed-by: Andrew Davis <afd@ti.com>
+Due to lack of a proper printk format, %p4cc was being used instead of
+%p4cl for the purpose of printing FourCCs. But the disadvange was that
+they were being printed in a reverse order. %p4cl should correct this
+issue.
 
->   drivers/remoteproc/ti_k3_r5_remoteproc.c | 65 ++++++++++++++++++++----
->   1 file changed, 56 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> index 525f26996b56..29205d9e21af 100644
-> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> @@ -84,18 +84,44 @@ enum cluster_mode {
->   	CLUSTER_MODE_SINGLECORE
->   };
->   
-> +/**
-> + * struct k3_r5_mem_data - memory definitions for a R5
-> + * @name: name for this memory entry
-> + * @dev_addr: device address for the memory entry
-> + */
-> +struct k3_r5_mem_data {
-> +	const char *name;
-> +	const u32 dev_addr;
-> +};
-> +
-> +/**
-> + * struct k3_r5_dev_data - device data structure for a R5
-> + * @mems: pointer to memory definitions for a R5
-> + * @num_mems: number of memory regions in @mems
-> + * @boot_align_addr: boot vector address alignment granularity
-> + * @uses_lreset: flag to denote the need for local reset management
-> + */
-> +struct k3_r5_dev_data {
-> +	const struct k3_r5_mem_data *mems;
-> +	u32 num_mems;
-> +	u32 boot_align_addr;
-> +	bool uses_lreset;
-> +};
-> +
->   /**
->    * struct k3_r5_soc_data - match data to handle SoC variations
->    * @tcm_is_double: flag to denote the larger unified TCMs in certain modes
->    * @tcm_ecc_autoinit: flag to denote the auto-initialization of TCMs for ECC
->    * @single_cpu_mode: flag to denote if SoC/IP supports Single-CPU mode
->    * @is_single_core: flag to denote if SoC/IP has only single core R5
-> + * @core_data: pointer to R5-core-specific device data
->    */
->   struct k3_r5_soc_data {
->   	bool tcm_is_double;
->   	bool tcm_ecc_autoinit;
->   	bool single_cpu_mode;
->   	bool is_single_core;
-> +	const struct k3_r5_dev_data *core_data;
->   };
->   
->   /**
-> @@ -151,6 +177,7 @@ struct k3_r5_core {
->    * @rmem: reserved memory regions data
->    * @num_rmems: number of reserved memory regions
->    * @reset: reset control handle
-> + * @data: pointer to R5-core-specific device data
->    * @tsp: TI-SCI processor control handle
->    * @ti_sci: TI-SCI handle
->    * @ti_sci_id: TI-SCI device identifier
-> @@ -166,6 +193,7 @@ struct k3_r5_rproc {
->   	struct k3_r5_mem *rmem;
->   	int num_rmems;
->   	struct reset_control *reset;
-> +	const struct k3_r5_dev_data *data;
->   	struct ti_sci_proc *tsp;
->   	const struct ti_sci_handle *ti_sci;
->   	u32 ti_sci_id;
-> @@ -1207,31 +1235,32 @@ static int k3_r5_rproc_configure_mode(struct k3_r5_rproc *kproc)
->   static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
->   					       struct k3_r5_rproc *kproc)
->   {
-> -	static const char * const mem_names[] = {"atcm", "btcm"};
-> +	const struct k3_r5_dev_data *data = kproc->data;
->   	struct device *dev = &pdev->dev;
->   	struct k3_r5_core *core = kproc->priv;
->   	struct resource *res;
->   	int num_mems;
->   	int i;
->   
-> -	num_mems = ARRAY_SIZE(mem_names);
-> -	kproc->mem = devm_kcalloc(dev, num_mems, sizeof(*kproc->mem), GFP_KERNEL);
-> +	num_mems = kproc->data->num_mems;
-> +	kproc->mem = devm_kcalloc(kproc->dev, num_mems, sizeof(*kproc->mem),
-> +				  GFP_KERNEL);
->   	if (!kproc->mem)
->   		return -ENOMEM;
->   
->   	for (i = 0; i < num_mems; i++) {
->   		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> -						   mem_names[i]);
-> +						   data->mems[i].name);
->   		if (!res) {
->   			dev_err(dev, "found no memory resource for %s\n",
-> -				mem_names[i]);
-> +				data->mems[i].name);
->   			return -EINVAL;
->   		}
->   		if (!devm_request_mem_region(dev, res->start,
->   					     resource_size(res),
->   					     dev_name(dev))) {
->   			dev_err(dev, "could not request %s region for resource\n",
-> -				mem_names[i]);
-> +				data->mems[i].name);
->   			return -EBUSY;
->   		}
->   
-> @@ -1245,7 +1274,8 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
->   		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
->   							 resource_size(res));
->   		if (!kproc->mem[i].cpu_addr) {
-> -			dev_err(dev, "failed to map %s memory\n", mem_names[i]);
-> +			dev_err(dev, "failed to map %s memory\n",
-> +				data->mems[i].name);
->   			return -ENOMEM;
->   		}
->   		kproc->mem[i].bus_addr = res->start;
-> @@ -1258,7 +1288,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
->   		 * addresses 0 and 0x41010000 (same as the bus address on AM65x
->   		 * SoCs) based on loczrama setting
->   		 */
-> -		if (!strcmp(mem_names[i], "atcm")) {
-> +		if (!strcmp(data->mems[i].name, "atcm")) {
->   			kproc->mem[i].dev_addr = core->loczrama ?
->   							0 : K3_R5_TCM_DEV_ADDR;
->   		} else {
-> @@ -1268,7 +1298,7 @@ static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
->   		kproc->mem[i].size = resource_size(res);
->   
->   		dev_dbg(dev, "memory %5s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
-> -			mem_names[i], &kproc->mem[i].bus_addr,
-> +			data->mems[i].name, &kproc->mem[i].bus_addr,
->   			kproc->mem[i].size, kproc->mem[i].cpu_addr,
->   			kproc->mem[i].dev_addr);
->   	}
-> @@ -1323,6 +1353,7 @@ static int k3_r5_cluster_rproc_init(struct platform_device *pdev)
->   		kproc->priv = core;
->   		kproc->dev = cdev;
->   		kproc->rproc = rproc;
-> +		kproc->data = cluster->soc_data->core_data;
->   		core->kproc = kproc;
->   
->   		kproc->ti_sci = devm_ti_sci_get_by_phandle(cdev, "ti,sci");
-> @@ -1764,11 +1795,24 @@ static int k3_r5_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +static const struct k3_r5_mem_data r5_mems[] = {
-> +	{ .name = "atcm", .dev_addr = 0x0 },
-> +	{ .name = "btcm", .dev_addr = K3_R5_TCM_DEV_ADDR },
-> +};
-> +
-> +static const struct k3_r5_dev_data r5_data = {
-> +	.mems = r5_mems,
-> +	.num_mems = ARRAY_SIZE(r5_mems),
-> +	.boot_align_addr = 0,
-> +	.uses_lreset = true,
-> +};
-> +
->   static const struct k3_r5_soc_data am65_j721e_soc_data = {
->   	.tcm_is_double = false,
->   	.tcm_ecc_autoinit = false,
->   	.single_cpu_mode = false,
->   	.is_single_core = false,
-> +	.core_data = &r5_data,
->   };
->   
->   static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
-> @@ -1776,6 +1820,7 @@ static const struct k3_r5_soc_data j7200_j721s2_soc_data = {
->   	.tcm_ecc_autoinit = true,
->   	.single_cpu_mode = false,
->   	.is_single_core = false,
-> +	.core_data = &r5_data,
->   };
->   
->   static const struct k3_r5_soc_data am64_soc_data = {
-> @@ -1783,6 +1828,7 @@ static const struct k3_r5_soc_data am64_soc_data = {
->   	.tcm_ecc_autoinit = true,
->   	.single_cpu_mode = true,
->   	.is_single_core = false,
-> +	.core_data = &r5_data,
->   };
->   
->   static const struct k3_r5_soc_data am62_soc_data = {
-> @@ -1790,6 +1836,7 @@ static const struct k3_r5_soc_data am62_soc_data = {
->   	.tcm_ecc_autoinit = true,
->   	.single_cpu_mode = false,
->   	.is_single_core = true,
-> +	.core_data = &r5_data,
->   };
->   
->   static const struct of_device_id k3_r5_of_match[] = {
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+ drivers/gpu/drm/tiny/appletbdrm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/appletbdrm.c
+index 703b9a41a..751b05753 100644
+--- a/drivers/gpu/drm/tiny/appletbdrm.c
++++ b/drivers/gpu/drm/tiny/appletbdrm.c
+@@ -212,7 +212,7 @@ static int appletbdrm_read_response(struct appletbdrm_device *adev,
+ 	}
+ 
+ 	if (response->msg != expected_response) {
+-		drm_err(drm, "Unexpected response from device (expected %p4cc found %p4cc)\n",
++		drm_err(drm, "Unexpected response from device (expected %p4cl found %p4cl)\n",
+ 			&expected_response, &response->msg);
+ 		return -EIO;
+ 	}
+@@ -286,7 +286,7 @@ static int appletbdrm_get_information(struct appletbdrm_device *adev)
+ 	}
+ 
+ 	if (pixel_format != APPLETBDRM_PIXEL_FORMAT) {
+-		drm_err(drm, "Encountered unknown pixel format (%p4cc)\n", &pixel_format);
++		drm_err(drm, "Encountered unknown pixel format (%p4cl)\n", &pixel_format);
+ 		ret = -EINVAL;
+ 		goto free_info;
+ 	}
+-- 
+2.43.0
+
