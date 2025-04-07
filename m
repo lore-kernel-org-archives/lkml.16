@@ -1,101 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4043119D08F;
-	Mon,  7 Apr 2025 13:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA6518DB03
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033737; cv=none; b=intF++s9amdQgiZZ7Mr+q51Lla8+CKmXlYMvj8CPJza0SMH8UFlFGMbb16XkbbcJgNFR5ePpb0fAWGec0pTw/O092I18tMIO9vChh61rCZ9gg1S/H3jgKoTvT+ECSwk9MqG7qiGfUuOFH3AZsMNEViVdHAcypV7Fa5kSrEDwr00=
+	t=1744033779; cv=none; b=EchkP9xVPfYKKqszWK0Uw5z2+uZ6APQRQEnGu96Kauv6Rn8Nf2mpiluXQu0U5psABPYYLg8EHHnT8Rl8lTh2z7odjHT9Khp5vXZvGa8v0/PEDAGC5N0/gPnJwnuUE3Sj38AbBZ4TrgRXJ5YIc3i2XtOI4vcG/4OGRX6ayYzUJ2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033737; c=relaxed/simple;
-	bh=Ox7tiIkaCRawomU325EiXwPmeeSjZyj78ZsMxwmOulA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8UFmKuDzVjMXOaRQJ+zjRcGvT3WX+DZfuR5gwOg96USjQErNf9Rk07KDTC2AaEtVYEwDrXP9PyEoSADUIbZvj0k/zyPLvphcoVJgYMA570NxM0Hw19aKI++ZJ+vps7h6gG9+8G+R+r69kzYsvJGXNGBIjismZ3sT5iucpBSh54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZX9MsYUv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744033779; c=relaxed/simple;
+	bh=WhV9u4IQQhmqgaWXSsNMfBXHEeR56D8mrLfD4YSL1jE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xgz2jcxtPSP/aqXBYfYjWZqUE/xYUG9ZdPfXn3bSndZTIWgzmdzoQW7TjtwPvikcbb07tv+ev59ozAky2+JZHDNQdNcsxtWbVkC1oPp5MjFNUA7+vSEgVzddoI2gvzftAW0+Z9oWW9jZ0CKEUHlMqRay1UXOf0P5zivvzWyfbeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=CHn2fjav; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZX9MsYUv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 992B7C4CEE7;
-	Mon,  7 Apr 2025 13:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744033736;
-	bh=Ox7tiIkaCRawomU325EiXwPmeeSjZyj78ZsMxwmOulA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZX9MsYUvCLd0WfNshTif2wMQJPsVnZ8FFIG7X87LnvtPDtFZ6cMZD67sMAoo+S0yB
-	 9p6BRSStrmqAd8xaXL5uGgmhk/HBMBYInq+zQrp2u+k3xaZYuu3XY1btqIWTyEhl34
-	 YpPDHlxvv21niX7Zgl2zXptLXx5LTJA7h3PhihzIf3bQzQcguuZUSKE0Hr7Yf10p6X
-	 4yDZZQC1KFRjHxIlWN1xNRudlUazsw0aZteJXsMt9niLrLrRlBCYbQi90gYWobwOQa
-	 pGdF329qlwvyTLWkt/pyDe8FycqpBCM2X9pTVj24OnizoeKVsK7/gUVFWxKSIT3GT6
-	 IIiKuuY+xTlAA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u1mqU-000000005bW-2a1S;
-	Mon, 07 Apr 2025 15:49:03 +0200
-Date: Mon, 7 Apr 2025 15:49:02 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: camss NULL-deref on power on with 6.12-rc2
-Message-ID: <Z_PXzvL5Zt9QkivE@hovoldconsulting.com>
-References: <Zwjw6XfVWcufMlqM@hovoldconsulting.com>
- <Z_OXELLDIfQII6wV@hovoldconsulting.com>
- <778e2cd0-5371-424f-809d-20f7c3ae5343@linaro.org>
- <Z_OrQGspD79k1Mg4@hovoldconsulting.com>
- <Z_OwdYtSyFDhkYMa@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="CHn2fjav"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-4003b22c2f4so2891680b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744033776; x=1744638576; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dIXA1CtYmOM8PewjK/ZzArTuI36AiEw8n/KPp8qCjcQ=;
+        b=CHn2fjavnRMMXFPMdiM8wCQdSQq7m3B5MrbyCeMlb+nwZ7atw1lcO8mtNCgnwTD+lK
+         EJMF4/55xR5QufM9zMHLTwFrR1zJiM+F5khHEBC8wnqlC+nPw3ZBJ9gUWE3MArMF3AP3
+         8jVCvfIIpyMCrvawBaJmK9sph1y89rNNgUwhC3eLAeM38KTLYPfhJxumz938I7Qv9IGz
+         54XjksTUoNgbKTzxfHF5KmXwvEz29dQ3O3ytQW7zpVLM39m8KHGhALbfDcIasgDaJ5gJ
+         zMgVrQ0a2L+UrkuHf5RA44p4IJEPmaiCA7K+KP0SAtI8dKbebAYyBNtOPADaR87TnBz9
+         az8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744033776; x=1744638576;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dIXA1CtYmOM8PewjK/ZzArTuI36AiEw8n/KPp8qCjcQ=;
+        b=FEziik+BTKobpo4Q1Z7GnEFyah0l/h6+BNcy/byjQj1QFlW1Tj/4D1NrGtkXP2crdD
+         hexy9Qnu5vFwAZl1WDt1bv3T8f7X26NI0GQ7/8n+fXPFm+S8rZqCPM7U/qPA2v9oC2ed
+         /WO7hZGXsJL1RXxMoIXuZMmxEdrkUFwXf6N2U3YbUptqbz3uVL72UXJdOyTZ5ha95pl8
+         ZDqnWpjPF2dRPd8rCWoy8J2M7xVtk07OWeIJRla/0qNKEOKkIOhlGCwcDeuMTLNkZNET
+         8aROv56jMENQJUXDoI6hjWs4Ngz30DIYKjB0Dqew3z70nzGy48rMzUxsfPNL9VAmqO/s
+         AaPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlgDTX1hKmcotQ+Pyo91IDvIS1sYgjnRLZ5rFvJZ6eKeBKG1wmi8WN7eCDOEaJC7oEsUnFjtDyKc2QdSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkHRxj3A3qkbwgvvGw5FnVVnFQ6yEMB6h1ZuM2jhW38mlEARHw
+	aC72cAbCwoanVCkJdG8XohKO3VdMeFh9exNRsHqHnhPS6XKeZBeANSkHe71xclE=
+X-Gm-Gg: ASbGncvqEEujlEFTzBlZqhY1djdjM4yoB+JkULyychRPmliGzcOf2Gou5He6PGMZMAU
+	qFHagGmDgVphsEa9GfZMi01GQFnxqjFrRO/0TfzS9HlxQQ7PXTdPdh9ryPdxxob8WktB7icGTCS
+	9S/IxQlpvF5EoVfL/pWPlr3Bx8j3fttgBEM7Wke12cFhDTX9K80tNPVF/qYTxIP6Cvhq5NmySFP
+	JAhZi8S0eXP3x5nJYFaaHzMoOmIbyYhyKCU/WNnkD5N0x5GQtYxDKS+D7GvJDBEOo634NJDaFAz
+	spsW56DfSKkL5b8DbQCyEqvRpykOzpazPdH7WlIuXITHDQTJ7M4Vla/Zm8r4OUWKXEEjqUMVj19
+	37U9AEQIEOQ==
+X-Google-Smtp-Source: AGHT+IG/WeJOsYTJug2WwIegYoFPtqQ1kYLmD+mN7tixYlfHeBiAMs6zs8YlU4OTlrzTKkroXpuE/Q==
+X-Received: by 2002:a05:6808:229e:b0:3fb:57ca:1ea7 with SMTP id 5614622812f47-4004668c4a6mr7559744b6e.36.1744033776048;
+        Mon, 07 Apr 2025 06:49:36 -0700 (PDT)
+Received: from [172.22.22.234] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40040099665sm1725950b6e.43.2025.04.07.06.49.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 06:49:35 -0700 (PDT)
+Message-ID: <184ecf87-823a-42ef-9903-a21c787e0c5d@riscstar.com>
+Date: Mon, 7 Apr 2025 08:49:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_OwdYtSyFDhkYMa@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: greybus: use new GPIO line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rui Miguel Silva <rmfrfs@gmail.com>,
+ Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-greybus-v1-1-9d4f721db7ca@linaro.org>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250407-gpiochip-set-rv-greybus-v1-1-9d4f721db7ca@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 01:01:09PM +0200, Johan Hovold wrote:
-> On Mon, Apr 07, 2025 at 12:38:56PM +0200, Johan Hovold wrote:
-> > On Mon, Apr 07, 2025 at 10:58:52AM +0100, Bryan O'Donoghue wrote:
-> > > On 07/04/2025 10:12, Johan Hovold wrote:
+On 4/7/25 2:14 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> > > > [    5.740833] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000030
-> > 
-> > > > [    5.744704] Call trace:
-> > > > [    5.744706]  camss_find_sensor_pad+0x20/0x74 [qcom_camss] (P)
-> > > > [    5.744711]  camss_get_pixel_clock+0x18/0x64 [qcom_camss]
-> > > > [    5.744716]  vfe_get+0xb8/0x504 [qcom_camss]
-> > > > [    5.744724]  vfe_set_power+0x30/0x58 [qcom_camss]
-> > > > [    5.744731]  pipeline_pm_power_one+0x13c/0x150 [videodev]
-> > > > [    5.744745]  pipeline_pm_power.part.0+0x58/0xf4 [videodev]
-> > > > [    5.744754]  v4l2_pipeline_pm_use+0x58/0x94 [videodev]
-> > > > [    5.744762]  v4l2_pipeline_pm_get+0x14/0x20 [videodev]
-> > > > [    5.744771]  video_open+0x78/0xf4 [qcom_camss]
-> > > > [    5.744776]  v4l2_open+0x80/0x120 [videodev]
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 > 
-> > I've only seen it twice myself (that I've noticed, at least this time it
-> > prevented the display from probing so I knew something was wrong).
-> 
-> Just hit this again with 6.15-rc1 after the third reboot so timing has
-> likely changed slightly which now makes it easier to hit this.
-> 
-> > Since it's obviously a race condition I think you'll need to analyse the
-> > code to try to figure out where the bug is. With an hypothesis you may
-> > be able to instrument a reliable reproducer (e.g. by adding appropriate
-> > delays to extend the race window).
-> 
-> It's apparently udev which powers up the camera when running v4l_id:
-> 
-> [    5.859741] CPU: 4 UID: 0 PID: 420 Comm: v4l_id Not tainted 6.15.0-rc1 #106 PREEMPT
-> 
-> So this looks like the classic bug of drivers registering their devices
-> before they have been fully set up.
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It's entity->pad which is being dereferenced while NULL in
-camss_find_sensor_pad() and when this happens entity->name is also NULL.
+Here is the commit that enabled these:
+   98ce1eb1fd87e gpiolib: introduce gpio_chip setters that return values
 
-Bailing out when entity->pad is NULL allows the machine to boot, but we
-should figure out why this function is called before things have been
-properly initialised.
- 
-Johan
+This looks good.  Thank you.
+
+Reviewed-by: Alex Elder <elder@riscstar.com>
+
+> ---
+>   drivers/staging/greybus/gpio.c | 16 +++++++++-------
+>   1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gpio.c
+> index 16bcf7fc8158..f81c34160f72 100644
+> --- a/drivers/staging/greybus/gpio.c
+> +++ b/drivers/staging/greybus/gpio.c
+> @@ -185,8 +185,8 @@ static int gb_gpio_get_value_operation(struct gb_gpio_controller *ggc,
+>   	return 0;
+>   }
+>   
+> -static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+> -					u8 which, bool value_high)
+> +static int gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+> +				       u8 which, bool value_high)
+>   {
+>   	struct device *dev = &ggc->gbphy_dev->dev;
+>   	struct gb_gpio_set_value_request request;
+> @@ -195,7 +195,7 @@ static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>   	if (ggc->lines[which].direction == 1) {
+>   		dev_warn(dev, "refusing to set value of input gpio %u\n",
+>   			 which);
+> -		return;
+> +		return -EPERM;
+>   	}
+>   
+>   	request.which = which;
+> @@ -204,10 +204,12 @@ static void gb_gpio_set_value_operation(struct gb_gpio_controller *ggc,
+>   				&request, sizeof(request), NULL, 0);
+>   	if (ret) {
+>   		dev_err(dev, "failed to set value of gpio %u\n", which);
+> -		return;
+> +		return ret;
+>   	}
+>   
+>   	ggc->lines[which].value = request.value;
+> +
+> +	return 0;
+>   }
+>   
+>   static int gb_gpio_set_debounce_operation(struct gb_gpio_controller *ggc,
+> @@ -457,11 +459,11 @@ static int gb_gpio_get(struct gpio_chip *chip, unsigned int offset)
+>   	return ggc->lines[which].value;
+>   }
+>   
+> -static void gb_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> +static int gb_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+>   {
+>   	struct gb_gpio_controller *ggc = gpiochip_get_data(chip);
+>   
+> -	gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+> +	return gb_gpio_set_value_operation(ggc, (u8)offset, !!value);
+>   }
+>   
+>   static int gb_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+> @@ -555,7 +557,7 @@ static int gb_gpio_probe(struct gbphy_device *gbphy_dev,
+>   	gpio->direction_input = gb_gpio_direction_input;
+>   	gpio->direction_output = gb_gpio_direction_output;
+>   	gpio->get = gb_gpio_get;
+> -	gpio->set = gb_gpio_set;
+> +	gpio->set_rv = gb_gpio_set;
+>   	gpio->set_config = gb_gpio_set_config;
+>   	gpio->base = -1;		/* Allocate base dynamically */
+>   	gpio->ngpio = ggc->line_max + 1;
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250331-gpiochip-set-rv-greybus-cd2365755186
+> 
+> Best regards,
+
