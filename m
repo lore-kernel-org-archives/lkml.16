@@ -1,92 +1,78 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7132451EE
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E64323BFBC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030372; cv=none; b=qaTjQ9qeXkqvmhNvQGoSOKxnMyVasjjJtbFpbY2LqOqneE6MD+evODCkOlIkaCTBhf/MVyjxwwwpx7vfRI6n87Y8I61yKb6RJYUaEKEgbHd6HOAAQgtyPKre94ukV+TvMgcZ2EfZqNnd4OEhyZf+NtZi//+BvGj+nCcEeoIUxCw=
+	t=1744030603; cv=none; b=cEubg1ex2dhZ4Bl/AoTW7azvFyk3bNvlqid7RvK28UX1EfNBwMfHx0Jka0aNckZBJUxGhRcNivFZZx+gK2cjEEGQ7xafJpu66jQgnDEG7jC0Cm0KWot5dNgnO3NnOHfb1JhqN0m+esZZxJc5oSMhZ+j/vICY4Ha8ZCnYu/KK8wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030372; c=relaxed/simple;
-	bh=UXiS6e53ATjOlg1moLZoLxv1EVd80kQyo2/El27n4ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VNp+OpF4x5il1u88BLvUxLi3VKyZ3CbEAReKrmxNfS0jlY7RMqbbC+/tnuWqiiyjShgQesVVBF9CQMj8a7NpUd35iFac4ESeAEhENvp+Bc0PedXOPXogXmS1+UXNQ6bDVe4N23K56MQPZrQdwV5k8zEqwT3V4d6UZgPu4UfW2lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NcpuByQk; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744030603; c=relaxed/simple;
+	bh=18LZ3UeBeD8+PKgIIQH47A2OwH8h/rcoFydIPYn9mgU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Fi7CIhgHRnTS84XHVvSscc+6GQvo+B8Pimj9TneOCWJceyWn3eazbJbvi4GNjRyaOPogPh+aaOED/A9kOqf20Z19E0xMoSZzvUrUOuDl5+3QPg+BAOBaWaDgyC0N1l++SsMrQpnirNs6Pz7Fk5pWjxH07iiq4BK8hQ89xySIfhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=XgQnXrBJ reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NcpuByQk"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c7913bab2cso39213685a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744030367; x=1744635167; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UXiS6e53ATjOlg1moLZoLxv1EVd80kQyo2/El27n4ho=;
-        b=NcpuByQkxZHwkER1s7yM+CjwKLhf/6elDU088bRMFHXGiNR4QPpxV/SWgKfZiU2KbG
-         TdecuOkz+6WLFAijtBDrfn/BGWabxD4fE4FkHyiMu8OVEihosibzAG5FpKPOPWLPVsN8
-         Jmm+GatMe5vtE+AKpyncvMKIHLXS6I18Sfxq2tUt3yE+V0FjRXB20JSxL2PDT1LBJQHU
-         UKyY95bXpCG4Wi/kF4E0OHQZJKv3piFlW4vPdhlpNNZE0k48pet1T7sPRdTZgM1vFoU2
-         uP569FMxt3hv0f8+O/gHriOsc6s8G+xGR9GvzvLoF3WEkld717Ov9tc6IFoUsq/FUVG8
-         0VJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744030367; x=1744635167;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UXiS6e53ATjOlg1moLZoLxv1EVd80kQyo2/El27n4ho=;
-        b=bxd0gD0T9riP70dfh5fsEz+O3YKZ9Dy4ev9TBsKG5XqwHUMpvzjy3ZHBHvRMVsg1yW
-         ZxWqg9nxSQMeWxTGBq9K7N4lT8w90ueymb4hDFJmrkOxr9PBKtt4Y/FtiAfPAFl+LKJi
-         yIUnEoboduH52BgiV5LmS7aJwMZgjb3XZFKeIYC3zrQuFq9fVezsGHV3bEMyWkRJO3ng
-         nRXlIVl0Z9Ba1mPNGwQT343iEP8j+6YZTieS4M/VKx4CnC6mEKcJ0798osMPaExnumCr
-         CF7o1KEdnX5W+/Vqb6jNQG3VUfnRSnpScArVx7hzg73Ap3qM7LePUR2nnfvdSEMjkpYw
-         FXFg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3pwleeZa9eaHuU62jDYD7xt5fj/Z3RIQbNmfrkWcfzItL8oODG31l+jWtWww4jhrlUVHLmSw8ewEKMCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ4PrY2z4z/mwqA+4DuFBWOWLFzWAvAtSUvuij4PzV3rVb7yJ1
-	ExjV1WC+YpvedMixAMCO9G4F+/mFusuS1atagefUzqq9rMdtRkGyq7XHD3jB9hU=
-X-Gm-Gg: ASbGncvKE4mj3rqbQnXkO2naI6ifpicGUWTElrqs6Y6GxFtoQ0LgK5XlL/1joBRHgGK
-	v7wIXghJIH+gxlbgOLwu5IYRUK8Ae7veW1H9BtDx7DXR/DUgyRGHluhTu3mDtNkVoh6+qjhqrk3
-	xhHLFPPVCB9t9SzJhJPyH5G2UZsyQBtiQxrOlkgiRRPb/Efz5bs349RaQZKulVWnr+Z7YeH0/pv
-	LUayvu7Whu/8zduygMqNA4qKDpe9/oLJcxpZpjjgPhtjQdBhY5Krf6lUA8EH0QZLLxWgdsORrnl
-	WOOyzLLswDTIAbMHpv+nwE1ug9y5IDpd71NtB3AXCA2EvIn32vWg0/dk4GiLv6gYiuEgZv5IzDD
-	+lFM458Px8gWr
-X-Google-Smtp-Source: AGHT+IFFujGf8/OpT8lH0erz6NHkVOvjXDhEBDliLgfZynIA49mD0iVlLuLiU9XRQecKr/w9OCmcAQ==
-X-Received: by 2002:a05:620a:801c:b0:7c5:3c69:2bce with SMTP id af79cd13be357-7c774d1c888mr2175938985a.7.1744030367654;
-        Mon, 07 Apr 2025 05:52:47 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea58d71sm591892685a.89.2025.04.07.05.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 05:52:47 -0700 (PDT)
-Message-ID: <7de1c05b-5f52-4bd7-ac3f-ca5688d39a5d@baylibre.com>
-Date: Mon, 7 Apr 2025 08:52:46 -0400
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="XgQnXrBJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=WMahgglQfhKL4OuHDIAWoSXkPdUPZsYVvzA3TCjbEf0=; b=X
+	gQnXrBJb2R3WZcdOyq6khpMjlzuHyfF5MIDl29e+2RZQA47I/kH5MmOXRE8kMPy7
+	FXhOVSL+UZDGWuhIL6XL/otpGtij/wphUcNCk8zWYJKFs6b9rgiAlPPWtK1xHNRL
+	Y5YfFPlKGAZXDq76HgbgMd3XdLiCUvAoNhE2AmtcLs=
+Received: from xavier_qy$163.com ( [117.131.123.221] ) by
+ ajax-webmail-wmsvr-40-107 (Coremail) ; Mon, 7 Apr 2025 20:56:06 +0800 (CST)
+Date: Mon, 7 Apr 2025 20:56:06 +0800 (CST)
+From: Xavier  <xavier_qy@163.com>
+To: "Lance Yang" <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, baohua@kernel.org, catalin.marinas@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	ryan.roberts@arm.com, will@kernel.org
+Subject: Re:Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
+ operations
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250407112922.17766-1-ioworker0@gmail.com>
+References: <20250407092243.2207837-1-xavier_qy@163.com>
+ <20250407112922.17766-1-ioworker0@gmail.com>
+X-NTES-SC: AL_Qu2fBvyYv00t4CWcYekfmkgWgus/WcW2u/Qj3IRSO5FwjCHp5BA7Y1lTE0bM2/CDFx2OkAiHXThMzOpkY49pWoEMkBbwyGARC+fCx4rMd7OOzw==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] pwm: axi-pwmgen: Let .round_waveform_tohw() signal
- when request was rounded up
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-kernel@vger.kernel.org
-References: <cover.1743844730.git.u.kleine-koenig@baylibre.com>
- <ba451573f0218d76645f068cec78bd97802cf010.1743844730.git.u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <ba451573f0218d76645f068cec78bd97802cf010.1743844730.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <5e3f976f.bca1.19610528896.Coremail.xavier_qy@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:aygvCgCHr+dmy_NnpzeQAA--.53262W
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiTQYoEGfzsgefNwADs5
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
-On 2025-04-05 05:27, Uwe Kleine-König wrote:
-> The .round_waveform_tohw() is supposed to return 1 if the requested
-> waveform cannot be implemented by rounding down all parameters. Also
-> adapt the corresponding comment to better describe why the implemented
-> procedure is right.
->
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Tested-by: Trevor Gamblin <tgamblin@baylibre.com>
+CgpIaSBMYW5jZSwKClRoYW5rcyBmb3IgeW91ciBmZWVkYmFjaywgbXkgcmVzcG9uc2UgaXMgYXMg
+Zm9sbG93cy4KCi0tClRoYW5rcywKWGF2aWVyCgoKCgoKQXQgMjAyNS0wNC0wNyAxOToyOToyMiwg
+IkxhbmNlIFlhbmciIDxpb3dvcmtlcjBAZ21haWwuY29tPiB3cm90ZToKPlRoYW5rcyBmb3IgdGhl
+IHBhdGNoLiBXb3VsZCB0aGUgZm9sbG93aW5nIGNoYW5nZSBiZSBiZXR0ZXI/Cj4KPmRpZmYgLS1n
+aXQgYS9hcmNoL2FybTY0L21tL2NvbnRwdGUuYyBiL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jCj5p
+bmRleCA1NTEwN2QyN2QzZjguLjY0ZWIzYjJmYmYwNiAxMDA2NDQKPi0tLSBhL2FyY2gvYXJtNjQv
+bW0vY29udHB0ZS5jCj4rKysgYi9hcmNoL2FybTY0L21tL2NvbnRwdGUuYwo+QEAgLTE3NCw2ICsx
+NzQsOSBAQCBwdGVfdCBjb250cHRlX3B0ZXBfZ2V0KHB0ZV90ICpwdGVwLCBwdGVfdCBvcmlnX3B0
+ZSkKPiAKPiAJCWlmIChwdGVfeW91bmcocHRlKSkKPiAJCQlvcmlnX3B0ZSA9IHB0ZV9ta3lvdW5n
+KG9yaWdfcHRlKTsKPisKPisJCWlmIChwdGVfeW91bmcob3JpZ19wdGUpICYmIHB0ZV9kaXJ0eShv
+cmlnX3B0ZSkpCj4rCQkJYnJlYWs7Cj4gCX0KPiAKPiAJcmV0dXJuIG9yaWdfcHRlOwo+LS0gCj4K
+PldlIGNhbiBjaGVjayB0aGUgb3JpZ19wdGUgZmxhZ3MgZGlyZWN0bHkgaW5zdGVhZCBvZiB1c2lu
+ZyBleHRyYSBib29sZWFuCj52YXJpYWJsZXMsIHdoaWNoIGdpdmVzIHVzIGFuIGVhcmx5LWV4aXQg
+d2hlbiBib3RoIGRpcnR5IGFuZCB5b3VuZyBmbGFncwo+YXJlIHNldC4KWW91ciB3YXkgb2Ygd3Jp
+dGluZyB0aGUgY29kZSBpcyBpbmRlZWQgbW9yZSBjb25jaXNlLiBIb3dldmVyLCBJIHRoaW5rCiB1
+c2luZyBib29sZWFuIHZhcmlhYmxlcyBtaWdodCBiZSBtb3JlIGVmZmljaWVudC4gQWx0aG91Z2gg
+aXQgaW50cm9kdWNlcwogYWRkaXRpb25hbCB2YXJpYWJsZXMsIGNvbXBhcmluZyBib29sZWFuIHZh
+bHVlcyBpcyBsaWtlbHkgdG8gYmUgbW9yZQogZWZmaWNpZW50IHRoYW4gY2hlY2tpbmcgYml0IHNl
+dHRpbmdzLgoKPgo+QWxzbywgaXMgdGhpcyBvcHRpbWl6YXRpb24gcmVhbGx5IG5lZWRlZCBmb3Ig
+dGhlIGNvbW1vbiBjYXNlPwpUaGlzIGZ1bmN0aW9uIGlzIG9uIGEgaGlnaC1mcmVxdWVuY3kgZXhl
+Y3V0aW9uIHBhdGguIER1cmluZyBkZWJ1Z2dpbmcsCiBJIGZvdW5kIHRoYXQgaW4gbW9zdCBjYXNl
+cywgdGhlIGZpcnN0IGZldyBwYWdlcyBhcmUgYWxyZWFkeSBtYXJrZWQgYXMKIGJvdGggZGlydHkg
+YW5kIHlvdW5nLiBCdXQgY3VycmVudGx5LCB0aGUgcHJvZ3JhbSBzdGlsbCBoYXMgdG8gY29tcGxl
+dGUKIHRoZSBlbnRpcmUgbG9vcCBvZiAxNiBwdGVwIGl0ZXJhdGlvbnMsIHdoaWNoIHNlcmlvdXNs
+eSByZWR1Y2VzIHRoZSBlZmZpY2llbmN5Lgo+Cj5UaGFua3MsCj5MYW5jZQo=
