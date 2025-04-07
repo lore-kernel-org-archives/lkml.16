@@ -1,136 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8272742A9B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA056212D65;
+	Mon,  7 Apr 2025 02:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743991715; cv=none; b=uGaMPeN+xomT3j73yJw//gYqhGZqyMntsgklsSo2xS7AuCWGZD89xypB202I3wVbTcijX4uMm05vDcrt9SINB+/HnkchYC0jxOT3hbSInh+6ZZbKh/zFj0AA28Nf7WPOQpbHomurg0oD3NIYwDQXzIIBRooxE0aRu3A9d8yXmcM=
+	t=1743991793; cv=none; b=lFszrrYBsPfa8Y3qEalITh5wZWb31s+ht/uopiRcvegF8oJIWsU5CLUh8thT42DpPA1b3qSPQ/35Ofzr1PyGyggu22J8wR5hpf/kH8WQS+ST9LpXAzONkrCTcIg02keedxGkwI4otEMT4tCwluQYMoIgB7R9oi5Hq4s+DicCw4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743991715; c=relaxed/simple;
-	bh=xm2ScceSyaOMTCAkQf3KIDsk6uIz8avCUOolRNi4Fuk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iJxWqXtBdhrDRowLORQe8CqhaYg3phdL5tpkfns441Qoh3xVwiV0jX6xdXESx3hlFXnufZBXoUaVgHXkQy/gft7wRnAlIcVjvRdx7jzAdXM7IQLkXKEtBprfLNpO9is4TNygxbYeEOqZBduHUFqnfC94aJ8mhL6xx95GTAP7DxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAQeyW70; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAQeyW70"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C498CC4CEE3;
-	Mon,  7 Apr 2025 02:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743991713;
-	bh=xm2ScceSyaOMTCAkQf3KIDsk6uIz8avCUOolRNi4Fuk=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=cAQeyW70FWP6Nri9RCE9s1AysIfjqTm2A7Y3SDdBHqRrT7Oj0KLsF/Ge+J4bsMWwg
-	 ds3u1ZjrFNXvnkfpWKl2NIoIv8rYGvX8Bm5q2lHrKx4uUxZz/PuqMnjDhCocFXTlD6
-	 bFp3lqCE2DiBO2CLXdKXfXSb+qj8N+7pjTCS3zi9oPyTeZ29tOmXk3MYng8grKJSoQ
-	 qvwKFgUXakpp6xjD5AHzpsIIWx1FR+AGbJlACJvgO+3eghM78u2+ahv2f9/rxcYhhP
-	 +mYnMKVkvkwMcnqlz7LzDige1CBB7vTEldOpLlWNSWzgrgUSzU+vyuMbgLRCwedAvW
-	 bvv1/jDs2ibbA==
-Message-ID: <7059eada-a51d-4f68-b62a-0f2c89c9b01c@kernel.org>
-Date: Mon, 7 Apr 2025 10:08:30 +0800
+	s=arc-20240116; t=1743991793; c=relaxed/simple;
+	bh=I0uSkIs7MwYCiFKpPqFS9fHzKIERPrO5A7jKe4gKoxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQwz0Urn4BcmiPWpneUaR+BHDPYRM/2xGp6UlWnsxqlGUaSR/4CVQOOmdz+hb1/WiBCpt5pawfpxmfojURR1mX4wcGNhr8h+f/C46N8Fvvp20+p+ULKvXT5Xi2gB3RJSCeHZL5+/507wZ4gs0zN0kT2WwmzWrjo2yF3k1u89BL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 406253430A7;
+	Mon, 07 Apr 2025 02:09:50 +0000 (UTC)
+Date: Mon, 7 Apr 2025 02:09:45 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	ghost <2990955050@qq.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-mmc@vger.kernel.org, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 9/9] riscv: dts: sophgo: Add initial device tree of
+ Sophgo SRD3-10
+Message-ID: <20250407020945-GYA13182@gentoo>
+References: <20250407010616.749833-1-inochiama@gmail.com>
+ <20250407010616.749833-10-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, pilhyun.kim@sk.com
-Subject: Re: [PATCH v5] f2fs: prevent the current section from being selected
- as a victim during GC
-To: Jaegeuk Kim <jaegeuk@kernel.org>, "yohan.joung" <yohan.joung@sk.com>
-References: <20250403232107.2960-1-yohan.joung@sk.com>
- <Z_A5SWl1ueMTZxV0@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Z_A5SWl1ueMTZxV0@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407010616.749833-10-inochiama@gmail.com>
 
-On 4/5/25 03:55, Jaegeuk Kim wrote:
-> Hi Yohan,
-> 
-> I modified this patch after applying the clean up by
-> 
-> https://lore.kernel.org/linux-f2fs-devel/20250404195442.413945-1-jaegeuk@kernel.org/T/#u
-> 
-> --- a/fs/f2fs/segment.h
-> +++ b/fs/f2fs/segment.h
-> @@ -486,6 +486,11 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-> 
->         free_i->free_sections++;
-> 
-> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
-> +               sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> +       if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
-> +               sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
 
-Reviewed-by: Chao Yu <chao@kernel.org>
-
-Thanks,
-
-> +
->  unlock_out:
->         spin_unlock(&free_i->segmap_lock);
->  }
+On 09:06 Mon 07 Apr     , Inochi Amaoto wrote:
+> Sophgo SG2044 SRD3-10 board bases on Sophgo SG2044 SoC.
+> This board includes 5 uart ports, 5 pcie x8 slots, 1 1G Ethernet port,
+> 1 microSD slot.
 > 
-> On 04/04, yohan.joung wrote:
->> When selecting a victim using next_victim_seg in a large section, the
->> selected section might already have been cleared and designated as the
->> new current section, making it actively in use.
->> This behavior causes inconsistency between the SIT and SSA.
->>
->> F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
->> Call trace:
->> dump_backtrace+0xe8/0x10c
->> show_stack+0x18/0x28
->> dump_stack_lvl+0x50/0x6c
->> dump_stack+0x18/0x28
->> f2fs_stop_checkpoint+0x1c/0x3c
->> do_garbage_collect+0x41c/0x271c
->> f2fs_gc+0x27c/0x828
->> gc_thread_func+0x290/0x88c
->> kthread+0x11c/0x164
->> ret_from_fork+0x10/0x20
->>
->> issue scenario
->> segs_per_sec=2
->> - seg#0 and seg#1 are all dirty
->> - all valid blocks are removed in seg#1
->> - gc select this sec and next_victim_seg=seg#0
->> - migrate seg#0, next_victim_seg=seg#1
->> - checkpoint -> sec(seg#0, seg#1)  becomes free
->> - allocator assigns sec(seg#0, seg#1) to curseg
->> - gc tries to migrate seg#1
->>
->> Signed-off-by: yohan.joung <yohan.joung@sk.com>
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>  fs/f2fs/segment.h | 9 ++++++++-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
->> index 0465dc00b349..0773283babfa 100644
->> --- a/fs/f2fs/segment.h
->> +++ b/fs/f2fs/segment.h
->> @@ -474,8 +474,15 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
->>  		next = find_next_bit(free_i->free_segmap,
->>  				start_segno + SEGS_PER_SEC(sbi), start_segno);
->>  		if (next >= start_segno + usable_segs) {
->> -			if (test_and_clear_bit(secno, free_i->free_secmap))
->> +			if (test_and_clear_bit(secno, free_i->free_secmap)) {
->>  				free_i->free_sections++;
->> +
->> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[BG_GC]) == secno)
->> +					sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
->> +
->> +				if (GET_SEC_FROM_SEG(sbi, sbi->next_victim_seg[FG_GC]) == secno)
->> +					sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
->> +			}
->>  		}
->>  	}
->>  skip_free:
->> -- 
->> 2.33.0
+> Add initial device tree of this board with uart support.
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  arch/riscv/boot/dts/sophgo/Makefile           |    1 +
+>  arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi   | 3002 +++++++++++++++++
+>  arch/riscv/boot/dts/sophgo/sg2044-reset.h     |  128 +
+>  .../boot/dts/sophgo/sg2044-sophgo-srd3-10.dts |   32 +
+>  arch/riscv/boot/dts/sophgo/sg2044.dtsi        |   86 +
+>  5 files changed, 3249 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
+>  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-reset.h
+>  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+>  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044.dtsi
+> 
+..
+> diff --git a/arch/riscv/boot/dts/sophgo/sg2044-reset.h b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
+> new file mode 100644
+> index 000000000000..94ed1e3777c3
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
+> @@ -0,0 +1,128 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
+you might want to use your gmail suffix? IIRC your outlook account
+isn't preferable? besides, it's better cosistent with your signed-off
 
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
