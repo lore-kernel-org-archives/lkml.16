@@ -1,108 +1,146 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3349F801;
-	Mon,  7 Apr 2025 03:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D911C36;
+	Mon,  7 Apr 2025 03:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743996424; cv=none; b=eZY7yKoiwnt1tdR+5JgxKZjfQBHs8/mtlNSKL3LnTvLL+CLb32Yo6aJLrVIn0pptE2hegi6yHEe/71AMH9Ns5bfER7Bg5juQHcPiAXTZ9lvZzlYvWpl7uy6y+eKlqBYbSx1gLDlCiSUsQrnOLk+JS5Po+jfhcOaefUTxbStSlq0=
+	t=1743996665; cv=none; b=c1oxu2o2A4OXqX1bAcNR0D3/M3T9tj9ivX6kcqjq0R9N/2XABGITWgFd6zTDLHP7f5BeeLAvnHoMSdtsL//8wClVMXOEiaC5QBRjQZgVbWSgZNypxZUFc7uUJ7EY/CODRMxqIgMdmiZ+MpkDmtyQSp3/pPMuUnjvCj2LUOUqvXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743996424; c=relaxed/simple;
-	bh=ApFqjXp9QptNXkQ0FrXmfzk+9tfugIwM4oMaIkdMyqA=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=pAZMWrqv9+5b3FL1Fj0QwHQJWYU+8nG3eP/RzafHfsMs415KTvnXweM0JJ3lTuEv2H4uaa3SpfIrqYUaFxkzBr6yHiNk64fU1T1PPYMNRCYAU6EZoEj2heuHIo15F+MCQ4TU9AxXXLF+9SqFE4s7Z19KgDoZmzRPGq/l7N9ENzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=oa9i/N/l; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1743996665; c=relaxed/simple;
+	bh=F4YPuhYwwH5EPtzJdyUauY3TMCnUWvTAe9kMB/iwmNo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JX9JFro39Be/JnwiexhLnvpLS7pO3S2g3o6x5n8vkyq6jvEVA4SPW411gFBNjBlW91/IyEE56RbDAD9MTHZfWnx6n6SPMt9DZyD7hWCvUVj87J/i1diWMRPDaV+uUXfyUHVmM8vQH0qq+Np9dHruu9K+6qT1VKRc6WyCQDJcZSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=oTfKK+4m; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="oa9i/N/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1743996109;
-	bh=J2ZmuHwb+XeDs7UBxiws1r+PRFifDNGqgstKjoaffss=;
-	h=From:To:Cc:Subject:Date;
-	b=oa9i/N/ldJHJrAVxCZxpsKlFN/lVvfn6+mhp99DDbuUcjY7vu4+pPljAXJn0WNL61
-	 IAcGrxzvcr/iFYSg7oWwrodQBnSeNyEbYSuEeTxHG1yWpMBqYLfLZH84mzn2kJ8xER
-	 laik9abkUbleRNQDsq80T6DCBlLZwAi+2uWvM87Y=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 5700EE92; Mon, 07 Apr 2025 11:21:48 +0800
-X-QQ-mid: xmsmtpt1743996108tvyniewjc
-Message-ID: <tencent_D5D35C992B70843CF70F5533E49717D24906@qq.com>
-X-QQ-XMAILINFO: NGZp1yYNf7Y+yXLVKDI2lXM5CHXiSfV4ucc+xECmUuw27VLHDBoszHAg5BsSvp
-	 qRx42rJjjJEtHBm9t/iTwinQvbdcQ2mNBicutbYxXHg7mrn3Rf+0sh2iPjNz2mQyT9cL5zDpk0hG
-	 /EjzLnqEZq/+nZWGL3zkTzwZqjj/dSIphohBC787Mp1VqWswvTJDiKlLmTo/NJqeBV3Y6ukV0QEB
-	 o8WCII+ztJ7J7uIppCJ6jRIHixjKmjOPWN8qLtRnvsHd5QDLB5xK5uBdplwj6BMmsIV3g8mI5QI4
-	 ajZOjY/pNHfQiJhkLW137fQ8ypcYkhYH50MwkHXpea4VhU5nI8oUyrzKA6sinB/kYFxI96fhbqe8
-	 MRAT1t5SsYgFVTTZ+xdcjKGAwH0MZ47T/+a5qyTvSGAZNKZ9FbrQFhFGUJM3FNWyMhBO7Uca8N3T
-	 yMW8jEHXGa14J5HdH4EtFVh1c3ZbpTkQ+EeSYhtJOtoyq5cM4x+DNpLKgSTFeRN/IHFuuNed+7a9
-	 gQmn42FJonfbMMzGyQEf+iK1h9SEkKVkbexbLs0XgGO2cHQ8IIOM8x3ryuvBf5DeTPy2LrYeaRpG
-	 ool/atb8Ff9ypsNSdgvPBa7f22ycT+LhKunmj+8y/+tChO1cxYBD7OPpwqwYV1Lmsv2yOw4J+wYc
-	 Mvwld140IskJEXU2Qgtico8tYB/cf7Dg+sOuBbDuv/YUIk3P2t4rZMG/5pL0LRkDPYr3T/d5Z9jf
-	 wjXgVB0pt/kxH0279QXXlmLGya4W9UMUQkXGZKgX+8c2N6KRPE/FjQOm2OY1oipLUuWun88iKvVE
-	 je/S1jwVDW1fCeDTJPRfetL+JLGFQJP8UEQCBpiXXf9vGPWXKijl8JKyjeFw5QJtzZ5B4gISrCEu
-	 K3fdtKGBo+WJN9pCpvdIshbtKtOr5Jks5BZENIuvZQytkBUiQ65bP2q+mPXFZDXc6GfeiCVgFEM5
-	 7eO5Wgy0C8QvDO6jGbvhbLfx+LSHS2mqstEFtEJFDzHhR0SFZ0wnTmudq3ok3t3QoQT1htJbmmVO
-	 NzR1IRpPD+ncfdoLCF
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: xiaopeitux@foxmail.com
-To: sboyd@kernel.org,
-	mturquette@baylibre.com,
-	unicorn_wang@outlook.com,
-	inochiama@gmail.com,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH] clk: sophgo: Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
-Date: Mon,  7 Apr 2025 11:21:46 +0800
-X-OQ-MSGID: <af209151c107a7a8d43938a5dc0f4fd3f8347712.1743995995.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="oTfKK+4m"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5373Ur4T2397097, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1743996653; bh=F4YPuhYwwH5EPtzJdyUauY3TMCnUWvTAe9kMB/iwmNo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=oTfKK+4mjg6OZkCIZi2ZTyxJ8H4WQGfe1BHn7O0vvi/8Y5yDfwlwZc1VdLsLWoIqZ
+	 o/qHE1/YkOuL1LEW+UOyNE9FyWtaYrFOoLnLtCOZglyCAQuRmAg7KwkOMlwgTb0lCr
+	 UEdbGeqS1NnT9uC+ix8jmTTZtpn3b3mPE7sQnwkrKA93r7lSviilYrPjzBy/F8Xv4U
+	 auTfDhfHqG6tGCPx2a8HdaywF1+0DfBdQJeZNS/fRHCxtP8JGIqbfmvSeAOc+i8+8R
+	 HU7bJD8lnRaHoqmWt4RhhdKZn3mMTL89lybli4eJBN4kNZeoXwd0H4Wd7lQLu1H/Zf
+	 KJZoa8RpIirEQ==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5373Ur4T2397097
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 11:30:53 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 7 Apr 2025 11:30:52 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 7 Apr 2025 11:30:51 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Mon, 7 Apr 2025 11:30:51 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Zhen XIN <zhen.xin@nokia-sbell.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>
+Subject: RE: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
+Thread-Topic: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
+Thread-Index: AQHbo+jJuNfRBVSN0k+LjlPmG1YP3LOXjoew
+Date: Mon, 7 Apr 2025 03:30:51 +0000
+Message-ID: <9d908c7c77684260818470225b8a0980@realtek.com>
+References: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
+In-Reply-To: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Pei Xiao <xiaopei01@kylinos.cn>
+Hi Martin,
 
-cocci warnings:
-    drivers/clk/sophgo/clk-sg2042-pll.c:217:1-7: WARNING:
-    do_div() does a 64-by-32 division, please consider using div64_ul
-    instead.
+I replied original mail, because I think discussion would be clearer.
 
-    drivers/clk/sophgo/clk-sg2042-pll.c:160:1-7: WARNING:
-    do_div() does a 64-by-32 division, please consider using div64_u64
-    instead.
+Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
+> Rtl8732ds doesn't work in AP-Mode due to the missing tx status for manage=
+ment frames
+> This patch enables tx status report for all tx skbs
+>=20
+> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/sdio.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wire=
+less/realtek/rtw88/sdio.c
+> index e024061bdbf7..84f71e13b5ae 100644
+> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
+> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+> @@ -1186,7 +1186,7 @@ static int rtw_sdio_request_irq(struct rtw_dev *rtw=
+dev,
+>  }
+>=20
+>  static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
+> -                                       struct sk_buff *skb)
+> +                                       struct sk_buff *skb, enum rtw_tx_=
+queue_type queue)
+>  {
+>         struct rtw_sdio_tx_data *tx_data =3D rtw_sdio_get_tx_data(skb);
+>         struct ieee80211_tx_info *info =3D IEEE80211_SKB_CB(skb);
+> @@ -1195,7 +1195,7 @@ static void rtw_sdio_indicate_tx_status(struct rtw_=
+dev *rtwdev,
+>         skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
+>=20
+>         /* enqueue to wait for tx report */
+> -       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
+> +       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS && queue <=3D RT=
+W_TX_QUEUE_VO) {
 
-replace do_div() with div64_*() which doesn't implicitly cast the divisor.
+Is this because you have seen "failed to get tx report"?
+Have you tried to increasing RTW_TX_PROBE_TIMEOUT?
 
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
- drivers/clk/sophgo/clk-sg2042-pll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If it still can't get TX report, we might take this workaround with comment=
+s
+to mention why we need it. Or a local variable with proper naming to point =
+out
+this, like
 
-diff --git a/drivers/clk/sophgo/clk-sg2042-pll.c b/drivers/clk/sophgo/clk-sg2042-pll.c
-index 1537f4f05860..e5fb0bb7ac4f 100644
---- a/drivers/clk/sophgo/clk-sg2042-pll.c
-+++ b/drivers/clk/sophgo/clk-sg2042-pll.c
-@@ -155,7 +155,7 @@ static unsigned long sg2042_pll_recalc_rate(unsigned int reg_value,
- 
- 	numerator = (u64)parent_rate * ctrl_table.fbdiv;
- 	denominator = ctrl_table.refdiv * ctrl_table.postdiv1 * ctrl_table.postdiv2;
--	do_div(numerator, denominator);
-+	numerator =  div64_u64(numerator, denominator);
- 	return numerator;
- }
- 
-@@ -212,7 +212,7 @@ static int sg2042_pll_get_postdiv_1_2(unsigned long rate,
- 	tmp0 *= fbdiv;
- 
- 	/* ((prate/REFDIV) x FBDIV)/rate and result save to tmp0 */
--	do_div(tmp0, rate);
-+	tmp0 = div64_ul(tmp0, rate);
- 
- 	/* tmp0 is POSTDIV1*POSTDIV2, now we calculate div1 and div2 value */
- 	if (tmp0 <= 7) {
--- 
-2.25.1
+	bool queue_has_no_tx_report =3D queue > RTW_TX_QUEUE_VO;
+
+
+By the way, USB behavior is very like to SDIO, but TX report seems to work =
+well.=20
+
+>                 rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
+>                 return;
+>         }
+> @@ -1227,10 +1227,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_d=
+ev *rtwdev,
+>                 return;
+>         }
+>=20
+> -       if (queue <=3D RTW_TX_QUEUE_VO)
+> -               rtw_sdio_indicate_tx_status(rtwdev, skb);
+> -       else
+> -               dev_kfree_skb_any(skb);
+> +       rtw_sdio_indicate_tx_status(rtwdev, skb, queue);
+
+I think this change is reasonable, since skb via all kinds of queues could=
+=20
+set IEEE80211_TX_CTL_REQ_TX_STATUS.
+
+>  }
+>=20
+>  static void rtw_sdio_tx_handler(struct work_struct *work)
+> --
+> 2.25.1
 
