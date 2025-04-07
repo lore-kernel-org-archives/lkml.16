@@ -1,95 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0AF267731;
-	Mon,  7 Apr 2025 18:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15856254AFD;
+	Mon,  7 Apr 2025 18:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049690; cv=none; b=Y4sy3KhCXedJt6c8ot5tjKL0UUi+xCgVBdRGzS+/SJ4n5OR1XXXzPoTLJNlxs5c/UrXQ76HLq+zBkAdQZvda/RB9oxfjQssgw6gh5kamW3JxAru6EdQJRNL1DD9YvTEXA/6OeoZWze6MZBryJrE7AG6K9QK6f4xALm++J1029FY=
+	t=1744049694; cv=none; b=XPmVgA+H95QH004BduTzdkRVoP9fOwSuexpEEp/7x6e0Cz7y404O8lF4Y4+yCJBdst5vzfFlT26PgJ1PKEX6vSkfTP6kBzKBXWnJmW1OE7YZ4FYUCbqA9f/J6zSY6qs1MNG4WJcSSZ4uc3c7PdLIVPGWg+hEuwwzFpupffOYXCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049690; c=relaxed/simple;
-	bh=roTV4fCBWYKtx7tR13LEF6bSe/MmWW79N66Dk4jgSkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MwSOhGbvwz28Ue+K0y6wd0lp5svIE2UYFxhp2NZlEuTupFc1Ne7Yhgi781uhXJ/I+hHQmGu82UP+AG36xrd3N69Ns481ptHHG5l9wqbxg7JqKHiPN2ycmpORdaCJZvKVmlJs0ZgiZFEtkq6x/3MGEJk+2CkPLR14dv6u1sfYmcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIXonLt1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049694; c=relaxed/simple;
+	bh=TH8AcD+ZKVsttfULi4BtBNFHCGBtCutCNncWV1T9Nl8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aZryx+iqGC3yH35qYAwveex1FfQPiCTIrJBZesbFEfs+hDF0i6ubOgYiK+bwhviFXbXub64UeamctOmZhZibhGN14aLxqBVm0NShNg1+IbOYqD70XYYn+hSRoDzBne8PO0OloeU4sxbGTt2W0tRNKWQNfxWN3Mhud3W4xf0f4T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+uui2La; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIXonLt1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00C9C4CEE7;
-	Mon,  7 Apr 2025 18:14:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+uui2La"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA86C4CEE7;
+	Mon,  7 Apr 2025 18:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049690;
-	bh=roTV4fCBWYKtx7tR13LEF6bSe/MmWW79N66Dk4jgSkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NIXonLt1oMwV1DOQJSeK3B40+6p6j24z3O8dhm0pzGEEfCBHhzCAYMflHFyIv8qhR
-	 XAA3/6l+dz+cCRkZ0DO96zwxiy4hCcWYBg81BYITFzqVT5tf13kP2mnrEXlaLcstTG
-	 3qg6LAz0AeRL8aoeq3M8OXdyODYcuB8bQPaSQcKR0VJXtGIlagA0Zlbam2kln9Txpb
-	 mWx+aGRN/7HGO3V31ldITu+d29kIImpM/a1Q/6XYVKxs7Bpt/QMTw+xU2qLjWvQUbe
-	 YJypWBrZm3mBlL6BPiXsLd0BBPs2nQzlCHV91stSHpEiq5RSGkpSCqBvNqLUVXf9nY
-	 J6AS1A+iJd/SA==
-Date: Mon, 7 Apr 2025 21:14:46 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
-	linux-integrity@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 0/4] Enlightened vTPM support for SVSM on SEV-SNP
-Message-ID: <Z_QWFjJbPWIsBP2s@kernel.org>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
- <20250407134643.GDZ_PXQ0OlzcMjiGgp@fat_crate.local>
+	s=k20201202; t=1744049694;
+	bh=TH8AcD+ZKVsttfULi4BtBNFHCGBtCutCNncWV1T9Nl8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=L+uui2LaHYvqx+o6EuOaXCNqRAdpFs2UcPeGP8FnXNK0wH/6MgyHnDmzABA/tRnFA
+	 1VuQzKkSzqRDpuwE0PWVZFc/BDKufB/EPulKmiy66czqsw/dPNOuJMEr/7srK4DBmz
+	 ebsEdGp2IKeusqAQZrqFNXejCLncVJhRUrfupOh1gfZX7Sn8Y0akfWFKM7tZkbFMsv
+	 F4CAo4tN+Yl5BLOqzjUNv4Gp29ZBfP0u0aBimGDq0Pki9LWyMJVxqg00sDpeWhWO5I
+	 PWavCqhhlwD9dIAHwhDvYrPPRyZRscNC2B7nD9BuAOjfz7AaQfN4qQ1Eur1z0PM3DL
+	 yzVlI0ryQIIMg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Alexander Stein <alexander.stein@mailbox.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mark.tomlinson@alliedtelesis.co.nz,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 01/13] usb: host: max3421-hcd: Add missing spi_device_id table
+Date: Mon,  7 Apr 2025 14:14:35 -0400
+Message-Id: <20250407181449.3183687-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407134643.GDZ_PXQ0OlzcMjiGgp@fat_crate.local>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.133
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 03:46:43PM +0200, Borislav Petkov wrote:
-> On Thu, Apr 03, 2025 at 12:09:38PM +0200, Stefano Garzarella wrote:
-> > Stefano Garzarella (4):
-> >   x86/sev: add SVSM vTPM probe/send_command functions
-> >   svsm: add header with SVSM_VTPM_CMD helpers
-> >   tpm: add SNP SVSM vTPM driver
-> >   x86/sev: register tpm-svsm platform device
-> > 
-> >  arch/x86/include/asm/sev.h  |   9 +++
-> >  include/linux/tpm_svsm.h    | 149 ++++++++++++++++++++++++++++++++++++
-> >  arch/x86/coco/sev/core.c    |  67 ++++++++++++++++
-> >  drivers/char/tpm/tpm_svsm.c | 128 +++++++++++++++++++++++++++++++
-> >  drivers/char/tpm/Kconfig    |  10 +++
-> >  drivers/char/tpm/Makefile   |   1 +
-> >  6 files changed, 364 insertions(+)
-> >  create mode 100644 include/linux/tpm_svsm.h
-> >  create mode 100644 drivers/char/tpm/tpm_svsm.c
-> 
-> Jarrko,
-> 
-> should I take the whole bunch through the tip tree?
-> 
-> No point in splitting between two trees...
+From: Alexander Stein <alexander.stein@mailbox.org>
 
-It's cleanly separated and does not even touch any shared headers,
-so I don't see any issues on doing that. I.e., I'm with it :-)
+[ Upstream commit 41d5e3806cf589f658f92c75195095df0b66f66a ]
 
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-> 
+"maxim,max3421" DT compatible is missing its SPI device ID entry, not
+allowing module autoloading and leading to the following message:
+ "SPI driver max3421-hcd has no spi_device_id for maxim,max3421"
 
-BR, Jarkko
+Fix this by adding the spi_device_id table.
+
+Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
+Link: https://lore.kernel.org/r/20250128195114.56321-1-alexander.stein@mailbox.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/max3421-hcd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
+index ab12d76b01fbe..8aaafba058aa9 100644
+--- a/drivers/usb/host/max3421-hcd.c
++++ b/drivers/usb/host/max3421-hcd.c
+@@ -1955,6 +1955,12 @@ max3421_remove(struct spi_device *spi)
+ 	usb_put_hcd(hcd);
+ }
+ 
++static const struct spi_device_id max3421_spi_ids[] = {
++	{ "max3421" },
++	{ },
++};
++MODULE_DEVICE_TABLE(spi, max3421_spi_ids);
++
+ static const struct of_device_id max3421_of_match_table[] = {
+ 	{ .compatible = "maxim,max3421", },
+ 	{},
+@@ -1964,6 +1970,7 @@ MODULE_DEVICE_TABLE(of, max3421_of_match_table);
+ static struct spi_driver max3421_driver = {
+ 	.probe		= max3421_probe,
+ 	.remove		= max3421_remove,
++	.id_table	= max3421_spi_ids,
+ 	.driver		= {
+ 		.name	= "max3421-hcd",
+ 		.of_match_table = of_match_ptr(max3421_of_match_table),
+-- 
+2.39.5
+
