@@ -1,97 +1,75 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D99513777E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 10:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A528D227B8C;
+	Mon,  7 Apr 2025 10:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744021836; cv=none; b=dDr9asQgUnU+loRMRzltWtqcpH3JTxYIHVPX2UzkKabc+usfNuH9+qG1xSUAXeD5yOUNvXQut/j16+NsFXZYyxgP8jNZb6eGKXWsxKU3mRqfoU4t6tnPF7nb/yrnReHWPOV5LdBYRghPLiHa80PTUxrG1zgpVPoM0KOUHjwo6dU=
+	t=1744022007; cv=none; b=Te1FbhnK5fgZWBQloLUQ9VzrmPCUbuvMv03czLJbwpCU1mEpEeQLPdB4gjmhm9vn/GvcN3IOl39D2vlDQBt7uYirvfnkSvBggwsI0cYSaiXFBahUwLNV2I1Jo/Dk+xgqCpvjLvEseWI+bJZ0ZSPKiEhZZ6E2btjxb6IbvHBPOSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744021836; c=relaxed/simple;
-	bh=4MmmsNnJmBCtjihgTEtAM1RiophjAm0ItwyqsGtZZ14=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qEwuw/HO01u6QY+7gEkidUD/6yLUXBDDJ1UJnedpNYI67gNMh5em8FGe1uaMhTUSr9rWDjAo12xi270lPp6Mml0paEEAhfHMXXpcXKRPd4p+qs2QI9gv8TYO/hIytiXDWpw2IfRbJxNYh1ZLSnpXxJI7TzgFOWjzwNEKLlPORI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u1jkB-0003Ep-7A; Mon, 07 Apr 2025 12:30:19 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u1jkA-003k9z-2v;
-	Mon, 07 Apr 2025 12:30:18 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u1jkA-0008q2-2f;
-	Mon, 07 Apr 2025 12:30:18 +0200
-Message-ID: <7af15c80a6b0f99f0bd1a67252e0403804d39691.camel@pengutronix.de>
-Subject: Re: [PATCH v1 0/2] TH1520 SoC: Add Reset Controller Support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Michal Wilczynski <m.wilczynski@samsung.com>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org, 
-	wefu@redhat.com, m.szyprowski@samsung.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 07 Apr 2025 12:30:18 +0200
-In-Reply-To: <20250303152511.494405-1-m.wilczynski@samsung.com>
-References: 
-	<CGME20250303152520eucas1p250f2e6d8eaf1172d8813b04ceb88679c@eucas1p2.samsung.com>
-	 <20250303152511.494405-1-m.wilczynski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1744022007; c=relaxed/simple;
+	bh=kCG4XKWjQBp+LMHAupprGAOdDDB1x/O4mkI4fpQ9XDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kYt2T0BXjYTfjJ8yDG/psVBCL4bTupURUFw93sNLLkqxNVaE8x4Z/zzt6rIrGH7OEMCKd65qy5bJ05rvrHFN41Fo4arudmQKmBMP29RqAcGuZ2SS94anUp6/QnyFM7NiffBoPjP680geqJslEJmDwDVs5MyxKqlRHPbiSAjwl5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 80C5F3430B1;
+	Mon, 07 Apr 2025 10:33:24 +0000 (UTC)
+Date: Mon, 7 Apr 2025 10:33:20 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
+ interrupts scheme
+Message-ID: <20250407103320-GYA13974@gentoo>
+References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
+ <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
 
-On Mo, 2025-03-03 at 16:25 +0100, Michal Wilczynski wrote:
-> This patch series adds reset controller support for the T-Head TH1520 SoC=
-,
-> which is used in boards like the LicheePi 4A. While part of a broader eff=
-ort to
-> enable the Imagination BXM-4-64 GPU upstream, these patches focus on prov=
-iding
-> a dedicated reset controller driver and the corresponding Device Tree
-> nodes/bindings.
->=20
-> Bigger series cover letter:
-> https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung=
-.com/
->=20
-> Michal Wilczynski (2):
->   dt-bindings: reset: Add T-HEAD TH1520 SoC Reset Controller
->   reset: thead: Add TH1520 reset controller driver
->=20
->  .../bindings/reset/thead,th1520-reset.yaml    |  44 ++++++
->  MAINTAINERS                                   |   3 +
->  drivers/reset/Kconfig                         |  10 ++
->  drivers/reset/Makefile                        |   1 +
->  drivers/reset/reset-th1520.c                  | 135 ++++++++++++++++++
->  .../dt-bindings/reset/thead,th1520-reset.h    |  16 +++
->  6 files changed, 209 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/thead,th1520-=
-reset.yaml
->  create mode 100644 drivers/reset/reset-th1520.c
->  create mode 100644 include/dt-bindings/reset/thead,th1520-reset.h
+Hi Linus Walleij:
 
-Applied to reset/next, thanks!
+On 06:06 Wed 26 Mar     , Yixun Lan wrote:
+> gpio irq which using three-cell scheme should always call
+> instance_match() function to find the correct irqdomain.
+> 
+> The select() function will be called with !DOMAIN_BUS_ANY,
+> so for specific gpio irq driver, it need to set bus token
+> explicitly, something like:
+>   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/gpio/gpiolib-of.c |  8 ++++++++
+>  drivers/gpio/gpiolib-of.h |  6 ++++++
+>  drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
+>  3 files changed, 32 insertions(+), 4 deletions(-)
+> 
 
-[1/2] dt-bindings: reset: Add T-HEAD TH1520 SoC Reset Controller
-      https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D30e7573babdc
-[2/2] reset: thead: Add TH1520 reset controller driver
-      https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D4a65326311ab
+  I'd assume this patch [2/2] will go via pinctrl's tree?
+as patch [1/2] has been accepted by Thomas into tip tree [1]..
+  Additonally need to pull that commit first? since it's a dependency
 
-regards
-Philipp
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=irq/core&id=0a02e1f4a54ace747304687ced3b76d159e58914
 
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
