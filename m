@@ -1,105 +1,113 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39BD22DFA5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692E022A808;
+	Mon,  7 Apr 2025 09:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019351; cv=none; b=BtaXVl7vfE0lw9jk+HJeV/JVqg48WQVT3oQ6tVM9rx52+hvKWlja3KQa6tO3+BOjm1jOAAZPWQz0e0eFsG5bUv1dkJyvL6l0WDqsTdf4ttYB3jsoQ5FugSl75a+Ql+1gqk5crg3o0/mDclr/SfN+Ltibxs0wBh5HpVEGBRKpSO4=
+	t=1744019379; cv=none; b=t73PvAxTvYn0tyRJPebcwT+RTMFriqgAlQgiq8Cnqs5gN2lMNb2cGjce1GCTpqQOIfm/x5hFDzVKjgrPaAP0lrMPrZaSvajdnIxefVP1n+489fVj8JY5nEz0X3oaEZI9GnS6F3s0gKzoALdbyN3yeRJqAOOmiCmFhwzUMGGB6lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744019351; c=relaxed/simple;
-	bh=DZ63rrAsGHtRItIF9LO8Z69pVpRXdsG0UIOS3yY/ZAw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=gSZZlX5wDlmtPEgwOWGaxykVIlz1TKJKDy4HmHLaRrNIY9Qqqol1Hl9B/zwO8RfBvFkvPzA7Rn3q2ZCNXbxVmoOpHuv0V16HCTQsHLDZPuHto/dYMx8hpnigA3FPD8gEN50Hon5FhU3QGrYFZNHSKYlewCyGpgvd6THLcPxOu50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ioe0kTZU; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ioe0kTZU"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744019347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xY51UqUYs+eWoTOCBh+Jna/CIahu4dovjoMPFMGK+94=;
-	b=Ioe0kTZUDluJBwKyn71CrZez9rDEMB6zSMKpo+dmuXKcVyV5HkxteDiPlNtuTXAxXh/YCr
-	+tbcirKNDPJAdHtNsPEF1atCVV+4DI5qhgzgJZ4zN4T0Zb/lhbjyS94pgHzTZEKgOPARLl
-	daq/dx6lgL303v132nfYFpVxFTfuwUI=
+	s=arc-20240116; t=1744019379; c=relaxed/simple;
+	bh=3+tkarQJVToety44JIPavZJwIKFiLWUn0JrvQxS5utg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BlUsFlTY6AqiffXvTXyIjP///tpMET9s/QvuniPf3ENTobUzBgK81mIt43O3c37FriTziZRVnGmVjImra4fHliVfjovt/S2lNDZdHFRbyQRYLTGmiYh9XhKC8xyHVO/iCHoyqXy2OwSLdxLcr6OBuwx9zzlq9PnT3/eyWLSDMIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZWPXz3SPbz67lLG;
+	Mon,  7 Apr 2025 17:48:35 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 701A71400DB;
+	Mon,  7 Apr 2025 17:49:27 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 7 Apr
+ 2025 11:49:26 +0200
+Date: Mon, 7 Apr 2025 10:49:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Rakie Kim <rakie.kim@sk.com>, <akpm@linux-foundation.org>,
+	<gourry@gourry.net>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <joshua.hahnjy@gmail.com>,
+	<ying.huang@linux.alibaba.com>, <david@redhat.com>, <osalvador@suse.de>,
+	<kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
+Subject: Re: [PATCH v6 2/3] mm/mempolicy: Prepare weighted interleave sysfs
+ for memory hotplug
+Message-ID: <20250407104924.00001dbb@huawei.com>
+In-Reply-To: <67f0157e498c9_464ec294df@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250404074623.1179-1-rakie.kim@sk.com>
+	<20250404074623.1179-3-rakie.kim@sk.com>
+	<20250404140559.00001112@huawei.com>
+	<67f0157e498c9_464ec294df@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
- PATCH 0/6] Deep talk about folio vmap
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20250407085943.GA27481@lst.de>
-Date: Mon, 7 Apr 2025 17:48:27 +0800
-Cc: Huan Yang <link@vivo.com>,
- bingbu.cao@linux.intel.com,
- Matthew Wilcox <willy@infradead.org>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>,
- Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org,
- linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org,
- opensource.kernel@vivo.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <3DC6E604-3CE9-49E3-A688-DC7F424382DA@linux.dev>
-References: <20250327092922.536-1-link@vivo.com>
- <20250404090111.GB11105@lst.de>
- <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
- <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
- <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
- <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
- <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
- <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
- <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
- <20250407085943.GA27481@lst.de>
-To: Christoph Hellwig <hch@lst.de>
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Fri, 4 Apr 2025 10:23:10 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-
-> On Apr 7, 2025, at 16:59, Christoph Hellwig <hch@lst.de> wrote:
+> Jonathan Cameron wrote:
+> > On Fri, 4 Apr 2025 16:46:20 +0900
+> > Rakie Kim <rakie.kim@sk.com> wrote:
+> >   
+> > > Previously, the weighted interleave sysfs structure was statically
+> > > managed during initialization. This prevented new nodes from being
+> > > recognized when memory hotplug events occurred, limiting the ability
+> > > to update or extend sysfs entries dynamically at runtime.
+> > > 
+> > > To address this, this patch refactors the sysfs infrastructure and
+> > > encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> > > both the kobject and an array of node attribute pointers.
+> > > 
+> > > By allocating this group structure globally, the per-node sysfs
+> > > attributes can be managed beyond initialization time, enabling
+> > > external modules to insert or remove node entries in response to
+> > > events such as memory hotplug or node online/offline transitions.
+> > > 
+> > > Instead of allocating all per-node sysfs attributes at once, the
+> > > initialization path now uses the existing sysfs_wi_node_add() and
+> > > sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> > > to modularly manage per-node sysfs entries and ensures the
+> > > infrastructure is ready for runtime extension.
+> > > 
+> > > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> > > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> > > Reviewed-by: Gregory Price <gourry@gourry.net>  
+> > Hi Rakie,
+> > 
+> > Some things I was requesting in patch 1 are done here.
+> > Mostly I think what is wanted is moving some of that
+> > refactoring back to that patch rather than here.
+> > 
+> > Some of the label and function naming needs another look.
+> > 
+> > Jonathan  
+> [..]
+> > > @@ -3430,27 +3437,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+> > >  	return count;
+> > >  }
+> > >  
+> > > -static struct iw_node_attr **node_attrs;
+> > > -
+> > > -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
+> > > -				  struct kobject *parent)
+> > > +static void sysfs_wi_node_delete(int nid)  
+> > 
+> > Maybe stick to release naming to match the sysfs_wi_release()
+> > below? I don't really care about this.  
 > 
-> On Mon, Apr 07, 2025 at 02:43:20PM +0800, Muchun Song wrote:
->> By the way, in case you truly struggle to comprehend the fundamental
->> aspects of HVO, I would like to summarize for you the user-visible
->> behaviors in comparison to the situation where HVO is disabled.
->> 
->> HVO Status Tail Page Structures Head Page Structures
->> Enabled Read-Only (RO) Read-Write (RW)
->> Disabled Read-Write (RW) Read-Write (RW)
->> 
->> The sole distinction between the two scenarios lies in whether the
->> tail page structures are allowed to be written or not. Please refrain
->> from getting bogged down in the details of the implementation of HVO.
-> 
-> This feels extremely fragile to me.  I doubt many people know what
-> operations needs read vs write access to tail pages.  Or for higher
-> level operations if needs access to tail pages at all.
+> I had asked for "delete" to pair with "add" and to not get confused with
+> a final kobject_put() callback.
 > 
 
-A compound page should modify its head page structure (e.g., refcount),
-which is why `compound_head()` is widely used. Modifying its tail page
-structures is incorrect. Users needn't worry about whether to modify
-tail page structures. They should use `compound_head(tail)` to get the
-head page structure and update it. All users must follow this rule (I
-think folio-infrastructure also requires this). If a user tries to write
-to a HugeTLB page's tail page, an exception will be raised as these tail
-pages are read-only mapped to catch invalid operations.
-
+Fair enough.
