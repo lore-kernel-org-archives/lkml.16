@@ -1,203 +1,151 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1A3224AFB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF62D224AFB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011492; cv=none; b=qKH6U7T204peqYY+PbCoiBkg6UUkvJYfDgylPo/ye5I53zp4yjSiFsy9Ck9Ubz8ynnd3wLa+r0Ahhrb5/v3VU8jMTQm88eumYXGQ3lExNPhOz/bBxfeMOYgCEslr0FoluO5XjBdR7Z9AtBaQRDlYfRZapuVHjz8i+Mtk21VueA0=
+	t=1744011502; cv=none; b=pV9V2oxRfaZCs6hVfDmHUp1R/tQJPqlazS4x/XHsyNAOPK7m/dELeVnVIdRbp+ZEURCHeaLv9FGMGpFdVetnQ/N/W9O4ZT7GhxewMsttkqI2gQ8MaSQSrpoUt7PuXQ0qaeEPNOblpMCE38rxF8fZ9GSH3JBuK3UsOm7zYhVS1Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011492; c=relaxed/simple;
-	bh=ilz5/Is23/2Et0wJx3nSR2tMPcZiNpLCnMfguSiZ1Ik=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LFTdY5XWAR5O3F2RylQd0g4YUKJSzUcUYudhcyD1rhnKlQohVvCsTM41iUKGXaXYXmZF03TXGRZNovaGf1fI+wuzDgG5mpQlDjcXZ/lDRgWZXa4U3UIFPNB0GnO9w6rhs4X6VgTq+Gq+MNZnw3dMSMb2wdHSr6K+TeotaeHdrCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QjlaFhHI; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QjlaFhHI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744011485; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=gYYSg5YwDogLH+IRS2vLAy217JvW0dvLBFZE5xtZqxk=;
-	b=QjlaFhHIGPJ53A5zMFH2o6imbKbi0BcxkuDAgKIA1oyVf+YMsC0G4M7YPuTAKfqq5imedPy771ELrcOX0v4Xwv8mTRXNEjRoHULan7rRfa+7qn62IkCR2yWWOuRdKmYtPZ9ut9pZwxSyTKh3lQIi7C+HIEA3NMaPJi8J7Am9jEg=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WVqMIo9_1744011483 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 07 Apr 2025 15:38:04 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Nikhil Dhama <nikhil.dhama@amd.com>
-Cc: <akpm@linux-foundation.org>,  <bharata@amd.com>,
-  <huang.ying.caritas@gmail.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-mm@kvack.org>,  <mgorman@techsingularity.net>,
-  <raghavendra.kodsarathimmappa@amd.com>,  <oe-lkp@lists.linux.dev>,
-  <lkp@intel.com>
-Subject: Re: [PATCH] mm: pcp: scale batch to reduce number of high order pcp
- flushes on deallocation
-In-Reply-To: <20250407063259.49271-1-nikhil.dhama@amd.com> (Nikhil Dhama's
-	message of "Mon, 7 Apr 2025 12:02:59 +0530")
-References: <875xjmuiup.fsf@DESKTOP-5N7EMDA>
-	<20250407063259.49271-1-nikhil.dhama@amd.com>
-Date: Mon, 07 Apr 2025 15:38:14 +0800
-Message-ID: <87r024o1zt.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1744011502; c=relaxed/simple;
+	bh=DuK3bifKObUj/1hjDahLrFJvEo4z68yicijyl+kid9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=N7GTvI7tdIhEEOIIHDVkN3cd0JE0qT1RqXz8FJhBCfB2hpKcRnx9VrGW+ekDK7CPI4SV0BHxNOeLsKzAIb9ZGTV5Uo/rPhhg13zOl0oBAOuFeBLaa+yQrG710Cys8cLPYvTdrs8XD6qYK/Ok3PPv+WLCBNPkezGzIilIwNsB8ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1744011490-086e2365b944450001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id kLJek5uXD4GYIZIg (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Mon, 07 Apr 2025 15:38:10 +0800 (CST)
+X-Barracuda-Envelope-From: LiamNi-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXSHMBX3.zhaoxin.com (10.28.252.165) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Mon, 7 Apr
+ 2025 15:38:10 +0800
+Received: from ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2]) by
+ ZXSHMBX3.zhaoxin.com ([fe80::8cc5:5bc6:24ec:65f2%6]) with mapi id
+ 15.01.2507.044; Mon, 7 Apr 2025 15:38:09 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from [10.28.66.46] (10.28.66.46) by ZXBJMBX02.zhaoxin.com
+ (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 7 Apr
+ 2025 10:19:32 +0800
+Message-ID: <fb523153-5185-4ec3-941c-3abf1a6eeac8@zhaoxin.com>
+Date: Mon, 7 Apr 2025 10:19:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
+ state to reduce the performance overhead caused by hrtimer during guest stop.
+To: Sean Christopherson <seanjc@google.com>
+X-ASG-Orig-Subj: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
+ state to reduce the performance overhead caused by hrtimer during guest stop.
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<pbonzini@redhat.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+	<LiamNi@zhaoxin.com>, <CobeChen@zhaoxin.com>, <LouisQi@zhaoxin.com>,
+	<EwanHai@zhaoxin.com>, <FrankZhu@zhaoxin.com>
+References: <20250317091917.72477-1-liamni-oc@zhaoxin.com>
+ <Z9gl5dbTfZsUCJy-@google.com>
+ <676ed22f-9c3f-4013-99d8-37c4c73bb9ac@zhaoxin.com>
+ <Z-_xNpgsYDW0_4Jn@google.com>
+From: LiamNioc <LiamNi-oc@zhaoxin.com>
+In-Reply-To: <Z-_xNpgsYDW0_4Jn@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Moderation-Data: 4/7/2025 3:38:08 PM
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1744011490
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 2798
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.139610
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-Nikhil Dhama <nikhil.dhama@amd.com> writes:
 
-> On 4/3/2025 7:06 AM, Huang, Ying wrote:
->
->>
->> Nikhil Dhama <nikhil.dhama@amd.com> writes:
->>
->>> On 3/30/2025 12:22 PM, Huang, Ying wrote:
->>>
->>>>
->>>> Hi, Nikhil,
->>>>
->>>> Nikhil Dhama <nikhil.dhama@amd.com> writes:
->>>>
->>>>> In old pcp design, pcp->free_factor gets incremented in nr_pcp_free()
->>>>> which is invoked by free_pcppages_bulk(). So, it used to increase
->>>>> free_factor by 1 only when we try to reduce the size of pcp list or
->>>>> flush for high order.
->>>>> and free_high used to trigger only for order > 0 and order <
->>>>> costly_order and free_factor > 0.
->>>>>
->>>>> and free_factor used to scale down by a factor of 2 on every successful
->>>>> allocation.
->>>>>
->>>>> for iperf3 I noticed that with older design in kernel v6.6, pcp list was
->>>>> drained mostly when pcp->count > high (more often when count goes above
->>>>> 530). and most of the time free_factor was 0, triggering very few
->>>>> high order flushes.
->>>>>
->>>>> Whereas in the current design, free_factor is changed to free_count to keep
->>>>> track of the number of pages freed contiguously,
->>>>> and with this design for iperf3, pcp list is getting flushed more
->>>>> frequently because free_high heuristics is triggered more often now.
->>>>>
->>>>> In current design, free_count is incremented on every deallocation,
->>>>> irrespective of whether pcp list was reduced or not. And logic to
->>>>> trigger free_high is if free_count goes above batch (which is 63) and
->>>>> there are two contiguous page free without any allocation.
->>>>> (and with cache slice optimisation).
->>>>>
->>>>> With this design, I observed that high order pcp list is drained as soon
->>>>> as both count and free_count goes about 63.
->>>>>
->>>>> and due to this more aggressive high order flushing, applications
->>>>> doing contiguous high order allocation will require to go to global list
->>>>> more frequently.
->>>>>
->>>>> On a 2-node AMD machine with 384 vCPUs on each node,
->>>>> connected via Mellonox connectX-7, I am seeing a ~30% performance
->>>>> reduction if we scale number of iperf3 client/server pairs from 32 to 64.
->>>>>
->>>>> So, though this new design reduced the time to detect high order flushes,
->>>>> but for application which are allocating high order pages more
->>>>> frequently it may be flushing the high order list pre-maturely.
->>>>> This motivates towards tuning on how late or early we should flush
->>>>> high order lists.
->>>>>
->>>>> for free_high heuristics. I tried to scale batch and tune it,
->>>>> which will delay the free_high flushes.
->>>>>
->>>>>
->>>>>                       score   # free_high
->>>>> -----------           -----   -----------
->>>>> v6.6 (base)           100             4
->>>>> v6.12 (batch*1)        69           170
->>>>> batch*2                69           150
->>>>> batch*4                74           101
->>>>> batch*5               100            53
->>>>> batch*6               100            36
->>>>> batch*8               100             3
->>>>>
->>>>> scaling batch for free_high heuristics with a factor of 5 or above restores
->>>>> the performance, as it is reducing the number of high order flushes.
->>>>>
->>>>> On 2-node AMD server with 384 vCPUs each,score for other benchmarks with
->>>>> patch v2 along with iperf3 are as follows:
->>>>
->>>> Em..., IIUC, this may disable the free_high optimizations.  free_high
->>>> optimization is introduced by Mel Gorman in commit f26b3fa04611
->>>> ("mm/page_alloc: limit number of high-order pages on PCP during bulk
->>>> free").  So, this may trigger regression for the workloads in the
->>>> commit.  Can you try it too?
->>>>
->>>
->>> Hi, I ran netperf-tcp as in commit f26b3fa04611 ("mm/page_alloc: limit
->>> number of high-order pages on PCP during bulk free"),
->>>
->>> On a 2-node AMD server with 384 vCPUs, results I observed are as follows:
->>>
->>>                                   6.12                     6.12
->>>                                vanilla   freehigh-heuristicsopt
->>> Hmean     64         732.14 (   0.00%)        736.90 (   0.65%)
->>> Hmean     128       1417.46 (   0.00%)       1421.54 (   0.29%)
->>> Hmean     256       2679.67 (   0.00%)       2689.68 (   0.37%)
->>> Hmean     1024      8328.52 (   0.00%)       8413.94 (   1.03%)
->>> Hmean     2048     12716.98 (   0.00%)      12838.94 (   0.96%)
->>> Hmean     3312     15787.79 (   0.00%)      15822.40 (   0.22%)
->>> Hmean     4096     17311.91 (   0.00%)      17328.74 (   0.10%)
->>> Hmean     8192     20310.73 (   0.00%)      20447.12 (   0.67%)
->>>
->>> It is not regressing for netperf-tcp.
->>
->> Thanks a lot for your data!
->>
->> Think about this again.  Compared with the pcp->free_factor solution,
->> the pcp->free_count solution will trigger free_high heuristics more
->> early, this causes performance regression in your workloads.  So, it's
->> reasonable to raise the bar to trigger free_high.  And, it's also
->> reasonable to use a stricter threshold, as you have done in this patch.
->> However, "5 * batch" appears too magic and adapt to one type of machine.
->>
->> Let's step back to do some analysis.  In the original pcp->free_factor
->> solution, free_high is triggered for contiguous freeing with size
->> ranging from "batch" to "pcp->high + batch".  So, the average value is
->> about "batch + pcp->high / 2".  While in the pcp->free_count solution,
->> free_high will be triggered for contiguous freeing with size "batch".
->> So, to restore the original behavior, it seems that we can use the
->> threshold "batch + pcp->high_min / 2".  Do you think that this is
->> reasonable?  If so, can you give it a try?
->
-> Hi, 
->
-> I have tried your suggestion as setting threshold to "batch + pcp->high_min / 2",
-> scores for different benchmarks on the same machine 
-> (2-Node AMD server with 384 vCPUs each) are as follows:
->
->                       iperf3    lmbench3            netperf         kbuild
->                                (AF_UNIX)      (SCTP_STREAM_MANY)
->                      -------   ---------      -----------------     ------
-> v6.6  vanilla (base)    100          100                  100          100
-> v6.12 vanilla            69          113                 98.5         98.8
-> v6.12 avg_threshold     100        110.3                100.2         99.3
->
-> and for netperf-tcp, it is as follows:
->
->                                   6.12                     6.12
->                                vanilla   avg_free_high_threshold
-> Hmean     64         732.14 (   0.00%)        730.45 (  -0.23%)
-> Hmean     128       1417.46 (   0.00%)       1419.44 (   0.14%)
-> Hmean     256       2679.67 (   0.00%)       2676.45 (  -0.12%)
-> Hmean     1024      8328.52 (   0.00%)       8339.34 (   0.13%)
-> Hmean     2048     12716.98 (   0.00%)      12743.68 (   0.21%)
-> Hmean     3312     15787.79 (   0.00%)      15887.25 (   0.63%)
-> Hmean     4096     17311.91 (   0.00%)      17332.68 (   0.12%)
-> Hmean     8192     20310.73 (   0.00%)      20465.09 (   0.76%)
 
-Thanks a lot for test and results!
+On 2025/4/4 22:48, Sean Christopherson wrote:
+>=20
+>=20
+> [=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E6=9D=A5=E8=87=AA=E5=A4=96=E9=83=A8=
+=E5=8F=91=E4=BB=B6=E4=BA=BA =E8=B0=A8=E9=98=B2=E9=A3=8E=E9=99=A9]
+>=20
+> On Tue, Mar 25, 2025, LiamNioc wrote:
+>> On 2025/3/17 21:38, Sean Christopherson wrote:
+>>> On Mon, Mar 17, 2025, Liam Ni wrote:
+>>>> When using the dump-guest-memory command in QEMU to dump
+>>>> the virtual machine's memory,the virtual machine will be
+>>>> paused for a period of time.If the guest (i.e., UEFI) uses
+>>>> the PIT as the system clock,it will be observed that the
+>>>> HRTIMER used by the PIT continues to run during the guest
+>>>> stop process, imposing an additional burden on the system.
+>>>> Moreover, during the guest restart process,the previously
+>>>> established HRTIMER will be canceled,and the accumulated
+>>>> timer events will be flushed.However, before the old
+>>>> HRTIMER is canceled,the accumulated timer events
+>>>> will "surreptitiously" inject interrupts into the guest.
+>>>>
+>>>> SO during the process of saving the KVM PIT state,
+>>>> the HRTIMER need to be canceled to reduce the performance overhead
+>>>> caused by HRTIMER during the guest stop process.
+>>>>
+>>>> i.e. if guest
+>>>>
+>>>> Signed-off-by: Liam Ni <liamni-oc@zhaoxin.com>
+>>>> ---
+>>>>    arch/x86/kvm/x86.c | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>>> index 045c61cc7e54..75355b315aca 100644
+>>>> --- a/arch/x86/kvm/x86.c
+>>>> +++ b/arch/x86/kvm/x86.c
+>>>> @@ -6405,6 +6405,8 @@ static int kvm_vm_ioctl_get_pit(struct kvm *kvm,=
+ struct kvm_pit_state *ps)
+>>>>
+>>>>         mutex_lock(&kps->lock);
+>>>>         memcpy(ps, &kps->channels, sizeof(*ps));
+>>>> +     hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
+>>>> +     kthread_flush_work(&kvm->arch.vpit->expired);
+>>>
+>>> KVM cannot assume userspace wants to stop the PIT when grabbing a snaps=
+hot.  It's
+>>> a significant ABI change, and not desirable in all cases.
+>>
+>> When VM Pause, all devices of the virtual machine are frozen, so the PIT
+>> freeze only saves the PIT device status, but does not cancel HRTIMER, bu=
+t
+>> chooses to cancel HRTIMER when VM resumes and refresh the pending task.
+>> According to my observation, before refreshing the pending task, these
+>> pending tasks will secretly inject interrupts into the guest.
+>>
+>> So do we need to cancel the HRTIMER when VM pause=EF=BC=9F
+>=20
+> The problem is that KVM has no real concept of pausing a VM.  There are a=
+ variety
+> of hacky hooks here and there, but no KVM-wide notion of "pause".
+>=20
+> For this case, after getting PIT state, you should be able to use KVM_SET=
+_PIT2 to
+> set the mode of channel[0] to 0xff, which call destroy_pit_timer() via
+> pit_load_count().
 
-It looks good to me.  Can you submit a formal patch?
+Got it.
+so i need to modify the behavior of QEMU's code.
 
----
-Best Regards,
-Huang, Ying
+
+
+
