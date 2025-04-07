@@ -1,90 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEC520CCFF;
-	Mon,  7 Apr 2025 16:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2FC20E6F0
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042550; cv=none; b=k1W4vhIzDlS+hk3CLcUSalBRI6RWSsK/mjv1r4uu7OCooswrQC155HMa8NnvIOhu+o79qKHIIearE/43LXw91Wf+VHXpVgrFD042Y0CvR3xJvYloYhz5+JGzfEg6gC/3KIhO56Ed6qf41n/H5xrjneDHgewkwN9ajxeOgCAfz24=
+	t=1744042561; cv=none; b=VG2HFkTJDP9xsUHazgSQn26nWJycAP6pPiDYMpwp3RtSNaOvk6QXOwAIj8GGZvGeFYnCvjZBN8FU67h+h2ct2a6cQ+2i71A0NbnPDiqoseOdPLQ7rA5wXpiwPOfObWJLas58tITO3IcCU1LZCHHN3n+wqF/LJt/3zasAYE+/FIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042550; c=relaxed/simple;
-	bh=AOliGlUBKUzs+wxh5QtKoPWw1ILQLm9KsSgD9k74nnE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RLul3+XfnZ3SEPq7EsbvbykwXscNZDh3Vv4yEfjfQMkI8kESRPZ+J9HvyMl8AiaHSTOprWfU7ilh+3aRfuFnk03VMdktDP/K8mN0xv7xX7gm72ejbIiKNfXTTV1P+g/C7s3CP1eWJ0leZuW2m3PznBUGDBo/jKKbHe/6bd9cTZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkjS9qH4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744042561; c=relaxed/simple;
+	bh=91gvHqHPOc53Dp2GfJTatN6rIy4QHEKxxdSxnbSlPIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvFvp/tc9o6a37tngPNtR2BBqgZLDN5tJO1IkTY/6OryhdW4aXvin7C9qKREW4y1YpklX3bIRHEomjMYFjvHM0cFXe0hK3roig0/0eCN4yIvxpUNR5PI08pMloxHMPoCi6+PXvrg5TFlimNcYqWN2EWj+5Vynw7+Gp+SUshOSb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NSRN+E5g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PBoLOEMW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkjS9qH4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7390C4CEEA;
-	Mon,  7 Apr 2025 16:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744042550;
-	bh=AOliGlUBKUzs+wxh5QtKoPWw1ILQLm9KsSgD9k74nnE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pkjS9qH4/KzEmPDmZA7tP8d/j8swZTT00bqM3aeohQZ7saHDn3J3s9cVH76EYaxYt
-	 jhYHkuSMtBvPuFjdZNvFxPdZsGCynBMHilZYHKGgQR/tkSPHG6zsHVOFpBHouYVTKk
-	 oTzAQi+IRwZSdBbKlJ7VjM7LSl1ngiaosJaquIDpeOawKnbx2tJjFZcVNvfPbu/h7K
-	 FMQLrpf3Ejn+5wV7Uz3YTqY6Njgt2rl1Aq/2NZd3d58UeziZOrExTDiVJPvGlmZoVA
-	 fCPpsoaDgUkwJKC+I4lFPv5K1ovaJ87HqrDbWmN7Lrf9kpCiyW8owpmBKjtAiElCqZ
-	 zP+Cfuf8q8tvw==
-From: Mark Brown <broonie@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
- Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: Krishnamoorthi M <krishnamoorthi.m@amd.com>, 
- Akshata MukundShetty <akshata.mukundshetty@amd.com>
-In-Reply-To: <20250402121514.2941334-1-Raju.Rangoju@amd.com>
-References: <20250402121514.2941334-1-Raju.Rangoju@amd.com>
-Subject: Re: [PATCH] spi: spi_amd: Add PCI-based driver for AMD HID2 SPI
- controller
-Message-Id: <174404254940.780717.3439023568635859213.b4-ty@kernel.org>
-Date: Mon, 07 Apr 2025 17:15:49 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NSRN+E5g";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PBoLOEMW"
+Date: Mon, 7 Apr 2025 18:15:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744042558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fz7uJL1ohohlWM7+X3g8H30ATSD/74W4U5rDjq4waLI=;
+	b=NSRN+E5g5+jwx+N5XY/zz12Om/VKVUF3edsDzQtWC5giwU4RB4iXkPVDUty/FWN3c4FBX/
+	fJLlfS1l/YN8hLq3orF4UfWRBEmK5UAY9Q5JrMXnMBW0AOeG9zhBAQstCPciFRSylugqCK
+	TD7axi3dxCJXCph01xjwJk8IJ4XAVl6ban+oiRpDChFbu48bnR5A2sU5+bSoglyqzz/+re
+	tAAUYR68o6HezHy96ENY4ZYYsY+btuRaOWWVFNsjAk+GmExdy0E+V1CNs0J8JxAvJ0L0CD
+	3SnTViVsySaiwrk4JmpP2yst/Dfb+uUE5EGNSdquQNOhbOwRdoxkKnTSSRhwvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744042558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fz7uJL1ohohlWM7+X3g8H30ATSD/74W4U5rDjq4waLI=;
+	b=PBoLOEMW7TSEcMsEVK0hPwQWx9mMg8WNlxzo5dODVL0dOU2vApr4dYrsJ4uqOAwxv+HOPA
+	Mw0Bt32k/JO4gEAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 00/21] futex: Add support task local hash maps,
+ FUTEX2_NUMA and FUTEX2_MPOL
+Message-ID: <20250407161557.bYYnmJSr@linutronix.de>
+References: <20250312151634.2183278-1-bigeasy@linutronix.de>
+ <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
 
-On Wed, 02 Apr 2025 17:45:14 +0530, Raju Rangoju wrote:
-> Register a new driver(spi_amd_pci) for the HID2 SPI controller using the
-> PCI ID of the LPC bridge device.
-> 
-> Add a new common probe function in spi_amd driver to encapsulate the
-> code required for registering the controller driver. This function will be
-> utilized by both the existing ACPI driver and the newly introduced
-> PCI-based driver for the HID2 SPI controller. The MMIO register base
-> address of the HID2 SPI controller can be obtained from the PCI LPC bridge
-> registers.
-> 
-> [...]
+On 2025-03-18 18:54:22 [+0530], Shrikanth Hegde wrote:
+> I ran "perf bench futex all" as is. No change has been made to perf.
+=E2=80=A6
 
-Applied to
+I just posted v11
+	https://lore.kernel.org/all/20250407155742.968816-1-bigeasy@linutronix.de/
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+this series extends "perf bench futex" with
+- -b switch to specify number of buckets to use. Default is auto-scale,
+  0 is global hash, everything is the number of buckets.
+- The used buckets are displayed after the run
+- -I switches freezes the used buckets so the get/ put can be avoided.
+  This brings the invocations/sec back to where it was.
 
-Thanks!
+If you use the "all" instead of "hash" then the arguments are skipped.
 
-[1/1] spi: spi_amd: Add PCI-based driver for AMD HID2 SPI controller
-      commit: b644c2776652671256edcd7a8e71161e212b59ac
+I did not wire up the MPOL part. IMHO in order to make sense, the memory
+allocation should based on the NUMA node and then the OP itself could be
+based on the NUMA node.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Sebastian
