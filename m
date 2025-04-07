@@ -1,75 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E1C21767D;
-	Mon,  7 Apr 2025 17:44:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9C521A42C;
+	Mon,  7 Apr 2025 17:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047861; cv=none; b=MGJjr4OxRnA+UiJ/4bjUs8s6GjSs9C8TDtW3cGOEg6OVYQY0zgUChTs6ZDf/FboZ6iduDv9xncOm24b+bS5hqBMeMRsk0WiftGnUEWtVZEI+o5GjakcLE8fyx1lm0Bc8V0IBU873SB/bHbZzCU+WCi5mn89r3WOLjmAbp9dpfsk=
+	t=1744047867; cv=none; b=KgywS/Afu7ljybF4lmXQujk43aBFAZq4Lh3KzaMySE9wfjJLwyc8LLgNd7B4b6MYpQ4VVNArOvxIKOHXQqVHfApAARW+m7qKuSZ6Fn5ilC3FnGq3EQPomJGRYG8ekyEsnLMevGThvsLcdnIMPdykm/n5MzHRmi/3Y3QDYaRyHRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047861; c=relaxed/simple;
-	bh=uT127XyRmsORoueF/P1WDngVjVymYta/zCNZ39Oz6rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMycrrWDko2k3WQt5L6HlETHm86QcWhVu2RfOSamm4QdzTTmPUcBvu//pW0nD28nJ26ayEWOiUteJ9WXm1TpdnW5h5hiqJw2Cj6DWyB9U22jwHria8ZQP+IrLu2FU1sRPuCojzaJGU8phlsRCaiZKkMpcd2nQrOeoVgy5P+zaLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fylVSXqB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744047867; c=relaxed/simple;
+	bh=7zVyw8dBACn0jbPMoiyXuDYILfE08Q4qXUzBs6PoXIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YgzMzj++ooIBpvTRwCLD9ug/2tgZGgV4u8kGncGeBNyOKAoMNiMW29ZZC7Tiam7Zr0qUJ4S58DfvzhwWA8WwQrKFc8JMmaxE1sv6hsegjA5irC916Zr8K99QTN6yq+upDn04Jv/PJMedFJr6hXG+/e/rbY9R6yz3ZFE1/4gpSfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXL7q/iV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fylVSXqB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B5DC4CEE7;
-	Mon,  7 Apr 2025 17:44:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXL7q/iV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6486BC4CEDD;
+	Mon,  7 Apr 2025 17:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744047861;
-	bh=uT127XyRmsORoueF/P1WDngVjVymYta/zCNZ39Oz6rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fylVSXqBqrBAEJCuhxrvwqznUR7qFx7d6qMtLZgUXKgmxZZKDuSVwIfgW0y5gSdeR
-	 IJl04VYhYsh0uG34EjX4zQOY5YnVZ9/8NJl+y83o/cHZ1vCjx5Atv/r/S+BzqN9Ltv
-	 dVD2TzsYZPHxahEYx9TcXYuaxOdgy7FNL6P+1oPT4D3YP/Dp7oJpIEg5wTDQl30DRa
-	 +Jq1gZ2pJXYoAhIgfY+eO2dCrTnphs8SepJdMyTbkJnkC0m+F2LmaVtS0UHXctJRKu
-	 6r1irs1ddZhNubrSk9xEqhOBdjmuTrtqjDSFAcPSxsg1d65aTnlMulMm6JPUniwrMN
-	 5sS7JW1wV1W4Q==
-Date: Mon, 7 Apr 2025 19:44:17 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 1/2] x86/boot: Move early kernel mapping code into
- startup/
-Message-ID: <Z_QO8QybPCwzRwms@gmail.com>
-References: <20250407061132.69315-4-ardb+git@google.com>
- <20250407061132.69315-5-ardb+git@google.com>
+	s=k20201202; t=1744047866;
+	bh=7zVyw8dBACn0jbPMoiyXuDYILfE08Q4qXUzBs6PoXIQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PXL7q/iVHF16iYIelGRyJ0X+jvpOeIcd1w/P3IAzcI6dT9KoqugVYED3VssP0vSNh
+	 kN9QOBgSD8ikX3v1pZvrNOugHFgoYkkF4Gx+Z30Pnwdupso0SSk/Io14R+pPQx4Mfd
+	 mIOhSaS+VyaJff5IJ20ScGDdXbl0LS6k11pf3CC39ZUBacwstJseoj/WI1joWkfQwH
+	 RQUXfe6lAROhiiXfjO6xPHrXwIp46MqYgN6YnxAX1ZSgXvgOAsGPavZxTcBts4P3aF
+	 nq35fvxQymYR4SS3TCBSrsMd1cHNcZiRvwJETq3zX5IT7bREZbHNcPlVAhvfBf9xQQ
+	 5DPRZ4BapvsuA==
+Date: Mon, 7 Apr 2025 10:44:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Parvathi Pudi <parvathi@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com,
+ ssantosh@kernel.org, tony@atomide.com, richardcochran@gmail.com,
+ glaroque@baylibre.com, schnelle@linux.ibm.com, m-karicheri2@ti.com,
+ rdunlap@infradead.org, diogo.ivo@siemens.com, basharath@couthit.com,
+ horms@kernel.org, jacob.e.keller@intel.com, m-malladi@ti.com,
+ javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
+ vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+ krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+Subject: Re: [PATCH net-next v4 00/11] PRU-ICSSM Ethernet Driver
+Message-ID: <20250407104424.01cc42f2@kernel.org>
+In-Reply-To: <20250407102528.1048589-1-parvathi@couthit.com>
+References: <20250407102528.1048589-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407061132.69315-5-ardb+git@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-
-* Ard Biesheuvel <ardb+git@google.com> wrote:
-
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Mon,  7 Apr 2025 15:55:17 +0530 Parvathi Pudi wrote:
+> The Programmable Real-Time Unit Industrial Communication Sub-system (PRU-ICSS)
+> is available on the TI SOCs in two flavors: Gigabit ICSS (ICSSG) and the older
+> Megabit ICSS (ICSSM).
 > 
-> The startup code that constructs the kernel virtual mapping runs from 
-> the 1:1 mapping of memory itself, and therefore, cannot use absolute 
-> symbol references. Move this code into a separate source file under 
-> arch/x86/boot/startup/ where all such code will be kept from now on.
+> Support for ICSSG Dual-EMAC mode has already been mainlined [1] and the
+> fundamental components/drivers such as PRUSS driver, Remoteproc driver,
+> PRU-ICSS INTC, and PRU-ICSS IEP drivers are already available in the mainline
+> Linux kernel. The current set of patch series builds on top of these components
+> and introduces changes to support the Dual-EMAC using ICSSM on the TI AM57xx,
+> AM437x and AM335x devices.
 > 
-> Since all code here is constructed in a manner that ensures that it 
-> tolerates running from the 1:1 mapping of memory, any uses of the 
-> RIP_REL_REF() macro can be dropped, along with __head annotations for 
-> placing this code in a dedicated startup section.
+> AM335x, AM437x and AM57xx devices may have either one or two PRU-ICSS instances
+> with two 32-bit RISC PRU cores. Each PRU core has (a) dedicated Ethernet interface
+> (MII, MDIO), timers, capture modules, and serial communication interfaces, and
+> (b) dedicated data and instruction RAM as well as shared RAM for inter PRU
+> communication within the PRU-ICSS.
 
-So would it be possible to do this in ~3 steps: first the mechanic 
-movement of code, with very few changes (if the result builds & boots), 
-then drop the RIP_REL_REF() uses and __head annotations in two separate 
-patches?
+This was posted prior to the "net-next is OPEN" announcement:
+https://lore.kernel.org/all/20250407055403.7a8f40df@kernel.org/
 
-Bisectability, ease of review, etc.
+In the interest of fairness towards those who correctly wait 
+for the tree to be open I will ask you to repost this again,
+in a couple of days.
 
-(The tiny bird gets the worm, but I might have butchered that proverb.)
-
-Thanks,
-
-	Ingo
+Thanks!
+-- 
+pw-bot: defer
