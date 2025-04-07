@@ -1,187 +1,275 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2096.outbound.protection.outlook.com [40.107.20.96])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C835910FD;
-	Mon,  7 Apr 2025 08:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013342; cv=fail; b=idh0iZK8ahnmOafXYY8EZShJlem2CVrIyzAHSlIQ0Gb1hYQEaUeTa1b6Umu83exTZLaO/kRVXGLQ3CrSsMEzmuldG6doM1LLCIRTKP/aAXWs57bzOhcGpv15j4FyIw1m8a527P0djIYN1EDw4CfFB8rPTKk9qP3s7r+i+5wMNxU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013342; c=relaxed/simple;
-	bh=1v0s+NHzbJg8XKNPxdMRBY0MarYgV0MCihY2Lqqn8FI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TS133K7XSnVmspqM4WTZEiX7uJcSCjz1a1SdGZUKmOtGrNyBH5SxWJLIlhKcWYSpyI4QDQ/43i/m0TxC7T8rQ0RatlA2CBzim0b6TAGH5vVROHmGIXSBa2aS+ng9g30V4vH1NdI6QNvIlTvYmRF0fkFHUwc2/+Jap8jtvgdlWvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axentia.se; spf=pass smtp.mailfrom=axentia.se; dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b=YiDA5axs; arc=fail smtp.client-ip=40.107.20.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axentia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axentia.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DBC82D91
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744013367; cv=none; b=NqNJX1GUhc8Px6xXr8dyXA4dZD6hrYQvmmRwYhEaIxN6id/GUIUOWtpi01HUxbHA9BKnm0leWLXpSmkYAyo4T6zh/zS43evRlIReF67HIrB0n6Egx1caVIKoLd/XNwo3BWEOuqhhxwcE3chVwog5qnWkFmUkk/RhyScV/XaxAAQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744013367; c=relaxed/simple;
+	bh=AIcU3qGQw0vyLqEK981tZMF9Tv1Bj8Bx9LH29b6ile8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V+6t7zKun4sx0IwUOiYjH/CbSs9eeg15y+3hgx6Mg74iaXloB8u4zHa3Qlm9xKwJDxAVhLU5o1WWZU4kxK6eY+zSIIFEs0ZRDrVFFrsFkLUSBnGPTNdmRHXVDWTqbrpmyV8eVfvLaqETZGhRQHKQY/p9QCgzOZSGQmRfbRVE69c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dLbomTfJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="YiDA5axs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cbIbj5C/ronbr5rJ0HiCRd/TfwaZcM6TgOHjSanSc/TSZnob1i7l81cUI6Mb+KeC09M/83aPiXptd/l+HobEugCY5LpbWBT8bMLpMI4LAZccjUz1yNAUwdpUlBnQLQYRUcPEHooGS5M0GPElLQqnsikNO4x5PTcdT/EuEV8pBzQFuWHc0cYdz9bTISgIofV69Nao92U7umF11TGYF7fYQYhPk8e/PkpYgk6goVeuUNvTxZbr6BdvWLN3dvay3g1YAwFjLfUODnM3Sd+VjsPmT4YKwraHeHPWC9cir8Y/RNSWNC5R5xoRv2mmDJeMCVYYwaEXmIsb/KZ7Hl557FUjBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jpXhQfGDGbrEXjJu4KsaW0tyN1EzcGXQRgV8fd7+b0Y=;
- b=WLPfarJKr0if9JrJATSYbbjaw3sNmJmCXA9IzwyFbwV61DNKh0aeTER34Tvq4O7dFqPAARULKQTdfbYmijHVMzhuXIMSL2Ttv6DAAbzXNEig9KHCdayVooz6ybglOlfupZb+vB6oMeSo/rDoi4QgTda7kFGV9yaG+Ea39AC6Q7RY+8OZMyq/KTV1+ADgYwK+PyLqOCD8FPb1t6AzohqwG2CJ3UD7Sza0MluKgqTiiWWzEy4Ow278eBhK3AxW72qdtZFscNNw2bvHrHalyeBOuVJEQ9I4g6ikjPpXTOiYJpDOwyCva0pg+7h8rcrhiagRGDJSlrGrlhTxDJYbd18G+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jpXhQfGDGbrEXjJu4KsaW0tyN1EzcGXQRgV8fd7+b0Y=;
- b=YiDA5axsMmtSCYx/kkukSLSjBRzNHIvIyjjy8uMsoHQ1uHm88+6/kvAchWnYR0Df+yXZiXp6SpxXhSouyrfH1AOULk5Z6pVlZzAhvN2tQ+gG28adLxE57sSJbdKGA1zJgNQCAkqDdbK24R+nnk4iYS8o28VaChMqv1fx7PDtdt4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axentia.se;
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com (2603:10a6:10:3e3::8)
- by DU5PR02MB10707.eurprd02.prod.outlook.com (2603:10a6:10:528::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.46; Mon, 7 Apr
- 2025 08:08:53 +0000
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::aff4:cbc7:ff18:b827]) by DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::aff4:cbc7:ff18:b827%3]) with mapi id 15.20.8583.045; Mon, 7 Apr 2025
- 08:08:53 +0000
-Message-ID: <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
-Date: Mon, 7 Apr 2025 10:08:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
- callbacks
-Content-Language: sv-SE, en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Michael Hennerich <michael.hennerich@analog.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
-From: Peter Rosin <peda@axentia.se>
-In-Reply-To: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P251CA0022.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d3::14) To DU0PR02MB8500.eurprd02.prod.outlook.com
- (2603:10a6:10:3e3::8)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dLbomTfJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744013364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=25iyDw7sQyJUYeKPA+oSXr49j9oc0JtsKm/C1RWwbCM=;
+	b=dLbomTfJN9bfAfCm+jl6XtNfXvhUHGYxqnv/rLq2965n8i1OqNV9IoYQhiNZTycVBAdkRp
+	5h1SC53lsL0AJVJVS+xyqn1CWF40bnszlNgthVlKfB5NwIXRcKQ4xzjQeYXDrivVWOfQDp
+	a7nwQ7P3QjbPPZ+r3NRylAKL+ry75+Y=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-6Kwft1LBPB6At1DVA4ooyQ-1; Mon, 07 Apr 2025 04:09:23 -0400
+X-MC-Unique: 6Kwft1LBPB6At1DVA4ooyQ-1
+X-Mimecast-MFC-AGG-ID: 6Kwft1LBPB6At1DVA4ooyQ_1744013363
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-6f2a2ab50f6so58046167b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:09:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744013363; x=1744618163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=25iyDw7sQyJUYeKPA+oSXr49j9oc0JtsKm/C1RWwbCM=;
+        b=JIpiIIN2MONu3ID47QINjc2NKikuBjYSubpZYYo652E+7XEMQxW6T74E2rx7fydPKH
+         btuOZWL5YihZ9xOfbIe8M3n3dNTi+AItOAqAN8kBRfvSUcsqb50OTzIGJyypuV+dCGAI
+         knYsXymQnPQZ8oyZcTaj7s3j833DPZ9NgguxPFyroxXFfVpjmUwB7nQMX2LYk7MczwxB
+         7gLannESlFSfthg1Wc4SWN+mA6S5CEF5PRiIw1mLxXWTOfnl4hsgslliLtjJgIYCpl5M
+         ZCzcSqcn86ZPoSzC8e29b2ohty2/UY4lpYfkfEWIKgvVBJh6s0g7Y3uaq1bWJEVBgPsA
+         hATw==
+X-Forwarded-Encrypted: i=1; AJvYcCW60Uk4pbC/0FkqSvN76NCFkI1J4O04awbMPBVUCQlQJjJH2n0OMQSOltm5afRgsNzdITfvX7AkZX6N2Bg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywmo3EepEEs6ULU01bzTzTIGDVt6yTn5kmIU+ZWlgNrN5yp+Zve
+	Y2HpP1RQ5+qa9xW5MYwiQWMsTrtvGixIh0nWo7ylA1xakyhebm44c8R0FkGvcxqK4VpD1vXNTCL
+	s5MQbZjvuZoGwNqa3CAaWCVgtqg66vC3IT2MZ60e4YtmDxI5wAWbAfycOdy4FMmgnseV2Yc4/M3
+	qZlkuqzR+1rxFWzNqiSm5ONjHVzaXkFSG6orAI
+X-Gm-Gg: ASbGnct1enSx/bfCDglsHHKKIGCNVBeqNK0pdR3U/zQy4l+97E/p42BEsFcMQxXZ/EO
+	YGcxFRNRUxn+QarlspeH2do4bmT70d+q20YKt9TDQsjYUvIQI1KNRsZQ1OKVwG4I4soxSQF0=
+X-Received: by 2002:a05:690c:7011:b0:6fb:a4e6:7d52 with SMTP id 00721157ae682-703e1625d65mr224051547b3.35.1744013362966;
+        Mon, 07 Apr 2025 01:09:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGb7hTIHt+NuAmVBBXpHYp02iOd0Zq7ltlx2Dmrw3wGkGid4PjxSlXl7aFHxqXXb8FYdr8XlOdtIB0TH3sudVc=
+X-Received: by 2002:a05:690c:7011:b0:6fb:a4e6:7d52 with SMTP id
+ 00721157ae682-703e1625d65mr224051167b3.35.1744013362628; Mon, 07 Apr 2025
+ 01:09:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR02MB8500:EE_|DU5PR02MB10707:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92984df8-b806-4a54-7d83-08dd75ab6ff6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UWRkUDZseTRtR1lqcEpKdFFnY3Fia1ZGc2JpQk5FeEp6YlkwYTF3WnhSdFVZ?=
- =?utf-8?B?SjRLNWNsSTlBNXErbU9yVjlvTVc2NDFOZ01TWWpvMGpvdmJzRDAxcG9RVnVI?=
- =?utf-8?B?ZG8rUWpKUGRIYUhHajRMUWtJWjkrK1dXdEtPVVhVNDdzTXhpNzlOZm1nVjc4?=
- =?utf-8?B?djNqZ01NdG9lV2l6bnZiOFdWdXRIL2dCVk1DVENNZHBhanNrTW5qRjBqWHlU?=
- =?utf-8?B?SmRkZ0dSYUZ3KzRpb3JReVFRdFR3ZzdXTjVLcExQN3FhYUtEbTRUdHMrTk5S?=
- =?utf-8?B?V0FOQktvMnQvS1ZrSWNOZmN0d1N5bEtNYzVBaUh5UC9RUDFnNk92bnhDOGZo?=
- =?utf-8?B?RGlNU3I1MTFaSXZMZnBueGF5MmJyR1JiSzdxQ0RGY3RoeEptS0sxMy93Tm9V?=
- =?utf-8?B?UExLVHgzL0VQdGlidDFjRnU5QUtJb09za3lmNStIN05OS3pwU2x4Y3ppZm9n?=
- =?utf-8?B?cFpDd1k4MU1nUzR2UGF0R3JJaUNVU2NSSGxFZWpGY3J3b3FWS2RnQjAwS0p6?=
- =?utf-8?B?K3NJbUxRZ3M0UWE5KzdSdnZqekRnYkNaMnRrWFMrKzY2YVZOQklYWThCZms2?=
- =?utf-8?B?a2I5aTZwdE40N3dxdDJ2bmtybG1qUTF0SlpnRVR4N2JKaFdtWTgrZ1Nobi8x?=
- =?utf-8?B?QUZUaE0zMy9nOGlLdFJtTTJibThDSFNiWUpqWmFzVzNrTFVqZWExSVZiRUx0?=
- =?utf-8?B?NW1pdUp2QnorSTJyNkY0em5mZGs4RTZSaDJzMEJpQjliTWROR3hCa0MyaSs5?=
- =?utf-8?B?NnFEelRYQ1pPUEtFemE5Nlk1YzBaVFgzaGNrKzc3T2dSbkhIZjk3elZkQ0JT?=
- =?utf-8?B?QUFjbnlneXh3MmNuNStRTTIxcEJuUGNpcXBLVjNBUGpFZlRDa2ZaUE9YMmcw?=
- =?utf-8?B?SllvRmgxQlFYZkxWL2lwZWhudW12UkI2MVNUWmlBdnBsa1ZpWHFZU0V0TGJO?=
- =?utf-8?B?bEhXUlB4aDJnUy9TVklHcDFzZzk1ak1VT0wzeUMvczMxVDA5UFdTeHZMUUEz?=
- =?utf-8?B?Nm0xVzRNdWJmWkVYSWJlYklvK1I3YXJuaGpzY3dkZ1lNaXdWOEdwVkQ5TmZY?=
- =?utf-8?B?QmttOU5Zb0RHeW8wbTcyUDhjQXRCN0NEeUJ1cGNJNFVJc0tBR0RCa1BBcmE4?=
- =?utf-8?B?UEE5L1NIOUt6QVRUOVdhQW1VOEtDOGxMTU1MTGVFa05meVVtT1N2SXZtUmtS?=
- =?utf-8?B?ek1vQm10aEVZRXlYYUcxN0lmWUkzNDVsYXVXU0FmbDVzRU1ESWRRY2VRRzVv?=
- =?utf-8?B?ZENwbFIyblR6d0cxRU5FVDE2TTA4M1RxZnZ5NTFVQnJ5ckV5c2xNSENacGdM?=
- =?utf-8?B?WVptTys0dkJ3b3pHNUxNaTQxYVkveDU2TVVvNWwrWW1uWW10MVBpSDhQN2RM?=
- =?utf-8?B?OWxMWFBlMDRVWHBvVk1pMVNpUnh0MUwvWHk2VlNQRE1jVlZORkExaElYUkJF?=
- =?utf-8?B?Vk55bzlpM1J3aVNEWXVtcFU0dko1NjNndkpLL3BDaWRLYzBYVTIzZGdabFdh?=
- =?utf-8?B?bXhZN3B1NHlNWCtJSS9WeXlXSlJiNE9TcVlmNHRVcGp3bTArNFErcnZ4clVP?=
- =?utf-8?B?VmZSbHNOajZNcU9zdld2WGRiU1c2L1JoQThrUldyTUpnemdqcUlCNGRKbTZs?=
- =?utf-8?B?b3Z6OEh1QkErVlV3dEZQOUxOc0tMejRyNVlkWTJvbDRDWWZlWmU2L0t4RGdx?=
- =?utf-8?B?emJDOS9ZcDBueStxVnE1VHVCaVQ5blE0OWViRE9DQ1NxdEhnUHRQd1AxUzBM?=
- =?utf-8?B?ZVh2NERFWllSQjdJVTQrQ2NlSUIwT0JKeXQya2d0a1gzODFrMGY1dFpMZjQw?=
- =?utf-8?B?WDFwV2Zxd2NremVpWjFTZnEySHpWUU1NbmRiSm45NjZyMHE0NHpqK2NMdFVi?=
- =?utf-8?B?dFU3RHJvSjRPeWR1bnJPc2xHZTNtUUVWZ2tueXBZUVBZenplRW93TTJTd0wy?=
- =?utf-8?Q?ym8HrN8jU9A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB8500.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZGhRbzRqdzQyaHl4UkJ6ZFpiWGxpWGM0bkZkVmk0T1ZKZ2ZacUlLQmgycU9D?=
- =?utf-8?B?Zzh2KzFWZ0tLZnFnbm1xK3RYTU85V2ZxMy9mRXE2WldQWFZWd2xTOVZLNTRl?=
- =?utf-8?B?T2RYSjRFNEdMNGpyU1VBTGwrL3NSSy8vR2QrSGRyMmtyemt6NnhxNTdkaTJN?=
- =?utf-8?B?a1BkdmNRdWQvZ043c3ZVYlNzSHRpcExEQzg4eWxibHErMHQ3aFVIcGQrNWs4?=
- =?utf-8?B?MzR1YnRRbVFkTEw1YXp5MmZKM1lBUXRkWDBxb1NxYTZJNmM1SDByQVN2VmxU?=
- =?utf-8?B?ZEFKQ0pBM2tTUHBLcVk4d3lRajJiY0NvR1FJZjgyNkhIcnNqNzljTnVHRWU1?=
- =?utf-8?B?U002SGM3Z1ZmM3VsZjZPODJHV2U4Y0VYR1RCdDE0Uzd6bjY0azlTRmJSZU1P?=
- =?utf-8?B?b0JKcnZZM2JuZUtMNVVpd1h4cElEaGQrejZhVHRIUWNnYjRnRFNHKysxSm9M?=
- =?utf-8?B?RmY1MlV6eURWa2lLekMvdWFHL3ZiTnFsQ21DMmtRYzE4bStaUGFPQTgzYjQ2?=
- =?utf-8?B?ZmZGMlRJQmdTcmR1SFFTcGtxaFZwNlgwNnV5RktQV3hsT1VDU3FoUEFDUHNj?=
- =?utf-8?B?WkNnWk9IVi9QQ1gvQlBiaWxGR05oWXlxRTkvd2l1WGs1V2o5NnZBTVlKank1?=
- =?utf-8?B?SkhQNjY4akYyNkRLVnJJejNad3VoNUN4eXVPTXZoMXRvdU16aDJnVERKOTl2?=
- =?utf-8?B?dGtyaEZ6N2luczh0WXRTRzFsclgxM1ZRRUZGdWtBYlhrWmNQNjhYUkQ0a2RS?=
- =?utf-8?B?dHFuTURQL3NwVXAvVFQzWGF6cm85WHJwSS9mcXE5bXZ2VFB5Y2Z6dnE5MklM?=
- =?utf-8?B?NWFvRnc1bklTTW9TTzI3S0FhNFNwZjQwY1l3b2VEY1diNkc5clFTRFhHdU9V?=
- =?utf-8?B?NWZlQXpvTXg5WmxxVlI2YWFsOXVsU3JucmZwUThobXJZd21tWHNMb2JDWUw3?=
- =?utf-8?B?TkRQcXBSYkxhRWJNZzZveXNCWWJhQzVsVzZFMEwwMmppQnF3TndZYVJvWFZV?=
- =?utf-8?B?eUJDWXhNYmRJUWlScEFvWk5aZE1oWnBnMnQxd3N6cWphcERpay9HTlVNc3Nt?=
- =?utf-8?B?QmV2MXZ0Zy9qQS9PQi9sdnh6eHV1WDFFQ1JyeVBxMU9RK3FHVmhlREY4YXlW?=
- =?utf-8?B?amhFRmR6RzJSem01c25TNTBvd1pGSjJuT05OLzJmV3V5ZUZHM3cvVWdDKzRN?=
- =?utf-8?B?WlJFUlRxUnFsVTIzMkJqOXNHYnVWOHNZalZEb1l2YVJ1Z2xEV2tQc3liOVo1?=
- =?utf-8?B?NjhoZzgxR3pFNFBsMWVyMGR3V01ZZ1F2SFNoZENMdWt6Y01TTkZ5Yzd3NFJq?=
- =?utf-8?B?eTVmblloVnJlQ2V6eHlZZ3FEZndVajNqSDNSNVJmUnVWZEg1WFRJV250ZmVH?=
- =?utf-8?B?MHpHV1lrdENpNEJiUFcyTlc0UG9qL1dEdHpZKzVkZU8vYWFzWnI0Tm43eWhJ?=
- =?utf-8?B?S0RtR1VXRlNHUmhYNFBwd1QzQVNEWGNaaUNPV0NzTTBYVlY1NFBmU1BocDRz?=
- =?utf-8?B?c054OWc4dzVzUTUwck11ZzkycHhKUEI2YzhVZlNsaytOalFhcU52aXZKMWpk?=
- =?utf-8?B?dFIvV29vMWdjeDhTcVV3cmw3V0x1NEM1aURPamdPd01WU2JySGJydk05Slhr?=
- =?utf-8?B?eDYzQTN0eVJuUSszbmU1TkdFVUlzVW11N3BTTGlWQmt2ajM4dkJoOThyK1cz?=
- =?utf-8?B?eW1YaTFpb1ZBMkxITlIycWNVWHlRTWlZNTZyL1g5Y0c2WW9IWHREdTRoVlBI?=
- =?utf-8?B?NVQwdFBOQ0lEb0pUY29CQ2ZqSDg5WW9lZHltNEM1bEJQc3R5QmFxdHpCSXNO?=
- =?utf-8?B?Mk5vQWp0anBqcDlPdzVWRVdiZEluWHJ2clBNR2F4V1Mwa1F2cnN0OE83Z21G?=
- =?utf-8?B?clpGQ2ZhYjg3QS80T0tnUUhFdGVqOWErdFZoWE9EYkZYbG8wWnJEQUlRczFZ?=
- =?utf-8?B?QjZJVzNBWW1zOTdnNjdlMTFKM2lhRnN1a3BvMHlWbUppS3dIU29qcTJPdFhS?=
- =?utf-8?B?UXZWSVYxdnYxOUp4Yjh1dTMrTFoxWEQzd0o0cUtLMW8vQWFSRmpHZTJVNVNK?=
- =?utf-8?B?Uk82aTRiRnpWYXB4aklNeUdodDNvaXFZUUJZaEVIQks3Z0lUZUJITDNteSsz?=
- =?utf-8?Q?5egh4yBJv0cxde1sKPssN6cgb?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92984df8-b806-4a54-7d83-08dd75ab6ff6
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB8500.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 08:08:53.6351
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hTdtjkC4ni5IGM3wahK+xiNzFr/RnR9RtG0xv8RR/pTC8t6Hb7Ky1lUy7D4ATS/3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR02MB10707
+References: <20250328100359.1306072-1-lulu@redhat.com> <20250328100359.1306072-5-lulu@redhat.com>
+ <3hsgi4a2kj5fg65zz7q463ypxbstf2x73avupayyrexjonkheo@utoyktego6as> <CACLfguV5v8Pm9=+0jkDnZFLp-MiyoYT=cFsA2rqeVgNJ2O7zvQ@mail.gmail.com>
+In-Reply-To: <CACLfguV5v8Pm9=+0jkDnZFLp-MiyoYT=cFsA2rqeVgNJ2O7zvQ@mail.gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Mon, 7 Apr 2025 10:09:11 +0200
+X-Gm-Features: ATxdqUGcClEaKZlXIh_kQkwLsnROHag_isA2bwLbYX3EtHi3Lr3hxio_8weYAPw
+Message-ID: <CAGxU2F5mCHdByvcuj8SOiXCj+MtD5=GM4yEprpeiDU8ZZAVsLw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/8] vhost: Introduce vhost_worker_ops in vhost_worker
+To: Cindy Lu <lulu@redhat.com>
+Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Mon, 7 Apr 2025 at 05:14, Cindy Lu <lulu@redhat.com> wrote:
+>
+> On Tue, Apr 1, 2025 at 9:48=E2=80=AFPM Stefano Garzarella <sgarzare@redha=
+t.com> wrote:
+> >
+> > On Fri, Mar 28, 2025 at 06:02:48PM +0800, Cindy Lu wrote:
+> > >Abstract vhost worker operations (create/stop/wakeup) into an ops
+> > >structure to prepare for kthread mode support.
+> > >
+> > >Signed-off-by: Cindy Lu <lulu@redhat.com>
+> > >---
+> > > drivers/vhost/vhost.c | 63 ++++++++++++++++++++++++++++++------------=
+-
+> > > drivers/vhost/vhost.h | 11 ++++++++
+> > > 2 files changed, 56 insertions(+), 18 deletions(-)
+> > >
+> > >diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > >index 20571bd6f7bd..c162ad772f8f 100644
+> > >--- a/drivers/vhost/vhost.c
+> > >+++ b/drivers/vhost/vhost.c
+> > >@@ -243,7 +243,7 @@ static void vhost_worker_queue(struct vhost_worker=
+ *worker,
+> > >                * test_and_set_bit() implies a memory barrier.
+> > >                */
+> > >               llist_add(&work->node, &worker->work_list);
+> > >-              vhost_task_wake(worker->vtsk);
+> > >+              worker->ops->wakeup(worker);
+> > >       }
+> > > }
+> > >
+> > >@@ -706,7 +706,7 @@ static void vhost_worker_destroy(struct vhost_dev =
+*dev,
+> > >
+> > >       WARN_ON(!llist_empty(&worker->work_list));
+> > >       xa_erase(&dev->worker_xa, worker->id);
+> > >-      vhost_task_stop(worker->vtsk);
+> > >+      worker->ops->stop(worker);
+> > >       kfree(worker);
+> > > }
+> > >
+> > >@@ -729,42 +729,69 @@ static void vhost_workers_free(struct vhost_dev =
+*dev)
+> > >       xa_destroy(&dev->worker_xa);
+> > > }
+> > >
+> > >+static void vhost_task_wakeup(struct vhost_worker *worker)
+> > >+{
+> > >+      return vhost_task_wake(worker->vtsk);
+> > >+}
+> > >+
+> > >+static void vhost_task_do_stop(struct vhost_worker *worker)
+> > >+{
+> > >+      return vhost_task_stop(worker->vtsk);
+> > >+}
+> > >+
+> > >+static int vhost_task_worker_create(struct vhost_worker *worker,
+> > >+                                  struct vhost_dev *dev, const char *=
+name)
+> > >+{
+> > >+      struct vhost_task *vtsk;
+> > >+      u32 id;
+> > >+      int ret;
+> > >+
+> > >+      vtsk =3D vhost_task_create(vhost_run_work_list, vhost_worker_ki=
+lled,
+> > >+                               worker, name);
+> > >+      if (IS_ERR(vtsk))
+> > >+              return PTR_ERR(vtsk);
+> > >+
+> > >+      worker->vtsk =3D vtsk;
+> > >+      vhost_task_start(vtsk);
+> > >+      ret =3D xa_alloc(&dev->worker_xa, &id, worker, xa_limit_32b, GF=
+P_KERNEL);
+> > >+      if (ret < 0) {
+> > >+              vhost_task_do_stop(worker);
+> > >+              return ret;
+> > >+      }
+> >
+> > In the final code, xa_alloc() is duplicated among the functions that
+> > create ktrhead or task, might it make sense to leave it out and do it i=
+n
+> > vhost_worker_create() ?
+> >
+> > Thanks,
+> > Stefano
+> >
+> Thanks a lot Stefano. I previously tried moving xa_alloc() out, but
+> that made the code strange.
+> I think keeping xa_alloc() in the create_ops function completes the
+> job in  a single function, and maybe it could be used in some other
+> functions in the future
 
-2025-04-07 at 09:17, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> Peter: I know you've not been very active recently. If you prefer to
-> just Ack it and let me take it through the GPIO tree, please do.
+Sure, if you tried, and it doesn't add benefits, that's perfectly fine
+to ignore this suggestion! ;-)
 
-What normally happens is that I just Ack trivial things like this, and
-then either Wolfram or Andi picks it. The risk of future conflicts in
-this area (and cycle) should be low, so I don't think it really matters
-if you pick it, but Wolfram/Andi should have first dibs, since it makes
-for slightly neater PRs during the merge window.
+Thanks,
+Stefano
 
-Acked-by: Peter Rosin <peda@axentia.se>
+> thanks
+> cindy
+>
+> > >+      worker->id =3D id;
+> > >+      return 0;
+> > >+}
+> > >+
+> > >+static const struct vhost_worker_ops vhost_task_ops =3D {
+> > >+      .create =3D vhost_task_worker_create,
+> > >+      .stop =3D vhost_task_do_stop,
+> > >+      .wakeup =3D vhost_task_wakeup,
+> > >+};
+> > >+
+> > > static struct vhost_worker *vhost_worker_create(struct vhost_dev *dev=
+)
+> > > {
+> > >       struct vhost_worker *worker;
+> > >-      struct vhost_task *vtsk;
+> > >       char name[TASK_COMM_LEN];
+> > >       int ret;
+> > >-      u32 id;
+> > >+      const struct vhost_worker_ops *ops =3D &vhost_task_ops;
+> > >
+> > >       worker =3D kzalloc(sizeof(*worker), GFP_KERNEL_ACCOUNT);
+> > >       if (!worker)
+> > >               return NULL;
+> > >
+> > >       worker->dev =3D dev;
+> > >+      worker->ops =3D ops;
+> > >       snprintf(name, sizeof(name), "vhost-%d", current->pid);
+> > >
+> > >-      vtsk =3D vhost_task_create(vhost_run_work_list, vhost_worker_ki=
+lled,
+> > >-                               worker, name);
+> > >-      if (IS_ERR(vtsk))
+> > >-              goto free_worker;
+> > >-
+> > >       mutex_init(&worker->mutex);
+> > >       init_llist_head(&worker->work_list);
+> > >       worker->kcov_handle =3D kcov_common_handle();
+> > >-      worker->vtsk =3D vtsk;
+> > >-
+> > >-      vhost_task_start(vtsk);
+> > >-
+> > >-      ret =3D xa_alloc(&dev->worker_xa, &id, worker, xa_limit_32b, GF=
+P_KERNEL);
+> > >+      ret =3D ops->create(worker, dev, name);
+> > >       if (ret < 0)
+> > >-              goto stop_worker;
+> > >-      worker->id =3D id;
+> > >+              goto free_worker;
+> > >
+> > >       return worker;
+> > >
+> > >-stop_worker:
+> > >-      vhost_task_stop(vtsk);
+> > > free_worker:
+> > >       kfree(worker);
+> > >       return NULL;
+> > >diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > >index 19bb94922a0e..98895e299efa 100644
+> > >--- a/drivers/vhost/vhost.h
+> > >+++ b/drivers/vhost/vhost.h
+> > >@@ -26,6 +26,16 @@ struct vhost_work {
+> > >       unsigned long           flags;
+> > > };
+> > >
+> > >+struct vhost_worker;
+> > >+struct vhost_dev;
+> > >+
+> > >+struct vhost_worker_ops {
+> > >+      int (*create)(struct vhost_worker *worker, struct vhost_dev *de=
+v,
+> > >+                    const char *name);
+> > >+      void (*stop)(struct vhost_worker *worker);
+> > >+      void (*wakeup)(struct vhost_worker *worker);
+> > >+};
+> > >+
+> > > struct vhost_worker {
+> > >       struct vhost_task       *vtsk;
+> > >       struct vhost_dev        *dev;
+> > >@@ -36,6 +46,7 @@ struct vhost_worker {
+> > >       u32                     id;
+> > >       int                     attachment_cnt;
+> > >       bool                    killed;
+> > >+      const struct vhost_worker_ops *ops;
+> > > };
+> > >
+> > > /* Poll a file (eventfd or socket) */
+> > >--
+> > >2.45.0
+> > >
+> >
+>
 
-Cheers,
-Peter
