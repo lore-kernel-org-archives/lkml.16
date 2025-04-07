@@ -1,138 +1,77 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451F320A5E5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E682206F0D;
+	Mon,  7 Apr 2025 16:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042447; cv=none; b=ajuZG0nezOiFRrd59oMD1b7DE2icNKpGWFiTGb+CCzyJsb8+RZAXFvNOOBNIjz4jwHGFQ3eNZ05JKIP2M4RQQWQ701flgSdIsilqHnt1wfzP4Ryk7jpVw3hD2ipR3q1/O80m/HKY6t84dQdXWCcILL8VvYJEVbTHoST3nikFNBo=
+	t=1744042455; cv=none; b=mdZtm7YoqmIMdFUJLe/u5Fg9cuA1gjwSjktSiOYuGjxKgo0axeXK0y5PddPFX+DhYUFXOfE9x4T2Cbxu20Lue6Ul2ZYg389PEgs/vN7lLQ/JYCJW1C3ayJdXyWpyDRL7DvWwB6JVATJJa68Ap2SdwLnmFPqFM0y10yxIqJL1usc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042447; c=relaxed/simple;
-	bh=MZ1+v4Yr8SrxsYFLNiPWcJ3X3rXXmM+Atb5i9VRwigw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBrMfSKNYrKYTFvNcjfU92+MkXV+1e2DJH2ny8lafziEHvJoGFUkAqh5mjTNo9WPj88v20F+7zLjUfD8v2lokWhaYfoEFI3gZ2+AXEuhr0w9L84GmPXUeWajVlCfZKRQR3qNUhf9W9vvTbc1WK84KIXiyziiAutFQ7lPqj6Je1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=endZq3d6; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744042455; c=relaxed/simple;
+	bh=lRo58WOEoZYlMzgSCKBBpT6Df41auOl5bPYJGpgfOuE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1yTdH61FdKlUDaG6aCY9toc7ygMPQRW5sfijf/zoGjSr4v1PT1IoSavSkCM7ZS2yiih4gcbefDXK3zCtOS+2vaMrEyZ+59jOQpD+j8EYiLmY4QLm3VNAhaW7e9VjWV447oBlnNLN8gyv2Q5GjIH3Obw8XbpRIABjug39mq/eQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BduanG0O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="endZq3d6"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6feab7c5f96so43068217b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744042445; x=1744647245; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bod33nGx35GYDGeyLDpG4qYPRiHJzUFJHwZD8P4WupU=;
-        b=endZq3d6f2rGBycLrcxNGnEUlxVaR8NwpKrT1XudIkVdUOkbzPggfFGfOlzpYKnUOF
-         D1Lga+Nwnt+zVDusaHfz9jmONa54DD7079bRQQA1oafjVIxsPCdLrQQ5bwpsowclji+d
-         YSImJOejdLXF6oGTGmuGaj3qaMGVPpXI8ptu/890dc5FwuPqR7xZG4rOJM9hcfKOAi5o
-         Jtm1E6S1BsPzc56+0MZh1izD70z/ge+ViuYlo2CQIfmR/2iSioQkql9KHoIiw7zk2enj
-         z7RPhShjiortuBqkwrbW8HGxxENiigwiS9dsDhANO0Lz+VKOR6nozIaM55La461Tfn9W
-         0QBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744042445; x=1744647245;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bod33nGx35GYDGeyLDpG4qYPRiHJzUFJHwZD8P4WupU=;
-        b=SBO7SUBHWTM7vCNdnVIJ088XWTGsX/S/X2KyNNlQALC8R1fwDjE0URVw8A+4NETyoC
-         b6+W1Fq3WoVQehrOwSKPmlUQB6nhi1spFoqGBzEFswxb8f5xQMa4qteTwiX+i+XXEWG6
-         4DlVZ/SlylUchtbzmGqxGvOzpj5df6zT9ocw2ZmV3C4BlQfscKhcsS1vfM+CfaErBMOr
-         dNpodec3J0fNiAvjASlAVu1BCaTuYTzmmOcl9I7B0gAKf/7sDYOfe4tS6PCIrJ71fivg
-         epf61HuJvOP+mt9xlUmqOiK4WmPY3bZHmikg7wkI02Px7thGfcKLgGX8SFrNAfrp2Dq4
-         Z3Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpn6KaLP6s/352VsTt3jgB2v3mED/Ts8uN391SKSLgBi4OdI3WH9nuGRP1aTQRyuwS1o2bcIM3W90TUCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlZvnEii0Xo2Y0lUsaeu8FOFOPflUl3TNwp1G5izlNrb8hbdKU
-	GGJrXNrxCsk4iG6eZrKld/xtL74wPd+pvQz0gBsC2/A/Qpa9Nc78tacUv6fkksg4gayLJR2J0Gu
-	U4svUXCB6PWaQ2K1d7LiToCMRmIPT/dwQCL1vAA==
-X-Gm-Gg: ASbGncutFGGxb1M8GJj7zHqBvUgQrKlyElS+nwWEhn+zSUCTX0FYp1earD9N1L2CwhR
-	eXlH0NR9rvroDqv04rQnjtMnt0jba+PvaFvcg2z7uSQ+5+r6hMpUUpDrziZ4IZtuEW45C4BZn68
-	I71fv4i6S1BzHq8M4NJjKX7QMNoO4=
-X-Google-Smtp-Source: AGHT+IFoDbEoYCGI/fKsfvc1W3WRJ48PIrl3shNMLSyLyHUCZEKjVWa8xv5qbOXVgK1f6QWGAMLLH1qGHEVK9aquLzg=
-X-Received: by 2002:a05:690c:4c11:b0:702:5689:356e with SMTP id
- 00721157ae682-703e1546003mr227916307b3.12.1744042445057; Mon, 07 Apr 2025
- 09:14:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BduanG0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254EBC4CEDD;
+	Mon,  7 Apr 2025 16:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744042455;
+	bh=lRo58WOEoZYlMzgSCKBBpT6Df41auOl5bPYJGpgfOuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BduanG0OKVkleR8XFTyB0bnJmIxsGo7D1T9I5vCD76VKCcdZ7KP7VYem4hEhSJG6o
+	 3BgO8dkrpSQp+RtKnegbA5ymlT+zjUKS1ssOMVIZHytOfBHQ4HRKkFRTWDHw2JvI1j
+	 3lK488n94NKLGxqmgtxCoUsVlsTHOIRJMjGw2fkapl18pk5CooT6kfZ6NhvqtRWvqO
+	 fhVklUI/mhbdCGOv/rfl7FgEI8VPnvO54E6WbhVZGWbQRw/eB5/LRdqhQ9aTU0eYG3
+	 c7CML4a6NE7L0zlZrghuj9M6F8UCQQO3MRS4RBigHT3E8PY6pEjNaw7cl7KKAMdS42
+	 lPQzUJB2DO3Tw==
+Date: Mon, 7 Apr 2025 17:14:10 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: add toradex,smarc-ec
+Message-ID: <20250407-glacial-unfrozen-333d6d62144c@spud>
+References: <20250407114947.41421-1-francesco@dolcini.it>
+ <20250407114947.41421-2-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230621144019.3219858-1-abel.vesa@linaro.org> <2786d9ff-0579-429b-b431-a8547cbf6fb6@ti>
-In-Reply-To: <2786d9ff-0579-429b-b431-a8547cbf6fb6@ti>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 7 Apr 2025 18:13:28 +0200
-X-Gm-Features: ATxdqUG2bTsfDvA_PWKUIhjRNtwJmFpgrRLM7JC797JM0tWqTf0FSYOqcVvkHm8
-Message-ID: <CAPDyKFodE6KokC9uwZZgF+VGCc5JCA5YjB7okUkELAn16V=nvA@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/4] PM: domain: Support skiping disabling unused
- domains until sync state
-To: Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-Cc: Abel Vesa <abel.vesa@linaro.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-pm@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S83CsH0c2BAJ1I46"
+Content-Disposition: inline
+In-Reply-To: <20250407114947.41421-2-francesco@dolcini.it>
 
-On Mon, 7 Apr 2025 at 16:13, Devarsh Thakkar
-<devarsht@lewv0571a.ent.ti.com> wrote:
->
-> Hi Abel,
->
-> On 21/06/23 20:10, Abel Vesa wrote:
->
-> Thanks a lot for working on this.
->
-> > This new approach drops the is_off change that was part of v4. That was
-> > kind of beyond the scope of this patchset. This new approach changes the
-> > boot_keep_on in such a way that we won't need any kind of new locking
-> > for a PD. This involves using the patch [1] for adding dev_set_drv_sync_state
-> > from Saravana for allowing the genpd core to set a default sync state
-> > callback for a provider that doesn't register one by itself. While at it,
-> > we can add another such API but this time to query a device's sync state.
-> > Then, we filter out each power off request in such a way that if a boot
-> > powered on power domain is not attached to its consumer device and
-> > the provider has not state synced yet, the power off request is skipped.
-> >
-> > [1] https://lore.kernel.org/all/20210407034456.516204-2-saravanak@google.com/
-> >
-> > No worth mentioning what changed since v4 as this version is almost
-> > entirely reworked.
-> >
-> > Abel Vesa (3):
-> >    driver core: Add dev_is_drv_state_synced()
-> >    PM: domains: Ignore power off request for enabled unused domains
-> >    PM: domains: Add and set generic sync state callback
-> >
-> > Saravana Kannan (1):
-> >    driver core: Add dev_set_drv_sync_state()
-> >
->
-> Could you please share if you are planning to re-spin this series as
-> non-RFC in near future ?
->
-> We think that these patches would be useful to enable smooth display
-> transition from boot-loader to kernel space, something which our team is
-> working on, so just wanted to know your plans for this series.
 
-I am working on it as we speak, but I need a few more days for
-testing. You should expect something to hit LKML later this week or at
-least early next week.
+--S83CsH0c2BAJ1I46
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I will keep you posted!
 
-Kind regards
-Uffe
 
->
->
-> Regards
-> Devarsh
->
-> >   drivers/base/power/domain.c | 72 +++++++++++++++++++++++++++++++++++++
-> >   include/linux/device.h      | 26 ++++++++++++++
-> >   include/linux/pm_domain.h   |  4 +++
-> >   3 files changed, 102 insertions(+)
-> >
->
+Actually, one minor thing, $subject says "firmware" but the binding is
+in the reset directory. I can see why you'd put it in either, but pick
+one for both please.
+
+--S83CsH0c2BAJ1I46
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/P50gAKCRB4tDGHoIJi
+0kaSAQCNZoSpmCC0RG0qlP1RosPaWHfYiFhuqtHjB8ycKDoCcQD+NymWoYRU/8qS
+7P///Etu4/piiVat9uxqeuX3UFwU7gI=
+=mT8w
+-----END PGP SIGNATURE-----
+
+--S83CsH0c2BAJ1I46--
