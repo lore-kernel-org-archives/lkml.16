@@ -1,52 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93036227EAB;
-	Mon,  7 Apr 2025 23:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6943622DFB2;
+	Mon,  7 Apr 2025 23:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068958; cv=none; b=o9NGNyY9ScahIzFY6nI5bjGwljfgj4cP/HKzB38yCsNlpd0G/T8ixh6zTsRu85wwRRlzxt5gwBrg3EpSOjyjHeUql2NBWY074AoTz5eYiDal2JTUlzmcUqVNQx7qcqHsl6FeLKVVXNJBhVS36rP3Yg7T87C06H1vRhdxLDiAt4g=
+	t=1744068960; cv=none; b=bkSszsd0oyVg0Bj89WNpMgMhK4qLG1Zg2aowgWfTUHA2Or6wLrC0rHOanTmefTYrsVG7lepPZUAhrkAj9SL+F2xZrz4HVmwJGykICj3zVjVWcw7vIIXoIyrt5vX1cRu4p03bYWp7TXLuHF4jWi4SySrYbiNREsoPhurd8pmAAR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068958; c=relaxed/simple;
-	bh=/z7hTbC2Tb83HvocgGBMaDIyuX2dpreYSjdsnXw0EzM=;
+	s=arc-20240116; t=1744068960; c=relaxed/simple;
+	bh=KTkq0uc9IoFczHum25qEcd7t6ypEzG4uxvrPNhRaJys=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ncMmfsJaO8s5zVNl2IxP5PoCBTIyT48G0inxvBgjCuEiO8VvEdVB/yfaTdqq+XHbpMibEn2zaKlqtSk5DhvdlvRF8x0MxVQSrc1v39vuYF1PL2vvb+kixl8LAFTQC1Xv4Gb/lzOq7bOpmgN9cV5/YYGm1fMc7w7dLsu8ARq50/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciDyeGuj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=k5HWjBJxTQUJiwUt9ZMrmsDAV4nzf6UFC9mAmZAB2PQHpiXlzpJKIBc6Zl1m0xc/biqLqHjKEKTiTj1QoGE936ZLYXuT6KazW0DhD7uRolVloOaxUa+bQfQaCoHVExr0NHrTXRvCqIvFD6D5msyplie3R+roEP4w5VMwlAIlyfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncJ/Iujc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciDyeGuj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB30C4CEE8;
-	Mon,  7 Apr 2025 23:35:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncJ/Iujc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5C3C4CEEC;
+	Mon,  7 Apr 2025 23:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744068958;
-	bh=/z7hTbC2Tb83HvocgGBMaDIyuX2dpreYSjdsnXw0EzM=;
+	s=k20201202; t=1744068959;
+	bh=KTkq0uc9IoFczHum25qEcd7t6ypEzG4uxvrPNhRaJys=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ciDyeGujRny0XaxzKcsihCyCw5kEbBss8tMWV6F9tpBc7nCfKfPk6iRuEQBjsFzzX
-	 RvqML2ZViHMYjL18WeeR6pa+Nsc5Eo0f0Sh+9ikUOr5eHzlLwXo7zBln0i5W6k6/JN
-	 z+23TeoubYMJKqn18pgEXErO7cB1rCmFpOGYsq3b9+78MyCGopyZg4GakrBGI9kDKA
-	 piFTaZubMo0sFjK5T0lPd1DiNlj8NJNuCFS1T0VlqdA7EVcyvOxdS+X0UuOSfNfq2z
-	 5rYbCgmzw2/iRMESoLcFpA3aj2mPnMTB0LYSpQDHFAYhSIZgPH25gNV7RkJ/Cew0Zq
-	 UF4V9Zgf8wrgQ==
+	b=ncJ/Iujc95Byyj4VPsC5KTRqQ3fiaULNUMQK/Okz+6J5OPl46oEqOOgke1TcPHJuf
+	 bJQU8si5JZWQPJ7toFZe2RJ2jYcUL2goSCKfoH/fVA8/R6r9Jh9VXXG4k2sajERKpt
+	 JDvgpcreeFj9TYCAQ6kYzh60Uv3RF5Un2bhw2Ym+KcLxCwqw9qLUwJtEALFgZMXO9B
+	 6kHt9G80rOu+tAQOGyt3/38DCHpgop6GSYkAlXSpbAy9wGFG5NVsg5OOOoECpH5Hhp
+	 0a3879DaiHeXkaBBSlDpKlAfFH3pt2w7lonPOFo54pf8BY2o2OTeka6rS7ThCpQevz
+	 sOFecCubttc9w==
 From: Mark Brown <broonie@kernel.org>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Clemens Ladisch <clemens@ladisch.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Thorsten Blum <thorsten.blum@linux.dev>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Maxim Mikityanskiy <maxtram95@gmail.com>, 
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- He Lugang <helugang@uniontech.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Binbin Zhou <zhoubinbin@loongson.cn>, 
- Tang Bin <tangbin@cmss.chinamobile.com>, 
- Philipp Stanner <phasta@kernel.org>
-Cc: linux-parisc@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250404121911.85277-2-phasta@kernel.org>
-References: <20250404121911.85277-2-phasta@kernel.org>
-Subject: Re: (subset) [PATCH 00/11] sound: Replace deprecated PCI functions
-Message-Id: <174406895437.1337819.1919250165088744285.b4-ty@kernel.org>
-Date: Tue, 08 Apr 2025 00:35:54 +0100
+To: Oder Chiou <oder_chiou@realtek.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250405125808.302259-1-thorsten.blum@linux.dev>
+References: <20250405125808.302259-1-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: codecs: rt5677: Use secs_to_jiffies() instead of
+ msecs_to_jiffies()
+Message-Id: <174406895824.1337819.13371783286316955668.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 00:35:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,14 +47,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 04 Apr 2025 14:19:01 +0200, Philipp Stanner wrote:
-> pcim_iomap_table() and pcim_iomap_regions() have been deprecated by the
-> PCI subsystem. In sound/, they can easily be replaced with
-> pcim_iomap_region().
+On Sat, 05 Apr 2025 14:58:08 +0200, Thorsten Blum wrote:
+> Use secs_to_jiffies() instead of msecs_to_jiffies() and avoid scaling
+> 'delay' to milliseconds.
 > 
-> This series was around some time in late summer last year as a single
-> patch. I lost track of it for a while, but Takashi Iwai (AFAIR)
-> requested that I split it by component.
+> Since 'delay' isn't a compile-time constant, secs_to_jiffies() expands
+> to much simpler code compared to msecs_to_jiffies(), reducing the size
+> of 'snd-soc-rt5677-spi.ko' by 472 bytes.
 > 
 > [...]
 
@@ -74,8 +63,8 @@ Applied to
 
 Thanks!
 
-[11/11] ASoC: loongson: Replace deprecated PCI functions
-        commit: 7288aa73e5cfb3f37ae93b55d7b7d63eca5140a8
+[1/1] ASoC: codecs: rt5677: Use secs_to_jiffies() instead of msecs_to_jiffies()
+      commit: 7afa96026f0a1d81b7e9cc8f1811cae4b80d4d94
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
