@@ -1,69 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD24D216E30
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9BE211706;
+	Mon,  7 Apr 2025 17:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046993; cv=none; b=k6V4/mRRuOYUcMLwn4gIM4HYo4OR2eIaOv6ZTvtCQ3/Rgav/HOfLgeWKWhrUX1zO7+TtTU5bg5jfV5BfPkSxIQ8/3M/ua01Lh80//r9c7STBYfqz6wzjIOjJqMNt3zPuFK/IxQ3NwMX+VQplN70bp3us022mZ+SLWYRA7j6FeJc=
+	t=1744047056; cv=none; b=PeiBIYArUlqXFRPI/wfSOKnuSdC9AjldEMzz3rcyKQx7HJu7LP6E8FGYs5VTru7E6ixl+mP3m1vbkiz0xJe5edLR+32xtjDrCxqKFpebo7hL/tkUv6z4eohsjw8fwXf7nfNe+dXaCHCafZysRSH6/qj/ov7z17KQRKGuXre+JxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046993; c=relaxed/simple;
-	bh=NWd2OapoEvDMUrXT+lsTD9tEGOgeTdX0z2/0E0iGGEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HTd4udxN0eNqu/jNWPbZpTIpubSqCPnARb7AGE29ss7g4Jpqm1GJvzfw+liyMFZ3bd+UDcaA+qPqkRBDie5Mw3g6sOeo+JCFEnxPponXrs3t9+nHWxgoZQ3WVyehke87T1mW6F7X2OQAa3Dsw5EXmhMAGXGSXsdTNIfF6o5c/gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZIbp/6zh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744047056; c=relaxed/simple;
+	bh=wnUA7OCiDXFrjQ7bMpg3N+TPEOBGeBxBjWaKqp+LSu8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KtHkJlHA9F6ZkuOSTT08s+yiCvfQIxW4khU7OYQphgaiSmqpVEya3jmG0kxcvTpAujcgTo4bO31M+xHvxbjDXDyQvpFDWm7FPUad/5UrmEk2VTg+OO+TEN9mEuOZMZTmEI7lIPN/vQGJ30+wC47OBJK8KZNbcxiUsVL5iVJxQf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=HG/bqvnK; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZIbp/6zh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744046990;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJdQzKKxcevh2Oe2aNeMatSmfz2Nc+4P0kNC4x5l3HU=;
-	b=ZIbp/6zhjfljCqyffEqOvMMQadWvt8Q2DD1iqX9FPH63AtgTSEJuu0uX76MJGJDfIevpiu
-	yRprGXIkP3V9hst44ijxwrMjVjmjgk6G0KT4mGDMTKnc122U7o9yURdsgMGZQ5Ahsmeo5d
-	WqMDjn7e001HwLuqOU53PyeJ5gUboFs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-a73XDGXGMz2M0mSaS5c-tw-1; Mon,
- 07 Apr 2025 13:29:11 -0400
-X-MC-Unique: a73XDGXGMz2M0mSaS5c-tw-1
-X-Mimecast-MFC-AGG-ID: a73XDGXGMz2M0mSaS5c-tw_1744046949
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5858119560B0;
-	Mon,  7 Apr 2025 17:29:09 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 62736180A803;
-	Mon,  7 Apr 2025 17:29:03 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Michal Schmidt <mschmidt@redhat.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 04/28] mfd: zl3073x: Add macros for device registers access
-Date: Mon,  7 Apr 2025 19:28:31 +0200
-Message-ID: <20250407172836.1009461-5-ivecera@redhat.com>
-In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
-References: <20250407172836.1009461-1-ivecera@redhat.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HG/bqvnK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744047055; x=1775583055;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mRKOQft2e0z8EF/8NpjO7vWzzUvKq2R+xjep8L7DnXQ=;
+  b=HG/bqvnKTmfi1R2bpGk74kbWoLWB2brqpOeeWdsTD7wmXn23Ta4Z3EM6
+   0n2/cvLN79LzczVYkTDKt9R379HE3PYhuEpVzhd+nCXwN2gLPeGXcYuNg
+   7HxOlLI8gcZ8gfKygGQb3IXFxKAAwMkMy3HJswZajxO1TRl8qloWet1ms
+   s=;
+X-IronPort-AV: E=Sophos;i="6.15,194,1739836800"; 
+   d="scan'208";a="481076549"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:30:50 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:30895]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.226:2525] with esmtp (Farcaster)
+ id 3f7e1099-9221-4c0b-bc80-36d24bd3665d; Mon, 7 Apr 2025 17:30:49 +0000 (UTC)
+X-Farcaster-Flow-ID: 3f7e1099-9221-4c0b-bc80-36d24bd3665d
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 7 Apr 2025 17:30:48 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 7 Apr 2025 17:30:45 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <i.abramov@mt-integration.ru>
+CC: <johannes@sipsolutions.net>, <linux-kernel@vger.kernel.org>,
+	<linux-wireless@vger.kernel.org>, <lvc-project@linuxtesting.org>,
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] Avoid calling WARN_ON() on allocation failure in cfg80211_switch_netns()
+Date: Mon, 7 Apr 2025 10:29:57 -0700
+Message-ID: <20250407173036.30549-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250407125345.1238818-1-i.abramov@mt-integration.ru>
+References: <20250407125345.1238818-1-i.abramov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,144 +60,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWC003.ant.amazon.com (10.13.139.214) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Add several macros to access device registers. These macros
-defines a couple of static inline functions to ease an access
-device registers. There are two types of registers, the 1st type
-is a simple one that is defined by an address and size and the 2nd
-type is indexed register that is defined by base address, type,
-number of register instances and address stride between instances.
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+Date: Mon, 7 Apr 2025 15:53:41 +0300
+> This series is inspired by similar series in ieee802154. As far as I know,
+> there were no WARN_ON triggers in this code so far, but since it's almost
+> identical to cfg802154_* counterparts, same changes are proposed.
+> 
+> Link to ieee802154 series: https://lore.kernel.org/netdev/20250403101935.991385-1-i.abramov@mt-integration.ru/T/
+> 
+> v2: Add 2 patches. Also make sure to commit against latest
+> netdev/net.
+> 
+> Ivan Abramov (3):
+>   cfg80211: Restore initial state on failed device_rename() in
+>     cfg80211_switch_netns()
+>   cfg80211: Avoid calling WARN_ON() on -ENOMEM in
+>     cfg80211_switch_netns()
+>   cfg80211: Remove WARN_ON() in cfg80211_pernet_exit()
 
-Examples:
-__ZL3073X_REG_DEF(reg1, 0x1234, 4, u32);
-__ZL3073X_REG_IDX_DEF(idx_reg2, 0x1234, 2, u16, 4, 0x10);
-
-this defines the following functions:
-int zl3073x_read_reg1(struct zl3073x_dev *dev, u32 *value);
-int zl3073x_write_reg1(struct zl3073x_dev *dev, u32 value);
-int zl3073x_read_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
-                          u32 *value);
-int zl3073x_write_idx_reg2(struct zl3073x_dev *dev, unsigned int idx,
-                           u32 value);
-
-There are also several shortcut macros to define registers with
-certain bit widths: 8, 16, 32 and 48 bits.
-
-Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- include/linux/mfd/zl3073x.h | 99 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
-
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-index 0156f9044d79d..3524426f0e3ba 100644
---- a/include/linux/mfd/zl3073x.h
-+++ b/include/linux/mfd/zl3073x.h
-@@ -44,4 +44,103 @@ int zl3073x_read_reg(struct zl3073x_dev *zldev, unsigned int reg,
- int zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg,
- 		      unsigned int len, const void *value);
- 
-+/**
-+ * __ZL3073X_REG_DEF - Define a device register helpers
-+ * @_name: register name
-+ * @_addr: register address
-+ * @_len: size of register value in bytes
-+ * @_type: type of register value
-+ *
-+ * The macro defines helper functions for particular device register
-+ * to access it.
-+ *
-+ * Example:
-+ * __ZL3073X_REG_DEF(sample_reg, 0x1234, 4, u32)
-+ *
-+ * generates static inline functions:
-+ * int zl3073x_read_sample_reg(struct zl3073x_dev *dev, u32 *value);
-+ * int zl3073x_write_sample_reg(struct zl3073x_dev *dev, u32 value);
-+ *
-+ * Note that these functions have to be called with the device lock
-+ * taken.
-+ */
-+#define __ZL3073X_REG_DEF(_name, _addr, _len, _type)			\
-+typedef _type zl3073x_##_name##_t;					\
-+static inline								\
-+int zl3073x_read_##_name(struct zl3073x_dev *zldev, _type * value)	\
-+{									\
-+	return zl3073x_read_reg(zldev, _addr, _len, value);		\
-+}									\
-+static inline								\
-+int zl3073x_write_##_name(struct zl3073x_dev *zldev, _type value)	\
-+{									\
-+	return zl3073x_write_reg(zldev, _addr, _len, &value);		\
-+}
-+
-+/**
-+ * __ZL3073X_REG_IDX_DEF - Define an indexed device register helpers
-+ * @_name: register name
-+ * @_addr: register address
-+ * @_len: size of register value in bytes
-+ * @_type: type of register value
-+ * @_num: number of register instances
-+ * @_stride: address stride between instances
-+ *
-+ * The macro defines helper functions for particular indexed device
-+ * register to access it.
-+ *
-+ * Example:
-+ * __ZL3073X_REG_IDX_DEF(sample_reg, 0x1234, 2, u16, 4, 0x10)
-+ *
-+ * generates static inline functions:
-+ * int zl3073x_read_sample_reg(struct zl3073x_dev *dev, unsigned int idx,
-+ *			       u32 *value);
-+ * int zl3073x_write_sample_reg(struct zl3073x_dev *dev, unsigned int idx,
-+ *				u32 value);
-+ *
-+ * Note that these functions have to be called with the device lock
-+ * taken.
-+ */
-+#define __ZL3073X_REG_IDX_DEF(_name, _addr, _len, _type, _num, _stride)	\
-+typedef _type zl3073x_##_name##_t;					\
-+static inline								\
-+int zl3073x_read_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
-+			 _type * value)					\
-+{									\
-+	WARN_ON(idx >= (_num));						\
-+	return zl3073x_read_reg(zldev, (_addr) + idx * (_stride), _len,	\
-+				value);					\
-+}									\
-+static inline								\
-+int zl3073x_write_##_name(struct zl3073x_dev *zldev, unsigned int idx,	\
-+			  _type value)					\
-+{									\
-+	WARN_ON(idx >= (_num));						\
-+	return zl3073x_write_reg(zldev, (_addr) + idx * (_stride),	\
-+				 _len, &value);				\
-+}
-+
-+/*
-+ * Add register definition shortcuts for 8, 16, 32 and 48 bits
-+ */
-+#define ZL3073X_REG8_DEF(_name, _addr)	__ZL3073X_REG_DEF(_name, _addr, 1, u8)
-+#define ZL3073X_REG16_DEF(_name, _addr)	__ZL3073X_REG_DEF(_name, _addr, 2, u16)
-+#define ZL3073X_REG32_DEF(_name, _addr)	__ZL3073X_REG_DEF(_name, _addr, 4, u32)
-+#define ZL3073X_REG48_DEF(_name, _addr)	__ZL3073X_REG_DEF(_name, _addr, 6, u64)
-+
-+/*
-+ * Add indexed register definition shortcuts for 8, 16, 32 and 48 bits
-+ */
-+#define ZL3073X_REG8_IDX_DEF(_name, _addr, _num, _stride)		\
-+	__ZL3073X_REG_IDX_DEF(_name, _addr, 1, u8, _num, _stride)
-+
-+#define ZL3073X_REG16_IDX_DEF(_name, _addr, _num, _stride)		\
-+	__ZL3073X_REG_IDX_DEF(_name, _addr, 2, u16, _num, _stride)
-+
-+#define ZL3073X_REG32_IDX_DEF(_name, _addr, _num, _stride)		\
-+	__ZL3073X_REG_IDX_DEF(_name, _addr, 4, u32, _num, _stride)
-+
-+#define ZL3073X_REG48_IDX_DEF(_name, _addr, _num, _stride)		\
-+	__ZL3073X_REG_IDX_DEF(_name, _addr, 6, u64, _num, _stride)
-+
- #endif /* __LINUX_MFD_ZL3073X_H */
--- 
-2.48.1
-
+Let's see how this thread goes first.
+https://lore.kernel.org/netdev/CANn89i+UQQ6GqhWisHQEL0ECNFoQqVrO+2Ee3oDzysdR7dh=Ag@mail.gmail.com/
