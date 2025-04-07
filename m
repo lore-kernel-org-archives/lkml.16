@@ -1,70 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAC87DA73
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5D32222B4;
+	Mon,  7 Apr 2025 20:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056488; cv=none; b=YlZkG0nToFDDFv5xUL8zMwiC4s0VFvm0aGFcp9ohrfLTcpRazGNl+UqQH09MNddtEwdWSfYkhL6QaW/Bbcm5cY7L1QSGMweTQl3YAPIuZ/ZrusCbyqSvOacLx3NJZEwK/MbmWwEdnPEvLCKy0uLjmhGiS/DS+kMBHWb2wFpMiSw=
+	t=1744056492; cv=none; b=bUJO64/w7BJtzH4RpgnCSa69Bwg26wFu2cn305xpp4C4v4rvjQFr536KBOgCYRsEG6p88tWqWCkTEDR0K5UJ3Z9YHL93eOOz/b6EVIkDJbYvdvx47BPMElaKGRIdPDWgutVJD+g++5wx2uEhDa5Lrg2eAYE/DCk/K6y2yjATcHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056488; c=relaxed/simple;
-	bh=gN/uTflVVU/EZB66rtR2lUnWDUxIT2FmHzXJVfnu9Bk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CGCvlhycz+LkJ6Cg1IhHTYPFuyisyANkIy8Huo7QJBgOTjeNUgF6bcACK/LXtxrDOSESSHuBgDjYliIlko/XguHzRjjBhekuJvInIEQz3qB0WlOv+nZ3XniKd9fmf8qyTfnsCX+VJ7BB7sn+nFDR1A9JP1hAJ7j/ATLGvBU9jEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=luCPXgFi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="luCPXgFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB675C4CEDD;
-	Mon,  7 Apr 2025 20:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744056488;
-	bh=gN/uTflVVU/EZB66rtR2lUnWDUxIT2FmHzXJVfnu9Bk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=luCPXgFiPrd/E62tavERiJU51C3lxxbpOYScc/+XmRTtcFd5bHqmDn33QdGF29Dx0
-	 bztvBQH7pMvkkd92IuDiC92FE/KcxRXqKyewlLCGxKl47iSeW7CQyWl9omHG5ydOew
-	 zTzsp587eZHPYVLwm/Ut+ujdT+y4/a5f4kwaEXpo=
-Date: Mon, 7 Apr 2025 13:08:07 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: will@kernel.org, peterz@infradead.org, mingo@redhat.com,
- longman@redhat.com, mhiramat@kernel.org, anna.schumaker@oracle.com,
- boqun.feng@gmail.com, joel.granados@kernel.org, kent.overstreet@linux.dev,
- leonylgao@tencent.com, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
- senozhatsky@chromium.org, tfiga@chromium.org, amaindex@outlook.com,
- jstultz@google.com
-Subject: Re: [PATCH v4 0/3] hung_task: extend blocking task stacktrace dump
- to semaphore
-Message-Id: <20250407130807.9d9eae28cced953cdef8b0a1@linux-foundation.org>
-In-Reply-To: <20250320064923.24000-1-ioworker0@gmail.com>
-References: <20250320064923.24000-1-ioworker0@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744056492; c=relaxed/simple;
+	bh=20stuSGvYmMIDzBJ1uUogt6bLz0H4E+TAVS8IFvSFEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NhsLNiRObdnHF357Pt07NfOjNxq1vIverf9RLWc/g98nVyyiXdGfD55dJX8mKNfYl7IH7ptsyZ46EkQgVXoM3eql6Cd4wznDyloXl7HEgHSCl6EgroxsmkI/U3iKWzGsGbDaFPVz2lQYKlaOoeDBYvdV4dqME5n6KZ/VAc1bMg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67CF1C4CEE9;
+	Mon,  7 Apr 2025 20:08:09 +0000 (UTC)
+Date: Mon, 7 Apr 2025 16:09:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andy Chiu <andybnac@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ bjorn@rivosinc.com, puranjay12@gmail.com, alexghiti@rivosinc.com,
+ paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com,
+ nylon.chen@sifive.com, eric.lin@sifive.com, vicent.chen@sifive.com,
+ zong.li@sifive.com, yongxuan.wang@sifive.com, samuel.holland@sifive.com,
+ olivia.chu@sifive.com, c2232430@gmail.com
+Subject: Re: [PATCH] ftrace: properly merge notrace hash
+Message-ID: <20250407160924.7c28fffd@gandalf.local.home>
+In-Reply-To: <20250407180745.42848-1-andybnac@gmail.com>
+References: <20250407180745.42848-1-andybnac@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Mar 2025 14:49:20 +0800 Lance Yang <ioworker0@gmail.com> wrote:
+On Tue,  8 Apr 2025 02:07:44 +0800
+Andy Chiu <andybnac@gmail.com> wrote:
 
-> Inspired by mutex blocker tracking[1], this patch series extend the
-> feature to not only dump the blocker task holding a mutex but also to
-> support semaphores. Unlike mutexes, semaphores lack explicit ownership
-> tracking, making it challenging to identify the root cause of hangs. To
-> address this, we introduce a last_holder field to the semaphore structure,
-> which is updated when a task successfully calls down() and cleared during
-> up().
+> The global notrace hash should be jointly decided by the intersection of
+> each subops's notrace hash, but not the filter hash.
 > 
-> The assumption is that if a task is blocked on a semaphore, the holders
-> must not have released it. While this does not guarantee that the last
-> holder is one of the current blockers, it likely provides a practical hint
-> for diagnosing semaphore-related stalls.
+> Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to manage many")
+> Signed-off-by: Andy Chiu <andybnac@gmail.com>
+> ---
+>  kernel/trace/ftrace.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> With this change, the hung task detector can now show blocker task's info
-> like below:
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 1a48aedb5255..ee662f380b61 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3526,18 +3526,17 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
+>  	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
+>  		notrace_hash = EMPTY_HASH;
+>  	} else {
+> -		size_bits = max(ops->func_hash->filter_hash->size_bits,
+> -				subops->func_hash->filter_hash->size_bits);
+> +		size_bits = max(ops->func_hash->notrace_hash->size_bits,
+> +				subops->func_hash->notrace_hash->size_bits);
+>  		notrace_hash = alloc_ftrace_hash(size_bits);
+>  		if (!notrace_hash) {
+> -			free_ftrace_hash(filter_hash);
+> +			free_ftrace_hash(notrace_hash);
+>  			return -ENOMEM;
+>  		}
+>  
+> -		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
+> -				     subops->func_hash->filter_hash);
+> +		ret = intersect_hash(&notrace_hash, ops->func_hash->notrace_hash,
+> +				     subops->func_hash->notrace_hash);
 
-Seems useful, but the semaphore code isn't really an akpm thing. 
-Peter, could you please comment?
+Thanks for catching this.
+
+
+>  		if (ret < 0) {
+> -			free_ftrace_hash(filter_hash);
+
+The filter_hash still needs to be freed, as it could have been allocated in
+the previous if statement and never used (both the filter_hash and
+notrace_hash get used at the end of the function via ftrace_update_ops().
+
+Care to send a v2?
+
+-- Steve
+
+
+>  			free_ftrace_hash(notrace_hash);
+>  			return ret;
+>  		}
 
