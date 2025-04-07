@@ -1,145 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FA41B042F;
-	Mon,  7 Apr 2025 13:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A8A19D8A0;
+	Mon,  7 Apr 2025 13:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033728; cv=none; b=IWYqJsY5ifmGFbisEyAfITRVGUH+mwV8jiUS7WnRSUVNGuHJjwty40mSbAhZd9KtcWyxy22Z9eHZuWK7hMw+CsmFs8AX444DcEYDlH6fxPHmVl4mlsLjcVR7+HqXNtU9BNOCah/oZ0iKJcez4siczMQAf1CiNBwioAgIUiFSlYE=
+	t=1744033737; cv=none; b=K/5QlTL5i7409cCVSHSKf4DsaP6iZsyie5pYwst5mp3V61mfOwa3Yi6zTIRFR01r54ed60HPK8BpBmlewSvkUBrZjdohRBKgSUZjruMOjFXWI3vKdOyeDvo1vHAIElSSynIWdfOrX56MJHczSqj85Bo0GBFpg2xJ9YkVBdaULcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033728; c=relaxed/simple;
-	bh=DRFXhK1JzU2VBd/uy4yTqEAFDJzhKgAsa35yJcL9TRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEA2HVrAhEal1uEWYIjKOoT1+XeR1o7yovhDyjbZSTOrHeThtdvAFCAU55+n/E9gCL17xetH1Lrl9vkZmvI9+YvlJ6718e5fJRWwmoog6couF/PVinDaTgtSOc4OwxcWyKKDClbHPOcx4iPg8Dv3zYvPkfazPmfT37LxFvmAVY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lUDPVglC; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lUDPVglC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744033727; x=1775569727;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DRFXhK1JzU2VBd/uy4yTqEAFDJzhKgAsa35yJcL9TRQ=;
-  b=lUDPVglCVd3aYZ01tVbJvE+/6loScbr8uDHhBWiRvPVGejO8MiD8d7Kt
-   4+kjqHPrgAbN2pHWVtro8G+Mp0k19MHla83V1ttX+PakfG18fQ1lEzuSb
-   WjY3IY7gqefeV1Lnoox0k97tE8B6KgpZy9llUB9IL7cLtrzbIVFwBo9tS
-   KuVEmGoGN0hi7KLGPyPPq4iO1jssO1bkHKN70CQxsrCK1yshn4UNbSmek
-   GTnjvBsI/+4xujRSHZKXbB2LIgWRS5EuGwQiTxsJlXYzKcy10oFw86xGx
-   HUE5skkc1iATZ0jkHM00XjpGM0VsB/GzoZQzb35azsISlnMq8KF8VV3j5
-   Q==;
-X-CSE-ConnectionGUID: d//c37E0S5yvspBqgjPubA==
-X-CSE-MsgGUID: R/QF+PjkQDCWzU9HbQMXDg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56790412"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="56790412"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 06:48:44 -0700
-X-CSE-ConnectionGUID: VK8AjloWTMKxZsrS58prFA==
-X-CSE-MsgGUID: fPEcj9zoSOqCLCkYQ+Ns4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="165163324"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 07 Apr 2025 06:48:42 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1mq7-0003S3-0q;
-	Mon, 07 Apr 2025 13:48:39 +0000
-Date: Mon, 7 Apr 2025 21:47:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
-Message-ID: <202504072133.J8njROAD-lkp@intel.com>
-References: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1744033737; c=relaxed/simple;
+	bh=DFeb1yPJZH9VmNhTkFCD3qVmWE+EwOxODBllxBF1Kpc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kwmy6tlHllHTNrwgLu3+/dJ9I1DJIeUXMeGRd8pvH3Emlnbx6Gudw1Rl4XKaXhE4AhawC08yChiNglr311dz5hoeRbqzIBZa7h9Q/QGCiVP3iVp6vbJ+aALFo/h7s8Ac9lUUP8LarJSH1OLJiVI2kRNPqDNKW/pMjM+rLj/IIA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZWVr30gC5z1R7nl;
+	Mon,  7 Apr 2025 21:46:59 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C52E01A0188;
+	Mon,  7 Apr 2025 21:48:51 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 7 Apr
+ 2025 21:48:50 +0800
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <dhowells@redhat.com>,
+	<viro@zeniv.linux.org.uk>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH] NFS: Fix shift-out-of-bounds UBSAN warning with negative retrans
+Date: Mon, 7 Apr 2025 21:48:50 +0800
+Message-ID: <20250407134850.2484368-1-wangzhaolong1@huawei.com>
+X-Mailer: git-send-email 2.34.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-Hi Andy,
+The previous commit c09f11ef3595 ("NFS: fs_context: validate UDP retrans
+to prevent shift out-of-bounds") added a check to prevent shift values
+that are too large, but it fails to account for negative retrans values.
+When data->retrans is negative, the condition `data->retrans >= 64` is
+skipped, allowing negative values to be copied to context->retrans,
+which is unsigned. This results in a large positive number that can
+trigger the original UBSAN issue[1].
 
-kernel test robot noticed the following build errors:
+This patch modifies the check to explicitly handle both negative values
+and values that are too large.
 
-[auto build test ERROR on wsa/i2c/for-next]
-[also build test ERROR on linus/master v6.15-rc1 next-20250407]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=219988
+Fixes: 9954bf92c0cd ("NFS: Move mount parameterisation bits into their own file")
+Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+---
+ fs/nfs/fs_context.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/i2c-core-Drop-duplicate-check-before-calling-OF-APIs/20250407-180528
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-patch link:    https://lore.kernel.org/r/20250407095852.215809-3-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
-config: arm-randconfig-002-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072133.J8njROAD-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504072133.J8njROAD-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504072133.J8njROAD-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/i2c/i2c-core-slave.c:117:3: error: call to undeclared function 'for_each_child_node_scoped'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                 ^
->> drivers/i2c/i2c-core-slave.c:117:44: error: expected ';' after expression
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                                                          ^
-         |                                                          ;
->> drivers/i2c/i2c-core-slave.c:117:38: error: use of undeclared identifier 'child'; did you mean 'ihold'?
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                                                    ^~~~~
-         |                                                    ihold
-   include/linux/fs.h:2758:13: note: 'ihold' declared here
-    2758 | extern void ihold(struct inode * inode);
-         |             ^
-   drivers/i2c/i2c-core-slave.c:118:29: error: use of undeclared identifier 'child'; did you mean 'ihold'?
-     118 |                         fwnode_property_read_u32(child, "reg", &reg);
-         |                                                  ^~~~~
-         |                                                  ihold
-   include/linux/fs.h:2758:13: note: 'ihold' declared here
-    2758 | extern void ihold(struct inode * inode);
-         |             ^
-   4 errors generated.
-
-
-vim +/for_each_child_node_scoped +117 drivers/i2c/i2c-core-slave.c
-
-    97	
-    98	/**
-    99	 * i2c_detect_slave_mode - detect operation mode
-   100	 * @dev: The device owning the bus
-   101	 *
-   102	 * This checks the device nodes for an I2C slave by checking the address
-   103	 * used in the reg property. If the address match the I2C_OWN_SLAVE_ADDRESS
-   104	 * flag this means the device is configured to act as a I2C slave and it will
-   105	 * be listening at that address.
-   106	 *
-   107	 * Returns true if an I2C own slave address is detected, otherwise returns
-   108	 * false.
-   109	 */
-   110	bool i2c_detect_slave_mode(struct device *dev)
-   111	{
-   112		struct fwnode_handle *fwnode = dev_fwnode(dev);
-   113	
-   114		if (is_of_node(fwnode)) {
-   115			u32 reg;
-   116	
- > 117			for_each_child_node_scoped(fwnode, child) {
-
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 13f71ca8c974..0703ac0349cb 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1161,11 +1161,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+ 		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
+ 		 * to_exponential, implying shift: limit the shift value
+ 		 * to BITS_PER_LONG (majortimeo is unsigned long)
+ 		 */
+ 		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
+-			if (data->retrans >= 64) /* shift value is too large */
++			/* Reject invalid retrans values (negative or too large) */
++			if (data->retrans < 0 || data->retrans >= 64)
+ 				goto out_invalid_data;
+ 
+ 		/*
+ 		 * Translate to nfs_fs_context, which nfs_fill_super
+ 		 * can deal with.
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.3
+
