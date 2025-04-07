@@ -1,265 +1,206 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31980224B07;
-	Mon,  7 Apr 2025 04:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914B22538F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 04:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744001200; cv=none; b=CNbbz32I1Wb/MMvhMf1eY+3SGcpSiPpg5qUYa57HujYoyKtYpwTN780yivpwmbGc6Is2bPAMjiWcA7AJzfrEYg4jeTbBt/MAZ2Dr6I0knYxWFMWohKfMdRKMYS/xcJ3qJ6Kf2Pk+G9bb7A7DMUYGN/teLAipB0yrZK0dwSyfZtk=
+	t=1744001201; cv=none; b=AW94OjgCvVmUHhdnJw0TogV6McrcedI3+THGHHXScIZW02oL81oO2+9hK79DesFArgDSyCbMMx0chnSK/GShgB9TSR1ZlC2F+YvxTrPq/+/i0dUpjYfR49PAftVRyuYLjc8UF4oTozBZb/onnyl/1IRRkuSh9FqalusAUXItr/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744001200; c=relaxed/simple;
-	bh=EBSRx3c6U11weHNs7rjc5+muXlHyhv1nGdUlu9ALZYY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oyoOFSxmPl+Y0uH6zl3qp9tWqBC/Wi61ag9/dRhTVP/rLy3TfV5wIdR5YkRzsYGknVm8ThVcO+FqaDQEwnzJoPaHrB34+Xy362nnnpVW4vrJwmOaCtM/IlCSCFae44Oh6wZLctfGwJB32+b8nJAZtYmPZi28ueYe153x7Y1Fmgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2ODXEZa; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744001201; c=relaxed/simple;
+	bh=cDebycVq9pZjSWmtfxT+24dkoAq4Mrn9Etuxjp80A74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gcCxEK66PPRryzWvkbkVa/y6L+wkFCDoUqmipXnOPViriLfMK78F2jQqtjf35/15d03z/SGy4YoAi3JoRVup1qx86inBLhDxIfSLYBOQibx2Gk6Pfy3ZlC4+wGP0s35hDrkv5jXbJY/2VIYir20DV+IHukkJ2tkrYiOu4l3tVa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npah8DRN; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2ODXEZa"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224100e9a5cso38507745ad.2;
-        Sun, 06 Apr 2025 21:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744001197; x=1744605997; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zud0rDyPmRtSFEeCjx+6zO9A4fHC48w3npIiibg9sIk=;
-        b=N2ODXEZaCABihEHinswzX26PK+vpLxOg9GSDj/gu77qFGolrhor0sbSC1pEVasq536
-         Ks+qerGHo2Ij9Hr5xpcUzTNS6ahV1jlp8nLoV9dr7DdxOY9/Ek06+sTby6LW39TlPbcz
-         D5QvezHTlaH3vJq1eZg86EcWBgF6NBOr7sGXIMOav38hLvbdaev0/AjFA8pusM3bn6Es
-         3sviCr5BuIVjBICpn/9rZeOoRhQiCbA1n87pHk2KzKFE4PzKcUn8fa02P2htRLsQucnn
-         K1Xu6ggpl81vaOrSN+ZZWQaYZNOEQNnRGGBZNCxnfkqNdLD+F0jKB4alUpRAynKdB7ih
-         36Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744001197; x=1744605997;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zud0rDyPmRtSFEeCjx+6zO9A4fHC48w3npIiibg9sIk=;
-        b=JXx0VMVX4Sh857CrAXbMruoyhJgWVmkRfqQDI9EUVKoRnhBQjCpjUk5mqrCVa8WOSl
-         fFe4pp/pToXbJLlTG+FsSEslSLNRW2fPFRobq5LC7xdY4Hxy8SWVMTqDlh3bCdh1F6dK
-         hqYfikuh7WLT1GUQlCU/hSkItlOp/mKwFS7Pnfgg4XqYvEMnY4MWXT5AEDDdbyS8XH5m
-         mR1/xQ8u2JrQ+0TSk0vSL2ePw2TZi0ZmGqD7PohtcJnIrC7kTC9DUQOAkPIhqehvKe7x
-         pyV8aeIKnj8Qn9ok29Op/3/cQ9ck3wI37Hcasnb9c+kpPLyS7oJiojL63jdP9mnLg8Pc
-         ja1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVRnLX9p/9jEXSM7vlK4v4Pa/DoESXmVnXKGVqP97HmEd1mRatEObaWCnkr/ElHAtggdlOpye3FKig4@vger.kernel.org, AJvYcCVv2nMCKCSmysOYUA7qj4B39L8nYdrBLr//Si0q72kGY3Hz2KYIHzj0xYmRwQo+c1OhyUMOi/rvInoK/DJu+xXMvw==@vger.kernel.org, AJvYcCXKqYZHEH486BtdfTUqCgOQU7+7tnJOHSWRucSdkZwso6lgHwItJpQWpZEHoorFj4IIjTO2gAQPJ5r9M0+4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1mMJs+drblGlGTNfFPAlFzh/6f5zjSlYOu0Nw6Tf8DVrEGowO
-	qdIPak0g51+wLILnHXNpiuksJRI7MxAdFylgjcMTWXkQsVe/lPbS
-X-Gm-Gg: ASbGncumPryefSkxIweKYUR9rmIvbAIMXL3n8V4URSFdoPBeW6JDswipi8wpePhGtws
-	TAoQw9K1Ot2r4NNLGs/ECvw+myHsM8f0UGgkxC0H26i36vNJ9wYb1qO90xIBnseGBsbQ6cx/HEn
-	9L5CrkF+R6C99Lyy69n8lDUKeqvJwF941rxKaIxC1SsNseQ+ccXM75DWyrxSy4H1d/vWK6MKKLa
-	+aDVIpsgLkCNspn8Tr9w0LuOK3N0uwxpsy6FCBK+Q6A+u0uBIMHmnytFTk+wTexgI2+90d7b2Wc
-	fHCUereHHXUZ2+l0FwcIlbXhB31VXJmVCiGMGy8j9TLpwJY=
-X-Google-Smtp-Source: AGHT+IGrce1mBrQ75bMWOKr5pnkTISyTTooIdkYs/K+rg66FCC1sePPVuxATydtj0PbZcFRSINu9cw==
-X-Received: by 2002:a17:902:ce0e:b0:223:44c5:4eb8 with SMTP id d9443c01a7336-22a8a8ced6cmr167560365ad.32.1744001197471;
-        Sun, 06 Apr 2025 21:46:37 -0700 (PDT)
-Received: from [127.0.1.1] ([59.188.211.160])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-305983b9954sm7765810a91.32.2025.04.06.21.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 21:46:37 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Mon, 07 Apr 2025 12:45:19 +0800
-Subject: [PATCH v6 10/21] drivers/perf: apple_m1: Add A9/A9X support
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npah8DRN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744001199; x=1775537199;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cDebycVq9pZjSWmtfxT+24dkoAq4Mrn9Etuxjp80A74=;
+  b=npah8DRNXznRHxTEoznkf7Cuw6RnP3yuSOLa9wyitmUe+OSQPFBqwc6/
+   YV69SglJ/3RPL3wkdNpPZnE6hFOhns+sTwM5npqZdzSZhDSifvx5EKigT
+   TnR6pVdbPw2Y7/kEob/ipzSpkBQhmKabgf1l7WQw1PQbKRTltOZwxt1LY
+   TYj3eb30M/FAwn0e4TDByGvNlRkTWAouHvLXTkdpAFtfNTL0BD5SjMhD1
+   y2PQ4kn93a+MwDHeyrqU0VxgzRiiXE/EIljPcpFwOEVtbT3PMV7wUdG4Z
+   LDsl64CLbd2Nnsluia26utJu5Wv7PXh8cPqsiUEHtX9mlQAYtURx+ni5R
+   g==;
+X-CSE-ConnectionGUID: d3yW1gUlQLqHtcQf48hYZQ==
+X-CSE-MsgGUID: m+s/JUnuR5mo1IQwlyFoBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="45082029"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="45082029"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 21:46:39 -0700
+X-CSE-ConnectionGUID: TiNzR/hbRMuCM2b0J0C9Kw==
+X-CSE-MsgGUID: DIZn/0IFR/aeyqsIXFmV3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="128356380"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 06 Apr 2025 21:46:37 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1eNW-0002zz-2D;
+	Mon, 07 Apr 2025 04:46:34 +0000
+Date: Mon, 7 Apr 2025 12:46:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, miquel.raynal@bootlin.com,
+	richard@nod.at, vigneshr@ti.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: Re: [PATCH] mtd: nand: Add error log for marvell_nfc_end_cmd()
+Message-ID: <202504071221.XxGT6EaS-lkp@intel.com>
+References: <20250407020917.1242-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-apple-cpmu-v6-10-ae8c2f225c1f@gmail.com>
-References: <20250407-apple-cpmu-v6-0-ae8c2f225c1f@gmail.com>
-In-Reply-To: <20250407-apple-cpmu-v6-0-ae8c2f225c1f@gmail.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Sven Peter <sven@svenpeter.dev>, 
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6996; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=EBSRx3c6U11weHNs7rjc5+muXlHyhv1nGdUlu9ALZYY=;
- b=owEBbQKS/ZANAwAIAQHKCLemxQgkAcsmYgBn81iHbvjGMv3E3nVhfdRC0ToUvKj3c6SLPsemX
- afF5JH1SGqJAjMEAAEIAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCZ/NYhwAKCRABygi3psUI
- JM/JEACOplQrm5dKEd+SLJzEidNxKrwxlo5QKNgbDImicP3w2i9ctY9mLFtesfWYOCJWMzFw9OD
- BKuHHgLPZUZH5AgZyuHLote7YUOaX0Xu+y9i7cfMCZMOztyXSqBI4fYNi6sUjC7/qCxjT4wsKRa
- psG5ckXa/T/nf7e56rSCxrf1XdxDB0R8DfqZi1zGfKLX1KYYTfkS64nen4J0l8SLnyjHXynsmpK
- uxROeaETXMBInXEZ2GxK5kJFdz2RLRW1wcVnd737qETyfxn4nUfNl9VhTySlph5qka3YNeRDtaX
- UX7wzk8k/5FnjNAmOjHqQDEiiCUnaAQXu85XbyMY/vrghhLIszLomwGguXXgcju0basD5X4fZB6
- Rw4kePdV5des3fp2uyQ1hqE6ghRotXq7H08aTLoqgECnsmTvyfTE8dL+d/3BJDfnRhEOEJmEvOt
- 40r2L+M1KK4iMsN6CxCn7RmGtPiaLjw+i63NgczBhaL/+fplDADcrK0W5ZfxPP6iQICtgntcX4w
- yeKbNgm7XMhp9uWMluoQI5GIMqNnl4sAPg7VqYRsRTRK1yC8+XpNk9Nrfmxnd3pHi7Qrj973Lmd
- EW7DQTS8z8TSAvvL7hqHCEXSGZpcx1VSN6twn7IC2nPMmFi78aOihzezy6Fi5v4eimjIF1+GGy9
- 729tYfM0oxI0RgQ==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407020917.1242-1-vulab@iscas.ac.cn>
 
-Add support for CPU PMU found in the Apple A9 and A9X SoCs.
+Hi Wentao,
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
- drivers/perf/apple_m1_cpu_pmu.c | 121 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 121 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
-index 5739a85f3ae07c52f4ce91c4eda3e4bcdf91015d..0f59a22812a424ecd442e731a5c6b5be828be77c 100644
---- a/drivers/perf/apple_m1_cpu_pmu.c
-+++ b/drivers/perf/apple_m1_cpu_pmu.c
-@@ -289,6 +289,109 @@ static const u16 a8_pmu_event_affinity[A8_PMU_PERFCTR_LAST + 1] = {
- 	[A8_PMU_PERFCTR_UNKNOWN_f7]				= ONLY_3_5_7,
- };
- 
-+
-+enum a9_pmu_events {
-+	A9_PMU_PERFCTR_UNKNOWN_1				= 0x1,
-+	A9_PMU_PERFCTR_CORE_ACTIVE_CYCLE			= 0x2,
-+	A9_PMU_PERFCTR_L2_TLB_MISS_INSTRUCTION			= 0xa,
-+	A9_PMU_PERFCTR_L2_TLB_MISS_DATA				= 0xb,
-+	A9_PMU_PERFCTR_L2C_AGENT_LD				= 0x1a,
-+	A9_PMU_PERFCTR_L2C_AGENT_LD_MISS			= 0x1b,
-+	A9_PMU_PERFCTR_L2C_AGENT_ST				= 0x1c,
-+	A9_PMU_PERFCTR_L2C_AGENT_ST_MISS			= 0x1d,
-+	A9_PMU_PERFCTR_SCHEDULE_UOP				= 0x52,
-+	A9_PMU_PERFCTR_MAP_REWIND				= 0x75,
-+	A9_PMU_PERFCTR_MAP_STALL				= 0x76,
-+	A9_PMU_PERFCTR_MAP_INT_UOP				= 0x7c,
-+	A9_PMU_PERFCTR_MAP_LDST_UOP				= 0x7d,
-+	A9_PMU_PERFCTR_MAP_SIMD_UOP				= 0x7e,
-+	A9_PMU_PERFCTR_FLUSH_RESTART_OTHER_NONSPEC		= 0x84,
-+	A9_PMU_PERFCTR_INST_ALL					= 0x8c,
-+	A9_PMU_PERFCTR_INST_BRANCH				= 0x8d,
-+	A9_PMU_PERFCTR_INST_BRANCH_CALL				= 0x8e,
-+	A9_PMU_PERFCTR_INST_BRANCH_RET				= 0x8f,
-+	A9_PMU_PERFCTR_INST_BRANCH_TAKEN			= 0x90,
-+	A9_PMU_PERFCTR_INST_BRANCH_INDIR			= 0x93,
-+	A9_PMU_PERFCTR_INST_BRANCH_COND				= 0x94,
-+	A9_PMU_PERFCTR_INST_INT_LD				= 0x95,
-+	A9_PMU_PERFCTR_INST_INT_ST				= 0x96,
-+	A9_PMU_PERFCTR_INST_INT_ALU				= 0x97,
-+	A9_PMU_PERFCTR_INST_SIMD_LD				= 0x98,
-+	A9_PMU_PERFCTR_INST_SIMD_ST				= 0x99,
-+	A9_PMU_PERFCTR_INST_SIMD_ALU				= 0x9a,
-+	A9_PMU_PERFCTR_INST_LDST				= 0x9b,
-+	A9_PMU_PERFCTR_INST_BARRIER				= 0x9c,
-+	A9_PMU_PERFCTR_UNKNOWN_9f				= 0x9f,
-+	A9_PMU_PERFCTR_L1D_TLB_ACCESS				= 0xa0,
-+	A9_PMU_PERFCTR_L1D_TLB_MISS				= 0xa1,
-+	A9_PMU_PERFCTR_L1D_CACHE_MISS_ST			= 0xa2,
-+	A9_PMU_PERFCTR_L1D_CACHE_MISS_LD			= 0xa3,
-+	A9_PMU_PERFCTR_LD_UNIT_UOP				= 0xa6,
-+	A9_PMU_PERFCTR_ST_UNIT_UOP				= 0xa7,
-+	A9_PMU_PERFCTR_L1D_CACHE_WRITEBACK			= 0xa8,
-+	A9_PMU_PERFCTR_LDST_X64_UOP				= 0xb1,
-+	A9_PMU_PERFCTR_ATOMIC_OR_EXCLUSIVE_SUCC			= 0xb3,
-+	A9_PMU_PERFCTR_ATOMIC_OR_EXCLUSIVE_FAIL			= 0xb4,
-+	A9_PMU_PERFCTR_L1D_CACHE_MISS_LD_NONSPEC		= 0xbf,
-+	A9_PMU_PERFCTR_L1D_CACHE_MISS_ST_NONSPEC		= 0xc0,
-+	A9_PMU_PERFCTR_L1D_TLB_MISS_NONSPEC			= 0xc1,
-+	A9_PMU_PERFCTR_ST_MEMORY_ORDER_VIOLATION_NONSPEC	= 0xc4,
-+	A9_PMU_PERFCTR_BRANCH_COND_MISPRED_NONSPEC		= 0xc5,
-+	A9_PMU_PERFCTR_BRANCH_INDIR_MISPRED_NONSPEC		= 0xc6,
-+	A9_PMU_PERFCTR_BRANCH_RET_INDIR_MISPRED_NONSPEC		= 0xc8,
-+	A9_PMU_PERFCTR_BRANCH_CALL_INDIR_MISPRED_NONSPEC	= 0xca,
-+	A9_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC			= 0xcb,
-+	A9_PMU_PERFCTR_FED_IC_MISS_DEMAND			= 0xd3,
-+	A9_PMU_PERFCTR_L1I_TLB_MISS_DEMAND			= 0xd4,
-+	A9_PMU_PERFCTR_MAP_DISPATCH_BUBBLE			= 0xd6,
-+	A9_PMU_PERFCTR_FETCH_RESTART				= 0xde,
-+	A9_PMU_PERFCTR_ST_NT_UOP				= 0xe5,
-+	A9_PMU_PERFCTR_LD_NT_UOP				= 0xe6,
-+	A9_PMU_PERFCTR_UNKNOWN_f6				= 0xf6,
-+	A9_PMU_PERFCTR_UNKNOWN_f7				= 0xf7,
-+	A9_PMU_PERFCTR_LAST					= M1_PMU_CFG_EVENT,
-+
-+	/*
-+	 * From this point onwards, these are not actual HW events,
-+	 * but attributes that get stored in hw->config_base.
-+	 */
-+	A9_PMU_CFG_COUNT_USER					= BIT(8),
-+	A9_PMU_CFG_COUNT_KERNEL					= BIT(9),
-+};
-+
-+static const u16 a9_pmu_event_affinity[A9_PMU_PERFCTR_LAST + 1] = {
-+	[0 ... A9_PMU_PERFCTR_LAST]				= ANY_BUT_0_1,
-+	[A9_PMU_PERFCTR_UNKNOWN_1]				= BIT(7),
-+	[A9_PMU_PERFCTR_CORE_ACTIVE_CYCLE]			= ANY_BUT_0_1 | BIT(0),
-+	[A9_PMU_PERFCTR_INST_ALL]				= BIT(7) | BIT(1),
-+	[A9_PMU_PERFCTR_INST_BRANCH]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BRANCH_CALL]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BRANCH_RET]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BRANCH_TAKEN]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BRANCH_INDIR]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BRANCH_COND]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_INT_LD]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_INT_ST]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_INT_ALU]				= BIT(7),
-+	[A9_PMU_PERFCTR_INST_SIMD_LD]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_SIMD_ST]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_SIMD_ALU]				= BIT(7),
-+	[A9_PMU_PERFCTR_INST_LDST]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_INST_BARRIER]				= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_UNKNOWN_9f]				= BIT(7),
-+	[A9_PMU_PERFCTR_L1D_CACHE_MISS_LD_NONSPEC]		= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_L1D_CACHE_MISS_ST_NONSPEC]		= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_L1D_TLB_MISS_NONSPEC]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_ST_MEMORY_ORDER_VIOLATION_NONSPEC]	= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_BRANCH_COND_MISPRED_NONSPEC]		= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_BRANCH_INDIR_MISPRED_NONSPEC]		= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_BRANCH_RET_INDIR_MISPRED_NONSPEC]	= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_BRANCH_CALL_INDIR_MISPRED_NONSPEC]	= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC]			= ONLY_5_6_7,
-+	[A9_PMU_PERFCTR_UNKNOWN_f6]				= ONLY_3_5_7,
-+	[A9_PMU_PERFCTR_UNKNOWN_f7]				= ONLY_3_5_7,
-+};
-+
- enum m1_pmu_events {
- 	M1_PMU_PERFCTR_RETIRE_UOP				= 0x1,
- 	M1_PMU_PERFCTR_CORE_ACTIVE_CYCLE			= 0x2,
-@@ -797,6 +900,12 @@ static int a8_pmu_get_event_idx(struct pmu_hw_events *cpuc,
- 	return apple_pmu_get_event_idx(cpuc, event, a8_pmu_event_affinity);
- }
- 
-+static int a9_pmu_get_event_idx(struct pmu_hw_events *cpuc,
-+				struct perf_event *event)
-+{
-+	return apple_pmu_get_event_idx(cpuc, event, a9_pmu_event_affinity);
-+}
-+
- static int m1_pmu_get_event_idx(struct pmu_hw_events *cpuc,
- 				struct perf_event *event)
- {
-@@ -986,6 +1095,17 @@ static int a8_pmu_typhoon_init(struct arm_pmu *cpu_pmu)
- 	return apple_pmu_init(cpu_pmu, A7_PMU_NR_COUNTERS);
- }
- 
-+static int a9_pmu_twister_init(struct arm_pmu *cpu_pmu)
-+{
-+	cpu_pmu->name = "apple_twister_pmu";
-+	cpu_pmu->get_event_idx	  = a9_pmu_get_event_idx;
-+	cpu_pmu->map_event	  = m1_pmu_map_event;
-+	cpu_pmu->reset		  = a7_pmu_reset;
-+	cpu_pmu->start		  = a7_pmu_start;
-+	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] = &m1_pmu_events_attr_group;
-+	return apple_pmu_init(cpu_pmu, A7_PMU_NR_COUNTERS);
-+}
-+
- static int m1_pmu_ice_init(struct arm_pmu *cpu_pmu)
- {
- 	cpu_pmu->name = "apple_icestorm_pmu";
-@@ -1035,6 +1155,7 @@ static const struct of_device_id m1_pmu_of_device_ids[] = {
- 	{ .compatible = "apple,blizzard-pmu",	.data = m2_pmu_blizzard_init, },
- 	{ .compatible = "apple,icestorm-pmu",	.data = m1_pmu_ice_init, },
- 	{ .compatible = "apple,firestorm-pmu",	.data = m1_pmu_fire_init, },
-+	{ .compatible = "apple,twister-pmu",	.data = a9_pmu_twister_init, },
- 	{ .compatible = "apple,typhoon-pmu",	.data = a8_pmu_typhoon_init, },
- 	{ .compatible = "apple,cyclone-pmu",	.data = a7_pmu_cyclone_init, },
- 	{ },
+[auto build test ERROR on mtd/nand/next]
+[also build test ERROR on linus/master v6.15-rc1 next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/mtd-nand-Add-error-log-for-marvell_nfc_end_cmd/20250407-101213
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next
+patch link:    https://lore.kernel.org/r/20250407020917.1242-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] mtd: nand: Add error log for marvell_nfc_end_cmd()
+config: arm64-randconfig-001-20250407 (https://download.01.org/0day-ci/archive/20250407/202504071221.XxGT6EaS-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504071221.XxGT6EaS-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504071221.XxGT6EaS-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/mtd/nand/raw/marvell_nand.c:89:
+   In file included from include/linux/dmaengine.h:12:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/mtd/nand/raw/marvell_nand.c:1354:3: error: use of undeclared identifier 'err'
+    1354 |                 err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+         |                 ^
+   drivers/mtd/nand/raw/marvell_nand.c:1356:7: error: use of undeclared identifier 'err'
+    1356 |                 if (err)
+         |                     ^
+   drivers/mtd/nand/raw/marvell_nand.c:1364:3: error: use of undeclared identifier 'err'
+    1364 |                 err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+         |                 ^
+   drivers/mtd/nand/raw/marvell_nand.c:1366:7: error: use of undeclared identifier 'err'
+    1366 |                 if (err)
+         |                     ^
+   3 warnings and 4 errors generated.
+
+
+vim +/err +1354 drivers/mtd/nand/raw/marvell_nand.c
+
+  1302	
+  1303	static void marvell_nfc_hw_ecc_bch_read_chunk(struct nand_chip *chip, int chunk,
+  1304						      u8 *data, unsigned int data_len,
+  1305						      u8 *spare, unsigned int spare_len,
+  1306						      int page)
+  1307	{
+  1308		struct marvell_nand_chip *marvell_nand = to_marvell_nand(chip);
+  1309		struct marvell_nfc *nfc = to_marvell_nfc(chip->controller);
+  1310		const struct marvell_hw_ecc_layout *lt = to_marvell_nand(chip)->layout;
+  1311		int i, ret;
+  1312		struct marvell_nfc_op nfc_op = {
+  1313			.ndcb[0] = NDCB0_CMD_TYPE(TYPE_READ) |
+  1314				   NDCB0_ADDR_CYC(marvell_nand->addr_cyc) |
+  1315				   NDCB0_LEN_OVRD,
+  1316			.ndcb[1] = NDCB1_ADDRS_PAGE(page),
+  1317			.ndcb[2] = NDCB2_ADDR5_PAGE(page),
+  1318			.ndcb[3] = data_len + spare_len,
+  1319		};
+  1320	
+  1321		ret = marvell_nfc_prepare_cmd(chip);
+  1322		if (ret)
+  1323			return;
+  1324	
+  1325		if (chunk == 0)
+  1326			nfc_op.ndcb[0] |= NDCB0_DBC |
+  1327					  NDCB0_CMD1(NAND_CMD_READ0) |
+  1328					  NDCB0_CMD2(NAND_CMD_READSTART);
+  1329	
+  1330		/*
+  1331		 * Trigger the monolithic read on the first chunk, then naked read on
+  1332		 * intermediate chunks and finally a last naked read on the last chunk.
+  1333		 */
+  1334		if (chunk == 0)
+  1335			nfc_op.ndcb[0] |= NDCB0_CMD_XTYPE(XTYPE_MONOLITHIC_RW);
+  1336		else if (chunk < lt->nchunks - 1)
+  1337			nfc_op.ndcb[0] |= NDCB0_CMD_XTYPE(XTYPE_NAKED_RW);
+  1338		else
+  1339			nfc_op.ndcb[0] |= NDCB0_CMD_XTYPE(XTYPE_LAST_NAKED_RW);
+  1340	
+  1341		marvell_nfc_send_cmd(chip, &nfc_op);
+  1342	
+  1343		/*
+  1344		 * According to the datasheet, when reading from NDDB
+  1345		 * with BCH enabled, after each 32 bytes reads, we
+  1346		 * have to make sure that the NDSR.RDDREQ bit is set.
+  1347		 *
+  1348		 * Drain the FIFO, 8 32-bit reads at a time, and skip
+  1349		 * the polling on the last read.
+  1350		 *
+  1351		 * Length is a multiple of 32 bytes, hence it is a multiple of 8 too.
+  1352		 */
+  1353		for (i = 0; i < data_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
+> 1354			err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+  1355						  "RDDREQ while draining FIFO (data)");
+  1356			if (err)
+  1357				dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
+  1358			marvell_nfc_xfer_data_in_pio(nfc, data,
+  1359						     FIFO_DEPTH * BCH_SEQ_READS);
+  1360			data += FIFO_DEPTH * BCH_SEQ_READS;
+  1361		}
+  1362	
+  1363		for (i = 0; i < spare_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
+  1364			err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+  1365						  "RDDREQ while draining FIFO (OOB)");
+  1366			if (err)
+  1367				dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
+  1368			marvell_nfc_xfer_data_in_pio(nfc, spare,
+  1369						     FIFO_DEPTH * BCH_SEQ_READS);
+  1370			spare += FIFO_DEPTH * BCH_SEQ_READS;
+  1371		}
+  1372	}
+  1373	
 
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
