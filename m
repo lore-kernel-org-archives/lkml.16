@@ -1,153 +1,112 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333D12309A7;
-	Mon,  7 Apr 2025 09:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95FE237193
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017545; cv=none; b=cU469jTf+jnDYt6/AbIt4aeGojirJA7ldxjiZooq71lANTk7oi5xR0Onqm32Gzl2PrD6ipAbmCv52sWdOtmILBvEsqHLckaGNVEIvcuSE8aMRru2KXLKX848jiE6jZHqn03guNzHSTxsDy6INaCqlY/nEQjnloPZciAC7zBLlRM=
+	t=1744017556; cv=none; b=k2AYZT3UWoTIZVsu43IYmmUgzEfU+sXicM4ueM/1d6PDSLgZs1w9J3uoX5s61yJtExMK7XkNeM9x8ZnZExfDC/CosfLrkS7kT4I9o3c+ZlCTewIuI2YLyxFaIaVx7GJlsYyMEZh1EpC1QxkxUjal/W+mTin8/bf6vLSIacd2aWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017545; c=relaxed/simple;
-	bh=V3UBWBz1dP9blhdNMV1eqFYjYZtuamSSLPyS2QAH8AI=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=jFjn5G/sb1wh6TGN1+OTBLRdCn6O6dWUZ+dhvfMCJBmY5b/dHQ5PXZQVBu1LgKaxrJN4InJOuSbromWRZNHUelbKSLkBDFZvL4z8nCOCi96W9gasaDXC8k7nrIWkg+KaIQjmgQeaMkjkNAopNsMj6DgBqQVHUOtwtnKv8Jcok4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Nt4cLGpd; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744017556; c=relaxed/simple;
+	bh=Tkr+VkgfcatvOGK2CcI4k8Lgblz5OGwYpc4Rt8EzxPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MJshUowuaSwwaFWNYIEPnsA+tO005CUz5PxpMtPLZ0wxhBTgpI1EqzTEc9frcnt6EocQXLA1gl1iVaJH/v2zLuHkqGH17zCUaUyA2V59+eSUFIDDDSJP3u75n1STbm1uMiPqENV/CbscCugaagcN8XQTe1v80C+TR8MY/98f9c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=KT/DDOs5; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Nt4cLGpd"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5377Hksf005166;
-	Mon, 7 Apr 2025 11:18:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=N5AtXF30ZSEIavx9DvPLf6
-	LlBFSsDfnGCmJ/CLj455o=; b=Nt4cLGpdki/I03x1poHeqB/lFIU/onWaGluIay
-	RGep8dx/IFINaZT11gfpq6jE8jroKd0w0FhMZf6empBf/+JiGa7JGaQv6v/KoxFH
-	2tzHs8poeBx7zJ1qo4o7AVpoCKeoTpj5JGcE2prQIoHGb5oD8so+4bOLhnM0JbIx
-	ZBdahiZKRikBjEoDbWrx/x1h1OvLle9M3YvMAZxdFy3bj6rD91KT29dt2MC3vCdK
-	bbU+I/NnrQpaxYTGuZrTjkFmzAdIxPJKjiDiGA4dTqm28AR5B9gql8k5yhP9udcB
-	nI7GkIJiGIS75icAV7iTgodBYTLN7K5yUrfvlFI3OF4mXUWw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw2gpt24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 11:18:53 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D79FB40048;
-	Mon,  7 Apr 2025 11:18:12 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 211EF94D580;
-	Mon,  7 Apr 2025 11:17:36 +0200 (CEST)
-Received: from localhost (10.252.1.150) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 11:17:35 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Subject: [PATCH v6 0/2] media: Add support for ST VD55G1 camera sensor
-Date: Mon, 7 Apr 2025 11:17:28 +0200
-Message-ID: <20250407-b4-vd55g1-v6-0-1850f18b1f24@foss.st.com>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="KT/DDOs5"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c54a9d3fcaso437871585a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1744017552; x=1744622352; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ds8ZeR6+lvLMS3Q8LQ2S5216HWjNwnvoE8o9qfIJEc=;
+        b=KT/DDOs5ObFJ1RiCja3/K39RGIULizsBhCvr7ew+0PaiDVciyX57/8oYh5EdQGyloQ
+         JtLLXz8yIWj6/Bw9atfneqjkcTUxwgq6kz/rmLYh984/1MoTtCl3FQU8gmQEqS88X9CC
+         DubvkZeReCCkG8RvM9G+L6YQpEc90Ej7/xVUs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744017552; x=1744622352;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0ds8ZeR6+lvLMS3Q8LQ2S5216HWjNwnvoE8o9qfIJEc=;
+        b=KuGo3Xjg4mD2E5rghbbeKCGOMOBsOckcgysEEyyLMgXEIuBotmPlIwWW2Pqw59mETb
+         168C9EP0VJZ7mUrvDaoG70qwEJtX8OEvhzU25lMuI0WTWWH/8cL9vjZdXWqWWVYnqRXJ
+         npnZE93abpXx4ymi3zsO9UKVfPVoJK0DTe5w/qSCsVCU5huC4q+P2qVDHeZUCj1lxmwN
+         HePU+5SFydCATMPdHAX9rAUEKoCA8SUk7z1xefxMbqROFvsb9etkESnvkNz4uJh4or3E
+         HK6c99Xm4cQ2smZP1GjLOP6ZZW1FfDN2aPy1VaEje3VtFpemtSZs3uloNz4scjlvCPo1
+         qPLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0tZC2tbWw9wk7ZzX9Dmv7qdWeKfWNtqmdvg5K+du3pAtKEvPHakBXjZX5oxDe6QRrc7v84jU2HfvZjCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWDx6+eoS64xLq8Nz+51qAp5y+vQPk/ySBJejO5GsuJMXWwmqT
+	8HlDwJVgiMqc40IsWOVdBTflFQNhZ2tlNS6E2WTWl5SamRvuin0zO+MJpN808aE+d2xM1pLpiOR
+	xrYcakKFwg3j/mp/j3SRe55uhOl2CXKbkzw/FWg==
+X-Gm-Gg: ASbGncuHJg20EF2WegnOyPBMGPFn8qh7PHUcnNNoc3/cG3dL56L4Ea8Op4hwJthxbt+
+	yrCZ9a7b11ipnyclZo1kLsoP8gnhPiasucRtCntL15EBQXkzg8Yenc9/sL5DtQ8ifuhN3Qj9bXP
+	+Z+eJcbzKry2Whl/+A/ykKBjT9/TY=
+X-Google-Smtp-Source: AGHT+IFCtLA+gZhyiLnF3PJgKmfPCouEKwTHmWyX/EjhKM6lZbWo0pjzfhlBNMSDCtBMubAuWZYFO3GyBdpYEiWKScw=
+X-Received: by 2002:a05:620a:450a:b0:7c5:5a51:d2c0 with SMTP id
+ af79cd13be357-7c775b17e0cmr1707617685a.52.1744017552449; Mon, 07 Apr 2025
+ 02:19:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACiY82cC/3XQTW7DIBAF4KtErEsEw4wNXfUeVRb8JiwaRyZCj
- SLfveBN3SRdDuJ7bzR3VuKcY2HvuzubY80lT+c2DG875k/2fIw8hzYzEEACgLhDXgPRUXIXnBH
- BRWWcYu3/ZY4pf69Zn4c2n3K5TvNtja6yv75KqZILrgJZoSGJZM1HmkrZl+veT189djUK9KPRQ
- Q4O7WgS/DW9u8JvHwq5tdCs8No6bVF7omertha2VvVdjTKaUOBIL3rxX4t9Z3QyEfphFP7Z0tb
- i1lKzRqd2IIjRP/Yuy/ID3WWoz8gBAAA=
-X-Change-ID: 20250225-b4-vd55g1-bdb90dbe39b3
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-        Sylvain Petinot
-	<sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
+References: <67f34d24.050a0220.0a13.027c.GAE@google.com>
+In-Reply-To: <67f34d24.050a0220.0a13.027c.GAE@google.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 7 Apr 2025 11:18:59 +0200
+X-Gm-Features: ATxdqUGPjYEhmO3guEkv_Uk_UNgq-v6h_uBbWK9b9Dl-HBK2d9h-7340TMg9-Is
+Message-ID: <CAJfpegvsi9SaeVdykBFhhwoOrsNQzy3C8HcJjn16uHdkzZ-EVQ@mail.gmail.com>
+Subject: Re: [syzbot] [ext4?] [overlayfs?] WARNING in file_seek_cur_needs_f_lock
+To: syzbot <syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com>
+Cc: adilger.kernel@dilger.ca, amir73il@gmail.com, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: multipart/mixed; boundary="000000000000b2665406322cbac6"
 
-Hi,
+--000000000000b2665406322cbac6
+Content-Type: text/plain; charset="UTF-8"
 
-This serie adds support for the STMicroelectronics VD55G1 camera sensor.
-The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
-resolution with RAW8 and RAW10 bytes per pixel.
-Datasheets and other documentation can be found at st.com [1].
-A lot of inspiration was taken from the imx219 and the vd56g3 serie.
-It is compatible with libcamera. Tested on Raspberry Pi 4 and 5, with and
-without libcamera.
+On Mon, 7 Apr 2025 at 05:57, syzbot
+<syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    16cd1c265776 Merge tag 'timers-cleanups-2025-04-06' of git..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=12e7923f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c79406130aa88d22
+> dashboard link: https://syzkaller.appspot.com/bug?extid=4036165fc595a74b09b2
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f9bd98580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1571c7e4580000
 
-[1] https://www.st.com/en/imaging-and-photonics-solutions/vd55g1.html#documentation
 
-Regards,
-Benjamin
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+v6.15-rc1
 
----
-Changes in v6:
-- Use return 0 whenever possible
-- Remove unneeded return values initializations
-- Fix traces format
-- Fix comment typo
-- Link to v5: https://lore.kernel.org/r/20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com
+--000000000000b2665406322cbac6
+Content-Type: text/x-patch; charset="US-ASCII"; name="ovl-dont-seek_cur-on-realfile.patch"
+Content-Disposition: attachment; 
+	filename="ovl-dont-seek_cur-on-realfile.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m96uyqc70>
+X-Attachment-Id: f_m96uyqc70
 
-Changes in v5:
-- Include missing proprety.h header
-- Move link_freq to device structure
-- Update get_vblank_limits() prototype
-- Add BUILD_BUG_ON() in vd55g1_update_patgen()
-- Drop hdl->error check
-- Use device_property*() instead of of_property*()
-- Drop OF requirement
-- Improve runtime pm usage
-- Various syntax fixes
-- Link to v4: https://lore.kernel.org/r/20250402-b4-vd55g1-v4-0-84b1f54c670c@foss.st.com
-
-Changes in v4:
-- Fix data-lanes syntax in binding
-- Link to v3: https://lore.kernel.org/r/20250402-b4-vd55g1-v3-0-393985404759@foss.st.com
-
-Changes in v3:
-- Add maxItems to data-lanes in binding
-- Drop redondant 'binding' in binding commit message
-- Link to v2: https://lore.kernel.org/r/20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com
-
-Changes in v2:
-- Fix device tree binding mistakes
-- Drop linux media git from MAINTAINERS file
-- Fix coding style mistakes
-- Drop vd55g1_err_probe wrapper
-- Fix 32bits build
-- Fix config symbol help paragraph being too short for checkpatch
-- Link to v1: https://lore.kernel.org/r/20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com
-
----
-Benjamin Mugnier (2):
-      media: dt-bindings: Add ST VD55G1 camera sensor
-      media: i2c: Add driver for ST VD55G1 camera sensor
-
- .../devicetree/bindings/media/i2c/st,vd55g1.yaml   |  132 ++
- MAINTAINERS                                        |    9 +
- drivers/media/i2c/Kconfig                          |   11 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/vd55g1.c                         | 2006 ++++++++++++++++++++
- 5 files changed, 2159 insertions(+)
----
-base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
-change-id: 20250225-b4-vd55g1-bdb90dbe39b3
-
-Best regards,
--- 
-Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-
+ZGlmZiAtLWdpdCBhL2ZzL292ZXJsYXlmcy9maWxlLmMgYi9mcy9vdmVybGF5ZnMvZmlsZS5jCmlu
+ZGV4IDk2OWI0NTgxMDBmZS4uNTQ4ZjBlNmFlZDU0IDEwMDY0NAotLS0gYS9mcy9vdmVybGF5ZnMv
+ZmlsZS5jCisrKyBiL2ZzL292ZXJsYXlmcy9maWxlLmMKQEAgLTI3Myw2ICsyNzMsMTIgQEAgc3Rh
+dGljIGxvZmZfdCBvdmxfbGxzZWVrKHN0cnVjdCBmaWxlICpmaWxlLCBsb2ZmX3Qgb2Zmc2V0LCBp
+bnQgd2hlbmNlKQogCW92bF9pbm9kZV9sb2NrKGlub2RlKTsKIAlyZWFsZmlsZS0+Zl9wb3MgPSBm
+aWxlLT5mX3BvczsKIAorCS8qIFByZXZlbnQgV0FSTklORyBpbiBmaWxlX3NlZWtfY3VyX25lZWRz
+X2ZfbG9jaygpICovCisJaWYgKHdoZW5jZSA9PSBTRUVLX0NVUiAmJiBvZmZzZXQpIHsKKwkJb2Zm
+c2V0ICs9IGZpbGUtPmZfcG9zOworCQl3aGVuY2UgPSBTRUVLX1NFVDsKKwl9CisKIAlvbGRfY3Jl
+ZCA9IG92bF9vdmVycmlkZV9jcmVkcyhpbm9kZS0+aV9zYik7CiAJcmV0ID0gdmZzX2xsc2Vlayhy
+ZWFsZmlsZSwgb2Zmc2V0LCB3aGVuY2UpOwogCW92bF9yZXZlcnRfY3JlZHMob2xkX2NyZWQpOwo=
+--000000000000b2665406322cbac6--
