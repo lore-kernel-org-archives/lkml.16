@@ -1,44 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8391625D903;
-	Mon,  7 Apr 2025 18:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ECF1EE032;
+	Mon,  7 Apr 2025 18:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050515; cv=none; b=XyuFP3cvfosS+YVsmG9KCxyksTmEP/AMEy9WDisG9g6N/zFi9zuYOWy+I2ryCQyyVMm+wr5RB8KkJ/1Zh9vAykspj987sjHhFQQSnH/LcsQ6PAVMKRetBj+3QraqC92hdBQxlpCdOprwlPhB0MifrTacDNZnm9MYcE9Ja2OTg10=
+	t=1744050624; cv=none; b=UQhEXxx4fMnk0gMEGfYvwFSoj0cRAB0U4rARMEoPe6qnFkybsAa9IL80h9pFxn4POqPWlG33ZchZ+G8zFHHViv83pWWd7Lql1SIAUV7NlO7TC8EGlrLOOv7qUJHkSzEC8KtS8yl4I2mrqrGPM4tVj7wA5omDzt6QHG0dtgirCL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050515; c=relaxed/simple;
-	bh=t9TUQsEt5Q9gIOtHF38LsFjD/8E4Sfx5Y8wLVTNcThA=;
+	s=arc-20240116; t=1744050624; c=relaxed/simple;
+	bh=FQMfGLh5C6n7JuybfDzu2iuG/1Pw/ID6KqOpxvzKSf0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYHH3m0LzDkh8oR2Q2uF1EptJmFRijT9zh/2tWOHQw87+26eT7tzHXGtCIPoSIJOtBem6NzxGmQMUgLxUbeAyvvIIT3u6oIdRpTg/t/3/q6khQKtES+RsLaKt69mVVLsj15/vnA8iifHLuZ+4Dj8hpsXZJH7hGd4aGZ8+hrJ57U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9OFDeBF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozC/uJIQ9M1dTTg8Q5PLahdXS6hJYHO6L7B5P7J/IqGQz0/t7dYIGtRo5XSGLbv1NYzHlTjnTl6rjGNLLyb/3jA69btfziE79n1Yx3UXB06nwj3olPMecCQqJ5/WaWigVl6wb2lm7w6jaBd6sqqbdeeqfTEexB00wgkLkAV7tmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhr8f8gZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9OFDeBF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F100CC4CEDD;
-	Mon,  7 Apr 2025 18:28:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhr8f8gZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8DFC4CEDD;
+	Mon,  7 Apr 2025 18:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744050515;
-	bh=t9TUQsEt5Q9gIOtHF38LsFjD/8E4Sfx5Y8wLVTNcThA=;
+	s=k20201202; t=1744050624;
+	bh=FQMfGLh5C6n7JuybfDzu2iuG/1Pw/ID6KqOpxvzKSf0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V9OFDeBFLFfhzZFtHLwRrBF+XIHuHUCJNloCXOSafflkYLjxTNErR3QE7PpyAY8G0
-	 oM2oUFEtOllLn1NmB94n+hwstzCt2bOjDdX4VoiNKrddcnGmpdic4Cz/yRHmZz7QFc
-	 nCV3LLR4sNHud4N5meQyEh4q/sqCRWb0MfYBfQJfGpCIUWfMxn5bwk4SXtJd6J3JUw
-	 aR/ehGVeCa9HHrNClCq/RiWWv0uF8aWPxcQHFcevsDGPoj6uDyrPXI6snymjBf6Iqy
-	 gZQbkx+HkYWYDZVHi4aCERl+bUd3HyzdPdHZGznnlN+O7pikgis3pUDMtrdLddifCU
-	 mObCa+3aPlJLQ==
-Date: Mon, 7 Apr 2025 11:28:32 -0700
-From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: James Smart <james.smart@broadcom.com>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with
- strscpy()
-Message-ID: <202504071126.37117C5D@keescook>
-References: <20250226185531.1092-2-thorsten.blum@linux.dev>
+	b=qhr8f8gZiL0WRr46kStn2vSZUbAYQXAuO0aN9Q++95HNF7FaI8kzwZSbly1LsBypL
+	 /MdsuXsMr+wp2Pjy8kXUAqkw5XZqGFteMbwpbvxr8Daj+eDx63tVuOgCzLkrgoFW9K
+	 O7yUUZJSQ/RJHzcpPP4yliEQTYEVcmEjK2mx+nDQU2+Ab1HJ1pR9RlUjD3m2o1j2b6
+	 iyU4WfBchLKbUk4sjkdCjSDahIan+K2xDP3sK0Lg34NFdEt8wEiBpS6EN36kmySjRl
+	 5NvqLJyvpIJbfe3cCeJIcv2Smi4XWmBXtRP5YBIa5HO7wjSWuG2hkFAnzHl2/Cz0Pf
+	 4LgmFHUyS9Mjg==
+Date: Mon, 7 Apr 2025 20:30:15 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-kbuild@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Brian Gerst <brgerst@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
+Message-ID: <Z_QZt8mPEf-dlvcZ@gmail.com>
+References: <20250407094116.1339199-1-arnd@kernel.org>
+ <20250407164151.GB2536@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,63 +58,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250226185531.1092-2-thorsten.blum@linux.dev>
+In-Reply-To: <20250407164151.GB2536@sol.localdomain>
 
-On Wed, Feb 26, 2025 at 07:55:26PM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers; use
-> strscpy() instead.
+
+* Eric Biggers <ebiggers@kernel.org> wrote:
+
+> On Mon, Apr 07, 2025 at 11:41:12AM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > x86 already requires gcc-8.1 since linux-6.15-rc1, which led me to
+> > actually go through all  version checks and make this is the minimum
+> > for all architectures.
+> > 
+> > Most of the actual resulting changes are actually for raising the
+> > binutils version, which eliminates version checks on x86 and arm64.
+> > 
+> > Arnd Bergmann (4):
+> >   kbuild: require gcc-8 and binutils-2.30
+> >   raid6: skip avx512 checks
+> >   x86: remove checks for binutils-2.30 and earlier
+> >   arm64: drop binutils version checks
 > 
-> Compile-tested only.
+> This is intended to supersede the patches from Uros that removed checks for
+> binutils < 2.25, right?  See:
 > 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  drivers/scsi/elx/libefc_sli/sli4.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/elx/libefc_sli/sli4.c b/drivers/scsi/elx/libefc_sli/sli4.c
-> index 5e7fb110bc3f..d9a231fc0e0d 100644
-> --- a/drivers/scsi/elx/libefc_sli/sli4.c
-> +++ b/drivers/scsi/elx/libefc_sli/sli4.c
-> @@ -3804,7 +3804,7 @@ sli_cmd_common_write_object(struct sli4 *sli4, void *buf, u16 noc,
->  	wr_obj->desired_write_len_dword = cpu_to_le32(dwflags);
->  
->  	wr_obj->write_offset = cpu_to_le32(offset);
-> -	strncpy(wr_obj->object_name, obj_name, sizeof(wr_obj->object_name) - 1);
-> +	strscpy(wr_obj->object_name, obj_name);
+> * https://lore.kernel.org/linux-crypto/20250404074135.520812-1-ubizjak@gmail.com/
+> * https://lore.kernel.org/linux-crypto/20250404074135.520812-2-ubizjak@gmail.com
+> * https://lore.kernel.org/linux-crypto/20250404074135.520812-3-ubizjak@gmail.com/
 
-Standard question for these kinds of conversions: Why is it safe that
-this is not NUL padded? I haven't found where this buffer is being
-zeroed out, but it probably is (given the "- 1" on the length), but
-without run-time testing, this needs much more careful analysis.
+Yeah, so these commits (now pending in the x86 tree) should nicely 
+complement each other, there shouldn't be much friction other than:
 
--Kees
+  a72d55dc3bd6 x86/idle: Remove CONFIG_AS_TPAUSE
 
->  	wr_obj->host_buffer_descriptor_count = cpu_to_le32(1);
->  
->  	bde = (struct sli4_bde *)wr_obj->host_buffer_descriptor;
-> @@ -3833,7 +3833,7 @@ sli_cmd_common_delete_object(struct sli4 *sli4, void *buf, char *obj_name)
->  			 SLI4_SUBSYSTEM_COMMON, CMD_V0,
->  			 SLI4_RQST_PYLD_LEN(cmn_delete_object));
->  
-> -	strncpy(req->object_name, obj_name, sizeof(req->object_name) - 1);
-> +	strscpy(req->object_name, obj_name);
->  	return 0;
->  }
->  
-> @@ -3856,7 +3856,7 @@ sli_cmd_common_read_object(struct sli4 *sli4, void *buf, u32 desired_read_len,
->  		cpu_to_le32(desired_read_len & SLI4_REQ_DESIRE_READLEN);
->  
->  	rd_obj->read_offset = cpu_to_le32(offset);
-> -	strncpy(rd_obj->object_name, obj_name, sizeof(rd_obj->object_name) - 1);
-> +	strscpy(rd_obj->object_name, obj_name);
->  	rd_obj->host_buffer_descriptor_count = cpu_to_le32(1);
->  
->  	bde = (struct sli4_bde *)rd_obj->host_buffer_descriptor;
-> -- 
-> 2.48.1
-> 
+... which will have a conflict in arch/x86/Kconfig.assembler but is 
+straightforward to resolve.
 
--- 
-Kees Cook
+> If we can indeed bump up the requirement to 2.30, that would be great.
+
+Agreed.
+
+Thanks,
+
+	Ingo
