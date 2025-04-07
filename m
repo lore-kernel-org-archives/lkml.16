@@ -1,259 +1,106 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB1B221F35;
-	Mon,  7 Apr 2025 07:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21943225402
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011728; cv=none; b=BzBwYbSBX6Thu6QxqvQIzeTp7zDVlU+ZLBZbOcBaD4jkP7LSC44zATyPnjU4GrPpDuqokidkHp+jd44av083cE0iPFv6d1dL6kwO7jBXwpg4GDo/gJIONYT9o3tCtTIeiRJu4VvkyNHLqAOtu+NKIMC5sLTean1k+s0+ftgH17A=
+	t=1744011742; cv=none; b=Y1ZszdKYjMVg5E/Vm1Uskt3jLeew7cOYR2qReZZxN0wdhTYDacJzf5P9QEeA5aqa2sHrdfSr8D+zJ8godtvL9EjDKENyk9LvW6p13RVqSXmjLajcn13BCrrQQ9l+5TJ+UDP4loEyb0WSKgglbECm6P5NwcyZUBFQV3DFJvAQAWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011728; c=relaxed/simple;
-	bh=wJwnGhorr/lQGHcTE2BKBCk8td8nfzDg28t8HbRDcDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mxl5fliqnmwf7sd1lFhyKIgaceKUaCClPEjpbG48UEqV8iwMtsDHmKVKfUZRnVm0rE7peMDKA93j2xRzMP1UpwzDGu0v7nR70kOwfxJuBxJSHwn99Zk/N31g/VPH0LtEyyAcAmXKuSwr2KwFXPmerZea1AlRZnmvEWgesGS1+6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZWLhm0tNnz1R7gq;
-	Mon,  7 Apr 2025 15:40:08 +0800 (CST)
-Received: from kwepemo200002.china.huawei.com (unknown [7.202.195.209])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFD5B18005F;
-	Mon,  7 Apr 2025 15:42:00 +0800 (CST)
-Received: from [10.174.179.13] (10.174.179.13) by
- kwepemo200002.china.huawei.com (7.202.195.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 7 Apr 2025 15:41:59 +0800
-Message-ID: <76609f9c-7c2b-a64a-5999-f359e6acc3ca@huawei.com>
-Date: Mon, 7 Apr 2025 15:41:58 +0800
+	s=arc-20240116; t=1744011742; c=relaxed/simple;
+	bh=V38eq7FCelCROs42raMwfhM/55ImU/2u3l53cm6mEn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YV2Sy3n6fTbwiK4ipwQR+fkrzQhWU2hRciLFiQ80jmP/xC8yW+QPslWJQ4rmSF9AAYVHqt8iJn8+fmQbqDFTZ1yYXpgFgIdrufgPyRKZK9e2cTJuKzVfm+hJv+9lSm88GhglmtHZiVHhiwqsa+nGmeNKuGp4tzq3qIz3XNLD0lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kjNHKqEr; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kjNHKqEr"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913d129c1aso2712006f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744011739; x=1744616539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jaxmJdvdhtX7hTbnte9HAxlvmD2ZRh/FVwxHdpp18yQ=;
+        b=kjNHKqEr+q1fYV9nEQxljZd1AFCuIR2oo6xz8NaZJhxdhJUkWuFLOs2r2e/PCbZeNW
+         eoG406Jn9pArw/E4qX18RnD2jgBp843kLs7jT7FalwXhCNOFBUkwxFEQVFeC/ZfJp/aN
+         1uzGU/vh1DiDVMoahseXd+DrY9Z+3TH5YIpDTLgB/v1kb0FJeGpwxquTT8lh1NjApujZ
+         +h/WmkEKuDZROKRC0QWjaolC6E9uJP5JtH8b2eGDchfMQ+TE9hXB4eeM1p97AQeKoO0u
+         IlmuzsvzpbdKMDtAOBpZ8I1FvCp9cd3jsmnEaSEhVD9lrLoshJ3fzeXKUUEYuE1hnTFF
+         f+LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744011739; x=1744616539;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jaxmJdvdhtX7hTbnte9HAxlvmD2ZRh/FVwxHdpp18yQ=;
+        b=ggC0jNHL3MKCBShBxQL0S2sxPvlkxBEC/eGwzF29r87nj7YkD5Di6Mh1Tnp+V8vlFq
+         zZ2nQEOHgDCBFqRIw7YohCqSJKmMokB3kYj5Q5O8JhoZWBA3b0cbpd17FXVH6wcwm5d/
+         HRx5Uy4moNWdhh+CVCvOtj7zDXTfiHOtKW+WmosaTbmn5b4Z0VB+kzKenVom0JA6VgNP
+         6VOF16dPaiXtSr1R6lKUjhuHh4+oKzMFQLc40QovNsQ5RZxObCOASu22dyN92oM1dtEF
+         gggHTi60+ngMT7j8EjCIVtjEiBODEl/gmvJWMoS6ITxjB7UeFWezH3KgeVw/x32dADBn
+         Zbvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpTMdpwx5f4XiLUoKN0xJQiO27f1ISL/qg3Akx6FKkdXuC3JZDDL5DIqkTqkcceXrFfaWiKQprRbtpyEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKlL9n8f5x7kLqCUSNHjin3DnsFrs7HAfD5+a1chhi74AcZLnD
+	9wY3adTDxzmk+5N+YQ3bvpEifYwnNwGXiI1RRKjHOmY+/rD/bl4T5MTMlnIuYpo=
+X-Gm-Gg: ASbGncs+ZEtEpv/RKu6a5zIO42fYIhk5j1y1Nva3N1CeZ3HDqTYtVzFnAMEU/HLMYGC
+	9ISbR/4Igu2cpVCy0ZHbkMdQzIGKdrHD0Jad94Rhocfu9MZ6hEwAhmdLl4eKwQQJaz92NDKgR91
+	SGMbj9bsMHDl5Nam4H2N96B2P/s8k3MpgPiV3Sa6ZBgcVaZha9dATpudN3uls9zEw2b//Ols1cM
+	tVMgH7ltnWiqIweEotC/8/qdIJ/JsvqkpSZBINs6DCZlS74G1P5SXdHxTBvFb7/mT9SVEpfsVwQ
+	0S3N2nWsGm+TagThk6nn+L6/hybVqm61hWTkFQQjg+64
+X-Google-Smtp-Source: AGHT+IE6QgJB9JshmZZcPlhwCB6EA7JVQMD4x3bAODJvhStUzpBPIJijVfdsvTwXBWDIy69lNco/0A==
+X-Received: by 2002:a05:6000:420f:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39c2e65a08bmr14907199f8f.24.1744011739377;
+        Mon, 07 Apr 2025 00:42:19 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301acec9sm11131294f8f.40.2025.04.07.00.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:42:17 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	krzk@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	andriy.shevchenko@intel.com,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: (subset) [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
+Date: Mon,  7 Apr 2025 09:42:15 +0200
+Message-ID: <174401173191.24103.4199616669647190339.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V4] mm/gup: Clear the LRU flag of a page before adding to
- LRU batch
-To: David Hildenbrand <david@redhat.com>, <yangge1116@126.com>,
-	<akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<stable@vger.kernel.org>, <21cnbao@gmail.com>,
-	<baolin.wang@linux.alibaba.com>, <aneesh.kumar@linux.ibm.com>,
-	<liuzixing@hygon.cn>, Kefeng Wang <wangkefeng.wang@huawei.com>
-References: <1720075944-27201-1-git-send-email-yangge1116@126.com>
- <4119c1d0-5010-b2e7-3f1c-edd37f16f1f2@huawei.com>
- <91ac638d-b2d6-4683-ab29-fb647f58af63@redhat.com>
- <076babae-9fc6-13f5-36a3-95dde0115f77@huawei.com>
- <26870d6f-8bb9-44de-9d1f-dcb1b5a93eae@redhat.com>
-From: Jinjiang Tu <tujinjiang@huawei.com>
-In-Reply-To: <26870d6f-8bb9-44de-9d1f-dcb1b5a93eae@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemo200002.china.huawei.com (7.202.195.209)
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-在 2025/4/1 22:33, David Hildenbrand 写道:
-> On 27.03.25 12:16, Jinjiang Tu wrote:
->>
->> 在 2025/3/26 20:46, David Hildenbrand 写道:
->>> On 26.03.25 13:42, Jinjiang Tu wrote:
->>>> Hi,
->>>>
->>>
->>> Hi!
->>>
->>>> We notiched a 12.3% performance regression for LibMicro pwrite
->>>> testcase due to
->>>> commit 33dfe9204f29 ("mm/gup: clear the LRU flag of a page before
->>>> adding to LRU batch").
->>>>
->>>> The testcase is executed as follows, and the file is tmpfs file.
->>>>       pwrite -E -C 200 -L -S -W -N "pwrite_t1k" -s 1k -I 500 -f $TFILE
->>>
->>> Do we know how much that reflects real workloads? (IOW, how much
->>> should we care)
->>
->> No, it's hard to say.
->>
->>>
->>>>
->>>> this testcase writes 1KB (only one page) to the tmpfs and repeats
->>>> this step for many times. The Flame
->>>> graph shows the performance regression comes from
->>>> folio_mark_accessed() and workingset_activation().
->>>>
->>>> folio_mark_accessed() is called for the same page for many times.
->>>> Before this patch, each call will
->>>> add the page to cpu_fbatches.activate. When the fbatch is full, the
->>>> fbatch is drained and the page
->>>> is promoted to active list. And then, folio_mark_accessed() does
->>>> nothing in later calls.
->>>>
->>>> But after this patch, the folio clear lru flags after it is added to
->>>> cpu_fbatches.activate. After then,
->>>> folio_mark_accessed will never call folio_activate() again due to the
->>>> page is without lru flag, and
->>>> the fbatch will not be full and the folio will not be marked active,
->>>> later folio_mark_accessed()
->>>> calls will always call workingset_activation(), leading to
->>>> performance regression.
->>>
->>> Would there be a good place to drain the LRU to effectively get that
->>> processed? (we can always try draining if the LRU flag is not set)
->>
->> Maybe we could drain the search the cpu_fbatches.activate of the 
->> local cpu in __lru_cache_activate_folio()? Drain other fbatches is 
->> meaningless .
->
-> So the current behavior is that folio_mark_accessed() will end up 
-> calling folio_activate()
-> once, and then __lru_cache_activate_folio() until the LRU was drained 
-> (which can
-> take a looong time).
->
-> The old behavior was that folio_mark_accessed() would keep calling 
-> folio_activate() until
-> the LRU was drained simply because it was full of "all the same pages" 
-> ?. Only *after*
-> the LRU was drained, folio_mark_accessed() would actually not do 
-> anything (desired behavior).
->
-> So the overhead comes primarily from __lru_cache_activate_folio() 
-> searching through
-> the list "more" repeatedly because the LRU does get drained less 
-> frequently; and
-> it would never find it in there in this case.
->
-> So ... it used to be suboptimal before, now it's more suboptimal I 
-> guess?! :)
->
-> We'd need a way to better identify "this folio is already queued for 
-> activation". Searching
-> that list as well would be one option, but the hole "search the list" 
-> is nasty.
+On Thu, 27 Mar 2025 08:49:44 +0800, Peng Fan (OSS) wrote:
+> This is prepare patch for switching s5m8767 regulator driver to
+> use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
+> "active low" polarity for the DVS and DS line. But per datasheet,
+> they are actually active high. So add polarity quirk for it.
+> 
+> 
 
-Sorry for late reply. I tried to search the activate batch with the following diff, and
-the performance regression disappears.
+Applied, thanks!
 
-diff --git a/mm/swap.c b/mm/swap.c
-index f81c8aa93e67..cfe484ff12e6 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -400,6 +400,21 @@ static void __lru_cache_activate_folio(struct folio 
-*folio)
-                 }
-         }
+[1/2] gpiolib: of: Add polarity quirk for s5m8767
+      commit: 4e310626eb4df52a31a142c1360fead0fcbd3793
 
-+       fbatch = this_cpu_ptr(&cpu_fbatches.activate);
-+       for (i = folio_batch_count(fbatch) - 1; i >= 0; i--) {
-+               struct folio *batch_folio = fbatch->folios[i];
-+
-+               if (batch_folio == folio) {
-+                       struct lruvec *lruvec;
-+                       unsigned long flags;
-+
-+                       lruvec = folio_lruvec_lock_irqsave(folio, &flags);
-+                       folio_activate_fn(lruvec, folio);
-+                       unlock_page_lruvec_irqrestore(lruvec, flags);
-+                       break;
-+               }
-+       }
-+
-         local_unlock(&cpu_fbatches.lock);
-  }
-
->
-> Maybe we can simply set the folio as active when staging it for 
-> activation, after having
-> cleared the LRU flag? We already do that during folio_add.
->
-> As the LRU flag was cleared, nobody should be messing with that folio 
-> until the cache was
-> drained and the move was successful.
->
-Yes, anyone who wants to delete the folio from lru list should test LRU flag
-
-I look some folio_test_active() calls, madvise_cold_or_pageout_pte_range() will
-set workingset flag if active flag is set. It seems more reasonable if we set
-active flag after adding to activate batch, since adding to activate batch already
-means active.
-
->
-> Pretty sure this doesn't work, but just to throw out an idea:
-
-Thanks, I will try it ASAP.
-
->
-> From c26e1c0ceda6c818826e5b89dc7c7c9279138f80 Mon Sep 17 00:00:00 2001
-> From: David Hildenbrand <david@redhat.com>
-> Date: Tue, 1 Apr 2025 16:31:56 +0200
-> Subject: [PATCH] test
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/swap.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/swap.c b/mm/swap.c
-> index fc8281ef42415..bbf9aa76db87f 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -175,6 +175,8 @@ static void folio_batch_move_lru(struct 
-> folio_batch *fbatch, move_fn_t move_fn)
->      folios_put(fbatch);
->  }
->
-> +static void lru_activate(struct lruvec *lruvec, struct folio *folio);
-> +
->  static void __folio_batch_add_and_move(struct folio_batch __percpu 
-> *fbatch,
->          struct folio *folio, move_fn_t move_fn,
->          bool on_lru, bool disable_irq)
-> @@ -191,6 +193,10 @@ static void __folio_batch_add_and_move(struct 
-> folio_batch __percpu *fbatch,
->      else
->          local_lock(&cpu_fbatches.lock);
->
-> +    /* We'll only perform the actual list move deferred. */
-> +    if (move_fn == lru_activate)
-> +        folio_set_active(folio);
-> +
->      if (!folio_batch_add(this_cpu_ptr(fbatch), folio) || 
-> folio_test_large(folio) ||
->          lru_cache_disabled())
->          folio_batch_move_lru(this_cpu_ptr(fbatch), move_fn);
-> @@ -299,12 +305,14 @@ static void lru_activate(struct lruvec *lruvec, 
-> struct folio *folio)
->  {
->      long nr_pages = folio_nr_pages(folio);
->
-> -    if (folio_test_active(folio) || folio_test_unevictable(folio))
-> -        return;
-> -
-> +    /*
-> +     * We set the folio active after clearing the LRU flag, and set the
-> +     * LRU flag only after moving it to the right list.
-> +     */
-> +    VM_WARN_ON_ONCE(!folio_test_active(folio));
-> +    VM_WARN_ON_ONCE(folio_test_unevictable(folio));
->
->      lruvec_del_folio(lruvec, folio);
-> -    folio_set_active(folio);
->      lruvec_add_folio(lruvec, folio);
->      trace_mm_lru_activate(folio);
->
-> @@ -342,7 +350,10 @@ void folio_activate(struct folio *folio)
->          return;
->
->      lruvec = folio_lruvec_lock_irq(folio);
-> -    lru_activate(lruvec, folio);
-> +    if (!folio_test_unevictable(folio)) {
-> +        folio_set_active(folio);
-> +        lru_activate(lruvec, folio);
-> +    }
->      unlock_page_lruvec_irq(lruvec);
->      folio_set_lru(folio);
->  }
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
