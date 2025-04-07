@@ -1,33 +1,65 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10D230981
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4621ADC67
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017766; cv=none; b=Uxi2UF3MYKzR22TKZUuh8sbU8Nvgk1gwukbsIWx1FA6O+0v5Eg7sVp8b18Q1JCksHMPKqEcuKqB3+jb96evY2qYEZqzCLuYN9cZ0Klv+L2cLviCKvs8WbyRIougrWOc68rGMgMMbdmqK2zboENrL5X7V3x9wvkcKAPj51Hs6taE=
+	t=1744017789; cv=none; b=l67+4zW0lgQm5rm6yrbql06CiVH8DQ1/T5YM94dzOYCdxwM1BC9qauDk0MzOYakBXN9MYUDUqSXfJhL2GZGWTurl+JBXTIMev88fF0YUy02hp+9BwcdoSEnMFj89YLy09cw5vvC/Thpn4HGnvyZWpqahjBTDi0oVDHeusxyIl8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017766; c=relaxed/simple;
-	bh=CxI6EFGNGVX/CqhcIkJT9/kC6JlC8uS4t6ru+ri2+vQ=;
+	s=arc-20240116; t=1744017789; c=relaxed/simple;
+	bh=r9RqrhzeutBtIOlYVz3agoheAkTOhawsk2ceW69HgXE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VpyibFBmPhk0raLkoLhL27zjvetDZrulFfUsjJENqFV+zr9FqoRANCBTNe7naBYH7ZNs6QgNIv3zRRceofJZ8W4fTKexfx9Bch9epWtDq+0LXtdozY3hk5fbXV10Lo3WwawkJokKMGaSEWSd93ZPmhKuNNRyfUFNj0IQPmlVKGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dAlPsvtA; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=sCUElNEV4yAGcEu0LWdigTXADRt0c0Lacc0kX7t+ka4QT2GNdzkLBb+dfUvmi/K177uQJpFLPL2wiUu78wtQkZsbfVt/qhC87GCpHTl3hxaCGLfTUlSI6Pyv8PPBLOhu9E631L3fhttA3Z2bBTK9i3TGrRSVM+R3G4ozxjG8DZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bV6hQi8g; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dAlPsvtA"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 730C3606;
-	Mon,  7 Apr 2025 11:20:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744017640;
-	bh=CxI6EFGNGVX/CqhcIkJT9/kC6JlC8uS4t6ru+ri2+vQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dAlPsvtAeKiEbQAk25PevLrCV26UzhUryGk89TCi+pBk9+4KGh6ol3xr0x4Av31z6
-	 DsRLEd7s2yyrZlpohxonKLhiC1bbQDc53WWeEnbjT9MSDBAFvlKhVDnK7tamXGmGNp
-	 y/OWbCePZeEqGg0EPsDYGLPxMW2zbRb8f7GKh8t4=
-Message-ID: <47436aab-f9e7-40d7-889a-8192d0570064@ideasonboard.com>
-Date: Mon, 7 Apr 2025 12:22:32 +0300
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bV6hQi8g"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3040126f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744017785; x=1744622585; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8GEB2/7f7npYgGmINlGKb01Ype4hZwo/GgBaLZ4O8ec=;
+        b=bV6hQi8gv1oYpnl4voM20JEKrXRqL0/1yGZfLVjoCkXI+wWagk3OajeMqQARB/dwmL
+         Bh5BltnRj1u3oQb0lqubM8jSGfLyH7EJMcRmDgHC6VjyEiCA/OLo8QKWqZU54CehYTuI
+         +Q2NdhYWwlewk3zGA4e2jleojLGvyrdRhIiP1q9S2AAlPS9v7ZMCQyrtl++TI1E7KVaO
+         HwSS+jGezW53MXTWfUc+kAghRbURXCZnYFfg2o1ZogQnsoR5RmSH7yEbPfsR4e8AmNxl
+         s98htRANFyNEORiRnqLAdbofycF8Psr4EqzwBlXrs7rGeu8yUJq6B+BRV+7ruWiHrhTf
+         oR7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744017785; x=1744622585;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8GEB2/7f7npYgGmINlGKb01Ype4hZwo/GgBaLZ4O8ec=;
+        b=MWusMznzfn17JBqLqJbqL0bT8iQ1lYayU/MIlA7iKRhRG5Co+CwnJZrwDI0HxNjDVn
+         l+yF+4VCYMPzHBmRYgW+RB2scFe0/JpT7VkZ6P9lCPXsTJYvvf53XGv7WCx2xU1IvJsE
+         KvNu7Yiz3M4dYQe0mPyoYGxf3gzB6/bDmRDqaZEV039z6VrO7n8cW3CfqQsgBr2Ip8zX
+         8c9RFL0yUVzgsHctdocvPBlY+v+EH9DZAeg8x+0OjxrkC/ASRxLnReH23mgA2lEYAUL5
+         knsyBbcRvsXMBLimEUw0vrCRqoDyZsZVtmS2ARlXjRasWR6spjeUy0OJ8yHEF7zHVw48
+         I0rA==
+X-Gm-Message-State: AOJu0Yy+TFBI7P1nyIBY00w52TcKN720VPzmHawYvbzr9dZHyEAK1Z73
+	28QzRAt25Oqd27fRkjVzyeAq1uzUtQ7uaKVCX/j/lzOx/FkEWyBdQpJKgqzVKlEbhaMAEzD1deA
+	2
+X-Gm-Gg: ASbGncuepTTWgOjHlEy56DG5SmfPOelIpTRn8hWQjcspyZgFUp5jcgq+1l8U+aC0alj
+	CUBf7cw+kLqtgxyF9HU9EpB7zyFkY0T184cv2B+CpeCo9Z/+7pvqjZk6iY99aGBo+kxZRD3smq3
+	OgEJPXd7ohGYNOYJ1cLJJGmnrVkJsmpWYjW1x71OKdT174TgnFrY25gsMitem7EYtAijA9x+B0Y
+	axIhymsjgJk36lM/XNPQ4VKR6Z0/9fVK+2yMbvk7QEC9/aldFI7le9OKzL73+5vxByrp56Pecdc
+	X6vDffXiziHpWG/uaUQqHSNgaXl1FrZ0SR0rugxxGdtDgoLUC+lO3Zufbg9yFgEStG1gXztgONI
+	R/5e99p+yrNk=
+X-Google-Smtp-Source: AGHT+IH2D4ZOZwcneAudIPcxeXzVvvPrAKJL14lK9bzoixHtxQl9qS6i6XTiQ1W94FT9J/YucBQ34w==
+X-Received: by 2002:a05:6000:40c9:b0:391:43cb:43e6 with SMTP id ffacd0b85a97d-39d6fd022a6mr6415177f8f.51.1744017785228;
+        Mon, 07 Apr 2025 02:23:05 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1302:8001:d2dc:b329:7532:c373? ([2001:a61:1302:8001:d2dc:b329:7532:c373])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea9a346e3sm110990905e9.1.2025.04.07.02.23.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 02:23:04 -0700 (PDT)
+Message-ID: <9fdb5e30-8570-420f-940b-bea5fa72e12d@suse.com>
+Date: Mon, 7 Apr 2025 11:23:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,112 +67,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 4/5] drm/bridge: Update the bridge enable/disable doc
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
- <20250406131642.171240-5-aradhya.bhatia@linux.dev>
+Subject: Re: [PATCH] usb: cdc-wdm: avoid setting WDM_READ for ZLP-s
+To: Robert Hodaszi <robert.hodaszi@digi.com>, gregkh@linuxfoundation.org,
+ oneukum@suse.com
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ stern@rowland.harvard.edu, viro@zeniv.linux.org.uk
+References: <20250403144004.3889125-1-robert.hodaszi@digi.com>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250406131642.171240-5-aradhya.bhatia@linux.dev>
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250403144004.3889125-1-robert.hodaszi@digi.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 06/04/2025 16:16, Aradhya Bhatia wrote:
-> Now that the bridges get pre-enabled before the CRTC is enabled, and get
-> post-disabled after the CRTC is disabled, update the function
-> descriptions to accurately reflect the updated scenario.
-> 
-> The enable sequence for the display pipeline looks like:
-> 
-> 	bridge[n]_pre_enable
-> 	...
-> 	bridge[1]_pre_enable
-> 
-> 	crtc_enable
-> 	encoder_enable
-> 
-> 	bridge[1]_enable
-> 	...
-> 	bridge[n]_enable
-> 
-> And, the disable sequence for the display pipeline looks like:
-> 
-> 	bridge[n]_disable
-> 	...
-> 	bridge[1]_disable
-> 
-> 	encoder_disable
-> 	crtc_disable
-> 
-> 	bridge[1]_post_disable
-> 	...
-> 	bridge[n]_post_disable
-> 
-> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-> ---
->   include/drm/drm_bridge.h | 249 ++++++++++++++++++++++++++++-----------
->   1 file changed, 183 insertions(+), 66 deletions(-)
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
+On 03.04.25 16:40, Robert Hodaszi wrote:
+> Don't set WDM_READ flag in wdm_in_callback() for ZLP-s, otherwise when
+> userspace tries to poll for available data, it might - incorrectly -
+> believe there is something available, and when it tries to non-blocking
+> read it, it might get stuck in the read loop.
+> 
+> For example this is what glib does for non-blocking read (briefly):
+> 
+>    1. poll
+>    2. if poll returns with non-zero, starts a read data loop:
+>      a. loop on poll() (EINTR disabled)
+>      b. if revents was set, reads data
+>        I. if read returns with EINTR or EAGAIN, goto 2.a.
+>        II. otherwise return with data
+> 
+> So if ZLP sets WDM_READ (#1), we expect data, and try to read it (#2).
+> But as that was a ZLP, and we are doing non-blocking read, wdm_read()
+> returns with EAGAIN (#2.b.I), so loop again, and try to read again
+> (#2.a.).
+> 
+> With glib, we might stuck in this loop forever, as EINTR is disabled
+> (#2.a).
+> 
+> Signed-off-by: Robert Hodaszi <robert.hodaszi@digi.com>
+Acked-by: Oliver Neukum <oneukum@suse.com>
 
