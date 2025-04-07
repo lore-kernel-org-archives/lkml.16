@@ -1,123 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0865822E41C;
-	Mon,  7 Apr 2025 18:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC3823FC52;
+	Mon,  7 Apr 2025 18:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052301; cv=none; b=BgzyaR1mROZMMuxAiGZeBrPzZZBaS82WbdGX57NiF+M6Ahf6dZA7SnjtflH8wIVzA8oKAklb2anEy8rkjoKZZlR9l6ZlatI3+L4u5mGW/0S3WVbayNpPMKuNjZw0LeABBg9bN6ErnSgdGyXQO2xjAsOOpH2EKZH92qxsL2GBtIM=
+	t=1744052308; cv=none; b=fAVgZJWBHTh9y3ROId+BU32jB3JjV/rQIyVhGOHDiWdS2qNlRPg2G7kvG+iEsQ07SOWRIll+IUBwyn+UPcLoMeuOEgu5vA7jvmu4V1G/zKQO9yc9cSXBXJqJguYR42WvcQ1Sd5hToJCqxUypU4MX8iEwfXdrfbecF0qrPzIFPXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052301; c=relaxed/simple;
-	bh=RJY+f1R8hI4t/Wsf1l9yEDTJPhNF5RCZngtFawzlXwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrTJEvkDt5lSg67SDNyiVxbXOnVzf5W3bg/wyN3k9W8RdIyvJE8okXme5wpxrbBL5Z5mLxJn2DCdLAKcoKf/koKmlOCBlgz7rTKjVJw6YFYt5vyKYHdBPs7yGdHqAOcfhKlbjuU5Bjk0hrfLoJmykITd1MgURuduY5g4JtA6aL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZF6Mwva6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744052308; c=relaxed/simple;
+	bh=kpnlwU1ua4w3405cDEFSviiFMiWPttNWuxqNWJ6xrhg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FZYYThZS7AMTMOHGTT9yZ0QzT3mEiZgIcOEab6AALY6u+tVj57P4P5B6dKur8Mm6EWwe7m3qt1l5HRZvCixf+FdRC2jSG9ZjnAMIeTMPLNHmgblCwNVlZJ5Snnod16iXpGFYe/GqBDfGf4JgTYXahcOAfsEzPNsSAFuiAmfwbOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0fvdEA9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZF6Mwva6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77358C4CEDD;
-	Mon,  7 Apr 2025 18:58:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0fvdEA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B0BC4CEFE;
+	Mon,  7 Apr 2025 18:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744052300;
-	bh=RJY+f1R8hI4t/Wsf1l9yEDTJPhNF5RCZngtFawzlXwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZF6Mwva6UbJZzY0vnZ9L5tUFhcQF8KHT8qbFcwyDqIJkvI5YnJxnwh8DTRKC9itRw
-	 QGHVd+fiUPzjSYtyx2fLVTh0ls7zriFZdp7cfc/4PQxNA4ew0xzN5GFaiQCPRqH2l2
-	 1A84Viiss7tpJyfI7L+sYf00qXOJqTFFpoAQg/gmfiwwShZ85+75GRLxG4AA9SZoOF
-	 bruJqFYNkHWNDQft+qfH7jzE/OYTTZUEaqgILb+ocwSqoHLb2ZRYxUKgkOebLf2hql
-	 eE0Cu1XQnL7Ivh2hsGIbg/b19rdqOEyHZyAgitB5iBMilmpaa388dJXGfQNiKjO79Z
-	 4+HnP4AC9ao/Q==
-Date: Mon, 7 Apr 2025 11:58:17 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ext4: Avoid -Wflex-array-member-not-at-end warning
-Message-ID: <202504071156.2344BA19@keescook>
-References: <Z-SF97N3AxcIMlSi@kspp>
+	s=k20201202; t=1744052307;
+	bh=kpnlwU1ua4w3405cDEFSviiFMiWPttNWuxqNWJ6xrhg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D0fvdEA9QYp9ibxMxuVd+ukYS2ASZtxn6COss2F01rOz4/UptfXi7frDT5l6MyO4N
+	 yWzDF+OcFCgdWR8pj6VAdc1YoOC3K/QA0QGF/8bWOyIXNb/vdIhjvJUHu8XBMcfKiq
+	 G5pM57vd/Nt8xKSUs8oCv58SQf89qqhc0rzwqFubjZR2X4gCamJoT/XEUIDXlSY4HJ
+	 GcinFmITK+bnmhkYdD1vJ6a+2qm8P8PjVD6wu+bbKjtRwANw95phihW3dgzbXE0r/h
+	 sUqo0Lxy3NGoKWtNpXvFdGQQdN0gIadPCs0nYA86PnA22VdaofSD/7Yt/pF1YPo+KY
+	 6hP1cPvNh3C2g==
+Date: Mon, 7 Apr 2025 19:58:19 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: adc: ad7606: add SPI offload support
+Message-ID: <20250407195819.506e4d6f@jic23-huawei>
+In-Reply-To: <20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
+References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+	<20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-SF97N3AxcIMlSi@kspp>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 26, 2025 at 04:55:51PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On Thu, 03 Apr 2025 18:19:06 +0200
+Angelo Dureghello <adureghello@baylibre.com> wrote:
+
+> From: Angelo Dureghello <adureghello@baylibre.com>
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+> Add SPI offload support for this family.
 > 
-> So, with these changes, fix the following warning:
-> 
-> fs/ext4/mballoc.c:3041:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/ext4/mballoc.c | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 0d523e9fb3d5..f88424c28194 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -3037,10 +3037,8 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
->  	unsigned char blocksize_bits = min_t(unsigned char,
->  					     sb->s_blocksize_bits,
->  					     EXT4_MAX_BLOCK_LOG_SIZE);
-> -	struct sg {
-> -		struct ext4_group_info info;
-> -		ext4_grpblk_t counters[EXT4_MAX_BLOCK_LOG_SIZE + 2];
-> -	} sg;
-> +	DEFINE_RAW_FLEX(struct ext4_group_info, sg, bb_counters,
-> +			EXT4_MAX_BLOCK_LOG_SIZE + 2);
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+Missing import of the IIO_DMAENGINE_BUFFER in the spi module.
 
-Yup, struct ext4_group_info::bb_counters is ext4_grpblk_t, so everything
-matches up.
-
->  
->  	group--;
->  	if (group == 0)
-> @@ -3048,7 +3046,7 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
->  			      " 2^0   2^1   2^2   2^3   2^4   2^5   2^6  "
->  			      " 2^7   2^8   2^9   2^10  2^11  2^12  2^13  ]\n");
->  
-> -	i = (blocksize_bits + 2) * sizeof(sg.info.bb_counters[0]) +
-> +	i = (blocksize_bits + 2) * sizeof(sg->bb_counters[0]) +
->  		sizeof(struct ext4_group_info);
->  
->  	grinfo = ext4_get_group_info(sb, group);
-> @@ -3068,14 +3066,14 @@ static int ext4_mb_seq_groups_show(struct seq_file *seq, void *v)
->  	 * We care only about free space counters in the group info and
->  	 * these are safe to access even after the buddy has been unloaded
->  	 */
-> -	memcpy(&sg, grinfo, i);
-> -	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg.info.bb_free,
-> -			sg.info.bb_fragments, sg.info.bb_first_free);
-> +	memcpy(sg, grinfo, i);
-> +	seq_printf(seq, "#%-5u: %-5u %-5u %-5u [", group, sg->bb_free,
-> +			sg->bb_fragments, sg->bb_first_free);
->  	for (i = 0; i <= 13; i++)
->  		seq_printf(seq, " %-5u", i <= blocksize_bits + 1 ?
-> -				sg.info.bb_counters[i] : 0);
-> +				sg->bb_counters[i] : 0);
->  	seq_puts(seq, " ]");
-> -	if (EXT4_MB_GRP_BBITMAP_CORRUPT(&sg.info))
-> +	if (EXT4_MB_GRP_BBITMAP_CORRUPT(sg))
->  		seq_puts(seq, " Block bitmap corrupted!");
->  	seq_putc(seq, '\n');
->  	return 0;
-
-Replacements looks good.
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
--- 
-Kees Cook
+Added.
