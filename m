@@ -1,91 +1,82 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172F22222D4;
-	Mon,  7 Apr 2025 19:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7648A25B66A;
+	Mon,  7 Apr 2025 19:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052619; cv=none; b=RLkUs47DiCnc9caJCcxajxYAtymQsakRM+q6TVicWfeieB3ned0EvpU32f4wbh/Z67XVITdfYW5ADrrT/KxjdsLFH/Dp6k89G3Bxb2YdKlkYpBRKLmD0F80Y/gCrzb3x3MFINJlswBo1icHyzNxltp9iqwZhLigsQo3VzHwqf5w=
+	t=1744052647; cv=none; b=TJRD/6W28jhbGLTiVqGSO1BNTrClIIgXoBcBzV9xrQ6x7ZHkf2h6q+HTFTPvNNJNs0Z3cx2WTI/gCbwbnTRawsXZ+DQQsxX73QX9re1XRJGcRyRjstKQ3vJ/QItbyuTciyWIw1xOJrsPOnUgUlkW548onhGxOlQf5Wm4o2nmAS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052619; c=relaxed/simple;
-	bh=9jUK5fFO/zBSCtoslWjYR97SvHCJCuRCU0KIKS3G5a0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=V28jqYTh9LDQqWaM3qd/qc5jA2ppL4BJE7ryYwOrGz3af4lBw1a3OABh17YfoQbYBsP3u47XW+p48WSawBmAYFuYjUKeM1NYXcFyPbVg2l6a9U0L47FY5euYK2bhjNxbj4RZbzgojT6aLgNcPG+bUfXIVvTgvDTs24VBfvziWa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=O+8BqO7M; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1744052647; c=relaxed/simple;
+	bh=qqrw6QRkHJJzwT64WIKngX6jRFxi983UO52jm9agfOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n7koXJHdIeqeIdIuF6oNIoCr0i2fFVf6POITX3XmWVlqxmHc2l8sKJdubbJCu4/hWnOuIQjQV9Whsi3pSWFA/a1vyiMvT70NLM0XLnvTOY/d7FH4hHjWPdR8+IF7kiROzKrQvl9JZQKsYfGldRDNQmmkjY1ynqtogNUOAHq7Pa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaJNJa1k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="O+8BqO7M"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1u1rQC-00CpZg-VG; Mon, 07 Apr 2025 20:42:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From; bh=B46oeqhR6OuooSI1uvUNydwdBFfTPFTrPvRqV6TVJlY=
-	; b=O+8BqO7M0VZFCHknGdVU2zQ/2dkc5OFRM/4XZMGQfM+V1PvaK+faD9P2Gr1VKilTIllvKeQaD
-	1awEBt/PiRh/mP0j2XNS5gEz3RH21Hh2wum0GvVuCu3vIUZ6ngYH0z0wa4IaFAs5+RMEFWz312qTy
-	4RDI6XvcaiU/O01W52l0DXvK5Pt6PBXm6KZbK01Gkf6cRl2U1yBDATGjWcFgHk/c9/XaOln9HPSBo
-	vUVoqG2RilDPKLsOpnnzQjFaOhuSlhQljB7G9FaASog2qeMoEC/IIgmiMGobf14NeUZ43K0HRaM1E
-	Rz0SxZ0oNeRG5pXQvMxW4ZdKG+leqDl2OLtCAQ==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1u1rQC-0001M7-HP; Mon, 07 Apr 2025 20:42:12 +0200
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1u1rPz-008fhd-5o; Mon, 07 Apr 2025 20:41:59 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Subject: [PATCH net-next 0/2] vsock: SOCK_LINGER rework
-Date: Mon, 07 Apr 2025 20:41:42 +0200
-Message-Id: <20250407-vsock-linger-v1-0-1458038e3492@rbox.co>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaJNJa1k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32123C4CEE9;
+	Mon,  7 Apr 2025 19:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744052647;
+	bh=qqrw6QRkHJJzwT64WIKngX6jRFxi983UO52jm9agfOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PaJNJa1kHSlAkFt6D4jNyw4pzpsOSColBRH1qfEYKHdz4TrUCw9wN5amD3LmAyBeZ
+	 kA7zYSgh58faw94Kb7Wg9Z/YYjlcykrwJKmScMuQgN27nplhvagJ4UoYoKIQaZvFoZ
+	 kRSxAyO0e73yASn8PLZVFo38qFh21GhPQQtSincuB08MEdtOPqWuH1uXw1mf9sgNXx
+	 aN9TgIqbtIaFSbirmSbugNz9PlUMqmme5U1pQzGPTENd2vZzBP+ZPJOXhIBJV1iQcx
+	 T8fnd2D5gCz/OINyrlhzjyXLSm0dU468sY0pszV5AxuLmnq8dz2qkmwtzTURA5TbhX
+	 D6eQph2ulg/RQ==
+Date: Mon, 7 Apr 2025 21:04:01 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 2/2] x86/CPU/AMD: Print the reason for the last reset
+Message-ID: <Z_QhoXeHf-Itua95@gmail.com>
+References: <20250407162525.1357673-1-superm1@kernel.org>
+ <20250407162525.1357673-2-superm1@kernel.org>
+ <Z_Qdn_WYAalNAHOi@gmail.com>
+ <ebfaae8d-7186-454f-ba06-b86fea357d03@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGYc9GcC/x2MQQqAIBAAvxJ7bsEsJftKdAhbayksVEKI/p50H
- IaZByIFpghD9UCgmyOfvkBTV2C32a+EvBQGKaQSrejwjqfd8eCiAhohNSlnTK8tlOQK5Dj/uxE
- 8JfSUE0zv+wFVJPPHaAAAAA==
-X-Change-ID: 20250304-vsock-linger-9026e5f9986c
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- Stefan Hajnoczi <stefanha@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ebfaae8d-7186-454f-ba06-b86fea357d03@kernel.org>
 
-Change vsock's lingerning to wait, on close() and shutdown(), until all
-data is sent, i.e. until workers picked all the packets for processing.
 
-Changes in v1:
-- Do not assume `unsent_bytes()` is implemented by all transports [Stefano]
-- Link to v0: https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
+* Mario Limonciello <superm1@kernel.org> wrote:
 
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
-Michal Luczaj (2):
-      vsock: Linger on unsent data
-      vsock/test: Expand linger test to ensure close() does not misbehave
+> > I realize that the entire numeric value gets printed as well, but it's
+> > the symbolic decoding that is most useful to humans.
+> 
+> The way that I "envisioned" this working was someone uses their machine and
+> suddenly hits a problem.  When they do they look at amd/debugging.rst and
+> then run:
+> 
+> "journalctl -k | grep "System reset was due"
+> 
+> and then map the odd duck(s) out to the table.
 
- include/net/af_vsock.h                  |  1 +
- net/vmw_vsock/af_vsock.c                | 25 +++++++++++++++++++++++++
- net/vmw_vsock/virtio_transport_common.c | 25 +++----------------------
- tools/testing/vsock/vsock_test.c        | 30 +++++++++++++++++++++++++++---
- 4 files changed, 56 insertions(+), 25 deletions(-)
----
-base-commit: 61f96e684edd28ca40555ec49ea1555df31ba619
-change-id: 20250304-vsock-linger-9026e5f9986c
+99% of such people wouldn't know about amd/debugging.rst (nor should 
+they really: why should there be an extra layer of obfuscation while we 
+have this thing called a 'computer' that could ... compute all that 
+lookup for us? ;-), and they'd be looking at information in the syslog 
+after weird reboots.
 
-Best regards,
--- 
-Michal Luczaj <mhal@rbox.co>
+We should improve their quality of life as much as possible.
 
+Thanks,
+
+	Ingo
