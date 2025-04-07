@@ -1,274 +1,108 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5A82253F9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F5C2253E9;
+	Mon,  7 Apr 2025 06:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008259; cv=none; b=sYA1nCfxc/rJMq6m6O8vhnL9XGaR933eIIADuetHO5cRr14Hbb8WPiGPhiMupss/1wfrpF13ZXgMxNv1+AhseSsqAsDpoURUbSPzm8P/1piBA6PnUAoB8ZSd8eXZTrdiJfJdmBkxmkbxtGed2/X44EtrZ98qV7BObQNn0XekFbM=
+	t=1744008266; cv=none; b=L95DOMpD7QcMzRdFkP+IvdYyU+B+TtjmqGt51zvB2Twzyrowdlbe+rRBbToUEEUG2OtQjmfFp8PjpYczeJBiSKPr2S/v8iNMqVwD3XqKO910LRJl71mA6gyszyhu+6TwkwuSwgSNflmt3pIQ8KRWu2wSfi1PVARpAEGnZ4szrcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008259; c=relaxed/simple;
-	bh=TquRFFsWaXpjEtyF5k5pgEz5YPd1VFDKv8sDo13Nc+g=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LK3hKK9kIBFZfVWJ2ngX3z4qAkwf/a1BdkqK3VxcrOdROXJ7wor5vNYImua2MrjvF3DEJqzgYe7rrzCtCMsmkGGWP5xY9R8BvLjPMfwrid/MchPB7v5lVSf61DHza0FOc0uN5K6uQPa3TwH3ou2ybneHYiX6xC/HZRId46wzStA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DSQiM1yG; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744008266; c=relaxed/simple;
+	bh=IJApF5GvlUKaQ4dbhAj9lAxSkNFHTX2V50aLbgGJ4nA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K/NChSAmL9WboXZe6hFo/PrHtPa3g6Wc4imOomId1kmD1Ds9pp2vQCFHPaQAYu14X0SEP4BveKyh3MX31rE1z60Nu2OQtrezyLiTjm2qfxmaBm2e9zc570dlb+w04+T6FH2NdclfmYctjWxfCrPXRbdr0AsCwwOCd7jf2XOiM78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGNeiXT5; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DSQiM1yG"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744008241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e/CZwjzLThDPBcpzNJbPn8jjn4kcP3tilyZ15dYYTMw=;
-	b=DSQiM1yGCPxf+jlCgxKzo6DIH9Mb2RciRD3k0uOS3Z6dngdRX8F18kW9ovmnjkk1INtygE
-	H6W9NuTR8vMLMJ8CCg6sJWxbCU9/cm9OO6cDoxKn+Be/aHqiA9BSCu4etl3bzLZY2mtgGB
-	lT5blpH8gSSw/x69NF6HOoa2yrXWk3A=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGNeiXT5"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-af519c159a8so3526480a12.3;
+        Sun, 06 Apr 2025 23:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744008264; x=1744613064; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R23Rmd1lHP4+HXEGAjgEs6C/ntfgiWBbV61WRF6DA/4=;
+        b=gGNeiXT5BsB5v9xaXNUIZE/OJ87kgJOy4NS/p1P3KRu6cZJEqXFyARNtGg2lqlf23n
+         5DdKLDiyJlLNfhDo0wwfWSFLRbdiSPOuyMVLckOGiS0OqcVCcl8cJbXU+BjanLfmiI4F
+         NEEsWTutzOnIQcCqTwBX3PH0VSmGk1VoGue99gAx94mCT4mwHp890sKg7uIeC0KjWVB+
+         jqms+N2T6aNBfRPnf7ax++rvLSiY2BaopKRTMmWcQugXR9mCEuRbXR8t7t205A+WOAFB
+         rnFkDvx8tEZBvNoeUSEMp87yputiVySXJkpYfGJO2oOcxWpsk3iFtq/wvuhkXUaaHr2c
+         JpEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744008264; x=1744613064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R23Rmd1lHP4+HXEGAjgEs6C/ntfgiWBbV61WRF6DA/4=;
+        b=n98foV+v+NuaLYk8eEkipTjmWCIUa3+UHMD4HlH9FxYhqkfLkKxJ6h8ivPSwczZH9l
+         kWUrzdBQroIJWV8+YFS6xpzndN0CDD9VjfCSBMTYFnrpK9BV3Q2fa5aAy31r/9hNrKXG
+         wji4RK+aq8KcWnywTw+NYmhZ7qXwZO0hPSpTVtDNK9M/JYN2o3Gm6XH+Waupu8+4Bw3X
+         W9Nf3RTR9f4m9kX0iPa/33PA6hrnmE8+BDB7NSEWrqSZja+JEX176YXS31KrtGPEXeq4
+         C4lkLyRlODi4FfY3EgrQYXIHE3YFr3UrnHmxkuOdllwHO2V7iT+YFNl32JCgftmvgEr0
+         dlPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoji7vDzTgnCteMhnjB2Yv6UEm/8N0BSyxFp+48Cv84vHEkSxx7EQpZRu7w13FosqvBfNEvKkKjiWJ@vger.kernel.org, AJvYcCV4AjKkEhYQ/ckFBwDLOpKSjMZbh9bN12FEzVdTOm3j+00BaaJtTA3poZDbI7zEuRhENekdSpPD1Kon48ED@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhzVXwqnjBcdJyhYk0fa/QJ4246ogpThtNx7FanjwvW4bKwMKg
+	X2mp1rNO3lkcHypP4QjmygIbYc1/8VJw8jIrOvqU4f7nZo7NTXD+VcJjMw16BF2j5Q==
+X-Gm-Gg: ASbGncu8m0s3CD2OCfANaFUd2MwHY2871dMUYIY4cC9ZeTpH7DRkwmiF5Y2C20zEtoW
+	lyk8/sqrjv8mhWw5C3m6Sam7cJF3dSC16Lsc+GXjrXehAUMpmBjGo0Weecf7HMApU1jFlrqHsBw
+	DiclZ86OkbV5nQY3HAbSWSasLi7HJ9wPeMRHyJ3BUkSZaV3fOPmfQmR5GOei0OL/hi6ax6Eqrun
+	SJt0/Xq8GLTMn/iQ3NHn1KsNffv3YmYvBUv2+8Fv2ZMIflguz7iPx63i8hDo4ZO4kIcMx/vojHN
+	hRB31stDUYw4ZVMUTdy2f2J/hGV4VZrlLjRaaxiwsmtJXjBkDk8mSiqHHA//wP2jwpTtUSjvaZJ
+	UKyvYhw==
+X-Google-Smtp-Source: AGHT+IHNadhMygFzVobr7OxY7oNZ6KW59eLbA8+UAQX34B0lIsW0kcJj8gK5tdNV+4GIMrlyQsAFtQ==
+X-Received: by 2002:a17:90b:6c3:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-306a617d201mr14598370a91.21.1744008264238;
+        Sun, 06 Apr 2025 23:44:24 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.133])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983b9d08sm8074055a91.35.2025.04.06.23.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 23:44:23 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: hao.wu@intel.com,
+	mdf@kernel.org,
+	yilun.xu@intel.com
+Cc: trix@redhat.com,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v2] fpga: dfl: fme: Add NULL check in fme_perf_pmu_register()
+Date: Mon,  7 Apr 2025 14:44:11 +0800
+Message-Id: <20250407064411.87531-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
- PATCH 0/6] Deep talk about folio vmap
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
-Date: Mon, 7 Apr 2025 14:43:20 +0800
-Cc: bingbu.cao@linux.intel.com,
- Christoph Hellwig <hch@lst.de>,
- Matthew Wilcox <willy@infradead.org>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>,
- Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org,
- linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org,
- opensource.kernel@vivo.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
-References: <20250327092922.536-1-link@vivo.com>
- <20250404090111.GB11105@lst.de>
- <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
- <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
- <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
- <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
- <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
- <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
-To: Huan Yang <link@vivo.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+devm_kasprintf() returns NULL when memory allocation fails. Currently,
+fme_perf_pmu_register() does not check for this case, which results in a
+NULL pointer dereference.
 
+Add NULL check after devm_kasprintf() to prevent this issue.
 
-> On Apr 7, 2025, at 11:37, Muchun Song <muchun.song@linux.dev> wrote:
->=20
->=20
->=20
->> On Apr 7, 2025, at 11:21, Huan Yang <link@vivo.com> wrote:
->>=20
->>=20
->> =E5=9C=A8 2025/4/7 10:57, Muchun Song =E5=86=99=E9=81=93:
->>>=20
->>>> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
->>>>=20
->>>>=20
->>>> =E5=9C=A8 2025/4/4 18:07, Muchun Song =E5=86=99=E9=81=93:
->>>>>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> =
-wrote:
->>>>>>=20
->>>>>>=20
->>>>>>=20
->>>>>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
->>>>>>>=20
->>>>>>> After the btrfs compressed bio discussion I think the hugetlb =
-changes that
->>>>>>> skip the tail pages are fundamentally unsafe in the current =
-kernel.
->>>>>>>=20
->>>>>>> That is because the bio_vec representation assumes tail pages do =
-exist, so
->>>>>>> as soon as you are doing direct I/O that generates a bvec =
-starting beyond
->>>>>>> the present head page things will blow up.  Other users of =
-bio_vecs might
->>>>>>> do the same, but the way the block bio_vecs are generated are =
-very suspect
->>>>>>> to that.  So we'll first need to sort that out and a few other =
-things
->>>>>>> before we can even think of enabling such a feature.
->>>>>>>=20
->>>>>> I would like to express my gratitude to Christoph for including =
-me in the
->>>>>> thread. I have carefully read the cover letter in [1], which =
-indicates
->>>>>> that an issue has arisen due to the improper use of `vmap_pfn()`. =
-I'm
->>>>>> wondering if we could consider using `vmap()` instead. In the HVO =
-scenario,
->>>>>> the tail struct pages do **exist**, but they are read-only. I've =
-examined
->>>>>> the code of `vmap()`, and it appears that it only reads the =
-struct page.
->>>>>> Therefore, it seems feasible for us to use `vmap()` (I am not a =
-expert in
->>>>>> udmabuf.). Right?
->>>>> I believe my stance is correct. I've also reviewed another thread =
-in [2].
->>>>> Allow me to clarify and correct the viewpoints you presented. You =
-stated:
->>>>>  "
->>>>>   So by HVO, it also not backed by pages, only contains folio =
-head, each
->>>>>   tail pfn's page struct go away.
->>>>>  "
->>>>> This statement is entirely inaccurate. The tail pages do not cease =
-to exist;
->>>>> rather, they are read-only. For your specific use-case, please use =
-`vmap()`
->>>>> to resolve the issue at hand. If you wish to gain a comprehensive =
-understanding
->>>> I see the document give a simple graph to point:
->>>>=20
->>>> +-----------+ ---virt_to_page---> +-----------+   mapping to   =
-+-----------+
->>>> |           |                                     |     0     | =
--------------> |     0     |
->>>> |           | +-----------+                +-----------+
->>>> |           |                                      |     1     | =
--------------> |     1     |
->>>> |           | +-----------+                +-----------+
->>>> |           |                                      |     2     | =
-----------------^ ^ ^ ^ ^ ^
->>>> |           | +-----------+                      | | | | |
->>>> |           |                                      |     3     | =
-------------------+ | | | |
->>>> |           | +-----------+                        | | | |
->>>> |           |                                      |     4     | =
---------------------+ | | |
->>>> |    PMD    | +-----------+                          | | |
->>>> |   level   |                                   |     5     | =
-----------------------+ | |
->>>> |  mapping  | +-----------+                             | |
->>>> |           |                                     |     6     | =
-------------------------+ |
->>>> |           | +-----------+                              |
->>>> |           |                                     |     7     | =
---------------------------+
->>>> |           |                                    +-----------+
->>>> |           |
->>>> |           |
->>>> |           |
->>>> +-----------+
->>>>=20
->>>> If I understand correct, each 2-7 tail's page struct is freed, so =
-if I just need map page 2-7, can we use vmap do
->>>>=20
->>>> something correctly?
->>> The answer is you can. It is essential to distinguish between =
-virtual
->>=20
->> Thanks for your reply, but I still can't understand it. For example, =
-I need vmap a hugetlb HVO folio's
->>=20
->> 2-7 page:
->>=20
->> struct page **pages =3D kvmalloc(sizeof(*pages), 6, GFP_KENREL);
->>=20
->> for (i =3D 2; i < 8; ++i)
->>=20
->>    pages[i] =3D folio_page(folio, i);    //set 2-7 range page into =
-pages,
->>=20
->> void *vaddr =3D vmap(pages, 6, 0, PAGE_KERNEL);
->>=20
->> For no HVO pages, this can work. If HVO enabled, do "pages[i] =3D =
-folio_page(folio, i);" just
->>=20
->> got the head page? and how vmap can correctly map each page?
->=20
-> Why do you think folio_page(folio, i) (i =E2=89=A0 0) returns the head =
-page?
-> Is it speculation or tested? Please base it on the actual situation
-> instead of indulging in wild thoughts.
+Fixes: 724142f8c42a ("fpga: dfl: fme: add performance reporting support")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: Add a blank line after the NULL check.
 
-By the way, in case you truly struggle to comprehend the fundamental
-aspects of HVO, I would like to summarize for you the user-visible
-behaviors in comparison to the situation where HVO is disabled.
+ drivers/fpga/dfl-fme-perf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-HVO Status		Tail Page Structures	Head Page Structures
-Enabled			Read-Only (RO)		Read-Write (RW)
-Disabled		Read-Write (RW)		Read-Write (RW)
-
-The sole distinction between the two scenarios lies in whether the
-tail page structures are allowed to be written or not. Please refrain
-from getting bogged down in the details of the implementation of HVO.
-
-Thanks,
-Muchun.
-
->=20
-> Thanks,
-> Muchun.
->=20
->>=20
->> Please correct me. :)
->>=20
->> Thanks,
->>=20
->> Huan Yang
->>=20
->>> address (VA) and physical address (PA). The VAs of tail struct pages
->>> aren't freed but remapped to the physical page mapped by the VA of =
-the
->>> head struct page (since contents of those tail physical pages are =
-the
->>> same). Thus, the freed pages are the physical pages mapped by =
-original
->>> tail struct pages, not their virtual addresses. Moreover, while it
->>> is possible to read the virtual addresses of these tail struct =
-pages,
->>> any write operations are prohibited since it is within the realm of
->>> acceptability that the kernel is expected to perform write =
-operations
->>> solely on the head struct page of a compound head and conduct read
->>> operations only on the tail struct pages. BTW, folio infrastructure
->>> is also based on this assumption.
->>>=20
->>> Thanks,
->>> Muchun.
->>>=20
->>>> Or something I still misunderstand, please correct me.
->>>>=20
->>>> Thanks,
->>>>=20
->>>> Huan Yang
->>>>=20
->>>>> of the fundamentals of HVO, I kindly suggest a thorough review of =
-the document
->>>>> in [3].
->>>>>=20
->>>>> [2] =
-https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com=
-/#t
->>>>> [3] Documentation/mm/vmemmap_dedup.rst
->>>>>=20
->>>>>> [1] =
-https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m05=
-5b34978cf882fd44d2d08d929b50292d8502b4
->>>>>>=20
->>>>>> Thanks,
->>>>>> Muchun.
-
+diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+index 7422d2bc6f37..db56d52411ef 100644
+--- a/drivers/fpga/dfl-fme-perf.c
++++ b/drivers/fpga/dfl-fme-perf.c
+@@ -925,6 +925,8 @@ static int fme_perf_pmu_register(struct platform_device *pdev,
+ 				PERF_PMU_CAP_NO_EXCLUDE;
+ 
+ 	name = devm_kasprintf(priv->dev, GFP_KERNEL, "dfl_fme%d", pdev->id);
++	if (!name)
++		return -ENOMEM;
+ 
+ 	ret = perf_pmu_register(pmu, name, -1);
+ 	if (ret)
+-- 
+2.34.1
 
