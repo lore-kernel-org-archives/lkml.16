@@ -1,106 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0C12144A1;
-	Mon,  7 Apr 2025 17:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987DC1C68A6
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047973; cv=none; b=H1ewG4m4OxPC7AbRb0dwymCKoaKh0PgjMddjcnPLg9242f0cBqS+dGEm38fbbcfNoNa+8FqhsYxmLtChF0y7gSfFFwq9HG/mT7NfSqiwOXLp5BdINUo0Va9FWs+iGEuYdj9vylnAQ4QtoFoqTuMsFxIjffpbqvJGKLijnvu+GIs=
+	t=1744048006; cv=none; b=gzNVXEblNgsDuqQyXFokcsqsYQhNaxKIRiN9I1gFJV/1gkxXmdn954VVEI1tmB/WmW6EyEBhEAIpM1JE2fgCNoiPcPfTjf9HEOJ69+vhVzHTFdVr3As0CSxyAl+wF/72nurr/d0H3A1utxDz73BgE3xyoc/z6PEBPy8560bNEKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047973; c=relaxed/simple;
-	bh=0fKTXOZW5qo0X+TiPkjQ6mKAeLsXB/zopMIkwzFYKkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CBxfIt0WyEKCsHi0XlqGMkZi5TGvIT0eE7P2mSxubRyOqVdIxCcxY3cQixq/FpsyJzsIXDHqVMW2YegaPjS4+KdncoqIfBNGChEw29mLehHTUoDG6l9uL2mLtL3eKO93SMhmtCW6rhGE7l1iK7gAy3MhsHvLA3veEqXajMVXkBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/sKjp9/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744048006; c=relaxed/simple;
+	bh=JzBmnWSt98HBgHAwiCtsM7eilR0ikgfQb2mp5c7ohR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K/mhR5TC17GVIwVrLHYn4Krt7N4I32LJ09hnlKQA/N61SVCVuNP3Z5EZwPkwtD6G2ysvE8mSXJlunuTNpz/ntoGVcxTvff/m4NvGYtl0BH6HgrBsqtkQtkzCW2uZJL4DuY/x4nByn34vLjUyrwAhU5sCARcOJfAbH2rAi1nYwl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kgO7v09K; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/sKjp9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70126C4CEE9;
-	Mon,  7 Apr 2025 17:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744047972;
-	bh=0fKTXOZW5qo0X+TiPkjQ6mKAeLsXB/zopMIkwzFYKkY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h/sKjp9/0UEj3NLNlpbKVUKjaab0cvUHzBQftW4GVPyilANLb59ujPgeoT+CjTiT6
-	 jffT6zLc+nk9TJZOqffiBsieyO7M1SBjEsgWDJoh3ycdyARaeZBfg2O7qtxA6OD2PM
-	 LmvYX33jzf5hYPcxvc+fj8NG45DtQyGUeE1q3P5WBOAGW6SJjdVhbeG8gG7ZwfV3oa
-	 Z8t6lz0Z5/0xOX+cUJVfIXTWsL1/EDkQoRhBQoQMYieq0V9Bi3s9ZEtXD7dxI2WV+L
-	 rBqUOD/WGboMxqn3Gf9TDHGXtsEhT+gd6FIp1pONwv8rKS1EIF8C0z6nTLZ7bmIxrI
-	 VTV95pfDJ0FzQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5499bd3084aso4383318e87.0;
-        Mon, 07 Apr 2025 10:46:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVOAut0xVKefLeG6WX19cyMGw5saXIEGXDexOhCDpnie8W+K4rzoglvNkIzK95Ss0878YlpUmM4K4e9OcqI@vger.kernel.org, AJvYcCXpGbfFzylxB/GtvkAaHJkQo/Z5BPm2Hg4BqbZWjKlmMCuFzc1cUssI9WV6CJftedAJD2GAgcMxvTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU1tfspCSx7y36pI5Mn/uF9ybXwjT3X2YYEyULsoqWRhYNUjst
-	9b+pPVCbP2XPk4jQRVCdzH2dP017AY+3IsocZFGsIAn1YeaU7bz7/QKg3UL5e62mWT9UQIokg6h
-	vkUDSpD5oqjZwD430eih4nLpSkhs=
-X-Google-Smtp-Source: AGHT+IGhlKGWnsMcOTGKmTWl7l4Q+R+vNEutfZ2rMUOfKaUEuAlPYG819aLiXhL+YHA/4nzk483tdd68kdI6IZm798s=
-X-Received: by 2002:a05:6512:3056:b0:549:c1e6:cbb9 with SMTP id
- 2adb3069b0e04-54c22767ef4mr3237009e87.9.1744047970782; Mon, 07 Apr 2025
- 10:46:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kgO7v09K"
+Message-ID: <dfa007cd-71d4-42a7-8785-b066f7240630@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744048002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R8ircDol4yo8g4TmFBTzW6351cSVGXrV0q9TBc9nzvs=;
+	b=kgO7v09Kjxl477hWa84NENJTdDf4jnih6zgOTrT8+DCb/BVUCE3SnfQlAEXrYcLqXKQP+z
+	R9zh1kK7emurPlIBqcubcma0tjdA+moWQaojlf3i749JfLXFgyGV5WYp34loWVylCaQ1Fi
+	K7igzccF39hOeZVjn3vFA2TBlQi2ghE=
+Date: Mon, 7 Apr 2025 23:15:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404082921.2767593-5-ardb+git@google.com> <20250404082921.2767593-8-ardb+git@google.com>
- <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
- <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
- <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
- <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
- <Z_QA6GwqoxdW6D0e@gmail.com> <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
- <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
-In-Reply-To: <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 7 Apr 2025 19:45:59 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
-X-Gm-Features: ATxdqUETiXubx7oL92fu01tgK_Ofbmg0d3GrBgABA6pQ3UBszjzW9WPybc7BwRM
-Message-ID: <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for SEV-SNP
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Ingo Molnar <mingo@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 08/18] drm/bridge: cdns-dsi: Clean up
+ cdns_dsi_mode2cfg()
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-8-4a093eaa5e27@ideasonboard.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-8-4a093eaa5e27@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 7 Apr 2025 at 19:33, Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> On Mon, Apr 07, 2025 at 07:21:17PM +0200, Ard Biesheuvel wrote:
-> > On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
-> > >
-> > > > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
-> > > > > If the GHCB is available, we should always prefer it.
-> > > >
-> > > > I believe we should consider the cost of code duplication in this
-> > > > situation.
-> > > >
-> > > > If the non-early version is only used in the kexec path, it will not be
-> > > > tested as frequently and could be more easily broken. I think it would be
-> > > > acceptable for kexec to be slightly slower if it results in more
-> > > > maintainable code.
-> > >
-> > > Absolutely so.
-> > >
-> >
-> > It would be nice if someone could quantify 'slightly slower' - I am
-> > leaning to the same conclusion but I have no clue what the actual
-> > performance impact is.
->
-> If we can survive the performance of the initial boot, we can live with it
-> for kexec.
->
 
-The initial boot does not occur via the decompressor, but via the EFI
-stub, where memory acceptance is handled by the firmware (as it
-should).
 
-Given that the traditional decompressor carves out an allocation from
-the raw E820 map without using any of the higher level APIs, it has to
-accept the memory itself if it is marked as unaccepted in the table.
+On 02/04/25 19:00, Tomi Valkeinen wrote:
+> Clean up the function a bit, mainly by doing the mode_valid_check dance
+> once in the beginning of the function, and grouping the calculations
+> wrt. sync/event mode a bit better.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 48 ++++++++++++--------------
+>  1 file changed, 22 insertions(+), 26 deletions(-)
 
-Perhaps the decompressor should try to avoid unaccepted memory?
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+
+-- 
+Regards
+Aradhya
+
