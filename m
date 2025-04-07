@@ -1,92 +1,76 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2151C21B9D6;
-	Mon,  7 Apr 2025 20:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D2222424C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056613; cv=none; b=BL0MwgpfO5fD2Tvtal9TwUPn1ywFaDA9eLIiniM3b2LeB6lqdc2Fanu/RFeloQQD1GD48xO8R+arMUBuU/Gkx6ZgSysYGDuRsPaMaEVjVSDb6H79G5jG1z+PSf2vgZ0nP4tMLSWmkfdaXQsvcEzrDBmVyA/dY7sISP9Js4J6MkE=
+	t=1744056614; cv=none; b=irVC3DjLk/WP8PJDyKojJXC34n4+ViP9Nx6rpIF5SRqti5jD+ICRZTNJo+WutLJ4/WoyBGpVncy9VNECexYStO8H4Zz8ZctJbBJM1RfuW2M+79KiVZ9/CEMdq+BzH3ka8hEo+3VwgxITdDlqRpat7bBJEczKFZJYuZERkRGADrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056613; c=relaxed/simple;
-	bh=dx9PVc5YU//su1hkWzSG1YoET9U0TvgQXEigv6hP5Uo=;
+	s=arc-20240116; t=1744056614; c=relaxed/simple;
+	bh=7RoIT9/RUIJd/OqbMR50Adl4B420MNsQ/i2IPCgIdKg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OITr6DKH6kLR0bVLebtreGeTEIFJOY+p93IqaOBabDVSDVv/8v+SJ24FaDPb2WCe0YPLuJv0UvRkG41UBwQh0WtzIyBMj+T1wp0ETjHkXeGbb9Zh56kt5WBV+0rJlEmzIzj8gjSf0fKIZz75Jz9T0CCRrIQNy+6y3ONMtuqfjjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ViHU42Id; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=Hg5WXELu/yXSIHHY06iz4ZbMlwA8Am5kqpPkYHAmO/AvN5r0vdNC0tcREKzMPB1+FfMGCoiDhVXrFbLrK1XcmLstjNUmCi8KaFID42KVeRvPJaP6fJwoXoFgOzj9nWyGeZEUnFzam6y9T3b8c9GM60UQuki+cnjcGJuKThVW9Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=xseyQlep; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViHU42Id"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso30811505e9.0;
-        Mon, 07 Apr 2025 13:10:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="xseyQlep"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227aaa82fafso41277125ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 13:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744056609; x=1744661409; darn=vger.kernel.org;
+        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1744056611; x=1744661411; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uPkuPJhDQNeNfNnsVYZ0vASsQVFDCqr4rUSrxemwlbE=;
-        b=ViHU42IdunXunZRnBl2GMigqu1PlwW9jFnu2MRQkOGSq4wGXZ0rpHK41aCZX2pRSKr
-         vtpAymSeMJUjFrcONR3fWyfnldN2nQlvfzOVcyt2ZNhXWmNfS8L6ojribDVj5zWJLdx4
-         il/zRLYoA5FWnDMijIi6IMBUKe3PUjfBXdX+s9E6hPS9Rq2kiNMUUrVUkrcZqsM0rDzC
-         bM/cnXyuCP36VG0JMAxBLYFF4YtNY6ri3TdbHTcJR2/qeDye9nfDHP/oI/ljcorlLw74
-         A+xziS8EkC02OP/YILrwjrlXHzOvUWERE9NfCDuu3iq9gM1dmBQy53gZoTXuRQzpRPm2
-         YRyA==
+        bh=SKorvTDcHHWmcS+AjT7qKhMDewJLu0PWpIswTAFjbRo=;
+        b=xseyQlepmsqtgwYCOGLB+yS8EQSTm2mrtGl3mvNapVVxMQy1ZsTKURZICYfWZkmGQN
+         gHRU39FkwcyUUUcDfFLZGn2hL1QjyPoDXdj4ZU98UZboRXgqu2D4cwUZnQgvWP5hDude
+         NnFVt1+QXpubsYc+jiDlKtBFRwrw0ix15Ol19e2Zm8DZPO3JEQwuwViBYVJnjfjyw6fX
+         loIXvabfaHK/WjmXRwkUdDxL1JJHTZwVLb5PvBYlgq4RTF6Gl22ceEyGdnb1gitFqZQN
+         Ivij96PKOxVG5OjaVLSnb/NJVaur5AareQVZLa2adbLCZlK1XByYCf8HGIZ9N6F1y3uW
+         nG6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744056609; x=1744661409;
+        d=1e100.net; s=20230601; t=1744056611; x=1744661411;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uPkuPJhDQNeNfNnsVYZ0vASsQVFDCqr4rUSrxemwlbE=;
-        b=h+My0/mDqSa1cQqDwv5bDMPLtapsjAwTBu1dBfHwKyQfCv0INvQfwGgJBHgmHgXmIw
-         RpxzwKkcoM/i1ZYeWDCBnuN0kxyx9Qi/qAJCH5Xv76ZXOjf3KWzzapO+wEiomB8LFJsW
-         jVXwFai/9OTSOkeHj99jpnhRtQahi6LWxZFJ0Pw8i1wkq67TPhPRo/SYfJzv8ykurXrD
-         hR/4ztjfh7bfRcy1v9JQESlVVJDLkVr22HECpOlrruY6kTicLvXCMx9wrPmlQrPRuQw1
-         GkBW7N6WRDA1uEH/bVag8XYM3RrALVt1tbGwQVSqD/APKbs01vwo3zJhfrd6XP0xtm7L
-         mMfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUew7oxevgCo4FwYy5n75Yh4CA5wpEHnHkQ6PPDFYu3gYF35JiRPeABWCB3YmyLuEzVCvW6lcKY7JqsrkHc@vger.kernel.org, AJvYcCVKMT9gkW8Qhb4z7wSJA2T29IBNZxOj2TF4GO12z822Ovyz3OLGNarAffgI+RZkO22eDZKY82fk@vger.kernel.org, AJvYcCX2UeMGFNynnojosyBTphPZGUZztEfobpapcYI5gsTe0AG0yzVMNBrlo4mDjFMpk3+NDGPcUhXD/Nfi@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSsX8EBk2nbBaJobTN0J6gK6zSPnNYdtEAYv0UJaTVDBFE8qAl
-	bJRPoR58K0mC65+RwYFkNzyHAy2M2TetdkpWsBkIvZNyaGOHXOBg0f8+GQ==
-X-Gm-Gg: ASbGncuQzcLZpEsnMKdLLxqfmpBMTspejZBrzGfbfgWMb8URxRQOAdtVEUdWNQRaN4P
-	9wN7dp4h4k7ZEZDsyze+aErdgW+Gt9gmkvqBiY4DBTDjwI8fHZjbDL/eNH8QP0Ecy5Q/i1D8tq6
-	Bibo1AVomt7Kvj7Iddp/Jqp9gFusxSyliFKi4XfE18VrmcbVIGRi15X2xwl+oAQKq13wn2UDnr7
-	u0y1q7D8EP33UVz0VzzM33JKEi0lRDTpA7iIsT4+D+UL9cEkBpv6pk5A+5IhvSqdfo5GMmHyShh
-	KrbMK2ulw9xKB83WRk9BF9srO8T3XtwrbC6Aze38AyNgpQ3523DkoB5HP7Y8vJFaOPm/inkRQLS
-	YlwljmpVmhii6sw==
-X-Google-Smtp-Source: AGHT+IF9pttysQVZNJTgTX41QxqZgkIrlkFuaiWO4kkUgp52qOZFGlcTaVCCOHBrV9hA6FTXzzXZ/g==
-X-Received: by 2002:a05:6000:250a:b0:391:2dea:c984 with SMTP id ffacd0b85a97d-39d07db55b9mr12747028f8f.11.1744056609236;
-        Mon, 07 Apr 2025 13:10:09 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm139605995e9.18.2025.04.07.13.10.07
+        bh=SKorvTDcHHWmcS+AjT7qKhMDewJLu0PWpIswTAFjbRo=;
+        b=M+0/hAMF+fWqQT/XO2v8Dh8iq7RmgN3CyGz/ZOF8y7LQnG35Svr8GMu/UTjjYOXXCU
+         v+9RkL9+yxkW8FjJQSbEjU1Zj0jbSCl7eA3dJ07z9tcmzjeArm7nT+cHpxv21GK0kQNj
+         SjeTh4k4YXjFs4PD5347N69BPjUn1eDUi4qA1OCIMZC2Dpwp9c8FiG3YK6F8seVlRssc
+         txyhMCFOiz5JiIpN+klRSX6iNUdo595AoBPUD4xSzzpuKKsl+NcoRh0SQvVhcyu7kAiU
+         vLQXLC8tW6/rqDlGHybJgCD0ndwxOnZE3OSxtQhH8eHK4WJ7nCri0/EHXblR7COyRit2
+         572A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9gbY7ZgfRG8UZ58SuTbjNV+01+SvaWQpwOda6+fxK0636YR5usRx3QO7KZijiOq66dxFjQYkVfHilJG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznAKtDnVdee1wMkj3GcY+QtErGvTMbEm7GxUWXITrHbTuS0eQw
+	nvqwJX5c59+hLLTJM/8gjRZuuOApK02MMUiSTElF+jqX/ExcuHf5VwI4wzYq+JA0u5+dnyE2k/Y
+	B
+X-Gm-Gg: ASbGncsTyVHpG40KYGj5Yul4BLj2qJWrRz2EiddJhO2HzSRvJlKHOo1EhpkvibTa94B
+	dA8DPH7mKp6Wz1k8nyVLdOe8mVOkiIkEXI6a2rnMo6GLnmYIzZiPbw6S4XNY0nS3tbPeLELtGS7
+	cuw0BmN47LzJ6e4Z9cKcW4TvzKtapEn2yowO9x8xA6pNAB7HWjoIZbbpUjRYPmIwFN98AwTmoFM
+	rPqe9gTRwLKSMAeT+jt81ccaKGRAIzOXQ9WHZmP+ijmVLpNlA60ugJSJeX3r0jSiD2Ku1wPRY4M
+	Vyf0Ch25XOSwLTMc1eUMxdNxV0Bv+IvN+6AElMrBGIWyBh4HrJ4KZMAME5Lo6/bDqZsGTyLUuz+
+	Qkh5xNTauVEX/GuifaYwCDq+Eqs7fikJd
+X-Google-Smtp-Source: AGHT+IHvXiMbLnANd8/D78KF/tGgUo37pGC3kDLDkaZfEw+83S+ZticgxpE0lAOSgNyNxaubDQZWOw==
+X-Received: by 2002:a17:902:ecc4:b0:224:1eab:97b2 with SMTP id d9443c01a7336-22a8a2da123mr210601995ad.53.1744056611011;
+        Mon, 07 Apr 2025 13:10:11 -0700 (PDT)
+Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:b25a:2d1b:1734:78be])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e0b4sm86087865ad.154.2025.04.07.13.10.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 13:10:08 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Andrei Botila <andrei.botila@oss.nxp.com>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [net-next PATCH v6 4/6] net: phy: introduce genphy_match_phy_device()
-Date: Mon,  7 Apr 2025 22:09:24 +0200
-Message-ID: <20250407200933.27811-5-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407200933.27811-1-ansuelsmth@gmail.com>
-References: <20250407200933.27811-1-ansuelsmth@gmail.com>
+        Mon, 07 Apr 2025 13:10:10 -0700 (PDT)
+From: "William A. Kennington III" <william@wkennington.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"William A. Kennington III" <william@wkennington.com>
+Subject: [PATCH v5] hwmon: (pmbus): Introduce page_change_delay
+Date: Mon,  7 Apr 2025 13:10:02 -0700
+Message-ID: <20250407201002.1198092-1-william@wkennington.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+In-Reply-To: <20250404193103.4174977-1-william@wkennington.com>
+References: <20250404193103.4174977-1-william@wkennington.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,112 +79,230 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce new API, genphy_match_phy_device(), to provide a way to check
-to match a PHY driver for a PHY device based on the info stored in the
-PHY device struct.
+We have some buggy pmbus devices that require a delay after performing a
+page change operation before trying to issue more commands to the
+device.
 
-The function generalize the logic used in phy_bus_match() to check the
-PHY ID whether if C45 or C22 ID should be used for matching.
+This allows for a configurable delay after page changes, but not
+affecting other read or write operations.
 
-This is useful for custom .match_phy_device function that wants to use
-the generic logic under some condition. (example a PHY is already setup
-and provide the correct PHY ID)
+This makes a slight behavioral tweak to the existing delay logic, where
+it considers the longest of delays between operations, instead of always
+chosing the write delay over the access delay.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Signed-off-by: William A. Kennington III <william@wkennington.com>
 ---
- drivers/net/phy/phy_device.c | 52 +++++++++++++++++++++++++-----------
- include/linux/phy.h          |  3 +++
- 2 files changed, 40 insertions(+), 15 deletions(-)
+V1 -> V2: Simplify how the backoff time is stored and computed
+V2 -> V3: Use the BIT macro
+V3 -> V4: Move defines up
+	  Move op combos outside update call
+	  Remove unused PMBUS_OP_READ
+V4 -> V5: Rebase onto 6.15-rc1
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 2d6ceacb2986..ead9a047043a 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -503,20 +503,26 @@ static int phy_scan_fixups(struct phy_device *phydev)
- 	return 0;
- }
+ drivers/hwmon/pmbus/pmbus.h      |  1 +
+ drivers/hwmon/pmbus/pmbus_core.c | 69 ++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index ddb19c9726d6..742dafc44390 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -482,6 +482,7 @@ struct pmbus_driver_info {
+ 	 */
+ 	int access_delay;		/* in microseconds */
+ 	int write_delay;		/* in microseconds */
++	int page_change_delay;		/* in microseconds */
+ };
  
--static int phy_bus_match(struct device *dev, const struct device_driver *drv)
-+/**
-+ * genphy_match_phy_device - match a PHY device with a PHY driver
-+ * @phydev: target phy_device struct
-+ * @phydrv: target phy_driver struct
-+ *
-+ * Description: Checks whether the given PHY device matches the specified
-+ * PHY driver. For Clause 45 PHYs, iterates over the available device
-+ * identifiers and compares them against the driver's expected PHY ID,
-+ * applying the provided mask. For Clause 22 PHYs, a direct ID comparison
-+ * is performed.
-+ *
-+ * Return: 1 if the PHY device matches the driver, 0 otherwise.
+ /* Regulator ops */
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index cfeba2e4c5c3..be6d05def115 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -32,6 +32,13 @@
+ #define PMBUS_ATTR_ALLOC_SIZE	32
+ #define PMBUS_NAME_SIZE		24
+ 
++/*
++ * The type of operation used for picking the delay between
++ * successive pmbus operations.
 + */
-+int genphy_match_phy_device(struct phy_device *phydev,
-+			    const struct phy_driver *phydrv)
++#define PMBUS_OP_WRITE		BIT(0)
++#define PMBUS_OP_PAGE_CHANGE	BIT(1)
++
+ static int wp = -1;
+ module_param(wp, int, 0444);
+ 
+@@ -113,8 +120,8 @@ struct pmbus_data {
+ 
+ 	int vout_low[PMBUS_PAGES];	/* voltage low margin */
+ 	int vout_high[PMBUS_PAGES];	/* voltage high margin */
+-	ktime_t write_time;		/* Last SMBUS write timestamp */
+-	ktime_t access_time;		/* Last SMBUS access timestamp */
++
++	ktime_t next_access_backoff;	/* Wait until at least this time */
+ };
+ 
+ struct pmbus_debugfs_entry {
+@@ -169,32 +176,26 @@ EXPORT_SYMBOL_NS_GPL(pmbus_set_update, "PMBUS");
+ static void pmbus_wait(struct i2c_client *client)
  {
--	struct phy_device *phydev = to_phy_device(dev);
--	const struct phy_driver *phydrv = to_phy_driver(drv);
--	const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
--	int i;
+ 	struct pmbus_data *data = i2c_get_clientdata(client);
+-	const struct pmbus_driver_info *info = data->info;
+-	s64 delta;
++	s64 delay = ktime_us_delta(data->next_access_backoff, ktime_get());
+ 
+-	if (info->access_delay) {
+-		delta = ktime_us_delta(ktime_get(), data->access_time);
 -
--	if (!(phydrv->mdiodrv.flags & MDIO_DEVICE_IS_PHY))
--		return 0;
+-		if (delta < info->access_delay)
+-			fsleep(info->access_delay - delta);
+-	} else if (info->write_delay) {
+-		delta = ktime_us_delta(ktime_get(), data->write_time);
 -
--	if (phydrv->match_phy_device)
--		return phydrv->match_phy_device(phydev, phydrv);
--
- 	if (phydev->is_c45) {
-+		const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
-+		int i;
-+
- 		for (i = 1; i < num_ids; i++) {
- 			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
- 				continue;
-@@ -525,11 +531,27 @@ static int phy_bus_match(struct device *dev, const struct device_driver *drv)
- 					   phydrv->phy_id, phydrv->phy_id_mask))
- 				return 1;
- 		}
-+
- 		return 0;
--	} else {
--		return phy_id_compare(phydev->phy_id, phydrv->phy_id,
--				      phydrv->phy_id_mask);
- 	}
-+
-+	return phy_id_compare(phydev->phy_id, phydrv->phy_id,
-+			      phydrv->phy_id_mask);
-+}
-+EXPORT_SYMBOL_GPL(genphy_match_phy_device);
-+
-+static int phy_bus_match(struct device *dev, const struct device_driver *drv)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	const struct phy_driver *phydrv = to_phy_driver(drv);
-+
-+	if (!(phydrv->mdiodrv.flags & MDIO_DEVICE_IS_PHY))
-+		return 0;
-+
-+	if (phydrv->match_phy_device)
-+		return phydrv->match_phy_device(phydev, phydrv);
-+
-+	return genphy_match_phy_device(phydev, phydrv);
+-		if (delta < info->write_delay)
+-			fsleep(info->write_delay - delta);
+-	}
++	if (delay > 0)
++		fsleep(delay);
  }
  
- static ssize_t
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 7042ceaadcc6..b7aa805e0ad6 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1911,6 +1911,9 @@ char *phy_attached_info_irq(struct phy_device *phydev)
- 	__malloc;
- void phy_attached_info(struct phy_device *phydev);
- 
-+int genphy_match_phy_device(struct phy_device *phydev,
-+			    const struct phy_driver *phydrv);
+-/* Sets the last accessed timestamp for pmbus_wait */
+-static void pmbus_update_ts(struct i2c_client *client, bool write_op)
++/* Sets the last operation timestamp for pmbus_wait */
++static void pmbus_update_ts(struct i2c_client *client, int op)
+ {
+ 	struct pmbus_data *data = i2c_get_clientdata(client);
+ 	const struct pmbus_driver_info *info = data->info;
++	int delay = info->access_delay;
 +
- /* Clause 22 PHY */
- int genphy_read_abilities(struct phy_device *phydev);
- int genphy_setup_forced(struct phy_device *phydev);
++	if (op & PMBUS_OP_WRITE)
++		delay = max(delay, info->write_delay);
++	if (op & PMBUS_OP_PAGE_CHANGE)
++		delay = max(delay, info->page_change_delay);
+ 
+-	if (info->access_delay)
+-		data->access_time = ktime_get();
+-	else if (info->write_delay && write_op)
+-		data->write_time = ktime_get();
++	if (delay > 0)
++		data->next_access_backoff = ktime_add_us(ktime_get(), delay);
+ }
+ 
+ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+@@ -209,13 +210,13 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 	    data->info->pages > 1 && page != data->currpage) {
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE);
+ 		if (rv < 0)
+ 			return rv;
+ 
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 		if (rv < 0)
+ 			return rv;
+ 
+@@ -229,7 +230,7 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PHASE,
+ 					       phase);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 		if (rv)
+ 			return rv;
+ 	}
+@@ -249,7 +250,7 @@ int pmbus_write_byte(struct i2c_client *client, int page, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte(client, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -284,7 +285,7 @@ int pmbus_write_word_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_word_data(client, reg, word);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -405,7 +406,7 @@ int pmbus_read_word_data(struct i2c_client *client, int page, int phase, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_word_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -468,7 +469,7 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_byte_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -484,7 +485,7 @@ int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte_data(client, reg, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -520,7 +521,7 @@ static int pmbus_read_block_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_block_data(client, reg, data_buf);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -2524,7 +2525,7 @@ static int pmbus_read_coefficients(struct i2c_client *client,
+ 	rv = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
+ 			    I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
+ 			    I2C_SMBUS_BLOCK_PROC_CALL, &data);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	if (rv < 0)
+ 		return rv;
+@@ -2728,7 +2729,7 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	if (!(data->flags & PMBUS_NO_CAPABILITY)) {
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 
+ 		if (ret >= 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
+ 			if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC))
+@@ -2744,13 +2745,13 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	data->read_status = pmbus_read_status_word;
+ 	pmbus_wait(client);
+ 	ret = i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	if (ret < 0 || ret == 0xffff) {
+ 		data->read_status = pmbus_read_status_byte;
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYTE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 
+ 		if (ret < 0 || ret == 0xff) {
+ 			dev_err(dev, "PMBus status register not found\n");
 -- 
-2.48.1
+2.49.0.504.g3bcea36a83-goog
 
