@@ -1,138 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A1822FF41;
-	Mon,  7 Apr 2025 07:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ECD79CF
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010324; cv=none; b=Nh61cun6b+aetWd0QlpQ7+9iq0Va4TOkwwN0qMRmNtoJTCv0P2egPfXyOKPPhDJlntaa7J2qZB4xbb7iumRUnecUMScvDcpNeIV7wgGMfh9lX/pKX+WKQV6xVi3Nc8iWwd9J17k3PiIXbWaQAH3D8uWuRM1the/WhyHSaPF1oaw=
+	t=1744010355; cv=none; b=I2tmTCqN2gY0gtr6lyoFZldCv9Bthhs2BTiCA1rQckXZzkI/lznv/FG/tSLj3ZGYyBQ7Nps6/B0exNQ/9PXctR1Az6Vb0clmI3zEEhHXI63xjXeFR7XyE7Gn8bmzvsP4pkmL5BptuKce0pErLQoBbYAL+oZYWhTf/EQq4TfOQko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010324; c=relaxed/simple;
-	bh=HSNjqz4a8M5fS+65hxqgWwwjzBf7XSHXFHjnWJ3OwXk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ltIQg5kRTUlCH/uoraGz1HZRvKVfRyHgyimdtQNdOaiRJMut2Zep6hx3BAKkW+l3rbE+hFkFY9LnYsrRIqKYO4L1tLK3Cc96BN0DiG9CA2u3PSuf3aoq53Mh25YCcIgqPbuYErk6cUnNCd/+mcJmb+9sTV1aHddE5XYIIKwLA3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XaQfzqxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744010355; c=relaxed/simple;
+	bh=BlY3UN5r5ZQCn0tDpg4oRi8gowXTcjflrHOZG4T6F4A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Rp39eSemGBGtmNlyssLVrkxW2iFvvkgFNOfQ8o/765WeQTf50EUAUt13T8BwzhOBkugD/kfYPmiqe58zx1HuJ/K9WFSDt+DxrqRY4ldwwtxmsrMw7lha+a0yVLcWXxTR8gXeZCRj4pf7V5BqsLFSzMM6wnrfPxhO35FeIyihw30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=az8NH4TE; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XaQfzqxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA8E9C4CEDD;
-	Mon,  7 Apr 2025 07:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744010324;
-	bh=HSNjqz4a8M5fS+65hxqgWwwjzBf7XSHXFHjnWJ3OwXk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=XaQfzqxSLdGAvT0lruNGWzRagxrJMSi04iNh2+SQOUiyLLKsHSz8qlDg2RTpplrtn
-	 8/Zl07yXmos6Yg13KbAMV92f3tpQq2ggt7lXMThPd8YRxEuH09GsdQNwbaxC3wfyYE
-	 e8VjIorr0dioCwFzd21Vd1kXQoyrT534JOhEtuhzKLGOL4FMOH3ekOhoZCIwWslUOm
-	 wTv20R8813Sa+BluUa9feq3kCbDHWR5kRdmaSAN2dgGSh5/Bsq48poT4yaxvC7WUxR
-	 e/hGuP7+i+QEsknuyokBHK4ZJ7m4Lj++/WqlVs6xQnKQT5t0TXGDx1rPA3CsWRY/8d
-	 LPi13HSWgUZ6g==
-Message-ID: <19b67f7d-a7fe-4c3e-884b-b2a3986f57ed@kernel.org>
-Date: Mon, 7 Apr 2025 09:18:36 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="az8NH4TE"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39bf44be22fso2645742f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010352; x=1744615152; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WqKh+14kSRTt3VLgemwcn051J7IF3QB71JoxU60RwiY=;
+        b=az8NH4TEk+ZEeX8OVtLOqMTMA+k/HIZeKrpuQoIGu2DNEB/VY2gHoXRxCGtsfshwQl
+         p+ZKXuuWI7tjDpGvn6okSltVcJTcjNSav9enyyPOq0r7gWcssSbyGnWdFzCFM/uOCz1C
+         HKn4emztEJcvmKYq5HhoQ2qW0uutn/+MHQIoH1hIEYyV68Jwge5syv7lAmuylqibgu8z
+         /7H0Pl9VJoFBj0/ff7TKHJ14ej0C9vAW3BouNN/iRloXzF9epaJWBUhru4Gg1EDnG5Sf
+         i1E1y1/1Ul/HT7zfFZmOGTKfWUE+7YVsUXOiU/8bd30P2uMNF2OJFd4xrj5SvvyX904b
+         GDOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010352; x=1744615152;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WqKh+14kSRTt3VLgemwcn051J7IF3QB71JoxU60RwiY=;
+        b=j5w4TZmhTUc7ZAz0MSzUWiZ7YZuJBb+ybqgXxGA3fCh3aQc0JTao2te24BhdZj0ZFg
+         aGM2cIcYHKDe2kOkcliwZEijO0MA0SnSRVb8yUwXu8bX67TdRk8Bb7nUn/LmitVQEvHz
+         NDYPgv87n+TDO79wVwExRWFDqWv6xcSWGJlTlmuzFHq4ITQv55oPzvRnHVhab/gHuvqt
+         OTFTnvfyJqFLarxTdqZVKYDs6bO51nW+We5WT/nIbq0StLrfIZFjudYZx5jWK5chpOWd
+         KxaS+W9nBIoi3hELQbruwPDaRrX7g0rRTvPw6S7X4ItpdKEQ2Oe/PczzifwMV7hnjeZr
+         sdxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/bQ6VtLQnJ9Tr2ae3hfmOhsUO4HnmWLVE8Sf6j1Bev8QKsyfB/UOiBbY+QBsnwwdgjVo2oSpUcywVP+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztrkBU9AFgGIaQ25XgjWB2tx6SCdGmovEFOml6G5cUZdSfXefM
+	kin0AK09Bj0drw7V7PGohYWvhmT3oNTl/tJYUVJMLBb/DYKsM+FX66FTwp9hQOc=
+X-Gm-Gg: ASbGncsRDpFYaqDoJ3PNgHcrXqPC5re+ldfJ7g4J9gE5AImY1e3xmHtjemvIf1nkNAS
+	/vzaWj6Bf1Pw971cxvcc3kkzDbUoS0GC5WljWDBSXGyQ0cbbxEBKJuu2OPNQgwFYASJ9fUzuHiK
+	hw76GYb3UDzYowMqlOxOhpyxKQvdlV/tfnLnbEbQG/0AVNWg5vM3lWTtwAo05sBqENJL1NiDWEP
+	P7usqqdEKJrmuwh6c4t9v2k2DEKUfJG3nguG79g54DnMcWjEK2qcXVCI40IfUCsYlQU4F+duknW
+	HJ4WypdMiVGjHCYPUmFmel1neCee0Te4KWu3DpyjQLWbrXKq
+X-Google-Smtp-Source: AGHT+IGvMdRPD+kjJ9Hujy59G/36mNIjZPkQ7ysnvQL9hCAIjtiyBVlbUsUp0SDWyYOEmz2lXL6QBg==
+X-Received: by 2002:a05:6000:2283:b0:39a:c80b:828a with SMTP id ffacd0b85a97d-39d6fc56dd2mr5544644f8f.33.1744010352600;
+        Mon, 07 Apr 2025 00:19:12 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364c959sm120215145e9.25.2025.04.07.00.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:19:12 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/3] Input: convert GPIO chips to using new value setters
+Date: Mon, 07 Apr 2025 09:19:09 +0200
+Message-Id: <20250407-gpiochip-set-rv-input-v1-0-a8b45b18e79c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/57] irqdomain: pci: Switch to of_fwnode_handle()
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
- Jingoo Han <jingoohan1@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Toan Le <toan@os.amperecomputing.com>,
- Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Michal Simek
- <michal.simek@amd.com>, Daire McNamara <daire.mcnamara@microchip.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250321163240.GA1130095@bhelgaas>
- <f213dc91-96db-4c91-a997-72ded078ae10@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <f213dc91-96db-4c91-a997-72ded078ae10@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG1882cC/x3MTQqAIBBA4avErBvwBym6SrQom3Q2JloRiHdPW
+ n6L9wpkSkwZpq5Aooczn6FB9h1YvwZHyHszKKGM0Fqii3xazxEzXZge5BDvCzcr1ShHawatoLU
+ x0cHv/52XWj+2dvWEZwAAAA==
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=972;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=BlY3UN5r5ZQCn0tDpg4oRi8gowXTcjflrHOZG4T6F4A=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83xvMKyHBavWMOsfyMnVmVhp65dXSJW20Oolq
+ K6mqIAwtxSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N8bwAKCRARpy6gFHHX
+ crMxEACb8LC3x3XGrTmU8mAJ0CIwJGyS9Z6f/YjHflKW3t+xGNYV2Mpa5Sm8/gMmLufd1ZG/7qH
+ tL/XTn+onWyHHqhjV6teuLm+sXA+htDwn7jaVRLzNuS+W/EcQYkSgDeY97H1+qF3/k1yrkA3Ki9
+ ln81wTFNuo6RKJve5+qmY5goKp2C+HuHYEciQqy+VGtKt071ibqEHH9flV7wiH9l1/e8RWp3ngT
+ 8c1fjG2HmzWuJINEimIE0Ik7PGSf1yn0yT1SVRcT8uJZLUQzYmdJKStphph0/Iiitsoma6COOIg
+ 7LKUzu0puqXOUjkViclKytOdXrft3Z9km4lkG809AlVdvBHlOwJ28KQR1cu3iMezKvE3NswtrjJ
+ Etlq6wu92rD/fnxOmQ6pUBy6UxXtbV7SzBPO8JIuGr8779328/eiLb3kt9/DU/7tkHjnXINQnjF
+ Wb4u5v4DD7KNKGzs0K7pGYafwPRP1IclhWS7wiNIbDCvnSx3P5EPgs66BJQH8LJHPWYH3O3Ob9D
+ PKPtiiTLvUfnb+mUIPzMSYoXUE5tUfmR1dexTOqteQRxcyEPS0BybIJDyn1cChWy+4tiIuXnutb
+ Mhb92PRqY5+CwzG0TCw1v54dmpk8sNo01zpApnJjuGCJP0mOTMdKJs6dzS+3HvCe2QcM9DDjs6P
+ KEzCLIZgo8AayAw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On 07. 04. 25, 9:17, Jiri Slaby wrote:
-> On 21. 03. 25, 17:32, Bjorn Helgaas wrote:
->> On Wed, Mar 19, 2025 at 10:29:00AM +0100, Jiri Slaby (SUSE) wrote:
->>> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
->>> defined of_fwnode_handle(). The former is in the process of being
->>> removed, so use the latter instead.
->>
->> I'm fine with these and happy to apply via the PCI tree, but it sounds
->> like you're planning a v3 with a few updates, so I'll hold off for
->> now:
->>
->> https://lore.kernel.org/r/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org
-> 
-> Right, there will be a v3 to deal better with irq_domain_create_*()'s 
-> first parameter (patches 13-39/57 later in this series).
-> 
-> But this very patch (of_fwnode_handle() cleanup sub-series) won't be 
-> affected, so please take it through your tree, if you can.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of
+converting all GPIO drivers to using the new API. This series converts
+all the GPIO controllers under drivers/input/.
 
-FWIW, the patch was 20250319092951.37667-8-jirislaby@kernel.org if you 
-already dropped it.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (3):
+      Input: ad7879 - use new GPIO line value setter callbacks
+      Input: adp5588 - use new GPIO line value setter callbacks
+      Input: adp5589 - use new GPIO line value setter callbacks
 
-> I will fix up the _create_ subseries and resend non-merged patches from 
-> this series in v3 later. So it's also fine to wait for v3. (But less I 
-> have to resend (unmodified), the better ;).)
-> 
-> thanks,
+ drivers/input/keyboard/adp5588-keys.c |  9 +++++----
+ drivers/input/keyboard/adp5589-keys.c | 11 ++++++-----
+ drivers/input/touchscreen/ad7879.c    | 11 +++++++----
+ 3 files changed, 18 insertions(+), 13 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250331-gpiochip-set-rv-input-bc12818c5732
+
+Best regards,
 -- 
-js
-suse labs
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
