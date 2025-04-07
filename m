@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162722066F5;
-	Mon,  7 Apr 2025 23:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5919422DF8F;
+	Mon,  7 Apr 2025 23:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069740; cv=none; b=H5EH+rqM9SMBDF29+91Brv+s8UNUKg184VkqTGQAKoVTC19G7OQmps6jdi7WjMCg/nwPdtSJqbp02zFPKmHB+TCUh/7VwYCnOYYJfZ1v5T4jp7wHm9YLTVd1eGTjWMnpGDmnfozj+x8NCvAX6OMR7oInkO1EvFHvEonyoMiMfmA=
+	t=1744069742; cv=none; b=u8XpubvvVVlTiuFnNnm8hJMPSxCdaJ0FvGBawH5gxrvwcesy8ePu/XVgSyrNnFSONUnVejESlamrjC/tkirGDWI/GgbgDg6LSy9X3mj92CvdEY3Xj32hBTJHFJCL+J+FREupghRm/iMN622N0gRjc6qEFTZIeV1/m/sFvFDJHeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069740; c=relaxed/simple;
-	bh=cu6+kIckq67kdlzXZHJvMgrKi3jntojrBC9KZq6RUYE=;
+	s=arc-20240116; t=1744069742; c=relaxed/simple;
+	bh=gWHU0YirxvL4wTbJogBuZ0d2pc7rrE0mYt9fbvBUgu4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=beS2iFJbkDAGy0XPxSg6KPG2Wf3K5TlwGvHn+ceBrcrT+FLyAqxkuFwj4zn5JCJYYp8gIlWCliZonLpKedv826NhFumPBo+OGHZ465JSO7JqZ9csQE7iIXF8JzDck1wO2UFQs520IxHL8bogGupD/nlFLKvzQAWHCj5Dec4Vn3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm8HtMSc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KEplfFLOXJd1rsKcTanqn5XMPpCYFqG365XrgPfvdCL9Zmf4tFKgzrypqew3lato5ZtlBEfsSp1Yxc3RyOAoTv10v5kzLDHwvqQNk2STM6ywlHHBZnvPcOzkRB6cSDSnZBGvdYXRCJOgVUJGfWJRfrwJimj5ZLF72Sm1kp+d3fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgW4XTfV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm8HtMSc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B98C4CEE9;
-	Mon,  7 Apr 2025 23:48:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgW4XTfV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FAAC4CEDD;
+	Mon,  7 Apr 2025 23:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744069738;
-	bh=cu6+kIckq67kdlzXZHJvMgrKi3jntojrBC9KZq6RUYE=;
+	s=k20201202; t=1744069741;
+	bh=gWHU0YirxvL4wTbJogBuZ0d2pc7rrE0mYt9fbvBUgu4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Lm8HtMSc+/F7tBFYJtNSAuDzRFilfStpnlI1smijGQJUR+VNmoB8wq7eqdBSyeETy
-	 25YjrHB/3ygosZoqFxz+1fbuDCPrnBmvPuiiU5bMx0KBulmO90DY9RHDKjjohr+XnL
-	 Etb3Sc+A8IMFDjcQ52wJIEXywt4ftQ3ilQWYTTqCFihQ3UeXeAewCCKrbRtDFjYjXr
-	 EjOvEK3Wgjg6B+y9ZRsXKZMsX3pKEOcCjvb50kLhZ/UhWf05vfKVZdDkB46wPCdre6
-	 6Zo9J3R8QJH731vWr9SQDalkdDTH3o0F453FYAaG+GCgJrm6IOE/PFDHyABVPoYaPF
-	 KUprz0XI6P3Cw==
+	b=MgW4XTfVWuL6k4JUO+q4ozYCOPJB9zR5/RKStK+0vhnTKVWQ6+zPHqaRcZ2SCtdtn
+	 2KjgXUQZN/hRHBqU/UGBeFsBM0w0eiR0XHzLsDzQHlPRFoo9J4tNMH8VOgUXj6oUCK
+	 +oc29TZdl82Oc/0ZCB2vPV5NI5Ua6gloF9b1gwPn9E8nqsI217V0/9NzaNM3sGzF68
+	 PfswAuuTRStUXfhS+k5BLkKIM7WEM27CVM9IjXd6c4n0ZyFB73i0pWnb9i6QMGKZQw
+	 nWVxkbrQVW8dCuwn/sZEO7fHiaSIpo7YV2mGmtieXgf9sjs38PW8t8ty6NtPFPLOG7
+	 0P3TmYwEAJnUg==
 From: Mark Brown <broonie@kernel.org>
-To: cezary.rojewski@intel.com, liam.r.girdwood@linux.intel.com, 
- peter.ujfalusi@linux.intel.com, yung-chuan.liao@linux.intel.com, 
- ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com, 
- Henry Martin <bsdhenrymartin@gmail.com>
-Cc: pierre-louis.bossart@linux.dev, perex@perex.cz, tiwai@suse.com, 
- amadeuszx.slawinski@linux.intel.com, ethan@ethancedwards.com, 
- jbrunet@baylibre.com, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250402141411.44972-1-bsdhenrymartin@gmail.com>
-References: <95c39d93-f35f-4017-843e-e5d836f1b091@intel.com>
- <20250402141411.44972-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2] ASoC: Intel: avs: Fix null-ptr-deref in
- avs_component_probe()
-Message-Id: <174406973561.1344763.15018486948824097169.b4-ty@kernel.org>
-Date: Tue, 08 Apr 2025 00:48:55 +0100
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Evgeny Pimenov <pimenoveu12@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Venkata Prasad Potturu <quic_potturu@quicinc.com>, 
+ Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org, 
+ Fedor Pchelkin <pchelkin@ispras.ru>, Mikhail Kobuk <m.kobuk@ispras.ru>, 
+ Alexey Khoroshilov <khoroshilov@ispras.ru>, stable@vger.kernel.org
+In-Reply-To: <20250401204058.32261-1-pimenoveu12@gmail.com>
+References: <20250401204058.32261-1-pimenoveu12@gmail.com>
+Subject: Re: [PATCH] ASoC: qcom: Fix sc7280 lpass potential buffer overflow
+Message-Id: <174406973881.1344763.7683351579116465463.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 00:48:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,12 +52,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 02 Apr 2025 22:14:11 +0800, Henry Martin wrote:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> avs_component_probe() does not check for this case, which results in a
-> NULL pointer dereference.
+On Tue, 01 Apr 2025 23:40:58 +0300, Evgeny Pimenov wrote:
+> Case values introduced in commit
+> 5f78e1fb7a3e ("ASoC: qcom: Add driver support for audioreach solution")
+> cause out of bounds access in arrays of sc7280 driver data (e.g. in case
+> of RX_CODEC_DMA_RX_0 in sc7280_snd_hw_params()).
 > 
+> Redefine LPASS_MAX_PORTS to consider the maximum possible port id for
+> q6dsp as sc7280 driver utilizes some of those values.
 > 
+> [...]
 
 Applied to
 
@@ -65,8 +69,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: Intel: avs: Fix null-ptr-deref in avs_component_probe()
-      commit: 95f723cf141b95e3b3a5b92cf2ea98a863fe7275
+[1/1] ASoC: qcom: Fix sc7280 lpass potential buffer overflow
+      commit: a31a4934b31faea76e735bab17e63d02fcd8e029
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
