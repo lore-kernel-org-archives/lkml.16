@@ -1,117 +1,99 @@
-Received: from ksmg01.maxima.ru (ksmg01.mt-integration.ru [81.200.124.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2DD21D3D9;
-	Mon,  7 Apr 2025 10:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C000822FE07
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 10:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744021167; cv=none; b=XUHTg6jtDuxek7DKPr5Wh9/pz5amNfwlBJK2zCQClvdLd7UkVVUArO976SkvYo3mdVpgcFfzqYxRUAfrcxO9RE4Fxf7kfp1QbK3sXKb+W9yzpM3kzNJXNiiKbyyFizH+7+HyyvV9nwTBgq41uNDW3iQCcKIWumxFTw5usblaJdo=
+	t=1744021232; cv=none; b=GKkCEZ13FkE4so3ze0zsNhJPMM1Xl/Z0wpWfdhnppr8O5LuLI0Bl7P5zjQieI3YUozpjkRvok9jfEnFJvqPrThuB5WbcDmOpbdarZv1XgELY14/V0ozNGLQT11B1XvqOx7YPGdMzgXODvQsFvwO1Yq6QZBxfacat2W3JWDItWPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744021167; c=relaxed/simple;
-	bh=fNPGdzrWquW6H1oNi/sXq1ti71yv7YBXmGrGcdUNT7s=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvDSWhc0ZuJlK0QC0kr7Ym1MWbiZY8Q10k/0A07fVfVH3UGiKqmujiJkAASCj+JmT05i3djMiDU1h9iDlBZoO7pm5mmU0wVtQxdCxcRZ5svkY5edOS6flgOZsNIvSN9uckSdbqh3f3EuVCOXbauvnxMLgV7MYUwZr1J2XLqU5hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=uGtGiQRS; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1744021232; c=relaxed/simple;
+	bh=JFVMB2yW22lXmwWMWcPmfPT4MtEe/YQP2YeKvV+tCEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DPIhSgdPKiGN6Gl8Qr71lTjKO+s6rN/wcHPeAeRKKSdtT7K7VBgHy2Afz9+r0MTsxA+MA5EfOnstCC9CG7gbTeUreue8BmHZhePbeOhCot+zi0FShx16H+QELQYZfsFTFK1/TpOwodCFKjkbGBcSA4aZczvoTJViTOlYBybYCdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iDmpOHgo; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="uGtGiQRS"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id 8D6EDC002B;
-	Mon,  7 Apr 2025 13:19:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 8D6EDC002B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1744021153; bh=fNPGdzrWquW6H1oNi/sXq1ti71yv7YBXmGrGcdUNT7s=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=uGtGiQRSV26qyWcsaf9CHRdGQvTELi6sXwumlyTusF5GjU20VkcbLqXZhIH8yQf/t
-	 BhZuGOSLY9j2v+5PPH9zeg/SxZDHimXAl4jARs5BVoRpacp3NtEGbk7CQXhXkBD+rX
-	 Axsqt0o9A+E3NQ9XjcxOlPEFHfDvBeMZAkI2f95EsU0gDAeDFoIqJXME/+dsP1X/78
-	 rNRIo43B4hL8k74LdV1M3ECvUY8oHrVlQGmcs8s6PvU/CwjUC2dSzVKH54NJvXAoG6
-	 glkydREAxj8k7VtK69dEi0HI4K/9mLUgAJDgZP5eg+tvY9FXKQPo3kOn+42rNHKdz0
-	 Cl6Ur/hmLQCjg==
-Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Mon,  7 Apr 2025 13:19:13 +0300 (MSK)
-Received: from ws-8313-abramov.mti-lab.com (172.25.5.19) by
- mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 7 Apr 2025 13:19:12 +0300
-Date: Mon, 7 Apr 2025 13:19:30 +0300
-From: Ivan Abramov <i.abramov@mt-integration.ru>
-To: Eric Dumazet <edumazet@google.com>
-CC: Stanislav Fomichev <stfomichev@gmail.com>, "David S. Miller"
-	<davem@davemloft.net>,
-	<syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, "Stanislav
- Fomichev" <sdf@fomichev.me>, Ahmed Zaki <ahmed.zaki@intel.com>, "Alexander
- Lobakin" <aleksander.lobakin@intel.com>, "Eric W. Biederman"
-	<ebiederm@xmission.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: Re: [PATCH net v2] net: Avoid calling WARN_ON() on -ENOMEM in
- netif_change_net_namespace()
-Message-ID: <20250407131930.70ad6df9d1e8c1f7c413f880@mt-integration.ru>
-In-Reply-To: <CANn89i+UQQ6GqhWisHQEL0ECNFoQqVrO+2Ee3oDzysdR7dh=Ag@mail.gmail.com>
-References: <20250403113519.992462-1-i.abramov@mt-integration.ru>
-	<Z-7N60DKIDLS2GXe@mini-arch>
-	<20250404102919.8d08a70102d5200788d1f091@mt-integration.ru>
-	<CANn89i+UQQ6GqhWisHQEL0ECNFoQqVrO+2Ee3oDzysdR7dh=Ag@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; i686-pc-mingw32)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iDmpOHgo"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3996af42857so3322005f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 03:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744021229; x=1744626029; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ezQp2+U6ixHlt9GUKNzafIUfaIB4N3lwLkkdWaVaceI=;
+        b=iDmpOHgold10PGwzlos/SaBDDmsBqEnI9/2trRkv4zQn6B4cmwv5swaH7VKmWxau30
+         4Z9O2OwvTtbTnRmrrSI+ZuKjuA43G5AYwRboYjM580xPFGfo14z/gXdtCSqgRPsTpJ3H
+         cOWyQiNsDk5IflFXHZaAszy9A7rWCKHfDA8ndCt6tOpYRLn0nUU9YOvTIaO+GRFAVvSy
+         cg0lIia4YsEY78TaElZb8NKzHw+P7wkfqwDrcTtKsXDI56aTmgva2QMBE5UXPjiNS4VX
+         jKsbYmSWLYyn6trnNEbCC0KlZweGl6by6AVLD8XNeusGjvRP4+tJOs4gHx/GdCHkoj9f
+         CRaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744021229; x=1744626029;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezQp2+U6ixHlt9GUKNzafIUfaIB4N3lwLkkdWaVaceI=;
+        b=gJtPI1/Gt/yIXwBMBgst8/it1voAwBP6q306mk3xACocaG+K1uBY1fIHAlqpWAgAtk
+         +CjaZRZThbciF2EtmqY8pQuqAWrefEsj3ouZTO8sUOyov48FuIA98uLB5bXRj13vpL8n
+         dvsPeMAACFi3VDWgZJympEZphrjLKVdpYJQz498UDjD6L2CCQ5zjGGUw9G0ovLWfmLos
+         URxsZV07UmZsV6jpDlFDNyd5FFWKomZyowvmuXyR4gvTXlVpXqQapJWl7uQvCiqruDDv
+         pFdPlCUO5AhMchjFGlG4Qv4jlYzVuosvruRFuvcVtNNJHC02bP9JZhsB4Y5ebzbVX/7M
+         jlvA==
+X-Gm-Message-State: AOJu0Yzj/BFj1yua/kfBtzrzfwxzRlnfb8mA5c0Ag7ai55hzzIA7AI1x
+	KugroMc+mHL/UXpRONQMUtbxrNJupuo36lpkIuS7kpkOcZfKvf3BUGMoGyymDHA=
+X-Gm-Gg: ASbGncuuk/mxB4Zyuqh+J3p01+XsJtLvGDCBwRtknj+DWhjf0vJ+l7Oo/7ZbBWaeWkI
+	8Q+HBBgs3dmmSRx7fpHXZpIcLpEatRFHHP+E1O8jJ+eR24sOD/Qp/FSDtiyPnVGCJ6sfiEfyHPv
+	XB1OYjIDHD7/ZEESvb0epK7AvWXYtxNuE5q7uTdPWn94D1BuJ61b8VWxZ5Uo40vm51doa0ALoqE
+	1w2EIz1CBrRfMBVHagImPQpYk3VJbTUnPf4FDcO4QLw4HKXFwdMaw4EjUQsYlYTSSls82JnjNz4
+	CGpeHeqkfvQisCl4AnwlLJZ56W1mxO0LpLJeF+MGBTjBQXXaXd+UnuVCBgw0PStjEcBnWRO/p5U
+	46fjaR4av9w==
+X-Google-Smtp-Source: AGHT+IFBFVAvZvAQWJ5FKIazBfYYoIxt8b/d6GZyBtfy4dBPa0KMfqalT1E6OJFjYBvAIvbUjzNAlg==
+X-Received: by 2002:a05:6000:400e:b0:39c:e0e:b6d1 with SMTP id ffacd0b85a97d-39c2e6112ddmr13566771f8f.12.1744021228977;
+        Mon, 07 Apr 2025 03:20:28 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d6b1sm11734041f8f.62.2025.04.07.03.20.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 03:20:28 -0700 (PDT)
+Message-ID: <b8dde6e9-5e84-4e4b-921c-4a2e2b3c05f5@linaro.org>
+Date: Mon, 7 Apr 2025 11:20:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
- mmail-p-exch01.mt.ru (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 54 0.3.54 464169e973265e881193cca5ab7aa5055e5b7016, {rep_avail}, {Prob_CN_TRASH_MAILERS}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;ksmg01.maxima.ru:7.1.1;81.200.124.61:7.1.2;127.0.0.199:7.1.2;mt-integration.ru:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 192423 [Apr 07 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 40
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/04/07 08:57:00 #27861720
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] media: qcom: camss: Add sa8775p camss TPG support
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
+ <012b0381-a5d1-49bc-aa59-aae0d35aa034@linaro.org>
+ <84fd283a-ca87-4689-8955-855f7275d6d1@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <84fd283a-ca87-4689-8955-855f7275d6d1@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 4 Apr 2025 10:53:35 +0200, Eric Dumazet wrote:
-> On Fri, Apr 4, 2025 at 9:29 AM Ivan Abramov <i.abramov@mt-integration.ru> wrote:
+On 07/04/2025 11:15, Wenmeng Liu wrote:
 >>
->> On Thu, 3 Apr 2025 11:05:31 -0700, Stanislav Fomichev wrote:
->> > On 04/03, Ivan Abramov wrote:
->> >> It's pointless to call WARN_ON() in case of an allocation failure in
->> >> device_rename(), since it only leads to useless splats caused by deliberate
->> >> fault injections, so avoid it.
+>> Great to see this work.
 >>
->> > What if this happens in a non-fault injection environment? Suppose
->> > the user shows up and says that he's having an issue with device
->> > changing its name after netns change. There will be no way to diagnose
->> > it, right?
+>> I think the TPG should be another type of PHY.
 >>
->> Failure to allocate a few hundred bytes in kstrdup doesn't seem
->> practically possible and happens only in fault injection scenarios. Other
->> types of failures in device_rename will still trigger WARN_ON.
->
-> If you want to fix this, fix it properly.
->
-> Do not paper around the issue by silencing a warning.
+>> ---
+>> bod
+> 
+> Hi bryan,
+> 
+> Do you mean to handle TPG like CSIPHY and embed it into the CSIPHY driver?
 
-As far as I know, WARN_ON call on -ENOMEM is the issue itself, since
-it only fires in testing/deliberate scenarios. And this fixes just that,
-without touching anything else.
+I have some example code I can share with you, I'll dig it out.
 
-How should proper fix of this look like? I would be glad to work up
-some solution that satisfies maintainers' vision, but I don't see other
-ways around it without some grand refactoring, which may bring more
-problems than solutions.
+---
+bod
