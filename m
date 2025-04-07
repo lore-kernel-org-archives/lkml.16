@@ -1,90 +1,104 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053E724CEFD
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB6724888D;
+	Mon,  7 Apr 2025 12:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030059; cv=none; b=EmzaEHlz30sOrdCeOV9TMMHbqat98Rq1QuQQjz9GzI8xtManOi9aO58GLQXz3CnDrvsAe8cY2QoDDkli/Ozvjd3DC07GIqiDGSCZdwqwY+2VnPqPqqOMcuN1EOOBRDUIMmmYHUMbiMArKVGwv0txh6MPVRVpE6swQvRhhJucXoA=
+	t=1744030076; cv=none; b=ayQqoJ4b6DzwRSOCnXmIszJlG4XqlN1QnZkwOcKLu1IXtK/AfyzHR+QQVk8GvxNUyN4+cTiSYRtdJKkkzWxtHqVudgDYLYNsIYVl51AhOrj2X1HLGyR4jxHQbuftclzKVYH8NuUU7uqXvSWRwMRoFPd1rnpoY870+BTkJQKzVE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030059; c=relaxed/simple;
-	bh=XTk5PsG8uayg5LAmbSO+vTuCSziVUwoF9sUJ4XPFQJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fXemqTZC+2nRF90Sdb5X/R3WGIiXJgn6zCBStC3mp6MT9J/D/OhQgFiIGMMzWEihiwZKBUP16TJmkB/lRKztUZOlrbh6tGDyeeRYEje0gOb5oqEKSynDIq/MoIj3MGYInIHc1emj97dmKjwFcEv/fgFiVtLZNYlDGX0KDO1ZG6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2996543160;
-	Mon,  7 Apr 2025 12:47:31 +0000 (UTC)
-Message-ID: <4b2a6bf1-3642-431b-bb74-3aeae79d17d3@ghiti.fr>
-Date: Mon, 7 Apr 2025 14:47:31 +0200
+	s=arc-20240116; t=1744030076; c=relaxed/simple;
+	bh=+IgO/E1P2X9+2yuR3YvVnFoL9ihGcuvDSLanfznzRRA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=rqX0SJeUUqnuYVxR8jBApUes8sN1QEwaQoFMpRqYoKz1m4K5N4lXYkJqNhQZFpl/kRMH38cSvegWXx8j0uHkg0HKaFxQBRYyXevWEnyQ7+v7QImR7RuOLGm5NwnNRzi5LHxQzUn3dcnshqkW/FiCYcJ05fLMOpO/ppqzLgzwcyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpT8c2cv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpT8c2cv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0AA3C4CEDD;
+	Mon,  7 Apr 2025 12:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744030076;
+	bh=+IgO/E1P2X9+2yuR3YvVnFoL9ihGcuvDSLanfznzRRA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=kpT8c2cv1xcz5ZHuC/5PEcmSVqNA3JxyZM+ffBQBgaRZFR7rMxiV4lYnjdFRlihyw
+	 i1VsA5BelYISKVWIYxkh16w1iduFyQkzYRF/wCNqhglkUVXRvWk6KpvzjBG+hnxEdg
+	 ul97TWkE4jge8PmxIEGSMUPv+T7vRz7QBG1ZpvDc6dYQ6pB22L9KGwN3bWpG64Mx39
+	 krGyHe6R3ZFoUIk2Itd7rzBGNRxZhKnEXiaOhkui+mQuYnFzruoV7lbE3GnFMz2eI8
+	 4FTw35xUBvkdNBb1ruSsBs6oaXVPaXCakyBc0EWXNi4dbdmBaIwGcOEI/6iAGalDa3
+	 0YcZ3G+JdTVug==
+Date: Mon, 07 Apr 2025 07:47:54 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RISC-V: Kconfig: Fix help text of CMDLINE_EXTEND
-Content-Language: en-US
-To: Yeking@Red54.com, linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Nick Kossifidis <mick@ics.forth.gr>, Debbie Maliotaki
- <dmaliotaki@gmail.com>, linux-kernel@vger.kernel.org
-References: <tencent_A93C7FB46BFD20054AD2FEF4645913FF550A@qq.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <tencent_A93C7FB46BFD20054AD2FEF4645913FF550A@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeeuieegveegudffiedvveejhfejiefhgefhkeejtdeufedufeehhfeufeduleehieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeeisgemvdefgeekmeduvgduheemvdgrgeehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepjggvkhhinhhgseftvgguheegrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehpr
- ghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepmhhitghksehitghsrdhfohhrthhhrdhgrhdprhgtphhtthhopegumhgrlhhiohhtrghkihesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-phy@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
+ Kishon Vijay Abraham I <kishon@kernel.org>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+In-Reply-To: <20250405174319.405975-1-mitltlatltl@gmail.com>
+References: <20250405174319.405975-1-mitltlatltl@gmail.com>
+Message-Id: <174402971815.1782886.2804255933275419532.robh@kernel.org>
+Subject: Re: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg
+ override handler
 
-Hi XIE Zhibang,
 
-On 28/03/2025 11:14, Yeking@Red54.com wrote:
-> From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
->
-> It is the built-in command line appended to the bootloader command line,
-> not the bootloader command line appended to the built-in command line.
->
-> Fixes: 3aed8c43267e ("RISC-V: Update Kconfig to better handle CMDLINE")
-> Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+On Sun, 06 Apr 2025 01:43:18 +0800, Pengyu Luo wrote:
+> In downstream tree, many registers need to be overrided, it varies
+> from devices and platforms, not only HS trasmit amplitude(0x51),
+> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
+> 
+> The device I plan to upstream also uses it, so I write the patch for
+> it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
+> 
+> In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
+> in downstream, some crd, mtp, htk devices also use it, I have no
+> such device, don't set it for them.
+> 
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 > ---
->   arch/riscv/Kconfig | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 54ed2a8cd7af..4cd18d0d07b3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -1144,8 +1144,8 @@ config CMDLINE_FALLBACK
->   config CMDLINE_EXTEND
->   	bool "Extend bootloader kernel arguments"
->   	help
-> -	  The command-line arguments provided during boot will be
-> -	  appended to the built-in command line. This is useful in
-> +	  The built-in command line will be appended to the command-
-> +	  line arguments provided during boot. This is useful in
->   	  cases where the provided arguments are insufficient and
->   	  you don't want to or cannot modify them.
->   
+>  .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
+>  .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
+>  2 files changed, 72 insertions(+), 19 deletions(-)
+> 
 
 
-It seems that you're correct 
-(https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/of/fdt.c#L1065).
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-I noticed that all the architectures that define this config have the 
-same text, so I guess the behavior changed at some point.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-I would suggest to fix all the architectures and find which commit 
-changed this behavior.
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-Thanks,
+  pip3 install dtschema --upgrade
 
-Alex
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/v6.14-rc6-274-gf4e35e5f940c (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250405174319.405975-1-mitltlatltl@gmail.com:
+
+arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dtb: pmic@7 (qcom,pm8550): phy@fd00: 'qcom,host-param-override-seq', 'qcom,param-override-seq' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dtb: phy@fd00 (qcom,pm8550b-eusb2-repeater): 'qcom,host-param-override-seq', 'qcom,param-override-seq' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/phy/qcom,snps-eusb2-repeater.yaml#
+
+
+
 
 
