@@ -1,65 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE825F97D;
-	Mon,  7 Apr 2025 18:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5801225FA38;
+	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051080; cv=none; b=oc8OxU818gknDdzLxBEbvo0QylLLn705FhdPYv0CoNy+GinUjauUzQO+mYxBnPpyciNi1qlOa9HBSoPUn619XPZ0NZlbBtuVog/saFhqHb7EiimX5wfrwCoc+1UkBhICKgybSXttRTfHCiUiThfvS8oy6couCOeMxsoulODKsT0=
+	t=1744051178; cv=none; b=b27A9NGD6S0RLkOdAKD0p+mZ076mkW6XxOt3mX8FREzxm88yfv/Thwqa8YEle8R9DkPwoSGQe2BoLCtQM7YQlVkoP9ipxGP0L85f0aoEtTYyocpBK5ecxhA8R7Yb2YaSotUSqAIoJRiSVCYB2nqjyNaMdVjCXee3GJYs12PMgQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051080; c=relaxed/simple;
-	bh=zk8wUrlmuDMDL1PuhRcv1wh0/L1IcyraU6qKme+S0p0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bs7nlr/uiIFz6YXeNOab5xn3RB+mGHU3vTnke1y3KsIz+yJkbqt09TRAKXDonIN+cZ6mxYStmRhEClpB/2ya1WifqEBB3sshiP8gW5EYA8xw62KemZ49Lz7bY+lkLio0swAQM4RNWAmMIbozHdoYSQMe4qfiGhK1/pu8pE1xIdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAuAhWCK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051178; c=relaxed/simple;
+	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RTQvybjxeS3dt2onYcW9G2e0O2kv0apOsVDhSRUo8VJJ+bJ4PEx8kJHAXm6ByVYtdZPf8gt+xREJrPrxNaRw8rSV0rEZYpOBKNxDQPO3ZKj1wL4eQo7iQxbhi+d8lZveLLGpLgFF2OOZe53ZSNatM/lx0PmamCFW5w2as7v2ULk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arFXIKZA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAuAhWCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F3A5C4CEDD;
-	Mon,  7 Apr 2025 18:37:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arFXIKZA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41D1C4CEDD;
+	Mon,  7 Apr 2025 18:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051079;
-	bh=zk8wUrlmuDMDL1PuhRcv1wh0/L1IcyraU6qKme+S0p0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZAuAhWCKuHgT1/ExnFqAZETSS+WPVhtKy6L/znez7KMIIeY7D4KIJhTcBAjUMi1Xs
-	 iVNys8Y9yQ6d7vMo9nMZa3bBiotopWU8shZ79s8Kw+K1huZLFUTpcU5toVSn+4udU9
-	 1HqUBOMv3TOK4AlAbw9Qq8AOfC7FOj6ohEBmLkyMVBfVI+igw6s48yu8YBbI5N+jMM
-	 9gSVuS0ubG4a5VuVZGXaGuZ9dAy6VFSDLPZxJ8UqPe9Dx10PQvOoT52g35g9iJe28q
-	 nxQWr0j1LzdE08hAU/bfnI19AhPdKyLKFqRth4yIvfblv27n1zlT1Qs2wRh4a3x7ST
-	 hN1Z1WeMWURhw==
-Date: Mon, 7 Apr 2025 11:37:58 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joseph Huang <joseph.huang.2024@gmail.com>
-Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Roopa
- Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon
- Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- bridge@lists.linux.dev
-Subject: Re: [Patch v3 net-next 0/3] Add support for mdb offload failure
- notification
-Message-ID: <20250407113758.2fee3e4a@kernel.org>
-In-Reply-To: <af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
-References: <20250404212940.1837879-1-Joseph.Huang@garmin.com>
-	<20250407102941.4331a41e@kernel.org>
-	<af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
+	s=k20201202; t=1744051177;
+	bh=FqBbfujZorWgG3rPeHe3EJNi1KkKcFDOQUHyCf5TY6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=arFXIKZA9VCS2brkxZJUTn7YyPSvWytivwyTvyMlTXOiZdn1DfXL2T9jkGH6fztBi
+	 hnKcsF0bAr+tBA7v8TPaWzcS+u6xzN/sa8pFk8/UPVwgaaybDk0KQ0l0o0FAU7QsBq
+	 fghq56XwRgZ6rVbW22jGMQgoDSotfSSekHQV2WGuiaz7JQa/UAzdkcfsZPvslMIEB9
+	 bV0rRCi0WuO7t9sLFrSkm8RX9JBF7ohec66F7cgx3I6D3a9JWfgMGkQBnd8CgtQiSB
+	 /cFy7ueImq3lKm/NRlh2J5uu4Brzes+mNmB/eru8AVV/ndag+iMGui8oyuPiUC01IJ
+	 as1yGmblcd4ag==
+Date: Mon, 7 Apr 2025 11:39:34 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: ath12k: core.h: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071138.98D5B6E@keescook>
+References: <Z8-Snz86Xfwdlyd7@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8-Snz86Xfwdlyd7@kspp>
 
-On Mon, 7 Apr 2025 14:15:31 -0400 Joseph Huang wrote:
-> - Should the re-post be v3 (no change) or v4 (bump)?
+On Tue, Mar 11, 2025 at 12:02:15PM +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct ieee80211_chanctx_conf` is a flexible structure --a
+> structure that contains a flexible-array member.
+> 
+> Fix 30 of the following warnings:
+> 
+> drivers/net/wireless/ath/ath12k/core.h:298:39: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Doesn't matter much, but probably v4 is less confusing.
+Hi, just checking in on this patch. Is some adjustment needed for this
+to land?
 
-> - Do I re-post after 6.15 is released? Around what time frame (so that I 
-> can set a reminder)?
+Thanks!
 
-No, no, I mean very soon. Like tomorrow. The merge window is when
-maintainers merge their tress up, rather than when we merge code
-from contributors. It's a bit confusing. Merge window open ==
-normal contribution closed, and vice versa.
+-Kees
+
+> ---
+>  drivers/net/wireless/ath/ath12k/core.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+> index 3fac4f00d383..d6b4c4d2c400 100644
+> --- a/drivers/net/wireless/ath/ath12k/core.h
+> +++ b/drivers/net/wireless/ath/ath12k/core.h
+> @@ -295,7 +295,6 @@ struct ath12k_link_vif {
+>  	int txpower;
+>  	bool rsnie_present;
+>  	bool wpaie_present;
+> -	struct ieee80211_chanctx_conf chanctx;
+>  	u8 vdev_stats_id;
+>  	u32 punct_bitmap;
+>  	u8 link_id;
+> @@ -303,6 +302,13 @@ struct ath12k_link_vif {
+>  	struct ath12k_rekey_data rekey_data;
+>  
+>  	u8 current_cntdown_counter;
+> +
+> +	/* Must be last - ends in a flexible-array member.
+> +	 *
+> +	 * FIXME: Driver should not copy struct ieee80211_chanctx_conf,
+> +	 * especially because it has a flexible array. Find a better way.
+> +	 */
+> +	struct ieee80211_chanctx_conf chanctx;
+>  };
+>  
+>  struct ath12k_vif {
+> -- 
+> 2.43.0
+> 
+
+-- 
+Kees Cook
