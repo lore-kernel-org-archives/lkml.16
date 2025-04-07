@@ -1,179 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9925D545;
-	Mon,  7 Apr 2025 19:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E7821B9E5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052570; cv=none; b=iEKDxol4rVbK/6imeVkZxQ/Xr/PgUE8/NE73/nMlL9tfh5YGX+apBuqZA3InhW5c70xNo/Ezkbf6BEmKPi79lDKpdXVMGzJqM7ie3TrtJO/IxB4J7p1cFMjWz+UXSw85Q4c1y6U3mVlXLfMeAe3NvdQsdII8X2z5lLHkP6uST2w=
+	t=1744052592; cv=none; b=fzj82N9qFhoIqrmu+q/hkGYBO6QYWyBi5BqKG/zduj765KKR2WcA+GljM+YX/xck7fKR4IUV92iQy/6QufM9Q3je22SYNIkUkK5h7FwYVrd0nM3qtR5zkJthZXAEZYc7tquSxN8pbsoOWwubyxiKhzC1fel1/9+8RBJGdr3gAKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052570; c=relaxed/simple;
-	bh=b/MXUmcAbF/lysUWjr8HjXUt9a43+bWo9N2Fk7BZ/x0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YO/C8n0yXeEUsbfSBiwB1dQKczUw8NzAR9V2kiG0D7tkKt/HDRdJLkkticjWnTHvIWqt/SP5HIXhgCA+OVi50l3lAmhAuOQYq9RT9JMltNizoeo8twZxVemu4DokSnHYo2/WDjteKLP3AMcEfo9KNmk+RmBBmDmhvs0TEiza/sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKuHHoBt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744052592; c=relaxed/simple;
+	bh=WxXvcXWBlibBfTQ5FIb9hcxkhzP3ZbBMImGvDJFUsA8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=puQAWdPXJnPOjfEloJkopkxbkxzoyX3GoLix2BbsgtLstx8vx7/MpQeHjL5yV20QSkAkUemldAadX8UhIAxjI0JgmZmVGOgUENq9pIr6pvznK4O/uK7xeNhiTOTzSu721OtNYQy+Vk3SuPju72y2wbAOWCStFE8/XFiEqF1ZidM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RI/0W5HR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKuHHoBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A283C4CEDD;
-	Mon,  7 Apr 2025 19:02:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RI/0W5HR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDA2C4CEDD;
+	Mon,  7 Apr 2025 19:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744052570;
-	bh=b/MXUmcAbF/lysUWjr8HjXUt9a43+bWo9N2Fk7BZ/x0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DKuHHoBtemrJGN7x4S5oEc6HTjYwNK5EeCEgTP0fjHDv58jNQ+nOOWhYqlZSa1FKS
-	 wi/bninK4zyZoajNsDxcm3aAk6wHSfwg4QBtFZTq+aSllD9IcQYaFXXcHcJwaw77rn
-	 qnML7crgeQFJdX8LriJdxs6BFg6ADV8cfMMQNfMfqOzFRmBf4RZwdbRb1o8w6rCVrI
-	 WDfB5igRXqCZZ8PSGehRlOKh+wC22wsKqU5/eDTb3TGY5wkLjLq0uOZWsoPMh/9Kb5
-	 Tw/ZNA73fIV+h8UQeJkoaR9uT5T8+ptYaIc5WN9m6UhI96wCPUCp0CNkDK3aLeGYzI
-	 N5cVEkN+tWZFw==
-Date: Mon, 7 Apr 2025 12:02:47 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] wifi: mac80211: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202504071200.565181DC1@keescook>
-References: <Z-SQdHZljwAgIlp9@kspp>
+	s=k20201202; t=1744052591;
+	bh=WxXvcXWBlibBfTQ5FIb9hcxkhzP3ZbBMImGvDJFUsA8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=RI/0W5HRY+3O4bE6VkUzffZl1JVXEQQzZilIGW/OhwqKAAhxLbhTJ0m8rv+bFUPSk
+	 TPzjZIxATWyNK0u4mbDkFDo6jyzL+cC4qZgIZWoyWVKsKCI68L6jckhA89295vbvAe
+	 aj/cLN3/He8sSTDuC8qztRqN+9LZEV73DozaMCT+RjKYYS0GsIJ50adrxIGhhJMZTb
+	 Q/A2LWamLMmpPug33XLN+HWP2Co67hAzYBxQcbE3Rw2FMdSjE0c3kQAk47G8kfdJlF
+	 YyNjtGnasX2Kok9KZAyanIYqlddE/XdLOA9mBhy5YlV82c2RADGG9+Wh/2lS/TEgr5
+	 TGra7Eo9IR/2Q==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, Yang Li <yang.lee@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+In-Reply-To: <20250407064532.22680-1-yang.lee@linux.alibaba.com>
+References: <20250407064532.22680-1-yang.lee@linux.alibaba.com>
+Subject: Re: [PATCH -next] regulator: pf9453: Improve documentation for
+ pf9453_regulator_set_ramp_delay_regmap
+Message-Id: <174405259056.819169.10817429856101827771.b4-ty@kernel.org>
+Date: Mon, 07 Apr 2025 20:03:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-SQdHZljwAgIlp9@kspp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, Mar 26, 2025 at 05:40:36PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On Mon, 07 Apr 2025 14:45:32 +0800, Yang Li wrote:
+> The function pf9453_regulator_set_ramp_delay_regmap lacked detailed
+> parameter descriptions and return value explanations in its documentation.
+> This patch improves the documentation by adding specific details about
+> the parameters, their usage, and the return values, enhancing clarity for
+> developers.
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
 > 
-> So, with these changes, fix the following warnings:
-> 
-> net/mac80211/spectmgmt.c:151:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> net/mac80211/spectmgmt.c:155:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  net/mac80211/spectmgmt.c | 55 ++++++++++++++++++++--------------------
->  1 file changed, 27 insertions(+), 28 deletions(-)
-> 
-> diff --git a/net/mac80211/spectmgmt.c b/net/mac80211/spectmgmt.c
-> index c6015cd00372..7422888d3640 100644
-> --- a/net/mac80211/spectmgmt.c
-> +++ b/net/mac80211/spectmgmt.c
-> @@ -147,14 +147,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
->  	struct ieee80211_local *local = sdata->local;
->  	u32 control_freq, center_freq1, center_freq2;
->  	enum nl80211_chan_width chan_width;
-> -	struct {
-> -		struct ieee80211_he_operation _oper;
-> -		struct ieee80211_he_6ghz_oper _6ghz_oper;
-> -	} __packed he;
-> -	struct {
-> -		struct ieee80211_eht_operation _oper;
-> -		struct ieee80211_eht_operation_info _oper_info;
-> -	} __packed eht;
-> +	DEFINE_RAW_FLEX(struct ieee80211_he_operation, he, optional,
-> +			sizeof(struct ieee80211_he_6ghz_oper));
-> +	struct ieee80211_he_6ghz_oper *_6ghz_oper =
-> +				(struct ieee80211_he_6ghz_oper *)he->optional;
-> +	DEFINE_RAW_FLEX(struct ieee80211_eht_operation, eht, optional,
-> +			sizeof(struct ieee80211_eht_operation_info));
-> +	struct ieee80211_eht_operation_info *_oper_info =
-> +			(struct ieee80211_eht_operation_info *)eht->optional;
+> [...]
 
-These are both packed, so any alignment issues with the trailing
-structures would be pre-existing.
+Applied to
 
->  	const struct ieee80211_eht_operation *eht_oper;
->  
->  	if (conn->mode < IEEE80211_CONN_MODE_HE) {
-> @@ -167,38 +167,38 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
->  	center_freq2 = chandef->center_freq2;
->  	chan_width = chandef->width;
->  
-> -	he._oper.he_oper_params =
-> +	he->he_oper_params =
->  		le32_encode_bits(1, IEEE80211_HE_OPERATION_6GHZ_OP_INFO);
-> -	he._6ghz_oper.primary =
-> +	_6ghz_oper->primary =
->  		ieee80211_frequency_to_channel(control_freq);
-> -	he._6ghz_oper.ccfs0 = ieee80211_frequency_to_channel(center_freq1);
-> -	he._6ghz_oper.ccfs1 = center_freq2 ?
-> +	_6ghz_oper->ccfs0 = ieee80211_frequency_to_channel(center_freq1);
-> +	_6ghz_oper->ccfs1 = center_freq2 ?
->  		ieee80211_frequency_to_channel(center_freq2) : 0;
->  
->  	switch (chan_width) {
->  	case NL80211_CHAN_WIDTH_320:
-> -		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
-> -		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -16 : 16;
-> -		he._6ghz_oper.control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
-> +		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
-> +		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -16 : 16;
-> +		_6ghz_oper->control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
->  		break;
->  	case NL80211_CHAN_WIDTH_160:
-> -		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
-> -		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -8 : 8;
-> +		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
-> +		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -8 : 8;
->  		fallthrough;
->  	case NL80211_CHAN_WIDTH_80P80:
-> -		he._6ghz_oper.control =
-> +		_6ghz_oper->control =
->  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_160MHZ;
->  		break;
->  	case NL80211_CHAN_WIDTH_80:
-> -		he._6ghz_oper.control =
-> +		_6ghz_oper->control =
->  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_80MHZ;
->  		break;
->  	case NL80211_CHAN_WIDTH_40:
-> -		he._6ghz_oper.control =
-> +		_6ghz_oper->control =
->  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_40MHZ;
->  		break;
->  	default:
-> -		he._6ghz_oper.control =
-> +		_6ghz_oper->control =
->  			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_20MHZ;
->  		break;
->  	}
-> @@ -206,15 +206,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
->  	if (conn->mode < IEEE80211_CONN_MODE_EHT) {
->  		eht_oper = NULL;
->  	} else {
-> -		eht._oper.params = IEEE80211_EHT_OPER_INFO_PRESENT;
-> -		eht._oper_info.control = he._6ghz_oper.control;
-> -		eht._oper_info.ccfs0 = he._6ghz_oper.ccfs0;
-> -		eht._oper_info.ccfs1 = he._6ghz_oper.ccfs1;
-> -		eht_oper = &eht._oper;
-> +		eht->params = IEEE80211_EHT_OPER_INFO_PRESENT;
-> +		_oper_info->control = _6ghz_oper->control;
-> +		_oper_info->ccfs0 = _6ghz_oper->ccfs0;
-> +		_oper_info->ccfs1 = _6ghz_oper->ccfs1;
-> +		eht_oper = eht;
->  	}
->  
-> -	if (!ieee80211_chandef_he_6ghz_oper(local, &he._oper,
-> -					    eht_oper, chandef))
-> +	if (!ieee80211_chandef_he_6ghz_oper(local, he, eht_oper, chandef))
->  		chandef->chan = NULL;
->  }
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-The leading "_" on the identifiers is a little weird, but it retains the
-original convention. Conversions looks correct.
+Thanks!
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+[1/1] regulator: pf9453: Improve documentation for pf9453_regulator_set_ramp_delay_regmap
+      commit: b3d9e96c96b0076a11aa1001d55b3dc189b8cd1c
 
--- 
-Kees Cook
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
