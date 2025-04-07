@@ -1,150 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C844225388
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3D222AE5E;
+	Mon,  7 Apr 2025 08:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016307; cv=none; b=OmbdlIgXnfGNkpAo11c4fammsvJHlh+TphxA7FiSzGDt4EoaSHxJNH4yQIeVo3fwpI0igC8fpZjOFrmDQhtjatilc3Eio+M9XzPkpe8Fm7DB302Coh2L+vTfIlWnyFHeutQbnFNVYxgoqvX2oKNwE7NpSNEQo9qc3wZQxknAh1Y=
+	t=1744016387; cv=none; b=XSBanttIsfuEqNZtulTMccusgB5Qktl37Jrvj7RWTRhe4CTMh7N0Dkdmcv9SBbDBWQbQIQ8MIp0rtgJSFbXO26YUE+VZLqvyvODQ+TGH6qPgTireMb5CpcRW6tZn42P/4yfKsalMStMnE5b0j55hKwj+MhkLo/nfhrOmWCy/Bb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016307; c=relaxed/simple;
-	bh=CG8MriHLl4x6ooaR3HqW98i5p2ZNjETviVu5KLjC8Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rdKNXPrMQ9M0s1fkuNNAvUVG75bOYPZUMIrREepFpLTdoEAtyAwcJKTPxXkut+QSvT1cSjeSLFQrkha4j7E8pUMmPGnJIr2KJYOPooiCKoRooTR9ff0noH1f+IzqcXzd6/oQ1Oyb2k3pAV3f6hpfSotQWAknIjjIDTgl6fsuvi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JECNUsOk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744016387; c=relaxed/simple;
+	bh=QukZAP/ULk9OvNrWPpJlqCslREUkQ5qQmKtJqtFGgqg=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=JWTYrrUWs3I1H/5vLyU4LFHoI3iJoefZP/LhJodXltt1+ghmImcSTJdshetvoQ9TNq+uRBio0IoKzsUuuBIx4953AFS2IBdxivwOzUis9YCNfyom+U2Mi6IElE/wHCAzzBLYgXqCgQSrv1pQU9+979DGztCWyy7kCftbuVBEiVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CbLgWycD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JECNUsOk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744016304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZV2HmK5xoNyWQTq3ZOPhBucA+WbSSx9NK0eZZiZro+I=;
-	b=JECNUsOk6InsM64N6tecTWiUJZbDV5wi+58pL+l1zC3Cf2FklXMtmuTJZL+N1t7pKg5JC4
-	Lx25XgsH/dNGtITptNHqiE82oG02Ou36fq29T31AmhexBRem6Zzf4EfWHXwFijhZ1GzJbz
-	p4BHSnL4t5A2RINqzrx2PTAVtMndmec=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-343-InWrmeWBO8yjFt5PgO_K6Q-1; Mon, 07 Apr 2025 04:58:23 -0400
-X-MC-Unique: InWrmeWBO8yjFt5PgO_K6Q-1
-X-Mimecast-MFC-AGG-ID: InWrmeWBO8yjFt5PgO_K6Q_1744016303
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so32075655e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:58:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744016302; x=1744621102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZV2HmK5xoNyWQTq3ZOPhBucA+WbSSx9NK0eZZiZro+I=;
-        b=VH1+fXal4oIthdVtgP2yu1g+IX55Nw8HAM3FzbpuNSoquWtFGHbKLBF/Sm18Zm7S1P
-         +pj0C8yNRI1z1MMK3tk1+D28xmjcZPIxJvdtvvNoHNzIeorE4+3Xfvrl9mBly+ndK6mz
-         i0AKt10hp1hCQf/CI5Uw4+1OF1qqmZhDwfAR+SkM2oNgvgoAQCg/LyU4rbYl+Ut+L5U+
-         TxWd1Td59HrVlxEiBCrwJbcmwJnmMgwNBH7p1iWl2HVBxK8MJhBcUzxA+20M/1nbtvNf
-         7qw9HJQft7MxpJ6Yg+sE5rE3dTgv2RfYU5NuZ6MjDE10IXO3qJToZvbWw1Fd7uu0OGkX
-         R1FA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjMdvhxvhpBt/fLa/mc+9G6p8Ebg4jqd9KBNkSB1QdOdrFAXz1mCGrLB69S0ISnYp8Id8kp9IQGmF+FSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVvxRjbGbT+zKf0Y6EoEldTNbLyu5SI/b6G17AjbBH7EbfEY+Y
-	d42qk8Plyji6GYPW1bvfJfrlxbtPvTTk5BqDsouoFGNAciKfjMzV3xo+i1l+5r1xYMMxnjPd/gZ
-	kX+3QyR7G1NzABWLhLYqJalNwgFf03IyV255niGwiMUhp9RyPkGrEAfB4AIkm4bAqexSN0Q==
-X-Gm-Gg: ASbGncuM3UfUfDdgO3XW0ezopUCc6qWEzBuVojzEvRigiYAAfA7zJYzHHfqXzSM2w2G
-	y9G4ugGUnGAZu6uHbDRpIQcrl++cKkZAfs/nIFCxKgRgYa25JGfpZK/p5ioJ0SI7kAWuRSwXV5M
-	bHOcodC+sUsW4vseHzVb735WFjakMWuMXyQEp3qU3i0ahuS526y1TraiCXJcs92mvoKkPL3/duX
-	DO5S/ohEo78RF1JJnOvcPxr0LJFsJ77K2hp1vSwNOHqgNINxgVLN/87RokwZnBi+aQ/tNgGjn1a
-	MeAruf6iJg==
-X-Received: by 2002:a05:600c:468c:b0:43c:f75a:eb54 with SMTP id 5b1f17b1804b1-43ecf89dddcmr115799915e9.13.1744016302267;
-        Mon, 07 Apr 2025 01:58:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhKuX0mUrFJVEgLqylU9xtfrLnxP9uo0MumXdr880MeHJm8lYFGfF2ifqGSX/2NbtuHhA09A==
-X-Received: by 2002:a05:600c:468c:b0:43c:f75a:eb54 with SMTP id 5b1f17b1804b1-43ecf89dddcmr115799665e9.13.1744016301907;
-        Mon, 07 Apr 2025 01:58:21 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec342827fsm124494865e9.6.2025.04.07.01.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:58:21 -0700 (PDT)
-Date: Mon, 7 Apr 2025 04:58:18 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407045456-mutt-send-email-mst@kernel.org>
-References: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
- <20250407034901-mutt-send-email-mst@kernel.org>
- <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
- <20250407042058-mutt-send-email-mst@kernel.org>
- <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
- <20250407044743-mutt-send-email-mst@kernel.org>
- <b331a780-a9db-4d76-af7c-e9e8e7d1cc10@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CbLgWycD"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378NQ5L017568;
+	Mon, 7 Apr 2025 08:59:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=QukZAP/ULk9OvNrWPpJlqCslREUk
+	Q5qQmKtJqtFGgqg=; b=CbLgWycDGGtIk6WqfLt654ilx6qyrrwFTx9uQL3rtHls
+	2k14dU7xANDpSh0fUEHpPY7YuKgoYI6RJ4R81Qz0C73XlMsj4ykDpuVJOZxRobSH
+	4qdfTWMK/HlM+VqFxD1JACXVVDlWt2GpdQJUEiG9Pqkt4BnQ0X+lCrTAVcjNGbN+
+	EPFiCs+8qT1WtLEa6sbXpDC1Tr4kNkcYa4SQLkhkP7BffnMwnuK0lUjD2i2zWYL4
+	kzfXjxLWUb+9kdSLtFm6h1f7c6ootHlm3qXPgkB1sSEStL/DkvL9X0GBxsmWBY8g
+	992IPwbEVl/COW/ywagXk42L7yxlqEs/NZ+ixgbd0Q==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uu1pkeyv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 08:59:33 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5374bweH011326;
+	Mon, 7 Apr 2025 08:59:32 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yd6td-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 08:59:32 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5378xVG119595944
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 08:59:31 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9D56258055;
+	Mon,  7 Apr 2025 08:59:31 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E5D8158043;
+	Mon,  7 Apr 2025 08:59:29 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.255.9])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  7 Apr 2025 08:59:29 +0000 (GMT)
+From: Venkat <venkat88@linux.ibm.com>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b331a780-a9db-4d76-af7c-e9e8e7d1cc10@redhat.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: linux-next: build warnings after merge of Linus' tree
+Message-Id: <9B0D38E4-3414-43B9-8F41-D552755DC81E@linux.ibm.com>
+Date: Mon, 7 Apr 2025 14:29:17 +0530
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        mathieu.desnoyers@efficios.com, rdunlap@infradead.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+To: peterz@infradead.org
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RB4JDKZU8B1RvoOy8htbA07n5K3dBLaU
+X-Proofpoint-ORIG-GUID: RB4JDKZU8B1RvoOy8htbA07n5K3dBLaU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=427 spamscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504070064
 
-On Mon, Apr 07, 2025 at 10:54:00AM +0200, David Hildenbrand wrote:
-> On 07.04.25 10:49, Michael S. Tsirkin wrote:
-> > On Mon, Apr 07, 2025 at 10:44:21AM +0200, David Hildenbrand wrote:
-> > > > 
-> > > > 
-> > > > 
-> > > > > Whoever adds new feat_X *must be aware* about all previous features,
-> > > > > otherwise we'd be reusing feature bits and everything falls to pieces.
-> > > > 
-> > > > 
-> > > > The knowledge is supposed be limited to which feature bit to use.
-> > > 
-> > > I think we also have to know which virtqueue bits can be used, right?
-> > > 
-> > 
-> > what are virtqueue bits? vq number?
-> 
-> Yes, sorry.
+On IBM Power9 only below warning is observed.=20
 
-I got confused myself, it's vq index actually now, we made the spec
-consistent with that terminology. used to be number/index
-interchangeably.
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
 
-> Assume cross-vm as an example. It would make use of virtqueue indexes 5+6
-> with their VIRTIO_BALLOON_F_WS_REPORTING.
+I have tested the patch and the above reported warning is fixed. Please =
+add below tag.
 
 
-crossvm guys really should have reserved the feature bit even if they
-did not bother specifying it. Let's reserve it now at least?
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
+Regards,
+Venkat.
 
-> So whatever feature another device implements couldn't use this feature bit
-> or these virtqueue indexes.
-> 
-> (as long the other device never intends to implement
-> VIRTIO_BALLOON_F_WS_REPORTING, the virtqueue indexes could be reused. But
-> the spec will also be a mess, because virtqueue indexes could also have
-> duplicate meanings ... ugh)
-
-what do they do with vq indices btw?
-
-
-
-> -- 
-> Cheers,
-> 
-> David / dhildenb
 
