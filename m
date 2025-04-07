@@ -1,141 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CF717AE11;
-	Mon,  7 Apr 2025 14:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6961CAA64
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035429; cv=none; b=my3sMWJY4oJLNS7AIKLfiPE+adGPL6XLuY4soU4IJ/P3oGhzh/asuLoF1h7H9D4tz4dcouuFaeigTMkhN3Ilc9OQp2cLtwkyAJ3wwJJzanyUlY2kas3vuJhGenOSjiUiKuRDAsi2KeSVtBLMf/rExLnzQb+60xac5z3/WkXpeZA=
+	t=1744035434; cv=none; b=jw4Ef+p7dayAyrO3McQPCEgoo3Kg2wqUrMSvpZeWsQwzEyxhK4wv+MWWpTB8HX95lOgOMaMpGs3CyTRNSJNYQhAoYl4Q1UvHKKLfToA1jXSfBP/mN4ek/byOz0WCYSGlfX9lCRYiPlFTdzan8xLkPv1izwsXk9CSd1JwjG2nPcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035429; c=relaxed/simple;
-	bh=Ou7KZNj8MSOzjom14ZDyBWFOBTkkVIoMAGHEMYI9KJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CEalrnQBCpSzLf1e+z2dmcxVNLD3/tE2n0E0QnzbvOVo8t+uWIAJ3WdV+5WJoll+Al1nXtCnHDzYNE+hJtS6IDPVb7sZms13AXBmOs5wwhqC8vIi94wOpCEu3w5mAEZEVH3VVa70vhpSsS30AK1hzCY96hUM1wg637d8rM9wlz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbKPtiIz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbKPtiIz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B0BC4CEDD;
-	Mon,  7 Apr 2025 14:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744035429;
-	bh=Ou7KZNj8MSOzjom14ZDyBWFOBTkkVIoMAGHEMYI9KJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RbKPtiIzsOuPBHNzuq5ufz2iufQKkuB9EK+/OAL+g0p9lSxjdzqYL1rOeHmmf/KQ9
-	 gHwcM6q5NYcSK1KMYu09RsHfmIzebugWAtJxh1bbCPvczaae8+wW+FLeStDjmEYxTJ
-	 WelSfYDKcPX08Jdx9E7hOXRSDJWKbSy9b093oOU4ZX2QbnbaKLgxqt6UbVlHT8l3WR
-	 w2eXNgqNI0gCR/QI/LyqYUOUzqmdtrzwkGwSk97ViL5gvw5xQvEGpGoGqzGDZgfGE8
-	 tJtlDrv18RiNfOh+K5mzuv6oTsvOkBsjlPv20G+XrOknMSg6UbU0hUWJCcpDW5+mTk
-	 KpvGBULMyd3sA==
-Date: Mon, 7 Apr 2025 09:17:08 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	krzk+dt@kernel.org, conor+dt@kernel.org, tglx@linutronix.de,
-	daniel.lezcano@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-	tim609@andestech.com
-Subject: Re: [PATCH 4/9] dt-bindings: interrupt-controller: add Andes
- machine-level software interrupt controller
-Message-ID: <20250407141708.GA2250717-robh@kernel.org>
-References: <20250407104937.315783-1-ben717@andestech.com>
- <20250407104937.315783-5-ben717@andestech.com>
+	s=arc-20240116; t=1744035434; c=relaxed/simple;
+	bh=u7xBi8y8quGJVDkuhH0qHYxgViZkg+uXeLe/8fr0ctU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=JjJ4qNWhpSUsOIlHxXNvTVhPK3E4mcnfW0GPo2xueG5z/w4o2IDQlC7lphITHMDECWt6ndyIv3p4E3Y7eHH1WwAT0IRKxPYZRgR7Y57F0w/y9AhWgJq9c9mhnXKqxtolUID3pBtGRWiR3NslfhixexxfdNAM1xavKqL7x1TO/q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d443811f04so41992385ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:17:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744035432; x=1744640232;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7uaNP5LiQosFTE3+99qu/GfFM+fsc9WqdSZxMpRvfLk=;
+        b=ksGbAxmlb5loi9++/Nfgtxc1MwaDull8Hn3/Dnqpdasp0urNOYoHKvpxF9qjUqrG6e
+         1oIVALamSVLgY4jcC1iC85e0anH/xbyXlVEQN+9esczABtf8LeofH5GFh1oGwxNNq/jp
+         E/lChbqiKAvIHKmHnJfbTkrPoW3cwJhIg591xqA2+9HibbJ0FPdtGuseZuBrpzYsGYLi
+         nD4ebnBGL8CJi6Ewoc3MLvvy1NJWToJzl5XKlTLiyAIzDRIOK6Q8zfB6tIjAUbc62g8E
+         3/DrHnWS3+fAR1y+pYFUF3UH5UxkkCSNuMR5FzPEetKT4CFSCHZn0YJ/Re8R+WJkWoRE
+         zWAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTrIkBZ2d+WXF0euqdxrY/MlhGN925LC8RN7Vn8Paf8tDuaGFPH326a4OwPHPXA+QhBL9ncgosrxk0KGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNPXtiJlXRbkZB1n7pyqRxAyIC6H5kBDC4j9gwasp6MSDtX/wB
+	j0LOhXrvKzFHgIIP7QPqxM/l2/si55IwVmcfLS4xU3b6uBPTFL8Ec3dPkG6Uxx3MdXob12MHmgm
+	1TU8hJOxNzS2dRNG00pNmVpJUq8aYBa/HwxH1aPRSypIT7l/wIm7S3ik=
+X-Google-Smtp-Source: AGHT+IE4CIzkVeo6NDC8dq8GCEK3Bm8+KBaaoCschs0czWHzY8PZIOmO1Z5AnKypOkUFkYMIyeOFb/wYjaRSjp0Bia06IV0yyJEQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407104937.315783-5-ben717@andestech.com>
+X-Received: by 2002:a05:6e02:4401:10b0:3d4:6ff4:261e with SMTP id
+ e9e14a558f8ab-3d6e3e67eacmr87122795ab.0.1744035432461; Mon, 07 Apr 2025
+ 07:17:12 -0700 (PDT)
+Date: Mon, 07 Apr 2025 07:17:12 -0700
+In-Reply-To: <20250407141705.92770-1-contact@arnaud-lcm.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f3de68.050a0220.396535.054f.GAE@google.com>
+Subject: Re: [syzbot]
+From: syzbot <syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com>
+To: contact@arnaud-lcm.com
+Cc: andrew@lunn.ch, contact@arnaud-lcm.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-ppp@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 07, 2025 at 06:49:32PM +0800, Ben Zong-You Xie wrote:
-> Add the DT binding documentation for Andes machine-level software
-> interrupt controller.
-> 
-> In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-> second time with all interrupt sources tied to zero as the software
-> interrupt controller (PLICSW). PLICSW can generate machine-level software
-> interrupts through programming its registers.
-> 
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  .../andestech,plicsw.yaml                     | 48 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> new file mode 100644
-> index 000000000000..5432fcfd95ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/andestech,plicsw.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Andes machine-level software interrupt controller
-> +
-> +description:
-> +  In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-> +  second time with all interrupt sources tied to zero as the software interrupt
-> +  controller (PLIC_SW). PLIC_SW can generate machine-level software interrupts
-> +  through programming its registers.
-> +
-> +maintainers:
-> +  - Ben Zong-You Xie <ben717@andestech.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - andestech,qilai-plicsw
-> +      - const: andestech,plicsw
+> Author: contact@arnaud-lcm.com
+>
+> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-Drop the fallback. If you have another implementation that's compatible, 
-then andestech,qilai-plicsw will be the fallback.
+want either no args or 2 args (repo, branch), got 5
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts-extended:
-> +    minItems: 1
-> +    maxItems: 15872
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller@400000 {
-> +      compatible = "andestech,qilai-plicsw", "andestech,plicsw";
-> +      reg = <0x400000 0x400000>;
-> +      interrupts-extended = <&cpu0intc 3>,
-> +                            <&cpu1intc 3>,
-> +                            <&cpu2intc 3>,
-> +                            <&cpu3intc 3>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a0ccac1cca29..645d7137cb07 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20728,6 +20728,7 @@ F:	include/linux/irqchip/riscv-imsic.h
->  RISC-V ANDES SoC Support
->  M:	Ben Zong-You Xie <ben717@andestech.com>
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
->  F:	Documentation/devicetree/bindings/riscv/andes.yaml
+>
+> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
+> index 644e99fc3623..520d895acc60 100644
+> --- a/drivers/net/ppp/ppp_synctty.c
+> +++ b/drivers/net/ppp/ppp_synctty.c
+> @@ -506,6 +506,11 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
+>  	unsigned char *data;
+>  	int islcp;
 >  
->  RISC-V ARCHITECTURE
-> -- 
-> 2.34.1
-> 
+> +	/* Ensure we can safely access protocol field and LCP code */
+> +	if (!skb || !pskb_may_pull(skb, 3)) {
+> +		kfree_skb(skb);
+> +		return NULL;
+> +	}
+>  	data  = skb->data;
+>  	proto = get_unaligned_be16(data);
