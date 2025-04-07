@@ -1,48 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F760217722;
-	Mon,  7 Apr 2025 20:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9DD190485;
+	Mon,  7 Apr 2025 20:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744058180; cv=none; b=hFrDHBuesy+XnesdOl9xNrAfP96pwz/VR1ftqDqtnvXe1rEHXeUCDKfZHnGsSfCIcOhVRMzR1odU3qiLeH68+WPedBjMf/I4Wt3j59TZWWqc5asc2B9qkEBISbt0/F5yRdggMjJtkieXbkADwXXo1qfWr112S8hb5S9g2ihaoJ4=
+	t=1744058363; cv=none; b=VY8Z5Kj4wjXG9zo5is6AviU8M7pxuqY4dMtyqheANDAZfUyDGdMqYc6k9HZSBHR8M4TIph8P1RDB7QWNaic7ZcLIB18xZa1fQE3CTJpbA5JtDrmnGoz/SoMJOUZ5KVhQRgOAOLVgMmxVkSM3uFM3KvhoKjaFsa8oOD0/K9wBqOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744058180; c=relaxed/simple;
-	bh=SEFMHa645xj5XB05KG2bL79aOQHT4caCQ1V0FQwTMWA=;
+	s=arc-20240116; t=1744058363; c=relaxed/simple;
+	bh=V7DUCjs9kVxBcWLtbI3zoQPAQpX2qv+UjffXf4Yk/Wo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjB+8YgnhaCdAyZWZxzjVuSlc7R/sJn4mEUyjXVO+7iacbeY26e3z2a53oh6DbQq2hZN/+M0TjyJ7Shr/Qt31Bwv/NXvX57ugjpJmDe8zSRO7p1coO6V8pEnlCu8QSgOrDclcW57pIjbxwv0lg2BywYjKcxtLdtjb6MMNLKYqys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3WLhrdk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HpeJSq1lP6NKfNygCZxHYeh7F7/p0mz4aN0IYcYQ2dNxrK4+BRE4PBZjxY9wD8ku7FKqgDIedlqoH2BCvVFzprOEV8npx9s/l1xgd0oH01IXgmASky3zRLCyugrIKBMcl8Hty9WP12BXzWoyiaz8ZwWDxZF0tpP48cF3RQCzf2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=csqrYtYL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3WLhrdk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D501C4CEDD;
-	Mon,  7 Apr 2025 20:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744058179;
-	bh=SEFMHa645xj5XB05KG2bL79aOQHT4caCQ1V0FQwTMWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E3WLhrdkFlGOeuw9sCam0RR1lmnr9l1+8hk5Tyx+GhHeMhS9uwxhXnRDQSU7RZhwz
-	 ajs+U3jhnqrzNI4wqt0/rCyH/ThWPWB7NJdioHW43Xhu2f/i/FVcgYUAoDeuLrv0XQ
-	 7Xu5H/O6qwMZm99L3MbYBPOi48m1gsHoD6mkmAaYBSDN/AyY68x/EEjZPQZdwSx4i9
-	 0ra2wsSQQ1ccvRFliHsg35rT9YFWFBrBKbNcuQPAxMBtpF++n8M/R5xuPKncKWaaeL
-	 toIWrpa5JNZPQAgKJD81KRXwgiK3+CAP9d4Tf8NupTcDr0uKyj5wEk6iZyFTpNw6wL
-	 POQLbX6eOrDSw==
-Date: Mon, 7 Apr 2025 13:36:16 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Lukasz Majczak <lma@chromium.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, chrome-platform@lists.linux.dev,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] watchdog: cros-ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <202504071331.D9E4D6B058@keescook>
-References: <Z-WG6_uhWsy_FCq3@kspp>
- <202504071212.D6CBE6740C@keescook>
- <e8114ca6-d092-482b-9d6b-db7ea1c15cbc@embeddedor.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="csqrYtYL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=tQe0PGDZfmp8rpY/ZTodvp4bt57E+3mmu/u8JN+CI9E=; b=csqrYtYLrstOUDID8fDr0c9AqB
+	F0CAlOxBHi8sEuYWLH4NxtpkFB0cFnr/nEQ9zSvw1CMeufnlKnqafFISAsHlRWfJYS3qx6ykJO0gz
+	5lcu6+wGw3Hukod7vFax88KwlV/trkypwiQU7uuG2TcYyE51USeDS5vIaTwlML5OslVw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u1tFV-008IsL-2W; Mon, 07 Apr 2025 22:39:17 +0200
+Date: Mon, 7 Apr 2025 22:39:17 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Marek Pazdan <mpazdan@arista.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Daniel Zahka <daniel.zahka@gmail.com>,
+	Jianbo Liu <jianbol@nvidia.com>, Gal Pressman <gal@nvidia.com>
+Subject: Re: [PATCH 1/2] ethtool: transceiver reset and presence pin control
+Message-ID: <8b8dca4d-bdf3-49e4-b081-5f51e26269bb@lunn.ch>
+References: <20250407123714.21646-1-mpazdan@arista.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,37 +57,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e8114ca6-d092-482b-9d6b-db7ea1c15cbc@embeddedor.com>
+In-Reply-To: <20250407123714.21646-1-mpazdan@arista.com>
 
-On Mon, Apr 07, 2025 at 01:42:07PM -0600, Gustavo A. R. Silva wrote:
-> 
-> > 
-> > > +	msg->command = EC_CMD_HANG_DETECT;
-> > > +	msg->insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
-> > > +		   sizeof(struct ec_response_hang_detect) :
-> > > +		   0;
-> > > +	msg->outsize = sizeof(struct ec_params_hang_detect);
-> > > +	*(struct ec_params_hang_detect *)msg->data = arg->req;
-> > > +
-> > > +	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
-> > >   	if (ret < 0)
-> > >   		return ret;
-> > > -	arg->resp = buf.data.resp;
-> > > +	arg->resp = *(struct ec_response_hang_detect *)msg->data;
-> > 
-> > msg->data used twice and a "sizeof()" earlier... might be nicer to have
-> > an explicit pointer?
-> 
-> Those are two different pointers:
-> 
-> *(struct ec_params_hang_detect *)msg->data = arg->req;
-> arg->resp = *(struct ec_response_hang_detect *)msg->data;
+On Mon, Apr 07, 2025 at 12:35:37PM +0000, Marek Pazdan wrote:
+> Signal Definition section (Other signals) of SFF-8636 Spec mentions that
+> additional signals like reset and module present may be implemented for
+> a specific hardware. There is currently no user space API for control of
+> those signals so user space management applications have no chance to
+> perform some diagnostic or configuration operations.
 
-Argh. I did it again. I can't see "params" vs "response". q_q
+How do you tell the kernel to stop managing the SFP? If you hit the
+module with a reset from user space, the kernel is going to get
+confused. And how are you talking to the module? Are you going to
+hijack the i2c device via i2-dev? Again, you need to stop the kernel
+from using the device.
 
-Sorry for the noise!
+Before you go any further, i think you need to zoom out and tell us
+the big picture....
 
-Reviewed-by: Kees Cook <kees@kernel.org>
-
--- 
-Kees Cook
+    Andrew
