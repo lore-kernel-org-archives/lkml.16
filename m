@@ -1,136 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7358922068F;
-	Mon,  7 Apr 2025 19:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C966D221D98;
+	Mon,  7 Apr 2025 19:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744054589; cv=none; b=AAE69tLYQaGdPNrcu0WaWScJajWkmCWnU5gWayYh/Uc0GRaT+coiUnTJtU9ABZzq+jB9lWmIvaPuxX2fVxvW/ox09v3fx9XOmU7nV2UlqfzPDwU8KC8+d+3guIrjE0fmk4ZCyTDhXwNGg+u9rg4Hsp4qBj5nbdVmpHcXzqZc14g=
+	t=1744054593; cv=none; b=pIo1NoMaoMzLjaGwncVMS5dnmscDb1kIgW+gXuE3ka9QTntwYwOSuu7fxt41sLm69Y+4WY63TViQIEVVp85WpmP0eRDizG7Z/JV5XfieURIrzmtbe/+iVtzoMJOxTUZ54XC8r3Am7/O/r0z/WfcgyejYv9BKiYQx8bhsxQ+bNbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744054589; c=relaxed/simple;
-	bh=C2w2lOcwPcrCvotdyulR6kXCscgjaiIOaat+VIngv+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dHMNYeVr8FrsNSHl1qGaTPaVeJO4daUM69OQCVp5svcS/Lv8GV2eCEIglbq15jDP8lbSiay+FpvCOg36Lvf9cjdaVTBomc0YhnlQcB2RxC/UqfHTk8AhKpKfuQ27/GGK9B6BPi6JcHELYMFY8zDyc7J7lwsuAj3u7ZW3b+savWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUsva2T2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744054593; c=relaxed/simple;
+	bh=fljdIlQJZT48DDgJB+u4ctW66iyga2K+jR8BgagU+oA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nH4WtERTat26rz+TSnJgriPArkIeoMGrRE2UPWpTTGeV67MPn4Esf2aFBt0Nlz2hZOqHCUG7KYmQ8jjnk4aqd/spLXLWzApDqPwcKsjV7NfEspvYum8UJK/fd8gmibSod2Si0q17WQneKEFffBq4TfQ4gZaVZAs+ugXX0V+3xGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=WJpXTXoP; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUsva2T2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E10C4CEEC;
-	Mon,  7 Apr 2025 19:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744054588;
-	bh=C2w2lOcwPcrCvotdyulR6kXCscgjaiIOaat+VIngv+A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NUsva2T2lhgFXF9sxYwI7KwExu4fozsIVeM7QGt4A2j7gcuHp0RdxRj3ITCA2K32E
-	 aYuKkjIR9Iv6vgdkNF5Fg+QtrNxlDtuEtbEw5HdBaSmHgvbdyCpINsmqIiqIbnLHVS
-	 qLBeETi+e2DSUOABw8OU7hAnABYcxtJ8SobFig56O+y/BmHCov6oC7KlXZDUR7Du0i
-	 zg7ld7bNK/usVq7lNTzWYs83JdS1DMfHZu3WuKEgVap8bLXdfko9Ys8LZJx68hP2Ur
-	 W1WIiCfrvoFF6UW3ck4OdiOEZtiDjf4y5WLHXWZtvSythLHREa2uQMakoypvqCMSjw
-	 1nKTyf9yEoOMg==
-Date: Mon, 7 Apr 2025 13:36:26 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] w1: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <Z_QpOlDTvyfRs4Su@kspp>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="WJpXTXoP"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZWfbL45x6zm0GSr;
+	Mon,  7 Apr 2025 19:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1744054588; x=1746646589; bh=fljdIlQJZT48DDgJB+u4ctW6
+	6iyga2K+jR8BgagU+oA=; b=WJpXTXoP0bkw3nRXfL8aGYfCprCbIVUz7G+C4d1R
+	czvIRvIu8ZoeEfblMK4HmrmWUpLSG6rOyUwdZUf2stXVmmRkrVKry5tcSSlTrM2f
+	aeFekgDVxgP+3NpkVGW6zcgeN2hbIjNFLoY3n/kAJjbEcynBLAmRKPTH9Jm+YHt3
+	0H2fYej9KKsNEg5z3bg5C6AUWlxZ4tCCXsuHyaJ8fpXGpIbdSuvarDdfRVsey/ue
+	7zC2JgtJqgrEBZzOe+IWjq5TC7c8w6rKYS8lgS5feY50zsol0P8BpvUeNFzFoTEw
+	BeRhAIsl99nIRlTbCyml1Qd9WrN20gOFyAup8WhuCve5Fw==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id sMQVAaMjmlv4; Mon,  7 Apr 2025 19:36:28 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZWfbB4sGmzlvt1M;
+	Mon,  7 Apr 2025 19:36:21 +0000 (UTC)
+Message-ID: <c78c2abd-292f-4e61-830a-683dee012b6c@acm.org>
+Date: Mon, 7 Apr 2025 12:36:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT v3 2/3] ufs: core: track when MCQ ESI is enabled
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250407-topic-ufs-use-threaded-irq-v3-0-08bee980f71e@linaro.org>
+ <20250407-topic-ufs-use-threaded-irq-v3-2-08bee980f71e@linaro.org>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250407-topic-ufs-use-threaded-irq-v3-2-08bee980f71e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On 4/7/25 3:17 AM, Neil Armstrong wrote:
+> In preparation of adding a threaded interrupt handler, track when
+> the MCQ ESI interrupt handlers were installed so we can optimize the
+> MCQ interrupt handling to avoid walking the threaded handler in the case
+> ESI handlers are enabled.
 
-Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
-
-So, with these changes, fix the following warnings:
-
-drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Z-WD2NP_1A0ratnI@kspp/
-
- drivers/w1/w1_netlink.c | 42 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
-index 691978cddab7..724a008cf342 100644
---- a/drivers/w1/w1_netlink.c
-+++ b/drivers/w1/w1_netlink.c
-@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
- static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
- 	int portid, int error)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memcpy(&packet.cn, cn, sizeof(packet.cn));
--	memcpy(&packet.msg, msg, sizeof(packet.msg));
--	packet.cn.len = sizeof(packet.msg);
--	packet.msg.len = 0;
--	packet.msg.status = (u8)-error;
--	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
-+	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
-+
-+	memcpy(packet, cn, sizeof(*packet));
-+	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
-+	packet->len = sizeof(*pkt_msg);
-+	pkt_msg->len = 0;
-+	pkt_msg->status = (u8)-error;
-+	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
- }
- 
- /**
-@@ -215,22 +215,20 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
-  */
- void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memset(&packet, 0, sizeof(packet));
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
-+	struct w1_netlink_msg *pkg_msg = (struct w1_netlink_msg *)packet->data;
- 
--	packet.cn.id.idx = CN_W1_IDX;
--	packet.cn.id.val = CN_W1_VAL;
-+	packet->id.idx = CN_W1_IDX;
-+	packet->id.val = CN_W1_VAL;
- 
--	packet.cn.seq = dev->seq++;
--	packet.cn.len = sizeof(*msg);
-+	packet->seq = dev->seq++;
-+	packet->len = sizeof(*msg);
- 
--	memcpy(&packet.msg, msg, sizeof(*msg));
--	packet.msg.len = 0;
-+	memcpy(pkg_msg, msg, sizeof(*msg));
-+	pkg_msg->len = 0;
- 
--	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
-+	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
- }
- 
- static void w1_send_slave(struct w1_master *dev, u64 rn)
--- 
-2.43.0
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
