@@ -1,127 +1,122 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59AB23C8BB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E4D23A9B6;
 	Mon,  7 Apr 2025 11:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025920; cv=none; b=uqBs46FYxls+/O8WEY+tg09lS50djpMoB+h2vZJUmkgbmerAPOXEu8KZNWf8b8yIehyJ0XwDot5UeiAy2Xn05CBd2Z1k1bYmSV5+2o6n3vUoZjSpj8v2U50mkvq6BeMds7UizMTtAcL61sdsdz2gRM+3FoA4nCLlpIoLP+t2fKQ=
+	t=1744025921; cv=none; b=YpuGYLd7hW7Mr+dRCogfIY3U5qg2RPNyCGiFhyXkAqOjV78m6E+DSN1A8FFKJc0mOeL12zMZG1gn8LFvaZ2tUn5RNn3H+As+8nyE2uJG72IoE/FefeFFymFoFT/t0wyndz3v2/qhlMz9W18u1SEvyjg6/pdY+0Qaa3r7LAVdfHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025920; c=relaxed/simple;
-	bh=1NEeEf3PBym/AYW+9G0XRQ0YgPkbn1hPa7KLg0dFXcw=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=rGeHXO8Z6rWwtVf4qEfFXgWJx8HowXVtZbgBJVrCgttVSJoyMdjO0qFvYeP/FXwRW+dvn40dXRFYtIcIamkiaYxdXfDcld6e770+kfJ7CghRu2aGIO6dw0+/IenB6cgfNF9OeppKkE+HtL+KDfdn48qhUTMyjOtFMu2CG5ca/+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Z+Hq1zCQ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744025921; c=relaxed/simple;
+	bh=VOPErnxtLORQUappvnEZwwAIyuoyRROHIYTRcdWB/e0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=i+QFQcLYHmvYa3XJAPu/8u/h9JwZzrmIgf8lrTBtdGKGMh0aK3dHUqe9hs5gZ3JR4FJUP48l74qSoweQ7xtzBL+QtTCM8cnhC3e4OKLa05+AqsMwqztFetHjr3Ng5ce3Bvdm2avYPEM2HBhs24KfAwLFeM8QpLNKgDAsTNaew2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XXwebaJ6; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z+Hq1zCQ"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378GrIP020812;
-	Mon, 7 Apr 2025 11:38:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=1NEeEf3PBym/AYW+9G0XRQ0YgPkb
-	n1hPa7KLg0dFXcw=; b=Z+Hq1zCQMmisKHtxh4/hqVMxESWKAlQ8pswhILuGpGd5
-	MifXP3/ZvdDwsxVOeF8I1O65bxC3XbIKuIvg/QxDYHEpoRZ26/tv1mePJLPuilhy
-	f0675WpmTxyZXGqD9u8gQblhBvJNvrt9Xdynb99KK3wDR/Zsbsarke5FikjJ1xty
-	rH7f7XMBsPUL5lBtDmKnGiAftZEP7jErCt9SmrducgmA+h6aqfqcXKxxWrcaDdht
-	KBvAd8zXDsel+s/iC+LPpJySBM0WRPXs5k37QBs0vGGDjMCiZMGqk6a5OvofOSl8
-	06lwlFKXYmWdfjne7a3RUFGCNwar+Y6HnzlwDhwKfA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uu1pm5k2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 11:38:07 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 537BX717020028;
-	Mon, 7 Apr 2025 11:38:07 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uu1pm5jy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 11:38:07 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 537AoHK1025537;
-	Mon, 7 Apr 2025 11:38:06 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbkngsq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 11:38:06 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 537Bc5Ng30999132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 11:38:05 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5562F58043;
-	Mon,  7 Apr 2025 11:38:05 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E280958059;
-	Mon,  7 Apr 2025 11:38:01 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.255.9])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  7 Apr 2025 11:38:01 +0000 (GMT)
-From: Venkat <venkat88@linux.ibm.com>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XXwebaJ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744025917; x=1744630717; i=markus.elfring@web.de;
+	bh=7BpszykP3a8TgXiCiFnrLPKvDXMJeEZXi14t+noJhAg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=XXwebaJ6g2otca99erTdOKqgrr8wdPMKcSJGjYO8sFXrDVlp6LvYz8uOtAGgrB7L
+	 6xs7eBLxbiBp3iJfKQHmktD6Ec4bodRdCV+OIIWc1dE1pCTiG2NBJUqvOWALW0xny
+	 ooo7c/QlEtNW3LOvX/x6QIqukBofE3BJZZQjiiC+/ROLyyVlEpG6GXolH8a9VfyM9
+	 +IdofeQb7rkL7wQ4pzx1LVnNWi1RTfoctCpjAWzyXQW5HrWX3B5a9xfsEqrIKXfs9
+	 orKLC/xoAqcjzwC8cmYGjIRgemtvQIw6+gNywm+F5B3P/TARbSEk8D8fEt/n/BrGi
+	 4+CJcXBGskXI2XO4tQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.4]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MumJF-1tA47z47z1-010NWl; Mon, 07
+ Apr 2025 13:38:37 +0200
+Message-ID: <5d8d6101-1a4b-4832-b263-e0f56840fdcd@web.de>
+Date: Mon, 7 Apr 2025 13:38:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH 10/10] kunit: slub: add module description
-Message-Id: <DC0A949B-A21C-460A-A368-377B4A28F141@linux.ibm.com>
-Date: Mon, 7 Apr 2025 17:07:48 +0530
-Cc: akpm@linux-foundation.org, arnd@arndb.de, feng.79.tang@gmail.com,
-        jeff.johnson@oss.qualcomm.com, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux@roeck-us.net, masahiroy@kernel.org,
-        rmoar@google.com, Stephen Rothwell <sfr@canb.auug.org.au>,
-        vbabka@suse.cz, xiaopei01@kylinos.cn
-To: arnd@kernel.org, akpm@linux-foundation.org
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sGd__CG-Qqc9oL1RY_BugIK2ts-ZZaVp
-X-Proofpoint-ORIG-GUID: xuuccnJ-CAvhy-FQ1qyPqEv0ILXr-cRF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- bulkscore=0 phishscore=0 mlxlogscore=871 spamscore=0 impostorscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504070082
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Qasim Ijaz <qasdev00@gmail.com>, linux-input@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+References: <20250406133551.4576-1-qasdev00@gmail.com>
+Subject: Re: [PATCH RESEND] HID: thrustmaster: fix memory leak in
+ thrustmaster_interrupts()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250406133551.4576-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7yBflSxGGeWdw7bVzYWFg7LDXkghO2FiIafj3/KBPQ0KK3LFSE6
+ rUn4X4ZhrwNVxZ6nBDP2tGow1+98ZomcmoJLr5stRtCAVjXWd3LbI7HnZOuS/MUHou5NSje
+ Zdle4XiyzsUdu8sgG8VyHHfeq69uRV8tUwRbaJ1TowZACZgZlBSznwewxMA9xbAX/HcWyem
+ HDrFii6zNxo/tqIjm+jEQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gjRTKgY1ReI=;b6/mK2dG3AeTU/SDylEZwv+v2qR
+ Sa8UWWlf9Waf1XPKaaoxzSlHAvt5AT6SZAeXHcaqTF1nCFP1Ep3wDnsOn1gTuS9HlSQIuMgs6
+ XAn0aNo93EsOvCAapbXP/yg+m9saqNbikQOhA0lB7R2E/8KJ7B8JSCa/+FnDnWbtylrNPyLgl
+ Qa/aBH/GMwg0P3E4quhWHUNuICIbPQX23Vi4yDrEmKQj/vLrAD+MmJ+h0X54yBO9T7gvq+Qhn
+ TQPTMLeGWoei4vlv7YvHKpUr+RHDq87Q5gdFg+z0ICmayROM/R8HCfCV/pD3OCNGV7qg/x4d0
+ /wY8eC6rKlOzqnwoSHKFn7OJ/EucV3+B60oAU3mIVzkbgdkP8Twno8ILkxOHSyvlLuMO/RFWE
+ lUUv2n5vw0LXZl3U0BiNuPMRnrc2u/EsdnVfwQFagNo4ZxQVTKUZTO6/XTZoWnwW9MiCcfisg
+ GwVYlhbExyMpaQAGHWyJVpLc+R6vZX5qNMnUtzRoywQYdJGCEt8dsjL/AfJW+oezjdcQqemaE
+ AC7OkNYESfHANkzbCRP84mHhRL+KOnt3UgO+UIlybXbBxuurXiatis7Oy0xCv15fDTq1WHb8G
+ jNvPBLP9g1g4VHs8NaR0JyVSqrffI/p1n2UePSlZbcvAJFkZhSPAQQohah91D5EHHbqeV873c
+ GH58MChwSl5cZ7dKSiWwKdIeAxfR2QsQAm8/zNBHuNAwtGbxFH9IAK8gL+Ti46Iar+6pqApcK
+ 4BCYYcXoBHBwvWKsPD5597LNc7KKIKEHvvwRsfIwL68cSWzJ2jriL/bEbbAKRFJtQrsvpSLCi
+ HvIEUCjmfjxAZsjzPEBlfXH28ChJptlTRXAs3N88jWN6MPkP2Hl6/+Dciugf8b+ueuZmCoqZB
+ 9m7L1UuyA8MR8MPICKhkWF1M+jFjr3MWV2uC0w1YvmOxa+9YV6H+C29WCts05nlapo1xPZiyG
+ fYGBp2yTgq8CUnLLiEOdzrMu9WOdH2XzfV9egf0G64Nt/AUgqGvxy6iTiHzhhEEI+I1VSpmHq
+ wiUnrBYBIfbTfr8KAD1HhtktrZ0H2nn1lY6hK5CtCJCzQYggcCZwtw3FmzHcFVi5kjVKsvnZp
+ RTsN3oB18mSMTp979jawGqA9ttK6bOp3XDtSuTPR+p9EbsOU9xjZ1zbhvV++pc3Wdsz4/OZbz
+ KiLKa5PnAuNpjailDaz5VrbijUSbWmW6Pq3TOwD+n66+RvHUpq5dDPuxv0dDljWzSup7XkEeK
+ 9VAiJfA8/6OqCEHrWXPKZzil0/2ygL8Lx3BmgnSpg1y8DiMwKkzC5d88IuVkX0WfpdZHCIWP4
+ f6d0FLPr7JfgME92AnC6emu5mZ0g6Ohv1SVyLfY/ZDDRRhBN4m4jwVkq5FhBAj35BUuqN6PeR
+ XmQL3akHCIGqRZ0y/AeaWzTHbTRPVn6RngKyuA6wputxoMyDLLOlmcOfRcWulu/sEYAf0EK6x
+ k5Tfq4FjotKRJOhQ3KyLJiO/H3urRstTPz+x0hI098S9fDihRtu6ZXCXUqTeouHSHA2pBSw==
 
-Hello,
+> In thrustmaster_interrupts(), the allocated send_buf is not
+> freed if the usb_check_int_endpoints() check fails, leading
+> to a memory leak.
+
+Will you get into the mood to make word wrapping occasionally a bit nicer
+for such text lines (which may be longer than 59 characters)?
 
 
-I am observing this warning on the mainline kernel on IBM Power9 Server. =
-Similar warnings are reported on the linux-next as well [1] .
+=E2=80=A6
+> +++ b/drivers/hid/hid-thrustmaster.c
+> @@ -174,6 +174,7 @@ static void thrustmaster_interrupts(struct hid_devic=
+e *hdev)
+>  	u8 ep_addr[2] =3D {b_ep, 0};
+>
+>  	if (!usb_check_int_endpoints(usbif, ep_addr)) {
+> +		kfree(send_buf);
+>  		hid_err(hdev, "Unexpected non-int endpoint\n");
+>  		return;
+>  	}
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
+* You may avoid such repeated function calls by using another label instea=
+d.
+  https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+=
+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resou=
+rces#MEM12C.Considerusingagotochainwhenleavingafunctiononerrorwhenusingand=
+releasingresources-CompliantSolution(copy_process()fromLinuxkernel)
 
-Repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+* How do you think about to benefit any more from the application of the a=
+ttribute =E2=80=9C__free=E2=80=9D?
+  https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/slab.h#L=
+472
 
-HEAD Commit: 0af2f6be1b4281385b618cb86ad946eded089ac8.
-
-[1]: =
-https://lore.kernel.org/all/20250407084858.74a128d2@canb.auug.org.au/
-
-I have made below changes and it fixes the issue.
-
-diff --git a/lib/tests/slub_kunit.c b/lib/tests/slub_kunit.c
-index d47c472b0520..848b682a2d70 100644
---- a/lib/tests/slub_kunit.c
-+++ b/lib/tests/slub_kunit.c
-@@ -325,4 +325,5 @@ static struct kunit_suite test_suite =3D {
- };
- kunit_test_suite(test_suite);
-=20
-+MODULE_DESCRIPTION("Kunit tests for slub allocator");
- MODULE_LICENSE("GPL");
-
-
-If its acceptable please add below tag.
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
 Regards,
-Venkat.=
+Markus
