@@ -1,75 +1,39 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58306207DE5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061DD1FE454;
+	Mon,  7 Apr 2025 16:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043163; cv=none; b=rNadAxzzidDsaTHmLCF4zZm+uvkAasWYHlesmdOZ8ZxF3QbKX0XPOyw+fFvt+QjqzFx97Ll/U1/zudoG007eCG/TARmFhc87N7Hw2PB+OQcqOCsgWL/mp5X4s/my/Z4cyKicchw3bVx6RC6JAZUQ4aYmpxpYHaUPOwKm+5zmGj8=
+	t=1744043228; cv=none; b=BdZzA1gq9DilOCKKtgaGVWOAH1Wmv+cAW+icSap08NsKai0fckhUUkx1WkLUHqxXOpjYy61daXy+dAzpIggwmEiQ16uV7N0Kia1T56pgOncHe82aqKfHZkVKm3Ip26+HJHxgcyYh5oE5/ZscvGJBHTC8hYs/v+pdaA3GIiWadk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043163; c=relaxed/simple;
-	bh=GMvaB3Mzb4QuxEqJ77ptGlToNSrLtUC7nn+mY9oNs94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GcjfVqaLQMp1GP/hctXtoGbArMOcys29tpZi1PVUCQrfR9ehxWvuAHF7Ldao3hbLqRG8R+yzVBgx4Tb/lrpmLGNronO6qGQPDSUw52dyGLa75cofzPnBNe5zM7WpzfNnQbdLfw9RA9d3JTmFQB6f4IwSs4ekbaJhBbn6Zkp26f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BEzljU0P; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1744043228; c=relaxed/simple;
+	bh=uGljTwGwHyQfIKUhJ3rgVgi8PhrSqdfBARVYzZ39ZwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WNF1U6Pb4t/yfIyGs9CyohlOGk5ZqQpZqQFToLwQhu9eVYCwvQ/AaNG/BgYXEEO5CfEvJG2zbKX1ZaLNqU0IRt9YmKNNdFjnM4a6yfTGBPFJU4Vt94x1jYa3JdLFlWpbqP+joNqA9ExoAmVdvqbD0sgxdPVV8tGARetsfhX1TEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=od3xGPtF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BEzljU0P"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8f7019422so41266346d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1744043160; x=1744647960; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+iCbhKN/vcDN+xhzXNKoawXibM8X0AG5KtFkzYcV9TI=;
-        b=BEzljU0P+1J2qYRt5ZjzzhsUAzbCPxZj9HMuMV0Y+AGVW3zYemgEkl7LFdssaBQgP9
-         IBgjTcfbxLsjwYaLL98VrqeDgFM4753fTj4yewr8IrJV9KDZKS/LbXuAsJwNTKHQw8d4
-         KyWQLCv5fU7iIo6bGYMuXdBgGthxlrsoX4dRyoBzg+MgVI8vRBG6fCfiZu29lPw7HJ5+
-         /LBlTko+INhtqOKllKeog96oEkFnjTidqonNlsRWweqQFBUZiAhA4HKDEJMZQo5gw+1H
-         dLXt27ThzXgy5wfeOwmmvf9PmXOpedrbnt6gLBzOxLxRF8wNHyfhy1DxUAeV47HOqR2g
-         NFVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744043160; x=1744647960;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+iCbhKN/vcDN+xhzXNKoawXibM8X0AG5KtFkzYcV9TI=;
-        b=ptukBYy2D5XNswb5XqL/A132CAqOdhR4JK/SqvdD5+JWRJ9qf/5VTnNYHvvv4PtAb5
-         L4tolG5RRlt0Yy/Bc6H9KqBqQ0OiU3cF1inhpTS7eLKSq7mPyb+POvFhv+rJtY0oE9ny
-         bxdpDS7JSGwTKF/5U19Uv5BXR4+NUKFFKiW0G2DsUx3Raf5agJpTX9xSW5s7waIMFn11
-         IGwEchJWLPsX4kQJvezfb4BM458aH15yWwYiayaRQfSTdjgzBCzsN9QeuOgSJCrRSB82
-         M2GgHuzKK7JcVFsrWMjC8vCuWlSjQzBU4mUdONOl4vHib3YB6fAYYtMncdWSuJYo3mRY
-         dvyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeI4vL+iafh9ZQ/87VE+TEZmKMLr7vWKlj7wZNSzqA9PBGBhkbWHfbgh3qM5poO0kvzy/DO2cbfgozEkI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhnMjDggNv5QQ6XhW8eCwSZh8M5DlK9YRHTpvSaRklHSd3YNEm
-	U+RvvU90aePCieHg9EPKer1X0afLtet1ZMK/MW9V47Aip0Ion9huZq48kXGtRYQ=
-X-Gm-Gg: ASbGncvv1sjw1Ow1XXxuVZJBNFlEs0TXldBNtdducMs26qifQtubz0QAVlti6RGSkrf
-	zWTskW7xniHUwf26z7cdEG/VMO5CjDQxIr2x/sWY4NY6eG6SCpzPZhyMmQ/3L7Nxvp+NHdzsUSe
-	xaZeaC7ncf6MSEKVpxY2t9nelryspwDSmfsf+p7Xu7BBzuNFtyI5dGzvvn67f0zCaI+dk5d9HxR
-	Gua0xTuFl050/ZTKwoORqrGdzMcJbPE6ylmDD1kAzNoMuAfe3PrJR0RnICrDFZ/6gGzcNC5OvTb
-	45vdtSr9A/ucJ2yvHSFcpSU2Wc5eqRIsP+FNPSwbvjPOKSDPsZvY3DnUN3NFVh/oZniQjxfEOYJ
-	RSfowy9FxThKRU76/zJMrAPQ=
-X-Google-Smtp-Source: AGHT+IEg3Lx6+oE5FhUSj9L70cdQ4V88WkIK1cwdCX/+smOJLjX9bN7bqLLW99Cz3jwxXg7No7sDEQ==
-X-Received: by 2002:a05:6214:2aa1:b0:6e4:3eb1:2bde with SMTP id 6a1803df08f44-6f00dfd7017mr269610496d6.19.1744043159997;
-        Mon, 07 Apr 2025 09:25:59 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f138c5bsm60200316d6.72.2025.04.07.09.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:25:59 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u1pIN-00000007DAh-0BNd;
-	Mon, 07 Apr 2025 13:25:59 -0300
-Date: Mon, 7 Apr 2025 13:25:59 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: luoqing <l1138897701@163.com>
-Cc: luoqing@kylinos.cn, Leon Romanovsky <leon@kernel.org>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rdma: infiniband: Added __alloc_cq request value Return
- value non-zero value determination
-Message-ID: <20250407162559.GA1562048@ziepe.ca>
-References: <20250407093341.3245344-1-l1138897701@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="od3xGPtF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABEF3C4CEDD;
+	Mon,  7 Apr 2025 16:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744043227;
+	bh=uGljTwGwHyQfIKUhJ3rgVgi8PhrSqdfBARVYzZ39ZwM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=od3xGPtFuaBYqVjju/bYhM4cxwm5meyXoVnl0K1d1myknCpTdX0RBwVBU8gNbzzrV
+	 3DwJd/AA+sUJUxsHir5xyOKuhjImUh9fnepAYzhtCpVMb+2urCDm0cC5xBr1hIONl1
+	 ZKayFQnAYLYO4iCplSzd26bY6kaGRNf4Fp/udmdRONNv07/TijciNghMSBZTvfVf0J
+	 zuC++aiO7+rThVIZNYTK7fXc11F39pq0aNOspSSq3g1w6C5rQbEtp/rWTFM4JpXupO
+	 dJSfn5RSgcwhFSObyoVVC7W+jTuUi0sSVXvkpC5CsiI7Z87rpLZyNAGuF8atUEq4XI
+	 L8p/wxI9qtOvQ==
+Date: Mon, 7 Apr 2025 09:27:06 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [GIT PULL] CRC cleanups for 6.15-rc2
+Message-ID: <20250407162706.GA2536@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,37 +42,153 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407093341.3245344-1-l1138897701@163.com>
 
-On Mon, Apr 07, 2025 at 05:33:41PM +0800, luoqing wrote:
-> From: luoqing <luoqing@kylinos.cn>
-> 
-> When the kernel allocates memory for completion queue object ib_cq on the specified
-> InfiniBand device dev and ensures that the allocated memory is cleared to zero,
-> if the ib_cq object is not initialized to 0, a non-null value is still returned,
-> and the kernel should exit and give a warning.
-> Avoid kernel crash when this memory is initialized.
+Hi Linus, please consider this second set of CRC kconfig option cleanups for
+6.15-rc2.  It could wait until 6.16 if you prefer, but I figured this would work
+well for 6.15 since it's a straightforward cleanup that touches a lot of files.
 
-?? This doesn't make any sense.
+The following changes since commit 91e5bfe317d8f8471fbaa3e70cf66cae1314a516:
 
-> ib_mad_init_device
-> 	-->ib_mad_port_open
-> 		-->__ib_alloc_cq
-> 			-->rdma_zalloc_drv_obj(dev, ib_cq);
+  Merge tag 'dmaengine-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine (2025-04-01 12:57:14 -0700)
 
-rdma_zalloc_drv_obj() must return memory that is validly castable to
-the struct ib_cq.
+are available in the Git repository at:
 
-> When ib_cq is zero, the return value of cq is ZERO_SIZE_PTR ((void *)16) and is not non-null
-> cq = rdma_zalloc_drv_obj(dev, ib_cq);
+  https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/crc-for-linus
 
-It looks to me like the driver returned the wrong size for the ib_cq
-in the ops->size_ib_cq. It is not allowed to be 0 if the driver is
-supporting cq.
+for you to fetch changes up to b261d2222063a9a8b9ec284244c285f2998ee01e:
 
-Arguably we should check that the size_* pointers have the requirement
-minimum size when registering the driver.
+  lib/crc: remove CONFIG_LIBCRC32C (2025-04-04 11:31:42 -0700)
 
-Allocation time is too late.
+----------------------------------------------------------------
 
-Jason
+Finish cleaning up the CRC kconfig options by removing the remaining
+unnecessary prompts and an unnecessary 'default y', removing
+CONFIG_LIBCRC32C, and documenting all the CRC library options.
+
+----------------------------------------------------------------
+Eric Biggers (7):
+      lib/crc: remove unnecessary prompt for CONFIG_CRC32 and drop 'default y'
+      lib/crc: remove unnecessary prompt for CONFIG_CRC_CCITT
+      lib/crc: remove unnecessary prompt for CONFIG_CRC16
+      lib/crc: remove unnecessary prompt for CONFIG_CRC_T10DIF
+      lib/crc: remove unnecessary prompt for CONFIG_CRC_ITU_T
+      lib/crc: document all the CRC library kconfig options
+      lib/crc: remove CONFIG_LIBCRC32C
+
+ arch/arm/configs/at91_dt_defconfig                |  1 -
+ arch/arm/configs/collie_defconfig                 |  1 -
+ arch/arm/configs/davinci_all_defconfig            |  1 -
+ arch/arm/configs/dove_defconfig                   |  1 -
+ arch/arm/configs/exynos_defconfig                 |  1 -
+ arch/arm/configs/imx_v6_v7_defconfig              |  2 -
+ arch/arm/configs/lpc18xx_defconfig                |  1 -
+ arch/arm/configs/lpc32xx_defconfig                |  1 -
+ arch/arm/configs/milbeaut_m10v_defconfig          |  2 -
+ arch/arm/configs/mmp2_defconfig                   |  1 -
+ arch/arm/configs/multi_v4t_defconfig              |  1 -
+ arch/arm/configs/multi_v5_defconfig               |  1 -
+ arch/arm/configs/mvebu_v5_defconfig               |  1 -
+ arch/arm/configs/mxs_defconfig                    |  1 -
+ arch/arm/configs/omap2plus_defconfig              |  3 --
+ arch/arm/configs/orion5x_defconfig                |  1 -
+ arch/arm/configs/pxa168_defconfig                 |  1 -
+ arch/arm/configs/pxa910_defconfig                 |  1 -
+ arch/arm/configs/pxa_defconfig                    |  2 -
+ arch/arm/configs/s5pv210_defconfig                |  1 -
+ arch/arm/configs/sama7_defconfig                  |  2 -
+ arch/arm/configs/spitz_defconfig                  |  1 -
+ arch/arm/configs/stm32_defconfig                  |  1 -
+ arch/arm/configs/wpcm450_defconfig                |  2 -
+ arch/hexagon/configs/comet_defconfig              |  3 --
+ arch/m68k/configs/amcore_defconfig                |  1 -
+ arch/mips/configs/ath79_defconfig                 |  1 -
+ arch/mips/configs/bigsur_defconfig                |  1 -
+ arch/mips/configs/fuloong2e_defconfig             |  1 -
+ arch/mips/configs/ip22_defconfig                  |  1 -
+ arch/mips/configs/ip27_defconfig                  |  1 -
+ arch/mips/configs/ip30_defconfig                  |  1 -
+ arch/mips/configs/ip32_defconfig                  |  1 -
+ arch/mips/configs/omega2p_defconfig               |  1 -
+ arch/mips/configs/rb532_defconfig                 |  1 -
+ arch/mips/configs/rt305x_defconfig                |  1 -
+ arch/mips/configs/sb1250_swarm_defconfig          |  1 -
+ arch/mips/configs/vocore2_defconfig               |  1 -
+ arch/mips/configs/xway_defconfig                  |  1 -
+ arch/parisc/configs/generic-32bit_defconfig       |  2 -
+ arch/parisc/configs/generic-64bit_defconfig       |  1 -
+ arch/powerpc/configs/44x/sam440ep_defconfig       |  1 -
+ arch/powerpc/configs/44x/warp_defconfig           |  2 -
+ arch/powerpc/configs/83xx/mpc832x_rdb_defconfig   |  1 -
+ arch/powerpc/configs/83xx/mpc834x_itx_defconfig   |  1 -
+ arch/powerpc/configs/83xx/mpc834x_itxgp_defconfig |  1 -
+ arch/powerpc/configs/83xx/mpc837x_rdb_defconfig   |  1 -
+ arch/powerpc/configs/85xx/ge_imp3a_defconfig      |  2 -
+ arch/powerpc/configs/85xx/stx_gp3_defconfig       |  2 -
+ arch/powerpc/configs/85xx/xes_mpc85xx_defconfig   |  1 -
+ arch/powerpc/configs/86xx-hw.config               |  1 -
+ arch/powerpc/configs/amigaone_defconfig           |  1 -
+ arch/powerpc/configs/chrp32_defconfig             |  1 -
+ arch/powerpc/configs/fsl-emb-nonhw.config         |  1 -
+ arch/powerpc/configs/g5_defconfig                 |  1 -
+ arch/powerpc/configs/gamecube_defconfig           |  1 -
+ arch/powerpc/configs/linkstation_defconfig        |  2 -
+ arch/powerpc/configs/mpc83xx_defconfig            |  1 -
+ arch/powerpc/configs/mpc866_ads_defconfig         |  1 -
+ arch/powerpc/configs/mvme5100_defconfig           |  2 -
+ arch/powerpc/configs/pasemi_defconfig             |  1 -
+ arch/powerpc/configs/pmac32_defconfig             |  1 -
+ arch/powerpc/configs/ppc44x_defconfig             |  1 -
+ arch/powerpc/configs/ppc64e_defconfig             |  1 -
+ arch/powerpc/configs/ps3_defconfig                |  2 -
+ arch/powerpc/configs/skiroot_defconfig            |  2 -
+ arch/powerpc/configs/storcenter_defconfig         |  1 -
+ arch/powerpc/configs/wii_defconfig                |  1 -
+ arch/sh/configs/ap325rxa_defconfig                |  1 -
+ arch/sh/configs/ecovec24_defconfig                |  1 -
+ arch/sh/configs/edosk7705_defconfig               |  1 -
+ arch/sh/configs/espt_defconfig                    |  1 -
+ arch/sh/configs/hp6xx_defconfig                   |  2 -
+ arch/sh/configs/kfr2r09-romimage_defconfig        |  1 -
+ arch/sh/configs/landisk_defconfig                 |  1 -
+ arch/sh/configs/lboxre2_defconfig                 |  1 -
+ arch/sh/configs/magicpanelr2_defconfig            |  2 -
+ arch/sh/configs/migor_defconfig                   |  1 -
+ arch/sh/configs/r7780mp_defconfig                 |  1 -
+ arch/sh/configs/r7785rp_defconfig                 |  1 -
+ arch/sh/configs/rts7751r2d1_defconfig             |  1 -
+ arch/sh/configs/rts7751r2dplus_defconfig          |  1 -
+ arch/sh/configs/sdk7780_defconfig                 |  1 -
+ arch/sh/configs/se7206_defconfig                  |  3 --
+ arch/sh/configs/se7712_defconfig                  |  1 -
+ arch/sh/configs/se7721_defconfig                  |  1 -
+ arch/sh/configs/se7724_defconfig                  |  1 -
+ arch/sh/configs/sh03_defconfig                    |  1 -
+ arch/sh/configs/sh2007_defconfig                  |  2 -
+ arch/sh/configs/sh7724_generic_defconfig          |  1 -
+ arch/sh/configs/sh7763rdp_defconfig               |  1 -
+ arch/sh/configs/sh7770_generic_defconfig          |  1 -
+ arch/sh/configs/titan_defconfig                   |  1 -
+ arch/sparc/configs/sparc64_defconfig              |  1 -
+ drivers/block/Kconfig                             |  2 +-
+ drivers/block/drbd/Kconfig                        |  2 +-
+ drivers/md/Kconfig                                |  2 +-
+ drivers/md/persistent-data/Kconfig                |  2 +-
+ drivers/net/ethernet/broadcom/Kconfig             |  4 +-
+ drivers/net/ethernet/cavium/Kconfig               |  2 +-
+ fs/bcachefs/Kconfig                               |  2 +-
+ fs/btrfs/Kconfig                                  |  2 +-
+ fs/ceph/Kconfig                                   |  2 +-
+ fs/erofs/Kconfig                                  |  2 +-
+ fs/gfs2/Kconfig                                   |  1 -
+ fs/xfs/Kconfig                                    |  2 +-
+ lib/Kconfig                                       | 57 +++++++++++------------
+ net/batman-adv/Kconfig                            |  2 +-
+ net/ceph/Kconfig                                  |  2 +-
+ net/netfilter/Kconfig                             |  4 +-
+ net/netfilter/ipvs/Kconfig                        |  2 +-
+ net/openvswitch/Kconfig                           |  2 +-
+ net/sched/Kconfig                                 |  2 +-
+ net/sctp/Kconfig                                  |  2 +-
+ tools/testing/selftests/bpf/config.x86_64         |  1 -
+ tools/testing/selftests/hid/config.common         |  1 -
+ 116 files changed, 46 insertions(+), 170 deletions(-)
