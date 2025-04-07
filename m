@@ -1,186 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E02035968;
-	Mon,  7 Apr 2025 08:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2B6221F1A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013038; cv=none; b=k7pNCJvkLAjoA9e0Pj71IYaX8XWPw2qEMQ/To3dh0ZxvMQ7OxrynJkvH0xJAeUJ0m6/ThPqDrKq6k8vS8fd+Yv8JChYXW0rnXOaqJViMXh+4nPMV/IHYQMCisAuxMYsgmzMh/WxmmGj9P5KJn4dbkXSfam0Dc2q7S3CSMkvusrg=
+	t=1744013063; cv=none; b=F3N80gMKvO+uPGe8bUg9JxL6Ft5a8wgiDbtl88XIH7iNk6N4/b9Ypk5lOvjB7H6sUPnpvHHY6cMvWadMlC3b1/AaGsEONY7Miw8/dPgctg0WkXlSnErhKMTNSbz3X88hamPyUeIwcfBmtl2XyWb9sNDxidP5Jy8R+/tdC1KXXeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013038; c=relaxed/simple;
-	bh=PcyczffQmyxkIS/mnKLqEhn2IuZ1HMm8KdQ1jktoTRM=;
+	s=arc-20240116; t=1744013063; c=relaxed/simple;
+	bh=7TnCmTzEaSfvHUAap+DisKRcdPyBOGyfTTrwSA8XN+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T8/9rEPFBtJLA6mUU4PdOegXjqUdULbP+oiNOvhmxEQkwlPiIWTP2EVlmSpK9iZHRGxp5DvLbqFBjv908Vr/25Y3BDq2eD3dDDFkorN5xfa3qpjXejYagWgAEY1f1Z7GdnAR2G25jyDZ3SCca2Ri4lcXrVN+3goJzcBJ/A86GsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5BJ/hok; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D40z2rEzfI8vvRiEhtwWPw0/GuiI+Vx3pSlSxCqi9LVMuXr4pyaIr+xoHXIMNEzlNEqoWZwIA7TCSAz41zoeiB7BoSRe2ayKM+faQ4Pw7H3vcBPyZJ6SLnb0iEJ6fT3hcRyxnQHHmhSWbfF0b7dYwc7XbsaUDoie3od2GA4irSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AqWlNunH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5BJ/hok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE55EC4CEDD;
-	Mon,  7 Apr 2025 08:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744013038;
-	bh=PcyczffQmyxkIS/mnKLqEhn2IuZ1HMm8KdQ1jktoTRM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j5BJ/hok+xXOM+t6+/FjVBnLukZ1RoLa4vb+39rSBapez7jv91gdH0wmGtj4XW116
-	 8zD9scX3rn404hc9GbXuNkC5KbPsZoI2uMBIveyEqYLSY0NyjKluWoBxFhUv2f1Gr3
-	 MZmo/9otey12resc9152JxmaQ8VO7am8IjVlcgUcPOKZ8uo/8ZTtH9ARfGRCGrjWyB
-	 Vb448b8pik/SWcpoj5HcczTBvQtIj9JT+woEFb+MiwTqHaJMc6sHPGlu0nyheUu5od
-	 RVT1dm9+dN1JWxQphhV7QYJ0SEFPwBHtYvFJNgw0TS4aS3NnKmMAIK+NSD1g9ej2Sb
-	 2gsc+4sa578WA==
-Date: Mon, 7 Apr 2025 10:03:54 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
- consistently
-Message-ID: <Z_OG6jdsX0_uar2a@ryzen>
-References: <20250403212924.306782-1-ipylypiv@google.com>
- <Z-_JExGDyO9pVTON@ryzen>
- <Z_AweMPLRJgBIBF3@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AqWlNunH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744013060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8fp+goqsiDX/imKy8nA+uPVV6MYng1RFSM6Na0BmegY=;
+	b=AqWlNunHJoSzjMprL4+rnnXjBJd+hpcJbD2ajY3ukI7A69G60EhKOWFqtHJTJMdDNdjClQ
+	jQ0hqdaiMWMXNBolnxObv4Ej+jxBrtceoughoS/ETb7qTIDXoyUMzF1UTIFujCkjrKhkWB
+	WkKKTFx0cMaGYR7fscXxoz8LR/J8rXM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-qRVqYNidPuaQRHo-dtghdw-1; Mon, 07 Apr 2025 04:04:17 -0400
+X-MC-Unique: qRVqYNidPuaQRHo-dtghdw-1
+X-Mimecast-MFC-AGG-ID: qRVqYNidPuaQRHo-dtghdw_1744013056
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39135d31ca4so2127037f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:04:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744013056; x=1744617856;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8fp+goqsiDX/imKy8nA+uPVV6MYng1RFSM6Na0BmegY=;
+        b=CFQheYePj8xLu8zNxxABXtFy9jIAGa3rtkVJ/nlAxaz9lg7r69LjSe1Rh+lKcNeW+Y
+         gpRumGtaYu1m/zKzS242k8G+wgn6OB0BfYZ1eBWETNJc6MFyiF7OaXexz9WAjclFIN2c
+         OVedzvbfz4PWnOXEjQ/GK9zTZ6Ilrs4usktmx7qzSSiNuQya2brLr8RI0tjVeBiNftpv
+         U81v27qWvNMCZNwW4yOAF5Mv/UlFn7Au0S/EFFSzDcwAIiljVIucvojIVNmesstoKyBy
+         qH6ZfDALiALQDuwe4ez8F/cYfXa1TmxU70wXn6oBr+TLP3yxTAUm3FHJb/2jg4b2zuaO
+         ohfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgGFb8wcf4SoyB9yQbH1nA0e2yUHTb34OmCLFIzZlGu/rq4Rn5qNgn4Pqefz957xrLzmy5ZGdgU5KI7h8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQZExHTNYodh3CwuPf2btbd5WAqX82JC+G7XdJv2Y+5zu94n6K
+	1X18nOTNl7LbhC0KccH/8sk2xJdJz/0tX9tg4iSRmIY5tjtgXAYW8g3wi+FaO4lTG2hydPYmFbA
+	rb8fTemP56M8VqJz//E2QeYzaz5E4UU6WEu4KdGyzyasNnQVtbUwKobLSR/Ri7A==
+X-Gm-Gg: ASbGncsVCQGvLZcIgVIrj5irz80r9endGfzHVlSL0Z35J8uH3SH3AoCfJBpC0yobhC+
+	hw5dSXT8IT1ssOESmW8RHMCWLPjBPNl0I22+hutQET7NrYDzKA492K3AM/jMyvdI2ISH/nDYZSq
+	9+IdeSP7DiP1EHqCMj+YjQV0m0n14Ggz7mIU3EfHzL8RJL6ZtWkf3LWDia3/3wPALWwptJPlFXS
+	7tFS8rmKB1Gaj8RRt8O3LJlcp2YURN0tIddemJ0yQybzGltAGRKCXiUXfI0gB7mlLwr8Cf+buZN
+	E844m3VoA1Q9TPahlXW9W0dAY+uoBcpp4clhCVfv3+bz0Cpa9a8piVP9XIZFujo/
+X-Received: by 2002:a5d:64ce:0:b0:39c:1f02:44d8 with SMTP id ffacd0b85a97d-39cb35a15f7mr9124854f8f.4.1744013055913;
+        Mon, 07 Apr 2025 01:04:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQypbiq0xQEWAWYQHoKnyO1B74jcLwUjtWUKTnUrs/7VMKU20PoxRua8Xmc3N2Zu+6xDL37Q==
+X-Received: by 2002:a5d:64ce:0:b0:39c:1f02:44d8 with SMTP id ffacd0b85a97d-39cb35a15f7mr9124805f8f.4.1744013055379;
+        Mon, 07 Apr 2025 01:04:15 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d75335591sm5098018f8f.1.2025.04.07.01.04.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:04:14 -0700 (PDT)
+Date: Mon, 7 Apr 2025 10:04:09 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: keyrings@vger.kernel.org, stable@vger.kernel.org, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Howells <dhowells@redhat.com>, 
+	Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@cloudflare.com>, 
+	"David S. Miller" <davem@davemloft.net>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Ard Biesheuvel <ardb@kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v3] tpm: Mask TPM RC in tpm2_start_auth_session()
+Message-ID: <2mjtwprr3dujf4wbu5licb3jtzxujimcz5iahrgqymu6znwbbq@cslxwt7ejva3>
+References: <20250407071731.78915-1-jarkko@kernel.org>
+ <20250407072057.81062-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_AweMPLRJgBIBF3@google.com>
+In-Reply-To: <20250407072057.81062-1-jarkko@kernel.org>
 
-Hello Igor,
+On Mon, Apr 07, 2025 at 10:20:57AM +0300, Jarkko Sakkinen wrote:
+>tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+>
+>[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+>
+>Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+>error codes.
+>
+>Cc: stable@vger.kernel.org # v6.10+
+>Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+>Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+>Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+>Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+>---
+>v3:
+>- rc > 0
+>v2:
+>- Investigate TPM rc only after destroying tpm_buf.
+>---
+> drivers/char/tpm/tpm2-sessions.c | 31 +++++++++++++++++--------------
+> include/linux/tpm.h              |  1 +
+> 2 files changed, 18 insertions(+), 14 deletions(-)
+>
+>diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+>index 3f89635ba5e8..abd54fb0a45a 100644
+>--- a/drivers/char/tpm/tpm2-sessions.c
+>+++ b/drivers/char/tpm/tpm2-sessions.c
+>@@ -40,11 +40,6 @@
+>  *
+>  * These are the usage functions:
+>  *
+>- * tpm2_start_auth_session() which allocates the opaque auth structure
+>- *	and gets a session from the TPM.  This must be called before
+>- *	any of the following functions.  The session is protected by a
+>- *	session_key which is derived from a random salt value
+>- *	encrypted to the NULL seed.
+>  * tpm2_end_auth_session() kills the session and frees the resources.
+>  *	Under normal operation this function is done by
+>  *	tpm_buf_check_hmac_response(), so this is only to be used on
+>@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
+> }
+>
+> /**
+>- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+>- * @chip: the TPM chip structure to create the session with
+>+ * tpm2_start_auth_session() - Create an a HMAC authentication session
+>+ * @chip:	A TPM chip
+>  *
+>- * This function loads the NULL seed from its saved context and starts
+>- * an authentication session on the null seed, fills in the
+>- * @chip->auth structure to contain all the session details necessary
+>- * for performing the HMAC, encrypt and decrypt operations and
+>- * returns.  The NULL seed is flushed before this function returns.
+>+ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
+>+ * session. The null seed is flushed before the return.
+>  *
+>- * Return: zero on success or actual error encountered.
+>+ * Returns zero on success, or a POSIX error code.
+>  */
+> int tpm2_start_auth_session(struct tpm_chip *chip)
+> {
+>@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+> 	/* hash algorithm for session */
+> 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+>
+>-	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
+>+	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
+> 	tpm2_flush_context(chip, null_key);
+>
+> 	if (rc == TPM2_RC_SUCCESS)
+>@@ -1032,6 +1024,17 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+>
+> 	tpm_buf_destroy(&buf);
+>
+>+	if (rc > 0) {
 
-On Fri, Apr 04, 2025 at 12:18:16PM -0700, Igor Pylypiv wrote:
-> > 
-> > I'm missing the bigger picture here.
-> > 
-> > Are we violating the spec? If so, please reference a specific
-> > section in the specs.
-> 
-> Hi Niklas,
-> 
-> Thank you for the thorough review!
-> 
-> I'm using the SAT-6 (revision 2) spec:
-> 
-> 11 Translation of ATA errors to SCSI errors
-> 11.7 INFORMATION field
-> 
->              Table 201 — Contents of the INFORMATION field
->  +---------------------------+------------------------------------------+
->  | ATA command               | INFORMATION field                        |
->  +---------------------------+------------------------------------------+
->  | FLUSH CACHE               |                                          |
->  | FLUSH CACHE EXT           |                                          |
->  | READ DMA                  |                                          |
->  | READ DMA EXT              |                                          |
->  | READ FPDMA QUEUED         |                                          |
->  | READ SECTORS              |                                          |
->  | READ SECTORS EXT          |                                          |
->  | READ VERIFY SECTOR(S)     | ATA LBA field ᵃ                          |
->  | READ VERIFY SECTOR(S) EXT |                                          |
->  | WRITE DMA                 |                                          |
->  | WRITE DMA EXT             |                                          |
->  | WRITE DMA FUA EXT         |                                          |
->  | WRITE FPDMA QUEUED        |                                          |
->  | WRITE SECTOR(S)           |                                          |
->  | WRITE SECTOR(S) EXT       |                                          |
->  +---------------------------+------------------------------------------+
->  | All others                | Unspecified                              |
->  +---------------------------+------------------------------------------+
->  | ᵃ From ATA error outputs (non-NCQ) or ATA NCQ Command Error log      |
->  +----------------------------------------------------------------------+
-> 
+To avoid the nesting blocks, can we include `TPM2_RC_SUCCESS` case in 
+the switch or move the `if (rc == TPM2_RC_SUCCESS)` before it?
 
-Please send a V3 where you include a reference to SAT-6 (revision 2),
-"11 Translation of ATA errors to SCSI errors" in the commit message.
+Thanks,
+Stefano
 
+>+		switch (rc) {
+>+		case TPM2_RC_SESSION_MEMORY:
+>+			rc = -ENOMEM;
+>+			goto out;
+>+		default:
+>+			rc = -EFAULT;
+>+			goto out;
+>+		}
+>+	}
+>+
+> 	if (rc == TPM2_RC_SUCCESS) {
+> 		chip->auth = auth;
+> 		return 0;
+>diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+>index 6c3125300c00..c1d3d60b416f 100644
+>--- a/include/linux/tpm.h
+>+++ b/include/linux/tpm.h
+>@@ -257,6 +257,7 @@ enum tpm2_return_codes {
+> 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+> 	TPM2_RC_REFERENCE_H0	= 0x0910,
+> 	TPM2_RC_RETRY		= 0x0922,
+>+	TPM2_RC_SESSION_MEMORY	= 0x0903,
+> };
+>
+> enum tpm2_command_codes {
+>-- 
+>2.39.5
+>
+>
 
-> > If a command attempts to access or reference an invalid LBA, then the device
-> > server shall report the first invalid LBA (e.g., lowest numbered LBA) in the
-> > INFORMATION field of the sense data (see SPC-6). If a recovered read error is
-> > reported, then the device server shall report the last LBA (e.g., highest
-> > numbered LBA) on which a recovered read error occurred for the command in the
-> > INFORMATION field of the sense data.
-> > """
-> > 
-> > Since we are generating this, it makes me thing that perhaps we should not
-> > set the INFORMATION field unconditionally? I guess it makes sense for e.g.
-> > REQ_OP_READ/READ_OP_WRITE commands, but probably does not make sense for e.g.
-> > REQ_OP_FLUSH commands?
-> >
-> 
-> SAT-6 specifies that we should set ATA LBA for FLUSH CACHE [EXT] as well.
-> For "All others" commands (not explicitly listed in Table 201), the value
-> in the INFORMATION field is "Unspecified". I think it should be fine to
-> set ATA LBA for other commands as well.
-
-Agreed, let's just set it unconditionally for now, and if there ever comes
-a command that wants to use the INFORMATION field for something else
-(which seems unlikely), we can simply special case that command.
-
-However, please mention this in the commit message as well.
-
-
-> > As you know, we also have successful commands with sense data
-> > (CDL policy 0xD), see ata_eh_get_success_sense().
-> > 
-> > These commands will either fetch sense data using
-> > ata_eh_get_ncq_success_sense() or using ata_eh_get_non_ncq_success_sense()
-> > (the latter function will fetch sense data using ata_eh_request_sense()).
-> > 
-> > Regardless of the path taken, these commands will also end up in
-> > ata_scsi_qc_complete(), so perhaps it is not enough for your patch to
-> > modify ata_scsi_qc_complete() to simply set the INFORMATION field for
-> > commands with ATA_ERR bit set (is_error) ? Perhaps you should also
-> > consider commands with sense data (have_sense), but without is_error set?
-> >
-> 
-> SAT-6 "11.7 INFORMATION field" has a footnote for the "ATA LBA field" as
-> follows: "From ATA error outputs (non-NCQ) or ATA NCQ Command Error log".
-> 
-> I limited the change to commands with ATA_ERR bit set (is_error) because
-> the spec explicitly mentions errors and the whole section 11 is dedicated
-> to the translation of ATA errors.
-
-We can have sense data for both SCSI status codes GOOD and CHECK CONDITION.
-I'm not really a big fan that the sense data is not the same (does not
-include the INFORMATION field) for these cases.
-
-The logical thing would be, either we have sense data or not, and if we do,
-the sense data has the same amount of information.
-
-You do mention the footnote that the SCSI INFORMATION field should be set
-to the ATA LBA field
-"From ATA error outputs (non-NCQ) or ATA NCQ Command Error log"
-
-If we look at the ATA NCQ Command Error log, it does have LBA field,
-but no INFORMATION field.
-
-If we look at the ATA Sense Data for Successful NCQ Commands log,
-it has a bunch of Sense Data descriptors.
-
-ACS-6, 9.29.3 Successful Sense Data descriptor,
-does have the LBA field and an INFORMATION field.
-
-The definition of the INFORMATION field in the Successful Sense Data
-descriptor:
-
-"""
-9.29.3.5 INFORMATION field
-If definition of the sense data to be returned when a command completes
-without an error includes an information value, then the INFORMATION field
-contains the defined value. Otherwise, the INFORMATION field is reserved.
-"""
-
-Thus, I do think that the most correct thing, for Successful NCQ commands
-with sense data, is to fill in the SCSI INFORMATION field to the INFORMATION
-field from the Successful Sense Data descriptor.
-
-Not sure how to deal with non-NCQ Successful commands... The spec writers
-do make our lives interesting by providing different amount of information
-depending on the method used to get the sense data :)
-
-
-Kind regards,
-Niklas
