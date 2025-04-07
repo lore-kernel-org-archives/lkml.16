@@ -1,42 +1,53 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDE6224AE1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9045224AFE;
+	Mon,  7 Apr 2025 06:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007193; cv=none; b=pqyCnQjyhno8ZDbTE8idW3JrvpjZGRHAZwSp7oznTNWWpQUsxAfJuvTYpVDE/P8SEBBkjvD80Iw8vh45C0N30sJHzj0gWp5jYygNqjdQf/NfUO7ZbehwIxiAVE+Kj+Z3LmH3KZC9v0efSWbopZCa4v54hdSOu5Zyv14Z7pL/bOg=
+	t=1744007210; cv=none; b=NVqXHmFxXfzhwdYpmDh7sHIlA13FeUJ6QTUN94xCIf3d6HnPVgLumNQRW8tgqMy5ASpFmpt/PDK8JUmBGV+oWg/iGCSqUuWURIDGSckFI+xBWH0LXjNAyGxZpTXxsnoVsyirMvxGsr3g7W1AgQmVDNW1zpKV5l/h37MwjCYBssI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007193; c=relaxed/simple;
-	bh=AwdFiZJgFvpy4NpCVC2LYrX4c4Oa3HfTHQ/IqTo/uK0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UnPAT2k+4M8TpG2vKuydEVolHd1N769BDtxesmWb7tbgLLxAP9dj4qpJ6yDwJeZ2lYW2Y5qEgRm3rJOdVUBsKsJr4R+6t4Etf3/ZPCiBqDfMVit3Bh3RnNsa5ChTc4UYlm6dD+6jQLnC7+rwyWSpLdFQECIBRxIXeMImQAeHu6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aIpTaz5G; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744007210; c=relaxed/simple;
+	bh=JbtnUeBkY8lHjyDAeo00/LdvvPp6LVNtEhu2KGtCojc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cgcQNmH6xdBI4onTu/zbh0F2HAtKVYu13+HkGI0t/RXN8pIxjvGh7yjKSVbIeoBkocKhDyA89jj8ySPrjEv0U0YFuMLK/xXbt8AHv6HT0GDWU6CbLqBgVvtCgx802D4fweM6YgOd0OW9RMrRIjKMkLs+1PzJW0Rot+gFP9wG4Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLWzKvEs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aIpTaz5G"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744007181; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=DObvmwmunJaaAhLjmCutZTbFoMNGkv4Jl5PNPWs0lKw=;
-	b=aIpTaz5GuEgoCSq56wl3LZFpvwyez6z04xAxXRP7M4A+ujPKgFy1vOVQTXWuDYP8qw5/4UJR1SOPPzsYP+o9T6E+xwd5+irTykGsYH3YIKTS0By3cpXm5GxhmmJ8u5QcfVFQjB+Xng0eod43bwzBm37LH6mz5mKqcOcolMFBrx0=
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0WVoemxs_1744007180 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 07 Apr 2025 14:26:21 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: alexander.deucher@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	christian.koenig@amd.com
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLWzKvEs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84FF0C4CEDD;
+	Mon,  7 Apr 2025 06:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744007209;
+	bh=JbtnUeBkY8lHjyDAeo00/LdvvPp6LVNtEhu2KGtCojc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kLWzKvEsvfO66KL3cyea5KENf77WOaDn5eHgyBuFY4k7eAcI4AMAlVS9Wf8RqC4+4
+	 ATCAWk3MbMuqgfA3Cl08+QEj0FZigBrdmxBON5I9z65ykPs+QHoDf37nc7+Tto007B
+	 jbNHrrQAzW4t8aoSbWM/pIS3IAw51b4KuVsy17IoCt12NuiMwY34arYOKoluaNe12l
+	 mXe7OTxg5qtmG4PR93stlnaYK2ipwqkiXT+HoCrT/myYTqStaTIL8HTK3aEfZjQy4p
+	 8+btH3ipSLOOw1DYrbfNBW4OO6biX1wug9VDgbNV6kJLc342RStY6zCnQT19cgIGV4
+	 rOAKFDOAbhUKg==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	stable@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] drm/amdgpu: Improve documentation for amdgpu_sdma_register_on_reset_callbacks
-Date: Mon,  7 Apr 2025 14:26:19 +0800
-Message-Id: <20250407062619.62026-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+	linux-integrity@vger.kernel.org
+Subject: [PATCH] tpm: Mask TPM RC in tpm2_start_auth_session()
+Date: Mon,  7 Apr 2025 09:26:42 +0300
+Message-Id: <20250407062642.72556-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <Z_NgdRHuTKP6JK--@gondor.apana.org.au>
+References: <Z_NgdRHuTKP6JK--@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,30 +56,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function amdgpu_sdma_register_on_reset_callbacks lacked detailed
-parameter descriptions in its documentation. This patch improves the
-documentation by adding specific details about the parameters and their
-usage, enhancing clarity for developers.
+tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=20167
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+
+Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+error codes.
+
+Cc: stable@vger.kernel.org # v6.10+
+Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/tpm/tpm2-sessions.c | 34 ++++++++++++++++----------------
+ include/linux/tpm.h              |  1 +
+ 2 files changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-index 529c9696c2f3..add252368dc2 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-@@ -539,6 +539,7 @@ bool amdgpu_sdma_is_shared_inv_eng(struct amdgpu_device *adev, struct amdgpu_rin
+diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+index 3f89635ba5e8..1ed23375e4cb 100644
+--- a/drivers/char/tpm/tpm2-sessions.c
++++ b/drivers/char/tpm/tpm2-sessions.c
+@@ -40,11 +40,6 @@
+  *
+  * These are the usage functions:
+  *
+- * tpm2_start_auth_session() which allocates the opaque auth structure
+- *	and gets a session from the TPM.  This must be called before
+- *	any of the following functions.  The session is protected by a
+- *	session_key which is derived from a random salt value
+- *	encrypted to the NULL seed.
+  * tpm2_end_auth_session() kills the session and frees the resources.
+  *	Under normal operation this function is done by
+  *	tpm_buf_check_hmac_response(), so this is only to be used on
+@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
+ }
  
  /**
-  * amdgpu_sdma_register_on_reset_callbacks - Register SDMA reset callbacks
-+ * @adev: Pointer to the amdgpu_device structure representing the GPU device
-  * @funcs: Pointer to the callback structure containing pre_reset and post_reset functions
+- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+- * @chip: the TPM chip structure to create the session with
++ * tpm2_start_auth_session() - Create an a HMAC authentication session
++ * @chip:	A TPM chip
   *
-  * This function allows KFD and AMDGPU to register their own callbacks for handling
+- * This function loads the NULL seed from its saved context and starts
+- * an authentication session on the null seed, fills in the
+- * @chip->auth structure to contain all the session details necessary
+- * for performing the HMAC, encrypt and decrypt operations and
+- * returns.  The NULL seed is flushed before this function returns.
++ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
++ * session. The null seed is flushed before the return.
+  *
+- * Return: zero on success or actual error encountered.
++ * Returns zero on success, or a POSIX error code.
+  */
+ int tpm2_start_auth_session(struct tpm_chip *chip)
+ {
+@@ -1024,11 +1016,19 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+ 	/* hash algorithm for session */
+ 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+ 
+-	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
++	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
+ 	tpm2_flush_context(chip, null_key);
+-
+-	if (rc == TPM2_RC_SUCCESS)
+-		rc = tpm2_parse_start_auth_session(auth, &buf);
++	switch (rc) {
++	case TPM2_RC_SUCCESS:
++		break;
++	case TPM2_RC_SESSION_MEMORY:
++		rc = -ENOMEM;
++		goto out;
++	default:
++		rc = -EFAULT;
++		goto out;
++	}
++	rc = tpm2_parse_start_auth_session(auth, &buf);
+ 
+ 	tpm_buf_destroy(&buf);
+ 
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..c1d3d60b416f 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -257,6 +257,7 @@ enum tpm2_return_codes {
+ 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+ 	TPM2_RC_REFERENCE_H0	= 0x0910,
+ 	TPM2_RC_RETRY		= 0x0922,
++	TPM2_RC_SESSION_MEMORY	= 0x0903,
+ };
+ 
+ enum tpm2_command_codes {
 -- 
-2.32.0.3.g01195cf9f
+2.39.5
 
