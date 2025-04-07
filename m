@@ -1,131 +1,161 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAB922C35B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A8920E6FB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026084; cv=none; b=j5G067dtPYMBnMMWwXQuaOkUuI15Ii3cQAy9UnkPmflG2YLreAjVKT1Ljp8XTKbwIAGDmNlsdbmcf67Qu/L+ZAtl7SCCs7sUMJ7HTNF1H2xjdKH3rzJ3TYziS11xJF5jQ/IxIVFX0vm+djSrxZdqcFVgSVqbJz2WnLwkRaYj9j4=
+	t=1744026106; cv=none; b=RLts77StdUSxTtCGLo/DPVsHeXPhth3D7hw7KRjsvuqdZXkeKfWH1A0VIuBng+Buj67YPoCNeyiA643qwKBUb1HBxitEKOV0fJ6D0DemOOiSjvHxgW4lY4I6bpS1sBmZe+Y+GKEiq2aZsTKGQ2jnrCWfldIj9zUf3r2uDCqjmhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026084; c=relaxed/simple;
-	bh=hZf9aBKMYg9drwsY1ZL3tP8lX7Ry40MXQxQH6VX6yLs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqcM7RRPM4qh3pic7RyBZGWvPC1v9zwfZ7G1aPaBepQ3vBuhRtZSFG8/lGAFnGQ92QSPTD/3UD6tjGb5yeVrKjaKAwe6ZMMflfhcdNNl3hR8zynS8ticBTSVCaXotMF6JTd0FWbxzZVCAnevTHabvG73e6h12pI3no7pvsBIJ+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=TKVvAOKg; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+	s=arc-20240116; t=1744026106; c=relaxed/simple;
+	bh=T1Gc1WsYyy+thC5pufNRIsi57oTBLKU11v4occxYB9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iCxjRFOoJHIqRuABSaPehZRMKY1yskW5HlHvnQFyBX1ESghv4rEjwBWgRHSjrFlIs1Rigq7+UFcb90PTfYLra2wgs2+dNAaasWeJn0cp4dr/0w7Y9xkBnBJr6dtPl4IEPLfm3lwo1IUncOJX82LT3rSJBCwrkVRd6+ohcqpk9Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aCtiMOu+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="TKVvAOKg"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e6df1419f94so3240938276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1744026082; x=1744630882; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6bubJ2d+BmHRmgs70y+zlLbzWUmkntEheMY266sG6w=;
-        b=TKVvAOKg0TBr3B5Kiq8MJxmlziDzie3v6l1PCQp5ym6lNVef2dYPbCzsepK9Y8VPEs
-         zshjdtaCA/6thT2DLnQCAKvmioMuLqQhmtCRtF40O9HzTTks1ag14odFMVx+6TbUpXPA
-         nj44aL4vG9WCejRi7xdBHhLzSb88muj1YPhS+loAYfLmLRe0lOvvnnDXdkRsQvrrPSJw
-         7JdogvB2FYFaIeaPWMz8OcouKnNC4Fe8HAekztPyJjOoNdlL8h+wOG0AHtXHX99aufv+
-         354gXaaGuVc6avnHZ3o0Jxak2lMiKfuK4m+ePPhF0rvWLly2Q9oWPMmJBBq16HBrl/6D
-         OXSA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCtiMOu+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744026103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/18Tl/tFX6iSKG+VYUdH9MARKh6n7GdxvTDO5NcIXq0=;
+	b=aCtiMOu+SaqNrndLEKAH2BnYfM7J+hlItx2RQwkADbUzPVZHUOUtXYy4uVQ6c5X3IA7U/L
+	o8v0e2P4dNeH2myG76yriKLqkFemWUmWhMCxlNDBsojC8hAlmFZIMKVMpIFX3kiJWFS7/c
+	9nUXRP/pd7bt6XV420M2AEzxConGFVM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-435--Tzwzpd-MkafjUyqpC20_Q-1; Mon, 07 Apr 2025 07:41:42 -0400
+X-MC-Unique: -Tzwzpd-MkafjUyqpC20_Q-1
+X-Mimecast-MFC-AGG-ID: -Tzwzpd-MkafjUyqpC20_Q_1744026101
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39134c762ebso1862578f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:41:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744026082; x=1744630882;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p6bubJ2d+BmHRmgs70y+zlLbzWUmkntEheMY266sG6w=;
-        b=rBYnuNSmPntOReyN1YMT5st9ssQbqJ5Oo2ko9W/MhttiEGqnLQVqMn7YNekr4qSZgZ
-         LKZO3/YqLjhyZ51Ly3v4fIUZPOOQTCn1fPQD0tvpuR5aElp6ZKq+yhT10nhC5KnA33hk
-         cOXFl0xNOKXg8vik1S/BM1ouQ2gd98iHYDhFGFDmStpowWoH7byzDrwsaBIZC5QsyWL2
-         vKPyYyrhs5JcT+0FWPtyILK3+ihqwfxEgjjqdMxYMlU0jK9ZJy0OM8kT8HWqVMRpWyAG
-         bqBjg/vqy/fv08Nya/LzgahtPDCdssKY+dycyloTwmAM5h4TT0tMFaA10LhLVy5HcXbR
-         6hOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3xzILiPL4tQXlFkH0pzgwg951B7+EhpOkGz0o4FO9Nc7k8JqW+4C3j3EKcMv1v/26DaQjFQC9MNQUwt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVAapJhIVeKIQlmzWQapUvHfjdlVPfiSsxVP7Rb1EA05ksnDSo
-	n60WXoftWgk1y3ZZg/QQVL6z5KyfS7dEJ+QAoI+PMzjbme1YzpHnfYQWURSoi7M=
-X-Gm-Gg: ASbGncv0E2g1sIuZJXiJKsCoH5Xm2OqvdjVo3AFpAPLQbwerohNg4VSDw7R7kN0CswB
-	TG9GDKi2NYBc0kP7BtEfMmQ3fm7sFFHS4Z00K2noF9x6IC6IH89GPVTmwGoiHx467f/rbBieGNL
-	SPumWWmqutDjZIvJOxeAVIJWbKyhbni/zWtDF2mPbotwMbJfrBamamvQtT8sRZ8hGDuSHVF8Wfd
-	bTDkjFTOgOAN5RGr0NPWg2znxYa8uDTLLIHRQuIwZkAMubZZ3m0qon2ICZLDhD92W7AELEwzGaG
-	dwyw7W7nC9DDIep9y91e1szqHjssSxm2tAvxuUypaNYPHsdbznhxwLu+nYhdpRAtLrx7MtnDPfu
-	ZKiLR2az/k/fF4EIZLw==
-X-Google-Smtp-Source: AGHT+IEH2+urCNhcYCnjnsCmCmufxjCnfY74JrlqFCW51UfpadBY73PwrLHZ9pw8pkedOhJGBs1p1w==
-X-Received: by 2002:a05:690c:3345:b0:6ff:1fac:c4fc with SMTP id 00721157ae682-703e3358b44mr203631067b3.37.1744026081737;
-        Mon, 07 Apr 2025 04:41:21 -0700 (PDT)
-Received: from fedora.. (cpe-109-60-82-221.zg3.cable.xnet.hr. [109.60.82.221])
-        by smtp.googlemail.com with ESMTPSA id 00721157ae682-703d1e2fe51sm24841567b3.9.2025.04.07.04.41.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 04:41:21 -0700 (PDT)
-From: Robert Marko <robert.marko@sartura.hr>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	arnd@arndb.de,
-	soc@lists.linux.dev
-Cc: Robert Marko <robert.marko@sartura.hr>,
-	Daniel Machon <daniel.machon@microchip.com>
-Subject: [PATCH v6] arm64: lan969x: Add support for Microchip LAN969x SoC
-Date: Mon,  7 Apr 2025 13:40:28 +0200
-Message-ID: <20250407114116.3211383-1-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1744026101; x=1744630901;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/18Tl/tFX6iSKG+VYUdH9MARKh6n7GdxvTDO5NcIXq0=;
+        b=ObzFlyZk3xjA04rhbktq4PwYcyosmmWOtl/1jn0wjIufNYFKxf24/B5MXNWJCE5T0T
+         ayndohE3C8Tc0ncxsHyXRfLwsg2B+doYLHYZB7Wmk1H34yvHHf9JtDqvG3sbFprb9+UU
+         u5wbmzMFd6tWjQscbKVdIl2F+8YS8W7cxNVGyWskrnQpfNDRfdoW3mcOUn4WtJyRWDcV
+         lRtuT4vWifSUsxiYPwNOuUZGl4QwqGY0bH2cxxQuktwnuRhpsC+lFfdjWH9UQWZ9rcE1
+         FY16bDYJ4it6G4m+ev759D8G41xE67G9LULs5p+/h/xz4aP/D4y/POqePOSOv81KAPai
+         FXxg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1h2bgWDenNpYPER+N4Di3Fce8XApmn38OgTbQ0qKupLVUoTygdfHD1LqckFJ6N1PjV/55543m3OvijxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV2fu3GFHVVwLgFPLoQcrwlTjA/c7r5yAgqUIZNTXn+y5hjqdD
+	Nl4vgLrCRGBCUH6MHWBlX3XVkbUhhlWo5GDMjtfc8vZBX46NeslCx8wzadMYiikty7YpqbmqOVl
+	Xa33uDUmHvy1aCxs97fPKK6ZXnvGbFbJ3i/cI1jtaHRHkhu1Y/7MvpGSv8FHs1w==
+X-Gm-Gg: ASbGnctN1ESygLHYxgLTHatJm8C6YV1xS3wt//5HaIyEiYiVKgEtyJU9xA2C0jjLSW+
+	RVllzJN5wHkZawNOymYE5nTYTLn+He/skBJwfLpEw54b2IBMxL7L/NxSnqZRTlOB8/ghKkmkTN8
+	VsdaflSl8ptpbavNtSFG0e8fSMZ2wil5mxAxSnAgobu1GETI+5vkFN3yLLsr7aeTZLvjueA7xP5
+	qepY2c+YNDMMRT5TJ4cNC7yPEAC19hUwsM8162ZWvcFkrN6fZ32XuOgIEKfcbjA1eZfawt5IQFE
+	aBLLpmRLmmO17p/3K1o=
+X-Received: by 2002:a5d:6da9:0:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39d6fc00b4dmr6938040f8f.9.1744026100975;
+        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE5I8mCiAb1eBIzaa69eqs7IXjcg7TUnCrCJ0nVq8RtXubncMnApUfmUN9ILHJhvMKIwwyQQQ==
+X-Received: by 2002:a5d:6da9:0:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39d6fc00b4dmr6938012f8f.9.1744026100616;
+        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1795630sm133704795e9.29.2025.04.07.04.41.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
+Message-ID: <14319e01-e7b8-4ab6-bc27-a2b02b755c10@redhat.com>
+Date: Mon, 7 Apr 2025 13:41:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/5] media: uvcvideo: Implement Granular Power Saving
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
+Hi Ricardo,
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Acked-by: Daniel Machon <daniel.machon@microchip.com>
----
-Changes in v6:
-* Rebase on top of next-20250407
+On 27-Mar-25 22:05, Ricardo Ribalda wrote:
+> Right now we power-up the device when a user open() the device and we
+> power it off when the last user close() the first video node.
+> 
+> This behaviour affects the power consumption of the device is multiple
+> use cases, such as:
+> - Polling the privacy gpio
+> - udev probing the device
+> 
+> This patchset introduces a more granular power saving behaviour where
+> the camera is only awaken when needed. It is compatible with
+> asynchronous controls.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> Changes in v6:
+> - Improve error handling
+> - Use __free instead of guards()
+> - Rename uvc_v4l2_unlocked_ioctl
+> - Link to v5: https://lore.kernel.org/r/20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org
 
-Changes in v5:
-* Rebase on top of next-20250131
+Thank you for the new version.
 
-Changes in v4:
-* Rebase on top of next-20250115
-* Pickup Acked-by from Daniel
+I've pushed 6.15-rc1 + the entire v6 series merged on top to:
+https://gitlab.freedesktop.org/linux-media/users/uvc/ -next now.
 
-Changes in v3:
-* Rebase on top of next-20250107
+Regards,
 
-Changes in v2:
-* Add forgotten LAN969x architecture support itself
+Hans
 
- arch/arm64/Kconfig.platforms | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 8b76821f190f..77f2b481238a 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -133,6 +133,20 @@ config ARCH_SPARX5
- 	  security through TCAM-based frame processing using versatile
- 	  content aware processor (VCAP).
- 
-+config ARCH_LAN969X
-+	bool "Microchip LAN969X SoC family"
-+	select PINCTRL
-+	select DW_APB_TIMER_OF
-+	help
-+	  This enables support for the Microchip LAN969X ARMv8-based
-+	  SoC family of TSN-capable gigabit switches.
-+
-+	  The LAN969X Ethernet switch family provides a rich set of
-+	  switching features such as advanced TCAM-based VLAN and QoS
-+	  processing enabling delivery of differentiated services, and
-+	  security through TCAM-based frame processing using versatile
-+	  content aware processor (VCAP).
-+
- config ARCH_K3
- 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
- 	select PM_GENERIC_DOMAINS if PM
--- 
-2.49.0
+
+
+> Changes in v5:
+> - Improve "media: uvcvideo: Make power management granular" commit
+>   message.
+> - Link to v4: https://lore.kernel.org/r/20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org
+> 
+> Changes in v4:
+> - CodeStyle
+> - Create uvc_pm_ functions
+> - Link to v3: https://lore.kernel.org/r/20250206-uvc-granpower-ng-v3-0-32d0d7b0c5d8@chromium.org
+> 
+> Changes in v3:
+> - Fix build error on sh4.
+> - Link to v2: https://lore.kernel.org/r/20250203-uvc-granpower-ng-v2-0-bef4b55e7b67@chromium.org
+> 
+> Changes in v2:
+> - Add missing semicolon.
+> - Rebase on top of media-committers/next
+> - Link to v1: https://lore.kernel.org/r/20241126-uvc-granpower-ng-v1-0-6312bf26549c@chromium.org
+> 
+> ---
+> Ricardo Ribalda (5):
+>       media: uvcvideo: Keep streaming state in the file handle
+>       media: uvcvideo: Create uvc_pm_(get|put) functions
+>       media: uvcvideo: Increase/decrease the PM counter per IOCTL
+>       media: uvcvideo: Make power management granular
+>       media: uvcvideo: Do not turn on the camera for some ioctls
+> 
+>  drivers/media/usb/uvc/uvc_ctrl.c |  37 +++++++++----
+>  drivers/media/usb/uvc/uvc_v4l2.c | 115 +++++++++++++++++++++++++++++++--------
+>  drivers/media/usb/uvc/uvcvideo.h |   5 ++
+>  3 files changed, 123 insertions(+), 34 deletions(-)
+> ---
+> base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+> change-id: 20241126-uvc-granpower-ng-069185a6d474
+> 
+> Best regards,
 
