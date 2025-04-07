@@ -1,248 +1,185 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4419C18E743;
-	Mon,  7 Apr 2025 22:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B961B87CF;
+	Mon,  7 Apr 2025 22:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744064832; cv=none; b=tJHVg9T6HleQ/QyK6OArWDhFhxLNjXxRlG5ZBQt2bRnsHsPSU5gTfWr4a1juBaD3kcUD/A+8DodqbP/+WzDe1arbmQyWo5m4QwUXW9XPfJJ1nybWUParnzHCqOA0NVxU8pJcF1RMsjfwEcSdvpOJGTsAKHosw0fqNcv6iaf9Fiw=
+	t=1744064888; cv=none; b=eZz4xuSeM0cKtdenp0wb6naWx/RnWzsknlrca7IfFlMUR0VV8l3ctuZh4Xms1TwtSTmFUG/7o2UimM0PTUPu+gHVgKAYB8k2KPw3rgg4ElVqv7/bhaZ6c9At04Y1M97OXSEoAB7qH5uvo8US0RsWfW3/6rDHbb8IzVrULpTw7Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744064832; c=relaxed/simple;
-	bh=QBBGdTOap4TTUmiPVlt8m+1Kw6mDb9jrIOwV2YJn2es=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dqwJ7icjd0+3hoh2ingDSc6TJOSl5ysMd9VKw7adgK4QGHyz+TBt5CeR4gZB3M6LGwaKbvsjW+ri6W9AaN8tp987qyBLNihPUS7pnRdXlbJz/jTuDWieHH05nJwkwMOP5cyalyCPc9pX1mtjLnbVP1vgz6Ek4r4TlHkBN8TF9H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YWJY8TYi; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744064888; c=relaxed/simple;
+	bh=6idXwPqbUKauYl+/ROVCk0OuBY2aHUha+iuVpPPXTws=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=a9rJHFvsY45nWAqJOmCcOGQnC0D4XGb3dNB99YyuCJcy6jGTIaE131yh8CpZKY3Fwr3biOqr9a39waZfTVzECkuk+wTFVxJD0mqBpLpTT32mK2R+oyOKOZjKq5R+RTeWqu/kopI+2N2gjt3y1SxdnUTO0p5PyQIW2CaJRc86j7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bl0qO2eX; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YWJY8TYi"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537MR3KC984374
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 17:27:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744064823;
-	bh=ZzA8TVtzp+E7ibh8aZ6+b+ehe2yA3To0p+8jBVMjF2g=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=YWJY8TYimEExP/ZzSBc3YwmcZqtfZp/2bDxPpWsDJP2MaRr/5OBpP8uc1gIl/RFGk
-	 qJgYYoA4ZeY+IUOYeqBd8S6sgOX2oBF1XEyq7hoTpVnE3clMs23i5BTBe2UZd+D2Zm
-	 cUtD9ZSd2mPtFaB8zgnvxb8YE00L/5XCgN9n4e1g=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537MR3Xo026292
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 17:27:03 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 17:27:02 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 17:27:02 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537MR229073249;
-	Mon, 7 Apr 2025 17:27:02 -0500
-From: Judith Mendez <jm@ti.com>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Josua Mayer
-	<josua@solid-run.com>, Moteen Shah <m-shah@ti.com>
-Subject: [PATCH 1/2] PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
-Date: Mon, 7 Apr 2025 17:27:01 -0500
-Message-ID: <20250407222702.2199047-2-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407222702.2199047-1-jm@ti.com>
-References: <20250407222702.2199047-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bl0qO2eX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744064887; x=1775600887;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=6idXwPqbUKauYl+/ROVCk0OuBY2aHUha+iuVpPPXTws=;
+  b=Bl0qO2eXHHXEFtmmNp6CmVrlJLsbTZc3Md4hXK+wWrFxhGvrBZg3i7+0
+   rkEYOvg/tG2kZ34UJweqOxNB915bIGxHjKNtYhFdAA4hW6lG8NkBJL1aS
+   R+gmgi3Ovs+xax/Hzl1zuuHhFfe3MOOhjZ6ieLwrl0W402QJICkSi8L3D
+   wVMBi9xTWPo/nbUwyAxaf9QrXraLCYMRIpaem17WcjNGnu0kMWmNUzK7W
+   +aAEXp71K+ec0xinFr472yqIwZ29/ZULKZPabliqBU3oLdUjApfMbyJR0
+   xenj16oZhUtNDcU2UAWFp7+qBoyh+heWzI6QQvJ94qDH4353Sen2V21IE
+   Q==;
+X-CSE-ConnectionGUID: 14hEI+JpQEq0nEIGAf7lZg==
+X-CSE-MsgGUID: 9CbUmNA2SSuwwzx5oDBlRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44724873"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="44724873"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 15:28:06 -0700
+X-CSE-ConnectionGUID: rZ+xuASHRsOPb1YYwHijnA==
+X-CSE-MsgGUID: 2ioR69SNQvCzcg5gUgU0qQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="128611698"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.59])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 15:28:06 -0700
+Message-ID: <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
+Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to
+ ->update_limits()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki"
+	 <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>,  Viresh Kumar <viresh.kumar@linaro.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Sudeep Holla
+ <sudeep.holla@arm.com>
+Date: Mon, 07 Apr 2025 15:27:59 -0700
+In-Reply-To: <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
+	 <8560367.NyiUUSuA9g@rjwysocki.net>
+	 <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch adds set_hs_ena call to sdhci_ops so that host
-controller drivers have the option to implement a custom
-callback for SDHCI_CTRL_HISPD control.
-
-On TI devices (for HS modes and legacy mode), timing was closed on
-half cycle timing. If any of HIGH_SPEED_ENA, UHS_MODE_SELECT, or
-V1P8_SIGNAL_ENA is set for these modes, host controller switches to
-full cycle timing which may cause read/write failures and/or cqe error
-logs.
-
-So add set_hs_ena() to sdhci_ops so each host controller driver
-can implement their own .set_hs_ena callback.
-
-Also add sdhci_am654_set_hs_ena to sdhci_am654 driver and only set
-HIGH_SPEED_ENA, for modes > MMC_TIMING_SD_HS.
-
-Signed-off-by: Judith Mendez <jm@ti.com>
----
- drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
- drivers/mmc/host/sdhci.h       |  2 ++
- drivers/mmc/host/sdhci_am654.c | 16 ++++++++++
- 3 files changed, 53 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 5f78be7ae16d7..3a878cf0c59b9 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2355,6 +2355,27 @@ static bool sdhci_presetable_values_change(struct sdhci_host *host, struct mmc_i
- 	       (sdhci_preset_needed(host, ios->timing) || host->drv_type != ios->drv_type);
- }
- 
-+void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing)
-+{
-+	u8 ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-+
-+	if (timing == MMC_TIMING_SD_HS ||
-+	    timing == MMC_TIMING_MMC_HS ||
-+	    timing == MMC_TIMING_MMC_HS400 ||
-+	    timing == MMC_TIMING_MMC_HS200 ||
-+	    timing == MMC_TIMING_MMC_DDR52 ||
-+	    timing == MMC_TIMING_UHS_SDR50 ||
-+	    timing == MMC_TIMING_UHS_SDR104 ||
-+	    timing == MMC_TIMING_UHS_DDR50 ||
-+	    timing == MMC_TIMING_UHS_SDR25)
-+		ctrl |= SDHCI_CTRL_HISPD;
-+	else
-+		ctrl &= ~SDHCI_CTRL_HISPD;
-+
-+	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+}
-+EXPORT_SYMBOL_GPL(sdhci_set_hs_ena);
-+
- void sdhci_set_ios_common(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
-@@ -2436,23 +2457,6 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	    !sdhci_presetable_values_change(host, ios))
- 		return;
- 
--	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
--
--	if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
--		if (ios->timing == MMC_TIMING_SD_HS ||
--		     ios->timing == MMC_TIMING_MMC_HS ||
--		     ios->timing == MMC_TIMING_MMC_HS400 ||
--		     ios->timing == MMC_TIMING_MMC_HS200 ||
--		     ios->timing == MMC_TIMING_MMC_DDR52 ||
--		     ios->timing == MMC_TIMING_UHS_SDR50 ||
--		     ios->timing == MMC_TIMING_UHS_SDR104 ||
--		     ios->timing == MMC_TIMING_UHS_DDR50 ||
--		     ios->timing == MMC_TIMING_UHS_SDR25)
--			ctrl |= SDHCI_CTRL_HISPD;
--		else
--			ctrl &= ~SDHCI_CTRL_HISPD;
--	}
--
- 	if (host->version >= SDHCI_SPEC_300) {
- 		u16 clk, ctrl_2;
- 
-@@ -2468,7 +2472,12 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 			sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
- 		}
- 
--		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+		if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
-+			if (host->ops->set_hs_ena)
-+				host->ops->set_hs_ena(host, ios->timing);
-+			else
-+				sdhci_set_hs_ena(host, ios->timing);
-+		}
- 
- 		if (!host->preset_enabled) {
- 			/*
-@@ -2510,8 +2519,14 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 
- 		/* Re-enable SD Clock */
- 		host->ops->set_clock(host, host->clock);
--	} else
--		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+	} else {
-+		if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
-+			if (host->ops->set_hs_ena)
-+				host->ops->set_hs_ena(host, ios->timing);
-+			else
-+				sdhci_set_hs_ena(host, ios->timing);
-+		}
-+	}
- }
- EXPORT_SYMBOL_GPL(sdhci_set_ios);
- 
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index cd0e35a805427..ebecb49792ca1 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -704,6 +704,7 @@ struct sdhci_ops {
- 	void		(*set_timeout)(struct sdhci_host *host,
- 				       struct mmc_command *cmd);
- 	void		(*set_bus_width)(struct sdhci_host *host, int width);
-+	void		(*set_hs_ena)(struct sdhci_host *host, unsigned char timing);
- 	void (*platform_send_init_74_clocks)(struct sdhci_host *host,
- 					     u8 power_mode);
- 	unsigned int    (*get_ro)(struct sdhci_host *host);
-@@ -857,6 +858,7 @@ int sdhci_get_ro(struct mmc_host *mmc);
- void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
- int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
- void sdhci_set_bus_width(struct sdhci_host *host, int width);
-+void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing);
- void sdhci_reset(struct sdhci_host *host, u8 mask);
- bool sdhci_do_reset(struct sdhci_host *host, u8 mask);
- void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index f75c31815ab00..67a64de4972c9 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -429,6 +429,19 @@ static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	return 0;
- }
- 
-+static void sdhci_am654_set_hs_ena(struct sdhci_host *host, unsigned char timing)
-+{
-+	u8 ctrl = 0;
-+
-+	if (timing > MMC_TIMING_SD_HS) {
-+		sdhci_set_hs_ena(host, timing);
-+	} else {
-+		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-+		ctrl &= ~SDHCI_CTRL_HISPD;
-+		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+	}
-+}
-+
- static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
- {
- 	int cmd_error = 0;
-@@ -578,6 +591,7 @@ static const struct sdhci_ops sdhci_am654_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.set_hs_ena = sdhci_am654_set_hs_ena,
- 	.set_power = sdhci_set_power_and_bus_voltage,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
-@@ -608,6 +622,7 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.set_hs_ena = sdhci_am654_set_hs_ena,
- 	.set_power = sdhci_set_power_and_bus_voltage,
- 	.set_clock = sdhci_am654_set_clock,
- 	.write_b = sdhci_am654_write_b,
-@@ -632,6 +647,7 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
- 	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.set_bus_width = sdhci_set_bus_width,
-+	.set_hs_ena = sdhci_am654_set_hs_ena,
- 	.set_power = sdhci_set_power_and_bus_voltage,
- 	.set_clock = sdhci_j721e_4bit_set_clock,
- 	.write_b = sdhci_am654_write_b,
--- 
-2.49.0
+T24gTW9uLCAyMDI1LTA0LTA3IGF0IDIwOjQ4ICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToKPiBPbiBGcmksIE1hciAyOCwgMjAyNSBhdCA5OjQ54oCvUE0gUmFmYWVsIEouIFd5c29ja2kg
+PHJqd0Byand5c29ja2kubmV0Pgo+IHdyb3RlOgo+ID4gCj4gPiBGcm9tOiBSYWZhZWwgSi4gV3lz
+b2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+Cj4gPiAKPiA+IFNpbmNlIGNwdWZyZXFf
+dXBkYXRlX2xpbWl0cygpIG9idGFpbnMgYSBjcHVmcmVxIHBvbGljeSBwb2ludGVyIGZvcgo+ID4g
+dGhlCj4gPiBnaXZlbiBDUFUgYW5kIHJlZmVyZW5jZSBjb3VudHMgdGhlIGNvcnJlc3BvbmRpbmcg
+cG9saWN5IG9iamVjdCwgaXQKPiA+IG1heQo+ID4gYXMgd2VsbCBwYXNzIHRoZSBwb2xpY3kgcG9p
+bnRlciB0byB0aGUgY3B1ZnJlcSBkcml2ZXIncyAtCj4gPiA+dXBkYXRlX2xpbWl0cygpCj4gPiBj
+YWxsYmFjayB3aGljaCBhbGxvd3MgdGhhdCBjYWxsYmFjayB0byBhdm9pZCBpbnZva2luZwo+ID4g
+Y3B1ZnJlcV9jcHVfZ2V0KCkKPiA+IGZvciB0aGUgc2FtZSBDUFUuCj4gPiAKPiA+IEFjY29yZGlu
+Z2x5LCByZWRlZmluZSAtPnVwZGF0ZV9saW1pdHMoKSB0byB0YWtlIGEgcG9saWN5IHBvaW50ZXIK
+PiA+IGluc3RlYWQKPiA+IG9mIGEgQ1BVIG51bWJlciBhbmQgdXBkYXRlIGJvdGggZHJpdmVycyBp
+bXBsZW1lbnRpbmcgaXQsCj4gPiBpbnRlbF9wc3RhdGUKPiA+IGFuZCBhbWQtcHN0YXRlLCBhcyBu
+ZWVkZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwu
+ai53eXNvY2tpQGludGVsLmNvbT4KPiAKSGkgUmFmYWVsLAoKPiBIaSBTcmluaXZhcywKPiAKPiBJ
+ZiB5b3UgaGF2ZSBhbnkgY29uY2VybnMgcmVnYXJkaW5nIHRoaXMgcGF0Y2gsIHBsZWFzZSBsZXQg
+bWUga25vdwo+IChub3RlIHRoYXQgaXQgaXMgYmFzZWQgb24gdGhlIFswNS8xMF0pLgo+IApDaGFu
+Z2VzIGxvb2tzIGZpbmUsIGJ1dCB3YW50cyB0byB0ZXN0IG91dCBzb21lIHVwZGF0ZSBsaW1pdHMg
+ZnJvbQppbnRlcnJ1cHQgcGF0aC4KQ2hlY2tlZCB5b3VyIGJyYW5jaGVzIGF0IGxpbnV4LXBtLCBu
+b3QgYWJsZSB0byBsb2NhdGUgaW4gYW55IGJyYW5jaCB0bwphcHBseS4KUGxlYXNlIHBvaW50IG1l
+IHRvIGEgYnJhbmNoLgoKVGhhbmtzLApTcmluaXZhcwoKPiA+IC0tLQo+ID4gwqBkcml2ZXJzL2Nw
+dWZyZXEvYW1kLXBzdGF0ZS5jwqDCoCB8wqDCoMKgIDcgKystLS0tLQo+ID4gwqBkcml2ZXJzL2Nw
+dWZyZXEvY3B1ZnJlcS5jwqDCoMKgwqDCoCB8wqDCoMKgIDIgKy0KPiA+IMKgZHJpdmVycy9jcHVm
+cmVxL2ludGVsX3BzdGF0ZS5jIHzCoMKgIDI5ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0K
+PiA+IC0KPiA+IMKgaW5jbHVkZS9saW51eC9jcHVmcmVxLmjCoMKgwqDCoMKgwqDCoCB8wqDCoMKg
+IDIgKy0KPiA+IMKgNCBmaWxlcyBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlv
+bnMoLSkKPiA+IAo+ID4gLS0tIGEvZHJpdmVycy9jcHVmcmVxL2FtZC1wc3RhdGUuYwo+ID4gKysr
+IGIvZHJpdmVycy9jcHVmcmVxL2FtZC1wc3RhdGUuYwo+ID4gQEAgLTgyMSwxOSArODIxLDE2IEBA
+Cj4gPiDCoMKgwqDCoMKgwqDCoCBzY2hlZHVsZV93b3JrKCZzY2hlZF9wcmVmY29yZV93b3JrKTsK
+PiA+IMKgfQo+ID4gCj4gPiAtc3RhdGljIHZvaWQgYW1kX3BzdGF0ZV91cGRhdGVfbGltaXRzKHVu
+c2lnbmVkIGludCBjcHUpCj4gPiArc3RhdGljIHZvaWQgYW1kX3BzdGF0ZV91cGRhdGVfbGltaXRz
+KHN0cnVjdCBjcHVmcmVxX3BvbGljeQo+ID4gKnBvbGljeSkKPiA+IMKgewo+ID4gLcKgwqDCoMKg
+wqDCoCBzdHJ1Y3QgY3B1ZnJlcV9wb2xpY3kgKnBvbGljeSBfX2ZyZWUocHV0X2NwdWZyZXFfcG9s
+aWN5KSA9Cj4gPiBjcHVmcmVxX2NwdV9nZXQoY3B1KTsKPiA+IMKgwqDCoMKgwqDCoMKgIHN0cnVj
+dCBhbWRfY3B1ZGF0YSAqY3B1ZGF0YTsKPiA+IMKgwqDCoMKgwqDCoMKgIHUzMiBwcmV2X2hpZ2gg
+PSAwLCBjdXJfaGlnaCA9IDA7Cj4gPiDCoMKgwqDCoMKgwqDCoCBib29sIGhpZ2hlc3RfcGVyZl9j
+aGFuZ2VkID0gZmFsc2U7Cj4gPiArwqDCoMKgwqDCoMKgIHVuc2lnbmVkIGludCBjcHUgPSBwb2xp
+Y3ktPmNwdTsKPiA+IAo+ID4gwqDCoMKgwqDCoMKgwqAgaWYgKCFhbWRfcHN0YXRlX3ByZWZjb3Jl
+KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybjsKPiA+IAo+ID4gLcKg
+wqDCoMKgwqDCoCBpZiAoIXBvbGljeSkKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHJldHVybjsKPiA+IC0KPiA+IMKgwqDCoMKgwqDCoMKgIGlmIChhbWRfZ2V0X2hpZ2hlc3RfcGVy
+ZihjcHUsICZjdXJfaGlnaCkpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0
+dXJuOwo+ID4gCj4gPiAtLS0gYS9kcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCj4gPiArKysgYi9k
+cml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCj4gPiBAQCAtMjc0MSw3ICsyNzQxLDcgQEAKPiA+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gPiAKPiA+IMKgwqDCoMKgwqDC
+oMKgIGlmIChjcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0cykKPiA+IC3CoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGNwdWZyZXFfZHJpdmVyLT51cGRhdGVfbGltaXRzKGNwdSk7Cj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0
+cyhwb2xpY3kpOwo+ID4gwqDCoMKgwqDCoMKgwqAgZWxzZQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGNwdWZyZXFfcG9saWN5X3JlZnJlc2gocG9saWN5KTsKPiA+IMKgfQo+ID4g
+LS0tIGEvZHJpdmVycy9jcHVmcmVxL2ludGVsX3BzdGF0ZS5jCj4gPiArKysgYi9kcml2ZXJzL2Nw
+dWZyZXEvaW50ZWxfcHN0YXRlLmMKPiA+IEBAIC0xMzUzLDE0ICsxMzUzLDkgQEAKPiA+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjcHVmcmVxX3VwZGF0ZV9wb2xpY3koY3B1KTsKPiA+
+IMKgfQo+ID4gCj4gPiAtc3RhdGljIGJvb2wgaW50ZWxfcHN0YXRlX3VwZGF0ZV9tYXhfZnJlcShz
+dHJ1Y3QgY3B1ZGF0YSAqY3B1ZGF0YSkKPiA+ICtzdGF0aWMgdm9pZCBfX2ludGVsX3BzdGF0ZV91
+cGRhdGVfbWF4X2ZyZXEoc3RydWN0IGNwdWZyZXFfcG9saWN5Cj4gPiAqcG9saWN5LAo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGNwdWRhdGEgKmNwdWRhdGEpCj4gPiDCoHsK
+PiA+IC3CoMKgwqDCoMKgwqAgc3RydWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3kgX19mcmVlKHB1
+dF9jcHVmcmVxX3BvbGljeSk7Cj4gPiAtCj4gPiAtwqDCoMKgwqDCoMKgIHBvbGljeSA9IGNwdWZy
+ZXFfY3B1X2dldChjcHVkYXRhLT5jcHUpOwo+ID4gLcKgwqDCoMKgwqDCoCBpZiAoIXBvbGljeSkK
+PiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBmYWxzZTsKPiA+IC0KPiA+
+IMKgwqDCoMKgwqDCoMKgIGd1YXJkKGNwdWZyZXFfcG9saWN5X3dyaXRlKShwb2xpY3kpOwo+ID4g
+Cj4gPiDCoMKgwqDCoMKgwqDCoCBpZiAoaHdwX2FjdGl2ZSkKPiA+IEBAIC0xMzcwLDE2ICsxMzY1
+LDI4IEBACj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGNwdWRhdGEtPnBzdGF0ZS5tYXhfZnJlcSA6IGNwdWRhdGEtCj4gPiA+cHN0YXRlLnR1cmJvX2Zy
+ZXE7Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgIHJlZnJlc2hfZnJlcXVlbmN5X2xpbWl0cyhwb2xp
+Y3kpOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgYm9vbCBpbnRlbF9wc3RhdGVfdXBkYXRlX21h
+eF9mcmVxKHN0cnVjdCBjcHVkYXRhICpjcHVkYXRhKQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqAg
+c3RydWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3kgX19mcmVlKHB1dF9jcHVmcmVxX3BvbGljeSk7
+Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgIHBvbGljeSA9IGNwdWZyZXFfY3B1X2dldChjcHVkYXRh
+LT5jcHUpOwo+ID4gK8KgwqDCoMKgwqDCoCBpZiAoIXBvbGljeSkKPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHJldHVybiBmYWxzZTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqAgX19p
+bnRlbF9wc3RhdGVfdXBkYXRlX21heF9mcmVxKHBvbGljeSwgY3B1ZGF0YSk7Cj4gPiAKPiA+IMKg
+wqDCoMKgwqDCoMKgIHJldHVybiB0cnVlOwo+ID4gwqB9Cj4gPiAKPiA+IC1zdGF0aWMgdm9pZCBp
+bnRlbF9wc3RhdGVfdXBkYXRlX2xpbWl0cyh1bnNpZ25lZCBpbnQgY3B1KQo+ID4gK3N0YXRpYyB2
+b2lkIGludGVsX3BzdGF0ZV91cGRhdGVfbGltaXRzKHN0cnVjdCBjcHVmcmVxX3BvbGljeQo+ID4g
+KnBvbGljeSkKPiA+IMKgewo+ID4gLcKgwqDCoMKgwqDCoCBzdHJ1Y3QgY3B1ZGF0YSAqY3B1ZGF0
+YSA9IGFsbF9jcHVfZGF0YVtjcHVdOwo+ID4gK8KgwqDCoMKgwqDCoCBzdHJ1Y3QgY3B1ZGF0YSAq
+Y3B1ZGF0YSA9IGFsbF9jcHVfZGF0YVtwb2xpY3ktPmNwdV07Cj4gPiArCj4gPiArwqDCoMKgwqDC
+oMKgIF9faW50ZWxfcHN0YXRlX3VwZGF0ZV9tYXhfZnJlcShwb2xpY3ksIGNwdWRhdGEpOwo+ID4g
+Cj4gPiAtwqDCoMKgwqDCoMKgIGlmIChpbnRlbF9wc3RhdGVfdXBkYXRlX21heF9mcmVxKGNwdWRh
+dGEpKQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaHlicmlkX3VwZGF0ZV9jYXBh
+Y2l0eShjcHVkYXRhKTsKPiA+ICvCoMKgwqDCoMKgwqAgaHlicmlkX3VwZGF0ZV9jYXBhY2l0eShj
+cHVkYXRhKTsKPiA+IMKgfQo+ID4gCj4gPiDCoHN0YXRpYyB2b2lkIGludGVsX3BzdGF0ZV91cGRh
+dGVfbGltaXRzX2Zvcl9hbGwodm9pZCkKPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvY3B1ZnJlcS5o
+Cj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2NwdWZyZXEuaAo+ID4gQEAgLTM5OSw3ICszOTksNyBA
+QAo+ID4gwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50wqDCoMKgICgqZ2V0KSh1bnNpZ25lZCBp
+bnQgY3B1KTsKPiA+IAo+ID4gwqDCoMKgwqDCoMKgwqAgLyogQ2FsbGVkIHRvIHVwZGF0ZSBwb2xp
+Y3kgbGltaXRzIG9uIGZpcm13YXJlCj4gPiBub3RpZmljYXRpb25zLiAqLwo+ID4gLcKgwqDCoMKg
+wqDCoCB2b2lkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAoKnVwZGF0ZV9saW1pdHMpKHVuc2lnbmVk
+IGludCBjcHUpOwo+ID4gK8KgwqDCoMKgwqDCoCB2b2lkwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAo
+KnVwZGF0ZV9saW1pdHMpKHN0cnVjdCBjcHVmcmVxX3BvbGljeQo+ID4gKnBvbGljeSk7Cj4gPiAK
+PiA+IMKgwqDCoMKgwqDCoMKgIC8qIG9wdGlvbmFsICovCj4gPiDCoMKgwqDCoMKgwqDCoCBpbnTC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKCpiaW9zX2xpbWl0KShpbnQgY3B1LCB1bnNpZ25lZCBp
+bnQKPiA+ICpsaW1pdCk7Cj4gPiAKPiA+IAo+ID4gCj4gPiAKPiAKCg==
 
