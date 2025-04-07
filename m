@@ -1,171 +1,102 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FBB18309C;
-	Mon,  7 Apr 2025 13:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39731A8F6D;
+	Mon,  7 Apr 2025 13:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033964; cv=none; b=Rx9nXlcDkKmhcIcIy6Xs8VRr3rbG39pfCb5hp+mF6CVMmjU9jpvPwbYiS5TOcI4m4fQ9ST24BU36y/mxJ5bg4FZrffpQSp8PMVMG/Kb4p71LUwE0bWhB5VdolFdK4lnZRDXnn7XXPo26iHuny9qS6BmClBCSVmgww9UjX9/sh74=
+	t=1744033981; cv=none; b=e7AwPPkk12IKH8KsPMpv1m6/t2n7SuBlPioN2r76HKhNRfTmplP3HmIAX3thV8Is4QD+8GxQn8NhNULYEPb6t5avw1ddDaQnkyPQXjA1REQbjtTRgmcv564GocmvNpQiWS1c7GzNyjTMx9VUG79S7qN5Q2Q7wPJYoB0S0Of3hAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033964; c=relaxed/simple;
-	bh=pa83JoLiOPU6QvFW/d1z/pQEvJXRucrMVpIOQJycOlM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Np0eGMyQcBCYvDlBXQLyEuWOIrg8WeDInGZ0e0FSw7a+/KPFk1S/mrsx79MC/0UHd8YSnBgg7+y+an2tGbnXwXdP19sUHpNrmxMNtvwLkYDIaJIbS5abPDL0ydvH+5VD830aUTBdrj7/7EuRWOkQFGwMzcCuB7kV3KSExi8q0B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MP2N10Qg; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744033981; c=relaxed/simple;
+	bh=r7kBNPEW0WRcFadtyDS13FnmZe7b22hJY5aSsMgnt7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W92Hd6jBvZq1H3OwNuGZqRIrhD4qT/Vi2FW0vaWhzWnYm/lOFECo7j4azRxxiJuj1X2jCfgTo3oa/944tGb4LOGuBim0Z1UudOOwe/MXs9sK9WGFh9ggSYklsehEbmwAHBCNgnT2K2Wx00DaJ28EDMxymZcI58VyTNCETiX29AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiXOjgvI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MP2N10Qg"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac34257295dso892409066b.2;
-        Mon, 07 Apr 2025 06:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744033961; x=1744638761; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sc9bjfbFTJWsLLxoFhUmoW8tGe7xoApEt1z4G7mllw8=;
-        b=MP2N10QgGXWd3kkXsPM+GcA/RxKH6QcT04IgRcYuXYvRcubi34Y3Fs6WKp0wQ0LLWb
-         2VvDIhueMt/suFbenGjX40q+YTjSbRsdR3cYWwE/5Uo3EgHF8QijNvMpQw776+uv0bl2
-         cxAjjduw4+XGM/iBVxdO4OhmwyL/N7rBmtWxs3pT6ZUTSbnVFeFvYxmZ74LbaHk1ZVDe
-         0RaPuAn5qbbVE5bwoQp4xJpVKtJ27lZNTT8T+zT4qTMsgp3cEwcQO/izyHw25tAWnKzt
-         KV5Jm6vn4Dx55L3YDN9atUkIw9dw1wtNemqpyzNuyPGov2G9/EQVriXgUXkJvKX7/6Ut
-         VLcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744033961; x=1744638761;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sc9bjfbFTJWsLLxoFhUmoW8tGe7xoApEt1z4G7mllw8=;
-        b=ht+RHdTtYC2mWvpVfUUYAA9onl7SDmjVjuIg5JVZc3rHMDu5EXkYEAEppsQpxxK1Qh
-         +SaxROTrCcYV74iSQUYzB0Ja5LWdQjdMj7wzxYEZwGTlQ/E6mJtbd/Onk+RQwxjEYsTk
-         K8+nQKeAR/aG393GU7Xq05vGOwwLFYHQwC0qkfznHE67cPBP2OJFVKkVzZySABnDoJf4
-         nSOQZyVS5fN3Yn/qlV5jiuyUz1584ZuEmGcKI4ZadNpdxQ4lV4JClvykmhypex/Yj2og
-         k98xoQzrHBMWcPMPd4fktzQ8OMuWdSkD3OrJTkVTG5J4J6ix8sJlm6RPwMG0ZPD7cjVP
-         mZDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/qqcz6FCxBKxFAwg9w/ycLgi/A5stqb2noT3pTFZ3qZJ8Liy3aIRkCpzlcy4ECOJVNHsLqqTPXyJMax/@vger.kernel.org, AJvYcCUjU/tots9yfLBfrBAXLd7o4rhkMktUe4HcfIcTLfSXkHKQWL2Js9qe3Yap9M3FORC/tuETZ4MMghmM@vger.kernel.org, AJvYcCWNnQH4XbIp4P77AR8Cq2GXDaXlJe6nfbCsWi1U2u8tMT6EX2n4dAk6MFU6TW6jrhqHyAdI66LKGwtj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz22Q3c8GVFo4diyQZqfpUlFbBOrFs3tCHM4/8FEQv/8F8ttyTa
-	hqb/1f83cqKpFy6TsvWllA6+pXCVJQlWbKB0ITrfgGeze8DtY3vle+rnFRg6p2q6MZzlR81KORK
-	NH9Zf+LkaTw1YW0C+f4qR/GLuyUY=
-X-Gm-Gg: ASbGnct47dNItmHOQjG5NsvwOoWJ82yYo4/N9YU5vi5obQrkcmpWaPEkkWSxHlu82KI
-	9D15tG8ydorhT4sV0hSRNt3kTw3I+/mC/x1/Gj60r6PkN/j+Uhsetsc5ZlJFm9xyfgAxu8mbOPm
-	1lF3GH5BWu2spKRKxI5STlDl5oUMCz2U/Pgj0=
-X-Google-Smtp-Source: AGHT+IE1K4KGssIOLmHorIy1oCMgGcf7x4fMQ+kzwtl7JUPWt1uEuI2jriF2sy5AIG+moU2mpDY/XKHdVul9jZaECm8=
-X-Received: by 2002:a17:907:7ea1:b0:ac7:b363:862c with SMTP id
- a640c23a62f3a-ac7d6d7f0a5mr1097419366b.34.1744033960765; Mon, 07 Apr 2025
- 06:52:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiXOjgvI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288BBC4CEDD;
+	Mon,  7 Apr 2025 13:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744033981;
+	bh=r7kBNPEW0WRcFadtyDS13FnmZe7b22hJY5aSsMgnt7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XiXOjgvIyF/YAsvifGIAgwZSmdMPUBs8MUAv5WO/tTM9zgRdJRpJBzggWfyrE/SL5
+	 tCfb08yJ/tEtFrD/THXLhPl+W5894aOVGSDQ4iRTTEaVLeu50TiepYFrg0+TuqDPJ1
+	 wTODaQJPKl+6BwavHCB2cm0+s1ZNkVv+voYlkQhx76VkFanddVLnPQToXYip7+XX5T
+	 FKE1n/oIFxIYofFZM9Mb5TbFAO5QNWoni1tEUSjT5PYTilyuSFhBPcj5WDQZ5i080f
+	 7jvXdKmc17n+jVe4MESYfaRv0txDi8UbvQOiTz68KnUJH8oXvhS0+LeEIQXSHI5lW8
+	 FAu79b4Bzwzng==
+Date: Mon, 7 Apr 2025 14:52:57 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+Message-ID: <841a919f-2a13-4488-aa1e-a5a07824ed76@sirena.org.uk>
+References: <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
+ <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
+ <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+ <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk>
+ <CAMRc=MeFqvJ3g3GhrZzto+jfgCUhtcRRyWqx51gCkKhYUqtsGg@mail.gmail.com>
+ <c16d3116-256d-470d-96dd-7f3dbe3334c3@sirena.org.uk>
+ <CAMRc=MeYcgje7dFq8WDiTB8mTQ1COv3a_6xhAGkTukD_V25Wgw@mail.gmail.com>
+ <df350510-64c9-46b4-9f82-ebd6b04bba36@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221090918.1487689-1-j2anfernee@gmail.com> <20250222152537.2a24d80f@jic23-huawei>
-In-Reply-To: <20250222152537.2a24d80f@jic23-huawei>
-From: Yu-Hsian Yang <j2anfernee@gmail.com>
-Date: Mon, 7 Apr 2025 21:51:41 +0800
-X-Gm-Features: ATxdqUFpGtpfSv-jv-HNzINZS8uIB_7m0tbvAuk-oq0i06yBUK38wFK3X9HpdrU
-Message-ID: <CA+4VgcJL7pi6y55N6QaUKNkOTqTKkF8dAo+5syvRCbx7gW+ehQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] iio: adc: add Nuvoton NCT7201 ADC driver
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nuno.sa@analog.com, dlechner@baylibre.com, javier.carrasco.cruz@gmail.com, 
-	andriy.shevchenko@linux.intel.com, gstols@baylibre.com, 
-	olivier.moysan@foss.st.com, mitrutzceclan@gmail.com, tgamblin@baylibre.com, 
-	matteomartelli3@gmail.com, marcelo.schmitt@analog.com, alisadariana@gmail.com, 
-	joao.goncalves@toradex.com, thomas.bonnefille@bootlin.com, 
-	ramona.nechita@analog.com, herve.codina@bootlin.com, 
-	chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com, 
-	openbmc@lists.ozlabs.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TF6//jndVbndOY/a"
+Content-Disposition: inline
+In-Reply-To: <df350510-64c9-46b4-9f82-ebd6b04bba36@sirena.org.uk>
+X-Cookie: Meester, do you vant to buy a duck?
+
+
+--TF6//jndVbndOY/a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Dear Jonathan,
+On Mon, Apr 07, 2025 at 02:33:53PM +0100, Mark Brown wrote:
+> On Mon, Apr 07, 2025 at 03:29:09PM +0200, Bartosz Golaszewski wrote:
+>=20
+> > Basically: we may set the GPIO to 1 but it was already enabled and we
+> > tell consumers the regulator was just enabled when it wasn't OR we set
+> > the GPIO to 0 and tell consumers the regulator was disabled when there
+> > are still users of this GPIO so it's not true either.
+>=20
+> > AFAICT, it's used in a few places to put the regulator consumer in
+> > reset if the power was *actually* disabled.
+>=20
+> Yes, and also do things like not bother to reinitialise the hardware if
+> we kept the power on.
 
-Thanks again for the review
+BTW, as an example of something that might go wrong if we didn't get
+reset when we expected to be one common thing the would be for the
+driver to reset it's register cache back to the hardware defaults but if
+the power wasn't really lost that won't reflect the actual hardware
+state.
+back to the hardware defaults=20
 
-Jonathan Cameron <jic23@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=8822=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=8811:25=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> On Fri, 21 Feb 2025 17:09:16 +0800
-> Eason Yang <j2anfernee@gmail.com> wrote:
->
-> Hi Eason,
->
-> Not sure if I asked this before, but this is a device that seems
-> to be typically used for hardware monitoring and there are a number
-> of similar sounding device in drivers/hwmon/
->
-> That raises a couple of questions:
-> 1) Is it compatible with any of those existing drivers?
+--TF6//jndVbndOY/a
+Content-Type: application/pgp-signature; name="signature.asc"
 
-No, we need a new driver to do the ADC conversion for NCT7201/NCT7202.
+-----BEGIN PGP SIGNATURE-----
 
-> 2) Why IIO rather than HWMON?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz2LgACgkQJNaLcl1U
+h9C9LQf/QIbHAWF8EhP1Wt/gpFzue7lJKceOhlLYJjD+nWLSTIf1Zo150javMGDs
+5hBNLfTaO/d3NSMGpuORvgBz1ru2whiyrNwKg4ndu8FrIWEIABVrD4uC31ysLSkG
+xfp2n01IzTMjNzdxGi5R1xkfNvjeR2DdAgAMigQAO3mPFDByyWH4SPQGP+v4EVyg
+r03ykaChJRYGrsnHFycyJoOXoTLZUp9UMLin09Phrie2B8Q8LnzFP+QOC1GOOyAf
+b06g8VSpODI9e4cC4VuTpTWcW3uOHh4iER4tAQfFzHKiZKK1RkZ4Vkf0+wAUn9eR
+HivJKdAAYzF8mM1lnGi6X5d/ji6p/A==
+=21A3
+-----END PGP SIGNATURE-----
 
-A driver for NCT7201 with more functionality is available in the iio
-adc subsystem.
-If the chip is used for hardware monitoring, the iio->hwmon bridge
-should be used.
->
-> There isn't normally a problem with having a hardware monitoring
-> related device supported by IIO, it is just good to know if your
-> usecase makes that a good idea.  We have the iio-hwmon bridge
-> driver to solve the problem of a device than can be used either
-> as a generic ADC or as a hwmon type monitoring device (which tends
-> to have more alarms etc)
-
-Yes, we also verify the iio-hwmon bridge.
-
->
-> Jonathan
->
->
-> > Change since version 4:
-> >  - Fix comments
-> >  - Add interrupts and reset-gpios to the DT example
-> >  - Use the FIELD_PREP and FIELD_GET
-> >  - Add use_single_write in regmap_config
-> >  - Use regmap_access_table
-> >
-> > Change since version 3:
-> >  - Fix comments
-> >  - Don't put nct720"x" in the name, just call it nct7201
-> >  - Remove differential inputs until conversions are finished
-> >  - Add NCT7201_ prefix in all macros and avoid the tables
-> >  - Correct event threshold values in raw units
-> >  - Add with and without interrupt callback function to have the event
-> >    config part and one that doesn't
-> >  - Remove print an error message if regmap_wirte failed case
-> >
-> > Change since version 2:
-> >  - Remvoe read-vin-data-size property, default use read word vin data
-> >  - Use regmap instead of i2c smbus API
-> >  - IIO should be IIO_CHAN_INFO_RAW and _SCALE not _PROCESSED
-> >  - Use dev_xxx_probe in probe function and dev_xxx in other functions
-> >  - Use devm_iio_device_register replace of iio_device_register
-> >  - Use guard(mutex) replace of mutex_lock
-> >  - Use get_unaligned_le16 conversion API
-> >
-> > Changes since version 1:
-> >  - Add new property in iio:adc binding document
-> >  - Add new driver for Nuvoton NCT720x driver
-> >
-> > Eason Yang (2):
-> >   dt-bindings: iio: adc: add NCT7201 ADCs
-> >   iio: adc: add support for Nuvoton NCT7201
-> >
-> >  .../bindings/iio/adc/nuvoton,nct7201.yaml     |  57 ++
-> >  MAINTAINERS                                   |   2 +
-> >  drivers/iio/adc/Kconfig                       |  11 +
-> >  drivers/iio/adc/Makefile                      |   1 +
-> >  drivers/iio/adc/nct7201.c                     | 487 ++++++++++++++++++
-> >  5 files changed, 558 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,n=
-ct7201.yaml
-> >  create mode 100644 drivers/iio/adc/nct7201.c
-> >
->
+--TF6//jndVbndOY/a--
