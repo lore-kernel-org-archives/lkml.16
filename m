@@ -1,54 +1,45 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9DD190485;
-	Mon,  7 Apr 2025 20:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C910190485;
+	Mon,  7 Apr 2025 20:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744058363; cv=none; b=VY8Z5Kj4wjXG9zo5is6AviU8M7pxuqY4dMtyqheANDAZfUyDGdMqYc6k9HZSBHR8M4TIph8P1RDB7QWNaic7ZcLIB18xZa1fQE3CTJpbA5JtDrmnGoz/SoMJOUZ5KVhQRgOAOLVgMmxVkSM3uFM3KvhoKjaFsa8oOD0/K9wBqOY=
+	t=1744058400; cv=none; b=h4sblHJV5/fzlLFJbIdP7eK7QBZcRwinzco23GLJomHDVoy867zJy4sIVpSbCp7Gti44J4yz6toJlHAIrJRoOPJVVJtvKAi5ocXdx3EY7xSWWakbQ+lf4dXa7t1JOtmTPbYboKhPgukxMOXUMgE1ZueopdnIro067mhAnNxjwUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744058363; c=relaxed/simple;
-	bh=V7DUCjs9kVxBcWLtbI3zoQPAQpX2qv+UjffXf4Yk/Wo=;
+	s=arc-20240116; t=1744058400; c=relaxed/simple;
+	bh=8HrL1EgPSyklT7FSW/bGqrEJaT6sICo4hJtgxDc0L7o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HpeJSq1lP6NKfNygCZxHYeh7F7/p0mz4aN0IYcYQ2dNxrK4+BRE4PBZjxY9wD8ku7FKqgDIedlqoH2BCvVFzprOEV8npx9s/l1xgd0oH01IXgmASky3zRLCyugrIKBMcl8Hty9WP12BXzWoyiaz8ZwWDxZF0tpP48cF3RQCzf2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=csqrYtYL; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=NROUXWLJuk8yGAfJhTr0kDniTGaKnFjbDjV97oe5eUfO0xIV4TYpnfW3jptiaJbx1fk5/qmDW85YXqnAiMUuHnOAVGsczktY3wQ4VEwxcLGEL87TCVRjLEO4/fCLTVi9SGCn8FnW9U5xNoNMtOm3x8wfrZK/3zHqePKmnXXGFrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpc9xriB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="csqrYtYL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=tQe0PGDZfmp8rpY/ZTodvp4bt57E+3mmu/u8JN+CI9E=; b=csqrYtYLrstOUDID8fDr0c9AqB
-	F0CAlOxBHi8sEuYWLH4NxtpkFB0cFnr/nEQ9zSvw1CMeufnlKnqafFISAsHlRWfJYS3qx6ykJO0gz
-	5lcu6+wGw3Hukod7vFax88KwlV/trkypwiQU7uuG2TcYyE51USeDS5vIaTwlML5OslVw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u1tFV-008IsL-2W; Mon, 07 Apr 2025 22:39:17 +0200
-Date: Mon, 7 Apr 2025 22:39:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Marek Pazdan <mpazdan@arista.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Daniel Zahka <daniel.zahka@gmail.com>,
-	Jianbo Liu <jianbol@nvidia.com>, Gal Pressman <gal@nvidia.com>
-Subject: Re: [PATCH 1/2] ethtool: transceiver reset and presence pin control
-Message-ID: <8b8dca4d-bdf3-49e4-b081-5f51e26269bb@lunn.ch>
-References: <20250407123714.21646-1-mpazdan@arista.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpc9xriB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76592C4CEDD;
+	Mon,  7 Apr 2025 20:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744058399;
+	bh=8HrL1EgPSyklT7FSW/bGqrEJaT6sICo4hJtgxDc0L7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mpc9xriBNIdKRA/FdQOVqQUjDpYiskXXHaB8SSN3PVPbEx0d7G72cuRTQV0mYbOkM
+	 LCECEwRHcHzj7qetGGF3Z+TfclcqxSbxYYj5YTR0Gv/ZPW4DyTUkOk/e1ojZ5UFsOD
+	 oCoqwEe9MmWorEXYlfOygne4KqgZhSU9CSOOJ/rTKm8/a31dXkLQcApADxdW7/1X9j
+	 0gqnwikX3XIEqgaoV/qLW0InHG1yeoXFuyzVjVz1pUyR0rZ4glt61wPEinEj7gn1Oa
+	 7v6LbNQw97DMWVdhyCe/+V9vOBNv2iHpheY2Ozh14XTZUfSx6F3XJ3wSSImcfkxEuz
+	 MIjjTi1sxf/OA==
+Date: Mon, 7 Apr 2025 13:39:56 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/nouveau: chan: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071336.0C708FCAB8@keescook>
+References: <Z-67Hm9uHEJs0RGw@kspp>
+ <202504071227.E8484EB@keescook>
+ <d8e63b8a-7a2c-46dc-a15c-9399044a23ee@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,22 +48,253 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407123714.21646-1-mpazdan@arista.com>
+In-Reply-To: <d8e63b8a-7a2c-46dc-a15c-9399044a23ee@embeddedor.com>
 
-On Mon, Apr 07, 2025 at 12:35:37PM +0000, Marek Pazdan wrote:
-> Signal Definition section (Other signals) of SFF-8636 Spec mentions that
-> additional signals like reset and module present may be implemented for
-> a specific hardware. There is currently no user space API for control of
-> those signals so user space management applications have no chance to
-> perform some diagnostic or configuration operations.
+On Mon, Apr 07, 2025 at 01:57:48PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 07/04/25 13:50, Kees Cook wrote:
+> > On Thu, Apr 03, 2025 at 10:45:18AM -0600, Gustavo A. R. Silva wrote:
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > > 
+> > > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
+> > > of a flexible structure where the size of the flexible-array member
+> > > is known at compile-time, and refactor the rest of the code,
+> > > accordingly.
+> > > 
+> > > So, with these changes, fix the following warnings:
+> > > 
+> > > drivers/gpu/drm/nouveau/nouveau_chan.c:274:37: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/gpu/drm/nouveau/nouveau_chan.c:371:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > drivers/gpu/drm/nouveau/nouveau_chan.c:524:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >   drivers/gpu/drm/nouveau/nouveau_chan.c | 115 ++++++++++++-------------
+> > >   1 file changed, 56 insertions(+), 59 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/nouveau/nouveau_chan.c b/drivers/gpu/drm/nouveau/nouveau_chan.c
+> > > index cd659b9fd1d9..a7e70517b7cd 100644
+> > > --- a/drivers/gpu/drm/nouveau/nouveau_chan.c
+> > > +++ b/drivers/gpu/drm/nouveau/nouveau_chan.c
+> > > @@ -270,10 +270,7 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
+> > >   		{    NV03_CHANNEL_DMA     , 0 },
+> > >   		{}
+> > >   	};
+> > > -	struct {
+> > > -		struct nvif_chan_v0 chan;
+> > > -		char name[TASK_COMM_LEN+16];
+> > > -	} args;
+> > > +	DEFINE_RAW_FLEX(struct nvif_chan_v0, args, name, TASK_COMM_LEN + 16);
+> > >   	struct nvif_device *device = &cli->device;
+> > >   	struct nouveau_channel *chan;
+> > >   	const u64 plength = 0x10000;
+> > > @@ -298,28 +295,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
+> > >   		return ret;
+> > >   	/* create channel object */
+> > > -	args.chan.version = 0;
+> > > -	args.chan.namelen = sizeof(args.name);
+> > > -	args.chan.runlist = __ffs64(runm);
+> > > -	args.chan.runq = 0;
+> > > -	args.chan.priv = priv;
+> > > -	args.chan.devm = BIT(0);
+> > > +	args->version = 0;
+> > > +	args->namelen = __struct_size(args) - sizeof(*args);
+> > 
+> > Does __struct_size(args->name) work here (and later)?
+> 
+> Why not?
 
-How do you tell the kernel to stop managing the SFP? If you hit the
-module with a reset from user space, the kernel is going to get
-confused. And how are you talking to the module? Are you going to
-hijack the i2c device via i2-dev? Again, you need to stop the kernel
-from using the device.
+Uhm, I'm genuinely curious. I *think* it will work, but because it's
+within the struct, not outside of it, I'm unclear if it'll DTRT for
+finding the size (since __builtin_object_size() can be touchy).
 
-Before you go any further, i think you need to zoom out and tell us
-the big picture....
+> I mean, this should be equivalent to `TASK_COMM_LEN+16`, I could
+> use the latter if people prefer it (see my comments below).
 
-    Andrew
+Right, it should be the same. I think __struct_size(args->name) would be
+much more readable ... if it works. :)
+
+> 
+> > 
+> > > +	args->runlist = __ffs64(runm);
+> > > +	args->runq = 0;
+> > > +	args->priv = priv;
+> > > +	args->devm = BIT(0);
+> > >   	if (hosts[cid].oclass < NV50_CHANNEL_GPFIFO) {
+> > > -		args.chan.vmm = 0;
+> > > -		args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
+> > > -		args.chan.offset = chan->push.addr;
+> > > -		args.chan.length = 0;
+> > > +		args->vmm = 0;
+> > > +		args->ctxdma = nvif_handle(&chan->push.ctxdma);
+> > > +		args->offset = chan->push.addr;
+> > > +		args->length = 0;
+> > >   	} else {
+> > > -		args.chan.vmm = nvif_handle(&chan->vmm->vmm.object);
+> > > +		args->vmm = nvif_handle(&chan->vmm->vmm.object);
+> > >   		if (hosts[cid].oclass < FERMI_CHANNEL_GPFIFO)
+> > > -			args.chan.ctxdma = nvif_handle(&chan->push.ctxdma);
+> > > +			args->ctxdma = nvif_handle(&chan->push.ctxdma);
+> > >   		else
+> > > -			args.chan.ctxdma = 0;
+> > > -		args.chan.offset = ioffset + chan->push.addr;
+> > > -		args.chan.length = ilength;
+> > > +			args->ctxdma = 0;
+> > > +		args->offset = ioffset + chan->push.addr;
+> > > +		args->length = ilength;
+> > >   	}
+> > > -	args.chan.huserd = 0;
+> > > -	args.chan.ouserd = 0;
+> > > +	args->huserd = 0;
+> > > +	args->ouserd = 0;
+> > >   	/* allocate userd */
+> > >   	if (hosts[cid].oclass >= VOLTA_CHANNEL_GPFIFO_A) {
+> > > @@ -329,27 +326,28 @@ nouveau_channel_ctor(struct nouveau_cli *cli, bool priv, u64 runm,
+> > >   		if (ret)
+> > >   			return ret;
+> > > -		args.chan.huserd = nvif_handle(&chan->mem_userd.object);
+> > > -		args.chan.ouserd = 0;
+> > > +		args->huserd = nvif_handle(&chan->mem_userd.object);
+> > > +		args->ouserd = 0;
+> > >   		chan->userd = &chan->mem_userd.object;
+> > >   	} else {
+> > >   		chan->userd = &chan->user;
+> > >   	}
+> > > -	snprintf(args.name, sizeof(args.name), "%s[%d]", current->comm, task_pid_nr(current));
+> > > +	snprintf(args->name, __struct_size(args) - sizeof(*args), "%s[%d]",
+> > > +		 current->comm, task_pid_nr(current));
+> > >   	ret = nvif_object_ctor(&device->object, "abi16ChanUser", 0, hosts[cid].oclass,
+> > > -			       &args, sizeof(args), &chan->user);
+> > > +			       args, __struct_size(args), &chan->user);
+> > >   	if (ret) {
+> > >   		nouveau_channel_del(pchan);
+> > >   		return ret;
+> > >   	}
+> > > -	chan->runlist = args.chan.runlist;
+> > > -	chan->chid = args.chan.chid;
+> > > -	chan->inst = args.chan.inst;
+> > > -	chan->token = args.chan.token;
+> > > +	chan->runlist = args->runlist;
+> > > +	chan->chid = args->chid;
+> > > +	chan->inst = args->inst;
+> > > +	chan->token = args->token;
+> > >   	return 0;
+> > >   }
+> > > @@ -367,17 +365,17 @@ nouveau_channel_init(struct nouveau_channel *chan, u32 vram, u32 gart)
+> > >   		return ret;
+> > >   	if (chan->user.oclass >= FERMI_CHANNEL_GPFIFO) {
+> > > -		struct {
+> > > -			struct nvif_event_v0 base;
+> > > -			struct nvif_chan_event_v0 host;
+> > > -		} args;
+> > > +		DEFINE_RAW_FLEX(struct nvif_event_v0, args, data,
+> > > +				sizeof(struct nvif_chan_event_v0));
+> > > +		struct nvif_chan_event_v0 *host =
+> > > +				(struct nvif_chan_event_v0 *)args->data;
+> > > -		args.host.version = 0;
+> > > -		args.host.type = NVIF_CHAN_EVENT_V0_KILLED;
+> > > +		host->version = 0;
+> > > +		host->type = NVIF_CHAN_EVENT_V0_KILLED;
+> > >   		ret = nvif_event_ctor(&chan->user, "abi16ChanKilled", chan->chid,
+> > >   				      nouveau_channel_killed, false,
+> > > -				      &args.base, sizeof(args), &chan->kill);
+> > > +				      args, __struct_size(args), &chan->kill);
+> > >   		if (ret == 0)
+> > >   			ret = nvif_event_allow(&chan->kill);
+> > >   		if (ret) {
+> > > @@ -520,46 +518,45 @@ nouveau_channels_fini(struct nouveau_drm *drm)
+> > >   int
+> > >   nouveau_channels_init(struct nouveau_drm *drm)
+> > >   {
+> > > -	struct {
+> > > -		struct nv_device_info_v1 m;
+> > > -		struct {
+> > > -			struct nv_device_info_v1_data channels;
+> > > -			struct nv_device_info_v1_data runlists;
+> > > -		} v;
+> > > -	} args = {
+> > > -		.m.version = 1,
+> > > -		.m.count = sizeof(args.v) / sizeof(args.v.channels),
+> > 
+> > sizeof(args.v) == sizeof(struct nv_device_info_v1_data) * 2
+> > 
+> > and sizeof(args.v.channels) == sizeof(struct nv_device_info_v1_data).
+> > 
+> > Isn't this just "2"? i.e. isn't struct nv_device_info_v1::count the
+> > counted_by for struct nv_device_info_v1::data?
+> 
+> Yes, it's just `2`. However, I didn't want to explicitly use the magic
+> number, in case people don't like it, as in other similar patches (in
+> other subsystems).
+> 
+> But, yeah, it's `2`. :)
+
+Okay. So if "count" is set up as a counted_by, the assignment will
+happen automatically (in DEFINE_FLEX -- no longer "RAW").
+
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> > 
+> > > -		.v.channels.mthd = NV_DEVICE_HOST_CHANNELS,
+> > > -		.v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS,
+> > > -	};
+> > > +	DEFINE_RAW_FLEX(struct nv_device_info_v1, args, data, 2);
+> > > +	struct nv_device_info_v1_data *channels = &args->data[0];
+> > > +	struct nv_device_info_v1_data *runlists = &args->data[1];
+> > >   	struct nvif_object *device = &drm->client.device.object;
+> > >   	int ret, i;
+> > > -	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
+> > > +	args->version = 1;
+> > > +	args->count = (__struct_size(args) - sizeof(*args)) /
+> > > +		      sizeof(*args->data);
+> > > +	channels->mthd = NV_DEVICE_HOST_CHANNELS;
+> > > +	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
+> > > +
+> > > +	ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
+> > > +			       __struct_size(args));
+> > >   	if (ret ||
+> > > -	    args.v.runlists.mthd == NV_DEVICE_INFO_INVALID || !args.v.runlists.data ||
+> > > -	    args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
+> > > +	    runlists->mthd == NV_DEVICE_INFO_INVALID || !runlists->data ||
+> > > +	    channels->mthd == NV_DEVICE_INFO_INVALID)
+> > >   		return -ENODEV;
+> > > -	drm->chan_nr = drm->chan_total = args.v.channels.data;
+> > > -	drm->runl_nr = fls64(args.v.runlists.data);
+> > > +	drm->chan_nr = drm->chan_total = channels->data;
+> > > +	drm->runl_nr = fls64(runlists->data);
+> > >   	drm->runl = kcalloc(drm->runl_nr, sizeof(*drm->runl), GFP_KERNEL);
+> > >   	if (!drm->runl)
+> > >   		return -ENOMEM;
+> > >   	if (drm->chan_nr == 0) {
+> > >   		for (i = 0; i < drm->runl_nr; i++) {
+> > > -			if (!(args.v.runlists.data & BIT(i)))
+> > > +			if (!(runlists->data & BIT(i)))
+> > >   				continue;
+> > > -			args.v.channels.mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
+> > > -			args.v.channels.data = i;
+> > > +			channels->mthd = NV_DEVICE_HOST_RUNLIST_CHANNELS;
+> > > +			channels->data = i;
+> > > -			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, &args, sizeof(args));
+> > > -			if (ret || args.v.channels.mthd == NV_DEVICE_INFO_INVALID)
+> > > +			ret = nvif_object_mthd(device, NV_DEVICE_V0_INFO, args,
+> > > +					       __struct_size(args));
+> > > +			if (ret || channels->mthd == NV_DEVICE_INFO_INVALID)
+> > >   				return -ENODEV;
+> > > -			drm->runl[i].chan_nr = args.v.channels.data;
+> > > +			drm->runl[i].chan_nr = channels->data;
+> > >   			drm->runl[i].chan_id_base = drm->chan_total;
+> > >   			drm->runl[i].context_base = dma_fence_context_alloc(drm->runl[i].chan_nr);
+> > 
+> > Otherwise looks good.
+> > 
+> > -Kees
+> > 
+> 
+
+-- 
+Kees Cook
