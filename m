@@ -1,170 +1,177 @@
-Received: from mail-oa1-f98.google.com (mail-oa1-f98.google.com [209.85.160.98])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75831A7044
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A77248879;
+	Mon,  7 Apr 2025 12:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029440; cv=none; b=oVZmxsOL6EtS6AtvghnU3PsTIuzX5YaktdDyiYhmDb8ViwhrlhhvgP8VoqAfw6hl5yz0RR1PVEx8K/D1yupu/Uo/853DJZlhCYF3V/Jvkpk30xKY/EywT4fCjbpmZxALuxgdxSyvgkO4Vvo3ZvJeokgGWjB5K9kIu+KFJImtoPs=
+	t=1744029441; cv=none; b=S2NrzNKUPZyqEJ0Ej/3MgtOU5Q5ZACw8drKneIs3Yhlavf+1Zgg3kqTROB3AChXsBvccN0Ix6FKWAVSgxMoudExaVi+EVeDS7wk5PBX101qvdajcpYRqpxX/OpOuQ9fRMBY2xgjLR8gGxHBl/65mF1ujhmHeqsStpeAk1WBERf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029440; c=relaxed/simple;
-	bh=r/T5Mvgm+4E8BMHpVYH3ATZZcktSIOl0OSw2kMJvrD8=;
-	h=From:To:Cc:Subject:Date:Message-ID; b=g+5jX6Mc/mlhLDLmimrwjK0V1OnGhOx/7DD8pqwDQ3y9CapMlT7KyYRZHocjzKha3KQSiT44lJ8CFM2aa8DN4wRj6JVzdI9REQI2ZcwQNJaObK5kgzSf5Gpsgqbx2YLGHFqFhXtY9zpAJ6RHy6bCPMxR+jg1Pr+82fWw1jpw0DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=WF4fTGRO; arc=none smtp.client-ip=209.85.160.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1744029441; c=relaxed/simple;
+	bh=HOibTiVBe6urW/I8l/bkB3d+bGhjt3ehDkrMVTY5jTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GrK7URVDHUWI5e2Te5IQhT7N5Iu4vX+H5/z6zQ10RVmkOS4KPfvTx19CHedWnepnn5bKX2XPHl5FN74ZOBK4JMQSZe7KLug6VcsFz2gnVgUvhc9cRm/oI3rS1pZd/ZqKGFa1HD7+9grXwE+PmMKPyb7JJdjrg9YyaII7pOAxXtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bFbE6NgE; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WF4fTGRO"
-Received: by mail-oa1-f98.google.com with SMTP id 586e51a60fabf-2c7e5fb8c38so2704818fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:37:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFbE6NgE"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3202037f8f.2;
+        Mon, 07 Apr 2025 05:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744029437; x=1744634237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lh/I3yXpOsBj/QaJBup8gnrC62Y5DCOS4SYvr7caIAA=;
+        b=bFbE6NgEjJ29ZUze30WNurTKDjAwAAhPunxQGlgRXVzefqVJ5Rh126Kyl9zCsF8pJr
+         udbkcJz3HauzvyRv4RSGxueEN+eAzYKj2XDioD/E2EyCI4cyJKINiLeMc4PNf7LfRZSX
+         /iV6oH7qFzK7NAAtJVE/NEoMxrdwTlQLh/b6+Z6CHYuSYjKcOp71pmPXyCOJxDYNblb4
+         mHbYGd8wjGr3o9DIpjPlsUijqL9zNsk6uaGCLOb+eGeHrSMl0pYxYYRzIT3IwFQa8F24
+         F0zVxYd5U6WmEdJlrTn3ziaMZUOEXm5IxJUsmVW4h41Sub4OpqBcZY8Y888e08MsTmQP
+         EmFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744029437; x=1744634237;
-        h=content-transfer-encoding:message-id:date:subject:cc:to:from
-         :dkim-signature:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=21ud4a7PpzHTsE+w/yzFe+lHiyhoei8BC1Tfj/sZr0c=;
-        b=Msq8P9mn1rA5H/ZiaL1yo5aNIikzFJd6TqJBgCJo6Eqc0gNxxNAA/KuN4uwJqVzLmA
-         q/l9Zkvt9bsrWc23yjPcH3Ny+cosLBMqlgteHULtkugriW/zB0Utwgq+Z2pn48ApYlBf
-         4Uu+tE48XIVr3kTOyBJ/X1PyzKgVchCQGBiLuf9xiwzyEHbFFhPq9ZJ6R0uZtDlAPMRC
-         Ig61uMbRJ2vPY+wBY4wXUiRI9DuAJ7N6+6Q1Fvxr5caif7scwPvmhPxK8RgW2mxDOPAM
-         SjCzMYqM4kSUdZdzLlXOzOiK12WzO9fBdd1tleNVpPBekgrJ6E4KC7A8iaVTDW04gyVd
-         IU2Q==
-X-Gm-Message-State: AOJu0Yxf0MLpviRTEt0bkhNOGWnHWNFTG1ZKlc9pu5sM1AYo4U1p2t0a
-	SZRDeXD842F1plspoFMtJ/TOvU+l8sq1oCF4/3hY9OCfzpFAS6bQS94Kd5RAt+5O2dio5fAv7u8
-	LGdAmfclpFWV024t9ArR+dVqN8AT3iw==
-X-Gm-Gg: ASbGncvqy7JnkQKrljq7VrMIBrT+2mSerzLX5Yk2JP6nGeTMqYdf9j7/5u2ruvRMhg0
-	XbBb3Ec9aq2t3e6xHfeHdlGXqC6H1CFh6adx029UFhwkBCPS53fSQZqw2CfH2RPVJvTz33ar6Td
-	HBXXMO7vz97CwUhdI+o+VdU408rhUilqXtkgW82J/8fOs3g1HNBELZVD9r4zmrIKHKPsGOm1HUO
-	9nCxub7AIROSVuV/9rrMZ2oW/lAB97xenNrnYQjzEPiN61ZxE87GoeaTZDYNldgSlzD+aws1Zec
-	vRdyiYYGRJwgUMbyf/KgkhjCZ6E=
-X-Google-Smtp-Source: AGHT+IFwD3N3azBjTuz63ahaMy52lmrJaPVlJJNJrWOY/OnOBkQkkoZFOugtTieb0gKL5dsL3XIPsVIQhsY6
-X-Received: by 2002:a05:6870:9c84:b0:2cb:c780:ac52 with SMTP id 586e51a60fabf-2cd32f45081mr4230230fac.23.1744029436705;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lh/I3yXpOsBj/QaJBup8gnrC62Y5DCOS4SYvr7caIAA=;
+        b=rpblIYqCZOBOj0WPV6OPF3Xc9cYjWHwfqMR5LOQ6pj1jYTsKpl0dO8sTO2v7sglGZv
+         TlOdBqqd4Bi4xvUxHZ1QgLw3djWAfTyNMCh4LWdZSxgGto6QOItWsby8UGpOPM60qq+7
+         KpmjU7n4cu4Kq/KfxHd0QU76wcksZ0jFwXauOw8sPhi8lldCI2UAjzL1/43rkhvVs87a
+         ixS/SO1F32sKMALYWM9lr5b/9SOG3H6gf7w6xg7MrUteaPg9Cw2BWfX9wvJSimbHtPrj
+         BrekyZ69y4vPfDpPkMrpluMPmHRMdqmOcL4dt4fwmbv/qjftf4+1JHe6wudnNJ8pZnSR
+         04UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaTz+iYjasCC7MPUTmPMMKW/mFTgobh1nQIplUoAfba3phGULVowFX2Jx8Y2V11OE1o3pJvdsQrFtV+ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7o41NqeZUPHVz0pWygh6jtr5PqdaYCmKO7xkxS4UUWMXrfo5H
+	NWOTZftSBBxR2/4x0eTdVEHXUsucuTiViwIaRqrew/C3MpZS0DgG6wQ7QQ==
+X-Gm-Gg: ASbGncvEp/kyUOJ5i3qpuP8fzGhwPZhyvwVxHgKHcivJrvC8mh5CATitaefTEwuDbQn
+	dmJW+opExsu9/9tYoCc/xk3+bIsiuAWwL0VhOXaguF68MurUei9IwfzoO3qTRoX+aDlfZ8Bc7db
+	Q8aLV72xo1MGzbmW8wzr0YHZvo/a5fofOpL6VcNqybYJxZiPKESeB0xTpjFtYaMB308mhJ9OqVY
+	ANIVM4eaMvQfeX6I1jcopmEP5xxG7DH6Lm18DKrmYEfH3xOY7muLfCRZQyXIxMxLeFGIlZL836h
+	qS5hMAmBRfJK9xKlKSJ049gsf+y+b+O/DtoZI5IvucZ6tf5DIiTVbb3FLSE0OrMfet1YqXi4
+X-Google-Smtp-Source: AGHT+IGHpxPIDtpchXInrsm1R02zHSRqOeOW0Uyj1nK5Y5FXV8oqwFqAV3X3meNPTj66oB5UmyG3Hg==
+X-Received: by 2002:a05:6000:4212:b0:39c:1efb:ec8e with SMTP id ffacd0b85a97d-39d6fc00a75mr6536810f8f.6.1744029436707;
         Mon, 07 Apr 2025 05:37:16 -0700 (PDT)
-Received: from smtp.aristanetworks.com ([74.123.28.25])
-        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2cc845542d8sm638112fac.5.2025.04.07.05.37.15
+Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm12065198f8f.53.2025.04.07.05.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 07 Apr 2025 05:37:16 -0700 (PDT)
-X-Relaying-Domain: arista.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-	s=Arista-A; t=1744029434;
-	bh=21ud4a7PpzHTsE+w/yzFe+lHiyhoei8BC1Tfj/sZr0c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WF4fTGROUngYoKZVX7o687VHDF3//y+V1ZeOlVvIKNMYZXvXmuzOdjIY9IY0aLl+/
-	 FaEvgWzVzhOdPMgz21C8E0ueAEqVmEWHozh70iYFJtt65h8LlW+cBqBDdz5+UA2gu0
-	 V7bttLm9A0H0m0c9Y5rHdL6gX8p0GG2wxFRnVniL8lWbHfixZztxI9U2OLrsJHDTKP
-	 owwr0aMD3lulmaNzyf901YaArthAlftfRm1U6Gui/1XjUaWQsZmQXmOEM1XcnXoAWG
-	 XsJrBltB7Ie2IQIAKSkjgsx1wFIjMW5nupqATvSG8y9nDOCQpfnjmApxBsbGBrjJsH
-	 4I6gHLODN9Xng==
-Received: from mpazdan-home-zvfkk.localdomain (dhcp-244-168-54.sjc.aristanetworks.com [10.244.168.54])
-	by smtp.aristanetworks.com (Postfix) with ESMTP id D55FE10023B;
-	Mon,  7 Apr 2025 12:37:14 +0000 (UTC)
-Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
-	id C0C3840B13; Mon,  7 Apr 2025 12:37:14 +0000 (UTC)
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-From: Marek Pazdan <mpazdan@arista.com>
-To: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Daniel Zahka <daniel.zahka@gmail.com>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Marek Pazdan <mpazdan@arista.com>
-Subject: [PATCH 1/2] ethtool: transceiver reset and presence pin control
-Date: Mon,  7 Apr 2025 12:35:37 +0000
-Message-ID: <20250407123714.21646-1-mpazdan@arista.com>
-Content-Transfer-Encoding: 8bit
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au
+Cc: davem@davemloft.net,
+	linux-kernel@vger.kernel.org,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH 1/4] crypto: img-hash - use API helpers to setup fallback request
+Date: Mon,  7 Apr 2025 15:36:01 +0300
+Message-ID: <20250407123604.2109561-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Signal Definition section (Other signals) of SFF-8636 Spec mentions that
-additional signals like reset and module present may be implemented for
-a specific hardware. There is currently no user space API for control of
-those signals so user space management applications have no chance to
-perform some diagnostic or configuration operations. This patch uses
-get_phy_tunable/set_phy_tunable ioctl API to provide above control to
-user space. Despite ethtool reset option seems to be more suitable for
-transceiver module reset control, ethtool reset doesn't allow for reset
-pin assertion and deassertion. Userspace API may require control over
-when pin will be asserte and deasserted so we cannot trigger reset and
-leave it to the driver when deassert should be perfromed.
+Rather than setting up the fallback request by hand, use
+ahash_request_set_callback() and ahash_request_set_crypt() API helpers
+to properly setup the new request.
 
-Signed-off-by: Marek Pazdan <mpazdan@arista.com>
+This also ensures that the completion callback is properly passed down
+to the fallback algorithm, which avoids a crash with async fallbacks.
+
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
 ---
- include/uapi/linux/ethtool.h | 14 ++++++++++++++
- net/ethtool/common.c         |  1 +
- net/ethtool/ioctl.c          |  1 +
- 3 files changed, 16 insertions(+)
+ drivers/crypto/img-hash.c | 41 ++++++++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 18 deletions(-)
 
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index 84833cca29fe..36c363b0ddd4 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -289,11 +289,24 @@ struct ethtool_tunable {
- #define ETHTOOL_PHY_EDPD_NO_TX			0xfffe
- #define ETHTOOL_PHY_EDPD_DISABLE		0
+diff --git a/drivers/crypto/img-hash.c b/drivers/crypto/img-hash.c
+index 1dc2378aa88b..e050f5ff5efb 100644
+--- a/drivers/crypto/img-hash.c
++++ b/drivers/crypto/img-hash.c
+@@ -491,8 +491,9 @@ static int img_hash_init(struct ahash_request *req)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
  
-+/**
-+ * SFF-8636 Spec in Signal Definition section (Other signals) mentions
-+ * that 'Additional signals such as power, module present, interrupt, reset,
-+ * and low-power mode may be implemented'. Below defines reflect present
-+ * and reset signal statuses. Additionally ETHTOOL_PHY_MODULE_RESET
-+ * in 'enum phy_tunable_id' will be used for reset pin toggle.
-+ */
-+#define ETHTOOL_PHY_MODULE_RESET_OFF            0x00
-+#define ETHTOOL_PHY_MODULE_RESET_ON             0x01
-+/* Not Available if module not present */
-+#define ETHTOOL_PHY_MODULE_RESET_NA             0xff
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags =	req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
+ 
+ 	return crypto_ahash_init(&rctx->fallback_req);
+ }
+@@ -555,10 +556,10 @@ static int img_hash_update(struct ahash_request *req)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+ 
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags = req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
+-	rctx->fallback_req.nbytes = req->nbytes;
+-	rctx->fallback_req.src = req->src;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
++	ahash_request_set_crypt(&rctx->fallback_req, req->src, NULL, req->nbytes);
+ 
+ 	return crypto_ahash_update(&rctx->fallback_req);
+ }
+@@ -570,9 +571,10 @@ static int img_hash_final(struct ahash_request *req)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+ 
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags = req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
+-	rctx->fallback_req.result = req->result;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
++	ahash_request_set_crypt(&rctx->fallback_req, NULL, req->result, 0);
+ 
+ 	return crypto_ahash_final(&rctx->fallback_req);
+ }
+@@ -584,11 +586,12 @@ static int img_hash_finup(struct ahash_request *req)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+ 
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags = req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
+-	rctx->fallback_req.nbytes = req->nbytes;
+-	rctx->fallback_req.src = req->src;
+-	rctx->fallback_req.result = req->result;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
++	ahash_request_set_crypt(&rctx->fallback_req, req->src, req->result,
++				req->nbytes);
 +
- enum phy_tunable_id {
- 	ETHTOOL_PHY_ID_UNSPEC,
- 	ETHTOOL_PHY_DOWNSHIFT,
- 	ETHTOOL_PHY_FAST_LINK_DOWN,
- 	ETHTOOL_PHY_EDPD,
-+	ETHTOOL_PHY_MODULE_RESET,
- 	/*
- 	 * Add your fresh new phy tunable attribute above and remember to update
- 	 * phy_tunable_strings[] in net/ethtool/common.c
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 0cb6da1f692a..3d35d3e77348 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -101,6 +101,7 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
- 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
- 	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
- 	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
-+	[ETHTOOL_PHY_MODULE_RESET]   = "phy-transceiver-module-reset",
- };
  
- #define __LINK_MODE_NAME(speed, type, duplex) \
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 221639407c72..f1f4270cdb69 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -2954,6 +2954,7 @@ static int ethtool_phy_tunable_valid(const struct ethtool_tunable *tuna)
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 	case ETHTOOL_PHY_FAST_LINK_DOWN:
-+	case ETHTOOL_PHY_MODULE_RESET:
- 		if (tuna->len != sizeof(u8) ||
- 		    tuna->type_id != ETHTOOL_TUNABLE_U8)
- 			return -EINVAL;
+ 	return crypto_ahash_finup(&rctx->fallback_req);
+ }
+@@ -600,8 +603,9 @@ static int img_hash_import(struct ahash_request *req, const void *in)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+ 
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags = req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
+ 
+ 	return crypto_ahash_import(&rctx->fallback_req, in);
+ }
+@@ -613,8 +617,9 @@ static int img_hash_export(struct ahash_request *req, void *out)
+ 	struct img_hash_ctx *ctx = crypto_ahash_ctx(tfm);
+ 
+ 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback);
+-	rctx->fallback_req.base.flags = req->base.flags
+-		& CRYPTO_TFM_REQ_MAY_SLEEP;
++	ahash_request_set_callback(&rctx->fallback_req,
++				   req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
++				   req->base.complete, req->base.data);
+ 
+ 	return crypto_ahash_export(&rctx->fallback_req, out);
+ }
 -- 
-2.47.0
+2.48.1
 
