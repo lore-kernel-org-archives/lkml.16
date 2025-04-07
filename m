@@ -1,183 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692B61FDE27
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A5D1FBEA2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039388; cv=none; b=uslxOwRymUj4WDPsDXog4tmW33y+RaNnZJAd2JKHNNUOZWiJJTMbjgeZhHxUYs36yUSAPTbTwVrJoVSER+7ZuGS0j0FlNBjtPDOhxLar222b5gFpSaiqBT9kR2HCu7tY0fFAreED+pl658D7+Csl5qmgamTRw6N0ca9fNk7QZjI=
+	t=1744039464; cv=none; b=HcL1alfwJg3sjZ2na//8u5PxO6Ew1YFGp6vgsO+7bCVeFWGoG8LfDVY0wYe85kQKPkqA42g8b7TmqZ5wGutqaprPu4gHjCgVTr5MX7AlnlLkx091HysCmlk30bzC5+WJpOD63ydqSVggHjw85cChyBG/1Fnd9z0yuvHGNtEk/Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039388; c=relaxed/simple;
-	bh=P28JeNDdfIsHs0Yhi2or+iZJOlxhsSMOqlD2e6764qc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gimzxl1T7lu2cyY0QBVZjIJUfj2YoaH0eu4jkHyePbrcnBTZKeDeGelQfra7/S5at2dQdyEBCb9FRwEmb62Pcx3NS6T5z7wBmE4p6rQ9SGbd3k4496V8740moniK+2XNu9QfNehsXd/jElDQ5w0Hsyfbfa3UM/Ejzuysd04unB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDMA0KP3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744039464; c=relaxed/simple;
+	bh=novHWt+IckjAs5RJ2jD+LBtvgjcjFIwSENHUX6qFjac=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N62wvUmP4lqOwWdRca2OqQDUYdrCpuajcusyHPuqjW9JBL6g//DfhG5vQboe+9merdoD10gmIq1gIjD4JkfUw99om/LskD7GqwFD87L+CWqwy9wwpxZTGck3dyorjtX/ILQFLPwO3gGqjf9Br5VtgADhlnaLBTSsOrQ4gkhR2VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d6AN9Lx1; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDMA0KP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53266C4CEE7;
-	Mon,  7 Apr 2025 15:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744039388;
-	bh=P28JeNDdfIsHs0Yhi2or+iZJOlxhsSMOqlD2e6764qc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cDMA0KP3tGjI6x6ba19ugGRDkswnjsmdqrOgCrhRrWMAR4djnsROl/4l2MrX3WT3i
-	 oC6BQ3/80kRlSuwBRd+OX6+O9QI7UtW5esQgRMSAED25dDB885cTxu876BlpXy1W97
-	 FgFh9ZxvUZOhimxW1+cx3+NhgWD9KUIy/+6XGK49wlrZ3HBE7CheCbjIJIAUbbcvgq
-	 04MVCCvDJ8YtoWIECJzwHL0HEKPr1AH2l6GtFRfY6GgjJd8RdOF5qEXPVGxy81H9ON
-	 HcFCGzG2skPCY46C3Ehal7dgPCeYDGJRvc6kCBBmIDwakwMxujq/l3J7DOmsUjZ2na
-	 F+Ne3qLdPI9Gg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] drm/nouveau: Remove waitque for sched teardown
-Date: Mon,  7 Apr 2025 17:22:40 +0200
-Message-ID: <20250407152239.34429-7-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407152239.34429-2-phasta@kernel.org>
-References: <20250407152239.34429-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d6AN9Lx1"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-391342fc0b5so3558928f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744039460; x=1744644260; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZRyv1eDw0Lky20FVBeh4eYv1yzrcMiBb0PQDIU5MYBI=;
+        b=d6AN9Lx1kJpeB4Uxkh/7SXsA+wk/p5UEvtkirnIE/4vfuPe4QWV2s4Ws2oatiQ/FHY
+         O/i9VrSAZITbh4hTaroZKFaSzKpwFxOOCjPFCSEzTxFe+CE+JZoPDymlV3X4F7GDENM6
+         FdWyqmUWuCMdo8CT/M0rp46354CRihp5PqS+akHuUYBbcKjyxpPG1w4sS6ii35vy1ziq
+         4BWI0rxTeRKbAUSoqAvVdWE0YXkFu/fVUJqUcIp06e7b9R8q5UZz3oZozB0Ua3EGwWYS
+         LmGvgG/T8ysa1uF9mmBipcbjS+lxP9ADbpW4EOSl7WOaqHecsS8AIaafC1gweo1T1QCL
+         0Icw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744039460; x=1744644260;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZRyv1eDw0Lky20FVBeh4eYv1yzrcMiBb0PQDIU5MYBI=;
+        b=im2LuYnDjI47M+Yt5roYRAzNJhyTAnEcX8qF6yJTozfOvoWvSMkiV15QSkGi1sm8Xo
+         9Y/0EqQKctJ0pm5XufKPKGDocHJkXlQjQ1b1xr01EL5kw/70xtkA8LMYBHvTyGzO+5o+
+         Jmj8hjEufs656ikG4A2hgIPmcN+PQDFghIEh4tod3yorfW7ZCLh/2sk4eRZzFuAzC2CL
+         4SIV7pSHXvvXSXfGShMAGzwvYW8pM+hOwiomDYlVrZLNp986x1XJpfAe9NIyAchDkk+G
+         8MF0X2oHleibBgeO26Bnn8GK/Qh+Y700HXV+eY2QPK4baRCCDxJ7GD2pe8YCcylTZmfT
+         /WEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDpCiL2kD7VDoaJ6AhxlbsBswYch+iPWm+66rtUJRHR7b2u0vypxBVR/fM8Qek0xh3rZdTwXJYqaepxtw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL3eINRoJg6z67JmLr9fdFHUP0PezhRtZHjAZT0jTtVD5sj58o
+	QL8fZzWHEoXDmk6Mv4t7/NE/Dq+g51cdxQOOXX7FMBKucxbdHKiaebdFY2FWzy47kvYMBOmGTYx
+	z
+X-Gm-Gg: ASbGnct9sc1w3LpX1ipWTAUZcj4UmFLdlZHwJwRO8aMMcH8ImYXd8OXI7KKm9KE6/pa
+	8FCJu8wMc/5lqcAIMtavadlhCHrdwJyX5TOHkp+9siKqXYFFhd9ouiqVGeKo+pPchvvxvN6HXNb
+	2PYmizMvvugyNFvcucSUbaMtLQaXzj6nJawKo+SxduA/wZfmXc6Q/UjXHXRsyA51soKCabDhAg4
+	4VhZXL/d/rmNwnm6rkN+E8pYZ2MLCJ8bzED/VVsrUvkLK5iA9DBaeixExQk5V0IVAV+qICq4iWO
+	WuG56VC0pXMkhgMnEv039s/tIru90FV5QmiG8tbLYSRmj4wF4JGC90AQl3y9Gisy3A==
+X-Google-Smtp-Source: AGHT+IFazXkdO5dDlRtZHa1gkMWXjDdGfMUMZBCjZ4nH7fqNCJsJp+Np6eSWi5wD/pQ2AlF0gHZP1A==
+X-Received: by 2002:a05:6000:4282:b0:39a:c9b3:e1d7 with SMTP id ffacd0b85a97d-39cba93ca51mr10971257f8f.29.1744039460252;
+        Mon, 07 Apr 2025 08:24:20 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b42besm12212001f8f.41.2025.04.07.08.24.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 08:24:19 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v3 0/5] media: qcom: iris: add support for SM8650
+Date: Mon, 07 Apr 2025 17:24:12 +0200
+Message-Id: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABzu82cC/4XNQQ6CMBCF4auYrh0zHSwUV97DuChQYBKlpCUNh
+ nB3Cxvjwrj8XzLfLCJYzzaIy2ER3kYO7IYU2fEg6t4MnQVuUgtCUkikYHIj1xCeelYI7DlAlAi
+ GZFlpo6tzUYh0O3rb8ry7t3vqnsPk/Gt/E+W2/hOjBARJ2raomjLP1fXBg/Hu5HwnNjLSh8nwJ
+ 0OJqZpcmaytsSztF7Ou6xvHld81AgEAAA==
+X-Change-ID: 20250225-topic-sm8x50-iris-v10-a219b8a8b477
+To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2440;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=novHWt+IckjAs5RJ2jD+LBtvgjcjFIwSENHUX6qFjac=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn8+4hiolf24bSQ+z1DduOnKmTyUM00q5JAx3da1TS
+ dOKJOjmJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/PuIQAKCRB33NvayMhJ0ZRTD/
+ 9/06gUrIeHJ91T0T7T+XymVksrJ7soK17CdlZikUBc9hb2OIO3IM0whrtPln8PNN6dpxwy0QwBwsGs
+ j91lYs8Ch2L96Z9FYUqPRvHOjPu/iyvq8m1UombjG79k2nr+EUpcv+CTqEGi/oDP8EVR6lqDTM0Edf
+ Jrn78YiwqJQe4Hgxeln4MGJyzmE2rBCAOLj7mbIlX0tncnFa9MqUHOdtrg1x+kPva3Yem7fnQZ/Zd0
+ +TEn8kIFLj3ngEIBQX2pO0YtQwiTpICgfZkucnq2wAXY1g5V1E8GzOX+8OAZKg/taKBB/7bpkuQa7H
+ ycuiPFf8aldlgUPmlenwuOXEEYwy1jsrIU4932w0BRKn2J73KxCFWz+g9W5UN22q5ksXTo8zcDxbDO
+ 3dR2rGJjf+o6WIuthETfS7v6tMqjKlItf+gonZaKU3iPMegcpUjueicct/xDl/ks3VQLFb6+aQo9eE
+ Mg5y+efg66PCnSrgZxWkmftUVNUroFh3ZrFVQtaxsXUFGSyeCQG2JUmEEVeifHMOXbO7mzhHHZ4JgM
+ QHc6nBVNaa/eGTt2c2g4v4cz46SQrqPDVqm+CJ+7EWlkuuECs9lRHga/HnGhNay1Ty5gDLmsXpyYzp
+ IBX00DXPR4ICGM3qLs1B6E9dxyjHPVR5lSitzH/dTS1jwlBTxA2wHEGUQs9w==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-struct nouveau_sched contains a waitque needed to prevent
-drm_sched_fini() from being called while there are still jobs pending.
-Doing so so far would have caused memory leaks.
+Add support for the IRIS accelerator for the SM8650
+platform, which uses the iris33 hardware.
 
-With the new memleak-free mode of operation switched on in
-drm_sched_fini() by providing the callback
-nouveau_sched_fence_context_kill() the waitque is not necessary anymore.
+The vpu33 requires a different reset & poweroff sequence
+in order to properly get out of runtime suspend.
 
-Remove the waitque.
+Based on the downstream implementation at:
+- https://git.codelinaro.org/clo/la/platform/vendor/opensource/video-driver/
+  branch video-kernel.lnx.4.0.r4-rel
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_sched.c | 20 +++++++-------------
- drivers/gpu/drm/nouveau/nouveau_sched.h |  9 +++------
- drivers/gpu/drm/nouveau/nouveau_uvmm.c  |  8 ++++----
- 3 files changed, 14 insertions(+), 23 deletions(-)
+Changes in v3:
+- Collected review tags
+- Removed bulky reset_controller ops
+- Removed iris_vpu_power_off_controller split
+- Link to v2: https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
-index 3659ac78bb3e..d9ac76198616 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
-@@ -121,11 +121,9 @@ nouveau_job_done(struct nouveau_job *job)
- {
- 	struct nouveau_sched *sched = job->sched;
- 
--	spin_lock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
- 	list_del(&job->entry);
--	spin_unlock(&sched->job.list.lock);
--
--	wake_up(&sched->job.wq);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- void
-@@ -306,9 +304,9 @@ nouveau_job_submit(struct nouveau_job *job)
- 	}
- 
- 	/* Submit was successful; add the job to the schedulers job list. */
--	spin_lock(&sched->job.list.lock);
--	list_add(&job->entry, &sched->job.list.head);
--	spin_unlock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
-+	list_add(&job->entry, &sched->job_list.head);
-+	spin_unlock(&sched->job_list.lock);
- 
- 	drm_sched_job_arm(&job->base);
- 	job->done_fence = dma_fence_get(&job->base.s_fence->finished);
-@@ -458,9 +456,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
- 		goto fail_sched;
- 
- 	mutex_init(&sched->mutex);
--	spin_lock_init(&sched->job.list.lock);
--	INIT_LIST_HEAD(&sched->job.list.head);
--	init_waitqueue_head(&sched->job.wq);
-+	spin_lock_init(&sched->job_list.lock);
-+	INIT_LIST_HEAD(&sched->job_list.head);
- 
- 	return 0;
- 
-@@ -503,9 +500,6 @@ nouveau_sched_fini(struct nouveau_sched *sched)
- 	struct drm_gpu_scheduler *drm_sched = &sched->base;
- 	struct drm_sched_entity *entity = &sched->entity;
- 
--	rmb(); /* for list_empty to work without lock */
--	wait_event(sched->job.wq, list_empty(&sched->job.list.head));
--
- 	drm_sched_entity_fini(entity);
- 	drm_sched_fini(drm_sched);
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
-index e6e2016a3569..339a14563fbb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
-@@ -105,12 +105,9 @@ struct nouveau_sched {
- 	struct nouveau_channel *chan;
- 
- 	struct {
--		struct {
--			struct list_head head;
--			spinlock_t lock;
--		} list;
--		struct wait_queue_head wq;
--	} job;
-+		struct list_head head;
-+		spinlock_t lock;
-+	} job_list;
- };
- 
- int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
-diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-index 48f105239f42..ddfc46bc1b3e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-@@ -1019,8 +1019,8 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 	u64 end = addr + range;
- 
- again:
--	spin_lock(&sched->job.list.lock);
--	list_for_each_entry(__job, &sched->job.list.head, entry) {
-+	spin_lock(&sched->job_list.lock);
-+	list_for_each_entry(__job, &sched->job_list.head, entry) {
- 		struct nouveau_uvmm_bind_job *bind_job = to_uvmm_bind_job(__job);
- 
- 		list_for_each_op(op, &bind_job->ops) {
-@@ -1030,7 +1030,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 
- 				if (!(end <= op_addr || addr >= op_end)) {
- 					nouveau_uvmm_bind_job_get(bind_job);
--					spin_unlock(&sched->job.list.lock);
-+					spin_unlock(&sched->job_list.lock);
- 					wait_for_completion(&bind_job->complete);
- 					nouveau_uvmm_bind_job_put(bind_job);
- 					goto again;
-@@ -1038,7 +1038,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 			}
- 		}
- 	}
--	spin_unlock(&sched->job.list.lock);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- static int
+Changes in v2:
+- Collected bindings review
+- Reworked rest handling by adding a secondary optional table to be used by controller poweroff
+- Reworked power_off_controller to be reused and extended by vpu33 support
+- Removed useless and unneeded vpu33 init
+- Moved vpu33 into vpu3x files to reuse code from vpu3
+- Moved sm8650 data table into sm8550
+- Link to v1: https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
+
+---
+Neil Armstrong (5):
+      dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
+      media: platform: qcom/iris: add power_off_controller to vpu_ops
+      media: platform: qcom/iris: introduce optional controller_rst_tbl
+      media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
+      media: platform: qcom/iris: add sm8650 support
+
+ .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
+ drivers/media/platform/qcom/iris/Makefile          |   2 +-
+ drivers/media/platform/qcom/iris/iris_core.h       |   1 +
+ .../platform/qcom/iris/iris_platform_common.h      |   3 +
+ .../platform/qcom/iris/iris_platform_sm8550.c      |  64 +++++
+ drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
+ drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
+ drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
+ drivers/media/platform/qcom/iris/iris_vpu3x.c      | 277 +++++++++++++++++++++
+ drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
+ drivers/media/platform/qcom/iris/iris_vpu_common.h |   5 +
+ 11 files changed, 413 insertions(+), 142 deletions(-)
+---
+base-commit: 0d6ed9e013fcc33da9676ed870454d2a014a5aee
+change-id: 20250225-topic-sm8x50-iris-v10-a219b8a8b477
+
+Best regards,
 -- 
-2.48.1
+Neil Armstrong <neil.armstrong@linaro.org>
 
