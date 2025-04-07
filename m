@@ -1,129 +1,288 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8471FC7CA;
-	Mon,  7 Apr 2025 15:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A10C1DF73E
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744038336; cv=none; b=WAuellUqHiwkN0oGX8zHz+0MmhXmcPlJ908b6Svbwf0KGhJlwxqxdNCjbkRfwu9yuvYi4iohD1SRhIPcQwsJzNpWYAgZHjT+RcPaLUcPsydJe1sn1mDldwDRQO0MZwTBSKmNFW6gr06lf0OYEzt/oHuU7IdWAyWwCOte40YyWf4=
+	t=1744038490; cv=none; b=KZztylKllV9dt1WCKyRYQtq1daWC/u0qb2/EpKSSQRPOPVziYSqVKSKBjJdkAPo9qzGFV/DfESn9CYEs+yAEuvSCGrOQEcpD5whJxEPG7cWx0jvs5U8oiYtJOJxFEJzGOiy/cHu05QBVJ3s2BliglojI3nAocwNWMNqjyRoowjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744038336; c=relaxed/simple;
-	bh=l5rMPyLON8NGIZfdFdeRiGexk44gSXDJlocK3eGFhGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KzMPqPpGM1T0bTQZMnk/kxrSiMC6SYR4g3x2H6fnxSvawGRRGcii3YuL8VMmwtBM35geSuU0czUa9/lkj8oiBx4sAXP7Lm8MGE8MYBKLcqTYMwMwgIy1AfJLt/CeCFBP1kHTtviMS8nKUb8Wi2KAd3U5SXw2pY5L8YuXcjD6iCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIbal7lj; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744038490; c=relaxed/simple;
+	bh=9ywssobLUS7opFFvYH219PgxdBbxWGMuqau2QH9Vwcw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z/I7dGILnaWYFqNwQzjfEo7M47wKUtSHSQKVVUbbT3R2o3bbTYkXpeQt7npGUXZ3F+hSANgwzxrSCfsOY7mSqmohQ8VkkYZ7zWbj3HdZPt41zB213yKEtJNh54ryEIbudUGn1wLaQA9j4/GAtTUxLsXPeTZajbyZN+h54mHcLTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=dz4c7QQx; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIbal7lj"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-85b3f92c8dfso143532139f.2;
-        Mon, 07 Apr 2025 08:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744038333; x=1744643133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l5rMPyLON8NGIZfdFdeRiGexk44gSXDJlocK3eGFhGQ=;
-        b=FIbal7ljCBPTYFq5ev9zJRzyC0NrfLn2sDFrrdM1WHnuLcRAHRoAY+ze8VKNo5c5gU
-         uMs1VkOPgodUymSJTd0aiU9DpRTmgpUuaGEK+w13aSr8kBfXBYyyWAEfbkX0U3TdIafN
-         lDoMXrLWc94LcpxUlXFcHq5zVVb4ROb/wubBWqX5JR6ewyn7spMpfWanrYol50YJE4Hc
-         gpO5RyRjtcqmBs6OHExyfi8maqaU6gC+/p7WchIJN8XsdcsMpqkv1SY57hxP6J0x2D+d
-         2zuCZYSBku5lCAWl3d37bb4ttOKCFdpplmPUIxC5uZTnTGJNkh80Xf3BuzHtvlE3Xumx
-         xKgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744038333; x=1744643133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l5rMPyLON8NGIZfdFdeRiGexk44gSXDJlocK3eGFhGQ=;
-        b=X0SpHpVIVEasfeCN6XpCr0xIMYxnwh21/IdyEvUPqw9cajxxVvZgsCuN8+qpPI6W3k
-         vd4n42OhTqzxeStxBzYMqsQDhnufWCTA2mkpG6INomQlWXwr06+klMgelII+i0BdjM4M
-         tA4iKO25XEi8ZgbgqNbWwa2cVOmrr7vu8l9o8PkWiwq1DwlvJVJBGBzflNhRJRZSzd0P
-         1svHUlf3yKr4DmQbKKnUJH492Dey9DX+YHKExyw1iSGa9JNo+IBPEq6zPPEXGGic/RQU
-         D92NsotIypqgQ1zgwSegnZzNyTGyuxhWLPhaOobgGquVRyB2IA81CYHPjnTTCu2/VhL1
-         aQuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgpong9wWPZpCmlxxPbLcPTjWaJa4N/hHLN6z2VH3Se4UFHgya2aBW5OmvUaB0WadlHlFN7+gGjWUooBw=@vger.kernel.org, AJvYcCXJ2z6Sx8sq6uMvbvmZjHy56OmB/qiTvjjSuHe4CGxrOTptPqk3guzA4QZPbqrRrkE+MFpo7jvB@vger.kernel.org, AJvYcCXWc5jAwt8oGbP4HNon58Ko+CV1Qj8mVp9ZzzmkcDgsjpBJ+S8vaj6G0PiK362WIwC8ZjDILN76lRPNeg==@vger.kernel.org, AJvYcCXzrqqe7ErqxKHN2SgOKaouBsUfibQ0xJr11nWiryOdi0GBW7jrlasP3J32iJ6mXtmCeIB72jS4@vger.kernel.org
-X-Gm-Message-State: AOJu0YygR2ma4lKIlsf5hM8r4/2A65vds3pM5241o0vV4dS3yvUfHJG7
-	mYx+Ep5nsjF55Dn1Smmqii8Msiw5dPOVkxAYQjQYd3o6/m4VZ2ISakmSx3OVNRL6teUgHNNFkes
-	14v+SnbAbfuYDpoZeTviEpMoPrOrdw/Oq
-X-Gm-Gg: ASbGncuZ29TMALdk0bScXfjmkC9ApKZN63g1XYrcPPafPDSsVCjJxmobNhLpfAFWEDb
-	2ne4iRbTWTGETTY0oTxF435c8s8PovrCS/pPJuXdVpJqCqH0u9xEMwGam+9Vjmec4VM+hY4QBrv
-	8RTkkXTKOmzMP3XZDuxMZ/ajbOKU5Ey/vXQf1AZfch4sarERwC4SGBs0Ikog==
-X-Google-Smtp-Source: AGHT+IF3I+vQSDuOBedXmdX/T50kiR5ajQm6UKhYNro+XWoy1mIZlzvfqcQuvZhjlXI0EfM2Fa1hvWdDfuhH2H7lIso=
-X-Received: by 2002:a05:6e02:260c:b0:3d3:f520:b7e0 with SMTP id
- e9e14a558f8ab-3d6e5307926mr121653945ab.6.1744038333557; Mon, 07 Apr 2025
- 08:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="dz4c7QQx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1744038480;
+ bh=yfiUG7YDzCPnO51CT5r9XyWAgJX3RxStPM+stWziErk=;
+ b=dz4c7QQxej3uHiGfBXmfyR4hf0xcCzU6SA4GaJzZKkUdlyeoR/GyDDn983MgbqHPbGnK6r5mO
+ lKyJsullbJM3Rup8ACWXlreCAoY1So2VWBf0Td2IMT7DDPxY5r22DcR9FrCcCsDDnurv4MOWuIl
+ 7hA4ov3TAdVABjivYCJew4KHvQlCksyM4x40FAAVqK8r7K+xW7WUwKKe12b6I/CHVn8YVhR391h
+ UskROeAff/zivkjmwmz/gt+t7Wr/tKCpgaM/EGGehJ7vOs7XORzdLA6RQOatCazmFVrBfrtdUGU
+ ugRCB3xbQepnTrr2gZRM/CIXxXJhjwPXXQRlXvOlVmLA==
+X-Forward-Email-ID: 67f3ea45fa8ccfb37ffb076e
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.0
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <cc53dbbf-405b-452b-b007-00588d6c8839@kwiboo.se>
+Date: Mon, 7 Apr 2025 17:07:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404-kasan_slab-use-after-free_read_in_sctp_outq_select_transport__20250404-v1-1-5ce4a0b78ef2@igalia.com>
-In-Reply-To: <20250404-kasan_slab-use-after-free_read_in_sctp_outq_select_transport__20250404-v1-1-5ce4a0b78ef2@igalia.com>
-From: Xin Long <lucien.xin@gmail.com>
-Date: Mon, 7 Apr 2025 11:05:22 -0400
-X-Gm-Features: ATxdqUG_xJ3EtXrPnSfaJh2qYk9eV3oKprtjQm0b6WggPpNLQViQklfMXyzONwQ
-Message-ID: <CADvbK_fRgqPTJGK7w_ujuiSVqwt_XPUaisd2Qp_t--yf6NuS8A@mail.gmail.com>
-Subject: Re: [PATCH] sctp: detect and prevent references to a freed transport
- in sendmsg
-To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo_Navarro?= <rcn@igalia.com>
-Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, revest@google.com, kernel-dev@igalia.com, 
-	linux-sctp@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Sebastian Fricke <sebastian.fricke@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Alex Bee <knaerzche@gmail.com>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Christopher Obbard <christopher.obbard@linaro.org>
+References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+ <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
+ <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
+ <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
+ <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
+ <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 4, 2025 at 10:54=E2=80=AFAM Ricardo Ca=C3=B1uelo Navarro <rcn@i=
-galia.com> wrote:
->
-> sctp_sendmsg() re-uses associations and transports when possible by
-> doing a lookup based on the socket endpoint and the message destination
-> address, and then sctp_sendmsg_to_asoc() sets the selected transport in
-> all the message chunks to be sent.
->
-> There's a possible race condition if another thread triggers the removal
-> of that selected transport, for instance, by explicitly unbinding an
-> address with setsockopt(SCTP_SOCKOPT_BINDX_REM), after the chunks have
-> been set up and before the message is sent. This can happen if the send
-> buffer is full, during the period when the sender thread temporarily
-> releases the socket lock in sctp_wait_for_sndbuf().
->
-> This causes the access to the transport data in
-> sctp_outq_select_transport(), when the association outqueue is flushed,
-> to result in a use-after-free read.
->
-> This change avoids this scenario by having sctp_transport_free() signal
-> the freeing of the transport, tagging it as "dead". In order to do this,
-> the patch restores the "dead" bit in struct sctp_transport, which was
-> removed in
-> commit 47faa1e4c50e ("sctp: remove the dead field of sctp_transport").
->
-> Then, in the scenario where the sender thread has released the socket
-> lock in sctp_wait_for_sndbuf(), the bit is checked again after
-> re-acquiring the socket lock to detect the deletion. This is done while
-> holding a reference to the transport to prevent it from being freed in
-> the process.
->
-> If the transport was deleted while the socket lock was relinquished,
-> sctp_sendmsg_to_asoc() will return -EAGAIN to let userspace retry the
-> send.
->
-> The bug was found by a private syzbot instance (see the error report [1]
-> and the C reproducer that triggers it [2]).
->
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
-after-free_Read_in_sctp_outq_select_transport.txt [1]
-> Link: https://people.igalia.com/rcn/kernel_logs/20250402__KASAN_slab-use-=
-after-free_Read_in_sctp_outq_select_transport__repro.c [2]
-> Cc: stable@vger.kernel.org
-> Fixes: df132eff4638 ("sctp: clear the transport of some out_chunk_list ch=
-unks in sctp_assoc_rm_peer")
-> Suggested-by: Xin Long <lucien.xin@gmail.com>
-> Signed-off-by: Ricardo Ca=C3=B1uelo Navarro <rcn@igalia.com>
+On 2025-04-07 16:59, Nicolas Dufresne wrote:
+> Le lundi 07 avril 2025 à 16:17 +0200, Hans Verkuil a écrit :
+>> On 07/04/2025 15:52, Nicolas Dufresne wrote:
+>>> Le lundi 07 avril 2025 à 13:09 +0200, Hans Verkuil a écrit :
+>>>> On 25/02/2025 10:40, Sebastian Fricke wrote:
+>>>>> From: Jonas Karlman <jonas@kwiboo.se>
+>>>>>
+>>>>> Add support for a get_image_fmt() ops that returns the required image
+>>>>> format.
+>>>>>
+>>>>> The CAPTURE format is reset when the required image format changes and
+>>>>> the buffer queue is not busy.
+>>>>>
+>>>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>>>>> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>>>>> Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+>>>>> Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+>>>>> ---
+>>>>>  drivers/staging/media/rkvdec/rkvdec.c | 49 +++++++++++++++++++++++++++++++++--
+>>>>>  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
+>>>>>  2 files changed, 49 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+>>>>> index 70154948b4e32e2c439f259b0f1e1bbc8b52b063..5394079509305c619f1d0c1f542bfc409317c3b7 100644
+>>>>> --- a/drivers/staging/media/rkvdec/rkvdec.c
+>>>>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+>>>>> @@ -111,15 +111,60 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+>>>>>  {
+>>>>>  	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+>>>>>  	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+>>>>> +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+>>>>> +	enum rkvdec_image_fmt image_fmt;
+>>>>> +	struct vb2_queue *vq;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	if (desc->ops->try_ctrl) {
+>>>>> +		ret = desc->ops->try_ctrl(ctx, ctrl);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +
+>>>>> +	if (!desc->ops->get_image_fmt)
+>>>>> +		return 0;
+>>>>>  
+>>>>> -	if (desc->ops->try_ctrl)
+>>>>> -		return desc->ops->try_ctrl(ctx, ctrl);
+>>>>> +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+>>>>> +	if (ctx->image_fmt == image_fmt)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	if (rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, image_fmt))
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	/* format change not allowed when queue is busy */
+>>>>> +	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
+>>>>> +			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>>>> +	if (vb2_is_busy(vq))
+>>>>> +		return -EINVAL;
+>>
+>> Looking closer, this code is just wrong. It does these format change
+>> tests for any control, so if more controls are added in the future, then
+>> those will be checked the same way, which makes no sense.
+> 
+> "Just wrong" should be kept for code that is semantically incorrect,
+> just a suggestion for choice of wording.
+> 
+>>
+>> These tests belong to the actual control that you 'try'. In this case
+>> rkvdec_h264_validate_sps(). This function already checks the width and
+>> height, but it should also check the image format. It is all in the
+>> wrong place.
 
-Acked-by: Xin Long <lucien.xin@gmail.com>
+Keep in mind that rkvdec_try_ctrl and rkvdec_s_ctrl are only used for
+CID_STATELESS_H264_SPS (and in future also CID_STATELESS_HEVC_SPS) not
+any other control, so this is already in the correct place?
 
-Thanks
+Maybe the naming of the functions are too generic, they could be named
+rkvdec_sps_try_ctrl and rkvdec_sps_s_ctrl or similar if that makes more
+sense?
+
+Regards,
+Jonas
+
+> 
+> We can do that too. Though, this was generalized since once you enable
+> the other codecs, you endup with code duplication. I know this series
+> is an extract from a larger one.
+> 
+> So let's suggest to make a helper that combines rkvdec_is_valid_fmt()
+> and the busy check. Though on that, please reply to my comment below
+> (which you skipped).
+> 
+>>
+>>>>
+>>>> This makes no sense to me. This just tries a control, and that should just
+>>>> work, regardless of vb2_is_busy(). It's a 'try', so you are not actually
+>>>> changing anything.
+>>>
+>>> See comment below, notice that this code is only reached if the control
+>>> introduce parameters that are not compatible with the current capture
+>>> queue fmt. The entire function uses "success" early exit, so the
+>>> further down you get in the function, the less likely your control is
+>>> valid.
+>>>
+>>>>
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>>> +{
+>>
+>> If there is a try_ctrl op specified, then the control framework
+>> will call that first before calling s_ctrl. So any validation that
+>> try_ctrl did does not need to be done again in s_ctrl.
+>>
+>> The same comment with try_ctrl is valid here as well: if there are
+>> image format checks that need to be done, then those need to be done
+>> per control and not as a generic check. If new controls are added in
+>> the future, then you don't want the same checks to apply to the new
+>> controls as well.
+> 
+> I don't think the behaviour of try_ctrl and that being embedded in set
+> calls was being questioned by anyone. Can you reply to the last
+> paragraph below ?
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>>> +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+>>>>> +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+>>>>> +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+>>>>> +	enum rkvdec_image_fmt image_fmt;
+>>>>> +
+>>>>> +	if (!desc->ops->get_image_fmt)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+>>>>> +	if (ctx->image_fmt == image_fmt)
+>>>>> +		return 0;
+>>>>
+>>>> If you really can't set a control when the queue is busy, then that should
+>>>> be tested here, not in try_ctrl. And then you return -EBUSY.
+>>>>
+>>>> Am I missing something here?
+>>>
+>>> When I reviewed, I had imagine that s_ctrl on a request would just run
+>>> a try. Now that I read that more careful, I see that it does a true set
+>>> on separate copy. So yes, this can safely be moved here.
+>>>
+>>> Since you seem wondering "If you really can't set a control", let me
+>>> explain what Jonas wants to protect against. RKVdec does not have any
+>>> color conversion code, the header compound control (which header
+>>> depends on the codec), contains details such as sub-sampling and color
+>>> depth. Without color conversion, when the image format is locked (the
+>>> busy queue), you can't request the HW to decode a frame witch does not
+>>> fit. This could otherwise lead to buffer overflow in the HW,
+>>> fortunately protected by the iommu, but you don't really want to depend
+>>> on the mmu.
+>>>
+>>> I've never used try_ctrl in my decade of v4l2, so obviously, now that I
+>>> know that s_ctrl on request is not a try, I'm fine with rejecting this
+>>> PR, sending a new version and making a PR again. But if I was to use
+>>> this API in userspace, my intuitive expectation would be that this
+>>> should fail try(), even if its very rarely valid to check the queue
+>>> state in try control.
+> 
+> Here, since we seem to disagree on the behaviour try should have for
+> this specific validation. What you asked on first pass is to make it so
+> that TRY will succeed, and SET will fail. I don't really like that
+> suggestion.
+> 
+> Nicolas
+> 
+>>>
+>>> Nicolas
+>>>
+>>>>
+>>>> Regards,
+>>>>
+>>>> 	Hans
+>>>>
+>>>>> +
+>>>>> +	ctx->image_fmt = image_fmt;
+>>>>> +	if (!rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, ctx->image_fmt))
+>>>>> +		rkvdec_reset_decoded_fmt(ctx);
+>>>>>  
+>>>>>  	return 0;
+>>>>>  }
+>>>>>  
+>>>>>  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+>>>>>  	.try_ctrl = rkvdec_try_ctrl,
+>>>>> +	.s_ctrl = rkvdec_s_ctrl,
+>>>>>  };
+>>>>>  
+>>>>>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>>>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+>>>>> index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
+>>>>> --- a/drivers/staging/media/rkvdec/rkvdec.h
+>>>>> +++ b/drivers/staging/media/rkvdec/rkvdec.h
+>>>>> @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
+>>>>>  		     struct vb2_v4l2_buffer *dst_buf,
+>>>>>  		     enum vb2_buffer_state result);
+>>>>>  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
+>>>>> +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
+>>>>> +					       struct v4l2_ctrl *ctrl);
+>>>>>  };
+>>>>>  
+>>>>>  enum rkvdec_image_fmt {
+>>>>>
+>>>
+> 
+
