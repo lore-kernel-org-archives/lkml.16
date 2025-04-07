@@ -1,213 +1,360 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B0E1367;
-	Mon,  7 Apr 2025 05:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744003041; cv=fail; b=U/1w5F8GxX2GEXuIYMD0UadkuFxteNY19ugtz5yvWSsczkQzmSj5VdyEBeDSLhhOPixh1hQS3CKsC9++nc+vt8lCmG1RNpYYcTGWnAvzAfs1xRASyREUs97O5190YWe6PPogBRCtd6gd+pzDJgwKcXzElrvomhNMu5pMXraIM40=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744003041; c=relaxed/simple;
-	bh=RA83Q5KUMl9GzDotn9XzG8aaJcfrKp2GmRqlcKpx3UQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BgZF0JMWmEk1psLTxfdBKFnLaFVkicvyEg2LfyOVJguMvnjaxMIPBQDLq+sQuHuSlO1Bj51owB0Tt3d1qn53X/2LIVuYuR9nspTdd1xL2hDKY5QsbUZDc1MJRrvO3Zodn2GB4GU2Xkd9C03k3x4FXtnZnpnqYNs5OworicLkdPI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uo7sTbKO; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C61E15199A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 05:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744003067; cv=none; b=jSCmP2/6M2U6Er3KL6GfStgqWboE50bDab7Z1NYHZxQfHxzRt0dOfVbZ8gdJ+1azZdabWzd+WrBNACSgntTdR2J2Wq3wK+6zAS7qL0XPvU42Rkx1vVAJ4nMAffbOXkgP/TYfKcwsNaSDiwcT3ShKAdFyNPpmXo9fw0+3HslHem8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744003067; c=relaxed/simple;
+	bh=IRXTLiy0wcr0UxPpdjDFFAExenmjhD4W3Ctx5oi7Pgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CqNOaa1d/okug7/FPRUj7RuVJoCULCvpYd+K/Elqs2x6KBJiq4+blnLtH29rI1nMpxelDsHS2iYMttiDAdvgmrRiBGnIhGye8KtzJ31BrwXjta/5cSxq9UUKQEqXG3cW/yOxF4CjK2+a5oXBl+Ac1XRauNfwQIELiq2YTvMADaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AR+jehR8; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uo7sTbKO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744003040; x=1775539040;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=RA83Q5KUMl9GzDotn9XzG8aaJcfrKp2GmRqlcKpx3UQ=;
-  b=Uo7sTbKOBQfvMGVi9mdE0H4AthZhDReIZHEUm53zzcL6auRK63nVUvRM
-   ahDqH5aJxEiVuxfZMFZ8m1jixWWFtjjHlv5ZI6FoiaHwBOUZGL34vYpir
-   7EdsVBGt5rKh34K+EZ/440MVtZsL7ndCcivPueU2vMDpvkbiDDNCEzaLG
-   d/50vPw41tpQtcS1+odPLnyRqPGcIoACNoI75IwRwLpZF7Hk/x4Zn5DqF
-   l59laVkxhPWwuCMcGJ/xY0muakY64L0Td85LQCpEIIgU5KEQibXk5Xgqi
-   LWdXj0b/JpSbZO2WM8l7yswaXOPU0JOtIFbefIXbI5BXhau5Q/zQ7Y9DV
-   A==;
-X-CSE-ConnectionGUID: nequERcXTICPg/ADfTtXow==
-X-CSE-MsgGUID: u9D7RGIFSViGbcTtQ3UdOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="48083638"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="48083638"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 22:17:19 -0700
-X-CSE-ConnectionGUID: YEqiUp5ARUOfZ2yKNG27jg==
-X-CSE-MsgGUID: WvcvkbTBQ1Kle74a7yhUlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="132990541"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Apr 2025 22:17:19 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Sun, 6 Apr 2025 22:17:18 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Sun, 6 Apr 2025 22:17:18 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 6 Apr 2025 22:16:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e11koatZK7toql0nYsW8OxOzIdkh8goZWaWbvSyHAEJyc4a9Z4OfX09TJVi5ip6ylbWH8pSmMgDi9DXTSKUkIJxLBa9gZXq6A6+rFYgJQvaTJmYYzNt6OozHEkKsTeniJlPi+jwBY1NiFPtBIUKRiN5PkmgQAe5B3tBHyDigwUMqurn5hZpuq+caBwm3jlIk67AVty/JsVCYyc5GYGdivuNT1s7upTVMSnSAMP+7E4hZ30o3mNcquAI8IdP3kKVHxUPtd9e4VfpuHuIdVLl6eApCyG4/o8Pyd7sgakcdsne4l4RPylUS3Wb0+FuO0fhQ2TGFYf5g4WMmAqWhpJUZqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RA83Q5KUMl9GzDotn9XzG8aaJcfrKp2GmRqlcKpx3UQ=;
- b=pOwl31EQoyyWdTRGy4ybT5bfJlTXNIq4JMzt7vW1lDj2WQHmOWCaApgPRNUvFi6lOWubA8fubNcs3+QVcl65Le/Y34SW5PK/+YbMw/MaHT13IgGEanKd7kpx4vg7JDTjicTxq/TL6zqZCz0RerC8LmfSqk1sPV8iMfx5M1tMhg8YIf9WQp6ch068ggA/GF8RhTLZpLZTqXQ6GJJLPZq/FQ83bKPTZ03JC42aUCLd6Py9JX4keDdQHuB6t15KokZSIvCPZmOP7pyyYtaGtSWwfHJqZcVpxRpRlpOmIzwDHiedcpygHrKTuiXlwi4sBdFItJyqJYMbpIVa30SVd2uRkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by DM3PR11MB8716.namprd11.prod.outlook.com (2603:10b6:0:43::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Mon, 7 Apr
- 2025 05:16:23 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.8606.033; Mon, 7 Apr 2025
- 05:16:23 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>, Alex Williamson
-	<alex.williamson@redhat.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, nd <nd@arm.com>, Philipp Stanner
-	<pstanner@redhat.com>, Yunxiang Li <Yunxiang.Li@amd.com>, "Dr. David Alan
- Gilbert" <linux@treblig.org>, Ankit Agrawal <ankita@nvidia.com>, "open
- list:VFIO DRIVER" <kvm@vger.kernel.org>, Dhruv Tripathi
-	<Dhruv.Tripathi@arm.com>, "Nagarahalli, Honnappa"
-	<Honnappa.Nagarahalli@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
-Subject: RE: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
-Thread-Topic: [RFC PATCH] vfio/pci: add PCIe TPH to device feature ioctl
-Thread-Index: AQHbhLKIOMwFCrbJIEmx0MTBFQvwabNjFiyAgACMrACAAC5ngIAAUDEAgAsZQcCAAsKCAIAl8RYQ
-Date: Mon, 7 Apr 2025 05:16:23 +0000
-Message-ID: <BN9PR11MB5276A08041ED09F4B215D50F8CAA2@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20250221224638.1836909-1-wathsala.vithanage@arm.com>
-	<20250304141447.GY5011@ziepe.ca>
-	<PAWPR08MB89093BBC1C7F725873921FB79FC82@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <20250304182421.05b6a12f.alex.williamson@redhat.com>
- <PAWPR08MB89095339DEAC58C405A0CF8F9FCB2@PAWPR08MB8909.eurprd08.prod.outlook.com>
- <BN9PR11MB5276468F5963137D5E734CB78CD02@BN9PR11MB5276.namprd11.prod.outlook.com>
- <PAWPR08MB89092CC3B8587E9938CCAA0C9FD22@PAWPR08MB8909.eurprd08.prod.outlook.com>
-In-Reply-To: <PAWPR08MB89092CC3B8587E9938CCAA0C9FD22@PAWPR08MB8909.eurprd08.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DM3PR11MB8716:EE_
-x-ms-office365-filtering-correlation-id: 40c73c73-6cf8-4030-a605-08dd759356f3
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?1Rf4l21guosKodLlBE81ShZaMIRgXurNtwJ3lrvbOg/McTNQhdb4Ab0jF0eR?=
- =?us-ascii?Q?AXyF3AKqz432jE/jbw0lO+hwbK+EwAyrJPu7houD6r4CZDm0qLWTTBqlVJ85?=
- =?us-ascii?Q?Dh5UKWlo/Npkvk7T9Ottt+fTfDsVWoOV2JqJqXnFDdkyhShgqo8rpY9/nqRj?=
- =?us-ascii?Q?pO3m281rD9Oefo26P1iZHj7wRVQSp4A/W9BjLYNHDH+2gv5tmiYNsDvAYNY+?=
- =?us-ascii?Q?JFa/wg/7n7XBtMyLnImV6DCUp045XYEvsMDXc5xACshRBx69dj87aGGjwA2f?=
- =?us-ascii?Q?pYUJUU18lZVyfB6kPq2yD0uwlZqz45IoFVY3VQ82uMmIkrW+NJNBO5I7boha?=
- =?us-ascii?Q?L58sIP2fafbyQw6YsRB/ccjIlVt0Omlm8YGnE4ftk28lSRwxju6fUMFqZ37a?=
- =?us-ascii?Q?kNwmLhzFyXNiQ9cUdEmcHEG6JImHbfUc8E7rq3+UbPY+IeKNZaZT+pqYlmhd?=
- =?us-ascii?Q?tGegcPLGIJhyEcQs2/oTcHuJgoVYTfpqEOK+J9NNwRIUIdeORViribKoPHL4?=
- =?us-ascii?Q?wk/tBqalQQz6qEe13yDOelPBTBE0r9Lw7C6lzsU6yrpfRGlaVbhHgAZr1IVl?=
- =?us-ascii?Q?44PwvouJFAKQuinl8cbaScnk4/2pVQ2ckzyl/HZ24byC/VTYPNsitXy0T503?=
- =?us-ascii?Q?mBKfwFbsd2bLLbZknG44sWHdpttpAULZOrRwSQwqcd1kf3oY9VtkFqS7v/Cs?=
- =?us-ascii?Q?nAYCwWpoc4YxyfKY/P/D48SDQChXYP9Qp37F8O5j6KSO/XA1YyHlcYPpvxi3?=
- =?us-ascii?Q?jMM5LpaZFl6uECkjB+jp0XLw/nSRd6cj0GBBrsJoeImJh3+dXazvWoxAFORT?=
- =?us-ascii?Q?GCD9lcwrutIv0ctjwN1d4pePv79luuv35ycGJ5vivBvAr7DfnIMV8AMyxv5t?=
- =?us-ascii?Q?O5OlLD6Waon5/T4NKfhAaOcC6wsfsqyCWdUzSWNWUqbfjiPl4fgYH+j/oKYk?=
- =?us-ascii?Q?VyreXXdP3dd9aaTNzQH9aiHv0YAm8fp0A5nlZpJ1IW2MainEdacmu/veCa1y?=
- =?us-ascii?Q?rHyUsApmAm7p+AIKLXEIiWigjNu75OAla6v+veWQkZPUfWLqepMCcuR4P1+U?=
- =?us-ascii?Q?xF872882sg+b9uh5gSUD6S7nUdxXG5dIZRBkrFzaUSdDoejkDGk9OPZ3aKTv?=
- =?us-ascii?Q?TY3ff0D4JeXeBENk+oQ18oFc1Hh3ihqNC+eM8UwZ+DgXTCpM6E6pCafwzY7h?=
- =?us-ascii?Q?qMWbN3BPlNRppQ+DWNyINjejz05JJ1En/RCMzVqA/5h/oz3IisqUaudFWUsr?=
- =?us-ascii?Q?8VN02T8dlEbrp/ObAHUKLFbHp347i5r73V8nGi3jADhwSGW7WehfzaGM3W9L?=
- =?us-ascii?Q?WHx0sPRJa1oD8kjl86deOCFMTwOsJnBPN8Bp968R0Y7NyAxX/SPba46vBdiV?=
- =?us-ascii?Q?BNlDC4tLeBfXXyVCR1lluWZu2VzwvD0xjHk8qAKPTaDYkakR59HEgMnoqaQu?=
- =?us-ascii?Q?utagyKt0WsN3VZfj6w8uV+TV1ZaJF3yI?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?RhvuUcC6N9x6rpHXcQiwAxFYWYgZ4AW9/1eWk6f5CvjWihDTw9/c250gtaVL?=
- =?us-ascii?Q?Xt8YIksaJQR8wRqhy6ic72sviEyHqpjt06jXR3Aqq216NjvPd+nB1wxXIroh?=
- =?us-ascii?Q?GkJ80Yb9W7wvxl4fhiZsY0h8JO/c2gvmRTm/jECmfzRRIxITc2LIJvn9e5Pt?=
- =?us-ascii?Q?DKQkMd/tu6MJcYZoSwefQLq3xeDgdhKNzb92HSrDw8O47JIrU4rAQFVloqdh?=
- =?us-ascii?Q?Ih5H86GS9YMWJM9AGcrrlweL+uvuHXD9Cz0GAaRpHGIxBbzWFSbBTJLrXM8z?=
- =?us-ascii?Q?GoOH7B4D7eKowTgzIjPL8WdEKxAJEHpZl0zRCvnl3QAi/NxduBuKkuMl4sbp?=
- =?us-ascii?Q?1Vt8FPZ1DgR4Qeh1fi+4wDbN9m0YulzVG8pKLuGIp+64XMlkeihAtuRNbKA1?=
- =?us-ascii?Q?IlZ0I+pJJ26bf7SC9p1uLLol5+euOwa5vyo9Y0Gygvyt4s1z0N9bE9uqmSKT?=
- =?us-ascii?Q?J/xmvivdLQzNI4oWgG8EvVodnHgaa7LAE0kxXaLOZOlARt8CKqCYI1utpTEU?=
- =?us-ascii?Q?+bW4jOKbWZuNcBp/yh4L3WSvKdHip0SF3gKJIjcL+stO6EL9Lj06OZvFWVTp?=
- =?us-ascii?Q?ZLye8lUTuOSenqElmBxo/6/046RzEP3/egdI8VJURjRF1grx777A8HDOQyDO?=
- =?us-ascii?Q?14NSFPtVvc/AL/WdMqP3PMMNbsD0dUIEUt3sr1DsKn3OAAqXFto2C6ABDyjS?=
- =?us-ascii?Q?RUQahAzVzoIt5P8KYyOUJm/jI6QNPxcJRTg+u4ZZ+fjO9C6OIEzaeR+cfrUR?=
- =?us-ascii?Q?hSN15CQVJuUFEfFInptSq3/7SE0rcLAbB640QnzOQ66MOpeOfrQNQzr+YIf2?=
- =?us-ascii?Q?HR8oOUDTCfOM7sPjCDLthRl6qk2gJmCdyZeB6jxwp7m+abs6HZOik4YAP2tn?=
- =?us-ascii?Q?ur/m3EzDSUNZq+aonqFjjLTvMdUu/f9BDHt5MJuJSR51rWw5ThECl69/8unj?=
- =?us-ascii?Q?SYhcNhRRljpYgZts3480Sri1NIbsQhn1i+LygjKE2pY+t4/PSwu7wAKn/HN+?=
- =?us-ascii?Q?gMCK7XVTrla6vr/GL8FEiwA0B5nm9VEG5CDw7gRsUPfanqd4haABB4w8iEru?=
- =?us-ascii?Q?FGKu2GB8Xfp8pQWUm4BVaguMm8rzOabaUfsv+RZg7SOBJTqznJvlF+lIt1r3?=
- =?us-ascii?Q?VC0+iWDtjZfQqYaAPD006GthrFKxbWy5T0mhAIacTaBEiL6I4tquZLWMY85f?=
- =?us-ascii?Q?IWndLx49mOip8YHusvD9hiPj4gQOY5V3byhcJF3Lum2Mv/Nvt3G1Z5TVbi+s?=
- =?us-ascii?Q?0kl3qf6T/WTDN4vUXterG18BBYdhEAI24pAZ7kjTkLOjB7PJrkk70vwMAQrR?=
- =?us-ascii?Q?vEPulir+TyGm2HxEi3MxVoPv0qrGBnV1/k5bPV1HBF7MFPDgnauGNoDOIkeF?=
- =?us-ascii?Q?00TbgZyW1kwd89CzqbDfd3qcKPiPH7YJPIPLvnFRcxd8q5RcHwjNvih2Yr1M?=
- =?us-ascii?Q?ijqqmbG9jpWBuMJK4BGMyq0DtsSbhQomP4Hshk2N6WTDzTjE/roYEdsak1xi?=
- =?us-ascii?Q?rd8E2a52/rCd9AzcDXkLg8p4jgJJH3pM1W7OfPJk8LwozAx3FamrjogOeNUf?=
- =?us-ascii?Q?OCg8fA1b5Qo8dvc2Fc+aKfdxWIGpIoHOFyVwFKOe?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AR+jehR8"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5499c5d9691so4440541e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 22:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744003063; x=1744607863; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c+CSHXB/SHU/srlzshakhN3xCnCyg3aky+ziRenabxo=;
+        b=AR+jehR81gsUOos5z+zCm2q9TBSkQrpgaJbKwegZU1E92+i2BYwBxQ+XE60acxncZQ
+         Wd97LtoKVYB+ON+kdJFxqHvvcE/+rcJujz+M6uXZNYgj7+shuzrFFrcDe97jAPXcGult
+         MHYQUJ4hfpo6edfITtPp69k7MBY6HZNWCA+kE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744003063; x=1744607863;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c+CSHXB/SHU/srlzshakhN3xCnCyg3aky+ziRenabxo=;
+        b=NQX4Trzbym+I1inOfuH2XRNlvA4YBJTd1eeZ5Sxl7im0U9ImZGMweBUrZoYNJiqiyY
+         /sndT0MUPvP/3AVLzHCvhCan37cq+XCzfujjTuV7NfoDYjuXKeWvuKJf72rl41owR0LS
+         O6EDsb5uxk4lnYLhZuOXT1XQKJ8C6auMALLDgVBePsgxpsVEapt9arnXOpSugnmGUX/T
+         cISoXCMhIvkc8j+yC4C2joXPcBjjmuX556OQ6T4lRwPwfbPFEGOjMJ8VKVXsdnd+Tp9K
+         Fke2cMkBwfVOZ7XDDHPBW+MI03JUrp7pLlxChR+k+NiiVV/ZTiQOAmsxrqoAZIB4KMhF
+         4dPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdQwGLKRJS13OQhNJCYuddiv755GiGshAQW5kw/qGRqzd9Mf4kZO9NvQbnV3RQWDnqwLW0ZJQqAbzWjk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrC11kXd2yOwKr3VkE5y8BaRdNqz7j1pMBqNImw7JsA76guzpi
+	iZdSEv0vXRFpP906f47YmK28SNOJz3yqcKTKnetsuCv2TrqHvLKHAvq/M34TAiSLuWMs6r6tX49
+	m/hkJtFCeoeBzCTArYDIGd8jDfaz5mvWdlxbT
+X-Gm-Gg: ASbGncu4i+n3M7dovjBdHxwYW5aLDqoBuuMz3coRKsiivKUWQXf9ASvZNOru0t4eITE
+	DpHlnapxPiqWv/RDq+xHl12pKpxAMN/SITS7LsGVn4AshJXXVC96IV20nQ0FbO/bXNU/Jjw+PyN
+	K0mILsdDEJppPZcVGpW6Xj0Wo8aDrrGtlOqAz83YIufbKz9VpPTXs3DlwBTi/Bcdec
+X-Google-Smtp-Source: AGHT+IGQ2TU+FlpVI8toiWJ8v4q+QWV6n0btfN2XilUVDSi83owzyvMB5XRoW71J+jG3hrQgX6cFS1CkqDdW8ihAT4c=
+X-Received: by 2002:a05:6512:1089:b0:549:c1e6:cbc9 with SMTP id
+ 2adb3069b0e04-54c22777bdbmr3206646e87.18.1744003063230; Sun, 06 Apr 2025
+ 22:17:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40c73c73-6cf8-4030-a605-08dd759356f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 05:16:23.5564
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WwTUW4wwkb94z6cqPJ5RFf49tZTfmkAygDOX/WKqnmm9mlhGKRbdpsrqtQpeU0CXtWjx3/i/owCXnpHfhNCdWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8716
-X-OriginatorOrg: intel.com
+References: <20250403-fix-mtk-iommu-error-v2-1-fe8b18f8b0a8@collabora.com>
+In-Reply-To: <20250403-fix-mtk-iommu-error-v2-1-fe8b18f8b0a8@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Mon, 7 Apr 2025 13:17:31 +0800
+X-Gm-Features: ATxdqUEdp8KSLA_Y9zkcGgx93Mg9QtyZLc50NVkg0bVvCTg0KMHwM3_uBSRUDiw
+Message-ID: <CAGXv+5HJpTYmQ2h-GD7GjyeYT7bL9EBCvu0mz5LgpzJZtzfW0w@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu/mediatek: Fix NULL pointer deference in mtk_iommu_device_group
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, Yong Wu <yong.wu@mediatek.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, kernel@collabora.com, Joerg Roedel <jroedel@suse.de>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev, linux-mediatek@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> From: Wathsala Wathawana Vithanage <wathsala.vithanage@arm.com>
-> Sent: Friday, March 14, 2025 9:49 AM
-> > >
-> > > Having said that, regardless of this proposal or the availability of =
-kernel
-> > > TPH support, a VFIO driver could enable TPH and set an arbitrary ST o=
-n
-> the
-> > > MSI-X/ST table or a device-specific location on supported platforms. =
-If the
-> > > driver doesn't have a list of valid STs, it can enumerate 8- or 16-bi=
-t STs
-> and
-> > > measure access latencies to determine valid ones.
-> > >
-> >
-> > PCI capabilities are managed by the kernel VFIO driver. So w/o this
-> > patch no userspace driver can enable TPH to try that trick?
->=20
-> Yes, it's possible. It's just a matter of setting the right bits in the P=
-CI config
-> space to enable TPH on the device.
->=20
+Hi,
 
-No. Before this patch the TPH capability is read-only to userspace,
-enforced by vfio-pci. So there is no way that an user can toggle
-the TPH cap by itself!
+On Thu, Apr 3, 2025 at 6:24=E2=80=AFPM Louis-Alexis Eyraud
+<louisalexis.eyraud@collabora.com> wrote:
+>
+> Currently, mtk_iommu calls during probe iommu_device_register before
+> the hw_list from driver data is initialized. Since iommu probing issue
+> fix, it leads to NULL pointer dereference in mtk_iommu_device_group when
+> hw_list is accessed with list_first_entry (not null safe).
+>
+> So, change the call order to ensure iommu_device_register is called
+> after the driver data are initialized.
+>
+> Fixes: 9e3a2a643653 ("iommu/mediatek: Adapt sharing and non-sharing pgtab=
+le case")
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe pa=
+th")
+> Reviewed-by: Yong Wu <yong.wu@mediatek.com>
+> Tested-by: Chen-Yu Tsai <wenst@chromium.org> # MT8183 Juniper, MT8186 Ten=
+tacruel
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabor=
+a.com>
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+> ---
+> This patch fixes a NULL pointer dereference that occurs during the
+> mtk_iommu driver probe and observed at least on several Mediatek Genio bo=
+ards:
+> ```
+> Unable to handle kernel NULL pointer dereference at virtual address 00000=
+00000000000
+
+This is a reminder to please land this and send to Linus ASAP.
+
+This fixes the v6.15-rc1 kernel on all the MediaTek Chromebook platforms,
+except for MT8188, which seems to have another issue in iommu_get_dma_domai=
+n()
+used from the DRM driver:
+
+    Disabling lock debugging due to kernel taint
+    Unable to handle kernel NULL pointer dereference at virtual
+address 0000000000000158
+    Mem abort info:
+      ESR =3D 0x0000000096000005
+      EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+      SET =3D 0, FnV =3D 0
+      EA =3D 0, S1PTW =3D 0
+      FSC =3D 0x05: level 1 translation fault
+    Data abort info:
+      ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
+      CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+      GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+    user pgtable: 4k pages, 39-bit VAs, pgdp=3D00000001185ab000
+    [0000000000000158] pgd=3D0000000000000000, p4d=3D0000000000000000,
+pud=3D0000000000000000
+    Internal error: Oops: 0000000096000005 [#1]  SMP
+    Modules linked in: mtk_vcodec_dec_hw mtk_vcodec_dec mtk_vcodec_enc
+v4l2_vp9 v4l2_h264 mtk_vcodec_dbgfs mtk_jpeg mtk_vcodec_common
+cros_ec_sensors mtk_jpeg_enc_hw cros_ec_sensors_core mtk_jpeg_dec_hw
+mtk_vpu v4l2_mem2mem videobuf2_v4l2 snd_sof_mt8186
+videobuf2_dma_contig snd_sof_xtensa_dsp sha1_ce videobuf2_memops
+mtk_adsp_common mtk_scp videobuf2_common snd_sof_of mtk_rpmsg snd_sof
+rpmsg_core cros_ec_sensorhub hid_google_hammer hid_vivaldi_common
+snd_sof_utils mtk_scp_ipi fuse
+    CPU: 6 UID: 0 PID: 12 Comm: kworker/u32:0 Tainted: G    B
+     6.15.0-rc1-00001-gfed05d98b726 #628 PREEMPT
+06e695da6360d22824958738f9ba1c9b2416be19
+    Tainted: [B]=3DBAD_PAGE
+    Hardware name: Google Ciri sku2 board (DT)
+    Workqueue: events_unbound deferred_probe_work_func
+    pstate: 40400009 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+    pc : iommu_get_dma_domain+0x30/0x58
+    lr : iommu_get_dma_domain+0x30/0x58
+    sp : ffffffc080186ee0
+    x29: ffffffc080186ee0 x28: ffffff80c4c59028 x27: 0000000000000000
+    x26: 0000000000000014 x25: 0068000000000f0b x24: ffffff80c4c5ca28
+    x23: 00000000008ca000 x22: 1ffffff810030df8 x21: ffffff80c20ea010
+    x20: ffffff80c20ea010 x19: 0000000000000000 x18: 0000000000000000
+    x17: 3d3d3d3d3d3d3d3d x16: 3d3d3d3d3d3d3d3d x15: 0720072007200720
+    x14: 0720072007200720 x13: ffffff80c0a1bb80 x12: ffffffbae2ca45e9
+    x11: 1ffffffae2ca45e8 x10: ffffffbae2ca45e8 x9 : dfffffc000000000
+    x8 : 000000451d35ba18 x7 : ffffffd716522f47 x6 : 0000000000000001
+    x5 : ffffffd716522f40 x4 : ffffffbae2ca45e9 x3 : ffffffd713717e6c
+    x2 : 0000000000000001 x1 : ffffff80c0941dc0 x0 : 0000000000000001
+    Call trace:
+     iommu_get_dma_domain+0x30/0x58 (P)
+     __iommu_dma_alloc_noncontiguous+0x34/0x498
+     iommu_dma_alloc+0x2f0/0x3e0
+     dma_alloc_attrs+0x1b4/0x3b8
+     mtk_gem_create+0x124/0x170
+     mtk_gem_dumb_create+0x84/0x180
+     drm_mode_create_dumb+0xf8/0x128
+     drm_client_framebuffer_create+0x11c/0x240
+     drm_fbdev_dma_driver_fbdev_probe+0x154/0x5a0
+     __drm_fb_helper_initial_config_and_unlock+0x4f0/0x928
+     drm_fb_helper_initial_config+0x50/0x68
+     drm_fbdev_client_hotplug+0xc0/0x120
+     drm_client_register+0xa0/0x100
+     drm_fbdev_client_setup+0xc8/0x260
+     drm_client_setup+0x60/0xd0
+     mtk_drm_bind+0x4f0/0xaf0
+     try_to_bring_up_aggregate_device+0x258/0x2f0
+     __component_add+0x104/0x240
+     component_add+0x1c/0x38
+     mtk_disp_rdma_probe+0x180/0x260
+     platform_probe+0x98/0x128
+     really_probe+0x118/0x3c0
+     __driver_probe_device+0xc0/0x198
+     driver_probe_device+0x64/0x1f8
+     __device_attach_driver+0xf0/0x1b0
+     bus_for_each_drv+0xf4/0x178
+     __device_attach+0x120/0x240
+     device_initial_probe+0x1c/0x30
+     bus_probe_device+0xdc/0xe8
+     deferred_probe_work_func+0xec/0x140
+     process_one_work+0x428/0xa80
+     worker_thread+0x2c0/0x538
+     kthread+0x258/0x380
+     ret_from_fork+0x10/0x20
+    Code: 97e8f12c f9422673 91056260 97e8f129 (f940ae60)
+    ---[ end trace 0000000000000000 ]---
+    Kernel panic - not syncing: Oops: Fatal exception
+    SMP: stopping secondary CPUs
+    Kernel Offset: 0x1693600000 from 0xffffffc080000000
+    PHYS_OFFSET: 0x40000000
+    CPU features: 0x0e00,000002e0,01202650,8200720b
+    Memory Limit: none
+    Rebooting in 30 seconds..
+
+
+
+Thanks
+ChenYu
+
+> Mem abort info:
+>   ESR =3D 0x0000000096000004
+>   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+>   SET =3D 0, FnV =3D 0
+>   EA =3D 0, S1PTW =3D 0
+>   FSC =3D 0x04: level 0 translation fault
+> Data abort info:
+>   ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
+>   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+>   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000101380000
+> [0000000000000000] pgd=3D0000000000000000, p4d=3D0000000000000000
+> Internal error: Oops: 0000000096000004 [#1]  SMP
+> Modules linked in: btusb btrtl mt6315_regulator btintel mtk_vcodec_dec
+>   btmtk v4l2_vp9 btbcm mtk_vcodec_enc v4l2_h264 mtk_vcodec_dbgfs
+>   bluetooth mtk_jpeg ecdh_generic mtk_vcodec_common mtk_jpeg_enc_hw
+>   mtk_jpeg_dec_hw ecc v4l2_mem2mem rfkill videobuf2_dma_contig
+>   videobuf2_memops videobuf2_v4l2 videodev videobuf2_common mc
+>   mt6360_charger mcp251xfd it5205 goodix_ts can_dev panfrost
+>   drm_shmem_helper gpu_sched lvts_thermal mtk_svs mtk_adsp_mailbox
+>   snd_soc_dmic mtk_scp mtk_rpmsg mtk_scp_ipi mtk_cmdq_mailbox
+>   mediatek_cpufreq_hw spmi_mtk_pmif fuse dm_mod ip_tables x_tables
+>   ipv6 mediatek_drm tcpci_mt6360 drm_display_helper drm_client_lib
+>   tcpci drm_dma_helper drm_kms_helper tcpm drm mtk_mutex mtk_mmsys
+>   typec rtc_mt6397 mtk_cmdq_helper phy_mtk_pcie pcie_mediatek_gen3
+>   dwmac_mediatek stmmac_platform stmmac pwm_mtk_disp pcs_xpcs pwm_bl
+>   backlight
+> CPU: 5 UID: 0 PID: 12 Comm: kworker/u32:0 Not tainted 6.14.0-next-2025032=
+6 #4 PREEMPT
+> Hardware name: MediaTek Genio 1200 EVK-P1V2-EMMC (DT)
+> Workqueue: events_unbound deferred_probe_work_func
+> pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> pc : mtk_iommu_device_group+0x2c/0xe0
+> lr : __iommu_probe_device+0x130/0x490
+> sp : ffff8000827b3970
+> x29: ffff8000827b3970 x28: ffff0000c0028000 x27: ffff80008164f2b8
+> x26: ffff0000cbc47130 x25: ffff80008096a9f0 x24: ffff80008164f5a8
+> x23: ffff800082684b60 x22: ffff8000827b3a80 x21: ffff0000cbc47130
+> x20: ffffffffffffffed x19: ffff0000c117c010 x18: 0000000000000000
+> x17: 6f702d616d642d64 x16: 6574636972747365 x15: 0000000000000002
+> x14: 0000000000000000 x13: 0000000000128d55 x12: 6f632d616d642e30
+> x11: 0000000000000100 x10: 0000000000000001 x9 : 0000000000000220
+> x8 : 0101010101010101 x7 : ffff0000c117c010 x6 : 306c766f2c727461
+> x5 : 0000000000000000 x4 : ffff0000c10a2de8 x3 : ffff0000c10a2e70
+> x2 : ffff0000c01a4600 x1 : 0000000000000000 x0 : ffff0000c65470c0
+> Call trace:
+>  mtk_iommu_device_group+0x2c/0xe0 (P)
+>  __iommu_probe_device+0x130/0x490
+>  probe_iommu_group+0x3c/0x70
+>  bus_for_each_dev+0x7c/0xe0
+>  iommu_device_register+0xd8/0x22c
+>  mtk_iommu_probe+0x270/0x53c
+>  platform_probe+0x68/0xd8
+>  really_probe+0xbc/0x2c0
+>  __driver_probe_device+0x78/0x120
+>  driver_probe_device+0x3c/0x154
+>  __device_attach_driver+0xb8/0x140
+>  bus_for_each_drv+0x88/0xe8
+>  __device_attach+0xa0/0x190
+>  device_initial_probe+0x14/0x20
+>  bus_probe_device+0xb4/0xc0
+>  deferred_probe_work_func+0x90/0xc8
+>  process_one_work+0x148/0x284
+>  worker_thread+0x2cc/0x3cc
+>  kthread+0x12c/0x204
+>  ret_from_fork+0x10/0x20
+> Code: b4000500 f9401c01 92800254 f9409821 (f9400035)
+> ---[ end trace 0000000000000000 ]---
+> ```
+>
+> I've tested this patch on Mediatek Genio 510-EVK and 1200-EVK boards
+> with a kernel based on linux-next (tag: next-20250327).
+> ---
+> Changes in v2:
+> - Fix goto label usage in device registration error case
+> - Add review and test trailers
+> - Link to v1: https://lore.kernel.org/r/20250327-fix-mtk-iommu-error-v1-1=
+-df969158e752@collabora.com
+> ---
+>  drivers/iommu/mtk_iommu.c | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 034b0e670384a24df10130cbbff95ce8e0bc092d..df98d0c65f5469c6803cd9d15=
+1c85ad855558cf5 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -1372,15 +1372,6 @@ static int mtk_iommu_probe(struct platform_device =
+*pdev)
+>         platform_set_drvdata(pdev, data);
+>         mutex_init(&data->mutex);
+>
+> -       ret =3D iommu_device_sysfs_add(&data->iommu, dev, NULL,
+> -                                    "mtk-iommu.%pa", &ioaddr);
+> -       if (ret)
+> -               goto out_link_remove;
+> -
+> -       ret =3D iommu_device_register(&data->iommu, &mtk_iommu_ops, dev);
+> -       if (ret)
+> -               goto out_sysfs_remove;
+> -
+>         if (MTK_IOMMU_HAS_FLAG(data->plat_data, SHARE_PGTABLE)) {
+>                 list_add_tail(&data->list, data->plat_data->hw_list);
+>                 data->hw_list =3D data->plat_data->hw_list;
+> @@ -1390,19 +1381,28 @@ static int mtk_iommu_probe(struct platform_device=
+ *pdev)
+>                 data->hw_list =3D &data->hw_list_head;
+>         }
+>
+> +       ret =3D iommu_device_sysfs_add(&data->iommu, dev, NULL,
+> +                                    "mtk-iommu.%pa", &ioaddr);
+> +       if (ret)
+> +               goto out_list_del;
+> +
+> +       ret =3D iommu_device_register(&data->iommu, &mtk_iommu_ops, dev);
+> +       if (ret)
+> +               goto out_sysfs_remove;
+> +
+>         if (MTK_IOMMU_IS_TYPE(data->plat_data, MTK_IOMMU_TYPE_MM)) {
+>                 ret =3D component_master_add_with_match(dev, &mtk_iommu_c=
+om_ops, match);
+>                 if (ret)
+> -                       goto out_list_del;
+> +                       goto out_device_unregister;
+>         }
+>         return ret;
+>
+> -out_list_del:
+> -       list_del(&data->list);
+> +out_device_unregister:
+>         iommu_device_unregister(&data->iommu);
+>  out_sysfs_remove:
+>         iommu_device_sysfs_remove(&data->iommu);
+> -out_link_remove:
+> +out_list_del:
+> +       list_del(&data->list);
+>         if (MTK_IOMMU_IS_TYPE(data->plat_data, MTK_IOMMU_TYPE_MM))
+>                 device_link_remove(data->smicomm_dev, dev);
+>  out_runtime_disable:
+>
+> ---
+> base-commit: bc960e3e32c8b940c10b14557271355f66ae4db1
+> change-id: 20250327-fix-mtk-iommu-error-af6ec347d057
+>
+> Best regards,
+> --
+> Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+>
