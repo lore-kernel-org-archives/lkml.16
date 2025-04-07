@@ -1,276 +1,103 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1476222652D;
-	Mon,  7 Apr 2025 18:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049422; cv=pass; b=mjCVLiBnkxGDk6B3PeAjUX0Lgy5VewO9R4Vm6+FpJM9u+YL1W6kkgagY5Kd4eCbMj1UuChj9pS00AOA7+anN3oSo5ae7m/Tm6I3Rh+hXPWw+ZIPlc7iONk6pmnOsrCt/IASSEiAIPnxwMp5uLV+Ed1JA0wlVWx2/HKGKGE9k9d0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049422; c=relaxed/simple;
-	bh=3up7opuehpBhT967vNE90K2e+CH2SO/lQi/Ygllvxcs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sdyMevfdahFvm1QqeSMo9tYecp11biyBbhfm7cY4Gq1mUY7WkbkO5jHjL2lzKSJyu9VKjQybzavg66UVW1uFxeLbaguSS5M2NCHiaHHzrGusG5y3aXls5xvIZjPK73FuuAICURPzQeWUpAUbJ/ZHsaF6nphJuH6hVouXD7VfD5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=AVHCswuj; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D18221703
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049433; cv=none; b=PnNkv7vZYmzn8hOf07sufeuFDv5u+P9B3jWPwalgdzb8X1u2mJ0cAoTjmNfMTghmBUC2qxOy/SqWdGYB/awPlYtus1/7apSagA+EVG5rmAqM81+S+Zu3nXewzv3IGL7NsHhx0ETtsPfIs5nNF95q+pxNVor9NxaeH6QsKDJSbx8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049433; c=relaxed/simple;
+	bh=v9npP5qbKRifiCIf9b7irGIXhNLkL7PO9tLewH6PPVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oOeWLiQyHPIBtD6kDjUCSnyhp5ei3YAlSDWfLvyjFGWGpyiu8sshwtKmG3g16f3eW+58Lwc4ZTE2elr2JHIsI3SB602crHKH8FXaALhUYd2pqW/Bw6ZsWD7s9NSlPd8xaasBic/L5TzpKsCOhBL+NyIuTSYIf4A85T4tl7sfRPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5Q+9D4r; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="AVHCswuj"
-ARC-Seal: i=1; a=rsa-sha256; t=1744049398; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=L7ZIIBXp64pKw0YfQAJ9eeFkBk7MKn3P4PYa0AVapVsvjZYiwVvIKuBFERU0O1JdoFzsHfhOD+jYAr3AqmA2+0DJevZRGymFAIMUzkXDTFyKnRsI6RrHPE8l126IsYGbj8E8DGb8SIZ6g5GA64hgA+hoSKUxXHkhOXn2bumAk18=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744049398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Xnv5MfaFzomawaxWyH7pWxpw5ddTb5bXnqTSVdYnSdk=; 
-	b=c3s68I/jQrQklNJHmiEynxXfmNyb++bmmR2YyFtXhGG3VRM0Rjkmb6YWWM94u9forsAEWzzPQN9JqgMByjVf1vgk6mc+uZu4Ib9JyWv7Wcj+RfjzPo1nbMApYbo7+/OAOa+bbowKAEo7KkAT3pEJuOvoTW58AAQPLaetHve5j8w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744049398;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Xnv5MfaFzomawaxWyH7pWxpw5ddTb5bXnqTSVdYnSdk=;
-	b=AVHCswuj8QKflz+JtHurC86AVR5fkFb2a+xHP+VdU+cKoyStT4rU/Dad1vFZqCB0
-	UHhq9ZU0FerqTM2ga2bweLJe2xnV8bVQT54v5XdBQlIVfc5UEDE002shiofdDBRllIH
-	anSpgvwL5g4gtqgn16lVKcNBrt5WOPIHfnx8Eojw=
-Received: by mx.zohomail.com with SMTPS id 1744049396610968.3321994444946;
-	Mon, 7 Apr 2025 11:09:56 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 07 Apr 2025 20:09:17 +0200
-Subject: [PATCH 4/4] arm64: dts: rockchip: enable USB on Sige5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5Q+9D4r"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso31856525e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744049430; x=1744654230; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K2jy8IatPgSK7yiHP9LyAJS3rO34x8/Nplf/sO52+c8=;
+        b=g5Q+9D4rDRCwARJ/i/u/XG+JzBQnY32OlcNWplUnQAXiI833NrkrhuwTDOtmhpEO1B
+         VGxjq5z3zPqTZoSLoYQlvDOnTtLfgYNNHmLqtFzn+HjrkZmTEHtSUBgIgGXgUYpBmCwz
+         Mm3+lJUp5m7PUNDieFPL5DM0lk6ehur2r52dfJQj/UnPv+EjY6UFqlRlRYVdKHHg4Cyn
+         nX/6iRgGLyDb/81jCmUkduEKhHTEA/hM2zwA/5SNMGYHrgffu7VJTns28z0SSo+lFDIZ
+         hE3T+WZ+d6jRRPspQbkyQvsrtxJwnz0NGkv/pE2ZrGX/44yRFFWF3e6JPabuLvVE7iOL
+         Ssjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744049430; x=1744654230;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K2jy8IatPgSK7yiHP9LyAJS3rO34x8/Nplf/sO52+c8=;
+        b=Ubh8odFBw34DRjSibyLy/WK4nNjn2Ad4EoKGHtI9RWZpitmQrFbbIkqccm4eDkZZth
+         fS0QFtQRlQl2Dq1dEBB4hU2VRsUfhD18CE/29CGoZd7eqHuCIe4/00yTMRwznyOjwmsx
+         /PLaQ2obU57Shm4J/SbWVt8Fvu4pUpM59a+vv9RkwhH+/9dxxSfUVl8NwqMZExP9iU0G
+         OsfTVDaXpe07VdKzuCp9awd3cDcanHzfddxdAD6X9aZSvFZcp1GFVF3poNlJwYYs5vr4
+         Xue9yGW3zge/DDeNksepAy8Jwb1gxykLFKrdj23q69WsnsPAPWU3KfLhDCQfQ/zCyKj/
+         24Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+SB0euszbI1oED+2b1JJuFoH0uu3tr+bMDOVYkK8f83lnG+pJZtkSYm13kqzAqvCemgwuXt7bJZ7hZoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv4fTzFyCMfpYl1jDWrO+APH//fJGO24JGmVaAUzmXguBpM/Co
+	0bZCqeJT46T/OVjpevNSTaa5kWuna+901H9GD+ygw/jnv/dEeDCXdpnysw==
+X-Gm-Gg: ASbGnctImGVBqE/fsYzBw7I1U24u0ThKi65Mwiq+Z1QO+sRcN2wXnAxLv72MaIt1shq
+	gFdgl7g3anb4JT3/mjqtQEqKHersScOHCj2bbmzo8KwJIGrW7YUHkUa1Xq8svhwpZxKuKnTCZNc
+	BV5iWlJOeyBq+REDqYrLnNgkGPQbUJ/Gq3/kG28U/BnpJ6NSvew1B/jfF6RFzTGVQ/STBd47oCf
+	VCkyrv0lZTVbOvXinzW66EqYGxkBylTlT+g+Z/4Nr+9Tyb3l5n7NopAzPwFjpMbhvZow4qaY1RL
+	flpG2HAHJMiXNjEG3t6l5WELDVHZHYz58Vl+SD8AMzc447SXOLsPCw7jiq+8VTZRRGclarUBhpU
+	2b+rORT0=
+X-Google-Smtp-Source: AGHT+IHaegiIWGdjPbnxhlEDw1k6oGNTFiTAtEH0eFypa2jskzJXuIGn2vVlNXDffixeGV1f7yuI3w==
+X-Received: by 2002:a05:6000:4021:b0:391:2df9:772d with SMTP id ffacd0b85a97d-39cb3596914mr11334861f8f.13.1744049429775;
+        Mon, 07 Apr 2025 11:10:29 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm12959981f8f.77.2025.04.07.11.10.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 11:10:29 -0700 (PDT)
+Date: Mon, 7 Apr 2025 19:10:27 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Kevin Koster <lkml@ombertech.com>
+Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, Ingo Molnar
+ <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+Message-ID: <20250407191027.54494cec@pumpkin>
+In-Reply-To: <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+	<20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+	<20250406174633.2c581923c145687476191753@ombertech.com>
+	<20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+	<20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
+	<20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+	<20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-rk3576-sige5-usb-v1-4-67eec166f82f@collabora.com>
-References: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
-In-Reply-To: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Frank Wang <frank.wang@rock-chips.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
- kernel@collabora.com, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
 
-The ArmSoM Sige5 has several USB ports: a Type-A USB 3 port (USB2 lines
-going through a hub), a Type-A USB 2.0 port (also going through a hub),
-a Type-C DC input port that has absolutely no USB data connection and a
-Type-C port with USB3.2 Gen1x1 that's also the maskrom programming port.
+On Tue, 8 Apr 2025 00:21:50 +1000
+Kevin Koster <lkml@ombertech.com> wrote:
 
-Enable these ports, and set the device role to be host for the host
-ports.
+...
+> > > and I'm not much better, writing this now on a Pentium 1.  
+> > 
+> > Lemme guess: this is your main machine you use for daily work?  
+> 
+> For email/news every morning, then a (newer) laptop afterwards.
 
-The data capable Type-C USB port uses a fusb302 for data role switching.
-It currently does not have functioning SuperSpeed with certain Type-C
-cables in one of the two possible orientations.
+Buy yourself a raspberry pi.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 153 +++++++++++++++++++++
- 1 file changed, 153 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-index 828bde7fab68dc6bcbd13d75c8a72540b3666071..cdd8f8b2319105b1dae34395be20e50d45cd4431 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
-@@ -175,6 +175,33 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
- 		regulator-max-microvolt = <3300000>;
- 		vin-supply = <&vcc_5v0_sys>;
- 	};
-+
-+	vcc_5v0_typec0: regulator-vcc-5v0-typec0 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_otg0_pwren>;
-+		regulator-name = "vcc_5v0_typec0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v0_device>;
-+	};
-+	vcc_5v0_usbhost: regulator-vcc-5v0-usbhost {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpios = <&gpio4 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_host_pwren>;
-+		regulator-name = "vcc_5v0_usbhost";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v0_device>;
-+	};
-+};
-+
-+&combphy1_psu {
-+	status = "okay";
- };
- 
- &cpu_l0 {
-@@ -605,6 +632,58 @@ regulator-state-mem {
- &i2c2 {
- 	status = "okay";
- 
-+	usbc0: typec-portc@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA5 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usbc0_interrupt>;
-+		vbus-supply = <&vcc_5v0_typec0>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			/* fusb302 supports PD Rev 2.0 Ver 1.2 */
-+			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>;
-+			power-role = "source";
-+			source-pdos = <PDO_FIXED(5000, 2000,
-+						 PDO_FIXED_USB_COMM | PDO_FIXED_DATA_SWAP)>;
-+
-+			altmodes {
-+				displayport {
-+					svid = /bits/ 16 <0xff01>;
-+					vdo = <0xffffffff>;
-+				};
-+			};
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					usbc0_hs_ep: endpoint {
-+						remote-endpoint = <&u2phy0_ep>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					usbc0_ss_ep: endpoint {
-+						remote-endpoint = <&usb_drd0_ep>;
-+					};
-+				};
-+				port@2 {
-+					reg = <2>;
-+					usbc0_dp_ep: endpoint {
-+						remote-endpoint = <&usbdp_phy_ep>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	hym8563: rtc@51 {
- 		compatible = "haoyu,hym8563";
- 		reg = <0x51>;
-@@ -655,6 +734,24 @@ led_rgb_g: led-green-en {
- 			rockchip,pins = <4 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	usb {
-+		usb_host_pwren: usb-host-pwren {
-+			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		usb_otg0_pwren: usb-otg0-pwren {
-+			rockchip,pins = <4 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		usbc0_interrupt: usbc0-interrupt {
-+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+		usbc0_sbu1: usbc0-sbu1 {
-+			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+		usbc0_sbu2: usbc0-sbu2 {
-+			rockchip,pins = <2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
- };
- 
- &sdhci {
-@@ -683,11 +780,67 @@ &sdmmc {
- 	status = "okay";
- };
- 
-+&u2phy0 {
-+	status = "okay";
-+
-+	port {
-+		u2phy0_ep: endpoint {
-+			remote-endpoint = <&usbc0_hs_ep>;
-+		};
-+	};
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy1 {
-+	status = "okay";
-+};
-+
-+&u2phy1_otg {
-+	phy-supply = <&vcc_5v0_usbhost>;
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-0 = <&uart0m0_xfer>;
- 	status = "okay";
- };
- 
-+&usb_drd0_dwc3 {
-+	usb-role-switch;
-+	dr_mode = "otg";
-+	status = "okay";
-+
-+	port {
-+		usb_drd0_ep: endpoint {
-+			remote-endpoint = <&usbc0_ss_ep>;
-+		};
-+	};
-+};
-+
-+&usb_drd1_dwc3 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbdp_phy {
-+	mode-switch;
-+	orientation-switch;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usbc0_sbu1 &usbc0_sbu2>;
-+	sbu1-dc-gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_HIGH>;
-+	sbu2-dc-gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	port {
-+		usbdp_phy_ep: endpoint {
-+			remote-endpoint = <&usbc0_dp_ep>;
-+		};
-+	};
-+};
-+
- &vop {
- 	status = "okay";
- };
-
--- 
-2.49.0
-
+	David
