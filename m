@@ -1,130 +1,68 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF81E7C3F;
-	Mon,  7 Apr 2025 14:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE021F30DE;
+	Mon,  7 Apr 2025 14:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037078; cv=none; b=n4Bi8yrRd/3jjLnE9VCBpwF7yGblYfxkwznaDGEPhzAy8F/CKPf7cvArdSPwpt3EGleiFaxomvVg+2TOl9Wg3BH5LDmLBPEmLVgaTy0GgleRr8o+Aks1+1yV5Vyj1BNHDDydOiib3D/Fg+cHrdvLBnbBprmCs2omBZgLWm6wLJg=
+	t=1744037173; cv=none; b=p0M27UJsF7yb4F0Rf+nml9YEIvaoowHkcl9+OY0aNBSFNaZMvadr4QLOud6/waMwBiorRk/PQtmLb89rJde2wmeU7+aMF3YBR1RIztXM4kV1ZbGG4mcpH2gfkjGVluY67lqNLTXrCRX3k8V19j5jhHnj5kd1H/LXIu/hmG90zpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037078; c=relaxed/simple;
-	bh=wb5vmLAwjAr6Q5os1/SxsAfNsedbjZxVvWahckqyYwQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=iTMEPFdA7sg9cU6NIxlB/x1C4ldPIJGE1lDsYZdv5g1emvsDdiR5Nv181f2869Hcvxghqlmmc60caThFFw54plwJY3vppgGzRONDO862F0SFswIwTmPyHH+SYaSPR74d9j/SlJcH2FPXc4hNXdJL1aXqVT8I88+um+m+Ghmue/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rCt58oB0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MNILQjjy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rCt58oB0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MNILQjjy"
-Date: Mon, 07 Apr 2025 14:44:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744037072;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3s6DBTjHyxR82bXyvnXgDJ3sQDO7hl6/WU1SEmuqLQ=;
-	b=rCt58oB0beAZUK1q8Ue6PuOcPPHE9qJ8tA08JSbrNfeRWlLESkKKCeBwa4Wx6lvMvQwasN
-	Q+5enUW+n9BuzW2NOrKvRBh9CCpugkpXDm7a1ULFRv1+P4nyKGzdPEaTcuBQ6OqWWWgjr+
-	w64UWOhCBfjBAazDPNmU7WT7U7yhHrPlhDybXeyYnvo6EEKmFnO9CUAVFPzcZwKHkuGoWR
-	UBceMBHsZ7/DNww6soTz8uniEG+ul80HVxVeN5JDPYZabbq8Sep2NFEglkfXIETDiZDySZ
-	5+OrNejDAvLJfe6badkqX6dPLo022ploTN7dMOniyAN6tFU8TNsX/BPgotjPnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744037072;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3s6DBTjHyxR82bXyvnXgDJ3sQDO7hl6/WU1SEmuqLQ=;
-	b=MNILQjjyGscMcijAd6AukIf1UcA7Br+pBQBrU9h46qPaDGNZqgUWFt9Uf8kxPeK5rdnnmZ
-	cm8YiHCxClCi52Aw==
-From: tip-bot2 for Petr =?utf-8?q?Van=C4=9Bk?= <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/acpi: Don't limit CPUs to 1 for Xen PV guests
- due to disabled ACPI
-Cc: arkamar@atlas.cz, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250407132445.6732-2-arkamar@atlas.cz>
-References: <20250407132445.6732-2-arkamar@atlas.cz>
+	s=arc-20240116; t=1744037173; c=relaxed/simple;
+	bh=pdZC+n3I/tFEuvosD6rfBo76t/HztMAlcqp68U2CG7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GMUgyGP/R+cDM0CHVqhFhW4Iad6e/c1rJfaotJXcrOnr2bxO7N6WJvPFMaEyAJQ+sNBSBnI7BARHIW5fVs6xQRch8Qz57RPxUWhd2GV8HqLYFdkrMSLeLZQ72QYz8oeE1P03ym+2VLmFwyIZh4FEDENDk27lDGeLZ7NrT0sw8qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF64C4CEE8;
+	Mon,  7 Apr 2025 14:46:12 +0000 (UTC)
+Date: Mon, 7 Apr 2025 10:47:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH v3] tracing: Move histogram trigger variables from stack
+ to per CPU structure
+Message-ID: <20250407104727.32c1eada@gandalf.local.home>
+In-Reply-To: <20250407111551.507e6e2a683a5028bcf62a2c@kernel.org>
+References: <20250404144008.0c47e4d7@gandalf.local.home>
+	<20250407111551.507e6e2a683a5028bcf62a2c@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174403706955.31282.7031075757256146451.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Mon, 7 Apr 2025 11:15:51 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Commit-ID:     8b37357a78d7fa13d88ea822b35b40137da1c85e
-Gitweb:        https://git.kernel.org/tip/8b37357a78d7fa13d88ea822b35b40137da=
-1c85e
-Author:        Petr Van=C4=9Bk <arkamar@atlas.cz>
-AuthorDate:    Mon, 07 Apr 2025 15:24:27 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 07 Apr 2025 16:35:21 +02:00
+> > +static int alloc_hist_pad(void)
+> > +{
+> > +	lockdep_assert_held(&event_mutex);
+> > +
+> > +	if (refcount_read(&hist_pad_ref)) {
+> > +		refcount_inc(&hist_pad_ref);  
+> 
+> nit: If this always runs under event_mutex, do we need to use atomic
+> refcount_t?
 
-x86/acpi: Don't limit CPUs to 1 for Xen PV guests due to disabled ACPI
+refcount has a bunch of debugging that will trigger if the refcount
+goes bad (negative and such) so that I don't need to add those checks.
 
-Xen disables ACPI for PV guests in DomU, which causes acpi_mps_check() to
-return 1 when CONFIG_X86_MPPARSE is not set. As a result, the local APIC is
-disabled and the guest is later limited to a single vCPU, despite being
-configured with more.
+Basically, refcount is for refcounting, and this is a ref counter ;-)
 
-This regression was introduced in version 6.9 in commit 7c0edad3643f
-("x86/cpu/topology: Rework possible CPU management"), which added an
-early check that limits CPUs to 1 if apic_is_disabled.
+It's a slow path, so I don't care about the added overhead from using an
+atomic.
 
-Update the acpi_mps_check() logic to return 0 early when running as a Xen
-PV guest in DomU, preventing APIC from being disabled in this specific case
-and restoring correct multi-vCPU behaviour.
+> 
+> Others looks good to me.
+> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fixes: 7c0edad3643f ("x86/cpu/topology: Rework possible CPU management")
-Signed-off-by: Petr Van=C4=9Bk <arkamar@atlas.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250407132445.6732-2-arkamar@atlas.cz
----
- arch/x86/kernel/acpi/boot.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Thanks!
 
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index dae6a73..9fa321a 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -23,6 +23,8 @@
- #include <linux/serial_core.h>
- #include <linux/pgtable.h>
-=20
-+#include <xen/xen.h>
-+
- #include <asm/e820/api.h>
- #include <asm/irqdomain.h>
- #include <asm/pci_x86.h>
-@@ -1729,6 +1731,15 @@ int __init acpi_mps_check(void)
- {
- #if defined(CONFIG_X86_LOCAL_APIC) && !defined(CONFIG_X86_MPPARSE)
- /* mptable code is not built-in*/
-+
-+	/*
-+	 * Xen disables ACPI in PV DomU guests but it still emulates APIC and
-+	 * supports SMP. Returning early here ensures that APIC is not disabled
-+	 * unnecessarily and the guest is not limited to a single vCPU.
-+	 */
-+	if (xen_pv_domain() && !xen_initial_domain())
-+		return 0;
-+
- 	if (acpi_disabled || acpi_noirq) {
- 		pr_warn("MPS support code is not built-in, using acpi=3Doff or acpi=3Dnoir=
-q or pci=3Dnoacpi may have problem\n");
- 		return 1;
+-- Steve
+
