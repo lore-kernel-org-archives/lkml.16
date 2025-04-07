@@ -1,65 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B8914A82;
-	Mon,  7 Apr 2025 09:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF25D3C0B;
+	Mon,  7 Apr 2025 09:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017942; cv=none; b=dh82K+DDEX/PMul2szhxStFxnSa60gIVgv9UuIFg+pieuq+zmeRkfo3Ylau73oehJPE2TYjKyL1zb/SMqGZvVTT8dcAsoer7L67nrHlKB0pufGU17Of88Qkr3VHB8RyXwUlfNJpBT/bXsWYq8ckvqFlXIebCgF7fiMWT1+IPKIQ=
+	t=1744018029; cv=none; b=LhA4OFD/6ND3cj8GBUCDHDRU45XVBS9cFhyBdaepeH1vewcaVT4RRNV/I9bAVXd/wHJ1cL8yp890GpUkuFCTg/nTxIbLzk+C1m7UkT6vv9RuUHxHRaEPax7Xnr2i4/dqm9Balz46DczaGgviMcMqnrC/Y2msT6f8hY+OdQ56tVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017942; c=relaxed/simple;
-	bh=TIea3HR0WabIaCEMALu390cFpJtUiF5TcTQQ8YCUWQE=;
+	s=arc-20240116; t=1744018029; c=relaxed/simple;
+	bh=rXEHGEuxHK31ihMMt9r5s/+C3v5fC7FBNn4rj7Av2Ww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCudWS8bAeiA7ctgH7PW+ba3R7pp3+rQx7wpmPKuQcc7U0U2YpytCedYokpx4crFDpSnweztE3AswTtHeS851SLbji7zo7BzKJib1PBn4TJst7zuSv2LJ7/zhqoFYKTP45MSrX9Jx2/HX23IPn4KfhGVW4U9ngXx7vE1776GlqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HA0tP20R; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HV8qEjC+ixzcZsM8J5MIPzvEpS2uJbG+dgWECAultpvJoY3JR5GsF/QLayh+aFm6gobJJ4o6ifURrPiI2P7LiHPvbEk8Jwa7h8EWiTpfElZZuybLDr0KsahOS5DyK0Jt5NERvIfqtcZr17qKWDSeCy4ZN23vd5rUbARaZAEcZ58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeIi7nvW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HA0tP20R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744017940; x=1775553940;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TIea3HR0WabIaCEMALu390cFpJtUiF5TcTQQ8YCUWQE=;
-  b=HA0tP20RoiPPg9ITEX3eVEHrVxJq+YMPeXOcj1QgnJt1V3d/41iw1YLK
-   wZPBhGaQF60dBE6XVWfozpZmNZ3j5L4eC+TC+XF5GI2W7z8jrLX6zRAXd
-   wMOSXIv53ZvZbJiCTHyrOh2XQhCfBBN8sCjp22/fC1NHs2paNkDQ2K0wy
-   +Olb//8zBMh/qUIzBZcc44hjzF5n1+RyEHoqHtDH14tiedzz4013zgC/k
-   NWC1tCzn1v4VZTZAGMckBOsB2JTQUxDIa0i1aM5eCUyogDubBPtOdPpt3
-   PxGGHTPFrEuJ9LPE4yzJpSiUl61hxcuJJ5tmbU4AWXyzAxsqIe2QUKUJb
-   A==;
-X-CSE-ConnectionGUID: be5EN/82RhqV3nuJMsOilQ==
-X-CSE-MsgGUID: 4aYYHBjFSaWBn89uyKUV7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="56763601"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="56763601"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 02:25:39 -0700
-X-CSE-ConnectionGUID: 2l5//JO1RWGWyV5jJ2/czQ==
-X-CSE-MsgGUID: mUFE9s3vQ1ioQu6znzjMQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132750919"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 07 Apr 2025 02:25:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 139D5340; Mon, 07 Apr 2025 12:25:35 +0300 (EEST)
-Date: Mon, 7 Apr 2025 12:25:35 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
- SEV-SNP
-Message-ID: <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
-References: <20250404082921.2767593-5-ardb+git@google.com>
- <20250404082921.2767593-8-ardb+git@google.com>
- <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
- <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
- <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeIi7nvW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61781C4CEDD;
+	Mon,  7 Apr 2025 09:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744018029;
+	bh=rXEHGEuxHK31ihMMt9r5s/+C3v5fC7FBNn4rj7Av2Ww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WeIi7nvW8psV1Ff1Pimq7/hjQIRRiP9JCtvgpO6UNcAe8xpdrbA5encAj31BhtVtU
+	 KvFsVK7T7YqnBeIuvikU9xUbLuo5hqU9+vL87UyeZAcvoXRyCPhH6YkttnMl5SYXC1
+	 HH2S+qxCBRZVp+dBF1XdNUwasUUrJ5jyHQKy8GnCxjzWBJGoRdeKphrtiRp1T1WJqt
+	 9Vp6NQUhpheR16yDwtcWIlmFHK3TyOk72xXfIIXmjLD6wArx08nXCyktvc8MVS9Bi1
+	 Wai8zpbQAfQsByA2GkJlVQd3dXfW1gvHW/awAmFPlq8/DS3xjw96WLA4EabHV0GhhB
+	 v+R/9AehpaSrw==
+Date: Mon, 7 Apr 2025 11:27:05 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Igor Pylypiv <ipylypiv@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
+ consistently
+Message-ID: <Z_OaafNRHhTiBzFG@ryzen>
+References: <20250403212924.306782-1-ipylypiv@google.com>
+ <Z-_JExGDyO9pVTON@ryzen>
+ <Z_AweMPLRJgBIBF3@google.com>
+ <Z_OG6jdsX0_uar2a@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,18 +46,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+In-Reply-To: <Z_OG6jdsX0_uar2a@ryzen>
 
-On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
-> If the GHCB is available, we should always prefer it.
+On Mon, Apr 07, 2025 at 10:03:54AM +0200, Niklas Cassel wrote:
+> 
+> If we look at the ATA Sense Data for Successful NCQ Commands log,
+> it has a bunch of Sense Data descriptors.
+> 
+> ACS-6, 9.29.3 Successful Sense Data descriptor,
+> does have the LBA field and an INFORMATION field.
+> 
+> The definition of the INFORMATION field in the Successful Sense Data
+> descriptor:
+> 
+> """
+> 9.29.3.5 INFORMATION field
+> If definition of the sense data to be returned when a command completes
+> without an error includes an information value, then the INFORMATION field
+> contains the defined value. Otherwise, the INFORMATION field is reserved.
+> """
 
-I believe we should consider the cost of code duplication in this
-situation.
+Side note:
+Considering that this is just two bytes, and the INFORMATION field in SCSI
+is four bytes, I honestly have no idea what this field actually contains.
 
-If the non-early version is only used in the kexec path, it will not be
-tested as frequently and could be more easily broken. I think it would be
-acceptable for kexec to be slightly slower if it results in more
-maintainable code.
+Anyway, the biggest question is what actual problem this fixes, since the
+sense data is not returned to the user for non-passthrough commands.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+
+Kind regards,
+Niklas
