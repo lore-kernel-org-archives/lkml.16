@@ -1,90 +1,265 @@
-Received: from sxb1plsmtpa01-04.prod.sxb1.secureserver.net (sxb1plsmtpa01-04.prod.sxb1.secureserver.net [92.204.81.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA19224258
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 05:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.204.81.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA5C22425B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 05:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744005040; cv=none; b=lPJzH2gzFq+TuOxIB7HE+ofJ77tLk9twi7/2pJEvZnl9LS2k9UN9qwMpgYhLAjmtBINxr0G6AXtue4aOOnVaDP5tzG1FoWdciA6NfoEXuuZCfrUbsZf2I37CETYO5fg6l4KuwodVpOV1NXzN0LbgBLt36S+EKawCe//VXWyOcDY=
+	t=1744005056; cv=none; b=o499rKw9pL3ozXQghNGkzIADSY64wJYZs9XaFLpsy7VWazqWl+t+wobOJB0GaMGthHGLzv4zFhUGCJ0zJE5Fs1xoczes0zWrNgEqjY65aeggkRc1j+5fmuWnEdCk6iaGlHapPVA1tHgvX2jVTolrUjBdN/cBY8lZgvS8PY6VbWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744005040; c=relaxed/simple;
-	bh=qyEm1ZA4yiL/b1lEXBMroVsfG9cT3DHpkXGoKCl2Ppw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=pOlyPCFq1p+ukjEgjStLn6Cg1i4OwF0fK7OJ4yU5BS3+i0nS8PXWmx0nmdfkAeIrg0cQ5qlKMVL0u1n3xZZa3zJGC8+/zbmyYY22s2zdwLR5+NT/3+cJNMQ3yvi3y9Q4PQKi2atGoiwYOH4n1bKJVl8MrEla4e7lARLlfrXXwIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=92.204.81.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from [192.168.178.95] ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPSA
-	id 1f4tuKfifINjl1f4vuE9Mb; Sun, 06 Apr 2025 22:31:26 -0700
-X-CMAE-Analysis: v=2.4 cv=NI8v+16g c=1 sm=1 tr=0 ts=67f3632f
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=IkcTkHD0fZMA:10 a=u6sYcmGwt8sEfABpyM8A:9 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-Message-ID: <2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk>
-Date: Mon, 7 Apr 2025 06:30:35 +0100
+	s=arc-20240116; t=1744005056; c=relaxed/simple;
+	bh=kKx4Mq6S60oDctpAHNOJ2iBB2kp8w70OG+S1g8NoT6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZNF2S2/iGLmurutXF1bbvP0oPJf3zpC4S2sZ5BZSBLZaAGuEADd1quW5R6II4cuJhddQkCQYAetDdXu16jxhtY5z/zKzF14qji+Mz9ymFEIzYumrvxyTvvgDpMcw1Ppt67TxRnyW2RxpTJmMyNsQQQ5CzCUh3jRoFZmP+1kbrDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBB/npdv; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBB/npdv"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1666187e0c.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 22:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744005054; x=1744609854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TncwcfsEts2FxYnhK+A5JNwLq/UeBfz60NCy/dOZhg8=;
+        b=BBB/npdv6OwkKJie/NePD03I3GTt/Z4aPlinSMGWZjdRlg9ZKLX/xYm7T8QVx6yC2b
+         orzMIU1884yA+YLxpFPhjhM1hpCerYXPHJu2RCyE8IKY07ClSbui68fwmvpdBzYDV7EH
+         AKLqMBmUul4T/+jhnsJvlmXmYyGSwqZ7w+nndH6P+ZEmhgun3GyzPNLmgwFtoLiQb7zL
+         9NwYz3oxLQ6r6HGFyGjnKn5dUUiDWzQ3DIpRXJRvzv1KDevECDAiSimTpK6b6qqgarcE
+         uk7RRYFLBbwP/4uIW5EeP7cIvl/y5XhaT6nf+8XnCYmhxBtRF6JJkbvUbZukz16CueYc
+         iShQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744005054; x=1744609854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TncwcfsEts2FxYnhK+A5JNwLq/UeBfz60NCy/dOZhg8=;
+        b=UiZrxJkT63ccRv0QW/YGQTyVQ5DjPr9NGH1fIrEG855av3NSW61cu0BhIqe3xWXIiZ
+         19bxkWGSZr4J+w/rl45AKFiNioQwbSHbJcZ6jaH5HtX28tOX9X9XKPjj0ZDigpOJvrww
+         vE4xjm5flVu32EJe2zg54gmeET6wy8T8Ln5raoxWNzQZmwTJcB5foulO5aYPDuPbegvG
+         AGcbbGDNroiExsuckeAmfLOvolMsUxHveP/u8vZ0pyCVvxttybhV1jPGeNJ1FZm7o69u
+         lOm+djS+qSxRpCZBykMtb4tIwHFHH5wT9HuiTMAmuT/tS7oiv9+8K2o9bKyybC+Pk5bJ
+         323w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWyXDf9dOh0bNV6tm8syf3YMuJbIky37u8g0xsJiSDhXcjDteg11+zxX6OTf7T1/8hrnReoy++keZduqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi66ANa96zU6sLiNWl4BRuJKyRRxONglLbgvUGo/A9ovS85B/y
+	7KiC5ysQgUfYir0WtXlm8ogt+1y8uZ14t+EJEHHX0LPDx75Y3Bri5QaVM54oKlJFAxT/Xj65HNh
+	dk1v45u/LQxcNsmcYPJyLIU3PwLs=
+X-Gm-Gg: ASbGncv3XXPnfVOTMhpk/ow/lTfHlbhVFYWxuQdBaliY/wk5jND3uuze47Vvs6qO/xD
+	DBqYwq61AbKVxTBDZwMqpIg29D29ILHU3SAuOPOkI9d+dbnnTp0THNNctutKeuFz3wxAwpFUEcM
+	9scJKm5kzEULa3E+r141AjxHEqIw==
+X-Google-Smtp-Source: AGHT+IFvBUALOfbhAc7ZTDj+1qYBwV+DDke3iV0oHmxLiMrPhi01dySNUBoaRmlF207WvrrXWhLb5Q/d30UQFe8H+RU=
+X-Received: by 2002:a05:6122:6585:b0:520:61ee:c7fc with SMTP id
+ 71dfb90a1353d-52764448721mr8144939e0c.4.1744005053724; Sun, 06 Apr 2025
+ 22:50:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: syzbot+65761fc25a137b9c8c6e@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org, phillip@squashfs.org.uk,
- squashfs-devel-owner@lists.sourceforge.net,
- squashfs-devel@lists.sourceforge.net, syzkaller-bugs@googlegroups.com,
- phillip.lougher@gmail.com
-References: <67f1f6f6.050a0220.0a13.025a.GAE@google.com>
-Subject: Re: [syzbot] [squashfs?] UBSAN: shift-out-of-bounds in
- squashfs_bio_read
-Content-Language: en-US
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <67f1f6f6.050a0220.0a13.025a.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfIM042gc/8JGCsd7GfE3sA190hiyYn41HftL2t7HhD8jU/qkoLtCZqDF90lN8wJOcPKl07Wi1+sGAwAQlbTQx3zgpXQL6HqfxJts/adOAEf1qR25kIpU
- NRZXPLUfj1bRszpEsdhBJ4f8Tbg6XRXgZD+Loh62vK/iF6LpL/OprcdFna+L6ByjLqex5N+hPGuWQKcy+9KXvpkRRtiBpZHgVU5il4afUdNzmX9C1Y8julWL
- QiVB8A1CwbaD6WMT6LQYjN1ySrv/ybH3szOl+0bP7ImaglxyiDZ5HWglZ6Mqrn7eI+rBE0LWK8Vg5vffjd6Uf30ihR7tIdmzeATslYypGVNZLVMjYsobUTkJ
- Kwxz52sWqF/i4+AwLLMbxNJl/YhCBzD0sUdpUPkMid1KdPzLg5BZaNiQrD9JroU1irflNFqUwSEwUFCynQW1tbPaV9lZCNY9t8bL520e1E4DkuiKSz00CZrb
- ab3UrmHmEdWRMB4Z81OjagXzJOmCootaFHc26fQx6z8u3kCYUqHyfM80GVg=
+References: <20250212022718.1995504-1-xiaqinxin@huawei.com> <20250212022718.1995504-3-xiaqinxin@huawei.com>
+In-Reply-To: <20250212022718.1995504-3-xiaqinxin@huawei.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 7 Apr 2025 17:50:42 +1200
+X-Gm-Features: ATxdqUEwAdwB6D5DagVzMUdZgoOsw1QIQSdcNIkWQDykU7LKqNsRceUjwcC4I-M
+Message-ID: <CAGsJ_4x7u00HVsa11cw_r6Mb3x0Ls-9tCg2HcUs=KvoVX=Vhvg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
+To: Qinxin Xia <xiaqinxin@huawei.com>
+Cc: chenxiang66@hisilicon.com, yangyicong@huawei.com, hch@lst.de, 
+	iommu@lists.linux.dev, jonathan.cameron@huawei.com, prime.zeng@huawei.com, 
+	fanghao11@huawei.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I have spent most of Sunday on this syzbot issue, because it is one of
-those PITAs, which are difficult to reproduce, and are full of red
-herrings.
+On Wed, Feb 12, 2025 at 3:27=E2=80=AFPM Qinxin Xia <xiaqinxin@huawei.com> w=
+rote:
+>
+> Support for dma scatter-gather mapping and is intended for testing
+> mapping performance. It achieves by introducing the dma_sg_map_param
+> structure and related functions, which enable the implementation of
+> scatter-gather mapping preparation, mapping, and unmapping operations.
+> Additionally, the dma_map_benchmark_ops array is updated to include
+> operations for scatter-gather mapping. This commit aims to provide
+> a wider range of mapping performance test  to cater to different scenario=
+s.
+>
+> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+> ---
+>  include/linux/map_benchmark.h |   1 +
+>  kernel/dma/map_benchmark.c    | 102 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 103 insertions(+)
+>
+> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.=
+h
+> index 054db02a03a7..a9c1a104ba4f 100644
+> --- a/include/linux/map_benchmark.h
+> +++ b/include/linux/map_benchmark.h
+> @@ -17,6 +17,7 @@
+>
+>  enum {
+>         DMA_MAP_SINGLE_MODE,
+> +       DMA_MAP_SG_MODE,
+>         DMA_MAP_MODE_MAX
+>  };
+>
+> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+> index d8ec0ce058d8..b5828eeb3db7 100644
+> --- a/kernel/dma/map_benchmark.c
+> +++ b/kernel/dma/map_benchmark.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/scatterlist.h>
+>  #include <linux/slab.h>
+>  #include <linux/timekeeping.h>
+>
+> @@ -111,8 +112,109 @@ static struct map_benchmark_ops dma_single_map_benc=
+hmark_ops =3D {
+>         .do_unmap =3D dma_single_map_benchmark_do_unmap,
+>  };
+>
+> +struct dma_sg_map_param {
+> +       struct sg_table sgt;
+> +       struct device *dev;
+> +       void **buf;
+> +       u32 npages;
+> +       u32 dma_dir;
+> +};
+> +
+> +static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map=
+)
+> +{
+> +       struct scatterlist *sg;
+> +       int i =3D 0;
+> +
+> +       struct dma_sg_map_param *mparam __free(kfree) =3D kzalloc(sizeof(=
+*mparam), GFP_KERNEL);
+> +       if (!mparam)
+> +               return NULL;
+> +
+> +       mparam->npages =3D map->bparam.granule;
 
-Firstly, this issue has nothing to do with corrupted Squashfs
-filesystems.  This is the because the failure occurs before the Squashfs
-filesystem superblock has been read, and thus filesystem corruption
-doesn't come into it.  Thus the source of the failure is elsewhere in
-the obfusticated auto-generated C reproducer.
+Please add comments explaining that "granule" serves as  nents in SG
+mode, and that each SG entry corresponds to a single page.
+Otherwise, in single mode, the granule represents what we map and
+unmap as a whole in a single operation.
+I mean, make the code below clearly express what you are doing:
 
-Digging deeper into the reproducer, it turns out the reproducer is
-forking multiple processes which after mounting the Squashfs filesystem,
-issues a LOOP_SET_BLOCK_SIZE(r0, 0x4c09, 0x8000) ioctl on loopback
-device /dev/loop0.  Now, if this ioctl occurs at the same time another
-process is in the process of mounting a Squashfs filesystem on
-/dev/loop0, the failure occurs.   The ioctl has to be issued in the
-early part of squashfs_fill_super() before the superblock has been read.
-When this happens, the following code in squashfs_fill_super() fails.
+__u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
 
-----
-msblk->devblksize = sb_min_blocksize(sb, SQUASHFS_DEVBLK_SIZE);
-msblk->devblksize_log2 = ffz(~msblk->devblksize);
-----
 
-sb_min_blocksize() returns 0, which means msblk->devblksize is set to 0.
+> +       mparam->dma_dir =3D map->bparam.dma_dir;
+> +       mparam->dev =3D map->dev;
+> +       mparam->buf =3D kmalloc_array(mparam->npages, sizeof(*mparam->buf=
+),
+> +                                   GFP_KERNEL);
+> +       if (!mparam->buf)
+> +               goto err1;
+> +
+> +       if (sg_alloc_table(&mparam->sgt, mparam->npages, GFP_KERNEL))
+> +               goto err2;
+> +
+> +       for_each_sgtable_sg(&mparam->sgt, sg, i) {
+> +               mparam->buf[i] =3D (void *)__get_free_page(GFP_KERNEL);
+> +               if (!mparam->buf[i])
+> +                       goto err3;
+> +
+> +               if (mparam->dma_dir !=3D DMA_FROM_DEVICE)
+> +                       memset(mparam->buf[i], 0x66, PAGE_SIZE);
+> +
+> +               sg_set_buf(sg, mparam->buf[i], PAGE_SIZE);
+> +       }
+> +
+> +       return_ptr(mparam);
+> +
+> +err3:
+> +       while (i-- > 0)
+> +               free_page((unsigned long)mparam->buf[i]);
+> +
+> +       pr_err("dma_map_sg failed get free page on %s\n", dev_name(mparam=
+->dev));
+> +       sg_free_table(&mparam->sgt);
+> +err2:
+> +       pr_err("dma_map_sg failed alloc sg table on %s\n", dev_name(mpara=
+m->dev));
+> +       kfree(mparam->buf);
+> +err1:
+> +       pr_err("dma_map_sg failed alloc mparam buf on %s\n", dev_name(mpa=
+ram->dev));
+> +       return NULL;
 
-As a result, ffz(~msblk->devblksize) returns 64, and
-msblk->devblksize_log2 is set to 64.
+I assume allocation failures will already trigger their own warnings, so yo=
+ur
+pr_err isn't necessary. BTW, please replace err1, err2, err3 with something
+meaningful.
 
-This subsequently causes the
+> +}
+> +
+> +static void dma_sg_map_benchmark_unprepare(void *arg)
+> +{
+> +       struct dma_sg_map_param *mparam =3D arg;
+> +       int i;
+> +
+> +       for (i =3D 0; i < mparam->npages; i++)
+> +               free_page((unsigned long)mparam->buf[i]);
+> +
+> +       sg_free_table(&mparam->sgt);
+> +
+> +       kfree(mparam->buf);
+> +       kfree(mparam);
+> +}
+> +
+> +static int dma_sg_map_benchmark_do_map(void *arg)
+> +{
+> +       struct dma_sg_map_param *mparam =3D arg;
+> +
+> +       int sg_mapped =3D dma_map_sg(mparam->dev, mparam->sgt.sgl,
+> +                                  mparam->npages, mparam->dma_dir);
+> +       if (!sg_mapped) {
+> +               pr_err("dma_map_sg failed on %s\n", dev_name(mparam->dev)=
+);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int dma_sg_map_benchmark_do_unmap(void *arg)
 
-UBSAN: shift-out-of-bounds in fs/squashfs/block.c:195:36
-shift exponent 64 is too large for 64-bit type 'u64' (aka 'unsigned long long')
+void
 
-The fix is to check for a 0 return by sb_min_blocksize().
+> +{
+> +       struct dma_sg_map_param *mparam =3D arg;
+> +
+> +       dma_unmap_sg(mparam->dev, mparam->sgt.sgl, mparam->npages,
+> +                    mparam->dma_dir);
+> +
+> +       return 0;
 
-I'll send a patch tomorrow.
+drop it.
 
-Phillip
+> +}
+> +
+> +static struct map_benchmark_ops dma_sg_map_benchmark_ops =3D {
+> +       .prepare =3D dma_sg_map_benchmark_prepare,
+> +       .unprepare =3D dma_sg_map_benchmark_unprepare,
+> +       .do_map =3D dma_sg_map_benchmark_do_map,
+> +       .do_unmap =3D dma_sg_map_benchmark_do_unmap,
+> +};
+> +
+>  static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX]=
+ =3D {
+>         [DMA_MAP_SINGLE_MODE] =3D &dma_single_map_benchmark_ops,
+> +       [DMA_MAP_SG_MODE] =3D &dma_sg_map_benchmark_ops,
+>  };
+>
+>  static int map_benchmark_thread(void *data)
+> --
+> 2.33.0
+>
+
+Thanks
+Barry
