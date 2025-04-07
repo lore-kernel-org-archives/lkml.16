@@ -1,96 +1,103 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D77823DE;
-	Mon,  7 Apr 2025 22:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C236823DE;
+	Mon,  7 Apr 2025 22:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744063242; cv=none; b=PE4T0mDXO6ic7SM8ggPJP5g6fXk9pNnpEKgWM47Fsw7LvgFbko43xB3vDQIzZV2qd0VQz/JLRQanpzZv9eVOfaXNZVsh//Kc2Zg997u/6SEMoOitXvwCZco4u/Wg5sR2vtTu53W/fYq7pdQP94KLlWkDOXXP5pFsc6TCfJVbbLs=
+	t=1744063340; cv=none; b=DpFl13cp8vXE8hCcwzYeX80gzmB89bxw5zIhak1UlGluczH4lJ0yrCZTFTxTyd364o4tt0CbhOa4N5kH5jipdRKwu6nwC0NkntFUSk7v5qlb2fAQ6lHpi/G0pCYD3d5hbjHKGbowURHvZOceptnVr3BaJ5iwp6RQGrEWQSh1s8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744063242; c=relaxed/simple;
-	bh=AdlKtehz82doSEn45Oyk5hf22xBH1s0QhMC3mjY+5lI=;
+	s=arc-20240116; t=1744063340; c=relaxed/simple;
+	bh=/4WGk6kSr8LKKFwu6dzWcmgp0DckK2KU9bDoF1Fe3XE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aahxK6bZj10m0CYuXPZgOAXAperL0i4tGrys9/FidzPTdDaIEAwz73JHA7R6Z+Ml5si6gG7ZX8/iMFFEv46Aj77SjrybZmL7hF3d7XphmYR8bJosUOl3hrT/8OeMKamBqrU1w23B6HUlJGDHHbSEB5eRawBhzPsBXwDbRafdMeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FaHsvH9c; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZCcAFmgQn7lzVpk5lf3nLFKseWiieYCA/D9uK1HlYlNIG2Qdnmx4GC02pVwaAArnYaYv+m7nKClwCHnaT72FqSKAnlGRpRweuL5JN5dq2u0ftmt447RW8ISC/qQdQeNTxacvrRhziexP1/UWud3cpNLbHvQfNxl6Hdu+BKxpNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abIzyW9Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaHsvH9c"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736a7e126c7so4383188b3a.3;
-        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744063240; x=1744668040; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
-        b=FaHsvH9cRz3fZmAAvc6VM/+Vy8edaxBJWRKy1qKoE8DrNRBhodUNYsq4GdVUyhkO/U
-         SC4s7rRBmzrmU9f3FvJAp/UcZChTpECNv/rlV/bsGBcDSqpFRuq/4OiDY80dS62yQFQS
-         4587UpKX9D7i/MK3MsCcE+uI5h5Qw5vVRwH4X0Q/ceso0BW/IWttKXz0XYltPlTB1dJ3
-         lJKLiuQQ1JV4tgX3y63Rhbip5sLWYi2Q4Yktkb16vmioMTSnLx+QWFzLGjGmzyM/or9E
-         fUycA5t7Va5k2p/DNIWvSwx0B4lvp0Cj/9CQWSWPCBOOYwSLpMX9lJJ6I1I61FQK3dC+
-         9iWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744063240; x=1744668040;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n6D0NZ7H12HB12+U9+CnAwmOYRWcrrB6ReApYETicOk=;
-        b=W6h+M23krxKwpt52bR42/iSDHuofiVYIHbcskTcwvXqsfjhu3l0ogT4j/tbw8tgq2l
-         gxgSY0EFNUBKeDqaBWhGpK4NTDvvG9rU9Aew1LS5aCcf3g71jEnFQl16iJVvrrcS816i
-         1XvgTYxOWzMYbJigEllGk3/W2Upml2voUSXQh6l41o/gbgRy4Vgaja4C+/g8xVnc/3Nz
-         /EllkLXvpfrLQYHEMxgSfAJKhCtLfS1A5DCXTpBfzFWaou1iZPety80fll+29F24bMNy
-         PSFeLtIpkRvuGtoZ3jYKfIbxwClP/v2lH3RBQsUzngX4Cb1wL7piuFIh7FJGXMrSbAXY
-         Xi5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRjRKwfyYNsIDLYAUKltVYJXAE3vEZGeIu9eTM3K5KZEVLbGoKs0cOVHBzDyETSNC5W75o+ALlsauTwhk=@vger.kernel.org, AJvYcCXIKue24FPkuUNrWP1kZ9o140cdr2YyHpyIbPHDvulS2ggrXeRtD95wUqhByn7nhlS5HX0FkxPhjQlI@vger.kernel.org, AJvYcCXVZffiutZXAKlFPAFltRrUVsaR8UUWyQ6qtoDv9HrUChAqmr7fBVrUJ8htw+3ezGso9f5F53FKZzfxcnsn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnix3RHyKzmAEQbVprlQbcf5jMZxghzzF3XdhaZOssOY/jGF8r
-	hUjSD2Q8bELBRH9VpekhF63nKFH8iLDWLKFYoGBa9iLXZjSh04b5
-X-Gm-Gg: ASbGncuKh51qjQUzSj8pS+0xQGIutuajVG7C29ymnls3qpcvu5E18XxXh2qeLUiNPtb
-	AbGiJYFz4sktwmOeJ37FxiC4xwNMtppEgWXvUlEGiXu7T14LFeB/K+q/Gl+b105HGYxzgEnH2Nv
-	fiFg4mtm1NeFYFq0sy5caIP25oihv4NSEttrmy6A+ZqUi2i2VV2i9xNoUVUZD5vXHRceF+l4UtK
-	ucIVBXH4SAMI1246DkVCuJl8LTGjJp2QNOcvDOcXgBQ7jZefB4u6CHuaNrK8br8kjqAlSPFsPp6
-	yIynZaPK+BV1/ZC9Tm3rAehDc35GpR4xAwbDUMmQSPW9Zfx08EEVT39LgA==
-X-Google-Smtp-Source: AGHT+IGXN3PtptyGLs+CQ9CJ+bDjhpeR7ILLRO9gIYVJ9LOIe8y7I4UKlZ9jze/A2pKV2h3rQA9TCQ==
-X-Received: by 2002:a05:6a20:d50b:b0:1f5:79c4:5da2 with SMTP id adf61e73a8af0-201047368bbmr25358744637.31.1744063240025;
-        Mon, 07 Apr 2025 15:00:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31db70sm7853349a12.24.2025.04.07.15.00.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 15:00:39 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 7 Apr 2025 15:00:38 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] hwmon: (pmbus/ucd9000) Use new GPIO line value
- setter callbacks
-Message-ID: <b5e0fe4d-9acd-4bdf-832e-673237f16f4b@roeck-us.net>
-References: <20250407-gpiochip-set-rv-hwmon-v1-0-1fa38f34dc07@linaro.org>
- <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abIzyW9Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDDDC4CEDD;
+	Mon,  7 Apr 2025 22:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744063339;
+	bh=/4WGk6kSr8LKKFwu6dzWcmgp0DckK2KU9bDoF1Fe3XE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=abIzyW9Zkbud1gngvmI5WfdQn1IgbCOEqr5RaAXnmDb4onbzTAQEiFgU4QxxBIJ4s
+	 j7D4g7WfoIfQvhb4Oh7n9gnUGvl21Ngmh+V0yCLQkVVur3CBp9h6u4z5VxwyV2C0/5
+	 g7eppUEarOJH76yIXNAprZCsi3YSTBHTI9ha3LMbtrpHK54/8NdRFmFFLzFJScKqqN
+	 ECrwAkFYj73uOqUKrmv/xiS/StqHyypHqPzL0lm1ZXY+FXpmDDYiBkqKZdITLGj0rG
+	 HIKr03lt3vuwpOzRSEb0ezOdBD+3djOzP+s8FqAZD/5sbLY9VQX/V2CxsMxk2LsznH
+	 KsXSKuNNin5Cw==
+Date: Mon, 7 Apr 2025 23:02:15 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+Message-ID: <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
+References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NwExeGW9LH0vNNUp"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
+X-Cookie: Meester, do you vant to buy a duck?
+
+
+--NwExeGW9LH0vNNUp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-hwmon-v1-2-1fa38f34dc07@linaro.org>
 
-On Mon, Apr 07, 2025 at 09:16:17AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Apr 07, 2025 at 02:33:40PM -0700, Linus Torvalds wrote:
+> On Mon, 7 Apr 2025 at 14:10, Mark Brown <broonie@kernel.org> wrote:
 
-Applied.
+> > Arnd bisected this to c56f649646ec ("landlock: Log mount-related
+> > denials") but that commit is fairly obviously not really at fault here,
+> > most likely this is an issue in the plugin.  Given how disruptive having
+> > key configs like this failing let's disable the plugins for compile test
+> > builds until a fix is found.
 
-Thanks,
-Guenter
+> I'm not against this, but I do want to bring up the "are the plugins
+> worth having at all" discussion again.
+
+> They've been a pain before. Afaik, the actual useful cases are now
+> done by actual real compiler support (and by clang, at that).
+
+> Who actually *uses* the gcc plugins? They just worry me in general,
+> and this is not the first time they have caused ICE problems.
+
+There was a bit of discussion of that on IRC which didn't summon up huge
+enthusiasm for them.  Arnd noted that:
+
+    https://github.com/nyrahul/linux-kernel-configs
+
+indicates that Talos 1.9.1 uses latent_entropy (but we didn't check how
+accurate that survey is).  He also noted that GCC_PLUGIN_SANCOV is
+obsolete as of GCC 6 (!) and both CC_HAVE_STACKPROTECTOR_TLS and
+GCC_PLUGIN_STRUCTLEAK_BYREF_ALL as of GCC 12, Ard indicated he wasn't
+worried about loosing CC_HAVE_STACKPROTECTOR_TLS.
+
+--NwExeGW9LH0vNNUp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0S2YACgkQJNaLcl1U
+h9Bsjwf8DugHLbBoWvF0qOUkI8O6UnAzYv2laisq1JEdRzmgVk+lPLamsjJuTwAC
+99LlD9yp1ZCNdTkNBWgZkWGv4qCOYqnC3wowU0aP0OJOUUHkGaSfprmDbCJr6otD
+yJXm13aomzsyFY6ah9368UVoGHKAZpsvNRr8q1c+FM5myM7W2iNUmy86uR8Gu5Y/
+wrp5T3AkMX+F58VIi6n6XLZjp7xxMc19j0osLF+MgAosaUfy3djgDhPomVAUp58r
+FeR5hlIMb6TbmucPC8Mdxommt4gqUJhfZi3CZZH4cT6pKh7ryhvkJ5H2MzaDnYmI
+uez22860AYJD6fBPaPpNyToVS6oonA==
+=otop
+-----END PGP SIGNATURE-----
+
+--NwExeGW9LH0vNNUp--
