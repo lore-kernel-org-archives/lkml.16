@@ -1,144 +1,393 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3757209F44
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B041820A5D3
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042431; cv=none; b=nAr+pXUEeH9IeDaC0Bk4yeLhDmAjl0zdvJMAAH7Wz13oCamq7DYI5AYLuXCMoWQdRzOjKGL/IvCwIY25VvVjtuYA/VvbrIT7E1cf1Vyt6oB5bc/Fb0OWNOIa58UbRaijWBLNmdmHGd05IEMB9kru6Muhrx6mmm9LYPekIKBK+oE=
+	t=1744042439; cv=none; b=SyGEE+1fHAxS4iep3tq6f491Ms9pyklVVoCnL9pyVKSBSmqquVQXWFCRn7MivISIM750vdk2gDKd7nucgDsO9JdVk3S794lVjZFaHddJLNsqJthuQIGeGzQp2qe8uCEd1mPs2GgZNtDfyhPLmwGEVNS8rlrs5ZEWjjHpuql+LpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042431; c=relaxed/simple;
-	bh=momMVb5vlwB7w7QBIrh4FuJxBMr+DXof5tHLvIxbILc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dH2C0UsAAUjUgRZp4QnjnlToEbwhjD6jvWLVQm1iyqKvhhTl1ONrA+0qcQ1sHO5fDFX/QZhzywxG5+pbIz3hwL+Wq6oOMmWJk7V5pZetSDeZtYdnYragzei9BX1P5VN1dW2lpjzpbmwtgsOLxCFcCH69NQPEWm0WqYrzp4Jau4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=VUkcGvdZ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1744042439; c=relaxed/simple;
+	bh=yXGsrki8kfI3lKdKj8xB169bMsZdM/bVZ17mJE+rFZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MLT+v3DOyomET+N6hhDWVDpbPzqs3gKI5b3ZoO21aPru90Mjn/qmPA/EZYJep+2Cv2KlEgaiRxkQM4tsmW85fQlM/mNxuSa1Vk5BuM7+2IgN5vIwE7wnsBRdJssjWM3WL37J4dsFIPSYr3UumR08lDdhfFYz33Thut2NjYS8R7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wHjkiQCJ; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="VUkcGvdZ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so44100995e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:13:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wHjkiQCJ"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47666573242so915131cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:13:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744042428; x=1744647228; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hAlufBsPlnjuTWbgusP8CYnzhAGj3Mnwll46JdWGBbE=;
-        b=VUkcGvdZWUbu9OzL8xb/T9nIPABJp+EpwUB25HeDeqsIYBWHw/KxG+9HzB6zJ25efA
-         IEVWesGAkZXnsKnEEQm5RrjsBBy/tM0vuvAVzxUKgGOfI/2MnZRk9eU1buIVmNaD/vyl
-         7ohlvYtihiG99nc1Pjalgx9Cg3PhduK3ocW9+yDw355ftfxGvBo3YocEdBwq8pF8+NYx
-         lMdNCYIYwmRxY1Ub0vqMljGY5ITbfI0syUZ0bCM41CmNbN56FnpgJML2mZso6zE4ctdw
-         GGWGXp/DxpbSRR2/MomVoMl/GluMdqLScFL5xdZU1NcCHhUkH0KM61p8FLLG8T+nyt1b
-         kttQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744042428; x=1744647228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744042436; x=1744647236; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hAlufBsPlnjuTWbgusP8CYnzhAGj3Mnwll46JdWGBbE=;
-        b=oLCx/8UYbQr9GiFSoKJ0HaCgJVpn9GSrJ1/NgMNppgXivKJjVh39zSda5HpnP1nj4S
-         2Hbx7KpSFIDQyKzF8o+CCc2489y+1JdzUJ2ueJQAydqwGOv8mQi3eCJdBP4lYOSvRj1N
-         thk0RO6twh7hHdUMnR6nviRP7vsQBLcpbDnmzjoOda1GBNBwxWhWKd+3409wDoqmV/bz
-         abM4t2bn3TZubyRoj5pwgccbY/UQm1L57RN5IpuHbZPXryfzAztWuzBHOfsBfr1w5QQh
-         Rx9itISuhCOWM2vLPmj/RWkyF4x6ewFTHgI5zt9CWimRDqrzEA+1W8qOQK055r8OtkOI
-         TK+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWejrKWuzpwVwIefDx9btM9p90bJogOUkS4xu5FOZ6DQhwnk6C1VoVdA/u85x4SYfj1/UQIsT8/ymUfgqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk13n8mm9fzx8n2MU8m8X3Weq1a4GgxYmx1zXZmv0kazGn8DBD
-	8X+FPVocdR79ml0udSmfqnpauC7X9ZzLRu/JXNNh8Tu6YBKLyDw4z9sBM4Ot9CU=
-X-Gm-Gg: ASbGncvSl5S5Ji4fviMysu5sVCAAov6bthqR6OIsPlt0eH59HHKCKXh3R/JOPrXiWGy
-	0RQkfuwu3MBx7wpBdwRMMoRCckjhrJjK6F4A+E4maES2KemaW6B+RJN6vlKN2LD01/QeXKBNcsK
-	+xiDbD2FNHsonZA2mQNoYHpYWgVH+IZ6yxxwGdjYnd3CcxS2u6OYonx8Ql1L7t31lwLiFBbWanL
-	dW0hpGHN39TOSldXNhYVRYzDgpF7CDvbQeiUKDZ3JUkpm1s72JR7y38U1nG+pl9b883cbrdWIyN
-	Qeo+WzIqi2Fx9APYpAynt7LyFp0MHk7xNZYBfsG8mezgb2aZ+j73VoFEbAf2wLS0oHjZhuiVoJB
-	ZQDwjHMlXVzAmb/byFf01trHuUX4=
-X-Google-Smtp-Source: AGHT+IF9E+Yu68SivmKTZ/2oBu6XpMDyufJhLClsxWUTbSHDLDqi5DwsmXJhaL8CEGG/v/moBPNDvw==
-X-Received: by 2002:a05:600c:1d28:b0:43c:fad6:fa5a with SMTP id 5b1f17b1804b1-43ed0d9ce1dmr107471025e9.24.1744042427942;
-        Mon, 07 Apr 2025 09:13:47 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630ddesm137924675e9.5.2025.04.07.09.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:13:46 -0700 (PDT)
-Date: Mon, 7 Apr 2025 17:13:44 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: Jianhua Lu <lujianhua000@gmail.com>, Lee Jones <lee@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
-	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 3/4] backlight: ktz8866: improve current sinks setting
-Message-ID: <Z_P5uLrGiQWez0jv@aspen.lan>
-References: <20250407095119.588920-1-mitltlatltl@gmail.com>
- <20250407095119.588920-4-mitltlatltl@gmail.com>
+        bh=4A/poKUEFANRwqNUNfr6r+UCigCdwi2GG/NsmqPgzHw=;
+        b=wHjkiQCJoHzUnoJtARD1Cyg/Ws5fiuBUPr4r1cxQo+4Ftv+I3CfuoHlZjJjoXvN9wh
+         q+EKEdemVUvPvRdHSM8ERwRtqWF8W4MI6S6Z0kAmU+XY0ionNLRE6hGjbf90hfqWqkG7
+         77ipWBbPR+0bRPWfFzV32onKuAPgLHU98bMIaH7yOKbhl3muUPaWvQzEx+GdIRdlW8zl
+         pGtGum0P86HdEEd4zgXsLlM4+kQ/c4GvbY9P0130EDTnTLHJeLT8BMet0nem5Jbs0M4i
+         MPPc8w0aobaQFlm1VVMIA88h2vtIG8lOQ0YmlPi1o3Q+TLTwhhlIb9aIIsfE6jhKbJ1H
+         a+8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744042436; x=1744647236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4A/poKUEFANRwqNUNfr6r+UCigCdwi2GG/NsmqPgzHw=;
+        b=XA9pTqT2tWBC6FCk0Vvn/4cOqm9eCrlX5JJjZaGuraebpmTV4YQggLtDliCKhqqb3X
+         ZaeQDOIy3IZ3q6h8DY0fCm4cmRHowUGpq/Kx9zfGwKHD9oQYYnBJ/H5AMevtSlNnVYUl
+         NEenP6N2fFHbHpovkcX4ROvHzW1NL+sLH0Q7sQHvjsayEAZvBV9cXLY+R5BVr3XSXQQp
+         ewpHMLYp14NZOt1xH88x0oMt2iONJBaGOZ9M6faUsTFNGev52UaWOLBbwDLy1OuhDPyX
+         am01OnkHGerBGsNEoiLJWLkNVO1B2F1qiR4co6vGP2c//TzueIyw1YemC0opIkOeJMpC
+         DmIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLTC0u2as0u6po4oNx/YOugja8D2lys1pLBagRKy48i+NPesaq/ZaLQrYruv65BSjOfN+6gxav6fL8zfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQA4szMY7rnt73TpS81nNdtNSxGgiEXm8Rc17qWFQG5rzirvPh
+	wiX56IAIbqSOgru/iHyVY9LToUpMuyqPDvVWUrgOzyrbFJ185VWpA0Zlf5V0KHxjZg0Z75adrSc
+	YfGmDpRNx3rq5dpzb9WfE7KviB5PztaMZawLg
+X-Gm-Gg: ASbGncv8Zm0Bw/dgZudQ6AoBmXfY468DosnSBTBk9lK3A4ds2cfZ6Kk+8fn/9EbKzyR
+	tKFhqPg1VbM6ksMBr3qNlFxxvskub0j3dKtcvQJqrPxTVpS0Qmn85zRGUcfu8/ulCsHUgj9SF3g
+	GRPcllmE7BaqSbdtKztEDGt2iF
+X-Google-Smtp-Source: AGHT+IF3a3W7UoOSom3xcvtXGYUBqQmM2SLodWt6ZxO2hwyK4IY71dJPZFsCUxiYi9eTkWJmo/9y1LSlkGOx/1yk1Xw=
+X-Received: by 2002:a05:622a:188d:b0:477:1f57:5493 with SMTP id
+ d75a77b69052e-47953fbaeb5mr10131cf.20.1744042436227; Mon, 07 Apr 2025
+ 09:13:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095119.588920-4-mitltlatltl@gmail.com>
+References: <20250330164229.2174672-1-varadgautam@google.com>
+In-Reply-To: <20250330164229.2174672-1-varadgautam@google.com>
+From: Varad Gautam <varadgautam@google.com>
+Date: Mon, 7 Apr 2025 18:13:44 +0200
+X-Gm-Features: ATxdqUEQc0bEHpn3hRXswH0d1qmEjsD8jwNtw3664JDWyonAkuYzF_Nvjd3_iSE
+Message-ID: <CAOLDJO+=+hcz498KRc+95dF5y3hZdtm+3y35o2rBC9qAOF-vDg@mail.gmail.com>
+Subject: Re: [PATCH] asm-generic/io.h: Skip trace helpers if rwmmio events are disabled
+To: linux-arch@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Sai Prakash Ranjan <quic_saipraka@quicinc.com>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 05:51:18PM +0800, Pengyu Luo wrote:
-> I polled all registers when the module was loading, found that
-> current sinks have already been configured. Bootloader would set
-> when booting. So checking it before setting the all channels.
+On Sun, Mar 30, 2025 at 6:42=E2=80=AFPM Varad Gautam <varadgautam@google.co=
+m> wrote:
+>
+> With `CONFIG_TRACE_MMIO_ACCESS=3Dy`, the `{read,write}{b,w,l,q}{_relaxed}=
+()`
+> mmio accessors unconditionally call `log_{post_}{read,write}_mmio()`
+> helpers, which in turn call the ftrace ops for `rwmmio` trace events
+>
+> This adds a performance penalty per mmio accessor call, even when
+> `rwmmio` events are disabled at runtime (~80% overhead on local
+> measurement).
+>
+> Guard these with `tracepoint_enabled()`.
+>
+> Signed-off-by: Varad Gautam <varadgautam@google.com>
+> Fixes: 210031971cdd ("asm-generic/io: Add logging support for MMIO access=
+ors")
+> Cc: <stable@vger.kernel.org>
 
-Can you rephrase this so the problem and solution are more clearly
-expressed. Perhaps template Ingo suggests here would be good:
-https://www.spinics.net/lists/kernel/msg1633438.html
+Ping.
 
-
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 > ---
->  drivers/video/backlight/ktz8866.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
+>  include/asm-generic/io.h | 98 +++++++++++++++++++++++++++-------------
+>  1 file changed, 66 insertions(+), 32 deletions(-)
 >
-> diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
-> index 017ad80dd..b67ca136d 100644
-> --- a/drivers/video/backlight/ktz8866.c
-> +++ b/drivers/video/backlight/ktz8866.c
-> @@ -46,6 +46,8 @@
->  #define LCD_BIAS_EN 0x9F
->  #define PWM_HYST 0x5
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index 3c61c29ff6ab..a9b5da547523 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -75,6 +75,7 @@
+>  #if IS_ENABLED(CONFIG_TRACE_MMIO_ACCESS) && !(defined(__DISABLE_TRACE_MM=
+IO__))
+>  #include <linux/tracepoint-defs.h>
 >
-> +#define CURRENT_SINKS_MASK GENMASK(5, 0)
-> +
-
-Call this BL_EN_CURRENT_SINKS_MASK and keep it next to the register it
-applies to.
-
-
->  struct ktz8866_slave {
->  	struct i2c_client *client;
->  	struct regmap *regmap;
-> @@ -112,11 +120,18 @@ static void ktz8866_init(struct ktz8866 *ktz)
+> +#define rwmmio_tracepoint_enabled(tracepoint) tracepoint_enabled(tracepo=
+int)
+>  DECLARE_TRACEPOINT(rwmmio_write);
+>  DECLARE_TRACEPOINT(rwmmio_post_write);
+>  DECLARE_TRACEPOINT(rwmmio_read);
+> @@ -91,6 +92,7 @@ void log_post_read_mmio(u64 val, u8 width, const volati=
+le void __iomem *addr,
+>
+>  #else
+>
+> +#define rwmmio_tracepoint_enabled(tracepoint) false
+>  static inline void log_write_mmio(u64 val, u8 width, volatile void __iom=
+em *addr,
+>                                   unsigned long caller_addr, unsigned lon=
+g caller_addr0) {}
+>  static inline void log_post_write_mmio(u64 val, u8 width, volatile void =
+__iomem *addr,
+> @@ -189,11 +191,13 @@ static inline u8 readb(const volatile void __iomem =
+*addr)
 >  {
->  	unsigned int val = 0;
+>         u8 val;
 >
-> -	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val))
-> +	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val)) {
->  		ktz8866_write(ktz, BL_EN, BIT(val) - 1);
-> -	else
-> -		/* Enable all 6 current sinks if the number of current sinks isn't specified. */
-> -		ktz8866_write(ktz, BL_EN, BIT(6) - 1);
-> +	} else {
-> +		/*
-> +		 * Enable all 6 current sinks if the number of current
-> +		 * sinks isn't specified and the bootloader didn't set
-> +		 * the value.
-> +		 */
-> +		ktz8866_read(ktz, BL_EN, &val);
-> +		if (!(val && CURRENT_SINKS_MASK))
-
-This is the wrong form of AND.
-
-> +			ktz8866_write(ktz, BL_EN, CURRENT_SINKS_MASK);
-> +	}
-
-
-Daniel.
+> -       log_read_mmio(8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(8, addr, _THIS_IP_, _RET_IP_);
+>         __io_br();
+>         val =3D __raw_readb(addr);
+>         __io_ar(val);
+> -       log_post_read_mmio(val, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 8, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -204,11 +208,13 @@ static inline u16 readw(const volatile void __iomem=
+ *addr)
+>  {
+>         u16 val;
+>
+> -       log_read_mmio(16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(16, addr, _THIS_IP_, _RET_IP_);
+>         __io_br();
+>         val =3D __le16_to_cpu((__le16 __force)__raw_readw(addr));
+>         __io_ar(val);
+> -       log_post_read_mmio(val, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 16, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -219,11 +225,13 @@ static inline u32 readl(const volatile void __iomem=
+ *addr)
+>  {
+>         u32 val;
+>
+> -       log_read_mmio(32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(32, addr, _THIS_IP_, _RET_IP_);
+>         __io_br();
+>         val =3D __le32_to_cpu((__le32 __force)__raw_readl(addr));
+>         __io_ar(val);
+> -       log_post_read_mmio(val, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 32, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -235,11 +243,13 @@ static inline u64 readq(const volatile void __iomem=
+ *addr)
+>  {
+>         u64 val;
+>
+> -       log_read_mmio(64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(64, addr, _THIS_IP_, _RET_IP_);
+>         __io_br();
+>         val =3D __le64_to_cpu((__le64 __force)__raw_readq(addr));
+>         __io_ar(val);
+> -       log_post_read_mmio(val, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 64, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -249,11 +259,13 @@ static inline u64 readq(const volatile void __iomem=
+ *addr)
+>  #define writeb writeb
+>  static inline void writeb(u8 value, volatile void __iomem *addr)
+>  {
+> -       log_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+>         __io_bw();
+>         __raw_writeb(value, addr);
+>         __io_aw();
+> -       log_post_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+>  }
+>  #endif
+>
+> @@ -261,11 +273,13 @@ static inline void writeb(u8 value, volatile void _=
+_iomem *addr)
+>  #define writew writew
+>  static inline void writew(u16 value, volatile void __iomem *addr)
+>  {
+> -       log_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+>         __io_bw();
+>         __raw_writew((u16 __force)cpu_to_le16(value), addr);
+>         __io_aw();
+> -       log_post_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>
+> @@ -273,11 +287,13 @@ static inline void writew(u16 value, volatile void =
+__iomem *addr)
+>  #define writel writel
+>  static inline void writel(u32 value, volatile void __iomem *addr)
+>  {
+> -       log_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+>         __io_bw();
+>         __raw_writel((u32 __force)__cpu_to_le32(value), addr);
+>         __io_aw();
+> -       log_post_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>
+> @@ -286,11 +302,13 @@ static inline void writel(u32 value, volatile void =
+__iomem *addr)
+>  #define writeq writeq
+>  static inline void writeq(u64 value, volatile void __iomem *addr)
+>  {
+> -       log_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+>         __io_bw();
+>         __raw_writeq((u64 __force)__cpu_to_le64(value), addr);
+>         __io_aw();
+> -       log_post_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>  #endif /* CONFIG_64BIT */
+> @@ -306,9 +324,11 @@ static inline u8 readb_relaxed(const volatile void _=
+_iomem *addr)
+>  {
+>         u8 val;
+>
+> -       log_read_mmio(8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(8, addr, _THIS_IP_, _RET_IP_);
+>         val =3D __raw_readb(addr);
+> -       log_post_read_mmio(val, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 8, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -319,9 +339,11 @@ static inline u16 readw_relaxed(const volatile void =
+__iomem *addr)
+>  {
+>         u16 val;
+>
+> -       log_read_mmio(16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(16, addr, _THIS_IP_, _RET_IP_);
+>         val =3D __le16_to_cpu((__le16 __force)__raw_readw(addr));
+> -       log_post_read_mmio(val, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 16, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -332,9 +354,11 @@ static inline u32 readl_relaxed(const volatile void =
+__iomem *addr)
+>  {
+>         u32 val;
+>
+> -       log_read_mmio(32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(32, addr, _THIS_IP_, _RET_IP_);
+>         val =3D __le32_to_cpu((__le32 __force)__raw_readl(addr));
+> -       log_post_read_mmio(val, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 32, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -345,9 +369,11 @@ static inline u64 readq_relaxed(const volatile void =
+__iomem *addr)
+>  {
+>         u64 val;
+>
+> -       log_read_mmio(64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_read))
+> +               log_read_mmio(64, addr, _THIS_IP_, _RET_IP_);
+>         val =3D __le64_to_cpu((__le64 __force)__raw_readq(addr));
+> -       log_post_read_mmio(val, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_read))
+> +               log_post_read_mmio(val, 64, addr, _THIS_IP_, _RET_IP_);
+>         return val;
+>  }
+>  #endif
+> @@ -356,9 +382,11 @@ static inline u64 readq_relaxed(const volatile void =
+__iomem *addr)
+>  #define writeb_relaxed writeb_relaxed
+>  static inline void writeb_relaxed(u8 value, volatile void __iomem *addr)
+>  {
+> -       log_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+>         __raw_writeb(value, addr);
+> -       log_post_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 8, addr, _THIS_IP_, _RET_IP_);
+>  }
+>  #endif
+>
+> @@ -366,9 +394,11 @@ static inline void writeb_relaxed(u8 value, volatile=
+ void __iomem *addr)
+>  #define writew_relaxed writew_relaxed
+>  static inline void writew_relaxed(u16 value, volatile void __iomem *addr=
+)
+>  {
+> -       log_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+>         __raw_writew((u16 __force)cpu_to_le16(value), addr);
+> -       log_post_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 16, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>
+> @@ -376,9 +406,11 @@ static inline void writew_relaxed(u16 value, volatil=
+e void __iomem *addr)
+>  #define writel_relaxed writel_relaxed
+>  static inline void writel_relaxed(u32 value, volatile void __iomem *addr=
+)
+>  {
+> -       log_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+>         __raw_writel((u32 __force)__cpu_to_le32(value), addr);
+> -       log_post_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 32, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>
+> @@ -386,9 +418,11 @@ static inline void writel_relaxed(u32 value, volatil=
+e void __iomem *addr)
+>  #define writeq_relaxed writeq_relaxed
+>  static inline void writeq_relaxed(u64 value, volatile void __iomem *addr=
+)
+>  {
+> -       log_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_write))
+> +               log_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+>         __raw_writeq((u64 __force)__cpu_to_le64(value), addr);
+> -       log_post_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_);
+> +       if (rwmmio_tracepoint_enabled(rwmmio_post_write))
+> +               log_post_write_mmio(value, 64, addr, _THIS_IP_, _RET_IP_)=
+;
+>  }
+>  #endif
+>
+> --
+> 2.49.0.472.ge94155a9ec-goog
+>
