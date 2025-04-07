@@ -1,98 +1,92 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38BE21D3D1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5F21D3D1;
+	Mon,  7 Apr 2025 07:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010225; cv=none; b=B9pEblTnhVfUCuEMg9ukn+VXBnq34m7lVHw2CINVUx3ikVstm2tAHqlUReFX7ABMDQrR3wPqWyFmS/KGoxuieDnkBCCH5emwO/NEmgHj4dG/BqPAemkDL3jNaqmFc812euVt2rkA4VNHPUotz0L4pnmKfAyMuzw5cEppKqFJppA=
+	t=1744010234; cv=none; b=rKaj0+kpBm5jaWFVifuaS/kIp5kFZfSy9UvOZSOAVSDPy+9bcd104Yzb2kj5jvpZCy49N0FbP+bJMk0TkuuPAefXDUz7tZYuvNnMgzM0sNixZDurlFujJAiFJYEoIMFBWL5dRLgIIAfs/LYi1r3xaigaiZ4+S320gGx4p/wUQsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010225; c=relaxed/simple;
-	bh=B9j3F74Q7ecV+6Khp4MhK5nezhNLnQ5WD2k7mfOwRYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fk48Jcwl3t/WYa0whi/b5H47fJwqAhQEyKV510slTUEqNOlC/lLQjze5v6E7gMS9FHZpZf74KP4DD0OhMJRhyA3bRuD5yVlsLY6D/QVKab8OwRIqUH2MDJdLzlP1Z7tCPphcK43J5dFHcTcIhdG1kKWp5IqnXES8diC1HPzKkPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowABXAAHfe_NnCWDSBg--.45177S2;
-	Mon, 07 Apr 2025 15:16:49 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: hamza.mahfooz@amd.com,
-	chiahsuan.chung@amd.com,
-	sunil.khatri@amd.com,
-	alex.hung@amd.com,
-	aurabindo.pillai@amd.com,
-	hersenxs.wu@amd.com,
-	mario.limonciello@amd.com,
-	mwen@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] drm/amd/display: Add error check for avi and vendor infoframe setup function
-Date: Mon,  7 Apr 2025 15:16:27 +0800
-Message-ID: <20250407071627.1666-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744010234; c=relaxed/simple;
+	bh=zKwzOYh8aAJuS+S3TkD57w5LMO2QhltXuYUO7CZQNWM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SDi3Vopa1uJtxzDkSezu3Q3jqsdiYBwS2yiOo/Y5WEZCeYv9ahrc9V732xcJS40DTFFZrqkKE0Fiey7oVooIvwwLBnLDQ5VaupUCoQGX4XNVqRZsosvw+n0DxZcgXxaT2V56wVEOz7dh9wj3WMDItu3fOAy8HoY9hVIk0OJRN/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RXDCWCMN; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RXDCWCMN"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 84A8820579;
+	Mon,  7 Apr 2025 07:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744010224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zKwzOYh8aAJuS+S3TkD57w5LMO2QhltXuYUO7CZQNWM=;
+	b=RXDCWCMNUclxLzRL6AiK1Fmxi79I2R8O37PVEhcp5lNPDKqaT2r42YJRp2/v6lyOzf7QvT
+	Poqw1OEyv/XO2jhlihzZshc2WMeMl7V4OOVUlEQNW5c7VVdVuhAEUy4ZkefKIl9703X1Lx
+	aAi1UzRmliogVdI/Dzk5IgeFfmxAWEkSE9Kw0iXCYDiRyFV4nqEO1cGUZiFM0IWD5b7G5o
+	DU2u9aAZF+fuxVjmSuQ9BSlPVAT+BkcQ53Xvf2ODYFcAKdiGeaAGrYC4gKCtMlUnUXrwXJ
+	ZKOPY2qIfBOv/d9TlmMIKVrLwer5cQD1ax7aZq/lwXkJYaybnVH5MuItoHd4cA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,  Tudor Ambarus
+ <tudor.ambarus@linaro.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  Michael Walle <michael@walle.cc>,  <linux-mtd@lists.infradead.org>,
+  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+  <linux-kernel@vger.kernel.org>,  Steam Lin <stlin2@winbond.com>,  Jean
+ Delvare <jdelvare@suse.de>,  kernel test robot <lkp@intel.com>,
+  stable@vger.kernel.org
+Subject: Re: [PATCH] mtd: spinand: Fix build with gcc < 7.5
+In-Reply-To: <20250401133637.219618-1-miquel.raynal@bootlin.com> (Miquel
+	Raynal's message of "Tue, 1 Apr 2025 15:36:37 +0200")
+References: <20250401133637.219618-1-miquel.raynal@bootlin.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 07 Apr 2025 09:16:59 +0200
+Message-ID: <87ikngh250.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABXAAHfe_NnCWDSBg--.45177S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF4UAr47KFW8CF47Jw1rtFb_yoW8Gw4Upw
-	48Ja4qvrWkWFZFyryUAF1ruFWYk3srJFW7Kr45Aw15W345CrZ8Ja1rJwn5t347uFWrA3ya
-	y3WDZ3yxXF1vkw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjTRCnmRDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwFA2fzOj3udQACsG
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedruddtkedrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrfedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhitghhrggvlhesfigrlhhlvgdrtggtpdhrtghpt
+ hhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-The function fill_stream_properties_from_drm_display_mode() calls the
-function drm_hdmi_avi_infoframe_from_display_mode() and the
-function drm_hdmi_vendor_infoframe_from_display_mode(), but does
-not check its return value. Log the error messages to prevent silent
-failure if either function fails.
+Hello,
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 01/04/2025 at 15:36:37 +02, Miquel Raynal <miquel.raynal@bootlin.com> wr=
+ote:
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 0396429a64be..d6feafb8fa3d 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6152,8 +6152,8 @@ static void fill_stream_properties_from_drm_display_mode(
- 
- 	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
- 		err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame, (struct drm_connector *)connector, mode_in);
--                if (err < 0)
--                        dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
-+		if (err < 0)
-+			dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
- 		timing_out->vic = avi_frame.video_code;
- 		err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame, (struct drm_connector *)connector, mode_in);
- 		if (err < 0)
--- 
-2.42.0.windows.2
+> __VA_OPT__ is a macro that is useful when some arguments can be present
+> or not to entirely skip some part of a definition. Unfortunately, it
+> is a too recent addition that some of the still supported old GCC
+> versions do not know about, and is anyway not part of C11 that is the
+> version used in the kernel.
+>
+> Find a trick to remove this macro, typically '__VA_ARGS__ + 0' is a
+> workaround used in netlink.h which works very well here, as we either
+> expect:
+> - 0
+> - A positive value
+> - No value, which means the field should be 0.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503181330.YcDXGy7F-lkp@i=
+ntel.com/
+> Fixes: 7ce0d16d5802 ("mtd: spinand: Add an optional frequency to read fro=
+m cache macros")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
+Applied on top of mtd/fixes with an unrelated conflict resolved.
+
+Thanks,
+Miqu=C3=A8l
