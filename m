@@ -1,91 +1,183 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F186F1B042E;
-	Mon,  7 Apr 2025 18:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1AF22256D;
+	Mon,  7 Apr 2025 18:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051590; cv=none; b=W03jblO/G/lXA7HtbYwoBd1n+o0a4oKwNo6cNEUvnmitHUdUdrCeVnT7irYR1T6sx1pbG/Hfjpg/8KUg/0HIlu/7eiIxORT58pbpJ7TB32Cj+2aDUqVfSzpixmKIu5UEHHJUTGJ9DV5WgvHovbrASkgwbcyWmW9Mtmd7dVqb6gY=
+	t=1744051609; cv=none; b=NB+BfaMIDcINsDnsRyY+6P/63GSnk97ClGL5Wj8BoNjcfXoXXnmyxbqdP0jHqJ/sbG5ovpadmEWcJhx2LX/mrkzslD5tzTebBqyR31EysOAYNnQLJI3cWeokfFICSfUOiZ0vhNEx5ey7LNTMQH/jmNi+nNJ15f+W0oOjpLzDi9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051590; c=relaxed/simple;
-	bh=t93cdI/wL24j2HR4ce39FZz6lJqa0QJlRalczKG2iHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jRtBdAYrua0wPcu67kvORdjiXEDiCdJFFWH1wwoKhGD3r+n0L/VsrLdN+N5HAFOicX1ub66PC6KKOFfNnsxK9LY0DhhAkeN01oqJaQEWMER3Tq11Enk0upatqhVcpwskCdK/1UPRMKYCbRlIRZmo6yDD5P2FfPv7oFXijEC0QPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upzcL7hy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051609; c=relaxed/simple;
+	bh=mHnRQrUz+4kvAeo6aGycQsGqtBT2rI2fecmfh3LmTuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KgvYTFtXyrd7tPvDyiwzgUyEAe0d/wxJpyDoAgbE+8wu2iH0toS1k9OSR5RW19rJ6P7NaaXj+0Lz1NRQnEE/y/olX7vheMt/8UZJzUU6YrgVxLhHKrCCWQ7j+Cn8ox4NUT4DVyKD9rB+IvNoJ7BZkDErq1X0J8WuKzGdEyFMUTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQEyrUFe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upzcL7hy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59521C4CEDD;
-	Mon,  7 Apr 2025 18:46:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQEyrUFe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 379F0C4CEEA;
+	Mon,  7 Apr 2025 18:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051589;
-	bh=t93cdI/wL24j2HR4ce39FZz6lJqa0QJlRalczKG2iHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=upzcL7hygJ/keMMrQfuERZ7goqYflE9P2ZNFyBvMwS++4GRb3FsbSPrc8ij6Il9mj
-	 h/iUwF5PfmCV7Uy/m3OY+WnepzR9VBlmyzXRX8wYKLF68DoTIJIKpCvq9+KHN/hutb
-	 ZPKeQRsnqXmUH4A49TYmoxucX1yPwpYtXLqZ1dQ5tdwhe9luhudB2O01dTRHiDvdA5
-	 FZHzjguUtWd1tvyhky5O9Y3G21VywD6t9vYee21/qvxhM0xIai3rp1saQFuY9BPvUQ
-	 V2pm9bs+ZdxNau5iAG4YX7e7/J28He7y+R19cdT/8z6IriHEfE/+AfFCoEVt3cHkKG
-	 1LUtbbqogcZFg==
-Date: Mon, 7 Apr 2025 19:46:20 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/5] iio: adc: ad7380: add ad7389-4 support
-Message-ID: <20250407194620.7d5e92df@jic23-huawei>
-In-Reply-To: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
-References: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1744051609;
+	bh=mHnRQrUz+4kvAeo6aGycQsGqtBT2rI2fecmfh3LmTuA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aQEyrUFejFBWiX5MQ+KtqSGSPBlyke8cXqyPg/yuXyoUWQW0178hMqT4lxEGazPr1
+	 9w+A5ywp0zwyStwhXpn5lhJsxcqNaRbhCvn++ylSA26D5maUCgZN7nRgALGveuE1dy
+	 hj2xrnQSw/L05YObx5q0ztufrLBZ+aD1654LCHJzjI4ogc2SaBmZuhM00psF/vcuYA
+	 4Jt9LtK2JH4ATYTBzuykDhav0Ps8Fzu8smP0zHAEWD0/vxDtn+bi6e6BuMWt/kOoND
+	 Y/u5FlIO4hm2ux9HJB85ItrM+ux8N9jUdiRsrljLyjkesC3EJ9/OT20z806QxEcPPj
+	 pu5DJ3cDMxWjA==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c12b7af278so3317181fac.0;
+        Mon, 07 Apr 2025 11:46:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXE+YbBhQxtD5OhUW4w7Ia3pMHVG7w+7g4o8T1NPDlpq1WXvcVZq/pV/Wcp9wF1FjqObhxhjLnYnYoFNwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4ztj2dRqG2RqNiE7KQVIWXWDmDWzsrfd8t7N0Fuczmfm7sV/X
+	aurkh6eHYuOPtWkNoeAfyCwoAls8Jz3Zop5pKcFSbQLgynobJ504LipoY2IOJBZEkkUMO8g3Jjc
+	wkc5Z8tvPmsTfl2siy+cqM3e6tF0=
+X-Google-Smtp-Source: AGHT+IE2+vBTKe9EtPxXIZLDGFxhC67FMH7CpylNJaJ36uL2RJ7DxAR/F+bFIuPqDcZ+XNZbR2fTHA5JxJSyBht8Oek=
+X-Received: by 2002:a05:6871:6183:b0:29e:5152:dab1 with SMTP id
+ 586e51a60fabf-2d064a73137mr318273fac.13.1744051608521; Mon, 07 Apr 2025
+ 11:46:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <4651448.LvFx2qVVIh@rjwysocki.net> <2315023.iZASKD2KPV@rjwysocki.net>
+In-Reply-To: <2315023.iZASKD2KPV@rjwysocki.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 7 Apr 2025 20:46:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gSVd05e+Wtx9WuxW1ETAt=_z9pAyyg7oQzKD4LhrA89Q@mail.gmail.com>
+X-Gm-Features: ATxdqUEtRSlzKEHxWBODwox92YuYeZYMboEOwjqSX-wnx9jwOv8J7S5FBu5R-6c
+Message-ID: <CAJZ5v0gSVd05e+Wtx9WuxW1ETAt=_z9pAyyg7oQzKD4LhrA89Q@mail.gmail.com>
+Subject: Re: [PATCH v1 05/10] cpufreq: intel_pstate: Rearrange max frequency
+ updates handling code
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 01 Apr 2025 17:50:07 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Fri, Mar 28, 2025 at 9:58=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Rename __intel_pstate_update_max_freq() to intel_pstate_update_max_freq()
+> and move the cpufreq policy reference counting and locking into it (and
+> implement the locking with the recently introduced cpufreq policy "write"
+> locking guard).
+>
+> No intentional functional impact.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> While developing this driver, we glossed over AD7389-4 since we didn't
-> have hardware to test it. However, it should be trivial enough to add
-> support without testing. It is basically the same as AD7380-4 but
-> instead of no internal reference, it has no external reference. And we
-> already have support for chips with internal reference only (ADAQ).
-> 
-> We have the typical DT bindings/driver/documentation patches for it plus
-> a few patches to shuffle around the existing code for supporting chips
-> with internal-reference-only to make it generic enough to support this
-> chip as well.
-Series applied to the togreg branch of iio.git (which I just rebased on rc1)
-Will initially push out as testing though to let 0-day have a first poke
-at it.
+Hi Srinivas,
 
-Thanks,
+If you have any concerns regarding this patch, please let me know.
 
-Jonathan
-
-> 
 > ---
-> David Lechner (5):
->       dt-bindings: iio: adc: ad7380: add AD7389-4
->       iio: adc: ad7380: rename internal_ref_only
->       iio: adc: ad7380: move internal reference voltage to chip_info
->       iio: adc: ad7380: add ad7389-4
->       Documentation: iio: ad7380: add AD7389-4
-> 
->  .../devicetree/bindings/iio/adc/adi,ad7380.yaml    | 11 +++++
->  Documentation/iio/ad7380.rst                       |  7 +++
->  drivers/iio/adc/ad7380.c                           | 50 +++++++++++++++++++---
->  3 files changed, 61 insertions(+), 7 deletions(-)
-> ---
-> base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
-> change-id: 20250401-iio-ad7380-add-ad7389-4-1f6d3d7dc749
-> 
-> Best regards,
-
+>  drivers/cpufreq/intel_pstate.c |   52 +++++++++++++---------------------=
+-------
+>  1 file changed, 17 insertions(+), 35 deletions(-)
+>
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -1353,9 +1353,16 @@
+>                 cpufreq_update_policy(cpu);
+>  }
+>
+> -static void __intel_pstate_update_max_freq(struct cpudata *cpudata,
+> -                                          struct cpufreq_policy *policy)
+> +static bool intel_pstate_update_max_freq(struct cpudata *cpudata)
+>  {
+> +       struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> +
+> +       policy =3D cpufreq_cpu_get(cpudata->cpu);
+> +       if (!policy)
+> +               return false;
+> +
+> +       guard(cpufreq_policy_write)(policy);
+> +
+>         if (hwp_active)
+>                 intel_pstate_get_hwp_cap(cpudata);
+>
+> @@ -1363,44 +1370,24 @@
+>                         cpudata->pstate.max_freq : cpudata->pstate.turbo_=
+freq;
+>
+>         refresh_frequency_limits(policy);
+> +
+> +       return true;
+>  }
+>
+>  static void intel_pstate_update_limits(unsigned int cpu)
+>  {
+> -       struct cpufreq_policy *policy =3D cpufreq_cpu_acquire(cpu);
+> -       struct cpudata *cpudata;
+> -
+> -       if (!policy)
+> -               return;
+> -
+> -       cpudata =3D all_cpu_data[cpu];
+> -
+> -       __intel_pstate_update_max_freq(cpudata, policy);
+> -
+> -       /* Prevent the driver from being unregistered now. */
+> -       mutex_lock(&intel_pstate_driver_lock);
+> +       struct cpudata *cpudata =3D all_cpu_data[cpu];
+>
+> -       cpufreq_cpu_release(policy);
+> -
+> -       hybrid_update_capacity(cpudata);
+> -
+> -       mutex_unlock(&intel_pstate_driver_lock);
+> +       if (intel_pstate_update_max_freq(cpudata))
+> +               hybrid_update_capacity(cpudata);
+>  }
+>
+>  static void intel_pstate_update_limits_for_all(void)
+>  {
+>         int cpu;
+>
+> -       for_each_possible_cpu(cpu) {
+> -               struct cpufreq_policy *policy =3D cpufreq_cpu_acquire(cpu=
+);
+> -
+> -               if (!policy)
+> -                       continue;
+> -
+> -               __intel_pstate_update_max_freq(all_cpu_data[cpu], policy)=
+;
+> -
+> -               cpufreq_cpu_release(policy);
+> -       }
+> +       for_each_possible_cpu(cpu)
+> +               intel_pstate_update_max_freq(all_cpu_data[cpu]);
+>
+>         mutex_lock(&hybrid_capacity_lock);
+>
+> @@ -1840,13 +1827,8 @@
+>  {
+>         struct cpudata *cpudata =3D
+>                 container_of(to_delayed_work(work), struct cpudata, hwp_n=
+otify_work);
+> -       struct cpufreq_policy *policy =3D cpufreq_cpu_acquire(cpudata->cp=
+u);
+> -
+> -       if (policy) {
+> -               __intel_pstate_update_max_freq(cpudata, policy);
+> -
+> -               cpufreq_cpu_release(policy);
+>
+> +       if (intel_pstate_update_max_freq(cpudata)) {
+>                 /*
+>                  * The driver will not be unregistered while this functio=
+n is
+>                  * running, so update the capacity without acquiring the =
+driver
+>
+>
+>
+>
