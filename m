@@ -1,147 +1,136 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7DD20DD5A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F3D20E6E8;
+	Mon,  7 Apr 2025 16:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043022; cv=none; b=MWgi7xkBBEn8H9K5Gm0MsUYs99g2Uefr3Ld0IA/Xf3d+HK1ayRgRBgLY6xqfD6SDJxcSwd6SJdP9CiqNaTNrZPqsdN/CK0G7rMJ/NGtgiEwuir5YV4MM86RlvuLZV2fJQ755MhgTfbBLpy205P8O90ViQ5ldD+Iss8wArZ+CmDk=
+	t=1744043060; cv=none; b=o9qMLH97BUahUg1dpreNYUUHBMK9p07QiMneyCpvcj1/kU/jmPlRUdPXBXV52xPjFW4uhBJB4ZCjmuaLMqNTCDM4FE0oqUpiDFJa8dSKHakrstjJMKGtVxglF6MmOIHr994+rP2B21/p4GKQA99n9x1gefu93sS9z2R7ndq8Eho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043022; c=relaxed/simple;
-	bh=xK3zdpugWS3t3I7XRyKqSkoBwBn9VFb6ajzBDZzEiQU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ea7U6RTVfMskWveaQvcJlwTdP6UdVhGPknYgWrlA/+mIp9bJiva2XIBcCGImwLMSB6UY/4ywtjY/UoqnieBRvFjoi5z6K+9LuMuq4SXnYNrc4SDBTrooUvlqiqob7x/fjZ/NcL83TfDYCvDOK0eU66EiU6IDpPVeyJhAraTTGRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JifTUwvy; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744043060; c=relaxed/simple;
+	bh=BX2OylRjTEWyuqtrqriHr2iC8YNM9oUeFRa/G1yRxD4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
+	 MIME-Version:References; b=OFZhkx+Rr5xEZKsIzIEWD8iDW5/kkOBPRv9xo8tXvrVmQ8bgSNz/OL4NJaKeLDTSaxEDUBpJo8d0umc5u7FEnJEF2sb34YYM2PxvdvZRm0IYGUB7mQLZ0QJm47YOi0SyHpmzK4f5Fe0YwHXud8C7T0n/veSfwS+EmR3P/ThNCIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=g3JHyA5R; arc=none smtp.client-ip=211.189.100.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JifTUwvy"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f74b78df93so55914637b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744043019; x=1744647819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rdLI4xLdMKIk5+aH2ShC4YXmxar43nmBcEhmGz0osts=;
-        b=JifTUwvyVvNi4cElR+4XTMQZUiwIh50LATtsx/jJXMSopgf5Rp1gpX/lBXbPHKoByb
-         avZiVmteCwgLlh52T48b53ueFXGIrqplCOaNv4PV8thFXkQZKJLzg3JLwprQ3R4IngaB
-         BoLzlfkfROFT9Lcr+ZZRX4PtH84ZCRSXTkcWsYIYCaNMT1zUTV3V933QYOMltkryokcq
-         eubT02R784B6f5NEXhokgS3A3lxZyrRxwRxoMENP04ouiYDoaNhaU6YwC67YTtCsfg6n
-         gMT08+WiTv8rXjUisSWkgmgD9ntmAIu4SB9lHaoiBfFo6xw4wcx0WGnZAxTIdb0/9psq
-         4CHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744043019; x=1744647819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rdLI4xLdMKIk5+aH2ShC4YXmxar43nmBcEhmGz0osts=;
-        b=a33CKugBviV/q/F+S3GX3+IVUWb5q9vCRNyR1ljxwRZMDpbb+qFyERuM1xXo8GcBU/
-         AsG7a/HEcRotnzyPGf1/psGlIpTHIABH7N+0ED5VNlmuEXdk+zg9G0HDU7QyotaxYHMK
-         RaDNsLeUOf/OxtGHDnz3Cv3exXEJ61SrkfqyeZVVeC7h49mDB2o33CQZPfqlq6boV8dg
-         9qtCj6ZJCY0OgKNEFcakdafgmM3Hw1q/XKw1a9hCCsZIcaL4KGESycH7Es5zMWgJ7tkW
-         85qTw4gg/uVO8SzcnNarDr6saSRB9hVygyz8X1R2/ddr/HFBPjcr85On5ZaIhY7UD7qs
-         QLiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWb5amg1IC/RbeGEGE/c4c24ObBMeH1sUvdCjvt1QwIz6PedFQ0Daldg4OKMco+tX3skSDS/TGqR96lWJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmn+M7rmcWOZgxeUeJ6GVB0y5MTiDnVtCycEV+3KbUJ0uEQr0N
-	JGjDOCLZvQGnW3HEJ9RAOqXfVNejWGqWt9aML01SMgOYgCBJLXzGS8G0eSxDOaV4P6Jc5gZWyIE
-	hM9EzajD+JH7X60zd+zc/ZBbz+XzwaCI/kGE6IA==
-X-Gm-Gg: ASbGncuovz4uMi0AKn8X0hRevbvcH48pMDFUtiyfqOmcSzpk2cIcshXafA/r3qr9P7+
-	hyQ0NSbK3x44UmgDIjIQWL/aBiK9IPLWfNFlD1PwSYsGAKFza09jUJOEFLkzGdg5rKHeTPDk1wD
-	QWgRvOjAas4YvPPcIZcUeUkdn07zc=
-X-Google-Smtp-Source: AGHT+IEvCyoULSP8GtunUj7XByE2xLEZApny/EX5BI9r2HNnS7M/lF2l9CVPZCF8J2YyYgCczjPfSOPcnUbnSfgNgFc=
-X-Received: by 2002:a05:690c:6481:b0:702:627c:94ec with SMTP id
- 00721157ae682-703e3357786mr243332367b3.35.1744043018812; Mon, 07 Apr 2025
- 09:23:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g3JHyA5R"
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20250407161445usoutp015fc88e0ee24a742e0fd18536a99fe488~0FWZ9sq4V3037730377usoutp01n;
+	Mon,  7 Apr 2025 16:14:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20250407161445usoutp015fc88e0ee24a742e0fd18536a99fe488~0FWZ9sq4V3037730377usoutp01n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744042485;
+	bh=BX2OylRjTEWyuqtrqriHr2iC8YNM9oUeFRa/G1yRxD4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=g3JHyA5R06HxUMnmT3+2yDysUc+dH2ZStLOaOLPD/Tqfv9Q+fW6RpMZE6TxlT65ei
+	 tUrsNpKBIq2+5F0TV1tjnIcMHP0fb1IAn60DTKbtSJc+xHo6xFeQZjnbhJCimjwkSt
+	 Kxpf0ker3OQ3aJYOevYOf2ayqv9xt+KSwZicYq3M=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250407161445uscas1p1c684f440defe1b5e3597e9ca65c9d07b~0FWZ3UGC40076300763uscas1p1w;
+	Mon,  7 Apr 2025 16:14:45 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+	ussmges3new.samsung.com (USCPEMTA) with SMTP id BD.9B.10853.5F9F3F76; Mon, 
+	7 Apr 2025 12:14:45 -0400 (EDT)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+	[203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250407161445uscas1p19322b476cafd59f9d7d6e1877f3148b8~0FWZqaSGt0283302833uscas1p1M;
+	Mon,  7 Apr 2025 16:14:45 +0000 (GMT)
+X-AuditID: cbfec370-527bf70000002a65-36-67f3f9f5023b
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.3.67]) by
+	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 58.CC.23118.5F9F3F76; Mon, 
+	7 Apr 2025 12:14:45 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+	SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2507.44; Mon, 7 Apr 2025 09:14:44 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.8.30]) by
+	SSI-EX3.ssi.samsung.com ([105.128.8.30]) with mapi id 15.01.2507.044; Mon, 7
+	Apr 2025 09:14:44 -0700
+From: Adam Manzanares <a.manzanares@samsung.com>
+To: Gregory Price <gourry@gourry.net>
+CC: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "mhocko@suse.com" <mhocko@suse.com>
+Subject: Re: [LSFMM] Updated: Linux Management of Volatile CXL Memory
+ Devices
+Thread-Topic: [LSFMM] Updated: Linux Management of Volatile CXL Memory
+	Devices
+Thread-Index: AQHbo4sSrr/1aO9zr0GJmcBOzZoej7OY3pYA
+Date: Mon, 7 Apr 2025 16:14:44 +0000
+Message-ID: <Z_P573QpYuWB4Zud@sjvm-adma01.eng.stellus.in>
+In-Reply-To: <Z-zB86WcoMEQ9lKV@gourry-fedora-PF4VCD3F>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0A32597186D05144A2FC7D8A5AE86327@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
- <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
-In-Reply-To: <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 7 Apr 2025 18:23:02 +0200
-X-Gm-Features: ATxdqUG4iYRDoX1uSepWjxp_lc67AACZn0NdIUwL4_627lSdYio0uG7PYHZfOMA
-Message-ID: <CAPDyKFoHQdHED0hHUR7VKin0XG6SVnYXuvPjB=Xe+1o2hpiPJA@mail.gmail.com>
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djX87pff35ONzh8U9bi593j7BbnZ51i
+	sbi8aw6bxb01/1kt9r3ey2xxv8/Bgc2ju+0yu8emT5PYPSbfWM7osX7LVRaPz5vkAlijuGxS
+	UnMyy1KL9O0SuDI2bHzAXLCBpWL12c9sDYzXmbsYOTkkBEwkjnz5wt7FyMUhJLCSUWJ5+1YW
+	CKeVSWLd4zXsMFX/z7+CSqxhlNg0YxUThPORUeLPrXZWCGcxo8SeGxfZQFrYBAwkfh/fCLSE
+	g0NEQFWi7Yo7SA2zwEwmiV23e1hBaoQF/CX6N/1hBLFFBAIkbv3azgxhG0m8aLwIVsMioCKx
+	5voesDivgKXE96+/wOZzCphJ3Oq8AmYzCohJfD+1hgnEZhYQl7j1ZD4TxNmCEotm74F6VEzi
+	366HbBC2osT97y/ZIep1JBbs/sQGYdtJNE1qYoWwtSWWLXwNtVdQ4uTMJywQvZISB1fcAAeF
+	hMAVDolpM5ZCw8hFYsm3RlYIW1ri791lUEfkS+xquwJ1RIXE1dfdUEdYSyz8s55pAqPKLCR3
+	z0Jy0ywkN81CctMsJDctYGRdxSheWlycm55abJyXWq5XnJhbXJqXrpecn7uJEZiWTv87XLCD
+	8datj3qHGJk4GA8xSnAwK4nwWp76lC7Em5JYWZValB9fVJqTWnyIUZqDRUmcV+VAa7qQQHpi
+	SWp2ampBahFMlomDU6qByb3G6t92BfH9K0JmO+UYVv833K/FeCc+S+vQzi9CNazO4Ye0N/9K
+	yDF582dnS9EkzT1aSiXTZn0pjWrb9G9pzLHyvs02M55kTOMOTk1/8DL9e9+6GXZ2k0vXv/90
+	3IvPlcejPPn4XNvD1yfKOXPqr5zat5Lr4frfs27dffv63F1paRH/g8CwmKUsfEl7ofu2r9Gy
+	Pm/yWu+nHzx1qZd7NePi1exRE8I9na/eLlokbMyY2Cfzfuu5A5+3GMwzWjeF1/vroRspPI9W
+	Lffn3Gx2Uytr52Uez/yE9GdlD1ieTKsTn/t6+eeX6Z99NPavXd8pYf6zvcDyf3aW8tcw3/df
+	bpgFbjFSfpzi4/3t3aq6DiWW4oxEQy3mouJEAG06wbS6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWS2cDsrPv15+d0g/WX+Sx+3j3ObnF+1ikW
+	i8u75rBZ3Fvzn9Vi3+u9zBb3+xwc2Dy62y6ze2z6NIndY/KN5Ywe67dcZfH4vEkugDWKyyYl
+	NSezLLVI3y6BK2PDxgfMBRtYKlaf/czWwHiduYuRk0NCwETi//lXLF2MXBxCAqsYJTqen2CC
+	cD4ySuxpf8kO4SxmlHi6ZCtYC5uAgcTv4xuBbA4OEQFVibYr7iA1zAIzmSR23e5hBakRFvCV
+	2DJ5EjuILSLgJ/Fw9QE2CNtI4kXjRbAaFgEViTXX94DN5BWwlPj+9RcbxLJeRokXM3uZQBKc
+	AmYStzqvgDUzCohJfD+1BizOLCAucevJfCaIHwQkluw5D/WPqMTLx/9YIWxFifvfX7JD1OtI
+	LNj9iQ3CtpNomtTECmFrSyxb+BrqCEGJkzOfsED0SkocXHGDZQKjxCwk62YhGTULyahZSEbN
+	QjJqASPrKkbx0uLi3PSKYqO81HK94sTc4tK8dL3k/NxNjMCYPv3vcPQOxtu3PuodYmTiYDzE
+	KMHBrCTCa3nqU7oQb0piZVVqUX58UWlOavEhRmkOFiVx3rsPNFKFBNITS1KzU1MLUotgskwc
+	nFINTFIO2j2lPH/9GnVkmyY0zJv4MTdgrbvWS0Odhk77I0f/6noK7978tqTFxnbSHPHaV/sX
+	5rply084qOdguDmye5foyeOZEnZTUhN32c9IY1j+/ZGRQeFxgcWPdjEeZWstnPnv7vbZmjP6
+	uW30ziV73X9+923Uvm928968EnFYyb7k3Nt3MxSdWmU8y09kJuw8biT0LcX9vdPBZ5f7f2aW
+	+OytuSH+3GyfzoIbJmXRTw3nGptWznCYuXCbdYTfG9+aMx8S1HeqXHAKms5woYPr1BHZy+WX
+	P3+bFtWtzhqwl/0v8+odr59vTjGf80pXpP/j4QPXBLyt05a9eh1r8/qyyKcZj3nvmfD9mtz+
+	aEvx5CYlluKMREMt5qLiRAAYRNGSWAMAAA==
+X-CMS-MailID: 20250407161445uscas1p19322b476cafd59f9d7d6e1877f3148b8
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20250407161445uscas1p19322b476cafd59f9d7d6e1877f3148b8
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+	<Z9mo5qCpdlE-KZ7P@gourry-fedora-PF4VCD3F>
+	<Z-zB86WcoMEQ9lKV@gourry-fedora-PF4VCD3F>
+	<CGME20250407161445uscas1p19322b476cafd59f9d7d6e1877f3148b8@uscas1p1.samsung.com>
 
-On Fri, 4 Apr 2025 at 15:09, Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.or=
-g> wrote:
-> >
-> > On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrote:
-> > >
-> > > The "power-domains" and "power-domains-names" properties are missing =
-any
-> > > constraints. Add the constraints and drop the generic descriptions.
-> > >
-> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Docume=
-ntation/devicetree/bindings/arm/cpus.yaml
-> > > index 6f74ebfd38df..5bd5822db8af 100644
-> > > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > @@ -313,19 +313,15 @@ properties:
-> > >      maxItems: 1
-> > >
-> > >    power-domains:
-> > > -    description:
-> > > -      List of phandles and PM domain specifiers, as defined by bindi=
-ngs of the
-> > > -      PM domain provider (see also ../power_domain.txt).
-> > > +    maxItems: 1
-> >
-> > There are more than one in some cases. The most is probably three, I th=
-ink.
->
-> Unless I missed it, testing says otherwise. What would the names be if
-> more than 1 entry?
+On Wed, Apr 02, 2025 at 12:49:55AM -0400, Gregory Price wrote:
+> Slides up at:
+> https://github.com/gourryinverse/cxl-boot-to-bash/blob/main/presentations=
+/lsfmm25.pdf
+>=20
+> Docs Transitioning to:
+> https://github.com/gourryinverse/cxl-boot-to-bash/tree/main
+>=20
+> Browsable Page:
+> https://gourryinverse.github.io/cxl-boot-to-bash/
+>=20
+> All help hacking on this is welcome. I imagine we'll convert some
+> portion of this over to kernel docs, but not sure what.
 
-"psci", "perf", "cpr", etc
+Thanks for presenting at LSF/MM and posting links
 
-The "psci" is always for CPU power management, the other is for CPU
-performance scaling (which may be more than one power-domain in some
-cases).
-
-I would suggest changing this to "maxItems: 3". That should be
-sufficient I think.
-
-Kind regards
-Uffe
+>=20
+> ~Gregory Price=
