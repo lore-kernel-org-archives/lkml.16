@@ -1,146 +1,257 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DD9224882;
-	Mon,  7 Apr 2025 18:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F50259CBF
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050076; cv=none; b=LN6BRVj4rVGEKOYZCTLDgtTjDlp5LHdFLq4X9EzhAeQK/XQXcxmSIxD7oYPmtMilYXfS7tAXmS87j8XrTk+3tVK6DQhYE1ZM4nNCEWmSDlne5WysKhyklFj5tnWS30qQvWOr7peWqkF7iOgqfjNGSHHJaGdUGSs0ydJbnDT19qw=
+	t=1744050081; cv=none; b=U0sZQb0PKGiCpzAsUYJwERO21iX2UX4gIpxF0R0K39cs1XGTKs9D97FYxkk2btMH1BIQ8GgKoDftZY7d83zlbfKCaMw1iBYF1FK5UKv73mqIUHWAX142M0/4U3dDtZgtXfjal8OJZ6/EmVQcFS9TtL+7Hl+hS7GkkvLOrnI4vFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050076; c=relaxed/simple;
-	bh=8wC0V3F7d+ilyrpMWafa8egm5sgRBCeyFuJIZP4vVRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=scQ/Mnak8RXr4NmT/FHeg9VODNj04DhyYlirN+EfUijmybrp+Bm9XORFBI4OYkgbLaQtDx0syRrZ44vS+S3lCb6Q3VaT72O2ODHnHjMuvliXZDJ4FSWO6YraBJ+xrLrCye3fSqoAtQBKpva/pMwiwN6czXb9kIfaXHnz8O8qAjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLh1tXPV; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744050081; c=relaxed/simple;
+	bh=Fz/XDtdulRxQ3oKljNvKc4VMr4rk0YKdQk3hA5O+D7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XnleAKpqWg+ahXIiI03VlG0D6oqoc9UW02Xp8y/92L5qY9+hpIdxt7BE+8YIAMKWxdtB2SRZLIVdAMr6M8OULHKAlWPia+uiqdiPCBHRIEkPI7S6oOY8J+u6H6QZhJ+Ir3hKlBWmlJ43ZBikGe7NYUYogwKeusDJ3gyrWXIPzbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gXvaBtmj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLh1tXPV"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so19967485e9.0;
-        Mon, 07 Apr 2025 11:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744050072; x=1744654872; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ES21mMERPPnSMI71+d30thtG1PyOJaAorY/1IBZ9Fis=;
-        b=RLh1tXPVIM8MjiBxxPBUK95dcSPJ5jr2pkYaq4Ne4OSVUoMg83cOXhES7v4ekW9SKx
-         10EPSLD5PH7L4WQRCJXbX+tVNtffvR01hs7/Y+ydWtTRJWsJS4YIIB6r8u5EbH1y+8Bn
-         Wy4B0DFmwJq2292+/mE9nZoWzHGV/x1uy/ofgHRnzAnlt3Emh5Ne6DZH92YOoXJ3iEUW
-         IIFUPt6+AvYVT5qP+xZiXl3PgCiBmYfCsVo82pAL+N4ksUoG2KEjUQ63yeinntOScBlu
-         Oe+CS2DIXh/hch8RVkfgGRv5EyL4cgK6Ev0EXxvsGm6c4l/NVuCKA3C0abL2rZ/rscxk
-         Mnrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744050072; x=1744654872;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ES21mMERPPnSMI71+d30thtG1PyOJaAorY/1IBZ9Fis=;
-        b=I3KVtG/oO0wG4+LKPjXQ3p6n4AbdQkCxj2Pg7vL7W2pE0tPHxmJM8nym6dNkodr58x
-         4xClfmOgYjSEK5qblFi+CxPkA/BVkMOkhNNQOlB2lU7caVRYawnHYxSYETtb1AdojtHR
-         dHHd5rTosnaF36ty/Etav0FAHE5WYM8gk5/7kAWD90A77oG17/A2weQNDM344eyjLW5c
-         Ibf/wbTX2XnNqZSBicSg9gambTJERupHfHyNP3pTW/fIGaGqi/AW9Bk6XZSTi92/3jpX
-         2rylYTg+/4bMZR/6FDGOXzKHyuZb15VzcMii/JswRrGVC+6x6GE81SfArAcKEQYBu+mk
-         Ckfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCsoUMmhqNXaKqp0hIhgs/hEGzE5wa0U2L8kt0IwuMT3OQM4iRh7XVwe9UVt3wiWTiAupfqWdAsIOjNRQS@vger.kernel.org, AJvYcCUQju+Tg3r2unjrYWSIhyr2/UEnC5XKsms/GOoLLYoUo0DCCe2BaUxukTTrGxvTnJJ9+k5DaiOh1k2qOqk=@vger.kernel.org, AJvYcCUwvWNr4cNkq4cm9KgqdorsoqmxY3JWmn/6usp8N4bVe/LKFR1/6LJJWxZ3Ywe5TCuhJorRqWZVYooT5+GC@vger.kernel.org, AJvYcCVTEToWl3r0KCVHMZ2GnmW1bpEXP4i1dO+/X6XYHZEt9IqoOMZvaLxCvl7qmVGkCx/K/BzR0Jl3G+fG@vger.kernel.org, AJvYcCWXb4TeKCIz7+ffGSu6YZM9jBjFeIsE5wTzS3cotQ5FjbESq53nQNITlAbErgTBCAXpD8jDrctEe/1g8A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ7CSspDsfbBiQ8tGlyFvoHGUHOBK/xN92azAo7GwEkURZeXSL
-	klriQVBddRCDOkwzCdWUskl4CUEEO8JbEl3NLGDwgYG2GEez5i0I
-X-Gm-Gg: ASbGncuhJNIXaszIMEtbAGHgUGxvOWj7l8aDGZQD8uHd6+w8h0RU2QTgafKixD6ggao
-	bghsVI1prsFRDg1VYmWuQg6I8OF/sY7yKD0gZ4QTph18NEDYodvHd6gYDtqQg7giORWwq/cCWjB
-	oFEBkToYO2cbJvQI8jcaNwDZxUhgfgQI11bgYe65Bhr+OZihgptS0XalMDztG98MwqKDh2rDLHn
-	+y5if9Zg4ua9migkuRI5h/lSMKA9OmxI60Cg4waOZ9SppSvyAGJqIhPy+7kc8bAwkgazRDr6W1i
-	Mha/mHTnyH+YS1ldcLnQ25sI3Jo7yGtOm8XPv1coVeamdAsLEY+D8muA2iN6XZc0uIS5YEZR3y8
-	REWJH5Sk=
-X-Google-Smtp-Source: AGHT+IH7UT5+ww2+1FoGL9t0kvvVtsQUX0Zd7DaWfpx4PLfPCluuGh6+cQNvkvF3tn8WY4k8enhO3A==
-X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr113598395e9.20.1744050072429;
-        Mon, 07 Apr 2025 11:21:12 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec3174cf0sm142595365e9.0.2025.04.07.11.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:21:11 -0700 (PDT)
-Date: Mon, 7 Apr 2025 19:21:10 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-kbuild@vger.kernel.org, Arnd
- Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel
- <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst
- <brgerst@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc
- Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro
- Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>, Thomas
- Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>, Will Deacon
- <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
-Message-ID: <20250407192110.5a7ad777@pumpkin>
-In-Reply-To: <20250407164151.GB2536@sol.localdomain>
-References: <20250407094116.1339199-1-arnd@kernel.org>
-	<20250407164151.GB2536@sol.localdomain>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXvaBtmj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744050078;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AKqSZoUpU0uzACYZM5pmj6GRgcBtXZsWwsDTZhVURtA=;
+	b=gXvaBtmjjuvFj3Vfjrts+Meqfzbuwm8b/ZxaG/Mig6Tx99C992HCEOSI7H/euDJFc+MZab
+	hIkd7D+311DDXReRHf/E7aXjcPEK1xhMDVFQIM/nPHxVKWDEnrUH1FkPSIRYHBBUagOJqA
+	T2C1XjX3XABca6ltHz2Kt3fv/8J/Q9k=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-_jQ5k9ceMQ6hbE5jbl7neQ-1; Mon,
+ 07 Apr 2025 14:21:14 -0400
+X-MC-Unique: _jQ5k9ceMQ6hbE5jbl7neQ-1
+X-Mimecast-MFC-AGG-ID: _jQ5k9ceMQ6hbE5jbl7neQ_1744050073
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2EBA19560BC;
+	Mon,  7 Apr 2025 18:21:12 +0000 (UTC)
+Received: from pasta.fast.eng.rdu2.dc.redhat.com (unknown [10.45.224.15])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 86B0D180A803;
+	Mon,  7 Apr 2025 18:21:09 +0000 (UTC)
+From: Andreas Gruenbacher <agruenba@redhat.com>
+To: cgroups@vger.kernel.org
+Cc: Andreas Gruenbacher <agruenba@redhat.com>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Jan Kara <jack@suse.cz>,
+	Rafael Aquini <aquini@redhat.com>,
+	gfs2@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC 1/2] gfs2: replace sd_aspace with sd_inode
+Date: Mon,  7 Apr 2025 20:21:01 +0200
+Message-ID: <20250407182104.716631-2-agruenba@redhat.com>
+In-Reply-To: <20250407182104.716631-1-agruenba@redhat.com>
+References: <20250407182104.716631-1-agruenba@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, 7 Apr 2025 09:41:51 -0700
-Eric Biggers <ebiggers@kernel.org> wrote:
+Use a dummy inode as mapping->host of the address spaces for global as
+well as per-inode metadata.  The global metadata address space is now
+accessed as gfs2_aspace(sdp) instead of sdp->sd_aspace.  The per-inode
+metadata address spaces are still accessed as
+gfs2_glock2aspace(GFS2_I(inode)->i_gl).
 
-> On Mon, Apr 07, 2025 at 11:41:12AM +0200, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > x86 already requires gcc-8.1 since linux-6.15-rc1, which led me to
-> > actually go through all  version checks and make this is the minimum
-> > for all architectures.
-> > 
-> > Most of the actual resulting changes are actually for raising the
-> > binutils version, which eliminates version checks on x86 and arm64.
-> > 
-> > Arnd Bergmann (4):
-> >   kbuild: require gcc-8 and binutils-2.30
-> >   raid6: skip avx512 checks
-> >   x86: remove checks for binutils-2.30 and earlier
-> >   arm64: drop binutils version checks  
-> 
-> This is intended to supersede the patches from Uros that removed checks for
-> binutils < 2.25, right?  See:
-> 
-> * https://lore.kernel.org/linux-crypto/20250404074135.520812-1-ubizjak@gmail.com/
-> * https://lore.kernel.org/linux-crypto/20250404074135.520812-2-ubizjak@gmail.com
-> * https://lore.kernel.org/linux-crypto/20250404074135.520812-3-ubizjak@gmail.com/
-> 
-> If we can indeed bump up the requirement to 2.30, that would be great.
-> 
-> Just a note though: I recently added VAES and VPCLMULQDQ instructions to
-> BoringSSL, which increased the binutils requirement of building BoringSSL to
-> 2.30, and this caused issues in a downstream project; e.g. see
-> https://github.com/briansmith/ring/issues/2463.  Specifically people complained
-> about being unable to build on Amazon Linux 2 and CentOS/RHEL/Oracle Linux 7.
+Based on a previous version from Bob Peterson from several years ago.
 
-Just tell them RHEL 7 is no longer supported :-)
-(Was a right PITA installing an extra package on a CentOS 7 system we use as
-a build machine...)
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+---
+ fs/gfs2/glock.c      |  3 +--
+ fs/gfs2/glops.c      |  4 ++--
+ fs/gfs2/incore.h     |  9 ++++++++-
+ fs/gfs2/meta_io.c    |  2 +-
+ fs/gfs2/meta_io.h    |  4 +---
+ fs/gfs2/ops_fstype.c | 24 +++++++++++++-----------
+ fs/gfs2/super.c      |  2 +-
+ 7 files changed, 27 insertions(+), 21 deletions(-)
 
-In any case it is relatively easy to install a later gcc - even though it ends
-up in a very obscure place.
-
-	David
-
-> 
-> So I just thought I'd mention that, based on past experience with this sort of
-> thing, those are the specific cases where it seems people are most likely to be
-> trying to use binutils < 2.30.
-> 
-> But if those distros are not going to be supported any longer (without
-> installing newer tools on them), or even are already unsupported due to the gcc
-> requirement, bumping up the binutils requirement to 2.30 sounds good to me.
-> 
-> - Eric
-> 
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d7220a6fe8f5..ba25b884169e 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -1166,7 +1166,6 @@ int gfs2_glock_get(struct gfs2_sbd *sdp, u64 number,
+ 		   const struct gfs2_glock_operations *glops, int create,
+ 		   struct gfs2_glock **glp)
+ {
+-	struct super_block *s = sdp->sd_vfs;
+ 	struct lm_lockname name = { .ln_number = number,
+ 				    .ln_type = glops->go_type,
+ 				    .ln_sbd = sdp };
+@@ -1229,7 +1228,7 @@ int gfs2_glock_get(struct gfs2_sbd *sdp, u64 number,
+ 	mapping = gfs2_glock2aspace(gl);
+ 	if (mapping) {
+                 mapping->a_ops = &gfs2_meta_aops;
+-		mapping->host = s->s_bdev->bd_mapping->host;
++		mapping->host = sdp->sd_inode;
+ 		mapping->flags = 0;
+ 		mapping_set_gfp_mask(mapping, GFP_NOFS);
+ 		mapping->i_private_data = NULL;
+diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
+index eb4714f299ef..116efe335c32 100644
+--- a/fs/gfs2/glops.c
++++ b/fs/gfs2/glops.c
+@@ -168,7 +168,7 @@ void gfs2_ail_flush(struct gfs2_glock *gl, bool fsync)
+ static int gfs2_rgrp_metasync(struct gfs2_glock *gl)
+ {
+ 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
+-	struct address_space *metamapping = &sdp->sd_aspace;
++	struct address_space *metamapping = gfs2_aspace(sdp);
+ 	struct gfs2_rgrpd *rgd = gfs2_glock2rgrp(gl);
+ 	const unsigned bsize = sdp->sd_sb.sb_bsize;
+ 	loff_t start = (rgd->rd_addr * bsize) & PAGE_MASK;
+@@ -225,7 +225,7 @@ static int rgrp_go_sync(struct gfs2_glock *gl)
+ static void rgrp_go_inval(struct gfs2_glock *gl, int flags)
+ {
+ 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
+-	struct address_space *mapping = &sdp->sd_aspace;
++	struct address_space *mapping = gfs2_aspace(sdp);
+ 	struct gfs2_rgrpd *rgd = gfs2_glock2rgrp(gl);
+ 	const unsigned bsize = sdp->sd_sb.sb_bsize;
+ 	loff_t start, end;
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index 74abbd4970f8..0a41c4e76b32 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -795,7 +795,7 @@ struct gfs2_sbd {
+ 
+ 	/* Log stuff */
+ 
+-	struct address_space sd_aspace;
++	struct inode *sd_inode;
+ 
+ 	spinlock_t sd_log_lock;
+ 
+@@ -851,6 +851,13 @@ struct gfs2_sbd {
+ 	unsigned long sd_glock_dqs_held;
+ };
+ 
++#define GFS2_BAD_INO 1
++
++static inline struct address_space *gfs2_aspace(struct gfs2_sbd *sdp)
++{
++	return sdp->sd_inode->i_mapping;
++}
++
+ static inline void gfs2_glstats_inc(struct gfs2_glock *gl, int which)
+ {
+ 	gl->gl_stats.stats[which]++;
+diff --git a/fs/gfs2/meta_io.c b/fs/gfs2/meta_io.c
+index 198cc7056637..9dc8885c95d0 100644
+--- a/fs/gfs2/meta_io.c
++++ b/fs/gfs2/meta_io.c
+@@ -132,7 +132,7 @@ struct buffer_head *gfs2_getbuf(struct gfs2_glock *gl, u64 blkno, int create)
+ 	unsigned int bufnum;
+ 
+ 	if (mapping == NULL)
+-		mapping = &sdp->sd_aspace;
++		mapping = gfs2_aspace(sdp);
+ 
+ 	shift = PAGE_SHIFT - sdp->sd_sb.sb_bsize_shift;
+ 	index = blkno >> shift;             /* convert block to page */
+diff --git a/fs/gfs2/meta_io.h b/fs/gfs2/meta_io.h
+index 831d988c2ceb..b7c8a6684d02 100644
+--- a/fs/gfs2/meta_io.h
++++ b/fs/gfs2/meta_io.h
+@@ -44,9 +44,7 @@ static inline struct gfs2_sbd *gfs2_mapping2sbd(struct address_space *mapping)
+ 		struct gfs2_glock_aspace *gla =
+ 			container_of(mapping, struct gfs2_glock_aspace, mapping);
+ 		return gla->glock.gl_name.ln_sbd;
+-	} else if (mapping->a_ops == &gfs2_rgrp_aops)
+-		return container_of(mapping, struct gfs2_sbd, sd_aspace);
+-	else
++	} else
+ 		return inode->i_sb->s_fs_info;
+ }
+ 
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index e83d293c3614..ce6ee494ffc4 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -72,7 +72,6 @@ void free_sbd(struct gfs2_sbd *sdp)
+ static struct gfs2_sbd *init_sbd(struct super_block *sb)
+ {
+ 	struct gfs2_sbd *sdp;
+-	struct address_space *mapping;
+ 
+ 	sdp = kzalloc(sizeof(struct gfs2_sbd), GFP_KERNEL);
+ 	if (!sdp)
+@@ -109,16 +108,6 @@ static struct gfs2_sbd *init_sbd(struct super_block *sb)
+ 
+ 	INIT_LIST_HEAD(&sdp->sd_sc_inodes_list);
+ 
+-	mapping = &sdp->sd_aspace;
+-
+-	address_space_init_once(mapping);
+-	mapping->a_ops = &gfs2_rgrp_aops;
+-	mapping->host = sb->s_bdev->bd_mapping->host;
+-	mapping->flags = 0;
+-	mapping_set_gfp_mask(mapping, GFP_NOFS);
+-	mapping->i_private_data = NULL;
+-	mapping->writeback_index = 0;
+-
+ 	spin_lock_init(&sdp->sd_log_lock);
+ 	atomic_set(&sdp->sd_log_pinned, 0);
+ 	INIT_LIST_HEAD(&sdp->sd_log_revokes);
+@@ -1135,6 +1124,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	int silent = fc->sb_flags & SB_SILENT;
+ 	struct gfs2_sbd *sdp;
+ 	struct gfs2_holder mount_gh;
++	struct address_space *mapping;
+ 	int error;
+ 
+ 	sdp = init_sbd(sb);
+@@ -1156,6 +1146,18 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_flags |= SB_NOSEC;
+ 	sb->s_magic = GFS2_MAGIC;
+ 	sb->s_op = &gfs2_super_ops;
++
++	/* Set up an address space for metadata writes */
++	sdp->sd_inode = new_inode(sb);
++	if (!sdp->sd_inode)
++		goto fail_free;
++	sdp->sd_inode->i_ino = GFS2_BAD_INO;
++	sdp->sd_inode->i_size = OFFSET_MAX;
++
++	mapping = gfs2_aspace(sdp);
++	mapping->a_ops = &gfs2_rgrp_aops;
++	mapping_set_gfp_mask(mapping, GFP_NOFS);
++
+ 	sb->s_d_op = &gfs2_dops;
+ 	sb->s_export_op = &gfs2_export_ops;
+ 	sb->s_qcop = &gfs2_quotactl_ops;
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index 44e5658b896c..4529b7dda8ca 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -648,7 +648,7 @@ static void gfs2_put_super(struct super_block *sb)
+ 	gfs2_jindex_free(sdp);
+ 	/*  Take apart glock structures and buffer lists  */
+ 	gfs2_gl_hash_clear(sdp);
+-	truncate_inode_pages_final(&sdp->sd_aspace);
++	iput(sdp->sd_inode);
+ 	gfs2_delete_debugfs_file(sdp);
+ 
+ 	gfs2_sys_fs_del(sdp);
+-- 
+2.48.1
 
