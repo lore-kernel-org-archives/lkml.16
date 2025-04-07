@@ -1,255 +1,188 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27C522B5A1;
-	Mon,  7 Apr 2025 22:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744066317; cv=fail; b=q259ZwO2NJ0jGBmzpes4q69/93WWXuPlsxzC1s+ulBSQC3Rb5gkrZcOJx6mRNKePTSlDaDPAYzWESrxQaLEQ2WLSDMEWfo6TGw3f1NX8sZ5Q0/RLyW+SFCUv8V2ivsN0YoxYuM3ECRA91T8GxdWTP05U2KXfjHWDfYHkNNGeWfE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744066317; c=relaxed/simple;
-	bh=iFYXoUdF3W8taZedS1xk0FCTEBI6CgwrfHDv9Cl3jF0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sibo47cZxh0tLbvVkLfVBg+Bhq1JH1yksoYgWsO8BKWRG45GWsEOcVvz4hkhBCOYn5oI5UGHOXt2FWL1emR0MVnO5g0l2AAlQj2v/DJGp4oNTStrmNsRnFEw2IHlapqnxf0pYpZkM/HBrWbHSaql7UIgNK/1uZXvbC4K9LtfA5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QMRlWxcJ; arc=fail smtp.client-ip=40.107.236.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F6B22DF84
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 22:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744066321; cv=none; b=UqqgAA+U5jPO9fGHYlIdhiU+Lx5n6seCSUPeN8xMW8EBAObYBFZPYjgVSifLBkUhJ81cIGQnU1yKxJ9G7aSTAaBszkE5jvaHLQ/kv0BrvD3131RSnXi4vniCBb1BC/SRXtXdDjslmzCokoGTOZz6Wj5c2k89pK+Xfx5a501EBi0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744066321; c=relaxed/simple;
+	bh=xk6+GuIlJyPcOF97rvioGdrmfsj08TuNFKPTnNBPVcU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h1w1LTK1o3OhxXhhxAe3u3HewR22bS9l2AH3ydXVH/SHItrRn/O4v38LY0yT37N3h7Nkr9HMzN/dvNVlRXMamjjEIjb7Tf+4oUXq6LuBAVx2jtfTBVENm38CxhAt263uGMMTRm2yuMoDcWlUGMbEUCgdoRPc7mlzwAGgCGkq1og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aRWrO/4Q; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QMRlWxcJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MRo2LCj9KdLrpHrIue0zfu2nEvR9Q0exv+vjlxglTMqST+YQTd+itZYfKK+lxiW58MPPCsIZCX9NLjAhq4dzYBsjwmlkmR9a+kRwcs5FZidzxmI+VWwSLeMEwJhHf4Lg/4QJrvRwh8Exj12daoV9BoVqMGvJABi1qw5mxm22GVGQPK2nNDN5Y2pptSvOF/gQv86X2CnbC+KNBam6qZI/+0UHekz53wVKHVKm1RuRSVlVKYJ4hOMUJJ2JcVPAxqGTev0m7BqrJUrw37v37Zd5TyQHFrxMT4CGEslY7+zlMtuHSZCjtDG1RjyX3HVDBTEdXHogw9/YI0N0G4Ig4vz6UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DbRfsUR9h/xdmIkJ+voPFjdBSud2yuK2UaqSyKlCj4o=;
- b=ZtmGfYJIrDELDAi4q3P1m2IOonYLyhVAWeYj0IPPAPGTJPyLMEJwb67Y+V3qPxQip+SgZIGEIGyjWPTA4X88Bo3siyu5fIdbSQKFWW30L9UHdqpTmLq9IjxdJyDZpLmTCOQHBfAy0adod376wmbF1TFryC7h7jC13bCAC0Oww9IUS9ZBgOe7avp5lZCoBT/EHsSGETinH/AH45Ho+Kl/TpSe0r98nh7EhvifRf20poc6ZyCDgSmI3mHFmk2Nc9JU9X/5kHvjZ3TvpyqOmhTVcRs91538OerV1reOdJM5Ctx5yZWjgUxG7oKLCQUuRgyugP8x/rgzi7Htpy0QZAvnRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DbRfsUR9h/xdmIkJ+voPFjdBSud2yuK2UaqSyKlCj4o=;
- b=QMRlWxcJv11zryobZpH3TvPop/Sd2BSIhBgPFReOFqhZHdW+AdcaTESl9bsCEalK0jcVlBzN9gXaom262F7ynQJlK/f9IcgVpIcNK7XfiqzeEp81YxhlGZRsPDEm+eYU8VnwJXF6zZsRh8JbLSzOUml0mJjwY8tQVgmmPe9NUak=
-Received: from BN9PR03CA0078.namprd03.prod.outlook.com (2603:10b6:408:fc::23)
- by IA0PPFD7DCFAC03.namprd12.prod.outlook.com (2603:10b6:20f:fc04::be7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
- 2025 22:51:50 +0000
-Received: from BL6PEPF0001AB53.namprd02.prod.outlook.com
- (2603:10b6:408:fc:cafe::32) by BN9PR03CA0078.outlook.office365.com
- (2603:10b6:408:fc::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.34 via Frontend Transport; Mon,
- 7 Apr 2025 22:51:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB53.mail.protection.outlook.com (10.167.241.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Mon, 7 Apr 2025 22:51:50 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 17:51:47 -0500
-From: Shannon Nelson <shannon.nelson@amd.com>
-To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<michal.swiatkowski@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH net 6/6] pds_core: make wait_context part of q_info
-Date: Mon, 7 Apr 2025 15:51:13 -0700
-Message-ID: <20250407225113.51850-7-shannon.nelson@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250407225113.51850-1-shannon.nelson@amd.com>
-References: <20250407225113.51850-1-shannon.nelson@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRWrO/4Q"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso5472862e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 15:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744066317; x=1744671117; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9T1LuFxtlhisA25vk0GSN9ZyiZy+KSvd4XC01LmHfFI=;
+        b=aRWrO/4Q9E4B0MNV+tJKgfo9c9heW7lRog8Dc85lAt5PytYH9yVgaLSJ+2qDRt4KGm
+         8OHXremBWnjJ1+157nNns7Ss+EVGQWY51xx6+cpN3mmrrsyi4Wa8zRov9sMH2Hf0aAFh
+         VOFxk+MX7NWBjG7VjxFwyY1CbBAN/ECmx48JoYc24LvN+FKVg0Z3fg9NGh2pa69rTMd7
+         2YYWAzjIZTEHwxkaGfYgYKO0KMoS6els9B8aI8cNAIutbOs+/ki5kbnZ+TWununInGzP
+         TPQ67+bHOaw5ApwHDMSxJ39IfblFdPzcpcjbfEOQNwpYYDeIYJCv57ss741AaAU+XHF2
+         3RaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744066317; x=1744671117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9T1LuFxtlhisA25vk0GSN9ZyiZy+KSvd4XC01LmHfFI=;
+        b=k7Lb3Mxd3Th8t/yG/84Y3M56zCVZXWHJmogfTOt7JIZf9YCeJIqt1KODmhVECIiJSd
+         LJkQ4BpE32r2G58kszLUSuQEf2hRPakbD6K+3n/2NhijiTVNxRhQ0VfVxcDM2iyVXxyP
+         TjX/sjO6Wyl7CkGGV5tZqebxX4YPk9mzyMDtq2M6Jt/dSmam9ylNrXgnevTy2DV29daL
+         Q2HZuQaMDtPv4lpneryuj40/n1hKIFctHDBUQlCnC2RW0oWwoMQWcJIgjdmU1IMvG2eo
+         GTn7EgiOfE5T6GcEI9lN4fszPz8Hs/u5Zx5FbRlnGgOrFKG+Ts5cOoY5m3kdtcebGsza
+         B5kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmgSNrfy44EIHW9LfnDHCkvK6SyfJsOuU+DkB713n3dRd57OUQnI99OvEWt0r3fVRsikOjlkIlUFihyF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9+2QxBAt9D+3gAV8c6wxyuywjcfMuolsDWoAzfslCpNFKM/vd
+	aJ689Cs2G5c/LSnSzb57U8+tcC54dr+m7OHYKSZ1zTO0vzs+aO+oUA/W5MWv6vKRUR4PWfm2rT1
+	Wq4Mq4u5moTx6ir3RqT0opTmPartI9lPaG43m
+X-Gm-Gg: ASbGnctR/wAPQvM64V9CZC+gMSqWR/8DjUHCmEu0EwWTfzINlrVS8tElgR2EnmVGQqI
+	ZwDi0/6ExwPZNYdBzDd/3v0+wNh/6BEojx1ZLs6WCMw3cVUiginqq+MsfwNcRi3MsdRsbb2mAn/
+	UyARpZ8q2VHAVVEsaZjw/0t5EdJZ2sIg91rog=
+X-Google-Smtp-Source: AGHT+IGZy1cH5XFvxf4qYN6nMiZKkGDS0+s79ElF1xv6IXDDdsnr740VlwJkyiHI3RPM0cEI5hC/q03/uRkTb7Y8OD0=
+X-Received: by 2002:a05:6512:2341:b0:549:86c8:113a with SMTP id
+ 2adb3069b0e04-54c297d0929mr2593762e87.15.1744066316436; Mon, 07 Apr 2025
+ 15:51:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB53:EE_|IA0PPFD7DCFAC03:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4abb84b-e0b6-4ed6-a801-08dd7626c882
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IWURqKbR7cAZNhHybQH6YmpjVt5h+fMi2LgmQz49E/B8OKW45WZHP4Ih469a?=
- =?us-ascii?Q?Fh+StW3p65XTb4pqyjly1I/DUPyV5JPSoGNfjru2VAgBFo2XZ0reSsGFr+oh?=
- =?us-ascii?Q?ZALfCIY/Z71YkC+MiLDzRhWXwUIvHbL8B5u3axV9vesMENGQQRzusHc1gSgG?=
- =?us-ascii?Q?rDgIrN/DMabJChT4GQJI9f4kjeirgdyvT6nwU47RW7DIPfaI94AhdfKRVBps?=
- =?us-ascii?Q?/Pix7wNG7w/IhH90KL4aOBZM3Gr0M/MODw7KptraSACV+UFUlhxtFwo5RKe1?=
- =?us-ascii?Q?YA13vzfVBpoS7rdp/UGure40TbTpycfU5/+tHbZfTtB36wItFFfeaqihkLYN?=
- =?us-ascii?Q?tS2LAk6e4A28ccr3IZ2bkXVS75HBSXFHCiR7L0SBp3Wv71R0Mv3GGOBHWhjJ?=
- =?us-ascii?Q?gQrg/Y42upuUqvzTdGK3o3mHjn0IzbkcowWX3jFeTvppIlNozzx365NSkz1R?=
- =?us-ascii?Q?a6znBnkVk+b37pJdnrPgUNHvXB6dGY6SLKk54LZBVx4VpAdvs1MV+5e5hEnc?=
- =?us-ascii?Q?SDvtRsFWv9pdFCC1F0TqGlCzgrtwLk+FPLQwSXSXd5pTpBlBsKBvNYTgrT46?=
- =?us-ascii?Q?haljfmAI0fL+MULQKGZeibCo+/UEyL4pXxOtNrLv2g6YROQVyS8KjTbiqrO2?=
- =?us-ascii?Q?OE4ZlCtTyOPF7E1HaU8qS8ec8yTcBRywh7kGhydRBKeGe6SW5w27y6Q9W1EF?=
- =?us-ascii?Q?Dvh+s4AzGDcTFcbCLWN8nNBMP7aXY68P0hgx3xNzolKrsHz0DoxjfTE5PidV?=
- =?us-ascii?Q?gEEPTauSMSDDcptUTm0wXnFlK9RdXnX6a18bdPL/sREQqrmz0G4O5AQ7Qmpd?=
- =?us-ascii?Q?L2209sxF7y+jvMbVNqiahY9mfSnMjhxdjeb6lnx70LwYbssZKgdF9164TY3Y?=
- =?us-ascii?Q?VEWT5bMaFmcU2hP1o786724KAZPpRYRbVq6vlp1SVfwUtFor8Ofp0tJxL93t?=
- =?us-ascii?Q?dKCcUPmDCdsb3aiGp4icAtg7JSHJh05/JfGQ7uDoA41YdrNUDS5ss0dVOLzm?=
- =?us-ascii?Q?qRr4zcfsyIeAeuB/0UKktfX/q8rEA0GLdORdagQaNOdSkakrSK9lKuIG97Q6?=
- =?us-ascii?Q?BXLuP4rL+1ACHtrOUhnNfrY0LmhED7uLks8kqaQI34HtXs8eGxwwM4z5LGIt?=
- =?us-ascii?Q?FfsFUbD/qMkKE6xomKOVqFVRss7qq9c8QkcWjc97tXIoEyx10G+K4zWX4AZ6?=
- =?us-ascii?Q?8w9nAW6mQ+oJTBLCebjukcuGiW3hwoi+Can1ZH9iSG94SzfYRhlU1RR6jEI1?=
- =?us-ascii?Q?WaANhmmKXw2KI8HuwRPNjxLLeBYmCeeXIu9lDyelgAdN4nzXqVkzTvddNg5f?=
- =?us-ascii?Q?2vfX9wuJkUuTN8kcvODYuJCzpjmh0KW7LurZB0ulZF28kWseeoNy7NZSbyzX?=
- =?us-ascii?Q?V8Bo32Dv8yv9b611t7VlO8b7FQLf+bO+eDvBLkiApVJfB5jWebJ+dxRVWT4w?=
- =?us-ascii?Q?/2bKhiY4Ik+XosY5BdziDob2qGRZUsz7NiDAbRzSsoxm0bqneOkmURFKtvLU?=
- =?us-ascii?Q?YNd1bPARAxHt1qg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 22:51:50.0850
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4abb84b-e0b6-4ed6-a801-08dd7626c882
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB53.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPFD7DCFAC03
+References: <20250407145546.270683-1-herve.codina@bootlin.com> <20250407145546.270683-3-herve.codina@bootlin.com>
+In-Reply-To: <20250407145546.270683-3-herve.codina@bootlin.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Mon, 7 Apr 2025 15:51:20 -0700
+X-Gm-Features: ATxdqUHzf_3trxjbd35DyDptpEJ-bBNCqGhzKGi2OGpUI_J2cUir_Gap-o-BFA4
+Message-ID: <CAGETcx81G7Bk3AswqGu1hoybuGL1znN7gvX5+baJurfWFx+xuA@mail.gmail.com>
+Subject: Re: [PATCH 02/16] driver core: Rename get_dev_from_fwnode() wrapper
+ to get_device_from_fwnode()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make the wait_context a full part of the q_info struct rather
-than a stack variable that goes away after pdsc_adminq_post()
-is done so that the context is still available after the wait
-loop has given up.
+On Mon, Apr 7, 2025 at 7:56=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
+>
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
+>
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
+>
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
+=3DiEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-There was a case where a slow development firmware caused
-the adminq request to time out, but then later the FW finally
-finished the request and sent the interrupt.  The handler tried
-to complete_all() the completion context that had been created
-on the stack in pdsc_adminq_post() but no longer existed.
-This caused bad pointer usage, kernel crashes, and much wailing
-and gnashing of teeth.
+Thank you!
 
-Fixes: 01ba61b55b20 ("pds_core: Add adminq processing and commands")
-Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
----
- drivers/net/ethernet/amd/pds_core/adminq.c | 23 +++++++---------------
- drivers/net/ethernet/amd/pds_core/core.h   |  7 ++++++-
- 2 files changed, 13 insertions(+), 17 deletions(-)
+Reviewed-by: Saravana Kannan <saravanak@google.com>
 
-diff --git a/drivers/net/ethernet/amd/pds_core/adminq.c b/drivers/net/ethernet/amd/pds_core/adminq.c
-index 2e840112efea..86a6371e5821 100644
---- a/drivers/net/ethernet/amd/pds_core/adminq.c
-+++ b/drivers/net/ethernet/amd/pds_core/adminq.c
-@@ -5,11 +5,6 @@
- 
- #include "core.h"
- 
--struct pdsc_wait_context {
--	struct pdsc_qcq *qcq;
--	struct completion wait_completion;
--};
--
- static int pdsc_process_notifyq(struct pdsc_qcq *qcq)
- {
- 	union pds_core_notifyq_comp *comp;
-@@ -112,7 +107,7 @@ void pdsc_process_adminq(struct pdsc_qcq *qcq)
- 		/* Copy out the completion data */
- 		memcpy(q_info->dest, comp, sizeof(*comp));
- 
--		complete_all(&q_info->wc->wait_completion);
-+		complete_all(&q_info->wc.wait_completion);
- 
- 		if (cq->tail_idx == cq->num_descs - 1)
- 			cq->done_color = !cq->done_color;
-@@ -162,8 +157,7 @@ irqreturn_t pdsc_adminq_isr(int irq, void *data)
- static int __pdsc_adminq_post(struct pdsc *pdsc,
- 			      struct pdsc_qcq *qcq,
- 			      union pds_core_adminq_cmd *cmd,
--			      union pds_core_adminq_comp *comp,
--			      struct pdsc_wait_context *wc)
-+			      union pds_core_adminq_comp *comp)
- {
- 	struct pdsc_queue *q = &qcq->q;
- 	struct pdsc_q_info *q_info;
-@@ -205,7 +199,6 @@ static int __pdsc_adminq_post(struct pdsc *pdsc,
- 	/* Post the request */
- 	index = q->head_idx;
- 	q_info = &q->info[index];
--	q_info->wc = wc;
- 	q_info->dest = comp;
- 	memcpy(q_info->desc, cmd, sizeof(*cmd));
- 
-@@ -231,11 +224,8 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 		     union pds_core_adminq_comp *comp,
- 		     bool fast_poll)
- {
--	struct pdsc_wait_context wc = {
--		.wait_completion =
--			COMPLETION_INITIALIZER_ONSTACK(wc.wait_completion),
--	};
- 	unsigned long poll_interval = 200;
-+	struct pdsc_wait_context *wc;
- 	unsigned long poll_jiffies;
- 	unsigned long time_limit;
- 	unsigned long time_start;
-@@ -250,19 +240,20 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 		return -ENXIO;
- 	}
- 
--	wc.qcq = &pdsc->adminqcq;
--	index = __pdsc_adminq_post(pdsc, &pdsc->adminqcq, cmd, comp, &wc);
-+	index = __pdsc_adminq_post(pdsc, &pdsc->adminqcq, cmd, comp);
- 	if (index < 0) {
- 		err = index;
- 		goto err_out;
- 	}
- 
-+	wc = &pdsc->adminqcq.q.info[index].wc;
-+	wc->wait_completion = COMPLETION_INITIALIZER_ONSTACK(wc->wait_completion);
- 	time_start = jiffies;
- 	time_limit = time_start + HZ * pdsc->devcmd_timeout;
- 	do {
- 		/* Timeslice the actual wait to catch IO errors etc early */
- 		poll_jiffies = usecs_to_jiffies(poll_interval);
--		remaining = wait_for_completion_timeout(&wc.wait_completion,
-+		remaining = wait_for_completion_timeout(&wc->wait_completion,
- 							poll_jiffies);
- 		if (remaining)
- 			break;
-diff --git a/drivers/net/ethernet/amd/pds_core/core.h b/drivers/net/ethernet/amd/pds_core/core.h
-index 199473112c29..84fd814d7904 100644
---- a/drivers/net/ethernet/amd/pds_core/core.h
-+++ b/drivers/net/ethernet/amd/pds_core/core.h
-@@ -88,6 +88,11 @@ struct pdsc_buf_info {
- 	u32 len;
- };
- 
-+struct pdsc_wait_context {
-+	struct pdsc_qcq *qcq;
-+	struct completion wait_completion;
-+};
-+
- struct pdsc_q_info {
- 	union {
- 		void *desc;
-@@ -96,7 +101,7 @@ struct pdsc_q_info {
- 	unsigned int bytes;
- 	unsigned int nbufs;
- 	struct pdsc_buf_info bufs[PDS_CORE_MAX_FRAGS];
--	struct pdsc_wait_context *wc;
-+	struct pdsc_wait_context wc;
- 	void *dest;
- };
- 
--- 
-2.17.1
-
+> ---
+>  drivers/base/core.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index d2f9d3a59d6b..f30260fd3031 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct dev=
+ice *dev)
+>         device_links_write_unlock();
+>  }
+>
+> -#define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
+> +#define get_device_from_fwnode(fwnode) get_device((fwnode)->dev)
+>
+>  static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
+>  {
+> @@ -1891,7 +1891,7 @@ static bool fwnode_init_without_drv(struct fwnode_h=
+andle *fwnode)
+>         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
+>                 return false;
+>
+> -       dev =3D get_dev_from_fwnode(fwnode);
+> +       dev =3D get_device_from_fwnode(fwnode);
+>         ret =3D !dev || dev->links.status =3D=3D DL_DEV_NO_DRIVER;
+>         put_device(dev);
+>
+> @@ -1960,7 +1960,7 @@ static struct device *fwnode_get_next_parent_dev(co=
+nst struct fwnode_handle *fwn
+>         struct device *dev;
+>
+>         fwnode_for_each_parent_node(fwnode, parent) {
+> -               dev =3D get_dev_from_fwnode(parent);
+> +               dev =3D get_device_from_fwnode(parent);
+>                 if (dev) {
+>                         fwnode_handle_put(parent);
+>                         return dev;
+> @@ -2016,8 +2016,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode=
+_handle *con_handle,
+>                 goto out;
+>         }
+>
+> -       sup_dev =3D get_dev_from_fwnode(sup_handle);
+> -       con_dev =3D get_dev_from_fwnode(con_handle);
+> +       sup_dev =3D get_device_from_fwnode(sup_handle);
+> +       con_dev =3D get_device_from_fwnode(con_handle);
+>         /*
+>          * If sup_dev is bound to a driver and @con hasn't started bindin=
+g to a
+>          * driver, sup_dev can't be a consumer of @con. So, no need to ch=
+eck
+> @@ -2156,7 +2156,7 @@ static int fw_devlink_create_devlink(struct device =
+*con,
+>         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
+>                 sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
+>         else
+> -               sup_dev =3D get_dev_from_fwnode(sup_handle);
+> +               sup_dev =3D get_device_from_fwnode(sup_handle);
+>
+>         if (sup_dev) {
+>                 /*
+> @@ -2225,7 +2225,7 @@ static void __fw_devlink_link_to_consumers(struct d=
+evice *dev)
+>                 bool own_link =3D true;
+>                 int ret;
+>
+> -               con_dev =3D get_dev_from_fwnode(link->consumer);
+> +               con_dev =3D get_device_from_fwnode(link->consumer);
+>                 /*
+>                  * If consumer device is not available yet, make a "proxy=
+"
+>                  * SYNC_STATE_ONLY link from the consumer's parent device=
+ to
+> --
+> 2.49.0
+>
