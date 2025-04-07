@@ -1,79 +1,60 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7C8801;
-	Mon,  7 Apr 2025 03:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3349F801;
+	Mon,  7 Apr 2025 03:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743996249; cv=none; b=GJ8rkE2BjNAOqPF89Hbk8ffc4p6tTCPungP/n6XL0QqN5+hcymnsvhzSazZXamqMTs8hU0s2qOXUxRTDM4Xpg0dScNWIhoX6yozt4THAVk19/fdNgW7juJ6dgS/JISa9FzowoUxYu6m5u5PBNGdw2hsxRbo6dZ+OL2oRUjx93Xs=
+	t=1743996424; cv=none; b=eZY7yKoiwnt1tdR+5JgxKZjfQBHs8/mtlNSKL3LnTvLL+CLb32Yo6aJLrVIn0pptE2hegi6yHEe/71AMH9Ns5bfER7Bg5juQHcPiAXTZ9lvZzlYvWpl7uy6y+eKlqBYbSx1gLDlCiSUsQrnOLk+JS5Po+jfhcOaefUTxbStSlq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743996249; c=relaxed/simple;
-	bh=MVqP/MRkeq5mWsnVeb6x8OKT7vqLIT1fVjO/24HiVfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ltFjdd40CMU2lirNXSQQiFzvbgzkGHVmmWHNdtSzNXnYtWBJjjWv/XtpdeIV01sCqxKmN9e5zoqHen/NIknvooqZLP6D4RP1EoL5Y1iUa3bMe4rkU33OvXzbACt4x5FWHNeccz8QA7JEAZwY+SCGa9ZBiilELgSjmaJVtI1KnTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PCPUaBmV; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743996424; c=relaxed/simple;
+	bh=ApFqjXp9QptNXkQ0FrXmfzk+9tfugIwM4oMaIkdMyqA=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=pAZMWrqv9+5b3FL1Fj0QwHQJWYU+8nG3eP/RzafHfsMs415KTvnXweM0JJ3lTuEv2H4uaa3SpfIrqYUaFxkzBr6yHiNk64fU1T1PPYMNRCYAU6EZoEj2heuHIo15F+MCQ4TU9AxXXLF+9SqFE4s7Z19KgDoZmzRPGq/l7N9ENzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=oa9i/N/l; arc=none smtp.client-ip=203.205.221.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCPUaBmV"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-227b828de00so35894295ad.1;
-        Sun, 06 Apr 2025 20:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743996247; x=1744601047; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4fmK2IFe+fh1XGVBCh9dw/6nJ72mkqtroySmjWMxwgI=;
-        b=PCPUaBmVDkeW/oVyBvEKw3ADFrth9DBNEQSM3KD2K1ZKKns5Ks8ZnDJWdWsR5Yrc+t
-         aIso07UUzp47Bxv7fuAHqxhrjejKR/eSGoNI44WtSqX5TCSQ368TNtahOEh0IwzjYnUu
-         +aJ/Clmkj+/B/sF7zZvzfWt89nt7SBRCv1sCtHi34+Hfn23dlq7VL6N9fTxVZAVErMeT
-         c+Oy0/f/Rrbw8ll5IPrlvPVk1ZvwhmB7JR4ySUaxXTZV74DcxYcAbqQrndXh+RvgFitN
-         4jSFYlkIgZNGjDpxB0H0rukLOE/Z9qnx0Lle/tc3ftwfsfZpwJ6F8SPIVz/rDKr5Mr2W
-         xkkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743996247; x=1744601047;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4fmK2IFe+fh1XGVBCh9dw/6nJ72mkqtroySmjWMxwgI=;
-        b=KV3F2omBV6qKA/L+Y8YQOdkShYBK8+3UBXbww4IlDv5jzyDcGHOzMLuteIKdQPklf+
-         6ZTce1rUiuJD+1h8PqvgpJVdMJnpnZCUuMF8mEWlovcvUOL1g2cRguciBngm27zdmjv4
-         +tjRYIw+lZd2XE6wduJL5p8L6xxqgNjaxgP/ImUYIuBv3hpUs62KCkO/3Ao9QjyeJStY
-         EPn44ZCk45ttyHFLmc7NPjR+c456TWuevXX4Ya1Ex0aPNzM3nfXLgcQhaD1pi4N4Aaay
-         ZZiZS7k0pKBww75kLNMBos/C0pHnQOQWmaCn4UCxrzKzYpHkXAXGK+VtkSgcfuTh0jpG
-         LoVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEL8h/sElsyr0ylNLxBjWTJ9T8kGa52bSQ2b6BlhA5FgZhfwepg4/6F2tX8AJzT3UP7cBu9EaiytnJZV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpqPg60RbuaOYhHu+4pH96kRKa0eUw6XW9VgKJCWOc9TWCttYD
-	7jF5g5TtugZWQiLh2UkyC3VHtmiUFeISEL7G9X2+00Q8o9wAQ+4kCqNYVvYTNK9mAw==
-X-Gm-Gg: ASbGncshgQped8N12REmEZFr7nyzRYMzB6l+l7NK5RIK8nYj3/3a9hfUel2GonZI8VM
-	gJBtpVZZLAJOkTt7uT/jj4CeXYb37SIuTo4LEucoBqD8DhXW+D1sLnC0LBZd4Pcaz5P8aphCZuu
-	+JNnvPDMUMzPLe4YAZSxJeTTxnmqbNBK6mPo1OqkiOWZlb7M8OhqmO6c1RNHhRLSKddtGuIuohX
-	XETS4BlvMbbbWXFw7ph0YbACOBH8E0eNcAkteiR5Lgp9ORpbB9z/5pixCxNJ6v+xPv5/evPcxRI
-	aFq5ZcNQ8qPGTUWxZck2kBpNzcyPF/9dgQDEL8EADH398IwaI62OX3zK+bmdLcY3B2iTKmE=
-X-Google-Smtp-Source: AGHT+IGiiOhCXltCwB7LH7Uukc7MXJILMdaUq06pKBBwQ/EOPL92BM5re8lzHelAZXPlHg/PFyG3ew==
-X-Received: by 2002:a17:902:d485:b0:223:3bf6:7e6a with SMTP id d9443c01a7336-22a95529550mr123048075ad.12.1743996247046;
-        Sun, 06 Apr 2025 20:24:07 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.133])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978772ee4sm70065505ad.233.2025.04.06.20.23.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 20:24:06 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chui-hao.chiu@mediatek.com,
-	bsdhenrymartin@gmail.com,
-	rex.lu@mediatek.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2] wifi: mt76: mt7996: Fix null-ptr-deref in mt7996_mmio_wed_init()
-Date: Mon,  7 Apr 2025 11:23:49 +0800
-Message-Id: <20250407032349.83360-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="oa9i/N/l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1743996109;
+	bh=J2ZmuHwb+XeDs7UBxiws1r+PRFifDNGqgstKjoaffss=;
+	h=From:To:Cc:Subject:Date;
+	b=oa9i/N/ldJHJrAVxCZxpsKlFN/lVvfn6+mhp99DDbuUcjY7vu4+pPljAXJn0WNL61
+	 IAcGrxzvcr/iFYSg7oWwrodQBnSeNyEbYSuEeTxHG1yWpMBqYLfLZH84mzn2kJ8xER
+	 laik9abkUbleRNQDsq80T6DCBlLZwAi+2uWvM87Y=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 5700EE92; Mon, 07 Apr 2025 11:21:48 +0800
+X-QQ-mid: xmsmtpt1743996108tvyniewjc
+Message-ID: <tencent_D5D35C992B70843CF70F5533E49717D24906@qq.com>
+X-QQ-XMAILINFO: NGZp1yYNf7Y+yXLVKDI2lXM5CHXiSfV4ucc+xECmUuw27VLHDBoszHAg5BsSvp
+	 qRx42rJjjJEtHBm9t/iTwinQvbdcQ2mNBicutbYxXHg7mrn3Rf+0sh2iPjNz2mQyT9cL5zDpk0hG
+	 /EjzLnqEZq/+nZWGL3zkTzwZqjj/dSIphohBC787Mp1VqWswvTJDiKlLmTo/NJqeBV3Y6ukV0QEB
+	 o8WCII+ztJ7J7uIppCJ6jRIHixjKmjOPWN8qLtRnvsHd5QDLB5xK5uBdplwj6BMmsIV3g8mI5QI4
+	 ajZOjY/pNHfQiJhkLW137fQ8ypcYkhYH50MwkHXpea4VhU5nI8oUyrzKA6sinB/kYFxI96fhbqe8
+	 MRAT1t5SsYgFVTTZ+xdcjKGAwH0MZ47T/+a5qyTvSGAZNKZ9FbrQFhFGUJM3FNWyMhBO7Uca8N3T
+	 yMW8jEHXGa14J5HdH4EtFVh1c3ZbpTkQ+EeSYhtJOtoyq5cM4x+DNpLKgSTFeRN/IHFuuNed+7a9
+	 gQmn42FJonfbMMzGyQEf+iK1h9SEkKVkbexbLs0XgGO2cHQ8IIOM8x3ryuvBf5DeTPy2LrYeaRpG
+	 ool/atb8Ff9ypsNSdgvPBa7f22ycT+LhKunmj+8y/+tChO1cxYBD7OPpwqwYV1Lmsv2yOw4J+wYc
+	 Mvwld140IskJEXU2Qgtico8tYB/cf7Dg+sOuBbDuv/YUIk3P2t4rZMG/5pL0LRkDPYr3T/d5Z9jf
+	 wjXgVB0pt/kxH0279QXXlmLGya4W9UMUQkXGZKgX+8c2N6KRPE/FjQOm2OY1oipLUuWun88iKvVE
+	 je/S1jwVDW1fCeDTJPRfetL+JLGFQJP8UEQCBpiXXf9vGPWXKijl8JKyjeFw5QJtzZ5B4gISrCEu
+	 K3fdtKGBo+WJN9pCpvdIshbtKtOr5Jks5BZENIuvZQytkBUiQ65bP2q+mPXFZDXc6GfeiCVgFEM5
+	 7eO5Wgy0C8QvDO6jGbvhbLfx+LSHS2mqstEFtEJFDzHhR0SFZ0wnTmudq3ok3t3QoQT1htJbmmVO
+	 NzR1IRpPD+ncfdoLCF
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: xiaopeitux@foxmail.com
+To: sboyd@kernel.org,
+	mturquette@baylibre.com,
+	unicorn_wang@outlook.com,
+	inochiama@gmail.com,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH] clk: sophgo: Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
+Date: Mon,  7 Apr 2025 11:21:46 +0800
+X-OQ-MSGID: <af209151c107a7a8d43938a5dc0f4fd3f8347712.1743995995.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,34 +63,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-devm_ioremap() returns NULL on error. Currently, mt7996_mmio_wed_init()
-does not check for this case, which results in a NULL pointer
-dereference.
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-Prevent null pointer dereference in mt7996_mmio_wed_init()
+cocci warnings:
+    drivers/clk/sophgo/clk-sg2042-pll.c:217:1-7: WARNING:
+    do_div() does a 64-by-32 division, please consider using div64_ul
+    instead.
 
-Fixes: 83eafc9251d6 ("wifi: mt76: mt7996: add wed tx support")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+    drivers/clk/sophgo/clk-sg2042-pll.c:160:1-7: WARNING:
+    do_div() does a 64-by-32 division, please consider using div64_u64
+    instead.
+
+replace do_div() with div64_*() which doesn't implicitly cast the divisor.
+
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
 ---
-V1 -> V2: Add a blank after the check and correct the summary.
+ drivers/clk/sophgo/clk-sg2042-pll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/net/wireless/mediatek/mt76/mt7996/mmio.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
-index 13b188e281bd..af9169030bad 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
-@@ -323,6 +323,9 @@ int mt7996_mmio_wed_init(struct mt7996_dev *dev, void *pdev_ptr,
- 	wed->wlan.base = devm_ioremap(dev->mt76.dev,
- 				      pci_resource_start(pci_dev, 0),
- 				      pci_resource_len(pci_dev, 0));
-+	if (!wed->wlan.base)
-+		return -ENOMEM;
-+
- 	wed->wlan.phy_base = pci_resource_start(pci_dev, 0);
+diff --git a/drivers/clk/sophgo/clk-sg2042-pll.c b/drivers/clk/sophgo/clk-sg2042-pll.c
+index 1537f4f05860..e5fb0bb7ac4f 100644
+--- a/drivers/clk/sophgo/clk-sg2042-pll.c
++++ b/drivers/clk/sophgo/clk-sg2042-pll.c
+@@ -155,7 +155,7 @@ static unsigned long sg2042_pll_recalc_rate(unsigned int reg_value,
  
- 	if (hif2) {
+ 	numerator = (u64)parent_rate * ctrl_table.fbdiv;
+ 	denominator = ctrl_table.refdiv * ctrl_table.postdiv1 * ctrl_table.postdiv2;
+-	do_div(numerator, denominator);
++	numerator =  div64_u64(numerator, denominator);
+ 	return numerator;
+ }
+ 
+@@ -212,7 +212,7 @@ static int sg2042_pll_get_postdiv_1_2(unsigned long rate,
+ 	tmp0 *= fbdiv;
+ 
+ 	/* ((prate/REFDIV) x FBDIV)/rate and result save to tmp0 */
+-	do_div(tmp0, rate);
++	tmp0 = div64_ul(tmp0, rate);
+ 
+ 	/* tmp0 is POSTDIV1*POSTDIV2, now we calculate div1 and div2 value */
+ 	if (tmp0 <= 7) {
 -- 
-2.34.1
+2.25.1
 
