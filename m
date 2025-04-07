@@ -1,193 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7AB230BCA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AA3233D9D;
+	Mon,  7 Apr 2025 09:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017374; cv=none; b=TI9JkULzWUc2LLtmYYMW+CBUJJze0oJO+kHLEooErqIVZjI6Y/8MLES7c8KD9hkUXd86Z3VIX8qCnEe1WQurWG86QuDnt8krb6x205ogB1Fpr3V/WJXPBAzwOwEgoIkx1A/YXZJjoAksXVpcJm156Du/pxWu2YwHyfsIZqK/rgY=
+	t=1744017389; cv=none; b=CqjPGHMQ/jDfsdoa8yoDmufuMCFzNAK7vEmbuHf6lvCDjH1VjnJXpRLyRmtFmgVBJ1omM7tAWA0WsEdI93av5FUCDXpeASzc+Vjh+tyUZLNiiYAJ6bhyUjRtWwwvi9EYIbheUUHBK24MHMWy3xn9z9FKIN3FweoBbuZ3Npo/BTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017374; c=relaxed/simple;
-	bh=31vqYQwn/J2VYn5vPyEE1407XeQoddh8cnodS3c1KD8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HAOLoDbAlCAU5VLCvuDm5ciwl6d/0C6pB4LOU6S4wW/DuBdVy/0tEOGZBXclTVmRD+HaML6twWa2C2F7aDBsUi73YYl1ON/2SNzR5K58A8nwB4tyJiCrP7Aqlj9kkwz2m6HexSR7SjHsGglqDG4C8MAgFoeKSzon9hkvN8xtgKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWDmbdWe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744017389; c=relaxed/simple;
+	bh=gbLuga0FZZjtAkly5hHxlMYBYHJSgtjehSgZ3utF1WI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=JaHReuK4YAflkC0AR8t7UeRTt3n9LynvzWcjO0qEJ4zSQKJv0rES7U32wATm0MwGhiMDuOT4mDU641TnWSEvKRMmNq9WugA/N2xCohv4AFlIxZ9FUHg5aY6e/nGxVbHBK7NsK0FhSXN9qrJSFNotIjo+MqxxhJL4BVA5LT8xZAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMw6WtrZ; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWDmbdWe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744017370;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V+GN2gS8lk8pQaqDs/K8fd6AI38wy4xbJjG61joXzQc=;
-	b=YWDmbdWe8nGplreXPxcEREc84T2QYc3ZpiwmMjMYVF1V73TVJ3m/EHjgOwv3ZxDhtI8+PG
-	HtsJYr1N9J31o24No4rKaKIPyo1U1qyCFQBvcAwK9vJoJUNlSJyqgKGmIFzEOV00gGmPEB
-	U01YVB4mGkqF43NsFKgrK1RNu47kflY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-202-SCyC-SVZMZ2RqwRGG68A2g-1; Mon,
- 07 Apr 2025 05:16:06 -0400
-X-MC-Unique: SCyC-SVZMZ2RqwRGG68A2g-1
-X-Mimecast-MFC-AGG-ID: SCyC-SVZMZ2RqwRGG68A2g_1744017363
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A0F1180AF52;
-	Mon,  7 Apr 2025 09:16:03 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.40])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A378192C7C3;
-	Mon,  7 Apr 2025 09:16:00 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-afs@lists.infradead.org,
-	openafs-devel@openafs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 12/12] rxrpc: rxperf: Add test RxGK server keys
-Date: Mon,  7 Apr 2025 10:14:43 +0100
-Message-ID: <20250407091451.1174056-13-dhowells@redhat.com>
-In-Reply-To: <20250407091451.1174056-1-dhowells@redhat.com>
-References: <20250407091451.1174056-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMw6WtrZ"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-739be717eddso3027869b3a.2;
+        Mon, 07 Apr 2025 02:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744017387; x=1744622187; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=swIVk5it6iZCkC8fcrmNeka/zWqDw9s3RoTa6zlBv7A=;
+        b=dMw6WtrZvcYn5iGgszGc46mVO6z6fm0HWRHMuE+ssjVt6b/jlYWU3Uf8uTfpmp6+Qd
+         75Qw+SplRljWWjOA2mYLt5ugLoGHuQp+qOraHiuFVQxoUSzb02jfVciV6Vlw9T+/E5Wv
+         rP8tmZn1Ed6c1ShX3lMWR1Wfr+IlcMdOjFWWXWKQzoAPh1pecyiE98MoXiH+A9YctvxZ
+         zhPkI+JS+6Y304Vj2/xCMN6rKnAVRHee/z+gqy82UWXtaOTRNfQmzie6H8rNaYY+TBv2
+         SsfjKSw2VyIMf70SUHdwykAbgb512e1FBOaKvYVpHHoEWj6ozCE+1stVwJjLUbHWJ5+p
+         WL8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744017387; x=1744622187;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=swIVk5it6iZCkC8fcrmNeka/zWqDw9s3RoTa6zlBv7A=;
+        b=KxeDjI6GRQ05AsYbT2CIixTAeKWEdKAtShf9E3KOsSPDcsNsN/aKxdkji1L3Sp463P
+         LjdNlicfBhiUaAf2i9YlVprTVtSn/ZSXYZZSje8P7i4jqBGIMJKxG+h0TLacwOlPyn3K
+         ZRcqoTZch8+nIOqM6CpHBpDVLDroZliATwi3W1GikbTaJwkVYsZ/9MHAdZoQr+ifsy0y
+         96bvXXIE5+1H8GmxRiCjBYu1x0JvxynS+eDM+/kLrI71K0U+DtRuypwb4Ff0pfYWQeiH
+         2CKLnkTKF++V2PW43QjWlkklIWhpk/NtbclPTeDbT3VxEyuA8gk8zacXMTwqNR/Y1El3
+         xxFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMbaNmf/LS1h1vw/kLlOxPrY38UkAzPtXjdDZzqltdUPI+yg5guqCvBBzVOD3Q/FIofOVBWp8aQDWOfYc=@vger.kernel.org, AJvYcCWddj8FcVjdLoDiOtM/zzDKL4u7PrlVMuX88ch+DPcXpXJHG1L1rx9FiHfAjjvuk9pObsAIdxAZbMZ5Aos=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywil7r54J8Xqp3QGrJ0ZhHmSIHo0Up19zv60jM+bVpubcHij2OP
+	ueu/UBaS/FEZpikqDJMq50xuJUK4vwpLD6ZY9x3IAx6Chim1EQjzE9iH3XRN3We4FQ==
+X-Gm-Gg: ASbGncstrzLmCMA54MqizE3UJRMG7VWzHKYC/DWE3DZvtbg+VN36MgjsHSNU1NoAsia
+	UC7HMqtnnOL5OelQm3c712Qu3sRMqAdfXz2GyEym4Rqx0Pf1lfQYDie+wneatZgzmbTAdqKf4Sd
+	Bcp84rJuHRi6HaiCjl6ExWd2rj1EXHjwE7XEpPoU5k0fTie73JxJex1yec+EywF/0m12rL2aMdM
+	nlrabSDiwN2raP/RWYW8ICUiR61uuhTb6XOGq6I0VNXuTOD/an9UmM1m+iqFSuT+IyOhr81ZQik
+	ckzrKtGpI6BSHT7bVzIYYl7B5lZh6FRMl6648GZpYlDi0T6NqvTm/yK9l8knBIs9YZsArA==
+X-Google-Smtp-Source: AGHT+IFlx2ii5NiEnBqPjdw7ftGPLVJqpiW1dr6kGdy4CZFhYl2QpRqsJYLGkW8nuzF5zNmBZNNMCQ==
+X-Received: by 2002:a05:6a20:12d1:b0:1f5:5aac:f345 with SMTP id adf61e73a8af0-20113d54fa9mr12705388637.36.1744017386965;
+        Mon, 07 Apr 2025 02:16:26 -0700 (PDT)
+Received: from ubuntu.localdomain ([112.249.157.217])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc41a84bsm6837183a12.63.2025.04.07.02.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 02:16:26 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: mchehab@kernel.org
+Cc: standback@126.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com,
+	Penglei Jiang <superman.xpt@gmail.com>
+Subject: [PATCH v2] media: dmxdev: fix repeated initialization of ringbuffer in dvb_dvr_open()
+Date: Mon,  7 Apr 2025 02:16:19 -0700
+Message-Id: <20250407091619.11250-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add RxGK server keys of bytes containing { 0, 1, 2, 3, 4, ... } to the
-server keyring for the rxperf test server.  This allows the rxperf test
-client to connect to it.
+The dvb_dvr_open() function has an issue where it repeatedly
+initializes the data and queue fields of the dvb_ringbuffer.
+We should not reinitialize the queue field in the open function,
+and if the data field is not empty, the initialization process
+should be skipped.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
+Fixes: 34731df288a5f ("V4L/DVB (3501): Dmxdev: use dvb_ringbuffer")
+Reported-by: syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67917ed8.050a0220.15cac.02eb.GAE@google.com
+Tested-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>
+Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
 ---
- net/rxrpc/rxperf.c | 68 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 65 insertions(+), 3 deletions(-)
+ drivers/media/dvb-core/dmxdev.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/rxrpc/rxperf.c b/net/rxrpc/rxperf.c
-index c76fbccfbb91..0377301156b0 100644
---- a/net/rxrpc/rxperf.c
-+++ b/net/rxrpc/rxperf.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt) "rxperf: " fmt
- #include <linux/module.h>
- #include <linux/slab.h>
-+#include <crypto/krb5.h>
- #include <net/sock.h>
- #include <net/af_rxrpc.h>
- #define RXRPC_TRACE_ONLY_DEFINE_ENUMS
-@@ -550,9 +551,9 @@ static int rxperf_process_call(struct rxperf_call *call)
+diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
+index 6063782e937a..55e73c96152a 100644
+--- a/drivers/media/dvb-core/dmxdev.c
++++ b/drivers/media/dvb-core/dmxdev.c
+@@ -113,6 +113,17 @@ static struct dmx_frontend *get_fe(struct dmx_demux *demux, int type)
+ 	return NULL;
  }
  
- /*
-- * Add a key to the security keyring.
-+ * Add an rxkad key to the security keyring.
-  */
--static int rxperf_add_key(struct key *keyring)
-+static int rxperf_add_rxkad_key(struct key *keyring)
- {
- 	key_ref_t kref;
- 	int ret;
-@@ -578,6 +579,47 @@ static int rxperf_add_key(struct key *keyring)
- 	return ret;
- }
- 
-+#ifdef CONFIG_RXGK
-+/*
-+ * Add a yfs-rxgk key to the security keyring.
-+ */
-+static int rxperf_add_yfs_rxgk_key(struct key *keyring, u32 enctype)
++static void dvb_ringbuffer_init_noqueue(struct dvb_ringbuffer *ringbuffer,
++				void *data, size_t len)
 +{
-+	const struct krb5_enctype *krb5 = crypto_krb5_find_enctype(enctype);
-+	key_ref_t kref;
-+	char name[64];
-+	int ret;
-+	u8 key[32];
-+
-+	if (!krb5 || krb5->key_len > sizeof(key))
-+		return 0;
-+
-+	/* The key is just { 0, 1, 2, 3, 4, ... } */
-+	for (int i = 0; i < krb5->key_len; i++)
-+		key[i] = i;
-+
-+	sprintf(name, "%u:6:1:%u", RX_PERF_SERVICE, enctype);
-+
-+	kref = key_create_or_update(make_key_ref(keyring, true),
-+				    "rxrpc_s", name,
-+				    key, krb5->key_len,
-+				    KEY_POS_VIEW | KEY_POS_READ | KEY_POS_SEARCH |
-+				    KEY_USR_VIEW,
-+				    KEY_ALLOC_NOT_IN_QUOTA);
-+
-+	if (IS_ERR(kref)) {
-+		pr_err("Can't allocate rxperf server key: %ld\n", PTR_ERR(kref));
-+		return PTR_ERR(kref);
-+	}
-+
-+	ret = key_link(keyring, key_ref_to_ptr(kref));
-+	if (ret < 0)
-+		pr_err("Can't link rxperf server key: %d\n", ret);
-+	key_ref_put(kref);
-+	return ret;
++	ringbuffer->pread = 0;
++	ringbuffer->pwrite = 0;
++	ringbuffer->data = data;
++	ringbuffer->size = len;
++	ringbuffer->error = 0;
++	spin_lock_init(&ringbuffer->lock);
 +}
-+#endif
 +
- /*
-  * Initialise the rxperf server.
-  */
-@@ -607,9 +649,29 @@ static int __init rxperf_init(void)
- 		goto error_keyring;
+ static int dvb_dvr_open(struct inode *inode, struct file *file)
+ {
+ 	struct dvb_device *dvbdev = file->private_data;
+@@ -156,7 +167,7 @@ static int dvb_dvr_open(struct inode *inode, struct file *file)
+ 		}
  	}
- 	rxperf_sec_keyring = keyring;
--	ret = rxperf_add_key(keyring);
-+	ret = rxperf_add_rxkad_key(keyring);
-+	if (ret < 0)
-+		goto error_key;
-+#ifdef CONFIG_RXGK
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES128_CTS_HMAC_SHA1_96);
-+	if (ret < 0)
-+		goto error_key;
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES256_CTS_HMAC_SHA1_96);
-+	if (ret < 0)
-+		goto error_key;
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES128_CTS_HMAC_SHA256_128);
-+	if (ret < 0)
-+		goto error_key;
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES256_CTS_HMAC_SHA384_192);
-+	if (ret < 0)
-+		goto error_key;
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_CAMELLIA128_CTS_CMAC);
-+	if (ret < 0)
-+		goto error_key;
-+	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_CAMELLIA256_CTS_CMAC);
- 	if (ret < 0)
- 		goto error_key;
-+#endif
  
- 	ret = rxperf_open_socket();
- 	if (ret < 0)
+-	if (need_ringbuffer) {
++	if (need_ringbuffer && !dmxdev->dvr_buffer.data) {
+ 		void *mem;
+ 
+ 		if (!dvbdev->readers) {
+@@ -168,7 +179,8 @@ static int dvb_dvr_open(struct inode *inode, struct file *file)
+ 			mutex_unlock(&dmxdev->mutex);
+ 			return -ENOMEM;
+ 		}
+-		dvb_ringbuffer_init(&dmxdev->dvr_buffer, mem, DVR_BUFFER_SIZE);
++		dvb_ringbuffer_init_noqueue(&dmxdev->dvr_buffer, mem,
++					DVR_BUFFER_SIZE);
+ 		if (dmxdev->may_do_mmap)
+ 			dvb_vb2_init(&dmxdev->dvr_vb2_ctx, "dvr",
+ 				     file->f_flags & O_NONBLOCK);
+-- 
+2.17.1
 
