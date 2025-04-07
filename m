@@ -1,99 +1,135 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F6D2253FF;
-	Mon,  7 Apr 2025 07:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C5F1A8F93
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012250; cv=none; b=rMiWxqx8QP9GtwHt4HUkBTTNKvdE5qeSpTEbXTBoLilHAH95kwGLl9JZwa3oezyS3rwgqLG7rxKRkua2VofH6QcSZxoJ/d8Tpks+COUcIaoaFFz0NyD+dj6UoJL3moKPHEiDZ3E+QbYlzC9O+9CtXsuqWoxkMqpRatEZOr4TFHs=
+	t=1744012290; cv=none; b=JT40QfuokfrIMkJzK4vueSKV499o0ECK4yt4LzaTXGvpg5dn3b67yW/eF5zQd5X21znFw5zMMmIeA1Tml4bNxcacYQRRI3gcw7Lvdi8h3TCDfBH12Rl4q8GrB5DjxI9q9YI47Q6hPDQnNd39pYeWRLm8738IHltUTDWt3qHtVjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012250; c=relaxed/simple;
-	bh=qzqYqpX1n+9iBoljfssVQ71YHV7yXI4Hc7MudyfJowk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=qXPNqW6qbdsJU6NJtoU3nPqYEonPJSO5D+W5ogs3BU5Em/Zvz79iIdYxn6rYLSazr/ouC37Zfa/zwvN+pY5z9bJTuwQp6F0gow5boTcbUVP5jGSnVayncXmixEVfOd8i3ShqSu2YJOI+IGE06wxoXCkLOVptuIzCOOXOKPnGh7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sWopx7xv; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744012290; c=relaxed/simple;
+	bh=o79E6iz8ZvmNeQP4Cpdd8X6btgIvg0exYvYyzn95SYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g38ZvEGwY7OABfXsiVhL3by0LhCI7PK28oyIMNpYsPNFph0gIjyEOaGyuOUafYCu4xZsk0Dm6b/jiYs+qbk21vQMgBfRZgYvAHdgIoQGDs8UGcq4eEQM0o7zvvCSThUkksKV6eGofjbsxJmYeAHJ2/L56+bENQY7up3d9gFKS0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ILu/WPpC; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sWopx7xv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744012236; x=1744617036; i=markus.elfring@web.de;
-	bh=qzqYqpX1n+9iBoljfssVQ71YHV7yXI4Hc7MudyfJowk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=sWopx7xvOIqDpk/rw3r8Q95+2HHtLbsF1C7cTccGgg996R71sAiDqnthOsSoJOrA
-	 6+A1nDQ07zh03mN0PygsY2P0q4205ukJoh+ludqIVU4cipZJx6wSLMg/x2r1t9M/T
-	 39YCcGFSOjEnQBA6UdXKHJxdd1pNSOS63kvgEHub9DQfBcLet2hhtJcvZXbV7Rky9
-	 g5xBFRSv5PbapbXNW5NNFoGX+Kquua33hdCODj6BlZ6l6WiBt9SD5y9jWqv9bf/G8
-	 w/zqb2T/JuX+Gg3QEmCuOh5IYgOyM58axcrDnKYEicAbR/yoWrsyH9BUF7laZx6p2
-	 2UvuugT255GYBM7JAw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.4]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N7gXQ-1sx8BC26vS-013ax6; Mon, 07
- Apr 2025 09:50:36 +0200
-Message-ID: <b429eb4d-514d-410f-8443-7e3f40709951@web.de>
-Date: Mon, 7 Apr 2025 09:50:34 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILu/WPpC"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5259331b31eso1861072e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744012288; x=1744617088; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GtZuEG+pnGVzzK4h3p2dQVU+EpheroOcxlaBk0xAm9k=;
+        b=ILu/WPpCAM+qNIb8SmOxGjqPPYpMdEA2BhfyBhgNOLk5980N4YdJwfvwM0+hbI435U
+         1BhiYN5iqk3c4BGXlAgrL5km122WAOqR/Oawf6k0MYSSXtwIihaHah4IbAXVCyt8d+y7
+         A1WXhKZ2RIBaIcM63VpVwjC4Usp/+jy5r1k3NDVE9xJweMQZbiHo+YUcTMhlF3ZIKH2C
+         ZnDe38dhh5rPbGHGb+SRIyMK7MDG6EZXgDCmXuZIgn3dt3fUTobmMm8U63fLZFGuhQcJ
+         AArz0YF73pyLdfuXUstpI71+e10p1oQWYPMBe21CDA5qYMY/MdupR2P7r8q77e34sfVu
+         n00w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744012288; x=1744617088;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GtZuEG+pnGVzzK4h3p2dQVU+EpheroOcxlaBk0xAm9k=;
+        b=KSVYjK0g+kK9oVP6O/tqQhNwJRfynw6MINR9xH+2Kt8on/SR/Q31XlzOKX3BEv3XuC
+         DAnybFRCWTkK6uiRS4WrmSkkMBm061ct+R8GPh3N6KT8es/8TPQh6Lzf0fEtGgoETOm+
+         gun7fjM0IGTaP/CQLfwF6HSbS0U9WUPli4csSHYcHrlhsj3WzWJUNJxdxSJvjvuLLSr/
+         WsjMGVUll1Hq8h7dti/Gq/d0k6rEWWVAnEE2iCkRj+yZzQ74EatfqgxaY/5wLCSBIgfa
+         h1s8b+jL/nWunNirois9/FJ49lRKFV/hxSqs4ZTyOvof5Wy1uiwr8n4g6lohZkOZPikl
+         2eTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpIAhTaHHiBYy0L/fPGByz84MMqyqdVXEmZVCTig3xtDYj7a4pvHMiSz7ozoDwVaP54WKsgw3vvCZqUag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb7GeDBaGb0HN5ZwksKrm0xQ+2VCSSWaxH/IVyQ3sTC4Qng8Ej
+	uao9PK/QIervN4Q98BOUV1QzEhnx/whINzQ3G86YBnL6txKpzimeei7Imel+RZSEUSvLEbHoLIZ
+	YVmD8HD03EhbHQ2YrVAG4wq3nzrM=
+X-Gm-Gg: ASbGncvziCXbOf0i5jhAfpsaPgtvnHRlOgv4px35NLSSR8Non1oMVFW3H38YgcJDmDr
+	ZcpZ7d2JwAX6Qg6XZhByGwLblUMZ0f+6xzH3vcXDDCiyskTvBJSR6kHKk+d9Z+y0Q6OdPVUtpDv
+	WRh6d99U5rMTgU9tHMWFz8shQttZrk/FSbuQJb1A==
+X-Google-Smtp-Source: AGHT+IEAhKw6pvZfmPU11eW7Mu3LcNdcjaDj2yQ40iqTe/wDunpLy0Cg0y3QthniLyQYYJJKkqC8V1utCVDnjNxAHfw=
+X-Received: by 2002:a05:6122:1816:b0:523:9ee7:7f8e with SMTP id
+ 71dfb90a1353d-52765c5444cmr6470357e0c.4.1744012287790; Mon, 07 Apr 2025
+ 00:51:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-wireless@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Peter Chiu <chui-hao.chiu@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rex Lu <rex.lu@mediatek.com>,
- Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Shayne Chen <shayne.chen@mediatek.com>, Shengyu Qu <wiagn233@outlook.com>
-References: <20250407032349.83360-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2] wifi: mt76: mt7996: Fix null-ptr-deref in
- mt7996_mmio_wed_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250407032349.83360-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+References: <Z/NxGilPLPy7KSQ3@ubuntu> <2025040757-clergyman-finalist-0c63@gregkh>
+ <2025040752-unrefined-labored-8c8c@gregkh>
+In-Reply-To: <2025040752-unrefined-labored-8c8c@gregkh>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Mon, 7 Apr 2025 08:51:18 +0100
+X-Gm-Features: ATxdqUHhyM420ZVP3BEml1GrGZKTTewJQJc6Tjl2jKwdFNU2DbODlPxG2XuGm5I
+Message-ID: <CADYq+fa0nJdq2+kMkwwb-s0ePH_8qN_R5Lu6SfNpH1pUsdRksg@mail.gmail.com>
+Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: julia.lawall@inria.fr, outreachy@lists.linux.dev, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	dan.carpenter@linaro.org, andy@kernel.org, david.laight.linux@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UyaaN9+jk/ECW7DFcQreDAuUpqxrW+hgEQpFAN5vL+Xk7uyrKqV
- +EUNAU6Cv+xDaECNkjN1LIEyvYICi2AFBiQ7r8mrRBmYsSeNd2UwCd9XqUkY2JPnRBVUmN2
- h0gmmb0mHyQ87sV39w4LuwIWX4ajZh5cdb/0APWFFd2VQlMvSFkeIPe7VuOiKjZTg1ArzQv
- Yf6BT3zSFj+s8FojjKDGA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rGWYfE/QzDg=;DQE66In2XWKiA1TpSrWROWLIh1P
- Caplna0f2CPkP/kc2OpqsL1kow6F+YtowFp+R9whgFTLaOpBZpHsCr+0/OeHoAztVkmlNtpNF
- 1EodH7GJcu4KJsiEP1VkNQspO9Z5/E7yjy5Xwy0mEtHN4gQ+paobRTm25kHiFirSO0Hes4nQj
- DiGL14Kihm1t7DjPi9smIDkvCn3yICFqnBUP4lZ3fOyVqdWT5o2Z1rBwGzw7IlgKnGWVoIim6
- HxAZSJrOvEapTKXeWrhjKLqXVt0AgmgFVVau56CLh3YtGaw+uw9umRrmgQfcWwpVB8EgVf/Ba
- DPwQI/KsLI6lz2BeVuRS1OAaMUNYZnAsColfR2D1dYA+BRvT9TPLXb7ovFJwe5AY/24Eg+RGv
- x7EE7skkdkz2P4QagnJI5pZhmclxNFYHgN+4henoy2txUgjTpuwJItWky3vJlGU0MvAhBWZ/E
- ddnziPFxXPntKyCRI0NpG1wF1xoo139zfa16c+/fuJuZbM6H074XZ59PF0sYtA+Exqtm4lizM
- nAFZ4eiI/9PcdTDZnpi+uvKcJPBwPbYFOB17L5M1M+zUQ7UFaW7XW0lelP09S4jzZp0OjkZM5
- f6ZjrWPZpH8AdBZ6cZADZouqTTUHVfKdaBISTcmX65FktrGIUMRV7zZzmVRBFC/ZFYn9Vb8RW
- mhS4B4irb/UWYrStuei0fpjSaJbMU0Wb51WbQr5W80yNLTDimff4B6GpQfcTUSWAeX531Wyk7
- Fegu8S+iXB8w/PhW2AvQGH8hBMrCAKeMeRyjELdr6BTSJPy34H4XRanpy7pEi5kj/jvh5iQf7
- 6OWTV/6wmgTdyn383O9L5PH/49Bz/kj1YnkywIuuKQhsZUndmjioEh8z8ZEdooAtMFq4+rsuP
- y/Ecf4EFz5LfN4ebl7itTooFQJkQJ3McG3QSXPGpLKD0Ga7HaDdD8DUYgPShgRArEa0t9JIA6
- 60oGy/8puUokr/j7kikD+tOC9bK/xl0Vo8RNCE73CCwDlzAX5HMu6czFM7YWJpzusOlnaH+q7
- SPHtYAgZSWFGeiQ7cY3Q6ylbyR8QDl1g+UU7e9T5JLbaoIRvRNg71L2DxqfJWKQY8PSqsBRlS
- sh1QP5I4mKbYp8gVaNh/hZK9iGX8rD8ska95FpWMoPdru5/gmy+Z8Zt5e4GdM+Cpeoxma/2CA
- kyW2fKe+/t45jiyxtjtaVBpP+8y3MYuB1fUjZbT2jntQoEhDhts+GeWJ9JPkTlBQZFqHaVvSs
- RasTOa+y+NB4TI+1v61qnNK770x90O0htoHtBKXswg6mYw6ViBdfZFY1BneciPd7o4ZpMTzol
- Nm5xMh2L4q5ls7RI0ogQm6Dx3J7lXN2mOyBdDvQfRUbIn9TNUEWzvlsYKo8Mnjhb+OC7Xa7Yf
- DPtf6J6PQIhx2WZ84tYq3om6RY8C0PmujbcXElsvs9uILVsNx325SEOpQTj7tvfKnUT5LoM0M
- V0kZs7j8DvoweK+IZfGFW5J1+NgrQ2J+w+4wGREwWK4jkr7Z9nIO9ITblGKXphb5+OXO+Qw==
 
-=E2=80=A6
-> Prevent null pointer dereference in mt7996_mmio_wed_init()
+On Mon, Apr 7, 2025 at 7:55=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
+>
+> On Mon, Apr 07, 2025 at 08:36:35AM +0200, Greg KH wrote:
+> > On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote=
+:
+> > > The sequence number is constrained to a range of [0, 4095], which
+> > > is a total of 4096 values. The bitmask operation using `0xfff` is
+> > > used to perform this wrap-around. While this is functionally correct,
+> > > it obscures the intended semantic of a 4096-based wrap.
+> > >
+> > > Using a modulo operation with `4096u` makes the wrap-around logic
+> >
+> > <snip>
+> >
+> > > -                           psta->sta_xmitpriv.txseq_tid[pattrib->pri=
+ority] &=3D 0xFFF;
+> > > +                           psta->sta_xmitpriv.txseq_tid[pattrib->pri=
+ority] &=3D 4096u;
+> >
+> > I do not see a modulo operation here, only another & operation.
 
-Would you occasionally like to mark the end of sentences with a dot?
+I'm sorry ...
+> >
+> > >                             pattrib->seqnum =3D psta->sta_xmitpriv.tx=
+seq_tid[pattrib->priority];
+> > >
+> > >                             SetSeqNum(hdr, pattrib->seqnum);
+> > > @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, =
+u8 *hdr, struct pkt_attrib *pattr
+> > >                                     if (SN_LESS(pattrib->seqnum, tx_s=
+eq)) {
+> > >                                             pattrib->ampdu_en =3D fal=
+se;/* AGG BK */
+> > >                                     } else if (SN_EQUAL(pattrib->seqn=
+um, tx_seq)) {
+> > > -                                           psta->BA_starting_seqctrl=
+[pattrib->priority & 0x0f] =3D (tx_seq+1)&0xfff;
+> > > +                                           psta->BA_starting_seqctrl=
+[pattrib->priority & 0x0f] =3D (tx_seq+1)&4096u;
+> >
+> > This also looks odd, nothing is being "AND" here, it's an address value
+> > being set (and an odd one at that, but that's another issue...)
+>
+> Sorry, no, I was wrong, it is being & here, but not %.  My fault,
+> the lack of spaces here threw me.
 
+I want to add spaces for readability. But since the changes occurs on
+the same line,
+I am a bit confused about the best approach to take
+Do I create a patchset, a patch for adding spaces, and a second for
+changing from & to %?
 
-Can any other summary phrase variant become more desirable accordingly?
+Also, should be second patch be based on the file after the first
+change I made, or it should be based on the original staging
+tree file.
 
-Regards,
-Markus
+Thanks
+Adekunle.
