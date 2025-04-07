@@ -1,139 +1,124 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CB72063FF
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B53206F15
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041139; cv=none; b=sFLgsds86Z7H+Bwc05iRC/mXnZF2A1kGICjRH6L9RP6z/gcSsP7bSj9Mg6p/7FIbKLGq9REg66SMfsRbvr7ZoydQIHiYUcwVb0r5tNEZa+Df0nmneCBH3ZZoQLSNHnb+8sWns97rF9CQ6pbDNl9dQCpcUnONDuFBvTy5a9iCx94=
+	t=1744041176; cv=none; b=uTl25QCh7wMlpT+wsSL2qByJvg7+bHYk59co1NBVAb0SZQV4CpdjN0i+KruKB4rN3gLIdSrGItl1Zd9Lj4YS5HVeDeZkVEbTwzllxHnsZFpwnypqVUF3Ie3OH8tfDXkZCBmBB+4UzGW8hgeSk+yzLEk/j3kPpKJEZADQ4gWJC2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041139; c=relaxed/simple;
-	bh=5Y1kkD63GffpokSvoVSgAXKIhsTTpE6ldnuA2Z/5/+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Js6F0EHBgbNgncXHFRsbq1UIeDn6GMX5KxDCvwGxY6q0Vp5vKylIHsvcJUqZpztEKtchT0+aRBW3yMvwcH3dLXi4M864cpUOV09UPgZuYnx1ePwQxAgFMcHDIyrY94YHBmokAQefLo6IDP2C5F+2GkveLoT1ilIS0qwmpZYvuoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IzM0GHCg; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744041176; c=relaxed/simple;
+	bh=3yAEh5s1GygKl6HhdpToiQkeOsg+sZZELL9UE4n8IWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QNLoaYk6T6y2dGKq+upIy+04o4MQWvn/DbE7oT0E5ergd/NrZH1mM44e/Dildmq5i9xMRlQ4++dt1FRG44wLsRpD1shLW60cL9EBNoCLITfhWCLVDm/XBmNmihp3aWvZJoBCWiQbetRzRccqVugiW5lHcfWOreOgbFzX1adn0GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUG1uU6S; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IzM0GHCg"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso24965935e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:52:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUG1uU6S"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4769e30af66so758761cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744041136; x=1744645936; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JKXVpHnQ9UfB3mcq/Ytnee0VY/Oh+/K5y49jt5/yJQg=;
-        b=IzM0GHCgX+u095Jd6i7+yevvOfA93QfXrYiF2RWJIuW7ZHX6t3HTYZx/WxYLHbOJgg
-         +P1g+QRWkD5CGvuT04VaK5ZjwjUj0FwicAuKcqz9XfN80dzhSGnSGzwNpaSZHQuaDzau
-         6tXbD0KibM4XmL9WTM3NbJtWhJe0hE0S0KC5NLZOrQDUqY25s/sye61ZsMmO/TlJ/KmJ
-         V1oGkwpyOu2bc94hPAi1zziHTap/bR+MLgQpHT1ubMczNDnkEen271jf2p6OStz9rgHA
-         GN7ZyWFgUCLdNoOfvt1P86IMeT2x7RpgkZmAhOvP2wd2Sk23D0/A7IWlGU48o0flETcA
-         RtSQ==
+        d=google.com; s=20230601; t=1744041174; x=1744645974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6xXXoLwvzZrukEdlx3X/HwLUc1KrRLOBJumxqoeXr2k=;
+        b=aUG1uU6ScLxFF//q0sKV/GqKf0DcZeC59rExvS2GFybi9o0nqe2te9cVUWJhNe5DT7
+         qbOz5QUb1/fprKrb+8LG7A06fcrvkjIQqR+j9XsIkFPWexy6L3iTbfHTbDSwHrL/LTMT
+         lJfrnvVg3VxSNTtiS4e9M7J40NUG5+gy7I7I6vlbXZt739VABA89e5j9RJTs+5pEIQw5
+         l8jvoCPVF3A88hTwke0tOOgwlKwplx9gOFLfBvpLU0NxCLBEd5SmaebP/tF6GUamoUiy
+         mueBnXbv3NP8wq5It98Dh1GSUofjXi1puNz/fzWwRehFLvocwAeQbEYEzFqbCz7Z1DJE
+         GPSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744041136; x=1744645936;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKXVpHnQ9UfB3mcq/Ytnee0VY/Oh+/K5y49jt5/yJQg=;
-        b=WtA0+3g/exhJRUZBgJLiwjOZ+5AaU/4xZDcnVqZS6F6In4hyjeGQnOnLooNJNz2l/D
-         JQxwyy2FtipHrlkUuEh+q50voZ50chIU0V6l1Fnu2grWHMLqYN5sBCxbK4x25XcxM+20
-         AbdBm6dueeG77avRkTHvtFFlqh3a3X6mqHpQBMkc89e9GIvMljrr2FJiH+zxRveLzYP/
-         hBhlwxzzrhRppXCBf2uEBAfQljFkPrCY7nHBlstky3N+Z+rnr7JqCCtRWTgzCqMmVL38
-         DIG+/Hj2QMBoQo1j7wrXSPF5DlX2MLCDj82w25Bm4DbRLc+vCyg+eaynZvf3BBXYvHCw
-         Nc0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUiTjlZZqXTVWJvl5C6Vq+0vnhH4A/MjS4eO4VdG78BbIHUxYmMjaKXLS7Bnb7zwBSssmpQwbBliLY5LaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUyMR0hON2Xvzu9+XgoSf6k0xot3Lv/07lJcgnJXAEbYOY2DtA
-	KEOhU+IQ/6yZI3WVPug7heQIIDNn8DZAHjBquzSsvVQ02QT9WiuzlFUi6BuyT+E=
-X-Gm-Gg: ASbGncu0hZ+wBbHF6Vz6FZty9gv++stNYPSRfSjIRZM0IyPqwhN09BiDpoZIbVBmpil
-	l0KBQQFIl1etixG09/R/54dUFd1e28gjFw63d8UEjVAFUZ2G8yFYfqW17usADfwIYhVQbbm9XfZ
-	V2VFVnBaDe3ebmJlh0FDG/nGQCEDRlgOpiyr+2PThKDSgAd/LCo6Oq3QSHxnsWMB8EhvFxg/+VR
-	T2we9Di4lhEBGl+cqELBrMG6RHmRslqHjPf441SNOwyeD9WMT4KgSSBbE1oCJyK5/9P1RgrUGnj
-	LXbd/OmD9ebc05jIjHsHjj3AGRci1D9JW+4dzrQ9plHboBC7OYzvHvLnT4oDa3pgMByIE1J4hvO
-	BmL5WV+BsDw==
-X-Google-Smtp-Source: AGHT+IFbrdnI0bm3X3wXVKLHpcb20gRsAzFE7lNyp40eyc5wEc6nf7w8wnTgwtpWKtCfdc480jt9mA==
-X-Received: by 2002:a05:600c:4fd6:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43ee0616f6fmr94548555e9.2.1744041136210;
-        Mon, 07 Apr 2025 08:52:16 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm133750525e9.18.2025.04.07.08.52.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 08:52:15 -0700 (PDT)
-Message-ID: <ecb193d1-2bf1-4d99-b9c6-9b5cde1e936e@linaro.org>
-Date: Mon, 7 Apr 2025 16:52:14 +0100
+        d=1e100.net; s=20230601; t=1744041174; x=1744645974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6xXXoLwvzZrukEdlx3X/HwLUc1KrRLOBJumxqoeXr2k=;
+        b=ifsg4Zd/VjkdRy3em1reCwYs1bako/qjV9D61Dk9ejQwLjzuKjjv/qyo2iOjnaYm0i
+         4hHjap5vxzJ6IsbCLAhMhHhsViEBUr1VQsAMAKXSuIlX1wqjInVSgaXkJ/jImJLKflDD
+         e8y8p9v1F73r/EVMlbw1qsB93/mLceJx+KgOfSmfVbWTD/ce/aYPYKKjhd0tVaL0eq+p
+         XqUugvVL04WjbON3AOJqlejjjAmbSs6TpnoTx6ZzbYZaKQNEXUy2XgrLEX9l3CJApAA3
+         xl2GNromIncC7nH86hmQVPGWp6QkmAwS/4ib44QkDAzPLD/LrNjYh1/TtgoBHNQJ+O8p
+         EDVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJJBtGFx/mn5w7G7v14/ltM/C4AT6JfqF0K4VRJIsnjdZ4GxtcJXte64MoutdhF3ziFLLMiK5n5ofFNWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw5gmu3LRGcEwdLTIXGNC7SxuRjT/Hb6nHLPje9dbOIwmdCTJd
+	cVpNPao6jd2nHKtmVFoIiKQQibekgTaECDO6QSQqIi0v5/CdZ0FhUf3X4dbonalyUvdQc4oHxM2
+	6wd+ne+CrQqrFn/525G8yEgR0s3wWiMzfNeIs
+X-Gm-Gg: ASbGncuahdNoLGGoBrcaC4azz92s0WRbb9QoP6rnBEFg+4kg1OQ0CKRkOI7U5mW/NiP
+	GYuqOs+Cz+kl69Q+iX9xYc9opqaIMekRwHWpxcujYCL27C7et/gdYc/XOC71IM7gc1HaD+AQgh4
+	BONaWhNB9yYFs+85vgH0ACW7A=
+X-Google-Smtp-Source: AGHT+IFIBgZaC437wC6LFI2WkYOyO3PJh+Hp0KwQwHgd7KVbv0KJT81vcrxyQeuTbHfu7nS8KoS+po1riLdnTGeL6ck=
+X-Received: by 2002:a05:622a:110c:b0:477:1f57:38a8 with SMTP id
+ d75a77b69052e-47953704448mr313851cf.8.1744041173528; Mon, 07 Apr 2025
+ 08:52:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] media: platform: qcom/iris: add sm8650 support
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
- <6zCwYEsWlyaz8z8Elw573sfjWDZBB46nc0IA4Eu_-pKdy3O1WzYh2sr0jdSPRr0uBHqfgMaK3WC5d9sN6-O6cA==@protonmail.internalid>
- <20250407-topic-sm8x50-iris-v10-v3-5-63569f6d04aa@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250407-topic-sm8x50-iris-v10-v3-5-63569f6d04aa@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250228182928.2645936-1-fvdl@google.com> <20250228182928.2645936-3-fvdl@google.com>
+ <CAMuHMdVWviQ7O9yBFE3f=ev0eVb1CnsQvR6SKtEROBbM6z7g3w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVWviQ7O9yBFE3f=ev0eVb1CnsQvR6SKtEROBbM6z7g3w@mail.gmail.com>
+From: Frank van der Linden <fvdl@google.com>
+Date: Mon, 7 Apr 2025 08:52:41 -0700
+X-Gm-Features: ATxdqUF9nwle-L2yhrR-TnrIw4GPykG22raNMPvcz2hBIWJJmX1JDxamArUc2zI
+Message-ID: <CAPTztWaAmG2L7L7x0boGG2aCNosJ8GHU=GiAQP-2nuP3k2650A@mail.gmail.com>
+Subject: Re: [PATCH v5 02/27] mm, cma: support multiple contiguous ranges, if requested
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, yuzhao@google.com, usamaarif642@gmail.com, 
+	joao.m.martins@oracle.com, roman.gushchin@linux.dev, ziy@nvidia.com, 
+	david@redhat.com, Arnd Bergmann <arnd@arndb.de>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/04/2025 16:24, Neil Armstrong wrote:
-> Add support for the SM8650 platform by re-using the SM8550
-> definitions and using the vpu33 ops.
-> 
-> The SM8650/vpu33 requires more reset lines, but the H.284
+On Mon, Apr 7, 2025 at 4:50=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Thanks for your patch, which is now commit c009da4258f9885c
+> ("mm, cma: support multiple contiguous ranges, if requested")
+> in v6.15-rc1.
+>
+> After this patch, the printed base address becomes zero on several
+> Renesas arm32/arm64 platforms:
+>
+>   - Koelsch (R-Car M2-W):
+>
+>       -cma: Reserved 64 MiB at 0x7c000000 on node -1
+>       +cma: Reserved 64 MiB at 0x00000000
+>
+>    - Salvator-XS (R-Car H3 ES2.0):
+>
+>       -cma: Reserved 128 MiB at 0x0000000078000000 on node -1
+>       +cma: Reserved 128 MiB at 0x0000000000000000
+>
+>   - Gray Hawk Single (R-Car V4H):
+>
+>       -cma: Reserved 128 MiB at 0x00000000b8000000 on node -1
+>       +cma: Reserved 128 MiB at 0x0000000000000000
+>
+> None of these have actual RAM at address zero.  As I haven't noticed
+> any other impact on system operation, I do not know if this is purely
+> a cosmetic issue, or if it can cause real problems.
+>
+> Thanks!
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
 
-h264.
+Hi Geert,
 
-> decoder capabilities are identical.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->   .../platform/qcom/iris/iris_platform_common.h      |  1 +
->   .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
->   drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
->   3 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> @@ -35,6 +35,7 @@ enum pipe_type {
-> 
->   extern struct iris_platform_data sm8250_data;
->   extern struct iris_platform_data sm8550_data;
-> +extern struct iris_platform_data sm8650_data;
-> 
->   enum platform_clk_type {
->   	IRIS_AXI_CLK,
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-> index 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-> @@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
-> 
->   static const char * const sm8550_clk_reset_table[] = { "bus" };
-> 
-> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
-> +
-> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+Thanks for the report! This is just a reporting issue with my change,
+it's working fine otherwise. I refactored the code slightly, and the
+!fixed && !multi case will now report base 0, because it doesn't 'see'
+the actual allocated base. Let me send a follow-up patch.
 
+Thanks again,
 
-At the risk of asking a stupid question, where are these resets in your 
-dts ?
-
-You're missing core here ?
-
-20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
-
----
-bod
+- Frank
