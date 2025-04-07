@@ -1,73 +1,90 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956351C32EA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B5D1C54A6;
+	Mon,  7 Apr 2025 14:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744034824; cv=none; b=cd/2iG+VLf6SqMYlSnWY2wgDjb/zcmJKBJCYCX48vJcE4yG4dtj5Ng7mQW4Up3qv2LgVehGxgUAnyItE7DXVEdFE6m+IG1o1y3xXPOx/WS1Capsq7MSdVZNQ1NCG6Q86UvmbQgx2kVwnDcIViI3eqPW4x6fbdNnTDyvruE4uw0s=
+	t=1744034862; cv=none; b=ruJEjIlGcoyGpRzosdbK6mFOgVy9MSUcmqv5CYeOry8k8MR/nuVe69mJ8XqBPMd1iAMfufUeG0DUMgOkkVrbIqamCu8vrFMUfwUA6G/ifGPFnvycu7Okelj/JDieyccjw1MyNAT7ykP6ZA3TF2WStJCIa/u6LsbAF0sUkijEZCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744034824; c=relaxed/simple;
-	bh=ncxjzCSmxOakrfI+ux5lY32lyCKIK2l6GJc70zdDPOM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=FcztqZDdQXshj3zHjnasyo+3ogH7DPCQs5C99IyqInxja0d4Uhk3QpPt+LNSaaE3xDSyQpbRvkKM7UtAo/5rHNw/fq/dVqAetF/VT/cfgbA1rWm+BpbIqBaR9kgMGgHHNusfXuifWrphbQmQDNSapIPxVxwNWcgrpOD53ldlJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b4dc23f03so1025597039f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:07:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744034821; x=1744639621;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GwXWzXPAt90Ym5+D6NPAF0rUeU+1DPFdOJn+FQQCuts=;
-        b=Fgka/3/LptBZIUPsRUhWqDY6CdoSCRnFnvgUdNKA4DLfa/D7+Q4GXnLZbJqwqWSBzZ
-         Tp83Y5nEm/DI2n02ax1HuQouKj787RBn0z4zAGXv0Mx5Nt0lAaLs2xcp2hvOikfDEf9D
-         0UhDgO32G0PSVOn3uspn6sokaAtEsrAnqUEcfqcKmdq80Z1442KjGXA3YzNVpA18fDkO
-         WgkFL7x+h9rMuqlURfDnJ2DAAJFsutf50FNp68fkgwEvJ5PJ3YGFSl13Ui/ONZqfY2jZ
-         bO0G4mWm9Fdmh0XaDFWwPpTgi0hu4aEgYgYYbhpEMHS4kRiiXWSOoCLYoVyL81jpm5Gs
-         CN1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUabnZ1TH+ddXUJ7tcxnFzThqkeMP1uxasdhpexfPLOXxzfMo4RUNWPgPmf2TD6NyPBV3a+lhwvpszWMTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCa+DvlpuNtobX4uvfU1QHQ0vVGlf8orqar19Y8EsL0bhB48u4
-	ZAKanfc4WL7lnaeYrJF/EFaPP1x6hxygIMEfng5hhpztUnh6fbBsow9rNupLcMB+NWvYfWCo9a6
-	M22WarvELz/LGgpax6i04hlhwLd+fE50kRjsq0G/j2fBvnS5N14C4lvY=
-X-Google-Smtp-Source: AGHT+IGk0qg4Non5+RqSgTngMpr84QybCMyGxRObEpMS/OBnGd9K0v8L1YYw6HKMv3i9T2PNneYp7wP0WdoYv8xmIodS/MaJDTO2
+	s=arc-20240116; t=1744034862; c=relaxed/simple;
+	bh=TaujOUNY4+EkrJXwK4q0mvwGc8rH8Q3ZdBnCxuWnWYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WIlDIi1DCc0fyBvlmYZYfQFts1UmKSlv0d6C9k2PNuAV3BT9aGPLVkex41p6Cv1eMT3QnRobyqw7CyogMv5vkzZap2FRvdlq+BeldhsQR00wvk6uSWUejVp9nh331prquF2Aqvm90pyXB0BpwpfPMx0duH1KVsfycOmgtNBYTDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVtMEVp7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVtMEVp7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C053FC4CEDD;
+	Mon,  7 Apr 2025 14:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744034861;
+	bh=TaujOUNY4+EkrJXwK4q0mvwGc8rH8Q3ZdBnCxuWnWYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BVtMEVp7APvFMAMDPfhn2yiDcq2izHGAQlMMWiPOoJwr+963UufgWNee3eLIFVFyU
+	 DfJY3Fjp+29pbzG9eo5FpmuOxsmDFCTMp+C1UleMdOibV3YOCTBep+huhmU1BMJP/M
+	 Dn55qS1ZvyrYeU0hMswrMaxHpk77qyncbDtsZYK7QShkChdL4UWZa+6SGpeLQ8vjM7
+	 gRdaghF80Olla4zzvrnEl4ySwUgoZR/+3suNZo8zhkQ5Iqog4w7/xEuN0S9oH7S+o8
+	 Qwqkj9mGIhRROpgvtO1SB4v2jXsM6fHHYFNzz6iIWT3KB/O/8m+JYJmyM34WoGkJhw
+	 vhIEoDBDfBYcw==
+Date: Mon, 7 Apr 2025 09:07:39 -0500
+From: Rob Herring <robh@kernel.org>
+To: Zixian Zeng <sycamoremoon376@gmail.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Mark Brown <broonie@kernel.org>,
+	Inochi Amaoto <inochiama@gmail.com>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org, sophgo@lists.linux.dev,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, dlan@gentoo.org
+Subject: Re: [PATCH v4 1/2] spi: dt-bindings: snps,dw-apb-ssi: Add compatible
+ for SOPHGO SG2042 SoC
+Message-ID: <20250407140739.GA2174606-robh@kernel.org>
+References: <20250407-sfg-spi-v4-0-30ac949a1e35@gmail.com>
+ <20250407-sfg-spi-v4-1-30ac949a1e35@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cda7:0:b0:3d5:d71f:75b3 with SMTP id
- e9e14a558f8ab-3d6ec57f9damr97693795ab.15.1744034821687; Mon, 07 Apr 2025
- 07:07:01 -0700 (PDT)
-Date: Mon, 07 Apr 2025 07:07:01 -0700
-In-Reply-To: <CAJfpegvsi9SaeVdykBFhhwoOrsNQzy3C8HcJjn16uHdkzZ-EVQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f3dc05.050a0220.107db6.059d.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] [overlayfs?] WARNING in file_seek_cur_needs_f_lock
-From: syzbot <syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, amir73il@gmail.com, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-sfg-spi-v4-1-30ac949a1e35@gmail.com>
 
-Hello,
+On Mon, Apr 07, 2025 at 02:35:12PM +0800, Zixian Zeng wrote:
+> add compatible property to include "sophgo,sg2042-spi" for
+> the SOPHGO SG2042 SoC SPI Controller.
+> 
+> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> index bccd00a1ddd0ad92b437eed5b525a6ea1963db57..94102d94ed5dffe889a8a11c1c637d466713c208 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> @@ -88,6 +88,10 @@ properties:
+>                - renesas,r9a06g032-spi # RZ/N1D
+>                - renesas,r9a06g033-spi # RZ/N1S
+>            - const: renesas,rzn1-spi   # RZ/N1
+> +      - description: SOPHGO SG2042 SoC SPI Controller
+> +        items:
+> +          - const: sophgo,sg2042-spi
+> +          - const: snps,dw-apb-ssi
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+This and all the other cases with snps,dw-apb-ssi fallback should be 
+combined into 1 entry.
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-
-
-Tested on:
-
-commit:         0af2f6be Linux 6.15-rc1
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v6.15-rc1
-console output: https://syzkaller.appspot.com/x/log.txt?x=123c0070580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bae073f4634b7fd
-dashboard link: https://syzkaller.appspot.com/bug?extid=4036165fc595a74b09b2
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=151deb4c580000
-
+>        - description: T-HEAD TH1520 SoC SPI Controller
+>          items:
+>            - const: thead,th1520-spi
+> 
+> -- 
+> 2.49.0
+> 
