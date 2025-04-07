@@ -1,87 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3D2080EF;
-	Mon,  7 Apr 2025 16:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802A2211464
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042368; cv=none; b=UZDUokaU/xGXp18MFGZzfzGmryOW7GC2/LjJjewagTi+7QwSlIu530vHG9GYmRLXOEvUB0kAF4bi3ge5Uo/GYOGqNXpeBbpntRisyXHNXh6zFVIIztLiikQrLSUJLSPOOEpsCGabsDC2s3lgCH20dLt/MOmejsB3z+sPQKNTKkA=
+	t=1744042371; cv=none; b=endy2axasD6Fi7d6J2HtCDhTN7CiN4F41NqwuXVUDUruSiqyzlzBeFPuHT5kiUKNvwzRYL0A1PX2pr2cf8J13vAA17WVccbnQj7T4DXahDo+ow8sGIbXlplUUmZpZD3/idOA4BO+STwLYhP15iI4QDU8Zwt8aMub2E95iff6ndg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042368; c=relaxed/simple;
-	bh=q+DM7mRmWOxkXvkh3aOXzbgwklXnaznMqTCzPvYOHbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p3CEdjw1Qx6zCgDn3/ichbiCYbjg3KlXeN+1BKo6PXLt6+VeDRpMIQdqpskPfaxkfbC8mCLzOee+hyEPaCSBg8rvzs3XuCFiLzDtRAVPS+U9JWniggcYjck4/2id9wOoBrs67AvZ0KPWO5ZVC/a6tqr/DQcLcgS1dftp8/aGMmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0sYCwTk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744042371; c=relaxed/simple;
+	bh=31vqYQwn/J2VYn5vPyEE1407XeQoddh8cnodS3c1KD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oBVho3qB6GRhtBNYHKb/Bi3+eudSy1CSFH1WvN8J07E/eSqib/zWwOlb216lEES8tXf1nu9xt1CLR7BxVzGL8AgbuBwXyq/EHx9fpvoIST0XXQ2rcdfaKTjqLAZa/AVnvC/ueN8uB3pu10v7JmBz37pBopkt4bsT/znjaIAjyN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UjWSCZ/y; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0sYCwTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1427DC4CEE7;
-	Mon,  7 Apr 2025 16:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744042368;
-	bh=q+DM7mRmWOxkXvkh3aOXzbgwklXnaznMqTCzPvYOHbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C0sYCwTkOaZdQGWE5ZnS5AwS8Mau5AZfW6ET8TsQLoPZM3+MDOauEwGevLQJgGgkW
-	 lm5swzoo+5+9sxh63pACe1u4ojD8+ja4TuoHZ+SPW9D8aG+U/lhLOUcrz1gdorjIh6
-	 u4NSbQFPpZVuYJ7afxYHoSWSa+ZqhDCwzvaLCp36WVfmINf6RrdwZFUyLH9RXHc65A
-	 P5TMOxWonDolpE6fmkfATv7sVxmDsqr9/r8bB3l1qPPgz9mh8uCNi9VS6Or7JclGj9
-	 8oJ85KJgU8bE63EH13tpQrqlp1KiUZK/vujilnOw1ZZVsx4GdUgRf9vxNautKlN6iy
-	 B4UnCVF3DKIwQ==
-Date: Mon, 7 Apr 2025 17:12:43 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UjWSCZ/y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744042368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V+GN2gS8lk8pQaqDs/K8fd6AI38wy4xbJjG61joXzQc=;
+	b=UjWSCZ/yTxhrCTmu+oEq/vWp5on/5IzK1thi9bypf/WzKszXa2I6twM6BwLBqnTfahu4ya
+	QSDblQ5r6K0hoEIhfbUWA9wWMRd/zTFJZppafTLsHHep+Z1/RaXvZpzo/VSBNtDBZlsMH9
+	ci5XzeNfqyjOPnULkVcn7hzaAfBw52E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-267-yym-QkhWNcG3NDV6VRRqsg-1; Mon,
+ 07 Apr 2025 12:12:44 -0400
+X-MC-Unique: yym-QkhWNcG3NDV6VRRqsg-1
+X-Mimecast-MFC-AGG-ID: yym-QkhWNcG3NDV6VRRqsg_1744042362
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7EA55180034D;
+	Mon,  7 Apr 2025 16:12:42 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.40])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7F1251828AA4;
+	Mon,  7 Apr 2025 16:12:39 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: add toradex,smarc-ec
-Message-ID: <20250407-impurity-cornball-0a1f534f5bf1@spud>
-References: <20250407114947.41421-1-francesco@dolcini.it>
- <20250407114947.41421-2-francesco@dolcini.it>
+Subject: [PATCH net-next v2 13/13] rxrpc: rxperf: Add test RxGK server keys
+Date: Mon,  7 Apr 2025 17:11:26 +0100
+Message-ID: <20250407161130.1349147-14-dhowells@redhat.com>
+In-Reply-To: <20250407161130.1349147-1-dhowells@redhat.com>
+References: <20250407161130.1349147-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="JmEBwwK8bMXzn6Dv"
-Content-Disposition: inline
-In-Reply-To: <20250407114947.41421-2-francesco@dolcini.it>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+Add RxGK server keys of bytes containing { 0, 1, 2, 3, 4, ... } to the
+server keyring for the rxperf test server.  This allows the rxperf test
+client to connect to it.
 
---JmEBwwK8bMXzn6Dv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Simon Horman <horms@kernel.org>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
+---
+ net/rxrpc/rxperf.c | 68 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 65 insertions(+), 3 deletions(-)
 
-On Mon, Apr 07, 2025 at 01:49:46PM +0200, Francesco Dolcini wrote:
-> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
->=20
-> The Toradex Embedded Controller provides system power-off and restart
-> functionalities.
-> The two variants, SMARC iMX95 and SMARC iMX8P, have a compatible
-> I2C interface.
-> Besides this, different compatible values are defined to allow for
-> future implementation differences.
->=20
-> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+diff --git a/net/rxrpc/rxperf.c b/net/rxrpc/rxperf.c
+index c76fbccfbb91..0377301156b0 100644
+--- a/net/rxrpc/rxperf.c
++++ b/net/rxrpc/rxperf.c
+@@ -8,6 +8,7 @@
+ #define pr_fmt(fmt) "rxperf: " fmt
+ #include <linux/module.h>
+ #include <linux/slab.h>
++#include <crypto/krb5.h>
+ #include <net/sock.h>
+ #include <net/af_rxrpc.h>
+ #define RXRPC_TRACE_ONLY_DEFINE_ENUMS
+@@ -550,9 +551,9 @@ static int rxperf_process_call(struct rxperf_call *call)
+ }
+ 
+ /*
+- * Add a key to the security keyring.
++ * Add an rxkad key to the security keyring.
+  */
+-static int rxperf_add_key(struct key *keyring)
++static int rxperf_add_rxkad_key(struct key *keyring)
+ {
+ 	key_ref_t kref;
+ 	int ret;
+@@ -578,6 +579,47 @@ static int rxperf_add_key(struct key *keyring)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_RXGK
++/*
++ * Add a yfs-rxgk key to the security keyring.
++ */
++static int rxperf_add_yfs_rxgk_key(struct key *keyring, u32 enctype)
++{
++	const struct krb5_enctype *krb5 = crypto_krb5_find_enctype(enctype);
++	key_ref_t kref;
++	char name[64];
++	int ret;
++	u8 key[32];
++
++	if (!krb5 || krb5->key_len > sizeof(key))
++		return 0;
++
++	/* The key is just { 0, 1, 2, 3, 4, ... } */
++	for (int i = 0; i < krb5->key_len; i++)
++		key[i] = i;
++
++	sprintf(name, "%u:6:1:%u", RX_PERF_SERVICE, enctype);
++
++	kref = key_create_or_update(make_key_ref(keyring, true),
++				    "rxrpc_s", name,
++				    key, krb5->key_len,
++				    KEY_POS_VIEW | KEY_POS_READ | KEY_POS_SEARCH |
++				    KEY_USR_VIEW,
++				    KEY_ALLOC_NOT_IN_QUOTA);
++
++	if (IS_ERR(kref)) {
++		pr_err("Can't allocate rxperf server key: %ld\n", PTR_ERR(kref));
++		return PTR_ERR(kref);
++	}
++
++	ret = key_link(keyring, key_ref_to_ptr(kref));
++	if (ret < 0)
++		pr_err("Can't link rxperf server key: %d\n", ret);
++	key_ref_put(kref);
++	return ret;
++}
++#endif
++
+ /*
+  * Initialise the rxperf server.
+  */
+@@ -607,9 +649,29 @@ static int __init rxperf_init(void)
+ 		goto error_keyring;
+ 	}
+ 	rxperf_sec_keyring = keyring;
+-	ret = rxperf_add_key(keyring);
++	ret = rxperf_add_rxkad_key(keyring);
++	if (ret < 0)
++		goto error_key;
++#ifdef CONFIG_RXGK
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES128_CTS_HMAC_SHA1_96);
++	if (ret < 0)
++		goto error_key;
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES256_CTS_HMAC_SHA1_96);
++	if (ret < 0)
++		goto error_key;
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES128_CTS_HMAC_SHA256_128);
++	if (ret < 0)
++		goto error_key;
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_AES256_CTS_HMAC_SHA384_192);
++	if (ret < 0)
++		goto error_key;
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_CAMELLIA128_CTS_CMAC);
++	if (ret < 0)
++		goto error_key;
++	ret = rxperf_add_yfs_rxgk_key(keyring, KRB5_ENCTYPE_CAMELLIA256_CTS_CMAC);
+ 	if (ret < 0)
+ 		goto error_key;
++#endif
+ 
+ 	ret = rxperf_open_socket();
+ 	if (ret < 0)
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
---JmEBwwK8bMXzn6Dv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/P5ewAKCRB4tDGHoIJi
-0u4lAQDnMq7Y/0H1ump4Uxo6/BIgrEqL9zrv0ik35Tyv+t7HQgEA4Uhiamuict3T
-BNZNPwb09KqXJk62YuhBLMMk/IHMEAc=
-=G/o+
------END PGP SIGNATURE-----
-
---JmEBwwK8bMXzn6Dv--
