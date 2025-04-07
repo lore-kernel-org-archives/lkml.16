@@ -1,55 +1,53 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AC222A4CB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A0522A1D4;
+	Mon,  7 Apr 2025 07:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010281; cv=none; b=tALw6xoav05XZa3mOi3IS7S63rhrnLOjmR7dH/zUeFypjrtMIXnMzmP/9uJefevGtB7pfyRRCr1XfSFZo7EWOqU+xVB/QcBTjifim8E540I179qoJztTzmzXCtDuhJfhFXoYqTjWNuhJ/A50ofV2jaSlOQ1Qo7VRyoUVPe/dr6I=
+	t=1744010281; cv=none; b=QHPSvA3GnM/K384AvmYjwFoBFmCsBjGGPl1gAXkcB09r2xwxWGzyAZHizbS0fwG0Wnzd8lBv9Q/ReJBSXp4lk25MquTowkbUqm/8ncUDfWR71nBweBLrqj7RvJT7HLbOYM+OW7bzhPUEvdO9tjZE1EwK33glxXuH42/T0/LEWsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744010281; c=relaxed/simple;
-	bh=ZfQMOAKgf3h0wQY63xd1dqWOYw4eLM03wklPxj3pBKw=;
+	bh=iX3zewBTvxovNqMvdbqa5066P6HDtF1rRKFpMZBdFLg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CpFyGnLwtwlqLD7LzgyjKmRcbq2GHCoGIx9xYROsRXXuZCPbHqNeU1iPSfyMW0Mn3rGNHut+uxfNMvXdLTvOg8P4SQI4Y7/Yc/RFWkQ7atZ1fqjcV7zY6PCQlju3LbpuEWm5+nX1QQtpxiLS901cJd9diUDSRbGyqMRtPblBrO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Ai9kF6Uj; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=YpHCBS2VTdJfshwNYhyB+1TWOqqoDfFF7zGhQiZN+42opLjq2U8adJW0qigi439qc9Udrvl7ov0PWa8aVIBPxceTnzozuaLYBmisluJks+djj4ZG6UB7vnNpd5HkMPgLnpAgm//3ywEkiSyFtadW/LQTGi2osLQnXIFyURkiTJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=CCWFB7Ty; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Ai9kF6Uj"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="CCWFB7Ty"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=KdUAOOSAppZrP2zaF9+Q2bZVNDNI+mu31ior4FSVRiE=; b=Ai9kF6UjsSD0f+9KkZno1zDRpi
-	1fLEu/mpv1DwA2IZJ1J3aBMu63mE52xFGLTFV3KFI2jiwOmP6Gsrstlau14han8uBefwUTJ28D1aB
-	J/MCarOsamtVmZqw+fzpvkWDqe+BFSl6KoXy8J2yx56Y19H05Dc9SDyGCRQXvXdRUZykVDWhB2iPy
-	81Dz5GIYbR5QHUOdH7U0rG+my3IIP0Tzl0jzTjkVe83nSOzRmMWofx/mdDzyksk/IbM/RcX594lhy
-	Zt3EACUI+PeVWhyH5qy+EtStCuZ02vTGk6ijfDHl8GO7NEaIn5/L81yzFnbMJyZsAfSa91PpAsQZh
-	PvTRJByg==;
+	bh=XrhZLC/gWu44yM/JXNBUfkny0yyqCUz+uaOnp1SH628=; b=CCWFB7TyuHv14vo2yVNtr3NiM3
+	l98FtBjdbLBhuyZw1d3gP1gS8Zj7wCAjJrtvIIkjbT+007HCeyhN0EOkX/syQwlDcNqRODgJDlupN
+	HiNWcySXh0JgaNhIMyUVMaITuZ7IWDcd1HYI7M9qunRlr2P+uZ/Y+HUL9kGx4gsgL/SA4RqJLyc91
+	K5GpqnBDBqXPyvVrKJDnzG3uIUNZTw9t4Kwg64Doj3w7bZ4etbeQAgnpONfh3938Ef2PaVdzSCB33
+	r0+UB7bStGsG5EY+ZIpiYfA4c/klYaP3lPHfZiHJR3L8LL9x+1X47PYGjv5al8YEPi45tI9vmLhAf
+	KDXi6FkA==;
 Received: from i53875b95.versanet.de ([83.135.91.149] helo=phil..)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1u1gjv-0000tP-In; Mon, 07 Apr 2025 09:17:51 +0200
+	id 1u1gju-0000tP-Jw; Mon, 07 Apr 2025 09:17:50 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Sam Edwards <cfsworks@gmail.com>
+To: Andy Yan <andyshrk@163.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org,
+	dsimic@manjaro.org,
+	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Daniel=20Kukie=C5=82a?= <daniel@kukiela.pl>,
-	Sven Rademakers <sven.rademakers@gmail.com>,
-	Joshua Riek <jjriek@verizon.net>,
-	Sam Edwards <CFSworks@gmail.com>,
-	stable@kernel.org,
-	Dragan Simic <dsimic@manjaro.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Allow Turing RK1 cooling fan to spin down
-Date: Mon,  7 Apr 2025 09:17:40 +0200
-Message-ID: <174401024392.372530.2675381411653155471.b4-ty@sntech.de>
+	linux-rockchip@lists.infradead.org,
+	krzk+dt@kernel.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: aliase sdhci as mmc0 for rk3566 box demo
+Date: Mon,  7 Apr 2025 09:17:38 +0200
+Message-ID: <174401024398.372530.4282077768159194558.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250329165017.3885-1-CFSworks@gmail.com>
-References: <20250329165017.3885-1-CFSworks@gmail.com>
+In-Reply-To: <20241221104920.4193034-1-andyshrk@163.com>
+References: <20241221104920.4193034-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,23 +58,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, 29 Mar 2025 09:50:17 -0700, Sam Edwards wrote:
-> The RK3588 thermal sensor driver only receives interrupts when a
-> higher-temperature threshold is crossed; it cannot notify when the
-> sensor cools back off. As a result, the driver must poll for temperature
-> changes to detect when the conditions for a thermal trip are no longer
-> met. However, it only does so if the DT enables polling.
+On Sat, 21 Dec 2024 18:49:07 +0800, Andy Yan wrote:
+> Follow most others rk356x based boards, and u-boot only use mmc0/1
+> as mmc boot targets, so aliase sdhci as mmc0.
 > 
-> Before this patch, the RK1 DT did not enable polling, causing the fan to
-> continue running at the speed corresponding to the highest temperature
-> reached.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: Allow Turing RK1 cooling fan to spin down
-      commit: fdc7bd909a5f38793468e9cf9b6a9063d96c6234
+[1/1] arm64: dts: rockchip: aliase sdhci as mmc0 for rk3566 box demo
+      commit: b6490faab67c4436abeddb5c9e1fb0e8791d58ad
 
 Best regards,
 -- 
