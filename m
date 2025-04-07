@@ -1,161 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A8920E6FB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375EF22E41C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026106; cv=none; b=RLts77StdUSxTtCGLo/DPVsHeXPhth3D7hw7KRjsvuqdZXkeKfWH1A0VIuBng+Buj67YPoCNeyiA643qwKBUb1HBxitEKOV0fJ6D0DemOOiSjvHxgW4lY4I6bpS1sBmZe+Y+GKEiq2aZsTKGQ2jnrCWfldIj9zUf3r2uDCqjmhU=
+	t=1744026283; cv=none; b=CWlBYkvbBhVHoxHLmH3mZkzFQ1JvGlcwnhTA8MaqKhNG5fizAD6A+YEqCH2dCIXEtn51GwhJ74ERr1tsRjAEJhse/xDI8Xu4m4Igcay4SZyPeJXF+fW71EsrHwWGHWfFScgdr+Yy92p7rGXHihbKqcH6IrEyujjh313vT79FqeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026106; c=relaxed/simple;
-	bh=T1Gc1WsYyy+thC5pufNRIsi57oTBLKU11v4occxYB9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iCxjRFOoJHIqRuABSaPehZRMKY1yskW5HlHvnQFyBX1ESghv4rEjwBWgRHSjrFlIs1Rigq7+UFcb90PTfYLra2wgs2+dNAaasWeJn0cp4dr/0w7Y9xkBnBJr6dtPl4IEPLfm3lwo1IUncOJX82LT3rSJBCwrkVRd6+ohcqpk9Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aCtiMOu+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744026283; c=relaxed/simple;
+	bh=D/CPT8XmvB9FAoPbJ9+WEUlE3u6NN/jBQGueVWn0J4E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cxR6tT98NxOwU+8SBd7WbcdcdwlKhNtIUDxuHacJtRJrLvlz3SqgGgAIHbVvmX8A5MSTCpteDngFFDczXgau5sNhBWYDZGdHRC3xoKx98By/JxKsnHpxKs4nVogDSFE7nu07GWb5aRsYgeoV/GADskwjW6jace4cNPdruJ/aHeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=VieeDlsn; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCtiMOu+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744026103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/18Tl/tFX6iSKG+VYUdH9MARKh6n7GdxvTDO5NcIXq0=;
-	b=aCtiMOu+SaqNrndLEKAH2BnYfM7J+hlItx2RQwkADbUzPVZHUOUtXYy4uVQ6c5X3IA7U/L
-	o8v0e2P4dNeH2myG76yriKLqkFemWUmWhMCxlNDBsojC8hAlmFZIMKVMpIFX3kiJWFS7/c
-	9nUXRP/pd7bt6XV420M2AEzxConGFVM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-435--Tzwzpd-MkafjUyqpC20_Q-1; Mon, 07 Apr 2025 07:41:42 -0400
-X-MC-Unique: -Tzwzpd-MkafjUyqpC20_Q-1
-X-Mimecast-MFC-AGG-ID: -Tzwzpd-MkafjUyqpC20_Q_1744026101
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39134c762ebso1862578f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:41:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744026101; x=1744630901;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/18Tl/tFX6iSKG+VYUdH9MARKh6n7GdxvTDO5NcIXq0=;
-        b=ObzFlyZk3xjA04rhbktq4PwYcyosmmWOtl/1jn0wjIufNYFKxf24/B5MXNWJCE5T0T
-         ayndohE3C8Tc0ncxsHyXRfLwsg2B+doYLHYZB7Wmk1H34yvHHf9JtDqvG3sbFprb9+UU
-         u5wbmzMFd6tWjQscbKVdIl2F+8YS8W7cxNVGyWskrnQpfNDRfdoW3mcOUn4WtJyRWDcV
-         lRtuT4vWifSUsxiYPwNOuUZGl4QwqGY0bH2cxxQuktwnuRhpsC+lFfdjWH9UQWZ9rcE1
-         FY16bDYJ4it6G4m+ev759D8G41xE67G9LULs5p+/h/xz4aP/D4y/POqePOSOv81KAPai
-         FXxg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1h2bgWDenNpYPER+N4Di3Fce8XApmn38OgTbQ0qKupLVUoTygdfHD1LqckFJ6N1PjV/55543m3OvijxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV2fu3GFHVVwLgFPLoQcrwlTjA/c7r5yAgqUIZNTXn+y5hjqdD
-	Nl4vgLrCRGBCUH6MHWBlX3XVkbUhhlWo5GDMjtfc8vZBX46NeslCx8wzadMYiikty7YpqbmqOVl
-	Xa33uDUmHvy1aCxs97fPKK6ZXnvGbFbJ3i/cI1jtaHRHkhu1Y/7MvpGSv8FHs1w==
-X-Gm-Gg: ASbGnctN1ESygLHYxgLTHatJm8C6YV1xS3wt//5HaIyEiYiVKgEtyJU9xA2C0jjLSW+
-	RVllzJN5wHkZawNOymYE5nTYTLn+He/skBJwfLpEw54b2IBMxL7L/NxSnqZRTlOB8/ghKkmkTN8
-	VsdaflSl8ptpbavNtSFG0e8fSMZ2wil5mxAxSnAgobu1GETI+5vkFN3yLLsr7aeTZLvjueA7xP5
-	qepY2c+YNDMMRT5TJ4cNC7yPEAC19hUwsM8162ZWvcFkrN6fZ32XuOgIEKfcbjA1eZfawt5IQFE
-	aBLLpmRLmmO17p/3K1o=
-X-Received: by 2002:a5d:6da9:0:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39d6fc00b4dmr6938040f8f.9.1744026100975;
-        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5I8mCiAb1eBIzaa69eqs7IXjcg7TUnCrCJ0nVq8RtXubncMnApUfmUN9ILHJhvMKIwwyQQQ==
-X-Received: by 2002:a5d:6da9:0:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39d6fc00b4dmr6938012f8f.9.1744026100616;
-        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1795630sm133704795e9.29.2025.04.07.04.41.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 04:41:40 -0700 (PDT)
-Message-ID: <14319e01-e7b8-4ab6-bc27-a2b02b755c10@redhat.com>
-Date: Mon, 7 Apr 2025 13:41:39 +0200
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="VieeDlsn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=yrxNiCLMqXjwK0WgtiD+xkdaChkkYlw7s+yydgfpWMI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=VieeDlsnnzEmC3kKJuvw6j2GtjJ7uh0gVhtB09REbS+ed5OupvxTEG4xe2edk9K9s
+	 OaN5YBG0fa4+99K3htWKiPMa9Ip/6n/nGM1GyHr2Lr1gm4sKtvCiQ40Q64ZwTMfH29
+	 BNqSop8wh1lPyZP+Gwt+wUk+JO3E8MTTe9uP400eSv5oDmuMFRumrZc5KuAsQwWDz9
+	 nHrcWftK1SsgqAud/ri3bHPhzirQa4xR5mDyL8ctjFyWWkYingisVnzAtLSmfWDvQn
+	 3wNOrZ2qXvuyIcZWUN2Egj35ENLd8xz2CX8PlcCWyIlrq1NzC5ywRLId2NXTdHCAQ5
+	 T22jLDOAdNdpw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 2E3044A0007;
+	Mon,  7 Apr 2025 11:44:36 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Mon, 07 Apr 2025 19:44:16 +0800
+Subject: [PATCH] errseq: Eliminate special limitation for macro MAX_ERRNO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/5] media: uvcvideo: Implement Granular Power Saving
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-improve_errseq-v1-1-7b27cbeb8298@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAI+682cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwNz3czcgqL8stT41KKi4tRCXYvktERDU2PLNMtUSyWgpoKi1LTMCrC
+ B0bG1tQBCYJudYAAAAA==
+X-Change-ID: 20250407-improve_errseq-8cfa1539f9e9
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Jeff Layton <jlayton@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: 3C_ZYFR2-74dNmgEHkSlXOGaBBQl0hQx
+X-Proofpoint-ORIG-GUID: 3C_ZYFR2-74dNmgEHkSlXOGaBBQl0hQx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ suspectscore=0 malwarescore=0 mlxlogscore=779 phishscore=0 mlxscore=0
+ spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504070084
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Hi Ricardo,
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-On 27-Mar-25 22:05, Ricardo Ribalda wrote:
-> Right now we power-up the device when a user open() the device and we
-> power it off when the last user close() the first video node.
-> 
-> This behaviour affects the power consumption of the device is multiple
-> use cases, such as:
-> - Polling the privacy gpio
-> - udev probing the device
-> 
-> This patchset introduces a more granular power saving behaviour where
-> the camera is only awaken when needed. It is compatible with
-> asynchronous controls.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
-> Changes in v6:
-> - Improve error handling
-> - Use __free instead of guards()
-> - Rename uvc_v4l2_unlocked_ioctl
-> - Link to v5: https://lore.kernel.org/r/20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org
+Current errseq implementation depends on a very special precondition
+that macro MAX_ERRNO must be (2^n - 1).
 
-Thank you for the new version.
+Eliminate the limitation by
+- redefine macro ERRSEQ_SHIFT.
+- define a new macro ERRNO_MASK instead of MAX_ERRNO for errno mask.
 
-I've pushed 6.15-rc1 + the entire v6 series merged on top to:
-https://gitlab.freedesktop.org/linux-media/users/uvc/ -next now.
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ lib/errseq.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Regards,
+diff --git a/lib/errseq.c b/lib/errseq.c
+index 93e9b94358dc63dcc911fd45a01ccf38d2104ecf..13a2581c5a878445f8a089d0d34e901f77a9e074 100644
+--- a/lib/errseq.c
++++ b/lib/errseq.c
+@@ -34,11 +34,14 @@
+  */
+ 
+ /* The low bits are designated for error code (max of MAX_ERRNO) */
+-#define ERRSEQ_SHIFT		ilog2(MAX_ERRNO + 1)
++#define ERRSEQ_SHIFT		(ilog2(MAX_ERRNO) + 1)
+ 
+ /* This bit is used as a flag to indicate whether the value has been seen */
+ #define ERRSEQ_SEEN		(1 << ERRSEQ_SHIFT)
+ 
++/* Leverage macro ERRSEQ_SEEN to define errno mask macro here */
++#define ERRNO_MASK		(ERRSEQ_SEEN - 1)
++
+ /* The lowest bit of the counter */
+ #define ERRSEQ_CTR_INC		(1 << (ERRSEQ_SHIFT + 1))
+ 
+@@ -60,8 +63,6 @@ errseq_t errseq_set(errseq_t *eseq, int err)
+ {
+ 	errseq_t cur, old;
+ 
+-	/* MAX_ERRNO must be able to serve as a mask */
+-	BUILD_BUG_ON_NOT_POWER_OF_2(MAX_ERRNO + 1);
+ 
+ 	/*
+ 	 * Ensure the error code actually fits where we want it to go. If it
+@@ -79,7 +80,7 @@ errseq_t errseq_set(errseq_t *eseq, int err)
+ 		errseq_t new;
+ 
+ 		/* Clear out error bits and set new error */
+-		new = (old & ~(MAX_ERRNO|ERRSEQ_SEEN)) | -err;
++		new = (old & ~(ERRNO_MASK | ERRSEQ_SEEN)) | -err;
+ 
+ 		/* Only increment if someone has looked at it */
+ 		if (old & ERRSEQ_SEEN)
+@@ -148,7 +149,7 @@ int errseq_check(errseq_t *eseq, errseq_t since)
+ 
+ 	if (likely(cur == since))
+ 		return 0;
+-	return -(cur & MAX_ERRNO);
++	return -(cur & ERRNO_MASK);
+ }
+ EXPORT_SYMBOL(errseq_check);
+ 
+@@ -200,7 +201,7 @@ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since)
+ 		if (new != old)
+ 			cmpxchg(eseq, old, new);
+ 		*since = new;
+-		err = -(new & MAX_ERRNO);
++		err = -(new & ERRNO_MASK);
+ 	}
+ 	return err;
+ }
 
-Hans
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250407-improve_errseq-8cfa1539f9e9
 
-
-
-
-> Changes in v5:
-> - Improve "media: uvcvideo: Make power management granular" commit
->   message.
-> - Link to v4: https://lore.kernel.org/r/20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org
-> 
-> Changes in v4:
-> - CodeStyle
-> - Create uvc_pm_ functions
-> - Link to v3: https://lore.kernel.org/r/20250206-uvc-granpower-ng-v3-0-32d0d7b0c5d8@chromium.org
-> 
-> Changes in v3:
-> - Fix build error on sh4.
-> - Link to v2: https://lore.kernel.org/r/20250203-uvc-granpower-ng-v2-0-bef4b55e7b67@chromium.org
-> 
-> Changes in v2:
-> - Add missing semicolon.
-> - Rebase on top of media-committers/next
-> - Link to v1: https://lore.kernel.org/r/20241126-uvc-granpower-ng-v1-0-6312bf26549c@chromium.org
-> 
-> ---
-> Ricardo Ribalda (5):
->       media: uvcvideo: Keep streaming state in the file handle
->       media: uvcvideo: Create uvc_pm_(get|put) functions
->       media: uvcvideo: Increase/decrease the PM counter per IOCTL
->       media: uvcvideo: Make power management granular
->       media: uvcvideo: Do not turn on the camera for some ioctls
-> 
->  drivers/media/usb/uvc/uvc_ctrl.c |  37 +++++++++----
->  drivers/media/usb/uvc/uvc_v4l2.c | 115 +++++++++++++++++++++++++++++++--------
->  drivers/media/usb/uvc/uvcvideo.h |   5 ++
->  3 files changed, 123 insertions(+), 34 deletions(-)
-> ---
-> base-commit: f2151613e040973c868d28c8b00885dfab69eb75
-> change-id: 20241126-uvc-granpower-ng-069185a6d474
-> 
-> Best regards,
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
 
