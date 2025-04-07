@@ -1,57 +1,74 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC1B19CC05;
-	Mon,  7 Apr 2025 07:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CB679CF
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011269; cv=none; b=QSr4Z2hfjqF1mKda7/A4KJlV+/NtuWq/lti1Mr3/XsukEuJgSS255ZKQOfS4cCyBtyY0vVOf79gs8kly8I2ku9G/rsX9U96e/VEbmyiiYuDGYSrlSiwIof1SDiyMrW+/jCCOZwctV3eH20fNxg0d1khXtf2Ps5qRn87Jgvsb9/A=
+	t=1744011413; cv=none; b=cPkHj4OKPp8Qx6h54CQ1GvpCkyxpGiofdwBfNC5W4pUi6n8IF/FI6JMYqf0/xplf/WwqKZl1xNmi7VDasptjizPbDX/2vd0dR5A/wwurKTsEvddtfJZDTroJK8mvGqFa0eaBThT3HoLPZXRkYXDreay8JM0T6ImEyd7Zd6ePtEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011269; c=relaxed/simple;
-	bh=OvFTZWVxok7Yh7TM8jJco47iNhMsnYLxmLRrKQQw3Bc=;
+	s=arc-20240116; t=1744011413; c=relaxed/simple;
+	bh=koynGf8+CdcmajpfO3doLXZJyU8BUTJFfTEZhbf/uRA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhVRGp9RSrva9cyx58QFgkcsvksZlbe2kep6FZFPlcI2ZmSgLa5M++GJ4O2cNASZUMFnS688rofBVaqRpBadej1wmMz6jja+/u2C8leN1iSXHUhHO07ydrrmttBUl8A84e3AQ+US0vkQm1JrH5DeHxC+H77aqam2KSMYG6M9X+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b4V1R35b; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3wmQn+7jVpA/MIcUzoF81EqoyvAst6IIXZRBD856QHOT7ZTisZfRu+FnMiWVXBkRWuVp3WZMCecyDb8s3oWhPbhsV2wqBZRSouitqlhOowLleX1h0hTkURVrmztmf0AmFiCOiWeqqN/MVGN6o92SsH2FiiEG+OXh6s6KwUFnJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I4WLD5Ga; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b4V1R35b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=E3wml/8+r4IsbKmjPypYCwVOPWR42TPuEreb9gSDrb8=; b=b4V1R35boRkA2HQoNEBDzhpItv
-	haipoU4Zie4sTAAGE83MMpjUFKpI1KRVgAJLMkLn5rbJS4aZYLo+eyswJM9pO/rcXPtrWH66rxCGu
-	61b8TqV+E7afjGroLw7yOuLuX3kV+EkJK9eO5OXxQIwmBEe2HPHfhwXbjL9s2/fsAdFDx/ypm5vvf
-	d0tOt6egMbf53SnpzXLwX1rFCxiDTx4ygSTb9Jf2bxGXlpN6vrkphSGLIvuWU6MvHXhCydrD9CFYh
-	NHHh6tFEoJibIj4vdpHNWjP/ogZpqYnePdoVM+mb5yJucEHk/3aP0PxqRG1uU8mmglqWe5jt0Sdw3
-	ARAmV9UQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1gzy-0000000GnWG-3Lu5;
-	Mon, 07 Apr 2025 07:34:26 +0000
-Date: Mon, 7 Apr 2025 00:34:26 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
-	mst@redhat.com, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <Z_OAAthpLmmyKsXM@infradead.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <Z-43svGzwoUQaYvg@infradead.org>
- <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
- <Z-99snVF5ESyJDDs@infradead.org>
- <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
- <Z--W_JagTSyhYqzk@infradead.org>
- <3251F79D-4838-4C89-80BF-6EB19076833A@infradead.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4WLD5Ga"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3014678689aso3239377a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744011411; x=1744616211; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g9hu9BIiKiLrAv9dyMtSU+8zo4UvBiFanlHUMy4ezNo=;
+        b=I4WLD5GaIzNeIGjoGCdOqnrYe9v7149BWRuEz2zVrMWdxPs2tETmbzRpj5Lf4t2FXv
+         bI15IeIxzA0o7fT2YHlDJMxYg5o4uBAWJY5ZVi3KdSp53OMxz1cM3LXpllQsd7joXlRZ
+         7DrG1C25ZkOSkcoTPid3sjv880UdaJC4Q1rKSWCB9NwVJaoYkCVEuie/17mHOpL9dMGr
+         ZN6y4t4A15VVZh4pSA20x7FV/pRg3A/BiflnNC9LHKc42ewUM6tgEoAOBW+UkXby3HMl
+         aekpmlZe4OyIN52hDE4CwZuR+O9L5wzTiw9MYobEAbZva1uNOlSTSPqplhuihyw4Ma8Q
+         yZVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744011411; x=1744616211;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g9hu9BIiKiLrAv9dyMtSU+8zo4UvBiFanlHUMy4ezNo=;
+        b=OWTwokIJx1iKdOS/8vs2MGocKjqYprNh0CYVBLcicEsI+Vto5oTrz6aY9i03t6Xvh4
+         zt0rfPXxMnt+xND5XAyCUNzPMTVtDOD+Fdx4W+CVZ8xytMtspk41lMylOT6mTnTh68Wi
+         +AMOTjhX63eiiuzQBLakhuJEE79GiofhVQirQccCX7janxzXCWwGMAWpF7RXCU7/JMOg
+         +VxmeEOBRDqaWcrrFWDq9P5rNyhWMjbTNOZ5JLGrhNRzfQLeB1uHAu2qSjbO9TJKMka8
+         XKxDr/GB7X3hfEads0opjYxOeMu9CtGywP504tVK7+sJZhMSIBe73sXsYhOVsyI84SI7
+         jPlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWmFjnxb7hlTeX0lZGGGDmPqmSpoWCjnOmrMaHMolXgf1YTk8QZZYzxSyQVEcqF4jnj4YOpLUp6A0b71s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywdHUSI9YV4WgccKMFgeK3H3EIGWcnNKrtxXQ9byCnsO8ufg4H
+	pFA5AFaw4S6ZV5E9NFSLsTSDlh6hBQ9aWBLkHpWy6Q4z7GOSCxRpxnKQBjIk2A==
+X-Gm-Gg: ASbGncv1cNSUq5y5ImVTDVbE2dsZo2yGEL9JxTro01PI2M15D149aUhKco65OxXcUgi
+	G37ULWLhm9VnvgjXxSpxsyDH7AOmB6rj7s0+1a4mMwzOpcjdV0CYN5tuuUv8sEAt/fAcgj7eish
+	QHJFDYzk55h7JN3bPXzmuoQ6pdaXU8eIHjFU/OSKnLaf/OxCpoHL4FRBkg2I1zVnxnMjR0C5Ba3
+	eQjilBcX6fAx0xtXfOxGdQGT3LFkmCqtAnUb+R0ykaypUtbITdnPvgTeL2Pata+XHYvALrowCN1
+	b9Um/RQiNFHHCiJu4wBmg7/7yuABuwwyxS2u9t0seH5e3beCQw8TkWc=
+X-Google-Smtp-Source: AGHT+IGzvdPdmWxd4WyWmrDKQ+6Kp6xrKgrTzXN8i5RbG1vlBal+aGVp4TmGrHiie98FKikeCFAn/g==
+X-Received: by 2002:a17:90b:2fc5:b0:2ef:19d0:2261 with SMTP id 98e67ed59e1d1-306a48a2359mr19194444a91.16.1744011411044;
+        Mon, 07 Apr 2025 00:36:51 -0700 (PDT)
+Received: from thinkpad ([36.255.17.160])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb91b9esm8316402a91.45.2025.04.07.00.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:36:50 -0700 (PDT)
+Date: Mon, 7 Apr 2025 13:06:45 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
+Message-ID: <jh2kntthtj5dz4dmltc63ye3v4owsl5evcnzpf5anrzdzqzms6@hng6ciwzry3t>
+References: <20250324-pcie-ptm-v2-0-c7d8c3644b4a@linaro.org>
+ <20250324-pcie-ptm-v2-1-c7d8c3644b4a@linaro.org>
+ <b76aaf39-1a03-ffbf-ae44-66dd01753bc7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,57 +78,197 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3251F79D-4838-4C89-80BF-6EB19076833A@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <b76aaf39-1a03-ffbf-ae44-66dd01753bc7@linux.intel.com>
 
-On Fri, Apr 04, 2025 at 10:39:35AM +0100, David Woodhouse wrote:
-> >> So "for the emulated devices, just use a device model that doesn't do
-> >> arbitrary DMA to system memory" is a nice simple answer, and keeps the
-> >> guest support restricted to its *own* standalone driver.
-> >
-> >It's also one that completely breaks the abstraction. 
+On Mon, Mar 24, 2025 at 03:01:49PM +0200, Ilpo Järvinen wrote:
+> On Mon, 24 Mar 2025, Manivannan Sadhasivam via B4 Relay wrote:
 > 
-> Hm? Having a device that simply doesn't *do* any DMA surely doesn't break
-> any system DMA / IOMMU abstractions because it's no longer even relevant
-> to them, which is kind of the point.
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
+> > sec 6.22 allows precise coordination of timing information across multiple
+> > components in a PCIe hierarchy with independent local time clocks.
 > 
-> Which abstraction did you mean?
-
-Implementing a DMA less device is fine.  Implementing a DMA less virtual
-device to work around the lack of CoCo shared bounce buffers in the
-system is.
-
+> Hi Mani,
 > 
+> PCIe r6.0.1 sec 6.22 is about Readiness Notification (RN) and PTM is 6.21, 
+> did you perhaps mistype the section number?
 > 
-> > I still don't
-> >understand what the problem is with having the paravirtualized devices
-> >on a different part of the virtual PCIe topology so that the stage2
-> >IOMMU isn't used for them, but instead just the direct mapping or a
-> >stub viommu that blocks all access.
+
+Oops, yeah. I referred the PCIe 5.0 spec, but mistakenly quoted 6.0. Will fix
+it.
+
+> > PCI core already supports enabling PTM in the root port and endpoint
+> > devices through PTM Extended Capability registers. But the PTM context
+> > supported by the PTM capable components such as Root Complex (RC) and
+> > Endpoint (EP) controllers were not exposed as of now.
+> > 
+> > Hence, add the sysfs support to expose the PTM context to userspace from
+> > both PCIe RC and EP controllers. Controller drivers are expected to call
+> > pcie_ptm_create_sysfs() to create the sysfs attributes for the PTM context
+> > and call pcie_ptm_destroy_sysfs() to destroy them. The drivers should also
+> > populate the relevant callbacks in the 'struct pcie_ptm_ops' structure
+> > based on the controller implementation.
+> > 
+> > Below PTM context are exposed through sysfs:
+> > 
+> > PCIe RC
+> > =======
+> > 
+> > 1. PTM Local clock
+> > 2. PTM T2 timestamp
+> > 3. PTM T3 timestamp
+> > 4. PTM Context valid
+> > 
+> > PCIe EP
+> > =======
+> > 
+> > 1. PTM Local clock
+> > 2. PTM T1 timestamp
+> > 3. PTM T4 timestamp
+> > 4. PTM Master clock
+> > 5. PTM Context update
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  Documentation/ABI/testing/sysfs-platform-pcie-ptm |  70 ++++++
+> >  MAINTAINERS                                       |   1 +
+> >  drivers/pci/pcie/ptm.c                            | 268 ++++++++++++++++++++++
+> >  include/linux/pci.h                               |  35 +++
+> >  4 files changed, 374 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-pcie-ptm b/Documentation/ABI/testing/sysfs-platform-pcie-ptm
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..010c3e32e2b8eaf352a8e1aad7420d8a3e948dae
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-platform-pcie-ptm
+> > @@ -0,0 +1,70 @@
+> > +What:		/sys/devices/platform/*/ptm/local_clock
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM local clock in nanoseconds. Applicable for both Root
+> > +		Complex and Endpoint controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/master_clock
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM master clock in nanoseconds. Applicable only for
+> > +		Endpoint controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/t1
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM T1 timestamp in nanoseconds. Applicable only for
+> > +		Endpoint controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/t2
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM T2 timestamp in nanoseconds. Applicable only for
+> > +		Root Complex controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/t3
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM T3 timestamp in nanoseconds. Applicable only for
+> > +		Root Complex controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/t4
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RO) PTM T4 timestamp in nanoseconds. Applicable only for
+> > +		Endpoint controllers.
+> > +
+> > +What:		/sys/devices/platform/*/ptm/context_update
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RW) Control the PTM context update mode. Applicable only for
+> > +		Endpoint controllers.
+> > +
+> > +		Following values are supported:
+> > +
+> > +		* auto = PTM context auto update trigger for every 10ms
+> > +
+> > +		* manual = PTM context manual update. Writing 'manual' to this
+> > +			   file triggers PTM context update (default)
+> > +
+> > +What:		/sys/devices/platform/*/ptm/context_valid
+> > +Date:		February 2025
+> > +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +Description:
+> > +		(RW) Control the PTM context validity (local clock timing).
+> > +		Applicable only for Root Complex controllers. PTM context is
+> > +		invalidated by hardware if the Root Complex enters low power
+> > +		mode or changes link frequency.
+> > +
+> > +		Following values are supported:
+> > +
+> > +		* 0 = PTM context invalid (default)
+> > +
+> > +		* 1 = PTM context valid
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index b4d09d52a750b320f689c1365791cdfa6e719fde..f1bac092877df739328347481bd14f6701a7df19 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -18213,6 +18213,7 @@ Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> >  B:	https://bugzilla.kernel.org
+> >  C:	irc://irc.oftc.net/linux-pci
+> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> > +F:	Documentation/ABI/testing/sysfs-platform-pcie-ptm
+> >  F:	Documentation/devicetree/bindings/pci/
+> >  F:	drivers/pci/controller/
+> >  F:	drivers/pci/pci-bridge-emul.c
+> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> > index 7cfb6c0d5dcb6de2a759b56d6877c95102b3d10f..bfa632b76a87ad304e966a8edfb5dba14d58a23c 100644
+> > --- a/drivers/pci/pcie/ptm.c
+> > +++ b/drivers/pci/pcie/ptm.c
+> > @@ -10,6 +10,8 @@
+> >  #include <linux/pci.h>
+> >  #include "../pci.h"
+> >  
+> > +struct device *ptm_device;
+> > +
+> >  /*
+> >   * If the next upstream device supports PTM, return it; otherwise return
+> >   * NULL.  PTM Messages are local, so both link partners must support it.
+> > @@ -252,3 +254,269 @@ bool pcie_ptm_enabled(struct pci_dev *dev)
+> >  	return dev->ptm_enabled;
+> >  }
+> >  EXPORT_SYMBOL(pcie_ptm_enabled);
+> > +
+> > +static ssize_t context_update_store(struct device *dev,
+> > +			      struct device_attribute *attr,
+> > +			      const char *buf, size_t count)
+> > +{
+> > +	struct pcie_ptm *ptm = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	if (!ptm->ops->context_update_store)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	ret = ptm->ops->context_update_store(ptm->pdata, buf);
 > 
-> It can't have a direct mapping because the VMM can't access guest
-> memory. It has to be blocked, which is fine.
-
-I only mentioned direct mapping in not having an IOMMU.  I fully expect
-it not to work.
-
-> But that's only part of the picture — then how do you actually get data
-> in/out of the device?
+> Do these store funcs need some locking? Who is responsible about it?
 > 
-> By having on-device memory and not attempting DMA to system memory,
-> perhaps...? :)
 
-By implementing the discovery of a shared pool in host memory as
-discussed in another branch of this thread?
+Good catch! I obviously missed the locking here.
 
-> >describe this limitation, which is much better than hacking around it
-> >using an odd device model.
+> Why isn't buf parsed here and converted to some define/enum values, what 
+> is the advantage of passing it on as char *?
 > 
-> It still has the problem that existing drivers in all operating systems
-> produced before 2030 will see the device and try to use it as-is, with
-> no comprehension of this new thing.
 
-Given how much enablement the various CoCo schemes need it won't work
-anyway.
+Only because I was not sure if the values are going to be the same across all
+implementations. But since I document 'auto' and 'manual' in ABI documentation,
+I think it makes sense to pass the values directly.
 
-Btw, you mail formatting in the last days went completely crazy.
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
