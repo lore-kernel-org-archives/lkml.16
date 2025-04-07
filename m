@@ -1,115 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7711FAC56;
-	Mon,  7 Apr 2025 15:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18371F9F70;
+	Mon,  7 Apr 2025 15:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039213; cv=none; b=rJ9g7c1hKghoDoZAjMhEE0SD9HXGH5MNPADxd6YWh5NfVKXKNuvVU4W4o/Xu6hBHJfjiPsvkOotZdj+bYAqxUv4MNlaMjFdzXjB/CgkwnCdmXgbFg1ezKMWA0PTgIZeIQzOoiU+ORge7dCQbie88c4rIJ3zic6HLZpBIzce6bEA=
+	t=1744039358; cv=none; b=YfD0+Fz6Itv1jWbdGKKmHkKr6wf3K5QmamIz0ilP4ppbYzUD/fjLl6FHZDzek8HQBr5SjTigjBCRLTk4yxcnvktbGQfD4uLELeV5bV82TUbKyjPaCSFRVoA9WympHglk810cTGwtYr+PlV8U+ZOCD0SSlGxJRgKgz3Iv48UidiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039213; c=relaxed/simple;
-	bh=dX1ZFgHNg5lDyS784SIlmHAz22dZyAAbob2jUM2Ek90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hYULyaiLWKmRPkVylSQuLmxdGO1Ta//VmrzNY9JsabiMUntHcZeo707ip0Ppkw+fnxqNO/IE5Jblg2tEV7FboAGW/M8SlI09EnAEI3/0nzyOZ/BpuQM0m4Lv3z6y4crVECEGlVnXHMxrenSDuXcMuJfIxraduPJQnk8odQqnBlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/cufWRQ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/cufWRQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744039212; x=1775575212;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dX1ZFgHNg5lDyS784SIlmHAz22dZyAAbob2jUM2Ek90=;
-  b=K/cufWRQ7m9Cs10VAmr4ycvMw8eIm1kLlDthEHQvkxPpGPnbkbKxjJCr
-   IsQGjbl5X+yJrxAAIEjW9yo+uRqW0u4fIwfH/DNDoYgWItPtRFRXUyGTk
-   pcg8FUJ3zfgJ40qgqQTq3SnrhIkMLfjys7tWBYoilqqDDJde5ScQgZWdo
-   CUf9ygIeOElRzBjg023jECpcmtRtqdxvPQs1shToAVXsB4Wb2cTyyOB7Y
-   dqQXTt40+88QHuursTkjjIbE3Fp8dbz5MLkOlKlejR4yjRjqGwDaUDjI4
-   dEw0cADisMQKd5njoVqBcWY2FirxDIs5GfHeikQClLdXpF5ogehD5D1yv
-   A==;
-X-CSE-ConnectionGUID: MfhF2akXQKSAlORHIfwbSA==
-X-CSE-MsgGUID: jdfQhJiTTT+r0FRS8qn6WA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45600508"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45600508"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:20:11 -0700
-X-CSE-ConnectionGUID: MwgiB73sS7uhuB6NDR48/g==
-X-CSE-MsgGUID: a1sZoUvtTligUrhNsq7h8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132712384"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:20:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1oGV-0000000A6kZ-3EWX;
-	Mon, 07 Apr 2025 18:19:59 +0300
-Date: Mon, 7 Apr 2025 18:19:59 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 02/16] driver core: Rename get_dev_from_fwnode() wrapper
- to get_device_from_fwnode()
-Message-ID: <Z_PtH45Zt1P_r35z@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-3-herve.codina@bootlin.com>
+	s=arc-20240116; t=1744039358; c=relaxed/simple;
+	bh=Fyy15kwhH1t3BBHKQP8IoJ5dLieJYZ+OgC0xKokOJFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f93lO586ynKChvTVIbcDsRIOuCUPB4M4S0Iv0u6Lc9fNUMjhIwZXFn92ytdbB1rJmVlL/vxQ4A0dWIeqGUjltyiarEx7cMfcCYeD7W8uG+jkLLCPR0CU3SjVt2FcME3Z1NX5LAQxKJYkImChJGTG8Y6Wftz+YlpKr5QI8aymPBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B91EC4CEDD;
+	Mon,  7 Apr 2025 15:22:37 +0000 (UTC)
+Date: Mon, 7 Apr 2025 11:23:52 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Jann
+ Horn <jannh@google.com>
+Subject: Re: [PATCH v6 3/4] tracing: Use vmap_page_range() to map memmap
+ ring buffer
+Message-ID: <20250407112352.264e12b0@gandalf.local.home>
+In-Reply-To: <4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net>
+References: <20250402144903.993276623@goodmis.org>
+	<20250402144953.754618481@goodmis.org>
+	<4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407145546.270683-3-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 04:55:31PM +0200, Herve Codina wrote:
-> get_dev_from_fwnode() calls get_device() and so it acquires a reference
-> on the device returned.
+On Sun, 6 Apr 2025 10:39:27 -0700
+Guenter Roeck <linux@roeck-us.net> wrote:
+
+> non-MMU builds (xtensa:nommu_kc705_defconfig):
+
+Bah!
+
 > 
-> In order to be more obvious that this wrapper is a get_device() variant,
-> rename it to get_device_from_fwnode().
+> kernel/trace/trace.o:(.init.literal+0x250): undefined reference to `get_vm_area'
 
-+1 to the change.
+Does this fix it?
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b581e388a9d9..8ddf6b17215c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9806,6 +9806,7 @@ static int instance_mkdir(const char *name)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_MMU
+ static u64 map_pages(unsigned long start, unsigned long size)
+ {
+ 	unsigned long vmap_start, vmap_end;
+@@ -9828,6 +9829,12 @@ static u64 map_pages(unsigned long start, unsigned long size)
+ 
+ 	return (u64)vmap_start;
+ }
++#else
++static inline u64 map_pages(unsigned long start, unsigned long size)
++{
++	return 0;
++}
++#endif
+ 
+ /**
+  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
 
--- 
-With Best Regards,
-Andy Shevchenko
 
-
+-- Steve
