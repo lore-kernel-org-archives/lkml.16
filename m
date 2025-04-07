@@ -1,110 +1,133 @@
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DA6139E;
-	Mon,  7 Apr 2025 03:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0F0610D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743995751; cv=none; b=Vp6YCJNgCYbkMsYJ1MGwr5VIgOoNE49/ShafYb3XLp+X8Zlr2ywzsW8miI5jtX1o44tt6C0XP4HZGmw0j8plfMtaTdtppCXXnuf337dSyOxeXiV/HuyUs1ncuJpqcpcIsmCHHxAYGmr36lykZU2kbvSMHgUC4IHs3vPETDQZmUc=
+	t=1743995775; cv=none; b=YuGYPWXRib3F2YDG+qcTuLkaU2gN1yUBD6vFVNat5xsyQpnWcH9HhmyGULgdUl+mncqgHxFcwJ1gmRZdz1npVCnSE+VVvxM32ZT1pAsnStZkuMORkTlaI+SIBVC1sTOtMH40RdcrhyJk4Q7Jr7eGSh32Sm6Pm2WWboX+XU7u3dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743995751; c=relaxed/simple;
-	bh=sWd+Hr6z4ZGOuTQ5zIXgD2YnXsigspmEtU3bafHQ4AI=;
+	s=arc-20240116; t=1743995775; c=relaxed/simple;
+	bh=2Psv4XKwzaxxk54Wxm2NMdJLhP46x/zOj5VLe1kQqFs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L99kaV7C431werKh7nIA+rx8WPp2wx/SHrHvH99s6n1kQ0jQzJwQuTXXJTrE1q05LQuyGZxzjT8ZfdPdVTmacoiqTbtgy7ahebjevQPBEv6suEwATT3VHIrYqr0Zx0RhgxnlEJll2OtKq3MnjfPmPENUzGkXeY5o8vWKAhC9mW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxwFlP/w; arc=none smtp.client-ip=209.85.208.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=gd6Xr6dMJBVT/a5FkKCzNBfUFGYb1H+1EdSa6T/VxeaDMUqs0ckR5JH1kCrd2TjdL/4l+8SR8J18HVqFFII8DYXcB2gIsWDwHZlEMlrq+neRroJtAQwWJHnvfRigJU6hhmbWwRE0PuYLgmFh6HqLLa1v71CylU5iRR+L+5giM5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AFK2SNTP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxwFlP/w"
-Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-30bf1d48843so34179571fa.2;
-        Sun, 06 Apr 2025 20:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743995748; x=1744600548; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PqDsWVFq6CmNz/0yFdKFX32jFAy7M6dtMt4P6N2Z6wA=;
-        b=fxwFlP/wLQbMMKqH8Ab74GINSwixplRNXCDymhJ4UEiaM9tH6r/BkqZRzz2K8CiFbm
-         UMiZbbGZEFih0B07w3IIpHCNPvlCbIO118igmNv5mg/wdU/HKmPAW3JEsAxsMHk6YMH0
-         VkYvbdmW6Fkdsj176PgmxC1Ek7ZYas7XYSxwvkR0QTwF5u7ZIzFiaRsf+LCNwVYt41c8
-         aHDXqZuYbVzqMyCpY1HeX2wNAGdLNEBd8h6zBQEq24KTHkcsd4PXHvAjpCaYKndrQtmq
-         ps6EFWIdhu4WGzh12Y2eLmIkhoVIQovB0kbKhtAZRMdTjOEOq6OjOU5H8ZNZF0ypOd69
-         cDag==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AFK2SNTP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743995772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ByT4VM0mlsPMFV1CM9t8/TNYyL/tLm0jIu9vYemq9w=;
+	b=AFK2SNTPMRZ/BfbI78/RbV1glk6BQag68dPA7M7oZ6vciguY3MgfzcNmqaqp4+1Ck92HR6
+	o89maK4SuzbWIeObWFnnTEuR7J1+zkkDZ/mU6/fGHYY5ZjTAwNwGaFWoV5byZjErQQ0KLq
+	RbMrNJhwrGAIbZIv4Vg4UxEiqrzRYC0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-290-BTXoyWAWPoiETyT9DiK4GA-1; Sun, 06 Apr 2025 23:16:11 -0400
+X-MC-Unique: BTXoyWAWPoiETyT9DiK4GA-1
+X-Mimecast-MFC-AGG-ID: BTXoyWAWPoiETyT9DiK4GA_1743995770
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac3df3f1193so299524366b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 20:16:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743995748; x=1744600548;
+        d=1e100.net; s=20230601; t=1743995770; x=1744600570;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PqDsWVFq6CmNz/0yFdKFX32jFAy7M6dtMt4P6N2Z6wA=;
-        b=al2SwKQZt1CCJXIAk75wuJMG3YeEjquNIe+ilaytDH+xt3hoI2raudnVUAqsMYhCr5
-         7OMIA8LQwIl33WUvUV0fqMinooz+RcsQHCbuZ3glBP4X/5rSuQYXdrVqUgBIf5exWA2T
-         T/dp0CzLCaHAkAEoTj6iq2xjByQndcAUGX5xXp083+ekL/vW17I29PGh4gQTnFo+Rprr
-         ockkIGANySv77TdAvQ3viaY8fr7AumlAdKz01WZiXHikzci6pwdRuH46IP43453r81kC
-         3sXGTysgtSgyM1sfr0dzieTs9PgjjBZhcKkJZCZiihjRJS0gOg7BRtVPAVEvkiEKhKBI
-         CJyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxZo2ruq0HOlbF+DF629V2vy+IEoQpluh0VMjSWZzxfVlmaivdBv0cxVMovgedFxpDjD8zCO+rTr15Tkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8N0cHWwnz644O/r1Iu5hkg61cTzo36B8Tc8Qn3fEkdCw5XlYt
-	ZoLCp+HF6BqzyChtYe7h6PYFvFrfKLHugQ6mPh6ocVIxpSkkASHeBjLvKIp6asgkbHP+rq21r75
-	uaAKquluqD9/xBEtMWeNB6xY72NA=
-X-Gm-Gg: ASbGncvjwLh/qKiQLYQNW1Ahw0LG6yRX+n4RPpCWKQAYuGSrfto7JxLHAoYTeZudQNM
-	Eqk4BmBoatHm40Pm++5feyKlRw/1C2I9516hyKpkC7/GOsZqOyx5DramwsHqNA5ksdi4AZY9UaD
-	oKzXw3Lo5nHdZp/sTo7eZPte3f37g=
-X-Google-Smtp-Source: AGHT+IE1/krWBer5PlXlNstxZmEQ7m52OIfXmOpc5fR3+RwNHJcKV+9HLLyqwwgFSrjQDe5S5gtm8Yxvggz68q1KRMw=
-X-Received: by 2002:a05:651c:1987:b0:30b:ecfc:78c6 with SMTP id
- 38308e7fff4ca-30f0be0402fmr29433611fa.1.1743995747797; Sun, 06 Apr 2025
- 20:15:47 -0700 (PDT)
+        bh=2ByT4VM0mlsPMFV1CM9t8/TNYyL/tLm0jIu9vYemq9w=;
+        b=trbKOKad+dBzjGV2AJxrJHRj/wTkVFpT1+9vQmj7DXqZqDIcqwvno9+xkTpU+pLWtv
+         AiwbQGnRTz4EvNYPVr5+eSLxVcVWHPdM7JdbKupkt0zNybjh9xrhxm2ww68JrTAEaamM
+         f9NmmIDwuYwErdz3eM2c+zruvyWrwfntxmsL+4x3Vz4AWXl5W8Npi+UG9PUleX7kRC44
+         KfmsESOnTV2qZ/wFz71iiovUwdOyrI4jC7AdY2iqWJFrR7cJTSlQWaVHMSG23K8YcKrd
+         119XHwqVv4ThzTz9u/V8QctpEcbriqQBuTshfQXNFCmg2/Z2qFyhzTYta4F5cf19jgJ2
+         h2Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWf0Mj5mTq09aLwWOzNMoHmDUCIZ+bxi5jusIBLwh666V7ldcBZkEZII0IyMWrIgxfj74j9xg5d3atPxdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKXfhpVM5Yt3vODVOorRbRnbH8rHLXI7IQShzxR82+Fx/P5iaJ
+	288gIEnjc71sjMSZrohz+oZQdubFiEuLyKHXSaiKaM/D072XL6SekcqxhIAID9doyQgO+9OOSGS
+	7ypmF9GAeclfI1hAk7HmmBFVKLii0K33v4dp1R0EyPgi8phBWPZ9G6cxiZLTKCasVKpcYyp/hGu
+	wTCCaNd4LdhFJK2ltA3iJeZcGlJwOO8NyipK1l
+X-Gm-Gg: ASbGnctlT4xa8YxVeNWOmUp6Gn01l0StuouoIE+pxNvuzri6jkiql/aeda/uk6hsjIS
+	hq4cjDpVx+Ia4GuAfY8Zv+jYZJoqLNFJG8VO2wGrfsaWI4tr5rc7lTh27WtmleiWVRdTyx9NQPg
+	==
+X-Received: by 2002:a17:907:7ea6:b0:ac2:a5c7:7fc9 with SMTP id a640c23a62f3a-ac7d6e93599mr994473466b.51.1743995770475;
+        Sun, 06 Apr 2025 20:16:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMJnXbAYIz1U9EXfhPLXDao58wG6UnY/kQ+tnR0/5Lpt/9hn9DGVTkSTF2KUQRBQfoiF3etXQ5fFZKr+LUKAs=
+X-Received: by 2002:a17:907:7ea6:b0:ac2:a5c7:7fc9 with SMTP id
+ a640c23a62f3a-ac7d6e93599mr994472366b.51.1743995770124; Sun, 06 Apr 2025
+ 20:16:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403064344.64253-1-bsdhenrymartin@gmail.com> <db778d8c-0a56-4b01-b5b5-5610a68a4875@web.de>
-In-Reply-To: <db778d8c-0a56-4b01-b5b5-5610a68a4875@web.de>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Mon, 7 Apr 2025 11:15:37 +0800
-X-Gm-Features: ATxdqUGqt472XmSz_PMOlPioxTI8XhNNFObI4ZwjTYubgdvn8cZdtUxQubfAd08
-Message-ID: <CAEnQdOox3XQnKVwefaT6p1rp=xEq1Ki4uD63nvwrjLCnVkZPmQ@mail.gmail.com>
-Subject: Re: [PATCH] wifi: mt76: mt7996: Fix null-ptr-deref in mt7996_mmio_wed_init()
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, 
-	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Peter Chiu <chui-hao.chiu@mediatek.com>, Felix Fietkau <nbd@nbd.name>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Rex Lu <rex.lu@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>, 
-	Shengyu Qu <wiagn233@outlook.com>
+References: <20250328100359.1306072-1-lulu@redhat.com> <20250328100359.1306072-8-lulu@redhat.com>
+ <d35istatjtnr42x4gwpwlgx627pl3ntqua3kde7fymtotl676i@jxxxkrii6rue>
+In-Reply-To: <d35istatjtnr42x4gwpwlgx627pl3ntqua3kde7fymtotl676i@jxxxkrii6rue>
+From: Cindy Lu <lulu@redhat.com>
+Date: Mon, 7 Apr 2025 11:15:33 +0800
+X-Gm-Features: ATxdqUHJ6Q-Ip5ecSwCjJr9VIgAypATzgnh9U_7r0L81kSaqxYSAPR91ELbFrEQ
+Message-ID: <CACLfguXFeV6aRL+rW9ULWh=gyF8u5vLncMFJhsOrfMWe7PhvTA@mail.gmail.com>
+Subject: Re: [PATCH v8 7/8] vhost: Add check for inherit_owner status
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ok, I will correct them in V2.
+On Tue, Apr 1, 2025 at 9:59=E2=80=AFPM Stefano Garzarella <sgarzare@redhat.=
+com> wrote:
+>
+> On Fri, Mar 28, 2025 at 06:02:51PM +0800, Cindy Lu wrote:
+> >The VHOST_NEW_WORKER requires the inherit_owner
+> >setting to be true. So we need to add a check for this.
+> >
+> >Signed-off-by: Cindy Lu <lulu@redhat.com>
+> >---
+> > drivers/vhost/vhost.c | 7 +++++++
+> > 1 file changed, 7 insertions(+)
+>
+> IMHO we should squash this patch also with the previous one, or do this
+> before allowing the user to change inherit_owner, otherwise bisection
+> can be broken.
+>
+> Thanks,
+> Stefano
+>
+Sure, will do
+Thanks
+Cindy
+> >
+> >diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> >index ff930c2e5b78..fb0c7fb43f78 100644
+> >--- a/drivers/vhost/vhost.c
+> >+++ b/drivers/vhost/vhost.c
+> >@@ -1018,6 +1018,13 @@ long vhost_worker_ioctl(struct vhost_dev *dev, un=
+signed int ioctl,
+> >       switch (ioctl) {
+> >       /* dev worker ioctls */
+> >       case VHOST_NEW_WORKER:
+> >+              /*
+> >+               * vhost_tasks will account for worker threads under the =
+parent's
+> >+               * NPROC value but kthreads do not. To avoid userspace ov=
+erflowing
+> >+               * the system with worker threads inherit_owner must be t=
+rue.
+> >+               */
+> >+              if (!dev->inherit_owner)
+> >+                      return -EFAULT;
+> >               ret =3D vhost_new_worker(dev, &state);
+> >               if (!ret && copy_to_user(argp, &state, sizeof(state)))
+> >                       ret =3D -EFAULT;
+> >--
+> >2.45.0
+> >
+>
 
-Regards,
-Henry
-
-Markus Elfring <Markus.Elfring@web.de> =E4=BA=8E2025=E5=B9=B44=E6=9C=883=E6=
-=97=A5=E5=91=A8=E5=9B=9B 18:13=E5=86=99=E9=81=93=EF=BC=9A
->
-> =E2=80=A6
-> > Add NULL check after devm_ioremap() to prevent this issue.
->
-> Can a summary phrase like =E2=80=9CPrevent null pointer dereference in mt=
-7996_mmio_wed_init()=E2=80=9D
-> be a bit nicer?
->
->
-> =E2=80=A6
-> > +++ b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
-> > @@ -323,6 +323,8 @@ int mt7996_mmio_wed_init(struct mt7996_dev *dev, vo=
-id *pdev_ptr,
-> >       wed->wlan.base =3D devm_ioremap(dev->mt76.dev,
-> >                                     pci_resource_start(pci_dev, 0),
-> >                                     pci_resource_len(pci_dev, 0));
-> > +     if (!wed->wlan.base)
-> > +             return -ENOMEM;
->
-> Can a blank line be desirable after such a statement?
->
-> Regards,
-> Markus
