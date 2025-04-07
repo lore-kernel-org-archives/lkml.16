@@ -1,80 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BBB211460;
-	Mon,  7 Apr 2025 08:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827D62253B2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015838; cv=none; b=Lat6+9pqPW1Q6fXxgUvDPRmjydOp6OTPtY2pbSH5Em5AfNQY+E0w2W3RGjwB5crQD49pwl9Twxi2rXTDCr50TLmdpD1z+115ITuparLuugsRBlI4k6e615uBE797SSg2hCx3lLgRLpgqcSXSuyD35xMKfAGZ5g7jwvcxWHliVL0=
+	t=1744015864; cv=none; b=l1NBiix//h0Ou2+9+ztMLbG8xcTSAWg6J1PIc1s4fBaQuUiBwDmJah+WwpKSw7xEV5C3nizOTApyxSZtyvR28NcufJo9jSif8TEdrQk/oxD4DTCFvVBbHI1saVR5t0A2Dop14KVpztGX9QA/ZePTG9NesqJSMjXac5q5k0/CcPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015838; c=relaxed/simple;
-	bh=Pzt5wycJlkf+e9wpxWW1NN9vBkIs1eaZ3Ka2d8Lwj+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKiQucZ431mNMCU//rDNeDB5jh5sEFAOlEGL9hS4UQ0bjj7n7oJbZ7sxo+yJRNmow3FaBcpgbQ0b3hDvpHinHj9bPq3+otIF2w8oFQzQjSevvb7DH9dYSCDcEx0CWIam4v/cD1BZGidJa/YEfrRvDjy1AZwuyMEUo+EKM/jpj0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: PA7LLTc+TQK9RqUDehrywQ==
-X-CSE-MsgGUID: kTOCl/7DSwu+YYzC4Flc2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="45278748"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="45278748"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:50:34 -0700
-X-CSE-ConnectionGUID: 54jyaMuLQaiFeBAgQfsjog==
-X-CSE-MsgGUID: 02H2fUevQ/ioepiy0FFQaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="132739344"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:50:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u1iBY-0000000A0Zw-2oac;
-	Mon, 07 Apr 2025 11:50:28 +0300
-Date: Mon, 7 Apr 2025 11:50:28 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 01/12] gpio: dln2: use new line value setter callbacks
-Message-ID: <Z_OR1HWJMHipH0U9@smile.fi.intel.com>
-References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
- <20250407-gpiochip-set-rv-gpio-part1-v1-1-78399683ca38@linaro.org>
+	s=arc-20240116; t=1744015864; c=relaxed/simple;
+	bh=ivifpmJA5RzuP+2VfL7wZfuN1Is6XWXXTnQ1F141g1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vD0UW4ec5d6qEk+EejOydJl0riSbkp8Q+iM3AV3nyJEcn9WeqL6FRondpBM9+vvdULNClxXYKVPmmcR7mwKmo/9WWIINaPzVroIxy30p3D3WfBMvzen0apD1iEBvv8PojQnPWrrjhvib0V+96JuWq5+LW7YhNwxhobrrTpOz0i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V22P3ufQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V22P3ufQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744015861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jdWTVOx71WrbrI+bILmB8IlavscoRW8coYO7NfgYHhI=;
+	b=V22P3ufQ1WW1T1hKfV+VMyGj4DiLwYsKJL9F9g/LsiAox7qeCVijUICjISWHLXUEpbsIpD
+	hEmIM7Uxc+QindY9czwV7/3mr5uuosRbNEKCdLrkzH46cAW/TWdtGKz4r5asHJcehn4KmH
+	RFwipDI/GXaAluqz4JpKVgBl9xzHjgs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-329-6ZdLqLv9N4WXK9ROw-EltA-1; Mon, 07 Apr 2025 04:50:59 -0400
+X-MC-Unique: 6ZdLqLv9N4WXK9ROw-EltA-1
+X-Mimecast-MFC-AGG-ID: 6ZdLqLv9N4WXK9ROw-EltA_1744015859
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ea256f039so34203105e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:50:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744015859; x=1744620659;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jdWTVOx71WrbrI+bILmB8IlavscoRW8coYO7NfgYHhI=;
+        b=VW6Dh+9Oz0FXsH8lLpm2lHfG6efp+TPt/9iLEWngUXMsU+E9uBnWGMVwfyDqsvHOwN
+         y1thFesDtSH16+UFvYKJnxSRSKwo2RwgG4AowO1VnthVX7AZ8w/UOgj4G0wReQbReSiS
+         r/hwPodmZ3lZIBAWAMmHAz4Wq1jKKqJGCLEwBmLRPJKDPImXsNn8q05PvlhndRaD/RnQ
+         mOOgSirAZtfePaLm5XaC4NyAohEa8kjz7aalDXYsvVXLQZ2jr/K8obj98x4rdm1UtHKi
+         AxKLOA2CDAgCT32KJruj8FpPXGOEMUpoZ9TN00ECYGmCnYs2Ojxz/Rt1kIdbQpajWOSW
+         E3/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXc9+SzDy93nNmmMGoDLssDA+mKjui8ApJejvdFN+EFe75Lr3oPLS0d0HPcoHXmFIZJsoy1JI/dNJP2hh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx10txY5jqFuaCv5khgYRyENk3Ikk4N0QuKtGmoJd3nrdVYLUtn
+	unSgwlVRAVYcvUnKEUkFPmkYreOXBu+jKhWTs+CD2NqxJbNHT/H+qd0+7MFq0DJDRHgSxzl6VrV
+	6uJmeFl4JpdFWHhZJ2sj2OjhxxAOI0awSMghqlPyCzIshtx+CotjcMC+b0vfxDQ==
+X-Gm-Gg: ASbGncs7r/SD1hm1ZPpJAEDDNSsj1iRxVDtE7yoTwNlOWh/w5PDSKhWJDWOAZwPjunf
+	rVb1RQI5HOhD8zGXlTwKB0Kf4eUqJBzvAreRsYS1i3Fa5HuYc1u0AIbTjgwRa6uU2DJe/eGduG0
+	Iw2koSyAGwVUbHIhyO9RbKXIJKw3lFTrt/E3AFxESa06VEvqKADNx8DDKfIz5sKGsZbfl3lTkXi
+	tk+j/hDsQSWvhj/KPYiNJ9CYuEvNVNaYH9OGRSWa7CJs3Vaw1g1YHT/m6/GFjh2lwF6KeFY3t5p
+	qRWWwGJSyPyo67qtR5eSSWN8ihumcsDc19cbVwGhvwsFrnggCMcYLx3+dSInoAMluyz433d1OAQ
+	1Bkcd9UgRt+AOGVKs6Qj8OpiaPlLBE3U4Rd5R6Ucl01c=
+X-Received: by 2002:a05:6000:40dc:b0:391:122c:8b2 with SMTP id ffacd0b85a97d-39d0de29387mr8430327f8f.31.1744015858750;
+        Mon, 07 Apr 2025 01:50:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGLN7bHhtvPRoeB2LIslpGvlY/eR4p3LIlYzOev7LpsbPTKPEJQ1+mxYzmjkKRaA1ybGp2MTA==
+X-Received: by 2002:a05:6000:40dc:b0:391:122c:8b2 with SMTP id ffacd0b85a97d-39d0de29387mr8430310f8f.31.1744015858397;
+        Mon, 07 Apr 2025 01:50:58 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226ee4sm11716681f8f.93.2025.04.07.01.50.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 01:50:57 -0700 (PDT)
+Message-ID: <25adc196-1070-4d55-b5bb-34dcdd6639d2@redhat.com>
+Date: Mon, 7 Apr 2025 10:50:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-1-78399683ca38@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+ Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+ Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Wei Wang <wei.w.wang@intel.com>
+References: <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com>
+ <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+ <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+ <39a67ca9-966b-40c1-b080-95d8e2cde376@redhat.com>
+ <20250407044246-mutt-send-email-mst@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250407044246-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 09:13:10AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 07.04.25 10:44, Michael S. Tsirkin wrote:
+> Wow great job digging through all these hypervisors!
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> On Mon, Apr 07, 2025 at 10:38:59AM +0200, David Hildenbrand wrote:
+>> crossvm:
+>> https://github.com/google/crosvm/blob/main/devices/src/virtio/balloon.rs
+>>
+>> -> Hard-codes queue numbers; does *not* offer/implement
+>>     VIRTIO_BALLOON_F_STATS_VQ but does offer VIRTIO_BALLOON_F_STATS_VQ
+>>     and VIRTIO_BALLOON_F_DEFLATE_ON_OOM.
+>>
+>> -> Implements something that is not in the virtio-spec
+>>
+>> const VIRTIO_BALLOON_F_WS_REPORTING: u32 = 8; // Working Set Reporting
+>> virtqueues
+>>
+>> and
+>>
+>> const WS_DATA_VQ: usize = 5;
+>> const WS_OP_VQ: usize = 6;
+>>
+>>
+>> IIUC, Linux inside cross-vm might actually be problematic? They would
+>> disagree on the virtqueue for free-page-reporting
+> 
+> 
+> That's why things must be tied to negotiated features, not to offered
+> ones.
 
-...
+cross-vm also has this weird comment:
 
-> -static void dln2_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> +static int dln2_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +			 int value)
+"
+const VIRTIO_BALLOON_F_PAGE_REPORTING: u32 = 5; // Page reporting virtqueue
+                                                 // TODO(b/273973298): 
+this should maybe be bit 6? to be changed later
+"
 
-It gets even shorter. If you are fan of 80 characters from last decade,
-it still fits.
+Not sure why that should be bit 6, the spec says 5 ...
+
+So maybe whatever they run inside the VM is also out of spec ... Really 
+hard to tell.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
 
+David / dhildenb
 
