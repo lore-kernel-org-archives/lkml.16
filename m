@@ -1,44 +1,44 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298DF22A4F4;
-	Mon,  7 Apr 2025 18:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1476222652D;
+	Mon,  7 Apr 2025 18:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049421; cv=pass; b=sKuV3H6U+wcYY1jcL3lVqQ5sW7kdkVaM+PKLLgx2gkH7MAGaAnejr9iTpR25ByqX0Rg3sRutX9+S7HN4nhAbpswsP19zIoSeXk5ddDeZyXXEgV5cu2d47cOoNHO5iRaqF0pYtVnG6jQIQB2fY4Rhv+DRqC3E3YGpstRfzCFg8Uc=
+	t=1744049422; cv=pass; b=mjCVLiBnkxGDk6B3PeAjUX0Lgy5VewO9R4Vm6+FpJM9u+YL1W6kkgagY5Kd4eCbMj1UuChj9pS00AOA7+anN3oSo5ae7m/Tm6I3Rh+hXPWw+ZIPlc7iONk6pmnOsrCt/IASSEiAIPnxwMp5uLV+Ed1JA0wlVWx2/HKGKGE9k9d0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049421; c=relaxed/simple;
-	bh=btuhMyuF1T0j0SAtS/VbarZsZiCy5Mldn/QL+Az3nh0=;
+	s=arc-20240116; t=1744049422; c=relaxed/simple;
+	bh=3up7opuehpBhT967vNE90K2e+CH2SO/lQi/Ygllvxcs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hnvNxwadbq0TQ8IOjzHPL85EdXR5s/NXAGmjkdrkrLLLk5XneqCG0BFK8fKxrCZjzIv3hCjvPKYNdlLNUNeP07t8XwbnIU+nwYGgX4ZAgvbjQZjLODnfGA6mTZWvusUxt9HZ1SNqMVPJWk7SrHiYHHA6WWlm/M/KCQf9DYBgKOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=CTSUKXVC; arc=pass smtp.client-ip=136.143.184.112
+	 In-Reply-To:To:Cc; b=sdyMevfdahFvm1QqeSMo9tYecp11biyBbhfm7cY4Gq1mUY7WkbkO5jHjL2lzKSJyu9VKjQybzavg66UVW1uFxeLbaguSS5M2NCHiaHHzrGusG5y3aXls5xvIZjPK73FuuAICURPzQeWUpAUbJ/ZHsaF6nphJuH6hVouXD7VfD5g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=AVHCswuj; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="CTSUKXVC"
-ARC-Seal: i=1; a=rsa-sha256; t=1744049390; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="AVHCswuj"
+ARC-Seal: i=1; a=rsa-sha256; t=1744049398; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Necu4VPR/VUul1b+RBujP89FTiCPjqO/Si5Jh01ACaOTbHqylyWqyQ7e2hBq3Qd/kSGArFXMfuiisrC/MF/Sm/qy1JaMMdt2bg4xTeXSvyISgS1WIL1wxGqLDJRQtd9wCIMgxjKpYghvZ1RQA7HrcMf5jEASc9LQkYlQQQzCwbg=
+	b=L7ZIIBXp64pKw0YfQAJ9eeFkBk7MKn3P4PYa0AVapVsvjZYiwVvIKuBFERU0O1JdoFzsHfhOD+jYAr3AqmA2+0DJevZRGymFAIMUzkXDTFyKnRsI6RrHPE8l126IsYGbj8E8DGb8SIZ6g5GA64hgA+hoSKUxXHkhOXn2bumAk18=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744049390; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Kk+sJ5uIUChiU10ulvk3xbtqOOJOIxtcCt00TnkAFo4=; 
-	b=mDDmyjXxgsyT6LQl1niZKJEuYW6a4ZgAiM+PbKd3RgMSuIr+0ueD9zC7e0L/ytg4Sj1XpWg2mr9NA67NsCLrtkKvThQtknnDw9Da4ldxVyZq0Cvu7fw95EOQ3r/9kPX+9aw90oHmSE9Ba3lF0rDD65noUcJHMr/uwgURi+ncu+c=
+	t=1744049398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Xnv5MfaFzomawaxWyH7pWxpw5ddTb5bXnqTSVdYnSdk=; 
+	b=c3s68I/jQrQklNJHmiEynxXfmNyb++bmmR2YyFtXhGG3VRM0Rjkmb6YWWM94u9forsAEWzzPQN9JqgMByjVf1vgk6mc+uZu4Ib9JyWv7Wcj+RfjzPo1nbMApYbo7+/OAOa+bbowKAEo7KkAT3pEJuOvoTW58AAQPLaetHve5j8w=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744049390;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744049398;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=Kk+sJ5uIUChiU10ulvk3xbtqOOJOIxtcCt00TnkAFo4=;
-	b=CTSUKXVCsZIacwoTbuUCDyLQX8AgWIkRchue8FyNix1y1bqePf2q7ojKJwPEz9m0
-	NR0tlGrOz2dHOFUyoqIZhFYUhX8m1USdh0WOtnXJZ2SWVIgUIfe2czjQnTWWpQ0HFyo
-	bkSmjqaVadC2gUSf/QSWfoDNCdR793HPtX9mtgg8=
-Received: by mx.zohomail.com with SMTPS id 174404938859027.759672499582507;
-	Mon, 7 Apr 2025 11:09:48 -0700 (PDT)
+	bh=Xnv5MfaFzomawaxWyH7pWxpw5ddTb5bXnqTSVdYnSdk=;
+	b=AVHCswuj8QKflz+JtHurC86AVR5fkFb2a+xHP+VdU+cKoyStT4rU/Dad1vFZqCB0
+	UHhq9ZU0FerqTM2ga2bweLJe2xnV8bVQT54v5XdBQlIVfc5UEDE002shiofdDBRllIH
+	anSpgvwL5g4gtqgn16lVKcNBrt5WOPIHfnx8Eojw=
+Received: by mx.zohomail.com with SMTPS id 1744049396610968.3321994444946;
+	Mon, 7 Apr 2025 11:09:56 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 07 Apr 2025 20:09:15 +0200
-Subject: [PATCH 2/4] phy: rockchip: inno-usb2: add soft vbusvalid control
+Date: Mon, 07 Apr 2025 20:09:17 +0200
+Subject: [PATCH 4/4] arm64: dts: rockchip: enable USB on Sige5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-rk3576-sige5-usb-v1-2-67eec166f82f@collabora.com>
+Message-Id: <20250407-rk3576-sige5-usb-v1-4-67eec166f82f@collabora.com>
 References: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
 In-Reply-To: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -63,198 +63,213 @@ Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-With USB type C connectors, the vbus detect pin of the OTG controller
-attached to it is pulled high by a USB Type C controller chip such as
-the fusb302. This means USB enumeration on Type-C ports never works, as
-the vbus is always seen as high.
+The ArmSoM Sige5 has several USB ports: a Type-A USB 3 port (USB2 lines
+going through a hub), a Type-A USB 2.0 port (also going through a hub),
+a Type-C DC input port that has absolutely no USB data connection and a
+Type-C port with USB3.2 Gen1x1 that's also the maskrom programming port.
 
-Rockchip added some GRF register flags to deal with this situation. The
-RK3576 TRM calls these "soft_vbusvalid_bvalid" (con0 bit index 15) and
-"soft_vbusvalid_bvalid_sel" (con0 bit index 14).
+Enable these ports, and set the device role to be host for the host
+ports.
 
-Downstream introduces a new vendor property which tells the USB 2 PHY
-that it's connected to a type C port, but we can do better. Since in
-such an arrangement, we'll have an OF graph connection to the USB
-connector anyway, we can walk said OF graph and check the connector's
-compatible to determine this without adding any further vendor
-properties.
-
-Do keep in mind that the usbdp PHY driver seemingly fiddles with these
-register fields as well, but what it does doesn't appear to be enough
-for us to get working USB enumeration, presumably because the whole
-vbus_attach logic needs to be adjusted as well either way.
+The data capable Type-C USB port uses a fusb302 for data role switching.
+It currently does not have functioning SuperSpeed with certain Type-C
+cables in one of the two possible orientations.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 78 +++++++++++++++++++++++++--
- 1 file changed, 74 insertions(+), 4 deletions(-)
+ .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 153 +++++++++++++++++++++
+ 1 file changed, 153 insertions(+)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index b5e6a864deebbcb33375001fc6ed67b2dfee6954..7dc4f53e18fcf0c9d010dd78e5fcd089b6bae43f 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-@@ -114,6 +115,8 @@ struct rockchip_chg_det_reg {
- /**
-  * struct rockchip_usb2phy_port_cfg - usb-phy port configuration.
-  * @phy_sus: phy suspend register.
-+ * @svbus_en: soft vbus bvalid enable register.
-+ * @svbus_sel: soft vbus bvalid selection register.
-  * @bvalid_det_en: vbus valid rise detection enable register.
-  * @bvalid_det_st: vbus valid rise detection status register.
-  * @bvalid_det_clr: vbus valid rise detection clear register.
-@@ -140,6 +143,8 @@ struct rockchip_chg_det_reg {
-  */
- struct rockchip_usb2phy_port_cfg {
- 	struct usb2phy_reg	phy_sus;
-+	struct usb2phy_reg	svbus_en;
-+	struct usb2phy_reg	svbus_sel;
- 	struct usb2phy_reg	bvalid_det_en;
- 	struct usb2phy_reg	bvalid_det_st;
- 	struct usb2phy_reg	bvalid_det_clr;
-@@ -203,6 +208,7 @@ struct rockchip_usb2phy_cfg {
-  * @event_nb: hold event notification callback.
-  * @state: define OTG enumeration states before device reset.
-  * @mode: the dr_mode of the controller.
-+ * @typec_vbus_det: whether to apply Type C logic to OTG vbus detection.
-  */
- struct rockchip_usb2phy_port {
- 	struct phy	*phy;
-@@ -222,6 +228,7 @@ struct rockchip_usb2phy_port {
- 	struct notifier_block	event_nb;
- 	enum usb_otg_state	state;
- 	enum usb_dr_mode	mode;
-+	bool typec_vbus_det;
- };
- 
- /**
-@@ -495,6 +502,13 @@ static int rockchip_usb2phy_init(struct phy *phy)
- 	mutex_lock(&rport->mutex);
- 
- 	if (rport->port_id == USB2PHY_PORT_OTG) {
-+		if (rport->typec_vbus_det) {
-+			if (rport->port_cfg->svbus_en.enable &&
-+					rport->port_cfg->svbus_sel.enable) {
-+				property_enable(rphy->grf, &rport->port_cfg->svbus_en, true);
-+				property_enable(rphy->grf, &rport->port_cfg->svbus_sel, true);
-+			}
-+		}
- 		if (rport->mode != USB_DR_MODE_HOST &&
- 		    rport->mode != USB_DR_MODE_UNKNOWN) {
- 			/* clear bvalid status and enable bvalid detect irq */
-@@ -535,8 +549,7 @@ static int rockchip_usb2phy_init(struct phy *phy)
- 			if (ret)
- 				goto out;
- 
--			schedule_delayed_work(&rport->otg_sm_work,
--					      OTG_SCHEDULE_DELAY * 3);
-+			schedule_delayed_work(&rport->otg_sm_work, 0);
- 		} else {
- 			/* If OTG works in host only mode, do nothing. */
- 			dev_dbg(&rport->phy->dev, "mode %d\n", rport->mode);
-@@ -666,8 +679,17 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
- 	unsigned long delay;
- 	bool vbus_attach, sch_work, notify_charger;
- 
--	vbus_attach = property_enabled(rphy->grf,
--				       &rport->port_cfg->utmi_bvalid);
-+	if (rport->port_cfg->svbus_en.enable && rport->typec_vbus_det) {
-+		if (property_enabled(rphy->grf, &rport->port_cfg->svbus_en) &&
-+		    property_enabled(rphy->grf, &rport->port_cfg->svbus_sel)) {
-+			vbus_attach = true;
-+		} else {
-+			vbus_attach = false;
-+		}
-+	} else {
-+		vbus_attach = property_enabled(rphy->grf,
-+					       &rport->port_cfg->utmi_bvalid);
-+	}
- 
- 	sch_work = false;
- 	notify_charger = false;
-@@ -1276,6 +1298,48 @@ static int rockchip_otg_event(struct notifier_block *nb,
- 	return NOTIFY_DONE;
- }
- 
-+static const char *const rockchip_usb2phy_typec_cons[] = {
-+	"usb-c-connector",
-+	NULL,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+index 828bde7fab68dc6bcbd13d75c8a72540b3666071..cdd8f8b2319105b1dae34395be20e50d45cd4431 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+@@ -175,6 +175,33 @@ vcc_3v3_ufs_s0: regulator-vcc-ufs-s0 {
+ 		regulator-max-microvolt = <3300000>;
+ 		vin-supply = <&vcc_5v0_sys>;
+ 	};
++
++	vcc_5v0_typec0: regulator-vcc-5v0-typec0 {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_otg0_pwren>;
++		regulator-name = "vcc_5v0_typec0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc_5v0_device>;
++	};
++	vcc_5v0_usbhost: regulator-vcc-5v0-usbhost {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&gpio4 RK_PA4 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_host_pwren>;
++		regulator-name = "vcc_5v0_usbhost";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc_5v0_device>;
++	};
 +};
 +
-+static bool rockchip_usb2phy_otg_is_type_c(struct rockchip_usb2phy *rphy)
-+{
-+	struct device_node *node = rphy->dev->of_node;
-+	struct device_node *ports;
-+	struct device_node *ep = NULL;
-+	struct device_node *parent;
-+
-+	ports = of_get_child_by_name(node, "ports");
-+	if (ports)
-+		node = ports;
-+
-+	for_each_of_graph_port(node, port) {
-+		ep = of_get_child_by_name(port, "endpoint");
-+		if (!ep)
-+			continue;
-+
-+		parent = of_graph_get_remote_port_parent(ep);
-+		of_node_put(ep);
-+		if (!parent)
-+			continue;
-+
-+		if (of_device_compatible_match(parent, rockchip_usb2phy_typec_cons)) {
-+			of_node_put(parent);
-+			if (ports)
-+				of_node_put(ports);
-+			return true;
-+		}
-+
-+		of_node_put(parent);
-+	}
-+
-+	if (ports)
-+		of_node_put(ports);
-+
-+	return false;
-+}
-+
- static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
- 					  struct rockchip_usb2phy_port *rport,
- 					  struct device_node *child_np)
-@@ -1297,6 +1361,8 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
++&combphy1_psu {
++	status = "okay";
+ };
  
- 	mutex_init(&rport->mutex);
+ &cpu_l0 {
+@@ -605,6 +632,58 @@ regulator-state-mem {
+ &i2c2 {
+ 	status = "okay";
  
-+	rport->typec_vbus_det = rockchip_usb2phy_otg_is_type_c(rphy);
++	usbc0: typec-portc@22 {
++		compatible = "fcs,fusb302";
++		reg = <0x22>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA5 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbc0_interrupt>;
++		vbus-supply = <&vcc_5v0_typec0>;
 +
- 	rport->mode = of_usb_get_dr_mode_by_phy(child_np, -1);
- 	if (rport->mode == USB_DR_MODE_HOST ||
- 	    rport->mode == USB_DR_MODE_UNKNOWN) {
-@@ -1971,6 +2037,8 @@ static const struct rockchip_usb2phy_cfg rk3576_phy_cfgs[] = {
- 		.port_cfgs	= {
- 			[USB2PHY_PORT_OTG] = {
- 				.phy_sus	= { 0x0000, 8, 0, 0, 0x1d1 },
-+				.svbus_en	= { 0x0000, 15, 15, 0, 1 },
-+				.svbus_sel	= { 0x0000, 14, 14, 0, 1 },
- 				.bvalid_det_en	= { 0x00c0, 1, 1, 0, 1 },
- 				.bvalid_det_st	= { 0x00c4, 1, 1, 0, 1 },
- 				.bvalid_det_clr = { 0x00c8, 1, 1, 0, 1 },
-@@ -2008,6 +2076,8 @@ static const struct rockchip_usb2phy_cfg rk3576_phy_cfgs[] = {
- 		.port_cfgs	= {
- 			[USB2PHY_PORT_OTG] = {
- 				.phy_sus	= { 0x2000, 8, 0, 0, 0x1d1 },
-+				.svbus_en	= { 0x2000, 15, 15, 0, 1 },
-+				.svbus_sel	= { 0x2000, 14, 14, 0, 1 },
- 				.bvalid_det_en	= { 0x20c0, 1, 1, 0, 1 },
- 				.bvalid_det_st	= { 0x20c4, 1, 1, 0, 1 },
- 				.bvalid_det_clr = { 0x20c8, 1, 1, 0, 1 },
++		connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			/* fusb302 supports PD Rev 2.0 Ver 1.2 */
++			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>;
++			power-role = "source";
++			source-pdos = <PDO_FIXED(5000, 2000,
++						 PDO_FIXED_USB_COMM | PDO_FIXED_DATA_SWAP)>;
++
++			altmodes {
++				displayport {
++					svid = /bits/ 16 <0xff01>;
++					vdo = <0xffffffff>;
++				};
++			};
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					usbc0_hs_ep: endpoint {
++						remote-endpoint = <&u2phy0_ep>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					usbc0_ss_ep: endpoint {
++						remote-endpoint = <&usb_drd0_ep>;
++					};
++				};
++				port@2 {
++					reg = <2>;
++					usbc0_dp_ep: endpoint {
++						remote-endpoint = <&usbdp_phy_ep>;
++					};
++				};
++			};
++		};
++	};
++
+ 	hym8563: rtc@51 {
+ 		compatible = "haoyu,hym8563";
+ 		reg = <0x51>;
+@@ -655,6 +734,24 @@ led_rgb_g: led-green-en {
+ 			rockchip,pins = <4 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	usb {
++		usb_host_pwren: usb-host-pwren {
++			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++		usb_otg0_pwren: usb-otg0-pwren {
++			rockchip,pins = <4 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++		usbc0_interrupt: usbc0-interrupt {
++			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++		usbc0_sbu1: usbc0-sbu1 {
++			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++		usbc0_sbu2: usbc0-sbu2 {
++			rockchip,pins = <2 RK_PA7 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
+ };
+ 
+ &sdhci {
+@@ -683,11 +780,67 @@ &sdmmc {
+ 	status = "okay";
+ };
+ 
++&u2phy0 {
++	status = "okay";
++
++	port {
++		u2phy0_ep: endpoint {
++			remote-endpoint = <&usbc0_hs_ep>;
++		};
++	};
++};
++
++&u2phy0_otg {
++	status = "okay";
++};
++
++&u2phy1 {
++	status = "okay";
++};
++
++&u2phy1_otg {
++	phy-supply = <&vcc_5v0_usbhost>;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-0 = <&uart0m0_xfer>;
+ 	status = "okay";
+ };
+ 
++&usb_drd0_dwc3 {
++	usb-role-switch;
++	dr_mode = "otg";
++	status = "okay";
++
++	port {
++		usb_drd0_ep: endpoint {
++			remote-endpoint = <&usbc0_ss_ep>;
++		};
++	};
++};
++
++&usb_drd1_dwc3 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbdp_phy {
++	mode-switch;
++	orientation-switch;
++	pinctrl-names = "default";
++	pinctrl-0 = <&usbc0_sbu1 &usbc0_sbu2>;
++	sbu1-dc-gpios = <&gpio2 RK_PA6 GPIO_ACTIVE_HIGH>;
++	sbu2-dc-gpios = <&gpio2 RK_PA7 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	port {
++		usbdp_phy_ep: endpoint {
++			remote-endpoint = <&usbc0_dp_ep>;
++		};
++	};
++};
++
+ &vop {
+ 	status = "okay";
+ };
 
 -- 
 2.49.0
