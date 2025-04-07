@@ -1,96 +1,110 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC5219C56C;
-	Mon,  7 Apr 2025 03:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C178C364BA;
+	Mon,  7 Apr 2025 03:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743997358; cv=none; b=IkFsX4aVv0Dbitg8x3W5fp54Kk25xcuOzxBfoWewk5R+eVopSQy7myO4afQCMep9XwBDfSouVBbDZXhLR54EU4xhHrAJiLsIpT0A9V3f8WwluSvYnhTJ2NcZsmtqhgSPHccKuL2innJfKVVdsbfFYyff5BITT/VrYSed1pc5LCk=
+	t=1743997643; cv=none; b=hHKmRpdX2UBZtB+dm+5oBcSi6SuJpQ3PxCyKgDktVl3XdSTeKo+ho2c/6aTAsuAh2Gmc53ZOqM35cBnyiqTdTilU7RKD89nNmp6EmtWPKFUIJMyNaChMYOAopQpLnsVmY3NWFTDk6BlFIoYTeBjV3VNwMlMve6rxPDJMDbL1TnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743997358; c=relaxed/simple;
-	bh=1E4N30ToQrS4oTEuXMPktjG45U+GwxhykLqwMXbp9JU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fg9WoG52uAor/lzC2/k94R6T4BEezL3YRFTRfSmmZfQzxC0A2xzW4oD/+NNuBTNQjQhxcbfLfx/ON9pZmvURlIZh7G9dJekQQ7NALgYQiOiupVzUqcTpfSkhbDbKoFjzVd0ytjQdisEzRqEZ86LHS0BoSBEYK6BxrSI1ae9KtG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowADXff6XSfNni_PKBg--.48924S2;
-	Mon, 07 Apr 2025 11:42:21 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] e1000e: Add error handling for e1e_rphy_locked()
-Date: Mon,  7 Apr 2025 11:41:54 +0800
-Message-ID: <20250407034155.1396-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743997643; c=relaxed/simple;
+	bh=av44q1rYsp/AtchN3ThcrzvAT1OfT4epMdxLK3s6ET0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=i++MfS+3iXkyZiGfBI/fDFN/xzrWPDFVg9xdniUa5Arbhi58cTXWQTBHXRhKzBY34YjE3KE6kcEzNg5r0XZNHmUnv2x66G0VLGmt5KX0GhUd6/svMbDrPdaehaZ1vjyfk12QBnNr9d0fZ3JyOYM/5tRaUVCV1xyqASahsiBtuuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=Y7iA9nao; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="Y7iA9nao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
+	s=sorc2401; t=1743997581;
+	bh=av44q1rYsp/AtchN3ThcrzvAT1OfT4epMdxLK3s6ET0=;
+	h=Mime-Version:Subject:From:Date:Message-Id:To;
+	b=Y7iA9nao7Mio9G6TjFM82PtODgwwAWBc9NkOrbepHObzwlnEzVNfZbemdQPT9A6Bv
+	 KYH18oB/g2YL18NzcCeSyFaHDP+3iZUVsL50H5cXXwWClLScN+V6EfXrCh1ZvKqWk9
+	 IaKsiFqHSQbB78D8TYnELbJX5Q0NL+HmupHyF6ik=
+X-QQ-mid: bizesmtpip4t1743997576t7187db
+X-QQ-Originating-IP: MlVPqRNBtqlehSWEyKUNjaKSp8r3taGDpfdzKSriZgI=
+Received: from smtpclient.apple ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 07 Apr 2025 11:46:14 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 4215720758617194204
+EX-QQ-RecipientCnt: 8
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADXff6XSfNni_PKBg--.48924S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw18ZF1fKry5Jw48CFyDZFb_yoW8Xr1Dpa
-	1q9ayqkw4rJw4avayxGa18A3s0v3yYyrnxCFyxu3sa9w4xAw18Jr18K343XryqyrZ8JFW2
-	yF1UAFnxCFs8Z3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-	4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUe4SrUUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUFA2fzOrdCVwAAsD
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: WARNING in cm109_urb_irq_callback/usb_submit_urb
+From: =?utf-8?B?6IOh54Sc?= <huk23@m.fudan.edu.cn>
+In-Reply-To: <3F7A182E-605F-4545-BF77-E739E7A624A4@m.fudan.edu.cn>
+Date: Mon, 7 Apr 2025 11:46:03 +0800
+Cc: =?utf-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>,
+ linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org,
+ syzkaller@googlegroups.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <90A10616-43EF-42CB-A1B7-80D9E7FB9816@m.fudan.edu.cn>
+References: <559eddf1.5c68.195b1d950ef.Coremail.baishuoran@hrbeu.edu.cn>
+ <62d91b68-2137-4a3a-a78a-c765402edd35@suse.com>
+ <3F7A182E-605F-4545-BF77-E739E7A624A4@m.fudan.edu.cn>
+To: Oliver Neukum <oneukum@suse.com>
+X-Mailer: Apple Mail (2.3818.100.11.1.3)
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MdlxueOE7DMoh3Nri4Oqb1+tlp453cqgvMfGnhDzQbDcb8fcLGKUcnM3
+	dN90j6wL1SZ+Juy+5htG/x9SYKjoOKcTjD+tn3pgZSDkC1Sprq6i/kh27vOgUJ3+B2hbp/g
+	U8qG+X7H3nulk9sqrZy4PAfN94116fimSuQxkiczVxQ12m/mYnYkcO0ggH9UMVN3GBQEuiX
+	62Wxu6p8rGCzC5aSmWAWYDxWnXeGnU//2crXZJloqblaVPQHoTmOYTz0JYZxPVybYo+MPP3
+	eKGvUpSCNK48z+REUgH6RLKeSKoS7ELWV5TXthUw8ihMV6WEEQyiu4XkUZFzJSV9sU0aio7
+	QorZimg+iFqucAZGN7ohsNiqfBuqbUagJQr50yfneamk9Gaei5UP3dNLsEiE/q67WRvniOr
+	xNqw+1PUHelKyPF//iosj45A8gkzc7ozxNypxLaYQl1OuwDSbo+DBIESqki6uMKv/WStrtx
+	yZwaatxSeps602U71YNb9YdP6lTVVTPxNvrUoR/sNHSa0VNIbP4XIL2n7LMoY3FBNKtt070
+	qIRE0SLjKp+Jpw6JM4w7G3E1KD6MDQ6gcVVFB1L23/S43cdFJQgrK9zOtawa1pYvlU069tP
+	kC0Lk8gK+eGli+SL0S4V4TqYOLp9lc1igyGqeyKjQ0MwdZZPkD4kEoypu0f2xX1CjLTN71w
+	5pbqnpSs3HJj+h/aCLQYaFJ5fGjGU4iawLqhychuUStxdlsOQ0PGc3p2TGqVXKmv6OW4IrQ
+	vQghW6rFJjSXtpYvchYzgxv99WhmyCLQW/Xwq1hxosbXo/ZfEhXwB54zi7cLEvYWNzWE4C2
+	L9tcK8UKLnHKPe7YsA2j+FjpsNo8BhsJD23lIwHOR6uL6P1YIUa1nmZJWiHu4vffTPSRIx7
+	VGJGjoeBdSo10eUqvBcBA+D5tQ/89l1M07QOBj/3qvkna6QJK1ggK/ige05fb1g4Q+xfS84
+	tp0NZFXD/khlmQWh7Xrp4Lhk8
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-The e1000_suspend_workarounds_ich8lan() calls e1e_rphy_locked to disable
-the SMB release, but does not check its return value. A proper
-implementation can be found in e1000_resume_workarounds_pchlan() from
-/source/drivers/net/ethernet/intel/e1000e/ich8lan.c.
 
-Add an error check for e1e_rphy_locked(). Log the error message and jump
-to 'release' label if the e1e_rphy_locked() fails.
+>=20
+>=20
+> Hi Oliver,
+>=20
+> Sorry for late, our servers have been down for a few days and we just =
+managed to fix it today.
+>=20
+> We retested the patch you provided, but we found that the issue still =
+exists, but may be somewhat different from the call trace from the =
+previous issue. I have provided a screenshot in diff form and the full =
+call trace log in the attachment.
+>=20
+>=20
+> =E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
+> Thanks,
+> Kun Hu
+>=20
+>=20
+> <call trace.txt><diff.jpg>
 
-Fixes: 2fbe4526e5aa ("e1000e: initial support for i217")
-Cc: stable@vger.kernel.org # v3.5+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index 2f9655cf5dd9..d16e3aa50809 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -5497,7 +5497,11 @@ void e1000_suspend_workarounds_ich8lan(struct e1000_hw *hw)
- 			e1e_wphy_locked(hw, I217_SxCTRL, phy_reg);
- 
- 			/* Disable the SMB release on LCD reset. */
--			e1e_rphy_locked(hw, I217_MEMPWR, &phy_reg);
-+			ret_val = e1e_rphy_locked(hw, I217_MEMPWR, &phy_reg);
-+			if (ret_val) {
-+				e_dbg("Fail to Disable the SMB release on LCD reset.");
-+				goto release;
-+			}
- 			phy_reg &= ~I217_MEMPWR_DISABLE_SMB_RELEASE;
- 			e1e_wphy_locked(hw, I217_MEMPWR, phy_reg);
- 		}
--- 
-2.42.0.windows.2
+Hi Oliver,
 
+Was the information on these tests helpful to you? Please let me know if =
+there are any tests you need.
+
+=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94
+Best,
+Kun=
