@@ -1,226 +1,164 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CDA22CBF7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A682156230
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013695; cv=none; b=uwfFKKT2iCXvGf4uC0glTdbY6Zvd/wY2hF+KOsC7Z/l8bWl46fiBDiENl8rGPCC78VdInD7VHO2RBu1LDlOmqUM2ZTKtjbE/+dE8poCqx5S/F9zJCKUDfN44WISm40JytJ/8UPW4pNZKj6jAxsxWS4QPzJG+Wx8oPXERCoaN+hY=
+	t=1744013726; cv=none; b=qUYAQ1xfaaG2loPCy2jmscRIOcmYKz5u9mkejPG/RF7ctnyceYCJqH8bdsqxISBDBUpq4GhelL9l0jlgEqEK0cXNNhLOkqM/p/AHs2Bm4SF+lbFg8mLkJcqKiXCPpiTRdjqGl/PtxtDQwwgezd0pXyF76ZjbG5M/wA+ljukL/bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013695; c=relaxed/simple;
-	bh=UaHEGZDcjpFQM+/91kkr8nzcxY1detjrCFlN+Zq5nB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TX68tznB/zS2rRwwUIZIPTXrLT4Zv1r+OvQSMRGK3kKqAxQVYz7Jq40xLqhsyznVHu/NVkC6scnpwu5Lcu6FJJBag7m+qbIMjhtGq5wDlbUW1I7PUX5DZBFa1RR17fDWS02gFtgn5y+RNeI/A8oJY9cjkm38KYQmVaGPrMG3IVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STAbgTLl; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744013726; c=relaxed/simple;
+	bh=7eKwR+8NelLDqbmRwgY2SrOwJJmgSMiDGnzt6L51nLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I5pvv2SFFCHZ3yr2YxOR9N+ItCBfHLSoT/1kp7i7gsbF8pTWXRUGKaw+oUUCTx9gNbVBGyBJr/X0HWVsDatNZSiuMDiyJx7g0yrNyzRSXJSrUczByG6NoXVYQl0hqSrghjDFnCEIGaSmr+5E/pOEXoJU0wLYVNFg+IDT9zoX+gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=YYwi1oc0; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STAbgTLl"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43690d4605dso26303005e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:14:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="YYwi1oc0"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso5917585a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744013692; x=1744618492; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744013722; x=1744618522; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xK4w0zRijqvJSQy92+j3ZDq7C+G47BlmHwixThFbhJo=;
-        b=STAbgTLlbIIrwW1hWQBewWcHOUo1+MKywO0xfWwoHPboWL9O025HBCdGmsLgakIC5S
-         jCyBvsHOw8xb3pkjnh4VhCPVbG9uItdjnWdXLOU8M6B1gzENJxwj7O4e9Doj9la8SndE
-         ZLxPMnZfkDoMXJTvJff7kDU9AASdQ+BQXdVEFcmqnAH2QPAtIdk6O7WFZhyLdxkOr73I
-         CT7s+7uKkWzEvMYr2zrLgLNG+9X/jeg3NUXbIwykzdAOv8LlJhjJRQS7bNz18QvrU3dg
-         2AHEyNi0DFIpVUhVkC+JCytwigvBq8nOaxX1b+oGSKeEDcRCF5bjO5YPRNoH7lFG4tiS
-         VE6Q==
+        bh=rxhNXhmOXrXU9cn3uuap3d3f1w/9DGD5pG/vOAg+GCU=;
+        b=YYwi1oc0edop/Av6fSOshDK2XvLhHx/X1pdYQfkv3n0Mtd7JUFaxmTBkwfnIgtUINR
+         EayPdUV46tfcXzwNS32vprlnmr25IvKLSDb5eEpaINdTlE3nmrv5kw0pfIIpASzfX7vU
+         AtP0bwpTELTB0xfR6oG4yLF+v4Cl318a5797Zb78XX4UkcqpBo+bnu+L4lMMBeP9VqOf
+         n6eT1JnePywHVn25oQij55/2jVwORFV62hV+NjxQz+ZM0ggcICSQZWMPEX0bOWLA0N3D
+         +i9QeX9bncGroT5P+aGd2bhnWGpw5VN2oi1LsaNITE0PQV1pc8MTGBtLJSA9ULPuqUDD
+         ID+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744013692; x=1744618492;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744013722; x=1744618522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xK4w0zRijqvJSQy92+j3ZDq7C+G47BlmHwixThFbhJo=;
-        b=UbACEvKha3XcgL7HryNPT9mOA0zXe53yIbvwjjJuAGpYrwJzviJLobdm7shUmFmxqY
-         JaELw2B+KGa45Y32UeUihCqinPTGvE2/SUSs5GpRv7Guxaf7vQ709PS9Z6o3Z3wpJgQ2
-         oCO93/MYURh3Vgvx9nwEJzuL6tjIbO4Y3Bzr+5Bz7xZ1yTC8nYuYqI3Oc2Ta7RpMD3ef
-         NB1fDk4enQm3vHFqSyfMy0bUH/R6tOyr1aok9o7Bw9SmLNMFCbdJaTa4y/AbREXodOz4
-         M/0Z+XXoiqSjnl1ebraAQW+8/+fodYFtHjP0Wdkc+RFLbqRz0w+w9j4iRugHbGHSULP8
-         R+8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXWKPOmk9qVzC6Vjx8b96yA5y814lNi6s9qNf/Sw+SAx62rr3VnoiuNTPuAgoc/ptl+GAdzLCvBAi3E0ic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDuWTIBQ6js3HBQ7Z/+aP68dKL3jDeRLUsu3bPeJ6FmnT9ZKBS
-	mkUPG/h5+9eXLKfyGGBLLIBQIU9RPgTsY4rSg6GRItuuJCQzncYy
-X-Gm-Gg: ASbGncsiKSmeNrni8I04oat1OnonJ1aBrXwEtYd6Qdv/dQwQWF2OFVSdBoOpAZ6zxOI
-	9s6xmDBhvr6PLtcq3FOmpA0MOV54ZT3E6F/rYp1uDfXjh8+lTDBEU16CTQvWhGRDLpij8s8zltK
-	NqJVr9tnyUcIaeB6XlyFuVr6e4DzJmxbbq7W6XF5a+Af2a1sXGHNk1kizitd+FVRMvS/la/S1PG
-	bNWVq1BWUfyiBNQ2leZ2Rd1Nzdi7d93H9tp8Z9GcpoBGttrZT0hue4H+QoKuMyUGSDG5BvRo6nh
-	QnLYGH6CMq82BOKNNjCEIcnhOmkjDaM2D7o4rOAwl0u0
-X-Google-Smtp-Source: AGHT+IGsQmQgOtBj5506Lq6aE02Cl59kHYz8T4g9MsZc1IMQIr6Edi6OTut4/mxeXQ0ztbCMSJbOSQ==
-X-Received: by 2002:a05:600c:3111:b0:43c:ef13:7e5e with SMTP id 5b1f17b1804b1-43ecf9c4691mr96175985e9.26.1744013691702;
-        Mon, 07 Apr 2025 01:14:51 -0700 (PDT)
-Received: from fedora.. ([94.73.34.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16a3aefsm125473445e9.21.2025.04.07.01.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:14:50 -0700 (PDT)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v4 16/16] drm/vkms: Allow to configure connector status via configfs
-Date: Mon,  7 Apr 2025 10:14:25 +0200
-Message-ID: <20250407081425.6420-17-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407081425.6420-1-jose.exposito89@gmail.com>
-References: <20250407081425.6420-1-jose.exposito89@gmail.com>
+        bh=rxhNXhmOXrXU9cn3uuap3d3f1w/9DGD5pG/vOAg+GCU=;
+        b=h6/KuVufWvusCEwpJ+JZtOCt7IuGB6W3To970tZ8lldO87nMhdhuTuiQqSPXFwielv
+         ALM0MuSDWk3XbJ9Plm7xb1hthVK/6GKkEsOkObCUUfdydFg8n3XFREgdg4hjn5L30dnQ
+         lpaKzA5FEFKQIB/pr3KMGSgNdEEAnfUtcNZmLaAwNGTOuEmLKW6kQQM5FzuwNO1zC5s/
+         SJiiO/FHWM27z6+UFttemjQXLi18HMbkNIZiqwCWRFHc/knt6LyYOjAXLfc+cbg79ZBb
+         FUPeCyvchW6sAuOytrnP1KfaSNNbCjBmBSy2QtmQWIrRmkJQ30ZPA+H97a5kuplGEPRo
+         gxRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhLhjxNl9n4UnY/4sj6P0ufcQ2Gn8prUCvv+zPr1ruRBN6PyOfx4UehuV8Zx4UBoe+sLVynTSX6m8xQ6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd++90asiSCYWH+6AkGlCkzErMjia8vC7z0XUt/9dsMov2skEs
+	tA8S6qwDGhcDisObYt9jh0IBvNmTdSBqwxriJdsyUdV4G2p/MT+u3tDxesEjfKoWaL5L/u2kDPQ
+	SoeRRmyWaxDcCx/9qB/TmlDJCUGStDRau9S6W5N0HXIue+sG/
+X-Gm-Gg: ASbGncuVBEo7CsIpuJs/IojlKaoEOVJCt0X/4rBGTzH6haVyyTq4oT/HqwsXIa4WPnv
+	ojsNmJERdeLYJt61s2VcfuaQGp7QJlKoVy7yUywa/cmWDripkNnkfLC+SHIwy9tJaynyl3ckjBS
+	23lIrQrS7GMubjw8t2uzNhw1ms6b/xIa6JGxhvG1dWLGWrwRZiEivW4tx4
+X-Google-Smtp-Source: AGHT+IGgzEsWY+FDt77Og8y5aNWXUnnOo8nRCNX9z9AS6T2kxW12Ew+hSRh5KhztpZghUinGFQgeBKUpUrZ7kM/dDF0=
+X-Received: by 2002:a05:6402:3489:b0:5de:c9d0:6742 with SMTP id
+ 4fb4d7f45d1cf-5f0db80a5ebmr5551794a12.9.1744013722372; Mon, 07 Apr 2025
+ 01:15:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250403134200.385077-1-alexghiti@rivosinc.com>
+ <CAMj1kXGzrn6i20LvUBnz_mGi946=GCogNHHUL=mNsv513qYv7A@mail.gmail.com>
+ <2874fc20-9135-4b13-b825-43fb350ce552@ghiti.fr> <CAK7LNAT5sDhh1v3U2xUuVnrbhNXp3SJ_ngxSqAgwmZL0E2QGpA@mail.gmail.com>
+In-Reply-To: <CAK7LNAT5sDhh1v3U2xUuVnrbhNXp3SJ_ngxSqAgwmZL0E2QGpA@mail.gmail.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Mon, 7 Apr 2025 10:15:11 +0200
+X-Gm-Features: ATxdqUF5a3kGXRp3r7uxE0Bhe9AOdQ046v-EZyv9hJ2EImaWyVHa56ABPSTHfBg
+Message-ID: <CAHVXubgZ+Dwx70vU03R9MZ7BjkzbdR21y-Ort6pBngFmFYs-uw@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts: Do not strip .rela.dyn section
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, Ard Biesheuvel <ardb@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Charlie Jenkins <charlie@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a connector is created, add a `status` file to allow to update the
-connector status to:
+Hi Masahiro,
 
- - 1 connector_status_connected
- - 2 connector_status_disconnected
- - 3 connector_status_unknown
+On Fri, Apr 4, 2025 at 5:25=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> On Fri, Apr 4, 2025 at 12:45=E2=80=AFAM Alexandre Ghiti <alex@ghiti.fr> w=
+rote:
+> >
+> > Hi Ard,
+> >
+> > On 03/04/2025 17:11, Ard Biesheuvel wrote:
+> > > On Thu, 3 Apr 2025 at 16:42, Alexandre Ghiti <alexghiti@rivosinc.com>=
+ wrote:
+> > >> riscv uses the .rela.dyn section to relocate the kernel at runtime b=
+ut
+> > >> that section is stripped from vmlinux. That prevents kexec to
+> > >> successfully load vmlinux since it does not contain the relocations =
+info
+> > >> needed.
+> > >>
+> > > Maybe explain that .rela.dyn contains runtime relocations, which are
+> > > only emitted if they are actually needed - as opposed to the static
+> > > relocations that are not emitted as SHF_ALLOC sections, and are not
+> > > considered to be part of the runtime image in the first place.
+> >
+> >
+> > Ok I'll do.
+> >
+> >
+> > > It
+> > > would be nice if we could use --remove-relocations=3D here, which onl=
+y
+> > > removes static relocations, but unfortunately, llvm-objcopy does not
+> > > support this.
+> > >
+> > > Also, I wonder if this should apply to all of .rel.dyn, .rela.dyn and
+> > > .relr.dyn, as they all carry runtime relocations.
+> >
+> >
+> > Ok, I'll add them to the next version.
+> >
+> >
+> > >
+> > > Finally, I'd be curious to know why RISC-V relies on --emit-relocs in
+> > > the first place? Is the relocs check really needed? If not, it would
+> > > be a nice opportunity to get rid of Makefile.postlink entirely.
+> >
+> >
+> > So I had to check and it happens that this was an issue with the
+> > toolchain, I should check if that still happens with newer ones.
+> >
+> > commit 559d1e45a16dcf1542e430ea3dce9ab625be98d0
+> > Author: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > Date:   Wed Mar 29 06:53:29 2023 +0200
+> >
+> >      riscv: Use --emit-relocs in order to move .rela.dyn in init
+>
+>
+>
+>
+> So,
+>
+> Fixes: 559d1e45a16d ("riscv: Use --emit-relocs in order to move
+> .rela.dyn in init")
+>
+> Is this the correct tag?
 
-If the device is enabled, updating the status hot-plug or unplugs the
-connector.
+This is the initial culprit yes, but if we use this tag, the fix won't
+apply. So I decided to pick Ard's patch so that this fix can be easily
+backported to 6.14, and I'll come up with a new version for previous
+releases. Is that ok with you?
 
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- Documentation/gpu/vkms.rst            |  5 +++
- drivers/gpu/drm/vkms/vkms_configfs.c  | 48 +++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_connector.c |  7 ++++
- drivers/gpu/drm/vkms/vkms_connector.h |  6 ++++
- 4 files changed, 66 insertions(+)
+Thanks,
 
-diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-index c551241fe873..7c54099b1dc6 100644
---- a/Documentation/gpu/vkms.rst
-+++ b/Documentation/gpu/vkms.rst
-@@ -108,6 +108,11 @@ Last but not least, create one or more connectors::
- 
-   sudo mkdir /config/vkms/my-vkms/connectors/connector0
- 
-+Connectors have 1 configurable attribute:
-+
-+- status: Connection status: 1 connected, 2 disconnected, 3 unknown (same values
-+  as those exposed by the "status" property of a connector)
-+
- To finish the configuration, link the different pipeline items::
- 
-   sudo ln -s /config/vkms/my-vkms/crtcs/crtc0 /config/vkms/my-vkms/planes/plane0/possible_crtcs
-diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-index 8e90acbebd6a..07ab794e1052 100644
---- a/drivers/gpu/drm/vkms/vkms_configfs.c
-+++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-@@ -7,6 +7,7 @@
- #include "vkms_drv.h"
- #include "vkms_config.h"
- #include "vkms_configfs.h"
-+#include "vkms_connector.h"
- 
- /* To avoid registering configfs more than once or unregistering on error */
- static bool is_configfs_registered;
-@@ -512,6 +513,52 @@ static const struct config_item_type encoder_group_type = {
- 	.ct_owner	= THIS_MODULE,
- };
- 
-+static ssize_t connector_status_show(struct config_item *item, char *page)
-+{
-+	struct vkms_configfs_connector *connector;
-+	enum drm_connector_status status;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	scoped_guard(mutex, &connector->dev->lock)
-+		status = vkms_config_connector_get_status(connector->config);
-+
-+	return sprintf(page, "%u", status);
-+}
-+
-+static ssize_t connector_status_store(struct config_item *item,
-+				      const char *page, size_t count)
-+{
-+	struct vkms_configfs_connector *connector;
-+	enum drm_connector_status status;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	if (kstrtouint(page, 10, &status))
-+		return -EINVAL;
-+
-+	if (status != connector_status_connected &&
-+	    status != connector_status_disconnected &&
-+	    status != connector_status_unknown)
-+		return -EINVAL;
-+
-+	scoped_guard(mutex, &connector->dev->lock) {
-+		vkms_config_connector_set_status(connector->config, status);
-+
-+		if (connector->dev->enabled)
-+			vkms_trigger_connector_hotplug(connector->dev->config->dev);
-+	}
-+
-+	return (ssize_t)count;
-+}
-+
-+CONFIGFS_ATTR(connector_, status);
-+
-+static struct configfs_attribute *connector_item_attrs[] = {
-+	&connector_attr_status,
-+	NULL,
-+};
-+
- static void connector_release(struct config_item *item)
- {
- 	struct vkms_configfs_connector *connector;
-@@ -531,6 +578,7 @@ static struct configfs_item_operations connector_item_operations = {
- };
- 
- static const struct config_item_type connector_item_type = {
-+	.ct_attrs	= connector_item_attrs,
- 	.ct_item_ops	= &connector_item_operations,
- 	.ct_owner	= THIS_MODULE,
- };
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.c b/drivers/gpu/drm/vkms/vkms_connector.c
-index 89fa8d9d739b..b0a6b212d3f4 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.c
-+++ b/drivers/gpu/drm/vkms/vkms_connector.c
-@@ -87,3 +87,10 @@ struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev)
- 
- 	return connector;
- }
-+
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev)
-+{
-+	struct drm_device *dev = &vkmsdev->drm;
-+
-+	drm_kms_helper_hotplug_event(dev);
-+}
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.h b/drivers/gpu/drm/vkms/vkms_connector.h
-index 90f835f70b3b..35f2adf97e32 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.h
-+++ b/drivers/gpu/drm/vkms/vkms_connector.h
-@@ -26,4 +26,10 @@ struct vkms_connector {
-  */
- struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev);
- 
-+/**
-+ * struct vkms_device *vkmsdev() - Update the device's connectors status
-+ * @vkmsdev: VKMS device to update
-+ */
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_CONNECTOR_H_ */
--- 
-2.48.1
+Alex
 
+>
+>
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
