@@ -1,103 +1,171 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D75D1FF601
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C75B1FC7D2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056305; cv=none; b=hrXZrdCrd4ukSebU7sWSCJTZKhBSoTjx6+/qKCyRRHlKKzRVIwJKKhnkEfZ0mNm5Q7wDSKV2ZdIPOTMqECYQ97I68rV+Y63HIU/8aLuteV7heTXApsS6rgOqCEeWrECF0zVt9JHDU3SeYS4hK3nevtpLtbl7aJsedG8+hdCaYPs=
+	t=1744056321; cv=none; b=scmZKoOQ4i9RKhgRIewA3rHh7JG3oWc5bHvBxg7Q6MztYGwKiLXyMlEegtbQztH6050Ko+wSfTZNYW7IrPUd9bxzj1WMM7iNdYHMUBeBWZoZZh9j3ZsWYgGj+ZKmJKOIFDZ0vc4mSWCRjjrqi04q7HkWKL0moFWeqj/7to+vqjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056305; c=relaxed/simple;
-	bh=fm73ijbA4AEhWXK9NGxQM7eAAsPeIxu3JLQ+krLfZx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D3cwe0bQAylk2H5jd6gre8tJFRcOiAYLlc0BRpA3d6DdbjfKQxoQdSrctPSqp8heLwJBDKdpL9tspdbcxAYFSbgaMM/ljfhsVUixz1Wt42QMzAWzXqXc1Aqjroivx9/OPw0UqJzZ9nIpHzhWPV/Lh1QTahHXTwasGvkE2f2TLm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=RRmnUKe/; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	s=arc-20240116; t=1744056321; c=relaxed/simple;
+	bh=NP+yHtjiA26BlPv4Bo3yN9TI5kAu4URcNDPeBV9A2/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdEvfKmTaT0j+xwoFkeO4sYA+o+t7F1CC+kJb6SFndq5gyWoFWSUW/+cChpcvyYk6LqvSS52UwQnk/an02dk2rBhy3Zu13YYmx6h5Idsucgigp1hJXfTxRW9rROfbtEYBgSx9WoQVDBb3YfCvCTGRyCZ3I8P3WJCngvQFjPZtNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XK/XrRuI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ko8Gx4VV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XK/XrRuI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ko8Gx4VV; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="RRmnUKe/"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so7277056d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 13:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1744056303; x=1744661103; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fm73ijbA4AEhWXK9NGxQM7eAAsPeIxu3JLQ+krLfZx4=;
-        b=RRmnUKe/T28jQUWp7c23qKeB6ac7OvjHRc/7BrOsUqUK0g1un9FuG8Z1b8xzU6Bdhf
-         aFAS7UVl6bqPWbfsVENMArDhs61usHkaoS39CQ01NaqwCXhuO+69yDZOBouFDlA9/de1
-         WcKcxPH+eifumw553IiY2J4CQoYbRiZzugf4P+3pZuv1kn8fUSV9VjoOXtHtZeNKYVg7
-         Wl1H37e1CzJkHNIB+jh0RKRxbnZMCJDSmsaSIe/FLsNL+q9R7LAzTIgMuWJuBFFQx5Yp
-         gYRXvDs34qd2jlSXXVKuswBsSUGbIYTogNch5FMvf/bOsxNe7D2ZpAOtiFL/ymvbnvWo
-         FjbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744056303; x=1744661103;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fm73ijbA4AEhWXK9NGxQM7eAAsPeIxu3JLQ+krLfZx4=;
-        b=kFyfz/L8n5l2vQmXz6mg3sb3jRS0dMdkkyEh9NgcllqozNZst+8biVq62H4TVA66/A
-         ArmaShxuV3oMC1Nk0xI3LVOFe+h28wXQg5CXUHD9MiyJoxmFoeaYqfOC9L6luTzEIO6c
-         qEIRJUYJUEdWY/04/NEv1polRT4L1sSelNTdW+nBtyKSXFF0lAaOElemyjaqbsI6HKE7
-         QT5XOVuBMQgzem1jtvxeyswoNMOEkckvGG/AGe6S6rGrGvOJB0cmR4FT8/RFyXN4pOu5
-         fBMzOhRErKLEyP7YR7hp+vyAWXjnNw+h97P/7gQgbSwNxnEt3+kBIxNluoOUndervw4+
-         9dsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJIDFrWdqSXSPI0uNfN6GAUluDwHTSUqaX9qUbbLbPJlzgNKRI0yF2amSxjhldeWh6mXxZqGRNrra5TpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZZ/F7YtTQNZxVJfAb/GgM+jwCXqPGl637sLhbL7lZ05Q3OPPl
-	Zdow4KszeNNPFt6bqlCMa4lyOGUVqVdo2nzMEiPoZ/v0RJBwsroNuef/jrLgydcSi/9k4WLPxXe
-	tPv0Swn4fJ64Jfduml5GuoSdrB2MhmeI/kwlMGA==
-X-Gm-Gg: ASbGnctEeNXw4k6EvFpsSCr00A/BBwKGcaQCASRXn3MKU6iW6A/MDwQRm1rmH1gJIfT
-	/NHhdfrahy1Q6hGUxRtT81O+GPdlp8FdI9ArFjwrb50s7xUtxVmEVaWdbUuoU/gatp3bNKa59nE
-	hcXxUWco44lnWtTSatJ2x8KI4XJ40go+X3KE+gYzLOqzzfIa+75JWwFOOe+W3n
-X-Google-Smtp-Source: AGHT+IFtx6dT5DSs3sTterG6CM1nKdqGCIiyPeM9wRE0wJgaTgDILFCrLS32GtEnAfJmptq3sO5lQq/wSnSv9pf2Juo=
-X-Received: by 2002:ad4:5bca:0:b0:6ed:1095:e9d3 with SMTP id
- 6a1803df08f44-6f0d254f9c3mr10640966d6.14.1744056303132; Mon, 07 Apr 2025
- 13:05:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XK/XrRuI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ko8Gx4VV";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XK/XrRuI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ko8Gx4VV"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 756AA21171;
+	Mon,  7 Apr 2025 20:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744056316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VuhCAbQSV1o1JMMT7kCYGC2V7mp5pOInaVYqF8BPnl4=;
+	b=XK/XrRuI1j+fdKZEZQQ621/5KlH+uWek+1tRYBWbWMwCN3qJQzb21e4duE6+Ocemu6BAyE
+	5mAAb1uBqWQ4XUFkg/Pw6TwN/dfyjB8YGB2AVL7fnA6aO7A9cBV3gdPfcGzqwDGEylei8d
+	O2gjAKxD/F1KkFGqblLUoHmXhI5JRMo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744056316;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VuhCAbQSV1o1JMMT7kCYGC2V7mp5pOInaVYqF8BPnl4=;
+	b=Ko8Gx4VVbs46pnLDyF21asvIk13rf70QovJyIEqT+O4YW2MSGEw8djxYXDS0RDIultphfM
+	8dIl3/4MsZX90hBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744056316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VuhCAbQSV1o1JMMT7kCYGC2V7mp5pOInaVYqF8BPnl4=;
+	b=XK/XrRuI1j+fdKZEZQQ621/5KlH+uWek+1tRYBWbWMwCN3qJQzb21e4duE6+Ocemu6BAyE
+	5mAAb1uBqWQ4XUFkg/Pw6TwN/dfyjB8YGB2AVL7fnA6aO7A9cBV3gdPfcGzqwDGEylei8d
+	O2gjAKxD/F1KkFGqblLUoHmXhI5JRMo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744056316;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VuhCAbQSV1o1JMMT7kCYGC2V7mp5pOInaVYqF8BPnl4=;
+	b=Ko8Gx4VVbs46pnLDyF21asvIk13rf70QovJyIEqT+O4YW2MSGEw8djxYXDS0RDIultphfM
+	8dIl3/4MsZX90hBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EC2A13A4B;
+	Mon,  7 Apr 2025 20:05:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id U7/MFvwv9GclDQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 07 Apr 2025 20:05:16 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>
+Subject: [RFC PATCH 1/2] MAINTAINERS: update SLAB ALLOCATOR maintainers
+Date: Mon,  7 Apr 2025 22:05:09 +0200
+Message-ID: <20250407200508.121357-3-vbabka@suse.cz>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403211246.3876138-1-william@wkennington.com>
- <20250404193103.4174977-1-william@wkennington.com> <295ea363-dbeb-43c6-b8b3-3992776b84c0@roeck-us.net>
-In-Reply-To: <295ea363-dbeb-43c6-b8b3-3992776b84c0@roeck-us.net>
-From: William Kennington <william@wkennington.com>
-Date: Mon, 7 Apr 2025 13:04:50 -0700
-X-Gm-Features: ATxdqUHQCR7kbQwR_HHylO85SDnwjBICFfQfX39-VfWHJyd7A0SEVwKQP1JYsKo
-Message-ID: <CAD_4BXgx0Np8XU1afhybtC2cTUMYPm1ajiT6F3S3Gk6RGmVZUQ@mail.gmail.com>
-Subject: Re: [PATCH v4] hwmon: (pmbus): Introduce page_change_delay
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Sun, Apr 6, 2025 at 10:28=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
-wrote:
->
-> On Fri, Apr 04, 2025 at 12:31:03PM -0700, William A. Kennington III wrote=
-:
-> > We have some buggy pmbus devices that require a delay after performing =
-a
-> > page change operation before trying to issue more commands to the
-> > device.
-> >
-> > This allows for a configurable delay after page changes, but not
-> > affecting other read or write operations.
-> >
-> > This makes a slight behavioral tweak to the existing delay logic, where
-> > it considers the longest of delays between operations, instead of alway=
-s
-> > chosing the write delay over the access delay.
-> >
-> > Signed-off-by: William A. Kennington III <william@wkennington.com>
->
-> I tried to apply your patch, but it fails. Please rebase to the upstream
-> kernel and resubmit.
+With permission, reduce the number of active maintainers. Create a
+CREDITS entry for Joonsoo (Pekka already has one). Thanks both for all
+the work!
 
-Done in v5
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Harry Yoo <harry.yoo@oracle.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+Thanks again both for all your work. Please let me know if you'd like to
+adjust the CREDITS record while at it. Pekka has currently:
 
->
-> Thanks,
-> Guenter
+N: Pekka Enberg
+E: penberg@cs.helsinki.fi
+W: http://www.cs.helsinki.fi/u/penberg/
+D: Various kernel hacks, fixes, and cleanups.
+D: Slab allocators
+S: Finland
+
+ CREDITS     | 4 ++++
+ MAINTAINERS | 2 --
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/CREDITS b/CREDITS
+index 1b77fba6c27e..f74d230992d6 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -2071,6 +2071,10 @@ S: 660 Harvard Ave. #7
+ S: Santa Clara, CA 95051
+ S: USA
+ 
++N: Joonsoo Kim
++E: iamjoonsoo.kim@lge.com
++D: Slab allocators
++
+ N: Kukjin Kim
+ E: kgene@kernel.org
+ D: Samsung S3C, S5P and Exynos ARM architectures
+diff --git a/MAINTAINERS b/MAINTAINERS
+index de97cd54ff24..4fe7cf5fc4ea 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22240,9 +22240,7 @@ F:	drivers/nvmem/layouts/sl28vpd.c
+ 
+ SLAB ALLOCATOR
+ M:	Christoph Lameter <cl@linux.com>
+-M:	Pekka Enberg <penberg@kernel.org>
+ M:	David Rientjes <rientjes@google.com>
+-M:	Joonsoo Kim <iamjoonsoo.kim@lge.com>
+ M:	Andrew Morton <akpm@linux-foundation.org>
+ M:	Vlastimil Babka <vbabka@suse.cz>
+ R:	Roman Gushchin <roman.gushchin@linux.dev>
+-- 
+2.49.0
+
