@@ -1,167 +1,151 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CF6155312;
-	Mon,  7 Apr 2025 10:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27794235BEB;
+	Mon,  7 Apr 2025 10:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744022699; cv=none; b=hICuTnKzQEkXf/yNnZ4hjusKN7xbwUsMg6ETAahHU0DEiJYXna5nZSBNuavVPNhVxnJZS778W9qfRA+dBgyfz3Fpd/j9+itsz5pjyFAsuxiC82Nu9VK7xINnWKnCCOFWfh0uZbxPjqz9sqS0Ud2wVLYBcYLThs7kOBHhPX4gixU=
+	t=1744022712; cv=none; b=XRUYsewnxwcZ3wfnFf64H+El1cdruyIXIW6FfTJedTs20z2c+MI5TSYy+CyBSrt5aLZs+Ukz0/Jem+soWjHVZBaCYtZi+d3t6k/bpf7/8CZZ3vDKqFG/TGFdJULHE6QQC7JAmzufRuRYI0OiH05+PFt0zRFv6dUuTOKUyH8oFSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744022699; c=relaxed/simple;
-	bh=QiqFrvmmVw+N2Uw2KU5ql7TcSX6YQZ4iOivPYU7G8d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=n45/yJVBjSBU5SOUxSnu21RVItwjR73bhAjRUNk9MxlWTz6/TzBn2yxq/BTa4EyOO1JXmhT5t8k9m9GyLZThUziENwtgBPvxCy+foUE8eIhqmGw3MaXg13TM23Pr4IkaH96CDCBbCapGMFvB91PzrlI1Zg32frO/r6w3q47AzXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=At47Mu+Y; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1744022712; c=relaxed/simple;
+	bh=Hk4uGRgFkM/9RTZxf002J0KJyA6Vd9XbtU0RYsEdWQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ByhlKp4Cffb73D/FPrAgs55GMm7t4OM618A8y4CyUrVNC7eQMQNciVXvF1vCR1ZzF9ozzxu5Mwyv2sP/hV59tmEtV9YLbpWPRKOO2cv0xLmYGgLCtW032Y1UUbhSi0+V4/4M9dqC6pZodqVh9g9k6iadwmxyW8fawblCZDNIq2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSmCmpr7; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At47Mu+Y"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so3913345e87.1;
-        Mon, 07 Apr 2025 03:44:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSmCmpr7"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736a7e126c7so3652487b3a.3;
+        Mon, 07 Apr 2025 03:45:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744022695; x=1744627495; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fedk0NTG7dIvyZOxge8ehVPeLKkiS67A38IL6ZEQtH4=;
-        b=At47Mu+YcRCXfwO4zb+5z9cKCHmf+CWE5PqpF4h8hnsSmc6sTTMQ/TVQwPSnZIhJz/
-         AXFQX7YHElbzuFy7ixfQ7nbaMDcbzLiRyJysnW7W8w/W09B6en7ZIgmSTgjFvXLCCjD9
-         5wclLNUI/wsOHginvD9ONKCO7S3/dySWZgRR19oKHzM9uuXu0V4CkIzYh/owTeoXdT+d
-         Z9cL46CgZQjGxD1I3eakdhkLZc7ZLBcUIEbKWh3SbsAKfGBO1m+qIJ74043aYWQIF+xg
-         2u1VA18fal8fSXYnSquLVy69GQSRDJ8+Ei5NBL7ccfHHXNAd+zr96rzpL+gKefOs+yoG
-         DvIg==
+        d=gmail.com; s=20230601; t=1744022710; x=1744627510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P7aPvlp6tp7+XGN925jTEd3RzRRNETSiKDYReSoir5Q=;
+        b=OSmCmpr7BjeuQOSFl8mKc83COj4eYneIftb355o+TRXoyUeDHXveu75G4+vlPEP9Oc
+         1Z9u9cMmbKadAMNkzXgZHDGUcLTdbGMhelsrtVm/fW3I7Mx2xK/D2ismkwH3c2zKxYms
+         OGLKnDFKNuCmODz4Rzaj3N4urGGxo6ExLezxuPhi3+2B26PSqhBNJfd3Zci69XKD6oIX
+         bo9isdH3CxXpAq1okfELe36diIXvGksOdvloTJ/54pbxHcXFB9cBU4Dfrj8j8vTQCnic
+         Jb2XbTtIHszPGr/+51o/BNMLxWCqncc8zLqlMXVzYCxL7E7SD9CqaVaKjzOl0wIoYzH4
+         4H4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744022695; x=1744627495;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fedk0NTG7dIvyZOxge8ehVPeLKkiS67A38IL6ZEQtH4=;
-        b=I/HeuEtsY6iFuE+6kXJPU6vFXOdK7hDd74yOrr021dyA17a6QDUQ01ZoNV0HgpfkTJ
-         BxpV7zs07MPX+TdHJoHMEHjQqqz6I5v8fwTm0+EkGLXFRmyFwMqy6lYkldKLqkW7Odr8
-         i81nfe4bx6F40qKB5fmdNJL2ivHquzjgP2EyMiwRG4J6dsefiYuv86zBxAuyzgrZ3WYz
-         nTi5lKUckg4CqfRuuXq/yySJf+qMcVI3fnM59f/QTKMEuFkl640bV/lMTpxPf8uYmeYV
-         wC+XONFj80RJ2TpU9w7lVvE2WgOwUyOPCmkw4NXZ9s31sDn8LdQnwymHqzFZYVA3IsGk
-         UMwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVspaFNsX7wPHa8weWc4C3WSqZwk8O+VUkI7jDM/WLe4z4KuP7b00DmVGr93NgW2CnVWef9ro7DZenQqlEg@vger.kernel.org, AJvYcCVz88rosD0bUeSb/6p4CxOv3oojhDBvAkKhO5aXgcoWxKFAM4aV8gGcmP8uZ9bF2HG4wWKtNdu4AYrD@vger.kernel.org, AJvYcCXPAA0kv+a2V4nQ31v3JqsdSuxLRIxl64EYvQYHQoj1zSzNoacmQGOXCJQ/vXU5etUbSgT0x47508pf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmFi1O2GpppPV4yW05jJrM+DeL4Xct8ZWMnWYDuNJHhIeXyTg9
-	ZOIihQ2mZ2SWqDfqed57F3TUySU9ynteZmE6u+qbJNzI1xBTowb9UamA3w==
-X-Gm-Gg: ASbGncvkgU0CH7L86OR9dB0vi8WoROdanTTvpK7Cc03UtvQFgqgHna1P7VW1xOZAsw5
-	byAKG0mVjdG5KrQDE1oBVuNMRzZdpI6ytPbNgiKngBh3hDK+mQ7BxdAESWcF/ta/UJDXRiYPygx
-	bhn6BIU8hjCil8Lgu124tKV6mH26w5KuBwylkvyr/cxd3h+phLMg4OQhHPjvDr2UDcpRRBKc+z2
-	H+XV+W94pctw2lIFK0Qpc5Uv047nDpm8jUG7lLxjoYp3d0Lxi52kzRyu39RY+dszGEnmo/3mKGn
-	on6Uao8l8ImC/kK714RjIR1iz0RzojvFfhu2VuUzBBPP69fzOP0=
-X-Google-Smtp-Source: AGHT+IEX4hEYrJq0c6xrNV8StN79EKIII9msXPaeyu0uJbkmxcP8gqMKNDTktthUksFdKHnPNdqsSQ==
-X-Received: by 2002:a05:6512:3ba4:b0:54b:117b:952d with SMTP id 2adb3069b0e04-54c29848292mr2222175e87.54.1744022695230;
-        Mon, 07 Apr 2025 03:44:55 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e671fa8sm1205737e87.218.2025.04.07.03.44.53
+        d=1e100.net; s=20230601; t=1744022710; x=1744627510;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P7aPvlp6tp7+XGN925jTEd3RzRRNETSiKDYReSoir5Q=;
+        b=lIC0E48jl0bSdQDbMO9oasiWRForWocZMRNZYxZWbx8qxJE+e9/h3PkhtoSwNjM+7y
+         9wqxBIevwv5H4y2bz0KbDt+2z5f7zN1Fu9hl4rO60n/jw1mHP31uwWQo4sceAcipvTQU
+         HtX/ymTo6o9XNzeRTC2FzDUc6ZrP3brwRDkSWch4OSp+JjLOToGOOuDFo9dNxH857ozR
+         bx+pZoU+stBB3k285ll1x+Ma8HJmn+E03xZdkILiBOYlSXDGq4YMOKKivgQC+BSna85e
+         lYV6duCFZZ3WGlBE8DOb6O5CoWEBCaeoy/thq9eMKCsaCi8iYlPBzuCEuJYL935J+azL
+         0sWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGOhivh10QmwY9A51RrUd9NlTUa8Bau822kN9aI/AfdramQ9ZOI9nzDH5jTb9Xc3UqG/9qKRPZJwbHuBJn9im4@vger.kernel.org, AJvYcCVNSBELJ9StxTnv5xl2H/RobBsdj8EcCl4HvmBYtfYk0wB3JrefExuHysnNFCmXzkhQO/4EZhLHgqqhEHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDxwgMP9ZGuZTgwPeD0KH8wZD++wuau6vVlOJHfzZiMrRjIuUB
+	heMLdse0p9/kRY+6w5UDGpmjTU541qcWfq+cr2ryx4V0I00G30uc
+X-Gm-Gg: ASbGnctFf5ovadgqJ2+4oaXgf1F5O5TDyFNz+L5cz7VBaQV/xJIJDhzwHmiyvulzXA9
+	1eTJqaiROEPydKrOnVkajLSO1bzsvZZnz/2xalapp0mhzpnj82FyW5vPrqPmnVUrz2+pzMLMdyF
+	KtHb9DvZnLMJlzF9LPJeC87/zy2lDM80MXdc7N7zS86tahJVUaUck/19YfK7XciDxI0jYNGPpwP
+	BNDSBcCLnETSI5Oyh2rRiXklsl6xKmrcQ0zMIgdU+XKfm8/TUXBznyyyOsIVHNphgq0dN//eE+U
+	c3sHiEcuVuXC/ucDZrezCp2q4FqrmPAnHs7v92/nzQFjnE8LXDSjZKI0gUT7x7iu43nxBwnLoOs
+	lrb67QfbZqRuGfr8N
+X-Google-Smtp-Source: AGHT+IGHn1IUThgt7QFbQCA7efZEDVKbPOd4Icc6xwQNrgcaJvHqQJosUwZg8GQpMAPVStdU4IR13A==
+X-Received: by 2002:a05:6a21:1643:b0:1ee:d06c:cddc with SMTP id adf61e73a8af0-20104735fc8mr20474708637.30.1744022710365;
+        Mon, 07 Apr 2025 03:45:10 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b46fasm8418597b3a.145.2025.04.07.03.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 03:44:54 -0700 (PDT)
-Date: Mon, 7 Apr 2025 13:44:46 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/8] Support ROHM BD79104 ADC
-Message-ID: <cover.1744022065.git.mazziesaccount@gmail.com>
+        Mon, 07 Apr 2025 03:45:09 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: mingo@kernel.org
+Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v2] selftests/x86/lam: fix resource leak in do_uring() and allocate_dsa_pasid()
+Date: Mon,  7 Apr 2025 16:14:44 +0530
+Message-ID: <20250407104445.442876-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAE2+fR_kG1SpE3DZ6cbZL+J8HT25RcaGxYrZP-H+rDFSJG6sdQ@mail.gmail.com>
+References: <CAE2+fR_kG1SpE3DZ6cbZL+J8HT25RcaGxYrZP-H+rDFSJG6sdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1xOCUHzjGimHh1+K"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+Exception branch returns without closing
+the file descriptors 'file_fd' and 'fd'
 
---1xOCUHzjGimHh1+K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-The ROHM BD79104 ADC is a 12 bit, 8-channel ADC controlled via SPI.
-
-The communication over SPI uses similar protocol as the ti-adc128s052.
-In order to avoid code duplication, the support for the ROHM IC is
-added in the same driver.
-
-The driver side differencies between the ti-adc128s052 and the ROHM
-BD79104 are related to the supply regulator handling. The BD79104
-requires supplies for the VDD and IOVDD. The ti-adc128s052 driver
-handles only the reference voltage supply, even though the TI data-sheet
-indicates it can also have separate supplies.
-
-Hardware vise the ROHM BD79104 requires SPI MODE 3, and has also some SPI
-frequency limitations.
-
-I decided to add own binding document for the ROHM BD79104 so it is
-easier to document the SPI limitations. It also allows using the supply
-names from the data sheet. And finally, it gives users of this IC a
-better hint that it is supported.
-
-I added myself as a maintainer for the driver, so I can stay on track of
-the changes to it. If anyone with experience with (and acces to) the
-TI's ICs has the energy ... feel free to add more maintainers.
-
-This series was based on the v6.15-rc1
-
-Revision history:
-
-v2 =3D v3:
- - Rebase on v6.15-rc1
- - Minor improvements to the Vref handling
- - Add MAINTAINERS entry
-v1 =3D> v2:
- - Drop the claim that original driver is broken for BE and rename the
-   patch 0001 accordingly
- - Fix race when filling the SPI message
- - Check return value for the devm_mutex_init()
- - Add a RFC patch for dropping the support for variable Vref.
-
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+:wq
 ---
+ tools/testing/selftests/x86/lam.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Matti Vaittinen (8):
-  dt-bindings: ROHM BD79104 ADC
-  iio: adc: ti-adc128s052: Simplify using be16_to_cpu()
-  iio: adc: ti-adc128s052: Be consistent with arrays
-  iio: adc: ti-adc128s052: Use devm_mutex_init()
-  iio: adc: ti-adc128s052: Simplify using guard(mutex)
-  iio: adc: ti-adc128s052: Support ROHM BD79104
-  MAINTAINERS: A driver for TI/ROHM ADCs
-  iio: ti-adc128s052: Drop variable vref
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 18d736640ece..1d3631ce4b69 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
+ 		return 1;
+ 
+ 	if (fstat(file_fd, &st) < 0)
+-		return 1;
++		goto cleanup;
+ 
+ 	off_t file_sz = st.st_size;
+ 
+@@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
+ 
+ 	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
+ 	if (!fi)
+-		return 1;
++		goto cleanup;
+ 
+ 	fi->file_sz = file_sz;
+ 	fi->file_fd = file_fd;
+@@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
+ 	ring = malloc(sizeof(*ring));
+ 	if (!ring) {
+ 		free(fi);
+-		return 1;
++		goto cleanup;
+ 	}
+ 
+ 	memset(ring, 0, sizeof(struct io_ring));
+@@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
+ 	}
+ 
+ 	free(fi);
++cleanup:
++	close(file_fd);
+ 
+ 	return ret;
+ }
+@@ -1189,9 +1191,10 @@ void *allocate_dsa_pasid(void)
+ 
+ 	wq = mmap(NULL, 0x1000, PROT_WRITE,
+ 			   MAP_SHARED | MAP_POPULATE, fd, 0);
+-	if (wq == MAP_FAILED)
++	if (wq == MAP_FAILED){
++		close(fd);
+ 		perror("mmap");
+-
++	}
+ 	return wq;
+ }
+ 
+-- 
+2.43.0
 
- .../bindings/iio/adc/rohm,bd79104.yaml        | 69 +++++++++++++
- MAINTAINERS                                   |  6 ++
- drivers/iio/adc/Kconfig                       |  2 +-
- drivers/iio/adc/ti-adc128s052.c               | 96 ++++++++++++-------
- 4 files changed, 135 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/rohm,bd79104.=
-yaml
-
---=20
-2.49.0
-
-
---1xOCUHzjGimHh1+K
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfzrJoACgkQeFA3/03a
-ocUttQgAvbxsJJotInDDIxfSYu1p1RzxNQsE9UIOT2xrutffLQjr4+HBwCMRq37B
-ErzZCvHwdqy47Mamj5yN+Xo9ZQF8sfwShJNNX44anufj3fyWj+8pEo/MDQB12TxK
-pxDkLZvznQL9MnUFaIV8rROIYSnepPbs4dv9eacAZcnMZjtMOJVrjAn+e1RL08NK
-gjgnb48TP2yqHdsRno/z8AcYxn9F7PM/vJCleTQxac6cwSvo4sclq/BaEpGoyBy9
-2ez05x1RnQokGx6927Kq3PQc8S9zFaTXvbeo9WOasMMOMBRAsu0jvw4GlpABLSo0
-CpwPdeqz48ir8m1MoBLodmYyqNPc5w==
-=qd6o
------END PGP SIGNATURE-----
-
---1xOCUHzjGimHh1+K--
