@@ -1,185 +1,142 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856D4227EBB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E20B2288D5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010663; cv=none; b=qFssfNQ/s1eLHJ6vibWZLQGTQfkg7bFm3XETjNwd/slOvc0ICIriCWgYeQAblSRIsW1DBIj7liSNF3RgnofiM2ubZqdLzFgnMSolbzXEW7/ZC2a+g/I6BKx11H0+klNtfC7fOKv06OuZMQlteu4WKQJhuF6yyuk/c1HZdNyEULs=
+	t=1744010664; cv=none; b=ti/cIDsux7zRONaH1djcEsXeFK0HjAZRHefl9fGzo7ZLl63e6Bu8y+oeIVocBZir2kVFm0nmGdqRJo/JjxalZU6WlKd9IwDGfbTd3WCpKpOGOd/4AH6mJaqdGETxWnUEaFtwgnZgA1oZ10R8iIlbj3JHwLyDlPQiJk1aHBtW8OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010663; c=relaxed/simple;
-	bh=g2jh8qxFjNVmTT054dLE7NXTT/LDZW8VfnPhvGKcqR0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tYBchEm2AgLVFdziE2pbVEQPPhEkmY+EhjFzb0/P4qA3E+gxOihfD+JMz/8r5BTiQhlQePJPZ/FrJ7C11rMQuqPSQW3dA/f/2c8A0Z0mefjNNMu41NOXUKyH44Amy5y598+iiHVMfZAfA774T7siHB9HoCPzH/X1+OS2Cyxj+qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=biHz2azs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w/lDg+UF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=biHz2azs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w/lDg+UF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744010664; c=relaxed/simple;
+	bh=46TsQHfMfuus2Y4N2Ujc0pUgsSG71cEeMP6rCE2Iukk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Xc8aux29Hf8So+QVMR8pdcAPWgpSPumb3Ncfp1vAULuMw0v2EvrwL9wYZGJQhJIkhuy5LHxdoWzTn2KniBtwqH2lL0Smervtgirk9lGfHL83EP1z7yQWouIHZFL2n/szEQEO9EO+KrfhlJ5YQL6VOe93qDjtt3yiGiwKMd4XiLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2v+8ql8o; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="biHz2azs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w/lDg+UF";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="biHz2azs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w/lDg+UF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B1D042119D;
-	Mon,  7 Apr 2025 07:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744010659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
-	b=biHz2azsqZ0hQvKLst7BgyWtUUHbAkWAD5h6NSruBvJtfEtq8AEQOeMh4ZWHuYcQL23c6W
-	hvuTebhYywxB7/4ydEQoeQWTUncuXYgFI6j1XW66vqzfbhl1C+Ah4k+DWscpmXGhnk3bwd
-	N5TnKN3/k+/bnk+e/EG5ju0/lnfmaL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744010659;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
-	b=w/lDg+UFFS5Wb05qV7wCjYsIh/81zGaXhyVymeIf7+CM6MJ5X0wqMaE8/ddtAFsgW8SFbp
-	YaIaoQKn8+eh78AA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=biHz2azs;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="w/lDg+UF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744010659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
-	b=biHz2azsqZ0hQvKLst7BgyWtUUHbAkWAD5h6NSruBvJtfEtq8AEQOeMh4ZWHuYcQL23c6W
-	hvuTebhYywxB7/4ydEQoeQWTUncuXYgFI6j1XW66vqzfbhl1C+Ah4k+DWscpmXGhnk3bwd
-	N5TnKN3/k+/bnk+e/EG5ju0/lnfmaL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744010659;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w7OwujLM1Gf7nXgT2lqd0dMzptfeJ2lG7J3xc5dMYGM=;
-	b=w/lDg+UFFS5Wb05qV7wCjYsIh/81zGaXhyVymeIf7+CM6MJ5X0wqMaE8/ddtAFsgW8SFbp
-	YaIaoQKn8+eh78AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 26FD313A4B;
-	Mon,  7 Apr 2025 07:24:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jkYwCKN982ccFwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 07 Apr 2025 07:24:19 +0000
-Date: Mon, 07 Apr 2025 09:24:18 +0200
-Message-ID: <87ecy41ljx.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: phasta@kernel.org,
-	Philipp Stanner <phasta@mailbox.org>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Clemens
- Ladisch <clemens@ladisch.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark
- Brown <broonie@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Bard Liao
- <yung-chuan.liao@linux.intel.com>,
-	Peter Ujfalusi
- <peter.ujfalusi@linux.intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Maxim Mikityanskiy <maxtram95@gmail.com>,
-	Kuninori Morimoto
- <kuninori.morimoto.gx@renesas.com>,
-	He Lugang <helugang@uniontech.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Tang Bin <tangbin@cmss.chinamobile.com>,
-	linux-parisc@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] sound: Replace deprecated PCI functions
-In-Reply-To: <01627e70902d331f7a9e8c08bd5c78dc6991ea74.camel@mailbox.org>
-References: <20250404121911.85277-2-phasta@kernel.org>
-	<87plhs2g4h.wl-tiwai@suse.de>
-	<01627e70902d331f7a9e8c08bd5c78dc6991ea74.camel@mailbox.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2v+8ql8o"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso36767755e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010661; x=1744615461; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/KkROuiXkCDKpcqyvio/9J/+1//CP2e3LnZSKP6f61Y=;
+        b=2v+8ql8oa3C67rgEkAb3uEji66pP+rOQdUZjUm99XaFfBimxo5sTy303A2tPQAxdqB
+         mOeYBsepcQXgoF1PM5GgK6pPp+DHg2Er8aMfOttnIAZPCAD8L84SmYMKxA/DYEGIjqa5
+         Mf5F3O3KIw//xUpqT79kXkruB+EoDIIVqVprur5QbBlzyIz4/c4zwG7xxlJDJ2Dmlo4q
+         6cR5h9jMIkj1pbJhuq6wZh30O6zmnu7PEskvvBckolCxy0qG13BI/Xln4WR5PzK1VRlN
+         EwGULIc3HBskwfZ+iywbRPYW7I2N3x1B0GT07IVPxHsvJViSP5jWUOO/7xYBkJULtWli
+         Aa1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010661; x=1744615461;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/KkROuiXkCDKpcqyvio/9J/+1//CP2e3LnZSKP6f61Y=;
+        b=DVy0cAXmFXSne60MI1HM5SfPFDNaDnDN2zQn3SCxd6rzm97IeSDiCwOZ+1hEq1LahV
+         IKRh5XRjtseRdfUmtQXzK2Nc/yoUy1VJ0ymFy3b5h6pPOng+pAFVc1kW7Z6JQF3Ep8iH
+         EX2F+/RP6mQ9kcVjUg/hf4+UYnrZjgfm61qt9IODk4moksgxHDb8E/gZ8QVU/mWX1A++
+         Ok27EWmFDvUvBeo9QnWbbzEjJyegIQZBH7YU1Kt/DIOM8KEH8qjobC8TCJaQZTriJ745
+         dMwnZx4vA5wrRoqIaPEjzm07faOdsJunZ/iAe0Hk04vMXBDcwwIO+CId8uSIL9IWKGeW
+         I0OQ==
+X-Gm-Message-State: AOJu0Yxdw8h1IEljkNXMzkp9uWC3vtDAVHF4QZaU0OuHDqOY45jE1S/7
+	fT4Np+DDImyhuR10IcWerECA7ZLdVJBGf16ySZwTuF6ce48chmqyZCWdtcMSXdA=
+X-Gm-Gg: ASbGnct2HT4TNbsR+YC3pWfr6imaM1JV34Cgx587rApY/sWZzCDZEugfRgnlBi44C3O
+	jSNKRFJXUXhZV555bQ8xeLQeqK/y/dOl0al39xB7EWBs4aHAmu4qNT3t7HL/reCdNYDUNvOlz41
+	sUcydRjapr0StmUHFC0b6PKo0zFhiAXrg9QPFECCCdXRmCBrK9dh3i2CXiw/dPB9f0/Omt0M6uN
+	jfOoekvBNMgGpWIhDLYmPwT7uzmYbqT/aOYpYxyW4Cfnhoql/ZLCDAhT4IZaP2Y9adEE0hZIPFD
+	E4f5X8OEb7yVxboAlmc7QMzgDEEhuS57B4R9IQ==
+X-Google-Smtp-Source: AGHT+IFtNLoH7gdKr+kyVE/8qt5O8vviG3nWzND179kXjnQR6oK2QV4EUTBGcSAr6Wgx1MkzEzIGiQ==
+X-Received: by 2002:a05:600c:1ca4:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-43ecf842872mr94232465e9.7.1744010660778;
+        Mon, 07 Apr 2025 00:24:20 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bf193sm119855255e9.24.2025.04.07.00.24.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:24:20 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Apr 2025 09:24:15 +0200
+Subject: [PATCH 3/3] mfd: ucb1x00: use new GPIO line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B1D042119D
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.de,perex.cz,suse.com,ladisch.de,gmail.com,kernel.org,linux.dev,linux.intel.com,renesas.com,uniontech.com,baylibre.com,loongson.cn,cmss.chinamobile.com,vger.kernel.org];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-gpiochip-set-rv-mfd-v1-3-43f4d86d01d1@linaro.org>
+References: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-mfd-v1-0-43f4d86d01d1@linaro.org>
+To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1623;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=TF+EFt7bi6NiJtGjUB3SG25pVoTiUVHr1riDXGIMQcI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn832ggGtmHWHRB0jo82i+GFL3aUN1MFDemCit1
+ rR5kPzXsraJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N9oAAKCRARpy6gFHHX
+ ch7JD/4sIxMbN+qp3taFnSwWjK3XqAYEI3jwbJqEC21sIokHaETEU9SdplBDszdGntVuqAxHbUV
+ GF1tgivckvWyBcOQHnZAwz9CnlAdgPb70BfWpi/yyOokfzHmFFWIVPUvrag1Qo1g17T293SMn0r
+ 0aj4x6AFrqDCfzEl3bxTQpZjcKa1qCThwmfF5DugUm+x30NiRmuQg0aZasa12aSnZ7lz+oqZxaE
+ I4av90UzKS/bkcNz0B/fmlUrRE4RRxQxqTpvk56Nv+QykP9P+M68sH6mZ2DMgvjFYihYTNoDB/O
+ G7ne/MHSp2NIlJRHislM657eqQYp1Gylr0OezdpE+i716faf3TKkqJonj/SlckwfnkqWsNpHR7T
+ HwhWVd8f3E2L/gpOnDBd9IfT3TP/ncztWW6D5RXp87f5oUY8Jg6QNkmS/9PnJaL0HUO8kLZDDj4
+ Tp/FCPeUc491T+ynmZH5X3Nr4bjAr1PPeG1jEyLazqcE7vUd8fBWZoFTqqCn51CnKJ6FgLlmAUZ
+ 8hd+/ILdLNsvUQJeLr/YPJ2sY5ItODk+iPhkTjwZqHtzhh4NCh24hH2qDBp0uVJfhJ8fcTbAW89
+ ZAECjTGyBcnxSTYOlQcNsQpMFy9t1gdTwQnn6LIg6VRzMUxhsIRqgFgX8xzPxoXmvP5LTKirWug
+ H7mkyD0SRy4m5iw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Fri, 04 Apr 2025 15:49:36 +0200,
-Philipp Stanner wrote:
-> 
-> On Fri, 2025-04-04 at 15:47 +0200, Takashi Iwai wrote:
-> > On Fri, 04 Apr 2025 14:19:01 +0200,
-> > Philipp Stanner wrote:
-> > > 
-> > > pcim_iomap_table() and pcim_iomap_regions() have been deprecated by
-> > > the
-> > > PCI subsystem. In sound/, they can easily be replaced with
-> > > pcim_iomap_region().
-> > > 
-> > > This series was around some time in late summer last year as a
-> > > single
-> > > patch. I lost track of it for a while, but Takashi Iwai (AFAIR)
-> > > requested that I split it by component.
-> > > 
-> > > So that's being done here. Feel free to squash the patches as you
-> > > like.
-> > 
-> > Thanks for the patches.  I suppose those are no urgent fixes, and can
-> > be postponed for 6.16?  If so, I'll pick them up after 6.15-rc1 merge
-> > window is closed.
-> 
-> Sure, those are just improvements that aren't urgent.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Now all patches applied to for-next branch.  Thanks.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/mfd/ucb1x00-core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Takashi
+diff --git a/drivers/mfd/ucb1x00-core.c b/drivers/mfd/ucb1x00-core.c
+index fc4d4c844a81..fd71ba29f6b5 100644
+--- a/drivers/mfd/ucb1x00-core.c
++++ b/drivers/mfd/ucb1x00-core.c
+@@ -104,7 +104,8 @@ unsigned int ucb1x00_io_read(struct ucb1x00 *ucb)
+ 	return ucb1x00_reg_read(ucb, UCB_IO_DATA);
+ }
+ 
+-static void ucb1x00_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++static int ucb1x00_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			    int value)
+ {
+ 	struct ucb1x00 *ucb = gpiochip_get_data(chip);
+ 	unsigned long flags;
+@@ -119,6 +120,8 @@ static void ucb1x00_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ 	ucb1x00_reg_write(ucb, UCB_IO_DATA, ucb->io_out);
+ 	ucb1x00_disable(ucb);
+ 	spin_unlock_irqrestore(&ucb->io_lock, flags);
++
++	return 0;
+ }
+ 
+ static int ucb1x00_gpio_get(struct gpio_chip *chip, unsigned offset)
+@@ -567,7 +570,7 @@ static int ucb1x00_probe(struct mcp *mcp)
+ 		ucb->gpio.owner = THIS_MODULE;
+ 		ucb->gpio.base = pdata->gpio_base;
+ 		ucb->gpio.ngpio = 10;
+-		ucb->gpio.set = ucb1x00_gpio_set;
++		ucb->gpio.set_rv = ucb1x00_gpio_set;
+ 		ucb->gpio.get = ucb1x00_gpio_get;
+ 		ucb->gpio.direction_input = ucb1x00_gpio_direction_input;
+ 		ucb->gpio.direction_output = ucb1x00_gpio_direction_output;
+
+-- 
+2.45.2
+
