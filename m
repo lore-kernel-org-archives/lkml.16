@@ -1,105 +1,123 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3019E20966B;
-	Mon,  7 Apr 2025 23:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C582222594
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067098; cv=none; b=BQLYOYGaALGb0sN5wV2eIYri6BCkb3haTa/brwGtg4MHSNCaGgUDS+n354NF8TWTlyKae8fORpugHgw+S0PVo9T7Z1o4quZElOZHIrDB1xdjxU4shAfmAtPz5aYSlo3rzlO3skynZxWbELDIFzKNHnFlL3VQiZeHELS2qwOVUrE=
+	t=1744067202; cv=none; b=HQPsT/br3n/SjAheYMaJQj4toRhLTPGF9EQAxiMJblaDrpiRtTSBIx8BjKIRx2xGfbpydm9RPYzHIKnFTAN2gFUxjCvTg0Y5RkVGOu3pibmwzbu2seKfY4NyyY8DKZG+Wp2DB3SjDBmeWk4APkhz/hNW9hr+KZTn6FDK537WxAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067098; c=relaxed/simple;
-	bh=0zaMJuW2E2sX2GTgnWPvgAAilohNggh6HJKl9fIlzHE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MLOC5nUUWhi6/R3nXgDHtdR1uB95NGFUW0CeUDhMkOYsCKvmUwEFnxQSAyB+t98/Ug0GkmRj/V7nwq2cUk+iMxIfplyekXYG+9KZklLOiCyvgfx5rUk8bjcmPolc67jc72B4napkHKBf4ogZorrs8RpsFP6CP3LnNBsltKQTsq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lLkhpptg; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744067202; c=relaxed/simple;
+	bh=NnpMR//R+lE0HzsOk3Sqk4S2BtKa0vwBWH2sSUWKfnU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=apXYQUTuIK75PGkLAQPs3pO+fTbVs00Vgalipmqteuq0uwqsbP+ukrTvEXi0DkyQD4FeSl6BtAbrzE3l2JrwX3X/9jKRX8mG75/wFXyue4VgV/yK1/n9kB9HOMhGhD2Pa4O4BrmIv0yxMsVmh/EQanxH7AIViwCsm1wlKYd/HHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4WhjCcnt; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lLkhpptg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744067088; x=1744326288;
-	bh=0zaMJuW2E2sX2GTgnWPvgAAilohNggh6HJKl9fIlzHE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=lLkhpptgkYKd2q6rpOEbE5VGo/V+n50UjQgv72FwAgmU5nDsHcmcHpv1KzL1+7jQI
-	 buGrXQqOY6FuPFTPqSOpBl4qqsinu/lWOV3JMTvRc+4oItCZWl+SOmGue8gPjrzxu/
-	 xyRjLRw505GapDMbWj//8IXtGda5gMdwgATO7WMf+Dtnu23zNGIwKKIjTHQ+nfB6ZV
-	 OjkyiArjc6H8UYtByPa3cnVFPv4Ry+L1xy+pdAJxt6nfFdilvepuzKwb7kPBR8EYsV
-	 vYG+qO22LmFvlqvlQcoe390M4W2ijbSzvuz7HeOTI3tZLPqkiY2C37WXE8/BGrMSIc
-	 yWJLC8GEkIsDQ==
-Date: Mon, 07 Apr 2025 23:04:42 +0000
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-From: Denis Mukhin <dmkhn@proton.me>
-Cc: Denis Mukhin <dmukhin@ford.com>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86/early_printk: add MMIO-based UARTs
-Message-ID: <vCbvBjUt9kPZhYP0tXAoVKrIn5hk5ON-HEqi2OjnCECThGJ73vh7S4qAKspAlxtgBAHFv1Sc_k6Hmdeq_nYXReITCt2FNRy1wWZR-udke9c=@proton.me>
-In-Reply-To: <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
-References: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com> <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
-Feedback-ID: 123220910:user:proton
-X-Pm-Message-ID: 364800189e164472cd92cc200173e0051292a8cd
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4WhjCcnt"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so4637a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744067198; x=1744671998; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K6ZU8/5kXxHvtLmBpOqeu36t6PMkH8wk6iaMboo1oUk=;
+        b=4WhjCcntCPmbLzJzbDIej7JAeA5fafx5VCkpzzUGcGsNq0A3HgH6sPXczPvkJB222L
+         RQCSflsLL0rDyz5lj1AJ8ZUEuGLR7Yc+10hiBI/3C9VJVq9sQe2ZIYX8uVyqbPGTC+Mj
+         MaTK9RbSFi0krpzV4KXEfAdwrVHWDx+1BicZ0mXecivSilcVKArkQ4XqKxd19s5q3uDz
+         bXvRwdZeTclQJmRf8iWuuoga9TJNhjxr8BSUxL+jKEWvfu3Aty5JYFmJypsW311NN3s5
+         5IAVWnBIK1nN0EnDVq9fZl9TvIbU7jovQNKFBzG8+UeGTpEYdkEkZysj6Z6ns+i5Xu2g
+         5x2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744067198; x=1744671998;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K6ZU8/5kXxHvtLmBpOqeu36t6PMkH8wk6iaMboo1oUk=;
+        b=Tj7bT+cHdOntcZ2b7dD13Di7lkLpC+JFGIoYKQ8IqCoIzN6ejfRmQLiBRybxEUAA1F
+         +Jk3mPv1HKiQITnKICBIqJPzDj8+TGCJN8dGLpzocxKNe1va9mBc5kKANkPOmAyq1cMn
+         rhsDs0pYsDQpDOtzb3UWP40+fkLt9eDVmSduElRCQSWp8i6SGAZ7lTFHVi1bkhywYJId
+         3eEcficKRbcIEC/ccCwJfXYA4V+ALyWd3UVYmedz3Ci6HSa1OAomj9vtvuo3hoUJ5cBB
+         SbSlBi5AmtsuKSfLASIS2R9XnLNr1C2LN0BmctiOENcALW3qCPT0FhYJem4X42i+F9Zu
+         0b5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWkidR/Z26SUJhW7PW8qlJBWapi1/vVMYGT0anp9RyEg+Q3T2+IWDxeiWHEbvSGEFnjWdprCkbSpXJ8y3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywKyFsu3TwMvXyjsny1D/OxhUmx/piDNofxc+yaMgmygoqr4kG
+	PfHVzoKAT059g2gm2lSJiM9rGMAwT2etYunT+Enswj+i30bvNRkYnYTkpaJUMhRuVV+AJvW1xod
+	Vohe5AqOWGdp98YcbMAcus+NhlOD9NGgMC5sW
+X-Gm-Gg: ASbGncu/lKZ+mYvq0spRUKsDMWtjxPfAkDZbddKbb9QktkXYqI2oBglzaDzpsjuNL3r
+	GJ0qRz1dpd2zlCAMuPu+8Wf8RDluxKDfCrYMWjp8Q9odhVprTL/j2p71kox2cyn7bPiU8M5K3Za
+	/uS0zs2QcDIiT6ZFo+Vmtapk6r1a8VyO61nGXNZx+0zOdXuzrTmRePXg==
+X-Google-Smtp-Source: AGHT+IGwqCibUtvZ7zXUKoLw/9l4mbZWNa3k4PRsHBInjoFnc3gA8HPUr5aBeYPf7FZ1MhHrVbTftQ1BznakccCAUeY=
+X-Received: by 2002:a05:6402:8d3:b0:5de:c832:89ad with SMTP id
+ 4fb4d7f45d1cf-5f26a698aa5mr22942a12.6.1744067197193; Mon, 07 Apr 2025
+ 16:06:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250320232757.2283956-2-samitolvanen@google.com> <CAK7LNAQ8t-O2Y-47MEQA2cPYKq2NB+FURbZ8zJKWgT0grG90rQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQ8t-O2Y-47MEQA2cPYKq2NB+FURbZ8zJKWgT0grG90rQ@mail.gmail.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Mon, 7 Apr 2025 23:05:59 +0000
+X-Gm-Features: ATxdqUH8gwXDjnSDaoNdK4s6L04JtZ--H42vGnrNEIhr4DeJpws2XPsHyTPSZa4
+Message-ID: <CABCJKudb3GVL-nfUvd=1rhyH_ZWnxQCQkZBdGXQ16pA5fg3yng@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Require pahole >v1.29 with GENDWARFKSYMS and BTF
+ on X86
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Pisati <paolo.pisati@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi Masahiro,
 
-On Monday, April 7th, 2025 at 9:38 AM, Andy Shevchenko <andriy.shevchenko@i=
-ntel.com> wrote:
+On Sun, Apr 6, 2025 at 1:21=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> On Fri, Mar 21, 2025 at 8:28=E2=80=AFAM Sami Tolvanen <samitolvanen@googl=
+e.com> wrote:
+> >
+> > With CONFIG_GENDWARFKSYMS, __gendwarfksyms_ptr variables are added
+> > to the kernel in EXPORT_SYMBOL() to ensure DWARF type information
+> > is available for exported symbols in the TUs where they're actually
+> > exported. These symbols are dropped when linking vmlinux, but
+> > dangling references to them remain in DWARF.
+> >
+> > With CONFIG_DEBUG_INFO_BTF enabled on X86, pahole versions
+> > before commit 9810758003ce ("btf_encoder: Verify 0 address
+> > DWARF variables are in ELF section") place these symbols in the
+> > .data..percpu section, which results in an "Invalid offset" error in
+> > btf_datasec_check_meta() during boot, as all the variables are at
+> > zero offset and have non-zero size. If CONFIG_DEBUG_INFO_BTF_MODULES
+> > is enabled, this also results in a failure to load modules with:
+> >
+> >   failed to validate module [$module] BTF: -22
+> >
+> > The pahole commit that adds 0 address DWARF variable verification
+> > was merged after v1.29 was released, so later versions of pahole
+> > shouldn't have this issue. Require pahole >v1.29 when GENDWARFKSYMS
+> > is enabled with DEBUG_INFO_BTF on X86.
+> >
+> > Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>
+> The issue occurs with
+> 47dcb534e253 ("btf_encoder: Stop indexing symbols for VARs"),
+> then fixed by  9810758003ce ("btf_encoder: Verify 0 address
+> DWARF variables are in ELF section")
+>
+>
+> Perhaps, does it make sense to do this?
+>
+>  depends on !X86 || !DEBUG_INFO_BTF || (PAHOLE_VERSION > 129 ||
+> PAHOLE_VERSION < 128)
 
->=20
->=20
-> On Mon, Mar 24, 2025 at 05:55:40PM -0700, Denis Mukhin wrote:
->=20
-> > During the bring-up of an x86 board, the kernel was crashing before
-> > reaching the platform's console driver because of a bug in the firmware=
-,
-> > leaving no trace of the boot progress.
-> >=20
-> > It was discovered that the only available method to debug the kernel
-> > boot process was via the platform's MMIO-based UART, as the board lacke=
-d
-> > an I/O port-based UART, PCI UART, or functional video output.
-> >=20
-> > Then it turned out that earlyprintk=3D does not have a knob to configur=
-e
-> > the MMIO-mapped UART.
-> >=20
-> > Extend the early printk facility to support platform MMIO-based UARTs
-> > on x86 systems, enabling debugging during the system bring-up phase.
-> >=20
-> > The command line syntax to enable platform MMIO-based UART is:
-> > earlyprintk=3Dmmio,membase[,{nocfg|baudrate}][,keep]
-> >=20
-> > Note, the change does not integrate MMIO-based UART support to:
-> > arch/x86/boot/early_serial_console.c
-> >=20
-> > Also, update kernel parameters documentation with the new syntax and
-> > add missing 'nocfg' setting to PCI serial cards description.
->=20
->=20
-> Just for your information: Have you seen this rather old series of mine?
->=20
-> https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot-e=
-arlyprintk
+That's a good point. I confirmed that v1.27 works fine too. I'll send v2.
 
-This is a nice cleanup!
-Thanks for sharing.
-
-Sorry, I haven't seen the series above, I had to write a patch (which was m=
-onths ago).
-It's just I could not post it on the mailing list until recently.
-
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
-
-Thanks,
-Denis
+Sami
