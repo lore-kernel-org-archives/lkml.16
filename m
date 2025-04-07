@@ -1,208 +1,115 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D358C2C9A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605CE23C9
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743994684; cv=none; b=jqjb373W7uWM5QhpYCaFx9ZpqonyGmFFxZNIX1SuuVPkoFn/eGMmAsLx4E5EThN0mI9Qmzq59ENw9WSnZtW6df6mwkv/3gLap5BMUXw/GKqMKp4KusT9aXVv6rElqFrjdG/KQ/o4+XIE6Q+hdjLfM4zjW2Vues866SHdIIqM9Bs=
+	t=1743995016; cv=none; b=jhLiYAUYfvRsbmqb+onced43OJioNSprSRgeufzJLb4Im9wbfVaHPxQqbBcA4u2FKH9zyHYmedRi0rXlBTeEBWdl5ppNNQ2yW8fJaj5tMnqKY3i7Tl/anXOv+ZZteBpU6HP1K8PnC5wK4ucbdeMMoppRWu7SSp1Zb/5zcODtlEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743994684; c=relaxed/simple;
-	bh=VogXSBrD8SHVxGlYf3YrlP5FJMI+kcWpXjacNnKAoqw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LDxH41aF06MbNvLbqkUP5OkahpYKrrhdTPA0OH6jk1R+MHNFofPFvWsTzTgKM9jbhcxAyFo8qUsGjoZWYbhA/puS+r/1rjOV9nJSAO2RWMc+GawyilfMo2cOYPLGtfzfQ+6riD5XdDwtfIxKoNtgABx9dnpNrawIVZ6R0Hm9S6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NNqMJer0; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743995016; c=relaxed/simple;
+	bh=fTlu5zMIWiov9oXR9pR1NkZa+LkJW7kkYEzDph2DPuU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=qq6UY35/6WQc6G4vpMHdL/kkPYjYLLIyKxkR+E+TeerhGjtaalfKtzRtbp7JEMY4FNpP88Sec7otbI0kDtO6YpXXwAI3lkgjIdjzUZ/HmbZNSLRh1suPZuTeSFsRjYmoteSzasdE+FpZc66m4WR1kjND0SgvDt5Lq+/ajOQF6GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GqhfPtA1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NNqMJer0"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743994678;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GqhfPtA1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743995013;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZBuX9pTkYEYQIsGttm8YDZUcTpLqDztcPCUqME/aBCU=;
-	b=NNqMJer0m9dJRGlkPVa7Uctlck1sAw997K2mD9x+TyavG6JzsL0AcggRwKsdQsUmoOYaLj
-	Q52AiJUZ01CVfwXjWJeu3sLUAU3ovtaldVFlrie4RtLBrCgWJiLCGllF9xNkW0rksJ0OD8
-	eUiqvMAS3SdXCsGAkLwU2m1lCuVvwvc=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EP0dZBjz3bW8z+EH39QEGB1MxdOta1QFrqvD6gDN79U=;
+	b=GqhfPtA1Cmc3zTy/MMef8fbBLwduBmZYF29abuoEb9oRtkyeSIfPVII4HYvqRw0h1xVpV1
+	tjwfvzqv3L7/+y3A4fA6PuYRypkCn0997+NSkRJctgiE0d6tZiaJ1jmeYzqCidgcxjmBQ/
+	uWGcZ6jBoAGltQFtNwh6sUINoOPqdJk=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-127-o_2yWg37M9-P3nYTSprhoA-1; Sun,
+ 06 Apr 2025 23:03:30 -0400
+X-MC-Unique: o_2yWg37M9-P3nYTSprhoA-1
+X-Mimecast-MFC-AGG-ID: o_2yWg37M9-P3nYTSprhoA_1743995008
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A4521956048;
+	Mon,  7 Apr 2025 03:03:28 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.15])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7294E180094A;
+	Mon,  7 Apr 2025 03:03:20 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	osalvador@suse.de,
+	david@redhat.com,
+	mingo@kernel.org,
+	yanjun.zhu@linux.dev,
+	linux-kernel@vger.kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 0/3] mm/gup: Minor fix, cleanup and improvements
+Date: Mon,  7 Apr 2025 11:03:03 +0800
+Message-ID: <20250407030306.411977-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
- PATCH 0/6] Deep talk about folio vmap
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
-Date: Mon, 7 Apr 2025 10:57:13 +0800
-Cc: bingbu.cao@linux.intel.com,
- Christoph Hellwig <hch@lst.de>,
- Matthew Wilcox <willy@infradead.org>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>,
- Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org,
- linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org,
- opensource.kernel@vivo.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
-References: <20250327092922.536-1-link@vivo.com>
- <20250404090111.GB11105@lst.de>
- <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
- <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
- <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
-To: Huan Yang <link@vivo.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+These are made when I explore codes in mm/gup.c.
 
+v2->v3:
+=========
+- In patch 1, change to use local variable 'start' as a loop cursor
+  in fault_in_readable() and fault_in_writeable() so that they have the
+  consistent code style with fault_in_safe_writeable(). Doing this can
+  avoid ugly long line caused by kinds of type cast (const char __user *). 
+  Thanks to David who suggested two ways including this one, I found this
+  is better when changing code.
 
-> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
->=20
->=20
-> =E5=9C=A8 2025/4/4 18:07, Muchun Song =E5=86=99=E9=81=93:
->>=20
->>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> wrote:
->>>=20
->>>=20
->>>=20
->>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
->>>>=20
->>>> After the btrfs compressed bio discussion I think the hugetlb =
-changes that
->>>> skip the tail pages are fundamentally unsafe in the current kernel.
->>>>=20
->>>> That is because the bio_vec representation assumes tail pages do =
-exist, so
->>>> as soon as you are doing direct I/O that generates a bvec starting =
-beyond
->>>> the present head page things will blow up.  Other users of bio_vecs =
-might
->>>> do the same, but the way the block bio_vecs are generated are very =
-suspect
->>>> to that.  So we'll first need to sort that out and a few other =
-things
->>>> before we can even think of enabling such a feature.
->>>>=20
->>> I would like to express my gratitude to Christoph for including me =
-in the
->>> thread. I have carefully read the cover letter in [1], which =
-indicates
->>> that an issue has arisen due to the improper use of `vmap_pfn()`. =
-I'm
->>> wondering if we could consider using `vmap()` instead. In the HVO =
-scenario,
->>> the tail struct pages do **exist**, but they are read-only. I've =
-examined
->>> the code of `vmap()`, and it appears that it only reads the struct =
-page.
->>> Therefore, it seems feasible for us to use `vmap()` (I am not a =
-expert in
->>> udmabuf.). Right?
->> I believe my stance is correct. I've also reviewed another thread in =
-[2].
->> Allow me to clarify and correct the viewpoints you presented. You =
-stated:
->>   "
->>    So by HVO, it also not backed by pages, only contains folio head, =
-each
->>    tail pfn's page struct go away.
->>   "
->> This statement is entirely inaccurate. The tail pages do not cease to =
-exist;
->> rather, they are read-only. For your specific use-case, please use =
-`vmap()`
->> to resolve the issue at hand. If you wish to gain a comprehensive =
-understanding
->=20
-> I see the document give a simple graph to point:
->=20
->  +-----------+ ---virt_to_page---> +-----------+   mapping to   =
-+-----------+
->  |           |                                     |     0     | =
--------------> |     0     |
->  |           | +-----------+                +-----------+
->  |           |                                      |     1     | =
--------------> |     1     |
->  |           | +-----------+                +-----------+
->  |           |                                      |     2     | =
-----------------^ ^ ^ ^ ^ ^
->  |           | +-----------+                      | | | | |
->  |           |                                      |     3     | =
-------------------+ | | | |
->  |           | +-----------+                        | | | |
->  |           |                                      |     4     | =
---------------------+ | | |
->  |    PMD    | +-----------+                          | | |
->  |   level   |                                   |     5     | =
-----------------------+ | |
->  |  mapping  | +-----------+                             | |
->  |           |                                     |     6     | =
-------------------------+ |
->  |           | +-----------+                              |
->  |           |                                     |     7     | =
---------------------------+
->  |           |                                    +-----------+
->  |           |
->  |           |
->  |           |
->  +-----------+
->=20
-> If I understand correct, each 2-7 tail's page struct is freed, so if I =
-just need map page 2-7, can we use vmap do
->=20
-> something correctly?
+- In patch2, changes to add VM_WARN_ON_ONCE() for both below chekcing
+  because all external users of __get_user_pages() have done the
+  checking in is_valid_gup_args() before calling __get_user_pages().
+  Just adding these VM_WARN_ON_ONCE() in case, e.g internal setting
+  wrong flags in kernel code. Thanks to David for suggesting this.
 
-The answer is you can. It is essential to distinguish between virtual
-address (VA) and physical address (PA). The VAs of tail struct pages
-aren't freed but remapped to the physical page mapped by the VA of the
-head struct page (since contents of those tail physical pages are the
-same). Thus, the freed pages are the physical pages mapped by original
-tail struct pages, not their virtual addresses. Moreover, while it
-is possible to read the virtual addresses of these tail struct pages,
-any write operations are prohibited since it is within the realm of
-acceptability that the kernel is expected to perform write operations
-solely on the head struct page of a compound head and conduct read
-operations only on the tail struct pages. BTW, folio infrastructure
-is also based on this assumption.
+   - (gup_flags & (FOLL_PIN | FOLL_GET)) == (FOLL_PIN | FOLL_GET))
+   - !!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN))
 
-Thanks,
-Muchun.
+- Drop
+      - the old patch 3 of v2 because it's from misunderstanding;
+      - the old patch 4, 5 of v2 because they have been merged into x86
+        tip tree by Ingo;
+      - the old patch 7 of v2 because it has been coverred in another
+        thread. Thanks to David for telling the thread link.
 
->=20
-> Or something I still misunderstand, please correct me.
->=20
-> Thanks,
->=20
-> Huan Yang
->=20
->> of the fundamentals of HVO, I kindly suggest a thorough review of the =
-document
->> in [3].
->>=20
->> [2] =
-https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com=
-/#t
->> [3] Documentation/mm/vmemmap_dedup.rst
->>=20
->>> [1] =
-https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m05=
-5b34978cf882fd44d2d08d929b50292d8502b4
->>>=20
->>> Thanks,
->>> Muchun.
->>>=20
->>=20
+- In patch 3, add reviewing tags from Oscar and David.
+
+v1->v2:
+==========
+- In patch 1, I carelessly copied the fault_in_readable() as
+  fault_in_writeable(). Thanks to Yanjun for pointing it out.
+
+- In patch 2, I copied the code in follow_page_pte() to
+  __get_user_pages() directly w/o adjustment which is done but not
+  merged to patch. That failed testing taken by lkp test robot, thanks
+  for reporting.
+
+Baoquan He (3):
+  mm/gup: fix wrongly calculated returned value in
+    fault_in_safe_writeable()
+  mm/gup: remove unneeded checking in follow_page_pte()
+  mm/gup: remove gup_fast_pgd_leaf() and clean up the relevant codes
+
+ mm/gup.c | 100 ++++++++++++++++---------------------------------------
+ 1 file changed, 28 insertions(+), 72 deletions(-)
+
+-- 
+2.41.0
 
