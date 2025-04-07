@@ -1,168 +1,136 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A309215F43;
-	Mon,  7 Apr 2025 19:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7358922068F;
+	Mon,  7 Apr 2025 19:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744054587; cv=none; b=lshggLO6MWFctSD4vqmZSvDU9LCkULD5Qq/t3/BKYZzH5gZlmceYJuaQXsblfRXdzxXJQlsM+zsCiI84N0rk4jjWbFKBE79DU7eMo1tdo91aA2Yf/10a3MMAkWu6FA7WQpmib3HHXvTzNATTbu/6kgxaAAd1xF4Jg7/PKEv4gMM=
+	t=1744054589; cv=none; b=AAE69tLYQaGdPNrcu0WaWScJajWkmCWnU5gWayYh/Uc0GRaT+coiUnTJtU9ABZzq+jB9lWmIvaPuxX2fVxvW/ox09v3fx9XOmU7nV2UlqfzPDwU8KC8+d+3guIrjE0fmk4ZCyTDhXwNGg+u9rg4Hsp4qBj5nbdVmpHcXzqZc14g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744054587; c=relaxed/simple;
-	bh=nStIjfSZeL0zt9W7+iaa9CoiY9nOZsfvqJhLH6Sl5g4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pj+Y8ibsWZzO/4CePW1kFlgGiCIA5jezrzwPsZLcWVGgB05z8A3PxRN9ufrTieevevWgMfasgbkpn4pXQpB6OVjDrwqXb79s4O59tdA7aUiu7bqJz36kbFiElSXu8PASnflWiFWKx0OJvls9h7UnlJgwvF2uld5DVYKlpANSYY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TisXWwTs; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744054589; c=relaxed/simple;
+	bh=C2w2lOcwPcrCvotdyulR6kXCscgjaiIOaat+VIngv+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dHMNYeVr8FrsNSHl1qGaTPaVeJO4daUM69OQCVp5svcS/Lv8GV2eCEIglbq15jDP8lbSiay+FpvCOg36Lvf9cjdaVTBomc0YhnlQcB2RxC/UqfHTk8AhKpKfuQ27/GGK9B6BPi6JcHELYMFY8zDyc7J7lwsuAj3u7ZW3b+savWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NUsva2T2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TisXWwTs"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso2729569f8f.1;
-        Mon, 07 Apr 2025 12:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744054584; x=1744659384; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSPr9sZkytyi6HYm3brTb7NWt25n9J2i6nUGBqwMRe0=;
-        b=TisXWwTsZER2+t3Fz0C3+MLh6b0gjcyVu1u/96LycHVavndkl9CLh+HLt4XrnCBpb1
-         NCTQnl9dBQGKM2y++PR6Oeu1rBuxzYaGwwkekD6YohdzLg5LUjjzFNTy51tTz2DC1kBs
-         7WV+8FkDv6zs7AUr7UDHy+9LSbX0ZIck0CfbCf1U7PhXvlwdi/FRFoqCeT1vAvCnxWew
-         b3qxD1GwL0pYMQ+kQRm9Ijy3I8B04+P8JrPcmeMnR4u7FjGesBMXpWdebilxd1JUuDLa
-         aaJbZFU5txVy5TBZj7AIwxE57QCM3mc9KvAEnolXo6GzOwEwVaFidSgpWRwd/Sl32nHm
-         r2TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744054584; x=1744659384;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hSPr9sZkytyi6HYm3brTb7NWt25n9J2i6nUGBqwMRe0=;
-        b=hcM+P1woM9hXC4BVcwe72owRwooIdrRWE0uN3AGoAr95WeVTA8btWNCJbHiZacEjpC
-         IDr7QZIRHbREXtektv2HT8kX7hjYwmQYGD6lPAx/n5W3kj/TEn6tm6WGFEDzoGcTA7yb
-         nH12xyKhc2hLsabrFsvSvpIUjwGEagkCAD0m6XOodIruq5t4r3uJ9YGsHRj+mvtPMX04
-         aIJSpmqtm5sfDvqb8FWDktg2Oy6ffbRW149NQUnsOWi/Z3qbcKwT46qmPOGp11nr3QRs
-         Z5kLnIaUmeYch5tr8Tj+rDCnfmgqds1MVneBme12SCgkaAarUubDtfW4oTjeOtpGsenS
-         HQVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTchuXNhmCl7ROzwWNPYGTVX+K/03aY/XihvR0Fc3JZ9u6jNjvjZRe6U9n+cUx0rvMzz2BEVhvBF209INT@vger.kernel.org, AJvYcCXOFnnsGJmp9E0DV0REhj7HWU+GqsshBrhdNyagJ1PGiAtx/9igyUiz1ajDInAbXoag2YRq0MlPb3PP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOXFqg8EqBtfmqTCT4qmKnPxV4v5CaFwERYOoi669BrTQNV1/P
-	MQq+AFoNcvvQmmZT/9omlhgsNQi/UmJVSnLRgGnNKDDl2B9h9+Ef
-X-Gm-Gg: ASbGncvStiRLRYeLVf9QXbw0gdZyfczOEqJw0CrqWtlCjOewkPdkWzCH0ffz7L5Geo+
-	93mM0zTHZTWxP+NfdM0o+1VUN4uCvGMHvGVw6LFSKgHJPVPXBRXy2s+s8Uoa9H586jXXeuIZM0i
-	0jmFkx93eKWaRo+UwhY8lrWPhHFfYjbhhnr4iic2PF2u8+kGCrKxNGM+z7zKr8K0IQ5qlNX8mmL
-	Fj7YnoWNOzfd8izSB6NawE+tekOGo4N/78OroZexA4a17Nwt0F4XIMV0cx0zMrTsDrP+KlhWDah
-	BeXIiPzHDtC1dBdCwEITe7U+k0UTYAiPRhgRBp7czelb45b3A86eakjPSh4sWD4=
-X-Google-Smtp-Source: AGHT+IEUiomeOiUOHrr0DKhbBbz9XR6SWezAxykM7N11ouMT90URl7Xtcfm6e8GrZrN3ZF04M6mwbg==
-X-Received: by 2002:a5d:584f:0:b0:391:65c:1b05 with SMTP id ffacd0b85a97d-39d820b0af5mr646908f8f.11.1744054584329;
-        Mon, 07 Apr 2025 12:36:24 -0700 (PDT)
-Received: from localhost.localdomain ([37.162.191.164])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d62fsm13122812f8f.79.2025.04.07.12.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 12:36:24 -0700 (PDT)
-From: Antoni Pokusinski <apokusinski01@gmail.com>
-To: alexandre.belloni@bootlin.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org,
-	alexander.stein@ew.tq-group.com
-Cc: linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Antoni Pokusinski <apokusinski01@gmail.com>
-Subject: [PATCH 3/3] dt-bindings: rtc: add binding for RV8063
-Date: Mon,  7 Apr 2025 21:35:21 +0200
-Message-Id: <20250407193521.634807-4-apokusinski01@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250407193521.634807-1-apokusinski01@gmail.com>
-References: <20250407193521.634807-1-apokusinski01@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NUsva2T2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E10C4CEEC;
+	Mon,  7 Apr 2025 19:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744054588;
+	bh=C2w2lOcwPcrCvotdyulR6kXCscgjaiIOaat+VIngv+A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NUsva2T2lhgFXF9sxYwI7KwExu4fozsIVeM7QGt4A2j7gcuHp0RdxRj3ITCA2K32E
+	 aYuKkjIR9Iv6vgdkNF5Fg+QtrNxlDtuEtbEw5HdBaSmHgvbdyCpINsmqIiqIbnLHVS
+	 qLBeETi+e2DSUOABw8OU7hAnABYcxtJ8SobFig56O+y/BmHCov6oC7KlXZDUR7Du0i
+	 zg7ld7bNK/usVq7lNTzWYs83JdS1DMfHZu3WuKEgVap8bLXdfko9Ys8LZJx68hP2Ur
+	 W1WIiCfrvoFF6UW3ck4OdiOEZtiDjf4y5WLHXWZtvSythLHREa2uQMakoypvqCMSjw
+	 1nKTyf9yEoOMg==
+Date: Mon, 7 Apr 2025 13:36:26 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] w1: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <Z_QpOlDTvyfRs4Su@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Microcrystal RV8063 is a real-time clock module with SPI interface.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
+
+So, with these changes, fix the following warnings:
+
+drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- .../devicetree/bindings/rtc/nxp,pcf85063.yaml | 33 ++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+Changes in v2:
+ - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
 
-diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-index 2f892f8640d1..cb31c7619d66 100644
---- a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-+++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.yaml
-@@ -12,6 +12,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+      - microcrystal,rv8063
-       - microcrystal,rv8263
-       - nxp,pcf85063
-       - nxp,pcf85063a
-@@ -44,7 +45,12 @@ properties:
- 
-   wakeup-source: true
- 
-+  spi-cs-high: true
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-WD2NP_1A0ratnI@kspp/
+
+ drivers/w1/w1_netlink.c | 42 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
+index 691978cddab7..724a008cf342 100644
+--- a/drivers/w1/w1_netlink.c
++++ b/drivers/w1/w1_netlink.c
+@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
+ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+ 	int portid, int error)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memcpy(&packet.cn, cn, sizeof(packet.cn));
+-	memcpy(&packet.msg, msg, sizeof(packet.msg));
+-	packet.cn.len = sizeof(packet.msg);
+-	packet.msg.len = 0;
+-	packet.msg.status = (u8)-error;
+-	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
++	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
 +
-+  spi-3wire: true
-+
- allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-   - $ref: rtc.yaml#
-   - if:
-       properties:
-@@ -52,6 +58,7 @@ allOf:
-           contains:
-             enum:
-               - microcrystal,rv8263
-+              - microcrystal,rv8063
-     then:
-       properties:
-         quartz-load-femtofarads: false
-@@ -65,12 +72,23 @@ allOf:
-       properties:
-         quartz-load-femtofarads:
-           const: 7000
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              enum:
-+                - microcrystal,rv8063
-+    then:
-+      properties:
-+        spi-cs-high: false
-+        spi-3wire: false
++	memcpy(packet, cn, sizeof(*packet));
++	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
++	packet->len = sizeof(*pkt_msg);
++	pkt_msg->len = 0;
++	pkt_msg->status = (u8)-error;
++	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
+ }
  
- required:
-   - compatible
-   - reg
+ /**
+@@ -215,22 +215,20 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+  */
+ void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memset(&packet, 0, sizeof(packet));
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
++	struct w1_netlink_msg *pkg_msg = (struct w1_netlink_msg *)packet->data;
  
--additionalProperties: false
-+unevaluatedProperties: false
+-	packet.cn.id.idx = CN_W1_IDX;
+-	packet.cn.id.val = CN_W1_VAL;
++	packet->id.idx = CN_W1_IDX;
++	packet->id.val = CN_W1_VAL;
  
- examples:
-   - |
-@@ -90,3 +108,16 @@ examples:
-           };
-         };
-       };
-+
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        rtc@0 {
-+          compatible = "microcrystal,rv8063";
-+          reg = <0>;
-+          spi-cs-high;
-+          spi-3wire;
-+        };
-+    };
+-	packet.cn.seq = dev->seq++;
+-	packet.cn.len = sizeof(*msg);
++	packet->seq = dev->seq++;
++	packet->len = sizeof(*msg);
+ 
+-	memcpy(&packet.msg, msg, sizeof(*msg));
+-	packet.msg.len = 0;
++	memcpy(pkg_msg, msg, sizeof(*msg));
++	pkg_msg->len = 0;
+ 
+-	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
++	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
+ }
+ 
+ static void w1_send_slave(struct w1_master *dev, u64 rn)
 -- 
-2.25.1
+2.43.0
 
