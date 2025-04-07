@@ -1,89 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6BE1C5F28;
-	Mon,  7 Apr 2025 14:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F133195980;
+	Mon,  7 Apr 2025 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035081; cv=none; b=NG3x+fVuizKnoU/msvmlcMvS7khz+hPPe2uklRqnPI7y2VQOYwON3+eeKe41zh6DGjvxqbCX1rVFbm2CW3c2MibpD38tZ6SKDmeVVROzumotOhTzZyAIyv9P22nkWx1YxGfN0b2j4TXg2agzrGpVBn8QgNXHeOBVhW16ziTNdbI=
+	t=1744035128; cv=none; b=HTHkR3DlpOTByMh/9Xf9l1QEKcwysURDRn8xl0YsIosgg8KUcPkw6mLwC/icJpW0zd79/97XszgzXbRsBosG8f0bPMPzNW094G/i7wpKRM9XT1Mj/cpUfr4oprgjNWZM0aomdSHyDmaArdO2R47PxB5rkznQ3kUO7Ufe1ibVVnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035081; c=relaxed/simple;
-	bh=kZUcAvHfg06pFUq3u0ppbMfjOjpMz7azG1mzNbRZCds=;
+	s=arc-20240116; t=1744035128; c=relaxed/simple;
+	bh=BM5cV4bBXrRvHTbU7sz/LUIUOjziIRu1j9LSZS//g88=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rUYuEBc+eNz7U5o/BIO7Ei1XxcEMaQ+hrXK6GLPNypJR9+5av+fGyerui1WNpJO9wN+cXXivaTmNNGwX5UhnTXiuwWXEZRpQCd2zWPEnMroC+91h9NjHsqxbqyjuxrSTuYO9jlIfC5SNjoVplj9pje9xxvZPs9IcZ2rJCgWrdVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLsODXQ6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q237In4ex+1s8puVHg6jTcRqpfRZN9uyZxQePz12ehwiJZYcrdwlR0Q0lyzXvplLUuqP45oYPvIr75Lk7e8S0tJhOkBr4foOJzmcJa3ZbRZxhjBVSPVO39qlfcKSMRb+djBa+tgmJlb4gngBeENeFGD6FsI3TAhx8vO38Xzx3Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+yFOOio; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLsODXQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB2DC4CEDD;
-	Mon,  7 Apr 2025 14:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744035081;
-	bh=kZUcAvHfg06pFUq3u0ppbMfjOjpMz7azG1mzNbRZCds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DLsODXQ6hUQvST6rpsd/56i2NZHg4QFuam+7YuMAvAIqqHs/DGMFXjuYdR4B1eqpj
-	 YQv+Zzut5lVsD/IqFdy+OvkoUmg+nxGgxkNDzlSffilACynbqFCaJzH2T5VPbMk3gn
-	 bUXhyDAV04SgHJLpTupeVxzpp1JVNo1MWsNu0VKOGgeEHcogj7ah3whTPAw0ciqmX+
-	 fq5op1+7RJJqaBu0+zDC2ZqoZxbByLbBc8quTJJpOtfMcP7tTBT2zKbEz68LDjNLSm
-	 FDYAeMPbbiuxsDUsfWADTCCXXvY/BXjMhjG+lNksaFW/dptlXhp0HGXvrPNp4H7SXg
-	 hVXNSPW2k/zSA==
-Date: Mon, 7 Apr 2025 09:11:19 -0500
-From: Rob Herring <robh@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: Longbin Li <looong.bin@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	ghost <2990955050@qq.com>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add pwm controller for
- SG2044
-Message-ID: <20250407141119.GA2192351-robh@kernel.org>
-References: <20250407072056.8629-1-looong.bin@gmail.com>
- <20250407072056.8629-2-looong.bin@gmail.com>
- <jq55x7uhftvejninh56tzk32jtmmwa5wxzna5uxbkk5woi7zi5@6wrg2ctmyg7b>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+yFOOio"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af93cd64ef3so2860485a12.2;
+        Mon, 07 Apr 2025 07:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744035126; x=1744639926; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmtDaVACLlSu94GW/amGh9wB9MWFIy2Gxw81cDDDK4A=;
+        b=X+yFOOiooRaYQm2sKTYKEIFMGo4WfAYY98jTrA+lkGEfPdy8Ky+fxKDK6LuvEYs4c+
+         8/MXQGCCe+y+cT5ABp3ocdmzvGrAYm3pvqZH1uHAjxriu1jRKtR8v+aff0ESdIjhhur3
+         /uoJ4Rw1LnfjCaPGXvC0AzAo4mwja1jj3tThmzw1YCIUTqwib9mnGdfjJgiLvI22ZS51
+         CEa3wv+qazuH1CqIVX2oo4pWWVjb9olg73SpfkOtqoOVIBn4IRBLIPAi5bYUDbHniiro
+         fFTHxeUINzW0WLBam5Ibgicr4xGgWpRokDXGXh4EnS32qJ6iFYZ9PpVuc0081JvMzTgs
+         qWZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744035126; x=1744639926;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pmtDaVACLlSu94GW/amGh9wB9MWFIy2Gxw81cDDDK4A=;
+        b=MX3yTtevrESt+GCZP0O3guBUtoz8cTHAF3GsB/+aZG/w4HhOGGh+p6EndWkAT8CVMW
+         tkqVKykOkyOwZzDwITJJSOAYGC8lNvDvvuCjT010qErRZ0q/lmRPlpcb+Pe0vnKSGYKo
+         BLL7vGKrNDumjcRvhOXf6M3KUO3l1y9RhGuKKpWYwWq8UYR0aN3yYYTLpy6Lt3Y/mYT9
+         pEbYOeeMVGoChtlLAN/Jn5wMGpP7VRrz1FUZtaJtUWzydQAiqpgGbLWHAocyVuCiKuqF
+         PD9D7JfWq2IMinE3XkCI4UVlDHbH51Rw8iIcfhX1kQICvKY6Zv0rUCbYBcqu53mA9Brm
+         vhhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz+RNv6uSwMH/MexSUSBg9/gFqmALiHNJZCbeUz7+NaSNrI4w8KCgBkfCIa2ebdJ1s2cN7d72H@vger.kernel.org, AJvYcCXOa6/XdqbAlcDv9e/Mze36jH/aQFQ8tK/Gc4x4p2JMo1XyL4YQtZvcGEZqdv/KzPNDxDAIvk0wpykSPLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvrw++COZIiNy2oG5Nw05QvJXMtOwWu/YmXZcNwhbFrWxeHudg
+	Svgc3p4VN4lEP+r2zto6A1XTT4oYO4Dp4G0MtU95peAFf6/iYHE=
+X-Gm-Gg: ASbGncsJtSRt+o0t2UuTafEDJJ9OxlMbn1LA9JISNo5soKFUZ6kc916Wvq+8qlaGO/V
+	TiIqHtEB8KWupVmYzBNvMN33TZLRBLNx5vp5Q1JH8+joi0p/zIIOde0tBx1eiPxTFJzMkoCsjiE
+	bpBS5vr9KMX/nLKaNDxKlyCA3ep+isZ5aNYo2A4Zdn107dc3tqXpL/9K5P0L4XRvJQdu8zizhPf
+	pwuQnFoneArsBS/YhwQRWKceADpoKbko8po8APcXDp8HZSodDc7OczvbjgqW82b5rilpMw0vWi9
+	PYh6WF/DcxXGHUUuaTIDYWfwcgrtCg0Bhz+DekJOlBj1
+X-Google-Smtp-Source: AGHT+IHvhv5UUYDWcqF+cM5R69UNg07/j0fxkjqP4eIQvIrI9zOpS3f8WzeG+b0JrqNCswA2NlRY1w==
+X-Received: by 2002:a17:902:ef03:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-22a8a06cc5dmr160510185ad.27.1744035125271;
+        Mon, 07 Apr 2025 07:12:05 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-229785ad9c3sm81324745ad.30.2025.04.07.07.12.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 07:12:04 -0700 (PDT)
+Date: Mon, 7 Apr 2025 07:12:03 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com,
+	davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, sdf@fomichev.me, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] net: get ops lock under dev valid
+Message-ID: <Z_PdMxDnE1j4sFks@mini-arch>
+References: <67f36908.050a0220.0a13.027f.GAE@google.com>
+ <tencent_ABAECE4C9727C606CDD2D6C67209852EC406@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <jq55x7uhftvejninh56tzk32jtmmwa5wxzna5uxbkk5woi7zi5@6wrg2ctmyg7b>
+In-Reply-To: <tencent_ABAECE4C9727C606CDD2D6C67209852EC406@qq.com>
 
-On Mon, Apr 07, 2025 at 02:31:24PM +0200, Uwe Kleine-König wrote:
-> Hello,
+On 04/07, Edward Adam Davis wrote:
+> Make sure that dev is not NULL before locking ops. 
 > 
-> On Mon, Apr 07, 2025 at 03:20:38PM +0800, Longbin Li wrote:
-> > diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > index bbb6326d47d7..e0e91aa237ec 100644
-> > --- a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > @@ -17,7 +17,9 @@ allOf:
-> > 
-> >  properties:
-> >    compatible:
-> > -    const: sophgo,sg2042-pwm
-> > +    enum:
-> > +      - sophgo,sg2042-pwm
-> > +      - sophgo,sg2044-pwm
-> 
-> Given that the sg2044 has more registers (to e.g. implement different
-> polarity), but the sg2042 registers are identical, I wonder if the 2044
-> device should use:
-> 
-> 	compatible = "sophgo,sg2044-pwm", "sophgo,sg2042-pwm";
-> 
-> Note, I'm unsure here, only providing input to people who are more
-> knowledgeable in DT that I am.
+> Fixes: 8965c160b8f7 ("net: use netif_disable_lro in ipv6_add_dev")
+> Reported-by: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 
-Depends if s/w only understanding "sophgo,sg2042-pwm" will work on the 
-2044. IOW, will a kernel without the driver change here work?
-
-Rob
+I think this happened first?
+https://lore.kernel.org/netdev/Z_Pb9dku3R1wdTEp@mini-arch/T/#m733abfc2e974bf96cfdebc8a47aa58f39bf76b82
