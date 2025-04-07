@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30A0228C9D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD2B21C9E0
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069249; cv=none; b=h1UeFWrIeU/MSduhfoDP4YYUoq59ro4MiqPLwz7+2XdIf3Mfxan4xEcFBHAQggtqXABjtQm8BgKo0c5Fo8zFE7h4XPPwCyRq/4Dpp7cPzgQWyRokGXXd9Yd05L0EUUwH0+aCiFuk22PRV4U79EfKmYuoaW9hpdan69UDDdGjaO4=
+	t=1744069249; cv=none; b=WihqSJWoyWB7yivlf8D5EJZ0jNiSvrjqloVbFYjGUBdYHOEK2/ZkArV5hVnywd5Pq5NfrBSgrkFEvk2ulUJrzyxJSLvDL5f86uZ932L/S8r16/u0zbVQpf2lMA1wlQ3qgPajzXs0QotFcc7CjP2wN0GIPhGcGwirvI8F7+QlADM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744069249; c=relaxed/simple;
-	bh=PbAmaYUfs3cYnTUyhKKObGUQYfLatjVDLhG5ft36Q3I=;
+	bh=0SsHkzJ+rKfwiQhKtqjOmpxI83+lcGEhE7JmP2gJ82k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=maq31Qitg/9mbuC908iUF23xBDOqKck+GUvHO388jcJuOo0K4iYSJA/IoztmnRQMB7mJOsh2dYl4FeVSJSkdUdz9p0hC9nogDMgAugojm2TMjzuR1wwGW8JnkPUdKvy++OqXQVSe6oxpzLgSSTCZ15rY/XJzMu1n5FEfT/DTjVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEtS3K3f; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=ranKmSsaE5Dx7AgazDdPscFlYboiEvMni1PbtrPwC0klg4y2cg5WzVCJYKRsOilWt1r517lPG4oQGz0IYqeexjdw1IApeE/YI5wBVdHOYUknV9T4IOfe5V9gIrVmnRPsAEW9kL8YRhMeUXyMTYdKanuqbSNtOg4bh1xx0ub9IqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaG8jNyU; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEtS3K3f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaG8jNyU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744069248; x=1775605248;
+  t=1744069247; x=1775605247;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=PbAmaYUfs3cYnTUyhKKObGUQYfLatjVDLhG5ft36Q3I=;
-  b=JEtS3K3f0c4ifCuW/RVqTJVEh2TZgR+h1ILuxXqEPqiZDLhitOjrN5W8
-   hUOqcEu5lNhyc0tQ6dt/9vQnhtwsWH2CwOCtOHu2cjkfrxmLsh73wb5jG
-   3Hzn6dxhWdV1Ms6HxY4P4n7/LnoF0E7JoJjf7imYSE3OLPdJ5pPpuaGV/
-   cbhFGFqU8X58PBjhI3511t0RETHjIPmxRDsa9MU7kxnnTxltdFqMd+fRm
-   MI+7XjhOUl+nXYuqoFBLu84Ywwr9xrE70b7sfAlGQaaRWY17cD57zjLDU
-   gmEmZYTCmQuTIARFepZkj++pJ1ZrJ22jR3KRPDFJia+J3VBchU0wpoFPH
-   A==;
-X-CSE-ConnectionGUID: ZzWIEwueRNqqSiGUetj0Ew==
-X-CSE-MsgGUID: FfXC6IjaSpSpHgNh1XgiTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193129"
+  bh=0SsHkzJ+rKfwiQhKtqjOmpxI83+lcGEhE7JmP2gJ82k=;
+  b=WaG8jNyUd65qMsehZLJDwfdy6GaLky4ATQvhOQyuFkqLm7qEOPMorxK1
+   W7mgM26k2m0Z9D4DFjUhbfq1kBxaz6lItfH3DcYD1996uvXTzPZV60nmW
+   6APpbtMWmx2Dg1VZn16qAcDlZQhNHJ2IXbLoYTx9Vuj9CF7ZMARBCPsUh
+   QtSXVs2Aj5Cxi2VL+auVtp5A7IY8D75A0CgABPnXDPd+oS2RA1OaI/NB9
+   HQNnfkuFnWd1GAeyevlrgz/Vbc4a0Hd6mdqVdN+duM7DWARz1GyRLfl4W
+   Na7gTPl+2arjHqS5j4RUag/SK4XfM/+DdCEdWzi1+hZiBtZCgH0ynMrRk
+   w==;
+X-CSE-ConnectionGUID: rXB46zD8Sf+MD7noJNQ0Ig==
+X-CSE-MsgGUID: jhL1PQ+rRBiL3LtHwjGGzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193122"
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="48193129"
+   d="scan'208";a="48193122"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:46 -0700
-X-CSE-ConnectionGUID: EfZ3o3v/RZWENunGoIdVUw==
-X-CSE-MsgGUID: RIpgCKW+SHeYXq99PvsPjg==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:45 -0700
+X-CSE-ConnectionGUID: 9U8pZbmcR76OHq4QZV87sg==
+X-CSE-MsgGUID: tXpnbrOETv22aTV6+5sc+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="165315452"
+   d="scan'208";a="165315447"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:45 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:44 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -56,9 +56,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 03/26] fs/resctrl: Change how events are initialized
-Date: Mon,  7 Apr 2025 16:40:05 -0700
-Message-ID: <20250407234032.241215-4-tony.luck@intel.com>
+Subject: [PATCH v3 02/26] fs-x86/resctrl: Prepare for more monitor events
+Date: Mon,  7 Apr 2025 16:40:04 -0700
+Message-ID: <20250407234032.241215-3-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250407234032.241215-1-tony.luck@intel.com>
 References: <20250407234032.241215-1-tony.luck@intel.com>
@@ -70,128 +70,553 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-New monitor events break some assumptions:
+There's a rule in computer programming that objects appear zero,
+once, or many times. So code accordingly.
 
-1) New events can be in resources other than L3.
-2) Enumeration of events may not be complete during early
-   boot.
+There are two MBM events and resctrl is coded with a lot of
 
-Prepare for events in other resources.
+	if (local)
+		do one thing
+	if (total)
+		do a different thing
 
-Delay building the event lists until first mount of the resctrl
-file system.
+Simplify the code by coding for many events using loops on
+which are enabled.
+
+Make rdt_mon_features a bitmap to allow for expansion.
+
+Move resctrl_is_mbm_event() to <asm/resctrl.h> as it gets used by core.c
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- fs/resctrl/internal.h |  3 +++
- fs/resctrl/monitor.c  | 30 +++++++++++++++++++-----------
- fs/resctrl/rdtgroup.c |  2 ++
- 3 files changed, 24 insertions(+), 11 deletions(-)
+ include/linux/resctrl.h                |  6 +--
+ include/linux/resctrl_types.h          |  8 +++
+ arch/x86/include/asm/resctrl.h         |  8 +--
+ arch/x86/kernel/cpu/resctrl/internal.h |  6 +--
+ fs/resctrl/internal.h                  |  4 ++
+ arch/x86/kernel/cpu/resctrl/core.c     | 45 +++++++++--------
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 33 ++++++------
+ fs/resctrl/ctrlmondata.c               | 41 ++++-----------
+ fs/resctrl/monitor.c                   | 70 ++++++++++++++++----------
+ fs/resctrl/rdtgroup.c                  | 47 ++++++++---------
+ 10 files changed, 133 insertions(+), 135 deletions(-)
 
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 5c7c8bf2c47f..d6a926b6fc0e 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -151,8 +151,7 @@ struct rdt_ctrl_domain {
+  * @hdr:		common header for different domain types
+  * @ci:			cache info for this domain
+  * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
+- * @mbm_total:		saved state for MBM total bandwidth
+- * @mbm_local:		saved state for MBM local bandwidth
++ * @mbm_states:		saved state for each QOS MBM event
+  * @mbm_over:		worker to periodically read MBM h/w counters
+  * @cqm_limbo:		worker to periodically read CQM h/w counters
+  * @mbm_work_cpu:	worker CPU for MBM h/w counters
+@@ -162,8 +161,7 @@ struct rdt_mon_domain {
+ 	struct rdt_domain_hdr		hdr;
+ 	struct cacheinfo		*ci;
+ 	unsigned long			*rmid_busy_llc;
+-	struct mbm_state		*mbm_total;
+-	struct mbm_state		*mbm_local;
++	struct mbm_state		*mbm_states[QOS_NUM_MBM_EVENTS];
+ 	struct delayed_work		mbm_over;
+ 	struct delayed_work		cqm_limbo;
+ 	int				mbm_work_cpu;
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index a7faf2cd5406..898068a99ef7 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -55,5 +55,13 @@ enum resctrl_event_id {
+ };
+ 
+ #define QOS_NUM_EVENTS		(QOS_L3_MBM_LOCAL_EVENT_ID + 1)
++#define QOS_NUM_MBM_EVENTS	(QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_TOTAL_EVENT_ID + 1)
++#define MBM_EVENT_IDX(evt)	((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
++
++static inline bool resctrl_is_mbm_event(int e)
++{
++	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
++		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
++}
+ 
+ #endif /* __LINUX_RESCTRL_TYPES_H */
+diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+index 6eb7d5c94c7a..4346de48eeab 100644
+--- a/arch/x86/include/asm/resctrl.h
++++ b/arch/x86/include/asm/resctrl.h
+@@ -42,7 +42,7 @@ DECLARE_PER_CPU(struct resctrl_pqr_state, pqr_state);
+ 
+ extern bool rdt_alloc_capable;
+ extern bool rdt_mon_capable;
+-extern unsigned int rdt_mon_features;
++extern DECLARE_BITMAP(rdt_mon_features, QOS_NUM_EVENTS);
+ 
+ DECLARE_STATIC_KEY_FALSE(rdt_enable_key);
+ DECLARE_STATIC_KEY_FALSE(rdt_alloc_enable_key);
+@@ -84,17 +84,17 @@ static inline void resctrl_arch_disable_mon(void)
+ 
+ static inline bool resctrl_arch_is_llc_occupancy_enabled(void)
+ {
+-	return (rdt_mon_features & (1 << QOS_L3_OCCUP_EVENT_ID));
++	return test_bit(QOS_L3_OCCUP_EVENT_ID, rdt_mon_features);
+ }
+ 
+ static inline bool resctrl_arch_is_mbm_total_enabled(void)
+ {
+-	return (rdt_mon_features & (1 << QOS_L3_MBM_TOTAL_EVENT_ID));
++	return test_bit(QOS_L3_MBM_TOTAL_EVENT_ID, rdt_mon_features);
+ }
+ 
+ static inline bool resctrl_arch_is_mbm_local_enabled(void)
+ {
+-	return (rdt_mon_features & (1 << QOS_L3_MBM_LOCAL_EVENT_ID));
++	return test_bit(QOS_L3_MBM_LOCAL_EVENT_ID, rdt_mon_features);
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 521db28efb3f..45eabc7919c6 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -59,15 +59,13 @@ struct rdt_hw_ctrl_domain {
+  * struct rdt_hw_mon_domain - Arch private attributes of a set of CPUs that share
+  *			      a resource for a monitor function
+  * @d_resctrl:	Properties exposed to the resctrl file system
+- * @arch_mbm_total:	arch private state for MBM total bandwidth
+- * @arch_mbm_local:	arch private state for MBM local bandwidth
++ * @arch_mbm_states:	arch private state for each MBM event
+  *
+  * Members of this structure are accessed via helpers that provide abstraction.
+  */
+ struct rdt_hw_mon_domain {
+ 	struct rdt_mon_domain		d_resctrl;
+-	struct arch_mbm_state		*arch_mbm_total;
+-	struct arch_mbm_state		*arch_mbm_local;
++	struct arch_mbm_state		*arch_mbm_states[QOS_NUM_MBM_EVENTS];
+ };
+ 
+ static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct rdt_ctrl_domain *r)
 diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
-index 7a65ea02d442..08dbf89939ac 100644
+index e5976bd52a35..7a65ea02d442 100644
 --- a/fs/resctrl/internal.h
 +++ b/fs/resctrl/internal.h
-@@ -76,6 +76,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
-  */
- struct mon_evt {
- 	enum resctrl_event_id	evtid;
-+	enum resctrl_res_level	rid;
- 	char			*name;
- 	bool			configurable;
- 	struct list_head	list;
-@@ -390,6 +391,8 @@ int rdt_lookup_evtid_by_name(char *name);
+@@ -386,6 +386,10 @@ bool closid_allocated(unsigned int closid);
  
- char *rdt_event_name(enum resctrl_event_id evt);
+ int resctrl_find_cleanest_closid(void);
  
-+void resctrl_init_mon_events(void);
++int rdt_lookup_evtid_by_name(char *name);
++
++char *rdt_event_name(enum resctrl_event_id evt);
 +
  #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
  int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
  
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 6ed0d4f5d6a3..6f4a3bd02a42 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -366,8 +366,8 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domain *hw_dom)
+ 
+ static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
+ {
+-	kfree(hw_dom->arch_mbm_total);
+-	kfree(hw_dom->arch_mbm_local);
++	for (int i = 0; i < QOS_NUM_MBM_EVENTS; i++)
++		kfree(hw_dom->arch_mbm_states[i]);
+ 	kfree(hw_dom);
+ }
+ 
+@@ -401,25 +401,26 @@ static int domain_setup_ctrlval(struct rdt_resource *r, struct rdt_ctrl_domain *
+  */
+ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_mon_domain *hw_dom)
+ {
+-	size_t tsize;
+-
+-	if (resctrl_arch_is_mbm_total_enabled()) {
+-		tsize = sizeof(*hw_dom->arch_mbm_total);
+-		hw_dom->arch_mbm_total = kcalloc(num_rmid, tsize, GFP_KERNEL);
+-		if (!hw_dom->arch_mbm_total)
+-			return -ENOMEM;
+-	}
+-	if (resctrl_arch_is_mbm_local_enabled()) {
+-		tsize = sizeof(*hw_dom->arch_mbm_local);
+-		hw_dom->arch_mbm_local = kcalloc(num_rmid, tsize, GFP_KERNEL);
+-		if (!hw_dom->arch_mbm_local) {
+-			kfree(hw_dom->arch_mbm_total);
+-			hw_dom->arch_mbm_total = NULL;
+-			return -ENOMEM;
+-		}
++	size_t tsize = sizeof(struct arch_mbm_state);
++	int evt, idx;
++
++	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		if (!resctrl_is_mbm_event(evt))
++			continue;
++		idx = MBM_EVENT_IDX(evt);
++		hw_dom->arch_mbm_states[idx] = kcalloc(num_rmid, tsize, GFP_KERNEL);
++		if (!hw_dom->arch_mbm_states[idx])
++			goto cleanup;
+ 	}
+ 
+ 	return 0;
++cleanup:
++	for (idx = 0; idx < QOS_NUM_MBM_EVENTS; idx++) {
++		kfree(hw_dom->arch_mbm_states[idx]);
++		hw_dom->arch_mbm_states[idx] = NULL;
++	}
++
++	return -ENOMEM;
+ }
+ 
+ static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
+@@ -864,13 +865,13 @@ static __init bool get_rdt_mon_resources(void)
+ 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+ 
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_OCCUP_LLC))
+-		rdt_mon_features |= (1 << QOS_L3_OCCUP_EVENT_ID);
++		__set_bit(QOS_L3_OCCUP_EVENT_ID, rdt_mon_features);
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_MBM_TOTAL))
+-		rdt_mon_features |= (1 << QOS_L3_MBM_TOTAL_EVENT_ID);
++		__set_bit(QOS_L3_MBM_TOTAL_EVENT_ID, rdt_mon_features);
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_MBM_LOCAL))
+-		rdt_mon_features |= (1 << QOS_L3_MBM_LOCAL_EVENT_ID);
++		__set_bit(QOS_L3_MBM_LOCAL_EVENT_ID, rdt_mon_features);
+ 
+-	if (!rdt_mon_features)
++	if (find_first_bit(rdt_mon_features, QOS_NUM_EVENTS) == QOS_NUM_EVENTS)
+ 		return false;
+ 
+ 	return !rdt_get_mon_l3_config(r);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 163174cc0d3e..06623d51d006 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -36,7 +36,7 @@ bool rdt_mon_capable;
+ /*
+  * Global to indicate which monitoring events are enabled.
+  */
+-unsigned int rdt_mon_features;
++DECLARE_BITMAP(rdt_mon_features, QOS_NUM_EVENTS);
+ 
+ #define CF(cf)	((unsigned long)(1048576 * (cf) + 0.5))
+ 
+@@ -168,19 +168,14 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
+ 						 u32 rmid,
+ 						 enum resctrl_event_id eventid)
+ {
+-	switch (eventid) {
+-	case QOS_L3_OCCUP_EVENT_ID:
++	struct arch_mbm_state *state;
++
++	if (!resctrl_is_mbm_event(eventid))
+ 		return NULL;
+-	case QOS_L3_MBM_TOTAL_EVENT_ID:
+-		return &hw_dom->arch_mbm_total[rmid];
+-	case QOS_L3_MBM_LOCAL_EVENT_ID:
+-		return &hw_dom->arch_mbm_local[rmid];
+-	}
+ 
+-	/* Never expect to get here */
+-	WARN_ON_ONCE(1);
++	state = hw_dom->arch_mbm_states[MBM_EVENT_IDX(eventid)];
+ 
+-	return NULL;
++	return state ? &state[rmid] : NULL;
+ }
+ 
+ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+@@ -209,14 +204,16 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+ void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
++	int evt, idx;
++
++	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		idx = MBM_EVENT_IDX(evt);
++		if (!hw_dom->arch_mbm_states[idx])
++			continue;
++		memset(hw_dom->arch_mbm_states[idx], 0,
++		       sizeof(struct arch_mbm_state) * r->num_rmid);
++	}
+ 
+-	if (resctrl_arch_is_mbm_total_enabled())
+-		memset(hw_dom->arch_mbm_total, 0,
+-		       sizeof(*hw_dom->arch_mbm_total) * r->num_rmid);
+-
+-	if (resctrl_arch_is_mbm_local_enabled())
+-		memset(hw_dom->arch_mbm_local, 0,
+-		       sizeof(*hw_dom->arch_mbm_local) * r->num_rmid);
+ }
+ 
+ static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
+diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
+index d56b78450a99..ce02e961a6c3 100644
+--- a/fs/resctrl/ctrlmondata.c
++++ b/fs/resctrl/ctrlmondata.c
+@@ -458,7 +458,7 @@ ssize_t rdtgroup_mba_mbps_event_write(struct kernfs_open_file *of,
+ 				      char *buf, size_t nbytes, loff_t off)
+ {
+ 	struct rdtgroup *rdtgrp;
+-	int ret = 0;
++	int ret;
+ 
+ 	/* Valid input requires a trailing newline */
+ 	if (nbytes == 0 || buf[nbytes - 1] != '\n')
+@@ -472,26 +472,15 @@ ssize_t rdtgroup_mba_mbps_event_write(struct kernfs_open_file *of,
+ 	}
+ 	rdt_last_cmd_clear();
+ 
+-	if (!strcmp(buf, "mbm_local_bytes")) {
+-		if (resctrl_arch_is_mbm_local_enabled())
+-			rdtgrp->mba_mbps_event = QOS_L3_MBM_LOCAL_EVENT_ID;
+-		else
+-			ret = -EINVAL;
+-	} else if (!strcmp(buf, "mbm_total_bytes")) {
+-		if (resctrl_arch_is_mbm_total_enabled())
+-			rdtgrp->mba_mbps_event = QOS_L3_MBM_TOTAL_EVENT_ID;
+-		else
+-			ret = -EINVAL;
+-	} else {
+-		ret = -EINVAL;
+-	}
+-
+-	if (ret)
++	ret = rdt_lookup_evtid_by_name(buf);
++	if (ret < 0)
+ 		rdt_last_cmd_printf("Unsupported event id '%s'\n", buf);
++	else
++		rdtgrp->mba_mbps_event = ret;
+ 
+ 	rdtgroup_kn_unlock(of->kn);
+ 
+-	return ret ?: nbytes;
++	return ret < 0 ? ret : nbytes;
+ }
+ 
+ int rdtgroup_mba_mbps_event_show(struct kernfs_open_file *of,
+@@ -502,22 +491,10 @@ int rdtgroup_mba_mbps_event_show(struct kernfs_open_file *of,
+ 
+ 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+ 
+-	if (rdtgrp) {
+-		switch (rdtgrp->mba_mbps_event) {
+-		case QOS_L3_MBM_LOCAL_EVENT_ID:
+-			seq_puts(s, "mbm_local_bytes\n");
+-			break;
+-		case QOS_L3_MBM_TOTAL_EVENT_ID:
+-			seq_puts(s, "mbm_total_bytes\n");
+-			break;
+-		default:
+-			pr_warn_once("Bad event %d\n", rdtgrp->mba_mbps_event);
+-			ret = -EINVAL;
+-			break;
+-		}
+-	} else {
++	if (rdtgrp)
++		seq_printf(s, "%s\n", rdt_event_name(rdtgrp->mba_mbps_event));
++	else
+ 		ret = -ENOENT;
+-	}
+ 
+ 	rdtgroup_kn_unlock(of->kn);
+ 
 diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index 66e613906f3e..472754d082cb 100644
+index 3fe21dcf0fde..66e613906f3e 100644
 --- a/fs/resctrl/monitor.c
 +++ b/fs/resctrl/monitor.c
-@@ -846,14 +846,17 @@ static struct mon_evt all_events[QOS_NUM_EVENTS] = {
- 	[QOS_L3_OCCUP_EVENT_ID] = {
- 		.name	= "llc_occupancy",
- 		.evtid	= QOS_L3_OCCUP_EVENT_ID,
-+		.rid	= RDT_RESOURCE_L3,
- 	},
- 	[QOS_L3_MBM_TOTAL_EVENT_ID] = {
- 		.name	= "mbm_total_bytes",
- 		.evtid	= QOS_L3_MBM_TOTAL_EVENT_ID,
-+		.rid	= RDT_RESOURCE_L3,
- 	},
- 	[QOS_L3_MBM_LOCAL_EVENT_ID] = {
- 		.name	= "mbm_local_bytes",
- 		.evtid	= QOS_L3_MBM_LOCAL_EVENT_ID,
-+		.rid	= RDT_RESOURCE_L3,
- 	},
+@@ -347,15 +347,14 @@ static struct mbm_state *get_mbm_state(struct rdt_mon_domain *d, u32 closid,
+ 				       u32 rmid, enum resctrl_event_id evtid)
+ {
+ 	u32 idx = resctrl_arch_rmid_idx_encode(closid, rmid);
++	struct mbm_state *states;
+ 
+-	switch (evtid) {
+-	case QOS_L3_MBM_TOTAL_EVENT_ID:
+-		return &d->mbm_total[idx];
+-	case QOS_L3_MBM_LOCAL_EVENT_ID:
+-		return &d->mbm_local[idx];
+-	default:
++	if (!resctrl_is_mbm_event(evtid))
+ 		return NULL;
+-	}
++
++	states = d->mbm_states[MBM_EVENT_IDX(evtid)];
++
++	return states ? &states[idx] : NULL;
+ }
+ 
+ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+@@ -843,20 +842,40 @@ static void dom_data_exit(struct rdt_resource *r)
+ 	mutex_unlock(&rdtgroup_mutex);
+ }
+ 
+-static struct mon_evt llc_occupancy_event = {
+-	.name		= "llc_occupancy",
+-	.evtid		= QOS_L3_OCCUP_EVENT_ID,
++static struct mon_evt all_events[QOS_NUM_EVENTS] = {
++	[QOS_L3_OCCUP_EVENT_ID] = {
++		.name	= "llc_occupancy",
++		.evtid	= QOS_L3_OCCUP_EVENT_ID,
++	},
++	[QOS_L3_MBM_TOTAL_EVENT_ID] = {
++		.name	= "mbm_total_bytes",
++		.evtid	= QOS_L3_MBM_TOTAL_EVENT_ID,
++	},
++	[QOS_L3_MBM_LOCAL_EVENT_ID] = {
++		.name	= "mbm_local_bytes",
++		.evtid	= QOS_L3_MBM_LOCAL_EVENT_ID,
++	},
  };
  
-@@ -878,22 +881,29 @@ char *rdt_event_name(enum resctrl_event_id evt)
- }
+-static struct mon_evt mbm_total_event = {
+-	.name		= "mbm_total_bytes",
+-	.evtid		= QOS_L3_MBM_TOTAL_EVENT_ID,
+-};
++int rdt_lookup_evtid_by_name(char *name)
++{
++	int evt;
+ 
+-static struct mon_evt mbm_local_event = {
+-	.name		= "mbm_local_bytes",
+-	.evtid		= QOS_L3_MBM_LOCAL_EVENT_ID,
+-};
++	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		if (!strcmp(name, all_events[evt].name))
++			return evt;
++	}
++
++	return -EINVAL;
++}
++
++char *rdt_event_name(enum resctrl_event_id evt)
++{
++	if (!test_bit(evt, rdt_mon_features))
++		return "unknown";
++
++	return all_events[evt].name;
++}
  
  /*
-- * Initialize the event list for the resource.
-+ * Initialize the event list for all mon_capable resources.
-  *
-- * Note that MBM events are also part of RDT_RESOURCE_L3 resource
-- * because as per the SDM the total and local memory bandwidth
-- * are enumerated as part of L3 monitoring.
-- *
-- * mon_put_default_kn_priv_all() also assumes monitor events are only supported
-- * on the L3 resource.
-+ * Called on each mount of the resctrl file system when all
-+ * events have been enumerated. Only needs to build the per-resource
-+ * event lists once.
+  * Initialize the event list for the resource.
+@@ -870,14 +889,13 @@ static struct mon_evt mbm_local_event = {
   */
--static void l3_mon_evt_init(struct rdt_resource *r)
-+void resctrl_init_mon_events(void)
+ static void l3_mon_evt_init(struct rdt_resource *r)
  {
-+	struct rdt_resource *r;
-+	static bool only_once;
- 	int evt;
- 
--	INIT_LIST_HEAD(&r->evt_list);
-+	if (only_once)
-+		return;
-+	only_once = true;
++	int evt;
 +
-+	for_each_mon_capable_rdt_resource(r)
-+		INIT_LIST_HEAD(&r->evt_list);
+ 	INIT_LIST_HEAD(&r->evt_list);
  
- 	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
-+		r = resctrl_arch_get_resource(all_events[evt].rid);
-+		if (!r->mon_capable)
-+			continue;
- 		list_add_tail(&all_events[evt].list, &r->evt_list);
- 	}
+-	if (resctrl_arch_is_llc_occupancy_enabled())
+-		list_add_tail(&llc_occupancy_event.list, &r->evt_list);
+-	if (resctrl_arch_is_mbm_total_enabled())
+-		list_add_tail(&mbm_total_event.list, &r->evt_list);
+-	if (resctrl_arch_is_mbm_local_enabled())
+-		list_add_tail(&mbm_local_event.list, &r->evt_list);
++	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		list_add_tail(&all_events[evt].list, &r->evt_list);
++	}
  }
-@@ -922,8 +932,6 @@ int resctrl_mon_resource_init(void)
- 	if (ret)
- 		return ret;
  
--	l3_mon_evt_init(r);
--
+ /**
+@@ -907,12 +925,12 @@ int resctrl_mon_resource_init(void)
+ 	l3_mon_evt_init(r);
+ 
  	if (resctrl_arch_is_evt_configurable(QOS_L3_MBM_TOTAL_EVENT_ID)) {
- 		all_events[QOS_L3_MBM_TOTAL_EVENT_ID].configurable = true;
+-		mbm_total_event.configurable = true;
++		all_events[QOS_L3_MBM_TOTAL_EVENT_ID].configurable = true;
  		resctrl_file_fflags_init("mbm_total_bytes_config",
+ 					 RFTYPE_MON_INFO | RFTYPE_RES_CACHE);
+ 	}
+ 	if (resctrl_arch_is_evt_configurable(QOS_L3_MBM_LOCAL_EVENT_ID)) {
+-		mbm_local_event.configurable = true;
++		all_events[QOS_L3_MBM_LOCAL_EVENT_ID].configurable = true;
+ 		resctrl_file_fflags_init("mbm_local_bytes_config",
+ 					 RFTYPE_MON_INFO | RFTYPE_RES_CACHE);
+ 	}
 diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 8d15d53fae76..1433fc098a90 100644
+index 338b70c7d302..8d15d53fae76 100644
 --- a/fs/resctrl/rdtgroup.c
 +++ b/fs/resctrl/rdtgroup.c
-@@ -2574,6 +2574,8 @@ static int rdt_get_tree(struct fs_context *fc)
- 		goto out;
+@@ -125,12 +125,6 @@ static bool resctrl_is_mbm_enabled(void)
+ 		resctrl_arch_is_mbm_local_enabled());
+ }
+ 
+-static bool resctrl_is_mbm_event(int e)
+-{
+-	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
+-		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
+-}
+-
+ /*
+  * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
+  * of free CLOSIDs.
+@@ -3970,8 +3964,10 @@ static void rdtgroup_setup_default(void)
+ static void domain_destroy_mon_state(struct rdt_mon_domain *d)
+ {
+ 	bitmap_free(d->rmid_busy_llc);
+-	kfree(d->mbm_total);
+-	kfree(d->mbm_local);
++	for (int i = 0; i < QOS_NUM_MBM_EVENTS; i++) {
++		kfree(d->mbm_states[i]);
++		d->mbm_states[i] = NULL;
++	}
+ }
+ 
+ void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
+@@ -4031,32 +4027,33 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+-	size_t tsize;
++	size_t tsize = sizeof(struct mbm_state);
++	int evt, idx;
+ 
+ 	if (resctrl_arch_is_llc_occupancy_enabled()) {
+ 		d->rmid_busy_llc = bitmap_zalloc(idx_limit, GFP_KERNEL);
+ 		if (!d->rmid_busy_llc)
+ 			return -ENOMEM;
+ 	}
+-	if (resctrl_arch_is_mbm_total_enabled()) {
+-		tsize = sizeof(*d->mbm_total);
+-		d->mbm_total = kcalloc(idx_limit, tsize, GFP_KERNEL);
+-		if (!d->mbm_total) {
+-			bitmap_free(d->rmid_busy_llc);
+-			return -ENOMEM;
+-		}
+-	}
+-	if (resctrl_arch_is_mbm_local_enabled()) {
+-		tsize = sizeof(*d->mbm_local);
+-		d->mbm_local = kcalloc(idx_limit, tsize, GFP_KERNEL);
+-		if (!d->mbm_local) {
+-			bitmap_free(d->rmid_busy_llc);
+-			kfree(d->mbm_total);
+-			return -ENOMEM;
+-		}
++
++	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		if (!resctrl_is_mbm_event(evt))
++			continue;
++		idx = MBM_EVENT_IDX(evt);
++		d->mbm_states[idx] = kcalloc(idx_limit, tsize, GFP_KERNEL);
++		if (!d->mbm_states[idx])
++			goto cleanup;
  	}
  
-+	resctrl_init_mon_events();
+ 	return 0;
++cleanup:
++	bitmap_free(d->rmid_busy_llc);
++	for (idx = 0; idx < QOS_NUM_MBM_EVENTS; idx++) {
++		kfree(d->mbm_states[idx]);
++		d->mbm_states[idx] = NULL;
++	}
 +
- 	ret = rdtgroup_setup_root(ctx);
- 	if (ret)
- 		goto out;
++	return -ENOMEM;
+ }
+ 
+ int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
 -- 
 2.48.1
 
