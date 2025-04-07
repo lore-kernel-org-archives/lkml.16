@@ -1,99 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FA02192EC;
-	Mon,  7 Apr 2025 18:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69CC2116EE;
+	Mon,  7 Apr 2025 18:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049463; cv=none; b=aOIY2qkphCQ/Pg4uKcjNrleBk0r8DUbkdrl/87jIjOfOJeh98+xuusHc98jJvGbOnK0wsfSUhEWTe5bin7ZBbOHZydkVkqq/F4wA5RHvMM98yIKNbyOyhrX9vLGadEHwS+oHS3Bbb5Z3hYzSk7OpZvE8VlQ5qi/1cUI/q7kJGms=
+	t=1744049471; cv=none; b=gUjaWJhT+b/dk10D52AreWdZvZxZg2ArjErsPC3O4/YwOVg8IBaCEklrTzdgrgR2RgXaCeLXco3zbk9jsIs7HsRfkenfjNzZ2jLwMiAarvhybvBQlRa75EBtNmH7M6yrao7wpt7zcJjSMYRerLVCwLh5Khdz6M/9qzn+hfzt+1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049463; c=relaxed/simple;
-	bh=aWnBchov1Oc4qRALKKfsxuNtvRNfxDEeevqDES1rkyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G1VB8zFXxTvTTkf6LZ/mEcuT0bXuXng5H1nOtO22EjY3lytrbAfUICLjjaJ6zmlb1ew/b/rh4y+GHz3gUDlYSbRulKJk0VF4aoGErLFv6+2fmZUvGhbePMTINElCohMZhshmo/rTKOZ62unIHdPpUuAqbzLE4R8hZmmusmPXSPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W61dIT2l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049471; c=relaxed/simple;
+	bh=tagdq/QljfjgdMX0x03i4UOxg2HpFNLPMOEOHRAu0iQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGLzWlHtWAGlN62AMTJWjcTP3GKhF4CD3VHbMMVtE6/JNLmOJlDuDlKtqhG6k578ZrRL/KYB9ibEMrkpsCXoI9ZfPdwfYyLeWpuqwl/7zrB0ALyvHTYbObLJZse6frm4jKVSHp9pEMn5VVyt8kNLZIqLr7gnfCh1riTiaUU6drU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnSqU0UR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W61dIT2l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9466C4CEDD;
-	Mon,  7 Apr 2025 18:11:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnSqU0UR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CFDBC4CEDD;
+	Mon,  7 Apr 2025 18:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049462;
-	bh=aWnBchov1Oc4qRALKKfsxuNtvRNfxDEeevqDES1rkyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W61dIT2l3z6W5uTbmuHaGO11AmCcW7qAayxhRLrAMFXAQdVqaZv0zRMLRcYIeySRZ
-	 pziU92wnIAnraD605LvA1coUF0szOgYuEa/j7mqxHvpblpp4CKeitWfoSQGuXnZTDT
-	 w73yT1fgWFg0SdyX7ykMjLcmq/T10ENxzNyG+P8yDSAEwuVHPdBLCtOUecpizrJsdp
-	 +yjt5NnvfHdPFGqZ25pceNUcMYX8cSq9gZMpST604PCt1k7lPy4qnY//t4uGdTmKPf
-	 mPp4kmrfHEmynqR/R4DqPn8ks7K4IraIlHs/VnIVBnJoCghhdnOhG9OwRx3VAIA9KW
-	 pLDYpv/a6yxeA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@mailbox.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mark.tomlinson@alliedtelesis.co.nz,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 02/31] usb: host: max3421-hcd: Add missing spi_device_id table
-Date: Mon,  7 Apr 2025 14:10:18 -0400
-Message-Id: <20250407181054.3177479-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181054.3177479-1-sashal@kernel.org>
-References: <20250407181054.3177479-1-sashal@kernel.org>
+	s=k20201202; t=1744049471;
+	bh=tagdq/QljfjgdMX0x03i4UOxg2HpFNLPMOEOHRAu0iQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QnSqU0URqqo0I1arFF81p8rkvHAOK4GGSZO4ubJped4npb68CDIgZGbgJI4y3UY7W
+	 N+4V+YOqRzGgUcqlwUIGI8lhZNI8bv+F6cPzMb3DQTmEvs77k1EeMmuxJorddfJmGh
+	 9oMLVLb+1S/uOILWJiC9qw1E2QdlQk84kJ2kbPwq0BhS3vLF64/g0iyqNNt+IfODhl
+	 ZdNxgNSNadHxfhNWa5Tampv7OjAFcV0/Djvvi4mMxj0bhOaSWpLdUOzyBBce2OFSUv
+	 ivAZiNSbQARBgX2PhJXjGzk98uUrO0fjs8RdN2FFt0/4qXBu0AW0Ty1m6sujpVX1P3
+	 O/TeMrK2SY1Og==
+Date: Mon, 7 Apr 2025 11:11:08 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] UAPI: ndctl / acpi: intel: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202504071106.3A0AF875F@keescook>
+References: <Z618ILbAR8YAvTkd@kspp>
+ <Z65xV2TaFY32eYdp@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z65xV2TaFY32eYdp@aschofie-mobl2.lan>
 
-From: Alexander Stein <alexander.stein@mailbox.org>
+On Thu, Feb 13, 2025 at 02:25:27PM -0800, Alison Schofield wrote:
+> On Thu, Feb 13, 2025 at 03:29:12PM +1030, Gustavo A. R. Silva wrote:
+> > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > getting ready to enable it, globally.
+> > 
+> > So, in order to avoid ending up with flexible-array members in the
+> > middle of other structs, we use the `__struct_group()` helper to
+> > separate the flexible array from the rest of the members in the
+> > flexible structure. We then use the newly created tagged `struct
+> > nd_cmd_pkg_hdr` to replace the type of the objects causing trouble
+> > (`pkg`) in multiple structs.
+> > 
+> > So, with these changes, fix the following warnings:
+> > 
+> > drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> One sample warning is good.
+> 
+> How about adding a comment on why the usage of __struct_group() here
+> means this doesn't break userspace.
+> 
+> snip
+> 
+> > diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+> > index 73516e263627..34c11644d5d7 100644
+> > --- a/include/uapi/linux/ndctl.h
+> > +++ b/include/uapi/linux/ndctl.h
+> 
+> FWIW: In a patch like this where reviewers likely want to see
+> the header file change first, put it first in the diff.
+> (git diff.orderfile)
 
-[ Upstream commit 41d5e3806cf589f658f92c75195095df0b66f66a ]
+TIL about diff.orderfile! :) Just for my own education, what do you have
+as the contents for your orderfile? Is it just simply:
 
-"maxim,max3421" DT compatible is missing its SPI device ID entry, not
-allowing module autoloading and leading to the following message:
- "SPI driver max3421-hcd has no spi_device_id for maxim,max3421"
+*.h
 
-Fix this by adding the spi_device_id table.
+?
 
-Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
-Link: https://lore.kernel.org/r/20250128195114.56321-1-alexander.stein@mailbox.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/max3421-hcd.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> 
+> 
+> > @@ -227,12 +227,15 @@ enum ars_masks {
+> >   */
+> >  
+> >  struct nd_cmd_pkg {
+> > -	__u64   nd_family;		/* family of commands */
+> > -	__u64   nd_command;
+> > -	__u32   nd_size_in;		/* INPUT: size of input args */
+> > -	__u32   nd_size_out;		/* INPUT: size of payload */
+> > -	__u32   nd_reserved2[9];	/* reserved must be zero */
+> > -	__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
+> > +	/* New members MUST be added within the __struct_group() macro below. */
+> > +	__struct_group(nd_cmd_pkg_hdr, __hdr, /* no attrs */,
+> > +		__u64   nd_family;		/* family of commands */
+> > +		__u64   nd_command;
+> > +		__u32   nd_size_in;		/* INPUT: size of input args */
+> > +		__u32   nd_size_out;		/* INPUT: size of payload */
+> > +		__u32   nd_reserved2[9];	/* reserved must be zero */
+> > +		__u32   nd_fw_size;		/* OUTPUT: size fw wants to return */
+> > +	);
+> >  	unsigned char nd_payload[];	/* Contents of call      */
+> >  };
 
-diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
-index 0881fdd1823e0..dcf31a592f5d1 100644
---- a/drivers/usb/host/max3421-hcd.c
-+++ b/drivers/usb/host/max3421-hcd.c
-@@ -1946,6 +1946,12 @@ max3421_remove(struct spi_device *spi)
- 	usb_put_hcd(hcd);
- }
- 
-+static const struct spi_device_id max3421_spi_ids[] = {
-+	{ "max3421" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(spi, max3421_spi_ids);
-+
- static const struct of_device_id max3421_of_match_table[] = {
- 	{ .compatible = "maxim,max3421", },
- 	{},
-@@ -1955,6 +1961,7 @@ MODULE_DEVICE_TABLE(of, max3421_of_match_table);
- static struct spi_driver max3421_driver = {
- 	.probe		= max3421_probe,
- 	.remove		= max3421_remove,
-+	.id_table	= max3421_spi_ids,
- 	.driver		= {
- 		.name	= "max3421-hcd",
- 		.of_match_table = max3421_of_match_table,
+Gustavo, any updates on this patch? I'm skimming through patchwork to
+check on stalled patches...
+
 -- 
-2.39.5
-
+Kees Cook
