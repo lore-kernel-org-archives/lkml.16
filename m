@@ -1,84 +1,37 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE7022FF21;
-	Mon,  7 Apr 2025 09:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB873218ABD;
+	Mon,  7 Apr 2025 09:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019660; cv=none; b=chUX3Fp4gDgc+lZzU433LCwdlQ0WKPxfqrY0f4F3QMyuR1Uxmq10wiNhtGSvA7kpEVD3XZ5TF4gEao+CJZa27iDaZi4iQzA+AH1yA+Q+R6LI0MuEl8e3OW03mtTskPuZqbIyDkCeRTR2sjWkdh2RIKgzzYOxXGEAzBOt+I59UsE=
+	t=1744019766; cv=none; b=ZKCW+oaSTuBGHcpumOoy1XTL4SLOraldjjyHqxpw97pyNapYXwwSYYt085j4/GQFdh2U9wRKiugadwpY91EttmBMaCt5DJLC10+PjNl2SfO2TdGVJkjKsVcwFxxvIkjaKegKv7K6iOT9lNOaoyR+Ecb5PdpGzdL5PWGZ/O8YWVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744019660; c=relaxed/simple;
-	bh=U16ykuJVW+RZ2Mtnpc0kC6WlrFpzsu8T5Gn3Qu7BLgQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uy8OmQMFFX0HIiPo32xgZ0Ali6XVijbcNpLV4/4LbIuIIfH6E14OlnCa22WyYOO/NN8vsf6XxRp20t+/vHlH35JQHn8HUZ8C6SqlGbLMrwmW1trMSgQlFiK8vZfCxryEYH0hHrzdEHite25wdONR0zQxGVdWw3V03Yf7CtyExLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZD9/+jl; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZD9/+jl"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2295d78b433so36905685ad.2;
-        Mon, 07 Apr 2025 02:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744019658; x=1744624458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LkqbTBwPGVLrWizLUawPs+MSKpssOAtGiDagVUV4NJ4=;
-        b=cZD9/+jlbP6IlZPtiInB6s64EYv7fbSsqD2Iqxzjc42i/E5k3gh8gyWMAFX00McSVA
-         DKnac0aVy26/zwgaGqR/wRGdxdURbuSbSJXlLmpgRxdOZoapBvrmdtM7hWqoDG8e9O4a
-         +fc6s2YBWtFPSyzm4y9IYWJwUbbBMzb53/ZDyt+K0dvsONe9cU4tSmEKY+FzbsrY9TXN
-         Che+R4QJHx9JlyCqe0RvcFTkWjWqe0iBR2Cjes6OzFoCaemjEVD1/ZNwhIbnRoIOAIIy
-         0IEv+zkv7aKoWJ59AueSGxmf1ObETA1Vfvn9QJo7SD+ozxrYRrPGN/YTR0ZO1B3sJZQz
-         xfjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744019658; x=1744624458;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LkqbTBwPGVLrWizLUawPs+MSKpssOAtGiDagVUV4NJ4=;
-        b=oHxApk9jZrSFwlzg39YzNXeTjHjKnpfXJDpHSxfOGm6QLWXSJ1G6UzagWBJNK5sjLZ
-         XcvNW+l+3Ur9ATupSnZwonxWeuuZuoXaqoVwVrwSpT5R2CXT2KbVtrU70qqPxn2L/SOQ
-         pIeyn0w2v+tIi7d43dgeBfbgY3E/4fD9TG58/5hXUhPPYg/7hBsmm4D4Z02zSn5pPJ4w
-         prXHWu7pM8zBePE/PTwnlmmlxI1iaqwoMr6hxe+MSeKkqBeY3CMeeWgQk7VLLSpAXum+
-         vmcnuFFPlz3Tv/rwat5ZtI1rF3kvIpWNdq47UT2qVFYLlF13+svnUZfV8vTnctXB7JFW
-         REWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWAzVNs8sYAXMZ1UsLj/I6nFtVrqFQ4Fa1tXs8NNIHwntBsszuhmDG1/+ovPfbxyTdjb70fRJA0OEe@vger.kernel.org, AJvYcCVawFQdheiTzNkozB9KzAtSxUMrPi6GNqTU4MCf2+nQ+cpH9NFV9smVvUs+sFzTAg5ftIqKcc5AveaaVeo=@vger.kernel.org, AJvYcCWKR1/elTRLd6bt1eGw1VGYy/3XozAS1BVipeb86FSK05Dtx2psrAoh3/OYUisgAkvJuhJmLS8ouChrXg==@vger.kernel.org, AJvYcCWQ2/l3XcqF08POv1+QiGnEVp5zb8jVSjmrCE4DUuwe/hqP5c7E3tzp4eMRT70ZS27uvHg0vHKt86zHW4FV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9DoXvZ2Gu8GvDw2NgZr04kJQ1914p/DfVZ55g5FN2ez+fdNyl
-	4X5gYh8aRFuPefRN6J6V8df/XhY62WC6n1UjCTlIJ6jyrwWfJ1Qn
-X-Gm-Gg: ASbGnctbd8jVnYuWwyr6wGEoO0o5JdTwXMtS3ObDtYMWNzZwSVuYNvmiaSGSlHdq91J
-	RzgC9GTtOPhrij2saeGvr0jOP8DwfBeWR4IRWy3eOwKwK5PBAgRTi9P8S2o8HR4YEgbYA7wODSX
-	xy+zkvoRnb1aujdh1RCcutUY91xAPEpryQRapZ96gWwQwCTQBkox9mdJrwzai6TAA98Bz34Xu07
-	6P5YbFg23veggtviStrtivkqpJTTuhlnzmqOfEjtsHq9YaT0l9O+w8e3qmb8ylMboY6aLkWCMcm
-	TjV2u62+hw3jdh/NkT1wo09TbgegLqtxhN74yQTACWE=
-X-Google-Smtp-Source: AGHT+IH9E8XsbCxLfsVsslPNMo/cSHYFTOjiDQDxMCuBzObL12vZxjJVRmA/QuSkAieMl45UO5T2kA==
-X-Received: by 2002:a17:903:2ce:b0:215:9bc2:42ec with SMTP id d9443c01a7336-22a8a0b3744mr133132005ad.47.1744019657677;
-        Mon, 07 Apr 2025 02:54:17 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bfddfsm77213805ad.66.2025.04.07.02.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 02:54:16 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Jianhua Lu <lujianhua000@gmail.com>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Helge Deller <deller@gmx.de>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [PATCH 4/4] backlight: ktz8866: add definitions to make it more readable
-Date: Mon,  7 Apr 2025 17:51:19 +0800
-Message-ID: <20250407095119.588920-5-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407095119.588920-1-mitltlatltl@gmail.com>
-References: <20250407095119.588920-1-mitltlatltl@gmail.com>
+	s=arc-20240116; t=1744019766; c=relaxed/simple;
+	bh=gNhUjMpeEX7mTvcDB/ug16RwEOcyXW1AXaDwQ+wRowk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cws7nqQ0HkJ+YgvBtHV6yTWEO2uWyJi3KrhuJZXODyA4j9kZvdFaouc6Qrsz2qoj7QVvltwouLHfp3O118RBYHiI1YMbK1Ug1Tc3COp50GZMlaTUaR0kv6Ucouy1/ClJTpXeYo110EoAP3Qx1cDNcNOP99xpv2LUREmtG24p0d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201606.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504071755536257;
+        Mon, 07 Apr 2025 17:55:53 +0800
+Received: from locahost.localdomain.com (10.94.5.217) by
+ jtjnmail201606.home.langchao.com (10.100.2.6) with Microsoft SMTP Server id
+ 15.1.2507.39; Mon, 7 Apr 2025 17:55:54 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <nbd@nbd.name>, <lorenzo@kernel.org>, <ryder.lee@mediatek.com>,
+	<shayne.chen@mediatek.com>, <sean.wang@mediatek.com>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<howard-yh.hsu@mediatek.com>, <StanleyYP.Wang@mediatek.com>,
+	<chui-hao.chiu@mediatek.com>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] wifi: mt76: mt7996: Add NULL check in mt7996_thermal_init
+Date: Mon, 7 Apr 2025 17:55:51 +0800
+Message-ID: <20250407095551.32127-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,48 +39,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025407175553cfc5208c70a300baf4f5d5e9bd496b54
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-LSB, MSB and their handling are slightly confused, so improve it.
+devm_kasprintf() can return a NULL pointer on failure,but this
+returned value in mt7996_thermal_init() is not checked.
+Add NULL check in mt7996_thermal_init(), to handle kernel NULL
+pointer dereference error.
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+Fixes: 69d54ce7491d ("wifi: mt76: mt7996: switch to single multi-radio wiphy")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
 ---
- drivers/video/backlight/ktz8866.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7996/init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
-index b67ca136d..5364ecfc0 100644
---- a/drivers/video/backlight/ktz8866.c
-+++ b/drivers/video/backlight/ktz8866.c
-@@ -24,7 +24,9 @@
- #define DEVICE_ID 0x01
- #define BL_CFG1 0x02
- #define BL_CFG2 0x03
-+/* least significant byte */
- #define BL_BRT_LSB 0x04
-+/* most significant byte */
- #define BL_BRT_MSB 0x05
- #define BL_EN 0x08
- #define LCD_BIAS_CFG1 0x09
-@@ -47,6 +49,8 @@
- #define PWM_HYST 0x5
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/init.c b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
+index 6b660424aedc..5af52bd1f1f1 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/init.c
+@@ -217,6 +217,9 @@ static int mt7996_thermal_init(struct mt7996_phy *phy)
  
- #define CURRENT_SINKS_MASK GENMASK(5, 0)
-+#define LOWER_BYTE GENMASK(2, 0)
-+#define HIGHER_BYTE GENMASK(10, 3)
+ 	name = devm_kasprintf(&wiphy->dev, GFP_KERNEL, "mt7996_%s.%d",
+ 			      wiphy_name(wiphy), phy->mt76->band_idx);
++	if (!name)
++		return -ENOMEM;
++
+ 	snprintf(cname, sizeof(cname), "cooling_device%d", phy->mt76->band_idx);
  
- struct ktz8866_slave {
- 	struct i2c_client *client;
-@@ -105,8 +109,8 @@ static int ktz8866_backlight_update_status(struct backlight_device *backlight_de
- 	}
- 
- 	/* Set brightness */
--	ktz8866_write(ktz, BL_BRT_LSB, brightness & 0x7);
--	ktz8866_write(ktz, BL_BRT_MSB, (brightness >> 3) & 0xFF);
-+	ktz8866_write(ktz, BL_BRT_LSB, FIELD_GET(LOWER_BYTE, brightness);
-+	ktz8866_write(ktz, BL_BRT_MSB, FIELD_GET(HIGHER_BYTE, brightness);
- 
- 	return 0;
- }
+ 	cdev = thermal_cooling_device_register(name, phy, &mt7996_thermal_ops);
 -- 
-2.49.0
+2.43.0
 
