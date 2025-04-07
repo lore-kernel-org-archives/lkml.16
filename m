@@ -1,58 +1,59 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E942144A1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5EA21B8F8;
+	Mon,  7 Apr 2025 23:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067663; cv=none; b=UTHornOa23GzOefM0+W7u8yD+TX/cxEsEqvSwY7oN9FmKz8C4lGumyYbWeHFJBgpTtQ97iP0RyOrprzBM10DqEPM3wPcUbcjICp/9WCOxoUfVBMBlppmTP2Idv4XLLnIQyYSFsVWFOVGI6whZ72k9R1hfzblwZKtEYb0YdYyhJI=
+	t=1744067664; cv=none; b=b+jh3/QuQbaiRT5mMTY/7P6sYbpbkQx7vsfUP3uIfgDLU2AprkgIVnM1V73m4cVok6sqbZ0jsWoYc1oYlhksWmndt32IVS+x0BaQXhFu5ORUzjP6P7A5MmipCemisW9UCHonLDxPXuHxLpBcWiTngfr6nLzsxyR4otRR4bqC7Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067663; c=relaxed/simple;
-	bh=FVWh5NPkxLNXUaVX+AXOHfYXjVGZbj/Zpz0e7/c3jUA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=l6NwrDEDDNKqTnLmqdTOy6uARDLMR3Gaf+E320TPMJT60TcmEncgpmmKO8pGSgWaT2RntqXQa1TtjQ3cPmIN9Yi9B/LHHTN2gKWUITpiSu7eRckBzNmQdXMhauaV+mun1vSVG4xyH1fuQPX5POSRrMogmUHdVfSxPMHgfzYuH40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUuPrtdp; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1744067664; c=relaxed/simple;
+	bh=JNVN48Idy8zApteJ4Tpy9VC4RKzWR7C77ffb+uIz13A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Esx+1h6n3xacwTE5EoylUBT2C1liyIOrdYsjQR7FJhixwwCJhHW+pzr9zq+fRwKQk3M8vMa8IwVv9dwgqCeo0guqMSr/K0Gfi8u+Z0iQL/p9UhF7ffD7Ylt6nMPUsTKU4Awwfojt3tOdoOMjF9OS79uk+0rPcqM70p7gzdySMSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8aUZdeO; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUuPrtdp"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac7bd86f637so888027166b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8aUZdeO"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso8209138a12.0;
+        Mon, 07 Apr 2025 16:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1744067660; x=1744672460; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iwVSTTQToz1Si8xB4Dm4R1UDLYWcbQsamHW0cZfFfXw=;
-        b=cUuPrtdpNu96PCLXA1QYT2gwK3lx7rjgkinh01jk/FTw0eLhoqulth0lTWQfU662Q1
-         Vp7Sln/n92jpNEGlI5/UPxFer7mrDvmAnqApDFeyCpu9+nHHY3uZ0TUDtyrUOpBZ/kwh
-         j7vfL5ZASnqQGIh+Gb+crXED4XBmAI/5rOyY1Nqm0t4IM6juShqua3vKSrGk6A2V1Z/i
-         dADZ5CASD0/Qc0PD9W/SIvVEzsgnzj3Glmb+NuX6xjwIMwsfM5mCOls6lKrhd85rLyaG
-         1INNoNn5HdJOkK2BcVfOkV7OVUkSat7VmyTIjdMLXkfG3adeByihJWZKBIN22XoaKJ1A
-         WJ4g==
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/e/GdwvLDoquOr0Afl2EN0vAREZXM36EPXG5G+ON0Dg=;
+        b=Y8aUZdeOdyLfhCQEiZrJCuy7i9yYhGSQqXHW+/eIUtU6zfQLN0UIypkQFtVBMmbcWZ
+         O6JWTWhYcSt8X/ORZB6DE5RDiZCFPbDL5TZu/teMYQOpivs/I13BpUEK2LTQ8ueE2uEH
+         j2vy0LDq7kCeyeLfuvuw3vJ8xqQoAFTwIMDEZ9zcS2Qz+PHkicIbx8QPRpCqF+o6kqZW
+         4nAW4O1JuP6NkCVJr80OpbVHjnXcwY8YMXpkOQqvjGJHVBlm2Mo0ARyKk53P2PzS1Ova
+         b8TpFql/tymutFKoKq3nZmWskGPc3TEnjMAyX/TldVzLuVEMM/55mrPYvRLdHW52u2xq
+         ZJGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744067660; x=1744672460;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iwVSTTQToz1Si8xB4Dm4R1UDLYWcbQsamHW0cZfFfXw=;
-        b=ftR6tqm/Zh7pesVO7MOBELNJaC5AqzD1diVzfWsOyryqiTlmtpEeqSAEp0XpoZiqK/
-         qI6gIeb4RbzfCnJslZTdQelWkQ2waYQY98RTj/3i3IzaPvuzRo7IGxIJueOMIZs4GLde
-         RqU9gV65App6ISJQCyEIChbZdxj7f97T/dkl3ThXqV0B3jxd++utCkr/LRUiCS1VqMXn
-         msRJ8oZhLqadVQmTOxp0NGBHTEN6S7Yu/46BsZinJY/S/SeNiA+FXz5SrBC1+SmwgyyS
-         7SxGrOZdUooTZ0Q+C1+opa9juVpiLXafz/+cQf6JzqBc0A+uzf7lnxd1OQimtE0+Cqcq
-         NdBw==
-X-Gm-Message-State: AOJu0Ywhds8/Vv7a4sPsTaNFmvGFyYUMlKaO6h+YY1Ff/x0Xpr4Rgmnb
-	jZiyLRjl1LoIVeFqTtqqwoIvu0OcuXA8FlZ/JPHrjcI26U2B2hXf
-X-Gm-Gg: ASbGncvowbMAMcy+iJXQPASS6M1meJluQ3lzjCWb+x7TFUI4ppgloTlrx8l10JQQm0u
-	yepu09DeX5yuoqVpi0mCgEk7gb0XjIxQbtubLo2EYIIRJyOPEDHtRrqtAIvwXfyfFD0mcGENFrl
-	NCyibCFFYE5rdQObZZ4PJUfdpXRSyH21iuxSj8zSUMJngO18eB2aKV3vB9/yzkN9NUHuYspTi7n
-	caKnKyjXhUcJxV5sGcV+kZLh9739r002PlxXm416BL10KHwLj85YryJmh7Myw4uztwQqX78QmWB
-	gIu0NgzyvSdsI8iVTDSP6LaGDWXD6BZarsEBKBDtrhPxzCeDbO41Skc=
-X-Google-Smtp-Source: AGHT+IEu793rfnRUE6OyaAQJX6Ur7iItwmF1zYiZiKf8alvcfaUjAZHFb3sd5MfyDjl+mS4XpRHKfA==
-X-Received: by 2002:a17:907:a0d:b0:abf:6a8d:76b8 with SMTP id a640c23a62f3a-ac81a5bd06amr104421266b.11.1744067659718;
-        Mon, 07 Apr 2025 16:14:19 -0700 (PDT)
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/e/GdwvLDoquOr0Afl2EN0vAREZXM36EPXG5G+ON0Dg=;
+        b=W/0u3eB8qJ+EFcJ5HxfO/43587XpjK7hxMxScpfgPz1wteeoPzv1NtH459OPAE9LKJ
+         4mSQRUwlDNOYJ2YZW2KsOObsCzqOrRxY/kmxbOL2wcfb84GDDQKDHl1SQJ/45U+pBEGy
+         t1hD6kNm7krpdB2yOcTrok0oIpK363/iD13eZvfuKnSF81OVuh1UHItWoEZDNhXhW7RL
+         CsYNYg/uinlGIeuGvq1gnGla+jK0CRvUm5jlptG/52Cnu7rheIWULBPNQLUZte8uAt8h
+         YcK0vzlZvpP75T+gMWtjbD+U0FLywpE4A8PPadf2nPWU2eOW/jJG6d1w0dSt9YJUjzDy
+         dw7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWqB2HfZ0LvBSc6E7XzdwmMg9GtiXl16RatyVAEGcx+lsOPxjf3OPS0h4jq/4D/98JicnMvrx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yypz6k9NkBbKH1CKmdveqVWbHbftJMwbkXACN2xaH7LNgd4Llwm
+	Rfo+Ww17PrIXXmftpbSvgpBGzt47AElPoLZhCr2Wr8kWSrtoWH1OkMJEybnY
+X-Gm-Gg: ASbGncue9hnaF3nwG/1ciHQBfzq014vhOTpoDl2YX8p4xx0b8dvFIR9C8PwoDK8DYKn
+	0TfrxlfTsZHgLtDkz+ZrwWyGQ4Ig7gBEt6VUs4JOEaNZnhaaa7Y94ZpCkegVra6vB6YcpzlRmwA
+	ZCqJXrbLKqkZbc2KYpfBH8T7RROtGMYWsXPOTH281MwIUaaQvopNbYL5iM3xU36YzvhqZ5vwo0q
+	2Q2Bh/zG/80X0H/5uIjDGC3OfWIUvMaysnwS0+xZCeDQFuo5RdhMKxf99MW1FeZdMKZtEg1euKD
+	9GMr0/T0GEko4UetISNHIZlUiGwZNSInKaQi8HJ1mHRRpu1+kZ4eQxM=
+X-Google-Smtp-Source: AGHT+IEizGkSgcvWbtRztjIhWVy9nYG+6Q1+YXuX+viOwFgo+QuD+47ezAE0MB7BT51RcdiPpVzD+w==
+X-Received: by 2002:a17:907:7206:b0:ac7:cbe2:87f5 with SMTP id a640c23a62f3a-ac7e6ef17ffmr1014917266b.0.1744067660454;
+        Mon, 07 Apr 2025 16:14:20 -0700 (PDT)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c1085sm805151966b.183.2025.04.07.16.14.19
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f730sm831204166b.92.2025.04.07.16.14.19
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 07 Apr 2025 16:14:19 -0700 (PDT)
+        Mon, 07 Apr 2025 16:14:20 -0700 (PDT)
 From: Wei Yang <richard.weiyang@gmail.com>
 To: Liam.Howlett@oracle.com,
 	akpm@linux-foundation.org,
@@ -60,44 +61,54 @@ To: Liam.Howlett@oracle.com,
 Cc: linux-kernel@vger.kernel.org,
 	maple-tree@lists.infradead.org,
 	linux-mm@kvack.org,
-	Wei Yang <richard.weiyang@gmail.com>
-Subject: [RESEND Patch v2 0/3] maple_tree: Fix the replacement of a root leaf node
-Date: Mon,  7 Apr 2025 23:13:51 +0000
-Message-Id: <20250407231354.11771-1-richard.weiyang@gmail.com>
+	Wei Yang <richard.weiyang@gmail.com>,
+	"Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+	stable@vger.kernel.org
+Subject: [RESEND Patch v2 1/3] maple_tree: Fix mt_destroy_walk() on root leaf node
+Date: Mon,  7 Apr 2025 23:13:52 +0000
+Message-Id: <20250407231354.11771-2-richard.weiyang@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20250407231354.11771-1-richard.weiyang@gmail.com>
+References: <20250407231354.11771-1-richard.weiyang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-On destroy we should set each node dead. But current
-code miss this when the maple tree has only the root node.
+On destroy, we should set each node dead. But current code miss this
+when the maple tree has only the root node.
 
 The reason is mt_destroy_walk() leverage mte_destroy_descend() to set
 node dead, but this is skipped since the only root node is a leaf.
 
-Patch 1 fixes this.
+Fixes this by setting the node dead if it is a leaf.
 
-When adding a test case, I found we always get the new value even we leave the
-old root node not dead. It turns out we always re-walk the tree in mas_walk().
-It looks like a typo on the status check of mas_walk().
+Fixes: 54a611b60590 ("Maple Tree: add new data structure")
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+CC: Liam R. Howlett <Liam.Howlett@Oracle.com>
+Cc: <stable@vger.kernel.org>
 
-Patch 2 fixes this.
+---
+v2:
+  * move the operation into mt_destroy_walk()
+  * adjust the title accordingly
+---
+ lib/maple_tree.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch 3 add a test case to assert retrieving new value when overwriting the
-whole range to a tree with only root node.
-
-Wei Yang (3):
-  maple_tree: Fix mt_destroy_walk() on root leaf node
-  maple_tree: restart walk on correct status
-  maple_tree: assert retrieving new value on a tree containing just a
-    leaf node
-
- lib/maple_tree.c                 |  3 ++-
- tools/testing/radix-tree/maple.c | 24 ++++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
-
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index 4bd5a5be1440..0696e8d1c4e9 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -5284,6 +5284,7 @@ static void mt_destroy_walk(struct maple_enode *enode, struct maple_tree *mt,
+ 	struct maple_enode *start;
+ 
+ 	if (mte_is_leaf(enode)) {
++		mte_set_node_dead(enode);
+ 		node->type = mte_node_type(enode);
+ 		goto free_leaf;
+ 	}
 -- 
 2.34.1
 
