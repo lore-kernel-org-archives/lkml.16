@@ -1,125 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4691F099B;
-	Mon,  7 Apr 2025 14:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ABB1F3FD7
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036640; cv=none; b=dI1r5P1TmAD8jdl4a9C/rUFWWIWrj9nIasa/8Pd9yiaog6nvCRLxz/0rIcY9MqCOmq1RGG97OjbmJCEbYHzhSXGesYeWVB88Lzax9q0E+PzoJ5hA8r8Hw7aofuO/trpItO+uPi4g6goDY5U0RsL6OTQI9Y8jV4fl7rgTuQtAuNE=
+	t=1744036677; cv=none; b=tBRqO9Zjgu0T+thRor6rbkBZcX1xY7D+SdkAfXqKByZxHKt99I1+MYoaMRcW5fRz9Pi73Ay914+Ej2mOukR/npW6XWURN7pnX7BODaFqPGS5FWAI59pH5UeoWI+/IXEsP/NPhGTdvrSbFyzrsKi4A5CnqjOYuKEEmbJ4LYLZddk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036640; c=relaxed/simple;
-	bh=v4nDRa7lWcmrrI6YZ0FZLDNlAJZzHt+gpJgfHuv74eA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZD1mv3MtYKP+wI5aAeYXreDcCIR8Ysow6VeTNPlKmKjW3n3SkQFOh8mxIaQ8+Ly0k6V4nD7R1Jy+WUBu5Tm7/8cC+lxN/rjq0wIDXSPtm320w1QOn1MwT51DRmSl97HMn6CAQzOh3S3Lm+5sNLD9Y52qApri5V+JI5zjKP81APc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IawprRAr; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744036677; c=relaxed/simple;
+	bh=Viw1/vsSFS4tMVWbylAf/FSdtFupU6TLICH4UYgv6oQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=n4VHGbl4pvZ0JV0rsf0tJK3hc9oj49up01VE7ZAUKdvuDYC5dvuLPYLtXLUf2s77SoozPtO2+BxwYsYdfvKt0kNIatqFVOYSY2BdMQGAD6GGlnt9B8U8Vfi/p/Q1tVLHAlk/Uh93yButD7qlobE702x2HYUgc+OfrRAw0LPAY/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Bo4Kqmz4; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IawprRAr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744036638; x=1775572638;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=v4nDRa7lWcmrrI6YZ0FZLDNlAJZzHt+gpJgfHuv74eA=;
-  b=IawprRArnIKGeCSHfR6ENdLdYIFzpqhiwuKnS7tO4qhoy6YlXFl0sV74
-   tR3v+0x/nfVBZcuyKvsI1s1wiJlf/zYvcete6LzL9UHqjqvNJqwaCZsU2
-   AAYyv0pPMip4behu/MCwfLePL8oBokxYjl4Pcsr9E4WeIxTxmZ5ix3ObG
-   5Gk8wCcpjseQMWMVW7adQfk9BBCj6Z4YF0wu44iVaAVfwUcccsoNSjAVy
-   28QvfEUXL5Jlh0F1natnD1cktkghezVBIj4ksoFHAQYUKkxvUijyMerX0
-   eI0dkK3TGeY79VY3ABBGGVP9a8lTyKqdABl9US9iYMTlblf7tfU0LRjlr
-   w==;
-X-CSE-ConnectionGUID: 6OdMghnIQVqtrDHo7R4+aA==
-X-CSE-MsgGUID: RqK6fgq0QduiDfDxXrDnnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56406335"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="56406335"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:37:18 -0700
-X-CSE-ConnectionGUID: p7k5PKY1Tn66D/PlOx035A==
-X-CSE-MsgGUID: po8wnZS4SpGQbDmOFodl8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128305914"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:37:15 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1nb6-0000000A65i-0dEa;
-	Mon, 07 Apr 2025 17:37:12 +0300
-Date: Mon, 7 Apr 2025 17:37:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de,
-	namcao@linutronix.de, benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-Message-ID: <Z_PjF88N7oAqr-N_@smile.fi.intel.com>
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
- <CAEEQ3wkWmfkq06iyhxs32pyTUp7Mm=UD-dYen_9H5kHnsJe10g@mail.gmail.com>
- <Z--7Wm_erf5U2xMl@smile.fi.intel.com>
- <CAEEQ3w=VVU=5a3VcrSpFXM5fOgWsM+-Y52FUdRK+w2bjr2ypfw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Bo4Kqmz4"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 537Eb2ho2459979
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 7 Apr 2025 07:37:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 537Eb2ho2459979
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1744036623;
+	bh=NW/RA2m+4jZ+WDc7pzOzngjZEMupvmS2HpHLLeRZwOU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Bo4Kqmz4xmBpjfn6AclxpXLoGKX7GZytoJf9v0fO9FtRQomshL/0HUl1XZUAWZvxu
+	 H00dPU+Tg9BMh1yC7qomWAzWCuCGNddcRde5F5vxduzNZ9I0PTiqigKVHnMJsQAJgP
+	 j2dSMoq8/+kWwtS556NjBKEqi7HF8Yzs+NHhZ4LqCD5tLH8wlhHtkLe2jCy4zcXQWi
+	 O1Csj4B6WY9cHrbudSpwmv+f2entNokdUO5wN7vyDFfR0HftdZLpKx15X7nMAj2ZyP
+	 hC2ot7uBoDPiqunH35+BR9R1KkQa11DHTUq+18Fr8QWwI78Ry+4+MKQjJu/OYaeyi1
+	 GI1HvbegOZxWg==
+Date: Mon, 07 Apr 2025 07:36:59 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>, Kevin Koster <lkml@ombertech.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Oerg866 <oerg866@googlemail.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/microcode=3A_Fix_crashes_o?=
+ =?US-ASCII?Q?n_early_486_CPUs_due_to_usage_of_=27cpuid=27=2E?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com> <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local> <20250407095848.7933a358c9f450fe03fb8234@ombertech.com> <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+Message-ID: <8E818E60-B112-429F-8537-6313258CFCF9@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3w=VVU=5a3VcrSpFXM5fOgWsM+-Y52FUdRK+w2bjr2ypfw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 09:22:08PM +0800, yunhui cui wrote:
-> On Fri, Apr 4, 2025 at 6:58 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Apr 04, 2025 at 10:44:09AM +0800, yunhui cui wrote:
-> > > On Thu, Apr 3, 2025 at 7:36 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
+On April 7, 2025 3:29:27 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
+>On Mon, Apr 07, 2025 at 09:58:48AM +1000, Kevin Koster wrote:
+>> But I like to know Linux really works on the hardware it's built for,
+>
+>I don't know what that means=2E
+>
+>> and I'm not much better, writing this now on a Pentium 1=2E
+>
+>Lemme guess: this is your main machine you use for daily work?
+>
+>:-\
+>
+>> > -	if (dis_ucode_ldr || c->x86_vendor !=3D X86_VENDOR_AMD || c->x86 < =
+0x10)
+>> > +	if (microcode_loader_disabled() || c->x86_vendor !=3D X86_VENDOR_AM=
+D || c->x86 < 0x10)
+>> 		return 0;
+>>=20
+>> Still fails unless the native_cpuid_eax(1) call is moved under here=2E =
+After that
+>> change, it boots fine=2E
+>
+>Please show me with a diff what you're doing because I don't know what yo=
+u
+>mean=2E
+>
+>I did this:
+>
+>bool have_cpuid_p(void)
+>{
+>        return false;
+>}
+>
+>in order to simulate no CPUID support but my 32-bit guest boots fine=2E
+>
+>Also, send a full dmesg from that machine so that I can try to reproduce =
+here=2E
+>
+>Thx=2E
+>
 
-...
-
-> > > > > To resolve this issue, relevant serial_port_out operations should be
-> > > >
-> > > > serial_port_out()
-> > >
-> > > Okay.
-> > >
-> > > > > placed in a critical section, and UART_RX data should only be read
-> > > > > when the UART_LSR DR bit is set.
-> > > >
-> > > > The last one is made in the common code, are you sure that all supported UARTs
-> > > > will be okay with such a change?
-> > >
-> > > This change enhances code robustness without being intrusive.
-> >
-> > It is intrusive as it touches the core part affecting basically
-> > _all_ of the 8250-based drivers.
-> >
-> > Yes, it's small, but still it needs to be done carefully with commit message
-> > pointing out to the other 8250 datasheets to show that this is _not_ DW
-> > specific change.
-> 
-> serial8250_clear_fifos is already part of the serial8250_do_startup
-> process. The purpose of adding it to the critical section is to
-> prevent the FIFO from being cleared while the UART is in use.
-> 
-> Similarly, serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> 
-> It is a correct logic to check if the data is ready before reading,
-> which prevents the FIFO from being enabled by other CPUs before
-> executing serial_port_in(port, UART_RX).
-
-Yes, I understand what you are doing there, my question is about possible
-side-effects on non-DW (non-Synopsys) IPs.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Well, Linus' original box was a 386 (SX, I think?) so that ship sailed alr=
+eady=2E
