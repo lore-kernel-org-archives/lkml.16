@@ -1,173 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D912F212F8A;
-	Mon,  7 Apr 2025 03:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC17192D8E
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 03:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743995184; cv=none; b=rD6EmVgzPBchO2+JRLtsAg9H6fOVE2KBbQwlO/+HLXJyuDTv23dMCfKZtENvcdhcB2O7QVGi0znNxGV16ThYcy9s7HysljKBqUa0eOYllHU6btSVp8UJsVw/xfFOURh7f0NL7PPsl9U83+04rJdayEQxV0bJS7KTrwgSZmQvYrg=
+	t=1743995318; cv=none; b=Jt2RKE6wZ97oqL16nwu+az0eAtt16ErbRo0wBBq4Qd6DtYZZ3sI1Nkmug1zoxVJ1IMBLjiu6n0K1Oi88LzR8eKVM/64A6o1ulfkmStUi+uPKGSzIDx3nvwut1HAPoXVYpNdRw+SZbe2pKrzb3DWrkZfVTupzEHdJHhe3g/iGNSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743995184; c=relaxed/simple;
-	bh=/wb7EDPZuLlPLl9Q+LhNHF1Q9Bp6fgQ8+43O6aKa+Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zt6XEOfjepBCKll/AaZyzWrEHamo/GxjNhOX3AsXbKmSQIdQJN0fFsgTxH98q2JKYpyEWmNYHoP7cHE6y4X5J+LwyVmYsS0DCoLp5WyZ4E+d2/ZrrACHybSNQHrcALwLy8w1VZYK6X9H1ygGF95ASs8x2qIeCXUQaBJZOimjiAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIBlcF9O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIBlcF9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB61BC4CEE3;
-	Mon,  7 Apr 2025 03:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743995183;
-	bh=/wb7EDPZuLlPLl9Q+LhNHF1Q9Bp6fgQ8+43O6aKa+Ag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uIBlcF9OHqkecTKw7PX4U2PZa2gaQr/6pdSNQsDO8HiIM3oC3W+R6ofuDjT4XvP3e
-	 KG9Y2BPUmD0AMdQNdR4b7exWNW4c1t/5zZHAe4RV7d7PRHKA52iN0dz2MomJSyc4ib
-	 kih0xao8dW4cEWpqKvTywVjUq4nueAx8pTJsabrcPTZ1ESTBe1Z22SpWjfF8w1nDrh
-	 hQ3pBffWFADBHw9471ifGjPSNfgu6yL8FsJJaIRsKHs42JUlT1ZH0tJ1jgzocD9xuu
-	 JHl5FdzLocnEK6JXCQ2YWmElEOp7jk58p26LN143dS52ePkhdsjlnMlKbll9vg7NSH
-	 YXW5qO4IbmI4A==
-Date: Mon, 7 Apr 2025 11:06:13 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: "=?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <nfraprado@collabora.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas.schier@linux.dev>, kernel@collabora.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH RFC 0/2] Add Kconfig pages and cross-references to
- Documentation
-Message-ID: <20250407110347.087497be@sal.lan>
-In-Reply-To: <6b019d76-1a8f-4e8d-8b9b-05094a014689@notapiano>
-References: <20250404-kconfig-docs-v1-0-4c3155d4ba44@collabora.com>
-	<8734eogfqw.fsf@trenco.lwn.net>
-	<6b019d76-1a8f-4e8d-8b9b-05094a014689@notapiano>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1743995318; c=relaxed/simple;
+	bh=F2RVHRfKGzec4XIsvpV64YdBdo5xRHMDVu4WqHIDXbM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gvHK7MigHu79dzrVHRk47DcPPw+tzt/ELz0X9TsZMIv4s+20ewejrHS42XwKuG6aJfVvTkKDsp63izPDE5SE3w612j3zSvU1RK6ogA8K+uvq3FHq7yBO+ZUmvS79X0danaOkp2dRBJnML8Z5+AOUhDuSCIN2K9HPH/vJWC6bI9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowABH7v6gQfNnQc7JBg--.11684S2;
+	Mon, 07 Apr 2025 11:08:17 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: dpenkler@gmail.com,
+	gregkh@linuxfoundation.org,
+	matchstick@neverthere.org,
+	dan.carpenter@linaro.org,
+	arnd@arndb.de,
+	everestkc@everestkc.com.np
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] staging: gpib: eastwood: Remove unnecessary print function dev_err()
+Date: Mon,  7 Apr 2025 11:07:43 +0800
+Message-Id: <20250407030743.2382246-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowABH7v6gQfNnQc7JBg--.11684S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrWrWF43Wr4rtryrAr4ruFg_yoWftwc_CF
+	18ZrWxAr1SvFya9w10qF15urWSy3WkXr4Fga9FgFW7Gw4YvF1UZr98ZF9xJr47X3yxKFy8
+	AryrGr4Ykr4fAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFylc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUjAu4UUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Em Fri, 4 Apr 2025 12:24:27 -0400
-N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> escreveu:
+Function dev_err() is redundant because platform_get_irq()
+already prints an error.
 
-> On Fri, Apr 04, 2025 at 08:31:35AM -0600, Jonathan Corbet wrote:
-> > N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> writes:
-> >  =20
-> > > This series adds Kconfig pages (patch 1) to the Documentation, and
-> > > automarkups CONFIG_* text as cross-references to those pages (patch 2=
-).
-> > >
-> > > There is a huge change in build time with this series, so we'd either
-> > > have to so some optimization and/or put this behind a flag in make so=
- it
-> > > is only generated when desired (for instance for the online
-> > > documentation):
-> > >
-> > >   (On an XPS 13 9300)
-> > >  =20
-> > >   Before:
-> > >  =20
-> > >   real	6m43.576s
-> > >   user	23m32.611s
-> > >   sys	1m48.220s
-> > >  =20
-> > >   After:
-> > >  =20
-> > >   real	11m56.845s
-> > >   user	47m40.528s
-> > >   sys	2m27.382s
-> > >
-> > > There are also some issues that were solved in ad-hoc ways (eg the
-> > > sphinx warnings due to repeated Kconfigs, by embedding the list of
-> > > repeated configs in the script). Hence the RFC. =20
-> >=20
-> > I'm still digging out from LSFMM, so have only glanced at this ... I can
-> > see the appeal of doing this, but nearly doubling the docs build time
-> > really isn't going to fly.  Have you looked to see what is taking all of
-> > that time?  The idea that it takes as long to process KConfig entries as
-> > it does to build the entire rest of the docs seems ... a bit wrong. =20
->=20
-> I have not yet. Thought I'd get some feedback before looking into the
-> performance. But I agree with the sentiment.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/staging/gpib/eastwood/fluke_gpib.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-My feeling is that the issue is using :glob" and a lot of wildcards
-inside Sphinx. Instead, you should use something similar to what
-I've done to get *.[ch] for the new kernel-doc.py implementation.
+diff --git a/drivers/staging/gpib/eastwood/fluke_gpib.c b/drivers/staging/gpib/eastwood/fluke_gpib.c
+index a6b1ac169f94..65078b4aeea3 100644
+--- a/drivers/staging/gpib/eastwood/fluke_gpib.c
++++ b/drivers/staging/gpib/eastwood/fluke_gpib.c
+@@ -1024,10 +1024,8 @@ static int fluke_attach_impl(struct gpib_board *board, const gpib_board_config_t
+ 	}
+ 
+ 	irq = platform_get_irq(fluke_gpib_pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&fluke_gpib_pdev->dev, "failed to obtain IRQ\n");
++	if (irq < 0)
+ 		return -EBUSY;
+-	}
+ 	retval = request_irq(irq, fluke_gpib_interrupt, isr_flags, fluke_gpib_pdev->name, board);
+ 	if (retval) {
+ 		dev_err(&fluke_gpib_pdev->dev,
+-- 
+2.25.1
 
-Placing it as an extension on a similar way to what i did with
-get_abi.py would likely help as well.
-
-> > I wonder what it would take to create a Sphinx extension that would
-> > simply walk the source tree and slurp up the KConfig entries directly?
-> > That would be nicer than adding a separate script in any case. =20
->=20
-> That is what is currently done for the ABI, AFAIK, so definitely seems do=
-able.
-
-Yes, doing that via an extension is doable. If done right, it can also be
-fast.
-
-> The key difference between the ABI approach and this here, is that my goa=
-l was
-> to reflect the Kconfig file hierarchy in the Documentation. So each Kconf=
-ig
-> file gets its own documentation page, while the ABI approach collects the
-> contents of all ABI files into just a few documentation pages (stable, te=
-sting,
-> etc). (So there's a non-constant number of .rst files, which means they h=
-ave to
-> be generated and can't be a sphinx plugin in this approach).
-
-Actually, get-api.py (the new version, merged for 6.15) generates a dict
-just once. Then, Sphinx rst files filters part of the doc, but I see your
-point: for every entry, we would need a .rst file if we follow the same
-approach.
-
-That's said, it may have a way to tell Sphinx to threat Kconfig files
-on a similar way it handles ".txt" and ".rst" files. Something like the
-extension to handle markdown works:
-
-	https://www.sphinx-doc.org/en/master/usage/markdown.html
-
-Another alternative would be to use:
-
-	https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-incl=
-ude_patterns
-
-but this would require Sphinx 5.1, which is above our current minimal
-version. That's said, nothing prevents to only enable generating such
-documentatation if the Sphinx version supports it.
-
-
-> I went for this approach because the filesystem hierarchy seemed the most
-> logical way to group the Kconfig symbols. Also Kconfig files have directi=
-ves like
-> 'menu' that should be present in the documentation in the same order they=
- appear
-> in the file to fully describe dependencies of the symbols, and having all=
- of
-> that in the same page seems like it would be confusing. But given the pot=
-ential
-> benefits it's worth a try for sure.
->=20
-> Now that I think about it, seems quite likely that a lot of the time spen=
-t comes
-> from creating a subshell and running the script for every Kconfig file. So
-> making a single script or sphinx extension that itself handles iterating =
-over
-> all the files would likely greatly reduce the run time. I'll test that.
->=20
-> Thanks,
-> N=C3=ADcolas
->=20
-> >=20
-> > I'll try to look closer, but I'll remain a bit distracted for a little
-> > while yet.
-> >=20
-> > Thanks,
-> >=20
-> > jon =20
