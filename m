@@ -1,371 +1,100 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0792459DF;
-	Mon,  7 Apr 2025 12:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98C724888D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744027412; cv=none; b=m9StND5vucBGyYBzm0NUkb9cLEynfucK4NZm+nYTRdux2i2ckP7SKYny3d9Bpnk94Bamce0BzZwkmd2Fa4HPLPCQz7wwA2kNk+7bSopZtRe8by3UemAF12LvelVRLradh0b1XJAYohtBd1lPYlVuU5BOxwjxSuI9n80B3oguTc4=
+	t=1744027414; cv=none; b=nP7iXVEpGBcLeYPtKPXBAGqj/fOKJ0F633ycasjSSaT0Pi3SSWgb0RX9LAizdVqBAtR2hFFkJjSOy/aQ7/UKkEgjPRGnoCbews9T8KSXlykIUJ13Apd8NR48q/+FanE4PvoZ1XGEAFAwG7chn+cIQxRNL9LNIfRokym647GIJdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744027412; c=relaxed/simple;
-	bh=mpPm/YXyFVhuw2LsswcQDRpQksNhChNOzdeViYkM+U4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CewgPd2N5iyeRqTlmIUeW2yO0l/X/9A0NhVEphAx67zilhxwnhujKMEMdVsSleiREU+G9h/8WjdwXMtSrARCt7vRPWdVyRaGhlsGMJuNyrHIuylsBmtl1Z7fhvEMEurnuPUp9CkqPs8/q7lbMctlsySLwx8stTfKWAXsG/2iqFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7lRpqw6; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744027414; c=relaxed/simple;
+	bh=rQdEHuve06/HByvBcIzeFfwJ+bNO/a8E1n7x9H/xF4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QQl7INM7FOWyPyjDCO4oWzwCZy77fUW86g/A9MrEiJ6MBMuCCQGzKcj51DIznf7iCaJLDo73nX0iBwYHlsy1cWwtmY3V5nI967enyT7bhsxav4vbhMw/TGBpDrflaC2nRg49dDPGZ7ZB2BsYRvDvkD0jLKdT664orbeizl4tcm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQH5P1nh; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7lRpqw6"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso47002465e9.3;
-        Mon, 07 Apr 2025 05:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744027409; x=1744632209; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P5Ix48oRIT+HGTyPb9AccXXigQ/v++2JPi/QLW8EM4M=;
-        b=a7lRpqw6/+vV4ix+cBzXstWX04B8xl7sczrlUnPWHH73RZWwaiSVhGwdmS1+sGl1R2
-         qO4NrVEgYIF//M6aFdpr+8pWOhSainK3qOr1OHgPDyyN48Oo5kd/heF4pyp9XzlVj73z
-         qKwMzeRR9ucAgB7vHzn4inIrBfDZBoR8PpkVQcfIke9Ph6Au4gP2ADnLn8Uy/+eiRcC/
-         /fgNl++1/o/DIvmPcltSrUAc9Tiv7rx0ispWsPdbxxUK7YGKTxdjb0Einyt+vIHz868j
-         aR31D8AfFv1IirRZBzHmQOiPWJ0JZ6rhQ6h18HyOGgrP2zKw+QrgBk6rMRkEl1LgAPOQ
-         K3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744027409; x=1744632209;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P5Ix48oRIT+HGTyPb9AccXXigQ/v++2JPi/QLW8EM4M=;
-        b=tMSCqb4eQ1BpZlZIEvYH+8H9EMksJ8qEnUBAwtRfhrXgxs6E6WFKDetlhA8qD9mjjb
-         3CjxSJoTRUCJg8ai9gdUOy8ggZYTIf2RkK8Rt0u0LK0N8qHMU+yfQE/AO3PBflePJHYc
-         m8oKgHZXVZWlThLwI8gqXZBtBCmtwurj3Da5G9DqHnBqzpCFMLJtA9mQRE7k+RIHxHcF
-         VjKedYOJwyaXNAxeTCBz/QUT0Oj08H2DvHB4zK8GhMQ9W5ILjLLNDxdvA2vvPEMMG3sN
-         BpBrnl4TLmtfkI/3khndULyFSNd8kmJrh7D1nVQmC9YjYHbSdWpIVYmUhdbMzwx7+96T
-         yhig==
-X-Forwarded-Encrypted: i=1; AJvYcCUln6BmzSmyp7bnveYm/Pxot1Xk3btnws+Nu5BbqIyH/FBIfL5Bi4rvkEriJV+p2Cfk3BtaxQvsQ976O64p@vger.kernel.org, AJvYcCXkRQhxnnX9rCvF04KT09j664Uy89uVfT5MEfOXCc0TyCkLHowXMCf3twEcrI+KIvglwUYuq4kzCrF6qAD+1jGcjSE=@vger.kernel.org, AJvYcCXqtAaTiRYWeixOaCgFpu/VpZa6WgJ9y5MsxzJniJu00i99sUWkR3n7BvBxrCw8e0l44RvQjtR/wcmb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCfuM7ESEH+MGsPfGv6SkjzfhYYVXTmGlRqYx/QTDRrvgxRyAq
-	QrBsOiWiI3/WCRGur8t9vsP7wyvmbWE0wPK6hi1SrcC1nvGgR6xv
-X-Gm-Gg: ASbGncuXO6xCpn/+U7P0ySIQ2V4/jnAwSoBTEpg+wIFdmRppvePi5pHmMztY/2jy6To
-	5JfYuQ/5ctKgR+a17z4Ti1ZXSK1oWw2lFf9yy6edcIP1pbZ6p+IWkciVyqt6myWaT5sUjefyiRM
-	OI6FI/Nu8u0nYI2Dxll5w0gKkLTxUanAGRUNmDEboctCZYD/+8EbuBcoGscLdx5H20o9+Iurh2m
-	rNOZcb1nXR7fNo9z0unlRAFA8AasrjDDCHic6XyzQGOoXEzvpKEEoSlMzJPIndQ9iR1MwtzxQ4x
-	YhY1OxzfQH/tiKvaT7ILw3JV9ZFDM25uIH5zGZdWQnm0Oi2brMksrvBAOAxaButQZq042w==
-X-Google-Smtp-Source: AGHT+IGv0WPEhaxZ3KFf2ynxyZh1pTzIGfLq7WSPwZd1xfiZPI9qiPF8P8FlBP+2g6f4DtbJ3H397w==
-X-Received: by 2002:a05:600c:3d05:b0:43c:fdbe:439b with SMTP id 5b1f17b1804b1-43ed0b76649mr112092695e9.4.1744027408323;
-        Mon, 07 Apr 2025 05:03:28 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:78b9:80c2:5373:1b49])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d943sm11986976f8f.74.2025.04.07.05.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 05:03:27 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH net-next v5 2/3] dt-bindings: net: Document support for Renesas RZ/V2H(P) GBETH
-Date: Mon,  7 Apr 2025 13:03:16 +0100
-Message-ID: <20250407120317.127056-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQH5P1nh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744027412; x=1775563412;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=rQdEHuve06/HByvBcIzeFfwJ+bNO/a8E1n7x9H/xF4Y=;
+  b=BQH5P1nh5QXPiCTGMIsO0WNAs4EyNhL+nsv4erixAyPMb0YhZgQ1BI30
+   z5GLwTNr6pRblwCnqWdMChpyfi2SqzqqOydird2xUV7vU/b/x1kWq/VAY
+   3Kr53CzMmIulW7XqprJUAyBfXZ/f8aVpyaIJdgIhV1nSj/mpM8V+7XbIZ
+   0xJor9ghfqu5bgO8eKfQ9eq3PG62VWVuasghIJWmkTVSuokMdoVyEm/tn
+   FKX3JuduZJ87pWdyinuEKvQovdLH91hCEl7bXhOnJr34pKuibRSRDMvOY
+   VGs/6bJglT1r8o+mESAy1oVp2IErrGs+/sWe9ih1veoRVuF8N2ahiREUZ
+   g==;
+X-CSE-ConnectionGUID: T/j8HxeASIOLWfTPHe0X7w==
+X-CSE-MsgGUID: p9ezgJIUS+i7RPw7JkFE+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45500971"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45500971"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:03:32 -0700
+X-CSE-ConnectionGUID: 4a4RBE4jTLS4IEiYA6c3bQ==
+X-CSE-MsgGUID: /Pso3oEuRhKUBn4d8GjLPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="132075591"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 07 Apr 2025 05:03:30 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1lCJ-0003NJ-35;
+	Mon, 07 Apr 2025 12:03:27 +0000
+Date: Mon, 7 Apr 2025 20:03:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: kernel/time/hrtimer.c:369:18: sparse: sparse: dereference of noderef
+ expression
+Message-ID: <202504071931.vOVl13tt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0af2f6be1b4281385b618cb86ad946eded089ac8
+commit: 04257da0c99c9d4ff7c5bb93046482e1f7d34938 hrtimers: Make callback function pointer private
+date:   2 days ago
+config: i386-randconfig-r123-20250407 (https://download.01.org/0day-ci/archive/20250407/202504071931.vOVl13tt-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504071931.vOVl13tt-lkp@intel.com/reproduce)
 
-GBETH IP on the Renesas RZ/V2H(P) SoC is integrated with Synopsys
-DesignWare MAC (version 5.20). Document the device tree bindings for
-the GBETH glue layer.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504071931.vOVl13tt-lkp@intel.com/
 
-Generic compatible string 'renesas,rzv2h-gbeth' is added since this
-module is identical on both the RZ/V2H(P) and RZ/G3E SoCs.
+sparse warnings: (new ones prefixed by >>)
+>> kernel/time/hrtimer.c:369:18: sparse: sparse: dereference of noderef expression
 
-The Rx/Tx clocks supplied for GBETH on the RZ/V2H(P) SoC is depicted
-below:
+vim +369 kernel/time/hrtimer.c
 
-                      Rx / Tx
--------+------------- on / off -------
-       |
-       |            Rx-180 / Tx-180
-       +---- not ---- on / off -------
+237fc6e7a35076f kernel/hrtimer.c Thomas Gleixner   2008-04-30  366  
+997772884036e6e kernel/hrtimer.c Stanislaw Gruszka 2011-03-07  367  static void *hrtimer_debug_hint(void *addr)
+997772884036e6e kernel/hrtimer.c Stanislaw Gruszka 2011-03-07  368  {
+997772884036e6e kernel/hrtimer.c Stanislaw Gruszka 2011-03-07 @369  	return ((struct hrtimer *) addr)->function;
+997772884036e6e kernel/hrtimer.c Stanislaw Gruszka 2011-03-07  370  }
+997772884036e6e kernel/hrtimer.c Stanislaw Gruszka 2011-03-07  371  
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
----
-v4->v5
-- No change
+:::::: The code at line 369 was first introduced by commit
+:::::: 997772884036e6e121de39322179989154437d9f debugobjects: Add hint for better object identification
 
-v3->v4
-- No change
+:::::: TO: Stanislaw Gruszka <sgruszka@redhat.com>
+:::::: CC: Thomas Gleixner <tglx@linutronix.de>
 
-v2->v3
-- Dropped interrupts description from interrupts property as
-  snps,dwmac.yaml already describes it.
-- Dropped snps,en-tx-lpi-clockgating as this is being marked
-  as deprecated.
-- Updated Rx/Tx interrupt names to match the regex from patch 1/3
-- Listed Rx interrupts before Tx interrupts in example node for
-  consistency.
-
-v1->v2
-- Updated commit description
-- Updated interrupts description for clarity
-- Updated interrupt-names for clarity
-- Updated example node
----
- .../bindings/net/renesas,r9a09g057-gbeth.yaml | 201 ++++++++++++++++++
- .../devicetree/bindings/net/snps,dwmac.yaml   |   1 +
- 2 files changed, 202 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-
-diff --git a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-new file mode 100644
-index 000000000000..02a6793c26f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-@@ -0,0 +1,201 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/renesas,r9a09g057-gbeth.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GBETH glue layer for Renesas RZ/V2H(P) (and similar SoCs)
-+
-+maintainers:
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - renesas,r9a09g057-gbeth
-+          - renesas,rzv2h-gbeth
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,r9a09g057-gbeth # RZ/V2H(P)
-+      - const: renesas,rzv2h-gbeth
-+      - const: snps,dwmac-5.20
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: CSR clock
-+      - description: AXI system clock
-+      - description: PTP clock
-+      - description: TX clock
-+      - description: RX clock
-+      - description: TX clock phase-shifted by 180 degrees
-+      - description: RX clock phase-shifted by 180 degrees
-+
-+  clock-names:
-+    items:
-+      - const: stmmaceth
-+      - const: pclk
-+      - const: ptp_ref
-+      - const: tx
-+      - const: rx
-+      - const: tx-180
-+      - const: rx-180
-+
-+  interrupts:
-+    minItems: 11
-+
-+  interrupt-names:
-+    items:
-+      - const: macirq
-+      - const: eth_wake_irq
-+      - const: eth_lpi
-+      - const: rx-queue-0
-+      - const: rx-queue-1
-+      - const: rx-queue-2
-+      - const: rx-queue-3
-+      - const: tx-queue-0
-+      - const: tx-queue-1
-+      - const: tx-queue-2
-+      - const: tx-queue-3
-+
-+  resets:
-+    items:
-+      - description: AXI power-on system reset
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - resets
-+
-+allOf:
-+  - $ref: snps,dwmac.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ethernet@15c30000 {
-+        compatible = "renesas,r9a09g057-gbeth", "renesas,rzv2h-gbeth", "snps,dwmac-5.20";
-+        reg = <0x15c30000 0x10000>;
-+        clocks =  <&cpg CPG_MOD 0xbd>, <&cpg CPG_MOD 0xbc>,
-+                  <&ptp_clock>, <&cpg CPG_MOD 0xb8>,
-+                  <&cpg CPG_MOD 0xb9>, <&cpg CPG_MOD 0xba>,
-+                  <&cpg CPG_MOD 0xbb>;
-+        clock-names = "stmmaceth", "pclk", "ptp_ref",
-+                      "tx", "rx", "tx-180", "rx-180";
-+        resets = <&cpg 0xb0>;
-+        interrupts = <GIC_SPI 765 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 767 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 766 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 772 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 773 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 774 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 745 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 768 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 769 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 770 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 771 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "macirq", "eth_wake_irq", "eth_lpi",
-+                          "rx-queue-0", "rx-queue-1", "rx-queue-2",
-+                          "rx-queue-3", "tx-queue-0", "tx-queue-1",
-+                          "tx-queue-2", "tx-queue-3";
-+        phy-mode = "rgmii-id";
-+        snps,multicast-filter-bins = <256>;
-+        snps,perfect-filter-entries = <128>;
-+        rx-fifo-depth = <8192>;
-+        tx-fifo-depth = <8192>;
-+        snps,fixed-burst;
-+        snps,force_thresh_dma_mode;
-+        snps,axi-config = <&stmmac_axi_setup>;
-+        snps,mtl-rx-config = <&mtl_rx_setup>;
-+        snps,mtl-tx-config = <&mtl_tx_setup>;
-+        snps,txpbl = <32>;
-+        snps,rxpbl = <32>;
-+        phy-handle = <&phy0>;
-+
-+        stmmac_axi_setup: stmmac-axi-config {
-+            snps,lpi_en;
-+            snps,wr_osr_lmt = <0xf>;
-+            snps,rd_osr_lmt = <0xf>;
-+            snps,blen = <16 8 4 0 0 0 0>;
-+        };
-+
-+        mtl_rx_setup: rx-queues-config {
-+            snps,rx-queues-to-use = <4>;
-+            snps,rx-sched-sp;
-+
-+            queue0 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x1>;
-+                snps,map-to-dma-channel = <0>;
-+            };
-+
-+            queue1 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x2>;
-+                snps,map-to-dma-channel = <1>;
-+            };
-+
-+            queue2 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x4>;
-+                snps,map-to-dma-channel = <2>;
-+            };
-+
-+            queue3 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x8>;
-+                snps,map-to-dma-channel = <3>;
-+            };
-+        };
-+
-+        mtl_tx_setup: tx-queues-config {
-+            snps,tx-queues-to-use = <4>;
-+
-+            queue0 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x1>;
-+            };
-+
-+            queue1 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x2>;
-+            };
-+
-+            queue2 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x4>;
-+            };
-+
-+            queue3 {
-+                snps,dcb-algorithm;
-+                snps,priority = <0x1>;
-+            };
-+        };
-+
-+        mdio {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            compatible = "snps,dwmac-mdio";
-+
-+            phy0: ethernet-phy@0 {
-+                reg = <0>;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 4d4fcaeca8a8..b525eca53850 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -75,6 +75,7 @@ properties:
-         - qcom,sm8150-ethqos
-         - renesas,r9a06g032-gmac
-         - renesas,rzn1-gmac
-+        - renesas,rzv2h-gbeth
-         - rockchip,px30-gmac
-         - rockchip,rk3128-gmac
-         - rockchip,rk3228-gmac
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
