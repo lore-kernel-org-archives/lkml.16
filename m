@@ -1,62 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48B120371F;
-	Mon,  7 Apr 2025 17:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4652AE66;
+	Mon,  7 Apr 2025 17:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045733; cv=none; b=BOVLz9UQ9gfIUwsZbKiivdkVFZaN8qNKnLI4pw6uZAZKJLJZrD4s0A3v9Kb2tHt/JL+iROM6ERnVMBcu48lH33GRf0xm4CERvlcQ97wnJ2aHpUGSRh7nLeimi2fPabzMJy6lmC6TuqrYFQtmt7ba7PGYwba+Iz3UfUxkachUFOQ=
+	t=1744045883; cv=none; b=I8ZuMoF8TWQwyOkNxN6TshK+N2COTIpnFNpkk2MzR3ZjKJ1BL7x+gAcArc7LgaqUQoZCJUW6YI7bDjRyYNkK2dEi85tamKNKhmFTWedePOeScq/hFUWWEdAhvzjZTUaZIwf4ukXfHG7p4MsP1IYALbe2md9Q+kTM+Dh8ZjhDjm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045733; c=relaxed/simple;
-	bh=VqC0gfQpUdwBMUNFwXYIIN11f43l0CgIeOiIwf8U8C8=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=E34lQf/QhCCJ4ndRC2MTTczGFxoO6K5ndmU/T05Ty2n3HnD5bDhq6Z153eSAJtm7DFn5ZN7b7lzh0d1uBNaSXiVhJ0b4X9uxiXrurOKfkg6tkiNMYumKLf0UC8CjDKZDUeL2qTpccqvlr+2jdQBgkkiFxSXXCbKPmT2kC9JU5XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mgyQJi9r; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1744045883; c=relaxed/simple;
+	bh=8LXaPygDfni3CPkRlg6WjoVmUsQjp7rmoKFXbZwc9lk=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IUr0mm7rB892EhuFBxCCPIHXu1EZtjuLiI81G9IPt+eU9JDfCSjt27fAI3AotWkCjAXUBlVIXja9E4Mh/EmZQahF9aCX9Hmhn9gbcpJxT4E+hyE9/yeGWJxLpu9vOw0FWQFoUHyHpFsAe0kDBLAkQJ5nHdRE+2hMdE6HhqmhPv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsAHywdY; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mgyQJi9r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsAHywdY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744045732; x=1775581732;
+  t=1744045882; x=1775581882;
   h=from:to:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=VqC0gfQpUdwBMUNFwXYIIN11f43l0CgIeOiIwf8U8C8=;
-  b=mgyQJi9rMvb1TSrNge00Gm/wZzQQT6Rh/bJts7PK2Ofks5r6naoggKtt
-   yQglQQyZpMb/eLIpVgNKd1b2jPQsqeMbqWJNwxNJFUVF+5D3cTiXwvrT4
-   iGJgbl87CSsZAzcaezpOBUNtp2qs+klAOgZ2q4eMEZ2ScAJKn8yxm2V02
-   D4G9f9ayiDSlrRBG2ut4yp9g2EOAFcjqmjMzul7Dcnov8x29X+UbqA5Uy
-   DgoeJREw/99lLEEBXw8CAiLruOJuaNNbXc2XuHvo8sQ0MX2+fDxaT3/Sw
-   XLL4rhx7qpYww98JebOo8tHGIvuFXgJIlOtZK5wSb++xQ/m02MeFNkuAc
+  bh=8LXaPygDfni3CPkRlg6WjoVmUsQjp7rmoKFXbZwc9lk=;
+  b=KsAHywdY/TMzyNT8uWeKHxUlNkX8BuvmVOUn5Fvhqbti5CgwRZIxWb7F
+   re3ew/k/HCNw/jqFKGVK5Sf0qTWkilVDJoBim/bFUQp7G7MkyX08LZQvO
+   u3iJNVpdpXaizD4yFkIgWqsWxy1PovSxIV2DsKle/j/1469w0bUM7kZFR
+   Gj2Fc3L1Bp36VLzmp5O3FlJrAWpwDxgdxPe1e11JFUi+7jfJkyDl5FUMZ
+   f3hB4FxpUXbdGoR6Dkslq2MncTgn9BwDcAqOtXwO2gQLHMlOEb+skTPLf
+   Qlp1K+XbGRw4R1u/ahe38E6gQ0385rtFql2RmHra9rCmRvTSvKBfWTTAq
    g==;
-X-CSE-ConnectionGUID: InXoTXBeTYuxhH3dCueydg==
-X-CSE-MsgGUID: XTfeWK/GS/SEGtgEUZH8wQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45347690"
+X-CSE-ConnectionGUID: oBuGOWcHTqaXQLKhgqgmpQ==
+X-CSE-MsgGUID: jav4FV5XRuytNBH7Dpbzow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45335146"
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45347690"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:08:51 -0700
-X-CSE-ConnectionGUID: Pl/JhWbxRWmQqVICCDelQQ==
-X-CSE-MsgGUID: vcK/BNsTRgiMtntE37fklQ==
+   d="scan'208";a="45335146"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:11:21 -0700
+X-CSE-ConnectionGUID: 6dUbJlVXTyaOyD5c1Um7ww==
+X-CSE-MsgGUID: P5TtE4j2QMGMTc636ujTZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132742013"
+   d="scan'208";a="132147300"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:08:46 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:11:18 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kenneth Chan <kenneth.t.chan@gmail.com>,
-	Mattia Dongili <malattia@linux.it>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Herton Ronaldo Krzesinski <herton@canonical.com>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net
-Subject: [PATCH 1/1] platform/x86: Use strscpy()/scnprintf() with acpi_device_name/class()
-Date: Mon,  7 Apr 2025 20:08:38 +0300
-Message-Id: <20250407170839.2153-1-ilpo.jarvinen@linux.intel.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] platform/x86/intel/pmc: Rename pmc_index -> pmcidx
+Date: Mon,  7 Apr 2025 20:11:12 +0300
+Message-Id: <20250407171112.2255-1-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,142 +62,194 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Replace strcpy() and sprintf() for acpi_device_name/class() targets
-with safer variant. In one case, scnprintf() is necessary but the
-rest can use strscpy().
+Rename pmc_index variables to pmcidx which contains the same amount
+information with less characters (helps to shorten e.g. for loop
+lines).
+
+Also change pmc_idx -> pmcidx to keep formatting consistent and similar
+to e.g. "pmcdev".
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/platform/x86/eeepc-laptop.c     |  4 ++--
- drivers/platform/x86/panasonic-laptop.c |  4 ++--
- drivers/platform/x86/sony-laptop.c      |  4 ++--
- drivers/platform/x86/thinkpad_acpi.c    |  6 +++---
- drivers/platform/x86/topstar-laptop.c   |  4 ++--
- drivers/platform/x86/xo15-ebook.c       | 10 +++-------
- 6 files changed, 14 insertions(+), 18 deletions(-)
+ drivers/platform/x86/intel/pmc/core.c       | 36 ++++++++++-----------
+ drivers/platform/x86/intel/pmc/core_ssram.c | 12 +++----
+ 2 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index f52fbc4924d4..d1908815f5a2 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -1370,8 +1370,8 @@ static int eeepc_acpi_add(struct acpi_device *device)
- 	if (!eeepc)
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 7a1d11f2914f..f64f6369fdf5 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -257,7 +257,7 @@ static unsigned int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
+ }
+ 
+ static void pmc_core_lpm_display(struct pmc *pmc, struct device *dev,
+-				 struct seq_file *s, u32 offset, int pmc_index,
++				 struct seq_file *s, u32 offset, int pmcidx,
+ 				 const char *str,
+ 				 const struct pmc_bit_map **maps)
+ {
+@@ -276,19 +276,19 @@ static void pmc_core_lpm_display(struct pmc *pmc, struct device *dev,
+ 
+ 	for (idx = 0; idx < arr_size; idx++) {
+ 		if (dev)
+-			dev_info(dev, "\nPMC%d:LPM_%s_%d:\t0x%x\n", pmc_index, str, idx,
++			dev_info(dev, "\nPMC%d:LPM_%s_%d:\t0x%x\n", pmcidx, str, idx,
+ 				lpm_regs[idx]);
+ 		if (s)
+-			seq_printf(s, "\nPMC%d:LPM_%s_%d:\t0x%x\n", pmc_index, str, idx,
++			seq_printf(s, "\nPMC%d:LPM_%s_%d:\t0x%x\n", pmcidx, str, idx,
+ 				   lpm_regs[idx]);
+ 		for (index = 0; maps[idx][index].name && index < len; index++) {
+ 			bit_mask = maps[idx][index].bit_mask;
+ 			if (dev)
+-				dev_info(dev, "PMC%d:%-30s %-30d\n", pmc_index,
++				dev_info(dev, "PMC%d:%-30s %-30d\n", pmcidx,
+ 					maps[idx][index].name,
+ 					lpm_regs[idx] & bit_mask ? 1 : 0);
+ 			if (s)
+-				seq_printf(s, "PMC%d:%-30s %-30d\n", pmc_index,
++				seq_printf(s, "PMC%d:%-30s %-30d\n", pmcidx,
+ 					   maps[idx][index].name,
+ 					   lpm_regs[idx] & bit_mask ? 1 : 0);
+ 		}
+@@ -305,10 +305,10 @@ static inline u8 pmc_core_reg_read_byte(struct pmc *pmc, int offset)
+ }
+ 
+ static void pmc_core_display_map(struct seq_file *s, int index, int idx, int ip,
+-				 int pmc_index, u8 pf_reg, const struct pmc_bit_map **pf_map)
++				 int pmcidx, u8 pf_reg, const struct pmc_bit_map **pf_map)
+ {
+ 	seq_printf(s, "PMC%d:PCH IP: %-2d - %-32s\tState: %s\n",
+-		   pmc_index, ip, pf_map[idx][index].name,
++		   pmcidx, ip, pf_map[idx][index].name,
+ 		   pf_map[idx][index].bit_mask & pf_reg ? "Off" : "On");
+ }
+ 
+@@ -465,7 +465,7 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ 	struct pmc *pmc;
+ 	const struct pmc_reg_map *map;
+ 	u32 reg;
+-	unsigned int pmc_index;
++	unsigned int pmcidx;
+ 	int ltr_index;
+ 
+ 	ltr_index = value;
+@@ -473,8 +473,8 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ 	 * is based on the contiguous indexes from ltr_show output.
+ 	 * pmc index and ltr index needs to be calculated from it.
+ 	 */
+-	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs) && ltr_index >= 0; pmc_index++) {
+-		pmc = pmcdev->pmcs[pmc_index];
++	for (pmcidx = 0; pmcidx < ARRAY_SIZE(pmcdev->pmcs) && ltr_index >= 0; pmcidx++) {
++		pmc = pmcdev->pmcs[pmcidx];
+ 
+ 		if (!pmc)
+ 			continue;
+@@ -491,10 +491,10 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore)
+ 		ltr_index = ltr_index - (map->ltr_ignore_max + 2) - 1;
+ 	}
+ 
+-	if (pmc_index >= ARRAY_SIZE(pmcdev->pmcs) || ltr_index < 0)
++	if (pmcidx >= ARRAY_SIZE(pmcdev->pmcs) || ltr_index < 0)
+ 		return -EINVAL;
+ 
+-	pr_debug("ltr_ignore for pmc%d: ltr_index:%d\n", pmc_index, ltr_index);
++	pr_debug("ltr_ignore for pmc%d: ltr_index:%d\n", pmcidx, ltr_index);
+ 
+ 	guard(mutex)(&pmcdev->lock);
+ 
+@@ -827,7 +827,7 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
+ 
+-static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
++static void pmc_core_substate_req_header_show(struct seq_file *s, int pmcidx)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+ 	int mode;
+@@ -846,11 +846,11 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+ 	u32 sts_offset;
+ 	u32 sts_offset_live;
+ 	u32 *lpm_req_regs;
+-	unsigned int mp, pmc_index;
++	unsigned int mp, pmcidx;
+ 	int num_maps;
+ 
+-	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); ++pmc_index) {
+-		struct pmc *pmc = pmcdev->pmcs[pmc_index];
++	for (pmcidx = 0; pmcidx < ARRAY_SIZE(pmcdev->pmcs); ++pmcidx) {
++		struct pmc *pmc = pmcdev->pmcs[pmcidx];
+ 		const struct pmc_bit_map **maps;
+ 
+ 		if (!pmc)
+@@ -871,7 +871,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+ 			continue;
+ 
+ 		/* Display the header */
+-		pmc_core_substate_req_header_show(s, pmc_index);
++		pmc_core_substate_req_header_show(s, pmcidx);
+ 
+ 		/* Loop over maps */
+ 		for (mp = 0; mp < num_maps; mp++) {
+@@ -909,7 +909,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+ 				}
+ 
+ 				/* Display the element name in the first column */
+-				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
++				seq_printf(s, "pmc%d: %26s |", pmcidx, map[i].name);
+ 
+ 				/* Loop over the enabled states and display if required */
+ 				pmc_for_each_mode(mode, pmcdev) {
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index 739569803017..7a9002e46947 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -219,9 +219,9 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
+ 
+ static int
+ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
+-		 const struct pmc_reg_map *reg_map, int pmc_index)
++		 const struct pmc_reg_map *reg_map, int pmcidx)
+ {
+-	struct pmc *pmc = pmcdev->pmcs[pmc_index];
++	struct pmc *pmc = pmcdev->pmcs[pmcidx];
+ 
+ 	if (!pwrm_base)
+ 		return -ENODEV;
+@@ -242,13 +242,13 @@ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
  		return -ENOMEM;
- 	eeepc->handle = device->handle;
--	strcpy(acpi_device_name(device), EEEPC_ACPI_DEVICE_NAME);
--	strcpy(acpi_device_class(device), EEEPC_ACPI_CLASS);
-+	strscpy(acpi_device_name(device), EEEPC_ACPI_DEVICE_NAME);
-+	strscpy(acpi_device_class(device), EEEPC_ACPI_CLASS);
- 	device->driver_data = eeepc;
- 	eeepc->device = device;
- 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 2987b4db6009..255317e6fec8 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -1033,8 +1033,8 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 	pcc->handle = device->handle;
- 	pcc->num_sifr = num_sifr;
- 	device->driver_data = pcc;
--	strcpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
--	strcpy(acpi_device_class(device), ACPI_PCC_CLASS);
-+	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
-+	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
- 
- 	result = acpi_pcc_init_input(pcc);
- 	if (result) {
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 3197aaa69da7..59f184f7c72f 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3157,7 +3157,7 @@ static int sony_nc_add(struct acpi_device *device)
- 	struct sony_nc_value *item;
- 
- 	sony_nc_acpi_device = device;
--	strcpy(acpi_device_class(device), "sony/hotkey");
-+	strscpy(acpi_device_class(device), "sony/hotkey");
- 
- 	sony_nc_acpi_handle = device->handle;
- 
-@@ -4677,7 +4677,7 @@ static int sony_pic_add(struct acpi_device *device)
- 	struct sony_pic_irq *irq, *tmp_irq;
- 
- 	spic_dev.acpi_dev = device;
--	strcpy(acpi_device_class(device), "sony/hotkey");
-+	strscpy(acpi_device_class(device), "sony/hotkey");
- 	sony_pic_detect_device_type(&spic_dev);
- 	mutex_init(&spic_dev.lock);
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 0384cf311878..519ce3cf9ed0 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -835,9 +835,9 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
  	}
  
- 	ibm->acpi->device->driver_data = ibm;
--	sprintf(acpi_device_class(ibm->acpi->device), "%s/%s",
--		TPACPI_ACPI_EVENT_PREFIX,
--		ibm->name);
-+	scnprintf(acpi_device_class(ibm->acpi->device),
-+		  sizeof(acpi_device_class(ibm->acpi->device)),
-+		  "%s/%s", TPACPI_ACPI_EVENT_PREFIX, ibm->name);
+-	pmcdev->pmcs[pmc_index] = pmc;
++	pmcdev->pmcs[pmcidx] = pmc;
  
- 	status = acpi_install_notify_handler(*ibm->acpi->handle,
- 			ibm->acpi->type, dispatch_acpi_notify, ibm);
-diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
-index 20df1ebefc30..53fc2b364552 100644
---- a/drivers/platform/x86/topstar-laptop.c
-+++ b/drivers/platform/x86/topstar-laptop.c
-@@ -296,8 +296,8 @@ static int topstar_acpi_add(struct acpi_device *device)
- 	if (!topstar)
+ 	return 0;
+ }
+ 
+ static int
+-pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
++pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmcidx, u32 offset)
+ {
+ 	struct pci_dev *ssram_pcidev = pmcdev->ssram_pcidev;
+ 	void __iomem __free(pmc_core_iounmap) *tmp_ssram = NULL;
+@@ -265,7 +265,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+ 	if (!tmp_ssram)
  		return -ENOMEM;
  
--	strcpy(acpi_device_name(device), "Topstar TPSACPI");
--	strcpy(acpi_device_class(device), TOPSTAR_LAPTOP_CLASS);
-+	strscpy(acpi_device_name(device), "Topstar TPSACPI");
-+	strscpy(acpi_device_class(device), TOPSTAR_LAPTOP_CLASS);
- 	device->driver_data = topstar;
- 	topstar->device = device;
+-	if (pmc_idx != PMC_IDX_MAIN) {
++	if (pmcidx != PMC_IDX_MAIN) {
+ 		/*
+ 		 * The secondary PMC BARS (which are behind hidden PCI devices)
+ 		 * are read from fixed offsets in MMIO of the primary PMC BAR.
+@@ -293,7 +293,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+ 	if (!map)
+ 		return -ENODEV;
  
-diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
-index df2bf1c58523..cb02222c978c 100644
---- a/drivers/platform/x86/xo15-ebook.c
-+++ b/drivers/platform/x86/xo15-ebook.c
-@@ -84,7 +84,6 @@ static int ebook_switch_add(struct acpi_device *device)
- 	const struct acpi_device_id *id;
- 	struct ebook_switch *button;
- 	struct input_dev *input;
--	char *name, *class;
- 	int error;
+-	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
++	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmcidx);
+ }
  
- 	button = kzalloc(sizeof(struct ebook_switch), GFP_KERNEL);
-@@ -99,9 +98,6 @@ static int ebook_switch_add(struct acpi_device *device)
- 		goto err_free_button;
- 	}
- 
--	name = acpi_device_name(device);
--	class = acpi_device_class(device);
--
- 	id = acpi_match_acpi_device(ebook_device_ids, device);
- 	if (!id) {
- 		dev_err(&device->dev, "Unsupported hid\n");
-@@ -109,12 +105,12 @@ static int ebook_switch_add(struct acpi_device *device)
- 		goto err_free_input;
- 	}
- 
--	strcpy(name, XO15_EBOOK_DEVICE_NAME);
--	sprintf(class, "%s/%s", XO15_EBOOK_CLASS, XO15_EBOOK_SUBCLASS);
-+	strscpy(acpi_device_name(device), XO15_EBOOK_DEVICE_NAME);
-+	strscpy(acpi_device_class(device), XO15_EBOOK_CLASS "/" XO15_EBOOK_SUBCLASS);
- 
- 	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", id->id);
- 
--	input->name = name;
-+	input->name = acpi_device_name(device);
- 	input->phys = button->phys;
- 	input->id.bustype = BUS_HOST;
- 	input->dev.parent = &device->dev;
+ int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func)
 
 base-commit: 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
 -- 
