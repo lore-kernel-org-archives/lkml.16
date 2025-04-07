@@ -1,142 +1,91 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FEB221F3C;
-	Mon,  7 Apr 2025 06:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB492253E9;
+	Mon,  7 Apr 2025 06:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007722; cv=none; b=Q+G/oRvcVI7h93lneFik16Fdngdyn/k3FJXtC/+b1uO7K5HpkQ2HnY+JSm1AGfwIoMBCKwUYadeJrLaMdqWlO0Xfi3NS9Ris65Mo9eW75IA+/SpkBT2GzDNfIG/KrfluKddxF64Sg4hZWedwi2lNB6hnl/ITlpaqUjxxqKU683Y=
+	t=1744007726; cv=none; b=DHOXWedE9YIZFaqh2PJvGYNf7ZtJSUcpcL3CXpFhxKKx4ISgbTw6IDOq8OQm/g2tNuXdCCYejtELfTehjhBtPCVWulT22ErUEaxAC9Yzx0XkfGRwARYWYVKZR+s7qBhZYm9vRAyGn46Z4QA0zQjWBBA4OUKpwYdYbjqZ9YJHhOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007722; c=relaxed/simple;
-	bh=PrUQRbB1c+rJuvNmtq5sRl5XHonz7LhulE1jv95UeZM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YTi5a9zBHeRMrP2o2x8XL4KafWZErkzsUTBJEW8G6JigP8h0orDWqrsDJupc/RAHybeqXufqoDH5nBs4/FVgLkYz+h/VQ1mGKm5QJTdFSe/BOtzyUCX8UmoJApuy/n9kTbSmvHw0x4W18HwMCK/cNlQWSQjlqmM0o8nz6fQ11o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpnaFRpj; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpnaFRpj"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af5139ad9a2so2558303a12.1;
-        Sun, 06 Apr 2025 23:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744007719; x=1744612519; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nUKnCXni+ZS+V5rei8asTaXf4mmG/ra2/KlqUzUvNL8=;
-        b=MpnaFRpjcU4UjbMww+9pqRtasa/ZZi1c2XcgzLI9XTv8oWwf0Z5cQ6qo9CAyUukMA0
-         8sx40iRy9OuSdN5PwWZZ9dMRThLERmY4l126QUJ4LxKwRaK5W5gRCyoen8K5iTxyqP/f
-         6DG1ymzM5MU2Evw9K1+zVlgG7YMNGSlpwzZVh3xGKDVO5512JDf412r9g43n7dfhqU2e
-         JeMCGoUcOMMZpvIsgQqDK4K2QkGjURaGjHIsS+eFJXhFPtyZgvzYcekh3F3ag3DCDyeZ
-         VWnwWSVxAY3WRLZNkdpWv0sRyB0wmnuL5Jd/CKDMbqu2C0o+ASBE9CkXmzkUi3eDKBmJ
-         yvEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744007719; x=1744612519;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nUKnCXni+ZS+V5rei8asTaXf4mmG/ra2/KlqUzUvNL8=;
-        b=Divh8gJgOwxlkWfM0QHd8M6jsRpJqstwbPxZF+J2DG3t6NcscBnX4jnTee98/VCZub
-         ocvi1dds6vjJYavngbjfZjwAEUx2FOmURc1WkW8yxC4tfvmpMLMSye0jOQSoJ6aNRzwS
-         7GoLj8r87/w/QNFrq3IZJwhzFbqxs3XiltfWjWRQVYvPQrQU5p3mJeAbARI3mgNd0ckK
-         l90dsmQdBtR4/O8pRmJJmIrx6TiUIOSNfX9ymDer1RBAaLggefn9XpCmXg1tSCTVYxmj
-         NZDDpsHJXaeZ1tR0sffaejPhXQZUrzx2QZXlNp9S69GDqJ+NTsxN98JOwHxU9OxlNQgb
-         u9Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWn+xABwicHq4X/sgJ29ANv7jgUYrkPYYIMKyPcQLD1Rowvq3gIzygL+ICYx/PQFnTUMqWiqLtQ1LEL@vger.kernel.org, AJvYcCXLtbBA20gyyC3cNDlTBI7/ZsMrEye/R0Ky/NzjI5l6DsndimFVjd7p1zKg8qFsCRBGNGhvtsC1/P9FWOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRCs6L4G6ejEiSy4g1lYX3cW3CjQSNhIIS+2jr4BdUl2N4LcIG
-	lA5rrrnWScUl+wlwHq7noShss31k1z5/F8rw2YZmXleH8gzBUr6y
-X-Gm-Gg: ASbGncuM50CYAgBtbFzarqk/f0vWpFilEldvKJszPBWXW1AjY6P4gcqn+qjwfkfYBWC
-	OvASt9TEjNwFUuzTR/lhlvx6sRqA03Hy7ANt/8A6O5jHKiZyXlxCAMES4zYEEl4Pfn8Ao0d668k
-	/kuUk0F6xg/dUfGeSURkQLmLuexwHcfjFQ5fJ5DqwAbPGTxu7GtD9hwDrTOCI3GYbPDRwnSNmbs
-	kRzg826HbFr/8wyKh2SFQ1+1QfwoWxdzpSiAGn0Z/6sNQGSv67ir8uqwqzogS0YSOtJtO48NmOg
-	xTc8Kqd4dTvirO7uXM7RG2LWv7JeynJRFk2Q
-X-Google-Smtp-Source: AGHT+IGRG2C26zGOmhoXFbiYCUXmZOta5ZKasjUrRKCZwa8ZEA1iM0n9fmVIC+YnuIVVcjAsIQP16Q==
-X-Received: by 2002:a17:90b:5190:b0:2ff:62f8:9a12 with SMTP id 98e67ed59e1d1-306a62134c9mr12842046a91.23.1744007718706;
-        Sun, 06 Apr 2025 23:35:18 -0700 (PDT)
-Received: from [127.0.0.1] ([2001:250:5800:1000::610c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983da691sm8048044a91.47.2025.04.06.23.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 23:35:18 -0700 (PDT)
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-Subject: [PATCH v4 0/2] Add basic SPI support for SG2042 SoC
-Date: Mon, 07 Apr 2025 14:35:11 +0800
-Message-Id: <20250407-sfg-spi-v4-0-30ac949a1e35@gmail.com>
+	s=arc-20240116; t=1744007726; c=relaxed/simple;
+	bh=/1Tn3fdh1YmHdKYpDHBh99LOXaHvuuJ86z8clOnHlIU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kX4rB9DZrIBBjkJlpd2SWWQfONoqrOAt2Vdk9jex4j1sSLZK+rxcgL8Yrxabx5VI/9PMb6I08bEbsdh0JA486qTzd96gQr53WWsQLxQHTeBRQUEi4N2/whY7vG3CSL5GCt7GXE+Ipg3Uv6Qv1FZM+86h9n2px00wpkT9U1LP90Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAC37gYdcvNnHnHQBg--.10866S2;
+	Mon, 07 Apr 2025 14:35:10 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	ckeepax@opensource.cirrus.com,
+	rf@opensource.cirrus.com,
+	simont@opensource.cirrus.com,
+	peterz@infradead.org
+Cc: patches@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] ASoC: wm_adsp: Remove unnecessary NULL check before release_firmware()
+Date: Mon,  7 Apr 2025 14:34:03 +0800
+Message-Id: <20250407063403.2772040-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAB9y82cC/3XMTQ7CIBCG4as0rMXAQCu48h7GBbRDS2J/AoZom
- t5d2k2NxuU3meedScTgMZJzMZOAyUc/DnnIQ0HqzgwtUt/kTYBByQAUja6lcfIUhQODtWHaWJK
- /p4DOP7fS9ZZ35+NjDK8tnPh6/W0kTjm1WmmDjZaa80vbG38/1mNP1kaCPw6yU9Y6EFaVDcNvJ
- 3YnuNidoIxipSoJJ8GlhU+3LMsbN/KdLQ4BAAA=
-X-Change-ID: 20250228-sfg-spi-e3f2aeca09ab
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
- Alexandre Ghiti <alex@ghiti.fr>, Mark Brown <broonie@kernel.org>, 
- Inochi Amaoto <inochiama@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
- sophgo@lists.linux.dev, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, 
- dlan@gentoo.org, Zixian Zeng <sycamoremoon376@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744007713; l=1831;
- i=sycamoremoon376@gmail.com; s=20250113; h=from:subject:message-id;
- bh=PrUQRbB1c+rJuvNmtq5sRl5XHonz7LhulE1jv95UeZM=;
- b=+Go8UegZSi0E77pZKJXd0DldPDvqti7TxLG0uptVeWXzxZduvooGHEgeSM4M2YYM6pATGfmqi
- JNh79RwI3F1B23p/37XeiAocKXBVwsXHOPhGKqqgwGevMOI5xoQHKvL
-X-Developer-Key: i=sycamoremoon376@gmail.com; a=ed25519;
- pk=OYfH6Z2Nx3aU1r0UZdvhskmddV6KC6V1nyFjsQQt4J8=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAC37gYdcvNnHnHQBg--.10866S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4ktr4xXry8JrW5KFg_yoWfXrg_Aa
+	ykCw18GryxtrW3X347ur1avrW3uay5ur1rJrnFyayUJryDJw4Sqw1UWan5ua18X3yIka4f
+	ZF1DZrWDC398JjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcjjkUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Implemented basic SPI support for SG2042 SoC[1] using 
-the upstreamed Synopsys DW-SPI IP.
+release_firmware() checks for NULL pointers internally.
+Remove unneeded NULL check for fmw here.
 
-This is tested on milkv-pioneer board on bus level. Using 
-driver/spi/spidev.c for creating virtual /dev/spidevX.Y and 
-tools/spi/spidev_test for testing functionality.
-
-Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
-Changes in v4:
-- Adjust the order of spi nodes
-- Place the binding after Renesas
-- Fix the description issues of patches
-- Link to v3: https://lore.kernel.org/r/20250313-sfg-spi-v3-0-e686427314b2@gmail.com
+ sound/soc/codecs/wm_adsp.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Changes in v3:
-- Remove the spi status on sg2042-milkv-pioneer board
-- Remove remove clock GATE_CLK_SYSDMA_AXI from spi[2]
-- Create dt-binding of compatible property
-- Replace the general compatible property with SoC-specific in dts
-- Link to v2: https://lore.kernel.org/r/20250228-sfg-spi-v2-1-8bbf23b85d0e@gmail.com
-
-Changes in v2:
-- Rebase v1 to sophgo/master(github.com/sophgo/linux.git).
-- Order properties in device node.
-- Remove unevaluated properties `clock-frequency`.
-- Set default status to disable.
-- Link to v1: https://lore.kernel.org/r/20250228-sfg-spi-v1-1-b989aed94911@gmail.com
-
-[1] https://github.com/sophgo/sophgo-doc/blob/main/SG2042/TRM/source/SPI.rst
-[2] https://github.com/sophgo/sophgo-doc/blob/main/SG2042/TRM/source/clock.rst#clock-tree
-
----
-Zixian Zeng (2):
-      spi: dt-bindings: snps,dw-apb-ssi: Add compatible for SOPHGO SG2042 SoC
-      riscv: sophgo: dts: Add spi controller for SG2042
-
- .../devicetree/bindings/spi/snps,dw-apb-ssi.yaml   |  4 ++++
- arch/riscv/boot/dts/sophgo/sg2042.dtsi             | 26 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250228-sfg-spi-e3f2aeca09ab
-
-Best regards,
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index 91c8697c29c3..ffd826f30e15 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -718,12 +718,10 @@ static void wm_adsp_release_firmware_files(struct wm_adsp *dsp,
+ 					   const struct firmware *coeff_firmware,
+ 					   char *coeff_filename)
+ {
+-	if (wmfw_firmware)
+-		release_firmware(wmfw_firmware);
++	release_firmware(wmfw_firmware);
+ 	kfree(wmfw_filename);
+ 
+-	if (coeff_firmware)
+-		release_firmware(coeff_firmware);
++	release_firmware(coeff_firmware);
+ 	kfree(coeff_filename);
+ }
+ 
 -- 
-Zixian Zeng <sycamoremoon376@gmail.com>
+2.25.1
 
