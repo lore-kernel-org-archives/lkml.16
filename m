@@ -1,77 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E682206F0D;
-	Mon,  7 Apr 2025 16:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1476C207E1B;
+	Mon,  7 Apr 2025 16:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042455; cv=none; b=mdZtm7YoqmIMdFUJLe/u5Fg9cuA1gjwSjktSiOYuGjxKgo0axeXK0y5PddPFX+DhYUFXOfE9x4T2Cbxu20Lue6Ul2ZYg389PEgs/vN7lLQ/JYCJW1C3ayJdXyWpyDRL7DvWwB6JVATJJa68Ap2SdwLnmFPqFM0y10yxIqJL1usc=
+	t=1744042547; cv=none; b=NbCANNTMFobf9ITXH7eITBshRHOr5DGRgD+0KJNvs9T4GVeMlgjolz0ZGQmVgpm96WK4gnr69QgfmKoHeS8SzgGejPlAY8QEtG7aEFadI6zUXYQGabv/sBhMKA9ChVolOFvZWZB29r28jzzmzOBE55Zo/U2WXaLp/nGdfweVeCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042455; c=relaxed/simple;
-	bh=lRo58WOEoZYlMzgSCKBBpT6Df41auOl5bPYJGpgfOuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1yTdH61FdKlUDaG6aCY9toc7ygMPQRW5sfijf/zoGjSr4v1PT1IoSavSkCM7ZS2yiih4gcbefDXK3zCtOS+2vaMrEyZ+59jOQpD+j8EYiLmY4QLm3VNAhaW7e9VjWV447oBlnNLN8gyv2Q5GjIH3Obw8XbpRIABjug39mq/eQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BduanG0O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744042547; c=relaxed/simple;
+	bh=/vZrV4sTxkcoN28b/L2BHGZocW18xExXmkYKNBBY7JA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nMon/Vn/fDMLwP4WTRcrLZW//9U4iVTRcNvw3FQkLj7NrhcFWhs+XdH5EQYU4j7ok5PZD4KrDFKNpKbPIcIw+Zpv45lPI9MfD81IECO9TkY2iMXvxwz3FFg5ey1Z9oua/keQ0lFsqAe08pjxTs85fLBR5DBlri4HV/g3A3wl1Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6+8k+pT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BduanG0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254EBC4CEDD;
-	Mon,  7 Apr 2025 16:14:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6+8k+pT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E19CC4CEDD;
+	Mon,  7 Apr 2025 16:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744042455;
-	bh=lRo58WOEoZYlMzgSCKBBpT6Df41auOl5bPYJGpgfOuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BduanG0OKVkleR8XFTyB0bnJmIxsGo7D1T9I5vCD76VKCcdZ7KP7VYem4hEhSJG6o
-	 3BgO8dkrpSQp+RtKnegbA5ymlT+zjUKS1ssOMVIZHytOfBHQ4HRKkFRTWDHw2JvI1j
-	 3lK488n94NKLGxqmgtxCoUsVlsTHOIRJMjGw2fkapl18pk5CooT6kfZ6NhvqtRWvqO
-	 fhVklUI/mhbdCGOv/rfl7FgEI8VPnvO54E6WbhVZGWbQRw/eB5/LRdqhQ9aTU0eYG3
-	 c7CML4a6NE7L0zlZrghuj9M6F8UCQQO3MRS4RBigHT3E8PY6pEjNaw7cl7KKAMdS42
-	 lPQzUJB2DO3Tw==
-Date: Mon, 7 Apr 2025 17:14:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: add toradex,smarc-ec
-Message-ID: <20250407-glacial-unfrozen-333d6d62144c@spud>
-References: <20250407114947.41421-1-francesco@dolcini.it>
- <20250407114947.41421-2-francesco@dolcini.it>
+	s=k20201202; t=1744042546;
+	bh=/vZrV4sTxkcoN28b/L2BHGZocW18xExXmkYKNBBY7JA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=m6+8k+pTP+eQ5L1rJZalS2n9o8JLaIHkqpYaDH4HWm5Jt8FAOftYvYzgYYntHdbgt
+	 VRfxh6vTQhLfVW7KbLPtcSdrv+0O9cgh9hKGPzAR2SUUncF6Z1fMjBB/poXyzJjPy4
+	 rZVUxatZDX9MyjueUQ3lwriMMxzoj7APJL6eZX4waS5/c7XryZuxLG3E4hw1zzkyyL
+	 /dWEzGvDZqSVvncbLDPndVQfNRfzreNpqz1JaF3M0OD+NOuJlaxWy93Mxkx7Pdb6EL
+	 Gm0ZC1FOYMQjkHVSSjTtTbp45X4bAtrsMaRM2fnyqbo1JhJr0zyi6FpiLMYzBCqDE6
+	 5TDpTGvVM2HCw==
+From: Mark Brown <broonie@kernel.org>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, linux-spi@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250320-qpic-snand-kmalloc-v1-1-94e267550675@gmail.com>
+References: <20250320-qpic-snand-kmalloc-v1-1-94e267550675@gmail.com>
+Subject: Re: [PATCH next] spi: spi-qpic-snand: use kmalloc() for OOB buffer
+ allocation
+Message-Id: <174404254509.780717.1127447329039664549.b4-ty@kernel.org>
+Date: Mon, 07 Apr 2025 17:15:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S83CsH0c2BAJ1I46"
-Content-Disposition: inline
-In-Reply-To: <20250407114947.41421-2-francesco@dolcini.it>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
+On Thu, 20 Mar 2025 19:11:59 +0100, Gabor Juhos wrote:
+> The qcom_spi_ecc_init_ctx_pipelined() function allocates zeroed
+> memory for the OOB buffer, then it fills the buffer with '0xff'
+> bytes right after the allocation. In this case zeroing the memory
+> during allocation is superfluous, so use kmalloc() instead of
+> kzalloc() to avoid that.
+> 
+> 
+> [...]
 
---S83CsH0c2BAJ1I46
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
+Thanks!
 
-Actually, one minor thing, $subject says "firmware" but the binding is
-in the reset directory. I can see why you'd put it in either, but pick
-one for both please.
+[1/1] spi: spi-qpic-snand: use kmalloc() for OOB buffer allocation
+      commit: f48d80503504257682e493dc17408f2f0b47bcfa
 
---S83CsH0c2BAJ1I46
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
------BEGIN PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/P50gAKCRB4tDGHoIJi
-0kaSAQCNZoSpmCC0RG0qlP1RosPaWHfYiFhuqtHjB8ycKDoCcQD+NymWoYRU/8qS
-7P///Etu4/piiVat9uxqeuX3UFwU7gI=
-=mT8w
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---S83CsH0c2BAJ1I46--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
