@@ -1,130 +1,152 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EA51C3BE2
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49DE20966B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067330; cv=none; b=X659B5PAYE1CzK5UTYz4CgUNEHg/zn/akMURFvP0wWfRvosLhNkopGKPTkw3q8taS1nwDRr45VqwEdFqd19UnppWocjDEfgAM9W7MZsVyCdn3CIRsKumgjom/HUo6XNLuSJ+rEtefTqvvaxYDCStVrxPT5ykhDFJf/qSA1BhqhA=
+	t=1744067381; cv=none; b=ijXYDkA9NvIrS3f/hqnjzAbaZPK1wzs92Tl6H1vHtABIw3wlti+fj62dgiMzQxzWgNskT6jUQmKG7V2IL/AZIAEZlo+G2DHvop3EzFX2dUkAOyD0WSxF6gzwNTE6F2YxCLDOPr1H45ShVRCjhxOYduc/CpjNwquw+oVvabsodtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067330; c=relaxed/simple;
-	bh=XMGA1c1pFh3lZFyhGlH2mKmzvBPoGQZqtVsn2MD7PhE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=D8QJo/QRiRjC1x0ocKspB4V13DLLL1kOTrHoOepQLUnE+GCHWbbuM9O1J1hAiqsQRHIKYqyCtAvPnMLpPzAnDmPTmSg1JweqK1MWKTKHo9qufxfSZx6Xt9emoQyioEAD2k94eAPWFuzv5jpP93XiQ1Q+KN2tqF9yZlXZnCfodxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wRLP/oOg; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
+	s=arc-20240116; t=1744067381; c=relaxed/simple;
+	bh=O74ZcjE1OQcfzpO0kSxXYabLxllHbRodD/griblwqRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LoLxbucI0qxd1MSS0cNV29NufEaIsy2OeCvd/wEQ0gcaKknBOXA+0ALB9+1zIqsaCTCuPWzNMDngo7+8i6kW53/TD12zswa5XvxGJsMYoJcUfURCEA2bda5BVnqS0aZcg9D80LrM5U4f/gdJDCwmOlWljidmkr5QSJ8SKYxdEpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Gcj+tGui; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wRLP/oOg"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736cd36189bso6701165b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744067327; x=1744672127; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aaM7XhOiO56IA4YPL35GKWLbBEG8M8dX5KAjEjvLLp4=;
-        b=wRLP/oOgCcDpVg9ltwVM+2+E6nrNVo4lkw1dXZRagD0LlknYbQYsSwzgxYGo+SWPRE
-         veX98p2DFpZLivcg1DF39tT9Z4iGrSP6EQkM4vZr99g6SYa+odDt1/VdHNYKXltnDfv+
-         siyT/IO/fKTk1cKmKna5NQPfmj6GfNvvo0k9ldYE9FZioiM7dG6S4wQ+au3nc4Uab3l3
-         Jc64WPi7a9JHkRtMfctZ9MbGOkiT3o1igQpyA0u3gzLdx6yiRjyedviA9/6Eu9csXzNe
-         V7iCWBG1SSJ29zZ5vuwpRKMr0lErCZuJhG8eWKNenwsFjca3ODRyVF24wSmKjgeM2bwB
-         OOOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744067327; x=1744672127;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aaM7XhOiO56IA4YPL35GKWLbBEG8M8dX5KAjEjvLLp4=;
-        b=H4rBhTHxyYyFJNpjqcXKXr6PlQjg35C2Jzca9Moq1js5j1p5cqebJ6X22MX17Cpn1v
-         CEJpzieHhw9FS0qKHYenqTPNM9s+n2rrLroJqu+xAJI4XDB9qYIo6K+/uY6ebQLBLP+m
-         HjlSAzDsKc28JOo1EGBF5IubEZIQ8Zk8myIqYdgy5QOQo9dfmQEQlkRf5eAWYVZ/JdIS
-         zRc7etuYHQCA2D0D0Un53tLipRafXyAisB9CZL4iQkd2kjhKKM5ZZ1Fl6stZn9AT3UFQ
-         VUhXjOOjUTGaZczdVI7jz0J+clBrb4WhWWa1Fo9ULxfxz9dUzkE2WSXNHg5G9TXXmKiM
-         9yDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUqPOnMMgt9UAwML6ZVS6XW5V/qhIBggIeadC75JwYbnwGxWgd7nVOUs6Ij1asEn5jE4cQThcySALR9BA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXVf4ZZaYnlbSlOocr6nI/UuvW6HLoB8V2tJZAL96Knpg+LWD4
-	xTS7gn8LzqAH9T2da2RcRjgWQmdRubwM+7QWHqlaDHHFHal6XL+yGxaO8NMdrjua862o8FwMf4p
-	6WnA4GcaJCsmgZiKrASiPZk9yRQ==
-X-Google-Smtp-Source: AGHT+IHGD1fnOZirnSWffQqJsQ+XNtsjfNV17kYKBnJj9gDOj9DYeZFe74FqcBdJnepH63c1aEHwz8JPrJi1wwvP5rE=
-X-Received: from pfbfd35.prod.google.com ([2002:a05:6a00:2ea3:b0:736:a70b:53c7])
- (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:aa7:888e:0:b0:736:3d7c:236c with SMTP id d2e1a72fcca58-739e4b58df9mr18283273b3a.14.1744067327333;
- Mon, 07 Apr 2025 16:08:47 -0700 (PDT)
-Date: Mon,  7 Apr 2025 23:08:44 +0000
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Gcj+tGui"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id BF5C9240103
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:09:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744067377; bh=O74ZcjE1OQcfzpO0kSxXYabLxllHbRodD/griblwqRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=Gcj+tGuiZxMvRsMcyD94GiVdn1pbO9JOIzUUYcuBSh9GfmYheVojifVwsYX3TZocE
+	 airCcsxueG1jNc8E+flZDNqAIVaA1RTYnI2TYOq6XTrybinrgEOrxB5YM10MpNH3vp
+	 fVt3u51ripG3p2iMMC/OkkREGypxdOGbkkqZGW/1hn/VpVbPT0wZrdsXArrlpZZwRM
+	 52NvzIdXNCaOEbudWSyhDAmQXRp1z+wc5vk8vYSLNmEEh21MUtY0zYpUD1uls0NUqM
+	 EJ79qOZbL1D/cpjvYIGXIqlf/1pHGka7SWSLK64IUJEOsEgWANgj7v4ofQwxJXzc/9
+	 ccueJiRTKHKgA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZWlKD3rbZz6v0r;
+	Tue,  8 Apr 2025 01:09:36 +0200 (CEST)
+Date: Mon,  7 Apr 2025 23:09:36 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
+Message-ID: <Z_RbMLu27AKHaCIO@probook>
+References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+ <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net>
+ <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
+ <Z-vjWFFWvo1gesCe@probook>
+ <CAFBinCDgn30H13hfkEsfyzSjO-HJ-XpAUwSwimBk7VPpKyNKMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2284; i=samitolvanen@google.com;
- h=from:subject; bh=XMGA1c1pFh3lZFyhGlH2mKmzvBPoGQZqtVsn2MD7PhE=;
- b=owGbwMvMwCEWxa662nLh8irG02pJDOlfov50FW6dlNm5uiqnZt4B/flph1tzDrAFHrnDbXOGL
- Wz7IcZPHaUsDGIcDLJiiiwtX1dv3f3dKfXV5yIJmDmsTCBDGLg4BWAiAd6MDJMOmvwpkeRI6TX4
- 2aSwSUtl9qtWzd7PHls3z9ryRS08fxbD/6B9Bx/GBDvoP5yWbcCSm6n5Q0BrZ+4z/na+vpdvbph qcgIA
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250407230843.1952850-2-samitolvanen@google.com>
-Subject: [PATCH v2] kbuild: Require pahole <v1.28 or >v1.29 with GENDWARFKSYMS
- on X86
-From: Sami Tolvanen <samitolvanen@google.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Paolo Pisati <paolo.pisati@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFBinCDgn30H13hfkEsfyzSjO-HJ-XpAUwSwimBk7VPpKyNKMw@mail.gmail.com>
 
-With CONFIG_GENDWARFKSYMS, __gendwarfksyms_ptr variables are
-added to the kernel in EXPORT_SYMBOL() to ensure DWARF type
-information is available for exported symbols in the TUs where
-they're actually exported. These symbols are dropped when linking
-vmlinux, but dangling references to them remain in DWARF.
+On Sun, Apr 06, 2025 at 10:36:18PM +0200, Martin Blumenstingl wrote:
+> On Tue, Apr 1, 2025 at 3:00 PM J. Neuschäfer <j.ne@posteo.net> wrote:
+> >
+> > On Sun, Mar 30, 2025 at 11:10:28PM +0200, Martin Blumenstingl wrote:
+> > > Thanks for your patch!
+> > >
+> > > On Sun, Mar 23, 2025 at 1:38 PM J. Neuschäfer via B4 Relay
+> > > <devnull+j.ne.posteo.net@kernel.org> wrote:
+> > > [...]
+> > > > +               eth_phy0: ethernet-phy@0 {
+> > > > +                       /* IC Plus IP101A (0x02430c54) */
+> > > > +                       reg = <0>;
+> > > Does reg = <1> also work on your board?
+> > > 0 is the broadcast address. It's unfortunately something that we still
+> > > have incorrect in a lot of .dts files.
+> >
+> > Unfortunately not. I tried addresses 1 to 31 without success, which
+> > seems strange; my guess was that the PHY should respond to one of them.
+> > I get this error:
+> >
+> > # ip l set eth0 up
+> > [    6.806847] meson6-dwmac c9410000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
+> > [    6.810609] meson6-dwmac c9410000.ethernet eth0: __stmmac_open: Cannot attach to PHY (error: -19)
+> Thanks for testing. Let's keep it at zero then.
+> 
+> > >
+> > > [...]
+> > > > +&i2c_AO {
+> > > > +       status = "okay";
+> > > > +       pinctrl-0 = <&i2c_ao_pins>;
+> > > > +       pinctrl-names = "default";
+> > > > +
+> > > > +       pmic@32 {
+> > > > +               compatible = "ricoh,rn5t618";
+> > > > +               reg = <0x32>;
+> > > > +               system-power-controller;
+> > > Here I'm a bit surprised:
+> > > Aren't some of the outputs used to drive VCCK (CPU power rail) and
+> > > VDDEE (everything else power rail, which also powers the GPU)?
+> >
+> > Unfortunately I don't have schematics and I wasn't able to trace the
+> > connections on the board because they're so tiny. So it's quite possible that
+> > you're right, but I can't be sure.
+> >
+> > Are there voltage sensors in the Meson8 SoC that I could use to establishs the
+> > relation between PMIC outputs and SoC supplies?
+>
+> There aren't any sensors (that I'm aware of). But you can check
+> /sys/kernel/debug/regulator/regulator_summary and compare the values
+> with the ones from arch/arm/boot/dts/amlogic/meson8m2-mxiii-plus.dts
+> Also the vendor u-boot and kernel logs may provide some information.
 
-With CONFIG_DEBUG_INFO_BTF enabled on X86, pahole versions after
-commit 47dcb534e253 ("btf_encoder: Stop indexing symbols for
-VARs") and before commit 9810758003ce ("btf_encoder: Verify 0
-address DWARF variables are in ELF section") place these symbols
-in the .data..percpu section, which results in an "Invalid
-offset" error in btf_datasec_check_meta() during boot, as all
-the variables are at zero offset and have non-zero size. If
-CONFIG_DEBUG_INFO_BTF_MODULES is enabled, this also results in a
-failure to load modules with:
+The values in /sys/kernel/debug/regulator/regulator_summary do indeed
+match the values in meson8m2-mxiii-plus.dts:
 
-  failed to validate module [$module] BTF: -22
+ DCDC1                            0    0      0 unknown  1100mV     0mA     0mV     0mV
+ DCDC2                            0    0      0 unknown  1150mV     0mA     0mV     0mV
+ DCDC3                            0    0      0 unknown  1500mV     0mA     0mV     0mV
+ LDO1                             0    0      0 unknown  2900mV     0mA     0mV     0mV
+ LDO2                             0    0      0 unknown  1800mV     0mA     0mV     0mV
+ LDO3                             0    0      0 unknown  1800mV     0mA     0mV     0mV
+ LDO4                             0    0      0 unknown  2850mV     0mA     0mV     0mV
+ LDO5                             0    0      0 unknown  1800mV     0mA     0mV     0mV
+ LDORTC1                          0    0      0 unknown  2700mV     0mA     0mV     0mV
+ LDORTC2                          0    0      0 unknown   900mV     0mA     0mV     0mV
 
-As the issue occurs in pahole v1.28 and the fix was merged
-after v1.29 was released, require pahole <v1.28 or >v1.29 when
-GENDWARFKSYMS is enabled with DEBUG_INFO_BTF on X86.
+After I copy the regulator table from meson8m2-mxiii-plus.dts, I can indeed
+observe the effect of regulators being on/off. I will use that to further
+investigate how the regulators are used.
 
-Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
+The vendor u-boot/kernel aren't very useful, unfortunately.
+The downstream devicetree includes these settings:
 
-Changes in v2:
-- Also allow pahole <v1.28.
-- Update comment to include the affected commit range.
+	rn5t618 {
+		status = "okay";
+		ddr_voltage   = <1500000>; // 1.5V
+		vddao_voltage = <1200000>; // 1.2V
+		[...]
+	};
 
----
- kernel/module/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+The corresponding driver seems to associate ddr_voltage with DCDC2 and
+vddio_voltage with DCDC3, although this part of the code[1] is "#if 0"'d.
 
-diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index d7762ef5949a..39278737bb68 100644
---- a/kernel/module/Kconfig
-+++ b/kernel/module/Kconfig
-@@ -192,6 +192,11 @@ config GENDWARFKSYMS
- 	depends on !DEBUG_INFO_REDUCED && !DEBUG_INFO_SPLIT
- 	# Requires ELF object files.
- 	depends on !LTO
-+	# To avoid conflicts with the discarded __gendwarfksyms_ptr symbols on
-+	# X86, requires pahole before commit 47dcb534e253 ("btf_encoder: Stop
-+	# indexing symbols for VARs") or after commit 9810758003ce ("btf_encoder:
-+	# Verify 0 address DWARF variables are in ELF section").
-+	depends on !X86 || !DEBUG_INFO_BTF || PAHOLE_VERSION < 128 || PAHOLE_VERSION > 129
- 	help
- 	  Calculate symbol versions from DWARF debugging information using
- 	  gendwarfksyms. Requires DEBUG_INFO to be enabled.
+[1] https://github.com/endlessm/linux-meson/blob/master/drivers/amlogic/power/ricoh/ricoh_pmu.c#L127
 
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
--- 
-2.49.0.504.g3bcea36a83-goog
 
+Best regards,
+J. Neuschäfer
