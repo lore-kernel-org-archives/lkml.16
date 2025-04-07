@@ -1,191 +1,246 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE0315687D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B08D2153C9;
+	Mon,  7 Apr 2025 23:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744066844; cv=none; b=Hn4oCGGOuSasolxQAVoej4SFBeUWDR2W9URDs9b/nl65NeDqLKmPZ8OvFSj9GbzmLz3pk/ZRk1WK77spi7MIdpaf2uXtzFcZGvi1FkRsnc2lKefXLiudUY1DTqzYTMgw2HQiMS44U8Sa+9IqG4Svs0SGFkdh/bHU4rdZm6ctzC8=
+	t=1744066917; cv=none; b=OK/vSOBqJwQFdoXGaKXqcJhmf9g/IeSB759/wnszp9oRC/u8+PihVoja6aI66CUOiJVPNTUit8uoA70eHbjjb4wZ8NQ7l4Vx0mkvulaQbdubbsGIIFcrBTSEwMtDerzB6iZAyBE8YJh5HS2UrMP37S5qz7d8oDGmwagBaBDZxRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744066844; c=relaxed/simple;
-	bh=HP9vbFV3vUxCVx7bpkpzw8lFeSnABgzR0hDblww+07o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cc2V+vqWA3cvkt9KdEDVRY02zo2bZFpD4Frxja/627yDvg6cqizXocgYe7I1MDTATZC2BafPcPrRWWu5OikeOwrlb7LUXzPqWKgSZYn2XQVb0fXlL3Q8/u3TaTsScqT6D6GbFdaGq/3uUAwK2xWjy2+lVT/Mq071QXYpVCzebvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=LvFT+oCQ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1744066917; c=relaxed/simple;
+	bh=7lZYwGAehZVXfOidjwb4UM/OhpkMpE2OfCWepjtE9iU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=L8jnMZdxJYgv1pX5AKMJCUqoGcW3GUbIB1fmk6iGHX6DJ0S+3Pz8d7SP8xaWa/Oqt3ChvmYXqSk2ZhU8wQpYb5SHrQFwk+6QuqNvSQ2CvBOktIjEwUZTX6DWRmQplk5iRGYLzCoiR/ZqMTWYNtugdoZRoDwneE9ueffkXq7g3jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bIFe+H9G; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="LvFT+oCQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so67701265ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744066842; x=1744671642; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=evNCUqWM/KE8Fgtxc4/OAJwDhlQwnWsjIDPeaW75aro=;
-        b=LvFT+oCQtJqvfw+/J/gHlX+6435AsnhgR23GSoZtrDSLtPn63tDhjPcnwQEabUIEMZ
-         8svriIETGCA9UopCOLtPyosT0NtclLGEYVuYDbQVbSKLKc+Ri0m7XGiDZigSVVZCEqCS
-         VGkL/5FErEFO7Jl/KaurZjwsKXZrnnMxkd5tydWXobY58XgK0+F2IhoKPOXBtAPEFCpm
-         vUOnrDkwJnwE/WRDbZRNiLWlHXJUS0mXEUzMTyvpjCcOfCnVOElwZmcO9To63dzbp7uB
-         fU2tkZBH6tc8cAQuLyCLk28zx1jq54q+TEox9cONVnogCDJlCGU/h2vG8+TA7JgaZKPv
-         axjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744066842; x=1744671642;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=evNCUqWM/KE8Fgtxc4/OAJwDhlQwnWsjIDPeaW75aro=;
-        b=c6GaNb/r6AQyKY9gYdcctCbycHIaCzz+tPRa/yDTSN2Bof3XpluBgQzZrC68woV7V+
-         Kbh8XdSzVpe02Ub4lvOb5nx11evGiqaOExhU7TgnIpsE46gav+SXVorKv33yXlShQbC6
-         drO2FbAEKiat1krrz3RFaGv+LKfwj0UoB8DXpM0Fqer46zB1308tT7uC0amIANQsAvIc
-         PJo2RjTKzJDcv5Qfk2RJmrpT7KASOT29jSjgBrQ3NsUpDlHXqNVUuGn97cqU7r34QHYu
-         OImbH1jx1JFWdCaDK7pCqKkRZAwtnsNlgijpnRASSTZrZWj5ozkmdRg/gd8bFgaffRfW
-         65rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlpCxiKqVugJf3ioA7A6vDFPz2ZJZvIidbNW1YtBLAeVUr19CberQiXkJPmGpTHCizgGVgSaBKlCnTUtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4wl7rqsvdPuD5ZuH6t9g5DKCf15OuK7bWXfVsfaLNkHEINWdV
-	YMnyWQYobveT/5gpZcrCJKCYQh464gPuAxpKt4o0Pp82k7GZzpblTyUeuLJBHIQ=
-X-Gm-Gg: ASbGnctsw76hkv5nmhurifoNhLoxG2RpJ/dxKUtNxFwNuIhcIbQHaMGJpr9VhRejiOq
-	3cxZRlJO8Fdgp3FQ8Pyb6X0UmK5flJoMk7QtI6t794eugDBDgVtcK5aKTvFUBG12hdsLv8F+wrF
-	/y1DAecvoWp7bu6nQs1us13gn/2MNuOJc63qSroaiBYHM7+Zorywtlu9XXAd1qo9djQNDU31uDM
-	N6zcpY8EFbHnYwkl9+DrC04fKyKL6c4aQDSd8ik7S6DGU0cfjraF9Lp1xBk0HWMQS8kYns4UfA+
-	AvV6xMwrI+SxDDLuRUqZfTVTVB5YWgpWKroyOuAU+pQXIk/t4TLasgFYuzFDRwHKd/sgjQFh5Da
-	k9TilpsOZCVHLcjukLg==
-X-Google-Smtp-Source: AGHT+IGnjTVKROKhiUbKxR04fwQFtAP05Upi/1tbtxnH3zXCfd/7yJ0o+NE/GXDeWDfof5DG3+Gjjg==
-X-Received: by 2002:a17:903:22c2:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22a955738c0mr177726185ad.41.1744066841870;
-        Mon, 07 Apr 2025 16:00:41 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e0b4sm87525135ad.154.2025.04.07.16.00.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 16:00:41 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1u1vSI-00000005pxh-0x3i;
-	Tue, 08 Apr 2025 09:00:38 +1000
-Date: Tue, 8 Apr 2025 09:00:38 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Matt Fleming <matt@readmodwrite.com>, adilger.kernel@dilger.ca,
-	akpm@linux-foundation.org, linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, luka.2016.cs@gmail.com, tytso@mit.edu,
-	Barry Song <baohua@kernel.org>, kernel-team@cloudflare.com,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>
-Subject: Re: Potential Linux Crash: WARNING in ext4_dirty_folio in Linux
- kernel v6.13-rc5
-Message-ID: <Z_RZFrlPArdj9d-5@dread.disaster.area>
-References: <Z8kvDz70Wjh5By7c@casper.infradead.org>
- <20250326105914.3803197-1-matt@readmodwrite.com>
- <CAENh_SSbkoa3srjkAMmJuf-iTFxHOtwESHoXiPAu6bO7MLOkDA@mail.gmail.com>
- <Z-7BengoC1j6WQBE@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bIFe+H9G"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537MVWJH003009;
+	Mon, 7 Apr 2025 23:01:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZcQfj4YVabsD87r7ZEMKU3vHMuaaGc3Pb/eaSqXyrs8=; b=bIFe+H9GbfLxTea1
+	qsa6vZOOEcXpabG6iU0zgNXImsH+BSIjBUQkcwBpcrkYN617pdHrVJdUww6CAJcN
+	JKgI8RBD6wYaro5QMu2rnFihq8NaqyqaDQYKLCgaOVyRCoTHdVUbF+NLgIbBjVtS
+	aG3qHEcbSPwDdrnbVguA3ixoawQS7M0zbhkEvebnX+1VoNcDXnhrwRCqUAnWd2yE
+	dw+HxyxwPTmWQHVc2ZJ2P0Uau7Vd0Jq5bMpZ6gd+3HDbMffR4UygSfIJhXRrNxSQ
+	T0EyDi1bqZEN9CTGGHFWTqHb0DZcvD2w8DqpkWpq97qt24+fSQ3oHO4IFU8nr/WL
+	2cKQ9Q==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftdrh8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 23:01:34 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537N1XPo009160
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 7 Apr 2025 23:01:33 GMT
+Received: from [10.110.75.38] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
+ 16:01:32 -0700
+Message-ID: <170a622b-33f5-bd8f-b473-815390fa67ef@quicinc.com>
+Date: Mon, 7 Apr 2025 16:01:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-7BengoC1j6WQBE@casper.infradead.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v37 22/31] ASoC: qcom: qdsp6: Introduce USB AFE port to
+ q6dsp
+Content-Language: en-US
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+CC: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <dmitry.torokhov@gmail.com>,
+        <corbet@lwn.net>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <krzk+dt@kernel.org>, <pierre-louis.bossart@linux.intel.com>,
+        <Thinh.Nguyen@synopsys.com>, <tiwai@suse.com>, <robh@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>
+References: <20250404002728.3590501-1-quic_wcheng@quicinc.com>
+ <20250404002728.3590501-23-quic_wcheng@quicinc.com>
+ <Z--lRII_5_rp9tDf@linaro.org>
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <Z--lRII_5_rp9tDf@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f4594e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=lmUSSy02aaOEq0b6HYAA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: nFKDLDwVLpf58kNVIoNjRdmt1gKk9FNR
+X-Proofpoint-ORIG-GUID: nFKDLDwVLpf58kNVIoNjRdmt1gKk9FNR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=766
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504070162
 
-On Thu, Apr 03, 2025 at 06:12:26PM +0100, Matthew Wilcox wrote:
-> On Thu, Apr 03, 2025 at 01:29:44PM +0100, Matt Fleming wrote:
-> > On Wed, Mar 26, 2025 at 10:59 AM Matt Fleming <matt@readmodwrite.com> wrote:
-> > >
-> > > Hi there,
-> > >
-> > > I'm also seeing this PF_MEMALLOC WARN triggered from kswapd in 6.12.19.
-> > >
-> > > Does overlayfs need some kind of background inode reclaim support?
-> > 
-> > Hey everyone, I know there was some off-list discussion last week at
-> > LSFMM, but I don't think a definite solution has been proposed for the
-> > below stacktrace.
+Hi Stephan,
+
+On 4/4/2025 2:24 AM, Stephan Gerhold wrote:
+> On Thu, Apr 03, 2025 at 05:27:19PM -0700, Wesley Cheng wrote:
+>> The QC ADSP is able to support USB playback endpoints, so that the main
+>> application processor can be placed into lower CPU power modes.  This adds
+>> the required AFE port configurations and port start command to start an
+>> audio session.
+>>
+>> Specifically, the QC ADSP can support all potential endpoints that are
+>> exposed by the audio data interface.  This includes isochronous data
+>> endpoints, in either synchronous mode or asynchronous mode. In the latter
+>> case both implicit or explicit feedback endpoints are supported.  The size
+>> of audio samples sent per USB frame (microframe) will be adjusted based on
+>> information received on the feedback endpoint.
+>>
+>> Some pre-requisites are needed before issuing the AFE port start command,
+>> such as setting the USB AFE dev_token.  This carries information about the
+>> available USB SND cards and PCM devices that have been discovered on the
+>> USB bus.  The dev_token field is used by the audio DSP to notify the USB
+>> offload driver of which card and PCM index to enable playback on.
+>>
+>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>> ---
+>>   sound/soc/qcom/qdsp6/q6afe-dai.c         |  60 +++++++
+>>   sound/soc/qcom/qdsp6/q6afe.c             | 192 ++++++++++++++++++++++-
+>>   sound/soc/qcom/qdsp6/q6afe.h             |  36 ++++-
+>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.c |  23 +++
+>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.h |   1 +
+>>   sound/soc/qcom/qdsp6/q6routing.c         |  10 +-
+>>   6 files changed, 319 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+>> index 7d9628cda875..0f47aadaabe1 100644
+>> --- a/sound/soc/qcom/qdsp6/q6afe-dai.c
+>> +++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+>> [...]
+>> +static int afe_port_send_usb_params(struct q6afe_port *port, struct q6afe_usb_cfg *cfg)
+>> +{
+>> +	union afe_port_config *pcfg = &port->port_cfg;
+>> +	struct afe_param_id_usb_audio_dev_lpcm_fmt lpcm_fmt;
+>> +	struct afe_param_id_usb_audio_svc_interval svc_int;
+>> +	int ret;
+>> +
+>> +	if (!pcfg) {
+>> +		dev_err(port->afe->dev, "%s: Error, no configuration data\n", __func__);
+>> +		ret = -EINVAL;
+>> +		goto exit;
 > 
-> Hi Matt,
+> Nitpick: drop the goto here, just do "return -EINVAL;"
 > 
-> We did have a substantial discussion at LSFMM and we just had another
-> discussion on the ext4 call.  I'm going to try to summarise those
-> discussions here, and people can jump in to correct me (I'm not really
-> an expert on this part of MM-FS interaction).
+>> +	}
+>> +
+>> +	memset(&lpcm_fmt, 0, sizeof(lpcm_fmt));
+>> +	memset(&svc_int, 0, sizeof(svc_int));
+>> +
+>> +	lpcm_fmt.cfg_minor_version = AFE_API_MINOR_VERSION_USB_AUDIO_CONFIG;
+>> +	lpcm_fmt.endian = pcfg->usb_cfg.endian;
+>> +	ret = q6afe_port_set_param_v2(port, &lpcm_fmt,
+>> +				      AFE_PARAM_ID_USB_AUDIO_DEV_LPCM_FMT,
+>> +				      AFE_MODULE_AUDIO_DEV_INTERFACE, sizeof(lpcm_fmt));
+>> +	if (ret) {
+>> +		dev_err(port->afe->dev, "%s: AFE device param cmd LPCM_FMT failed %d\n",
+>> +			__func__, ret);
+>> +		goto exit;
 > 
-> At LSFMM, we came up with a solution that doesn't work, so let's start
-> with ideas that don't work:
+> return ret;
 > 
->  - Allow PF_MEMALLOC to dip into the atomic reserves.  With large block
->    devices, we might end up doing emergency high-order allocations, and
->    that makes everybody nervous
->  - Only allow inode reclaim from kswapd and not from direct reclaim.
-
-That's what GFP_NOFS does. We already rely on kswapd to do inode
-reclaim rather than direct reclaim when filesystem cache pressure
-is driving memory reclaim...
-
->    Your stack trace here is from kswapd, so obviously that doesn't work.
->  - Allow ->evict_inode to return an error.  At this point the inode has
->    been taken off the lists which means that somebody else may have
->    started to start constructing it again, and we can't just put it back
->    on the lists.
-
-No. When ->evict_inode is called, the inode hasn't been taken off
-the inode hash list. Hence the inode can still be found
-via cache lookups whilst evict_inode() is running. However, the
-inode will have I_FREEING set, so lookups will call
-wait_on_freeing_inode() before retrying the lookup. They will
-get woken by the inode_wake_up_bit() call in evict() that happens
-after ->evict_inode returns, so I_FREEING is what provides
-->evict_inode serialisation against new lookups trying to recreate
-the inode whilst it is being torn down.
-
-IOWs, nothing should be reconstructing the inode whilst evict() is
-tearing it down because it can still be found in the inode hash.
-
-> Jan explained that _usually_ the reclaim path is not the last
-> holder of a reference to the inode.  What's happening here is that
-> we've lost a race where the dentry is being turned negative by
-> somebody else at the same time, and usually they'd have the last
-> reference and call evict.  But if the shrinker has the last
-> reference, it has to do the eviction.
+>> +	}
+>> +
+>> +	svc_int.cfg_minor_version = AFE_API_MINOR_VERSION_USB_AUDIO_CONFIG;
+>> +	svc_int.svc_interval = pcfg->usb_cfg.service_interval;
+>> +	ret = q6afe_port_set_param_v2(port, &svc_int,
+>> +				      AFE_PARAM_ID_USB_AUDIO_SVC_INTERVAL,
+>> +				      AFE_MODULE_AUDIO_DEV_INTERFACE, sizeof(svc_int));
+>> +	if (ret)
+>> +		dev_err(port->afe->dev, "%s: AFE device param cmd svc_interval failed %d\n",
+>> +			__func__, ret);
+>> +
+>> +exit:
 > 
-> Jan does not think that Overlayfs is a factor here.  It may change
-> the timing somewhat but should not make the race wider (nor
-> narrower).
+> drop
 > 
-> Ideas still on the table:
+
+Done
+
+>> +	return ret;
+>> +}
+>> +
+>> [...]
+>> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+>> index 90228699ba7d..0def036ed3c9 100644
+>> --- a/sound/soc/qcom/qdsp6/q6routing.c
+>> +++ b/sound/soc/qcom/qdsp6/q6routing.c
+>> @@ -435,6 +435,7 @@ static struct session_data *get_session_from_id(struct msm_routing_data *data,
+>>   
+>>   	return NULL;
+>>   }
+>> +
+>>   /**
+>>    * q6routing_stream_close() - Deregister a stream
+>>    *
+>> @@ -515,6 +516,9 @@ static int msm_routing_put_audio_mixer(struct snd_kcontrol *kcontrol,
+>>   	return 1;
+>>   }
+>>   
+>> +static const struct snd_kcontrol_new usb_rx_mixer_controls[] = {
+>> +	Q6ROUTING_RX_MIXERS(USB_RX) };
+>> +
+>>   static const struct snd_kcontrol_new hdmi_mixer_controls[] = {
+>>   	Q6ROUTING_RX_MIXERS(HDMI_RX) };
+>>   
+>> @@ -933,6 +937,9 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
+>>   	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_7 Audio Mixer", SND_SOC_NOPM, 0, 0,
+>>   		rx_codec_dma_rx_7_mixer_controls,
+>>   		ARRAY_SIZE(rx_codec_dma_rx_7_mixer_controls)),
+>> +	SND_SOC_DAPM_MIXER("USB Mixer", SND_SOC_NOPM, 0, 0,
 > 
->  - Convert all filesystems to use the XFS inode management scheme.
->  Nobody is thrilled by this large amount of work.
+> As I wrote on v36:
+> 
+> I think it would be more clear if you call this "USB_RX Audio Mixer"
+> instead for consistency with the other playback mixers. This would also
+> avoid confusion later when USB_TX is added in addition to USB_RX.
+> 
+> The "Audio" part in the name is redundant, but looks like all the other
+> playback mixers have it as well ...
+> 
+> 
+>> +			   usb_rx_mixer_controls,
+>> +			   ARRAY_SIZE(usb_rx_mixer_controls)),
+>>   	SND_SOC_DAPM_MIXER("MultiMedia1 Mixer", SND_SOC_NOPM, 0, 0,
+>>   		mmul1_mixer_controls, ARRAY_SIZE(mmul1_mixer_controls)),
+>>   	SND_SOC_DAPM_MIXER("MultiMedia2 Mixer", SND_SOC_NOPM, 0, 0,
+>> @@ -949,7 +956,6 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
+>>   		mmul7_mixer_controls, ARRAY_SIZE(mmul7_mixer_controls)),
+>>   	SND_SOC_DAPM_MIXER("MultiMedia8 Mixer", SND_SOC_NOPM, 0, 0,
+>>   		mmul8_mixer_controls, ARRAY_SIZE(mmul8_mixer_controls)),
+>> -
+>>   };
+>>   
+>>   static const struct snd_soc_dapm_route intercon[] = {
+>> @@ -1043,6 +1049,8 @@ static const struct snd_soc_dapm_route intercon[] = {
+>>   	{"MM_UL6", NULL, "MultiMedia6 Mixer"},
+>>   	{"MM_UL7", NULL, "MultiMedia7 Mixer"},
+>>   	{"MM_UL8", NULL, "MultiMedia8 Mixer"},
+>> +
+>> +	Q6ROUTING_RX_DAPM_ROUTE("USB Mixer", "USB_RX"),
+> 
+> Put this below "Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_7 Audio Mixer".
+> 
 
-There is no need to do that.
+Sorry, missed that part.  Fixed the naming and position of this.
 
->  - Find a simpler version of the XFS scheme to implement for other
->    filesystems.
-
-If we push the last half of evict_inode() out to the background
-thread (i.e. go async before remove_inode_hash() is called), then
-new lookups will still serialise on the inode hash due to I_FREEING
-being set. i.e. Problems only arise if the inode is removed from
-lookup visibility whilst they still have cleanup work pending.
-
-e.g. have the filesystem provide a ->evict_inode_async() method
-that either completes inode eviction directly or punts it to a
-workqueue where it does the work and then completes inode eviction.
-As long as all this work is done whilst the inode is marked
-I_FREEING and is present in the inode hash, then new lookups will
-serialise on the eviction work regardless of how it is scheduled.
-
-It is likely we could simplify the XFS code by converting it over to
-a mechanism like this, rather than playing the long-standing "defer
-everything to background threads from ->destroy_inode()" game that
-we current do.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks
+Wesley Cheng
