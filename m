@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3844D2206B6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D723221569;
 	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056197; cv=none; b=ki0MiJN2JmuKNh+1PITDewnSqc00blkW4/0Yvw+6kKfo/89o8rMM5g01gRzl4ywPUSWN1KxZTkgRQHOce7VWpzaWHgO/VpTW4yQTzRMyXD3peT+2qjj6TDmk30pLgbT0AO4sVNPov3oH4XPC88227cMQh6f4yg+PLPDRu1NxyCw=
+	t=1744056197; cv=none; b=O4yazWZMvZgyQ3ctYnLSznYYOvaWye/9bRLzrCx9/kkdYNZmVxHf+IlyLsIOmRec+65f41cQKod0G6dgwkOnz/vN9yJQr/70FhCfbdou6eX0i4FYukoPsJ8458RGhcEive3ZrGHF8gjHwh28+wgF/pU40zZJ5Hk0GYEqmU31bDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744056197; c=relaxed/simple;
-	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	bh=0dXeYBgh2L/3HBCx8wBbRUEktHByls+slsnYn1cPoLQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GL+orTKJhXN97UAvC/sgDjV9dMvLacD2Y2pYC/XiEcBM/fDV0g7ShqjdaTaUhFnSqqsxLysboQ9L7/+1cEBx00t8RyJuUcl91sbmdSeVZyprKmnVVEMnYOxMuxUPH3w16iri7/qo8UnnnnfPVGY5XgA49uRls86mPlYUY87knF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTDEVXji; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=TJnIK+yocbDR1mUlsIDz/MJwRYT2jB9FbtWs4cF6Urb16b+WoAuVwPqEWgeMzF9IO8UmHqYvq4SL7eZfI/ZMOiogbA3DWUJiXvQ8M1eVDODd5xAj8y2lrFHamZltalbFKmPptUyFKE52HgUECOKGCm3vGaX2dpmp0P1zzYHC+8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tP864Is+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTDEVXji"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5DDDC4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tP864Is+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C5567C4CEE7;
 	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744056196;
-	bh=3EKCRIQbwtBUlUpec8gu+1qG8QcOMBPBU2NPHsauFtM=;
+	bh=0dXeYBgh2L/3HBCx8wBbRUEktHByls+slsnYn1cPoLQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tTDEVXjiTaRg82h666TCev6oxyYBA3yNSMqXz9fKJ9VD03cxgpQxeGWjDbEc/fWX0
-	 A4LdGH2kXT+I/jyDDQn5jBVg94xPRluaFfFX/m4gSGfOgGO91DWgCMIKE4QswKfUGJ
-	 F0tmdkY9HEsHjuJikB9RcjIZ36qoe6affu/v+EAFEhkVcERilMPidqWFul/o9QJZjY
-	 rjtVSYNE6xjcxfqLZ3bU4DoHze5QBMhDKuOqzhO97aSXZwOnm7jP+BceLLo102j1Q2
-	 A14dfkCCCeEm6rz7TRHAKdrY/Hfq45WHdiaK7wo4/jvQ73dXep+Z7e+9L4wy/VfISZ
-	 wDGguTS8N9QCA==
+	b=tP864Is+ECnZgZN5lojekala04Fer7qjBOnPDavxQp+7o9ne+yo+EvrdQyMXBbZC+
+	 4Ku7iEUsKABWuKDoEbLCZoAR7jPtwup/G53VcAy8baYqKhX/8PQFRdJ4MDt8w0KVRD
+	 Uaz6eVUHhwIwMy+8YeGjfeK0zt1/NuBaMgNIi5oy63dvGTuLnacZ44Gf0+/hdivceo
+	 JkXr41VjV82sPDAnFC/XCjyysAcGUzsmp1WDnlOWONzQDXcwkU/UIO4lEqsXs/o14D
+	 AGabdcnnE3ZcOWSfgxuVRMskkYJ+mcldiX38DybpAfbnaLqFmJzIvKUOMvg6d/lSSg
+	 qrxW5LwlyPthw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB2C369A1;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3842C36010;
 	Mon,  7 Apr 2025 20:03:16 +0000 (UTC)
 From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Mon, 07 Apr 2025 22:02:12 +0200
-Subject: [PATCH v15 1/4] dt-bindings: marvell: Document PXA1908 SoC and
- samsung,coreprimevelte
+Date: Mon, 07 Apr 2025 22:02:13 +0200
+Subject: [PATCH v15 2/4] arm64: Kconfig.platforms: Add config for Marvell
+ PXA1908 platform
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-pxa1908-lkml-v15-1-e83ef101f944@skole.hr>
+Message-Id: <20250407-pxa1908-lkml-v15-2-e83ef101f944@skole.hr>
 References: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
 In-Reply-To: <20250407-pxa1908-lkml-v15-0-e83ef101f944@skole.hr>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -59,13 +59,13 @@ Cc: David Wronek <david@mainlining.org>, Karel Balej <balejk@matfyz.cz>,
  =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1205;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=978;
  i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=0HZYngyzaREGDzMJHsAvgTM3SsJmtfsUf/jVpOGt2SA=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDOlf9Bu3P7002btD6MyP5Ezu7c0/nsW96K749Oy29v7ki
- JX++8sedJSyMIhxMciKKbLk/ne8xvtZZOv27GUGMHNYmUCGMHBxCsBEgmIZGY58lVa8/3Plnflb
- NBbGLr9zMr+3THq/ONOCa+eXfdpSf6GZkeGgwoNX0o/Zvt9efsbgkG5E1+rZ4hkfpaTCDbzmFd6
- 7t4gXAA==
+ bh=5u1dvhpQmAFJynb0nujG0E7sr3ZjMEE0fab61FCV79A=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDOlf9BufeNXlyz9fOGuOref/9/2XRcx8Z6deTe+0WFb6L
+ FGvRb2/o5SFQYyLQVZMkSX3v+M13s8iW7dnLzOAmcPKBDKEgYtTACYS8YeRoX+xnbvEcpaTK6dd
+ 6bjNdubcbD42l6M7ijLSDa790mRMbmVkmG+5odDxb9Trhas8bvyXUm03UlrzmP1MS/jL6flrVcM
+ vMwIA
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
@@ -75,35 +75,33 @@ Reply-To: duje.mihanovic@skole.hr
 
 From: Duje Mihanović <duje.mihanovic@skole.hr>
 
-Add dt bindings for the Marvell PXA1908 SoC and the Samsung Galaxy Core
-Prime VE LTE phone (model number SM-G361F) using the SoC.
-
-The SoC comes with 4 Cortex-A53 cores clocked up to ~1.2GHz and a
-Vivante GC7000UL GPU. The phone also has a 4.5" 480x800 touchscreen, 8GB
-eMMC and 1GB of LPDDR3 RAM.
+Add ARCH_MMP configuration option for Marvell PXA1908 SoC.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/Kconfig.platforms | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-index 4c43eaf3632e4ec8e7d9aeac62f7204e2af4405a..f73bb8ec3a1a1b9594eb059b72d95dcbf8c87c6b 100644
---- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-+++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-@@ -35,6 +35,11 @@ properties:
-           - enum:
-               - dell,wyse-ariel
-           - const: marvell,mmp3
-+      - description: PXA1908 based boards
-+        items:
-+          - enum:
-+              - samsung,coreprimevelte
-+          - const: marvell,pxa1908
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8b76821f190fcf5cbb5db3a5de211279c23c2c59..858ccd72eb353ac31164a845cce1e1349e9c996e 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -178,6 +178,14 @@ config ARCH_MESON
+ 	  This enables support for the arm64 based Amlogic SoCs
+ 	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
  
- additionalProperties: true
- 
++config ARCH_MMP
++	bool "Marvell MMP SoC Family"
++	select PINCTRL
++	select PINCTRL_SINGLE
++	help
++	  This enables support for Marvell MMP SoC family, currently
++	  supporting PXA1908 aka IAP140.
++
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
+ 	select ARMADA_AP806_SYSCON
 
 -- 
 2.49.0
