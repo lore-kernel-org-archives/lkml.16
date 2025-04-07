@@ -1,107 +1,186 @@
-Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F175BAD5A;
-	Mon,  7 Apr 2025 08:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E02035968;
+	Mon,  7 Apr 2025 08:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013021; cv=none; b=d6Yaq7gptJgBXQKMWNFaFkRMGaHdtPTGxNQRFH96otzZ0gfr9T7vovY0AeOLnOHUMbbWWCT8MP25vWJTblJJhg8MYn2drc6XlaJNJX0sqtUQFq05wv/vs5fKxzNkoo2SsBRiLyyMEBiHwaOrmwMo+BSdFqa6FhaGP+NoCje7GWU=
+	t=1744013038; cv=none; b=k7pNCJvkLAjoA9e0Pj71IYaX8XWPw2qEMQ/To3dh0ZxvMQ7OxrynJkvH0xJAeUJ0m6/ThPqDrKq6k8vS8fd+Yv8JChYXW0rnXOaqJViMXh+4nPMV/IHYQMCisAuxMYsgmzMh/WxmmGj9P5KJn4dbkXSfam0Dc2q7S3CSMkvusrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013021; c=relaxed/simple;
-	bh=bEsYDKsEeCem02wFhShv2lx/lA0WPayiWYXzd/tmYgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uBktTjlgOHhXs05+XKd3UV2Le5Ne6oiJSVpYr6jWo17OgjIqyTqSRsXtsHXTGOc9R8KEKr8nIfJyRuAVfa5qgCkZiO6mc0XApDmXXIMcMqnj49Rp3S5eZGyl9/CV7czM6RPYzC2GXvAarQKAo4T7cdRlBeBCThy60YBG6ltP4T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=KfKoE0+n; arc=none smtp.client-ip=68.232.139.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1744013038; c=relaxed/simple;
+	bh=PcyczffQmyxkIS/mnKLqEhn2IuZ1HMm8KdQ1jktoTRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T8/9rEPFBtJLA6mUU4PdOegXjqUdULbP+oiNOvhmxEQkwlPiIWTP2EVlmSpK9iZHRGxp5DvLbqFBjv908Vr/25Y3BDq2eD3dDDFkorN5xfa3qpjXejYagWgAEY1f1Z7GdnAR2G25jyDZ3SCca2Ri4lcXrVN+3goJzcBJ/A86GsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5BJ/hok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="KfKoE0+n"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1744013020; x=1775549020;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=bEsYDKsEeCem02wFhShv2lx/lA0WPayiWYXzd/tmYgg=;
-  b=KfKoE0+nxdy2pLwWH00d4gtsTThzQlQc9dHt9R1olNGkWN2qirx08xLZ
-   guKD7xm4DGS7T+baSw2jBwdy/DOFex4eqtp3+iZ+zL3H56qBhoTp9l9Ew
-   wy+UO6IXm3JtGrVr7cOHFV3duq5Kmlmqt36WyRRvQOj+B/F8O8EVIjDk+
-   BiqNkxmUbG331Rs8fqS1CJE0y0MojVk/+ATE5QZgz7eubcxTpTRRi7zaQ
-   yJkJzKhwnPObce5aLSfJ7qqTIrR73gxoEmsVi/EqwIu1gquPSNRHNnxwB
-   FOAJx+f8ZrRxL2gzix6T99IaFkur9grBaCqiw0aksz4Z/JTAoZGf5bDYV
-   Q==;
-X-CSE-ConnectionGUID: Tu+DfewJRKWe3g6ycnS0YQ==
-X-CSE-MsgGUID: GoUJnCEBRWutC5y73okiSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="198427340"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739804400"; 
-   d="scan'208";a="198427340"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:02:28 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 731CED4809;
-	Mon,  7 Apr 2025 17:02:25 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 366C2D88D2;
-	Mon,  7 Apr 2025 17:02:25 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 686EF1A0071;
-	Mon,  7 Apr 2025 16:02:22 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH v2] cxl/acpi: Verify CHBS length for CXL2.0
-Date: Mon,  7 Apr 2025 16:02:17 +0800
-Message-Id: <20250407080217.76117-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5BJ/hok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE55EC4CEDD;
+	Mon,  7 Apr 2025 08:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744013038;
+	bh=PcyczffQmyxkIS/mnKLqEhn2IuZ1HMm8KdQ1jktoTRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j5BJ/hok+xXOM+t6+/FjVBnLukZ1RoLa4vb+39rSBapez7jv91gdH0wmGtj4XW116
+	 8zD9scX3rn404hc9GbXuNkC5KbPsZoI2uMBIveyEqYLSY0NyjKluWoBxFhUv2f1Gr3
+	 MZmo/9otey12resc9152JxmaQ8VO7am8IjVlcgUcPOKZ8uo/8ZTtH9ARfGRCGrjWyB
+	 Vb448b8pik/SWcpoj5HcczTBvQtIj9JT+woEFb+MiwTqHaJMc6sHPGlu0nyheUu5od
+	 RVT1dm9+dN1JWxQphhV7QYJ0SEFPwBHtYvFJNgw0TS4aS3NnKmMAIK+NSD1g9ej2Sb
+	 2gsc+4sa578WA==
+Date: Mon, 7 Apr 2025 10:03:54 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Igor Pylypiv <ipylypiv@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
+ consistently
+Message-ID: <Z_OG6jdsX0_uar2a@ryzen>
+References: <20250403212924.306782-1-ipylypiv@google.com>
+ <Z-_JExGDyO9pVTON@ryzen>
+ <Z_AweMPLRJgBIBF3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_AweMPLRJgBIBF3@google.com>
 
-Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
-own length, verify it to avoid an invalid CHBS.
+Hello Igor,
 
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-V2: don't factor out, just validate # Dan
----
- drivers/cxl/acpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Fri, Apr 04, 2025 at 12:18:16PM -0700, Igor Pylypiv wrote:
+> > 
+> > I'm missing the bigger picture here.
+> > 
+> > Are we violating the spec? If so, please reference a specific
+> > section in the specs.
+> 
+> Hi Niklas,
+> 
+> Thank you for the thorough review!
+> 
+> I'm using the SAT-6 (revision 2) spec:
+> 
+> 11 Translation of ATA errors to SCSI errors
+> 11.7 INFORMATION field
+> 
+>              Table 201 — Contents of the INFORMATION field
+>  +---------------------------+------------------------------------------+
+>  | ATA command               | INFORMATION field                        |
+>  +---------------------------+------------------------------------------+
+>  | FLUSH CACHE               |                                          |
+>  | FLUSH CACHE EXT           |                                          |
+>  | READ DMA                  |                                          |
+>  | READ DMA EXT              |                                          |
+>  | READ FPDMA QUEUED         |                                          |
+>  | READ SECTORS              |                                          |
+>  | READ SECTORS EXT          |                                          |
+>  | READ VERIFY SECTOR(S)     | ATA LBA field ᵃ                          |
+>  | READ VERIFY SECTOR(S) EXT |                                          |
+>  | WRITE DMA                 |                                          |
+>  | WRITE DMA EXT             |                                          |
+>  | WRITE DMA FUA EXT         |                                          |
+>  | WRITE FPDMA QUEUED        |                                          |
+>  | WRITE SECTOR(S)           |                                          |
+>  | WRITE SECTOR(S) EXT       |                                          |
+>  +---------------------------+------------------------------------------+
+>  | All others                | Unspecified                              |
+>  +---------------------------+------------------------------------------+
+>  | ᵃ From ATA error outputs (non-NCQ) or ATA NCQ Command Error log      |
+>  +----------------------------------------------------------------------+
+> 
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index cb14829bb9be..2e63e50b2c40 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -11,8 +11,6 @@
- #include "cxlpci.h"
- #include "cxl.h"
- 
--#define CXL_RCRB_SIZE	SZ_8K
--
- struct cxl_cxims_data {
- 	int nr_maps;
- 	u64 xormaps[] __counted_by(nr_maps);
-@@ -478,8 +476,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
- 
- 	chbs = (struct acpi_cedt_chbs *) header;
- 
--	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
--	    chbs->length != CXL_RCRB_SIZE)
-+	if ((chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-+	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11) ||
-+	   (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
-+	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20))
- 		return 0;
- 
- 	if (!chbs->base)
--- 
-2.47.0
+Please send a V3 where you include a reference to SAT-6 (revision 2),
+"11 Translation of ATA errors to SCSI errors" in the commit message.
 
+
+> > If a command attempts to access or reference an invalid LBA, then the device
+> > server shall report the first invalid LBA (e.g., lowest numbered LBA) in the
+> > INFORMATION field of the sense data (see SPC-6). If a recovered read error is
+> > reported, then the device server shall report the last LBA (e.g., highest
+> > numbered LBA) on which a recovered read error occurred for the command in the
+> > INFORMATION field of the sense data.
+> > """
+> > 
+> > Since we are generating this, it makes me thing that perhaps we should not
+> > set the INFORMATION field unconditionally? I guess it makes sense for e.g.
+> > REQ_OP_READ/READ_OP_WRITE commands, but probably does not make sense for e.g.
+> > REQ_OP_FLUSH commands?
+> >
+> 
+> SAT-6 specifies that we should set ATA LBA for FLUSH CACHE [EXT] as well.
+> For "All others" commands (not explicitly listed in Table 201), the value
+> in the INFORMATION field is "Unspecified". I think it should be fine to
+> set ATA LBA for other commands as well.
+
+Agreed, let's just set it unconditionally for now, and if there ever comes
+a command that wants to use the INFORMATION field for something else
+(which seems unlikely), we can simply special case that command.
+
+However, please mention this in the commit message as well.
+
+
+> > As you know, we also have successful commands with sense data
+> > (CDL policy 0xD), see ata_eh_get_success_sense().
+> > 
+> > These commands will either fetch sense data using
+> > ata_eh_get_ncq_success_sense() or using ata_eh_get_non_ncq_success_sense()
+> > (the latter function will fetch sense data using ata_eh_request_sense()).
+> > 
+> > Regardless of the path taken, these commands will also end up in
+> > ata_scsi_qc_complete(), so perhaps it is not enough for your patch to
+> > modify ata_scsi_qc_complete() to simply set the INFORMATION field for
+> > commands with ATA_ERR bit set (is_error) ? Perhaps you should also
+> > consider commands with sense data (have_sense), but without is_error set?
+> >
+> 
+> SAT-6 "11.7 INFORMATION field" has a footnote for the "ATA LBA field" as
+> follows: "From ATA error outputs (non-NCQ) or ATA NCQ Command Error log".
+> 
+> I limited the change to commands with ATA_ERR bit set (is_error) because
+> the spec explicitly mentions errors and the whole section 11 is dedicated
+> to the translation of ATA errors.
+
+We can have sense data for both SCSI status codes GOOD and CHECK CONDITION.
+I'm not really a big fan that the sense data is not the same (does not
+include the INFORMATION field) for these cases.
+
+The logical thing would be, either we have sense data or not, and if we do,
+the sense data has the same amount of information.
+
+You do mention the footnote that the SCSI INFORMATION field should be set
+to the ATA LBA field
+"From ATA error outputs (non-NCQ) or ATA NCQ Command Error log"
+
+If we look at the ATA NCQ Command Error log, it does have LBA field,
+but no INFORMATION field.
+
+If we look at the ATA Sense Data for Successful NCQ Commands log,
+it has a bunch of Sense Data descriptors.
+
+ACS-6, 9.29.3 Successful Sense Data descriptor,
+does have the LBA field and an INFORMATION field.
+
+The definition of the INFORMATION field in the Successful Sense Data
+descriptor:
+
+"""
+9.29.3.5 INFORMATION field
+If definition of the sense data to be returned when a command completes
+without an error includes an information value, then the INFORMATION field
+contains the defined value. Otherwise, the INFORMATION field is reserved.
+"""
+
+Thus, I do think that the most correct thing, for Successful NCQ commands
+with sense data, is to fill in the SCSI INFORMATION field to the INFORMATION
+field from the Successful Sense Data descriptor.
+
+Not sure how to deal with non-NCQ Successful commands... The spec writers
+do make our lives interesting by providing different amount of information
+depending on the method used to get the sense data :)
+
+
+Kind regards,
+Niklas
