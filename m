@@ -1,113 +1,156 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222482AD2A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995D92080F1;
+	Mon,  7 Apr 2025 16:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041634; cv=none; b=ocv53Sp+RBtuKOKRBthizOL4v0GPlXo3DL+MB6hBRw+8c5e24p1WvQpXOKDHHtr/8K/uIu2sg6RBCKQiUIKd+EdM0pRCmEpBaWzQ/i6ZrM8FxYrdiiEhR3QQSneNlybW5ZDk6It4HossdaojzniNJR9B+kHRkb6YH+8BEMvCpWk=
+	t=1744041646; cv=none; b=Nc+YtQaAcyDeMzZBj9bUM1IuRlwl7rmX1CAdSXGz8NGqoczXc3rAMUf5AcU+bzEvPLseJrChdFI2Vgjfw2eRHNtV8cZdvDitc2E5smEm8e3RbFue2PIlpoatPoya3llP3VLNF4XUdlsfYi+YwAajWqhb70Yictt9lc9NT1nGUcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041634; c=relaxed/simple;
-	bh=16jnXUwEzg+6vjOWlFFNf1AIjcyTPaes4VV1VjBmRVs=;
+	s=arc-20240116; t=1744041646; c=relaxed/simple;
+	bh=lg3cSbzvrK/T/urDtbB3CSVmlQ8cKNzboRehv+MXEaI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQOtHs+Ez39TkNjX4BF7RWPoEUmal84hQ/y8d84dm/zlONRJqThIf0C88dsykE6ise5CI2tKIugBg2pO1JGnS7YrJrVMXjKHV+Ek2+vNr55aD8Rs1auU/gH4d0TnwgqPFW07KmkQ1zwQpq1q9gNzIlXkJcS3AxiqUuj0Vm36GA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SWoMW8WV; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=kqP7DY5n1XUMvOREPuFaq2ZCJl1vSDmTZJuDwTL89/pw/U8Jloe0d0tI1j9NCfiuAIO3BdDJgeAV3h1DXOFsBljl/N82v3HRUmaU0GFePhpgDCGwi3A2xTwYY7hLK23UwyZUbfua6rG1if1H8U1CPpPOYNc7ThgZfMYwepF0vPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXYmxvTw; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SWoMW8WV"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so7972120a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:00:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXYmxvTw"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b10956398so5298805e87.0;
+        Mon, 07 Apr 2025 09:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744041629; x=1744646429; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zO4Ev4894plW7TI/YV+dAf1aUzFJZSWz5C8372wjus=;
-        b=SWoMW8WV8rq9K1zWhj/RsCea0aY4maZi65SMczK+DBz3NrDvyw8cDxG202U1KCNyWn
-         eNFmhFkRNtHVrln6Iu2b7m7z4fERmv7CzJKOiVojdRnACf4XKytKBCxvyzBXBX7yMIrA
-         Y/Hw/fllCfDAV7Al/dIe66dGTvm2V/Etouffw=
+        d=gmail.com; s=20230601; t=1744041643; x=1744646443; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jqd/F8I+kjZgKXTtOk1uv6CuQQZlQwvT3i64alSUGLw=;
+        b=gXYmxvTwqmoTawKxR7TID8Qr2cxTwIP0C6DaerrMfd0dqMIIJOZL0RTris83F+ly2c
+         QHeEkRLYvhXwXTRj4tbtmQ6hhwBi0xh/BeoZkYoCcMf5ZJp/bZrRKq5RQt5dRK3fyd3f
+         I+QJulZQSvF/hEIR4XvSzzZFFJbL/zAH1j7PhLfSB4O6a2jyyLoWIgc0uYPrOHZhWdB+
+         cZ+kyv0PImptIDFt3tDvhu6CeCvs9x8GC6FzfnXhpl1j05CK1LzdIwrmszAT6ZcKow+C
+         WKcuNEt4rTeOWCogoenz7LhqBDw3erLZJ4ElJJ3SZYG2Mi+a4n2cVxO1Fgz6VFndJyZh
+         J8XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744041629; x=1744646429;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8zO4Ev4894plW7TI/YV+dAf1aUzFJZSWz5C8372wjus=;
-        b=qbykgQYFidctX0jOF96lcdXCT3tki+KxfRkrltiQLy0SIrI4VYGDqfVrSPai1kZqJI
-         7sZ+z5ux5loAbjT2LSf07ot7NLFOvesYNAsttV/CuDT3/yzw0fc+mg8cLEORbF0qgEqs
-         OL/Xn82rnzpSWO80Ym01F12j2TiJp5jg3OBOquqNeeggU0XNNKG5ZNoVqHW51QB/toXS
-         4Gn85BaPNP9VthyM3au64lsxwAjQ2cx8vnu1CQ7Kv9czJGSMVxruJI6wKyUeJbMIRDRJ
-         IOAKgGG+FknCtb18WacS+n6QUm4kUpwSFEIZsqleMmnAK7SBsLpVz4Ri6AjJkv72Z4gd
-         DJoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7XsFEEqmT7HFkfn66/ptMtlmbHCLz11unV2cONFEoSr31cZ1kMeQjP5dKZmB4mEo9Gyw9Cfp1ihdCFQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI4XgVdPSFEcrmrubWFIx1lb50yhqRBPts6uXB0u7E86pSGf22
-	l4HW4p27Z1Gz6owj8AkZAKtYaD7+IcPH6siv7epWua7tIpwmTp3ANMTnLlG/j+MMCWpVaVQ6bwI
-	DbIM=
-X-Gm-Gg: ASbGncscT3x7H8dbkRCPofzbfWWxtFXD8s5Odl8Glq1gsIQhucoid3vpPID0f4DmYl/
-	oAxSe8rqHPWjRfIByosvw3rsMVSMn2Gh7ZMQjZHtl9ha+pZfQUVqEY4r1/vJcsudHT+zB/g0OfP
-	x/hvpgSpLq5Sq7yy3d25IrRaqAS7H55FhgvoVpeFpZKMDVhVndMH8zq5VOmhKRp4Q6yJTRdfUaN
-	eJS8VOdP6vOkW1+2cxkyQlV3h2geuq2U+u/c/ka4Q17iu8e2BrTN608ckX+EAgXuFaeikKQnbR8
-	9rCq6GmCLQCqiQFYs3qHg3uY9XApjeM0tUNeDZmaUlGJKv1qWldFuj70SXshc5LNKqUjNpxeHb+
-	HT3SABEyrDgCw9SVW2TQ=
-X-Google-Smtp-Source: AGHT+IHifW82CekXhsjRsX38iC0iWn/zf0jml3ybm+PlTmb1Lbe/+TxMBUIUzHZNStbwH2cruvC01Q==
-X-Received: by 2002:a17:907:3686:b0:ac7:9937:e259 with SMTP id a640c23a62f3a-ac7d134e4a1mr1061453266b.0.1744041628840;
-        Mon, 07 Apr 2025 09:00:28 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01844e1sm757785566b.126.2025.04.07.09.00.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 09:00:27 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abbd96bef64so875566566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:00:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5/1OAgXlV11pgF/kIQ5+gA+cD+Lu0qamrwe4UYfxCbq7BqD3xeC+QXeiR8dbFOG7hGHj2mK1nf/zErO4=@vger.kernel.org
-X-Received: by 2002:a17:907:3da2:b0:ac6:bca0:eb70 with SMTP id
- a640c23a62f3a-ac7d1b9fe8dmr1237120166b.56.1744041626801; Mon, 07 Apr 2025
- 09:00:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744041643; x=1744646443;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jqd/F8I+kjZgKXTtOk1uv6CuQQZlQwvT3i64alSUGLw=;
+        b=nyKMUOMX/7KUYmrUl68VikPZcWFjw1SoX08PMdJMWw6HHKt6KKEwDqb9qgJMEo9far
+         ONy5/IWEB9l+xxIFFg5CH8NrJAs7KcWCIg3/wbHRSUC9KL2G7VMQ2JhbaVrN3BT1n94p
+         hsVkAK76R9D/8U2Pd9Th2zkkuGc+Q9MoXVHAcqKnkZf0mcDlBC6VI81RdlEK/TUrtH87
+         hVqG/jCBbrehn7UDIeVUfK8DMfa5BNSPMIOdq339CmLY9UOjK+zxB6Nr//7qOrYhUKyl
+         8WlDxqhZRuW7iIsSTId30v70IQvy9ojEG7MbZFEB6N5PghEGhPneMfh6gXLX//S14esj
+         430g==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Fx7tfOY+01catBr3ojsEFwUOgBHF66tUaTU35MTN44yX2MMyEf2TjtPXTgWbp/WNzpYVdBg2dgvv@vger.kernel.org, AJvYcCVhWiRX3WISiCkjVNtWFwYGHJBvoUHDRzFEp5UhKxmVGNQhwVjii5ukDAWiFlzoRHhL+zumKMNJSBQJ2g1D3Ubo@vger.kernel.org, AJvYcCWAa8EAGaKzABtgn0sovNuhCBhi5M29s0gzVxzwZLgQZgnCVzcOw4xqur6ZeXk5kfpLmrFGofy6jCFWR8Ya@vger.kernel.org, AJvYcCWa2dPSmneMqs9skGeBo9l5sMU8RtrQbmUnO2mTj1w2pB1RQYwB9bFgCgbqjvsl887IrPopn4zFvNSc3zE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxP2oX6JK2iCurTG1JyDuITNunzAdpCsj2WW2lrfaoVXa/xwp/
+	PVaKgyBa08uGoOb5sLPZHFQo4deFKmujdaMz6+cfibYOLHPa76j+UxPx0/6YBgx8UK5Ok3zZQ1j
+	nQJi7CCkglk2Lk5k3wqpg1myYDYs=
+X-Gm-Gg: ASbGncvVFcxlILIEOpJTxSI6oDUjJViaesFpebpfCVj79AvyGpiEQ65RSXwKMUbg40u
+	32jU/E4kj59pxUAGqdRvxBhPDIxtYtGwjnsFnqYvoCNI+Ur5hRYTnHwVbqN0vFt6MUdSwW88aB5
+	mHIQvcDKsgQ55lBZs6Ev6g+Btsrg==
+X-Google-Smtp-Source: AGHT+IEVrNVcwklMERTdBeYNy+sQv1Qhef78D7qd4L4zddSsRfl28NNMUq3bgprXEFJQvPG//aGTthRP2n9RzHntEyE=
+X-Received: by 2002:a05:6512:3697:b0:549:91bd:2d86 with SMTP id
+ 2adb3069b0e04-54c1ca8c075mr4841164e87.26.1744041642153; Mon, 07 Apr 2025
+ 09:00:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250322-vfs-mount-b08c842965f4@brauner> <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal> <20250403-bankintern-unsympathisch-03272ab45229@brauner>
- <20250403-quartal-kaltstart-eb56df61e784@brauner> <196c53c26e8f3862567d72ed610da6323e3dba83.camel@HansenPartnership.com>
- <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
- <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
- <Z--YEKTkaojFNUQN@infradead.org> <CAHk-=wjjGb0Uik101G-B76pp+Xvq5-xa1azJF0EwRxb_kisi2Q@mail.gmail.com>
- <Z_OSEJ-Bd-wL1CpS@infradead.org>
-In-Reply-To: <Z_OSEJ-Bd-wL1CpS@infradead.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 7 Apr 2025 09:00:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgtKqZoQZB6VzJr+EQNfsT1r1A9U2zxOrGFb+pqtkTXFA@mail.gmail.com>
-X-Gm-Features: ATxdqUGe2UEcBb7-HxSxAS-BggZkNNT9Atl96RrMDJ0cWDe458YcI4kTYsxsNfo
-Message-ID: <CAHk-=wgtKqZoQZB6VzJr+EQNfsT1r1A9U2zxOrGFb+pqtkTXFA@mail.gmail.com>
-Subject: Re: [GIT PULL] vfs mount
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Christian Brauner <brauner@kernel.org>, Leon Romanovsky <leon@kernel.org>, pr-tracker-bot@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com> <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
+In-Reply-To: <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 7 Apr 2025 11:00:29 -0500
+X-Gm-Features: ATxdqUFNsatT5UhJzB5tzRpz10S4ukxDMe0vOi53IWYyOQIORz0IaHECah3vQ8s
+Message-ID: <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 7 Apr 2025 at 01:51, Christoph Hellwig <hch@infradead.org> wrote:
+On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
 >
-> The scoped one with proper indentation is fine.  The non-scoped one is
-> the one that is really confusing and odd.
+> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > This allows using pstore on all such platforms. There are some
+> > differences per arch:
+> >
+> > * Tegra132: Flounder does not appear to enumerate pstore and I do not
+> >   have access to norrin, thus Tegra132 is left out of this commit.
+> > * Tegra210: Does not support ramoops carveouts in the bootloader, inste=
+ad
+> >   relying on a dowstream driver to allocate the carveout, hence this
+> >   hardcodes a location matching what the downstream driver picks.
+> > * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
+> >   size in a node specifically named /reserved-memory/ramoops_carveout,
+> >   thus these cannot be renamed.
+> > * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
+> >   compatible, however the dt still does not know the address, so keepin=
+g
+> >   the node name consistent on Tegra186 and newer.
+> >
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+> >  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+> >  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+> >  4 files changed, 61 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot=
+/dts/nvidia/tegra186.dtsi
+> > index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42dd=
+03f5a1da5079971dc 100644
+> > --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > @@ -2051,6 +2051,22 @@ pmu-denver {
+> >               interrupt-affinity =3D <&denver_0 &denver_1>;
+> >       };
+> >
+> > +     reserved-memory {
+> > +             #address-cells =3D <2>;
+> > +             #size-cells =3D <2>;
+> > +             ranges;
+> > +
+> > +             ramoops_carveout {
+>
+> Please follow DTS coding style for name, so this is probably only ramoops=
+.
 
-Ahh, I misunderstood you.
+As per the commit message regarding tegra186: bootloader fills in the
+address and size in a node specifically named
+/reserved-memory/ramoops_carveout, thus these cannot be renamed.
 
-You're obviously right in a "visually obvious" way - even if it was
-the scoped one that caused problems.
+>
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=3D1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sou=
+rces-with-the-devicetree-schema/
+> for instructions).
+> Maybe you need to update your dtschema and yamllint. Don't rely on
+> distro packages for dtschema and be sure you are using the latest
+> released dtschema.
 
-But the non-scoped one is *so* convenient when you have a helper
-function that just wants to run with some local (or RCU) held.
+The bot is reporting that the reg field is missing from the added
+ramoops nodes on t186, t194, and t234. However, as also mentioned in
+the commit message, this is intentional because it is expected for the
+bootloader to fill that in. It is not known at dt compile time. Is
+there a way to mark this as intentional, so dtschema doesn't flag it?
 
-There's a reason we have more than two _thousand_ uses of it by now in
-the kernel (~4x as many as the scoped version). It's just makes code
-look so much simpler.
+>
+> Best regards,
+> Krzysztof
 
-I was nervous about the lock guard macros initially, but it really
-does get rid of pointless boilerplate code. Even without error
-handling complications it just makes code simpler.
-
-          Linus
+Sincerely,
+Aaron
