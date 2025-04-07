@@ -1,244 +1,408 @@
-Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334BD1FF5F7;
-	Mon,  7 Apr 2025 19:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185A2F2A;
+	Mon,  7 Apr 2025 19:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744054196; cv=none; b=njTLQEswtlFNCHe7A2xdEgI57YZoGgbnFVIAT87gmtqCI1JB6rtYyPh8b4dRuryHD4feL5fM7leWzpLeJp+XDV9GqJfxjIOCycPvcuygfdt+ofC599L+clWGg7KZI4IQU8odoS9OtysEsIcZzNSzXaqP5fOg+CtPm1hQB6lmS20=
+	t=1744054391; cv=none; b=UrFK08r7VbJZFoATOHN6wHG11L6xBEfNmmmwdePXsEzfyAlsSI2KenLuc51a2DRUCjJ9exZnkGGbNtAzQrhkLDWz3jtztSQ3MtkHXfv9cGmZ1qrXPvZryEIifjyBPUh69p3sQlHAh51Cx1o+tQKiKHwByOnDoFgQ5ojilhyksPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744054196; c=relaxed/simple;
-	bh=QxbJUQj494NJu8ZjgJ05X2q3+gIgGLIBqzCnPxe0YBw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wo84BRp0LV/HOS6qVyIcLVXYQfloMAc/L/tQmgbwfOaVZ+7VYTHL54wEciZHPvMwzShfOReXYD5JAV5coy5j2z0Ur37AZiA1Rb7iW7HTJ48O12EC0xsSCIdslRSuOzxRoDKl5hXw7lQ4OE0xdKaAQ22HnMJj5A/GIsx6c9sBLR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=LlKTXg+d; arc=none smtp.client-ip=168.119.26.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+	s=arc-20240116; t=1744054391; c=relaxed/simple;
+	bh=RrtH/nD1uFMYPrOsQE4EjIFgCUo0VKpTZ+3/dIza3Tk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sfL85C3OC7A8DSFqqjdPD7bAvLfDb4Rc62zdUgfECW4HXvOfLZP4tdkBhbKM4wIUgDoOjedTHMp2oR0BdUCUgW4O9tenLmX0Zohjc8JE5duJxm3fPUnj8ifCWsrwqFTG+P88ebolTV+MtrQoiztFubqjULY4r2X5Q+Kc7/+FGz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CxIpMACt; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="LlKTXg+d"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
-	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=O40M1F4FENumpeawEN/zW0HV0k/GzWMb+PW3MS2kdeI=; b=LlKTXg+dXXhUmVPx2ZyqdR1/3W
-	dAq7E8QCV8RWayeTm/0ESqnhvcMKoys7h6YK0dWBvztEzbOpkwm3AM0qSCUES7j+vjOGhGL3CycUG
-	j3vwSJC7liLPPL+PFrZE/QAIEuwd7MNC6nvJxxxKqb0G+Z/gVcmBXdF8K1Vy+BbZwNEfMP6zR92Q4
-	h84rzZChgAWx8HoKjK5LeuEl3gUTypBP+CaQKau6Wp6yOxulbt/LaaWMGKwCcHqQrWVxQ5vkp2Nwv
-	L9scyRvxvqXTkHYamJD+YYB4rRpS6nj6kgYapvIiUcueXenErGHJJjMOKD/Pko5aLZHxlvZBm6R/h
-	24ZeZNzQ==;
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <git@apitzsch.eu>)
-	id 1u1rrg-000MKL-05;
-	Mon, 07 Apr 2025 21:10:36 +0200
-Received: from [92.206.190.59] (helo=framework.lan)
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <git@apitzsch.eu>)
-	id 1u1rrf-000OkW-1w;
-	Mon, 07 Apr 2025 21:10:35 +0200
-Message-ID: <29677b7d5ceb07693d0b530c88a5aa9bde6c04dd.camel@apitzsch.eu>
-Subject: Re: [PATCH RESEND 0/4] media: i2c: imx214: Problem with CCS PLL
- calculator
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Ricardo Ribalda <ribalda@kernel.org>, Mauro Carvalho Chehab
-	 <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 07 Apr 2025 21:10:34 +0200
-In-Reply-To: <4c62bb9d5575e9075b39500917e09687d37cf7ca.camel@apitzsch.eu>
-References: <20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu>
-		 <Z87I2xh0HY-YD_tZ@kekkonen.localdomain>
-	 <4c62bb9d5575e9075b39500917e09687d37cf7ca.camel@apitzsch.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CxIpMACt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744054389; x=1775590389;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=RrtH/nD1uFMYPrOsQE4EjIFgCUo0VKpTZ+3/dIza3Tk=;
+  b=CxIpMACt4c1mhBXd6WFIIfrxuOQvxi6h8R+PGktlyb6tTEM4bvCZdxXK
+   iBL1DuJ79MnmhrsK7AxKZ1Skjg816y252o8l4/uqNmFbmL+ii98RyV3Y6
+   I8q8kQy5z8E4gcfZRaOtIge3XBVkswSZI0T/YfOtMoD297vGMT73MqRPM
+   R0FM4PCmG4p8Gx8xMQniunrG6GphM2JWDRwxJgjKpCoDk+Qymb9LtH0TB
+   FvidnAAe0wephdCyOWObYykRXJTlbXh5nl+XcFXbXQJHAvby5UBa7Wzh5
+   c3nK9Q4PrA/REG/IWqGa91lJmixBFAvk9OD1k81bu/itFL2InZ6KX1hoX
+   g==;
+X-CSE-ConnectionGUID: G29oGrjgQpylSgD6dKQSug==
+X-CSE-MsgGUID: jwV55EQ6Su6RsubSM/Yqow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45578368"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="45578368"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 12:33:08 -0700
+X-CSE-ConnectionGUID: dQ5nDWjXRpSrqe10qDlYIg==
+X-CSE-MsgGUID: brwscPrJTG+Bw0uVFofDFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="132183735"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 12:33:08 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D0F6020B5736;
+	Mon,  7 Apr 2025 12:33:04 -0700 (PDT)
+Message-ID: <7457b450-9f13-4528-b5e1-2f10f0a7be12@linux.intel.com>
+Date: Mon, 7 Apr 2025 15:33:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authenticated-Sender: andre@apitzsch.eu
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27601/Mon Apr  7 10:42:24 2025)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/16] perf intel-tpebs: Refactor tpebs_results list
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>, James Clark <james.clark@linaro.org>,
+ Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>,
+ Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407050101.1389825-1-irogers@google.com>
+ <20250407050101.1389825-10-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250407050101.1389825-10-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Montag, dem 10.03.2025 um 23:35 +0100 schrieb Andr=C3=A9 Apitzsch:
-> Hi Sakari,
->=20
-> Am Montag, dem 10.03.2025 um 11:11 +0000 schrieb Sakari Ailus:
-> > Hi Andr=C3=A9,
-> >=20
-> > On Sat, Mar 08, 2025 at 10:47:54PM +0100, Andr=C3=A9 Apitzsch via B4
-> > Relay
-> > wrote:
-> > > The imx214 driver currently supports only a 24MHz external clock.
-> > > But
-> > > there are devices, like Qualcomm-MSM8916-based phones, which
-> > > cannot
-> > > provide this frequency. To make the sensor usable by those
-> > > devices,
-> > > add
-> > > support for 23.88MHz clock.
-> > >=20
-> > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> > > ---
-> > > Andr=C3=A9 Apitzsch (4):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Calculate link bit=
- rate from clock
-> > > frequency
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Prepare for variab=
-le clock frequency
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Read clock frequen=
-cy from device tree
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media: i2c: imx214: Add support for 23=
-.88MHz clock
-> > >=20
-> > > =C2=A0drivers/media/i2c/imx214.c | 188
-> > > +++++++++++++++++++++++++++++++++++----------
-> > > =C2=A01 file changed, 146 insertions(+), 42 deletions(-)
-> >=20
-> > Thanks for the patches.
-> >=20
-> > Do you think the driver could use the CCS PLL calculator? The PLL
-> > appears to be compliant. The AR0234 driver will do the same. (The
-> > sensor might just work with the CCS driver, too, but that's another
-> > discussion.)
-> >=20
-> Using the CCS PLL calculator seems quite complicated compared to
-> switching to the CCS driver. That's why I looked at the later first.
-> But for it to work, quirks already need to be applied in
-> ccs_power_on(), to disable writing to COMPRESSION_MODE, and in
-> ccs_identify_module(), to change the MODULE_MANUFACTURER_ID register.
->=20
-> I'll check if CCS PLL calculator could be used.
->=20
-> Best regards,
-> Andr=C3=A9
 
-Hi Sakari,
 
-the CCS PLL calculator seems to work (up to one problem) and to be a
-more elegant way forward.
-The problem is, that the pixel rate is too small by a factor of 10 and
-I cannot figure out why. Any help would be appreciated.
+On 2025-04-07 1:00 a.m., Ian Rogers wrote:
+> evsel names and metric-ids are used for matching but this can be
+> problematic, for example, multiple occurrences of the same retirement
+> latency event become a single event for the record. Change the name of
+> the record events so they are unique and reflect the evsel of the
+> retirement latency event that opens them (the retirement latency
+> event's evsel address is embedded within them). This allows an evsel
+> based close to close the event when the retirement latency event is
+> closed. This is important as perf stat has an evlist and the session
+> listen to the record events has an evlist, knowing which event should
+> remove the tpebs_retire_lat can't be tied to an evlist list as there
+> is more than 1, so closing which evlist should cause the tpebs to
+> stop? Using the evsel and the last one out doing the tpebs_stop is
+> cleaner.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-stat.c     |   2 -
+>  tools/perf/util/evlist.c      |   1 -
+>  tools/perf/util/evsel.c       |   2 +-
+>  tools/perf/util/intel-tpebs.c | 152 ++++++++++++++++++++--------------
+>  tools/perf/util/intel-tpebs.h |   2 +-
+>  5 files changed, 94 insertions(+), 65 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 68ea7589c143..80e491bd775b 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -681,8 +681,6 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>  	if (child_pid != -1)
+>  		kill(child_pid, SIGTERM);
+>  
+> -	tpebs_delete();
+> -
+>  	return COUNTER_FATAL;
+>  }
+>  
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index c1a04141aed0..0a21da4f990f 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -183,7 +183,6 @@ void evlist__delete(struct evlist *evlist)
+>  	if (evlist == NULL)
+>  		return;
+>  
+> -	tpebs_delete();
+>  	evlist__free_stats(evlist);
+>  	evlist__munmap(evlist);
+>  	evlist__close(evlist);
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 121283f2f382..554252ed1aab 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2759,7 +2759,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  void evsel__close(struct evsel *evsel)
+>  {
+>  	if (evsel__is_retire_lat(evsel))
+> -		tpebs_delete();
+> +		evsel__tpebs_close(evsel);
+>  	perf_evsel__close(&evsel->core);
+>  	perf_evsel__free_id(&evsel->core);
+>  }
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> index e42f3ec39a64..e3227646a9cc 100644
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -35,10 +35,10 @@ static struct child_process tpebs_cmd;
+>  
+>  struct tpebs_retire_lat {
+>  	struct list_head nd;
+> -	/* Event name */
+> -	char *name;
+> -	/* Event name with the TPEBS modifier R */
+> -	const char *tpebs_name;
+> +	/** @evsel: The evsel that opened the retire_lat event. */
+> +	struct evsel *evsel;
+> +	/** @event: Event passed to perf record. */
+> +	char *event;
+>  	/* Count of retire_latency values found in sample data */
+>  	size_t count;
+>  	/* Sum of all the retire_latency values in sample data */
+> @@ -49,6 +49,8 @@ struct tpebs_retire_lat {
+>  	bool started;
+>  };
+>  
+> +static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel);
+> +
+>  static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[], int ack_fd[])
+>  {
+>  	const char **record_argv;
+> @@ -85,7 +87,7 @@ static int evsel__tpebs_start_perf_record(struct evsel *evsel, int control_fd[],
+>  
+>  	list_for_each_entry(t, &tpebs_results, nd) {
+>  		record_argv[i++] = "-e";
+> -		record_argv[i++] = t->name;
+> +		record_argv[i++] = t->event;
+>  	}
+>  	record_argv[i++] = NULL;
+>  	assert(i == 10 + 2 * tpebs_event_size || i == 8 + 2 * tpebs_event_size);
+> @@ -108,27 +110,20 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  				struct evsel *evsel,
+>  				struct machine *machine __maybe_unused)
+>  {
+> -	int ret = 0;
+> -	const char *evname;
+>  	struct tpebs_retire_lat *t;
+>  
+> -	evname = evsel__name(evsel);
+> -
+> +	t = tpebs_retire_lat__find(evsel);
+> +	if (!t)
+> +		return -EINVAL;
+>  	/*
+>  	 * Need to handle per core results? We are assuming average retire
+>  	 * latency value will be used. Save the number of samples and the sum of
+>  	 * retire latency value for each event.
+>  	 */
+> -	list_for_each_entry(t, &tpebs_results, nd) {
+> -		if (!strcmp(evname, t->name)) {
+> -			t->count += 1;
+> -			t->sum += sample->retire_lat;
+> -			t->val = (double) t->sum / t->count;
+> -			break;
+> -		}
+> -	}
+> -
+> -	return ret;
+> +	t->count += 1;
+> +	t->sum += sample->retire_lat;
+> +	t->val = (double) t->sum / t->count;
+> +	return 0;
+>  }
+>  
+>  static int process_feature_event(struct perf_session *session,
+> @@ -183,50 +178,98 @@ static int tpebs_stop(void)
+>  	return ret;
+>  }
+>  
+> -static char *evsel__tpebs_name(struct evsel *evsel)
+> +/**
+> + * evsel__tpebs_event() - Create string event encoding to pass to `perf record`.
+> + */
+> +static int evsel__tpebs_event(struct evsel *evsel, char **event)
+>  {
+>  	char *name, *modifier;
+> +	int ret;
+>  
+>  	name = strdup(evsel->name);
+> -	if (!name)
+> -		return NULL;
+> +	if (!*name)
+> +		return -ENOMEM;
 
-My devices uses a clock-frequency of 24000000 and a link-frequency of
-600000000. There are four data lanes.
-The calculator returns a pixel rate of 480.000.000. The expected value
-is 4800.000.000.
+if (!name)?
 
-You can find the PLL input parameters in [1] and the generated debug
-output below.
+Thanks,
+Kan
 
-Best regards,
-Andr=C3=A9
+>  
+>  	modifier = strrchr(name, 'R');
+>  	if (!modifier) {
+> -		pr_err("Tpebs event missing modifier '%s'\n", name);
+> -		free(name);
+> -		return NULL;
+> +		ret = -EINVAL;
+> +		goto out;
+>  	}
+> -
+>  	*modifier = 'p';
+> -	return name;
+> +	modifier = strchr(name, ':');
+> +	if (!modifier)
+> +		modifier = strrchr(name, '/');
+> +	if (!modifier) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +	*modifier = '\0';
+> +	if (asprintf(event, "%s/name=tpebs_event_%p/%s", name, evsel, modifier + 1) > 0)
+> +		ret = 0;
+> +	else
+> +		ret = -ENOMEM;
+> +out:
+> +	if (ret)
+> +		pr_err("Tpebs event modifier broken '%s'\n", evsel->name);
+> +	free(name);
+> +	return ret;
+>  }
+>  
+>  static struct tpebs_retire_lat *tpebs_retire_lat__new(struct evsel *evsel)
+>  {
+>  	struct tpebs_retire_lat *result = zalloc(sizeof(*result));
+> +	int ret;
+>  
+>  	if (!result)
+>  		return NULL;
+>  
+> -	result->tpebs_name = evsel->name;
+> -	result->name = evsel__tpebs_name(evsel);
+> -	if (!result->name) {
+> +	ret = evsel__tpebs_event(evsel, &result->event);
+> +	if (ret) {
+>  		free(result);
+>  		return NULL;
+>  	}
+> +	result->evsel = evsel;
+>  	list_add_tail(&result->nd, &tpebs_results);
+>  	return result;
+>  }
+>  
+> +static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+> +{
+> +	zfree(&r->event);
+> +	free(r);
+> +}
+> +
+>  static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
+>  {
+>  	struct tpebs_retire_lat *t;
+> +	uint64_t num;
+> +	const char *evsel_name;
+>  
+> +	/*
+> +	 * Evsels will match for evlist with the retirement latency event. The
+> +	 * name with "tpebs_event_" prefix will be present on events being read
+> +	 * from `perf record`.
+> +	 */
+> +	if (evsel__is_retire_lat(evsel)) {
+> +		list_for_each_entry(t, &tpebs_results, nd) {
+> +			if (t->evsel == evsel)
+> +				return t;
+> +		}
+> +		return NULL;
+> +	}
+> +	evsel_name = strstr(evsel->name, "tpebs_event_");
+> +	if (!evsel_name) {
+> +		/* Unexpected that the perf record should have other events. */
+> +		return NULL;
+> +	}
+> +	errno = 0;
+> +	num = strtoull(evsel_name + 12, NULL, 16);
+> +	if (errno) {
+> +		pr_err("Bad evsel for tpebs find '%s'\n", evsel->name);
+> +		return NULL;
+> +	}
+>  	list_for_each_entry(t, &tpebs_results, nd) {
+> -		if (t->tpebs_name == evsel->name ||
+> -		    !strcmp(t->tpebs_name, evsel->name) ||
+> -		    (evsel->metric_id && !strcmp(t->tpebs_name, evsel->metric_id)))
+> +		if ((uint64_t)t->evsel == num)
+>  			return t;
+>  	}
+>  	return NULL;
+> @@ -363,8 +406,12 @@ int evsel__tpebs_open(struct evsel *evsel)
+>  		close(ack_fd[0]);
+>  		close(ack_fd[1]);
+>  	}
+> -	if (ret)
+> -		tpebs_delete();
+> +	if (ret) {
+> +		struct tpebs_retire_lat *t = tpebs_retire_lat__find(evsel);
+> +
+> +		list_del_init(&t->nd);
+> +		tpebs_retire_lat__delete(t);
+> +	}
+>  	return ret;
+>  }
+>  
+> @@ -414,34 +461,19 @@ int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
+>  	return 0;
+>  }
+>  
+> -static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+> -{
+> -	zfree(&r->name);
+> -	free(r);
+> -}
+> -
+> -
+> -/*
+> - * tpebs_delete - delete tpebs related data and stop the created thread and
+> - * process by calling tpebs_stop().
+> - *
+> - * This function is called from evlist_delete() and also from builtin-stat
+> - * stat_handle_error(). If tpebs_start() is called from places other then perf
+> - * stat, need to ensure tpebs_delete() is also called to safely free mem and
+> - * close the data read thread and the forked perf record process.
+> +/**
+> + * evsel__tpebs_close() - delete tpebs related data. If the last event, stop the
+> + * created thread and process by calling tpebs_stop().
+>   *
+> - * This function is also called in evsel__close() to be symmetric with
+> - * tpebs_start() being called in evsel__open(). We will update this call site
+> - * when move tpebs_start() to evlist level.
+> + * This function is called in evsel__close() to be symmetric with
+> + * evsel__tpebs_open() being called in evsel__open().
+>   */
+> -void tpebs_delete(void)
+> +void evsel__tpebs_close(struct evsel *evsel)
+>  {
+> -	struct tpebs_retire_lat *r, *rtmp;
+> +	struct tpebs_retire_lat *t = tpebs_retire_lat__find(evsel);
+>  
+> -	tpebs_stop();
+> +	tpebs_retire_lat__delete(t);
+>  
+> -	list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
+> -		list_del_init(&r->nd);
+> -		tpebs_retire_lat__delete(r);
+> -	}
+> +	if (list_empty(&tpebs_results))
+> +		tpebs_stop();
+>  }
+> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+> index cc98203719c8..5c671181ec60 100644
+> --- a/tools/perf/util/intel-tpebs.h
+> +++ b/tools/perf/util/intel-tpebs.h
+> @@ -11,7 +11,7 @@ struct evsel;
+>  extern bool tpebs_recording;
+>  
+>  int evsel__tpebs_open(struct evsel *evsel);
+> -void tpebs_delete(void);
+> +void evsel__tpebs_close(struct evsel *evsel);
+>  int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+>  
+>  #endif /* __INTEL_TPEBS_H */
 
-[1] https://github.com/a-andre/linux/blob/58e10a814985f700579847ac7c99468a6=
-5cb55bb/drivers/media/i2c/imx214.c#L1116-L1196
-
-$ dmesg | grep imx
-[   17.851215] imx214 4-0010: vt_lanes: 4
-[   17.851245] imx214 4-0010: op_lanes: 4
-[   17.851254] imx214 4-0010: binning: 1x1
-[   17.851262] imx214 4-0010: min / max op_pre_pll_clk_div: 1 / 15
-[   17.851272] imx214 4-0010: pre-pll check: min / max op_pre_pll_clk_div: =
-1 / 15
-[   17.851281] imx214 4-0010: mul 50 / div 1
-[   17.851290] imx214 4-0010: pll_op check: min / max op_pre_pll_clk_div: 1=
- / 15
-[   17.851300] imx214 4-0010: op_pre_pll_clk_div 1
-[   17.851308] imx214 4-0010: more_mul_max: max_op_pll_multiplier check: 24
-[   17.851317] imx214 4-0010: more_mul_max: max_pll_op_clk_freq_hz check: 1
-[   17.851325] imx214 4-0010: more_mul_max: max_op_sys_clk_div check: 1
-[   17.851333] imx214 4-0010: more_mul_max: min_pll_multiplier check: 1
-[   17.851341] imx214 4-0010: more_mul_min: min_op_pll_op_clk_freq_hz check=
-: 1
-[   17.851349] imx214 4-0010: more_mul_min: min_op_pll_multiplier check: 1
-[   17.851357] imx214 4-0010: more_mul_factor: 1
-[   17.851365] imx214 4-0010: more_mul_factor: min_op_sys_clk_div: 1
-[   17.851373] imx214 4-0010: final more_mul: 1
-[   17.851381] imx214 4-0010: op_sys_clk_div: 1
-[   17.851389] imx214 4-0010: op_pix_clk_div: 10
-[   17.851398] imx214 4-0010: min_vt_div: 10
-[   17.851406] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_hz: 10
-[   17.851414] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
-[   17.851422] imx214 4-0010: max_vt_div: 40
-[   17.851486] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_hz: 40
-[   17.851502] imx214 4-0010: min_sys_div: 2
-[   17.851510] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: 2
-[   17.851518] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_hz: 2
-[   17.851526] imx214 4-0010: min_sys_div: one or even: 2
-[   17.851534] imx214 4-0010: max_sys_div: 4
-[   17.851541] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: 4
-[   17.851549] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_hz: 4
-[   17.851557] imx214 4-0010: pix_div 3 too small or too big (5--10)
-[   17.851568] imx214 4-0010: ext_clk_freq_hz		24000000
-[   17.851578] imx214 4-0010: vt_pre_pll_clk_div		1
-[   17.851587] imx214 4-0010: vt_pll_multiplier		50
-[   17.851595] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
-[   17.851603] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
-[   17.851612] imx214 4-0010: vt_sys_clk_div		2
-[   17.851620] imx214 4-0010: vt_pix_clk_div		5
-[   17.851629] imx214 4-0010: vt_sys_clk_freq_hz	600000000
-[   17.851637] imx214 4-0010: vt_pix_clk_freq_hz	120000000
-[   17.851645] imx214 4-0010: op_sys_clk_div		1
-[   17.851653] imx214 4-0010: op_pix_clk_div		10
-[   17.851661] imx214 4-0010: op_sys_clk_freq_hz	1200000000
-[   17.851669] imx214 4-0010: op_pix_clk_freq_hz	120000000
-[   17.851677] imx214 4-0010: pixel rate in pixel array:	480000000
-[   17.851685] imx214 4-0010: pixel rate on CSI-2 bus:	480000000
-[   17.851694] imx214 4-0010: flags lane-speed
-[   17.869313] imx214 4-0010: vt_lanes: 4
-[   17.869342] imx214 4-0010: op_lanes: 4
-[   17.869352] imx214 4-0010: binning: 1x1
-[   17.869361] imx214 4-0010: min / max op_pre_pll_clk_div: 1 / 15
-[   17.869372] imx214 4-0010: pre-pll check: min / max op_pre_pll_clk_div: =
-1 / 15
-[   17.869382] imx214 4-0010: mul 50 / div 1
-[   17.869391] imx214 4-0010: pll_op check: min / max op_pre_pll_clk_div: 1=
- / 15
-[   17.869400] imx214 4-0010: op_pre_pll_clk_div 1
-[   17.869409] imx214 4-0010: more_mul_max: max_op_pll_multiplier check: 24
-[   17.869417] imx214 4-0010: more_mul_max: max_pll_op_clk_freq_hz check: 1
-[   17.869426] imx214 4-0010: more_mul_max: max_op_sys_clk_div check: 1
-[   17.869435] imx214 4-0010: more_mul_max: min_pll_multiplier check: 1
-[   17.869443] imx214 4-0010: more_mul_min: min_op_pll_op_clk_freq_hz check=
-: 1
-[   17.869451] imx214 4-0010: more_mul_min: min_op_pll_multiplier check: 1
-[   17.869460] imx214 4-0010: more_mul_factor: 1
-[   17.869468] imx214 4-0010: more_mul_factor: min_op_sys_clk_div: 1
-[   17.869476] imx214 4-0010: final more_mul: 1
-[   17.869483] imx214 4-0010: op_sys_clk_div: 1
-[   17.869491] imx214 4-0010: op_pix_clk_div: 10
-[   17.869501] imx214 4-0010: min_vt_div: 10
-[   17.869509] imx214 4-0010: min_vt_div: max_vt_pix_clk_freq_hz: 10
-[   17.869517] imx214 4-0010: min_vt_div: min_vt_clk_div: 10
-[   17.869525] imx214 4-0010: max_vt_div: 40
-[   17.869533] imx214 4-0010: max_vt_div: min_vt_pix_clk_freq_hz: 40
-[   17.869541] imx214 4-0010: min_sys_div: 2
-[   17.869549] imx214 4-0010: min_sys_div: max_vt_pix_clk_div: 2
-[   17.869557] imx214 4-0010: min_sys_div: max_pll_op_clk_freq_hz: 2
-[   17.869565] imx214 4-0010: min_sys_div: one or even: 2
-[   17.869572] imx214 4-0010: max_sys_div: 4
-[   17.869580] imx214 4-0010: max_sys_div: min_vt_pix_clk_div: 4
-[   17.869588] imx214 4-0010: max_sys_div: min_vt_pix_clk_freq_hz: 4
-[   17.869596] imx214 4-0010: pix_div 3 too small or too big (5--10)
-[   17.869607] imx214 4-0010: ext_clk_freq_hz		24000000
-[   17.869616] imx214 4-0010: vt_pre_pll_clk_div		1
-[   17.869624] imx214 4-0010: vt_pll_multiplier		50
-[   17.869633] imx214 4-0010: vt_pll_ip_clk_freq_hz	24000000
-[   17.869642] imx214 4-0010: vt_pll_op_clk_freq_hz	1200000000
-[   17.869651] imx214 4-0010: vt_sys_clk_div		2
-[   17.869659] imx214 4-0010: vt_pix_clk_div		5
-[   17.869667] imx214 4-0010: vt_sys_clk_freq_hz	600000000
-[   17.869675] imx214 4-0010: vt_pix_clk_freq_hz	120000000
-[   17.869684] imx214 4-0010: op_sys_clk_div		1
-[   17.869692] imx214 4-0010: op_pix_clk_div		10
-[   17.869699] imx214 4-0010: op_sys_clk_freq_hz	1200000000
-[   17.869707] imx214 4-0010: op_pix_clk_freq_hz	120000000
-[   17.869716] imx214 4-0010: pixel rate in pixel array:	480000000
-[   17.869724] imx214 4-0010: pixel rate on CSI-2 bus:	480000000
-[   17.869732] imx214 4-0010: flags lane-speed
