@@ -1,122 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C0525D1E6;
-	Mon,  7 Apr 2025 18:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC8D2222D2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050409; cv=none; b=FdpocF1um6XB0T8mwwInmnhufcP3EuK2nTfP9B0GmA4kRwfBdgrDCW3ZmpBa7G4a6F6zxjVdVIbfH3JwOsaF9QYQD0xuSMLf71IU42xxiRoAqkdqQGxx6DFOFqy6Z0QKJ0x+tGAyUgS7kxv6lzKnOUJUsyQ8vpbBpVTt3GT5nn4=
+	t=1744050474; cv=none; b=jYbwE0R4JQQOx5Q1XD1g5IptbmuVW2sl1v5CX+4/2gCelpud3YxDHgqUs9oFtvLM1WO/6OGCeCKdvst68htEVhd9S5zUfPg6/jjMYJsYgkxMHmAJh97GzRQJY42wE+RwVlyssUdHExWFcvECiUAHl2yf0+jm8QXcCberHMa0CJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050409; c=relaxed/simple;
-	bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y+SRucYB/Sn0oVsE8IFr4clRbvieRqkdBR33t/y5wa0ohhs9+wjAjEuXvv1JaCFk6N4AGEYX8Ttk3hsqxjr+1hurPRJ8YwgKUuTj/mVdVAT4dL/aR/ONTO7R9NLq6p7onu3hIkDzSceo20bG7mJurYHHoVHg575GchltZpEd6VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TS+QrSO/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744050474; c=relaxed/simple;
+	bh=ILO2pDkDATVl5xlVItoRt9kbG9feenEnlD3ixktoGDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=roBVnz8ebQVDGG0mZ0+D/mmM7UyvCHR0yro86b71w/mqbuIyHkfwmC9w3ejGMHl6cFWW1vnTVCru8ni/hGaepRJG7If+O9uy5H4MWu8x9dkpWa0nvd48pQexCY4Vr7DRzxoOzoRChYY7d1hRSmgF29RSjXDxutD8eEQCaJG+DcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=kKg7YfyT; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TS+QrSO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4A1C4CEDD;
-	Mon,  7 Apr 2025 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744050409;
-	bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TS+QrSO/66kDHas/i6aI/fa+aEcoXxEe0MZBm76l8899NeQjiVhm6i5HcizWEAJCa
-	 aDnKh4Em5FDzcz5tSOCgoUHKj+M8pwD74xhhEYtNFWWUc/RicnIKYjCHvi2ESwcHKU
-	 sit9HlBXGyJibOuUGFcd27/SLk5UIocTtdnRTEAREL77j6FmW5B4J3RtgjatFsQ6UP
-	 bUuMgDcDaO0HyoYneLH9aitvfHFTTzgxW7uS7TTElc4HHZ7iAEkXvZDL1AISFrxy/z
-	 BZ1R0tSc7pc/b4Gg+dvy5JC0wAaut4ALTZOs9tjkKvMddjiXe9pdL4wfLv+fjSzFvC
-	 8bnmeEUbwKFOQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 07 Apr 2025 20:26:33 +0200
-Subject: [PATCH net 2/2] selftests: mptcp: validate MPJoin HMacFailure
- counters
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kKg7YfyT"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4769bbc21b0so42282441cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1744050472; x=1744655272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LipqWD1+mRA3ccfnYHF9wzUPGn6IorpYD8/e+3VH2Y0=;
+        b=kKg7YfyTNF4cEGz6srxHV9pDdxGPsMs/PUwZwgqQzft9kT0gmBNCuMz6QxUTVApbE3
+         W0+7HkgR06PVqkz0WcUq+BtjKduKbAiAD1wnLeYYCghkfJmnbgJWjUy8WW6p7bPpDHuG
+         MNRW0dIwzbGPBNfUSFVhdYAHAK2Kv//4KRvwki3uInfKRj6C2jfpVUv1f68N1ELwPDU/
+         HR5Y1x8GM+hCHRaAym9c+roWM6cTDS2oLN1F2judIvqtegI9JU70WnNtVXdj2Du7yIp4
+         4RqTSpXHe6912HgNLMDn406Ic1iKU9GMV+EsjgcdWrFw85AnsMABvZmuc6hT2Fj0Cvbr
+         sl+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744050472; x=1744655272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LipqWD1+mRA3ccfnYHF9wzUPGn6IorpYD8/e+3VH2Y0=;
+        b=ozL2PMtYOgEjsqUJwqE7aI1n8mwZyhYsxahagcw8jkV5GwVrB0SlbF/V/7oZP84Vl5
+         rxz8ylDynBeeiKMtFQf5pXLBiLt2ZEq3S4woj/Ym7cYrPeE49rdP9TBKdr6GHJADquxe
+         Gs6qZS2QJqX9ykUTuCgQfo1WSn2fc2jcxxfVTaZN+P/bq69U7gGKBsT3i0GoW1Rrwoxg
+         9J3sv/QhPfA3g7ZcwLZ9LCkKE9yZKeFH/nh7tRoeS14vLv/aGiWUdFWMMMbslM+GwghC
+         lqzCSpCfIS6PnSRQ2fJVpYBTOro3u9GeHD6PaPn6nsz+jTw/FqBc5IdaKU7NrqVlpPWm
+         hZFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdHQamE7mOHSJePzQx4CGVxL9Xf8C7L3EtgyKH/VEcP1+6Wkvkm0XdcS53MDmeHHZoXyJo/Nt6mlkyCHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3S7c+RdIs97XPTpdqlsAVNozY+/E3AviveAFpKTb8Ovzwy4R1
+	ACcKTw8I4wi01CMwu3JDOCXiWuLvmTkZ48I1G/UsGMf8W9xaa5CJqdY3+ItvRdE=
+X-Gm-Gg: ASbGnct6zynO5uMMxobsAfOw5f4BEbFsYt3DiWlbKukQtIyheud6rDflTSXmKCLV1c9
+	iqG5t+gE75mJsyXDJ3sh7HCF97/+0LV0z9dRp7Ep75FhgITKbp0zEddI9ymIyACRAsAF+MmdEaI
+	vdS8Pd66syiEwPUldKgSSyYosQMMBRnxPEsMVzFDmd24p7C4cFMy0WTLZlyqA9cpLkRV5YpzzhU
+	2ssXOmC6IZr7OBB1G9hyxmVHFY8L6KqHqhO/IMuUqY3iiF+e9xHhfloV05QR2rqbk3LIAPXk9rg
+	rhpvnd9LyO3mePWnayMWo6JzVETMvHFEswEe6YamhlRL0mpRBwX2DhfV4TbQH4p40aUiI/Ox6yi
+	hx50JP8ers09sfKYRttqAaIc=
+X-Google-Smtp-Source: AGHT+IE/m8/Fdsf69NCfrjgfUS4jJCYgvOivQ5nUV/iyctDTmBmE5TpokwkCVsL1qlBP7xetviS9Og==
+X-Received: by 2002:a05:622a:1211:b0:476:7018:9ae4 with SMTP id d75a77b69052e-47930fc2e7dmr153017351cf.16.1744050471657;
+        Mon, 07 Apr 2025 11:27:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b0876easm63483561cf.34.2025.04.07.11.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 11:27:50 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u1rCI-00000007Qnx-1UJD;
+	Mon, 07 Apr 2025 15:27:50 -0300
+Date: Mon, 7 Apr 2025 15:27:50 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Maher Sanalla <msanalla@nvidia.com>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/hfi1: use a struct group to avoid warning
+Message-ID: <20250407182750.GA1727154@ziepe.ca>
+References: <20250403144801.3779379-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-net-mptcp-hmac-failure-mib-v1-2-3c9ecd0a3a50@kernel.org>
-References: <20250407-net-mptcp-hmac-failure-mib-v1-0-3c9ecd0a3a50@kernel.org>
-In-Reply-To: <20250407-net-mptcp-hmac-failure-mib-v1-0-3c9ecd0a3a50@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1783; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
- b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBn9Bjg1Gtym9sISXFIzb2ww3e06wI6gWVSgTfH1
- yphsTczaXqJAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ/QY4AAKCRD2t4JPQmmg
- cwdqEACUb/JbM+TljiOqLHuRMZxE3Sezd2TIZU4UFTVNCCo+OfZBy9VA/KAAeXki3x34CgZh75H
- 7cAoZacSWacZjDyUHN+c0Y14qlMM3bXuy9Y6G40Crsg7Sg+CE+qFk4mreedn+s94Rc7vg4Gki+j
- kLznkDLwZsuhJfA02c73xdjtcRFO98GvPkZXb8yN3egUJi1Vwb546JwhiBeXgihNtESYhTkb+tZ
- xW3+q1PV1iOyu6MmRwTwcO7zQCB65BlM6rvHqVQez00kZE6FJXQQQAOQGMH3+pXQ3tCrlOHTBxZ
- 2Lhoe6btlD0mi+NRvE34hzOiXweAooZyjU1EHe3iQXUSVYtGiwx7Ak0gl2jgNcxQuSIQuRlpLHY
- vCTIDJqkRowDHX/GAiXDpQF/kWGFWhU1Wv6r3nTT61FvfQEcpRfZBB8WPjv4j0o3ATQ6cgvoZQV
- XdUGB8HoZOTT36VcG4eKwmyEpIab9PuHc0NP0T18Xu8iGeJDu1+alBOQ2nSyiIwKI6yL0Jjh9zO
- 3HqAY79sa1c8fGd+lKWEhE1NcE+uG25dG1vwVJBUuHROuDerDZYD0t31caraNqWrZq68wAB/eTs
- x8ZIa1GnmtCxhSY3Q+367d2UgZ8wRWbmKcwo7+rmfwEpAJw/1yMKtBNq+kylevpeuIFLFOypC8s
- XRLLEptn9EJje/A==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403144801.3779379-1-arnd@kernel.org>
 
-The parent commit fixes an issue around these counters where one of them
--- MPJoinAckHMacFailure -- was wrongly incremented in some cases.
+On Thu, Apr 03, 2025 at 04:47:53PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> On gcc-11 and earlier, the driver sometimes produces a warning
+> for memset:
+> 
+> In file included from include/linux/string.h:392,
+>                  from drivers/infiniband/hw/hfi1/mad.c:6:
+> In function 'fortify_memset_chk',
+>     inlined from '__subn_get_opa_hfi1_cong_log' at drivers/infiniband/hw/hfi1/mad.c:3873:2,
+>     inlined from 'subn_get_opa_sma' at drivers/infiniband/hw/hfi1/mad.c:4114:9:
+> include/linux/fortify-string.h:480:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror]
+>     __write_overflow_field(p_size_field, size);
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> This seems to be a false positive, and I found no nice way to rewrite
+> the code to avoid the warning, but adding a a struct group works.
 
-This makes sure the counter is always 0. It should be incremented only
-in case of corruption, or a wrong implementation, which should not be
-the case in these selftests.
+Er.. so do we really want to fix it or just ignore this on gcc-11? Or
+is there really a compile bug here and it is mis-generating the code?
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+The unneeded struct group seems ugly to me?
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 13a3b68181ee14eb628a858e5738094c3c936b74..befa66f5a366bb738f8e6d6d84677f5c07488720 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1441,6 +1441,15 @@ chk_join_nr()
- 		fi
- 	fi
- 
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynAckHMacFailure")
-+	if [ -z "$count" ]; then
-+		rc=${KSFT_SKIP}
-+	elif [ "$count" != "0" ]; then
-+		rc=${KSFT_FAIL}
-+		print_check "synack HMAC"
-+		fail_test "got $count JOIN[s] synack HMAC failure expected 0"
-+	fi
-+
- 	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
- 	if [ -z "$count" ]; then
- 		rc=${KSFT_SKIP}
-@@ -1450,6 +1459,15 @@ chk_join_nr()
- 		fail_test "got $count JOIN[s] ack rx expected $ack_nr"
- 	fi
- 
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckHMacFailure")
-+	if [ -z "$count" ]; then
-+		rc=${KSFT_SKIP}
-+	elif [ "$count" != "0" ]; then
-+		rc=${KSFT_FAIL}
-+		print_check "ack HMAC"
-+		fail_test "got $count JOIN[s] ack HMAC failure expected 0"
-+	fi
-+
- 	print_results "join Rx" ${rc}
- 
- 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
-
--- 
-2.48.1
-
+Jason
