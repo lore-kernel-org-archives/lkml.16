@@ -1,248 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C879B335BA;
-	Mon,  7 Apr 2025 05:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744002466; cv=fail; b=ts7tGRfb/VBTTG8JwaNDek/avdn5kYJsqZc+ODbkVWImoOC5tspSd/LsQA3OftRqPT6jIQq4Yzdpphtcvka/62VkDPX0Ui88a7zrN3lno/UoNoK6bLGbGvYwBThJIg1s2e4rdL7tZ3rX72L7yQIdpQtx8UiK/kmsghFxb0uXbcY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744002466; c=relaxed/simple;
-	bh=+luenkTxrsdIs8sePLqWOzJ7FSao9Z3w5CsT8QMcrgY=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=QdPSSm5O5kX+SNQC0oploPBf2qOkpCpnNxFQrFyMgG075+B2bjq7Vr37KlDsfhotlE1iIQehDuxhtVEwwkXtfDfrhN24HoXzyIFgTZEVf3UNxhCGCR9Z/fTNNLUecf2KD5coRPIpeY/HICjxv+zrS9L+6CeWotcr/lZjWY0Aw9k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hj8L4VQp; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D2F38FA3;
+	Mon,  7 Apr 2025 05:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744002589; cv=none; b=m8xXs6ENUwXVPqlIob+6TrCGBRfscvzmccvMSOyIl3wbAXgHYoujFZZq3W7ucboh+hsONUrkwxbZbLn/p5s++yBGnL80XRuPJUG/sUDdqYPYdtlIvpFbQGas3WHijqZYOV+JglusaxchA9JToUGEZQxCsIQWBFIbWpfRUiuyBVI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744002589; c=relaxed/simple;
+	bh=TOcRmAewKpzLaLnd2j86+JSrN+qmHHKC9ipgNM5H8/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VcTWgTU6OrR+jOusOYT1T2/lqXJY+AdbXnCPsRJa6qEOQXFaciQdeZsMz3Pp/2PwiGKg2ZJRo5Ks1MWqqSLrbHZVGGFgrYsC3WxepwBZfh9uV+0ewZUEwUr9lbRzNAcdNkkGdC8Cm2G0EMRvkcK7f5axJk/d+J5gHgF1k6fZgZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Carv0U4K; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hj8L4VQp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744002465; x=1775538465;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=+luenkTxrsdIs8sePLqWOzJ7FSao9Z3w5CsT8QMcrgY=;
-  b=Hj8L4VQp7wPS3xNt5rQZUwLwPpskCmXRK2SuFgrvAFCuvsdbzzwR+OVt
-   ixd4aYgwYBNDHEimGSY5xvc15Svrcjq7dP2G+WBzJV4Bo4O5/Hf/e/AiH
-   LcoiN4vQ4GrIlLGHvOCzWxvFNPX/C1V5ZxMvqt4bgBSo1eQr1njHQV2hU
-   49PMTO1ppXWRr0Jo5i/VTYk2mxFFSJkD9McYDmgs58/XN4pZf8uQVq0ZA
-   Q9u8dkQgm28TauvmpxAczm5FzMbE3JEyMU2M2eU8bNTzGfbiH2/pPYedQ
-   V5DT9CeVmyVNUXD8wbi4faaPLsHiZ8TXTN3mKLfCCriCWmipeM2ZLx8ay
-   Q==;
-X-CSE-ConnectionGUID: sEyp9EUET+CKg5v57Z9www==
-X-CSE-MsgGUID: hqxuyTXpS8eZPDXfyx114Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="56003770"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="log'?scan'208";a="56003770"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 22:07:44 -0700
-X-CSE-ConnectionGUID: ltpmEGTiQe2DfEwXMuRpIQ==
-X-CSE-MsgGUID: 7tyzdds9Te+alv9c+n1qlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="log'?scan'208";a="127685980"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Apr 2025 22:07:44 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Sun, 6 Apr 2025 22:07:43 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Sun, 6 Apr 2025 22:07:43 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Sun, 6 Apr 2025 22:07:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lt7SBwEM2hHRG7ngslo3CLzHwZg0XjUvLSIUCjufagCXZBF/ay4+FaZyxR1GHgMDbEZAult5780lSCEGHlvwjd+phmOqKoUrVkfIU4Jf6rvS6lo9AOyzGvnAujLTr4hZwN99JTc5fNafyjurbEkATAgC24m6+iTEkXsODuPbrAGy/d9YKyVjj7Nztod3Nf82KxrkxBlWllfJQsqNWhZdxE8eB59EdBQOIHVME4PYFHADzFDUYCbV7f4O0PPOWdc6fQWKV0EpXf9mHvbjpDtX2FPzXjHFGzxDoewGjq4Cq/8ZfDHpJq+Ls0as4kf5kjd5qXbrrB01xlelnFa2c+EOIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zlg7cnyHxuT7kZhluWZRJwY2gKcKe/o6QpxQsna6gws=;
- b=h5jnUboZEQ4kgefxZ8EekTqV1tnP0PVnRksVLeS5ASsCpdIPkq3t8Mf2X5QIgdILA5vbGkvwHiLwUVjGY1G8EQyT0oWQL+09Q9Fbsuxypi130DtdANWkG7Fz9ljrSQ54gv6Wv2AB6tInBFx/wemLZw4VDIbg94xzGhlkURuH8Tc7tMAj6lEI2XdhLbvDZyU5fgWHFO9gevgAS+UWB9HVLd9YDMPDqbi9pRB+kH9gi4PZCfTDoExY0HxSn2u2riT/01NbdFCLthJLzIh8MPBAZwM1bFKBURNVZ/Gpuj4JqpoMY7ziAwp7Kyw4FElntGaI67mq1+wK2q3Ejl2GVoC86w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by MN0PR11MB6253.namprd11.prod.outlook.com (2603:10b6:208:3c6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Mon, 7 Apr
- 2025 05:07:27 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
- 05:07:26 +0000
-Date: Mon, 7 Apr 2025 13:07:17 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Kan Liang <kan.liang@linux.intel.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, "Peter
- Zijlstra" <peterz@infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linus:master] [perf/x86]  88ec7eedbb: kvm-unit-tests.pmu_lbr.fail
-Message-ID: <202504071232.3c2fa7d5-lkp@intel.com>
-Content-Type: multipart/mixed; boundary="A3gEDkc/lJ/+Stz+"
-Content-Disposition: inline
-X-ClientProxiedBy: SG2PR02CA0091.apcprd02.prod.outlook.com
- (2603:1096:4:90::31) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Carv0U4K"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54993c68ba0so4365181e87.2;
+        Sun, 06 Apr 2025 22:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744002585; x=1744607385; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=15DHILdvgwDmTjhnhh/S9UFdOX4eqaWTZfsAwv/+ioE=;
+        b=Carv0U4KK8Fp3CXqyz1eLEayTEsEDWZC0vbcO60XNUPutoPdmgb6KOnyVlTyIaOkN2
+         uYh0xVszPZqt1km/5wUk52VNyB1Cjcoh0poolVhd3oGZG9YbhTrsMMQZvH3M5fgmtdyx
+         lDhr6mafiQyu6nUJvrgpbTV9J6uHu8bEfkItA5rnypgiNBgz1bk3zK49vd/lMY9bTpgS
+         KLJrCFpC5l/+Et7q5yKKAANBa1z/kEtVR7OlaPpHekrClLqCqzBe3npB7hLhbQ6RcEuF
+         hVWM/NX/89UukpIMWhwNTofvYWEYeaGcUbLMxY7cf0ufaA0hJCKLnqG47+LPdGeHmsqY
+         A4+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744002585; x=1744607385;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=15DHILdvgwDmTjhnhh/S9UFdOX4eqaWTZfsAwv/+ioE=;
+        b=RJV31Qx8mFcBXfTh8DdrAMmqw9pHe6rmukIPKt2Jm/EjqvEjMSTktnwBQvm3NF5PON
+         R14LMAzh/dVO3nB6D5tcamQM8WFvJ3H4bEq/s2Q/YcH9b+Jua4Yre3Z4VEqZCHCGLP//
+         sFhPkj2arV8QDsiKW5lX2TMiPnzk4ZqpsJ/+lIBJbJumCOuMp7+y+jorx7gFRsxW56Yi
+         L+3WgkRev1quUomUP/l/waHYzirx0Arw+7U0VszIl/+z4vZpmIzECYSJgZIGDD7LON//
+         BW9Asjho7M31IkvfcndtalYioihTuROhsd6WA43F49/DgLylQ/k9y0TRUUm72pmb3Xcg
+         mbuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdlpvR7feeD7qDUSROIsECelVWo4Kwzc6ol+RDWbw1gadMzBu/tlM05XD2mWyTzBnJqD5pv7VMlMPlhjbX@vger.kernel.org, AJvYcCWqr9bcV8TfTqmtbUo9cKAPaZbD7RF8SbrfdchVH95oBOczAV2BCUoS5L7TpAru2//51LrG24Fi69GK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4FE5+jsOEhKOE4kvOPla4hRgh/76ewHtFcn5Mv8oiRwBeAtpZ
+	TqMoOJefil4pbhE+RWfFy7aN0+3wjjMuoX0p4X89FjcNpCjYde2KeJZu4A==
+X-Gm-Gg: ASbGnctHqHmTTmD1I5P1FflS10LTS6XfEVjWALBSjjfVLdA7McaJJ3gZ46VQHrtOTCX
+	ZPh8KPw1aRCMjIQO96MzRSBWwyrUM82gv7hL3V82mP1P4EyFPmJ4OE1lTHI5WF68bMOqA4Zuzoa
+	ME4ljpwe+tvvLgOvixakcwlvY+qOMn2exl8ajI1Hf8JlQPXC/865pPqdMKPi5n7xStPZVS7Cp0y
+	QZvcH1q3E/WXsF6ftUq6aeDMCM4LSttHgbhpEwmdyMUzd4nPDh8dj1oFl67VawlmkihUEcTpNnj
+	SdiTWp2JFYdft0xtxb4mwwwlXG01V4ciiBdVcDIVEiCaKZ6mwjyCrz64KMwcmBAS2w7MvMVCgJM
+	GaE/oFXtGh0riQMxjn1cHxYNALw==
+X-Google-Smtp-Source: AGHT+IEeVdRWtDbmlDwucy3+7umdQuSdpeDu7wo4IM8msmlcEeuZhtu7qNaMvPmIDtRm1JKjguT2Lg==
+X-Received: by 2002:ac2:4c4b:0:b0:545:62c:4b13 with SMTP id 2adb3069b0e04-54c227f8ed8mr2620730e87.40.1744002585162;
+        Sun, 06 Apr 2025 22:09:45 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5ab61fsm1120006e87.34.2025.04.06.22.09.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Apr 2025 22:09:43 -0700 (PDT)
+Message-ID: <2d18b7bc-7d94-4e45-8c7d-9a8acf4089eb@gmail.com>
+Date: Mon, 7 Apr 2025 08:09:41 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|MN0PR11MB6253:EE_
-X-MS-Office365-Filtering-Correlation-Id: fa69226b-f952-4fc0-57ba-08dd759216f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|4053099003;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?61IrfXD3wzaI+ZuhbeBYoDphPsT4C1CJcrqBVKlbAoFXoJ/pwjxqyTfQoDor?=
- =?us-ascii?Q?i8KMNhn+zQ1g11WefwdxcJC/3Ufk0FasPley16xVrfa0TZnbsgkRDtKmxqFC?=
- =?us-ascii?Q?bg09vMcCbKdMRsN37/pLLE3R/gk1p1WigKfxgsmZ6ByGa1DDIcn4CAkADLXr?=
- =?us-ascii?Q?psTUpaX4KUJ7X1SDrps5G9Lgu9G0qo7sutpmiGZCoPBtJ8qokjVXA4OcsCtc?=
- =?us-ascii?Q?zODDdmg4tifP3PSs3CFyL37ZILeSFHOK5mu+NRc5WiAIN1JVKwwzFLbZAZH1?=
- =?us-ascii?Q?hOO0PBkOZztFN5fuTBOFwmN0VjAgS5nGIKJKn55qEGdaz8UInc9JMTLavdrq?=
- =?us-ascii?Q?P+yos8J+PGwYEErw5jVE7fj8+lYy4+eUAjI5GbMJ6BO9nuqOUhOny3fknxCf?=
- =?us-ascii?Q?Sq5RKhrSpYZNI4RLDVZwIl7isoEsFzN/ObUlsowDOuK2RLXfUZxi9oXy8812?=
- =?us-ascii?Q?GuvW1dgawVDFr9mf44VcVNNuR5DBRrRVwjPp1SLfGxVRELPWOfTCL46ruRE4?=
- =?us-ascii?Q?gi4A6PskTrTD5NEE8u3sekE2iJTs+AKi4ved6a6E1hl32eHuB4woN/RhQgtT?=
- =?us-ascii?Q?bYG9wChHymgm31nZoe76gU4Rrvc9sDMrBSeaSM3mzG6MIaD5s5hdKsd4i6aH?=
- =?us-ascii?Q?jN//cYNaAuMtvl4dfpZGi8kcdyrKFCRtK7/I0khLpw0zfXfWyH4eVuytU07J?=
- =?us-ascii?Q?4bKfkRhfZTUszs6rD8raRHt2A8azIrXRO5opPDFtlTjvgQyesYWrIT8s6I9/?=
- =?us-ascii?Q?c9vJxPZXE4c/gK3ybQ23pGt65ozY9nT9057kGTgWINEQMpyyhas11o2zadYn?=
- =?us-ascii?Q?22HPzv4sFa5LOmGw7SyKASuIB7axXKnmK84I+AiV1c/Y+KXun4mjMklE+zpR?=
- =?us-ascii?Q?vfk2Iqiu5AjeiywHIeGqy4JmLpIEzQlx+pX4xW6EF6honAKhuOb0XoVdosD5?=
- =?us-ascii?Q?5+8mOzyEu2Rt5IOBWWh48sSv6ZrM9pL62D6JS+I1f+VceIvknnOarj9PEQKM?=
- =?us-ascii?Q?UbIpCaAuluPR6M5MYdh2qMvXKlNBVnO2LOrUmvnRH9absfuFgRtQL34SrpZ7?=
- =?us-ascii?Q?MYBV+PC1fPfmYsN229IU+TBaAZ7Y/Lji69WWa6QEqviBhW+Bg6hj2DHyWGXx?=
- =?us-ascii?Q?fSD44fCe2X7mp8LHuuHSFhkvPJYELaNLt6Z3RHSiLYQsDJOaBkjrRMqrnX9j?=
- =?us-ascii?Q?hzaxBjd6j4inNRDNZ/oaoFK5y6cQkNRxKDrPRyWh90AGGVyeuhmSCKZRsX1S?=
- =?us-ascii?Q?pD3PfBv8DEUwYqQcZQZNSC+DGvPgqEDuW4VCiin/Y8wXj+GwZ6c+xxm6dYtK?=
- =?us-ascii?Q?nBAFQl4VxrO9Yjlp0AGJLOWwKOkVtKYGMgOtmVFdMPqRkOCXunEn1WR6CrnM?=
- =?us-ascii?Q?qSLNLtShGZ0zcApwVN4rpwQPjhuM?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(4053099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6HZK67tnpqiEpwQqNmT3jycFENEVhf8DgQYwBjuQaLGma9psYm6c7FIYcglK?=
- =?us-ascii?Q?XdvpGE5pVkqPbBoXicw0RjPs9CW1zsXa+mwXpksPuOP+d9X1kzkBboD7/QnO?=
- =?us-ascii?Q?GUmpsHctn01XeuXob8VK6iahXCxJ21D8Xbf6B5CWTGKRva/FGRhZzO+onydN?=
- =?us-ascii?Q?EPrOuCBPMpEi5LQ7HEJ0x8M/6PfcdUZO+h36ght6AB9TcuJeTrHqrBS7UpXX?=
- =?us-ascii?Q?89cTJ2rCNI/p7ww7uotW6MPykT3G+YumYtKNGLIgTgg4buKzPDlVYeTBasr2?=
- =?us-ascii?Q?1OaKVrFQ6kUx7O21Mb5qemwOtRRYM8GH1QtLhp1Cx1yYVQ0KiBV2qnPZjCtn?=
- =?us-ascii?Q?W8AFkOtk7eXCSBJde45sE5LQx3fDjb7Aqnae/DlJH92QvagwlcNEVjSXFyM1?=
- =?us-ascii?Q?Y3Keu1dzzbb15UZi3YjBs/ARSml0Ooes6B3Ljky/MMTZVJtt+bs93MER3To6?=
- =?us-ascii?Q?0rg1ZLSmcaQ99tWdSz3qhs3VsL2DagywsuzS4g6GFWeR0UHtciZ3qfr6YVgq?=
- =?us-ascii?Q?pEUrn4xPB6HEujntoc2i3duEjOzJBNORcM+Yp9au/GDZimxoaPhA/2tL8Yad?=
- =?us-ascii?Q?VrHV6RNfMRMyJvkanYVOH334pCjo7dqMzu6rSGR+czgo+fS+bTcp1BRE7aT/?=
- =?us-ascii?Q?7jhTebASI38AZ5xLh1Eq4Mq7rhWH9idymEr7NcLt+gW5k1RvASE4Sd0iifFz?=
- =?us-ascii?Q?Jo1WV5GNt2ApGh4xU8be+8y9yZP0Q58MKW9ZmUk83fzwkw1faDhOw+HiiJL6?=
- =?us-ascii?Q?X5p3r+mSBx2t4AzCdQsshmgJKe6aSoo/4jnYFxsE1VNh0NbeoMgp0fmeVwDc?=
- =?us-ascii?Q?UDHX1i6YKduo3hIfCSMNREKhZ1F0WOYDvX11qHxhrEzl/9i86G/btRrMQVQv?=
- =?us-ascii?Q?2AENJxQSHUbDMHWYzT6nb2p83nWU+RGwgBXh0M4jRO4TdhAxaxpJqNRWUw6B?=
- =?us-ascii?Q?xPpD4a5LRvTm5s8YSTjJeJWNl1sLtYE5/TXvADlhJtRGLGFWtxzaVC/pty2q?=
- =?us-ascii?Q?8qFIMxlbsGdp40CarYO1Mn1oaFHLsPckhQhVf8X6ikJRAT8Lk82nrPsZnwGQ?=
- =?us-ascii?Q?yfhr7mt07R6jy/tY0jWT07u2CISxJpEsqrNZddXX4MWXXTwatYINddmSge4M?=
- =?us-ascii?Q?lslgLhFoYItyCJoBmmwQCpu29YfaTSoSndnOObG7CriHRfFvaNe3h9lbNafT?=
- =?us-ascii?Q?SLK6SkA3eXQqk54fYfhZsJryQF2YllYCUj7xM25CtwhGw+X5ZQNFR2goMMf6?=
- =?us-ascii?Q?+K5Tg4Ny7ISScJ/lvi67a9phjGFmEV9THyxkKm77Cg+4uTrcUnqvCtlIzmhG?=
- =?us-ascii?Q?QlwdocZiDEcYF3vGVfKo2SoZ6P37BBSMG8+B1gklGRgixcUOGHZ4PtJxTPlK?=
- =?us-ascii?Q?99qIdpgbGX0HGl5aH7xoQDH7FEJ59xYNOBFO8Qjcxa5RVnFin5/23y7zdABu?=
- =?us-ascii?Q?+LsLK9ViyMQZO8JpTpt+Oh7EKJ6a/DvQl0j5K3mah1vlWvxDXOMyySHrvckF?=
- =?us-ascii?Q?B0rD65O0KMl0n1oAvBLJ8csZboRz8vGhjnLH7B76Sw78zmAL/cuNDuWzgd34?=
- =?us-ascii?Q?Z7BVNOhwhZhZVdDsXS5h3QMCYjG32GnM8vAVdQwJdRYEWvqCtCQmrUEksEcF?=
- =?us-ascii?Q?zA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa69226b-f952-4fc0-57ba-08dd759216f7
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 05:07:26.8612
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qjnUNyphRDhhqF7FzMmNfK8H6OiR3kQM6tbHno3WdDbtMNu71aGfy4h96NsMxUSartGKVON9sNDDH2n7bUJSew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6253
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/14] Support ROHM Scalable PMIC family
+To: Lee Jones <lee@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1742802856.git.mazziesaccount@gmail.com>
+ <20250404154355.GH372032@google.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250404154355.GH372032@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---A3gEDkc/lJ/+Stz+
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04/04/2025 18:43, Lee Jones wrote:
+> On Mon, 24 Mar 2025, Matti Vaittinen wrote:
+> 
+>> Support ROHM BD96802, BD96805 and BD96806 PMICs
+>>
+>> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
+>> to the digital interface. Main difference is voltage tuning range.
+>> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
+>> able to differentiate the PMICs (done based on the devicetree
+>> compatible) and then providing separate voltage tables.
+>>
+>> The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
+>> provide more capacity on systems where the BD96801 alone is not
+>> sufficient. Startup sequence of these PMICs can be synchronized in
+>> hardware level, and there seems to be some mechanisms which allow
+>> delivering the companion PMIC (BD96802) status to the main PMIC
+>> (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
+>> individual PMICs and allows using them from software point of view as a
+>> stand alone ICs. From the digital point of view, the BD96802 is a subset
+>> of BD96801, providing only buck1 and buck2 regulators. Please see the
+>> data sheet
+>>
+>> The ROHM BD96806 [4] is similar to the BD96802, except that it does also
+>> provide different voltage tuning ranges.
+>>
+>> This series adds basic voltage monitoring and control as well as a
+>> watchdog support for these PMICs using the BD96801 drivers.
+>>
+>> Similarly to the BD96801, these PMICs too have a few configurations
+>> which can only be done when the PMIC is in STBY state. Similarly to the
+>> BD96801, doing these configurations isn't supported by the driver. The
+>> original BD96801 RFC [5] driver should be able to cover those
+>> configurations, if modified to support these models.
+>>
+>> [1]: ROHM BD96801 data sheet:
+>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
+>> [2]: ROHM BD96805 data sheet:
+>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
+>> [3]: ROHM BD96802 data sheet:
+>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
+>> [4]: ROHM BD96806 data sheet:
+>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
+>> [5]: Original BD96801 RFC:
+>> https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
+>>
+>> Revision history:
+>>
+>> v1 => v2: MFD driver changes after review by Lee
+>>   - Use enum for chip type instead of picking the data directly from the
+>>     of_match_data.
+>>   - rename "chip data" variable 'cd' to more widely used 'ddata'.
+>>   link to v1:
+>>    https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
+>>
+>> ---
+>>
+>> Matti Vaittinen (14):
+>>    dt-bindings: regulator: Add ROHM BD96802 PMIC
+>>    dt-bindings: mfd: Add ROHM BD96802 PMIC
+>>    dt-bindings: mfd: bd96801: Add ROHM BD96805
+>>    dt-bindings: mfd: bd96802: Add ROHM BD96806
+>>    mfd: rohm-bd96801: Add chip info
+>>    mfd: bd96801: Drop IC name from the regulator IRQ resources
+>>    regulator: bd96801: Drop IC name from the IRQ resources
+>>    mfd: rohm-bd96801: Support ROHM BD96802
+>>    regulator: bd96801: Support ROHM BD96802
+>>    mfd: bd96801: Support ROHM BD96805
+>>    regulator: bd96801: Support ROHM BD96805 PMIC
+>>    mfd: bd96801: Support ROHM BD96806
+>>    regulator: bd96801: Support ROHM BD96806 PMIC
+>>    MAINTAINERS: Add BD96802 specific header
+> 
+> Adding support for 3 new devices in one set!
+> 
+> You don't like making things easy for yourself (or us) do you!  =:-)
 
+Well, adding the BD96805 and the BD96806 were _very_ minor changes. More 
+or less just adding new voltage range tables. (After the support for 
+different ICs was done for the BD96802). All of the ICs, BD96801,2,5 and 
+6 are 'same family' of "scalable PMICs" - which all share similar 
+digital logic. Hence, bundling them into one series didn't seem like too 
+big if a chunk.
 
+> 
+>>   .../bindings/mfd/rohm,bd96801-pmic.yaml       |  10 +-
+>>   .../bindings/mfd/rohm,bd96802-pmic.yaml       | 101 ++++
+>>   .../regulator/rohm,bd96802-regulator.yaml     |  44 ++
+>>   MAINTAINERS                                   |   1 +
+>>   drivers/mfd/rohm-bd96801.c                    | 565 ++++++++++++++----
+>>   drivers/regulator/bd96801-regulator.c         | 447 ++++++++++++--
+>>   include/linux/mfd/rohm-bd96801.h              |   2 +
+>>   include/linux/mfd/rohm-bd96802.h              |  74 +++
+>>   include/linux/mfd/rohm-generic.h              |   3 +
+>>   9 files changed, 1065 insertions(+), 182 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
+>>   create mode 100644 include/linux/mfd/rohm-bd96802.h
+> 
+> The MFD stuff looks okay to me now.
 
-Hello,
+Thanks! I'll translate this to ACK tag for the v3 :) Please, let me know 
+if you feel that's not Ok.
 
-kernel test robot noticed "kvm-unit-tests.pmu_lbr.fail" on:
+> Let me know when everything else is ready to go.
 
-commit: 88ec7eedbbd21cad38707620ad6c48a4e9a87c18 ("perf/x86: Fix low freqen=
-cy setting issue")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+I still need Mark's ack for the patches 7 and 9, and I need to fix the 
+voltages for BD96806 - meaning at least 1 more version.
 
-[test failed on linus/master      0a87d6bb6fd274cde3bf217a821153714374198f]
-[test failed on linux-next/master fefb886b1344e222b3218f3c0165b0fd770e8b88]
-
-in testcase: kvm-unit-tests
-version: kvm-unit-tests-x86_64-69574079-1_20250322
-with following parameters:
-
-
-config: x86_64-rhel-9.4-func
-compiler: gcc-12
-test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (=
-Haswell) with 8G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new versio=
-n of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202504071232.3c2fa7d5-lkp@intel.co=
-m
-
-
-...
-=1B[32mPASS=1B[0m pmu (143 tests, 14 skipped)
-=1B[31mFAIL=1B[0m pmu_lbr (2 tests, 1 unexpected failures)   <---
-=1B[33mSKIP=1B[0m pmu_pebs (1 tests, 1 skipped)
-...
-
-
-one log is attached.
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250407/202504071232.3c2fa7d5-lkp@=
-intel.com
-
-
-
---=20
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
-
---A3gEDkc/lJ/+Stz+
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: attachment; filename="pmu_lbr.log"
-
-timeout -k 1s --foreground 90s /usr/bin/qemu-system-x86_64 --no-reboot -nodefaults -device pc-testdev -device isa-debug-exit,iobase=0xf4,iosize=0x4 -vnc none -serial stdio -device pci-testdev -machine accel=kvm -kernel x86/pmu_lbr.flat -smp 1 -cpu host,migratable=no # -initrd /tmp/tmp.1JDHego9zM
-enabling apic
-smp: waiting for 0 APs
-paging enabled
-cr0 = 80010011
-cr3 = 1007000
-cr4 = 20
-PMU version:		 2
-LBR version:		 4
-PASS: The number of guest LBR entries is good.
-FAIL: The guest LBR FROM_IP/TO_IP values are good.
-SUMMARY: 2 tests, 1 unexpected failures
-
-
---A3gEDkc/lJ/+Stz+--
+Yours,
+	-- Matti
