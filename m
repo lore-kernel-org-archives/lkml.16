@@ -1,72 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B07253B5F
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678AC23A9B6;
+	Mon,  7 Apr 2025 13:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031872; cv=none; b=peaKZXGoYlC4F4yoAidbdGtuzhQ/vhbRuVhYKru2z9OowC6BN6JyRo2WXSlBTLG+Rn9A0Um9tKDHzgaBi75jk0xRLTzK45W1Ic3cwoGKLzwghbQRDA0cXnNRt0pEHPKxu7tT80+j4ILHEDvBMulYh6tjRQq0daoAelcLJRpukwY=
+	t=1744031938; cv=none; b=g0AQU3VLcppxWHgSvwCbet3S8c/PfRvtT9bSi8peTizthccsPplwMgrMasgvxDKEDJRksDNKy56KFQEmBL4xqz4Ipl0PTXhyO+NALlcGu4dMcTQtumOYn1THTzeLfKf8RvQyT6SzaY5BLHdX//+N7sr7KjimJ6iSAVvsZy7Be38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031872; c=relaxed/simple;
-	bh=S4DZHGQjVJb+4A4qFaXbHEcAUW8Cb8hEE4RunNXnZPQ=;
+	s=arc-20240116; t=1744031938; c=relaxed/simple;
+	bh=v1NRki44ZNsg11HwuI5lbdH0wmJphUEXdqHPrVHt4dw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fGKb0cuXdigm+NmBvIgRoeLNZxVFTBNb8v2iuaD7T81iWFT5pFmE88drOxf1wMe8T6xn1T8ZnBUJJGfW5eAzmxJIEpCo1aVO2op/dlKJcFYdN/sN/Djhjh8DvJLTI+fcGcWagNhiwVLUaVceEC8A801YQH7dIL5a03PGpjU5ikk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R+S688Ab; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=icxERXfm1CZawVPaI5Iozq/IHRAgG5zezKLB7cqy8ZA2xiPTlXdbaoU8vUCCGoTtmk/l4JUrrA/pZZkyKrRVrzUOcoby9YIhYds46E5mVyxqtHeTiuQ1dEhcD8VApk5L1ojaxpaTMEAFcFnVVzcYMgL/Ephwtr0ZPagLg70cfik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzfSUKFV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+S688Ab"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744031869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BDwPW9pE1ppSBFgbdeMQcAvVIbhGoy40D70IGcXEs5w=;
-	b=R+S688Abp3LIWbdROFKmwAa13lxMTp5+zzl+cCC5ur8jKxccrspTZIXUoZ7tAr4Zaw2I5A
-	qi4Koq6BJ9zbJiHmHv5FiAbeJHDYlNOSlgeJLcSI5siwMUbr+WbwRGC/lAAZGjvwWeThel
-	tBqHVMzTJxwqSZqxu4Ilaa2GQDdSjoY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-IBfLSCLaP_Wy8g1UoXmH4Q-1; Mon, 07 Apr 2025 09:17:47 -0400
-X-MC-Unique: IBfLSCLaP_Wy8g1UoXmH4Q-1
-X-Mimecast-MFC-AGG-ID: IBfLSCLaP_Wy8g1UoXmH4Q_1744031866
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso32452405e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:17:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744031866; x=1744636666;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BDwPW9pE1ppSBFgbdeMQcAvVIbhGoy40D70IGcXEs5w=;
-        b=pXOKEs7w7NwfDPoSXxiSJwerHc4mdn5LesD2ZhmSSc7dKRKW+HkYwLtd6ISxigfuiQ
-         FzuaKjJOlLgKgZOuvYYt2vPwnqwrGPaeRHbKj3kpD4iBsBjm/K8MpLyWxLbirpz7twm7
-         8vP+qNuyLQbEsznh/k9WF8SiSNXJ9kGBvyk0XLruWrVHTKkS08t59aMFyOrNXN/TLavp
-         eBUyDaFIxdJaRy5d1aB+EFPZfk6pOfYbsYSYwvAn1s8N/uXwI1+Ccjvu2F+X3EasBpa+
-         H64UZzb6QQBCrYpeSVKQrBl8UdgsDmvq1hyQOpJ7tnFtLudbIhZb45zyweNmH5xYz1Zv
-         wlGQ==
-X-Gm-Message-State: AOJu0YxzNttzrjkN9vqN45UUc2zpJwoIfPaRRGSKMuqEtpR5nKJ9Wsoy
-	H9hFGFpr07msYRjpjtN4DMcDgFlCsLHyGAnSejlIBSKPvX+wkwBjU4aBRgJo/WUY+yLmDOO4yld
-	PZmdJc2acIjFNedaimzO6XKF5Wg7UR9/225ctsEeUGs853C0wsaXkva4P4FsEMA==
-X-Gm-Gg: ASbGncsLGpwqoP2b2AVOtPm68rg/ePh0VTI+t8gWnfNVMGIkgLNr0fjiPiVeFg8KJxT
-	YgddK0I2U8eW1eMIVjnFQXegJbOOYE7Y4GpOPv2W56Q2wWxgwY1IU4A8Lt2QLZ36Z306s607xrS
-	QVa++vibCn85IDVj6aBerWL6gCn96RWm4pPwwuca1OjMlDHf/pzdVj0Kc4zEp6fVBBNtYNbR/td
-	awePZMPG7f56WR3rExFgLgjwHlnLb1hn6keZ82nRbMD4o6/Kh6Uoq0j5ncSuTRIsAPtEp8W8YKo
-	ifMwUc1LQUuX2bPg51B+/9Xwka/HfIC15XfvA5T9iUEtJNbYaIhFIQvmsSkgAPCq4ahROFL290k
-	UrPqyY4UISESMyh28ycZduCpY1YAlYhL2bGz+V//Dnpk=
-X-Received: by 2002:a05:600c:1d88:b0:43c:ea40:ae4a with SMTP id 5b1f17b1804b1-43ee0783f84mr91002545e9.31.1744031866262;
-        Mon, 07 Apr 2025 06:17:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJDoHH+S74Q3s4YfYRMtY1QKAiLrupUYEmKs8h7WdQfIUm62OfLdBHe1bCgK7GIfw3yihrvQ==
-X-Received: by 2002:a05:600c:1d88:b0:43c:ea40:ae4a with SMTP id 5b1f17b1804b1-43ee0783f84mr91002085e9.31.1744031865876;
-        Mon, 07 Apr 2025 06:17:45 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366a88csm127570905e9.37.2025.04.07.06.17.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 06:17:45 -0700 (PDT)
-Message-ID: <9126bfbf-9461-4959-bd38-1d7bc36d7701@redhat.com>
-Date: Mon, 7 Apr 2025 15:17:44 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzfSUKFV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73452C4CEDD;
+	Mon,  7 Apr 2025 13:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744031937;
+	bh=v1NRki44ZNsg11HwuI5lbdH0wmJphUEXdqHPrVHt4dw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BzfSUKFVEpf0b9QkyCwYgoqYngi01GfaCOmSO7DOi5Ik36vH6qRv7isKR9eWSdXb+
+	 cBo+ifa02XLZ4OjgqVo+GwClE3157DdGsWBq/QjH22e9seMOLo/xU3kNaj3h3rvXe0
+	 npHsD2YUE8VSizzc/Pu63CbZ6Vvl6VhhihD5JmVL+ULVqF1ZsIY0iTuvLH4GuRm0gY
+	 J18IchOfnFU1109RueLHMAb7SnVT8NwTsfbALQQRgHy6Ad0G2XehMnP4JyU5LnvBkT
+	 GHRHJFRVpUM49HIi16FO9YNq9sxWQQw1G5/GMw11NMbayBpgJndcsoJYynwNuVkrrP
+	 JEwGs1AEWZTbg==
+Message-ID: <02157e96-9524-4590-9ca6-e4390176d74e@kernel.org>
+Date: Mon, 7 Apr 2025 15:18:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,140 +35,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-To: Halil Pasic <pasic@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org,
- Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org,
- Cornelia Huck <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
- Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Wei Wang <wei.w.wang@intel.com>
-References: <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
- <20250407034901-mutt-send-email-mst@kernel.org>
- <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
- <20250407042058-mutt-send-email-mst@kernel.org>
- <20250407151249.7fe1e418.pasic@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/7] dt-bindings: phy: spacemit: add K1 USB2 PHY
+To: Ze Huang <huangze@whut.edu.cn>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
+ <20250407-b4-k1-usb3-v3-2-v1-1-bf0bcc41c9ba@whut.edu.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250407151249.7fe1e418.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407-b4-k1-usb3-v3-2-v1-1-bf0bcc41c9ba@whut.edu.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07.04.25 15:12, Halil Pasic wrote:
-> On Mon, 7 Apr 2025 04:34:29 -0400
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> 
->> On Mon, Apr 07, 2025 at 10:17:10AM +0200, David Hildenbrand wrote:
->>> On 07.04.25 09:52, Michael S. Tsirkin wrote:
->>>> On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
->>>>>>
->>>>>> Not perfect, but AFAIKS, not horrible.
->>>>>
->>>>> It is like it is. QEMU does queue exist if the corresponding feature
->>>>> is offered by the device, and that is what we have to live with.
->>>>
->>>> I don't think we can live with this properly though.
->>>> It means a guest that does not know about some features
->>>> does not know where to find things.
->>>
->>> Please describe a real scenario, I'm missing the point.
->>
->>
->> OK so.
->>
->> Device has VIRTIO_BALLOON_F_FREE_PAGE_HINT and VIRTIO_BALLOON_F_REPORTING
->> Driver only knows about VIRTIO_BALLOON_F_REPORTING so
->> it does not know what does VIRTIO_BALLOON_F_FREE_PAGE_HINT do.
->> How does it know which vq to use for reporting?
->> It will try to use the free page hint one.
-> 
-> First, sorry for not catching up again with the discussion earlier.
-> 
-> I think David's point is based on the assumption that by the time feature
-> with the feature bit N+1 is specified and allocates a queue Q, all
-> queues with indexes smaller than Q are allocated and possibly associated
-> with features that were previously specified (and probably have feature
-> bits smaller than N+1).
-> 
-> I.e. that we can mandate, even if you don't want to care about other
-> optional features, you have to, because we say so, for the matter of
-> virtqueue existence. And anything in the future, you don't have to care
-> about because the queue index associated with future features is larger
-> than Q, so it does not affect our position.
-> 
-> I think that argument can fall a part if:
-> * future features reference optional queues defined in the past
-> * somebody managed to introduce a limbo where a feature is reserved, and
->    they can not decide if they want a queue or not, or make the existence
->    of the queue depend on something else than a feature bit.
+On 07/04/2025 14:38, Ze Huang wrote:
+> +
+> +properties:
+> +  compatible:
+> +    const: spacemit,k1-usb2-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+No supplies? No resets? Are you sure hardware does not use them?
 
-Staring at the cross-vmm, including the adding+removing of features and 
-queues that are not in the spec, I am wondering if (in a world with 
-fixed virtqueues)
-
-1) Feature bits must be reserved before used.
-
-2) Queue indices must be reserved before used.
-
-It all smells like a problem similar to device IDs ...
-
--- 
-Cheers,
-
-David / dhildenb
-
+Best regards,
+Krzysztof
