@@ -1,103 +1,110 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D18221703
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D52D2192EC;
+	Mon,  7 Apr 2025 18:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049433; cv=none; b=PnNkv7vZYmzn8hOf07sufeuFDv5u+P9B3jWPwalgdzb8X1u2mJ0cAoTjmNfMTghmBUC2qxOy/SqWdGYB/awPlYtus1/7apSagA+EVG5rmAqM81+S+Zu3nXewzv3IGL7NsHhx0ETtsPfIs5nNF95q+pxNVor9NxaeH6QsKDJSbx8=
+	t=1744049460; cv=none; b=hEKql3bEs8jl9Mp2uRL1ZNCnvNRQTtAljHX+Ta7VbH5yhWcxs7lW6UUqGfA62c22Bu0qaxE6F/B6Fnhu/2hZvG2nN8rgxtrg/rKPMm5FbmOleab34UzmNR9wov8xRhFbmR6d9hGlMC9lr79xOKTDpqoWQiKyGUS+5VcRGyN/pNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049433; c=relaxed/simple;
-	bh=v9npP5qbKRifiCIf9b7irGIXhNLkL7PO9tLewH6PPVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oOeWLiQyHPIBtD6kDjUCSnyhp5ei3YAlSDWfLvyjFGWGpyiu8sshwtKmG3g16f3eW+58Lwc4ZTE2elr2JHIsI3SB602crHKH8FXaALhUYd2pqW/Bw6ZsWD7s9NSlPd8xaasBic/L5TzpKsCOhBL+NyIuTSYIf4A85T4tl7sfRPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5Q+9D4r; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744049460; c=relaxed/simple;
+	bh=1n8w72QUH2UGgtG9x7UIbDqk/81YUoHFqZ/HuioKmpw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hrGcqYjq4NUGgfbAaswXFTJD6id6slNTxc41TmnsgBzSwaqJMPY3PgJ47mRJmW/3NKJiu8NVNymwMpbLCOO/MGBkL8ijOxQre4us/iBnuk9Bwrkifo8UTN8nKuPn31DaK4xPmH0m9HOw2gnzBQCIAaFvcUXnp0SfwCR/0GR1930=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IazVlB9o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5Q+9D4r"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso31856525e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049430; x=1744654230; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K2jy8IatPgSK7yiHP9LyAJS3rO34x8/Nplf/sO52+c8=;
-        b=g5Q+9D4rDRCwARJ/i/u/XG+JzBQnY32OlcNWplUnQAXiI833NrkrhuwTDOtmhpEO1B
-         VGxjq5z3zPqTZoSLoYQlvDOnTtLfgYNNHmLqtFzn+HjrkZmTEHtSUBgIgGXgUYpBmCwz
-         Mm3+lJUp5m7PUNDieFPL5DM0lk6ehur2r52dfJQj/UnPv+EjY6UFqlRlRYVdKHHg4Cyn
-         nX/6iRgGLyDb/81jCmUkduEKhHTEA/hM2zwA/5SNMGYHrgffu7VJTns28z0SSo+lFDIZ
-         hE3T+WZ+d6jRRPspQbkyQvsrtxJwnz0NGkv/pE2ZrGX/44yRFFWF3e6JPabuLvVE7iOL
-         Ssjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049430; x=1744654230;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K2jy8IatPgSK7yiHP9LyAJS3rO34x8/Nplf/sO52+c8=;
-        b=Ubh8odFBw34DRjSibyLy/WK4nNjn2Ad4EoKGHtI9RWZpitmQrFbbIkqccm4eDkZZth
-         fS0QFtQRlQl2Dq1dEBB4hU2VRsUfhD18CE/29CGoZd7eqHuCIe4/00yTMRwznyOjwmsx
-         /PLaQ2obU57Shm4J/SbWVt8Fvu4pUpM59a+vv9RkwhH+/9dxxSfUVl8NwqMZExP9iU0G
-         OsfTVDaXpe07VdKzuCp9awd3cDcanHzfddxdAD6X9aZSvFZcp1GFVF3poNlJwYYs5vr4
-         Xue9yGW3zge/DDeNksepAy8Jwb1gxykLFKrdj23q69WsnsPAPWU3KfLhDCQfQ/zCyKj/
-         24Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+SB0euszbI1oED+2b1JJuFoH0uu3tr+bMDOVYkK8f83lnG+pJZtkSYm13kqzAqvCemgwuXt7bJZ7hZoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv4fTzFyCMfpYl1jDWrO+APH//fJGO24JGmVaAUzmXguBpM/Co
-	0bZCqeJT46T/OVjpevNSTaa5kWuna+901H9GD+ygw/jnv/dEeDCXdpnysw==
-X-Gm-Gg: ASbGnctImGVBqE/fsYzBw7I1U24u0ThKi65Mwiq+Z1QO+sRcN2wXnAxLv72MaIt1shq
-	gFdgl7g3anb4JT3/mjqtQEqKHersScOHCj2bbmzo8KwJIGrW7YUHkUa1Xq8svhwpZxKuKnTCZNc
-	BV5iWlJOeyBq+REDqYrLnNgkGPQbUJ/Gq3/kG28U/BnpJ6NSvew1B/jfF6RFzTGVQ/STBd47oCf
-	VCkyrv0lZTVbOvXinzW66EqYGxkBylTlT+g+Z/4Nr+9Tyb3l5n7NopAzPwFjpMbhvZow4qaY1RL
-	flpG2HAHJMiXNjEG3t6l5WELDVHZHYz58Vl+SD8AMzc447SXOLsPCw7jiq+8VTZRRGclarUBhpU
-	2b+rORT0=
-X-Google-Smtp-Source: AGHT+IHaegiIWGdjPbnxhlEDw1k6oGNTFiTAtEH0eFypa2jskzJXuIGn2vVlNXDffixeGV1f7yuI3w==
-X-Received: by 2002:a05:6000:4021:b0:391:2df9:772d with SMTP id ffacd0b85a97d-39cb3596914mr11334861f8f.13.1744049429775;
-        Mon, 07 Apr 2025 11:10:29 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm12959981f8f.77.2025.04.07.11.10.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:10:29 -0700 (PDT)
-Date: Mon, 7 Apr 2025 19:10:27 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kevin Koster <lkml@ombertech.com>
-Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, Ingo Molnar
- <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-Message-ID: <20250407191027.54494cec@pumpkin>
-In-Reply-To: <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
-	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
-	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
-	<20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
-	<20250406174633.2c581923c145687476191753@ombertech.com>
-	<20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-	<20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
-	<20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
-	<20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IazVlB9o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79174C4CEE9;
+	Mon,  7 Apr 2025 18:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744049459;
+	bh=1n8w72QUH2UGgtG9x7UIbDqk/81YUoHFqZ/HuioKmpw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IazVlB9ooZbzKQmBkVvfMj6eRbS3l6G7+I1qu+SV4NIjHzNyYa0IeUu7NTrxms4me
+	 jrIoM03huOfwwqidkrxoyApQ4pvhTw6mMKu8FuNsP+BYJkSeU/j+aE2fEOsx2j9B5T
+	 4CNbQoZAqmJo7ekqZ2ginu4YC0duY/9Sff2/rvqTNcuIxeJlgIW6dQAon9bh5F3iRo
+	 fuqE+fwF/pktDXc4kyUAh+95k7F9ZWgGrd2R2b+bFSe/aaeZuD5nEjgjGg++98Kd6m
+	 z5yKncHarxdjj/cgOAy5DBVRx3ry04Cvyrsu3Qkr87KhXxuiztS96ZtFrfbSb6SXHN
+	 SHqRjTLXD/AYw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Dave Penkler <dpenkler@gmail.com>,
+	kernel test robot <lkp@intel.com>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	dan.carpenter@linaro.org,
+	arnd@arndb.de,
+	salwansandeep5@gmail.com,
+	roheetchavan@gmail.com,
+	matchstick@neverthere.org,
+	linux-staging@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.14 01/31] staging: gpib: Use min for calculating transfer length
+Date: Mon,  7 Apr 2025 14:10:17 -0400
+Message-Id: <20250407181054.3177479-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.1
+Content-Transfer-Encoding: 8bit
 
-On Tue, 8 Apr 2025 00:21:50 +1000
-Kevin Koster <lkml@ombertech.com> wrote:
+From: Dave Penkler <dpenkler@gmail.com>
 
-...
-> > > and I'm not much better, writing this now on a Pentium 1.  
-> > 
-> > Lemme guess: this is your main machine you use for daily work?  
-> 
-> For email/news every morning, then a (newer) laptop afterwards.
+[ Upstream commit 76d54fd5471b10ee993c217928a39d7351eaff5c ]
 
-Buy yourself a raspberry pi.
+In the accel read and write functions the transfer length
+was being calculated by an if statement setting it to
+the lesser of the remaining bytes to read/write and the
+fifo size.
 
-	David
+Replace both instances with min() which is clearer and
+more compact.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Closes: https://lore.kernel.org/r/202501182153.qHfL4Fbc-lkp@intel.com/
+Signed-off-by: Dave Penkler <dpenkler@gmail.com>
+Link: https://lore.kernel.org/r/20250120145030.29684-1-dpenkler@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
+index 3f4f95b7fe34a..0ba592dc98490 100644
+--- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
++++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
+@@ -66,10 +66,7 @@ int agilent_82350b_accel_read(gpib_board_t *board, uint8_t *buffer, size_t lengt
+ 		int j;
+ 		int count;
+ 
+-		if (num_fifo_bytes - i < agilent_82350b_fifo_size)
+-			block_size = num_fifo_bytes - i;
+-		else
+-			block_size = agilent_82350b_fifo_size;
++		block_size = min(num_fifo_bytes - i, agilent_82350b_fifo_size);
+ 		set_transfer_counter(a_priv, block_size);
+ 		writeb(ENABLE_TI_TO_SRAM | DIRECTION_GPIB_TO_HOST,
+ 		       a_priv->gpib_base + SRAM_ACCESS_CONTROL_REG);
+@@ -200,10 +197,7 @@ int agilent_82350b_accel_write(gpib_board_t *board, uint8_t *buffer, size_t leng
+ 	for (i = 1; i < fifotransferlength;) {
+ 		clear_bit(WRITE_READY_BN, &tms_priv->state);
+ 
+-		if (fifotransferlength - i < agilent_82350b_fifo_size)
+-			block_size = fifotransferlength - i;
+-		else
+-			block_size = agilent_82350b_fifo_size;
++		block_size = min(fifotransferlength - i, agilent_82350b_fifo_size);
+ 		set_transfer_counter(a_priv, block_size);
+ 		for (j = 0; j < block_size; ++j, ++i) {
+ 			// load data into board's sram
+-- 
+2.39.5
+
