@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB6724888D;
-	Mon,  7 Apr 2025 12:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06B0250C1E;
+	Mon,  7 Apr 2025 12:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030076; cv=none; b=ayQqoJ4b6DzwRSOCnXmIszJlG4XqlN1QnZkwOcKLu1IXtK/AfyzHR+QQVk8GvxNUyN4+cTiSYRtdJKkkzWxtHqVudgDYLYNsIYVl51AhOrj2X1HLGyR4jxHQbuftclzKVYH8NuUU7uqXvSWRwMRoFPd1rnpoY870+BTkJQKzVE4=
+	t=1744030077; cv=none; b=iYROg6uEW5SP8WWdhd4EOzzQYPp7rrRlC10LoX0K7lNiATq0FM6HhqxFUylVYvTf0vu6iluNjHIkpShnoPgrFMDbM5dc1bBnZHRpWO811/6BEMZNMdOacVAVVkDdHeQ7xKTgOZdXAIPGWMJfrbyP0YxCzBHxtkv8v5BW606ej2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030076; c=relaxed/simple;
-	bh=+IgO/E1P2X9+2yuR3YvVnFoL9ihGcuvDSLanfznzRRA=;
+	s=arc-20240116; t=1744030077; c=relaxed/simple;
+	bh=8pg0IaAVYZFUC95tFMo4ZQZdSqJpqLsdAE8soxBwgso=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=rqX0SJeUUqnuYVxR8jBApUes8sN1QEwaQoFMpRqYoKz1m4K5N4lXYkJqNhQZFpl/kRMH38cSvegWXx8j0uHkg0HKaFxQBRYyXevWEnyQ7+v7QImR7RuOLGm5NwnNRzi5LHxQzUn3dcnshqkW/FiCYcJ05fLMOpO/ppqzLgzwcyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpT8c2cv; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=UXD2GQzUoG8tqxtmtnjGEu/Ocy+udXlZ673d2TSjz0b6rfrFoPODz4eGu2iyyml0Nl0SSCCkzpJOEFQQBTjeys9PLnaI/HD8nepd14dEgHOcNQPVFkDWOhGvtHdazagbRGBzHVdMVc77NMqCA+OxxUOE9kjEpPivTcFsaqhbeBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbxisBFp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpT8c2cv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0AA3C4CEDD;
-	Mon,  7 Apr 2025 12:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbxisBFp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F03C4CEE9;
+	Mon,  7 Apr 2025 12:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744030076;
-	bh=+IgO/E1P2X9+2yuR3YvVnFoL9ihGcuvDSLanfznzRRA=;
+	s=k20201202; t=1744030077;
+	bh=8pg0IaAVYZFUC95tFMo4ZQZdSqJpqLsdAE8soxBwgso=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=kpT8c2cv1xcz5ZHuC/5PEcmSVqNA3JxyZM+ffBQBgaRZFR7rMxiV4lYnjdFRlihyw
-	 i1VsA5BelYISKVWIYxkh16w1iduFyQkzYRF/wCNqhglkUVXRvWk6KpvzjBG+hnxEdg
-	 ul97TWkE4jge8PmxIEGSMUPv+T7vRz7QBG1ZpvDc6dYQ6pB22L9KGwN3bWpG64Mx39
-	 krGyHe6R3ZFoUIk2Itd7rzBGNRxZhKnEXiaOhkui+mQuYnFzruoV7lbE3GnFMz2eI8
-	 4FTw35xUBvkdNBb1ruSsBs6oaXVPaXCakyBc0EWXNi4dbdmBaIwGcOEI/6iAGalDa3
-	 0YcZ3G+JdTVug==
-Date: Mon, 07 Apr 2025 07:47:54 -0500
+	b=UbxisBFpNniJeAn7s9ciXKDlEKSn/dko3/G/IS+qreBSlrZFvLpLIoWyOo/ODkv3L
+	 9WMEdeDouKvLldhEuhRmz1JWi+bXlpR4+93pLOuikjUeIF2ZADnUw4cuYkudNOqA76
+	 3RZBptpjE/B1jV4TatHbuEhXQN2OPaXUYgG/AoiaMPQ3Qp+fKF/HLM5GJk8TjArEwF
+	 +BNmcpSqQtSmVktigkF/+RFaU483DWFH+6fuB8goi95RgFcwUSKSUbdDmiNyGNdvCr
+	 +6pIvlzB6AiwxmDkyC+ENxNt9x0HgPZ5lcCB5WeZMbLQOlm/gf/8/HNZXtQ1b2vD+2
+	 0qa24HwMDP3rA==
+Date: Mon, 07 Apr 2025 07:47:56 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,37 +36,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-phy@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
- Kishon Vijay Abraham I <kishon@kernel.org>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-In-Reply-To: <20250405174319.405975-1-mitltlatltl@gmail.com>
-References: <20250405174319.405975-1-mitltlatltl@gmail.com>
-Message-Id: <174402971815.1782886.2804255933275419532.robh@kernel.org>
-Subject: Re: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg
- override handler
+Cc: pavel@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, 
+ corbet@lwn.net, linux-kernel@vger.kernel.org, lee@kernel.org, 
+ linux-leds@vger.kernel.org, krzk+dt@kernel.org
+To: Nam Tran <trannamatk@gmail.com>
+In-Reply-To: <20250405183246.198568-1-trannamatk@gmail.com>
+References: <20250405183246.198568-1-trannamatk@gmail.com>
+Message-Id: <174402971830.1782904.14648060042339616468.robh@kernel.org>
+Subject: Re: [PATCH v4 0/5] leds: add new LED driver for TI LP5812
 
 
-On Sun, 06 Apr 2025 01:43:18 +0800, Pengyu Luo wrote:
-> In downstream tree, many registers need to be overrided, it varies
-> from devices and platforms, not only HS trasmit amplitude(0x51),
-> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
+On Sun, 06 Apr 2025 01:32:41 +0700, Nam Tran wrote:
+> This patch series adds support for the Texas Instruments LP5812 LED driver.
+> Patch 1 adds the Device Tree (DT) bindings documentation.
+> Patch 2 introduces the core driver implementation.
+> Patch 3 adds documentation of sysfs ABI interfaces.
+> Patch 4 adds Driver documentation in reStructuredText format.
+> Patch 5 adds the LP5812 device tree node for Raspberry Pi 4B.
 > 
-> The device I plan to upstream also uses it, so I write the patch for
-> it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
+> Changes in v4:
+> - Merge leds-lp5812-common.c into leds-lp5812.c
+> - Implemented the core of aeu_pwm[1-4]_{store, show}()
+> - Used kstrdup() instead of kmalloc() for allocating characters array
+> - Add sysfs ABI documentation
+> - Updated device tree binding documentation
 > 
-> In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
-> in downstream, some crd, mtp, htk devices also use it, I have no
-> such device, don't set it for them.
+> Best regards,
+> Nam
 > 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
->  .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
->  .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
->  2 files changed, 72 insertions(+), 19 deletions(-)
 > 
 
 
@@ -86,17 +83,14 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/v6.14-rc6-274-gf4e35e5f940c (exact match)
+ Base: tags/v6.14-1107-g406fad7698f5 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250405174319.405975-1-mitltlatltl@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/broadcom/' for 20250405183246.198568-1-trannamatk@gmail.com:
 
-arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dtb: pmic@7 (qcom,pm8550): phy@fd00: 'qcom,host-param-override-seq', 'qcom,param-override-seq' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
-arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dtb: phy@fd00 (qcom,pm8550b-eusb2-repeater): 'qcom,host-param-override-seq', 'qcom,param-override-seq' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/phy/qcom,snps-eusb2-repeater.yaml#
+arch/arm/boot/dts/broadcom/bcm2836-rpi-2-b.dtb: /soc/i2s@7e203000: failed to match any schema with compatible: ['brcm,bcm2835-i2s']
 
 
 
