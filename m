@@ -1,40 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E7821B9E5
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172F22222D4;
+	Mon,  7 Apr 2025 19:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052592; cv=none; b=fzj82N9qFhoIqrmu+q/hkGYBO6QYWyBi5BqKG/zduj765KKR2WcA+GljM+YX/xck7fKR4IUV92iQy/6QufM9Q3je22SYNIkUkK5h7FwYVrd0nM3qtR5zkJthZXAEZYc7tquSxN8pbsoOWwubyxiKhzC1fel1/9+8RBJGdr3gAKA=
+	t=1744052619; cv=none; b=RLkUs47DiCnc9caJCcxajxYAtymQsakRM+q6TVicWfeieB3ned0EvpU32f4wbh/Z67XVITdfYW5ADrrT/KxjdsLFH/Dp6k89G3Bxb2YdKlkYpBRKLmD0F80Y/gCrzb3x3MFINJlswBo1icHyzNxltp9iqwZhLigsQo3VzHwqf5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052592; c=relaxed/simple;
-	bh=WxXvcXWBlibBfTQ5FIb9hcxkhzP3ZbBMImGvDJFUsA8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=puQAWdPXJnPOjfEloJkopkxbkxzoyX3GoLix2BbsgtLstx8vx7/MpQeHjL5yV20QSkAkUemldAadX8UhIAxjI0JgmZmVGOgUENq9pIr6pvznK4O/uK7xeNhiTOTzSu721OtNYQy+Vk3SuPju72y2wbAOWCStFE8/XFiEqF1ZidM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RI/0W5HR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744052619; c=relaxed/simple;
+	bh=9jUK5fFO/zBSCtoslWjYR97SvHCJCuRCU0KIKS3G5a0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=V28jqYTh9LDQqWaM3qd/qc5jA2ppL4BJE7ryYwOrGz3af4lBw1a3OABh17YfoQbYBsP3u47XW+p48WSawBmAYFuYjUKeM1NYXcFyPbVg2l6a9U0L47FY5euYK2bhjNxbj4RZbzgojT6aLgNcPG+bUfXIVvTgvDTs24VBfvziWa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=O+8BqO7M; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RI/0W5HR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDA2C4CEDD;
-	Mon,  7 Apr 2025 19:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744052591;
-	bh=WxXvcXWBlibBfTQ5FIb9hcxkhzP3ZbBMImGvDJFUsA8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RI/0W5HRY+3O4bE6VkUzffZl1JVXEQQzZilIGW/OhwqKAAhxLbhTJ0m8rv+bFUPSk
-	 TPzjZIxATWyNK0u4mbDkFDo6jyzL+cC4qZgIZWoyWVKsKCI68L6jckhA89295vbvAe
-	 aj/cLN3/He8sSTDuC8qztRqN+9LZEV73DozaMCT+RjKYYS0GsIJ50adrxIGhhJMZTb
-	 Q/A2LWamLMmpPug33XLN+HWP2Co67hAzYBxQcbE3Rw2FMdSjE0c3kQAk47G8kfdJlF
-	 YyNjtGnasX2Kok9KZAyanIYqlddE/XdLOA9mBhy5YlV82c2RADGG9+Wh/2lS/TEgr5
-	 TGra7Eo9IR/2Q==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, Yang Li <yang.lee@linux.alibaba.com>
-Cc: linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-In-Reply-To: <20250407064532.22680-1-yang.lee@linux.alibaba.com>
-References: <20250407064532.22680-1-yang.lee@linux.alibaba.com>
-Subject: Re: [PATCH -next] regulator: pf9453: Improve documentation for
- pf9453_regulator_set_ramp_delay_regmap
-Message-Id: <174405259056.819169.10817429856101827771.b4-ty@kernel.org>
-Date: Mon, 07 Apr 2025 20:03:10 +0100
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="O+8BqO7M"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1u1rQC-00CpZg-VG; Mon, 07 Apr 2025 20:42:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=B46oeqhR6OuooSI1uvUNydwdBFfTPFTrPvRqV6TVJlY=
+	; b=O+8BqO7M0VZFCHknGdVU2zQ/2dkc5OFRM/4XZMGQfM+V1PvaK+faD9P2Gr1VKilTIllvKeQaD
+	1awEBt/PiRh/mP0j2XNS5gEz3RH21Hh2wum0GvVuCu3vIUZ6ngYH0z0wa4IaFAs5+RMEFWz312qTy
+	4RDI6XvcaiU/O01W52l0DXvK5Pt6PBXm6KZbK01Gkf6cRl2U1yBDATGjWcFgHk/c9/XaOln9HPSBo
+	vUVoqG2RilDPKLsOpnnzQjFaOhuSlhQljB7G9FaASog2qeMoEC/IIgmiMGobf14NeUZ43K0HRaM1E
+	Rz0SxZ0oNeRG5pXQvMxW4ZdKG+leqDl2OLtCAQ==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1u1rQC-0001M7-HP; Mon, 07 Apr 2025 20:42:12 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1u1rPz-008fhd-5o; Mon, 07 Apr 2025 20:41:59 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Subject: [PATCH net-next 0/2] vsock: SOCK_LINGER rework
+Date: Mon, 07 Apr 2025 20:41:42 +0200
+Message-Id: <20250407-vsock-linger-v1-0-1458038e3492@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,43 +47,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+X-B4-Tracking: v=1; b=H4sIAGYc9GcC/x2MQQqAIBAAvxJ7bsEsJftKdAhbayksVEKI/p50H
+ IaZByIFpghD9UCgmyOfvkBTV2C32a+EvBQGKaQSrejwjqfd8eCiAhohNSlnTK8tlOQK5Dj/uxE
+ 8JfSUE0zv+wFVJPPHaAAAAA==
+X-Change-ID: 20250304-vsock-linger-9026e5f9986c
+To: Stefano Garzarella <sgarzare@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-On Mon, 07 Apr 2025 14:45:32 +0800, Yang Li wrote:
-> The function pf9453_regulator_set_ramp_delay_regmap lacked detailed
-> parameter descriptions and return value explanations in its documentation.
-> This patch improves the documentation by adding specific details about
-> the parameters, their usage, and the return values, enhancing clarity for
-> developers.
-> 
-> 
-> [...]
+Change vsock's lingerning to wait, on close() and shutdown(), until all
+data is sent, i.e. until workers picked all the packets for processing.
 
-Applied to
+Changes in v1:
+- Do not assume `unsent_bytes()` is implemented by all transports [Stefano]
+- Link to v0: https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+Michal Luczaj (2):
+      vsock: Linger on unsent data
+      vsock/test: Expand linger test to ensure close() does not misbehave
 
-Thanks!
+ include/net/af_vsock.h                  |  1 +
+ net/vmw_vsock/af_vsock.c                | 25 +++++++++++++++++++++++++
+ net/vmw_vsock/virtio_transport_common.c | 25 +++----------------------
+ tools/testing/vsock/vsock_test.c        | 30 +++++++++++++++++++++++++++---
+ 4 files changed, 56 insertions(+), 25 deletions(-)
+---
+base-commit: 61f96e684edd28ca40555ec49ea1555df31ba619
+change-id: 20250304-vsock-linger-9026e5f9986c
 
-[1/1] regulator: pf9453: Improve documentation for pf9453_regulator_set_ramp_delay_regmap
-      commit: b3d9e96c96b0076a11aa1001d55b3dc189b8cd1c
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Best regards,
+-- 
+Michal Luczaj <mhal@rbox.co>
 
