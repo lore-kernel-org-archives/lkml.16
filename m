@@ -1,256 +1,144 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26331940A2;
-	Mon,  7 Apr 2025 13:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D871A83FB;
+	Mon,  7 Apr 2025 13:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033399; cv=none; b=S9n6/oT6upyZEoy2vPJIxFc+SdsIQsgp2Pr/a6bZHSP4P2utZgKgE2uI3g42/lZlk4cewMI8gSRTus4ENQDaE3kmeU4Trsg1lIBJtn5MU/ZeYURB993UMNAfUSbcIHDe7lckdkgn3fts++DZlVqfMj0bQP7mUwM0IipU0YA12Bo=
+	t=1744033407; cv=none; b=O9auLiKBNb7CrBSqh5h8TSEbfUrj6J/tXkpIduCIb2V0/yK3ykv03hL+RlxKrmsiPVc5p/VA4fU2hL+v/cjl0ko0gbK6QWeEAvfFw5iYNF4YkvT5hxNBCTM0XkDIPNeUM6OSnOpzVL2cAtE02N+GG5Mk//RIATz049Fl/kROxG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033399; c=relaxed/simple;
-	bh=X1ea2CJNe5g29eU7NaxN/Y1blw5H6lgzb0bZxLXWx0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZmAgn+yEIR3xzcqPG9sCi9xOhPiU3N+BUjiovfZs9uM/eJ3f5PE8HpWLQ65eOyHy7ZNBe/Ur2cyffW6Q2kYiwZCSjEh/vEi1hkF8VST1HWvpk3uVAQS2uY4Wu7+FRFLJlXRGbYod75nJDNiqt//wFxkRvUAc+0lpAMPz88DMf0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pP1g8jHj; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744033407; c=relaxed/simple;
+	bh=jrzILLsCIxZUTLE3MafGV/FTTLWLet8Gdk95AnmhE+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPi3uvGgEsWj5Q1wSWnyrGTnzEexdYonjfDfglLwYOHQGdCh4HDj4H1RYn4j+239iANYUYYbuoyJNjcpfKvm0m25/FuckzcdOkMSOAEJC6Xs34WVVovXpOFJ/0DZCZf2FAytDWYFnOP66GGyMKzk34gwkdvXfSG3xQTT/BgS6vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=OOLfnVJE; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pP1g8jHj"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Dh9R6875578
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:43:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744033389;
-	bh=dGBpYQ2u4Xg72qKcD8o7JaVtQ8ZvFq1mwxt4AEdFmf8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=pP1g8jHjn4YkrYv9Bor31jj3olwp0KUAVLGkSLly6fYT4Nwa8tzD8Rr61c8aDHBkl
-	 MCiBzqlHEVsmF5ihv5H6JOGVLi4BK0b4xuH8wZDgJr4D8a/ULGZ16WaPy+ZMSWUw2k
-	 syTaYitdzI4Duo2RwXyV5tgQDqPSJ7FhcBwits2k=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537Dh9FL027727
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 08:43:09 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 08:43:09 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 08:43:09 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537Dh8uN071585;
-	Mon, 7 Apr 2025 08:43:08 -0500
-Message-ID: <0636d6a8-7de9-4887-82eb-3f5fd8a208d5@ti.com>
-Date: Mon, 7 Apr 2025 08:43:08 -0500
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="OOLfnVJE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1744033388; x=1744638188; i=christian@heusel.eu;
+	bh=nxVX+/XG3otJuF4Layjw9CHGn3CFOF+qkjVmgD6saaE=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=OOLfnVJECo/p7+m5OhqZgTNtR1kA97QDNfTkZe5a4IuE8E6aGws3SnEP/JPEQHi1
+	 vv/v3a0bKvTddAEo/iG3gRukP2eP+jNnPTGTUx7r/CNPW8qQC6XgRK2x9kOOkVGH2
+	 oejqtLvDxjL0D87HMal4qqnwTZmm44cxxmcEx0qqlJD5Xx9FW4BgN4N0o59K1sggu
+	 Xs2n2EMatsjRNxl6qGJPvWDA5bTAGIVkmNTLwOYTRXQ1KOUlUbMQXk5NozvX49oEK
+	 GQpBpaEBgs0aRu0caXrd6Eiic7AwuaGte3FuQ+01uNIleZXlwPz8X0URCkaFVDpti
+	 4AaVMsNSx4zKW3hVXA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([147.142.179.140]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MLA6k-1tjZ783ITC-00VwJa; Mon, 07 Apr 2025 15:43:08 +0200
+Date: Mon, 7 Apr 2025 15:43:07 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>, 
+	Patil Rajesh <Patil.Reddy@amd.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, "linux@frame.work" <linux@frame.work>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+Message-ID: <d77dc639-dd7c-4a48-ae0a-26829d6fcdca@heusel.eu>
+References: <ae644428-5bf2-4b30-81ba-0b259ed3449b@heusel.eu>
+ <BL1PR12MB5176333ACE3287786831B0749AAA2@BL1PR12MB5176.namprd12.prod.outlook.com>
+ <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 05/26] remoteproc: k3-m4: Use k3_rproc_mem_data
- structure for memory info
-To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250317120622.1746415-1-b-padhi@ti.com>
- <20250317120622.1746415-6-b-padhi@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250317120622.1746415-6-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4jdafsn3zhukglgv"
+Content-Disposition: inline
+In-Reply-To: <195e5df0-d044-4d7a-afa1-4361c760c1f3@amd.com>
+X-Provags-ID: V03:K1:STRrzaZkDUer/XXZd+uC/hyiVVowrvzju+RynrANkb59pbujCSC
+ CxUnBgGA/r9L0V/hehkVeOJ72O3uBzpkC+ppLrGpMuLy1JpcsGPs25gGMWf53gWk2f5Cou8
+ qr0Tq+ABbrmet0fudZAqDsbjqiPJCxUwIkzSc7Q3U7ahsmar4mKNVRW6jxOrPxHfrAPedy+
+ YkmsvPV6LIEqSahQQhRbA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZVuUV60D3Rg=;yqnubyWrjx2j2LJVhr8jw702Gg9
+ +qH6p6Y4EoIBNx2eLFjWd4i31DYA75jq7AV0zod3HhH3AQMXBiIwkncppW/NRiN6ZPzdRrzFA
+ NLgoljokpVIdNBfdfdW5tpJI91OYoV+ZaLpR2wIwteMLauf4hqJOSs762BAAlLgABe0d4TDrN
+ gS7Y2MBrjqNjRfs8tA2K3dt/eJBeV4Mma3gdQlx8Mlu5IlHwynqQeChcyml3E7hYEBa6vfjFO
+ ubaX1mNfSQSaEXZ1Hk+DVxRGaDxRdDAcXkKDSCJ5/TMtNkEX8DbqZIdZup/bG0r43ShDh5u/W
+ HbTpqK9/EtVX/gfAs4bBA0/81kMGAkRiVdu9UGDkdx21/YmRw0pARWj1qaKGi6rXeHf7/khtt
+ /EkhVC76POF7/Sw32N38oXdYvCvmYVCPcJbsS7bd/gBUm5X65Yt54ZwWmbr91cIZIOa9HXKJp
+ ojYipTFxdI74gqIOh9S/HhHqnwgPnCT2u0IL7oDR5h66u5nLs9wjH3kD1A7Ws5gT7RYMafzpV
+ 0KmOiBvZNYwgQQrVZEhFUxZiQ4EslMsjwc4pawpoSZdaH4eY/+3FvUqPhBBeBiI6tDZ0GDE8c
+ Xa4w06FLlXCQQZciHTPiHCLhB72jekkGN7EoDWNlPSPQtfOkymx8QezTdAVuNEfueBzQLdAFN
+ zqfgxelFMdpkv4/sO9Mh7o682DaYEuoOrN3z3iGCRVoQ8ufCO7Ps2ZWm9uLzsk9ivpQ1DfS66
+ AmwcZa9auEmeTMph5hTsENS0LXcVaNkTmCvxhZ0Tnr/DGhEWmUppJZZxTQGLTHz1g+WLdbPMq
+ uU4Yfbf/Q8oKynEuWBBHUuh4QOLrtrZEX2bAlChn32Rs1KF5k389G1yHTCgIBpUwFsdw77lhE
+ XxFj3m3MRV0tLOWh5N+l8UVEQGLx2Ad+p8lUr5nErFq1loS62w1RTRiZHaT7K0kWGYSx+MaPC
+ fTbNVcMp5arr0W8met+jGh22a6oyXsl9NANkhhdYSQmyatJGHeYQwt0lfxJIEPwaLnH/Gg4zw
+ hNIfEyKFy/LQUu07Q+vRBKegesKFQ1TW38pTf7SsS5q1XokEZv+UxvI3LxR5Mo3hEWSg7VGUK
+ cATTk4kujQtunRstkAmZX6VPCe4OBo7PcWxDmquFZ1az1GOxaRKt4GNKa6YkrZu9vqMGyGQtV
+ Y21tIzNAHSWWRE+w8nQgIJIfKL+ehd3wPLfvRnwPppcKGUBIFjhQldjAz8sZFcMN/XFB3sytL
+ sFJCd7NFpjrmSkNRl2V671urWdp3o+tgjRYJD/NSh4Qd6JTPzs/bCypWiYGLC0UAKPliZZtQw
+ Tr0jpEZXJp+KwJ+MSmpKhmtra9mEvyUjctGJ/V2kUTXgLUFUDZOoiIRTXx3ixfDwXVJuCKB+b
+ Tsaguz96j+33K0ulnmJT/xCfEZiWUED1IXRAeK+7uSvfsjQ9Ohj7ktNPQ6
 
-On 3/17/25 7:06 AM, Beleswar Padhi wrote:
-> The ti_k3_m4_remoteproc.c driver previously hardcoded device memory
-> region addresses and names. Change this to use the k3_rproc_mem_data
-> structure to store memory information. This aligns with DSP and R5
-> drivers, and can be refactored out later.
-> 
-> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
-> ---
->   drivers/remoteproc/ti_k3_m4_remoteproc.c | 60 ++++++++++++++++++------
->   1 file changed, 45 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> index d0ee7a8d460d..e83bef7cfddf 100644
-> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> @@ -20,9 +20,6 @@
->   #include "remoteproc_internal.h"
->   #include "ti_sci_proc.h"
->   
-> -#define K3_M4_IRAM_DEV_ADDR 0x00000
-> -#define K3_M4_DRAM_DEV_ADDR 0x30000
-> -
 
-So two patches ago when you did this same thing for R5, you kept the
-K3_R5_TCM_DEV_ADDR define. But here you remove the adress #defines.
-I don't care if you leave them or keep them, but just do the same
-either way for both M4 and R5.
+--4jdafsn3zhukglgv
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION][BISECTED] Firmware load error for TEE on Framework
+ Desktop
+MIME-Version: 1.0
 
-Andrew
+On 25/04/07 08:20AM, Mario Limonciello wrote:
+> On 4/7/2025 1:36 AM, S-k, Shyam-sundar wrote:
+> > Hi,
 
->   /**
->    * struct k3_m4_rproc_mem - internal memory structure
->    * @cpu_addr: MPU virtual address of the memory region
-> @@ -38,15 +35,29 @@ struct k3_m4_rproc_mem {
->   };
->   
->   /**
-> - * struct k3_m4_rproc_mem_data - memory definitions for a remote processor
-> + * struct k3_m4_mem_data - memory definitions for a remote processor
->    * @name: name for this memory entry
->    * @dev_addr: device address for the memory entry
->    */
-> -struct k3_m4_rproc_mem_data {
-> +struct k3_m4_mem_data {
->   	const char *name;
->   	const u32 dev_addr;
->   };
->   
-> +/**
-> + * struct k3_m4_dev_data - device data structure for a M4 core
-> + * @mems: pointer to memory definitions for a M4 core
-> + * @num_mems: number of memory regions in @mems
-> + * @boot_align_addr: boot vector address alignment granularity
-> + * @uses_lreset: flag to denote the need for local reset management
-> + */
-> +struct k3_m4_dev_data {
-> +	const struct k3_m4_mem_data *mems;
-> +	u32 num_mems;
-> +	u32 boot_align_addr;
-> +	bool uses_lreset;
-> +};
-> +
->   /**
->    * struct k3_m4_rproc - k3 remote processor driver structure
->    * @dev: cached device pointer
-> @@ -56,6 +67,7 @@ struct k3_m4_rproc_mem_data {
->    * @rmem: reserved memory regions data
->    * @num_rmems: number of reserved memory regions
->    * @reset: reset control handle
-> + * @data: pointer to M4-specific device data
->    * @tsp: TI-SCI processor control handle
->    * @ti_sci: TI-SCI handle
->    * @ti_sci_id: TI-SCI device identifier
-> @@ -71,6 +83,7 @@ struct k3_m4_rproc {
->   	struct k3_m4_rproc_mem *rmem;
->   	int num_rmems;
->   	struct reset_control *reset;
-> +	const struct k3_m4_dev_data *data;
->   	struct ti_sci_proc *tsp;
->   	const struct ti_sci_handle *ti_sci;
->   	u32 ti_sci_id;
-> @@ -336,14 +349,13 @@ static void *k3_m4_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len, bool
->   static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
->   				       struct k3_m4_rproc *kproc)
->   {
-> -	static const char * const mem_names[] = { "iram", "dram" };
-> -	static const u32 mem_addrs[] = { K3_M4_IRAM_DEV_ADDR, K3_M4_DRAM_DEV_ADDR };
-> +	const struct k3_m4_dev_data *data = kproc->data;
->   	struct device *dev = &pdev->dev;
->   	struct resource *res;
->   	int num_mems;
->   	int i;
->   
-> -	num_mems = ARRAY_SIZE(mem_names);
-> +	num_mems = kproc->data->num_mems;
->   	kproc->mem = devm_kcalloc(kproc->dev, num_mems,
->   				  sizeof(*kproc->mem), GFP_KERNEL);
->   	if (!kproc->mem)
-> @@ -351,17 +363,17 @@ static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
->   
->   	for (i = 0; i < num_mems; i++) {
->   		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> -						   mem_names[i]);
-> +						   data->mems[i].name);
->   		if (!res) {
->   			dev_err(dev, "found no memory resource for %s\n",
-> -				mem_names[i]);
-> +				data->mems[i].name);
->   			return -EINVAL;
->   		}
->   		if (!devm_request_mem_region(dev, res->start,
->   					     resource_size(res),
->   					     dev_name(dev))) {
->   			dev_err(dev, "could not request %s region for resource\n",
-> -				mem_names[i]);
-> +				data->mems[i].name);
->   			return -EBUSY;
->   		}
->   
-> @@ -369,15 +381,15 @@ static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
->   							 resource_size(res));
->   		if (!kproc->mem[i].cpu_addr) {
->   			dev_err(dev, "failed to map %s memory\n",
-> -				mem_names[i]);
-> +				data->mems[i].name);
->   			return -ENOMEM;
->   		}
->   		kproc->mem[i].bus_addr = res->start;
-> -		kproc->mem[i].dev_addr = mem_addrs[i];
-> +		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
->   		kproc->mem[i].size = resource_size(res);
->   
->   		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
-> -			mem_names[i], &kproc->mem[i].bus_addr,
-> +			data->mems[i].name, &kproc->mem[i].bus_addr,
->   			kproc->mem[i].size, kproc->mem[i].cpu_addr,
->   			kproc->mem[i].dev_addr);
->   	}
-> @@ -563,12 +575,17 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct k3_m4_rproc *kproc;
-> +	const struct k3_m4_dev_data *data;
->   	struct rproc *rproc;
->   	const char *fw_name;
->   	bool r_state = false;
->   	bool p_state = false;
->   	int ret;
->   
-> +	data = of_device_get_match_data(dev);
-> +	if (!data)
-> +		return -ENODEV;
-> +
->   	ret = rproc_of_parse_firmware(dev, 0, &fw_name);
->   	if (ret)
->   		return dev_err_probe(dev, ret, "failed to parse firmware-name property\n");
-> @@ -583,6 +600,7 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
->   	kproc = rproc->priv;
->   	kproc->dev = dev;
->   	kproc->rproc = rproc;
-> +	kproc->data = data;
->   	platform_set_drvdata(pdev, rproc);
->   
->   	kproc->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
-> @@ -650,8 +668,20 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +static const struct k3_m4_mem_data am64_m4_mems[] = {
-> +	{ .name = "iram", .dev_addr = 0x0 },
-> +	{ .name = "dram", .dev_addr = 0x30000 },
-> +};
-> +
-> +static const struct k3_m4_dev_data am64_m4_data = {
-> +	.mems = am64_m4_mems,
-> +	.num_mems = ARRAY_SIZE(am64_m4_mems),
-> +	.boot_align_addr = SZ_1K,
-> +	.uses_lreset = true,
-> +};
-> +
->   static const struct of_device_id k3_m4_of_match[] = {
-> -	{ .compatible = "ti,am64-m4fss", },
-> +	{ .compatible = "ti,am64-m4fss", .data = &am64_m4_data, },
->   	{ /* sentinel */ },
->   };
->   MODULE_DEVICE_TABLE(of, k3_m4_of_match);
+Hey Mario, hey Shyam,
+
+> > The file "f29bb3d9-bd66-5441-afb88acc2b2b60d6.bin" is missing from
+> > the "/lib/firmware/amdtee" folder, which is causing the issue. This
+> > is because there have been some last-minute modifications to the TA
+> > firmware, and as a result, the firmware has not yet been updated. I
+> > will inform you once the updated TA firmware is available, so you
+> > can provide your feedback at that time.
+> >=20
+> > Thanks,
+> > Shyam
+> >=20
+>=20
+> FWIW - this below error is noisy but should be totally harmless on the
+> Framework desktop as well.  AFAIK - BIOS on FW desktop doesn't contain
+> any PMF policies in the first place.
+
+thanks for your answers, that's good to know! I guess we don't need an
+urgent fix on the kernel side (or revert) then, let's just wait for the
+firmware to land.
+
+Cheers,
+Chris
+
+--4jdafsn3zhukglgv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfz1msACgkQwEfU8yi1
+JYUmUA//c0ZaIlMqe/O+9XE2Ba1mvalQvUt6pAiGCphmMDpbnsy/bjYxdaiGjwC0
+4d0jKuRii9fCQj8R4ZP1PftgltGO7sx7ny+YTl6vQf6iWxErRzEb841mTlURta9k
+5MkIFjemha/WXH09YkdZ2AmmF4AUpiE6A4ZeANhEKTjYTFYkoe9lt43qs6RTJ9w0
+Z/uRQ1cKwWEK5HrOOghyIGBCQ+XNmOJ0knPHbJPyKkz+Ah5Vi/a4R40rnx4UM8aU
+BVgIRwiQibvzCOPaH3PnZNPxjyKh6sYuM21b3/6m5XMwD46vrOYFebxAt0H/2V+R
+bfr80u8dIcBX6/HGlEvXYtBMUH+Dx6dzkxF08WMW4Q9bmU/1R7bEu5+3z9AsFuLP
+Job1grXwk4ovK3I49u9uGueGapQfqRTjsz3qxJq7M12k0Hocu4gHJllyOgT4X1yP
+/AU7m5qMcjt8pdk6pSdpdKw3PsQ2SEtZb+cWgrmcNJH5Xj7FuFdQBPKjJsd4yF3k
+Aw+Q7Lxa9C748YFe9ILRnwS2RTFlL30KHZQMZ8LBSryd0b+torcxxjXlgTmNs3pM
+iqgrN0YkZ6cRI2U8D6eYf7co3Enrimwsz7wcklJCb5N+PR23Wp8BmD/h0cxATqfs
+3d+NLetyyNeaO+bnVSQRKbO8uIQlevSJtf5Cd/LL9Zo3iKzVtDA=
+=ZEen
+-----END PGP SIGNATURE-----
+
+--4jdafsn3zhukglgv--
