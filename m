@@ -1,108 +1,83 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330971A3147;
-	Mon,  7 Apr 2025 23:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0519801;
+	Mon,  7 Apr 2025 23:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068897; cv=none; b=e13yDCteVoGC/vrwA8wrfq2etVwKpZ+vgZ3s59l66+dGmA5HULMDSPuqfumRukzDgQSR57TpJT7MxTcEknVjgU/V3HmaLmrUe0cJ3wK2VVGAp+EfIXX2Pkookc+xg8KPpSrNDigI8CnaJNWxIE70qhw0tT6rM0e4Hm3zwpwMP50=
+	t=1744068936; cv=none; b=SeaUy2+w4cQgHTE/uwNXG6A2ypmM/Je3PNILsUqb26VbABjhmEvmKaQ1tf4wev0f1+LY0BSV2xOcZsswwrRmomUqhWBfYZqLa/hkDRuLYiTLY0y5HCqNvEw9vb18IoHfLOyQkEBl6wjQ+sy21pnqdBA0SZnFfuk0IbvKPRmkxtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068897; c=relaxed/simple;
-	bh=HxTLhR5YyazcUPD3RztBrMcbn+ygyOpA405ju0k0ryc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jKZrZHXajvIZiEC07tib69Xi6q4HAdXWWWp7jOhYup89QQwvPtrRr6eBXcy1/fPuIHw5RlIc0GQ/4DMEU91auzhdeUF2MpActdtOz4AGgMk5gSPHPWd5I0/FT35yNQqtUtetHGn7oENttkK1HwO7BgJadhER3jG+5XJsbZL8EzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJI4q2tG; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744068936; c=relaxed/simple;
+	bh=7H2QLiiwamtqP+xqCNs8SVpZggnWEBIBrv6ew/pvmi0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=K8J+HOEOODhv9wcXrwpIxZSQ622pkNEMvOVFbCz5zdBZJOqW7co9XTHXknjuJCYnpDh37UzM7Pc8U0SGSuYAt3DmHmrWDuvtedl5VFY3h2ojw4cz3s8V4xHX02AQQZtabDubBoqIj70SbHqyCiDm+iOXnmtNvubetOSDEc1b7Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqgOXCiX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJI4q2tG"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c0e135e953so475477485a.2;
-        Mon, 07 Apr 2025 16:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744068895; x=1744673695; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zpdIhZyR7Jkn/zvOFh7pNcs0X66PCzAzcCsJZ749W4g=;
-        b=ZJI4q2tGzyCVhOY22dcrqFHH9iL+Bm0K7WwjZ7cII8MFKLmpqoIyru97oO0hr7a1cH
-         Jc1QtdwScJtv7c3QLJ1p0bMUvlpW9zFmgYNYNLcn7SuVkyNjQ2PQzAk4OyQzX3yL3yiC
-         3K1Ssyk8JBDNab9NsbMkBWV0fRMmswgQtcLL4pSgs06IXmDfgkkNUtyb+/l0yDjJEBb7
-         SMvrf28iatFbdq3pwd936airqDS9MlK8drjjgSzMQfskNi/5OZfpy/pjRMY3MY+Dx2ZM
-         jJVPxePtREYHasmNbIrQ0+qEjkQQgSzSjxO+HG9LFvsd08MEOAU+UD7B9Yf+TCt3Fx6z
-         YgCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744068895; x=1744673695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zpdIhZyR7Jkn/zvOFh7pNcs0X66PCzAzcCsJZ749W4g=;
-        b=VPsPsCv5VV6LnGa7qMlNxoK6w0Jcv726/aTE6CSZRgcCJjT6wIVYDV5vqwl1fsUSja
-         NwgGPZq4es+pOOOCMmKw9FqHEH8vofts7fltEUbHsPRTyrx+DCRZQJPrK4I0e0jZXUO2
-         fJFOKtEST2M1/NOEIO1jk+8KUmz99H8TZXTTtlN8pOUpeC3ZjjVCV1a3kbDo7z0L75BV
-         Um6QOuxyXbWZxRFNEruv/+KY8F6lfz76MsxUxWKgvoLFl9qR4tNkIiBr7JPZnQ4yIqtU
-         WgWpqKO/SrNNQUcim9JoPiSJIlnhKZ+pghRAEK0awCMD0+BkoorZq5Upy6XJ8y6YlBgb
-         Wcpg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1MW+riU045RJOUuUMbw/LXhSArXgMPWTBn5HjEIScQuT/3g0RRRl88ei7WyI4egXT+LH7K/Ma7Vfy@vger.kernel.org, AJvYcCVUMfzD4yBN547Ys2gONxZmlxAHLE+0N2/qCATKpKdTBkqmtxCbiKLkbJqxAkVgTagdGVM8AX4pu+OvvZyj@vger.kernel.org, AJvYcCWH2OhxFzweq5/Zy07u+IpKVXUjuSONSdAmK1NQ1lPgyYwwvB4foIV9AfravWosoeIXdbEdC/u+B2eC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLCMr3y3DwFGb4Rf0BVNL6f8t4VYaLDsTxVmdGm8rcPGqv2Fw8
-	zs+UdE363qxrWnrLV+29BneJt7932f96Ded4fVWiV4f9tSEcEFYA5OqMf/9q
-X-Gm-Gg: ASbGnctgYxIW5zUjsrgw6tluoxj4MvljGXR/WxBWA/yJF154PAR+2/7X8Opn7iBK/+b
-	3pdUikzW228bOIVnAz4Q8nCJUlZbDBYNp9TE9WS68Myrmnw2n1XcGY2yq+PfAq0/XnvGVsrtAAa
-	OlSQAViNvVUMFmAvcKrrSAayc/gSrKAD6kLvY0uNaq/VdanHpnsuzSyZGiJOcg34U5aIELMdHXj
-	u5mOx+Bl1pskp29lF4l241iwuAxhn4zJ4C5PXpYUaXbXv8prDeJlVh1PpWNON3u+eeBbbJ7IE7+
-	AZ/GoKwASEKxHIVObRl5
-X-Google-Smtp-Source: AGHT+IELDfTjNUKlfaY71qFiTkaQeFH6uko8o6VC0/566T+WMs+1ocO1EyyVXl92Tw31XsERKCllmw==
-X-Received: by 2002:a05:6214:212c:b0:6e6:61a5:aa54 with SMTP id 6a1803df08f44-6f0b754cc60mr157396126d6.44.1744068894916;
-        Mon, 07 Apr 2025 16:34:54 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f00e585sm65551266d6.27.2025.04.07.16.34.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 16:34:54 -0700 (PDT)
-Date: Tue, 8 Apr 2025 07:34:19 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, sophgo@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Yangyu Chen <cyy@cyyself.name>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 1/3] dt-bindings: soc: sophgo: add RTC support for
- Sophgo CV1800 series
-Message-ID: <tay4sxc6vx3lgwywlz3nefxo3tlkj2lm6qwdozogz5agao2djh@wt2qtruopmy2>
-References: <20250309202629.3516822-1-alexander.sverdlin@gmail.com>
- <20250309202629.3516822-2-alexander.sverdlin@gmail.com>
- <vxjtdvy5vxhmqldgvt4mgeuor36gdjriiai7y3rej3tevuwisa@wpupxzhvc3tt>
- <a691fe4864debf7592010bc892066beb439c1740.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqgOXCiX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07F1C4CEDD;
+	Mon,  7 Apr 2025 23:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744068936;
+	bh=7H2QLiiwamtqP+xqCNs8SVpZggnWEBIBrv6ew/pvmi0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=pqgOXCiXWy7gfLhhQmVTjby8PJHngfPdr17IKlXdM+HwNuOwAxTHJK5DV8OIyQtbE
+	 l+2OT8XuaEEO/PmlUpmM6NiXBZuB4bWwBKTlal+n16A2ecjAvYARxCriGEAuV6FXWV
+	 U8oBBERR7XicvaqCnm7EgK8AkNx+SUULvwH/FxQQJUvN3dBXjVEh4gj+tGoc7YYTgs
+	 Byli84yo/ev0SK1bVKdiljzxlp5Z/tqI4qWIp8HFphggOX/8StZcxXjM4bgRvZEJpk
+	 zlGnUikRvSAy10yD9w4xpa05rreq+YlyHTXEdfxhRc+i970LJTB2rufn7Xbb2gJiYL
+	 FfJg+wtlYkqjw==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ u.kleine-koenig@pengutronix.de, andy.shevchenko@gmail.com, 
+ Chen Ni <nichen@iscas.ac.cn>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250325032226.603963-1-nichen@iscas.ac.cn>
+References: <20250325032226.603963-1-nichen@iscas.ac.cn>
+Subject: Re: [PATCH] ASoC: sta32x: Remove unnecessary NULL check before
+ clk_disable_unprepare()
+Message-Id: <174406893443.1337819.17540928973108570629.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 00:35:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a691fe4864debf7592010bc892066beb439c1740.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, Apr 07, 2025 at 07:29:37AM +0200, Alexander Sverdlin wrote:
-> Hi Inochi!
+On Tue, 25 Mar 2025 11:22:26 +0800, Chen Ni wrote:
+> clk_disable_unprepare() already checks NULL by using IS_ERR_OR_NULL.
+> Remove unneeded NULL check for clk here.
 > 
-> On Mon, 2025-04-07 at 09:09 +0800, Inochi Amaoto wrote:
-> > > Add RTC devicetree binding for Sophgo CV1800 series SoC. The device is
-> > > called RTC, but contains control registers of other HW blocks in its
-> > > address space, most notably of Power-on-Reset (PoR) module, DW8051 IP
-> > > (MCU core), accompanying SRAM, hence putting it in SoC subsystem.
-> > > 
-> > 
-> > I think this is a mfd device, so why not moving this into mfd subsystem?
-> 
-> MFD is by far the most tricky subsystem to get into [1] ;-)
-> SOC looks much more realistic [2]
-> 
-> [1] https://lore.kernel.org/all/20250306003211.GA8350@google.com/
-> [2] https://lore.kernel.org/all/20250303-loud-mauve-coyote-1eefbb@krzk-bin/
 > 
 
-Cool, let's keep it.
+Applied to
 
-LGTM.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Reviewed-by: Inochi Amaoto <inochiama@gmail.com>
+Thanks!
+
+[1/1] ASoC: sta32x: Remove unnecessary NULL check before clk_disable_unprepare()
+      commit: ea61f39b38bdbb7c77ba2c70e130acdb808c8d68
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
