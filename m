@@ -1,209 +1,285 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-yw1-f228.google.com (mail-yw1-f228.google.com [209.85.128.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51524CEEA;
-	Mon,  7 Apr 2025 12:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7F724CEFD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029444; cv=none; b=iiwy7P+owdTPfjoWeUYmg/ctD5d5kZ8UgT/nQQfWQ56vFdop0IjKhG/rSU9MxVrkNSK/vul5YyeQfrt8SV8Kqq4y5S7Zw3cekGu3IjGVS0YMm8uDE6TB8A8KeFedS/OcCNDQjIH9hwSV2IOGLBuvOlFqtAHO+ns5Zv20mg+xUq8=
+	t=1744029446; cv=none; b=dtB5b9F+WiuZzzfMBtz1EodN0056Q0Y3gr02Gr1hFf+COY2Jw6kZg4Rycj2QX4WvgWgA16BnUUr/YBOme/SMkWyhPDRn8jarZphvx7gQ1xMFv2Tyf8uqyhXGamftSFGiqQpzlltXQKrdxQz84z5C5n/Um2TLDvY7ZCWWucO5ZAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029444; c=relaxed/simple;
-	bh=fPaIJlcWeN7XcHAT4dA7liyZzdvlkwCm9/OnQCQ+nbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaMC5146PtEYrzqpmLuDq3Kcz3k/QAdJeEme8odZZwD8lX+oea1piismLwFuCKITxSEabcFS4Hwp+DEYPUsU3pZCBzyfR340iXT4N65ciXZWJqHyUIgMfe/9w0BYmT1tpXfPqATGBHdI/FUorF/fUAZpexJRgqkqh9vuUcAIgsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKFE3lTZ; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744029446; c=relaxed/simple;
+	bh=8KBRkSvUHlDN7T2obQXkXij4Jqau8z2GKUl3MezZnxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=j1o3dlpETbkc7EuD9Nc2Xs8mGM2k7qzYY9HpwuJwqohCtcxCUX83wlD3KG98jEjhY7ooxZ9/l4x/zU6o7CDucja4Cl3+gPKPriBi1F6nYBueYSSzHZdCmitFnpFqol1Q0jAhg92Dc4wJWzcRSO7sEvSACo5A0YN7GyS8vMr+5oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Oycb19f6; arc=none smtp.client-ip=209.85.128.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKFE3lTZ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso3381814f8f.1;
-        Mon, 07 Apr 2025 05:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744029439; x=1744634239; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0o6+zdI0AtRq1Xlwz5OA5c9uHll3v6Nadhh0JoXi15w=;
-        b=dKFE3lTZVDjWFDEn8jhcl91iaoqGJTLt5gt3eLm10FXWozrWUejOwGdrYEWUygFZHv
-         eHO14cjEnkHwIG9RhI5IyYoadXBNqoAWikdCX8esKBxAO3zZ6sHWrDCMMC/Pf60NDNqM
-         2IurqPFpOfcT3in62fWYbqwW7cxLGzi9GKG+ieXkQRdybBAFqEHmkorPpYWBSCVlPEIm
-         XAtXQxDHvMzhxv+lPDC9LRrQCadtAx7Mo2ROeAmRSq1mi/UOhPQY1r3QEwRUZ9H44J8Z
-         uB7xLwujSxWWl1cfTqF67iAj+2HiHWjQgcvWByrzXh/bGdvFtAsaUAI9mB++68wv6ZMC
-         txrg==
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Oycb19f6"
+Received: by mail-yw1-f228.google.com with SMTP id 00721157ae682-7040ac93c29so11701057b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:37:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744029439; x=1744634239;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744029440; x=1744634240;
+        h=content-transfer-encoding:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0o6+zdI0AtRq1Xlwz5OA5c9uHll3v6Nadhh0JoXi15w=;
-        b=jHRza67fp2WYokvGsdMzDm+0x138yWdY4WAYKxYnocyR+3qLlB7BKqeyQdSpXRT0AB
-         c4vDzy3YQkKPdf2VVdsUk2IvIxqYI59NCYieSwCtqeuoZl7Oefkcb9E7exTiCkDy7H1Y
-         1slzZZ66PNtk6rIAnf3HAZmKHDcztRHA8RQ8iVqioLMkYaIN1Zvss/+nY+irWUMOFLDX
-         ScYYtU+N0ggx34W1SXdVbhQnO4ELHNA+EyWC+ViB8iUCt8txh9vY10Ze3lVydTqMJTt/
-         U3+rir+6ZOxHtVA1rQg+a6dTYekoa4hgiSI76s5oadh256mCGQ17OARCx4hdwuThWBTk
-         sYlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWB5e8/r8onX3WflIONSMJLrZIMUlFdNIhe0ih4CU3zVxqzEpnZSgsr8dK55KjYN4vjyuCJF83RsQ8WQHE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz8zvNdCG7sNQPrUMQWZPRq0vwdiNgkV8VD6eejmKXk+rg4q64
-	A89Rn52GuPObMZimYnGuemB8uyrb7LkcWe3qgPd4v3rdVh5A9Kc9v+nzXg==
-X-Gm-Gg: ASbGncsAynOa+nLisx953XjGsoO9HbjYHnzLeE7UXJmQy0gScnaXt8+d3qG4yyls0ap
-	X3K+b94EZe2uEGear8klTIS4sGrt0DTblTaXC/wgHR0emoJU1SGGuXCIXTFxiv6ywjGWVyPBOLa
-	33NG3cshfq+3kDTd/SEBIpza3CcRLvNyCK0/awLQuElxx0C1M1KbDNeSV/f/4lTr92rlWeKcQWj
-	cEdKjUGoEkWQCumyn2UvLFNDxBarGcyEiHf7yQ1M7xuzB/FOLaPw1ZnqwfEI4hFt2BFsugASMn6
-	29F6d6Nllpn2zPLQCHFFqLbVLKFwTEhnqBQAUom9g0F2fW1s3eAEeGC3x34oDlyzJUTXqXSN
-X-Google-Smtp-Source: AGHT+IEPI0/uAmG1j3NVe3lMMXToyTKqXz/tt6wVkSqKVKUWUxmvO7uD/TEvDrvrmVRLlqnGT6k+9g==
-X-Received: by 2002:a05:6000:2489:b0:390:e9ee:f27a with SMTP id ffacd0b85a97d-39cba94dac8mr10539389f8f.28.1744029438981;
-        Mon, 07 Apr 2025 05:37:18 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm12065198f8f.53.2025.04.07.05.37.17
+        bh=Trgvy9GTSGogGCZdfDcgDmfNiW583yZjnxh1kXgKLxA=;
+        b=K+QTMRiBhluMSx1eX5TN9dQNIHg0hnzsGZSt37L/f3yULj+F4+QwauX7w7H8luVXH4
+         dBxY/nTXleeaZMfRbkJd6dpodBXKicP97h4Ynvdmx7ChFAjnf9PAtf3LnCZwdbDgVStC
+         GgcIX9eOS8BcgfQQSIZwvAgevQwSFRUXIRrYlcYHGXTFI7dlgfi3DNQ4HhFJ8QriaVb6
+         WKVPxA64hflmABqVPxwGMDEy/DGvSy87BwKGFnOwo0r1VwQU3He/YNKVzcSkpfVEzsO/
+         paQGu6Y1Wvd/A9hGXFfCcggkLz71NzoK+r6XMSCGU8465q/UE/dTGqEcKxXuWACjApAn
+         F/mQ==
+X-Gm-Message-State: AOJu0YyQqLmk04PdFeEhUb3PCWzzcAGMZMksDuWEqwd9oKX4E13CVbfL
+	5/6tEYv87PqD2U0MU2rfSRDkLRYFqfPJwV9nKtyKbbgB0YzFWWkXufsitTVx5DcB7VTc6uUA7n2
+	QCQThWy/yHED3JTjxx8mWHdpo1nwCoA==
+X-Gm-Gg: ASbGncvxtIG1KIzLn0XVZPYi2FcGNzuuHZQcLGjiF7hx+3Q47OpMQ6ojm+pdjA9ATwk
+	Tao9C0/Nnw8GzjBWTfwEb3WNroBFKRe5Re0BxbTkqslFad/BzzqcB4XRHuLdPB8kIOpwf8vHtIb
+	1B4P3DS4bD1mFJsk44oIn7Hjq7jAGOxxmDdt3B9aLIf6FPRi/fdwNMSQkinGhhHBMfmu8wnE1uO
+	Uffl/ghPm84CLLvDN+8uIfYXZ6Zbvj2dqS+HQetkFnFEX5zjTJ7O5BJlNUwxw+HbmAtPNsOBdXA
+	D/5BZNx4+NNPiscJE5HJ8HkPPjE=
+X-Google-Smtp-Source: AGHT+IE+hzviWhN6B0jWB5QM/z49QcOQQ2Yro+qHcz4urLr6lrNbJexRdmOvEMe55nbtS4Vx+x0TJ+wyDeYK
+X-Received: by 2002:a05:690c:700c:b0:703:d0b5:7abc with SMTP id 00721157ae682-703e313e2f6mr203015537b3.9.1744029439891;
+        Mon, 07 Apr 2025 05:37:19 -0700 (PDT)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-703d1e8238asm9016807b3.39.2025.04.07.05.37.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 05:37:18 -0700 (PDT)
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-To: linux-crypto@vger.kernel.org,
-	herbert@gondor.apana.org.au
-Cc: davem@davemloft.net,
-	linux-kernel@vger.kernel.org,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH 3/4] crypto: sun8i-ss - use API helpers to setup fallback request
-Date: Mon,  7 Apr 2025 15:36:03 +0300
-Message-ID: <20250407123604.2109561-3-ovidiu.panait.oss@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407123604.2109561-1-ovidiu.panait.oss@gmail.com>
-References: <20250407123604.2109561-1-ovidiu.panait.oss@gmail.com>
+        Mon, 07 Apr 2025 05:37:19 -0700 (PDT)
+X-Relaying-Domain: arista.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1744029438;
+	bh=Trgvy9GTSGogGCZdfDcgDmfNiW583yZjnxh1kXgKLxA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Oycb19f6Bi4C5MrT2AQjPil4ELQBt6HQceZ5HE13kolKKMtyTKdfxXt0OxSEFxFoD
+	 +TRl7QefdMkOQ/w41zvyDTJTDj7mALuN8mIXvOurDs/EivQS9wMDUAht660sf1Nt2G
+	 M0nNr/d+z1j19rHU1z0GVVLBh3Qyh6K8SZis7Ix6zqirc2QbgOdgm+cZnIx2WOmLS7
+	 ql0PsRQ5elnuxrbUbt03A4MiR9oiY6hBstfIyy1C5qc76fOKLBpiEShK1EYCCPOGyz
+	 TzqvHH8PEXcWkXT9Q09iP4wBA9BiQCaFa7j2sVZylNyYwamHKmBdoEKavkrEaSfZ9k
+	 slFyLTUGsRpPg==
+Received: from mpazdan-home-zvfkk.localdomain (pinkesh-itest-2-us285.sjc.aristanetworks.com [10.244.168.54])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id D090210023B;
+	Mon,  7 Apr 2025 12:37:18 +0000 (UTC)
+Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
+	id C8B8B40B16; Mon,  7 Apr 2025 12:37:18 +0000 (UTC)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Marek Pazdan <mpazdan@arista.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Daniel Zahka <daniel.zahka@gmail.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Gal Pressman <gal@nvidia.com>,
+	Marek Pazdan <mpazdan@arista.com>
+Subject: [PATCH 2/2] ice: add qsfp transceiver reset and presence pin control
+Date: Mon,  7 Apr 2025 12:35:38 +0000
+Message-ID: <20250407123714.21646-2-mpazdan@arista.com>
+In-Reply-To: <20250407123714.21646-1-mpazdan@arista.com>
+References: <20250407123714.21646-1-mpazdan@arista.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Rather than setting up the fallback request by hand, use
-ahash_request_set_callback() and ahash_request_set_crypt() API helpers
-to properly setup the new request.
+Commit f3c1c896f5a8 ("ethtool: transceiver reset and presence pin control")
+adds ioctl API extension for get/set-phy-tunable so that transceiver
+reset and presence pin control is enabled.
+This commit adds functionality to utilize the API in ice driver.
+According to E810 datasheet QSFP reset and presence pins are being
+connected to SDP0 and SDP2 pins on controller host. Those pins can
+be accessed using AQ commands for GPIO get/set.[O
 
-This also ensures that the completion callback is properly passed down
-to the fallback algorithm, which avoids a crash with async fallbacks.
-
-Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Signed-off-by: Marek Pazdan <mpazdan@arista.com>
 ---
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Samuel Holland <samuel@sholland.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-sunxi@lists.linux.dev
+ drivers/net/ethernet/intel/ice/ice.h         |  2 +
+ drivers/net/ethernet/intel/ice/ice_common.c  | 21 ++++++
+ drivers/net/ethernet/intel/ice/ice_common.h  |  1 +
+ drivers/net/ethernet/intel/ice/ice_ethtool.c | 72 ++++++++++++++++++++
+ drivers/net/ethernet/intel/ice/ice_main.c    |  1 +
+ drivers/net/ethernet/intel/ice/ice_type.h    |  2 +
+ 6 files changed, 99 insertions(+)
 
- .../crypto/allwinner/sun8i-ss/sun8i-ss-hash.c | 49 ++++++++++---------
- 1 file changed, 27 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-hash.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-hash.c
-index 753f67a36dc5..8bc08089f044 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-hash.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-hash.c
-@@ -150,7 +150,9 @@ int sun8i_ss_hash_init(struct ahash_request *areq)
- 	memset(rctx, 0, sizeof(struct sun8i_ss_hash_reqctx));
+diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
+index fd083647c14a..2dbbcb20decf 100644
+--- a/drivers/net/ethernet/intel/ice/ice.h
++++ b/drivers/net/ethernet/intel/ice/ice.h
+@@ -106,6 +106,8 @@
+ #define ICE_Q_WAIT_MAX_RETRY	(5 * ICE_Q_WAIT_RETRY_LIMIT)
+ #define ICE_MAX_LG_RSS_QS	256
+ #define ICE_INVAL_Q_INDEX	0xffff
++#define ICE_GPIO_QSFP0_RESET	0
++#define ICE_GPIO_QSFP0_PRESENT	2
  
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
+ #define ICE_MAX_RXQS_PER_TC		256	/* Used when setting VSI context per TC Rx queues */
  
- 	return crypto_ahash_init(&rctx->fallback_req);
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
+index 59df31c2c83f..2d643a7cc90f 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.c
++++ b/drivers/net/ethernet/intel/ice/ice_common.c
+@@ -6096,3 +6096,24 @@ u32 ice_get_link_speed(u16 index)
+ 
+ 	return ice_aq_to_link_speed[index];
  }
-@@ -162,7 +164,9 @@ int sun8i_ss_hash_export(struct ahash_request *areq, void *out)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
- 
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
- 
- 	return crypto_ahash_export(&rctx->fallback_req, out);
++
++/**
++ * ice_set_has_gpios - Sets availability of SDP GPIO pins.
++ * @hw: pointer to the HW structure
++ *
++ * This function sets availability of GPIO software defined pins
++ * (SDP) which are connected to transceiver slots and are used
++ * for transceiver control.
++ */
++bool ice_set_has_gpios(struct ice_hw *hw)
++{
++	if (hw->vendor_id != PCI_VENDOR_ID_INTEL)
++		return false;
++
++	switch (hw->device_id) {
++	case ICE_DEV_ID_E810C_QSFP:
++		return true;
++	default:
++		return false;
++	}
++}
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
+index 9b00aa0ddf10..b64629b1d60d 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.h
++++ b/drivers/net/ethernet/intel/ice/ice_common.h
+@@ -304,4 +304,5 @@ ice_aq_write_i2c(struct ice_hw *hw, struct ice_aqc_link_topo_addr topo_addr,
+ int ice_get_pca9575_handle(struct ice_hw *hw, u16 *pca9575_handle);
+ int ice_read_pca9575_reg(struct ice_hw *hw, u8 offset, u8 *data);
+ bool ice_fw_supports_report_dflt_cfg(struct ice_hw *hw);
++bool ice_set_has_gpios(struct ice_hw *hw);
+ #endif /* _ICE_COMMON_H_ */
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 7c2dc347e4e5..20727c582ad5 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -4765,6 +4765,76 @@ static int ice_repr_ethtool_reset(struct net_device *dev, u32 *flags)
+ 	return ice_reset_vf(vf, ICE_VF_RESET_VFLR | ICE_VF_RESET_LOCK);
  }
-@@ -174,7 +178,9 @@ int sun8i_ss_hash_import(struct ahash_request *areq, const void *in)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
  
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
++static int ice_get_phy_tunable(struct net_device *netdev,
++			       const struct ethtool_tunable *tuna, void *data)
++{
++	struct ice_netdev_priv *np = netdev_priv(netdev);
++	struct ice_vsi *vsi = np->vsi;
++	struct ice_pf *pf = vsi->back;
++	struct ice_hw *hw = &pf->hw;
++	u16 gpio_handle = 0; /* SOC/on-chip GPIO */
++	u8 *enabled = data;
++	bool value;
++
++	switch (tuna->id) {
++	case ETHTOOL_PHY_MODULE_RESET:
++		if (!hw->has_gpios)
++			return -EOPNOTSUPP;
++
++		if (ice_aq_get_gpio(hw, gpio_handle, ICE_GPIO_QSFP0_PRESENT,
++				    &value, NULL))
++			return -EIO;
++		if (!value) {
++			*enabled = ETHTOOL_PHY_MODULE_RESET_NA;
++		} else {
++			if (ice_aq_get_gpio(hw, gpio_handle, ICE_GPIO_QSFP0_RESET,
++					    &value, NULL))
++				return -EIO;
++			*enabled = value ? ETHTOOL_PHY_MODULE_RESET_ON :
++						ETHTOOL_PHY_FAST_LINK_DOWN_OFF;
++		}
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int ice_set_phy_tunable(struct net_device *netdev,
++			       const struct ethtool_tunable *tuna, const void *data)
++{
++	struct ice_netdev_priv *np = netdev_priv(netdev);
++	struct ice_vsi *vsi = np->vsi;
++	struct ice_pf *pf = vsi->back;
++	struct ice_hw *hw = &pf->hw;
++	u16 gpio_handle = 0; /* SOC/on-chip GPIO */
++	const u8 *enable = data;
++	bool value;
++
++	switch (tuna->id) {
++	case ETHTOOL_PHY_MODULE_RESET:
++		if (!hw->has_gpios)
++			return -EOPNOTSUPP;
++
++		if (*enable == ETHTOOL_PHY_MODULE_RESET_ON)
++			value = true;
++		else if (*enable == ETHTOOL_PHY_FAST_LINK_DOWN_OFF)
++			value = false;
++		else
++			return -EINVAL;
++
++		if (ice_aq_set_gpio(hw, gpio_handle, ICE_GPIO_QSFP0_RESET,
++				    value, NULL))
++			return -EIO;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static const struct ethtool_ops ice_ethtool_ops = {
+ 	.cap_rss_ctx_supported  = true,
+ 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS |
+@@ -4815,6 +4885,8 @@ static const struct ethtool_ops ice_ethtool_ops = {
+ 	.set_fecparam		= ice_set_fecparam,
+ 	.get_module_info	= ice_get_module_info,
+ 	.get_module_eeprom	= ice_get_module_eeprom,
++	.get_phy_tunable	= ice_get_phy_tunable,
++	.set_phy_tunable	= ice_set_phy_tunable,
+ };
  
- 	return crypto_ahash_import(&rctx->fallback_req, in);
- }
-@@ -186,9 +192,10 @@ int sun8i_ss_hash_final(struct ahash_request *areq)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
+ static const struct ethtool_ops ice_ethtool_safe_mode_ops = {
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 049edeb60104..fa18fc965649 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -5294,6 +5294,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 	hw->port_info = NULL;
+ 	hw->vendor_id = pdev->vendor;
+ 	hw->device_id = pdev->device;
++	hw->has_gpios = ice_set_has_gpios(hw);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &hw->revision_id);
+ 	hw->subsystem_vendor_id = pdev->subsystem_vendor;
+ 	hw->subsystem_device_id = pdev->subsystem_device;
+diff --git a/drivers/net/ethernet/intel/ice/ice_type.h b/drivers/net/ethernet/intel/ice/ice_type.h
+index 0aab21113cc4..ff758b4b7070 100644
+--- a/drivers/net/ethernet/intel/ice/ice_type.h
++++ b/drivers/net/ethernet/intel/ice/ice_type.h
+@@ -896,6 +896,8 @@ struct ice_hw {
+ 	u64 debug_mask;		/* bitmap for debug mask */
+ 	enum ice_mac_type mac_type;
  
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags &
--					CRYPTO_TFM_REQ_MAY_SLEEP;
--	rctx->fallback_req.result = areq->result;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
-+	ahash_request_set_crypt(&rctx->fallback_req, NULL, areq->result, 0);
++	bool has_gpios;
++
+ 	u16 fd_ctr_base;	/* FD counter base index */
  
- 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG)) {
- 		struct ahash_alg *alg = crypto_ahash_alg(tfm);
-@@ -212,10 +219,10 @@ int sun8i_ss_hash_update(struct ahash_request *areq)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
- 
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags &
--					CRYPTO_TFM_REQ_MAY_SLEEP;
--	rctx->fallback_req.nbytes = areq->nbytes;
--	rctx->fallback_req.src = areq->src;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
-+	ahash_request_set_crypt(&rctx->fallback_req, areq->src, NULL, areq->nbytes);
- 
- 	return crypto_ahash_update(&rctx->fallback_req);
- }
-@@ -227,12 +234,11 @@ int sun8i_ss_hash_finup(struct ahash_request *areq)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
- 
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags &
--					CRYPTO_TFM_REQ_MAY_SLEEP;
--
--	rctx->fallback_req.nbytes = areq->nbytes;
--	rctx->fallback_req.src = areq->src;
--	rctx->fallback_req.result = areq->result;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
-+	ahash_request_set_crypt(&rctx->fallback_req, areq->src, areq->result,
-+				areq->nbytes);
- 
- 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG)) {
- 		struct ahash_alg *alg = crypto_ahash_alg(tfm);
-@@ -256,12 +262,11 @@ static int sun8i_ss_hash_digest_fb(struct ahash_request *areq)
- 	struct sun8i_ss_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
- 
- 	ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
--	rctx->fallback_req.base.flags = areq->base.flags &
--					CRYPTO_TFM_REQ_MAY_SLEEP;
--
--	rctx->fallback_req.nbytes = areq->nbytes;
--	rctx->fallback_req.src = areq->src;
--	rctx->fallback_req.result = areq->result;
-+	ahash_request_set_callback(&rctx->fallback_req,
-+				   areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP,
-+				   areq->base.complete, areq->base.data);
-+	ahash_request_set_crypt(&rctx->fallback_req, areq->src, areq->result,
-+				areq->nbytes);
- 
- 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG)) {
- 		struct ahash_alg *alg = crypto_ahash_alg(tfm);
+ 	/* pci info */
 -- 
-2.48.1
+2.47.0
 
