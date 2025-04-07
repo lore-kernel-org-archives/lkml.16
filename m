@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEA6224AFA;
-	Mon,  7 Apr 2025 08:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3AE22A1E2;
+	Mon,  7 Apr 2025 08:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014106; cv=none; b=mfUUqedWx2YrivwD6UCkvfG6dmnuv4G+tDfoVFADd9VlRlqci/aTU8twHakzBryjYVgsqNubWserFDje0FVrzC0p9igY2RRPzCPKeZ1u8QzLZsMQm/84p8517sdDLncVLOggePoZSQHk3MmgAe5WI92L1wNnzn1uvVLf+b1IrQg=
+	t=1744014115; cv=none; b=rZyijNXAL+N2KoYUWXLZonRxMQZ4YCEY4zzstQtEVzYjmX1ZYOyOmgyx7baYKGMJKrgwmSJgk3CARwHvMGwU0oRv4+5f0ptptpTYHKet8JNUZubEGkC+re1DZKSdow5zE7P10C0pw+qZkovZjPPoWNChMFLImnD9ZlsEbbdqxyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014106; c=relaxed/simple;
-	bh=gq11TY3FYzygslcnWRHLdACPtbMFhdH0IrI/zbF3//8=;
+	s=arc-20240116; t=1744014115; c=relaxed/simple;
+	bh=Gy7496cwbknI6p1aiz7+xBjXfs4pwhxMt1p8/p5sNJM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=daWp1jrST8kTZhMLfODJfZvplda48DJuO2P5sq6G9Z7tjTeSwSnEqS0rAdcXKS1V7kpf+aXvKza2lhhLqHGszzJTTZt4CHhFjHjVp82oqU19aVvTNs0/VCGCgAyU2uJLopNiahtc0GqvDYbwof5pJ/aNqFgL2Ik1Uv6txeTZLsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cmb5ULBo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=snv3XisSlWyLqb410so9+8Gl0g8LNo2pzKif02PgIbnul04VFTx/N54NAxWWKw365XVPJFh1D2vK8wQIoccOlOsi/9X3h5MQbWnTnkXLutuMYWxz9Dw0srUMAA89u3u6V7rS38b5NRDYoVDpYgjug/vZ9ajm9t8JC5bJCtkA80E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=k1yzJPfx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cmb5ULBo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97258C4CEDD;
-	Mon,  7 Apr 2025 08:21:45 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="k1yzJPfx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D1FC4CEEA;
+	Mon,  7 Apr 2025 08:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744014106;
-	bh=gq11TY3FYzygslcnWRHLdACPtbMFhdH0IrI/zbF3//8=;
+	s=korg; t=1744014114;
+	bh=Gy7496cwbknI6p1aiz7+xBjXfs4pwhxMt1p8/p5sNJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cmb5ULBoE5yEQUorX3XvV1CgQf++wOqTGfknRGyKX5ENNdYTGjmmmbvrCowAACR68
-	 kV32G7k6UzGj+RPFLXiyNT8Q08sf8/chTjQBmEsAbwjYnmR2vaVDftBP1M20sTTq5x
-	 8Rn6emCgzFjpdhEverjdTjgl9gMpwj1reJsty49U=
+	b=k1yzJPfxxuAhpdWVgurVxGr3H3rLuBXthFZLqwjFAH1KqLweyqRx3WvJx6u0OclaE
+	 g84NXQ74vzixBWi2WGOhr5xd+EH9T0ilRHMCHKH//XzvwY3wVF0/b6vCu5mfSg0lOd
+	 A1JUBae7VS5xj1tLrH2b9hGZjzRxljEsK5/nKMmY=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.12.22
-Date: Mon,  7 Apr 2025 10:20:08 +0200
-Message-ID: <2025040708-unfounded-mothproof-975b@gregkh>
+Subject: Re: Linux 6.13.10
+Date: Mon,  7 Apr 2025 10:20:15 +0200
+Message-ID: <2025040715-subduing-portable-49d0@gregkh>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025040708-showcase-purifier-a1a7@gregkh>
-References: <2025040708-showcase-purifier-a1a7@gregkh>
+In-Reply-To: <2025040715-antiquity-retired-a642@gregkh>
+References: <2025040715-antiquity-retired-a642@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,20 +46,20 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 diff --git a/Makefile b/Makefile
-index a646151342b8..f380005d1600 100644
+index 21a34e8991ac..ffed1f493b48 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 12
--SUBLEVEL = 21
-+SUBLEVEL = 22
+ PATCHLEVEL = 13
+-SUBLEVEL = 9
++SUBLEVEL = 10
  EXTRAVERSION =
  NAME = Baby Opossum Posse
  
 diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index b3e615cbd2ca..461f57f66631 100644
+index 2f096a5b973d..c391ac38b990 100644
 --- a/drivers/counter/microchip-tcb-capture.c
 +++ b/drivers/counter/microchip-tcb-capture.c
 @@ -368,6 +368,25 @@ static int mchp_tc_probe(struct platform_device *pdev)
@@ -89,7 +89,7 @@ index b3e615cbd2ca..461f57f66631 100644
  	priv->regmap = regmap;
  	counter->name = dev_name(&pdev->dev);
 diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
-index 8439755559b2..537fe9b669f3 100644
+index cf73f65baf60..b249c8647639 100644
 --- a/drivers/counter/stm32-lptimer-cnt.c
 +++ b/drivers/counter/stm32-lptimer-cnt.c
 @@ -58,37 +58,43 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
@@ -145,47 +145,6 @@ index 8439755559b2..537fe9b669f3 100644
  }
  
  static int stm32_lptim_setup(struct stm32_lptim_cnt *priv, int enable)
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index d9a3917d207e..c4c6538eabae 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3231,8 +3231,7 @@ static int dm_resume(void *handle)
- 	struct dm_atomic_state *dm_state = to_dm_atomic_state(dm->atomic_obj.state);
- 	enum dc_connection_type new_connection_type = dc_connection_none;
- 	struct dc_state *dc_state;
--	int i, r, j, ret;
--	bool need_hotplug = false;
-+	int i, r, j;
- 	struct dc_commit_streams_params commit_params = {};
- 
- 	if (dm->dc->caps.ips_support) {
-@@ -3427,23 +3426,16 @@ static int dm_resume(void *handle)
- 		    aconnector->mst_root)
- 			continue;
- 
--		ret = drm_dp_mst_topology_mgr_resume(&aconnector->mst_mgr, true);
--
--		if (ret < 0) {
--			dm_helpers_dp_mst_stop_top_mgr(aconnector->dc_link->ctx,
--					aconnector->dc_link);
--			need_hotplug = true;
--		}
-+		drm_dp_mst_topology_queue_probe(&aconnector->mst_mgr);
- 	}
- 	drm_connector_list_iter_end(&iter);
- 
--	if (need_hotplug)
--		drm_kms_helper_hotplug_event(ddev);
--
- 	amdgpu_dm_irq_resume_late(adev);
- 
- 	amdgpu_dm_smu_write_watermarks_table(adev);
- 
-+	drm_kms_helper_hotplug_event(ddev);
-+
- 	return 0;
- }
- 
 diff --git a/drivers/hid/hid-plantronics.c b/drivers/hid/hid-plantronics.c
 index 25cfd964dc25..acb9eb18f7cc 100644
 --- a/drivers/hid/hid-plantronics.c
@@ -439,7 +398,7 @@ index 25cfd964dc25..acb9eb18f7cc 100644
  };
  
 diff --git a/drivers/memstick/host/rtsx_usb_ms.c b/drivers/memstick/host/rtsx_usb_ms.c
-index ffdd8de9ec5d..d99f8922d4ad 100644
+index 6eb892fd4d34..3878136227e4 100644
 --- a/drivers/memstick/host/rtsx_usb_ms.c
 +++ b/drivers/memstick/host/rtsx_usb_ms.c
 @@ -813,6 +813,7 @@ static void rtsx_usb_ms_drv_remove(struct platform_device *pdev)
@@ -451,7 +410,7 @@ index ffdd8de9ec5d..d99f8922d4ad 100644
  	mutex_lock(&host->host_mutex);
  	if (host->req) {
 diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9fe7f704a2f7..944a33361dae 100644
+index e9208a8d2bfa..a5a4252ea19f 100644
 --- a/drivers/net/usb/qmi_wwan.c
 +++ b/drivers/net/usb/qmi_wwan.c
 @@ -1365,9 +1365,11 @@ static const struct usb_device_id products[] = {
@@ -520,10 +479,10 @@ index f245a84f4a50..bdd26c9f34bd 100644
  
  int serial8250_rx_dma(struct uart_8250_port *p)
 diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index de6d90bf0d70..b3c19ba777c6 100644
+index df4d0d832e54..73c200127b08 100644
 --- a/drivers/tty/serial/8250/8250_pci.c
 +++ b/drivers/tty/serial/8250/8250_pci.c
-@@ -2687,6 +2687,22 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+@@ -2727,6 +2727,22 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
  		.init		= pci_oxsemi_tornado_init,
  		.setup		= pci_oxsemi_tornado_setup,
  	},
@@ -546,7 +505,7 @@ index de6d90bf0d70..b3c19ba777c6 100644
  	{
  		.vendor         = PCI_VENDOR_ID_INTEL,
  		.device         = 0x8811,
-@@ -5213,6 +5229,14 @@ static const struct pci_device_id serial_pci_tbl[] = {
+@@ -5253,6 +5269,14 @@ static const struct pci_device_id serial_pci_tbl[] = {
  		PCI_ANY_ID, PCI_ANY_ID,
  		0, 0,
  		pbn_b2_2_115200 },
@@ -561,7 +520,7 @@ index de6d90bf0d70..b3c19ba777c6 100644
  	/*
  	 * Brainboxes UC-235/246
  	 */
-@@ -5333,6 +5357,14 @@ static const struct pci_device_id serial_pci_tbl[] = {
+@@ -5373,6 +5397,14 @@ static const struct pci_device_id serial_pci_tbl[] = {
  		PCI_ANY_ID, PCI_ANY_ID,
  		0, 0,
  		pbn_b2_4_115200 },
@@ -576,7 +535,7 @@ index de6d90bf0d70..b3c19ba777c6 100644
  	/*
  	 * Brainboxes UC-420
  	 */
-@@ -5559,6 +5591,20 @@ static const struct pci_device_id serial_pci_tbl[] = {
+@@ -5599,6 +5631,20 @@ static const struct pci_device_id serial_pci_tbl[] = {
  		PCI_ANY_ID, PCI_ANY_ID,
  		0, 0,
  		pbn_oxsemi_1_15625000 },
@@ -598,10 +557,10 @@ index de6d90bf0d70..b3c19ba777c6 100644
  	/*
  	 * Perle PCI-RAS cards
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 77efa7ee6eda..9f9fc733eb2c 100644
+index 57b0632a3db6..433cf2267e16 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -1483,6 +1483,19 @@ static int lpuart32_config_rs485(struct uart_port *port, struct ktermios *termio
+@@ -1484,6 +1484,19 @@ static int lpuart32_config_rs485(struct uart_port *port, struct ktermios *termio
  
  	unsigned long modem = lpuart32_read(&sport->port, UARTMODIR)
  				& ~(UARTMODIR_TXRTSPOL | UARTMODIR_TXRTSE);
@@ -621,7 +580,7 @@ index 77efa7ee6eda..9f9fc733eb2c 100644
  	lpuart32_write(&sport->port, modem, UARTMODIR);
  
  	if (rs485->flags & SER_RS485_ENABLED) {
-@@ -1502,6 +1515,10 @@ static int lpuart32_config_rs485(struct uart_port *port, struct ktermios *termio
+@@ -1503,6 +1516,10 @@ static int lpuart32_config_rs485(struct uart_port *port, struct ktermios *termio
  	}
  
  	lpuart32_write(&sport->port, modem, UARTMODIR);
@@ -633,7 +592,7 @@ index 77efa7ee6eda..9f9fc733eb2c 100644
  }
  
 diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index f5199fdecff2..9b9981352b1e 100644
+index 1ec5d8c3aef8..0854ad8c90cd 100644
 --- a/drivers/tty/serial/stm32-usart.c
 +++ b/drivers/tty/serial/stm32-usart.c
 @@ -965,10 +965,8 @@ static void stm32_usart_start_tx(struct uart_port *port)
@@ -649,10 +608,10 @@ index f5199fdecff2..9b9981352b1e 100644
  	stm32_usart_rs485_rts_enable(port);
  
 diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 4384b86ea7b6..2fad9563dca4 100644
+index dfe1a676d487..e24109c2ab54 100644
 --- a/drivers/usb/host/xhci-ring.c
 +++ b/drivers/usb/host/xhci-ring.c
-@@ -2866,6 +2866,10 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+@@ -2862,6 +2862,10 @@ static int handle_tx_event(struct xhci_hcd *xhci,
  		if (!ep_seg) {
  
  			if (ep->skip && usb_endpoint_xfer_isoc(&td->urb->ep->desc)) {
@@ -664,10 +623,10 @@ index 4384b86ea7b6..2fad9563dca4 100644
  				if (!list_empty(&ep_ring->td_list))
  					continue;
 diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 439767d242fa..71588e4db0e3 100644
+index dba1db259cd3..40015c41b129 100644
 --- a/drivers/usb/host/xhci.h
 +++ b/drivers/usb/host/xhci.h
-@@ -1748,11 +1748,20 @@ static inline void xhci_write_64(struct xhci_hcd *xhci,
+@@ -1755,11 +1755,20 @@ static inline void xhci_write_64(struct xhci_hcd *xhci,
  }
  
  
@@ -721,6 +680,60 @@ index 4a765555bf84..1c8fcb04b3cd 100644
  	}
  	return status;
  }
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index aac91466279f..3e01781aeb7b 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -612,36 +612,33 @@ static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat
+ void cgroup_base_stat_cputime_show(struct seq_file *seq)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+-	u64 usage, utime, stime, ntime;
++	struct cgroup_base_stat bstat;
+ 
+ 	if (cgroup_parent(cgrp)) {
+ 		cgroup_rstat_flush_hold(cgrp);
+-		usage = cgrp->bstat.cputime.sum_exec_runtime;
++		bstat = cgrp->bstat;
+ 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
+-			       &utime, &stime);
+-		ntime = cgrp->bstat.ntime;
++			       &bstat.cputime.utime, &bstat.cputime.stime);
+ 		cgroup_rstat_flush_release(cgrp);
+ 	} else {
+-		/* cgrp->bstat of root is not actually used, reuse it */
+-		root_cgroup_cputime(&cgrp->bstat);
+-		usage = cgrp->bstat.cputime.sum_exec_runtime;
+-		utime = cgrp->bstat.cputime.utime;
+-		stime = cgrp->bstat.cputime.stime;
+-		ntime = cgrp->bstat.ntime;
++		root_cgroup_cputime(&bstat);
+ 	}
+ 
+-	do_div(usage, NSEC_PER_USEC);
+-	do_div(utime, NSEC_PER_USEC);
+-	do_div(stime, NSEC_PER_USEC);
+-	do_div(ntime, NSEC_PER_USEC);
++	do_div(bstat.cputime.sum_exec_runtime, NSEC_PER_USEC);
++	do_div(bstat.cputime.utime, NSEC_PER_USEC);
++	do_div(bstat.cputime.stime, NSEC_PER_USEC);
++	do_div(bstat.ntime, NSEC_PER_USEC);
+ 
+ 	seq_printf(seq, "usage_usec %llu\n"
+ 			"user_usec %llu\n"
+ 			"system_usec %llu\n"
+ 			"nice_usec %llu\n",
+-			usage, utime, stime, ntime);
++			bstat.cputime.sum_exec_runtime,
++			bstat.cputime.utime,
++			bstat.cputime.stime,
++			bstat.ntime);
+ 
+-	cgroup_force_idle_show(seq, &cgrp->bstat);
++	cgroup_force_idle_show(seq, &bstat);
+ }
+ 
+ /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
 diff --git a/net/atm/mpc.c b/net/atm/mpc.c
 index 324e3ab96bb3..12da0269275c 100644
 --- a/net/atm/mpc.c
@@ -776,10 +789,10 @@ index a7690ec62325..9ea5ef56cb27 100644
  				     sport, dport, indev);
  }
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 3949e2614a66..8c7da13a804c 100644
+index f952918191ef..ee1682a2e038 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -10441,6 +10441,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+@@ -10472,6 +10472,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
  	SND_PCI_QUIRK(0x103c, 0x8811, "HP Spectre x360 15-eb1xxx", ALC285_FIXUP_HP_SPECTRE_X360_EB1),
  	SND_PCI_QUIRK(0x103c, 0x8812, "HP Spectre x360 15-eb1xxx", ALC285_FIXUP_HP_SPECTRE_X360_EB1),
  	SND_PCI_QUIRK(0x103c, 0x881d, "HP 250 G8 Notebook PC", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
@@ -787,11 +800,19 @@ index 3949e2614a66..8c7da13a804c 100644
  	SND_PCI_QUIRK(0x103c, 0x8846, "HP EliteBook 850 G8 Notebook PC", ALC285_FIXUP_HP_GPIO_LED),
  	SND_PCI_QUIRK(0x103c, 0x8847, "HP EliteBook x360 830 G8 Notebook PC", ALC285_FIXUP_HP_GPIO_LED),
  	SND_PCI_QUIRK(0x103c, 0x884b, "HP EliteBook 840 Aero G8 Notebook PC", ALC285_FIXUP_HP_GPIO_LED),
+@@ -10729,6 +10730,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1d4e, "ASUS TM420", ALC256_FIXUP_ASUS_HPE),
+ 	SND_PCI_QUIRK(0x1043, 0x1da2, "ASUS UP6502ZA/ZD", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1df3, "ASUS UM5606WA", ALC294_FIXUP_BASS_SPEAKER_15),
++	SND_PCI_QUIRK(0x1043, 0x1264, "ASUS UM5606KA", ALC294_FIXUP_BASS_SPEAKER_15),
+ 	SND_PCI_QUIRK(0x1043, 0x1e02, "ASUS UX3402ZA", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
+ 	SND_PCI_QUIRK(0x1043, 0x1e12, "ASUS UM3402", ALC287_FIXUP_CS35L41_I2C_2),
 diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index a95ebcf4e46e..1e7192cb4693 100644
+index 23fcd680167d..9b0bf626cd02 100644
 --- a/sound/usb/mixer_quirks.c
 +++ b/sound/usb/mixer_quirks.c
-@@ -4156,6 +4156,52 @@ static void snd_dragonfly_quirk_db_scale(struct usb_mixer_interface *mixer,
+@@ -4216,6 +4216,52 @@ static void snd_dragonfly_quirk_db_scale(struct usb_mixer_interface *mixer,
  	}
  }
  
@@ -844,7 +865,7 @@ index a95ebcf4e46e..1e7192cb4693 100644
  void snd_usb_mixer_fu_apply_quirk(struct usb_mixer_interface *mixer,
  				  struct usb_mixer_elem_info *cval, int unitid,
  				  struct snd_kcontrol *kctl)
-@@ -4173,5 +4219,10 @@ void snd_usb_mixer_fu_apply_quirk(struct usb_mixer_interface *mixer,
+@@ -4233,5 +4279,10 @@ void snd_usb_mixer_fu_apply_quirk(struct usb_mixer_interface *mixer,
  			cval->min_mute = 1;
  		break;
  	}
@@ -891,7 +912,7 @@ index e7a776ad25d7..0379903673a4 100644
  The new attr.config layout for PERF_TYPE_HARDWARE:
  
 diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index dea005410ec0..ee5d333e2ca9 100644
+index d0c65fad419a..c3ffd93f94d7 100644
 --- a/tools/perf/Documentation/perf-list.txt
 +++ b/tools/perf/Documentation/perf-list.txt
 @@ -188,7 +188,7 @@ in the CPU vendor specific documentation.
@@ -904,7 +925,7 @@ index dea005410ec0..ee5d333e2ca9 100644
  For example the raw event "LSD.UOPS" core pmu event above could
  be specified as
 diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
-index df7b5dfcc26a..7ea882ef293a 100644
+index 366b44d0bb7e..ac26ad07ccc1 100644
 --- a/tools/perf/arch/x86/util/iostat.c
 +++ b/tools/perf/arch/x86/util/iostat.c
 @@ -32,7 +32,7 @@
@@ -917,10 +938,10 @@ index df7b5dfcc26a..7ea882ef293a 100644
  #define PLATFORM_MAPPING_PATH	UNCORE_IIO_PMU_PATH"/die%d"
  
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4933efdfee76..628c61397d2d 100644
+index fdf5172646a5..55745b780f28 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -96,7 +96,7 @@
+@@ -97,7 +97,7 @@
  #include <internal/threadmap.h>
  
  #define DEFAULT_SEPARATOR	" "
@@ -943,10 +964,10 @@ index bf5090f5220b..9c4adfb45f62 100644
  	return !stat(path, &st);
  }
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 61bdda01a05a..ed893c3c6ad9 100644
+index 08a9d0bd9301..d217678631ff 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -33,12 +33,12 @@
+@@ -35,12 +35,12 @@
  #define UNIT_MAX_LEN	31 /* max length for event unit name */
  
  enum event_source {
