@@ -1,38 +1,81 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2643F22DF8C;
-	Mon,  7 Apr 2025 07:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEAC22DF9A;
+	Mon,  7 Apr 2025 07:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010519; cv=none; b=tZ8DY7lVW0kLl11RWyAfMFTReleH7X97pNB93pp6vA0ws1iyGG3c46TBQDb1cExwICWx0Yc4j9u7lWJZXK07/ulcyHQ5D0Ii3CQZON5hTKelBWpGTWhxIw2kPKtb7/57rQa/yfPbnrG9tsST3Hm5+e9zY1cvuim3SiZGyxw/FWI=
+	t=1744010518; cv=none; b=rmzPdUIs6a4l77gEsnbBiSeq7cPoBIvFb3OamPZwzNZD+kFaR+jWjT3EiSxnifkGX5Nickih5K2YUBBv0TV64k/KyRpHhJJEJNwoG6jHTj2UIzSvd9VMpUKsc67Pw1YW79/pMib5/vZ2Ktph/bwQZX3OhfzYIhGi4E9EyzbUXQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010519; c=relaxed/simple;
-	bh=gwlbrJ4E+kM2LfDpPto20YwjkS8MNLC7fHkGVJptOIQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dur0eitt8nXMqTjgO8lFz/DqVNjhhkhkws37IvXv2Rl75r5ikSDk5AvHH1mRi4mSmTUULU2Rc+28hgb5jip5AX6FBhJsCBqDXxlpBzUxd8lqGS9H7Nde/so0FmzO8RGx875wQSxi4f8tXhuWeSIoI7BJqBJctrZHiDZ1Er93ISk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201606.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202504071520345929;
-        Mon, 07 Apr 2025 15:20:34 +0800
-Received: from locahost.localdomain.com (10.94.5.217) by
- jtjnmail201606.home.langchao.com (10.100.2.6) with Microsoft SMTP Server id
- 15.1.2507.39; Mon, 7 Apr 2025 15:20:34 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <saeedm@nvidia.com>, <tariqt@nvidia.com>, <leon@kernel.org>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <lariel@nvidia.com>,
-	<paulb@nvidia.com>, <maord@nvidia.com>
-CC: <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
-Subject: [PATCH V2] net/mlx5e: fix potential null dereference in mlx5e_tc_nic_create_miss_table
-Date: Mon, 7 Apr 2025 15:20:31 +0800
-Message-ID: <20250407072032.5232-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0e08292e-9280-4ef6-baf7-e9f642d33177@gmail.com>
-References: <0e08292e-9280-4ef6-baf7-e9f642d33177@gmail.com>
+	s=arc-20240116; t=1744010518; c=relaxed/simple;
+	bh=lq/B1uM+ZdZwRZ6B00/5OflkTp2/rdXR/2K2PuehMkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jReAFc7gsYZ/bqiAQ5ZAHLcfRxqFe10BY+tVy8PjaKhd2tY7DzenImXZagWMjnX84ex/v9FaPT1px3GvjdiGnb5FjuTGbVamhqJlwG+4G+hlbAZ1NVJSF+Wwzxrhbmc+ioG+6Ic0+AT6n5w1R7gMkiJMKFdNF8Kp++JlnGboKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKpfrJH3; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKpfrJH3"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-739525d4e12so3355111b3a.3;
+        Mon, 07 Apr 2025 00:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744010516; x=1744615316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dP9TEDefRiCfKDK6dCXsCuGcFPJWg2jzI0nw7IpyNo=;
+        b=TKpfrJH3WymlWQcBN3anrZLU7ant6M3E7dxMQWgV4O1VfwiswDMjWVKJHEqUU52rOf
+         Hue82SLsLuFnHSxK2VtoHo6JY6PqTQ9XE885aEMM23g/iysetR9pgcyk3lvBvVa25Y42
+         R1PQ1jXC/Qxjn0ll3Dn58cgXCJPf2adIcWbUNSMeibdMuYlqT+8SiFIBayV6uvm5uiSo
+         VIXHNoMDbZeWJZ2vHXkeVTAw1ZZgougifwFnqqnHslJ8qFInZah+UmT3BrdmKllWqIwg
+         b6DsWcBE3LXCYwyskblIGJd+jStj+38wqpHGYKAJzHS9anWFxjT9oa072Sd4DL1Sjswl
+         mp0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010516; x=1744615316;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/dP9TEDefRiCfKDK6dCXsCuGcFPJWg2jzI0nw7IpyNo=;
+        b=oSmCpkdNWlMeKbzidfn+38A5lJ1cqjz2zsyCQaYovD7hWLHc8ShLvbLd9YWR7wIQR/
+         PfIRnsaS8nW/UgLq5HwwHg+oDPKdSYkwdcyCLgkgwn8/jkRHhPrwkSwHE72Uf5rb2R2Y
+         BwmvI/pEboUTWJuWg8D2okjXJ2uToZvLeJTQdd4iGmE4YSIGTup+XUB/nmSY3QDrVeQp
+         oT8KHHtBQWadkd+m3/CknIBzsA7HpZB/JUj2O1vZ3EHRU1GyNoG2JMJy6L6IluVN+THU
+         pSJCpACehEgN1/ADarumirxugZy+hqzEp0Qs6im4JUTjm4YsiGGrCqWOL7XohAd+cLIk
+         PGUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWW+KF3Cw8/oolnSOwbHYGFjS+AVPM+vJge6zk1f1sgv9ya3u16Eu3NROslwYx71Z8rAsEOSRC7S30kPGfu@vger.kernel.org, AJvYcCXYYt2ZQvdTSh8xjwy5DFvRr4iuAh5Y10o/wYHmOwk67NGXg4eE+Tf62yNvj2PENn7ptxEIBJ4aIJ7g@vger.kernel.org, AJvYcCXdrPkc+pPdiTIJfCrpRABGKDv0bySbZxbB9VahvkWxo60lFoN6DwPIfI/nU9Y1zs4cHCM1IxTCJKbv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDDQQLd/8tj8FX7brMCCdh3KnfuoUOfZmW7C0w4jWo4Na8+hHy
+	geJx4D3eYqEiFi/7a3+FbetGnN9dOJrppcSafDRrN/vflWKu1pWw
+X-Gm-Gg: ASbGnctOBXeRq+nO/mPKTzM153e9uJnc8OwhJ+T8z+uFVFExKNXhih0/cpxXOhazouC
+	L7CJpsVNbF54NjqAZqJ3U19rmgF9nbH+yrxzfqwMg3lukebWvTESVTjMxAFVskH4wREWIiYVcxq
+	ACs0/f42le2hQjmwrKVTEWHkQiqdH6b2m0AGeEiK1YFtV63EigZHiXBCzDOw4gEfrfc64gc4im8
+	fW58aTyKvc3Wkqu0FgW9YgPCmKjSV+nHn0QxaGfV4cBMVAsdEJEAhGMdhwF5/V4GZEhVgoStn11
+	xMHunEJzrnUZZ1mMrUNtNc2AH5Q1FQ==
+X-Google-Smtp-Source: AGHT+IFQxRWIvC5wkqCh6heDsDs6qCBCvJgy83QuVa7jiqs/EDCg6zs/0W+VCWvbxeuO/25zv5oksg==
+X-Received: by 2002:a05:6a00:2381:b0:736:5753:12f7 with SMTP id d2e1a72fcca58-739e48cf381mr17596430b3a.3.1744010516171;
+        Mon, 07 Apr 2025 00:21:56 -0700 (PDT)
+Received: from cu.. ([199.182.234.55])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee60dsm7787598b3a.40.2025.04.07.00.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:21:55 -0700 (PDT)
+From: Longbin Li <looong.bin@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: Longbin Li <looong.bin@gmail.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 0/2] riscv: pwm: sophgo: add pwm support for SG2044
+Date: Mon,  7 Apr 2025 15:20:37 +0800
+Message-ID: <20250407072056.8629-1-looong.bin@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,38 +83,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 2025407152034ba30f3d455ddc3e2cb5a8f6e9b48885a
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
 
-mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
-without NULL check may lead to NULL dereference.
-Add a NULL check for ns.
+This patch adds PWM controller support for four independent
+PWM channel outputs.
 
-Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ghost (2):
+  dt-bindings: pwm: sophgo: add pwm controller for SG2044
+  pwm: sophgo: add driver for SG2044
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 9ba99609999f..c2f23ac95c3d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -5216,6 +5216,10 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
- 	ft_attr.level = MLX5E_TC_MISS_LEVEL;
- 	ft_attr.prio = 0;
- 	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
-+	if (!ns) {
-+		netdev_err(priv->mdev, "Failed to get flow namespace\n");
-+		return -EOPNOTSUPP;
-+	}
- 
- 	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
- 	if (IS_ERR(*ft)) {
--- 
-2.43.0
+ .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
+ drivers/pwm/pwm-sophgo-sg2042.c               | 162 +++++++++++++++---
+ 2 files changed, 141 insertions(+), 25 deletions(-)
 
+--
+2.48.1
