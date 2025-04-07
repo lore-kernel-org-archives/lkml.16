@@ -1,106 +1,135 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8064A55;
-	Mon,  7 Apr 2025 06:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C398122423A;
+	Mon,  7 Apr 2025 06:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744005736; cv=none; b=W8j4jHiQ/HmDCLR7N3spslaVmtUTNztDMKNi9Ds3tCIoJlD78gU8QcPFj3KcDjxXwuumPJmVxelrQvGlzukXNEXQYB9+so9l3wXuX8jOo9oLtzWmEPgWqn9ngHdxPLnO6piOLiENiRi3JP0koK78U8aioH8vjsKhldM/eFRo8sA=
+	t=1744005902; cv=none; b=Z+ZABvSh+3fW/q7o9ysrbOvzWCjKkL73ooP3OJVMo8/69xtajlk9r4aZcd0roAK1PykYHS5kRX7OZ/xntCQ2jlBWdf+sQyQl9BqDTbayLnz4wR+pEqnHY5hxlBbx3pDRY6IsBInuMRI5H/vQP7AZyc4SjF+k4ODeoqS2/C39R9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744005736; c=relaxed/simple;
-	bh=H/DN+IGFERvFuFDKrxwkrcuAN/o1R7RZj+ZcKKslgls=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N2dWhKa3yZaMWcf9fDfP7HKSa4miV6yXtnpJHmaF1DGZSfok9kCFxSiWeIvVMofRW6VFIh1Vl9ZfARqakFNFtWOBTHQ9X2FRYaYLH/hdftVxC+BY5Nt284e8f4kMHlgD/Xtyzo27/n/yi4yMfDD2jFuAxC3ZGpeRSu2eepA7+ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=BrnpHO9O; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1744005902; c=relaxed/simple;
+	bh=QdlPTuGFDzHLTqGSHvpyqeL+wyYF1szxTKJZUAoSyAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PM/cnrdzoURnsgkt53FSwMe5AaY5y69EFbuh4bf2Bv9iEDgL8LQ0RZq9CUA1vbaAutoj+xaIddVJSWw+Hd3T3y0SO0n3OC/0j3QE4kTEZ64N2txgiBIU80UDUPJGQxPFaVg2OtVaPPjHfo4Qu9hooXy4LZn0efsQPlBzfB2qvsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLHkWsYj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="BrnpHO9O"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5372oEQd001745;
-	Sun, 6 Apr 2025 23:02:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	pfpt0220; bh=44fsOX6TG7LBfegSeqHa/Lp8L9umgjt8n2TcLILnhz0=; b=Brn
-	pHO9OXdZar81ZjD8I2axk20ceVRhGGiquMKwKmxyEZ1dz6At4oBZpvQu/1coNSPG
-	2buxJaTkyslG4O3iSOGXv5hKeqwirkeCNcYX29ILThcxp9dTTiK8zIm0VzfV0pbA
-	DLqRfQiCecAmidWBvyt5H6Cs6TUowzsaHxpoSOjAT34WK/VkW2JMPHRHCtwhIQXU
-	gCz8Oo3/94ndXXqw77A9nR0uPnh77Pb5lT3EmtfkCRzQEtpoN7JgozqXzt1nq6ub
-	qKH7ci198DjG1xW/icqdE7fAhKve8G2nK1N+3kJetr24x4hX+XkJuSTKJuo1/p1W
-	h+4TZIAMtq7sNALS/AQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 45un99segn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 06 Apr 2025 23:02:03 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 6 Apr 2025 23:02:02 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Sun, 6 Apr 2025 23:02:02 -0700
-Received: from 452e0070d9ab (HY-LT91368.marvell.com [10.29.8.52])
-	by maili.marvell.com (Postfix) with SMTP id E55945E689E;
-	Sun,  6 Apr 2025 23:01:58 -0700 (PDT)
-Date: Mon, 7 Apr 2025 06:01:57 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Wentao Liang <vulab@iscas.ac.cn>
-CC: <sgoutham@marvell.com>, <gakula@marvell.com>, <hkelam@marvell.com>,
-        <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] octeontx2-pf: Add error log
- forcn10k_map_unmap_rq_policer()
-Message-ID: <Z_NqVUSiG6Ia1qSK@452e0070d9ab>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLHkWsYj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1E6C4CEDD;
+	Mon,  7 Apr 2025 06:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744005902;
+	bh=QdlPTuGFDzHLTqGSHvpyqeL+wyYF1szxTKJZUAoSyAs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lLHkWsYj5spzqNUuH90Xd8qyXgoOZloNmjJ0gHK4EvJvTCrNLAwG+3nIJ1Y0l7CuZ
+	 8mUzIFqjh6IqSYAnZFL1cUspFhtUhYFTsJ7Dja2j9XI2Gg20dwN9Dyx2uxZrv1fQRZ
+	 2gcqVR2csGTopegBDIC3qjkr4RVCKJOGV4m/9voKS8eYYavf86BKA7FFRwKTnKznK2
+	 /rDyDVzfe/HHv7a42+Iuw4CxJRwpkRSe3JU8w96H5SsHCwSHvGktXSzNUeEwdWC63c
+	 w9V+Q4gQkFmABRMbrJbUEiNiHKAR8X4QFDRjrgiQOswgD1hY1YXbrtt+okKtKsU7gn
+	 oCjUqy44ya8Kg==
+Message-ID: <befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
+Date: Mon, 7 Apr 2025 08:04:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-Authority-Analysis: v=2.4 cv=I/JlRMgg c=1 sm=1 tr=0 ts=67f36a5b cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=8WfIFTDPXWsKq01BisAA:9 a=CjuIK1q_8ugA:10 a=MdnaEeoEtbPGM3ywBibD:22
-X-Proofpoint-GUID: Ups23XZxmlBTK0z0QtCZeE3XS11QHXVF
-X-Proofpoint-ORIG-GUID: Ups23XZxmlBTK0z0QtCZeE3XS11QHXVF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
+To: Faraz Ata <faraz.ata@samsung.com>, alim.akhtar@samsung.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rosa.pila@samsung.com, dev.tailor@samsung.com, suyash.bitti@samsung.com
+References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
+ <20250318075635.3372599-1-faraz.ata@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250318075635.3372599-1-faraz.ata@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-05 at 15:23:34, Wentao Liang (vulab@iscas.ac.cn) wrote:
-> The cn10k_free_matchall_ipolicer() calls the cn10k_map_unmap_rq_policer()
-> for each queue in a for loop without checking for any errors.
-> 
-> Check the return value of the cn10k_map_unmap_rq_policer() function during
-> each loop, and report a warning if the function fails.
-> 
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> index a15cc86635d6..895f0f8c85b2 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> @@ -353,8 +353,10 @@ int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
->  
->  	/* Remove RQ's policer mapping */
->  	for (qidx = 0; qidx < hw->rx_queues; qidx++)
-> -		cn10k_map_unmap_rq_policer(pfvf, qidx,
-> -					   hw->matchall_ipolicer, false);
-> +		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
-> +		if (rc)
-> +			dev_warn(pfvf->dev,
-> +				 "Failed to unmap RQ's policer.");
+On 18/03/2025 08:56, Faraz Ata wrote:
+> +
+> +		usi_17: usi@10d800c0 {
 
-Print failed queue number also please.
+Messed order. Keep nodes sorted by unit address (see DTS coding style).
 
-Thanks,
-Sundeep
->  
->  	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
->  
-> -- 
-> 2.42.0.windows.2
-> 
+> +			compatible = "samsung,exynosautov920-usi",
+> +				     "samsung,exynos850-usi";
+> +			reg = <0x10d800c0 0x20>;
+> +			samsung,sysreg = <&syscon_peric1 0x1040>;
+> +			samsung,mode = <USI_V2_UART>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
+> +				 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
+> +			clock-names = "pclk", "ipclk";
+> +			status = "disabled";
+> +
+> +			serial_17: serial@10d80000 {
+> +				compatible = "samsung,exynosautov920-uart",
+> +					     "samsung,exynos850-uart";
+> +				reg = <0x10d80000 0xc0>;
+> +				interrupts = <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&uart17_bus>;
+> +				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
+> +					 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
+> +				clock-names = "uart", "clk_uart_baud0";
+> +				samsung,uart-fifosize = <64>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>  		pwm: pwm@109b0000 {
+>  			compatible = "samsung,exynosautov920-pwm",
+>  				     "samsung,exynos4210-pwm";
+
+
+Best regards,
+Krzysztof
