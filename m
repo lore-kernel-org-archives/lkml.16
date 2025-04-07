@@ -1,94 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39F721B1AB;
-	Mon,  7 Apr 2025 17:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830122101BD;
+	Mon,  7 Apr 2025 17:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047272; cv=none; b=aiTqj/4X5F0XxCc2YZUMaZIYmfJPFe/wulixQVaQd+ypslj6hk7YY3CM9hKuL8RrF0FcgdE3Va2ftJZdh4EBYs7t5Pm3gSxoxhaCimeIIHRKTR7GH2wKQ4juJgJwwyI6ok8NC72yzRaMg1KXyww5orZnQiX5izXFKFPGnkn7TKk=
+	t=1744047321; cv=none; b=VnCQS3ZX8++UhdOwjV1z1l/UcoouuNhQR2f1UDOTLV/nYrj4EqzluCkK3RcDqN+w1gkmPDIyFpv0xLvuKrFEzGm+JMeJ4foZD/9yzkNS+DU3xdtALz5WYJZX6TtcVZs/qXtPZA2N24EarxJWrl/YWUFBFVSm3plNQqkuPsmi1hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047272; c=relaxed/simple;
-	bh=o63Kr8wHNE3EOi+oVha6nVGxp6Yoorpa1gflUrhu3J0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lrOjQ2+GpfEyOtpGpOHF7c1F0AVK+uW6rgTfslcH4YcG3e4n2jPbe774fBGsGEYxKo9Y+un+4GW4IpA5wyE6YleU9pAKUpwB0gBD1Uhsq4CP/LuwgQQmNjjU7jkoQKABg6B3+PSil0vCMUQTGkZ+DiNdwmgo1PBGkGdo3IvlQdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AIvM9G9K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744047321; c=relaxed/simple;
+	bh=wxtvOqHC+32lbWhXdQ+bVh6Khx7LdIvjYtV/DX+xWVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e0KGDFBml5mMW4ggjIL8xhMTlRklbnBYCHJ2INok3puyWsptMAIIrenbhawdrsS9P7dcuKBcXRVfSspABlXapFhiH4deNBjELk6wEihHfiMBIxGXrvZMK7b0jLd9VBnvAtLhOIKv+TOm5Asy4rbXck/bjZ/RtwmCbf0Jdpy6Sac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eTXnmBIB; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AIvM9G9K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D753C4CEDD;
-	Mon,  7 Apr 2025 17:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744047272;
-	bh=o63Kr8wHNE3EOi+oVha6nVGxp6Yoorpa1gflUrhu3J0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AIvM9G9KtpnXpve51JFF+dO41kdErgyup6M1biPljJfC7vmEl8MjpousOzbV1gO2E
-	 A8CVidrgrX6diPFz7sZau3F8VS1Zno9Kzjhz95lNVA5WX7bbilMG/DALG/3AK9YNht
-	 SzYkGhGBUSxVaJAOHYHXc/2bVDTLy7lqzOKcYB5PEqK3wO6mcgY+FFavLePnBIv8U/
-	 Esgi8xocqAGLMdzhmjJ2k3MNAfoO5G0FpVfqIkbnozdCHRoVF9bK0VvvNTGmiCpUNx
-	 mug97U3IaFYJXmgbGxhsR8WR/vD5BpDVG9onn+JwRLACkyGjqfKGRqylhUsHv1EWfY
-	 Mu0P+Co0aizzg==
-Date: Mon, 7 Apr 2025 07:34:31 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-	cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Subject: [GIT PULL] cgroup: Fixes for v6.15-rc1
-Message-ID: <Z_QMp_w1wVoU5A2w@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTXnmBIB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2240b4de10eso8831425ad.1;
+        Mon, 07 Apr 2025 10:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744047320; x=1744652120; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wxtvOqHC+32lbWhXdQ+bVh6Khx7LdIvjYtV/DX+xWVU=;
+        b=eTXnmBIBjnUbS6nfuWeL0mkb5/cEa7lKQ2EG1MwBdcwwEaqfqJlN6Ix/RbOb++cu9O
+         WpIS1K1dAtHIpngwElQb4kh36kMFFFibOZH+U/uhy/O/kQPeEKLFgDuk7K73gEAnyzqC
+         KWOFNuJutBcrkawnUUgX9zSkeWSFXwTxJIuF4bSJe30w5RxA3xvRPdqihNApjhVOwIwk
+         py+QEzrx8DH6CCEvXZMspGfS1YdEB5yE04pTai7mwCvVQbwqoYLqzXsSdS1YRinmp2kJ
+         Cqis187Z/7/dWSSd0V/j8iJgzgONGm9AMwxngB860RC0XNdxc1YMf1zeJKiGoApRcmof
+         L8uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744047320; x=1744652120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wxtvOqHC+32lbWhXdQ+bVh6Khx7LdIvjYtV/DX+xWVU=;
+        b=sGHNYAWEAcCvncmIt5OV4kbXQgh2dsheTrBbObcO3+/4VbHwm19+8O3d+7+39fK37e
+         G0rgzxI87KGOtxlPGm9O3i+yQkiRSXFtS1j6urzqOHvyTnd4idfEz4rX8MQTRqAaoqPq
+         5wyvAD/6V4kFuydDlZ350PBSe2LQuCnzcR8DbZ3JY8uwkTs1oNnOwhc9wq+qXxKl9eY6
+         PTHT/wUKl0ddzansEu1bCVCmbzPMit4kE1+h4TdYHeZ0e5/aqoaMt5UraJWeMqo+1SMD
+         y+xSmgEzeI+i5rh48cZ4eNpj7Gin2KV0ArMAV1A0oddQ03TadR9P3e7tIdTMkbEvs7G5
+         P5xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTcrwsH/KecYsfZWcn12dPCzXkBrZfIKHKKXaQdax7b6Ay6IuKEjk7YWdjkUwq7ViAlF7HWAAisEed8QbRDGI=@vger.kernel.org, AJvYcCUwEjJ1p/AxBJi0ExqTWPnxdq46AYpE8FNp9Ta7Q6d7xchonNe7uNIywHfGRRPQKBF0VZTmIxzgp+1pYo/N@vger.kernel.org, AJvYcCVTJwRcm/YgiWbM6MlFqSNTPu82qBwQfBYXZf/ezWrFi/sq63NvLG+kSzG7QaByXTOYjZ1ra02lUbo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyPDZA4eSWsMLZdfaV3eLzY9HbPdIHW0j9tJjyKQ/hFes4+B5i
+	KnECHHnE6d4dP+OmpvbEHGNADlzkitM2pvObNvTaAMLkg5Dh2QdXWgK4xZGgR+6SHX+tnHq6qaY
+	51bScydibagqC8ULOtZX0DwbDx/I=
+X-Gm-Gg: ASbGncs/W0QLLid2t7/tIumeIzuDIseYrWFBNs7Dx+sqSbgyyy4MICFkEhuGtt91/nz
+	zR9xlCalbiwyT53MLN1Evf+dktOuWseFpcI3oBx70Nn/LcFwP8WQJuKZOvl7KCEMDiN9MO95xpo
+	xFt25yP6TJGvPYeyOR71qJz71OkA==
+X-Google-Smtp-Source: AGHT+IGrOYdd22BOkNcMFAJN6gBEaM6XViMqZTPa3LiMF4ZXBrTaB6b4smjpdk/WhbGIXTWECsJFDdeZQZg/KU0ria8=
+X-Received: by 2002:a17:902:f609:b0:215:a96d:ec36 with SMTP id
+ d9443c01a7336-22a8a0584ebmr72206115ad.5.1744047319861; Mon, 07 Apr 2025
+ 10:35:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <D90J8JOGEBWI.4P0BAZG2R4G7@proton.me>
+In-Reply-To: <D90J8JOGEBWI.4P0BAZG2R4G7@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 7 Apr 2025 19:35:06 +0200
+X-Gm-Features: ATxdqUFraFwWuS1l8wKAeEcupvutnzUZ8-1cg_oEdUgNAzrys-VAJ9qg6SJWJNQ
+Message-ID: <CANiq72kokgc+ZxVN=UKUNbov4t3NkccTWSk8mDesbniJVFdr3w@mail.gmail.com>
+Subject: Re: [PATCH v3] arm: rust: Enable Rust support for ARMv7
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Manish Shakya <msh.shakya@gmail.com>, chrisi.schrefl@gmail.com, Jamie.Cunliffe@arm.com, 
+	a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	andrew@lunn.ch, ardb@kernel.org, bjorn3_gh@protonmail.com, 
+	boqun.feng@gmail.com, corbet@lwn.net, gary@garyguo.net, guptarud@gmail.com, 
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux@armlinux.org.uk, ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
+	stappers@stappers.nl, thesven73@gmail.com, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 1e7857b28020ba57ca7fdafae7ac855ba326c697:
+On Mon, Apr 7, 2025 at 6:04=E2=80=AFPM Benno Lossin <benno.lossin@proton.me=
+> wrote:
+>
+> Maybe we should also hide it behind CONFIG_EXPERT?
 
-  x86: don't re-generate cpufeaturemasks.h so eagerly (2025-03-31 14:19:55 -0700)
+Maybe -- it is already inside the "Kernel hacking" menu, but it could help.
 
-are available in the Git repository at:
+> Yeah, the upstream support would be the best. Did we ever need to enable
+> this option?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.15-rc1-fixes
+Not that I am aware of / recall. So far all the ones that we got a
+report for were actually expected cases.
 
-for you to fetch changes up to a22b3d54de94f82ca057cc2ebf9496fa91ebf698:
-
-  cgroup/cpuset: Fix race between newly created partition and dying one (2025-04-01 21:46:22 -1000)
-
-----------------------------------------------------------------
-cgroup: Fixes for v6.15-rc1
-
-- A number of cpuset remote partition related fixes and cleanups along with
-  selftest updates.
-
-- A change from this merge window made cgroup_rstat_updated_list() called
-  outside cgroup_rstat_lock leading to list corruptions. Fix it by
-  relocating the call inside the lock.
-
-----------------------------------------------------------------
-Shakeel Butt (1):
-      cgroup: rstat: call cgroup_rstat_updated_list with cgroup_rstat_lock
-
-Waiman Long (10):
-      cgroup/cpuset: Fix incorrect isolated_cpus update in update_parent_effective_cpumask()
-      cgroup/cpuset: Fix error handling in remote_partition_disable()
-      cgroup/cpuset: Remove remote_partition_check() & make update_cpumasks_hier() handle remote partition
-      cgroup/cpuset: Don't allow creation of local partition over a remote one
-      cgroup/cpuset: Code cleanup and comment update
-      cgroup/cpuset: Remove unneeded goto in sched_partition_write() and rename it
-      selftest/cgroup: Update test_cpuset_prs.sh to use | as effective CPUs and state separator
-      selftest/cgroup: Clean up and restructure test_cpuset_prs.sh
-      selftest/cgroup: Add a remote partition transition test to test_cpuset_prs.sh
-      cgroup/cpuset: Fix race between newly created partition and dying one
-
- include/linux/cgroup-defs.h                       |   1 +
- include/linux/cgroup.h                            |   2 +-
- kernel/cgroup/cgroup.c                            |   6 +
- kernel/cgroup/cpuset-internal.h                   |   1 +
- kernel/cgroup/cpuset.c                            | 401 ++++++++------
- kernel/cgroup/rstat.c                             |   3 +-
- tools/testing/selftests/cgroup/test_cpuset_prs.sh | 617 ++++++++++++++--------
- 7 files changed, 651 insertions(+), 380 deletions(-)
-
--- 
-tejun
+Cheers,
+Miguel
