@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042B922B8C8;
-	Mon,  7 Apr 2025 06:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F6C22CBD5;
+	Mon,  7 Apr 2025 06:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008795; cv=none; b=XAVPqsyjnHWnidVP6whIHEHeJYOOsq41MofG0hVIH/qBrhIQ8oiwtdWklOZRX5QzybIX2r9sSJDnKZ6RHin/JJ6jvAW3+34Yfhfw3UknmuZ/fIHro7QX7Wd9CBOoQv+Enby/fcB34ZNZH/QqEyB/hqwB09SqQ46Y8VKNS1Hn5wE=
+	t=1744008796; cv=none; b=RYI15q7WJJX16ZM0YT2YT0ufhmt3Ij8fy6YPvlISEpPC1tVu8HNLbaIQSFXm0wBjKMNvmgV2hZS4dWXoMibYVT8NnHXe0eB1LgQzH/zxnOYlmssFMkawnYCMn0PUzWq7xvF/vLiyRuniur1qGvzBwykELId6KCkVXpThyefWbkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008795; c=relaxed/simple;
-	bh=eueIMfuhJ+J1yj2bA5e9rnF4yzqTd/ncjRAHWOjdMl8=;
+	s=arc-20240116; t=1744008796; c=relaxed/simple;
+	bh=orWxm+0HgDh0luacmmPqHBYqPsziQRKvdvp7XdrcWAY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bjHHtjFEuzCQzOxkboahn89D88w0oHHsXw/zrQqMB+AFbJcl3md0NbOtDCBJkDNKo9eWPA5fJyCNRfUo29eYfLgOsNAvUlus1Yg4aQtUVsUWOUzrNRFdPwfdvVG8upAO+KQUO1qiIFYwYp7ENpB8K3Vft2PcXq3vD3AnRbZxCQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=haV6Mavk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WYS6HE84; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=m/IPOxa4PWlEIjEL4eJX/REYJnMOzpRjrn9UGAc1taHTn++Dns5fjl3BsyJly+CHoOD29CcCpeqhSJ4rUTeUJmqethx+U8yx/Al5LbNi3+Et8zlxhgOY1O+VxJfGPNFdiut9/tCVUJkFKyOEgWFv2OK4RLpNpwL/G4/c22tFaEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XINUmWGS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GSA1f0R4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="haV6Mavk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WYS6HE84"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XINUmWGS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GSA1f0R4"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008792;
+	s=2020; t=1744008793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tz+K3JzFCxIC1WzEuZHw4kf96d8I8QM3F1CQ6V2mVsY=;
-	b=haV6MavkJ3INLV/sb12G6p+5mwA0rJLvRRfv/Qnh5t5RCuivBOHBbzrDoD2JEAaFZk44ed
-	WdguII8++cXG9sDM6oOpZyTB2XC0Nno2B+nm41c+45/KKw3JGYL3Tc2Q/zKNp9rnxzpjue
-	32iLMzORkw3c/3j0dkKdy8DgQBJpTqH/FlncfmkH5qyAjcpKsS5C5BZEHVZr3eWmZKEUF6
-	5AAAG3ZrnxxgkuR/8M/Mngfi2lo3BbRfDvFfPo1w/jVUs63suFA56ShgkTnBoFvpPevF4f
-	RmNA8oFfUOL/q+KL7JJasqtQ76jP3+jLBK8EfE92vw3eBJdfpCSxNMnOGTJfYQ==
+	bh=zxPxFvYnts74EjizYrncbr+uFIPm2JowqVuGA565ZYE=;
+	b=XINUmWGSqm3ZLtQ/RUTAc9kRwyuBaDhz68Ht45lK8O7a+9qFsBgK0e3VJnO/ziQsr57wkg
+	Uy5bL/db4YTcTNTj46czPVkSC1L1EDE38hFhq7ZCq25UWbXzu1QYuABFdd9DTdA5SOprMT
+	/7mOKmstaP0qAfyGENQeRz1kYM9kX3ELqf2QIpuP/af1587JnpXZJruvyBIcyECiPZx3AH
+	EWvxMJYyqmrM+RLlqSsi/DNQ6qyTYbOx7XGW2z82ssWYJ6iqghV5YNYnRwEq+CkKkMYMpI
+	3JdDHxF7/DKjoLAGC1FUEAva1nUAcYOa/YeeM/HJ88dvJns4IRDC1YEQJ1u1Dg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008792;
+	s=2020e; t=1744008793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tz+K3JzFCxIC1WzEuZHw4kf96d8I8QM3F1CQ6V2mVsY=;
-	b=WYS6HE84mqpV4OI//j5AWim59+SRTAsqN4WCtR+O6ecEfnuZvdkTm+z/LJiNuzMfb4PPeP
-	K+BAwvNY+e6vrCCw==
-Date: Mon, 07 Apr 2025 08:52:44 +0200
-Subject: [PATCH v2 21/32] tools/nolibc: implement waitpid() in terms of
- waitid()
+	bh=zxPxFvYnts74EjizYrncbr+uFIPm2JowqVuGA565ZYE=;
+	b=GSA1f0R49mBlFEqFJenZ0hBd5VDKslLpNspKQzJfMpaa5PGc8OqVqv6RUpQ+Sg+6N4c9Pp
+	LdqCFJDpCv60JDDw==
+Date: Mon, 07 Apr 2025 08:52:46 +0200
+Subject: [PATCH v2 23/32] tools/nolibc: add dprintf() and vdprintf()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-21-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-23-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -58,119 +57,59 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=2732;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1389;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=eueIMfuhJ+J1yj2bA5e9rnF4yzqTd/ncjRAHWOjdMl8=;
- b=c1Y/9C5M8EZrpldyWRKJa8tv+1Ke9Pz0esyc0zHkgHGB1PokScLvzl+UcSFQJMxUfhwY9eSeI
- 3XKgZkZVQkJAoW0/thfJln2R5Ipt+jThg2uv0qKRNGqleHxCNYo4hWQ
+ bh=orWxm+0HgDh0luacmmPqHBYqPsziQRKvdvp7XdrcWAY=;
+ b=zgu6bhfIbTzLSbHAGSc9RMoJXQxadrdVuWFlyKVdA8snPXsAOEQabrhfz0KG9RSCs8p02vfER
+ LjB7FDssy2RAfBOU65TC3kuAEhXr92h+7GnqmfqdA/Qw/QEUpaT5FhL
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The old wait4() syscall used by waitpid() before is not available everywhere.
-Switch to the waitid() syscall which is the new replacement.
+dprintf() and vdprintf() are printf() variants printing directly into a
+filedescriptor. As FILE in nolibc is based directly on filedescriptors,
+the implementation is trivial.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Acked-by: Willy Tarreau <w@1wt.eu>
 ---
- tools/include/nolibc/sys.h | 71 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 59 insertions(+), 12 deletions(-)
+ tools/include/nolibc/stdio.h | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index 5c71a2f65c7bd93f6f516a54f7e63244466fad47..e39eefb2b82cc97eccfc030005fe0321632f12c4 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -1267,6 +1267,7 @@ int unlink(const char *path)
-  * pid_t wait(int *status);
-  * pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
-  * pid_t waitpid(pid_t pid, int *status, int options);
-+ * int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
-  */
- 
- static __attribute__((unused))
-@@ -1291,18 +1292,6 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage)
- 	return __sysret(sys_wait4(pid, status, options, rusage));
+diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
+index b32b8b794015276ab6242c2be18f860c095f90a3..262d0da4da9062e0c83b55661b2509f36548cf88 100644
+--- a/tools/include/nolibc/stdio.h
++++ b/tools/include/nolibc/stdio.h
+@@ -351,6 +351,30 @@ int printf(const char *fmt, ...)
+ 	return ret;
  }
  
--
--static __attribute__((unused))
--pid_t waitpid(pid_t pid, int *status, int options)
--{
--	return __sysret(sys_wait4(pid, status, options, NULL));
--}
--
--
--/*
-- * int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
-- */
--
- static __attribute__((unused))
- int sys_waitid(int which, pid_t pid, siginfo_t *infop, int options, struct rusage *rusage)
- {
-@@ -1316,6 +1305,64 @@ int waitid(int which, pid_t pid, siginfo_t *infop, int options)
- }
- 
- 
-+static __attribute__((unused))
-+pid_t waitpid(pid_t pid, int *status, int options)
++static __attribute__((unused, format(printf, 2, 0)))
++int vdprintf(int fd, const char *fmt, va_list args)
 +{
-+	int idtype, ret;
-+	siginfo_t info;
-+	pid_t id;
++	FILE *stream;
 +
-+	if (pid == INT_MIN) {
-+		SET_ERRNO(ESRCH);
++	stream = fdopen(fd, NULL);
++	if (!stream)
 +		return -1;
-+	} else if (pid < -1) {
-+		idtype = P_PGID;
-+		id = -pid;
-+	} else if (pid == -1) {
-+		idtype = P_ALL;
-+		id = 0;
-+	} else if (pid == 0) {
-+		idtype = P_PGID;
-+		id = 0;
-+	} else {
-+		idtype = P_PID;
-+		id = pid;
-+	}
-+
-+	options |= WEXITED;
-+
-+	ret = waitid(idtype, id, &info, options);
-+	if (ret)
-+		return ret;
-+
-+	switch (info.si_code) {
-+	case 0:
-+		*status = 0;
-+		break;
-+	case CLD_EXITED:
-+		*status = (info.si_status & 0xff) << 8;
-+		break;
-+	case CLD_KILLED:
-+		*status = info.si_status & 0x7f;
-+		break;
-+	case CLD_DUMPED:
-+		*status = (info.si_status & 0x7f) | 0x80;
-+		break;
-+	case CLD_STOPPED:
-+	case CLD_TRAPPED:
-+		*status = (info.si_status << 8) + 0x7f;
-+		break;
-+	case CLD_CONTINUED:
-+		*status = 0xffff;
-+		break;
-+	default:
-+		return -1;
-+	}
-+
-+	return info.si_pid;
++	/* Technically 'stream' is leaked, but as it's only a wrapper around 'fd' that is fine */
++	return vfprintf(stream, fmt, args);
 +}
 +
++static __attribute__((unused, format(printf, 2, 3)))
++int dprintf(int fd, const char *fmt, ...)
++{
++	va_list args;
++	int ret;
 +
- /*
-  * ssize_t write(int fd, const void *buf, size_t count);
-  */
++	va_start(args, fmt);
++	ret = vdprintf(fd, fmt, args);
++	va_end(args);
++	return ret;
++}
++
+ static __attribute__((unused))
+ int vsscanf(const char *str, const char *format, va_list args)
+ {
 
 -- 
 2.49.0
