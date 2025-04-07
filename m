@@ -1,49 +1,33 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1DE205E22;
-	Mon,  7 Apr 2025 15:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95F21ADC86;
+	Mon,  7 Apr 2025 15:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041541; cv=none; b=TwV0VM+LU1qlTg2hGZ2iNKXrrWTLPlufW4ung1z6VwHoNCzjPhr8kL0Uad4ZpTk0zIZ2mlmvhyz1HJnT3DIvTqPRvadK9HjIjIFXBokW/EchgkAwPbGXI1Cl8ICSovPJvFwY5LaJmtT0s27edyo7e5Zv03ErxWlKpaLtFw0lE9U=
+	t=1744041558; cv=none; b=D3mn5Ch0oKV+0yCFB6udtgMKwbLR7rcS3Pq6pv9MtmaWllRSVKE+SX50MlKCuHo+E3Su2UoXi8ntuXqt/3vWNiIBrA4T+NMtF0rqiViEi9hC1n0jL6XSE0BtOM7FwGKtCjEQKWoNxDvfa/rOjhO+u25FGSHRx+GbXEuj0egRWv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041541; c=relaxed/simple;
-	bh=7xL2Pvejkhm/LMdO01nWJ0qjQpyVLWiU7owkz4pgwew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ioi0n81C2D3nmd+0iFiMdt8tlWj+VbVBTqHCdQklZU4tabpyXBWfOlsvGg2S2iyLHU58NvjE2Lu49Fhf6WwnvVS/Ca9nLgwzOJ0sjt65dJrP6r34vLBhm0kgjDn4WpCbLp8myeUwXbOsq5BaKYGdYCNTa2adFuIvlBlKxRbeNPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RnfscsZj; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744041558; c=relaxed/simple;
+	bh=1GyAjSDlG1wgBYRaQ8zf6o0fLwSnmGQPgHb92Y351kE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AdOHh8PjRD6c2YefU2p7I8Bwu+1eEjFKHoKaU6U9IsSq1TLWUN5V33BfjmhPmE0/8R0PkCVCQ2Lnxp5mxxHHIFbrDCQuuaTvhgL7s+DsHhmkQna+xg4LkEPrfbLCkT919rIQym0Xw35bv3/4PHQFgT+RBmu66RojFSuxKCHLe5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U87Tcvkn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RnfscsZj"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Fwp64412378
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 10:58:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744041531;
-	bh=CM1BJ12DnqqQb7OjNUW+NjZkGcwmy/JnA2JZ39Kh3aw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=RnfscsZjHDPkYoOtGmVavQryimF7JMTVgyOOkpBGdsqkznTmyCjbmQT6ibOtFncnz
-	 jqBBmCAksx5FiZ26rjiXhZl8xprGLx+B6MXliWgaTyddHS02I+oDnkIPGBdgpxRAf2
-	 Dm+Wm96RicagazhqJ9aXWi77m4b7m91wH8CyaSmw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537FwoH5114980
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 10:58:50 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 10:58:50 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 10:58:50 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537FwnDW117852;
-	Mon, 7 Apr 2025 10:58:50 -0500
-Message-ID: <e131298f-3713-482a-a740-ff89709270b4@ti.com>
-Date: Mon, 7 Apr 2025 10:58:49 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U87Tcvkn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1337C4CEE7;
+	Mon,  7 Apr 2025 15:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744041558;
+	bh=1GyAjSDlG1wgBYRaQ8zf6o0fLwSnmGQPgHb92Y351kE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U87TcvknweLw8WVHBDI8tFeDHzDGjFfL/7YNpQa4B0ILtFjdBE6LbOff6Qw8up2KU
+	 Tv5W+RAl6B7U87U1zp4eUA+ubLjgQ3cN7kxBfCpAwaj3BztjSDw3UYswmoz+yOHZ68
+	 uNF6E1JAVZus23iUGq47KGXJil5OYH4qC0iR74ErWqPlxwfpPiTaM/6J1T78thq5oZ
+	 IXqcKRivw5nEvxZfxdogQUUeF9Ej0X4Wh9zNkhFXpFMTzOkim2DFLTWixI1+n51n60
+	 TJaZHG/PMGgTxOnIyDvGt5r/b01cgh2Tp+IUG9gwlWm4RKGzYqkDneZnLGOE3Dwu/e
+	 bEaafTh9m3jpQ==
+Message-ID: <c3284c33-4a8e-4150-b40a-05cd3af39def@kernel.org>
+Date: Mon, 7 Apr 2025 16:59:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,242 +35,148 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Judith Mendez <jm@ti.com>,
-        Devarsh Thakkar
-	<devarsht@lewv0571a.ent.ti.com>,
-        Nishanth Menon <nm@ti.com>, Hari Nagalla
-	<hnagalla@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Beleswar Padhi <b-padhi@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+Subject: Re: [PATCH v1 1/2] media: camss: Increase the maximum frame size
+To: Luca Weiss <luca.weiss@fairphone.com>, Jordan Crouse
+ <jorcrous@amazon.com>, linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Foss
+ <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240802152435.35796-1-jorcrous@amazon.com>
+ <20240802152435.35796-2-jorcrous@amazon.com>
+ <D64PAIXELZ6A.37ZSFBIRPE6MT@fairphone.com>
 Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Bryan O'Donoghue <bod@kernel.org>
+In-Reply-To: <D64PAIXELZ6A.37ZSFBIRPE6MT@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 4/7/25 9:13 AM, Judith Mendez wrote:
-> Hi Devarsh,
+On 06/12/2024 14:51, Luca Weiss wrote:
+> On Fri Aug 2, 2024 at 5:24 PM CEST, Jordan Crouse wrote:
+>> Commit 35493d653a2d
+>> ("media: camss: add support for vidioc_enum_framesizes ioctl") added a
+>> maximum frame width and height but the values selected seemed to have
+>> been arbitrary. In reality the cam hardware doesn't seem to have a maximum
+>> size restriction so double up the maximum reported width and height to
+>> allow for larger frames.
+>>
+>> Also increase the maximum size checks at each point in the pipeline so
+>> the increased sizes are allowed all the way down to the sensor.
 > 
-> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
->> Hi Judith,
->>
->> On 05/04/25 05:45, Judith Mendez wrote:
->>  > From: Devarsh Thakkar <devarsht@ti.com>
->>>
->>
->> Thanks for the patch.
->>
->>> For each remote proc, reserve memory for IPC and bind the mailbox
->>> assignments. Two memory regions are reserved for each remote processor.
->>> The first region of 1MB of memory is used for Vring shared buffers
->>> and the second region is used as external memory to the remote processor
->>> for the resource table and for tracebuffer allocations.
->>>
->>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>> Signed-off-by: Judith Mendez <jm@ti.com>
->>> ---
->>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++++--
->>>   1 file changed, 90 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>> index 1c9d95696c839..7d817b447c1d0 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>> @@ -52,6 +52,42 @@ linux,cma {
->>>               linux,cma-default;
->>>           };
->>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x99800000 0x00 0x100000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        c7x_0_memory_region: c7x-memory@99900000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
->>> +            no-map;
->>> +        };
->>> +
->>>           secure_tfa_ddr: tfa@9e780000 {
->>>               reg = <0x00 0x9e780000 0x00 0x80000>;
->>>               alignment = <0x1000>;
->>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
->>>               alignment = <0x1000>;
->>>               no-map;
->>>           };
->>> -
->>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>> -            compatible = "shared-dma-pool";
->>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
->>> -            no-map;
->>> -        };
->>>       };
->>
->> This is missing the edgeAI specific remote-core carveouts and RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares which come as pre-packaged in the official SDK release for AM62A.
->>
->> There is only one official SDK release for AM62A (which is edgeAI based) [2] which packages these edgeAI remoteproc firmwares and in my view it is a fair expectation that remote core careveouts in device-tree should align with firmwares released in SDK.
->>
-
-Why should Linux upstream care about what we do in our current evil vendor SDKs?
-We change things around every cycle, and do all kinds of hacky things to just
-"make it work" for the current SDK release.
-
->> This is because most developers (including me) and vendors download this official SDK release and use it with latest upstream kernel and modules (right now we are applying required patches locally) and this patch won't suffice for this, in-fact it won't work since the remoteproc firmwares are already using regions beyond the reserved-regions from this patch.
-
-Then that firmware team should fix their firmware, Linux should not
-do things just because some builds of a firmware did the wrong thing.
-
-Just a random example from the top of my mind here, a while back
-someone on the codec firmware team decided to take the standard RPMSG
-name service structure and modify it to suit some specific usecase
-they had, suddenly all the firmware we made for AM57x devices stopped
-working on upstream kernels. Instead of fixing the firmware we just
-carried a hack for the same in our vendor kernel trees. Now customers
-have no path to use this old firmware on newer kernels as adding the
-hack to upstream Linux (rightly) failed [0].
-
-Let's not do that again, if we have firmware that doesn't follow
-upstream, then let's fix the firmware, not hack around it upstream.
-
-The edgeAI firmware folks have no issue ignoring existing upstream
-IPC carveouts and simply replacing them all with their own custom
-ones in their SDK[1], I see no reason they cannot continue doing that
-if they don't want to fix their firmware.
-
+> Hi Jordan,
 > 
-> I understand your point, currently with this patch remoteproc loading
-> will not work for some cores. However, the goal here is to standardize
-> as much as possible the memory carveout sizes, push the "demo firmware"
-> to request resources the correct way from resource table, and move away
-> from this dependency and limitations that we have with our firmware. We
-> should soon be able to generate our own firmware using Zephyr,  which
-> Andrew is pioneering, so with this firmware we should move to the
-> correct direction upstream. Downstream we are still using the memory
-> carveout sizes that the firmware folk want so desperately to keep, for
-> now..
+> Looks like this hasn't landed yet, do you plan on resending this?
 > 
-
-+1
-
-I have this Zephyr based firmware for AM62A working and it uses the
-standard IPC regions as specified in this patch. I'll be posting the PR
-for it in Zephyr upstream by the end of week.
-
-For this patch as it is:
-
-Acked-by: Andrew Davis <afd@ti.com>
-
-Andrew
-
-[0] https://lore.kernel.org/lkml/20241011123922.23135-1-richard@nod.at/
-[1] https://git.ti.com/cgit/edgeai/meta-edgeai/tree/recipes-kernel/linux/linux-ti-staging/j721e-evm/0001-arm64-dts-ti-Add-DTB-overlays-for-vision-apps-and-ed.patch?h=kirkstone
-
-> ~ Judith
+> Just wanted to try a 8192x6144 format but csid limiting the size to 8191
+> is a bit in the way.
+> 
+> Regards
+> Luca
 > 
 >>
->> [1]: https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+>> Signed-off-by: Jordan Crouse <jorcrous@amazon.com>
+>> ---
 >>
->> Regards
->> Devarsh
+>>   drivers/media/platform/qcom/camss/camss-csid.c   | 8 ++++----
+>>   drivers/media/platform/qcom/camss/camss-csiphy.c | 4 ++--
+>>   drivers/media/platform/qcom/camss/camss-ispif.c  | 4 ++--
+>>   drivers/media/platform/qcom/camss/camss-vfe.c    | 4 ++--
+>>   drivers/media/platform/qcom/camss/camss-video.c  | 6 +++---
+>>   5 files changed, 13 insertions(+), 13 deletions(-)
 >>
->>>       opp-table {
->>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>           };
->>>       };
->>>   };
->>> +
->>> +&mailbox0_cluster0 {
->>> +    status = "okay";
->>> +
->>> +    mbox_r5_0: mbox-r5-0 {
->>> +        ti,mbox-rx = <0 0 0>;
->>> +        ti,mbox-tx = <1 0 0>;
->>> +    };
->>> +};
->>> +
->>> +&mailbox0_cluster1 {
->>> +    status = "okay";
->>> +
->>> +    mbox_c7x_0: mbox-c7x-0 {
->>> +        ti,mbox-rx = <0 0 0>;
->>> +        ti,mbox-tx = <1 0 0>;
->>> +    };
->>> +};
->>> +
->>> +&mailbox0_cluster2 {
->>> +    status = "okay";
->>> +
->>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>> +        ti,mbox-rx = <0 0 0>;
->>> +        ti,mbox-tx = <1 0 0>;
->>> +    };
->>> +};
->>> +
->>> +&wkup_r5fss0 {
->>> +    status = "okay";
->>> +};
->>> +
->>> +&wkup_r5fss0_core0 {
->>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>> +            <&wkup_r5fss0_core0_memory_region>;
->>> +};
->>> +
->>> +&mcu_r5fss0 {
->>> +    status = "okay";
->>> +};
->>> +
->>> +&mcu_r5fss0_core0 {
->>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>> +            <&mcu_r5fss0_core0_memory_region>;
->>> +};
->>> +
->>> +&c7x_0 {
->>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>> +    memory-region = <&c7x_0_dma_memory_region>,
->>> +            <&c7x_0_memory_region>;
->>> +    status = "okay";
->>> +};
->>
+>> diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
+>> index 858db5d4ca75..886c42c82612 100644
+>> --- a/drivers/media/platform/qcom/camss/camss-csid.c
+>> +++ b/drivers/media/platform/qcom/camss/camss-csid.c
+>> @@ -752,8 +752,8 @@ static void csid_try_format(struct csid_device *csid,
+>>   		if (i >= csid->res->formats->nformats)
+>>   			fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
+>>   
+>> -		fmt->width = clamp_t(u32, fmt->width, 1, 8191);
+>> -		fmt->height = clamp_t(u32, fmt->height, 1, 8191);
+>> +		fmt->width = clamp_t(u32, fmt->width, 1, 16383);
+>> +		fmt->height = clamp_t(u32, fmt->height, 1, 16383);
+>>   
+>>   		fmt->field = V4L2_FIELD_NONE;
+>>   		fmt->colorspace = V4L2_COLORSPACE_SRGB;
+>> @@ -781,8 +781,8 @@ static void csid_try_format(struct csid_device *csid,
+>>   			if (i >= csid->res->formats->nformats)
+>>   				fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
+>>   
+>> -			fmt->width = clamp_t(u32, fmt->width, 1, 8191);
+>> -			fmt->height = clamp_t(u32, fmt->height, 1, 8191);
+>> +			fmt->width = clamp_t(u32, fmt->width, 1, 16383);
+>> +			fmt->height = clamp_t(u32, fmt->height, 1, 16383);
+>>   
+>>   			fmt->field = V4L2_FIELD_NONE;
+>>   		}
+>> diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
+>> index 2f7361dfd461..43c35ad6ac84 100644
+>> --- a/drivers/media/platform/qcom/camss/camss-csiphy.c
+>> +++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
+>> @@ -368,8 +368,8 @@ static void csiphy_try_format(struct csiphy_device *csiphy,
+>>   		if (i >= csiphy->res->formats->nformats)
+>>   			fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
+>>   
+>> -		fmt->width = clamp_t(u32, fmt->width, 1, 8191);
+>> -		fmt->height = clamp_t(u32, fmt->height, 1, 8191);
+>> +		fmt->width = clamp_t(u32, fmt->width, 1, 16383);
+>> +		fmt->height = clamp_t(u32, fmt->height, 1, 16383);
+>>   
+>>   		fmt->field = V4L2_FIELD_NONE;
+>>   		fmt->colorspace = V4L2_COLORSPACE_SRGB;
+>> diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/media/platform/qcom/camss/camss-ispif.c
+>> index a12dcc7ff438..01e2ded8da0b 100644
+>> --- a/drivers/media/platform/qcom/camss/camss-ispif.c
+>> +++ b/drivers/media/platform/qcom/camss/camss-ispif.c
+>> @@ -912,8 +912,8 @@ static void ispif_try_format(struct ispif_line *line,
+>>   		if (i >= line->nformats)
+>>   			fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
+>>   
+>> -		fmt->width = clamp_t(u32, fmt->width, 1, 8191);
+>> -		fmt->height = clamp_t(u32, fmt->height, 1, 8191);
+>> +		fmt->width = clamp_t(u32, fmt->width, 1, 16383);
+>> +		fmt->height = clamp_t(u32, fmt->height, 1, 16383);
+>>   
+>>   		fmt->field = V4L2_FIELD_NONE;
+>>   		fmt->colorspace = V4L2_COLORSPACE_SRGB;
+>> diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
+>> index 83c5a36d071f..826c0fb31785 100644
+>> --- a/drivers/media/platform/qcom/camss/camss-vfe.c
+>> +++ b/drivers/media/platform/qcom/camss/camss-vfe.c
+>> @@ -1049,8 +1049,8 @@ static void vfe_try_format(struct vfe_line *line,
+>>   		if (i >= line->nformats)
+>>   			fmt->code = MEDIA_BUS_FMT_UYVY8_1X16;
+>>   
+>> -		fmt->width = clamp_t(u32, fmt->width, 1, 8191);
+>> -		fmt->height = clamp_t(u32, fmt->height, 1, 8191);
+>> +		fmt->width = clamp_t(u32, fmt->width, 1, 16383);
+>> +		fmt->height = clamp_t(u32, fmt->height, 1, 16383);
+>>   
+>>   		fmt->field = V4L2_FIELD_NONE;
+>>   		fmt->colorspace = V4L2_COLORSPACE_SRGB;
+>> diff --git a/drivers/media/platform/qcom/camss/camss-video.c b/drivers/media/platform/qcom/camss/camss-video.c
+>> index cd72feca618c..5fee3733da8e 100644
+>> --- a/drivers/media/platform/qcom/camss/camss-video.c
+>> +++ b/drivers/media/platform/qcom/camss/camss-video.c
+>> @@ -19,10 +19,10 @@
+>>   #include "camss.h"
+>>   
+>>   #define CAMSS_FRAME_MIN_WIDTH		1
+>> -#define CAMSS_FRAME_MAX_WIDTH		8191
+>> +#define CAMSS_FRAME_MAX_WIDTH		16833
+>>   #define CAMSS_FRAME_MIN_HEIGHT		1
+>> -#define CAMSS_FRAME_MAX_HEIGHT_RDI	8191
+>> -#define CAMSS_FRAME_MAX_HEIGHT_PIX	4096
+>> +#define CAMSS_FRAME_MAX_HEIGHT_RDI	16833
+>> +#define CAMSS_FRAME_MAX_HEIGHT_PIX	8192
+>>   
+>>   /* -----------------------------------------------------------------------------
+>>    * Helper functions
 > 
+
+Ping Jordan !
+
+Will buy you beer for a v2 of this series.
+
+---
+bod
