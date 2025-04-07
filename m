@@ -1,166 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628BB224FD;
-	Mon,  7 Apr 2025 12:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C182459F1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744028892; cv=none; b=sl98Ap9GD+sn0E05u8XuFp7sqzG0XEZ6Ml0EdxMx3+VEVkZPmVuoyRAoWzGV0pkGRSZCCO9vcVV0tBV/iTnMlz+E7p6GoUQHGJ7SkgcBSDB1/h6AX+EOhSYreaVWco8YoB6D6ajCM3WzlXdJVpRs7Ouu3Uw5IeeLpE/bsHOoq+8=
+	t=1744028921; cv=none; b=k4QjDoxOiUfdPEgQST8VhamG70sCVxWfL+/qkClqkXPldd+cgXNacmqUdJYaXYI5xMvEvwouFM0hopJDeEDZIBQYWVePtArLDkadqmfMZQD0iEsg9wIb1Oj4qA5PBi6TH01aW3xYznXewfOrboxsQarXSvTwlX8D6qiTQyvHw8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744028892; c=relaxed/simple;
-	bh=2o4HproG0lV+6CiJy2e2v2QRjfeRHQV3nL2UwubnNis=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W4MODK4MXccgmFknRLnfKuBedxFrZiLViUkYYpRS54bHCtzlRfyWJ3d5buf5qsCpdaUdvXPT0BsLoXA9BP0SwX85k4FcZU6PjTuBWZLXw8oJol0iU3Q/FovVkpOR7WrovipEM+U3I2pX0idMgNrfyTOUF0svqNpu06NxV+AJcCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H57H6F4J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H57H6F4J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3525FC4CEE7;
-	Mon,  7 Apr 2025 12:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744028891;
-	bh=2o4HproG0lV+6CiJy2e2v2QRjfeRHQV3nL2UwubnNis=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H57H6F4JJ5H/IuuJsy3mS27ZfEHXGNxu5o6j3PyHMAsO3NMGyjRLyQYXxvkripA6i
-	 p2rc7+G0EWhj3qBCVSzdhndmfqpKlo2NYtIOa9inISnvLWEcnpMByPfjwFnL+BLQS0
-	 Ol9CSZU+Rd9/8w3DCaoe9maNsf9uxxL2EE/BPRTtc6Ohltn2chNvuCMyBH6SRFncHQ
-	 UW/YmRCOgF+ZC3K21TYl5XmeJRmv1dR0heyOmyCR4jzUD7SKh+Pyr34rYLBO4FGbH7
-	 FoVdlRURId39Moj+WSWmpMPBTWzp3RrBP5c3xMi568TLiYDPPd/q356PN7O67hpbxl
-	 YsjS2pb9ibELw==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	stable@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: [PATCH v4] tpm: Mask TPM RC in tpm2_start_auth_session()
-Date: Mon,  7 Apr 2025 15:28:05 +0300
-Message-Id: <20250407122806.15400-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407072057.81062-1-jarkko@kernel.org>
-References: <20250407072057.81062-1-jarkko@kernel.org>
+	s=arc-20240116; t=1744028921; c=relaxed/simple;
+	bh=dDCLsoBqPfjWbCG4p1BxBYTwjiD+HPi7id2DzJFDYuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkRoALacc34d2ZZSuZfeEFNQtz+pvHGV6NcKaB2vzAbmUIVDvaC8tRxDIahBreeMGlRibRI1eL1fiBW3FR3Q9K848j43fCoJaV+CVCtA1q5rKWxHE4DVi9mX8CpWhnWM27NvOyREfK4YkmUircND1fOazLnwY1ATlijwz2D8cP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: D5T64hA0TRON5uuxvF4OSw==
+X-CSE-MsgGUID: RigfFxLOTQWRd2lXgQPYuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45503784"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="45503784"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:28:39 -0700
+X-CSE-ConnectionGUID: V7WAbuhdRRaCz1Fu5rD9lg==
+X-CSE-MsgGUID: cnCsxASrQrSUBASJDuV33w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127924698"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:28:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u1lac-0000000A44A-2D5l;
+	Mon, 07 Apr 2025 15:28:34 +0300
+Date: Mon, 7 Apr 2025 15:28:34 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
+	julia.lawall@inria.fr, outreachy@lists.linux.dev,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dan.carpenter@linaro.org
+Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+Message-ID: <Z_PE8usXhpLJ4sTd@smile.fi.intel.com>
+References: <Z/NxGilPLPy7KSQ3@ubuntu>
+ <2025040757-clergyman-finalist-0c63@gregkh>
+ <2025040752-unrefined-labored-8c8c@gregkh>
+ <20250407132115.11ded3d9@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407132115.11ded3d9@pumpkin>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+On Mon, Apr 07, 2025 at 01:21:15PM +0100, David Laight wrote:
+> On Mon, 7 Apr 2025 08:53:30 +0200
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Mon, Apr 07, 2025 at 08:36:35AM +0200, Greg KH wrote:
+> > > On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote:  
 
-[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+<snip>
 
-Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
-error codes.
+> > > > -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+> > > > +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;  
+> > > 
+> > > I do not see a modulo operation here, only another & operation.
+> > >   
+> > > >  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+> > > >  
+> > > >  				SetSeqNum(hdr, pattrib->seqnum);
+> > > > @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+> > > >  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+> > > >  						pattrib->ampdu_en = false;/* AGG BK */
+> > > >  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> > > > -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> > > > +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;  
+> > > 
+> > > This also looks odd, nothing is being "AND" here, it's an address value
+> > > being set (and an odd one at that, but that's another issue...)  
+> > 
+> > Sorry, no, I was wrong, it is being & here, but not %.  My fault,
+> > the lack of spaces here threw me.
+> 
+> It is still wrong '& 0xfff' => '% 4096u'.
 
-Cc: stable@vger.kernel.org # v6.10+
-Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v4:
-- tpm_to_ret()
-v3:
-- rc > 0
-v2:
-- Investigate TPM rc only after destroying tpm_buf.
----
- drivers/char/tpm/tpm2-sessions.c | 20 ++++++--------------
- include/linux/tpm.h              | 21 +++++++++++++++++++++
- 2 files changed, 27 insertions(+), 14 deletions(-)
+Why?
 
-diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
-index 3f89635ba5e8..102e099f22c1 100644
---- a/drivers/char/tpm/tpm2-sessions.c
-+++ b/drivers/char/tpm/tpm2-sessions.c
-@@ -40,11 +40,6 @@
-  *
-  * These are the usage functions:
-  *
-- * tpm2_start_auth_session() which allocates the opaque auth structure
-- *	and gets a session from the TPM.  This must be called before
-- *	any of the following functions.  The session is protected by a
-- *	session_key which is derived from a random salt value
-- *	encrypted to the NULL seed.
-  * tpm2_end_auth_session() kills the session and frees the resources.
-  *	Under normal operation this function is done by
-  *	tpm_buf_check_hmac_response(), so this is only to be used on
-@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
- }
- 
- /**
-- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
-- * @chip: the TPM chip structure to create the session with
-+ * tpm2_start_auth_session() - Create an a HMAC authentication session
-+ * @chip:	A TPM chip
-  *
-- * This function loads the NULL seed from its saved context and starts
-- * an authentication session on the null seed, fills in the
-- * @chip->auth structure to contain all the session details necessary
-- * for performing the HMAC, encrypt and decrypt operations and
-- * returns.  The NULL seed is flushed before this function returns.
-+ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
-+ * session. The null seed is flushed before the return.
-  *
-- * Return: zero on success or actual error encountered.
-+ * Returns zero on success, or a POSIX error code.
-  */
- int tpm2_start_auth_session(struct tpm_chip *chip)
- {
-@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
- 	/* hash algorithm for session */
- 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
- 
--	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
-+	rc = tpm_to_ret(tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession"));
- 	tpm2_flush_context(chip, null_key);
- 
- 	if (rc == TPM2_RC_SUCCESS)
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 6c3125300c00..c826d5a9d894 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -257,8 +257,29 @@ enum tpm2_return_codes {
- 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
- 	TPM2_RC_REFERENCE_H0	= 0x0910,
- 	TPM2_RC_RETRY		= 0x0922,
-+	TPM2_RC_SESSION_MEMORY	= 0x0903,
- };
- 
-+/*
-+ * Convert a return value from tpm_transmit_cmd() to a POSIX return value. The
-+ * fallback return value is -EFAULT.
-+ */
-+static inline ssize_t tpm_to_ret(ssize_t ret)
-+{
-+	/* Already a POSIX error: */
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
-+	case TPM2_RC_SUCCESS:
-+		return 0;
-+	case TPM2_RC_SESSION_MEMORY:
-+		return -ENOMEM;
-+	default:
-+		return -EFAULT;
-+	}
-+}
-+
- enum tpm2_command_codes {
- 	TPM2_CC_FIRST		        = 0x011F,
- 	TPM2_CC_HIERARCHY_CONTROL       = 0x0121,
+> But it is all rather pointless especially if you can't test it.
+
+> Plausibly more useful would be to find ALL of the uses of 0xfff/4096 (I suspect
+> there is an array lurking somewhere) and change them to use the same constant.
+> But you need to be able to test the changes - or at least discover that
+> they make absolutely no difference to the generated object code.
+
+The problem with &, it's not non-power-of-2 tolerable solution. Also using
+hexadecimal there is not so helpful as when we are talking about sequences
+(or indices in the circular buffer), the decimal makes more sense.
+
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
