@@ -1,83 +1,97 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3172F15B554;
-	Mon,  7 Apr 2025 21:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6EF20897F;
+	Mon,  7 Apr 2025 21:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744062935; cv=none; b=JSxcLdrgqSHy7NCFG2EujOfITxP7SOSJlfeDFy2cAm9nhnLzyK4PrxE/E+6oC/8WdJ7jtTucsgLFAISZib1nn4ojFri3VrwIfN9FKdPd1QaFGBycfjcd9/RCMKXs3AyeTe52K7PuTE6IuL8Bu+la0hhZ6y3dkyasBkMb7TbxKqM=
+	t=1744063080; cv=none; b=XrWlywyo1QjoFRLCnJKnkOxqTU7ckVBBrMz0SbwP+OfyNPbxW07Ft0mIpsjVsMqhX5cpW3fLxp0KhvrcySd7xryg8uDPWMqwtMV+ZMAF2XMrMj/K724AFDIG3EdSMijkBaoZiNSXW0jhMR1KAOSBiPKc441WjE8bC6xMtggA6pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744062935; c=relaxed/simple;
-	bh=bkH2uSaer9eBquNpQpw7ZxqqYZXCerxg7bpVDmxrtvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=D0gqAdSw5sYLwJbHM415rrIkkeHHBqWq/j+fXfBV2bDiSGSIjqgJilisKGkw2gTDoAvtIn4UdKYwRIAdAYXBX9Wu0WtdckAqSycBUpipwGxnnPgaYB/ODLOQWKA4dKpVkhNdiFzT8TpB2quzbVgHrFOj9+SHPP6PcxHPF7os7AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Hdm4x17V; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744063080; c=relaxed/simple;
+	bh=xvj+lvuBw1TbMx/NEN9QY0Pk1ROGSFMdHKlCdA1pCBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTgPSMXPaI2FIPlFX0/osOuGhFgKSFlTOfoKhrSR1BZp+zJY3faFWCD11ngOczcMUyE/JdyBjUSdoN/gXZsiTr6wF0dqfCS2j9ejTO1WmYqbPURccZUwdt7YDLS3Qp3kU5EVyyt9bjXg8APGs0i1EMZVraTDv61FW17hVmAvWBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMsLQT8W; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hdm4x17V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744062920;
-	bh=xTGuWH/wDMqbTn7jRysmx9B/1EhJBg3ZH5/JjDsLV3g=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Hdm4x17V8a82ora4jaRVxO+rLhejlFUjNOzBaXvo6mLZp3veXABVpO8htISP6o/fL
-	 Z7kB8KHtA3pm9IHQvNv01DX5lUGU36SqKSZL7Zh1NhB120uY8kE0dWppusWyqgUsRg
-	 xyJ/nw0b2Bqi6ZiIEDGsGggTtPfu8g0FOB7h0Eit7oTtYqZJTIaBJaEMTsahZX+/+g
-	 kmNMomqMtDRA8LklEGgChAb+O8/Xbumd0bKcTUQU6j9JJxbTCS7HNbV6WasqImzz7Z
-	 ikC94fXbDSwXZFRPvCXi9+Oebm5Y71QPOs6Y+6Kl9E93Jgm735zCFR+WoYebA9yKCq
-	 GrP8P8yfmj5Zw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWjgW74FVz4wcZ;
-	Tue,  8 Apr 2025 07:55:19 +1000 (AEST)
-Date: Tue, 8 Apr 2025 07:55:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Tony Yi <Tony.Yi@amd.com>, Victor Skvortsov <Victor.Skvortsov@amd.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the amdgpu tree
-Message-ID: <20250408075518.3a86e064@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMsLQT8W"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so3780729a91.2;
+        Mon, 07 Apr 2025 14:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744063078; x=1744667878; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t/veMl5cJutbSFbAOBwrUVmNBffppxF3I3Y+pxxlSyY=;
+        b=mMsLQT8WYoo5x6GNBhlYVzXdbbsW+VzRY/HlsmIxqnbTOczdKYfuev38BGHozxP7Tc
+         fhtYPr0HZhcof+CTYnzym9idLeDnCtVKNJ1gCekn6lQvOoTzrkvVj2yz7ArfYSfsZdCx
+         2CoS5tEf0xoD39TTAQk6x6YAI0l3ZIoVTtlehzqRdp1s3gIV7+mlIBxlMiXnusyomxIN
+         sVYtR4WgZAOspAJTQQ605Dd0oHxeD0LZZbbFLDd9Y67vlGPlgQQsfTsyuMgRubQqFLNR
+         LTubdrd4GH29BZsnhxeAAqTMYkyQHvaHgb7HHYaAgncaT4s2GlkH5WWEAjIleVFq90EJ
+         SSLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744063078; x=1744667878;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t/veMl5cJutbSFbAOBwrUVmNBffppxF3I3Y+pxxlSyY=;
+        b=ImVqJLyP0LBFdOPxuV+JaB4u885Nx/gKbuo18wek3yj0JA8dJc2oyiNH3moRCf/HjA
+         a4E81DTDtJrbdtMHIBLXqieNOtRMELGKUmy8DaxunVWisgoLhz7xrZQtAOwbQnFjMLoh
+         /yCsk8v0DbFGckAGo2J3oqLE8N2L3cudhzHfrHJPumXlDMp3HPWPReZTkDuZQWg/XWis
+         69VTFEH9Z8IwATljq3paNlLYiBpy1IlRCL2yYT90nN2+9HC56Ht4fF7qRiQwPKYxXzRb
+         WAizlTHtxKs0v2xCcuLjYtGC34/ssukdVDf+E2DiqG2wpcU4Clhn94v5vwa1DGMlnOSj
+         wE1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVqSMTYvEgm+GszAXMLKzzqdT2bULiVMNS5x5R6hmpTahDrZnHBspv1M5nBm4cyI0JAsCqvZlNsHtnEKQ==@vger.kernel.org, AJvYcCWhIBr7YVOZMNj5WEg+hhtCYFF9gQB+46oL5QPVasT01yH02BcF2MhCOE/cQEqBTSLWve+8AcVYflsx23Ij@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUEc8dOP55VHrSOBLNCJAitIWJNrNMC8XWQ4OgFrgb3Hnjccuo
+	hnzJ+KzD5IQ9bs6D24/rSHMvJwLsM/idurQIoa2hDBWfO+zsSjCitUYy9Q==
+X-Gm-Gg: ASbGnctguyx4eHhLrbBiQtkcW5dwGu0Db3GyjLXgpgbF9HgHGvEuAxnZLaRMxoAHKC7
+	AahrDKkHMC8+szmC2Bhw/UgJVgL4zOHWbLX0tFQFoCVykRry6Aft11S/dxApiZ6+VBybXTD87L1
+	uWJrcsudS6pxzCpWNHqK6O4zp0B6zEX8x9/pQ1VRcE4aafiQvoZ1THRd64DKI1yERXSVkaqD8/k
+	j1/WXCme0EnMZQAqizm6a1bxboKnixt77wc1Dt2DUkTD1lOQXCyvIxf/dNzGMbUnxEsclsSmf5g
+	swxfJcqzf0+Pz4iFNQd1n2beCdMtQ3ms+tecxSj60RFEPOo23sFrUFFED3AfntupYeJ4
+X-Google-Smtp-Source: AGHT+IGfIN/Tn2zcpNNxNhbVzCk6TRhMPHWB9OED8Dglm2of2mkcbNbnlggU8TM3GCAkI1G+Mx1uJg==
+X-Received: by 2002:a17:90b:4ec7:b0:2ff:7ad4:77b1 with SMTP id 98e67ed59e1d1-306a4836fd7mr19970783a91.2.1744063077923;
+        Mon, 07 Apr 2025 14:57:57 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306d2340f00sm129774a91.0.2025.04.07.14.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 14:57:57 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 7 Apr 2025 14:57:56 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: "William A. Kennington III" <william@wkennington.com>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] hwmon: (pmbus): Introduce page_change_delay
+Message-ID: <f650198f-159c-4793-8328-11b861c7f2ee@roeck-us.net>
+References: <20250404193103.4174977-1-william@wkennington.com>
+ <20250407201002.1198092-1-william@wkennington.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9/9qPQIHANNoq20Tf0iP09W";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407201002.1198092-1-william@wkennington.com>
 
---Sig_/9/9qPQIHANNoq20Tf0iP09W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 07, 2025 at 01:10:02PM -0700, William A. Kennington III wrote:
+> We have some buggy pmbus devices that require a delay after performing a
+> page change operation before trying to issue more commands to the
+> device.
+> 
+> This allows for a configurable delay after page changes, but not
+> affecting other read or write operations.
+> 
+> This makes a slight behavioral tweak to the existing delay logic, where
+> it considers the longest of delays between operations, instead of always
+> chosing the write delay over the access delay.
+> 
+> Signed-off-by: William A. Kennington III <william@wkennington.com>
 
-Hi all,
+Applied.
 
-Commit
-
-  46f572345cf5 ("drm/amdgpu: Fix CPER error handling on VFs")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9/9qPQIHANNoq20Tf0iP09W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0ScYACgkQAVBC80lX
-0GyHLwf+IxCe0ZOgN32aZuWpInFJLLRrUlvMpILN6Z0fo/sI5rBmTG15LHN1zWKa
-AyXzokKZ8iIM6iADQ9IfpS0gIDGQMHK1RJSAmBAQ19JYkSEHyZP5AP1bJpqD+6CH
-U41QG9aWMw8oTEr5hd7UqtSQ5tDvbIsplR06XHNm6JvwoqUAaTvprhoSq2a3O7y7
-KER1qfuH0LeLsi7ma8gAoLeBWLETQ5hS46MTFrblxtxJJQND92KCH72asRmHK2NC
-F6XyozBQ4dmCi9Uf69tZwz7EYc8WBCYsrJ1RuNQ8RtpUtZD6RSnP3WpLwyhTxrwb
-mLdIT9rYSqGYMoamxFOQcB04fi552w==
-=hLZS
------END PGP SIGNATURE-----
-
---Sig_/9/9qPQIHANNoq20Tf0iP09W--
+Thanks,
+Guenter
