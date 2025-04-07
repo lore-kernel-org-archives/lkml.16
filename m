@@ -1,76 +1,91 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D2222424C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7845B224254;
+	Mon,  7 Apr 2025 20:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056614; cv=none; b=irVC3DjLk/WP8PJDyKojJXC34n4+ViP9Nx6rpIF5SRqti5jD+ICRZTNJo+WutLJ4/WoyBGpVncy9VNECexYStO8H4Zz8ZctJbBJM1RfuW2M+79KiVZ9/CEMdq+BzH3ka8hEo+3VwgxITdDlqRpat7bBJEczKFZJYuZERkRGADrM=
+	t=1744056616; cv=none; b=G0L25882N6jEGdjgdeTQfTBuS7E2g4mC5R9QCCSXQZnIOxJ4rGQRiuziiMA30aJVwj0O6J734psEimrdlGkzA5kdlwzzntEmmlwgRrRItgIvTH9OZ6uIfpnsmPB4ELY1jRkM1Z4rrnljQGZNmi2R05DKktaVmb4weLmG0N0K/FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056614; c=relaxed/simple;
-	bh=7RoIT9/RUIJd/OqbMR50Adl4B420MNsQ/i2IPCgIdKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hg5WXELu/yXSIHHY06iz4ZbMlwA8Am5kqpPkYHAmO/AvN5r0vdNC0tcREKzMPB1+FfMGCoiDhVXrFbLrK1XcmLstjNUmCi8KaFID42KVeRvPJaP6fJwoXoFgOzj9nWyGeZEUnFzam6y9T3b8c9GM60UQuki+cnjcGJuKThVW9Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=xseyQlep; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	s=arc-20240116; t=1744056616; c=relaxed/simple;
+	bh=4THuh4l2cNhIbqy6HlF/J7Hc+TBYJG/XLk/3DEKuZfU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JxSRsQhT4YanMwsmS4/pay6RMN6PhqdRBMFWkKligXobbxfK3SEBldGsBIVNqjjwctVWsolvJzP+g0WD56tVRW7X6tm0SNuHWtPYs7F1eUq0CPEizhXs5FUSzfps2tt19J4t6JA+ZwSt0/mYi4FlGaukUDxrfnXjhZyuTuICVB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XX8t4Gtc; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="xseyQlep"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227aaa82fafso41277125ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 13:10:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX8t4Gtc"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39149bccb69so4409410f8f.2;
+        Mon, 07 Apr 2025 13:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1744056611; x=1744661411; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744056613; x=1744661413; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKorvTDcHHWmcS+AjT7qKhMDewJLu0PWpIswTAFjbRo=;
-        b=xseyQlepmsqtgwYCOGLB+yS8EQSTm2mrtGl3mvNapVVxMQy1ZsTKURZICYfWZkmGQN
-         gHRU39FkwcyUUUcDfFLZGn2hL1QjyPoDXdj4ZU98UZboRXgqu2D4cwUZnQgvWP5hDude
-         NnFVt1+QXpubsYc+jiDlKtBFRwrw0ix15Ol19e2Zm8DZPO3JEQwuwViBYVJnjfjyw6fX
-         loIXvabfaHK/WjmXRwkUdDxL1JJHTZwVLb5PvBYlgq4RTF6Gl22ceEyGdnb1gitFqZQN
-         Ivij96PKOxVG5OjaVLSnb/NJVaur5AareQVZLa2adbLCZlK1XByYCf8HGIZ9N6F1y3uW
-         nG6g==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1XrhBUQXr1bVfeeEaE7z+isBFAKnFsoBJygdtgcyNsY=;
+        b=XX8t4Gtc+DV3MsCJT+xuT7IUlWODJlLdGxo2WknOdXFn6sktlkHE2DPsJPIhjNtCUv
+         3U11HSJp2UJZzdNmk4IP/8jRHvdZpUfhZWV3OCfP5u+YRc6BWFgjvDWpsK15YNAugpay
+         F441CWyMhWfixxrBhMMTQSvTRQWvShW4E9NzERe4SDm/givFVJrJ46dPALCeBJXlZCz/
+         dTEVGn2DR0N756cjVEEwBNjqpC7Ne/SGxsR3oRwY0I+V1L4orIDBLcTuaiLzCOSc4eNp
+         an0kr5H1INi9pi68njja9IJsEybofsD/mWgKKTlXHs02O33dp4ymVL884lVTVALlJ8Ei
+         YC6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744056611; x=1744661411;
+        d=1e100.net; s=20230601; t=1744056613; x=1744661413;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SKorvTDcHHWmcS+AjT7qKhMDewJLu0PWpIswTAFjbRo=;
-        b=M+0/hAMF+fWqQT/XO2v8Dh8iq7RmgN3CyGz/ZOF8y7LQnG35Svr8GMu/UTjjYOXXCU
-         v+9RkL9+yxkW8FjJQSbEjU1Zj0jbSCl7eA3dJ07z9tcmzjeArm7nT+cHpxv21GK0kQNj
-         SjeTh4k4YXjFs4PD5347N69BPjUn1eDUi4qA1OCIMZC2Dpwp9c8FiG3YK6F8seVlRssc
-         txyhMCFOiz5JiIpN+klRSX6iNUdo595AoBPUD4xSzzpuKKsl+NcoRh0SQvVhcyu7kAiU
-         vLQXLC8tW6/rqDlGHybJgCD0ndwxOnZE3OSxtQhH8eHK4WJ7nCri0/EHXblR7COyRit2
-         572A==
-X-Forwarded-Encrypted: i=1; AJvYcCW9gbY7ZgfRG8UZ58SuTbjNV+01+SvaWQpwOda6+fxK0636YR5usRx3QO7KZijiOq66dxFjQYkVfHilJG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznAKtDnVdee1wMkj3GcY+QtErGvTMbEm7GxUWXITrHbTuS0eQw
-	nvqwJX5c59+hLLTJM/8gjRZuuOApK02MMUiSTElF+jqX/ExcuHf5VwI4wzYq+JA0u5+dnyE2k/Y
-	B
-X-Gm-Gg: ASbGncsTyVHpG40KYGj5Yul4BLj2qJWrRz2EiddJhO2HzSRvJlKHOo1EhpkvibTa94B
-	dA8DPH7mKp6Wz1k8nyVLdOe8mVOkiIkEXI6a2rnMo6GLnmYIzZiPbw6S4XNY0nS3tbPeLELtGS7
-	cuw0BmN47LzJ6e4Z9cKcW4TvzKtapEn2yowO9x8xA6pNAB7HWjoIZbbpUjRYPmIwFN98AwTmoFM
-	rPqe9gTRwLKSMAeT+jt81ccaKGRAIzOXQ9WHZmP+ijmVLpNlA60ugJSJeX3r0jSiD2Ku1wPRY4M
-	Vyf0Ch25XOSwLTMc1eUMxdNxV0Bv+IvN+6AElMrBGIWyBh4HrJ4KZMAME5Lo6/bDqZsGTyLUuz+
-	Qkh5xNTauVEX/GuifaYwCDq+Eqs7fikJd
-X-Google-Smtp-Source: AGHT+IHvXiMbLnANd8/D78KF/tGgUo37pGC3kDLDkaZfEw+83S+ZticgxpE0lAOSgNyNxaubDQZWOw==
-X-Received: by 2002:a17:902:ecc4:b0:224:1eab:97b2 with SMTP id d9443c01a7336-22a8a2da123mr210601995ad.53.1744056611011;
-        Mon, 07 Apr 2025 13:10:11 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:b25a:2d1b:1734:78be])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e0b4sm86087865ad.154.2025.04.07.13.10.09
+        bh=1XrhBUQXr1bVfeeEaE7z+isBFAKnFsoBJygdtgcyNsY=;
+        b=bM6BHzZEk0RwxVoypcfQrtYpFN5k4IUOVA86eBoeFfP3tfYcKlG+J9y5sOBo2DSLpK
+         g8qckjDGDj7ckpgF6wOK9BrHd3stOm8ylXTfYGWrGwUmbctJ90HQpMUFB5svYiuqBF1l
+         h6fesGznfrMSdZXOtBPbcYbtP9EEtHIOA/ERHs3gv4sL+d7PTZjujxqG5AT/YfgxlpWy
+         szuUdyQGtIeJjL6STC+GjzlZLTBPu+JPslu/c4RX6v0+bHusL/ZvETq6s0WifMAryISi
+         rEizbyhekLdcGm5XwyDrZx2Bf122AeAAW4hRMTrlBzMA6P1o6qPigLEdCRB5jwlRhJlm
+         5cGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVb/VK2WMJ2i5S0X7mw1JetLgPMpXxh4FHd0LLjquSlR9MPALNoeC0Bd2cYT1SDo8FlNM8h21ewH5bdghOF@vger.kernel.org, AJvYcCWGI5BugClzgRgDl64gqmGrS0CQCbWN/FDvd2V1TIZxooGDA4GZjrrkmCH/a0i6rybASsi+sMGu@vger.kernel.org, AJvYcCWu13XfipQ85M/GDUFZiU15sBhYpqRQONcTFDx2MBZbgul/gtbIb2Y5qsnKBlFvAtNHGC8MRtDK6ExJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzisOlyto3b77XCZU8xazd9n7joNkemENJzQHdKgW/NNDoHpufx
+	wNh2xsUBkrNWN5ibezCk8oL7OKiVsDY1jHyCLTmz6JWf6L31/21C
+X-Gm-Gg: ASbGnctPp2Fa1X4Yz6s7HSHbYL8h7MGXerQQXqoro9GOkQ6hgHyLH3PHIwmDmFUCT/a
+	WKMFFvVv0H7ALMj+IhAMMSsYly7qrShS0QJfff1TgRz4+E2elXYcEG5rBfH37Gq2wHlsUl4UCD1
+	i9VyezX/4dg0n2i4WvCx3sFwlCjU/Gg24ELkYDl43mmLldmrldlfaVXKYWA2fduxlNZ1aBXiCwd
+	LCK9N34P84MjfqaCFViQo6ZaVUrSyY3MOyNhYmImGc6xjI/6yCnWEEXL/PfSVdLaxfsciDOgNzM
+	8GZPcQvooaFwNR3Dwoanh3eF9tdWreG0ExCV28cOwY1GYZ0jGOslK1r+oXglgki3gjKi+Xr8Kjq
+	XL8xy7gcyc/Iskw==
+X-Google-Smtp-Source: AGHT+IHcKTiAAT1Xb4Y7xPSiHnxVFr56KUk1LUjvUXUD8GOBUmmIlQOlFAQVy4mp+4uzzkAuN3gNYA==
+X-Received: by 2002:a5d:64ac:0:b0:39c:30e2:7218 with SMTP id ffacd0b85a97d-39d6fd18da7mr6942191f8f.41.1744056612651;
+        Mon, 07 Apr 2025 13:10:12 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm139605995e9.18.2025.04.07.13.10.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 13:10:10 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH v5] hwmon: (pmbus): Introduce page_change_delay
-Date: Mon,  7 Apr 2025 13:10:02 -0700
-Message-ID: <20250407201002.1198092-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-In-Reply-To: <20250404193103.4174977-1-william@wkennington.com>
-References: <20250404193103.4174977-1-william@wkennington.com>
+        Mon, 07 Apr 2025 13:10:12 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrei Botila <andrei.botila@oss.nxp.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Eric Woudstra <ericwouds@gmail.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next PATCH v6 6/6] dt-bindings: net: Document support for Aeonsemi PHYs
+Date: Mon,  7 Apr 2025 22:09:26 +0200
+Message-ID: <20250407200933.27811-7-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250407200933.27811-1-ansuelsmth@gmail.com>
+References: <20250407200933.27811-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,230 +94,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We have some buggy pmbus devices that require a delay after performing a
-page change operation before trying to issue more commands to the
-device.
+Add Aeonsemi PHYs and the requirement of a firmware to correctly work.
+Also document the max number of LEDs supported and what PHY ID expose
+when no firmware is loaded.
 
-This allows for a configurable delay after page changes, but not
-affecting other read or write operations.
+Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
+AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
+AS21210PB1 that all register with the PHY ID 0x7500 0x9410 on C45
+registers before the firmware is loaded.
 
-This makes a slight behavioral tweak to the existing delay logic, where
-it considers the longest of delays between operations, instead of always
-chosing the write delay over the access delay.
-
-Signed-off-by: William A. Kennington III <william@wkennington.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
-V1 -> V2: Simplify how the backoff time is stored and computed
-V2 -> V3: Use the BIT macro
-V3 -> V4: Move defines up
-	  Move op combos outside update call
-	  Remove unused PMBUS_OP_READ
-V4 -> V5: Rebase onto 6.15-rc1
+ .../bindings/net/aeonsemi,as21xxx.yaml        | 122 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
 
- drivers/hwmon/pmbus/pmbus.h      |  1 +
- drivers/hwmon/pmbus/pmbus_core.c | 69 ++++++++++++++++----------------
- 2 files changed, 36 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-index ddb19c9726d6..742dafc44390 100644
---- a/drivers/hwmon/pmbus/pmbus.h
-+++ b/drivers/hwmon/pmbus/pmbus.h
-@@ -482,6 +482,7 @@ struct pmbus_driver_info {
- 	 */
- 	int access_delay;		/* in microseconds */
- 	int write_delay;		/* in microseconds */
-+	int page_change_delay;		/* in microseconds */
- };
- 
- /* Regulator ops */
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index cfeba2e4c5c3..be6d05def115 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -32,6 +32,13 @@
- #define PMBUS_ATTR_ALLOC_SIZE	32
- #define PMBUS_NAME_SIZE		24
- 
-+/*
-+ * The type of operation used for picking the delay between
-+ * successive pmbus operations.
-+ */
-+#define PMBUS_OP_WRITE		BIT(0)
-+#define PMBUS_OP_PAGE_CHANGE	BIT(1)
+diff --git a/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+new file mode 100644
+index 000000000000..69eb29dc4d7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/aeonsemi,as21xxx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static int wp = -1;
- module_param(wp, int, 0444);
- 
-@@ -113,8 +120,8 @@ struct pmbus_data {
- 
- 	int vout_low[PMBUS_PAGES];	/* voltage low margin */
- 	int vout_high[PMBUS_PAGES];	/* voltage high margin */
--	ktime_t write_time;		/* Last SMBUS write timestamp */
--	ktime_t access_time;		/* Last SMBUS access timestamp */
++title: Aeonsemi AS21XXX Ethernet PHY
 +
-+	ktime_t next_access_backoff;	/* Wait until at least this time */
- };
- 
- struct pmbus_debugfs_entry {
-@@ -169,32 +176,26 @@ EXPORT_SYMBOL_NS_GPL(pmbus_set_update, "PMBUS");
- static void pmbus_wait(struct i2c_client *client)
- {
- 	struct pmbus_data *data = i2c_get_clientdata(client);
--	const struct pmbus_driver_info *info = data->info;
--	s64 delta;
-+	s64 delay = ktime_us_delta(data->next_access_backoff, ktime_get());
- 
--	if (info->access_delay) {
--		delta = ktime_us_delta(ktime_get(), data->access_time);
--
--		if (delta < info->access_delay)
--			fsleep(info->access_delay - delta);
--	} else if (info->write_delay) {
--		delta = ktime_us_delta(ktime_get(), data->write_time);
--
--		if (delta < info->write_delay)
--			fsleep(info->write_delay - delta);
--	}
-+	if (delay > 0)
-+		fsleep(delay);
- }
- 
--/* Sets the last accessed timestamp for pmbus_wait */
--static void pmbus_update_ts(struct i2c_client *client, bool write_op)
-+/* Sets the last operation timestamp for pmbus_wait */
-+static void pmbus_update_ts(struct i2c_client *client, int op)
- {
- 	struct pmbus_data *data = i2c_get_clientdata(client);
- 	const struct pmbus_driver_info *info = data->info;
-+	int delay = info->access_delay;
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
 +
-+	if (op & PMBUS_OP_WRITE)
-+		delay = max(delay, info->write_delay);
-+	if (op & PMBUS_OP_PAGE_CHANGE)
-+		delay = max(delay, info->page_change_delay);
++description: |
++  Aeonsemi AS21xxx Ethernet PHYs requires a firmware to be loaded to actually
++  work. The same firmware is compatible with various PHYs of the same family.
++
++  A PHY with not firmware loaded will be exposed on the MDIO bus with ID
++  0x7500 0x7500 or 0x7500 0x9410 on C45 registers.
++
++  This can be done and is implemented by OEM in 2 different way:
++    - Attached SPI flash directly to the PHY with the firmware. The PHY
++      will self load the firmware in the presence of this configuration.
++    - Manually provided firmware loaded from a file in the filesystem.
++
++  Each PHY can support up to 5 LEDs.
++
++  AS2xxx PHY Name logic:
++
++  AS21x1xxB1
++      ^ ^^
++      | |J: Supports SyncE/PTP
++      | |P: No SyncE/PTP support
++      | 1: Supports 2nd Serdes
++      | 2: Not 2nd Serdes support
++      0: 10G, 5G, 2.5G
++      5: 5G, 2.5G
++      2: 2.5G
++
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ethernet-phy-id7500.9410
++          - ethernet-phy-id7500.9402
++          - ethernet-phy-id7500.9412
++          - ethernet-phy-id7500.9422
++          - ethernet-phy-id7500.9432
++          - ethernet-phy-id7500.9442
++          - ethernet-phy-id7500.9452
++          - ethernet-phy-id7500.9462
++          - ethernet-phy-id7500.9472
++          - ethernet-phy-id7500.9482
++          - ethernet-phy-id7500.9492
++  required:
++    - compatible
++
++properties:
++  reg:
++    maxItems: 1
++
++  firmware-name:
++    description: specify the name of PHY firmware to load
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: ethernet-phy-id7500.9410
++then:
++  required:
++    - firmware-name
++else:
++  properties:
++    firmware-name: false
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet-phy@1f {
++            compatible = "ethernet-phy-id7500.9410",
++                         "ethernet-phy-ieee802.3-c45";
++
++            reg = <31>;
++            firmware-name = "as21x1x_fw.bin";
++
++            leds {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                    reg = <0>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <0>;
++                    default-state = "keep";
++                };
++
++                led@1 {
++                    reg = <1>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <1>;
++                    default-state = "keep";
++                };
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 53ca93b0cc18..310530649a48 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -650,6 +650,7 @@ AEONSEMI PHY DRIVER
+ M:	Christian Marangi <ansuelsmth@gmail.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+ F:	drivers/net/phy/as21xxx.c
  
--	if (info->access_delay)
--		data->access_time = ktime_get();
--	else if (info->write_delay && write_op)
--		data->write_time = ktime_get();
-+	if (delay > 0)
-+		data->next_access_backoff = ktime_add_us(ktime_get(), delay);
- }
- 
- int pmbus_set_page(struct i2c_client *client, int page, int phase)
-@@ -209,13 +210,13 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
- 	    data->info->pages > 1 && page != data->currpage) {
- 		pmbus_wait(client);
- 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
--		pmbus_update_ts(client, true);
-+		pmbus_update_ts(client, PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE);
- 		if (rv < 0)
- 			return rv;
- 
- 		pmbus_wait(client);
- 		rv = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
--		pmbus_update_ts(client, false);
-+		pmbus_update_ts(client, 0);
- 		if (rv < 0)
- 			return rv;
- 
-@@ -229,7 +230,7 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
- 		pmbus_wait(client);
- 		rv = i2c_smbus_write_byte_data(client, PMBUS_PHASE,
- 					       phase);
--		pmbus_update_ts(client, true);
-+		pmbus_update_ts(client, PMBUS_OP_WRITE);
- 		if (rv)
- 			return rv;
- 	}
-@@ -249,7 +250,7 @@ int pmbus_write_byte(struct i2c_client *client, int page, u8 value)
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_write_byte(client, value);
--	pmbus_update_ts(client, true);
-+	pmbus_update_ts(client, PMBUS_OP_WRITE);
- 
- 	return rv;
- }
-@@ -284,7 +285,7 @@ int pmbus_write_word_data(struct i2c_client *client, int page, u8 reg,
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_write_word_data(client, reg, word);
--	pmbus_update_ts(client, true);
-+	pmbus_update_ts(client, PMBUS_OP_WRITE);
- 
- 	return rv;
- }
-@@ -405,7 +406,7 @@ int pmbus_read_word_data(struct i2c_client *client, int page, int phase, u8 reg)
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_read_word_data(client, reg);
--	pmbus_update_ts(client, false);
-+	pmbus_update_ts(client, 0);
- 
- 	return rv;
- }
-@@ -468,7 +469,7 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_read_byte_data(client, reg);
--	pmbus_update_ts(client, false);
-+	pmbus_update_ts(client, 0);
- 
- 	return rv;
- }
-@@ -484,7 +485,7 @@ int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_write_byte_data(client, reg, value);
--	pmbus_update_ts(client, true);
-+	pmbus_update_ts(client, PMBUS_OP_WRITE);
- 
- 	return rv;
- }
-@@ -520,7 +521,7 @@ static int pmbus_read_block_data(struct i2c_client *client, int page, u8 reg,
- 
- 	pmbus_wait(client);
- 	rv = i2c_smbus_read_block_data(client, reg, data_buf);
--	pmbus_update_ts(client, false);
-+	pmbus_update_ts(client, 0);
- 
- 	return rv;
- }
-@@ -2524,7 +2525,7 @@ static int pmbus_read_coefficients(struct i2c_client *client,
- 	rv = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
- 			    I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
- 			    I2C_SMBUS_BLOCK_PROC_CALL, &data);
--	pmbus_update_ts(client, true);
-+	pmbus_update_ts(client, PMBUS_OP_WRITE);
- 
- 	if (rv < 0)
- 		return rv;
-@@ -2728,7 +2729,7 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
- 	if (!(data->flags & PMBUS_NO_CAPABILITY)) {
- 		pmbus_wait(client);
- 		ret = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
--		pmbus_update_ts(client, false);
-+		pmbus_update_ts(client, 0);
- 
- 		if (ret >= 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
- 			if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC))
-@@ -2744,13 +2745,13 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
- 	data->read_status = pmbus_read_status_word;
- 	pmbus_wait(client);
- 	ret = i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
--	pmbus_update_ts(client, false);
-+	pmbus_update_ts(client, 0);
- 
- 	if (ret < 0 || ret == 0xffff) {
- 		data->read_status = pmbus_read_status_byte;
- 		pmbus_wait(client);
- 		ret = i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYTE);
--		pmbus_update_ts(client, false);
-+		pmbus_update_ts(client, 0);
- 
- 		if (ret < 0 || ret == 0xff) {
- 			dev_err(dev, "PMBus status register not found\n");
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
 -- 
-2.49.0.504.g3bcea36a83-goog
+2.48.1
 
