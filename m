@@ -1,87 +1,156 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F7D2066F9;
-	Mon,  7 Apr 2025 16:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AA91B3934;
+	Mon,  7 Apr 2025 16:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042405; cv=none; b=Hbs99KXQ/GWGAzbj3qzqZdsJhMLRQcvcavdwFBCQEVgd7ehhnNEyvQr40KnCYT/Nt0w55dkHZg+AkfaIweK4lrA/A49EuNYX4/6LxreSYk0BfBr2xU5ffvUGniiSz4sXSFlSo91E8GgeEJ3lPgSFQbDAJLPz4/mKmY6aVlWRn4c=
+	t=1744042428; cv=none; b=d/d9BHSZJZ57Fbf4G9UoByD6Faulx7e7FPmeN8VMejCRMN5sxSKprop10fM+aYSITgubqrw246aeI0wps8k9fBjoHbMNLI9pX5HBus6svx1u/wqGkzxfayEgaTc//RWtLlgn/J9YjDgwU0ArNQ6MJEKgWr6f4iK0kpMIeSif7jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042405; c=relaxed/simple;
-	bh=2KFVeKdPLKXBfR5EWHDbvkaoyV0vRqU2QFbIw5uPBQU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0q2HiDestloDoEdACMyxpOyshNDncMCG7xctqBL7Dm9XQlcl48WA4yPI+1GsUP3laYFj/kJEZjIZpQapKkGzkt7a2MxKHOgO1fHdw/26GiAspDBrAJabmXJutP1/sp6C4hxCFtUCg/lo55XYv+7a+B56qp0+yryqZ0Ag/kBvLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=dOL6fL8L; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744042428; c=relaxed/simple;
+	bh=p2zobvi7rWLFeSuUW0t9mkfYAvLLJwM3P3t01NCBP3g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EDgut0uWS+6HFEtpBu7fUiylq60DyMXPF5VXKFs7848YADk9m60dyEXBU6+ydCr0GVqjZOgN+b8+p3TwbbKMWpeq3BH9KLkJcdVHCRvbxXmoeF0p9T+rwppcsXlrOw5PdCWqqHOMENLUHTsMB3wQLDFEnTxA/BveaVWRFi8NOmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azkGcDLR; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dOL6fL8L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azkGcDLR"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso42627165e9.2;
+        Mon, 07 Apr 2025 09:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744042404; x=1775578404;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ax3m+iIFkyYPhqmuuHtqTChmLOMPFAoAyAVCrfKI3uI=;
-  b=dOL6fL8L8q3YIwxqQp/gFi4Mb4HOy9r7hHbjMlraGA07jE9LCsua4pkU
-   bm0irU0Agfnuc5pNm94Mkgi3Qqnrv426N4FSnT+MHSjeOl0GiUQBxlV7s
-   mmt2FPcnMzQ36jiII2FCPcuf4A8IVhOYTEkLBlFjV4C9Tv+RqK6sRYK9i
-   o=;
-X-IronPort-AV: E=Sophos;i="6.15,194,1739836800"; 
-   d="scan'208";a="38499040"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:13:21 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:1061]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.222:2525] with esmtp (Farcaster)
- id 4e4911d2-5cb4-4150-b7fb-bb7ce2a6281e; Mon, 7 Apr 2025 16:13:21 +0000 (UTC)
-X-Farcaster-Flow-ID: 4e4911d2-5cb4-4150-b7fb-bb7ce2a6281e
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 7 Apr 2025 16:13:20 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 7 Apr 2025 16:13:16 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <stfomichev@gmail.com>
-CC: <andrew@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <sdf@fomichev.me>,
-	<syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
-Date: Mon, 7 Apr 2025 09:12:37 -0700
-Message-ID: <20250407161308.19286-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <Z_PfCosPB7GS4DJl@mini-arch>
-References: <Z_PfCosPB7GS4DJl@mini-arch>
+        d=gmail.com; s=20230601; t=1744042424; x=1744647224; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=70LGfavtABLJLsgIq6Bm88SDdFJG1TJDo/u2Aa0VN/w=;
+        b=azkGcDLRakHzIGjEPd5CePOJ2tSA1cESxCWZNsZ5zdu/2I/Vu6+4+oy1ErssUVWg5A
+         27t97hhkKtfB+Wxpkw9F9AcVmYYwXCj/4l7be1e0L8jht2KHy0In+1dopcpt8V30OFt9
+         AdJczDb17ZyMXSPnsVsFxVZcMrcoR5lRkYpLGvFkvKCX7UfE87p0PTj45sIZwGiKu0Hl
+         uzbyvtm4AZ9ybx7NozMGXfLs6yqe0zj2O0k9iQKL/FZBOPfvYv29Z9xIBE87x3edUoL+
+         D6wcoCrsGvcVPju9iKOtb92IrglvsjXxkrCEP6aGTkhd1WQtL3HPTIZVAtg6aeoFdFaK
+         xy3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744042424; x=1744647224;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=70LGfavtABLJLsgIq6Bm88SDdFJG1TJDo/u2Aa0VN/w=;
+        b=D1mpjjAFbpWs8B+oqkdFJRkJX8y1dJk9Q9d3MTZRsoPDCHU4IlYoNfH4OBCd82IyqU
+         K7Jgk5Jod3TPRgBkaireXGTpM0O55S8HM82bKVRefRkwv/MpRidMWJbM04PYyFuOBcIF
+         PbPd9NsBQYzC9a9VN6RQUYiVmSVC70vUOo06D5Aks0WmJx5QuTKWCrRFon6iwFKra4iv
+         CghmREdEDtCM5hoWjyF+A0BIY8HZpVaJ6jN5FajCAjugM+zfvmUxF5OVCyUlDvHHdkGU
+         a/VvZQiKh1RVq0EatsoPnai7uadKDbKDjgnGeWH3fmTgKGezBO1+qH4QlWHyvz1zJ/OQ
+         64Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNP5YgI73SGWvGaNxxOd71vzxPbCjhr+OEq/pO0/hLqFCytdb/0i7Fii0EgtzEqDcrsaPQ/uRzAwFP+V2g@vger.kernel.org, AJvYcCVvRcCQZe7oE611jpRaz/7XY4Eo3RZEg2if54LZ6qlvG9B4rNicu+VsEYBtwYYFyCUOSg5O/8ycCBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5QgQdEoylfkYrCpNzxU+7ns+1sfjXpaiiDvi7+VwbcQ+/m9oH
+	dIz9M7PcW66P5ypV3EpvtoLs0Cb0cAojATq84NgQH9u8/nmQzYo6
+X-Gm-Gg: ASbGncsgVF8icgLff52XR/FopZiTEwVV3vKCGlmcKr2+0SHB6lYvruK63a/V2Fc2ZRA
+	GqyNcZbX003ov5Aoz/2aGfguwHlLEVJKxUbp/bGTE2gfF0Dzvk0abAwWy/ZMSiT+27Yz4biO34L
+	q0NSfVd5MKvoKR1TZ7jWxfYrrwAoZdfDROB58j01aeBsivdwM10EBJN3O9SKDocXCnB8fbdUHGx
+	2gNgPWyc/1hILYWdFd+brPHwF/T97VvyDhQBprWNXJ8DdtssQHYOL4zqEIqJRGKCs2DGDk7iM34
+	2Sr6/7d3fzdFtx2XWyEvgxdY5E3w54kFWZvVmgLYmysAS431E6e/dnPgI63pQNezG4KjCw7efot
+	Hv+Src1oG2rkK36st
+X-Google-Smtp-Source: AGHT+IF+LRS5kJ8HAD2cz4rJeC67p0ChUWXfOfl/gjpqN8sIiWg6owJ812B5obdplJyggnWpsz9FxA==
+X-Received: by 2002:a05:600c:5124:b0:43c:f3e4:d6f7 with SMTP id 5b1f17b1804b1-43ecfa18f8emr125832185e9.31.1744042423705;
+        Mon, 07 Apr 2025 09:13:43 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6321sm12278444f8f.44.2025.04.07.09.13.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 09:13:43 -0700 (PDT)
+Message-ID: <b0c6eb83a052fe6e1656d47e118b1e70336e38d1.camel@gmail.com>
+Subject: Re: [PATCH v3 4/5] iio: dac: adi-axi-dac: add data source get
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
+ Clausen	 <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Olivier
+ Moysan	 <olivier.moysan@foss.st.com>, Michael Hennerich
+ <Michael.Hennerich@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 07 Apr 2025 17:13:43 +0100
+In-Reply-To: <20250407-wip-bl-ad3552r-fixes-v3-4-61874065b60f@baylibre.com>
+References: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
+	 <20250407-wip-bl-ad3552r-fixes-v3-4-61874065b60f@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWA002.ant.amazon.com (10.13.139.39) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Stanislav Fomichev <stfomichev@gmail.com>
-Date: Mon, 7 Apr 2025 07:19:54 -0700
-> On 04/07, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> > unregister_netdevice: waiting for DEV to become free
-> > 
-> > unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
-> 
-> So it does fix the lock unbalance issue, but now there is a hang?
+On Mon, 2025-04-07 at 10:52 +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+>=20
+> Add data source getter.
+>=20
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
 
-I think this is an orthogonal issue.
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-I saw this in another report as well.
-https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@google.com/
-
-syzbot may want to find a better way to filter this kind of noise.
+> =C2=A0drivers/iio/dac/adi-axi-dac.c | 30 ++++++++++++++++++++++++++++++
+> =C2=A01 file changed, 30 insertions(+)
+>=20
+> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.=
+c
+> index
+> f86acb98b0cffb09bf4d4626f932bf1edc911e2b..8ed5ad1fa24cef649056bc5f4ca80ab=
+bf28b
+> 9323 100644
+> --- a/drivers/iio/dac/adi-axi-dac.c
+> +++ b/drivers/iio/dac/adi-axi-dac.c
+> @@ -536,6 +536,35 @@ static int axi_dac_data_source_set(struct iio_backen=
+d
+> *back, unsigned int chan,
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static int axi_dac_data_source_get(struct iio_backend *back, unsigned in=
+t
+> chan,
+> +				=C2=A0=C2=A0 enum iio_backend_data_source *data)
+> +{
+> +	struct axi_dac_state *st =3D iio_backend_get_priv(back);
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
+> +		return -EINVAL;
+> +
+> +	ret =3D regmap_read(st->regmap, AXI_DAC_CHAN_CNTRL_7_REG(chan), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (val) {
+> +	case AXI_DAC_DATA_INTERNAL_TONE:
+> +		*data =3D IIO_BACKEND_INTERNAL_CONTINUOUS_WAVE;
+> +		return 0;
+> +	case AXI_DAC_DATA_DMA:
+> +		*data =3D IIO_BACKEND_EXTERNAL;
+> +		return 0;
+> +	case AXI_DAC_DATA_INTERNAL_RAMP_16BIT:
+> +		*data =3D IIO_BACKEND_INTERNAL_RAMP_16BIT;
+> +		return 0;
+> +	default:
+> +		return -EIO;
+> +	}
+> +}
+> +
+> =C2=A0static int axi_dac_set_sample_rate(struct iio_backend *back, unsign=
+ed int
+> chan,
+> =C2=A0				=C2=A0=C2=A0 u64 sample_rate)
+> =C2=A0{
+> @@ -818,6 +847,7 @@ static const struct iio_backend_ops axi_ad3552r_ops =
+=3D {
+> =C2=A0	.request_buffer =3D axi_dac_request_buffer,
+> =C2=A0	.free_buffer =3D axi_dac_free_buffer,
+> =C2=A0	.data_source_set =3D axi_dac_data_source_set,
+> +	.data_source_get =3D axi_dac_data_source_get,
+> =C2=A0	.ddr_enable =3D axi_dac_ddr_enable,
+> =C2=A0	.ddr_disable =3D axi_dac_ddr_disable,
+> =C2=A0	.data_stream_enable =3D axi_dac_data_stream_enable,
