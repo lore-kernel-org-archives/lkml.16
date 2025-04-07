@@ -1,161 +1,170 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88098225388
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040EB22A1F1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014873; cv=none; b=K0dw/Him53vGMg6Q3O/WNA7c0HnJL8qHJT79FLT1sNc1MPwTKV0cdwdFY3OZzgLSScoRmwmJjsKniV8uQoA/T8zusXh0Dcix+9H1GkiMrHmIcxRzRZf2kEmJMPXUdu9dIh6PLuAK7xa/Z6cZ51RGXeElCVvQFxzfIKlyITVkh4k=
+	t=1744014879; cv=none; b=fAcwqhDvm9K8RTH6PLdH6pOk8IkhuWTXFn7duT/+xz0v4341bCR0bnZMbWFC0AW1GqCY4AiWwzL3hQyKanQQjuE1bT68EmPiT6EnDh6pzCnUOVRMKDZUFBuRz5lBnzC3CX+H7TxwtOk9lFUMcWaEn+wj98EKOg3nz2mAuWkI/z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014873; c=relaxed/simple;
-	bh=A6qh3Sgw7ouHvHGBVuDPdJ17QgVL3yJ+i8GQjDO+UXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frYWHTmkZavNSlSXE0q+2wzbWhsPCjseCVnxMyCJJYEV6nz3an1/0RCozL04+wsVdhOxuueeX0txofRccPElB9dbxZFn8EZU0GSUh95j2luy7yWYgVNSwTY4ArjSB1jNxMj5LkQlXG/fuJOBfcDW0kBwf8Vii7IlO7JSk+qqU5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p3ZDc9J5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eCG5Timy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p3ZDc9J5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eCG5Timy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744014879; c=relaxed/simple;
+	bh=sLck2J+6PcjmSINGrDUpZvijf9T2VzrBWCePSK/Qvj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwxixZVEL89lQFFLcQtp+Ms52CPI4ZjaybpgpewPwyaRFlCT0vjNFn/Ga7vDXJ8To9RmKeb5bDVy2bw1lIeNLyyPNlZ95NVpF3d+nGsFOpN/JWGkHRgQR6GTD/q0sxJ4knELFNm9B2Dn9Tdzwi9fN7gtAt48SEasK6lg30fbMjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QpdX44Lg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p3ZDc9J5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eCG5Timy";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p3ZDc9J5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eCG5Timy"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9C4BC1F38D;
-	Mon,  7 Apr 2025 08:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744014869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpdX44Lg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744014876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
-	b=p3ZDc9J58BpkE3PjiND2CoE8vvcUgVl2js9A1++CsgCyRSZ3IrFEi+GAL9nPLtMAdZEOd6
-	cjzTd9i5wVeG8kVaa4+45GAO9itAoR1eYPnVYDOv+beGned6IAJoJPsIiquZd5fPoZAF9B
-	ZOQag8KOsQoppwKXc57tqE+NmyBbaTE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744014869;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
-	b=eCG5Timy1vcrphnKlLEONd0X0ZdtNUETWamDJw6Zad+2n/O/FVrQ29UaFNUdDqWvy2Lqpg
-	qrV5VbzergPSJLAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744014869; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
-	b=p3ZDc9J58BpkE3PjiND2CoE8vvcUgVl2js9A1++CsgCyRSZ3IrFEi+GAL9nPLtMAdZEOd6
-	cjzTd9i5wVeG8kVaa4+45GAO9itAoR1eYPnVYDOv+beGned6IAJoJPsIiquZd5fPoZAF9B
-	ZOQag8KOsQoppwKXc57tqE+NmyBbaTE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744014869;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nACja8aKkopWKSDW7ThN2Ck/XWjNZp8gsrX/0bfmumM=;
-	b=eCG5Timy1vcrphnKlLEONd0X0ZdtNUETWamDJw6Zad+2n/O/FVrQ29UaFNUdDqWvy2Lqpg
-	qrV5VbzergPSJLAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87B8913691;
-	Mon,  7 Apr 2025 08:34:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wC3UIBWO82fwLwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 07 Apr 2025 08:34:29 +0000
-Message-ID: <bb3d1391-d155-4e83-9103-818cd1a82c66@suse.cz>
-Date: Mon, 7 Apr 2025 10:34:29 +0200
+	bh=RyTmsi9BhA0X2tfDIhwHRBuV/xgf5KDyDiyovwov3BE=;
+	b=QpdX44LgbzIPJTqRMIvF5PZ7fFBPXIgzvk6qPV4RxuarKW7iXOq4pvWTSW/Zej43/XdUdF
+	iNixCp2vkg5yQHU6fkczUuFRTPEqUxtcgcUyqhCIsd+iMKFv4NM+bESdAVyCUJ84U+ha/H
+	PspcaSKa/V/UJyKByhlhRLO3/94cYOs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-622-_5u0o2lKO16vjU9iMFoadA-1; Mon, 07 Apr 2025 04:34:35 -0400
+X-MC-Unique: _5u0o2lKO16vjU9iMFoadA-1
+X-Mimecast-MFC-AGG-ID: _5u0o2lKO16vjU9iMFoadA_1744014874
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eed325461so6101735e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:34:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744014874; x=1744619674;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RyTmsi9BhA0X2tfDIhwHRBuV/xgf5KDyDiyovwov3BE=;
+        b=YN5ZENLmUKiRlW0xxXdW31xVymoOCwbIf8WKPDnFbbKYrMDqGf50iffnAdiqCiXGRQ
+         wICsHSFY+6Q8CIEnOV7lIKRwDT5DI4HVG1iJ+4UddEOqnokUR+H3PBNs0Ki9yz5Cb5rp
+         4Zf489fLcSQfKMtHoDRcXbyM/PewGtDruaN3/7GQfO3mSFCzIoAdyms+KpsTyGVYeznJ
+         cCuW7KMeVJUURTptU+gOSfo9D+TVTsvvGEtrS787V1UvVYCSlrRmE0eoplcNUxmaRrow
+         883A6xRnf2jSS52xh+jBKyTaMNMdyZGJ9/Wg8MkjPp89iCsF1Ea5i5zXjhF5CitGBWP2
+         ZGlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGSunLmNwCTpCYGFHfqqcdPtq9TLMs4ajLk5aU/4hqCMdp7tQo7pZ6lZ5aOlo0WgmklaiJr1QB8GBp+ro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZojc2yTKJp0WBv+gMmmUVTu5QfyjjVdLrgHSEd+jaCN/NquXd
+	WItE5AdJSX1+tzzaf4CHq8ieghbrLEOv8Ha19ySmXMbLSBbA4pBtV0r2z/ALg7gMMVBT1EFfbKJ
+	mliCMS836BpBi9kead7Wuvwt+EZ81lBrt5PCyz/l8g+BFmw2sUj2vXrSZogxZGg==
+X-Gm-Gg: ASbGncuQHAIIZSrsClVZOUSDAj4kRkfY8Y8H45alobvMnoKvV9A2DIxw7nc4BGAp2Kc
+	oDntuFEyrtrQoxTb3UBfldO/Pj1aLI8CWQXzFh+sT7BKGxZTrWMdkR5uLlDGcewKvMJ47IZsy3V
+	H36hBF/nqh+dgt94dKYN0vNjflQStIcgvi7H9z4T9lUDDvXzlBngXFpoCZC0VTTa7WFlFTBz1gz
+	mhwLsK0vje+9o3zBfJ3S61hwr7CHVs+bUGmqik2aTKN5EUpkqwiyUa+kOIdp4sEXA7eA21mBBIO
+	MG5KHZlJsQ==
+X-Received: by 2002:a05:600c:1e13:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43ecf8e72d6mr114694615e9.18.1744014874155;
+        Mon, 07 Apr 2025 01:34:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+83STYsHXI3xn6x5xnem+/h77ehJWni3dU6P1EgXI8aWI6y/h2doOJ2sCUgok7+DS4MLeKg==
+X-Received: by 2002:a05:600c:1e13:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43ecf8e72d6mr114694305e9.18.1744014873776;
+        Mon, 07 Apr 2025 01:34:33 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630f21sm126976935e9.8.2025.04.07.01.34.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:34:33 -0700 (PDT)
+Date: Mon, 7 Apr 2025 04:34:29 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250407042058-mutt-send-email-mst@kernel.org>
+References: <20250404063619.0fa60a41.pasic@linux.ibm.com>
+ <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com>
+ <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+ <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Kbuild updates for v6.15-rc1
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Damian Tometzki <damian@riscv-rocks.de>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>
-References: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
- <01070196099fd059-e8463438-7b1b-4ec8-816d-173874be9966-000000@eu-central-1.amazonses.com>
- <CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
 
-On 4/6/25 18:50, Linus Torvalds wrote:
-> On Sat, 5 Apr 2025 at 22:43, Damian Tometzki <damian@riscv-rocks.de> wrote:
->>
->> i got the following error after this pull request.
->>
->>  MODPOST Module.symvers
->> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
->> make[3]: *** [/home/damian/kernel/linux/scripts/Makefile.modpost:147: Module.symvers] Error 1
->> make[2]: *** [/home/damian/kernel/linux/Makefile:1956: modpost] Error 2
->> make[1]: *** [/home/damian/kernel/linux/Makefile:248: __sub-make] Error 2
->> make[1]: Leaving directory '/home/damian/kernel/build'
->> make: *** [Makefile:248: __sub-make] Error 2
+On Mon, Apr 07, 2025 at 10:17:10AM +0200, David Hildenbrand wrote:
+> On 07.04.25 09:52, Michael S. Tsirkin wrote:
+> > On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
+> > > > 
+> > > > Not perfect, but AFAIKS, not horrible.
+> > > 
+> > > It is like it is. QEMU does queue exist if the corresponding feature
+> > > is offered by the device, and that is what we have to live with.
+> > 
+> > I don't think we can live with this properly though.
+> > It means a guest that does not know about some features
+> > does not know where to find things.
 > 
-> I think I'll downgrade the error() to a warn() again, and make
-> SLUB_TINY depend on !COMPILE_TEST.
+> Please describe a real scenario, I'm missing the point.
 
-Ack, thanks.
 
-> And I'm not even convinced we should require module descriptions for
-> silly test modules, but whatever.
-> 
-> We'll see if something else pops up, but making the lack of a module
-> description a fatal error was clearly not right as-is.
-> 
->               Linus
-> 
-> [*] In fact, I'm not convinced SLUB_TINYT ever makes sense at all, but
-> that may be too unrelated to this to worry about.
+OK so.
 
-Back when it was introduced, it allowed removing SLAB without breaking some
-particular small systems, so I'd say it was worth it :) But since the
-savings are mostly coming from not allocating for performance rather than
-the disabled code size, we could probably easily turn it to a non-intrusive
-boot option and not regress anyone.
+Device has VIRTIO_BALLOON_F_FREE_PAGE_HINT and VIRTIO_BALLOON_F_REPORTING
+Driver only knows about VIRTIO_BALLOON_F_REPORTING so
+it does not know what does VIRTIO_BALLOON_F_FREE_PAGE_HINT do.
+How does it know which vq to use for reporting?
+It will try to use the free page hint one.
+
+
+
+> Whoever adds new feat_X *must be aware* about all previous features,
+> otherwise we'd be reusing feature bits and everything falls to pieces.
+
+
+The knowledge is supposed be limited to which feature bit to use.
+
+
+
+> > 
+> > So now, I am inclined to add linux code to work with current qemu and
+> > with spec compliant one, and add qemu code to work with current linux
+> > and spec compliant one.
+> > 
+> > Document the bug in the spec, maybe, in a non conformance section.
+> 
+> I'm afraid this results in a lot of churn without really making things
+> better.
+
+> IMHO, documenting things how they actually behave, and maybe moving towards
+> fixed queue indexes for new features is the low hanging fruit.
+
+I worry about how to we ensure that?
+If old code is messed up people will just keep propagating that.
+I would like to fix old code so that new code is correct.
+
+> 
+> As raised, it's not just qemu+linux, it's *at least* also cloud-hypervisor.
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+
+There's a slippery slope here in that people will come to us
+with buggy devices and ask to change the spec.
+
+
+
+
+-- 
+MST
+
