@@ -1,342 +1,203 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37A71F7074
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E88A1EFF9E;
+	Mon,  7 Apr 2025 14:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037729; cv=none; b=FWBCIu6n6PAGk7zu7jpKUUfexxfMk8ocxLg+Tco/fBeNb46CfPdkxk5G3Qz9xSID3dY101NoZpDTZo3pKeNPm2yP3MgppFKXbTHMBgkhuLYPbtKztT3omDqXEhRf7YS75pB/KQiVIdJrUp8hrKfk4I7z976DL2C+FUCSj/NA/Ag=
+	t=1744037764; cv=none; b=EAjjI02sn+wG7l+5fCpEoyWoVeGwYIn6v87wyz8KaNBe07j+ott7JOX/WeYVAlWBoAeHGV/9vCeuYvV7Y/XdS7/59JkhFzbz0tyEqpUw8vpywGqKAKdzCnKI6PmK5McfWQD+3gNC14JJMUO1LbMp5dFtiMyi56HF6rKrAODpF8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037729; c=relaxed/simple;
-	bh=E9qbrxGdm0fqahKIKbgt5AwMhqrhHXdpe/uu8rggp0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g20JyjKoceO7w233w1J0EBPc/v9SSZBDsTqkojsJzyawXQWO20ntSflrUQmhD7KlCoQVCP8/9MkMuFOp4z5lhxvxV+JHik2UATwRfX7CU7aezapL36yJMKm08mVIFSnD+0EfBJm22oVRie6SeZQizQGwkqsxWmw+efCbKaGq1i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J7i/Y59h; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744037764; c=relaxed/simple;
+	bh=3dIv9KA8LuHWus0/gPfXpZGDmk0o22eeLSJ/w1PnhmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RlXX/oZFtMc7OYLwpzWaZay3wwz/twg5Xn09WmPke12HkAbR15sDvAE1tx+r0B+39UQAf5nWfY++myCsA3zOmFMHNoc3c/Qa09cdZ7MU1UPiD7BQT1LXjCHcKk3RdWBcijKSctaI4ZwH81VG7K9KuiXh5gAjeIeciDyJ5sO9rnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AEfocUA/; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7i/Y59h"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2b8e26063e4so2362740fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744037726; x=1744642526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4xn9cimfDHTXs5TpUGv6N7Mowttz4ZTLbCFX2kVKqw=;
-        b=J7i/Y59hjvNr4avwPD5Q8kF9RMsSvs30K5bkvTmuLguLYObIHDRS7DiAfDDsjdGKXQ
-         wF2XYQN/464zI4EO/+gICsH9f+iu+PREB+9AjTJ4x8b/P+nkqQ3o8yS+DS1eDD0IpfZa
-         OcvFBFhW88f8kgNn7YaX/aS0oFQFKth6fBTs/R6wbOAJfXIEEUiR4gWmoT3oTa0yzPRq
-         mgaPtDqlzHYJgpIqVUSdOh+AiHny9wJVJZAx8gVXzT9oK0acG5tTojH5W0rpIcMU71v0
-         qdp1hjcaWO5oqNGkQ/1nanc+1n/qvZEJtFgO2g0pkIVe3KV1HZ3T5fLJ97AEAefFUWLl
-         O15w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744037726; x=1744642526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o4xn9cimfDHTXs5TpUGv6N7Mowttz4ZTLbCFX2kVKqw=;
-        b=VaN2bKRVxn9U6+IT4Ogl/w8WpbMsBXTKCB2zya6QtSrD2gC2Qn+xXFsp2vRDvh8Fhk
-         n8J69YY2edjNeQrNpuWETKzrppz/HueZ+EXmbmeEN1fspd7vRoyrK1R7EKzIx6b0BIbF
-         9JoEvHAlOEfWprZpxMGIZhVfvxHFaxTXnxCk6nHXZimGApOGQvqBOA/R9bXMfWgZ9Xmw
-         mrFjEO43n05kTwZFOe9x9cjbzRW7qPq8af3JiEsYFIv32lucdytX29xCDLh8hixFJUmm
-         XD0DYt6m2eIGMadZaBArdInimbgaXUHciiajoBpwcjW+LWn6K8pLLpSqAXFBfyG16UQ9
-         izEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfaSlIgJMdaAmY25TsFVwxigQzMXNWZbmFhHvmL6DGFxUxBC97sgK1fqEKOarOjx19/DllNU1S7NVor78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXv0nfEShvbM3ihY/osODiXcM0y7KFiaQXmoxHTPK/z2J1ob5H
-	+ScbWDZ+cM46XHdj/3zQHAl9tCswJ4Pda+dGajHiqYFvewtt1yf3n9iqtuEaYAnTtrNK5rCePfs
-	hs1QVxKDMDPKA4ozpCWtLESBuLakRrYe0srPdWA==
-X-Gm-Gg: ASbGncsksmzgQGWstySe2mf7L2isgQMVTlrspCVWyFrtFgFIYmHHiZe9gWyhZk+ezGd
-	tdfEfUPAKYNwyNTD2+aSgdmvKSsdqvbGB8JhpAS3D5T2A2rgjK/8oJyNcoonTQrrZKJvaDuVcDQ
-	8IdKUX/CfQt8BvCWZ1xzMPLLEyHdc=
-X-Google-Smtp-Source: AGHT+IE6txomzGGAbwFADFCUywgbtkEgGT6GCg3c/ibtTiN62bLYpeINpXvDIoclViQ8oopGWCfxq+knFtQaTlHdqqI=
-X-Received: by 2002:a05:6870:de17:b0:2c2:5b08:8e42 with SMTP id
- 586e51a60fabf-2cd3311870dmr5281511fac.27.1744037725617; Mon, 07 Apr 2025
- 07:55:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AEfocUA/"
+Received: by mail.gandi.net (Postfix) with ESMTPA id C7B0644333;
+	Mon,  7 Apr 2025 14:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744037759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BVPT0CFkqtX/ZcwT+Cc/lDNZWWWi2vq+Tcz4vrmiE6g=;
+	b=AEfocUA/21kPxWHKfw8jxdyA1UpdsBAP2ARoRqUIV44X1+NtGaOs+mvc5hbx7lGRON38EG
+	8EdRiyVXfjngizQzKPYdcaoIkLVFz70gC8PVdJCxKkx7FgLTqC3sd/CrhJaI+Xp52nJqj+
+	ydQYj8PltIX9XZVYmYg3meK3XegIY2trYNfqr3z81pTiQbi8IjUTml8T3avDvXlvrMbQBL
+	G9X7PgxgRXA2igkfN4KsY8oCmQz6/dG3FxctKN1x/XkM4eBr4N6QB5WZaA8Jw7c5Qppqnt
+	jW0ctNrXD66wH0yXieSqK0E8TaJhuS+4xX6VZuluZQQkb9Q9IvUCOgGdnAYhBg==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 00/16] lan966x pci device: Add support for SFPs
+Date: Mon,  7 Apr 2025 16:55:29 +0200
+Message-ID: <20250407145546.270683-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
- <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
-In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 7 Apr 2025 16:55:13 +0200
-X-Gm-Features: ATxdqUFUAjG5BhSKb_2PfAi1V3_18wUctOFmQdGMnywulnQl545FYuZXFXM_jpk
-Message-ID: <CAHUa44G+Z9LjxqqqvKRRHrfN_6QPweF_5df2uOqtRuBfa5j3pw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/11] tee: add close_context to TEE driver operation
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Sumit Garg <sumit.garg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelteduffeltddvtdffgedugfejffeggeekheejiefggfeivefhkeffheehheeiueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvr
+ hesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomhdprhgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsrhgvrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Amir,
+Hi,
 
-On Fri, Mar 28, 2025 at 3:48=E2=80=AFAM Amirreza Zarrabi
-<amirreza.zarrabi@oss.qualcomm.com> wrote:
->
-> The tee_context can be used to manage TEE user resources, including
-> those allocated by the driver for the TEE on behalf of the user.
-> The release() callback is invoked only when all resources, such as
-> tee_shm, are released and there are no references to the tee_context.
->
-> When a user closes the device file, the driver should notify the
-> TEE to release any resources it may hold and drop the context
-> references. To achieve this, a close_context() callback is
-> introduced to initiate resource release in the TEE driver when
-> the device file is closed.
->
-> Relocate teedev_ctx_get, teedev_ctx_put, tee_device_get, and
-> tee_device_get functions to tee_drv.h to make them accessible
-> outside the TEE subsystem.
->
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
->  drivers/tee/tee_core.c    | 39 +++++++++++++++++++++++++++++++++++++++
->  drivers/tee/tee_private.h |  6 ------
->  include/linux/tee_core.h  | 11 +++++++++--
->  include/linux/tee_drv.h   | 40 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 88 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> index 24edce4cdbaa..22cc7d624b0c 100644
-> --- a/drivers/tee/tee_core.c
-> +++ b/drivers/tee/tee_core.c
-> @@ -72,6 +72,20 @@ struct tee_context *teedev_open(struct tee_device *tee=
-dev)
->  }
->  EXPORT_SYMBOL_GPL(teedev_open);
->
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration pr=
-ocess,
-> + * the context may remain valid even after tee_device_unregister() has r=
-eturned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased=
- before
-> + * calling tee_device_put(), typically within the context's release() fu=
-nction.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() t=
-ogether
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
+This series add support for SFPs ports available on the LAN966x PCI
+device. In order to have the SFPs supported, additional devices are
+needed such as clock controller and I2C.
 
-Please move this @ctx line to before the verbose description of the functio=
-n.
+As a reminder, the LAN966x PCI device driver use a device-tree overlay
+to describe devices available on the PCI board. Adding support for SFPs
+ports consists in adding more devices in the already existing
+device-tree overlay.
 
-Cheers,
-Jens
+With those devices added, the device-tree overlay is more complex and
+some consumer/supplier relationship are needed in order to remove
+devices in correct order when the LAN966x PCI driver is removed.
 
-> + */
->  void teedev_ctx_get(struct tee_context *ctx)
->  {
->         if (ctx->releasing)
-> @@ -79,6 +93,7 @@ void teedev_ctx_get(struct tee_context *ctx)
->
->         kref_get(&ctx->refcount);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_get);
->
->  static void teedev_ctx_release(struct kref *ref)
->  {
-> @@ -89,6 +104,10 @@ static void teedev_ctx_release(struct kref *ref)
->         kfree(ctx);
->  }
->
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
->  void teedev_ctx_put(struct tee_context *ctx)
->  {
->         if (ctx->releasing)
-> @@ -96,11 +115,15 @@ void teedev_ctx_put(struct tee_context *ctx)
->
->         kref_put(&ctx->refcount, teedev_ctx_release);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_put);
->
->  void teedev_close_context(struct tee_context *ctx)
->  {
->         struct tee_device *teedev =3D ctx->teedev;
->
-> +       if (teedev->desc->ops->close_context)
-> +               teedev->desc->ops->close_context(ctx);
-> +
->         teedev_ctx_put(ctx);
->         tee_device_put(teedev);
->  }
-> @@ -1024,6 +1047,10 @@ int tee_device_register(struct tee_device *teedev)
->  }
->  EXPORT_SYMBOL_GPL(tee_device_register);
->
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
->  void tee_device_put(struct tee_device *teedev)
->  {
->         mutex_lock(&teedev->mutex);
-> @@ -1037,7 +1064,18 @@ void tee_device_put(struct tee_device *teedev)
->         }
->         mutex_unlock(&teedev->mutex);
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_put);
->
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @tee=
-dev
-> + * has already released the device, this function will fail to prevent n=
-ew users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
->  bool tee_device_get(struct tee_device *teedev)
->  {
->         mutex_lock(&teedev->mutex);
-> @@ -1049,6 +1087,7 @@ bool tee_device_get(struct tee_device *teedev)
->         mutex_unlock(&teedev->mutex);
->         return true;
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_get);
->
->  /**
->   * tee_device_unregister() - Removes a TEE device
-> diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
-> index 9bc50605227c..d3f40a03de36 100644
-> --- a/drivers/tee/tee_private.h
-> +++ b/drivers/tee/tee_private.h
-> @@ -14,12 +14,6 @@
->
->  int tee_shm_get_fd(struct tee_shm *shm);
->
-> -bool tee_device_get(struct tee_device *teedev);
-> -void tee_device_put(struct tee_device *teedev);
-> -
-> -void teedev_ctx_get(struct tee_context *ctx);
-> -void teedev_ctx_put(struct tee_context *ctx);
-> -
->  struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t s=
-ize);
->  struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
->                                           unsigned long addr, size_t leng=
-th);
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index a38494d6b5f4..8a4c9e30b652 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -65,8 +65,9 @@ struct tee_device {
->  /**
->   * struct tee_driver_ops - driver operations vtable
->   * @get_version:       returns version of driver
-> - * @open:              called when the device file is opened
-> - * @release:           release this open file
-> + * @open:              called for a context when the device file is open=
-ed
-> + * @close_context:     called when the device file is closed
-> + * @release:           called to release the context
->   * @open_session:      open a new session
->   * @close_session:     close a session
->   * @system_session:    declare session as a system session
-> @@ -76,11 +77,17 @@ struct tee_device {
->   * @supp_send:         called for supplicant to send a response
->   * @shm_register:      register shared memory buffer in TEE
->   * @shm_unregister:    unregister shared memory buffer in TEE
-> + *
-> + * The context given to @open might last longer than the device file if =
-it is
-> + * tied to other resources in the TEE driver. @close_context is called w=
-hen the
-> + * client closes the device file, even if there are existing references =
-to the
-> + * context. The TEE driver can use @close_context to start cleaning up.
->   */
->  struct tee_driver_ops {
->         void (*get_version)(struct tee_device *teedev,
->                             struct tee_ioctl_version_data *vers);
->         int (*open)(struct tee_context *ctx);
-> +       void (*close_context)(struct tee_context *ctx);
->         void (*release)(struct tee_context *ctx);
->         int (*open_session)(struct tee_context *ctx,
->                             struct tee_ioctl_open_session_arg *arg,
-> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> index a54c203000ed..ce23fd42c5d4 100644
-> --- a/include/linux/tee_drv.h
-> +++ b/include/linux/tee_drv.h
-> @@ -96,6 +96,46 @@ struct tee_param {
->         } u;
->  };
->
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @tee=
-dev
-> + * has already released the device, this function will fail to prevent n=
-ew users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
-> +bool tee_device_get(struct tee_device *teedev);
-> +
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
-> +void tee_device_put(struct tee_device *teedev);
-> +
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration pr=
-ocess,
-> + * the context may remain valid even after tee_device_unregister() has r=
-eturned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased=
- before
-> + * calling tee_device_put(), typically within the context's release() fu=
-nction.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() t=
-ogether
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
-> + */
-> +void teedev_ctx_get(struct tee_context *ctx);
-> +
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
-> +void teedev_ctx_put(struct tee_context *ctx);
-> +
->  /**
->   * tee_shm_alloc_kernel_buf() - Allocate kernel shared memory for a
->   *                              particular TEE client driver
->
-> --
-> 2.34.1
->
+Those links are typically provided by fw_devlink and we faced some
+issues with fw_devlink and overlays.
+
+This series gives the big picture related to the SFPs support from
+fixing issues to adding new devices. Of course, it can be split if
+needed.
+
+The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
+is used with overlay. Patches 1 and 3 were previously sent by Saravana
+[0]. I just rebased them on top of v6.15-rc1 and added patch 2 in order
+to take into account feedback received on the series sent by Saravana.
+
+Those modification were not sufficient in our case and so, on top of
+that, patch 4 and 5 fix some more issues related to fw_devlink.
+
+Patches 6 and 7 are related also to fw_devlink but specific to PCI and
+the device-tree nodes created during enumeration.
+
+Patches 8, 9 and 10 are related fw_devlink too but specific to I2C
+muxes. Patches purpose is to correctly set a link between an adapter
+supplier and its consumer. Indeed, an i2c mux adapter's parent is not
+the i2c mux supplier but the adapter the i2c mux is connected to. Adding
+a new link between the adapter supplier involved when i2c muxes are used
+avoid a freeze observed during device removal.
+
+Patch 11 adds support for fw_delink on x86. fw_devlink is needed to have
+the consumer/supplier relationship between devices in order to ensure a
+correct device removal order. Adding fw_devlink support for x86 has been
+tried in the past but was reverted [1] because it broke some systems.
+Instead of disabling fw_devlink on *all* x86 system, use a finer grain
+and disable it only on system which could be broken.
+
+Patches 12 and 13 allow to build clock and i2c controller used by the
+LAN966x PCI device when the LAN966x PCI device is enabled.
+
+The next 2 patches (patches 14 and 15) update the LAN966x device-tree
+overlay itself to have the SPF ports and devices they depends on
+described.
+
+The last patch (patch 16) adds new drivers in the needed driver list
+available in the Kconfig help to keep this list up to date with the
+devices described in the device-tree overlay.
+
+Once again, this series gives the big picture and can be split if
+needed. Let me know.
+
+[0] https://lore.kernel.org/lkml/20240411235623.1260061-1-saravanak@google.com/
+[1] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/
+
+Best regards,
+Hervé
+
+Herve Codina (14):
+  driver core: Rename get_dev_from_fwnode() wrapper to
+    get_device_from_fwnode()
+  driver core: Avoid warning when removing a device while its supplier
+    is unbinding
+  bus: simple-pm-bus: Populate child nodes at probe
+  PCI: of: Set fwnode.dev of newly created PCI device nodes
+  PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
+    node
+  i2c: core: Introduce i2c_get_adapter_supplier()
+  i2c: mux: Set adapter supplier
+  i2c: mux: Create missing devlink between mux and adapter supplier
+  of: property: Allow fw_devlink device-tree support for x86
+  clk: lan966x: Add MCHP_LAN966X_PCI dependency
+  i2c: busses: at91: Add MCHP_LAN966X_PCI dependency
+  misc: lan966x_pci: Fix dtso nodes ordering
+  misc: lan966x_pci: Add dtso nodes in order to support SFPs
+  misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
+
+Saravana Kannan (2):
+  Revert "treewide: Fix probing of devices in DT overlays"
+  of: dynamic: Fix overlayed devices not probing because of fw_devlink
+
+ drivers/base/core.c           |  93 ++++++++++++---
+ drivers/bus/imx-weim.c        |   6 -
+ drivers/bus/simple-pm-bus.c   |  23 ++--
+ drivers/clk/Kconfig           |   2 +-
+ drivers/i2c/busses/Kconfig    |   2 +-
+ drivers/i2c/i2c-core-base.c   |  16 +++
+ drivers/i2c/i2c-core-of.c     |   5 -
+ drivers/i2c/i2c-mux.c         |  21 ++++
+ drivers/misc/Kconfig          |   5 +
+ drivers/misc/lan966x_pci.dtso | 206 ++++++++++++++++++++++++++--------
+ drivers/of/dynamic.c          |   1 -
+ drivers/of/overlay.c          |  15 +++
+ drivers/of/platform.c         |   5 -
+ drivers/of/property.c         |   2 +-
+ drivers/pci/of.c              |   8 +-
+ drivers/spi/spi.c             |   5 -
+ include/linux/fwnode.h        |   1 +
+ include/linux/i2c.h           |   3 +
+ 18 files changed, 318 insertions(+), 101 deletions(-)
+
+-- 
+2.49.0
+
