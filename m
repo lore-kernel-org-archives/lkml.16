@@ -1,38 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049AB823DE;
-	Mon,  7 Apr 2025 06:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589B12135A4;
+	Mon,  7 Apr 2025 06:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007887; cv=none; b=CZD7ioIe+5VonFig6lcdkEZgzF0KoDD8M6myG1vCBuvU+nsS99PPhzfwHuT2utg/Jj1nbJE9tDyiWxo34azufDY+o2sk8uyANm2WTCWxJ1jlOF4hfeE2vDYwmKc5w7uSdS9ioXjPIUpwRcJVIWCp8KRBMYqWC9/w83gdsP2N/3c=
+	t=1744008109; cv=none; b=IHMXjnsmvqeFTMxFwdk+AiIe9j/GXapSzXjO9MDglAGwMuyZk6Z6w+QDDBmZRYITKVKznX1ra7zdBOPpSk/NX/rMJPrSFEUDJngfVifEG/WiSmOLc7FHuLfCdH8uGkby1UoV9+07mZH943eSFviV2iy73nBRiWm403aQCz15WGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007887; c=relaxed/simple;
-	bh=TQqbK7sOwuKRjkMrPbuSLr7XyT7yAd0z2T4yZVVYNsU=;
+	s=arc-20240116; t=1744008109; c=relaxed/simple;
+	bh=PCQiGG6B2DNaakC53prIZJdI+gBuGzvVt2GLvpU+2cE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i6kTGkdNteuVJBUMg+MAiaxkfhJnkbaxfuRKuM55eH0Ld5TUFomqkEKF5ywbmSOHIcgkn/we0JUgvceL7G8pMgo7akJ8xvAREh/OBEoq1wY1zY1o///phf9gyS0ZakaLZC4jVooQNpyhq4mRc2OTE/y1oAVFF136uyu6A6q2K7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DIMhohUZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tTGBA/v3X/ej8jxDBOouuXn83CtoFkCXqp94DWRftffZ4dDuM/I2+sGV2BL0aHPnAeUq00oyk85eLvd498SEpFsRRNcKOiJQgwztoLfMAfmWnx6m3dztNEpOYyVLjozC80l+3+l/sDYFwkQ7/hqj6WU4XWdZR7Cpw8pKZ/kJ1KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gWfKNRQj; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DIMhohUZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC36C4CEDD;
-	Mon,  7 Apr 2025 06:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744007885;
-	bh=TQqbK7sOwuKRjkMrPbuSLr7XyT7yAd0z2T4yZVVYNsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DIMhohUZ5bOWNPq3Xrg/UD62VXTi0mgpRbNWgc4wDEd3EmSWBfwaHoQdtbv8emg/f
-	 q7wz7Tcsja9zOryUwBwU9MmRro8OWZrHHVT2ehUSegPhfo2Ka9A7IvSBjZu3UM+Qv8
-	 lLbmVTydvwBeQZTDeUgZ2uGk1FajukI7W42rpxd4=
-Date: Mon, 7 Apr 2025 08:36:35 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: julia.lawall@inria.fr, outreachy@lists.linux.dev,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	dan.carpenter@linaro.org, andy@kernel.org,
-	david.laight.linux@gmail.com
-Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
-Message-ID: <2025040757-clergyman-finalist-0c63@gregkh>
-References: <Z/NxGilPLPy7KSQ3@ubuntu>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gWfKNRQj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744008108; x=1775544108;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PCQiGG6B2DNaakC53prIZJdI+gBuGzvVt2GLvpU+2cE=;
+  b=gWfKNRQjv7tDSGmUXG0+teaqCvd1+vV2KP0WX7wzDcnivYdYKWDWt/zj
+   kGnq/KKlUEPlx7fHskHlu220fYFrneVXjm3W9H/KEeosPUzGEboJMxud5
+   JWwhhAtC7LGI7uEJZHHti5Hg885Q6Okc2glezjQKb6AXffGzUVQ9UMWnf
+   JlQb5bGpzzMBBjJ8ZYTJa5TQkGvFlXBTIAzd+2TQsN1C0anc3JDcThiiZ
+   cgwFaQ4ZDozJH8qf6BKZKho3hthnu9DDESgwvDnYVOdpXZ73BeJFZoP3r
+   UP17hmtt3eq6ks5Yvq4j6oXyLzYcgWIuPbaM9wJKEiqJWeRXtTmRuCm+F
+   Q==;
+X-CSE-ConnectionGUID: CSJ9rAG7T82RQ6MVRr6EVQ==
+X-CSE-MsgGUID: kOVNx4PGSA2YfHVL9G2xuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="56739012"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="56739012"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:41:47 -0700
+X-CSE-ConnectionGUID: 4PuUPLd0TvK25LbH6hG7Nw==
+X-CSE-MsgGUID: RR+H+9wGQgGAI79CRQ80Aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="158831349"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:41:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1gAv-00000009yco-3xUB;
+	Mon, 07 Apr 2025 09:41:41 +0300
+Date: Mon, 7 Apr 2025 09:41:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v2 0/6] gpiolib: acpi: Refactor to shrink the code by ~8%
+Message-ID: <Z_NzpTUiXMPffXmI@smile.fi.intel.com>
+References: <20250403160034.2680485-1-andriy.shevchenko@linux.intel.com>
+ <20250404044318.GL3152277@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,41 +67,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z/NxGilPLPy7KSQ3@ubuntu>
+In-Reply-To: <20250404044318.GL3152277@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote:
-> The sequence number is constrained to a range of [0, 4095], which
-> is a total of 4096 values. The bitmask operation using `0xfff` is
-> used to perform this wrap-around. While this is functionally correct,
-> it obscures the intended semantic of a 4096-based wrap.
+On Fri, Apr 04, 2025 at 07:43:18AM +0300, Mika Westerberg wrote:
+> On Thu, Apr 03, 2025 at 06:59:11PM +0300, Andy Shevchenko wrote:
+> > A simple refactoring of the GPIO ACPI library parts to get an impressive
+> > ~8% code shrink on x86_64 and ~2% on x86_32. Also reduces a C code a bit.
+> > 
+> > add/remove: 0/2 grow/shrink: 0/5 up/down: 0/-1221 (-1221)
+> > Function                                     old     new   delta
+> > acpi_gpio_property_lookup                    425     414     -11
+> > acpi_find_gpio.__UNIQUE_ID_ddebug478          56       -     -56
+> > acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug480      56       -     -56
+> > acpi_find_gpio                               354     216    -138
+> > acpi_get_gpiod_by_index                      462     307    -155
+> > __acpi_find_gpio                             877     638    -239
+> > acpi_dev_gpio_irq_wake_get_by                695     129    -566
+> > Total: Before=15375, After=14154, chg -7.94%
+
+> Looks good now,
 > 
-> Using a modulo operation with `4096u` makes the wrap-around logic
+> Acked-by: Mika Westerberg <westeri@kernel.org>
 
-<snip>
 
-> -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-> +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;
+Pushed to my review and testing queue, thanks!
 
-I do not see a modulo operation here, only another & operation.
+-- 
+With Best Regards,
+Andy Shevchenko
 
->  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
->  
->  				SetSeqNum(hdr, pattrib->seqnum);
-> @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
->  						pattrib->ampdu_en = false;/* AGG BK */
->  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;
 
-This also looks odd, nothing is being "AND" here, it's an address value
-being set (and an odd one at that, but that's another issue...)
-
-How was any of this tested?
-
-Slow down, take some time, and think about what you are wanting to do
-here.  There's no rush.
-
-thanks,
-
-greg k-h
