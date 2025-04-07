@@ -1,116 +1,75 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F472236F3;
-	Mon,  7 Apr 2025 05:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1769C20F093;
+	Mon,  7 Apr 2025 05:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744004326; cv=none; b=hYK/7w/OBAfJ1XVz+UWmK+81LrUB5T+xlbhv9R53WQTP5Obdw6pns7JAGRAxzx3aznRLIKu5NIjy3AyPIJ8BUL4frpkfqutmQMURERMcUT/kSm3O8OB/STpdvJJDrAhO6Y1DOJGBXKHhRcXGMmyR9R+nKzOUS8/kdwy787w8EHc=
+	t=1744004528; cv=none; b=KbQ8Yd/Ft6o8++8mArzqUIibRNFcy/Mtd+WUHXadn3GzFx2mj6I2I5PBn27UCD+LWXQx3nTkiIGTAsWSkkP/ZcQnshzyYmRdh1KFB3UPGSDEeAqyvTEwSXr7O8CUPu6+Ii10oc2NZNJ+VpyN99fUeE4LQM6GsPGph3HwGU+pItA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744004326; c=relaxed/simple;
-	bh=hvves4toXk2gLEBXAQSEPuGfDWPqF2N/IQRJ3Mjnmv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iOqUcYHLwjV1v22qE1ag97lfDE1mw3Ns3RnizdqN0fCg0ibij/XfBxFdEAcqtHafdk/QRtAcoMoqW/k+6i6OmbreKlWqr6C9+IOZFunDhlIbHvkIF4Wbcii/gEk9h3tkLUdUY/3Uq4bzQTfzcFZLWvZiBAxp+pFIlBsUXUrjTRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LwRK/2Zh; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744004528; c=relaxed/simple;
+	bh=RSwbvv0qIoQs2um0mScuvh6q7YNXBwU2GFXsViG6ArE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEmLzrOq9FmmEvl7scs4rLTGuEHngVoXqRVPW91TNeBSBWg6PYVSkIV5TGPFPdbbB8WjXojPKKo0yuNADUXyjn+LKnRpOfm3+lO931L4yvh5YqMPTTvjCdRxa+enNDmEWhP0HL1W1PXZC2ljmklLCWxvmkb+VAXFwJ5YUaUz+mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNvARVZf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwRK/2Zh"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b602d2ffso1275352a91.0;
-        Sun, 06 Apr 2025 22:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744004325; x=1744609125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=axcpWb0CiJMv6x26lX8+ffH+IwdPQ6J2ls63frRS//w=;
-        b=LwRK/2ZhxEzfs9QBMPB0p4+PXyGWXBCjA5I/jNnK0kR56wF7ZNtFcx6FDDl5fxjlOi
-         jnutT7h9iNcZdg8APXlo/JHufaht16RejJImMHI8N6zyFk8aJm9ZIB96j9Nyr8vXp6Sh
-         QgkptlunC+yMT7CESyfz38Y2wrZwf9hW4eFvENXQ7ZmBhgwoqfnGnL4k7gz045/O2wQf
-         pNVYdEWy2nxZP+JKbq6uKd/dfYQE/vK+N5e/o/Kt24FX0uJkBKDvaN0om4Aa8e5d1VOg
-         xfLR9chmhJTsvqrXoxktLK3p5QUvaYzGoUy+tKzrnwhwhy2YfYc0ohNPdQMo3MDgxHEy
-         sRCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744004325; x=1744609125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=axcpWb0CiJMv6x26lX8+ffH+IwdPQ6J2ls63frRS//w=;
-        b=SeZXRinqFERs47tfeFVJxDgU7u1ceHSsTk5O0/6gB4/O7Z1b2ijUG0YkkFJwbhAahc
-         DDh954O5cF37iPNmhBonndKDAQ/G9ju2z6XyhYE7b5fGLKUlvGwSoOPwX1CVjOCzeFfY
-         Tcbbj5UECLw/fMkwYuqLIzalL7dMrEOjE2MQWOuWUgsQ3XiZfKvm9fLApXq20vzwkDvy
-         y2SS6Ues/5AJWcV0Y6MPTj5ypOvt/2i3Bdwrs1KfD8Vtv+c49u5qQ/qUvGqYxN6IqkI3
-         g3NsqyXdx8i8HaST0iM5gBy3N0fmsprdDae5LeLNgchMhMpBHQUCsFuTxzNhh13pvJHm
-         8nCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBEaUd5qH8VjLf1kYmIdIo7ENSZk+FuF//0TsiXbCU4I1iJ7I9AsDDRkHsvGnxzU4l+MMwbudLNbSohA/z@vger.kernel.org, AJvYcCUEs3QJscwJKb+6gY28ZzTeRxlLMljDKBNwxSaLL6MqOhxzWA2VVBr2h1LR2ztgmLWKQYoqBXlUHQoH@vger.kernel.org, AJvYcCWceAbQFHJdxAvqbHV4wqHltOo3hUqRCFSKcT4XAekrwQeLJCPLF+e1KPo6RnZF3/AFvniTpIbxveL7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLGnvJan+0DfYT0b8/fsrYpRy36OiLv9OjuaAd3eoVRTmw/kDl
-	qYauTBf0l3n8kSGCQ+6M0AUUCffk9fM1jIx7JII2P/ZM3nK1wuMCVsedBlg81WxRNB3j+18BTlx
-	fQC/yint0c5gUFpHgKDINmHuhVEs=
-X-Gm-Gg: ASbGncupVzhRfZ94rKunqyKvao70+YHs8k4iruFhqBIso9AohP8aCvHZxxX8opKU4Om
-	UJoHVpSpW3EGcHWxHPWyQNQ3fcMPWDd6SsUw00+vlAOw9ZpFe3UojkF683gtFt2bFP4uTMMWrqJ
-	txs6pRW+Ft0S36FwQPslGGt4C9/HBuU5gnsos=
-X-Google-Smtp-Source: AGHT+IGndqGRW8avHxtl3qnm0RlH6ICqsq3r3bvO1qI0RAfBt8JObOMkl82WtVLXKzSMEnJm4hSuODChzuGE5fFuW3Y=
-X-Received: by 2002:a17:90b:4ec8:b0:2ff:6608:78e2 with SMTP id
- 98e67ed59e1d1-306af746455mr12866112a91.16.1744004324069; Sun, 06 Apr 2025
- 22:38:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNvARVZf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55810C4CEDD;
+	Mon,  7 Apr 2025 05:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744004526;
+	bh=RSwbvv0qIoQs2um0mScuvh6q7YNXBwU2GFXsViG6ArE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iNvARVZfDl4Qp5M4TFI3QuCkCW625zxVf6M/X/Yt+GA5GsQIWYmBDV7P2DNxv0gXg
+	 iEkXIU5phghDFDFkZ+k61fGEwFUoJXNE2qHqnplt6T9IaUQqP2uKLYuoR3qzUaZoQT
+	 5tocNEU/UmxvemN3QH2baaChtBbHKZJv0mtfvM8AZ5sh/zkA1QAjZblY8m4/WXctb4
+	 X0y7otVzDtMXxeajkwwqvV9H0NkG76W5HzLgXx/PYflgG+ZtW+7b9t7IVTfev50uMf
+	 p7LO05/LHyZB+EWA2hUTWwMrJV38Tj7ZhHJFI1OZD94MNTFPrJ0/lGzCoUYpn5f6Ff
+	 RZ2bmSxrtpYZA==
+Date: Mon, 7 Apr 2025 05:42:04 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	mhklinux@outlook.com, decui@microsoft.com
+Subject: Re: [PATCH] Drivers: hv: Fix bad pointer dereference in
+ hv_get_partition_id
+Message-ID: <Z_NlrCgFmErcp-8U@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <b7102dfb-86e4-4a85-8444-de18258473f2@linux.microsoft.com>
+ <Z_NheILh0exTxoo1@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com> <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
- <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
-In-Reply-To: <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Mon, 7 Apr 2025 13:38:33 +0800
-X-Gm-Features: ATxdqUHIt5xrCNGwJLh7UoP-kFxlH9HUctmkFVMByLT_ziJVw0ZWkg8cIzGt-ig
-Message-ID: <CAJRtX8S0Zg7-Rba6ziaAoBi-2Bs3N0NfpguF40T16yObaxCZiQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, unicorn_wang@outlook.com, 
-	dlan@gentoo.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_NheILh0exTxoo1@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
 
-On Sun, Apr 6, 2025 at 8:16=E2=80=AFAM Thomas Bonnefille
-<thomas.bonnefille@bootlin.com> wrote:
->
-> Hello,
->
-> On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> > On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
-> >> [...]
-> >> +    if ((state & BIT(pwm->hwpwm)) && enable)
-> >> +            regmap_update_bits(priv->map, PWM_CV1800_OE,
-> >> +                               PWM_CV1800_OE_MASK(pwm->hwpwm),
-> >> +                               PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> >
-> > This looks strange. If BIT(hwpwm) is already set, set it again?!
-> > Also if you used the caching implemented in regmap, you don't need to
-> > make this conditional.
-> >
->
-> I was testing the series and noticed indeed an issue in this driver at
-> those lines. If PWM_CV1800_OE isn't set by something else than the
-> kernel it will never be set and so, there will never be a PWM outputted.
->
-> Using :
->     if (!(state & BIT(pwm->hwpwm)) && enable)
-> Solved the issue but as Uwe said you can probably rely on regmap caching
-> to avoid this condition.
->
-> >
-> > ...
-> >
->
-> Do you plan on sending a new iteration some day ? I may have some time
-> to continue the upstreaming process if you need to.
->
-I am so happy you can continue finish this patch.
+On Mon, Apr 07, 2025 at 05:24:08AM +0000, Wei Liu wrote:
+> On Thu, Apr 03, 2025 at 01:54:37PM +0530, Naman Jain wrote:
+> > 
+> > 
+> > On 4/1/2025 11:02 PM, Nuno Das Neves wrote:
+> > > 'output' is already a pointer to the output argument, it should be
+> > > passed directly to hv_do_hypercall() without the '&' operator.
+> > > 
+> > > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> > > ---
+> > > This patch is a fixup for:
+> > > e96204e5e96e hyperv: Move hv_current_partition_id to arch-generic code
+> > 
+> > You can add Fixes: tag, so that it gets ported to previous kernel, in case,
+> > it does not make it to 6.14.
+> 
+> This does not need to be ported to older kernels because the bug was
+> never released.
 
-Best regards
-Jingbao Qiu
+To be clear that was just a passing comment. I'm not against adding a
+Fixes tag. I've done that while applying this patch.
+
+Thanks,
+Wei.
