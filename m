@@ -1,175 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8581DE4DA;
-	Mon,  7 Apr 2025 14:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC411D8E10;
+	Mon,  7 Apr 2025 14:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035702; cv=none; b=NE3+8yXpALMH8a1kPFUMx58rTa9vlMI5jyUkvFj6nXs8mwn1Ihch+T6uEd2nQBdJayFaigVK77S/E52rPakqMgoQp6oojC2Q9nAhH6WvmMMn6tFSBl1Wnx+b+bOMaaZKxptqz8Su4UT76l196hTE9bzLTuEMKHZwfii9yhdVxLo=
+	t=1744035790; cv=none; b=ETmeQm9/R1Xi6DyB/aoVg0KBKgMaLPGFewaKX+asvhYxoiyis3xZjCcqyuDOJ24BbGMLsTp3RbenJABftqPMfpNQlkNj/88Zv2/T8cR1DIoTYqRlbgKVP+dYKAKB4UUOYDhuN+0Htl4dmH2i+sJ6HkxCm2zP2HIE5TdLyPG0Wzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035702; c=relaxed/simple;
-	bh=3yqdxfN8mBE/0Isqq5N0IafS5lYEEcmxfFTObL8gLB0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UVahf4kUJqUA8GyGFidZNpN9nMFp9eFqppzMAL0Eei0uQcLyKTQq9TtuVqj8ygpOBpuGeqf82WeStU+scEdW8V0uN/zjDP2JtycuSUDHYdfdLgTOigQxcdycnpq7rgnUgxHSvE9q3x/Mrm5lueIC2h/AfLygA3Qak8fAMji1LIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SwWlcYL3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744035790; c=relaxed/simple;
+	bh=zTmn5P4FyENhR3+TvfDsp/1/HX1sb8RCnnjZ9N23NDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjSJruMvk59iHiOVmduNfQPp/aGnu+TYmNGKMlbdpY6XEcBPKzeF8fNq+a9jfNfC68zR2VFKWYJgj94VtcEoY0SVpjN7kNhR4MuxC4q2pKqZVhh4F3xtWPF4k7vG5oINm5TAlW00Amdj7k629Iv5xaLKKOIfP4xzIMGQoapzNDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T9R6bIAt; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SwWlcYL3"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dnOK009248;
-	Mon, 7 Apr 2025 14:21:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=zmFdUop9JRXRGeCW1vcmGM8I
-	mpPSKGBJ0ajOqtj2q0U=; b=SwWlcYL3ZRKqtQcNBQ/RRo3QSKZT1/qwZdbSAcIs
-	f5Lfa+D+eduSygwQqzmVY8OnBmYU6ZygJ347NWpTgnZn0rTNjixvw+udI5k0jjeG
-	FQtynQHM222ZLQNR+73ILmfdk/RplybWJpn5cP4Y7DdVezxmYlym99GRDR53Qq7l
-	d9b+ICNEX7ETO1sx0efdd89uHaJjde9lgPlUqPQF/7nTblww4LfVicCFrgAftHPW
-	rptIiqVTfx29vmmL7NXa4mJ/lzuiPKruYuljn/pGW57wFTu9PoRdYuX8q+denImH
-	U8VzhoFPbV8qQeN0Cz6qazOERX7DWY7qTldxaZ+hSnqDTQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbucg44-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 14:21:35 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537ELYcX026448
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 7 Apr 2025 14:21:34 GMT
-Received: from hu-mapa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 7 Apr 2025 07:21:31 -0700
-From: Manish Pandey <quic_mapa@quicinc.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <quic_rampraka@quicinc.com>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>
-Subject: [PATCH V6 3/3] scsi: ufs-qcom: Add support to dump testbus registers
-Date: Mon, 7 Apr 2025 19:51:10 +0530
-Message-ID: <20250407142110.16925-4-quic_mapa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250407142110.16925-1-quic_mapa@quicinc.com>
-References: <20250407142110.16925-1-quic_mapa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T9R6bIAt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744035789; x=1775571789;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zTmn5P4FyENhR3+TvfDsp/1/HX1sb8RCnnjZ9N23NDA=;
+  b=T9R6bIAtWBYGdBttlOAOUkwBxVDoXkzJZv3pTiQAimC7ykImNYjECLa0
+   ewBiWWFcWd/JvXQYFH1Z9DOWnVG5gkPu7S1Knt83Il3WhmPemPlx7DFYF
+   e4cvpesnjhCQsUm7FH8FfXNCYkmy/MGZsOUSSP0TEi3750rDP82FVmfNW
+   ZaMfcgwGN/t3n4iKB0nLGdRRA6KcTPzzby9WjDfPcY1/HlBWh22FS07dc
+   wNMeuXm9imJnwK/SZFvZI+iOEK0Bb4FKLujAfi4kIp5ZTTmQP73E0qoFu
+   NyGteuvpGEHtBR2FxhaRjzVHKwxy5IfDDbeebitwMyXIQGF86z8752oIj
+   Q==;
+X-CSE-ConnectionGUID: qACBmBWURaWFC8hCO21g9w==
+X-CSE-MsgGUID: N7y2tFq3QT+qbO408cSAmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56404753"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="56404753"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:23:08 -0700
+X-CSE-ConnectionGUID: 0/Np+nHdQzWhFwn8StpAXA==
+X-CSE-MsgGUID: vkdJP5xQRfG8NCeg5d7hXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127952584"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:23:02 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1nNJ-0000000A5r6-2o0a;
+	Mon, 07 Apr 2025 17:22:57 +0300
+Date: Mon, 7 Apr 2025 17:22:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
+	Petr Mladek <pmladek@suse.com>, Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>,
+	"airlied@redhat.com" <airlied@redhat.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"apw@canonical.com" <apw@canonical.com>,
+	"joe@perches.com" <joe@perches.com>,
+	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+	Kees Cook <kees@kernel.org>, "tamird@gmail.com" <tamird@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	"asahi@lists.linux.dev" <asahi@lists.linux.dev>
+Subject: Re: [PATCH v3 0/3] Use proper printk format in appletbdrm
+Message-ID: <Z_PfwShQX95IyHWR@smile.fi.intel.com>
+References: <PN3PR01MB9597596DA5DA9FC02825CF0FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z_PZXPAklfkMlx6O@smile.fi.intel.com>
+ <PN3PR01MB9597E19A55EAFC3E7B191F5FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: waBTlqCZDqnT5GIec2I6RY_3XQjiCYpY
-X-Proofpoint-ORIG-GUID: waBTlqCZDqnT5GIec2I6RY_3XQjiCYpY
-X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f3df6f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=oU32yFmJg_HV1qE5Ry8A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxlogscore=732 phishscore=0 mlxscore=0 spamscore=0
- malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504070101
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN3PR01MB9597E19A55EAFC3E7B191F5FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add support to dump testbus registers to enhance debugging capabilities
-for the Qualcomm UFS Host Controller.
+On Mon, Apr 07, 2025 at 02:17:00PM +0000, Aditya Garg wrote:
+> > On 7 Apr 2025, at 7:26 PM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Apr 07, 2025 at 07:05:13PM +0530, Aditya Garg wrote:
+> >> The vsprint patch was originally being sent as a seperate patch [1], and
+> >> I was waiting it to be taken up. But as suggested by Petr, I'm sending
+> >> them via DRM.
+> > 
+> > Your message is detached from the thread, make sure you use proper tools, e.g.
+> 
+> It's not a problem with tools, it's a problem with my email provider.
+> 
+> Microsoft now supports only oauth2 for SMTP, which git send-email doesn't
+> support. I had done a few tests using msmtp with git send-email, but msmtp
+> also had this detached from thread bug, since it doesn't read the message id
+> specified by git send-email. I've been using macOS mail for a long time for
+> kernel patches, but since it was a pain to reboot to macOS every time for
+> this. So I just tried using thunderbird in Linux this time. Now this time, it
+> was a configuration issue in thunderbird, in which it was making a copy of
+> the sent email in my sent folder, resulting in 2 copies there. I replied to
+> the copied one by mistake. I've finally fixed this issue as well, so should
+> be good in future.
 
-Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 50 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+There is a project called email-oauth2-proxy, which makes it transparent, so
+just take your time and configure your box or find another email provider.
+The above is not an excuse to break the process.
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 3a8eac62967e..f9868a240430 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/clk.h>
-+#include <linux/cleanup.h>
- #include <linux/delay.h>
- #include <linux/devfreq.h>
- #include <linux/gpio/consumer.h>
-@@ -96,6 +97,24 @@ static const struct __ufs_qcom_bw_table {
- 	[MODE_MAX][0][0]		    = { 7643136,	819200 },
- };
- 
-+static const struct {
-+	int nminor;
-+	char *prefix;
-+} testbus_info[TSTBUS_MAX] = {
-+	[TSTBUS_UAWM]     = {32, "TSTBUS_UAWM"},
-+	[TSTBUS_UARM]     = {32, "TSTBUS_UARM"},
-+	[TSTBUS_TXUC]     = {32, "TSTBUS_TXUC"},
-+	[TSTBUS_RXUC]     = {32, "TSTBUS_RXUC"},
-+	[TSTBUS_DFC]      = {32, "TSTBUS_DFC"},
-+	[TSTBUS_TRLUT]    = {32, "TSTBUS_TRLUT"},
-+	[TSTBUS_TMRLUT]   = {32, "TSTBUS_TMRLUT"},
-+	[TSTBUS_OCSC]     = {32, "TSTBUS_OCSC"},
-+	[TSTBUS_UTP_HCI]  = {32, "TSTBUS_UTP_HCI"},
-+	[TSTBUS_COMBINED] = {32, "TSTBUS_COMBINED"},
-+	[TSTBUS_WRAPPER]  = {32, "TSTBUS_WRAPPER"},
-+	[TSTBUS_UNIPRO]   = {256, "TSTBUS_UNIPRO"},
-+};
-+
- static void ufs_qcom_get_default_testbus_cfg(struct ufs_qcom_host *host);
- static int ufs_qcom_set_core_clk_ctrl(struct ufs_hba *hba, bool is_scale_up);
- 
-@@ -1565,6 +1584,32 @@ int ufs_qcom_dump_regs(struct ufs_hba *hba, size_t offset, size_t len,
- 	return 0;
- }
- 
-+static void ufs_qcom_dump_testbus(struct ufs_hba *hba)
-+{
-+	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+	int i, j, nminor = 0, testbus_len = 0;
-+	u32 *testbus __free(kfree) = NULL;
-+	char *prefix;
-+
-+	testbus = kmalloc_array(256, sizeof(u32), GFP_KERNEL);
-+	if (!testbus)
-+		return;
-+
-+	for (j = 0; j < TSTBUS_MAX; j++) {
-+		nminor = testbus_info[j].nminor;
-+		prefix = testbus_info[j].prefix;
-+		host->testbus.select_major = j;
-+		testbus_len = nminor * sizeof(u32);
-+		for (i = 0; i < nminor; i++) {
-+			host->testbus.select_minor = i;
-+			ufs_qcom_testbus_config(host);
-+			testbus[i] = ufshcd_readl(hba, UFS_TEST_BUS);
-+		}
-+		print_hex_dump(KERN_ERR, prefix, DUMP_PREFIX_OFFSET,
-+				16, 4, testbus, testbus_len, false);
-+	}
-+}
-+
- static void ufs_qcom_dump_mcq_hci_regs(struct ufs_hba *hba)
- {
- 	/* voluntarily yield the CPU to prevent CPU hog during data dumps */
-@@ -1682,6 +1727,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
- 		/* Dump MCQ Host Vendor Specific Registers */
- 		if (hba->mcq_enabled)
- 			ufs_qcom_dump_mcq_hci_regs(hba);
-+
-+		/* voluntarily yield the CPU as we are dumping too much data */
-+		ufshcd_dump_regs(hba, UFS_TEST_BUS, 4, "UFS_TEST_BUS ");
-+		cond_resched();
-+		ufs_qcom_dump_testbus(hba);
- 	}
- }
- 
+> > `git format-patch --thread --cover-letter -v3 ...` gives the correct result.
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
