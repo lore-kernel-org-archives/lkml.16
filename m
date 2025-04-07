@@ -1,117 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A725524F;
-	Mon,  7 Apr 2025 17:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55C0255E2B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047240; cv=none; b=dBHwwfybS3vDDXA8nLXEBUthoRuyAHC7TU7CSp0fzU/ALnD+cSnPOPii3XdkGQxS+aZbFmMh5v7OSIaQ7NJNAFH2Y/pqeh7BF7G7CyUtxeWgZwtjGE3itCOb/t7R10LdgZeBvFsb3zRiGT1SObI5RoBg7YwZwpHfKRVBV7KwYRs=
+	t=1744047244; cv=none; b=rGYWicA/qGk+Za7jGy98OcAbS3/9TFI/GIyzC2Cnv50GUnKrdJMEe2qrGqjeysdXhpYRy+bYtGlzvtAzKgV+dfVy18QfomXst9dvFjKSJmOA26tifX1EQCaznHG65R86NfLQRms0QS4P0J5363aL1lDmutEFVeE5FXRJaSvMQ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047240; c=relaxed/simple;
-	bh=5zlDeiuL9DgF/BlOHl+qwQ7JDuCW686ISBIaHc651Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fWOfePjL6yHm6qyHMfME+CNJl68lx8gpPjIUAf/D9aoh/k7DVNkhW3tkKebkbDbC5wYELpKBy06b8BHCvk39NuCaSPjJnXCL94ua/QJqXS+EvGipaEZqYzmWHsLiqCZsESOlIc73rbXHLm1mO+ogdHRg0HImPtuobixtdNYsMR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWLu1ztK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744047244; c=relaxed/simple;
+	bh=0eoyesuUJ7nZXFehU0rjs/Slq1sdsdIs1Ek+4VMektQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=osypggBu+o5vCdp7z2i0p1hnbTOmtTHLDfHdW+xHoFB8qqmaQcViV/WvKlW0biDJ8gJ0++RfL5GJi4W66POPSAgSVU8ZbrX5kTl/irKOvyCyyrlv5dGhkGu9wJog4fWENMS7bab0UVmSifruFgIonRduJebCW2mzSsBLJvCRKYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D9f8m09p; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWLu1ztK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2FEC4CEE9;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9f8m09p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744047241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ixTjOYCWUZvSMYGAAMcSYpU49kgLEmCLWZmPx1x/04U=;
+	b=D9f8m09pail2aDFVFMmGy3qar8Vl4sK4Cx/J0b1TKALVOuz6kxZplB5mNoKT4XtfESAfi5
+	F180Cxtrl7YwYo12JFFWJHmYbHAwPw86c/BBbqiZIQmRC7+Fog3TZkGmlAZNXf8yxI8JD+
+	Rlw1f7Dk6VCM9ayX59LFb36Mgsv2qrI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-aWG3WrrmMMebsZvXhkGbgg-1; Mon,
+ 07 Apr 2025 13:33:59 -0400
+X-MC-Unique: aWG3WrrmMMebsZvXhkGbgg-1
+X-Mimecast-MFC-AGG-ID: aWG3WrrmMMebsZvXhkGbgg_1744047237
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7388018001F8;
 	Mon,  7 Apr 2025 17:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744047239;
-	bh=5zlDeiuL9DgF/BlOHl+qwQ7JDuCW686ISBIaHc651Yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KWLu1ztKxj+u68He4wtSFTYHUbqcfekr+20JiLGGg0ExuUEQUF+l3kOndmoXkkCUs
-	 iizQ/TafNhaN1T950Oja51szTRDgt0oe7BcBZ0kldpIdmimu5wyh3k8774HZWJu8iO
-	 c6EcckZVd28qeumMyWTYrRf6tnb17HdJy/wh463Zf7I4eKO7uVjkEiEqBUfUjtv9pO
-	 meqeIPfl18yAKKOPyf/LlqQrLgUyt5fdEfBKjrK0G9ChVzcsgDFzuh79qjFfOhuIWM
-	 GXE98g9W2k48+Wc9IVj7jqBQC8mPrQC3VLZ/T1Hwm5nXk/khpJfRlaD4KocyTL/lWv
-	 DVIzpEC/s5yIA==
-Date: Mon, 7 Apr 2025 19:33:54 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Roberto Ricci <io@r-ricci.it>
-Subject: Re: [PATCH v3] x86/e820: Fix handling of subpage regions when
- calculating nosave ranges
-Message-ID: <Z_QMghKBVFz_EDap@gmail.com>
-References: <20250406-fix-e820-nosave-v3-1-f3787bc1ee1d@qtmlabs.xyz>
- <Z_LGqgUhDrTmzj5r@gmail.com>
- <Z_LJv9gATY6nk4Yu@gmail.com>
- <78346ff0-d5ee-48f0-ac4d-762a5ec18eb7@qtmlabs.xyz>
+Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51F9F180B488;
+	Mon,  7 Apr 2025 17:33:52 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 28/28] dpll: zl3073x: Add support to get fractional frequency offset on input pins
+Date: Mon,  7 Apr 2025 19:33:01 +0200
+Message-ID: <20250407173301.1010462-9-ivecera@redhat.com>
+In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78346ff0-d5ee-48f0-ac4d-762a5ec18eb7@qtmlabs.xyz>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+This adds support to get fractional frequency offset for input pins.
+Implement the appropriate callback that performs reference frequency
+measurement and reports the frequency offset between the DPLL and
+the reference.
 
-* Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz> wrote:
+Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/dpll/dpll_zl3073x.c | 110 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 109 insertions(+), 1 deletion(-)
 
-> On 4/7/25 01:36, Ingo Molnar wrote:
-> 
-> > * Ingo Molnar<mingo@kernel.org> wrote:
-> > 
-> > > * Myrrh Periwinkle<myrrhperiwinkle@qtmlabs.xyz> wrote:
-> > > 
-> > > > The current implementation of e820__register_nosave_regions suffers from
-> > > > multiple serious issues:
-> > > >   - The end of last region is tracked by PFN, causing it to find holes
-> > > >     that aren't there if two consecutive subpage regions are present
-> > > >   - The nosave PFN ranges derived from holes are rounded out (instead of
-> > > >     rounded in) which makes it inconsistent with how explicitly reserved
-> > > >     regions are handled
-> > > > 
-> > > > Fix this by:
-> > > >   - Treating reserved regions as if they were holes, to ensure consistent
-> > > >     handling (rounding out nosave PFN ranges is more correct as the
-> > > >     kernel does not use partial pages)
-> > > >   - Tracking the end of the last RAM region by address instead of pages
-> > > >     to detect holes more precisely
-> > > > 
-> > > > Cc:stable@vger.kernel.org
-> > > > Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
-> > > So why is this SHA1 indicated as the root cause? AFAICS that commit
-> > > does nothing but cleanups, so it cannot cause such regressions.
-> > BTW.:
-> > 
-> >   A) "It was the first random commit that seemed related, sry"
-> >   B) "It's a 15 years old bug, but I wanted to indicate a fresh, 8-year old bug to get this into -stable. Busted!"
-> 
-> You got me :) How did you know that this is a 15 years old bug?
+diff --git a/drivers/dpll/dpll_zl3073x.c b/drivers/dpll/dpll_zl3073x.c
+index e1d7f6d4c3d57..f5a58c3bab382 100644
+--- a/drivers/dpll/dpll_zl3073x.c
++++ b/drivers/dpll/dpll_zl3073x.c
+@@ -36,12 +36,31 @@ ZL3073X_REG8_IDX_DEF(dpll_refsel_status,	0x130, ZL3073X_NUM_CHANNELS, 1);
+ #define DPLL_REFSEL_STATUS_STATE_ACQUIRING	3
+ #define DPLL_REFSEL_STATUS_STATE_LOCK		4
+ 
++ZL3073X_REG32_IDX_DEF(ref_freq,			0x144,
++						ZL3073X_NUM_INPUT_PINS, 4);
++
+ /*
+  * Register Map Page 4, Ref
+  */
+ ZL3073X_REG8_DEF(ref_phase_err_read_rqst,	0x20f);
+ #define REF_PHASE_ERR_READ_RQST_RD		BIT(0)
+ 
++ZL3073X_REG8_DEF(ref_freq_meas_ctrl,		0x21c);
++#define REF_FREQ_MEAS_CTRL_LATCH		GENMASK(1, 0)
++#define REF_FREQ_MEAS_CTRL_LATCH_REF_FREQ	1
++#define REF_FREQ_MEAS_CTRL_LATCH_REF_FREQ_OFF	2
++#define REF_FREQ_MEAS_CTRL_LATCH_DPLL_FREQ_OFF	3
++
++ZL3073X_REG8_DEF(ref_freq_meas_mask_3_0,	0x21d);
++#define REF_FREQ_MEAS_MASK_3_0(_ref)		BIT(_ref)
++
++ZL3073X_REG8_DEF(ref_freq_meas_mask_4,		0x21e);
++#define REF_FREQ_MEAS_MASK_4(_ref)		BIT((_ref) - 8)
++
++ZL3073X_REG8_DEF(dpll_meas_ref_freq_ctrl,	0x21f);
++#define DPLL_MEAS_REF_FREQ_CTRL_EN		BIT(0)
++#define DPLL_MEAS_REF_FREQ_CTRL_IDX		GENMASK(6, 4)
++
+ ZL3073X_REG48_IDX_DEF(ref_phase,		0x220,
+ 						ZL3073X_NUM_INPUT_PINS, 6);
+ 
+@@ -140,6 +159,7 @@ struct zl3073x_dpll_pin_info {
+  * @esync_control: embedded sync is controllable
+  * @pin_state: last saved pin state
+  * @phase_offset: last saved pin phase offset
++ * @freq_offset: last saved fractional frequency offset
+  */
+ struct zl3073x_dpll_pin {
+ 	struct dpll_pin			*dpll_pin;
+@@ -149,6 +169,7 @@ struct zl3073x_dpll_pin {
+ 	bool				esync_control;
+ 	enum dpll_pin_state		pin_state;
+ 	s64				phase_offset;
++	s64				freq_offset;
+ };
+ 
+ /**
+@@ -498,6 +519,79 @@ zl3073x_dpll_input_pin_esync_set(const struct dpll_pin *dpll_pin,
+ 	return rc;
+ }
+ 
++static int
++zl3073x_dpll_input_pin_ffo_get(const struct dpll_pin *dpll_pin, void *pin_priv,
++			       const struct dpll_device *dpll, void *dpll_priv,
++			       s64 *ffo, struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll *zldpll = dpll_priv;
++	struct zl3073x_dev *zldev = zldpll->mfd;
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	u8 dpll_meas_ref_freq_ctrl, ref_id;
++	u8 ref_freq_meas_ctrl, ref_mask;
++	s32 freq_offset;
++	int rc;
++
++	/* Take device lock */
++	guard(zl3073x)(zldev);
++
++	/* Get index of the pin */
++	ref_id = zl3073x_dpll_pin_index_get(pin);
++
++	/* Wait for being ready */
++	rc = zl3073x_wait_clear_bits(zldev, ref_freq_meas_ctrl,
++				     REF_FREQ_MEAS_CTRL_LATCH);
++	if (rc)
++		return rc;
++
++	/* Select channel index in the mask and enable freq measurement */
++	dpll_meas_ref_freq_ctrl =
++		DPLL_MEAS_REF_FREQ_CTRL_EN |
++		FIELD_PREP(DPLL_MEAS_REF_FREQ_CTRL_IDX, zldpll->id);
++
++	rc = zl3073x_write_dpll_meas_ref_freq_ctrl(zldev,
++						   dpll_meas_ref_freq_ctrl);
++	if (rc)
++		return rc;
++
++	/* Set reference mask
++	 * REF0P,REF0N..REF3P,REF3N are set in ref_freq_meas_mask_3_0 register
++	 * REF4P and REF4N are set in ref_freq_meas_mask_4 register
++	 */
++	if (ref_id < 8) {
++		ref_mask = REF_FREQ_MEAS_MASK_3_0(ref_id);
++		rc = zl3073x_write_ref_freq_meas_mask_3_0(zldev, ref_mask);
++	} else {
++		ref_mask = REF_FREQ_MEAS_MASK_4(ref_id);
++		rc = zl3073x_write_ref_freq_meas_mask_4(zldev, ref_mask);
++	}
++	if (rc)
++		return rc;
++
++	/* Request a reading of the frequency offset between the DPLL and
++	 * the reference
++	 */
++	ref_freq_meas_ctrl = REF_FREQ_MEAS_CTRL_LATCH_DPLL_FREQ_OFF;
++	rc = zl3073x_write_ref_freq_meas_ctrl(zldev, ref_freq_meas_ctrl);
++	if (rc)
++		return rc;
++
++	/* Wait for the command to actually finish */
++	rc = zl3073x_wait_clear_bits(zldev, ref_freq_meas_ctrl,
++				     REF_FREQ_MEAS_CTRL_LATCH);
++	if (rc)
++		return rc;
++
++	/* Read the frequency offset between DPLL and reference */
++	rc = zl3073x_read_ref_freq(zldev, ref_id, &freq_offset);
++	if (rc)
++		return rc;
++
++	*ffo = freq_offset;
++
++	return rc;
++}
++
+ static int
+ zl3073x_dpll_input_pin_frequency_get(const struct dpll_pin *dpll_pin,
+ 				     void *pin_priv,
+@@ -1778,6 +1872,7 @@ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
+ 	.esync_get = zl3073x_dpll_input_pin_esync_get,
+ 	.esync_set = zl3073x_dpll_input_pin_esync_set,
++	.ffo_get = zl3073x_dpll_input_pin_ffo_get,
+ 	.frequency_get = zl3073x_dpll_input_pin_frequency_get,
+ 	.frequency_set = zl3073x_dpll_input_pin_frequency_set,
+ 	.phase_offset_get = zl3073x_dpll_input_pin_phase_offset_get,
+@@ -2484,9 +2579,9 @@ zl3073x_dpll_periodic_work(struct kthread_work *work)
+ 	 * are constant.
+ 	 */
+ 	for (i = 0; i < ZL3073X_NUM_INPUT_PINS; i++) {
++		s64 freq_offset, phase_offset;
+ 		struct zl3073x_dpll_pin *pin;
+ 		enum dpll_pin_state state;
+-		s64 phase_offset;
+ 		bool pin_changed;
+ 
+ 		/* Input pins starts are stored after output pins */
+@@ -2513,6 +2608,12 @@ zl3073x_dpll_periodic_work(struct kthread_work *work)
+ 		if (rc)
+ 			goto out;
+ 
++		rc = zl3073x_dpll_input_pin_ffo_get(pin->dpll_pin, pin,
++						    zldpll->dpll_dev, zldpll,
++						    &freq_offset, NULL);
++		if (rc)
++			goto out;
++
+ 		if (state != pin->pin_state) {
+ 			dev_dbg(zldev->dev,
+ 				"INPUT%u state changed to %u\n",
+@@ -2527,6 +2628,13 @@ zl3073x_dpll_periodic_work(struct kthread_work *work)
+ 			pin->phase_offset = phase_offset;
+ 			pin_changed = true;
+ 		}
++		if (freq_offset != pin->freq_offset) {
++			dev_dbg(zldev->dev,
++				"INPUT%u frequency offset changed to %llu\n",
++				pin->index, freq_offset);
++			pin->freq_offset = freq_offset;
++			pin_changed = true;
++		}
+ 
+ 		if (pin_changed)
+ 			dpll_pin_change_ntf(pin->dpll_pin);
+-- 
+2.48.1
 
-Call it a 'regression radar' that every kernel maintainer develops 
-after their first 20 years or so - each bug has a distinct feeling
-to them, and this one felt genuinely *ancient*.
-
-> [...] (although I didn't think the age of the bug a patch fixes would 
-> affect its chances of getting to -stable)
-
-Yeah, it doesn't really affect its -stable elibility much once we move 
-outside the ~6-12 months window that upstream recognizes as a 
-semi-recent regression - it was mostly my lame attempt at deadpan 
-humor, trying to play off 15 year old bugs against 8 year old bugs as 
-if 8 years old bugs were fresh. Yeah, I know, it's not funny even to me 
-anymore, I'm weird that way. ;-)
-
-> This specific revision was picked since it's the latest one that this 
-> patch can be straightforwardly applied to (there is a (trivial) merge 
-> conflict with -stable, though).
-
-Yeah. So in the x86/urgent commit I've tagged the other commit you 
-pinpointed in your followup mail:
-
-    Fixes: e8eff5ac294e ("[PATCH] Make swsusp avoid memory holes and reserved memory regions on x86_64")
-
-Just to give backporters *some* chance at fixing this ancient bug
-in older kernels, if they really want to.
-
-Thanks,
-
-	Ingo
