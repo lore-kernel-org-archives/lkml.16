@@ -1,132 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D41226520;
-	Mon,  7 Apr 2025 07:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63EA226CFE;
+	Mon,  7 Apr 2025 07:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010259; cv=none; b=ox/qfGatf/M7qHoghPriw43rzCx8kwlxUvMrsxUoRGmLa/J1a6dFI45beD230nTBpsZhYpU9Pr7ZMRMt86j3NaTjDa1tES4vq0lkQqspmLy4g/2v6GodBj36wiZhnJQEhhkmZO2Q9mm3GsVfjHSiQn0VeSrvEevEgEC0D/LTy5g=
+	t=1744010269; cv=none; b=EF8teyFr5ZXxH1YsZIyJMT3SjDOk2CZuYNk2RsVZVmYqflBA8ybysoGMdKbPfNqBdgW5ov2jGb0j+zUUo8Tdo+SfjjIKlJ70mwcXQAEYDeo3ug0/NiKtngldRxOpjHw3+i6QMKFBiKGd0w9LQJFfLzSnyUYc9B9e8Pq2tZytXUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010259; c=relaxed/simple;
-	bh=xJjO5xrrilFPpI6mBKh+TwJzScF9WqVhZqd3zYeJSIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i2SReinmYU+684D2SWNslDDhrYIGMLtyCsEQgbFjVLBHwyMzSV08WiJeCPvYOBh/FQAuuYxcUusa3vPkM/Ub6A8iw9NH8djPeB1aAkn1sa2xP7gqd4XriuPsxX9JfXEtn7wqG4/p0sG6KLkqfaMUwllfab6CfG+lBxomHipkBAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRutONbp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744010269; c=relaxed/simple;
+	bh=XA8lnQcE0ouvfuzyiI1j3jvd3iAkaYmuoqLOg4BNbYU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Vdg8dFVC1ekcU5VM3Vd4F64Gcp1gLp/VfM1h9hzA/ZdzoLDvaFPGvKSLxHvZFkifiOhCtzpq8zBaHv3czq07fVd+vTD/dwIcvQSDVKbuRkqI9QGjMnnIT14TG6ZQ6zpWiDr7HIFoucTHth2uPjiOwtuykIb9crP2i0FfObd18No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lW6RmWZ+; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRutONbp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B617EC4CEDD;
-	Mon,  7 Apr 2025 07:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744010259;
-	bh=xJjO5xrrilFPpI6mBKh+TwJzScF9WqVhZqd3zYeJSIw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cRutONbpHlN1ZSPZTjguB2x0f33l9njLQS1D88rABmVfG3nEZkbjgHksJ3cKjO4fi
-	 yixsqYmhCGBqGXDrXFnVPZ1rLmJRgzzH4foTv+Ova6dMRDxulLNPHIBJuxlVPKxDkd
-	 oJhWzd/Khql6TtIADoR/oxvUF0VV7mtqTjhthjv9+fLN+n3EAGhgrLw6wByy8coMSG
-	 1edTD31vSGI017jC2OlJoq/Z0V7PplJe2xNFAqI1zhOqZziqYkZpy74hhA8vIbA0r2
-	 4WvDaGJjXyk8LqytWvhU/aFjG2njZ6UwcV81CkF3OLgS6MstGe1YS7H+VFV2tOJtt1
-	 H776i7Vd+IIuw==
-Message-ID: <f213dc91-96db-4c91-a997-72ded078ae10@kernel.org>
-Date: Mon, 7 Apr 2025 09:17:31 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lW6RmWZ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744010268; x=1775546268;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=XA8lnQcE0ouvfuzyiI1j3jvd3iAkaYmuoqLOg4BNbYU=;
+  b=lW6RmWZ+wXW3dNdCvB87z4tMWoMJ8X0d21g6nDskE2hj2sZGp6HIR6Qe
+   Y4uc5VoB7p42TNp98OJR3Ppy/9y4JkjeCiWvRxAApxFReW5rO7mrHJQgJ
+   niedBKbmrrTCLdyU20YBdwNYmuYnXPKevKeJ/L20iF28+M/TeCo6ohiqg
+   uobLxSHAB8XYBn8q9kiV5E5I/tgPeX6yVJjDHUVAhHnILamwTYTi+aNUn
+   u5ec3egIIfNC27Lwnvwk/aqPFy30OE+RRbQZwI8VXo1WV0CckzZnayG/d
+   isbanZT3m3WHjODJ45YGOI2vT/ttymYPdg+ZNewCqo+tlAvaPoQJihigj
+   Q==;
+X-CSE-ConnectionGUID: 6zKPLC9uQVajJFjiicIRiw==
+X-CSE-MsgGUID: 1LrXzt01R2C86XnMW3b63w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="48093718"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="48093718"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 00:17:47 -0700
+X-CSE-ConnectionGUID: ba+i4eG2SK2sumghvQt8Xw==
+X-CSE-MsgGUID: Ij/6vasiTuWTBDiU4lA9XA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="127846702"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.51])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 00:17:43 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ linux-kbuild@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2 0/4] kbuild: resurrect generic header check facility
+In-Reply-To: <CAK7LNAS6o_66bUB6-qj6NnaTRNKvu5ycxOP+kGfizYVBNjZAyw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250402124656.629226-1-jani.nikula@intel.com>
+ <CAK7LNAS6o_66bUB6-qj6NnaTRNKvu5ycxOP+kGfizYVBNjZAyw@mail.gmail.com>
+Date: Mon, 07 Apr 2025 10:17:40 +0300
+Message-ID: <878qoczbhn.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/57] irqdomain: pci: Switch to of_fwnode_handle()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
- Jingoo Han <jingoohan1@gmail.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Toan Le <toan@os.amperecomputing.com>,
- Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Michal Simek
- <michal.simek@amd.com>, Daire McNamara <daire.mcnamara@microchip.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250321163240.GA1130095@bhelgaas>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250321163240.GA1130095@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 21. 03. 25, 17:32, Bjorn Helgaas wrote:
-> On Wed, Mar 19, 2025 at 10:29:00AM +0100, Jiri Slaby (SUSE) wrote:
->> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
->> defined of_fwnode_handle(). The former is in the process of being
->> removed, so use the latter instead.
-> 
-> I'm fine with these and happy to apply via the PCI tree, but it sounds
-> like you're planning a v3 with a few updates, so I'll hold off for
-> now:
-> 
-> https://lore.kernel.org/r/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org
+On Fri, 04 Apr 2025, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> On Wed, Apr 2, 2025 at 9:47=E2=80=AFPM Jani Nikula <jani.nikula@intel.com=
+> wrote:
+>>
+>> Another go at hiding the turds.
+>>
+>> In v1 [1] I hid the build artifacts under .hdrtest subdirectories, one i=
+n each
+>> $(obj) directory, but the feedback from Linus [2] was to have one top le=
+vel
+>> directory for this.
+>>
+>> This is not possible without turning the whole thing back into a generic=
+ header
+>> check facility. Personally, I think this is a good thing. Just look at p=
+atches
+>> 2-4, it's great.
+>>
+>> The main reason we've been doing this in the subsystem/driver level at a=
+ll is
+>> the opposition from the kbuild maintainer. We'd very much like for Masah=
+iro to
+>> support us in our efforts, but without that support, we're limited to ha=
+cking in
+>> the subsystem/driver Makefiles.
+>>
+>> BR,
+>> Jani.
+>>
+>>
+>> [1] https://lore.kernel.org/r/20250401121830.21696-1-jani.nikula@intel.c=
+om
+>>
+>> [2] https://lore.kernel.org/r/CAHk-=3DwiP0ea7xq2P3ryYs6xGWoqTw1E4jha67Zb=
+JkaFrjqUdkQ@mail.gmail.com
+>>
+>>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>
+>
+> NACK.
+>
+> This does not solve any real issue, except making Linus happy
+> - Sure, he is happy as long as he no longer has to see the turds.
+>
+> This patch merely hides the turds by moving all the
+> header-test build artifacts under the .header-check/
+> and introducing CONFIG_HEADER_CHECK_DISABLE.
+> Yes, Linus advised us to hide all the turds because he cares
+> about the TAB-completion.
+>
+> But to me, from the Kbuild perspective, this is not a solution at all.
+> What is worse, Jani is pushing his workaround into the common
+> Kbuild Makefiles, which I maintain, and he is even make this
+> broken feature widely accessible.
+>
+> I agree with Jason.
+> His idea sounds better, although I do not have enough time
+> for investigating it further or implementing it now.
+>
+>
+> At least, this patchset is not something we should rush into.
 
-Right, there will be a v3 to deal better with irq_domain_create_*()'s 
-first parameter (patches 13-39/57 later in this series).
+I expect much better rationale for NAKs than this.
 
-But this very patch (of_fwnode_handle() cleanup sub-series) won't be 
-affected, so please take it through your tree, if you can.
+The shortcoming in this series is that it offloads the decision *which*
+header files to check to the subsystems and drivers that actually opt-in
+to having the header files to be checked. Because you have to opt-in
+anyway, because not everyone wants this.
 
-I will fix up the _create_ subseries and resend non-merged patches from 
-this series in v3 later. So it's also fine to wait for v3. (But less I 
-have to resend (unmodified), the better ;).)
+This makes concrete forward progress, and enables subsystems (like drm)
+and drivers (like i915 and xe) have their headers checked the way they
+want. It converts the local hacks into a generic solution. And does not
+block future improvements.
 
-thanks,
--- 
-js
-suse labs
+Even with Jason's idea [1], you *still* have to start small and opt-in
+(i.e. the patch series at hand). You can't just start off by testing
+every header in one go, because it's a flag day switch. There'll be so
+many warnings that it's useless. This series only spotted one omission
+of header guards, because we've gradually cleaned stuff up. Oh, and
+there's the small detail that the idea is not backed up by any code or
+testing.
+
+I fully expect sharp and concrete technical review, but handwavy "does
+not solve any real issue", "workaround", and "broken feature" comments
+don't help anyone.
+
+With this type of antagonistic rather than encouraging attitude towards
+contributions, there's just no way I can justify to myself (or my
+employer) spending more time on what looks like a wild goose chase. I
+have zero confidence that no matter what I do I'd get approval from you.
+
+And this is the primary reason subsystems and drivers hack up stuff in
+their little corners of the kernel instead of sticking their necks out
+and trying to generalize anything.
+
+BR,
+Jani.
+
+
+[1] https://lore.kernel.org/r/20250401191455.GC325917@nvidia.com
+
+
+>
+>> Cc: David Airlie <airlied@gmail.com>
+>> Cc: Simona Vetter <simona.vetter@ffwll.ch>
+>> Cc: linux-kbuild@vger.kernel.org
+>> Cc: dri-devel@lists.freedesktop.org
+>> Cc: intel-xe@lists.freedesktop.org
+>> Cc: intel-gfx@lists.freedesktop.org
+>>
+>>
+>> Jani Nikula (4):
+>>   kbuild: add generic header check facility
+>>   drm: switch to generic header check facility
+>>   drm/i915: switch to generic header check facility
+>>   drm/xe: switch to generic header check facility
+>>
+>>  drivers/gpu/drm/Kconfig           |  2 +-
+>>  drivers/gpu/drm/Makefile          | 15 +--------------
+>>  drivers/gpu/drm/i915/Makefile     | 14 ++------------
+>>  drivers/gpu/drm/xe/Makefile       | 10 ++--------
+>>  drivers/gpu/drm/xe/xe_pcode_api.h |  4 ++++
+>>  include/drm/Makefile              | 15 +--------------
+>>  init/Kconfig                      | 25 +++++++++++++++++++++++++
+>>  scripts/Makefile.build            | 13 +++++++++++++
+>>  scripts/Makefile.lib              |  7 +++++++
+>>  9 files changed, 56 insertions(+), 49 deletions(-)
+>>
+>> --
+>> 2.39.5
+>>
+
+--=20
+Jani Nikula, Intel
