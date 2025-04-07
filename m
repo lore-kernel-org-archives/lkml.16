@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08EA22CBF9;
-	Mon,  7 Apr 2025 06:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBC822D4DB;
+	Mon,  7 Apr 2025 06:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008797; cv=none; b=iUf7pYPVN1QNQHZf2F26z0zOxfzbOxIZqlERV8JDMNnX1aAaGDr7nrB4Mn6vnC6Mh+jF70pVWbXAx/90PcQfgbF5i/ngxoHgODxvZ1wIqez0NdqUULnQSom5pDQ4uiiukVpr9i6uvM4O43iK26yKX+RE822ldoNfXdLCqkVpF0Q=
+	t=1744008798; cv=none; b=XdP8Js+qfIR466dgD/7nBQvPFJaJgHhSUiHwswfwRI1MqBCl2M6Kv5CB/j9BF5a9hxHx+xuQkwsESaGRCq3pSKUAOgqNkvGBA8Z+FE2dtOhnosWFpeS5KTAo0/U2VIlVUcblMy0zU+JW2nAV9Ld1eSxRMkbQpNI/IIXxnSMAEL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008797; c=relaxed/simple;
-	bh=tt5NS4cBLTbNoJ7EV6vHy54O54vj6AeymCsD10sDXy0=;
+	s=arc-20240116; t=1744008798; c=relaxed/simple;
+	bh=HtVJce/zltJfmoUxHSGByH8pfwgO3OfNF4RtzIB7sOk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AUvXGo0huyP5OA/mjXgaTNE2SmA7DjCz2heH1LNw0Cn2RnSP2L9vHtTQMnP+BsDeF1CId/Mtoz0M62S/VAHCVU35m4Ui6pYYr6Ic/afR9BAz2TNP+320X31540RrqKyqRXg4QBMRhDjteXsU6LhvludCO6/bAhtgTJkKlmy4h60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cabcOXmZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9BhbHd0s; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=eIYWU2+x9gnUxUT/blrgHdr7LC+MCTodQOHjptlg98poK9rBDSSj/oZguy9+l5AUpbRiON2UEyQ/oLOiwY55esqmBSPQsS/b8CGoGt9CP4GIU5XmQsIm1rZGGZf+LZ5u3I1yz5QLRgQ0cSkpzyiTiEFUDcTGDwpJG+ybh0h4fqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LjKZNFeK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LG3JWloy; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cabcOXmZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9BhbHd0s"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LjKZNFeK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LG3JWloy"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008794;
+	s=2020; t=1744008795;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2u19rqjC1rYwxFvMglNkhCFpgxOoiJO9w3f9eDb1mvo=;
-	b=cabcOXmZk9YOq7XN1PSQx2o9bgs7u+tx2aYHCPHeMBQpKYnF0zk68ssaXbNENl1Dt4WVGL
-	jZDKe/difepVa0ekrPPZEkN/NY4ZY9cd5bo+81yRPYbgGHM3QPJonWLCKI5eyslGVII2kS
-	0a6H6VrJroNGtDvBApe+fz+QiuvVMhZJa6qZ3Pi1I5CmXBDaPBYc6cvv8YR3t9Llu6ayIJ
-	JlgJycG7QvfSnYvVOH+iCWf50IfUrRVli3o3YhKX65dJ/xhlMebW/If1ZeUEYk1eAeljbB
-	gG4kL84jDGynnetCaKPMmTh6jl4hEzvlBff5IjDh5Jvzb0kJeFwDvpluaSozkw==
+	bh=pvBGqGX78XvKEVW6i13ta4x/bQjOWTVre+e55nvMR/A=;
+	b=LjKZNFeKaT5zlIG0HQqN+TdGrfIZkHYq+m9pS6BXEA1IZ946yhU1d9QUuiV+FKg9wcFeeA
+	y+KrTekmnLlsHN9fDld0c1OKCK+VXLaeEVCYoDUP8Uy2NLuJRcx3xC51ycXVj1NaCzn2r7
+	ou5tCsXzZVZRhdNYyYDM0u6YVuHXX2RB5zCdR/bnaZa94ENPxkZxbQBFE1eSnDgMMuizZy
+	AunHcxoAOZXzqhlIOuLVueyXihf05dq1FGAgGLFxq/SJ8Vx+IzJoju9flVpvi2Xqws4mB7
+	JmagNIe3R5aupFsg9RZlxaVOOqqOFDdPKgMn3S5xL8bl7tKAN2cTsXRnZI6zVA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008794;
+	s=2020e; t=1744008795;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2u19rqjC1rYwxFvMglNkhCFpgxOoiJO9w3f9eDb1mvo=;
-	b=9BhbHd0sLMuS+UtiV4owJ2ZJ1bxgy/9DLD/6vVMjy3zWNYnPawW2LRkV1eBhB3NCC6cYg0
-	jJssi8LutzO4qlDA==
-Date: Mon, 07 Apr 2025 08:52:47 +0200
-Subject: [PATCH v2 24/32] tools/nolibc: add getopt()
+	bh=pvBGqGX78XvKEVW6i13ta4x/bQjOWTVre+e55nvMR/A=;
+	b=LG3JWloykDvoRMJEKshLOVrrzK6rE2Tx/36yZrKqYlpCXI0ckO72s21bTvnwcXQlScR0Db
+	BoWibW9NDiiS7oAw==
+Date: Mon, 07 Apr 2025 08:52:49 +0200
+Subject: [PATCH v2 26/32] tools/nolibc: allow limiting of printf
+ destination size
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-24-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-26-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,157 +58,69 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=3808;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=2100;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=tt5NS4cBLTbNoJ7EV6vHy54O54vj6AeymCsD10sDXy0=;
- b=LRL2J5pb4wAWcxHeNVNEvKmL9deo7/Ny/Vj8QxpZmPcTEQobICspcxBRFrmX8yljcYemA2QOz
- znzzAOHX/JfCMXPLoMk1f/MnrmLqddspPwdmdXLtaKSawpqkFwZejaT
+ bh=HtVJce/zltJfmoUxHSGByH8pfwgO3OfNF4RtzIB7sOk=;
+ b=IqgTPpO3PWnUMN4VmPuep8LFP/X0mBYJeu1nuF5O9IQhGCEnuk4jDyCNBDcwdzqaacw/3ljjX
+ YdrUmm3BSikDE7XGyiTwRvMH1lTnDW8LogMKafJh/1w2cEAoA7Vao4I
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Introduce a getopt() implementation based on the one from musl.
-The only deviations are adaption to the kernel coding style and nolibc
-infrastructure and removal of multi-byte support.
+snprintf() allows limiting the output buffer, while still returning the
+number of all bytes that would have been written.
+Implement the limitation logic in preparation for snprintf().
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Acked-by: Willy Tarreau <w@1wt.eu>
 ---
- tools/include/nolibc/Makefile |   1 +
- tools/include/nolibc/getopt.h | 101 ++++++++++++++++++++++++++++++++++++++++++
- tools/include/nolibc/nolibc.h |   1 +
- 3 files changed, 103 insertions(+)
+ tools/include/nolibc/stdio.h | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index f9702877ac21ab5ad30df1740e40e67f477f3824..e47e1607bab82f1d91effc025c9257e8a451f047 100644
---- a/tools/include/nolibc/Makefile
-+++ b/tools/include/nolibc/Makefile
-@@ -31,6 +31,7 @@ all_files := \
- 		ctype.h \
- 		dirent.h \
- 		errno.h \
-+		getopt.h \
- 		limits.h \
- 		nolibc.h \
- 		signal.h \
-diff --git a/tools/include/nolibc/getopt.h b/tools/include/nolibc/getopt.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..5fd06c9702e96e8c58a6b242f535bca09db69343
---- /dev/null
-+++ b/tools/include/nolibc/getopt.h
-@@ -0,0 +1,101 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * getopt function definitions for NOLIBC, adapted from musl libc
-+ * Copyright (C) 2005-2020 Rich Felker, et al.
-+ * Copyright (C) 2025 Thomas Weißschuh <linux@weissschuh.net>
-+ */
-+
-+#ifndef _NOLIBC_GETOPT_H
-+#define _NOLIBC_GETOPT_H
-+
-+struct FILE;
-+static struct FILE *const stderr;
-+static int fprintf(struct FILE *stream, const char *fmt, ...);
-+
-+__attribute__((weak,unused,section(".data.nolibc_getopt")))
-+char *optarg;
-+
-+__attribute__((weak,unused,section(".data.nolibc_getopt")))
-+int optind = 1, opterr = 1, optopt;
-+
-+static __attribute__((unused))
-+int getopt(int argc, char * const argv[], const char *optstring)
-+{
-+	static int __optpos;
-+	int i;
-+	char c, d;
-+	char *optchar;
-+
-+	if (!optind) {
-+		__optpos = 0;
-+		optind = 1;
-+	}
-+
-+	if (optind >= argc || !argv[optind])
-+		return -1;
-+
-+	if (argv[optind][0] != '-') {
-+		if (optstring[0] == '-') {
-+			optarg = argv[optind++];
-+			return 1;
-+		}
-+		return -1;
-+	}
-+
-+	if (!argv[optind][1])
-+		return -1;
-+
-+	if (argv[optind][1] == '-' && !argv[optind][2])
-+		return optind++, -1;
-+
-+	if (!__optpos)
-+		__optpos++;
-+	c = argv[optind][__optpos];
-+	optchar = argv[optind] + __optpos;
-+	__optpos++;
-+
-+	if (!argv[optind][__optpos]) {
-+		optind++;
-+		__optpos = 0;
-+	}
-+
-+	if (optstring[0] == '-' || optstring[0] == '+')
-+		optstring++;
-+
-+	i = 0;
-+	d = 0;
-+	do {
-+		d = optstring[i++];
-+	} while (d && d != c);
-+
-+	if (d != c || c == ':') {
-+		optopt = c;
-+		if (optstring[0] != ':' && opterr)
-+			fprintf(stderr, "%s: unrecognized option: %c\n", argv[0], *optchar);
-+		return '?';
-+	}
-+	if (optstring[i] == ':') {
-+		optarg = 0;
-+		if (optstring[i + 1] != ':' || __optpos) {
-+			optarg = argv[optind++];
-+			if (__optpos)
-+				optarg += __optpos;
-+			__optpos = 0;
-+		}
-+		if (optind > argc) {
-+			optopt = c;
-+			if (optstring[0] == ':')
-+				return ':';
-+			if (opterr)
-+				fprintf(stderr, "%s: option requires argument: %c\n",
-+					argv[0], *optchar);
-+			return '?';
-+		}
-+	}
-+	return c;
-+}
-+
-+/* make sure to include all global symbols */
-+#include "nolibc.h"
-+
-+#endif /* _NOLIBC_GETOPT_H */
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 70872401aca8d5aa37b12ee585193353f692576d..187490535d1359aff371e2981118e62bcc0c6948 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -105,6 +105,7 @@
- #include "time.h"
- #include "stackprotector.h"
- #include "dirent.h"
-+#include "getopt.h"
+diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
+index 5c893b4903a3040a366e11b600ccde30913d7db2..b17b473bd8751a6283309178b4848e61e1683305 100644
+--- a/tools/include/nolibc/stdio.h
++++ b/tools/include/nolibc/stdio.h
+@@ -215,13 +215,13 @@ char *fgets(char *s, int size, FILE *stream)
+  */
+ typedef int (*__nolibc_printf_cb)(intptr_t state, const char *buf, size_t size);
  
- /* Used by programs to avoid std includes */
- #define NOLIBC
+-static __attribute__((unused, format(printf, 3, 0)))
+-int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, const char *fmt, va_list args)
++static __attribute__((unused, format(printf, 4, 0)))
++int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, size_t n, const char *fmt, va_list args)
+ {
+ 	char escape, lpref, c;
+ 	unsigned long long v;
+ 	unsigned int written;
+-	size_t len, ofs;
++	size_t len, ofs, w;
+ 	char tmpbuf[21];
+ 	const char *outstr;
+ 
+@@ -306,8 +306,12 @@ int __nolibc_printf(__nolibc_printf_cb cb, intptr_t state, const char *fmt, va_l
+ 			outstr = fmt;
+ 			len = ofs - 1;
+ 		flush_str:
+-			if (cb(state, outstr, len) != 0)
+-				break;
++			if (n) {
++				w = len < n ? len : n;
++				n -= w;
++				if (cb(state, outstr, w) != 0)
++					break;
++			}
+ 
+ 			written += len;
+ 		do_escape:
+@@ -331,7 +335,7 @@ static int __nolibc_fprintf_cb(intptr_t state, const char *buf, size_t size)
+ static __attribute__((unused, format(printf, 2, 0)))
+ int vfprintf(FILE *stream, const char *fmt, va_list args)
+ {
+-	return __nolibc_printf(__nolibc_fprintf_cb, (intptr_t)stream, fmt, args);
++	return __nolibc_printf(__nolibc_fprintf_cb, (intptr_t)stream, SIZE_MAX, fmt, args);
+ }
+ 
+ static __attribute__((unused, format(printf, 1, 0)))
 
 -- 
 2.49.0
