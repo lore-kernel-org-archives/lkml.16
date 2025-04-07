@@ -1,135 +1,432 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DA6229B2C
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B101227EBB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016085; cv=none; b=XQW6TyVW0VxQmfni5BKkJZEqI/Cj7gXAN5/x5dA9rN5SES+gGdNlf0YrBd8chm6IHb0eFFqvMdB1tP1KYrVfyXvkJPVC9RAjCynqn8LZiMOxldCiWkKKwdo78IoFemFsY4FErQ6miDtYuKadJMQEPCM8fSdP8NLX71ebiaR5bSo=
+	t=1744016100; cv=none; b=cxY1uBdS2BvnGO9Xg9OpspHgJSfqfVgdNNIXoJ9RboFfuzU7m6cEnJ7PHFpH2bAUMZubhkmuiaMwtWPSpIZ4VK89Ap52OEMG7DhpO50X5W5GG6momPo3C926ZAJpuo/D92P8e7Bj9FXCN41yYmAfw6Z1n0mkVnqxucJc2hmq7vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016085; c=relaxed/simple;
-	bh=R+0sWKhqbThzPkae+5wVut0fKNCyuXS4OYJ/SETg+GQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i1O5Aome/d/9zd/iMvBosqLVCSJYITz5exzRlFljk717AQRX5ANH1M9No+c385iLBmXXnoruZge+OYj98Saq//a0vdSdB2xh9BzylpnyWuoFV+2ByKSadV3JjClAm9zuCWxjPoRiBm5phl7fdIQDx+GFyK0RU4vm47QGQvO/7ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OI6D7Op7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744016100; c=relaxed/simple;
+	bh=S/krgJ47mHcWOwClo3HTb0co93o+dijfVcRLgxutwHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m2Wh3TfqicnAuoKbSlP927FYylYiY9UwTpoR/PIfdaQuuKStISv8B0Q+dQTQze6BssaSQ2M4RUSCr9WcfDqBhBcBcy8s1kUJrQfI483QCstq377lA/qQu2n4jJUdWZXeC5qr4zLAk7C5uTDfGe8i8mu+YGAx3yp0ZydlS82/Vjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eCwmTJwu; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OI6D7Op7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744016082;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eCwmTJwu"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744016086;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MAmqbLHdw+HuKBAeHI83rPkmOKB4Sfbwt9oiDo5180k=;
-	b=OI6D7Op7j81Ld2tGFDWanBI/NtuPw8FNZbFIximhPKwXGVWzDfSaetmGOSkEK8pubNG4be
-	sF/cT3ZJprHYxzZVSdhneM1LaaTMEXmQZDpvZ5N10uEKpMjnDe9++2Kv0bXodtdLn0KQl3
-	BnI0mG3s0onTc7m/4bAtAKsBonOpVz4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-601-oQ1Im2SDNcWK-NQGGijOew-1; Mon, 07 Apr 2025 04:54:41 -0400
-X-MC-Unique: oQ1Im2SDNcWK-NQGGijOew-1
-X-Mimecast-MFC-AGG-ID: oQ1Im2SDNcWK-NQGGijOew_1744016080
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so21191085e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:54:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744016080; x=1744620880;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MAmqbLHdw+HuKBAeHI83rPkmOKB4Sfbwt9oiDo5180k=;
-        b=GgQ9wlnN+W5pmxRdbKiuOldkUm5IRQtfhDsU61KtRhJ0Mik5qK3VhC1ouxC5e7sdbR
-         PU6Mgw5VSh96HfQBCJjNjtZSN3kNovEaehPZVvywOxbxqc7OQ8QZWMrrmPilIlk/Xn4O
-         A+wZLTJ4yRY+DDVWQ1KxwuaXqu0vMeyBfgQGhUvauwiKQBGj+ckWJB4c/D/PSfWQmTOJ
-         6KTDsDauq0H9riZ/DVInIOMbm9y+dNtomRbd/yfFVOtk1OL3jLOPd8gfxd23utWFBZbQ
-         7A+/Q8J+/CRpEnmovJrxNNqSy84itzgyNTqA3A3vT3U9QhZd2eEek5mPglxMrSWfeBVl
-         Dj8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpRotGQoApDNIVZmHeEuOVO2796lyKwHDkWhLKSeRKhyJRF9HtQpLcLZujywrqM+ULf8odGCFWU2PmKUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoSekoWMF219M4/ZM64nTENfL0n4WUXNP6epY8b3dYZmYRjw8u
-	fJzP1OiuI4ibNzmOQXTyNPgbipLDOyfyrlgMQZqp86oU22NVo9bLkUy2IRYFmwfneXfT07YlCuG
-	lJlYOLkrBqLB/tHrahg0NNT1bMWscPxXMMgsiQwa6Xh5ZWpTMoNqy3rUS6VIrwg==
-X-Gm-Gg: ASbGncvraYuHGyHxb+TsmrYji4ZPqKGasJXObYDnyoat05606awo79MQTDH9fK85lXd
-	q/8cVFDh1qvw1i19pSQeTwSWSx4eKn/0b3G2z/xn8ELYD8/VOjXSNUJBgUrpYlUiz46U4Fax8XW
-	JTN3QEwD1U1eNeeWSbpXDPGEtOahLMW80RtAyqwMt1zioBKIEiuq/ckb3mdGp1keBWI8+wxqCVd
-	GEPnD8z3KZTZLdw3McpqRctr33qGoxh/uVAOJWhrjNMPPQNHtabebk8pOgm/0pYy8EwUhfu8Mrc
-	OLz1DVdE0g==
-X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr95894175e9.20.1744016080218;
-        Mon, 07 Apr 2025 01:54:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGH8IW0yqzJPKyGZGPD6qVstVRgqzDFHSOjqPBtRY8GjulSPFiJgnNYxrGMbcuC1XF3d2jQRg==
-X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr95893945e9.20.1744016079846;
-        Mon, 07 Apr 2025 01:54:39 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a75fcsm121633225e9.11.2025.04.07.01.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:54:39 -0700 (PDT)
-Date: Mon, 7 Apr 2025 04:54:36 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407045009-mutt-send-email-mst@kernel.org>
-References: <20250402203621.940090-1-david@redhat.com>
- <20250403161836.7fe9fea5.pasic@linux.ibm.com>
- <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
- <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250406144025-mutt-send-email-mst@kernel.org>
- <4450ec71-8a8f-478c-a66e-b53d858beb02@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uZTCm0LxWsnE3tYH357Upfibjs77OsM/NB9Y2oX27PE=;
+	b=eCwmTJwuriVtW9CejDnYuY98GUudC4abWzVHy9TV+D7BtP+GbflTsGpyfc0MyEYJgdQ1CI
+	LWJ3meLEcrI7BlwoQHM241nrKkwNN6T1W6A5yuKVIAzGAPUGWi1cU+FDs66nS67pJ2CfYY
+	BvxW+WaWc40WmTORz7ew4G7QvGBqHCc=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Ingo Molnar <mingo@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf/x86: Rename local bts_buffer variables
+Date: Mon,  7 Apr 2025 10:52:53 +0200
+Message-ID: <20250407085253.742834-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4450ec71-8a8f-478c-a66e-b53d858beb02@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 07, 2025 at 09:18:21AM +0200, David Hildenbrand wrote:
-> > Now I am beginning to think we should leave the spec alone
-> > and fix the drivers ... Ugh ....
-> 
-> We could always say that starting with feature X, queue indexes are fixed
-> again. E.g., VIRTIO_BALLOON_F_X would have it's virtqueue fixed at index 5,
-> independent of the other (older) features where the virtqueue indexes are
-> determined like today.
-> 
-> Won't make the implementation easier, though, I'm afraid.
-> 
-> (I also thought about a way to query the virtqueue index for a feature, but
-> that's probably overengineering)
+Rename struct bts_buffer objects from 'buf' to 'bb' to improve the
+readability when accessing the structure's 'buf' member. For example,
+'buf->buf[]' becomes 'bb->buf[]'.
 
-The best contract we have is the spec. Sometimes it is hopelessly broken
-and we have to fix it, but not in this case.
+Indent line 327 using tabs to silence a checkpatch warning.
 
-Let's do a theoretical excercise, assuming we want to fix the drivers,
-but we also want to have workarounds in place in qemu and in
-drivers to support existing ones. How would we go about it?
+No functional changes intended.
 
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- struct_size() change should be a separate patch as suggested by Peter
+- Link to v1: https://lore.kernel.org/lkml/20250331122938.1837255-2-thorsten.blum@linux.dev/
+---
+ arch/x86/events/intel/bts.c | 144 ++++++++++++++++++------------------
+ 1 file changed, 72 insertions(+), 72 deletions(-)
 
-
-Maybe we want a feature bit BALLOON_FIXED and ask everyone
-to negotiate it?  But if we go this way, we really need to fix
-the 48 bit limitation too.
-
-
-
-
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index a95e6c91c4d7..16bc89c8023b 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -80,54 +80,54 @@ static void *
+ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		     int nr_pages, bool overwrite)
+ {
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 	struct page *page;
+ 	int cpu = event->cpu;
+ 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
+ 	unsigned long offset;
+ 	size_t size = nr_pages << PAGE_SHIFT;
+-	int pg, nbuf, pad;
++	int pg, nr_buf, pad;
+ 
+ 	/* count all the high order buffers */
+-	for (pg = 0, nbuf = 0; pg < nr_pages;) {
++	for (pg = 0, nr_buf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+ 		pg += buf_nr_pages(page);
+-		nbuf++;
++		nr_buf++;
+ 	}
+ 
+ 	/*
+ 	 * to avoid interrupts in overwrite mode, only allow one physical
+ 	 */
+-	if (overwrite && nbuf > 1)
++	if (overwrite && nr_buf > 1)
+ 		return NULL;
+ 
+-	buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
+-	if (!buf)
++	bb = kzalloc_node(offsetof(struct bts_buffer, buf[nr_buf]), GFP_KERNEL, node);
++	if (!bb)
+ 		return NULL;
+ 
+-	buf->nr_pages = nr_pages;
+-	buf->nr_bufs = nbuf;
+-	buf->snapshot = overwrite;
+-	buf->data_pages = pages;
+-	buf->real_size = size - size % BTS_RECORD_SIZE;
++	bb->nr_pages = nr_pages;
++	bb->nr_bufs = nr_buf;
++	bb->snapshot = overwrite;
++	bb->data_pages = pages;
++	bb->real_size = size - size % BTS_RECORD_SIZE;
+ 
+-	for (pg = 0, nbuf = 0, offset = 0, pad = 0; nbuf < buf->nr_bufs; nbuf++) {
++	for (pg = 0, nr_buf = 0, offset = 0, pad = 0; nr_buf < bb->nr_bufs; nr_buf++) {
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+ 		__nr_pages = buf_nr_pages(page);
+-		buf->buf[nbuf].page = page;
+-		buf->buf[nbuf].offset = offset;
+-		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
+-		buf->buf[nbuf].size = buf_size(page) - buf->buf[nbuf].displacement;
+-		pad = buf->buf[nbuf].size % BTS_RECORD_SIZE;
+-		buf->buf[nbuf].size -= pad;
++		bb->buf[nr_buf].page = page;
++		bb->buf[nr_buf].offset = offset;
++		bb->buf[nr_buf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
++		bb->buf[nr_buf].size = buf_size(page) - bb->buf[nr_buf].displacement;
++		pad = bb->buf[nr_buf].size % BTS_RECORD_SIZE;
++		bb->buf[nr_buf].size -= pad;
+ 
+ 		pg += __nr_pages;
+ 		offset += __nr_pages << PAGE_SHIFT;
+ 	}
+ 
+-	return buf;
++	return bb;
+ }
+ 
+ static void bts_buffer_free_aux(void *data)
+@@ -135,25 +135,25 @@ static void bts_buffer_free_aux(void *data)
+ 	kfree(data);
+ }
+ 
+-static unsigned long bts_buffer_offset(struct bts_buffer *buf, unsigned int idx)
++static unsigned long bts_buffer_offset(struct bts_buffer *bb, unsigned int idx)
+ {
+-	return buf->buf[idx].offset + buf->buf[idx].displacement;
++	return bb->buf[idx].offset + bb->buf[idx].displacement;
+ }
+ 
+ static void
+-bts_config_buffer(struct bts_buffer *buf)
++bts_config_buffer(struct bts_buffer *bb)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
+-	struct bts_phys *phys = &buf->buf[buf->cur_buf];
++	struct bts_phys *phys = &bb->buf[bb->cur_buf];
+ 	unsigned long index, thresh = 0, end = phys->size;
+ 	struct page *page = phys->page;
+ 
+-	index = local_read(&buf->head);
++	index = local_read(&bb->head);
+ 
+-	if (!buf->snapshot) {
+-		if (buf->end < phys->offset + buf_size(page))
+-			end = buf->end - phys->offset - phys->displacement;
++	if (!bb->snapshot) {
++		if (bb->end < phys->offset + buf_size(page))
++			end = bb->end - phys->offset - phys->displacement;
+ 
+ 		index -= phys->offset + phys->displacement;
+ 
+@@ -168,7 +168,7 @@ bts_config_buffer(struct bts_buffer *buf)
+ 	ds->bts_buffer_base = (u64)(long)page_address(page) + phys->displacement;
+ 	ds->bts_index = ds->bts_buffer_base + index;
+ 	ds->bts_absolute_maximum = ds->bts_buffer_base + end;
+-	ds->bts_interrupt_threshold = !buf->snapshot
++	ds->bts_interrupt_threshold = !bb->snapshot
+ 		? ds->bts_buffer_base + thresh
+ 		: ds->bts_absolute_maximum + BTS_RECORD_SIZE;
+ }
+@@ -184,16 +184,16 @@ static void bts_update(struct bts_ctx *bts)
+ {
+ 	int cpu = raw_smp_processor_id();
+ 	struct debug_store *ds = per_cpu(cpu_hw_events, cpu).ds;
+-	struct bts_buffer *buf = perf_get_aux(&bts->handle);
++	struct bts_buffer *bb = perf_get_aux(&bts->handle);
+ 	unsigned long index = ds->bts_index - ds->bts_buffer_base, old, head;
+ 
+-	if (!buf)
++	if (!bb)
+ 		return;
+ 
+-	head = index + bts_buffer_offset(buf, buf->cur_buf);
+-	old = local_xchg(&buf->head, head);
++	head = index + bts_buffer_offset(bb, bb->cur_buf);
++	old = local_xchg(&bb->head, head);
+ 
+-	if (!buf->snapshot) {
++	if (!bb->snapshot) {
+ 		if (old == head)
+ 			return;
+ 
+@@ -205,9 +205,9 @@ static void bts_update(struct bts_ctx *bts)
+ 		 * old and head are always in the same physical buffer, so we
+ 		 * can subtract them to get the data size.
+ 		 */
+-		local_add(head - old, &buf->data_size);
++		local_add(head - old, &bb->data_size);
+ 	} else {
+-		local_set(&buf->data_size, head);
++		local_set(&bb->data_size, head);
+ 	}
+ 
+ 	/*
+@@ -218,7 +218,7 @@ static void bts_update(struct bts_ctx *bts)
+ }
+ 
+ static int
+-bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
++bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle);
+ 
+ /*
+  * Ordering PMU callbacks wrt themselves and the PMI is done by means
+@@ -232,17 +232,17 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle);
+ static void __bts_event_start(struct perf_event *event)
+ {
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf = perf_get_aux(&bts->handle);
++	struct bts_buffer *bb = perf_get_aux(&bts->handle);
+ 	u64 config = 0;
+ 
+-	if (!buf->snapshot)
++	if (!bb->snapshot)
+ 		config |= ARCH_PERFMON_EVENTSEL_INT;
+ 	if (!event->attr.exclude_kernel)
+ 		config |= ARCH_PERFMON_EVENTSEL_OS;
+ 	if (!event->attr.exclude_user)
+ 		config |= ARCH_PERFMON_EVENTSEL_USR;
+ 
+-	bts_config_buffer(buf);
++	bts_config_buffer(bb);
+ 
+ 	/*
+ 	 * local barrier to make sure that ds configuration made it
+@@ -261,13 +261,13 @@ static void bts_event_start(struct perf_event *event, int flags)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 
+-	buf = perf_aux_output_begin(&bts->handle, event);
+-	if (!buf)
++	bb = perf_aux_output_begin(&bts->handle, event);
++	if (!bb)
+ 		goto fail_stop;
+ 
+-	if (bts_buffer_reset(buf, &bts->handle))
++	if (bts_buffer_reset(bb, &bts->handle))
+ 		goto fail_end_stop;
+ 
+ 	bts->ds_back.bts_buffer_base = cpuc->ds->bts_buffer_base;
+@@ -306,27 +306,27 @@ static void bts_event_stop(struct perf_event *event, int flags)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct bts_ctx *bts = this_cpu_ptr(bts_ctx);
+-	struct bts_buffer *buf = NULL;
++	struct bts_buffer *bb = NULL;
+ 	int state = READ_ONCE(bts->state);
+ 
+ 	if (state == BTS_STATE_ACTIVE)
+ 		__bts_event_stop(event, BTS_STATE_STOPPED);
+ 
+ 	if (state != BTS_STATE_STOPPED)
+-		buf = perf_get_aux(&bts->handle);
++		bb = perf_get_aux(&bts->handle);
+ 
+ 	event->hw.state |= PERF_HES_STOPPED;
+ 
+ 	if (flags & PERF_EF_UPDATE) {
+ 		bts_update(bts);
+ 
+-		if (buf) {
+-			if (buf->snapshot)
++		if (bb) {
++			if (bb->snapshot)
+ 				bts->handle.head =
+-					local_xchg(&buf->data_size,
+-						   buf->nr_pages << PAGE_SHIFT);
++					local_xchg(&bb->data_size,
++						   bb->nr_pages << PAGE_SHIFT);
+ 			perf_aux_output_end(&bts->handle,
+-			                    local_xchg(&buf->data_size, 0));
++					    local_xchg(&bb->data_size, 0));
+ 		}
+ 
+ 		cpuc->ds->bts_index = bts->ds_back.bts_buffer_base;
+@@ -382,19 +382,19 @@ void intel_bts_disable_local(void)
+ }
+ 
+ static int
+-bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
++bts_buffer_reset(struct bts_buffer *bb, struct perf_output_handle *handle)
+ {
+ 	unsigned long head, space, next_space, pad, gap, skip, wakeup;
+ 	unsigned int next_buf;
+ 	struct bts_phys *phys, *next_phys;
+ 	int ret;
+ 
+-	if (buf->snapshot)
++	if (bb->snapshot)
+ 		return 0;
+ 
+-	head = handle->head & ((buf->nr_pages << PAGE_SHIFT) - 1);
++	head = handle->head & ((bb->nr_pages << PAGE_SHIFT) - 1);
+ 
+-	phys = &buf->buf[buf->cur_buf];
++	phys = &bb->buf[bb->cur_buf];
+ 	space = phys->offset + phys->displacement + phys->size - head;
+ 	pad = space;
+ 	if (space > handle->size) {
+@@ -403,10 +403,10 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 	}
+ 	if (space <= BTS_SAFETY_MARGIN) {
+ 		/* See if next phys buffer has more space */
+-		next_buf = buf->cur_buf + 1;
+-		if (next_buf >= buf->nr_bufs)
++		next_buf = bb->cur_buf + 1;
++		if (next_buf >= bb->nr_bufs)
+ 			next_buf = 0;
+-		next_phys = &buf->buf[next_buf];
++		next_phys = &bb->buf[next_buf];
+ 		gap = buf_size(phys->page) - phys->displacement - phys->size +
+ 		      next_phys->displacement;
+ 		skip = pad + gap;
+@@ -431,8 +431,8 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 				 * anymore, so we must not be racing with
+ 				 * bts_update().
+ 				 */
+-				buf->cur_buf = next_buf;
+-				local_set(&buf->head, head);
++				bb->cur_buf = next_buf;
++				local_set(&bb->head, head);
+ 			}
+ 		}
+ 	}
+@@ -445,7 +445,7 @@ bts_buffer_reset(struct bts_buffer *buf, struct perf_output_handle *handle)
+ 		space -= space % BTS_RECORD_SIZE;
+ 	}
+ 
+-	buf->end = head + space;
++	bb->end = head + space;
+ 
+ 	/*
+ 	 * If we have no space, the lost notification would have been sent when
+@@ -462,7 +462,7 @@ int intel_bts_interrupt(void)
+ 	struct debug_store *ds = this_cpu_ptr(&cpu_hw_events)->ds;
+ 	struct bts_ctx *bts;
+ 	struct perf_event *event;
+-	struct bts_buffer *buf;
++	struct bts_buffer *bb;
+ 	s64 old_head;
+ 	int err = -ENOSPC, handled = 0;
+ 
+@@ -485,8 +485,8 @@ int intel_bts_interrupt(void)
+ 	if (READ_ONCE(bts->state) == BTS_STATE_STOPPED)
+ 		return handled;
+ 
+-	buf = perf_get_aux(&bts->handle);
+-	if (!buf)
++	bb = perf_get_aux(&bts->handle);
++	if (!bb)
+ 		return handled;
+ 
+ 	/*
+@@ -494,26 +494,26 @@ int intel_bts_interrupt(void)
+ 	 * there's no other way of telling, because the pointer will
+ 	 * keep moving
+ 	 */
+-	if (buf->snapshot)
++	if (bb->snapshot)
+ 		return 0;
+ 
+-	old_head = local_read(&buf->head);
++	old_head = local_read(&bb->head);
+ 	bts_update(bts);
+ 
+ 	/* no new data */
+-	if (old_head == local_read(&buf->head))
++	if (old_head == local_read(&bb->head))
+ 		return handled;
+ 
+-	perf_aux_output_end(&bts->handle, local_xchg(&buf->data_size, 0));
++	perf_aux_output_end(&bts->handle, local_xchg(&bb->data_size, 0));
+ 
+-	buf = perf_aux_output_begin(&bts->handle, event);
+-	if (buf)
+-		err = bts_buffer_reset(buf, &bts->handle);
++	bb = perf_aux_output_begin(&bts->handle, event);
++	if (bb)
++		err = bts_buffer_reset(bb, &bts->handle);
+ 
+ 	if (err) {
+ 		WRITE_ONCE(bts->state, BTS_STATE_STOPPED);
+ 
+-		if (buf) {
++		if (bb) {
+ 			/*
+ 			 * BTS_STATE_STOPPED should be visible before
+ 			 * cleared handle::event
 -- 
-MST
+2.49.0
 
