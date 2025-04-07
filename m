@@ -1,256 +1,274 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F86A1DFE12;
-	Mon,  7 Apr 2025 14:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9AA1DFE12;
+	Mon,  7 Apr 2025 14:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037953; cv=none; b=i4bCT3pHT+dEHxyI3T1dhhA6QzyPbd4Oy9aWipBrlnkzNCo4PNOQESOQC0k85rPZjY1GWIOTg+rEdj/TtlFs+o/JCSmhatm5x8fSbm+/TQ70uiqPhqunGnQyREJca8Sf7bssgO66CcA+4vf9q1hEYxl9Ny11Bx//GuWEAIU5JrA=
+	t=1744037963; cv=none; b=UdbV5TXwUhgHCwYfFJGaNAi6R3SUQH1bqzAwzhn2dOQhhSWurN2z6goFN/HfqRYh1KycCFpoWUDCFgqRLCgaiGLulxPF/kx+Rmab3id0NSxzfd6MorV5OD54NzUNKtB6upMLjUQTEbldQji643jF63ln3QVkgo6IryBJ1Yd+JX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037953; c=relaxed/simple;
-	bh=AhPmjpq0qyhSX5vVWXOFVA58oUUgjHy5WEesBT7EWSk=;
+	s=arc-20240116; t=1744037963; c=relaxed/simple;
+	bh=HQM4uxn75CYtTEW9gKNjzEOEB2aUrEgmY6X6vzctcEE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZFLCxzR3JtK3k2652kbbV5HnXVfgp2V5NfZnyv92lFAk/5S0XibkZIjoz8SBIBPjHR+9Yw1oRj45XIC7ZBFwFqDmLP33wVwhcyBBYCHhULUAFNefWI3kVbtmI7YRMDPC0btJh2fOmK40q187GvtQSDGN+TOsk3+VG+w/c0x57Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bJ7edHze; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	 Content-Type:MIME-Version; b=gZ9pRMRVtJGmsQgHAn0/Jcm/U7oqpkTMQus2vrKaAOj4UUC9J60Fv+B56AuHXA5vW1AAz+35TkwIh0m7xugm2qW6MWeBQe0mwL0LGSbAoLOKFOB8UHBDWz5ZZyiCi70HYO/3eFASLW2KJBz9QS9K3wtVAdkKKV1gC8y1QogqBO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LwHXP8lX; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bJ7edHze"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fiiz6N2vHALzfLWvzDVyDHebS2Xevm6nKgKnzMNpz7g=; b=bJ7edHzelD2Hsp+1NHmyJdTD1i
-	JN99fdUcBrz1nYgxuUoK4IMU/uXjriMcP5nyms1Bh62lV7NLEZiMKZrkHshX0PjGAaaqQjgoiyjIA
-	yCwpe5qmQLz/5ret7QENZN/T2Nii6mURvouuHYghHtRFQManmD01sMvxxei9KmaeMJkkHgjQrf2lk
-	L98HLpOIlHLdXP57eYbtQTBS/sarJZzjTvvSysBeEFLS0iAAqdPZW/XlObKIq+IIpLCLg39PXJKWT
-	CxbZkLmNe2e3jotSYKBS58gkXlSA+z3X3pUWz65h1VnGKMRITpqHACzf3/bH9vbDuM+VZLHQ/6Nga
-	AnaguazQ==;
-Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1nwF-0000000801w-11UA;
-	Mon, 07 Apr 2025 14:59:03 +0000
-Message-ID: <dec21a7dd4ba0f095009f9bf4657c5e8c0a4d9da.camel@infradead.org>
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-From: David Woodhouse <dwmw2@infradead.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, virtio-comment@lists.linux.dev, 
- Claire Chang <tientzu@chromium.org>, linux-devicetree
- <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
- =?ISO-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>, 
- iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- graf@amazon.de
-Date: Mon, 07 Apr 2025 15:59:03 +0100
-In-Reply-To: <Z_Pb3PPIJNp4ZTjY@infradead.org>
-References: <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
-	 <20250404043016-mutt-send-email-mst@kernel.org>
-	 <F30D33D5-38CC-4397-8DC8-9EE1B0FEF40D@infradead.org>
-	 <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org>
-	 <20250404062409-mutt-send-email-mst@kernel.org>
-	 <7fd789b61a586417add2115f6752ebec5e7b81bf.camel@infradead.org>
-	 <Z_N_DNXq9VbPvTfA@infradead.org>
-	 <f54f46399aa2d0066231d95ef9e98526cf217115.camel@infradead.org>
-	 <Z_OVbRNHU1LXU368@infradead.org>
-	 <c08d3fd2bdae1b0fa629ecd9261a5ca9549ce9aa.camel@infradead.org>
-	 <Z_Pb3PPIJNp4ZTjY@infradead.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-X4Wvl5Dn79Iwla08Tm8+"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LwHXP8lX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744037959;
+	bh=HQM4uxn75CYtTEW9gKNjzEOEB2aUrEgmY6X6vzctcEE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LwHXP8lXsPwRlQOKaAb5w1Q0kiebDRW1J88Frj6CV2RGN5GvIl07bivq1VTLp51oD
+	 Ik2BLxM8i55eWVet1+BeRDDv0lkb3WZ/MVzDviUYYAUuQLuLqsQ3CRcAYF7zr/GMF+
+	 lwOGBv++iRfAJTKk+nXtN3HsFXR4YosjvNm3ikgZ8YnILUNGkLtUaoYHWsr9wxMHta
+	 osT2/e246fSaJwHiuHiqngvfD8VKHkwPvcRSjnDpF9dn7Ji6wSIwEAVz1DzsA8dSIs
+	 zkKzS5wNdmfF63giwba0y0LZad7hfI/uLStmGKJ4ia4HqjbolnttKu79/LFuXgnEOk
+	 MtcYhSCf8Q/vQ==
+Received: from [IPv6:2606:6d00:11:e976::c41] (unknown [IPv6:2606:6d00:11:e976::c41])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3739C17E0FD9;
+	Mon,  7 Apr 2025 16:59:17 +0200 (CEST)
+Message-ID: <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
+Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Boris Brezillon	
+ <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>, Alex Bee
+ <knaerzche@gmail.com>, Benjamin Gaignard	
+ <benjamin.gaignard@collabora.com>, Detlev Casanova	
+ <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+ Jonas Karlman <jonas@kwiboo.se>, Christopher Obbard
+ <christopher.obbard@linaro.org>
+Date: Mon, 07 Apr 2025 10:59:15 -0400
+In-Reply-To: <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
+References: 
+	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+	 <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
+	 <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
+	 <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
+	 <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
+Le lundi 07 avril 2025 à 16:17 +0200, Hans Verkuil a écrit :
+> On 07/04/2025 15:52, Nicolas Dufresne wrote:
+> > Le lundi 07 avril 2025 à 13:09 +0200, Hans Verkuil a écrit :
+> > > On 25/02/2025 10:40, Sebastian Fricke wrote:
+> > > > From: Jonas Karlman <jonas@kwiboo.se>
+> > > > 
+> > > > Add support for a get_image_fmt() ops that returns the required image
+> > > > format.
+> > > > 
+> > > > The CAPTURE format is reset when the required image format changes and
+> > > > the buffer queue is not busy.
+> > > > 
+> > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > > Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > > > Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > > > Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+> > > > ---
+> > > >  drivers/staging/media/rkvdec/rkvdec.c | 49 +++++++++++++++++++++++++++++++++--
+> > > >  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
+> > > >  2 files changed, 49 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> > > > index 70154948b4e32e2c439f259b0f1e1bbc8b52b063..5394079509305c619f1d0c1f542bfc409317c3b7 100644
+> > > > --- a/drivers/staging/media/rkvdec/rkvdec.c
+> > > > +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> > > > @@ -111,15 +111,60 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+> > > >  {
+> > > >  	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+> > > >  	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+> > > > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+> > > > +	enum rkvdec_image_fmt image_fmt;
+> > > > +	struct vb2_queue *vq;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (desc->ops->try_ctrl) {
+> > > > +		ret = desc->ops->try_ctrl(ctx, ctrl);
+> > > > +		if (ret)
+> > > > +			return ret;
+> > > > +	}
+> > > > +
+> > > > +	if (!desc->ops->get_image_fmt)
+> > > > +		return 0;
+> > > >  
+> > > > -	if (desc->ops->try_ctrl)
+> > > > -		return desc->ops->try_ctrl(ctx, ctrl);
+> > > > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+> > > > +	if (ctx->image_fmt == image_fmt)
+> > > > +		return 0;
+> > > > +
+> > > > +	if (rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, image_fmt))
+> > > > +		return 0;
+> > > > +
+> > > > +	/* format change not allowed when queue is busy */
+> > > > +	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
+> > > > +			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> > > > +	if (vb2_is_busy(vq))
+> > > > +		return -EINVAL;
+> 
+> Looking closer, this code is just wrong. It does these format change
+> tests for any control, so if more controls are added in the future, then
+> those will be checked the same way, which makes no sense.
 
---=-X4Wvl5Dn79Iwla08Tm8+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+"Just wrong" should be kept for code that is semantically incorrect,
+just a suggestion for choice of wording.
 
-On Mon, 2025-04-07 at 07:06 -0700, Christoph Hellwig wrote:
-> On Mon, Apr 07, 2025 at 11:09:54AM +0100, David Woodhouse wrote:
-> > > should be usable for all devices bar actual addressing limits that ar=
-e
-> > > handled in the dma layer already.=C2=A0 The only things you need is:
-> > >=20
-> > > =C2=A0a) a way to declare one or more pools
-> > > =C2=A0b) a way to destinguish between devices behind a two stage IOMM=
-U vs not
-> > > =C2=A0=C2=A0=C2=A0 to figure out if they need to use a pool
-> >=20
-> > I'm not averse to that, but it's different to the `restricted-dma-pool`
-> > model that's defined today which has explicit matching. So I'd like to
-> > reconcile them =E2=80=94 and preferably literally use PRP0001 to expose
-> > `restricted-dma-pool` even under ACPI.
->=20
-> A per-device flag is probably fine and easier for some things like
-> pool sizing.=C2=A0 It also would be worse for other things like eventuall=
-y
-> implementing percpu pools.
+> 
+> These tests belong to the actual control that you 'try'. In this case
+> rkvdec_h264_validate_sps(). This function already checks the width and
+> height, but it should also check the image format. It is all in the
+> wrong place.
 
-What exactly are you thinking of when you say a 'per-device' flag?
+We can do that too. Though, this was generalized since once you enable
+the other codecs, you endup with code duplication. I know this series
+is an extract from a larger one.
 
-> > Maybe it's as simple as a flag/property on the `restricted-dma-pool`
-> > node which declares that it's a 'catch-all', and that *all* devices
-> > which aren't explicitly bound to an IOMMU or other DMA operations (e.g.
-> > explicitly bound to a different restricted-dma-pool) should use it?
->=20
-> Yeah.=C2=A0 Similar what we do with the generic shared-dma-pool.
+So let's suggest to make a helper that combines rkvdec_is_valid_fmt()
+and the busy check. Though on that, please reply to my comment below
+(which you skipped).
 
-Yeah, I was trying to work that one out, and it looks like I'm almost
-describing the 'linux,dma-default' property. Except that seems to be
-only for coherent allocations on the `shared-dma-pool`.
+> 
+> > > 
+> > > This makes no sense to me. This just tries a control, and that should just
+> > > work, regardless of vb2_is_busy(). It's a 'try', so you are not actually
+> > > changing anything.
+> > 
+> > See comment below, notice that this code is only reached if the control
+> > introduce parameters that are not compatible with the current capture
+> > queue fmt. The entire function uses "success" early exit, so the
+> > further down you get in the function, the less likely your control is
+> > valid.
+> > 
+> > > 
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
+> > > > +{
+> 
+> If there is a try_ctrl op specified, then the control framework
+> will call that first before calling s_ctrl. So any validation that
+> try_ctrl did does not need to be done again in s_ctrl.
+> 
+> The same comment with try_ctrl is valid here as well: if there are
+> image format checks that need to be done, then those need to be done
+> per control and not as a generic check. If new controls are added in
+> the future, then you don't want the same checks to apply to the new
+> controls as well.
 
-Maybe it makes sense for 'linux,dma-default' on a restricted-dma-pool
-to mean that it should be used as a swiotlb for *all* DMA?
+I don't think the behaviour of try_ctrl and that being embedded in set
+calls was being questioned by anyone. Can you reply to the last
+paragraph below ?
 
-I don't much like the "linux," prefix but can live with that if that's
-the precedent.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > > > +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+> > > > +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+> > > > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+> > > > +	enum rkvdec_image_fmt image_fmt;
+> > > > +
+> > > > +	if (!desc->ops->get_image_fmt)
+> > > > +		return 0;
+> > > > +
+> > > > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+> > > > +	if (ctx->image_fmt == image_fmt)
+> > > > +		return 0;
+> > > 
+> > > If you really can't set a control when the queue is busy, then that should
+> > > be tested here, not in try_ctrl. And then you return -EBUSY.
+> > > 
+> > > Am I missing something here?
+> > 
+> > When I reviewed, I had imagine that s_ctrl on a request would just run
+> > a try. Now that I read that more careful, I see that it does a true set
+> > on separate copy. So yes, this can safely be moved here.
+> > 
+> > Since you seem wondering "If you really can't set a control", let me
+> > explain what Jonas wants to protect against. RKVdec does not have any
+> > color conversion code, the header compound control (which header
+> > depends on the codec), contains details such as sub-sampling and color
+> > depth. Without color conversion, when the image format is locked (the
+> > busy queue), you can't request the HW to decode a frame witch does not
+> > fit. This could otherwise lead to buffer overflow in the HW,
+> > fortunately protected by the iommu, but you don't really want to depend
+> > on the mmu.
+> > 
+> > I've never used try_ctrl in my decade of v4l2, so obviously, now that I
+> > know that s_ctrl on request is not a try, I'm fine with rejecting this
+> > PR, sending a new version and making a PR again. But if I was to use
+> > this API in userspace, my intuitive expectation would be that this
+> > should fail try(), even if its very rarely valid to check the queue
+> > state in try control.
 
-> > Either way, we'd still ideally want a virtio feature bit to say "don't
-> > touch me if you don't understand my DMA restrictions", to prevent older
-> > drivers (on older operating systems) from failing.
->=20
-> As said before they really need system level awareness of a coco host.
-> That's not something to be hacked into virtio drivers.
+Here, since we seem to disagree on the behaviour try should have for
+this specific validation. What you asked on first pass is to make it so
+that TRY will succeed, and SET will fail. I don't really like that
+suggestion.
 
-Nah. As long as they use the IOMMU they're offered, guests don't need
-any awareness at all that they're running in an environment where the
-VMM can't access all their memory. There is precisely *zero* enablement
-required in the guest for that.
+Nicolas
 
-The only problem is virtual devices which are provided by that VMM.
+> > 
+> > Nicolas
+> > 
+> > > 
+> > > Regards,
+> > > 
+> > > 	Hans
+> > > 
+> > > > +
+> > > > +	ctx->image_fmt = image_fmt;
+> > > > +	if (!rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, ctx->image_fmt))
+> > > > +		rkvdec_reset_decoded_fmt(ctx);
+> > > >  
+> > > >  	return 0;
+> > > >  }
+> > > >  
+> > > >  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+> > > >  	.try_ctrl = rkvdec_try_ctrl,
+> > > > +	.s_ctrl = rkvdec_s_ctrl,
+> > > >  };
+> > > >  
+> > > >  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+> > > > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+> > > > index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
+> > > > --- a/drivers/staging/media/rkvdec/rkvdec.h
+> > > > +++ b/drivers/staging/media/rkvdec/rkvdec.h
+> > > > @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
+> > > >  		     struct vb2_v4l2_buffer *dst_buf,
+> > > >  		     enum vb2_buffer_state result);
+> > > >  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
+> > > > +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
+> > > > +					       struct v4l2_ctrl *ctrl);
+> > > >  };
+> > > >  
+> > > >  enum rkvdec_image_fmt {
+> > > > 
+> > 
 
-If the guests *do* have system level awareness of the particular
-variant of CoCo host they're running on, then sure, they can explicitly
-manage sharing/encryption/whatever with a system-specific set of DMA
-operations and the problem goes away. But that's a long way off.
-
-How does this sound as a plan...
-
- 1. Define 'linux,dma-default' on a 'restricted-dma-pool' object to
-    mean that it should be used as a fallback SWIOTLB for *all* devices
-    (basically, as if each device explicitly referenced it as they do
-    today).
-
- 2. Provide a way to represent `restricted-dma-pool` in ACPI (which
-    ought to work naturally as PRP0001 and it's mostly a matter of
-    untangling it from OF-specific code on the guest side).
-
- 3. Add a VIRTIO_F_RESTRICTED_DMA feature to virtio, so that devices
-    which *know* they have such a limitation can gracefully decline
-    to operate with a driver which doesn't support it.
-
- 4. Add a way for a virtio-pci device to explicitly reference a given
-    `restricted-dma-pool` like virtio-mmio devices can today. And it
-    probably makes sense for a virtio-pci device which requires the
-    VIRTIO_F_RESTRICTED_DMA feature to explicitly reference such a
-    pool even if that pool has the `linux,dma-default' property?
-
-With #1 and #2 we provide this facility even for passthrough PCI
-devices. And with #3 and #4 we make it work *better* for virtio, which
-is the more important use case (since those two-stage IOMMUs *do* exist
-in the cases of CoCo-supporting hardware; it's just that they don't
-enable *virtual* devices).
-
-
---=-X4Wvl5Dn79Iwla08Tm8+
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQwNzE0NTkw
-M1owLwYJKoZIhvcNAQkEMSIEIP6sJUbRW0GlvzpC/r6n5S7LEcPHMgaCvQmD6qegYObbMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAeOgGgm5JHwbM
-nmZwyFimIefatdf+PWA7USobHXrEOkohFkDzhGqp4zeBtlYoncqPyfULjG2ByZMq0ynNTaXc1eTZ
-ECGIz6aowG4rXmShUUBgIm8kIPrXUhwx/5DTatJ2p7VmnEYMV3gK419yCQemZv6gRzRjykXgEq36
-jz24SNGRXk/VNnosmpLGiiqAadXLHeXFSTw4ApW0JLKEdXi0MUqNV/4LuqF0xP0XViQ9uNaRBche
-8c9wzBEM1FM8urMCo3Gw+BpkhFP2eVBClPiBUH8qdOY/7GBwVcqgqtgjBxcDh7rXA+Qxt5xqZM0t
-URHArlZHAfO6YDBP00accu689qliy9jMeytCe+QeISZXVGvDF0n9lxg6FPNfKvspduVorfuZqovo
-2NK1T9Kfd84wQHfnKDEiQzaIb+GaZf0PH5v8Kz9zxMthp9yBhAZW0okSgFFLdq/m1371yqXpooiY
-1DXpgNoJY0g/yssjFz1K0HqjW5LuQkwxeA0odWtU3zccmCTw23Q1LOwyC+rGNEVqEYNju74/p2xh
-FA32fQOItxUNMpBNik0id/e2lc+tqPIws4i458eZJ11E87N3IuCMMgGEVMBtXhmMoFRiUDGfo3Of
-AG6car0INyNwhgrj9Q1IRNdYbfCaI5yLuxVaqBurGV1ZTVQaRm3kvt7E2oETDWQAAAAAAAA=
-
-
---=-X4Wvl5Dn79Iwla08Tm8+--
+-- 
+Nicolas Dufresne
+Principal Engineer at Collabora
