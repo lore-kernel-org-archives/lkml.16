@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A97C218AAA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3932821B192
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060931; cv=none; b=HKRw1t1kZKHvNdw4BYB4YGrOoQTkoTNU9CLV2ser7Z1pS1htODtNCi1qPjfDnNlJc9KvKbZ4LwycD+FEtTXLT6JNIC9+eLw7kn9dstCgHReOCgU5e+zLVmJIVdz066NFDe8Elons7RsiF8ArPZWYN8SFoH17HXCeQoQE12jeoAk=
+	t=1744060931; cv=none; b=aoYnuKv3uzQ3YHUR4eR04ZUPXgtAPIC34U0WluHi25DmEE/hsyA7T/CdkPodgQ5qzMeqGjI34xB13sLaxg+c0SNKVCQHa43rDsgjxeeSgtc187k61jT31rURjxMg1DzTkR4sbKtRGvliG7UHULOF9RnV2tczHzrFHz4aLhkroe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744060931; c=relaxed/simple;
-	bh=g5CFip42mFQqpEmbBM/+lzFmhN2ygnDKANEGd2AJ6C0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qkSVALsmSq+M8M14zbFKDQ51iG2d4S5U+Fq6vFOO6ll1UU/1+0jEk+yx+UNR1jwxeF33kaqT1KsI+w/0v828jedhdw6EvTYKqZEZyI+iJyvKEaAeQhaLWkPw0LI9MhqM/wEeUQTRoXrRebGB+w3o6rJ+atGO7l+qNCYVm3Y9K0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EX30Wao5; arc=none smtp.client-ip=170.10.129.124
+	bh=EfF4dAbUv6xiHbKdAZn9zu83Y5I8dMHD1u4TY/zaCGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EgYMAvp5uPvTrbgQK5IKimlAcgGvOLRnRctqp8POlVknAit2LOq/4R1X4hCNroL+Ktx3tb3+8qnGDnvIL/5yK5/+CzbdCxv1/W77M5R/VwwI1kWMXBxO7NdJ9i4mseuBX2ZlTBTjJmmhKhyGWfZdQ+HsQnIX+WOCfsZLq8HMbUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EQ3hUieP; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EX30Wao5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EQ3hUieP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744060928;
+	s=mimecast20190719; t=1744060929;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=TnEDpx0qUE5Tyu5NVIbxJ4n/nTjH1L4vePOyeympb+0=;
-	b=EX30Wao5DuTbF3StUXNX9tT500Azei2kKZwRiKindNP1xxNIqzkMvRp/XNljF7NDpmbLA3
-	UNDjmF+oTk8nxucqBhgp/3ZbLcGgpcUi2OQOj8m1kLUqddO+8ib3JaF4vkQjPPCYDFUfdO
-	JrcE0OayzqEtweq52UzRz4bpK2wiCWc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YHK0+caqHkWkmDYmUREBSe8ATHgicW3LTgCek9DEivA=;
+	b=EQ3hUiePWcLV2UqkdB2GAoRrYVzYAahrOw6KmIzzCGXcNju2ofOL1Nw82r4swoQQQWgP1c
+	lSBbhd0xmxFtgJwEE4h/ANpaMs+IQttoZq+2ld/bC/JlbSQkep/DzlnGOkGoXqjYED0czW
+	P8Hq7ZlXdlMCiuO9yVvL3IuJfK4ATOQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-orbbIonaP7CpCAz-xQn1HA-1; Mon,
- 07 Apr 2025 17:22:04 -0400
-X-MC-Unique: orbbIonaP7CpCAz-xQn1HA-1
-X-Mimecast-MFC-AGG-ID: orbbIonaP7CpCAz-xQn1HA_1744060923
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-R2lktt8sP8uNOuFnpPEyLg-1; Mon,
+ 07 Apr 2025 17:22:08 -0400
+X-MC-Unique: R2lktt8sP8uNOuFnpPEyLg-1
+X-Mimecast-MFC-AGG-ID: R2lktt8sP8uNOuFnpPEyLg_1744060927
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 699061800257;
-	Mon,  7 Apr 2025 21:22:03 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B685819560BB;
+	Mon,  7 Apr 2025 21:22:06 +0000 (UTC)
 Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.90.98])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7C5DB180B487;
-	Mon,  7 Apr 2025 21:22:01 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B040180A803;
+	Mon,  7 Apr 2025 21:22:05 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Tejun Heo <tj@kernel.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
@@ -47,9 +49,11 @@ To: Tejun Heo <tj@kernel.org>,
 Cc: cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH 0/3] cgroup/cpuset: Miscellaneous cleanup patches
-Date: Mon,  7 Apr 2025 17:21:02 -0400
-Message-ID: <20250407212127.1534285-1-longman@redhat.com>
+Subject: [PATCH 2/3] cgroup/cpuset: Fix obsolete comment in cpuset_css_offline()
+Date: Mon,  7 Apr 2025 17:21:04 -0400
+Message-ID: <20250407212127.1534285-3-longman@redhat.com>
+In-Reply-To: <20250407212127.1534285-1-longman@redhat.com>
+References: <20250407212127.1534285-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,16 +64,44 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This series contains a number of cpuset cleanup patches.
+Move the partition disablement comment from cpuset_css_offline()
+to cpuset_css_killed() and reword it to remove the remnant of
+sched.partition.
 
-Waiman Long (3):
-  cgroup/cpuset: Always use cpu_active_mask
-  cgroup/cpuset: Fix obsolete comment in cpuset_css_offline()
-  cgroup/cpuset: Add warnings to catch inconsistency in exclusive CPUs
+Suggested-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/cgroup/cpuset.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
- kernel/cgroup/cpuset.c | 84 ++++++++++++++++++++++++++++++------------
- 1 file changed, 61 insertions(+), 23 deletions(-)
-
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 583f20942802..1497a2a4b2a3 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3538,11 +3538,7 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+  * will call rebuild_sched_domains_locked(). That is not needed
+  * in the default hierarchy where only changes in partition
+  * will cause repartitioning.
+- *
+- * If the cpuset has the 'sched.partition' flag enabled, simulate
+- * turning 'sched.partition" off.
+  */
+-
+ static void cpuset_css_offline(struct cgroup_subsys_state *css)
+ {
+ 	struct cpuset *cs = css_cs(css);
+@@ -3560,6 +3556,11 @@ static void cpuset_css_offline(struct cgroup_subsys_state *css)
+ 	cpus_read_unlock();
+ }
+ 
++/*
++ * If a dying cpuset has the 'cpus.partition' enabled, turn it off by
++ * changing it back to member to free its exclusive CPUs back to the pool to
++ * be used by other online cpusets.
++ */
+ static void cpuset_css_killed(struct cgroup_subsys_state *css)
+ {
+ 	struct cpuset *cs = css_cs(css);
 -- 
 2.48.1
 
