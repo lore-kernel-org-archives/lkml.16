@@ -1,101 +1,97 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA056212D65;
-	Mon,  7 Apr 2025 02:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B0212D65
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743991793; cv=none; b=lFszrrYBsPfa8Y3qEalITh5wZWb31s+ht/uopiRcvegF8oJIWsU5CLUh8thT42DpPA1b3qSPQ/35Ofzr1PyGyggu22J8wR5hpf/kH8WQS+ST9LpXAzONkrCTcIg02keedxGkwI4otEMT4tCwluQYMoIgB7R9oi5Hq4s+DicCw4I=
+	t=1743991801; cv=none; b=SwTSaPiOlzyTiJAyt4YEpL9HdQgd+Wy90r3ZUCL63VCQWWWG/voUV4QPfjV2NXDkDG0kGrDcMXas4PAeZUPVvTPybwh3Z9ky8LpvwIUCx7gganpIY6RQdb4kSKDooTHvW7SHW3rpCyAj+TNjmsn5jKZQ3GBBCUR2rK+UF6xMRLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743991793; c=relaxed/simple;
-	bh=I0uSkIs7MwYCiFKpPqFS9fHzKIERPrO5A7jKe4gKoxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQwz0Urn4BcmiPWpneUaR+BHDPYRM/2xGp6UlWnsxqlGUaSR/4CVQOOmdz+hb1/WiBCpt5pawfpxmfojURR1mX4wcGNhr8h+f/C46N8Fvvp20+p+ULKvXT5Xi2gB3RJSCeHZL5+/507wZ4gs0zN0kT2WwmzWrjo2yF3k1u89BL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 406253430A7;
-	Mon, 07 Apr 2025 02:09:50 +0000 (UTC)
-Date: Mon, 7 Apr 2025 02:09:45 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	ghost <2990955050@qq.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-mmc@vger.kernel.org, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 9/9] riscv: dts: sophgo: Add initial device tree of
- Sophgo SRD3-10
-Message-ID: <20250407020945-GYA13182@gentoo>
-References: <20250407010616.749833-1-inochiama@gmail.com>
- <20250407010616.749833-10-inochiama@gmail.com>
+	s=arc-20240116; t=1743991801; c=relaxed/simple;
+	bh=W5PvpIs3YYQPP/nm47aShabS05J2uCrQMtCbey8iOOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r0v+EFLq9QpEv6oLWO1YoeqKMNOzXkzM318Jg+xRKKkHFWZr0aSWj9iLl4VLNqka62VMCuHcxsGBJQv2+724TkGbbbsu3TOSdRKXVCPSXaz+BqKl6OnQVwDs/6urhBiVzFQ9aCCW6g0kxVHRBTct/7zznyKTKRk0PgQ8e/ubbyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAA3dQ3gM_NnLGnGBg--.8741S2;
+	Mon, 07 Apr 2025 10:09:42 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] mtd: nand: Add error log for marvell_nfc_end_cmd()
+Date: Mon,  7 Apr 2025 10:09:16 +0800
+Message-ID: <20250407020917.1242-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407010616.749833-10-inochiama@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAA3dQ3gM_NnLGnGBg--.8741S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWrZw1xWw1UtFW8AF4fXwb_yoW8AryDpw
+	4rZFW5KF40ya1YyrnxJa1DuFy5t3Z3K348K3Wvva4j9r4xGF4jgrsFya40gF1UAayfAw1a
+	qrZxKr9Y9Fn0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfUYdgADUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAFA2fytf-jFwAAs0
 
+The function marvell_nfc_hw_ecc_bch_read_chunk() calls the function
+marvell_nfc_end_cmd(), but dose not check its return value. Since it
+is incorrect to bail from the loop if the marvell_nfc_end_cmd() fails,
+an error log is necessary to prevent silent failure.
 
-On 09:06 Mon 07 Apr     , Inochi Amaoto wrote:
-> Sophgo SG2044 SRD3-10 board bases on Sophgo SG2044 SoC.
-> This board includes 5 uart ports, 5 pcie x8 slots, 1 1G Ethernet port,
-> 1 microSD slot.
-> 
-> Add initial device tree of this board with uart support.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  arch/riscv/boot/dts/sophgo/Makefile           |    1 +
->  arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi   | 3002 +++++++++++++++++
->  arch/riscv/boot/dts/sophgo/sg2044-reset.h     |  128 +
->  .../boot/dts/sophgo/sg2044-sophgo-srd3-10.dts |   32 +
->  arch/riscv/boot/dts/sophgo/sg2044.dtsi        |   86 +
->  5 files changed, 3249 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-reset.h
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2044.dtsi
-> 
-..
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2044-reset.h b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
-> new file mode 100644
-> index 000000000000..94ed1e3777c3
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sophgo/sg2044-reset.h
-> @@ -0,0 +1,128 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +/*
-> + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
-you might want to use your gmail suffix? IIRC your outlook account
-isn't preferable? besides, it's better cosistent with your signed-off
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/mtd/nand/raw/marvell_nand.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
+index 303b3016a070..1069a17dae9d 100644
+--- a/drivers/mtd/nand/raw/marvell_nand.c
++++ b/drivers/mtd/nand/raw/marvell_nand.c
+@@ -1351,16 +1351,20 @@ static void marvell_nfc_hw_ecc_bch_read_chunk(struct nand_chip *chip, int chunk,
+ 	 * Length is a multiple of 32 bytes, hence it is a multiple of 8 too.
+ 	 */
+ 	for (i = 0; i < data_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
+-		marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+-				    "RDDREQ while draining FIFO (data)");
++		err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
++					  "RDDREQ while draining FIFO (data)");
++		if (err)
++			dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
+ 		marvell_nfc_xfer_data_in_pio(nfc, data,
+ 					     FIFO_DEPTH * BCH_SEQ_READS);
+ 		data += FIFO_DEPTH * BCH_SEQ_READS;
+ 	}
+ 
+ 	for (i = 0; i < spare_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
+-		marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
+-				    "RDDREQ while draining FIFO (OOB)");
++		err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
++					  "RDDREQ while draining FIFO (OOB)");
++		if (err)
++			dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
+ 		marvell_nfc_xfer_data_in_pio(nfc, spare,
+ 					     FIFO_DEPTH * BCH_SEQ_READS);
+ 		spare += FIFO_DEPTH * BCH_SEQ_READS;
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.42.0.windows.2
+
