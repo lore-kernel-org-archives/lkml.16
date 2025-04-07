@@ -1,63 +1,63 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE0F2580FA;
-	Mon,  7 Apr 2025 19:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1F258CF3;
+	Mon,  7 Apr 2025 19:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744053416; cv=none; b=NgIYKhxgfAnjF2TB2EpDdsgR8f1sz1am3+ABWj1qXHqEaIrfREIByJiQsDcf1BjPK0tN/ZyJPIyZsz/U1I7bjMKop/HS6vlKWZaongAT72ksydtaJaNTDqQAqiEUZgvYwjCpZkQQtE7OVUOIqGdL1tei8y6Nb4xCceA8LnunzxM=
+	t=1744053419; cv=none; b=A/XXD0XMC5R3VNXuaEv5pYrdj/ocjgVoG1B7SZwQH0W0RWtFIIt00J/DP0kk8WXYpNRCBGn8f/TZDe+DjHdLqo0JENr4yuUMhdaJ4I7PSyPDcenDWvTHbzkn/5m6z6kb7VVq3h25c2qLoddJISUvxkIx1WHdkIPeFqOfVt8msMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744053416; c=relaxed/simple;
-	bh=YUgtdkCswpmcmSLt8cbM6c9IsNrvF/hy6GF1DInSUvM=;
+	s=arc-20240116; t=1744053419; c=relaxed/simple;
+	bh=naUjUisOyjlWOOpdHq+axpmjXsW6FuxI9hzLn5+iEpk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X5JZZ5VxMektLtIVKNWf5CarstOqprGineLpAGYbHcIK7d+h6P/6Xhq81ucnbPliYyusT1z9ZMarerdLGw/4cVlBUhbT1NeJ1LFZeR53raHUvu+ash3wkq8aJk5z+XC1qTYLlXmce82yhDiPop+Y1QnZxnsWTghYLqw9jKg91mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ETnoPFhC; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=O6RR6NSfGfN3nqXiFdF7Dqosy9ctGLC0uda64R0uON+p8ltH/K6wdCcYDq9d8QXXkrmAb/FcxkUuF/XFiSLyUz1bcwi0Y6GgKVpKLvs3efZAxmY61GLAGpmCzUGxep+ajbawu4hLqkT9ycpgSU0d/SRJmLe6eawwA8U74C4iumA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mga0pkUz; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETnoPFhC"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so2938073f8f.0;
-        Mon, 07 Apr 2025 12:16:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mga0pkUz"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so32620095e9.1;
+        Mon, 07 Apr 2025 12:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744053413; x=1744658213; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744053415; x=1744658215; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0HVqosNrSIW/pKBI7Ggnwy8rlAyo8lRrabHAPvILChA=;
-        b=ETnoPFhCEGrMwlqG0gA8MTkQbH/C7TP4Qunfs3jRLBkIMJtXDZ9tIRuU2C2Pe6q8R4
-         vvQlrUEa9uzWL2jha8mlxHXgN/KZxLuIN0KYEF7vNFr/L/qf9/ljIkDGuz9vNKNM22MY
-         ws7YAtQvbkDaSC9HQ9cQYhGOj24iWY95iOYHubWz0HdA74yqHFp45YCEPBES8ca80qOS
-         fEv2unbFVttpZ39XhF4JU4nAihAj2muGzn+yLvi/bIswhRcvnHN90wWzAbUlnkTRzK8A
-         e1b8niE4IM93gFwmXx+/9113LkteOycTTDTQd5OlekW2kBDsmU7O/exyhtuaq9UAaAZD
-         j5rQ==
+        bh=slVHo0owJS6MAx4PpzF19Vk9iA82FPjThq35k4/DBek=;
+        b=Mga0pkUzBkL4epgjjGdw0a8GI7v3SqYlv8m6SGnujbJ06uQ/Uil30TQRdCpldm/yCh
+         Y4VKsmL1VwPEXGRQxmE7gwzRYR1NpKEdo1vmEgopc16pDIA4kLJjerNESOp+ZjVBsRKj
+         iBYyvvu1Y9L5eyUCZBsmL8+pD83yHJGe0/vvSAmPmdK2It9RqSfohoa/n+KKicX09k2S
+         mVjZ5Lm04cJ1ZsyeKZovUFaGo0yac8/+McIH0PhNtyevQjbU30BaldDqEWS9QCGHfTCf
+         KMQ1DQe6h6zGmtS5o4olce0qG0XBFNtrDkMkK/yN9El2zIwmIs9uWyq/oWpiEI1xLqrj
+         ah4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744053413; x=1744658213;
+        d=1e100.net; s=20230601; t=1744053415; x=1744658215;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0HVqosNrSIW/pKBI7Ggnwy8rlAyo8lRrabHAPvILChA=;
-        b=gXz3kcvtroKqRhA7Yptb4pFin88aWmV3/eWFHJOLyxcI0n4M2zOWwwKmCy+9j1ifZE
-         o3I/kr+4otmSqCQVjBQYA17ZazJ2TpxB8wS7FpcLaKLtUzn/6LRgpcTfC7tCGn2yRIh8
-         wCFI2BqBnhUo0naPDnHNGriQUy+he1eAu/9fXwfgEpkhUERBJavaZ+Ac/kkk5TbS5yKm
-         eeE43ZRzDQ3x0h8OsesrWI6Zb4RYXDRaIQ/mF6VxK5VbgzOTPxZwOl7u7tOadvmfOb4P
-         Xl61TDFFdleBiAMydGDQajbXmRF9/12WXbcngcOpySqzMD2Pco6bSZZMXoMFgy/hzmB2
-         K29g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrwpibANHs+ScCW4p9KRXKtzD+XiuB0owc1UuEBDMP93XTw8IVdMeYtxg8ZOg+s3N/1lss2kpqRgQHnkJp@vger.kernel.org, AJvYcCVDf/84qhAnho+7za5WFZga4PxZremsunlS64Q/tBGl9u+lrh8zLNtUzaRyNVQgw/s/AjlsjOII4SanjCYy@vger.kernel.org, AJvYcCW+JaEGZpFiPLeI2EuURgIj4uCjvLeuZ1Wk0jnQQZoyRxGW+hGaCvMyvxrJgHan5bsrHKdKFizC0HhZvg==@vger.kernel.org, AJvYcCW7zd0DozqeXdSlIz46W7wI2pzo8oliIN1UXChyCUDXA0nNuaDmpcBwV0Cczgtptgcf9kJctkaQWCab@vger.kernel.org, AJvYcCXuvrq5x9IkMi3EjF1hI2sPRicFSY7uKXTMAWOooMbdI7JpZsXQxGHmbcURt37wS7TNYGWgUnUMIqhN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIYmSIURIhK7qxj0261NaAeLgYaZltyu8rcshVtlIo6V4ptO2O
-	IPgHc5gQcf68R2xtHJjmwG303fjGgJ9AlUphdWTXb1SCZ4gaj8cN
-X-Gm-Gg: ASbGncvcZq8WkuKLj3MchOxXZj842XDDswKMl43dvC56winik2cYO7cf1qZNwQEfGwU
-	Ebo3yeU7CIM4bgmd+acrhdK73UAWNFpJOCfRPO2XkeGsZs66rCT39e+bV27fcqGRTC2pnDuF5OF
-	7uJ+oiEGXE6XCIwEAdzfV+hOL79dDtAqem2epamGU4zoc9wbwzdEQ/FAlqicYSfSBTQ013uWfFa
-	dBSYoXqtV4gRKTfEKLoFOztFUw3PpXmr9z470XDc9ah9+SNlTtZ4yYtFE4H+aBVcHnFxzZNG+AA
-	YczIvYOzU2BgwBqR5RASzvkNrFrDGrcT+IEcLnYj6+doMxYNhejwZddM2EhH/29ia0OxC2xFeqh
-	0NGLz
-X-Google-Smtp-Source: AGHT+IFKNaCP2JI5kKFbN2JYH16oEkn3RK5Xzyr/BQwUoLUTh0SYG5lOksCxM8yv2vJ3Sp9JEUUPHw==
-X-Received: by 2002:a05:6000:2489:b0:391:4873:7943 with SMTP id ffacd0b85a97d-39cb35aaaeamr11111784f8f.32.1744053413103;
-        Mon, 07 Apr 2025 12:16:53 -0700 (PDT)
+        bh=slVHo0owJS6MAx4PpzF19Vk9iA82FPjThq35k4/DBek=;
+        b=V+oO8XlKZR23lEOSPXYSgakP2wuMcJDJARDQZhT4tWWRLhk306jGcvEE7iiMxlsjx7
+         ExqqyqM3u/aISde3UtxkCq3aTvENJL1ggC2brIguVB2NBdzSH2NB9zcHBWfzI58dRYMS
+         H2dmJmdVckAo2xJbCz74TZMsLZx0Fj0+9wnYyIRM/j6GU3trVBReGNEJQ/2g//ZiaTeF
+         tmXHjIxx8NGU6wRxJ/xqjswOzPZpsAeY5wr9EU9tYSzRqGFlUL0+Ugut9Hp9daD9tfRw
+         lgf1YoAyzdghChJVmDKHQ8Bsbhzs26ULOuvgRV6EM5kNQlmr32WiqEdvDEbGJn9SJsk8
+         0nKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUL8HVmFBFZ9zuhmYGyh/AU5TXixObokxnXukUxRPpZe/Ct75rBBtA7KSgcSn4o2Lb5IsbCJzm1/sNNeF45@vger.kernel.org, AJvYcCWBiuWMIg0sP5UFJ0VUbsRU1QAQAsZcSbtgcjwBbDl5LXJhT1CGY4hQJdIVhMirBwC7duZpd0MLe+OF@vger.kernel.org, AJvYcCWKsPZ7A5mG4Xh+4AfuVVTXj32sSdwIQZbqCyGs6EIP+CL9EOTiLgH2ZGvUwCHD1CJoLtfhAFMMvUeKfw==@vger.kernel.org, AJvYcCWpYWecdP7+7OTU37mdRhwwsxWoGYFk/A/r5LJu8tklxs7ffZAWDTkaspFwFIxylRPktrLd5cepRNHa@vger.kernel.org, AJvYcCXffxzjHUpdylwFOHkwbtkI9GQk9FzLGHaT5/N85XsCWtaCkVh927dWLKYfFN93DjEGQSLVS6EHAamSWLYb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6DUocqvWpbWDlx6McZpnpWvk6KFnfqNX3OL8QRfPMyfKCLM4Q
+	vgww7UopwSH/tvVnQJDrE2lJep5hYQzOEZpzbdpqioLRFttdmO04
+X-Gm-Gg: ASbGncuaf17PxtwvaDHHUC89nHVMXpYMLN8EF1COxnDgj4hOHTYqf/Ipp3JhOP0J39/
+	ByCYSZam3PKfbXw0ToyINFd0wvGKeScEpU402xu6df9F39Q4l4XSlj6pL0HZ+Vn0TcKBzGkMG5S
+	8KiioZiUC/DTDR4zaS8jxZJa6mChbyAL7Wzg0VaffWM3AiurAJaT2WIQdj0NIiYxtAaoWR1reg3
+	yidZQAzGfew6mqcBGOMYn2LmNdxLLNTT31XdzFaj0OTSa8D+YEzUwmgfsmf9GW5xbe5wpcjqTum
+	2XNgEz8hWCRvOvwL/OiwAeLxeIHMJKyZvwTO/uGg8XWhM02hy+kC431rgjBV1YCtBjTIe2fH6Fi
+	xuB4c
+X-Google-Smtp-Source: AGHT+IEL42x7uF/NnsyHco9mxLN/kOyCWb/fw3/RZjhZSxcdSaQMTmnkfH2XrV/JBAeMjiDzVqMyiw==
+X-Received: by 2002:a05:6000:18af:b0:391:2ab1:d4c2 with SMTP id ffacd0b85a97d-39d0de62221mr9684236f8f.37.1744053415480;
+        Mon, 07 Apr 2025 12:16:55 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:78b9:80c2:5373:1b49])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096bb2sm12994453f8f.12.2025.04.07.12.16.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096bb2sm12994453f8f.12.2025.04.07.12.16.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 12:16:52 -0700 (PDT)
+        Mon, 07 Apr 2025 12:16:54 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -80,9 +80,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 10/12] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
-Date: Mon,  7 Apr 2025 20:16:26 +0100
-Message-ID: <20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 12/12] arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
+Date: Mon,  7 Apr 2025 20:16:28 +0100
+Message-ID: <20250407191628.323613-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -96,103 +96,160 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
-RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
-the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
+Add the initial device tree for the Renesas RZ/V2N EVK board, based on
+the R9A09G056N48 SoC. Enable basic board functionality, including:
 
-To accommodate this, move the `PCIE1_RSTOUTB` entry to the end of the
-`rzv2h_dedicated_pins` array and set `.n_dedicated_pins` to
-`ARRAY_SIZE(rzv2h_dedicated_pins) - 1` in the RZ/V2N OF data.
+- Memory mapping (reserve the first 128MB for the secure area)
+- Clock inputs (QEXTAL, RTXIN, AUDIO_EXTAL)
+- PINCTRL configurations for peripherals
+- Serial console (SCIF)
+- SDHI1 with power control and UHS modes
+
+Update the Makefile to include the new DTB.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-v1->v2:
-- No changes in the code.
+v1->v2
+- Followed DTS coding style guidelines
 ---
- drivers/pinctrl/renesas/Kconfig         |  1 +
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 36 ++++++++++++++++++++++++-
- 2 files changed, 36 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 114 ++++++++++++++++++
+ 2 files changed, 116 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
 
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 3c18d908b21e..e16034fc1bbf 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -42,6 +42,7 @@ config PINCTRL_RENESAS
- 	select PINCTRL_RZG2L if ARCH_RZG2L
- 	select PINCTRL_RZV2M if ARCH_R9A09G011
- 	select PINCTRL_RZG2L if ARCH_R9A09G047
-+	select PINCTRL_RZG2L if ARCH_R9A09G056
- 	select PINCTRL_RZG2L if ARCH_R9A09G057
- 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
- 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index c72e250f4a15..ae5e040f3276 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2304,7 +2304,6 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
- 	{ "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
- 						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
- 	{ "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
--	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
- 	{ "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
- 						     PIN_CFG_IEN | PIN_CFG_PUPD)) },
- 	{ "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-@@ -2359,6 +2358,14 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
- 	{ "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
- 	{ "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
- 	{ "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 5b99c337763a..ea7f93b7d2b3 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -152,6 +152,8 @@ dtb-$(CONFIG_ARCH_R9A09G011) += r9a09g011-v2mevk2.dtb
+ 
+ dtb-$(CONFIG_ARCH_R9A09G047) += r9a09g047e57-smarc.dtb
+ 
++dtb-$(CONFIG_ARCH_R9A09G056) += r9a09g056n48-rzv2n-evk.dtb
 +
-+	/*
-+	 * This pin is only available on the RZ/V2H(P) SoC and not on the RZ/V2N.
-+	 * Since this array is shared with the RZ/V2N SoC, this entry should be placed
-+	 * at the end. This ensures that on the RZ/V2N, we can set
-+	 * `.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,`.
-+	 */
-+	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
- };
+ dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h44-rzv2h-evk.dtb
+ dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h48-kakip.dtb
  
- static struct rzg2l_dedicated_configs rzg3e_dedicated_pins[] = {
-@@ -3349,6 +3356,29 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
- 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
- };
- 
-+static struct rzg2l_pinctrl_data r9a09g056_data = {
-+	.port_pins = rzv2h_gpio_names,
-+	.port_pin_configs = r9a09g057_gpio_configs,
-+	.n_ports = ARRAY_SIZE(r9a09g057_gpio_configs),
-+	.dedicated_pins = rzv2h_dedicated_pins,
-+	.n_port_pins = ARRAY_SIZE(r9a09g057_gpio_configs) * RZG2L_PINS_PER_PORT,
-+	.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,
-+	.hwcfg = &rzv2h_hwcfg,
-+	.variable_pin_cfg = r9a09g057_variable_pin_cfg,
-+	.n_variable_pin_cfg = ARRAY_SIZE(r9a09g057_variable_pin_cfg),
-+	.num_custom_params = ARRAY_SIZE(renesas_rzv2h_custom_bindings),
-+	.custom_params = renesas_rzv2h_custom_bindings,
-+#ifdef CONFIG_DEBUG_FS
-+	.custom_conf_items = renesas_rzv2h_conf_items,
-+#endif
-+	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
-+	.pmc_writeb = &rzv2h_pmc_writeb,
-+	.oen_read = &rzv2h_oen_read,
-+	.oen_write = &rzv2h_oen_write,
-+	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
-+	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+new file mode 100644
+index 000000000000..f379871c39cc
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
+@@ -0,0 +1,114 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/*
++ * Device Tree Source for the RZ/V2N EVK board
++ *
++ * Copyright (C) 2025 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "r9a09g056.dtsi"
++
++/ {
++	model = "Renesas RZ/V2N EVK Board based on r9a09g056n48";
++	compatible = "renesas,rzv2n-evk", "renesas,r9a09g056n48", "renesas,r9a09g056";
++
++	aliases {
++		mmc1 = &sdhi1;
++		serial0 = &scif;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x1 0xf8000000>;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vqmmc_sdhi1: regulator-vqmmc-sdhi1 {
++		compatible = "regulator-gpio";
++		regulator-name = "SDHI1 VqmmC";
++		gpios = <&pinctrl RZV2N_GPIO(A, 2) GPIO_ACTIVE_HIGH>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		gpios-states = <0>;
++		states = <3300000 0>, <1800000 1>;
++	};
 +};
 +
- static struct rzg2l_pinctrl_data r9a09g057_data = {
- 	.port_pins = rzv2h_gpio_names,
- 	.port_pin_configs = r9a09g057_gpio_configs,
-@@ -3389,6 +3419,10 @@ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
- 		.compatible = "renesas,r9a09g047-pinctrl",
- 		.data = &r9a09g047_data,
- 	},
-+	{
-+		.compatible = "renesas,r9a09g056-pinctrl",
-+		.data = &r9a09g056_data,
-+	},
- 	{
- 		.compatible = "renesas,r9a09g057-pinctrl",
- 		.data = &r9a09g057_data,
++&audio_extal_clk {
++	clock-frequency = <22579200>;
++};
++
++&pinctrl {
++	scif_pins: scif {
++		pins = "SCIF_TXD", "SCIF_RXD";
++		renesas,output-impedance = <1>;
++	};
++
++	sd1-pwr-en-hog {
++		gpio-hog;
++		gpios = <RZV2N_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "sd1_pwr_en";
++	};
++
++	sdhi1_pins: sd1 {
++		sd1-dat-cmd {
++			pins = "SD1DAT0", "SD1DAT1", "SD1DAT2", "SD1DAT3", "SD1CMD";
++			input-enable;
++			renesas,output-impedance = <3>;
++			slew-rate = <0>;
++		};
++
++		sd1-clk {
++			pins = "SD1CLK";
++			renesas,output-impedance = <3>;
++			slew-rate = <0>;
++		};
++
++		sd1-cd {
++			pinmux = <RZV2N_PORT_PINMUX(9, 4, 14)>; /* SD1_CD */
++		};
++	};
++};
++
++&qextal_clk {
++	clock-frequency = <24000000>;
++};
++
++&rtxin_clk {
++	clock-frequency = <32768>;
++};
++
++&scif {
++	pinctrl-0 = <&scif_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&sdhi1 {
++	pinctrl-0 = <&sdhi1_pins>;
++	pinctrl-1 = <&sdhi1_pins>;
++	pinctrl-names = "default", "state_uhs";
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&vqmmc_sdhi1>;
++	bus-width = <4>;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	status = "okay";
++};
 -- 
 2.49.0
 
