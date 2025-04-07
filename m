@@ -1,218 +1,171 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F039E18309C;
-	Mon,  7 Apr 2025 13:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FBB18309C;
+	Mon,  7 Apr 2025 13:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033956; cv=none; b=Wu918hcb6k9cIXyk3sTVWf4PfbWo1pBjKDbnWQSac4TC7swPAyT5BWmR5zHpmM2YL9RYaEsL3K7g93TfR1n4b4VXnvqAAs/A4FMM+SqE/0aGO1HfRVNvizKMl/P53w+nJrLQFdnnwyURHN+xYonP+0S5vzjYSagSsGO6I0XjSi0=
+	t=1744033964; cv=none; b=Rx9nXlcDkKmhcIcIy6Xs8VRr3rbG39pfCb5hp+mF6CVMmjU9jpvPwbYiS5TOcI4m4fQ9ST24BU36y/mxJ5bg4FZrffpQSp8PMVMG/Kb4p71LUwE0bWhB5VdolFdK4lnZRDXnn7XXPo26iHuny9qS6BmClBCSVmgww9UjX9/sh74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033956; c=relaxed/simple;
-	bh=AvmCGkM8u6k1w56iBZRvCudCuwVtYQRZVcLroU7KZWw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dsitkJSZWh5576pIfasv6jwaEFmnRBYm1WlwLL8muUV9tNk40FRjZSa0kg9RYP5ikS6ZWcvTm+JivPGLJEqM74AWm5xblxg7bXDm5kWXCBVejUlTP/KO9qar3Tc7GrpSi0yhW6LdWEOc/Hgm/7csYoeh7qgW5V6+H8mNSVApSUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iTvIuzxU; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744033964; c=relaxed/simple;
+	bh=pa83JoLiOPU6QvFW/d1z/pQEvJXRucrMVpIOQJycOlM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Np0eGMyQcBCYvDlBXQLyEuWOIrg8WeDInGZ0e0FSw7a+/KPFk1S/mrsx79MC/0UHd8YSnBgg7+y+an2tGbnXwXdP19sUHpNrmxMNtvwLkYDIaJIbS5abPDL0ydvH+5VD830aUTBdrj7/7EuRWOkQFGwMzcCuB7kV3KSExi8q0B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MP2N10Qg; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iTvIuzxU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744033951;
-	bh=AvmCGkM8u6k1w56iBZRvCudCuwVtYQRZVcLroU7KZWw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iTvIuzxUPKAPP0exP2+Vin+Q8GrD/goiJouenHZx4PQ72VOhHaAYcp+7mXoFiVKTE
-	 I40vD9/8CmdI9cRH9IDHjbla0Ru1Yzx/16jWdK47/i+kM1E28cfnllsFAbMKFuOQJU
-	 sJguV5U9zeZ0ptHTJ6Hos9UZOVKZ+6Ag8qYy0a+nPup5O28kd/hMDDUREReFcMVodW
-	 NFXtx90Ma8TR7jqIYvZt0Hx5PwB69YyyZnjSamJ8qB4jfTnZ8UCrNAORIYKYxYsi2S
-	 AJzmeciI0F6RjIdb4z/Rhkwcz0pANIpkM3+vGQmGnpEnfgD7YW7Wl2qTt6+BfaRG5q
-	 h4dwKfhJY9ByA==
-Received: from [IPv6:2606:6d00:11:e976::c41] (unknown [IPv6:2606:6d00:11:e976::c41])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1B2AC17E02BE;
-	Mon,  7 Apr 2025 15:52:28 +0200 (CEST)
-Message-ID: <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
-Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke	
- <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Boris Brezillon	
- <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Mauro
- Carvalho Chehab <mchehab+huawei@kernel.org>, Alex Bee
- <knaerzche@gmail.com>, Benjamin Gaignard	
- <benjamin.gaignard@collabora.com>, Detlev Casanova	
- <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
- Jonas Karlman <jonas@kwiboo.se>, Christopher Obbard
- <christopher.obbard@linaro.org>
-Date: Mon, 07 Apr 2025 09:52:27 -0400
-In-Reply-To: <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
-References: 
-	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-	 <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
-	 <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MP2N10Qg"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac34257295dso892409066b.2;
+        Mon, 07 Apr 2025 06:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744033961; x=1744638761; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sc9bjfbFTJWsLLxoFhUmoW8tGe7xoApEt1z4G7mllw8=;
+        b=MP2N10QgGXWd3kkXsPM+GcA/RxKH6QcT04IgRcYuXYvRcubi34Y3Fs6WKp0wQ0LLWb
+         2VvDIhueMt/suFbenGjX40q+YTjSbRsdR3cYWwE/5Uo3EgHF8QijNvMpQw776+uv0bl2
+         cxAjjduw4+XGM/iBVxdO4OhmwyL/N7rBmtWxs3pT6ZUTSbnVFeFvYxmZ74LbaHk1ZVDe
+         0RaPuAn5qbbVE5bwoQp4xJpVKtJ27lZNTT8T+zT4qTMsgp3cEwcQO/izyHw25tAWnKzt
+         KV5Jm6vn4Dx55L3YDN9atUkIw9dw1wtNemqpyzNuyPGov2G9/EQVriXgUXkJvKX7/6Ut
+         VLcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744033961; x=1744638761;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sc9bjfbFTJWsLLxoFhUmoW8tGe7xoApEt1z4G7mllw8=;
+        b=ht+RHdTtYC2mWvpVfUUYAA9onl7SDmjVjuIg5JVZc3rHMDu5EXkYEAEppsQpxxK1Qh
+         +SaxROTrCcYV74iSQUYzB0Ja5LWdQjdMj7wzxYEZwGTlQ/E6mJtbd/Onk+RQwxjEYsTk
+         K8+nQKeAR/aG393GU7Xq05vGOwwLFYHQwC0qkfznHE67cPBP2OJFVKkVzZySABnDoJf4
+         nSOQZyVS5fN3Yn/qlV5jiuyUz1584ZuEmGcKI4ZadNpdxQ4lV4JClvykmhypex/Yj2og
+         k98xoQzrHBMWcPMPd4fktzQ8OMuWdSkD3OrJTkVTG5J4J6ix8sJlm6RPwMG0ZPD7cjVP
+         mZDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV/qqcz6FCxBKxFAwg9w/ycLgi/A5stqb2noT3pTFZ3qZJ8Liy3aIRkCpzlcy4ECOJVNHsLqqTPXyJMax/@vger.kernel.org, AJvYcCUjU/tots9yfLBfrBAXLd7o4rhkMktUe4HcfIcTLfSXkHKQWL2Js9qe3Yap9M3FORC/tuETZ4MMghmM@vger.kernel.org, AJvYcCWNnQH4XbIp4P77AR8Cq2GXDaXlJe6nfbCsWi1U2u8tMT6EX2n4dAk6MFU6TW6jrhqHyAdI66LKGwtj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz22Q3c8GVFo4diyQZqfpUlFbBOrFs3tCHM4/8FEQv/8F8ttyTa
+	hqb/1f83cqKpFy6TsvWllA6+pXCVJQlWbKB0ITrfgGeze8DtY3vle+rnFRg6p2q6MZzlR81KORK
+	NH9Zf+LkaTw1YW0C+f4qR/GLuyUY=
+X-Gm-Gg: ASbGnct47dNItmHOQjG5NsvwOoWJ82yYo4/N9YU5vi5obQrkcmpWaPEkkWSxHlu82KI
+	9D15tG8ydorhT4sV0hSRNt3kTw3I+/mC/x1/Gj60r6PkN/j+Uhsetsc5ZlJFm9xyfgAxu8mbOPm
+	1lF3GH5BWu2spKRKxI5STlDl5oUMCz2U/Pgj0=
+X-Google-Smtp-Source: AGHT+IE1K4KGssIOLmHorIy1oCMgGcf7x4fMQ+kzwtl7JUPWt1uEuI2jriF2sy5AIG+moU2mpDY/XKHdVul9jZaECm8=
+X-Received: by 2002:a17:907:7ea1:b0:ac7:b363:862c with SMTP id
+ a640c23a62f3a-ac7d6d7f0a5mr1097419366b.34.1744033960765; Mon, 07 Apr 2025
+ 06:52:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250221090918.1487689-1-j2anfernee@gmail.com> <20250222152537.2a24d80f@jic23-huawei>
+In-Reply-To: <20250222152537.2a24d80f@jic23-huawei>
+From: Yu-Hsian Yang <j2anfernee@gmail.com>
+Date: Mon, 7 Apr 2025 21:51:41 +0800
+X-Gm-Features: ATxdqUFpGtpfSv-jv-HNzINZS8uIB_7m0tbvAuk-oq0i06yBUK38wFK3X9HpdrU
+Message-ID: <CA+4VgcJL7pi6y55N6QaUKNkOTqTKkF8dAo+5syvRCbx7gW+ehQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] iio: adc: add Nuvoton NCT7201 ADC driver
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, 
+	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
+	lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nuno.sa@analog.com, dlechner@baylibre.com, javier.carrasco.cruz@gmail.com, 
+	andriy.shevchenko@linux.intel.com, gstols@baylibre.com, 
+	olivier.moysan@foss.st.com, mitrutzceclan@gmail.com, tgamblin@baylibre.com, 
+	matteomartelli3@gmail.com, marcelo.schmitt@analog.com, alisadariana@gmail.com, 
+	joao.goncalves@toradex.com, thomas.bonnefille@bootlin.com, 
+	ramona.nechita@analog.com, herve.codina@bootlin.com, 
+	chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com, 
+	openbmc@lists.ozlabs.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le lundi 07 avril 2025 à 13:09 +0200, Hans Verkuil a écrit :
-> On 25/02/2025 10:40, Sebastian Fricke wrote:
-> > From: Jonas Karlman <jonas@kwiboo.se>
-> > 
-> > Add support for a get_image_fmt() ops that returns the required image
-> > format.
-> > 
-> > The CAPTURE format is reset when the required image format changes and
-> > the buffer queue is not busy.
-> > 
-> > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> > Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > Tested-by: Christopher Obbard <chris.obbard@collabora.com>
-> > ---
-> >  drivers/staging/media/rkvdec/rkvdec.c | 49 +++++++++++++++++++++++++++++++++--
-> >  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
-> >  2 files changed, 49 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-> > index 70154948b4e32e2c439f259b0f1e1bbc8b52b063..5394079509305c619f1d0c1f542bfc409317c3b7 100644
-> > --- a/drivers/staging/media/rkvdec/rkvdec.c
-> > +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> > @@ -111,15 +111,60 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
-> >  {
-> >  	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-> >  	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
-> > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
-> > +	enum rkvdec_image_fmt image_fmt;
-> > +	struct vb2_queue *vq;
-> > +	int ret;
-> > +
-> > +	if (desc->ops->try_ctrl) {
-> > +		ret = desc->ops->try_ctrl(ctx, ctrl);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	if (!desc->ops->get_image_fmt)
-> > +		return 0;
-> >  
-> > -	if (desc->ops->try_ctrl)
-> > -		return desc->ops->try_ctrl(ctx, ctrl);
-> > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
-> > +	if (ctx->image_fmt == image_fmt)
-> > +		return 0;
-> > +
-> > +	if (rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, image_fmt))
-> > +		return 0;
-> > +
-> > +	/* format change not allowed when queue is busy */
-> > +	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
-> > +			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
-> > +	if (vb2_is_busy(vq))
-> > +		return -EINVAL;
-> 
-> This makes no sense to me. This just tries a control, and that should just
-> work, regardless of vb2_is_busy(). It's a 'try', so you are not actually
-> changing anything.
+Dear Jonathan,
 
-See comment below, notice that this code is only reached if the control
-introduce parameters that are not compatible with the current capture
-queue fmt. The entire function uses "success" early exit, so the
-further down you get in the function, the less likely your control is
-valid.
+Thanks again for the review
 
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
-> > +{
-> > +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-> > +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
-> > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
-> > +	enum rkvdec_image_fmt image_fmt;
-> > +
-> > +	if (!desc->ops->get_image_fmt)
-> > +		return 0;
-> > +
-> > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
-> > +	if (ctx->image_fmt == image_fmt)
-> > +		return 0;
-> 
-> If you really can't set a control when the queue is busy, then that should
-> be tested here, not in try_ctrl. And then you return -EBUSY.
-> 
-> Am I missing something here?
+Jonathan Cameron <jic23@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=8822=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=8811:25=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On Fri, 21 Feb 2025 17:09:16 +0800
+> Eason Yang <j2anfernee@gmail.com> wrote:
+>
+> Hi Eason,
+>
+> Not sure if I asked this before, but this is a device that seems
+> to be typically used for hardware monitoring and there are a number
+> of similar sounding device in drivers/hwmon/
+>
+> That raises a couple of questions:
+> 1) Is it compatible with any of those existing drivers?
 
-When I reviewed, I had imagine that s_ctrl on a request would just run
-a try. Now that I read that more careful, I see that it does a true set
-on separate copy. So yes, this can safely be moved here.
+No, we need a new driver to do the ADC conversion for NCT7201/NCT7202.
 
-Since you seem wondering "If you really can't set a control", let me
-explain what Jonas wants to protect against. RKVdec does not have any
-color conversion code, the header compound control (which header
-depends on the codec), contains details such as sub-sampling and color
-depth. Without color conversion, when the image format is locked (the
-busy queue), you can't request the HW to decode a frame witch does not
-fit. This could otherwise lead to buffer overflow in the HW,
-fortunately protected by the iommu, but you don't really want to depend
-on the mmu.
+> 2) Why IIO rather than HWMON?
 
-I've never used try_ctrl in my decade of v4l2, so obviously, now that I
-know that s_ctrl on request is not a try, I'm fine with rejecting this
-PR, sending a new version and making a PR again. But if I was to use
-this API in userspace, my intuitive expectation would be that this
-should fail try(), even if its very rarely valid to check the queue
-state in try control.
+A driver for NCT7201 with more functionality is available in the iio
+adc subsystem.
+If the chip is used for hardware monitoring, the iio->hwmon bridge
+should be used.
+>
+> There isn't normally a problem with having a hardware monitoring
+> related device supported by IIO, it is just good to know if your
+> usecase makes that a good idea.  We have the iio-hwmon bridge
+> driver to solve the problem of a device than can be used either
+> as a generic ADC or as a hwmon type monitoring device (which tends
+> to have more alarms etc)
 
-Nicolas
+Yes, we also verify the iio-hwmon bridge.
 
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > +
-> > +	ctx->image_fmt = image_fmt;
-> > +	if (!rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, ctx->image_fmt))
-> > +		rkvdec_reset_decoded_fmt(ctx);
-> >  
-> >  	return 0;
-> >  }
-> >  
-> >  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
-> >  	.try_ctrl = rkvdec_try_ctrl,
-> > +	.s_ctrl = rkvdec_s_ctrl,
-> >  };
-> >  
-> >  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
-> > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-> > index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
-> > --- a/drivers/staging/media/rkvdec/rkvdec.h
-> > +++ b/drivers/staging/media/rkvdec/rkvdec.h
-> > @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
-> >  		     struct vb2_v4l2_buffer *dst_buf,
-> >  		     enum vb2_buffer_state result);
-> >  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
-> > +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
-> > +					       struct v4l2_ctrl *ctrl);
-> >  };
-> >  
-> >  enum rkvdec_image_fmt {
-> > 
-
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+>
+> Jonathan
+>
+>
+> > Change since version 4:
+> >  - Fix comments
+> >  - Add interrupts and reset-gpios to the DT example
+> >  - Use the FIELD_PREP and FIELD_GET
+> >  - Add use_single_write in regmap_config
+> >  - Use regmap_access_table
+> >
+> > Change since version 3:
+> >  - Fix comments
+> >  - Don't put nct720"x" in the name, just call it nct7201
+> >  - Remove differential inputs until conversions are finished
+> >  - Add NCT7201_ prefix in all macros and avoid the tables
+> >  - Correct event threshold values in raw units
+> >  - Add with and without interrupt callback function to have the event
+> >    config part and one that doesn't
+> >  - Remove print an error message if regmap_wirte failed case
+> >
+> > Change since version 2:
+> >  - Remvoe read-vin-data-size property, default use read word vin data
+> >  - Use regmap instead of i2c smbus API
+> >  - IIO should be IIO_CHAN_INFO_RAW and _SCALE not _PROCESSED
+> >  - Use dev_xxx_probe in probe function and dev_xxx in other functions
+> >  - Use devm_iio_device_register replace of iio_device_register
+> >  - Use guard(mutex) replace of mutex_lock
+> >  - Use get_unaligned_le16 conversion API
+> >
+> > Changes since version 1:
+> >  - Add new property in iio:adc binding document
+> >  - Add new driver for Nuvoton NCT720x driver
+> >
+> > Eason Yang (2):
+> >   dt-bindings: iio: adc: add NCT7201 ADCs
+> >   iio: adc: add support for Nuvoton NCT7201
+> >
+> >  .../bindings/iio/adc/nuvoton,nct7201.yaml     |  57 ++
+> >  MAINTAINERS                                   |   2 +
+> >  drivers/iio/adc/Kconfig                       |  11 +
+> >  drivers/iio/adc/Makefile                      |   1 +
+> >  drivers/iio/adc/nct7201.c                     | 487 ++++++++++++++++++
+> >  5 files changed, 558 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,n=
+ct7201.yaml
+> >  create mode 100644 drivers/iio/adc/nct7201.c
+> >
+>
