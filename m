@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66D8227E96;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B92F22839A;
 	Mon,  7 Apr 2025 07:43:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011785; cv=none; b=RmLR9NhK64MT2uJJkzCWsBXFD3Qf6EtxX6eRkv8SJUUPaJ6edUPAU5d0efGdKcF0W/Y77YTady+kZ01O0ungIUzzuL9YI3oXzvjRjr95Z4lLMVtSDzbuFDu/5z4nA3E1zt0Ic8fmebgS2ilpe6a0o1NLTIoKa7FhqP0syF3OMdY=
+	t=1744011786; cv=none; b=jxSFNaa5/Mu9fZK7mbgVsGQH9/SGHOnuooJ7S+534/sxhocc9znl3M1JmBYQGyGqLNpnqaXR2EcLCsBT/Gpkk4DUiMVx3I0Mn1ED7r2E5BlDDNWot0v5QW1QLnoYmB+uK/E+qjWOWbgN2wY7wTP4bhM8oDn0huKqaAD+KUPAlOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011785; c=relaxed/simple;
-	bh=5+9YHZKmXU6mu3ieCn3ti44g1IrXSfzapL+qAM5m2Io=;
+	s=arc-20240116; t=1744011786; c=relaxed/simple;
+	bh=JuaIjS9/HyTR39eTJxdj9heG3qdGFyt4hvgxTOmYfHs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GRut2c28f3meBzgApwSoC8zhbfLF3UmWyNe/H08f+4lxhbLOZc22L0qRxP781omP+G6FzIG2v7GDK4gRwSzInGJw3ysFWElAG1PNyrTWEVE/JQkfDAdV90MOeXtvlDZxSfbwcoWLQ84r1bf0JTftkGidpXafLJElttswNtlOM1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iUQjQmZ4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nPfo6cdf; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Ow18ouU9le4LTIqBSTc+V4M1Uc02Gj5kO60FYqudc18U8in4RjCGKSoE9uMElHFgMkZ5hl+X8ccua9EX3z2ZpcTjPES3ZZhonpE/2FGITxKnBYw10s8Aqrcnf+2IvjMQ4jJgc5c4USp0zUfm4wLxN7L8J8SpFQP6IdxnbPl8fjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tsZImF8I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x+RwxxsW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iUQjQmZ4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nPfo6cdf"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tsZImF8I";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x+RwxxsW"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744011781;
+	s=2020; t=1744011782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l6kgYTTgkOaGrAjyvy1nAqnbCYfemdPya6M/+xOGiEc=;
-	b=iUQjQmZ4WLhv8Bj5/LsbYSllLNNiC0ByhwrAdFwfc39flMyavPPOUM6dQuI7mi4KnF6s4o
-	neo5r27sEKMqJifGGFiPyP01Fi9q6VMDhf4s865/COiDHsN8j1e9Xq669GTtN8X/wVwk+t
-	YSMDk1L6is7VccCSrkRCAPsouTHtZN+eU+sb3WP5eV0ZM3MmLy2RJTqbPoLOEzGwIPVOYN
-	pjiSMF9VBmawWqMU58NYUfE2IJFUC5QF/0UDiHaXjgqzWygWKcmdB5cJ1Mr6gagh2sTkFb
-	z85rpFK0Mbu85SXLloKObIZXS/eWWFGcrt4SNfbg+YbLez+UACMzonmXOh9MXg==
+	bh=SlhQKzkZM6Jr36iAYSy0CT5G2SSQr4FADfY/xCw8dbo=;
+	b=tsZImF8IKRFZs9LynGUEysPNfC/cknXyNJce05iqbVB3g/Ee8NQoEt/F4a3SpKL2qnVa/c
+	vEpmRoj9yws4jNTxf4CH+AYvONrIjQNxMQekdsYe4hR35mj4rD+4crf8KSN7JSzL4Fdb+0
+	X26ziTNBc3EBYKHo+f6QwN7e61ia8GIzcyDjFA9qbCHj+NNJjPqGJWus8mBrWkL2xBK6qx
+	HJklh8aOsuboYT/vyE7i5yF/r1S8N5MQoZTv01PWoWnnrJqYjJk2TiEW7s8HbvxcQskyvX
+	O5XtF2YdmOfmrWJDYRruhrOUPOcPDIzRvPVRzcaIPvJ6D6Drtzy5mtBe6ER3/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744011781;
+	s=2020e; t=1744011782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l6kgYTTgkOaGrAjyvy1nAqnbCYfemdPya6M/+xOGiEc=;
-	b=nPfo6cdfGcoXjaSzliF6IZJmggvMNlZYQMb27T7+3WWDH99HiM2zIHKtCOPq0+WPRcGm1E
-	Wqo1L+wiPA4EDpBA==
-Date: Mon, 07 Apr 2025 09:42:44 +0200
-Subject: [PATCH v2 07/11] kunit: tool: Parse skipped tests from kselftest.h
+	bh=SlhQKzkZM6Jr36iAYSy0CT5G2SSQr4FADfY/xCw8dbo=;
+	b=x+RwxxsWDYfiJ/iTSGu6N6jGVesB6Fat4uppuHmFT0p4wx+Z0A6HsJxvhj03ktcEaAQaM8
+	ZFANoWpGsiwe1/CA==
+Date: Mon, 07 Apr 2025 09:42:46 +0200
+Subject: [PATCH v2 09/11] kunit: uapi: Add example for UAPI tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-kunit-kselftests-v2-7-454114e287fd@linutronix.de>
+Message-Id: <20250407-kunit-kselftests-v2-9-454114e287fd@linutronix.de>
 References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
 In-Reply-To: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -65,79 +65,121 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744011776; l=2785;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744011776; l=3632;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=5+9YHZKmXU6mu3ieCn3ti44g1IrXSfzapL+qAM5m2Io=;
- b=29XvoBTMRB00a/65QHfQvVAsIXIBH7G5KKROFGXUVpbDYaKm9czWb2Mqti8KnPTC6ddNLcCrB
- P/fHFMKUu6QDO8VyonYFUsn6Cp9qm4RYAs5YP3YfKCafgYJ+RTmSNaK
+ bh=JuaIjS9/HyTR39eTJxdj9heG3qdGFyt4hvgxTOmYfHs=;
+ b=pQmTBghv8NpE4tuvPIF6Q2FgZ5AQGkatdQ4Q38jAFbpCj6aPC6lSE+zpN3nem/WABJQCcGUHd
+ dU9UOjM9Y6iDkbZ8xStr3Mr961j2CbU5FEbM/PnPAxZRxvN21Kn36MT
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Skipped tests reported by kselftest.h use a different format than KTAP,
-there is no explicit test name. Normally the test name is part of the
-free-form string after the SKIP keyword:
-
-	ok 3 # SKIP test: some reason
-
-Extend the parser to handle those correctly. Use the free-form string as
-test name instead.
+Extend the example to show how to run a userspace executable.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/kunit/kunit_parser.py                             | 8 +++++---
- tools/testing/kunit/test_data/test_is_test_passed-kselftest.log | 3 ++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ lib/kunit/.kunitconfig         |  2 ++
+ lib/kunit/Makefile             |  9 ++++++++-
+ lib/kunit/kunit-example-test.c | 15 +++++++++++++++
+ lib/kunit/kunit-example-uapi.c | 22 ++++++++++++++++++++++
+ 4 files changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index b4a695ed7d2c88120b35b617f0ff2f1cb2be60fb..41aaa85d249b592efe6227a4c2d9517a5c13dbef 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -352,9 +352,9 @@ def parse_test_plan(lines: LineStream, test: Test) -> bool:
- 	lines.pop()
- 	return True
+diff --git a/lib/kunit/.kunitconfig b/lib/kunit/.kunitconfig
+index 9235b7d42d389d2c7bf912546c7bb084eae99235..b7433e691563a3a8442db69874dea88f3b607332 100644
+--- a/lib/kunit/.kunitconfig
++++ b/lib/kunit/.kunitconfig
+@@ -1,3 +1,5 @@
+ CONFIG_KUNIT=y
++CONFIG_SHMEM=y
++CONFIG_TMPFS=y
+ CONFIG_KUNIT_TEST=y
+ CONFIG_KUNIT_EXAMPLE_TEST=y
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 989933dab9ad2267f376db470b876ce2a88711b4..1b6be12676f89cafa34f0093d8136b36f4cf5532 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -30,4 +30,11 @@ obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
+ obj-$(CONFIG_KUNIT_TEST) +=		assert_test.o
+ endif
  
--TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
-+TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?([^#]*)( # .*)?$')
+-obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-test.o
++userprogs +=				kunit-example-uapi
++kunit-example-uapi-userccflags :=	-static
++kunit-example-uapi-nolibc :=		$(CONFIG_ARCH_HAS_NOLIBC)
++blobs +=				kunit-example-uapi.blob.o
++
++obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-mod.o
++kunit-example-mod-y +=			kunit-example-test.o
++kunit-example-mod-$(CONFIG_KUNIT_UAPI) += kunit-example-uapi.blob.o
+diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-test.c
+index 3056d6bc705d0a8f196f0f4412e679dbb0e03114..b2681a6e047dfd6fea4a7cca60e81651d09c2eae 100644
+--- a/lib/kunit/kunit-example-test.c
++++ b/lib/kunit/kunit-example-test.c
+@@ -6,8 +6,11 @@
+  * Author: Brendan Higgins <brendanhiggins@google.com>
+  */
  
--TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
-+TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?(.*) # SKIP ?(.*)$')
++#include <linux/blob.h>
++
+ #include <kunit/test.h>
+ #include <kunit/static_stub.h>
++#include <kunit/uapi.h>
  
- def peek_test_name_match(lines: LineStream, test: Test) -> bool:
- 	"""
-@@ -379,6 +379,8 @@ def peek_test_name_match(lines: LineStream, test: Test) -> bool:
- 	if not match:
- 		return False
- 	name = match.group(4)
-+	if not name:
-+		return False
- 	return name == test.name
+ /*
+  * This is the most fundamental element of KUnit, the test case. A test case
+@@ -277,6 +280,17 @@ static void example_slow_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
+ }
  
- def parse_test_result(lines: LineStream, test: Test,
-@@ -416,7 +418,7 @@ def parse_test_result(lines: LineStream, test: Test,
++/*
++ * This test shows the usage of UAPI tests.
++ */
++static void example_uapi_test(struct kunit *test)
++{
++	if (IS_ENABLED(CONFIG_KUNIT_UAPI))
++		kunit_uapi_run_kselftest(test, BLOB(kunit_example_uapi));
++	else
++		kunit_skip(test, "CONFIG_KUNIT_UAPI is not enabled");
++}
++
+ /*
+  * Here we make a list of all the test cases we want to add to the test suite
+  * below.
+@@ -297,6 +311,7 @@ static struct kunit_case example_test_cases[] = {
+ 	KUNIT_CASE(example_priv_test),
+ 	KUNIT_CASE_PARAM(example_params_test, example_gen_params),
+ 	KUNIT_CASE_SLOW(example_slow_test),
++	KUNIT_CASE(example_uapi_test),
+ 	{}
+ };
  
- 	# Set name of test object
- 	if skip_match:
--		test.name = skip_match.group(4)
-+		test.name = skip_match.group(4) or skip_match.group(5)
- 	else:
- 		test.name = match.group(4)
- 
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-index 65d3f27feaf22a3f47ed831c4c24f6f11c625a92..30d9ef18bcec177067288d5242771236f29b7d56 100644
---- a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-+++ b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-@@ -1,5 +1,5 @@
- TAP version 13
--1..2
-+1..3
- # selftests: membarrier: membarrier_test_single_thread
- # TAP version 13
- # 1..2
-@@ -12,3 +12,4 @@ ok 1 selftests: membarrier: membarrier_test_single_thread
- # ok 1 sys_membarrier available
- # ok 2 sys membarrier invalid command test: command = -1, flags = 0, errno = 22. Failed as expected
- ok 2 selftests: membarrier: membarrier_test_multi_thread
-+ok 3 # SKIP selftests: membarrier: membarrier_test_multi_thread
+diff --git a/lib/kunit/kunit-example-uapi.c b/lib/kunit/kunit-example-uapi.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..4ce657050dd4a576632a41ca0309c4cb5134ce14
+--- /dev/null
++++ b/lib/kunit/kunit-example-uapi.c
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit Userspace example test.
++ *
++ * Copyright (C) 2025, Linutronix GmbH.
++ * Author: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
++ *
++ * This is *userspace* code.
++ */
++
++#include "../../tools/testing/selftests/kselftest.h"
++
++int main(void)
++{
++	ksft_print_header();
++	ksft_set_plan(4);
++	ksft_test_result_pass("userspace test 1\n");
++	ksft_test_result_pass("userspace test 2\n");
++	ksft_test_result_skip("userspace test 3: some reason\n");
++	ksft_test_result_pass("userspace test 4\n");
++	ksft_finished();
++}
 
 -- 
 2.49.0
