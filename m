@@ -1,670 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F059C229B01
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533AE211A33
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744014642; cv=none; b=boUo6JzABKv4T1bMbqBGe/zWfOK+xeVXO7OUqSoXaJUbh0iURFrZibLFfA1T/Fzu40oG8QZTh4Wez+OBkv69VTAx/495sIbmd3Gjjeqd93TGeRTjeIQAgnpe74vRmI32fxqUjTDP9XKjRNVV20Sc/i+gJCAxySin8+y1hiZrF8c=
+	t=1744014676; cv=none; b=YfwfgKVlGSCc6/SzOiz1AGnqFHGGWL6cIY6V4ZB7xOS3OtGqs7Q6+gMxqn7ZNa8buxrWRoXkwVd4+z30JTZEElZOeWzsteuaFPuuzOwRVBy5IupyL5Fnxc34F/fBqIqL9ECD2LI8D2NcybvAetmq4kdbId9zl2EoGbO9X2hj068=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744014642; c=relaxed/simple;
-	bh=YedqApFs9Mzk8MwED0+PRJywxkX8koX/jA8u9odis6g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SMIc9ipmDc6lHWePGK+dbBRwXchGKSnYPrrBo6K7U1yvUfkLBh/aJeT+Xbwu1p68Tx8+2GM3xyxTOe6LiswF5aiVtrBKhv1RAroc4N7sFNJRc+J8MFY4LzFqZ+hXK2Xu5+qHfj+dyyXdn8n/4bm9t57QOWeaYH91xEiB/5E8fFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJNfFphV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744014676; c=relaxed/simple;
+	bh=z9NSYQ9/spWX/hV/BJtbmRQy6HwxBHDuqH25V8Xe3iY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rOzu+ceqU+7ycHLIoLgcG6o37LMSi/1fcUWDR3k0478NCbXXMO5I+1sgWqcZKYQ6CSIio14VZZ/rre7twcc9TrRewL1hyiyWhPGSNI/Zo0RniXoqOFxYahMscKEdrSacH4NhxZOx+QFPxDSSwGiQ/GcTzTAx88s9R0MfXDAUqyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0RJNziIm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3BiFjLea; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0RJNziIm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3BiFjLea; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJNfFphV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C210C4AF09
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744014640;
-	bh=YedqApFs9Mzk8MwED0+PRJywxkX8koX/jA8u9odis6g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PJNfFphVFoOyE6l/eFj8R48vm03aaxOdhIy54SZf2rrYDVXRfmax63oFKWh36dvgr
-	 ezV4K7ewTFHcEgmm3dwkslCdvjfrC0G6EkeXm/6+v7vZ9eGwgaInrKG273IGyBs289
-	 dp4nBrsLPXdAuY+NUILg+YTSsE3RqknXc3LydRJCfy8wtB61AzWElLcjXfLEJrTKwb
-	 E0FyjCr+N1rDtzjgI5po4kSF6S0SUZC6n/8nM2TTeFg9dw3c6JCzECfmt9dj41YKDu
-	 kvnEVVtK5DSUKbH5vxyFqSoMJ3LvYLnSqS6MJVGql3GFDGt3i0dPrJMJ9b+xPEvgqi
-	 k4p/NhkR7Em5Q==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30613802a04so44315501fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:30:40 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yz6zomdx8iQF052eCATExxQkorf5WKb8RGkzBmWqX4zxFU10WhF
-	zII1Ceq5MYSsLjCyX+aFqT8embfQE/HGAC6cQKFP5YGuVH5dc3FJ9v2eqjKpDqiRzlJbzmYJqOt
-	nRGPNHr64p51PuU+zcGkoqWOYzfE=
-X-Google-Smtp-Source: AGHT+IGj8q4XDQeedYmTz/yhoazUHBw0uie0pxuBF2nBxv6ED2EafzVJyfz/t0NxMAvQluOGeVahj6FfZkJZVAcK4ys=
-X-Received: by 2002:a2e:bd87:0:b0:304:4e03:f9d9 with SMTP id
- 38308e7fff4ca-30f16590f13mr29248501fa.28.1744014638633; Mon, 07 Apr 2025
- 01:30:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0RJNziIm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3BiFjLea";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0RJNziIm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3BiFjLea"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6884421134;
+	Mon,  7 Apr 2025 08:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744014672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1aOMpn7X33tom+bcDGhQUGrFQSnD+9ZnNoK0jFavZkA=;
+	b=0RJNziImOZGPJVIQ5CJ58KvV2m6LlqM6IuJC2qJdyyVf3AFrENUfqVq3YPF3EySRCToKm8
+	XXFdkmDZQHcusPKUGXl90iiBXHa3Vdpq/47ALzEKI0qUWIHDFlozJmNWN56warxk3LPMsi
+	YqAF52UwtssqKVTZF3Ej38rNyngVXBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744014672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1aOMpn7X33tom+bcDGhQUGrFQSnD+9ZnNoK0jFavZkA=;
+	b=3BiFjLea5O5mUq1h0GOLOBo0coFOx1QbIMUl+cC0R+8axcMYTqCOJIINEqSFt60UQ6933M
+	YYo/evEHD0lyDUAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0RJNziIm;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=3BiFjLea
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744014672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1aOMpn7X33tom+bcDGhQUGrFQSnD+9ZnNoK0jFavZkA=;
+	b=0RJNziImOZGPJVIQ5CJ58KvV2m6LlqM6IuJC2qJdyyVf3AFrENUfqVq3YPF3EySRCToKm8
+	XXFdkmDZQHcusPKUGXl90iiBXHa3Vdpq/47ALzEKI0qUWIHDFlozJmNWN56warxk3LPMsi
+	YqAF52UwtssqKVTZF3Ej38rNyngVXBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744014672;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=1aOMpn7X33tom+bcDGhQUGrFQSnD+9ZnNoK0jFavZkA=;
+	b=3BiFjLea5O5mUq1h0GOLOBo0coFOx1QbIMUl+cC0R+8axcMYTqCOJIINEqSFt60UQ6933M
+	YYo/evEHD0lyDUAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20C1613691;
+	Mon,  7 Apr 2025 08:31:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YrmiBlCN82dpLgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 07 Apr 2025 08:31:12 +0000
+Message-ID: <0789ef01-bc92-4fae-aac3-70e9995482b2@suse.de>
+Date: Mon, 7 Apr 2025 10:31:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401133416.1436741-11-ardb+git@google.com>
- <174396438105.31282.2243827952440371468.tip-bot2@tip-bot2> <6eb78989-efa6-4558-9637-9467560265cd@amd.com>
-In-Reply-To: <6eb78989-efa6-4558-9637-9467560265cd@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 7 Apr 2025 11:30:25 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHTQSfsr8m86zGZCp1cvp9_kOpOe6P1MjjjSh72HZ8PSg@mail.gmail.com>
-X-Gm-Features: ATxdqUGnRAGyPcmUz6gYIu9prXmDmAkS0EZFD7PahsTaIc-3Zo7Licb3GRygd7E
-Message-ID: <CAMj1kXHTQSfsr8m86zGZCp1cvp9_kOpOe6P1MjjjSh72HZ8PSg@mail.gmail.com>
-Subject: Re: [tip: x86/boot] x86/boot: Move the EFI mixed mode startup code
- back under arch/x86, into startup/
-To: "Aithal, Srikanth" <sraithal@amd.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	David Woodhouse <dwmw@amazon.co.uk>, "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: add antry for Sitronix ST7571 LCD
+ controller
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250404-st7571-v2-0-4c78aab9cd5a@gmail.com>
+ <20250404-st7571-v2-3-4c78aab9cd5a@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250404-st7571-v2-3-4c78aab9cd5a@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6884421134
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Mon, 7 Apr 2025 at 10:38, Aithal, Srikanth <sraithal@amd.com> wrote:
+
+
+Am 04.04.25 um 15:50 schrieb Marcus Folkesson:
+> Add MAINTAINERS entry for the Sitronix ST7571 dot matrix LCD
+> controller.
 >
-> Hello,
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+> ---
+>   MAINTAINERS | 6 ++++++
+>   1 file changed, 6 insertions(+)
 >
-> This commit breaks the build of next-20250407. The kernel config is
-> attached here.
->
-> Build error:
->
-> arch/x86/boot/startup/efi-mixed.o: warning: objtool:
-> efi32_stub_entry+0x0: unannotated intra-function call
-> make[3]: *** [scripts/Makefile.build:335:
-> arch/x86/boot/startup/efi-mixed.o] Error 255
-> make[3]: *** Deleting file 'arch/x86/boot/startup/efi-mixed.o'
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [scripts/Makefile.build:461: arch/x86/boot/startup] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/home/VT_BUILD/linux/Makefile:2006: .] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
->
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 889bd4a59551c9bc125f94944a6e1c7e3ef2de83..eeae24fda846b9f63400ebb08c3fa7f02f3f4b19 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7572,6 +7572,12 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/display/sitronix,st7586.txt
+>   F:	drivers/gpu/drm/tiny/st7586.c
+>   
+> +DRM DRIVER FOR SITRONIX ST7571 PANELS
+> +M:	Marcus Folkesson <marcus.folkesson@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/display/sitronix,st7571.yaml
+> +F:	drivers/gpu/drm/tiny/st7571-i2c.c
+> +
+>   DRM DRIVER FOR SITRONIX ST7701 PANELS
+>   M:	Jagan Teki <jagan@amarulasolutions.com>
+>   S:	Maintained
 >
 
-Apologies for the breakage.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Does it help to add the following to arch/x86/boot/startup/Makefile:
-
-OBJECT_FILES_NON_STANDARD := y
-
-?
-
->
-> Thanks,
-> Srikanth Aithal <sraithal@amd.com>
->
->
-> On 4/7/2025 12:03 AM, tip-bot2 for Ard Biesheuvel wrote:
-> > The following commit has been merged into the x86/boot branch of tip:
-> >
-> > Commit-ID:     4f2d1bbc2c92a32fd612e6c3b51832d5c1c3678e
-> > Gitweb:        https://git.kernel.org/tip/4f2d1bbc2c92a32fd612e6c3b51832d5c1c3678e
-> > Author:        Ard Biesheuvel <ardb@kernel.org>
-> > AuthorDate:    Tue, 01 Apr 2025 15:34:20 +02:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Sun, 06 Apr 2025 20:15:14 +02:00
-> >
-> > x86/boot: Move the EFI mixed mode startup code back under arch/x86, into startup/
-> >
-> > Linus expressed a strong preference for arch-specific asm code (i.e.,
-> > virtually all of it) to reside under arch/ rather than anywhere else.
-> >
-> > So move the EFI mixed mode startup code back, and put it under
-> > arch/x86/boot/startup/ where all shared x86 startup code is going to
-> > live.
-> >
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Cc: David Woodhouse <dwmw@amazon.co.uk>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Link: https://lore.kernel.org/r/20250401133416.1436741-11-ardb+git@google.com
-> > ---
-> >   arch/x86/boot/startup/Makefile           |   3 +-
-> >   arch/x86/boot/startup/efi-mixed.S        | 253 ++++++++++++++++++++++-
-> >   drivers/firmware/efi/libstub/Makefile    |   1 +-
-> >   drivers/firmware/efi/libstub/x86-mixed.S | 253 +----------------------
-> >   4 files changed, 256 insertions(+), 254 deletions(-)
-> >   create mode 100644 arch/x86/boot/startup/efi-mixed.S
-> >   delete mode 100644 drivers/firmware/efi/libstub/x86-mixed.S
-> >
-> > diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-> > index 03519ef..73946a3 100644
-> > --- a/arch/x86/boot/startup/Makefile
-> > +++ b/arch/x86/boot/startup/Makefile
-> > @@ -1,3 +1,6 @@
-> >   # SPDX-License-Identifier: GPL-2.0
-> >
-> > +KBUILD_AFLAGS                += -D__DISABLE_EXPORTS
-> > +
-> >   lib-$(CONFIG_X86_64)                += la57toggle.o
-> > +lib-$(CONFIG_EFI_MIXED)              += efi-mixed.o
-> > diff --git a/arch/x86/boot/startup/efi-mixed.S b/arch/x86/boot/startup/efi-mixed.S
-> > new file mode 100644
-> > index 0000000..e04ed99
-> > --- /dev/null
-> > +++ b/arch/x86/boot/startup/efi-mixed.S
-> > @@ -0,0 +1,253 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2014, 2015 Intel Corporation; author Matt Fleming
-> > + *
-> > + * Early support for invoking 32-bit EFI services from a 64-bit kernel.
-> > + *
-> > + * Because this thunking occurs before ExitBootServices() we have to
-> > + * restore the firmware's 32-bit GDT and IDT before we make EFI service
-> > + * calls.
-> > + *
-> > + * On the plus side, we don't have to worry about mangling 64-bit
-> > + * addresses into 32-bits because we're executing with an identity
-> > + * mapped pagetable and haven't transitioned to 64-bit virtual addresses
-> > + * yet.
-> > + */
-> > +
-> > +#include <linux/linkage.h>
-> > +#include <asm/desc_defs.h>
-> > +#include <asm/msr.h>
-> > +#include <asm/page_types.h>
-> > +#include <asm/pgtable_types.h>
-> > +#include <asm/processor-flags.h>
-> > +#include <asm/segment.h>
-> > +
-> > +     .text
-> > +     .code32
-> > +#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
-> > +SYM_FUNC_START(efi32_stub_entry)
-> > +     call    1f
-> > +1:   popl    %ecx
-> > +
-> > +     /* Clear BSS */
-> > +     xorl    %eax, %eax
-> > +     leal    (_bss - 1b)(%ecx), %edi
-> > +     leal    (_ebss - 1b)(%ecx), %ecx
-> > +     subl    %edi, %ecx
-> > +     shrl    $2, %ecx
-> > +     cld
-> > +     rep     stosl
-> > +
-> > +     add     $0x4, %esp              /* Discard return address */
-> > +     movl    8(%esp), %ebx           /* struct boot_params pointer */
-> > +     jmp     efi32_startup
-> > +SYM_FUNC_END(efi32_stub_entry)
-> > +#endif
-> > +
-> > +/*
-> > + * Called using a far call from __efi64_thunk() below, using the x86_64 SysV
-> > + * ABI (except for R8/R9 which are inaccessible to 32-bit code - EAX/EBX are
-> > + * used instead).  EBP+16 points to the arguments passed via the stack.
-> > + *
-> > + * The first argument (EDI) is a pointer to the boot service or protocol, to
-> > + * which the remaining arguments are passed, each truncated to 32 bits.
-> > + */
-> > +SYM_FUNC_START_LOCAL(efi_enter32)
-> > +     /*
-> > +      * Convert x86-64 SysV ABI params to i386 ABI
-> > +      */
-> > +     pushl   32(%ebp)        /* Up to 3 args passed via the stack */
-> > +     pushl   24(%ebp)
-> > +     pushl   16(%ebp)
-> > +     pushl   %ebx            /* R9 */
-> > +     pushl   %eax            /* R8 */
-> > +     pushl   %ecx
-> > +     pushl   %edx
-> > +     pushl   %esi
-> > +
-> > +     /* Disable paging */
-> > +     movl    %cr0, %eax
-> > +     btrl    $X86_CR0_PG_BIT, %eax
-> > +     movl    %eax, %cr0
-> > +
-> > +     /* Disable long mode via EFER */
-> > +     movl    $MSR_EFER, %ecx
-> > +     rdmsr
-> > +     btrl    $_EFER_LME, %eax
-> > +     wrmsr
-> > +
-> > +     call    *%edi
-> > +
-> > +     /* We must preserve return value */
-> > +     movl    %eax, %edi
-> > +
-> > +     call    efi32_enable_long_mode
-> > +
-> > +     addl    $32, %esp
-> > +     movl    %edi, %eax
-> > +     lret
-> > +SYM_FUNC_END(efi_enter32)
-> > +
-> > +     .code64
-> > +SYM_FUNC_START(__efi64_thunk)
-> > +     push    %rbp
-> > +     movl    %esp, %ebp
-> > +     push    %rbx
-> > +
-> > +     /* Move args #5 and #6 into 32-bit accessible registers */
-> > +     movl    %r8d, %eax
-> > +     movl    %r9d, %ebx
-> > +
-> > +     lcalll  *efi32_call(%rip)
-> > +
-> > +     pop     %rbx
-> > +     pop     %rbp
-> > +     RET
-> > +SYM_FUNC_END(__efi64_thunk)
-> > +
-> > +     .code32
-> > +SYM_FUNC_START_LOCAL(efi32_enable_long_mode)
-> > +     movl    %cr4, %eax
-> > +     btsl    $(X86_CR4_PAE_BIT), %eax
-> > +     movl    %eax, %cr4
-> > +
-> > +     movl    $MSR_EFER, %ecx
-> > +     rdmsr
-> > +     btsl    $_EFER_LME, %eax
-> > +     wrmsr
-> > +
-> > +     /* Disable interrupts - the firmware's IDT does not work in long mode */
-> > +     cli
-> > +
-> > +     /* Enable paging */
-> > +     movl    %cr0, %eax
-> > +     btsl    $X86_CR0_PG_BIT, %eax
-> > +     movl    %eax, %cr0
-> > +     ret
-> > +SYM_FUNC_END(efi32_enable_long_mode)
-> > +
-> > +/*
-> > + * This is the common EFI stub entry point for mixed mode. It sets up the GDT
-> > + * and page tables needed for 64-bit execution, after which it calls the
-> > + * common 64-bit EFI entrypoint efi_stub_entry().
-> > + *
-> > + * Arguments:        0(%esp) image handle
-> > + *           4(%esp) EFI system table pointer
-> > + *           %ebx    struct boot_params pointer (or NULL)
-> > + *
-> > + * Since this is the point of no return for ordinary execution, no registers
-> > + * are considered live except for the function parameters. [Note that the EFI
-> > + * stub may still exit and return to the firmware using the Exit() EFI boot
-> > + * service.]
-> > + */
-> > +SYM_FUNC_START_LOCAL(efi32_startup)
-> > +     movl    %esp, %ebp
-> > +
-> > +     subl    $8, %esp
-> > +     sgdtl   (%esp)                  /* Save GDT descriptor to the stack */
-> > +     movl    2(%esp), %esi           /* Existing GDT pointer */
-> > +     movzwl  (%esp), %ecx            /* Existing GDT limit */
-> > +     inc     %ecx                    /* Existing GDT size */
-> > +     andl    $~7, %ecx               /* Ensure size is multiple of 8 */
-> > +
-> > +     subl    %ecx, %esp              /* Allocate new GDT */
-> > +     andl    $~15, %esp              /* Realign the stack */
-> > +     movl    %esp, %edi              /* New GDT address */
-> > +     leal    7(%ecx), %eax           /* New GDT limit */
-> > +     pushw   %cx                     /* Push 64-bit CS (for LJMP below) */
-> > +     pushl   %edi                    /* Push new GDT address */
-> > +     pushw   %ax                     /* Push new GDT limit */
-> > +
-> > +     /* Copy GDT to the stack and add a 64-bit code segment at the end */
-> > +     movl    $GDT_ENTRY(DESC_CODE64, 0, 0xfffff) & 0xffffffff, (%edi,%ecx)
-> > +     movl    $GDT_ENTRY(DESC_CODE64, 0, 0xfffff) >> 32, 4(%edi,%ecx)
-> > +     shrl    $2, %ecx
-> > +     cld
-> > +     rep     movsl                   /* Copy the firmware GDT */
-> > +     lgdtl   (%esp)                  /* Switch to the new GDT */
-> > +
-> > +     call    1f
-> > +1:   pop     %edi
-> > +
-> > +     /* Record mixed mode entry */
-> > +     movb    $0x0, (efi_is64 - 1b)(%edi)
-> > +
-> > +     /* Set up indirect far call to re-enter 32-bit mode */
-> > +     leal    (efi32_call - 1b)(%edi), %eax
-> > +     addl    %eax, (%eax)
-> > +     movw    %cs, 4(%eax)
-> > +
-> > +     /* Disable paging */
-> > +     movl    %cr0, %eax
-> > +     btrl    $X86_CR0_PG_BIT, %eax
-> > +     movl    %eax, %cr0
-> > +
-> > +     /* Set up 1:1 mapping */
-> > +     leal    (pte - 1b)(%edi), %eax
-> > +     movl    $_PAGE_PRESENT | _PAGE_RW | _PAGE_PSE, %ecx
-> > +     leal    (_PAGE_PRESENT | _PAGE_RW)(%eax), %edx
-> > +2:   movl    %ecx, (%eax)
-> > +     addl    $8, %eax
-> > +     addl    $PMD_SIZE, %ecx
-> > +     jnc     2b
-> > +
-> > +     movl    $PAGE_SIZE, %ecx
-> > +     .irpc   l, 0123
-> > +     movl    %edx, \l * 8(%eax)
-> > +     addl    %ecx, %edx
-> > +     .endr
-> > +     addl    %ecx, %eax
-> > +     movl    %edx, (%eax)
-> > +     movl    %eax, %cr3
-> > +
-> > +     call    efi32_enable_long_mode
-> > +
-> > +     /* Set up far jump to 64-bit mode (CS is already on the stack) */
-> > +     leal    (efi_stub_entry - 1b)(%edi), %eax
-> > +     movl    %eax, 2(%esp)
-> > +
-> > +     movl    0(%ebp), %edi
-> > +     movl    4(%ebp), %esi
-> > +     movl    %ebx, %edx
-> > +     ljmpl   *2(%esp)
-> > +SYM_FUNC_END(efi32_startup)
-> > +
-> > +/*
-> > + * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
-> > + *                          efi_system_table_32_t *sys_table)
-> > + */
-> > +SYM_FUNC_START(efi32_pe_entry)
-> > +     pushl   %ebx                            // save callee-save registers
-> > +
-> > +     /* Check whether the CPU supports long mode */
-> > +     movl    $0x80000001, %eax               // assume extended info support
-> > +     cpuid
-> > +     btl     $29, %edx                       // check long mode bit
-> > +     jnc     1f
-> > +     leal    8(%esp), %esp                   // preserve stack alignment
-> > +     xor     %ebx, %ebx                      // no struct boot_params pointer
-> > +     jmp     efi32_startup                   // only ESP and EBX remain live
-> > +1:   movl    $0x80000003, %eax               // EFI_UNSUPPORTED
-> > +     popl    %ebx
-> > +     RET
-> > +SYM_FUNC_END(efi32_pe_entry)
-> > +
-> > +#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
-> > +     .org    efi32_stub_entry + 0x200
-> > +     .code64
-> > +SYM_FUNC_START_NOALIGN(efi64_stub_entry)
-> > +     jmp     efi_handover_entry
-> > +SYM_FUNC_END(efi64_stub_entry)
-> > +#endif
-> > +
-> > +     .data
-> > +     .balign 8
-> > +SYM_DATA_START_LOCAL(efi32_call)
-> > +     .long   efi_enter32 - .
-> > +     .word   0x0
-> > +SYM_DATA_END(efi32_call)
-> > +SYM_DATA(efi_is64, .byte 1)
-> > +
-> > +     .bss
-> > +     .balign PAGE_SIZE
-> > +SYM_DATA_LOCAL(pte, .fill 6 * PAGE_SIZE, 1, 0)
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index d23a1b9..2f17339 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -85,7 +85,6 @@ lib-$(CONFIG_EFI_GENERIC_STUB)      += efi-stub.o string.o intrinsics.o systable.o \
-> >   lib-$(CONFIG_ARM)           += arm32-stub.o
-> >   lib-$(CONFIG_ARM64)         += kaslr.o arm64.o arm64-stub.o smbios.o
-> >   lib-$(CONFIG_X86)           += x86-stub.o smbios.o
-> > -lib-$(CONFIG_EFI_MIXED)              += x86-mixed.o
-> >   lib-$(CONFIG_X86_64)                += x86-5lvl.o
-> >   lib-$(CONFIG_RISCV)         += kaslr.o riscv.o riscv-stub.o
-> >   lib-$(CONFIG_LOONGARCH)             += loongarch.o loongarch-stub.o
-> > diff --git a/drivers/firmware/efi/libstub/x86-mixed.S b/drivers/firmware/efi/libstub/x86-mixed.S
-> > deleted file mode 100644
-> > index e04ed99..0000000
-> > --- a/drivers/firmware/efi/libstub/x86-mixed.S
-> > +++ /dev/null
-> > @@ -1,253 +0,0 @@
-> > -/* SPDX-License-Identifier: GPL-2.0 */
-> > -/*
-> > - * Copyright (C) 2014, 2015 Intel Corporation; author Matt Fleming
-> > - *
-> > - * Early support for invoking 32-bit EFI services from a 64-bit kernel.
-> > - *
-> > - * Because this thunking occurs before ExitBootServices() we have to
-> > - * restore the firmware's 32-bit GDT and IDT before we make EFI service
-> > - * calls.
-> > - *
-> > - * On the plus side, we don't have to worry about mangling 64-bit
-> > - * addresses into 32-bits because we're executing with an identity
-> > - * mapped pagetable and haven't transitioned to 64-bit virtual addresses
-> > - * yet.
-> > - */
-> > -
-> > -#include <linux/linkage.h>
-> > -#include <asm/desc_defs.h>
-> > -#include <asm/msr.h>
-> > -#include <asm/page_types.h>
-> > -#include <asm/pgtable_types.h>
-> > -#include <asm/processor-flags.h>
-> > -#include <asm/segment.h>
-> > -
-> > -     .text
-> > -     .code32
-> > -#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
-> > -SYM_FUNC_START(efi32_stub_entry)
-> > -     call    1f
-> > -1:   popl    %ecx
-> > -
-> > -     /* Clear BSS */
-> > -     xorl    %eax, %eax
-> > -     leal    (_bss - 1b)(%ecx), %edi
-> > -     leal    (_ebss - 1b)(%ecx), %ecx
-> > -     subl    %edi, %ecx
-> > -     shrl    $2, %ecx
-> > -     cld
-> > -     rep     stosl
-> > -
-> > -     add     $0x4, %esp              /* Discard return address */
-> > -     movl    8(%esp), %ebx           /* struct boot_params pointer */
-> > -     jmp     efi32_startup
-> > -SYM_FUNC_END(efi32_stub_entry)
-> > -#endif
-> > -
-> > -/*
-> > - * Called using a far call from __efi64_thunk() below, using the x86_64 SysV
-> > - * ABI (except for R8/R9 which are inaccessible to 32-bit code - EAX/EBX are
-> > - * used instead).  EBP+16 points to the arguments passed via the stack.
-> > - *
-> > - * The first argument (EDI) is a pointer to the boot service or protocol, to
-> > - * which the remaining arguments are passed, each truncated to 32 bits.
-> > - */
-> > -SYM_FUNC_START_LOCAL(efi_enter32)
-> > -     /*
-> > -      * Convert x86-64 SysV ABI params to i386 ABI
-> > -      */
-> > -     pushl   32(%ebp)        /* Up to 3 args passed via the stack */
-> > -     pushl   24(%ebp)
-> > -     pushl   16(%ebp)
-> > -     pushl   %ebx            /* R9 */
-> > -     pushl   %eax            /* R8 */
-> > -     pushl   %ecx
-> > -     pushl   %edx
-> > -     pushl   %esi
-> > -
-> > -     /* Disable paging */
-> > -     movl    %cr0, %eax
-> > -     btrl    $X86_CR0_PG_BIT, %eax
-> > -     movl    %eax, %cr0
-> > -
-> > -     /* Disable long mode via EFER */
-> > -     movl    $MSR_EFER, %ecx
-> > -     rdmsr
-> > -     btrl    $_EFER_LME, %eax
-> > -     wrmsr
-> > -
-> > -     call    *%edi
-> > -
-> > -     /* We must preserve return value */
-> > -     movl    %eax, %edi
-> > -
-> > -     call    efi32_enable_long_mode
-> > -
-> > -     addl    $32, %esp
-> > -     movl    %edi, %eax
-> > -     lret
-> > -SYM_FUNC_END(efi_enter32)
-> > -
-> > -     .code64
-> > -SYM_FUNC_START(__efi64_thunk)
-> > -     push    %rbp
-> > -     movl    %esp, %ebp
-> > -     push    %rbx
-> > -
-> > -     /* Move args #5 and #6 into 32-bit accessible registers */
-> > -     movl    %r8d, %eax
-> > -     movl    %r9d, %ebx
-> > -
-> > -     lcalll  *efi32_call(%rip)
-> > -
-> > -     pop     %rbx
-> > -     pop     %rbp
-> > -     RET
-> > -SYM_FUNC_END(__efi64_thunk)
-> > -
-> > -     .code32
-> > -SYM_FUNC_START_LOCAL(efi32_enable_long_mode)
-> > -     movl    %cr4, %eax
-> > -     btsl    $(X86_CR4_PAE_BIT), %eax
-> > -     movl    %eax, %cr4
-> > -
-> > -     movl    $MSR_EFER, %ecx
-> > -     rdmsr
-> > -     btsl    $_EFER_LME, %eax
-> > -     wrmsr
-> > -
-> > -     /* Disable interrupts - the firmware's IDT does not work in long mode */
-> > -     cli
-> > -
-> > -     /* Enable paging */
-> > -     movl    %cr0, %eax
-> > -     btsl    $X86_CR0_PG_BIT, %eax
-> > -     movl    %eax, %cr0
-> > -     ret
-> > -SYM_FUNC_END(efi32_enable_long_mode)
-> > -
-> > -/*
-> > - * This is the common EFI stub entry point for mixed mode. It sets up the GDT
-> > - * and page tables needed for 64-bit execution, after which it calls the
-> > - * common 64-bit EFI entrypoint efi_stub_entry().
-> > - *
-> > - * Arguments:        0(%esp) image handle
-> > - *           4(%esp) EFI system table pointer
-> > - *           %ebx    struct boot_params pointer (or NULL)
-> > - *
-> > - * Since this is the point of no return for ordinary execution, no registers
-> > - * are considered live except for the function parameters. [Note that the EFI
-> > - * stub may still exit and return to the firmware using the Exit() EFI boot
-> > - * service.]
-> > - */
-> > -SYM_FUNC_START_LOCAL(efi32_startup)
-> > -     movl    %esp, %ebp
-> > -
-> > -     subl    $8, %esp
-> > -     sgdtl   (%esp)                  /* Save GDT descriptor to the stack */
-> > -     movl    2(%esp), %esi           /* Existing GDT pointer */
-> > -     movzwl  (%esp), %ecx            /* Existing GDT limit */
-> > -     inc     %ecx                    /* Existing GDT size */
-> > -     andl    $~7, %ecx               /* Ensure size is multiple of 8 */
-> > -
-> > -     subl    %ecx, %esp              /* Allocate new GDT */
-> > -     andl    $~15, %esp              /* Realign the stack */
-> > -     movl    %esp, %edi              /* New GDT address */
-> > -     leal    7(%ecx), %eax           /* New GDT limit */
-> > -     pushw   %cx                     /* Push 64-bit CS (for LJMP below) */
-> > -     pushl   %edi                    /* Push new GDT address */
-> > -     pushw   %ax                     /* Push new GDT limit */
-> > -
-> > -     /* Copy GDT to the stack and add a 64-bit code segment at the end */
-> > -     movl    $GDT_ENTRY(DESC_CODE64, 0, 0xfffff) & 0xffffffff, (%edi,%ecx)
-> > -     movl    $GDT_ENTRY(DESC_CODE64, 0, 0xfffff) >> 32, 4(%edi,%ecx)
-> > -     shrl    $2, %ecx
-> > -     cld
-> > -     rep     movsl                   /* Copy the firmware GDT */
-> > -     lgdtl   (%esp)                  /* Switch to the new GDT */
-> > -
-> > -     call    1f
-> > -1:   pop     %edi
-> > -
-> > -     /* Record mixed mode entry */
-> > -     movb    $0x0, (efi_is64 - 1b)(%edi)
-> > -
-> > -     /* Set up indirect far call to re-enter 32-bit mode */
-> > -     leal    (efi32_call - 1b)(%edi), %eax
-> > -     addl    %eax, (%eax)
-> > -     movw    %cs, 4(%eax)
-> > -
-> > -     /* Disable paging */
-> > -     movl    %cr0, %eax
-> > -     btrl    $X86_CR0_PG_BIT, %eax
-> > -     movl    %eax, %cr0
-> > -
-> > -     /* Set up 1:1 mapping */
-> > -     leal    (pte - 1b)(%edi), %eax
-> > -     movl    $_PAGE_PRESENT | _PAGE_RW | _PAGE_PSE, %ecx
-> > -     leal    (_PAGE_PRESENT | _PAGE_RW)(%eax), %edx
-> > -2:   movl    %ecx, (%eax)
-> > -     addl    $8, %eax
-> > -     addl    $PMD_SIZE, %ecx
-> > -     jnc     2b
-> > -
-> > -     movl    $PAGE_SIZE, %ecx
-> > -     .irpc   l, 0123
-> > -     movl    %edx, \l * 8(%eax)
-> > -     addl    %ecx, %edx
-> > -     .endr
-> > -     addl    %ecx, %eax
-> > -     movl    %edx, (%eax)
-> > -     movl    %eax, %cr3
-> > -
-> > -     call    efi32_enable_long_mode
-> > -
-> > -     /* Set up far jump to 64-bit mode (CS is already on the stack) */
-> > -     leal    (efi_stub_entry - 1b)(%edi), %eax
-> > -     movl    %eax, 2(%esp)
-> > -
-> > -     movl    0(%ebp), %edi
-> > -     movl    4(%ebp), %esi
-> > -     movl    %ebx, %edx
-> > -     ljmpl   *2(%esp)
-> > -SYM_FUNC_END(efi32_startup)
-> > -
-> > -/*
-> > - * efi_status_t efi32_pe_entry(efi_handle_t image_handle,
-> > - *                          efi_system_table_32_t *sys_table)
-> > - */
-> > -SYM_FUNC_START(efi32_pe_entry)
-> > -     pushl   %ebx                            // save callee-save registers
-> > -
-> > -     /* Check whether the CPU supports long mode */
-> > -     movl    $0x80000001, %eax               // assume extended info support
-> > -     cpuid
-> > -     btl     $29, %edx                       // check long mode bit
-> > -     jnc     1f
-> > -     leal    8(%esp), %esp                   // preserve stack alignment
-> > -     xor     %ebx, %ebx                      // no struct boot_params pointer
-> > -     jmp     efi32_startup                   // only ESP and EBX remain live
-> > -1:   movl    $0x80000003, %eax               // EFI_UNSUPPORTED
-> > -     popl    %ebx
-> > -     RET
-> > -SYM_FUNC_END(efi32_pe_entry)
-> > -
-> > -#ifdef CONFIG_EFI_HANDOVER_PROTOCOL
-> > -     .org    efi32_stub_entry + 0x200
-> > -     .code64
-> > -SYM_FUNC_START_NOALIGN(efi64_stub_entry)
-> > -     jmp     efi_handover_entry
-> > -SYM_FUNC_END(efi64_stub_entry)
-> > -#endif
-> > -
-> > -     .data
-> > -     .balign 8
-> > -SYM_DATA_START_LOCAL(efi32_call)
-> > -     .long   efi_enter32 - .
-> > -     .word   0x0
-> > -SYM_DATA_END(efi32_call)
-> > -SYM_DATA(efi_is64, .byte 1)
-> > -
-> > -     .bss
-> > -     .balign PAGE_SIZE
-> > -SYM_DATA_LOCAL(pte, .fill 6 * PAGE_SIZE, 1, 0)
