@@ -1,74 +1,96 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DD01EF39B;
-	Mon,  7 Apr 2025 20:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 165101CB337;
+	Mon,  7 Apr 2025 20:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744058631; cv=none; b=h8yQTw7Kfoh4NtpCy825XZe/lclWKUMCVw/PzQ4Ycaz6/jR1hwx/hzCDMcQcY4DCXVrAn0Jwr4sdpiIoh1kkPAWGJ61hAWxYTB+fGuPmgZvqy5R92dx+If+CWn25rr5q9zNGNbnBwfpwBfrmFMoxdcXDxZKXiWFxDAe1f/HX47M=
+	t=1744058798; cv=none; b=jsYU+dp38V6tbcWNU5S2Xrb1tWPvL1xkhbUhwfFqsou6AyhPSnYFcOqCGyZKJrZb47djKrUxKwCQW6Fk7XeKEl8I7lbHAxyY3dSl8cmscPep5rGyHe1YP/3pI0HB/Y2tXAtofNsXsitHMwZpUgJMzMCuRt4+t/w01QyD75NHkiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744058631; c=relaxed/simple;
-	bh=6EBh2U1Xj5T1DiZG4ZcEokMC3YV0jDfrvas4ybr1kCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJB/h84Edoqf7LlF6nvBIeTLqzn1TQrsZwJzZsanWRNeZlLFchQvb2L4E7xpznp7XaN9bGcV/nJmnzGKcRRDpC+MptgUsjQ8JcgOP7mMMhi7MLG8cHG5+0iTVtkgTVTWgHJNjEbaIkWNXQEVmHG6ZX7eUzGnET/tsHFqwot/gt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0ZmvjQkV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0ZmvjQkV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YetF0m4s/Yc5t+Cr7WhKcRQIRuNVoT1QJ5N9WOd4WgM=; b=0ZmvjQkV5qlg+yfme4Qsz/Yndz
-	51Y6/G/0kexD56xw1hBYrwyI+3n3MTpyXwquaBETy3quAcb9bR8bE0ahLlXx+AWKcXMxKvZ3+ealD
-	uMcN1zdsGJwUbX4OmIBlOeu7rmZKMvZ/T7iF9SBY9FDfc/TvR4XcvwiKZ1q8eok18Rto=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u1tJl-008Its-Sj; Mon, 07 Apr 2025 22:43:41 +0200
-Date: Mon, 7 Apr 2025 22:43:41 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Moon Yeounsu <yyyynoom@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6] net: dlink: add support for reporting stats
- via `ethtool -S` and `ip -s -s link show`
-Message-ID: <122f35a6-a8b6-446a-a76d-9b761c716dfe@lunn.ch>
-References: <20250407134930.124307-1-yyyynoom@gmail.com>
+	s=arc-20240116; t=1744058798; c=relaxed/simple;
+	bh=iB9D5wE/9tCMm0C28EHmkJdL/Ho9v5VD5tSpttA5WsI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mLxkmKCAooLoFcKzOxzZ4TLgjAe7MvgVyncWMI5cyIqp6DqTNO7X8M3BACYfIpKAY/XfmaR24vj0KRkh3l12Sdv0ofD/npRHajREvB2wTCuNrv1/tZ7szDIh9X29F5wEh2dQwfMEWm5sPW21/hRdTxjdNlEBihUSo/94gSj9dag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 7671092009C; Mon,  7 Apr 2025 22:46:26 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 6F1B792009B;
+	Mon,  7 Apr 2025 21:46:26 +0100 (BST)
+Date: Mon, 7 Apr 2025 21:46:26 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Richard Henderson <richard.henderson@linaro.org>, 
+    Ivan Kokshaysky <ink@unseen.parts>, Matt Turner <mattst88@gmail.com>, 
+    Arnd Bergmann <arnd@arndb.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    Magnus Lindholm <linmag7@gmail.com>, 
+    "Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+    linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data
+ consistency
+In-Reply-To: <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk> <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com> <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407134930.124307-1-yyyynoom@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-> +static const struct dlink_stats stats[] = {
-> +	{
-> +		.string = "tx_jumbo_frames",
-> +		.stat_offset = offsetof(struct netdev_private,
-> +					tx_jumbo_frames),
-> +		.size = sizeof(u16),
-> +		.regs = TxJumboFrames
-> +	},
-> +	{
-> +		.string = "rmon_rx_packets",
-> +		.stat_offset = offsetof(struct netdev_private,
-> +					rmon_rx_packets),
-> +		.size = sizeof(u32),
-> +		.regs = EtherStatsPkts
-> +	}
-> +}, ctrl_stats[] = {
-> +	{
-> +		.string = "tx_mac_control_frames",
+On Thu, 20 Feb 2025, Maciej W. Rozycki wrote:
 
-That is an odd way of doing it. It would be better to repeat the
-static const struct dlink_stats.
+> > Again, I don't think we care, and it works in practice, but it does
+> > mean that I *really* think that:
+> > 
+> >  (c) you should not handle the kernel case at all.
+> > 
+> > If the kernel does an unaligned ld_l/st_c, that's a fundamental kernel
+> > bug. Don't emulate it. Particularly when the emulation fundamentally
+> > is not truly atomic wrt other accesses.
+> 
+>  Good point actually, I think I mentally drove myself into a dead end 
+> here.  Yes, absolutely, it is not expected to happen unless we have a bug 
+> in our code somewhere!
 
-       Andrew
+ Well, I take it back.  I knew I had something in mind while writing this 
+code, just couldn't remember at the time of the reply, and I now brought 
+it back at a mental relief break: it's networking.
+
+ It's been decades ago, but I kept in memory a discussion when Alpha still 
+was a thing, up to remembering it was DaveM saying we chose to use aligned 
+frame/packet header accesses for performance reasons even where we don't 
+know beforehand whether a given piece of networking data will or will not 
+be actually aligned, so as not to penalise the common aligned case.
+
+ Here's one reference I could track down: "TCP SYNs broken in 2.3.41", 
+<https://marc.info/?l=linux-kernel&m=94927689929463> (not present on lore; 
+I have the original thread of discussion with complete e-mail headers in 
+my personal archive though), likely the very one I remembered.
+
+ So unless I'm proved otherwise (e.g. that all such code paths are now 
+gone from networking, which may or may not be the case: I saw IPX go but I 
+can see AppleTalk still around; or that no sub-longword accesses are ever 
+used in the relevant networking paths), I'm going to keep kernel emulation 
+in v2, because what just used to be wrapped in an unaligned LDQ/STQ pair, 
+which we trapped on and emulated, will now become an LDQ_L/STQ_C loop.
+
+ Do you happen to know what the situation is here?
+
+ NB my network usage with my Alpha environment is virtually exclusively 
+FDDI, and there the wrong alignment phenomena may or may not be present at 
+all for the various networking protocols, owing to different link-layer 
+framing (and including the Packet Request Header used by the Motorola FDDI 
+chipset the way it does for the very purpose to keep things aligned).  I 
+don't know offhand, my FDDI-fu is a bit dusty even in the areas I have 
+already explored, and this is a new one; I've certainly not tried (to 
+learn anything about) AppleTalk over FDDI (or indeed otherwise).
+
+ All in all the lack of kernel unaligned traps in my setup and hence no 
+recorded way to trigger them merely means I haven't used any of the stuff 
+that used to cause them.
+
+  Maciej
