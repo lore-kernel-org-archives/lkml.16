@@ -1,127 +1,249 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B057C227BA4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2820211A33
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015314; cv=none; b=qXicU7CSZ2qPyWXP5MBJ5EdCfNnPmAxvrsKxJcOfA3vDfbUplUebJ/KWfV10qIeGh6UNHeC+y83ZXZTE5zSSwYRzm5G9ZfKftzQ+zKXHLzJzOqMgk+emG36puFRRL+f5oDs7oTsRFTxnLs/+Zf5g3UHT2+ABzutqH+xXuekvQw4=
+	t=1744015345; cv=none; b=gTBTa8uFPgGvRPbzHYE5SDyDw6fv5BE+zm4/UIat0/goVezUALwXzppZmYyJtzsmMYpbOPJRtzcbmSAVW3JCPRKlinhpLSlrv58KpXMtz5lfyXWjbGFwhG6a2qC4GQkViz/RiPjM9WjcDi3bV8SUCXC1FbpAq3ytRoTzY3lAk7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015314; c=relaxed/simple;
-	bh=dubat8tCLJKpXwu98mOgPZCaGLWjN3X5sHoHO7zCnlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4uyc9e0TiCdv1jfbYvQQK4rIZi2RfVt/Sltk9ZWeyw3hI0TpatZLZtqOXEYEzz2CcchmcIN06S3p2EbwP4q2e/4XsmYHeqsAt22IONhc9gxNI4XcISUrbikoLDjdGOanQK9ijmXUHdEuboSl4GzkE1BATwhDr/Km3cPR9AUDC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bx5ZAoS3; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1744015345; c=relaxed/simple;
+	bh=15WWb39rFMg02fOtz9X8hSYa4BiOQYUx+EjN+2Atdis=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c6EuIOuDGTYKwVCFbjN3O2a/wsnmBmPA1hUX+WN6BKUA1fqNq+ZLGt8St5F1m7H8yjZqtGis7rEJqoiuW7DJQs1LHEYwzKHcYHynUzQSV5xER1ARvW9VI3ngd2sJZaMxK9aD88DEAgGd5dd5XbJCpPaeeebu7Rxt46Tc/Qyhc6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oj372CMk; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bx5ZAoS3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oj372CMk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744015311;
+	s=mimecast20190719; t=1744015341;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m3pK6yIdPNYZ4p3nnxwbYWeXbQyAyM0EzrK62OMGx28=;
-	b=bx5ZAoS3UwOKTWEVPCAen1bCVlFGjOUbOSPgB/Q2yxSxkKyOrfQbALqBG0ANrnoSXWuUM1
-	GqjHJG4opdNzy/+jNfBVl0tUccgzpfJgViYAEtTzqi/loIpSqqKxw+K3cRSMjF1CBAVFqH
-	vSUhdWj7ZoviBRJ99M11TmGXjRJUTCg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-RWkjQHMxN2abtEPttYwWKQ-1; Mon, 07 Apr 2025 04:41:50 -0400
-X-MC-Unique: RWkjQHMxN2abtEPttYwWKQ-1
-X-Mimecast-MFC-AGG-ID: RWkjQHMxN2abtEPttYwWKQ_1744015309
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cec217977so26286125e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:41:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744015309; x=1744620109;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m3pK6yIdPNYZ4p3nnxwbYWeXbQyAyM0EzrK62OMGx28=;
-        b=CYHfzUB8Km39I1ZT0Ad4UZpcczx5f/K23QP707Yhj/Z9epRNe95GDvSArgjxcrswwm
-         pAzcqCsBZVSzsPlWIunHsI92bdJ/N+z1HQdRI6WYKfZRQxm2YBrpL/Fp9SEwFZ8W1Sss
-         OZRc7XKvc9lDmQoItz1YIGh4KQ1tz/jCovk3s0tSACfLBseqG5fcwTYJzogX01dVjhf4
-         cK1mrPRNO5SslOW0Mck83RpJ6cRI1qAVb7YyIEpcJisLljD6d0iHKgB9orI2Lthh8qXH
-         BIzrVbhAnyegW+nT8KjXJaBd3PXMsu0ayQpYQLvWJqaXLNhL7+YCj/XrGcmSHTvfWcFr
-         djgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWw335b2Bd7lXiYdI4ZMtTRDYxo1uJutgQMgYGio8pCqjlit5rd4BjnQOAMd9VNhdaIYtYltsv3GFl2WLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPO653VgpftccZsg4O4bIsVJFB991KhJSoM+4MC1FdpMxREIZc
-	PHUIiBzr8DgLeKKlL9/fjQ7JCErTRxPxV/393UfN5/OJv51vDgUE9XYx//8Anlb3T07QD53wKgS
-	4DFrWGzaMgTW+t7cpYdqbDFeDBEH7xF+BBA9jFQN+hFlVQT40P+V/EA6BwxsTQw==
-X-Gm-Gg: ASbGncvjtiC3uDCVhVeGUw5+4EHI2Xa7mUbVntVqIdieTbN2W6BMylt37B0BNheTOqI
-	vkzudekgGTawpawMjGpeI4OjiyOK0iTcCBgNwto3O/OVb5q00IYizvBDYYbjj/4+c8ELwcFFf1M
-	qtqDqYO97cGM+yLaWgv9vnvFuVwd70Qkh9Uo4+T6FC/hL2Wxyz6A/ItMOfOb4k1qfKTu6v4mW3M
-	JTvEKgJC5cxhRu783xH4vWUDVkeWYJxXnLfqFpxDFX+xzG4Jb/0pJtJfefS05PLrveeAS0xNUek
-	uGHdfjpHsg==
-X-Received: by 2002:a05:600c:5248:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-43edf8a28d1mr45333075e9.22.1744015309274;
-        Mon, 07 Apr 2025 01:41:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEnMOiX9O9gk9kURjhnnuCNT1UVrytArjtGV7ecRUIBKrJSc0PSzOsjWjaDnmkVaY/+rUOMfQ==
-X-Received: by 2002:a05:600c:5248:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-43edf8a28d1mr45332875e9.22.1744015308965;
-        Mon, 07 Apr 2025 01:41:48 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c302269a2sm11484143f8f.91.2025.04.07.01.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:41:48 -0700 (PDT)
-Date: Mon, 7 Apr 2025 04:41:45 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407044029-mutt-send-email-mst@kernel.org>
-References: <20250403161836.7fe9fea5.pasic@linux.ibm.com>
- <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
- <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3+6tBOQqFX76msxDugyjTEa3wbr1jZTjo+PNwIN3lnY=;
+	b=Oj372CMkNKmlfUcEKr5oGc9HnveVa81+Cyfo9bnYJoJPTtbNxARHk3HY0enTSj3pssEKBd
+	CBov8DadmwdLJ0DPG+8jtG82Q3aTdcAnTSQlPJgdSNxm/OQV77WmeTGJckbPpcjRlQIfri
+	8sCtk1aN6SiRlyM7cnt1ReBDZfC5F20=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-WgJssNW9OWaNc8BIS4cfYg-1; Mon,
+ 07 Apr 2025 04:42:17 -0400
+X-MC-Unique: WgJssNW9OWaNc8BIS4cfYg-1
+X-Mimecast-MFC-AGG-ID: WgJssNW9OWaNc8BIS4cfYg_1744015336
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E24018608D9;
+	Mon,  7 Apr 2025 08:42:13 +0000 (UTC)
+Received: from dell-per7425-02.rhts.eng.pek2.redhat.com (dell-per7425-02.rhts.eng.pek2.redhat.com [10.73.116.18])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5C1891828AA8;
+	Mon,  7 Apr 2025 08:42:06 +0000 (UTC)
+From: Li Wang <liwang@redhat.com>
+To: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	liwang@redhat.com
+Cc: Waiman Long <longman@redhat.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	"Kirill A. Shuemov" <kirill.shutemov@linux.intel.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: [PATCH] selftest/mm: Make hugetlb_reparenting_test tolerant to async reparenting
+Date: Mon,  7 Apr 2025 16:42:01 +0800
+Message-ID: <20250407084201.74492-1-liwang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404173910.6581706a.pasic@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
-> That basically means that if I was, for the sake of fun do
-> 
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -1197,7 +1197,6 @@ static unsigned int features[] = {
->         VIRTIO_BALLOON_F_MUST_TELL_HOST,
->         VIRTIO_BALLOON_F_STATS_VQ,
->         VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
-> -       VIRTIO_BALLOON_F_FREE_PAGE_HINT,
->         VIRTIO_BALLOON_F_PAGE_POISON,
->         VIRTIO_BALLOON_F_REPORTING,
->  };
-> 
-> I would end up with virtio_check_driver_offered_feature() calling
-> BUG().
+In cgroup v2, memory and hugetlb usage reparenting is asynchronous.
+This can cause test flakiness when immediately asserting usage after
+deleting a child cgroup. To address this, add a helper function
+`assert_with_retry()` that checks usage values with a timeout-based retry.
+This improves test stability without relying on fixed sleep delays.
 
+Also bump up the tolerance size to 7MB.
 
-I mean, yes, this is exactly to catch drivers that use
-features without negotiating them first. 
+To avoid False Positives:
+  ...
+  # Assert memory charged correctly for child only use.
+  # actual a = 11 MB
+  # expected a = 0 MB
+  # fail
+  # cleanup
+  # [FAIL]
+  not ok 11 hugetlb_reparenting_test.sh -cgroup-v2 # exit=1
+  # 0
+  # SUMMARY: PASS=10 SKIP=0 FAIL=1
 
+Signed-off-by: Li Wang <liwang@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>
+Cc: Kirill A. Shuemov <kirill.shutemov@linux.intel.com>
+Cc: Shuah Khan <shuah@kernel.org>
+---
+ .../selftests/mm/hugetlb_reparenting_test.sh  | 96 ++++++++-----------
+ 1 file changed, 41 insertions(+), 55 deletions(-)
 
+diff --git a/tools/testing/selftests/mm/hugetlb_reparenting_test.sh b/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
+index 11f9bbe7dc22..1c172c6999f4 100755
+--- a/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
++++ b/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
+@@ -36,7 +36,7 @@ else
+     do_umount=1
+   fi
+ fi
+-MNT='/mnt/huge/'
++MNT='/mnt/huge'
+ 
+ function get_machine_hugepage_size() {
+   hpz=$(grep -i hugepagesize /proc/meminfo)
+@@ -60,6 +60,41 @@ function cleanup() {
+   set -e
+ }
+ 
++function assert_with_retry() {
++  local actual_path="$1"
++  local expected="$2"
++  local tolerance=$((7 * 1024 * 1024))
++  local timeout=20
++  local interval=1
++  local start_time
++  local now
++  local elapsed
++  local actual
++
++  start_time=$(date +%s)
++
++  while true; do
++    actual="$(cat "$actual_path")"
++
++    if [[ $actual -ge $(($expected - $tolerance)) ]] &&
++        [[ $actual -le $(($expected + $tolerance)) ]]; then
++      return 0
++    fi
++
++    now=$(date +%s)
++    elapsed=$((now - start_time))
++
++    if [[ $elapsed -ge $timeout ]]; then
++      echo "actual = $((${actual%% *} / 1024 / 1024)) MB"
++      echo "expected = $((${expected%% *} / 1024 / 1024)) MB"
++      cleanup
++      exit 1
++    fi
++
++    sleep $interval
++  done
++}
++
+ function assert_state() {
+   local expected_a="$1"
+   local expected_a_hugetlb="$2"
+@@ -70,58 +105,13 @@ function assert_state() {
+     expected_b="$3"
+     expected_b_hugetlb="$4"
+   fi
+-  local tolerance=$((5 * 1024 * 1024))
+-
+-  local actual_a
+-  actual_a="$(cat "$CGROUP_ROOT"/a/memory.$usage_file)"
+-  if [[ $actual_a -lt $(($expected_a - $tolerance)) ]] ||
+-    [[ $actual_a -gt $(($expected_a + $tolerance)) ]]; then
+-    echo actual a = $((${actual_a%% *} / 1024 / 1024)) MB
+-    echo expected a = $((${expected_a%% *} / 1024 / 1024)) MB
+-    echo fail
+-
+-    cleanup
+-    exit 1
+-  fi
+-
+-  local actual_a_hugetlb
+-  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.${MB}MB.$usage_file)"
+-  if [[ $actual_a_hugetlb -lt $(($expected_a_hugetlb - $tolerance)) ]] ||
+-    [[ $actual_a_hugetlb -gt $(($expected_a_hugetlb + $tolerance)) ]]; then
+-    echo actual a hugetlb = $((${actual_a_hugetlb%% *} / 1024 / 1024)) MB
+-    echo expected a hugetlb = $((${expected_a_hugetlb%% *} / 1024 / 1024)) MB
+-    echo fail
+-
+-    cleanup
+-    exit 1
+-  fi
+-
+-  if [[ -z "$expected_b" || -z "$expected_b_hugetlb" ]]; then
+-    return
+-  fi
+-
+-  local actual_b
+-  actual_b="$(cat "$CGROUP_ROOT"/a/b/memory.$usage_file)"
+-  if [[ $actual_b -lt $(($expected_b - $tolerance)) ]] ||
+-    [[ $actual_b -gt $(($expected_b + $tolerance)) ]]; then
+-    echo actual b = $((${actual_b%% *} / 1024 / 1024)) MB
+-    echo expected b = $((${expected_b%% *} / 1024 / 1024)) MB
+-    echo fail
+-
+-    cleanup
+-    exit 1
+-  fi
+ 
+-  local actual_b_hugetlb
+-  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.${MB}MB.$usage_file)"
+-  if [[ $actual_b_hugetlb -lt $(($expected_b_hugetlb - $tolerance)) ]] ||
+-    [[ $actual_b_hugetlb -gt $(($expected_b_hugetlb + $tolerance)) ]]; then
+-    echo actual b hugetlb = $((${actual_b_hugetlb%% *} / 1024 / 1024)) MB
+-    echo expected b hugetlb = $((${expected_b_hugetlb%% *} / 1024 / 1024)) MB
+-    echo fail
++  assert_with_retry "$CGROUP_ROOT/a/memory.$usage_file" "$expected_a"
++  assert_with_retry "$CGROUP_ROOT/a/hugetlb.${MB}MB.$usage_file" "$expected_a_hugetlb"
+ 
+-    cleanup
+-    exit 1
++  if [[ -n "$expected_b" && -n "$expected_b_hugetlb" ]]; then
++    assert_with_retry "$CGROUP_ROOT/a/b/memory.$usage_file" "$expected_b"
++    assert_with_retry "$CGROUP_ROOT/a/b/hugetlb.${MB}MB.$usage_file" "$expected_b_hugetlb"
+   fi
+ }
+ 
+@@ -174,7 +164,6 @@ size=$((${MB} * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
+ 
+ cleanup
+ 
+-echo
+ echo
+ echo Test charge, rmdir, uncharge
+ setup
+@@ -195,7 +184,6 @@ cleanup
+ 
+ echo done
+ echo
+-echo
+ if [[ ! $cgroup2 ]]; then
+   echo "Test parent and child hugetlb usage"
+   setup
+@@ -212,7 +200,6 @@ if [[ ! $cgroup2 ]]; then
+   assert_state 0 $(($size * 2)) 0 $size
+ 
+   rmdir "$CGROUP_ROOT"/a/b
+-  sleep 5
+   echo Assert memory reparent correctly.
+   assert_state 0 $(($size * 2))
+ 
+@@ -224,7 +211,6 @@ if [[ ! $cgroup2 ]]; then
+   cleanup
+ fi
+ 
+-echo
+ echo
+ echo "Test child only hugetlb usage"
+ echo setup
 -- 
-MST
+2.48.1
 
