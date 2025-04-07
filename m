@@ -1,118 +1,85 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2A11F63DD;
-	Mon,  7 Apr 2025 14:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50FA1F790C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035885; cv=none; b=iLmFc6qVlgjuHghuFLZV1YqEEOdPrtbEbQO2vAGBzCCH2XPEAdX6MNcQKsJXBBmGbyBk/VeabXPJcwPw578vhytVnNLPGh89dv8fgtHK/7AlOMRMyxCQMYs2wErYbRm+djv3onNQnFzFtHs7/0tz8uWNg5qsLnXghDHU9bxEh8A=
+	t=1744035888; cv=none; b=t6MF+LbQ38tl/Zr5WqVUDtjzP2xJDC8+MD+MapMFs7tBjnuLLibXk2Nlnz/mZ70R3JUcNRnDNhl+UptiycF6+09aMWNzec1SgljyxsXyLucnE/XBjlLnhbBrFjlKSy2r+EIeV07xphd18fSnNLJDbARlMGuFEeKwlFN8lyJs1b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035885; c=relaxed/simple;
-	bh=xUERWjhVygQSEdW8chIcQBLblVgXTj0G7Izb92f1TKk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n/+xx2/UFVHF52F0I6yme03JSd77srC2Bz6T79TtDt5u8z8rJeqTdeF3HevgGILqqpnuDJ/JlRbRj/mcdAKxnCYz6QpIh/cNh1MIARsIRgDIZdU50da9qIBWze0/XlWqPk/2acie7eplurdT5xmcuFhwQJD2u8LuUmfjUAebCW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o0FfAszI; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744035888; c=relaxed/simple;
+	bh=FNL+NAWFI0GxoBJ167yJeoBFSWA7FvYgScloIAzLUeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EFGRb2pyikfA/B1ZG5bHuK3EuDLv9R4Bpm1Acyq8GuJ4rd45dldjlJf8jr8dQDfcbZCPq6FynBaQuCKgnc5huyfIhZVvdDivspMFbzbCk4t2jdu9ughPpxmzOoa+X4lBUuFfpuFrrrNoXiXW3nLM28+gRZ6rc0excTZPbCA08zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=HekbsPYU; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o0FfAszI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E24E6442B9;
-	Mon,  7 Apr 2025 14:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744035881;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6HA7/sDL4FYVwc4Od7+7q5E7fLZvI9fOGo2Vc3YR5Sg=;
-	b=o0FfAszIHLipUj12POofZu/gwb+aJcvzkARUhm5e6EIQGsmA3I7DHij/hjsNeNsKEr4jL5
-	qjOOkdYghybGegJjgbnYtSbda5OIT8///KzIV0HvCwFILg9H2OzrlyCm5b6eszp9zBmY3e
-	N5Q/TLIVjTmB/qHULQW0aMoJ3K324BywXWvwmNKzpax+PXUM+PKbzaWomHrifk2SNbEW/M
-	+erS7Qm830OzCLBLvnl/mB11c8ElGnB+xSRyaU7OI7Z1iUORS91UtY9Q8zOWJR0WDGufsW
-	FS4h9LarICIYChGu/eLGmmYveskEW/Jq8g/K7fLEZBPyVl3n0uIh5SCJBxCPtQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 07 Apr 2025 16:23:28 +0200
-Subject: [PATCH 13/34] drm/bridge: ti-sn65dsi86: convert to
- devm_drm_bridge_alloc() API
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="HekbsPYU"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47663aeff1bso39611411cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1744035884; x=1744640684; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FNL+NAWFI0GxoBJ167yJeoBFSWA7FvYgScloIAzLUeo=;
+        b=HekbsPYUXk7zhTOruFnRnQckKhfaxTWzEjMmsaJBlgqabCZ6jjZ+LqGVA1xI/whr50
+         LIx8t49SNes4OXnO8Nr0MCEy1a+9jhSQt/D1vYdIOKlHDUTcA0QOF8uLj6eKXxnWFsXl
+         hSW+mdJEr0QcPCOm/WX4dHqoW581abar4frAk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744035884; x=1744640684;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FNL+NAWFI0GxoBJ167yJeoBFSWA7FvYgScloIAzLUeo=;
+        b=OaHk5hzyox6hbIm0IR+Ip+YqqTdE+j8q8gXpA5O8CCASKQDm0kis2EPGocOBmIMluB
+         AcCszCSfm5j1oHoJlAImvCAM5jzPBozRoilE56CeexCjn/Gz+dcpXOkzTNu9pMBUo3od
+         K5fBvfXTwroh2Kd16nA8OfiqyqMkPfgyTVGretM7fI9chMXS4E2EaDR08piJtO6bgokH
+         wO6wVDz06J247jcWhlv4OLLBvxozpo2arSnLoXwRkyoEVUrh2t+06bweKoE2aLF8WAlB
+         g763wEpyrp2XjrdpQtIzBTJhOMj+ZTKzVKh8oG6WVM7WcnyyJi6BwT06AoB36E+EmHJM
+         QWqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvgdup8WJ3LLIQht5uIpZTR+EddI2yyHR5QyJaCY4miMk7ECIbSUO6KeC9QE3WT7mvjLtvCafvQuTKkVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2CA0kD0L5NVx1o17m7/4fxT9H6xBy3DUdl/5hG9UVHdlIl0Ne
+	hx6f1r7aHQkQFqjHYFHo8uMEnD5WzQdRLdxFtyrNptczVb98+jrMn+BVJ8QjEzt/5T2OQJeyzE4
+	zuHuHTJubbcoBWbkoxLH0WhAjQCVUxF4Xvn1ebA==
+X-Gm-Gg: ASbGncus5GwYWOdNFHU7cxAlaQxZbmWaF7YmBBabnLup5/Oz3xIVx5EHUsBFpIThLdD
+	fkjb6/szDaAb6EhcLZPP8+j5OQXb2vqgWGlT3qHivNyYjVylmOEnNii9LNIB5AqVqjfRqI/D5Nv
+	ytXO07NFI+b61gCtRzXCwB69l9Gtk=
+X-Google-Smtp-Source: AGHT+IFQd4jHNyMbSuzJ059jvOO/iExVzCO/KphR667EKFZiLjHNp+k+91snAGwPCrKp9DxvzNZfuI0F/c1qQXQ410A=
+X-Received: by 2002:a05:622a:199f:b0:472:bbb:1bab with SMTP id
+ d75a77b69052e-47930fe7403mr104524641cf.24.1744035883851; Mon, 07 Apr 2025
+ 07:24:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-13-42113ff8d9c0@bootlin.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Douglas Anderson <dianders@chromium.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedutdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeguddprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvr
- hhnvghlrdhorhhgpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
+In-Reply-To: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 7 Apr 2025 16:24:32 +0200
+X-Gm-Features: ATxdqUEaLGT2M3QdvlukIOwAEuscXulm8_kXjOV6iVYrWf5p1vewCG0W1HdKGiE
+Message-ID: <CAJfpegsN47xDbVFsu=-TLW+A2=-33fNY83zt5bhebFqH67LAVA@mail.gmail.com>
+Subject: Re: [RESEND] virtiofs: add filesystem context source name check
+To: Xiangsheng Hou <xiangsheng.hou@mediatek.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, eperezma@redhat.com, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, virtualization@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	benliang.zhao@mediatek.com, bin.zhang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is the new API for allocating DRM bridges.
+On Mon, 7 Apr 2025 at 13:51, Xiangsheng Hou <xiangsheng.hou@mediatek.com> wrote:
+>
+> In certain scenarios, for example, during fuzz testing, the source
+> name may be NULL, which could lead to a kernel panic. Therefore, an
+> extra check for the source name should be added.
+>
+> Signed-off-by: Xiangsheng Hou <xiangsheng.hou@mediatek.com>
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Acked-by: Miklos Szeredi <mszeredi@redhat.com>
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index f72675766e01108d72033b8b83c25d3e4d8fd1a7..60224f476e1d048c693ab36a0a79b6897c6101a8 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -1317,7 +1317,6 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
- 	if (ret)
- 		return ret;
- 
--	pdata->bridge.funcs = &ti_sn_bridge_funcs;
- 	pdata->bridge.of_node = np;
- 	pdata->bridge.type = pdata->next_bridge->type == DRM_MODE_CONNECTOR_DisplayPort
- 			   ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
-@@ -1907,9 +1906,9 @@ static int ti_sn65dsi86_probe(struct i2c_client *client)
- 		return -ENODEV;
- 	}
- 
--	pdata = devm_kzalloc(dev, sizeof(struct ti_sn65dsi86), GFP_KERNEL);
--	if (!pdata)
--		return -ENOMEM;
-+	pdata = devm_drm_bridge_alloc(dev, struct ti_sn65dsi86, bridge, &ti_sn_bridge_funcs);
-+	if (IS_ERR(pdata))
-+		return PTR_ERR(pdata);
- 	dev_set_drvdata(dev, pdata);
- 	pdata->dev = dev;
- 
-
--- 
-2.49.0
-
+Thanks,
+Miklos
