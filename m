@@ -1,189 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F9C27700E;
-	Mon,  7 Apr 2025 18:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A3E277006;
+	Mon,  7 Apr 2025 18:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049850; cv=none; b=oDDlD7HDwk7uM7lsDLIkyxo7tseAl/eSgfkh/sBII3vUc0xt4J7tfHWIBOFb+kceZhc6FCDDX6G4M0v5j7anw+1g5Ott/ClhwyxJpS6sx7I/oxBEs3HYavHxeGTlB4yb1IAS2rwA6+w4X17rADgJRq0iPP3uYl+CObn7K0OHrzw=
+	t=1744049851; cv=none; b=orn3z9vo1dDRyGKkGloIaQVl4Xs31w1lV3d9OrFJ/v9+uqbzZmJRJON5keb6yrbSMXTXWdiE+z/eRa/usVTZfmYhhGohwSk3uL1aaHRltgQnl4hYD1v1W7vWS7nvLmtTyII6AL9XjQIN3vg1S+szt76pohFlBJXJl6Hv7qsqDBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049850; c=relaxed/simple;
-	bh=BeW7KyRz9QXFfHF0mE0Pz/vjKgeDBXwEhubm2TUylA4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VLfoTFCttS1ZJmZ+kxtaxh3CZy+mlpvU8sqLWVtuJlFJOwmKiTeaiByb5lZtWvzJyyjPBXwvlW+fHyZW7cuV8ocUa1BJjWSiZnSYG722P3FZiqiYvzaGI4L56F4r3A+C0UnsreAOCx1ko9IGJMaZonK2t30hc4AZjEoMzvHp6i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgZ3qe92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049851; c=relaxed/simple;
+	bh=73k/0BVysXl85xBXV2b3hE1PzEdgiYsKHfcYo5esxL8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VQ/ZbdWbKuEcXXcVkdUw/ZHMgs90PacpIWil0yPsYbNCCcAwr648gg85oZhpSAlAyQvRvrCgwYFtZfITtFEwe2owI34XogFbbDW+LEU8HzYLJCG9uKSoSluJXXST4geTrb/4gcl1DlGeWNLLYcQTb4tbVs/45d2Ca12hT4FwPQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjoMQOEa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgZ3qe92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8BFBC4CEE7;
-	Mon,  7 Apr 2025 18:17:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjoMQOEa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78793C4CEED;
+	Mon,  7 Apr 2025 18:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049850;
-	bh=BeW7KyRz9QXFfHF0mE0Pz/vjKgeDBXwEhubm2TUylA4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GgZ3qe92NioK5XO/ScNufyYUOvU8IR2yESiKQ0lzSXTY0MTh4get9FNMFwiGjczw2
-	 Iue3tfA0Pg+D5a9MZer6ppGOWQlibgmzlS1LHpT8rNEQP+AhkTXamqjYbnHafgtSOw
-	 GsFqNWmi6sDgsAkP2lcVaFoka71rM93nUHozcuZCOOIseDYx31oENtMUybWsQpR5kE
-	 xLo+ug7vPj/KFrdeh8buiVgO8ZhfDVkJ2/7Aq1ejtepx4zfLI49KEm/kT3bYjhtM1S
-	 GYzt6VFv1P3dIw0KYxaykejYVH92/JdN5FK5slrR7xh5sQqRMQrH2QTNS0fzCf7qxQ
-	 Ex+2jhI/8FoLw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Dominique Martinet <asmadeus@codewreck.org>,
-	Robert Morris <rtm@mit.edu>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ericvh@kernel.org,
-	lucho@ionkov.net,
-	v9fs@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 4/7] 9p/net: fix improper handling of bogus negative read/write replies
-Date: Mon,  7 Apr 2025 14:17:15 -0400
-Message-Id: <20250407181718.3184348-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181718.3184348-1-sashal@kernel.org>
-References: <20250407181718.3184348-1-sashal@kernel.org>
+	s=k20201202; t=1744049849;
+	bh=73k/0BVysXl85xBXV2b3hE1PzEdgiYsKHfcYo5esxL8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FjoMQOEaRJFMQew/UUTFr2hKYDO6hv9g7+V3MPFy4GRbB+KyPzDtsQWqb0ld8BikB
+	 y4LOg5TQyvYkQ8DJEbOPLLHoNeXgNkaPA0XwvhaLhVigaC6TXI8n8dn2M/PqeuGdHA
+	 Xptdo1g80NJBvl9UvVJB59gIpvH0zApI2/kIxk67R88d6xbXktWgXPN+0bBAFkg4aD
+	 MwIM52NSOjHFBfQnFLQNpvkhhVV5/4onKM0L4oziKs1qU03odqFfrlgJ5v4KfkckJL
+	 UEhEhThzNlSVLUJ9c9Q6bYL7LZdoxwaggU3+38Zb3VLBN0h+MI7vRA0LDmCsLGwzNJ
+	 jSLIy7VvcmllQ==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2b2b6019a74so2383896fac.0;
+        Mon, 07 Apr 2025 11:17:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWwH2S+Wq0m6hVmuZKgXvg7ZQOmcuaGcwDYkh5tmpEcB0KYir28z+Y37wcFUGkjy6OX90K3bFWaiMSz06Hb@vger.kernel.org, AJvYcCXtkojFCJsejYO43bZheHnLugFWjgvfHRX6G3HFn/9bbXACh7ffN8iuF09IpienUeqWayE+RhXNwqkd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQjds19HVLhAMTsVOyel4EXN/CRqClmpDpk4ta7D3puqdO0Tv4
+	+dq4odWBBA2B0f72X0gy/oGWfMwRgcQxGoique570Qbsp4jM1cNYruFRx9wu/sIeRDe5E+VKAEP
+	f36iymT4gkvrUx9p4Fdo92Yw4kfs=
+X-Google-Smtp-Source: AGHT+IHb7HQkxQkd/RpdZWzCI+chrPYGzOX2Ou3UAUShksSZYvBwUdp6Xd5oT0itTCl6KmJPHoPBw1Y1/y2y6HBpHOY=
+X-Received: by 2002:a05:6871:2012:b0:2b8:e4b9:47a3 with SMTP id
+ 586e51a60fabf-2cca19bec51mr7257158fac.22.1744049848789; Mon, 07 Apr 2025
+ 11:17:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.22
-Content-Transfer-Encoding: 8bit
+References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 7 Apr 2025 20:17:17 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH4SH0U0ivnL3XXp1HsH_vqZucars30DOB9bNLycYszvuikvDD20zwIRSY
+Message-ID: <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Dominique Martinet <asmadeus@codewreck.org>
+On Mon, Mar 31, 2025 at 6:32=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Add a note to the fwnode.h that the header should not be used
+> directly in the leaf drivers, they all should use the higher
+> level APIs and the respective headers.
 
-[ Upstream commit d0259a856afca31d699b706ed5e2adf11086c73b ]
+This sounds like a solution to a problem, but the problem statement is miss=
+ing.
 
-In p9_client_write() and p9_client_read_once(), if the server
-incorrectly replies with success but a negative write/read count then we
-would consider written (negative) <= rsize (positive) because both
-variables were signed.
+What's your motivation?
 
-Make variables unsigned to avoid this problem.
-
-The reproducer linked below now fails with the following error instead
-of a null pointer deref:
-9pnet: bogus RWRITE count (4294967295 > 3)
-
-Reported-by: Robert Morris <rtm@mit.edu>
-Closes: https://lore.kernel.org/16271.1734448631@26-5-164.dynamic.csail.mit.edu
-Message-ID: <20250319-9p_unsigned_rw-v3-1-71327f1503d0@codewreck.org>
-Reviewed-by: Christian Schoenebeck <linux_oss@crudebyte.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/9p/client.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 09f8ced9f8bb7..52a5497cfca79 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1548,7 +1548,8 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 	struct p9_client *clnt = fid->clnt;
- 	struct p9_req_t *req;
- 	int count = iov_iter_count(to);
--	int rsize, received, non_zc = 0;
-+	u32 rsize, received;
-+	bool non_zc = false;
- 	char *dataptr;
- 
- 	*err = 0;
-@@ -1571,7 +1572,7 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 				       0, 11, "dqd", fid->fid,
- 				       offset, rsize);
- 	} else {
--		non_zc = 1;
-+		non_zc = true;
- 		req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
- 				    rsize);
- 	}
-@@ -1592,11 +1593,11 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 		return 0;
- 	}
- 	if (rsize < received) {
--		pr_err("bogus RREAD count (%d > %d)\n", received, rsize);
-+		pr_err("bogus RREAD count (%u > %u)\n", received, rsize);
- 		received = rsize;
- 	}
- 
--	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", received);
-+	p9_debug(P9_DEBUG_9P, "<<< RREAD count %u\n", received);
- 
- 	if (non_zc) {
- 		int n = copy_to_iter(dataptr, received, to);
-@@ -1623,9 +1624,9 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 	*err = 0;
- 
- 	while (iov_iter_count(from)) {
--		int count = iov_iter_count(from);
--		int rsize = fid->iounit;
--		int written;
-+		size_t count = iov_iter_count(from);
-+		u32 rsize = fid->iounit;
-+		u32 written;
- 
- 		if (!rsize || rsize > clnt->msize - P9_IOHDRSZ)
- 			rsize = clnt->msize - P9_IOHDRSZ;
-@@ -1633,7 +1634,7 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 		if (count < rsize)
- 			rsize = count;
- 
--		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %d (/%d)\n",
-+		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %u (/%zu)\n",
- 			 fid->fid, offset, rsize, count);
- 
- 		/* Don't bother zerocopy for small IO (< 1024) */
-@@ -1659,11 +1660,11 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 			break;
- 		}
- 		if (rsize < written) {
--			pr_err("bogus RWRITE count (%d > %d)\n", written, rsize);
-+			pr_err("bogus RWRITE count (%u > %u)\n", written, rsize);
- 			written = rsize;
- 		}
- 
--		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", written);
-+		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %u\n", written);
- 
- 		p9_req_put(clnt, req);
- 		iov_iter_revert(from, count - written - iov_iter_count(from));
-@@ -2098,7 +2099,8 @@ EXPORT_SYMBOL_GPL(p9_client_xattrcreate);
- 
- int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- {
--	int err, rsize, non_zc = 0;
-+	int err, non_zc = 0;
-+	u32 rsize;
- 	struct p9_client *clnt;
- 	struct p9_req_t *req;
- 	char *dataptr;
-@@ -2107,7 +2109,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- 
- 	iov_iter_kvec(&to, ITER_DEST, &kv, 1, count);
- 
--	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %d\n",
-+	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %u\n",
- 		 fid->fid, offset, count);
- 
- 	clnt = fid->clnt;
-@@ -2142,11 +2144,11 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- 		goto free_and_error;
- 	}
- 	if (rsize < count) {
--		pr_err("bogus RREADDIR count (%d > %d)\n", count, rsize);
-+		pr_err("bogus RREADDIR count (%u > %u)\n", count, rsize);
- 		count = rsize;
- 	}
- 
--	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %d\n", count);
-+	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %u\n", count);
- 
- 	if (non_zc)
- 		memmove(data, dataptr, count);
--- 
-2.39.5
-
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/fwnode.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 6fa0a268d538..da537c7c30dc 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -2,6 +2,12 @@
+>  /*
+>   * fwnode.h - Firmware device node object handle type definition.
+>   *
+> + * Note, this header is not meant to be used by the leaf drivers.
+> + * It provides the low level data types and definitions for the firmware
+> + * and device property providers. The respective API headers should
+> + * guarantee all the required data types and definitions without includi=
+ng
+> + * this header directly.
+> + *
+>   * Copyright (C) 2015, Intel Corporation
+>   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>   */
+> --
+> 2.47.2
+>
+>
