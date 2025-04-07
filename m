@@ -1,91 +1,121 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB492253E9;
-	Mon,  7 Apr 2025 06:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81E62253FF;
+	Mon,  7 Apr 2025 06:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007726; cv=none; b=DHOXWedE9YIZFaqh2PJvGYNf7ZtJSUcpcL3CXpFhxKKx4ISgbTw6IDOq8OQm/g2tNuXdCCYejtELfTehjhBtPCVWulT22ErUEaxAC9Yzx0XkfGRwARYWYVKZR+s7qBhZYm9vRAyGn46Z4QA0zQjWBBA4OUKpwYdYbjqZ9YJHhOk=
+	t=1744007726; cv=none; b=erwCfOQ5C/GZzvyMbL1JD+0+r4omz0JM8vH6de8cOrZap7Y7G50uo1LQkWBq5M57401KyqpB0VVjwLa1ylMYvgR7G8Gxrr/FeO3ZOZRTnkTygrux5OG5uA/in3zc5j5wfozp4pwLVD5DzYgE5U8dgnJ98tagi54RZuny98FfjZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744007726; c=relaxed/simple;
-	bh=/1Tn3fdh1YmHdKYpDHBh99LOXaHvuuJ86z8clOnHlIU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kX4rB9DZrIBBjkJlpd2SWWQfONoqrOAt2Vdk9jex4j1sSLZK+rxcgL8Yrxabx5VI/9PMb6I08bEbsdh0JA486qTzd96gQr53WWsQLxQHTeBRQUEi4N2/whY7vG3CSL5GCt7GXE+Ipg3Uv6Qv1FZM+86h9n2px00wpkT9U1LP90Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAC37gYdcvNnHnHQBg--.10866S2;
-	Mon, 07 Apr 2025 14:35:10 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	ckeepax@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	simont@opensource.cirrus.com,
-	peterz@infradead.org
-Cc: patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ASoC: wm_adsp: Remove unnecessary NULL check before release_firmware()
-Date: Mon,  7 Apr 2025 14:34:03 +0800
-Message-Id: <20250407063403.2772040-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	bh=Ocz7+gcKVvx9JS7ROJOowK4HkGeQFJNuw93TvrjIVTM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mVjgR3G6p8eZUK7ue8BwqF//kV4HuMXI9oBIjUqFqMf6Io/vIb41PQ8ncE7MWm93O3mpYA4ZD7ooYKJpEZyMDg3AUzbBEcJ4ufkw8BBmT258A+41tNv6xGoH4gKSaW0Vi+LDZwOctsfw3QfdRLZJUpqIfozPM6xHM4dN6PXHjXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PzCujVmt; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzCujVmt"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-301e05b90caso3759107a91.2;
+        Sun, 06 Apr 2025 23:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744007724; x=1744612524; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GGIQTeSUJ/msyOcBGgyCOEy8RB/Vu85gn7KiLYCFQmg=;
+        b=PzCujVmt+Wu0e+e9e3pDOlx4PKjGChyO2lKUa74ku14vdWgeu5U2GDFXKjiYzNqHfv
+         0OPmw3aBZw0Rzgb4Z3sHnnm8aQ8sDyYfKVo44eG/14LmDQvn5fXnskPK1Kzqq250XB2i
+         w1IhDw/4ZtnVYlcjWdr23xGcAou7otVi2QoEhBiLF/X3MSkxN8IsVJKrs2xQ0gn8SVzn
+         OObhMlp6vhdBCFo9u+/RY+N6pxgVUwLmo1eNhPznQNFiuHJ4jl7+WhXmoRVMJs/rx4W3
+         AsS6zqXm+5wYyRwGPjcUPIZlIRPEa+n4tNmUavePgEGrCIZP9wQqhyeuZg8zPfFBSOrl
+         yBRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744007724; x=1744612524;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GGIQTeSUJ/msyOcBGgyCOEy8RB/Vu85gn7KiLYCFQmg=;
+        b=G1UNGXSbfwDXNnKkYSoXUqcmfWY+pkL2FoZteLL7WQdMy5Kp7jU07pRZc+25Lr/jvC
+         8KiDPOEGT+EDJ5ASkjQ4Mv7c0IxpVNInmpgsOO/1xphTLh2zEIZGh12RKgZz8nd2JE84
+         MA2ctZH+0H8TUauznCWt6Ndgyvw4H5mQFvpfj/3bPq2S8Z+Z3sQpwlE0d3WMbe43pVis
+         husRcHgUMJnNgOj86knV3+9GjslZnB0jKkQMoPjWsywLYegFsKnsIGJeo67C2dgKdU0n
+         hCF1CU5hFopChUPR7rCNFJ2WSuLzJ/p25bpVFVSKmCw3XYB8Kg8EkHlrhFSB2ctE5BHX
+         ojkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUC8Pts3JZa9X9u/bSvTwrtWDzf3y+1dup7PuYCPx3E37LupOms65d7adawhvwBNjNpUPtKnC8XE/3YXUY=@vger.kernel.org, AJvYcCUIpQrm3znD/TITyvCWPzSvED0bCTf1PBSzqNLsvLD2vTMwS9Yw4CZA8Ckx51gQUU1ZIpddAoZFVDmz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5/2YrBcEa/PHyueZYKTcGd4t7+xdGZpfn3w0wXe+1q4oTU1JZ
+	Ki1foNnR5yzWdWiJA4wo6LcVQtouOzFnS5xK8fa9puqjACl0HtOo
+X-Gm-Gg: ASbGnct6qzrMDBV88bygvquD8Ct33wngV6kbc3aMWKKUT9Q+hs+GmkAxY4yI/WOLIWM
+	tWpj+iZuk8ShD7ZvQHH1vhgotQVbEq/DaaziAe3l6daEoXXvGWZMJWlTMDoTe5zps7RSJKz1RVQ
+	DsO+8cNrOzZQ7sDlW1TgCPX9Hphuf8c1iSj6b5dMlOwj0MgkXyDwh1aQfzH7CsR6iQpgZgLIw10
+	OQfjQ24kZ7HUCUO5HgBoV3pGg6nRdOZgNczWQJyV8Dw9/pDk2xKVWOGO3+6jbY5vkwpSWTC1NPw
+	mgDvpFbR7PVaKx0DAoxWMQX+t3TwOi1M+KEy
+X-Google-Smtp-Source: AGHT+IHBFpIgTbEaMnBWm5RVBjeYevVuixu+5yTWxBRjJdtCoVEVF/pCoi2mcsaK29zligKIYWm+4w==
+X-Received: by 2002:a17:90b:1f8c:b0:2ff:52e1:c49f with SMTP id 98e67ed59e1d1-306a4892fafmr14203035a91.26.1744007723635;
+        Sun, 06 Apr 2025 23:35:23 -0700 (PDT)
+Received: from [127.0.0.1] ([2001:250:5800:1000::610c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983da691sm8048044a91.47.2025.04.06.23.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 23:35:23 -0700 (PDT)
+From: Zixian Zeng <sycamoremoon376@gmail.com>
+Date: Mon, 07 Apr 2025 14:35:12 +0800
+Subject: [PATCH v4 1/2] spi: dt-bindings: snps,dw-apb-ssi: Add compatible
+ for SOPHGO SG2042 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC37gYdcvNnHnHQBg--.10866S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4ktr4xXry8JrW5KFg_yoWfXrg_Aa
-	ykCw18GryxtrW3X347ur1avrW3uay5ur1rJrnFyayUJryDJw4Sqw1UWan5ua18X3yIka4f
-	ZF1DZrWDC398JjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcjjkUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-sfg-spi-v4-1-30ac949a1e35@gmail.com>
+References: <20250407-sfg-spi-v4-0-30ac949a1e35@gmail.com>
+In-Reply-To: <20250407-sfg-spi-v4-0-30ac949a1e35@gmail.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Mark Brown <broonie@kernel.org>, 
+ Inochi Amaoto <inochiama@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ sophgo@lists.linux.dev, chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, 
+ dlan@gentoo.org, Zixian Zeng <sycamoremoon376@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744007713; l=1084;
+ i=sycamoremoon376@gmail.com; s=20250113; h=from:subject:message-id;
+ bh=Ocz7+gcKVvx9JS7ROJOowK4HkGeQFJNuw93TvrjIVTM=;
+ b=Uxcj0G45ieTZvKKQjyJrxTtDAyr9bek1RVrok389pH1B68f9abGhumzllp68p4QUAXIPiL0cU
+ w83qtuBizUND2pqbvQGlxfR9NsMTPYVLoZS9AoWD/VKGhB/9V9nGlcB
+X-Developer-Key: i=sycamoremoon376@gmail.com; a=ed25519;
+ pk=OYfH6Z2Nx3aU1r0UZdvhskmddV6KC6V1nyFjsQQt4J8=
 
-release_firmware() checks for NULL pointers internally.
-Remove unneeded NULL check for fmw here.
+add compatible property to include "sophgo,sg2042-spi" for
+the SOPHGO SG2042 SoC SPI Controller.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
 ---
- sound/soc/codecs/wm_adsp.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
-index 91c8697c29c3..ffd826f30e15 100644
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -718,12 +718,10 @@ static void wm_adsp_release_firmware_files(struct wm_adsp *dsp,
- 					   const struct firmware *coeff_firmware,
- 					   char *coeff_filename)
- {
--	if (wmfw_firmware)
--		release_firmware(wmfw_firmware);
-+	release_firmware(wmfw_firmware);
- 	kfree(wmfw_filename);
- 
--	if (coeff_firmware)
--		release_firmware(coeff_firmware);
-+	release_firmware(coeff_firmware);
- 	kfree(coeff_filename);
- }
- 
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index bccd00a1ddd0ad92b437eed5b525a6ea1963db57..94102d94ed5dffe889a8a11c1c637d466713c208 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -88,6 +88,10 @@ properties:
+               - renesas,r9a06g032-spi # RZ/N1D
+               - renesas,r9a06g033-spi # RZ/N1S
+           - const: renesas,rzn1-spi   # RZ/N1
++      - description: SOPHGO SG2042 SoC SPI Controller
++        items:
++          - const: sophgo,sg2042-spi
++          - const: snps,dw-apb-ssi
+       - description: T-HEAD TH1520 SoC SPI Controller
+         items:
+           - const: thead,th1520-spi
+
 -- 
-2.25.1
+2.49.0
 
