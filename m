@@ -1,214 +1,242 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2070.outbound.protection.outlook.com [40.107.20.70])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA49258CEC;
-	Mon,  7 Apr 2025 19:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744055557; cv=fail; b=TN3It/6BfWU4/bqFfOAjKgAPZ6m6UcRoVqL37oG5ANwp2RYWk3ppY/+w18J9UTCbYgqLLDLPQD+ohLxMSpNWULzi/kKJm3kKL4NI7bxceV6SIuazZAcQRAgNKrjsrjYGwuMyc1xfawHHixK78diAMSpUQPY3blwi3hyIlZXbv9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744055557; c=relaxed/simple;
-	bh=qxV51hE9iVaqehK/qn4rz9KrbxpDkLsIBLjf7RRGT20=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=CcUpOl5epW1F1AL+WBxPcNXl3EIkJkAwGuu6+0ezj1aDMEc3eaM2sLEw2bMdl6vWOwuRsaHhsWPq5cfYIwDwn7zMQ3Lhx2TxS7+V4++QqdZP130q0bmrFisFHIf/e3FvaJGrRecyNz2n4qAmcI0/aj0yrJnLoygskn09y5lcP3E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=d752ZsQN; arc=fail smtp.client-ip=40.107.20.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1C31EE032;
+	Mon,  7 Apr 2025 19:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744055817; cv=none; b=bfF5SnpWKvb9VLogOtQgSEZmF5mgXQBBrkHSXxcyp8h/vzeRA8wutVPrSNDLRR3OIVT/M72FP+SepKZtRgACu/ZI1ZRXk9kB2sFw0UoIO5MA9gWNNmfKJGma9IdiTWrhXg+vaQXE4tl4UF8lz/p3hQnyvpXobvebHYRp1o1cYpI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744055817; c=relaxed/simple;
+	bh=php8EIOk6BYXVsKfscJQr4caE1Nr9sdW4mLkv44J7GY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D5BB4tU8nXwLUmTJ4XPBm4wbpcQQ/awr5+30T2XrCy4CayNkj12cMwaaFzWnL8Ey17vo92SVWovFrHZJJM/cTzpQ6SyMebHWf2GhRownP2S0Iu0w5my5MxGGODywE8vao0bBKrANj1J8OwZhiSVDbGFeP2OR7ka14nM5RMwnvBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBXwfpbu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="d752ZsQN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Qp06LB8Bek7Ua4jXlJlSb8ao3XYfSO/NQEY8XFizwWLTGL+6bZVdnVLyOHxAaDErmNkUEZxyIjRp6HeaaWi2X4cbkBBrF/QGsnm2yph1MQUcc0MT4b5+esT1Ey+INm5gLAhRGt+pIyGWaGbtX+ogUDidtSnXual88g9eq+XvdjbywblcnDYgclE5eu2b+Z7G4W0n99cU2MoVC/9TSZDHIMrkVxkdBVlbhr+N7I0G2VhuvBZPYCCupC63DPAMtXzOza4378mwIDuX0hPVl6QpEN0Zzihbe0dKAJ5WQ9uX9x91aNACurLXGnzNKbL2qDvFMMoJiXudXyMYo9SHZvdBUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3HXJMXZ9LGUTZustVJgA/C/zKgpGDb31Acgkq44bsAc=;
- b=FXSAd+YHTG8o0LSf/nB6U4faFM7pd2BixGY1d7yskMv/pxXCdRxwlILYAclNIw8NcDBwHrJXdRl0uqJ2vHavG2rd1U18AkwbRSREMb3UeQeG34y9KT3TBDmuE3Bd5LQfzLLjAXYkzBHDW82RxcGPJL5u+c+fSXhL7j9JJm77njW9168Uf/8eQrYUKQfnQjDNBJ8Kaa4EnG6KQNOcvcupOJvgL7/TVGciC0zQGG9jah0pNXlI8on/5Gx4kny/H0CunUdi/rLNNtaiLDmLpk7Sk0VIZz5ehY84Kcfeq89JtI1HH8g9v90SzwSZraDqzq1CfRvgZMgJw6LfO6GyNjuLJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3HXJMXZ9LGUTZustVJgA/C/zKgpGDb31Acgkq44bsAc=;
- b=d752ZsQNlLkRl+iX7nsN2I1hAwTL8q1PIOGI3zQcHCv+2m5H0wHbGI3kG+D+Hhe5i5j/MbgEDQIA3k39np8E8B0CLr0K+8R80oxQ4IohfzeP+nXL0fPqXmH6mXBzy/+KLv2gZYIlKDq2gFURztZIXUdU9YEZDSLm7BN4+aQXhnK+7ejYPO7bpCRMHjAUGCH6qBLyv19GXjc6ZbLYKAnLlpOqk1jDHkRrI7dm+0peVQUE5IJmvrw6mIk0KkRZTe6x2kevWanH6LvXGsN1W3HX5ON1yVid6RWkAt1blYoUHQxybjTR3NtdlbxRpeHvURPkUa6Bw89DycuEG8cagS/1YQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PR3PR04MB7452.eurprd04.prod.outlook.com (2603:10a6:102:80::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
- 2025 19:52:33 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 19:52:33 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 07 Apr 2025 15:51:05 -0400
-Subject: [PATCH v17 15/15] arm64: dts: imx95: Add msi-map for pci-ep device
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-ep-msi-v17-15-633ab45a31d0@nxp.com>
-References: <20250407-ep-msi-v17-0-633ab45a31d0@nxp.com>
-In-Reply-To: <20250407-ep-msi-v17-0-633ab45a31d0@nxp.com>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Anup Patel <apatel@ventanamicro.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
- Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- imx@lists.linux.dev, devicetree@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744055468; l=827;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=qxV51hE9iVaqehK/qn4rz9KrbxpDkLsIBLjf7RRGT20=;
- b=r2+4fvsAkmquI/lDxL6ovaIFymtnoci8MOwzny0OC8txBlZqw8k4FA2/YUz17OfVfYmxv/mGm
- iuXOBfZVv4TC13rhFmXvJLx8G3wlQplCtBogmVwohaGgMRmCGywMwEH
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: AS4P189CA0041.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:5dd::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBXwfpbu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744055815; x=1775591815;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=php8EIOk6BYXVsKfscJQr4caE1Nr9sdW4mLkv44J7GY=;
+  b=KBXwfpbuu82wBt105edM62TCzUePNwTJaRWTCPC5BY1Aj7HoPkFtHVME
+   F0znwDM4y6o4uLB7Fz2JhtOujgGZT0coYANyIy7GJ64qU1x6v9E/+yjmC
+   a9eaMEhj5Hp/N6LipBi7/0OT9126A+GQ45U6/bM4M0TAOngJ7rYB/WLqR
+   ipjNwglLLJPgcCeapxBY4rEWRoEWSjAz0e0IixVKXBScpfjmVLzcgzbxg
+   wKUaIlx8jNLdxzKlmUQmtyFWz+OBT017piS/1VAcq8UxP2SwM5Xg3X/eH
+   rjVeOzJF8WPJAqYmVfATXe8It0Vy+PYtqIcVN4xR/vaB8pQU0yQi+qzLC
+   Q==;
+X-CSE-ConnectionGUID: NbLoeZW/Sb2IX0z+wj1RBg==
+X-CSE-MsgGUID: e0Dvpy+tQ+qQkJtt5vLufA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="33069470"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="33069470"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 12:56:54 -0700
+X-CSE-ConnectionGUID: OXjFkQkSRLqJV2fFG/C/fA==
+X-CSE-MsgGUID: JzzTMcMtRaS+OWGFkFFEig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="128581795"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 12:56:53 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6AD7920B58A2;
+	Mon,  7 Apr 2025 12:56:50 -0700 (PDT)
+Message-ID: <8b06ba86-c7a4-45b4-8a51-525ef5e2187a@linux.intel.com>
+Date: Mon, 7 Apr 2025 15:56:49 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7452:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0da3af99-c323-42d5-0832-08dd760dbcf8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TGQzTnhGTG1od3QrbTk5aFNGcE11c3pmTmoyU2JZSmNvT1FTL1VQWXRNMmdK?=
- =?utf-8?B?WG5ueWw2a3p6ZUNMaVV5MHAvZjBycDZtT29BUS9LY3NQSWMvN3JWL3hSMWNw?=
- =?utf-8?B?YTYzeFZRWU9kR1BzT2xpM05oUGozb3V5YkREL2lXazlGeUU3cU9EekdWZzZ3?=
- =?utf-8?B?WkFpektBM2s5VVJDb3dKSjVxMXk2TGR2UkRseTg3eVh4bUtzYzdCd0tXZWVv?=
- =?utf-8?B?eXIzdFE0V0ZJSmZZWEZtQ1A5TTliMjh2bzFMUER1MGZ4VDFqemNvZVpxZFMw?=
- =?utf-8?B?dTZWOWErak5mdm9tdGxvQ1hmQzBpbWVVZXBhWlVxTDFYQ0pTYWdKZkZBSDhu?=
- =?utf-8?B?ZGxuSk9VdkFoL0VZOWVhQVVydzlkT0c5Mm1OWGVnVm5uMkVnM1hFM2I4RlhD?=
- =?utf-8?B?N1A2RDlFMitsUWlFWUlKWDNhTTFUSkV2cEhkQ01YSlVjbG8xY2MySWRqR0h1?=
- =?utf-8?B?VnEwWWt0M1dDN3E4T0lJblQ2UkVLMllIMWxBYTA5SjJIeHJROEt5UnJnYk1Y?=
- =?utf-8?B?Yld2RGJhTk4zVDlpV0s4eWozamRsbTlGWTF6L1NvRC9JMkRDczVOWmV3dHJ0?=
- =?utf-8?B?YlZQQ1BvNVFiSmhLZFBjUUMvNGVzS0RXdXdTbjZPd2c3bnlWYjJMVExYMktZ?=
- =?utf-8?B?ZkFZVmp2YXNuOFc1Ty9HWS9YOFluQ09RN0hLTUpDZEk5elJjSi9pSHUrV1Vk?=
- =?utf-8?B?VXk1SGpMcGF6aXJQSndyQi9Sb1JCNHhmb2k1NDVmaUo2NWJUcithN2RucmZ2?=
- =?utf-8?B?MXc3VFVqUmRDK05yTUlDZnJUYTR1QzFoY2Yrc2srSm5zcktFd1U5UDBiS0Jt?=
- =?utf-8?B?SktZUTF4UHk1OFdGQTJkOWhHcXAyeVlmWS9RdHE4NzZUN3JvK2Q3NHR2Q0FL?=
- =?utf-8?B?NkR0UUhCZjRaSmNYSUllaXJiRGdDU2d3Z0UzcjdRWGY2NGRvTnFudnBnRzFD?=
- =?utf-8?B?M25GZFJtTUFaNFpvM3V0cUI2VExySW82SFpwT1EwdE9GMTB5U2dQNmtReW5L?=
- =?utf-8?B?MGlTWlZ2MGRoWEN6U1h2WnQ3MWFRN3VRcXFEdzF1K0tjV2Izb2JsYnlOdU1X?=
- =?utf-8?B?ZlRSTEhrRjV0bEltOTlpaDZVM2VGV09Ca2ZDb1V0QU5LZllwa3ljNHo4aXdZ?=
- =?utf-8?B?NkdRWnBEa3hKdFo0L2FQSHBBQUVHRnNJYVlxVWd4c0xmalVRdVg2UVBuMG9H?=
- =?utf-8?B?WStuZENIY0xzaDlkVFRBRko5dlBpbVhYZGU4TmpYVzE2ZFUySEIyWW9nSUk5?=
- =?utf-8?B?emlZalFRRUFaV1ZWWEdYd3owOHdIY3R0VlJWbCs4U3dOZUJzczRBcHUzMUR2?=
- =?utf-8?B?Y05mTExRQTAyOTNzVDIrV2R2eFUxV1NiUURSQ08wRkZFdWtUNXJ6NlM5cXpi?=
- =?utf-8?B?N2xIRlEwcGg3bkcvMm5RbVgzb3pWQTNWNDRLRHQwWTc0T1BTaW0yR293WjRV?=
- =?utf-8?B?dm9Bd0U0RzhvVHdyL1I4aldaV3BZUEZlVTh0dWNCaHFDaGtpejh5czhxK0Fp?=
- =?utf-8?B?TnpTdkl0ZW5HWWtiMHBBMW05czlrWVpwMGtVTmtMUFlGcGFQa0xUVVNMSnp0?=
- =?utf-8?B?NEhCV0RCdFI1Z1FONmJnOEZqUGxhbUNqQnJ1U3JPRWRlRHhlRGVDdi96cWh3?=
- =?utf-8?B?dG8yNHdyMWFtbHljcy9kaDhDUnZMWFo5WDQzRDQ1NEJOZHdxZmdjYWtLckRv?=
- =?utf-8?B?UThlb1h1cC8vSC91cjNMWDk1Y1orSHZUVVk4NkxkWHNBNVo0RUJ3cjVuVTFo?=
- =?utf-8?B?VFIxZXMzc29uamhmZGErZTVOaUJrWURENHB1d0NFV0g1OGtCMUFnS21DSnZw?=
- =?utf-8?B?MU5xN3ZhQzlXRlU3NzZxZk1uS3JmNnVGdWxzbVR5WkFVMDdrWm16a2FqaHM4?=
- =?utf-8?B?dExieWE5cjZudXlqWG1ra0hoR3M3NU9pMm90ckcrLzhlVFJyRXZVWHRpeW84?=
- =?utf-8?B?WWsrY3d1Ni95QVNrZlJGMmpuTlpXR09XYysvcERjVU1ZNjFpdXloR21DTHhz?=
- =?utf-8?B?RnB5WVFjRmJ3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RlR6cE5XUzJLa3FpT0NqWThmaVB2Q0lUQU1BZmI2R2tKYzJRb3N6WUkzUDlF?=
- =?utf-8?B?RHpJTjU1VUlYMC82NDlLem5XT1hXYnloUVd6V2o4R1JNbUZPdkM1dTYrV2Fx?=
- =?utf-8?B?OGtrbndEMWdab3lHMXhjVVB0WUJvWlZDSmFLM1hqYzhSZmFSa1I5cVczNVBJ?=
- =?utf-8?B?UFFGUHNCR3BrdWF4WUgzY0lrcE9YUDNZYktURXZ2Zkc1OVhObUJzZlUzK0Rw?=
- =?utf-8?B?TWVwQkVGUXNFRFlhOXo5cWh0OTRYdEJrQ1N2NGFvV3c0Q3hSYS85VTJrb1c0?=
- =?utf-8?B?S0tLYVp2dVNqbnZWTFE0SFlDcjRERGZpKzJtazBoVitpMXoxZ0F4OWxTckFU?=
- =?utf-8?B?QzZiRGpkZmZEM2ZxbVd5S1VYekpaSDdWZkdPRFUwVHlBRFVucXUzNDJkaEFO?=
- =?utf-8?B?YUVHb2VIWWZYVVUyejJpNGxDelVtUmdGbG1NNmxud2hvT1Y1eTZjR282dHFQ?=
- =?utf-8?B?Z1BRUW9VbmRScE9RTFljMyt1blRJWWFPZFJuYlRHOElEcFhDNTJmV1hNSVJt?=
- =?utf-8?B?SlZPOUxzN3FjODNKM282RmRzUHl2dmJ5S3YzbVZURTZhTXBmR1ZxNDRNZitN?=
- =?utf-8?B?d3dHc0ZwT3RHY0ZxR3pnRUZHSEV2OFhudGFaVEtrNitOcGNYcFlKaStWekJZ?=
- =?utf-8?B?VjB6aXdKNUVRQzV1UjhWYnMzMEhGMTJRcldKUkk2ZFc5akc4WE9nTHRGMU9n?=
- =?utf-8?B?UHZMV1hUVmVoWGc1bDNKOUdCSVRYTzQ0UTBzU0NzOTFmN1BudGxqM3hjRStG?=
- =?utf-8?B?bVQwdnc4cVl4RVlickZCU1NvUUo0MmgrWTNjTFFuY3Y3SHZETUgra1BrZGhL?=
- =?utf-8?B?TTNjRmZHZHNnc1BGWUlPcWx6ZGpIc2ZOa2Y4T0UyMHQzQ1VmWWRKZzlRMERy?=
- =?utf-8?B?bnBjYUV5WE9TUzNpNGxUZkhMc1g2aUsyMXFVbE5Gc1hFd0xwdDdYbDR3U0c4?=
- =?utf-8?B?WEs0QWpFTVg4RDd2YlJnQ0s5WXM2U1FJVEZ0Tm05ZlIveHExVWVVREJyT0VR?=
- =?utf-8?B?MU9VVXBSNW84dDR4R2FOOWRTY3prVExOZ2ZiNWlrZ25VRWVhUEl4d2MrcGpT?=
- =?utf-8?B?QXp1RGYwcVhUZlo4MDZmQnpraElJWjc4ZXBMRURTellxL2RET0E0dEV5U2Vl?=
- =?utf-8?B?N2dIV293NktiSGxONVFlNVZxSTVlOXpTcisrYUoxakhaaU45aXpMMG80Tk5E?=
- =?utf-8?B?Yk9xd2pxS0hUdERYSy90LzNTRTRTeWk4bExWdmhpeDQrN0x0TjhQclU3dEtD?=
- =?utf-8?B?UmNIZDFCcW8wb084VjFKZklmZHNtcFVXRjR0QnR6Q0wxRWRHZEFjVTgvZVkv?=
- =?utf-8?B?dDBBRHRqbkY4MENFSG9UZDVBZTU3UDdlQ1FnQnd6VEJVQmJ0YkxRTDZHQ21H?=
- =?utf-8?B?a05uT0NqcUVYSCtNWWpnRVZmbm5jUXpRUjJMcG1RVHJTdHJJMThTc2RjTWNz?=
- =?utf-8?B?SFlqcm96YjFyZkhDdzhveGRyR1B0VFJGTmt6UnUya2JkMHQ4M1Z4M3dqekJn?=
- =?utf-8?B?b3BtcUlIdEhQOHRwY1o0eEU3SEpFamZCYzBneVhHRXhtYVNGdUM1d1BKTXkx?=
- =?utf-8?B?T2VEOWpRdjFrWkVmV0pzTkhYbnFySHcrMldRaU9kZExxSjh6Q1hiMjkrTnlZ?=
- =?utf-8?B?WHEzY1VMaXNUSWhpK0lia096aVF2N0J4dUMvTnVKZW5qRWw3K3dEL1hUT1hB?=
- =?utf-8?B?Nnp6ODVxQlkzMXpqTld6Vm5WZ3FvMjU3K1pabHdMZHNkN0NpVkhULzlRb2tF?=
- =?utf-8?B?dzh1eG9IK3JnQjNYUVlGZkhjQjA0cDZNVThUcU1RNEpDdDkzb2NFYVhrTERC?=
- =?utf-8?B?YTZqUVQva0o4VWlFWTdPVWpPV254L2k4cVNrT05OVzYvaEgwSTRMamloeDF2?=
- =?utf-8?B?b1pnQ3RWQUR2dW40WTY2UmRwQ2RuYWxBZ0JHTXU1VFk3TXduNEVidEwxTVh2?=
- =?utf-8?B?b3c3ajBVSFhvQU9yTm8xZTVSbExNbGdQSHdkMXdmRkNDZFg0VDJYcEVQQXRq?=
- =?utf-8?B?TXJtWUNjYlZsczdFT3Vnb01WNzlxVURuOFVncFV2UVNDOXV3dnlUSjA1aFBn?=
- =?utf-8?B?WlB4T05hYzA1eUFDMGpyS3FFZWhySU1XOUdwQmRPQ3RvaHNLMi9ReCtFSVVE?=
- =?utf-8?Q?YYkvoySe764/3fwezxr9rLZIZ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0da3af99-c323-42d5-0832-08dd760dbcf8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 19:52:33.4607
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v/kYlHgUn37NfHzz8yWaww88PoOvzMxELgOCoSF1Y+iZV9siMn1mt0C9iKiKw4jPYJaVXxnZ8usQMyp/fvZXaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7452
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 14/16] perf stat: Add mean, min, max and last
+ --tpebs-mode options
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>, James Clark <james.clark@linaro.org>,
+ Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>,
+ Howard Chu <howardchu95@gmail.com>, Levi Yun <yeoreum.yun@arm.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407050101.1389825-1-irogers@google.com>
+ <20250407050101.1389825-15-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250407050101.1389825-15-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add msi-map for pci-ep device.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change from v14 to v16
-- none
 
-change from v13 to v14
-- new patch
----
- arch/arm64/boot/dts/freescale/imx95.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On 2025-04-07 1:00 a.m., Ian Rogers wrote:
+> Add command line configuration option for how retirement latency
+> events are combined. The default "mean" gives the average of
+> retirement latency. "min" or "max" give the smallest or largest
+> retirment latency times respectively. "last" uses the last retirment
+> latency sample's time.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/perf-stat.txt |  7 +++++++
+>  tools/perf/builtin-stat.c              | 27 ++++++++++++++++++++++++++
+>  tools/perf/util/intel-tpebs.c          | 20 ++++++++++++++++++-
+>  tools/perf/util/intel-tpebs.h          |  8 ++++++++
+>  4 files changed, 61 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 2bc063672486..61d091670dee 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -506,6 +506,13 @@ this option is not set. The TPEBS hardware feature starts from Intel Granite
+>  Rapids microarchitecture. This option only exists in X86_64 and is meaningful on
+>  Intel platforms with TPEBS feature.
+>  
+> +--tpebs-mode=[mean|min|max|last]::
+> +Set how retirement latency events have their sample times
+> +combined. The default "mean" gives the average of retirement
+> +latency. "min" or "max" give the smallest or largest retirment latency
+> +times respectively. "last" uses the last retirment latency sample's
+> +time.
+> +
+>  --td-level::
+>  Print the top-down statistics that equal the input level. It allows
+>  users to print the interested top-down metrics level instead of the
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 80e491bd775b..4adf2ae53b11 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2327,6 +2327,30 @@ static void setup_system_wide(int forks)
+>  	}
+>  }
+>  
+> +static int parse_tpebs_mode(const struct option *opt, const char *str,
+> +			    int unset __maybe_unused)
+> +{
+> +	enum tpebs_mode *mode = opt->value;
+> +
+> +	if (!strcasecmp("mean", str)) {
+> +		*mode = TPEBS_MODE__MEAN;
+> +		return 0;
+> +	}
+> +	if (!strcasecmp("min", str)) {
+> +		*mode = TPEBS_MODE__MIN;
+> +		return 0;
+> +	}
+> +	if (!strcasecmp("max", str)) {
+> +		*mode = TPEBS_MODE__MAX;
+> +		return 0;
+> +	}
+> +	if (!strcasecmp("last", str)) {
+> +		*mode = TPEBS_MODE__LAST;
+> +		return 0;
+> +	}
+> +	return -1;
+> +}
+> +
+>  int cmd_stat(int argc, const char **argv)
+>  {
+>  	struct opt_aggr_mode opt_mode = {};
+> @@ -2431,6 +2455,9 @@ int cmd_stat(int argc, const char **argv)
+>  #ifdef HAVE_ARCH_X86_64_SUPPORT
+>  		OPT_BOOLEAN(0, "record-tpebs", &tpebs_recording,
+>  			"enable recording for tpebs when retire_latency required"),
+> +		OPT_CALLBACK(0, "tpebs-mode", &tpebs_mode, "tpebs-mode",
+> +			"Mode of TPEBS recording: mean, min or max",
+> +			parse_tpebs_mode),
+>  #endif
+>  		OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
+>  			"Set the metrics level for the top-down statistics (0: max level)"),
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> index f9584b00fb05..e1bdab4bba6f 100644
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -31,6 +31,7 @@
+>  #define PERF_DATA		"-"
+>  
+>  bool tpebs_recording;
+> +enum tpebs_mode tpebs_mode;
+>  static LIST_HEAD(tpebs_results);
+>  static pthread_t tpebs_reader_thread;
+>  static struct child_process tpebs_cmd;
+> @@ -45,6 +46,8 @@ struct tpebs_retire_lat {
+>  	char *event;
+>  	/** @stats: Recorded retirement latency stats. */
+>  	struct stats stats;
+> +	/** @last: Last retirement latency read. */
+> +	uint64_t last;
+>  	/* Has the event been sent to perf record? */
+>  	bool started;
+>  };
+> @@ -142,6 +145,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	 * latency value will be used. Save the number of samples and the sum of
+>  	 * retire latency value for each event.
+>  	 */
+> +	t->last = sample->retire_lat;
+>  	update_stats(&t->stats, sample->retire_lat);
+>  	mutex_unlock(tpebs_mtx_get());
+>  	return 0;
+> @@ -517,7 +521,21 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
+>  			return ret;
+>  		mutex_lock(tpebs_mtx_get());
+>  	}
+> -	val = rint(t->stats.mean);
+> +	switch (tpebs_mode) {
+> +	case TPEBS_MODE__MIN:
+> +		val = rint(t->stats.mean);
 
-diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm64/boot/dts/freescale/imx95.dtsi
-index 15ba83ce691f4..c3c76991f1c8e 100644
---- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-@@ -1768,6 +1768,7 @@ pcie1_ep: pcie-ep@4c380000 {
- 			assigned-clock-rates = <3600000000>, <100000000>, <10000000>;
- 			assigned-clock-parents = <0>, <0>,
- 						 <&scmi_clk IMX95_CLK_SYSPLL1_PFD1_DIV2>;
-+			msi-map = <0x0 &its 0x98 0x1>;
- 			power-domains = <&scmi_devpd IMX95_PD_HSIO_TOP>;
- 			status = "disabled";
- 		};
+t->stats.min?
 
--- 
-2.34.1
+> +		break;
+> +	case TPEBS_MODE__MAX:
+> +		val = rint(t->stats.mean);
+
+t->stats.max?
+
+Thanks,
+Kan
+
+> +		break;
+> +	case TPEBS_MODE__LAST:
+> +		val = t->last;
+> +		break;
+> +	default:
+> +	case TPEBS_MODE__MEAN:
+> +		val = rint(t->stats.mean);
+> +		break;
+> +	}
+>  	mutex_unlock(tpebs_mtx_get());
+>  
+>  	if (old_count) {
+> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+> index 218a82866cee..9475e2e6ea74 100644
+> --- a/tools/perf/util/intel-tpebs.h
+> +++ b/tools/perf/util/intel-tpebs.h
+> @@ -8,7 +8,15 @@
+>  struct evlist;
+>  struct evsel;
+>  
+> +enum tpebs_mode {
+> +	TPEBS_MODE__MEAN,
+> +	TPEBS_MODE__MIN,
+> +	TPEBS_MODE__MAX,
+> +	TPEBS_MODE__LAST,
+> +};
+> +
+>  extern bool tpebs_recording;
+> +extern enum tpebs_mode tpebs_mode;
+>  
+>  int evsel__tpebs_open(struct evsel *evsel);
+>  void evsel__tpebs_close(struct evsel *evsel);
 
