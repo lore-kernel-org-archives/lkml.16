@@ -1,152 +1,156 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D2B2288F9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3971E176AA1;
+	Mon,  7 Apr 2025 07:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010238; cv=none; b=dZq8oRpvG9EBfffmZp0uHT+/85YDTUMuhFQzEOx0geyGoCSTxgqM94sJyaLsYNLSK65FUs/QvFuSYQsIDz9XrCjrHtDNU68WZcDC2za+cCRSn2Lr+Hqe537oM8q0SlNoWFKjZsUvfCkTIEuEYaAYt9g3lWW5Ee1Un/PfQxRfuDA=
+	t=1744010258; cv=none; b=FuVaGH1PBnTgpWjGhnRqtz6Ew4F0GNYo/1oa7GvNoluIXFyEqpiKOnVzbrJ4lMCM8gI6CTnYOBKliYqaotUB//nzO85j4a5PPY/vBFP35CZ3fNhLufMh7fvzlYtVIw9qihE7P3+J4j4GvfQc+bxu1rg6V8bCZidFdyV6FOO997Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010238; c=relaxed/simple;
-	bh=1O8lqW8cS1dNqbfy6OMrbFG9L0GlTpQ+kAMyz+Y1LR0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TCkDO8rmb68hVXAfezCW5DiORjbvrinHmNZfxkQZ7pO9uOrDFldNZ1YN7y53i7cC0cmvxd+OhE+jlgkOr3lVuHQYJGHF4NjCmnQvD92GWbU7ZxZkMqR0Qan+w1PTiweAh1MVQhk5v071419jU/RVOiBYOtlhgXfhd6mnnbL7nWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SXahJSac; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744010258; c=relaxed/simple;
+	bh=ZMpjbqNV5VmvNx/yWcRwPHpaDgDVafqCD1Ypnp/Awhw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZxjVAx1X9FIDRz2NZdYVi+gpjIpK2+ytrgmybAMaf/fakEY57Gi1iATacbqbE3jHZI0yLiMEJ8S6aojs5AO1f3VWQoL8Eu+RGDKJTr0DktZeXBys27L/3/f9b8ovGivzYpFgsQLE0pAsUQK/7T+Cx3p5nw/MQ6TCD8OlksVJLE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INMZ82CW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SXahJSac"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913d129c1aso2695469f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010235; x=1744615035; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fJ5k9V1gZZBaoixqt8Dqhche1ximAkFV+Q8ydYzr4lM=;
-        b=SXahJSacAdCF0QL1Y7mi05opQvJLK1XNfktIWE0ClizuYk9wH0VmlJ8OZkTQDmu617
-         MKuD5iHlullw7amlsouTK52DaeDQGboS/vlnhKFkx5AehWGTmf3w2dCJ6JXBGiuQVI+u
-         o9fwjSJOS8bpQa6ne+VY4BZYlhK/9QnxwsyQZmWmFGgm0qZCdgCozg+0aBwsZ3z6SIax
-         /PlSI94TfRW5K2fTlJ5TYZQY983VxeoeXHkYVA22crYcF/fWhs5Mj1a7Rga75jrVcglB
-         eU8jvilnr5uIRVp6ob6YCwTvaRtcJZ+sAjQU+zcfVf0SL4k19kjM5sa2CiVPFpSMJG0a
-         +B0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744010235; x=1744615035;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fJ5k9V1gZZBaoixqt8Dqhche1ximAkFV+Q8ydYzr4lM=;
-        b=vixJWbuPEWeooHZSLiXjQmtgucUDoRuE4IyUgCBvM5GfEI8Z8mtGakwTwXWNZD4h8j
-         s6EmT441tXYizXIJw7prQMnEFlWNDw/JRam9dUikR3OYKTdbglUpW2EHAIpHn4T8CFPS
-         AoN+QsAydVccxUuCKFAgOyx9GEBQz6V9tvTauX/OeN4I9wsfsxTqPtCPPc29cPAqGetv
-         25JAz8WeLtN2cbi045O2MaIRojr2/DHuEEN6LJHxfQzupSt2hgdzRZsOTVrVnkIxT+5D
-         b8YQ9DvGbs/5NCCF/TxBGQ3Hw75IHpavrAwQE1V6Qwo7T++Eh8/BlkoAb+B8qf/CazdX
-         wOEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuslZsdl+nh7We8Uxygav5ICfaBgEKD9YOfnOQe89cMhQLMQKB97qwHbvh4pMBx0fx3YxXjI0lVgfrYl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg0ED0Y/h0YggaRBtza0uQMtRi+qHL0kKbAPCcaAZO5HPNZgE0
-	wSQGDzGFor9Nyv7ZTVhvlMWe4zmd1vgWOv9oHyswD7StMbea2hh8+dYsqa4aLzs=
-X-Gm-Gg: ASbGncu/4s2Yw+DB/hLRO7/p9J7va1mH6GX4wSnt8v5NaRZUg5s4MByM9bHyDLmIuyd
-	JaP88hDSeWfkQKKHm4xLg4U4FU1cdBv6nBWP0oe0mTLzTEIkhGNC00vLN5y53RpNEjo5dq30bVr
-	TbV18CulgmLLslP74GOCH8LmsPM6c/eQ4gFuz2zH0oVtE2YQcJHRNvXQFHXkC8aK5ZmwtzayB5g
-	0xvOCmFhRqpjK33OByDG0/NiB2FroLv9tXf17tSwdzLAUXi6gwm9T85ce0yJ+JTf+abKk9RFiq6
-	QjE+LV9eZaGU51TjtsVQkff9M6O4jFwq1qT5uV7d5iLO4bjH
-X-Google-Smtp-Source: AGHT+IEpoa/PZ2AejlY650G8XiTE+W12xCG7yD0eGrhUNC7DsoqDYf34mekXbyvr4lJDgzHkjgQCZw==
-X-Received: by 2002:a05:6000:4211:b0:391:2a79:a110 with SMTP id ffacd0b85a97d-39cba967942mr8565795f8f.29.1744010235273;
-        Mon, 07 Apr 2025 00:17:15 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096ed7sm10922620f8f.8.2025.04.07.00.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:17:14 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 07 Apr 2025 09:17:14 +0200
-Subject: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
- callbacks
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INMZ82CW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12981C4CEE8;
+	Mon,  7 Apr 2025 07:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744010257;
+	bh=ZMpjbqNV5VmvNx/yWcRwPHpaDgDVafqCD1Ypnp/Awhw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=INMZ82CWGDwx835l7YQF1L/d1lSwQBKmNVJMiEdhnwGTPIEvwEJIGLd7hxvJ9DFnb
+	 nFshLFU8bbnHriaqJ3GBHX8DjYWADh9mRpLCMIpW8tyrAUVIH4IRRYdmZVDw6vIfmb
+	 mpdi4x4KEKLhfmOuPBwkoeTSdP73g7PUH8JRewv+lX0XfpcbydJk2C4Ct5NldMAgVN
+	 RqhkCO8cBt3qkL75WU5KpkesF4qqnvXnyriLhtdYCoD6qCM1KkwD3Rfdt6XHu3J/5q
+	 /E81o25eRmwOFnvq6ZqZySXCmG2CvBk2E2NLvLZ4SaeBYS9EitOfrMkvyNOFdHCsKh
+	 evd0G4BIVyqqA==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	stable@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org
+Subject: [PATCH v2] tpm: Mask TPM RC in tpm2_start_auth_session()
+Date: Mon,  7 Apr 2025 10:17:31 +0300
+Message-Id: <20250407071731.78915-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250407062642.72556-1-jarkko@kernel.org>
+References: <20250407062642.72556-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAPl782cC/x3MPQqAMAxA4atIZgNp/cWriIPEqBnU0moRxLtbH
- L/hvQeCeJUAXfaAl6hBjz3B5BnwOu6LoE7JYMlWVBQGF6cHr+owyIk+olrG7bpxpJpa07BhKiH
- Vzsus93/uh/f9ANmrOb5pAAAA
-To: Michael Hennerich <michael.hennerich@analog.com>, 
- Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1998;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=HUva6KxkFsPb6XhDalpn8pFG6qq9F7QxSjA+2auuqw0=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83v6pQEaPrRb+WyfidLqHn+m4WTU6ulxgomxY
- LWL9BPGC1WJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N7+gAKCRARpy6gFHHX
- cgVHD/9TVSPUw0US9f5r+ibdGFf5bnBluIH6R0yTN83DJJx/xGcBBT34JhNgD//8U2QvVoWREFE
- TIfsKr/XgPxjgylbOtA1AS12IQC6aG20ipMfo2ILXFw7cn05vM7xwI0ANyqkYLyth3wd1dnHqOV
- tEYFHwJqrpgjgkb0mzaQdtDCe3OepC2dL2zPcNgJzto/3CXdZNZAIAB+C/P/8odckguo2I1jqKZ
- t9cdVEIHgUHnrU648QNijPK7IFS96QUVRwR9E40PXVXlRTgpnvBhpcTt5LhMh38LDs8M3qCTcvo
- L4rPCJLzTVnpEOXNOtKZxqpZ7olnqlWL8J7K3xxOFzOgDX5s69eqj+oToGAgawq0Hu/ClR5n3Zo
- QYWujeEt9Dge1iX5BDOfveBas/dKjLtUJO3Tq2QGre+H068fGZSLsQsCpCRv5FNOIL011ZUF1bE
- lniRd8Xp8TjwAeMqZK8kbPVFb+VAs/f6E26GWpY+eDdf/DnhQ1LvuXdRT/F/zxQSGJ69rUBSzBs
- NVAQRN52mIsmxCBC17aawjIMxsM/aW+fpnnEMIuEvZrg8p5I0KmabYnY29i5i0bIR3HtdXv++51
- H9lm46t+g4pPvMYWHb7dEkYiXlCLkFALjoJZfGrdF5GzZuWf3u12pgUQJAyiJugH3AkYkUiJ5Dd
- DNhdPNUw0eZejdw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+error codes.
+
+Cc: stable@vger.kernel.org # v6.10+
+Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
-Peter: I know you've not been very active recently. If you prefer to
-just Ack it and let me take it through the GPIO tree, please do.
+v2:
+- Investigate TPM rc only after destroying tpm_buf.
 ---
- drivers/i2c/muxes/i2c-mux-ltc4306.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/char/tpm/tpm2-sessions.c | 29 +++++++++++++++--------------
+ include/linux/tpm.h              |  1 +
+ 2 files changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/i2c/muxes/i2c-mux-ltc4306.c b/drivers/i2c/muxes/i2c-mux-ltc4306.c
-index 8a87f19bf5d5..c688af270a11 100644
---- a/drivers/i2c/muxes/i2c-mux-ltc4306.c
-+++ b/drivers/i2c/muxes/i2c-mux-ltc4306.c
-@@ -85,13 +85,13 @@ static int ltc4306_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(val & BIT(1 - offset));
+diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+index 3f89635ba5e8..da382b86dc41 100644
+--- a/drivers/char/tpm/tpm2-sessions.c
++++ b/drivers/char/tpm/tpm2-sessions.c
+@@ -40,11 +40,6 @@
+  *
+  * These are the usage functions:
+  *
+- * tpm2_start_auth_session() which allocates the opaque auth structure
+- *	and gets a session from the TPM.  This must be called before
+- *	any of the following functions.  The session is protected by a
+- *	session_key which is derived from a random salt value
+- *	encrypted to the NULL seed.
+  * tpm2_end_auth_session() kills the session and frees the resources.
+  *	Under normal operation this function is done by
+  *	tpm_buf_check_hmac_response(), so this is only to be used on
+@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
  }
  
--static void ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
--			     int value)
-+static int ltc4306_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
+ /**
+- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+- * @chip: the TPM chip structure to create the session with
++ * tpm2_start_auth_session() - Create an a HMAC authentication session
++ * @chip:	A TPM chip
+  *
+- * This function loads the NULL seed from its saved context and starts
+- * an authentication session on the null seed, fills in the
+- * @chip->auth structure to contain all the session details necessary
+- * for performing the HMAC, encrypt and decrypt operations and
+- * returns.  The NULL seed is flushed before this function returns.
++ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
++ * session. The null seed is flushed before the return.
+  *
+- * Return: zero on success or actual error encountered.
++ * Returns zero on success, or a POSIX error code.
+  */
+ int tpm2_start_auth_session(struct tpm_chip *chip)
  {
- 	struct ltc4306 *data = gpiochip_get_data(chip);
+@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+ 	/* hash algorithm for session */
+ 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
  
--	regmap_update_bits(data->regmap, LTC_REG_CONFIG, BIT(5 - offset),
--			   value ? BIT(5 - offset) : 0);
-+	return regmap_update_bits(data->regmap, LTC_REG_CONFIG,
-+				  BIT(5 - offset), value ? BIT(5 - offset) : 0);
- }
+-	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
++	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
+ 	tpm2_flush_context(chip, null_key);
  
- static int ltc4306_gpio_get_direction(struct gpio_chip *chip,
-@@ -164,7 +164,7 @@ static int ltc4306_gpio_init(struct ltc4306 *data)
- 	data->gpiochip.direction_input = ltc4306_gpio_direction_input;
- 	data->gpiochip.direction_output = ltc4306_gpio_direction_output;
- 	data->gpiochip.get = ltc4306_gpio_get;
--	data->gpiochip.set = ltc4306_gpio_set;
-+	data->gpiochip.set_rv = ltc4306_gpio_set;
- 	data->gpiochip.set_config = ltc4306_gpio_set_config;
- 	data->gpiochip.owner = THIS_MODULE;
+ 	if (rc == TPM2_RC_SUCCESS)
+@@ -1032,6 +1024,15 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
  
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250331-gpiochip-set-rv-i2c-mux-a060817c1c04
-
-Best regards,
+ 	tpm_buf_destroy(&buf);
+ 
++	switch (rc) {
++	case TPM2_RC_SESSION_MEMORY:
++		rc = -ENOMEM;
++		goto out;
++	default:
++		rc = -EFAULT;
++		goto out;
++	}
++
+ 	if (rc == TPM2_RC_SUCCESS) {
+ 		chip->auth = auth;
+ 		return 0;
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..c1d3d60b416f 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -257,6 +257,7 @@ enum tpm2_return_codes {
+ 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+ 	TPM2_RC_REFERENCE_H0	= 0x0910,
+ 	TPM2_RC_RETRY		= 0x0922,
++	TPM2_RC_SESSION_MEMORY	= 0x0903,
+ };
+ 
+ enum tpm2_command_codes {
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.39.5
 
