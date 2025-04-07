@@ -1,85 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEAF23815A;
-	Mon,  7 Apr 2025 10:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF5023815A;
+	Mon,  7 Apr 2025 10:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744023029; cv=none; b=feFD3arRrz9QJDzs6Dq4e+XqC2KeSZu8gB7lnz1QYnmhS+XzgK4EbR71nLDsyTvMCdbMQ3r3T91xXzdzUOXYJPl5Su/fiVKGc2Hdl50dlWrQRzn7J8eqhSAdZo3EHao6eWpUOqQ4h9BY2/127wdMpyUecjbzIB0ccuXtfC1ZjJI=
+	t=1744023040; cv=none; b=fDLOioB+IiW3PNhSdo6+JamFQcRnMEKrKlWrNQAWzHbvxyy12m1lzeeTH08mK66qL5ZQt75ysUyd7JxeW89DBuS1An9hthsRoP9mCmhFkWkQGaDnLwgJDIF0wHx/bBDXMQ8JGtkkbump4X2cHjL4wm3DnaqSNyzeehzO3GaEceU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744023029; c=relaxed/simple;
-	bh=Gszh3eqxlJO6JcJ+S8IHd+SMm1KIYAxiLl0NsfPIPec=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iLSTppG9FAHShxrKsHHlwON7KDxD/Pg15p1bWLaB7tttTESDfT/gd2FKhio/gIgYuHI119GwpaJ5vRDWKuRhpGKc5PS1sweblniOvHMJCLalSVDrJF7MGRqHcXaZJZvyYNGb+ydbCQGiU5RYwOfl3hKULiKvKxuWB/kgWKhF044=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dxp0mSjS; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1744023040; c=relaxed/simple;
+	bh=h09H0mVo+a/xhXkOSI8OnmS+1oWns5vRt4sP272clcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DSO9jDtUzqvo0ocyk7djW9f4YxsZSidicJ/g6R7EvysHyV9y50+qRSskpAP4aye56hWDIFrozfhH5hha9RFCMu/UpuwTFzL0lxv8p699gUhD1mNudkkiASQOHd2j410pED/OOy0xfuU2+uX7OHRuMdFh0Zu5Q0OyYXUG6zEyHwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llvNHHMo; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dxp0mSjS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llvNHHMo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744023028; x=1775559028;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=Gszh3eqxlJO6JcJ+S8IHd+SMm1KIYAxiLl0NsfPIPec=;
-  b=Dxp0mSjSP94Ijzhf0NcpH0hWuCPiSqCHZhACrO5f514l4F+TPj5l40kO
-   ilB8z0qW+l47+uopSJ2h7x7iZw7m4gi80BJ1bdCPYy+3JpBKdIg8FcYuf
-   nFmksCEPsu5Lslt1v9loW1YvVsUkpgyji66hxGEG8yvIFq2/fEjZWUDB9
-   4QTRLSt4w5le7iK+LgZeXB2wJnzupB7uvhy6TbJ36EVUPfwhNJjqmxXGZ
-   8FlZrrsaW+wmdQgnKDw7Stwk5M+iNbccvXpFHhrPoAHOaEfTF4+B73ai0
-   PGD/F7rAFDDBbPrQGcmNO3V4lXIqI+B/yqltig2whoA/Lbu7E9r28NiVj
-   A==;
-X-CSE-ConnectionGUID: OYUAcLoQSsGK30xjslY4oQ==
-X-CSE-MsgGUID: C8pb2WeURbK6+DmekaQMCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67875039"
+  t=1744023039; x=1775559039;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h09H0mVo+a/xhXkOSI8OnmS+1oWns5vRt4sP272clcs=;
+  b=llvNHHMo84LWJWTBkyHJc33vuakuL8dXX2C6qyit/pu4T6ggq53+w49q
+   Gi9RRtVir/pWViaU0uBCSgnmaP2GPqt8sZMUVPxUfq1fVarOR3FAOL+Jw
+   FheX5t/3lipmpZhTYmzHRDGtjFJsUtKyNnqsoi60B4eioAy6VlVn7Fcbr
+   Qka0tx1eYhGDZOt4wMB0MyActvtxePd/Xx0OE4RFXuNxfaf9Vnz22bdCL
+   g7eu73s6Jg/0W40ibTaYBCYk5xggFbLgD0uYkZxXUp0PhZwekbkr73ROq
+   9ORHPM1RzMEUUOjY2n1o2oJpSid+/cJ6kLZjl2Qlf05LIlSH7OJh3MVyQ
+   w==;
+X-CSE-ConnectionGUID: 06WyhrNrTN2V3lLhgG1KHw==
+X-CSE-MsgGUID: kMbKFKHmRT6JvNOdo0PAag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="62947720"
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="67875039"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:27 -0700
-X-CSE-ConnectionGUID: 6L10EDg6TaGjRaElhF5k9A==
-X-CSE-MsgGUID: EcxYejMiRWWEyzGYNXPaEw==
+   d="scan'208";a="62947720"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:38 -0700
+X-CSE-ConnectionGUID: joj3L2zQSP6xc7/XnLV2Qg==
+X-CSE-MsgGUID: H+IhcpiRRhWwWK0XPvYUyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132058478"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: mitltlatltl@gmail.com, hdegoede@redhat.com, bryan.odonoghue@linaro.org, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Chen Ni <nichen@iscas.ac.cn>
-In-Reply-To: <20250327025244.1790897-1-nichen@iscas.ac.cn>
-References: <20250327025244.1790897-1-nichen@iscas.ac.cn>
-Subject: Re: [PATCH] platform: arm64: huawei-gaokun-ec: Remove unneeded
- semicolon
-Message-Id: <174402301956.2251.11043011225525757063.b4-ty@linux.intel.com>
-Date: Mon, 07 Apr 2025 13:50:19 +0300
+   d="scan'208";a="128793016"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 07 Apr 2025 03:50:36 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3AB7C26A; Mon, 07 Apr 2025 13:50:34 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Eddie James <eajames@linux.ibm.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pavel Machek <pavel@kernel.org>
+Subject: [PATCH v2 1/1] leds: pca955x: Avoid potential overflow when filling default_label
+Date: Mon,  7 Apr 2025 13:49:58 +0300
+Message-ID: <20250407105033.324789-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Mar 2025 10:52:44 +0800, Chen Ni wrote:
+GCC compiler (Debian 14.2.0-17) is not happy about printing
+into a too short buffer (when build with `make W=1`):
 
-> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
-> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
-> 
-> 
+  drivers/leds/leds-pca955x.c:554:33: note: ‘snprintf’ output between 2 and 12 bytes into a destination of size 8
 
+Indeed, the buffer size is chosen based on some assumptions,
+while in general the assigned value might not fit (GCC can't
+prove it does).
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Fix this by changing the bits field in the struct pca955x_chipdef to u8,
+with a positive side effect of the better memory footprint, and convert
+loop iterator to be unsigned. With that done, update format specifiers
+accordingly. Note, the choice of the format specifier is made deliberately
+like that because some of (old) GCC versions (powerpc-linux-gcc (GCC) 8.5.0)
+are not happy otherwise.
 
-The list of commits applied:
-[1/1] platform: arm64: huawei-gaokun-ec: Remove unneeded semicolon
-      commit: 70081121e24cacbef8b3be849cc13bea31f8a158
+In one case join back string literal as it improves the grepping over the code
+based on the message and remove duplicating information (the driver name is
+printed as pert of the dev_*() output [1]) as we touch the same line anyway.
 
---
- i.
+Link: https://lore.kernel.org/r/4ac527f2-c59e-70a2-efd4-da52370ea557@dave.eu/ [1]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+v2: updated format specifier once again (LKP)
+
+ drivers/leds/leds-pca955x.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+index e9cfde9fe4b1..b71c1580f4bb 100644
+--- a/drivers/leds/leds-pca955x.c
++++ b/drivers/leds/leds-pca955x.c
+@@ -73,7 +73,7 @@ enum pca955x_type {
+ };
+ 
+ struct pca955x_chipdef {
+-	int			bits;
++	u8			bits;
+ 	u8			slv_addr;	/* 7-bit slave address mask */
+ 	int			slv_addr_shift;	/* Number of bits to ignore */
+ 	int			blink_div;	/* PSC divider */
+@@ -581,7 +581,6 @@ static int pca955x_probe(struct i2c_client *client)
+ 	struct led_classdev *led;
+ 	struct led_init_data init_data;
+ 	struct i2c_adapter *adapter;
+-	int i, bit, err, nls, reg;
+ 	u8 ls1[4];
+ 	u8 ls2[4];
+ 	struct pca955x_platform_data *pdata;
+@@ -589,6 +588,9 @@ static int pca955x_probe(struct i2c_client *client)
+ 	bool keep_psc0 = false;
+ 	bool set_default_label = false;
+ 	char default_label[8];
++	int bit, nls, reg;
++	unsigned int i;
++	int err;
+ 
+ 	chip = i2c_get_match_data(client);
+ 	if (!chip)
+@@ -610,16 +612,15 @@ static int pca955x_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
+-	dev_info(&client->dev, "leds-pca955x: Using %s %d-bit LED driver at "
+-		 "slave address 0x%02x\n", client->name, chip->bits,
+-		 client->addr);
++	dev_info(&client->dev, "Using %s %u-bit LED driver at slave address 0x%02x\n",
++		 client->name, chip->bits, client->addr);
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+ 	if (pdata->num_leds != chip->bits) {
+ 		dev_err(&client->dev,
+-			"board info claims %d LEDs on a %d-bit chip\n",
++			"board info claims %d LEDs on a %u-bit chip\n",
+ 			pdata->num_leds, chip->bits);
+ 		return -ENODEV;
+ 	}
+@@ -694,8 +695,7 @@ static int pca955x_probe(struct i2c_client *client)
+ 			}
+ 
+ 			if (set_default_label) {
+-				snprintf(default_label, sizeof(default_label),
+-					 "%d", i);
++				snprintf(default_label, sizeof(default_label), "%hhu", i);
+ 				init_data.default_label = default_label;
+ 			} else {
+ 				init_data.default_label = NULL;
+-- 
+2.47.2
 
