@@ -1,238 +1,190 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DCB210198
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210B4DDD3;
+	Mon,  7 Apr 2025 06:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744006118; cv=none; b=UuzMnsJ/6CGZ3CVRCQyfccEF2mq2bZVe0usxC/pTDQxkpdxK5U1IV0mF+7oF3qd+teBo/LyP72Jbl/uPQ8Cfsd/gQczgPzbBnr+hzMiurzy3FC3Ik1u2lUeNa1oYM5LQeSUBiB4qG4CI5x8JxHo7GDfDctwV1i36AtolN0OV6JM=
+	t=1744006212; cv=none; b=mLq48o+IExLT/n9J5NcW1uewiqz7gVl5q8XIdyrP/F+c81ieY8SSFFwVKIDgvC/8d9z2sr4XCUVJjcUH2xVW0Ecy9eZtcIA1BWbRLman2o/LhxlUtHEyf4OQZtmuU1g1aNEVDTb2hOPPlfZkjx8JCFpG3g7jj/QftauSs33YEeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744006118; c=relaxed/simple;
-	bh=1XUFDFTQaz0LuYdxM8uPaQsUJ28Sya2ULD6CTPTaZJI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hLXxaB7Wg3MRPph/BBu8SbPBB+zraRDe09fLxSD9yuuNQEP1EtcWQsFgm5GADP1MEns1z0oBiMXZjF0OWM9A5Bv/KUMstgLFS1yh+U5QsQirT18y+YuQvFkNIOrzD51XzKuFwciRBdpdJ4VlzSndy+9l4tSgSVlFlqzmtDESVYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85d9a52717aso577467439f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:08:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744006116; x=1744610916;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1744006212; c=relaxed/simple;
+	bh=WHptMty8/X/ube0FQL8nrBNpTd+8qRvV8oDKOCjRJ/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ssJibcDNM3aZDhWuOBYZBrauhkfJqLsRd8wL/mSAMaKAluMu65sEHMjF8l03JzDM9ZPMJ8QnIWLv7MssHO4AV1Jlk/B0l7X7J8igEJ9Re4sAIxeosaVDiIGMBtp/gUYHuM5gVGxsxepujaUXfrtHjdVmoBzxN3alrhnIfHqNMpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ql55X4yx; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql55X4yx"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54954fa61c9so1492947e87.1;
+        Sun, 06 Apr 2025 23:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744006208; x=1744611008; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5/KgWplF9dPNYbjdfFLAHHlYvNMnSVx8I1yTmpszd84=;
-        b=EhHcRrKwbkm8cU0zXdU6ay84XemeWWJMGsngUbtTN8qFvqHlE1ZfIvbGq/40i+Dtyg
-         f4FyRH2A3abh5TKmEDo9EtrhEEdH7HY6vuPSKrCnvkDVCAVXGI/8/UVcKjF/Hu52QLRB
-         cyCNiK2sGf9rU3ZxCqh+kr3rNPF1qm8yBquLf9i/Xf1rfxCfg1Z+CSXZqDL/orzRd4i3
-         kOjyYAza5hpbVZb8G+Roqg02hTjtkK1XCeQknlENw2JCOY4xsFKKwxxImE1VtmmktPCX
-         nHhGu9lpFIhBX4kd3hlpjgFbZj/Rc6Z+MhHLKRv2KV+QL4PBWoZpTh4fr7DRriKtU7zC
-         91Og==
-X-Forwarded-Encrypted: i=1; AJvYcCWcZ69Dq7waoOmiijrUOyU4lOnwWKC7VjMjDc3wi9vHqCSnTtemLUVV1NbooLnIPfphnpx6og/LC9SbAWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWtElgzKH64n4gESG0Iy9U+kzvnU+3sPw1CA9TCRY7YECyc8mU
-	SvSOkpUQ6aAlZ5fZILuk1kwTPkT9q/+4mMDTPWjavSz8ZsDq7Gst4y1rZPJ1xs9JT6NauX9BVbd
-	i42BH1TuLBCozS1n4/boUdF7qlaObbbqgR4UiTXmOPsQ7ujVNn5hMET4=
-X-Google-Smtp-Source: AGHT+IFOu+JBb/IA55NbLTkjn0k9i5GFcRsLwDL+8WOvZiKl4NGApXhoFO6dLuk8aewfQRxrV+JvNZ+vkoPZV2Yv4HgCxjoeV4YK
+        bh=8tQt3XJvixzCS8l8Xq4o4BtUJ6YS65Te0LIUOY4NnHk=;
+        b=Ql55X4yxHd/gwcN9Ai2a5moMPA0InDNCJI2WPgH7REoyAnUbusstFrD5xyzKquh7Kh
+         k4vFlfG8rB5fUcjkfQcyTDFY/a1x5RGi0If8BL6vUtzRCBBFI3wBkbf5OHzuMCyM6cAu
+         okrjVfqokEcLKDpROiVtLShrzL+GnEMhvPMDHW8KLd4KnNC1qZ5p2Gc6RWMc5mFI41xv
+         JYmHBNXr8Cq+0zu1RGmfJrA2ERDJjGVu5cTm8WCzADfvdITgfBjqk89FfUx+U1IXQbbX
+         f2KIctMU/y2Y/HbBKXpZH1dBLkKXjntD+deYmhePUEQd5UCquoT9A/IBKKlyFT91J1k2
+         V9AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744006208; x=1744611008;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8tQt3XJvixzCS8l8Xq4o4BtUJ6YS65Te0LIUOY4NnHk=;
+        b=PsXvrhXlbBeZIq7A8o0XeRqZtKMKxbyVTRYW67veBORtCtgZQFX9x00+Ta+cbaz58M
+         jvlMAI1IzZL9sNzDq+gfOBEUplAaT+OkOXbreMKRix15jkamYtwh7Etqr4q3nyYMsBmF
+         790qSE4Vfi+HuRYDORn9In/3MmfCg1o0NOrxt4quciwY63uQpPoQvdANqb3SLRr1aMci
+         f08hh6nz6p4jCczJjS1AVkJNyPYDA/kqVnprRZtBRkp/IwG4OyU63OjJ1ET9r0nPAbtN
+         5cXz76wSkEEDNgDHZkw+JxKVO2JoJg3H8+L4eq6ZumLqhndlRmNrzXdjX0c7KRpOdWFj
+         YvJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwsaFkX9f+pa9vQeus47O/aFzmJxcxMaSZ1jsKXEJnV45OG3dUv+V47M/N6irBD37FWc4R6ij8aAob@vger.kernel.org, AJvYcCWK6c9eg+5F6IPzmTHs28PHfnFhoF3ueZvaWqV7asBmyRLkoGQzUrEfzCaNH+vgdhkHRy0m5lyyOT9R@vger.kernel.org, AJvYcCXPNAYsKPoCDqAoMAR8Tp9Y0gKfAO9G/VhxRe3imm+4HYBSAk9C8VD9xYyMPXWtHV39PhYBnRFUDv6ig5u3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsAOcMLdKUNzLZ+BCG6l3zn4lZwP3X8n6IkEieRW1MVGH4xWFg
+	Hv9oryGhezXv/2nJwX9EuazlM76n6YJmrjhfjcL5YD+iZfhZu4GN
+X-Gm-Gg: ASbGncs2CTp29OrdwJXpEGziLvfbKXWDHSypMzQFVrl/VorFJ+q46CUmsMGAAMyyk1s
+	wow6unLFe4YpmpweNuLSClnEG2d1cqj8CwSOV0AGeaWWru1p9v0y/AyHj3O9TOZRpRB30pNZT+I
+	gaSw9yw84KGZggiJytrTTROeydIcKDZVF2EoiSaBQvk7o4oeoaoX8i61KsJJfNHOxW97gXzs7oN
+	LzoRrzlbG9aNs7nBoXN/+80qGuuFHdpz3qWoWjXrYIdrkbQv263vGdnSbkcYbRS5h5C9zG6xrpW
+	uOKWydHBwziAA+jzVpktOyQOGhk0fUKrIUf5ZZ9z0yaNmHFtb3f2xR/Olvq7l0uo3U4JHYHd5CV
+	Ikfxu9eJh4HWkFXpdKAvIzF9yFQ==
+X-Google-Smtp-Source: AGHT+IGQciRZD1LR83G4S8zlR0hZxoK4W9ubK7Hlcuv4dP4RJxWWqZW4WXzMhLTpCHd17H+HQihVkw==
+X-Received: by 2002:a05:6512:e9a:b0:54a:cc75:3d81 with SMTP id 2adb3069b0e04-54c22769a54mr2960657e87.4.1744006207979;
+        Sun, 06 Apr 2025 23:10:07 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c2158sm1138523e87.93.2025.04.06.23.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Apr 2025 23:10:06 -0700 (PDT)
+Message-ID: <99d1d972-d9a5-4ca3-811a-b22083bea4e6@gmail.com>
+Date: Mon, 7 Apr 2025 09:10:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e04:b0:3d3:fdb8:1792 with SMTP id
- e9e14a558f8ab-3d6e5876e66mr102311675ab.14.1744006115815; Sun, 06 Apr 2025
- 23:08:35 -0700 (PDT)
-Date: Sun, 06 Apr 2025 23:08:35 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f36be3.050a0220.0a13.0282.GAE@google.com>
-Subject: [syzbot] [net?] possible deadlock in team_vlan_rx_kill_vid
-From: syzbot <syzbot+cefa9e687471ee7f359a@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1742474322.git.mazziesaccount@gmail.com>
+ <8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
+ <20250331122247.05c6b09d@jic23-huawei>
+ <a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
+ <20250405184346.3c4b1234@jic23-huawei>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250405184346.3c4b1234@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 05/04/2025 20:43, Jonathan Cameron wrote:
+> On Tue, 1 Apr 2025 15:33:15 +0300
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+>> On 31/03/2025 14:22, Jonathan Cameron wrote:
+>>> On Mon, 31 Mar 2025 11:03:58 +0300
+>>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+>>>    
+>>>> The ROHM BD79104 ADC has identical SPI communication logic as the
+>>>> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
+>>>> started when the CS is pulled low, and channel selection is done by
+>>>> writing the channel ID after two zero bits. Data is contained in
+>>>> big-endian format in the last 12 bits.
+>>>
+>>> Nicely found match.  Sometimes these are tricky to spot.
+>>>    
+>>>>
+>>>> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
+>>>> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
+>>>> the driver expects finding these from the device-tree, instead of having
+>>>> the "vref" only as TI's driver.
+>>>>
+>>>> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
+>>>> have two voltage inputs as well. Pins are called Va (analog reference)
+>>>> and Vd (digital supply pin) - but I keep the existing driver behaviour
+>>>> for the TI's IC "as is", because I have no HW to test changes, and
+>>>> because I have no real need to touch it.
+>>>>
+>>>> NOTE II: The BD79104 requires SPI MODE 3.
+>>>>
+>>>> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
+>>>> this board I had to drop the SPI speed below the 20M which is mentioned
+>>>> in the data-sheet [2]. This, however, may be a limitation of the EVK
+>>>> board, not the component itself.
+>>>>
+>>>> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+>>>>
+>>>> [2]:
+>>>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
+>>>>   
+>>> Prefer Datasheet tags with # [1]
+>>> after them for the cross references.
+>>>
+>>> Those belong here in the tag block (no blank lines)
+>>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>>>
+>>> One request for an additional cleanup precursor patch given you are
+>>> touching the relevant code anyway.   It's a small one that you can
+>>> test so hope you don't mind doing that whilst here.
+>>>
+>>> I'm relying on the incredibly small chance anyone has a variable
+>>> regulator wired up to the reference that they are modifying at runtime.
+>>> I have seen that done (once long ago on a crazy dev board for a really
+>>> noisy humidity sensor) when the reference was VDD but not on a separate
+>>> reference pin.  That means we almost certainly won't break the existing
+>>> parts and can't have a regression on your new one so we should be fine
+>>> to make the change.
+>>
+>> The change you ask for is indeed small. I have no real objections
+>> against implementing it (and I actually wrote it already) - but I am
+>> still somewhat hesitant. As you say, (it seems like) the idea of the
+>> original code is to allow changing the vref at runtime. It looks to me
+>> this might've been intentional choice. I am not terribly happy about
+>> dropping the working functionality, when the gained simplification isn't
+>> particularly massive.
+> 
+> Hmm. I suspect this was added at my request (or copied from where I requested
+> it)  Back when we did this there was no advantage in doing it at probe
+> as it was just a question of store a value or store a pointer we had
+> to get anyway.  So I tended to advocate what I now think was a bit silly,
+> that someone elses board might have it changing...
+> 
+> User space wise, what code checks for random scaling changes?  So it
+> was best effort at best anyway!
 
-syzbot found the following issue on:
+Ah, right. I suppose this should've been accompanied with scale setting 
+which could've changed the regulator voltage - and I have no idea if 
+such hardware would make any sense.
 
-HEAD commit:    16cd1c265776 Merge tag 'timers-cleanups-2025-04-06' of git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12459fb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=cefa9e687471ee7f359a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+The slim chance I can imagine is that the reference voltage can't be 
+set/known at probe time.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>> Because of this, I am thinking of adding the patch dropping the
+>> functionality as an RFC. Leaving that floating on the list for a while
+>> would at least have my ass partially covered ;)
+>>
+>> I'd rather not delayed the support for the BD79104 though. So - would it
+>> be okay if I didn't implement the clean-up as a precursory patch, but
+>> did it as a last patch of the series? That will make it a tad more
+>> complex to review, but it'd allow taking the BD79104 changes in while
+>> leaving the RFC to float on a list. (Also, I'm not sure if you can push
+>> an RFC in next without taking it in for the cycle?)
+> 
+> I'll probably just merge it even as an RFC :)  That way it's my
+> fault if we break someone and they shout!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/18e42a5dca85/disk-16cd1c26.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/866f5ebb32ef/vmlinux-16cd1c26.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4476a8f83564/bzImage-16cd1c26.xz
+That's fine for me. Well, doing it this way around (as a last patch) 
+should ease reverting, should it be needed.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cefa9e687471ee7f359a@syzkaller.appspotmail.com
-
-veth1_macvtap: left allmulticast mode
-veth1_macvtap: left promiscuous mode
-veth0_macvtap: left promiscuous mode
-veth1_vlan: left promiscuous mode
-veth0_vlan: left promiscuous mode
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-13546-g16cd1c265776 #0 Not tainted
-------------------------------------------------------
-kworker/u8:5/83 is trying to acquire lock:
-ffff888053410e00 (team->team_lock_key#2){+.+.}-{4:4}, at: team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
-
-but task is already holding lock:
-ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: unregister_netdevice_many_notify+0x5a1/0x2510 net/core/dev.c:11947
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&dev_instance_lock_key#3){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       netdev_lock include/linux/netdevice.h:2751 [inline]
-       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-       dev_set_mtu+0x11c/0x270 net/core/dev_api.c:246
-       team_port_add drivers/net/team/team_core.c:1215 [inline]
-       team_add_slave+0x83b/0x28b0 drivers/net/team/team_core.c:1989
-       do_set_master+0x579/0x730 net/core/rtnetlink.c:2946
-       do_setlink+0x111d/0x43a0 net/core/rtnetlink.c:3159
-       rtnl_changelink net/core/rtnetlink.c:3769 [inline]
-       __rtnl_newlink net/core/rtnetlink.c:3928 [inline]
-       rtnl_newlink+0x17e2/0x1fe0 net/core/rtnetlink.c:4065
-       rtnetlink_rcv_msg+0x80f/0xd70 net/core/rtnetlink.c:6955
-       netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x221/0x270 net/socket.c:727
-       ____sys_sendmsg+0x523/0x860 net/socket.c:2566
-       ___sys_sendmsg net/socket.c:2620 [inline]
-       __sys_sendmsg+0x271/0x360 net/socket.c:2652
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (team->team_lock_key#2){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
-       vlan_kill_rx_filter_info net/8021q/vlan_core.c:222 [inline]
-       __vlan_vid_del net/8021q/vlan_core.c:362 [inline]
-       vlan_vid_del+0x483/0x770 net/8021q/vlan_core.c:387
-       vlan_device_event+0x23c/0x1e00 net/8021q/vlan.c:390
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       dev_close_many+0x33e/0x4c0 net/core/dev.c:1738
-       unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
-       ops_exit_list net/core/net_namespace.c:177 [inline]
-       cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-       kthread+0x7b7/0x940 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev_instance_lock_key#3);
-                               lock(team->team_lock_key#2);
-                               lock(&dev_instance_lock_key#3);
-  lock(team->team_lock_key#2);
-
- *** DEADLOCK ***
-
-5 locks held by kworker/u8:5/83:
- #0: ffff88801bef6148 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff88801bef6148 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x990/0x18e0 kernel/workqueue.c:3319
- #1: ffffc900015d7c60 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc900015d7c60 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x9cb/0x18e0 kernel/workqueue.c:3319
- #2: ffffffff900f0850 (pernet_ops_rwsem){++++}-{4:4}, at: cleanup_net+0x17c/0xd60 net/core/net_namespace.c:608
- #3: ffffffff900fd388 (rtnl_mutex){+.+.}-{4:4}, at: default_device_exit_batch+0xde/0x880 net/core/dev.c:12522
- #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
- #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
- #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: unregister_netdevice_many_notify+0x5a1/0x2510 net/core/dev.c:11947
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 83 Comm: kworker/u8:5 Not tainted 6.14.0-syzkaller-13546-g16cd1c265776 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: netns cleanup_net
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
- check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
- team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
- vlan_kill_rx_filter_info net/8021q/vlan_core.c:222 [inline]
- __vlan_vid_del net/8021q/vlan_core.c:362 [inline]
- vlan_vid_del+0x483/0x770 net/8021q/vlan_core.c:387
- vlan_device_event+0x23c/0x1e00 net/8021q/vlan.c:390
- notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
- call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
- call_netdevice_notifiers net/core/dev.c:2235 [inline]
- dev_close_many+0x33e/0x4c0 net/core/dev.c:1738
- unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
- unregister_netdevice_many net/core/dev.c:12044 [inline]
- default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
- ops_exit_list net/core/net_namespace.c:177 [inline]
- cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd50 kernel/workqueue.c:3400
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-pim6reg (unregistering): left allmulticast mode
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Yours
+	-- Matti
