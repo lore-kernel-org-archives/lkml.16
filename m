@@ -1,86 +1,33 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE082165EA;
-	Mon,  7 Apr 2025 16:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836702147F4;
+	Mon,  7 Apr 2025 16:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044750; cv=none; b=QBS2IcZh9vk9paHFsdQ9HQZCPpRFHpFvjXKVRtvnPH165DNatOdMxySFY7FtpVUjV+lecVPPW6xqkDRrRnevyXiqDJgt5T9og8xycbzeNYZkEUAgTGb21/nZPBGuR40HUqLPVte9XvqwI+Hsd13ORfeBaGQFErNKTcJzcoLLT8E=
+	t=1744044754; cv=none; b=efAYhwK+kAUF3HzJlwBEErfMsv77HWpYtkt70QVcC1+qXwKWeqrLNsIt8FLjYMCIbEHaLFIMIz7KnVHbzv10f5ALAvHLzq109sM+C0Ls7fG+I86Wkz2BIaQnV+Ers4Kt+a2UxtGPHU4rbYrNsLi6Ckioqsz4TM50V5F3PXmHw6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044750; c=relaxed/simple;
-	bh=zBmztjqaLSQ8FjjYALCB3BVxmox429bkI2uo/uzjB6M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PpG6UGBVB0ER7BCcAaCMcWli551RHwGpS0RwYgWbTyO/KpEdGV7ZBSyLCCyRQgbuniVuTC4GfktW6R4kkYZM71wk478nUWz75So280IT765f7xHEL47VbMFLYk/H4YMV2ICXpl7ZKuoYNEdqFGXNiMUZMeP1kePou5GsmKH56Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DfT/r8YO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfT/r8YO"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so46047625e9.3;
-        Mon, 07 Apr 2025 09:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744044747; x=1744649547; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=THekJI9YUzNNtdWRmefKg2uKRp0jBqvId+F8Fzl+4HY=;
-        b=DfT/r8YO79zerh3r/LjunBvDp6PVnS6w+HtqMLUl+l1oZ8AdDuCt6wF1pPu+hTWTVu
-         ept2RWUe/M4O7Hargc2q6hAaw8DFmEK/beAoPkq5iuRb6hxCClIZAC+SBuuAbFsliseu
-         3DvMW+YRlOQfyIHdjXALPsXb/tEBhMa0z7kofXNPJeVnKRV2SAw0SsbX5N46wPpYn1fn
-         HxYzaKRkcHErftmzMv3gNi9VpR8ezklnnG3Ju0XO1qZysgamajeeDn3D2EJJxtE1A+3z
-         xZ+UhhtKD97+K7vcAnV2shgEGh7RVQJlUlgM9dJVVPdzcs2hlm4rl08+ObSOSJDCszMX
-         eDrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744044747; x=1744649547;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=THekJI9YUzNNtdWRmefKg2uKRp0jBqvId+F8Fzl+4HY=;
-        b=Fn1ynlebabUb3WagReR4hI0DOVcpaTbbDOJnivxznATCjrT5KvmuW05TDVcZZ7Fkjt
-         lk4Jh8GzOdGsM4sV1+JqsfddXaDwfBQh/ahDoxxAd5eUeaWru/MViBVlvL3Fvgw4uIs7
-         qVJy2XOssYfysV/eZ6Bm9D8IfIt8CmGoNmdOucRH/7VmUS5iKPjzfHNPsVMx1BWxKLAB
-         S7lcKVQj3pAmiAngpdrGkyMlSUiE61kh2lDfodtstNsU4DyAIppRxJ7gFXLy6rfo5eWT
-         I6LkFoWgV6l91SV0yT5gBQCtGmoP/xlP2bZsJ7831GuqJ8srzg0sN6stZSR4J8ERimV2
-         TXcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHwf0sZVWQkYmWyz+rGgYBJBhmeSeOXgwge3JXlAmda4WRUDqFkBwovjtelvAExAbpCzg08C1f1Xj0T5Ra@vger.kernel.org, AJvYcCVh01U54uBL0QYmmvUqSu1YktU2mHfL+SDXnljS5Id8Dn4B8HtuQ87BCQvBgpNX1og+INgmWCJW7WCp@vger.kernel.org, AJvYcCXzP7n4y4dfrrJ/e27o7m9aPX06E5U1QBPhNLxjbem28UaAk73ZdBYh1Z7+pWHgKBp8aZWQRXv/mD+l@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeGVbFXKnirSFb7gHroI8OkdthVVCTC9GYV/8DoAHu8LOm11of
-	/6su0veEOb6ViLGiVb/ZhTn6QDJPnYN3dpYKpQui3G2wqTnPFNYv
-X-Gm-Gg: ASbGncvSnWzl7xoMZLTO/SrAEBntKu1a/s6KcraX5H1e5FskHlLjLZi3Wb7a94nJPF7
-	bfHdeJcD3OmxX2vZ+xpa9MD1zDDsogrygXufJXM1HtSX9gbIIC/Ly5n2WsDp7qOclFrrrCYZm0G
-	yJtzgCSl9S4iDoarz2MPhhxlCuf0eg1SNMtQ8yneWSAScnR5vf8a7aiFkb7T9S8Ke0tSSQPMFcy
-	e5Ir1s+LfxYKpJyKAWYvxc3wzPRG8gGNOttDM3fGrc+8eiOJe6KWQoBIcWuU7tjk5CmPJq8lj43
-	2DtWGtsRKCFpXbwz+Qe2AsKvVIFRaXvX4zbb+O3ExfidbWjLLVDypqwtBazZTA/C68v2fcsAHkC
-	UUrkc
-X-Google-Smtp-Source: AGHT+IH38nxrx51hlfO0odZaRY9B9aNs0+tJwFUxHQFmNQ1mD4yd8oltYm3RpK5U+Mch14mMo8WKOg==
-X-Received: by 2002:a05:600c:3549:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-43ecf90aae2mr142732175e9.17.1744044746713;
-        Mon, 07 Apr 2025 09:52:26 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:78b9:80c2:5373:1b49])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16ba978sm139272305e9.23.2025.04.07.09.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:52:26 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset entries for GBETH0/1
-Date: Mon,  7 Apr 2025 17:52:02 +0100
-Message-ID: <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1744044754; c=relaxed/simple;
+	bh=wNBPtN0495VM5MuOkw0I6+oQIO5BBxEfhzqYaYz5iQg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lj+IghyBCMExX+Wtm7D7ZRsnWRMxbvOVvZcYHmceIFphb1cm58bT0nFE7yMPXniwF6PpTp5Kh/wWP0dkW8cclehDlqrhwDh+5EoQ6zsYSlOp9sme9+MVb+YWfMDAOS7c8v85jEOMD6NqOPbVwx9kJuZ2B4xy4X5/ptWy45c1oec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from localhost.localdomain (178.207.21.175) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 7 Apr
+ 2025 19:52:12 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Roman Smirnov <r.smirnov@omp.ru>, Steve French <sfrench@samba.org>,
+	Shirish Pargaonkar <shirishpargaonkar@gmail.com>, Sachin Prabhu
+	<sprabhu@redhat.com>, <linux-cifs@vger.kernel.org>,
+	<samba-technical@lists.samba.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.10] cifs: fix integer overflow in match_server()
+Date: Mon, 7 Apr 2025 19:51:48 +0300
+Message-ID: <20250407165150.780252-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,184 +35,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 04/07/2025 16:40:10
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 192443 [Apr 07 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 54 0.3.54
+ 464169e973265e881193cca5ab7aa5055e5b7016
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.207.21.175 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1;178.207.21.175:7.1.2
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.207.21.175
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 04/07/2025 16:44:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 4/7/2025 3:07:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Roman Smirnov <r.smirnov@omp.ru>
 
-Add clock and reset entries for GBETH instances. Include core clocks for
-PTP, sourced from PLLETH, and add PLLs, dividers, and static mux clocks
-used as clock sources for the GBETH IP.
+[ Upstream commit 2510859475d7f46ed7940db0853f3342bf1b65ee ]
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+The echo_interval is not limited in any way during mounting,
+which makes it possible to write a large number to it. This can
+cause an overflow when multiplying ctx->echo_interval by HZ in
+match_server().
+
+Add constraints for echo_interval to smb3_fs_context_parse_param().
+
+Found by Linux Verification Center (linuxtesting.org) with Svace.
+
+Fixes: adfeb3e00e8e1 ("cifs: Make echo interval tunable")
+Cc: stable@vger.kernel.org
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
 ---
- drivers/clk/renesas/r9a09g057-cpg.c | 72 +++++++++++++++++++++++++++++
- drivers/clk/renesas/rzv2h-cpg.h     | 11 +++++
- 2 files changed, 83 insertions(+)
+ fs/cifs/connect.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/clk/renesas/r9a09g057-cpg.c b/drivers/clk/renesas/r9a09g057-cpg.c
-index 3c40e36259fe..057bfa0e2a57 100644
---- a/drivers/clk/renesas/r9a09g057-cpg.c
-+++ b/drivers/clk/renesas/r9a09g057-cpg.c
-@@ -29,6 +29,7 @@ enum clk_ids {
- 	CLK_PLLDTY,
- 	CLK_PLLCA55,
- 	CLK_PLLVDO,
-+	CLK_PLLETH,
- 	CLK_PLLGPU,
- 
- 	/* Internal Core Clocks */
-@@ -49,6 +50,14 @@ enum clk_ids {
- 	CLK_PLLVDO_CRU1,
- 	CLK_PLLVDO_CRU2,
- 	CLK_PLLVDO_CRU3,
-+	CLK_PLLETH_DIV_250_FIX,
-+	CLK_PLLETH_DIV_125_FIX,
-+	CLK_CSDIV_PLLETH_GBE0,
-+	CLK_CSDIV_PLLETH_GBE1,
-+	CLK_SMUX2_GBE0_TXCLK,
-+	CLK_SMUX2_GBE0_RXCLK,
-+	CLK_SMUX2_GBE1_TXCLK,
-+	CLK_SMUX2_GBE1_RXCLK,
- 	CLK_PLLGPU_GEAR,
- 
- 	/* Module Clocks */
-@@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] = {
- 	{0, 0},
- };
- 
-+static const struct clk_div_table dtable_2_100[] = {
-+	{0, 2},
-+	{1, 10},
-+	{2, 100},
-+	{0, 0},
-+};
-+
-+/* Mux clock tables */
-+static const char * const smux2_gbe0_rxclk[] = { ".plleth_gbe0", "et0-rxc-rxclk" };
-+static const char * const smux2_gbe0_txclk[] = { ".plleth_gbe0", "et0-txc-txclk" };
-+static const char * const smux2_gbe1_rxclk[] = { ".plleth_gbe1", "et1-rxc-rxclk" };
-+static const char * const smux2_gbe1_txclk[] = { ".plleth_gbe1", "et1-txc-txclk" };
-+
- static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	/* External Clock Inputs */
- 	DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
-@@ -90,6 +112,7 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_FIXED(".plldty", CLK_PLLDTY, CLK_QEXTAL, 200, 3),
- 	DEF_PLL(".pllca55", CLK_PLLCA55, CLK_QEXTAL, PLLCA55),
- 	DEF_FIXED(".pllvdo", CLK_PLLVDO, CLK_QEXTAL, 105, 2),
-+	DEF_FIXED(".plleth", CLK_PLLETH, CLK_QEXTAL, 125, 3),
- 	DEF_PLL(".pllgpu", CLK_PLLGPU, CLK_QEXTAL, PLLGPU),
- 
- 	/* Internal Core Clocks */
-@@ -115,6 +138,17 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_DDIV(".pllvdo_cru2", CLK_PLLVDO_CRU2, CLK_PLLVDO, CDDIV4_DIVCTL1, dtable_2_4),
- 	DEF_DDIV(".pllvdo_cru3", CLK_PLLVDO_CRU3, CLK_PLLVDO, CDDIV4_DIVCTL2, dtable_2_4),
- 
-+	DEF_FIXED(".plleth_250_fix", CLK_PLLETH_DIV_250_FIX, CLK_PLLETH, 1, 4),
-+	DEF_FIXED(".plleth_125_fix", CLK_PLLETH_DIV_125_FIX, CLK_PLLETH_DIV_250_FIX, 1, 2),
-+	DEF_CSDIV(".plleth_gbe0", CLK_CSDIV_PLLETH_GBE0,
-+		  CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL0, dtable_2_100),
-+	DEF_CSDIV(".plleth_gbe1", CLK_CSDIV_PLLETH_GBE1,
-+		  CLK_PLLETH_DIV_250_FIX, CSDIV0_DIVCTL1, dtable_2_100),
-+	DEF_SMUX(".smux2_gbe0_txclk", CLK_SMUX2_GBE0_TXCLK, SSEL0_SELCTL2, smux2_gbe0_txclk),
-+	DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_SELCTL3, smux2_gbe0_rxclk),
-+	DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_SELCTL0, smux2_gbe1_txclk),
-+	DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_SELCTL1, smux2_gbe1_rxclk),
-+
- 	DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV3_DIVCTL1, dtable_2_64),
- 
- 	/* Core Clocks */
-@@ -130,6 +164,10 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
- 	DEF_FIXED("iotop_0_shclk", R9A09G057_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
- 	DEF_FIXED("usb2_0_clk_core0", R9A09G057_USB2_0_CLK_CORE0, CLK_QEXTAL, 1, 1),
- 	DEF_FIXED("usb2_0_clk_core1", R9A09G057_USB2_0_CLK_CORE1, CLK_QEXTAL, 1, 1),
-+	DEF_FIXED("gbeth_0_clk_ptp_ref_i", R9A09G057_GBETH_0_CLK_PTP_REF_I,
-+		  CLK_PLLETH_DIV_125_FIX, 1, 1),
-+	DEF_FIXED("gbeth_1_clk_ptp_ref_i", R9A09G057_GBETH_1_CLK_PTP_REF_I,
-+		  CLK_PLLETH_DIV_125_FIX, 1, 1),
- };
- 
- static const struct rzv2h_mod_clk r9a09g057_mod_clks[] __initconst = {
-@@ -233,6 +271,38 @@ static const struct rzv2h_mod_clk r9a09g057_mod_clks[] __initconst = {
- 						BUS_MSTOP(7, BIT(10))),
- 	DEF_MOD("usb2_0_pclk_usbtst1",		CLK_PLLDTY_ACPU_DIV4, 11, 7, 5, 23,
- 						BUS_MSTOP(7, BIT(11))),
-+	DEF_MOD_EXTERNAL("gbeth_0_clk_tx_i",	CLK_SMUX2_GBE0_TXCLK, 11, 8, 5, 24,
-+						BUS_MSTOP(8, BIT(5)),
-+						0x300, 8, 1),
-+	DEF_MOD_EXTERNAL("gbeth_0_clk_rx_i",	CLK_SMUX2_GBE0_RXCLK, 11, 9, 5, 25,
-+						BUS_MSTOP(8, BIT(5)),
-+						0x300, 12, 1),
-+	DEF_MOD_EXTERNAL("gbeth_0_clk_tx_180_i", CLK_SMUX2_GBE0_TXCLK, 11, 10, 5, 26,
-+						BUS_MSTOP(8, BIT(5)),
-+						0x300, 8, 1),
-+	DEF_MOD_EXTERNAL("gbeth_0_clk_rx_180_i", CLK_SMUX2_GBE0_RXCLK, 11, 11, 5, 27,
-+						BUS_MSTOP(8, BIT(5)),
-+						0x300, 12, 1),
-+	DEF_MOD("gbeth_0_aclk_csr_i",		CLK_PLLDTY_DIV8, 11, 12, 5, 28,
-+						BUS_MSTOP(8, BIT(5))),
-+	DEF_MOD("gbeth_0_aclk_i",		CLK_PLLDTY_DIV8, 11, 13, 5, 29,
-+						BUS_MSTOP(8, BIT(5))),
-+	DEF_MOD_EXTERNAL("gbeth_1_clk_tx_i",	CLK_SMUX2_GBE1_TXCLK, 11, 14, 5, 30,
-+						BUS_MSTOP(8, BIT(6)),
-+						0x304, 8, 1),
-+	DEF_MOD_EXTERNAL("gbeth_1_clk_rx_i",	CLK_SMUX2_GBE1_RXCLK, 11, 15, 5, 31,
-+						BUS_MSTOP(8, BIT(6)),
-+						0x304, 12, 1),
-+	DEF_MOD_EXTERNAL("gbeth_1_clk_tx_180_i", CLK_SMUX2_GBE1_TXCLK, 12, 0, 6, 0,
-+						BUS_MSTOP(8, BIT(6)),
-+						0x304, 8, 1),
-+	DEF_MOD_EXTERNAL("gbeth_1_clk_rx_180_i", CLK_SMUX2_GBE1_RXCLK, 12, 1, 6, 1,
-+						BUS_MSTOP(8, BIT(6)),
-+						0x304, 12, 1),
-+	DEF_MOD("gbeth_1_aclk_csr_i",		CLK_PLLDTY_DIV8, 12, 2, 6, 2,
-+						BUS_MSTOP(8, BIT(6))),
-+	DEF_MOD("gbeth_1_aclk_i",		CLK_PLLDTY_DIV8, 12, 3, 6, 3,
-+						BUS_MSTOP(8, BIT(6))),
- 	DEF_MOD("cru_0_aclk",			CLK_PLLDTY_ACPU_DIV2, 13, 2, 6, 18,
- 						BUS_MSTOP(9, BIT(4))),
- 	DEF_MOD_NO_PM("cru_0_vclk",		CLK_PLLVDO_CRU0, 13, 3, 6, 19,
-@@ -304,6 +374,8 @@ static const struct rzv2h_reset r9a09g057_resets[] __initconst = {
- 	DEF_RST(10, 13, 4, 30),		/* USB2_0_U2H1_HRESETN */
- 	DEF_RST(10, 14, 4, 31),		/* USB2_0_U2P_EXL_SYSRST */
- 	DEF_RST(10, 15, 5, 0),		/* USB2_0_PRESETN */
-+	DEF_RST(11, 0, 5, 1),		/* GBETH_0_ARESETN_I */
-+	DEF_RST(11, 1, 5, 2),		/* GBETH_1_ARESETN_I */
- 	DEF_RST(12, 5, 5, 22),		/* CRU_0_PRESETN */
- 	DEF_RST(12, 6, 5, 23),		/* CRU_0_ARESETN */
- 	DEF_RST(12, 7, 5, 24),		/* CRU_0_S_RESETN */
-diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
-index c64cfead6dc1..e730179d92aa 100644
---- a/drivers/clk/renesas/rzv2h-cpg.h
-+++ b/drivers/clk/renesas/rzv2h-cpg.h
-@@ -93,10 +93,13 @@ struct smuxed {
- 		.width = (_width), \
- 	})
- 
-+#define CPG_SSEL0		(0x300)
-+#define CPG_SSEL1		(0x304)
- #define CPG_CDDIV0		(0x400)
- #define CPG_CDDIV1		(0x404)
- #define CPG_CDDIV3		(0x40C)
- #define CPG_CDDIV4		(0x410)
-+#define CPG_CSDIV0		(0x500)
- 
- #define CDDIV0_DIVCTL1	DDIV_PACK(CPG_CDDIV0, 4, 3, 1)
- #define CDDIV0_DIVCTL2	DDIV_PACK(CPG_CDDIV0, 8, 3, 2)
-@@ -111,6 +114,14 @@ struct smuxed {
- #define CDDIV4_DIVCTL1	DDIV_PACK(CPG_CDDIV4, 4, 1, 17)
- #define CDDIV4_DIVCTL2	DDIV_PACK(CPG_CDDIV4, 8, 1, 18)
- 
-+#define CSDIV0_DIVCTL0	DDIV_PACK(CPG_CSDIV0, 0, 2, CSDIV_NO_MON)
-+#define CSDIV0_DIVCTL1	DDIV_PACK(CPG_CSDIV0, 4, 2, CSDIV_NO_MON)
-+
-+#define SSEL0_SELCTL2	SMUX_PACK(CPG_SSEL0, 8, 1)
-+#define SSEL0_SELCTL3	SMUX_PACK(CPG_SSEL0, 12, 1)
-+#define SSEL1_SELCTL0	SMUX_PACK(CPG_SSEL1, 0, 1)
-+#define SSEL1_SELCTL1	SMUX_PACK(CPG_SSEL1, 4, 1)
-+
- #define BUS_MSTOP_IDX_MASK	GENMASK(31, 16)
- #define BUS_MSTOP_BITS_MASK	GENMASK(15, 0)
- #define BUS_MSTOP(idx, mask)	(FIELD_PREP_CONST(BUS_MSTOP_IDX_MASK, (idx)) | \
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a3c0e6a4e484..322b8be73bb8 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1915,6 +1915,12 @@ cifs_parse_mount_options(const char *mountdata, const char *devname,
+ 					 __func__);
+ 				goto cifs_parse_mount_err;
+ 			}
++			if (option < SMB_ECHO_INTERVAL_MIN ||
++			    option > SMB_ECHO_INTERVAL_MAX) {
++				cifs_dbg(VFS, "%s: Echo interval is out of bounds\n",
++					 __func__);
++				goto cifs_parse_mount_err;
++			}
+ 			vol->echo_interval = option;
+ 			break;
+ 		case Opt_snapshot:
 -- 
-2.49.0
+2.43.0
 
