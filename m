@@ -1,112 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2012550CE;
-	Mon,  7 Apr 2025 21:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6398254B10
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060241; cv=none; b=VSX5s+LHk7p95W5H1hZAxVHGvZaUYejdehCV9xfzu1v7Xvn5sTdEe4pfz7e2onEpfqJf1DXISLnouvvEaEHfVcwSdZq7/LnK72vATSbz+gEZtc6W6Go5XMxl5KQpW9/RdpEdg6j73tFzPy+0jFF4AUPCB4aOgPMiTudy8tbQ9I4=
+	t=1744060241; cv=none; b=F9z//5mlzpsvIWYMh4f6bAKjlc6QpKBKVReUecrdSmt9qKhJAlilvXOXcY8vTUsaB5v4mIKcB4Klz+ryHHEfW5bvGUZANId7PEXtta5hp3Wcvj0bxbGz1J5nv9JB/T7gJPFAhgfeGoRJaUVe2AQN0kwyOqPr7uLzGpOYwXzDMHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744060241; c=relaxed/simple;
-	bh=brpFVo8UvhI+dLDZkVYf5Q8wXfm0uRTbp38j5NZgP3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sgY2q3rbb3o8nWuikuVh+TendZDZK9Wxmlm7ynCQRJUIUkhkwGOo56Jpr57zfDMxf7EpgHSp0rYKaWC2/oA2+HLeP8+EPzMnjnIDW/RwzBKcKL+nnK3enWInK6F52sho7amrMo/saGKzuk8FCIfZbcM5PXv5Y9QNVpp1TyBo7s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jv74tbaW; arc=none smtp.client-ip=10.30.226.201
+	bh=midHO3Z3byxoUBHfKzM92TodrGzwSNi/xUV5ijTnPeg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=XYn+lpJrNVBjyEVNeXCxPE2kQVS7uaeXLqoH6PiGB3VulAOkyyHlPcvwgFD9jyqwqIvD8IpAhRHKt+O+6T6kARvU8khmwPvXCQXJnWzC44KKIqh0A1QEqxQdYsVOlymr4Jf41HJ+siGQFMLe26p7iUuEttlU05tz8yaIhEfxhhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mb0MEax6; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jv74tbaW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE84FC4CEED;
-	Mon,  7 Apr 2025 21:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744060240;
-	bh=brpFVo8UvhI+dLDZkVYf5Q8wXfm0uRTbp38j5NZgP3E=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Jv74tbaW1z9GlbmKwjUV0u8B8UcWwmKx90JyTHWha8Undg21FQgQZlUqC1PnWgard
-	 hvgv5MDmOjCK1YgSj/aDbgUDsrCyMeKJsyEWzIjThaIvlBBSk95aqSvKyFWJbzzp55
-	 X6Rx2IobOHpM1/0+dkyD4Lh1t/MitCn/0iQKF6njpsulHqHvQlOsVM6g1TII7Vc4kV
-	 +pPDsP8mfDZlkVIiMQT4XYT8CsgVxKb1lhhav++rwT2/07+tDMcJheqSPT7wEdweP+
-	 GGRBK1MGaW5vTMof7VQwwwAvsbaXStldI25Td/rH+tgdFIYiSnISs7c/zB41Bvx27X
-	 IIBlxWvGK4/rw==
-From: Mark Brown <broonie@kernel.org>
-Date: Mon, 07 Apr 2025 21:57:32 +0100
-Subject: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mb0MEax6"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2241e7e3addso39728665ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 14:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744060239; x=1744665039; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w1vjvtqlcWS/+dNR0OE++xaid1m3UsjjNffN8GtQ4ds=;
+        b=Mb0MEax6JUqQd2OotEHLXGOJrfdKwhKK50VRq5JFGx8rItq4mX9d1B805DSdaMXalP
+         Bu9f6M8NrbJCbdbrWz1zTIUAtRSqnQed3mSqDsT9gau0GU9B3FlJIOHHqDrUnswxT+K7
+         Iiyhru9do947dIv+VofzVDsliFAWCoV35iND5PML5BZY5sl8fHDQZEXcR6Xz6MurDbMv
+         0QK6YMCz5agGWMnl85tq3wfET37ngV4NkWhN5iRGBHEgGvtDLHXAzxh/MteWF6VN176B
+         3eRBfFidQMy4kM5F9uRMEdBQZ6v05jgbroOZAzGxtjKmW7z+9uyUwjUQCnjNJ0K83FBe
+         +QeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744060239; x=1744665039;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w1vjvtqlcWS/+dNR0OE++xaid1m3UsjjNffN8GtQ4ds=;
+        b=IW0paG5zfTP+g0xodk7G0XqVhXhigZ1PXwzxPH5noxazklIN/aWqDmd5fQRfrGbdLl
+         yQDUbn5OFWDU4RKwpIC8sRPVnXvmvlhRWCPJcej5WStr1Lg0O59BgzkRqenfaqhyApFb
+         zmi7bpIb583S16nvFezNpKM1wPq6ikQLHNqFIEHGZhMCQIk1nSbwCbliNnXjDQ8txoYc
+         SYuCij6W7Vjt3Q4Ctldw550+KGInIP+EEj0sIwGUDfJiD2+ySBh3nyriCN8DCijuSfO4
+         nZh5z/t3kTdTEKoHsCf4bXs8ekDA291GCVlybiagPGUeSTjYngL+5GF0cwoRnE8dSfpG
+         W4Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjh+CwaaN98JCz1edOtW3K8fJ022pwZk2LXvwOTaA5CXZXvd+jLRG1IPH+NBRKkdFAMQ2P2+vAuVeDgLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4LhixGLYQQ5y2pW0WkjgDDX/E6mzQJBTYb+67KRwwqWmApRrp
+	oJI5VaN3DAPei3Gf1iacjDETjdSmngJtgbSbPpj3g+7Bfsl8Z9fOLtLpoqMuOSHWtqX4gw8ty79
+	TOdK6Kw==
+X-Google-Smtp-Source: AGHT+IGADpgsCuG4PHa3Qu9sgQTTobjrW0PuIpK1wi9mW1TmFE2abMLBb0bRgk7WFEzx8RlVsADBzs7CRw5z
+X-Received: from plnu5.prod.google.com ([2002:a17:903:1a45:b0:223:58e2:570d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41c6:b0:221:78a1:27fb
+ with SMTP id d9443c01a7336-22a8a049ee7mr143568095ad.11.1744060239381; Mon, 07
+ Apr 2025 14:10:39 -0700 (PDT)
+Date: Mon,  7 Apr 2025 14:09:31 -0700
+In-Reply-To: <20250407210937.131681-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADs89GcC/x3MSwqDMBAA0KvIrDswauunVyku8pnGwRAlg0UQ7
- 27o8m3eCcpZWOFdnZD5JyprKqgfFbjZpMAovhgaal70pB4Xu0v06EWNjYzBOdziHiQpDj3VxnQ
- 0OttCCbbMXzn++We6rhuXJoY4bAAAAA==
-X-Change-ID: 20250407-kbuild-disable-gcc-plugins-8701aa609cb3
-To: Linus Torvalds <torvalds@linux-foundation.org>, 
- Kees Cook <kees@kernel.org>, 
- =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
- =?utf-8?q?G=C3=BCnther_Noack?= <gnoack@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2028; i=broonie@kernel.org;
- h=from:subject:message-id; bh=brpFVo8UvhI+dLDZkVYf5Q8wXfm0uRTbp38j5NZgP3E=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBn9D9NFa1CcYWHR9Jafm0V3+B0BSeBSppLOL80Eo13
- /5YKXmqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ/Q/TQAKCRAk1otyXVSH0FVlB/
- 9bzbJ3wzNgGnwSOkcK0bI+lv9NfuUW1TYwntVoPd5trP2im1S0pkznBsxarhFp7KFhCigYv3oV1PK1
- skwMSW2P4lHUVETiN4CgpawF9G7gpGljTiyZd41ZR5Lq+5MUG4//lRJSPUNcY7Jd+V6iknh285jdYZ
- hsNMkwQYwq/7OamiB8djDkOKMXr/uBDEN/8+btNrvy7hWl8DLQl5RBUUPvqqaWp8zcf4nDamKNstce
- MXTcp6nPt0vF0HaY8D0vRaoaiEt6u6XL8UYFAnn8Wmtl129GdHzO3Geiy4NceIz1qK1lfVq/YEeKgX
- x29r3FWVa3t11pD0SjtdoU1TnksOE9
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Mime-Version: 1.0
+References: <20250407210937.131681-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250407210937.131681-11-irogers@google.com>
+Subject: [PATCH v3 10/16] perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In current mainline x86_64 allmodconfig builds done with tuxmake GCC 13
-and GCC 14 toolchains (which are Debian ones packaged up into containers)
-generate ICEs in landlock:
+Rename to reflect evsel argument and for consistency with other tpebs
+functions. Update count from prev_raw_counts when
+available. Eventually this will allow inteval mode support.
 
-Event                            | Plugins
-PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-PLUGIN_FINISH_DECL               | randomize_layout_plugin
-PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layout_plugin
-PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-/build/stage/linux/security/landlock/fs.c: In function ‘hook_file_ioctl_common’:
-/build/stage/linux/security/landlock/fs.c:1745:61: internal compiler error: in c
-ount_type_elements, at expr.cc:7075
- 1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
-      |                                                             ^
-
-Arnd bisected this to c56f649646ec ("landlock: Log mount-related
-denials") but that commit is fairly obviously not really at fault here,
-most likely this is an issue in the plugin.  Given how disruptive having
-key configs like this failing let's disable the plugins for compile test
-builds until a fix is found.
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- scripts/gcc-plugins/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/evsel.c       | 11 ++------
+ tools/perf/util/intel-tpebs.c | 52 ++++++++++++++---------------------
+ tools/perf/util/intel-tpebs.h |  2 +-
+ 3 files changed, 25 insertions(+), 40 deletions(-)
 
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index e383cda05367..29b03c136165 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -7,6 +7,7 @@ config HAVE_GCC_PLUGINS
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 554252ed1aab..1d343f51225b 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1718,11 +1718,6 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
+ 	return perf_evsel__read(&evsel->core, cpu_map_idx, thread, count);
+ }
  
- menuconfig GCC_PLUGINS
- 	bool "GCC plugins"
-+	depends on !COMPILE_TEST
- 	depends on HAVE_GCC_PLUGINS
- 	depends on CC_IS_GCC
- 	depends on $(success,test -e $(shell,$(CC) -print-file-name=plugin)/include/plugin-version.h)
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250407-kbuild-disable-gcc-plugins-8701aa609cb3
-
-Best regards,
+-static int evsel__read_retire_lat(struct evsel *evsel, int cpu_map_idx, int thread)
+-{
+-	return tpebs_set_evsel(evsel, cpu_map_idx, thread);
+-}
+-
+ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+ 			     u64 val, u64 ena, u64 run, u64 lost)
+ {
+@@ -1730,8 +1725,8 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+ 
+ 	count = perf_counts(counter->counts, cpu_map_idx, thread);
+ 
+-	if (counter->retire_lat) {
+-		evsel__read_retire_lat(counter, cpu_map_idx, thread);
++	if (evsel__is_retire_lat(counter)) {
++		evsel__tpebs_read(counter, cpu_map_idx, thread);
+ 		perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
+ 		return;
+ 	}
+@@ -1889,7 +1884,7 @@ int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
+ 		return evsel__hwmon_pmu_read(evsel, cpu_map_idx, thread);
+ 
+ 	if (evsel__is_retire_lat(evsel))
+-		return evsel__read_retire_lat(evsel, cpu_map_idx, thread);
++		return evsel__tpebs_read(evsel, cpu_map_idx, thread);
+ 
+ 	if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
+ 		return evsel__read_group(evsel, cpu_map_idx, thread);
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index a723687e67f6..f648fca17556 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -415,49 +415,39 @@ int evsel__tpebs_open(struct evsel *evsel)
+ 	return ret;
+ }
+ 
+-
+-int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
++int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
+ {
+-	__u64 val;
++	struct perf_counts_values *count, *old_count = NULL;
+ 	struct tpebs_retire_lat *t;
+-	struct perf_counts_values *count;
++	uint64_t val;
++
++	/* Only set retire_latency value to the first CPU and thread. */
++	if (cpu_map_idx != 0 || thread != 0)
++		return 0;
++
++	if (evsel->prev_raw_counts)
++		old_count = perf_counts(evsel->prev_raw_counts, cpu_map_idx, thread);
+ 
+-	/* Non reitre_latency evsel should never enter this function. */
+-	if (!evsel__is_retire_lat(evsel))
+-		return -1;
++	count = perf_counts(evsel->counts, cpu_map_idx, thread);
+ 
+ 	/*
+ 	 * Need to stop the forked record to ensure get sampled data from the
+ 	 * PIPE to process and get non-zero retire_lat value for hybrid.
+ 	 */
+ 	tpebs_stop();
+-	count = perf_counts(evsel->counts, cpu_map_idx, thread);
+ 
+ 	t = tpebs_retire_lat__find(evsel);
+-
+-	/* Set ena and run to non-zero */
+-	count->ena = count->run = 1;
+-	count->lost = 0;
+-
+-	if (!t) {
+-		/*
+-		 * Set default value or 0 when retire_latency for this event is
+-		 * not found from sampling data (record_tpebs not set or 0
+-		 * sample recorded).
+-		 */
+-		count->val = 0;
+-		return 0;
++	val = rint(t->val);
++
++	if (old_count) {
++		count->val = old_count->val + val;
++		count->run = old_count->run + 1;
++		count->ena = old_count->ena + 1;
++	} else {
++		count->val = val;
++		count->run++;
++		count->ena++;
+ 	}
+-
+-	/*
+-	 * Only set retire_latency value to the first CPU and thread.
+-	 */
+-	if (cpu_map_idx == 0 && thread == 0)
+-		val = rint(t->val);
+-	else
+-		val = 0;
+-
+-	count->val = val;
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+index 5c671181ec60..218a82866cee 100644
+--- a/tools/perf/util/intel-tpebs.h
++++ b/tools/perf/util/intel-tpebs.h
+@@ -12,6 +12,6 @@ extern bool tpebs_recording;
+ 
+ int evsel__tpebs_open(struct evsel *evsel);
+ void evsel__tpebs_close(struct evsel *evsel);
+-int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
++int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
+ #endif /* __INTEL_TPEBS_H */
 -- 
-Mark Brown <broonie@kernel.org>
+2.49.0.504.g3bcea36a83-goog
 
