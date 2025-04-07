@@ -1,108 +1,103 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82C5823DE
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78B923AE67;
+	Mon,  7 Apr 2025 11:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025188; cv=none; b=Of0xgdWPUFy4E7f/NPECLlZj1iIRW7R03JC8BUBxYNHlwTTHiTLsdzDibgyj9k9l0ar1B2KcnByQfCjmkg+iFYw7mexHwen7ENNSMhdFO7/vp/aPopeHuX8o6C00kkByh+LVJex/QNvN7F+fLRwW/Bpl+epMhVHjLOVFjojCzvk=
+	t=1744025262; cv=none; b=tAdWzusgffsSUtTJu33vZPZLyR2JknmLCeKVSWQwX/SXmZDx0FI/lNoiOtn+xwKXadJXz4CoN4fx1uAW5xLyiF5YUyZk6EnfNvdCvXLGiLniViYxc8qpZSTF+ZEMIYmrQFBm0YQA3ufRcY0HNr9wBP4e1GrqOffdbGI3ZPr2XME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025188; c=relaxed/simple;
-	bh=RviIKAswlPvNGRsEWdEPn05fxHOsZa6tlhHIEII4Ung=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ku1l4YzNfJMWKKfvEQONPCIGw2xF8zYZwoyGyHprdsFVWZf5TRtVtZkL6AjLTsiJ55hwR7jBgydIbXPeEh45wkrvg3vU3dR7zc3Jnfweaule/FT3S3cXmGT6QAPK79QWfNBd9AWk4o1HZyDvYDuH2ok2PgBOmjz5ouLa0tTQ8D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZVDY1fVP; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744025262; c=relaxed/simple;
+	bh=093rrwsmRiqMHVzVRyHSZKXYoLgYn1XFtxsIr38PXd8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=mjm8Zs+acq+l7o1gvXJumB1BAZqlMfp6sR4JWKf5WalNyAdLehi+7TuNZmkknhvTFjRWvn7vkRCl/0kyVJsa1fAdylryInrn9kXoj2KGHH9P+xpzniBenBYitvrJsfz8Q8EDZIBvAEgQSg7pg6C8CTHfjiCmkX23MKtVE3AhbEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ARcF3FHg; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZVDY1fVP"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54acc04516cso4856166e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744025184; x=1744629984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wMO1POcPMv7WcEI3IEK8Y5twX/lsGWmxAHtpCcotjPQ=;
-        b=ZVDY1fVPITL5y0lB7xs6qqdEmtD18vOXeZpZXhyeAyFOCSNBGjAm4XuAhqYobZnDco
-         RxkPpNI0MUCHaufv1teJaf7fQj/vCnq+c+HTUf0dpC6VkY/+E/eisw3yXTNPhbm9U4Vf
-         S+hzaBrn2iesr9OfiGbTS5stgARF6StqOofTz7csKLN+d8PAFD4CIUpZkVUoqm/gSeRA
-         HME9yR4Bft++hjU21ReXNXDNUA58q4+N86Hx8qjg/D8wns/4Z+5QjK85WRyVHGBomWmU
-         zGD9GpNIg4EtXkrSEnOms5jOp1yasb1qSQduVT7eydqXaYCPTMUKj+haUV8lbcIP0QYr
-         Hf0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744025184; x=1744629984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wMO1POcPMv7WcEI3IEK8Y5twX/lsGWmxAHtpCcotjPQ=;
-        b=T2Xk4HhHgl59rd31KvfGnLVmL9X0sKoNiATqQiMOKFOZ8aO3CN98IpqVWdUSqaFeni
-         7oTnAF6HOzCcs8Cw+9VQiJO3Fj2DimwP0cBSs5us26PHmmFSa0WsNtAbwqecd66vIl48
-         TkzjzWS7fV7SfGPlVDPfNXD4iy3hkF9fVCcuv30JWjPTIl2O3aJmaanuyUZnoCaC1731
-         VInGMwHwVfGogGYQoII/tZhec9tHqXDIMm6tIOa5p5vvY9TOiB80gaPYpiuRh4e9XWVY
-         b3lSMOC96vRKV+a32eCAMYkhozrLJOBbTmPbEI7TtVE+I7A5CsIBw6JJsNTZ/8tYWQ6b
-         4+oA==
-X-Forwarded-Encrypted: i=1; AJvYcCUws70ZjkP9sI9fNZCeMTuoGQBZy+vwW4UeS6gCawLlFcMOD+/7VucIbMQLaEWNuEEw5EOqStfmAjwp/ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwizFDwxyZoF9apACFohdX7SvNPO/wIWulkJYyYb9bFH+n1lADg
-	tPLYd9abMEyxO+sHRJQerQO9E0ZTRLVIIecoN/sdeAO9AH/4osB0wG+rcex8hHlEIvy7TYj8bv+
-	BKGFzAupUeqrH9iHBLA+4nBSGFfNrVXlkBKibjw==
-X-Gm-Gg: ASbGncscRDcRgAiVUVISQTC82efXFi3fGCAv/HEAnjzebqIDQ1/fKJu81pNB7nEDq3C
-	Q7o7itmd7egvOFq8x1fGDk1VdiLEW1LSgGuFJ0xta6RwFk0rztofxSfNxQjzy5gGRfavuqNETF4
-	4570Y1dUw0qphJgQTVDxrq5+wmCNqDprrkdyhhccZcfgu7Z4ySAVk8VuyA9MpT5S+wvaBU
-X-Google-Smtp-Source: AGHT+IEF0Umob27acb0T2mBiL6aYslIf1iwF0v4IeDnV4GdBZ6Kni8wcccQPNxQv4mkDvYKKandIkloAlzt8S6od9ac=
-X-Received: by 2002:a05:6512:400c:b0:545:48c:6de2 with SMTP id
- 2adb3069b0e04-54c297d099bmr1645433e87.13.1744025183610; Mon, 07 Apr 2025
- 04:26:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ARcF3FHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744024951; bh=OIMPWzh9MNaYKe51Y4PxWwdbK6/caOHyB47lalq/Giw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ARcF3FHgac1cBtfU/xYwkXL9sRUEHtpKKFu1SwGHfMFM/QRLFQ5gHU5IhfB1De/yU
+	 gEokIErEQBTYGWlxXs+PF/BBYDnEAZmb/xJlVO21REJZskg7QRdl1Bq3BQKPZmWxYv
+	 8AKz6I+IHd5gb6w6cjZN+gVWSDtrp1evFxEs3VJE=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 59C84251; Mon, 07 Apr 2025 19:22:28 +0800
+X-QQ-mid: xmsmtpt1744024948t3yx4n6wg
+Message-ID: <tencent_ABAECE4C9727C606CDD2D6C67209852EC406@qq.com>
+X-QQ-XMAILINFO: ORuEwgb9eurkQv1vLgVvgl69FjKBMdrYxy4FNZvmCEmHg27T/Qt3YjNmYaxJCz
+	 EmeEHAn0bWMiidYxwb8uBTCGf77qeavPqlUbh373Ti+gH4f3vcVTQg6r+tFbCyaXoXebRuYHbv67
+	 ooRCp0tGHMjPDdx5lf1s1PxVg6E5fiBlLK8en79VewN+Uy9qeuEd1XypyjiKjDr9VKLeA3k61HxE
+	 74MfASVN8dnz1KFTT8/Y5NakDvF0p+zHrJI9Lx28Zj/GM08ed6kyMkLCMJMPmPhHO9VvjA5qybiT
+	 pIWBq4mt2WbvqZ03A570oNGPllStNRhy7Pt4wHQa0cfO4wd+i3/8Hx7HsI1fWCHeeUalIm3/vHef
+	 6Ya55BJLY3ZT7UziimXrOfvDMQLkkn2LbQu3YbI+q54jNiUEkcXI+JIvOTRR9IsbcAopvtg+v0cd
+	 S84v1jmz+vScCFWP7SvIPlauKhy+8JarHrXJpToUh6Vb/KVCMOI/pGZzvbrh+5MLTpWc37uDgXUI
+	 MAEgftHz7zXyAHTnAwD92NvJGwKSvSaToNiHyFpsTSBhAsc0Crd32xRLxWI6S40I6GZOMqsH+EQd
+	 ePyD/rQCJGAqaA+X2MrN2dI8/dk592lChh3b6M8zh95B7K/sfIlMSirCuFkK5RXhqU8d6tBVdwZK
+	 OgwcZiHBRT2v4Fn419jGgFNLSoblBVZYkrFxPg74LMMSi0srrRhyY+lkwiTvQjEIDmd0XpRGCYJg
+	 wEW98q+KN70YzCGsonglchzP4/vfcghxTKUVqnZao/+A/Bx0NtcZ4yaV9jNXRKDJB/CwbbeT0m6R
+	 rawwkZPzrxlLme59uGvC5haohOv8/7duDZrZOSMrPkdpZSpgdAe1iP+cBKI0lefztxA7QZjJ6MIg
+	 yCTFR45TnerQg3o2MzO9TB3+tkWjMEAl2Dyzzsm1Tv
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	kuniyu@amazon.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	sdf@fomichev.me,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] net: get ops lock under dev valid
+Date: Mon,  7 Apr 2025 19:22:27 +0800
+X-OQ-MSGID: <20250407112226.570082-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <67f36908.050a0220.0a13.027f.GAE@google.com>
+References: <67f36908.050a0220.0a13.027f.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
- <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org> <20250407103320-GYA13974@gentoo>
-In-Reply-To: <20250407103320-GYA13974@gentoo>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Apr 2025 13:26:12 +0200
-X-Gm-Features: ATxdqUFdC84fNZAgdG0QB3uYh3FcHqNCfMgI5v2DW_l-kU6Xw4akq4WaqW0KsIA
-Message-ID: <CAMRc=MeFK1gX69CWH2gkYUqkLU-KCOcwHcA+gjN1RXFA++B_eQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
- interrupts scheme
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 7, 2025 at 12:33=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->
-> Hi Linus Walleij:
->
-> On 06:06 Wed 26 Mar     , Yixun Lan wrote:
-> > gpio irq which using three-cell scheme should always call
-> > instance_match() function to find the correct irqdomain.
-> >
-> > The select() function will be called with !DOMAIN_BUS_ANY,
-> > so for specific gpio irq driver, it need to set bus token
-> > explicitly, something like:
-> >   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
-> >
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  drivers/gpio/gpiolib-of.c |  8 ++++++++
-> >  drivers/gpio/gpiolib-of.h |  6 ++++++
-> >  drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
-> >  3 files changed, 32 insertions(+), 4 deletions(-)
-> >
->
->   I'd assume this patch [2/2] will go via pinctrl's tree?
-> as patch [1/2] has been accepted by Thomas into tip tree [1]..
->   Additonally need to pull that commit first? since it's a dependency
->
+Make sure that dev is not NULL before locking ops. 
 
-No, this should go through the GPIO tree but for that I'd need an
-immutable tag with patch 1/2.
+Fixes: 8965c160b8f7 ("net: use netif_disable_lro in ipv6_add_dev")
+Reported-by: syzbot+10d145ea96fc91185445@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ net/ipv6/addrconf.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Bart
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index 2cffb8f4a2bc..5d9fd01e6265 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3154,12 +3154,13 @@ int addrconf_add_ifaddr(struct net *net, void __user *arg)
+ 
+ 	rtnl_net_lock(net);
+ 	dev = __dev_get_by_index(net, ireq.ifr6_ifindex);
+-	netdev_lock_ops(dev);
+-	if (dev)
++	if (dev) {
++		netdev_lock_ops(dev);
+ 		err = inet6_addr_add(net, dev, &cfg, 0, 0, NULL);
++		netdev_unlock_ops(dev);
++	}
+ 	else
+ 		err = -ENODEV;
+-	netdev_unlock_ops(dev);
+ 	rtnl_net_unlock(net);
+ 	return err;
+ }
+-- 
+2.43.0
+
