@@ -1,135 +1,105 @@
 Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815A8188734
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39BD22DFA5
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:49:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019310; cv=none; b=QI4R0o4xThefbGp4MAjZNdIVXmiB/8yNLDOXgWLe7HZOOKY1fh2AK3Bvy7F3/rPM1CR8UQxB59aP4RmS88PFNzIpd2ExaUIzhXucCzeoerhNUuOfyHg00nE0c09E4bE99dl68+lBseLUjEUJ0V1f5B7eGiVGsuCBWU+vcHcxfEs=
+	t=1744019351; cv=none; b=BtaXVl7vfE0lw9jk+HJeV/JVqg48WQVT3oQ6tVM9rx52+hvKWlja3KQa6tO3+BOjm1jOAAZPWQz0e0eFsG5bUv1dkJyvL6l0WDqsTdf4ttYB3jsoQ5FugSl75a+Ql+1gqk5crg3o0/mDclr/SfN+Ltibxs0wBh5HpVEGBRKpSO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744019310; c=relaxed/simple;
-	bh=OCft2ZaB8KRinqm7lbd9SCxq/oufiEqpYsCrHnLjcO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fXy+KFsxuHmoQQcUK2mRvRb618zpsXS6jV+wEWbGdppenH4KqH+6QC4XW4jAuHemjWqCpt952IQ+oa3SyTWlHoTyEBpIwgg2Z9o6lzEwiZLPpqcx6UeZMA9eTTKRCUhYGq9QIIxgFta2E1q/m8n+WRRuJciAO4P47rwRVvdj8C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lC6P47RC; arc=none smtp.client-ip=95.215.58.187
+	s=arc-20240116; t=1744019351; c=relaxed/simple;
+	bh=DZ63rrAsGHtRItIF9LO8Z69pVpRXdsG0UIOS3yY/ZAw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gSZZlX5wDlmtPEgwOWGaxykVIlz1TKJKDy4HmHLaRrNIY9Qqqol1Hl9B/zwO8RfBvFkvPzA7Rn3q2ZCNXbxVmoOpHuv0V16HCTQsHLDZPuHto/dYMx8hpnigA3FPD8gEN50Hon5FhU3QGrYFZNHSKYlewCyGpgvd6THLcPxOu50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ioe0kTZU; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lC6P47RC"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ioe0kTZU"
+Content-Type: text/plain;
+	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744019305;
+	t=1744019347;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FpPprgCenUzvjf8AHGUz7rTCRGVZ109X7TG++VFSnGE=;
-	b=lC6P47RC7FurlK373rzl5F79jlYjNqFgf3NP27vmJFiDMVGFwYprCyW/ygI7KPE/ymp6uJ
-	iaAVavwrfuUi8QhyHL5MxULHpFgVt7YsEIUb+KaEN0sDxibG13a0mArilcnl7v1uPwJ5qx
-	tkvXTnjjYMD4pPmqy7OVg94O48MUD+k=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] scsi: target: Remove unnecessary strscpy() size arguments
-Date: Mon,  7 Apr 2025 11:47:52 +0200
-Message-ID: <20250407094751.744379-2-thorsten.blum@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xY51UqUYs+eWoTOCBh+Jna/CIahu4dovjoMPFMGK+94=;
+	b=Ioe0kTZUDluJBwKyn71CrZez9rDEMB6zSMKpo+dmuXKcVyV5HkxteDiPlNtuTXAxXh/YCr
+	+tbcirKNDPJAdHtNsPEF1atCVV+4DI5qhgzgJZ4zN4T0Zb/lhbjyS94pgHzTZEKgOPARLl
+	daq/dx6lgL303v132nfYFpVxFTfuwUI=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20250407085943.GA27481@lst.de>
+Date: Mon, 7 Apr 2025 17:48:27 +0800
+Cc: Huan Yang <link@vivo.com>,
+ bingbu.cao@linux.intel.com,
+ Matthew Wilcox <willy@infradead.org>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org,
+ linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org,
+ opensource.kernel@vivo.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <3DC6E604-3CE9-49E3-A688-DC7F424382DA@linux.dev>
+References: <20250327092922.536-1-link@vivo.com>
+ <20250404090111.GB11105@lst.de>
+ <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+ <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
+ <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
+ <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
+ <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
+ <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
+ <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
+ <20250407085943.GA27481@lst.de>
+To: Christoph Hellwig <hch@lst.de>
 X-Migadu-Flow: FLOW_OUT
 
-If the destination buffer has a fixed length, strscpy() automatically
-determines its size using sizeof() when the argument is omitted. This
-makes the explicit sizeof() calls unnecessary - remove them.
 
-Remove some unnecessary curly braces.
 
-No functional changes intended.
+> On Apr 7, 2025, at 16:59, Christoph Hellwig <hch@lst.de> wrote:
+> 
+> On Mon, Apr 07, 2025 at 02:43:20PM +0800, Muchun Song wrote:
+>> By the way, in case you truly struggle to comprehend the fundamental
+>> aspects of HVO, I would like to summarize for you the user-visible
+>> behaviors in comparison to the situation where HVO is disabled.
+>> 
+>> HVO Status Tail Page Structures Head Page Structures
+>> Enabled Read-Only (RO) Read-Write (RW)
+>> Disabled Read-Write (RW) Read-Write (RW)
+>> 
+>> The sole distinction between the two scenarios lies in whether the
+>> tail page structures are allowed to be written or not. Please refrain
+>> from getting bogged down in the details of the implementation of HVO.
+> 
+> This feels extremely fragile to me.  I doubt many people know what
+> operations needs read vs write access to tail pages.  Or for higher
+> level operations if needs access to tail pages at all.
+> 
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/target/target_core_configfs.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-index 66804bf1ee32..0904ecae253a 100644
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -673,12 +673,10 @@ static ssize_t emulate_model_alias_store(struct config_item *item,
- 		return ret;
- 
- 	BUILD_BUG_ON(sizeof(dev->t10_wwn.model) != INQUIRY_MODEL_LEN + 1);
--	if (flag) {
-+	if (flag)
- 		dev_set_t10_wwn_model_alias(dev);
--	} else {
--		strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod,
--			sizeof(dev->t10_wwn.model));
--	}
-+	else
-+		strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod);
- 	da->emulate_model_alias = flag;
- 	return count;
- }
-@@ -1433,7 +1431,7 @@ static ssize_t target_wwn_vendor_id_store(struct config_item *item,
- 	ssize_t len;
- 	ssize_t ret;
- 
--	len = strscpy(buf, page, sizeof(buf));
-+	len = strscpy(buf, page);
- 	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
-@@ -1464,7 +1462,7 @@ static ssize_t target_wwn_vendor_id_store(struct config_item *item,
- 	}
- 
- 	BUILD_BUG_ON(sizeof(dev->t10_wwn.vendor) != INQUIRY_VENDOR_LEN + 1);
--	strscpy(dev->t10_wwn.vendor, stripped, sizeof(dev->t10_wwn.vendor));
-+	strscpy(dev->t10_wwn.vendor, stripped);
- 
- 	pr_debug("Target_Core_ConfigFS: Set emulated T10 Vendor Identification:"
- 		 " %s\n", dev->t10_wwn.vendor);
-@@ -1489,7 +1487,7 @@ static ssize_t target_wwn_product_id_store(struct config_item *item,
- 	ssize_t len;
- 	ssize_t ret;
- 
--	len = strscpy(buf, page, sizeof(buf));
-+	len = strscpy(buf, page);
- 	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
-@@ -1520,7 +1518,7 @@ static ssize_t target_wwn_product_id_store(struct config_item *item,
- 	}
- 
- 	BUILD_BUG_ON(sizeof(dev->t10_wwn.model) != INQUIRY_MODEL_LEN + 1);
--	strscpy(dev->t10_wwn.model, stripped, sizeof(dev->t10_wwn.model));
-+	strscpy(dev->t10_wwn.model, stripped);
- 
- 	pr_debug("Target_Core_ConfigFS: Set emulated T10 Model Identification: %s\n",
- 		 dev->t10_wwn.model);
-@@ -1545,7 +1543,7 @@ static ssize_t target_wwn_revision_store(struct config_item *item,
- 	ssize_t len;
- 	ssize_t ret;
- 
--	len = strscpy(buf, page, sizeof(buf));
-+	len = strscpy(buf, page);
- 	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
-@@ -1576,7 +1574,7 @@ static ssize_t target_wwn_revision_store(struct config_item *item,
- 	}
- 
- 	BUILD_BUG_ON(sizeof(dev->t10_wwn.revision) != INQUIRY_REVISION_LEN + 1);
--	strscpy(dev->t10_wwn.revision, stripped, sizeof(dev->t10_wwn.revision));
-+	strscpy(dev->t10_wwn.revision, stripped);
- 
- 	pr_debug("Target_Core_ConfigFS: Set emulated T10 Revision: %s\n",
- 		 dev->t10_wwn.revision);
--- 
-2.49.0
+A compound page should modify its head page structure (e.g., refcount),
+which is why `compound_head()` is widely used. Modifying its tail page
+structures is incorrect. Users needn't worry about whether to modify
+tail page structures. They should use `compound_head(tail)` to get the
+head page structure and update it. All users must follow this rule (I
+think folio-infrastructure also requires this). If a user tries to write
+to a HugeTLB page's tail page, an exception will be raised as these tail
+pages are read-only mapped to catch invalid operations.
 
