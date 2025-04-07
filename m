@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFA122D7B1;
-	Mon,  7 Apr 2025 06:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A5E22D7B9;
+	Mon,  7 Apr 2025 06:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008800; cv=none; b=Ka0fy3WtFioxsPk8eUVL2zY6JUGIK1H1NTXTBYi9+Pqsqhtz9y2+MXDmnxrWh9r0Zp6akkoVgH7HgduoT1RBeMGm0WKn1Rrb4/8HCzew1tpJoXXdll2Dzf+8MSH8dFlS5UL7jbwygNuZD76LKqAiSk3BSKeRRMPtXN8z6Wq8Hnc=
+	t=1744008800; cv=none; b=uoSDH2gKB3DmWc5vlAamwtUps/hhHi6X+GskngAWuQ2saCWSSH4n/lUt/pxjt41fwlxxHVFW7qLf1jhfGtveVxIiDE/kZfIiW/DHqyES7ToSHWcNrVjlymsgYwMcMKU/mTojwQAZcLR1dRSOa1N6s1XtTiOuTouPlT/kinovEb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744008800; c=relaxed/simple;
-	bh=kr1493r0mCxh9Smwnzq2sT4EOgraIN/H6Zk+RSFwpBw=;
+	bh=8gx2j4OH7y+ey3+O8eHa4G2jocjuirJqpQ8j8E98oto=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mLZEkIJgNy3fmj+qC4bM3GUGcPCNVfy46DDVy11qmXvReu0b8RtIoaiw5jBykzcl7XxQRBEnQsRQ+wvx/jo5iBu8C/RO4IJvjaky+LAGX9xw9+u7nzaq2NLhoZn8oMzQAAnrxpbJ8NDI0M25SWxgYuj7Xyhzz/+fM23yqu6YdkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DaPb9ygV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X24OgPGa; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=MxMJgogTI+TwmhjVxTwAJej/E5RGJGXNJQjcA2V5zpkenaVvhkkFQ1ddl3GxE58DikR+7hj/PZVZTT0mWc9sRmEinvrjluauSAOGVyp9AKdaLQX7r2OGSHjn8Hhp2N3wz15w0Iy5BJwC2T/kE4OyAJOyWPrZimNUbC/xCxWJncE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k6IaNKBM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/7BeNvxC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DaPb9ygV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X24OgPGa"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6IaNKBM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/7BeNvxC"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008795;
+	s=2020; t=1744008797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R9tNYn1A7xCJCEfyuN7DqxsUEM5cT1Wf6v4wfadNgQw=;
-	b=DaPb9ygVoceu7y23NxtPhtA/1626L9zDd6Ge4IcjV3uuQ0EG9uc6Ib0x0vNreccd0JRo5N
-	R1BDHL3FTsBfaMDdYHMffDpYiPPBFyJYnqkbF0x4ubiuaJ97VVcb6oX2VQK4kSVsVE5mul
-	DDWCra8q8kcd2Gz/DLDJiH8/qF13mKXl96+zo2yhH583vzKPZ/NXnul1eOzzdRl29jX/aj
-	uegW80nPYoWn7xKUUBAFiEAB0ANfh155cTrQv3jlpsRvM8DIZP8Z3AhNUTdsU/BmWHWEaM
-	rmKvoOwIV0vJSReBsiRXElg071AtUFscW7CxxYR+xyKYZ1NLCqNqPAmIX5+e2g==
+	bh=tGncphnL/iwYpyKH8kWhkIbaBWNrCOh1asPqEQP8sdM=;
+	b=k6IaNKBMjL8R82hCIbmOKz2Z54NT6rH6WZMazn/Njx/FYvUpHmVZlUXGMGFUPgNSayQ5lU
+	8W/HRKBgpzuU9aPWEDijEXKmRBeL+JdMyA1Zc206ZNM31w8vRyQISWaFC3uJTsFb+65g/R
+	UoajDcyZpQG5w7u8wQmIFyfzt3EZ6T1JiipYsK4VXWS4yT4rcN1/0IGM6k78+wt825NLmh
+	tzZLzNvy+acB75eVyTlT006seJCvYcQv5eYDB+MtGbuCoiBUn1/lv7+iQ9oCQ+b5elXL0N
+	hNn2pLX7As9oV8zBkO6EV8odtSXqfDqVCfmFpJ0XJFX8z94RF+qDFpY0oeIocg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008795;
+	s=2020e; t=1744008797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R9tNYn1A7xCJCEfyuN7DqxsUEM5cT1Wf6v4wfadNgQw=;
-	b=X24OgPGaw6uBBnj+2v9K590oczvbjqMFJvA9AKQ+CFLgExmmscTruzMxX6ZIxspAejPle8
-	eqf8O8YU0Xqz+6AQ==
-Date: Mon, 07 Apr 2025 08:52:50 +0200
-Subject: [PATCH v2 27/32] tools/nolibc: add snprintf() and friends
+	bh=tGncphnL/iwYpyKH8kWhkIbaBWNrCOh1asPqEQP8sdM=;
+	b=/7BeNvxCd+2GBts2slRFBZ+gX7MSP8fHsKeDu9dkIJ/kALR2DyEGuWJMsP9hIpxjelws50
+	DrpPRU5b2FwmSBCQ==
+Date: Mon, 07 Apr 2025 08:52:53 +0200
+Subject: [PATCH v2 30/32] selftests/nolibc: add test for snprintf()
+ truncation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-27-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-30-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,88 +58,45 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1911;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1552;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=kr1493r0mCxh9Smwnzq2sT4EOgraIN/H6Zk+RSFwpBw=;
- b=T169iwSDEAw6NBOfISyp8FfGy70pTOpo2d0vbbH4ooZWXmB2gSDkpeRZS7m3SVrgxlcN+2R+s
- GKaaqWzQRNRDEC3ug+KAPNi8BwbFnGRewrekivT5jyR6DvLMlgmIcZu
+ bh=8gx2j4OH7y+ey3+O8eHa4G2jocjuirJqpQ8j8E98oto=;
+ b=BhC7h+puBd4O9DmWI8gn+gRsb3fFR4Thhp6iWt+25q3//CLAwF5mxhioFtd2wZjVxnsWdje2X
+ MPTX7bEuAYoDo/mXkYN4DgF6Wx3imMzkyHdZUs6sH+VEG6HEZ1ASbi3
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Add more of the printf() functions.
+Now that we have a proper snprintf() implementation,
+make sure truncation is handled properly.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Acked-by: Willy Tarreau <w@1wt.eu>
 ---
- tools/include/nolibc/stdio.h | 55 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ tools/testing/selftests/nolibc/nolibc-test.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
-index b17b473bd8751a6283309178b4848e61e1683305..46bd90f96d654fadda20292baddc98358a3afc62 100644
---- a/tools/include/nolibc/stdio.h
-+++ b/tools/include/nolibc/stdio.h
-@@ -389,6 +389,61 @@ int dprintf(int fd, const char *fmt, ...)
- 	va_start(args, fmt);
- 	ret = vdprintf(fd, fmt, args);
- 	va_end(args);
-+
-+	return ret;
-+}
-+
-+static int __nolibc_sprintf_cb(intptr_t _state, const char *buf, size_t size)
-+{
-+	char **state = (char **)_state;
-+
-+	memcpy(*state, buf, size);
-+	*state += size;
-+	return 0;
-+}
-+
-+static __attribute__((unused, format(printf, 3, 0)))
-+int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
-+{
-+	char *state = buf;
-+	int ret;
-+
-+	ret = __nolibc_printf(__nolibc_sprintf_cb, (intptr_t)&state, size, fmt, args);
-+	if (ret < 0)
-+		return ret;
-+	buf[(size_t)ret < size ? (size_t)ret : size - 1] = '\0';
-+	return ret;
-+}
-+
-+static __attribute__((unused, format(printf, 3, 4)))
-+int snprintf(char *buf, size_t size, const char *fmt, ...)
-+{
-+	va_list args;
-+	int ret;
-+
-+	va_start(args, fmt);
-+	ret = vsnprintf(buf, size, fmt, args);
-+	va_end(args);
-+
-+	return ret;
-+}
-+
-+static __attribute__((unused, format(printf, 2, 0)))
-+int vsprintf(char *buf, const char *fmt, va_list args)
-+{
-+	return vsnprintf(buf, SIZE_MAX, fmt, args);
-+}
-+
-+static __attribute__((unused, format(printf, 2, 3)))
-+int sprintf(char *buf, const char *fmt, ...)
-+{
-+	va_list args;
-+	int ret;
-+
-+	va_start(args, fmt);
-+	ret = vsprintf(buf, fmt, args);
-+	va_end(args);
-+
- 	return ret;
- }
+diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+index 6dfa94df37547dae46ab19195a763fe22b065bab..9bd0a9c68b903cbd660ff81d4b0386b0b7c13977 100644
+--- a/tools/testing/selftests/nolibc/nolibc-test.c
++++ b/tools/testing/selftests/nolibc/nolibc-test.c
+@@ -1307,7 +1307,8 @@ static int expect_vfprintf(int llen, int c, const char *expected, const char *fm
  
+ 
+ 	va_start(args, fmt);
+-	w = vsnprintf(buf, sizeof(buf), fmt, args);
++	/* Only allow writing 21 bytes, to test truncation */
++	w = vsnprintf(buf, 21, fmt, args);
+ 	va_end(args);
+ 
+ 	if (w != c) {
+@@ -1413,6 +1414,7 @@ static int run_printf(int min, int max)
+ 		CASE_TEST(pointer);      EXPECT_VFPRINTF(3, "0x1", "%p", (void *) 0x1); break;
+ 		CASE_TEST(uintmax_t);    EXPECT_VFPRINTF(20, "18446744073709551615", "%ju", 0xffffffffffffffffULL); break;
+ 		CASE_TEST(intmax_t);     EXPECT_VFPRINTF(20, "-9223372036854775807", "%jd", 0x8000000000000001LL); break;
++		CASE_TEST(truncation);   EXPECT_VFPRINTF(25, "01234567890123456789", "%s", "0123456789012345678901234"); break;
+ 		CASE_TEST(scanf);        EXPECT_ZR(1, test_scanf()); break;
+ 		case __LINE__:
+ 			return ret; /* must be last */
 
 -- 
 2.49.0
