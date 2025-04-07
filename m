@@ -1,64 +1,62 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064C92288E3;
-	Mon,  7 Apr 2025 07:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0198229B17;
+	Mon,  7 Apr 2025 07:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012437; cv=none; b=NYRO0QWJtJMSV80febsK7sEV/J0t98K9nRETcQ6GQqOj8F1XryxDWxRKhqo/9Lg+yoAEBN6VvyDLvXuMopoBu6gsN0Y0Auq1GqazeUIXFOkwpIqFFG0w7D6t9XRkG20oCTVB0qNb7W+TsMSknXANe+1pL/Y1DmtB9YSlwDb7/tc=
+	t=1744012438; cv=none; b=mINvppNOvr6Nn21T23cOx+nnSMUmu44kgbeA/Mi8Q8j/2THZjHyIF95Aks2U0UfBpWLYeT2WTQ3nzGcE597yllptzUc2or4U0n9B/i1ZU5pZTYl+/H3iJbGEZIuvnuLySd4wvC5cwV969MkKjwAtLivzS3/9VOZaVctcW8/FLTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012437; c=relaxed/simple;
-	bh=XY+Ifi72Of5QaaNfkouN4q7jrWNs8gcAg3+Z9YpjCyw=;
+	s=arc-20240116; t=1744012438; c=relaxed/simple;
+	bh=hr3PPT0BZx7a4k3crHwQAeMTpTeGYoP5CKl7emLQTsI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ceKsPewrLj7D7eT5cokPXcryeswZa81evMtYKnuSq6CFKDlG4UCOIntFEOyoVgSoaXlS1cvLqJVJcu9U4hRC9rLKOJo660AIX+8dVQ5eFUyTtWu2OLScBOjMOgfNAMn55cfPgVksD9zhaScKPKF2gp/mgw1dbito8biot3mR27E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zSJI+XLK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qRxDc2RR; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=S55WzSGbDg0WXIfI1P0A+fYH1u3MkqN7Kbw1AEiT3qQ9PvhsSX0L5dQQf1PKUCnLc9Srre8AB1bDtOdzOa9bxxnD8pPrry0lQCzFWI6pTPNUA7/AFK3TRnBiR1nhUEZAtOIMvFtNr73rs/PzbDQzV5R4dNLk21rNz7qt+HUrSro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bfezmrQK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gG6bxhRT; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zSJI+XLK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qRxDc2RR"
-Date: Mon, 07 Apr 2025 07:53:51 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bfezmrQK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gG6bxhRT"
+Date: Mon, 07 Apr 2025 07:53:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744012433;
+	s=2020; t=1744012434;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MVt18rSYNmX8MA9tzkgca2OI7mPY8D4CVW+Hwm9q2B4=;
-	b=zSJI+XLKt+VbzEBK19i4Gsi5+Ykh5vdKnLxAXJLEZ474J/1Q3+ULhZOBCtXOPenOYBR9Ed
-	zHPaEwzSLOHXx8MVrUAMGjQUzcDAbjjHvGJgjks0224YqwyobK3fruYUH21C4Dzqut6jjc
-	THBPGiS1sCoediXdMPOlz17q5ZLD5439ilXoD0sEQegB/3EuLPlk1G4Kmq8dsA2Vtog8FP
-	KH7lNHSUq3xVY5mzrSLmfLbElgoq7BlPpTYY0xUJDXqXw5+SXlSxIsikdHN5gubrU99A2m
-	LhgzE93oj+b6K8mRCDqJ61QHePOC38pMmXR2PcED+y+TwF3mlBg06szuqUONqw==
+	bh=DX9tUDRzVVIEfV6wn3/YswGB1ECEjomcy1ljcE8OVWo=;
+	b=bfezmrQKm4i2O0CGZPyQjh5wjQyprfmU/rux+ktOIApADbkGW88N5OFSWqS8e/TuE5lDYV
+	ivPWNYrCbugegmeXV/abC2d714U58rO1MLkza1dTjRozdZQSd+57rMFjkFrt0B7NnQPemf
+	RPLCZSIRl5ZuKmI+KHn72gT8ftryarKp4RjCi2dMBjyAS0/s3g1ZKne695z7XQ5vjRJwMm
+	Xhv+ZfSvPZ40+n8AmW9/m1EpZmANift9XqitBaZhVOWBU2yhyYsFLNhKUJl7OGZzbHy+HZ
+	09imzxD4Ism34Lz6ffhJGWM0kkNqJMg2824RAS3sTBsN8XS4Kku/BIBE2Sv3Ig==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744012433;
+	s=2020e; t=1744012434;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MVt18rSYNmX8MA9tzkgca2OI7mPY8D4CVW+Hwm9q2B4=;
-	b=qRxDc2RRXSmy7lDf5Sq3RlKU0+ChUVQn9eZFk24wI+MXqkFjG6kcAXPTSyE3NWaGPBmKfl
-	Pev2IbINlBsGxDBA==
+	bh=DX9tUDRzVVIEfV6wn3/YswGB1ECEjomcy1ljcE8OVWo=;
+	b=gG6bxhRTWmHsF8uwSEoY4P91xjPBs9XEWBY7b77KsD+e9mWbKpmh2Q0HamI1KU2vZ3ggGe
+	JIrVIpPfhRpULLBQ==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] soc: dove: Convert generic irqchip locking to guard()
-Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
- Linus Walleij <linus.walleij@linaro.org>, x86@kernel.org,
+Subject: [tip: irq/drivers] genirq/generic-chip: Make locking unconditional
+Cc: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250313142524.137040686@linutronix.de>
-References: <20250313142524.137040686@linutronix.de>
+In-Reply-To: <20250313142524.011345765@linutronix.de>
+References: <20250313142524.011345765@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174401243190.31282.15872492945691322223.tip-bot2@tip-bot2>
+Message-ID: <174401243393.31282.13098708422031962410.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,39 +66,52 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/drivers branch of tip:
 
-Commit-ID:     b54bd5a29b428afff4a37c7b6e1df67e43c327c3
-Gitweb:        https://git.kernel.org/tip/b54bd5a29b428afff4a37c7b6e1df67e43c327c3
+Commit-ID:     06f2f68a670aae28b825065439301831e74da880
+Gitweb:        https://git.kernel.org/tip/06f2f68a670aae28b825065439301831e74da880
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 13 Mar 2025 15:31:21 +01:00
+AuthorDate:    Thu, 13 Mar 2025 15:31:15 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 07 Apr 2025 09:43:19 +02:00
 
-soc: dove: Convert generic irqchip locking to guard()
+genirq/generic-chip: Make locking unconditional
 
-Conversion was done with Coccinelle. No functional change.
+The SMP conditional wrappers around raw_spin_[un]lock() have no real
+value. On !SMP kernels the lock operations are NOOPs except for a
+preempt_disable/enable() pair on PREEMPT enabled kernels, which are not
+really worth to optimize for. Aside of that this evades lockdep on !SMP
+kernels.
+
+Remove the !SMP stubs and make it unconditional.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/all/20250313142524.137040686@linutronix.de
+Link: https://lore.kernel.org/all/20250313142524.011345765@linutronix.de
 
 ---
- drivers/soc/dove/pmu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/irq.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/soc/dove/pmu.c b/drivers/soc/dove/pmu.c
-index 6202dbc..795802b 100644
---- a/drivers/soc/dove/pmu.c
-+++ b/drivers/soc/dove/pmu.c
-@@ -257,10 +257,9 @@ static void pmu_irq_handler(struct irq_desc *desc)
- 	 * So, let's structure the code so that the window is as small as
- 	 * possible.
- 	 */
--	irq_gc_lock(gc);
-+	guard(raw_spinlock)(&gc->lock);
- 	done &= readl_relaxed(base + PMC_IRQ_CAUSE);
- 	writel_relaxed(done, base + PMC_IRQ_CAUSE);
--	irq_gc_unlock(gc);
- }
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index dd5df1e..5007729 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -1222,7 +1222,6 @@ static inline struct irq_chip_type *irq_data_get_chip_type(struct irq_data *d)
  
- static int __init dove_init_pmu_irq(struct pmu_data *pmu, int irq)
+ #define IRQ_MSK(n) (u32)((n) < 32 ? ((1 << (n)) - 1) : UINT_MAX)
+ 
+-#ifdef CONFIG_SMP
+ static inline void irq_gc_lock(struct irq_chip_generic *gc)
+ {
+ 	raw_spin_lock(&gc->lock);
+@@ -1232,10 +1231,6 @@ static inline void irq_gc_unlock(struct irq_chip_generic *gc)
+ {
+ 	raw_spin_unlock(&gc->lock);
+ }
+-#else
+-static inline void irq_gc_lock(struct irq_chip_generic *gc) { }
+-static inline void irq_gc_unlock(struct irq_chip_generic *gc) { }
+-#endif
+ 
+ /*
+  * The irqsave variants are for usage in non interrupt code. Do not use
