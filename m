@@ -1,269 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9217BA3;
-	Mon,  7 Apr 2025 02:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0310155A59
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743993567; cv=none; b=tSlIf+rrejox4wnqBCcSgy8wO9fu9V6/GcZvuID1ZEx09yPhb7qsUu3WIP2SvzlSOFomNp1JNFR1uDGiWgj380/KzVoimAfPaiFbKah8PUaKz+i1zHY26Enj26WCzOqTGDCdx4PH4XvNrmFx/HFPndqzx5ahkxRb8KqL6Dnb8Vs=
+	t=1743993739; cv=none; b=AdRyCNNd3T1R1lHZBDNkB6/R4O5fkGRi7sN0grvWWduFb3cmsugwy16yMbhtlVFdRn7QoAtOCFNDW56wHQ7bwdm38nE67IARgxq2a5YHw70r6XCsNPtUxbKfymzAw9YQdITn8un8bB0niS4SqYuCHA2DbKw567CitKo9JeVTw4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743993567; c=relaxed/simple;
-	bh=KQMsWCMT4TtG0LbnlHpbZgQ5ITAtVM5iwetYpYMVVqc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lk182YP13D22nBICXCFW4+HicvyaRlIFzdBZuYbQ04lQeE0ApoONBThwOY3PmakqkmoMJ1nQ3QodMEkmEHpNcQAxZLcrlI5dpGyjPIWtraG17H0a+9BtxIa/vik6KIUuakiwqhIJ+j4KarstiQYfc/AEKQtxk2AI8TwaIWIXBJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTM/iaS9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743993739; c=relaxed/simple;
+	bh=gDlzVIGYtm+Se/bs835g8E4Dd9CfYgWb9Ta3picnPfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5kNNXKYH+6PoEZ7Sl9NlkjdR4C8UXajV1GwZSYk1E6hyLmbuVF4+WzSe2jbJel8ZiCNZXXsT/IDq5FdFV6ucar593SdjrUl1YNzYYXv9iD1srA/h1Q6zF9l9oZeorr7hYqbMVhTLKOLKEVzY2l7MtevvXVK4HM24pADQcRLrA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwF82CMQ; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTM/iaS9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F94C4CEE3;
-	Mon,  7 Apr 2025 02:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743993567;
-	bh=KQMsWCMT4TtG0LbnlHpbZgQ5ITAtVM5iwetYpYMVVqc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uTM/iaS9R22uVhBrylGj3xZPiDPi+88i2y338gm4Al1M8ghKJN2Zq6R/0db5kJVH9
-	 lk6IhSw10DUFfEXYOyCkNQuomq//u/bnUR6E0oLf1fjANuI24F82SzXGdO4DaBJkHl
-	 a8mArc2K5tswTyymGcEDD5r5a2Y85Rg9WAka022kORDl+QYXfX0f3SWcbWFMWsVxCp
-	 +M/R85PSx9a7/LkM3dv2U5K1Ghb6kiAxiWRmdwyVc+UeqfbMjTlvyHZz4XwjktqBBJ
-	 9GSGt2ng931SZN4Se6svz5Swq9UzYvzF5JHCOEvmT7vLa6kHw/n8ywlQZlFzWgt8WN
-	 vJOkjpcLI/2dA==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH v7] KEYS: Add a list for unreferenced keys
-Date: Mon,  7 Apr 2025 05:39:18 +0300
-Message-Id: <20250407023918.29956-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwF82CMQ"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2963dc379so628952166b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 19:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743993736; x=1744598536; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDlzVIGYtm+Se/bs835g8E4Dd9CfYgWb9Ta3picnPfg=;
+        b=IwF82CMQZlVWnPbJEdfCFLP2kwkzzYmmjZEJaWBuhz88LlmtPq4GUhvF9888iVOwHd
+         dHkga50YkGdDzn0VfIMpHZsv3vMD2s1Aup/joHKeQqLCr36dfwBRMJgQrwAsOARSyEZY
+         n6z3BqIg41rBu/FSjYLLhRkjfl0STCc+1ur/rDWNTXtBgZQe/NXIQookxeEZxOKj7v1K
+         +IYZtASQq6zw8dCzGutadwx1+ZqDPJXQSVx4cfIYPwZhf2Pk/nqZvhYjWr2nKxbC0bka
+         rDqzGoflh7kDZ1L8KyHSuGLr0tUC5ZwaloSdohhKm5mFX6tQYFCR0SHiY9mQx0nC3TX1
+         P9Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743993736; x=1744598536;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gDlzVIGYtm+Se/bs835g8E4Dd9CfYgWb9Ta3picnPfg=;
+        b=a+w+6g2Uz/0jTJZGw0KmAnRtNw6GSMt6/XvjxTEPQPl/1hBPAqsKlq1D4HImIjjABh
+         KVMsYmUyvoYuvPvaIjxv9uEiw9/n+QAoJc8uctpsabBPUJ7wieK1Fq6pDBBhajNO2YfV
+         WZlKKV3+I8TJ2Vn3lrquDF+m41fM4k+I0f77zCK4Lt9smDxJ5uA/RmBLq1rjcp+0zgjW
+         TUWlT++NF4SD8oWL/dsEooJMULjsiq3JDRvTF7xN3g7nSnHLaPyDl4HHDha0S6Un07fs
+         n+WBb/468CVAqCcoAZZBd0pj+mhbnxmm1ajc49pP6YooERQDrtflWz3gqK6Lf+sk/TwJ
+         3+2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWwzMj0alPccGszQYjdOF4+Lv9f8tcrNI0fwuCT7i51MgYii09BIcUc/Ja69mxMlzEiYIHuGFNkbaNfgJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCuuHWw79JvU/s7VI7XWucrzuDnJy1reHijK+NYodvR0CoPbU5
+	GOQIFE81+LftHCTF6p5Jted0S8gwOYcC3QcXWnW8q8ezIvOdNJcO
+X-Gm-Gg: ASbGncvaGMG1HbF77p8wQr0rqs4xtGdjA1lHyskZu03zJ9A2CHa8fQo21LxFkSax3U8
+	yBWcawtEWDW3irbISrDvlT/iZ0b1n9YeYjq2XjLCdfsZjBwCkkPkBRTVf5le+7ZzDQVe1agYL2B
+	QUoSwyfvf9KzBboamFt/5oV4g8Hi55JtTAs4VNadAJSXghlpFnZyWeRMRLGsun9NrCf1Lred4/J
+	trPMMhnEPhfz5e81EuW/5RuLar86EwhRkpWn+5XPf6RMVCEWLkF0QluvKXvNNBz7cAQGID9FjxT
+	ILU8ETozVOmso6vCzC8+e5kKfYMM74HPYy/x8y8R8zAuKpSDs5LDR6o=
+X-Google-Smtp-Source: AGHT+IF78Emhh04kwDG8vk4HmMAYxAhki3SCwVQPpJplE9JAU6VrrfT8rkPxV7l9DPJBE86cPYUCiQ==
+X-Received: by 2002:a17:907:2cc2:b0:ac7:1600:ea81 with SMTP id a640c23a62f3a-ac7d19ece28mr926746166b.49.1743993736016;
+        Sun, 06 Apr 2025 19:42:16 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f646sm656784266b.120.2025.04.06.19.42.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Apr 2025 19:42:15 -0700 (PDT)
+Date: Mon, 7 Apr 2025 02:42:15 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] tools/testing: add PROCMAP_QUERY helper functions in
+ mm self tests
+Message-ID: <20250407024215.pgxvxaikate765yi@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
+ <fafaa05d2f0fc7ff3c2b852427dc9b64e1709891.1742245056.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fafaa05d2f0fc7ff3c2b852427dc9b64e1709891.1742245056.git.lorenzo.stoakes@oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+On Mon, Mar 17, 2025 at 09:15:04PM +0000, Lorenzo Stoakes wrote:
+>The PROCMAP_QUERY ioctl() is very useful - it allows for binary access to
+>/proc/$pid/[s]maps data and thus convenient lookup of data contained there.
+>
+>This patch exposes this for convenient use by mm self tests so the state of
+>VMAs can easily be queried.
+>
+>Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Add an isolated list of unreferenced keys to be queued for deletion, and
-try to pin the keys in the garbage collector before processing anything.
-Skip unpinnable keys.
-
-Use this list for blocking the reaping process during the teardown:
-
-1. First off, the keys added to `keys_graveyard` are snapshotted, and the
-   list is flushed. This the very last step in `key_put()`.
-2. `key_put()` reaches zero. This will mark key as busy for the garbage
-   collector.
-3. `key_garbage_collector()` will try to increase refcount, which won't go
-   above zero. Whenever this happens, the key will be skipped.
-
-Cc: stable@vger.kernel.org # v6.1+
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
----
-v7:
-- Fixed multiple definitions (from rebasing, sorry).
-v6:
-- Rebase went wrong in v5.
-v5:
-- Rebased on top of v6.15-rc
-- Updated commit message to explain how spin lock and refcount
-  isolate the time window in key_put().
-v4:
-- Pin the key while processing key type teardown. Skip dead keys.
-- Revert key_gc_graveyard back key_gc_unused_keys.
-- Rewrote the commit message.
-- "unsigned long flags" declaration somehow did make to the previous
-  patch (sorry).
-v3:
-- Using spin_lock() fails since key_put() is executed inside IRQs.
-  Using spin_lock_irqsave() would neither work given the lock is
-  acquired for /proc/keys. Therefore, separate the lock for
-  graveyard and key_graveyard before reaping key_serial_tree.
-v2:
-- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
-  function.
----
- include/linux/key.h      |  7 ++-----
- security/keys/gc.c       | 40 ++++++++++++++++++++++++----------------
- security/keys/internal.h |  5 +++++
- security/keys/key.c      |  7 +++++--
- 4 files changed, 36 insertions(+), 23 deletions(-)
-
-diff --git a/include/linux/key.h b/include/linux/key.h
-index ba05de8579ec..c50659184bdf 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -195,10 +195,8 @@ enum key_state {
- struct key {
- 	refcount_t		usage;		/* number of references */
- 	key_serial_t		serial;		/* key serial number */
--	union {
--		struct list_head graveyard_link;
--		struct rb_node	serial_node;
--	};
-+	struct list_head	graveyard_link; /* key->usage == 0 */
-+	struct rb_node		serial_node;
- #ifdef CONFIG_KEY_NOTIFICATIONS
- 	struct watch_list	*watchers;	/* Entities watching this key for changes */
- #endif
-@@ -236,7 +234,6 @@ struct key {
- #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
- #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
- #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
--#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
- 
- 	/* the key type and key description string
- 	 * - the desc is used to match a key against search criteria
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index f27223ea4578..0a3beb68633c 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -189,6 +189,7 @@ static void key_garbage_collector(struct work_struct *work)
- 	struct rb_node *cursor;
- 	struct key *key;
- 	time64_t new_timer, limit, expiry;
-+	unsigned long flags;
- 
- 	kenter("[%lx,%x]", key_gc_flags, gc_state);
- 
-@@ -206,21 +207,35 @@ static void key_garbage_collector(struct work_struct *work)
- 
- 	new_timer = TIME64_MAX;
- 
-+	spin_lock_irqsave(&key_graveyard_lock, flags);
-+	list_splice_init(&key_graveyard, &graveyard);
-+	spin_unlock_irqrestore(&key_graveyard_lock, flags);
-+
-+	list_for_each_entry(key, &graveyard, graveyard_link) {
-+		spin_lock(&key_serial_lock);
-+		kdebug("unrefd key %d", key->serial);
-+		rb_erase(&key->serial_node, &key_serial_tree);
-+		spin_unlock(&key_serial_lock);
-+	}
-+
- 	/* As only this function is permitted to remove things from the key
- 	 * serial tree, if cursor is non-NULL then it will always point to a
- 	 * valid node in the tree - even if lock got dropped.
- 	 */
- 	spin_lock(&key_serial_lock);
-+	key = NULL;
- 	cursor = rb_first(&key_serial_tree);
- 
- continue_scanning:
-+	key_put(key);
- 	while (cursor) {
- 		key = rb_entry(cursor, struct key, serial_node);
- 		cursor = rb_next(cursor);
--
--		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
--			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
--			goto found_unreferenced_key;
-+		/* key_get(), unless zero: */
-+		if (!refcount_inc_not_zero(&key->usage)) {
-+			key = NULL;
-+			gc_state |= KEY_GC_REAP_AGAIN;
-+			goto skip_dead_key;
- 		}
- 
- 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
-@@ -274,6 +289,7 @@ static void key_garbage_collector(struct work_struct *work)
- 		spin_lock(&key_serial_lock);
- 		goto continue_scanning;
- 	}
-+	key_put(key);
- 
- 	/* We've completed the pass.  Set the timer if we need to and queue a
- 	 * new cycle if necessary.  We keep executing cycles until we find one
-@@ -286,6 +302,10 @@ static void key_garbage_collector(struct work_struct *work)
- 		key_schedule_gc(new_timer);
- 	}
- 
-+	spin_lock(&key_graveyard_lock);
-+	list_splice_init(&key_graveyard, &graveyard);
-+	spin_unlock(&key_graveyard_lock);
-+
- 	if (unlikely(gc_state & KEY_GC_REAPING_DEAD_2) ||
- 	    !list_empty(&graveyard)) {
- 		/* Make sure that all pending keyring payload destructions are
-@@ -328,18 +348,6 @@ static void key_garbage_collector(struct work_struct *work)
- 	kleave(" [end %x]", gc_state);
- 	return;
- 
--	/* We found an unreferenced key - once we've removed it from the tree,
--	 * we can safely drop the lock.
--	 */
--found_unreferenced_key:
--	kdebug("unrefd key %d", key->serial);
--	rb_erase(&key->serial_node, &key_serial_tree);
--	spin_unlock(&key_serial_lock);
--
--	list_add_tail(&key->graveyard_link, &graveyard);
--	gc_state |= KEY_GC_REAP_AGAIN;
--	goto maybe_resched;
--
- 	/* We found a restricted keyring and need to update the restriction if
- 	 * it is associated with the dead key type.
- 	 */
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 2cffa6dc8255..4e3d9b322390 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -63,9 +63,14 @@ struct key_user {
- 	int			qnbytes;	/* number of bytes allocated to this user */
- };
- 
-+extern struct list_head key_graveyard;
-+extern spinlock_t key_graveyard_lock;
-+
- extern struct rb_root	key_user_tree;
- extern spinlock_t	key_user_lock;
- extern struct key_user	root_key_user;
-+extern struct list_head	key_graveyard;
-+extern spinlock_t	key_graveyard_lock;
- 
- extern struct key_user *key_user_lookup(kuid_t uid);
- extern void key_user_put(struct key_user *user);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..7511f2017b6b 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -22,6 +22,8 @@ DEFINE_SPINLOCK(key_serial_lock);
- 
- struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
- DEFINE_SPINLOCK(key_user_lock);
-+LIST_HEAD(key_graveyard);
-+DEFINE_SPINLOCK(key_graveyard_lock);
- 
- unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
- unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
-@@ -658,8 +660,9 @@ void key_put(struct key *key)
- 				key->user->qnbytes -= key->quotalen;
- 				spin_unlock_irqrestore(&key->user->lock, flags);
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+			spin_lock_irqsave(&key_graveyard_lock, flags);
-+			list_add_tail(&key->graveyard_link, &key_graveyard);
-+			spin_unlock_irqrestore(&key_graveyard_lock, flags);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
--- 
-2.39.5
-
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
