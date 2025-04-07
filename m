@@ -1,110 +1,136 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D822222D1
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BF62561CC;
+	Mon,  7 Apr 2025 19:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744053008; cv=none; b=oB2T2N/TZ6RVSKtKed9bYDs0M4AuoeG1C1WBMCw3N9N/VVfNeYu0tglCHd5Dh0IqfH9U3sxTEn2QNEbsUKVLbQE7vfWBEpGS3UoCzBHDAHnhCSky4PcrYSFAHhYfJPzZtPI5z+bRdbyBuZHKWH364P2kr5SFjcb5Zr6YLu2gG5k=
+	t=1744053130; cv=none; b=V2pHD5g8IpJZ4jahysUjc6VTmSOiwxbw92S3HbebdmUWTxjz0AbnBmovgKEWKLF3quIZ/uaq/gyHHjyeDgMZkvgE5viHWa7q8Bg1kVvJ5jzns6AoUy8oOC2wWhyu7IG48dM2mwi3OE2Tu2Q05vI3+N1wTwDeIfhXDy0edQfigUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744053008; c=relaxed/simple;
-	bh=hlvX3dKMPy7AKbI9AZt2/QooFInqEXvd3/I/fL8l5fI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YSIDMAbzmANr8SdRrc95o0sAAr5QHKduZpCEzKSdbjjY1cG1fEJfA4PsfR0hqLs8Zb+rN21YFYTEgVhl84q189f79ZUrMTxa1Fx9lMjLLB5EoYsMTl1CMCpZ/iWPnz2Tn4Po8FVBZPV4ui0cw+VuHwOPUooz4nN5wdUlxv2Y8L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Xdf9CB2d; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1744053130; c=relaxed/simple;
+	bh=eRwcNqwW7+h4lJEE4g3DMP42LSVphf2gVF3zYxnzX8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gKg/LAAqXlPUIE8fuyz6g5xRgag36Ty6Ji2M+0Jbd5hCHBT9PdtryVPsjMwsD/r2AA6gUY2neA9smqUTMH+UmrbjJnn4iuSgDvDlUuwzQdYhSZVGjpyxXhOqlFnGoncR7WgZDLKJmZAGBnkgHYqMDB5Xhl8+OsML93ju4U8hOBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spvac6wQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Xdf9CB2d"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id 1oDdu0oyCf1UX1rr6uq5YR; Mon, 07 Apr 2025 19:10:00 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 1rr5udIW8YlC61rr5u2VZm; Mon, 07 Apr 2025 19:10:00 +0000
-X-Authority-Analysis: v=2.4 cv=d4HzywjE c=1 sm=1 tr=0 ts=67f42308
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=QyXUC8HyAAAA:8 a=r2MVV0ggy3cR_goCns0A:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6Fx0cjpFIDP4TVvSQqu5zpeRXwbcNwQbAPGVgowUYRY=; b=Xdf9CB2dHJJGo5zpUmzK33wSBC
-	oqUBtFezyXl6wHdvY7YydiHqg1RVT0c/TSV/uffAA3UEOPueeWF8wyz6L72Au/5KEqy09cdegIfvt
-	npIxnP15aME7/oaENDMfM53z9se1OI337fnPiI0Hh3+0QwiM7JHlwrA5I+oxttpA0JM6UB3xbfgFN
-	rC+2CFTz+ft/f3TyX8LEpexdnI3wwGu5wQpKJ4a1KnXQt9dSOxF5VZausMuHQ3BO2OPhGBsWyRarq
-	dIMZDpv7P0Lv9YVo2cd+SYcVd4W0IF71SYJ5i7AThHgjwNQNxPiMatsyKhKzgOGp/W1ULUjnaLXvD
-	4GXlA3yQ==;
-Received: from [201.172.174.147] (port=39666 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u1rr3-00000002JT0-2lW1;
-	Mon, 07 Apr 2025 14:09:57 -0500
-Message-ID: <b5ab34b1-e27a-40ca-be24-56a28b5d37bd@embeddedor.com>
-Date: Mon, 7 Apr 2025 13:09:51 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spvac6wQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652AAC4CEE7;
+	Mon,  7 Apr 2025 19:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744053129;
+	bh=eRwcNqwW7+h4lJEE4g3DMP42LSVphf2gVF3zYxnzX8s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=spvac6wQ9Eduo+A6D/vNhaDzpye9yxUDTHzLDPDBF5MgU9G+UkGAADJZTtGuKkQ10
+	 5wVqzPlcRg8y/MQiJySK7wMm62Es/rpXjYsbM3dbe44z/hPUo7AQFcf+zVQb7NpQcM
+	 q7ygkNQeIbNF8EBJP+UbMrbQbVajBC+SR4IwBoN5JPllrWX7/eTB0D2igbnH7x0Nx2
+	 kQQsPf9d4I0HuOBK0vnmOhi5fCdCg1Dfv9qORhLHIfJa5eoe0RdzOEb0kd5JsY9j4C
+	 GmF/nWIrrebrrf3s+OBeMJfPU1ASxRq0ml7X9RtXX0EvRnaMc4LBF7HoGLRqP6kPgB
+	 olE6QZdT8na4Q==
+Date: Mon, 7 Apr 2025 20:12:02 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Bartosz
+ Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/7] iio: dac: ad5592r: use lock guards
+Message-ID: <20250407201202.7c74a39d@jic23-huawei>
+In-Reply-To: <20250407-gpiochip-set-rv-iio-v1-2-8431b003a145@linaro.org>
+References: <20250407-gpiochip-set-rv-iio-v1-0-8431b003a145@linaro.org>
+	<20250407-gpiochip-set-rv-iio-v1-2-8431b003a145@linaro.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] UAPI: ndctl / acpi: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: Kees Cook <kees@kernel.org>, Alison Schofield <alison.schofield@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <Z618ILbAR8YAvTkd@kspp> <Z65xV2TaFY32eYdp@aschofie-mobl2.lan>
- <202504071106.3A0AF875F@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202504071106.3A0AF875F@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u1rr3-00000002JT0-2lW1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:39666
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPnSeRfacVhmtCjtsc1XeDmZ/d3nv+St/9ofoVqIhJJ8ydFGoEW1ODOd0wCAbTLpLLAxezp0iTD6hhaSZkbeCKCadJMbfpfDkT6s/YjwCEN2KSyZUU+e
- oZfzP7U0fsKkZBOmYMRi/zCoJf9sCNHDKTWjYNhHFAlaY9e/UIb5yoqr0fN0wgtaG9RQaXNcHQAxsluv0LSFwftD+LYmRbxvpsVj1qOU/5u4kTIOEV3Bhcrj
 
+On Mon, 07 Apr 2025 09:18:10 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Gustavo, any updates on this patch? I'm skimming through patchwork to
-> check on stalled patches...
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
+> Use lock guards from linux/cleanup.h to simplify the code and remove
+> some labels.
+> 
+> Note that we need to initialize some variables even though it's not
+> technically required as scoped_guards() are implemented as for loops.
+That is always a tiny bit irritating. Thanks for calling it out.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/iio/dac/ad5592r-base.c | 119 ++++++++++++++++-------------------------
+>  1 file changed, 47 insertions(+), 72 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+> index fe4c35689d4d..bbe3b52c6a12 100644
+> --- a/drivers/iio/dac/ad5592r-base.c
+> +++ b/drivers/iio/dac/ad5592r-base.c
 
-Yep, I proposed a couple of patches for this:
+Just one case I'd prefer done a tiny bit differently so as to alway do
+early returns rather than very nearly always.
 
-https://lore.kernel.org/linux-hardening/a66056cf-570c-4875-b5cf-c51e2bc488d9@intel.com/t/#mf958b73b3021db415b9e9c623c3f386259ca0829
-(not sure why my patch doesn't show up on linux-hardening anymore...)
 
-And this is the most recent alternative:
-https://lore.kernel.org/linux-hardening/Z-QpUcxFCRByYcTA@kspp/
+>  	udelay(250);
+> @@ -249,45 +235,43 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
+>  		}
+>  	}
+>  
+> -	mutex_lock(&st->lock);
+> +	guard(mutex)(&st->lock);
+>  
+>  	/* Pull down unused pins to GND */
+>  	ret = ops->reg_write(st, AD5592R_REG_PULLDOWN, pulldown);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	ret = ops->reg_write(st, AD5592R_REG_TRISTATE, tristate);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	/* Configure pins that we use */
+>  	ret = ops->reg_write(st, AD5592R_REG_DAC_EN, dac);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	ret = ops->reg_write(st, AD5592R_REG_ADC_EN, adc);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	ret = ops->reg_write(st, AD5592R_REG_GPIO_SET, st->gpio_val);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	ret = ops->reg_write(st, AD5592R_REG_GPIO_OUT_EN, st->gpio_out);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	ret = ops->reg_write(st, AD5592R_REG_GPIO_IN_EN, st->gpio_in);
+>  	if (ret)
+> -		goto err_unlock;
+> +		return ret;
+>  
+>  	/* Verify that we can read back at least one register */
+>  	ret = ops->reg_read(st, AD5592R_REG_ADC_EN, &read_back);
+>  	if (!ret && (read_back & 0xff) != adc)
+>  		ret = -EIO;
+		return -EIO; 
+for this one.
 
-Thanks
---
-Gustavo
+>  
+> -err_unlock:
+> -	mutex_unlock(&st->lock);
+>  	return ret;
+return 0; here
+
+>  }
