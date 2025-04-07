@@ -1,134 +1,74 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EA72A8C1;
-	Mon,  7 Apr 2025 06:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDE6224AE1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007182; cv=none; b=W2NdnKVT+3C5H38jgVH3G76j16O7/wHPJm85XcS2uFJvK/cq5X+bAQbiBGM/g5ahdX/2DiAVpMvOreE4gVVDOTMFd6jfX+8LpTd2Q/Iu5N6DxqoKcMFzCQRdBABW074mO28Mlwqg4+5AfvjdVsWI3F5Ti8dZospKZpSBaNV+k2Y=
+	t=1744007193; cv=none; b=pqyCnQjyhno8ZDbTE8idW3JrvpjZGRHAZwSp7oznTNWWpQUsxAfJuvTYpVDE/P8SEBBkjvD80Iw8vh45C0N30sJHzj0gWp5jYygNqjdQf/NfUO7ZbehwIxiAVE+Kj+Z3LmH3KZC9v0efSWbopZCa4v54hdSOu5Zyv14Z7pL/bOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007182; c=relaxed/simple;
-	bh=k8YYOPh/3JkuLOMn/Hj98STqPu3UvcIJ1IzVOh1TAOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jsJ92awq78QcSgGJb1zhxISzzBfx80LoxCKpmu/SqcKPj7eKsA88atrBbbDU2MoVYVw98qI/AJKLblajWn00uWW0fYDk2k60AwwNqsIYlnLYtcbwXemYdlQqQmuQxXWmU0hM7wdP93NlMOXjxzNoBk+HxmAuGAoRKuKQsm3SMOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V//rwAjW; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744007193; c=relaxed/simple;
+	bh=AwdFiZJgFvpy4NpCVC2LYrX4c4Oa3HfTHQ/IqTo/uK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UnPAT2k+4M8TpG2vKuydEVolHd1N769BDtxesmWb7tbgLLxAP9dj4qpJ6yDwJeZ2lYW2Y5qEgRm3rJOdVUBsKsJr4R+6t4Etf3/ZPCiBqDfMVit3Bh3RnNsa5ChTc4UYlm6dD+6jQLnC7+rwyWSpLdFQECIBRxIXeMImQAeHu6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aIpTaz5G; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V//rwAjW"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso42704085e9.3;
-        Sun, 06 Apr 2025 23:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744007179; x=1744611979; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7vcZaHtT0Bdp7jhNpBVwgeNyTw0QbyKnO+4kb1PkgZw=;
-        b=V//rwAjWBfRLbFdQ4NmYutnEKNJP6XdGcRTo5ckph0Kcqf2qHslEQsNNJI67WTG6KA
-         AlzPIYC5PZLUwyo772JtYFzXFq4iyLobzjEzmp1XSwmQnSdZRzaHzU7g2wSIoG9BNrNg
-         6ysZs0COspIFREZksUvaOK2pOvjjN1XFcxCwzk0YhOOl4OYQsRPAlg10sjwPWbzY6/xG
-         vuAbSbKSHwctG30f9KNuTZsr1/apAHUijw++0BNZLVNa8L5dOdwz+STgKjFi/fne6BKc
-         Mgj5gr3TfTLlvkmjSHf9+HgmozuZAqcolWtyXspg95OEZS9NV9Hh2mP3k05ExzKWdsXx
-         04Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744007179; x=1744611979;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7vcZaHtT0Bdp7jhNpBVwgeNyTw0QbyKnO+4kb1PkgZw=;
-        b=AgjXRlwuGKW6xauMtU/d0iv9V+U2jtXJxBHg6dYCW8LbvnXj8e3pvT8O+jVpogpb4p
-         9+re4Dh2pEWycWLMUIni05g2PO4MdL7IFrnjyCkMxEiaIioFiZcHH2t3HUv0/CTxKLwP
-         SriQC57jrt8rwUxM9sUAtV9qx0OOq2Z6wjyut+aK9bh2btx0lfhhc/11wwKVhD80Hprm
-         BiOv935f9+o1cPOkLzI9hBrtBA8bUoI7et9qsQ3IbDnkePZPni361bzuG8bQaXbB5tsw
-         WD6dfC59Xw1eS902TqUwAa3vbao1tidEMpqB0qc79ZKJiSna9bD4i/cc6zrmRFUNNs6o
-         i94A==
-X-Forwarded-Encrypted: i=1; AJvYcCWxjy5WjyNvibQHaF3lNSOTHTLWmfUgA21yTT/Vv1xrI1EcjPwKoGlPaCvWC/cg7B5vS2Ut4eWowNg4rClu@vger.kernel.org, AJvYcCWxvCf1sOLIE+ccTVk1UmX6hd5MjvnZzOTNBe+JTX+1E5X5DzSNd4LxcX/cen48tg/7GJUOtAijdmokAdE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ6U1/TA8IIKGH7cuBnkY+nBLhMvUnP/GviF+RRmefCS4Lg+Cd
-	+qk5MbVf9EldIG3fI5ste0NtvOmBQf47XNPoEAgQNsMSIkG88aGLWLCaHQ==
-X-Gm-Gg: ASbGncuQrfWblU6YUdPpMvs6zcMyCiCPbfUSzOS550GKcPKDFKQs2ioGinxnMWeLFya
-	V1WDF29wFNXrmIkqAAZ3SQ4k/XD/47gOQltfQceaW2eqG3I66f+XIo1873QhzcBL+Rjk8EjkKcy
-	7vKznBHMduKNw6peQ2yw74tLcCp9m+7LxBEKN55wBjpKsBbFct8/bpDASk+qq4VuAY08WsbKs7R
-	eqBUqi+apHVNNExASvL5XWkj3l/u4h2B2//LGjOp0cU0QFUy9vyruv7iLT/KRYWYcj6H2r/s3L5
-	pX/laSvRIyAFih19CZrdaKxRROzPkAoHSPt9SRErrMv5T0svn/CUtosi/3KgU1pbRn7Qt6SNVgB
-	srRiC+3ewRqobrfib0XHvGjhBo71lgg==
-X-Google-Smtp-Source: AGHT+IGNAbuqm5FmxluF5wtjWawmF2WQ5tcvDHorTjnjuiAauWPbvFZ5uA5beNY4uy00YPPjFwGD/g==
-X-Received: by 2002:a05:600c:a04:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43ee06401a7mr54753425e9.14.1744007178599;
-        Sun, 06 Apr 2025 23:26:18 -0700 (PDT)
-Received: from ?IPV6:2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6? ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a9da1sm10916991f8f.22.2025.04.06.23.26.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 23:26:18 -0700 (PDT)
-Message-ID: <115a9838-faf0-4607-87f9-c952b43bca78@gmail.com>
-Date: Mon, 7 Apr 2025 09:26:17 +0300
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aIpTaz5G"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744007181; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=DObvmwmunJaaAhLjmCutZTbFoMNGkv4Jl5PNPWs0lKw=;
+	b=aIpTaz5GuEgoCSq56wl3LZFpvwyez6z04xAxXRP7M4A+ujPKgFy1vOVQTXWuDYP8qw5/4UJR1SOPPzsYP+o9T6E+xwd5+irTykGsYH3YIKTS0By3cpXm5GxhmmJ8u5QcfVFQjB+Xng0eod43bwzBm37LH6mz5mKqcOcolMFBrx0=
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0WVoemxs_1744007180 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Apr 2025 14:26:21 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: alexander.deucher@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	christian.koenig@amd.com
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] drm/amdgpu: Improve documentation for amdgpu_sdma_register_on_reset_callbacks
+Date: Mon,  7 Apr 2025 14:26:19 +0800
+Message-Id: <20250407062619.62026-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] crypto: sun8i-ce-hash - drop
- CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG ifdefs
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: clabbe.montjoie@gmail.com, davem@davemloft.net,
- linux-crypto@vger.kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250401192321.3370188-1-ovidiu.panait.oss@gmail.com>
- <20250401192321.3370188-4-ovidiu.panait.oss@gmail.com>
- <Z_NM9LnUF6Gpv_iz@gondor.apana.org.au>
-Content-Language: en-US
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-In-Reply-To: <Z_NM9LnUF6Gpv_iz@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+The function amdgpu_sdma_register_on_reset_callbacks lacked detailed
+parameter descriptions in its documentation. This patch improves the
+documentation by adding specific details about the parameters and their
+usage, enhancing clarity for developers.
 
-On 4/7/25 6:56 AM, Herbert Xu wrote:
-> On Tue, Apr 01, 2025 at 10:23:19PM +0300, Ovidiu Panait wrote:
->> 'struct sun8i_ce_alg_template' is always defined, even with
->> CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG disabled, so the ifdef guards
->> are not needed.
->>
->> Make sure the statistics have IS_ENABLED() checks instead.
->>
->> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
->> ---
->>   drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 8 +++-----
->>   1 file changed, 3 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
->> index b0959d8218cb..530c5181d73c 100644
->> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
->> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
->> @@ -31,9 +31,7 @@ static void sun8i_ce_hash_stat_fb_inc(struct crypto_ahash *tfm)
->>   
->>   		algt = container_of(alg, struct sun8i_ce_alg_template,
->>   				    alg.hash.base);
->> -#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
->>   		algt->stat_fb++;
->> -#endif
-> 
-> Should this go under IS_ENABLED as well?
-> 
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=20167
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is already part of an IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG) 
-block, so no need to add an extra IS_ENABLED() check here. Just the 
-ifdef was dropped:
-
-	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)) {
-		struct sun8i_ce_alg_template *algt __maybe_unused;
-		struct ahash_alg *alg = crypto_ahash_alg(tfm);
-
-		algt = container_of(alg, struct sun8i_ce_alg_template,
-				    alg.hash.base);
-#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-		algt->stat_fb++;
-#endif
-	}
-
-Thanks,
-
-> Thanks,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+index 529c9696c2f3..add252368dc2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+@@ -539,6 +539,7 @@ bool amdgpu_sdma_is_shared_inv_eng(struct amdgpu_device *adev, struct amdgpu_rin
+ 
+ /**
+  * amdgpu_sdma_register_on_reset_callbacks - Register SDMA reset callbacks
++ * @adev: Pointer to the amdgpu_device structure representing the GPU device
+  * @funcs: Pointer to the callback structure containing pre_reset and post_reset functions
+  *
+  * This function allows KFD and AMDGPU to register their own callbacks for handling
+-- 
+2.32.0.3.g01195cf9f
 
