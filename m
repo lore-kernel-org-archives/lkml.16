@@ -1,105 +1,116 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE7F215079
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2154879B;
+	Mon,  7 Apr 2025 16:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044981; cv=none; b=rsq7TqmmE0EwuPPrkUK/g2HqMsmdkcrIN0+yaijQHdQCgSKtO80nHSq8la6/r5Rk0bW9f37mfgq5CxOhD+SVBCtgaFZw/Z4c8u67Q265lCl2vrq/T3ocIxVL406NRbCj3jP/Pj88svfk9igBoJ41ueu40bkyFestI4P0qVG6zkI=
+	t=1744045037; cv=none; b=OSC0o6d0SYxNvDjuOI16uMmnqCt68KLakz+KwJHglUxqQqsD4oI3wodyJivtemWq/hMDtA/ITHjCp5gFl002zoGvXn5lQXITFydEF4axCCF7Bhj4G/Yl3zWBXwAyFhSLk+mrJAIds8pyVm2QOQ7iuGhx4xUxzqxpz/vYdVIdbI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044981; c=relaxed/simple;
-	bh=Ipr7PYVaEn6nY3r5e5wreXLQTo72JtqtAbjgfUZeuiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JLDhOBCiJqB/5JNRq5JRW36oviXfndvycpdLARiV0TrIlB7wp6dwaOqGxdVLgb0vywqZ9oURMFc4AEK1FZ4bN8rIBI9xxwyOLD+N8fBvri2dEhxKsKwpRmlbw3lPdJ3pn27PmxotgSIebJyb3KqK/NKFrsWMt7j37clurs5F1dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBqQ7107; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBqQ7107"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3b12e8518so855018666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744044978; x=1744649778; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9m3SFcS7v9boR9MBhfKth1VUt84e9D1szZVnPdeXUm4=;
-        b=SBqQ7107eg9R44ZutuftlrLO5TiXE39zYuU50gfLIFCSjnBIyDvEWxK+cGYf60x8i7
-         525eycQnMZCdV7+zh5jzOuDnuWYlaLL78AljTB39wPwv3+DKxuzCm7W4juBmL5qYJSJi
-         TwZoiDXCWtXJ3dxyL3VBbjxaQMX8zXlJVHoWiLg8XuubOztGEy6itWafMZbDzE8DmzhD
-         XYWTSoneaqDGarv5vwsX0jXpJFu+eYpOxjrnYVIP3POCd8+xIb7xfGrCnw28zt0gRW5R
-         qo8CEb1GOEud+sPu8bXFO7pOkUJ189+7N2rwSYP4Up5etdSS/SELR+LfxCYTl+Q4GfnF
-         anyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744044978; x=1744649778;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9m3SFcS7v9boR9MBhfKth1VUt84e9D1szZVnPdeXUm4=;
-        b=DqXijqeKxXie4cA5VLaFdr+bTJ2W/EXkmIDyeIOuMLFf/Jo36oaFTw3hAODKdDi0AB
-         1HIT02BPCRL5gZP3QQjakoGVcYTqJvkf5NkAB97sDK9gfR1NazhkKnjT1j7BmQD0oWhL
-         21066b5QM3iNJbxlbZGpo/NGdcf/4Bm7RiTK7xx6AKYFFgOP2O4yXl1yv2E5ovewravw
-         dT8e84Ut7P/QdQ/wehQzaG2/ffkLMn+VwkZ3etJDzRoGTF4FItjSHvN3dZXk6ZDHdu7w
-         DLeDFGqRYUMArbCRwI4bbh8Gj8x614N/TX+Xkz9KDBb9u+wBCtQWbjnofRcY147cgRew
-         kJDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUmpVf+4+xM7niTLabaS4jCVDifvaTwewYmhhFbr5jmusMfSFfK31e4FNOQZcT16/qQH18yju9dHYlcVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWIlZvwJ4avrhXLEWpCW1yiDLftUpHdOGpgmremylcGO93srEf
-	WEllvr2n/iWRpe7W42E1H7mzLMk8oN/SxO8ceUfjY9tN/Ic3GA/m
-X-Gm-Gg: ASbGncsbrNHCvwZRFYOzeto8sI2oXYtXoHB9QTtuqogdJjQaJjTf7OQR/zQJrk48/5g
-	HPxEYo3oE4wCX/p3z1OkzkZCIb5sRfYjhCOjNtRXKoM01owoIlbrG6TrA+koRVzs4KanidIByBD
-	uCv4wenIzHYRMbuYjjyq/Kyl0BWo8UVX219an17YGIaA9OYuFNbW/iDRSTrYZ3zmSWrMzjzcbJM
-	/VadgboDxT4LDKiXswGaZ0yVeM60N/O0GEFvr9B2BCcgoi11HJC9GE2B7kayvRPCjq9MFVJk775
-	YURcI4Ggvrqu1SXaAZuiP/tyFcTsUwY2YXA=
-X-Google-Smtp-Source: AGHT+IH1Kz/8T0WZNUgO1gJkkvC4vzCjMpU46O7x6SqVz8u3U8uFqTr3j9NeDtrPnjr1DizbTSckAQ==
-X-Received: by 2002:a17:906:b293:b0:ac8:197f:3ff6 with SMTP id a640c23a62f3a-ac8197f4094mr33183066b.28.1744044977703;
-        Mon, 07 Apr 2025 09:56:17 -0700 (PDT)
-Received: from pc ([196.235.56.129])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d46esm786264966b.19.2025.04.07.09.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:56:17 -0700 (PDT)
-Date: Mon, 7 Apr 2025 17:56:14 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Jim Cromie <jim.cromie@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Cc: salah.triki@gmail.com
-Subject: [PATCH] drivers: char: scx200_gpio: check return value of cdev_add()
-Message-ID: <Z_QDrlkYnmsVRe5w@pc>
+	s=arc-20240116; t=1744045037; c=relaxed/simple;
+	bh=fVOlvEKHAoex+96mqsldAlAhMfNcp5FCshpoMDp/TAI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hSKbJSL7hVkz1e9oSrM3kNA7scXNVozRMatGxc76u7rFL6O1nhUxJfHi239Bjgjru/J9ofzXpHc99qz9rv8SUq4XLBoPVljLvtV7gInweG7ygIzefoLeMjLiY/WOYbk0h4SnXI4aVuCUDc0TJ/ige4G0ccGCXWK6iPiVnFPpr0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from localhost.localdomain (178.207.21.175) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 7 Apr
+ 2025 19:41:53 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Roman Smirnov <r.smirnov@omp.ru>, Steve French <sfrench@samba.org>,
+	Shirish Pargaonkar <shirishpargaonkar@gmail.com>, Sachin Prabhu
+	<sprabhu@redhat.com>, <linux-cifs@vger.kernel.org>,
+	<samba-technical@lists.samba.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.15] cifs: fix integer overflow in match_server()
+Date: Mon, 7 Apr 2025 19:41:37 +0300
+Message-ID: <20250407164138.644037-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 04/07/2025 16:28:07
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 192443 [Apr 07 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 54 0.3.54
+ 464169e973265e881193cca5ab7aa5055e5b7016
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.207.21.175:7.1.2
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.207.21.175
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 04/07/2025 16:31:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 4/7/2025 3:07:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Check return value of cdev_add() and in case of error unregister the
-range of device numbers.
+From: Roman Smirnov <r.smirnov@omp.ru>
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
+[ Upstream commit 2510859475d7f46ed7940db0853f3342bf1b65ee ]
+
+The echo_interval is not limited in any way during mounting,
+which makes it possible to write a large number to it. This can
+cause an overflow when multiplying ctx->echo_interval by HZ in
+match_server().
+
+Add constraints for echo_interval to smb3_fs_context_parse_param().
+
+Found by Linux Verification Center (linuxtesting.org) with Svace.
+
+Fixes: adfeb3e00e8e1 ("cifs: Make echo interval tunable")
+Cc: stable@vger.kernel.org
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
 ---
- drivers/char/scx200_gpio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/cifs/fs_context.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/char/scx200_gpio.c b/drivers/char/scx200_gpio.c
-index 700e6affea6f..36efcc828e8e 100644
---- a/drivers/char/scx200_gpio.c
-+++ b/drivers/char/scx200_gpio.c
-@@ -107,10 +107,14 @@ static int __init scx200_gpio_init(void)
- 	}
- 
- 	cdev_init(&scx200_gpio_cdev, &scx200_gpio_fileops);
--	cdev_add(&scx200_gpio_cdev, devid, MAX_PINS);
-+	rc = cdev_add(&scx200_gpio_cdev, devid, MAX_PINS);
-+	if (rc)
-+		goto unregister_chrdev_region;
- 
- 	return 0; /* succeed */
- 
-+unregister_chrdev_region:
-+	unregister_chrdev_region(devid, MAX_PINS);
- undo_platform_device_add:
- 	platform_device_del(pdev);
- undo_malloc:
+diff --git a/fs/cifs/fs_context.c b/fs/cifs/fs_context.c
+index fb3651513f83..3479f0072cf6 100644
+--- a/fs/cifs/fs_context.c
++++ b/fs/cifs/fs_context.c
+@@ -1088,6 +1088,11 @@ static int smb3_fs_context_parse_param(struct fs_context *fc,
+ 		}
+ 		break;
+ 	case Opt_echo_interval:
++		if (result.uint_32 < SMB_ECHO_INTERVAL_MIN ||
++		    result.uint_32 > SMB_ECHO_INTERVAL_MAX) {
++			cifs_errorf(fc, "echo interval is out of bounds\n");
++			goto cifs_parse_mount_err;
++		}
+ 		ctx->echo_interval = result.uint_32;
+ 		break;
+ 	case Opt_snapshot:
 -- 
 2.43.0
 
