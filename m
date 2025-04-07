@@ -1,96 +1,122 @@
-Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC5E1A8F68
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75581A8F68
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026940; cv=none; b=tEKmO92NU1gAgbVJ1RfAixWE9ExuP9djdm2Ic1S9MYgYPYrBqmZaCBlzkZjF9yOZT4nrJ41AwJyekMmgf/H/9XFkwFC6tNiKaMh2yWlhVDjIRfwXRKvOqMa2X2PkQKk5U/n6QhlffkFVY6sQZthy74V4u7CsD84KnUKta+OhWKs=
+	t=1744027029; cv=none; b=MtYJF8ahSZv3r3wazTAtB7LLlZ7FhyXGDj763U1jIJ5DRRWCSaJF79UbHFIFBBwWlpYc3J62uENV14+7VHXnwC4IdMBDp9Y/AiMB4Vgho7YdfY1Zm98l4Hl8gzM1GvDwypk+9g+zSM1QVHHQ953Fak9qEBgUsu2HgwchEvZg7RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026940; c=relaxed/simple;
-	bh=Q7w6rQMWzrrI56q78w0SYb/BTNujEKUgrLF8isK6A8w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=on0/DzgWjeR8If1clH7oKvKXWlcs/SM4DCT8VhqSyzm+EV3XnDSdS7kcY9KnHySe5mBMnHtsUXUwJ1ZIYt24Oo0ggZPleVr9j/wbO44SUHGimmeo7Dvhg1YiGrp311Twjstw9j3kaZ4l4wGlxox/GyYNIBsqiKz+I1Z8WLR4k2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=anymPyWj; arc=none smtp.client-ip=17.58.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744027029; c=relaxed/simple;
+	bh=PbdMhMfjBduUwZfF5rKVVOOwgvHETSCbxx9ro5sIPQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jZZ5Ob/s6O/u0UwTEvt4ofFd9gvkSgAoGWTnZhG7flPTxs8wguUt4J8foIGK5IGaki/iY0TmuUydIhBtIPORYlgdzns2jSldQMlg3NLDf/MQ8uhR+h2TsOqagqHLXlZ2S6v/fivrAx+yq0J7I8iTNiQZ3drsLL78tB42qJrODtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FVZoxeE9; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="anymPyWj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=Z75kDtTMKquraVShLM7bPPJB66WvUMJ0QtUbJjFQFJk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=anymPyWjrQHKXWLbTzp5qhjeZc2WbjdqfQgYHsxP3SmB7oAoFj7RauAT55mdnYQR7
-	 w0unR/JlTIpMBC24xy0XXDAAPFtIRMu4uOkRsFL2SSnkPk/jNH13/dFZOR7PFQLA2m
-	 gliT4Ukkmd1dcAdSSsULfYzSbkG5wwiM4tbVlL3l+p1Lm9cc5T81eOZ34VZt2n3o3A
-	 pyYLv8NXk+wuPEC4xAuNO41DDZMu0Xr6FNV5F9yTxFdlIOH+m76ivGFDzCR2gEsUsJ
-	 HU6ZBYzzLE5DfD7Bg6STnOASObUNAJnw1x5ULuZgWAg2/0rId3A2aE221RvNTpLWZi
-	 Lf16WFvaI+aiw==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id A20402010176;
-	Mon,  7 Apr 2025 11:55:34 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 07 Apr 2025 19:55:20 +0800
-Subject: [PATCH] fbdev/nvidiafb: Correct const string length in
- nvidiafb_setup()
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVZoxeE9"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30613802a04so46372921fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744027025; x=1744631825; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VuEAK7onIXipyZd1ca+l7EoIcSYMPQnsm7F6wcaYXKE=;
+        b=FVZoxeE9uGmeAdG2YPagDhkpwxH8suKxtgHD9vzH8McO0Qjkb3aLVODIbckbXe9wyC
+         mQZlcQHOIE1HtIwv2J2nRuY0E0rNhoGjzP3OnP9TCzFVV9Fm34CKGPpXGiYReiH5C8qR
+         809KPNsRR1Hv74wMGcLdnez3wjJ1kukcxGEpCQ+PY/sCQM2aG6IGNNqa1W+TExkKGSpf
+         HTeg7UbDrWJZodAeYzrfOVzf7aEqN0t8NqsFi0EKHxmR7zDczk98ntvDKnPHcCEYBAL5
+         1m0EqKwN5B8SARQH0i61L8ImU9LA0MDDKpS3j6n83Z/GcggygvjYnzEbTj9mTc/mp0Ag
+         oviA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744027025; x=1744631825;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VuEAK7onIXipyZd1ca+l7EoIcSYMPQnsm7F6wcaYXKE=;
+        b=cRpmLL57s7+33f+ex38bXRr+5b0GrPGP04mXoeSAs55wqJul5Cd67mbhQbXx5+iHAg
+         rbHuUU0oQTe3Q/IyVkMjVmNBSaFI4e29FJR4l+XV0g1gw7JT+Gcf1IYWlFhkiSb1GbKu
+         UAyExnYotpTsRaxrkhb7R3ISc+4CidP/Qk9hAwHmLe5sa0JfwHGNKC6oyRkMt5AGkNx4
+         TmJEfLjUSZ0kg43+CbESZHqdRnHhGOtAlX/TcQrmPJWgFk0qmc7hYjqviIZ7kUZD1bzd
+         HceKVtG4O7CWMcICbN8euYvfUGCjoOiiiHE4aaKAGvR73AycEMaCEI5NS0ot52RRkzWw
+         hJvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi6tskGFSxhTUIrTa9l6PiZZUdfOrQKQfHf3vOSFwuAAZFzE2AskYOrZZJldfywtlgnncdFElpfaAz6HA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ+UE0W+boeojbCk6M+xPzrnWf3kdA8Rvon7YNeYMzLClQwTEG
+	Zdd6NsxgYTNM6+vnMFS+IpF90+qxUQFeK1sCe3a6jC5eMfIrq3alRU7pQzoo67HsC6BZKnGuPQe
+	sSa/ePTL2rDdYA//23qljrPJdQ6MEGaq7af18XA==
+X-Gm-Gg: ASbGncvPazl0Ve5klDOfMPP6XAohHWXeVXo2Pb+lUSKMHOf1isEsPDIfS31anWrusCh
+	M0AHabA9N0Sf34qm9V0tFO3kzDcD6578rFjyEAY6VtyxONgJdhyDAjKIrA5CMSc2IC61P/FP03P
+	ZSdrRfza0VBdwtL6fqYG+JssKcnAFBrK4=
+X-Google-Smtp-Source: AGHT+IGvd9l6oHOLE9fnxfE684zOBfeLzMgdLUIP7Dlo/5MmH56BWMQ4SvzpvsYGq7X+B76XwXqLUfBxwBV44JNMIjY=
+X-Received: by 2002:a05:651c:150e:b0:30b:c328:3c9a with SMTP id
+ 38308e7fff4ca-30f165907d5mr25336491fa.29.1744027024752; Mon, 07 Apr 2025
+ 04:57:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-fix_nvidia-v1-1-843f8d031c7d@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIACe982cC/x2MQQqAIBAAvyJ7TjAp1L4SEYtutRcLBQnEvycdh
- 2GmQqbElGERFRIVznzHDuMgwF8YT5IcOoNWelaTMvLgd4+FA6NEF4z2zqJVFnrwJOr2n61bax/
- BNxyRXAAAAA==
-X-Change-ID: 20250407-fix_nvidia-a9d72c98a808
-To: Antonino Daplas <adaplas@gmail.com>, Helge Deller <deller@gmx.de>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-fbdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: hR7R5pRJtDpg_X92yc7fAbAx09XflHRV
-X-Proofpoint-GUID: hR7R5pRJtDpg_X92yc7fAbAx09XflHRV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1011
- malwarescore=0 spamscore=0 mlxlogscore=857 adultscore=0 suspectscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2504070085
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+References: <20250315101032.5152-1-zhangfei.gao@linaro.org> <20250317011352.5806-1-zhangfei.gao@linaro.org>
+In-Reply-To: <20250317011352.5806-1-zhangfei.gao@linaro.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Mon, 7 Apr 2025 19:56:53 +0800
+X-Gm-Features: ATxdqUHUra-Tho__TVApIyf-WrBs147BbLBYcTvf1B00xAmjRluVy3FNIE4M4m4
+Message-ID: <CABQgh9H9JTQz5V=O1MYCX=WqH-bz3oFfSzU-pLXVL4+xyqH72Q@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
+To: Bjorn Helgaas <bhelgaas@google.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: iommu@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi, Bjorn
 
-The actual length of const string "noaccel" is 7, but the strncmp()
-branch in nvidiafb_setup() wrongly hard codes it as 6.
+On Mon, 17 Mar 2025 at 09:14, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+>
+> The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+> probe path") fixed the iommu_probe_device() flow to correctly initialize
+> firmware operations, allowing arm_smmu_probe_device() to be invoked
+> earlier. This changes the invocation timing of arm_smmu_probe_device
+> from the final fixup phase to the header fixup phase.
+>
+> pci_iov_add_virtfn
+>     pci_device_add
+>       pci_fixup_device(pci_fixup_header)      <--
+>       device_add
+>         bus_notify
+>           iommu_bus_notifier
+>   +         iommu_probe_device
+>   +           arm_smmu_probe_device
+>     pci_bus_add_device
+>       pci_fixup_device(pci_fixup_final)       <--
+>       device_attach
+>         driver_probe_device
+>           really_probe
+>             pci_dma_configure
+>               acpi_dma_configure_id
+>   -             iommu_probe_device
+>   -               arm_smmu_probe_device
+>
+> This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
+> that pci_device_add() is called from pci_scan_single_device() in the
+> generic enumeration path, and pci_bus_add_device() is called later,
+> after all a host bridge has been enumerated.
+>
+> Declare the fixup as pci_fixup_header to ensure the configuration
+> happens before arm_smmu_probe_device.
+>
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-Fix by using actual length 7 as argument of the strncmp().
+As  the commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+probe path") already merged in 6.15-rc1, would you mind taking this
+patch for rc?
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/video/fbdev/nvidia/nvidia.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Now 6.15-rc1 can not work without this patch.
 
-diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
-index 8900f181f1952acd2acc16a6ab49a5a42ec056ac..cfaf9454014d8161bedc3598fb68855e04ea9408 100644
---- a/drivers/video/fbdev/nvidia/nvidia.c
-+++ b/drivers/video/fbdev/nvidia/nvidia.c
-@@ -1484,7 +1484,7 @@ static int nvidiafb_setup(char *options)
- 			flatpanel = 1;
- 		} else if (!strncmp(this_opt, "hwcur", 5)) {
- 			hwcur = 1;
--		} else if (!strncmp(this_opt, "noaccel", 6)) {
-+		} else if (!strncmp(this_opt, "noaccel", 7)) {
- 			noaccel = 1;
- 		} else if (!strncmp(this_opt, "noscale", 7)) {
- 			noscale = 1;
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250407-fix_nvidia-a9d72c98a808
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
-
+Thanks
