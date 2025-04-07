@@ -1,121 +1,77 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5973915B554;
-	Mon,  7 Apr 2025 21:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3042185B4C;
+	Mon,  7 Apr 2025 21:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744061765; cv=none; b=TQMQ1t34Wn/oA9YVvkmsX33ANFxR1c8f4NDhUlwrdQxsjZXddN8KSDvm9h8YkHL1L8bOQSKxZDZYYvN+Co5zKtMZoN+CvAhG+2fKQMNgTx4G7c4NBWV++UKl1K+u4X6UvnTrQpE/JN/BTO2ASXQNlx1Q2f2TpBIYzmLQ5QWHHTQ=
+	t=1744062174; cv=none; b=KBAuqy/QAm1IYYMfE210WyPhztxeUr+Qu4AcJU5DcniVV3x91i4DUL60wQ7feR53LTYyEasK0AWeZEc02INCHSHLNpMLg5345jlyZNWB9pQIpLW3ufUzYG1JYs2V++xyky3ZJ7XrNAj8VJC3mxjnlenePI4S9LWNGmnQgJttYwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744061765; c=relaxed/simple;
-	bh=a5b0WvpQMoPPq7yfGlCcyxkDNvmGvof8hOvH9QCyHBc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7FaEfAHDP0B2AwvRvUPzfoI0cRA/ncqCrFPiXp1c+PB74MH6OIHZQUGZUGyQRXmc6BvFn1EKhwkSQfy+eSMJTj3GXm/emSTdPRDmvzq2HKm/nJ61uS4x1H8iXvSKH6KRliI9gu8I9EtDAPOl6OLesA2Kg0pMVAcfFYk8iNB1K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sZ0VMVL6; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744062174; c=relaxed/simple;
+	bh=1aplgnizhUX2KCMPSohtzujJdpI6mRSUV6g2qAsz/1E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=taJtSpMQSrK4q2YSH/YBugoeq1q8FAEi/6vkxkS9wuOvPFgFOWF+PNg0ylQf26NZeNjWrXE7IPA1hA1fp8Z0Vh+JgWg5Ceo4tJaChKSHgY5aATbPe+H2U71W9rOtunHFmzlQ8lpvCc48H+Up8r8YjxmKK+/CHUJAse2hC/c/sf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUdWfIbR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sZ0VMVL6"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537LZt2v978209
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 16:35:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744061755;
-	bh=DPD3Ics/DkuZFkrnuOdnN9s5GAjNkBL8wq880h+djCY=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=sZ0VMVL6qUcE0R9qxNs9WN3+lpi5QfJk+p52qAptEyoKdSoTP0AgLJ5Mq3SRisJyi
-	 K+nNtuzSA9+b14vdJRkdxzMSRdCjGTvIOlLP0CZCYLk26ln4Bg8dU9qSiu0i0zeVDd
-	 7gsn0bse2V+mLoab/I8D6+07u2oGkq00x3us+GZE=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537LZtQj056827
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 16:35:55 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 16:35:54 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 16:35:54 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537LZseS016539;
-	Mon, 7 Apr 2025 16:35:54 -0500
-Date: Mon, 7 Apr 2025 16:35:54 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Andrew Davis <afd@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/3] arm64: dts: ti: k3-am62l: add initial
- infrastructure
-Message-ID: <20250407213554.hzfwic55j5y335jz@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250407-am62lx-v4-0-ce97749b9eae@ti.com>
- <20250407-am62lx-v4-2-ce97749b9eae@ti.com>
- <d6ba8b6b-bbd8-4f55-a0a8-347bd15784f0@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUdWfIbR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6BCC4CEDD;
+	Mon,  7 Apr 2025 21:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744062173;
+	bh=1aplgnizhUX2KCMPSohtzujJdpI6mRSUV6g2qAsz/1E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VUdWfIbRKyPlXHdyZ6qauIe1bmxf+Ot0q8NfnVj5M89zJOMXU1e5B/lnV+etkbT53
+	 iDsN4R2PXv8zPU9b2zfQiwarbxdbtycBRiXsh/W5iW6rknfZkssTebvFVWp14ShPTz
+	 xDpUACU7CjOcZTmt8aYlluTM8vrmWD0EfRqey59y2k5OQUI6K00mdbHlksPsXoIRiC
+	 BO/dqZ7RTI9bW14ttwOkOg2476r/L/w1nB7HOuoVvmAIB7oLURd/WiquOff7ce9FUJ
+	 BWbGkEph5/DieKip8VsgfmHtY3u01lpq50PFFg6irQ/x6rj1WDRGwReDP0+zIljM9k
+	 FuSgVLaFopj8Q==
+Date: Mon, 7 Apr 2025 14:42:51 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: linux-kernel@vger.kernel.org, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: objtool warning in ice_free_prof_mask
+Message-ID: <ficwjo5aa6enekhu6nsmsi5vfp6ms7dgyc326yqknda22pthdn@puk4cdrmem23>
+References: <4970551.GXAFRqVoOG@natalenko.name>
+ <fdb5d23c-8c39-4f73-a89d-32257dac389b@intel.com>
+ <5874052.DvuYhMxLoT@natalenko.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d6ba8b6b-bbd8-4f55-a0a8-347bd15784f0@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <5874052.DvuYhMxLoT@natalenko.name>
 
-On April  7, 2025 thus sayeth Andrew Davis:
-> On 4/7/25 10:34 AM, Bryan Brattlof wrote:
-> > From: Vignesh Raghavendra <vigneshr@ti.com>
-> > 
-> > Add the initial infrastructure needed for the AM62L. ALl of which can be
-> > found in the Technical Reference Manual (TRM) located here:
-> > 
-> >      https://www.ti.com/lit/pdf/sprujb4
-> > 
-> > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> > Signed-off-by: Bryan Brattlof <bb@ti.com>
-> > ---
-> > Changes in v3:
-> >   - Added more nodes now that the SCMI interface is ready
-> > 
-> > Changes in v1:
-> >   - switched to non-direct links to TRM updates are automatic
-> >   - fixed white space indent issues with a few nodes
-> >   - separated out device tree bindings
-> > ---
-> >   arch/arm64/boot/dts/ti/Makefile              |   3 +
-> >   arch/arm64/boot/dts/ti/k3-am62l-main.dtsi    | 672 +++++++++++++++++++++++++++
-> >   arch/arm64/boot/dts/ti/k3-am62l-thermal.dtsi |  19 +
-> >   arch/arm64/boot/dts/ti/k3-am62l-wakeup.dtsi  | 144 ++++++
-> >   arch/arm64/boot/dts/ti/k3-am62l.dtsi         | 121 +++++
-> >   arch/arm64/boot/dts/ti/k3-am62l3.dtsi        |  67 +++
-> >   arch/arm64/boot/dts/ti/k3-pinctrl.h          |   2 +
-> >   7 files changed, 1028 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> > +
-
-...
-
-> > +	fss: bus@fc00000 {
-> > +		compatible = "simple-bus";
-> > +		reg = <0x00 0x0fc00000 0x00 0x70000>;
+On Mon, Apr 07, 2025 at 11:21:27AM +0200, Oleksandr Natalenko wrote:
+> It's not a new warning, I've observe it for several recent major kernel releases already.
 > 
-> The reg node does nothing for a "simple-bus", put the used
-> register ranges in the ranges node, see how we did for some
-> other devices:
+> I do not build with CONFIG_COMPILE_TEST.
 > 
-> https://lore.kernel.org/all/20240326205920.40147-2-afd@ti.com/
+> I've also realised I see this warning with -O3 only. I know this is
+> unsupported, so feel free to ignore me, but I do -O3 builds for
+> finding out possible loose ends in the code, and this is the only
+> place where it breaks.
 > 
+> > > ```
+> > > drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0() falls through to next function ice_free_flow_profs.cold()
+> > > drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0.cold() is missing an ELF size annotation
+> > > ```
+> > > 
+> > > If I mark ice_write_prof_mask_reg() as noinline, this warning disappears.
+> > > 
+> > > Any idea what's going wrong?
 
-As sweet. Thanks for the link. I'll get this updated
+This type of error usually means some type of undefined behavior.  Can
+you share your config?  No guarantees since it is -O3 after all, but I
+can still take a look to see if it's pointing to a bug of some kind.
 
-~Bryan
+-- 
+Josh
