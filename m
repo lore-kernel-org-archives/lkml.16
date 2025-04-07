@@ -1,132 +1,98 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AA3233D9D;
-	Mon,  7 Apr 2025 09:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6447E110;
+	Mon,  7 Apr 2025 09:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017389; cv=none; b=CqjPGHMQ/jDfsdoa8yoDmufuMCFzNAK7vEmbuHf6lvCDjH1VjnJXpRLyRmtFmgVBJ1omM7tAWA0WsEdI93av5FUCDXpeASzc+Vjh+tyUZLNiiYAJ6bhyUjRtWwwvi9EYIbheUUHBK24MHMWy3xn9z9FKIN3FweoBbuZ3Npo/BTQ=
+	t=1744017446; cv=none; b=tdO7Rn8eDR7zKEY1O97/YB6I2zZIGJYyhXS1/eYaXFQcua7ISHaCaHlcyMthf3rSOSE5cDAul9etLd740ftO/IYEFREpH8oB3KlVDtrJ/n+YViojX3psVIYZlzSHHAJDsYQC09f2PsY5cI75FqpvF7X6D6HbAoDNqHhe7SySJww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017389; c=relaxed/simple;
-	bh=gbLuga0FZZjtAkly5hHxlMYBYHJSgtjehSgZ3utF1WI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=JaHReuK4YAflkC0AR8t7UeRTt3n9LynvzWcjO0qEJ4zSQKJv0rES7U32wATm0MwGhiMDuOT4mDU641TnWSEvKRMmNq9WugA/N2xCohv4AFlIxZ9FUHg5aY6e/nGxVbHBK7NsK0FhSXN9qrJSFNotIjo+MqxxhJL4BVA5LT8xZAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMw6WtrZ; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744017446; c=relaxed/simple;
+	bh=fXVnyYZ2BcK24UjtsZeOKwEmhM+VYm+slcB3WCTfcKE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=LngTqOlMVwcwYBcoqho3C596GprIiIil3g8voEbQEpcb1CFn+YljOkNEJTrohUUoDbqzDmPdDXSk0zA8VVsfn1zGL3tSY64oqZz0WbbpTBRr3SabRREAkieC7f0NpIsxhJxHBSL3AsM3qSgneV2oESo/LEfVfRI3VNWoW2Uv/Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PDj4qvNT; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMw6WtrZ"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-739be717eddso3027869b3a.2;
-        Mon, 07 Apr 2025 02:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744017387; x=1744622187; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=swIVk5it6iZCkC8fcrmNeka/zWqDw9s3RoTa6zlBv7A=;
-        b=dMw6WtrZvcYn5iGgszGc46mVO6z6fm0HWRHMuE+ssjVt6b/jlYWU3Uf8uTfpmp6+Qd
-         75Qw+SplRljWWjOA2mYLt5ugLoGHuQp+qOraHiuFVQxoUSzb02jfVciV6Vlw9T+/E5Wv
-         rP8tmZn1Ed6c1ShX3lMWR1Wfr+IlcMdOjFWWXWKQzoAPh1pecyiE98MoXiH+A9YctvxZ
-         zhPkI+JS+6Y304Vj2/xCMN6rKnAVRHee/z+gqy82UWXtaOTRNfQmzie6H8rNaYY+TBv2
-         SsfjKSw2VyIMf70SUHdwykAbgb512e1FBOaKvYVpHHoEWj6ozCE+1stVwJjLUbHWJ5+p
-         WL8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744017387; x=1744622187;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=swIVk5it6iZCkC8fcrmNeka/zWqDw9s3RoTa6zlBv7A=;
-        b=KxeDjI6GRQ05AsYbT2CIixTAeKWEdKAtShf9E3KOsSPDcsNsN/aKxdkji1L3Sp463P
-         LjdNlicfBhiUaAf2i9YlVprTVtSn/ZSXYZZSje8P7i4jqBGIMJKxG+h0TLacwOlPyn3K
-         ZRcqoTZch8+nIOqM6CpHBpDVLDroZliATwi3W1GikbTaJwkVYsZ/9MHAdZoQr+ifsy0y
-         96bvXXIE5+1H8GmxRiCjBYu1x0JvxynS+eDM+/kLrI71K0U+DtRuypwb4Ff0pfYWQeiH
-         2CKLnkTKF++V2PW43QjWlkklIWhpk/NtbclPTeDbT3VxEyuA8gk8zacXMTwqNR/Y1El3
-         xxFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMbaNmf/LS1h1vw/kLlOxPrY38UkAzPtXjdDZzqltdUPI+yg5guqCvBBzVOD3Q/FIofOVBWp8aQDWOfYc=@vger.kernel.org, AJvYcCWddj8FcVjdLoDiOtM/zzDKL4u7PrlVMuX88ch+DPcXpXJHG1L1rx9FiHfAjjvuk9pObsAIdxAZbMZ5Aos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywil7r54J8Xqp3QGrJ0ZhHmSIHo0Up19zv60jM+bVpubcHij2OP
-	ueu/UBaS/FEZpikqDJMq50xuJUK4vwpLD6ZY9x3IAx6Chim1EQjzE9iH3XRN3We4FQ==
-X-Gm-Gg: ASbGncstrzLmCMA54MqizE3UJRMG7VWzHKYC/DWE3DZvtbg+VN36MgjsHSNU1NoAsia
-	UC7HMqtnnOL5OelQm3c712Qu3sRMqAdfXz2GyEym4Rqx0Pf1lfQYDie+wneatZgzmbTAdqKf4Sd
-	Bcp84rJuHRi6HaiCjl6ExWd2rj1EXHjwE7XEpPoU5k0fTie73JxJex1yec+EywF/0m12rL2aMdM
-	nlrabSDiwN2raP/RWYW8ICUiR61uuhTb6XOGq6I0VNXuTOD/an9UmM1m+iqFSuT+IyOhr81ZQik
-	ckzrKtGpI6BSHT7bVzIYYl7B5lZh6FRMl6648GZpYlDi0T6NqvTm/yK9l8knBIs9YZsArA==
-X-Google-Smtp-Source: AGHT+IFlx2ii5NiEnBqPjdw7ftGPLVJqpiW1dr6kGdy4CZFhYl2QpRqsJYLGkW8nuzF5zNmBZNNMCQ==
-X-Received: by 2002:a05:6a20:12d1:b0:1f5:5aac:f345 with SMTP id adf61e73a8af0-20113d54fa9mr12705388637.36.1744017386965;
-        Mon, 07 Apr 2025 02:16:26 -0700 (PDT)
-Received: from ubuntu.localdomain ([112.249.157.217])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc41a84bsm6837183a12.63.2025.04.07.02.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 02:16:26 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: mchehab@kernel.org
-Cc: standback@126.com,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH v2] media: dmxdev: fix repeated initialization of ringbuffer in dvb_dvr_open()
-Date: Mon,  7 Apr 2025 02:16:19 -0700
-Message-Id: <20250407091619.11250-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PDj4qvNT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744017441; x=1744622241; i=markus.elfring@web.de;
+	bh=fXVnyYZ2BcK24UjtsZeOKwEmhM+VYm+slcB3WCTfcKE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PDj4qvNT6VBaWmkX2q3DXbDivd9GQUo7Pc5DwaEBDczDxElE92X+WBeWdqsMnICu
+	 Tfhim6ldfMEQGBQZ2+OspldJ7UHOfxDQ9RhA59gKtKe51RFJBx0E8qTk5/YUikJ/p
+	 KjoY/40WpdWY/emBVraNAKae3S4SQEI9wOZnHpmT0zNijTeUxIOEGKFSt4njoTY4v
+	 5VgCiq3/akCixGsWXt1Z/hA0kLZDumpNp7ByZjyV1R4L/897wHvZsVy/A2uprIhCU
+	 fImnzhMGM9IJIP156lSGahMbbR3hlRjF4MMKCxLT7EdzspB52gFTpCc21zO2Tdvq+
+	 hKmz8yiIt6IGB5CJ6w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.4]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N7gbY-1sx7kh1FBK-00wGw4; Mon, 07
+ Apr 2025 11:17:21 +0200
+Message-ID: <e23e7566-fc04-46bf-9d77-317d8a23c146@web.de>
+Date: Mon, 7 Apr 2025 11:17:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, asahi@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>,
+ Neal Gompa <neal@gompa.dev>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Sven Peter <sven@svenpeter.dev>, Viresh Kumar <viresh.kumar@linaro.org>
+References: <20250405061927.75485-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] cpufreq: apple-soc: Fix null-ptr-deref in
+ apple_soc_cpufreq_get_rate()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250405061927.75485-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:HFpgaG3Y83cljGQvayNhWLmLMgaKy9NE39RP228CGSUU5E/0Y8Y
+ UaizXSpqLlB5h1T/i+EFDKsXgbY4ZE4+h23eapPXDfKvPDfeZ3XVky/ZX6hOekzgqjsZQfJ
+ J69RPVYhUutyCeZihLPYFRTVgigYhO7qPb4FItMfnqtNGGCZus7K+muKDHOMEawBH32dq6X
+ rZwBlPgZf6a7DNbXOt3Gw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:20z4uXMhqt4=;G/EikhJIvhLDD2AYSrqiRmLM2rw
+ UoZcyiuBUqWx80NRPAb8n6MixxN2z1yq0o65iCbD2YQNCidUvdL17rKiJ+6ws10yg+6ziejQf
+ WErYmmUM716lNyXFAu/n5CbCHbVUefVU+owSP7K06OG2UFMEVLod4LfVUXLef8GHofT4y+Zxl
+ KrZhpKG9e/6XST3Fvq4tUgYVNmgJHHh9zOtD9pdDLnh7rTD2iTKYAo1rEOwQS+CJpCnOG3kLG
+ a3ZDpq0iewKuVe2ouqVJtPU6jCdeA6KM/I6u7qgKwwzG0xUAEufLR4isLPrnA6TIea6N6MdVi
+ cYpZGBEKpVGmPUHSjPUtO9rJa1Ci6g7aqjJ9ZQrkF96hUh73DgQhv2EGtlGg/AbCJyCv5SAtT
+ Cgfro8zQWKAChb9AWiRJFingr+7MMFcZDYcuHuAtsyx34QnR8ze8FdacsPifvmwupCh61Cq5H
+ IPQdjwAvustdEeQmA6EPZt/SFTMO8dauzbOpmJ3wDXlO5A82nfSSJyge/QxwfY+JuJdb/6ErU
+ /RWEQheCmsyQ2UAWLruyinzv0mpA8vy7BoCGZGQm1bdpsBX0FsQmK09aj1iWDtxdSwRIOaTzQ
+ Doq+AyekjowH+YKedkE2sV2znTqSg3oQYMJ6k+zh1d4B8e3CP4JUg76v9P1jLeSaLxBcTiLIj
+ h7/UUO3qgRwir/FqhMloK7Bry3zBMrGXaonlasTZ3+imSeZq1kKKEcAqM/OxTZj61+fvrpdyW
+ +aj37j9Qd4EZGTfl5W0t5P0DJi/6bTppYqKerqdAw9hWPTmJrEPjQjUo2T/dj5W8Mlpzc8CJs
+ /fF95LpCfipn9CuDBwWtvCbomY/Za0mWu97g6PSiUFDAj8BcuuIYTKXErtMhkVLAleWz4YqJO
+ AjEhrmfXIyini9IoBS62eE//R0vpuwEocOTxaKtP+AB5TslQb16hcAi8scLtFHV0vCeKT2NQ6
+ kVrQ/RjQpSo6DXdq35EOs0KlxMHLI5klokQaE0hrb4gp+kCn7WsjsBvEl0zeRiRGh1fN3A8NR
+ Oo3s8qYjR2d5h8kuulZLUk/vyRUNCjaDljz+40658gA2L7wM6nfzYHYTSZG9hoyCE2TAa4duW
+ FHlyuvyn+mwPy8oGduKH4DQLGTLNe+PzFGzs+4GcOqm2l5NV5zhqk9Kwg/WCZHIY9QGr0Zk2L
+ gVE6LBlh4iFngHCDnq4wnngYGmKCiAViGbtN0PsGI39KIC2MAuDPKFY2LrUF02XXqdGGyCjFb
+ aoxEoshX5XwFeXVFdVlF+N3VEReWDpvjMO7a7VGuESQRcfqSpq3r9s/ic4z97oErjUrhTCApa
+ KYIawPlYJIqhv0jamWaqBXQBo3HfUj1vh9yIRvmm85Vqwa+RX4VI3Kmd0FvevBZAfMrxHSGfN
+ CN1MQX9VF/EWuQvVXDrRL5uVTDzE/cvmHBQ+DgmGwkpy9PH2HvJIt+5FxWlK0Dn9yIQb2HNO2
+ w0/Z2OCMXCV1uTIPCYnVekGN88c0HWbthL9EerqI2nmd4Vpej993VT46zreVMLQt0wAM2nA==
 
-The dvb_dvr_open() function has an issue where it repeatedly
-initializes the data and queue fields of the dvb_ringbuffer.
-We should not reinitialize the queue field in the open function,
-and if the data field is not empty, the initialization process
-should be skipped.
+> cpufreq_cpu_get_raw() can return NULL when the target CPU is not present
+> in the policy->cpus mask. apple_soc_cpufreq_get_rate() does not check
+> for this case, which results in a NULL pointer dereference.
 
-Fixes: 34731df288a5f ("V4L/DVB (3501): Dmxdev: use dvb_ringbuffer")
-Reported-by: syzbot+4e21d5f67b886a692b55@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67917ed8.050a0220.15cac.02eb.GAE@google.com
-Tested-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
- drivers/media/dvb-core/dmxdev.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+See also once more:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.15-rc1#n94
 
-diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
-index 6063782e937a..55e73c96152a 100644
---- a/drivers/media/dvb-core/dmxdev.c
-+++ b/drivers/media/dvb-core/dmxdev.c
-@@ -113,6 +113,17 @@ static struct dmx_frontend *get_fe(struct dmx_demux *demux, int type)
- 	return NULL;
- }
- 
-+static void dvb_ringbuffer_init_noqueue(struct dvb_ringbuffer *ringbuffer,
-+				void *data, size_t len)
-+{
-+	ringbuffer->pread = 0;
-+	ringbuffer->pwrite = 0;
-+	ringbuffer->data = data;
-+	ringbuffer->size = len;
-+	ringbuffer->error = 0;
-+	spin_lock_init(&ringbuffer->lock);
-+}
-+
- static int dvb_dvr_open(struct inode *inode, struct file *file)
- {
- 	struct dvb_device *dvbdev = file->private_data;
-@@ -156,7 +167,7 @@ static int dvb_dvr_open(struct inode *inode, struct file *file)
- 		}
- 	}
- 
--	if (need_ringbuffer) {
-+	if (need_ringbuffer && !dmxdev->dvr_buffer.data) {
- 		void *mem;
- 
- 		if (!dvbdev->readers) {
-@@ -168,7 +179,8 @@ static int dvb_dvr_open(struct inode *inode, struct file *file)
- 			mutex_unlock(&dmxdev->mutex);
- 			return -ENOMEM;
- 		}
--		dvb_ringbuffer_init(&dmxdev->dvr_buffer, mem, DVR_BUFFER_SIZE);
-+		dvb_ringbuffer_init_noqueue(&dmxdev->dvr_buffer, mem,
-+					DVR_BUFFER_SIZE);
- 		if (dmxdev->may_do_mmap)
- 			dvb_vb2_init(&dmxdev->dvr_vb2_ctx, "dvr",
- 				     file->f_flags & O_NONBLOCK);
--- 
-2.17.1
 
+Can any other summary phrase variant become more desirable accordingly?
+
+Regards,
+Markus
