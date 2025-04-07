@@ -1,46 +1,95 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226AF2253B2;
-	Mon,  7 Apr 2025 08:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DA6229B2C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016072; cv=none; b=V5FS3DumCfJeX9wmGkV+94UTGIUeuEscuYOg147Omv6hZKMShQiNajPzU3suQtl7UdSYEG7nVatqL7PjY1I4/UEIQ5jouyENhnHJLwhpflzR0KlNExTKsy+pzgPCiuOzDxmaVxye3M5kSaFMvXBcCBLvCnekFHI+ZSPQYsF2KM8=
+	t=1744016085; cv=none; b=XQW6TyVW0VxQmfni5BKkJZEqI/Cj7gXAN5/x5dA9rN5SES+gGdNlf0YrBd8chm6IHb0eFFqvMdB1tP1KYrVfyXvkJPVC9RAjCynqn8LZiMOxldCiWkKKwdo78IoFemFsY4FErQ6miDtYuKadJMQEPCM8fSdP8NLX71ebiaR5bSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016072; c=relaxed/simple;
-	bh=D9Qp9Xpod5vQ2c1K9oZQsiA4c+t8QgQMAbQ+ppm1yWc=;
+	s=arc-20240116; t=1744016085; c=relaxed/simple;
+	bh=R+0sWKhqbThzPkae+5wVut0fKNCyuXS4OYJ/SETg+GQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wv/703yJMjTqIbTi2joAb+a+9goz5rOcpwRpFi8YkFH6Edsb695Zj7zrbVh1fS6XsN28m08T624KpUzfhFv8LjhesR1Rsy5MwQ8V6SBNz7J4i3XZFnq59A0X8LvB2kpaauvb4PISOvp5et1YCc97NwcfKDE7n7f85gu4T5Sg2PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=psEsFESo; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1O5Aome/d/9zd/iMvBosqLVCSJYITz5exzRlFljk717AQRX5ANH1M9No+c385iLBmXXnoruZge+OYj98Saq//a0vdSdB2xh9BzylpnyWuoFV+2ByKSadV3JjClAm9zuCWxjPoRiBm5phl7fdIQDx+GFyK0RU4vm47QGQvO/7ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OI6D7Op7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="psEsFESo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HF58+EBZsTkT38Oxh6SEKfNEVcs2K9eImbrdbf6EQd8=; b=psEsFESoo8z4BcWL9/cytZUkdU
-	egKQZrZ6FXFrDdqSluxTSxfwnswJgX77bTuZqfTKsxsaaJCAXQutxak1THhz0gRWfMl4fQ7okgH9Y
-	TFYgGGVi2Kkg035mAxOl8VK8+9c+gJXSwLj9/vP6bjyz8kL86eA9MmYC+k3vAwg43fUn+6yygzTcw
-	PiVAafZSVsPowyrp3i8W4AEthzESQnX86iZxVNB+1h74KrIWgzX//ZE/b8TBReUtV7stJtybAC059
-	S/On8M/u3BcJnBzOq4DuuH6Tqe/GBKcZwxjmZpo0rTKqSYcasrxKDtGojiKSL+rHXJlSDxPi6Sux3
-	xwtHO8Xw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1iFR-0000000H5aC-20X1;
-	Mon, 07 Apr 2025 08:54:29 +0000
-Date: Mon, 7 Apr 2025 01:54:29 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] fs: make generic_fillattr() tail-callable and utilize
- it in ext2/ext4
-Message-ID: <Z_OSxRO4b7OduCTx@infradead.org>
-References: <20250401165252.1124215-1-mjguzik@gmail.com>
- <Z--ZdiXwzCBskXQK@infradead.org>
- <CAGudoHFcUBdZUBDFqWs4aLQfXyN4781-g-8x0mfBWwEMrTFQUg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OI6D7Op7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744016082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MAmqbLHdw+HuKBAeHI83rPkmOKB4Sfbwt9oiDo5180k=;
+	b=OI6D7Op7j81Ld2tGFDWanBI/NtuPw8FNZbFIximhPKwXGVWzDfSaetmGOSkEK8pubNG4be
+	sF/cT3ZJprHYxzZVSdhneM1LaaTMEXmQZDpvZ5N10uEKpMjnDe9++2Kv0bXodtdLn0KQl3
+	BnI0mG3s0onTc7m/4bAtAKsBonOpVz4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-601-oQ1Im2SDNcWK-NQGGijOew-1; Mon, 07 Apr 2025 04:54:41 -0400
+X-MC-Unique: oQ1Im2SDNcWK-NQGGijOew-1
+X-Mimecast-MFC-AGG-ID: oQ1Im2SDNcWK-NQGGijOew_1744016080
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so21191085e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:54:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744016080; x=1744620880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MAmqbLHdw+HuKBAeHI83rPkmOKB4Sfbwt9oiDo5180k=;
+        b=GgQ9wlnN+W5pmxRdbKiuOldkUm5IRQtfhDsU61KtRhJ0Mik5qK3VhC1ouxC5e7sdbR
+         PU6Mgw5VSh96HfQBCJjNjtZSN3kNovEaehPZVvywOxbxqc7OQ8QZWMrrmPilIlk/Xn4O
+         A+wZLTJ4yRY+DDVWQ1KxwuaXqu0vMeyBfgQGhUvauwiKQBGj+ckWJB4c/D/PSfWQmTOJ
+         6KTDsDauq0H9riZ/DVInIOMbm9y+dNtomRbd/yfFVOtk1OL3jLOPd8gfxd23utWFBZbQ
+         7A+/Q8J+/CRpEnmovJrxNNqSy84itzgyNTqA3A3vT3U9QhZd2eEek5mPglxMrSWfeBVl
+         Dj8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUpRotGQoApDNIVZmHeEuOVO2796lyKwHDkWhLKSeRKhyJRF9HtQpLcLZujywrqM+ULf8odGCFWU2PmKUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoSekoWMF219M4/ZM64nTENfL0n4WUXNP6epY8b3dYZmYRjw8u
+	fJzP1OiuI4ibNzmOQXTyNPgbipLDOyfyrlgMQZqp86oU22NVo9bLkUy2IRYFmwfneXfT07YlCuG
+	lJlYOLkrBqLB/tHrahg0NNT1bMWscPxXMMgsiQwa6Xh5ZWpTMoNqy3rUS6VIrwg==
+X-Gm-Gg: ASbGncvraYuHGyHxb+TsmrYji4ZPqKGasJXObYDnyoat05606awo79MQTDH9fK85lXd
+	q/8cVFDh1qvw1i19pSQeTwSWSx4eKn/0b3G2z/xn8ELYD8/VOjXSNUJBgUrpYlUiz46U4Fax8XW
+	JTN3QEwD1U1eNeeWSbpXDPGEtOahLMW80RtAyqwMt1zioBKIEiuq/ckb3mdGp1keBWI8+wxqCVd
+	GEPnD8z3KZTZLdw3McpqRctr33qGoxh/uVAOJWhrjNMPPQNHtabebk8pOgm/0pYy8EwUhfu8Mrc
+	OLz1DVdE0g==
+X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr95894175e9.20.1744016080218;
+        Mon, 07 Apr 2025 01:54:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGH8IW0yqzJPKyGZGPD6qVstVRgqzDFHSOjqPBtRY8GjulSPFiJgnNYxrGMbcuC1XF3d2jQRg==
+X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr95893945e9.20.1744016079846;
+        Mon, 07 Apr 2025 01:54:39 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a75fcsm121633225e9.11.2025.04.07.01.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 01:54:39 -0700 (PDT)
+Date: Mon, 7 Apr 2025 04:54:36 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250407045009-mutt-send-email-mst@kernel.org>
+References: <20250402203621.940090-1-david@redhat.com>
+ <20250403161836.7fe9fea5.pasic@linux.ibm.com>
+ <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+ <20250404063619.0fa60a41.pasic@linux.ibm.com>
+ <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250406144025-mutt-send-email-mst@kernel.org>
+ <4450ec71-8a8f-478c-a66e-b53d858beb02@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,29 +98,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGudoHFcUBdZUBDFqWs4aLQfXyN4781-g-8x0mfBWwEMrTFQUg@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <4450ec71-8a8f-478c-a66e-b53d858beb02@redhat.com>
 
-On Fri, Apr 04, 2025 at 10:14:32PM +0200, Mateusz Guzik wrote:
-> Callers don't need to check it because it is guaranteed to be 0. Also
-> returning 0 vs returning nothing makes virtually no difference to
-> anyone.
+On Mon, Apr 07, 2025 at 09:18:21AM +0200, David Hildenbrand wrote:
+> > Now I am beginning to think we should leave the spec alone
+> > and fix the drivers ... Ugh ....
+> 
+> We could always say that starting with feature X, queue indexes are fixed
+> again. E.g., VIRTIO_BALLOON_F_X would have it's virtqueue fixed at index 5,
+> independent of the other (older) features where the virtqueue indexes are
+> determined like today.
+> 
+> Won't make the implementation easier, though, I'm afraid.
+> 
+> (I also thought about a way to query the virtqueue index for a feature, but
+> that's probably overengineering)
 
-Nom the return value very clearly states it can return something else
-with your patch, and people will sooner or later do that.
+The best contract we have is the spec. Sometimes it is hopelessly broken
+and we have to fix it, but not in this case.
 
-Let's stop these silly things that just create nasty landmines for no
-reason at all.
+Let's do a theoretical excercise, assuming we want to fix the drivers,
+but we also want to have workarounds in place in qemu and in
+drivers to support existing ones. How would we go about it?
 
-> As for general context, there are several small slowdowns when issuing
-> fstat() and I'm tackling them bit by bit (and yes, tail calling vs
-> returning to the caller and that caller exiting is a small
-> optimization).
 
-Please prove that it makes a difference.  And if it does do the
-changes in a sane way by keeping the helper as is except for marking
-it as inline candidate and a special _tail helper below that inlines
-it.
 
-But the bar for such micro-optimizations should be high, and so far you
-have no managed to provide any rationale for it.
+Maybe we want a feature bit BALLOON_FIXED and ask everyone
+to negotiate it?  But if we go this way, we really need to fix
+the 48 bit limitation too.
+
+
+
+
+-- 
+MST
+
