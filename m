@@ -1,74 +1,71 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2761C22DFBA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E4F22E41D;
+	Mon,  7 Apr 2025 09:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016933; cv=none; b=PR7dQIeA9ONs+IVKf/GfL1qRA+IsEhlheNWFRJ7Vl6iKH+fkBuVAd2gVYnSDPwSNQ0zWxu8eXJU/9lauHFKdHgKb1zHyPO1I/W4zh6QTaEnC4MV9UlBIioXL5MkP+A8aNA8dXzCYaaugKY1QDAfdNEQrR99VMT8S6LgGhkFflII=
+	t=1744016935; cv=none; b=B2XxcXxYXixCHobIZiihqHBEwi4t2zDsqlOPFUzxc85F8wzvOj/lyUKGeWnYnhx4V001eAzJgI6QE9QmB0wCGJk+V/wfrdELeNJ48UbxluEPkOjn/ZxWIvX2ZpqY9JiGSbFTX8BbKvuFlqNo+iSi+pltY5hzwjVpbj2Ew0LYySI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016933; c=relaxed/simple;
-	bh=otjyu1yK+Nmm0V/n4TFbCOpBPDznw9MHSZTLk3O0/70=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nn4xCf0oZJIIvRx0gAZzKtfEa9YH36GAI7WidWYkcbBy8ES53iiIr/G8jAFGryaGCYJpa06Kb5em0ie62C81GLIURAucdpqQSZPzaTXYkTdSoiiG62sfOCYZGqkv5RepoELOfWEOXGQiwzRy9nnVNxgkVCF2Fh2V6pCQ92SluHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MbvvmloL; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744016935; c=relaxed/simple;
+	bh=NA23vhUttLHVenuptP8n3w38fIMwxrbF/awe8gtEvbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fyqfEQbpP8icNp84P80vkZaU/NhDRgw4adr64T/wXC17UpilsS9tudH2jGIchOW31E2dmOJGHkSXSq1JKU9PSLQGF1C6/LmPirP5ZSUFyH3qijFYHbk2CFbeWgAiUlcitxE5+j373QISxKFZz6hHIO4uFiBiXYS4Vo6cErlsX9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FimAJhvK; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MbvvmloL"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744016929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PI2yBm7HedcIW7BHq6L6NdzgVKH2U6R6R99lyNbMjAI=;
-	b=MbvvmloLqmACtwOASZdPBiiKhNS7Tlhx4oACe/gaRkdPZI2hpQlHnxYJ69k1YNPBbprgn+
-	OnhuWeTjD6uv58h2y1q3E8rQkrhiVqQrCWRIN3Oew/L2smy1XWH5ksN1/c/r/UGqrKQgxD
-	ZfiBcv9j0QkxIXd5CWOU2wxBIoqPcsY=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: azt2320: Replace deprecated strcpy() with strscpy()
-Date: Mon,  7 Apr 2025 11:08:29 +0200
-Message-ID: <20250407090832.743255-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FimAJhvK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M61jlF/ve4QmSmhTeUmdNVmwIGJ2BP/aOzBU5BP/5nE=; b=FimAJhvKRx7qL+2muuG5DRbZyl
+	izD4CHwBq92yCQeCaqH8U0gIeKnEdzYt7owvrgWPiypVqnBGhpho6CyKqbJbwqcF3fzLkojeW+7Ij
+	aa/VYQIFkY0DNRE3XYhituaUpcu3f2cpV+XYp/Xa8NTYTAVjFTdJlCDXwRPDvwah31/b/2CMArhbj
+	641Uvb/UkK+sxZFuNAIcOqI3IkTb+qJIDXlaJJF9Cibd69LWVNCaDVaVhIpedG88fqbeZo2zM+Zd1
+	+mKnlrZVTDchjTWboKtktw2Fg0q2rSIifkubQYsek2YT/U1q8pfT7bIcSYPXZzhLhR/FcpaQHv3Kj
+	+sbwkh3w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1iTO-0000000H8D8-1I3x;
+	Mon, 07 Apr 2025 09:08:54 +0000
+Date: Mon, 7 Apr 2025 02:08:54 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com,
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	boqun.feng@gmail.com
+Subject: Re: [PATCH] fs: allow nesting with FREEZE_EXCL
+Message-ID: <Z_OWJqiOyVPWGq1a@infradead.org>
+References: <ilwyxf34ixfkhbylev6d76tz5ufzg2sdxxhy6i3tr4ko5dbefr@57yuviqrftzr>
+ <20250404-work-freeze-v1-1-31f9a26f7bc9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404-work-freeze-v1-1-31f9a26f7bc9@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-strcpy() is deprecated, use strscpy() instead.
+On Fri, Apr 04, 2025 at 12:24:09PM +0200, Christian Brauner wrote:
+> If hibernation races with filesystem freezing (e.g. DM reconfiguration),
+> then hibernation need not freeze a filesystem because it's already
+> frozen but userspace may thaw the filesystem before hibernation actually
+> happens.
+> 
+> If the race happens the other way around, DM reconfiguration may
+> unexpectedly fail with EBUSY.
+> 
+> So allow FREEZE_EXCL to nest with other holders. An exclusive freezer
+> cannot be undone by any of the other concurrent freezers.
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/isa/azt2320.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/isa/azt2320.c b/sound/isa/azt2320.c
-index b937c9138d12..588b9f0831d3 100644
---- a/sound/isa/azt2320.c
-+++ b/sound/isa/azt2320.c
-@@ -189,8 +189,8 @@ static int snd_card_azt2320_probe(int dev,
- 	if (error < 0)
- 		return error;
- 
--	strcpy(card->driver, "AZT2320");
--	strcpy(card->shortname, "Aztech AZT2320");
-+	strscpy(card->driver, "AZT2320");
-+	strscpy(card->shortname, "Aztech AZT2320");
- 	sprintf(card->longname, "%s, WSS at 0x%lx, irq %i, dma %i&%i",
- 		card->shortname, chip->port, irq[dev], dma1[dev], dma2[dev]);
- 
--- 
-2.49.0
+What is FREEZE_EXCL?  I can't find it anywhere including in linux-next.
 
