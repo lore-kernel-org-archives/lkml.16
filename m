@@ -1,112 +1,156 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EBB227BB5;
-	Mon,  7 Apr 2025 12:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E047C227BB5;
+	Mon,  7 Apr 2025 12:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029373; cv=none; b=PFyk7MbMZHxNs3f5k1kqriLyaqwlRu2BPTP6uI5TLyUzm7sSqbxQuBcOApw07FIUnAoRGxIbRCKA9VKO3o3YdirY6gx+xHTVi7p7SIqQNZHmfrc3xdD5pBOGqHkp6/MIOqX2gkZthghoy3xpUyb9lQ4BiCav4uPLAHfxcJIOEVk=
+	t=1744029384; cv=none; b=Kac50nt3lkBfszMe+VlT0XPOUGBT0YuB6s6yT/MmO3wMNtn0Elf+hhRErAfoTBq7dX/mYlWUERxCtSrDc3vSux9vj/90NbMSaOVF7iFdRps+5sPDXhacc3U2s68ONIZ/iLXgv4qU5yCS9ATTLC6L/64QYjFZGdE2MIm+zLemhGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029373; c=relaxed/simple;
-	bh=dcJyfRfsMmgxmRuoZ6uKnKv89TRcKrAVyw0Xtxreftk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k4T71wJZ4kQ/usrWV8I0dxRffSLCpH6w57R2JDlozaGmLR8Qhn1nGdQrq3wEVilwJIWEZmr/EsJBvlLLzvnjnvmm1S8rvzzuHK1BZakUpTkZCQtxpp4jpik9fr1bEF156zKspPaHE6MM6EyeFCb1koo4jzriRsyMncjauXWcIR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J9oVDJbk; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744029384; c=relaxed/simple;
+	bh=1su1RVr9WJ58wLxVjeeErnWvxQCpntRQJD3KfQYta8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qMYKuRq4BiFDb3Fw9I1qTGvZmSyHXskg/ksYyzdnPO7Fsat2DzBJanBRQTkIsmfCOUuxJSiRQI7zi0vuTouVXIg3uhtEZ5/PLKwtWly7grpWsPneST3iM1NYHZjJEbff6UhuyATvFDpGMd7T4UA3AVhWfHKC4rM1uFwnSLbVL1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wPhcHSfk; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9oVDJbk"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c592764e24so469008985a.0;
-        Mon, 07 Apr 2025 05:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744029370; x=1744634170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3TcKaW1iKbZzoagO8ECUBHNyiWF3ioNPUUj4VMULq6c=;
-        b=J9oVDJbkDrrqL6fXpRmLfYyjwF690w7uJ7M7zvA1hOttA6X2WntTw2BFm1iLxmkSTL
-         M4VXcYY4ChDWfRpPoFSH5NVepJM5uiFDDJKlbMPjs5XSm5S66e39kvVK5bl/gYOCuNvH
-         IrCK/GYxUIuhpONlMvoAYG5xMAYpkIRdMEhcM6tqltEDhXzg/VTwWTVyhFmRDs+kkcTY
-         j+hiRTB263dA9vjWduwW25heJsps5Nsf4AW3ujuncxEZbkR7k8NpgCo9j0rJRfkMXBnS
-         q5rPUUv/wgGlGwlr7aRShIssgfOVmqJ3rE0ZiH2ApHqyEYsSxiB+6gATTQKq4tZ1quFE
-         JSKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744029370; x=1744634170;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3TcKaW1iKbZzoagO8ECUBHNyiWF3ioNPUUj4VMULq6c=;
-        b=awuqIGy9mjO+6UmopH5yC6MB8qmJqflht3Xt5q+tmfxlvjF74LcdTJwnwbcxMmDR3Q
-         nMW0bvcSNQ8P+D4QbOqxZ7dIC3V9CUnyImRPxbGvl4ikO11E9Uyl01dPC7wuuXDIJpc5
-         ZcniqUhrKc7Uoi00zVaf8GiFrMJUUrK4HPKmjWQ7X0wCZ46bxXRwwALrt0TYFywswpg4
-         n2iwd0J5KRgVDjgh6YKM9BxjgxLhvi8Wa1AAjb3C7A+u5t/Af3Cc5aLScMG3PAMKNp7W
-         3hBs0lwOoUR6KgBQEBCZEhfK5dOdXSkF8rfx9Hy3CNnawOFOMnkaE+ld8qekSpgZB6A6
-         2zoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIDUilZS0G7spvyA+lUVdDoS/e9xe4exxFJtKQrKn6uQlRSxKflgcY0Ov3iZtkhetNGUeCKUTpUisZb3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj0Wo3XTaFhHu2tRS1pdUwA2a6bL5t7uA3IVBhRvgdYvcforgQ
-	jCN3PDckHDzdW+iwAN3F8EZqL4sGH3rnYbH20NjnCC0/VQfrWcnjVx+gpZ6dSAA=
-X-Gm-Gg: ASbGncvFEbdwYqQ42WnOKkUlS4+H5dwuDA6XyY7sFEMTC5E7RgqQ+PF4fZutw1xdBNN
-	QF1HC050OyhZkpQpxE2tHD4PomQDDVLu5sGdH8hjOYnjXXowzDPHJBAx2Q2K+4BQNxE46E4edEx
-	h1ROWteq7SMqfGcCqMioecpR59XV6YqZ/KoJ8NEHs6/TTbLhwyU00bO7EiLYOg+1qG6R/GUn/bV
-	EUNbx9aXQxJEME5cMo862wiTzX7HuG7X7At6B3ve6qzoMtrls0ely/cPiPxQQLLBcriUmLu8ArG
-	FK4VLz/uEOntP5Hg1fUwNQ0RxZ3Y0KR9oo6tsH5V6lC7Ts45xD2oQD5evt4=
-X-Google-Smtp-Source: AGHT+IFYSVKw5VCmG3zldSTuQDk/3t0DK/gVNVF8RsJQdy0hmP+obfuJJuPgy2KdD4uTEL82O7eV4A==
-X-Received: by 2002:a05:620a:40cc:b0:7c5:9566:83dc with SMTP id af79cd13be357-7c774a57ad1mr1674861285a.25.1744029370535;
-        Mon, 07 Apr 2025 05:36:10 -0700 (PDT)
-Received: from theriatric.mshome.net ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea59e42sm590373885a.77.2025.04.07.05.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 05:36:10 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: linux-media@vger.kernel.org
-Cc: andy@kernel.org,
-	hdegoede@redhat.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	gshahrouzi@gmail.com
-Subject: [PATCH v3] media: Fix indentation to use TAB instead of spaces
-Date: Mon,  7 Apr 2025 08:36:08 -0400
-Message-ID: <20250407123608.366190-1-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <MESSAGE_ID_OF_V2_EMAIL_OR_REVIEW>
-References: <MESSAGE_ID_OF_V2_EMAIL_OR_REVIEW>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wPhcHSfk"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537CZwPw915930
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 07:35:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744029358;
+	bh=ZIqra39FwyGHX2IBVRB5giqoWceascBFIqyv6tet87s=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=wPhcHSfkvXDW05Uv+Wg56S8G1rDINJtfYXmbcnaxa1Oi8f+UyxXNbiJmRvSpAzxAO
+	 7gp7cepdfvoGd1X3Zx71ysgd4sCOv+R40T0ciAhqs99x4CffV6iwmpDMiB5C40khlQ
+	 57Hz4oBrRIWyPOviRdoBA+MiGgf0dyYV0PCVaBX0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537CZwqV113614
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 07:35:58 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 07:35:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 07:35:57 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537CZvmS006892;
+	Mon, 7 Apr 2025 07:35:57 -0500
+Message-ID: <956c0598-9934-4295-87af-ef86f4eabd94@ti.com>
+Date: Mon, 7 Apr 2025 07:35:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/11] arm64: dts: ti: k3-am64: Reserve timers used by
+ MCU FW
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+        Beleswar
+ Padhi <b-padhi@ti.com>,
+        Markus Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-12-jm@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250405001518.1315273-12-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Replace spaces with TAB to comply with kernel coding style.
+On 4/4/25 7:15 PM, Judith Mendez wrote:
+> From: Hari Nagalla <hnagalla@ti.com>
+> 
+> AM64x device has 4 R5F cores in the main domain. TI MCU firmware uses
+> main domain timers as tick timers in these firmwares. Hence keep them
+> as reserved in the Linux device tree.
+> 
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-am642-evm.dts | 17 +++++++++++++++++
+>   arch/arm64/boot/dts/ti/k3-am642-sk.dts  | 17 +++++++++++++++++
+>   2 files changed, 34 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> index f8ec40523254b..68bd6b806f8f0 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> @@ -796,6 +796,23 @@ &mcu_m4fss {
+>   	status = "okay";
+>   };
+>   
+> +/* main_timers 8-11 are used by TI MCU FW */
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
-Changes in v2:
-	- Resend using git send-email to fix formatting issues in email body.
-Changes in v3:
-	- Use media prefix.
-	- Capitalize tab to TAB.
----
- .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you make this comment per-core and explain which core
+each timer is reserved for? Makes it easier on me in Zephyr
+to point out why we use the timers that we do, something
+like:
 
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-index ece5e3da34ee..127f12ba2214 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-@@ -114,7 +114,7 @@ configure_dma(
- }
- 
- int ia_css_vf_configure(const struct ia_css_binary *binary,
--		        const struct ia_css_frame_info *out_info,
-+			const struct ia_css_frame_info *out_info,
- 			struct ia_css_frame_info *vf_info,
- 			unsigned int *downscale_log2)
- {
--- 
-2.43.0
+/* main_timer8 is reserved for mcu_r5fss0_core0 */
 
+Andrew
+
+> +&main_timer8 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer9 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer10 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer11 {
+> +	status = "reserved";
+> +};
+> +
+>   &serdes_ln_ctrl {
+>   	idle-states = <AM64_SERDES0_LANE0_PCIE0>;
+>   };
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> index 33e421ec18abb..07fbdf2400d23 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+> @@ -710,6 +710,23 @@ &mcu_m4fss {
+>   	status = "okay";
+>   };
+>   
+> +/* main_timers 8-11 are used by TI MCU FW */
+> +&main_timer8 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer9 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer10 {
+> +	status = "reserved";
+> +};
+> +
+> +&main_timer11 {
+> +	status = "reserved";
+> +};
+> +
+>   &ecap0 {
+>   	status = "okay";
+>   	/* PWM is available on Pin 1 of header J3 */
