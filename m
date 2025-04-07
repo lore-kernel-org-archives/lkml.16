@@ -1,135 +1,117 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E59F23A9B6;
-	Mon,  7 Apr 2025 13:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFBB22B8AB;
+	Mon,  7 Apr 2025 13:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031122; cv=none; b=Lgb+SdU5mcy03kGVm2StWCP5fOs6AUFOW0zI2LGXBDplD7BRRUNRixSnwz54sRZ284/eZ+C4wjqzT3CVrrZnPWp6UPq47kVHOZaZG6wk0wiCsTzreH38Na20Qi1F5j2w8nfS2L9o4ezcT1p8XAq1h8PctoFwEUD1cWMb/t3bB1A=
+	t=1744031198; cv=none; b=IJH7sCaA57hyx2tFLg6eGzMorZmJWh27b2QdGZuLesrBP8DpzTnz0uryIkXM1qw+4GIdXU/X8J5SqumISpT+gBD62rXa2Irc+yLwjHsF1hSRefm4KcJ2UqiXo0gEPG0H2nqLnGrr5sSbG90yvTdv6Gji/8by19esYMYKE73NpNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031122; c=relaxed/simple;
-	bh=EP1KymtgMgbZpZqAIGN1ppT0EOijNSsu9AkvWc5csVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DbooQTWfw/2+FCvCDN+hmRfabdFCUapyv5xZUV2+fGjXJ4Cv8bdRa1/g9lkUbT5+XM81LSaTEQ58Hrw7UVwjYDg7MuTUhyCRyhiTb0IZdTdmsBDIBl2tu0LRC3f15Wip0V3+gTK1wCUFnSjP6ntxSTFgP/xj3gLCD0fQkV/D6rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HRd8o50Q; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744031198; c=relaxed/simple;
+	bh=4il+HotzhlVVEHUZXJvUut3Fviv7uoztwUZyBpLG0wY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QL/5wpWBacvuojToshzqR1KaVe8etghM6nOwRPplGyQitwrrWzxv4KyAuOlD3hgui6jVW/dCSSap7mOWK5oz7dHsQJIy2mD1UWEWhr4hGOKMEgdiK1Nu9qjphkY0O13hqx3wtY5eJkFoC+EL5eF2sAgQhasUC5JqWZXCc1R6pOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QeQkPxBC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gD2vDOTh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HRd8o50Q"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 96A7944310;
-	Mon,  7 Apr 2025 13:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744031116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HnHmAe40fcEqMw5EeqY5E54FMr33D6Spd3JkgsCsMDM=;
-	b=HRd8o50Qd6nt4OXCR0ac04aW4HbjdT3y5aIn0pLBFC9Kr+3kEkR6umb2H+AwlkAnmDNgtQ
-	NrqqXHhKYSV2Lum9alkPFQRHs22TwKtkCiSHI2479Mp4C9VUkXcysPSrTN7XWnVW7S0Qez
-	KmqEXBZEaON+AteOQQ2wUVfu6ofG/Nastjw7uJdZyagWymljeFpbI0mE+LTd2+zi1phyxk
-	ZirjJAnOFYRqcpldCkciPa/l16OxXveH21c4rOoznpCENfjpF2oKZpuuZQszfOiEYZb9Jh
-	9ADUrq8C49vmpTYlGBEz+sR0bTu8HvUgOrCnBkXGQul5q/TqdcEfx69V4rh33w==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	Michal Kubecek <mkubecek@suse.cz>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net v2] net: ethtool: Don't call .cleanup_data when prepare_data fails
-Date: Mon,  7 Apr 2025 15:05:10 +0200
-Message-ID: <20250407130511.75621-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QeQkPxBC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gD2vDOTh"
+Date: Mon, 07 Apr 2025 13:06:23 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744031187;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5EZ/1gJ5T5oT17yvV4r2Fbnb/Lj+dlo7WNR85K2DgTQ=;
+	b=QeQkPxBCNKqZyTkYSxcYhzaAZrX48MsHIxRIh0pm1W1MHLwoTBfL9w//+hQ9M1iL2sCnlm
+	6c0EpI5tou/CtrPSNqVKe/BPVR+73vf+ODZu4ZFj4RaSPoaD+ynkhu+t3eS2Q3GEQEP/KS
+	ybd386GYL+mym49P+UGuk+DTbWGHBWLQCIjHyOnrCZFrGEXqi0PkRvmIxY+ErUPPUbyNzX
+	c8h0P3Lh36aAqmKQKIRf+ztSIznSJH4f1ySbcimRjVxr8fhYpil2FfB8l/m7PgamSV0RHw
+	JvmHEWErRPS/l/Pa/i7e67GX9TmvhOtXBDUvdP1ve28a0LOnU464UBnFx6RkNQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744031187;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5EZ/1gJ5T5oT17yvV4r2Fbnb/Lj+dlo7WNR85K2DgTQ=;
+	b=gD2vDOThS/FQ5xzcs9t+LFjmQvPCEmwzKrsLqhNVO8J3XkUpqYmAqKrL0I64PTTTsZHkBn
+	HBZXcrm8Oz5RNMDg==
+From: "tip-bot2 for Boris Ostrovsky" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/microcode] x86/microcode/AMD: Clean the cache if update did
+ not load microcode
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250327230503.1850368-3-boris.ostrovsky@oracle.com>
+References: <20250327230503.1850368-3-boris.ostrovsky@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiiv
- ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Message-ID: <174403118308.31282.8495809232181072693.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-There's a consistent pattern where the .cleanup_data() callback is
-called when .prepare_data() fails, when it should really be called to
-clean after a successful .prepare_data() as per the documentation.
+The following commit has been merged into the x86/microcode branch of tip:
 
-Rewrite the error-handling paths to make sure we don't cleanup
-un-prepared data.
+Commit-ID:     321550859f3bd64f547d0b4e9fbd97bd539ef47c
+Gitweb:        https://git.kernel.org/tip/321550859f3bd64f547d0b4e9fbd97bd539ef47c
+Author:        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+AuthorDate:    Thu, 27 Mar 2025 19:05:03 -04:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 07 Apr 2025 14:46:56 +02:00
 
-Fixes: c781ff12a2f3 ("ethtool: Allow network drivers to dump arbitrary EEPROM data")
-Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+x86/microcode/AMD: Clean the cache if update did not load microcode
+
+If microcode did not get loaded there is no reason to keep it in the cache.
+Moreover, if loading failed it will not be possible to load an earlier version
+of microcode since the failed revision will always be selected from the cache
+on the next reload attempt.
+
+Since the failed revisions is not easily available at this point just clean the
+whole cache. It will be rebuilt later if needed.
+
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250327230503.1850368-3-boris.ostrovsky@oracle.com
 ---
-V2: - Fixed typo in commit log (Simon)
-    - Changed the Fixes tag, as per Jakub's comment. Eeprom appears to
-      be the first potentially problematic case, as we risk freeing
-      twice the eeprom data. I couldn't test that with what I have
-      locally though.
-    - Aggregated Simon and Michal's reviews
+ arch/x86/kernel/cpu/microcode/amd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
- net/ethtool/netlink.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index a163d40c6431..977beeaaa2f9 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -500,7 +500,7 @@ static int ethnl_default_doit(struct sk_buff *skb, struct genl_info *info)
- 		netdev_unlock_ops(req_info->dev);
- 	rtnl_unlock();
- 	if (ret < 0)
--		goto err_cleanup;
-+		goto err_dev;
- 	ret = ops->reply_size(req_info, reply_data);
- 	if (ret < 0)
- 		goto err_cleanup;
-@@ -560,7 +560,7 @@ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
- 	netdev_unlock_ops(dev);
- 	rtnl_unlock();
- 	if (ret < 0)
--		goto out;
-+		goto out_cancel;
- 	ret = ethnl_fill_reply_header(skb, dev, ctx->ops->hdr_attr);
- 	if (ret < 0)
- 		goto out;
-@@ -569,6 +569,7 @@ static int ethnl_default_dump_one(struct sk_buff *skb, struct net_device *dev,
- out:
- 	if (ctx->ops->cleanup_data)
- 		ctx->ops->cleanup_data(ctx->reply_data);
-+out_cancel:
- 	ctx->reply_data->dev = NULL;
- 	if (ret < 0)
- 		genlmsg_cancel(skb, ehdr);
-@@ -793,7 +794,7 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- 	ethnl_init_reply_data(reply_data, ops, dev);
- 	ret = ops->prepare_data(req_info, reply_data, &info);
- 	if (ret < 0)
--		goto err_cleanup;
-+		goto err_rep;
- 	ret = ops->reply_size(req_info, reply_data);
- 	if (ret < 0)
- 		goto err_cleanup;
-@@ -828,6 +829,7 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- err_cleanup:
- 	if (ops->cleanup_data)
- 		ops->cleanup_data(reply_data);
-+err_rep:
- 	kfree(reply_data);
- 	kfree(req_info);
- 	return;
--- 
-2.49.0
-
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index b61028c..57bd61f 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -1171,11 +1171,18 @@ static void microcode_fini_cpu_amd(int cpu)
+ 	uci->mc = NULL;
+ }
+ 
++static void finalize_late_load_amd(int result)
++{
++	if (result)
++		cleanup();
++}
++
+ static struct microcode_ops microcode_amd_ops = {
+ 	.request_microcode_fw	= request_microcode_amd,
+ 	.collect_cpu_info	= collect_cpu_info_amd,
+ 	.apply_microcode	= apply_microcode_amd,
+ 	.microcode_fini_cpu	= microcode_fini_cpu_amd,
++	.finalize_late_load	= finalize_late_load_amd,
+ 	.nmi_safe		= true,
+ };
+ 
