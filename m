@@ -1,149 +1,110 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F6D22540A;
-	Mon,  7 Apr 2025 06:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A65225776
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008958; cv=none; b=QeI0EoFVXKXL31lqqu4xFaD+l2V0gqJTtBkVtpVnUCEoJxhliwJGOFLJZHlNks8c7JC/pjbSofHZxxpGfcZ6+hJA3FZtnLLBNjeh2wDuf26UCPlQYi/icjj37HPgYayImtgHuJL5HeCwY4xyRjHmNFF9ybS2XNqjgxCYvpYogx4=
+	t=1744009140; cv=none; b=TxB17NH6xT1ZlwMCu2bZ8zLDC2DjLm0mihn2eAoFJVNJ24cOloek0sFNohFx0c3nKVeItwgfCS5724QU8KrKZxaraFGmFWzPb34oSQTpR6aEyqH2ibk3x9z+vcxiSsJ20YVYNnX0QKCKIA+b99knoaiZt71l1i5UTye7ZmhOQO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008958; c=relaxed/simple;
-	bh=0RsV/UiWuSYyhNTxCLLOFl3X8Rix1KUqQ5uoJ8qyXVI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pG56BC30kLinraDwqMzElOh/wdHQ4HahqWex98KO1IZovivh413HHiHVEvRRgqLZMcco9zz7MIwpjZ9mYRJ1P2HWoEN0U5sbYu8zbXkQHdPylxWqaEj2E3itsTMmGPlvqkTfSghQiodKrzM59rVlzqfGQ5ozIsSg6MX84Eq3Ol8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=fyxFsUzX; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744009140; c=relaxed/simple;
+	bh=z+jxWqKxyeO5QNJuDToNT3262v1CJ58P5Q9DJ8I/mso=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IYYGJMXBfaEXWuKIeu60CJ6RZjA78MkvArb7+XheHulCqAXFSMlFJjN/a7vVPMSrYMoARbz5v1kxab1rWA4BGJGDXdn/X/cbA7A8SrIoOWwAeGdXo67hnSDyQdTUV1tzdS1BEnoJj2zqNyQNRbvfA4+/19wQ3DofMrWINnjelFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f4Fxxy8P; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="fyxFsUzX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744008927;
-	bh=0RsV/UiWuSYyhNTxCLLOFl3X8Rix1KUqQ5uoJ8qyXVI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=fyxFsUzXmwXxAl66K3xJxK/9pBh8rdwMPgQvkMkajhmNpASTe9zYgaaVsrdjBHcqx
-	 LfJhcEkKoWwlsmUkVxtpEBA6u02EFMgHkZvvkvc227yMpnAWgfasjdqjsC/3qemWwW
-	 OKXUuZaZEyYKGWZy42DCd1fL5tDoBPSPX/nctO9Y=
-X-QQ-mid: bizesmtpip4t1744008914t06b9eb
-X-QQ-Originating-IP: GU3L6N8JcwWfgXCNUbLufMg08lqQRsb+nd9ZB3aqLTo=
-Received: from [IPV6:240e:668:120a::212:156] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Apr 2025 14:55:13 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17120012834144405305
-EX-QQ-RecipientCnt: 8
-Message-ID: <E1C033BA7FD27C8D+cab4d687-98df-49c6-adc9-e55a1c8fef34@uniontech.com>
-Date: Mon, 7 Apr 2025 14:55:13 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f4Fxxy8P"
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 87F1C582803
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:51:09 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E0AEA44354;
+	Mon,  7 Apr 2025 06:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744008662;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CtkCibXJB/RAmbeTC0As2u6SgcfbFFbzL81/+9wXhXA=;
+	b=f4Fxxy8P4A8uNP2ya5EyjjqSi8Jlhk+SbkkDPZMSuBCy2I4z7CrB0NoeTp+9wF1ic9GcIo
+	ynP4N5mlg/G0CAOwRSnJ7DenxNN7zlKfQM9PrmKyx0KxlmpZRIRXRbYgIL/qB1T9DCySpE
+	pmykKA6sWDHCEq5nu0c5+Ke1jflZQvuRve+hcolWZcRJrvAw3RB5IK1FB6NhBEGP4zjyNe
+	FNPZK2gmtqi37AvlQiVPxqn1UfrkryW4MrC3T+ydQFlvAqlRikT/UxE68FS5+7gCtcpUOs
+	HL5xr6BNP1Re6aLILxxklJgBABEr0J4VsG1A3yBfaKGE8LRnTGnZJRisRZ7jHw==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: richard@nod.at,  vigneshr@ti.com,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: bcm47xxnflash: Add error handling for
+ bcm47xxnflash_ops_bcm4706_ctl_cmd()
+In-Reply-To: <20250405143348.2477-1-vulab@iscas.ac.cn> (Wentao Liang's message
+	of "Sat, 5 Apr 2025 22:33:47 +0800")
+References: <20250405143348.2477-1-vulab@iscas.ac.cn>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 07 Apr 2025 08:51:00 +0200
+Message-ID: <875xjgihwr.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] MIPS: dec: Remove dec_irq_dispatch()
-To: macro@orcam.me.uk, tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com,
- chenlinxuan@uniontech.com
-References: <303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------KN0coP3cYQR4uMxnh4wuE0WS"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OQEfmBmUqqJ6FBuux7cBN0soiSsYrXvj8jwXLxfmDF9i0U12mYFYRUC8
-	4qnoBo/YQMSZm5YobklCRJS8bRXe1AyCUx05oP05dLeEqnPwfWgCRpl2w4hBToyLpSvok48
-	Dq9yWBzTbtGuvZf/PCqD/ej+14b3qlePbioivCSzu52fEQD+wFZGnS7uuQRgKP3DQA1f08l
-	68VPKz2Ebu8F4WyqGNixncAN4nrqsdro52X3/hhNcOYN8kjUzQepGiB+HPZZdc2gznSeqhL
-	ytEvk7zLntKKuXq3L9MkWMOcMhUYzMGlxMFXNgn6J7ugqTVKGqTF06aR7DKznglyrYKhGwl
-	pzWrLuFottOyf1HTtHepnv6yi+sUJ+vpnZtofaB3u+9xO2+2at005lxelgnKGHqSFVF7vbi
-	Kz7dvEgBmwucr0E4Su5DTUSqSDEESiEL/elgIBeBFl1ax8MNFDFj4YBsEG8II5kKPIPHEJj
-	dBf9voLRPOsa4gUYSYVPjpIsFZl8W3Zu/ETTT1DoB5JqATtiTrz8ewkoenjlVdLRRdM7j/3
-	sRZgFZgC8LKh/DVz3KZKQ1jh95j8dTKPVWlTVK7nofmQ3PzjA6uPs+Bs+Q53QPRyKyukHA2
-	YQQ5ko0tJLB5udSMf/2I61hmnlM5VUpPloG2E2stEZ8I6ekGyoLd/Gy71GBsw2EvWBwBcqZ
-	ZmeNnWghSOFe1RcytUAi23lQfvHlcUxTSg9j60X5/xUKGyzosv7gbdZGMLNX9qM8UTxtTQv
-	sI6VecMEj0xgNFpbID43cPvzXm77Bt+/kw0uYvAAhj+cMsQ1cv2KaLDd6OpSvN2mZl0dWwa
-	4JVClt03g5oCZagHXldtHSkjbPAK0zVhR9buiuxa8m/xPr/KETeoEl9lWLdSV01DzPkNa3k
-	fxWl8473TVaf61NnKtmC6T1QiQWXOnHcY/FrwNY0xXePZkj4XRNol/fnRo9gJn6z+9CKQ5z
-	WMthSuyUUlT7c0hIfqerAv0mmruTfEal0aGlAbiuQ8SF8RpoDyEEGWoWec2bHM6l8E5Kyvs
-	/S8MZG/pff7BvVSxZY8CSlZEMbhXY=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------KN0coP3cYQR4uMxnh4wuE0WS
-Content-Type: multipart/mixed; boundary="------------EyBmMelODotX0r1tdK24hhvY";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: macro@orcam.me.uk, tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com,
- chenlinxuan@uniontech.com
-Message-ID: <cab4d687-98df-49c6-adc9-e55a1c8fef34@uniontech.com>
-Subject: Re: [PATCH v2] MIPS: dec: Remove dec_irq_dispatch()
-References: <303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com>
-In-Reply-To: <303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com>
-
---------------EyBmMelODotX0r1tdK24hhvY
-Content-Type: multipart/mixed; boundary="------------TN7x9oijtL0BFlCv0EKyNKOK"
-
---------------TN7x9oijtL0BFlCv0EKyNKOK
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-SGkgYWxsLA0KDQo2LjE1LXJjMSBpcyByZWxlYXNlZC4NCg0KSXQgbG9va3MgbGlrZSBhIHBv
-cnRpb24gb2YgdGhpcyBwYXRjaHNldCBhbmQgaXRzIGltcGxpY2l0IGRlcGVuZGVuY2llcyAN
-CmdvdCBtZXJnZWQgaW50byBtYWlubGluZS4NCg0KSSd2ZSBhbHJlYWR5IGFkZHJlc3NlZCB0
-aGUgcmVzdCwgYW5kIEknbGwgYmUgc2VuZGluZyBvdXQgYSBmcmVzaCANCnBhdGNoc2V0IHRv
-IGF2b2lkIGFueSBtZXNzLg0KDQpUaGFua3MsDQoNCi0tIA0KV2FuZ1l1bGkNCg==
---------------TN7x9oijtL0BFlCv0EKyNKOK
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleelhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeelvddrudekgedruddtkedrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddtkedrfedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohephedprhgtphhtthhopehvuhhlrggssehishgtrghsrdgrtgdrtghnpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Hello Liang,
 
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
+On 05/04/2025 at 22:33:47 +08, Wentao Liang <vulab@iscas.ac.cn> wrote:
 
---------------TN7x9oijtL0BFlCv0EKyNKOK--
+> The bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls
+> bcm47xxnflash_ops_bcm4706_ctl_cmd() without printing error message. A
+> proper implementation can be found in
+> bcm47xxnflash_ops_bcm4706_write().
 
---------------EyBmMelODotX0r1tdK24hhvY--
+This is a problem with cmd_ctrl, but this interface has been deprecated
+~5y ago and people encouraged to transition to ->exec_op(). Did you
+personally experience issues with that or is this just code analysis? If
+you are actually using this driver, I'd highly suggest to update the
+driver.
 
---------------KN0coP3cYQR4uMxnh4wuE0WS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+> Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() to prevent
+> silent failure.
+>
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/m=
+td/nand/raw/bcm47xxnflash/ops_bcm4706.c
+> index 6487dfc64258..c89129588bb6 100644
+> --- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+> +++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+> @@ -182,7 +182,8 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct=
+ nand_chip *nand_chip,
+>  	if (cmd !=3D NAND_CMD_RESET)
+>  		code |=3D NCTL_CSA;
+>=20=20
+> -	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
+> +	if (bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code))
+> +		pr_err("%s ctl_cmd didn't work!\n", __func__);
 
------BEGIN PGP SIGNATURE-----
+dev_err() is probably better
+__func__ is not needed
+If we want to make it a bit usable, I'd say that the return code shall
+be there as well.
 
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/N20QUDAAAAAAAKCRDF2h8wRvQL7q6h
-AP4h5Su80DrjeNbLGczOJ8/S6JFYE/dilFkVYzQIHTS4EwD+IpeCXJgSzkSjBkknbChUsibhl38y
-8S4pqZyv8h2j4AM=
-=ocBW
------END PGP SIGNATURE-----
+>  }
+>=20=20
+>  /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706=
+ */
 
---------------KN0coP3cYQR4uMxnh4wuE0WS--
+Thanks,
+Miqu=C3=A8l
+
