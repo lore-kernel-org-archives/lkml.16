@@ -1,156 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3971E176AA1;
-	Mon,  7 Apr 2025 07:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D41226520;
+	Mon,  7 Apr 2025 07:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010258; cv=none; b=FuVaGH1PBnTgpWjGhnRqtz6Ew4F0GNYo/1oa7GvNoluIXFyEqpiKOnVzbrJ4lMCM8gI6CTnYOBKliYqaotUB//nzO85j4a5PPY/vBFP35CZ3fNhLufMh7fvzlYtVIw9qihE7P3+J4j4GvfQc+bxu1rg6V8bCZidFdyV6FOO997Y=
+	t=1744010259; cv=none; b=ox/qfGatf/M7qHoghPriw43rzCx8kwlxUvMrsxUoRGmLa/J1a6dFI45beD230nTBpsZhYpU9Pr7ZMRMt86j3NaTjDa1tES4vq0lkQqspmLy4g/2v6GodBj36wiZhnJQEhhkmZO2Q9mm3GsVfjHSiQn0VeSrvEevEgEC0D/LTy5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010258; c=relaxed/simple;
-	bh=ZMpjbqNV5VmvNx/yWcRwPHpaDgDVafqCD1Ypnp/Awhw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZxjVAx1X9FIDRz2NZdYVi+gpjIpK2+ytrgmybAMaf/fakEY57Gi1iATacbqbE3jHZI0yLiMEJ8S6aojs5AO1f3VWQoL8Eu+RGDKJTr0DktZeXBys27L/3/f9b8ovGivzYpFgsQLE0pAsUQK/7T+Cx3p5nw/MQ6TCD8OlksVJLE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INMZ82CW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744010259; c=relaxed/simple;
+	bh=xJjO5xrrilFPpI6mBKh+TwJzScF9WqVhZqd3zYeJSIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i2SReinmYU+684D2SWNslDDhrYIGMLtyCsEQgbFjVLBHwyMzSV08WiJeCPvYOBh/FQAuuYxcUusa3vPkM/Ub6A8iw9NH8djPeB1aAkn1sa2xP7gqd4XriuPsxX9JfXEtn7wqG4/p0sG6KLkqfaMUwllfab6CfG+lBxomHipkBAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRutONbp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INMZ82CW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12981C4CEE8;
-	Mon,  7 Apr 2025 07:17:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRutONbp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B617EC4CEDD;
+	Mon,  7 Apr 2025 07:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744010257;
-	bh=ZMpjbqNV5VmvNx/yWcRwPHpaDgDVafqCD1Ypnp/Awhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=INMZ82CWGDwx835l7YQF1L/d1lSwQBKmNVJMiEdhnwGTPIEvwEJIGLd7hxvJ9DFnb
-	 nFshLFU8bbnHriaqJ3GBHX8DjYWADh9mRpLCMIpW8tyrAUVIH4IRRYdmZVDw6vIfmb
-	 mpdi4x4KEKLhfmOuPBwkoeTSdP73g7PUH8JRewv+lX0XfpcbydJk2C4Ct5NldMAgVN
-	 RqhkCO8cBt3qkL75WU5KpkesF4qqnvXnyriLhtdYCoD6qCM1KkwD3Rfdt6XHu3J/5q
-	 /E81o25eRmwOFnvq6ZqZySXCmG2CvBk2E2NLvLZ4SaeBYS9EitOfrMkvyNOFdHCsKh
-	 evd0G4BIVyqqA==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	stable@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: [PATCH v2] tpm: Mask TPM RC in tpm2_start_auth_session()
-Date: Mon,  7 Apr 2025 10:17:31 +0300
-Message-Id: <20250407071731.78915-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407062642.72556-1-jarkko@kernel.org>
-References: <20250407062642.72556-1-jarkko@kernel.org>
+	s=k20201202; t=1744010259;
+	bh=xJjO5xrrilFPpI6mBKh+TwJzScF9WqVhZqd3zYeJSIw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cRutONbpHlN1ZSPZTjguB2x0f33l9njLQS1D88rABmVfG3nEZkbjgHksJ3cKjO4fi
+	 yixsqYmhCGBqGXDrXFnVPZ1rLmJRgzzH4foTv+Ova6dMRDxulLNPHIBJuxlVPKxDkd
+	 oJhWzd/Khql6TtIADoR/oxvUF0VV7mtqTjhthjv9+fLN+n3EAGhgrLw6wByy8coMSG
+	 1edTD31vSGI017jC2OlJoq/Z0V7PplJe2xNFAqI1zhOqZziqYkZpy74hhA8vIbA0r2
+	 4WvDaGJjXyk8LqytWvhU/aFjG2njZ6UwcV81CkF3OLgS6MstGe1YS7H+VFV2tOJtt1
+	 H776i7Vd+IIuw==
+Message-ID: <f213dc91-96db-4c91-a997-72ded078ae10@kernel.org>
+Date: Mon, 7 Apr 2025 09:17:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/57] irqdomain: pci: Switch to of_fwnode_handle()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+ Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Toan Le <toan@os.amperecomputing.com>,
+ Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>, Michal Simek
+ <michal.simek@amd.com>, Daire McNamara <daire.mcnamara@microchip.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250321163240.GA1130095@bhelgaas>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250321163240.GA1130095@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+On 21. 03. 25, 17:32, Bjorn Helgaas wrote:
+> On Wed, Mar 19, 2025 at 10:29:00AM +0100, Jiri Slaby (SUSE) wrote:
+>> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+>> defined of_fwnode_handle(). The former is in the process of being
+>> removed, so use the latter instead.
+> 
+> I'm fine with these and happy to apply via the PCI tree, but it sounds
+> like you're planning a v3 with a few updates, so I'll hold off for
+> now:
+> 
+> https://lore.kernel.org/r/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org
 
-[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+Right, there will be a v3 to deal better with irq_domain_create_*()'s 
+first parameter (patches 13-39/57 later in this series).
 
-Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
-error codes.
+But this very patch (of_fwnode_handle() cleanup sub-series) won't be 
+affected, so please take it through your tree, if you can.
 
-Cc: stable@vger.kernel.org # v6.10+
-Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v2:
-- Investigate TPM rc only after destroying tpm_buf.
----
- drivers/char/tpm/tpm2-sessions.c | 29 +++++++++++++++--------------
- include/linux/tpm.h              |  1 +
- 2 files changed, 16 insertions(+), 14 deletions(-)
+I will fix up the _create_ subseries and resend non-merged patches from 
+this series in v3 later. So it's also fine to wait for v3. (But less I 
+have to resend (unmodified), the better ;).)
 
-diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
-index 3f89635ba5e8..da382b86dc41 100644
---- a/drivers/char/tpm/tpm2-sessions.c
-+++ b/drivers/char/tpm/tpm2-sessions.c
-@@ -40,11 +40,6 @@
-  *
-  * These are the usage functions:
-  *
-- * tpm2_start_auth_session() which allocates the opaque auth structure
-- *	and gets a session from the TPM.  This must be called before
-- *	any of the following functions.  The session is protected by a
-- *	session_key which is derived from a random salt value
-- *	encrypted to the NULL seed.
-  * tpm2_end_auth_session() kills the session and frees the resources.
-  *	Under normal operation this function is done by
-  *	tpm_buf_check_hmac_response(), so this is only to be used on
-@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
- }
- 
- /**
-- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
-- * @chip: the TPM chip structure to create the session with
-+ * tpm2_start_auth_session() - Create an a HMAC authentication session
-+ * @chip:	A TPM chip
-  *
-- * This function loads the NULL seed from its saved context and starts
-- * an authentication session on the null seed, fills in the
-- * @chip->auth structure to contain all the session details necessary
-- * for performing the HMAC, encrypt and decrypt operations and
-- * returns.  The NULL seed is flushed before this function returns.
-+ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
-+ * session. The null seed is flushed before the return.
-  *
-- * Return: zero on success or actual error encountered.
-+ * Returns zero on success, or a POSIX error code.
-  */
- int tpm2_start_auth_session(struct tpm_chip *chip)
- {
-@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
- 	/* hash algorithm for session */
- 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
- 
--	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
-+	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
- 	tpm2_flush_context(chip, null_key);
- 
- 	if (rc == TPM2_RC_SUCCESS)
-@@ -1032,6 +1024,15 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
- 
- 	tpm_buf_destroy(&buf);
- 
-+	switch (rc) {
-+	case TPM2_RC_SESSION_MEMORY:
-+		rc = -ENOMEM;
-+		goto out;
-+	default:
-+		rc = -EFAULT;
-+		goto out;
-+	}
-+
- 	if (rc == TPM2_RC_SUCCESS) {
- 		chip->auth = auth;
- 		return 0;
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 6c3125300c00..c1d3d60b416f 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -257,6 +257,7 @@ enum tpm2_return_codes {
- 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
- 	TPM2_RC_REFERENCE_H0	= 0x0910,
- 	TPM2_RC_RETRY		= 0x0922,
-+	TPM2_RC_SESSION_MEMORY	= 0x0903,
- };
- 
- enum tpm2_command_codes {
+thanks,
 -- 
-2.39.5
-
+js
+suse labs
