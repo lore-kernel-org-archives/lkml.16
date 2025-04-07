@@ -1,52 +1,51 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004E822A7E8;
-	Mon,  7 Apr 2025 13:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1F4253B5B;
+	Mon,  7 Apr 2025 13:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032588; cv=none; b=D2Yn3kKCcjakwYTNxUpUL02MhqrrzmVenyS1vJORXa1QOxxucQrQ6bBMxI3043gCiV3u8718f6IDrimpZpHOUWLm9bUqWzukKtAkTNpTGyU7ECTORds7Lt2mo5RT+n/Rx65v7M9qDLNJ4mndxV/tiVLDMrvU2kHHUJeABwgIhOQ=
+	t=1744032588; cv=none; b=WhWmJu18JzQGNMza7xaIRZwhU4SSG04Un+vT46LIfbcBjK8GRjVRbKaunCt5WTGDmgRHn52VDXPs44+z9wmYtqwBfY7l/mnVkCeay/vZIu3j3n2OTgpqQBbCGYimvqbZeJURBIyA3BSyjKgvE1lcVEN4z4YYoDzyRS6d80Vf13A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744032588; c=relaxed/simple;
-	bh=9Q98KqvJA/ktaNjA4btZsY1SHLBRzDRkvw39WcCRzP0=;
+	bh=sF9Bs9BFn+tu3Fe7YihVWY/3OH5IQjqZbMiK3Rhc8tM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=gEkvEqqRgkz0n1maw+y1srt9b964uws986tPuvcs9X+2OrOWEDrNjcUkky/gsOwpZdWwM1bY8VgsNaiQCZQlNTz9kA+9kP97xuPsyLa0z5lx47ZC3JYEEurcWW5jEBUUOBO/HyVRdcI2Di5Gr6uAVOQKCctvn11x0xSN4Vydk90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=doCt7kmH; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:To:CC; b=fil3F047n1ThvOANeSEfPWP2L1JpewAleAWNnFRpfnIMMVr9JLKaxxkgJ2vD7tXhGJQTixgKjGID6DA4rfSxz9gxOnEAlxCxllkPj1L4+U83Y9R6FhpBVN1P18Le2gkSxlPeaWRPV0FWmM3Dr9IiSPRLJpj6QKvo2LIX4s8ASqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5e3KUJSe; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="doCt7kmH"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537CPtK0020013;
-	Mon, 7 Apr 2025 15:29:30 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5e3KUJSe"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537CPrwU020507;
+	Mon, 7 Apr 2025 15:29:31 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	6+aM4v81IIJ0lXB9aqI4mX4YkHUFBD7dtY0uixMWUn8=; b=doCt7kmH+R5+iRmg
-	YP2prSynfMLoUGpYUPeb0JZBr5fVjhai0q6iYGuJeKDA2LhBQvPWHuhC0T8SRaVb
-	dGwYJwniFTgiDv/qABGzN5kvv462dTCXaIGguJ2A18wxTUtITONuZ7aMh8IzCtzC
-	aZxvg0/V6QOGjcGYLDEgNRaZg9ANJGWTTdvht2Zfq1FMnn8N30pTCUrAQFV4uULg
-	xWpuGx97fR+ck1O/5naouKs5+BLVBocE+uhc66D85UQWrESY4E3ge11otKOO3ROC
-	xu5M5JY0R9rz1QA29CkmkJPOI5cr1DFRK+MnEsN3FD4PwXLrwDa8EhiokZ1c4WLF
-	8Y3oGA==
+	8GrCvKJa411jKEzIP+wKcHD3zzR63U6U1kKUHbgAHkQ=; b=5e3KUJSeSrXXuIkz
+	bcH7koB9p5AIbAf1AVRY7Lpx4Jn3u0yhJdlQwyBAwRI2W4gYuC31DMYU4n50XFEL
+	kE8YbJSmP6bAQ5ij2c7+dG28TSRwHcC77gGee3sAzHoKbgbX92y+l749LzeiSfu4
+	x/6AtFdy1kxGpjNeKUrfa/rb9K6lKbiOOAUARtOymwUdiRM7B/QVOf6HxvY+rxUa
+	7kho/hOg7yBazLQc/zfTgvl85gH4iU0M6A9YxCx2wC9Mw28f4EVhIEEZ4ed90dbk
+	PaSqzdWzenrTVsAxcLZOSECMymUtBZpSZb11ZN/EMVvskq77opyeYJ0m6yDk0EBq
+	0UpEMQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw5g04jn-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw8p82kx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 15:29:30 +0200 (MEST)
+	Mon, 07 Apr 2025 15:29:31 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6697240047;
-	Mon,  7 Apr 2025 15:28:21 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C9A984004A;
+	Mon,  7 Apr 2025 15:28:32 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3ABB49400C0;
-	Mon,  7 Apr 2025 15:27:42 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 709679400EF;
+	Mon,  7 Apr 2025 15:27:44 +0200 (CEST)
 Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
- 2025 15:27:41 +0200
+ 2025 15:27:44 +0200
 From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 7 Apr 2025 15:27:32 +0200
-Subject: [PATCH v8 1/7] MAINTAINERS: add entry for STM32 OCTO MEMORY
- MANAGER driver
+Date: Mon, 7 Apr 2025 15:27:35 +0200
+Subject: [PATCH v8 4/7] arm64: dts: st: Add OMM node on stm32mp251
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250407-upstream_ospi_v6-v8-1-7b7716c1c1f6@foss.st.com>
+Message-ID: <20250407-upstream_ospi_v6-v8-4-7b7716c1c1f6@foss.st.com>
 References: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
 In-Reply-To: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -82,30 +81,79 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
 
-Add myself as STM32 OCTO MEMORY MANAGER maintainer.
+Add Octo Memory Manager (OMM) entry on stm32mp251 and its two
+OSPI instance.
 
 Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 54 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b7e1f9c30f3e45fb85b0d0f58b56db84d986061..830245c8d583c422e869dfe4b5a184faaf52b559 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22766,6 +22766,12 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-stm32*
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index f3c6cdfd7008c5b736ba75f5210d0eddb5b43489..bb95d61ff7b54bcbb70d981c88dfffcc1951e103 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -230,6 +230,60 @@ hpdma3: dma-controller@40420000 {
+ 			#dma-cells = <3>;
+ 		};
  
-+ST STM32 OCTO MEMORY MANAGER
-+M:	Patrice Chotard <patrice.chotard@foss.st.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
-+F:	drivers/memory/stm32_omm.c
++		ommanager: ommanager@40500000 {
++			compatible = "st,stm32mp25-omm";
++			reg = <0x40500000 0x400>, <0x60000000 0x10000000>;
++			reg-names = "regs", "memory_map";
++			ranges = <0 0 0x40430000 0x400>,
++				 <1 0 0x40440000 0x400>;
++			clocks = <&rcc CK_BUS_OSPIIOM>,
++				 <&scmi_clk CK_SCMI_OSPI1>,
++				 <&scmi_clk CK_SCMI_OSPI2>;
++			clock-names = "omm", "ospi1", "ospi2";
++			resets = <&rcc OSPIIOM_R>,
++				 <&scmi_reset RST_SCMI_OSPI1>,
++				 <&scmi_reset RST_SCMI_OSPI2>;
++			reset-names = "omm", "ospi1", "ospi2";
++			access-controllers = <&rifsc 111>;
++			power-domains = <&CLUSTER_PD>;
++			#address-cells = <2>;
++			#size-cells = <1>;
++			st,syscfg-amcr = <&syscfg 0x2c00 0x7>;
++			status = "disabled";
 +
- ST STM32 SPI DRIVER
- M:	Alain Volmat <alain.volmat@foss.st.com>
- L:	linux-spi@vger.kernel.org
++			ospi1: spi@0 {
++				compatible = "st,stm32mp25-ospi";
++				reg = <0 0 0x400>;
++				interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++				dmas = <&hpdma 2 0x62 0x3121>,
++				       <&hpdma 2 0x42 0x3112>;
++				dma-names = "tx", "rx";
++				clocks = <&scmi_clk CK_SCMI_OSPI1>;
++				resets = <&scmi_reset RST_SCMI_OSPI1>,
++					 <&scmi_reset RST_SCMI_OSPI1DLL>;
++				access-controllers = <&rifsc 74>;
++				power-domains = <&CLUSTER_PD>;
++				st,syscfg-dlyb = <&syscfg 0x1000>;
++				status = "disabled";
++			};
++
++			ospi2: spi@1 {
++				compatible = "st,stm32mp25-ospi";
++				reg = <1 0 0x400>;
++				interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++				dmas = <&hpdma 3 0x62 0x3121>,
++				       <&hpdma 3 0x42 0x3112>;
++				dma-names = "tx", "rx";
++				clocks = <&scmi_clk CK_SCMI_OSPI2>;
++				resets = <&scmi_reset RST_SCMI_OSPI2>,
++					 <&scmi_reset RST_SCMI_OSPI2DLL>;
++				access-controllers = <&rifsc 75>;
++				power-domains = <&CLUSTER_PD>;
++				st,syscfg-dlyb = <&syscfg 0x1400>;
++				status = "disabled";
++			};
++		};
++
+ 		rifsc: bus@42080000 {
+ 			compatible = "st,stm32mp25-rifsc", "simple-bus";
+ 			reg = <0x42080000 0x1000>;
 
 -- 
 2.25.1
