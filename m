@@ -1,129 +1,175 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B3F2116FD
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD54D1F8BC6
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046896; cv=none; b=c0CLVI8Cukk/nXhju72AVlvi0DxWw4BYWGXbQX3ICyctISyBXNRyHpkOc1zV5hlx/oZY9F4Pm27xgyQAqna0K5D9KcimoS2lDAlLvbxG9ocfqBlGypMYas7UuqC9piGCzNZrGa2WQyIiwRAMUUZHkvxhUmffxsrzzJhw5sPugfI=
+	t=1744046932; cv=none; b=ma4h73x3y7mSNwgYNJDvmlwRQARw8LmOp3MlZAKtDzG3se1tTqEIv+ejiDUdGFA1uuCF9ZYPJAi8mYKDhhefqY40UUWH0jMAQ1AjQ5oVLbRzaXXNhlWvTYxkcFr/hr/yssunu0Rurj8lpRCZrO5VcdPEa+ZkIZDAr6SZBCSUn/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046896; c=relaxed/simple;
-	bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pnfjcs9/qk3IPdm2jmm+QHRLR3k5I0T0k19eh7G32lui3nc+zW2NxLOEzT6mqpCD670McZaaV67EebL6I6XduNZQQfqxcGdtTxF+qmLHlPfHWDF3rmal4hpnzP2Si2PKI1hpLDoqZOhQmPWFfEP3KO8+TDiu2G+sMWb2G5Ykhn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r5W6cTOm; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744046932; c=relaxed/simple;
+	bh=wsHHJZqntazBpATd7YuS+J2IlhAOuKOpdFMOBcPiE/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SutIvdnWgSDvlbsPLo+zWmzKy+lMkt0pD8u9DRX++eED1xg5bO4oKfFGDQ8p5rD0/W5VjXDYbhNPxn7gipCdAxHW1KdoPcGvRe7802xPTb5APKDAAh1SRsJ6AXyc3X/Zoaj9/4hSComeEdB9KXQRFem5NFJuKmT5qEhjpLkM+XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z4QKsCnN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r5W6cTOm"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5259327a937so1922637e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 10:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744046894; x=1744651694; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-        b=r5W6cTOmlNjbbX7waUS2oQItsqO8EDCzKHEHkZnuaakpZs6kqnjy8gyj5J4a/CrzPu
-         wsWL4Om5TE+kXck6IfiV6tZi/qlHA21IfootF6x2+7oSHQWbL3ANH41PsUq8ZAG02qpF
-         XMySGKBPmOzS+tK2YUKidZIAzt507fw93bvtw0WfMoY3vKO2L1Mu/OQbSd8yLoSvTxQy
-         QkpkNVJF2njHy32gBMhINPyd8sOSL2ENF4tus87n46yRzApeorcNZ4iA4UDwrFXCPl50
-         rK5xslg4qwRhZiqWOVO04Cw/ATCUXMmq8K+hokH98dmtHkAdl9mWZ65+TXhYQsS48lh9
-         FgUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744046894; x=1744651694;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a6Z+ENeEuUU+yC9/pxXn5f1hhHRj75A4YQ3p6o52+7Y=;
-        b=TILOmnBn9B/ZrazEdzGKfB12ukHNGFXQkIPSTaVthsudtEGyAANU8qzE8ssDV//BdQ
-         s2Tifk+cIqr0UF57S1bvOqqrPdPDPt+ekxk+qALfW/mJsmC7v7G+CKV1Q7J+D6Va31DD
-         6i3dXtFCaYiSwlPl3gqcETQ2nwq0cNvJqcMNiyog5aGnnZB7iFf+dct+YdFOwnvLAt1/
-         3t4J4/GrPh1He5WPcJHOz9buNz5AKle1RmurpX6RGRhYWQ64dcqtzfKaQZHMY3RXaEvY
-         SYyFqXzn32WbUUrK7NhPJmSBoaiusBZ29ZJD30z/8p4ckiitghehBgpK6I6xlM41gg0E
-         P0hw==
-X-Gm-Message-State: AOJu0YyEIbKrxe3TC1i+JX/qry23TGYPj7ryNndEf+D6F+9L4E2wmNhR
-	Zoa4xwk8WJZu/6PrSBVNSytm0udy4ow5vQK8l9JRkhuUA2jXqMEe9dIf6hJNgWv94C1D3x6yCkc
-	rpcII35XZyZvKOACrL47yQ+TRIdJqLR0y00pc0wRnaLzbFEgdBN4=
-X-Gm-Gg: ASbGnctSB/Ji7YzzPjhx6OcZCI+CLamyLGzP8s4oBx3ig4w8Cj79F82tHO10ySncv+l
-	P4Wx+CfTGIyKL/yRyzrd2WY16pvKTa0zuLqN0fgqfbnJSVa+M6VzgY+zq6kAzBC85g9J2gFon0H
-	0XhQRG9xFf6zKyU9HkdZJEBrDqUW7OsUADRnbj5jXjuzu1KpvuBpUo4D/HCtA=
-X-Google-Smtp-Source: AGHT+IEVmMkitaw4QXdhkgwEdPJbukthI9jSNdopAjIIvfIiiFbgx7Oz2lGA20nc3VtA0Aj3qI6veAxd6wO3GXeed4k=
-X-Received: by 2002:a05:6122:3122:b0:526:1ddc:1896 with SMTP id
- 71dfb90a1353d-52772cd6318mr5308951e0c.0.1744046893651; Mon, 07 Apr 2025
- 10:28:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4QKsCnN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744046929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bFO8XTLN8X6PR8VKPvsVUaoldbdxYBtD0THNWLQS6Mk=;
+	b=Z4QKsCnN5J3q36dDjPfozoHxWiOfEqnQ9EJ3Xwoi5+ykrNaKEDC3Zq02HgTApl4Xlv2ENO
+	hI6TDwkSySRYabQGWwGHMrX3xnWrIrMo8MSuMG+K5cjNn2cA0EDl52IgfdQc93gTQl3270
+	92/tLTYru3Uu1ZX1OODh+9DucQ2LnGM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-Thv6vA51MdGQe-uhtfgtTA-1; Mon,
+ 07 Apr 2025 13:28:46 -0400
+X-MC-Unique: Thv6vA51MdGQe-uhtfgtTA-1
+X-Mimecast-MFC-AGG-ID: Thv6vA51MdGQe-uhtfgtTA_1744046924
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 979BE180034D;
+	Mon,  7 Apr 2025 17:28:43 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A186180A803;
+	Mon,  7 Apr 2025 17:28:37 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 00/28] Add Microchip ZL3073x support
+Date: Mon,  7 Apr 2025 19:28:27 +0200
+Message-ID: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 7 Apr 2025 22:58:02 +0530
-X-Gm-Features: ATxdqUG0lZPw-xmkzQsqNG-x55VknO4sMa7eENem1IFu3dmqQUBmDzTB3tDNgw4
-Message-ID: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
-Subject: Build: arm rustgcc unknown argument '-mno-fdpic'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, rust-for-linux@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, laura.nao@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Regressions on arm build with config rustgcc-lkftconfig-kselftest on the
-Linux mainline and next failed with CONFIG_RUST=y enabled.
+This series adds support for Microchip Azurite DPLL/PTP/SyncE chip
+family. These chips provide DPLL and PTP functionality, so the series
+adds the common MFD driver that provides an access to the bus that can
+be either I2C or SPI. The second part of the series is DPLL driver that
+covers DPLL functionality. The PTP support will be added by separate
+series as well as flashing capability.
 
-First seen on the v6.14-13039-ge8b471285262 (April 3, 2025)
-Bad: v6.15-rc1
-Good: v6.14-12966-ga2cc6ff5ec8f ( April 3, 2025 )
+All functionality was tested by myself and by Prathosh Satish on
+Microchip EDS2 development board with ZL30732 DPLL chip connected over
+I2C bus.
 
-Bad: next-20250327
-Good: next-20250326
+Patch breakdown
+===============
+Patch 1 - Basic support for I2C, SPI and regmap
+Patch 2 - Devlink registration
+Patches 3-4 - Helpers for accessing device registers
+Patches 5-6 - Component versions reporting via devlink dev info
+Patches 7-8 - Helpers for accessing register mailboxes
+Patch 9 - Clock ID generation for DPLL driver
+Patch 10 - Export strnchrnul function for modules
+           (used by next patch)
+Patch 11 - Support for MFG config initialization file
+Patch 12 - Fetch invariant register values used by DPLL and later by
+           PTP driver
+Patch 13 - Basic DPLL driver with required only functionality
+Patch 14 - Registration of DPLL sub-devices by MFD driver
+Patch 15 - Device tree bindings for DPLL device and pin
+Patch 16 - Device tree bindings for ZL3073x device
+Patch 17 - Read DPLL device types from firmware (DT,ACPI...)
+Patch 18 - Read basic pin properties from firmware
+Patch 19 - Implementation of input pin selection for DPLL in manual mode
+Patch 20 - Implementation of getting/setting priority for input pins
+Patch 21 - Implementation of input pin state setting for DPLL in auto mode
+Patch 22 - Implementation of getting/setting frequency for input pins
+Patch 23 - Implementation of getting/setting frequency for output pins
+Patch 24 - Read pin supported frequencies from firmware
+Patch 25 - Implementation of getting phase offset from input pins
+Patch 26 - Implementation of getting/setting phase adjust for both
+           pin types
+Patch 27 - Implementation of getting/setting embedded sync frequency
+           for both pin types
+Patch 28 - Implementation of getting fractional frequency offset for
+           input pins
 
-* arm, build
- - rustgcc-lkftconfig-kselftest
+Ivan Vecera (28):
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Register itself as devlink device
+  mfd: zl3073x: Add register access helpers
+  mfd: zl3073x: Add macros for device registers access
+  mfd: zl3073x: Add components versions register defs
+  mfd: zl3073x: Implement devlink device info
+  mfd: zl3073x: Add macro to wait for register value bits to be cleared
+  mfd: zl3073x: Add functions to work with register mailboxes
+  mfd: zl3073x: Add clock_id field
+  lib: Allow modules to use strnchrnul
+  mfd: zl3073x: Load mfg file into HW if it is present
+  mfd: zl3073x: Fetch invariants during probe
+  dpll: Add Microchip ZL3073x DPLL driver
+  mfd: zl3073x: Register DPLL sub-device during init
+  dt-bindings: dpll: Add device tree bindings for DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  dpll: zl3073x: Read DPLL types from firmware
+  dpll: zl3073x: Read optional pin properties from firmware
+  dpll: zl3073x: Implement input pin selection in manual mode
+  dpll: zl3073x: Add support to get/set priority on input pins
+  dpll: zl3073x: Implement input pin state setting in automatic mode
+  dpll: zl3073x: Add support to get/set frequency on input pins
+  dpll: zl3073x: Add support to get/set frequency on output pins
+  dpll: zl3073x: Read pin supported frequencies from firmware
+  dpll: zl3073x: Add support to get phase offset on input pins
+  dpll: zl3073x: Add support to get/set phase adjust on pins
+  dpll: zl3073x: Add support to get/set esync on pins
+  dpll: zl3073x: Add support to get fractional frequency offset on input
+    pins
 
-Regression Analysis:
-- New regression? Yes
-- Reproducibility? Yes
+ .../devicetree/bindings/dpll/dpll-device.yaml |   84 +
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   43 +
+ .../bindings/dpll/microchip,zl3073x.yaml      |   74 +
+ MAINTAINERS                                   |   12 +
+ drivers/dpll/Kconfig                          |   16 +
+ drivers/dpll/Makefile                         |    2 +
+ drivers/dpll/dpll_zl3073x.c                   | 2768 +++++++++++++++++
+ drivers/mfd/Kconfig                           |   33 +
+ drivers/mfd/Makefile                          |    5 +
+ drivers/mfd/zl3073x-core.c                    |  840 +++++
+ drivers/mfd/zl3073x-i2c.c                     |   71 +
+ drivers/mfd/zl3073x-spi.c                     |   72 +
+ drivers/mfd/zl3073x.h                         |   13 +
+ include/linux/mfd/zl3073x.h                   |  335 ++
+ lib/string.c                                  |    1 +
+ 15 files changed, 4369 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml
+ create mode 100644 drivers/dpll/dpll_zl3073x.c
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x.h
 
-Build regression: arm rustgcc unknown argument '-mno-fdpic'
+-- 
+2.48.1
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-Unable to generate bindings: clang diagnosed error: error: unknown
-argument: '-mno-fdpic'
-
-
-## Source
-* Kernel version: v6.15-rc1
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-* Git sha: 0af2f6be1b4281385b618cb86ad946eded089ac8
-* Git describe: v6.15-rc1
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/
-* compiler: gcc version (Debian 14.2.0-19) 14.2.0
-* Toolchain: rustgcc
-* build config: rustgcc-lkftconfig-kselftest
-
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/log
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.15-rc1/testrun/27924146/suite/build/test/rustgcc-lkftconfig-kselftest/history/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNMCPjd4rTR3hQdnzAuHzLE1NR/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vNMCPjd4rTR3hQdnzAuHzLE1NR/config
-* Test history on next:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250407/testrun/27929685/suite/build/test/rustgcc-lkftconfig-kselftest/history/
-
-## Steps to reproduce
- - tuxmake --runtime podman --target-arch arm --toolchain rustgcc
---kconfig defconfig --kconfig-add
-https://gitlab.com/Linaro/lkft/kernel-fragments/-/raw/main/systemd.config
---kconfig-add CONFIG_ARM_LPAE=y --kconfig-add CONFIG_GCC_PLUGINS=n
---kconfig-add tools/testing/selftests/rust/config TARGETS=rust dtbs
-dtbs-legacy headers kernel kselftest modules
-
---
-Linaro LKFT
-https://lkft.linaro.org
