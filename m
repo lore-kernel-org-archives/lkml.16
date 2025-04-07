@@ -1,253 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC261C6B4;
-	Mon,  7 Apr 2025 05:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAACB2236F3;
+	Mon,  7 Apr 2025 05:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744003910; cv=none; b=fX9H3FGl4t1agcx1784Y/H+0tmxhCu3UUpiG5TjGUVPhW39HnIGYFFwRLe0niUSzsBGTVgsjToYnGClvaSKXTDFBVhg2X12BGMrNEMVHcJ1aaalkhElwHFfcMcVRBGOB3VeqEev8/+bZEDKgpJOofbXyRY6otnuME/L7Oj4EJzE=
+	t=1744004254; cv=none; b=s3gNuWIg1ymNLDnYbSgJVCB+UAHZNVOTqt2WXq8S3XY5+PO74hN2T8YnydgBM1rIDxiAKBctgOlTxbc7tzSE2L8gkRalcv2Mhdxl0BY2BjIMBELjrNoZJYLBTdy6qis/ZyO6a9NGSF0LjUWnDyjm80uAbShZXOvNYNuipo7Kp4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744003910; c=relaxed/simple;
-	bh=hRPXXQom3Jcic+6bPtce8M8Sp8FtKuPiocesCS/hKh4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KOS73BC7ui1geJelnI9Pd5BNv0HrRFjKZnUXfe6IBz6ll85WWMQYduf0Pym8XvMYQyPsKOFRTNV2xCsg022W4622ZaSdj2YY0gNVdcLBmioIAg9UHifzfAViD0NcBA3LLIzCpilNmDkMLLSKfRitpdNUwuj5X+hXa0e6SMc8tLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 336541CC4;
-	Sun,  6 Apr 2025 22:31:49 -0700 (PDT)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.42.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0B0463F6A8;
-	Sun,  6 Apr 2025 22:31:40 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: mark.rutland@arm.com,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-efi@vger.kernel.org
-Subject: [PATCH V2 3/3] arm64/mm: Define ptdesc_t
-Date: Mon,  7 Apr 2025 11:01:13 +0530
-Message-Id: <20250407053113.746295-4-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250407053113.746295-1-anshuman.khandual@arm.com>
-References: <20250407053113.746295-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1744004254; c=relaxed/simple;
+	bh=iuAds8JJoa+dbYsSrJ66iR8rQIcqF5nXdx0l7K8tiIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JquBI9WCZtvNzuaioMI79Wo4UVGMxmAVA9M8Yvz3gRNOY6gE1lL90utWfziOYCkPSt5Lv8hGAh1GYmPLQheTMBoRhdrgoL9lnLZkLFrseCTDrmmoc22nWVTQiAcBmHEnsoI5R74gI3FedCTs+eJvM/qzdozk7H0PFnsWrDl659I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7SXHhVP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7SXHhVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850ADC4CEDD;
+	Mon,  7 Apr 2025 05:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744004253;
+	bh=iuAds8JJoa+dbYsSrJ66iR8rQIcqF5nXdx0l7K8tiIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l7SXHhVPZJH1W7ANVSO5S54c7aEMlgNAlUen2nFf80lr2CfCEjci5two0FSDc6n2z
+	 /mwIZGQaRkWkfzKPtymGpEUQDNf5OVE/eB8aZ2Qfc6V1R885oY7LCQkd0WjnkaqIji
+	 o2OGYt+17JThJpbZv+9tAXG51WAuwiUJoOsOUaYUTOhe/BcUIAaan+Al+JSSYbM9+M
+	 NH9+tzr2jXhIYIONK1VhnRvR9eBolMBqTHx5xjAajOo3PAHVqKomqj4DzAGBnuLfZt
+	 PWEMMaHOnVI3svtvo9Z+3YpGFeTOHw6wKQLPXmffqzys2tIfvMw6Pcd5jiPRDVL0IX
+	 oZ0GGezcJGHlA==
+Date: Mon, 7 Apr 2025 05:37:32 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Malaya Kumar Rout <malayarout91@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH] tools/hv: Memory Leak on realloc
+Message-ID: <Z_NknPrx26vMuJ-9@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250322164709.500340-1-malayarout91@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250322164709.500340-1-malayarout91@gmail.com>
 
-Define ptdesc_t type which describes the basic page table descriptor layout
-on arm64 platform. Subsequently all level specific pxxval_t descriptors are
-derived from ptdesc_t thus establishing a common original format, which can
-also be appropriate for page table entries, masks and protection values etc
-which are used at all page table levels.
+On Sat, Mar 22, 2025 at 10:16:47PM +0530, Malaya Kumar Rout wrote:
+> Static analysis for hv_kvp_daemon.c with cppcheck : error:
+> 
+> hv_kvp_daemon.c:359:3: error: Common realloc mistake:
+> 'record' nulled but not freed upon failure [memleakOnRealloc]
+> record = realloc(record, sizeof(struct kvp_record) *
+> 
+> If realloc() fails, record is now NULL.
+> If we directly assign this NULL to record, the reference to the previously allocated memory is lost.
+> This causes a memory leak because the old allocated memory remains but is no longer accessible.
+> 
+> A temporary pointer was utilized when invoking realloc() to prevent
+> the loss of the original allocation in the event of a failure
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
-Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/pgtable-types.h | 20 ++++++++++++++------
- arch/arm64/include/asm/ptdump.h        |  8 ++++----
- arch/arm64/kernel/efi.c                |  4 ++--
- arch/arm64/kernel/pi/map_kernel.c      |  2 +-
- arch/arm64/kernel/pi/map_range.c       |  4 ++--
- arch/arm64/kernel/pi/pi.h              |  2 +-
- arch/arm64/mm/mmap.c                   |  2 +-
- arch/arm64/mm/ptdump.c                 |  2 +-
- 8 files changed, 26 insertions(+), 18 deletions(-)
+While this patch finds a problem, it misses the big picture.
 
-diff --git a/arch/arm64/include/asm/pgtable-types.h b/arch/arm64/include/asm/pgtable-types.h
-index 6d6d4065b0cb..265e8301d7ba 100644
---- a/arch/arm64/include/asm/pgtable-types.h
-+++ b/arch/arm64/include/asm/pgtable-types.h
-@@ -11,11 +11,19 @@
- 
- #include <asm/types.h>
- 
--typedef u64 pteval_t;
--typedef u64 pmdval_t;
--typedef u64 pudval_t;
--typedef u64 p4dval_t;
--typedef u64 pgdval_t;
-+/*
-+ * Page Table Descriptor
-+ *
-+ * Generic page table descriptor format from which
-+ * all level specific descriptors can be derived.
-+ */
-+typedef u64 ptdesc_t;
-+
-+typedef ptdesc_t pteval_t;
-+typedef ptdesc_t pmdval_t;
-+typedef ptdesc_t pudval_t;
-+typedef ptdesc_t p4dval_t;
-+typedef ptdesc_t pgdval_t;
- 
- /*
-  * These are used to make use of C type-checking..
-@@ -46,7 +54,7 @@ typedef struct { pgdval_t pgd; } pgd_t;
- #define pgd_val(x)	((x).pgd)
- #define __pgd(x)	((pgd_t) { (x) } )
- 
--typedef struct { pteval_t pgprot; } pgprot_t;
-+typedef struct { ptdesc_t pgprot; } pgprot_t;
- #define pgprot_val(x)	((x).pgprot)
- #define __pgprot(x)	((pgprot_t) { (x) } )
- 
-diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
-index 01033c1d38dc..fded5358641f 100644
---- a/arch/arm64/include/asm/ptdump.h
-+++ b/arch/arm64/include/asm/ptdump.h
-@@ -24,8 +24,8 @@ struct ptdump_info {
- };
- 
- struct ptdump_prot_bits {
--	u64		mask;
--	u64		val;
-+	ptdesc_t	mask;
-+	ptdesc_t	val;
- 	const char	*set;
- 	const char	*clear;
- };
-@@ -34,7 +34,7 @@ struct ptdump_pg_level {
- 	const struct ptdump_prot_bits *bits;
- 	char name[4];
- 	int num;
--	u64 mask;
-+	ptdesc_t mask;
- };
- 
- /*
-@@ -51,7 +51,7 @@ struct ptdump_pg_state {
- 	const struct mm_struct *mm;
- 	unsigned long start_address;
- 	int level;
--	u64 current_prot;
-+	ptdesc_t current_prot;
- 	bool check_wx;
- 	unsigned long wx_pages;
- 	unsigned long uxn_pages;
-diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-index 1d25d8899dbf..42e281c07c2f 100644
---- a/arch/arm64/kernel/efi.c
-+++ b/arch/arm64/kernel/efi.c
-@@ -29,7 +29,7 @@ static bool region_is_misaligned(const efi_memory_desc_t *md)
-  * executable, everything else can be mapped with the XN bits
-  * set. Also take the new (optional) RO/XP bits into account.
-  */
--static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
-+static __init ptdesc_t create_mapping_protection(efi_memory_desc_t *md)
- {
- 	u64 attr = md->attribute;
- 	u32 type = md->type;
-@@ -83,7 +83,7 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
- 
- int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
- {
--	pteval_t prot_val = create_mapping_protection(md);
-+	ptdesc_t prot_val = create_mapping_protection(md);
- 	bool page_mappings_only = (md->type == EFI_RUNTIME_SERVICES_CODE ||
- 				   md->type == EFI_RUNTIME_SERVICES_DATA);
- 
-diff --git a/arch/arm64/kernel/pi/map_kernel.c b/arch/arm64/kernel/pi/map_kernel.c
-index e57b043f324b..a00f57c73d81 100644
---- a/arch/arm64/kernel/pi/map_kernel.c
-+++ b/arch/arm64/kernel/pi/map_kernel.c
-@@ -159,7 +159,7 @@ static void noinline __section(".idmap.text") set_ttbr0_for_lpa2(u64 ttbr)
- static void __init remap_idmap_for_lpa2(void)
- {
- 	/* clear the bits that change meaning once LPA2 is turned on */
--	pteval_t mask = PTE_SHARED;
-+	ptdesc_t mask = PTE_SHARED;
- 
- 	/*
- 	 * We have to clear bits [9:8] in all block or page descriptors in the
-diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
-index 81345f68f9fc..7982788e7b9a 100644
---- a/arch/arm64/kernel/pi/map_range.c
-+++ b/arch/arm64/kernel/pi/map_range.c
-@@ -30,7 +30,7 @@ void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
- 		      int level, pte_t *tbl, bool may_use_cont, u64 va_offset)
- {
- 	u64 cmask = (level == 3) ? CONT_PTE_SIZE - 1 : U64_MAX;
--	pteval_t protval = pgprot_val(prot) & ~PTE_TYPE_MASK;
-+	ptdesc_t protval = pgprot_val(prot) & ~PTE_TYPE_MASK;
- 	int lshift = (3 - level) * PTDESC_TABLE_SHIFT;
- 	u64 lmask = (PAGE_SIZE << lshift) - 1;
- 
-@@ -87,7 +87,7 @@ void __init map_range(u64 *pte, u64 start, u64 end, u64 pa, pgprot_t prot,
- 	}
- }
- 
--asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, pteval_t clrmask)
-+asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, ptdesc_t clrmask)
- {
- 	u64 ptep = (u64)pg_dir + PAGE_SIZE;
- 	pgprot_t text_prot = PAGE_KERNEL_ROX;
-diff --git a/arch/arm64/kernel/pi/pi.h b/arch/arm64/kernel/pi/pi.h
-index c91e5e965cd3..91dcb5b6bbd1 100644
---- a/arch/arm64/kernel/pi/pi.h
-+++ b/arch/arm64/kernel/pi/pi.h
-@@ -33,4 +33,4 @@ void map_range(u64 *pgd, u64 start, u64 end, u64 pa, pgprot_t prot,
- 
- asmlinkage void early_map_kernel(u64 boot_status, void *fdt);
- 
--asmlinkage u64 create_init_idmap(pgd_t *pgd, pteval_t clrmask);
-+asmlinkage u64 create_init_idmap(pgd_t *pgd, ptdesc_t clrmask);
-diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-index 07aeab8a7606..c86c348857c4 100644
---- a/arch/arm64/mm/mmap.c
-+++ b/arch/arm64/mm/mmap.c
-@@ -83,7 +83,7 @@ arch_initcall(adjust_protection_map);
- 
- pgprot_t vm_get_page_prot(unsigned long vm_flags)
- {
--	pteval_t prot;
-+	ptdesc_t prot;
- 
- 	/* Short circuit GCS to avoid bloating the table. */
- 	if (system_supports_gcs() && (vm_flags & VM_SHADOW_STACK)) {
-diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-index ac0c20ba0cd9..421a5de806c6 100644
---- a/arch/arm64/mm/ptdump.c
-+++ b/arch/arm64/mm/ptdump.c
-@@ -194,7 +194,7 @@ void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
- 	struct ptdump_pg_state *st = container_of(pt_st, struct ptdump_pg_state, ptdump);
- 	struct ptdump_pg_level *pg_level = st->pg_level;
- 	static const char units[] = "KMGTPE";
--	u64 prot = 0;
-+	ptdesc_t prot = 0;
- 
- 	/* check if the current level has been folded dynamically */
- 	if (st->mm && ((level == 1 && mm_p4d_folded(st->mm)) ||
--- 
-2.25.1
+If realloc fails, the process quits. It depends on the OS to reclaim the
+memory. Freeing this one instance to prevent a memory leak is not
+sufficient -- there can be already memory allocated prior to a failure.
 
+Unless this program is sufficiently reworked to be resilient against
+OOM, this change itself does not bring much value.
+
+That being said, thank you for writing a patch and went through the
+trouble to submit it.
+
+Thanks,
+Wei.
+
+> 
+> CC: linux-kernel@vger.kernel.org
+>     linux-hyperv@vger.kernel.org
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+> ---
+>  tools/hv/hv_kvp_daemon.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index 04ba035d67e9..6807832209f0 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -356,11 +356,14 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  	 */
+>  	if (num_records == (ENTRIES_PER_BLOCK * num_blocks)) {
+>  		/* Need to allocate a larger array for reg entries. */
+> -		record = realloc(record, sizeof(struct kvp_record) *
+> -			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+> -
+> -		if (record == NULL)
+> +		struct kvp_record *temp = realloc(record, sizeof(struct kvp_record) *
+> +				ENTRIES_PER_BLOCK * (num_blocks + 1));
+> +		if (!temp) {
+> +			free(record);
+> +			record = NULL;
+>  			return 1;
+> +		}
+> +		record = temp;
+>  		kvp_file_info[pool].num_blocks++;
+>  
+>  	}
+> -- 
+> 2.43.0
+> 
