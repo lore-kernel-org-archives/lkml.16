@@ -1,195 +1,86 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E9E207679
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C90A204C11;
+	Mon,  7 Apr 2025 15:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041186; cv=none; b=YozTgbiiVZlcjjFPJzxUf6l/mC5+rgzUPfwGDz15VHw+E8dUKmC6B0FugA3rE1nyZpoDdotM3BrWGtqmdC17C3wxeGPNMSoJ6Av3Kh7W3onzwnoFUu8CieYyQ/txdIASvGsTG6Vhyq11vVLtfPeCsGhpqJnbQ7bBcaIXEVtwFWQ=
+	t=1744041202; cv=none; b=dog1YwzrB/kHryQ7aaMtzHRKlvQfaylR/qMaazq7dLFu8lFGXYIlo/4Ye82xPpfKShZ+i9Dto2D6/gYNOlrr652MUtxYpoc0Va4/LExkO+oDZikf3h90/hjMTNNtDamcrwS82Z5i4Ts+sAK0Jvds+8hjv3M2Pt+wSLbB2mqpKr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041186; c=relaxed/simple;
-	bh=lSRirgD6vmXWR2W+LyxRShb2hqrhF7lTs6ytrW6ttLg=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bby6215H2y4CkXatHt9kaNDU/aXAVuWZPsHluF16HHn+TyUq+RLmQa6X7/l1oHZnzlzT2eEYDJI5/L2oz0sI0fTcHPyQQhSt8BFRbohXEMQnvTDKjGeza7NvvdbaxkSLqKXduMsE8bYX7MNb9xbn0VB5OI8xX72bdYEjUglRBBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=QVhgxBu0; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744041202; c=relaxed/simple;
+	bh=NIrIJzzmdQL32hJN2sevH3JixRQ0+8i8QHBKjFJpt5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f843lp7QXjGM0KgVv3QzOOs0qDCAqrSGCXBVnyMjrivSk+tnBYGFHjBeJU3FeXxI4rx0Vya/gcj5B0QkfPd7v3zZkpiBQfNedtzMa8rTAaOs82DejBBF/aEV8f9QqQEcEp59+7TMrA+b9+b6pKEjoS63hZHwFvf5YwVuulbKOYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcuoTgV4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="QVhgxBu0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744041168; x=1744300368;
-	bh=UO58uVNVuqrkxontk+bpXoCuz/hQY26JfCS2dLBPfS4=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=QVhgxBu03cUpTinM0Iick6X3X3GkWqA974KI2kzDFdH5mi0FU2YANJKNm4iJYYJa7
-	 B9qasfCxqu0nRVCnYdO2tosa2m0Vlrfinv6dkSn4pR62xJIGn91dA/U4sHlKaCntEN
-	 hGCU41p2o4BVXwBdgz3nLB0q7vWJLTWzRu560Fjdn3UV76D1j5/KkIzDtTWpcgmzwR
-	 6Ddutdxcdlyi+EI9JoOnnaivxloLtPcwUTYwMKVxq1XxkpcYSBCeqFOmntIpXc0PX8
-	 BNA8BnnhZy+JaJheBLxAOGGmyWeJSxvBSlU3JY3YOxCG5dRUM6bWGb4NP9E3lznlmw
-	 KSySkKr8Nx6LA==
-Date: Mon, 07 Apr 2025 15:52:42 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <D90IZQSXEDMM.1AKV40R0VB94T@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 308df588d7fde4ef846351eef06d533f1a7121cf
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcuoTgV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B207C4CEE7;
+	Mon,  7 Apr 2025 15:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744041201;
+	bh=NIrIJzzmdQL32hJN2sevH3JixRQ0+8i8QHBKjFJpt5o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CcuoTgV47FXyu6zNK+dq2segR1GdghpPTPda+6XN00y2K+8rJo7H0kIZtgREE8ret
+	 xiPrhuZeMJZiNO0f5SgpSU4bn+WB1SwVk9QMgsIRaJZrsRCCJJ5MQq22uaklCAWr3p
+	 RCSa96y7/Tjg8eBgeGwWMTKuxoTPQfNUKrnK2m8a7G+FbugClJgP/pzrNVPMRreg5f
+	 LGbpzKYe46OlGiCOLqdsWXslA7ZF8zXhprO5LZjFqafFLSBA1Nej6sP1BBnwgyG/Fv
+	 xMB7FCT0vP8cSGaTEo3sT2/hSQVdC8tx7eAdlyNlmCuVUTpMigDARSS/KeuyfJ6Zgr
+	 CmfeyiEeMcyjQ==
+From: Conor Dooley <conor@kernel.org>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	drew@pdp7.com,
+	guoren@kernel.org,
+	wefu@redhat.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	jszhang@kernel.org,
+	ulf.hansson@linaro.org,
+	m.szyprowski@samsung.com,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: (subset) [PATCH v8 0/5] TH1520 SoC: Add AON firmware & power-domain support
+Date: Mon,  7 Apr 2025 16:53:03 +0100
+Message-ID: <20250407-diabolic-draw-200389f7d6f0@spud>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250311171900.1549916-1-m.wilczynski@samsung.com>
+References:  <CGME20250311172030eucas1p12dda42760f751174e774b8d1a3d3f4cd@eucas1p1.samsung.com> <20250311171900.1549916-1-m.wilczynski@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=657; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=n+5hM5kQu6ehBQ3n8017RawWqIN18GKPHpFuSaJtspw=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOmfv9w78Ij31uJti0qcPn9UvyjW1zH94RHDDZG1DJ+6X /yfkxfp3lHKwiDGwSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJzCpk+M1mvj/LPvDz037h SRO3vs1+a+fS33fCuZm172lyo7OdYxsjQ8sti/PNp0IbLrEFvmBy6Db5KMIf8iaLq0X9ocBlnz5 1VgA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed Apr 2, 2025 at 11:06 AM CEST, Danilo Krummrich wrote:
-> On Wed, Apr 02, 2025 at 12:05:56AM +0000, Benno Lossin wrote:
->> On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
->> > On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
->> >> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
->> >> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
->> >> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
->> >> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
->> >> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
->> >> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wr=
-ote:
->> >> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
->> >> >> >> >> > Along these lines, if you can convince me that this is som=
-ething that we
->> >> >> >> >> > really should be doing, in that we should always be checki=
-ng every time
->> >> >> >> >> > someone would want to call to_pci_dev(), that the return v=
-alue is
->> >> >> >> >> > checked, then why don't we also do this in C if it's going=
- to be
->> >> >> >> >> > something to assure people it is going to be correct?  I d=
-on't want to
->> >> >> >> >> > see the rust and C sides get "out of sync" here for things=
- that can be
->> >> >> >> >> > kept in sync, as that reduces the mental load of all of us=
- as we travers
->> >> >> >> >> > across the boundry for the next 20+ years.
->> >> >> >> >>=20
->> >> >> >> >> I think in this case it is good when the C and Rust side get=
- a bit
->> >> >> >> >> "out of sync":
->> >> >> >> >
->> >> >> >> > A bit more clarification on this:
->> >> >> >> >
->> >> >> >> > What I want to say with this is, since we can cover a lot of =
-the common cases
->> >> >> >> > through abstractions and the type system, we're left with the=
- not so common
->> >> >> >> > ones, where the "upcasts" are not made in the context of comm=
-on and well
->> >> >> >> > established patterns, but, for instance, depend on the semant=
-ics of the driver;
->> >> >> >> > those should not be unsafe IMHO.
->> >> >> >>=20
->> >> >> >> I don't think that we should use `TryFrom` for stuff that shoul=
-d only be
->> >> >> >> used seldomly. A function that we can document properly is a mu=
-ch better
->> >> >> >> fit, since we can point users to the "correct" API.
->> >> >> >
->> >> >> > Most of the cases where drivers would do this conversion should =
-be covered by
->> >> >> > the abstraction to already provide that actual bus specific devi=
-ce, rather than
->> >> >> > a generic one or some priv pointer, etc.
->> >> >> >
->> >> >> > So, the point is that the APIs we design won't leave drivers wit=
-h a reason to
->> >> >> > make this conversion in the first place. For the cases where the=
-y have to
->> >> >> > (which should be rare), it's the right thing to do. There is not=
- an alternative
->> >> >> > API to point to.
->> >> >>=20
->> >> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since =
-that
->> >> >> trait to me is a sign of a canonical way to convert a value.
->> >> >
->> >> > Well, it is the canonical way to convert, it's just that by the des=
-ign of other
->> >> > abstractions drivers should very rarely get in the situation of nee=
-ding it in
->> >> > the first place.
->> >>=20
->> >> I'd still prefer it though, since one can spot a
->> >>=20
->> >>     let dev =3D CustomDevice::checked_from(dev)?
->> >>=20
->> >> much better in review than the `try_from` conversion. It also prevent=
-s
->> >> one from giving it to a generic interface expecting the `TryFrom` tra=
-it.
->> >
->> > (I plan to rebase this on my series introducing the Bound device conte=
-xt [1].)
->> >
->> > I thought about this for a while and I still think TryFrom is fine her=
-e.
->>=20
->> What reasoning do you have?
->
-> The concern in terms of abuse is that one could try to randomly guess the
-> "outer" device type (if any), which obiously indicates a fundamental desi=
-gn
-> issue.
->
-> But that's not specific to devices; it is a common anti-pattern in OOP to
-> randomly guess the subclass type of an object instance.
->
-> So, I don't think the situation here is really that special such that it =
-needs
-> an extra highlight.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-I re-read the docs on `TryFrom` and I have some new thoughts:
-`TryFrom<device::Device> for pci::Device` is indeed similar to
-`TryFrom<i64> for i32`. If the `device::Device` is embedded in a
-`pci::Device`, then the `Ok` value is obvious. If not, then the error is
-also clear and the user should do something in that case. So in this
-regard, it's pretty natural to use `TryFrom`.
+On Tue, 11 Mar 2025 18:18:55 +0100, Michal Wilczynski wrote:
+> This patch series introduces and documents power management (PM) support and
+> the AON firmware driver for the T-Head TH1520 SoC, as used on the LicheePi 4A
+> board. While part of a larger effort to enable the Imagination BXM-4-64 GPU
+> upstream, these patches can merge independently.
+> 
+> Bigger series cover letter:
+> https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
+> 
+> [...]
 
-Now my initial thoughts were more on the side of if people should avoid
-it, then it shouldn't be named `try_from`. But IIUC, most of the time
-they won't be able to call `try_from`, since they already have the
-correct type to begin with.
+Applied to riscv-config-for-next, thanks!
 
-Ultimately this is your call to make, if you think that it's unlikely
-that people will use the `try_from` in the wrong places, then go for it.
+[5/5] riscv: Enable PM_GENERIC_DOMAINS for T-Head SoCs
+      https://git.kernel.org/conor/c/54fe9380a50b
 
->> > At some point I want to replace this implementation with a macro, sinc=
-e the code
->> > is pretty similar for bus specific devices. I think that's a bit clean=
-er with
->> > TryFrom compared to with a custom method, since we'd need the bus spec=
-ific
->> > device to call the macro from the generic impl, i.e.
->> >
->> > =09impl<Ctx: DeviceContext> Device<Ctx>
->> >
->> > rather than a specific one, which we can't control. We can control it =
-for
->> > TryFrom though.
->>=20
->> We could have our own trait for that.
->
-> I don't think we should have a trait specific for devices for this. If we=
- really
-> think the above anti-pattern deserves special attention, then we should h=
-ave a
-> generic trait (e.g. FromSuper<T>) instead.
->
-> But I'm not sure that we really need to put special attention on that.
-
-That's fair, but I think then it would lose the `Device` specific docs
-about not using it if there are other options.
-
----
-Cheers,
-Benno
-
+Thanks,
+Conor.
