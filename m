@@ -1,213 +1,113 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4292722652E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6577E224FD;
+	Mon,  7 Apr 2025 11:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025003; cv=none; b=Q6mJD2VQ2QEtWRtEgMq6+B5BfbZ9PRiAVs5sNHqBKKrXJMIuDxNXAyWC/nHEWs11+f3KZ3Z2O2CiweoodQnPwzrwkqsBhgbn3+hAqT9/eMvW96doCByJtO4++nv6t1hagekh1pet8sIpZmUiY529tFmEdEQdFfJzSqddC8zWSwg=
+	t=1744025029; cv=none; b=Lxsj3OS2RSglAQW2zGjqIvtdEHpRod5nDN2Adwxba9F++yXBoxD19A1le3OfYMC+HQVpFuez21BA6PCUKDESNBhmkWDrboA/meEJOGpkDaS2lyjLVWerJld/qaDjGF0PxpEYtdE+cVlu09jJYjbbVTtWcXisqKG7p36y2c5UY0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025003; c=relaxed/simple;
-	bh=9ULjJH5M27m+Ul5XupFsEMVMAitDOxAYjmbue307NqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ehh6/T5QrNMTly/XCE8luyNZ+rFjfwZ2P/EQTtr+BkLc8YOyM8Tg3g1W1sTqfLKZ8caSirNop0My5PNShrSJwuFht62Qtk1PJHxeH0xh3XvNeamCmmek+MT7ovd4oiTebAFdSb/+lrvj6tfVakc6eKHr0Lpqaz5Jra/KzTPGz20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ONZrRj/d; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744025029; c=relaxed/simple;
+	bh=sHEKCcrC+aBLI9FEns9XzlFr6q3pm4govj/mFugnWCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RaEFSpTebGe3uP3o7spCPEoDcQZqP79kNj82sWvonFKwC3DENq+1W+rqYM5pebZPBtkMtsUXvzj1JT1teu3ZElw6Rityh2g+vUEku/7C61bVIxt0fboRCQHBuNufbdTDHTYXpAxHnWPPBnDhU0tmhhxt4FwlCBqDbUS4TzTCCh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+V5oIbE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONZrRj/d"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac345bd8e13so709556766b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744024999; x=1744629799; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K75WVrnwF2RMwBZca7VabHFLHEWgEfMMiN0EHNjeDhE=;
-        b=ONZrRj/dgq8EfDoaIWrqAj9k79lPcyzMza4mGSyjxvc/hHLFx/CdvkO11n6pr86YdY
-         hU4PZeIA1utBwiDJPzkrA+4IDWRxxqRrlibctePpXpf4oBRjFRsDvZSoczcW2a2rBU7J
-         H+pj9dIQVBNqKI4We1iYsyZbeIp3kDZVoGo2DNGOx8H6iMpQF9E4ezi/OPJwUHYSpqmN
-         8h8ryQwNi0ys47qDdILsDDydHva04tzGcbL0OZuvRv04AK0vhhluJ/HIGM9j1HfE+EoZ
-         9KRu4QWbN2xYRd3bchuisPkGcxznYhLkGr1bB5i9P5hu/lnv9JepUxto00FEpXtTIad7
-         Sjcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744024999; x=1744629799;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K75WVrnwF2RMwBZca7VabHFLHEWgEfMMiN0EHNjeDhE=;
-        b=gBSNAn4lbre+N8hwN4QoxnrXIJfUlLbAfCHbLB17mCDQAQUc2ob+iM71eQxaabsDX7
-         fZDl49txm9uRtb4OmEn6m+uawn78V/BeBSnkRC+NpCvHb40UKrWvS8on/n/svMPn2257
-         R6zxXrlaO2m4dTV+OV3rRfqnpMCOyXNZ3m1QSKmsmvi2r49i74Y5Djgw4YQCglcfJuYz
-         9s8ZSz8zsQRuw/fzEUuVOmvsSU/Rs/XYgnzb9JN4jjVM9JPJa7n03O/K3kc7LWFJcUie
-         lO2kGdQV5yelEa+maldz1ZjI/VVVq9NDS+rYyUQ06umr+j8NQMOy/XXBIq3W4ptnxt/e
-         sIeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuZbdksNThV0OGs0/ys0UK5Zif6c/plkKK+47JyL5eycWvQpa4l+I84QBcs/MnjECXnMmPcu8JIQ3eJ2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGafDGsQqUkoYG2tFp/EB+dmyRm4Ax6fKhchHpxmHfKodolrJa
-	IUkomdTVN2dv7OrDEOwHv2u0bPV+6Rf1BXX0d50qq/0zYNo4H+UZqLOZNjA6
-X-Gm-Gg: ASbGncuMLZdp+u7CrxY0bfqcYw2wjdUVP2mea70n7twsNVHguL8BsMPvj/mxhIamveQ
-	GpSVf8vUknNM0b4dYQxZ84Vyq6KT83YGvXklhCboDzA3NR1GqQ5p6+4ayjWpeiNBWPeKoODo9Ls
-	Zp1vECZnzgqKV4B5P+uTOrZkC4ZDKHVdNZ/GlZlhJWiXWXv+aTZLPFW1PL3JPgs8CpC0CVTlQaC
-	2p1PMJJiJkPLzSGVRtggJPVwR/55IxdH38AQfFsMIK6wjUWHl0P3ackCDf2en5d5sNGOU9Gosr5
-	JVQAzOyxOk6XUaj5Q3g/+BnQGhB0UGELyC9I
-X-Google-Smtp-Source: AGHT+IF04Eagh0FV1hi3MRhHCCoP/aWp7SqK89xlJ3XA4skuerEkya5+ccgPhUHTtpPZZuFrFhLOKw==
-X-Received: by 2002:a17:907:724e:b0:ac7:3918:752d with SMTP id a640c23a62f3a-ac7e77b2faamr731384266b.58.1744024999275;
-        Mon, 07 Apr 2025 04:23:19 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f08a98sm6583194a12.34.2025.04.07.04.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 04:23:18 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86: Remove __FORCE_ORDER workaround
-Date: Mon,  7 Apr 2025 13:23:01 +0200
-Message-ID: <20250407112316.378347-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+V5oIbE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8E3C4CEDD;
+	Mon,  7 Apr 2025 11:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744025028;
+	bh=sHEKCcrC+aBLI9FEns9XzlFr6q3pm4govj/mFugnWCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W+V5oIbEuDtHrxQJgqamVnyQwbZkwMLLRJm44TVufYz/3fHfv+aXNOtbiwMPaqL/4
+	 W4Fcgak8ZG3CNT59EC3YCAr5iiost2mwp8UhrJnAgWExIETwaXXO4mx5UoQivS4ZBA
+	 PzaCk7okiFCtBVxRlrIh/L3eGkph/AhgKfISUQ5YYUVM9J4/fJWc744GE/ebqgauDu
+	 f8+IIrs7QNJSuDgw7W846+RjWcwNAMKCYLYTcYC1pTU0/ozrvE2juSmmESRhVEM0o6
+	 Yq1o9WQcqKehDJZEbRF0WRvMgEjBLEV7o4flfX+Kgaf902OY1OrnLBpJqS0xkiVnIl
+	 6nDHZuaP6hrVg==
+Date: Mon, 7 Apr 2025 14:23:43 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v7] KEYS: Add a list for unreferenced keys
+Message-ID: <Z_O1v8awuTeJ9qfS@kernel.org>
+References: <20250407023918.29956-1-jarkko@kernel.org>
+ <CGME20250407102514eucas1p1b297b7b6012a5ece4ccdca8e0e2c7956@eucas1p1.samsung.com>
+ <32c1e996-ac34-496f-933e-a266b487da1a@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <32c1e996-ac34-496f-933e-a266b487da1a@samsung.com>
 
-GCC PR82602 that caused invalid scheduling of volatile asms:
+On Mon, Apr 07, 2025 at 12:25:11PM +0200, Marek Szyprowski wrote:
+> On 07.04.2025 04:39, Jarkko Sakkinen wrote:
+> > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> >
+> > Add an isolated list of unreferenced keys to be queued for deletion, and
+> > try to pin the keys in the garbage collector before processing anything.
+> > Skip unpinnable keys.
+> >
+> > Use this list for blocking the reaping process during the teardown:
+> >
+> > 1. First off, the keys added to `keys_graveyard` are snapshotted, and the
+> >     list is flushed. This the very last step in `key_put()`.
+> > 2. `key_put()` reaches zero. This will mark key as busy for the garbage
+> >     collector.
+> > 3. `key_garbage_collector()` will try to increase refcount, which won't go
+> >     above zero. Whenever this happens, the key will be skipped.
+> >
+> > Cc: stable@vger.kernel.org # v6.1+ Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> This patch landed in today's linux-next as commit b0d023797e3e ("keys: 
+> Add a list for unreferenced keys"). In my tests I found that it triggers 
+> the following lockdep issue:
+> 
+> ================================
+> WARNING: inconsistent lock state
+> 6.15.0-rc1-next-20250407 #15630 Not tainted
+> --------------------------------
+> inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+> ksoftirqd/3/32 [HC0[0]:SC1[1]:HE1:SE0] takes:
+> c13fdd68 (key_serial_lock){+.?.}-{2:2}, at: key_put+0x74/0x128
+> {SOFTIRQ-ON-W} state was registered at:
+>    lock_acquire+0x134/0x384
+>    _raw_spin_lock+0x38/0x48
+>    key_alloc+0x2fc/0x4d8
+>    keyring_alloc+0x40/0x90
+>    system_trusted_keyring_init+0x50/0x7c
+>    do_one_initcall+0x68/0x314
+>    kernel_init_freeable+0x1c0/0x224
+>    kernel_init+0x1c/0x12c
+>    ret_from_fork+0x14/0x28
+> irq event stamp: 234
+> hardirqs last  enabled at (234): [<c0cb7060>] 
+> _raw_spin_unlock_irqrestore+0x5c/0x60
+> hardirqs last disabled at (233): [<c0cb6dd0>] 
+> _raw_spin_lock_irqsave+0x64/0x68
+> softirqs last  enabled at (42): [<c013bcd8>] handle_softirqs+0x328/0x520
+> softirqs last disabled at (47): [<c013bf10>] run_ksoftirqd+0x40/0x68
 
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602
+OK what went to -next went there by accident and has been removed,
+sorry. I think it was like the very first version of this patch.
 
-was fixed for gcc-8.1.0, the current minimum version of the
-compiler, required to compile the kernel. Remove workaround
-that prevented invalid scheduling for compilers, affected by
-PR82602.
+Thanks for informing anyhow!
 
-There were no differences between old and new kernel object file
-when compiled for x86_64 defconfig with gcc-8.1.0.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/debugreg.h      | 12 ++++++------
- arch/x86/include/asm/special_insns.h | 21 +++++----------------
- 2 files changed, 11 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-index fdbbbfec745a..719d95f1ab5e 100644
---- a/arch/x86/include/asm/debugreg.h
-+++ b/arch/x86/include/asm/debugreg.h
-@@ -23,7 +23,7 @@ DECLARE_PER_CPU(unsigned long, cpu_dr7);
- 
- static __always_inline unsigned long native_get_debugreg(int regno)
- {
--	unsigned long val = 0;	/* Damn you, gcc! */
-+	unsigned long val;
- 
- 	switch (regno) {
- 	case 0:
-@@ -43,7 +43,7 @@ static __always_inline unsigned long native_get_debugreg(int regno)
- 		break;
- 	case 7:
- 		/*
--		 * Apply __FORCE_ORDER to DR7 reads to forbid re-ordering them
-+		 * Use "asm volatile" for DR7 reads to forbid re-ordering them
- 		 * with other code.
- 		 *
- 		 * This is needed because a DR7 access can cause a #VC exception
-@@ -55,7 +55,7 @@ static __always_inline unsigned long native_get_debugreg(int regno)
- 		 * re-ordered to happen before the call to sev_es_ist_enter(),
- 		 * causing stack recursion.
- 		 */
--		asm volatile("mov %%db7, %0" : "=r" (val) : __FORCE_ORDER);
-+		asm volatile("mov %%db7, %0" : "=r" (val));
- 		break;
- 	default:
- 		BUG();
-@@ -83,15 +83,15 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
- 		break;
- 	case 7:
- 		/*
--		 * Apply __FORCE_ORDER to DR7 writes to forbid re-ordering them
-+		 * Use "asm volatile" for DR7 writes to forbid re-ordering them
- 		 * with other code.
- 		 *
- 		 * While is didn't happen with a DR7 write (see the DR7 read
- 		 * comment above which explains where it happened), add the
--		 * __FORCE_ORDER here too to avoid similar problems in the
-+		 * "asm volatile" here too to avoid similar problems in the
- 		 * future.
- 		 */
--		asm volatile("mov %0, %%db7"	::"r" (value), __FORCE_ORDER);
-+		asm volatile("mov %0, %%db7"	::"r" (value));
- 		break;
- 	default:
- 		BUG();
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 6266d6b9e0b8..ecda17efa042 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -10,30 +10,19 @@
- #include <linux/irqflags.h>
- #include <linux/jump_label.h>
- 
--/*
-- * The compiler should not reorder volatile asm statements with respect to each
-- * other: they should execute in program order. However GCC 4.9.x and 5.x have
-- * a bug (which was fixed in 8.1, 7.3 and 6.5) where they might reorder
-- * volatile asm. The write functions are not affected since they have memory
-- * clobbers preventing reordering. To prevent reads from being reordered with
-- * respect to writes, use a dummy memory operand.
-- */
--
--#define __FORCE_ORDER "m"(*(unsigned int *)0x1000UL)
--
- void native_write_cr0(unsigned long val);
- 
- static inline unsigned long native_read_cr0(void)
- {
- 	unsigned long val;
--	asm volatile("mov %%cr0,%0\n\t" : "=r" (val) : __FORCE_ORDER);
-+	asm volatile("mov %%cr0,%0" : "=r" (val));
- 	return val;
- }
- 
- static __always_inline unsigned long native_read_cr2(void)
- {
- 	unsigned long val;
--	asm volatile("mov %%cr2,%0\n\t" : "=r" (val) : __FORCE_ORDER);
-+	asm volatile("mov %%cr2,%0" : "=r" (val));
- 	return val;
- }
- 
-@@ -45,7 +34,7 @@ static __always_inline void native_write_cr2(unsigned long val)
- static __always_inline unsigned long __native_read_cr3(void)
- {
- 	unsigned long val;
--	asm volatile("mov %%cr3,%0\n\t" : "=r" (val) : __FORCE_ORDER);
-+	asm volatile("mov %%cr3,%0" : "=r" (val));
- 	return val;
- }
- 
-@@ -66,10 +55,10 @@ static inline unsigned long native_read_cr4(void)
- 	asm volatile("1: mov %%cr4, %0\n"
- 		     "2:\n"
- 		     _ASM_EXTABLE(1b, 2b)
--		     : "=r" (val) : "0" (0), __FORCE_ORDER);
-+		     : "=r" (val) : "0" (0));
- #else
- 	/* CR4 always exists on x86_64. */
--	asm volatile("mov %%cr4,%0\n\t" : "=r" (val) : __FORCE_ORDER);
-+	asm volatile("mov %%cr4,%0" : "=r" (val));
- #endif
- 	return val;
- }
--- 
-2.49.0
-
+BR, Jarkko
