@@ -1,144 +1,161 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3B620E6FB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46224A04;
+	Mon,  7 Apr 2025 13:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744031350; cv=none; b=cgtMDJkfD9oZcvOWfEhz74YVx4rYwzfkGmoc8msv/QC5AqiK2dNM8bWIpb5ce0ZW/6C9tjpdxyg9jBzA+FKCulNMaV9KhGqsHOv7KFxVUF7/7hw5LWQOU7Si1W9h6KyHuY62hljNMTYqasuJ1Vc1pbYoWQFeHzBetqw7zlLox98=
+	t=1744031401; cv=none; b=T6iU0y2FzwyM4qGa7tXpOD/lu1MjhrCHlj29zitmPFRREXsGzJecbSRmYpt7DzeFLCvnzG8w5FZMUzS3h3cRgm3ZdV/6jfm9gtkp7xregbPIRpCsNyNJBZx9Y5LanRB/IATDfJ194h8cVh5e1HgTT19Um6grar3S47MElp+Jepw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744031350; c=relaxed/simple;
-	bh=xXCuFVww/NlUudV8SgwoqY3CZ2vPEw38inrW5lB3lLg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DgB9vbyqTm9HYNAfU42Jp96JahbZU1EfrXHFtsAsxK+YTceVlMLdQ85ZRaJbMrO3APZklcZbYQZ5gIBMXvuryDz+L4kiLOpa83UdzUNU0yFl/oa9Ihld4QSISQLjpDWEl+BNZ+bpmLIn/4UbV8QttTJSXvH+seE5Fa0OKNVoYCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g6DAHguz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g6DAHguz"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dk2P028069
-	for <linux-kernel@vger.kernel.org>; Mon, 7 Apr 2025 13:09:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hAFJIGd25SE14xpwa+KhUSRa80h97UsYN+TeQKpPB9k=; b=g6DAHguz4Gq0/Frx
-	Mz1CwKecDhKrpZn6+rg4Xq9oRH/S3CdY2l1ELTu0/ex2PkqC5IVXTsPYh6klLHKi
-	YRv0W1ToJBAz5/8kpaS6Rm+ifSI3Wam8NA+Lmk3bxNoAfgKpXmu62++ZFJLXghTV
-	K4Dp3tCgQrD5ImfBLRQ95hV2s9KuRbHu6K0VaJ2ZYv3nXRfrutNn99fZ+V4L0z+P
-	B2BpE8Dq3X1a5OvaiDlllrN6/8zaXXJguUOEYkficfhZ7SzVfCYyMCGcLk59+ZPa
-	i3jpvWBoQa8k/h2x+53IsY8jj9U0GK++z/pfqIRA1UVmnS8ZzzyJnn00Uv7UbW44
-	GyOBDA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcyvap2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 13:09:07 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c9abdbd3so419832485a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:09:07 -0700 (PDT)
+	s=arc-20240116; t=1744031401; c=relaxed/simple;
+	bh=9MC8INLcpsg0XXiU5MvT3qHFLKectbQWdkzXQ2sDKZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TVhY7Iz0xGNRA4Zf0Z3m6lboQMeleiiZqBLAi7BhXwP65m1X9siVxQPcuZ8SMvsMijlXSLBRXBr/QDoVWQuWipidQPohyj5DMXy63JzO2/9JSb0JCr+7xZs2BNGm9mmXXXx8KPZ2A2G9aYiXxXRY17YAPwTu0DCzNdHP17eWAIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1794792241.1;
+        Mon, 07 Apr 2025 06:09:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744031347; x=1744636147;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hAFJIGd25SE14xpwa+KhUSRa80h97UsYN+TeQKpPB9k=;
-        b=kXFTDA5a9BIPLnN0GLz+seU2GMBwZ6pp+hFBRVRw6uifC3HhFXbaPLLFjlirK3/kXH
-         kPP5vMrf8Py45KDezlTRTB//acKoIjhfznUU+cIPhFBgFZd/dwL/oqa21xvU7KiB8jNi
-         S3HOZsi4dfk41djMz95/w2d5W40LO6bxIVR41xS+K6fqpnoINf8EL7NjEPYTCjEBqgAk
-         vSKRPhlfzVZsq8GqcU0+LHwQ0D/crh8Vr61m0K+Oi+A/gUGkIZsvezU9n8LWCLSF9JcE
-         N+UW1Za7AZZPBblm22a9mZHspHbB1NHjY6Cb80428en9fss/nMg/xeGN4Y7GggVIX8XB
-         21Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXx6kBgEQbtpTr4FBIayXD0imkpAMOmFuwarjnLJ/I82/VFRT6wl8BmKIxS3vNUP2lHYY0RwdIqXLcHeGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyXTgQ+6Gaz7R8qqNm1beO7BRUJhq/Iq2bxFx3pRImuaCE3rqA
-	8gReL18SlPiEnp03ppdOclYSDDE1XvEEYbEF7Mk9nb0ak/QYSAwoNpAhz+/QEDt7u0ZVLB8ynHH
-	Yk0EMOpohl9x2tgBiIZU6f2tdBzzrHc7gE6mG+l2tSEiq4r3UbEwtElYaMALMUck=
-X-Gm-Gg: ASbGnct6ODoOXIe8gFoROOftLTxBmfWctsF+zypeqxJ2XWmHvQiIvU5bnAMgJtHp83Z
-	mL4VBYYSQvM85vBTluAeN2L8IdKKu0RGzSEH1trKkL9JafdhQoM9UjAeVJP/Y1YtrQdUelSJjql
-	QW5Uq5MZZmlywln/BReZavcQiW8Zvh0uKY4W8vjyJEVAcPzSqZ5FMHrbz4+vGG9ZC2CYWi2j/ib
-	PqscCB+whwkJifg+cRu3ISW5KF0GKRtnIaSvTrTDpg+qJa47rfXjU+jWRujrbmSF2LuFH7GLJ+i
-	0yt+TMFL0zUXMnr5KGt42oJz2CfSjp7TVuaEoPwjoyCmHO+rg3TNUVWaoIQFPTy5306H/N1YXpz
-	6jn0=
-X-Received: by 2002:a05:620a:24ce:b0:7c5:e226:9da2 with SMTP id af79cd13be357-7c775ae9e54mr1621401985a.47.1744031346752;
-        Mon, 07 Apr 2025 06:09:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFe7KohhBIGgD1fDaoNscLqxmlrmjcjcccMAiZ1cn7+YLrzEZrX0CHRA3Rk601QkVQkjPsAvA==
-X-Received: by 2002:a05:620a:24ce:b0:7c5:e226:9da2 with SMTP id af79cd13be357-7c775ae9e54mr1621397985a.47.1744031346391;
-        Mon, 07 Apr 2025 06:09:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e67141csm1293819e87.224.2025.04.07.06.09.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 06:09:05 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Hermes Wu <Hermes.wu@ite.com.tw>, Dmitry Baryshkov <lumag@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-In-Reply-To: <20250314-dp-hdmi-audio-v6-0-dbd228fa73d7@oss.qualcomm.com>
-References: <20250314-dp-hdmi-audio-v6-0-dbd228fa73d7@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v6 0/4] drm/bridge: reuse DRM HDMI Audio
- helpers for DisplayPort bridges
-Message-Id: <174403134393.3385678.13559826981567818455.b4-ty@oss.qualcomm.com>
-Date: Mon, 07 Apr 2025 16:09:03 +0300
+        d=1e100.net; s=20230601; t=1744031397; x=1744636197;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VMbt/iLjQgXAqzYY3Q4wO5RPHa7TGoR9HHOAkNd8J4I=;
+        b=SEa1MpvHjQ/FTcuWiq6iKhEk9eLc7yswrnd2V7NxHjN6riuk4kLanPr3KvOKW5z9L/
+         PqBq8Vtb9lOTcHGoScPxpyDZM7Jsl0rmlINB7Le7LzbYZlVPeQwR43ooBcfPMBRwlg5m
+         IFASpMpU2JvW6cHLLqvBUiy6/mEvDVmDO7nb/rrOXJCagkmWBF+REer32YJp3zJLLBBT
+         odhL0PmUtRDi/ynJGUYTRrloil2eg+V/1nzE87vvmk3O8hfDamt3GZ5XbNxfUgwX9CSh
+         tQA2ArGeTEUQXSftFpWTnFspwWoZjbXEYWJg8IprtloFwwqULW6ynCxKaM6EmIhnWXqN
+         QP3w==
+X-Forwarded-Encrypted: i=1; AJvYcCU+h7hrKFxAFWiNRCYFZtBKFsItW4eeUbbWYKjQC7X5qzL74LCLA+YAoVEEpu3xUY302TWUK/e1AvwzoDayy+ngG3Y=@vger.kernel.org, AJvYcCVK3Q0j0B8a+attqOw4I/d31pYqWQp/RlAGacv9UcBsLRlx8Bp6pyX5DcAFCWVA6VykHKBAlaTP1fHkPQE=@vger.kernel.org, AJvYcCWxtds4OqyhQAjiaTB52aCsuUh3t3K8tmJL12I9rr2WwndKP3/ya/Rx51opnd/0/TxQpcFvYs33/EtXSBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTCr6rdk9OAqZb7uBbMP4SV8xzfVCwGFDPPn7tsxHF9iPjF+ij
+	o1h3ACoJihXwVIdV5fea+uyIXnHYPjD31b0v5vImEV2wbF+DgZLqCMBDiB18
+X-Gm-Gg: ASbGncvRcs1znuI2/P7Pb6J3NPWQRHjjV07l0rMqTUH5Z6e4lWGR9gCLr+PWhtmTYGn
+	R5HHDjRmRa5FbauA84ZF4AUa16/MaZ90TGaqU/+dcAyTG19eq/ZpisQau8d+WgxYCINX28mGXOO
+	UYVDltuk9ihgFR+J51xPFnl4MoNFBn8hWYeoGjZme0kd6ppqR5C8kU5AE5PKsTbpPpV6Q7FqElZ
+	awvCBQwP+W29XsDCo5BdV3C3zbjt4YvadTgeZJNHLWDhanMpFQu4QL/0Fm/uRNqcNLJjz4yDUxy
+	Aeb8z4qyZfQ0xogHRl0CcLYp+Gj9QyzbHzBWNX67Xq6e8l5NDE/N2Zwyh+2iOi0SVnll6s+n8ya
+	JnUDdszA=
+X-Google-Smtp-Source: AGHT+IGOD5dmsQ8m21gwcytd5EDiwEi/MRy59TrjZo5ewTnhrPnXxN4LDlLWEzDzJ9v6HGzPsg6MwA==
+X-Received: by 2002:a05:6102:334d:b0:4c3:6393:83f4 with SMTP id ada2fe7eead31-4c856889f09mr8839975137.2.1744031397316;
+        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8738b28b561sm1718557241.23.2025.04.07.06.09.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86feb848764so1783246241.0;
+        Mon, 07 Apr 2025 06:09:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWfc9+wu8uYzXb7+PprHVIwQ6DAGR717mxKz6gf8Z9Dd46hvCFE0eW69FjH2+7eJyrg6aKIXk9GO6P+LxLOE497Lzg=@vger.kernel.org, AJvYcCXCFYEgDup4/bWxWEOsMjlEgYkYVCoLRuWse8tmTSrkKaB/5kPScn0XSKEpjRZm9Vr0V4oqy+l2MTkwlFk=@vger.kernel.org, AJvYcCXUyvAy63If8kMUWNvyG3UJj8Gs8DGYpQ6DGvmTVvLIHz9OYj2cOxnFBPuGazrc2UctixzyKtPhz8PG6SY=@vger.kernel.org
+X-Received: by 2002:a05:6102:2c8c:b0:4c1:9159:859c with SMTP id
+ ada2fe7eead31-4c856907033mr8729050137.15.1744031396980; Mon, 07 Apr 2025
+ 06:09:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: G3jpNM3LT4zm75NyJm60dSWv2Uj1abmJ
-X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f3ce73 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=5uxiH3rk7msUY6mfsOcA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: G3jpNM3LT4zm75NyJm60dSWv2Uj1abmJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070092
+References: <20250124-alsa-hdmi-codec-eld-v1-0-bad045cfaeac@linaro.org> <20250124-alsa-hdmi-codec-eld-v1-2-bad045cfaeac@linaro.org>
+In-Reply-To: <20250124-alsa-hdmi-codec-eld-v1-2-bad045cfaeac@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Apr 2025 15:09:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWjc1rE54KZ39XmVbjvGa4rYeaSjAMgMQfs6gFKpRbhZg@mail.gmail.com>
+X-Gm-Features: ATxdqUGyXl6MbUhtXCef-j2gYLh_XFf9jBcdhmDTWPqF69APCxPPQvz1cfXCg4M
+Message-ID: <CAMuHMdWjc1rE54KZ39XmVbjvGa4rYeaSjAMgMQfs6gFKpRbhZg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: hdmi-codec: dump ELD through procfs
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 14 Mar 2025 11:36:47 +0200, Dmitry Baryshkov wrote:
-> A lot of DisplayPort bridges use HDMI Codec in order to provide audio
-> support. Present DRM HDMI Audio support has been written with the HDMI
-> and in particular DRM HDMI Connector framework support, however those
-> audio helpers can be easily reused for DisplayPort drivers too.
-> 
-> Patches by Hermes Wu that targeted implementing HDMI Audio support in
-> the iTE IT6506 driver pointed out the necessity of allowing one to use
-> generic audio helpers for DisplayPort drivers, as otherwise each driver
-> has to manually (and correctly) implement the get_eld() and plugged_cb
-> support.
-> 
-> [...]
+Hi Dmitry,
 
-Applied to drm-misc-next, thanks!
+On Fri, 24 Jan 2025 at 22:14, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+> Use freshly added API and add eld#n files to procfs for the ASoC cards
+> utilizing HDMI codec. This simplifies debugging of the possible ASoC /
+> HDMI / DisplayPort audio issues.
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[1/4] drm/bridge: split HDMI Audio from DRM_BRIDGE_OP_HDMI
-      commit: 5d04b41889596adab613b0e2f27f76f6414cda66
-[2/4] drm/bridge: add function interface for DisplayPort audio implementation
-      commit: d87ecc232706ace682a900a45018d843f148da56
-[3/4] drm/bridge-connector: hook DisplayPort audio support
-      commit: 231adeda9f674ece664b09b75b68a4c023180fb4
+Thanks for your patch, which is now commit 0ecd24a6d8b251eb ("ASoC:
+hdmi-codec: dump ELD through procfs") in v6.15-rc1.
 
-Best regards,
+This causes the following failure on Salvator-XS:
+
+    ------------[ cut here ]------------
+    proc_dir_entry 'card0/eld#0' already registered
+    WARNING: CPU: 3 PID: 93 at fs/proc/generic.c:377 proc_register+0x12c/0x1b8
+    CPU: 3 UID: 0 PID: 93 Comm: kworker/u33:5 Not tainted
+6.14.0-rc1-arm64-renesas-00004-g0ecd24a6d8b2 #2923
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+    Workqueue: events_unbound deferred_probe_work_func
+    pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+    pc : proc_register+0x12c/0x1b8
+    lr : proc_register+0x12c/0x1b8
+    sp : ffff800081ac38d0
+    x29: ffff800081ac38d0 x28: ffff0004c2f7b398 x27: ffff8000813fca80
+    x26: ffff0004c2f3b8c0 x25: ffff8000814b3660 x24: ffff0004c2f3b840
+    x23: 0000000000000005 x22: ffff0004c2ce7b2c x21: 0000000000000005
+    x20: ffff0004c2ce7a80 x19: ffff0004c2ce7a48 x18: 0000000000000006
+    x17: 0000000000000000 x16: 0000000000000068 x15: 0769076707650772
+    x14: 0720077907640761 x13: ffff800081380a30 x12: 00000000000005ca
+    x11: 00000000000001ee x10: ffff8000813d8a30 x9 : ffff800081380a30
+    x8 : 00000000ffffefff x7 : ffff8000813d8a30 x6 : 80000000fffff000
+    x5 : 00000000000001ef x4 : 0000000000000000 x3 : 0000000000000000
+    x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0004c0870000
+    Call trace:
+     proc_register+0x12c/0x1b8 (P)
+     proc_create_data+0x3c/0x60
+     snd_info_register+0xcc/0x12c
+     snd_info_register+0x30/0x12c
+     snd_info_card_register+0x1c/0x94
+     snd_card_register+0x1a4/0x1e4
+     snd_soc_bind_card+0x7dc/0xab4
+     snd_soc_register_card+0xec/0x100
+     devm_snd_soc_register_card+0x48/0x98
+     audio_graph_parse_of+0x1c4/0x1f8
+     graph_probe+0x6c/0x80
+     platform_probe+0x64/0xbc
+     really_probe+0xb8/0x294
+     __driver_probe_device+0x74/0x124
+     driver_probe_device+0xd4/0x158
+     __device_attach_driver+0xd4/0x154
+     bus_for_each_drv+0x84/0xe0
+     __device_attach+0x9c/0x188
+     device_initial_probe+0x10/0x18
+     bus_probe_device+0xa0/0xa4
+     deferred_probe_work_func+0x80/0xb4
+     process_one_work+0x144/0x280
+     worker_thread+0x2c4/0x3cc
+     kthread+0x128/0x1e0
+     ret_from_fork+0x10/0x20
+    ---[ end trace 0000000000000000 ]---
+    asoc-audio-graph-card sound: ASoC: failed to register soundcard -12
+    asoc-audio-graph-card sound: probe with driver
+asoc-audio-graph-card failed with error -12
+
+And:
+
+     ALSA device list:
+    -  #0: rcar-sound
+    +  No soundcards found.
+
+So the card it tried to register is the first one?
+
+Reverting the commit fixes the issue.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-With best wishes
-Dmitry
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
