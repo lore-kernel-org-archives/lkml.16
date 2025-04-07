@@ -1,102 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918DB208993;
-	Mon,  7 Apr 2025 16:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E566B20DD5E;
+	Mon,  7 Apr 2025 16:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043940; cv=none; b=jpfGcYkRnS1HZJrxp4hueyQiKEWVXYiyQrPZsYzgiAkjyjbKo92lC++jsKx2URjb7AcH5dZ5GtMbc7BQ6RxNPfaa15V5vxD2c5MEjiT+vdADTuZ/z9xA++aKLa/ADHnQetsNp4/wwGyv34tFb9FAVBevYoWW9gbQmFQSNSYoBec=
+	t=1744043961; cv=none; b=tYk5vXjpziVXpZm+f0OvefcGWBYduFPDJ0Y5JUQrbbUrdKoCphxdSyvbcUM2ZUlTd+xZEQP88M5+KKUEEGqkVljgX/kBN8ei/dBFNOb0vnR17D4g2/TYQ5F3Kf78ZWPCaHo/Ju4XYpYVqyJOlE2/p/9HBK8clpZVbuHh7MenttU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043940; c=relaxed/simple;
-	bh=b5Bcf4bgH9mfTxOjTTOwooVPb+WHPpMcRRDPk4qIZbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V8kJobZt3WWZkRawDNCzz4oAI+V0QKy03LdXIwohOeh9PHNg4f39CG0Bsc5U0/476LWoKblFc7Y2LdyD3fAV++vsZ06uel5N9PgQ4HjEIe5wNxEPqAMltjjgOQ8eNlh8TGa+OfJf0awYzvtf7gJqFKIk2oSm4yOKHiA0oovjFPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jx4KxV9R; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744043961; c=relaxed/simple;
+	bh=Dg8o6C0AsxnelO6Xo6Qfc2MXFDv91eVFRd7+6eolJJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZQoUCvuNyzT+2wQIIvhuGnZzAPcbneJjnK3oi0YCJxgdv8V90lx0mhZqnPN9oVKiaGxiV9AshHGl1EE+azo1f+uh5t/oCd/9hB8p/kELGRMWUXtG88/p/5sZEQTvUe0PxTGPTNKWWvNTw5YnBuVmS+7LnQMepQ8DODfEKvgH/DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PwAsRLai; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jx4KxV9R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744043939; x=1775579939;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b5Bcf4bgH9mfTxOjTTOwooVPb+WHPpMcRRDPk4qIZbg=;
-  b=jx4KxV9RN5gDv6kTMtkzg3/Xvf6h8tIC9XRd4s3Vym0zaGOuwtpwoD5R
-   8nxfqlAy8m9MPBnZJ+AKwVT7MjoXrpsTVU5+/zVJbbCuZFcb0LZedpcwp
-   9KLf9sSCMlX03KDH0dfODU85gMPpw11RhvMkdcDQBwmYG8ymobjgeGLPM
-   f4HP7Ke8iVNyxHlycnsKNOajsVrqeWgrhLWu2wVAfXeDXn/6szoj8DCyR
-   MS1mo0/VCIcCwqdvL4xfy/Op6hd8PcAtdzYjsvxQauccOMGT4SXdC6KQX
-   VMrysvcVUPUKhRzO+fSJE51LBT7l+4Ip/dCIuDQ0obAvr3fp7vDt+E+kS
-   w==;
-X-CSE-ConnectionGUID: WgQnuPr8TdOmbiA6GR/hdQ==
-X-CSE-MsgGUID: WvXpTZgAR9ub/Lhu4bQ4WQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="67915103"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="67915103"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:38:57 -0700
-X-CSE-ConnectionGUID: a3D7z+wCQ0+4GqgKioce9Q==
-X-CSE-MsgGUID: Hc8LHqKdTLC6Iacr22IIeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127867940"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 07 Apr 2025 09:38:54 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A63D3F0; Mon, 07 Apr 2025 19:38:53 +0300 (EEST)
-Date: Mon, 7 Apr 2025 19:38:53 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Denis Mukhin <dmukhin@ford.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86/early_printk: add MMIO-based UARTs
-Message-ID: <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
-References: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PwAsRLai"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2B8B620485;
+	Mon,  7 Apr 2025 16:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744043956;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8CH/qp3/AaCHFl3eKPvG4jbQaXjD1BP8zO8PK+bAjXs=;
+	b=PwAsRLaiVpkvg02qQVZERhFznJv4C1gCboEdp20ke9sUHRUBwPvUQReKEvazvJDzSXAzD0
+	6MVzAsi8Iw6gj2UOKrWjE7AWTdWlDFj6aAgt+JEIrdlP0gndWnjzH94ExZDXWbd84L1KZS
+	ETsLaJ9rJhS0tloXjf8jlmEVdGMKsLfuLRCNuifRFdS/YNKH641do5dq6ANpTvO5K/5tdf
+	quZLAn9dkp9DKxgofEDrDbIpo3oEPM5SR3pYezHS37JMSJBqmVzHF54fEQgKmawwZgnRWL
+	Gans8LUwPGjFlhMiBE9nWFljGaSLJF3GJbN/D4LIMHCjVgwIEFE0mQiJLtvG4A==
+Date: Mon, 7 Apr 2025 18:39:14 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Richard
+ Cochran <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
+Message-ID: <20250407183914.4ec135c8@kmaincent-XPS-13-7390>
+In-Reply-To: <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
+	<20250407182028.75531758@kmaincent-XPS-13-7390>
+	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtieelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvt
+ hdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepkhgrsggvlheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, Mar 24, 2025 at 05:55:40PM -0700, Denis Mukhin wrote:
-> During the bring-up of an x86 board, the kernel was crashing before
-> reaching the platform's console driver because of a bug in the firmware,
-> leaving no trace of the boot progress.
-> 
-> It was discovered that the only available method to debug the kernel
-> boot process was via the platform's MMIO-based UART, as the board lacked
-> an I/O port-based UART, PCI UART, or functional video output.
-> 
-> Then it turned out that earlyprintk= does not have a knob to configure
-> the MMIO-mapped UART.
-> 
-> Extend the early printk facility to support platform MMIO-based UARTs
-> on x86 systems, enabling debugging during the system bring-up phase.
-> 
-> The command line syntax to enable platform MMIO-based UART is:
->   earlyprintk=mmio,membase[,{nocfg|baudrate}][,keep]
-> 
-> Note, the change does not integrate MMIO-based UART support to:
->   arch/x86/boot/early_serial_console.c
-> 
-> Also, update kernel parameters documentation with the new syntax and
-> add missing 'nocfg' setting to PCI serial cards description.
+On Mon, 7 Apr 2025 17:32:43 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Just for your information: Have you seen this rather old series of mine?
+> On Mon, Apr 07, 2025 at 06:20:28PM +0200, Kory Maincent wrote:
+> > On Mon, 7 Apr 2025 17:02:28 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> >  =20
+> > > On Mon, Apr 07, 2025 at 04:02:59PM +0200, Kory Maincent wrote: =20
+>  [...] =20
+> > >=20
+> > > Is the PTP selection stuff actually sorted now? Last time I tested it
+> > > after it having been merged into the kernel for a while, it didn't wo=
+rk,
+> > > and I reported that fact. You haven't told me that you now expect it =
+to
+> > > work. =20
+> >=20
+> > The last part of the series, the PTP selection support wasn't merged wh=
+en
+> > you tested it, although the default PTP choice that causes your regress=
+ion
+> > was merged.
+> > Now it is fully merged, even the ethtool support.
+> > https://lore.kernel.org/netdev/mjn6eeo6lestvo6z3utb7aemufmfhn5alecyoaz4=
+6dt4pwjn6v@4aaaz6qpqd4b/
+> >=20
+> > The only issue is the rtln warning from the phy_detach function. About =
+it, I
+> > have already sent you the work I have done throwing ASSERT_RTNL in
+> > phy_detach. Maybe I should resend it as RFC.
+> >  =20
+> > > I don't want this merged until such time that we can be sure that MVP=
+P2
+> > > platforms can continue using the MVPP2 PTP support, which to me means
+> > > that the PTP selection between a MAC and PHY needs to work. =20
+> >=20
+> > It should works, the default PTP will be the MAC PTP and you will be ab=
+le to
+> > select the current PTP between MAC and PHY with the following command:
+> > # ethtool --set-hwtimestamp-cfg eth0 index 0 qualifier precise
+> > Time stamping configuration for eth0:
+> > Hardware timestamp provider index: 0
+> > Hardware timestamp provider qualifier: Precise (IEEE 1588 quality)
+> > Hardware Transmit Timestamp Mode:
+> > 	off
+> > Hardware Receive Filter Mode:
+> > 	none
+> > Hardware Flags: none
+> > # ethtool --set-hwtimestamp-cfg eth0 index 1 qualifier precise
+> > Time stamping configuration for eth0:
+> > Hardware timestamp provider index: 1
+> > Hardware timestamp provider qualifier: Precise (IEEE 1588 quality)
+> > Hardware Transmit Timestamp Mode:
+> > 	off
+> > Hardware Receive Filter Mode:
+> > 	none
+> > Hardware Flags: none
+> >=20
+> > You can list the PTPs with the dump command:
+> > # ethtool --show-time-stamping "*"
+> >=20
+> > You will need to stop phc2sys and ptp4l during these change as linuxptp=
+ may
+> > face some issues during the PTP change. =20
+>=20
+> I'm preferring to my emails in connection with:
+>=20
+> https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
+>=20
+> when I tested your work last time, it seemed that what was merged hadn't
+> even been tested. In the last email, you said you'd look into it, but I
+> didn't hear anything further. Have the problems I reported been
+> addressed?
 
-https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot-earlyprintk
+It wasn't merged it was 19th version and it worked and was tested, but not
+with the best development design. I have replied to you that I will do some
+change in v20 to address this.
+https://lore.kernel.org/all/20241113171443.697ac278@kmaincent-XPS-13-7390/
 
--- 
-With Best Regards,
-Andy Shevchenko
+It gets finally merged in v21.
 
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
