@@ -1,143 +1,87 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAB91F462B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A131F63E8;
 	Mon,  7 Apr 2025 14:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037555; cv=none; b=gQ6aiKq5hopdDEKSMqbdqxRUzJHer4iWOHzseONEwMC6NuLVepBl1n2xrlF7nZUTksjuD60yuUAQjnW9jGHQmt4ozJbcrZKKd7lXHFzubv678nYh59hu7n/jybcCQyeNGijFwHZYvut99flEIahD5pbBl2RWk1bR+71ZDkBKdoU=
+	t=1744037555; cv=none; b=UJqSDJ/Hdzi6IOz9U7jRf6y0AVzMpPx+d32I69v7dolw9Z3GmHMUFWw0gAj/KaMpqbekXaq9KcbMUwmhp9fcwYVZL0vobt1qjWIHGfNmg26HmYrQcwZAD/6UGR8HWUXt7PDwS42tWUI/Vc624F9f4ChYnKbwTNqxSOqiC+ybn9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744037555; c=relaxed/simple;
-	bh=R+nIWcWX77DJgNRg7FJpUjVWPR4BsTfaYK2n0ZXLNGI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m6PbxHNtupXaEj53B3IDCbQSd1q+qhYUDnySkfztrflWfzOYO6zznsv0jENq8aKwwiNFHA1HPzcLxLrPsvBSPreqlwiC720uYQnJLuNxsvF1VIzMSSYzlad8X2djWk1fpQNqajTT/LEyPaA89das5YGCL/VNPU4Qj7Csu03nmyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=PjLEvA/u; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	bh=C9Lp+oxxK8YI81wgMjaGgrdX/gmILj7cv8HGtrIXUwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c57u9D/nIP+EyXZu8fn5kj4Fpd7LWCERfGdhl4hPSuqI7eEx6n7itfGV/xfzOa3+EWwXOlRd8beea+XtQs9sjwPioCTpfx4Qdj7qiB+4MyYKDxN1zz8I49lHmYK0PMfDYBu44mgW/xsrGIdgTriAKr0cnfZwoIzOSLZsv9c56Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hDdjxsvr; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="PjLEvA/u"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0693102EBA59;
-	Mon,  7 Apr 2025 16:52:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1744037552; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=9hQC8vrHx8N83M87KFCVLR8GsI2ltS0sa0EK/tes2cU=;
-	b=PjLEvA/uZUZS7dLRl31QVnzKPhVLsLVVzHyv+MDK3E54ix+H1HkmK99srbhgRGFhxc4r8P
-	rW64LhjCgZ5BverbwAzGhedyTVRf70p0y/gxp0KPUKRm85ytYZ2piW76GxMmFF5a0WVNUN
-	OWxSfv1J3ecjHaBddSfYrs+1pSsI/4tusJpWh+YjGspKHDSd9uxax5iv1HUUTxfrVxNX5a
-	aX9aM3ZBSspe/R37y/KSIa87dpD49FXtsSR8YWeFfq3GCGavPIzPsypgldNMJqwhlvB6or
-	GIn7ZNSQz7rEFdH8I3LLr8MtUJseQWQYRyoK/A9tYWDrMIstfrhmGtTi649NPw==
-From: Lukasz Majewski <lukma@denx.de>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next v4 5/5] ARM: mxs_defconfig: Enable CONFIG_FEC_MTIP_L2SW to support MTIP L2 switch
-Date: Mon,  7 Apr 2025 16:51:57 +0200
-Message-Id: <20250407145157.3626463-6-lukma@denx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407145157.3626463-1-lukma@denx.de>
-References: <20250407145157.3626463-1-lukma@denx.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hDdjxsvr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Du9LrcnSmmpQfyk+A9bM7cXw8+S6BiGq/iA3VmlU+QY=; b=hDdjxsvrnDrjTcHeoWHXf/wJbM
+	+LH1dO4eh/QQVhFNjbebh0t80sOJG9P9wy+qG88b8Jpf5MDdoiW0PKyODRl89vRbne8srmgsxqjze
+	4bKMLDmoF79HZ7wjPOB/TZDUmeepupQVTtWxLKRRBYnSyxPl5yO8PGyPhZJd7/uqzztQmT/h2dtD7
+	dqknCDv3S3Nljf8j/Th3loZDOfCsQvR2Nr3IxyrM9wm9VCyUVdnAe+eQFVO8/r59Qne6jv/VNOm7z
+	ZW96QTSfHhErE0hfb5PcBrtCNZlGjPvktfT8mJ4C0PrO3GBdzk6nIRSCDyYeCQvdsz6f2akvZiNYo
+	s78ZlglA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1npt-00000000oqp-2zxf;
+	Mon, 07 Apr 2025 14:52:29 +0000
+Date: Mon, 7 Apr 2025 07:52:29 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: linan666@huaweicloud.com
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, hare@suse.de,
+	martin.petersen@oracle.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+	yangerkun@huawei.com, zhangxiaoxu5@huawei.com, wanghai38@huawei.com
+Subject: Re: [PATCH 1/4] block: factor out a helper to set logical/physical
+ block size
+Message-ID: <Z_PmrUtXtCY6FCcw@infradead.org>
+References: <20250304121918.3159388-1-linan666@huaweicloud.com>
+ <20250304121918.3159388-2-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20250304121918.3159388-2-linan666@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-This patch enables support for More Than IP switch available on some
-imx28[7] devices.
+On Tue, Mar 04, 2025 at 08:19:15PM +0800, linan666@huaweicloud.com wrote:
+> +extern int blk_set_block_size(struct queue_limits *t, unsigned int logical_block_size,
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
-Changes for v4:
-- New patch
----
- arch/arm/configs/mxs_defconfig | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+No need for the extern.
 
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index d8a6e43c401e..4dc4306c035f 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -32,11 +32,10 @@ CONFIG_INET=y
- CONFIG_IP_PNP=y
- CONFIG_IP_PNP_DHCP=y
- CONFIG_SYN_COOKIES=y
--# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
--# CONFIG_INET_XFRM_MODE_TUNNEL is not set
--# CONFIG_INET_XFRM_MODE_BEET is not set
- # CONFIG_INET_DIAG is not set
- # CONFIG_IPV6 is not set
-+CONFIG_BRIDGE=y
-+CONFIG_NET_SWITCHDEV=y
- CONFIG_CAN=m
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
-@@ -45,7 +44,6 @@ CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_DATAFLASH=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_GPMI_NAND=y
-@@ -56,11 +54,11 @@ CONFIG_EEPROM_AT24=y
- CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_NETDEVICES=y
-+CONFIG_FEC_MTIP_L2SW=y
- CONFIG_ENC28J60=y
- CONFIG_ICPLUS_PHY=y
- CONFIG_MICREL_PHY=y
- CONFIG_REALTEK_PHY=y
--CONFIG_SMSC_PHY=y
- CONFIG_CAN_FLEXCAN=m
- CONFIG_USB_USBNET=y
- CONFIG_USB_NET_SMSC95XX=y
-@@ -77,13 +75,11 @@ CONFIG_SERIAL_AMBA_PL011=y
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
- CONFIG_SERIAL_MXS_AUART=y
- # CONFIG_HW_RANDOM is not set
--# CONFIG_I2C_COMPAT is not set
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_MXS=y
- CONFIG_SPI=y
- CONFIG_SPI_GPIO=m
- CONFIG_SPI_MXS=y
--CONFIG_GPIO_SYSFS=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_STMP3XXX_RTC_WATCHDOG=y
-@@ -138,10 +134,6 @@ CONFIG_PWM_MXS=y
- CONFIG_NVMEM_MXS_OCOTP=y
- CONFIG_EXT4_FS=y
- # CONFIG_DNOTIFY is not set
--CONFIG_NETFS_SUPPORT=m
--CONFIG_FSCACHE=y
--CONFIG_FSCACHE_STATS=y
--CONFIG_CACHEFILES=m
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
- CONFIG_TMPFS_POSIX_ACL=y
--- 
-2.39.5
+> +int blk_set_block_size(struct queue_limits *t, unsigned int logical_block_size,
+> +		     unsigned int physical_block_size)
+
+
+As Bart said this really needs documentation, both in the commit message
+and the code.  It appears to be a subset of the queue limits stacking,
+but I have no idea why that is needed, and the set_ name also confers
+the wrong implications to me gіven the stacking logic.
+
+> +{
+> +	int ret = 0;
+
+ret is always 0 or -1, so using a bool would be better.
+
+> +	t->max_sectors = blk_round_down_sectors(t->max_sectors, t->logical_block_size);
+> +	t->max_hw_sectors = blk_round_down_sectors(t->max_hw_sectors, t->logical_block_size);
+> +	t->max_dev_sectors = blk_round_down_sectors(t->max_dev_sectors, t->logical_block_size);
+
+Please avoid the overly long lines.
+
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(blk_set_block_size);
+
+At best this should be a EXPORT_SYMBOL_GPL.
 
