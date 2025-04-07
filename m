@@ -1,156 +1,170 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f98.google.com (mail-oa1-f98.google.com [209.85.160.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E047C227BB5;
-	Mon,  7 Apr 2025 12:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75831A7044
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029384; cv=none; b=Kac50nt3lkBfszMe+VlT0XPOUGBT0YuB6s6yT/MmO3wMNtn0Elf+hhRErAfoTBq7dX/mYlWUERxCtSrDc3vSux9vj/90NbMSaOVF7iFdRps+5sPDXhacc3U2s68ONIZ/iLXgv4qU5yCS9ATTLC6L/64QYjFZGdE2MIm+zLemhGQ=
+	t=1744029440; cv=none; b=oVZmxsOL6EtS6AtvghnU3PsTIuzX5YaktdDyiYhmDb8ViwhrlhhvgP8VoqAfw6hl5yz0RR1PVEx8K/D1yupu/Uo/853DJZlhCYF3V/Jvkpk30xKY/EywT4fCjbpmZxALuxgdxSyvgkO4Vvo3ZvJeokgGWjB5K9kIu+KFJImtoPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029384; c=relaxed/simple;
-	bh=1su1RVr9WJ58wLxVjeeErnWvxQCpntRQJD3KfQYta8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qMYKuRq4BiFDb3Fw9I1qTGvZmSyHXskg/ksYyzdnPO7Fsat2DzBJanBRQTkIsmfCOUuxJSiRQI7zi0vuTouVXIg3uhtEZ5/PLKwtWly7grpWsPneST3iM1NYHZjJEbff6UhuyATvFDpGMd7T4UA3AVhWfHKC4rM1uFwnSLbVL1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wPhcHSfk; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744029440; c=relaxed/simple;
+	bh=r/T5Mvgm+4E8BMHpVYH3ATZZcktSIOl0OSw2kMJvrD8=;
+	h=From:To:Cc:Subject:Date:Message-ID; b=g+5jX6Mc/mlhLDLmimrwjK0V1OnGhOx/7DD8pqwDQ3y9CapMlT7KyYRZHocjzKha3KQSiT44lJ8CFM2aa8DN4wRj6JVzdI9REQI2ZcwQNJaObK5kgzSf5Gpsgqbx2YLGHFqFhXtY9zpAJ6RHy6bCPMxR+jg1Pr+82fWw1jpw0DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=WF4fTGRO; arc=none smtp.client-ip=209.85.160.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wPhcHSfk"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537CZwPw915930
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 07:35:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744029358;
-	bh=ZIqra39FwyGHX2IBVRB5giqoWceascBFIqyv6tet87s=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=wPhcHSfkvXDW05Uv+Wg56S8G1rDINJtfYXmbcnaxa1Oi8f+UyxXNbiJmRvSpAzxAO
-	 7gp7cepdfvoGd1X3Zx71ysgd4sCOv+R40T0ciAhqs99x4CffV6iwmpDMiB5C40khlQ
-	 57Hz4oBrRIWyPOviRdoBA+MiGgf0dyYV0PCVaBX0=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537CZwqV113614
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 07:35:58 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 07:35:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 07:35:57 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537CZvmS006892;
-	Mon, 7 Apr 2025 07:35:57 -0500
-Message-ID: <956c0598-9934-4295-87af-ef86f4eabd94@ti.com>
-Date: Mon, 7 Apr 2025 07:35:57 -0500
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WF4fTGRO"
+Received: by mail-oa1-f98.google.com with SMTP id 586e51a60fabf-2c7e5fb8c38so2704818fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:37:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744029437; x=1744634237;
+        h=content-transfer-encoding:message-id:date:subject:cc:to:from
+         :dkim-signature:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21ud4a7PpzHTsE+w/yzFe+lHiyhoei8BC1Tfj/sZr0c=;
+        b=Msq8P9mn1rA5H/ZiaL1yo5aNIikzFJd6TqJBgCJo6Eqc0gNxxNAA/KuN4uwJqVzLmA
+         q/l9Zkvt9bsrWc23yjPcH3Ny+cosLBMqlgteHULtkugriW/zB0Utwgq+Z2pn48ApYlBf
+         4Uu+tE48XIVr3kTOyBJ/X1PyzKgVchCQGBiLuf9xiwzyEHbFFhPq9ZJ6R0uZtDlAPMRC
+         Ig61uMbRJ2vPY+wBY4wXUiRI9DuAJ7N6+6Q1Fvxr5caif7scwPvmhPxK8RgW2mxDOPAM
+         SjCzMYqM4kSUdZdzLlXOzOiK12WzO9fBdd1tleNVpPBekgrJ6E4KC7A8iaVTDW04gyVd
+         IU2Q==
+X-Gm-Message-State: AOJu0Yxf0MLpviRTEt0bkhNOGWnHWNFTG1ZKlc9pu5sM1AYo4U1p2t0a
+	SZRDeXD842F1plspoFMtJ/TOvU+l8sq1oCF4/3hY9OCfzpFAS6bQS94Kd5RAt+5O2dio5fAv7u8
+	LGdAmfclpFWV024t9ArR+dVqN8AT3iw==
+X-Gm-Gg: ASbGncvqy7JnkQKrljq7VrMIBrT+2mSerzLX5Yk2JP6nGeTMqYdf9j7/5u2ruvRMhg0
+	XbBb3Ec9aq2t3e6xHfeHdlGXqC6H1CFh6adx029UFhwkBCPS53fSQZqw2CfH2RPVJvTz33ar6Td
+	HBXXMO7vz97CwUhdI+o+VdU408rhUilqXtkgW82J/8fOs3g1HNBELZVD9r4zmrIKHKPsGOm1HUO
+	9nCxub7AIROSVuV/9rrMZ2oW/lAB97xenNrnYQjzEPiN61ZxE87GoeaTZDYNldgSlzD+aws1Zec
+	vRdyiYYGRJwgUMbyf/KgkhjCZ6E=
+X-Google-Smtp-Source: AGHT+IFwD3N3azBjTuz63ahaMy52lmrJaPVlJJNJrWOY/OnOBkQkkoZFOugtTieb0gKL5dsL3XIPsVIQhsY6
+X-Received: by 2002:a05:6870:9c84:b0:2cb:c780:ac52 with SMTP id 586e51a60fabf-2cd32f45081mr4230230fac.23.1744029436705;
+        Mon, 07 Apr 2025 05:37:16 -0700 (PDT)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2cc845542d8sm638112fac.5.2025.04.07.05.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 05:37:16 -0700 (PDT)
+X-Relaying-Domain: arista.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1744029434;
+	bh=21ud4a7PpzHTsE+w/yzFe+lHiyhoei8BC1Tfj/sZr0c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WF4fTGROUngYoKZVX7o687VHDF3//y+V1ZeOlVvIKNMYZXvXmuzOdjIY9IY0aLl+/
+	 FaEvgWzVzhOdPMgz21C8E0ueAEqVmEWHozh70iYFJtt65h8LlW+cBqBDdz5+UA2gu0
+	 V7bttLm9A0H0m0c9Y5rHdL6gX8p0GG2wxFRnVniL8lWbHfixZztxI9U2OLrsJHDTKP
+	 owwr0aMD3lulmaNzyf901YaArthAlftfRm1U6Gui/1XjUaWQsZmQXmOEM1XcnXoAWG
+	 XsJrBltB7Ie2IQIAKSkjgsx1wFIjMW5nupqATvSG8y9nDOCQpfnjmApxBsbGBrjJsH
+	 4I6gHLODN9Xng==
+Received: from mpazdan-home-zvfkk.localdomain (dhcp-244-168-54.sjc.aristanetworks.com [10.244.168.54])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id D55FE10023B;
+	Mon,  7 Apr 2025 12:37:14 +0000 (UTC)
+Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
+	id C0C3840B13; Mon,  7 Apr 2025 12:37:14 +0000 (UTC)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Marek Pazdan <mpazdan@arista.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Daniel Zahka <daniel.zahka@gmail.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Gal Pressman <gal@nvidia.com>,
+	Marek Pazdan <mpazdan@arista.com>
+Subject: [PATCH 1/2] ethtool: transceiver reset and presence pin control
+Date: Mon,  7 Apr 2025 12:35:37 +0000
+Message-ID: <20250407123714.21646-1-mpazdan@arista.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 11/11] arm64: dts: ti: k3-am64: Reserve timers used by
- MCU FW
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Padhi <b-padhi@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-12-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250405001518.1315273-12-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/4/25 7:15 PM, Judith Mendez wrote:
-> From: Hari Nagalla <hnagalla@ti.com>
-> 
-> AM64x device has 4 R5F cores in the main domain. TI MCU firmware uses
-> main domain timers as tick timers in these firmwares. Hence keep them
-> as reserved in the Linux device tree.
-> 
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/k3-am642-evm.dts | 17 +++++++++++++++++
->   arch/arm64/boot/dts/ti/k3-am642-sk.dts  | 17 +++++++++++++++++
->   2 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-> index f8ec40523254b..68bd6b806f8f0 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-> @@ -796,6 +796,23 @@ &mcu_m4fss {
->   	status = "okay";
->   };
->   
-> +/* main_timers 8-11 are used by TI MCU FW */
+Signal Definition section (Other signals) of SFF-8636 Spec mentions that
+additional signals like reset and module present may be implemented for
+a specific hardware. There is currently no user space API for control of
+those signals so user space management applications have no chance to
+perform some diagnostic or configuration operations. This patch uses
+get_phy_tunable/set_phy_tunable ioctl API to provide above control to
+user space. Despite ethtool reset option seems to be more suitable for
+transceiver module reset control, ethtool reset doesn't allow for reset
+pin assertion and deassertion. Userspace API may require control over
+when pin will be asserte and deasserted so we cannot trigger reset and
+leave it to the driver when deassert should be perfromed.
 
-Can you make this comment per-core and explain which core
-each timer is reserved for? Makes it easier on me in Zephyr
-to point out why we use the timers that we do, something
-like:
+Signed-off-by: Marek Pazdan <mpazdan@arista.com>
+---
+ include/uapi/linux/ethtool.h | 14 ++++++++++++++
+ net/ethtool/common.c         |  1 +
+ net/ethtool/ioctl.c          |  1 +
+ 3 files changed, 16 insertions(+)
 
-/* main_timer8 is reserved for mcu_r5fss0_core0 */
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 84833cca29fe..36c363b0ddd4 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -289,11 +289,24 @@ struct ethtool_tunable {
+ #define ETHTOOL_PHY_EDPD_NO_TX			0xfffe
+ #define ETHTOOL_PHY_EDPD_DISABLE		0
+ 
++/**
++ * SFF-8636 Spec in Signal Definition section (Other signals) mentions
++ * that 'Additional signals such as power, module present, interrupt, reset,
++ * and low-power mode may be implemented'. Below defines reflect present
++ * and reset signal statuses. Additionally ETHTOOL_PHY_MODULE_RESET
++ * in 'enum phy_tunable_id' will be used for reset pin toggle.
++ */
++#define ETHTOOL_PHY_MODULE_RESET_OFF            0x00
++#define ETHTOOL_PHY_MODULE_RESET_ON             0x01
++/* Not Available if module not present */
++#define ETHTOOL_PHY_MODULE_RESET_NA             0xff
++
+ enum phy_tunable_id {
+ 	ETHTOOL_PHY_ID_UNSPEC,
+ 	ETHTOOL_PHY_DOWNSHIFT,
+ 	ETHTOOL_PHY_FAST_LINK_DOWN,
+ 	ETHTOOL_PHY_EDPD,
++	ETHTOOL_PHY_MODULE_RESET,
+ 	/*
+ 	 * Add your fresh new phy tunable attribute above and remember to update
+ 	 * phy_tunable_strings[] in net/ethtool/common.c
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 0cb6da1f692a..3d35d3e77348 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -101,6 +101,7 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
+ 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
+ 	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
+ 	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
++	[ETHTOOL_PHY_MODULE_RESET]   = "phy-transceiver-module-reset",
+ };
+ 
+ #define __LINK_MODE_NAME(speed, type, duplex) \
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 221639407c72..f1f4270cdb69 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -2954,6 +2954,7 @@ static int ethtool_phy_tunable_valid(const struct ethtool_tunable *tuna)
+ 	switch (tuna->id) {
+ 	case ETHTOOL_PHY_DOWNSHIFT:
+ 	case ETHTOOL_PHY_FAST_LINK_DOWN:
++	case ETHTOOL_PHY_MODULE_RESET:
+ 		if (tuna->len != sizeof(u8) ||
+ 		    tuna->type_id != ETHTOOL_TUNABLE_U8)
+ 			return -EINVAL;
+-- 
+2.47.0
 
-Andrew
-
-> +&main_timer8 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer9 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer10 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer11 {
-> +	status = "reserved";
-> +};
-> +
->   &serdes_ln_ctrl {
->   	idle-states = <AM64_SERDES0_LANE0_PCIE0>;
->   };
-> diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-> index 33e421ec18abb..07fbdf2400d23 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-> @@ -710,6 +710,23 @@ &mcu_m4fss {
->   	status = "okay";
->   };
->   
-> +/* main_timers 8-11 are used by TI MCU FW */
-> +&main_timer8 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer9 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer10 {
-> +	status = "reserved";
-> +};
-> +
-> +&main_timer11 {
-> +	status = "reserved";
-> +};
-> +
->   &ecap0 {
->   	status = "okay";
->   	/* PWM is available on Pin 1 of header J3 */
