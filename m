@@ -1,123 +1,173 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E0421AAE28;
-	Mon,  7 Apr 2025 09:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F211622FE07
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744018677; cv=none; b=Gbu/Uggsy09rg+UjW2NeiELW7WAtPSPDOzn0O4AOGic0jY+1KC4XuiOLvXMvhlovjU6tKpARjXMW+OrqA7Ckqlnm+ABdGDFJaOR6rCI1SI+LNligDlAzvwEwo60Xoak6yVjfTvpke8uUJP0wrZQUbYaCJz3SYrivmyzc2UKR2Cw=
+	t=1744018679; cv=none; b=UCHaRGEe2/vL6az05bxd3KiKgKa7N8PFG7hJB5Vtdz2K+Uwpl48m4CDf7BzS/OJN93hOOp7XxnddjWiKQIcqxWXaC3lHK137G8n+SK1pQ1Sb76lsFleU2Eh2HZvW/c/NDrUhUg0nKNdkflzaGrtHnH7h40OJdbj+8vsWMcizUdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744018677; c=relaxed/simple;
-	bh=EuEA2yEZnbY0BhR9l4M5pcQ1yh2rrp4dfcKgMY7mxro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tAMYvSX0di8Zvq505KylSHiBHKjLBuePPtQB5hb3gg1LxdV9AjoSXaYIoocnlkajCuWwOmEQfpmPJPiLLnDYz5LZgEDv6u6XVR8U4FhtilW6K+1S4Z0g96m0DOwdjS1/QkjW0+VFXSBo8lqA5bmYExbqE+XhWNHR036yn+zvqzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-75-67f39ce63774
-From: Rakie Kim <rakie.kim@sk.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH v6 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Mon,  7 Apr 2025 18:37:32 +0900
-Message-ID: <20250407093738.406-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <Z--bppMUIo5k5eOF@localhost.localdomain>
-References: 
+	s=arc-20240116; t=1744018679; c=relaxed/simple;
+	bh=UYVpnQToVhKkeD2a7choe2evBwk4oKQuBCk3T1e9dSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sAODZAIBszNVd9LZXaCnh/+J6yiKOMBmyIBP+QCxtkTj/Yq9rV5YEE+t9l7yyMUW98C9jXZRHOhM/zyt0Yd2vQEjVnEGJNwQs5NanuJ/7ox6zonipym1cIl2wtcTXpruixqUwt7K7/BTQsKFuhiOyEbyeuZcRyzhlUtboSmrXM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULpTT6T6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULpTT6T6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744018676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dTru+5exuSFoOa7/E+HIvTf2c8suoUygvHtY3wcFXLI=;
+	b=ULpTT6T6iGiNJcL3sX2ESxUoQhcAzY3E4DKrinfNzGVX6P8HQCbJ520+YNyhZ7PnA++irY
+	PixymnCwgQaFh0pcB3TzarF1Fq7Itz22G7hEafH84ugh7ZPLv8zX5HuGeVePP652+9U95x
+	Bj016KmptQo00vFgMNhk+mfXzft3Go4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-354-UL_ikMQGNQKFjJ6FX563Tw-1; Mon, 07 Apr 2025 05:37:55 -0400
+X-MC-Unique: UL_ikMQGNQKFjJ6FX563Tw-1
+X-Mimecast-MFC-AGG-ID: UL_ikMQGNQKFjJ6FX563Tw_1744018675
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so9104615e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:37:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744018674; x=1744623474;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dTru+5exuSFoOa7/E+HIvTf2c8suoUygvHtY3wcFXLI=;
+        b=PNAtlx3HSXeDMzubkeRdRbn7b1+AFBO92IhL7W3fChe5IHmsB9kKPYkLuexnl0bey4
+         tBNX9ceYU6rvlcvIkudabe1XgRkGWqpdYlALQrL9KNgeOrlyQxU0jPKWDn7j4uBTbV05
+         G7HLAUXfWuFua9w+sNQ3lgz1FfzadEzGMxoU5krFy5oeL1/w7Z7sQopgGf8c56jg0Jb8
+         VWW5DVlV9D6HMhENFN24zG1hq9MmfXZrY9JdvutZNc7pjds+ali1yQMfUy5rtytcCV88
+         U3GhH7fgJzXmGTVH/imw9Rj+Y1emxuhL+THiTk5Ev31GLbXl3ikHilmWJAJvxsc49tWC
+         kRSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbZatYbST86VLHLoGpQ3X4r1SCByIrPkSBOzFiXjGHgx2SRZTD0eciSCQ0yxAtLb+HjXuQJd3vjROjcHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysrgBhZjHuEW4d7JzBqhm8CWVzjnm5oYU66ec+BMOxemxCSjcZ
+	QANah4yCGkDGWf1Zyt4QOEjJpGtj51pclAJxuSImgEVpyy3AWZUV9a/VYFGECb6g4d8bfq/IcU/
+	K9VjJAKCrH7IhNfYdum1xtXizt4B39pHKDfhrqrhcB/JrvckvRkK8XF802pjRXQ==
+X-Gm-Gg: ASbGncuHpeCWzjAbeTPpvwGcMQRyT8OJ+yc6BMuRB9cEOOI6lW1hbsxH5b28zeaF6c7
+	XxFnSQjdLsASp9yeQClO0xjtC7M8V2OpT31c0gPoWgTIpcvle8lEUMdwXsQKHcSK9+0LQbeNuWt
+	AXISYLGWOrCet+zwshEkL4UmtljOGTBRr+EcBFBL6KiY5LhulUCDrP8Y9z0AklUzIv8pQr6Hk6+
+	Et0pG5kuUZJdlxmMFSDnQwSLD30VNsnsmwS2MbZY8Pyoz9dwEFYu8QvldqFtK324eqcPC8P61x7
+	1lPTQiU7cA==
+X-Received: by 2002:a05:600c:470d:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-43ecf85f23bmr79396865e9.11.1744018674544;
+        Mon, 07 Apr 2025 02:37:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRDexwe+g43YwqQL8SzrJOq1OlI7SDdhXyepzHhoBm7gIYyJsaf0/QWV3+ztzeILwqBFtKrA==
+X-Received: by 2002:a05:600c:470d:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-43ecf85f23bmr79396625e9.11.1744018674172;
+        Mon, 07 Apr 2025 02:37:54 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec17b33c2sm132022505e9.40.2025.04.07.02.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 02:37:53 -0700 (PDT)
+Date: Mon, 7 Apr 2025 05:37:50 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250407053037-mutt-send-email-mst@kernel.org>
+References: <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+ <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+ <20250407042058-mutt-send-email-mst@kernel.org>
+ <0c221abf-de20-4ce3-917d-0375c1ec9140@redhat.com>
+ <20250407044743-mutt-send-email-mst@kernel.org>
+ <b331a780-a9db-4d76-af7c-e9e8e7d1cc10@redhat.com>
+ <20250407045456-mutt-send-email-mst@kernel.org>
+ <a86240bc-8417-48a6-bf13-01dd7ace5ae9@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsXC9ZZnoe6zOZ/TDc60iVjMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
-	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
-	Uov07RK4Mi7tnsZS8EOw4sOLDqYGxh18XYycHBICJhLfp7UzdzFygNkf/zuBmGwCShLH9saA
-	VIgIqElMe9XI3sXIxcEs8J1JovnMNHaQhLBAuMT3+09YQOpZBFQlPpxKBwnzChhLbHr5jxFi
-	uqZEw6V7TCA2p4CpxITPU1hAbCEBHolXG/YzQtQLSpyc+QQsziwgL9G8dTYzyC4Jge9sEnv7
-	fzJDDJKUOLjiBssERv5ZSHpmIelZwMi0ilEoM68sNzEzx0QvozIvs0IvOT93EyMw+JfV/one
-	wfjpQvAhRgEORiUe3h1un9OFWBPLiitzDzFKcDArifBanvqULsSbklhZlVqUH19UmpNafIhR
-	moNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoHR++bmjQ+nPDZVD7gY6sRf6WobxWio7fyp
-	3VmEO6dOvzF1+f7rjEkTz63w2bhy/pYOmbd3c8wfOF/2edjezFlQUPGZVXqG3tkL162tpi9d
-	qGlytbk1sJlLz4PlmcFy9qRfr4/V29Q+fTAhSu7b+eTmk+I706fcun5g3WHxs3NK4zYdfmae
-	pPFGiaU4I9FQi7moOBEA02HKlXoCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsXCNUNNS/fZnM/pBmc+cFjMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvF52evmS1WLbzGZnF86zx2i8NzT7JanJ91isXi8q45bBb31vxntTgzrcji
-	0LXnrBar12RY/N62gs2B32PnrLvsHt1tl9k9Wo68ZfVYvOclk8emT5PYPU7M+M3isfOhpcf7
-	fVfZPL7d9vBY/OIDk8fm09UenzfJBfBEcdmkpOZklqUW6dslcGVc2j2NpeCHYMWHFx1MDYw7
-	+LoYOTgkBEwkPv53AjHZBJQkju2N6WLk5BARUJOY9qqRvYuRi4NZ4DuTRPOZaewgCWGBcInv
-	95+wgNSzCKhKfDiVDhLmFTCW2PTyHyOILSGgKdFw6R4TiM0pYCox4fMUFhBbSIBH4tWG/YwQ
-	9YISJ2c+AYszC8hLNG+dzTyBkWcWktQsJKkFjEyrGEUy88pyEzNzTPWKszMq8zIr9JLzczcx
-	AgN+We2fiTsYv1x2P8QowMGoxMN7o/FTuhBrYllxZe4hRgkOZiURXstTQCHelMTKqtSi/Pii
-	0pzU4kOM0hwsSuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGkN3a+hEH6zmZUq+oVdWWHF4c
-	p7EoXDFonuK+CRNds5Jmde9dlrVW8ZhC7DO7OOWT6n6Lfi839Lj1lcFQJeuQ/r792heOcDiE
-	79Ls5LxoraxV9mA7U5dp7a97ydHSP5+nTri14Rrvvenf7xu9FJrWuKnrcNxfh87rMQ/+CWv/
-	NZluN+P1hPxYJZbijERDLeai4kQAkX4dnnQCAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a86240bc-8417-48a6-bf13-01dd7ace5ae9@redhat.com>
 
-On Fri, 4 Apr 2025 10:43:18 +0200 Oscar Salvador <osalvador@suse.de> wrote:
-> On Fri, Apr 04, 2025 at 04:46:21PM +0900, Rakie Kim wrote:
-> > The weighted interleave policy distributes page allocations across multiple
-> > NUMA nodes based on their performance weight, thereby improving memory
-> > bandwidth utilization. The weight values for each node are configured
-> > through sysfs.
+On Mon, Apr 07, 2025 at 11:11:34AM +0200, David Hildenbrand wrote:
+> On 07.04.25 10:58, Michael S. Tsirkin wrote:
+> > On Mon, Apr 07, 2025 at 10:54:00AM +0200, David Hildenbrand wrote:
+> > > On 07.04.25 10:49, Michael S. Tsirkin wrote:
+> > > > On Mon, Apr 07, 2025 at 10:44:21AM +0200, David Hildenbrand wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > 
+> > > > > > > Whoever adds new feat_X *must be aware* about all previous features,
+> > > > > > > otherwise we'd be reusing feature bits and everything falls to pieces.
+> > > > > > 
+> > > > > > 
+> > > > > > The knowledge is supposed be limited to which feature bit to use.
+> > > > > 
+> > > > > I think we also have to know which virtqueue bits can be used, right?
+> > > > > 
+> > > > 
+> > > > what are virtqueue bits? vq number?
+> > > 
+> > > Yes, sorry.
 > > 
-> > Previously, sysfs entries for configuring weighted interleave were created
-> > for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-> > might not have memory. However, not all nodes in N_POSSIBLE are usable at
-> > runtime, as some may remain memoryless or offline.
-> > This led to sysfs entries being created for unusable nodes, causing
-> > potential misconfiguration issues.
+> > I got confused myself, it's vq index actually now, we made the spec
+> > consistent with that terminology. used to be number/index
+> > interchangeably.
 > > 
-> > To address this issue, this patch modifies the sysfs creation logic to:
-> > 1) Limit sysfs entries to nodes that are online and have memory, avoiding
-> >    the creation of sysfs entries for nodes that cannot be used.
-> > 2) Support memory hotplug by dynamically adding and removing sysfs entries
-> >    based on whether a node transitions into or out of the N_MEMORY state.
+> > > Assume cross-vm as an example. It would make use of virtqueue indexes 5+6
+> > > with their VIRTIO_BALLOON_F_WS_REPORTING.
 > > 
-> > Additionally, the patch ensures that sysfs attributes are properly managed
-> > when nodes go offline, preventing stale or redundant entries from persisting
-> > in the system.
 > > 
-> > By making these changes, the weighted interleave policy now manages its
-> > sysfs entries more efficiently, ensuring that only relevant nodes are
-> > considered for interleaving, and dynamically adapting to memory hotplug
-> > events.
-> > 
-> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> > crossvm guys really should have reserved the feature bit even if they
+> > did not bother specifying it. Let's reserve it now at least?
 > 
-> For the memory-hotplug bits: Reviewed-by: Oscar Salvador
-> <osalvador@suse.de<
+> Along with the virtqueue indices, right?
+
+Well ... as long as the implementation is careful to check that feature
+is negotiated, reusing vq index at least causes no trouble for others.
+
+
+> Note that there was
 > 
-> Just one thing that caught my eye:
+> https://lists.gnu.org/archive/html/qemu-devel/2023-05/msg02503.html
 > 
-> Cannot add_weighted_interleave_group be __init? AFAICS, it only gets
-> called at boot time?
+> and
 > 
+> https://groups.oasis-open.org/communities/community-home/digestviewer/viewthread?GroupId=3973&MessageKey=afb07613-f56c-4d40-8981-2fad1c723998&CommunityKey=2f26be99-3aa1-48f6-93a5-018dce262226&hlmlt=VT
+> 
+> But it only was RFC, and as the QEMU implementation didn't materialize,
+> nobody seemed to care ...
+
+Thanks! I will try poke the author again.
+
+
+> > 
+> > 
+> > > So whatever feature another device implements couldn't use this feature bit
+> > > or these virtqueue indexes.
+> > > 
+> > > (as long the other device never intends to implement
+> > > VIRTIO_BALLOON_F_WS_REPORTING, the virtqueue indexes could be reused. But
+> > > the spec will also be a mess, because virtqueue indexes could also have
+> > > duplicate meanings ... ugh)
+> > 
+> > what do they do with vq indices btw?
+> 
+> See above links, they use the two for "s_vq and notification_vq".
 > 
 > -- 
-> Oscar Salvador
-> SUSE Labs
-
-Thank you for your response regarding this patch.
-I agree that `add_weighted_interleave_group` can be marked with __init,
-as it is only called during system boot.
-I will make this change in the next revision.
-
-Rakie
+> Cheers,
+> 
+> David / dhildenb
 
