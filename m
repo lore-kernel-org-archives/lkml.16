@@ -1,128 +1,198 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C7F36AF5;
-	Mon,  7 Apr 2025 01:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5454A3594A;
+	Mon,  7 Apr 2025 01:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743988020; cv=none; b=jbVZppffhJpEbJ2TcFdZmmQC1AE2rO4gcYUpDkJDdW1JgZwo7GVTKA0/3D9+EC2TiZ2y44l3UOqaRtV87EX64jHz0natlk9tGc63JCVdmJP01AAmBMnC14Ewk0blKKeZTZ+4UKXqnb4+MgY5C3HFcWNZWkO2wAuDqlO/VPE70Qo=
+	t=1743988022; cv=none; b=B/iydmU6ApZLjvS9hcYUAgsloHauYGYmbbE8fGi686oITdB5cuhbkImkv6vjJSDtGJD1fokkGFCfbTp3qwf4MDX+ogw4po4QLBdLdlWENvakNPyuKM2kS34VK01t37NHayNNQWEjk0BbHVXyN5xaaajfXI/7CiOEF8r7njZULDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743988020; c=relaxed/simple;
-	bh=67Xb0cRe3kqLGS8vDJK44RPpdgPBDQqj7cmtau1ZK38=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=allbi91nvKxysUYttI6+tE8cLbpy7pB0IE3LUKVKe6txqTWiUknuzBxSQSmh/X2SQIYq5QSfUBYpgqyo8n58tS4V67Im9NSpztljz9RIGOhhuXasxMtk3cA0fyA+dqQ4IkhgFZJNQenPJ9MEfSEFirvHf3cLkWOrZPJVNuTXb/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl+g2vVK; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743988022; c=relaxed/simple;
+	bh=ch6lvxNheDI1ivTt0ioTzc9Ny+4ood1tqZFhk88N0lc=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=Gz6eDqnVnFSKBTXH0Y7RZgiy1E0VDWMiNeIEvnV/fbhrzq8fQq4xZ59rIfK0glQkQxGOt+EhlmeNv1xHi53yYWUXFBSEFSmHo6O8/XQz/2N48/plE0URj1LftX2iA4rSrDAJtiLmCDx3OGmOnh1oYkts87eCMXp8yKY/DfiuIM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gKU3beZn; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl+g2vVK"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47691d82bfbso80912351cf.0;
-        Sun, 06 Apr 2025 18:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743988018; x=1744592818; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zFs5RauZ5QOy8Ab3T4kUtd0LneBhBgJkwOZmpV0EdcU=;
-        b=kl+g2vVK9mImOkwb50KlIXV+34Q1Rlr0DCmIQoTCqLFWV9Cto84HWaOXFQl4Df8za1
-         mmIWrK8wtjGmn3N4AdtsKvLk4fa4BrZ8G6hortmhlRQdN3yH/Qw8VMrUY/pX3vBbLgX6
-         qL5wbDauCoPWyLox6mQXBM7+lHJqszoD9ZKzYdeK35rDB84ptnP3WhS70jCio4Ar5jKO
-         vKez9yXSjpOBCyme1MNoLpQ44pvo5td/G7eNKafOBOIAL3UuVZ+I5hBTY2/wqY+d/A0C
-         UdjXmtdHqmZ/bue2sW13oHAThEEDkp1zos2GGjlHAMuzfIt/fhb+MJdqdIcltWlblBj/
-         XbWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743988018; x=1744592818;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zFs5RauZ5QOy8Ab3T4kUtd0LneBhBgJkwOZmpV0EdcU=;
-        b=mZAaDuGH57DdrTW0hEG7l9+0d8E/t7sGZCLcKHtXSWfpIfGmbCy3gKFUfzoya2cHMg
-         xp8PJtzNauD/Azxpw7ZRYM1vP0Ni7p4JgdOVbUQOe5+M2V8ezFJ0njdRScl/jBkMy4Ie
-         b1K/OIw4yLsunf0HyAr7lDWIPyDZcWcKXW2iEyyUwWhz/pJISvTh8SqFhTPDUdzrC6Lo
-         ElvCOW+d0cq4jg0tChzoQ7FjLnkXoaY0Y0JiN8+P4tPeJNo50SntinpiaTogA98j8mSJ
-         yxmrGPqBs21I2g5hnYIbuHbVxYkHqTVBTGpezi+OKhge8Scx0KUxH713mWOPsu5b0hKR
-         W2jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKUIKozZeFdMd7as/FPQOCLYjSzRsZCJpEwHfObDUX/CNb4BF69Hyp8RLlCg9WmWIukrUChiFIyOj4@vger.kernel.org, AJvYcCWd+aOnmroDWtqtY1mfCVlFpWS4kJlJtl3ZiKlTvKOpr9dJY4RMfWx8i7YBnTnWVHWvOapHDDL7po2q@vger.kernel.org, AJvYcCX3xG4kVE/nWG748X/gkXXC9DNDDiLnpgwqBqgmjwpEccKHxuFR0k1AUDJx7OT3ujVTH1aq7JXl8r+o@vger.kernel.org, AJvYcCXGhmg6ZU83/unRljqi+o+GTHqLXpdaObRRYDNED/wYRwffOefHSVN+bI47y+L4LU9xzM0Njoy2p/WAA/ev@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcBxBosuCUSQMr/TCMmtTGJ3/mLFLGR3un0/ZrRgm0KnbnoMJf
-	MQ9pxz6hUddc8+slQulh3GkPvtVnzCUfY4eAnJBa9QEn43QdC1y7
-X-Gm-Gg: ASbGnctOMfGV44V+wk1XNS3tP0Anu0DgeWUpGdkmf2wCamDH9btY1pKjqmTtTP1h1da
-	0g7/WALCrxoFPtfYG5KmW6suO/Rau8ayix1YPzRinBgJmK+woBvlx9vdyeBSILuYk8C1Ba8i4AQ
-	Aaz36YN1UhPSoQJU3m123ZOKQqmUB05NRwKkZv4B39bNZntkd6gC0JBOQfYnFr5YMstU7fdYQqs
-	U0UnSRSx0hpY5+2GS0o3AjYRjF7M+BXXH7MhJZx7sDuSISW6VgI3/W21pRGCi2jufvR8dK+KWkr
-	T6edVjFrcbOjWqLL6FqU
-X-Google-Smtp-Source: AGHT+IGThLD0f1Wc+dVeoU1jl4PtajVlgXRPCMJv4ypnlzRq3f4lx9CHT6fpIIMYrngbXMnRUpODkA==
-X-Received: by 2002:a05:622a:48f:b0:476:add4:d2c0 with SMTP id d75a77b69052e-479249a7edcmr176008051cf.35.1743988017797;
-        Sun, 06 Apr 2025 18:06:57 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4791b1266aesm53295311cf.64.2025.04.06.18.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 18:06:56 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	ghost <2990955050@qq.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Chao Wei <chao.wei@sophgo.com>
-Cc: linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mmc@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 1/9] dt-bindings: timer: Add Sophgo SG2044 ACLINT timer
-Date: Mon,  7 Apr 2025 09:06:06 +0800
-Message-ID: <20250407010616.749833-2-inochiama@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407010616.749833-1-inochiama@gmail.com>
-References: <20250407010616.749833-1-inochiama@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gKU3beZn"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743988009; h=Message-ID:Subject:Date:From:To;
+	bh=RQsGAvlcouaF8GQ6e4VtQjlTST+z+xj3ljx+lelKUrw=;
+	b=gKU3beZnczj9WNOm+nAW+U1d5iOtOoTJHHx6hij0RZQgo55Gl4xuIwcVfBzVJV4k4+CEzHkvROx1y7r/xBHBnlvjfvRiT/QHsouXicx3tPfq8RnJRNJ5M89X7kFUGDbP8fA7LlwjMz6vArf+KCkrdKMa0/EQSQxC1ZPosH55eoU=
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WVj13AP_1743988008 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Apr 2025 09:06:48 +0800
+Message-ID: <1743987836.9938157-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH] virtio-net: disable delayed refill when pausing rx
+Date: Mon, 7 Apr 2025 09:03:56 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ Bui Quang Minh <minhquangbui99@gmail.com>,
+ virtualization@lists.linux.dev
+References: <20250404093903.37416-1-minhquangbui99@gmail.com>
+In-Reply-To: <20250404093903.37416-1-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Like SG2042, SG2044 implements an enhanced ACLINT, so add necessary
-compatible string for SG2044 SoC.
+On Fri,  4 Apr 2025 16:39:03 +0700, Bui Quang Minh <minhquangbui99@gmail.com> wrote:
+> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+> napi_disable() on the receive queue's napi. In delayed refill_work, it
+> also calls napi_disable() on the receive queue's napi. This can leads to
+> deadlock when napi_disable() is called on an already disabled napi. This
+> scenario can be reproducible by binding a XDP socket to virtio-net
+> interface without setting up the fill ring. As a result, try_fill_recv
+> will fail until the fill ring is set up and refill_work is scheduled.
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
----
- .../devicetree/bindings/timer/thead,c900-aclint-mtimer.yaml      | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/thead,c900-aclint-mtimer.yaml b/Documentation/devicetree/bindings/timer/thead,c900-aclint-mtimer.yaml
-index 2e92bcdeb423..4ed30efe4052 100644
---- a/Documentation/devicetree/bindings/timer/thead,c900-aclint-mtimer.yaml
-+++ b/Documentation/devicetree/bindings/timer/thead,c900-aclint-mtimer.yaml
-@@ -14,6 +14,7 @@ properties:
-     items:
-       - enum:
-           - sophgo,sg2042-aclint-mtimer
-+          - sophgo,sg2044-aclint-mtimer
-       - const: thead,c900-aclint-mtimer
- 
-   reg:
--- 
-2.49.0
+So, what is the problem? The refill_work is waiting? As I know, that thread
+will sleep some time, so the cpu can do other work.
 
+Thanks.
+
+>
+> This commit adds virtnet_rx_(pause/resume)_all helpers and fixes up the
+> virtnet_rx_resume to disable future and cancel all inflights delayed
+> refill_work before calling napi_disable() to pause the rx.
+>
+> Fixes: 6a4763e26803 ("virtio_net: support rx queue resize")
+> Fixes: 4941d472bf95 ("virtio-net: do not reset during XDP set")
+> Fixes: 09d2b3182c8e ("virtio_net: xsk: bind/unbind xsk for rx")
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+>  drivers/net/virtio_net.c | 60 ++++++++++++++++++++++++++++++++++------
+>  1 file changed, 51 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 7e4617216a4b..4361b91ccc64 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -3342,10 +3342,53 @@ static netdev_tx_t start_xmit(struct sk_buff *skb, struct net_device *dev)
+>  	return NETDEV_TX_OK;
+>  }
+>
+> +static void virtnet_rx_pause_all(struct virtnet_info *vi)
+> +{
+> +	bool running = netif_running(vi->dev);
+> +
+> +	/*
+> +	 * Make sure refill_work does not run concurrently to
+> +	 * avoid napi_disable race which leads to deadlock.
+> +	 */
+> +	disable_delayed_refill(vi);
+> +	cancel_delayed_work_sync(&vi->refill);
+> +	if (running) {
+> +		int i;
+> +
+> +		for (i = 0; i < vi->max_queue_pairs; i++) {
+> +			virtnet_napi_disable(&vi->rq[i]);
+> +			virtnet_cancel_dim(vi, &vi->rq[i].dim);
+> +		}
+> +	}
+> +}
+> +
+> +static void virtnet_rx_resume_all(struct virtnet_info *vi)
+> +{
+> +	bool running = netif_running(vi->dev);
+> +	int i;
+> +
+> +	enable_delayed_refill(vi);
+> +	for (i = 0; i < vi->max_queue_pairs; i++) {
+> +		if (i < vi->curr_queue_pairs) {
+> +			if (!try_fill_recv(vi, &vi->rq[i], GFP_KERNEL))
+> +				schedule_delayed_work(&vi->refill, 0);
+> +		}
+> +
+> +		if (running)
+> +			virtnet_napi_enable(&vi->rq[i]);
+> +	}
+> +}
+> +
+>  static void virtnet_rx_pause(struct virtnet_info *vi, struct receive_queue *rq)
+>  {
+>  	bool running = netif_running(vi->dev);
+>
+> +	/*
+> +	 * Make sure refill_work does not run concurrently to
+> +	 * avoid napi_disable race which leads to deadlock.
+> +	 */
+> +	disable_delayed_refill(vi);
+> +	cancel_delayed_work_sync(&vi->refill);
+>  	if (running) {
+>  		virtnet_napi_disable(rq);
+>  		virtnet_cancel_dim(vi, &rq->dim);
+> @@ -3356,6 +3399,7 @@ static void virtnet_rx_resume(struct virtnet_info *vi, struct receive_queue *rq)
+>  {
+>  	bool running = netif_running(vi->dev);
+>
+> +	enable_delayed_refill(vi);
+>  	if (!try_fill_recv(vi, rq, GFP_KERNEL))
+>  		schedule_delayed_work(&vi->refill, 0);
+>
+> @@ -5959,12 +6003,12 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+>  	if (prog)
+>  		bpf_prog_add(prog, vi->max_queue_pairs - 1);
+>
+> +	virtnet_rx_pause_all(vi);
+> +
+>  	/* Make sure NAPI is not using any XDP TX queues for RX. */
+>  	if (netif_running(dev)) {
+> -		for (i = 0; i < vi->max_queue_pairs; i++) {
+> -			virtnet_napi_disable(&vi->rq[i]);
+> +		for (i = 0; i < vi->max_queue_pairs; i++)
+>  			virtnet_napi_tx_disable(&vi->sq[i]);
+> -		}
+>  	}
+>
+>  	if (!prog) {
+> @@ -5996,13 +6040,12 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+>  		vi->xdp_enabled = false;
+>  	}
+>
+> +	virtnet_rx_resume_all(vi);
+>  	for (i = 0; i < vi->max_queue_pairs; i++) {
+>  		if (old_prog)
+>  			bpf_prog_put(old_prog);
+> -		if (netif_running(dev)) {
+> -			virtnet_napi_enable(&vi->rq[i]);
+> +		if (netif_running(dev))
+>  			virtnet_napi_tx_enable(&vi->sq[i]);
+> -		}
+>  	}
+>
+>  	return 0;
+> @@ -6014,11 +6057,10 @@ static int virtnet_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+>  			rcu_assign_pointer(vi->rq[i].xdp_prog, old_prog);
+>  	}
+>
+> +	virtnet_rx_resume_all(vi);
+>  	if (netif_running(dev)) {
+> -		for (i = 0; i < vi->max_queue_pairs; i++) {
+> -			virtnet_napi_enable(&vi->rq[i]);
+> +		for (i = 0; i < vi->max_queue_pairs; i++)
+>  			virtnet_napi_tx_enable(&vi->sq[i]);
+> -		}
+>  	}
+>  	if (prog)
+>  		bpf_prog_sub(prog, vi->max_queue_pairs - 1);
+> --
+> 2.43.0
+>
