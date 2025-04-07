@@ -1,66 +1,67 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB6E1F8745;
-	Mon,  7 Apr 2025 14:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB3D1F8BCC;
+	Mon,  7 Apr 2025 14:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037559; cv=none; b=NC95IBrst7QpEEtRcSlpoua8NmcgC6gCGwp29uSicWpnkBfrN42hrBSGxD5x7CjQye2QZXoVn77li4ZbSSo5HJWN3zpIhR3Vo151BlphjZR5ZQcwKcSO8if2gf5a/A1lwwY+rucEnibJ45hfIsU9wSEJxsihlld1xRspV/w8TIs=
+	t=1744037560; cv=none; b=MnRqExr/kOOcT6g/nCADsaILFHCizhNAug7mqrF0KaIHqxPlv53D/+DT2nK2Tvnp16j963+JkJEfGVgF1ciOeh5n3HYZ81M6p08JqluTeSHxlzOUlb8KLsejBcixMBNBxcaZBkcmEe3XDyHiEJPq7Y+QHqGPVpR2WhdhP9lHzBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037559; c=relaxed/simple;
-	bh=pP/vLwj1914GL9XTfvcpv/G1iSUzs4bBTRxc+t/uqv4=;
+	s=arc-20240116; t=1744037560; c=relaxed/simple;
+	bh=dNjzd71oIUhFnetcIZ4cjovfuK4KPL5cuUztsNo6E1o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rhpVPYrsHA1Y6MQrpX1IeLfsLO6ytzk2z9RjU5T6Fi4cLKQ0mmB6f8/AzhCzeFO7oT5301r5JWONEdJMF4EX8rhcRelBfuyYiyhi7Rgzmb2OOpdgBYz14ALNSzkvcgzObkOgwc0LfPuYp6l3C10bT7+jCZzWzKt5SWj0nbCSyPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lGnVxPSH; arc=none smtp.client-ip=209.85.160.177
+	 In-Reply-To:To:Cc; b=gMX6O3+UOu7s8oNxuNQmRch20y2f5D/6BSzZtAmJs8y8K70z/N86vXkvz0VzFCjialAVDBIRPo/ymNG6XK7skK/uLMqeeGc1zEPfvJ4TRoz0RAVhy8ZoR6etQ8WTkG6M5Wkw7BlATUGimwoJq03J5DY1vtYP/t5E9CmEK/Oc7IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZ4XqF3j; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGnVxPSH"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47691d82bfbso91948851cf.0;
-        Mon, 07 Apr 2025 07:52:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZ4XqF3j"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4766cb762b6so45170331cf.0;
+        Mon, 07 Apr 2025 07:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744037556; x=1744642356; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744037557; x=1744642357; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=npHOa95vpIqO5FBiS+oki9p8r42Ah9xfbMYb5nq+smE=;
-        b=lGnVxPSHQesPMIR7f1y9eULMvHnyM1TRHTmIwTCHgmZya5aB3G8d9h79yKTq1bTMFp
-         9SBPuTi0gnw9UnKPrIgiXcMbivrFcTnKmZo4pbZlQhCtY4gXUbP8V+4Y0eI8g94PPGOv
-         8DuPiwVTdg+0G8mXMTQAZ+S1y4LC9r6ruhquupBVAQ1zp6bn7PpJHK9NyELvCtPRP75+
-         e8V9G5vmqQCUfKN1I9zdretMoLo8l+RA4f6Z9FrQ9x2xKkkDmbnlf25K+K6iSVTDQigL
-         AWo+ACTQxjYnVfKYgbZBnkU0VNx51DCK4rkiwEU2owL3VBpZo8xpJh976+scHT/GAHda
-         2n6Q==
+        bh=IUy34P+DoBoMQt3OZN3Q8KWP0NyQoRSypET5AtaZZ10=;
+        b=WZ4XqF3jWLN2uaUv6IVszJc8ILqWMwEYiOqlJ3AjL0RAm/hW8gWxpok+m8nqeANQF3
+         s/6UkJfoPN81FvcQR1pONmoK9dWpzT60/QTg3VullcTBxuSuGNyN9LNh0AYZpTEjdWME
+         oMXNB3IH4KuMq90vEWYt7N/19gy5XEdLBPhCbiXFgyIYpOUJj2wyjDZ6KqIF4sS8NKg3
+         BigNPnNwwz1EmDGseVN9r/fVc+Hrq2pNQcUEM1cG5NRMLrcIpmMNzBBtxu3EwbYwW0yS
+         QeHEgVKqdoYtz0FRAO3XtdJYCjNSR95vxKrS3zwmYOKfFD492jPqbKgL+qzo7yf2lF+Y
+         l+8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744037556; x=1744642356;
+        d=1e100.net; s=20230601; t=1744037557; x=1744642357;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=npHOa95vpIqO5FBiS+oki9p8r42Ah9xfbMYb5nq+smE=;
-        b=GNAqRfs+Rm3bsoalDQWcCT5LRyDX/5Y10tFLT7h/oN/aoeUh/e23UaqkdZRns2A/6c
-         2STvuAKi6bsIAi3FXXtKB/zQM1lc+O5qecW3c39HaeAqG6k7VUddiq0MDBshYy+afFwO
-         hIwS29LmmNjZSY0ptcNr7wc/mTB9LoUxNlJ79caIsoEb+zj/gKud8PpwNscCcdrJrzg7
-         +Z81iRoJhkgJ5X9KRl7ZUafQB4GcriXQPxwlbINuNkgHwtXfA53Llri10Wd5XjByJtEv
-         IENpSkehVuBbglWJvLF4im6/Jx0ALEjRCvvPloe6dKnArNqCfPhl7xyBB04kp2aCCaJy
-         zIZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Qy5TiAv/u8v5BtZQyag2gDud6vJiiP1VPC4NoSeHii34ZfCCXY0i0B0WCDBFcwM27Fj6huRqKCSCoaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAfVYzJoTpcGN+rDmic0gvdHKrOofvBfaZ5zvSjYkAoMeeHwRH
-	18fOMaLCnH0co3S2ftksOtWnnFkIBox+qYqJ6+ne+Tpq7iZzp0Fu
-X-Gm-Gg: ASbGncuG/ZT7AubjLT3/CGMKMdea11T3kuhAQVybN5RUappXQdhyaU9J1PquSmIcZ4Z
-	nlfr3XLPGIc/F7wIY/Rx9A7UqjyDq2KJSaIYJpvw90SuoluTHAlh1dpSeHW6T5uifyL9EcYOf9B
-	+X47zg2e1To8xFr5sV1ORgIXAuZ5E3LgGduQutVTME+b2BiaKmiEpGeInGdg8Ur3agZIrHNngYq
-	z3QAXxUy3/P1GcWoIWIa3Ol5WwwIggy23NIaOiZD6IhnJOwvV4Ib9HK8t3ZLDE/Vuuyrnll6toG
-	9fa22yWcnTw+2CuvZPO5IiWby4fVeJILmNSsFVz+Q3h5ibEDeAy8MbnIdK45zxWR5wq3Z1elEW7
-	eRXhheTXH0q/HBr39wchKvgAlNouftBfgYjqLYU7xmjDRDCXnFIpuT3tG34VQwAFZ
-X-Google-Smtp-Source: AGHT+IHzq7r3nFIpr5rp2jmfyHRa+T8oEFiFcMfEAD9KtU9Mmk7FCWPdy36Pnu2LTtiHZo1VVdUlvw==
-X-Received: by 2002:a05:622a:1a1d:b0:476:7e72:3538 with SMTP id d75a77b69052e-479249c23afmr214725511cf.50.1744037556582;
-        Mon, 07 Apr 2025 07:52:36 -0700 (PDT)
+        bh=IUy34P+DoBoMQt3OZN3Q8KWP0NyQoRSypET5AtaZZ10=;
+        b=jipECschJSMjvVpYTRsEARQ+ofaAXDFDpri+3B0au5P6n0nFAe2iXhQrZ+ugN9nsUG
+         Lnx8iyATvq2en0xaoN/FiG6dsNMiRw9o5Fi3SuVuizLBUWInbZgE0eifkkQcp023EC4B
+         yg649ssJWSLoZf2IXhWm9gsk6WOy0zaEQT+NxkSDNI/GKhM6ox70shWJE+ZqUkxZNhGG
+         AQvCf56LKzmxRFwI0jC+/5jK0Fhqha3kB0DLsMh14kXfVDbURo9fQGpZxh286D79OPbY
+         7h5P9xx5ZOM0wzGQq2S6MMJeqdG/HdfdLYCW4hGCkpG/4mRHxOlAW01gafsK1foNiP7S
+         sS9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8gXjqHnWhW567bHWRAdOANa+/Uc3L00Szf5IIiuqDNaIgbdeovZHwdqRJPR0J9BYWNzWROsv/JUus+M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVOC0vNcivkMMVlIYKOeJLFOlZyDaOy10lQB22PGx09cQD1Nc/
+	ogkjGLVgYBCZxdJtHC5clC41o4nCjWLDZd4znyOMv2KTGYElOZQs
+X-Gm-Gg: ASbGncsD4jxduUmOWYzQI6im7UrjKGcdiosAhXKNgvldY/JYewg5I13G3vu+6Qx7hfg
+	Cq05qiO2aQ0VhgahZPVEBA/NIXI9vdTbDlt9iCOM9rWkdjAun0LXqV3RyZ4seUzz2wuUdzfwgTn
+	GS+nWxdWsM0a61iJTZZ6GXW7c3MwIl89d1yefeh1dv7TjDXJLPKYxpRX+0PkhQmBkOCFUoFpzEl
+	CURIisqqgQFG+XWdFC2i2nfyz2Y6SdUFhBpD4Rg0K+GwaaQ/2n7N3X/wsaGpxMIv0jomcnrfgDT
+	d62obQbEu3lSEf42OdXBwB5CX+1/Hvb1orO8JQxU5uf26hzMAR4mK1VGcQtMRmspmT8HJta+T/T
+	vuMG5m8hokFk028JLkcVNB3d3wpEC7Pg/mWpGi+Fn7D2+w8w9DjEnGNOwtm2vX31h
+X-Google-Smtp-Source: AGHT+IFXXuWHPAgJppz8Bflv9yauYrd0TI9kqDg45vrypllHt7rGZH7xP7HB56ZjnhWiQKN4J9hEjQ==
+X-Received: by 2002:a05:622a:205:b0:471:9e02:365e with SMTP id d75a77b69052e-47924c8547fmr207883451cf.8.1744037557552;
+        Mon, 07 Apr 2025 07:52:37 -0700 (PDT)
 Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:d8ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-479364eaa28sm33065601cf.28.2025.04.07.07.52.35
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-479364eaa28sm33065601cf.28.2025.04.07.07.52.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 07:52:36 -0700 (PDT)
+        Mon, 07 Apr 2025 07:52:37 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 07 Apr 2025 10:52:32 -0400
-Subject: [PATCH v3 2/4] rust: alloc: add `Vec::dec_len`
+Date: Mon, 07 Apr 2025 10:52:33 -0400
+Subject: [PATCH v3 3/4] rust: alloc: refactor `Vec::truncate` using
+ `dec_len`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-vec-set-len-v3-2-c5da0d03216e@gmail.com>
+Message-Id: <20250407-vec-set-len-v3-3-c5da0d03216e@gmail.com>
 References: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
 In-Reply-To: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
 To: Danilo Krummrich <dakr@kernel.org>, 
@@ -84,46 +85,50 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
 
-Add `Vec::dec_len` that reduces the length of the receiver. This method
-is intended to be used from methods that remove elements from `Vec` such
-as `truncate`, `pop`, `remove`, and others. This method is intentionally
-not `pub`.
+Use `checked_sub` to satisfy the safety requirements of `dec_len` and
+replace nearly the whole body of `truncate` with a call to `dec_len`.
 
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- rust/kernel/alloc/kvec.rs | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ rust/kernel/alloc/kvec.rs | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
 diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index f8045b6c8976..844154d310f0 100644
+index 844154d310f0..d0b46aa36169 100644
 --- a/rust/kernel/alloc/kvec.rs
 +++ b/rust/kernel/alloc/kvec.rs
-@@ -201,6 +201,25 @@ pub unsafe fn set_len(&mut self, new_len: usize) {
-         self.len = new_len;
-     }
- 
-+    /// Decreases `self.len` by `count`.
-+    ///
-+    /// Returns a mutable slice to the elements forgotten by the vector. It is the caller's
-+    /// responsibility to drop these elements if necessary.
-+    ///
-+    /// # Safety
-+    ///
-+    /// - `count` must be less than or equal to `self.len`.
-+    unsafe fn dec_len(&mut self, count: usize) -> &mut [T] {
-+        debug_assert!(count <= self.len());
-+        // INVARIANT: We relinquish ownership of the elements within the range `[self.len - count,
-+        // self.len)`, hence the updated value of `set.len` represents the exact number of elements
-+        // stored within `self`.
-+        self.len -= count;
-+        // SAFETY: The memory after `self.len()` is guaranteed to contain `count` initialized
-+        // elements of type `T`.
-+        unsafe { slice::from_raw_parts_mut(self.as_mut_ptr().add(self.len), count) }
-+    }
+@@ -493,23 +493,15 @@ pub fn reserve(&mut self, additional: usize, flags: Flags) -> Result<(), AllocEr
+     /// # Ok::<(), Error>(())
+     /// ```
+     pub fn truncate(&mut self, len: usize) {
+-        if len >= self.len() {
+-            return;
++        if let Some(count) = self.len().checked_sub(len) {
++            // SAFETY: `count` is `self.len() - len` so it is guaranteed to be less than or
++            // equal to `self.len()`.
++            let ptr: *mut [T] = unsafe { self.dec_len(count) };
 +
-     /// Returns a slice of the entire vector.
-     #[inline]
-     pub fn as_slice(&self) -> &[T] {
++            // SAFETY: the contract of `dec_len` guarantees that the elements in `ptr` are
++            // valid elements whose ownership has been transferred to the caller.
++            unsafe { ptr::drop_in_place(ptr) };
+         }
+-
+-        let drop_range = len..self.len();
+-
+-        // SAFETY: `drop_range` is a subrange of `[0, len)` by the bounds check above.
+-        let ptr: *mut [T] = unsafe { self.get_unchecked_mut(drop_range) };
+-
+-        // SAFETY: By the above bounds check, it is guaranteed that `len < self.capacity()`.
+-        unsafe { self.set_len(len) };
+-
+-        // SAFETY:
+-        // - the dropped values are valid `T`s by the type invariant
+-        // - we are allowed to invalidate [`new_len`, `old_len`) because we just changed the
+-        //   len, therefore we have exclusive access to [`new_len`, `old_len`)
+-        unsafe { ptr::drop_in_place(ptr) };
+     }
+ }
+ 
 
 -- 
 2.49.0
