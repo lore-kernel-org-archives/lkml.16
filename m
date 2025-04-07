@@ -1,63 +1,63 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C550D201258
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D182202996
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040345; cv=none; b=T6pIwj3xrVPTqOdwDZ2myNqFrnfx4uDA74k57pGlxWaB8CK4COiTDmb1dBNjjXMTNf1b1We2iU/PIRZxx6V6bekUN89zoll9ydvhfWV67AukgVkSuseCTaYAb3ceAcLTvmXxipmWAAXOxprgJLrquM60ltEm+93vSEPTwb6UHOA=
+	t=1744040346; cv=none; b=JiPHgvyPPdlFTz3+Id4psxIw4hoqT4IgSZWBz1j7POvjADErrUyCOnL4SYHsnAsiO9njTa+Dt7tQslLT2guCHAmrUHgSHZrPiy1BMoD8N2HKs9b9rrwXNS7WSqRBp5NH0Z9PUMgvtiwhrO1PLBHoGWZKBOYwDEWrhIkvkJ+AKOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040345; c=relaxed/simple;
-	bh=/j3M1uu9C+F77GujjQypyAKgz544kzX0sqIEJgki2CU=;
+	s=arc-20240116; t=1744040346; c=relaxed/simple;
+	bh=YccRhJzXOVUtPTATWsrLUBAvdjjA7nJr0RfSoXtT7x0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jQlgBTPh7s2ipJzBZjh+uI0jRqmOXMhkQ+KQ0KLqZ4OdHnw5RlH7k2xqlaxIXONGiqUhbvCx8eI5d1dEJQBNVnaxsCKkwvrjZlfgG1pfAzx04qd7Z5TTqb9zRpEkK0HFOLk9zQ3Bp5l5oX1PJ/f/FfAoTimgSmxtwjT9/slzfAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTwqHIc5; arc=none smtp.client-ip=209.85.128.179
+	 MIME-Version; b=IzdmcIjt+qBCpRbi2jMJygetLX0uBoTpbZ/Hhl+TcXCJccMrGD8/cibp7lvXUPjf70n/N53+136E1Onk2fdknmJMs/YUg5o6aX7Ms5cUdyf4cb8eNgtZT5hy9U/2X3pY8BvRNwaeIiysA77M91SErs+fsXM/BuBm0cKnnV6b93o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLJjhlTL; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTwqHIc5"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6feab7c5f96so42556277b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:39:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLJjhlTL"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e6e09fb66c7so3653595276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744040343; x=1744645143; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744040344; x=1744645144; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NUg9GEd9vWrZ/rj86A40MHUOre17ooeFUfErMtu4AI4=;
-        b=HTwqHIc5xPY5Lh5zVMZJoQMUzRwgyyxmB4Dxk+IMwKoE98g+L9TOUEjo7mTj6grEOw
-         1PYYjZVWavIphxNL7uevzVsbwRVIVZYX6X34ACBgtd2p2I+yf7KAKwh0aYUhDz5IuvfV
-         a8BVhb69XMAeGHTf/w0L3aFl4R1tu0UvENml0IZdxjA0Rs3hmk+ya/I7yS5Tc8RNLpxn
-         Q2eQBOd+a5AtoXA1m3DELzdNvCWnshqsiPrUH0MLckhM8468fp9hscw0MHatYsssBhVC
-         rL6YpnP3KZvHxDDU/PIjUuLz9k6muDZg7G8zNJBcqjbQaNh9KZYfzrguh0DqC519ftVL
-         pHxw==
+        bh=uu42nQ2bSmAwDWGBzjWYiwCDhQBT41z5F8NL5MUeB9A=;
+        b=MLJjhlTLwX+K8313I1EqLCfPgbk2UqT1zIhZ2EAKVApYr1cENBI5iuXANKgrTy54pA
+         Y3Ks5qPkpm/wQSCV2GQocx0FVinQvq3iyHbl9MaobBitL2agdMIDmgaxqbrC7ILvoHXe
+         VHYp4A66tisAWiyG/0KL7wwQLuEHIL7bGvGt2lXAOOhfRPrKDm98xzto+5yy2+054TTx
+         xHkU+NlTT1PLUlNONydkm2u1d7lBCKYcFJ/a8AIVh25ZUD/XbqAh0QWUrWATiBrlqG9F
+         /qMboEVxe0VordbHF7Zb+vGZ+XD0vb2ZOephPu2rbLRQ1TnxhI6aRxnscLN3R6NicZe9
+         c9Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744040343; x=1744645143;
+        d=1e100.net; s=20230601; t=1744040344; x=1744645144;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NUg9GEd9vWrZ/rj86A40MHUOre17ooeFUfErMtu4AI4=;
-        b=E16ckdm7LIXI3QskcJHFU+XqKRdkmJgEUcuopNiJwUb7cDmcW6K6YIAUh9zMsJMUZs
-         djC5q+QZyti0t7p1ary/totv4PyMYHhpb7oBLq+tGJ5J9IaGt0nBC6cvrD8CtHouKGAY
-         +aLphyAdLuc9BLdZ8zk0LkyEjM8RwboDHJMP5dlh6aLEyT3lS5WKWBVCIbDcckMbD+4h
-         z0rLCm+ZdsNwmzCE51drC7MgNNqCKdIDxAe6hhc0in0hP1vx4+L93F0TY+bahZYQJUOK
-         yv2lMrcPGBWFkBfYIpynA7dqx52H/qO32L6pjzFoslT2NRwpzdDH63FlfA8LfE3+hoZD
-         T6gw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKU71qll+Silh9526zQ8HBcU8VHFNo8YwcQmVx7kkT7ENnEi7ra2l5yY2NS34P6q/mHNg3HthF46UxrK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFUDt2s3yTBPeB0TcTw3hT+xEUpKqlmfE3hSb5K8xtfLVZo8QH
-	vjqRP8VWvhxPwJcSEuFuS3DUF2RyHpqqc/IB+6fCBBrNYYAN/Wnk
-X-Gm-Gg: ASbGncsPLJ3ecaC1IjH0ifP7MujK1a/hUJu24XvgBfKbjt9ByJgyKrHsbB2PDr+YOJo
-	zul4s+bMzV5amB4c+ggzLBFE/Lzs+ZG2hoAXMmFRWrEObVo2MglCkDXGyiODifcsLEXen3QIDlt
-	io3IzmR78e8VkN165Hb0tAYXA9aYCHnPMVPdk7XhNho5Hf6vyOzS+trtQL8BoYlaGMK+Fc767h7
-	DlaqdVs269ASnKZbO7N56pRAozDY/KB1Oxtn9V0sp9iUOf8mYODWkSdtYaxRq6m6YwYnJf1BacH
-	vpO1fz1FQOQIOVnMAk8LLkN2ixlAS1XAFKvGyDFsZkbSkopyL+2ECT2dYtUwEks1qO1wuZep4Pt
-	6qkch
-X-Google-Smtp-Source: AGHT+IFwIENfljndIrpGt9Cf8l7TIOozxBCW4Fb9t7PBibicOkS4GOtf842XC6W7UgHmvMuB4aWZkg==
-X-Received: by 2002:a05:690c:998e:b0:6f9:af1f:fdcd with SMTP id 00721157ae682-703e1545832mr254558847b3.11.1744040342591;
-        Mon, 07 Apr 2025 08:39:02 -0700 (PDT)
+        bh=uu42nQ2bSmAwDWGBzjWYiwCDhQBT41z5F8NL5MUeB9A=;
+        b=IB1U1NFD3pXu2RLkNP5hz9EPZMAozUbuYNsdy+c+cfz7JHzoQUctJICW8N1fbOt9mR
+         s9g12/EW0KjlLB6O4NRHcshVJEYtYt2ufPBRGI8lErkk/TiicXWlRZNCE1GRhFtNq62C
+         RzdmZcmbNh08R7FSapTMBTjcC29RkL08EHfn8IERHlvkUsnCLh1mU4lH1AgYnsnU+hpH
+         bicgLTK/RIzeNHFlDv2Nlywg5XkODi5HlwhyDtAWFOjKBAiBE6CqoUCHQMcRCUhWkdso
+         ffvSJYGlX9xITiHcN3XO1dXMO1u0ta/P4ncHRil6j+PnWWtrliTTYn3Qywk3Oduh6hYx
+         1OQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVr5VX4f4Vx2ZUmV9Fp4A1pXspf3gLUyui9WTpvU/pCVLUdwXZ+NYZEMeM4ohLlpKPCE8RIB4mCLfqf9so=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaKv+wEPcO53xUG6CfUmdsvvmp5/X/T4QCjggl23WFI5IOjP0D
+	mrnXWNkzQvQRh0Nxm412ndJD6sOHPlPFtlSb0GeILZ2PLPu3+ZcF
+X-Gm-Gg: ASbGncuIyIt4djG4CMlChpDhyNPgxLauduboEk9wmHVIKAcKiRL87fJ2xZR+AsCj932
+	d+fuJbq4eFRY43Bfv2z1/252VIOlB9PH6z0E4KUFN4g3AqaxOCg7KCqy59+5xPHd3qwiNMNi+6z
+	wPx4LgQUQOhU4P2SU26X6oRs+x9bER0Wu28jwqpAQ3fMuDhf+LXIbXioQq0t/BCFZqNFDH2cFSz
+	LlStIPcjjXx+qjHobBwrE9KTkb8zsJgxp1XR/3tZl5p+fMOv6eqDs0OxzMzxnLGvMSLMGqr7lMe
+	iQqVVSjGBXEPuhi0GzNTa1dzLbuHR0Qz8xnxMGIHyam1fVwTSSwUcLvF8Ucu85hk9/a/wvdGGbL
+	LfyestysnMV+dxuA=
+X-Google-Smtp-Source: AGHT+IGH8gkmMulMeXKGXIZTf8+s7ZupbfV3/p6oz6Ro5ygbXr9jdCeHXgH4ndUknwBwdh9y2n+VLw==
+X-Received: by 2002:a05:690c:6f85:b0:6ff:1c8c:b670 with SMTP id 00721157ae682-703e152e632mr216891757b3.14.1744040344063;
+        Mon, 07 Apr 2025 08:39:04 -0700 (PDT)
 Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1e4dedasm25946297b3.27.2025.04.07.08.39.01
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1f778b4sm25735757b3.91.2025.04.07.08.39.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 08:39:02 -0700 (PDT)
+        Mon, 07 Apr 2025 08:39:03 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: Tony Luck <tony.luck@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -70,9 +70,9 @@ To: Tony Luck <tony.luck@intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	x86@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] cpumask: add cpumask_{first,next}_andnot() API
-Date: Mon,  7 Apr 2025 11:38:54 -0400
-Message-ID: <20250407153856.133093-4-yury.norov@gmail.com>
+Subject: [PATCH 4/4] x86/resctrl: optimize cpumask_any_housekeeping()
+Date: Mon,  7 Apr 2025 11:38:55 -0400
+Message-ID: <20250407153856.133093-5-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250407153856.133093-1-yury.norov@gmail.com>
 References: <20250407153856.133093-1-yury.norov@gmail.com>
@@ -86,98 +86,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-With the lack of the functions, client code has to abuse less efficient
-cpumask_nth().
+With the lack of cpumask_andnot_any_but(), users have to abuse
+cpumask_nth() functions which are O(N*log(N)), comparing to O(N)
+for cpumask_any().
+
+This series adds missing cpumask_andnot_any_but() and makes
+cpumask_any_but() understanding the RESCTRL_PICK_ANY_CPU hint.
+This simplifies cpumask_any_housekeeping() significantly.
 
 Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- include/linux/cpumask.h | 59 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ arch/x86/kernel/cpu/resctrl/internal.h | 28 +++++++-------------------
+ 1 file changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 0f816092c891..9067c3411cd0 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -178,6 +178,19 @@ unsigned int cpumask_first_and(const struct cpumask *srcp1, const struct cpumask
- 	return find_first_and_bit(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 20c898f09b7e..1db02bab9743 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -71,30 +71,16 @@
+ static inline unsigned int
+ cpumask_any_housekeeping(const struct cpumask *mask, int exclude_cpu)
+ {
+-	unsigned int cpu, hk_cpu;
+-
+-	if (exclude_cpu == RESCTRL_PICK_ANY_CPU)
+-		cpu = cpumask_any(mask);
+-	else
+-		cpu = cpumask_any_but(mask, exclude_cpu);
+-
+-	/* Only continue if tick_nohz_full_mask has been initialized. */
+-	if (!tick_nohz_full_enabled())
+-		return cpu;
+-
+-	/* If the CPU picked isn't marked nohz_full nothing more needs doing. */
+-	if (cpu < nr_cpu_ids && !tick_nohz_full_cpu(cpu))
+-		return cpu;
++	unsigned int cpu;
+ 
+ 	/* Try to find a CPU that isn't nohz_full to use in preference */
+-	hk_cpu = cpumask_nth_andnot(0, mask, tick_nohz_full_mask);
+-	if (hk_cpu == exclude_cpu)
+-		hk_cpu = cpumask_nth_andnot(1, mask, tick_nohz_full_mask);
+-
+-	if (hk_cpu < nr_cpu_ids)
+-		cpu = hk_cpu;
++	if (tick_nohz_full_enabled()) {
++		cpu = cpumask_andnot_any_but(mask, tick_nohz_full_mask, exclude_cpu);
++		if (cpu < nr_cpu_ids)
++			return cpu;
++	}
+ 
+-	return cpu;
++	return cpumask_any_but(mask, exclude_cpu);
  }
  
-+/**
-+ * cpumask_first_andnot - return the first cpu from *srcp1 & ~*srcp2
-+ * @srcp1: the first input
-+ * @srcp2: the second input
-+ *
-+ * Return: >= nr_cpu_ids if no such cpu found.
-+ */
-+static __always_inline
-+unsigned int cpumask_first_andnot(const struct cpumask *srcp1, const struct cpumask *srcp2)
-+{
-+	return find_first_andnot_bit(cpumask_bits(srcp1), cpumask_bits(srcp2), small_cpumask_bits);
-+}
-+
- /**
-  * cpumask_first_and_and - return the first cpu from *srcp1 & *srcp2 & *srcp3
-  * @srcp1: the first input
-@@ -284,6 +297,25 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
- 		small_cpumask_bits, n + 1);
- }
- 
-+/**
-+ * cpumask_next_andnot - get the next cpu in *src1p & ~*src2p
-+ * @n: the cpu prior to the place to search (i.e. return will be > @n)
-+ * @src1p: the first cpumask pointer
-+ * @src2p: the second cpumask pointer
-+ *
-+ * Return: >= nr_cpu_ids if no further cpus set in both.
-+ */
-+static __always_inline
-+unsigned int cpumask_next_andnot(int n, const struct cpumask *src1p,
-+				 const struct cpumask *src2p)
-+{
-+	/* -1 is a legal arg here. */
-+	if (n != -1)
-+		cpumask_check(n);
-+	return find_next_andnot_bit(cpumask_bits(src1p), cpumask_bits(src2p),
-+		small_cpumask_bits, n + 1);
-+}
-+
- /**
-  * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
-  *			   @n+1. If nothing found, wrap around and start from
-@@ -458,6 +490,33 @@ unsigned int cpumask_any_and_but(const struct cpumask *mask1,
- 	return cpumask_next_and(cpu, mask1, mask2);
- }
- 
-+/**
-+ * cpumask_andnot_any_but - pick an arbitrary cpu from *mask1 & ~*mask2, but not this one.
-+ * @mask1: the first input cpumask
-+ * @mask2: the second input cpumask
-+ * @cpu: the cpu to ignore
-+ *
-+ * If @cpu == -1, the function returns the first matching cpu.
-+ * Returns >= nr_cpu_ids if no cpus set.
-+ */
-+static __always_inline
-+unsigned int cpumask_andnot_any_but(const struct cpumask *mask1,
-+				    const struct cpumask *mask2,
-+				    unsigned int cpu)
-+{
-+	unsigned int i;
-+
-+	/* -1 is a legal arg here. */
-+	if (cpu != -1)
-+		cpumask_check(cpu);
-+
-+	i = cpumask_first_andnot(mask1, mask2);
-+	if (i != cpu)
-+		return i;
-+
-+	return cpumask_next_andnot(cpu, mask1, mask2);
-+}
-+
- /**
-  * cpumask_nth - get the Nth cpu in a cpumask
-  * @srcp: the cpumask pointer
+ struct rdt_fs_context {
 -- 
 2.43.0
 
