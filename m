@@ -1,124 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5588B200106;
-	Mon,  7 Apr 2025 15:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115B6200114
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040325; cv=none; b=m/r3Ypx0XFYSpM1R8skA5yPPw987bdhwrf0PKn9sw/940VURCE4Dd/IBFw9Wco46i2tTbR1j6w5gRJvZXebALJyFOZCvUIJCOTaue4HQnylA1s1tIgv18ZNgzP1d7UzzxzV5b5VpmXhqzOLMdYTGLDPiCZ/U1DrjErGWDbIuh1M=
+	t=1744040341; cv=none; b=GEal+bbcRUj1mqdAWIrKESEiEpZHq0TuO44c+B4A7QOJ+avICB36QJ4XgqRefkcb4p3TXbf6QejUZE0/ZJeFjW7GaYHyetEzscUoYk46Ll6PQ7f2P0eimI2Fm3RavNQyQbqRv2yb7/x4dK3z79TZsNKLfd+Jn+Qn+zwF+z71WY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040325; c=relaxed/simple;
-	bh=LKcgqnfETeD5E25/OJgmgcuHbrOXdpZ82Zu7gUGorQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTsIrelLuueJ6sf7EAgZwjweR5WYKxuxr0s2esIEadtE641fboYM7lqrlbTK+RT32VhmRrm0Z7KV+0vCLS59MSwsbNglRtT1GzY94J7xc13jWPi+G/balv5YQnbZw3rCZqkk+NoK9dKNt02aPAEOpFgsmNNnyaqtbv1u5tZYZe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cHoLWBkR; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744040341; c=relaxed/simple;
+	bh=dwbSAtKldl0BbILJp1GVrL/yXnbNxbyOhAztADC3s4k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=lCyZyt7PrrZWRYl87lz2d3neJxF57lnuQ15K+f4e+K4SXzPQR3bFQFsVQCv5yox2LtOLJWstgxBantnN+BkZ3jvyOXWEgrYNrvTZgDMYZBhFB5riH/GhPspg3Qvn1VAzIy5HcbgdeWMZ0u+Qtfuy3EJiPWJv42h0Kvg3jrCxGbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJu/R6/d; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cHoLWBkR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744040323; x=1775576323;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LKcgqnfETeD5E25/OJgmgcuHbrOXdpZ82Zu7gUGorQM=;
-  b=cHoLWBkR4JBK91F6MrvKcpIzC89fFhGiDdkN8ydVmKhRiSXgzHjhb2ni
-   003xFdjrLOltpL3qNGG8x5SUNjoklO9RNJztNLqtkuavWwIOarOIaQTA1
-   HMMVv8ZBzxD5eS1+0kc0gvZFuc082Amf/dpGvz99eJfEUNHxVTztPSawb
-   qBFXXKVHlmjY8RnYAkf5ZmKDT3JMBejPUml2VvZbubvhIOAZcHOBMlx+g
-   uf5Xwx8xojcR/hqp9IwoXhl/LGtSnq0druB254QEk95s/Ht5vdy7zHAFa
-   uyXl8WunL4Dl7QRMdIKIC8IIBgGawnXAdECW7igSAACeBc1L8z9+HIf2J
-   g==;
-X-CSE-ConnectionGUID: WBqAL4NsRLmwL+IMWOtjlA==
-X-CSE-MsgGUID: rdr3y0fpRO6AQgv0Fwb/Nw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56073767"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="56073767"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:38:42 -0700
-X-CSE-ConnectionGUID: ZaM6breCTEu2fVcXhk221g==
-X-CSE-MsgGUID: SW7yuP2sS1iNa9uO/jM7Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128498972"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:38:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1oYQ-0000000A71t-3Nnw;
-	Mon, 07 Apr 2025 18:38:30 +0300
-Date: Mon, 7 Apr 2025 18:38:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 12/16] clk: lan966x: Add MCHP_LAN966X_PCI dependency
-Message-ID: <Z_PxdmKbBGlhpQpr@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-13-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJu/R6/d"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f666c94285so48543467b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744040339; x=1744645139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QtSYvWzrk0VScnOOFWHdizBCo8ajslxrvYcnnH98cNo=;
+        b=TJu/R6/d74EkaIwTi5KJ8cqdZnjndMD7M8pD3c7DxKI5zq9WYLCvj3ADImgem8mcu9
+         j8nwOi2Zb0voz2FHCG5RYNHM9g0Y/Vbi57PRstigWTePpitTAW2g46rViwVHydUl1/tb
+         COooPHWusY3zKFDrlSnqW98FkMiMtyN7D8T6AvT+GF3yoKYGk6Wh1aADENegM97Pftat
+         BEpD1Gq+E0gJRWyz7r7QfOUOD4/CMC+LQzC/4ODHk5C7UJA/Kqy1D7iDOVDJ/mRpd46b
+         AMMYVwyfAehkx1x6l73zZYWatljYyf6xtkliuG+Af7E235UqWgh97dPRbdjA67KrkTxD
+         iv6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744040339; x=1744645139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QtSYvWzrk0VScnOOFWHdizBCo8ajslxrvYcnnH98cNo=;
+        b=akLzDswAAP6fCfQzEY1Zfn8qrp6E94uX5g5+SVUvbOXlDOb3J6+9AVVlAEP9Qu8s3D
+         p16w1rEURUfy17kkPnwq5gXwS4WeaF07sbTVQCEl/OimmvuoN54qNKD4G1UkHRIgo0VP
+         uN3qt8WwF5/Sk7VuL1a64WCuo28F4GDGFcrCxQktppkiwFxbCBvwFcnREOjchFXrUyjc
+         VO8ABIvOI3eZpiI6sh4HL2lq0GjZMeDn+xRMEW0wBC8OPHqiYCukRBglHuTcRZ9Cz0tE
+         ud7RnAykUaS2gwoHu7Kj1Te2Sz69p5+AkgYFcMmmyWGuGClx4PPcie8JnLdTKtS9by04
+         gjVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPfT70aH8zdOHWoZrU3zDn/wMqq8VsHTson+vuJNN7vTiyABn7RjPgEUV7tMb6sKTcJOjKYEz7oZvWisY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylsGpPzDtHtU3O9NtFyB8LcEfrhqdD/NCsqRR4xk+kxlE5Tbeq
+	Q6Paz4afTdsqZ7NV0JGL8QWcQNtRtExYYIo1mjCYC30swuMvho+4
+X-Gm-Gg: ASbGncuW7QPX5S1tP7Xhs+VVi281vtt/HBpaEgePtUSCSoNANJ4xxDk7q/n2S1uO/ck
+	dIE7X+uhjgDrCCI6IdSXVIMhkd34TOJRRZVBD/BnwKLtshEQ9+aiy9DBudmmHvedC2j5qFXfLeX
+	us//s5Cd8VXfYHfl6OvgRJFjq+Q9hcIKh0zmPCYdHBY7Tnh2m+i+ldhoj1OPhvHST3838tCF3KW
+	xTJhIsNCvKDzWc+K/4flSVPJU0aWoshX2Bl8nk1wrkz53HXoHN7SOYjFZ1mnNzjQwslHZZB7a/+
+	HkvoIZ7Wo7vHEVVAoOv1KpbF5Te4OM7LSNcXSGxp2rvijwoEEsWThe6pdooecPiHfILJDc78wg1
+	pHkM+
+X-Google-Smtp-Source: AGHT+IFzlTGk/hVFL1+UWxpnHWm38CREhh/2GeKQ8rne09KTGOM/Df21gQgFvRlGyVQfgGK7HqPsKQ==
+X-Received: by 2002:a05:690c:338d:b0:6fe:e76a:4d38 with SMTP id 00721157ae682-703f4198020mr169274207b3.21.1744040338871;
+        Mon, 07 Apr 2025 08:38:58 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1f706a3sm25851477b3.81.2025.04.07.08.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 08:38:58 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] cpumask: add missing API and simplify cpumask_any_housekeeping()
+Date: Mon,  7 Apr 2025 11:38:51 -0400
+Message-ID: <20250407153856.133093-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407145546.270683-13-herve.codina@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 04:55:41PM +0200, Herve Codina wrote:
-> The lan966x clock controller depends on the LAN969x architecture or the
-> LAN966x SoC.
-> 
-> This clock controller can be used by the LAN966x PCI device and so it
-> needs to be available when the LAN966x PCI device is enabled.
+From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-...
+cpumask library missed some flavors of cpumask_any_but(), which makes
+users to workaround it by using less efficient cpumask_nth() functions.
 
->  	depends on HAS_IOMEM
->  	depends on OF
-> -	depends on SOC_LAN966 || ARCH_LAN969X || COMPILE_TEST
-> +	depends on SOC_LAN966 || ARCH_LAN969X || MCHP_LAN966X_PCI || COMPILE_TEST
+Yury Norov (4):
+  relax cpumask_any_but()
+  find: add find_first_andnot_bit()
+  cpumask_first_andnot
+  resctrl
 
-This doesn't seem to scale. Why not simply
-
-	depends on HAS_IOMEM
-	depends on OF || COMPILE_TEST
-
-?
+ arch/x86/kernel/cpu/resctrl/internal.h | 28 +++-------
+ include/linux/cpumask.h                | 71 +++++++++++++++++++++++++-
+ include/linux/find.h                   | 25 +++++++++
+ lib/find_bit.c                         | 11 ++++
+ 4 files changed, 112 insertions(+), 23 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
