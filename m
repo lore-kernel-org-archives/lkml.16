@@ -1,125 +1,141 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECE42206B6;
-	Mon,  7 Apr 2025 18:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049411; cv=pass; b=fWk/6Uu42Xx0zGwnAa8yf+HFjZjTL7JqIoyi5thgeMa8rW14/MXE4wZcqtJakY6yprRMJ9ztcb8nLrCo0NCNCzBRo0NC8pWyZDUyIbumlLcJLS0NRVn6HhKBo2G3wycJqFiJdtYF1tgpIOdblD5w6VpHxoEo7y8qAOLvdkNsp0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049411; c=relaxed/simple;
-	bh=w+f7Lr7WyqYv3iH7mWqMTgKQhvPiitOPImCoN/8GPoA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=m+uE5/W/56vtY5tIBqgDH2Eaj/+as8tPGtiCtI1vBE0GwLcMG15E3uAZ9HRzgbjXFuNPRHV6NfNsDVf2Pmi64kSh1ZpEIJJEcwN2vlE9w4rWYXMldAnz3VBOUqYR2SP7AcsrRT2vgXnR4nGgEcj7noIx8SEUdygEN1KGyn4MaM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=aMYIGLxL; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B6722652D;
+	Mon,  7 Apr 2025 18:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049414; cv=none; b=ZqLTt3mzsnR2BtdhQjjH4WJW4mZN+5REPvM02epqp4HAAr5d+ioRPIvLulQNS5+QrhzyZ/KEzyeLeBQPISxfGNoepsHj0Mdj6a61DSoKvXrSUpIhatUZsCFsJEBp4uXm2k3Svnq/0KCtop8jxsd3uM4Uo1ie4Zgd6ZsOKaxZusQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049414; c=relaxed/simple;
+	bh=iXtslnS0wzQz4pKR0UogzZj88g+7+/4qQOlDzhBkFiA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KrpOA+dbKcLaWNVjuCOOv56g43IOv0ScQ15L8vLckEofXFR+MC1bgiNxOrXy87L80oXDkzjUrbybSu/8lgK3f4e8pxy3/e795AaEu5eQICTfrwMNKr/Cj9t2xY1SZLt3cuxhu8LHwdD+Ku1W//S4NCc7u964nqyKnYIC2ksZm0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6Sepuxp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="aMYIGLxL"
-ARC-Seal: i=1; a=rsa-sha256; t=1744049382; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MA29WiSaM/qGw8Ez5IWEq+k0N2YAnfiNfAhPgQHriNRPs3EL3yjtKFFtGwEbVGsyo3QmNx0TTr8siu2V121Ox4gfxO8Lnz60I6ZI+pK7jPSNwtlEgfVtFnXaWFk+dJilbETEQ2Ob1jpwG7IHHKL2QDQlRQoXjvn6yDoyRnv6ZJg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744049382; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=i7yUmtcPXYs5jDz4UO9uvLqV1/UD2ocMo6ScIwBAIPA=; 
-	b=MzysafK93/6rHCj0cYFISDahwz2lsGydQU5sYBwQBuLQo1Vo5UbN0PHoTIAojVuGMDnLH4JwQGsJTHWxImSERg5GqWGlb92nJBrpiq2dBZAgGYrsnzbx4O9KySgYEqT2zhzGULJUEEnDicmtAfNE0Bz/atsW4cR9xR91i+0DD1o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744049382;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=i7yUmtcPXYs5jDz4UO9uvLqV1/UD2ocMo6ScIwBAIPA=;
-	b=aMYIGLxLmuS8LHedJmkzvIWJCZ21bwD1Ms9cqEuChNGK7MNfmvOdJdPQv40ImOev
-	8fmXjtvGPgf649q2yQnwB1xLrMnC7pBaYu2E1ujWsCSSP/jWjJvjs2LJQihe4UEsQy5
-	FJ0aXsuuj/ukpo4MjOIU6/YUezwv01Ach2y1GsSo=
-Received: by mx.zohomail.com with SMTPS id 1744049380397611.0260384445199;
-	Mon, 7 Apr 2025 11:09:40 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject: [PATCH 0/4] RK3576 USB Enablement
-Date: Mon, 07 Apr 2025 20:09:13 +0200
-Message-Id: <20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6Sepuxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11878C4CEE7;
+	Mon,  7 Apr 2025 18:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744049413;
+	bh=iXtslnS0wzQz4pKR0UogzZj88g+7+/4qQOlDzhBkFiA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=E6SepuxpH5lUPV9LvkMXHbZMmpBEW0c+BI0taXokZpxs54V4oWQyc0+w3yV3AsQI+
+	 A3tnH96D7188ljxaVlShR3VFjuR0fDzyx+adS2KK5vOoh5jiZ1VpUG3guchkq1Hg9x
+	 C7M6hmk40ep244aJ1ErozbxR6XWgxmA11oKq/fI+stZUoEn+WMsnUvpeo1f7PLkE2j
+	 m7HFIPU4gve/HaRAlc62gVTm+e7eu9kkZ9FEWgDXp1m+Cxu9epMiisnraMBxK4DX4Y
+	 aXu9uXKPHaw6CBqCPU81tpjwY8ZcjfEAFdc1pysZ9agVZn7Imw24SQ2h3tY2JCxPTz
+	 uQ1m7qSeX1GLQ==
+Message-ID: <b1d0a55d-75ab-422b-9e38-2dc2bbd1be91@kernel.org>
+Date: Mon, 7 Apr 2025 20:10:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 15/28] dt-bindings: dpll: Add device tree bindings for
+ DPLL device and pin
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407173149.1010216-6-ivecera@redhat.com>
+ <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMkU9GcC/yXMywqDQAyF4VcZsm7KXBhbfJXiYpxGG4raJioF8
- d076PI7cP4NlIRJoTYbCK2sPI0F7mIgv9LYE/KzGLz10QZ/R3mHeKtQuaeIi7bog3XWJ6KUE5T
- bR6jj35F8NKeFvkspz+cIbVLCPA0Dz7VZq6uLKNlBs+9/rj/QuI8AAAA=
-X-Change-ID: 20250328-rk3576-sige5-usb-230102aeeaca
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Frank Wang <frank.wang@rock-chips.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
- kernel@collabora.com, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
 
-This series is the result of what I thought would be a quick 10 minute
-job, but turned out to be more like 3 days of pain, suffering, and
-confusion. This should be expected with USB Type C though.
+On 07/04/2025 20:01, Krzysztof Kozlowski wrote:
+>> +
+>> +  input-pins:
+>> +    type: object
+>> +    description: DPLL input pins
+>> +    unevaluatedProperties: false
+> 
+> So this is all for pinctrl? Or something else? Could not figure out from
+> commit msg. This does not help me either.
+> 
+>> +
+>> +    properties:
+>> +      "#address-cells":
+>> +        const: 1
+> 
+> Why?
 
-The first patch in the series extends the inno usb2 PHY binding in order
-for us to be able to do what the second patch in the series does, which
-is fiddle with some GRF flags in that driver when the PHY is connected
-to a USB Type C port. Without this change, devices on USB-C simply don't
-enumerate at all, as the state machine gets stuck waiting for vbus to go
-low or something along those lines.
+Ah, I see being used.
 
-An alternate way to implement this would've been a vendor property in
-the PHY binding which is then checked for in the driver and needs to be
-present in all rockchip inno u2phy instances that happen to be connected
-to a USB Type C connector. This is what downstream does, for example.
+> 
+>> +      "#size-cells":
+>> +        const: 0
+> 
+> Why? I don't see these being used.
 
-Patch 3 was really lovely to run into and needed a good amount of
-sleuthing. I'm still certain this is "the wrong" fix, as it simply keeps
-the PHY on, but it's a fix nonetheless, and one which has precedent,
-namely in the RK3399. If someone is on a hunt to save milliamps in the
-future, they might want to invest the time to come up with a less
-sledgehammer sized solution for this problem, e.g. by disabling power
-management until the controller is fully initialised.
+And this as well.
 
-Patch 4 adds the USB related nodes, including associated regulators and
-Type C controllers, to the Sige5 tree.
+> 
+>> +
+>> +    patternProperties:
+>> +      "^pin@[0-9]+$":
+>> +        $ref: /schemas/dpll/dpll-pin.yaml
+>> +        unevaluatedProperties: false
+>> +
 
-As it stands, superspeed on the Sige 5's Type C port is still finnicky;
-after a full day of debugging I still can't figure out why superspeed
-only works in one cable orientation. I did a thorough pick through the
-usbdp PHY driver, comparing it with what downstream has, etc. etc.
-Because everything to do with testing Type-C ultimately comes down to
-narrowing down the search space of non-compliant devices and
-non-compliant cables to where you can sort of guess at the bug, it's a
-huge time investment to debug this, and I'd rather submit the series
-as-is right now for review and maybe some additional insight and testing
-from someone with a wider variety of USB Type C cables and devices.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
-Nicolas Frattaroli (4):
-      dt-bindings: phy: rockchip,inno-usb2phy: add port property
-      phy: rockchip: inno-usb2: add soft vbusvalid control
-      arm64: dts: rockchip: add phy suspend quirk to usb on rk3576
-      arm64: dts: rockchip: enable USB on Sige5
-
- .../bindings/phy/rockchip,inno-usb2phy.yaml        |   5 +
- .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 153 +++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3576.dtsi           |   2 +
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c      |  78 ++++++++++-
- 4 files changed, 234 insertions(+), 4 deletions(-)
----
-base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
-change-id: 20250328-rk3576-sige5-usb-230102aeeaca
 
 Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
+Krzysztof
