@@ -1,136 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6342B209F50;
-	Mon,  7 Apr 2025 16:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F7D2066F9;
+	Mon,  7 Apr 2025 16:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042382; cv=none; b=A1/tsQXVcbswjJGAt5UKxLl2k5ntmdKcf5wzbxGeLNQtHjE6Dx8jyS/vEF+o9L1QgSUVf8OBVKVa65UJq8tcMsnmclvu3H9TXuX2gdTXYnjS6IhoIwhHafVE9FH7sRJH+na5A17CHvMN6RpRxQ855ZWDBCHrxPyo+eJsh3yyyTA=
+	t=1744042405; cv=none; b=Hbs99KXQ/GWGAzbj3qzqZdsJhMLRQcvcavdwFBCQEVgd7ehhnNEyvQr40KnCYT/Nt0w55dkHZg+AkfaIweK4lrA/A49EuNYX4/6LxreSYk0BfBr2xU5ffvUGniiSz4sXSFlSo91E8GgeEJ3lPgSFQbDAJLPz4/mKmY6aVlWRn4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042382; c=relaxed/simple;
-	bh=7NRQROoGi6xdqbP2R4M0Uz5Zs5B5LfACyW4gQA73b3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TNekyyAZR6IMhxySsWtLRQA7/V/pzzpEE+utlzQigvuGytGFwmB2y+YIrJRfNkJn5vJuib7tCxt+ODD/YvdmirXbBrsMyX4RzCIjILsOs98qA5fCKeEA2Fk8Zb1+KFVFUumRDXcWYnYEiL8U+F06qJi+YbsLlc6Fl6ots8O6fmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gd1xcb9s; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744042405; c=relaxed/simple;
+	bh=2KFVeKdPLKXBfR5EWHDbvkaoyV0vRqU2QFbIw5uPBQU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a0q2HiDestloDoEdACMyxpOyshNDncMCG7xctqBL7Dm9XQlcl48WA4yPI+1GsUP3laYFj/kJEZjIZpQapKkGzkt7a2MxKHOgO1fHdw/26GiAspDBrAJabmXJutP1/sp6C4hxCFtUCg/lo55XYv+7a+B56qp0+yryqZ0Ag/kBvLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=dOL6fL8L; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gd1xcb9s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744042381; x=1775578381;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7NRQROoGi6xdqbP2R4M0Uz5Zs5B5LfACyW4gQA73b3s=;
-  b=gd1xcb9sceHKV+ia6Mi/EXhj6m+ETKX+JhlA058L5xNxRz4iejyPsOMj
-   jmGIvc4rgTZMviMDgpNL7J2prLiz3jPDT7aJM9FXR/ELPXBNSIPupddmO
-   /9iKO0YxvIUtwWMnSQwfmR/Yg1u+k5RW1fWJXortSdolR0Pwlk/pqEBSa
-   rRQQGNKps8dYeks9uMHozJcj9aKmeX0/abMGPTxKFfxvHmgqzBMi7hjYi
-   SyuIYuz9lV6b6AzqKeabTuD+1wB92BL29cukmILDJbWPmPK0fy/xYCc68
-   is1WhTl5yspO8gWqOzg5D2Q5zMYOG95ifM2pws5EGn536X7YvOYdWtgIZ
-   w==;
-X-CSE-ConnectionGUID: 8sFRIKQdR4aTGrbpRVH1Ww==
-X-CSE-MsgGUID: AJLOdWowQHuWio7EwfHnBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="33043296"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="33043296"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:13:00 -0700
-X-CSE-ConnectionGUID: pybg/E1uQ0KgOcJ41PlKUA==
-X-CSE-MsgGUID: ginmmX3CSqO1+aY969XI7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="158990716"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 07 Apr 2025 09:12:58 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1p5j-0003aN-2J;
-	Mon, 07 Apr 2025 16:12:55 +0000
-Date: Tue, 8 Apr 2025 00:11:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: ds4520: don't check the 'ngpios' property in the
- driver
-Message-ID: <202504072320.SjnRj58d-lkp@intel.com>
-References: <20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dOL6fL8L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744042404; x=1775578404;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ax3m+iIFkyYPhqmuuHtqTChmLOMPFAoAyAVCrfKI3uI=;
+  b=dOL6fL8L8q3YIwxqQp/gFi4Mb4HOy9r7hHbjMlraGA07jE9LCsua4pkU
+   bm0irU0Agfnuc5pNm94Mkgi3Qqnrv426N4FSnT+MHSjeOl0GiUQBxlV7s
+   mmt2FPcnMzQ36jiII2FCPcuf4A8IVhOYTEkLBlFjV4C9Tv+RqK6sRYK9i
+   o=;
+X-IronPort-AV: E=Sophos;i="6.15,194,1739836800"; 
+   d="scan'208";a="38499040"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:13:21 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:1061]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.222:2525] with esmtp (Farcaster)
+ id 4e4911d2-5cb4-4150-b7fb-bb7ce2a6281e; Mon, 7 Apr 2025 16:13:21 +0000 (UTC)
+X-Farcaster-Flow-ID: 4e4911d2-5cb4-4150-b7fb-bb7ce2a6281e
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 7 Apr 2025 16:13:20 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 7 Apr 2025 16:13:16 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <stfomichev@gmail.com>
+CC: <andrew@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <sdf@fomichev.me>,
+	<syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com>,
+	<syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
+Date: Mon, 7 Apr 2025 09:12:37 -0700
+Message-ID: <20250407161308.19286-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <Z_PfCosPB7GS4DJl@mini-arch>
+References: <Z_PfCosPB7GS4DJl@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWA002.ant.amazon.com (10.13.139.39) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hi Bartosz,
+From: Stanislav Fomichev <stfomichev@gmail.com>
+Date: Mon, 7 Apr 2025 07:19:54 -0700
+> On 04/07, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> > unregister_netdevice: waiting for DEV to become free
+> > 
+> > unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+> 
+> So it does fix the lock unbalance issue, but now there is a hang?
 
-kernel test robot noticed the following build warnings:
+I think this is an orthogonal issue.
 
-[auto build test WARNING on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+I saw this in another report as well.
+https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@google.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-ds4520-don-t-check-the-ngpios-property-in-the-driver/20250407-150804
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39%40linaro.org
-patch subject: [PATCH] gpio: ds4520: don't check the 'ngpios' property in the driver
-config: arm-randconfig-002-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072320.SjnRj58d-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504072320.SjnRj58d-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504072320.SjnRj58d-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpio/gpio-ds4520.c:43:17: warning: variable 'ngpio' is uninitialized when used here [-Wuninitialized]
-      43 |         config.ngpio = ngpio;
-         |                        ^~~~~
-   drivers/gpio/gpio-ds4520.c:28:11: note: initialize the variable 'ngpio' to silence this warning
-      28 |         u32 ngpio;
-         |                  ^
-         |                   = 0
-   1 warning generated.
-
-
-vim +/ngpio +43 drivers/gpio/gpio-ds4520.c
-
-659ad5f7efece8 Okan Sahin 2023-07-29  22  
-659ad5f7efece8 Okan Sahin 2023-07-29  23  static int ds4520_gpio_probe(struct i2c_client *client)
-659ad5f7efece8 Okan Sahin 2023-07-29  24  {
-659ad5f7efece8 Okan Sahin 2023-07-29  25  	struct gpio_regmap_config config = { };
-659ad5f7efece8 Okan Sahin 2023-07-29  26  	struct device *dev = &client->dev;
-659ad5f7efece8 Okan Sahin 2023-07-29  27  	struct regmap *regmap;
-659ad5f7efece8 Okan Sahin 2023-07-29  28  	u32 ngpio;
-659ad5f7efece8 Okan Sahin 2023-07-29  29  	u32 base;
-659ad5f7efece8 Okan Sahin 2023-07-29  30  	int ret;
-659ad5f7efece8 Okan Sahin 2023-07-29  31  
-659ad5f7efece8 Okan Sahin 2023-07-29  32  	ret = device_property_read_u32(dev, "reg", &base);
-659ad5f7efece8 Okan Sahin 2023-07-29  33  	if (ret)
-659ad5f7efece8 Okan Sahin 2023-07-29  34  		return dev_err_probe(dev, ret, "Missing 'reg' property.\n");
-659ad5f7efece8 Okan Sahin 2023-07-29  35  
-659ad5f7efece8 Okan Sahin 2023-07-29  36  	regmap = devm_regmap_init_i2c(client, &ds4520_regmap_config);
-659ad5f7efece8 Okan Sahin 2023-07-29  37  	if (IS_ERR(regmap))
-659ad5f7efece8 Okan Sahin 2023-07-29  38  		return dev_err_probe(dev, PTR_ERR(regmap),
-659ad5f7efece8 Okan Sahin 2023-07-29  39  				     "Failed to allocate register map\n");
-659ad5f7efece8 Okan Sahin 2023-07-29  40  
-659ad5f7efece8 Okan Sahin 2023-07-29  41  	config.regmap = regmap;
-659ad5f7efece8 Okan Sahin 2023-07-29  42  	config.parent = dev;
-659ad5f7efece8 Okan Sahin 2023-07-29 @43  	config.ngpio = ngpio;
-659ad5f7efece8 Okan Sahin 2023-07-29  44  
-659ad5f7efece8 Okan Sahin 2023-07-29  45  	config.reg_dat_base = base + DS4520_IO_STATUS0;
-659ad5f7efece8 Okan Sahin 2023-07-29  46  	config.reg_set_base = base + DS4520_PULLUP0;
-659ad5f7efece8 Okan Sahin 2023-07-29  47  	config.reg_dir_out_base = base + DS4520_IO_CONTROL0;
-659ad5f7efece8 Okan Sahin 2023-07-29  48  
-659ad5f7efece8 Okan Sahin 2023-07-29  49  	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &config));
-659ad5f7efece8 Okan Sahin 2023-07-29  50  }
-659ad5f7efece8 Okan Sahin 2023-07-29  51  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+syzbot may want to find a better way to filter this kind of noise.
