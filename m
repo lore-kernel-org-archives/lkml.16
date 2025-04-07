@@ -1,630 +1,375 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011065.outbound.protection.outlook.com [52.101.129.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEF5229B1E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016151; cv=none; b=dFCFkLz5XNQKTJSRuy3ZnIzeSI8QvJBV1p4y7YtCRKWdcUV7CVwIDE2b3kUEy36ZqjzSX4aGGLBYgSOFcwHnQxkLfUy29LE1ewB0/3VWotKNSIsFss/jvG6hj4z9eZ0uFdaU4cnDPZkbhzUsgnxKxX0Ev9dbQMU01SKIh6gDIlM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016151; c=relaxed/simple;
-	bh=0OLQI/RJjtpMhMe/e1bBeJkkny0qk2ULECSY66zw7uc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TgQzwGOGt7zPVHHE89vKgISvm043U/eKGkAkTHzOYjp+qqyBTdqlkFqT3WdZx1VAqqp8CuEzZhl8Ux6dEXl/6aEHknxJouw+PLNLyh8o5+oGUCOpcq+9YmbJyBznwWAj5LTNWlAhJYjmdwRW4r6F48W2zQUgatLyL544aYdWHc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ypu/Nfye; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6948822A7ED;
+	Mon,  7 Apr 2025 08:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744016156; cv=fail; b=c9sYg7MwRXCqKCZeqJCDn6Q2915gTIdGxA8bMjxrUsLOn751mZCyP1sFndpA6nKb1ABXEymoCjKkVeSuhFyQhuZXMkCyx37ieKHi8cbdfcyT6z35x6JFUT/II/5vp/P4OCHXt2dJehPnEcl62PSDkSf0xC3b/DocLgMtnBxGkBU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744016156; c=relaxed/simple;
+	bh=YvCWzrBKHuRyh+UW9RMAxg/YLxydpbcdq5u14L2hP+E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JJ8GV49dw3GfHCsG1CJJP0dPdplQ10kZ028X5iTOpDq85pev1ui+6WOVEdcK6OzR28nlV76ysXWBjYD5/FJTuAKQ3c6VfzlmCR29bSI0FY4b+le6utLrqwHfwDYX64+r47E+9C78UcRhIG7nuYcxdJq2PAjEPWNdVHOMkOeAUgg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=anCgZ2RC; arc=fail smtp.client-ip=52.101.129.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypu/Nfye"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so27342645e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744016147; x=1744620947; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=usZvs6KCLTgjGr0SVDdV9KkJaypefAlDD3xqFkv+Ahk=;
-        b=ypu/Nfye5uU362Pwj3xMxkcDcidtsFIQWXRAdVZWYkJLeLUHU0Z6lpz8XfcPgRnf/8
-         gLwStplfK/9nR6L2DYKaNjwGEnX1xlE9grY9sm0b+ioiw4ML3TzcDaH/E5WI2KeKnyvF
-         JTaRzOEJVTVbxvdZ3D2sZma7L7hgTTjpxWVN7wwXMGzQKm/FBRjPwnZlef4nUneTWv2J
-         lJBlOMLH/tnh8py2T38/4yqoodu+TiIoXjpNvfxIZlqntGiXeX4u0FWAd1KVm2vM9NGI
-         Br8GCWqfbggdwVPzV8LTNOJtYkb1+UvY0UEwKNDt0CNRtUYKiYV2vnauRF79pK2EXnpy
-         a2Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744016147; x=1744620947;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=usZvs6KCLTgjGr0SVDdV9KkJaypefAlDD3xqFkv+Ahk=;
-        b=PHL3OUa6FNkQHiFci1WzhtlO54hw2E/4FD4biqSSXLc60ZhJipzD/wJBPC8cbytjt4
-         bgLm6pTmTiMQ+uZTc8B7FMghjkWqfIOzmJ14h79U3nEMjIdNYXt1ofk3AJMeoFV6aLEc
-         +8dvyA15KjyLl4O3l/Pfa/oWect2G2KHeuiU7mq+pnAnhGdu4hzB4WASCEaBKxjWKP67
-         af7FsllMq0Ic/feI2LzpMQ6Vi1uhKpH0hR5CDac30Nb5UU1AxhLNbd9iSPXK1uNaEkzG
-         9BB+ydmlUHyNciJipkRFrEhdXr1sfQ8Mc1SL9Z8yAhl3HBMguUkxAcifZyCCMR9ED5Xo
-         iHOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwG+MoQyeAMxGFakFOpA/F6LxgBhCGIZLJcpAuQR5Mk8UZKRE3JR4zm+r+QN24B/xVZGe1VsbW3L8CEWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyed3s2IfKJ8Ow1RNWxt4O6QkiBC1elA6UUL7da0rOYoEgnijol
-	OzSrygv0WhurrX3Z65uj1kDnH7Pg+B60WaH5Enixb2Izo5xQDLuR+22Nd9R6gK4=
-X-Gm-Gg: ASbGncsBz0nwHznXLcTJ0WCULoQeol6fDIjeTqOrwQfNjtvp1Iiundg1RFeqPkLUTPV
-	5eH8vFL+tUAqDZ/Bfr9w0pWVfpAgPKSGJDH1jQxWoz7abB6HJeXMpSWMGaQlINkXGqeHhSTQ/fo
-	cwFnG4QUR3GfjL7N9maxserAJls1VMxP+IkWpiKgNjwFFJhnac3LjfWeNLIMbS21vnFd9akTnN7
-	dRu729Q19qN9yMNSkXfkI8a66ViEKm09kVJ8otpT7cgWHx9Ip3MW3lLK6keR0aVk/6PNxghp0lk
-	7FR07tADHHuzZoKPqx0qnz4RTdV0boYpcZCAaeMS7OxZ0uVK
-X-Google-Smtp-Source: AGHT+IHkOpZ5UWfNCm7D0PZAZL/ZLHhBDc6m6mb4xiPQsIW15234vRHFYT+yvby5B9w2sdj4Hzpxzg==
-X-Received: by 2002:a05:600c:3489:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-43ee0617025mr74208375e9.7.1744016147044;
-        Mon, 07 Apr 2025 01:55:47 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec163107csm127864145e9.3.2025.04.07.01.55.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:55:46 -0700 (PDT)
-Message-ID: <0a1f45f3221f74fdde0f388b3693e51c771bb307.camel@linaro.org>
-Subject: Re: [PATCH v3 09/32] mfd: sec: add support for S2MPG10 PMIC
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki
- <s.nawrocki@samsung.com>, Chanwoo Choi	 <cw00.choi@samsung.com>, Alim
- Akhtar <alim.akhtar@samsung.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Russell King	
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon	 <will@kernel.org>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker	
- <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Date: Mon, 07 Apr 2025 09:55:45 +0100
-In-Reply-To: <20250404091858.GA43241@google.com>
-References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
-	 <20250403-s2mpg10-v3-9-b542b3505e68@linaro.org>
-	 <20250404091858.GA43241@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-1 
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="anCgZ2RC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tQfKvXJCTcHCuFIaaAsqT4dZgjMKcIay1Fg+kj4Idbi//GnWt6BWz0gT0Ru47xGymnrIvYr/dzZDjCQ5T8T3DGAWFXi4+wsiLFkqCE7pFowLVon9zEwbgnJxzcljTR+6OeM9GHMvDuiG84XbzzuTOxgO3gsFwaCM2nideNBixyZItvTqavM+MZLwqssrkDNEGIgBd0l5zdcrbLFrGV+OIjPN1JtRawP1BlQ3jm/dbhYJhYfigBfeedcB85LeeSVFq+V2Oi8S2k4O1wle9vMeaVMWqLE7MvSzGOsFdzVrG95O6Vx6lVqsWs3FI5q7Ogb5INuVO5CIYXZbt0bpANUkDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bBQSN7SB1IuWN2cl0nVtbj365BeYHwnxF+9OpTTrCBI=;
+ b=F0oCmfNUW45u79sYM9hVk6evi623dcrxeDTIUCuj223KftOSh0oiEQaIfF/2KWQxaE5ZBFjOqAVrTSWemFsdVDhyLzRmKsdqtRmBfWC3m30nvQ9WxF4jkuRvs/ZUO9eP6P4Rv7/JisRD0CIOxi4xRSYzSGESFLMQ6TuC8kEuMa3x5whbLVpVGogGEPTb0lpNAGRky4wX0yF+KKI63zuhidMAw+YOBSkL+4vNrnP8mOiGvyCnyuGjG9J4yCyJJkLBQlDcRxHXmYqwUoBFHhn71cyW7cTqo7zuIYlyJld3BFjdCWp9FILQmopx4t4fZIipIy8k38oSghs/I0iYww8KRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bBQSN7SB1IuWN2cl0nVtbj365BeYHwnxF+9OpTTrCBI=;
+ b=anCgZ2RClRLndEKIH4QPDd3dETAtBEMnFLiily0UENUd3nhWLMd9spaGbdU+E1TlAw7VbSJ+jCwlQEkMF7sRb/uLAiCTr23o7kb2c7IxRRgqLI0/gwRrAbgfARE/2QiS1hvpkQKuYqTtdzqozIuWo6wVngKPvTqoKpMudWfRf2xiDz+H7tC/a+PLDWBhoRBN/roR167DyFo4cqzjxBD0bMZXOFKZZMw7F7McvDOPH/xeJdaCXVRRzaKwS4Ze691K7Gkpj45BdgwJw9Pb/LcQ4tS7DectNq10O1mZnD7KdCLO6ik4GsQHqbaih1P6KmvS/QpUXHA9QxH+0lQcAgRPEw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
+ by OS8PR06MB7302.apcprd06.prod.outlook.com (2603:1096:604:284::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.43; Mon, 7 Apr
+ 2025 08:55:47 +0000
+Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f]) by PUZPR06MB5676.apcprd06.prod.outlook.com
+ ([fe80::a00b:f422:ac44:636f%4]) with mapi id 15.20.8583.043; Mon, 7 Apr 2025
+ 08:55:46 +0000
+Message-ID: <276d2b85-0d5a-4bff-a408-604d823efef0@vivo.com>
+Date: Mon, 7 Apr 2025 16:55:40 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+To: Muchun Song <muchun.song@linux.dev>
+Cc: bingbu.cao@linux.intel.com, Christoph Hellwig <hch@lst.de>,
+ Matthew Wilcox <willy@infradead.org>, Gerd Hoffmann <kraxel@redhat.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ opensource.kernel@vivo.com
+References: <20250327092922.536-1-link@vivo.com>
+ <20250404090111.GB11105@lst.de>
+ <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+ <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
+ <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
+ <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
+ <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
+ <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
+ <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
+ <55306631-8421-455a-9d03-709ebee97d76@vivo.com>
+ <777BB63E-245D-4027-880A-FFC3717928D7@linux.dev>
+From: Huan Yang <link@vivo.com>
+In-Reply-To: <777BB63E-245D-4027-880A-FFC3717928D7@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2P153CA0005.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::11) To PUZPR06MB5676.apcprd06.prod.outlook.com
+ (2603:1096:301:f8::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|OS8PR06MB7302:EE_
+X-MS-Office365-Filtering-Correlation-Id: 638bd07d-d486-45a7-061b-08dd75b1fc56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bUF3MlVhRmlJUGtqaDg5OHZkcWlqS1NiSlhoWHdjalZsN2c2b1gvcXNWVHBn?=
+ =?utf-8?B?ckNPWWRUV05qL3NlYlpjaFBXNEZVM3hQZVdER1dISUZpa2FKci9FV2hpRFNC?=
+ =?utf-8?B?QkV4RWx0aEZMTkptZzY4SGNCTVRmS2MwRVBXdGRTcU9pMmVaN2U3Tml6di83?=
+ =?utf-8?B?S1kwZEZySkRTQ3F6NXFydzZZV1JET1NUUjFHNWg4bExMa080YnEzcGFGcks5?=
+ =?utf-8?B?eC95Qmd6MTVzT05BdUQwM3E0amFCZWgrUTgrTVpWMDMyYWZYR29xdnQ0eGpY?=
+ =?utf-8?B?QlgzTVNub1NoTitUV1hKMU1rZlNyOUhST0J6czd0Qk1jQkRGeDV4V1VWdjBt?=
+ =?utf-8?B?Q0Z3bExqTzZSVUxBVVZUWVBnVStudlRsakRBSEl2ejl1UHdmakRSMXlJQkdl?=
+ =?utf-8?B?ZElROG5jZW81bXFXR2Jma3lPb1dyWkZlMGxpNkRkZElSbURKVTBuVzY5UGxC?=
+ =?utf-8?B?VVA3TjRmV2VEemhjRjZ6b2JPK01VN1oyZFBGd3VSaXQ5VmFqQk1Ec3E4T2o0?=
+ =?utf-8?B?aHNpUFVuMkNwY2c5UHlsRjFsZTlhS3hZdWVNTnpzRFJEdWtMekxWa2JOOW44?=
+ =?utf-8?B?Q1J3cmxxdzVrMnRPbUwwVVlaaGFYNkoyZHdyS1ZJQkNBZDdVZzIrcDY4bkF5?=
+ =?utf-8?B?MnZlREZ6SVNBTWdabUNXc2JwNUJITFBqMTFpNHZmWVRQb3hCTkJCVTFQcVU4?=
+ =?utf-8?B?NmRuVHhxMHJ1cTBwdjZUTDQ5MjBJY09NSGh1UGhCbE01SXh0T29qUEtTSk5j?=
+ =?utf-8?B?Q09kQkFTdXkxcVBEOFE2UmM3MnhzTTR2M0YxSmxjWlN4dHpsR1NMYlRob1RJ?=
+ =?utf-8?B?MEdvR1Q3WVFJUXlJdjNNdkxUTzZaTWNrOFNBZzdxWXlqazVCc21nMS9ZV0lT?=
+ =?utf-8?B?bkpaN0RIemNyRXlDQ0JwNFFOVXBlRkxGbUx2ZURmQVZmUzBGZE1wc25TNzFy?=
+ =?utf-8?B?SDQ0bmdpZ2FBZ0M1bDZxVU9yczg1WWYwZERlZUw5SFdJZkFtQ0EwblBJck5N?=
+ =?utf-8?B?VXlDM0RDZGYyVWEvQ3daWFliNSs5TjZzR1J4THpWZEJzS1FQQ2tTNkdINHBO?=
+ =?utf-8?B?bjhCWkkweTBNd1orbGllMVpobXlUYmtFd1JNYnBRU1MrMithUTFFYTdteDUy?=
+ =?utf-8?B?Mkp2MVFsM3drUXd5YVJMSFZwVXZHb015d09QWmtjMXg4VlVjYVJ0OTBWYzE4?=
+ =?utf-8?B?QkJ2TTVmcHp2WHF2ZzczVGN3KzB6S2daYytJQmtYWkZBc21HS1FGYjdzZDh5?=
+ =?utf-8?B?Z0I1NWJ1MWJCRWVrMHMzVVFhcm82MjMwVHcyZU5YNS9wczBJcGQ2dFpPeWVa?=
+ =?utf-8?B?QmlxbVlFWFA3NFBFNDdVTWM2TmVSdFYwLzZLQlJQeGZmM3d3UEZJeDM4Q0JU?=
+ =?utf-8?B?VU5QK0pBU0RKeFMvWUltN3BkWXNZM0tmTm15ak1uL3NSWVdsbVh5dUNaU1BY?=
+ =?utf-8?B?K3hDK01Eb043MUNsQjFtZUhmMHE2WnRzcVF2c1Z5dDk5WUhkNHU3V3JzVThO?=
+ =?utf-8?B?Vm15aG50SzJybFVCR01mem9UMGZtdS9UMWNZMTVaV2FBQ0x5S1kzTGxuT3R0?=
+ =?utf-8?B?NGRHZGkzdTlBZElzeW0zUm5nemk3enRhNFRtZzNERldXdDhTOU82NXlCeXJP?=
+ =?utf-8?B?NVpTWjQ1cnUydW4wcFFmTkVJcmJ1VTdXTC81MmgwcVk5S0txNDJ2ZEhkTWZZ?=
+ =?utf-8?B?OHRFaXR3amZHS0paRWE3aU9ndmhoN3F2a2lZbjNBbW1YSjlISE1NTDN5Tkt6?=
+ =?utf-8?B?aGFacDRySC8xaXhKTjZPQ3Uxcm0xL0N4c0E4S3hzajhHeEpLOCtJczg5MFpz?=
+ =?utf-8?B?KzBLM1A5RU1WYzVOZGYrdXFUVVJ4MDQwME9TeFpFTU5uK1RCS2VqdWNTUjBY?=
+ =?utf-8?B?SmhSemFvWFV5ZkYyOE9RaHVtTHFYeFRhTGZlV2EyZXdIb3dmZDRLN3NJT2l3?=
+ =?utf-8?Q?kr+hTzx8NkZQnhG3K76FvV+pdAksg89P?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M1dkNXpTZXNReEtMWG5YdTd3S2tBcFVOait0RDRYVVdpZGdjMHFMZFFUUldx?=
+ =?utf-8?B?K2xEWndJakt4NG5NQXZBYTlvTHkySC9KVWZwYzRiL2s2am5rOU14K29QSTVC?=
+ =?utf-8?B?M2E4WFZpeVFjZnowN1ljT1NWNkEzN1JsbUdYOURMOWV0NHpxVzd6Q1B3Q0NY?=
+ =?utf-8?B?VVVVcjl2R0xybU5HNGxTeENXdnJKSDdoRUt5ZHAzS1R2YnhROEM4WWcrZStO?=
+ =?utf-8?B?QmxoTGlXekkvbXpzZXRBMFltd21iNHo3cmhUd1IwYnFYSTM4Mk1hNE5qcGN1?=
+ =?utf-8?B?MjgvOWdHMkFERWtPKzd4REpNYUpHL2Vaa2gweS8wM29TVXNjQ1BqUVlwYTVK?=
+ =?utf-8?B?cUJQTjQzeUlmTnZjK0RCd2RxOFYyVEJaY3NjQmxuZzhucm93UHRQNEJHMW5N?=
+ =?utf-8?B?c3dxcjZuM3pVdTY0N2VXVkxFYjNUQ3Rpa2JnemFmdEJ0ZDFyaERlOWRXZzl4?=
+ =?utf-8?B?NTg1RUJtZTYzbVlIeThFVnFPNVJVWDhYSzlpNEFleDVvY25BVC8yYVc0Nkkw?=
+ =?utf-8?B?WEd2SUxIcjRKZ0RlemhaaG1iR3lRRXNXc1BrTk5sK2phNmVIcnN6QXFkWmhS?=
+ =?utf-8?B?MFBuK1R1a0dpWFBqT1I4OGNVMWxQRVpkb3liS3pjdXEya2dzSXRWZUdxd3E0?=
+ =?utf-8?B?aEgycGxyOURTZlhPSzdQVTRkUmlaYlJLYlFvcU51bEtFMmRSQnZ4aFZxSWJ1?=
+ =?utf-8?B?YlRkSHk0YXVBaDBDdEtxQXJxVUFRL1FIUGY4R1kxYTB4Uzlwb1RvcmJYc2lo?=
+ =?utf-8?B?Z0t5RWVPZTU3dHoxOHFEUVQ4QjV1aXpyZjNlQmVnSm1OWUxPalhrOERvSWN3?=
+ =?utf-8?B?cW51b0hFRTk5SlltcVpWSU5RaHFMajUxazlKeGR3b0hYRXlzcXg0Q3UxYTNW?=
+ =?utf-8?B?bldZakY4MStqLzI0SGIrMVJ1ejRNMkJaaWlsMldWbGxHaDBhcnAyR2tjNnZa?=
+ =?utf-8?B?VFZjVm1OSHFLbXozSWRhMjhBMnlPa3VybUI2L3FhQ1Y5K1RidHQ5bWlHci92?=
+ =?utf-8?B?QWE4M1hiTkdaQVR1Ry9RMDJXSjNlWVZGeVlMeWczdENOS0QzY0lBR1lpNzZN?=
+ =?utf-8?B?cy9hR1l3Ymc3NkNObFdST0tRUzN1bTdBdktMdEFVM1BmWHVIM3k5a0tMc3FJ?=
+ =?utf-8?B?dGJFaXE2bEZqMEd6blBQTXdJSDFXMEcrRGtrSHBORVZoL0xqVlNUZHdESGVp?=
+ =?utf-8?B?RnhzNW9lQjNsdDlocXNIUktWZnFBQndhcXQ2b3FreVdOQzBrMXJMa1l4ZGtV?=
+ =?utf-8?B?UW9hQzdKWDFWTFprOHh3TExlNWxTMThIQ0loY25sMXlFeU5INlU2WDN2ckwr?=
+ =?utf-8?B?OUF3VDRrMzJyY01Jdys1azhESVdEU2dYM0UvSFUxaDJUdmREWVRDRitjR0lF?=
+ =?utf-8?B?Ym12OHEzdG5vQzhtNUdmMlErcit4OXNLc2xUS2VKOWc1dXFrRVJaZmFicUl0?=
+ =?utf-8?B?b1NDeVlpNGZZTy9lT3BEZXdjY1Uwdks3NEJjQ3lLM0JmRjVxWTN5anNKSFAy?=
+ =?utf-8?B?TThZSnVRUmJ3OWRmWkh6TlRER1hoZVc1eXVJQmY4ZEpKUTNHSTdrMi9pd0M1?=
+ =?utf-8?B?UHhXaDQ3MEJSeWg3YnUwUWFkNlBCMERYUlVmREFQd1R0c2NFaE9pMFc4YlJi?=
+ =?utf-8?B?WkgzT0srRjI2V1ppcEpZMXptUERtTERvZ2E4b0JHN1pIQ2c3b2xrNHQ4d3BJ?=
+ =?utf-8?B?VVhaOGExOElSdFNqRmt2OU5KUDVrSm5leFNpMlRzSmJlZVM5Zi9jczhxWEFv?=
+ =?utf-8?B?OWhaYUl2eDAxTnNPYmlsVENzcXF0TDhSOFRNTUFDQ0FRWVFNSmVVRFNLRFVW?=
+ =?utf-8?B?c3ZiZVg3T3c1VCtJZGZ0bFc1dm9MYWFrVlNzUDJuOUV3ZUJ0eE4rMDZ6Ujcx?=
+ =?utf-8?B?M3VVZmNJN0M2T2JqaUVnRHNmem5hdVVxMkpXbGg5ZkQrMUczbWY2ekxscVBn?=
+ =?utf-8?B?aFRuKzBPNlJTM1lTRnJ6L2hlMDJxVW5VTTZKWkhFRFZWNkQ2UlV6dW1MNGhX?=
+ =?utf-8?B?em1zenFFYWpJU3Z0TmlQbEMvODRQRWpjaUJvSGxsTmpNbXRYS0NqTWhnVmx6?=
+ =?utf-8?B?YUNrQ1Bjc0lOZmhTS3VSY3JkS2ZRamxiV3NhekdzRHp1Q2cxRXpKNHdJZDRw?=
+ =?utf-8?Q?Bbf9v/B7yYrmDqX2rqWO0/i2/?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 638bd07d-d486-45a7-061b-08dd75b1fc56
+X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 08:55:46.2163
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g+BUTSN0Ks7hJkP/cPwoEUT2dSfLaCskAVA16Gf73I5ioMKthV1TGm4lFh/rzBmorqfR+XW0GP3zGLz+e34Alw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS8PR06MB7302
 
-Hi,
 
-Thanks Lee for your review!
+在 2025/4/7 15:22, Muchun Song 写道:
+>
+>> On Apr 7, 2025, at 15:09, Huan Yang <link@vivo.com> wrote:
+>>
+>>
+>> 在 2025/4/7 14:43, Muchun Song 写道:
+>>>> On Apr 7, 2025, at 11:37, Muchun Song <muchun.song@linux.dev> wrote:
+>>>>
+>>>>
+>>>>
+>>>>> On Apr 7, 2025, at 11:21, Huan Yang <link@vivo.com> wrote:
+>>>>>
+>>>>>
+>>>>> 在 2025/4/7 10:57, Muchun Song 写道:
+>>>>>>> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> 在 2025/4/4 18:07, Muchun Song 写道:
+>>>>>>>>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
+>>>>>>>>>>
+>>>>>>>>>> After the btrfs compressed bio discussion I think the hugetlb changes that
+>>>>>>>>>> skip the tail pages are fundamentally unsafe in the current kernel.
+>>>>>>>>>>
+>>>>>>>>>> That is because the bio_vec representation assumes tail pages do exist, so
+>>>>>>>>>> as soon as you are doing direct I/O that generates a bvec starting beyond
+>>>>>>>>>> the present head page things will blow up.  Other users of bio_vecs might
+>>>>>>>>>> do the same, but the way the block bio_vecs are generated are very suspect
+>>>>>>>>>> to that.  So we'll first need to sort that out and a few other things
+>>>>>>>>>> before we can even think of enabling such a feature.
+>>>>>>>>>>
+>>>>>>>>> I would like to express my gratitude to Christoph for including me in the
+>>>>>>>>> thread. I have carefully read the cover letter in [1], which indicates
+>>>>>>>>> that an issue has arisen due to the improper use of `vmap_pfn()`. I'm
+>>>>>>>>> wondering if we could consider using `vmap()` instead. In the HVO scenario,
+>>>>>>>>> the tail struct pages do **exist**, but they are read-only. I've examined
+>>>>>>>>> the code of `vmap()`, and it appears that it only reads the struct page.
+>>>>>>>>> Therefore, it seems feasible for us to use `vmap()` (I am not a expert in
+>>>>>>>>> udmabuf.). Right?
+>>>>>>>> I believe my stance is correct. I've also reviewed another thread in [2].
+>>>>>>>> Allow me to clarify and correct the viewpoints you presented. You stated:
+>>>>>>>>   "
+>>>>>>>>    So by HVO, it also not backed by pages, only contains folio head, each
+>>>>>>>>    tail pfn's page struct go away.
+>>>>>>>>   "
+>>>>>>>> This statement is entirely inaccurate. The tail pages do not cease to exist;
+>>>>>>>> rather, they are read-only. For your specific use-case, please use `vmap()`
+>>>>>>>> to resolve the issue at hand. If you wish to gain a comprehensive understanding
+>>>>>>> I see the document give a simple graph to point:
+>>>>>>>
+>>>>>>> +-----------+ ---virt_to_page---> +-----------+   mapping to   +-----------+
+>>>>>>> |           |                                     |     0     | -------------> |     0     |
+>>>>>>> |           | +-----------+                +-----------+
+>>>>>>> |           |                                      |     1     | -------------> |     1     |
+>>>>>>> |           | +-----------+                +-----------+
+>>>>>>> |           |                                      |     2     | ----------------^ ^ ^ ^ ^ ^
+>>>>>>> |           | +-----------+                      | | | | |
+>>>>>>> |           |                                      |     3     | ------------------+ | | | |
+>>>>>>> |           | +-----------+                        | | | |
+>>>>>>> |           |                                      |     4     | --------------------+ | | |
+>>>>>>> |    PMD    | +-----------+                          | | |
+>>>>>>> |   level   |                                   |     5     | ----------------------+ | |
+>>>>>>> |  mapping  | +-----------+                             | |
+>>>>>>> |           |                                     |     6     | ------------------------+ |
+>>>>>>> |           | +-----------+                              |
+>>>>>>> |           |                                     |     7     | --------------------------+
+>>>>>>> |           |                                    +-----------+
+>>>>>>> |           |
+>>>>>>> |           |
+>>>>>>> |           |
+>>>>>>> +-----------+
+>>>>>>>
+>>>>>>> If I understand correct, each 2-7 tail's page struct is freed, so if I just need map page 2-7, can we use vmap do
+>>>>>>>
+>>>>>>> something correctly?
+>>>>>> The answer is you can. It is essential to distinguish between virtual
+>>>>> Thanks for your reply, but I still can't understand it. For example, I need vmap a hugetlb HVO folio's
+>>>>>
+>>>>> 2-7 page:
+>>>>>
+>>>>> struct page **pages = kvmalloc(sizeof(*pages), 6, GFP_KENREL);
+>>>>>
+>>>>> for (i = 2; i < 8; ++i)
+>>>>>
+>>>>>     pages[i] = folio_page(folio, i);    //set 2-7 range page into pages,
+>>>>>
+>>>>> void *vaddr = vmap(pages, 6, 0, PAGE_KERNEL);
+>>>>>
+>>>>> For no HVO pages, this can work. If HVO enabled, do "pages[i] = folio_page(folio, i);" just
+>>>>>
+>>>>> got the head page? and how vmap can correctly map each page?
+>>>> Why do you think folio_page(folio, i) (i ≠ 0) returns the head page?
+>>>> Is it speculation or tested? Please base it on the actual situation
+>>>> instead of indulging in wild thoughts.
+>>> By the way, in case you truly struggle to comprehend the fundamental
+>>> aspects of HVO, I would like to summarize for you the user-visible
+>>> behaviors in comparison to the situation where HVO is disabled.
+>>>
+>>> HVO Status Tail Page Structures Head Page Structures
+>>> Enabled Read-Only (RO) Read-Write (RW)
+>>> Disabled Read-Write (RW) Read-Write (RW)
+>>>
+>>> The sole distinction between the two scenarios lies in whether the
+>>> tail page structures are allowed to be written or not. Please refrain
+>>> from getting bogged down in the details of the implementation of HVO.
+>> Thanks, I do a test, an figure out that I'm totally misunderstand it.
+>>
+>> Even if HVO enabled, tail page struct freed and point to head, linear mapping still exist, so that any page_to_pfn,
+>>
+>> page_to_virt(also folio's version), if start from head page can compute each need page like folio_page, can still work:
+>>
+>> hvo head 0xfffff9de849d0000, pfn=0x127400, wish offset_pfn 0x1275f1, idx 497 is 0xfffff9de849d7c40, pfn=0x1275f1.
+>>
+>> When vmap, we no need to touch actually page's content, just turn to pfn, so, work well.
+> You are able to read those tail page structures. The reason why vmap can
+> function is not that it doesn't read those page structures. What I mean
+> is that vmap will still work even if it does read the page structures,
+> because those tail page structures do indeed exist.
+>
+>> BTW, even if we need to touch actually input page struct, it point to head page, I guess will effect nothing.
+> Allow me to clarify this for you to ensure that we have a shared understanding.
+> Those tail page structures (virtual addresses in the vmemmap area) are mapped
+> to the same page frame (physical page) to which the head page structures (virtual
+> addresses in the vmemmap area) are mapped. It is analogous to the shared-mapping
+> mechanism in the user space.
 
-On Fri, 2025-04-04 at 10:18 +0100, Lee Jones wrote:
-> On Thu, 03 Apr 2025, Andr=C3=A9 Draszik wrote:
+Thank you for your answer.  I may understand it.
 
-[...]
+HVO do not release vmemmap page struct pointer array, just change it's va point to head page's.(vmemmap_remap_pte)
 
-> > diff --git a/drivers/mfd/sec-acpm.c b/drivers/mfd/sec-acpm.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..39dbb968086ac835b96ed3e=
-4efa68868fda63429
-> > --- /dev/null
-> > +++ b/drivers/mfd/sec-acpm.c
-> > @@ -0,0 +1,465 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright 2020 Google Inc
-> > + * Copyright 2025 Linaro Ltd.
-> > + *
-> > + * Samsung S2MPG1x ACPM driver
-> > + */
-> > +
-> > +#include <linux/array_size.h>
-> > +#include <linux/device.h>
-> > +#include <linux/firmware/samsung/exynos-acpm-protocol.h>
-> > +#include <linux/mfd/samsung/core.h>
-> > +#include <linux/mfd/samsung/rtc.h>
-> > +#include <linux/mfd/samsung/s2mpg10.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm.h>
-> > +#include <linux/property.h>
-> > +#include <linux/regmap.h>
-> > +#include "sec-core.h"
-> > +
-> > +#define ACPM_MAX_BULK_DATA=C2=A0=C2=A0 8
-> > +
-> > +struct sec_pmic_acpm_platform_data {
->=20
-> This isn't platform data.=C2=A0 It's driver data.
->=20
-> Platform data is passed in, driver data is derived.
+So:
 
-This is the match data from of_device_id::data, it is passed in
-via device_get_match_data().
+1. any deal of page struct pointer still work, can get right pfn or something.
 
->=20
-> See how the other drivers do this:
->=20
-> =C2=A0 $ git grep ddata -- drivers/mfd
+2. Any read of this va still work, we can get correct folio info, but can't change it.(PAGE_KERNEL_RO)
 
-I had followed the example of drivers/mfd/rk8xx-i2c.c
+What I misunderstand ahead is vmemmap's page struct pointer also freed, what a fool. :(
 
-I can rename it to struct sec_pmic_acpm_chip_data if you prefer or
-something like that, but the rk8xx driver also calls this platform
-data.
+Thanks,
 
-ddata in drivers/mfd/ generally seems used for dynamically allocated
-runtime driver data. That's not the case here.
+Huan Yang
 
-> > +	int device_type;
-> > +
-> > +	unsigned int acpm_chan_id;
-> > +	u8 speedy_channel;
-> > +
-> > +	const struct regmap_config *regmap_cfg_common;
-> > +	const struct regmap_config *regmap_cfg_pmic;
-> > +	const struct regmap_config *regmap_cfg_rtc;
-> > +	const struct regmap_config *regmap_cfg_meter;
-> > +};
-> > +
-> > +static const struct regmap_range s2mpg10_common_registers[] =3D {
-> > +	regmap_reg_range(0x00, 0x02), /* CHIP_ID_M, INT, INT_MASK */
-> > +	regmap_reg_range(0x0a, 0x0c), /* speedy control */
-> > +	regmap_reg_range(0x1a, 0x2a), /* debug */
->=20
-> Nit: I like comments to start with an upper-case char.
-
-OK
-
->=20
-> > +};
-> > +
-> > +static const struct regmap_range s2mpg10_common_ro_registers[] =3D {
-> > +	regmap_reg_range(0x00, 0x01),
-> > +	regmap_reg_range(0x28, 0x2a),
->=20
-> Why describe some, but not all ranges?
-
-They're all covered above. I'll duplicate them here and elsewhere.
-
-> > +struct sec_pmic_acpm_shared_bus_context {
-> > +	const struct acpm_handle *acpm;
-> > +	unsigned int acpm_chan_id;
-> > +	u8 speedy_channel;
-> > +};
-> > +
-> > +enum sec_pmic_acpm_accesstype {
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_COMMON =3D 0x00,
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_PMIC =3D 0x01,
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_RTC =3D 0x02,
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_METER =3D 0x0a,
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_WLWP =3D 0x0b,
-> > +	SEC_PMIC_ACPM_ACCESSTYPE_TRIM =3D 0x0f,
-> > +};
-> > +
-> > +struct sec_pmic_acpm_bus_context {
-> > +	struct sec_pmic_acpm_shared_bus_context *shared;
-> > +	enum sec_pmic_acpm_accesstype type;
-> > +};
-> > +
-> > +static int sec_pmic_acpm_bus_write(void *context, const void *data,
-> > +				=C2=A0=C2=A0 size_t count)
->=20
-> Nit: You can tidy this, and similar line-feeds, up by using 100-chars her=
-e.
-
-Will do.
-
-> > +{
-> > +	struct sec_pmic_acpm_bus_context *ctx =3D context;
-> > +	const struct acpm_handle *acpm =3D ctx->shared->acpm;
-> > +	const struct acpm_pmic_ops *pmic_ops =3D &acpm->ops.pmic_ops;
-> > +	u8 reg;
-> > +
-> > +	if (count < 2 || count > (ACPM_MAX_BULK_DATA + 1))
->=20
-> 2 because?=C2=A0 Either comment or define magic numbers please.
->=20
-> > +		return -EINVAL;
-> > +
-> > +	reg =3D *(u8 *)data;
->=20
-> No API to conduct this raw read for you?=C2=A0 readl(), *_to_cpu() or sim=
-ilar?
-
-This is just regmap, passing a buffer. First byte(s) contains the reg
-address, depending on the regmap_config used during creation, and remainder
-the values starting from that address. This is not an I/O read as such, it'=
-s
-only extracting the register address. See e.g. regmap_parse_8().
-
-I'll reflow it a little.
-
->=20
-> > +	++data;
-> > +	--count;
-> > +
-> > +	return pmic_ops->bulk_write(acpm, ctx->shared->acpm_chan_id,
-> > +				=C2=A0=C2=A0=C2=A0 ctx->type, reg,
-> > +				=C2=A0=C2=A0=C2=A0 ctx->shared->speedy_channel, count, data);
-> > +}
-> > +
-> > +static int sec_pmic_acpm_bus_read(void *context, const void *reg_buf,
-> > +				=C2=A0 size_t reg_size, void *val_buf,
-> > +				=C2=A0 size_t val_size)
-> > +{
-> > +	struct sec_pmic_acpm_bus_context *ctx =3D context;
-> > +	const struct acpm_handle *acpm =3D ctx->shared->acpm;
-> > +	const struct acpm_pmic_ops *pmic_ops =3D &acpm->ops.pmic_ops;
-> > +	u8 reg;
-> > +
-> > +	if (reg_size !=3D 1 || !val_size || val_size > ACPM_MAX_BULK_DATA)
-> > +		return -EINVAL;
-> > +
-> > +	reg =3D *(u8 *)reg_buf;
-> > +
-> > +	return pmic_ops->bulk_read(acpm, ctx->shared->acpm_chan_id,
-> > +				=C2=A0=C2=A0 ctx->type, reg,
-> > +				=C2=A0=C2=A0 ctx->shared->speedy_channel,
-> > +				=C2=A0=C2=A0 val_size, val_buf);
-> > +}
-> > +
-> > +static int sec_pmic_acpm_bus_reg_update_bits(void *context, unsigned i=
-nt reg,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int mask,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int val)
-> > +{
-> > +	struct sec_pmic_acpm_bus_context *ctx =3D context;
-> > +	const struct acpm_handle *acpm =3D ctx->shared->acpm;
-> > +	const struct acpm_pmic_ops *pmic_ops =3D &acpm->ops.pmic_ops;
-> > +
-> > +	return pmic_ops->update_reg(acpm, ctx->shared->acpm_chan_id,
-> > +				=C2=A0=C2=A0=C2=A0 ctx->type, reg & 0xff,
-> > +				=C2=A0=C2=A0=C2=A0 ctx->shared->speedy_channel, val, mask);
-> > +}
-> > +
-> > +static const struct regmap_bus sec_pmic_acpm_regmap_bus =3D {
-> > +	.write =3D sec_pmic_acpm_bus_write,
-> > +	.read =3D sec_pmic_acpm_bus_read,
-> > +	.reg_update_bits =3D sec_pmic_acpm_bus_reg_update_bits,
-> > +	.max_raw_read =3D ACPM_MAX_BULK_DATA,
-> > +	.max_raw_write =3D ACPM_MAX_BULK_DATA,
-> > +};
-> > +
-> > +static struct regmap *
-> > +sec_pmic_acpm_regmap_init(struct device *dev,
->=20
-> Place both of these on the same line please.
->=20
-> > +			=C2=A0 struct sec_pmic_acpm_shared_bus_context *shared_ctx,
-> > +			=C2=A0 enum sec_pmic_acpm_accesstype type,
-> > +			=C2=A0 const struct regmap_config *cfg, bool do_attach)
-> > +{
-> > +	struct sec_pmic_acpm_bus_context *ctx;
-> > +	struct regmap *regmap;
-> > +
-> > +	ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > +	if (!ctx)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	ctx->shared =3D shared_ctx;
-> > +	ctx->type =3D type;
-> > +
-> > +	regmap =3D devm_regmap_init(dev, &sec_pmic_acpm_regmap_bus, ctx, cfg)=
-;
-> > +	if (IS_ERR(regmap))
-> > +		return ERR_PTR(dev_err_probe(dev, PTR_ERR(regmap),
->=20
-> dev_err_cast_probe()
->=20
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 "regmap init (%s) failed\n",
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 cfg->name));
-> > +
-> > +	if (do_attach) {
-> > +		int ret;
-> > +
-> > +		ret =3D regmap_attach_dev(dev, regmap, cfg);
-> > +		if (ret)
-> > +			return ERR_PTR(dev_err_probe(dev, ret,
->=20
-> dev_err_ptr_probe()
-
-Thanks! I had forgotten about those two.
-
-> > +						=C2=A0=C2=A0=C2=A0=C2=A0 "regmap attach (%s) failed\n",
-> > +						=C2=A0=C2=A0=C2=A0=C2=A0 cfg->name));
-> > +	}
-> > +
-> > +	return regmap;
-> > +}
-> > +
-> > +static void sec_pmic_acpm_mask_common_irqs(void *regmap_common)
-> > +{
-> > +	regmap_write(regmap_common, S2MPG10_COMMON_INT_MASK,
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0 S2MPG10_COMMON_INT_SRC);
->=20
-> Single line.=C2=A0 And others like it.
->=20
-> > +}
-> > +
-> > +static int sec_pmic_acpm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct regmap *regmap_common, *regmap_pmic, *regmap;
-> > +	const struct sec_pmic_acpm_platform_data *pdata;
-> > +	struct sec_pmic_acpm_shared_bus_context *shared_ctx;
-> > +	const struct acpm_handle *acpm;
-> > +	struct device *dev;
-> > +	int ret, irq;
-> > +
-> > +	dev =3D &pdev->dev;
->=20
-> You can do this during the declaration.
->=20
-> > +	pdata =3D device_get_match_data(dev);
-> > +	if (!pdata)
-> > +		return dev_err_probe(dev, -ENODEV,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "unsupported device type\n");
-> > +
-> > +	acpm =3D devm_acpm_get_by_node(dev, pdev->dev.parent->of_node);
->=20
-> You have 'dev' now.=C2=A0 Please use it.
->=20
-> > +	if (IS_ERR(acpm))
-> > +		return dev_err_probe(dev, PTR_ERR(acpm),
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get acpm (2)\n");
-> > +
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	if (irq < 0)
-> > +		return irq;
-> > +
-> > +	shared_ctx =3D devm_kzalloc(dev, sizeof(*shared_ctx), GFP_KERNEL);
-> > +	if (!shared_ctx)
-> > +		return -ENOMEM;
-> > +
-> > +	shared_ctx->acpm =3D acpm;
-> > +	shared_ctx->acpm_chan_id =3D pdata->acpm_chan_id;
-> > +	shared_ctx->speedy_channel =3D pdata->speedy_channel;
-> > +
-> > +	regmap_common =3D sec_pmic_acpm_regmap_init(dev, shared_ctx,
-> > +						=C2=A0 SEC_PMIC_ACPM_ACCESSTYPE_COMMON,
-> > +						=C2=A0 pdata->regmap_cfg_common, false);
-> > +	if (IS_ERR(regmap_common))
-> > +		return PTR_ERR(regmap_common);
-> > +
-> > +	/* Mask all interrupts from 'common' block, until successful init */
-> > +	ret =3D regmap_write(regmap_common, S2MPG10_COMMON_INT_MASK,
-> > +			=C2=A0=C2=A0 S2MPG10_COMMON_INT_SRC);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to mask common block interrupts\n=
-");
-> > +
-> > +	regmap_pmic =3D sec_pmic_acpm_regmap_init(dev, shared_ctx,
-> > +						SEC_PMIC_ACPM_ACCESSTYPE_PMIC,
-> > +						pdata->regmap_cfg_pmic, false);
-> > +	if (IS_ERR(regmap_pmic))
-> > +		return PTR_ERR(regmap_pmic);
-> > +
-> > +	regmap =3D sec_pmic_acpm_regmap_init(dev, shared_ctx,
-> > +					=C2=A0=C2=A0 SEC_PMIC_ACPM_ACCESSTYPE_RTC,
-> > +					=C2=A0=C2=A0 pdata->regmap_cfg_rtc, true);
-> > +	if (IS_ERR(regmap))
-> > +		return PTR_ERR(regmap);
-> > +
-> > +	regmap =3D sec_pmic_acpm_regmap_init(dev, shared_ctx,
-> > +					=C2=A0=C2=A0 SEC_PMIC_ACPM_ACCESSTYPE_METER,
-> > +					=C2=A0=C2=A0 pdata->regmap_cfg_meter, true);
-> > +	if (IS_ERR(regmap))
-> > +		return PTR_ERR(regmap);
-> > +
-> > +	ret =3D sec_pmic_probe(dev, pdata->device_type, irq, regmap_pmic, NUL=
-L);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (device_property_read_bool(dev, "wakeup-source"))
-> > +		devm_device_init_wakeup(dev);
-> > +
-> > +	/*
-> > +	 * Unmask PMIC interrupt from 'common' block, now that everything is =
-in
-> > +	 * place.
-> > +	 */
-> > +	ret =3D regmap_clear_bits(regmap_common, S2MPG10_COMMON_INT_MASK,
-> > +				S2MPG10_COMMON_INT_SRC_PMIC);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to unmask PMIC interrupt\n");
-> > +
-> > +	/* Mask all interrupts from 'common' block on shutdown */
-> > +	ret =3D devm_add_action_or_reset(dev, sec_pmic_acpm_mask_common_irqs,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regmap_common);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void sec_pmic_acpm_shutdown(struct platform_device *pdev)
-> > +{
-> > +	sec_pmic_shutdown(&pdev->dev);
->=20
-> sec_pmic_shutdown() takes a pointer to i2c_client (unless you changed it
-> somewhere else).=C2=A0 If the later is true, then why not make it take a
-> pointer to platform_device and omit this abstraction?
-
-I changed it earlier indeed to support both I2C and ACPM transports, simila=
-r
-to drivers/mfd/rk*. The I2C driver doesn't have a struct platform_device,
-but it has struct i2c_client::dev, hence I'm passing struct device to the
-common code, like in the rk8xx example.
-
-[...]
-
->=20
-> > diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
-> > index 4d49bb42bd0d109263f485c8b58e88cdd8d598d9..bf86281401ac6ff05c90c2d=
-71c84744709ed79cb 100644
-> > --- a/drivers/mfd/sec-irq.c
-> > +++ b/drivers/mfd/sec-irq.c
-> > @@ -11,6 +11,7 @@
-> > =C2=A0#include <linux/irq.h>
-> > =C2=A0#include <linux/mfd/samsung/core.h>
-> > =C2=A0#include <linux/mfd/samsung/irq.h>
-> > +#include <linux/mfd/samsung/s2mpg10.h>
-> > =C2=A0#include <linux/mfd/samsung/s2mps11.h>
-> > =C2=A0#include <linux/mfd/samsung/s2mps14.h>
-> > =C2=A0#include <linux/mfd/samsung/s2mpu02.h>
-> > @@ -20,6 +21,60 @@
-> > =C2=A0#include <linux/regmap.h>
-> > =C2=A0#include "sec-core.h"
-> > =C2=A0
-> > +static const struct regmap_irq s2mpg10_irqs[] =3D {
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRONF, 0, S2MPG10_IRQ_PWRONF_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRONR, 0, S2MPG10_IRQ_PWRONR_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_JIGONBF, 0, S2MPG10_IRQ_JIGONBF_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_JIGONBR, 0, S2MPG10_IRQ_JIGONBR_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_ACOKBF, 0, S2MPG10_IRQ_ACOKBF_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_ACOKBR, 0, S2MPG10_IRQ_ACOKBR_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRON1S, 0, S2MPG10_IRQ_PWRON1S_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_MRB, 0, S2MPG10_IRQ_MRB_MASK),
-> > +
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_RTC60S, 1, S2MPG10_IRQ_RTC60S_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_RTCA1, 1, S2MPG10_IRQ_RTCA1_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_RTCA0, 1, S2MPG10_IRQ_RTCA0_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_RTC1S, 1, S2MPG10_IRQ_RTC1S_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR_COLDRST, 1, S2MPG10_IRQ_WTSR_COLDRST_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR, 1, S2MPG10_IRQ_WTSR_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_WRST, 1, S2MPG10_IRQ_WRST_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_SMPL, 1, S2MPG10_IRQ_SMPL_MASK),
-> > +
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_120C, 2, S2MPG10_IRQ_INT120C_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_140C, 2, S2MPG10_IRQ_INT140C_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_TSD, 2, S2MPG10_IRQ_TSD_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PIF_TIMEOUT1, 2, S2MPG10_IRQ_PIF_TIMEOUT1_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PIF_TIMEOUT2, 2, S2MPG10_IRQ_PIF_TIMEOUT2_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_PARITY_ERR, 2, S2MPG10_IRQ_SPD_PARITY_=
-ERR_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_ABNORMAL_STOP, 2, S2MPG10_IRQ_SPD_ABNO=
-RMAL_STOP_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PMETER_OVERF, 2, S2MPG10_IRQ_PMETER_OVERF_=
-MASK),
-> > +
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B1M, 3, S2MPG10_IRQ_OCP_B1M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B2M, 3, S2MPG10_IRQ_OCP_B2M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B3M, 3, S2MPG10_IRQ_OCP_B3M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B4M, 3, S2MPG10_IRQ_OCP_B4M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B5M, 3, S2MPG10_IRQ_OCP_B5M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B6M, 3, S2MPG10_IRQ_OCP_B6M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B7M, 3, S2MPG10_IRQ_OCP_B7M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B8M, 3, S2MPG10_IRQ_OCP_B8M_MASK),
-> > +
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B9M, 4, S2MPG10_IRQ_OCP_B9M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B10M, 4, S2MPG10_IRQ_OCP_B10M_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_WLWP_ACC, 4, S2MPG10_IRQ_WLWP_ACC_MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_SMPL_TIMEOUT, 4, S2MPG10_IRQ_SMPL_TIMEOUT_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR_TIMEOUT, 4, S2MPG10_IRQ_WTSR_TIMEOUT_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_SRP_PKT_RST, 4, S2MPG10_IRQ_SPD_SRP_PK=
-T_RST_MASK),
-> > +
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH0, 5, S2MPG10_IRQ_PWR_WARN_CH0_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH1, 5, S2MPG10_IRQ_PWR_WARN_CH1_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH2, 5, S2MPG10_IRQ_PWR_WARN_CH2_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH3, 5, S2MPG10_IRQ_PWR_WARN_CH3_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH4, 5, S2MPG10_IRQ_PWR_WARN_CH4_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH5, 5, S2MPG10_IRQ_PWR_WARN_CH5_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH6, 5, S2MPG10_IRQ_PWR_WARN_CH6_=
-MASK),
-> > +	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH7, 5, S2MPG10_IRQ_PWR_WARN_CH7_=
-MASK),
-> > +};
-> > +
-> > =C2=A0static const struct regmap_irq s2mps11_irqs[] =3D {
-> > =C2=A0	[S2MPS11_IRQ_PWRONF] =3D {
-> > =C2=A0		.reg_offset =3D 0,
-> > @@ -320,6 +375,16 @@ static const struct regmap_irq s5m8767_irqs[] =3D =
-{
-> > =C2=A0	},
-> > =C2=A0};
-> > =C2=A0
-> > +static const struct regmap_irq_chip s2mpg10_irq_chip =3D {
-> > +	.name =3D "s2mpg10",
-> > +	.irqs =3D s2mpg10_irqs,
-> > +	.num_irqs =3D ARRAY_SIZE(s2mpg10_irqs),
-> > +	.num_regs =3D 6,
-> > +	.status_base =3D S2MPG10_PMIC_INT1,
-> > +	.mask_base =3D S2MPG10_PMIC_INT1M,
-> > +	/* all interrupt sources are read-to-clear */
->=20
-> TOUPPER(a);
->=20
-> Comments usually go on-top of the thing they're commenting on.
-
-This comment is where .ack_base would usually be specified, but I'll move i=
-t.
-
-[...]
-
-> > diff --git a/include/linux/mfd/samsung/s2mpg10.h b/include/linux/mfd/sa=
-msung/s2mpg10.h
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..778ff16ef6668ded514e8dc=
-7242f369cb9c2d0e6
-> > --- /dev/null
-> > +++ b/include/linux/mfd/samsung/s2mpg10.h
-> > @@ -0,0 +1,454 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * Copyright 2015 Samsung Electronics
-> > + * Copyright 2020 Google Inc
-> > + * Copyright 2025 Linaro Ltd.
-> > + */
-> > +
-> > +#ifndef __LINUX_MFD_S2MPG10_H
-> > +#define __LINUX_MFD_S2MPG10_H
-> > +
-> > +/* Common registers (type 0x000) */
-> > +enum s2mpg10_common_reg {
-> > +	S2MPG10_COMMON_CHIPID,
-> > +	S2MPG10_COMMON_INT,
-> > +	S2MPG10_COMMON_INT_MASK,
-> > +	S2MPG10_COMMON_SPD_CTRL1 =3D 0x0a,
-> > +	S2MPG10_COMMON_SPD_CTRL2,
-> > +	S2MPG10_COMMON_SPD_CTRL3,
-> > +	S2MPG10_COMMON_MON1SEL =3D 0x1a,
-> > +	S2MPG10_COMMON_MON2SEL,
-> > +	S2MPG10_COMMON_MONR,
-> > +	S2MPG10_COMMON_DEBUG_CTRL1,
-> > +	S2MPG10_COMMON_DEBUG_CTRL2,
-> > +	S2MPG10_COMMON_DEBUG_CTRL3,
-> > +	S2MPG10_COMMON_DEBUG_CTRL4,
-> > +	S2MPG10_COMMON_DEBUG_CTRL5,
-> > +	S2MPG10_COMMON_DEBUG_CTRL6,
-> > +	S2MPG10_COMMON_DEBUG_CTRL7,
-> > +	S2MPG10_COMMON_DEBUG_CTRL8,
-> > +	S2MPG10_COMMON_TEST_MODE1,
-> > +	S2MPG10_COMMON_TEST_MODE2,
-> > +	S2MPG10_COMMON_SPD_DEBUG1,
-> > +	S2MPG10_COMMON_SPD_DEBUG2,
-> > +	S2MPG10_COMMON_SPD_DEBUG3,
-> > +	S2MPG10_COMMON_SPD_DEBUG4,
-> > +};
-> > +
-> > +/* for S2MPG10_COMMON_INT and S2MPG10_COMMON_INT_MASK */
->=20
-> TOUPPER(f), etc.
-
-Still getting used to this, sorry I missed them
-
-Thanks Lee!
-
-Andre'
-
+>
+>> If anything still misunderstand, please corrent me. :)
+>>
+>> Muchun, thank you for your patience,
+>>
+>> Huan Yang
+>>
+>>> Thanks,
+>>> Muchun.
+>>>
+>>>> Thanks,
+>>>> Muchun.
+>>>>
+>>>>> Please correct me. :)
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>> Huan Yang
+>>>>>
+>>>>>> address (VA) and physical address (PA). The VAs of tail struct pages
+>>>>>> aren't freed but remapped to the physical page mapped by the VA of the
+>>>>>> head struct page (since contents of those tail physical pages are the
+>>>>>> same). Thus, the freed pages are the physical pages mapped by original
+>>>>>> tail struct pages, not their virtual addresses. Moreover, while it
+>>>>>> is possible to read the virtual addresses of these tail struct pages,
+>>>>>> any write operations are prohibited since it is within the realm of
+>>>>>> acceptability that the kernel is expected to perform write operations
+>>>>>> solely on the head struct page of a compound head and conduct read
+>>>>>> operations only on the tail struct pages. BTW, folio infrastructure
+>>>>>> is also based on this assumption.
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Muchun.
+>>>>>>
+>>>>>>> Or something I still misunderstand, please correct me.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>>
+>>>>>>> Huan Yang
+>>>>>>>
+>>>>>>>> of the fundamentals of HVO, I kindly suggest a thorough review of the document
+>>>>>>>> in [3].
+>>>>>>>>
+>>>>>>>> [2] https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com/#t
+>>>>>>>> [3] Documentation/mm/vmemmap_dedup.rst
+>>>>>>>>
+>>>>>>>>> [1] https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m055b34978cf882fd44d2d08d929b50292d8502b4
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> Muchun.
+>
+>
