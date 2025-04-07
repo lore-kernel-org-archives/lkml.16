@@ -1,46 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912EC155A59;
-	Mon,  7 Apr 2025 20:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BE8215F43;
+	Mon,  7 Apr 2025 20:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744057849; cv=none; b=GTNdKXQIYDOXDrrVP0frmnUWctbrDaMVTMd8vjUHe0rgoVJhWQGVR/YSCldcqf+H7fz0My7TSDt6zK0ib4xDnPd9YmmEoaqIh/rA+sssTQP9jdiRiOClzBZ61lr6X6z227vo1gxEZvl3/HiEkAc8hV7hyck+aW+Ta1Q5rUsXOQw=
+	t=1744057861; cv=none; b=VnpI8l4Me0P1PvNmJW+D6cszTkBJilv00WjJ20GoMjVNqG4VO9BzUOSmpfSjx0iVdPMWNchX/oTQUBX9psZ2+6FqqX/K6Fsy9j0s/BmOZBWVyEioA2mD2Np0pcE6TG484BkR3VRX/0eCPG0wLiptyipWn31JsGMV+/pR8UQugwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744057849; c=relaxed/simple;
-	bh=aX8gqFFDz3aJgiJg+W0QD39qGZotbE0J+oqjt08tgH8=;
+	s=arc-20240116; t=1744057861; c=relaxed/simple;
+	bh=G8HBEsHNEI0sJGgfxNrWXXn1MJdNjzeXSWy4JVY8JD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KjOoqMFeGbYzg1kNvMsne7VgHETOGY+b7AO+JM6CAI1epY96ZRXmYuaj216BY4opw9D5/EhidNVD9w9dke3XM7gp9yXz8GjQW8ceZ+RILwNaCjAffOGMk6FtqAq6qNozZqQOIyP6V6Iv7cTP6K164oYZx5iL9+t6B6uZz3jF9EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zt+xCYHt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLgtRH2umXkNXOv03XrdZwBuHi/aD9EdV02PjhLTsN7u1IA6OmuN6BjIlPxvwWaeq2ngEZpZYayz4RlBm8nj0cumd0avL/SKfnph81XV0+s9NBxeJtada+o2G8l1tcZA+i4Hg1CQwDYPvQIGQcAb+SS0Lf+coN9mSDGsgBb9XCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zk1qfI4o; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zt+xCYHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EE6C4CEDD;
-	Mon,  7 Apr 2025 20:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744057849;
-	bh=aX8gqFFDz3aJgiJg+W0QD39qGZotbE0J+oqjt08tgH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zt+xCYHt9EIIZFqi6AgmNiWL6K0G8MoqwjgEl2rir6MnyEDm7706x+kqPjbBJVFBQ
-	 ghp53bHFXfyd2wiq8JyNROwlTD5ZWWu9/v7mrlNXDiEFiY3lEt/YNBQs282HiE4ijM
-	 brLgqF6YACgWs7FZpXsvkXiIOrERy8/yiGo24pvOs8NVzOZkG1lzXR3SWDi/qD0ATK
-	 FOzAjTq2F6oVjtcRv02VLtJ6hk/MS/1g5TGpnFcnsTK0d6tPfHI9JCT5KWnLmptn8F
-	 kkQqSy8NgiWp8n0hj3BULNWtrOhH1fTUorL5363XG6rD9DBzXc4QFOZ12y5X8HoM8C
-	 46Yqlkrj3AuLw==
-Date: Mon, 7 Apr 2025 13:30:46 -0700
-From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: James Smart <james.smart@broadcom.com>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with
- strscpy()
-Message-ID: <202504071330.90FC6D8@keescook>
-References: <20250226185531.1092-2-thorsten.blum@linux.dev>
- <202504071126.37117C5D@keescook>
- <67E5FE26-F258-4690-A466-236A7E7484E8@linux.dev>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zk1qfI4o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=w9ovsHoE8JgQH4oLggs1TAJXs8X7Tpangv6cT0yEWGE=; b=zk1qfI4oag4BvCspUMOS1Nf+MT
+	fMx1LRMlR/se1AMr09cj03hH1ctbqgnxT1ENKy9/oNMx4oSZU0+iQ6rUdnjhNx8vgu3x28Pf8qEmp
+	4f96vidN8sCC5ZQYYFAmFxwy2fPRR6cKawgwxQrKaqQHgPq1LzRAwYzZh5bXhEG0QbGc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u1t7O-008Iqo-J2; Mon, 07 Apr 2025 22:30:54 +0200
+Date: Mon, 7 Apr 2025 22:30:54 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Marek Pazdan <mpazdan@arista.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Daniel Zahka <daniel.zahka@gmail.com>,
+	Jianbo Liu <jianbol@nvidia.com>, Gal Pressman <gal@nvidia.com>
+Subject: Re: [PATCH 2/2] ice: add qsfp transceiver reset and presence pin
+ control
+Message-ID: <6ad4b88c-4d08-4a77-baac-fdc0e2564d5b@lunn.ch>
+References: <20250407123714.21646-1-mpazdan@arista.com>
+ <20250407123714.21646-2-mpazdan@arista.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,41 +59,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67E5FE26-F258-4690-A466-236A7E7484E8@linux.dev>
+In-Reply-To: <20250407123714.21646-2-mpazdan@arista.com>
 
-On Mon, Apr 07, 2025 at 09:01:53PM +0200, Thorsten Blum wrote:
-> On 7. Apr 2025, at 20:28, Kees Cook wrote:
-> > On Wed, Feb 26, 2025 at 07:55:26PM +0100, Thorsten Blum wrote:
-> >> strncpy() is deprecated for NUL-terminated destination buffers; use
-> >> strscpy() instead.
-> >> 
-> >> Compile-tested only.
-> >> 
-> >> Link: https://github.com/KSPP/linux/issues/90
-> >> Cc: linux-hardening@vger.kernel.org
-> >> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> >> ---
-> > 
-> > Standard question for these kinds of conversions: Why is it safe that
-> > this is not NUL padded? I haven't found where this buffer is being
-> > zeroed out, but it probably is (given the "- 1" on the length), but
-> > without run-time testing, this needs much more careful analysis.
-> 
-> I think this was submitted before I started to explain this better.
-> 
-> 'wr_obj' is the zeroed out 'buf' returned from sli_config_cmd_init().
+On Mon, Apr 07, 2025 at 12:35:38PM +0000, Marek Pazdan wrote:
+> Commit f3c1c896f5a8 ("ethtool: transceiver reset and presence pin control")
+> adds ioctl API extension for get/set-phy-tunable so that transceiver
+> reset and presence pin control is enabled.
 
-I don't see how dma->virt and buf are associated?
+As the name get/set-phy-tunable suggests, these are for PHY
+properties, like downshift, fast link down, energy detected power
+down.
 
-> 
-> I'll update the description and submit a v2.
+What PHY are you using here?
 
-Thanks!
-
-> 
-> Thanks,
-> Thorsten
-> 
-
--- 
-Kees Cook
+     Andrew
