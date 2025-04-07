@@ -1,39 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B4E1C3BE2;
-	Mon,  7 Apr 2025 23:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A87801;
+	Mon,  7 Apr 2025 23:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068503; cv=none; b=Z9gClrOqr/FU6TgNMxrx02Rvn/hGea77diNTVj9N3i64tzCHSHq1NT3km2pA1WGSWNIz8Z6SzDbEjq9VWrig6aey0XvYJXvc/G+dIb7dDPsM11oOf54ic6xSs0gUun4PmjZuCfliKvYNb3u7ZEMaQ05OgDJulcs2S0f9sDKK0i0=
+	t=1744068743; cv=none; b=UfDWKgDnNzszohQLJWfPGIYKKz4gvZDIDj8zBQmCRc/1/DTBns3WzXWzMHKYB4mCtdfcQobDxVmQE1tNecFlkZ76ZQxroEMGXNkLA0sIamyHjbME2V6xF+uVZWPULekIODwWqMteZKwytt9IKMxxGt/M5YIa5bGgEmi8dSGNp/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068503; c=relaxed/simple;
-	bh=CVByR+4DUcPMIUDLKFFCym0RNlJROf+tgLBlalzq684=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CKwNyDLgBkRm42hc11DV3JClmGdmEmPfbOJdTLAwsjVi1Tqb/eupkvqNT+pn2ta1TqI41HrY6aaSHcNnWjeVbdzJ4322x80cjM6dTROhjvgCc/92i9SS5b/EK366I8Mhp97NIoWPIoQUF17HBsvRuFHaJ5jkNSMMsO6R2hwC7eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dc/+YKaC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744068743; c=relaxed/simple;
+	bh=y0VMyqj2jrwxkMMoBpqQeCXfy0c7ujpzElgdYnxnprE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8eRrmIxXZio4iXqN6178caapVIj4LzAvp+yc87k+aXOKfoajBuNzOiyfSqbbFLMGuY4igLTCogEkBfxjEEoxOmFsMAV+sP+zNHaQJ1JG02Hv+FdOAYsYSLCX2vd9K/Vzj+H3UtsyswiiqWT1/1cFEdnGGCdV9yMDP7LFqNNzNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NO0ok/7V; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dc/+YKaC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807C3C4CEDD;
-	Mon,  7 Apr 2025 23:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744068503;
-	bh=CVByR+4DUcPMIUDLKFFCym0RNlJROf+tgLBlalzq684=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Dc/+YKaCZAPvYGK1OpQkKOxUDC4ZO/1otb1fw/TRkoT1ODBzj3oSSQds4z2ycU937
-	 NLnNR77OWPHc2oP4nPrniVwMT2cAvw6tR8+zW170fZaOtJJPUro7I/wiMi/U0BdSwj
-	 b/D7rl3VK3Ra8uk/x5q8es0WnvYaixS109NKHmjTcZHWUfRAISgW8sXXDFn6ax5PV0
-	 yzPyiu02cfktINIdyhMlZGl+bMLO+o3irAziOdQk3+UgrGJJPRLcSY6onqa2kfqSZA
-	 yRswvfcRXKdC4HKzNujhe6fReAOvHs5dfrftn4xCFS69NvOLKMw729826evop/5AKh
-	 cJzRYWcTDvRqw==
-Date: Mon, 7 Apr 2025 17:28:20 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] w1: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <Z_RflBe5iDGTMFjV@kspp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NO0ok/7V"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c55500d08cso468745185a.0;
+        Mon, 07 Apr 2025 16:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744068740; x=1744673540; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJIvZC6BOhqiO/IQEbyhQ90MLD58EsSNP3rWCk4udso=;
+        b=NO0ok/7V9Dao8S50aFu2gAXouo/MYy9LTU+ozAcgQjk4k4UmScdXXXxXxqaH5Y6OGJ
+         SNL/prhNQbh8sQBPQ9Ju6U/dINgkaaDnxEb5y9go/exb2cSKBwlyrUTYk3s4u0v084x9
+         7Vzi6g6vSr/BSYmErI9j9cVGVDyuaBjemreD//ld6ljqk/vbOIDzzubTymuVfZajTmxr
+         uuKMleYEDVmqYewHsP8lWMU9bnIbH+CsPKLrLpChk+iMqXnjUb1Al2DNh5Ol/RnongxN
+         PNCK55n0wB9ZQ/x9H0BIhFuFtpKnegUvMf9zKJvFhsPhDe0MqPVvHf75NHz+ELASA1j8
+         niUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744068740; x=1744673540;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jJIvZC6BOhqiO/IQEbyhQ90MLD58EsSNP3rWCk4udso=;
+        b=JnB36knO2Mjgznk3WOCkpX56mfFndTMie+QX4k28DlPhjhH71g84/c69GyPAPA46OR
+         QK52vfUKqGFwZLoCA8Lr7X6YAAnIolKdmJRMCfMNDDonzttTc8xiULxlHztHU7PKMJ/K
+         mDHyEeePkYc4zEuGa2kTEk0z3rbL0HTZSJYazTTUwuZsC1nBnL0n3DXfCcYnIaVXS1KC
+         CTPBCiYzruy23ZJrAB6WW16HVqJUbE8XkuvD1lDcYmFGoX2hvfqAQJVInw/odG3o1fSX
+         nRuxFfCBzlfJ90qc3ggpx1rETlW/2959SQXCXdEimYvd1ED+GHlAXaw3b6fcVxj/B8Tl
+         kkQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUU7HwrqLrIkB+lXmNCYS3z0q0KPoc6kTDNRyafRhOK/FAHl6a0Ja6AA2ZcPKOg4tyoCQ0AwYPFAUNV@vger.kernel.org, AJvYcCVcXaXjfqgKQep2iWf6icuEkYwyDMf3FaWQdHinjseh2IXaKN8q3if5ESLU4EUxIMgpbTjRJdq9ml19cLP5@vger.kernel.org, AJvYcCW/dkSlLBXV5u9u82zDEyU/YbP+ljoc4S6JLiNk+5HHWpUtJA2AOPBaORymKAVgfzYe6w6XIt4QvSrG@vger.kernel.org, AJvYcCWK7ee3bAcAmNuE8ECNpjIfR4jDtPKOTJ1cJIMpqn6D4QtvgCOzG+5Bn/ykOFC4Tv4Mz3FJBI7E8HfF@vger.kernel.org, AJvYcCWWqgPsJsXGccUqeuOYeNg9q2qKawWpgl2jL8Q/8ePn6ATDq8oqFj9RnMQdjHXCpCW5rXWrBGSSAe+Myys=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8KKJwWLXwKK+2kSL6ee96xJriDesuzqlHxa1syEt4Sr758Qpr
+	tmxy+Sap0UkFLls/TEsuevjJb2mRvJhROKIIrBpsZ/dKXSObJFLq
+X-Gm-Gg: ASbGncu6RL8QYwQsxZkPbuzfgJ1vw4sPeHmMFYOS3KJ+VD4VttYnjrWoGKIk5cy0ZXq
+	9jSa6xG0oKFi8Ws8bGQuS5iwYLlIzOu1PMuSEH7vJ3rd0CPU8Rg127Dm33PTgmDrN7ssj8/UgfV
+	qq0otk2SwAsDVWdYABTGBFJ4yJ36FwpjQQNX6RT3KjFp9fPK1YmP2c/pVYfBJuC1R+up6p0sois
+	JRWb2AhRuyT+qDyon+Z/V5nbQHD3+Rhyo/cfwgRx1rC0PZr42tQs4HEz3gpoRdWKnLm+f6+sfQN
+	E3baHTpnlIIyOoatgYOX
+X-Google-Smtp-Source: AGHT+IEKkMIItDnAtEbc/6DeDUtD3EXh0WmABN9nky7dyvGG/jJvA+lzzO9SpmOhIoNbdRJ6S7A1Kw==
+X-Received: by 2002:a05:6214:762:b0:6e8:e828:820d with SMTP id 6a1803df08f44-6f0b74bfde0mr179951146d6.36.1744068740691;
+        Mon, 07 Apr 2025 16:32:20 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f00e821sm65227956d6.34.2025.04.07.16.32.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 16:32:20 -0700 (PDT)
+Date: Tue, 8 Apr 2025 07:31:44 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	ghost <2990955050@qq.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 7/9] dt-bindings: i2c: dw: Add Sophgo SG2044 SoC I2C
+ controller
+Message-ID: <eltevzydjle25nyte5xn5mwxssi26awl4l4sgrz3v7h7m7vgur@tajtirx3up3x>
+References: <20250407010616.749833-1-inochiama@gmail.com>
+ <20250407010616.749833-8-inochiama@gmail.com>
+ <20250407140232.GA2165777-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,101 +86,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250407140232.GA2165777-robh@kernel.org>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Mon, Apr 07, 2025 at 09:02:32AM -0500, Rob Herring wrote:
+> On Mon, Apr 07, 2025 at 09:06:12AM +0800, Inochi Amaoto wrote:
+> > Add compatible string for Sophgo SG2044 SoC I2C controller which can be
+> > used specifically for the SG2044 SoC.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  .../devicetree/bindings/i2c/snps,designware-i2c.yaml          | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > index bc5d0fb5abfe..677b39865af0 100644
+> > --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -38,6 +38,10 @@ properties:
+> >            - const: snps,designware-i2c
+> >        - description: Baikal-T1 SoC System I2C controller
+> >          const: baikal,bt1-sys-i2c
+> > +      - description: Sophgo SoCs I2C controller
+> > +        items:
+> > +          - const: sophgo,sg2044-i2c
+> > +          - const: snps,designware-i2c
+> 
+> This is not a great pattern we've started. T-HEAD, Ocelot, and this 
+> should all be combined into 1 enum. The description here is not that 
+> useful.
+> 
 
-Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+I agree and am fine to do this.
 
-So, with these changes, fix the following warnings:
-
-drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Use direct object assignments instead of memcpy(), and gain type checking. (Kees)
- - Add RB tag.
-
-Changes in v2:
- - Fix memcpy() instance - use new pointer `pkg_msg`, instead of `packet`. (Kees)
- - Link: https://lore.kernel.org/linux-hardening/Z_QpOlDTvyfRs4Su@kspp/
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Z-WD2NP_1A0ratnI@kspp/
-
- drivers/w1/w1_netlink.c | 42 ++++++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
-index 691978cddab7..e6b59d921076 100644
---- a/drivers/w1/w1_netlink.c
-+++ b/drivers/w1/w1_netlink.c
-@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
- static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
- 	int portid, int error)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memcpy(&packet.cn, cn, sizeof(packet.cn));
--	memcpy(&packet.msg, msg, sizeof(packet.msg));
--	packet.cn.len = sizeof(packet.msg);
--	packet.msg.len = 0;
--	packet.msg.status = (u8)-error;
--	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
-+	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
-+
-+	*packet = *cn;
-+	*pkt_msg = *msg;
-+	packet->len = sizeof(*pkt_msg);
-+	pkt_msg->len = 0;
-+	pkt_msg->status = (u8)-error;
-+	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
- }
- 
- /**
-@@ -215,22 +215,20 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
-  */
- void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memset(&packet, 0, sizeof(packet));
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
-+	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
- 
--	packet.cn.id.idx = CN_W1_IDX;
--	packet.cn.id.val = CN_W1_VAL;
-+	packet->id.idx = CN_W1_IDX;
-+	packet->id.val = CN_W1_VAL;
- 
--	packet.cn.seq = dev->seq++;
--	packet.cn.len = sizeof(*msg);
-+	packet->seq = dev->seq++;
-+	packet->len = sizeof(*msg);
- 
--	memcpy(&packet.msg, msg, sizeof(*msg));
--	packet.msg.len = 0;
-+	*pkt_msg = *msg;
-+	pkt_msg->len = 0;
- 
--	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
-+	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
- }
- 
- static void w1_send_slave(struct w1_master *dev, u64 rn)
--- 
-2.43.0
-
+Regard,
+Inochi
