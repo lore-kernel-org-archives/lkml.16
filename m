@@ -1,99 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E73213E99;
-	Mon,  7 Apr 2025 18:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E288253343
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050370; cv=none; b=nmEzNY01TXRfKDctGcRiUgSIc/Rl0fpFPv5L489n5QqXlpKr8sY8t88E/uzEFX4f4j+aUD+kaYQgUWUKIBULZe6B4xjtmernL3yduOuwFLIOthS1gsfkKGEttYwxE0XX1pBsPp5LM73pyAyvg9WTykgiFapeB9HzzWmy6PHkz1k=
+	t=1744050373; cv=none; b=SEruIAvdaFX3hv3fFMGOF6ZcTfFfMYRFxDefwzyd09OtJCVebPR30Os+G4UluHiftHIwX2AWTNA/QAUqMeIJymnmdOIv1xyk2fnrzqq9dZ8hGELtgbZcNSNURcAUFeERw1uZKekFwrvgJ5kCPGEQTu/pPfjOKxd2COMasznojTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050370; c=relaxed/simple;
-	bh=olO9oaDx1GoQ7ivZvRHmbadSGi3duuSuYlEI+kfpHWs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XYebq+mHTD0LVk6NfqQG1HY0Jmmg30oeys0bPb1xWW82kmNASPYJ4PSGC59CiJk/KlxAY1Bbn4VfnRKl9R9HTtts4FFenROj7Ft5vvQYi8GVWDcOkrjvLeUB6Yfa+JFfu50OthJPDU7S06kuIPBH0fbPqeuazGP4ea51xs+yk8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8lwMuu3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744050373; c=relaxed/simple;
+	bh=+O62Pvw3dHm7xa/KPW2DkmES5HnPQW8Wq/sIkaCeTXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQeCptyrFctvXNhD0G2klYwpOMYZTkF1jqc+f9QXbPD+Pt0/85JfuMBZFnqWUlZkdNg1MLsC8/T1U7EmKIzp0nIZV9V1BwFWE4QsMCBsV1YTR3Y9bcwzrZTxyYU+fjVzseIUlwGrjU6tm3CJFq6G/QbHE0yfYiDBr8InvFUIv5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kW7w8Fiw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8lwMuu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65771C4AF09;
-	Mon,  7 Apr 2025 18:26:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kW7w8Fiw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90282C4CEDD;
+	Mon,  7 Apr 2025 18:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744050369;
-	bh=olO9oaDx1GoQ7ivZvRHmbadSGi3duuSuYlEI+kfpHWs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M8lwMuu34nsLsCCWFTK9rbkw2g4kW3woTke46HyqCO+DQtr+K97LprLYIaMfkalg/
-	 XUBcqm4lzCatPE4MYF+qtNpmlZGmJ30f/xyvYS41c+QFvjKvAdQ+FBN4xHxdpALouP
-	 xcbb8/IEJdi1EToGPMcRf07K8LCNbVkPT3qBttfBk9D66rCxghHkOnpa+3vQrYu16D
-	 myXNAzMzmqAFrQ8S/8W+V2PL0ZGWsOAfaFH+LXTdOIBCoHZISawwdhF0jqz+wPQDZq
-	 8ydNdJyfhRbturDW21kQW6cAKEWBthQ6jiTO7qmM5ussFcEQMtOGD+GhQM7VcP9vKE
-	 N6wZPQos2Motg==
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72b7a53ceb6so2540508a34.0;
-        Mon, 07 Apr 2025 11:26:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4T0T1TkqHvqhqcpZzXLheYCBC7jfrZ/mBWAGLpltdvoRKcXkgNlh+ZIsN8EoLdDw4vpcHUTHhcL7TBnvj@vger.kernel.org, AJvYcCW7ymQ2rA0Iimdsnj37mhFapZa1d4VFRLIafnPelXgwbSSSIa4RJYNJYbQpPRWpU4oeM28IcSYmruPt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrcEXhuD6b0eZMxf6PlTm+R+ai2QO8MOvoYx9lGIFEJWOX4TDq
-	+J/pLXt95knmavO/7eRjjf3AFeKYIV1ar6qTdFjNiW0qYQJ8xS5PXyMrsR4fzzMZZ5CFSND7F1m
-	Lt3zqNDXVIZ6rdPPn7U4TqYwBQAY=
-X-Google-Smtp-Source: AGHT+IEcX0VH8ZU90iBSKORw+3GwDPJVmd2pUmn2aWr7n/gmmHIx/FPCgUAwkXtPasuewod5E7ViwdEazon9ShW2Q8I=
-X-Received: by 2002:a05:6830:1bf9:b0:72a:b2a:476 with SMTP id
- 46e09a7af769-72e64a3d4c3mr308372a34.3.1744050368683; Mon, 07 Apr 2025
- 11:26:08 -0700 (PDT)
+	s=k20201202; t=1744050373;
+	bh=+O62Pvw3dHm7xa/KPW2DkmES5HnPQW8Wq/sIkaCeTXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kW7w8FiwpU6hx0/hEDXP9OAA8cyu1BAM1kMal/MZPxQE5F00mXY8YnE+GJcgtFQNT
+	 rMQk0iRtWrTDiWNMVzlhexerg8h63tQKCNK4EJ+B8/cYcBn2fZNGGbZNjy2WNfGeko
+	 FCcFMWcGeWafe5nCXnXhyuibA7YVm7pj7Mh4yhgnb7tvWTVNL8PrnfkF+Xcj9r+fuz
+	 4418E02GmN9Ydl6WR0YbNzX6BvacY5sCJIoyEvs8NSke9cY5VkBAB8lgf9MU1DVIbU
+	 vvoXyjzqv97YJB4eyCSv8XBdK9Aw5FWOSyCJ/K5/SMCfIztOqVSL/b7Zjkc+uGg3fs
+	 nhGpGRGvOtXFw==
+Date: Mon, 7 Apr 2025 20:26:08 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, babu.moger@amd.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of
+ kernfs_node::name
+Message-ID: <Z_QYwMn5dAcTOglC@gmail.com>
+References: <20250213145023.2820193-7-bigeasy@linutronix.de>
+ <20250407124637.2433230-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402001542.2600671-1-jmeurin@google.com>
-In-Reply-To: <20250402001542.2600671-1-jmeurin@google.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 7 Apr 2025 20:25:57 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gGjfomEJAJ8c6HwQz9oOqZk+gYfJM4q9XTWy5vHLzoSA@mail.gmail.com>
-X-Gm-Features: ATxdqUENPsmh4QE5Zc_Hji6ZwnpQ2pNcLKhBpPJG0jtAYF-R_1YQdpb0-806YBU
-Message-ID: <CAJZ5v0gGjfomEJAJ8c6HwQz9oOqZk+gYfJM4q9XTWy5vHLzoSA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI PPTT: Fix typos in a couple of sizeof() calls.
-To: Jean-Marc Eurin <jmeurin@google.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407124637.2433230-1-james.morse@arm.com>
 
-On Wed, Apr 2, 2025 at 2:15=E2=80=AFAM Jean-Marc Eurin <jmeurin@google.com>=
- wrote:
->
-> The end of table checks should be done with the structure size,
-> but 2 of the 3 similar calls use the pointer size.
->
-> Signed-off-by: Jean-Marc Eurin <jmeurin@google.com>
-> ---
->  drivers/acpi/pptt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index a35dd0e41c27..f73ce6e13065 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -229,7 +229,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_head=
-er *table_hdr,
->         node_entry =3D ACPI_PTR_DIFF(node, table_hdr);
->         entry =3D ACPI_ADD_PTR(struct acpi_subtable_header, table_hdr,
->                              sizeof(struct acpi_table_pptt));
-> -       proc_sz =3D sizeof(struct acpi_pptt_processor *);
-> +       proc_sz =3D sizeof(struct acpi_pptt_processor);
->
->         while ((unsigned long)entry + proc_sz < table_end) {
->                 cpu_node =3D (struct acpi_pptt_processor *)entry;
-> @@ -270,7 +270,7 @@ static struct acpi_pptt_processor *acpi_find_processo=
-r_node(struct acpi_table_he
->         table_end =3D (unsigned long)table_hdr + table_hdr->length;
->         entry =3D ACPI_ADD_PTR(struct acpi_subtable_header, table_hdr,
->                              sizeof(struct acpi_table_pptt));
-> -       proc_sz =3D sizeof(struct acpi_pptt_processor *);
-> +       proc_sz =3D sizeof(struct acpi_pptt_processor);
->
->         /* find the processor structure associated with this cpuid */
->         while ((unsigned long)entry + proc_sz < table_end) {
-> --
 
-Applied as 6.15-rc material with a couple of edits in the subject.
+* James Morse <james.morse@arm.com> wrote:
 
-Thanks!
+> +	/*
+> +	 * Check the parent directory for a monitor group is a "mon_groups"
+> +	 * directory.
+> +	 */
+
+This sentence probably wants to be a bit less linguistically ambiguous, 
+via something like:
+
+  s/Check the parent directory for a monitor group is a "mon_groups" directory.
+   /Check that the parent directory for a monitor group is a "mon_groups" directory.
+
+With that:
+
+  Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
