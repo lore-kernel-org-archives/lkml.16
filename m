@@ -1,134 +1,193 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8427422B8B0;
-	Mon,  7 Apr 2025 09:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EAA42A97
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017708; cv=none; b=lwmMJH7vP46+KggaTaumxpJMSCJi/85f7rXWX1/iiYr1Png/6uJEDas8B6EXptS2DYw0g3O0NydOB0onciPQ9z+NzlwWKvR6BUe8EpnbVCWwzzIoPvZCemz8yBV0NMNQITlkUME84WXGd0GlBhLVWMed6bKwb3mOWfFainFZiyQ=
+	t=1744017756; cv=none; b=MA5yaJ9PhEwj+Kzmbl0k5YP0Tyy1fuvLnFS0dVByMYG4iq29QDGAUtDiw9tWRJvrX+7UW0Ak6ej4/4SfTlxQlZmpVvJvfCBK7pl3moyklCWi7cy16YTp9SPS5ZgLy2mkLVLEuvDxjrtJf2EIGOFW8RzLlZiiravuj79Zn3eoP4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017708; c=relaxed/simple;
-	bh=vlHXXG98PgWKxGxcZYLCRP/TU5pgXiI5WxEWwcpmfhA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nDXvoqVaj6J+e7DK2PWOgFmJztC7QA0NKjjxWgoYZ9o4wYEEuS1t4BeLfdc/8d1RO3mebICPCr3Za9aEte3SSVJI3/Bg9frOBjIMlo3ZeUuSbU8ee6EY1J9FZcRusPYmihpn9p5D9XkYS+5IgheNJxWwWHIbpRVC5plzWSA4u6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=HWQ80ZTx; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1744017756; c=relaxed/simple;
+	bh=VqyGAa/Wnple9ormWUNewXd2QL7o32mB++LF6Ev1Zls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tWm/HKDk6f3Pn3VcEuBm6YeDeCcC65hBstOSiaSIWLrdq5KatVE0erOXld9uPtd7UNEP5RZgSiSWv0ybIa4HmQfsWWKqV0l4l0oVlh0x6IVV744o86iwaSTusb2qNFpt0iKBj3oU3eyU0G7JQfqkS4k+7MVutpiK+gaMquJ6OiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OjyBY2B/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="HWQ80ZTx"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id A6A4E62DD1A0;
-	Mon, 07 Apr 2025 11:21:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1744017702;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OjyBY2B/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744017752;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vlHXXG98PgWKxGxcZYLCRP/TU5pgXiI5WxEWwcpmfhA=;
-	b=HWQ80ZTxEG5UnyG7P9JMbkv47UEZourqaoZAbgle4OKb4AEfJSo1zomrOgB+0UCTrsI0El
-	qRpXGKWbr4/a2sG6UBWwEhYeNIAd95Afh+HV9ILmJwr5i1G1BZTp51y1CFGmn5fxURmwji
-	rSNpV3ltsvQ+xQWX+W7qrYb8rO01WRA=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: objtool warning in ice_free_prof_mask
-Date: Mon, 07 Apr 2025 11:21:27 +0200
-Message-ID: <5874052.DvuYhMxLoT@natalenko.name>
-In-Reply-To: <fdb5d23c-8c39-4f73-a89d-32257dac389b@intel.com>
-References:
- <4970551.GXAFRqVoOG@natalenko.name>
- <fdb5d23c-8c39-4f73-a89d-32257dac389b@intel.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/yCYFM5XQ5OKPftJDCwWOuxcCEJiJqE9Gf8hXOCSC2Y=;
+	b=OjyBY2B/7k75ML5Hwnx8xnUnJNbKCF2Dxu/0l6lQp/CMyVzmzZW3msNAxz0YUNKDSUiZv5
+	i6EirqpF1CgMLHEfKPTMalB25lhj+3GaKi3XFlLgAz+33/5yDayBggvCq7BPJHEB55NZjp
+	l5+jSXiz73k8fGRXekLdGEZd/i01bXY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-344-PDnQIl3kNeeS2cjt_c3INQ-1; Mon, 07 Apr 2025 05:22:31 -0400
+X-MC-Unique: PDnQIl3kNeeS2cjt_c3INQ-1
+X-Mimecast-MFC-AGG-ID: PDnQIl3kNeeS2cjt_c3INQ_1744017750
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912fe32a30so1636607f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:22:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744017750; x=1744622550;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/yCYFM5XQ5OKPftJDCwWOuxcCEJiJqE9Gf8hXOCSC2Y=;
+        b=dxlvxOQCV9kvNZRkKwz4y1AhaWkCfvowyKvImedoDD2i0jCn/Pp0FunK7LuxJ2MDZk
+         6Ni2VEE3pzjgxYOsiijRXzH0X0WXgB73hNlYN061GyN0KTwppKas7ZK8ku78ug785kfO
+         vRPUeOUjArpL+EKr5mdU2+yO4OBPcTBBsx0ryf1C5OQ3L0n1ymhOc8zhCqxEsdLRpto7
+         s4kOagAdbGbdPkPZ5KydIi37oR98598muUwqFxgd3mXmMLqYnTPi1AoQ/wBidzIwGJ7Y
+         cqY5ATtFSp1wtAdi9UFdW30owdzyUckQEUR0Pg28I6+iYIbkXrsd4XvYTvdLYiUycjpY
+         yAvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrahfPT3odJxTc2K9blvoWSxARM/qzL8XlinI4XmIOuBCRFp13FAtUE9KK1ca0+fn4NzQ+k7OY+E9IiGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEkk7rSiuqtrckVKKulteCqJz6fzm7jGhWToZBymhu0uaTqVW8
+	pERxKonpcseN+Hy6jSfPNvBQCDTUPEoR1ZHVMWxXGrbncItGqwzLFzlapsOxtaYmOke2q4E0gCI
+	DrepPr80CKAnynt5ECRHgMYTGYgPpKiQH0K4X9vLLg6Mq07vsYMSIOvU8PLhLuA==
+X-Gm-Gg: ASbGnctTcZL9b6QWQMXUldOzqDhUdBoqR5kEhn93+vaBBvmsYO4v93mpFcwoBP6Cx2S
+	b/cRNiGEu43XEbziprW350dyacIAEtOGsL4o/bnIQNU6sPZist/qDAG59/g3y6Dy6uQzqBBeccn
+	BINVoYPuLlc73o/OuUfdjOfuCe6e/33NWLpXb6nThu1sBZJ/d2QmRX6NOSoKyqdpw4t2p8NTHnq
+	yYLpaes0Js6lCEem7t3EdA9NXM8TNWvYMxvARmnBYE66hFmDC0PJM+Dzt0TPvtzKX6+f8HsO8Aq
+	W2AdiNzdvRLTHdeDJktAOb6mUP0oL2+84N6lNBZPLjUdnlPnxoWypOizJO1ehWHBU/dYY/2tjf3
+	unJkt4Ow4NCzsrCjrMUpYbB/lU401YgTYZ4y/sWtLS2o=
+X-Received: by 2002:a05:6000:1842:b0:390:d796:b946 with SMTP id ffacd0b85a97d-39cba975b7amr10984341f8f.44.1744017749700;
+        Mon, 07 Apr 2025 02:22:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpnuVhkewnRTqYTGM8Rx3shfIX+fz32ljJ3fzJujcF/CDjD46/a7MbDgl6ZMvURv3xWypjfg==
+X-Received: by 2002:a05:6000:1842:b0:390:d796:b946 with SMTP id ffacd0b85a97d-39cba975b7amr10984301f8f.44.1744017749294;
+        Mon, 07 Apr 2025 02:22:29 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b816csm11532758f8f.57.2025.04.07.02.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 02:22:28 -0700 (PDT)
+Message-ID: <d5080785-b197-4444-b9c1-25838cd9496a@redhat.com>
+Date: Mon, 7 Apr 2025 11:22:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6142846.lOV4Wx5bFT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+ kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+ Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+ Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Wei Wang <wei.w.wang@intel.com>
+References: <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com>
+ <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+ <20250407034901-mutt-send-email-mst@kernel.org>
+ <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
+ <39a67ca9-966b-40c1-b080-95d8e2cde376@redhat.com>
+ <20250407044246-mutt-send-email-mst@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250407044246-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---nextPart6142846.lOV4Wx5bFT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Subject: Re: objtool warning in ice_free_prof_mask
-Date: Mon, 07 Apr 2025 11:21:27 +0200
-Message-ID: <5874052.DvuYhMxLoT@natalenko.name>
-In-Reply-To: <fdb5d23c-8c39-4f73-a89d-32257dac389b@intel.com>
-MIME-Version: 1.0
+On 07.04.25 10:44, Michael S. Tsirkin wrote:
+> Wow great job digging through all these hypervisors!
 
-Hello.
+There is more ... :(
 
-On pond=C4=9Bl=C3=AD 7. dubna 2025 11:03:31, st=C5=99edoevropsk=C3=BD letn=
-=C3=AD =C4=8Das Przemek Kitszel wrote:
-> On 4/7/25 08:20, Oleksandr Natalenko wrote:
-> > Hello.
-> >=20
-> > With v6.15-rc1, CONFIG_OBJTOOL_WERROR=3Dy and gcc 14.2.1 the following =
-happens:
->=20
-> have you COMPILE_TEST'ed whole kernel and this is the only (new) error?
+aloith: 
+https://github.com/google/alioth/blob/main/alioth/src/virtio/dev/balloon.rs
 
-It's not a new warning, I've observe it for several recent major kernel rel=
-eases already.
+It uses the incremental vq index assignment like QEMU.
 
-I do not build with CONFIG_COMPILE_TEST.
-
-I've also realised I see this warning with -O3 only. I know this is unsuppo=
-rted, so feel free to ignore me, but I do -O3 builds for finding out possib=
-le loose ends in the code, and this is the only place where it breaks.
-
-> > ```
-> > drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mas=
-k.isra.0() falls through to next function ice_free_flow_profs.cold()
-> > drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mas=
-k.isra.0.cold() is missing an ELF size annotation
-> > ```
-> >=20
-> > If I mark ice_write_prof_mask_reg() as noinline, this warning disappear=
-s.
-> >=20
-> > Any idea what's going wrong?
->=20
-> sorry, no idea
->=20
-> >=20
-> > Thank you.
-
-=2D-=20
-Oleksandr Natalenko, MSE
---nextPart6142846.lOV4Wx5bFT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmfzmRcACgkQil/iNcg8
-M0sq2hAAgv9gMejnpHVI+Cxnx+H+zNepzIt+NeOM1RI95cqJCAWkNIFl2msIJcy5
-fn5ycnUTeVCuIBFi2Rsjs3offXq3B7gARMBL5nE7qKphSjgGsg8Spo4ckSfH7kgJ
-74sgXuPHwNw5n0RaWcvuq75vojemqZ5AmO/YybDdJFXElLyPfy96fDx85DN/wmw0
-9jsbNW+e/p+xpOIMcJqsVrbRmWLtTDMEOYK1jCCq6LX4GHzVhtWIUT0xIZ/hdC8S
-5Sbrq6sLaH0WFfVum1ibwUmqD+pcN4zDsipSorobrkZ5oPG6J9oTmeQPFS+PoO/s
-M6pbP5shs+q+HDcxUTb6XaeVnj4IhFJMBmP5FPNRqhiacj9hWHcXUk7++2VxeANF
-cS8HF38eYZ3DWm89uec0gZR3TGwi5+bTGXfppsbGbrY0FwThbugSMkImCRKgJlGi
-lMLzAujx4S1hYo7vqoPIc7eN0ogPezI1zpY7zb7Nm5qK2X80qX+Ky5KC7piPU363
-vX8Trfl+gPIN7KgKvlafM+0pRjNklrtfGod/rWsHR86lshVzopB/g0HLE47kuXkQ
-0L2Ea4DYfODrXXPZBZZs258wH6IakUGDz9nXBNe52p6eGBSMqvAL/EQR+IZIGXo8
-OnAOqWELkQ30ZaE+FBKfdQhjyPO7IBfyh4TtmouGyTBOQoLWjug=
-=/Gz6
------END PGP SIGNATURE-----
-
---nextPart6142846.lOV4Wx5bFT--
+impl VirtioMio for Balloon {
+     fn activate<'a, 'm, Q: VirtQueue<'m>, S: IrqSender>(
+         &mut self,
+         feature: u64,
+         _active_mio: &mut ActiveMio<'a, 'm, Q, S>,
+     ) -> Result<()> {
+         let feature = BalloonFeature::from_bits_retain(feature);
+         self.queues[0] = BalloonQueue::Inflate;
+         self.queues[1] = BalloonQueue::Deflate;
+         let mut index = 2;
+         if feature.contains(BalloonFeature::STATS_VQ) {
+             self.queues[index] = BalloonQueue::Stats;
+             index += 1;
+         }
+         if feature.contains(BalloonFeature::FREE_PAGE_HINT) {
+             self.queues[index] = BalloonQueue::FreePage;
+             index += 1;
+         }
+         if feature.contains(BalloonFeature::PAGE_REPORTING) {
+             self.queues[index] = BalloonQueue::Reporting;
+         }
+         Ok(())
+     }
 
 
+I'll dig some more, but this is getting out of hand :D
+
+-- 
+Cheers,
+
+David / dhildenb
 
