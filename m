@@ -1,142 +1,158 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C20221726
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6FF1EE032;
+	Mon,  7 Apr 2025 20:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056330; cv=none; b=ZT/BT2bkaVbWZ41NXuZAL4j/vb7qR0j903sn5HO0vQ9YCxLwGKorj/k1luWCRE91MryU8+Tr8Fj8a8jQVZbC6takEAjWh/i47vs8N6W0eEj/4XVQXTXcpnyxvb+Z1crJLqLH+b3veWTSUqI/ZWfvNcTk+tT0gCYFVcB1EFU0Zx8=
+	t=1744056354; cv=none; b=qrFN0xdCegD7r9WFtw4XDuM5D/8imAggVKK7ORTXFIQOfWofzBdc3AE4ZcbECByz6Sm2nnSYJ7dN80sdXZ4oqNVbmCeTFtU049MyMn5iXusDIOteFG98N1LRF3jykcW5QsdRImLSX/qgbb5hJhIekJ6LD7b70pVZd2RIasn3Ljk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056330; c=relaxed/simple;
-	bh=JB8IXb0Ha070M2DawyUQcJGuiY/0q8e7asydtE59Enc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m/ZmsZMy2EqOSMYdxZYGPfY89NfE0z25DpUpwWj7ghaia1HFId6ZHZfsdOCtIpexz3O0ah+rALGZGrYDl7kvxYbmGvWP5r+XWqZZpUm13NIZvV+0Nlt7vLb2tbIofolKOXDxmEk+/tQoUXYxqjt3Fm/JJK9z203G/H9+t0ywUsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D1Ie1KFO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2xxSbG9j; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744056354; c=relaxed/simple;
+	bh=sOI/Ws0aQosMDdWy0Ov4bIs+PItfPMvkWap9D35EHWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzzQEDRVSV1sMnjLKS9mt7m+8eRTvD4tfM0YaB6DxWhpeBAcpEsnkG9fCVcuZBcQC7uH8Zfn/dKCZ6UM8D75BNn7cvVv51vh2mI1cWdTbVRhDZN1tQEA/iqcroueF7gd2FeR35NXDf9erCOQ7jz1i8SMT54PaBfinlslxACpJHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qxWeMnez; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D1Ie1KFO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2xxSbG9j"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9332B21175;
-	Mon,  7 Apr 2025 20:05:16 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744056316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mu5Igb6PfT3RoV8eg0e5nAknLnS9vYsWz4r8fKsjoUY=;
-	b=D1Ie1KFOxEVQNjQIKeBaZ9iuOJa5S0/UqQY7xoDlOBUN5vgWQvnwcaLoWJdvFuBmYvwjFK
-	Ps5kfs8hqSsYXMS2IEDkdtd7nloXhe9V/84I4cblUMhlIh+FvdgieEEfofzHP24zvL8Fp4
-	F85ZQOSDpMoModZ4lgNSEaLFw7v9PLU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744056316;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mu5Igb6PfT3RoV8eg0e5nAknLnS9vYsWz4r8fKsjoUY=;
-	b=2xxSbG9jpnqLDLi/et8jRx2Fbz8AlBdiMJimKW2g5606HiZnJwy2/IDYlwr5e5cyO9iwQm
-	pkHl/xvWPtmM1tAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7546113AB8;
-	Mon,  7 Apr 2025 20:05:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GPBTHPwv9GclDQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 07 Apr 2025 20:05:16 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Michal Hocko <mhocko@kernel.org>
-Subject: [RFC PATCH 2/2] MAINTAINERS: add MM subsection for the page allocator
-Date: Mon,  7 Apr 2025 22:05:10 +0200
-Message-ID: <20250407200508.121357-4-vbabka@suse.cz>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407200508.121357-3-vbabka@suse.cz>
-References: <20250407200508.121357-3-vbabka@suse.cz>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qxWeMnez"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=nl5JULT9PoC4C0/72HEzW8Mzovg/wHI2O7mxt7leeac=; b=qxWeMnezbVGyFUZ5BOqEZBMjTK
+	4viXQQ3adWeVMFtj8DWC62nPkKxNP3JRzHmTYRUWNXDWfiC9zspf3TzS6xn3/qt+/aH7SogayZXAf
+	9FfUvh72FV/sVaQ9VxcIoxpCx6DEvrtYWOUpWwVcdeWwajTvujFf2v2Ta/AVHazNifO0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u1sip-008Igt-Tz; Mon, 07 Apr 2025 22:05:31 +0200
+Date: Mon, 7 Apr 2025 22:05:31 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
+ support SFPs
+Message-ID: <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-16-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 9332B21175
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407145546.270683-16-herve.codina@bootlin.com>
 
-Add a subsection for the page allocator, including compaction as it's
-crucial for high-order allocations and works together with the
-anti-fragmentation features. Volunteer myself as a reviewer.
+On Mon, Apr 07, 2025 at 04:55:44PM +0200, Herve Codina wrote:
+> Add device-tree nodes needed to support SFPs.
+> Those nodes are:
+>  - the clock controller
+>  - the i2c controller
+>  - the i2c mux
+>  - the SFPs themselves and their related ports in the switch
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/misc/lan966x_pci.dtso | 111 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+> 
+> diff --git a/drivers/misc/lan966x_pci.dtso b/drivers/misc/lan966x_pci.dtso
+> index 94a967b384f3..a2015b46cd44 100644
+> --- a/drivers/misc/lan966x_pci.dtso
+> +++ b/drivers/misc/lan966x_pci.dtso
 
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Brendan Jackman <jackmanb@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
-Extra reviewers would be welcome, including/not limited the people I
-Cc'd based on my recollection and get_maintainers --git
-Also if I missed any related file please lmk. Thanks.
+What exactly does this DTSO file represent?
 
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4fe7cf5fc4ea..610636f622b1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15511,6 +15511,16 @@ F:	mm/numa.c
- F:	mm/numa_emulation.c
- F:	mm/numa_memblks.c
- 
-+MEMORY MANAGEMENT - PAGE ALLOCATOR
-+M:	Andrew Morton <akpm@linux-foundation.org>
-+R:	Vlastimil Babka <vbabka@suse.cz>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	mm/compaction.c
-+F:	mm/page_alloc.c
-+F:	include/linux/gfp.h
-+F:	include/linux/compaction.h
-+
- MEMORY MANAGEMENT - SECRETMEM
- M:	Andrew Morton <akpm@linux-foundation.org>
- M:	Mike Rapoport <rppt@kernel.org>
--- 
-2.49.0
+> @@ -47,6 +47,47 @@ sys_clk: clock-15625000 {
+>  				clock-frequency = <15625000>;  /* System clock = 15.625MHz */
+>  			};
+>  
+> +			i2c0_emux: i2c0-emux {
+> +				compatible = "i2c-mux-pinctrl";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				i2c-parent = <&i2c0>;
+> +				pinctrl-names = "i2c102", "i2c103", "idle";
+> +				pinctrl-0 = <&i2cmux_0>;
+> +				pinctrl-1 = <&i2cmux_1>;
+> +				pinctrl-2 = <&i2cmux_pins>;
+> +
+> +				i2c102: i2c@0 {
+> +					reg = <0>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +				};
+> +
+> +				i2c103: i2c@1 {
+> +					reg = <1>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +				};
+> +			};
+> +
+> +			sfp2: sfp2 {
+> +				compatible = "sff,sfp";
+> +				i2c-bus = <&i2c102>;
+> +				tx-disable-gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
+> +				los-gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
+> +				mod-def0-gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
+> +				tx-fault-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
 
+DT files are generally hierarchical. There is a soc .dtsi file which
+describes everything internal to the SoC.  And then we have .dts file
+which describes the board the SoC is placed on.
+
+We have a slightly different setup here. A PCI chip instead of a SoC.
+And a PCI card in a slot, which could be seen as the board.
+
+The SFP cage is on the board. How the GPIOs and i2c busses are wired
+to the SFP cage is a board property, not a SoC/PCI chip
+property. Different boards could wire them up differently. So to me,
+it seems wrong these nodes are here. They should be in a dtso file
+which represents the PCIe board in the slot, and that .dtso file
+imports the .dtso file which represents the PCIe chip.
+
+I suppose this comes down to, what do the PCIe IDs represent, since
+that is what is used for probing? The PCIe chip, or the board as a
+whole. When somebody purchases the chips from Microchip, and builds
+their own board, are they required to have their own PCIe IDs, and a
+.dtso file representing their board design? The PCIe chip part should
+be reusable, so we are talking about stacked dtso files, or at least
+included .dtso files.
+
+      Andrew
