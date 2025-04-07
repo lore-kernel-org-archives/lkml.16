@@ -1,115 +1,145 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAAE221DAB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9721225390;
+	Mon,  7 Apr 2025 06:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007551; cv=none; b=JbkzK0huLJU0tCdZBO/tcWUPLctAlxRLKrjmXTFU9n3FRd2KZhvCSKOTDJpZ+BWD/t6btrcItaQKg5bJLg/BuqZtVQlseQW/5wyn1UQyUFeqa6Ul7QkjUtTizsWdQ1kd5mIRIEhelmQ5Ky+ysp98ZZQFTnS6xryXBmkIYoXCQiU=
+	t=1744007552; cv=none; b=tSmgvJxOSmmrmbna8sk0H7BZIpM+ivHSfdMlnfSDZUcQOqYHOuGybWddfhSJkTq7C3/EBZa0E0k72IzwRZdGpK/8U9FJKY+61KtOj0kKHb6227Bcj4oMSoaVWn7zM8MeFDZKSKtVaz6NOpsLXSlf+7hKm2sKXj3bt869BKulmRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007551; c=relaxed/simple;
-	bh=oblhWxgwN0vg6hjBPTixU+LjIBwj2tbuN66nuPJZqEU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ohb1u1KijC7NTFKtB+A7GO2SNV1yKNoMai3+2XdTM5sKC24qQkBvAc+nICRQWafpFSM2OQdJ30CLd3wBaQ6+pJrH21Ci+ILUow0tMdNEmNbWlEl2LF1m1kPzfRX3cpvhV6oSb3x9F9koidnUFKw5Se4nVFTzQLEARzkF9u+91w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XlhYMmlj; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744007552; c=relaxed/simple;
+	bh=gTratXnbj5KxD1AOYDpsXH7eQtuPd31z5buflZddPPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gNQSQL5tZQ5BUr4NN108eowNdVM1Jm4VSWOqlwTibkNtdqny4ro1Xw/DEq/nHm5v0KAl1SCeNy0HY3JVUX3cCXAbrapMu7O372tLrV4BXRfkL/K6ap7Vksp/EjOvaLXcGFgho9z+sXHCBm3SG+CBNp4CftZIYjvOGZZ+AkLbhks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVrhxln9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlhYMmlj"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5242f137a1eso1638748e0c.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744007548; x=1744612348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OAsH6xyP+BlqJ30TbZINVs3gH4R48kHTKbHXFCB8J1w=;
-        b=XlhYMmljmI5VLAYB6kEGhGTeLw+xmRqvLgopmjT/PnSO4h/70cOU22Zzaq/PCDPqAK
-         d98Xy+LjLqKRQ0jZ6ze+uIvQbLihgfurqUOp20TShos886c+P3+9lW4vBMC8ReFUmYB7
-         Ids03CdwBFzm9seiNbQckB16ZcZylkp/RIxZZtLV5+OfKq1ZnTES55K1X+jZyNaMnkj8
-         AAGRc0CyOIkAX8DkqBq8zapetmcAMRAomrZoXYx8fX6LE9o0Zw7MHXY5OQ/IxBtjT4/Y
-         UcvsxiSPjaVaIFu0KzX2zIu7srCCQXtED429kr6o0vxF09JY9JFOnA3Bqv3v1gjN0Wdb
-         ubMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744007548; x=1744612348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OAsH6xyP+BlqJ30TbZINVs3gH4R48kHTKbHXFCB8J1w=;
-        b=swtdf3EZUXQ33Zkkib8wwtT4QE84fJnvOdwBfsrRUNYHKGWuMEE3nsQERe5N+RaHgk
-         +0sqC5czrIDplqyGbb+hZF03w8cS0A20VxYIK6OfBTXwa4Xemykb+nsQFK8mlbNdSgWn
-         nL+y0lnY/xaqeewRezlHjkvbB8gvFvPLFs3sWu0l1fpygtqcY3gtzmuu7b8Xb7pzun9g
-         l3LzHQY5LtQ2vSLCa5UCxlqtkXKJn/TOdkOZTKe9X0N3lJiozBPl5oOXXTbANE998I3b
-         JCsA6eK9ECMxGIgNkjzZJMsqaweern1Gpr9xTcRkDzy/+07mZj8Zhzw/Q+enLrICU6Om
-         8BIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHtDUIXEcUWNgi3zK5vL5yErZEmvqYJZW3tcTuGYsKh1wqdMEbSx8HxSfxJwynUiOdzRkszQN6haTpa2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrqXnYifsAiAXq+nQjRTKL/Wbs6Ho/feJr1sjH+/fbjCFrDpCm
-	klxSNd/ltjyT+JAkl1/M8pgIV89Hi838FQHs1qShJfb0uPEDSME29IWwmWr5SmJzY8ShgmPWFuX
-	vvNQijOAsJi25CCU+IciRTplFMcQ=
-X-Gm-Gg: ASbGncvSzreWEHvTtLI3Lmt8+VKBnjqzKFOPR7UdgcCUoZb4Q41MVK3+H/ved86wz2p
-	poMMCG5j3OmJnv29IEQG6dKdIS5CN2hl1pQalsEJe0NEJRtJVDWYi39Ez1Fvl5LIvsIn/hsWgyH
-	Ur53ejjRa0B6f7M3f+jVZckSzs0n5yaPASj2DpWw==
-X-Google-Smtp-Source: AGHT+IHs9ScGvj4OWEx4v3durvZDgeZiAiY8aul09WdPxrtj1Sd4XcK36me3zb0C/0zjPSYv6v57tKmF/FzwQVIxNQU=
-X-Received: by 2002:a05:6122:f09:b0:527:67db:9cb2 with SMTP id
- 71dfb90a1353d-52767db9cfamr7378492e0c.4.1744007548058; Sun, 06 Apr 2025
- 23:32:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVrhxln9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90442C4CEDD;
+	Mon,  7 Apr 2025 06:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744007551;
+	bh=gTratXnbj5KxD1AOYDpsXH7eQtuPd31z5buflZddPPQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FVrhxln96ar4ccBf9aqcKxCUYPpKe69ZckpMZPum6jh0GXI8Jvtvmf6fIVbqpbSva
+	 BXZIzI84EbfZho5tzD9bNd7imnZ5nSa/8pvQBsQWd5Bw1k/BsSCzvfyWY/nbURndL8
+	 SGhd8G0I4Sm/0F9Dcr7lOuKYTRZtMrQqJmg8XcJG9J9REJoJAitnrZ9yMA8QCZZpqj
+	 WyGiopnhAvcekHJHxd6IX0LFuPeI7m/32FwVbSbo7y7+9tjNR3pBmoSq70gU+Q7iL/
+	 a09pX6nd/NABqdwTv5nJB6APX2Z+lqLg7EW33X38WKt5cC/UPE1j5uazgd7nrrCbvQ
+	 gbE4XXK559STA==
+Message-ID: <4dcbcf57-de98-4bdd-a688-6156d5eba98c@kernel.org>
+Date: Mon, 7 Apr 2025 08:32:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z/McCdceSpyL2A2p@ubuntu> <2025040719-utter-hydrant-b241@gregkh>
-In-Reply-To: <2025040719-utter-hydrant-b241@gregkh>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Mon, 7 Apr 2025 07:32:18 +0100
-X-Gm-Features: ATxdqUHlpQO0oh2sTMnp5Q5lmbaJmnkyhUOvFly-RL_CnRtc-y1iO9UEAGk3jdw
-Message-ID: <CADYq+fZzzJTEvhbO9y=i2DA7fH_99ofcG-PZHP_7LR1pyhympA@mail.gmail.com>
-Subject: Re: [PATCH v3] staging: rtl8723bs: Use % 4096u instead of & 0xfff
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev, andy@kernel.org, 
-	dan.carpenter@linaro.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND,V1,01/12] dt-bindings: mediatek: Add mediatek,
+ mt8196-jpgdec compatible
+To: =?UTF-8?B?S3lyaWUgV3UgKOWQtOaZlyk=?= <Kyrie.Wu@mediatek.com>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "mchehab@kernel.org" <mchehab@kernel.org>,
+ "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+ "tzungbi@chromium.org" <tzungbi@chromium.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kyrie.wu@mediatek.corp-partner.google.com"
+ <kyrie.wu@mediatek.corp-partner.google.com>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <20250110012749.30072-1-kyrie.wu@mediatek.com>
+ <20250110012749.30072-2-kyrie.wu@mediatek.com>
+ <e6019aea-b097-4a24-afd2-e1d638a5a8a7@kernel.org>
+ <545fcf458d79e1ad1e4a9f1b6b81f32504a6886a.camel@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <545fcf458d79e1ad1e4a9f1b6b81f32504a6886a.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 7, 2025 at 6:10=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Apr 07, 2025 at 12:27:53AM +0000, Abraham Samuel Adekunle wrote:
-> > The sequence number is constrained to a range of [0, 4095], which
-> > is a total of 4096 values. The bitmask operation using `0xfff` is
-> > used to perform this wrap-around. While this is functionally correct,
-> > it obscures the intended semantic of a 4096-based wrap.
-> >
-> > Using a modulo operation with `4096u` makes the wrap-around logic
-> > explicit and easier to understand. It clearly signals that the sequence
-> > number cycles though a range of 4096 values.
-> >
-> > The use of `4096u` also guarantees that the modulo operation is perform=
-ed
-> > with unsigned arithmetic, preventing potential issues with signed types=
-.
-> >
-> > Suggested-by: Andy Shevchenko <andy@kernel.org>
-> > David Laight <david.laight.linux@gmail.com>
-> >
-> > Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> > ---
-> > Changes in v2:
-> >       - Changed the commit message to a more descriptive message which
-> >       makes it clear why the patch does the change.
-> >       - Changed the subject title to include `4096u` to show that an un=
-signed
-> >       module is used.
-> > Changes in v1:
-> >       - Added more patch recipients.
-> >
-> >  drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
->
-> Any specific reason you did not include the staging mailing list like
-> scripts/get_maintainers.pl asks you to?
+On 07/04/2025 08:24, Kyrie Wu (吴晗) wrote:
+> On Fri, 2025-01-10 at 08:40 +0100, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On 10/01/2025 02:27, kyrie.wu wrote:
+>>> Add mediatek,mt8196-jpgdec compatible to binding document.
+>>>
+>>> Signed-off-by: kyrie.wu <kyrie.wu@mediatek.com>
+>>> ---
+>>
+>> No, why are you resending without improving anything here?
+>>
+>> You got comments. Respond to them, implement them, not resend same
+>> stuff.
+>>
+>> NAK
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Dear Krzysztof,
+> 
+> Thanks for your kind reminder. I made a mistake in the V1, so I
+> resended it. I will correct all the comments in the V2.
 
-Thank you, Greg.
-I have sent an updated patch.
+You got review within 30 minutes on v1. You did not respond and the
+*next* day (or after some hours) you resent it ignoring that review, so
+you totally ignored it.
 
-Adekunle
+All this was 3 months ago.
+
+Best regards,
+Krzysztof
