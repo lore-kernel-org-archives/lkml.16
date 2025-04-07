@@ -1,213 +1,208 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F77522D7A7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57368252916
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030977; cv=none; b=VqzAgZLawk6gocVYH3Zm1ZD7FAeciojmeE2BLlwrkAPYEKSQcKSPQ7taRQ7MZNiVwUkxFGSD0HfAL/ThTi1svVZ2j2FUzMpLd58bAF8OZqQBstw7npX4MZZzjRVSjRExUynx3GLNse2LJaRSTo/AGZKqnNePI/u6SthvINlXUVo=
+	t=1744030984; cv=none; b=nFPdr2AJEuTuwV6rEGW718gqFuRTcUuKX+PfJ0KFWZ2/+IyEY+mkr0Rhy8uctWpFMK6Byxhd3fJDgOMDlTbPz12mIyqKdxceV7OxkndBEk0CSzt999aQF2pnfscI4IwmMrUi6fTYK1o0vEdakOKjA6sMZfKkUcwrrsqtqpv5EAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030977; c=relaxed/simple;
-	bh=4wEfAfpNpyVRT1KG4Jp7NXlVFJTUhte98RFnNHbj9lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U9pr+SNElbQ1RdtpqBMjzZdQXH8VsW5NOYEzxQWW5sE9JFn6pNP4rZY7CgJkvuhKlKuGQKGWXrI8p9Hlmy3J/gjLompmdrv0CQ+YCtQ/hv+HvzDu67YoT9/09m1vdLlTuVpR8Er6vSZtYtXXQfD77RpCsWF0YFLIWuFnrEAODAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UGrue1fB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744030984; c=relaxed/simple;
+	bh=eWQPgI8XSPxRiYYryfl8uQnSfNBvxwSJhnDq76893Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l9tUxFHEPlLxgZX7tppOohQFIkVnYmWTZX8xpeC/vwbkiB5txOL7JcBzqzrr5pVn7t32SvFDQ8LVmVsJhXoeJoa6HlIgFFzFF6qUz13OtAcqwU6ko0Dn1DhrhypRgbxTCECTSOT5mH5gfpLgnr0FPRRNhEo95BjahUtNwboSNdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vHXqawzj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kCpajPkj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vHXqawzj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kCpajPkj; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGrue1fB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744030974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vHXqawzj";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kCpajPkj";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vHXqawzj";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kCpajPkj"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5DADD1F388;
+	Mon,  7 Apr 2025 13:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744030979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QN5V11JQJn749B7yJB3Rd7WNs8XT3qNDgGSI4GX9Fqw=;
-	b=UGrue1fBXMY4WZv9meHdwJCvShXPLHo6IDBLd02Ox7LNR3o7eqH+HdQHIrXS76lfceQfhZ
-	4PLZUCR6wWlblAJMIdXIXjiNHvmHT5MUpofRXJbBw16K3o1HTRejrn1tpVGFNfCBJlxB5h
-	Es82VJdGHBXgkyZeI6JD1c476dZRsn0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-156-kIq4na_ZOoCN5IIa4iz_aQ-1; Mon, 07 Apr 2025 09:02:49 -0400
-X-MC-Unique: kIq4na_ZOoCN5IIa4iz_aQ-1
-X-Mimecast-MFC-AGG-ID: kIq4na_ZOoCN5IIa4iz_aQ_1744030969
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso26420975e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:02:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744030968; x=1744635768;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QN5V11JQJn749B7yJB3Rd7WNs8XT3qNDgGSI4GX9Fqw=;
-        b=jMYq2F5tofrBymb+SaSU2VRzYVspCrwa9+3x1+O54Ppc4XYUw/uItHJ9XSmaaJ+ajY
-         opevNQb7BXtbsuMgOQ5BZGnzHw90D3J+uT2jvsMPKz0CgEWbFF1awArCiyiIGoTz+pCc
-         Dbnn7cVr8Ry7jxNq+wbaVR3zoFabHUO+qITY4+p4CbKsM8srHTIOjB55sajylEET961a
-         73Ts8GqERDj+3GZsaM7gHNByUIaQDn8RUMomGbSgz+Gh0RqbRTvT2px6u+NRB+C/Hxfi
-         PKWxR332ycu/qvfut/c0NQtr2qR6LfMJUxWVgl5wcBVHByyInXnHu0t6Q0bFOztSGudd
-         leNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLE1368HOhOxInJfUxlhyCYS1fuEOqrCcCJPVPLAhZ3ZeCsCOpVRbiHrV2WYTYdicohip8uGL9GYqVRPM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjbNxSqnFItSfkMuKAf/zMBPUkSwC8cF1TSy7dy370ntdJJhHf
-	uEwR3wkG6LdYoCvmKOPhWsPLptTaoJ+M+orQyTpwkqF8YHB6m+UfpANLT9hnyhvOIRFTbHGHLe1
-	YP6d8fAANL9rcHTUqDTYm9ii/gB6JJ43Vf83XgiJtKjYF/7C338/8GrGzjPwsCUSUlrQduA==
-X-Gm-Gg: ASbGncsWrZKmr3bFJ3K5xgvrNhhl8COYEmoLXMp5PPUBW21m2/RRmI3WIcE2OoxCpAW
-	+wqF0sB9MmUiqSuToCXHg9yUDmo3X47YHWOCHpT5k5sm+UOflYcMHThQsaJXyWozIPvJLXnOslR
-	fiS4jYZHmwFvB8Ul9bLDDuvmtM/uahXlNd694GmcUAZhSbkbK+IxuD1tkvG2G8KwE0dg9DyjtPT
-	1XMFHm+P2Gn4cE4g4KzaKu94R24s3Pjvzow0PDNDCM2K1044DDbR0LIkHctS2c0d3B2l4G6LHso
-	KYqSObeuP3eKVLEMYF4=
-X-Received: by 2002:a05:600c:1991:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-43ebefb7f50mr167012965e9.15.1744030966646;
-        Mon, 07 Apr 2025 06:02:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLU7pKg+nMPuiI5SurCH5seyxqbkaxqIDvfQwhDA/jiwqcW6EvfKlSq2nokduCEknwmGQoag==
-X-Received: by 2002:a05:600c:1991:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-43ebefb7f50mr167011895e9.15.1744030965707;
-        Mon, 07 Apr 2025 06:02:45 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea8d1673dsm151308495e9.0.2025.04.07.06.02.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 06:02:44 -0700 (PDT)
-Message-ID: <c80da442-c35a-4336-9a49-5a6745e4ce6b@redhat.com>
-Date: Mon, 7 Apr 2025 15:02:43 +0200
+	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
+	b=vHXqawzjFpkWyVcPcgkHdGxWOoRHjbu+Z43399bXGkcC9/x9uGRV8wtFB2ngBkzeZN41XO
+	s0qZS22zEq5c5gDSJcrU+KAV7wiAehRs0IYEQK6WEHP3l8W9fh3nzjaWtMPgsVjTuruB8O
+	gP7261s9hQTN2h7zktDluNgRHqMtwdU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744030979;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
+	b=kCpajPkj7sgkHbQK596rrHxDh6C/7EVSq1taHyEInxIrPJl9RFbi4/49OMRzdvBaQuHI2g
+	V3Bc4djqlHooP2CA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744030979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
+	b=vHXqawzjFpkWyVcPcgkHdGxWOoRHjbu+Z43399bXGkcC9/x9uGRV8wtFB2ngBkzeZN41XO
+	s0qZS22zEq5c5gDSJcrU+KAV7wiAehRs0IYEQK6WEHP3l8W9fh3nzjaWtMPgsVjTuruB8O
+	gP7261s9hQTN2h7zktDluNgRHqMtwdU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744030979;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
+	b=kCpajPkj7sgkHbQK596rrHxDh6C/7EVSq1taHyEInxIrPJl9RFbi4/49OMRzdvBaQuHI2g
+	V3Bc4djqlHooP2CA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5115113691;
+	Mon,  7 Apr 2025 13:02:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WY3EEwPN82dlDQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 07 Apr 2025 13:02:59 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 00A91A08D2; Mon,  7 Apr 2025 15:02:58 +0200 (CEST)
+Date: Mon, 7 Apr 2025 15:02:58 +0200
+From: Jan Kara <jack@suse.cz>
+To: Artem Sadovnikov <a.sadovnikov@ispras.ru>
+Cc: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Eric Sandeen <sandeen@redhat.com>, Jan Kara <jack@suse.cz>, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH] ext4: fix off-by-one error in do_split
+Message-ID: <odgkvml62unm4ux3sbnympgyzj22z7dwjgdvdmlbgtiybq4j7z@gnnaygdp7muw>
+References: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] media: uvcvideo: Rollback non processed entities
- on error
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org
-References: <20250224-uvc-data-backup-v2-0-de993ed9823b@chromium.org>
- <20250224-uvc-data-backup-v2-3-de993ed9823b@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250224-uvc-data-backup-v2-3-de993ed9823b@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Ricardo,
-
-On 24-Feb-25 11:34, Ricardo Ribalda wrote:
-> If we wail to commit an entity, we need to restore the
-
-s/wail/fail/
-
-I've fixed this up while merging this series and
-I've pushed the entire series to:
-https://gitlab.freedesktop.org/linux-media/users/uvc/ next now.
-
-Note I had to manually fix some conflicts due to the granular power
-saving series being merged first. I'm pretty sure I got things correct
-but a double check would be appreciated.
-
-Regards,
-
-Hans
-
-
-
-
-> UVC_CTRL_DATA_BACKUP for the other uncommitted entities. Otherwise the
-> control cache and the device would be out of sync.
+On Fri 04-04-25 08:28:05, Artem Sadovnikov wrote:
+> Syzkaller detected a use-after-free issue in ext4_insert_dentry that was
+> caused by out-of-bounds access due to incorrect splitting in do_split.
 > 
-> Cc: stable@kernel.org
-> Fixes: b4012002f3a3 ("[media] uvcvideo: Add support for control events")
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Closes: https://lore.kernel.org/linux-media/fe845e04-9fde-46ee-9763-a6f00867929a@redhat.com/
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> BUG: KASAN: use-after-free in ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
+> Write of size 251 at addr ffff888074572f14 by task syz-executor335/5847
+> 
+> CPU: 0 UID: 0 PID: 5847 Comm: syz-executor335 Not tainted 6.12.0-rc6-syzkaller-00318-ga9cda7c0ffed #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:377 [inline]
+>  print_report+0x169/0x550 mm/kasan/report.c:488
+>  kasan_report+0x143/0x180 mm/kasan/report.c:601
+>  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+>  __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
+>  ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
+>  add_dirent_to_buf+0x3d9/0x750 fs/ext4/namei.c:2154
+>  make_indexed_dir+0xf98/0x1600 fs/ext4/namei.c:2351
+>  ext4_add_entry+0x222a/0x25d0 fs/ext4/namei.c:2455
+>  ext4_add_nondir+0x8d/0x290 fs/ext4/namei.c:2796
+>  ext4_symlink+0x920/0xb50 fs/ext4/namei.c:3431
+>  vfs_symlink+0x137/0x2e0 fs/namei.c:4615
+>  do_symlinkat+0x222/0x3a0 fs/namei.c:4641
+>  __do_sys_symlink fs/namei.c:4662 [inline]
+>  __se_sys_symlink fs/namei.c:4660 [inline]
+>  __x64_sys_symlink+0x7a/0x90 fs/namei.c:4660
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>  </TASK>
+> 
+> The following loop is located right above 'if' statement.
+> 
+> for (i = count-1; i >= 0; i--) {
+> 	/* is more than half of this entry in 2nd half of the block? */
+> 	if (size + map[i].size/2 > blocksize/2)
+> 		break;
+> 	size += map[i].size;
+> 	move++;
+> }
+> 
+> 'i' in this case could go down to -1, in which case sum of active entries
+> wouldn't exceed half the block size, but previous behaviour would also do
+> split in half if sum would exceed at the very last block, which in case of
+> having too many long name files in a single block could lead to
+> out-of-bounds access and following use-after-free.
+
+Thanks for debugging this! The fix looks good, but I'm still failing to see
+the use-after-free / end-of-buffer issue. If we wrongly split to two parts
+count/2 each, then dx_move_dirents() and dx_pack_dirents() seem to still
+work correctly. Just they will make too small amount of space in bh but
+still at least one dir entry gets moved? Following add_dirent_to_buf() is
+more likely to fail due to ENOSPC but still I don't see the buffer overrun
+issue? Can you please tell me what I'm missing? Thanks!
+
+Anyway, since the fix looks obviously correct feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+
+								Honza
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 5872331b3d91 ("ext4: fix potential negative array index in do_split()")
+> Signed-off-by: Artem Sadovnikov <a.sadovnikov@ispras.ru>
 > ---
->  drivers/media/usb/uvc/uvc_ctrl.c | 32 ++++++++++++++++++++++----------
->  1 file changed, 22 insertions(+), 10 deletions(-)
+>  fs/ext4/namei.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index 7d074686eef4..89b946151b16 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -1864,7 +1864,7 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
->  	unsigned int processed_ctrls = 0;
->  	struct uvc_control *ctrl;
->  	unsigned int i;
-> -	int ret;
-> +	int ret = 0;
->  
->  	if (entity == NULL)
->  		return 0;
-> @@ -1893,8 +1893,6 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
->  				dev->intfnum, ctrl->info.selector,
->  				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT),
->  				ctrl->info.size);
-> -		else
-> -			ret = 0;
->  
->  		if (!ret)
->  			processed_ctrls++;
-> @@ -1906,10 +1904,14 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
->  
->  		ctrl->dirty = 0;
->  
-> -		if (ret < 0) {
-> +		if (ret < 0 && !rollback) {
->  			if (err_ctrl)
->  				*err_ctrl = ctrl;
-> -			return ret;
-> +			/*
-> +			 * If we fail to set a control, we need to rollback
-> +			 * the next ones.
-> +			 */
-> +			rollback = 1;
->  		}
->  
->  		if (!rollback && handle &&
-> @@ -1917,6 +1919,9 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
->  			uvc_ctrl_set_handle(handle, ctrl, handle);
->  	}
->  
-> +	if (ret)
-> +		return ret;
-> +
->  	return processed_ctrls;
->  }
->  
-> @@ -1947,7 +1952,8 @@ int __uvc_ctrl_commit(struct uvc_fh *handle, int rollback,
->  	struct uvc_video_chain *chain = handle->chain;
->  	struct uvc_control *err_ctrl;
->  	struct uvc_entity *entity;
-> -	int ret = 0;
-> +	int ret_out = 0;
-> +	int ret;
->  
->  	/* Find the control. */
->  	list_for_each_entry(entity, &chain->entities, chain) {
-> @@ -1958,17 +1964,23 @@ int __uvc_ctrl_commit(struct uvc_fh *handle, int rollback,
->  				ctrls->error_idx =
->  					uvc_ctrl_find_ctrl_idx(entity, ctrls,
->  							       err_ctrl);
-> -			goto done;
-> +			/*
-> +			 * When we fail to commit an entity, we need to
-> +			 * restore the UVC_CTRL_DATA_BACKUP for all the
-> +			 * controls in the other entities, otherwise our cache
-> +			 * and the hardware will be out of sync.
-> +			 */
-> +			rollback = 1;
-> +
-> +			ret_out = ret;
->  		} else if (ret > 0 && !rollback) {
->  			uvc_ctrl_send_events(handle, entity,
->  					     ctrls->controls, ctrls->count);
->  		}
->  	}
->  
-> -	ret = 0;
-> -done:
->  	mutex_unlock(&chain->ctrl_mutex);
-> -	return ret;
-> +	return ret_out;
->  }
->  
->  int uvc_ctrl_get(struct uvc_video_chain *chain,
+> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+> index cb5cb33b1d91..e9712e64ec8f 100644
+> --- a/fs/ext4/namei.c
+> +++ b/fs/ext4/namei.c
+> @@ -1971,7 +1971,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
+>  	 * split it in half by count; each resulting block will have at least
+>  	 * half the space free.
+>  	 */
+> -	if (i > 0)
+> +	if (i >= 0)
+>  		split = count - move;
+>  	else
+>  		split = count/2;
+> -- 
+> 2.43.0
 > 
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
