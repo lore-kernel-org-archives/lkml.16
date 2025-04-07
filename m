@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A925D22425C;
-	Mon,  7 Apr 2025 07:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E2D225A22;
+	Mon,  7 Apr 2025 07:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011782; cv=none; b=suR2tGCCCIHLR8qrnFXTBMedvyMipRLAOD36yXMsn9Wjl//nP+aksw7j6AbqlMYbnAqG/yisbPjII+n9DUcQ7ujuxQ4lr/3V59rZeHIhiaicBk9yeKRdYoi2b1gaSz2tjme9uhCOQaagEvGGIV+FbA/qheaSAPEp9R4m9ekjwbo=
+	t=1744011783; cv=none; b=i6bwKKwEg9yBg9JnJUy8Hk+LGEUSXvRudR8CrFafpMiLKG1BT6MX5aEVuA9yYsz8xYzT+OIq1lIVX/W3mk2HCv2kVaGuflPPLjKX3q2tjyEWIO71wZRN4McY5oVg4/W8J+MQYga1tS0gfqoU/AZyzyyVeXX3QpwwG4GFGgAaBQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011782; c=relaxed/simple;
-	bh=jxO3E6fY/cRCojmRh56m84xcozUfNDAYCPH6toOUjVU=;
+	s=arc-20240116; t=1744011783; c=relaxed/simple;
+	bh=wigAJUFJ+V9EVhNSp3BPVdxWuuiUQqmtFd9VHobAqVk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qokXdZfelpOuqUfaMpFDIlvDJLp78K+0WV8+uq3opDnl1U5y+7vzxzJ8jHvY4I7e9OrjyMO54+5YLUD1K4wCEgFjjolqLFm0GeuCl4OvmlETsBa8MXgl3WvupCnTkFKIYnDZLTCsS6XliLoPoisI5ar9sq6WucLSRlr7nEVO06s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z5Yx9uzH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S3nDxtOX; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=XHWHJtyOk3B7yiI2ownPyyrA7HH+B2wzVOP35rqEp5EGYSulHUB154o1V3xLmT1fnLsDWr4xqxL80sLdeexdRbgvuo9f3FwQxgxMAYJGPU/2rJG5nBH9IH6EzpOPYfU1PT8tZfN6bNNLWAl706fyFQs4VLQQeDzVFnIsnC9qQxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lwR6wPAy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LsFfLANA; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z5Yx9uzH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S3nDxtOX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lwR6wPAy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LsFfLANA"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744011777;
+	s=2020; t=1744011779;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=71yX+dxuZgcMiLhYB0nVTc9ZvKb7jxerOTVN6LgpvkU=;
-	b=z5Yx9uzHqdbvEg81aFKO0Z2AKopLGyzT6tN5p6C+YuVw8+yh4aMeBMjFq8F24hH/4V1ndT
-	jmztDArKwytIE1m9+7vaD9+eKF5HBWuZ8xEg5YzM9BLJ+pgkudHY4i7JLfcJEfMVMu8jDY
-	g5wiL5xFq65+tKMg1ydHaTHFD34i41YKxGgYwzrwGZW2qsPm7xnwgbRKILzWDvJbz/bp3U
-	STiUvBRitKNWnfUxDLag0RPKZ6D+XFUOdmXc/pBiduN3BBr4ucDNaIWbJOMizWnTxwwF5A
-	ra7fVhaiYhxB7GuOHW+b70eq2s5jklZyqMoKcUIQHFi/tZRacWTaJkv1PN+k3g==
+	bh=61AaDAxKbOLaApOgc6P6k2wgx7ZZhb7JXrh4epva6Ak=;
+	b=lwR6wPAyMCnoqtHBjbQX509ibXuppvAPHqwU3w3/XR9MoYll9WTLRMizfjkKewVvYbBLfV
+	4w9HT11cMOn9Q/Y1tjmkZMWEGddaWeCFxF34PxnI1bFj/7nAtYu9OjWFVnLQBNzpinWwWW
+	/FNISO6VZ0loic3wpQfH2IYVv81xAz7E4sMOGpDKAtLAoIm/LlnUeCfWQ1WPX5LDA3+zQl
+	WUfuiLCLBi/NUMU9j1Dv8Mpg4enZLstU7tVvWCdbSp0mH2AgzEbw7pNN0OHcIeadql+1vW
+	YTP1zRP3ioOm4zQVGTzd8pW09Fk1GH6JVfWLMc85UPpizFe47ZS2QVOXt3F9hQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744011777;
+	s=2020e; t=1744011779;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=71yX+dxuZgcMiLhYB0nVTc9ZvKb7jxerOTVN6LgpvkU=;
-	b=S3nDxtOXUie7rH30tDNH1w7jDgiKUn44PWhU5pzVN1QgRlD3plAb9rB43+pGbRiXuTSBWc
-	0+6pGiMyJ+C9sNAg==
-Date: Mon, 07 Apr 2025 09:42:38 +0200
-Subject: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
+	bh=61AaDAxKbOLaApOgc6P6k2wgx7ZZhb7JXrh4epva6Ak=;
+	b=LsFfLANAiIa1ulCK7XvzhNo/OdTnoA9OhV288y1h/5g3b4SMu0mRTYZ1NGptK77eazmFdc
+	dXPWMqElO1QzWXBQ==
+Date: Mon, 07 Apr 2025 09:42:41 +0200
+Subject: [PATCH v2 04/11] kbuild: introduce blob framework
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
+Message-Id: <20250407-kunit-kselftests-v2-4-454114e287fd@linutronix.de>
 References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
 In-Reply-To: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -65,89 +65,222 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744011776; l=3510;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744011776; l=7377;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=jxO3E6fY/cRCojmRh56m84xcozUfNDAYCPH6toOUjVU=;
- b=2YBONPJ+hWofM0Hneh5fSQgoKjbNUqWD/nQZU1IP/AdEfOq4UA6LhG176h1joDjTNVuSLSZLy
- IYK7pKi5tkIDiVvpeC/ZayKFGgupPDPzH4f1EyMQdwLl44oBDF0zWl0
+ bh=wigAJUFJ+V9EVhNSp3BPVdxWuuiUQqmtFd9VHobAqVk=;
+ b=W53cr/hBF4jP2PzCvJZgWJY4oQ5TqlaFkaGw7u+jGR9Cu1DPovyqhYzOJHDMXsTKszIKeqJdw
+ lddPRiKmgI7DjR/GRuD7iv70BRo3E27/64A0GXV+m/B2dQF1WktVfb/
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Userprogs are built with the regular kernel compiler $CC.
-A kernel compiler does not necessarily contain a libc which is required
-for a normal userspace application.
-However the kernel tree does contain a minimal libc implementation
-"nolibc" which can be used to build userspace applications.
+Various subsystems embed non-code build artifacts into the kernel,
+for example the initramfs, /proc/config.gz, vDSO image, etc.
+Currently each user has their own implementation for that.
 
-Introduce support to build userprogs against nolibc instead of the
-default libc of the compiler, which may not exist.
+Add a common "blob" framework to provide this functionality.
+It provides standard kbuild and C APIs to embed and later access non-code
+build artifacts into the kernel image or modules.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
 ---
-This could probably be moved out of the generic kbuild makefiles.
-I think the ergonimics would suffer and this functionality could be
-used by other users of userprogs.
-
-Also this does currently not support out-of-tree builds.
-For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-installed into the build directory.
+Due to its closeness to kbuild this is currently added to its MAINTAINER entry.
+But I can also maintain it on its own.
 ---
- Documentation/kbuild/makefiles.rst | 12 ++++++++++++
- scripts/Makefile.userprogs         | 16 +++++++++++++---
- 2 files changed, 25 insertions(+), 3 deletions(-)
+ Documentation/kbuild/makefiles.rst | 23 +++++++++++++++++++++--
+ MAINTAINERS                        |  2 ++
+ include/linux/blob.h               | 32 ++++++++++++++++++++++++++++++++
+ scripts/Makefile.blobs             | 19 +++++++++++++++++++
+ scripts/Makefile.build             |  6 ++++++
+ scripts/Makefile.clean             |  2 +-
+ scripts/blob-wrap.c                | 27 +++++++++++++++++++++++++++
+ 7 files changed, 108 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
+index d5cd73820e406276ee2e3721e265e3ed3cc299c9..c3a165fcb1ab0bbc090fd61c38ebd78317c7aa85 100644
 --- a/Documentation/kbuild/makefiles.rst
 +++ b/Documentation/kbuild/makefiles.rst
-@@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
+@@ -521,8 +521,8 @@ otherwise the command line check will fail, and the target will
+ always be built.
  
- From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
+ If the target is already listed in the recognized syntax such as
+-obj-y/m, lib-y/m, extra-y/m, always-y/m, hostprogs, userprogs, Kbuild
+-automatically adds it to $(targets). Otherwise, the target must be
++obj-y/m, lib-y/m, extra-y/m, always-y/m, hostprogs, userprogs, blobs,
++Kbuild automatically adds it to $(targets). Otherwise, the target must be
+ explicitly added to $(targets).
  
-+Bulding userprogs against nolibc
-+--------------------------------
+ Assignments to $(targets) are without $(obj)/ prefix. if_changed may be
+@@ -1014,6 +1014,25 @@ There are two ways to do this.
+     This will tell Kbuild to build binderfs_example when it visits this
+     Makefile.
+ 
++.. _kbuild_blobs:
 +
-+Not all kernel toolchains provide a libc.
-+Simple userprogs can be built against a very simple libc call "nolibc" provided
-+by the kernel source tree.
++Blob framework
++==============
++
++Kbuild supports wrapping source or generated files into object files which are linked
++into the kernel and then accessed at runtime through ``include/linux/blob.h``.
 +
 +Example::
 +
-+  # lib/kunit/Makefile
-+  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
++  obj-m := some-module.o
++  userprogs := some-userprog
++  blobs := some-userprog.blob.o
++  some-userprog.blob-symbol := some_userprog
++  some-module-y += some-userprog.blob.o
 +
- When userspace programs are actually built
- ------------------------------------------
- 
-diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
---- a/scripts/Makefile.userprogs
-+++ b/scripts/Makefile.userprogs
-@@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
- user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
- user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
- 
-+user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
++Kbuild will build the :ref:`userprog <kbuild_userprogs>` ``some-userprog`` and
++link it into ``some-module`` from where it can be accessed as ``BLOB(some_userprog)``.
 +
-+user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-+		      -ffreestanding -fno-stack-protector \
-+		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
-+user_nolibc_ldflags := -nostdlib -nostdinc -static
-+user_nolibc_ldlibs  := $(user-libgcc)
-+
- user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
--			$($(target-stem)-userccflags)
--user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
--user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
-+			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-+user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-+			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-+user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
-+			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
+ Kbuild clean infrastructure
+ ===========================
  
- # Create an executable from a single .c file
- quiet_cmd_user_cc_c = CC [U]  $@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b82704950184bd71623ff41fc4df31e4c7fe87..d61e28e289c7027c026a872cd166342a4761b2a4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12847,11 +12847,13 @@ Q:	https://patchwork.kernel.org/project/linux-kbuild/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ F:	Documentation/kbuild/
+ F:	Makefile
++F:	include/linux/blob.h
+ F:	scripts/*vmlinux*
+ F:	scripts/Kbuild*
+ F:	scripts/Makefile*
+ F:	scripts/bash-completion/
+ F:	scripts/basic/
++F:	scripts/blob-wrap.c
+ F:	scripts/clang-tools/
+ F:	scripts/dummy-tools/
+ F:	scripts/include/
+diff --git a/include/linux/blob.h b/include/linux/blob.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..de76cdb76cbab388b62f574b80fb13a4c84d1d2d
+--- /dev/null
++++ b/include/linux/blob.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Linkable blob API.
++ *
++ * Copyright (C) 2025, Linutronix GmbH.
++ * Author: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
++ */
++
++#ifndef _LINUX_BLOB_H
++#define _LINUX_BLOB_H
++
++#include <linux/args.h>
++#include <linux/compiler_types.h>
++#include <linux/types.h>
++
++struct blob {
++	const char *const path;
++	const u8 *data;
++	const u8 __private *end;
++};
++
++#define BLOB(_symbol)	({					\
++	extern const struct blob CONCATENATE(__blob_, _symbol);	\
++	&CONCATENATE(__blob_, _symbol);				\
++})
++
++static inline size_t blob_size(const struct blob *blob)
++{
++	return ACCESS_PRIVATE(blob, end) - blob->data;
++}
++
++#endif /* _LINUX_BLOB_H */
+diff --git a/scripts/Makefile.blobs b/scripts/Makefile.blobs
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd20ebb41c1d6509750debf7896a08a143d28759
+--- /dev/null
++++ b/scripts/Makefile.blobs
+@@ -0,0 +1,19 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Build linkable blobs
++#
++
++blobs	:= $(addprefix $(obj)/, $(blobs))
++
++blob-stem = $(subst -,_,$(subst .blob,,$(basename $(patsubst $(obj)/%,%,$@))))
++blob-symbol = $(or $($(target-stem)-symbol),$(blob-stem))
++
++blob-flags = -DBLOB_SYMBOL="$(blob-symbol)" -DBLOB_INPUT=$<
++
++quiet_cmd_blob = BLOB    $@
++      cmd_blob = $(CC) $(c_flags) $(blob-flags) -c -o $@ $(srctree)/scripts/blob-wrap.c
++
++$(blobs): $(obj)/%.blob.o: $(obj)/% $(srctree)/scripts/blob-wrap.c FORCE
++	$(call if_changed_dep,blob)
++
++targets += $(blobs)
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 13dcd86e74ca830ce3fb2587df7f200105490881..c2965ee4002d239bf4e18115e026e7bcd5abb197 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -436,6 +436,12 @@ ifneq ($(need-dtbslist)$(dtb-y)$(dtb-)$(filter %.dtb %.dtb.o %.dtbo.o,$(targets)
+ include $(srctree)/scripts/Makefile.dtbs
+ endif
+ 
++# $(sort ...) is used here to remove duplicated words and excessive spaces.
++blobs := $(sort $(blobs))
++ifneq ($(blobs),)
++include $(srctree)/scripts/Makefile.blobs
++endif
++
+ # Build
+ # ---------------------------------------------------------------------------
+ 
+diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
+index 6ead00ec7313b3e4330a8de5f1342f2da1d6eb84..536972b0a528d117e17296da9936825c3903af6e 100644
+--- a/scripts/Makefile.clean
++++ b/scripts/Makefile.clean
+@@ -25,7 +25,7 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
+ # directory
+ 
+ __clean-files	:= \
+-	$(clean-files) $(targets) $(hostprogs) $(userprogs) \
++	$(clean-files) $(targets) $(hostprogs) $(userprogs) $(blobs) \
+ 	$(extra-y) $(extra-m) $(extra-) \
+ 	$(always-y) $(always-m) $(always-) \
+ 	$(hostprogs-always-y) $(hostprogs-always-m) $(hostprogs-always-) \
+diff --git a/scripts/blob-wrap.c b/scripts/blob-wrap.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..82ab3bc641bd69ec35029c2f4a9dd6d6c6720a02
+--- /dev/null
++++ b/scripts/blob-wrap.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/args.h>
++#include <linux/blob.h>
++#include <linux/stringify.h>
++
++#define BLOB_SYMBOL_DATA	CONCATENATE(__blob_data_, BLOB_SYMBOL)
++#define BLOB_SYMBOL_END		CONCATENATE(__blob_end_, BLOB_SYMBOL)
++
++asm (
++"	.pushsection .rodata, \"a\"\n"
++"	.global " __stringify(BLOB_SYMBOL_DATA) "\n"
++__stringify(BLOB_SYMBOL_DATA) ":\n"
++"	.incbin \"" __stringify(BLOB_INPUT) "\"\n"
++"	.global " __stringify(BLOB_SYMBOL_END) "\n"
++__stringify(BLOB_SYMBOL_END) ":\n"
++"	.popsection\n"
++);
++
++extern const u8 BLOB_SYMBOL_DATA;
++extern const u8 BLOB_SYMBOL_END;
++
++const struct blob CONCATENATE(__blob_, BLOB_SYMBOL) = {
++	.path	= __stringify(BLOB_INPUT),
++	.data	= &BLOB_SYMBOL_DATA,
++	.end	= &BLOB_SYMBOL_END,
++};
 
 -- 
 2.49.0
