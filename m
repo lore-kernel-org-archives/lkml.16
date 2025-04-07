@@ -1,62 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF5722AE4E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017B822B594
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013690; cv=none; b=u7ETRmsM6687V8PQoz6QyBZ2D+dogTUbQsoCg50U7ZbcqkD97e6Jw2GuAjS7qhc487Ny3rh3I/+J21qcUD2UFk96ZX5HwlzRYMAEkCAEtPOmDErdFdRomgd5wScLmCyvTTGPHws374EN4DRinoxdVAtIjT/4v7hLl5zm+zcj4Rg=
+	t=1744013691; cv=none; b=Ty0CjTVgUaxQg8LB5loPaxOEbdsrjC9buVTJ5xilZbbnwWyBvj8OG48OZdL+f7PMlrwRbJXYDpjWynmlsz8SDtVjRcyX6+FGRsqqMpdL6ar8iRpmCZtNnqoun3/3P+ejj2O/fKwcBgSrHk/ho2lnpjVpM0GDrZMHI3DOtZLj4Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013690; c=relaxed/simple;
-	bh=ruD0UQijRSTbAbiYbiy92bcwQmGm+acqNJsn/Xwt7PA=;
+	s=arc-20240116; t=1744013691; c=relaxed/simple;
+	bh=Vi+uu/h5Zd8rK2aatFelcFPD2hYQTWMEmZWHarVSvJU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j4T4E9ZjaDq5HQp24b08syhyN0QFJkfq9VMcj5jvkBzwlrVpdL3NZbzfsRF3Wd6lUnvi8Eg9cu7WCplM+RtdnmwFXHLJeDlakc+BVbMvmn32JGInjXUP0PcWCaOzfMiN2Bk9zvdl77a9or6maQrcA1aBs+qH+K25uqJBlOBk26Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DqHn6g9x; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version:Content-Type; b=eUnQrXSv4A4XVQYrOIl95OlcR4wk9AfdVI40bdYuIxT0Kwat1xYTHC1BIgIWKq81zhgezB46iWkrHI8fWc1eTCsQpXQ7t30qvXnc5Q8o4J8lsFgQ4l462ldNdojdRBkrtrVqASzBCPrdt4kMpmFaXhSXAYKT2X6tpTlM22Y7vyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=anNqxzCV; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqHn6g9x"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4394a823036so36791315e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:14:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anNqxzCV"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ede096d73so13157295e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:14:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744013687; x=1744618487; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744013688; x=1744618488; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zIdjBnojDe9JlRJkQtXkq6PiLeEhZjPQxZt/O+Cfesg=;
-        b=DqHn6g9x2yS3yXvW40AQcRv8mI9GP1XVs/URBpQ3J4tFx8FKAvdQI9dJEi0THQP+re
-         r/YhpzS52SmwxhjGQF+PHbo+d9XR3twooyuaIXGV6J3Y+j2NWWFVRcz0Jpzhm5I69H/o
-         sl5rB5vWvdt8JvQEMZLSr1h6XmP6ykXzscrrxr56S4IE580j+whzYRQpOeYX149i796X
-         41xYD+eZvowMiYcqUgEVCrEoWTJU9FjA49ytZdTIjwqVIJN7aqBa+JC26frsFiQmk7OJ
-         sijfrDd/TKA3FDo5ISahJQe+ncEPKPWMuAsbtVikBqn8OcvJqyB9SKgd1QvKUfgKsebv
-         Trow==
+        bh=g2I+AKiUaGilJvwS/f5X1LlsvDutZk3cs9KHKo4vYS0=;
+        b=anNqxzCVDij5BCXuvXsXYTi7KFbtszxsWLsEfKCvFsSkrL0EGZ3jnNBE3BQ+OGA4V3
+         qRQlMvfwin5befSzQLUc20jI9yQnH4KTUWs+88qfYjtb0CeOYvzsUD3HTtB+YTIK98Zg
+         AJFcEBE/0yr+Fz3GXUdoZ9m7pWtgsDWc4ynnDINiyee0YXMV4i9PU0k8rHt70lIvImd8
+         wG2LpXauP1coA9YukSJN6k+rnnuxA7BXdP4ISoc52hrc15bpgp9jlmazqQFIso+DtaEN
+         DYuldACXlOcTffxUKazKqnZSQ6TSpIgY99PWMbNbkQrUhV7MjVmhLNTqfZQJ5HEkhQnr
+         /Tew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744013687; x=1744618487;
+        d=1e100.net; s=20230601; t=1744013688; x=1744618488;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zIdjBnojDe9JlRJkQtXkq6PiLeEhZjPQxZt/O+Cfesg=;
-        b=Cy0RsMxZ9U1eJOFDPVMp4Zt6CeEJL+NnqMyY+QWd/ZK18px5Fv9c0N3vOIyDfGN+ec
-         QlKfEPK0W38tJlh/Gc4T5AtrZ+wGg5LQEYedU1pRspGmQqg+0W39YUQqZov5GytjvdRK
-         8osgmPaoWI73qUMmPPiAsuXoSbLBiCoUKTfxgtGyJQj5BoJFH4gwca7xp+AwsdSirPL5
-         Wgm9MYTsC4mG6MN79qId2TIYO04Nb6XAXr/150YtYkpkiu1eZVud5mr5/r4t6CvyPLcq
-         mTP4iNbzHTCqQGg7J94UzJKU7zX2duhmQxA2qLv3XMSKl4o2+GUOfsCj+cTmICZqboAv
-         Lukg==
-X-Forwarded-Encrypted: i=1; AJvYcCVP4/pf8QAn/MdkEtaTD0uWOZUkSp9kyKEIjptLiShknXNx8sPHwwwDUcInD4kEu2VOAOLBIhBeooAjI+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcsk9hd3bugNzUF7jQlbWLRW9EMkdhlR4Z9nUtFQWlyrkw7xmW
-	uESqt5FPl5wSnZMnF3iZiv0EAEUIqQWj368AeQ4Ysz8yM+v9zVB2
-X-Gm-Gg: ASbGncukrO/0t7WXsn67cu2F6Cl4115vjZ2pLYIP8rMUweVlHxHG5NaF9wh5sBa+ueg
-	GmN8rQjrEfJ3wr/qHdQlh5jpwG43OqVun/4LIQaH8vZxH4um/eWiC7q06AO/6GGk4vxRZECXmyk
-	VjbBziRl7QsPLtgcyKEDOCakZW1qdBmFUmDzOC9jwqt0/mdHp2NCbVkJfYuSE+OWsI4Abp9QA7q
-	665aodwMte1WrVepLRWPPwI4W9+C5hb+eHiuR4PyD6UMwOJ1Obdu4LfkcYc2VF3vVS8Poaaq4Rc
-	P6pTjMJTvx9ZYmPVwrz8whgZ2OGj97woVM2XZhtCJneZ
-X-Google-Smtp-Source: AGHT+IFEC5GG2+hUc2x3gBJXtIb381aGws3rfz4/kdhZc+Tli1KoK5wHEcldern7+kcj8ZfKsinmig==
-X-Received: by 2002:a05:600c:3d0c:b0:43b:c284:5bc2 with SMTP id 5b1f17b1804b1-43ee047ca70mr75672455e9.0.1744013687392;
-        Mon, 07 Apr 2025 01:14:47 -0700 (PDT)
+        bh=g2I+AKiUaGilJvwS/f5X1LlsvDutZk3cs9KHKo4vYS0=;
+        b=oDVAhnyM4PUhgSJo9nH346hBcbnZOau68FscSelifl1PcyiCAiO4LmGgU6Sf+yAE5L
+         /3aTfnZj6+TEHNkCIFQJUJLQGvKal/oD19Wra6Njb7Sho+1hYf5tLu8HjQKi4HDK53yG
+         mZyjNTOxpmitDV7vGmESIYhZmo9FsVe5AlGID/ZkD4cEbq0auhyXBvHgZUTjEWSe/RiB
+         WHyhi6JPPuBVdMfpJoYLbSZFlKH9AIV1ruWpbyznVXZLWs4XbMprRtHTHBDgmmdDXCV/
+         zrwOzrLjHHLmk3pDgoam6CyE6Jch1j+Sq4ZSHQqN8Vc8IKqCSY2TKv/SwdOQe3u2tHQ+
+         +3Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUweORRDLlbh47+16Yx7enEil0/dEurVphtkC8AaTAXOK+EIcMoI2RfEQ5hU7pttFnxhK3638To5OYhmss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc2IgEuSOZe8nr1/Qszb4roYrTkSuiyWUffGteO7asQ3C3bxnt
+	eq79xF9xtaggpXL4wHTf+OJRosFLSPHVcfCTpL6Jp+mDFmcsOma0
+X-Gm-Gg: ASbGncsqksyH8FDn8QO8uVgk2auBTZhTmAZ130ZbVe0kmP9yRPbMVWpNid4l4DI4OZ0
+	JzPYxDdjMCPg+P7E6sHXeHPHYebZmf8n7/MUJVsM00Pfz9KMWmrbW1P2+kZzfCfOmWSZ4O8MAND
+	9yS9Cq+6renTO3IewrUwdUWstKdLVUl7vQUk3epZSi2mcwuUOjn4OGV8KKcAtGNi7UU/Wmc+7c1
+	3VAHZF7ESyuzBf+FOHAzM/Gd57SRg7ANnIG0izvyHeDNcQc33y/yVWn4WA+UqlaXaPLqkkv8cvA
+	0yc1xFFVd4qcsenl3OThjhIxtj7uksFis5Z+82mjBK7T
+X-Google-Smtp-Source: AGHT+IGbgQ//mAxkxBQPqRYYwqdydsPUaU2Ht9FH9jq4jjH4ZQzh906R4fJI7RwkRpSwroXoZXzckA==
+X-Received: by 2002:a5d:5f96:0:b0:390:f2f1:2a17 with SMTP id ffacd0b85a97d-39d1466229bmr10501615f8f.53.1744013688359;
+        Mon, 07 Apr 2025 01:14:48 -0700 (PDT)
 Received: from fedora.. ([94.73.34.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16a3aefsm125473445e9.21.2025.04.07.01.14.46
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16a3aefsm125473445e9.21.2025.04.07.01.14.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:14:46 -0700 (PDT)
+        Mon, 07 Apr 2025 01:14:48 -0700 (PDT)
 From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 To: louis.chauvet@bootlin.com
 Cc: hamohammed.sa@gmail.com,
@@ -69,9 +69,9 @@ Cc: hamohammed.sa@gmail.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v4 12/16] drm/vkms: Allow to configure the default device creation
-Date: Mon,  7 Apr 2025 10:14:21 +0200
-Message-ID: <20250407081425.6420-13-jose.exposito89@gmail.com>
+Subject: [PATCH v4 13/16] drm/vkms: Remove completed task from the TODO list
+Date: Mon,  7 Apr 2025 10:14:22 +0200
+Message-ID: <20250407081425.6420-14-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250407081425.6420-1-jose.exposito89@gmail.com>
 References: <20250407081425.6420-1-jose.exposito89@gmail.com>
@@ -84,41 +84,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a new module param to allow to create or not the default VKMS
-instance. Useful when combined with configfs to avoid having additional
-VKMS instances.
+Remove the configfs related TODO items from the "Runtime Configuration"
+section.
 
 Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_drv.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/gpu/vkms.rst | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index 5bcfbcb6c0c5..b4ed19c97576 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -50,6 +50,10 @@ static bool enable_overlay;
- module_param_named(enable_overlay, enable_overlay, bool, 0444);
- MODULE_PARM_DESC(enable_overlay, "Enable/Disable overlay support");
+diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+index 74126d2e32e4..c551241fe873 100644
+--- a/Documentation/gpu/vkms.rst
++++ b/Documentation/gpu/vkms.rst
+@@ -222,21 +222,14 @@ Runtime Configuration
+ ---------------------
  
-+static bool create_default_dev = true;
-+module_param_named(create_default_dev, create_default_dev, bool, 0444);
-+MODULE_PARM_DESC(create_default_dev, "Create or not the default VKMS device");
-+
- DEFINE_DRM_GEM_FOPS(vkms_driver_fops);
+ We want to be able to reconfigure vkms instance without having to reload the
+-module. Use/Test-cases:
++module through configfs. Use/Test-cases:
  
- static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
-@@ -219,6 +223,9 @@ static int __init vkms_init(void)
- 	if (ret)
- 		return ret;
+ - Hotplug/hotremove connectors on the fly (to be able to test DP MST handling
+   of compositors).
  
-+	if (!create_default_dev)
-+		return 0;
-+
- 	config = vkms_config_default_create(enable_cursor, enable_writeback, enable_overlay);
- 	if (IS_ERR(config))
- 		return PTR_ERR(config);
+-- Configure planes/crtcs/connectors (we'd need some code to have more than 1 of
+-  them first).
+-
+ - Change output configuration: Plug/unplug screens, change EDID, allow changing
+   the refresh rate.
+ 
+-The currently proposed solution is to expose vkms configuration through
+-configfs. All existing module options should be supported through configfs
+-too.
+-
+ Writeback support
+ -----------------
+ 
 -- 
 2.48.1
 
