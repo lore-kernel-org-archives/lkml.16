@@ -1,199 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A0618C31;
-	Mon,  7 Apr 2025 18:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049076; cv=none; b=OhWTNH5TmsoHkV18cS8btEOUivrXMfcdAgIlijcT3wbW5G6LpJccv+fIv1TOVKj0j/Gh84+rOYgYP7rfO/y8np577BZX2iaAaRcyJU+1DQvNdb8qqHJLjBx/SSGJcY2pNgmIaklK8WnieVQCCx4YlHq7IKayoWukhpwr8/Rw3bA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049076; c=relaxed/simple;
-	bh=qq406OyfbZqR5Lr+xDNdCNLUQZRFdKMk4sWTOaf5174=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kweoC5wzAscP8XxwZD+yEQ7mh+vs5kX8GUnFP0QAfRfX4zDAaoBlZfsUs0D7SzGHhWByVdX7/rXbuPx4qtYiAzcvC+D2r1rSBbwoycj7kpjRPlLbwsgxHQAbu3RCJrS4Qg+oJdLcR+oS6Iqugf3h4g31kD0Jp+dNK8oPYxNSc3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQ0lTDne; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1A629B0;
+	Mon,  7 Apr 2025 18:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049110; cv=fail; b=SrgcZ22s5uXzBRY9WDG+K87wl1JO3ULNs045/fvR6Zlf/OHGfdqkVtGd0dy1AVvoRUeEheMPF0H5aNGkkYMDjmnSBNFdowesXD+P7h5FnhKdCV5yk8v57lYl0W1OEfXCd6RevDyLu4kNthAiJNXzpNOA8bn9Fts5nlHqv10FWdY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049110; c=relaxed/simple;
+	bh=OYiPBucOJiUfT2MOIwdI4jdRBPWoysNvtDNCUi5IICE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b12PpHHCuMrJiAQERIZOJcGhvD8T+J3+5O9T8czxT7jQ3maeQC6bz4TdaYL4ZQxRtKojKhZFU3T7R+ouklg3Hwjv2rBp/d5VEKfVDIDFoELbvpzKby+PwVyCuH9sf/q7DqZxQtleQ3aZl4sbtDmMoeccoTGGc+uS18ffVixEb/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JEKlZeQX; arc=fail smtp.client-ip=40.107.94.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQ0lTDne"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A6BC4CEDD;
-	Mon,  7 Apr 2025 18:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049075;
-	bh=qq406OyfbZqR5Lr+xDNdCNLUQZRFdKMk4sWTOaf5174=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kQ0lTDne9D49aDkh9A9qwERQUxh+8Xo4iGd4MwsqlgEePOgiRt3YYobySLETN+q2D
-	 nYQNNnkynDiwcOby6oaqtuhuQDhxI3OATYkcIYB2ewy1an6i6PsN1ue5b/U9IZtA4x
-	 DVdD+2ySmX1rxmkOubnbghRW/2FNeHe3Hr8+wucENlcUmAHCltOo2Yh5uABQGj3mio
-	 GcblCAg9XUkiZQaRUdWrlBJlTHc4oaJJbC0mrnEzi2aIDG3inVmGF96igAhkzfvP6O
-	 FOYlNOm1l2R19ZAiQC1GcKMoA30hV7zlZYa8NmHQRAlhZHmDXpIKjbOhBPZNajd2aP
-	 3nmSQHMNFwV4Q==
-Message-ID: <7dfede37-2434-4892-8c8d-4d005fa1072b@kernel.org>
-Date: Mon, 7 Apr 2025 20:04:26 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JEKlZeQX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QIea3/kljquSzmUgxjH0BsMEWSn67P5IBhiBbtHcQfLCLY+CQud9FEaeWo3hg+u2kNA4cXu84/8GEJpjba6/M38KD39gvUvmiKd9ByP0qgUvYV5wooVAT6Y03q3v3EwSJVmR3AxAn0gm57wwZESGPvDx8sB4JhbfhCZBPDqOvyUMHCAYbFvgm1/q+Y2wt9R/9hDCrCjD7loM5O1IbbrAgYVadiGOxauV04wi67lqBZywTCqntiQwRiKlIo+Tn1mHDDoKO8T8gisS3bBmGybQQ1cswxBLL16oX6MkLeMGRKXTxII7bg9o0uJ6yltwxp/z0KBgbfXSaJ89KFzOvjIjKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SWshpPCG1IihApF1kktUt+ajZ3Xr4HopyfyQYN0pwyU=;
+ b=bgTlfHIBNL5QjMfjefUfUcQJJ9as6O7jPFFZVObZgVNYkY3eeul1Mhni+2Oe7Pn8+FZrJB4obF2SS/jcroHYIbjkyJp/ef5eIsyLDqz9LKCu3OlLbaIOjZekDJG1FwdEWaNDBN8NVuCZ2vpQ3hghfT6qbz5e/21QYRqzKih2e/03Xh44g3LryxPqpHUonL2hbHJcdPRHfhWpYellFfcfCg66k7COEETfPLMVaNcsJw1W7j2/so/li96NFniCPehP4ipYCaIL/84KOaTRLoT8oL0AU4rgXb0GqIGr5Ol5qP3N+ZwlRXlgnI2HGyOH2egbCNwyoyZhIiBDcPAnNzF1/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SWshpPCG1IihApF1kktUt+ajZ3Xr4HopyfyQYN0pwyU=;
+ b=JEKlZeQX8ps/O8cvxxwtzUayEhum0Qfaj75qXUXFZUCMH8hAj+kLdl8CEEjMLMdDePqd8ZrF8BtZVh0yhc6Ytoncuc0rcSfKW83IeKt+VcoF56a50VgqdYjyoj84vUWNbU4Bopn+rcLRXGTxKQQQbfsNWv4/RLlxawrc9RBhuyY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
+ 2025 18:05:04 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
+ 18:05:03 +0000
+Message-ID: <9f689ba2-add6-cca2-e7b3-fa0393fe2b98@amd.com>
+Date: Mon, 7 Apr 2025 13:05:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
+ SEV-SNP
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+ Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
+References: <20250404082921.2767593-5-ardb+git@google.com>
+ <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0104.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c5::14) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/28] dt-bindings: dpll: Add support for Microchip
- Azurite chip family
-To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
-Cc: Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407173149.1010216-7-ivecera@redhat.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250407173149.1010216-7-ivecera@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|DM4PR12MB6591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b460669-6c17-43a5-dfde-08dd75feb8aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Ymk4bS9XVWozMGRQejF2a1R1MUNLVnBKTUVZbVpUaDJ6TlFNbStac2pKdUt2?=
+ =?utf-8?B?a2xIUnhINUxKcGoxejlGVGVhYW5rcHlGSVRKNXUwakpzR1hkcHg5R2FZSjVz?=
+ =?utf-8?B?MEhjcTdvS1NrTU1BQjBDdEhJdXN5SXhnT2RmeG0yUUsyUEVDVERjMHZZUTBi?=
+ =?utf-8?B?RlZGdWxBL0swc2tXSU81b0YwdGtDMFNNYWw5V0RaenBVZFF4R1Mwd2JYMmJ4?=
+ =?utf-8?B?OWh1UzZ0Wm1pZ1p1R0taZllRdVdjOWh6OG1vWktUSjdTSW4wRmxMdWdxNkdv?=
+ =?utf-8?B?ZGtJU0lzZWdsbXViQ0V3eko1aU03MWlOaFkyRmNsci9OTGg3bXhnZ3R6K3ZH?=
+ =?utf-8?B?TFd1U2Z5T1hNdHpzWTFPRnhhdXMrZlZSTml2ZTRFSzdoNkFvOVJvYmU4R3FP?=
+ =?utf-8?B?YlNDN0o0Qjk0Um5OYlF3NmM0WjlwSjRJK3BuOTZMeVloTmxGWVNEWWEyVTVL?=
+ =?utf-8?B?YVJ6VVFDOWIyK2RSeDlOQW45OExzRkRhUmYwVktxSGxZQW8rRkt5bzBvN0ps?=
+ =?utf-8?B?ODQwTHlvRHFWd2w2bEZBM2JWQmlDRWhlMTNSRmJYYlpWbFl2WWVnbTBMa0hk?=
+ =?utf-8?B?WUd4QWJOY0xiakV1b3JuSFBDcXNyMVNVZTZjYUdNaGo4eWhCdStCWGozNHF6?=
+ =?utf-8?B?YTlnVUJyUG1IbmRKUGVaTWVCT2x0TnN0T2tMWjczRXBGVFhGY1hPcnhQaEFS?=
+ =?utf-8?B?b1ExVS9WcTBvaE1EUHJzUVZMUUVaZVEvNWhRVnFud09vbUNmaXdwNEpaRTAx?=
+ =?utf-8?B?Q1BIbHQ1VFBkaXZXbkdYbFNPaUl6ajF0NnJmQ3hYdDBENmtPRXdpNmRvM1Va?=
+ =?utf-8?B?VWlZZUFacS9RMUZ1TFdodVNFcGU2akRucEd4VzcvcHI5RkJqa3JRSVk2Mnp5?=
+ =?utf-8?B?dXc1TUhnUEEyeGRJcWRWNk5tSkZ4UHhFTjd5ZzFZdThMUGRlZ2I5aHFTMTZp?=
+ =?utf-8?B?ZW04RVJQN2J1d0UxWEZnR08zaExDd21FK01OU1dDK0UrOVJaYk9WdTUycm9H?=
+ =?utf-8?B?aGI3MEN5S3V1a0tSbmw5T0tZNkhjK00rVHRUU3hKdUVFVFFKOU9LRDhnMTZw?=
+ =?utf-8?B?NkZibUIrbHcvT0cwWStnMG0rbld0clJjNnR5NDcxSHFuTlNCT2N4U2FZcWQy?=
+ =?utf-8?B?bnNLOHNzWmkwSXpUMHhRVE5PSFRxQ0liOHFMT3pTblBtSllyeGtrTXQyeVVB?=
+ =?utf-8?B?bzhOWVlkbG5vU0M1SVlqSEVpa1BPdE9wUnJuTGFETjV1Z3c0UXRkemVvNnBx?=
+ =?utf-8?B?dGxHN0VBVmlxRnFRZEZncWZWaEcxa3hOK0tyYUdKdnVQSFVOQUViUzBENEZw?=
+ =?utf-8?B?Z05oektrejRQRzQyaFNqeEtrV2pJT01MU2FONGVuRkJaSWZraHZFdllBREFk?=
+ =?utf-8?B?bUdPYnVlcjJGVTVEUkJsR081OHljQm1HUFdESWxzM240MStWVFlYSDF4eC9W?=
+ =?utf-8?B?RUtQN25wRmFUUm1PUVpqWGVFQlhvalVlb3FkUC82WVVkaURsdUVXSG5UZmgr?=
+ =?utf-8?B?VHhSaXU3VVJYVnJlak1Pb1d4azdVRzcwL2tUL3Y3YjZycWp4dkkwY0JCUUVr?=
+ =?utf-8?B?VTBWM0hNWlovK3JrNWpwSG5GdUtKWGVvcnBnd3NqOS9PTnRZRVN4R0M5QjMr?=
+ =?utf-8?B?M3dJS2kwSmdwaDhLaWJMTWhYbUdSK1d6U1l5UTNPd2R6bWtPbTZFOWxzcmV0?=
+ =?utf-8?B?dWp6Z1drS3ZwcnlTek42dVZ0STdNTnJ4ZldBU3RpdlBZR2s3UDB6dVZQekFi?=
+ =?utf-8?B?M1JPOG9uSWRISU9wMlR3dW1KMmVYNEJpY25qRUxmZEhKZ2J3VE5SbnQzbGxj?=
+ =?utf-8?B?S04xdisrUW1DaU1rV3RFZENoY1Z4QXpmR0prMVRObThGVEdyM04wK284QS9j?=
+ =?utf-8?Q?vukxJceDO1qxP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QUJtYytVSnBZYkFqTkxtNUhPclR0ZkRhMHpud2J2d3MrdzNlRFpaQkRtcWNK?=
+ =?utf-8?B?alRJdkREb1VyUjg2U25pa1B3dFQvQUc4bXBabzYxaVk3ajNFemluNjNEZHVL?=
+ =?utf-8?B?cGJWbDhjYXZmYVM4Vkd0RDVOc1VUQkR5VThORnBYalp3cjc1ZmxXT2RHOFpX?=
+ =?utf-8?B?Y1hLZHJDRFB3aEtsSHhIODBwbkZCNXJhYzZCVmY1OHVmeXdpbVZESnJPb3E4?=
+ =?utf-8?B?a3Zld1NJZFNaMDhza0FjOGlyZ2ZJdFhnRXVVNDBLc3l1QjBDVGZ0WTlIbW5C?=
+ =?utf-8?B?bTl5cjZoN3pzdE90UThMSWZ6RzVWaTN5WUdzdVZNVkNMblhRVHQvdmM0ektK?=
+ =?utf-8?B?OXlZQ0VPeTFQb1pxSGU5Vk8rc2dSQjRoaVhOdmlVK29nSWxxN0hKcFdOZGxP?=
+ =?utf-8?B?NEp5RDZEL284NVVQcDBhYlNIUE9LVHE4Zlh4Zmp4RGgySG85elA1MzNKNldk?=
+ =?utf-8?B?ZXJNc3NocFBEbVNjY3dxTVBFNUU0MDIremZ4c1UxQ2V2VG9UL2R1Q2kvTHFK?=
+ =?utf-8?B?SUNxR0x4Ry9YSmxaSHJOQy9UeG5MNTU1cXZ0cGl3eGFodE9lWW9IenloUW54?=
+ =?utf-8?B?VGt2SGc5b1NtZTUzcjVpUkRmTEpEWlFMM3dCRXJ2Z2ZrK1ZJRGx1SWk1T05Y?=
+ =?utf-8?B?ZHRjQkNRN2RQdGpzeWJTYVhoZ2o5eGhvaS92WGd0VkxseDU0WFFkYUpCSlhV?=
+ =?utf-8?B?YUJnNlhncmc0eEkyMU5KUGFUZElaSnhzM1Y5M2l2QjBsV0kxL1RyeFcwemFy?=
+ =?utf-8?B?TDYrSVY2eGp0K0E3MkZ3NFdQa2o5a0hIalBxTUl0bmh6Ni9aeHVzdWE2bnZH?=
+ =?utf-8?B?RXQzc2pvSXRWeVRsSkVwdHlGbHNPNC95b0w1MjdyeFZHNTZybmc3TmdHOUlS?=
+ =?utf-8?B?Z2pIMVdYZFJpNVFFcEVOTnYrZWRZYmxaZlEyaTdkZzdodWFmN091YktDL0Ey?=
+ =?utf-8?B?cEw4dzlTVnQreS84UFRwMHNjSTZqVlJYWjBnbU1JS3BaSU9uNlNIZ3ZtRTRj?=
+ =?utf-8?B?WlVBNWVzWUUzTGFyS1R2eUErZmpQc2RIUE1KMjk4Zm16VHBGbzB2SXhEMzVT?=
+ =?utf-8?B?NVNTc1AvTW82cHZSRTl4OHB4SExvWnBTbm9uOXVVdm1BMzJLdS9LRUVaVHZ1?=
+ =?utf-8?B?NWNXczZXT24wWWwyamJ2dXdvZ2N3MHhWMFByQkhhVUpPWW15NVo2cGxTOTI5?=
+ =?utf-8?B?NmdRYWRzMkVrSUxHNVVicjczWXo2c3FlQTdhTGxSd2xLbnluQTZqL2IrMG5x?=
+ =?utf-8?B?SFRBTmNwdWVwOVdKTVpFYzJmbzJHTjlHV21zSnRQOUtLN1dtSmFZWXExOVhJ?=
+ =?utf-8?B?bG8rOTN2RWdEdGRWVFlTeTRyQTJxbTNwR1VQVE9SVkhrTTVCUEtTQ2lnbWZo?=
+ =?utf-8?B?Zmk5YS9iSGNsczBSa3RQMm9uN1FyT0QrZmw5ckJFZ0psZTJJOU9JeXhsa2xP?=
+ =?utf-8?B?L1BxcWxlcFp4dSt5NytUcVdMTjRZeCs0akQ0L0RxVWN6VTMwUXhMaS9ZZlJy?=
+ =?utf-8?B?eWY3WFh2cVlvRDZsVHRUZHJTaVJvOXgrNzZxMDVkR0c3RVBJeFAxNjRlK3Zn?=
+ =?utf-8?B?NXZKMTdZTmNDSjR4VlFrSXNaTGpaM0JGa0dPdDJUNzlia3VsRXRkR0xzVFBT?=
+ =?utf-8?B?SzI5TnJ6QlJ2REZTTVRLM3g2RGhCMFFaTHRLMmpPTllSUERlYkpmRXFONGFo?=
+ =?utf-8?B?aWhuVGlBS2xuWXd3Uk5pam85YzNhYk0rYmpBaGJrQ01aMHBlZXBjVlNocGlm?=
+ =?utf-8?B?QTVHRnhjUFAzZEIveTU5cmFYdHIwc0F2MTNqYjA3amZUR3RHSjdFR2pETUV6?=
+ =?utf-8?B?eEdvRmtEeEE3ZW9kY2VHNDU1dVhySVlpQi9lZEpYeTJDQTg5MFhaeGZyeVAw?=
+ =?utf-8?B?R1lTRGpXNGRWSmtzdkpzN21WUnlBNWU1K3hNcS96Wm9pQlcrUzdNc3hQNURM?=
+ =?utf-8?B?WWhMUnNoMFRoUXV0MzkrTENrUmdwTmdrNjJiOEtXWmtjR1ljQ3g4WGoybUdx?=
+ =?utf-8?B?Q3VWZFQzM01EenV4ZWRLK01MVTdhakZES3Nla3k5RG02SFlLTTVrd2c2ZVNi?=
+ =?utf-8?B?VUN0WnFuV0Y0YlJDWmRaWjZVdjZ0MzI4SE5nOXF2YmZncnNZdno4bmdpbWd2?=
+ =?utf-8?Q?OlHG84u0jQBulgTcHx/BKoI4w?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b460669-6c17-43a5-dfde-08dd75feb8aa
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 18:05:03.8654
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T35fUZdaZDjrSBnWfta6VgM3Mi0hgRSXWdShn/3TnRxK/+4LpWonTvLGDDzKDWHmqsSsRBpEgWCo5WFuf0ra4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
 
-On 07/04/2025 19:31, Ivan Vecera wrote:
-> This adds DT bindings schema for Microchip Azurite DPLL chip family.
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-> These bindings are used by zl3073x driver and specifies this device
-> that can be connected either to I2C or SPI bus.
-
-Bindings are for hardware, not driver. Explain the hardware.
-
+On 4/7/25 04:25, Kirill A. Shutemov wrote:
+> On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+>> If the GHCB is available, we should always prefer it.
 > 
-> The schema inherits existing dpll-device and dpll-pin schemas.
+> I believe we should consider the cost of code duplication in this
+> situation.
+> 
+> If the non-early version is only used in the kexec path, it will not be
+> tested as frequently and could be more easily broken. I think it would be
+> acceptable for kexec to be slightly slower if it results in more
+> maintainable code.
 > 
 
-Do not explain what schema does - we see  it. Explain the hardware which
-we do not see here, because we (or to be precise: I) know nothing about.
+Is accept_memory() in the decompressor or efistub only used in the kexec
+path?
 
-> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> ---
->  .../bindings/dpll/microchip,zl3073x.yaml      | 74 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml
-> new file mode 100644
-> index 0000000000000..38a6cc00bc026
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip Azurite DPLL device
-> +
-> +maintainers:
-> +  - Ivan Vecera <ivecera@redhat.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,zl3073x-i2c
-> +      - microchip,zl3073x-spi
-
-1. No, you do not get two compatibles. Only one.
-2. What is 'x'? Wildcard? If so, drop and use specific compatibles.
-
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - $ref: /schemas/dpll/dpll-device.yaml
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      dpll@70 {
-> +        compatible = "microchip,zl3073x-i2c";
-
-> +        #address-cells = <0>;
-> +        #size-cells = <0>;
-
-Again, why do you need them if you are not using these two?
-
-> +        reg = <0x70>;
-> +        status = "okay";
-
-Drop
-
-Also, follow DTS coding style and order properties properly.
-
-> +
-> +        num-dplls = <2>;
-> +        dpll-types = "pps", "eec";
-> +
-
-
-
-
-Best regards,
-Krzysztof
+Thanks,
+Tom
