@@ -1,107 +1,84 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695C72101AF;
-	Mon,  7 Apr 2025 01:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595002C9A;
+	Mon,  7 Apr 2025 01:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743988891; cv=none; b=KCfzjs5w038FwrVk+mQ09LvLIwhj3Sg7rJsv+H9PWaDe/dqdZz79Wpc8aDJ7OtTlan4aE63BTP0AmkOpmnFmoYSZiCTClZUS5MZN8qlYUyxrqR2hZLmdNLDVoqrD9kLXI8dXbs/C+3pKhCb1LSxmrS7PhucUamBz5s6GKXCjc8U=
+	t=1743989105; cv=none; b=sUks0856uTP59YbM+FZIV8BCyP8CXYFW2yT9ggxi2JHngHEkHWpREGUehSh2y0mUzoBmsXadB59XHivHYDWmqRK4vHhcoRIJvcC4DKmFnoz9o9mufMMyEhr++q6N6QdlkIh0EOe6RtsoFiLymASVo9pi9CIpcP8XyKVVxLhwkPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743988891; c=relaxed/simple;
-	bh=6L77+RRua/4acu1pIvF8GpxjPnFtzZwigbVkXSwVkU8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Vu4SGTX4FQOJ7mK8t51ADFt5pvjf8pPz1ajp6w2t6eorSeEOAKrJYQjoqLP+YxAjLKd8+xDEGWo6DLOE/eYB9IGK+ugJkQeAYwEGzM0qYSu/tTXHMleWLWboL/75b40hRgd/A8NjiaCW9rEmpchgz9te2g4qpEoY/ed2UPLZuM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWBHQ6KSjz4f3jt7;
-	Mon,  7 Apr 2025 09:21:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id CB4EC1A0D62;
-	Mon,  7 Apr 2025 09:21:24 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgB321+UKPNnv2fyIg--.50539S3;
-	Mon, 07 Apr 2025 09:21:24 +0800 (CST)
-Subject: Re: [PATCH V2] md/md-bitmap: fix stats collection for external
- bitmaps
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250403015322.2873369-1-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <50e45490-2d68-f882-97d8-a4548730caab@huaweicloud.com>
-Date: Mon, 7 Apr 2025 09:21:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1743989105; c=relaxed/simple;
+	bh=JIEoReQEctUrAkJXeAkaQVuUdCXPKX03hBBCmh5fqj0=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qCxwJ25XU7uUDK3moD4I0ro0xMouxMlyOEs2y8njX2GtdG58MRkOo8nspkU1qFN1fJz7n6plKS6BppgGZ5w+SkIzhpQMhqBHd2cVbjWIFHjatWnzyiiCRcEYOukfOOdFkNaJcMUsIQopaQSXrjpaZnAcxgrDyP4XVLR4Hd1gnJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZW9y56kFNz13L9W;
+	Mon,  7 Apr 2025 09:06:05 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id B422C140121;
+	Mon,  7 Apr 2025 09:06:43 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 7 Apr 2025 09:06:42 +0800
+Message-ID: <b3aafd85-cb58-4046-88df-2b3566e2497d@huawei.com>
+Date: Mon, 7 Apr 2025 09:06:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250403015322.2873369-1-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB321+UKPNnv2fyIg--.50539S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFyxArWrurW8Kr13ur1Utrb_yoW8Xr4kpF
-	ZxG3W5urWrJr10gF1UZFy8ZFyrJ3ZxtrZrKr1rG3s5uFZFyF9xKry8Gas0g3ZIvryrZF4q
-	qrW5ta45Ca4j9F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFB
-	T5DUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>,
+	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v2 6/7] net: hibmcge: fix not restore rx pause mac
+ addr after reset issue
+To: Jakub Kicinski <kuba@kernel.org>
+References: <20250403135311.545633-1-shaojijie@huawei.com>
+ <20250403135311.545633-7-shaojijie@huawei.com>
+ <20250404075804.42ccf6f0@kernel.org>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <20250404075804.42ccf6f0@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-ÔÚ 2025/04/03 9:53, Zheng Qixing Ð´µÀ:
-> From: Zheng Qixing <zhengqixing@huawei.com>
-> 
-> The bitmap_get_stats() function incorrectly returns -ENOENT for external
-> bitmaps.
-> 
-> Remove the external bitmap check as the statistics should be available
-> regardless of bitmap storage location.
-> 
-> Return -EINVAL only for invalid bitmap with no storage (neither in
-> superblock nor in external file).
-> 
-> Note: "bitmap_info.external" here refers to a bitmap stored in a separate
-> file (bitmap_file), not to external metadata.
-> 
-> Fixes: 8d28d0ddb986 ("md/md-bitmap: Synchronize bitmap_get_stats() with bitmap lifetime")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
-> ---
->   drivers/md/md-bitmap.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-Applied to md-6.15
-Thanks
 
-> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-> index 44ec9b17cfd3..37b08f26c62f 100644
-> --- a/drivers/md/md-bitmap.c
-> +++ b/drivers/md/md-bitmap.c
-> @@ -2357,9 +2357,8 @@ static int bitmap_get_stats(void *data, struct md_bitmap_stats *stats)
->   
->   	if (!bitmap)
->   		return -ENOENT;
-> -	if (bitmap->mddev->bitmap_info.external)
-> -		return -ENOENT;
-> -	if (!bitmap->storage.sb_page) /* no superblock */
-> +	if (!bitmap->mddev->bitmap_info.external &&
-> +	    !bitmap->storage.sb_page)
->   		return -EINVAL;
->   	sb = kmap_local_page(bitmap->storage.sb_page);
->   	stats->sync_size = le64_to_cpu(sb->sync_size);
-> 
+on 2025/4/4 22:58, Jakub Kicinski wrote:
+> On Thu, 3 Apr 2025 21:53:10 +0800 Jijie Shao wrote:
+>> In normal cases, the driver must ensure that the value
+>> of rx pause mac addr is the same as the MAC address of
+>> the network port. This ensures that the driver can
+>> receive pause frames whose destination address is
+>> the MAC address of the network port.
+> I thought "in normal cases" pause frames use 01:80:C2:00:00:01
+> as the destination address!?
 
+No, the address set in .ndo_set_mac_address() is used.
+01:80:C2:00:00:01 is supported by default. No additional configuration is required.
+
+>
+> Are you sure this patch is not a misunderstanding, and the issue
+> is already fixed by patch 2?
+
+It's a different issue. This patch is used to solve the problem that
+the configuration is lost after reset.
+
+>
+>> Currently, the rx pause addr does not restored after reset.
+
+Here.
+
+>>
+>> The index of the MAC address of the host is always 0.
+>> Therefore, this patch sets rx pause addr to
+>> the MAC address with index 0.
