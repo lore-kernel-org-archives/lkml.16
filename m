@@ -1,156 +1,144 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AA91B3934;
-	Mon,  7 Apr 2025 16:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3757209F44
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042428; cv=none; b=d/d9BHSZJZ57Fbf4G9UoByD6Faulx7e7FPmeN8VMejCRMN5sxSKprop10fM+aYSITgubqrw246aeI0wps8k9fBjoHbMNLI9pX5HBus6svx1u/wqGkzxfayEgaTc//RWtLlgn/J9YjDgwU0ArNQ6MJEKgWr6f4iK0kpMIeSif7jI=
+	t=1744042431; cv=none; b=nAr+pXUEeH9IeDaC0Bk4yeLhDmAjl0zdvJMAAH7Wz13oCamq7DYI5AYLuXCMoWQdRzOjKGL/IvCwIY25VvVjtuYA/VvbrIT7E1cf1Vyt6oB5bc/Fb0OWNOIa58UbRaijWBLNmdmHGd05IEMB9kru6Muhrx6mmm9LYPekIKBK+oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042428; c=relaxed/simple;
-	bh=p2zobvi7rWLFeSuUW0t9mkfYAvLLJwM3P3t01NCBP3g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EDgut0uWS+6HFEtpBu7fUiylq60DyMXPF5VXKFs7848YADk9m60dyEXBU6+ydCr0GVqjZOgN+b8+p3TwbbKMWpeq3BH9KLkJcdVHCRvbxXmoeF0p9T+rwppcsXlrOw5PdCWqqHOMENLUHTsMB3wQLDFEnTxA/BveaVWRFi8NOmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azkGcDLR; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744042431; c=relaxed/simple;
+	bh=momMVb5vlwB7w7QBIrh4FuJxBMr+DXof5tHLvIxbILc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dH2C0UsAAUjUgRZp4QnjnlToEbwhjD6jvWLVQm1iyqKvhhTl1ONrA+0qcQ1sHO5fDFX/QZhzywxG5+pbIz3hwL+Wq6oOMmWJk7V5pZetSDeZtYdnYragzei9BX1P5VN1dW2lpjzpbmwtgsOLxCFcCH69NQPEWm0WqYrzp4Jau4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=VUkcGvdZ; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azkGcDLR"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso42627165e9.2;
-        Mon, 07 Apr 2025 09:13:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="VUkcGvdZ"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so44100995e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744042424; x=1744647224; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=70LGfavtABLJLsgIq6Bm88SDdFJG1TJDo/u2Aa0VN/w=;
-        b=azkGcDLRakHzIGjEPd5CePOJ2tSA1cESxCWZNsZ5zdu/2I/Vu6+4+oy1ErssUVWg5A
-         27t97hhkKtfB+Wxpkw9F9AcVmYYwXCj/4l7be1e0L8jht2KHy0In+1dopcpt8V30OFt9
-         AdJczDb17ZyMXSPnsVsFxVZcMrcoR5lRkYpLGvFkvKCX7UfE87p0PTj45sIZwGiKu0Hl
-         uzbyvtm4AZ9ybx7NozMGXfLs6yqe0zj2O0k9iQKL/FZBOPfvYv29Z9xIBE87x3edUoL+
-         D6wcoCrsGvcVPju9iKOtb92IrglvsjXxkrCEP6aGTkhd1WQtL3HPTIZVAtg6aeoFdFaK
-         xy3Q==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744042428; x=1744647228; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hAlufBsPlnjuTWbgusP8CYnzhAGj3Mnwll46JdWGBbE=;
+        b=VUkcGvdZWUbu9OzL8xb/T9nIPABJp+EpwUB25HeDeqsIYBWHw/KxG+9HzB6zJ25efA
+         IEVWesGAkZXnsKnEEQm5RrjsBBy/tM0vuvAVzxUKgGOfI/2MnZRk9eU1buIVmNaD/vyl
+         7ohlvYtihiG99nc1Pjalgx9Cg3PhduK3ocW9+yDw355ftfxGvBo3YocEdBwq8pF8+NYx
+         lMdNCYIYwmRxY1Ub0vqMljGY5ITbfI0syUZ0bCM41CmNbN56FnpgJML2mZso6zE4ctdw
+         GGWGXp/DxpbSRR2/MomVoMl/GluMdqLScFL5xdZU1NcCHhUkH0KM61p8FLLG8T+nyt1b
+         kttQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744042424; x=1744647224;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=70LGfavtABLJLsgIq6Bm88SDdFJG1TJDo/u2Aa0VN/w=;
-        b=D1mpjjAFbpWs8B+oqkdFJRkJX8y1dJk9Q9d3MTZRsoPDCHU4IlYoNfH4OBCd82IyqU
-         K7Jgk5Jod3TPRgBkaireXGTpM0O55S8HM82bKVRefRkwv/MpRidMWJbM04PYyFuOBcIF
-         PbPd9NsBQYzC9a9VN6RQUYiVmSVC70vUOo06D5Aks0WmJx5QuTKWCrRFon6iwFKra4iv
-         CghmREdEDtCM5hoWjyF+A0BIY8HZpVaJ6jN5FajCAjugM+zfvmUxF5OVCyUlDvHHdkGU
-         a/VvZQiKh1RVq0EatsoPnai7uadKDbKDjgnGeWH3fmTgKGezBO1+qH4QlWHyvz1zJ/OQ
-         64Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNP5YgI73SGWvGaNxxOd71vzxPbCjhr+OEq/pO0/hLqFCytdb/0i7Fii0EgtzEqDcrsaPQ/uRzAwFP+V2g@vger.kernel.org, AJvYcCVvRcCQZe7oE611jpRaz/7XY4Eo3RZEg2if54LZ6qlvG9B4rNicu+VsEYBtwYYFyCUOSg5O/8ycCBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5QgQdEoylfkYrCpNzxU+7ns+1sfjXpaiiDvi7+VwbcQ+/m9oH
-	dIz9M7PcW66P5ypV3EpvtoLs0Cb0cAojATq84NgQH9u8/nmQzYo6
-X-Gm-Gg: ASbGncsgVF8icgLff52XR/FopZiTEwVV3vKCGlmcKr2+0SHB6lYvruK63a/V2Fc2ZRA
-	GqyNcZbX003ov5Aoz/2aGfguwHlLEVJKxUbp/bGTE2gfF0Dzvk0abAwWy/ZMSiT+27Yz4biO34L
-	q0NSfVd5MKvoKR1TZ7jWxfYrrwAoZdfDROB58j01aeBsivdwM10EBJN3O9SKDocXCnB8fbdUHGx
-	2gNgPWyc/1hILYWdFd+brPHwF/T97VvyDhQBprWNXJ8DdtssQHYOL4zqEIqJRGKCs2DGDk7iM34
-	2Sr6/7d3fzdFtx2XWyEvgxdY5E3w54kFWZvVmgLYmysAS431E6e/dnPgI63pQNezG4KjCw7efot
-	Hv+Src1oG2rkK36st
-X-Google-Smtp-Source: AGHT+IF+LRS5kJ8HAD2cz4rJeC67p0ChUWXfOfl/gjpqN8sIiWg6owJ812B5obdplJyggnWpsz9FxA==
-X-Received: by 2002:a05:600c:5124:b0:43c:f3e4:d6f7 with SMTP id 5b1f17b1804b1-43ecfa18f8emr125832185e9.31.1744042423705;
-        Mon, 07 Apr 2025 09:13:43 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6321sm12278444f8f.44.2025.04.07.09.13.42
+        d=1e100.net; s=20230601; t=1744042428; x=1744647228;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hAlufBsPlnjuTWbgusP8CYnzhAGj3Mnwll46JdWGBbE=;
+        b=oLCx/8UYbQr9GiFSoKJ0HaCgJVpn9GSrJ1/NgMNppgXivKJjVh39zSda5HpnP1nj4S
+         2Hbx7KpSFIDQyKzF8o+CCc2489y+1JdzUJ2ueJQAydqwGOv8mQi3eCJdBP4lYOSvRj1N
+         thk0RO6twh7hHdUMnR6nviRP7vsQBLcpbDnmzjoOda1GBNBwxWhWKd+3409wDoqmV/bz
+         abM4t2bn3TZubyRoj5pwgccbY/UQm1L57RN5IpuHbZPXryfzAztWuzBHOfsBfr1w5QQh
+         Rx9itISuhCOWM2vLPmj/RWkyF4x6ewFTHgI5zt9CWimRDqrzEA+1W8qOQK055r8OtkOI
+         TK+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWejrKWuzpwVwIefDx9btM9p90bJogOUkS4xu5FOZ6DQhwnk6C1VoVdA/u85x4SYfj1/UQIsT8/ymUfgqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk13n8mm9fzx8n2MU8m8X3Weq1a4GgxYmx1zXZmv0kazGn8DBD
+	8X+FPVocdR79ml0udSmfqnpauC7X9ZzLRu/JXNNh8Tu6YBKLyDw4z9sBM4Ot9CU=
+X-Gm-Gg: ASbGncvSl5S5Ji4fviMysu5sVCAAov6bthqR6OIsPlt0eH59HHKCKXh3R/JOPrXiWGy
+	0RQkfuwu3MBx7wpBdwRMMoRCckjhrJjK6F4A+E4maES2KemaW6B+RJN6vlKN2LD01/QeXKBNcsK
+	+xiDbD2FNHsonZA2mQNoYHpYWgVH+IZ6yxxwGdjYnd3CcxS2u6OYonx8Ql1L7t31lwLiFBbWanL
+	dW0hpGHN39TOSldXNhYVRYzDgpF7CDvbQeiUKDZ3JUkpm1s72JR7y38U1nG+pl9b883cbrdWIyN
+	Qeo+WzIqi2Fx9APYpAynt7LyFp0MHk7xNZYBfsG8mezgb2aZ+j73VoFEbAf2wLS0oHjZhuiVoJB
+	ZQDwjHMlXVzAmb/byFf01trHuUX4=
+X-Google-Smtp-Source: AGHT+IF9E+Yu68SivmKTZ/2oBu6XpMDyufJhLClsxWUTbSHDLDqi5DwsmXJhaL8CEGG/v/moBPNDvw==
+X-Received: by 2002:a05:600c:1d28:b0:43c:fad6:fa5a with SMTP id 5b1f17b1804b1-43ed0d9ce1dmr107471025e9.24.1744042427942;
+        Mon, 07 Apr 2025 09:13:47 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630ddesm137924675e9.5.2025.04.07.09.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 09:13:43 -0700 (PDT)
-Message-ID: <b0c6eb83a052fe6e1656d47e118b1e70336e38d1.camel@gmail.com>
-Subject: Re: [PATCH v3 4/5] iio: dac: adi-axi-dac: add data source get
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen	 <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Olivier
- Moysan	 <olivier.moysan@foss.st.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 07 Apr 2025 17:13:43 +0100
-In-Reply-To: <20250407-wip-bl-ad3552r-fixes-v3-4-61874065b60f@baylibre.com>
-References: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
-	 <20250407-wip-bl-ad3552r-fixes-v3-4-61874065b60f@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        Mon, 07 Apr 2025 09:13:46 -0700 (PDT)
+Date: Mon, 7 Apr 2025 17:13:44 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Jianhua Lu <lujianhua000@gmail.com>, Lee Jones <lee@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
+	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 3/4] backlight: ktz8866: improve current sinks setting
+Message-ID: <Z_P5uLrGiQWez0jv@aspen.lan>
+References: <20250407095119.588920-1-mitltlatltl@gmail.com>
+ <20250407095119.588920-4-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407095119.588920-4-mitltlatltl@gmail.com>
 
-On Mon, 2025-04-07 at 10:52 +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add data source getter.
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+On Mon, Apr 07, 2025 at 05:51:18PM +0800, Pengyu Luo wrote:
+> I polled all registers when the module was loading, found that
+> current sinks have already been configured. Bootloader would set
+> when booting. So checking it before setting the all channels.
+
+Can you rephrase this so the problem and solution are more clearly
+expressed. Perhaps template Ingo suggests here would be good:
+https://www.spinics.net/lists/kernel/msg1633438.html
+
+
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 > ---
+>  drivers/video/backlight/ktz8866.c | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/video/backlight/ktz8866.c b/drivers/video/backlight/ktz8866.c
+> index 017ad80dd..b67ca136d 100644
+> --- a/drivers/video/backlight/ktz8866.c
+> +++ b/drivers/video/backlight/ktz8866.c
+> @@ -46,6 +46,8 @@
+>  #define LCD_BIAS_EN 0x9F
+>  #define PWM_HYST 0x5
+>
+> +#define CURRENT_SINKS_MASK GENMASK(5, 0)
+> +
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Call this BL_EN_CURRENT_SINKS_MASK and keep it next to the register it
+applies to.
 
-> =C2=A0drivers/iio/dac/adi-axi-dac.c | 30 ++++++++++++++++++++++++++++++
-> =C2=A01 file changed, 30 insertions(+)
->=20
-> diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.=
-c
-> index
-> f86acb98b0cffb09bf4d4626f932bf1edc911e2b..8ed5ad1fa24cef649056bc5f4ca80ab=
-bf28b
-> 9323 100644
-> --- a/drivers/iio/dac/adi-axi-dac.c
-> +++ b/drivers/iio/dac/adi-axi-dac.c
-> @@ -536,6 +536,35 @@ static int axi_dac_data_source_set(struct iio_backen=
-d
-> *back, unsigned int chan,
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> +static int axi_dac_data_source_get(struct iio_backend *back, unsigned in=
-t
-> chan,
-> +				=C2=A0=C2=A0 enum iio_backend_data_source *data)
-> +{
-> +	struct axi_dac_state *st =3D iio_backend_get_priv(back);
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
-> +		return -EINVAL;
-> +
-> +	ret =3D regmap_read(st->regmap, AXI_DAC_CHAN_CNTRL_7_REG(chan), &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (val) {
-> +	case AXI_DAC_DATA_INTERNAL_TONE:
-> +		*data =3D IIO_BACKEND_INTERNAL_CONTINUOUS_WAVE;
-> +		return 0;
-> +	case AXI_DAC_DATA_DMA:
-> +		*data =3D IIO_BACKEND_EXTERNAL;
-> +		return 0;
-> +	case AXI_DAC_DATA_INTERNAL_RAMP_16BIT:
-> +		*data =3D IIO_BACKEND_INTERNAL_RAMP_16BIT;
-> +		return 0;
-> +	default:
-> +		return -EIO;
+
+>  struct ktz8866_slave {
+>  	struct i2c_client *client;
+>  	struct regmap *regmap;
+> @@ -112,11 +120,18 @@ static void ktz8866_init(struct ktz8866 *ktz)
+>  {
+>  	unsigned int val = 0;
+>
+> -	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val))
+> +	if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val)) {
+>  		ktz8866_write(ktz, BL_EN, BIT(val) - 1);
+> -	else
+> -		/* Enable all 6 current sinks if the number of current sinks isn't specified. */
+> -		ktz8866_write(ktz, BL_EN, BIT(6) - 1);
+> +	} else {
+> +		/*
+> +		 * Enable all 6 current sinks if the number of current
+> +		 * sinks isn't specified and the bootloader didn't set
+> +		 * the value.
+> +		 */
+> +		ktz8866_read(ktz, BL_EN, &val);
+> +		if (!(val && CURRENT_SINKS_MASK))
+
+This is the wrong form of AND.
+
+> +			ktz8866_write(ktz, BL_EN, CURRENT_SINKS_MASK);
 > +	}
-> +}
-> +
-> =C2=A0static int axi_dac_set_sample_rate(struct iio_backend *back, unsign=
-ed int
-> chan,
-> =C2=A0				=C2=A0=C2=A0 u64 sample_rate)
-> =C2=A0{
-> @@ -818,6 +847,7 @@ static const struct iio_backend_ops axi_ad3552r_ops =
-=3D {
-> =C2=A0	.request_buffer =3D axi_dac_request_buffer,
-> =C2=A0	.free_buffer =3D axi_dac_free_buffer,
-> =C2=A0	.data_source_set =3D axi_dac_data_source_set,
-> +	.data_source_get =3D axi_dac_data_source_get,
-> =C2=A0	.ddr_enable =3D axi_dac_ddr_enable,
-> =C2=A0	.ddr_disable =3D axi_dac_ddr_disable,
-> =C2=A0	.data_stream_enable =3D axi_dac_data_stream_enable,
+
+
+Daniel.
