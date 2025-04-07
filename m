@@ -1,111 +1,176 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C571BBBD4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857FE22A4D6;
+	Mon,  7 Apr 2025 09:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744018501; cv=none; b=aaZBIJS4IdqD35ILr1SeQbpvJ+NiiLgCx+vImi5j24frJa+/NIZt8WSzHhVspEiLJzJZ0+/eThbv/9/lL/nOsddqLDG18YUg2IvmJPzhXok7Ggb+Y6/x1w/WVxH79Pd91jEeHkvAK0xBxTVw4gs8njwZN3Ao21zhuFTZVxsYP/Q=
+	t=1744018506; cv=none; b=NLISuHtIMpf/3SdnsJZ723jXtLcuMgXErxZljWLeU8KelNGCWJx0XiuTynFo7JZv4SooECfp8yYnVsL2lqsgfdju5DedG08T0Xhh9OkWM1omHTpllsLd89MiiI2Qkf0/QqWqRYDxXzL/lWkHWLdYEP8d2GPG7TvMqxy/yIBEHlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744018501; c=relaxed/simple;
-	bh=sY8de/adKxVx84s/9OXx6B8gB3VJnbWZllFUS1NDxPo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E452JpbAwIOEYgXNVUNK3s+Dd9pvEfA/CHMbVzRCdacdU6kK3DGTOffQlDMqoy8mCdfvlpE+9C5TFonMMcC9q26vxODXNccVWhANQsWP0deCKVS/0onDHYUb5+iH35vNP8+zGJpgI2jUOHDEs+E5wYzU9V2P8orNTP+p5Rb7uLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uTZvzowo; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744018506; c=relaxed/simple;
+	bh=NA/Nd0Ddf2jORatQD4g6yIs1ne9f1uLXUzl99732yc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIiZdkTinlIfmmrpJE/O1C/v7u2gbhVWTKKKwepn0j//n/nw7RZM06lHEbXX8JRHxHWI7zG+MMyvkFLfc+2UVtDPfStNy1SE2H/4w76grS511BQf9Aq39QMxjOZNb8KDtwPoRbxRKK78UGbpzL/smrhyu9XoeFXC5ZCKoptHhIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhBcz9C7; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uTZvzowo"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac56756f6so3505513f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:34:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhBcz9C7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224341bbc1dso34729935ad.3;
+        Mon, 07 Apr 2025 02:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744018497; x=1744623297; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sY8de/adKxVx84s/9OXx6B8gB3VJnbWZllFUS1NDxPo=;
-        b=uTZvzowoocuBhurdncvrklh8cm6VOJJcEIQSRLbT+JGtoypeC6dMvlfj0mc8wZU7I5
-         GyrRjkKf2AE/n8NApqIRK5yf5sUDv6SkkdUQk5Y1v3JAdo4/vUs0MpVkdQOaBEbrCvno
-         9xwcYUmjMDtS3xRbrMK3s6cOK03cLKKW5aK+EpFFk/Ds5xsPLUCQc98cH9poXIQMrzz5
-         BZFhHInzrACnCEhR68cMq5z8Jf8kDYV333FTnQUjigevbuBS3JARVdAfD2WSx+2AF+89
-         Vid59EjqbCNvhYtEByIRuyLU9p/dim9hoQjOWRXYIjifXG19IKdXNvRHa4+t4k7QRloZ
-         Apdw==
+        d=gmail.com; s=20230601; t=1744018504; x=1744623304; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e3fVOy8mns/9JIDsaRuopOAvHNx0fO3H/yc9m6/qJXA=;
+        b=dhBcz9C72nOh88cyHuVKzc9Mj1lJ90mOTZ37LCkrBfP8fgPZYxxFwK7oglW6qDjoaW
+         IdCS9gABnZ0jKW08RY4q0lR1Z11SjwkgLVK0N+8v2W1vuM0B1SNalVNEcG4m386Eknjz
+         qM6STO4qejUT5Ed7G1UWNyCGyjQVata3oDAnUsby1UWamTfXluaNeZSJz7IwtK2kaMVj
+         MeLjPLTK56ySUSK63JzT5NfNCSyNOzqfpOT4BXonbn5IhW9778aW4WkMHZGI3NUPI6lF
+         5DjTp8UgFlVxSpAgMhhkFFFX9CUdLt/tUufP56bDa5q+nKx/0qQ/6/oY/kiOiLdCRCyF
+         bjUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744018497; x=1744623297;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sY8de/adKxVx84s/9OXx6B8gB3VJnbWZllFUS1NDxPo=;
-        b=Wifzcl76x6i2T059d16zqmyVWpesDdtOW9i464qAg5KCrZ1hp5w4PxkACjCx2hnE6P
-         hjviXpisg1jdt6CVhC3owEtTl7bkgm9sW9Ziyp10Ovbt3/8ugoOJRyl0vEQwRlT0KnFX
-         cRXoQDqUsC3FqH4DDk8jM+ssn+zSgEPFNyHibrfBTn0V6kEw2gqZVR6RA9U+2tzMjHoM
-         Jlu915xsW4jSNhIK3bGsB97XgSSraHFdHNLLsJv79DHFTVp9A8mFy6fHBsjvQY25lVjn
-         nrkg4y2M2VrdzUrn0vrSA35JKExN/vVB4/0kUuJ8t6JFnil/bPaxyiGQdbkWjmubrlBb
-         M+QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJTZJLsjWZOL0E4jXcGZmf+OIXElqAoECwQRT2Hvb3FjcXXEBN4CR1dvcrYnwfBAkGRp2557EP2EMjMlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMyKnHUacIK7MmPHuz/rt8iwcwkr4SbF5BlZxA/M1VRlNBr+OI
-	7/+bOePSpmBMFA8YmBP6ybU7iJI+5F7v5cLDrrsmsyTF59cmPxbxell7dllJdpc=
-X-Gm-Gg: ASbGncvn151X/syV4J8ivAvFTHHkuQ7eOK2OdNM+ZPxbZ6fLw2yD7G2+KRjJIBr5e9n
-	WuBzGkyQFvRgX9XgAbj5vOuNc8h0PWQQFZ3kb3zHJYpuKBSnf/rkie7ko5hJ6m7uiQCDww+drJq
-	UhaayUK4ePiVOCoDWdy4u4evd8EkrJkhm7VrgI9tsemDC3IEWKL82Lw1QCn64DmP4MNTHid//qL
-	ZRwyBlxt9zKPE0fw7BgndwQcSYJM1FWjcR8VstEOz3IBpg8EgRAXGPmN95TCUBUma3Y2CtlznJx
-	U/9zp5fzlPq3IwrtHQxZETnpCU7or3f0kO8iUxVesFWwrDjd
-X-Google-Smtp-Source: AGHT+IEK2ylsj8A3zv5KP41r85GTG06Mj0FN2K9Pnsar54qT+bII0+ur9gb54xnBI0cqR8Dv4CuOpw==
-X-Received: by 2002:a05:6000:4282:b0:39a:c9b3:e1d7 with SMTP id ffacd0b85a97d-39cba93ca51mr9835262f8f.29.1744018497031;
-        Mon, 07 Apr 2025 02:34:57 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eda4662a0sm85615765e9.36.2025.04.07.02.34.55
+        d=1e100.net; s=20230601; t=1744018504; x=1744623304;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e3fVOy8mns/9JIDsaRuopOAvHNx0fO3H/yc9m6/qJXA=;
+        b=Ja/p0IHTifmAPbYpYhDRNbaOcC6qQFQM1+Fjy2OYGIiLPjfLJXaBYrQjCbqN5JwbTN
+         MeXKT3Un2v+eKP4UxQAuN4Dun0SDMEtA/KMCTTJNhCOz02EFZZG4uXbc8h5yE2rucTBK
+         IQ8l/KyORlM24HUjP/xxXYhSyvo52d39/962zazhvI6UAv/znSeXnzytDtsWv+ovxm/8
+         /oN3ajVBhmi2aiJit65CTMppycgkbFqSYxyhINeTKnx40iitAHuZXaG+eadTMZGmCn4X
+         kiiS67JGV6entGcUNO80kD23QdU/abV4d4XrkkUxMU8OgYIGrnDJfU3DIQHsz0P+W9FO
+         aTtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdQG7/skepdFaS8xFPyaExNRev4w1J2M9LS2T+WhrUDSKMsOxVCIVjlsvE7F5GeDrmvKCqtghag4I7pRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye36hjuOVG8WIsk71dyB6o/nfNDtPpSuze6rxyie8aCtST5fV6
+	zy/EmI0Ek90MMzLKp3Rc6MGK9eUmG/s5YC9LpSNaLaDgOXd6sX3q
+X-Gm-Gg: ASbGncv2KUeVvG4hCyX2BADFhbZiHmZUQ+L/bis5TyZH0mIIvDZilYY95fjqo3y3AWl
+	xLt71KZsRqIpAwxoc8xqjoH16GYRYRnbj2cjjqHM+PeiwqpNdqz8jbvO66+sNkeAOYNRKLE6qMm
+	QAaba793Ha3IqWp8MYTUUXQ5mu2B+mWJ1nJ33ikercMDyhUMW4GWyW4dct5n32rVyZAhIdS6xef
+	nOq25ufkm8QbYrQbP+J+nsOikWgX7hbttX4IOioSJ1ylGQbiSkgT5hhHHX3cpRgdiXo+dcVXsBu
+	7c/f/ZBBawSfF+thzCxZ2YPPel0XKeVb12HKEmh68b2LgCmVyw==
+X-Google-Smtp-Source: AGHT+IFN5Aj47HVwSZNa0w+mDnCZklaD4x92z/LhnYjRYcRlKKi9NZjwjG50B6PZzoYQmqv6RINMmA==
+X-Received: by 2002:a17:902:d485:b0:223:3bf6:7e6a with SMTP id d9443c01a7336-22a95529550mr137783025ad.12.1744018503634;
+        Mon, 07 Apr 2025 02:35:03 -0700 (PDT)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ada7csm76473015ad.31.2025.04.07.02.34.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 02:34:56 -0700 (PDT)
-Message-ID: <305582d4a9c0fc8f34f997a697081409dd2df273.camel@linaro.org>
-Subject: Re: [PATCH v3 27/32] rtc: s5m: add support for S2MPG10 RTC
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
- Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
- Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
- <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
-	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rtc@vger.kernel.org
-Date: Mon, 07 Apr 2025 10:34:51 +0100
-In-Reply-To: <5e91005a-28b0-4508-b576-5406f3e048e0@kernel.org>
-References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
-	 <20250403-s2mpg10-v3-27-b542b3505e68@linaro.org>
-	 <5e91005a-28b0-4508-b576-5406f3e048e0@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-1 
+        Mon, 07 Apr 2025 02:35:02 -0700 (PDT)
+Date: Mon, 7 Apr 2025 09:34:55 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
+ device address is same
+Message-ID: <Z_OcP36h_XOhAfjv@fedora>
+References: <20250401090631.8103-1-liuhangbin@gmail.com>
+ <3383533.1743802599@famine>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3383533.1743802599@famine>
 
-On Sun, 2025-04-06 at 20:33 +0200, Krzysztof Kozlowski wrote:
-> You just sorted the MFD headers in other patch, but here you break the
-> sorting.
->=20
-> For me patches resorting the addresses (as a separate patch) is churn,
-> but sure. If you do this however, it means you really believe that it is
-> worth to sort them, so you must keep that standard for all your further
-> patches in that series.
+On Fri, Apr 04, 2025 at 02:36:39PM -0700, Jay Vosburgh wrote:
+> Hangbin Liu <liuhangbin@gmail.com> wrote:
+> 
+> >Similar with a951bc1e6ba5 ("bonding: correct the MAC address for "follow"
+> >fail_over_mac policy"). The fail_over_mac follow mode requires the formerly
+> >active slave to swap MAC addresses with the newly active slave during
+> >failover. However, the slave's MAC address can be same under certain
+> >conditions:
+> >
+> >1) ip link set eth0 master bond0
+> >   bond0 adopts eth0's MAC address (MAC0).
+> >
+> >1) ip link set eth1 master bond0
+> >   eth1 is added as a backup with its own MAC (MAC1).
+> >
+> >3) ip link set eth0 nomaster
+> >   eth0 is released and restores its MAC (MAC0).
+> >   eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
+> 
+> 	This step leaves both the bond+eth1 and the independent eth0
+> using the same MAC address.  There is a warning printed for this, and
+> allowing the duplicated MAC address assignment has been the behavior for
+> a very long time, and to my knowledge hasn't caused issues (I presume
+> because swapping interfaces in and out of a bond willy nilly doesn't
+> happen much outside of test cases).
 
-Definitely. Not sure how that happened :-(
+Yes, until the NetworkManager become the default interface configuration tool
+on some release. When set a slave down, the nmcli will remove the interface
+from bond... This causes the issue to be triggered more often.
 
->=20
-> Rest is fine, so with this fixed:
->=20
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >4) ip link set eth0 master bond0
+> >   eth0 is re-added to bond0, but both eth0 and eth1 now have MAC0,
+> >   breaking the follow policy.
+> >
+> >To resolve this issue, we need to swap the new active slave’s permanent
+> >MAC address with the old one. The new active slave then uses the old
+> >dev_addr, ensuring that it matches the bond address. After the fix:
+> 
+> 	Which interface is the "new active" in this situation?  Adding
+> eth0 back into the bond should not cause a change of active, eth0 would
+> be added as a backup.
 
-Thanks Krzysztof!
+When do fail-over, the "new active" literally. E.g.
 
-Cheers,
-Andre'
+> >5) ip link set bond0 type bond active_slave eth0
+> >   dev_addr is the same, swap old active eth1's MAC (MAC0) with eth0.
+> >   Swap new active eth0's permanent MAC (MAC0) to eth1.
+> >   MAC addresses remain unchanged.
 
+The new active slave is eth0 here.
+> 
+> 
+> 	So this patch's change wouldn't actually resolve the MAC
+> conflict until a failover takes place?  I.e., if we only do step 4 but
+> not step 5 or 6, eth0 and eth1 will both have the same MAC address.  Am
+> I understanding correctly?
+
+Yes, you are right. At step 4, there is no failover, so eth0 is still using
+it's own mac address. How about set the mac at enslave time, with this we
+can get correct mac directly. e.g.
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 950d8e4d86f8..0d4e1ddd900d 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2120,6 +2120,24 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+ 			slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", res);
+ 			goto err_restore_mtu;
+ 		}
++	} else if (bond->params.fail_over_mac == BOND_FOM_FOLLOW &&
++		   BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP &&
++		   memcmp(slave_dev->dev_addr, bond_dev->dev_addr, bond_dev->addr_len) == 0) {
++		/* Set slave to current active slave's permanent mac address to
++		 * avoid duplicate mac address.
++		 */
++		curr_active_slave = rcu_dereference(bond->curr_active_slave);
++		if (curr_active_slave) {
++			memcpy(ss.__data, curr_active_slave->perm_hwaddr,
++			       curr_active_slave->dev->addr_len);
++			ss.ss_family = slave_dev->type;
++			res = dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
++					extack);
++			if (res) {
++				slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", res);
++				goto err_restore_mtu;
++			}
++		}
+ 	}
+
+Thanks
+Hangbin
