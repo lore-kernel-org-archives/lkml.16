@@ -1,104 +1,84 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ED7188734;
-	Mon,  7 Apr 2025 09:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2F161FF2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019241; cv=none; b=qEn1EEqGII+5bZum7WRmUwmMz7KzAiKkLy0rHRIyLMgspgxAXtn9P3nhB5cVgw5xCtwbNKXze3xK/za6dZKgnFEVyOrGzNMuhUe1CUFzEhZ7QlG0WxvjZPxRC3hUNhRdioQg3PRXtKtuV54B0h0tRIRCKcNO2NrzQMOIOS2iXwg=
+	t=1744019308; cv=none; b=Onb/bCylQ9k0xR1Rdz7ZeKWhS/t4dP2ILIBvqssaGPA/4/z2iMrnETgRKpjBTLuL5WRvaprkO/6PK3FJPJrcivGyLct83CP/A73271h5MW3V4pDiFn5iQPvEjQTPkJghSSGw8nSuYJbfeaXpyiWdMVi4/9MgWFbog7BFAFJdFUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744019241; c=relaxed/simple;
-	bh=vf6M3lg33KLJ/vprW0PAOSoPqYB41I383pWT+BQvwVk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ntap22+jojRsxP6aPw2qDDsrwI2z88tUdJi279685hbOJB5Auxi00GjnG8+8YyALhVM5fk2aOryWn+dVyCE1VNxyc4paLiD9fTCjFWAi2i9Tx9eZWZJk3NaquDBxcsT4iVKEPBqK0uVb3OdsiF/LdpZ/aVmHS4lOn1rtq6Nz/mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=szBIIE2v; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744019308; c=relaxed/simple;
+	bh=gvOI2CUmbzBfNIWceOsLmwrPHO5Nksb5zSXx89esflk=;
+	h=From:To:CC:In-Reply-To:References:Subject:Message-ID:Date:
+	 MIME-Version:Content-Type; b=FEXa/cBHV6H0aaVajHoO06SyJAe45vP7ErKGx4O7tB806eVO42bWGlhkvAd1FFnD5jgmqugVKcCNsj1sxLr6+T1TxyCee4TF+iRMW1ZVGqrBYoGysvl3lqXnSQZLq4OTMi3APivDdj7gTsWKkYg0EQTstqKJ84A5VgAGBvT9OwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=yTVTX3jN; arc=none smtp.client-ip=185.132.180.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="szBIIE2v"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5379WFL0024219;
-	Mon, 7 Apr 2025 09:47:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="yTVTX3jN"
+Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5375uENI000926;
+	Mon, 7 Apr 2025 10:47:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vf6M3l
-	g33KLJ/vprW0PAOSoPqYB41I383pWT+BQvwVk=; b=szBIIE2vvGy2B1b07fixvO
-	dXiMPAqi3j13fYMB9Loaf9tDoKJcqWHXMuo1m8BYESqQ6DrhJvR/vQGYRqi/foyL
-	61OiKp86oWBWmUKzh0olA8XBw9IVarku3c9TZQ94cI9RF8r3Zz/aJvxX+pF8Usxh
-	emI/0U7/VxOhzuJ9/Oszc7qZm2nauFvncDcU/yY13h6vqcIzYbXp3Bfy/xlIDSdT
-	aeNdIDmV2t8T4yDr2L26PkFkk0QDRtoR3zaILkm20WUFecXtUlbkWmxPnxBqZNET
-	s/MrPXkD4EaZgquQqLPr/7ktYzOh12O0SQm0lISdIoxFALRDUvsAb/SYHuq0E0mQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45v0spjj71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 09:47:07 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53796KU9024583;
-	Mon, 7 Apr 2025 09:47:06 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ueut5d70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 09:47:06 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5379l5sU30081678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 09:47:06 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD62658056;
-	Mon,  7 Apr 2025 09:47:05 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 60DFC5805D;
-	Mon,  7 Apr 2025 09:47:03 +0000 (GMT)
-Received: from [9.61.255.9] (unknown [9.61.255.9])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Apr 2025 09:47:03 +0000 (GMT)
-Message-ID: <e5df899e-4edf-41cc-8611-720a67b0a584@linux.ibm.com>
-Date: Mon, 7 Apr 2025 15:17:01 +0530
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=L
+	rdbaiWgj+VqUgPxskU+PG3nQx7JvvWRLYO0Q0qnifE=; b=yTVTX3jNV8nyVF1kN
+	OdDZ1wscYyHSHQGCSK624IPFaYmm64J6st+wC5TIpdw8dci0fALl/hxqPNfKpmRa
+	HLtG+GSfVBYjZ2pgcOp8M5wqfdI7YRKEbQSeMW8cptJKxms01Ulr68gsDztJoRUo
+	7yKP5/zcRTjVR6/uFUkWIlIwvh661qAicbZCGLr1o3SzPeQaONF4P6LJUUb+774R
+	YQWir3NqWXZmHfIRqNjhn3m6jeXe8U1oWepoJcwActVtx7QLTzfJ1tOVBD3WtOfU
+	LcOierFmQWJ0PkiDWr8L4vZyWin7yiS11GdJSnTn+vE+tTIPQ8CnQdNiCSGxqtaL
+	YVWSg==
+Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45uv5w8fpa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 07 Apr 2025 10:47:56 +0100 (BST)
+Received: from Matts-MacBook-Pro.local (172.25.7.98) by HHMAIL05.hh.imgtec.org
+ (10.100.10.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 7 Apr
+ 2025 10:47:55 +0100
+From: Matt Coster <matt.coster@imgtec.com>
+To: Frank Binns <frank.binns@imgtec.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Alexandru Dadu <alexandru.dadu@imgtec.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250402-for-loop-counter-scope-v2-1-4fd550d22832@imgtec.com>
+References: <20250402-for-loop-counter-scope-v2-1-4fd550d22832@imgtec.com>
+Subject: Re: [PATCH v2] drm/imagination: loop counters moved to loop scope
+Message-ID: <174401927500.42684.16219205012504623611.b4-ty@imgtec.com>
+Date: Mon, 7 Apr 2025 10:47:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warnings after merge of Linus' tree
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-To: peterz@infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, rdunlap@infradead.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <9B0D38E4-3414-43B9-8F41-D552755DC81E@linux.ibm.com>
-Content-Language: en-GB
-In-Reply-To: <9B0D38E4-3414-43B9-8F41-D552755DC81E@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: vI9fyKVr5Wi6k2UXEX-HiTBhTSpYk9Fp
-X-Proofpoint-ORIG-GUID: vI9fyKVr5Wi6k2UXEX-HiTBhTSpYk9Fp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- bulkscore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=686
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070067
+X-Mailer: b4 0.14.2
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Proofpoint-ORIG-GUID: 6CXKL1Bl7JVCpFq_7teK4J7jLNJycVGZ
+X-Authority-Analysis: v=2.4 cv=VYD3PEp9 c=1 sm=1 tr=0 ts=67f39f4c cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=6pm0VhuFVbIA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=r_1tXGB3AAAA:8 a=PEAm01bx7CXaZduv5QMA:9 a=QEXdDO2ut3YA:10
+ a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: 6CXKL1Bl7JVCpFq_7teK4J7jLNJycVGZ
 
-I think I have messed up. Please ignore below mail.
 
-On 07/04/25 2:29 pm, Venkat wrote:
-> On IBM Power9 only below warning is observed.
->
-> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
->
-> I have tested the patch and the above reported warning is fixed. Please add below tag.
->
->
-> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->
-> Regards,
-> Venkat.
->
->
->
+On Wed, 02 Apr 2025 09:40:05 +0100, Alexandru Dadu wrote:
+> Reduce the scope of some loop counters as these aren't needed outside
+> the loops they're used in.
+> 
+> 
+
+Applied, thanks!
+
+[1/1] drm/imagination: loop counters moved to loop scope
+      commit: 81feddc12613567d8206a9697d068711140e9c47
+
+Best regards,
+-- 
+Matt Coster <matt.coster@imgtec.com>
+
