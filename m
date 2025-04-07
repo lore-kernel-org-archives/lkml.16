@@ -1,256 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3D420F06E
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F3D2080EF;
+	Mon,  7 Apr 2025 16:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744042365; cv=none; b=PCPuqt5SkyrGs3CdBpM8mISoJurfXcsk4qECZYRldDHGKGEl15X2k42fAZkYFNgwx6xGrpOnQKppN5qMxGEuUWlkwz7Hc82xr6JuI6AvAbrmkcZJ8V4Ze+OTxC7KQ7mFXPME7Fg+dHzPZc/3C+K3O16R+1Cmzr7MRsxtCC1gJYM=
+	t=1744042368; cv=none; b=UZDUokaU/xGXp18MFGZzfzGmryOW7GC2/LjJjewagTi+7QwSlIu530vHG9GYmRLXOEvUB0kAF4bi3ge5Uo/GYOGqNXpeBbpntRisyXHNXh6zFVIIztLiikQrLSUJLSPOOEpsCGabsDC2s3lgCH20dLt/MOmejsB3z+sPQKNTKkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744042365; c=relaxed/simple;
-	bh=CHVQUjPLvJ7fK0LyaLJS3WmyYbej6Uh9Len6O7znwa8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lQr30UWzQ0JhmiDuCC9h8yAL3RuQGLjWPciwWhT1LQrmXEL30lK70ZZGw8zoyfppXwUTIb4B0Hbpr1PxTR0wZ0HU+GlXYZfOFCaxVrA8f4uR9NdBBJ+/MjJl3o5fXyG1gOqqNc+zN/JaAOSxRjI+2xNnLQIPFZUsH8o0fVj539o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M77DlkIh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744042368; c=relaxed/simple;
+	bh=q+DM7mRmWOxkXvkh3aOXzbgwklXnaznMqTCzPvYOHbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3CEdjw1Qx6zCgDn3/ichbiCYbjg3KlXeN+1BKo6PXLt6+VeDRpMIQdqpskPfaxkfbC8mCLzOee+hyEPaCSBg8rvzs3XuCFiLzDtRAVPS+U9JWniggcYjck4/2id9wOoBrs67AvZ0KPWO5ZVC/a6tqr/DQcLcgS1dftp8/aGMmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0sYCwTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M77DlkIh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744042361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KBIstxJZIatf0asUmmZkh+WHsnG4IUit448otRZVL0U=;
-	b=M77DlkIhPOU1o3OhHSik2Jxcl6Zg9TBoypBQZFNTQRcF0RLIV8t6IMwfqAkxTM3hrB2X3w
-	WBs3TG9Wje/k5G0TjmvxyCVRNsocRl8xBOypRbswscmV233au+Wa/QZjmArtl21JDmLV+g
-	q6ZIQNWQx0tNYyyjv9vM6kPOp8XwYHg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-rRbd53bMP9KgWfP-0uUc9Q-1; Mon,
- 07 Apr 2025 12:12:39 -0400
-X-MC-Unique: rRbd53bMP9KgWfP-0uUc9Q-1
-X-Mimecast-MFC-AGG-ID: rRbd53bMP9KgWfP-0uUc9Q_1744042358
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 316B3180AF4C;
-	Mon,  7 Apr 2025 16:12:38 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.40])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1EAC9195609D;
-	Mon,  7 Apr 2025 16:12:34 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-afs@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0sYCwTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1427DC4CEE7;
+	Mon,  7 Apr 2025 16:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744042368;
+	bh=q+DM7mRmWOxkXvkh3aOXzbgwklXnaznMqTCzPvYOHbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C0sYCwTkOaZdQGWE5ZnS5AwS8Mau5AZfW6ET8TsQLoPZM3+MDOauEwGevLQJgGgkW
+	 lm5swzoo+5+9sxh63pACe1u4ojD8+ja4TuoHZ+SPW9D8aG+U/lhLOUcrz1gdorjIh6
+	 u4NSbQFPpZVuYJ7afxYHoSWSa+ZqhDCwzvaLCp36WVfmINf6RrdwZFUyLH9RXHc65A
+	 P5TMOxWonDolpE6fmkfATv7sVxmDsqr9/r8bB3l1qPPgz9mh8uCNi9VS6Or7JclGj9
+	 8oJ85KJgU8bE63EH13tpQrqlp1KiUZK/vujilnOw1ZZVsx4GdUgRf9vxNautKlN6iy
+	 B4UnCVF3DKIwQ==
+Date: Mon, 7 Apr 2025 17:12:43 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Emanuele Ghidoli <ghidoliemanuele@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 12/13] rxrpc: Add more CHALLENGE/RESPONSE packet tracing
-Date: Mon,  7 Apr 2025 17:11:25 +0100
-Message-ID: <20250407161130.1349147-13-dhowells@redhat.com>
-In-Reply-To: <20250407161130.1349147-1-dhowells@redhat.com>
-References: <20250407161130.1349147-1-dhowells@redhat.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: add toradex,smarc-ec
+Message-ID: <20250407-impurity-cornball-0a1f534f5bf1@spud>
+References: <20250407114947.41421-1-francesco@dolcini.it>
+ <20250407114947.41421-2-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="JmEBwwK8bMXzn6Dv"
+Content-Disposition: inline
+In-Reply-To: <20250407114947.41421-2-francesco@dolcini.it>
 
-Add more tracing for CHALLENGE and RESPONSE packets.  Currently, rxrpc only
-has client-relevant tracepoints (rx_challenge and tx_response), but add the
-server-side ones too.
 
-Further, record the service ID in the rx_challenge tracepoint as well.
+--JmEBwwK8bMXzn6Dv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- include/trace/events/rxrpc.h | 78 +++++++++++++++++++++++++++++++++++-
- net/rxrpc/output.c           |  2 +
- net/rxrpc/rxgk.c             |  4 ++
- net/rxrpc/rxkad.c            |  2 +
- 4 files changed, 85 insertions(+), 1 deletion(-)
+On Mon, Apr 07, 2025 at 01:49:46PM +0200, Francesco Dolcini wrote:
+> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+>=20
+> The Toradex Embedded Controller provides system power-off and restart
+> functionalities.
+> The two variants, SMARC iMX95 and SMARC iMX8P, have a compatible
+> I2C interface.
+> Besides this, different compatible values are defined to allow for
+> future implementation differences.
+>=20
+> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 920439df1f6f..378d2dfc7392 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1201,6 +1201,39 @@ TRACE_EVENT(rxrpc_rx_conn_abort,
- 		      __entry->abort_code)
- 	    );
- 
-+TRACE_EVENT(rxrpc_tx_challenge,
-+	    TP_PROTO(struct rxrpc_connection *conn, rxrpc_serial_t serial,
-+		     u32 version, u32 nonce),
-+
-+	    TP_ARGS(conn, serial, version, nonce),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int,	conn)
-+		    __field(rxrpc_serial_t,	serial)
-+		    __field(u32,		version)
-+		    __field(u32,		nonce)
-+		    __field(u16,		service_id)
-+		    __field(u8,			security_ix)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->conn = conn->debug_id;
-+		    __entry->serial = serial;
-+		    __entry->version = version;
-+		    __entry->nonce = nonce;
-+		    __entry->service_id = conn->service_id;
-+		    __entry->security_ix = conn->security_ix;
-+			   ),
-+
-+	    TP_printk("C=%08x CHALLENGE r=%08x sv=%u+%u v=%x n=%x",
-+		      __entry->conn,
-+		      __entry->serial,
-+		      __entry->service_id,
-+		      __entry->security_ix,
-+		      __entry->version,
-+		      __entry->nonce)
-+	    );
-+
- TRACE_EVENT(rxrpc_rx_challenge,
- 	    TP_PROTO(struct rxrpc_connection *conn, rxrpc_serial_t serial,
- 		     u32 version, u32 nonce, u32 min_level),
-@@ -1213,6 +1246,7 @@ TRACE_EVENT(rxrpc_rx_challenge,
- 		    __field(u32,		version)
- 		    __field(u32,		nonce)
- 		    __field(u32,		min_level)
-+		    __field(u16,		service_id)
- 		    __field(u8,			security_ix)
- 			     ),
- 
-@@ -1222,18 +1256,60 @@ TRACE_EVENT(rxrpc_rx_challenge,
- 		    __entry->version = version;
- 		    __entry->nonce = nonce;
- 		    __entry->min_level = min_level;
-+		    __entry->service_id = conn->service_id;
- 		    __entry->security_ix = conn->security_ix;
- 			   ),
- 
--	    TP_printk("C=%08x CHALLENGE r=%08x sx=%u v=%x n=%x ml=%x",
-+	    TP_printk("C=%08x CHALLENGE r=%08x sv=%u+%u v=%x n=%x ml=%x",
- 		      __entry->conn,
- 		      __entry->serial,
-+		      __entry->service_id,
- 		      __entry->security_ix,
- 		      __entry->version,
- 		      __entry->nonce,
- 		      __entry->min_level)
- 	    );
- 
-+TRACE_EVENT(rxrpc_tx_response,
-+	    TP_PROTO(struct rxrpc_connection *conn, rxrpc_serial_t serial,
-+		     struct rxrpc_skb_priv *rsp),
-+
-+	    TP_ARGS(conn, serial, rsp),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int,	conn)
-+		    __field(rxrpc_serial_t,	serial)
-+		    __field(rxrpc_serial_t,	challenge)
-+		    __field(u32,		version)
-+		    __field(u32,		kvno)
-+		    __field(u16,		ticket_len)
-+		    __field(u16,		appdata_len)
-+		    __field(u16,		service_id)
-+		    __field(u8,			security_ix)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->conn	= conn->debug_id;
-+		    __entry->serial	= serial;
-+		    __entry->challenge	= rsp->resp.challenge_serial;
-+		    __entry->version	= rsp->resp.version;
-+		    __entry->kvno	= rsp->resp.kvno;
-+		    __entry->ticket_len = rsp->resp.ticket_len;
-+		    __entry->service_id = conn->service_id;
-+		    __entry->security_ix = conn->security_ix;
-+			   ),
-+
-+	    TP_printk("C=%08x RESPONSE r=%08x cr=%08x sv=%u+%u v=%x kv=%x tl=%u",
-+		      __entry->conn,
-+		      __entry->serial,
-+		      __entry->challenge,
-+		      __entry->service_id,
-+		      __entry->security_ix,
-+		      __entry->version,
-+		      __entry->kvno,
-+		      __entry->ticket_len)
-+	    );
-+
- TRACE_EVENT(rxrpc_rx_response,
- 	    TP_PROTO(struct rxrpc_connection *conn, rxrpc_serial_t serial,
- 		     u32 version, u32 kvno, u32 ticket_len),
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 8138f35d7945..0af19bcdc80a 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -953,6 +953,8 @@ void rxrpc_send_response(struct rxrpc_connection *conn, struct sk_buff *response
- 	serial = rxrpc_get_next_serials(conn, 1);
- 	wserial = htonl(serial);
- 
-+	trace_rxrpc_tx_response(conn, serial, sp);
-+
- 	ret = skb_store_bits(response, offsetof(struct rxrpc_wire_header, serial),
- 			     &wserial, sizeof(wserial));
- 	if (ret < 0)
-diff --git a/net/rxrpc/rxgk.c b/net/rxrpc/rxgk.c
-index 6175fc54ba90..ba8bc201b8d3 100644
---- a/net/rxrpc/rxgk.c
-+++ b/net/rxrpc/rxgk.c
-@@ -668,6 +668,8 @@ static int rxgk_issue_challenge(struct rxrpc_connection *conn)
- 	serial = rxrpc_get_next_serials(conn, 1);
- 	whdr->serial = htonl(serial);
- 
-+	trace_rxrpc_tx_challenge(conn, serial, 0, *(u32 *)&conn->rxgk.nonce);
-+
- 	ret = do_udp_sendmsg(conn->local->socket, &msg, len);
- 	if (ret > 0)
- 		conn->peer->last_tx_at = ktime_get_seconds();
-@@ -1203,6 +1205,8 @@ static int rxgk_verify_response(struct rxrpc_connection *conn,
- 	if (xdr_round_up(token_len) + sizeof(__be32) > len)
- 		goto short_packet;
- 
-+	trace_rxrpc_rx_response(conn, sp->hdr.serial, 0, sp->hdr.cksum, token_len);
-+
- 	offset	+= xdr_round_up(token_len);
- 	len	-= xdr_round_up(token_len);
- 
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 0b5e007c7de9..3657c0661cdc 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -685,6 +685,8 @@ static int rxkad_issue_challenge(struct rxrpc_connection *conn)
- 	serial = rxrpc_get_next_serial(conn);
- 	whdr.serial = htonl(serial);
- 
-+	trace_rxrpc_tx_challenge(conn, serial, 0, conn->rxkad.nonce);
-+
- 	ret = kernel_sendmsg(conn->local->socket, &msg, iov, 2, len);
- 	if (ret < 0) {
- 		trace_rxrpc_tx_fail(conn->debug_id, serial, ret,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+--JmEBwwK8bMXzn6Dv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/P5ewAKCRB4tDGHoIJi
+0u4lAQDnMq7Y/0H1ump4Uxo6/BIgrEqL9zrv0ik35Tyv+t7HQgEA4Uhiamuict3T
+BNZNPwb09KqXJk62YuhBLMMk/IHMEAc=
+=G/o+
+-----END PGP SIGNATURE-----
+
+--JmEBwwK8bMXzn6Dv--
