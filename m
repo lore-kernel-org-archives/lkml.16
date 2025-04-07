@@ -1,97 +1,66 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3D222AE5E;
-	Mon,  7 Apr 2025 08:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4F022AE4E;
+	Mon,  7 Apr 2025 08:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016387; cv=none; b=XSBanttIsfuEqNZtulTMccusgB5Qktl37Jrvj7RWTRhe4CTMh7N0Dkdmcv9SBbDBWQbQIQ8MIp0rtgJSFbXO26YUE+VZLqvyvODQ+TGH6qPgTireMb5CpcRW6tZn42P/4yfKsalMStMnE5b0j55hKwj+MhkLo/nfhrOmWCy/Bb0=
+	t=1744016395; cv=none; b=XhLvnoFrg6ben7uPWEGIpXekNWk587LnqXMo5LMxUcNv3WejS1b8UeUJGGP2ne6DBzgCX10b0uXBqwU6kPVHvK+CrHVH/sdebKTud2YFK3gEOnRozDlHgzWjBElfSCSU389m8Ibmiy9y7l0Vd33IocgzEuEQmKJIbu/FB7mzoRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016387; c=relaxed/simple;
-	bh=QukZAP/ULk9OvNrWPpJlqCslREUkQ5qQmKtJqtFGgqg=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=JWTYrrUWs3I1H/5vLyU4LFHoI3iJoefZP/LhJodXltt1+ghmImcSTJdshetvoQ9TNq+uRBio0IoKzsUuuBIx4953AFS2IBdxivwOzUis9YCNfyom+U2Mi6IElE/wHCAzzBLYgXqCgQSrv1pQU9+979DGztCWyy7kCftbuVBEiVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CbLgWycD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CbLgWycD"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378NQ5L017568;
-	Mon, 7 Apr 2025 08:59:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=QukZAP/ULk9OvNrWPpJlqCslREUk
-	Q5qQmKtJqtFGgqg=; b=CbLgWycDGGtIk6WqfLt654ilx6qyrrwFTx9uQL3rtHls
-	2k14dU7xANDpSh0fUEHpPY7YuKgoYI6RJ4R81Qz0C73XlMsj4ykDpuVJOZxRobSH
-	4qdfTWMK/HlM+VqFxD1JACXVVDlWt2GpdQJUEiG9Pqkt4BnQ0X+lCrTAVcjNGbN+
-	EPFiCs+8qT1WtLEa6sbXpDC1Tr4kNkcYa4SQLkhkP7BffnMwnuK0lUjD2i2zWYL4
-	kzfXjxLWUb+9kdSLtFm6h1f7c6ootHlm3qXPgkB1sSEStL/DkvL9X0GBxsmWBY8g
-	992IPwbEVl/COW/ywagXk42L7yxlqEs/NZ+ixgbd0Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uu1pkeyv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 08:59:33 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5374bweH011326;
-	Mon, 7 Apr 2025 08:59:32 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yd6td-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 08:59:32 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5378xVG119595944
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:59:31 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D56258055;
-	Mon,  7 Apr 2025 08:59:31 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E5D8158043;
-	Mon,  7 Apr 2025 08:59:29 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.255.9])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  7 Apr 2025 08:59:29 +0000 (GMT)
-From: Venkat <venkat88@linux.ibm.com>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1744016395; c=relaxed/simple;
+	bh=/KZr0izSTAZMM0jVYPGx+EQyA76KAy1RBD0L3EszOIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdTcI6fiNiE+nXwqGpp9oFgLzZa+afKKeHwoXx7oBoX/OYfiTl55s9B4Cw9vqM4HyC/c06l2/8/DYSafsCWaKekgTdw65CgNHYLvCl2hvnRkRrmAfiXJ1Om3DKlQXqhfCHnH2mdoqdoh17xMd/HNFQSQH3dQGpV+FFNoomRO6pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 2DB0768BFE; Mon,  7 Apr 2025 10:59:44 +0200 (CEST)
+Date: Mon, 7 Apr 2025 10:59:44 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Muchun Song <muchun.song@linux.dev>
+Cc: Huan Yang <link@vivo.com>, bingbu.cao@linux.intel.com,
+	Christoph Hellwig <hch@lst.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	opensource.kernel@vivo.com
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+Message-ID: <20250407085943.GA27481@lst.de>
+References: <20250327092922.536-1-link@vivo.com> <20250404090111.GB11105@lst.de> <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev> <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev> <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com> <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev> <6f76a497-248b-4f92-9448-755006c732c8@vivo.com> <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev> <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: linux-next: build warnings after merge of Linus' tree
-Message-Id: <9B0D38E4-3414-43B9-8F41-D552755DC81E@linux.ibm.com>
-Date: Mon, 7 Apr 2025 14:29:17 +0530
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, rdunlap@infradead.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-To: peterz@infradead.org
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RB4JDKZU8B1RvoOy8htbA07n5K3dBLaU
-X-Proofpoint-ORIG-GUID: RB4JDKZU8B1RvoOy8htbA07n5K3dBLaU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- bulkscore=0 phishscore=0 mlxlogscore=427 spamscore=0 impostorscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504070064
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On IBM Power9 only below warning is observed.=20
+On Mon, Apr 07, 2025 at 02:43:20PM +0800, Muchun Song wrote:
+> By the way, in case you truly struggle to comprehend the fundamental
+> aspects of HVO, I would like to summarize for you the user-visible
+> behaviors in comparison to the situation where HVO is disabled.
+> 
+> HVO Status		Tail Page Structures	Head Page Structures
+> Enabled			Read-Only (RO)		Read-Write (RW)
+> Disabled		Read-Write (RW)		Read-Write (RW)
+> 
+> The sole distinction between the two scenarios lies in whether the
+> tail page structures are allowed to be written or not. Please refrain
+> from getting bogged down in the details of the implementation of HVO.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
-
-I have tested the patch and the above reported warning is fixed. Please =
-add below tag.
-
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-Regards,
-Venkat.
-
+This feels extremely fragile to me.  I doubt many people know what
+operations needs read vs write access to tail pages.  Or for higher
+level operations if needs access to tail pages at all.
 
