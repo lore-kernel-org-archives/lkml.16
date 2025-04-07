@@ -1,98 +1,93 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1930542A97
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85ED519F40A;
+	Mon,  7 Apr 2025 09:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744017850; cv=none; b=pVu7qYcW2MCFAtYe7NiUjzIZr2+EIuuhrrpMjYpa15bUnPhMpm61O5DY6K7Y1NEelk18qAIu5LCjkJMqIEkV3AI9KVRdctl1dcHBkVXmkoI+C5mcBtoIbwRtFDzxMqAy7CwmmGCNc69K6TPeU+241xaDWrn6Rj3JDkcZvrPY65U=
+	t=1744017891; cv=none; b=l5to9ASVcqwQLALoPsuySMD/dgUbnvAe2GZOZzN2lAyKs1a+XB1oQnl0yW5F4npcVknPlLhhZ7eKVKAnNiB1syP5JUGgrr4VhO3ZRYGQoKDIC3g1EdvlvuvsPg+R3D8lgAjTMYNi58ynMugTXezCTHbAoyadkXFXhLF7eAz/z5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744017850; c=relaxed/simple;
-	bh=gq1Xj/M3orWe8oAAO6fD3x0IRJTeENqeec0izr4rszg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bmsGAzuAST+LH6JbBNeplZVOfqJa96HQb5syHFrDMIQzpYmPNj5nTjDfdXZimX7Dar9Xy80ZwKBTY5UnvlxFLRHAoVg1yO6oBOAnCLUWjYgKMG/EEYVMVbNqc1AIt4tbcl0ZUK+th1ZHIVP134KTFDKNsxLBWJPKbYf8sVHnGjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d3JbWkbc; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744017891; c=relaxed/simple;
+	bh=Y7Wep/Ex4FCqkpNl8itbZHa4HzPYS0ZPyqV7jJZj6mE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=ZHH0z1ScamMgfoCOvIOkjDpB83lqW0wr5m2Ln1Ym+lDE/QG9fgopJNOkff0SpE0F6TT+Y2LkpCn4RDqcBH7xWcThn0MQ+Wqfkr8M3lwzI6WTI+lRPI3hOlAGawXeUfxV0iJrc5IvB6vWV6+RQ80J3AkIWbsQ+QjmSnVT2hQO4NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ALjTthH5; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d3JbWkbc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8TN9/
-	6BnKvyU3e8vS2iprMvt0bdbH7kVE3wStXcniB4=; b=d3JbWkbc94Y9e0M1/KoJZ
-	kJCyNIX5hYPPv5KEDfpgU49ogkrXWuQDHG99CC1liP2oR3dx8/IgApfkGGeUbeDF
-	n7xib3tanF2iFbJPf+/cjXtxJqYpwkjKpUT6vn+EejgVSGa8fgxK9zigJF+vNWNF
-	IrkHR5+Jej5uuiiwHABwNg=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDn32p6mfNne6pOEw--.1721S2;
-	Mon, 07 Apr 2025 17:23:06 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	ryan.roberts@arm.com,
-	ioworker0@gmail.com
-Cc: xavier_qy@163.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] mm/contpte: Optimize loop to reduce redundant operations
-Date: Mon,  7 Apr 2025 17:22:43 +0800
-Message-Id: <20250407092243.2207837-1-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ALjTthH5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744017886; x=1744622686; i=markus.elfring@web.de;
+	bh=Y7Wep/Ex4FCqkpNl8itbZHa4HzPYS0ZPyqV7jJZj6mE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ALjTthH5wW0M30q6hXCIj7OJtGa+JU2F6TkjCN/dm7W0ozIiQNLSq8CE6dFBSU7s
+	 L+SLuE0uByBzoQEgd0kJJpVjln7qSMZRl6lbzoEeSQ54iOA9ql5kHIHGTqSpyBhws
+	 LiCHlcNoieFdxtAhlmIv+CsnL0sOo8bTtay6LMl8U+PbMQSXDnY4huTk0MerGQUL0
+	 EFBbG3fjnbHT07FYjBJyNFvqXiXCQeTwDi8PRbtRgOkgOa3TJc3Dwhz9IJy1BAll/
+	 azBhmksdGzkaaQTafyW52nIq8QS1Zhnugb8sHeFTtibgwWy77qb26ujlIwUHb79xw
+	 mx6YSa+Y3EaXmQrhiA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.4]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnG2Q-1tKiwE1oKC-00am9q; Mon, 07
+ Apr 2025 11:24:46 +0200
+Message-ID: <46d19d22-bd7e-4bfb-8cd0-205d6cd55509@web.de>
+Date: Mon, 7 Apr 2025 11:24:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn32p6mfNne6pOEw--.1721S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrur43Cr17tw15uF4xZry7KFg_yoWkArb_Zr
-	4xtasxXF1UJFyjgFyUt398Gryjgayj93W3JFn29r1UXryfW3yfXrZ2qF92gF1xWrWagr45
-	trn8Jr13uFnrCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNE_MDUUUUU==
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiTh8oEGfzkOnw9AABsB
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-pm@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Cristian Marussi <cristian.marussi@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla
+ <sudeep.holla@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>
+References: <20250405055447.73925-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH] cpufreq: scmi: Fix null-ptr-deref in
+ scmi_cpufreq_get_rate()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250405055447.73925-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zrwSZtb72r6Ymls6zRupndXyWr82t7wtXvEnv4NziLlT2xnmKdS
+ zc2vwYBwvu3Fw9FUbEUysVQGROZq3g8tYELwiRhJpHansNTw7QoX68obh7R1GCnF89Km5K2
+ RsnNTCo+nOui+SC9S5F4XMw7o6WJW4uL0MqqSN0W0XqpKX1UXMFFC8wceJfRYOZm3SsuVrx
+ oYGJtZy/8gSCfqE1Kr0Vw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:80qe5cnW1V8=;NckIWCSnzH9bSPLAp2QcPrOsMmY
+ ipRzMR30Nx1/FOduRWLVuVLas06AEhR21RyMRp6TTM6LBmepA5cepKpyGn6n4aRYilimRAl6J
+ Q9qENjJknwyfeTa19pgtE8B0kljVPY3lI6/KvGgPYhtHhuA7cOSDix6/s09IZvDhArLXPpNyH
+ MQWoQBk6N9ZC0flAbLoL/2FvY6CPxjEOsIXaQ499/YUUhYT+iJQ8gI8956bE7LZ6XPo4Q9Oa8
+ ZkhfD/rfQwPwhosiC6tE8TV/Z6+abm28pC75LUlI+QJe1vJY/a16t3s0iIpckLCkibOuVo2zd
+ FJ2ORgwqj52EmopP1E4d2hHq+kWJQ5x5uWeLGr50n8IVxUdyIdbC4qQNnfdjHUTMfJkV9KLsE
+ LRjDXI7Z6j7Y05viLVzW6edeIhmgjkjBqdyiJu2Ryyo7kXceA6ckb4JZzhq/dYU0dUmGLY+ho
+ ZLQSXMcUZz+5VNE2tu01G8DQKOgh/lZqLwLuwi31X/QIaJ8ct5X7IJx9cW15UNyIqB/g7KOf8
+ ywjtVJPgoeClsUjFa0iMFzbMgEFGOmIfy6p9/4Jw3QkQrGhsyN57Pvf1tYLhxGDXuJmodJsVw
+ OfUUmMt/OaE81eiXwzkj2fA5Gr/crVonBtGjXTaqS6jmAWQOZMrVfL3xL1alN6QR/aR+u3Alg
+ ri35pZPn6YOjaVm700nzB+wac/aJAI6xu4lPPjkagqqgx3PwPPFwYOogacOJz7S13cCSXJwkY
+ bXUZ8iuBQfSNKDoJIhl55E1G05LUpAWQ8Qaj/DqalQDJIemQvwNHfu9JgxKiSb23ibCzrTEec
+ uYCi9jYO4OY5ZYCtYxx2LgjVbaQGMhLCbEy4xxSdc8qBaD2c4/w9x993v6RkO4Z9VoaYS9qYE
+ 6HcISyHh1DdnNS8qqKYzfcSrm9fzPind3wpzVUnPDmNiOWl/hX5s7I+gWE/aTdzhG9aXK2y/v
+ 2tIaXj8h0RkJNME36RVMH9AFjjmDwiH9aEx1bFm+cwn312o/TKNeBheP4EZypef69VJC0E1gY
+ wjbWG1MJNwF/glqsQcJG+jmXzVMcqBVLRLZ15ZEMj48OEgWFFbsspCrADwHyIKYMxEEp2dSae
+ 4Hst70TqNGIweaahd0bGMHa6NyXqOJ/RHYiEVetPWG5gX8BB4SFLVXoHROJ0+elVoGCDhzfMv
+ z0VGR5N3j8NA9HJ7XTZ3L30JYGCMHGKiW+G6P9Ln7V4tfRapuvErg9/c9y8BWacOYBkug2drK
+ N0FX1pKRqHCWruezIMLqMZsj1i1gXjSaLoIIywy/QPvu8n6DlFPycLGyua8BhmaGz31RVk5vK
+ ml4nmSgY0zwSHXdo2X10x8sQ8o+2alUFHJGQmwcPOl7OuI9/E+qO/E2X7eA6Wc7di/WR1FZox
+ T/6mhkVfB3euZYBdeH7KNtACPOi52tROhXYPvLEpoCaT5nGgDzewxxOpO1rIbzKGQVSOqgM5D
+ GvyR6uyl9emyVu17tXU0gKRhCJ3URlBV/QAp1u4Bp5ZYjJ3ym
 
-This commit optimizes the contpte_ptep_get function by adding early
- termination logic. It checks if the dirty and young bits of orig_pte
- are already set and skips redundant bit-setting operations during
- the loop. This reduces unnecessary iterations and improves performance.
+=E2=80=A6
+> Add NULL check after cpufreq_cpu_get_raw() to prevent this issue.
 
-Signed-off-by: Xavier <xavier_qy@163.com>
----
- arch/arm64/mm/contpte.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Can any other summary phrase variant become more desirable accordingly?
 
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index bcac4f55f9c1..ca15d8f52d14 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -163,17 +163,26 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
- 
- 	pte_t pte;
- 	int i;
-+	bool dirty = false;
-+	bool young = false;
- 
- 	ptep = contpte_align_down(ptep);
- 
- 	for (i = 0; i < CONT_PTES; i++, ptep++) {
- 		pte = __ptep_get(ptep);
- 
--		if (pte_dirty(pte))
-+		if (!dirty && pte_dirty(pte)) {
-+			dirty = true;
- 			orig_pte = pte_mkdirty(orig_pte);
-+		}
- 
--		if (pte_young(pte))
-+		if (!young && pte_young(pte)) {
-+			young = true;
- 			orig_pte = pte_mkyoung(orig_pte);
-+		}
-+
-+		if (dirty && young)
-+			break;
- 	}
- 
- 	return orig_pte;
--- 
-2.34.1
-
+Regards,
+Markus
