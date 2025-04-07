@@ -1,134 +1,315 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDB121B9F7;
-	Mon,  7 Apr 2025 17:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59D21CA0D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047229; cv=none; b=PRY/7ESxl2UsfJhB6e5t5MOU7HENkJTumHqoDUiA4h5yS4i10jgu3i131kIFhhteaYi5vAPMcA61qG0wTafDcgzOQgAFY0/8C+IEKtYvgZS77kideH0W5l5WLVNwFdDXTMUqd4OzlWY8eKFzNwsR4304xxdsw6HryWBzuP00YlA=
+	t=1744047232; cv=none; b=sVxrsLiJLLBmkDULfkJdaYLAlzyxf3wkawoVUyH8E3+Vbp0Wd72VkmaSPnt43IRZsEjV3SA+XDmstwW7VhJ8rQ8ypOrp+153aJ+riIyPEJyK/L6Phm7yYxEUIi1+UyRBPBnKf6CWXTsS0prf5pF253Gvna0wcAxC9ylUJyZf03I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047229; c=relaxed/simple;
-	bh=43EUjzsJrbIj5lwOeksbNo3oJD//CY9Yr3R4TUrVDs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ih+hMArIRrnfYA2ZtHqoTV/monNrgbGIx8p9Ydj8eEGIymSv0IGugLW0HOS+Ty/wzSvoVH0U4UhB6lDGUNwvakq/wdAZTGzzHPcHuLGDySbAnpjMwrWsWY0OMTKzY7C3/tdxTOPQkoPfIJuh+ZERgnIsKv42oZ7/EkA3/DjDIJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=fVJdzCDe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MjrhbkZi; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1744047232; c=relaxed/simple;
+	bh=OVj9Ib21dXimZLr1073/sKR4D7bcHA8iGi2AcUi8iiQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D2UIA2oZbed0kZikL0K3KRLjvBtOBe2L1Gj09bihPrOzTn5IlgfU0Gq4GPjcEGkzmb/r9cOBPWoGmPP0e59z60je5RyPcp1rX6bZ/CsCdJZWeCV30X9gATdF3WtM9quKK8N1lU9ANN+V8PLLVluSYaWxTgBADqUXEsmLeOFWpyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HIMZ5NPP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="fVJdzCDe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MjrhbkZi"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 73609114017C;
-	Mon,  7 Apr 2025 13:33:45 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 07 Apr 2025 13:33:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1744047225; x=
-	1744133625; bh=rOJzUg2Z5K8abGAZ6cTAjToJiu9EAfJ9aa8qOahrQmQ=; b=f
-	VJdzCDeLdqn3xJxSLqXhQOmDzk8oDAEY0guunfyBSbz0cG0/NpjJ/i/fh+QP0evn
-	UlB8x0SZk6/42mbV8Ru3ino0HSFVohqFxkZPqRZkEUJnuPtv5VjGjCVoOqnPoPuL
-	GLVxVnAXVyFwnW8q1bg9WK1+fzWzciuUXLVOP3Lw+6HV5DJgo6zPNwlLVz3qtwp9
-	QdMuaCZva5+ZF2FEbBblhNa4zwNKu48DNtY0dOsDAuEvL3BXVDVc1KEUNuRarapb
-	ak+ft+4W3NsNPEY7KIOxFJ5UGR842XtHTDUi94HpQe1dOrI4BAMdW4XiNooEkavM
-	L8HV7VnD2blR1TUbvUWnA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744047225; x=1744133625; bh=rOJzUg2Z5K8abGAZ6cTAjToJiu9EAfJ9aa8
-	qOahrQmQ=; b=MjrhbkZiFT0ljg5hOuwZCPpBavvRiXba4TXQEIXWIbjp2Emgh7M
-	GSwj6fREyoSLeLH11GxCTAcKF58NHA5dZAtDDv753eHKQGkmgnM4nCFOz0oNYQe3
-	pQiUUetIvCWhH7JKi4y2Kw++Un5rLvK0tafsWAU/ijQqjXaZ3Y6Nf2bkUhGgWaHK
-	6IMrtWHYAcj6kUXg/eeMCc00hqEVnvtsfNSIzCrKxu25BSd/q3HUr0xgfJ8t53Uj
-	3acRl9hvwX5ulvpWZvRdLpTKjHsKEbQVA5CSWc7PQ3SEcdztcWMWvOob1xN/R/x9
-	sDLnFosfgpNie1eTDqUzCRygDRlqqoGjiYw==
-X-ME-Sender: <xms:eAz0ZwjHnpJgtanECsN6naUH00uYVcMFlVM-58W-MFlU2HCkbkJR6g>
-    <xme:eAz0Z5AKwsfhy-kbm5Jk_1dEd1xvfZsv83AWMU78Wn4X6EzroSN6dFEuuHpy9GyBB
-    5ctmSw1e_16RCTev9k>
-X-ME-Received: <xmr:eAz0Z4E3PPdC0YIyeso4hI7M-GZ1ywdocoVTn9M59q8sG2Vu90EizoneXfklDrc__jC1Qg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtkeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhinhhgohes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslh
-    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguihhonhhnrghglhgriigvsehg
-    ohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgdoghhithesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgr
-    shdrlhgvnhgurggtkhihsegrmhgurdgtohhm
-X-ME-Proxy: <xmx:eAz0ZxT0UKzcOcivwsNglq4oowhd-Mr8Htp5NBrJLCxyD8Rw-cD1Rw>
-    <xmx:eAz0Z9yodbCpMEKGy0PpSI-r1fDEcIkTRkFENQT9pKzB_iM9oBGhWA>
-    <xmx:eAz0Z_4phctABvZGCT7dDRLY-rit4buJB5Or7mGrZiIfulo9IS6Csw>
-    <xmx:eAz0Z6ymMrhDNFI15-U80FCa0nL8ICFGhwIfK-wfEmZu89YAwppVWA>
-    <xmx:eQz0Z9k3U8O9p9okIOZjokXBTkB6Ecg9S_R_i4gkUITs-vjb25b77pG5>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 7 Apr 2025 13:33:40 -0400 (EDT)
-Date: Mon, 7 Apr 2025 20:33:37 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
- SEV-SNP
-Message-ID: <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
-References: <20250404082921.2767593-5-ardb+git@google.com>
- <20250404082921.2767593-8-ardb+git@google.com>
- <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
- <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
- <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
- <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
- <Z_QA6GwqoxdW6D0e@gmail.com>
- <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIMZ5NPP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744047229;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nPKTO/lkAm23+jGXrw/+m68oGTpukXV85p9697O5xzI=;
+	b=HIMZ5NPPNsuxcGkWSrAfIYAAfi4V28qC1H6AWCubFhQ8H3iOz8BowjdBHjeJnY4D2HJaOJ
+	mYBsvuYOpgCuxErUsl6UUfpFX1BrRLBHzlnZjuC6ttYI1Zszw9vlNCyzMqZ4AqiHYU7ZVk
+	NhIbhj42qQPWvwZUtbbPjdxzra+Ea1U=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-J8Mg4pjHMaWQLk82l9cgyw-1; Mon,
+ 07 Apr 2025 13:33:44 -0400
+X-MC-Unique: J8Mg4pjHMaWQLk82l9cgyw-1
+X-Mimecast-MFC-AGG-ID: J8Mg4pjHMaWQLk82l9cgyw_1744047219
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0F851801A07;
+	Mon,  7 Apr 2025 17:33:39 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4C524180B488;
+	Mon,  7 Apr 2025 17:33:33 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Michal Schmidt <mschmidt@redhat.com>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 25/28] dpll: zl3073x: Add support to get phase offset on input pins
+Date: Mon,  7 Apr 2025 19:32:58 +0200
+Message-ID: <20250407173301.1010462-6-ivecera@redhat.com>
+In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 07, 2025 at 07:21:17PM +0200, Ard Biesheuvel wrote:
-> On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
-> >
-> > > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
-> > > > If the GHCB is available, we should always prefer it.
-> > >
-> > > I believe we should consider the cost of code duplication in this
-> > > situation.
-> > >
-> > > If the non-early version is only used in the kexec path, it will not be
-> > > tested as frequently and could be more easily broken. I think it would be
-> > > acceptable for kexec to be slightly slower if it results in more
-> > > maintainable code.
-> >
-> > Absolutely so.
-> >
-> 
-> It would be nice if someone could quantify 'slightly slower' - I am
-> leaning to the same conclusion but I have no clue what the actual
-> performance impact is.
+This adds support to get phase offset for the input pins. Implement
+the appropriate callback that performs DPLL to reference phase
+error measurement and reports the measured value. If the DPLL is
+currently locked to different reference with higher frequency
+then the phase offset is modded to the period of the signal
+the DPLL is locked to.
 
-If we can survive the performance of the initial boot, we can live with it
-for kexec.
+Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/dpll/dpll_zl3073x.c | 156 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 155 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/dpll/dpll_zl3073x.c b/drivers/dpll/dpll_zl3073x.c
+index c920904008e22..3b28d229dd4be 100644
+--- a/drivers/dpll/dpll_zl3073x.c
++++ b/drivers/dpll/dpll_zl3073x.c
+@@ -36,6 +36,15 @@ ZL3073X_REG8_IDX_DEF(dpll_refsel_status,	0x130, ZL3073X_NUM_CHANNELS, 1);
+ #define DPLL_REFSEL_STATUS_STATE_ACQUIRING	3
+ #define DPLL_REFSEL_STATUS_STATE_LOCK		4
+ 
++/*
++ * Register Map Page 4, Ref
++ */
++ZL3073X_REG8_DEF(ref_phase_err_read_rqst,	0x20f);
++#define REF_PHASE_ERR_READ_RQST_RD		BIT(0)
++
++ZL3073X_REG48_IDX_DEF(ref_phase,		0x220,
++						ZL3073X_NUM_INPUT_PINS, 6);
++
+ /*
+  * Register Map Page 5, DPLL
+  */
+@@ -48,6 +57,13 @@ ZL3073X_REG8_IDX_DEF(dpll_mode_refsel,		0x284, ZL3073X_NUM_CHANNELS, 4);
+ #define DPLL_MODE_REFSEL_MODE_NCO		4
+ #define DPLL_MODE_REFSEL_REF			GENMASK(7, 4)
+ 
++ZL3073X_REG8_DEF(dpll_meas_ctrl,		0x2d0);
++#define DPLL_MEAS_CTRL_EN			BIT(0)
++#define DPLL_MEAS_CTRL_AVG_FACTOR		GENMASK(7, 4)
++
++ZL3073X_REG8_DEF(dpll_meas_idx,			0x2d1);
++#define DPLL_MEAS_IDX_IDX			GENMASK(2, 0)
++
+ /*
+  * Register Map Page 9, Synth and Output
+  */
+@@ -104,6 +120,7 @@ struct zl3073x_dpll_pin_info {
+  * @prio: pin priority <0, 14>
+  * @selectable: pin is selectable in automatic mode
+  * @pin_state: last saved pin state
++ * @phase_offset: last saved pin phase offset
+  */
+ struct zl3073x_dpll_pin {
+ 	struct dpll_pin			*dpll_pin;
+@@ -111,6 +128,7 @@ struct zl3073x_dpll_pin {
+ 	u8				prio;
+ 	bool				selectable;
+ 	enum dpll_pin_state		pin_state;
++	s64				phase_offset;
+ };
+ 
+ /**
+@@ -558,6 +576,120 @@ zl3073x_dpll_connected_ref_get(struct zl3073x_dpll *zldpll, u8 *ref)
+  *
+  * Returns 0 in case of success or negative value otherwise.
+  */
++static int
++zl3073x_dpll_input_pin_phase_offset_get(const struct dpll_pin *dpll_pin,
++					void *pin_priv,
++					const struct dpll_device *dpll,
++					void *dpll_priv, s64 *phase_offset,
++					struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll *zldpll = dpll_priv;
++	struct zl3073x_dev *zldev = zldpll->mfd;
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	u8 dpll_meas_ctrl, dpll_meas_idx;
++	u8 conn_ref, ref_id, ref_status;
++	s64 ref_phase;
++	int rc;
++
++	/* Take device lock */
++	guard(zl3073x)(zldev);
++
++	/* Get index of the pin */
++	ref_id = zl3073x_dpll_pin_index_get(pin);
++
++	/* Wait for reading to be ready */
++	rc = zl3073x_wait_clear_bits(zldev, ref_phase_err_read_rqst,
++				     REF_PHASE_ERR_READ_RQST_RD);
++	if (rc)
++		return rc;
++
++	/* Read measurement control register */
++	rc = zl3073x_read_dpll_meas_ctrl(zldev, &dpll_meas_ctrl);
++	if (rc)
++		return rc;
++
++	/* Enable measurement */
++	dpll_meas_ctrl |= DPLL_MEAS_CTRL_EN;
++
++	/* Update measurement control register with new values */
++	rc = zl3073x_write_dpll_meas_ctrl(zldev, dpll_meas_ctrl);
++	if (rc)
++		return rc;
++
++	/* Set measurement index to channel index */
++	dpll_meas_idx = FIELD_PREP(DPLL_MEAS_IDX_IDX, zldpll->id);
++	rc = zl3073x_write_dpll_meas_idx(zldev, dpll_meas_idx);
++	if (rc)
++		return rc;
++
++	/* Request read of the current phase error measurements */
++	rc = zl3073x_write_ref_phase_err_read_rqst(zldev,
++						   REF_PHASE_ERR_READ_RQST_RD);
++	if (rc)
++		return rc;
++
++	/* Wait for confirmation from the device */
++	rc = zl3073x_wait_clear_bits(zldev, ref_phase_err_read_rqst,
++				     REF_PHASE_ERR_READ_RQST_RD);
++	if (rc)
++		return rc;
++
++	/* Read DPLL-to-REF phase measurement */
++	rc = zl3073x_read_ref_phase(zldev, ref_id, &ref_phase);
++	if (rc)
++		return rc;
++
++	/* Perform sign extension for 48bit signed value */
++	ref_phase = sign_extend64(ref_phase, 47);
++
++	/* Register units are 0.01 ps -> convert it to ps */
++	ref_phase = div_s64(ref_phase, 100);
++
++	/* Get currently connected reference */
++	rc = zl3073x_dpll_connected_ref_get(zldpll, &conn_ref);
++	if (rc)
++		return rc;
++
++	/* Get this pin monitor status */
++	rc = zl3073x_read_ref_mon_status(zldev, ref_id, &ref_status);
++	if (rc)
++		return rc;
++
++	/* The DPLL being locked to a higher freq than the current ref
++	 * the phase offset is modded to the period of the signal
++	 * the dpll is locked to.
++	 */
++	if (ZL3073X_REF_IS_VALID(conn_ref) && conn_ref != ref_id &&
++	    ref_status == REF_MON_STATUS_OK) {
++		u64 conn_freq, ref_freq;
++
++		/* Get frequency of connected ref */
++		rc = zl3073x_dpll_input_ref_frequency_get(zldev, conn_ref,
++							  &conn_freq);
++		if (rc)
++			return rc;
++
++		/* Get frequency of given ref */
++		rc = zl3073x_dpll_input_ref_frequency_get(zldev, ref_id,
++							  &ref_freq);
++		if (rc)
++			return rc;
++
++		if (conn_freq > ref_freq) {
++			s64 conn_period;
++			int div_factor;
++
++			conn_period = (s64)div_u64(PSEC_PER_SEC, conn_freq);
++			div_factor = div64_s64(ref_phase, conn_period);
++			ref_phase -= conn_period * div_factor;
++		}
++	}
++
++	*phase_offset = ref_phase;
++
++	return rc;
++}
++
+ static int
+ zl3073x_dpll_ref_prio_get(struct zl3073x_dpll_pin *pin, u8 *prio)
+ {
+@@ -1110,6 +1242,7 @@ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
+ 	.frequency_get = zl3073x_dpll_input_pin_frequency_get,
+ 	.frequency_set = zl3073x_dpll_input_pin_frequency_set,
++	.phase_offset_get = zl3073x_dpll_input_pin_phase_offset_get,
+ 	.prio_get = zl3073x_dpll_input_pin_prio_get,
+ 	.prio_set = zl3073x_dpll_input_pin_prio_set,
+ 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
+@@ -1805,6 +1938,8 @@ zl3073x_dpll_periodic_work(struct kthread_work *work)
+ 	for (i = 0; i < ZL3073X_NUM_INPUT_PINS; i++) {
+ 		struct zl3073x_dpll_pin *pin;
+ 		enum dpll_pin_state state;
++		s64 phase_offset;
++		bool pin_changed;
+ 
+ 		/* Input pins starts are stored after output pins */
+ 		pin = &zldpll->pins[ZL3073X_NUM_OUTPUT_PINS + i];
+@@ -1821,13 +1956,32 @@ zl3073x_dpll_periodic_work(struct kthread_work *work)
+ 		if (rc)
+ 			goto out;
+ 
++		rc = zl3073x_dpll_input_pin_phase_offset_get(pin->dpll_pin,
++							     pin,
++							     zldpll->dpll_dev,
++							     zldpll,
++							     &phase_offset,
++							     NULL);
++		if (rc)
++			goto out;
++
+ 		if (state != pin->pin_state) {
+ 			dev_dbg(zldev->dev,
+ 				"INPUT%u state changed to %u\n",
+ 				zl3073x_dpll_pin_index_get(pin), state);
+ 			pin->pin_state = state;
+-			dpll_pin_change_ntf(pin->dpll_pin);
++			pin_changed = true;
+ 		}
++		if (phase_offset != pin->phase_offset) {
++			dev_dbg(zldev->dev,
++				"INPUT%u phase offset changed to %llu\n",
++				pin->index, phase_offset);
++			pin->phase_offset = phase_offset;
++			pin_changed = true;
++		}
++
++		if (pin_changed)
++			dpll_pin_change_ntf(pin->dpll_pin);
+ 	}
+ 
+ out:
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.48.1
+
