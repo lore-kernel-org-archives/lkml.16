@@ -1,169 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2380226173
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D4B15B554
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060935; cv=none; b=a9MgRzw9q2pSCZFisqMLW8I7bmqMPsQpZSxWiPRe8yzSyBDi9UzbxrsIpdTrcI0oxaGnBvTET4ZLhC+zMF1Fe99buWhXyvzS350Zkze7CvX2n556bRAM5LfgllsqGo6sP5WpbuIfXBOSGNDQVZKxWGCJBjWCXnu7xn949H/kJjM=
+	t=1744061642; cv=none; b=FbZtZiTu4CtKLng6B0lmqFzCjQfmkwuNMafOE1ldX8loUrHycY2Whyff5BDRey+sHDsqo4q0pnkelnFFnjk4LGIvWU05DZGvE3SCmm9AXFPHulM8QRExzaKyfMaZP5rMkGzQKU4XnHckcMsVzVjxjmbyeGelImT1TgfEZwXdsLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744060935; c=relaxed/simple;
-	bh=lgWxqBtLH9pJAIx5zVJb3BGHn1TkxNAuETrUPhk326w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ieeiyO41Q1g2DwjKVgrYJasNJ8OT5cqSQZdSINnYdxdOjgTjDSTKsflnjYYnc9V4931CNeEkrrDs1WyrftKIO43o1oSI/pQs76VVf0+x0nI/BeKUchcJYLyTTP/6md0wKid/VUzUsRGQHqGQuWplodVYRugAlG3qrdjwHdYkyNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jOOIysrs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744061642; c=relaxed/simple;
+	bh=c1iUpbhcrXzPl8Azbq+GjxoxxV7VV/BdFZJ0L+31bsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sk6AaiJGcJkDJwrnc8WXKam0kQXcj5L1VVPo6AgMt08kIvnBKbsNVIE3anE3ceUgp2A/lobgs3pjER3YZvOWaVoCYQPqzZg3PjzmV24PIUxVdsy3nxeIeB0KUIZpffccCSNLKXKzL25ezorJfUSpW1lq96WIigQhMiKlyWVZBe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dfZQRy89; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jOOIysrs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744060932;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NR/Ky/GsJ2q9CL9cmUdAHPUCzxFT+B+70sC+38xj5+8=;
-	b=jOOIysrsEQLu8UbJTLUwTOmUV2KKoYU9pvYQ4EscTtnB/tZ5vj0+41YW2uBnfIEdVcntzd
-	ykLhQkFGx/+g92FuEgz/hQYvOmPfiCJLTsQ7wdor3Ztu6Y4zPDcBZdtId6ow5789Gf6bgM
-	KUl59m/OYfbuZgZnQCXXOLRoWo6ifhg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-2kV8-peZO2uTnlO-MfBbcQ-1; Mon,
- 07 Apr 2025 17:22:09 -0400
-X-MC-Unique: 2kV8-peZO2uTnlO-MfBbcQ-1
-X-Mimecast-MFC-AGG-ID: 2kV8-peZO2uTnlO-MfBbcQ_1744060928
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72CA9180AF4D;
-	Mon,  7 Apr 2025 21:22:08 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.90.98])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 083C8180B488;
-	Mon,  7 Apr 2025 21:22:06 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 3/3] cgroup/cpuset: Add warnings to catch inconsistency in exclusive CPUs
-Date: Mon,  7 Apr 2025 17:21:05 -0400
-Message-ID: <20250407212127.1534285-4-longman@redhat.com>
-In-Reply-To: <20250407212127.1534285-1-longman@redhat.com>
-References: <20250407212127.1534285-1-longman@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dfZQRy89"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso6597185a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 14:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1744061638; x=1744666438; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ypbOCgQfA8w2KdlopYIWQGlt+OxpNY3XdMomop2Fvk4=;
+        b=dfZQRy89UQxnn5a8yKYYkbPuEyiGMUlg6c9qtJ5M/zpJSajErcgPQfbUls4bGL7DMr
+         Rsku9FTJDrN2o0y9b+un/p4rFp/WX8LeeyXY8u5dHjCg5iBAaY7z7imlEwbFvaCuiFiU
+         AH/RNM4MA0t+ZHOT6CXsKinruIRIkx7956eTs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744061638; x=1744666438;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ypbOCgQfA8w2KdlopYIWQGlt+OxpNY3XdMomop2Fvk4=;
+        b=NMPQZ8NrVfyW/NbHjokniAZ3esZkRj3lCotjjpqQuDToHvFHv/eex3Qv+yPqGdsA5h
+         TCTHNuLMd2lRWsjeC5snivsC3Bj+Ij/BVy+9ucgqvhBhl5cjyjIQyYnTfqbhwPXOq2iJ
+         PhliUyuLSy9MYzXgEaOl/xgJ8WXnVoJon5VBa8ctTeL6sMXlW+H1lLrENkmowwYt5pCd
+         QjnZZit8D3XD7qHyk0ujdaJcokeWypNXq+RLatKHoaYVFdoc996pR5S1K/a9XGxSlx6B
+         TFz0AdHRn7WSjKA1MQQhZP5BzRuiDtNiZm1KpFxuogD+HcLMleMa40U44/dmc1UciY1I
+         rYLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2QDg/aDAU+DzujCNH2EVIzhNQZpERl2E0BG6ffQo0sGWvw4CZ466qzrdZToJdrO9MIJWpEExqmdmgR2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi66MxX9Zd6seSVFYTlsnessC6R1e/NlDXcoTmVOII8x36Xpdt
+	5fnxcO5niyRL31Iy174ZT542OH4qCj4+N3Y4CGxIpM7DvOXV1nruzEIW40JeDyJDpO6jaM1uZgx
+	Ia9g=
+X-Gm-Gg: ASbGncvCRD7a/26irgJ6/D6f1Noad/NTFIloW6Q1/UfOEya9f8Ca7k49Ii+NaLBKBe7
+	sBYS5bomhkJWdXwDZnnTSiOYio8Nw5nDaRxS988t4n0MSJy0Xs2zW//jBJ/c6QK3EgRvpIwWLF0
+	W2mA22aWRGEe+gWViX1kvTMdhzh7d2iLK+THKIQSRXuyaM8qYQ+wbhJxWCkijKuvoVLkL7D/EtU
+	hxVbWd2aKJT5tuN9PCpOnPRF/gC17Ud6vS3JnhJkpX1kgMHBNh2aRbQa1BsU/3T91bLwN62nP7P
+	qI76ycaWQNLmmzTKsPuRfkZijOQyr5ecqqEVOhSEhV/W+L2VTROVN8bR/OyR+9dnpgKkg8p4GpR
+	OT6BeAiBoEC0brQ5xwz4=
+X-Google-Smtp-Source: AGHT+IHtRDJtCfRr+9OhPbrOVE6HjwLexGP+eDR6I84MlPfQrqPzN8oa538yvYWxCCJ6WQFonrnWKw==
+X-Received: by 2002:a17:907:9615:b0:ac2:9841:3085 with SMTP id a640c23a62f3a-ac7d17d8763mr1257437266b.30.1744061637877;
+        Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f80dsm796645866b.119.2025.04.07.14.33.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2963dc379so801240666b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVhD+G+zA/Ax99SrCa6KmUGpYEY60xrRdeyR9cX3eGGfATsY1mLOIGlUAKvy1KFTBBae2R9YONqZKJwyeQ=@vger.kernel.org
+X-Received: by 2002:a17:907:3d87:b0:abf:6aa4:924c with SMTP id
+ a640c23a62f3a-ac7d17747cfmr1256778866b.17.1744061636768; Mon, 07 Apr 2025
+ 14:33:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+In-Reply-To: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 7 Apr 2025 14:33:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
+X-Gm-Features: ATxdqUGKkDY0PVxsE-mkdFJ1IAX_JWpY62Qh1ZEnaMl7fepQQaa7Zys4sYl5c8g
+Message-ID: <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+To: Mark Brown <broonie@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add WARN_ON_ONCE() statements whenever new exclusive CPUs are being
-added to a partition root to catch inconsistency in the way exclusive
-CPUs are being handled in the cpuset code.
+On Mon, 7 Apr 2025 at 14:10, Mark Brown <broonie@kernel.org> wrote:
+>
+> Arnd bisected this to c56f649646ec ("landlock: Log mount-related
+> denials") but that commit is fairly obviously not really at fault here,
+> most likely this is an issue in the plugin.  Given how disruptive having
+> key configs like this failing let's disable the plugins for compile test
+> builds until a fix is found.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/cgroup/cpuset.c | 43 ++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+I'm not against this, but I do want to bring up the "are the plugins
+worth having at all" discussion again.
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 1497a2a4b2a3..d0143b3dce47 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -1453,13 +1453,15 @@ static int remote_partition_enable(struct cpuset *cs, int new_prs,
- 	 * The requested exclusive_cpus must not be allocated to other
- 	 * partitions and it can't use up all the root's effective_cpus.
- 	 *
--	 * Note that if there is any local partition root above it or
--	 * remote partition root underneath it, its exclusive_cpus must
--	 * have overlapped with subpartitions_cpus.
-+	 * The effective_xcpus mask can contain offline CPUs, but there must
-+	 * be at least one or more online CPUs present before it can be enabled.
-+	 *
-+	 * Note that creating a remote partition with any local partition root
-+	 * above it or remote partition root underneath it is not allowed.
- 	 */
- 	compute_effective_exclusive_cpumask(cs, tmp->new_cpus, NULL);
--	if (cpumask_empty(tmp->new_cpus) ||
--	    cpumask_intersects(tmp->new_cpus, subpartitions_cpus) ||
-+	WARN_ON_ONCE(cpumask_intersects(tmp->new_cpus, subpartitions_cpus));
-+	if (!cpumask_intersects(tmp->new_cpus, cpu_active_mask) ||
- 	    cpumask_subset(top_cpuset.effective_cpus, tmp->new_cpus))
- 		return PERR_INVCPUS;
- 
-@@ -1555,6 +1557,7 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
- 	 * left in the top cpuset.
- 	 */
- 	if (adding) {
-+		WARN_ON_ONCE(cpumask_intersects(tmp->addmask, subpartitions_cpus));
- 		if (!capable(CAP_SYS_ADMIN))
- 			cs->prs_err = PERR_ACCESS;
- 		else if (cpumask_intersects(tmp->addmask, subpartitions_cpus) ||
-@@ -1664,7 +1667,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 	bool nocpu;
- 
- 	lockdep_assert_held(&cpuset_mutex);
--	WARN_ON_ONCE(is_remote_partition(cs));
-+	WARN_ON_ONCE(is_remote_partition(cs));	/* For local partition only */
- 
- 	/*
- 	 * new_prs will only be changed for the partcmd_update and
-@@ -1710,7 +1713,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 		 * exclusive_cpus not set. Sibling conflict should only happen
- 		 * if exclusive_cpus isn't set.
- 		 */
--		xcpus = tmp->new_cpus;
-+		xcpus = tmp->delmask;
- 		if (compute_effective_exclusive_cpumask(cs, xcpus, NULL))
- 			WARN_ON_ONCE(!cpumask_empty(cs->exclusive_cpus));
- 
-@@ -1731,9 +1734,20 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 		if (nocpu)
- 			return PERR_NOCPUS;
- 
--		deleting = cpumask_and(tmp->delmask, xcpus, parent->effective_xcpus);
--		if (deleting)
--			subparts_delta++;
-+		/*
-+		 * This function will only be called when all the preliminary
-+		 * checks have passed. At this point, the following condition
-+		 * should hold.
-+		 *
-+		 * (cs->effective_xcpus & cpu_active_mask) ⊆ parent->effective_cpus
-+		 *
-+		 * Warn if it is not the case.
-+		 */
-+		cpumask_and(tmp->new_cpus, xcpus, cpu_active_mask);
-+		WARN_ON_ONCE(!cpumask_subset(tmp->new_cpus, parent->effective_cpus));
-+
-+		deleting = true;
-+		subparts_delta++;
- 		new_prs = (cmd == partcmd_enable) ? PRS_ROOT : PRS_ISOLATED;
- 	} else if (cmd == partcmd_disable) {
- 		/*
-@@ -1787,6 +1801,15 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 			deleting = cpumask_and(tmp->delmask, tmp->delmask,
- 					       parent->effective_xcpus);
- 		}
-+		/*
-+		 * The new CPUs to be removed from parent's effective CPUs
-+		 * must be present.
-+		 */
-+		if (deleting) {
-+			cpumask_and(tmp->new_cpus, tmp->delmask, cpu_active_mask);
-+			WARN_ON_ONCE(!cpumask_subset(tmp->new_cpus, parent->effective_cpus));
-+		}
-+
- 		/*
- 		 * Make partition invalid if parent's effective_cpus could
- 		 * become empty and there are tasks in the parent.
--- 
-2.48.1
+They've been a pain before. Afaik, the actual useful cases are now
+done by actual real compiler support (and by clang, at that).
 
+Who actually *uses* the gcc plugins? They just worry me in general,
+and this is not the first time they have caused ICE problems.
+
+            Linus
