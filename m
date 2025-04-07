@@ -1,182 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C70253355
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF8F253F21;
+	Mon,  7 Apr 2025 13:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032017; cv=none; b=S0JvpoL/CgwI9fQ/tzb2YsTmgz0fTDrPwpiN8VVp+81pswY5fEODoDOzI8YVR4pBznIViDWwWtwWlW+VXgQFIRyVLxbqH1wVYrDTQ2UFfxSjk+TI4uCLulH4q9ohSKL9Zh096V/dlhrT5f7jT1B9z31MUpQs/BX81yjZYv1idYA=
+	t=1744032020; cv=none; b=hLoeeL+nwKQVTZQwNPyp58VbS+5DTUpIqdQxw1eSc9LlJISwvcNP/163NI2G+sJhELOVNpqywYKi5BhmsOM3y0BzCzF1oLZvbbAQ0ddrsD+LXrYsFikbq9aXvEhzyxzuBbrCOosFA+8KRRfOdFwHw5JaqwbJTsIyj7ghh4SiNF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032017; c=relaxed/simple;
-	bh=IBAFSYEftFSEOjm2cNkui0kQbyc4fGxVU2sHcdp1J4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jy2oLlqD9ZGPRtVVjwMZBl3oSfrv1BL+FuDF5zRvsscLU64IFLklX1RJln4zb/8a9wNa1oz71mXIu8K4MQOEgSI4oTVd9mZZGT9KzeF01TxYIVY3gJcl5iHK4Wrii8R/2Sj0jGAYo22bn+4mhJnX0uSoAwwNrzhviv5byX1Nk9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bAeMkpdg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744032020; c=relaxed/simple;
+	bh=filjrS06rqZ0ew/T3d0sXhHExTLXZr6chgbI6OChQmE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JKDGKNFMpXP4ncYVXavxyBXHsnMcZ5MfTjco9YSCuRw2fdYckqkh3nUDQUsLVrVcOWT16zjjm3y7VzLyR/f8dHR8vqYygqoDoPKGw3+ecJzX4/WDMMJFx62IyVgbfcpM2LsmEbTr0GYGTKKROpjzCq3j+kCTN6rCwYjmRPOyuA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/yNomVj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bAeMkpdg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744032014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=puvyqjVmSzk0HYb0KyLQqy8hU7+rU+A/opPj1bWYc1Q=;
-	b=bAeMkpdgieavYfe/pfHJ9cVvV4/OvXgt8/4LKiSEvmc5vWteKr9Rtj3ixI7PK0aac8J++O
-	ryTHdfAeeUVD1/Sg+FHG2YEUIznKOPDNsxje2KHQgRc0FTsurDjVRYcPrKp0Z6uWn6ligZ
-	5t0GTU0ppDriHQymfQMXEEQd5r3u1Cs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-259-G1JD6t9OOA638nmrXcAWnw-1; Mon, 07 Apr 2025 09:20:12 -0400
-X-MC-Unique: G1JD6t9OOA638nmrXcAWnw-1
-X-Mimecast-MFC-AGG-ID: G1JD6t9OOA638nmrXcAWnw_1744032011
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cec217977so28347965e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:20:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744032011; x=1744636811;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=puvyqjVmSzk0HYb0KyLQqy8hU7+rU+A/opPj1bWYc1Q=;
-        b=dRAETQoLeNMUBEDc7PITzz/hwBQEbcRzQ4KsfgWVTiUKfGywRyRBxikObtMWG6uhYg
-         eIb5QgOt8thXY6RM3u5JCpR6XH9wwGYbvBBK4OaHvdIoJWy6+N10xKq+75JI57A2pcbK
-         Nc/XUstrH21f6NdimQsp+8komdAtVKBxTyitweOY3t3BA4nDqaQqL0dOWDELqa+GXJUS
-         Sl8Jrrm180wys1zhGg3uoh5C5UMMxoDU8F/J6V40lCZH3foQBFrABGYSxfT+r14BygEM
-         CnYwHWINEk/y+vX8NgM1CuaDj6sTsAYJipgCAJgNwJ9RFRIWN4Po28LUtgXWuaXOQ1NV
-         ACKw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8yvgcCK0VzVCGmALXnxwmhXCQFh/9jqPLfyBv5ZPx5Golh1ey+iuBHgocLGc5OcuTN0qfOwj4We4NFlw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOpKV+hPEZt6CeUISmENTQcODgvJIJtbdMYeTj0pb5iNDCr3Eh
-	2bchJv3gziWV75hZVHU4QjBKfnsHD8kTDIfmiOD/A70l/0U1lgkToCwI+rt9udqjouh9HjM7Zw4
-	7Y86ajaY1kYNHzms6dNibpvD75ac883s5x6uP3GDmZCsJblFLgLSAecW/LOhwOg==
-X-Gm-Gg: ASbGncsjV68RcnyhkmnZZxzDZfAzc4mBMM0Frxi8Hthc7swnyxkt466Gv+aC9mfApx2
-	98LJBYWj3AgukiN0PmQcOrNF1u2CGo1RRpVooH0jTATn0hywIMt+p7B21PbwhXzjmgw2i8bXrv3
-	KJfiT0p+d8JvM62McyPNsLj377Xy3/onDQCSBoX6JKqK30gIOSvPa5I8TzctP6a2z9EGVhFxKH9
-	avy45FcniaOuzJuPQywezOBEQtA90dAGCZTVBLgs1YggjoJ2wJmWIBiWq1N1Kq0Hg/MsrfvO26a
-	Ah+me9cBAeU3W1s2Kjt1VC1PwYzSSpG5yqWWCYp1HSRUUKfolPegQOWQ/S6vN4fF
-X-Received: by 2002:a05:600c:510d:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-43ecf9c3e5emr89278775e9.20.1744032011110;
-        Mon, 07 Apr 2025 06:20:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEVMmWlPQZtDsnMFLZbMAxM9zqTMfp14GmzwUzy662LRZwj/J32cgeouoGgUEXLfLAfpiOEg==
-X-Received: by 2002:a05:600c:510d:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-43ecf9c3e5emr89278465e9.20.1744032010642;
-        Mon, 07 Apr 2025 06:20:10 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm12381031f8f.66.2025.04.07.06.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 06:20:10 -0700 (PDT)
-Date: Mon, 7 Apr 2025 15:20:05 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: keyrings@vger.kernel.org, stable@vger.kernel.org, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Howells <dhowells@redhat.com>, 
-	Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@cloudflare.com>, 
-	"David S. Miller" <davem@davemloft.net>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Ard Biesheuvel <ardb@kernel.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v3] tpm: Mask TPM RC in tpm2_start_auth_session()
-Message-ID: <rxygujdrx3d22mv2jcbp2mjr52noyf6c346vi7iljjf4ova2wz@zkoqxvcudi35>
-References: <20250407071731.78915-1-jarkko@kernel.org>
- <20250407072057.81062-1-jarkko@kernel.org>
- <2mjtwprr3dujf4wbu5licb3jtzxujimcz5iahrgqymu6znwbbq@cslxwt7ejva3>
- <Z_O3PU5XDbDirlUO@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/yNomVj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A3DC4CEDD;
+	Mon,  7 Apr 2025 13:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744032018;
+	bh=filjrS06rqZ0ew/T3d0sXhHExTLXZr6chgbI6OChQmE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a/yNomVjn7s86TOYejdygiH1sC/wzPEjFMGUQTb/FZ1Kp1Zl0AskZHojDh37MF9rp
+	 bVsVNviFb0fNioBtNNKl5Qq8c/9wspSr2td0bwJyaguUsxdPW8ZTbkSYFWHsNnULib
+	 01PqflKsNQuGb9+g2G9hcOCuB0TGRF6VvkQUFTm/lIwh0C4bC7bHqAOJ3wGtx1wf7q
+	 rOYYVwDiq0EggDefaSeE+ksRKj8pXAEa7P/EpyGfDGwPHJ5wP2rh557lUjvSKWXXwr
+	 iGVB64MxsWkbcKf2kU90a2BQ/ypR1cygnM95c4lcfUjQr/mciUjN+twBapFbDRWUqA
+	 NuJP3LfCJg5Pg==
+Message-ID: <74bb9d27-fd6f-4332-9965-e967c3a31c63@kernel.org>
+Date: Mon, 7 Apr 2025 15:20:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z_O3PU5XDbDirlUO@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] dt-bindings: phy: spacemit: add K1 PCIe/USB3 combo
+ PHY
+To: Ze Huang <huangze@whut.edu.cn>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
+ <20250407-b4-k1-usb3-v3-2-v1-2-bf0bcc41c9ba@whut.edu.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407-b4-k1-usb3-v3-2-v1-2-bf0bcc41c9ba@whut.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 02:30:05PM +0300, Jarkko Sakkinen wrote:
->On Mon, Apr 07, 2025 at 10:04:09AM +0200, Stefano Garzarella wrote:
->> On Mon, Apr 07, 2025 at 10:20:57AM +0300, Jarkko Sakkinen wrote:
->> > tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
->> >
->> > [   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
->> >
->> > Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
->> > error codes.
->> >
->> > Cc: stable@vger.kernel.org # v6.10+
->> > Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
->> > Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
->> > Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
->> > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
->> > ---
->> > v3:
->> > - rc > 0
->> > v2:
->> > - Investigate TPM rc only after destroying tpm_buf.
->> > ---
->> > drivers/char/tpm/tpm2-sessions.c | 31 +++++++++++++++++--------------
->> > include/linux/tpm.h              |  1 +
->> > 2 files changed, 18 insertions(+), 14 deletions(-)
->> >
->> > diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
->> > index 3f89635ba5e8..abd54fb0a45a 100644
->> > --- a/drivers/char/tpm/tpm2-sessions.c
->> > +++ b/drivers/char/tpm/tpm2-sessions.c
->> > @@ -40,11 +40,6 @@
->> >  *
->> >  * These are the usage functions:
->> >  *
->> > - * tpm2_start_auth_session() which allocates the opaque auth structure
->> > - *	and gets a session from the TPM.  This must be called before
->> > - *	any of the following functions.  The session is protected by a
->> > - *	session_key which is derived from a random salt value
->> > - *	encrypted to the NULL seed.
->> >  * tpm2_end_auth_session() kills the session and frees the resources.
->> >  *	Under normal operation this function is done by
->> >  *	tpm_buf_check_hmac_response(), so this is only to be used on
->> > @@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
->> > }
->> >
->> > /**
->> > - * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
->> > - * @chip: the TPM chip structure to create the session with
->> > + * tpm2_start_auth_session() - Create an a HMAC authentication session
->> > + * @chip:	A TPM chip
->> >  *
->> > - * This function loads the NULL seed from its saved context and starts
->> > - * an authentication session on the null seed, fills in the
->> > - * @chip->auth structure to contain all the session details necessary
->> > - * for performing the HMAC, encrypt and decrypt operations and
->> > - * returns.  The NULL seed is flushed before this function returns.
->> > + * Loads the ephemeral key (null seed), and starts an HMAC authenticated
->> > + * session. The null seed is flushed before the return.
->> >  *
->> > - * Return: zero on success or actual error encountered.
->> > + * Returns zero on success, or a POSIX error code.
->> >  */
->> > int tpm2_start_auth_session(struct tpm_chip *chip)
->> > {
->> > @@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
->> > 	/* hash algorithm for session */
->> > 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
->> >
->> > -	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
->> > +	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
->> > 	tpm2_flush_context(chip, null_key);
->> >
->> > 	if (rc == TPM2_RC_SUCCESS)
->> > @@ -1032,6 +1024,17 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
->> >
->> > 	tpm_buf_destroy(&buf);
->> >
->> > +	if (rc > 0) {
->>
->> To avoid the nesting blocks, can we include `TPM2_RC_SUCCESS` case in the
->> switch or move the `if (rc == TPM2_RC_SUCCESS)` before it?
->
->What do you mean by "avoiding nesting blocks"?
+On 07/04/2025 14:38, Ze Huang wrote:
+> Introduce support for SpacemiT K1 PCIe/USB3 combo PHY controller.
+> 
+> PCIe portA and USB3 controller share this phy, only one of them can work
+> at any given application scenario.
+> 
+> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+> ---
+>  .../bindings/phy/spacemit,k1-combphy.yaml          | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-combphy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-combphy.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..450157b65410b27129603ea1f3523776a1b0a75e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-combphy.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/spacemit,k1-combphy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Spacemit K1 PCIe/USB3 PHY
+> +
+> +maintainers:
+> +  - Ze Huang <huangze@whut.edu.cn>
+> +
+> +description:
+> +  Combo PHY on SpacemiT K1 SoC.PCIe port A and USB3 controller share this
+> +  phy, only one of PCIe port A and USB3 port can work at any given application
+> +  scenario.
+> +
+> +properties:
+> +  compatible:
+> +    const: spacemit,k1-combphy
+> +
+> +  reg:
+> +    maxItems: 2
 
-Ooops, I thought `rc` was unsigned always returning TPM2_RC_* values,
-but it looks it's not the case.
+List and describe the items instead
 
-I meant the switch "block" inside the if block, at the end exactly what
-you did in tpm_to_ret() in v4 :-)
+> +
+> +  reg-names:
+> +    items:
+> +      - const: phy_ctrl
 
-Thanks,
-Stefano
+drop phy_
 
+> +      - const: phy_sel
+
+ditto
+
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 1
+
+What is the cell argument?
+
+Also no supplies?
+
+> 
+
+
+Best regards,
+Krzysztof
