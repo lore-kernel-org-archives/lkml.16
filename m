@@ -1,345 +1,148 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011016.outbound.protection.outlook.com [52.101.129.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5543D226D1D;
-	Mon,  7 Apr 2025 07:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744009775; cv=fail; b=lngFuz10d2vPc92jze2XBqsCKUvT76q5/HeFeuDutGJn3aCggEewCeY0sq2o3RcP109py3p3NpwY9pg4dvxjQLkwN8pPsDfnJWiXAA5yAgwTlcH+OxN76I8GT6NOffQAn1MnmnY86gVTYg/6Dm65Hxsra1BVeC0yQctFC+b3s3s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744009775; c=relaxed/simple;
-	bh=mV65HbmWubJhSxwnu2K8LQtNG+WbeJM5PLToRwLNlUM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DQUXAPuFb1L6uu+c7QbxZgEpMt5vzAlt/mDPhys8bmqLU4OwiaPVWrexCPhdwVFYzGWp9ygEybfS6RWcR9oS7BN2MtX+hHiXJIUrNFry6Wb8r3L3DGJC/bda48m59qexUGIL/t/ydhicWtJAke6Ff8ezCNxLDbYY7rVzAs8SWWA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=mCe9e4bn; arc=fail smtp.client-ip=52.101.129.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843E014A639
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744009854; cv=none; b=hORp/DtLlyi/hR0EJYNVtp8GgrGE+9LtxBBF+RxAkV7dcS2KrkSaZVwCVWnE2EUMAfH8S2sy1gp0DdPRs7bH/Y6Ydwyw1D4j2dXs3Lk8XvhfGPlLVvN9NfR6Fony5u/shJ+gDIlGk01zLxPmC7t7QBMtodcE29QgzgTjV+C/ilM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744009854; c=relaxed/simple;
+	bh=Gn/9poI96RQZEB4BdTG2EIlVnj5fIffZbi0kjF65Z3g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Yk47tkGtamfP6NRVU7EXP7Maedutg0MLa+Ry8F3ZmPbC+DoG0i5PDZQc09QS75dEHDS8k9hCB+AOWa72pW6iZzr2D4Pqno+/Fc19g38klk1fNFLcOQCCoLt2cZS7SvUAu2QX/Z7ArxV7AP70KGZY5pdXzxLG2wPmZQTVMEH8nDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ncAkilTQ; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="mCe9e4bn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h4CqZMl4wUzfXPoDbm9VzCC+KN9DvpM6x/0Tnhwx7yvR/AhnW7yS3XQVYzFn9fAaehw1xbvFDsNKSqmUqnRX//yAGA0Lx7RJ/owblxXLJ9vtCm0jWasQemAL8iI2ip4iDkpqMMT9Q6A+anZdfuWu6NZipDlbZkaJTpc7Pnw9GIYur3mdx6wno7yuhq5+5rAlOECLYzI+t4H7zXJxv9ORo1mzl0WDZBSjSFElGBCbH/OM5FsrWERAr4chsqBU27vXwxpij50GxIrWHmtwnhN5Fa3KU3+P5SKcHrqVFGODV1aqqTPbYzZui/WwOYLgYfFababyI8mRsq68Nhasj1Huag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yzellQTPpv0iXdujIdL0gzBn9Iws+Oa76U/6nYoHqcU=;
- b=MrsXQr9ZODTxDYfY9QPL5Nkax9L4e/EerrlFV1ohg1DQYFvmYU/LRKbrhGTPSnc3hedGyeEtC0Vkp/RnfQe4stjgdb54iw1BmeNnqnDv5Z8dmDDnwMIc+i5edNKhQRfP0JrI+dtu6cTXZNwDICBBuxAL0O1KVu5CplI8x13Ny0S0mOOaTSf3mryV+CxlIGhIGYeLwomZ+VmByokeF+4FOJ7bQMSlZ62cqqgn4LFNu2j5wNTC6/Nj48HmUZh6KSMxXz0Tu88Zpx7Uh+Bj28Tjx0Xnu8kVinVxrmzA8XHJpM3cc7gxwd0XQP0bI3tOCfKGsBSSSrFce4/W/JPknwAnxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yzellQTPpv0iXdujIdL0gzBn9Iws+Oa76U/6nYoHqcU=;
- b=mCe9e4bn7azJXHTFC3djzTMZYjXAAWqhKAzK62qnZYM69Kk8+0m4wCZmYIJfQRbaarIkZBWKEOAKgu8ju1oda6+7IxffTkjLnzmiypICbwS2a4CFpakUsu+DqMJxpRWzhsTlcIMplQ8TyeR4RBLHj36EO2NxIO0/r7GXZw3mq+aDoNDdOVtXOxxSoc6yqhMQGIKsdspvTJ76ESyd2dxwDVdlJ/3v4OespaQwnInFk/mMPXzxytY0RovjPG6ckfs9MP3ernLWCZNUcvv2NZKKo9HFoV0bajpEGLdezlyVd755p9LDe5DgrZH0pGVpIlC+Y5DZH+CZ7qOR+ZJsXsozsw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
- by OSQPR06MB7250.apcprd06.prod.outlook.com (2603:1096:604:2a1::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Mon, 7 Apr
- 2025 07:09:29 +0000
-Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
- ([fe80::a00b:f422:ac44:636f]) by PUZPR06MB5676.apcprd06.prod.outlook.com
- ([fe80::a00b:f422:ac44:636f%4]) with mapi id 15.20.8583.043; Mon, 7 Apr 2025
- 07:09:28 +0000
-Message-ID: <55306631-8421-455a-9d03-709ebee97d76@vivo.com>
-Date: Mon, 7 Apr 2025 15:09:22 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
- PATCH 0/6] Deep talk about folio vmap
-To: Muchun Song <muchun.song@linux.dev>
-Cc: bingbu.cao@linux.intel.com, Christoph Hellwig <hch@lst.de>,
- Matthew Wilcox <willy@infradead.org>, Gerd Hoffmann <kraxel@redhat.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- opensource.kernel@vivo.com
-References: <20250327092922.536-1-link@vivo.com>
- <20250404090111.GB11105@lst.de>
- <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
- <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
- <e9f44d16-fd9a-4d82-b40e-c173d068676a@vivo.com>
- <E4D6E02F-BC82-4630-8CB8-CD1A0163ABCF@linux.dev>
- <6f76a497-248b-4f92-9448-755006c732c8@vivo.com>
- <FDB7F930-8537-4B79-BAA6-AA782B39943A@linux.dev>
- <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
-From: Huan Yang <link@vivo.com>
-In-Reply-To: <35D26C00-952F-481C-8345-E339F0ED770B@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYBP286CA0033.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:404:10a::21) To PUZPR06MB5676.apcprd06.prod.outlook.com
- (2603:1096:301:f8::10)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ncAkilTQ"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so2399829f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744009851; x=1744614651; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S09RcVQv3bFd4mzFCRVHGkaFyCuRf84i2/SgMcqwsV4=;
+        b=ncAkilTQpIMAcVkgc5BIs7BeO14i9pCho8HmylyiCZ5JDErSV+DoTErDjmw6PXAt4f
+         VxqiryK5/pczyOySPGim8k1HsjXP0pqF4AD4D4k/7DGgZl7DPXbryeLNv/jGLm9PTeO4
+         cCqg9L3j3aDfTDVQvWhfujtKXYV2wQ91CRLRzCRyCMgqxBQ06H4+q9HL91BTxDICYHQG
+         DmeDGzNYy3uHcNa74JNqxdORvmepk8BIY8YEsve0E+2kEGQfNxzCw7t686STRTcVpjYC
+         UYkDFZx9VwR9u8NG3fpa7yR/DC2gu3Msl1ttsArLwVd0N+KXqKZ31fSQWkhvYI56wDeD
+         fLNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744009851; x=1744614651;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S09RcVQv3bFd4mzFCRVHGkaFyCuRf84i2/SgMcqwsV4=;
+        b=Vd3zOtL95YmAj6sWpS5UeJzJKct3ud69krAOcD089U2pryv4876WNqka9C36ShPADD
+         sQ5Or0S3Put+3tt7zBWYRT2s2ARfnwZSfQWLulRkihcLeJ2N2vDwpSr6iTIIl2Qq2i3R
+         TF0oCZArZrytjVDEEVjtRK8xqQhrZG51NINggBKlpw0eJ4va8tslT/gRCBjRqpNOaZ/3
+         gOyz9qskd9rmTeMhLwdyHHRE1NDQ4vQDAXruQcC+5Xff/hfnND1LmNiv7oP1SnjYYUCX
+         PXanPLm/X2MJOtJxkrjdmmcjpLnNfz2VO5DKVzKL/sLVK0BeFI7mMjDtFZTt//+cTjMa
+         gtxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtbOGYTqmHbELDdrM+LIrEFKaIx6tueVZzFQwIQc5YVxUyptaKSy24EWzcmOc6rz7oTZ67fCFpW8GNi3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKSWX4z2UmZ2AQYY0sF3q5NpGCngBcBvzbOcdaSsHB4SNZ8at7
+	SEj8A7HjGBi/C702R32PchamoF87vVJ739MiXgoLnvUHpcdQuXF98FSlIhaM6ivRvBYHBNblc4n
+	V648=
+X-Gm-Gg: ASbGncuCSPEuAUPGC+cpxeqohnPt3kv1+mvih8wNE7E2/bHtLzyVvQoZDzdGsYOxPfn
+	+cFALkHxwDuDnIxNLMUoD3UrKgl7VwKP4QJW/9MnmUQNxG+8Z6n4mhhvIv3cy9xo/iS+ttVlChD
+	TEdTgNLDCQKWLB7+rlMlUfzTUUvRdMmk9qf8z9DaNImdaS13HPAK5Yhy8D3HprHrszRSm1wbE2S
+	TEnGmZo8sGPBXovs+XK87EgHp/v8B6MzNrWJc/mH8cm2XCKev+l17m2RGyH4CaqgF4fYCvNe7pn
+	C0AUKjTsWNQHFxVTlR9E7n/nH9M/FFGPO1ONzw==
+X-Google-Smtp-Source: AGHT+IHV0AysUoJ50GBhtdS1U93v5S2aO1jvgA/LrlpNVHs6oeC/W37GOR8YbQv8vBRtvRtnfI1+Xw==
+X-Received: by 2002:a05:6000:4021:b0:391:2df9:772d with SMTP id ffacd0b85a97d-39cb3596914mr9392893f8f.13.1744009851078;
+        Mon, 07 Apr 2025 00:10:51 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm120476845e9.18.2025.04.07.00.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:10:50 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Apr 2025 09:10:49 +0200
+Subject: [PATCH] bcma: use new GPIO line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|OSQPR06MB7250:EE_
-X-MS-Office365-Filtering-Correlation-Id: b9784c8b-7857-40bd-6ac0-08dd75a3231b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QXhITEcxR09nbjdka2djU2h0OEFlbzE0eTJBT1A0ZWdCTjlqbXRET3hTeFQ2?=
- =?utf-8?B?TjAxLzhvQ3Y3QXFVdGg2ZW9tZ25mUmUvY2F2R1NRM1ViNUpvRk1neDNZcUlV?=
- =?utf-8?B?YzJMVXA1SmxXSlYweWI2YTdHeVJCendXT0g0Z3dsMzJjdEoweFpxR3FBTEVl?=
- =?utf-8?B?ekNLQmkvOGdtYmdFdXJPeTNxMnpGY28vZVJpeW9jNDNFR21DdmhXb0wvQXZq?=
- =?utf-8?B?Ujc1OVcyR3FvdDBxRndkSmhqVWN1QitRUkxYK0phVmoxbS9sRDdHZWxnOTBR?=
- =?utf-8?B?TWhXY3g0bUNtUFlKNkJYTWNxOFZqTXJiTGxCRWE4TktnMnJKRUdlcmlqczJD?=
- =?utf-8?B?YXdVTzNzL053YXRsWVI4cFFWSUlxQTBxT1NKcGlqSXNRZ0JEdjhVb291dUd6?=
- =?utf-8?B?MENHclM0ZS9lUkVXMDJtVWt0VDB1S2Vqckp4UmtRaHdUTVpISjZsV1JmYTVW?=
- =?utf-8?B?RFBHMnFNOW9XUmptZS9pQXY0T0JGMXduZk44QVFiRXVTMjZybm4zUEVGeUVV?=
- =?utf-8?B?VFlTaEpFOXRCdGlUUGJqQUdSTmVoVXN2R1dKUkpxb3NCOCtwY2FjNXFranV1?=
- =?utf-8?B?YmtHYllIWHczSHZESDVBRG1tWlRnRnBqQ1N6Qk01clB3cG4wSFNjL2svbU80?=
- =?utf-8?B?UEk1aSsyQ0RnNC9jaHdpV0JieU1CelZic3JxNEdyUlQ4N25jdFE4bCtJOTUv?=
- =?utf-8?B?b1dqdDRjVU9NZ0dxNGtkZWgxTmtSMDY5NG1mTXFYVnBURVZlUWprK0RZdG9Q?=
- =?utf-8?B?aE8rcVg2bUQ4NXN3Rys0UzlsdmdWdnZtWGpXTXRCck1QMHFIUzFsUGxuOGhL?=
- =?utf-8?B?cFFOa0VoVnhlQlZzczFaejRFU081THBKclJ1aVY1dXFUQXIyZ1hRR25oT2px?=
- =?utf-8?B?bndNdUJWMFRqYlNkVGJnOHp0TmpwUDJrMDEycjlyK1BjSVlieU10d3ZVVmJa?=
- =?utf-8?B?N1dVUE1qQlY5bmJPMVU2eGhJSkdNaXRMdWRmVkZxVlo4emJKYkxPL3ZZTUVz?=
- =?utf-8?B?bzFxdkZubHVWVkZnQlQ4Y1VPNFJDa21Qdkg4Zjlnb1JBN1h3VnZsNit5U0oy?=
- =?utf-8?B?cTRGa0N6elJWLzVFTncwRUVJWFV6OGZaU0lKVy9iWi9UZXFWVTZrSDB0amFP?=
- =?utf-8?B?N2FXblBRRVp0L2hTbzAvSkxuUW9KbUx2cGl3VmhkaVBNVG5odjQycDZCZmNU?=
- =?utf-8?B?YjIvL1NvSXpzcFBXZHF2V3pDN211cTBLbVNmcWdPYlloVXJnZTFKM1JqVk5v?=
- =?utf-8?B?M1M4ZW9KN0s2a2VZZTZFWU85ZkNUR0NHZFhsdmRoM05QeGdPOFZUWDQ5N09Y?=
- =?utf-8?B?ZTlYaS90UWlMc01ETWhaM1BpSHI2TWluWjZsR2pGOFkzdm1XNVowVXZPQ3N5?=
- =?utf-8?B?a0ZBUE4zR2FGNmxkWTZqMGwzS3NhZWtReGdzWUNMSU9LNFU4SHRXdEhMZ00v?=
- =?utf-8?B?eW9GQ1pocWlWK0FNSUpSUXNYMUN4KzZpZzJYZnJ6eU1uWDg3L1FkQUo2OWtN?=
- =?utf-8?B?SGFVbnhKZkxmZlVOMWZnVEVzK3ZSRHd2VWdpblJqaTAzRkd5clo5aDUyYVBE?=
- =?utf-8?B?SFJONURsSnZiTFlMcmRFQ3JSRFpuZ25LWWgzczZ2VWkzNzV4Q3hvc1BFcGdN?=
- =?utf-8?B?NjhsR2tDRStRMTYweVpDNUlOVWJLRHJmZmN5Q1VLR3FKU3RBVkZWMkJhL2l6?=
- =?utf-8?B?QnNBc2ZOVmNpUmVhTWZ6NG9sQ1I5bjVnZXF0a09FUTRyWXZuTk0zckFKMVVO?=
- =?utf-8?B?MXJOeENWUXZiNUJkVTRQcWlPVmpGOFU2dzVQczFhbjBLVmxBNGhpM0xNUHY2?=
- =?utf-8?B?Um9BazRGMC9iTkZCanBqdTZ6YkRHWFAxQnNQM1lmL1F1K09mWlNSYU5VZm11?=
- =?utf-8?B?ZDFYclNmT0JRRHJGVDhCM1FpZ0M2cWdqcTlBSEVOM0ExUENZYm1uV0F2VW9G?=
- =?utf-8?Q?hg6cnnMZ5un1CVSbITFLdrQH2VOd5XoR?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjVnVjZpTDJEWjRLVjJnOGRiUTNZeVc0QlZuVGJHVVRaQTVTY1BUYXdrVVBh?=
- =?utf-8?B?QVpBYVdmOHJIRnhMdktCdGhHcTBoTlBoK1lnQS8rTTVURlR6OWpyUGdtWGxQ?=
- =?utf-8?B?WmRVNmRpMHpVdVhOMGlQYVE0bWl2M2tCWjBqTXgyenpRZDRUQmVRYlFXS2N3?=
- =?utf-8?B?bGtsRm5rVkEwc3l1Yi9YM2RWN3BWNExpOWtsUGw1Ylk1bWhxVEo1ZEF4REZK?=
- =?utf-8?B?U2tBRkFoeVJoUDZKbVoraSszZTFlTktFMEY2N2hUeDlydkh0V0JQWjJWeU9o?=
- =?utf-8?B?dlp3QUczVmRTcDZ2aEZMN0dSR0JXbEpEOFhOenpTdXpGZDFlTkN3Y2RsSU5s?=
- =?utf-8?B?YU9tMDhPbmVUc0ltQ2ZSdE52TjU5VUVyQVhHbHZDNnRQU2ZmSCtoRGRjaWVu?=
- =?utf-8?B?SDRBTE1aNGY0dDgyY2ZTTDhmNXcyZ0FpMUZwTkJ6N3lqd2oxOEZLdURyRVNJ?=
- =?utf-8?B?dThNNkZNcUtBK2RvdytkTXFzQ0dna1VXWnpWQTZ0SlArK3R6Ulp4NUZJNDhZ?=
- =?utf-8?B?ZGNNTERmdXlFR2VKY2VTR0txd2VaMG9kbEVBSkFTNFZrdTdPeHVBejc2T1JF?=
- =?utf-8?B?eWtPNTNkbzlESnA4R2E0M0xFK3ZtSlJIU0Nja0ZCdjJadmJLalJxZW5CcnFn?=
- =?utf-8?B?R3lOOXhRTmFyeTh4N05ROHMwTGNjQWVRUTE4TEVlZjBMZ3QwdC9XV20zb25C?=
- =?utf-8?B?Qi9GYkRjbC9iNlg1L1h5dUF6YTVIR1lHdVlKRFNRWHdpek9Md2swTTFJUnAx?=
- =?utf-8?B?YnkwYVBRZkxuRWxHdFAyRUkwMjlYMGRYdzNIM05NNU9TbkRWS3RzVjlJWDhX?=
- =?utf-8?B?M1hiZTRVU0J3QmIwMzFTajNCWEd4V3hCelZnbC9PRGM3ZC9NT3NHTFlDQWVo?=
- =?utf-8?B?eW5pRVFvU3VMV2FxUUM1WnIxbTRPcG1JeUlmeTdITEVoMW9HdjBMcm5CVFE4?=
- =?utf-8?B?S01VbWU4eDVCSjNQeFVUWkNrWjhVTEZIVURQUmw4azJhd21RUVFPVTlkN3Jj?=
- =?utf-8?B?Q21jQmVLYlBrTDRjRGpvS0pZcHNLRk9ZNE9DUlM5d09NNEpjc0xqZzY4ZW1v?=
- =?utf-8?B?VFpzT0JYamRoKzZ0dm5GcExTTkxhaGIzajZzWmZqc2h1U21rZkJkSFMvNHRv?=
- =?utf-8?B?eWhiZ1FKMU5uQWdDYWIxWGd1dnJXQ0Znc1JITjAzZ0h4a0FZbGdxdlVYOFFW?=
- =?utf-8?B?Z2ZBRW5KK2EzaGx0cEJaS0JvYU9IU0o3azB2VFBVcWJOMlVkQjRoT3NqajVQ?=
- =?utf-8?B?R0NHTjQwWDBQNzkzK2wyc25nYzB2d3l0QStLLzdYaU5Wb00wa09sM1d5TGdn?=
- =?utf-8?B?dXlTZVRWUGRQNlhBZDlJZFp3K1NIVWNpTzhuZmk0V3RUSnh0WmVEdTZ0cjZW?=
- =?utf-8?B?OFdKbnY4RkI0NzFobnNmRnZER0FUNHdldmt5Y0hLSG9IYWhtN0Vaajl5a2Iw?=
- =?utf-8?B?aStxaUdXYWpqU2pPa1dQeWJyODZjdlZnUXI3ZDdUcm5DYmJ1aGh5YTZ3ZGNz?=
- =?utf-8?B?YUNjMGNkNzU1T3FMTUFrSXBKanF2eWJ0TkcxaVJkc1ZJcE1WaHMvem5Ka25I?=
- =?utf-8?B?N1VCV25aV2xpWEtuYnMvV3IvbjFkdWtTNVN5dkNiV0dPcXhnODRzelNwMk0v?=
- =?utf-8?B?dWJzaFc5bElWR28yQmhpQ0FQc3ZmNFVtQ2xpTnE3UFBiUFdCaWxuR0FEVlNm?=
- =?utf-8?B?cXF5NnNvM1BRVUM0Mldwc1ZKcUxRQTlRV1lmWlJzeEVOUW5IUmVsaGVRbGVr?=
- =?utf-8?B?YU5TcFA1MFo1N05pZGFWMUlUNVBUbkUyM2QxSGFSR3Q2Qk0ySTBMa3M5Z01G?=
- =?utf-8?B?ZnpPUGFWWmY2SGVrNnk1aFBwdUlUOEk1aWs0ak5UZUMwdlhMb21NTG9pby9s?=
- =?utf-8?B?Mlp3NWROZnYrSDUrbHhveVFMTjFaanZ3TllyaWdXOU01bEFnTENuL0NWZjFh?=
- =?utf-8?B?ZENjWUE2UzNUZHBOMWRUcE5icURsdE9DbHlFemhKaTBVWjRRVTRtUzdCemhR?=
- =?utf-8?B?ZVJ0dzQ4dnFFaXRYUEpNY0xmTDMzVExjWDNCd1dqZmFzSWlhMXo4UzFXWFQ0?=
- =?utf-8?B?T0w4RnYwdDArRHp3TFFCTksrcVMyWFFHOVlTUnBvNWFvOUFadHFUNjR4Ykdm?=
- =?utf-8?Q?2j3MyrvML5T/o83gd27afS4Z6?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9784c8b-7857-40bd-6ac0-08dd75a3231b
-X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 07:09:28.7473
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8O8Uhw2aNa0gfVHSGNx2yPOFYTSaI+7qgliMkXAlxR9A9jiEGKfHzhMOGmeooMxS2MMBPpq3iB6kvXdRsmJ4eQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR06MB7250
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-gpiochip-set-rv-bcma-v1-1-fa403ad76966@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHh682cC/x3MQQqAIBBA0avIrBswJYOuEi1KR51FKRoRRHdPW
+ r7F/w9UKkwVJvFAoYsrp6Oh7wTYuB6BkF0zKKkGqZXBkDnZyBkrnVgu3Oy+4mi0HY2RznkHLc2
+ FPN//dl7e9wNlTrGoZgAAAA==
+To: =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1641;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=3QgGWzq7NIFxjepgO+EmxIwBZ5R8mEbO5nAStbsHTAI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83p6dQ6MBr5EP50kHnerEPZb674bB0ty/mPpO
+ AkT5Lt41qGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N6egAKCRARpy6gFHHX
+ ctY6D/9ShTLBL9Z6nPznwrvX8KbisGsXZDGio4APnrq6sv+eyzWEIUuQpVj6hLiAGofpngsZN8z
+ 7KYIk7x2nqmWhksXtzbemhiSaYduVaLICb5vPhyyxX7uJM2HxRsTEGUEKhUeY3l91g8RtxCIW5h
+ W4iE3Pm/DcoM2xk4V+fdPicW/a6PrpDcBj0G1tHY5zVqZC0X9MqsK78V6jjCOu0yIdPv18TQS8P
+ NQmsN0OdbUprYBS327ua3WUzvDVKzcYdlTT22L6MAI1psZ5KEp2kNyUmQmQXe9Ze0VS28ZMSTLQ
+ XbzCYNWwwc9dhc+ef/U0NmXafZg7ui0RQ8FU8u3j1hHYsk0aYner35bWObVd1R5+qbC/J0T6nr9
+ JWAefuvYfggMY2dML7OcIFxw+eAqNnxaRG/wGPFNsI8xgODcFtiH2eHvA9RwA+xfDtOM0hCCYtW
+ MEwEUXI1Dhw4EB7oANpCc8ucg55yMHcwGEuiFV9RdUn7MNx4+PrwzAbyGwisOxUpI5F12NDOKjc
+ +pNDSM2+5oEeYRjchK6VCHFzGi37+Wth8gQEiW5sjB6kdwFn1NdshhNZ3gfLIUW3I0Dql/A7yYH
+ sQbPbiYKtBRFxArph9hk3Kb5yBP0cvawSFe48bZvU3KBGAungIK97nxtzc6geL8B9i+f/gPtcaf
+ 0C6BVMj5zCpFTUg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-在 2025/4/7 14:43, Muchun Song 写道:
->
->> On Apr 7, 2025, at 11:37, Muchun Song <muchun.song@linux.dev> wrote:
->>
->>
->>
->>> On Apr 7, 2025, at 11:21, Huan Yang <link@vivo.com> wrote:
->>>
->>>
->>> 在 2025/4/7 10:57, Muchun Song 写道:
->>>>> On Apr 7, 2025, at 09:59, Huan Yang <link@vivo.com> wrote:
->>>>>
->>>>>
->>>>> 在 2025/4/4 18:07, Muchun Song 写道:
->>>>>>> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
->>>>>>>>
->>>>>>>> After the btrfs compressed bio discussion I think the hugetlb changes that
->>>>>>>> skip the tail pages are fundamentally unsafe in the current kernel.
->>>>>>>>
->>>>>>>> That is because the bio_vec representation assumes tail pages do exist, so
->>>>>>>> as soon as you are doing direct I/O that generates a bvec starting beyond
->>>>>>>> the present head page things will blow up.  Other users of bio_vecs might
->>>>>>>> do the same, but the way the block bio_vecs are generated are very suspect
->>>>>>>> to that.  So we'll first need to sort that out and a few other things
->>>>>>>> before we can even think of enabling such a feature.
->>>>>>>>
->>>>>>> I would like to express my gratitude to Christoph for including me in the
->>>>>>> thread. I have carefully read the cover letter in [1], which indicates
->>>>>>> that an issue has arisen due to the improper use of `vmap_pfn()`. I'm
->>>>>>> wondering if we could consider using `vmap()` instead. In the HVO scenario,
->>>>>>> the tail struct pages do **exist**, but they are read-only. I've examined
->>>>>>> the code of `vmap()`, and it appears that it only reads the struct page.
->>>>>>> Therefore, it seems feasible for us to use `vmap()` (I am not a expert in
->>>>>>> udmabuf.). Right?
->>>>>> I believe my stance is correct. I've also reviewed another thread in [2].
->>>>>> Allow me to clarify and correct the viewpoints you presented. You stated:
->>>>>>   "
->>>>>>    So by HVO, it also not backed by pages, only contains folio head, each
->>>>>>    tail pfn's page struct go away.
->>>>>>   "
->>>>>> This statement is entirely inaccurate. The tail pages do not cease to exist;
->>>>>> rather, they are read-only. For your specific use-case, please use `vmap()`
->>>>>> to resolve the issue at hand. If you wish to gain a comprehensive understanding
->>>>> I see the document give a simple graph to point:
->>>>>
->>>>> +-----------+ ---virt_to_page---> +-----------+   mapping to   +-----------+
->>>>> |           |                                     |     0     | -------------> |     0     |
->>>>> |           | +-----------+                +-----------+
->>>>> |           |                                      |     1     | -------------> |     1     |
->>>>> |           | +-----------+                +-----------+
->>>>> |           |                                      |     2     | ----------------^ ^ ^ ^ ^ ^
->>>>> |           | +-----------+                      | | | | |
->>>>> |           |                                      |     3     | ------------------+ | | | |
->>>>> |           | +-----------+                        | | | |
->>>>> |           |                                      |     4     | --------------------+ | | |
->>>>> |    PMD    | +-----------+                          | | |
->>>>> |   level   |                                   |     5     | ----------------------+ | |
->>>>> |  mapping  | +-----------+                             | |
->>>>> |           |                                     |     6     | ------------------------+ |
->>>>> |           | +-----------+                              |
->>>>> |           |                                     |     7     | --------------------------+
->>>>> |           |                                    +-----------+
->>>>> |           |
->>>>> |           |
->>>>> |           |
->>>>> +-----------+
->>>>>
->>>>> If I understand correct, each 2-7 tail's page struct is freed, so if I just need map page 2-7, can we use vmap do
->>>>>
->>>>> something correctly?
->>>> The answer is you can. It is essential to distinguish between virtual
->>> Thanks for your reply, but I still can't understand it. For example, I need vmap a hugetlb HVO folio's
->>>
->>> 2-7 page:
->>>
->>> struct page **pages = kvmalloc(sizeof(*pages), 6, GFP_KENREL);
->>>
->>> for (i = 2; i < 8; ++i)
->>>
->>>     pages[i] = folio_page(folio, i);    //set 2-7 range page into pages,
->>>
->>> void *vaddr = vmap(pages, 6, 0, PAGE_KERNEL);
->>>
->>> For no HVO pages, this can work. If HVO enabled, do "pages[i] = folio_page(folio, i);" just
->>>
->>> got the head page? and how vmap can correctly map each page?
->> Why do you think folio_page(folio, i) (i ≠ 0) returns the head page?
->> Is it speculation or tested? Please base it on the actual situation
->> instead of indulging in wild thoughts.
-> By the way, in case you truly struggle to comprehend the fundamental
-> aspects of HVO, I would like to summarize for you the user-visible
-> behaviors in comparison to the situation where HVO is disabled.
->
-> HVO Status		Tail Page Structures	Head Page Structures
-> Enabled			Read-Only (RO)		Read-Write (RW)
-> Disabled		Read-Write (RW)		Read-Write (RW)
->
-> The sole distinction between the two scenarios lies in whether the
-> tail page structures are allowed to be written or not. Please refrain
-> from getting bogged down in the details of the implementation of HVO.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-Thanks, I do a test, an figure out that I'm totally misunderstand it.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/bcma/driver_gpio.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Even if HVO enabled, tail page struct freed and point to head, linear mapping still exist, so that any page_to_pfn,
+diff --git a/drivers/bcma/driver_gpio.c b/drivers/bcma/driver_gpio.c
+index 5f90bac6bb09..f021e27644e0 100644
+--- a/drivers/bcma/driver_gpio.c
++++ b/drivers/bcma/driver_gpio.c
+@@ -26,12 +26,14 @@ static int bcma_gpio_get_value(struct gpio_chip *chip, unsigned gpio)
+ 	return !!bcma_chipco_gpio_in(cc, 1 << gpio);
+ }
+ 
+-static void bcma_gpio_set_value(struct gpio_chip *chip, unsigned gpio,
+-				int value)
++static int bcma_gpio_set_value(struct gpio_chip *chip, unsigned int gpio,
++			       int value)
+ {
+ 	struct bcma_drv_cc *cc = gpiochip_get_data(chip);
+ 
+ 	bcma_chipco_gpio_out(cc, 1 << gpio, value ? 1 << gpio : 0);
++
++	return 0;
+ }
+ 
+ static int bcma_gpio_direction_input(struct gpio_chip *chip, unsigned gpio)
+@@ -184,7 +186,7 @@ int bcma_gpio_init(struct bcma_drv_cc *cc)
+ 	chip->request		= bcma_gpio_request;
+ 	chip->free		= bcma_gpio_free;
+ 	chip->get		= bcma_gpio_get_value;
+-	chip->set		= bcma_gpio_set_value;
++	chip->set_rv		= bcma_gpio_set_value;
+ 	chip->direction_input	= bcma_gpio_direction_input;
+ 	chip->direction_output	= bcma_gpio_direction_output;
+ 	chip->parent		= bus->dev;
 
-page_to_virt(also folio's version), if start from head page can compute each need page like folio_page, can still work:
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250326-gpiochip-set-rv-bcma-763c7660ddfd
 
-hvo head 0xfffff9de849d0000, pfn=0x127400, wish offset_pfn 0x1275f1, idx 497 is 0xfffff9de849d7c40, pfn=0x1275f1.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-When vmap, we no need to touch actually page's content, just turn to pfn, so, work well.
-
-BTW, even if we need to touch actually input page struct, it point to head page, I guess will effect nothing.
-
-If anything still misunderstand, please corrent me. :)
-
-Muchun, thank you for your patience,
-
-Huan Yang
-
->
-> Thanks,
-> Muchun.
->
->> Thanks,
->> Muchun.
->>
->>> Please correct me. :)
->>>
->>> Thanks,
->>>
->>> Huan Yang
->>>
->>>> address (VA) and physical address (PA). The VAs of tail struct pages
->>>> aren't freed but remapped to the physical page mapped by the VA of the
->>>> head struct page (since contents of those tail physical pages are the
->>>> same). Thus, the freed pages are the physical pages mapped by original
->>>> tail struct pages, not their virtual addresses. Moreover, while it
->>>> is possible to read the virtual addresses of these tail struct pages,
->>>> any write operations are prohibited since it is within the realm of
->>>> acceptability that the kernel is expected to perform write operations
->>>> solely on the head struct page of a compound head and conduct read
->>>> operations only on the tail struct pages. BTW, folio infrastructure
->>>> is also based on this assumption.
->>>>
->>>> Thanks,
->>>> Muchun.
->>>>
->>>>> Or something I still misunderstand, please correct me.
->>>>>
->>>>> Thanks,
->>>>>
->>>>> Huan Yang
->>>>>
->>>>>> of the fundamentals of HVO, I kindly suggest a thorough review of the document
->>>>>> in [3].
->>>>>>
->>>>>> [2] https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com/#t
->>>>>> [3] Documentation/mm/vmemmap_dedup.rst
->>>>>>
->>>>>>> [1] https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m055b34978cf882fd44d2d08d929b50292d8502b4
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Muchun.
->
->
