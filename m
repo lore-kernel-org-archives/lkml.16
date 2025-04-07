@@ -1,41 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424DF335BA;
-	Mon,  7 Apr 2025 05:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA717A319;
+	Mon,  7 Apr 2025 05:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744003478; cv=none; b=joC4x6AaKILCvYB1cAawMClxUv10I7lF3BIWjjXdcSFZEuKCJFNYUGmQgGBM/mmcl++vj7wHTlyTjxVVh3RPoOFXwRsbw0OEUsRnTXWlr+ilA1vB9V8OObLE+QxmxOZvUTBkAN+wEPJna/AA/G2YqAHxaDPheYN3ir5ciQIGeWM=
+	t=1744003480; cv=none; b=YXLFNQ5AMFxZS3hkMjGsUu6Vz19aPhGi1H5uTK1OeOL9yBYcqNIY3gfEkrccYdIQj7TviNTF9pKhZWuBhhPCQVZDFSFwuIqICoJBBf5MQ1XBuMfTvT2nc+CORTWW4TSXGekX2pSt+Bf5bwKbySGa9+HJJsBMt2tjFmjdufdL4YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744003478; c=relaxed/simple;
-	bh=NYxOraE5tY452HW4mFZLuhv+m94cgUKS1yX2m1YM3Og=;
+	s=arc-20240116; t=1744003480; c=relaxed/simple;
+	bh=x4/ZECRf2xLTgM64M82wzde//1q1BgFB1l4XoJ8942Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tcrUhfX2MKhUObGzHy7M3w1Ci4Ugbv2fI1N7Hag+sqB/hlZ00Wkk556SHdKVdzskSHd2XY0PP6d51vS8O8Zc3BhL5jNQcavI13Nc5nQH2FKao5f0t1naVdTeGuFODdD+fpcrVCdwfOMKbhQIP/ql7wEZCc0dHgxvSOMyaY6U0to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgG5tsHy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJCLAVoseTRalhg6fAjNx6gFpWTNLiGtxNDN3nNHMyHOt+1kjgL7gkhK5jP1vc4fS54F7vzMN07mVsMnMpfJydg+f/YKvf7Ld0oGjAGTJDN/vuWVFr0gpo/sQslD+cOcVkWb1wPKbuoB3SnAuHqJeisWdKw9jX7j7vuZI/I9pio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Tle9oFmN; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgG5tsHy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97164C4CEDD;
-	Mon,  7 Apr 2025 05:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744003477;
-	bh=NYxOraE5tY452HW4mFZLuhv+m94cgUKS1yX2m1YM3Og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WgG5tsHygFfrBSIEk6tPsXidti3vgIP0WCLtSJ44pg4tgfROGKcuXuuKixRIbve1I
-	 uEwp0Kpp27EsVQwe8cL6AR5Vmi1eQOEtC4V3MojCN6Ne8+Q2NF9K/IylJMR+DNmP4l
-	 tqQGBN3KO8lB7aRhG9z2nPbXa4HeJ+NXtJY+gsQlG8ef1cyT77RzWHNqBI23vG6kqj
-	 dWuDadeoNPsLBxLCPn/5JgITDDizM1r5NMuY/V1eolFL6Os8djiCPhvwdm9PUzs/aA
-	 QpufR7W5gUTW0zJDlcLxhbi7+ac9IECSqHkCTuTbiIgAZFsXhxXJAi6ec23/TtOIO+
-	 kKQdrCY2TBZgg==
-Date: Mon, 7 Apr 2025 05:24:36 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	mhklinux@outlook.com, decui@microsoft.com
-Subject: Re: [PATCH] Drivers: hv: Fix bad pointer dereference in
- hv_get_partition_id
-Message-ID: <Z_NhlDk2YpptYtxe@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Tle9oFmN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=F3Zl/p/xSIFkGCwxTRGfCYy96e823i/BGAgVv7utCw8=; b=Tle9oFmNKPrm2mjkiB+hqurC/0
+	2IXKRQ3A3McjIQUdB/DNhdjA1yZlcklgU0GI2iGZMQMLPmzKpsn7Mw5S9BkD4mqTrmVISAdSvWNMZ
+	L+zcyLWVJdOpWGfaTnovkABHKoUEkJJgGlFRrRDBUkc7dtdT0gaoWLXDjhyVBeJzm7TzcfBHISeis
+	+TgHYkgKWmQeAS0EFVs349p8eLDcFvZpxWk5LbKSpW9TWRiFBFYLn9eiDIyhFKnaQs/16e1WC8lv/
+	Uc1i0wxvhIvm+7TI9HHSflY9DTup8qX/hWCE2KFCzFF+RI4y15SME9ETsqmjnMKyIPuCs2D3b2Tjh
+	mKw3O5jQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u1eyI-00DNIp-29;
+	Mon, 07 Apr 2025 13:24:35 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Apr 2025 13:24:34 +0800
+Date: Mon, 7 Apr 2025 13:24:34 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	davem@davemloft.net
+Subject: Re: [PATCH 1/2] crypto: omap-aes - use dev_groups to register
+ attribute groups
+Message-ID: <Z_Nhkv2_86vSS8LD@gondor.apana.org.au>
+References: <20250329180122.3668989-1-ovidiu.panait.oss@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,36 +50,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250329180122.3668989-1-ovidiu.panait.oss@gmail.com>
 
-On Tue, Apr 01, 2025 at 10:32:17AM -0700, Nuno Das Neves wrote:
-> 'output' is already a pointer to the output argument, it should be
-> passed directly to hv_do_hypercall() without the '&' operator.
+On Sat, Mar 29, 2025 at 08:01:21PM +0200, Ovidiu Panait wrote:
+> Instead of manually adding attribute groups, set dev_groups pointer to
+> have the driver core do it.
 > 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-
-Applied to hyperv-fixes. Thanks.
-
+> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
 > ---
-> This patch is a fixup for:
-> e96204e5e96e hyperv: Move hv_current_partition_id to arch-generic code
-> 
->  drivers/hv/hv_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index b3b11be11650..a7d7494feaca 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -307,7 +307,7 @@ void __init hv_get_partition_id(void)
->  
->  	local_irq_save(flags);
->  	output = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
-> +	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output);
->  	pt_id = output->partition_id;
->  	local_irq_restore(flags);
->  
-> -- 
-> 2.34.1
-> 
+>  drivers/crypto/omap-aes.c | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
+
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
