@@ -1,68 +1,68 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB78B2222D4
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F0D22258B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049368; cv=none; b=mzezmDFU9f8mMioJdb/kBVddr0UHaQZ6TFHIlXs3iJYOCFf0cEUNyn9qQPvWETQiGg3MAw+7OY3wO2PH8ilhqtQYX04JzDblfnfhyVS/WI4fbNhK2S70lPAAACZI0kTYMb/qxGvl1pY6yNfPdFM7+Its75eZbZ5KDslPVtS4lr4=
+	t=1744049372; cv=none; b=ct2g5dFaL4FQaZTem3bhsefijzG4NJwWK+QfzFlhlFqwXaEHf8raGAPME6976m/KuL5sczAI+JdxmiLsAVGCAzOg2Pl6n3I9MhWQ/yeZdbucF+HMjETgHcmQg4iIOZIMICfRZPIU9J+H6gkpLP0cI5f5lo8OY9M1Qo028f5L8Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049368; c=relaxed/simple;
-	bh=xwD+hParWO1vz6uH2Pzv5Jj35e6Ns1OzYF8bQQL/WmE=;
+	s=arc-20240116; t=1744049372; c=relaxed/simple;
+	bh=+z4ZM3TqTvoic9Teqna+6DZPTl5o6ThQykWvw0OH6uQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BBq+09fvJl8WF/Du3OS7x8LZvJkktO5rDSezSVPc9rQ08t15jIMs+LatZB8NCjsLv1CPZ778kgEpyspNugP8p3BGNEq0R2MrwCKJBAKRj2F1YsmwGFqFf1fpuhZc7dL+S1hdUMoZkU1AYd2P3ueQR6mNNv6xVyPrfYmbAVg3pNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDpaTv9D; arc=none smtp.client-ip=209.85.216.51
+	 MIME-Version:Content-Type; b=uvug+kpMDAGByntovk+uz1sclO0+w+Zd1fZvu/piO4q/+YuVKoL0oUyfZcWQm/T25nF0b7Y+3GMwbhLiDeXn0GtoyidWqKg1GJeN1gHUhkEpox+DyZrQgf4U0gYkVFzZxvQz0oaNicfaA44AasxcTo2+rQyw5zVgqVV2IYyVs/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7JnpFYr; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDpaTv9D"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3031354f134so3489732a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:09:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7JnpFYr"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af519c159a8so4183994a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049366; x=1744654166; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744049370; x=1744654170; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Z0y0TK+N2j7unfdHAGWrmjHTParwUExlSa0jHt4G78=;
-        b=ZDpaTv9D1YlImNpWYlk5/LuT7KCeSXaYISuC1uWSHN2JOyBa0TPYCuELjoIn1RF16/
-         4BGFKLcKO78Vi8uFQ5A6EzB25M1Aw+LBpdX4OqeEcHdGqKlInyUbH3Pw9qx5K6OFy5A5
-         Wwt7rYvD86WJlrjnwmJf1rGg2atHdOYEg14dq5SRqsX5BDpV1FH01xPezFV78N4nsWn0
-         56TV99lvs7DIjvxuzqrF/OQeOOhUAk0gBvY8Oj/ciA1sfjzkQML2sP/YL0+KrXoGlEqg
-         bIp6/Nm1W8VEpiJOo7fRZgzADWBGjN3dGf6LNrELe2yaDoJa0ZoCKfdife+Xgky0yJNj
-         PzHQ==
+        bh=WMjCLGzG+iKPyMJNKKfkgkaaKsErgB/MOxToztcG4nk=;
+        b=C7JnpFYr8VudhnyJv135Wg1LONJWNM9NvWOccEQ8uML7A2/xYwtBWwEEaerqalfhll
+         sSC9OmghFJJRhIyrW1NvwF+jWNByPaLVmD8fCN2D82owfy94pXfx68fIFFrvspBJCMor
+         2txIDeBxlwvoqDdNH1V36+iVQyNMvBV+ggowdJrNMakm1qDDnEBiajMJ0jpIc68CPHV6
+         IPW1piwCU/I7kHN/SZoHN7KZzRt5kW1sfH8Mv37T4CTfKmUeRyEXZ2zp0YltrbqBTsUK
+         0fUlrg2fG0i1VJirLKHaJQFaABLUM5xXem8u0rbWRLMd3hiwhXGr0QhmTUOzehvwpVT/
+         FO/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049366; x=1744654166;
+        d=1e100.net; s=20230601; t=1744049370; x=1744654170;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5Z0y0TK+N2j7unfdHAGWrmjHTParwUExlSa0jHt4G78=;
-        b=knpOiJnfclYPXKAlakHup7wKMFGczDWFqZAxsOjCzfpooqtC3M8h8b9RqlWV1WtbJn
-         OFpm+w2uXqlSykW06mMT2H+eDzuvTT28UMQ1L97XdsfJhrCIcYvY8mvKJ9UOIy8X7c64
-         MpDk1zlnia12cietc25r/emCVopYcP4gWnnjl3lpfwdYAmAfVWaC8StdiDqdZhlNVlk3
-         C2muzHo5Qv8KmkWdGR7YcBGY4NTu4ELikHvFq+a+ASrY/ogOgF4jY2A8Z7E7E8qNgURL
-         Areug4PoOct/EYGTdM+Hy4ZiVrJ1S7Ri3WtUxlcO/YxaNsL/bzWDjlDTEBss7rSk8u8d
-         tgiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU09K27bo8VvWvN4TTV2hMBQCRf+1RQfOff+drOV/OKmkcEUJ7tT4Rl/MV6PbyxLldu6/aLJULuPl5eDnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkZAyItsBIJTWJPuFmJ9MxxP5GUmMiauWHh0T0jp74F9O/oopB
-	DZ4h7m6hZg/Ieg10ep2HXmcKu3tZHkxP1q+rSiKZJ0/XOUe0JH2P
-X-Gm-Gg: ASbGncvHu0mOrl+uyfeGSmI79234QSMGlrBhsUmc1kvvokpZV9j6kUBUskIGuXQDm74
-	7fV5bG9imh1EBYNw1G62iQ3Z5fQ8wry/Mm+dc76DYtGl6rwN6yCurFNvPJJ7iHCdMDEWKYelwNS
-	mGxxIqYveYcgIhIgIAzT+xe8iOumoIZxFRzl5V8bkOPnuy6NiDpZYXElRFE0OTJ0OLT526I78CP
-	mhE9sWheAhDOUux3CQMWmLb/WWjaXsPqCjvfp3ZpYChYHWfbENaHhPv561e1XQueMB7pKr6qDtF
-	ozhhY5fsN34RjzNklattBi6L0lrMfsEZZ7czeq2E8Vmk0mf67H/IlFqA3B5K8TqMd5d9SEjKf7W
-	xNFAMwrCg0hTAEZOj/eyO2Rbxi327FcFrQQ==
-X-Google-Smtp-Source: AGHT+IFgrdURIj5aGIW42rvqFSz+4B3fV+3dwcYfHSLwCG5BImXtPG/2PWupoaefl6dEzTqBihbAPA==
-X-Received: by 2002:a17:90b:2d4c:b0:2fa:228d:5b03 with SMTP id 98e67ed59e1d1-306a615be9fmr15006956a91.19.1744049365882;
-        Mon, 07 Apr 2025 11:09:25 -0700 (PDT)
+        bh=WMjCLGzG+iKPyMJNKKfkgkaaKsErgB/MOxToztcG4nk=;
+        b=Un4Uth9uPh/813SRqa9kAhqeYUPzggyV5ZRhq1haSn62tlcthzatb5Uocziopg+L7I
+         jvjcV8uP2JiYGM6hHAjGUlbTxM9EnY3gV8fZi8BCZirKGtgIjx6kgMft0i44v305Gz3l
+         jgW2YvHVPdqkNUZ/eYLqhmWOqra6eNcS5qE87qGVa/3gq8ABy+hLyLbX5priRAf7PMru
+         2Ie+nwfogB+l32tWY50vjYlu8JoG1U0fVuUKOuv60JKQNPc8ka5N1ufhq9PZE7mCWSyF
+         QI4PvE4yvaP8E1IYQ5Hdpl73mhgMW/FJ0esnyrBFyv5RTMOO1cWi9QUsaaMVVp8Wu+fi
+         ITdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdoDDaXOtvoKk2pu/AhEuLnzJxN+X0DAFV/mxrwoe04paOQ1RWhSM3uG+KE8I1KA04WSls5hhYy95xIrA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrLv9Ua2YhW3iETfSA8ntq22VuK+gEkc09HxlOgzTCywr+RACm
+	XNoI7/pcY+CbwV0KKKIJIlp3XdF+2+YZe9xyB7Otbyhc3FpS0IeY
+X-Gm-Gg: ASbGncvh1e2T+/BH/5AVwE49++H1SV05dGFX+cDlw+SSfB2zUm/acI/SoMTnkyq/+r/
+	knVL+QXzd87dcCC2IXpNOHAaUiM8RUUvmaYydiLqXQMjQRjfqgPSB/1xVu1nEJD2AITugopsSPv
+	ckkdIxWULVtGYDZ6jAykJPo78iNCvmRy+VNWPR3ePlOKlzCkNryr9Q6ZjaV0r20W8sKq/yyYsYX
+	zHVaQkKIK/aLO+LYAgsKWB1JxLRp17TM2TVlgZOjpSVstz/ePT+WbFv9f5/leuglhyodvZ2B6Dd
+	+0cOFen27808R16BgqR3T/xncvu8fQX8/NepMsFVWn+xllLJm+gqZ5yT0t9/fBa/u31AnmZBPaT
+	XkeeIaNLMm9r8ew5C9o4IPYUas/X201S0dA==
+X-Google-Smtp-Source: AGHT+IFm3nEZ9gY9atSzADAapLMqEef81qmFhhoX5lX79/arRk7VY+zxr+6spU/7xP1WGipqyHp2rw==
+X-Received: by 2002:a17:903:3bc6:b0:224:fa0:36da with SMTP id d9443c01a7336-22a8a85bf1amr140171225ad.18.1744049370199;
+        Mon, 07 Apr 2025 11:09:30 -0700 (PDT)
 Received: from localhost.localdomain (118-160-134-247.dynamic-ip.hinet.net. [118.160.134.247])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e03esm84282455ad.146.2025.04.07.11.09.22
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e03esm84282455ad.146.2025.04.07.11.09.26
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Apr 2025 11:09:25 -0700 (PDT)
+        Mon, 07 Apr 2025 11:09:29 -0700 (PDT)
 From: Andy Chiu <andybnac@gmail.com>
 To: linux-riscv@lists.infradead.org,
 	alexghiti@rivosinc.com,
 	palmer@dabbelt.com
-Cc: Andy Chiu <andybnac@gmail.com>,
+Cc: Andy Chiu <andy.chiu@sifive.com>,
 	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
 	linux-kernel@vger.kernel.org,
 	Alexandre Ghiti <alex@ghiti.fr>,
@@ -78,9 +78,9 @@ Cc: Andy Chiu <andybnac@gmail.com>,
 	samuel.holland@sifive.com,
 	olivia.chu@sifive.com,
 	c2232430@gmail.com
-Subject: [PATCH v4 08/12] riscv: add a data fence for CMODX in the kernel mode
-Date: Tue,  8 Apr 2025 02:08:32 +0800
-Message-Id: <20250407180838.42877-8-andybnac@gmail.com>
+Subject: [PATCH v4 09/12] riscv: ftrace: support PREEMPT
+Date: Tue,  8 Apr 2025 02:08:33 +0800
+Message-Id: <20250407180838.42877-9-andybnac@gmail.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 In-Reply-To: <20250407180838.42877-1-andybnac@gmail.com>
 References: <20250407180838.42877-1-andybnac@gmail.com>
@@ -93,57 +93,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-RISC-V spec explicitly calls out that a local fence.i is not enough for
-the code modification to be visble from a remote hart. In fact, it
-states:
+From: Andy Chiu <andy.chiu@sifive.com>
 
-To make a store to instruction memory visible to all RISC-V harts, the
-writing hart also has to execute a data FENCE before requesting that all
-remote RISC-V harts execute a FENCE.I.
+Now, we can safely enable dynamic ftrace with kernel preemption.
 
-Although current riscv drivers for IPI use ordered MMIO when sending IPIs
-in order to synchronize the action between previous csd writes, riscv
-does not restrict itself to any particular flavor of IPI. Any driver or
-firmware implementation that does not order data writes before the IPI
-may pose a risk for code-modifying race.
-
-Thus, add a fence here to order data writes before making the IPI.
-
-Signed-off-by: Andy Chiu <andybnac@gmail.com>
+Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
 Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
 ---
-Changelog v4:
- - Explain more in commit msg and add Björn's R-b
----
- arch/riscv/mm/cacheflush.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/riscv/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-index b81672729887..b2e4b81763f8 100644
---- a/arch/riscv/mm/cacheflush.c
-+++ b/arch/riscv/mm/cacheflush.c
-@@ -24,7 +24,20 @@ void flush_icache_all(void)
- 
- 	if (num_online_cpus() < 2)
- 		return;
--	else if (riscv_use_sbi_for_rfence())
-+
-+	/*
-+	 * Make sure all previous writes to the D$ are ordered before making
-+	 * the IPI. The RISC-V spec states that a hart must execute a data fence
-+	 * before triggering a remote fence.i in order to make the modification
-+	 * visable for remote harts.
-+	 *
-+	 * IPIs on RISC-V are triggered by MMIO writes to either CLINT or
-+	 * S-IMSIC, so the fence ensures previous data writes "happen before"
-+	 * the MMIO.
-+	 */
-+	RISCV_FENCE(w, o);
-+
-+	if (riscv_use_sbi_for_rfence())
- 		sbi_remote_fence_i(NULL);
- 	else
- 		on_each_cpu(ipi_remote_fence_i, NULL, 1);
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 7dbed10843d2..dc0fc11b6e96 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -157,7 +157,7 @@ config RISCV
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_GRAPH_TRACER if HAVE_DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_FUNCTION_GRAPH_FREGS
+-	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
++	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+ 	select HAVE_EBPF_JIT if MMU
+ 	select HAVE_GUP_FAST if MMU
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
 -- 
 2.39.3 (Apple Git-145)
 
