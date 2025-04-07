@@ -1,205 +1,98 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621402459DF;
-	Mon,  7 Apr 2025 11:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40422459FB;
+	Mon,  7 Apr 2025 11:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026527; cv=none; b=cPGFXLpYvugUxhgY/XD3/L9jq73SIJAi1mfglHSrhlLo6+GvRHDXF9Vj8aVKTgCm5Bd6dFddZcSTNnFIv0GVQff1jWO7hY7NOOCGCt9KVP6nnNMt2cJStbrAmDZgBF/gboNVKPFtKh7LhmWxpD3Ek+3VZcUb3OQP/pY9xgW0UNM=
+	t=1744026538; cv=none; b=Ks5hBc6O/FipXVAQLwwuuvDASqSf4i+El5dvKGYIt9f5Xo+MxfNI1jTVoNeiyrHfNv5opCYqaSngo6ifw3RfqNoLWYbv0g3wAxqXCiL9ExwpWqhdQ8bLBEf05IZ5uS4FDfwiSOC92699xTGXBQyBo1llyNwlRnfXyBvjl263Mok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026527; c=relaxed/simple;
-	bh=oGpnu5Y7EnY5P9X1AiW9ING7v/3dxT5f+8RiP8Atz6U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KNgOnvWW8Gi8SQwvqms0sNf8H/+D7TdVzasMLk+7URdiAR7oNr5w34i7LxnJp4Ep+VaNl2C1fzk0VL277R2im0ys63rIyqyLKMzVtXsaXN6Ld0MY3PCRbco2ByTRx5zgBWNS1I0LkmBxYvHIh1JGpqTIQJxxIPX85JEgl+GfGH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=g+SZDsLk; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1744026538; c=relaxed/simple;
+	bh=K8TbyYbFoFexJklIknQNbJz1L0TvNV9NasumndhoVrI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DzCHGJ8GiNwVU3Gten9he/lcgBRQZ1Gr0N9jBuY6ZwOA9VlUtSucniwFKjD5ArGVA94YHFmBOmnPKw98E7xgKRFYaNvEIi/3dVVKPJB0JAxNvNoEi3wuLbAQr/dE9g4CNfwFlFb3jagtbs9egG4GflGxlyGjC3i1welqIYbO4Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XY+ow4T1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="g+SZDsLk"
-X-UUID: 3e446ad013a611f0aae1fd9735fae912-20250407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JAbvFEC9Kt8P81+V2sHCH2GZ+SfpkGkZ983AinyulB0=;
-	b=g+SZDsLkvjKbQxs5p066AGN5gh2k8U3h9Adi1CSuEDmSxz1Q2AJw4bK5hstY9jKXCGCOj2zgsmo0fKHWtcR20ucFALmwiFTmw8kCPe9JUgnPvjM+Kzu4DdzeGSxO6rBrAciXdmoquefy7n7AFofl8Np1QziyFW0is0486e4jynE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:1526d06d-ccef-4f20-a309-76ebbefe26a2,IP:0,UR
-	L:25,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:0ef645f,CLOUDID:9d0c46c7-16da-468a-87f7-8ca8d6b3b9f7,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:11|83|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 3e446ad013a611f0aae1fd9735fae912-20250407
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1441387583; Mon, 07 Apr 2025 19:48:37 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 7 Apr 2025 19:48:36 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 7 Apr 2025 19:48:35 +0800
-From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
-	<darren.ye@mediatek.com>
-Subject: [PATCH 11/11] ASoC: dt-bindings: mediatek,mt8196-mt6681: add mt8196-mt6681 document
-Date: Mon, 7 Apr 2025 19:47:24 +0800
-Message-ID: <20250407114759.24835-13-darren.ye@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250407114759.24835-1-darren.ye@mediatek.com>
-References: <20250407114759.24835-1-darren.ye@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XY+ow4T1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2F452C4CEE9;
+	Mon,  7 Apr 2025 11:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744026538;
+	bh=K8TbyYbFoFexJklIknQNbJz1L0TvNV9NasumndhoVrI=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=XY+ow4T13NlnWCufVECdYB5+EGQTLp/WyUFdIOxSjVz37QrS5eByqOxdfa2FwTcpn
+	 DkFTQWSVtxfStTDUbMWZa62Eu3Bj+C1i4JASVq7FeFiuupydHiObkasl0H0plE/5jB
+	 Aqb4DHR45JVsmNYzC08YpKu5x9CRfmmirOH0wfwgfCi540klEsxsc80L2NEltrTt5f
+	 dkA7JrRT6lk3BXaOZoG3/rbC/gvGbM0Eb0wzPL+fwFFZu3/wSXUFtwUTq06fWKe8tV
+	 +Arl+vZWFYPqnich/l44VTtH7k1OWDmRxj1OclLIcpDwPeJScpS7IukxjeDeHliALE
+	 AO/gSMIUX00NQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9B8C36010;
+	Mon,  7 Apr 2025 11:48:58 +0000 (UTC)
+From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
+Date: Mon, 07 Apr 2025 13:48:49 +0200
+Subject: [PATCH] rtc: sd2405al: Add I2C address.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Message-Id: <20250407-rtc-sd2405al-i2c-addr-v1-1-efdd951952c0@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAKC782cC/x3MwQqDMAyA4VeRnA3UzM7qq4iH0mRbYFRJRQbiu
+ 694/A7/f0IRUykwNSeYHFp0zRVd20D6xPwWVK4GcuRd7wa0PWFh6p2PX1RKGJkNHyOxDxL8c2C
+ o7Wby0t/9nZfr+gMVtME4ZwAAAA==
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744026537; l=976;
+ i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
+ bh=fg5GX8rA+Q5pAy0F9ekX3Q4r3NUci+f2g8fC+4fI6IQ=;
+ b=lS+9qPiYe02kBjoBsCue2i0H/hxmCMMXIY0GYgeI2sHiYyuUljLEUfzLHKYX8CDQ7BE/FCiCA
+ x7D//v3z2FPCZMzTj4MHPk1V9764M88WXK7xfKcZlAyes49iBNqImBe
+X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
+ pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
+X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
+ auth_id=60
+X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+Reply-To: gomba007@gmail.com
 
-From: Darren Ye <darren.ye@mediatek.com>
+From: Tóth János <gomba007@gmail.com>
 
-Add document for mt8196 board with mt6681.
+It is common to include the I2C address of the device in the source
+file.
 
-Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+Signed-off-by: Tóth János <gomba007@gmail.com>
 ---
- .../sound/mediatek,mt8196-mt6681.yaml         | 114 ++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8196-mt6681.yaml
+It is common to include the I2C address of the device in the source file.
+---
+ drivers/rtc/rtc-sd2405al.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8196-mt6681.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8196-mt6681.yaml
-new file mode 100644
-index 000000000000..2c1b0df05c27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8196-mt6681.yaml
-@@ -0,0 +1,114 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8196-mt6681.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek MT8196 ASoC sound card
-+
-+maintainers:
-+  - Darren Ye <darren.ye@mediatek.com>
-+
-+allOf:
-+  - $ref: sound-card-common.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - mediatek,mt8196-mt6681-sound
-+          - mediatek,mt8196-nau8825-sound
-+          - mediatek,mt8196-rt5682s-sound
-+          - mediatek,mt8196-rt5650-sound
-+
-+  audio-routing:
-+    description:
-+      Valid names could be the input or output widgets of audio components,
-+      power supplies, MicBias of codec and the software switch.
-+
-+  mediatek,platform:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of MT8188 ASoC platform.
-+
-+  mediatek,adsp:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the MT8188 ADSP platform, which is the optional Audio DSP
-+      hardware that provides additional audio functionalities if present.
-+      The AFE will link to ADSP when the phandle is provided.
-+
-+patternProperties:
-+  "^dai-link-[0-9]+$":
-+    type: object
-+    description:
-+      Container for dai-link level properties and CODEC sub-nodes.
-+
-+    properties:
-+      link-name:
-+        description:
-+          This property corresponds to the name of the BE dai-link to which
-+          we are going to update parameters in this node.
-+        items:
-+          enum:
-+            - TDM_DPTX_BE
-+            - I2SOUT6_BE
-+            - I2SIN6_BE
-+            - I2SOUT4_BE
-+            - I2SOUT3_BE
-+
-+      codec:
-+        description: Holds subnode which indicates codec dai.
-+        type: object
-+        additionalProperties: false
-+        properties:
-+          sound-dai:
-+            minItems: 1
-+            maxItems: 2
-+        required:
-+          - sound-dai
-+
-+      dai-format:
-+        description: audio format.
-+        items:
-+          enum:
-+            - i2s
-+            - right_j
-+            - left_j
-+            - dsp_a
-+            - dsp_b
-+
-+      mediatek,clk-provider:
-+        $ref: /schemas/types.yaml#/definitions/string
-+        description: Indicates dai-link clock master.
-+        items:
-+          enum:
-+            - cpu
-+            - codec
-+
-+    additionalProperties: false
-+
-+    required:
-+      - link-name
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - mediatek,platform
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "mediatek,mt8196-mt6681-sound";
-+        model = "mt8196-mt6681";
-+        mediatek,platform = <&afe>;
-+        dai-link-0 {
-+            link-name = "I2SOUT6_BE";
-+            dai-format = "i2s";
-+            mediatek,clk-provider = "cpu";
-+            codec {
-+                sound-dai = <&nau8825>;
-+            };
-+        };
-+    };
-+
+diff --git a/drivers/rtc/rtc-sd2405al.c b/drivers/rtc/rtc-sd2405al.c
+index 00c3033e8079..708ea5d964de 100644
+--- a/drivers/rtc/rtc-sd2405al.c
++++ b/drivers/rtc/rtc-sd2405al.c
+@@ -5,7 +5,9 @@
+  * Datasheet:
+  * https://image.dfrobot.com/image/data/TOY0021/SD2405AL%20datasheet%20(Angelo%20v0.1).pdf
+  *
+- * Copyright (C) 2024 Tóth János <gomba007@gmail.com>
++ * I2C slave address: 0x32
++ *
++ * Copyright (C) 2024-2025 Tóth János <gomba007@gmail.com>
+  */
+ 
+ #include <linux/bcd.h>
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250407-rtc-sd2405al-i2c-addr-392d58e8567d
+
+Best regards,
 -- 
-2.45.2
+Tóth János <gomba007@gmail.com>
+
 
