@@ -1,133 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164A121C163
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA7E22A4CD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068006; cv=none; b=F96QgxiJ8bPgIVG/BhBV8QJADCqq4MnKMPJqbN29NIsacRsEUeypb4eC8j0wLqYJHYMs2LOb9IRWFWguG1AW3Y6KjBep+Zot/KkQvAojIRYaEmNkFOWPtdJZE08s5KcTFMb6rqpnXFa9+N6m+r/xEd4dpj7uoCu7M7HdvIzn16M=
+	t=1744068069; cv=none; b=AlfYJmtgu6iB01u6XLllLWrM57xHlwoWAzEvWkpCkP/EAB7zcYO6b43wLpVjf0oc+fel3lMlJf80+pkjy7zIXIOJDGb/6YAQ+pJuNqRMzqiGd3puV01UZLsBISUVPL/AIyNbcsuyzQyYqgoFMxca39aaveoEztpkHWGijv7GiWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068006; c=relaxed/simple;
-	bh=Ell+TiAR+gMi4isFjx8EW+xy21+P6XYWO/FJdjmF9mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Mba6htXsc4S3AT5Z6vzsusknSYuzmffTKB13dYVGilBbOPukk/+ZCS+vigo1xHe+5AGWe046fYK9f3Jo0adES6KZd+fLuEHUgvdVholyHo5QhVLp4S8pEG9uuxUqeMdoje8yDrSGTQZhZBN7E6Qz0PAhuuxi6q60G+n7B+T/ww4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbGDQoWy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744068069; c=relaxed/simple;
+	bh=GNknNSg9k4OWme+Fjmp9amYJnm0rSpYrQI66em8bK8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CdjMy1ztfcUGnjah1SBOBKwpgq7r8ajtQ7eB9xCTKaKOAVNtowO3m0VyQeO7eJkT+s8Gms+GRnBEhCao6b6JzvZMM1JzSUa9KSqoltH/6TzJsoMoN5zanbKO9Q4Vbs2cMSn9MNw5LBL4/udxiWWE9xQHGU/AcHMNSrCuqyE5rlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AXt01SOt; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbGDQoWy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD8EC4CEEC;
-	Mon,  7 Apr 2025 23:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744068005;
-	bh=Ell+TiAR+gMi4isFjx8EW+xy21+P6XYWO/FJdjmF9mg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LbGDQoWyLig5aU7qQDOpT7DczpCp8SmP0/jnFWSa1FW8Zerb8CNviKc/fGl0uf2DX
-	 KxuBtehoqxYWyH1Gci4G79MEwd8WA8f1E8uj52VGmb2Ng9ZXszdXY1d8lG2DLSOCS/
-	 ArTlWHhRUWTsQVfeXwznjhUpE9wMmsPp8KUQ3oEpEME8DCOTSw3KmtA/fgOGx6arIv
-	 uf7kX/DjLE3GfIjmCnwTniAXQkP7hrPQQeyKoTkLWJLZti9FQPHgotprj9qZRbIrON
-	 bmF7p96ZqdAdzO9Dc3X0ZESoj2sNSvQXp713T+cLjkohyXzt2irMqxrvMap+uXCMUg
-	 6j4IjYpZmR7hA==
-Date: Mon, 7 Apr 2025 13:20:04 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH sched_ext/for-6.16] sched_ext: Remove cpu.weight / cpu.idle
- unimplemented warnings
-Message-ID: <Z_RdpDkLCXm140RT@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AXt01SOt"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744068064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fQtnU5VvQKmBKR5FQX/PqgLk+92YYJoISTlXuvfIkC0=;
+	b=AXt01SOtmZ4o9XTZvJssxHxElF0kX/HOu/XrCF8zq6tXXV1UIksOKzVKWcXNvt+YFJpNIq
+	O85Uq66yL1FyWBsZCHmFvpcvf2hDlYHbh7vuiWuzKdYk38tBRYQPwwEqN01MLB3Mp6uZLW
+	4TmYMEBSP0BbdF7JOVgD8FBRUzHBSSI=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	upstream@airoha.com,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Michal Simek <michal.simek@amd.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Robert Hancock <robert.hancock@calian.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [net-next PATCH v2 11/14] net: axienet: Convert to use PCS subsystem
+Date: Mon,  7 Apr 2025 19:20:58 -0400
+Message-Id: <20250407232058.2317056-1-sean.anderson@linux.dev>
+In-Reply-To: <20250407231746.2316518-1-sean.anderson@linux.dev>
+References: <20250407231746.2316518-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-sched_ext generates warnings when cpu.weight / cpu.idle are set to
-non-default values if the BPF scheduler doesn't implement weight support.
-These warnings don't provide much value while adding constant annoyance. A
-BPF scheduler may not implement any particular behavior and there's nothing
-particularly special about missing cgroup weight support. Drop the warnings.
+Convert the AXI Ethernet driver to use the PCS subsystem, including the
+new Xilinx PCA/PMA driver. Unfortunately, we must use a helper to work
+with bare MDIO nodes without a compatible.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
- kernel/sched/ext.c |   40 +---------------------------------------
- 1 file changed, 1 insertion(+), 39 deletions(-)
 
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -3896,34 +3896,6 @@ bool scx_can_stop_tick(struct rq *rq)
+(no changes since v1)
+
+ drivers/net/ethernet/xilinx/Kconfig           |   1 +
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |   4 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 104 ++++--------------
+ drivers/net/pcs/Kconfig                       |   1 -
+ 4 files changed, 22 insertions(+), 88 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
+index 7502214cc7d5..2eab64cf1646 100644
+--- a/drivers/net/ethernet/xilinx/Kconfig
++++ b/drivers/net/ethernet/xilinx/Kconfig
+@@ -27,6 +27,7 @@ config XILINX_AXI_EMAC
+ 	tristate "Xilinx 10/100/1000 AXI Ethernet support"
+ 	depends on HAS_IOMEM
+ 	depends on XILINX_DMA
++	select OF_DYNAMIC if PCS_XILINX
+ 	select PHYLINK
+ 	select DIMLIB
+ 	help
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 5ff742103beb..f46e862245eb 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -473,7 +473,6 @@ struct skbuf_dma_descriptor {
+  * @dev:	Pointer to device structure
+  * @phylink:	Pointer to phylink instance
+  * @phylink_config: phylink configuration settings
+- * @pcs_phy:	Reference to PCS/PMA PHY if used
+  * @pcs:	phylink pcs structure for PCS PHY
+  * @switch_x_sgmii: Whether switchable 1000BaseX/SGMII mode is enabled in the core
+  * @axi_clk:	AXI4-Lite bus clock
+@@ -553,8 +552,7 @@ struct axienet_local {
+ 	struct phylink *phylink;
+ 	struct phylink_config phylink_config;
  
- DEFINE_STATIC_PERCPU_RWSEM(scx_cgroup_rwsem);
- static bool scx_cgroup_enabled;
--static bool cgroup_warned_missing_weight;
--static bool cgroup_warned_missing_idle;
--
--static void scx_cgroup_warn_missing_weight(struct task_group *tg)
+-	struct mdio_device *pcs_phy;
+-	struct phylink_pcs pcs;
++	struct phylink_pcs *pcs;
+ 
+ 	bool switch_x_sgmii;
+ 
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 054abf283ab3..07487c4b2141 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -35,6 +35,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/skbuff.h>
+ #include <linux/math64.h>
++#include <linux/pcs.h>
++#include <linux/pcs-xilinx.h>
+ #include <linux/phy.h>
+ #include <linux/mii.h>
+ #include <linux/ethtool.h>
+@@ -2519,63 +2521,6 @@ static const struct ethtool_ops axienet_ethtool_ops = {
+ 	.get_rmon_stats = axienet_ethtool_get_rmon_stats,
+ };
+ 
+-static struct axienet_local *pcs_to_axienet_local(struct phylink_pcs *pcs)
 -{
--	if (scx_enable_state() == SCX_DISABLED || cgroup_warned_missing_weight)
--		return;
--
--	if ((scx_ops.flags & SCX_OPS_HAS_CGROUP_WEIGHT) || !tg->css.parent)
--		return;
--
--	pr_warn("sched_ext: \"%s\" does not implement cgroup cpu.weight\n",
--		scx_ops.name);
--	cgroup_warned_missing_weight = true;
+-	return container_of(pcs, struct axienet_local, pcs);
 -}
 -
--static void scx_cgroup_warn_missing_idle(struct task_group *tg)
+-static void axienet_pcs_get_state(struct phylink_pcs *pcs,
+-				  unsigned int neg_mode,
+-				  struct phylink_link_state *state)
 -{
--	if (!scx_cgroup_enabled || cgroup_warned_missing_idle)
--		return;
+-	struct mdio_device *pcs_phy = pcs_to_axienet_local(pcs)->pcs_phy;
 -
--	if (!tg->idle)
--		return;
--
--	pr_warn("sched_ext: \"%s\" does not implement cgroup cpu.idle\n",
--		scx_ops.name);
--	cgroup_warned_missing_idle = true;
+-	phylink_mii_c22_pcs_get_state(pcs_phy, neg_mode, state);
 -}
- 
- int scx_tg_online(struct task_group *tg)
- {
-@@ -3933,8 +3905,6 @@ int scx_tg_online(struct task_group *tg)
- 
- 	percpu_down_read(&scx_cgroup_rwsem);
- 
--	scx_cgroup_warn_missing_weight(tg);
 -
- 	if (scx_cgroup_enabled) {
- 		if (SCX_HAS_OP(cgroup_init)) {
- 			struct scx_cgroup_init_args args =
-@@ -4072,9 +4042,7 @@ void scx_group_set_weight(struct task_gr
- 
- void scx_group_set_idle(struct task_group *tg, bool idle)
+-static void axienet_pcs_an_restart(struct phylink_pcs *pcs)
+-{
+-	struct mdio_device *pcs_phy = pcs_to_axienet_local(pcs)->pcs_phy;
+-
+-	phylink_mii_c22_pcs_an_restart(pcs_phy);
+-}
+-
+-static int axienet_pcs_config(struct phylink_pcs *pcs, unsigned int neg_mode,
+-			      phy_interface_t interface,
+-			      const unsigned long *advertising,
+-			      bool permit_pause_to_mac)
+-{
+-	struct mdio_device *pcs_phy = pcs_to_axienet_local(pcs)->pcs_phy;
+-	struct net_device *ndev = pcs_to_axienet_local(pcs)->ndev;
+-	struct axienet_local *lp = netdev_priv(ndev);
+-	int ret;
+-
+-	if (lp->switch_x_sgmii) {
+-		ret = mdiodev_write(pcs_phy, XLNX_MII_STD_SELECT_REG,
+-				    interface == PHY_INTERFACE_MODE_SGMII ?
+-					XLNX_MII_STD_SELECT_SGMII : 0);
+-		if (ret < 0) {
+-			netdev_warn(ndev,
+-				    "Failed to switch PHY interface: %d\n",
+-				    ret);
+-			return ret;
+-		}
+-	}
+-
+-	ret = phylink_mii_c22_pcs_config(pcs_phy, interface, advertising,
+-					 neg_mode);
+-	if (ret < 0)
+-		netdev_warn(ndev, "Failed to configure PCS: %d\n", ret);
+-
+-	return ret;
+-}
+-
+-static const struct phylink_pcs_ops axienet_pcs_ops = {
+-	.pcs_get_state = axienet_pcs_get_state,
+-	.pcs_config = axienet_pcs_config,
+-	.pcs_an_restart = axienet_pcs_an_restart,
+-};
+-
+ static struct phylink_pcs *axienet_mac_select_pcs(struct phylink_config *config,
+ 						  phy_interface_t interface)
  {
--	percpu_down_read(&scx_cgroup_rwsem);
--	scx_cgroup_warn_missing_idle(tg);
--	percpu_up_read(&scx_cgroup_rwsem);
-+	/* TODO: Implement ops->cgroup_set_idle() */
+@@ -2583,8 +2528,8 @@ static struct phylink_pcs *axienet_mac_select_pcs(struct phylink_config *config,
+ 	struct axienet_local *lp = netdev_priv(ndev);
+ 
+ 	if (interface == PHY_INTERFACE_MODE_1000BASEX ||
+-	    interface ==  PHY_INTERFACE_MODE_SGMII)
+-		return &lp->pcs;
++	    interface == PHY_INTERFACE_MODE_SGMII)
++		return lp->pcs;
+ 
+ 	return NULL;
  }
+@@ -3056,28 +3001,23 @@ static int axienet_probe(struct platform_device *pdev)
  
- static void scx_cgroup_lock(void)
-@@ -4268,9 +4236,6 @@ static int scx_cgroup_init(void)
+ 	if (lp->phy_mode == PHY_INTERFACE_MODE_SGMII ||
+ 	    lp->phy_mode == PHY_INTERFACE_MODE_1000BASEX) {
+-		np = of_parse_phandle(pdev->dev.of_node, "pcs-handle", 0);
+-		if (!np) {
+-			/* Deprecated: Always use "pcs-handle" for pcs_phy.
+-			 * Falling back to "phy-handle" here is only for
+-			 * backward compatibility with old device trees.
+-			 */
+-			np = of_parse_phandle(pdev->dev.of_node, "phy-handle", 0);
+-		}
+-		if (!np) {
+-			dev_err(&pdev->dev, "pcs-handle (preferred) or phy-handle required for 1000BaseX/SGMII\n");
+-			ret = -EINVAL;
+-			goto cleanup_mdio;
+-		}
+-		lp->pcs_phy = of_mdio_find_device(np);
+-		if (!lp->pcs_phy) {
+-			ret = -EPROBE_DEFER;
+-			of_node_put(np);
++		DECLARE_PHY_INTERFACE_MASK(interfaces);
++
++		phy_interface_zero(interfaces);
++		if (lp->switch_x_sgmii ||
++		    lp->phy_mode == PHY_INTERFACE_MODE_SGMII)
++			__set_bit(PHY_INTERFACE_MODE_SGMII, interfaces);
++		if (lp->switch_x_sgmii ||
++		    lp->phy_mode == PHY_INTERFACE_MODE_1000BASEX)
++			__set_bit(PHY_INTERFACE_MODE_1000BASEX, interfaces);
++
++		lp->pcs = axienet_xilinx_pcs_get(&pdev->dev, interfaces);
++		if (IS_ERR(lp->pcs)) {
++			ret = PTR_ERR(lp->pcs);
++			dev_err_probe(&pdev->dev, ret,
++				      "could not get PCS for 1000BASE-X/SGMII\n");
+ 			goto cleanup_mdio;
+ 		}
+-		of_node_put(np);
+-		lp->pcs.ops = &axienet_pcs_ops;
+-		lp->pcs.poll = true;
+ 	}
  
- 	percpu_rwsem_assert_held(&scx_cgroup_rwsem);
+ 	lp->phylink_config.dev = &ndev->dev;
+@@ -3115,8 +3055,6 @@ static int axienet_probe(struct platform_device *pdev)
+ 	phylink_destroy(lp->phylink);
  
--	cgroup_warned_missing_weight = false;
--	cgroup_warned_missing_idle = false;
+ cleanup_mdio:
+-	if (lp->pcs_phy)
+-		put_device(&lp->pcs_phy->dev);
+ 	if (lp->mii_bus)
+ 		axienet_mdio_teardown(lp);
+ cleanup_clk:
+@@ -3139,9 +3077,7 @@ static void axienet_remove(struct platform_device *pdev)
+ 	if (lp->phylink)
+ 		phylink_destroy(lp->phylink);
+ 
+-	if (lp->pcs_phy)
+-		put_device(&lp->pcs_phy->dev);
 -
- 	/*
- 	 * scx_tg_on/offline() are excluded through scx_cgroup_rwsem. If we walk
- 	 * cgroups and init, all online cgroups are initialized.
-@@ -4280,9 +4245,6 @@ static int scx_cgroup_init(void)
- 		struct task_group *tg = css_tg(css);
- 		struct scx_cgroup_init_args args = { .weight = tg->scx_weight };
++	pcs_put(&pdev->dev, lp->pcs);
+ 	axienet_mdio_teardown(lp);
  
--		scx_cgroup_warn_missing_weight(tg);
--		scx_cgroup_warn_missing_idle(tg);
--
- 		if ((tg->scx_flags &
- 		     (SCX_TG_ONLINE | SCX_TG_INITED)) != SCX_TG_ONLINE)
- 			continue;
+ 	clk_bulk_disable_unprepare(XAE_NUM_MISC_CLOCKS, lp->misc_clks);
+diff --git a/drivers/net/pcs/Kconfig b/drivers/net/pcs/Kconfig
+index 261d2fd29fc7..90ca0002600b 100644
+--- a/drivers/net/pcs/Kconfig
++++ b/drivers/net/pcs/Kconfig
+@@ -57,7 +57,6 @@ config PCS_XILINX
+ 	depends on PCS
+ 	select MDIO_DEVICE
+ 	select PHYLINK
+-	default XILINX_AXI_EMAC
+ 	tristate "Xilinx PCS driver"
+ 	help
+ 	  PCS driver for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII device.
+-- 
+2.35.1.1320.gc452695387.dirty
+
