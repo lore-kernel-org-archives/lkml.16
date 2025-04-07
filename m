@@ -1,139 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE0F22D4C3;
-	Mon,  7 Apr 2025 12:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB96226170;
+	Mon,  7 Apr 2025 12:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029939; cv=none; b=saAREuGulwr462xZcltMJrox4Gt+zaa2aQ72pfCRKikVfTO2pEUbySm8Ag+v+jDarO5/mAkYo+yRK9cEGGMZjm55oOzQAj8YXoVH22pklr0fu0WDt92tqesTod/PCixJaVJ+y1xdpJXGb2I2/foMXna31eG/LgbBOKL/DFaqm4Y=
+	t=1744029984; cv=none; b=QLA5G2yYd6tyKyBtV3kouHUua5+IxfQWP6S/7oaT8kJxuXaD0GWaRAu0I32erIreNJdMThsMpwvYD64H1LwFMWUB18Gv09aZJB1U/zIp5jDnZYbtoEyb9UeolpXL30lT0cFnJpiicbxQgtHNy7SVhlz4F+ehbd8HQYF3xITrfLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029939; c=relaxed/simple;
-	bh=oi7xvK7sq6Mk30ayGug3Cz0ce7Qbzy8vn4VUDnl94Fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jIsQCgYTAL6C4wzXWcxwKGpP8mQ1zJoFym0WAHD9ItPf8nM+1x5jZbpnBBz5XX/rd+yYtKP6zw3y+N2qWvMY/BMQZJEZ61xjkuMUaChIWbCM/T17YBLRL4LlcyeHJodxDEPWcDTLYynhBIBDMLOrTvP2Jb3pBxfI5LLLPi6aKEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4DkUFiO; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744029984; c=relaxed/simple;
+	bh=awrNsZWV5nSX7p7ue6vo+aZV8nLHTp/fCQJTnQ2xznE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bcwpiFHoyzR1g90HaXHnrpeXLe+durqt1dWYifenBQk9eiqrseYXbzEz0AGuykKs0KE18Hxh6F4W5/DXXSFV2Rtd2l07mPSVp1RQPEA8br1JOtXlnQ5z0/1na63BXkkXyunJBDfYjeF4onSAAQnc59Dst6rqkKCxZtCuKD5ndOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ITll9t9T; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4DkUFiO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744029937; x=1775565937;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oi7xvK7sq6Mk30ayGug3Cz0ce7Qbzy8vn4VUDnl94Fk=;
-  b=Q4DkUFiOhFowklIqPzGtu3CwTt1Ua2c3AnBn0Easq2fyZfO1Gcm0NPzg
-   InRLUH9+Mr/4ccMFnYrY5Q7M9hqDtZqT/CHAoK8YdqhQ5qw4szTej+2AC
-   Ay8SkNFFQ7d/SUm5X+LMI1T0UeJCJhPkw42dHy5tEyDGSFzx0nzd0kiFk
-   tfvbrvzByZsct/keSi+Da9NiR9SSZizHbTX0MKoKmMJiDfZQpi4ZKCCoU
-   9btS4r4Wq9ZR8NLYhqi+WkGONyuTDFV69gKtcIbj9jA2/hVVv50JZKSCr
-   Z7Zu578OGubQI0QUgtBc6BlZ6gr92u0v0G4+D6UCV6CwKDTqym0L61/UF
-   Q==;
-X-CSE-ConnectionGUID: pXrqrFN/Sr+4zIAyrmGRJQ==
-X-CSE-MsgGUID: aXZ3tTynQv6eWt25y4c34Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44660999"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="44660999"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:45:37 -0700
-X-CSE-ConnectionGUID: 9P08ZSozR0Kdsb1iejdrkw==
-X-CSE-MsgGUID: S8frljUTRLKrkL7PDqw5QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="127829153"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 07 Apr 2025 05:45:34 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1lr2-0003OR-0T;
-	Mon, 07 Apr 2025 12:45:32 +0000
-Date: Mon, 7 Apr 2025 20:45:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
-Message-ID: <202504072041.Bv9mOk4o-lkp@intel.com>
-References: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ITll9t9T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=awrNsZWV5nSX7p7ue6vo+aZV8nLHTp/fCQJTnQ2xznE=; b=ITll9t9TxcrxD0Cqp1O68TplCj
+	VFGMn5jVkNVqvsdmmHe/MSMt0Lq1R0loIOJa7snvWlowxybUnshwYw1gAOaqpJZ98rvM/8aJpss3Q
+	SM4qcjg5yrpUi5ii//v9EgzmFHgSXhuBdYTDrCfenraSjThnuaLVvP+jC8/H7VZn+9rm63XFtGxuH
+	Kf98X9F717CjoUAKqmwJ1DruC9QmmVWGZ1NuwmqNIgZWSf7ZQnB85JYBY5zDoEdKQHfC4O5LReIbh
+	kZcvoNCrHrovVO0OiJSi7Dep09xT1Kiu0E2q9Q/ykmIj5gBQdEdPu6T3Uzeol9V4YFe1nh9dXZUJu
+	T76dTd2Q==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1lrl-00000007wyi-0CT5;
+	Mon, 07 Apr 2025 12:46:17 +0000
+Message-ID: <8f85d15478a578f7d9ab63b7e5edecda94830a84.camel@infradead.org>
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev, 
+ Claire Chang <tientzu@chromium.org>, linux-devicetree
+ <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ =?ISO-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>, 
+ iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ graf@amazon.de
+Date: Mon, 07 Apr 2025 13:46:16 +0100
+In-Reply-To: <20250407081110-mutt-send-email-mst@kernel.org>
+References: <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
+	 <Z-99snVF5ESyJDDs@infradead.org>
+	 <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
+	 <20250404040838-mutt-send-email-mst@kernel.org>
+	 <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+	 <20250404043016-mutt-send-email-mst@kernel.org>
+	 <F30D33D5-38CC-4397-8DC8-9EE1B0FEF40D@infradead.org>
+	 <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org>
+	 <20250404062409-mutt-send-email-mst@kernel.org>
+	 <7fd789b61a586417add2115f6752ebec5e7b81bf.camel@infradead.org>
+	 <20250407081110-mutt-send-email-mst@kernel.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-CvO4McfBwZWmhMi4ADxu"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
-
-Hi Andy,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on wsa/i2c/for-next]
-[also build test ERROR on linus/master v6.15-rc1 next-20250407]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/i2c-core-Drop-duplicate-check-before-calling-OF-APIs/20250407-180528
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-patch link:    https://lore.kernel.org/r/20250407095852.215809-3-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
-config: arc-randconfig-002-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072041.Bv9mOk4o-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504072041.Bv9mOk4o-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504072041.Bv9mOk4o-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/i2c/i2c-core-slave.c: In function 'i2c_detect_slave_mode':
->> drivers/i2c/i2c-core-slave.c:117:17: error: implicit declaration of function 'for_each_child_node_scoped'; did you mean 'for_each_child_of_node_scoped'? [-Wimplicit-function-declaration]
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                 for_each_child_of_node_scoped
->> drivers/i2c/i2c-core-slave.c:117:52: error: 'child' undeclared (first use in this function)
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                                                    ^~~~~
-   drivers/i2c/i2c-core-slave.c:117:52: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/i2c/i2c-core-slave.c:117:58: error: expected ';' before '{' token
-     117 |                 for_each_child_node_scoped(fwnode, child) {
-         |                                                          ^~
-         |                                                          ;
->> drivers/i2c/i2c-core-slave.c:115:21: warning: unused variable 'reg' [-Wunused-variable]
-     115 |                 u32 reg;
-         |                     ^~~
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
 
-vim +117 drivers/i2c/i2c-core-slave.c
+--=-CvO4McfBwZWmhMi4ADxu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-    97	
-    98	/**
-    99	 * i2c_detect_slave_mode - detect operation mode
-   100	 * @dev: The device owning the bus
-   101	 *
-   102	 * This checks the device nodes for an I2C slave by checking the address
-   103	 * used in the reg property. If the address match the I2C_OWN_SLAVE_ADDRESS
-   104	 * flag this means the device is configured to act as a I2C slave and it will
-   105	 * be listening at that address.
-   106	 *
-   107	 * Returns true if an I2C own slave address is detected, otherwise returns
-   108	 * false.
-   109	 */
-   110	bool i2c_detect_slave_mode(struct device *dev)
-   111	{
-   112		struct fwnode_handle *fwnode = dev_fwnode(dev);
-   113	
-   114		if (is_of_node(fwnode)) {
- > 115			u32 reg;
-   116	
- > 117			for_each_child_node_scoped(fwnode, child) {
+On Mon, 2025-04-07 at 08:14 -0400, Michael S. Tsirkin wrote:
+> On Fri, Apr 04, 2025 at 12:15:52PM +0100, David Woodhouse wrote:
+> > > What I don't get, is what does the *device* want, exactly?
+> >=20
+> > The device wants to know that a driver won't try to use it without
+> > understanding the restriction. Because otherwise the driver will just
+> > give it system addresses for DMA and be sad, without any coherent
+> > error/failure report about why.
+> >=20
+> > (You could ask the same question about what the *device* wants with
+> > VIRTIO_F_ACCESS_PLATFORM, and the answer is much the same).
+> >=20
+> > Or maybe not the *device* per se, but the *system integrator* wants to
+> > know that only operating systems which understand the restriction
+> > described above, will attempt to drive the device in question.
+> >=20
+> > We could achieve that by presenting the device with a completely new
+> > PCI device/vendor ID so that old drivers don't match, or in the DT
+> > model you could make a new "compatible" string for it. I chose to use a
+> > VIRTIO_F_ bit for it instead, which seemed natural and allows the
+> > device model (under the influence of the system integrator) to *choose*
+> > whether a failure to negotiate such bit is fatal or not.
+>=20
+> Let's focus on the mmio part, for simplicity.
+> So IIUC there's a devicetree attribute restricted dma, that
+> guests currently simply ignore.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+No, I think Linux guests with CONFIG_DMA_RESTRICTED_POOL enabled will
+honour it just fine and do the right thing. For virtio-mmio.
+
+> You want to fix it in the guest, but you also want to find a clean way
+> to detect that it's fixed. Right?
+
+For virtio-mmio I believe there's no bug to fix.
+
+Sure, it would have been nice if a feature bit had been added when this
+attribute was defined, so that a device which *knows* it has this
+restriction could gracefully decline to operate with a driver which
+doesn't understand it.
+
+But as you pointed out, that ship has sailed. Enforcing a new feature
+bit now for virtio-mmio devices would break compatibility even with
+existing drivers in kernels which *do* have CONFIG_DMA_RESTRICTED_POOL
+enabled and which do work today.
+
+There's nothing to fix here for virtio-mmio.
+
+> And if so, my question is, why this specific bug especially?
+> There likely are a ton of bugs, some more catastrophic than just
+> crashing the guest, like data corruption.
+> Is it because we were supposed to add it to the virtio spec but
+> did not?
+
+If I could easily expose virtio-mmio on an ACPI-afflicted guest instead
+of using virtio-pci, maybe that might suffice=C2=B9.
+
+But while we might be able to hack that up for Linux guests, I don't
+think that's feasible for the general case. So what I'm trying to do
+here is just bring the same capability to virtio-pci, that already
+exists for virtio-mmio.
+
+And if we do so I *would* like to get it right this time and add that
+feature bit.
+
+
+
+
+=C2=B9 It'd want MSI support, and the CONFIG_DMA_RESTRICTED_POOL support in
+the kernel is a bit OF-specific and probably needs to be made a bit
+more generic in some places. But I'm prepared to consider those as
+implementation details, and the latter probably needs to be done anyway
+for any of the approaches we've considered for supporting this in
+virtio-pci.
+
+--=-CvO4McfBwZWmhMi4ADxu
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQwNzEyNDYx
+NlowLwYJKoZIhvcNAQkEMSIEIJ6IEqHhkM5rvYz/uum1QYqq0maKbj6eyg95ssXaSL5AMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAKNrqPG2SqoF6
+L1DW6BVHfwqTKrrfN1l8bLe6J2nmPHyFH4Xkmbmn4MRJM6YJAYDvjJaYOshtMwApqEtv9HapXDKC
+H22arlIC08ruBap5hNP7+vxDIW4lUzzvjeTFW/lkP3ZU6ZiDI0vawLA++V6rZKqlBK1ZgqA/8Jsg
+PnNmgZxgy9TIK9WZLWf3wdR63ZNU0sjKCE5MiIgeNEnTRC7sNwqNzLuTC0P6WLD7f9bI92yJ1y3I
+0clkVrbzFlQeBWfvpxYbCwcoQ/v/zotF4KkombQtK6k2cZEEnlr+Zeqxo/xcys3GmWIrLEctNPTb
+Cyz+f3G0kVX60Mq/276UpzeQppqnfi7FxXKpn4Z9TEM5fISA/wN+8jnvRD57RodvUduN0KfM9o2D
+RKB9PqnKrAF9RPYl44OVoHpjJ7BL1OFsFhSZJH91MDxt+Cnic+kHRZZfgXD2p1oQ3TJnUOST2hVC
+JgTSL1VIyee27Jyvv2F1OBXhJHWsOodyr6eL88VKVhFVKTYcYJ1jf6bcCl9R7Uxia5JhI+c/9WDv
+NaGgUdVDXh3uHLJOy/Ayp0hzHnKaTJSGKCSrV2wabJbKSihIHDOk+K5NMmX3k5Mz4UCn2WOi9JDj
+7GLuFgAhrXVaPqdAQUwPLo31ECuWLjQHQDpL2Er7Wfgriuj8/WJMMTyv3sc5XTAAAAAAAAA=
+
+
+--=-CvO4McfBwZWmhMi4ADxu--
