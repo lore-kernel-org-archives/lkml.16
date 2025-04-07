@@ -1,146 +1,221 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43630146593;
-	Mon,  7 Apr 2025 13:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D189319D086;
+	Mon,  7 Apr 2025 13:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744033337; cv=none; b=pdZRB2808zFuvltgKMn1/jGYh4VkNrcKj7EJAQPuGUTJUyivrbKxLVneP1VYde5/rVllWN3buNDUA1ptEXi8inebSA7W4JHEFxdxm+n7S0LtBuu1CuC9+UroYq54TRsvJQpF77z1eqCCgoDGGyLnZgAJxLPMjTYQ/iXA6BRa9KY=
+	t=1744033341; cv=none; b=lxIix9pzGNOl+pZUSiNcQ3s90eqQDzu5Qsk3ErPMc+Nd5ggKJbj4yM3YbuNKWCzxlW8L4LZvsujMfB0LASpWavYTEHgwCK36Q4OMzWlwaao2YbXB3bXTQiA4CH72Ma6M7uuyibT/xlhcwN7V8xmZ2S2iCCNBd8whJXu8gGWmIP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744033337; c=relaxed/simple;
-	bh=OChTPvbOHKXpnQ6w50WNp/bYpibG4OEAg9afouZx3SQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BiAmpxxFhbd2MnZv+mpcOsCF4r8iw5W9WUN5Dh9rDW+PQc6R/qurcH1HAplTeeZdovw1VXun5ZkbI4Kcr+jpenBbszfAnlSkZvuC2YVznO7VvxleSsVrz8qoKwnZ1OfN6dH0iIlP7zVrU2bAgobiEvXb/L3T6ZXFQWx84hkERXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IMMohk2u; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744033341; c=relaxed/simple;
+	bh=1r4Y1xGaIw6Z2bMc6PG2RocXTnsmf+k7C3olFVHVcc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AY0DsVXAs7ijow9WwRXbzRTg1zElro4xmf6frsgRFGxlW28P2XmsAGACCutYZ3AbasFrVP1NWh+gOH+H3QclDOsnf8oqn/qVu2/C2pihbVp/ZK/hJT7qzPX/IMGL/ZAHJAb7N4HBqBRhtFchq+3j3lkPmwsCdyOZAaX5AkKcosU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuRnNh2u; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IMMohk2u"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537Dfndh934145
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 08:41:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744033309;
-	bh=P4I/pxj6ciOAfSgArhJmnl0xdOFa83L6gzoY+P6C+iM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=IMMohk2u3wiR6fvLuezX71e9of8d79SGM/5R+5VoQVwqu8aEV8B3zFzs2KZ0e3l9A
-	 Gdt2wVepxeMWF7bFnM04l6zESyT4HIfWy0Y9E/zneEUMksY1PTfb2lRz5W4pVPKuTe
-	 x8neLtgPraeoaDIgKxbX0BLm/Rb8VebiTXycnsNI=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537DfnZq077164
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 08:41:49 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 08:41:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 08:41:48 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537DfmfQ070173;
-	Mon, 7 Apr 2025 08:41:48 -0500
-Date: Mon, 7 Apr 2025 08:41:48 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
-        <jai.luthra@linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
-Subject: Re: [PATCH 1/5] arm64: dts: ti: j721e-sk: Add DT nodes for power
- regulators
-Message-ID: <20250407134148.jk43mzr5iyk4htyy@unplanned>
-References: <20250401114053.229534-1-y-abhilashchandra@ti.com>
- <20250401114053.229534-2-y-abhilashchandra@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuRnNh2u"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso8363902a12.2;
+        Mon, 07 Apr 2025 06:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744033338; x=1744638138; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wa6KU2wdxERyxbNkzxJOW0BR3XtH5OL92vINFtJKy6o=;
+        b=MuRnNh2u9+QBx055fC9222qHYI6qmsrlbRzRBYvN/XHgpjZXRoslV/G2t1+SZ0DldY
+         IPbKlCc/yPNWThOWSCDJ+r2tIYPLHzPjoC2JKg4xGdEU5VZQUwIaPFvSQSa7PLpxFV0v
+         /xaSCBkmcyUbeOKbFGIVhFoX2c8dGVWbvhviVtXuGN0xh2WxLtahTD8QZyP8HprY8LU5
+         Z37RGbnuO0AXTwyQRdl9YTUo4vKE8IRCaE/GCvdfd5UGQb7DRJiyMafzpw74pja3xAfv
+         NWyxw93G7YGHgV3Y0ZHb7WufNs9Fixk+mVcplpkkpXaOE1xvJ6ku2PBwiERU1K4w3g7L
+         9FpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744033338; x=1744638138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wa6KU2wdxERyxbNkzxJOW0BR3XtH5OL92vINFtJKy6o=;
+        b=Xq2RMhCh+SIVvrk9qfNDixufOmMNcKgdml0Qx2ar4klXfCK7v1OeO5MiU++rml2++s
+         xNlnYbQ+OuqyWWv7++lgzQs6TZmHW7rJWpixHL+yu0VXvvLC6kJ47fu48/WVdGt9Hitb
+         jgfl4IlCHQZ0g3dh/LOC1MdOhB1m9UsEsMTLCNvDYoyVdTLpCa3ZSCzYeL7jgtJ78cx2
+         mHDP+KXUC9v/Zvh9VKArY35xB4PGa67gjULwYry/zchlAyNKNMU6aqDWO5iqKnNU2MVY
+         1aeA5lleIeAcvGjWa+O2dv1t96qeOzB0GOUGhcMPwPUhO7lBCJpFTGKOp+fy6fSf73Ry
+         /Kfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQHjwF6381twxu1+ZVSjmeEW2A8SS28Ga/uUidC8eqjRqlYT2Ar+Jo4qtrFszicrAKEX0XCspd7sBQ@vger.kernel.org, AJvYcCUy/enEj9hdeN+AN1eb5Lm2Ml8KD7UvDcgpBXrp90PMrxUe84TmRgRbhGx2upp96LxhGpZu0fsLbfpc30TH@vger.kernel.org, AJvYcCVOMPFpF8iBSfCXdpX91pgBob7JndjA3C8ooAayUYXNsBRtdBnnAHDXVVZ2O9Xt2AU4QBpiNw8PpTVk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPv6EkEOU1uMCOKJscMQplWKZ5YfNpblrOigA4Cce4HfmU/3zx
+	aJMn4Q9eS4jO3oh6ckSiR6DAllsmn0oKJTtC8Wc9gBLJSrFQVtsNzslQRABI529PyD3e2epcVpa
+	4h3OiKHBKfeFQHf6pGNugepL88tE=
+X-Gm-Gg: ASbGncsh/P0s3IeChclbC5kJa181efjPa6lZE2H9pEKiKLbYytlIz52WXn5Azkf6wd/
+	Q1XYJJKW82FitZKXs3OUcsXyyueBUDSKPxKJpJ7yvZh2TIc4WtyvMKhbptfPhj+z7BO1LvahTrn
+	CfDvu7gXmVWAbG+841qozebftO
+X-Google-Smtp-Source: AGHT+IHhtn/MY8uQvzJzvMpoMO8/8pCPRUNklZgOaGuOQVfqvhUggICmePL4U7XBoQsuoXMMgsVnU6yzTxAsZQISebE=
+X-Received: by 2002:a17:907:7216:b0:ac3:8899:d2a6 with SMTP id
+ a640c23a62f3a-ac7d185ce57mr1279671566b.12.1744033337483; Mon, 07 Apr 2025
+ 06:42:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250401114053.229534-2-y-abhilashchandra@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250221090918.1487689-1-j2anfernee@gmail.com>
+ <20250221090918.1487689-2-j2anfernee@gmail.com> <8975b119-fe24-463a-b163-dce702df3cdd@baylibre.com>
+In-Reply-To: <8975b119-fe24-463a-b163-dce702df3cdd@baylibre.com>
+From: Yu-Hsian Yang <j2anfernee@gmail.com>
+Date: Mon, 7 Apr 2025 21:41:19 +0800
+X-Gm-Features: ATxdqUE_5Q4GslleR9QLgSAVfxgRYmQtklJyPCOrpUHS44T56v3qQ5wCflyg1WM
+Message-ID: <CA+4VgcK=R=BF-qk4w-pLkwbTypgMmpJ=7joYN8nioT2Dx3_Z7w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: add NCT7201 ADCs
+To: David Lechner <dlechner@baylibre.com>
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, 
+	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
+	jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, nuno.sa@analog.com, javier.carrasco.cruz@gmail.com, 
+	andriy.shevchenko@linux.intel.com, gstols@baylibre.com, 
+	olivier.moysan@foss.st.com, mitrutzceclan@gmail.com, tgamblin@baylibre.com, 
+	matteomartelli3@gmail.com, marcelo.schmitt@analog.com, alisadariana@gmail.com, 
+	joao.goncalves@toradex.com, thomas.bonnefille@bootlin.com, 
+	ramona.nechita@analog.com, herve.codina@bootlin.com, 
+	chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com, 
+	openbmc@lists.ozlabs.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17:10-20250401, Yemike Abhilash Chandra wrote:
-> Add device tree nodes for two power regulators on the J721E SK board.
-> vsys_5v0: A fixed regulator representing the 5V supply output from the
-> LM61460 and vdd_sd_dv: A GPIO-controlled TLV71033 regulator.
-> 
-> J721E-SK schematics: https://www.ti.com/lit/zip/sprr438
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-sk.dts | 31 ++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-> index 440ef57be294..4965957e6545 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk.dts
-> @@ -184,6 +184,17 @@ vsys_3v3: fixedregulator-vsys3v3 {
->  		regulator-boot-on;
->  	};
->  
-> +	vsys_5v0: fixedregulator-vsys5v0 {
-> +		/* Output of LM61460 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys_5v0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vusb_main>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
->  	vdd_mmc1: fixedregulator-sd {
->  		compatible = "regulator-fixed";
->  		pinctrl-names = "default";
-> @@ -211,6 +222,20 @@ vdd_sd_dv_alt: gpio-regulator-tps659411 {
->  			 <3300000 0x1>;
->  	};
->  
-> +	vdd_sd_dv: gpio-regulator-TLV71033 {
+Dear David Lechner,
 
-Where is this used?
+Thanks again for the review, I'll do the changes here and send next patch.
 
-> +		compatible = "regulator-gpio";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vdd_sd_dv_pins_default>;
-> +		regulator-name = "tlv71033";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		vin-supply = <&vsys_5v0>;
-> +		gpios = <&main_gpio0 118 GPIO_ACTIVE_HIGH>;
-> +		states = <1800000 0x0>,
-> +			 <3300000 0x1>;
-> +	};
-> +
->  	transceiver1: can-phy1 {
->  		compatible = "ti,tcan1042";
->  		#phy-cells = <0>;
-> @@ -613,6 +638,12 @@ J721E_WKUP_IOPAD(0xd4, PIN_OUTPUT, 7) /* (G26) WKUP_GPIO0_9 */
->  		>;
->  	};
->  
-> +	vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
-> +		pinctrl-single,pins = <
-> +			J721E_IOPAD(0x1dc, PIN_INPUT, 7) /* (Y1) SPI1_CLK.GPIO0_118 */
-> +		>;
-> +	};
-> +
->  	wkup_uart0_pins_default: wkup-uart0-default-pins {
->  		pinctrl-single,pins = <
->  			J721E_WKUP_IOPAD(0xa0, PIN_INPUT, 0) /* (J29) WKUP_UART0_RXD */
-> -- 
-> 2.34.1
-> 
+David Lechner <dlechner@baylibre.com> =E6=96=BC 2025=E5=B9=B42=E6=9C=8821=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:56=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> On 2/21/25 3:09 AM, Eason Yang wrote:
+> > Add a binding specification for the Nuvoton NCT7201/NCT7202 up to 12-bi=
+t
+> > ADCs with I2C interface.
+> >
+> > Signed-off-by: Eason Yang <j2anfernee@gmail.com>
+> > ---
+> >  .../bindings/iio/adc/nuvoton,nct7201.yaml     | 57 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,n=
+ct7201.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.=
+yaml b/Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+> > new file mode 100644
+> > index 000000000000..830c37fd9f22
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/nuvoton,nct7201.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Nuvoton nct7201 and similar ADCs
+> > +
+> > +maintainers:
+> > +  - Eason Yang <j2anfernee@gmail.com>
+> > +
+> > +description: |
+> > +  The NCT7201/NCT7202 is a Nuvoton Hardware Monitor IC, contains up to=
+ 12 voltage
+> > +  monitoring channels, with SMBus interface, and up to 4 sets SMBus ad=
+dress
+> > +  selection by ADDR connection. It also provides ALERT# signal for eve=
+nt
+> > +  notification and reset input RSTIN# to recover it from a fault condi=
+tion.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - nuvoton,nct7201
+> > +      - nuvoton,nct7202
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    maxItems: 1
+> > +
+>
+> Maybe this was brought up before, but no power supply?
+>
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+  vdd-supply:
+    description:
+      A 3.3V to supply that powers the chip.
+
+  vref-supply:
+    description:
+      The regulator supply for the ADC reference voltage.
+
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        adc@1d {
+> > +            compatible =3D "nuvoton,nct7202";
+> > +            reg =3D <0x1d>;
+
+            vdd-supply =3D <&vdd>;
+            vref-supply =3D <&vref>;
+
+> > +            interrupt-parent =3D <&gpio3>;
+> > +            interrupts =3D <30 IRQ_TYPE_LEVEL_LOW>;
+> > +            reset-gpios =3D <&gpio3 28 GPIO_ACTIVE_LOW>;
+> > +        };
+> > +    };
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 3864d473f52f..fdc4aa5c7eff 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -2831,6 +2831,7 @@ L:      openbmc@lists.ozlabs.org (moderated for n=
+on-subscribers)
+> >  S:   Supported
+> >  F:   Documentation/devicetree/bindings/*/*/*npcm*
+> >  F:   Documentation/devicetree/bindings/*/*npcm*
+> > +F:   Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+
+Remove F:   Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+>
+> This (ARM/NUVOTON NPCM ARCHITECTURE) doesn't look like the right place fo=
+r
+> adding a stand-alone chip. You will need to start a new section like:
+>
+> NUVOTON NCT7201 IIO DRIVER
+>
+
+NUVOTON NCT7201 IIO DRIVER
+M: Eason Yang <j2anfernee@gmail.com>
+L: linux-iio@vger.kernel.org
+S: Maintained
+F: Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+F: drivers/iio/adc/nct7201.c
+
+> >  F:   Documentation/devicetree/bindings/rtc/nuvoton,nct3018y.yaml
+> >  F:   arch/arm/boot/dts/nuvoton/nuvoton-npcm*
+> >  F:   arch/arm/mach-npcm/
+>
