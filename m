@@ -1,82 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508AD209F59;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F6F20A5C1;
 	Mon,  7 Apr 2025 16:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043455; cv=none; b=kdv2ShXLw8GJINZMI/bZOWDUwC5BksbyKNZwNXlCjt1Gx9hu6QJS2kozlmdmXfWwv9xmVv6Lmir9n25tQ0YwJBlwrtVq+Pud3mcXNhw5jCBtSokYaK8ZZsVUQUeJ70VwtKi1twd6FRLWo3zjewY892txXWG2sAFmO9gO7s4f348=
+	t=1744043457; cv=none; b=oAQReDo9CBTGlPSkUgv3jKjmwjyxWFmgpu0t2Tl/t2DIqLZ6rGxaj21VJi59SOZ3WQgZwmeF4oCYrXhs2Zi5gZebAMsxFSXJPQKPCH0Y28tQuhH4Tg1KBDc7Uzf5SO86YRs1MyqyV9alW1qnbkKlEEauNO4KEk3iCOHABVk+f3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043455; c=relaxed/simple;
-	bh=/TutFamz++e9Ol2BnfqwTlYdT8/rOGbQ5Wci+oxPL90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jIhZFsMat4m49mXT06xHAsAVwInlpGMdZfp6FPm8MbO+c4t8O8StU2591YjZEfWCo1c0IxOdu+B7fYJnpCkAY+AV6uy7eVrI9r9qpAZqBd3d39hVbngmiCERiGZ2nB+zuz8nI3UAoARQtaLNbjHkbjFgjHfkyd4IDCIyOufw5+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skO9Z74L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744043457; c=relaxed/simple;
+	bh=4/eAx+z1rDRdsY31wrNn05fNKOvEcgHJxmNn4FBwm1I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IyLTw8s8/uLBDv7lxxB6809dojT3jy4jQVl4/8QhR9pXDpg9bt3F54nH78LNbcykm1oMvSc2uWPyGlxU/7EYdp1ul6M79Suso747PwT9h1ADipAKkb4W2eQxKo3ckF8zlZNGWRR6LgIeM/kGAxUfa4wi/zuzMIS89eY6MGYj7g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Id35yZj5; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skO9Z74L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4647DC4CEDD;
-	Mon,  7 Apr 2025 16:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744043455;
-	bh=/TutFamz++e9Ol2BnfqwTlYdT8/rOGbQ5Wci+oxPL90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=skO9Z74LvwgZqxXLqkgxLFPE8VSvxn6JVjP2UZju0T4h6wfnyJkwoaBvcZ/KM3DWD
-	 M/+k5D458oDCzRfZHpkSEeZI6W8k6FuetwkelIlQgq55IjmneseaoaZpi0ZJdtsrhm
-	 oYciipfbBhWx233JqrsSmonMy9Q5KlHHNt2iwzj7b2agUHvLPYfIpBdBGyvEcK4+wq
-	 yAWWSKZPv1d5K1YdmedCsSuecmF4oG7NVJHjrGsOtQ4FyBO4L/pwmRoeGD2VpNEu4v
-	 W1u3R0RVhnqbxN5jeeLcW/p2lfXaMPs1fSp+yoxytgRHVjephrvq3puNuzqtKF7tms
-	 ZDJkY6e2mPf7Q==
-Date: Mon, 7 Apr 2025 17:30:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Shyam-sundar.S-k@amd.com
-Subject: Re: [PATCH net] amd-xgbe: Convert to SPDX identifier
-Message-ID: <20250407163051.GS395307@horms.kernel.org>
-References: <20250407102913.3063691-1-Raju.Rangoju@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Id35yZj5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744043455; x=1775579455;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4/eAx+z1rDRdsY31wrNn05fNKOvEcgHJxmNn4FBwm1I=;
+  b=Id35yZj5VKerWDkxdLiSKwbrTg7ldsRaNfY606L0StXEtWPy0bliyTHx
+   BwQ9cmewqvQSz0w2PZ4l5euVQlGBCmfsAmon1z9k81n3ANSCw0StCXIy5
+   FXg4yko84ycnyKKesm+arT13EhkZ0yQzwY98lSTnMZcRIoQyzDQDAEDCP
+   LHfMh15WJcVqh/EoFpazKfJ2pjXLWWwyPCkUAoi3wO1jQKkqjwHFOnNa/
+   zXEfbwYzUo1j8DP5oIVao7coClroiXpuknxISAbLYC2WAdcaUNt78rrOh
+   uTbFLIC7+atAWjComla7/HiaqTrBOz4SfxGSN5kK6D0xLI3yK9nG7v3ks
+   Q==;
+X-CSE-ConnectionGUID: m1rNArxSQMyl7/02Z/AVog==
+X-CSE-MsgGUID: cwYVJULVShGmvehojvR4mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44688022"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="44688022"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:30:54 -0700
+X-CSE-ConnectionGUID: tM1YoT8rTMqNJJUKCooyyg==
+X-CSE-MsgGUID: 3ORR2AfjQyq8TdXQSCUtHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127764730"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 09:30:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Apr 2025 19:30:47 +0300 (EEST)
+To: Wentao Liang <vulab@iscas.ac.cn>
+cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: thinkpad-acpi: Add error check for
+ tpacpi_check_quirks()
+In-Reply-To: <20250407135808.2486-1-vulab@iscas.ac.cn>
+Message-ID: <32dfd23a-7fa2-77d7-b4e5-3cfa90933ff5@linux.intel.com>
+References: <20250407135808.2486-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407102913.3063691-1-Raju.Rangoju@amd.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Apr 07, 2025 at 03:59:13PM +0530, Raju Rangoju wrote:
-> Use SPDX-License-Identifier accross all the files of the xgbe driver to
-> ensure compliance with Linux kernel standards, thus removing the
-> boiler-plate template license text.
+On Mon, 7 Apr 2025, Wentao Liang wrote:
+
+> In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
+> to be checked. The battery should not be hooked if there is no matched
+> battery information in quirk table.
 > 
-> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
-> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-
-I note that this patch changes both the licences and copyright information,
-and not just the representation of that information, for the files it
-updates. And that the patch is from and reviewed by people at AMD. So I
-assume those changes are intentional.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+> Add an error check and return -ENODEV immediately if the device fail
+> the check.
+> 
+> Fixes: 1a32ebb26ba9 ("platform/x86: thinkpad_acpi: Support battery quirk")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->  drivers/net/ethernet/amd/xgbe/xgbe-common.h   | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-dcb.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-debugfs.c  | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-desc.c     | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-dev.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-drv.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-i2c.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-main.c     | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-mdio.c     | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-pci.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-phy-v1.c   | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-phy-v2.c   | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-platform.c | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe-ptp.c      | 117 +-----------------
->  drivers/net/ethernet/amd/xgbe/xgbe.h          | 117 +-----------------
->  16 files changed, 64 insertions(+), 1808 deletions(-)
+> v2: Fix double assignment error.
+> 
+>  drivers/platform/x86/thinkpad_acpi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 2cfb2ac3f465..93eaca3bd9d1 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9973,7 +9973,9 @@ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
+>  
+>  	tp_features.battery_force_primary = tpacpi_check_quirks(
+>  					battery_quirk_table,
+> -					ARRAY_SIZE(battery_quirk_table));
+> +					ARRAY_SIZE(battery_quirk_table))
 
-...
+Fine, using the same variable is okay but this will fail build as remove 
+that semicolon.
+
+> +	if (!tp_features.battery_force_primary)
+> +		return -ENODEV;
+>  
+>  	battery_hook_register(&battery_hook);
+>  	return 0;
+> 
+
+-- 
+ i.
+
