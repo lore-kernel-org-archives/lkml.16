@@ -1,89 +1,86 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D20215F50
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EE1290F;
+	Mon,  7 Apr 2025 17:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046423; cv=none; b=HVV7vwh1Eg+Zo889ZZ5hdINNMAyfGLu/3HhsKI3tt+nxGFHlCbe5s6uzmgAUtpovD0lcpnu7ZWtWIOIKUHrbTqP23nUouwWCDFuP19F7tdNFhqV7S/gy/4JaS8R6ebU6RwmDCigNLsj1GY0jRkValwAlLYcr0TLF9057rKcICm4=
+	t=1744046490; cv=none; b=rxD6aJmRy58CjZLu+pXEA690BAefHiQD5z80VsOxOGXT05Jy9uv6wQsvFx+vXLutQBtrcT8M7PDFsRTsWUxgsme3/hKNw2yKrgdiJZ1Ux/Ai5ARML3l8THqQ1RwqwNZ79EKzwDZxolpJGdSBZiXAj58dGgAx7LFCdGyYDSciqG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046423; c=relaxed/simple;
-	bh=d8/3HEU5ZuR1sJc+Fgt6KUOcMb7ztYoX8aqxZSyTS0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FTJjX5904gRhuSUIzsQLjeYbttt/4oRcxsdHXNqTNsjGuBLZ1YV9hxzPYe0KUbhRdb4VJ+obVzixX6aThhokTFEAJQ+QCPS9R46rfbUfI/GMo9vW0KFSpqj69QjlJ4sriluw9yZju2Zl07gY0WWq9QFg0ce+mtGhFU024s+hMPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CWbW93gr; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744046490; c=relaxed/simple;
+	bh=6TuvDEOvwE6rzCZvIUQMKgR2bXPTiX5L8vTEyUSbe04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZjbZ4iS2Amq+JfoXgs/SDjoZmM1TMvU2OyeXt3q9Yr7jsOH1YqJnKDexTmUsrqHEh47wyvYIoWnv6phH6oTQrFGrSvsmeNI6jj+3R9W+QYG0axwPAbcHVpQ/KaTmtMwUhy9H38Ed/yE3si3pgWR/qeCwcgEyNCj31RxJLP2ur0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7j3wcK1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CWbW93gr"
-Message-ID: <3fdfd450-6624-4621-bcae-5457da7cacc7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744046419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXRWft0X5vqZc806dG3f8UT9bd4FnC+vOrHSKFqZhi0=;
-	b=CWbW93grZ9qPup6CaE6mEnjqWauqK0oVhtuflAXlR3ZkbwO+FDKQwsH4kdb3oJ0feFh8QP
-	4QZOrDXBmVQcqjUvzOULDxa1Ln6FPbuZ03uuDbICGy8UBZUj7Hy/KZdzcZwtiK9CY9pHHa
-	muZIk67GG8PrVwJNg9sU5aWN4x0RaeI=
-Date: Mon, 7 Apr 2025 22:50:09 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7j3wcK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC62C4CEEA;
+	Mon,  7 Apr 2025 17:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744046489;
+	bh=6TuvDEOvwE6rzCZvIUQMKgR2bXPTiX5L8vTEyUSbe04=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=E7j3wcK17aMIUS5Zle4yYki3TyHEgpfM0R2uCyD2b/NQvFxJcGIIHicEUIMbaGgt1
+	 QIF87TJ6gLTi7U7C+IHCCUByQ+a1U2+7IWPZZJXnrB+i5zxZoLxovNUlauieGPicP9
+	 yha+WlCf8mdVEXcFjKIPOJwvGWYcmTZ3RacyDCLQTUZGM3TBV9qtwRSyiHoteVzfSH
+	 dzNqM0bqv3QKQlfmbBaoMjzZ/H8nrJs5hsKdocN3017SpdifLUDUfo+SYKPfKaJNq0
+	 f17FPZnp0IO/3RNop6uLKyhC1ZqII3dYhlCNt2U/h9vr41AHTpeVoDKpPDSKfbmp1S
+	 2bI0scKBoZgaQ==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso43642351fa.3;
+        Mon, 07 Apr 2025 10:21:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOfl1O7e2wZZuOZagIwLirGQIn8Z8oiUbF0XRbQpSJfsGqfFV6BDmHkpuOfIkSGOTUknT8KZOTBwo=@vger.kernel.org, AJvYcCVpN0sKD0utqwCaQ+IH9RlPcFy2QMAXnYJhjkRL+LM2BeXHGakKUdMxnl7+6OEsoqcS5iTxPm0EF6uht4wU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFZdJfXWS+BM0nDr9tvX4hjjbmNhQ//fGE+ZHU5/t6mRIXOt29
+	DBA8jIPWC4hdKYGqNaYImT9QNsjGSU78+QTZ8eYg7B/5uEo0If4r4BaaQoFYBLU+DoAjo0yXF5e
+	wh2RiEriBA1PxS8HqUuesaioZisw=
+X-Google-Smtp-Source: AGHT+IG0z+Bar7RSCvD9eNSZbPTryngAUba/nCQRwFMtbWhDcFc4Vz2Pj4789pRs0U56B6pNIUHP4IkqWpgOhU8fIn4=
+X-Received: by 2002:a2e:bd81:0:b0:30b:f775:bb25 with SMTP id
+ 38308e7fff4ca-30f0a190a9emr44227601fa.36.1744046488240; Mon, 07 Apr 2025
+ 10:21:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
- capabilities
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
- <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250404082921.2767593-5-ardb+git@google.com> <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m> <Z_QA6GwqoxdW6D0e@gmail.com>
+In-Reply-To: <Z_QA6GwqoxdW6D0e@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 7 Apr 2025 19:21:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
+X-Gm-Features: ATxdqUE7JvfkFBgD0ctY2GHjPkEPUKpuJg91wGrLByrfqElFhaHXz7CnksqEQ4Q
+Message-ID: <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for SEV-SNP
+To: Ingo Molnar <mingo@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, 
+	Kevin Loughlin <kevinloughlin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
+>
+> > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+> > > If the GHCB is available, we should always prefer it.
+> >
+> > I believe we should consider the cost of code duplication in this
+> > situation.
+> >
+> > If the non-early version is only used in the kexec path, it will not be
+> > tested as frequently and could be more easily broken. I think it would be
+> > acceptable for kexec to be slightly slower if it results in more
+> > maintainable code.
+>
+> Absolutely so.
+>
 
-
-On 02/04/25 19:00, Tomi Valkeinen wrote:
-> At the moment the driver just sets the clock rate with clk_set_rate(),
-> and if the resulting rate is not the same as requested, prints a debug
-> print, but nothing else.
-> 
-> Add functionality to atomic_check(), in which the clk_round_rate() is
-> used to get the "rounded" rate, and set that to the adjusted_mode.
-> 
-> In practice, with the current K3 SoCs, the display PLL is capable of
-> producing very exact clocks, so most likely the rounded rate is the same
-> as the original one.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/tidss/tidss_crtc.c  | 23 +++++++++++++++++++----
->  drivers/gpu/drm/tidss/tidss_dispc.c |  6 ++++++
->  drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
->  3 files changed, 27 insertions(+), 4 deletions(-)
-> 
-
-Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-
--- 
-Regards
-Aradhya
-
+It would be nice if someone could quantify 'slightly slower' - I am
+leaning to the same conclusion but I have no clue what the actual
+performance impact is.
