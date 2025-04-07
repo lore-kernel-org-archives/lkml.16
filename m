@@ -1,162 +1,149 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2B522172D;
-	Mon,  7 Apr 2025 18:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049365; cv=fail; b=CS1H/d9gxKdRPmPkuFY7cwxU7dvBFX+C0w0dmZcvJqckuDik4xKdx0UK2AGzjuuuyWNAXr8IKxy3eHbmStAYkyFF1JrwxUUDeXMJkcvd34X0cAJl/p9Z0BIR8OdSgRGMNjIpOkp0qD5mYXC4cRQNe37G7yVbt/KI3rxtcTtr6Fw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049365; c=relaxed/simple;
-	bh=Oq/7sm2csyF4fg4GkAfAu3Zs39g8S0ucixi4jxk/4fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=D6RNBROlVmo39esTBcGc2EQRwfgJJ9Bfv+dYfYNyyzzBktor6bVoM7XsrGhS3bY+bxVihUyE+T5hh60s/9Bz4spicKgAZJgr8ng2Kqd7xgWT8LeDKwDbXMPxIiTzJDvhgpl31Ji/xwNIG3RdeGoq42CHx+YugCTU9fnU1bWP/XY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=HhFQKLyR; arc=fail smtp.client-ip=40.107.94.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB78B2222D4
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744049368; cv=none; b=mzezmDFU9f8mMioJdb/kBVddr0UHaQZ6TFHIlXs3iJYOCFf0cEUNyn9qQPvWETQiGg3MAw+7OY3wO2PH8ilhqtQYX04JzDblfnfhyVS/WI4fbNhK2S70lPAAACZI0kTYMb/qxGvl1pY6yNfPdFM7+Its75eZbZ5KDslPVtS4lr4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744049368; c=relaxed/simple;
+	bh=xwD+hParWO1vz6uH2Pzv5Jj35e6Ns1OzYF8bQQL/WmE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BBq+09fvJl8WF/Du3OS7x8LZvJkktO5rDSezSVPc9rQ08t15jIMs+LatZB8NCjsLv1CPZ778kgEpyspNugP8p3BGNEq0R2MrwCKJBAKRj2F1YsmwGFqFf1fpuhZc7dL+S1hdUMoZkU1AYd2P3ueQR6mNNv6xVyPrfYmbAVg3pNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDpaTv9D; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="HhFQKLyR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hmKGzldYXbESuD9mfNhKjUt+0mO8QTVNoBS3v3Mjiv4iK/Px0EL6DfLasw0plylyyn8C6ct9TX1rZkYD2M+JSlCN9b1FZ+pYott6PACq9OFfzDBSJAi/99bBZE4r0rzg+xdtb81myoE8wg8E3pKnkbOB7Utwd9Qd0AR7327lEKn69QIFDphQqNSNOpC/yFXWRDIYTc23ZMoyBrBwSH8flHWLAqyoZ8KdV5KCLHYkKocBcRLr/Cmj6/+gmmLmzWbwY/7jXGwEodIM0QXA2vNX3Tzz37RtBOQYvo3yHw5L2Bfeb8RazHgQ0wUi4hhz7zxICgZh2JsA4NxPjqDTMEgjvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BYMTh3c+/DFa7wkSK/oOqfOvOke+9q2YuxGEbwzmCAI=;
- b=Lo68a8wUsHV06ef83I2vPR3pZLkrxE8F94MzEHjfxH9OWWTD67nL+14nJ47lTo9w4/ICdrSDHcKuvxrrc/iLFCJ+ppCG300wpGQeBZKPX2OID5OGxlNnMKod+HeLLKrVu/RYdKIKSu0Z/zX1hwpwUAWF9rxTXdG/RA7aPRhs9NUYzPdWh2Ol9sbbIAAUxqYPwwiHjHGo8WudtiPls8Ne3gxK8WHvYjLEWMwHpSRTBBS/PrTpb9Be8ghRnh5xgaSKEohqcGcUyqzmbMxtKcRV9ahXTjUH8F4l9ukLlYHoPGAKf7eZvjvWpuUd3xBiQSLqzlcDtBvCT1ZVAvxReuUmTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BYMTh3c+/DFa7wkSK/oOqfOvOke+9q2YuxGEbwzmCAI=;
- b=HhFQKLyRSmlTVLxNx1EfOEkyShASovevHrjyC5UejUBNmfbzFnFJvjsJJ1qUEI3fXqmNV9or6Y0qV0u7LHdWq11UiY0ypXNibTLrkwVxWGJ4n0YXOwBlTJWXEu3lm6Jy1KV6AFcoBKkRVD1FCgxZxMj2H7TLCFWjtof6wFL7ZKbO8jeMOSZ6wD2PaYJWhybnZG06Q4XORY1zAOIQEHnh6MCeDbG6N2NR+ewSxE91uhBr6QiyGb4E/dTx3S4U6pjoo/6GZWttVECaSUQ+6B+YxJfcFfbpaxssIN0kUiRN++ww5clt2L9VfqVEx/PxSJ1zDMyA6VNOho5+x6WyCKfW+A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM4PR12MB6182.namprd12.prod.outlook.com (2603:10b6:8:a8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
- 2025 18:09:18 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
- 18:09:18 +0000
-Date: Mon, 7 Apr 2025 15:09:17 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Yue Haibing <yuehaibing@huawei.com>
-Cc: benve@cisco.com, neescoba@cisco.com, leon@kernel.org,
-	liyuyu6@huawei.com, roland@purestorage.com, umalhi@cisco.com,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yanjun.zhu@linux.dev
-Subject: Re: [PATCH v2 -next] RDMA/usnic: Fix passing zero to PTR_ERR in
- usnic_ib_pci_probe()
-Message-ID: <20250407180917.GA1761465@nvidia.com>
-References: <20250324123132.2392077-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324123132.2392077-1-yuehaibing@huawei.com>
-X-ClientProxiedBy: BN9PR03CA0603.namprd03.prod.outlook.com
- (2603:10b6:408:106::8) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDpaTv9D"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3031354f134so3489732a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744049366; x=1744654166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Z0y0TK+N2j7unfdHAGWrmjHTParwUExlSa0jHt4G78=;
+        b=ZDpaTv9D1YlImNpWYlk5/LuT7KCeSXaYISuC1uWSHN2JOyBa0TPYCuELjoIn1RF16/
+         4BGFKLcKO78Vi8uFQ5A6EzB25M1Aw+LBpdX4OqeEcHdGqKlInyUbH3Pw9qx5K6OFy5A5
+         Wwt7rYvD86WJlrjnwmJf1rGg2atHdOYEg14dq5SRqsX5BDpV1FH01xPezFV78N4nsWn0
+         56TV99lvs7DIjvxuzqrF/OQeOOhUAk0gBvY8Oj/ciA1sfjzkQML2sP/YL0+KrXoGlEqg
+         bIp6/Nm1W8VEpiJOo7fRZgzADWBGjN3dGf6LNrELe2yaDoJa0ZoCKfdife+Xgky0yJNj
+         PzHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744049366; x=1744654166;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Z0y0TK+N2j7unfdHAGWrmjHTParwUExlSa0jHt4G78=;
+        b=knpOiJnfclYPXKAlakHup7wKMFGczDWFqZAxsOjCzfpooqtC3M8h8b9RqlWV1WtbJn
+         OFpm+w2uXqlSykW06mMT2H+eDzuvTT28UMQ1L97XdsfJhrCIcYvY8mvKJ9UOIy8X7c64
+         MpDk1zlnia12cietc25r/emCVopYcP4gWnnjl3lpfwdYAmAfVWaC8StdiDqdZhlNVlk3
+         C2muzHo5Qv8KmkWdGR7YcBGY4NTu4ELikHvFq+a+ASrY/ogOgF4jY2A8Z7E7E8qNgURL
+         Areug4PoOct/EYGTdM+Hy4ZiVrJ1S7Ri3WtUxlcO/YxaNsL/bzWDjlDTEBss7rSk8u8d
+         tgiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU09K27bo8VvWvN4TTV2hMBQCRf+1RQfOff+drOV/OKmkcEUJ7tT4Rl/MV6PbyxLldu6/aLJULuPl5eDnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkZAyItsBIJTWJPuFmJ9MxxP5GUmMiauWHh0T0jp74F9O/oopB
+	DZ4h7m6hZg/Ieg10ep2HXmcKu3tZHkxP1q+rSiKZJ0/XOUe0JH2P
+X-Gm-Gg: ASbGncvHu0mOrl+uyfeGSmI79234QSMGlrBhsUmc1kvvokpZV9j6kUBUskIGuXQDm74
+	7fV5bG9imh1EBYNw1G62iQ3Z5fQ8wry/Mm+dc76DYtGl6rwN6yCurFNvPJJ7iHCdMDEWKYelwNS
+	mGxxIqYveYcgIhIgIAzT+xe8iOumoIZxFRzl5V8bkOPnuy6NiDpZYXElRFE0OTJ0OLT526I78CP
+	mhE9sWheAhDOUux3CQMWmLb/WWjaXsPqCjvfp3ZpYChYHWfbENaHhPv561e1XQueMB7pKr6qDtF
+	ozhhY5fsN34RjzNklattBi6L0lrMfsEZZ7czeq2E8Vmk0mf67H/IlFqA3B5K8TqMd5d9SEjKf7W
+	xNFAMwrCg0hTAEZOj/eyO2Rbxi327FcFrQQ==
+X-Google-Smtp-Source: AGHT+IFgrdURIj5aGIW42rvqFSz+4B3fV+3dwcYfHSLwCG5BImXtPG/2PWupoaefl6dEzTqBihbAPA==
+X-Received: by 2002:a17:90b:2d4c:b0:2fa:228d:5b03 with SMTP id 98e67ed59e1d1-306a615be9fmr15006956a91.19.1744049365882;
+        Mon, 07 Apr 2025 11:09:25 -0700 (PDT)
+Received: from localhost.localdomain (118-160-134-247.dynamic-ip.hinet.net. [118.160.134.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e03esm84282455ad.146.2025.04.07.11.09.22
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 07 Apr 2025 11:09:25 -0700 (PDT)
+From: Andy Chiu <andybnac@gmail.com>
+To: linux-riscv@lists.infradead.org,
+	alexghiti@rivosinc.com,
+	palmer@dabbelt.com
+Cc: Andy Chiu <andybnac@gmail.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	puranjay12@gmail.com,
+	paul.walmsley@sifive.com,
+	greentime.hu@sifive.com,
+	nick.hu@sifive.com,
+	nylon.chen@sifive.com,
+	eric.lin@sifive.com,
+	vicent.chen@sifive.com,
+	zong.li@sifive.com,
+	yongxuan.wang@sifive.com,
+	samuel.holland@sifive.com,
+	olivia.chu@sifive.com,
+	c2232430@gmail.com
+Subject: [PATCH v4 08/12] riscv: add a data fence for CMODX in the kernel mode
+Date: Tue,  8 Apr 2025 02:08:32 +0800
+Message-Id: <20250407180838.42877-8-andybnac@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <20250407180838.42877-1-andybnac@gmail.com>
+References: <20250407180838.42877-1-andybnac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41b9a2e7-04ed-4027-7f11-08dd75ff5041
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GMWumjDFYZWkpcN5RxKESKggUkQkV/GftAo9MZGCK3HdaWDeYWU0CURbJ+q4?=
- =?us-ascii?Q?yWK5l1RP5dci3EYC+ty2QzInoaOeON4QaGeJZkGQMCJmzxXGApVkj0/sY9pJ?=
- =?us-ascii?Q?3A+K+Qnof8oGFz+rFtRUJiDqFTYXdPyqTF9tbmnmKjO+QP/FXmGVChrU2NdM?=
- =?us-ascii?Q?IXJ0iBewK58SM874joR8KmA6XrmL3OhXcB9Oy1mt2Z1YDVm8Q1Z5r3jYGKfF?=
- =?us-ascii?Q?f9ABVQjdFAMGk2jQGH3NUu4laV6yu6h2Sets95+7KI2zjCYsDDwp0RXGMIlW?=
- =?us-ascii?Q?XFrgK3qLxxr2Va7tUQcIPHsMawxhiEzN0h6Z1BldlAcRRhvlqji0VFV0U9HJ?=
- =?us-ascii?Q?gy9NzRqEkrU7o/g+Z81gvSUerGRq6nHnAdL31Qrpi2/Lx/cdtJ0qT2aVEvqv?=
- =?us-ascii?Q?aQ53aiIfp8DWFX1aueiYOk78MuY7LjwIFEgNtNTkx3t8pO8RT0MySp08aq6g?=
- =?us-ascii?Q?Omaa+go7NmBwWOaXoBxjBgfjTns4GcxrXGAzsdKQi372hamSuzVWLvzM+0Kr?=
- =?us-ascii?Q?sjUKupyF3yO4GjaM02pPi9uQeWsuim8lSar3ZrfEuuf4kzNAX3KEglZr/TnH?=
- =?us-ascii?Q?6+VtvYScjPsFdOr4otmRV/DccX/802XHo6fSZV40nIAyKsPLdkdYhHOtdFPa?=
- =?us-ascii?Q?IQEfICHa5KCbM1ROl418GngiNeS0Cz+3+HgkRlcybtUisJWxz6MwYxLzqY4W?=
- =?us-ascii?Q?V01EQCHxfTzC7Kighak7up/77kZwFqDDPTNF4kk0gLtYX5vDKaK8qx+aSczm?=
- =?us-ascii?Q?ruHbNdqARFUWa92qJGd5PGuFq8/sJ4jexQr/Sg6UX8XWYb8fx2VCzQxDJruf?=
- =?us-ascii?Q?exhHkyVi8lh63fRI9QQcxs3ctzudFL6oR8vIKBoABK1iOyhjNDPQwSIiTIbv?=
- =?us-ascii?Q?15rDDPZk408NtwNMLo3er4s8HnS2IiH41TwjAGsmQXe/lWQ2jgsbpmWDZK+k?=
- =?us-ascii?Q?F8hz3Svan/xFk6bBkCQ50WbqteoWA2ApDkaIv/SiLVCiKz1MhUKTjgASE+S3?=
- =?us-ascii?Q?PBefjPjP3Khsb8r1Pr5+WZyNTThS/wYJ7WjVNFLedUAHtmSt3g/DhXA1CF8Z?=
- =?us-ascii?Q?TAO92DdEArjaInUPK1K6qDoQNZd3zVnt03BFK1zEImMEn+2Hyg5b7i1Nen6O?=
- =?us-ascii?Q?d8yPG/Zi3KdzLNnB4mEFxrT/wDbNn91NVpY8xxuWAtuRZ+bq+vSXXFKTBeFm?=
- =?us-ascii?Q?UmcY5iU0h6JnSSEl3zLNrf1TL6UdJCHi4S94yJyNgJ5JLvfsCLMSAf1wnx9q?=
- =?us-ascii?Q?Y3ewXCS0Kwvtn1A7Y6Rc5+aofvPX4P4CpcJeT2yINlXIyXPcnqv+WAKTHJFx?=
- =?us-ascii?Q?kD5Qyc7D+Sc5f/NFxqdpxw5z2E+wSr5iiaBvC+4+G40JhSgCNlpyIXJ36srI?=
- =?us-ascii?Q?t3ch/Vv2brcGm3Zldg9XTrwyLuP4?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?A6KZF6bFS9p8rml3P94VtyjQUlOGjXUhiwScmh4Yg5nmXeMY/oSMyk66AKUn?=
- =?us-ascii?Q?wjYFI07Ay92E7f5IJIQx5s6yN5NuW/aitUhTPkyQawe01qcW0fMjK7wqVmGW?=
- =?us-ascii?Q?RiLn99H+TXlWure7R/5PCHS8WY9vU+9kniAWK3DsfBjvjuNn+7wG40Jd37tz?=
- =?us-ascii?Q?Lz7vherw++wHV9UJ1yUU1x0BmcQBqMKeULmfnnBVkNIZ3VG2zhjCDXPgfDjQ?=
- =?us-ascii?Q?AvEvcLG0quLqUP7Irvp52/PQDXqIGGznUSG0ryqKH+I0AAeA//pnM/17EDsY?=
- =?us-ascii?Q?DmiqnBn6y3VQZNVmdmiiQ7ZNnGQfOe8N3nzrDhb6M2RX95zzPuJVv9ZNLMrf?=
- =?us-ascii?Q?yKPB1JaNPC9Pv8A2oLUfefkusFMyoJTRx+UcKntsnFpkhHjoB44m9IKO3vVw?=
- =?us-ascii?Q?+JolBjCgeiedMlf8yFADu5keCBPRLsesgcNARYFwzzeJ2nZpUTRaqSHGhfEr?=
- =?us-ascii?Q?TizWip4XZbAKdvnKQVIIDQzHmpvX2xYMDrAk8v+JOnpZHPMTPbr4rcCLDpCx?=
- =?us-ascii?Q?SwgqWkRZU4zeewzYSGd/6pkUdTkucUNXW9q6WxH1Hw5pZmj5cIaiH5PUxXBh?=
- =?us-ascii?Q?lYPIcQD2YAfYc0YhhIggM5BMJyEwxcgOj+aTLQ3IBdAWIdE6eaN1fVVp11hB?=
- =?us-ascii?Q?472DcVLpgWa746JRMilShTcX/ynWHxLTESCWvdHlfRGzDhgTszVfPE5IAkzV?=
- =?us-ascii?Q?B7pWMyMKqXv0LJssn1c9tiHuV2w8HNSSFlYB9SF5vHOFMgTuYcMjwtv2D5qg?=
- =?us-ascii?Q?Jjus9W+tpjhd4im6tOEOiMQ0SzUQqCelNv7K9Bfz6kKUfPS9WaW55mcGHhy1?=
- =?us-ascii?Q?RqDfx3sofp7g7dUVfSJQCfgCgmihgcah6IxMQL54CRaUGTY+0exc7VkjpTSX?=
- =?us-ascii?Q?Q9wuPs2yR0uLCoWprQYe2ORjd3Tz9hSUqCMbOkK1Ts4cGSZVAn9ZlWZEoOao?=
- =?us-ascii?Q?qoayPVo2m07dqnJTmnF27QXX7JX7TVIOXCZY07o1W2By3WI5lLtYnwxarWuN?=
- =?us-ascii?Q?bfB++Sls5i+GrwNK41lyCANRWCe6w39+h8SNl+2ge8/mP61pdEkWdV/o3mk5?=
- =?us-ascii?Q?k8vLhIdHLLx1FmUkYWC4eVgu3T8JhL4d+ZNuxMxIspB8c/TVOFmyBefqCcU9?=
- =?us-ascii?Q?RW6qLBkXdIcK7/4Y4cgAi8kspyuXiQO1bU1I2CRIlVhgPWMhQrGH+AeTd5AE?=
- =?us-ascii?Q?BR5zJcKeOAxOZvxP2CIHvL2uwH7lwUKHiWnBHBiZ3NDd/TA7fcnEtijQvZW9?=
- =?us-ascii?Q?zPas057NkGT62NYBFA/MAeWLRR6Z2SeriFb1ygKzZIMBHaeMQugvpD1N6/ej?=
- =?us-ascii?Q?HDdLgHMlNWBqnQY9ZPoL7Bfql6HFur22WtQYfFG8gvtW/YJ1xH9O0jSddyVS?=
- =?us-ascii?Q?Ua9NqM9rkBrFhAZ39iXJz0w0miEa4JixzkaU7dyoxDEkv8K37ecNuVZ/P0nW?=
- =?us-ascii?Q?mS0mxL0MUW9SeZIXgsQ/1zn8di3Ps+0YKrGD+C0SjsPtGFssnYcrLnxjoLSQ?=
- =?us-ascii?Q?7P4djeNL4xokdI+L4Au0LbY/pu9WOAvAAN8Jh13eL7PibvK7pibVZetoNn3C?=
- =?us-ascii?Q?Now3ik0Q31mBrCMC026h5cBxncukk+YOz/rFBZfT?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41b9a2e7-04ed-4027-7f11-08dd75ff5041
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 18:09:18.2856
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C7L5ZwoUrg3AlSIx6DPoYjYL/npUQLnCsm/LCQ/UdkcB6MJq9ps8q+bhEUwXgiPy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6182
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 24, 2025 at 08:31:32PM +0800, Yue Haibing wrote:
-> drivers/infiniband/hw/usnic/usnic_ib_main.c:590
->  usnic_ib_pci_probe() warn: passing zero to 'PTR_ERR'
-> 
-> Make usnic_ib_device_add() return NULL on fail path, also remove
-> useless NULL check for usnic_ib_discover_pf()
-> 
-> Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
-> v2: remove useless null check for usnic_ib_discover_pf
-> ---
->  drivers/infiniband/hw/usnic/usnic_ib_main.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+RISC-V spec explicitly calls out that a local fence.i is not enough for
+the code modification to be visble from a remote hart. In fact, it
+states:
 
-Applied to for-rc, thanks
+To make a store to instruction memory visible to all RISC-V harts, the
+writing hart also has to execute a data FENCE before requesting that all
+remote RISC-V harts execute a FENCE.I.
 
-Jason
+Although current riscv drivers for IPI use ordered MMIO when sending IPIs
+in order to synchronize the action between previous csd writes, riscv
+does not restrict itself to any particular flavor of IPI. Any driver or
+firmware implementation that does not order data writes before the IPI
+may pose a risk for code-modifying race.
+
+Thus, add a fence here to order data writes before making the IPI.
+
+Signed-off-by: Andy Chiu <andybnac@gmail.com>
+Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
+---
+Changelog v4:
+ - Explain more in commit msg and add Björn's R-b
+---
+ arch/riscv/mm/cacheflush.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+index b81672729887..b2e4b81763f8 100644
+--- a/arch/riscv/mm/cacheflush.c
++++ b/arch/riscv/mm/cacheflush.c
+@@ -24,7 +24,20 @@ void flush_icache_all(void)
+ 
+ 	if (num_online_cpus() < 2)
+ 		return;
+-	else if (riscv_use_sbi_for_rfence())
++
++	/*
++	 * Make sure all previous writes to the D$ are ordered before making
++	 * the IPI. The RISC-V spec states that a hart must execute a data fence
++	 * before triggering a remote fence.i in order to make the modification
++	 * visable for remote harts.
++	 *
++	 * IPIs on RISC-V are triggered by MMIO writes to either CLINT or
++	 * S-IMSIC, so the fence ensures previous data writes "happen before"
++	 * the MMIO.
++	 */
++	RISCV_FENCE(w, o);
++
++	if (riscv_use_sbi_for_rfence())
+ 		sbi_remote_fence_i(NULL);
+ 	else
+ 		on_each_cpu(ipi_remote_fence_i, NULL, 1);
+-- 
+2.39.3 (Apple Git-145)
+
