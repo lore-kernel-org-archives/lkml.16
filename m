@@ -1,106 +1,179 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21943225402
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424B0224259
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011742; cv=none; b=Y1ZszdKYjMVg5E/Vm1Uskt3jLeew7cOYR2qReZZxN0wdhTYDacJzf5P9QEeA5aqa2sHrdfSr8D+zJ8godtvL9EjDKENyk9LvW6p13RVqSXmjLajcn13BCrrQQ9l+5TJ+UDP4loEyb0WSKgglbECm6P5NwcyZUBFQV3DFJvAQAWA=
+	t=1744011770; cv=none; b=LqZ9ifJogjat1OuP8/ldKVnXcz4u3IdrK3o6AEwobVIP24/xu64rLmvgE9nyathY71E2j+EiO+THCgwLD69Ik3jA4XZYFjTV0JJ2F6rSlsI3jVzsVdO/h8XK+In5dZbDeT9i+e6+4kLfDozZ7bj3jKtaHovdUc9xsdWNrD0H+5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011742; c=relaxed/simple;
-	bh=V38eq7FCelCROs42raMwfhM/55ImU/2u3l53cm6mEn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YV2Sy3n6fTbwiK4ipwQR+fkrzQhWU2hRciLFiQ80jmP/xC8yW+QPslWJQ4rmSF9AAYVHqt8iJn8+fmQbqDFTZ1yYXpgFgIdrufgPyRKZK9e2cTJuKzVfm+hJv+9lSm88GhglmtHZiVHhiwqsa+nGmeNKuGp4tzq3qIz3XNLD0lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kjNHKqEr; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744011770; c=relaxed/simple;
+	bh=TT2CwatyE3PScxA6aGzLKHWl9XyGLFx6ZMSmhaOgntY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FwVA7ywPiseghKs6IlymTTIKuj6AQiS921AcXZlFQgYbGDyWTgLMtc5RxY+HxM1fT+fZgf9YrPaUoQZo715JeGQAh2f7KZ+iFfZ2B8EX0c1zTL8yHgfki2LZrr1f4Z7+PJslAnllB2lSoa/NTdWoIzAj13HyQP5NmMuEfBriZTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Uh1FIZEH; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kjNHKqEr"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913d129c1aso2712006f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:42:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Uh1FIZEH"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so14350355e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744011739; x=1744616539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaxmJdvdhtX7hTbnte9HAxlvmD2ZRh/FVwxHdpp18yQ=;
-        b=kjNHKqEr+q1fYV9nEQxljZd1AFCuIR2oo6xz8NaZJhxdhJUkWuFLOs2r2e/PCbZeNW
-         eoG406Jn9pArw/E4qX18RnD2jgBp843kLs7jT7FalwXhCNOFBUkwxFEQVFeC/ZfJp/aN
-         1uzGU/vh1DiDVMoahseXd+DrY9Z+3TH5YIpDTLgB/v1kb0FJeGpwxquTT8lh1NjApujZ
-         +h/WmkEKuDZROKRC0QWjaolC6E9uJP5JtH8b2eGDchfMQ+TE9hXB4eeM1p97AQeKoO0u
-         IlmuzsvzpbdKMDtAOBpZ8I1FvCp9cd3jsmnEaSEhVD9lrLoshJ3fzeXKUUEYuE1hnTFF
-         f+LQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744011765; x=1744616565; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+SH50cqVXDjMtrk7e8ugGB2VmAlt5N0M4eNdMhk4w28=;
+        b=Uh1FIZEHmLO0ydh4g3L1wDcEVKdGWwgWXtbRPV/o+Oj0BJqWxxkySgzxioEXA952tN
+         piNPrlYHsPuQrSqhi2xn75UocRDQWCrvy8Ne4q6+V+FIKf8+9zMItUcK5M/ObxggDXmv
+         AOAK3h/yzTGb76Ma/1SmYr17oDYo5CYTDZm8eFip5o7WN1bRgcXERAhKm1In8/Z1T22H
+         HR8bTogDpOw19JMVITLhPd4FOL6fZaPMYnYIyzKSAuqBbXFT2JTus6h20i8Lc7w6Z6Xo
+         VS/VkYtqO01JKldyu82WcqHTaDn5kyOQ9vqYYpfWofh/Xcf2ow609LpulSCLEy9+VYPi
+         19yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744011739; x=1744616539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jaxmJdvdhtX7hTbnte9HAxlvmD2ZRh/FVwxHdpp18yQ=;
-        b=ggC0jNHL3MKCBShBxQL0S2sxPvlkxBEC/eGwzF29r87nj7YkD5Di6Mh1Tnp+V8vlFq
-         zZ2nQEOHgDCBFqRIw7YohCqSJKmMokB3kYj5Q5O8JhoZWBA3b0cbpd17FXVH6wcwm5d/
-         HRx5Uy4moNWdhh+CVCvOtj7zDXTfiHOtKW+WmosaTbmn5b4Z0VB+kzKenVom0JA6VgNP
-         6VOF16dPaiXtSr1R6lKUjhuHh4+oKzMFQLc40QovNsQ5RZxObCOASu22dyN92oM1dtEF
-         gggHTi60+ngMT7j8EjCIVtjEiBODEl/gmvJWMoS6ITxjB7UeFWezH3KgeVw/x32dADBn
-         Zbvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpTMdpwx5f4XiLUoKN0xJQiO27f1ISL/qg3Akx6FKkdXuC3JZDDL5DIqkTqkcceXrFfaWiKQprRbtpyEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKlL9n8f5x7kLqCUSNHjin3DnsFrs7HAfD5+a1chhi74AcZLnD
-	9wY3adTDxzmk+5N+YQ3bvpEifYwnNwGXiI1RRKjHOmY+/rD/bl4T5MTMlnIuYpo=
-X-Gm-Gg: ASbGncs+ZEtEpv/RKu6a5zIO42fYIhk5j1y1Nva3N1CeZ3HDqTYtVzFnAMEU/HLMYGC
-	9ISbR/4Igu2cpVCy0ZHbkMdQzIGKdrHD0Jad94Rhocfu9MZ6hEwAhmdLl4eKwQQJaz92NDKgR91
-	SGMbj9bsMHDl5Nam4H2N96B2P/s8k3MpgPiV3Sa6ZBgcVaZha9dATpudN3uls9zEw2b//Ols1cM
-	tVMgH7ltnWiqIweEotC/8/qdIJ/JsvqkpSZBINs6DCZlS74G1P5SXdHxTBvFb7/mT9SVEpfsVwQ
-	0S3N2nWsGm+TagThk6nn+L6/hybVqm61hWTkFQQjg+64
-X-Google-Smtp-Source: AGHT+IE6QgJB9JshmZZcPlhwCB6EA7JVQMD4x3bAODJvhStUzpBPIJijVfdsvTwXBWDIy69lNco/0A==
-X-Received: by 2002:a05:6000:420f:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39c2e65a08bmr14907199f8f.24.1744011739377;
-        Mon, 07 Apr 2025 00:42:19 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301acec9sm11131294f8f.40.2025.04.07.00.42.16
+        d=1e100.net; s=20230601; t=1744011765; x=1744616565;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+SH50cqVXDjMtrk7e8ugGB2VmAlt5N0M4eNdMhk4w28=;
+        b=U/KtJ7LCrC649uJ/XB5ZgUFU44BN6OROSJtGTDp0OoEmnFmSCO4gaUcU5hDdIysTK4
+         THFSazTX7Pqk8Sw2Z8f93DRD0uOb7UEhXFMi9cYae4Lwn17wjlJXYkZBqKV2cFBl2sHM
+         Woel4KVbrWWVVmdig2O5JvqJse4tEGPzh0aOZpK+3Pf4gwfyzjYSN3gOyoryuD4x7OxJ
+         7E/iw19xWCGeoPKwxnuEz5yQcAr+yCpnbJfUtH3hlGYpr+etDDv/btPNuiwCEtwgB2zO
+         lLVHQwbVEOfWbTJPQhcfT9w2Wxr3rkBW8eUYNEzDJBsrbGuD6IFgHkUexn7Zbw9JfE0w
+         S4Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBW+LpvdcxLUGhHn70cLZfHwCEC3wBOr7uWTEa9YekSW/4T5+JjFB0I8mTj+YJEF2JXKPS1HiaCRbSpII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/O7ZWZI9RxoD2Y0Ns7j4jF/s7kgw0Zc2aEcxdb4X9bwd/CtKM
+	j+bJFF3A0ao5iie/L4TQTacsCbUQflH/2ub6N2i3wHhC3FprMx0nrw0YhjaSeIE=
+X-Gm-Gg: ASbGncvbzw9xBMjKgsCqLiIwnIXSRIhIHpo20zflB95GVux3HDsNV4koSOSERUhzG3a
+	VdrhSHAhCmXv3npL56DNfIZ/FiGnG63a0UvwBSokWo3zYFyYCYJfBIH+wGkiVconnMkR5gg3IUz
+	MvwS9DZfANNX6Wf1M8ypWl6K/5GXZ1dby0xHD/XaFSiQyd1C16w9WduNEz78LGeSg2mSdiW8Z8J
+	k+B5cOhXfWiL1Ebhm2Ory+no9d+DBni+gWvGZAu7iI6rT5biyiQ1elu//K7ecXbZd5zkTjwMh5u
+	vjtCe1Bn151Xj9Z2WUVazTwMJO7q4Px/TbpypkGvSEGohFruIdY2GPflGpOQqlx6TWt5IcKex/j
+	sPFUFn6WRHNCObvvz
+X-Google-Smtp-Source: AGHT+IGj4oFOpbFlCSYKH70mEMH5XLqpGaZABBghjAnvaw9bAjEggbo9aAX8vuvntuy/p28yBQRuZQ==
+X-Received: by 2002:a05:600c:4f46:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-43ecf86a5f9mr108047395e9.12.1744011765391;
+        Mon, 07 Apr 2025 00:42:45 -0700 (PDT)
+Received: from archlinux (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630de9sm124012395e9.1.2025.04.07.00.42.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:42:17 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	krzk@kernel.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	andriy.shevchenko@intel.com,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: (subset) [PATCH V2 1/2] gpiolib: of: Add polarity quirk for s5m8767
-Date: Mon,  7 Apr 2025 09:42:15 +0200
-Message-ID: <174401173191.24103.4199616669647190339.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250327004945.563765-1-peng.fan@oss.nxp.com>
-References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
+        Mon, 07 Apr 2025 00:42:44 -0700 (PDT)
+Date: Mon, 7 Apr 2025 09:41:32 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: adc: ad7606: add SPI offload support
+Message-ID: <vjxnpbxvvh2vdjsamdznhrmrwwfwt5tjhugqik3ktueopajv6l@wmehdnowjvjq>
+References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
+ <20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
+ <20250405164041.7d2e586b@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250405164041.7d2e586b@jic23-huawei>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Jonathan,
 
+On 05.04.2025 16:40, Jonathan Cameron wrote:
+> On Thu, 03 Apr 2025 18:19:06 +0200
+> Angelo Dureghello <adureghello@baylibre.com> wrote:
+> 
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Add SPI offload support for this family.
+> > 
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> Hi Angelo,
+> 
+> Code looks fine, but there is a TODO I'd like to know more about
+> as it sounds 'ominous'. 
+> 
+> Otherwise this needs a dt review for patch 1 before I queue it up.
+> 
+> Jonathan
+> > diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
+> > index b2b975fb7fea4d1af6caef59e75ca495501bc140..b086122497eb22042171580878160334f56baa23 100644
+> > --- a/drivers/iio/adc/ad7606_spi.c
+> > +++ b/drivers/iio/adc/ad7606_spi.c
+> 
+> > +static int ad7606_spi_offload_probe(struct device *dev,
+> > +				    struct iio_dev *indio_dev)
+> > +{
+> > +	struct ad7606_state *st = iio_priv(indio_dev);
+> > +	struct spi_device *spi = to_spi_device(dev);
+> > +	struct spi_bus_data *bus_data;
+> > +	struct dma_chan *rx_dma;
+> > +	struct spi_offload_trigger_info trigger_info = {
+> > +		.fwnode = dev_fwnode(dev),
+> > +		.ops = &ad7606_offload_trigger_ops,
+> > +		.priv = st,
+> > +	};
+> > +	int ret;
+> > +
+> > +	bus_data = devm_kzalloc(dev, sizeof(*bus_data), GFP_KERNEL);
+> > +	if (!bus_data)
+> > +		return -ENOMEM;
+> > +	st->bus_data = bus_data;
+> > +
+> > +	bus_data->offload = devm_spi_offload_get(dev, spi,
+> > +						 &ad7606_spi_offload_config);
+> > +	ret = PTR_ERR_OR_ZERO(bus_data->offload);
+> > +	if (ret && ret != -ENODEV)
+> > +		return dev_err_probe(dev, ret, "failed to get SPI offload\n");
+> > +	/* Allow main ad7606_probe function to continue. */
+> > +	if (ret == -ENODEV)
+> > +		return 0;
+> > +
+> > +	ret = devm_spi_offload_trigger_register(dev, &trigger_info);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret,
+> > +				     "failed to register offload trigger\n");
+> > +
+> > +	bus_data->offload_trigger = devm_spi_offload_trigger_get(dev,
+> > +		bus_data->offload, SPI_OFFLOAD_TRIGGER_DATA_READY);
+> > +	if (IS_ERR(bus_data->offload_trigger))
+> > +		return dev_err_probe(dev, PTR_ERR(bus_data->offload_trigger),
+> > +				     "failed to get offload trigger\n");
+> > +
+> > +	/* TODO: PWM setup should be ok, done for the backend. PWM mutex ? */
+> 
+> I don't understand this todo. Perhaps some more details?
+>
+it was just an initial comment i did, when i started the things
+was not clear.
+Let me know if you can remove it, or i can send a v2.
 
-On Thu, 27 Mar 2025 08:49:44 +0800, Peng Fan (OSS) wrote:
-> This is prepare patch for switching s5m8767 regulator driver to
-> use GPIO descriptor. DTS for exynos5250 spring incorrectly specifies
-> "active low" polarity for the DVS and DS line. But per datasheet,
-> they are actually active high. So add polarity quirk for it.
+Thanks a lot.
+
+Regards,
+angelo
+ 
+> > +	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev,
+> > +							     bus_data->offload);
+> > +	if (IS_ERR(rx_dma))
+> > +		return dev_err_probe(dev, PTR_ERR(rx_dma),
+> > +				     "failed to get offload RX DMA\n");
+> > +
+> > +	ret = devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev,
+> > +		rx_dma, IIO_BUFFER_DIRECTION_IN);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, PTR_ERR(rx_dma),
+> > +				     "failed to setup offload RX DMA\n");
+> > +
+> > +	/* Use offload ops. */
+> > +	indio_dev->setup_ops = &ad7606_offload_buffer_setup_ops;
+> > +
+> > +	st->offload_en = true;
+> > +
+> > +	return 0;
+> > +}
 > 
 > 
-
-Applied, thanks!
-
-[1/2] gpiolib: of: Add polarity quirk for s5m8767
-      commit: 4e310626eb4df52a31a142c1360fead0fcbd3793
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
