@@ -1,66 +1,67 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9682B1F7074;
-	Mon,  7 Apr 2025 14:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7DC1F8681;
+	Mon,  7 Apr 2025 14:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037557; cv=none; b=fO6ID2Jgp4m8F1YifOgiZN+MPNFv1nHenZncqWVbsq6HC1Y1TFZpgFn8eaPmWy3Osz1F3eYfuM/5GUXqOG53oLYTPpBwFCfAhtPC6LOB1adfRREIcdqWWv5B46JLzn/87VK6XU0SwpcdEBgX8Il+XXK+5xe2UhXiXwJgEwXSgv8=
+	t=1744037558; cv=none; b=jlwMeot4sHe+BhWm4LYXebIoToSqyy2xfc73ojdxZaWxA4hz+gV3k4B/NQ1b2+sR2VA7jLuAjR2D/xA7nk5UOJ8muspguYVtf8HGVwITIy8s2TbxslCO5ft40LMXu4YVDbvV9849PFFcPTkPdUBL5OK853nrRiQThypb1gZ7Yig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037557; c=relaxed/simple;
-	bh=vG2b/mQo7+BgxnosoSx6pacevmgS07/uJ/cwU4NRObw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jG5YMO2yDOkW69PW1m/S5aIfQfXmVbDx1R0Hx1/83XyBVJX5qBEpEQ9mmghoNAzs2HOMRmCIm4CbwyJ4cYGNLdLEy3BPI+TtKWKoESlhYO/B3R4+v6WQRMqaOKzVhsifTQbnFAd+3yiij2TuhVIEYq9l0UKNmzR1kbXkHWXn4yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4OW6FpN; arc=none smtp.client-ip=209.85.160.176
+	s=arc-20240116; t=1744037558; c=relaxed/simple;
+	bh=nCyCTUmjgvM2Ewl4LpZ8GJPzP0gVuWaJXuVsOo7zTA4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=d4hBsfl9NzqZ8jxBs3l8hyUmxBRkeW4hDXpmnfPZgyph1KtO65tPsuZVHEg6YdR/eScRxsffUchXoQFLOYl1/tehZU2nYCsXBy5vM/Ev7gSzz6EjJ7tLj69bV4Kasz4ZQFXSTUWJwL1dg2XthZ/mdh6WILB9NoTOdddJu3vnXoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTkUapXy; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4OW6FpN"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476f4e9cf92so33529711cf.3;
-        Mon, 07 Apr 2025 07:52:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTkUapXy"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476b4c9faa2so53162511cf.3;
+        Mon, 07 Apr 2025 07:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744037554; x=1744642354; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mY2lvpZDIegCTlej9ySCKVFC0gMPohSyMQ/u0Oqs1wE=;
-        b=b4OW6FpNdGgve7Zp0l9oB6aNUMsgiRmjWGDwMYJXk+U8p/xIIrE3f86Re71urozhlu
-         U4VeiG3uY85jHGXOfr4zWtilPIAd70Hu4pcLnRmWvAefXcDGtvn4M0KBZtoLGMj3iDsW
-         X4lYjycODov6DGOYulKYIkbzDLrWb3SFFMSS0iSFp4K54bdannKZ0TSMs2BihIJjEflA
-         SYsZnzp7r9vzkABM/L84wr2KepW5siBZNc6uKVz0CET8VrdoljcC7MUOmFaLLRLIOkos
-         Ab+4cNh7TG1uwrlEkg54pJM+DxOtljmLuEAu78q5B7/g0uQj02gTx/uSXBn3YUSIWRiV
-         GFmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744037554; x=1744642354;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1744037555; x=1744642355; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mY2lvpZDIegCTlej9ySCKVFC0gMPohSyMQ/u0Oqs1wE=;
-        b=T8wjwJjKo/8xcjMZf3ZQ49xhioaeKJ5bTBRphUAHKljzZOqBrwfGF/wOKlG3Q1ere6
-         dl5AZRwZpRwq5nteoRxfxS2klXb9+KgxxnsuW2uSBX1BDejjLno25G+3iH19DGvfolDr
-         9Nr8X6cfPTT1D3V9toVTx6Iy6V8chQwlG/UV5he7q6lmBZ09PYL/kkPO2x/SALE7NTcN
-         fgsrlFnm2n/5Hzhw25zuC/MPS/ZT38IVX8hS0G4Exx5erlkqw6ZAs1PrJNMY8PmXTopW
-         NqlPkQHmhhUpucy4MbjuYvo3QzYpiLOnoy8UcyX8b5gUL7vi6rv7UrDErh7bL5vXgZ/A
-         8SFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxzEVDf2cUnZStf5nvT4ossI7YZVRrisMCloOHYvDeR6lej6iIU53jHARnGJqsMQHkUxagyPWGCxWbi/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwugP4E1uSEDdg9/wq8/n3xgUM6SP/P7gmzyJLi4LWHKqFF2S16
-	zBT/tp1t6MSTecP2205VAfmiYiJPbc2LNxuRFxhG1XH1/0s+M0E1
-X-Gm-Gg: ASbGncuA0+sWw3BrJmiWqV/a3mA2PCeaJtGJWtn0gG3wEziR8BtQAWONgd8B2GO92kC
-	sqLgdKyBNYYW00iQRp379wpLoiElwxrbDrAx+xNG0a3It+TdNsAGk/+nl5FMn64aHDAWNoppTse
-	zN03zo25nDvloP0dpKy8dOYGOj54Hpk7V1kHTe2EuKv9NCUII0vkABSJiEZ3jURzV1L4atyPZcP
-	wNy7m8tmiS0HPRjjn7a9MRklM6rHx9EXKyAqTUeISgg7c3c8YUmDOAWbMcjM1mUpOWnQQ4wZXC0
-	ZFGXqpz2oXkKfR+q31ZGJ5Czms5GZmoNSXz4yaSM3M0CEfLn/6P9J3YDmflaL5qmHOYclGV7DMs
-	UDt2PgQva8ELOFuknhTRsnddCsiEfQQmRch4KdzbZhQMU9ZilrcRz7JZS2VbuzMyL
-X-Google-Smtp-Source: AGHT+IGHbcWxN0uAcqteJVI3QWU4ZbW7i4s5XOj1gv1kyknpyeTsJYt+g9pZFfLlR+w6C7yUPfaZ5g==
-X-Received: by 2002:a05:622a:64c:b0:476:83d6:75ed with SMTP id d75a77b69052e-47925a1bd80mr201882111cf.34.1744037554227;
-        Mon, 07 Apr 2025 07:52:34 -0700 (PDT)
+        bh=l9bXsaHdigFtnZ6oLbvWvIAc6v1jQOnqbovRbFPfFaw=;
+        b=hTkUapXykty0H2nLYQCzyk71NdRSJ9IOP9u6ZORSGFVlTm+mgaBWWRb7IlZHBM1V4I
+         zd7FjfbWb5zyDvnR0fkGvUvIiiNpyv0vBO/21z/OL0Jcu8Hy6YTDTUnziEDDBEaDZqu5
+         tg4KJR9VJkMpocBUgRYzqbSI0wBIIcLQNxKbWn9+e9UeVxZR7PiB8OsJKivBEnuAJt9z
+         eMV9vjaEZjkuKJWhpq/bmLvg1PNcKBLhEq64m2n+2Q5xidCFnJyc9g/Pt1o9fIsjPPLu
+         j84qYKNzI2vu+E9XqmkjZnBo9M5RW38nUJ0iduY7bL7UzhtmpRue2vqVHMIjzofsqKub
+         7Fkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744037555; x=1744642355;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l9bXsaHdigFtnZ6oLbvWvIAc6v1jQOnqbovRbFPfFaw=;
+        b=RF9NHvSehIFtAIpcufIVW45RxYrYaEZkzMBxXf1X8vhOo1dTZL5OgK1JMZ94bkLS5i
+         gUTOUC+W2em5UzpkdbS9oH3IWcVn1QqcBQlPSj9s8tbm5RrvRmVkBkT4va7jL156f45J
+         NHvTpX/P+bUboRh2iYoGPUkAYf9OYfJ/WpXZfGaPTixzQp+04bQSNoXjpHYIChL/zMO3
+         0twQtY07MhM73JF7vJ54IvI40iszcwhI8xcql8q/viCOAgHhcExIlF9qMYoUDs10OXDX
+         rPg21QUKyb5tKoPHKwJyUIaZNMhiISJsKQJGMBce7KbKwji5FApSAmmw5yQOddc9wJBR
+         3kVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUo9/FxrLiyxuB7Rm1b1dJ0g9JoY58x7hFUdq4kG72J7c03OWDgqDw6mgrFM1tUaVLy3/rEtZ1zWqhfWyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9U74SzKBr76ahHpvkuaaJFblQ45hZKm3q+Ubs+BpBXJ5RQZa/
+	K32ETVhhjheX272U6Y4Pf/APlVWlw5wzPgIpQF3FU2iv02o1mEAtDt/xOA==
+X-Gm-Gg: ASbGnctxh/v+nC1e66gRym2wMS4u8acsARF82aiBtxyqbmxQfXUz8hJ88fM8coyikCQ
+	GjMCACeF6E9ElsVrl89MTLwDwugyzwIAOEPrzoxQ3/6EVwvipI0orsHVDhXWb4cIVX68IeZJFIk
+	DGX4/GknAr7b5OJ58zYaKZeiyHCXmVF25VfdGAeLRieK2iDqnRVPFl7PdX3faV5ldn/I0SzowXP
+	RAnEXtzHnhAN3Y+J77FeGANltESsiqPaJN92hKPGl0ZEV/SbVVHI6TKaYL84fvU6QaYUOepTKa+
+	lgr1EqsGV0Oxw3x0lYSU/+B66uyvGIjxjCIunn/CvoTlofPJxsKNuIphu5BDajFL6cT0KdkZNFW
+	/Q2Tv7oPS7QCSY2rd1P7a9tMZYVSETCbJQ0t0fCEXqrU0HCWiX9bRmw==
+X-Google-Smtp-Source: AGHT+IF7PDCkqwUh+RUKUoekJdm4DFiDxe2Kohgw9QJDLYYkhHpRMHxvJNPDxB1wY2rC8ks4/hvQMA==
+X-Received: by 2002:a05:622a:1349:b0:476:9483:feaf with SMTP id d75a77b69052e-4792595a4efmr175777321cf.19.1744037555514;
+        Mon, 07 Apr 2025 07:52:35 -0700 (PDT)
 Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:d8ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-479364eaa28sm33065601cf.28.2025.04.07.07.52.33
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-479364eaa28sm33065601cf.28.2025.04.07.07.52.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 07:52:33 -0700 (PDT)
+        Mon, 07 Apr 2025 07:52:34 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Subject: [PATCH v3 0/4] rust: alloc: split `Vec::set_len` into
- `Vec::{inc,dec}_len`
-Date: Mon, 07 Apr 2025 10:52:30 -0400
-Message-Id: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
+Date: Mon, 07 Apr 2025 10:52:31 -0400
+Subject: [PATCH v3 1/4] rust: alloc: add Vec::len() <= Vec::capacity
+ invariant
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,11 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAK7m82cC/22Pyw7CIBBFf6VhLQaGPsCV/2FcVDq0JH0JlWia/
- ru0uqiJyzPJObkzE4/OoienZCYOg/V26COIQ0J0U/Y1UltFJsAgY4LnNKCmHifaYk+VumGudSp
- FkZJojA6NfW61yzVyY/00uNcWD3y9/u8EThnNmVGyBFmAMOe6K2171ENH1k6AvSt/XYguKFFlm
- ZFQcbl3l88oh/dH/Gz6LluWNz0mJFr3AAAA
-X-Change-ID: 20250316-vec-set-len-99be6cc48374
+Message-Id: <20250407-vec-set-len-v3-1-c5da0d03216e@gmail.com>
+References: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
+In-Reply-To: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
 To: Danilo Krummrich <dakr@kernel.org>, 
  Andrew Ballance <andrewjballance@gmail.com>, 
  Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -86,49 +85,82 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
 
-This series is the product of a discussion[0] on the safety requirements
-of `set_len`.
+Document the invariant that the vector's length is always less than or
+equal to its capacity. This is already implied by these other
+invariants:
 
-Link: https://lore.kernel.org/all/20250315154436.65065-1-dakr@kernel.org/ [0]
-Link: https://lore.kernel.org/all/20250316111644.154602-2-andrewjballance@gmail.com/ [1]
+- `self.len` always represents the exact number of elements stored in
+  the vector.
+- `self.layout` represents the absolute number of elements that can be
+  stored within the vector without re-allocation.
+
+but it doesn't hurt to spell it out. Note that the language references
+`self.capacity` rather than `self.layout.len` as the latter is zero for
+a vector of ZSTs.
+
+Update a safety comment touched by this patch to correctly reference
+`realloc` rather than `alloc` and replace "leaves" with "leave" to
+improve grammar.
+
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
-Changes in v3:
-- Fix compilation (s/ptr/tail/) in "refactor `Vec::truncate` using
-  `dec_len`".
-- Fix grammar and s/alloc/realloc/ in a safety comment touched by "rust:
-  alloc: add Vec::len() <= Vec::capacity invariant".
-- Use `if let`. (Alice Ryhl).
-- Avoid mutable reference after `drop_in_place`. (Alice Ryhl).
-- Rebase on rust/alloc-next.
-- Remove dependency on the `Vec::truncate` series which has been merged.
-- Link to v2: https://lore.kernel.org/r/20250318-vec-set-len-v2-0-293d55f82d18@gmail.com
+ rust/kernel/alloc/kvec.rs | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-Changes in v2:
-- Avoid overflow in `set_len`. (Benno Lossin)
-- Explained `CString::try_from_fmt` usage of `set_len`. (Benno Lossin,
-  Miguel Ojeda, Alice Ryhl)
-- Added missing SoB. (Alice Ryhl)
-- Prepend a patch documenting `Vec::len() <= Vec::capacity()` invariant.
-- Add a patch rewriting `Vec::truncate` in terms of `Vec::dec_len`.
-- Link to v1: https://lore.kernel.org/r/20250316-vec-set-len-v1-0-60f98a28723f@gmail.com
+diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+index 7ebec5c4a277..f8045b6c8976 100644
+--- a/rust/kernel/alloc/kvec.rs
++++ b/rust/kernel/alloc/kvec.rs
+@@ -90,6 +90,8 @@ macro_rules! kvec {
+ ///   without re-allocation. For ZSTs `self.layout`'s capacity is zero. However, it is legal for the
+ ///   backing buffer to be larger than `layout`.
+ ///
++/// - `self.len()` is always less than or equal to `self.capacity()`.
++///
+ /// - The `Allocator` type `A` of the vector is the exact same `Allocator` type the backing buffer
+ ///   was allocated with (and must be freed with).
+ pub struct Vec<T, A: Allocator> {
+@@ -262,8 +264,8 @@ pub const fn new() -> Self {
+     /// Returns a slice of `MaybeUninit<T>` for the remaining spare capacity of the vector.
+     pub fn spare_capacity_mut(&mut self) -> &mut [MaybeUninit<T>] {
+         // SAFETY:
+-        // - `self.len` is smaller than `self.capacity` and hence, the resulting pointer is
+-        //   guaranteed to be part of the same allocated object.
++        // - `self.len` is smaller than `self.capacity` by the type invariant and hence, the
++        //   resulting pointer is guaranteed to be part of the same allocated object.
+         // - `self.len` can not overflow `isize`.
+         let ptr = unsafe { self.as_mut_ptr().add(self.len) } as *mut MaybeUninit<T>;
+ 
+@@ -289,8 +291,8 @@ pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
+         self.reserve(1, flags)?;
+ 
+         // SAFETY:
+-        // - `self.len` is smaller than `self.capacity` and hence, the resulting pointer is
+-        //   guaranteed to be part of the same allocated object.
++        // - `self.len` is smaller than `self.capacity` by the type invariant and hence, the
++        //   resulting pointer is guaranteed to be part of the same allocated object.
+         // - `self.len` can not overflow `isize`.
+         let ptr = unsafe { self.as_mut_ptr().add(self.len) };
+ 
+@@ -822,12 +824,13 @@ pub fn collect(self, flags: Flags) -> Vec<T, A> {
+             unsafe { ptr::copy(ptr, buf.as_ptr(), len) };
+             ptr = buf.as_ptr();
+ 
+-            // SAFETY: `len` is guaranteed to be smaller than `self.layout.len()`.
++            // SAFETY: `len` is guaranteed to be smaller than `self.layout.len()` by the type
++            // invariant.
+             let layout = unsafe { ArrayLayout::<T>::new_unchecked(len) };
+ 
+-            // SAFETY: `buf` points to the start of the backing buffer and `len` is guaranteed to be
+-            // smaller than `cap`. Depending on `alloc` this operation may shrink the buffer or leaves
+-            // it as it is.
++            // SAFETY: `buf` points to the start of the backing buffer and `len` is guaranteed by
++            // the type invariant to be smaller than `cap`. Depending on `realloc` this operation
++            // may shrink the buffer or leave it as it is.
+             ptr = match unsafe {
+                 A::realloc(Some(buf.cast()), layout.into(), old_layout.into(), flags)
+             } {
 
----
-Tamir Duberstein (4):
-      rust: alloc: add Vec::len() <= Vec::capacity invariant
-      rust: alloc: add `Vec::dec_len`
-      rust: alloc: refactor `Vec::truncate` using `dec_len`
-      rust: alloc: replace `Vec::set_len` with `inc_len`
-
- rust/kernel/alloc/kvec.rs | 85 +++++++++++++++++++++++++++--------------------
- rust/kernel/str.rs        |  2 +-
- rust/kernel/uaccess.rs    |  2 +-
- 3 files changed, 51 insertions(+), 38 deletions(-)
----
-base-commit: 1679b7159379d11100e4ab7d1de23c8cd7765aa1
-change-id: 20250316-vec-set-len-99be6cc48374
-
-Best regards,
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.49.0
 
