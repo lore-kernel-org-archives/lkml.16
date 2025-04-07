@@ -1,136 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157FE2135C4;
-	Mon,  7 Apr 2025 16:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5665C21148B;
+	Mon,  7 Apr 2025 16:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044651; cv=none; b=qiW3TuyCYljhhSaeIDVXyOxr4I0wrrXS3BetgRA3+6AOsnA5+tHGxdyUTs5mnIN1R6BBKy9OXlFbP7RxsQ+PD4wd0QvW3A/OlB2z25qZJWivmGApLntvs7i3jHDcELVPDA20hKfhwZcPOZ4n81G77bURwEUOjiYmiIlqJQTG03Y=
+	t=1744044699; cv=none; b=Zkaw/SV8lfJr4oFEsdgiVmw3rUw+nKzhmge9+cdayMXaJn1N+jc5K8eo+QwVQDSFNmk6wMC6k+unHNsXYaeLpASKLiQA9+a8ACfrZYswj5zz8JuLODluFKkqv27W3puc8FsDmkCcCyE3h8/ycbCXLvFMMD0kz9WtZ8qm1g2Tmw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044651; c=relaxed/simple;
-	bh=9rKDfEvc7K+7LzU7nTcuoqeYfX0y7c5G08Njz5uF/Vo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRrYyQLZF19cJaEQ3UG3y72wW7dF2LNkxA7GuwPhPWC9v9QGcOTc59HnJIEfLHuZ+6B+ZXA4J+zHQRu3omh0KvcYdHHRxCRzvlGIDduBTHvVDjSpu4smBsM+NY8dlUhctFx9dJk0bmQ4UvcspdsN+HN9JeNE6jE8Kxlkp7sq8yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sp9MSWDJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744044699; c=relaxed/simple;
+	bh=ZzdiNXHuskzVB8qqfZ+KEStr8CQJVJ+kBhPW7XeWeY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jNBhiXJ7tXekHnEtuKlZZSaX270BepfoafvrVBYcdDRlRTRfNcuQDiyEfl3lGvxx4nIJ4YUqJ1Q0mB02TLDwOBk/Fgd4eqn2dCSY7jL7kp5PdHgDR7PQx1rnoYkWDL+l2v6NXl+aMWdRfiF/olUaW4MN+6WGmKfs7wwdEy+LvpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QYtsHvD9; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sp9MSWDJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA155C4CEEA;
-	Mon,  7 Apr 2025 16:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744044650;
-	bh=9rKDfEvc7K+7LzU7nTcuoqeYfX0y7c5G08Njz5uF/Vo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Sp9MSWDJaaAqP1q2SYIWKIo2g5ROm+6P5tR7LFd8E50X8gK4zuhxBadi53VkyP+Ic
-	 Mjsmlr7jxLIM1qBo59vxeEqPR6FZPe9YVLx4CPyU2A4DHmeFfsEwHB8BxVshIFEmeC
-	 12MMo2b3egIrNo05eXUirOJt6tvZCoIHerm6NWQWppuvtrt7Sdv8HQefioWs1cgwOv
-	 mkQpF5mP4YM/Mqvyo83b7cKwtpLn0eBZTzXGJBE6sjFWjRkVl9Js0s32ghUeE+0pJ2
-	 vKcR/Tzpjum/ZIgOGGfWTmbdDSesqQEtB6FpedtzQIqOmygCuQe1BApOBiIe8k3tMk
-	 ZEfSj8h17KEtg==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso7660012a12.0;
-        Mon, 07 Apr 2025 09:50:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVWYfK284QZK3ZSOB0TGPmqN96wItXg129KFE251t8RlpoUSs/j5c3hh6YoM3Of5Vmatmgwpk1j1HLK9Qx6Js485Go=@vger.kernel.org, AJvYcCVl3y8eDNcpp4+eco4kzYzRONoDkDsPwERBWfNoJaQFQxL49wVEm8clU6penhVXoNXIWJ6nnc+id4X9/w==@vger.kernel.org, AJvYcCWG3+ChYv58nYuDvp0ct5iVib2TtwUJVxSZjKNpUtnEDP65jKr3KBYd8WfpjU6/GpUOjPfOQFFBCreo2t5MjA==@vger.kernel.org, AJvYcCXMtV6GuzEHcdq6TZXgXdVy/nGEezghUyq9hAUyP//D5EDBVdXngnG98v/7Q+YS0YO/5DkVX0DzhCk=@vger.kernel.org, AJvYcCXbp9ny4kz3GVNfnhcA2BzN5OVqBDCgij0th5g78NJDEt/A7IeZ4h+vYkdI/XhiUDovjYQDMYKHN5sl@vger.kernel.org, AJvYcCXyjsFu3VLrokHHeX8kobC/gJEDq9wIRPQ0XfWM6XYAjFLMFWCU7cKwWouMvf6lc51EpQ1iqawVsSHJSjv+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3932QmiHejRd9RhBAami7SKubs9ilWeDS/IgXBLP1t1e3Ft0N
-	pIWn258V8RyJlgoA0YV3Wilk/RHe388aGQXAPy+o4RT63fGtLoExs/GeDEK1L8cdAyF/CB6a6HG
-	CU1W4LCApDXxFXgGaRIcZpQEVaA==
-X-Google-Smtp-Source: AGHT+IEYKsKGhFSJY/Ew6wLedApBd8mm5Tfxxs3oUxIJoVcHTWnGkb+RbDSqCHxLGxft/yGwgIdnVVemND8kyOfPXZI=
-X-Received: by 2002:a05:6402:26ca:b0:5e7:c779:85db with SMTP id
- 4fb4d7f45d1cf-5f0db7fc898mr8148611a12.4.1744044649254; Mon, 07 Apr 2025
- 09:50:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QYtsHvD9"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D6084439C;
+	Mon,  7 Apr 2025 16:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744044694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H1iMwU3ajJMnMcuSPtx2gxJdVmNL3/UCZFSDfHMc86M=;
+	b=QYtsHvD9DTOGiFETvj+We/hzG7h1j54bIDzufGVCgmf9PbORkltx0JqHpWe+aPyMEzw+BY
+	BLDFSYOw4BRIzx3SstgbwbImXzPVHlUsTqWNRXQMNtJwh5XyQjekREZy25k9HxtytuDyZN
+	qV59Wm1ThVZCXTV3w9PeAglD6hgRNxlH/IwDQIUaCvNdsDNQovSjkUY3vwG7oobLiOXONu
+	3fcpBrr6eKbvYY2tiur2Zp4fDRRWjdS+BQCz++nt2rDXujLJerJnif/Ws3w7qaHXJ5i+Nh
+	B4dnM/nggzNsA6Hna2/Z08ckKMc22MO7DWqmr40zEGjIdMt7bvIlwiAJxj0IUQ==
+Date: Mon, 7 Apr 2025 18:51:29 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S .
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Russell King
+ <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Christian Marangi
+ <ansuelsmth@gmail.com>, upstream@airoha.com, Heiner Kallweit
+ <hkallweit1@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Clark Wang <xiaoning.wang@nxp.com>, Claudiu
+ Beznea <claudiu.beznea@microchip.com>, Claudiu Manoil
+ <claudiu.manoil@nxp.com>, Conor Dooley <conor+dt@kernel.org>, Ioana Ciornei
+ <ioana.ciornei@nxp.com>, Jonathan Corbet <corbet@lwn.net>, Joyce Ooi
+ <joyce.ooi@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Li Yang
+ <leoyang.li@nxp.com>, Madalin Bucur <madalin.bucur@nxp.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal
+ Simek <michal.simek@amd.com>, Naveen N Rao <naveen@kernel.org>, Nicholas
+ Piggin <npiggin@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, Rob Herring
+ <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Robert Hancock
+ <robert.hancock@calian.com>, Saravana Kannan <saravanak@google.com>, Shawn
+ Guo <shawnguo@kernel.org>, UNGLinuxDriver@microchip.com, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Wei Fang <wei.fang@nxp.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC net-next PATCH 00/13] Add PCS core support
+Message-ID: <20250407185129.654e7c9c@kmaincent-XPS-13-7390>
+In-Reply-To: <720b6db8-49c5-47e7-98da-f044fc38fc1a@linux.dev>
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+	<20250407182738.498d96b0@kmaincent-XPS-13-7390>
+	<720b6db8-49c5-47e7-98da-f044fc38fc1a@linux.dev>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
- <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com> <CAPDyKFoHQdHED0hHUR7VKin0XG6SVnYXuvPjB=Xe+1o2hpiPJA@mail.gmail.com>
-In-Reply-To: <CAPDyKFoHQdHED0hHUR7VKin0XG6SVnYXuvPjB=Xe+1o2hpiPJA@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 7 Apr 2025 11:50:37 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFxTokrKuT9iYBdxHBpsv0NfQo4Eim7mTXXSg7aEaclQFxJWUQS1crmjko
-Message-ID: <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegledprhgtphhtthhopehsvggrnhdrrghnuggvrhhsohhnsehlihhnuhigrdguvghvpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegur
+ ghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhk
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, Apr 7, 2025 at 11:23=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> On Fri, 4 Apr 2025 at 15:09, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.=
-org> wrote:
-> > >
-> > > On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrot=
-e:
-> > > >
-> > > > The "power-domains" and "power-domains-names" properties are missin=
-g any
-> > > > constraints. Add the constraints and drop the generic descriptions.
-> > > >
-> > > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> > > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Docu=
-mentation/devicetree/bindings/arm/cpus.yaml
-> > > > index 6f74ebfd38df..5bd5822db8af 100644
-> > > > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > > @@ -313,19 +313,15 @@ properties:
-> > > >      maxItems: 1
-> > > >
-> > > >    power-domains:
-> > > > -    description:
-> > > > -      List of phandles and PM domain specifiers, as defined by bin=
-dings of the
-> > > > -      PM domain provider (see also ../power_domain.txt).
-> > > > +    maxItems: 1
-> > >
-> > > There are more than one in some cases. The most is probably three, I =
-think.
-> >
-> > Unless I missed it, testing says otherwise. What would the names be if
-> > more than 1 entry?
->
-> "psci", "perf", "cpr", etc
->
-> The "psci" is always for CPU power management, the other is for CPU
-> performance scaling (which may be more than one power-domain in some
-> cases).
->
-> I would suggest changing this to "maxItems: 3". That should be
-> sufficient I think.
+On Mon, 7 Apr 2025 12:33:28 -0400
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-Again, my testing says 1 is enough. So where is a .dts file with 3 or 2?
+> On 4/7/25 12:27, Kory Maincent wrote:
+> > On Thu,  3 Apr 2025 14:18:54 -0400
+> > Sean Anderson <sean.anderson@linux.dev> wrote:
+> >  =20
+> >> This series adds support for creating PCSs as devices on a bus with a
+> >> driver (patch 3). As initial users,
+> >>=20
+> >> - The Lynx PCS (and all of its users) is converted to this system (pat=
+ch 5)
+> >> - The Xilinx PCS is broken out from the AXI Ethernet driver (patches 6=
+-8)
+> >> - The Cadence MACB driver is converted to support external PCSs (namely
+> >>   the Xilinx PCS) (patches 9-10).
+> >>=20
+> >> The last few patches add device links for pcs-handle to improve boot t=
+imes,
+> >> and add compatibles for all Lynx PCSs.
+> >>=20
+> >> Care has been taken to ensure backwards-compatibility. The main source
+> >> of this is that many PCS devices lack compatibles and get detected as
+> >> PHYs. To address this, pcs_get_by_fwnode_compat allows drivers to edit
+> >> the devicetree to add appropriate compatibles. =20
+> >=20
+> > I don't dive into your patch series and I don't know if you have heard
+> > about it but Christian Marangi is currently working on fwnode for PCS:
+> > https://lore.kernel.org/netdev/20250406221423.9723-1-ansuelsmth@gmail.c=
+om
+> >=20
+> > Maybe you should sync with him! =20
+>=20
+> I saw that series and made some comments. He is CC'd on this one.
 
-Rob
+Oh indeed, you have replied on his v1, sorry I missed it.
+It seems he forgot to add you in CC in the v2.
+
+> I think this approach has two advantages:
+>=20
+> - It completely solves the problem of the PCS being unregistered while the
+> netdev (or whatever) is up
+> - I have designed the interface to make it easy to convert existing
+>   drivers that may not be able to use the "standard" probing process
+>   (because they have to support other devicetree structures for
+>   backwards-compatibility).
+
+Ok, thanks for the clarification!
+I was working on the axienet driver to add support for the 10G version that=
+'s
+why I discovered your series.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
