@@ -1,68 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88661C7004;
-	Mon,  7 Apr 2025 14:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A3E1D7E5F;
+	Mon,  7 Apr 2025 14:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035557; cv=none; b=oxLxJrUidGnRETQ6orQV8nSG3bmishRajrMVjxBwxwpctaQiQgyLFlAcDueUOut9UainyxJ+jbqKE2ZWzuyaFLBfjoHQcoDijfDbNCWVBUWskaPtX7Rbg8/thJBCi5pL4gMjFKtAashK81bxlMSzsRNA0Sc7d8axpQxl4XX8mEc=
+	t=1744035598; cv=none; b=qqQVAjdqnliA0mqZz86/jYqSwW4ZV5T/MGW78jEWV3AnHX52QxiTsKdJ8HVDlFFm8vS/3oJO7h7XAoCUqgDP5VXd7Ck3TvufxJIIFn5p9R6KISLqlj+4GfwWrWywgK3I6v19lZzFgMNCOH4VlorLn7HN0wPBfEuELXQMOCF7R2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035557; c=relaxed/simple;
-	bh=GjGaoAAE9MKbGwuqWCzyfmhuFwEKdCeeIbdKCd9ibFc=;
+	s=arc-20240116; t=1744035598; c=relaxed/simple;
+	bh=COo4eTIosiBDvpHNDIDibfVEmpvog3VWcP5SJfo6PGk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGLXxfmX/lmv1w6Xb6oUhP2xjAUGmFwiCYZbRMR5W76DJqVk+tgDuGifqp5bIz3C111IyLmsu+nE75JA+aXKHw4buY8Kr9n6zzOAK0fOvsYePvkKKKJkf4lNrMffpjnUA2H9QlzhEQG6rB7R3u4tcuaNJ78NZamDBu215G9FWto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+f1yaJ+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MWJPToFgBtCdjQd9DwI0AyuFKpBq7g1PnhMScJDydcN8uSzQs0w/aCdVfppD31GzA8Ut/ARZNAvgAls8o5DEfcDeiYA0diYc2m8n9mJBeefrasfi3NCxyIB1c/H+IHk+VrXtz6boeF2FUgyyfQGBxMQxEDUWwlYv8WZkIhy839Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExVEJrTs; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+f1yaJ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F14C4CEEC;
-	Mon,  7 Apr 2025 14:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744035557;
-	bh=GjGaoAAE9MKbGwuqWCzyfmhuFwEKdCeeIbdKCd9ibFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b+f1yaJ+ILi+Gv1CUx81xTjEJCIdg58gl4Q11D6u0Bro/5+2ufums6D6TJc3vMGGU
-	 QPEvh6yz7Ks/PQxZyKeWD7cIk6m0OnabmzLwCAr9UkTCInEM3T9pXwy/2tr1DZCRHZ
-	 ZlN90fBYh0ZDZjEKHPgnNkf3BAx3RP4m9mvuXryCXvnwquJebXpqZDxicgEG2ZBK5e
-	 uxb2Fi/Uw4DwXcewGnzxm4Y0JZwaGWNVhJnIlj7bdC0x+nLxuSFjhUGl418K5c3bGM
-	 nyBaWNN61q+Y99DGJEb+jgKoAasOhDw6geTW7Wby5AyTNvwzsNAZN9I34uWBQ/msDB
-	 bvW3KiGeykEAQ==
-Date: Mon, 7 Apr 2025 09:19:16 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
-	devicetree@vger.kernel.org, tim609@andestech.com,
-	palmer@dabbelt.com, paul.walmsley@sifive.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de,
-	aou@eecs.berkeley.edu, daniel.lezcano@linaro.org,
-	conor+dt@kernel.org, alex@ghiti.fr
-Subject: Re: [PATCH 6/9] dt-bindings: cache: ax45mp-cache: allow variable
- cache-sets for Andes L2 cache
-Message-ID: <174403555555.2295519.2830969748366451702.robh@kernel.org>
-References: <20250407104937.315783-1-ben717@andestech.com>
- <20250407104937.315783-7-ben717@andestech.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExVEJrTs"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7359aca7ef2so6113517b3a.2;
+        Mon, 07 Apr 2025 07:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744035596; x=1744640396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ykkh3Ohmv9ZUd47pCocMHxGpinGV2tHgF6Qucb+8O7Y=;
+        b=ExVEJrTslu2D5AvyvcYzblaDoWpz7wAMqjGYHCcbfIhyLG1zouE/BDkVVHlrT77rMF
+         tLUmKtUmP4Sii5Cu2pAH2EfCDNMxKbhOMqHctP1tFGLAgmu7Hnx6OxYN/MspYVd87DTL
+         lGBo0kUJmELujpABob81bDmqpd4rqf0/twq+GwofdRN+eS7y8lrN/Dsqk5XtEkOQfFof
+         wihiaBoUtTaFwyE/AjyyxPbFyWQ1tmMwlkyHvqFUMhSqAQtzlPeh4erwrGiZ3kuJQjA3
+         q4IQnEBmbItwF12wMkRlYfPT939VvhCJaY7lProj8uRfqS+55Af2BsO0EEUur/wld8my
+         BJJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744035596; x=1744640396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ykkh3Ohmv9ZUd47pCocMHxGpinGV2tHgF6Qucb+8O7Y=;
+        b=oEcXWetbDVvpzlwB6/yAsumr4fqiq98dZe4h41WkQ/a6iI+PaVQaC4U29k75V7KZC4
+         GEe++gWeISvd2e66dmqS28ZvUPm5pAxGkMXTi2pS2DZUujHA/GIgY5tCbA7/UmoHMXNz
+         J/P+ANfz0UO8z6nzDWwfcflhWjz69L6p8fALRXCGoM3c8m2pkR8MZZQ9GYioO58rpU6L
+         AFTpljL5BsxQ0U/SN5x+lDKS407rT3aJrRWAEtB75sOGXeML920tjHw98JLwWIrk+uvp
+         Id7lu9edP98w2TiOqu4baq/4ZVXUyTUEni26OW0Dd0tFECDC6AQfPuOpYeEJxSYiKULH
+         1zmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXf6rRIOuth8otkrmwilBJ9ejCAXeZjNXacrOwYvd1ydPJul7E+JDJcvIypunotyuin6jVBVkX/DABvD0=@vger.kernel.org, AJvYcCWjW/BwE9Yc5sUCwadTM/w6Pt5/wfEIVP4Kt+kwQFsawx24u4pq7T+WRof4Kjc9LCjaMCvGljjx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRsxI8DFsmw8kxYWKhT5rRU4inbcuZWyrcAuKrJ0tYF9a0Jit5
+	oZVScfGl03sisKUhQGYrP8xCIHiskwQX2P3TfrWVUgn7WRIlDWs=
+X-Gm-Gg: ASbGncsP0CAOQ+TvCwl9GXOSB9jqP+xx/ft5gJddvRmsrgn8BcA6mr1RsZ6et/Psvqv
+	83Cu/Lwo5eM0nx8c7a78P24YUgCYdKezdrhTfaK/li5vli4okPak+uLqemV8m0YJpQHR3dJXHAL
+	SKOEEE85pD2DYl6h1Mt5hMkpveYnVE3wZlhmjPDbBEyILv3bUHT7EUvEe86sru/dr7Jonvg5pmW
+	HJgug5R538MHewFaSvHUS4qaiv66NdBs9tivdzrivudXsuWg34BAUAltPy7dskQx0nAN5p6yJgh
+	Y3DfLTk8Smot7ox8lZq/QI5HbCS1GGTVt3jDAQzmRs8c
+X-Google-Smtp-Source: AGHT+IH7qTsg5rAVlTqY22Bx9Y+Mos8itMtbbMRcIw6Seluh6RcUktlYJUma1nx81i4q1ja//ikO/Q==
+X-Received: by 2002:a05:6a00:179b:b0:736:baa0:2acd with SMTP id d2e1a72fcca58-739e7156defmr18489104b3a.20.1744035595875;
+        Mon, 07 Apr 2025 07:19:55 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-739d97ee6b3sm8839062b3a.53.2025.04.07.07.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 07:19:54 -0700 (PDT)
+Date: Mon, 7 Apr 2025 07:19:54 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com>
+Cc: andrew@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, sdf@fomichev.me, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
+Message-ID: <Z_PfCosPB7GS4DJl@mini-arch>
+References: <20250407063703.20757-1-kuniyu@amazon.com>
+ <67f3890f.050a0220.0a13.0286.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250407104937.315783-7-ben717@andestech.com>
+In-Reply-To: <67f3890f.050a0220.0a13.0286.GAE@google.com>
 
-
-On Mon, 07 Apr 2025 18:49:34 +0800, Ben Zong-You Xie wrote:
-> The current device tree binding for the Andes AX45MP L2 cache enforces
-> a fixed number of cache-sets (1024). However, there are 2048 cache-sets in
-> the QiLai SoC. This change allows both 1024 and 2048 as valid values for
-> "cache-sets".
+On 04/07, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  .../devicetree/bindings/cache/andestech,ax45mp-cache.yaml       | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> unregister_netdevice: waiting for DEV to become free
 > 
+> unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+So it does fix the lock unbalance issue, but now there is a hang?
