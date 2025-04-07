@@ -1,55 +1,51 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39331225764;
-	Mon,  7 Apr 2025 08:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6CC225A3B;
+	Mon,  7 Apr 2025 08:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015891; cv=none; b=NLv07j3VwC3RZXBComvUIyQU1kIdAmxUqQcO7ksHjIybcUm8Q5lHcUEMz56ed+vRpzt8hNie5UfOP+MMFcSQ/eeGw5Xsyvn1hqrrP/4f0AubMv9reesIaqfbkzkuZ/q4Yti6mFlLMN/x5fQukK53TRlFt1A8q8nFz4GB+7s1R70=
+	t=1744015906; cv=none; b=LJjwCNFl5UzwIubnvVo6GftO/YfMX209OgZztYKI/vHcqqRqj7Zfu0b6xrjCXKGQLaRzXCOMtegKY7QZQ8zu0So7+QAjdtnwTpZuUTW/dksFC2wsYDTHrgWYyI11InmaiMMO4HiVUImyMLpiKhipxJvJ9Uk8l1asX8ebrOyvNcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015891; c=relaxed/simple;
-	bh=cgFMoVhFsVsQuhzN0oPZnKuo1WBBdB+pN2xtQ9S128k=;
+	s=arc-20240116; t=1744015906; c=relaxed/simple;
+	bh=TgwlTKegCo45TJs8/oF3ACvzDA5PXJN4aq2xQfZnIYw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bK4T0llBRfszXKWgYlTl5Smew8fJ86ifPDsXahPuV2KjOH/bmkI9SiwQGyq+bKqpmTPhVlCmMNVwr015kbz3C43PMqgkCE6DpeUFDJL7NpD6xvfG+DUVPHS6yBCDwz1CnhN0HuXVMSgI16exzrLTwxUW57EHOBKvoP8IIV3uVjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0Dnn0tsY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0Dnn0tsY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=AqJgXjOTWo8t0DUAqIkgmqFLug8gZ7gxKZ1gLMUCv9M=; b=0Dnn0tsYcbtenCdb3OGIfRdXOl
-	fstm/HPBAC6tjIUhoWZOWnPn3P/8rHZkCNV3mE3DTS17/kAUntZ44RHMoMxlA+Unz4HiB0vDbrcx3
-	X9Pnd2Lr7zMlsQSJkkCXR6GleXwnl2qaue4MPVmxKHftgSYtcSS1RvTaQblcg06g3zt4lZxq+2KQJ
-	mbV6xwCE1H/NmH1zKHcSq7lDWUhfIiTD5NFdA28ioouAwzBu7apvCkZu3O8matkPsHyJPIAB1XNoC
-	MFI6k4Nl8Qrik/hl/uli7ovpjoRdp1VdBDAZWiIgi2RYk3yTIW8zR/qWoGQJPSVmmWnpd8oXEfZHb
-	xQcXbjuw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u1iCW-0000000H4sH-2j0J;
-	Mon, 07 Apr 2025 08:51:28 +0000
-Date: Mon, 7 Apr 2025 01:51:28 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>, pr-tracker-bot@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] vfs mount
-Message-ID: <Z_OSEJ-Bd-wL1CpS@infradead.org>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
- <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal>
- <20250403-bankintern-unsympathisch-03272ab45229@brauner>
- <20250403-quartal-kaltstart-eb56df61e784@brauner>
- <196c53c26e8f3862567d72ed610da6323e3dba83.camel@HansenPartnership.com>
- <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
- <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
- <Z--YEKTkaojFNUQN@infradead.org>
- <CAHk-=wjjGb0Uik101G-B76pp+Xvq5-xa1azJF0EwRxb_kisi2Q@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tbv5u3Y48kaK0FguK9vPvvUgLka567i9YrgD2YlNTzmPjEz0hIuw0Rf8+JeQp+oq3oQpFKfpW9D8kfGrv5oppixdMzqE0wrWme5cEdWf/Rjrs1sGnAIu5aLSaGcm95JBS7VqSuXJFeWsu6LRzqdJUoXn2SR50tBYyd113AmrEtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: EN6JY2kwRLmykHmmZYzEIw==
+X-CSE-MsgGUID: 16rxFEDtSUmZ9lUWnH8nVg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="44635208"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="44635208"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:51:44 -0700
+X-CSE-ConnectionGUID: J+aKm/sYSpS4GRNWS+Uyww==
+X-CSE-MsgGUID: zz2q+2knTfGKuED9urpMLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="132859997"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 01:51:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u1iCg-0000000A0ap-2Gz1;
+	Mon, 07 Apr 2025 11:51:38 +0300
+Date: Mon, 7 Apr 2025 11:51:38 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 04/12] gpio: exar: use new line value setter callbacks
+Message-ID: <Z_OSGmIk4AH5xtdp@smile.fi.intel.com>
+References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
+ <20250407-gpiochip-set-rv-gpio-part1-v1-4-78399683ca38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,19 +54,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjjGb0Uik101G-B76pp+Xvq5-xa1azJF0EwRxb_kisi2Q@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-4-78399683ca38@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 04, 2025 at 07:19:27AM -0700, Linus Torvalds wrote:
-> On Fri, 4 Apr 2025 at 01:28, Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > Or just kill the non-scoped guard because it simply is an insane API.
+On Mon, Apr 07, 2025 at 09:13:13AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> The scoped guard may be odd, but it's actually rather a common
-> situation.  And when used with the proper indentation, it also ends up
-> being pretty visually clear about what part of a function is under the
-> lock.
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-The scoped one with proper indentation is fine.  The non-scoped one is
-the one that is really confusing and odd.
+...
+
+> -static void exar_set_value(struct gpio_chip *chip, unsigned int offset,
+> -			   int value)
+> +static int exar_set_value(struct gpio_chip *chip, unsigned int offset,
+> +			  int value)
+
+It can be located on one line (81 characters).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
