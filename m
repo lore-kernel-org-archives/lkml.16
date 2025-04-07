@@ -1,252 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610EA1FFC45
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C731FE468;
+	Mon,  7 Apr 2025 15:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744039600; cv=none; b=lCy7BKu+cwD/lR//sEjTL+tLsnnN6P/PmvjBOC6yg9ZmSEkXHWjI94nU9/qJ0AIsrdJWFLN1Ux1R17bKmfT3Tk+aN75aRdjhxZNf629oLoxTVhr5yvM3EDiYEJuFLTh5YgZMOhCMHUddefCbj+4zd+mD4QWbEIFAtZpVrs3oX+A=
+	t=1744039643; cv=none; b=jmApTsU57UfJdi1Sg8/0NzXhTC7eyVQ6Vm5ubfRY+xoyaBHdJldIY0LB2029YNcELg8o1Mu/FZUQlzSEvxWXq4gr7z0W0gjL9/UKnoJUg++xonthPJFw6v57yPayglH149sW3anV45RQxQPyWzmaP6d3+lJPkKNHHk3nC+1xbZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744039600; c=relaxed/simple;
-	bh=2yxu2ftjhLgwXt5BOs8JdGombJJ2m7SBqpDFhpHKPDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cKxjgUTem2B5/Mh/4FgRO5lU8GFj/vn1VxUg2/ngpyCk9wWWryK7HqiHr2yLlQJYuPwbH++Dgsvi19Q3atn7HWM59wCbij5/Bx97Lpyheyk9qVZUUz3u0s8HtQFQei2mYxY5XzHfCwQi7VQj6tNGpuHRURtD801O3nGuO1EML6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OMCM0pz7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744039643; c=relaxed/simple;
+	bh=wzVkiX1WHW1+VEd41zgoCl+IvRzbkG2erhgb/grMY6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F+5Bcz+UUIlKhEGpIvq8qn97C+8mUc9g1362tyxvAlTRrUKL85JA98OXQhbZmJjbH7rUlbCh/v/o1uCmsnXQ9cuLP4N4DfFgvp9aqvlj6JWmAaevawimUooy60RJEScJLbu07f7/eQ+MgkF3jRJ/Eia2mv6Z8Tgj+s9fAHB6nMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDkweTAB; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OMCM0pz7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744039592;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=EL83hwHGluELeTGZxMlRpvKaRrcq3aVK0an6BMkeimc=;
-	b=OMCM0pz7zQbeYuUvADuqLz8tO2k3EF3fqDWkJI44bLntashajnR07kfPyUb1rOS/EhCfVF
-	vIIV8BuBhUSFcRrNqcvx6BLVXQDQjB7SEcrlokBTW/mG/8aZGQM4iNAc4SVlEiPZFXYPt3
-	bWHaQt63PInW2fgDaNR7MVPw4L3HYG4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-168-Yquvm_xeMO6eDxU3gjyyqg-1; Mon, 07 Apr 2025 11:26:29 -0400
-X-MC-Unique: Yquvm_xeMO6eDxU3gjyyqg-1
-X-Mimecast-MFC-AGG-ID: Yquvm_xeMO6eDxU3gjyyqg_1744039589
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d01024089so38440825e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:26:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744039589; x=1744644389;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EL83hwHGluELeTGZxMlRpvKaRrcq3aVK0an6BMkeimc=;
-        b=qK2WmMTYP49o0YrvLfyBLGiBS0YiAVwdvTTXyBxpNW0v4x8UsFgAQNonFyTtWXsWba
-         Q2Zxhtnq7x+zeC+eInQwyWvRYhYiEKP0n3Py1JPqAiVkYvj7lqVIUXWV0+EmKGVUHShN
-         0qIKa5VjcUXT4oGh3M0TQnB0kdVkfo5cDBdvT9wpl2k+AEMGUK/2Li0fdOghbDpcYcYE
-         8f8BgBPv5tv7xxpTL9OW50svW1yZwwtBfi11RK2XzTH/SY0okKqth4YjZsdRHhSxiDhf
-         3j8y63L4ogJaL1efb88FYfvkWXVEuKIzZfeU7FSL1F+paaq4ksCoYshkareyZD1htvon
-         LmFA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7Dxa0b9Yehnionw5gYOtMR4CW6fq00roIZzhT8nVAofcyUmXoWq2sPMZShSlWYHbp8UNMMig+xcdOw50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+8iDmyASqe43tIhiIdShSv+AY1OFj9AINLjKQCt2l2v81N5ph
-	9G/PYQdOGCol1FhpA/ekbhVfAohY5TJYg0/IGphKHEG02wHIWCBzyOJxuIyYElIEtiO7iBHOw8m
-	AbCKKzYvBJPBuxr+InFDRtP/faZH1gAuJ8JCdk2x3UdxwmpNtC07zExRZLb0EtQ==
-X-Gm-Gg: ASbGncvoaaUsG4AAeFYsZRNOtFTrW5nv5QNWmOKKmYRDg2tvbcg4sFC2Ab5OCV+7akI
-	qmlvg6TUzGBORi6VGigz6HUK/0xOh/1Mt2BJs2rnQc/1SOd38pE/n8rurSo3J6OkT3ajZhV3agN
-	J2SYJHtlDHp75ERojVrJ04n/9mRn0OqUJ0hO1ixKlhf1ikbrravBK4Efu40fLj4+jSlW2ahhynX
-	6iln2GFUGN8e7gjYVxLkZOu9nQ8Csl7erGnW6wF32YTA3tl947GvqBnegLgyRTLh+nLusJHuBKM
-	J2B59c8CKKGE++XrwEWDc442sZX06waHcmce/06UtvdWadxVE30tNs3jEPutl0+FwvS27LLoBIg
-	NWqwyEwU3j5j0dam55o72FcjwEYKlLefK8PahJ4p+Z90=
-X-Received: by 2002:a05:600c:c11:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-43ecf9c7c07mr100253895e9.22.1744039588648;
-        Mon, 07 Apr 2025 08:26:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHfumRvr1iRJJdKTk3cEqLk0Y+KSAfeVeyGf/7z7Mi5OFfXT9g/jtX7HqDJVzz2LCJZt3F8pw==
-X-Received: by 2002:a05:600c:c11:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-43ecf9c7c07mr100253405e9.22.1744039588139;
-        Mon, 07 Apr 2025 08:26:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1663060sm137771335e9.14.2025.04.07.08.26.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 08:26:27 -0700 (PDT)
-Message-ID: <e6971cb8-b3da-4453-bda3-a555b670c8ea@redhat.com>
-Date: Mon, 7 Apr 2025 17:26:25 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDkweTAB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744039641; x=1775575641;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wzVkiX1WHW1+VEd41zgoCl+IvRzbkG2erhgb/grMY6c=;
+  b=KDkweTABnKRrWzNr6Ob3RSO09XarIaNp1DlAebYbttNksP0PgKwlM6Yx
+   HTyskV5KxRdChGsoPSeq+ltCSh/4BUHjBNKszyM14p4ADjs9D1nk1C81d
+   3o8XHhiF8ls69Hx/2zyoDKSJBcWyVxKZrkYWGl7U/feFuz0C6DCiVbJF7
+   UnYqeLZaaQ91G9FDAGxzH+ZgEDBRQWejsd6SbBjf9idwhFmUE5fNF+wkw
+   WZtotpUtMOEIShzOlfRKM75UTttZ8/iZAIjzUD/WoH5Q/bdGq5L5K8u2o
+   d5H771YKwNBmjymqX4Ls2WrbxCdTqxYzvNNT9sjQQrw9F8H3+XVXKKqNL
+   A==;
+X-CSE-ConnectionGUID: g+cQroHrQ/aRapVHbeMvJA==
+X-CSE-MsgGUID: LrAqoUG7RNe1ITvknoee2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56071565"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="56071565"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:27:20 -0700
+X-CSE-ConnectionGUID: jvFf7bVAQseoAmXxE0FYLw==
+X-CSE-MsgGUID: HlBrMmKlQUu/6KGFBwYp/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="128496587"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:27:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u1oNQ-0000000A6q5-0tDQ;
+	Mon, 07 Apr 2025 18:27:08 +0300
+Date: Mon, 7 Apr 2025 18:27:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 08/16] i2c: core: Introduce i2c_get_adapter_supplier()
+Message-ID: <Z_Puy8eEBc6tubEx@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-9-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] KVM: guest_memfd: support for uffd minor
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Nikita Kalyazin <kalyazin@amazon.com>, Ackerley Tng
- <ackerleytng@google.com>, Vishal Annapurve <vannapurve@google.com>,
- Fuad Tabba <tabba@google.com>, akpm@linux-foundation.org,
- pbonzini@redhat.com, shuah@kernel.org, viro@zeniv.linux.org.uk,
- brauner@kernel.org, muchun.song@linux.dev, hughd@google.com,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, jack@suse.cz, jannh@google.com,
- ryan.roberts@arm.com, jthoughton@google.com, peterx@redhat.com,
- graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk, derekmn@amazon.com,
- nsaenz@amazon.es, xmarcalx@amazon.com
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <2iggdfimgfke5saxs74zmfrswgrxmmsyxzphq4mdfpj54wu4pl@5uiia4pzkxem>
- <e8abe599-f48f-4203-8c60-9ee776aa4a24@amazon.com>
- <63j2cdjh6oxzb5ehtetiaolobp6zzev7emgqvvfkf5tuwlnspx@7h5u4nrqwvsc>
- <ba93b9c1-cb2b-442f-a4c4-b5530e94f88a@amazon.com>
- <2bohfxnbthvf3w4kz5u72wj5uxh5sb5s3mbhdk5eg2ingkpkqg@ylykphugpydy>
- <9326367c-977d-4d55-80bd-f1ad3673f375@redhat.com>
- <4a32724c-0891-4ce5-81b1-dfce9cfb91f2@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <4a32724c-0891-4ce5-81b1-dfce9cfb91f2@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407145546.270683-9-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 07.04.25 17:14, Lorenzo Stoakes wrote:
-> On Mon, Apr 07, 2025 at 04:46:48PM +0200, David Hildenbrand wrote:
->> On 07.04.25 16:24, Liam R. Howlett wrote:
->>> * Nikita Kalyazin <kalyazin@amazon.com> [250407 10:05]:
->>>>
->>>
->>> ...
->>>
->>>>>
->>>>> All of this is extremely confusing because the onus of figuring out what
->>>>> the final code will look like is put on the reviewer.  As it is, we have
->>>>> issues with people not doing enough review of the code (due to limited
->>>>> time).  One way to get reviews is to make the barrier of entry as low as
->>>>> possible.
->>>>>
->>>>> I spent Friday going down a rabbit hole of patches referring to each
->>>>> other as dependencies and I gave up.  It looks like I mistook one set of
->>>>> patches as required vs them requiring the same in-flight ones as your
->>>>> patches.
->>>>>
->>>>> I am struggling to see how we can adequately support all of you given
->>>>> the way the patches are sent out in batches with dependencies - it is
->>>>> just too time consuming to sort out.
->>>>
->>>> I'm happy to do whatever I can to make the review easier.  I suppose the
->>>> extreme case is to wait for the dependencies to get accepted, effectively
->>>> serialising submissions, but that slows the process down significantly.  For
->>>> example, I received very good feedback on v1 and v2 of this series and was
->>>> able to address it instead of waiting for the dependency.  Would including
->>>> the required patches directly in the series help?  My only concern is in
->>>> that case the same patch will be submitted multiple times (as a part of
->>>> every depending series), but if it's better, I'll be doing that instead.
->>>
->>> Don't resend patches that someone else is upstreaming, that'll cause
->>> other problems.
->>>
->>> Three methods come to mind:
->>>
->>> 1. As you stated, wait for the dependencies to land.  This is will mean
->>> what you are working against is well tested and won't change (and you
->>> won't have to re-spin due to an unstable base).
->>>
->>> 2. Combine them into a bigger patch set.  I can then pull one patch set
->>> and look at the parts of interest to the mm side.
->>>
->>> 3. Provide a git repo with the necessary changes together.
->>>
->>> I think 2 and 3 together should be used for the guest_memfd patches.
->>> Someone needs to be managing these to send upstream.  See the discussion
->>> in another patch set on guest_memfd here [1].
->>
->> The issue is that most extensions are fairly independent from each other,
->> except that they built up on Fuad's mmap support,
->>
->> Sending all together as one thing might not be the best option.
->>
->> Once basic mmap support is upstream, some of the extensions (e.g., directmap
->> removal) can go in next.
->>
->> So until that is upstream, I agree that tagging the stuff that builds up on
->> that is the right thing to do, and providing git trees is another very good
->> idea.
->>
->> I'll prioritize getting Fuad's mmap stuff reviewed. (I keep saying that, I
->> know)
+On Mon, Apr 07, 2025 at 04:55:37PM +0200, Herve Codina wrote:
+> The supplier device of an I2C adapter is the device that calls
+> i2c_add_adapter() or variants and i2c_del_adapter().
 > 
-> Which series is this? Sorry maybe lost track of this one.
+> Most of the time this supplier device is the parent of the adapter dev.
+> 
+> Exceptions exist with i2c muxes. Indeed, in case of i2c muxes, the
+> parent of the adapter dev points to the adapter dev the mux is connected
 
-Heh, not your fault :)
+dev --> device (in both cases)
 
-The most important one for basic mmap support is "KVM: Mapping 
-guest_memfd backed memory at the host for software protected VMs" [1]. 
-Some stuff (e.g., direct map removal) should be able to make progress 
-once that landed.
+> to instead of the supplier of this adapter.
+> 
+> Introduce i2c_get_adapter_supplier() and a new supplier field in the
+> adapter structure in order to ease the adapter supplier retrieval.
 
-I do expect the MM-specific patch in there ("mm: Consolidate freeing of 
-typed folios on final folio_put()") to not be included as part of that work.
+...
 
-[I shared the feedback from the LSF/MM session in the upstream 
-guest_memfd call, and we decided to minimize the usage of the 
-folio_put() callback to where absolutely required; that will simplify 
-things and avoid issues as pointed out by Willy, which is great]
+> +/**
+> + * i2c_get_adapter_supplier() - Get the supplier of an adapter
+> + * @adapter: the adapter to get the supplier from
+> + *
+> + * return:
 
-The next important one will be "[PATCH v7 0/7] KVM: Restricted mapping 
-of guest_memfd at the host and arm64 support" [2], but I similarly 
-expect a simplification as we try moving away from folio_put() for the 
-"shared <-> private" page conversion case.
+Return:
 
+> + * Look up and return the &struct device corresponding to the device supplying
+> + * this adapter.
 
-So I expect a v8 of [1] (and that also [2] needs to be updated).
+@adapter
 
-@Fuad, please let me know if I am wrong.
+> + * The user must call put_device() once done with the supplier returned.
+> + */
+> +struct device *i2c_get_adapter_supplier(struct i2c_adapter *adapter)
+> +{
+> +	return get_device(adapter->supplier ?: adapter->dev.parent);
 
-[1] 
-https://lore.kernel.org/all/20250318161823.4005529-1-tabba@google.com/T/#u
-[2] https://lore.kernel.org/all/20250328153133.3504118-1-tabba@google.com/
+What will be the meaning when both are set? Why dev.parent is not the same
+as supplier in this case?  Looking at the commit message example, it seems
+like you want to provide a physdev or sysdev (as term supplier seems more
+devlink:ish), like it's done elsewhere. And in the same way _always_ initialise
+it. In such a case, the ambiguity will be gone.
+
+> +}
 
 -- 
-Cheers,
+With Best Regards,
+Andy Shevchenko
 
-David / dhildenb
 
