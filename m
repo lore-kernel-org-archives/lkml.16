@@ -1,137 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7E11F4717;
-	Mon,  7 Apr 2025 14:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DABF1E8352;
+	Mon,  7 Apr 2025 14:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036684; cv=none; b=BpAuRFWQYIzFeCJWHoiyaHyolAvkRbkskr/zpLnDYKK/tom63Nq5BNZI0Ut3/gok+ifwCxTE8coLGsZcj2O3cYjMgVxo2f1Z/0h4xngr3512JbOeP5Qp8sRgMz7qapUV8ZqabMwKd87XJlnGK5G+8OZDmkyyZkotaJGCsOBEYwc=
+	t=1744036734; cv=none; b=D2UddRnpltL3iyp+fho1awMhCLifM7ROmKv000pqCKs5bbwOTzrndJdXWIBmD4yezhSC3ASvSvJilEtEM6zvk0ZdYVzYKeg9DN5XmN0r2gbsGNwMOzUuX7mPM4GETvz9LzTkzrm8pgzZYlwBG6bUJ+fqzKF6fGjlaO3XNLUWrBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036684; c=relaxed/simple;
-	bh=gaqCmPGyFFrl7wtrmHGJykIupKENxWSgvwIml4rhHuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHxUW5eaH1heOoDBiqofZ4PPdCL7H3GSmI0alGurfE0w1HdpjtwVmH97oeMf3iLV+c6knHY4w6OD8D7C0x89W/AB7OOE9+wvxJLcQHBim5nk8Re/1lcL/regm55Fh03KEvHB/rzGpUlNTnSU7oSuRzccXvnQ7RGThrW9N39RysQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBO9TyXZ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744036734; c=relaxed/simple;
+	bh=ecPuob8sNYqZVvV1h+fY77LO2Awi2+Th0hCMGUR6dNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=a0h1IRSLofkOTWa/6rhraEgbzrm/RJjAZVPYJE7CpzcaAwfOkOe5rTeU5GGn2D52ZwaVit/B5bzjstgmcjC+v2WensVf3uhDF4N3lJiKRgQIah8J0u7vq7vfl2hF1itGaMtnxw89MCAOSCHFLhqbZwUqYbrR2mdU5k6Nv1drxzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vyVRcrtD; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBO9TyXZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744036683; x=1775572683;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=gaqCmPGyFFrl7wtrmHGJykIupKENxWSgvwIml4rhHuQ=;
-  b=BBO9TyXZYHafo5iCC+aMMGYRUvjhoQ+p4VnBMIqcHfmVn6goOhuAFvbg
-   u2EKVugmeJlkdUgIq8vLeacJd1Y24+Yc7ycUqXHblsiEERXNxiQON8uxZ
-   Nm5+BuHYGzQRyPEd+vRvwEeFsfatycEc6Z9n92Hdzitm8i9d/nsntzLlz
-   f3pcEoB5aoFhTR876SDb131j1fmf0Z49TkBCx/2peurEywjTgHKciyAbe
-   A3tc2G3JjuflSkObN3OgZU8HwFBQ3U8cOZzKZKmI2jVlDQ7eIa+DoJWJs
-   +DIGgv5qZVtaKCzuvwsBZV8uR9m830m2LRRF7n+KXQBYXZ2Q61CRJESP9
-   A==;
-X-CSE-ConnectionGUID: HaE3NwT2Rg6vt7174aRGKw==
-X-CSE-MsgGUID: oYl1LOk2RmeyUs3lmynHVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="55616146"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="55616146"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:38:02 -0700
-X-CSE-ConnectionGUID: IKY4xDJ9SPqBBwld+K/TWA==
-X-CSE-MsgGUID: 7+kZ3K5kQMO34kjDQq8XXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128840982"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 07:37:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1nbk-0000000A66o-0cqX;
-	Mon, 07 Apr 2025 17:37:52 +0300
-Date: Mon, 7 Apr 2025 17:37:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
-	Petr Mladek <pmladek@suse.com>, Sven Peter <sven@svenpeter.dev>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Maxime Ripard <mripard@kernel.org>,
-	"airlied@redhat.com" <airlied@redhat.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"apw@canonical.com" <apw@canonical.com>,
-	"joe@perches.com" <joe@perches.com>,
-	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
-	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
-	Kees Cook <kees@kernel.org>, "tamird@gmail.com" <tamird@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	"asahi@lists.linux.dev" <asahi@lists.linux.dev>
-Subject: Re: [PATCH v3 0/3] Use proper printk format in appletbdrm
-Message-ID: <Z_PjP_fck57S1ACi@smile.fi.intel.com>
-References: <PN3PR01MB9597596DA5DA9FC02825CF0FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <Z_PZXPAklfkMlx6O@smile.fi.intel.com>
- <PN3PR01MB9597E19A55EAFC3E7B191F5FB8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <Z_PfwShQX95IyHWR@smile.fi.intel.com>
- <PN3PR01MB9597227004F9472689FA6395B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vyVRcrtD"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537EcjNv385036
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 09:38:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744036725;
+	bh=nySQPps4T2a0FRio8EjYlEXOxTgZnY6kE2ly05mdvsU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vyVRcrtD3xjOIAXPPd1J9sovyIHHufJymNRSCBZUw0E/1fmoZQkym040c60IfRVGX
+	 xA2MKUwcN2xWAJ/WXQkHjFlfdk1bClxvWTHnc1JNGVs+2CPRYQXfQXWKN7d2SKcVHl
+	 ZKs5QnMngiP2eUaLAVFZz4q8ZfJfqAYspm9Zcnr0=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537EcjIH065068
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 09:38:45 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 09:38:44 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 09:38:44 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537Eciuh037344;
+	Mon, 7 Apr 2025 09:38:44 -0500
+Message-ID: <dab7c2ae-2ce9-4fdc-933c-35a4fd92a8e5@ti.com>
+Date: Mon, 7 Apr 2025 09:38:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/11] arm64: dts: ti: k3-am64: Reserve timers used by
+ MCU FW
+To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+        Beleswar
+ Padhi <b-padhi@ti.com>,
+        Markus Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-12-jm@ti.com>
+ <956c0598-9934-4295-87af-ef86f4eabd94@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <956c0598-9934-4295-87af-ef86f4eabd94@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN3PR01MB9597227004F9472689FA6395B8AA2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Apr 07, 2025 at 07:57:08PM +0530, Aditya Garg wrote:
-> On 07-04-2025 07:52 pm, Andy Shevchenko wrote:
-> > On Mon, Apr 07, 2025 at 02:17:00PM +0000, Aditya Garg wrote:
-> >>> On 7 Apr 2025, at 7:26 PM, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> >>> On Mon, Apr 07, 2025 at 07:05:13PM +0530, Aditya Garg wrote:
+Hi Andrew,
 
-> >>>> The vsprint patch was originally being sent as a seperate patch [1], and
-> >>>> I was waiting it to be taken up. But as suggested by Petr, I'm sending
-> >>>> them via DRM.
-> >>>
-> >>> Your message is detached from the thread, make sure you use proper tools, e.g.
-> >>
-> >> It's not a problem with tools, it's a problem with my email provider.
-> >>
-> >> Microsoft now supports only oauth2 for SMTP, which git send-email doesn't
-> >> support. I had done a few tests using msmtp with git send-email, but msmtp
-> >> also had this detached from thread bug, since it doesn't read the message id
-> >> specified by git send-email. I've been using macOS mail for a long time for
-> >> kernel patches, but since it was a pain to reboot to macOS every time for
-> >> this. So I just tried using thunderbird in Linux this time. Now this time, it
-> >> was a configuration issue in thunderbird, in which it was making a copy of
-> >> the sent email in my sent folder, resulting in 2 copies there. I replied to
-> >> the copied one by mistake. I've finally fixed this issue as well, so should
-> >> be good in future.
-> > 
-> > There is a project called email-oauth2-proxy, which makes it transparent, so
-> > just take your time and configure your box or find another email provider.
+On 4/7/25 7:35 AM, Andrew Davis wrote:
+> On 4/4/25 7:15 PM, Judith Mendez wrote:
+>> From: Hari Nagalla <hnagalla@ti.com>
+>>
+>> AM64x device has 4 R5F cores in the main domain. TI MCU firmware uses
+>> main domain timers as tick timers in these firmwares. Hence keep them
+>> as reserved in the Linux device tree.
+>>
+>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-am642-evm.dts | 17 +++++++++++++++++
+>>   arch/arm64/boot/dts/ti/k3-am642-sk.dts  | 17 +++++++++++++++++
+>>   2 files changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts 
+>> b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+>> index f8ec40523254b..68bd6b806f8f0 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+>> @@ -796,6 +796,23 @@ &mcu_m4fss {
+>>       status = "okay";
+>>   };
+>> +/* main_timers 8-11 are used by TI MCU FW */
 > 
-> I already have a way to get oauth2 tokens for Outlook, something similar to this.
+> Can you make this comment per-core and explain which core
+> each timer is reserved for? Makes it easier on me in Zephyr
+> to point out why we use the timers that we do, something
+> like:
 > 
-> > The above is not an excuse to break the process.
+> /* main_timer8 is reserved for mcu_r5fss0_core0 */
+
+Sure, I can do that. Will wait for [0] conversation to close and then
+respin the series with this change
+
+[0] 
+https://lore.kernel.org/linux-devicetree/f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com/
+
+~ Judith
+
 > 
-> It was an honest mistake, and I just said I managed to fix it and should be
-> good in the future right?
-
-Sure!
-
-> >>> `git format-patch --thread --cover-letter -v3 ...` gives the correct result.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Andrew
+> 
+>> +&main_timer8 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer9 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer10 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer11 {
+>> +    status = "reserved";
+>> +};
+>> +
+>>   &serdes_ln_ctrl {
+>>       idle-states = <AM64_SERDES0_LANE0_PCIE0>;
+>>   };
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts 
+>> b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+>> index 33e421ec18abb..07fbdf2400d23 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+>> @@ -710,6 +710,23 @@ &mcu_m4fss {
+>>       status = "okay";
+>>   };
+>> +/* main_timers 8-11 are used by TI MCU FW */
+>> +&main_timer8 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer9 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer10 {
+>> +    status = "reserved";
+>> +};
+>> +
+>> +&main_timer11 {
+>> +    status = "reserved";
+>> +};
+>> +
+>>   &ecap0 {
+>>       status = "okay";
+>>       /* PWM is available on Pin 1 of header J3 */
 
