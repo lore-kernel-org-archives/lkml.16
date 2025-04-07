@@ -1,67 +1,67 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3A3366
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D5E2253B2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016010; cv=none; b=tPMLiEKSK73fgR/TdRVWP6vzCxUBVhZney2QgxGxNj1tOrvaTZGwGOTPH3Uqiyn7Pz4fLNO9De0zOtl1WjpY1X2ThliP2fgpNgjIdt8keGTp1/reXjIEX0E57eSWNBMkKGe5mfa4w3qJE2HEVBimIT85m9XXqpTolxSKRKi7AZs=
+	t=1744016011; cv=none; b=XBSpkEX7cRC3NmBmMadoZMAmZ/uQ4q31vAzhsfQEbF6bjidYm+HSUj3XIsqsO37+Tp0UPzXtSXzX0TpAiysGlGXPRPLFWBDE5sA7lqTlTeWmTSiVayNfyPj4x8eOl0CGWrsYGFWDEByTCaGLBjWtNdZozTIkLvA4Dj9bjGtQsqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016010; c=relaxed/simple;
-	bh=QPHh8N4sbhjKwZMK7xvZJUBdpo9mG11VcIyhWlrXKk4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YxTjT/D0Iavd4rG+g+HVLJ30qB1+dK9aMEH1d+K6SVXSnUUsjNkirnaK3pZSlsEkY6yXseSFhdbUFfgKtC65SrJUr+x3erAee2UB+7+jNKDHyKwK5NGHLdNeORsco3bkqh+0kMLm1Ewsc4c6CxsRn+Nvy22v4hDvAb6k6rekECc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=e9x+mz3k; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1744016011; c=relaxed/simple;
+	bh=pCpjDjmBZOzK40k+vljZr2BliJA0xp91AOXjRWTRx0Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ApksgnY2aKII2i/4pQ3r+Crp78Y2PAl3H8uYCeN1QAMaWZ47K12q2QzXKY33AJZ+ruNIvd4q1c+Rro2DbgOidgxd+iubqAD0CCoFKsq9BfJhPYBcKBNvIqvpdcspdAs9euTBr0L2f6gDtoioGixTE3+slB3WrCF5VmD844gYWv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yIFdg0gr; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="e9x+mz3k"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso44480165e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:53:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yIFdg0gr"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so39009395e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744016004; x=1744620804; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eTlY5GezUXHh/ytz6WGIA1+pAcc+7slCnrxJejlItUg=;
-        b=e9x+mz3kS2BVS1g38LWAYaOk64I2SwhrjW3oJPWUAnNZtVAAgLSHTkNLJKvLKdS2IU
-         gMvH8qYALfNxLjvyRIRZmUEwv2FqNJ+706Q2dlhFqRBqByu1L20eLzQvEzT9endtKFzu
-         g8150BrjrpFPFbRU3U42s58mvqrjnBAkIZ7zSsHmuc3bVjnfQwypurHm+4hjYiiTIT95
-         JuZ4/ADSHhPzSrQ3pViOztJDoTmnsktxHAvws8ciAxoVAW2y+sbq4/9QvaHzEYjbmEsd
-         g4Fr39Hd1+83PWplQur/P3Oky+Vnz/cokRniFCYN3xvXQMNTZwda8Ye2rA4l2peXbBOg
-         aYTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744016004; x=1744620804;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744016006; x=1744620806; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eTlY5GezUXHh/ytz6WGIA1+pAcc+7slCnrxJejlItUg=;
-        b=b1hEyfoxHCk8KkOpdUG0Psv5KNRwGNp+9b0Gj/1OvONrnKgzbDscuNO3FL0eUZSVlb
-         nQ/vSxNQboZh5eVCapYivAp9Cykcw+P2WKE5s818sGDTW1M+x7Rp7lApUfZavA3iO84e
-         WTmnE19S4cNGo7yWtQ86Ivf6tU+TYBPm/1nc+wUZIaJpuszLU0luoi3uOTMM6fT6CnlU
-         RWrN/FPC/JZmRPeD/6yRCJ/ALN2ixHuJzTJf6tHQzrdfkta1O/Al3bkLK5OlcOBSX0Pw
-         jrQIDTvP28w2k5EOy5cOHu1HiPsoezKmfCzL1Bm007ddMMUbxkFmy9c2V9PaCDCyjCdV
-         dyNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWshdOA+A1tU7APPAe2+AZ8cnkoONq/JpeFMWxeEmPkpBx2ecVm7Xbd4uQT1HsrBr/DVFLtKhf/DNj4MXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5neC+gTbA8jC7e7jViu3BJKo5AsIzD8gyvUyeOQ2F/w4SQKkk
-	SkKuWEO9uDT7vYKEUxVJSoFjAIup48k5zGKmYaqSJhp8wzUTD09I0UkHIt3dhsI=
-X-Gm-Gg: ASbGncvln9ozx1T7u5TKHJD9FTJlRoUZG1pKMZ8TNxrplr5Nv6wZJoXp5GzoF2FhpGH
-	FzcGDNu3PFGDG4wICW8tnng+bDEGvfZxO/lOxf5ecPsFcSzrh37/hc75XZ/z+fOS90bjauo8lDf
-	uKAcxVbCJvYWo6Kapw/mKbeWOAzBUgUytFps+cfJweph7M0IKksXiNWzgKiA1A3SlrLAuTW8USS
-	vvF1rt7zOZWfczq1hqXD7Wnm7wdAWAioOnNz2RrNrnSXi/VeDkB/zpUbYyGk90YIngy+1X4Lplh
-	locHnCl4u0TLVUIOnZMcgzo4SaaMY0+tOuKiEOyg8y1mCKL0kgQTQ4wBrsV7nEIVrCy4X+3biOA
-	liEHuw+RIMrI1vxoctVvmeg==
-X-Google-Smtp-Source: AGHT+IGDheRzEIDWvy9jJjVetSnf3JmgBhH88wP2OMBcuwCzAIlUjPSEuV2XkMUSvUT2xeOCmyTN3g==
-X-Received: by 2002:a7b:cb42:0:b0:43d:fa59:bcee with SMTP id 5b1f17b1804b1-43edf4581d1mr45012985e9.33.1744016004661;
-        Mon, 07 Apr 2025 01:53:24 -0700 (PDT)
+        bh=fOf9H7BQRbk9vcOFRZPDyvrAxaPKr+t8x7+lT2OYigQ=;
+        b=yIFdg0grHJGVGw0+gsygFH0k/IVKY8xSqACiOs45DwJXts5N0quuuSVZpk8bS+hI6I
+         P+i/odY97IRb7kIkW1FyqcaNgJk4x4v4Ycka+hZxYLElJTKnBaHhD9D8l5hwPpTosR/h
+         S/a0iGwyFF7coiDzu8YKpb0qcKf7TnSsstiXdT0yS6bGu91FdzINefnkRIFC0VjkyQ79
+         ZWh1PdcaSQ43k7964WsXTud/yyl0FWHDzLiZ5drtD8l+R4+hrYaUV2OEpjC4cxvYFsyP
+         Ihc+mW1+DXck3Q3hTtutXkIV/iwuE6+yusS6GvquJHCbJPoVrAh1q3egT6ojvT3E13QK
+         jm8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744016006; x=1744620806;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOf9H7BQRbk9vcOFRZPDyvrAxaPKr+t8x7+lT2OYigQ=;
+        b=IGxwxnp9cqQkI/8BEuRJxgiReIad8XbB5DNsccYOriTF5VOTahfLY038mVrDnREL6V
+         DTn+0a/aAOxUr+qg6nVsvwXiLfoql4wfY/t41FKkOiVehApSZ1wueRbJ7iTsPhNk++id
+         OUVhEjLv9rTaN055gBmLwfaUN7B3MUcpSyhy5BJEAELb0F2ms8icaZMrp8sn/ZybZQL/
+         TrixPnCVhlh0nOYHDKCZ+ONvozap7e3qvNy1mULfl5VK97mJzB655CDHH1pCjkaVO9Nv
+         WGpd5XvRkK4va6ZMO3DXXSESX5RGhdc8IWaI7cuKmJhd3oQeMR2LHYFj1wAynNvwSMcp
+         SbdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0BDw4bQOfTFuOXkrHb62cfVQJ/VyHNNNV/QEuMF4n2cRSZZGk8/Ksn9g8M3tDYMxvmzLlay3V2ExMU2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypyWruU7t0IxuEyjKtyWmawzGv2Jfo05G6qA7AG2ZVUIs0Os2O
+	ULIV6ZeEKx/ubS5fm+lQXg4C/h3kpKOhs167d/rRtLM5k52odHUnDvRKUvG6QRY=
+X-Gm-Gg: ASbGnctGkeyp4qKfwl/3buk34DOkDDByvT3jhRZe/YJ1rSy0Yqccuh0LC8UKG3xtFrT
+	w61P5+j1w35M++V8xnB7iedhLntxAY8mXurr4ljAo8XfjzoOBt5S15Bj8H0hDpzoJNjU/fpL1WB
+	YhRIe+yVT9yLTiepymreo5LZ1q0DAxEZK8K69jP5PRUwrlPJK7SI3XlqUOqI3xuQDVHwiahNvew
+	F8ZEyOgQyx0Zjyf+L+YvP3AOavhmCGoHLaOCvVryZGqpEXwDasEaXJfx1wzbSC6QJrPI4q7Qj54
+	/s4ffbfVOHbI4D8ebvQJN1kDDljzWcYA+KFXCt7UkNwh3J5w3yMKp9TPrFf++TbHCvuobl1nY17
+	cKzPPRgd6p2AiAinsFkuB8w==
+X-Google-Smtp-Source: AGHT+IEESbUJjv5zNbby1nRneFXpbSe5k56jX92f688Vnu++FT+Kfoz76Ak446pwm5EA80vwmYPa0g==
+X-Received: by 2002:a05:600c:1819:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-43ed0c6b9famr79797225e9.17.1744016006024;
+        Mon, 07 Apr 2025 01:53:26 -0700 (PDT)
 Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec3174cf0sm126966995e9.0.2025.04.07.01.53.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec3174cf0sm126966995e9.0.2025.04.07.01.53.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:53:24 -0700 (PDT)
+        Mon, 07 Apr 2025 01:53:25 -0700 (PDT)
 From: Angelo Dureghello <adureghello@baylibre.com>
 X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Subject: [PATCH v3 0/5] iio: ad3552r-hs: add support for internal ramp
- generator
-Date: Mon, 07 Apr 2025 10:52:02 +0200
-Message-Id: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
+Date: Mon, 07 Apr 2025 10:52:03 +0200
+Subject: [PATCH v3 1/5] iio: dac: adi-axi-dac: add cntrl chan check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,11 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADKS82cC/4XNTQ6CMBAF4KuQrh3TdgqIK+9hXPRnlCYIpDVVQ
- ri7hZUxMS7fm7xvZhYpeIrsWMwsUPLRD30OuCuYbXV/I/AuZya5LDlKAU8/gulAOyxLGeDqXxR
- BaTxUjVJW1Jzl6RhoO+Tl+ZJz6+NjCNP2JYm1/QMmARzQCq2lapyo8GT01HkTaG+HO1vNJD8c/
- OXI7FhHzijkqqnpy1mW5Q2hu+TnAwEAAA==
-X-Change-ID: 20250321-wip-bl-ad3552r-fixes-4a386944c170
+Message-Id: <20250407-wip-bl-ad3552r-fixes-v3-1-61874065b60f@baylibre.com>
+References: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
+In-Reply-To: <20250407-wip-bl-ad3552r-fixes-v3-0-61874065b60f@baylibre.com>
 To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
  Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
  Jonathan Corbet <corbet@lwn.net>, 
@@ -83,69 +81,117 @@ To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
 Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2144;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3048;
  i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=QPHh8N4sbhjKwZMK7xvZJUBdpo9mG11VcIyhWlrXKk4=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/PMn6s0PTYdHJSzQMT5X2HVmyLGTdNxX17+46TRWOz
- je37l63uqOUhUGMi0FWTJGlLjHCJPR2qJTyAsbZMHNYmUCGMHBxCsBEzBwZGaaeZQzKdMqf8ClV
- JEGvZgbz/7ijyXvb76/RkJvapGEk1MbIMONgjRiL7cZXbeY5PQXXeOvMzyWn2/ZHWXkffpxVmtH
- MDQA=
+ bh=LEhJ7d3UZmGONv0UbtL1XfLYWtYo9rliWEIHzqon6QA=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/PMnG9U/8FZZrZ1Y86Vm0d8aLM0XaJgz2gVcWMub12
+ bOofmdX7yhlYRDjYpAVU2SpS4wwCb0dKqW8gHE2zBxWJpAhDFycAjCRa4sYGdZZ8RndWTNjdst5
+ H46K6Dl7Hu/8oCFaJ7hZ4rHxZlsmsUZGhi2PJJKTOWKnC34/tfRBvHBAdSRHTcYGOz7pLYtDVY7
+ 5sQEA
 X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
  fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-Add support to enable the HDL IP core internal ramp generator,
-actually managed by the adi-axi-dac backend. 
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-It works this way:
-
-/sys/bus/iio/devices/iio:device0# echo 1 > buffer0/out_voltage0_en 
-/sys/bus/iio/devices/iio:device0# echo 1 > buffer0/out_voltage1_en                                           
-/sys/bus/iio/devices/iio:device0# echo 1 > buffer0/enable 
-
-Activating ramp generator:
-
-/sys/kernel/debug/iio/iio:device0# echo -n backend-ramp-generator > data_source
-
-Deactivating:
-
-/sys/kernel/debug/iio/iio:device0# echo -n iio-buffer > data_source
+Add validity check on CNTRL_X channels (valid as 0 to 15).
 
 Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 ---
-Changes in v3:
-- add mutex description,
-- use devm_mutex_init and check for return value.
-- Link to v2: https://lore.kernel.org/r/20250331-wip-bl-ad3552r-fixes-v2-0-cdedb430497e@baylibre.com
+ drivers/iio/dac/adi-axi-dac.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Changes in v2:
-- doc, add few words for generic spi driver version,
-- axi-dac, add a separate patch to check cntrl chan validity,
-- axi-dac, return EIO on a wrong source on get, 
-- add a lock on debugfs file access,
-- use const strings and strlen on file access.
-- Link to v1: https://lore.kernel.org/r/20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com
+diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+index 892d770aec69c4259de777058801c9ab33c79923..f86acb98b0cffb09bf4d4626f932bf1edc911e2b 100644
+--- a/drivers/iio/dac/adi-axi-dac.c
++++ b/drivers/iio/dac/adi-axi-dac.c
+@@ -84,6 +84,7 @@
+ #define AXI_DAC_CHAN_CNTRL_7_REG(c)		(0x0418 + (c) * 0x40)
+ #define   AXI_DAC_CHAN_CNTRL_7_DATA_SEL		GENMASK(3, 0)
+ 
++#define AXI_DAC_CHAN_CNTRL_MAX			15
+ #define AXI_DAC_RD_ADDR(x)			(BIT(7) | (x))
+ 
+ /* 360 degrees in rad */
+@@ -186,6 +187,9 @@ static int __axi_dac_frequency_get(struct axi_dac_state *st, unsigned int chan,
+ 	u32 reg, raw;
+ 	int ret;
+ 
++	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	if (!st->dac_clk) {
+ 		dev_err(st->dev, "Sampling rate is 0...\n");
+ 		return -EINVAL;
+@@ -230,6 +234,9 @@ static int axi_dac_scale_get(struct axi_dac_state *st,
+ 	int ret, vals[2];
+ 	u32 reg, raw;
+ 
++	if (chan->channel > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	if (tone_2)
+ 		reg = AXI_DAC_CHAN_CNTRL_3_REG(chan->channel);
+ 	else
+@@ -264,6 +271,9 @@ static int axi_dac_phase_get(struct axi_dac_state *st,
+ 	u32 reg, raw, phase;
+ 	int ret, vals[2];
+ 
++	if (chan->channel > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	if (tone_2)
+ 		reg = AXI_DAC_CHAN_CNTRL_4_REG(chan->channel);
+ 	else
+@@ -291,6 +301,9 @@ static int __axi_dac_frequency_set(struct axi_dac_state *st, unsigned int chan,
+ 	u16 raw;
+ 	int ret;
+ 
++	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	if (!sample_rate || freq > sample_rate / 2) {
+ 		dev_err(st->dev, "Invalid frequency(%u) dac_clk(%llu)\n",
+ 			freq, sample_rate);
+@@ -342,6 +355,9 @@ static int axi_dac_scale_set(struct axi_dac_state *st,
+ 	u32 raw = 0, reg;
+ 	int ret;
+ 
++	if (chan->channel > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	ret = iio_str_to_fixpoint(buf, 100000, &integer, &frac);
+ 	if (ret)
+ 		return ret;
+@@ -385,6 +401,9 @@ static int axi_dac_phase_set(struct axi_dac_state *st,
+ 	u32 raw, reg;
+ 	int ret;
+ 
++	if (chan->channel > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	ret = iio_str_to_fixpoint(buf, 100000, &integer, &frac);
+ 	if (ret)
+ 		return ret;
+@@ -493,6 +512,9 @@ static int axi_dac_data_source_set(struct iio_backend *back, unsigned int chan,
+ {
+ 	struct axi_dac_state *st = iio_backend_get_priv(back);
+ 
++	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
++
+ 	switch (data) {
+ 	case IIO_BACKEND_INTERNAL_CONTINUOUS_WAVE:
+ 		return regmap_update_bits(st->regmap,
+@@ -521,6 +543,8 @@ static int axi_dac_set_sample_rate(struct iio_backend *back, unsigned int chan,
+ 	unsigned int freq;
+ 	int ret, tone;
+ 
++	if (chan > AXI_DAC_CHAN_CNTRL_MAX)
++		return -EINVAL;
+ 	if (!sample_rate)
+ 		return -EINVAL;
+ 	if (st->reg_config & AXI_DAC_CONFIG_DDS_DISABLE)
 
----
-Angelo Dureghello (5):
-      iio: dac: adi-axi-dac: add cntrl chan check
-      docs: iio: add documentation for ad3552r driver
-      iio: backend: add support for data source get
-      iio: dac: adi-axi-dac: add data source get
-      iio: dac: ad3552r-hs: add support for internal ramp
-
- Documentation/iio/ad3552r.rst      |  72 +++++++++++++++++++++
- Documentation/iio/index.rst        |   1 +
- MAINTAINERS                        |   1 +
- drivers/iio/dac/ad3552r-hs.c       | 124 +++++++++++++++++++++++++++++++++++--
- drivers/iio/dac/adi-axi-dac.c      |  54 ++++++++++++++++
- drivers/iio/industrialio-backend.c |  28 +++++++++
- include/linux/iio/backend.h        |   5 ++
- 7 files changed, 279 insertions(+), 6 deletions(-)
----
-base-commit: eb870a5af7db1e5ca59330875125230b28e630f9
-change-id: 20250321-wip-bl-ad3552r-fixes-4a386944c170
-
-Best regards,
 -- 
-Angelo Dureghello <adureghello@baylibre.com>
+2.49.0
 
