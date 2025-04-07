@@ -1,206 +1,191 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD49F15687D;
-	Mon,  7 Apr 2025 23:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE0315687D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744066831; cv=none; b=rd1ySJY68iDKcEVtDOvyM+syz+7YMQIFBuRGVCeqs/pzC0q46VjVc4Yf7zIVzi3HSymclRl+dayKT0sZNjoK5FXg6xmERwpNtV0qi/elP25f7JvPcWE1kXCsaaWTG3z5O4ip+oHaCAlh58klLiO8Ut/T1Ml0utJHH6myR8jnCOA=
+	t=1744066844; cv=none; b=Hn4oCGGOuSasolxQAVoej4SFBeUWDR2W9URDs9b/nl65NeDqLKmPZ8OvFSj9GbzmLz3pk/ZRk1WK77spi7MIdpaf2uXtzFcZGvi1FkRsnc2lKefXLiudUY1DTqzYTMgw2HQiMS44U8Sa+9IqG4Svs0SGFkdh/bHU4rdZm6ctzC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744066831; c=relaxed/simple;
-	bh=hRS+kMizGkPqXYHgEHzhS2iEQ3yYETNDaisS1kSjthM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SBYA98ZZN69xtm1VmohCKESBP6XJD1HVrxvfqER3/TFbiINNSbnTMLwQ3eoUFi2S6BzdUNUDbc4p0wdunUzvNjGzwq3o+lWBiArhB2PUDOijqLaJddVOoqnSQR75WyObFMIsXzZrVF5YTWBJPWdVWQxYy14NpMm/oeOFy/+fcxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K3hJ/iwi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744066844; c=relaxed/simple;
+	bh=HP9vbFV3vUxCVx7bpkpzw8lFeSnABgzR0hDblww+07o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cc2V+vqWA3cvkt9KdEDVRY02zo2bZFpD4Frxja/627yDvg6cqizXocgYe7I1MDTATZC2BafPcPrRWWu5OikeOwrlb7LUXzPqWKgSZYn2XQVb0fXlL3Q8/u3TaTsScqT6D6GbFdaGq/3uUAwK2xWjy2+lVT/Mq071QXYpVCzebvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=LvFT+oCQ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K3hJ/iwi"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537MVGQJ027956;
-	Mon, 7 Apr 2025 23:00:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Vh1NuIKsWZxQa9OlhJMGU2vga5oCE2rkTE1ygS51NT8=; b=K3hJ/iwiDlsc0rLZ
-	fSlCdLuT5RsiMXguOGGr8LuvfjXnydvf9Ilgs2kNBYgG01Y49TrM/KkznDMdpuZ4
-	lY0cQc5zSgfNbRf0tOxZHKVk2ivQlbsdeQR70NnbDwNMAbU3lyflgR5i43cxeFxk
-	lqI1ClXOKUBlBaVdoAoQD4C1K0M8uW/svJHx3GhEhhV4JrUP3U3eEc5/1ws1au7x
-	iKfabWEz9A75P1PddiegSbj1B5gJ9vaEOfsfdneIiJkFoC4s1bb7l4bzSRo1wb0E
-	DYgJPcw/GgRpy79kPjFWLMVvHpe322u2y5j3I0whMdy8Vc7sV0HXKF4Un4297X02
-	cgAmgQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcywtrh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Apr 2025 23:00:04 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 537N03qv026043
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 7 Apr 2025 23:00:03 GMT
-Received: from [10.110.75.38] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
- 16:00:02 -0700
-Message-ID: <0b8a77f4-2751-3982-3883-dec2ac5804e8@quicinc.com>
-Date: Mon, 7 Apr 2025 15:59:56 -0700
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="LvFT+oCQ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so67701265ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744066842; x=1744671642; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=evNCUqWM/KE8Fgtxc4/OAJwDhlQwnWsjIDPeaW75aro=;
+        b=LvFT+oCQtJqvfw+/J/gHlX+6435AsnhgR23GSoZtrDSLtPn63tDhjPcnwQEabUIEMZ
+         8svriIETGCA9UopCOLtPyosT0NtclLGEYVuYDbQVbSKLKc+Ri0m7XGiDZigSVVZCEqCS
+         VGkL/5FErEFO7Jl/KaurZjwsKXZrnnMxkd5tydWXobY58XgK0+F2IhoKPOXBtAPEFCpm
+         vUOnrDkwJnwE/WRDbZRNiLWlHXJUS0mXEUzMTyvpjCcOfCnVOElwZmcO9To63dzbp7uB
+         fU2tkZBH6tc8cAQuLyCLk28zx1jq54q+TEox9cONVnogCDJlCGU/h2vG8+TA7JgaZKPv
+         axjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744066842; x=1744671642;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=evNCUqWM/KE8Fgtxc4/OAJwDhlQwnWsjIDPeaW75aro=;
+        b=c6GaNb/r6AQyKY9gYdcctCbycHIaCzz+tPRa/yDTSN2Bof3XpluBgQzZrC68woV7V+
+         Kbh8XdSzVpe02Ub4lvOb5nx11evGiqaOExhU7TgnIpsE46gav+SXVorKv33yXlShQbC6
+         drO2FbAEKiat1krrz3RFaGv+LKfwj0UoB8DXpM0Fqer46zB1308tT7uC0amIANQsAvIc
+         PJo2RjTKzJDcv5Qfk2RJmrpT7KASOT29jSjgBrQ3NsUpDlHXqNVUuGn97cqU7r34QHYu
+         OImbH1jx1JFWdCaDK7pCqKkRZAwtnsNlgijpnRASSTZrZWj5ozkmdRg/gd8bFgaffRfW
+         65rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlpCxiKqVugJf3ioA7A6vDFPz2ZJZvIidbNW1YtBLAeVUr19CberQiXkJPmGpTHCizgGVgSaBKlCnTUtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4wl7rqsvdPuD5ZuH6t9g5DKCf15OuK7bWXfVsfaLNkHEINWdV
+	YMnyWQYobveT/5gpZcrCJKCYQh464gPuAxpKt4o0Pp82k7GZzpblTyUeuLJBHIQ=
+X-Gm-Gg: ASbGnctsw76hkv5nmhurifoNhLoxG2RpJ/dxKUtNxFwNuIhcIbQHaMGJpr9VhRejiOq
+	3cxZRlJO8Fdgp3FQ8Pyb6X0UmK5flJoMk7QtI6t794eugDBDgVtcK5aKTvFUBG12hdsLv8F+wrF
+	/y1DAecvoWp7bu6nQs1us13gn/2MNuOJc63qSroaiBYHM7+Zorywtlu9XXAd1qo9djQNDU31uDM
+	N6zcpY8EFbHnYwkl9+DrC04fKyKL6c4aQDSd8ik7S6DGU0cfjraF9Lp1xBk0HWMQS8kYns4UfA+
+	AvV6xMwrI+SxDDLuRUqZfTVTVB5YWgpWKroyOuAU+pQXIk/t4TLasgFYuzFDRwHKd/sgjQFh5Da
+	k9TilpsOZCVHLcjukLg==
+X-Google-Smtp-Source: AGHT+IGnjTVKROKhiUbKxR04fwQFtAP05Upi/1tbtxnH3zXCfd/7yJ0o+NE/GXDeWDfof5DG3+Gjjg==
+X-Received: by 2002:a17:903:22c2:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22a955738c0mr177726185ad.41.1744066841870;
+        Mon, 07 Apr 2025 16:00:41 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e0b4sm87525135ad.154.2025.04.07.16.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 16:00:41 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1u1vSI-00000005pxh-0x3i;
+	Tue, 08 Apr 2025 09:00:38 +1000
+Date: Tue, 8 Apr 2025 09:00:38 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Matt Fleming <matt@readmodwrite.com>, adilger.kernel@dilger.ca,
+	akpm@linux-foundation.org, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, luka.2016.cs@gmail.com, tytso@mit.edu,
+	Barry Song <baohua@kernel.org>, kernel-team@cloudflare.com,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>
+Subject: Re: Potential Linux Crash: WARNING in ext4_dirty_folio in Linux
+ kernel v6.13-rc5
+Message-ID: <Z_RZFrlPArdj9d-5@dread.disaster.area>
+References: <Z8kvDz70Wjh5By7c@casper.infradead.org>
+ <20250326105914.3803197-1-matt@readmodwrite.com>
+ <CAENh_SSbkoa3srjkAMmJuf-iTFxHOtwESHoXiPAu6bO7MLOkDA@mail.gmail.com>
+ <Z-7BengoC1j6WQBE@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v37 24/31] ASoC: qcom: qdsp6: Add USB backend ASoC driver
- for Q6
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <dmitry.torokhov@gmail.com>,
-        <corbet@lwn.net>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <krzk+dt@kernel.org>, <pierre-louis.bossart@linux.intel.com>,
-        <Thinh.Nguyen@synopsys.com>, <tiwai@suse.com>, <robh@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>
-References: <20250404002728.3590501-1-quic_wcheng@quicinc.com>
- <20250404002728.3590501-25-quic_wcheng@quicinc.com>
- <Z--sQj-fXwXkk5iS@linaro.org>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <Z--sQj-fXwXkk5iS@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1nl-DQhG9dzg8yTLK0FVSV7GtgsZ5IF9
-X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f458f4 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=GBvyv-u1fKLaKHI2v8gA:9 a=QEXdDO2ut3YA:10
- a=RVmHIydaz68A:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 1nl-DQhG9dzg8yTLK0FVSV7GtgsZ5IF9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070161
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-7BengoC1j6WQBE@casper.infradead.org>
 
-Hi Stephan,
-
-On 4/4/2025 2:54 AM, Stephan Gerhold wrote:
-> On Thu, Apr 03, 2025 at 05:27:21PM -0700, Wesley Cheng wrote:
->> Create a USB BE component that will register a new USB port to the ASoC USB
->> framework.  This will handle determination on if the requested audio
->> profile is supported by the USB device currently selected.
->>
->> Check for if the PCM format is supported during the hw_params callback.  If
->> the profile is not supported then the userspace ALSA entity will receive an
->> error, and can take further action.
->>
->> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
->> ---
->>   include/sound/q6usboffload.h  |  20 +++
->>   sound/soc/qcom/Kconfig        |  12 ++
->>   sound/soc/qcom/qdsp6/Makefile |   1 +
->>   sound/soc/qcom/qdsp6/q6usb.c  | 278 ++++++++++++++++++++++++++++++++++
->>   4 files changed, 311 insertions(+)
->>   create mode 100644 include/sound/q6usboffload.h
->>   create mode 100644 sound/soc/qcom/qdsp6/q6usb.c
->>
->> diff --git a/include/sound/q6usboffload.h b/include/sound/q6usboffload.h
->> new file mode 100644
->> index 000000000000..35ae26ba6509
->> --- /dev/null
->> +++ b/include/sound/q6usboffload.h
->> @@ -0,0 +1,20 @@
->> +/* SPDX-License-Identifier: GPL-2.0
->> + *
->> + * sound/q6usboffload.h -- QDSP6 USB offload
->> + *
->> + * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +/**
->> + * struct q6usb_offload - USB backend DAI link offload parameters
->> + * @dev: dev handle to usb be
->> + * @domain: allocated iommu domain
->> + * @sid: streamID for iommu
->> + * @intr_num: usb interrupter number
->> + **/
->> +struct q6usb_offload {
->> +	struct device *dev;
->> +	struct iommu_domain *domain;
->> +	long long sid;
+On Thu, Apr 03, 2025 at 06:12:26PM +0100, Matthew Wilcox wrote:
+> On Thu, Apr 03, 2025 at 01:29:44PM +0100, Matt Fleming wrote:
+> > On Wed, Mar 26, 2025 at 10:59 AM Matt Fleming <matt@readmodwrite.com> wrote:
+> > >
+> > > Hi there,
+> > >
+> > > I'm also seeing this PF_MEMALLOC WARN triggered from kswapd in 6.12.19.
+> > >
+> > > Does overlayfs need some kind of background inode reclaim support?
+> > 
+> > Hey everyone, I know there was some off-list discussion last week at
+> > LSFMM, but I don't think a definite solution has been proposed for the
+> > below stacktrace.
 > 
-> "long long" feels like overkill for sid, given that it's essentially
-> either an u8 or -1. I see you just copied this from q6asm-dai.c, but
-> unlike q6asm-dai, you don't seem to check for sid < 0 in PATCH 28/31
-> (qc_audio_offload.c).
+> Hi Matt,
 > 
-> Looking at the logic in q6asm-dai.c, it feels like this could really
-> just be an "u8", since the -1 for "no iommus specified" is effectively
-> just handled like sid = 0.
+> We did have a substantial discussion at LSFMM and we just had another
+> discussion on the ext4 call.  I'm going to try to summarise those
+> discussions here, and people can jump in to correct me (I'm not really
+> an expert on this part of MM-FS interaction).
 > 
-
-Thanks for the detailed feedback and review.  Will change it accordingly 
-as you suggested.
-
->> +	u16 intr_num;
->> +};
->> [...]
->> diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
->> new file mode 100644
->> index 000000000000..cb8c4a62a816
->> --- /dev/null
->> +++ b/sound/soc/qcom/qdsp6/q6usb.c
->> [...]
->> +static int q6usb_dai_dev_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *node = pdev->dev.of_node;
->> +	struct q6usb_port_data *data;
->> +	struct device *dev = &pdev->dev;
->> +	struct of_phandle_args args;
->> +	int ret;
->> +
->> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->> +	if (!data)
->> +		return -ENOMEM;
->> +
->> +	ret = of_property_read_u16(node, "qcom,usb-audio-intr-idx",
->> +				   &data->priv.intr_num);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "failed to read intr idx.\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = of_parse_phandle_with_fixed_args(node, "iommus", 1, 0, &args);
->> +	if (ret < 0)
->> +		data->priv.sid = -1;
->> +	else
+> At LSFMM, we came up with a solution that doesn't work, so let's start
+> with ideas that don't work:
 > 
-> Could just do if (ret == 0) here and drop the if branch above, if you
-> make sid an u8 like I suggested above.
+>  - Allow PF_MEMALLOC to dip into the atomic reserves.  With large block
+>    devices, we might end up doing emergency high-order allocations, and
+>    that makes everybody nervous
+>  - Only allow inode reclaim from kswapd and not from direct reclaim.
+
+That's what GFP_NOFS does. We already rely on kswapd to do inode
+reclaim rather than direct reclaim when filesystem cache pressure
+is driving memory reclaim...
+
+>    Your stack trace here is from kswapd, so obviously that doesn't work.
+>  - Allow ->evict_inode to return an error.  At this point the inode has
+>    been taken off the lists which means that somebody else may have
+>    started to start constructing it again, and we can't just put it back
+>    on the lists.
+
+No. When ->evict_inode is called, the inode hasn't been taken off
+the inode hash list. Hence the inode can still be found
+via cache lookups whilst evict_inode() is running. However, the
+inode will have I_FREEING set, so lookups will call
+wait_on_freeing_inode() before retrying the lookup. They will
+get woken by the inode_wake_up_bit() call in evict() that happens
+after ->evict_inode returns, so I_FREEING is what provides
+->evict_inode serialisation against new lookups trying to recreate
+the inode whilst it is being torn down.
+
+IOWs, nothing should be reconstructing the inode whilst evict() is
+tearing it down because it can still be found in the inode hash.
+
+> Jan explained that _usually_ the reclaim path is not the last
+> holder of a reference to the inode.  What's happening here is that
+> we've lost a race where the dentry is being turned negative by
+> somebody else at the same time, and usually they'd have the last
+> reference and call evict.  But if the shrinker has the last
+> reference, it has to do the eviction.
 > 
-
-Will do.
-
->> +		data->priv.sid = args.args[0] & Q6_USB_SID_MASK;
->> +
->> +	data->priv.domain = iommu_get_domain_for_dev(&pdev->dev);
->> +
->> +	data->priv.dev = dev;
->> +	INIT_LIST_HEAD(&data->devices);
+> Jan does not think that Overlayfs is a factor here.  It may change
+> the timing somewhat but should not make the race wider (nor
+> narrower).
 > 
-> I think you also need devm_mutex_init(&data->lock) or separate
-> mutex_init()/mutex_destroy() here, if someone enables
-> CONFIG_DEBUG_MUTEXES.
+> Ideas still on the table:
 > 
+>  - Convert all filesystems to use the XFS inode management scheme.
+>  Nobody is thrilled by this large amount of work.
 
-Ah, yes, will explicitly initialize the mutex here.
+There is no need to do that.
 
-Thanks
-Wesley Cheng
+>  - Find a simpler version of the XFS scheme to implement for other
+>    filesystems.
+
+If we push the last half of evict_inode() out to the background
+thread (i.e. go async before remove_inode_hash() is called), then
+new lookups will still serialise on the inode hash due to I_FREEING
+being set. i.e. Problems only arise if the inode is removed from
+lookup visibility whilst they still have cleanup work pending.
+
+e.g. have the filesystem provide a ->evict_inode_async() method
+that either completes inode eviction directly or punts it to a
+workqueue where it does the work and then completes inode eviction.
+As long as all this work is done whilst the inode is marked
+I_FREEING and is present in the inode hash, then new lookups will
+serialise on the eviction work regardless of how it is scheduled.
+
+It is likely we could simplify the XFS code by converting it over to
+a mechanism like this, rather than playing the long-standing "defer
+everything to background threads from ->destroy_inode()" game that
+we current do.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
