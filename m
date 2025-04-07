@@ -1,105 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AE6192B89;
-	Mon,  7 Apr 2025 12:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628BB224FD;
+	Mon,  7 Apr 2025 12:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744028610; cv=none; b=PVE5CLzCeRKfVfOeNam8r7zVZ1bJ2et16s3z2Mt1HLSW06sGRptJ0BcUkIjU+th6OCCKlZnb/xRsexCdNsX/FDbCzimaDmTzu/Mgr2GToUbJV/3XIJmmJCnRQ1b2itbFCi0m4UGuvJfsdnqyGntdu2A7VBjWpO6HW4f1sIabZ/M=
+	t=1744028892; cv=none; b=sl98Ap9GD+sn0E05u8XuFp7sqzG0XEZ6Ml0EdxMx3+VEVkZPmVuoyRAoWzGV0pkGRSZCCO9vcVV0tBV/iTnMlz+E7p6GoUQHGJ7SkgcBSDB1/h6AX+EOhSYreaVWco8YoB6D6ajCM3WzlXdJVpRs7Ouu3Uw5IeeLpE/bsHOoq+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744028610; c=relaxed/simple;
-	bh=grRP9IIZu+yzVT4nTI/ur2s0/bB6KpDJMElRNUUlS7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pYvyGp1KxzMUsPV9GdUc+O/pTk2UJru5777ZTsv++ZoVG2gKoTsviVhLxEVjpQ9houiYj5/5QAuZfBQxYwpc6uNnOdEMvNcdtFsrKvFC1eg8VXlUi1kaRzz5exijEraa/Hq3a3P8l05uZDQsrslcHIbec9qD/nL7AY1hvSrg5Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eesl5/zA; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744028892; c=relaxed/simple;
+	bh=2o4HproG0lV+6CiJy2e2v2QRjfeRHQV3nL2UwubnNis=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=W4MODK4MXccgmFknRLnfKuBedxFrZiLViUkYYpRS54bHCtzlRfyWJ3d5buf5qsCpdaUdvXPT0BsLoXA9BP0SwX85k4FcZU6PjTuBWZLXw8oJol0iU3Q/FovVkpOR7WrovipEM+U3I2pX0idMgNrfyTOUF0svqNpu06NxV+AJcCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H57H6F4J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eesl5/zA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744028608; x=1775564608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=grRP9IIZu+yzVT4nTI/ur2s0/bB6KpDJMElRNUUlS7k=;
-  b=Eesl5/zANuz024Lx2kvJhiepAKftOk/C2I7sPNdaxHd+NEXH198xUmb2
-   aQG9C4tG9ipcZHanOhI74tR10aKP8IzHZgaixV/2QNoGZpqrY8tmxs0t+
-   76Cveu+p8Aa/O5MREq8a/HSYx8T+U+7lM+HTYlY50WVl9uVctmzipLcBi
-   95FHCSCMZU7iRkq3RPDsCotl0hXqRKLMb/9pE5vxE7h6X/u4KAMUueF/e
-   7xc8U49fghRlVf0vfFgwnPpH9xy9Kf1LOSIMzaS+E1XEdprrTjQeSrM4k
-   6/aNGlNchnUpuI8os7aounWgZCJ6ZxgnZn/IrN66GGBtGXnpXNboXStyH
-   w==;
-X-CSE-ConnectionGUID: 5HxFY114QOeWVt2+BqMU0A==
-X-CSE-MsgGUID: eo423dVsQzqy2TUZCt39qA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44554989"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="44554989"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:23:26 -0700
-X-CSE-ConnectionGUID: r9NFi8VXRgyZc6Z/TpGkLg==
-X-CSE-MsgGUID: +vw++kUxSJO/fOiJNdXVAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="128875979"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:23:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1lVa-0000000A3zK-2mje;
-	Mon, 07 Apr 2025 15:23:22 +0300
-Date: Mon, 7 Apr 2025 15:23:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] i2c: core: Move client towards fwnode
-Message-ID: <Z_PDuilyIYM_3STr@smile.fi.intel.com>
-References: <20250407095852.215809-1-andriy.shevchenko@linux.intel.com>
- <d51a686c-583a-4fed-81bd-9287459c48fe@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H57H6F4J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3525FC4CEE7;
+	Mon,  7 Apr 2025 12:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744028891;
+	bh=2o4HproG0lV+6CiJy2e2v2QRjfeRHQV3nL2UwubnNis=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H57H6F4JJ5H/IuuJsy3mS27ZfEHXGNxu5o6j3PyHMAsO3NMGyjRLyQYXxvkripA6i
+	 p2rc7+G0EWhj3qBCVSzdhndmfqpKlo2NYtIOa9inISnvLWEcnpMByPfjwFnL+BLQS0
+	 Ol9CSZU+Rd9/8w3DCaoe9maNsf9uxxL2EE/BPRTtc6Ohltn2chNvuCMyBH6SRFncHQ
+	 UW/YmRCOgF+ZC3K21TYl5XmeJRmv1dR0heyOmyCR4jzUD7SKh+Pyr34rYLBO4FGbH7
+	 FoVdlRURId39Moj+WSWmpMPBTWzp3RrBP5c3xMi568TLiYDPPd/q356PN7O67hpbxl
+	 YsjS2pb9ibELw==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	stable@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org
+Subject: [PATCH v4] tpm: Mask TPM RC in tpm2_start_auth_session()
+Date: Mon,  7 Apr 2025 15:28:05 +0300
+Message-Id: <20250407122806.15400-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250407072057.81062-1-jarkko@kernel.org>
+References: <20250407072057.81062-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d51a686c-583a-4fed-81bd-9287459c48fe@ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 02:34:48PM +0300, Tomi Valkeinen wrote:
-> On 07/04/2025 12:55, Andy Shevchenko wrote:
-> > The struct i2c_board_info has of_node and fwnode members. This is
-> > quite confusing as they are of the same semantics and it's tend
-> > to have an issue if user assigns both. Luckily there is only a
-> > single driver that does this and fix was sent today. Nevertheless
-> > the series moves the client handling code to use fwnode and deprecates
-> > the of_node member in the respective documentation.
-> > 
-> > Tomi, can you test this series + the patch we discussed earlier so it works as
-> > expected?
-> 
-> I tested this series, and then tested this series + "[PATCH v1 1/1] media:
-> i2c: ds90ub960: Remove of_node assignment". I didn't see anything amiss in
-> either case.
-> 
-> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
 
-Thank you very much for the testing!
+[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
 
-> I assume the ds90ub960 patch is the "single driver that does this and fix
-> was sent today"? If so, I think that patch could have been included in this
-> series as well, there's hardly a chance of conflicts with the one liner. And
-> if applied separately, we probably need to apply the ub960 patch one kernel
-> version later than this series.
+Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+error codes.
 
-Yeah, I forgot to update the cover letter to point to that one out.
-I agree on everything you said above. But let's wait a bit for Wolfram
-to comment on / apply this first. It would be nice to have it in, so
-we prevent new ambiguous users from appearing.
+Cc: stable@vger.kernel.org # v6.10+
+Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+v4:
+- tpm_to_ret()
+v3:
+- rc > 0
+v2:
+- Investigate TPM rc only after destroying tpm_buf.
+---
+ drivers/char/tpm/tpm2-sessions.c | 20 ++++++--------------
+ include/linux/tpm.h              | 21 +++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+index 3f89635ba5e8..102e099f22c1 100644
+--- a/drivers/char/tpm/tpm2-sessions.c
++++ b/drivers/char/tpm/tpm2-sessions.c
+@@ -40,11 +40,6 @@
+  *
+  * These are the usage functions:
+  *
+- * tpm2_start_auth_session() which allocates the opaque auth structure
+- *	and gets a session from the TPM.  This must be called before
+- *	any of the following functions.  The session is protected by a
+- *	session_key which is derived from a random salt value
+- *	encrypted to the NULL seed.
+  * tpm2_end_auth_session() kills the session and frees the resources.
+  *	Under normal operation this function is done by
+  *	tpm_buf_check_hmac_response(), so this is only to be used on
+@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
+ }
+ 
+ /**
+- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+- * @chip: the TPM chip structure to create the session with
++ * tpm2_start_auth_session() - Create an a HMAC authentication session
++ * @chip:	A TPM chip
+  *
+- * This function loads the NULL seed from its saved context and starts
+- * an authentication session on the null seed, fills in the
+- * @chip->auth structure to contain all the session details necessary
+- * for performing the HMAC, encrypt and decrypt operations and
+- * returns.  The NULL seed is flushed before this function returns.
++ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
++ * session. The null seed is flushed before the return.
+  *
+- * Return: zero on success or actual error encountered.
++ * Returns zero on success, or a POSIX error code.
+  */
+ int tpm2_start_auth_session(struct tpm_chip *chip)
+ {
+@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+ 	/* hash algorithm for session */
+ 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+ 
+-	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
++	rc = tpm_to_ret(tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession"));
+ 	tpm2_flush_context(chip, null_key);
+ 
+ 	if (rc == TPM2_RC_SUCCESS)
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..c826d5a9d894 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -257,8 +257,29 @@ enum tpm2_return_codes {
+ 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+ 	TPM2_RC_REFERENCE_H0	= 0x0910,
+ 	TPM2_RC_RETRY		= 0x0922,
++	TPM2_RC_SESSION_MEMORY	= 0x0903,
+ };
+ 
++/*
++ * Convert a return value from tpm_transmit_cmd() to a POSIX return value. The
++ * fallback return value is -EFAULT.
++ */
++static inline ssize_t tpm_to_ret(ssize_t ret)
++{
++	/* Already a POSIX error: */
++	if (ret < 0)
++		return ret;
++
++	switch (ret) {
++	case TPM2_RC_SUCCESS:
++		return 0;
++	case TPM2_RC_SESSION_MEMORY:
++		return -ENOMEM;
++	default:
++		return -EFAULT;
++	}
++}
++
+ enum tpm2_command_codes {
+ 	TPM2_CC_FIRST		        = 0x011F,
+ 	TPM2_CC_HIERARCHY_CONTROL       = 0x0121,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
