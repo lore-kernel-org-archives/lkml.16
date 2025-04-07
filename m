@@ -1,122 +1,112 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEE72253FF
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8494A225407
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:53:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012367; cv=none; b=U7ZfkcHMVzd42VdVtoPCu6+NobmTItL+E8qtWniCqg0U2BiNgum8Guzbsy/hd4+5qG+9rJFZtB7symTCkhnoO5zNZ6cqfOcusJqX6CFw+fPzc9s9FvNY4XQizbo5jvbuAHmqvs1MG0NXSpNCT81YvDabQhErnyPqrdcgj3lpoHg=
+	t=1744012417; cv=none; b=H70LJTna1ozy0YdGR7nlpI/hmA1y9XBj3OgmznPT2by520+xH7Bhx9LMKgXJJsxN4Yid4WhvVHXJ8pBF3YZGCwUk7dl+O2rGv0anI9Hz7OuOPb6ZLAUF5EtA6RvBlr+q7mlY9SFn3p1wRMH0LIi11VR03E3FdimQMYX1X7Q/EW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012367; c=relaxed/simple;
-	bh=rUX6kwf2jcF8ugrawlFPTy7xjQXkwZR1IvpwRwX1AmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VQCCA57pFSbE7WWBamWaaQ6qRtWRqJO0toqSH+V62uLExU/8g0lGpC7rQh8r6qu64nZAzZp5LE6wBK08ffiM9dY12edqWvo+zEvMxEivIWwNYuAmcFdfFROFGpUhN0u3MVy/l6dSTot1vbVYq+t9HtLniFi4So/vSwqEYMtotPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dEfPSiMi; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1744012417; c=relaxed/simple;
+	bh=szwnXOzOSOjBOch3SoWaXXjO3Tlak50jw4MvIJHciKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gaUIjL7SrnFXwy+VfbMYeahwbKv2NeMAk9+2czFnT0arnBlNvdDHYip3os7KaGl3DM3dUeATRS9VTRsHTaaGiNruPMquPEoUKBc6UXwhRSuEUYF0Fpi9cwoGZH8UQ2bP21+9sbbQ9McQocSiJ3PEC7MWpvJaq7qWst6wPrzVs4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L0NUK7Je; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dEfPSiMi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0NUK7Je"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744012364;
+	s=mimecast20190719; t=1744012414;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SWeyxgVRp5P7mOHz2eAUtnv3gFTxLpkuE25ons4rBo4=;
-	b=dEfPSiMiA2EKUviZFjwC6pQ1BjlCBHkoWLN0QiZiLBRDBtu8ODJRfqK+S0mvSzKnkkMxye
-	lhMHEuU3h1i1mzRWq4vawDJUwJd/GBPdP+eMDSafijSrO/Nx7pyi9xtZB8NIcUqTNcSUFE
-	vUCZv4FCoZT0NvfMVvkrvb7/Yzzj7wo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Ofsy77ssOrCPdPnwbpfIBh3i6M18rOr/4yXwZKj56Wg=;
+	b=L0NUK7JeD1sQMw4xDSvwNBx9w7BkhnJzcFVg2Cl6vnp9uCjeNaVN9h49J8Sr28z8D/Fj5Y
+	aPLp0ugrnkAqmxjJQgj8guIyAddGDXLR/wlg3gVVXRb4lFI/ApCM0lYq9FvAuNwyZeIvFv
+	rZrbmNhEo9EMObyQnCFGLzvXnRvP08g=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-hs8QEPL2MmGFBMDqjxzy8Q-1; Mon, 07 Apr 2025 03:52:43 -0400
-X-MC-Unique: hs8QEPL2MmGFBMDqjxzy8Q-1
-X-Mimecast-MFC-AGG-ID: hs8QEPL2MmGFBMDqjxzy8Q_1744012362
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso2664175f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:52:43 -0700 (PDT)
+ us-mta-251-q1MNDHHiP-yAq6CI5KH2dQ-1; Mon, 07 Apr 2025 03:53:32 -0400
+X-MC-Unique: q1MNDHHiP-yAq6CI5KH2dQ-1
+X-Mimecast-MFC-AGG-ID: q1MNDHHiP-yAq6CI5KH2dQ_1744012411
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912fe32a30so1585748f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:53:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744012362; x=1744617162;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SWeyxgVRp5P7mOHz2eAUtnv3gFTxLpkuE25ons4rBo4=;
-        b=jndhkKw7dkdUz4Sd5kFs5GQ0r/zs/RP6D1Bl+6S9Zz77RfSSmWnWyZfZXpca/hdItj
-         apE1IqjpIvkJOOLgdeLx+CGi3uzS12eySMCJDEMRSlAr8lUdY7IO99NEXpih9swhTjY+
-         0UqcJUHKCmUbG7zZ0D8Wh8ZG5GMp5t1VZxvsOAcV7h8qsVwOp659cMv+At1miSAH0ets
-         JaDxBbeUjvcrNE/tNc+4Z9OTuYKdg7SSd0TFdUmdQ7JRXET6w5Ez4doYpJjtpxWmehVm
-         aFTT0Ehwu4i81mba5oK3hJau9NfNipkDhehD9FAhhWz3H+ULZz8LeOgNGq+gitvzgj//
-         Bq+w==
-X-Forwarded-Encrypted: i=1; AJvYcCU4pr/wD50QUlT3q8bVhl6nwKEtoP8fVSofq7M1gVhUO4r8BjmDHr3oIwr+7KlDGrJL6J8OuG0yZP+9D/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAdO8oYek90C771hfjh+HnobzKeldYd0fJuq5AANXvC6U+7frj
-	tcbj+VvfbaKFf1wX11ZcgHyNAoXpk1omML37Ga2vUaiy5GmPVf1vM8QRiHIxa+XZEabRvTSzsGe
-	QQz5debDAB+Si50hQqGaUEUG4drtEou4DMBUqXWbjI/NalCyUt4vO9Co2sco6u4HKWluTJg==
-X-Gm-Gg: ASbGnctNYPwFwW9xQxEUQ0xOIV56Od+HaRURzu++tCBK9b3K00WV5xx/DC3yfwBiJRW
-	ZVYjEWydPLWb73AFbDFVWh7m1uMOYqspVwsDPfgXPmDXnpI6ArHfRFBmOj01FGviR6iBIvXUYWR
-	UMA0tWbVW041bfAIdyUKaGsZriXVWNMWS210ZGTehyDwM/WTRbOqVuc3bzea4khPSHAbCiTN8DD
-	iutIeJhHkdj7jjKDCDbL5gXSE4VPkD5X4F0yZNrwFiT3nmaMWCCQ0GtTPKP6Nmyu57cm1FyonQR
-	YsDsN7jjaA==
-X-Received: by 2002:a05:6000:2ca:b0:39c:30fd:ca7 with SMTP id ffacd0b85a97d-39d6fc0c02emr6572095f8f.7.1744012361844;
-        Mon, 07 Apr 2025 00:52:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJsYAXUaNdpV/VhhZQQ5RxLgg/gr/bn4kaQg3vnQsXyz4+tvGKcyIi12k0f6ULNipYdQ/RcQ==
-X-Received: by 2002:a05:6000:2ca:b0:39c:30fd:ca7 with SMTP id ffacd0b85a97d-39d6fc0c02emr6572064f8f.7.1744012361448;
-        Mon, 07 Apr 2025 00:52:41 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d75ac6d66sm4958408f8f.14.2025.04.07.00.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:52:40 -0700 (PDT)
-Date: Mon, 7 Apr 2025 03:52:37 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407034901-mutt-send-email-mst@kernel.org>
-References: <20250403161836.7fe9fea5.pasic@linux.ibm.com>
- <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
- <20250404063619.0fa60a41.pasic@linux.ibm.com>
- <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
- <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
- <20250404153620.04d2df05.pasic@linux.ibm.com>
- <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
+        d=1e100.net; s=20230601; t=1744012411; x=1744617211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ofsy77ssOrCPdPnwbpfIBh3i6M18rOr/4yXwZKj56Wg=;
+        b=tgujjKZqp2XhxYn5DZKiw7t/ZozFeq6hX6eKTvDXghfhV0l9HEuvIf9QcGJY1i/9Y9
+         jb5GMhGCGxELK8iBKVIZgJqckWsunVuWNqTGg3GHN2cFRqX1UemgPHwuaC4eMtj2kPlm
+         nUcLM7AfbCWMzEI3VLOA06iBgVpRVgdLp5I703dCs0Y2u7ortnJZ4mDjKaucOSfQX4tQ
+         38rgHjmuHDn6tQvXpcWc1znq4vhuLkkzG79X/16GheigTOO2TeigSIoU3EpxH1NZs/7b
+         L866qRlPfxTBIfvUp496JFsaVWnRwdMeAlsPCK2UbdUQ+43GxWfTRPHX4Gz7c7Y05py9
+         ctBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQyUbqRSWur2NQVWdu0KexW6oExnqdh6aO6dLRz6uTxtxoRf5cx5aW4ymgE5gDC2fYs8PmkB8ptOgaVYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbMSW8+fkpHbIb1gITfGEDjqGCvb0PGFt6Nibvd/x36GG+Hal4
+	V4YimJTrUizCZBEqQ1L0Wbl8aDcJ93DdilqH2vXMBBP2sM6eV58KTRKiZDEACHVhTTjp1Dr80x3
+	CfGJuLnzJNuJDv3ehAeeBPlUQpBALVy7pSU87DhFsAkQKtrH2kWtEidVcdgv9JgwuZNT0PQWd1w
+	stQlHcT8bBj+50MKqDriKUUXKxWiTcPy52rpfb
+X-Gm-Gg: ASbGnctH+jbYw2OH1mHlK0i0wY4ODEs3+6RDwxXdgXbbfRI0MmOEADS4ihFU/oKV0Wo
+	7nqHaZlvkF3HPKCsfZv9UWgOC/breIb53+XRgUybKGbvKoQQiQs2FH3QwK9wfwJ9PPMi7J18=
+X-Received: by 2002:a5d:6d8b:0:b0:391:489a:ce12 with SMTP id ffacd0b85a97d-39cba9324c4mr9434685f8f.26.1744012411512;
+        Mon, 07 Apr 2025 00:53:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEucAUDP41Wd19TJhxmtFTNd5L+/2tfINDx0SVCwJt1Ss7gnd+Nfa6ty3EOnVN7dms57jS4L4Bva0CX/NdTT8g=
+X-Received: by 2002:a5d:6d8b:0:b0:391:489a:ce12 with SMTP id
+ ffacd0b85a97d-39cba9324c4mr9434669f8f.26.1744012411222; Mon, 07 Apr 2025
+ 00:53:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404173910.6581706a.pasic@linux.ibm.com>
+References: <cover.1742850400.git.ashish.kalra@amd.com> <Z_NdKF3PllghT2XC@gondor.apana.org.au>
+In-Reply-To: <Z_NdKF3PllghT2XC@gondor.apana.org.au>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 7 Apr 2025 09:53:19 +0200
+X-Gm-Features: ATxdqUFovAPd1YyW8urz9uvodd5Msi-Jyl0y3VBXdc00kyPAkug_xTk1qmoKSKs
+Message-ID: <CABgObfa=7DMCz99268Lamgn5g5h_sgDqkDoOSUAd5rG+seCe-g@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Move initializing SEV/SNP functionality to KVM
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com, 
+	michael.roth@amd.com, dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org, 
+	kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, aik@amd.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
-> > 
-> > Not perfect, but AFAIKS, not horrible.
-> 
-> It is like it is. QEMU does queue exist if the corresponding feature
-> is offered by the device, and that is what we have to live with.
+On Mon, Apr 7, 2025 at 7:06=E2=80=AFAM Herbert Xu <herbert@gondor.apana.org=
+.au> wrote:
+> > Ashish Kalra (8):
+> >   crypto: ccp: Abort doing SEV INIT if SNP INIT fails
+> >   crypto: ccp: Move dev_info/err messages for SEV/SNP init and shutdown
+> >   crypto: ccp: Ensure implicit SEV/SNP init and shutdown in ioctls
+> >   crypto: ccp: Reset TMR size at SNP Shutdown
+> >   crypto: ccp: Register SNP panic notifier only if SNP is enabled
+> >   crypto: ccp: Add new SEV/SNP platform shutdown API
+> >   KVM: SVM: Add support to initialize SEV/SNP functionality in KVM
+> >   crypto: ccp: Move SEV/SNP Platform initialization to KVM
+> >
+> >  arch/x86/kvm/svm/sev.c       |  12 ++
+> >  drivers/crypto/ccp/sev-dev.c | 245 +++++++++++++++++++++++++----------
+> >  include/linux/psp-sev.h      |   3 +
+> >  3 files changed, 194 insertions(+), 66 deletions(-)
+> >
+> > --
+> > 2.34.1
+>
+> Patches 1-6 applied.  Thanks.
 
-I don't think we can live with this properly though.
-It means a guest that does not know about some features
-does not know where to find things.
+Thanks, go ahead and apply 7-8 as well (or if you don't want to,
+please provide a topic branch).
 
-So now, I am inclined to add linux code to work with current qemu and
-with spec compliant one, and add qemu code to work with current linux
-and spec compliant one.
-
-Document the bug in the spec, maybe, in a non conformance section.
-
--- 
-MST
+Paolo
 
