@@ -1,136 +1,185 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E926230996
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1182188734;
+	Mon,  7 Apr 2025 09:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744019825; cv=none; b=QlpfHgnn0R7eEHfe6PwsQsZRbK8haoVHCUgfeyi/tDE9rDXB7o3/Kf7cJ7XuqOw38rj97ewn0SxcK0fQpnc4DsAV5NPgoC1vafUcNlaA9NAQQ66M9Vp9kITKj0AFuDT9bC4DMIc40LHf+v/o9CCeyzpV1SGB6rBLosnRc+4Ly7I=
+	t=1744019864; cv=none; b=PyNKiwKroPDKq3FDUZD9QSHETZ+A9/yloB6YwE6CtlTAQC/fs2QmCCViTcyenI5+sUlF57BsfPtfVUqyD71JdxsnX2UBiCgW7UeiEkctLBVaE0XfqRrPpXLq0KQ2tduCUtylpC6hVCJEnWh/vGQL1aCJwJdTzfoFDhfqaepHlSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744019825; c=relaxed/simple;
-	bh=ECIQQcTVtg/hv39ybDI897PJaXrGxDcq2VT2bEcU6rU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEPBDlfPfuwBmACIltCrpBHMBBV8Sa0w3ET96upLdZZRzOkDj8UJM44j6kcn1wMmzZwXhp1HvvH0JGD3VdFBlhNu9q4W9QpuI0LYJDYY8V25ukYVhwmLB3ApupbMoX/WnAHoU5fdHkryfwr+D1uGrhdN17az+Y/Vpz1+Bcs6BYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=baK0FbfF; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744019864; c=relaxed/simple;
+	bh=+leZAOgv1p8vUSpsx7CFEyKcsFmvohU4JdSQl13lHkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H/JF5M5uXacsAF+jClShs5rjosK7kzdWqyWKa/GJV0Ln7wGnFa6RSu9KD/UPuh5QKz+nAKGnQSxT9W0pGVHfjj0b6FXrE5UBAxBMQSgqqBhlJpl3oZXOpwMhArxnKgPB5Fxm/GFlaNMACqlLdIDYaXBdeDgi9VuC/c06eAyeUgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+j+IA+o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="baK0FbfF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744019821;
-	bh=ECIQQcTVtg/hv39ybDI897PJaXrGxDcq2VT2bEcU6rU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=baK0FbfFY0YlYV41bgu/R7tTtxwh18jci8auDNjRN15GWCxMEQETpAoUYHtx/Qp0h
-	 vXh13n1xlrAU6BaqCE4xvrBR1UptiwW3CQgaYdQWFjKr5a8nGHUJ8//RbtN2u2JceR
-	 mBrdlQFFpm7IuhycGuTx4ny+iPhW84ReEHppr8HEX/tQNb8JVKOPtDH0E53q2MHrFl
-	 7bxkTKwGp0zwLY2sZZxKUfLAQVFsMyXs3N9sm2vfaD61xMd9U91vYYefQecY4RxEaZ
-	 Rrc/HBIFhwymshCskIEA/JNqhLbrtbbX5q7wD30ooFDvxvwwGCJPsBlGgNGtDyFCFk
-	 /41UxKO/+5YDw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6891E17E001E;
-	Mon,  7 Apr 2025 11:57:00 +0200 (CEST)
-Date: Mon, 7 Apr 2025 11:56:54 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Gerd Hoffmann
- <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>, Steven Price
- <steven.price@arm.com>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
- <matt.coster@imgtec.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
- drm_gem_shmem_vmap/vunmap to use pin/unpin
-Message-ID: <20250407115654.761ddaa6@collabora.com>
-In-Reply-To: <edf93bc7-3289-4b1c-9698-e5e2cc5a6910@suse.de>
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
-	<20250322212608.40511-10-dmitry.osipenko@collabora.com>
-	<ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
-	<710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
-	<20250402152102.01d9cfee@collabora.com>
-	<a8ed4b8b-5116-4ac2-bfce-21b2751f7377@suse.de>
-	<20250403105053.788b0f6e@collabora.com>
-	<29cfb98b-fe27-4243-abe4-ce66aa504573@suse.de>
-	<20250404165233.139814ee@collabora.com>
-	<edf93bc7-3289-4b1c-9698-e5e2cc5a6910@suse.de>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+j+IA+o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9DF5C4CEDD;
+	Mon,  7 Apr 2025 09:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744019863;
+	bh=+leZAOgv1p8vUSpsx7CFEyKcsFmvohU4JdSQl13lHkg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y+j+IA+o0qewxZsdrTbggvxB/+6KUQsrUryxr2o8rEIWzhgI4Svq0lY713/dRKJ0Q
+	 cRryF3bpzTtDPKHV2SIC5H3egWanJ8F+8iAaY+n4W6LVEBpLPFor5ml7Je32fXAKUD
+	 WKpTx3kib14X1tO6WUXuSa3rhvB25nE4guOlQ2jC/2A6WZFXq3yqVHy84eS9Afkupn
+	 /sA3m1uX1Nf1DoJC5b5f+xO/emwsopxvHVFic7eyEjfxgjPQMJ0F3YU3A85IUPBDmf
+	 3bqqPTo6GrPUK+T/OkD/xDoH3n+wipGTW4+ewBi+xftyAD31krO+o/ITSTaTgoiIns
+	 Iz5ayF0xjazhg==
+Message-ID: <36c30069-3e7a-495c-8225-acd080732485@kernel.org>
+Date: Mon, 7 Apr 2025 11:57:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: backlight: kinetic,ktz8866: add ktz8866
+ slave compatible
+To: Pengyu Luo <mitltlatltl@gmail.com>, Jianhua Lu <lujianhua000@gmail.com>,
+ Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>,
+ Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>
+Cc: dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+References: <20250407095119.588920-1-mitltlatltl@gmail.com>
+ <20250407095119.588920-2-mitltlatltl@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407095119.588920-2-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 4 Apr 2025 16:58:20 +0200
-Thomas Zimmermann <tzimmermann@suse.de> wrote:
+On 07/04/2025 11:51, Pengyu Luo wrote:
+> Kinetic ktz8866, found in many android devices, nowadays, some oem use
+> dual ktz8866 to support a larger panel and  higher brightness, add the
 
-> Hi
-> 
-> Am 04.04.25 um 16:52 schrieb Boris Brezillon:
-> > On Fri, 4 Apr 2025 10:01:50 +0200
-> > Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >  
-> >>>> In your case, vmap an pin both intent to hold the shmem pages in memory.
-> >>>> They might be build on top of the same implementation, but one should
-> >>>> not be implemented with the other because of their different meanings.  
-> >>> But that's not what we do, is it? Sure, in drm_gem_shmem_vmap_locked(),
-> >>> we call drm_gem_shmem_pin_locked(), but that's an internal function to
-> >>> make sure the pages are allocated and stay around until
-> >>> drm_gem_shmem_vunmap_locked() is called.
-> >>>
-> >>> I guess we could rename pin_count into hard_refcount or
-> >>> page_residency_count or xxx_count, and change the pin/unpin_locked()
-> >>> function names accordingly, but that's just a naming detail, it doesn't
-> >>> force you to call drm_gem_pin() to vmap() your GEM, it's something we
-> >>> do internally.  
-> >> Such a rename would be much appreciated. page_residency_count seems
-> >> appropriate.  
-> > On a second thought, I think I prefer
-> > 'unevictable_count/inc_unevictable()/dec_unevictable()'. But looking at  
-> 
-> Ok
-> 
-> > the gem-vram changes you just posted, it looks like gem-shmem is not the
-> > only one to use the term 'pin' for this page pinning thing, so if we go
-> > and plan for a rename, I'd rather make it DRM-wide than gem-shmem being
-> > the outlier yet again :-).  
-> 
-> Which one do you mean?
-> 
-> - The code in gem-vram does pinning in the TTM sense of the term.
+Just one space after 'and'.
 
-Sorry, but I still don't see why pinning should be a TTM only thing. If
-I read the doc of drm_gem_vram_pin():
-
-"
-Pinning a buffer object ensures that it is not evicted from a memory
-region. A pinned buffer object has to be unpinned before it can be
-pinned to another region. If the pl_flag argument is 0, the buffer is
-pinned at its current location (video RAM or system memory).
-"
-
-And this pinning is not so different from the pinning we have in
-gem-shmem: making buffer object memory unevictable/unmovable.
-
+> binding for slave case.
 > 
-> - From the client code, the pinning got removed.
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>  .../leds/backlight/kinetic,ktz8866.yaml       | 29 +++++++++++++++----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
 > 
-> - The GEM pin/unpin callbacks are still there, but the long-term plan is 
-> to go to dma-buf pin callbacks AFAICT.
-> 
-> - Renaming the dma-buf pin/unpin would be a kernel-wide change. Not 
-> likely to happen.
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktz8866.yaml b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktz8866.yaml
+> index c914e1276..825a6fbf1 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktz8866.yaml
+> +++ b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktz8866.yaml
+> @@ -19,7 +19,9 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    const: kinetic,ktz8866
+> +    enum:
+> +      - kinetic,ktz8866
+> +      - kinetic,ktz8866-slave
 
-Again, I'm not sure why we'd want to do that anyway. Just because the
-TTM pinning semantics might be slightly different from the
-GEM/dma-buf ones doesn't mean the pinning term should be
-prohibited outside the TTM scope. The concept of pinning is pretty
-generic and applies to system memory too AFAICT.
+Does not look right. That's the same device. Same devices have same
+compatible.
+
+>  
+>    reg:
+>      maxItems: 1
+> @@ -58,9 +60,16 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - vddpos-supply
+> -  - vddneg-supply
+> -  - enable-gpios
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      const: kinetic,ktz8866
+> +then:
+> +  required:
+> +    - vddpos-supply
+> +    - vddneg-supply
+> +    - enable-gpios
+
+I don't understand why other device does not need power.
+
+>  
+>  unevaluatedProperties: false
+>  
+> @@ -68,7 +77,7 @@ examples:
+>    - |
+>      #include <dt-bindings/gpio/gpio.h>
+>  
+> -    i2c {
+> +    i2c0 {
+
+No, don't change.
+
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>  
+> @@ -84,3 +93,13 @@ examples:
+>              kinetic,enable-lcd-bias;
+>          };
+>      };
+> +
+> +    i2c1 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        backlight@11 {
+> +            compatible = "kinetic,ktz8866-slave";
+> +            reg = <0x11>;
+
+No real differences here, so drop the example. Anyway, new examples
+would start from - | (see other bindings).
+
+
+
+Best regards,
+Krzysztof
