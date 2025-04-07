@@ -1,124 +1,190 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C9022CBD7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E98224FD
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744027754; cv=none; b=VywNzZr6ZQhPTVQ252P6x768fUkjAMRhDukozLrTf/soER1FLHpLKdi698uqty0oH+wbxYr8ZA2eYttRDWufRVo2+ldDIeqQZnUMpzwpl8KAFOtMW4m4FHa4ECoGoS4yDfOFK5iww5HLF5bTFZB+2lxMBUHcB+D6HpYLadazsHs=
+	t=1744027792; cv=none; b=X4WE78IsgUGo3Ft3J9gffke+PshJAJrXwwokR8IEnMrWMRwjJTTF6YYSvRSmALT1ILlN29zSgRrAlH+AnolnxtJNKWE301kZg/Ha4IhseF7G+mGwTpGBeiVCI24m88fsefUQg6+GcfZ7kSIAQ9TxoZptUMTKkKUH/SlU19NtaWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744027754; c=relaxed/simple;
-	bh=sBCQHBDcAUpG17ddyItmIuUCIWSKR3D3zFJjSYLtoVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GbXz6uF3GJMnXoftM6XZ4tbyGkJKqUCSDNx7+KJVOpMfE8e5dYSjYuk+xovtfardRRbBGya4im7s0DYFxIlPcdwKUE144upvS7DWqe5R8dDcRck7F+fcqOS1TywSqxIBDxItesy4OtUVQsSuzAOmbodrFHpwlXl9scsjeundI4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O1QJa5vY; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744027792; c=relaxed/simple;
+	bh=e44SiL3bvklsDrt1HjaQIZmPJ2dv984wWJrVwVr43XM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+DrDazE6IePQUL66mIm76XXlpsMfeD3QgAbgyFS0VI3Dfs+Mw3omkWSUK0ArvHzCkDKUr5PVU7s95lfznoXdNPOWrQJin3ZughZi9GK8EiTTuLPr8y13n0dx1wMfFoRRDC9nz2yeL2pLCjB5ntPc6ccPmhK+XYkHD0TXLr2Fmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqrCjnzW; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1QJa5vY"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so41102351fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:09:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqrCjnzW"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so7298844a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744027749; x=1744632549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m/LHFPsYBw0bwDf6dVcpDSJnHybANIimgmPtryFgNPA=;
-        b=O1QJa5vY6mTfmLs4ycXkNd6aOG9TDOigmEPs4fGrs6HMlbtovJIojTYeLGjotYTCEi
-         Nu6iahUJ6uSbz3VOCihPxCibWBcX53WqJWABSHx51ja9uZWjhVGK6+c2s0Xf84/jo0TL
-         sIeRlZwEVDfcRnGsdTgXbAu5wIYRW02VQofWNVlYgUYF6FGFvJhvX+ny1je2EkvMmMDK
-         3k3b7uqj4/3izloAXQNSCGOrJnl5C3ximExbC/8fyjr8Nqn5qhZWy6YgwdiPPH4QXdRB
-         NbqhoiRDg1WssFrf8I/vOaF897YXt9zSMnkgOYRqlCGfaF2uukSl0YqXO1xA2WFFmNgR
-         v+oA==
+        d=gmail.com; s=20230601; t=1744027789; x=1744632589; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=enARi2Z7JnPTEmDCNXEY7n8qxxK9DglFVB+3z5zSkI0=;
+        b=MqrCjnzWuIA3k3IMVpU04YS6JGOaEgkT45/nByZmz6I5+BPvQLJH6VeDgYXIqrTTNC
+         ircBSoaEx8KOrDUQA+wsgnSxskDspk5i9HYCBhB9TjV0ZMM6EvfnQgv0MKnGTCTt0s8Y
+         dfXARSnYEFeLBQZjpp+C6qXUrpbVBP3JtxFpBJOk0wdUuNmVvjdlLXmSVx/qeddIlp7R
+         KmtO1Yda2S1SlmCzi+cgBIV85bRKAuCC8zDeg5RKb/2QL8opzSYRAA/Li2nPXDyZWcjO
+         0oWtZ89E1OFxtENwIsrIVIynedQDDLjHRlGlmBXGuiiBnvSTkBp7/R68w21FiJkNJuCp
+         XI7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744027749; x=1744632549;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m/LHFPsYBw0bwDf6dVcpDSJnHybANIimgmPtryFgNPA=;
-        b=uN8BXNWpyFrZUXKXRU9IvWym60Ei+cuzkFEzxbFmq8fwCfL5ukyzQTEHC+aZdlaLqy
-         aHNil3XH1ZTvxyi3TfleirUGw7k2EAYW54Q40vTH7Vq+eU4Ie6DOn2C+Nvlzi0fUfOTR
-         k8tn4r5Q5BWPEHbaeW/WrYsIfqUzbi/vdj5qn6GDFLMFJl4j4cUwOQr05ONNJLUqCJ9O
-         vU4ZZ2x2kGwTXwZIK4nCZ6NN4SduUFSfY2X+g21eRJf4g33nEe11vqOjASPnMeDMyVvV
-         bX1cq2iaCxw6wXCPeeFtSGBB8sFyJ2DFsNhsKvEvoRDVLyIk52AUtlA9BTR8ZdfzWUMH
-         8hBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjvyd8nsOjkfXpWdVaPOcnZ5eJD8lqI76EE5E4TVGIQWkl1TobpKyDB2+L1371e0yInud4WuFysgphako=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC4VY9EkFl8p+XRuyEph7RuG+6bzyvtJrXtUUQrBxamLQQvcaR
-	/p6i1GzNWOMSWL88fCnh/nvR1UYXZz2ZyZXOJWMjl76cRJDWteTKExRkmaNrfaVqolCPnpFRHBQ
-	PTzFs2hkqQT2IkvHswjytaGTzKy7kSjtC9ziJEg==
-X-Gm-Gg: ASbGncv/UEqbHu1rYTY4s2CUyKZ8spHupQ4SJdhxWFT9UkVm0flOULJeuG+U9FlwPQj
-	6ranR5QSP91EwghaFsNsN61QTar0cbjGu48McdOtS1zt2ziNUOe8RWiU6rjLbnZIof04E7kFcoe
-	wjRjb2bEU9lhf4nCZd6eWIJ5X5JU4ws71UZN7QzbO80A==
-X-Google-Smtp-Source: AGHT+IE7avfocEmD5lqNIyS63JcSTkkwf3BvTJpAGhR9l+oQoFSuLjrFiN2oMnoA2mOmJOAmlfiARgKB+FZMo6LuuCU=
-X-Received: by 2002:a2e:bc1b:0:b0:308:f580:729e with SMTP id
- 38308e7fff4ca-30f0a180dd0mr35506541fa.27.1744027749231; Mon, 07 Apr 2025
- 05:09:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744027789; x=1744632589;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=enARi2Z7JnPTEmDCNXEY7n8qxxK9DglFVB+3z5zSkI0=;
+        b=jIgTEcBmaDXjd2fDDOhAzcbFZAbRqaWfieKxJIh9Ds59pRYW13ZbfPLzlA6NR97v4K
+         qY4unsd1pf0jWtwKnXzNeszq+hneR9e8JafE+tFCO1xdotDzcztthy1G4cNrQRjQVVIn
+         jYzy+41+2bwH3V1ZXmrbeL+anvVargY4LDHmNxL1WS7ChysNnv88MhMaMnWfCW4xJ+nn
+         GqkMX6TsektsKLkR5RmMeW/3EbC3COLVtcz8mmcVNyFJPkXXBvPWa1aHaxWDgBC4btwj
+         2WOf6LOqjcrHchaLAXLGfnnc1kazdIa0HEKgsPrGm2anhMpfrvA/yXMegW7rhXwpzO9l
+         fIQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYfPe47xRXP+xp2srlb+hD9KPkCfUlYPEWO9OSisrpIaJOSKVh1jikT8jjarrrAFMc07EhoJfH3jfp2UE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeLLUs5IpZKiG8yP19XSi/m/+xY4wXEDW7Zw/nkpuHb4lduElF
+	t0s96VYac16MtMoupwjlAHpjqtKBrvtQ1jByc1Lde6glH85vwiGf
+X-Gm-Gg: ASbGncsLs0ahfDe5ldHvs1g0xv3JdHJCvIgrZSOtigHXapjDNs+VrVdcznAi92zXiZD
+	W+yQHi+zQkb9bDXYhIgPYkyjCpR2AOPaBjrFhJ1h+bp05G78/sj8verDkamhfCIcmpZoGTaVPcF
+	Gy2MnKasA1wEW8bdF7O1Qkhq8uIuz8wdYiEzEaJduAI4NHJ9tHjT64PzSUOw2fIOaBYiLGRjA2Y
+	D9cBrFtj+/UA7DPjiX3NEM2GMg7r1adRq6cHxTD3d5Lu1h9dzOgS4xKxzdqNOR3uzk3tIsNSdWr
+	kwABQpjzRG7IgIKTyvbtDjxAFyWKXyIJ+tCzSZ8Vk/z43nT/8mhW5Vo=
+X-Google-Smtp-Source: AGHT+IGn0rEfvulogO9nsHA48Cij7KYVKJkS78aPH6qE6hVJ5Z+++CiiVGjuZNBfsfI6Ibw6sqznyQ==
+X-Received: by 2002:a17:907:6e88:b0:ac6:fe8c:e7bb with SMTP id a640c23a62f3a-ac7d1c66170mr1253923566b.55.1744027788976;
+        Mon, 07 Apr 2025 05:09:48 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9adc6sm740717766b.59.2025.04.07.05.09.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 07 Apr 2025 05:09:48 -0700 (PDT)
+Date: Mon, 7 Apr 2025 12:09:48 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] tools/testing/selftests: assert that anon merge
+ cases behave as expected
+Message-ID: <20250407120948.zb5th45e6ehxpmrm@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
+ <e9e016392b6ceb5c58a868439fd7039e31bfda18.1742245056.git.lorenzo.stoakes@oracle.com>
+ <20250407025455.67nhchndedotn57g@master>
+ <4a8a1163-a7f9-4368-98e1-f79b0411aac4@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1740504232.git.nicolinc@nvidia.com> <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
-In-Reply-To: <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Mon, 7 Apr 2025 20:08:57 +0800
-X-Gm-Features: ATxdqUE-WE2mGG2qPqESoLiVUp7LnTlD7II4G1YhfYdYp1Eq06d5HdYvjf8h2-k
-Message-ID: <CABQgh9Fuh2HdBH7pyAteawZBpa55ZzfR9dv2K4RF=Ps4yhREbw@mail.gmail.com>
-Subject: Re: [PATCH v8 12/14] iommu/arm-smmu-v3: Introduce struct arm_smmu_vmaster
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, 
-	joro@8bytes.org, suravee.suthikulpanit@amd.com, robin.murphy@arm.com, 
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org, 
-	mshavit@google.com, shameerali.kolothum.thodi@huawei.com, smostafa@google.com, 
-	ddutile@redhat.com, yi.l.liu@intel.com, praan@google.com, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a8a1163-a7f9-4368-98e1-f79b0411aac4@lucifer.local>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-Hi, Nico
-
-On Wed, 26 Feb 2025 at 01:35, Nicolin Chen <nicolinc@nvidia.com> wrote:
+On Mon, Apr 07, 2025 at 12:02:00PM +0100, Lorenzo Stoakes wrote:
+>I know you mean well Wei,
 >
-> Use it to store all vSMMU-related data. The vsid (Virtual Stream ID) will
-> be the first use case. Since the vsid reader will be the eventq handler
-> that already holds a streams_mutex, reuse that to fenche the vmaster too.
+>But drive-by extremely pedantic review on minor details isn't really
+>useful. I can't tell you not to do this, but I can at least ask. I don't
+>think this is a great use of either of our time.
 >
-> Also add a pair of arm_smmu_attach_prepare/commit_vmaster helpers to set
-> or unset the master->vmaster point. Put these helpers inside the existing
-> arm_smmu_attach_prepare/commit().
+>Thanks.
 >
-> For identity/blocked ops that don't call arm_smmu_attach_prepare/commit(),
-> add a simpler arm_smmu_master_clear_vmaster helper to unset the vmaster.
+[...]
+>> >+
+>> >+	/* unCOWing everything does not cause the AVC to go away. */
+>>            ^^^
+>>
+>> Before ptr[i] = 'x', we have unCOWed pages in vma. What we are doing here is
+>> COWing, right?
 >
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Pranjal Shrivastavat <praan@google.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
-
+>Nope, it's the other way round, as commented. A 'CoW' page is one marked
+>for copy-on-write right? we now make it just a normal mapping by writing to
+>it.
 >
-> +int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> +                                   struct arm_smmu_nested_domain *nested_domain)
-> +{
-> +       struct arm_smmu_vmaster *vmaster;
-> +       unsigned long vsid;
-> +       int ret;
-> +
-> +       iommu_group_mutex_assert(state->master->dev);
-> +
-> +       /* Skip invalid vSTE */
-> +       if (!(nested_domain->ste[0] & cpu_to_le64(STRTAB_STE_0_V)))
-> +               return 0;
 
-Why this is removed in v9 and 6.15-rc1?
+Oh, I misunderstand the meaning of 'CoW' page. It is the page before copy. I
+thought it is the page after. Sorry for bothering.
 
-I tested 6.15-rc1 the qemu failed to boot with qemu branch:
-for_iommufd_veventq-v8
-"failed to attach the bypass pagetable"
+>>
+>> >+	for (i = 0; i < 5 * page_size; i += page_size)
+>> >+		ptr[i] = 'x';
+>> >+
+>> >+	/*
+>> >+	 * Map in adjacent VMA in child.
+>> >+	 *
+>> >+	 *     forked
+>> >+	 * |-----------|-----------|
+>> >+	 * |  faulted  | unfaulted |
+>> >+	 * |-----------|-----------|
+>> >+	 *      ptr         ptr2
+>> >+	 */
+>> >+	ptr2 = mmap(&ptr[5 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
+>> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
+>> >+	ASSERT_NE(ptr2, MAP_FAILED);
+>> >+
+>> >+	/* Make sure not merged. */
+>> >+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
+>> >+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
+>> >+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
+>> >+}
+>> >+
+>> >+TEST_F(merge, forked_source_vma)
+>> >+{
+>> >+	unsigned int page_size = self->page_size;
+>> >+	char *carveout = self->carveout;
+>> >+	struct procmap_fd *procmap = &self->procmap;
+>> >+	pid_t pid;
+>> >+	char *ptr, *ptr2;
+>> >+	int i;
+>> >+
+>> >+	/*
+>> >+	 * |............|-----------|
+>> >+	 * | <unmapped> | unfaulted |
+>> >+	 * |............|-----------|
+>>
+>> I am not sure "unmapped" is correct here. The range has already been mapped by
+>> FIXTURE_SETUP(merge).
+>
+>This is pointless and actually misleading pedantry.
+>
+>For the purposes of what we are doing here, this is unmapped. Do you truly
+>think mentioning a PROT_NONE mapping here would be useful, meaningful, or
+>add anything but noise?
+>
+>>
+>> >+	 */
+>> >+	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
+>> >+		   MAP_ANON | MAP_PRIVATE | MAP_FIXED | MAP_NORESERVE, -1, 0);
+>> >+	ASSERT_NE(ptr, MAP_FAILED);
+>> >+
+>> >+	/*
+>> >+	 * Fault in process.
+>> >+	 *
+>> >+	 * |............||-----------|
+>> >+	 * | <unmapped> ||  faulted  |
+>> >+	 * |............||-----------|
+>>                          ^
+>>
+>> Extra line here?
+>
+>Eh? I don't understand what you mean... you mean an extra '-'? This is to
+>fit both unfaulted/faulted in the same size SACII 'VMA', a convention I've
+>kept (hopefully) consistently...
+>
 
-After adding this "skip check" back, the qemu works again.
+Sounds the character format is corrupted.
 
-Do we need to add this back?
+The extra line I meant is "||" between unmapped and faulted area. Well it is
+trivial, just forget it.
 
-Thanks
+-- 
+Wei Yang
+Help you, Help me
