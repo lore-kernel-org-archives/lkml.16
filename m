@@ -1,32 +1,32 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA3722CBF7
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4F229B21;
+	Mon,  7 Apr 2025 23:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744067896; cv=none; b=KBBaNgW2Ahe4f4KGGZ/ytbtO0jscuoEfdntVKsCPyHXNnYetrT7w1tEK5oHS8V0LfA22o7GINoDyMDoG6+aPbNFDkMxbxwt8s2ZfVyhDg7iHNEHRC8wEJ3KIQL1OhtbyNH3wfEsZbY6/BvgUVYJthMt8K1jLo1jIO/deYqYGQig=
+	t=1744067898; cv=none; b=BV+3MgTzCednh6RaEyTuOIjWhP9pJtCV3V02mudlNhdqX6BbxGNYgw7/++cK7Tw4yky7QVAJI9YUQ2w3cMuQ5cSGUQGWnRVhZZE2QroNiC+/yQyESIQhbPBHnycJslmc3WeH5Ptq48lfV0VU86rVJuoC95coO966SbNoXUJ+aYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744067896; c=relaxed/simple;
-	bh=AC7RcwPVpV3XOV/lZJo+4IGpi7BDO+mqRwD6yNvd4+c=;
+	s=arc-20240116; t=1744067898; c=relaxed/simple;
+	bh=0a8Tm8F4nw7ll3Te78QmIIlXcu31CarzokCN38n04JU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QJY87YKkHoc2qV0a71d2LRa0pfqUQYRGpFEBcDeCIzsolYStYpO/MEvhiV3Cz2Z/6jGAJmfriiwAd1d3eVLYY9wPH0qBM+d6pyH4Amcw6cp/+w+ScCSdiaIpYG7rqtHNN1fHe/jO8lUDH1zzs8aVaP5ik9SAnjq13KBVJk2NaWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OP8if3s0; arc=none smtp.client-ip=91.218.175.174
+	 MIME-Version; b=nMCpRFnG5+5PX2jY9Kyg6BtLUdj0sCiyZeRrAbooZtsk2aUFlKrQR7ku+mPjagLqTUgK2gYiM/Eicy4bfWdad7ffZW+jjwxY/4TiZMznwFvFWWGFGn3UVjslYUpa2WuM8OaxvOwIQwJnbrNsaqUBfYfN8ch0P6csNFWiYcNISjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a1YRgMzm; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OP8if3s0"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a1YRgMzm"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744067888;
+	t=1744067894;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u6a4Wcye6WJVPgGZBEyX6k0xTnOuI2j7TkoMRNc7qY4=;
-	b=OP8if3s0QgKUQHdD/c1/+nU5o+jwZIkLjg5DDcpxeA5FgS+e+1yysHdSnaUdJ7jTdCwNGm
-	+iIVAHYxh9Wj5P9GhEBByODpB43nCJMs5rgE8Gu8ewfDchMoRkEKIy+jtCFr4t2Rp4hhtw
-	mjPjdX8r9iNuGY+AKHMdSEMCw/OqPJ0=
+	bh=y59pT+OH1+71fA//RkwprkuSIou3iot0H18g9s9hw/o=;
+	b=a1YRgMzm7vXBkFH8KGYWbBuThnwGSiAWzlFdSxJQnNMbDaoJV7kCbV7fhUis6sSvhQeyZg
+	YE9O2wkkH8PPaawRQGoZ4M8aLmcwR0WQGkp9sdEjmokVXsINGqgZDwqKIk8cDn7bfdpMR3
+	k2SJb/mqdxAJvoLMpJACiq6psJS1qeQ=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: netdev@vger.kernel.org,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -40,10 +40,14 @@ Cc: linux-kernel@vger.kernel.org,
 	Christian Marangi <ansuelsmth@gmail.com>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
 	Kory Maincent <kory.maincent@bootlin.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [net-next PATCH v2 05/14] net: phylink: Support setting PCS link change callbacks
-Date: Mon,  7 Apr 2025 19:17:36 -0400
-Message-Id: <20250407231746.2316518-6-sean.anderson@linux.dev>
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	UNGLinuxDriver@microchip.com
+Subject: [net-next PATCH v2 07/14] net: dsa: ocelot: suppress PHY device scanning on the internal MDIO bus
+Date: Mon,  7 Apr 2025 19:17:38 -0400
+Message-Id: <20250407231746.2316518-8-sean.anderson@linux.dev>
 In-Reply-To: <20250407231746.2316518-1-sean.anderson@linux.dev>
 References: <20250407231746.2316518-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -55,130 +59,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Support changing the link change callback, similar to how PHYs do it.
-This will allow the PCS wrapper to forward link changes to the wrapped
-PCS.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
+This bus contains Lynx PCS devices, and if the lynx-pcs driver ever
+decided to call mdio_device_register(), it would fail due to
+mdiobus_scan() having created a dummy phydev for the same address
+(the PCS responds to standard clause 22 PHY ID registers and can
+therefore by autodetected by phylib which thinks it's a PHY).
+
+On the Seville driver, things are a bit more complicated, since bus
+creation is handled by mscc_miim_setup() and that is shared with the
+dedicated mscc-miim driver. Suppress PHY scanning only for the Seville
+internal MDIO bus rather than for the whole mscc-miim driver, since we
+know that on NXP T1040, this bus only contains Lynx PCS devices.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
 (no changes since v1)
 
- drivers/net/phy/phylink.c | 24 +++++++-----------------
- include/linux/phylink.h   | 27 ++++++++++++++++++++++-----
- 2 files changed, 29 insertions(+), 22 deletions(-)
+ drivers/net/dsa/ocelot/felix_vsc9959.c   | 4 ++++
+ drivers/net/dsa/ocelot/seville_vsc9953.c | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 69ca765485db..76ce96315c0c 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -1205,6 +1205,8 @@ static void phylink_pcs_neg_mode(struct phylink *pl, struct phylink_pcs *pcs,
- 	pl->act_link_an_mode = mode;
- }
- 
-+static void pcs_change_callback(void *priv, bool up);
-+
- static void phylink_major_config(struct phylink *pl, bool restart,
- 				  const struct phylink_link_state *state)
- {
-@@ -1260,10 +1262,10 @@ static void phylink_major_config(struct phylink *pl, bool restart,
- 		phylink_pcs_disable(pl->pcs);
- 
- 		if (pl->pcs)
--			pl->pcs->phylink = NULL;
--
--		pcs->phylink = pl;
-+			pl->pcs->link_change_priv = NULL;
- 
-+		pcs->link_change = pcs_change_callback;
-+		pcs->link_change_priv = pl;
- 		pl->pcs = pcs;
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index 940f1b71226d..2de12611ab57 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -1001,6 +1001,10 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
+ 	bus->read_c45 = enetc_mdio_read_c45;
+ 	bus->write_c45 = enetc_mdio_write_c45;
+ 	bus->parent = dev;
++	/* Suppress PHY device creation in mdiobus_scan(),
++	 * we have Lynx PCSs
++	 */
++	bus->phy_mask = ~0;
+ 	mdio_priv = bus->priv;
+ 	mdio_priv->hw = hw;
+ 	/* This gets added to imdio_regs, which already maps addresses
+diff --git a/drivers/net/dsa/ocelot/seville_vsc9953.c b/drivers/net/dsa/ocelot/seville_vsc9953.c
+index eb3944ba2a72..28bcdef34a6c 100644
+--- a/drivers/net/dsa/ocelot/seville_vsc9953.c
++++ b/drivers/net/dsa/ocelot/seville_vsc9953.c
+@@ -901,6 +901,11 @@ static int vsc9953_mdio_bus_alloc(struct ocelot *ocelot)
+ 		return rc;
  	}
  
-@@ -2333,25 +2335,13 @@ void phylink_mac_change(struct phylink *pl, bool up)
- }
- EXPORT_SYMBOL_GPL(phylink_mac_change);
- 
--/**
-- * phylink_pcs_change() - notify phylink of a change to PCS link state
-- * @pcs: pointer to &struct phylink_pcs
-- * @up: indicates whether the link is currently up.
-- *
-- * The PCS driver should call this when the state of its link changes
-- * (e.g. link failure, new negotiation results, etc.) Note: it should
-- * not determine "up" by reading the BMSR. If in doubt about the link
-- * state at interrupt time, then pass true if pcs_get_state() returns
-- * the latched link-down state, otherwise pass false.
-- */
--void phylink_pcs_change(struct phylink_pcs *pcs, bool up)
-+static void pcs_change_callback(void *priv, bool up)
- {
--	struct phylink *pl = pcs->phylink;
-+	struct phylink *pl = priv;
- 
- 	if (pl)
- 		phylink_link_changed(pl, up, "pcs");
- }
--EXPORT_SYMBOL_GPL(phylink_pcs_change);
- 
- static irqreturn_t phylink_link_handler(int irq, void *data)
- {
-diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-index 1f5773ab5660..a16282ae746d 100644
---- a/include/linux/phylink.h
-+++ b/include/linux/phylink.h
-@@ -441,7 +441,8 @@ struct phylink_pcs_ops;
-  * @supported_interfaces: describing which PHY_INTERFACE_MODE_xxx
-  *                        are supported by this PCS.
-  * @ops: a pointer to the &struct phylink_pcs_ops structure
-- * @phylink: pointer to &struct phylink_config
-+ * @link_change: callback for when the link changes
-+ * @link_change_priv: first argument to @link_change
-  * @poll: poll the PCS for link changes
-  * @rxc_always_on: The MAC driver requires the reference clock
-  *                 to always be on. Standalone PCS drivers which
-@@ -451,13 +452,14 @@ struct phylink_pcs_ops;
-  * This structure is designed to be embedded within the PCS private data,
-  * and will be passed between phylink and the PCS.
-  *
-- * The @phylink member is private to phylink and must not be touched by
-- * the PCS driver.
-+ * @link_change, @link_change_priv, and @rxc_always_on will be filled in by
-+ * phylink.
-  */
- struct phylink_pcs {
- 	DECLARE_PHY_INTERFACE_MASK(supported_interfaces);
- 	const struct phylink_pcs_ops *ops;
--	struct phylink *phylink;
-+	void (*link_change)(void *priv, bool up);
-+	void *link_change_priv;
- 	bool poll;
- 	bool rxc_always_on;
- };
-@@ -699,7 +701,22 @@ int phylink_set_fixed_link(struct phylink *,
- 			   const struct phylink_link_state *);
- 
- void phylink_mac_change(struct phylink *, bool up);
--void phylink_pcs_change(struct phylink_pcs *, bool up);
-+/**
-+ * phylink_pcs_change() - notify phylink of a change to PCS link state
-+ * @pcs: pointer to &struct phylink_pcs
-+ * @up: indicates whether the link is currently up.
-+ *
-+ * The PCS driver should call this when the state of its link changes
-+ * (e.g. link failure, new negotiation results, etc.) Note: it should
-+ * not determine "up" by reading the BMSR. If in doubt about the link
-+ * state at interrupt time, then pass true if pcs_get_state() returns
-+ * the latched link-down state, otherwise pass false.
-+ */
-+static inline void phylink_pcs_change(struct phylink_pcs *pcs, bool up)
-+{
-+	if (pcs->link_change)
-+		pcs->link_change(pcs->link_change_priv, up);
-+}
- 
- int phylink_pcs_pre_init(struct phylink *pl, struct phylink_pcs *pcs);
- 
++	/* Suppress PHY device creation in mdiobus_scan(),
++	 * we have Lynx PCSs
++	 */
++	bus->phy_mask = ~0;
++
+ 	/* Needed in order to initialize the bus mutex lock */
+ 	rc = devm_of_mdiobus_register(dev, bus, NULL);
+ 	if (rc < 0) {
 -- 
 2.35.1.1320.gc452695387.dirty
 
