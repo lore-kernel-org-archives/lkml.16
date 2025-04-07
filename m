@@ -1,109 +1,98 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3811F4199;
-	Mon,  7 Apr 2025 22:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936CD199235;
+	Mon,  7 Apr 2025 22:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744064596; cv=none; b=BawAuNRRMUGPgCHLslgi2G6g/Cm+ixUTv712KR+RnMbasSmzxnFX5v8OlFHhIcZR3lIR7ngeeNeMtidWRsYl76lk/I59uC4cVeOwztgZsXuThb9NRh7lnnVruDMT6uOdOZfYKJ4fNDWtnhIiuh2f1w4+YajniM2TuoPLUDdIrr8=
+	t=1744064831; cv=none; b=RvhlxDFAKkitRd6I8y+u95YEarLZUmj7+J6iQ7BFcNbpwsbhCznxMyKbZwA3YJEo2sxkDhMZBCnEnSMLqCKnrdyZUwVfP0+TuN3FrhJ9N9yX5b9Za3e9xP4KgTJlfQKPJ+4VkTKKS2Mc6fduhOuI2MR3NTsuFgT5r0+Cws0Fn8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744064596; c=relaxed/simple;
-	bh=vOHCcuStpqZxUTDTbE+guySnY7gWbbaPhAY3mPxLucE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbV0tw4dIY+Hyjp4/7RLc/jbPzfPHGur44PrC/FVPJqSvMdVUFWinXpf7iHmfEYlifM4Rt4ynRjQAaS18CGqGR1fq4ZKTSNbhKAzbNjoN1vZ8BrFMRwWnw7P5BiGwyiQL8SIy48Mrpiwenmuvvm+uw0MFhRdLHmZpfBavwyYN6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iO4IcSr1; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744064831; c=relaxed/simple;
+	bh=8vxtgFjplcFUtJXG4ul9cSfWBPurAuH67A1b9tZXa4M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZqTzaZRBsnuvfhFMpkcyZz6HouifMVOrzQo/4O9n114NBO4d8nN/wq4JKo2qUWJK/7pw9j0PjJ4NOB1JF90gau2qGN7zmMCrhj8pqUO1k+k180UvlqDq/GSJmpBOClJB+LHRkjLt1gzG3Z3Tdl2XOvqISVWKtVVyPHeJ5u/ZunQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u47PHR5t; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iO4IcSr1"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54af20849bbso2337059e87.0;
-        Mon, 07 Apr 2025 15:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744064593; x=1744669393; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1F7HhWO1LnOhK6MSocO4DGoRqA9u+WS41dhl1g2yR/k=;
-        b=iO4IcSr1lyJdq0S1nuVPXRwMA1EKJPqzLPKODdV31MrZCZnT+UiHvpmhCyCx3VVqIL
-         e0+mzS+l0k/udF4T2kEYCgzS96RygGTkt0PSAclg7kisIVpZntFNcS35B3KcEG3QqAO9
-         N/0S1sqRy34lA1sge/y0yskov+jL3v1NuDWIdK6AtNZtxEFH/h/lNYEsWfGPAWxGGYU3
-         TI6aLiZzyEqYfD2peqA8CI473c63wlOMh6r3L6wpkgZiwscWo1uV5I/QSOU35c+jTeqb
-         lWir9WweAnEU4xU5NZSg05Uw3J3u5U/ssNwqOpS9x7v0tDr8EirZBRcSa+dQFQyy/uCL
-         G7kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744064593; x=1744669393;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1F7HhWO1LnOhK6MSocO4DGoRqA9u+WS41dhl1g2yR/k=;
-        b=VZAxVRqHIdKT4H859sSocmiEnd63eEcXcbQlMNrqGo/rUzQz6c4UbC3lP3g5uCvjsH
-         HBet71xQwpwk7QxMT5r9YHAaHb9jLefrg+amV9uIsQF43ozXjyY4XkC0/ZQPIByS0C+R
-         aH0YdwiJp0qWbGIEyioPZPetwRZCz85o5BKL9gH3MGB6ra0+zeF80/qBQx9WvEz15ymH
-         B7q2EY+7i1bxqYYlFCwQjr+IUwFxX1ZmDgNBbieiAt8b98mDM1rdGUzTK/rV0Tps+n4G
-         MaaYssOsVtrKF9GCBEwYhe0h4Fux3leP9grTV8RVCfCDQ00U3SJn6vPI42joiEX19MV8
-         7DfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOGrWi02TnRybEoAoG3J9omHlTuXH0CRjX3vRsnvjkpLJGDpTYzwPQ6WuYQsQVwbyCS/udTeUc@vger.kernel.org, AJvYcCVAOg+uwlWAyfwTA9VfoACSj3POeGNqf38ddtqS9Z0wL13GYkAZFGBJtc8mQu0ytQUyZfKW3qYTu/EdYRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk1/XN7oQ8z2NhlloFEAb4CWEhqE367KG0Ggvy1uInhuwuVVqR
-	dYv40S9GyuibjccNfMutjEpFFZ4bPZ0PdJMWlqJnlOJQP991laJf
-X-Gm-Gg: ASbGncuxgSeGSXn2M+SyLYSsTzmYurTE1AlpHZ6Lj4S4u+aUCSflqaFdAZSfkUhmdUv
-	WrplyKvN80xtFf1siCIrtc3dh5QtIlUOpnqe1UAz/W8/8LShmZNisDcma8jxU4WNmSuGSPMMKJg
-	sOtQIcnPDBPY/hB+YF8VZLUfBzBT4AzoFWgYwvmZLrxFvAkB85hKVjN8aPn3qWwNdTUsGhcrYlu
-	Ufr9SHPs9Ggjxot5Gol8RbRcE/sIVUKIykNMyOT3ilpZck/VwrFNg9DOB+aNSy9lbvwrrRKf0lk
-	It1QzOjRl0+GzHLapnnH6j6wTJxR3MqNtoMv6B03JzeZyYvBIGoHdAUFp68=
-X-Google-Smtp-Source: AGHT+IGBsMos3hJsyJXySb8JRnfqGLGz1miXDBT/4t4UOyjZMKfYxKN+E9YRH/z/S/Lnnjv7wz+0Kw==
-X-Received: by 2002:a05:6512:68a:b0:545:9ce:7608 with SMTP id 2adb3069b0e04-54c22808a42mr3848934e87.50.1744064592721;
-        Mon, 07 Apr 2025 15:23:12 -0700 (PDT)
-Received: from home.paul.comp (paulfertser.info. [2001:470:26:54b:226:9eff:fe70:80c2])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c1896sm1377554e87.56.2025.04.07.15.23.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 15:23:12 -0700 (PDT)
-Received: from home.paul.comp (home.paul.comp [IPv6:0:0:0:0:0:0:0:1])
-	by home.paul.comp (8.15.2/8.15.2/Debian-22+deb11u3) with ESMTP id 537MN7dY011627;
-	Tue, 8 Apr 2025 01:23:09 +0300
-Received: (from paul@localhost)
-	by home.paul.comp (8.15.2/8.15.2/Submit) id 537MN6sR011626;
-	Tue, 8 Apr 2025 01:23:06 +0300
-Date: Tue, 8 Apr 2025 01:23:05 +0300
-From: Paul Fertser <fercerpav@gmail.com>
-To: kalavakunta.hari.prasad@gmail.com
-Cc: sam@mendozajonas.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        npeacock@meta.com, akozlov@meta.com
-Subject: Re: [PATCH net-next 2/2] net: ncsi: Fix GCPS 64-bit member variables
-Message-ID: <Z/RQSfwH1CLcDEuT@home.paul.comp>
-References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
- <1ee392cf6a639b47cf9aa648fbc1c11393e19748.1744048182.git.kalavakunta.hari.prasad@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u47PHR5t"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537MR2VQ984370
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 17:27:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744064822;
+	bh=KfEZzRTeWtUnuAOOZ4Yf4u0OaURswnKGRy0cKmTlhis=;
+	h=From:To:CC:Subject:Date;
+	b=u47PHR5t6xs6YKroYzq7GybGuo5Pdkl2rdR4t+vkmLiWYqMTD4Luo/4W6SJGNfwt5
+	 58HA5Mlitt/BnsWC4muK6fE4914l6eYoZ4yYDImiPLU3h+INzEArxk+xqjNj7gWAWr
+	 LMNHJxlxG8JgrV8aZXiWBMxA45Uf6t93Esavtb0s=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537MR2rU026270
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 17:27:02 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 17:27:02 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 17:27:02 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537MR228073249;
+	Mon, 7 Apr 2025 17:27:02 -0500
+From: Judith Mendez <jm@ti.com>
+To: Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Josua Mayer
+	<josua@solid-run.com>, Moteen Shah <m-shah@ti.com>
+Subject: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
+Date: Mon, 7 Apr 2025 17:27:00 -0500
+Message-ID: <20250407222702.2199047-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ee392cf6a639b47cf9aa648fbc1c11393e19748.1744048182.git.kalavakunta.hari.prasad@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello Hari,
+For all TI devices, timing was closed For Legacy and HS modes in
+half cycle timing, where data is launched on the negative edge of
+clock and latched on the following positive edge of clock. The
+switch to full cycle timing happens when any of HIGH_SPEED_ENA,
+V1P8_SIGNAL_ENA, or UHS_MODE_SELECT is set.
 
-Thank you for the patch.
+Currently HIGH_SPEED_ENA is set for HS modes and violates timing
+requirements for TI devices so add a .set_hs_ena callback in
+sdhci_am654 driver so that HIGH_SPEED_ENA is not set for this mode.
 
-On Mon, Apr 07, 2025 at 11:19:49AM -0700, kalavakunta.hari.prasad@gmail.com wrote:
-> @@ -290,7 +298,8 @@ struct ncsi_rsp_gcps_pkt {
->  	__be32                  tx_1023_frames;    /* Tx 512-1023 bytes frames   */
->  	__be32                  tx_1522_frames;    /* Tx 1024-1522 bytes frames  */
->  	__be32                  tx_9022_frames;    /* Tx 1523-9022 bytes frames  */
-> -	__be32                  rx_valid_bytes;    /* Rx valid bytes             */
-> +	__be32                  rx_valid_bytes_hi; /* Rx valid bytes             */
-> +	__be32                  rx_valid_bytes_lo; /* Rx valid bytes             */
+There are eMMC boot failures seen with V1P8_SIGNAL_ENA with a
+specific Kingston eMMC due to the sequencing when enumerating to
+HS200 mode. Since V1P8_SIGNAL_ENA is optional for eMMC, do not
+set V1P8_SIGNAL_ENA be default. This fix was previously merged in
+the kernel, but was reverted due to the "heuristics for enabling
+the quirk"[0]. The new implementation applies the quirk based-off of
+bus width, which should not be an issue since there is no internal
+LDO for MMC0 8bit wide interface and hence V1P8_SIGNAL_ENA should only
+effect timing for MMC0 interface.
 
-Why not __be64 then?
+[0] https://lore.kernel.org/linux-mmc/20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com/
 
->  	__be32                  rx_runt_pkts;      /* Rx error runt packets      */
->  	__be32                  rx_jabber_pkts;    /* Rx error jabber packets    */
->  	__be32                  checksum;          /* Checksum                   */
+Judith Mendez (2):
+  PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
+  mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch
 
-I wonder how come this problem you're fixing wasn't spotted earlier,
-as your patch is changing the checksum offset within the struct it
-means the checksum isn't properly checked at all and neither is the
-kernel checking that the size of the returned packet matches the size
-of the struct?
+ drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h       |  2 ++
+ drivers/mmc/host/sdhci_am654.c | 48 +++++++++++++++++++++++++++++
+ 3 files changed, 85 insertions(+), 20 deletions(-)
+
+-- 
+2.49.0
+
