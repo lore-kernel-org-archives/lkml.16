@@ -1,87 +1,91 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48661401B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 01:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408D13FC3;
+	Mon,  7 Apr 2025 01:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743989180; cv=none; b=COf0qOC6ySl2moJTjhPOWBdT+CVH9Bgr6CHY6s2dBV474Rk5qNdHN+B4A77Y3gMBM0Rxve5gYSovVhuCkVrJ1Dah+9MiXJxmdMZ14Fzv9XCEPIjc777zLE/FQdx4dzIQ4lnZZGujGjuEhEDgrfHCUvsbta6Ngpi24JvgF0Ucys0=
+	t=1743989303; cv=none; b=j6bllwfyp5aE7DzpUTDGQ+rd5HgY7cm/u/AnUHaWkq2UmGVUrPULrdsH2RQH1sDPLUsWi+M7+yQQbEuYnk0d1YWUIz0AD8uxG3f6wS+npD5KUIYFgTAzcsZrHCOMznvqDkanl7M4RNwITlBAc6Og0PAG17b8yvyOC6F5lZ/4SRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743989180; c=relaxed/simple;
-	bh=jnGBOiv+RYhuCQ1nIvJ3OOpkXrAHlA2ONpbAI3RjY1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K9401c7iQ0ZEyaowR5TE8V4gqj3RfNo8wrRrwDzDZ8yf0sav9YoG6t9fxH0Gm7GczoyC6DlqF8zQc77qHmN0nUbuGlxzAkToCcHsp8iXbrMt8FIX5pycm/aQfdAxgU/qKFU/yMIoqgP05pFQullC2FlvXifb2updZ0S31bcm1wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GLkmjS65; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GLkmjS65"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743989156; bh=/OIJU9QPMxtFCYIcP7p8yixB8viOTUvvg7p+Re86knI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=GLkmjS65z0djvW9BAKR8pe+FH/J8WKxAesTYsn1P+niqH+XDknnCz8lrr3a85h2tk
-	 hQw9nCZmmYIenay/j0EC/b1QQper7xJ0bqelngioLa3RGCEcjlbLsfrj59s2174+zR
-	 LvWVv5heCUrzWvozX2AxUvCdU4TynLeMFmox1GdQ=
-Received: from [10.42.13.21] ([116.128.244.169])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 675B6ADF; Mon, 07 Apr 2025 09:25:53 +0800
-X-QQ-mid: xmsmtpt1743989153tyv7wq22r
-Message-ID: <tencent_6A42A1EE91831C3D5B94CECC5F8B12C3B107@qq.com>
-X-QQ-XMAILINFO: NySneyYf/AjRBuw7u62X6Bzn4S6kIUfuTENl0LNV/au7n1wtpWG8htnPxbPS5n
-	 wNd3KZZpjBZ+A6rYKfcH2bVsYgdfdGk6Fyf6p/8V1KNLEU74KbSF7l5MM1VmG9MDif1P4v6nkBqr
-	 kTI4qwk5+hoqANiQ9Qf+pi7OiB2M78kZ3VW7fU4i4IVM5Wi7E3Rsh1BVYhsavZ0GGE7Us5iKsuDz
-	 DqRA0As94KaeXyFPDQLMILY8C3rkg5Q9nIINpfydu+56kcPfWAsOC1rEvg20cAv9JP+BYJ3FWONb
-	 DsUaAwN6oAJLC57heindqnTTLk2/1ro7XEQnxKPEir68ZR06yVV/YPpMYBxWWr317eRn5nxNX60q
-	 d8C2EyweuqlfUF60Q50OzB/Ykm+SrMZ1RkLgifwViv7yx3EucM5KEhmUTvrNWk/ME+pGVRIPgt8B
-	 iyeNOrX/tJmBcUvtn+R1WOSrvlFBBVQm8z9j5DObPEeLNArk9fs0xt98PyE0VzB2s7sJyhbjV0Uk
-	 uAYvsq29XOq625JN1A27ExrbsU+sot3Pnad5q9s5pSE1sdz9Wxq4eBDnw54DtXApzOmgcEO2CHWj
-	 uEtx00/zMHu+dt8tWTHjdaXmCbh3ctKRZ+gXA2BOD4FDXFkBn48CaMGyOvTX+dcSLyoDu9u/dpeC
-	 KP92/KUfu2s1Bu5HcSH8gCFMrFrPT26ZQ7wYCpXBTm4jTZsm1ORoV9AT+6uJJJSwr4Pd/WXtcmoX
-	 JdyC9xHuwyLCCJuPjiKcq1MpGsv+yA1MzfXkaG+8ldBRHdfY0yPeqMO3isG3GGGninLcZxddCzv2
-	 e1lehheUJVGcOoHQF4WjN/LAqmiZdxHMtyUxFgjBPIhsFEvawLPahhvevTcf3GMfqIMV9UbFh0iv
-	 VCXeX63ze92vwPeesrOU9goZIwjvGXKZS2sw2tq6fvbRZlrHdEEv1L7siV+EKoAPcztkHqkiIPWr
-	 TnbP1sJC0=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-OQ-MSGID: <5f596d63-b11e-4728-a782-4551a0eead04@qq.com>
-Date: Mon, 7 Apr 2025 09:25:53 +0800
+	s=arc-20240116; t=1743989303; c=relaxed/simple;
+	bh=8CfLDbKuh5+ZoxMWcl20u+RCFvy8oYza47qfogj25xU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HXhDovx22j+Bv9NgFWwjhzIo5YEAZ9kK4KJWt6/cRUQkkotS1UYTuNzEZyrlhrM49qhMvPhzcpBHjuR8hALtHVaIoVw+ttKf/3Wg1WlokGYlNPPMk5tzdrpKMGv+QgSST+k9muNAy/q5N8NSMqQI8v0CJyprjBibVCNAxrq4gls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWB1k68HHz4f3jtP;
+	Mon,  7 Apr 2025 09:09:14 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id C3E031A058E;
+	Mon,  7 Apr 2025 09:09:32 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgA3m1_IJfNnypPxIg--.52167S3;
+	Mon, 07 Apr 2025 09:09:30 +0800 (CST)
+Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, axboe@kernel.dk, agk@redhat.com,
+ snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+ <20250404092739.GA14046@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <1b4e3ddc-be1b-8266-13c1-5654c4c79e9b@huaweicloud.com>
+Date: Mon, 7 Apr 2025 09:09:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] nvme: Add sysfs interface for APST configuration
- management
-To: Christoph Hellwig <hch@lst.de>
-Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me,
- chaitanyak@nvidia.com, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
- alexey.bogoslavsky@wdc.com
-References: <tencent_4612952C8C5109058CD8E688D81276A2FD0A@qq.com>
- <20250403042504.GB22360@lst.de>
- <tencent_D00C9DD2BF00258063B042172328396DB608@qq.com>
- <20250404082950.GA8928@lst.de>
-Content-Language: en-US
-From: Yaxiong Tian <iambestgod@qq.com>
-In-Reply-To: <20250404082950.GA8928@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250404092739.GA14046@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgA3m1_IJfNnypPxIg--.52167S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw45tr13AFykKFy7tw47urg_yoWxKrcEkF
+	43WryrGwn7A342gan7Kr1fZrs5K34UJF93trZ2qFy3Ww1fAF1fAa9akr95A3ZxJ3Z3trZr
+	KF1DJrWDXr129jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmsjUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-
-åœ¨ 2025/4/4 16:29, Christoph Hellwig å†™é“:
-> On Thu, Apr 03, 2025 at 03:05:37PM +0800, Yaxiong Tian wrote:
->> These two patches don't fundamentally change the APST configuration policy,
->> but rather enable users to configure various APST parameters in real-time
->> across different devices. As mentioned in commit <ebd8a93aa4f5> ("nvme:
->> extend and modify the APST configuration algorithm"):
+ÔÚ 2025/04/04 17:27, Christoph Hellwig Ð´µÀ:
+> On Fri, Mar 28, 2025 at 02:08:39PM +0800, Yu Kuai wrote:
+>> 1) user must apply the following mdadm patch, and then llbitmap can be
+>> enabled by --bitmap=lockless
+>> https://lore.kernel.org/all/20250327134853.1069356-1-yukuai1@huaweicloud.com/
+>> 2) this set is cooked on the top of my other set:
+>> https://lore.kernel.org/all/20250219083456.941760-1-yukuai1@huaweicloud.com/
 > 
-> And who are those users?  What tools do they use.  What settings do they
-> set and why?
-The three issues you mentioned were actually partially addressed in the 
-previous email, or at least touched upon.
+> I tried to create a tree to review the entire thing but failed.  Can you
+> please also provide a working git branch?
 
-In any case, I agree with applying a universal setting for APST, as I 
-donâ€™t have a good tool to handle this either Now.
+Of course, here is the branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/yukuai/linux.git/log/?h=md-6.15
+
+Thanks,
+Kuai
+
+> 
+> .
+> 
 
