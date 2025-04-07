@@ -1,433 +1,135 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD6022ACDF;
-	Mon,  7 Apr 2025 07:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1BA225405
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011789; cv=none; b=qeZoYi0H1GCf7OSQWauO2LB+OiVd3ErpXFFkMbOHMu3k6n72z2p9l27hngWHGcue2gP7VyBwWfQIXSywfVfQvI8o9taUzXVqHCdASOXsYX0Z5Z4OFqqkG/xwHFCMkq0+Ja0AU5K9aGoBvvXQqNPyd40sk9j9aXzYP0Kkxo8xgo0=
+	t=1744011904; cv=none; b=QrXbcM5EKXBcwB3E+1NrKmAmBN7YXQAQSVpqcghi74kmg7iuB6/wI7tL5ZdWUf6Hd/bXfGdQNP/VsqNNnfkkXPkQb03Jew6Q792og2a119UJJ8sCVbbJS/fOvM2v3OyP0MmOCPyZC4WwF8dh0kSbBmDN8GnJZHOA+NuDSiFp9KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011789; c=relaxed/simple;
-	bh=impmw6XhEHSK2ZIiESJDD5YiZnq9TuyKeYBkg9+8Xag=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dZJzMyLm9ni+oL5mxlTZy1Bp2LRYYQxQVLHyF7qlohJwLHd+zlDjLPh9oqvAZ8wq3HvAWvZYmzLRu3MIUv1XBM/DXl6u6W6o8wCm2t1U0PZZU1lVjtXMGNPTeegKm8IRnZtCpUI5ho5DJydxvNOKhPqRYpo2dxQuxQHwMhl6wns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CFm9w9Ew; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yKWOM8bO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744011904; c=relaxed/simple;
+	bh=tYR5OsW0DxS03ZNpNqNCjjugrDqa6bpqk8h3hPCTJIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9ey9wRO6lYoCPGZbEdU3jMljrQQu17KpRN6ifXWHnVV7XZfJt+G1WAisalcU5LjtQYY5Omane8gwHmHEI0kCNEWY+bSm8Zdi67/X6jHg5SLQXJWx1my0seOh80M9YPPJWcraGtln2srijPDELyFtEkPV/n/L5NxJdwePqS4VBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sTc4AU+h; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CFm9w9Ew";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yKWOM8bO"
-Date: Mon, 07 Apr 2025 07:43:04 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744011785;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zWE0gN9QF3X2J/XpjGDimxjvoftRmDNGW0YXzWoY/vg=;
-	b=CFm9w9Ew19Zg3E+xDgkmd3GlGk3UTJ2ckWDJdqUkHfzzi9v/T+olMjM72e1lDwSDp+9+l/
-	b3xytTc1js0pXS9SoEW4q70ccKDpstrg818Drbw73v5btVczW8JW7GAqDqRaeHliiy77vY
-	Q78art+nhJ+NpqO6kxwoBoXHF0pYvA0EZi5LMMTQFKKzNtR6D6ea9BGkK8KFjfamZf7YVE
-	wDVPlFZukiZiGEYgaFP6oB3RxCCgnurXvvMI3Is9VVM155GJcByJE6mb8/ab9WEofptLIG
-	YgqS5fZnjviwubP0x2I5AaEigCSzKBcopAK+T2PTFAjPa1/7dCMzy4Nz4MgfFA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744011785;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zWE0gN9QF3X2J/XpjGDimxjvoftRmDNGW0YXzWoY/vg=;
-	b=yKWOM8bOtPrZOd4M3Sa/mvD1EE0I0dl8tfnhUKsVTwf/4C5qYO+iiilKlN7uq1MlR8n0ki
-	AbZZbZ04e/ZnNNCQ==
-From: "tip-bot2 for Caleb James DeLisle" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/drivers] irqchip: Add EcoNet EN751221 INTC
-Cc: Caleb James DeLisle <cjd@cjdns.fr>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250330170306.2584136-4-cjd@cjdns.fr>
-References: <20250330170306.2584136-4-cjd@cjdns.fr>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sTc4AU+h"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736b350a22cso3335515b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744011902; x=1744616702; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=o3NHeKTvtrNLVJ7Xwv0eZCsKPdpzCtXi2/NrHXy46hY=;
+        b=sTc4AU+hZgcD+aAfUKUeLA7YouGKnKNn0xAik35BhSnhQEm2lNWH8hi4dfdsk/Kmj3
+         NBMLjgP8+aNVHD2G5sirHPWvSZf2GpjGD03kTXlZ+kZ16ak5MO2z/YILGmQtjtzjdBTo
+         kuMRragN8elKXy0q0+Y5B9hUi87VS1im4+WLTgd9DyAEFbD9jmxMFK2mskEE17UbVMvg
+         EwBsfpYSzHQ18GxMGJl+4okie9jRNYB27t2EMFvcfo2ac60zKxUP2TNBEjg6uL3BKvVk
+         rWonGEiUYWbPuUOXhAZQHQwVudCT4Y2D21b7A/MGWEPw675Jtk+YxmiW6r4Ne0LJ1LdZ
+         twRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744011902; x=1744616702;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o3NHeKTvtrNLVJ7Xwv0eZCsKPdpzCtXi2/NrHXy46hY=;
+        b=h44ZZ/LgaK8ZTzWpiPuoRXtcP19zgo1vOLit2sOEYRVIlGPr3TMyUPR//FSOYrNzep
+         AeKgnN+90NwiZHwE12rmjukamr/isQQC0wuTvGd1B+uPVk3v+nD6jtFsonh8AZ4ZcuEa
+         XcT7qEAs3ryAYPFmNNj51M5IVb5nDsRNNAyNyU5ltrrT4njB4BXh+uM9vstKLVLptVXC
+         CbJWgy7oGJ74pDm/L5LyVKVPhE4ccwjiwqHbViASInt6WZANU+t78+8/nMPYnIJSXOx8
+         Pn+dlFMC4ORnAcAjC1zweH7AOkONIuAu+yANW68gZH1dzR4AjVQQwZZnKIZ1wibGxjOf
+         3hPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJHtsmes3qxspe+f9mpxk7talW8iH4sTT02wpesGuGx4iGrNCcWCrRQ8lSsWxFyy0Xv1aVeVgfyRGsu5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf9Io74yfJxSPy801r4LyzYeXU26/55zhfRuK5RoJ3p3siQgWw
+	tIMxE+RpbQaFpbQ3Oe8oaPqprMihlv7eIgCpQZkxjfIci0SN2FAGmeF63gbY8A==
+X-Gm-Gg: ASbGncsXMT5HVJDFNvpVbX2Yrn16X5R5UPb+vQvvIFZeoeuBh2P+aySX/FBbCOk0YaJ
+	mr3t0kRzPlsa8TOoBSCyCT2T+N+bADa4gvanzgoXlFsflN0qDSyPeAX2CU3ku7XvaqC7iD9QNOW
+	9a4Vso4biVe5tFVx3USJTeqfXoZFvjujc6eWXH9I1cr23QZYcF7acmRkTBzP4Rl47nGrmxQ2WGg
+	5DwfbajqiMkrXDKEl0R5k75GrKB2ASnJ3sofnfCucF5TTeLSC34Z7ntey5ihWZzRs4iS6TTAAfV
+	vWJGWPWen2sz8BDqmu8e6zAPWpq8bel/nYP0kXLFN/a66AkNR5r2Zu8=
+X-Google-Smtp-Source: AGHT+IENobJ4uhI9CmAsS3iKtExZlmVr/Dw2mLVdyX06yvJmgGIWTlO27UTxouzUZOs/bVIxrsfjdQ==
+X-Received: by 2002:a05:6a21:999e:b0:1f5:77bd:ecbc with SMTP id adf61e73a8af0-201045a726dmr17705262637.16.1744011901653;
+        Mon, 07 Apr 2025 00:45:01 -0700 (PDT)
+Received: from thinkpad ([36.255.17.160])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc41ad0csm6707969a12.66.2025.04.07.00.44.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:45:01 -0700 (PDT)
+Date: Mon, 7 Apr 2025 13:14:56 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
+Message-ID: <lhtklncbcyphq2ljxn6w5p7wk4rdj5wxzskmlly4mrr664b2lj@w5clch5uzvd3>
+References: <20250324-pcie-ptm-v2-1-c7d8c3644b4a@linaro.org>
+ <20250324162854.GA1251469@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174401178408.31282.7860647273143030971.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250324162854.GA1251469@bhelgaas>
 
-The following commit has been merged into the irq/drivers branch of tip:
+On Mon, Mar 24, 2025 at 11:28:54AM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 24, 2025 at 03:34:35PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
+> > sec 6.22 allows precise coordination of timing information across multiple
+> > components in a PCIe hierarchy with independent local time clocks.
+> > 
+> > PCI core already supports enabling PTM in the root port and endpoint
+> > devices through PTM Extended Capability registers. But the PTM context
+> > supported by the PTM capable components such as Root Complex (RC) and
+> > Endpoint (EP) controllers were not exposed as of now.
+> > 
+> > Hence, add the sysfs support to expose the PTM context to userspace from
+> > both PCIe RC and EP controllers. Controller drivers are expected to call
+> > pcie_ptm_create_sysfs() to create the sysfs attributes for the PTM context
+> > and call pcie_ptm_destroy_sysfs() to destroy them. The drivers should also
+> > populate the relevant callbacks in the 'struct pcie_ptm_ops' structure
+> > based on the controller implementation.
+> 
+> Can we include some motivation here, e.g., what is the value of
+> exposing this information?  Is this for debugging or bringup purposes?
+> Can users or administrators use this for something?  Obviously they
+> can read and update some internal PTM state, but it would be nice to
+> know what that's good for.
+> 
 
-Commit-ID:     1902a59cf5f9d8b99ecf0cb8f122cb00ef7a3f13
-Gitweb:        https://git.kernel.org/tip/1902a59cf5f9d8b99ecf0cb8f122cb00ef7a3f13
-Author:        Caleb James DeLisle <cjd@cjdns.fr>
-AuthorDate:    Sun, 30 Mar 2025 17:02:59 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 07 Apr 2025 09:39:39 +02:00
+This was a request from one of the Qualcomm customers, but they didn't share how
+they are using these context. They just said that they want to collect the PTM
+timestamps for comparing with PTP timestamps from a different PCIe switch. That
+was not a worth of information to be mentioned in the cover letter, so I skipped
+it intentionally.
 
-irqchip: Add EcoNet EN751221 INTC
+Also, the spec itself didn't mention any specific usecases unfortunately.
 
-Add a driver for the interrupt controller in the EcoNet EN751221 MIPS SoC.
+> It looks like this requires device-specific support, i.e., the context
+> itself, context update modes, access to the clock values, etc., is not
+> specified by the generic PCIe spec.
 
-Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250330170306.2584136-4-cjd@cjdns.fr
+Right.
 
----
- drivers/irqchip/Kconfig               |   5 +-
- drivers/irqchip/Makefile              |   1 +-
- drivers/irqchip/irq-econet-en751221.c | 309 +++++++++++++++++++++++++-
- 3 files changed, 315 insertions(+)
- create mode 100644 drivers/irqchip/irq-econet-en751221.c
+>  Consequently this probably can't
+> be done by generic drivers like ACPI, and maybe this is a candidate
+> for debugfs instead of sysfs.
+>
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index cec05e4..4b43870 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -166,6 +166,11 @@ config DW_APB_ICTL
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN_HIERARCHY
+Well, we can still create syfs ABI for vendor specific features. Problem with
+debugfs is that the customers cannot use debugfs in a production environment.
+Moreover, I cannot strictly classify PTM context as a debugging information.
  
-+config ECONET_EN751221_INTC
-+	bool
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config FARADAY_FTINTC010
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 365bcea..23ca495 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
- obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
- obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
-+obj-$(CONFIG_ECONET_EN751221_INTC)	+= irq-econet-en751221.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
- obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
-diff --git a/drivers/irqchip/irq-econet-en751221.c b/drivers/irqchip/irq-econet-en751221.c
-new file mode 100644
-index 0000000..886d60c
---- /dev/null
-+++ b/drivers/irqchip/irq-econet-en751221.c
-@@ -0,0 +1,309 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * EN751221 Interrupt Controller Driver.
-+ *
-+ * The EcoNet EN751221 Interrupt Controller is a simple interrupt controller
-+ * designed for the MIPS 34Kc MT SMP processor with 2 VPEs. Each interrupt can
-+ * be routed to either VPE but not both, so to support per-CPU interrupts, a
-+ * secondary IRQ number is allocated to control masking/unmasking on VPE#1. In
-+ * this driver, these are called "shadow interrupts". The assignment of shadow
-+ * interrupts is defined by the SoC integrator when wiring the interrupt lines,
-+ * so they are configurable in the device tree.
-+ *
-+ * If an interrupt (say 30) needs per-CPU capability, the SoC integrator
-+ * allocates another IRQ number (say 29) to be its shadow. The device tree
-+ * reflects this by adding the pair <30 29> to the "econet,shadow-interrupts"
-+ * property.
-+ *
-+ * When VPE#1 requests IRQ 30, the driver manipulates the mask bit for IRQ 29,
-+ * telling the hardware to mask VPE#1's view of IRQ 30.
-+ *
-+ * Copyright (C) 2025 Caleb James DeLisle <cjd@cjdns.fr>
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+
-+#define IRQ_COUNT		40
-+
-+#define NOT_PERCPU		0xff
-+#define IS_SHADOW		0xfe
-+
-+#define REG_MASK0		0x04
-+#define REG_MASK1		0x50
-+#define REG_PENDING0		0x08
-+#define REG_PENDING1		0x54
-+
-+/**
-+ * @membase: Base address of the interrupt controller registers
-+ * @interrupt_shadows: Array of all interrupts, for each value,
-+ *	- NOT_PERCPU: This interrupt is not per-cpu, so it has no shadow
-+ *	- IS_SHADOW: This interrupt is a shadow of another per-cpu interrupt
-+ *	- else: This is a per-cpu interrupt whose shadow is the value
-+ */
-+static struct {
-+	void __iomem	*membase;
-+	u8		interrupt_shadows[IRQ_COUNT];
-+} econet_intc __ro_after_init;
-+
-+static DEFINE_RAW_SPINLOCK(irq_lock);
-+
-+/* IRQs must be disabled */
-+static void econet_wreg(u32 reg, u32 val, u32 mask)
-+{
-+	u32 v;
-+
-+	guard(raw_spinlock)(&irq_lock);
-+
-+	v = ioread32(econet_intc.membase + reg);
-+	v &= ~mask;
-+	v |= val & mask;
-+	iowrite32(v, econet_intc.membase + reg);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_chmask(u32 hwirq, bool unmask)
-+{
-+	u32 reg, mask;
-+	u8 shadow;
-+
-+	/*
-+	 * If the IRQ is a shadow, it should never be manipulated directly.
-+	 * It should only be masked/unmasked as a result of the "real" per-cpu
-+	 * irq being manipulated by a thread running on VPE#1.
-+	 * If it is per-cpu (has a shadow), and we're on VPE#1, the shadow is what we mask.
-+	 * This is single processor only, so smp_processor_id() never exceeds 1.
-+	 */
-+	shadow = econet_intc.interrupt_shadows[hwirq];
-+	if (WARN_ON_ONCE(shadow == IS_SHADOW))
-+		return;
-+	else if (shadow != NOT_PERCPU && smp_processor_id() == 1)
-+		hwirq = shadow;
-+
-+	if (hwirq >= 32) {
-+		reg = REG_MASK1;
-+		mask = BIT(hwirq - 32);
-+	} else {
-+		reg = REG_MASK0;
-+		mask = BIT(hwirq);
-+	}
-+
-+	econet_wreg(reg, unmask ? mask : 0, mask);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_intc_mask(struct irq_data *d)
-+{
-+	econet_chmask(d->hwirq, false);
-+}
-+
-+/* IRQs must be disabled */
-+static void econet_intc_unmask(struct irq_data *d)
-+{
-+	econet_chmask(d->hwirq, true);
-+}
-+
-+static void econet_mask_all(void)
-+{
-+	/* IRQs are generally disabled during init, but guarding here makes it non-obligatory. */
-+	guard(irqsave)();
-+	econet_wreg(REG_MASK0, 0, ~0);
-+	econet_wreg(REG_MASK1, 0, ~0);
-+}
-+
-+static void econet_intc_handle_pending(struct irq_domain *d, u32 pending, u32 offset)
-+{
-+	int hwirq;
-+
-+	while (pending) {
-+		hwirq = fls(pending) - 1;
-+		generic_handle_domain_irq(d, hwirq + offset);
-+		pending &= ~BIT(hwirq);
-+	}
-+}
-+
-+static void econet_intc_from_parent(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct irq_domain *domain;
-+	u32 pending0, pending1;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	pending0 = ioread32(econet_intc.membase + REG_PENDING0);
-+	pending1 = ioread32(econet_intc.membase + REG_PENDING1);
-+
-+	if (unlikely(!(pending0 | pending1))) {
-+		spurious_interrupt();
-+	} else {
-+		domain = irq_desc_get_handler_data(desc);
-+		econet_intc_handle_pending(domain, pending0, 0);
-+		econet_intc_handle_pending(domain, pending1, 32);
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static const struct irq_chip econet_irq_chip;
-+
-+static int econet_intc_map(struct irq_domain *d, u32 irq, irq_hw_number_t hwirq)
-+{
-+	int ret;
-+
-+	if (hwirq >= IRQ_COUNT) {
-+		pr_err("%s: hwirq %lu out of range\n", __func__, hwirq);
-+		return -EINVAL;
-+	} else if (econet_intc.interrupt_shadows[hwirq] == IS_SHADOW) {
-+		pr_err("%s: can't map hwirq %lu, it is a shadow interrupt\n", __func__, hwirq);
-+		return -EINVAL;
-+	}
-+
-+	if (econet_intc.interrupt_shadows[hwirq] == NOT_PERCPU) {
-+		irq_set_chip_and_handler(irq, &econet_irq_chip, handle_level_irq);
-+	} else {
-+		irq_set_chip_and_handler(irq, &econet_irq_chip, handle_percpu_devid_irq);
-+		ret = irq_set_percpu_devid(irq);
-+		if (ret)
-+			pr_warn("%s: Failed irq_set_percpu_devid for %u: %d\n", d->name, irq, ret);
-+	}
-+
-+	irq_set_chip_data(irq, NULL);
-+	return 0;
-+}
-+
-+static const struct irq_chip econet_irq_chip = {
-+	.name		= "en751221-intc",
-+	.irq_unmask	= econet_intc_unmask,
-+	.irq_mask	= econet_intc_mask,
-+	.irq_mask_ack	= econet_intc_mask,
-+};
-+
-+static const struct irq_domain_ops econet_domain_ops = {
-+	.xlate	= irq_domain_xlate_onecell,
-+	.map	= econet_intc_map
-+};
-+
-+static int __init get_shadow_interrupts(struct device_node *node)
-+{
-+	const char *field = "econet,shadow-interrupts";
-+	int num_shadows;
-+
-+	num_shadows = of_property_count_u32_elems(node, field);
-+
-+	memset(econet_intc.interrupt_shadows, NOT_PERCPU,
-+	       sizeof(econet_intc.interrupt_shadows));
-+
-+	if (num_shadows <= 0) {
-+		return 0;
-+	} else if (num_shadows % 2) {
-+		pr_err("%pOF: %s count is odd, ignoring\n", node, field);
-+		return 0;
-+	}
-+
-+	u32 *shadows __free(kfree) = kmalloc_array(num_shadows, sizeof(u32), GFP_KERNEL);
-+	if (!shadows)
-+		return -ENOMEM;
-+
-+	if (of_property_read_u32_array(node, field, shadows, num_shadows)) {
-+		pr_err("%pOF: Failed to read %s\n", node, field);
-+		return -EINVAL;
-+	}
-+
-+	for (int i = 0; i < num_shadows; i += 2) {
-+		u32 shadow = shadows[i + 1];
-+		u32 target = shadows[i];
-+
-+		if (shadow > IRQ_COUNT) {
-+			pr_err("%pOF: %s[%d] shadow(%d) out of range\n",
-+			       node, field, i + 1, shadow);
-+			continue;
-+		}
-+
-+		if (target >= IRQ_COUNT) {
-+			pr_err("%pOF: %s[%d] target(%d) out of range\n", node, field, i, target);
-+			continue;
-+		}
-+
-+		if (econet_intc.interrupt_shadows[target] != NOT_PERCPU) {
-+			pr_err("%pOF: %s[%d] target(%d) already has a shadow\n",
-+			       node, field, i, target);
-+			continue;
-+		}
-+
-+		if (econet_intc.interrupt_shadows[shadow] != NOT_PERCPU) {
-+			pr_err("%pOF: %s[%d] shadow(%d) already has a target\n",
-+			       node, field, i + 1, shadow);
-+			continue;
-+		}
-+
-+		econet_intc.interrupt_shadows[target] = shadow;
-+		econet_intc.interrupt_shadows[shadow] = IS_SHADOW;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init econet_intc_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	struct irq_domain *domain;
-+	struct resource res;
-+	int ret, irq;
-+
-+	ret = get_shadow_interrupts(node);
-+	if (ret)
-+		return ret;
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	if (!irq) {
-+		pr_err("%pOF: DT: Failed to get IRQ from 'interrupts'\n", node);
-+		return -EINVAL;
-+	}
-+
-+	if (of_address_to_resource(node, 0, &res)) {
-+		pr_err("%pOF: DT: Failed to get 'reg'\n", node);
-+		ret = -EINVAL;
-+		goto err_dispose_mapping;
-+	}
-+
-+	if (!request_mem_region(res.start, resource_size(&res), res.name)) {
-+		pr_err("%pOF: Failed to request memory\n", node);
-+		ret = -EBUSY;
-+		goto err_dispose_mapping;
-+	}
-+
-+	econet_intc.membase = ioremap(res.start, resource_size(&res));
-+	if (!econet_intc.membase) {
-+		pr_err("%pOF: Failed to remap membase\n", node);
-+		ret = -ENOMEM;
-+		goto err_release;
-+	}
-+
-+	econet_mask_all();
-+
-+	domain = irq_domain_add_linear(node, IRQ_COUNT, &econet_domain_ops, NULL);
-+	if (!domain) {
-+		pr_err("%pOF: Failed to add irqdomain\n", node);
-+		ret = -ENOMEM;
-+		goto err_unmap;
-+	}
-+
-+	irq_set_chained_handler_and_data(irq, econet_intc_from_parent, domain);
-+
-+	return 0;
-+
-+err_unmap:
-+	iounmap(econet_intc.membase);
-+err_release:
-+	release_mem_region(res.start, resource_size(&res));
-+err_dispose_mapping:
-+	irq_dispose_mapping(irq);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(econet_en751221_intc, "econet,en751221-intc", econet_intc_of_init);
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
