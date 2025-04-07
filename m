@@ -1,52 +1,34 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A10185920;
-	Mon,  7 Apr 2025 07:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BBB22578A;
+	Mon,  7 Apr 2025 07:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011476; cv=none; b=uYWej8cFamAB0wh1/DzgCmV2XLv3dp8OeUFVZ/DcCVnptHZodnDBibcAJUo/ZpG5dP2t19237jNh4pM7uqXU3/+REhCzROngSXkGLfyNDmRphSqHQJ55IbpbrKf3hTeGoqmdnb/jzrBNE+5h80d9kFs4xfat5/SRKnpYJlzoggQ=
+	t=1744011479; cv=none; b=h+xDmdAcf9Y6kK0lxp8yy9ikSTShJn91eSQj7z6rklapNBlMPw/e1hXw7if81Dn7qh/ZVNzQAbBY0lyYnOcT6uhrBkt6NSUl3y52H6ne1ndLW2UFMyRSkGLq6Qy59jqaL6N0vGlDkK+bg/kxaav/5JhLB2WFb7yAoNbg16FiHY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011476; c=relaxed/simple;
-	bh=niHZ7SywtqEBXhJxXUoQ5qHTD9B3hV3qxTLETfQVkRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C/8WSM/d8CNTmYjzQi0qMu7znQ2pQ4k8PiN7mnbkdS+ktU+zq8QR2NitkdZyYNh19/cbXbay/7/xBXXWxnJrs2HlHAOco2SqBmIn3x1Yg9HLbAjvUIouZRo2YVn1KNQvstyA75/VqA9IMT631HDLVyWp6d+vBHyhRkCZPyZ2NRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=QFVzwYkU; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="QFVzwYkU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744011464;
-	bh=TTsZEPwrBCz/1dlJoPGkzqJ2iCyPoKODASZBVNBm63g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QFVzwYkUp7/0YXmOYc77Vw8VUAHv9K8Lx3nN4iGtvZGq4aAZILNNy0c0hnwTs3PG6
-	 IcA68dp9k7YDdUPCJRhPyc11/AhSL4u0JgE/mjmfM5kpQP8UaxQGgIGUKIZuVSjQUw
-	 eO9XMaG/2DGkGe1usKz4uWfFagGkCqj0+12K99X8=
-X-QQ-mid: bizesmtpip3t1744011421t80f82c
-X-QQ-Originating-IP: vgyjA3JwGgo1td1m2zDCHvAGGPVP7//IjViELQggqP4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 07 Apr 2025 15:36:59 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14365369474605265875
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: guanwentao@uniontech.com,
+	s=arc-20240116; t=1744011479; c=relaxed/simple;
+	bh=p8L/crSaIvP89HYdkhQRcIOEzvOeFkDY8nSCAWshkQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GGGqa+YloFcjQjoxJQBW6F9JL2lBizRUbzFEJ5Ebb/RECPPx0535JdfHJxuJHZnT4QrWk3mY9LBCEhQM3wSbWFU79w7qTgg/iY3QScY2+mKptzw0+ULklLFU3ah8nunxSrysnyqrfqjnGKL/9dePX7kb4bJVkxUOlE1PxPJtfm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-03 (Coremail) with SMTP id rQCowAA34j61gPNnaYzVBg--.32337S2;
+	Mon, 07 Apr 2025 15:37:34 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: eajames@linux.ibm.com,
+	ninad@linux.ibm.com,
+	joel@jms.id.au,
+	jk@ozlabs.org
+Cc: linux-fsi@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	macro@orcam.me.uk,
-	niecheng1@uniontech.com,
-	tsbogend@alpha.franken.de,
-	zhanjun@uniontech.com
-Subject: [PATCH 6/6] MIPS: decstation_64_defconfig: Compile the kernel with warnings as errors
-Date: Mon,  7 Apr 2025 15:36:22 +0800
-Message-ID: <58DFBC3D4C9FC64F+20250407073622.495364-6-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
-References: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] fsi/core: fix error handling in fsi_slave_init()
+Date: Mon,  7 Apr 2025 15:37:24 +0800
+Message-Id: <20250407073724.2578717-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,44 +36,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OJo9j87u+UJVCsaUKG/0nTaU5/jP2VtUE+olkX6buirH77Wv24pxC0cW
-	rYFgCC34Y3HPJt/2D9Gllvb5BdKpkWazLvGvyAVKD0CLxZNOtj+BeQCOSDbwm3BDZ937BuB
-	hQ8m9M+Pks0Ji1EOQVH59Mhoq+tljb8EGHNSbMwAtF4z55bt0ZZ8kdfdIZeo2VLiYs/lTMx
-	vJoha+o7hnRsv2g0ravgtgT+6AgjAmLnpI/09VsldkvBehRlhvOsT5avrGZUfHiNoOx/jR3
-	s7CkE5lLDhFrXHFgt+Ii/6FdD+wknI/EksD0LTUKXgVU8U7RreObh9DNmU1gRlpWNRp+5WQ
-	wl0yRwx7oxNFwRgc7U3huynJMq0ved4L9aAIgK8oxTF3QqudiHi85Dqpfs42JViQ52T6JWI
-	XZuGSDdQjy5LK3G3SnWlloTiLrMgKgJ3zl1DH6LEEP1IZbhRKGFeJIdiCNrXIk59QbJpaqg
-	elhnyEiLsoLa2Vspqeae8m0JNl+Uf9DtIEWcLauOGdS0fgrgOqhAx/VdVfSURpL+UXrBANd
-	RJozj47EC13SjpzBKIkuzWuBwNkuBH5MOidUY5Dq9KZnY64+B5cTUcbsEBNb+CjsuekEp4V
-	xGYYXkF+LAa7nXUP3krmF6qG4y2UOOxTui8UMJ0W2flEV3lEIr9rTtAxLI6It4cJBlMEoke
-	+Ft9CQaGWSJXhZ5iLv/IBbZVh7oKoWXfKOF7G9qDes0laO9dmq4X6TugdfC8F9mMMI40XSy
-	gaup/AQOK2sK58OET7ohNQDAR+0k/o1X6XMLkxK1ph1L+RPThE5yJ4MrAF5Xv1WwyAgwT1p
-	2ca9JR7upJ4NItpqT9Oey9M3o0NQkXm46rQoW5CCSdiTOKqKuVyYD4qdE/cOb+CfX59MfCW
-	cDSepUOFHU0roWWl2UBRq8HgIzToUHXSVMY5MOG46Dp7prZ6mAOgDUZxCXgLJKwlls7bBhK
-	Cqk/6fLk3goH+wnJkzJ0kyV2lK+edSUZ8GBw4SdZI9ZdPQ7UIFjVva6lLW410M89fArSmmg
-	iuav88DFQvhqG4anbohRiPi7ZkIg4=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:rQCowAA34j61gPNnaYzVBg--.32337S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryrKw4rWw17XFW8GFyDJrb_yoW8Wr4kpa
+	1DGa4FyryUGr1kKrsrZas7Zr98CrWIy34furWrGwn2krZxJ34Yyryjg340ya48JFWkGF48
+	X3srXrykWF1kXF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbsYFJUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-All compilation issues under decstation_64_defconfig have been
-resolved, and it is now safe to enable CONFIG_WERROR now.
+Once cdev_device_add() failed, we should use put_device() to decrement
+reference count for cleanup. Or it could cause memory leak. Although
+operations in err_free_ida are similar to the operations in callback
+function fsi_slave_release(), put_device() is a correct handling
+operation as comments require when cdev_device_add() fails.
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+As comment of device_add() says, 'if device_add() succeeds, you should
+call device_del() when you want to get rid of it. If device_add() has
+not succeeded, use only put_device() to drop the reference count'.
+
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: 371975b0b075 ("fsi/core: Fix error paths on CFAM init")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 ---
- arch/mips/configs/decstation_64_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/fsi/fsi-core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/configs/decstation_64_defconfig b/arch/mips/configs/decstation_64_defconfig
-index bf579866cf4b..12415c5dd28c 100644
---- a/arch/mips/configs/decstation_64_defconfig
-+++ b/arch/mips/configs/decstation_64_defconfig
-@@ -1,3 +1,4 @@
-+CONFIG_WERROR=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
- CONFIG_HIGH_RES_TIMERS=y
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 50e8736039fe..c494fc0bd747 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1084,7 +1084,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	rc = cdev_device_add(&slave->cdev, &slave->dev);
+ 	if (rc) {
+ 		dev_err(&slave->dev, "Error %d creating slave device\n", rc);
+-		goto err_free_ida;
++		put_device(&slave->dev);
++		return rc;
+ 	}
+ 
+ 	/* Now that we have the cdev registered with the core, any fatal
+@@ -1110,8 +1111,6 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 
+ 	return 0;
+ 
+-err_free_ida:
+-	fsi_free_minor(slave->dev.devt);
+ err_free:
+ 	of_node_put(slave->dev.of_node);
+ 	kfree(slave);
 -- 
-2.49.0
+2.25.1
 
