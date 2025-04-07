@@ -1,237 +1,182 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE361DE2B2
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036565; cv=fail; b=U4bZSh2ftELUM8whdE6gvZbJDyey0YyzrqNJX9ZrPpu/TzNVNJTRWKEaIqEF/f9Fs7oyF3VS9FP8bcqRW85L8a8lO/RhebiExocBJgmoCYxxLSCWSd9bV3G/FdGhwRiJmdjVLTrl5e3vJl99Uk96mAVWo4B/q5RQpx0OvRr2ZKE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036565; c=relaxed/simple;
-	bh=aAcUweTw3pEmjBbZG4N8kUaGAqhg7giZpbi0HvdlHEM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qJhFUR3+T/RqblDdrXJsXK8eAKqUugSnPHVqFq/gSzU5mLW20BDHHqlaSquziDWV9J4Elh9hANp3O/4pyeMBH8D+B0RoHVc8RDDM/DM9RslP2ZUm8z83GOaALb8zqaEgA5WZgjuV/GzjycogSXTB3d0qJIOaimxaKomurnpzfIs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NisW85LC; arc=fail smtp.client-ip=40.107.92.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED0C1E5218
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744036577; cv=none; b=M1pGHe2I6IfALQ9s1xbjkiw6RA4iynU5k+Kti5uvEHDv29HlX+Kmzh9Qvuv3B4a/Sc3F+7b1R6z78s2i6BM342eCWEuwXnu1zX/pb2tbJ8YMBVcWg3gCzt0CAYQB4SOiU5n9n3ZjABwObY+ivesoToGfvb28yF3w+AW5JxBNuXw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744036577; c=relaxed/simple;
+	bh=cGNyz+WOFZZfNQEOkJkIG2uYIRO4WjMsJbUDGsYid5o=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=h6JRsEF7v45RgpXMtp0I/gk6XjldjxJ6kxxHY+tlZa4QPcbGl+1FMfZtsPzfDyue47BJcMgSVUG2PBGa1N4UrWdNcaIPUCWlCO+YtFUZ6bVYL1T/66GpOe6LY/dEMj9kO7+9Pzqw3NDS2v/TjXDJz7PFEP7OLzknXUfrDaT3P+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OqTSVKcX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NisW85LC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q3cn/AihDpdON+9dFfVOp0QihIFSfERsmHXN1HPom2M8HfnftVjYtRq3WOdQzXF3YBvY6MH/Fr6k+u4MmkpIwT0T+tMUZbJSB7S8rAQ5somGHdsjHloTntzhtMtUKM387LUoSSQQgiOAI1AMKiqA85oZSK2TEtNGm+x+yoZL5XrxcUSnOQPVp9lD1QwWFh8v+YAVj398w2GogPzyujVcaWbaxCisauyV1k24Nkng0NmaT30RZT5fusVCQhaBWO7oBTfRD21yVj+sLQfvv+YVSaH5lt8kMvd4xCpH5s4kSoBK0jhaAYXDhu7LYhCqgOr0ir6HNCE+Jmrc/UPSg5xGUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aAcUweTw3pEmjBbZG4N8kUaGAqhg7giZpbi0HvdlHEM=;
- b=BKame75eEIT+aaVlBAEmtdXxQ+7WyMq2wYCXqmwqtGf5Ovym7gohCeTCIO2HuET74dyET4ld9QQg07AYddbPIA0VgSanM8YRQtXvRMeHo9EezxUEQ8Or7P/JmWjJ7zu6N1rawNau9CnAJU+IfzPC2GHLnnu07nbCwHxGXxiYfp3kHvRQAsaHyBGFoNwHviSRpD6g0S1c8MQZllTfEpoFArConEZn8BJkLrPZgU40eyTRmtloMg3U7AFUXwlCpg9d2Whfk2cORGwg0NUuPRignZ9kfES+hY/8Va2ZRCvmiVyJyQrsYSV9pzeLHvMn8BRcSWZASACwdGkDu4dsG1WiuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aAcUweTw3pEmjBbZG4N8kUaGAqhg7giZpbi0HvdlHEM=;
- b=NisW85LCBHpMDqI6KDIjjYUBBvYxsrlbsSY1xB8RqAb21HTHLVhcuGniCV26Ll73VOsXd7XJ64YRrKFfWaRuAIbr9E28xazhmFZRCQrOZUg4gBV5RMV5Y+Qwzqs/qG6x/+FDPq/+1Ty1MFyzygHBGGaeYLqzF488wU+KLn4v0tc=
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
- by DM4PR12MB6616.namprd12.prod.outlook.com (2603:10b6:8:8e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.45; Mon, 7 Apr
- 2025 14:35:59 +0000
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::491a:cce3:e531:3c42]) by BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::491a:cce3:e531:3c42%6]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 14:35:59 +0000
-From: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "kernel-team@meta.com" <kernel-team@meta.com>, kernel test robot
-	<lkp@intel.com>, "Feng, Kenneth" <Kenneth.Feng@amd.com>, "Koenig, Christian"
-	<Christian.Koenig@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: RE: [PATCH RFC 4/9] drm/amd/pm: Avoid open-coded use of
- ratelimit_state structure's internals
-Thread-Topic: [PATCH RFC 4/9] drm/amd/pm: Avoid open-coded use of
- ratelimit_state structure's internals
-Thread-Index: AQHbpN2BM+ySY16V60CIoYSnrwfOMbOYSpCw
-Date: Mon, 7 Apr 2025 14:35:59 +0000
-Message-ID:
- <BL1PR12MB5144A3990501E76BB96F9557F7AA2@BL1PR12MB5144.namprd12.prod.outlook.com>
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <20250403211514.985900-4-paulmck@kernel.org>
-In-Reply-To: <20250403211514.985900-4-paulmck@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ActionId=3204a20e-e3ff-475b-8e30-f90999a49467;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=0;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=true;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
- Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2025-04-07T14:34:32Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Tag=10,
- 0, 1, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR12MB5144:EE_|DM4PR12MB6616:EE_
-x-ms-office365-filtering-correlation-id: a068706c-15b2-43e2-96db-08dd75e183bb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?SC9UTVUzWmxrWmFDZGZ5SEdyTzB0NXJYUEUxZFJYSTJFSTV5M21TdDJVUFdq?=
- =?utf-8?B?MXdLZEFPRktFM1JsUHpBTWsxSlJJRi95NGIvd3c2U0l0UHRTSGVDakd0OElx?=
- =?utf-8?B?cGVyWUtNYVd5cDRLY1I5UjdtaWxYSzdEam53SE9WSUpBSVZ5Y0xkUEl1Q3M3?=
- =?utf-8?B?RnptMllXdDFvZ2NvZWo5cGUzMHRxRW1PckJoWmoxdmpoVkVKYmRrTm9QQmtD?=
- =?utf-8?B?dkZ6SExzTXloc0lhR1VjdTdHZHcrYVJaaFZzeFBIZ2ZzaHVYNHdiQis1TE5j?=
- =?utf-8?B?UXA1VWNkbkpXTzlxLzZxZ3A4dHJjWC9DVDVDQ0Y1RnQxKzZMT0RlRmprNlNn?=
- =?utf-8?B?RGprN2VZNy9IcWZKSndQRHJnNlBGYW5MdUwyYi9ZYnVlNVVGUTIyVlE1VmdQ?=
- =?utf-8?B?RS9oK0NMeEk5WG5kY1ZHM0xjV0NpTGZxVFp4RGRsajd2OXZpbk9Ka2dIMUQw?=
- =?utf-8?B?Skx3TzJBZzlIVlk5OXRodktSeSt6NzN1eW0yUFRUc1MwYk5nZ3lZU0pFQm44?=
- =?utf-8?B?WEpCMThWRkpZYTVnKzBCSmE3NzB2dUs3aW9TcHZaSmI3clYyS1ZRU3ZXWWk0?=
- =?utf-8?B?Wm9oTGltSjVpbnlqeE1PY1hiTC80MTIwc2JqZkVjZU9iVzNtMFJKbTFPMnM0?=
- =?utf-8?B?UzNUZlRIMnpoVEhhQXNWQ243WmcyV1VWUXVnb2tRM291bStOeUEwamJ0d3FZ?=
- =?utf-8?B?S0hxalc4RkdNSkJreXNNTXlxVEVReVBwcThGNnlqL3F2UWNNVXE0bHdPSWE3?=
- =?utf-8?B?MHllaThma1R2MGlJcUhVaVQyVzg4d1loZDA2alplTzhFU3ZxdTdMTkdyUHJi?=
- =?utf-8?B?NW1zUXhmNzdxcTBJUnh4US9oNUtnL0NnOW5OSlRDQnh2b3M4N0ZvSFoyam50?=
- =?utf-8?B?VkRjUXdZQ2I5bFJIQTF3N0RQcmhUSXV3TUt0T042a2VyczFHVloxd3VIQ1Z3?=
- =?utf-8?B?Z085V05OUUkrUFV1VEt6VW1EZzNCS3JiWXQ1QVRHRkNZTWZoU1NFTHl2NWVY?=
- =?utf-8?B?azFrQXdTOWtMV2g3a2grZUM5ZmY0bGswUm9ZNE1KekkxVVByZDN6VFBjRXpZ?=
- =?utf-8?B?V1djSjFEVXduRUIxRVd4SHhsNUZkWVZ1ZDNyaytJckZiOGl6TDVrK1hHQ3A0?=
- =?utf-8?B?UzZNRUZWODNSeG51d1pIeFYyRmdCdG4ySHk2VmF3SGpFM0Rqb09LUnpaU040?=
- =?utf-8?B?aE5VMktXWUcra1VodUxiKzlpNFJyTjNpajFDbzliaE1MaDUzT2FVM3YxNjZm?=
- =?utf-8?B?WVpLdzZZdnZZUkRXTXVIYnZFbDRlQ1BObHpNdUE1czY5V3dOY0RqOUZoR3pj?=
- =?utf-8?B?czAzeWhyd2k2dnIxaW1VOUR4R3NwdG94THZVR3h3aVQwcnFxcWJwY201cm1j?=
- =?utf-8?B?MjRCb044akV6NkRFZ2JoTnFkQStvbk9DQ0lwdTg4M2d5YlREeWk1RVZLeVVy?=
- =?utf-8?B?S0d3aFVwc3NsRitNSXp0VXFKLzBOcnpRTkhSZGx3eUpzNmJFb1I4T1BOUzhp?=
- =?utf-8?B?UG5TelI3a1hTb0dIV01rdGxNVFVnOStqckxFeG5od0s1MnI3bityd0VnRmVY?=
- =?utf-8?B?RWJrR2oxSnZSMllGMWpWOUYwWitpL0JUVnJiZDhtc0hneXI2VUdQTCt2ZENi?=
- =?utf-8?B?dXpSRDZZazZqNjFUTHVLSzJZMHRMQlRxV3dmOXBWNkEwcjRWU0RUMUlFNWcy?=
- =?utf-8?B?V2U1cFhXR3FiMUVXRmhUeFNWSk9MeSttMkZLOGtjM1A5dmY2T1ordCtIQ05E?=
- =?utf-8?B?WXRkaFZsQ1BwQkRnZWxjNGlYZjZJdFltOEhqNDRGUEYwK2czMGxMRjRuWjNx?=
- =?utf-8?B?Q1I5QXlxMWVIUkFLTHhmTzM3Nkp1NG5wVis4ZVZQc25RK2dUYXYxbW50b1ND?=
- =?utf-8?B?bXBSdVl3b0V6RnphV09FOE0zU1dyUC83ZUxjUXdjbXBIOTBubmoxcFNyRkkz?=
- =?utf-8?Q?8HrZt1dkuWCJXpLjuZD7Lejh6/qTF8x5?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?eWIyZEYwYUtLcXhhV0pUMWI0NlZlQTNKV1dpMnhITG1zcW5oVGFKQS9oak5I?=
- =?utf-8?B?emZ1Z1EwWUZoQ0lxUFFkU0doeXltUE1acUh2Y0ZUN1RDaDlNZXBFdy9Wd0hN?=
- =?utf-8?B?Z1d0R1dWU004UU5FWXEzamFTeHl1K0R5bUpKak9sOTZPMG9EYkJCM3RzMEh6?=
- =?utf-8?B?bUNCYVYyem5HOWhwWXhKWW1VVXJ2ZjRISDQ4UmJPaUtCTjBrdStXLzhXTmZS?=
- =?utf-8?B?ZGthdm5vbXlBMm1UUkYwT2wyZ0ZwSG1zbHZMRmZtbm44OEpuMWR2Z0J6NVMv?=
- =?utf-8?B?cXJHZXN1N3VKOGliUml4T3BEUjB3cFQyemVrWkZhaUJKVThsS1cwQlNuUC9y?=
- =?utf-8?B?Y0FQVFVxQTMyaUJ6WkJZekp3QUgrcmZLQ1dOYkdVU0Y5LzdjRjEySHMyYksx?=
- =?utf-8?B?Z05kbE8weUp4ME9EeS9NSkFUY09xZ3U4WTRDYTE2N0hLVHJWY2ViVzgyVWZk?=
- =?utf-8?B?Z0NsS1JlYzRxd1p1Q1NpUDhFT29NbW1nSmhMWEI5b1RseDZ3cWNoSzBFb1Uv?=
- =?utf-8?B?RWlvdkl3dWZuUm1KWUwvaUxZTTVuWUpWc1ZzdVlDb29SUXVTREtjdUxRUGt4?=
- =?utf-8?B?L0xXc2pVNmEyOXNubExERUowZ0QwclpFZnF0cHVQYUdodG1YZTNiN0ZTMEYz?=
- =?utf-8?B?MkQ4aG0xUWJQQktkQWFPM0RQTjRuSkVpNTJkYnZERzhxdVV0Vi9FQ3JmRHRL?=
- =?utf-8?B?dVJBS1RiYWp6VlJ4ekZLQ2xOQW94Ny8vZTVKdjNHejh1UDFQam1nd1pUU1Ft?=
- =?utf-8?B?OUh4aFBqZWREOUhpcHhHTDc4ZW9uTzRtZDBPbHVCblhvNitrMWZJWVd3OENZ?=
- =?utf-8?B?bngrWkVFTHlad3REVEkzL0lqbUFRR2ZwVFBSV2tadzJUNXoyTE1EYUVlUFV5?=
- =?utf-8?B?akFid1huMUJLUnpWVExaWk5vNlVOQmRtRThOYUU4Ni9OYWRUclFLUDZvMUFi?=
- =?utf-8?B?VkQ2UEtUaldkK3htYXlpZjZUd1E2KzlYWEtvd3FFWjJFdG5WRlpVSmtETWpq?=
- =?utf-8?B?VzQydTNnbWxEU2Q4b3I1SC9zdCtHVGJHWXZ1cDJNRW93YUdNVktHY2pVWEha?=
- =?utf-8?B?dnBzME8zY0xxSlhZQlc5MFFXakdpeEcvcVhPRm1yWHJxc2ZVMEZ6QS9Gbk9h?=
- =?utf-8?B?T3NhUnk3VTd3V0xDQzY2OSt5c2hINDdJN2EzVE5WMVVSOXowVWwwcjFTQ2ZJ?=
- =?utf-8?B?bnVscDdTYkh4VE5SVmQ1dzliRS9ydmFwQmwyeWlYckpzMzd4SlVKblFKaENN?=
- =?utf-8?B?SjNxY3hnME1OeVFYb2VmcTRNOGlja2hJTjdJRm5HMTBBM3VsSTRURDEzZUlZ?=
- =?utf-8?B?V1dsQmRSWHFyWEZzVzE3OUZRNmdNcGJFMHlTc2k0Y0xqS0NoYTkxWlBGelBZ?=
- =?utf-8?B?RUZSU2p0RzRuM0ZmWUswWC90aDlKWkVnMmgwalBrRytNZnNLZ1RaVXRhc0tv?=
- =?utf-8?B?YmVuTFh1RlFFTXFMZmQ3ZngwTmFmNXdKQzZUTURrWVZvdHlpdmh1Q0R0SUh0?=
- =?utf-8?B?bWt0NVBRQ2pDcmRFeG9qaEhBTUUwdytZbm9USWM2M2dnK0krWXRRTWNTVDVr?=
- =?utf-8?B?NGFlbFk1NHp1VmlpcytVRXlER3huMEdSVHM1YVdjNkdFWG9pMXJ6N2tVeXFY?=
- =?utf-8?B?VGhLUHM2R3ZIWmNJa1NRRWsrSHFxVjc1c0pTeVhoY1B5UGJOeGNXLyt4TGNC?=
- =?utf-8?B?a0JJaXA1S3QvTzIzaEU1Tkh6YzJnQ3RBWElmblJCdHhSaDA2K3NaaGtyeUUr?=
- =?utf-8?B?a0NJaEwwVjdtcXhLaE9EZ1piL3BKaE1SSy9ON1hLdnhUNkJpZE91OVhWSHdJ?=
- =?utf-8?B?a0JnQXROK3JkMXNzNU8yaytXODFXMG45bEJPOWJmNzQzOTVyZEYvR0wzamp5?=
- =?utf-8?B?NlR1VklhdEZvTUlZVUVCYVdzYVBjdkNGd2EwM0Nqbzl6VldXQ0tyWEZZUHJK?=
- =?utf-8?B?YUNVWFNRUFBnZnQ4OUEvb1NPRldmYTdRQlBDRlZhTkdwanMwcFV4UTdMVVpw?=
- =?utf-8?B?YnJ6UjdvMm42VHN0ZzZBb2pUQnZ6eGtkOUpaWjFaQ1J4SHRpNDMrV0g5SGhy?=
- =?utf-8?B?WTZvRW5XZHdheEtMdlFwckNWY1Q0dHRpOFhPYW1YbGk4NE0yYktnMEZMMlNz?=
- =?utf-8?Q?2j4E=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqTSVKcX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744036573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x5DJg/Yndiod0rCSXdIIJltN9dcYDMLjV18CCekaRB0=;
+	b=OqTSVKcXleFv0qk1gQT+K+jUo2BbLv9fEsCwhrF/eUmwjVJ/VVwl0kbkUVRGKWsirlkyFz
+	0EJpMAZtuUK3K1UuEJn5l61CJLOChtI1OW6rycJkBz/vsYwrvFxGc2FNraucKmTIzL+NpB
+	6TGibCjlCj0bqZ7DlGSN86dmXN/2k9o=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-86-7LXdxAUhNNiATllpMEYBuA-1; Mon, 07 Apr 2025 10:36:11 -0400
+X-MC-Unique: 7LXdxAUhNNiATllpMEYBuA-1
+X-Mimecast-MFC-AGG-ID: 7LXdxAUhNNiATllpMEYBuA_1744036571
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8feffbe08so114026326d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:36:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744036571; x=1744641371;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x5DJg/Yndiod0rCSXdIIJltN9dcYDMLjV18CCekaRB0=;
+        b=emw5Ei8dKiWN/SppI2AvyzcqC94KqXzA2Ms74AGd+hpuBzyntcD0gNe9A8vjDMriM3
+         g6rYGZq5QOGnD0k8cFonkNkFXOP1fGUZI4ohXKVuqJT5gg4hfvHf8eSUeQHnSdIvwGNI
+         b5geMKLUBK5ixQCg6g2IoZ3oApF6czWyQuBGhocXG37jf6bJBrsxFSWqL/o6hKJwRz9j
+         uOfoYg3HOkrkMfRL9fPTNA4Ljoog5dQv+jZVdQaqimYyuIWq43UdKYoYiK+7CLFrIX6Z
+         cRtPtjzwwMJBzGlYzDlDCi86WifL3HShB/kwvW3Kzbw0HQf8t4AnP757d1qR5A4Qb6NI
+         If2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXOIDplA027MiQMvQX0wteDlEaOkhmxdUn0GI0BxbQXv3RXaTVvhmxH6fd5G8h7FQJ1Mvvu96WU+X3WXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAd/3E/3znFwsW/qp3Vnk+i+d9FIoyhIRB7SIhoL8qeTJTqp0g
+	EJS0OdeCsPCR8SXPucJlzXZ2DZPTqYeGGo5mcOMTQqFNYaVZxfPH2mi5TIGIXbB7o1h0YGVNCMq
+	NCBzlDzG94vxsIakyyPFKFpdP4RU4yYtuL9fV1cMbvnN5o1sInNkrphNbWk4FkA==
+X-Gm-Gg: ASbGncvb7A95jgZLH8GBJpt8vvk3ecLR0kCaKISbIKrUx9PDV5lqqWOsT49IR8GQA4r
+	x0Mp4NhwrYG2VS9kbWSQJYPvNL3shxKWgGq9jTVCNtTA4YFh8FBUs0iikSb3d+lGKWCbQgTXWYk
+	HlD3THlEFK/xWKBkSRgZBPAIjVKyb9NL3xp1ueYUXNJ5MKRPN9vDbhGH6QVT7f93zWr14AF+xvj
+	g12CTB1GHhDjBssOM1yrggXypi/iQtZ8qbI61InKRgt8z1w9T6tUpLt+JaMLOl//AIrk3F++OhR
+	CWAsIU9nLRmbxbbhbChqF8IaCXHmIWHYMGHsTcRQe0LdNWkzeo+dm/fbpbWfCw==
+X-Received: by 2002:a05:6214:5189:b0:6e8:fb92:dffa with SMTP id 6a1803df08f44-6f012e1adf0mr219540256d6.25.1744036571309;
+        Mon, 07 Apr 2025 07:36:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBjeFW6/Zy3PCGjK+e4ng1QFrOqWTfMoNnO69ymICNu5TBJyk/4flMbpzGbuBr1A3OzyWJBA==
+X-Received: by 2002:a05:6214:5189:b0:6e8:fb92:dffa with SMTP id 6a1803df08f44-6f012e1adf0mr219539506d6.25.1744036570672;
+        Mon, 07 Apr 2025 07:36:10 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f14cf41sm58909196d6.105.2025.04.07.07.36.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 07:36:10 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <2d50bccb-9cb9-4f28-a8a6-116b2003acd2@redhat.com>
+Date: Mon, 7 Apr 2025 10:36:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a068706c-15b2-43e2-96db-08dd75e183bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 14:35:59.4372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z1XCGOUGcq/rhwP8fLI92MQZpBvr9qmj4sEFtO4N+UxLqGG+XsLRhx464F1P5nSkTsLm0luEsELs5JWspentHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6616
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] mm/vmscan: Skip memcg with !usage in
+ shrink_node_memcgs()
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <20250407014159.1291785-1-longman@redhat.com>
+ <20250407014159.1291785-2-longman@redhat.com>
+ <20250407142455.GA827@cmpxchg.org>
+Content-Language: en-US
+In-Reply-To: <20250407142455.GA827@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-W1B1YmxpY10NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIEUu
-IE1jS2VubmV5IDxwYXVsbWNrQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAz
-LCAyMDI1IDU6MTUgUE0NCj4gVG86IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
-IGtlcm5lbC10ZWFtQG1ldGEuY29tOyBQYXVsIEUuIE1jS2VubmV5IDxwYXVsbWNrQGtlcm5lbC5v
-cmc+OyBrZXJuZWwNCj4gdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT47IEZlbmcsIEtlbm5ldGgg
-PEtlbm5ldGguRmVuZ0BhbWQuY29tPjsgRGV1Y2hlciwNCj4gQWxleGFuZGVyIDxBbGV4YW5kZXIu
-RGV1Y2hlckBhbWQuY29tPjsgS29lbmlnLCBDaHJpc3RpYW4NCj4gPENocmlzdGlhbi5Lb2VuaWdA
-YW1kLmNvbT47IFhpbmh1aSBQYW4gPFhpbmh1aS5QYW5AYW1kLmNvbT47IERhdmlkIEFpcmxpZQ0K
-PiA8YWlybGllZEBnbWFpbC5jb20+OyBTaW1vbmEgVmV0dGVyIDxzaW1vbmFAZmZ3bGwuY2g+OyBh
-bWQtDQo+IGdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcNCj4gU3ViamVjdDogW1BBVENIIFJGQyA0LzldIGRybS9hbWQvcG06IEF2b2lkIG9w
-ZW4tY29kZWQgdXNlIG9mIHJhdGVsaW1pdF9zdGF0ZQ0KPiBzdHJ1Y3R1cmUncyBpbnRlcm5hbHMN
-Cj4NCj4gVGhlIGFtZGdwdV9zZXRfdGhlcm1hbF90aHJvdHRsaW5nX2xvZ2dpbmcoKSBmdW5jdGlv
-biBkaXJlY3RseSBhY2Nlc3NlcyB0aGUNCj4gcmF0ZWxpbWl0X3N0YXRlIHN0cnVjdHVyZSdzIC0+
-bWlzc2VkIGZpZWxkLCB3aGljaCB3b3JrLCBidXQgd2hpY2ggYWxzbyBtYWtlcyBpdCBtb3JlDQo+
-IGRpZmZpY3VsdCB0byBjaGFuZ2UgdGhpcyBmaWVsZC4gIFRoZXJlZm9yZSwgbWFrZSB1c2Ugb2Yg
-dGhlIHJhdGVsaW1pdF9zdGF0ZV9yZXNldF9taXNzKCkNCj4gZnVuY3Rpb24gaW5zdGVhZCBvZiBk
-aXJlY3RseSBhY2Nlc3NpbmcgdGhlIC0+bWlzc2VkIGZpZWxkLg0KPg0KPiBOZXZlcnRoZWxlc3Ms
-IG9wZW4tY29kZWQgdXNlIG9mIC0+YnVyc3QgYW5kIC0+aW50ZXJ2YWwgaXMgc3RpbGwgcGVybWl0
-dGVkLCBmb3INCj4gZXhhbXBsZSwgZm9yIHJ1bnRpbWUgc3lzZnMgYWRqdXN0bWVudCBvZiB0aGVz
-ZSBmaWVsZHMuDQo+DQo+IFJlcG9ydGVkLWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVs
-LmNvbT4NCj4gQ2xvc2VzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9vZS1rYnVpbGQtYWxsLzIw
-MjUwMzE4MDgyNi5FaWVrQTFNQi0NCj4gbGtwQGludGVsLmNvbS8NCj4gU2lnbmVkLW9mZi1ieTog
-UGF1bCBFLiBNY0tlbm5leSA8cGF1bG1ja0BrZXJuZWwub3JnPg0KDQoNCkFja2VkLWJ5OiBBbGV4
-IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5jb20+DQoNCkZlZWwgZnJlZSB0byB0YWtl
-IHRoaXMgdmlhIHdoYXRldmVyIHRyZWUgbWFrZXMgc2Vuc2UgZm9yIHRoZSBsYXJnZXIgc2VyaWVz
-LiAgT3RoZXJ3aXNlLCBsZXQgbWUga25vdywgYW5kIEkgd2lsbCBwaWNrIGl0IHVwLg0KDQpBbGV4
-DQoNCg0KPiBDYzogS2VubmV0aCBGZW5nIDxrZW5uZXRoLmZlbmdAYW1kLmNvbT4NCj4gQ2M6IEFs
-ZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4NCj4gQ2M6ICJDaHJpc3RpYW4g
-S8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPg0KPiBDYzogWGluaHVpIFBhbiA8WGlu
-aHVpLlBhbkBhbWQuY29tPg0KPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGdtYWlsLmNvbT4N
-Cj4gQ2M6IFNpbW9uYSBWZXR0ZXIgPHNpbW9uYUBmZndsbC5jaD4NCj4gQ2M6IDxhbWQtZ2Z4QGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZz4NCj4gQ2M6IDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvcG0vYW1kZ3B1X3BtLmMgfCAxMSAr
-Ky0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlv
-bnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvcG0vYW1kZ3B1X3Bt
-LmMNCj4gYi9kcml2ZXJzL2dwdS9kcm0vYW1kL3BtL2FtZGdwdV9wbS5jDQo+IGluZGV4IGU4YWU3
-NjgxYmYwYTMuLjZhZGY0ZTg4MjIxMDggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9h
-bWQvcG0vYW1kZ3B1X3BtLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9wbS9hbWRncHVf
-cG0uYw0KPiBAQCAtMTY2Myw3ICsxNjYzLDYgQEAgc3RhdGljIHNzaXplX3QNCj4gYW1kZ3B1X3Nl
-dF90aGVybWFsX3Rocm90dGxpbmdfbG9nZ2luZyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICAgICAg
-IHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ICAgICAg
-IHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2ID0gZHJtX3RvX2FkZXYoZGRldik7DQo+ICAgICAg
-IGxvbmcgdGhyb3R0bGluZ19sb2dnaW5nX2ludGVydmFsOw0KPiAtICAgICB1bnNpZ25lZCBsb25n
-IGZsYWdzOw0KPiAgICAgICBpbnQgcmV0ID0gMDsNCj4NCj4gICAgICAgcmV0ID0ga3N0cnRvbChi
-dWYsIDAsICZ0aHJvdHRsaW5nX2xvZ2dpbmdfaW50ZXJ2YWwpOyBAQCAtMTY3NCwxOCArMTY3Mywx
-Mg0KPiBAQCBzdGF0aWMgc3NpemVfdCBhbWRncHVfc2V0X3RoZXJtYWxfdGhyb3R0bGluZ19sb2dn
-aW5nKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsN
-Cj4NCj4gICAgICAgaWYgKHRocm90dGxpbmdfbG9nZ2luZ19pbnRlcnZhbCA+IDApIHsNCj4gLSAg
-ICAgICAgICAgICByYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmFkZXYtPnRocm90dGxpbmdfbG9nZ2lu
-Z19ycy5sb2NrLCBmbGFncyk7DQo+ICAgICAgICAgICAgICAgLyoNCj4gICAgICAgICAgICAgICAg
-KiBSZXNldCB0aGUgcmF0ZWxpbWl0IHRpbWVyIGludGVybmFscy4NCj4gICAgICAgICAgICAgICAg
-KiBUaGlzIGNhbiBlZmZlY3RpdmVseSByZXN0YXJ0IHRoZSB0aW1lci4NCj4gICAgICAgICAgICAg
-ICAgKi8NCj4gLSAgICAgICAgICAgICBhZGV2LT50aHJvdHRsaW5nX2xvZ2dpbmdfcnMuaW50ZXJ2
-YWwgPQ0KPiAtICAgICAgICAgICAgICAgICAgICAgKHRocm90dGxpbmdfbG9nZ2luZ19pbnRlcnZh
-bCAtIDEpICogSFo7DQo+IC0gICAgICAgICAgICAgYWRldi0+dGhyb3R0bGluZ19sb2dnaW5nX3Jz
-LmJlZ2luID0gMDsNCj4gLSAgICAgICAgICAgICBhZGV2LT50aHJvdHRsaW5nX2xvZ2dpbmdfcnMu
-cHJpbnRlZCA9IDA7DQo+IC0gICAgICAgICAgICAgYWRldi0+dGhyb3R0bGluZ19sb2dnaW5nX3Jz
-Lm1pc3NlZCA9IDA7DQo+IC0gICAgICAgICAgICAgcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUo
-JmFkZXYtPnRocm90dGxpbmdfbG9nZ2luZ19ycy5sb2NrLA0KPiBmbGFncyk7DQo+IC0NCj4gKyAg
-ICAgICAgICAgICByYXRlbGltaXRfc3RhdGVfcmVzZXRfaW50ZXJ2YWwoJmFkZXYtPnRocm90dGxp
-bmdfbG9nZ2luZ19ycywNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgKHRocm90dGxpbmdfbG9nZ2luZ19pbnRlcnZhbCAtIDEpICogSFopOw0KPiAgICAgICAg
-ICAgICAgIGF0b21pY19zZXQoJmFkZXYtPnRocm90dGxpbmdfbG9nZ2luZ19lbmFibGVkLCAxKTsN
-Cj4gICAgICAgfSBlbHNlIHsNCj4gICAgICAgICAgICAgICBhdG9taWNfc2V0KCZhZGV2LT50aHJv
-dHRsaW5nX2xvZ2dpbmdfZW5hYmxlZCwgMCk7DQo+IC0tDQo+IDIuNDAuMQ0KDQo=
+On 4/7/25 10:24 AM, Johannes Weiner wrote:
+> On Sun, Apr 06, 2025 at 09:41:58PM -0400, Waiman Long wrote:
+>> The test_memcontrol selftest consistently fails its test_memcg_low
+>> sub-test due to the fact that two of its test child cgroups which
+>> have a memmory.low of 0 or an effective memory.low of 0 still have low
+>> events generated for them since mem_cgroup_below_low() use the ">="
+>> operator when comparing to elow.
+>>
+>> The two failed use cases are as follows:
+>>
+>> 1) memory.low is set to 0, but low events can still be triggered and
+>>     so the cgroup may have a non-zero low event count. I doubt users are
+>>     looking for that as they didn't set memory.low at all.
+>>
+>> 2) memory.low is set to a non-zero value but the cgroup has no task in
+>>     it so that it has an effective low value of 0. Again it may have a
+>>     non-zero low event count if memory reclaim happens. This is probably
+>>     not a result expected by the users and it is really doubtful that
+>>     users will check an empty cgroup with no task in it and expecting
+>>     some non-zero event counts.
+>>
+>> In the first case, even though memory.low isn't set, it may still have
+>> some low protection if memory.low is set in the parent. So low event may
+>> still be recorded. The test_memcontrol.c test has to be modified to
+>> account for that.
+>>
+>> For the second case, it really doesn't make sense to have non-zero
+>> low event if the cgroup has 0 usage. So we need to skip this corner
+>> case in shrink_node_memcgs() by skipping the !usage case. The
+>> "#ifdef CONFIG_MEMCG" directive is added to avoid problem with the
+>> non-CONFIG_MEMCG case.
+>>
+>> With this patch applied, the test_memcg_low sub-test finishes
+>> successfully without failure in most cases. Though both test_memcg_low
+>> and test_memcg_min sub-tests may still fail occasionally if the
+>> memory.current values fall outside of the expected ranges.
+>>
+>> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   mm/vmscan.c                                      | 10 ++++++++++
+>>   tools/testing/selftests/cgroup/test_memcontrol.c |  7 ++++++-
+>>   2 files changed, 16 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index b620d74b0f66..65dee0ad6627 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -5926,6 +5926,7 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+>>   	return inactive_lru_pages > pages_for_compaction;
+>>   }
+>>   
+>> +#ifdef CONFIG_MEMCG
+>>   static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>>   {
+>>   	struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
+>> @@ -5963,6 +5964,10 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>>   
+>>   		mem_cgroup_calculate_protection(target_memcg, memcg);
+>>   
+>> +		/* Skip memcg with no usage */
+>> +		if (!page_counter_read(&memcg->memory))
+>> +			continue;
+> Please use mem_cgroup_usage() like I had originally suggested.
+>
+> The !CONFIG_MEMCG case can be done like its root cgroup branch.
+Will do that.
+>
+>>   		if (mem_cgroup_below_min(target_memcg, memcg)) {
+>>   			/*
+>>   			 * Hard protection.
+>> @@ -6004,6 +6009,11 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>>   		}
+>>   	} while ((memcg = mem_cgroup_iter(target_memcg, memcg, partial)));
+>>   }
+>> +#else
+>> +static inline void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>> +{
+>> +}
+>> +#endif /* CONFIG_MEMCG */
+> You made the entire reclaim path a nop for !CONFIG_MEMCG.
+
+Yes, that is probably not right. Will fix that.
+
+Cheers,
+Longman
+
