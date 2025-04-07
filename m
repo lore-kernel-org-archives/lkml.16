@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965222B8C7;
-	Mon,  7 Apr 2025 23:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DA422CBEC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069734; cv=none; b=gOHMQ2zsgJDxs/6bIVeQf4hLIippMKiF+ZKBvagDoaHiSSd8EkT7GuJspudOw+1qmUlbfgRgCaq9rcjelUHBI/HP7IgHTW9N1fjtxdTL4gYN+m0g+NntMHyyaWkUNq5v/wYXLWezlHA9L2Ixamm5vDVr1YtB3CtoejZw4yg1hX0=
+	t=1744069736; cv=none; b=ux+ipa14CoyB+zA5PhJhsLQzcWAludJvaSB37P46dCN/F1+oRDTGMz9rikQwWYmaaUgEUO4M2nzXj1Qhlaz9BKwidYnwPeBhafDqf2WCNnuVAQDfcZWF3f4G8gSfazYQn/bEoQL9SAKumwWS6Cx//Vj+LI+6X7WhgodAaRDNDHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069734; c=relaxed/simple;
-	bh=jMMELnblMemF3AYQvGgHeCfvJKpdkDZIw7VpKQqJUUo=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RWi8DWjxhKwntZU8hO5PSSngH3/lDDyVjClmnZgu30se41Fvkdi+NfqPH4G3mSB0jnBl14/utc3zLDAnw2DtKLRnaOtZN4vv9sX1PfPiZ8UgOhGCYh+9aMxbP0QwQLTOod6bSarvHPgVLPWaKGOvgTTByHuHTK4Iu0rG/zcvfdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE5oLfVu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744069736; c=relaxed/simple;
+	bh=lk3294jy+i1Zyw8OTcudQdwcRZhXRnpOmKOB+6Wu+OQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PXMgYrennG+F5ca/1JpFdQGpemjaRgjSGymsXx0w8L/03nPJhvI78KxCOLUiWihYwRkKFTXmHvtzM9LOdsKP2nxPoqM4tH1x6qYfOHWLSZtt7tyL9O3lHEQGffOBpcHIvNLRSTQscHHQHneEGk3UGxJLr86HqezJ9FOB5A7iqbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jT3mEt1f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE5oLfVu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA287C4CEDD;
-	Mon,  7 Apr 2025 23:48:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jT3mEt1f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348F1C4CEE8;
+	Mon,  7 Apr 2025 23:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744069733;
-	bh=jMMELnblMemF3AYQvGgHeCfvJKpdkDZIw7VpKQqJUUo=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=KE5oLfVuQ6RdNYzVpQHcwdXdgM4r69W2Wm4Vt9oxwQAevIHsvxLmhJrlV+DcgmSdn
-	 ofUuZJtfxVK3Jjr2zTyoat2roKHA0s/oTdkXUcbwhVOb4QrDv49ZVCFiPQGmrVxfEJ
-	 PNC3VNAjIFSIbYTZFLEJm3tlZZl0FpyX31IVvgnO4lEUFktNQotsUt6ANEEC39gO/D
-	 9S4KdGPdH3MwWRSmX4O/+QvHmyVRLpRniJYdmnaw6jut0MDulwwniwzN+Dl7dWuaa7
-	 hzq/IJv6yY3MslMrNzcFFRwd4M/RMN2gnI6nFfXdXZsVv274VJYxL3rxtFPtXSGtUS
-	 5Ag1uLZmkNvGg==
+	s=k20201202; t=1744069735;
+	bh=lk3294jy+i1Zyw8OTcudQdwcRZhXRnpOmKOB+6Wu+OQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jT3mEt1fowtbtLBkmQkjm0Ybtk21DKZOwUux2eVnQIU7WhcMEe2np/BS7e/CQb1Wo
+	 dV/UYu8VeYj4UMIzGB3Kk86KRA7EeDbrKqjgfXvwGkRQDbj9CaLIQDNrptb0nxl64E
+	 fQj5AXiWiZcGmE5xyERMQ8QGAjTH5TDb4OiTgSeuLMCk/f5STLfVuhUp5xfDANe/iM
+	 /hPy32zMlTIuA+oq1KgmQOOSxp+DMUInUppb6gAy0YsJsAkbrdgsLPFN0ER/KBbWpj
+	 KViDoWJtYFXaF7YAzkA1hPot3iAGFDTVy1c8HJq55O/BZhMZg/BJNnvJFduXhUa5ZM
+	 UzFDOJCxV5xYA==
 From: Mark Brown <broonie@kernel.org>
-To: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
- nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>
-In-Reply-To: <20250319033504.2898605-1-shengjiu.wang@nxp.com>
-References: <20250319033504.2898605-1-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ASoC: fsl_asrc_dma: get codec or cpu dai from backend
-Message-Id: <174406973149.1344763.148124979192544931.b4-ty@kernel.org>
-Date: Tue, 08 Apr 2025 00:48:51 +0100
+To: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, 
+ Brady Norander <bradynorander@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ u.kleine-koenig@baylibre.com
+In-Reply-To: <20250330130852.37881-3-bradynorander@gmail.com>
+References: <20250330130852.37881-3-bradynorander@gmail.com>
+Subject: Re: [PATCH v2] ASoC: dwc: always enable/disable i2s irqs
+Message-Id: <174406973394.1344763.1510125660737652294.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 00:48:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,12 +46,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 19 Mar 2025 11:35:04 +0800, Shengjiu Wang wrote:
-> With audio graph card, original cpu dai is changed to codec device in
-> backend, so if cpu dai is dummy device in backend, get the codec dai
-> device, which is the real hardware device connected.
-> 
-> The specific case is ASRC->SAI->AMIX->CODEC.
+On Sun, 30 Mar 2025 09:08:54 -0400, Brady Norander wrote:
+> Commit a42e988 ("ASoC: dwc: add DMA handshake control") changed the
+> behavior of the driver to not enable or disable i2s irqs if using DMA. This
+> breaks platforms such as AMD ACP. Audio playback appears to work but no
+> audio can be heard. Revert to the old behavior by always enabling and
+> disabling i2s irqs while keeping DMA handshake control.
 > 
 > 
 > [...]
@@ -62,8 +62,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: fsl_asrc_dma: get codec or cpu dai from backend
-      commit: ef5c23ae9ab380fa756f257411024a9b4518d1b9
+[1/1] ASoC: dwc: always enable/disable i2s irqs
+      commit: 2b727b3f8a04fe52f55316ccb8792cfd9b2dd05d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
