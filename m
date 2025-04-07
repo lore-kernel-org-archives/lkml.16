@@ -1,198 +1,140 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1D622A4ED;
-	Mon,  7 Apr 2025 07:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DA1229B37;
+	Mon,  7 Apr 2025 07:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011788; cv=none; b=HV9iCxay/Yzidjv9IEMT3cFZaGg0jYeskDrl/xNJbQ+JQtyqKVPaoUksMb+bm/H8Y54M+4jLfhUXnS657cS2pSZ0/8Org4PBo8r9n7A/e3nPr9ri1DnMQQM13IhUyR2PYcvlYbUqoYTtMxWJ+4rJhcgh3KRqZuNiBsc97TGtKiI=
+	t=1744011789; cv=none; b=pgcVRkCdtvk0AwsApj61ouK6jEXYKf4RmvaYj+QkKY98pXDxox/+v4JuqIYNRpu9ImCP19XNRWUoBBMChKR2qTJ33GHMik6ED5dz0YzQM1Ftcsh3zDVjD85L4FDlLODmM6wo360tBbbiiamVAoQWLb24TLTzq4hCIYxB8R2EOuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011788; c=relaxed/simple;
-	bh=Z18tG0YYAcgDJXTbPcKni8tCL725TAMxyNNo0ZfLVrs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RoxNnHK6V0oE6m0bCcQ+7BLLKxJ7q58FoGzxR3OJXW5uAIorROsO4d6823U+FRjDQVmsTITz4tDxdNNTIlhe4u68OogFeGCg5KEmrzk6+Rp8bjB7EKaT+ItNoY7NRWBv1VPSnK04N+pB/ycQB6dyzfLYXC+gFYSG5xE43sahhng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GOVnPJaF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SVnXoQYR; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744011789; c=relaxed/simple;
+	bh=Xu0nGb1RBd1CDhyD0m7yCE3cioNquNLySTJFGTDwjao=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E0KQmyMLG3BH8eX5t3Dxdb1/rxXhY7YQPor2oambFViVBGmNJnfjq5CqpDqSTpYRd8eh3t5BuUoHEDL21k9SWdRr8tGV6oWTjUrGhdeoeVxBj9pAq+lk0vmLPxHp1T9Jr5glJWwe3qPw+hnDNJ17NUrGppJN0SqFd6sHex0Xz6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RVJtXjbw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=muD2AkzR; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GOVnPJaF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SVnXoQYR"
-Date: Mon, 07 Apr 2025 07:43:02 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RVJtXjbw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="muD2AkzR"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744011784;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	s=2020; t=1744011783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=apAihtZ08wt73iCQ9Naf1ARpWTV93n9IpvEywPGt470=;
-	b=GOVnPJaFmcvJmwYR7CI5L0JygGu6eVFv43VD65irMdGcPkr5OyGaBZArOOX3tRwmwodJjg
-	JdTJSdnTVBNla19ozowq1AbBEOwm1c2/7iRCkYP5yN96QAlinJRfjQzAfNe1awJTOjgvau
-	yimEWawMBE6Zmolzpzip3gzg5SFmR6vRTbK5AW6zUkG+Hp77g+ttwOVcDF41VTZ/YpDKUH
-	vvlZf3Bfwa3RFXtaLoeSv1WSi5Cvsjyc2TC6Kqfv+PLX3VQ2KRN+pVppisAtEZdQ+KLazx
-	s9OZgIL06ZNGa12xm0Cliszs+PX+5k9OPfx4Tjtlw3es0CGIVimQnhkD27s0IA==
+	bh=Fh2unyChEPBf9y7CX/RyBwfskSXNSGnqSQiwlf+aj58=;
+	b=RVJtXjbwy7sozind3uDpXZ4nMXH19nxGBDnFxlf2qZ5bawYGkIAmc4G9hM1Kx5gz+nfp2f
+	TCG49yZb6ECoLcr1tSqaQCo4BpH2MclAOXlhJIR7e9tSO7vW7IgUakh03Pyuoo4QSAx/Lk
+	8xoLgvWl3DMabRfNqL30TiMHGHh3lNIpRQpzUnq4vMl4SBlXtzvERa27DvH5w8ssfiA6ig
+	CRgwoIOy/eGz1Bnkn4AXa3FL5khH2Tjt9ZoUQiAhob1tLxmHwcFexiUcDZn5E60XwMvgEQ
+	whS99NQavWc3JwywfirrRZeOh4SaxZNpCmPnAvQFpe+KgLZOjvgr0P/3+AHyzQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744011784;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	s=2020e; t=1744011783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=apAihtZ08wt73iCQ9Naf1ARpWTV93n9IpvEywPGt470=;
-	b=SVnXoQYRWVfPTqS6w+LP2fBF9GJuehMv2XB1sTpR83KHfFxkpUsw7EWJ1mcmKdFKhTPG/f
-	CWPaWaARuQR+ngDg==
-From: "tip-bot2 for Yixun Lan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqdomain: Support three-cell scheme interrupts
-Cc: Yixun Lan <dlan@gentoo.org>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250326-04-gpio-irq-threecell-v3-1-aab006ab0e00@gentoo.org>
-References: <20250326-04-gpio-irq-threecell-v3-1-aab006ab0e00@gentoo.org>
+	bh=Fh2unyChEPBf9y7CX/RyBwfskSXNSGnqSQiwlf+aj58=;
+	b=muD2AkzRJwItNBC+oQNRwwODIMyO4dMt1xuUZ2OqMSAKU8Tcbyy76kUgbVQsCHKjsxgKCT
+	sgP9XK6XYWiyybCg==
+Date: Mon, 07 Apr 2025 09:42:48 +0200
+Subject: [PATCH v2 11/11] kunit: uapi: Validate usability of /proc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174401178220.31282.2947787410456906417.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250407-kunit-kselftests-v2-11-454114e287fd@linutronix.de>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+In-Reply-To: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-doc@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744011776; l=1637;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=Xu0nGb1RBd1CDhyD0m7yCE3cioNquNLySTJFGTDwjao=;
+ b=9+Ci04x9JPHWfBiiC85eaitNDlilTzJtZJ7o0CBVN3RWJtjvGW+OUEyH06U2XAd4V8XpX5u8Q
+ G1PdRLPg325C8zFfrPvccqNtmTdS1mG4GzXWe6c2tH38ic27egE5NLB
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The following commit has been merged into the irq/core branch of tip:
+Show that the selftests are executed from a fairly "normal"
+userspace context.
 
-Commit-ID:     0a02e1f4a54ace747304687ced3b76d159e58914
-Gitweb:        https://git.kernel.org/tip/0a02e1f4a54ace747304687ced3b76d159e58914
-Author:        Yixun Lan <dlan@gentoo.org>
-AuthorDate:    Wed, 26 Mar 2025 06:06:19 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 07 Apr 2025 09:36:09 +02:00
-
-irqdomain: Support three-cell scheme interrupts
-
-Add new function *_twothreecell() to extend support to parse three-cell
-interrupts which encoded as <instance hwirq irqflag>, the translate
-function will retrieve irq number and flag from last two cells.
-
-This API will be used in gpio irq driver which need to work with
-two or three cells cases.
-
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250326-04-gpio-irq-threecell-v3-1-aab006ab0e00@gentoo.org
-
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/linux/irqdomain.h | 20 +++++++-------
- kernel/irq/irqdomain.c    | 56 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 66 insertions(+), 10 deletions(-)
+ lib/kunit/kunit-example-uapi.c | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index bb71111..df7e927 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -571,16 +571,16 @@ int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
- int irq_domain_xlate_onetwocell(struct irq_domain *d, struct device_node *ctrlr,
- 			const u32 *intspec, unsigned int intsize,
- 			irq_hw_number_t *out_hwirq, unsigned int *out_type);
--
--int irq_domain_translate_twocell(struct irq_domain *d,
--				 struct irq_fwspec *fwspec,
--				 unsigned long *out_hwirq,
--				 unsigned int *out_type);
--
--int irq_domain_translate_onecell(struct irq_domain *d,
--				 struct irq_fwspec *fwspec,
--				 unsigned long *out_hwirq,
--				 unsigned int *out_type);
-+int irq_domain_xlate_twothreecell(struct irq_domain *d, struct device_node *ctrlr,
-+				  const u32 *intspec, unsigned int intsize,
-+				  irq_hw_number_t *out_hwirq, unsigned int *out_type);
+diff --git a/lib/kunit/kunit-example-uapi.c b/lib/kunit/kunit-example-uapi.c
+index 4ce657050dd4a576632a41ca0309c4cb5134ce14..d121c4620716aadddc38a1d5845e4b51e721fb67 100644
+--- a/lib/kunit/kunit-example-uapi.c
++++ b/lib/kunit/kunit-example-uapi.c
+@@ -8,13 +8,47 @@
+  * This is *userspace* code.
+  */
+ 
++#ifndef NOLIBC
++#include <fcntl.h>
++#endif
++#include <unistd.h>
++#include <string.h>
 +
-+int irq_domain_translate_onecell(struct irq_domain *d, struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq, unsigned int *out_type);
-+int irq_domain_translate_twocell(struct irq_domain *d, struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq, unsigned int *out_type);
-+int irq_domain_translate_twothreecell(struct irq_domain *d, struct irq_fwspec *fwspec,
-+				      unsigned long *out_hwirq, unsigned int *out_type);
+ #include "../../tools/testing/selftests/kselftest.h"
  
- /* IPI functions */
- int irq_reserve_ipi(struct irq_domain *domain, const struct cpumask *dest);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 9d5c865..b294c3f 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1133,6 +1133,31 @@ int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
- EXPORT_SYMBOL_GPL(irq_domain_xlate_twocell);
- 
- /**
-+ * irq_domain_xlate_twothreecell() - Generic xlate for direct two or three cell bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @ctrlr:	The device tree node for the device whose interrupt is translated
-+ * @intspec:	The interrupt specifier data from the device tree
-+ * @intsize:	The number of entries in @intspec
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-+ *
-+ * Device Tree interrupt specifier translation function for two or three
-+ * cell bindings, where the cell values map directly to the hardware
-+ * interrupt number and the type specifier.
-+ */
-+int irq_domain_xlate_twothreecell(struct irq_domain *d, struct device_node *ctrlr,
-+				  const u32 *intspec, unsigned int intsize,
-+				  irq_hw_number_t *out_hwirq, unsigned int *out_type)
++static void test_procfs(void)
 +{
-+	struct irq_fwspec fwspec;
++	char buf[256];
++	ssize_t r;
++	int fd;
 +
-+	of_phandle_args_to_fwspec(ctrlr, intspec, intsize, &fwspec);
-+
-+	return irq_domain_translate_twothreecell(d, &fwspec, out_hwirq, out_type);
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_xlate_twothreecell);
-+
-+/**
-  * irq_domain_xlate_onetwocell() - Generic xlate for one or two cell bindings
-  * @d:		Interrupt domain involved in the translation
-  * @ctrlr:	The device tree node for the device whose interrupt is translated
-@@ -1216,6 +1241,37 @@ int irq_domain_translate_twocell(struct irq_domain *d,
- }
- EXPORT_SYMBOL_GPL(irq_domain_translate_twocell);
- 
-+/**
-+ * irq_domain_translate_twothreecell() - Generic translate for direct two or three cell
-+ * bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @fwspec:	The firmware interrupt specifier to translate
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-+ *
-+ * Firmware interrupt specifier translation function for two or three cell
-+ * specifications, where the parameter values map directly to the hardware
-+ * interrupt number and the type specifier.
-+ */
-+int irq_domain_translate_twothreecell(struct irq_domain *d, struct irq_fwspec *fwspec,
-+				      unsigned long *out_hwirq, unsigned int *out_type)
-+{
-+	if (fwspec->param_count == 2) {
-+		*out_hwirq = fwspec->param[0];
-+		*out_type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+		return 0;
++	fd = open("/proc/self/comm", O_RDONLY);
++	if (fd == -1) {
++		ksft_test_result_fail("procfs: open() failed: %s\n", strerror(errno));
++		return;
 +	}
 +
-+	if (fwspec->param_count == 3) {
-+		*out_hwirq = fwspec->param[1];
-+		*out_type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-+		return 0;
++	r = read(fd, buf, sizeof(buf));
++	close(fd);
++
++	if (r == -1) {
++		ksft_test_result_fail("procfs: read() failed: %s\n", strerror(errno));
++		return;
 +	}
 +
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_translate_twothreecell);
++	if (r != 16 || strncmp("kunit-example-u\n", buf, 16) != 0) {
++		ksft_test_result_fail("procfs: incorrect comm\n");
++		return;
++	}
 +
- int irq_domain_alloc_descs(int virq, unsigned int cnt, irq_hw_number_t hwirq,
- 			   int node, const struct irq_affinity_desc *affinity)
++	ksft_test_result_pass("procfs\n");
++}
++
+ int main(void)
  {
+ 	ksft_print_header();
+ 	ksft_set_plan(4);
+-	ksft_test_result_pass("userspace test 1\n");
++	test_procfs();
+ 	ksft_test_result_pass("userspace test 2\n");
+ 	ksft_test_result_skip("userspace test 3: some reason\n");
+ 	ksft_test_result_pass("userspace test 4\n");
+
+-- 
+2.49.0
+
