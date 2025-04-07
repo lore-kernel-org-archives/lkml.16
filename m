@@ -1,132 +1,117 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B346F17BD3
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CD1253B70;
+	Mon,  7 Apr 2025 13:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032565; cv=none; b=Q3wpmCBNIyp8Sz1mfKhgdOadYEYyT3tgkdRVJBwDH2hXBZyukO54IqduG/RnfB0ggdPs3lpqo8C0tpE2C8pOdiONb1u7n0osD4i0XdzOqj6bJeV0E0RyLsaKWENxBN1TigJe9Gyrb9ZgDEVlYQF6bVeal3v3xOK1Rka6c+Hc7is=
+	t=1744032587; cv=none; b=tmwq4MeBabexL3U5u5pyo5hcwXpkPR8RUD0CC4XiU7qhYV0JImTUyCPRzo/pASX0OagXTXtd8aS/CTiouU3KpQCjB4GOxkhoyYVSGwHM3HZkNmeVouXv2I+9gHxUCv8+FaBB+MSu4SL0pB5PsUWmxk85LvHMaWP+on8LAXFLXw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032565; c=relaxed/simple;
-	bh=9mpTOzXTtZhzgDxpHjaUQndjrrlV6hkModuaRIwNpNc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kizaw22P4hP9vAJk37U2mW7/aVwNxoniL9xL6PUho5DRlK1E7nAFzUN5E1nvdcC6np5moyeaTonYeeELx7p3wFNtuqrM8DdDIKxUjCrzqhuNiZGDWjUWXyLFP5quda6I9Kl1YOLfGaZ3lYtSy4wgB/qvAjQqj7LZeT4FpQyRtu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qztqCVis; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744032587; c=relaxed/simple;
+	bh=pNCuaRq20ihRDPIs6gWBbwsMGTzuOJxHjP1yYRN8ZiQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=RHaXZ3px5L6QtqGkFY09+iHLZoaKjSyIe66Am2gA3H3D/QNe6Lc7y36WKoHIj8MCB1E+BfoAt08vV8Y/FeXR0DoIulO0qPi4IVl210/dZzWKiTL51OrUFTB33wPepfmw8TcSBRMAyJtMGAEZpEJfZxVLn+wshZq5/sSsVZUuLPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WDb2CwGD; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qztqCVis"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-306b78ae2d1so1342811a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744032563; x=1744637363; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ajHSN1cCUijZc9GsoTHrD7erAp1SQSZtWGXja5UGiA=;
-        b=qztqCVisOQhHbCc8xZdLGM27sdlkMsPYf4UVUd0Q+xXIOITqcS7Xpl1uvaIRkUKO+r
-         /34jaCdeGQFALLZRg7TTcGmhSRCzDZiS5oIMAfgLPqRAux4+qDFygCYTCFJ5MYGFUaCO
-         FhlRfmiz9enHnhw1MSSjBUU+xjiydOQ6gKb1lDNa611mLjNNI02MmnoOsG816sZ0TyHo
-         GfjGV8/zRu0MFy5U3Dwy0WnbzFmACYMaaP4vZP+sjD4XeRFVOzOZW1s/7WVujJp5MuiE
-         VGI6yo9kwwHPS7g6h0VCRB1UTE0yd8eH7T8GpQyEFrNMgAoccLhn60+F55RHa52YrFot
-         XVAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744032563; x=1744637363;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ajHSN1cCUijZc9GsoTHrD7erAp1SQSZtWGXja5UGiA=;
-        b=dcF/tbcyHQ/pSB/rbSS/uwmzhwmBCNb1X0uKb8OEKm/iiZbq+tWG+j8TruTlFa16V4
-         jglpYYqT3aVwMkL9Kgy4gF6pYymfM5vgMTvcQR0CR7OGwxvnllVvP83GOhJ+AfNfBnnO
-         HkKOpR7iUXKS0elwAKwkaEUSnIJwsQp7+WfP6VdRXOsHGFOolnHnkg1x16JusRFX4z5A
-         FYhrt2dmIqVgXzQUS3GcCDPnqlNOUCng6mmXOxRgOF29Giog32PZ0ii+Xe3XUf7F2Zs6
-         nPoiqScabgo3E9I/6OPqOZIJLWW6GBox/1whVVBiPD/ZTBDiSABh0qPuR1/1CGscwv/Q
-         zZ5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVeh+riiiICZKwjK5+LXjGx6VqIFuWkzHNryB6xjR5/XlSDpKzrerFfXJ/8KRr6MvQPEnZ0maW5FtqnpmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN4B9buRBuex+FZffvgRCxPwtFCqeYoLVZl/ULjRyuK5Zuo7gi
-	ktyv61fJM2I6k+n2+UQxIcxnMN3AGwUATe5H9at4gF7EWQYdrv2c+D7qF+QH6SoT1NxDq6L+auh
-	Cd11mQwMZBwWX8Fd6mo5nF9QX6Bd+SEvhtOzq0v3pvtQFRhin
-X-Gm-Gg: ASbGncuNki9m8mgrNPbe640Vx1dwe5XWXT4dytncQ+874biBbxgkjJIJm588s+1N1I7
-	dsunMLsaAXCZdUZf0gfRMP0fsCvucal05aOY4DxgiNoWAAdnefxp/jphxMEh1ukly8q3MlBhAEF
-	kCQvejxpHcpEbSjjF/zqI4elgECi6Vo3t+49ZXrQmrXF9F0jlzmwwpy9R4HnZ76ZPSwoek
-X-Google-Smtp-Source: AGHT+IGKqFC5LHX0jTabWx+okI10tLsLEWz7jJM0RCoVhL8tSdu9r04tB7T2j1t5Drqrr9abQp3S+efjjieviBgTso8=
-X-Received: by 2002:a17:90b:5251:b0:2ee:aa28:79aa with SMTP id
- 98e67ed59e1d1-306a4821d7dmr17576304a91.6.1744032563009; Mon, 07 Apr 2025
- 06:29:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WDb2CwGD"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537CPsvl008739;
+	Mon, 7 Apr 2025 15:29:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	WwkG1pZIiujSvSdNAeNRVIU4m+oKTZ5N+BMPOnssFpU=; b=WDb2CwGDoGtAzSr2
+	Pl0f0frt8o3g+L9Pxy3wWWPy+rR728r403TKUNm8eu8h8BdzDzlmsMqYhucSP6oa
+	l5+ArHeR0FPGhYDd67F7BalVgzW9aPcZC2N1xF/M/yXcIWd2WeP/ow7J/o70NArB
+	YNofjsYdv0oReFDT307Bex0vqe0m3DRAid0ufl4aguSk0dAdmjsEoR+DZpnpwrBn
+	hUEc5M7Csxe1EiYTffp6qQyyMUDTRTOS/Jmp6qH0WSNH2OKIP4WI5hbxpkTSHr1W
+	ZB9SAdjpIa9h61ssUcJRIVk9lpwwRz5I3g+EGscceByzztWZrN5zef3sp1/99ho9
+	jzWc9w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw2gqwyn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 15:29:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D521E40059;
+	Mon,  7 Apr 2025 15:28:35 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8D11B9400D0;
+	Mon,  7 Apr 2025 15:27:46 +0200 (CEST)
+Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 7 Apr
+ 2025 15:27:46 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Mon, 7 Apr 2025 15:27:38 +0200
+Subject: [PATCH v8 7/7] arm64: defconfig: Enable STM32 Octo Memory Manager
+ and OcstoSPI driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk> <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
- <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk> <CAMRc=MeFqvJ3g3GhrZzto+jfgCUhtcRRyWqx51gCkKhYUqtsGg@mail.gmail.com>
- <c16d3116-256d-470d-96dd-7f3dbe3334c3@sirena.org.uk>
-In-Reply-To: <c16d3116-256d-470d-96dd-7f3dbe3334c3@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Apr 2025 15:29:09 +0200
-X-Gm-Features: ATxdqUE1lakRv6EOuCGarXSPzi9CAEc3IM8tN_Opel4nS3X41aAEE-pBaohpZLg
-Message-ID: <CAMRc=MeYcgje7dFq8WDiTB8mTQ1COv3a_6xhAGkTukD_V25Wgw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250407-upstream_ospi_v6-v8-7-7b7716c1c1f6@foss.st.com>
+References: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
+In-Reply-To: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
 
-On Mon, Apr 7, 2025 at 3:24=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Mon, Apr 07, 2025 at 03:15:13PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Apr 2, 2025 at 4:08=E2=80=AFPM Mark Brown <broonie@kernel.org> =
-wrote:
->
-> > > > I believe pwrseq could actually be used to hide the enable counting
-> > > > for GPIOs behind a faux GPIO chip and the consumer would never see =
-a
-> > > > pwrseq handle - they would instead use GPIO consumer interfaces and
-> > > > we'd have to agree on what logic would we put behind gpiod_set_valu=
-e()
-> > > > (should it effectively work as gpiod_enable() meaning: value is 1 a=
-s
-> > > > long as at least one user sets it to 1?) and
-> > > > gpiod_direction_input()/output() (same thing: highest priority is
-> > > > gpiod_direction_output(HIGH) and as long as at least one user sets =
-it
-> > > > as such, we keep it).
->
-> > > Like I say that doesn't do the right thing since other users need to =
-be
-> > > able to see when something changes on the GPIO.  If that just happens=
- on
-> > > normal gpiolib then that complicates usage for the default case since
-> > > they now have to worry about things not actually happening when
-> > > requested which doesn't seem ideal.
->
-> > If I understand correctly, regulator_ena_gpio_ctrl()[1] changes the
-> > GPIO value (even if it's shared) and then notifies regulator consumers
-> > about a DISABLE event. Now if we'd be implicitly sharing the GPIO with
-> > an enable-counter, we could possibly emit an event that's a
-> > false-positive?
->
-> Yes (or vice versa for enable).  If the device thinks power got pulled
-> when it didn't it might get confused about what the hardware is doing.
+Enable STM32 OctoSPI driver.
+Enable STM32 Octo Memory Manager (OMM) driver which is needed
+for OSPI usage on STM32MP257F-EV1 board.
 
-Sure, that's the example I was going for, maybe my wording isn't clear.
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Basically: we may set the GPIO to 1 but it was already enabled and we
-tell consumers the regulator was just enabled when it wasn't OR we set
-the GPIO to 0 and tell consumers the regulator was disabled when there
-are still users of this GPIO so it's not true either.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index bde1287ad9a7a1341162b817873eb651bb310d52..3674d9138bae6deba19c0d13586aa6e1de6750c5 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -580,6 +580,7 @@ CONFIG_SPI_QUP=y
+ CONFIG_SPI_QCOM_GENI=m
+ CONFIG_SPI_S3C64XX=y
+ CONFIG_SPI_SH_MSIOF=m
++CONFIG_SPI_STM32_OSPI=m
+ CONFIG_SPI_SUN6I=y
+ CONFIG_SPI_TEGRA210_QUAD=m
+ CONFIG_SPI_TEGRA114=m
+@@ -1518,6 +1519,7 @@ CONFIG_EXTCON_USB_GPIO=y
+ CONFIG_EXTCON_USBC_CROS_EC=y
+ CONFIG_FSL_IFC=y
+ CONFIG_RENESAS_RPCIF=m
++CONFIG_STM32_OMM=m
+ CONFIG_IIO=y
+ CONFIG_EXYNOS_ADC=y
+ CONFIG_IMX8QXP_ADC=m
 
-AFAICT, it's used in a few places to put the regulator consumer in
-reset if the power was *actually* disabled.
+-- 
+2.25.1
 
-I'll think about how that could be improved.
-
-Bartosz
