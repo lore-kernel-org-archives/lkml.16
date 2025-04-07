@@ -1,219 +1,484 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2041.outbound.protection.outlook.com [40.107.93.41])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6627207A03;
-	Mon,  7 Apr 2025 17:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045392; cv=fail; b=e2pgqEfntxC0nUXUyQDEXgnv8ub8FD+KVeH8DClYxZ6TGO9umCOsWS1samMKopwzrA2ST+gmqJ0zwdEFnPbEjrUsu/smmWjt4y4h9LbSD2WOc5RUH0aF9cjDcrjk56nHsZ+frSSg8xADI1XrbNCDCHYsngNiez1Cg9dhoEDaHEo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045392; c=relaxed/simple;
-	bh=f+LaH9vzUKMcY6CD5+NT5c9CLuvJnvBzEjQyFj5Eju8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b4X6tpxQFJIMYeg5Z9n1ANYvXHmohLqyg7GmGbf9DJg1UnLKQ10p5q8WIeXthFJm25WC+9pjag95BuDJ2wx4WtzjrzzRnonty98Npr14uNgicVJABfTtzTLBX6HzmCh630oXDtJ8XP7kVyYNEpuH8D/tXWJQ8uH2stpocqqq5cY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lw7LHgj5; arc=fail smtp.client-ip=40.107.93.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30852147E4;
+	Mon,  7 Apr 2025 17:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744045425; cv=none; b=ffj8VQobFSQMvPgCP10Xj78mdiW74lqwukL6fDL7GWp/r/Ux4/BSuTLSaRkvPzRbpBTsJhN20gQEvkvzakVS24qtPezk+FTiAJHUvOy5ix7myvb5CXAaaetb7VhMyrdF0ziFJZtnco/Re0lFoohdexsg4d5OSNXbyKqjb5WVbFc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744045425; c=relaxed/simple;
+	bh=uGH8Y5dUpYWEFGIoyf0TOOSBgAkFdU1fp1yGsMKllZg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=khGoW18ske2HNQpElknqZ8IJePn26/X+1NnR+xUYZ2S9ClgrMeKRUOTzdMSyMA4tFVigPVqK/wazOxldXnmA0STekTmJ7DihlAgEdkw4mB5lMWuHD5M1ac+RDlt7Mhef3cN4/canjEnBnq+tb34H4I7m9gUqDCsnaNEb53pwQik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ddvQe6jX; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lw7LHgj5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xDkzL5Ox3lesSeWuaeMMiDAuv9sxEfB0AOPn/77l8zAcse2aZKZxsyozHOaz3XZChKUMqqNPfv24KpeEBei+9zfVwE/k0CDG6rU1+UN1u+LXXQJhLCgzfzISTM2J5ZDtsaT9T10FWESnDInKZ+kBGOEZGh+TYq+bATpciYdddzrLUy3e/TVrVcvcDz1fN98zb1+jT715scrfVdh6W0czso3+QpBjXxMG+zsWbqvrHsQ+/KyoW3C8xObKnWKeOS/XmWlL9LWRY/ODBepiXCAJ+3t69FMdA+JyQd++jN14sbtvdmGJNndnh1iUkDEzc/7kNDzScqwgPsucBd0LVPHMBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SovsdLYmNZQQn+AX1T/HhC2wN3hrETuP/Ro+w2IBk7I=;
- b=xrexrhJSKWJOX7nTpimcPGcJCNOnrxOLdQyXeH0oe4/gX/UDSpCPPKLTK27Wn9H4XC7rYKcVl5b1fBQTnrwDkva+8WAK1eB7R8/RM97OwyzZ3LMCPWPA7vr56CVTjZDmwGDmSvx2Bg4Vp4V+yphLJIyhrcCW7gePMgOZ/Gya0o/ookanWYvISeK9cYe5kZjaKWI8rARCJBWnDVPklntjihEnCnA0Fj3lbwDTUbtTp3f5DKex3pZOEGgia20aRRPQCyfmcSSKZbl5HqXRwQzp+34xFztqnk43i+dnQclTWhkiONE5zLFZD8RDI/OoGpzxZ8i7U+2caonAKVbUUWqjkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SovsdLYmNZQQn+AX1T/HhC2wN3hrETuP/Ro+w2IBk7I=;
- b=lw7LHgj5p3v3wvv7bSe8FIKvCWe5miFmqWR7tgHAKLl222cwZ5DW60PcfzV5Afzn/1WfnA8CfoeNZjXRkr8EnqAXsLmyGuALKFGoYN1ep3JBc4BDrUH+q/qHeFkgsMnlf+zwPtvYO7TpRVW2IC8jJ9NS9gF37+wF+tVj/wHDuEvbv1npqiSgGyzkRrJHpcZ7/ZCVndc/Aw60IJjIOmNEniOq0WUSxNIRrLU4ylFWqlIHXB8NOHbTA7yUxRjfMcqMh5L/lGJz/hU3TlUuV4ReKOd7ypFg46p53yO/fjzIEke4+u3HibpQT4pOWLfy9g9MPyjdtXLlFl/QTCPtu8a8UA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ1PR12MB6028.namprd12.prod.outlook.com (2603:10b6:a03:489::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
- 2025 17:03:07 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Mon, 7 Apr 2025
- 17:03:07 +0000
-Date: Mon, 7 Apr 2025 14:03:05 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <20250407170305.GI1557073@nvidia.com>
-References: <20250403114209.GE342109@nvidia.com>
- <Z-6UA3C1TPeH_kGL@kernel.org>
- <20250403142438.GF342109@nvidia.com>
- <Z--sUYCvP3Q8nT8e@kernel.org>
- <20250404124729.GH342109@nvidia.com>
- <Z-_kSXrHWU5Bf3sV@kernel.org>
- <20250404143031.GB1336818@nvidia.com>
- <Z_KnovvW7F2ZyzhX@kernel.org>
- <20250407141626.GB1557073@nvidia.com>
- <Z_P92UCbNCV0TbiA@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_P92UCbNCV0TbiA@kernel.org>
-X-ClientProxiedBy: BN0PR04CA0056.namprd04.prod.outlook.com
- (2603:10b6:408:e8::31) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ddvQe6jX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744045423; x=1775581423;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uGH8Y5dUpYWEFGIoyf0TOOSBgAkFdU1fp1yGsMKllZg=;
+  b=ddvQe6jXO1Ak9MA5e/DRC+DdcCPgzFxyGGOz2xTy+537BcsyY1o5Yioj
+   O0ceLMoti93XDOYu71Cia1EbXD+Jm8rmQ/0LRcCahTdts7J1vp31jrRuz
+   23Y0PvZNGHju22EgZnMHYgBsTwp4/W3AFR4y7vIoLU9clG5HCuWJs72lO
+   4ISTJ/o+cz/+I7R41AkYH2DYawuRFpkyVd6q/6LNjBu9SccQfFZCEqzsc
+   E2H5+Gw4+ZQp5RjK3eEn850tLrJDN4t/gvsUKRlPqv4F/TcZTQGSwk+Dh
+   FVlG9PwJ3+t9R6Cl0vUGBuEmi3Dbb8OiEVRp/vcXn0tajg1CKn/nB7/90
+   w==;
+X-CSE-ConnectionGUID: TeevXfkLRmSrqEqJGekjTA==
+X-CSE-MsgGUID: xdA9xqMCSyW4+Bniqbz6cQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="70820182"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="70820182"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:03:42 -0700
+X-CSE-ConnectionGUID: GSmzYfrSQ/Sid9fJjdqG5A==
+X-CSE-MsgGUID: 9GyG4JovR8y60vJRfgGMqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="133167967"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 10:03:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 7 Apr 2025 20:03:35 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com, 
+    manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
+    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+In-Reply-To: <ef0237d9-f5da-44d7-ab45-2be037cf0f25@163.com>
+Message-ID: <3689b121-1ff2-f0f6-59f4-293cda8ea6a8@linux.intel.com>
+References: <20250402042020.48681-1-18255117159@163.com> <20250402042020.48681-3-18255117159@163.com> <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com> <c6706073-86b0-445a-b39f-993ac9b054fa@163.com> <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
+ <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com> <ef0237d9-f5da-44d7-ab45-2be037cf0f25@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ1PR12MB6028:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b02822b-8318-468d-e29f-08dd75f61121
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?whhFyC1Kh9AfeKBxvHNKheZNYYfhzmf97TaOsTmA3YtHFQUqMR2OLXRiaDkz?=
- =?us-ascii?Q?atUYcx07ibQAzZZ7GpG3EG5qHWJogMwiekROMmWMFHersOeZXIyXMv+0qcTs?=
- =?us-ascii?Q?wwv4EQjD9Js6Y/1oW6rhhCaQXfV4FXCV629dpSYvgfPeebgbaHFrKZNaA6Ze?=
- =?us-ascii?Q?cRMjTRptSTEbQE9rOpiNU0CXsyxMcxwbm3PsNeWJHwYqVXzakBuTGK70bljl?=
- =?us-ascii?Q?umf689emk2tkWg8rb9LRKyItsRZ84DNvJCaYgLph9ooyOrEfxK2SMbIqz+Vl?=
- =?us-ascii?Q?FsaqT+DJhiQ00gvR48VZmwJEHfo4DqdE627kAG5ZIH4MPEUUJgDSPqbOfQVV?=
- =?us-ascii?Q?ZlUCCGD301P/BLC0M3H1EA0eSHaCqIQblf0icj6yCx2LS/3dx15Z1M+HHtAR?=
- =?us-ascii?Q?AQRv2YMPnYXsFWOwyyQApSrg5WMMaLoRfbLVwIdi9fe2chYK6fzj2/pJt3Ak?=
- =?us-ascii?Q?ZfWQTsYLlBU8KhQ/GOQpFwPqHSwd22Ggv8idzqotVivhMdXcjk0DnRf8JhWf?=
- =?us-ascii?Q?KMyoGRy0POiO4WWFxdjFQm4ICfAiAxQq3Arbjp/L32zMDKiKTDsNQbKCiXQX?=
- =?us-ascii?Q?N0KZKg1TxbVzt2APwEMf+93fFCzwegDLJ7Yk7ozTAsUfndMUjTdjMqbJXuDL?=
- =?us-ascii?Q?Sfe+J1KrNPd6/5JVuPrmh51oJjNWZ09B/6JBV9mFGRvulM1v5l5019MSXdim?=
- =?us-ascii?Q?BzIe8gH66jPPyKeYqnKX3bYwZ9Bn0bjVhVEl86/CarBGtSRFzx+JSbzkJ1jg?=
- =?us-ascii?Q?INkal8xDr1jd9kG071sEYWze1A4tCg4kBzcSGuLbsW1hJYr7s6O91jqzTeZd?=
- =?us-ascii?Q?kWkHbfXgf+Ow4hTHU0QoCTtQ/IBSkgWQcAEXueqWZYk4hHsbzDIin2gq8CVd?=
- =?us-ascii?Q?+iLMF7Jdqw9cl5o6ZCQ6GtGqblqAHoDY2T4dhjqu/ldajLiz1c+BcF1f96eE?=
- =?us-ascii?Q?TY71Joz+WoWDi0JmmtuaZiOA0aSz8DW78C6a7dtllRrQEgifIbW/7pjgfyxw?=
- =?us-ascii?Q?zYztpufgSNUKYNcXxwKdN93oT5ZcifXcZ5IagzzfjmtlO7O5IVUjEJDHPOV0?=
- =?us-ascii?Q?q0xqr1rp1liHNO7mXuXOooGBBhLLmHcdy44B8sMFGd9FaQx1CzuVx5UxBJD2?=
- =?us-ascii?Q?Jen8pCLQdwDrOC9du0jRmDd/UiQB3kMw678+DjJnmVXOcN0Xlxjsm6REkqOW?=
- =?us-ascii?Q?am+JV/PDU2IrEonM/IOgHfLlCCtyc/RVrEyZaZu3GlzCWhuT6weR7/1Ts+O5?=
- =?us-ascii?Q?oOpWTRO2XcqZ2gpWcab+2KKT0wOWErbZnRL8WTcS+ykXG3fWeA+Y06cebmFf?=
- =?us-ascii?Q?4oB81Gq0p7dSwEj9DneYc/LBYXTo7+H/Alj5JfN3rKWe7dvq+uOezTkQ8a8c?=
- =?us-ascii?Q?GhuFWM9sl0xXQ5+TgnGp83ja0qPs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FR9qraM0JkXFFVzYxhzg+bK0+QVx2qBmpYs4vn/r3wu2DuR3aSIx2VyRMSzY?=
- =?us-ascii?Q?THDIk96GpvDYBIcOKOFhPVZwb837o3U9mMVC8YO83yBxJD1NwIjzvbbzFQsL?=
- =?us-ascii?Q?x0qQGl7jXfbWY+P+PQLHxubiYzBpxslcj+vhn1DVOZMV9jLeMEzRxAE1uLK7?=
- =?us-ascii?Q?6tn6ttHeQz57/Stwcx4PCGIlt8LEvb7MkbxgJpFu7zhWHD2meVtQTEyrOOhS?=
- =?us-ascii?Q?kNLXhi5KpA8n2mte/FKGOfuoKhGGrpm8czLmSsh9yBUB6jwKTh8rnCVPRuKH?=
- =?us-ascii?Q?QO0o9ddFt3+q6H5KnjqYjFzc6Jj98zPhI3VMKVJFmRF9DMp/kdc+FSdqyOqv?=
- =?us-ascii?Q?D5f/AxDOLV/K12X5+1aE/Lb0LNRIAvCbnPpxgOGPcpJhq7MQ3z270InEf7fy?=
- =?us-ascii?Q?VR3Z38LNWUyIjcbWOOSZ6SU6fiT8dL8gmyqA3muXz+F6CywYt5+XasLcaqsh?=
- =?us-ascii?Q?sU7S4CXj8I3zRWf4F40eWlcMPBjWb/oy5efITkZOUyFdtKHyKWhtG1tlo2xh?=
- =?us-ascii?Q?DK5Ow5Ul/D4bqAgT/JvaUj4PkVEO6rMyxWkdQCmwUF2RDJRTOg+VaFknj6Sb?=
- =?us-ascii?Q?56OPVB2CeEKeWycOx4u8CtGSnH+zVpTHmiOe1zaBdvW6lSL+QBHDY+QVQJDw?=
- =?us-ascii?Q?CZOHQLZH3YCIRMZ+1QPIu8Li7GA9se3OGl1V07RJaxqe0OBR63LcVYVUCnU+?=
- =?us-ascii?Q?DUJRyzyDq1NMO3FIbgTFqmdWtjI3dDUsHP4A5kvndHPKjfemK4c4K7ejCzcq?=
- =?us-ascii?Q?aAGaeReZYTSSfAr6b9RYDF3MPBsvAoCkuKo34oDd6pOiNk7YjBuQZQK3aLUb?=
- =?us-ascii?Q?c6578oXlwO2Vg35fhfzG7DRBHRt8DbXWmVDpICbFoEOTe/Ylksb2HC6YEEBL?=
- =?us-ascii?Q?Jap2UkqkZZ/wDJZ1ssdJjFFnDsJY+donCenb3JIq/dhko1jsUTlMAZ9TMj6u?=
- =?us-ascii?Q?K5aPBx3CpYWI2jLtfabPQkSlqk3gjfwzqdsFaJIXJ45LhWtxUfX+NIYdf2CY?=
- =?us-ascii?Q?Ht9Dp5pcp+7WBWoFb+1AGGwKhTq8BKUSRxgL6WpxCsit0PnNDyWjnBcrFWu9?=
- =?us-ascii?Q?KVdgqzs9uOP/opvvsRTDGTmVOJw04Fsk+pBkVRF4pA9Om3PbqXjpsIdoFXq1?=
- =?us-ascii?Q?sRCwe0rN5T7S9uf1dO9gj96Mpyb6GpXOzKSDT7kvTuDSHXsrN2M5LAWcM8nL?=
- =?us-ascii?Q?Dkx/egFWMGiZ7kHAzyHzlYT15PfOVrnEZfxPNgSGBoooVvIyosO38tH9GAiJ?=
- =?us-ascii?Q?iGW9MxiUFfSaIbiPbC7Ppo9q3O4I2Gnq7WfsokZY6Y0TtGBVhPXeBQnfdB0C?=
- =?us-ascii?Q?QKWTERSLxsURGPeZSp/hG9k4znI3CVkvJzk224oE8fJUL0iZbdZldgixsSPe?=
- =?us-ascii?Q?N+QO5NbLHcyMdGiM4FW1r1DjJGfKwHsFx2p21OoRoGuRMfUS/Hooow1wgh4V?=
- =?us-ascii?Q?hOxqQz67d/uNF0TiylcCFG6/3C8v7lc67e0fx2u9M9djPg2vIBfvx//o8PKX?=
- =?us-ascii?Q?RG2aP/tQmnGYzrjwdQanW/bkEIrvCXxJBPk4R6i0l/t1Tub8KlIDa+9/sQek?=
- =?us-ascii?Q?/FacV9FXrM7uIg0fjZqibFdyc0y7w+r8a6nqonbG?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b02822b-8318-468d-e29f-08dd75f61121
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 17:03:06.8951
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gpkovNkFzudeaRlgpzQ8QcNuoIJfVwZgi62wr+FGE0YJclk63yL80dZ3slGaK6ox
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6028
+Content-Type: multipart/mixed; boundary="8323328-830954236-1744045415=:936"
 
-On Mon, Apr 07, 2025 at 07:31:21PM +0300, Mike Rapoport wrote:
-> > alloc_pages is a 0 order "folio". vmalloc is an array of 0 order
-> > folios (?)
-> 
-> According to current Matthew's plan [1] vmalloc is misc memory :)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Someday! :)
+--8323328-830954236-1744045415=:936
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Ok, let's stick with memdesc then. Put aside the name it looks like we do
-> agree that KHO needs to provide a way to preserve memory allocated from
-> buddy along with some of the metadata describing that memory, like order
-> for multi-order allocations.
+On Fri, 4 Apr 2025, Hans Zhang wrote:
 
-+1
+>=20
+>=20
+> On 2025/4/3 20:24, Hans Zhang wrote:
+> > > > > > =C2=A0=C2=A0 }
+> > > > > > =C2=A0=C2=A0 EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+> > > > > > =C2=A0=C2=A0 @@ -648,7 +614,6 @@ EXPORT_SYMBOL_GPL(pci_get_dsn)=
+;
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0 static u8 __pci_find_next_ht_cap(struc=
+t pci_dev *dev, u8 pos,
+> > > > > > int
+> > > > > > ht_cap)
+> > > > > > =C2=A0=C2=A0 {
+> > > > > > -=C2=A0=C2=A0=C2=A0 int rc, ttl =3D PCI_FIND_CAP_TTL;
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8 cap, mask;
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ht_cap =3D=
+=3D HT_CAPTYPE_SLAVE || ht_cap =3D=3D
+> > > > > > HT_CAPTYPE_HOST)
+> > > > > > @@ -657,7 +622,7 @@ static u8 __pci_find_next_ht_cap(struct pci=
+_dev
+> > > > > > *dev,
+> > > > > > u8 pos, int ht_cap)
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ma=
+sk =3D HT_5BIT_CAP_MASK;
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pos =3D __pci_=
+find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PCI_CAP_=
+ID_HT, &ttl);
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PCI_CAP_=
+ID_HT);
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (pos) {
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc=
+ =3D pci_read_config_byte(dev, pos + 3, &cap);
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
+ (rc !=3D PCIBIOS_SUCCESSFUL)
+> > > > > > @@ -668,7 +633,7 @@ static u8 __pci_find_next_ht_cap(struct pci=
+_dev
+> > > > > > *dev,
+> > > > > > u8 pos, int ht_cap)
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 pos =3D __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pos + PCI_CAP_LIST_NEXT,
+> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 PCI_CAP_ID_HT, &ttl);
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 PCI_CAP_ID_HT);
+> > > > >=20
+> > > > > This function kind of had the idea to share the ttl but I suppose=
+ that
+> > > > > was
+> > > > > just a final safeguard to make sure the loop will always terminat=
+e in
+> > > > > case
+> > > > > the config space is corrupted so the unsharing is not a big issue=
+=2E
+> > > > >=20
+> > > >=20
+> > > > __pci_find_next_cap_ttl
+> > > > =C2=A0=C2=A0 // This macro definition already has ttl loop restrict=
+ions inside it.
+> > > > =C2=A0=C2=A0 PCI_FIND_NEXT_CAP_TTL
+> > > >=20
+> > > > Do I understand that you agree to remove ttl initialization and
+> > > > parameter
+> > > > passing?
+> > >=20
+> > > Yes, I agree with it but doing anything like this (although I'd menti=
+on
+> > > the reasoning in the changelog myself).
+> > >=20
+> >=20
+> > Ok, I see. I will give the reasons.
+>=20
+> Hi Ilpo,
+>=20
+> The [v9 3/6]patch I plan to submit is as follows, please review it.
+>=20
+> From 6da415d130e76b57ecf401f14bf0b66f20407839 Mon Sep 17 00:00:00 2001
+> From: Hans Zhang <18255117159@163.com>
+> Date: Fri, 4 Apr 2025 00:20:29 +0800
+> Subject: [v9 3/6] PCI: Refactor capability search into common macros
+>=20
+> - Capability search is done both in PCI core and some controller drivers.
+> - PCI core's cap search func requires PCI device and bus structs exist.
+> - Controller drivers cannot use PCI core's cap search func as they
+>   need to find capabilities before they instantiated the PCI device & bus
+>   structs.
+>=20
+> - Move capability search into a macro so it can be reused where normal
+>   PCI config space accessors cannot yet be used due to lack of the
+>   instantiated PCI dev.
+> - Instead, give the config space reading function as an argument to the
+>   new macro.
+> - Convert PCI core to use the new macro.
 
-> The issue I see with bitmaps is that there's nothing except the order that
-> we can save. And if sometime later we'd have to recreate memdesc for that
-> memory, that would mean allocating a correct data structure, i.e. struct
-> folio, struct slab, struct vmalloc maybe.
+None of these bullets are true lists so please write them as normal=20
+English paragraphs. Also please extend some of shortened words lke "cap"=20
+--> "Capability", "PCI dev" -> PCI Device (for terms, the capitalization=20
+of the first letter, you should follow what the PCI specs use).
 
-Yes. The caller would have to take care of this using a caller
-specific serialization of any memdesc data. Like slab would have to
-presumably record the object size and the object allocation bitmap.
+--=20
+ i.
 
-> I'm not sure we are going to preserve slabs at least at the foreseeable
-> future, but vmalloc seems like something that we'd have to address.
-
-And I suspect vmalloc doesn't need to preserve any memdesc information?
-It can all be recreated
-
-> > Also the bitmap scanning to optimize the memblock reserve isn't
-> > implemented for xarray.. I don't think this is representative..
-> 
-> I believe that even with optimization of bitmap scanning maple tree would
-> perform much better when the memory is not fragmented. 
-
-Hard to guess, bitmap scanning is not free, especially if there are
-lots of zeros, but memory allocating maple tree nodes and locking them
-is not free either so who knows where things cross over..
-
-> And when it is fragmented both will need to call memblock_reserve()
-> similar number of times and there won't be real difference. Of
-> course maple tree will consume much more memory in the worst case.
-
-Yes.
-
-bitmaps are bounded like the comment says, 512K for 16G of memory with
-arbitary order 0 fragmentation.
-
-Assuming absolute worst case fragmentation maple tree (@24 bytes per
-range, alternating allocated/freed pattern) would require around
-50M. Then almost doubled since we have the maple tree and then the
-serialized copy.
-
-100Mb vs 512k - I will pick the 512K :)
-
-Jason
+>=20
+> The macros now implement, parameterized by the config access method. The
+> PCI core functions are converted to utilize these macros with the standar=
+d
+> pci_bus_read_config accessors. Controller drivers can later use the same
+> macros with their early access mechanisms while maintaining the existing
+> protection against infinite loops through preserved TTL checks.
+>=20
+> The ttl parameter was originally an additional safeguard to prevent
+> infinite loops in corrupted config space.  However, the
+> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
+> Removing redundant ttl handling simplifies the interface while maintainin=
+g
+> the safety guarantee. This aligns with the macro's design intent of
+> encapsulating TTL management.
+>=20
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/pci.c | 70 +++++---------------------------------
+>  drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 95 insertions(+), 61 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e4d3719b653d..bef242d84ab4 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -9,7 +9,6 @@
+>   */
+>=20
+>  #include <linux/acpi.h>
+> -#include <linux/align.h>
+>  #include <linux/kernel.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> @@ -31,7 +30,6 @@
+>  #include <asm/dma.h>
+>  #include <linux/aer.h>
+>  #include <linux/bitfield.h>
+> -#include <uapi/linux/pci_regs.h>
+>  #include "pci.h"
+>=20
+>  DEFINE_MUTEX(pci_slot_mutex);
+> @@ -426,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, c=
+onst
+> char *p,
+>  }
+>=20
+>  static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devf=
+n,
+> -=09=09=09=09  u8 pos, int cap, int *ttl)
+> +=09=09=09=09  u8 pos, int cap)
+>  {
+> -=09u8 id;
+> -=09u16 ent;
+> -
+> -=09pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> -
+> -=09while ((*ttl)--) {
+> -=09=09if (pos < PCI_STD_HEADER_SIZEOF)
+> -=09=09=09break;
+> -=09=09pos =3D ALIGN_DOWN(pos, 4);
+> -=09=09pci_bus_read_config_word(bus, devfn, pos, &ent);
+> -
+> -=09=09id =3D FIELD_GET(PCI_CAP_ID_MASK, ent);
+> -=09=09if (id =3D=3D 0xff)
+> -=09=09=09break;
+> -=09=09if (id =3D=3D cap)
+> -=09=09=09return pos;
+> -=09=09pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+> -=09}
+> -=09return 0;
+> +=09return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
+> +=09=09=09=09     devfn);
+>  }
+>=20
+>  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+>  =09=09=09      u8 pos, int cap)
+>  {
+> -=09int ttl =3D PCI_FIND_CAP_TTL;
+> -
+> -=09return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+> +=09return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
+>  }
+>=20
+>  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+> @@ -555,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+>   */
+>  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap=
+)
+>  {
+> -=09u32 header;
+> -=09int ttl;
+> -=09u16 pos =3D PCI_CFG_SPACE_SIZE;
+> -
+> -=09/* minimum 8 bytes per capability */
+> -=09ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> -
+>  =09if (dev->cfg_size <=3D PCI_CFG_SPACE_SIZE)
+>  =09=09return 0;
+>=20
+> -=09if (start)
+> -=09=09pos =3D start;
+> -
+> -=09if (pci_read_config_dword(dev, pos, &header) !=3D PCIBIOS_SUCCESSFUL)
+> -=09=09return 0;
+> -
+> -=09/*
+> -=09 * If we have no capabilities, this is indicated by cap ID,
+> -=09 * cap version and next pointer all being 0.
+> -=09 */
+> -=09if (header =3D=3D 0)
+> -=09=09return 0;
+> -
+> -=09while (ttl-- > 0) {
+> -=09=09if (PCI_EXT_CAP_ID(header) =3D=3D cap && pos !=3D start)
+> -=09=09=09return pos;
+> -
+> -=09=09pos =3D PCI_EXT_CAP_NEXT(header);
+> -=09=09if (pos < PCI_CFG_SPACE_SIZE)
+> -=09=09=09break;
+> -
+> -=09=09if (pci_read_config_dword(dev, pos, &header) !=3D
+> PCIBIOS_SUCCESSFUL)
+> -=09=09=09break;
+> -=09}
+> -
+> -=09return 0;
+> +=09return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
+> +=09=09=09=09=09    dev->bus, dev->devfn);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>=20
+> @@ -650,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>=20
+>  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap=
+)
+>  {
+> -=09int rc, ttl =3D PCI_FIND_CAP_TTL;
+> +=09int rc;
+>  =09u8 cap, mask;
+>=20
+>  =09if (ht_cap =3D=3D HT_CAPTYPE_SLAVE || ht_cap =3D=3D HT_CAPTYPE_HOST)
+> @@ -659,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,=
+ u8
+> pos, int ht_cap)
+>  =09=09mask =3D HT_5BIT_CAP_MASK;
+>=20
+>  =09pos =3D __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> -=09=09=09=09      PCI_CAP_ID_HT, &ttl);
+> +=09=09=09=09      PCI_CAP_ID_HT);
+>  =09while (pos) {
+>  =09=09rc =3D pci_read_config_byte(dev, pos + 3, &cap);
+>  =09=09if (rc !=3D PCIBIOS_SUCCESSFUL)
+> @@ -670,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,=
+ u8
+> pos, int ht_cap)
+>=20
+>  =09=09pos =3D __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+>  =09=09=09=09=09      pos + PCI_CAP_LIST_NEXT,
+> -=09=09=09=09=09      PCI_CAP_ID_HT, &ttl);
+> +=09=09=09=09=09      PCI_CAP_ID_HT);
+>  =09}
+>=20
+>  =09return 0;
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 6a7c88b9cd35..b204ebeeb1cf 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -2,7 +2,9 @@
+>  #ifndef DRIVERS_PCI_H
+>  #define DRIVERS_PCI_H
+>=20
+> +#include <linux/align.h>
+>  #include <linux/pci.h>
+> +#include <uapi/linux/pci_regs.h>
+>=20
+>  struct pcie_tlp_log;
+>=20
+> @@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>  int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 s=
+ize,
+>  =09=09=09u32 *val);
+>=20
+> +/* Standard Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search
+> + * @cap: Capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Iterates through the capability list in PCI config space to find
+> + * the specified capability. Implements TTL (time-to-live) protection
+> + * against infinite loops.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)=09=09\
+> +({=09=09=09=09=09=09=09=09=09\
+> +=09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
+> +=09u8 __id, __found_pos =3D 0;=09=09=09=09=09\
+> +=09u8 __pos =3D (start);=09=09=09=09=09=09\
+> +=09u16 __ent;=09=09=09=09=09=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09while (__ttl--) {=09=09=09=09=09=09\
+> +=09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
+> +=09=09=09break;=09=09=09=09=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
+> +=09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
+> +=09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
+> +=09=09=09break;=09=09=09=09=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
+> +=09=09=09__found_pos =3D __pos;=09=09=09=09\
+> +=09=09=09break;=09=09=09=09=09=09\
+> +=09=09}=09=09=09=09=09=09=09\
+> +=09=09=09=09=09=09=09=09=09\
+> +=09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
+> +=09}=09=09=09=09=09=09=09=09\
+> +=09__found_pos;=09=09=09=09=09=09=09\
+> +})
+> +
+> +/* Extended Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search (0 for initial search)
+> + * @cap: Extended capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Searches the extended capability space in PCI config registers
+> + * for the specified capability. Implements TTL protection against
+> + * infinite loops using a calculated maximum search count.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)
+> \
+> +({
+> \
+> +=09u16 __pos =3D (start) ?: PCI_CFG_SPACE_SIZE;
+> \
+> +=09u16 __found_pos =3D 0;
+> \
+> +=09int __ttl, __ret;
+> \
+> +=09u32 __header;
+> \
+> +
+> \
+> +=09__ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> \
+> +=09while (__ttl-- > 0 && __pos >=3D PCI_CFG_SPACE_SIZE) {
+> \
+> +=09=09__ret =3D read_cfg(args, __pos, 4, &__header);
+> \
+> +=09=09if (__ret !=3D PCIBIOS_SUCCESSFUL)
+> \
+> +=09=09=09break;
+> \
+> +
+> \
+> +=09=09if (__header =3D=3D 0)
+> \
+> +=09=09=09break;
+> \
+> +
+> \
+> +=09=09if (PCI_EXT_CAP_ID(__header) =3D=3D (cap) && __pos !=3D start) {
+> \
+> +=09=09=09__found_pos =3D __pos;
+> \
+> +=09=09=09break;
+> \
+> +=09=09}
+> \
+> +
+> \
+> +=09=09__pos =3D PCI_EXT_CAP_NEXT(__header);
+> \
+> +=09}
+> \
+> +=09__found_pos;
+> \
+> +})
+> +
+>  /* Functions internal to the PCI core code */
+>=20
+>  #ifdef CONFIG_DMI
+>=20
+>=20
+>=20
+> Best regards,
+> Hans
+>=20
+--8323328-830954236-1744045415=:936--
