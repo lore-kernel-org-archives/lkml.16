@@ -1,69 +1,133 @@
-Received: from pv50p00im-hyfv10011601.me.com (pv50p00im-hyfv10011601.me.com [17.58.6.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC5B14A4C6
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF4C22D78F
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744028404; cv=none; b=M1MV+SeI+936XwrwqabugKcIp3vBy7LsLcTmsC7IshaFXtPsBCZs7VSXz4xSkoc4ikvJW8VIO2vF4TFcJ6a4NsaNvML7uRxA4hWQKf5HJRcO56BCofFrgvf9XPu0h6NL32i0BhLHVDzFw5ezsVmxwM2Zq+p754KyWVsWfe0cbAQ=
+	t=1744028485; cv=none; b=kTf7fyQ9iV+Ln5+rr78530eh90jam8oYNmAGB1/BrhhCn6QxXgyHWrHxhQ5YAUu8AmXgjvevSPZWorZ6L8zBzWTJcwYrg2O5ye/maKvwtIMiimnnBVW/fBwl1CbKqUL5vJlrpRdVBIObHiedIKqiJ4ldc8KLw52G1UAVop7iY9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744028404; c=relaxed/simple;
-	bh=g1abDZwvXwceS+Lyb8/fvN1t0E10b7TNUO5oyLG7MSU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eLQYUlxIj6/YsgXAjnUvc8ZDqH4yJ30hVFDJQcwhpXlUnVw/fh9Qcv7MJeB5Xq+Q745egZ1QbJuArYKzM89gS/ijeOwMohWs/z9MD8K24QXj9LvmY2wKC+CQm5/XuqiFvmwBbRAgUzfOq70T6cF2W/4zhxM5oqaqeb1ENaSND7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=OEQQlaNe; arc=none smtp.client-ip=17.58.6.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744028485; c=relaxed/simple;
+	bh=dXDqJcnrYdDQC2YiFBN/WStaW5lex6NUThZVJBzqIns=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LpMZ9Kfyxfj5qzrvUwbm1NlhdLU9MeK0hCt71h1+BEe4fROwTqGhfr9eUG8ZjMfmETvePPp4DfCBrZ7qw0p1NSBVjpYQIergArbHu7HNn1rWL7V0fZ8/sGV6VdtqD6lOPfHJy3CSZFx/7DzgyQKHqmQKYBDaHjEU1NSjRk2I1Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjVoif2r; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="OEQQlaNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=g1abDZwvXwceS+Lyb8/fvN1t0E10b7TNUO5oyLG7MSU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=OEQQlaNejqMomDvzKuEMa9mld74Z4AcWzkDYJJg9OfAsr/GQRhp3vg6HqOdZuwcDF
-	 0ctEb7B+eYu/04Qr81dBnZ3PKpxkdE3MOvkVl1kPfoe2CKDE9CC83xuyWH2EadfP6p
-	 1KOdHKfTEIu4lRcVSEMyIgsL4m4KBKhJ/kQ8albmpCyvVXOj5vGpKJQBWGr6SX29IF
-	 0GrAJfy85mQx2P77RrMYVjCVWz47tYlfFqzW/9Iy+01/4wIDsvHpSGuQ/pbreSfKva
-	 gTWlvmnfz/6Eo8YpsiKsniVusHc9cAn13nsT0W9g7FLDSVf9h12bxWGI4bSUib2Yhx
-	 WXY534tWcr9vQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-hyfv10011601.me.com (Postfix) with ESMTPSA id 32DFEC8017D;
-	Mon,  7 Apr 2025 12:19:59 +0000 (UTC)
-Message-ID: <77d7aede-0e4a-4ef7-8b51-4028c1f677f6@icloud.com>
-Date: Mon, 7 Apr 2025 20:19:55 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjVoif2r"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso21776235e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744028481; x=1744633281; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mk7RPcv+2R4YAv/tAF8Qdd1Qu0WpDKQeLpxo+ejMbqY=;
+        b=RjVoif2r9wZO3RLdjCGIZ+rReZ2AMbrRnXrgozfc/dAdunkAoLCIQCYGuNoyZCqUUf
+         Ewz4J62OGwrhH9eMIw1G7O3JEZWMIot+1ZqyIkaZmCq/QSDvZ5MZ2TnTAW/aYk7SZCA8
+         ESwl2KWqt4z71UH3zvk+71bbJsMHadZRkx/JJMrBRgjfuUKeWEn12X8IW/pXrXLoWRyw
+         yTScYf0YjJMC48QCRsrFdjjjuLpw/0nPp386dJ7PJqqSAA9HsYykFWK/i+1YWcQpkeyw
+         kOf+SCdtGpvE8bc636YCOdpbNkizm02aTP+cNwf8GWo1cVUiNu2RT3UBtD2GyqL43GME
+         7r8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744028481; x=1744633281;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mk7RPcv+2R4YAv/tAF8Qdd1Qu0WpDKQeLpxo+ejMbqY=;
+        b=dMjBWkcMtHkoVoyXGbiNdyrQieQ3WheVLD/RQWlhs0plSG/ce6OBI8dvqKBD/05ive
+         yoCLoEbKZoczRxUva69zt7RR0gHzqjGQg78+RlklgEWkqhiGw4SAx8Mm20Nzf5VBbahF
+         ATtpk3gAAJRMK9304rPUwBLv06hbYyX1rtKPvSgbHS2flVikTQ7sh7eNcaIfpF0IOABj
+         JlWIygGAPC0io0jvF4P1XIahTi0brum/gbCw1Y65W8ysMKM5i+rJ2usZlF+85lxbO7i/
+         Myu63tjI4MWWA71KFjdDUa4cEwUTDo7lIu4WH1V/Kw2KS16Wd4fZ9So14CqXiDTERuiE
+         vUVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcuQD76ZqxfOhdkOx52ft1SRHjvdEgDY99ePCUvXknlR92I0+Czdupr+Mj/yKyFqed/i68mxGDu+c4dEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr13HaGKdEWLB1bATn9QctB0KFe0i/DoUx3wsp4yqWVDvehhqw
+	u+RnG8K9MTdd9yd7MWl828yQ+xDWb2Xl6Do0cbDehAoVFZuEigPG
+X-Gm-Gg: ASbGncsF02SHdcdFXNkZnPMrgE9y1IuYyZ56pz8xMu7Eik5ynvZJIb8NwQmelkoot1k
+	mE/Dudy8Ge6b7AIqzmIDqOlKbDqV2+d+pCV4BMEPkfaIKVUb/wDzhSftFOYi2OypksNXlJirlQx
+	gxErKRYE3z9xxKo/yqB/FQvSiw18dLkMndntca9bGoy+JBJT9utaIXU9pbuJy5moAMFWqOpu+rW
+	O73LQsZWl/OV9h65F+q39JnoQCgix9Ohy56KHRu9dBtTNYMqOKb3Y5NVRDEb11pWrSjltO+K5sl
+	xhngkj2ae8m/z9+qZ3m2b2cm4EYOxtnwTUEIbHeA+aQZpOFhpUSj0F9wcc2mzYstwNaLwtiCxVV
+	w9trk7bc=
+X-Google-Smtp-Source: AGHT+IHYLR1EDZrWvod38pShwJcb9XIwrEvM/Ff6ZkWw6dYwPM+i0rz878gr+CGs8FOEgXf2AGrR7Q==
+X-Received: by 2002:a05:6000:420f:b0:39c:30fb:fd97 with SMTP id ffacd0b85a97d-39d07ad8accmr9499023f8f.1.1744028480684;
+        Mon, 07 Apr 2025 05:21:20 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d943sm12034152f8f.74.2025.04.07.05.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 05:21:20 -0700 (PDT)
+Date: Mon, 7 Apr 2025 13:21:15 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
+ julia.lawall@inria.fr, outreachy@lists.linux.dev,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dan.carpenter@linaro.org, andy@kernel.org
+Subject: Re: [PATCH v4] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+Message-ID: <20250407132115.11ded3d9@pumpkin>
+In-Reply-To: <2025040752-unrefined-labored-8c8c@gregkh>
+References: <Z/NxGilPLPy7KSQ3@ubuntu>
+	<2025040757-clergyman-finalist-0c63@gregkh>
+	<2025040752-unrefined-labored-8c8c@gregkh>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] errseq: Eliminate special limitation for macro MAX_ERRNO
-To: Jeff Layton <jlayton@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20250407-improve_errseq-v1-1-7b27cbeb8298@quicinc.com>
- <17f1c39447c3706387d62224018522d4dcbf85bf.camel@kernel.org>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <17f1c39447c3706387d62224018522d4dcbf85bf.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: KDwk9knJ_vy9sp_CVpKj25u2FzucHiFh
-X-Proofpoint-ORIG-GUID: KDwk9knJ_vy9sp_CVpKj25u2FzucHiFh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=340 adultscore=0
- phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0 suspectscore=0
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2504070087
 
-On 2025/4/7 20:05, Jeff Layton wrote:
-> Patch looks like it will do the right thing, but why change this? Is
+On Mon, 7 Apr 2025 08:53:30 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-just make errseq implementation more generic.
+> On Mon, Apr 07, 2025 at 08:36:35AM +0200, Greg KH wrote:
+> > On Mon, Apr 07, 2025 at 06:30:50AM +0000, Abraham Samuel Adekunle wrote:  
+> > > The sequence number is constrained to a range of [0, 4095], which
+> > > is a total of 4096 values. The bitmask operation using `0xfff` is
+> > > used to perform this wrap-around. While this is functionally correct,
+> > > it obscures the intended semantic of a 4096-based wrap.
+> > > 
+> > > Using a modulo operation with `4096u` makes the wrap-around logic  
+> > 
+> > <snip>
+> >   
+> > > -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+> > > +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 4096u;  
+> > 
+> > I do not see a modulo operation here, only another & operation.
+> >   
+> > >  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+> > >  
+> > >  				SetSeqNum(hdr, pattrib->seqnum);
+> > > @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+> > >  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+> > >  						pattrib->ampdu_en = false;/* AGG BK */
+> > >  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> > > -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> > > +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&4096u;  
+> > 
+> > This also looks odd, nothing is being "AND" here, it's an address value
+> > being set (and an odd one at that, but that's another issue...)  
+> 
+> Sorry, no, I was wrong, it is being & here, but not %.  My fault,
+> the lack of spaces here threw me.
 
-> there some plan to change the value of MAX_ERRNO that I'm not aware of?
+It is still wrong '& 0xfff' => '% 4096u'.
+But it is all rather pointless especially if you can't test it.
 
-no.
+Plausibly more useful would be to find ALL of the uses of 0xfff/4096 (I suspect
+there is an array lurking somewhere) and change them to use the same constant.
+But you need to be able to test the changes - or at least discover that
+they make absolutely no difference to the generated object code.
+
+	David
+
+> 
+> thanks,
+> 
+> greg k-h
 
