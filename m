@@ -1,83 +1,77 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842561F4C9D;
-	Mon,  7 Apr 2025 14:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5099A1F3BA7
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037802; cv=none; b=nifh8HE46dYYpjJQN46tz1jtk9t55EHIFYQtmKlfhLICeDSyJuU6PlfQbZKcrlJgNFQqmJPsiDQBX6LZvAD6jT7wOEU+JMRX2vGb4Y/MAvtibKUzZL7wkuF9id8a45q5X2GQ1MLaEOqKL3S1hS3a2asrEjyO0Sm2zcjvHYGM10c=
+	t=1744037932; cv=none; b=WEQswaIDLltmCzh8FJBS3JhsMVKeZWJS8rjlaFeHpS5ZzYQZFLhLW9m5L754dnLaPEuOl0UfbCN971r5PhJLYx8Xntb4LCdJYBYUZm92kvQ+DKimhoKjsTVe7FdbRqCjsRHfi4s2b89hER07WynXVRL0FcIpB6tnoJGKjJBNmm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037802; c=relaxed/simple;
-	bh=T5vLlX1C+2xyL7oFOTUVSKB+HSlcZZxQNyn91LNdUFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gumjjsCDbcf9/TKW3KfdrvtxN+gBS5iU08hswZfOAXhetYBre8LsSm4it8oKfq7mJn6cxvc4qlAAgJJ6Q/ithfnz4V3vFxD/Cr6BQU+vRVAoDPubfeuPM2gPsMfwVFq3qZy39nzmDuUzaY+bxeKGbPHOlUC6En/SlmUsNZj1Wxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i8A/Qbry; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744037932; c=relaxed/simple;
+	bh=BpzgmuGlEFK/RQSOak77g/Mgr8Oovi8BXchVpl8j8E4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NqEmZJg1XRXaojdn9G8WGmSxFWASL8rnKScgBZ1DriyjTTGZ3tlwfq0ig33Ej2Vh/JWWJe6ydum6WyGeRrn3SP5Tows4KQ7HdluSkmoAlOjjLV9oYN6WkRofb7+ldeqVva+dDsvMDh4pOGiuFY6X8WGjgDc/+wOXC2eO5l1UCoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVyN3qze; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i8A/Qbry"
-Received: by mail.gandi.net (Postfix) with ESMTPA id D25DC44334;
-	Mon,  7 Apr 2025 14:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744037797;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFS7mkJjmpuYSEioASPocfXE9tFZiE4yxHGMBy3XokQ=;
-	b=i8A/QbrytSBSNDOIwQrOPt8cTmoIXfPqJnMhiNxvxgaK77DffW+pNZKoWSCzbZYxChnz2o
-	6IVf7zw5yu5ZDNVfOcIqsUo3w5oe5LxOrktNyHMy/DlWuVVw8fCHlu/RGMVATYgxHgNvIJ
-	mB+znqbckeg8sPaIBTKrVfAZnmGjlc9sfGNL0Kkd4WKt07rXEXnwKp98mIHjE8sCB7jHpV
-	BEoMt62lk6Xb5CGovsLaFdYoOCQ6PMHjFU07ylr9mDVH8D260KrnOg3+XiELToFkEJ+9PA
-	pNUQf2J1dzWHHOtiu0S+dqd0PO2nRPweHMTiRGI0tnAOqzd5TwyvQTMMEEg3WA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVyN3qze"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6eeceb05894so4994966d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744037930; x=1744642730; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BSL/Umne63WeKz6DVQx0NLyY1Y4Pn9uacURukfI+Kqk=;
+        b=nVyN3qzeqaLxh8SKoM7Cg3NaFkTJY/ep01AR69ROQhGeBclgKSC5Ww8OzMEjn/uE7f
+         EmwlSaDyh5hroT8b+oasPmNNff+03X1R18PIW2rbVeoelCcw+RRvnMF/X72p9v+d5sv6
+         GbJVc5wrRwtMlVNOvypzcQ/Y7SPg6YG6uvrE3GcrpPm5acqenMY/xReHnFbpz0emdAGJ
+         aM7mLPWBA7uSjHK4AER+2sEu26Q2Wp71vQ/1CvMeAe9M2fXj/v1RNGTQyOPsteLHoJsd
+         fELpFt7eeAUHlyOwX6Wojnb82fAFWLnRYLTazQI/20HneihNALCELIl7/9odcsU9tWf5
+         vjSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744037930; x=1744642730;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BSL/Umne63WeKz6DVQx0NLyY1Y4Pn9uacURukfI+Kqk=;
+        b=ZDLtqmEAZdtO4YLoFdrlv6Kd2Jek+uf5hmeQdpyeqRgDa22DS8E3b6c1zxVy/aqlIb
+         JtjPWqhOFcNMToQuj3THYlCKjFvO/h6nGhdOQruP2ounzkBtCHnAa8EylT9NZgF7914f
+         tG9Pgm3E5T33BQyqY8zrvsLnmKRU0vfsNsRYg12Y7feKuLKZADpfrzEngiMxUNTa2OGo
+         jc4mdxPyioW8mea3fNLeqOPG90rnzYz8kK5usIiuokCBWyWiTXIBjNJV9BkcyMH7tpZI
+         Bwb4vqH3M85mmVNw+Ldi7LIcQuLGtkUvSpfgydAPMi9uOjB8TLLXZyYXzgGUcKoLF7hI
+         Yd9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVWoOw8yvKIWLLGdEjfHB39QEcznRc8iDIcAmpb1QDZVLEvT534Cu/l5xXnF5haKoUqo2na8vgNT6SUexw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyX4vNieRUB/SL77EwSPI1/N/pcod/22doFURfB5vwhVvzYhYD
+	ZS4zWJxwg8Wg7D/a5EWo7jOYKyKko+tWa/B9V90sUapJF2cJeSU=
+X-Gm-Gg: ASbGncu8B7FgGUeeTF/tHSs5m5rECHUVOdk0+OdgftSiuqMQO76bdc+jUmm1w/+BGLj
+	WbXpC7115rZrE+op1+1TMtcQ8Cvfwh0wsm0+z1UVis+ScpFViI+XXdRRQy9UUrVrUbP8AJB3SiP
+	JbES61EoOi05/uQn+Nsa/MFuBGJQbxKoJWko0ukuguVL3cB0MztjG16efUGxGPY70futWNXiLQJ
+	5BxkMPmrK0bcG+JauFfa0iInOwOcAqBbIqnsQN06OxzW0aZU87L/Wd3Aw3aYNyFFRHd8PM9Fff1
+	KSW1z2BOyf4YF0qIFIQncF3Mhdy2Mw5HwemEgUugZA==
+X-Google-Smtp-Source: AGHT+IHkhABbtbnbZCCqFm6QnrvFXaTc5FgxOup1Hmvg0MMV6iWmGuCzMsv9xxt25ZU2Gr7ek+7lYw==
+X-Received: by 2002:a05:6214:e8e:b0:6e4:29f8:1e9e with SMTP id 6a1803df08f44-6f00214d08fmr75158456d6.0.1744037929933;
+        Mon, 07 Apr 2025 07:58:49 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea5782fsm607790885a.73.2025.04.07.07.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 07:58:49 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: patrik.r.jakobsson@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	airlied@redhat.com,
+	yakui.zhao@intel.com,
+	alan@linux.intel.com
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 16/16] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Mon,  7 Apr 2025 16:55:45 +0200
-Message-ID: <20250407145546.270683-17-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407145546.270683-1-herve.codina@bootlin.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] gma500/cdv: fix null pointer dereference in cdv_intel_dp_get_modes
+Date: Mon,  7 Apr 2025 09:58:47 -0500
+Message-Id: <20250407145847.1016528-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,42 +79,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheffiefgjeeuleeuueffleeufefglefhjefhheeigedukeetieeltddthfffkeffnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepuddunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdpr
- hgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhtuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+In cdv_intel_dp_get_modes(), the return value of drm_mode_duplicate()
+is assigned to mode, which will lead to a NULL pointer dereference on
+failure of drm_mode_duplicate(). Add a check to avoid npd.
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+This is similar to the fix commit cb520c3f366c
+("drm/gma500: fix null pointer dereference in cdv_intel_lvds_get_modes").
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
+This is found by our static analysis tool KNighter.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Fixes: d112a8163f83 ("gma500/cdv: Add eDP support")
 ---
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/gma500/cdv_intel_dp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 6b37d61150ee..fb3e48543453 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -631,6 +631,11 @@ config MCHP_LAN966X_PCI
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-switch (LAN966X_SWITCH)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sfp (SFP)
- 
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
+diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+index c85143792019..4bd66804bc09 100644
+--- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
++++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
+@@ -1767,6 +1767,9 @@ static int cdv_intel_dp_get_modes(struct drm_connector *connector)
+ 		if (intel_dp->panel_fixed_mode != NULL) {
+ 			struct drm_display_mode *mode;
+ 			mode = drm_mode_duplicate(dev, intel_dp->panel_fixed_mode);
++			if (!mode)
++				return ret;
++
+ 			drm_mode_probed_add(connector, mode);
+ 			return 1;
+ 		}
 -- 
-2.49.0
+2.34.1
 
