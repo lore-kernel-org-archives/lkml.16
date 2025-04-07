@@ -1,169 +1,106 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3857022A4DB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D35218ABA;
+	Mon,  7 Apr 2025 23:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068133; cv=none; b=LgfBeLvS16UkloV735oyPDJvM0goRc0lf2I+86TCwYUI/aIpYz2hRS3/128+4/1cKnEocYqk+4/m+0m5St0ER5NxS4oW+1UlS/ElLH7Iglq6qhpvexezJqFO2J7C2nmrr3kVPsGn02Jmcj/K4SeF9Q5n+cLKDoAGrvDYKKuGG/Q=
+	t=1744068150; cv=none; b=LUtbGtENGjDze0c1uoaw1CDN9+0ARvCNZP73fXmLqieAF8oCaQI9taYFcpiGff/2XOBgIAZJwjF1j5rfINQh4MmEOc1u+w1ex752Bb38r145yIrom9s9uT1QtcNuxm8EIhN7XBZfx7m8l7nyIx9OAmSRckkK10JKkTP+Nd9xBT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068133; c=relaxed/simple;
-	bh=VAli4Hqoc2udRObGUi3yFrlc+G+LEkaNEDyVuNoc8KQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gOUMKSX6hEBylwb1l4vSJdsuQOJBa1ECUVanKwfNodwwRXMrtA48F0Uh09VL3UiAXNSn2PBslKOikspU5rLNsbzXZ6IDT1r+J5+B1w2QgCPliZK0z6iBdb3fzlgxfvipOWk9EcAn83vo5ydIeXgJm7iaaiJiGzUsgSgeq05yv7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=khEuAX2o; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744068150; c=relaxed/simple;
+	bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VYFPVUYOJ6J8+/3pmRFxU9bg18DDCpvkAT+xRN+w6LYVzIsZoi4o6s6frHeRn+HOT5KM/y1utb/d7W3+4dpAkwSL7B9U4ng99r53e2nXoNY2XalruzdWriHk5h+5Kj3qHSkZQYe9K8FAMD4ZZhCTWAZHkctGWYHrBw+a32vPhOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnOYkPeg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="khEuAX2o"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744068129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qq6Vv/CkP4YKiaGHVdsEm6RC9mu+KNutOEDnzksBJgw=;
-	b=khEuAX2oCVnvsuH5zxvIEymWftDOLrcV8HiBaIt/jQCx0rx9aJYCIajcmh7U9qO7Io8Tb3
-	r8Ll+f3aiUHDYJvhaJo8XY+Vz0ROTFcDAg4YnopUTL4RAMGrg3KHQXQSIOmWObgOImqLjc
-	aXmypAaDym8gGwciCQbPcFVhozXkAQ4=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	upstream@airoha.com,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [net-next PATCH v2 13/14] net: macb: Support external PCSs
-Date: Mon,  7 Apr 2025 19:21:52 -0400
-Message-Id: <20250407232152.2317123-1-sean.anderson@linux.dev>
-In-Reply-To: <20250407231746.2316518-1-sean.anderson@linux.dev>
-References: <20250407231746.2316518-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnOYkPeg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A88A7C4CEE8;
+	Mon,  7 Apr 2025 23:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744068149;
+	bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZnOYkPeg+6MV5/3EgmQKlfeGvSukYVXEBNOuI++ZIqpO2sBtZUL95/+qQ2P5dSeKF
+	 oSPu4sN8mFyyNOZe8mZiTgX7pC/l4ug0jOOqzLqgiMVRbj4Pu1FPiObGrouvOJJowI
+	 6ep3fZqpJEYm+3fRpsNujSFWQTKiN/EmdMob5AdvmEr4UyiGQST4uYQxjZWo1A+9Lu
+	 Q9GgAS01ILv9vqFzxq3lvytNllwrTIv+QoI8Q9/4AU0NVnPQnz0r1sflx+97TIro2t
+	 RDTxxKfm9DvU4hPk1Gcop4mxa/qk+rcjsSiJxBi8k7bXhwCbcsDWO2tIqpJvY9y8dV
+	 IlXPtZwcNoWAw==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Mon, 07 Apr 2025 16:22:12 -0700
+Subject: [PATCH] kbuild: Add '-fno-builtin-wcslen'
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-fno-builtin-wcslen-v1-1-6775ce759b15@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACNe9GcC/x3MSQqAMAxA0auUrA3U0uJwFXFRNWpAorROIN7d4
+ vIt/n8gUmCKUKsHAp0ceZWEPFPQz14mQh6SwWjjtNUFjrJid/Cys+DVx4UEK+1LV3oqBmchhVu
+ gke9/2rTv+wFljN1dZAAAAA==
+X-Change-ID: 20250407-fno-builtin-wcslen-90a858ae7d54
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, stable@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1685; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOlf4ozvNQY8YpTnm1DMN23RuQOm005tNI0+u/bw2k9xr
+ YtvN3TYd5SyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJGNoz/FPrSH7FqHx6o7SF
+ udY3j7inkQU18ZfUD6brpOi9+pcssZ+R4WBf1qTeeceyFiYyqy5cJMjY3/7x0bMl93MndZ8Lk1V
+ 9wgUA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-This adds support for external PCSs. For example, the Xilinx UltraScale+
-processor exposes its GMII interface to the FPGA fabric. This fabric may
-implement PCS to convert GMII to a serial interface such as SGMII or
-1000BASE-X. When present, the external PCS takes precedence over the
-internal PCSs.
+A recent optimization change in LLVM [1] aims to transform certain loop
+idioms into calls to strlen() or wcslen(). This change transforms the
+first while loop in UniStrcat() into a call to wcslen(), breaking the
+build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+  ld.lld: error: undefined symbol: wcslen
+  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
+  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
+  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+
+Disable this optimization with '-fno-builtin-wcslen', which prevents the
+compiler from assuming that wcslen() is available in the kernel's C
+library
+
+Cc: stable@vger.kernel.org
+Link: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d [1]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
+ Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v2:
-- Move update to macb_pcs_get_state to previous patch
+diff --git a/Makefile b/Makefile
+index 38689a0c3605..f42418556507 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1068,6 +1068,9 @@ ifdef CONFIG_CC_IS_GCC
+ KBUILD_CFLAGS   += -fconserve-stack
+ endif
+ 
++# Ensure compilers do not transform certain loops into calls to wcslen()
++KBUILD_CFLAGS += -fno-builtin-wcslen
++
+ # change __FILE__ to the relative path to the source directory
+ ifdef building_out_of_srctree
+ KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
 
- drivers/net/ethernet/cadence/macb.h      |  1 +
- drivers/net/ethernet/cadence/macb_main.c | 26 ++++++++++++++++++++++--
- 2 files changed, 25 insertions(+), 2 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250407-fno-builtin-wcslen-90a858ae7d54
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index c9a5c8beb2fa..9d310814f052 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -1291,6 +1291,7 @@ struct macb {
- 	struct phylink_config	phylink_config;
- 	struct phylink_pcs	phylink_usx_pcs;
- 	struct phylink_pcs	phylink_sgmii_pcs;
-+	struct phylink_pcs	*phylink_ext_pcs;
- 
- 	u32			caps;
- 	unsigned int		dma_burst_length;
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index ed37b1d85212..61810c914270 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -21,6 +21,7 @@
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/dma-mapping.h>
-+#include <linux/pcs.h>
- #include <linux/platform_device.h>
- #include <linux/phylink.h>
- #include <linux/of.h>
-@@ -707,7 +708,10 @@ static struct phylink_pcs *macb_mac_select_pcs(struct phylink_config *config,
- 	struct net_device *ndev = to_net_dev(config->dev);
- 	struct macb *bp = netdev_priv(ndev);
- 
--	if (interface == PHY_INTERFACE_MODE_10GBASER)
-+	if (bp->phylink_ext_pcs &&
-+	    test_bit(interface, bp->phylink_ext_pcs->supported_interfaces))
-+		return bp->phylink_ext_pcs;
-+	else if (interface == PHY_INTERFACE_MODE_10GBASER)
- 		return &bp->phylink_usx_pcs;
- 	else if (interface == PHY_INTERFACE_MODE_SGMII)
- 		return &bp->phylink_sgmii_pcs;
-@@ -733,7 +737,10 @@ static void macb_mac_config(struct phylink_config *config, unsigned int mode,
- 		if (state->interface == PHY_INTERFACE_MODE_RMII)
- 			ctrl |= MACB_BIT(RM9200_RMII);
- 	} else if (macb_is_gem(bp)) {
--		if (macb_mac_select_pcs(config, state->interface))
-+		struct phylink_pcs *pcs = macb_mac_select_pcs(config,
-+							      state->interface);
-+
-+		if (pcs && pcs != bp->phylink_ext_pcs)
- 			ctrl |= GEM_BIT(PCSSEL);
- 		else
- 			ctrl &= ~GEM_BIT(PCSSEL);
-@@ -907,6 +914,14 @@ static int macb_mii_probe(struct net_device *dev)
- 	bp->phylink_sgmii_pcs.ops = &macb_phylink_pcs_ops;
- 	bp->phylink_usx_pcs.ops = &macb_phylink_usx_pcs_ops;
- 
-+	bp->phylink_ext_pcs = pcs_get_by_fwnode_optional(&bp->pdev->dev,
-+							 bp->pdev->dev.fwnode,
-+							 NULL);
-+	if (IS_ERR(bp->phylink_ext_pcs))
-+		return dev_err_probe(&bp->pdev->dev,
-+				     PTR_ERR(bp->phylink_ext_pcs),
-+				     "Could not get external PCS\n");
-+
- 	bp->phylink_config.dev = &dev->dev;
- 	bp->phylink_config.type = PHYLINK_NETDEV;
- 	bp->phylink_config.mac_managed_pm = true;
-@@ -924,6 +939,11 @@ static int macb_mii_probe(struct net_device *dev)
- 	__set_bit(PHY_INTERFACE_MODE_RMII,
- 		  bp->phylink_config.supported_interfaces);
- 
-+	if (bp->phylink_ext_pcs)
-+		phy_interface_or(bp->phylink_config.supported_interfaces,
-+				 bp->phylink_config.supported_interfaces,
-+				 bp->phylink_ext_pcs->supported_interfaces);
-+
- 	/* Determine what modes are supported */
- 	if (macb_is_gem(bp) && (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)) {
- 		bp->phylink_config.mac_capabilities |= MAC_1000FD;
-@@ -950,6 +970,7 @@ static int macb_mii_probe(struct net_device *dev)
- 	if (IS_ERR(bp->phylink)) {
- 		netdev_err(dev, "Could not create a phylink instance (%ld)\n",
- 			   PTR_ERR(bp->phylink));
-+		pcs_put(&bp->pdev->dev, bp->phylink_ext_pcs);
- 		return PTR_ERR(bp->phylink);
- 	}
- 
-@@ -5462,6 +5483,7 @@ static void macb_remove(struct platform_device *pdev)
- 					  bp->rx_clk, bp->tsu_clk);
- 			pm_runtime_set_suspended(&pdev->dev);
- 		}
-+		pcs_put(&pdev->dev, bp->phylink_ext_pcs);
- 		phylink_destroy(bp->phylink);
- 		free_netdev(dev);
- 	}
+Best regards,
 -- 
-2.35.1.1320.gc452695387.dirty
+Nathan Chancellor <nathan@kernel.org>
 
