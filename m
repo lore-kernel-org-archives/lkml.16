@@ -1,156 +1,222 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012047.outbound.protection.outlook.com [52.101.71.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DDD227B95
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010319; cv=none; b=S77lsGLICHzccAVb8T7mh5Cq0Keb11HiWX82iaow9XaPkG3RM9kHYd904xgzftDnBjqM0dvH3JbyEeZOAOSiayYvy4/LprtsrkjKA8gKf1fhT9W1MnUlsTZttYl4/9EwLGfS9fayOeO/KrggAY/RqMHWB/igedvZmv86/Jeoww4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010319; c=relaxed/simple;
-	bh=5kdF5oVUy/yps6X9BImufh8OuKxxdQ4BjJ7Qv2H6pxc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TxuNsNPcDPHoU2Vm80ZxhiXJEOLNh3DNktUhr8oMAW7Sy+0v9riWF+xE+aZ3NcbehypDN0+UfcuVKqzmdx/ZsSs3ZgWwcY3ucpmzUGOk2Ohyob1H7BNkeNo/etsEolOQsH8UMPn/SR+gRSfivdR0DpHsjDiXB9IR7Il9HMy3feE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MatPvXe6; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCBD22A7FE;
+	Mon,  7 Apr 2025 07:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744010318; cv=fail; b=E1YluP/D9wezYgReOP//d5HSfI33ijlJuOMcvmGiBjV0Www29GEsk/ZZ25K3NJS8wJ1FQwynNkhh5EUVHOo0Lqm2gdIG7zj6IGAWIZrngvvazHDEpUztcuHnxUF+8ojPYt1V0FG3sWW42G5jhaLBkrJ1MvVft62IVaKCg8u3QMo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744010318; c=relaxed/simple;
+	bh=ROWUsargyfr8ZG+N1WJ5DBvr1QhALHkdfoHdCZSrGF0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eAX4NKl0LyggHYzERxsVAHFZBuj/cuuymEMCJMknLK48e8Ve1AgSnDPSCllLqdDzQ1qT0kLfD+pflFsrrcs1Sc898DmF8O9YvlyPQmbVK1ske5+2pWhyLgCODhK51smEy7MYDJj26GDRvucPQUTMrWvPrLPk9dd8vKoXPLpGfAA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ThZgJr/w; arc=fail smtp.client-ip=52.101.71.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MatPvXe6"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe574976so26700575e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744010316; x=1744615116; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K/lQSP02uZhzaqZfFDZ+bFMWR2NaVs5b5QtoM2HpE7Y=;
-        b=MatPvXe64+0aWbA3s/4/FrI//Kmz2mSQ+u34tLBnNCnLKaEIWKzvISQ0N5dQRbYmz8
-         3CE0HgUPDiEa7k/+e7KJ5hTk16TIkU8z1vnfagkzDXYINVXVVptPnC07Ai1pPPb4gr+f
-         iLw2/I/XHCnDFV/mxoAdTFxhuEK3OIL+qcgC2GsB6YQiLtpckiHhAFXKHN1BmMBvcTc/
-         wORUqXBUfMaPiAZSvrXIcdJxW/jSP1Bd8bmaQ2gapuxKDOgYXHq5TjEQEpYo4YwhlGS4
-         TfSm1Szx4cvwNCGk4SLViWWUXGE2CmAmHSVGp7TETz5QIGwHnSiKh4IocpsCWkzQlXZq
-         SR6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744010316; x=1744615116;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K/lQSP02uZhzaqZfFDZ+bFMWR2NaVs5b5QtoM2HpE7Y=;
-        b=ZE4zzVW2IdMU2jnDsWY5iC/NQOzI4EDy9hA5HwMGZDGauk+tQ4jNNIm4EQPZYBeVUq
-         3/nkM0d5qBO6ImlwESrQmwUJQG+PT163m+r+5J4p4xNDYJyWVE8RCZs21e3fmm+47JhF
-         hcCUZzTmyXeK5R3p2wKvFlNCjYP50vxfE+gw/G/anSHS3NR/V9EPVZ5SW3HbWU2++8ip
-         BPlcyv4TrEr3ykzxRpN4YHCbKFJkVlPkC899rk/Xi+iLdA9okB0CPY5y6WjsEF7n+osM
-         jLwD72Iv9JFYZwXGweImFyNC0C2v2ERqzcGuzZnI1GCLfm1iR705Q7rrwkuTVvlmB6es
-         Yl2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXLaTRuzBSyZoaUGPp2R7GkJ9yuXEtaNw9OJ0E+iIKxuMHlKSU/hyL0zKAvNEEA7VFtVOF5yONcOlDY8sY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNa41f9O9v6JcpNczdm0RgFvDa1+Pibf6YUk3+RAYOUYaNgduh
-	391NFjLwfXhBXwtBjvKVNL5e9jb75gkO7tpRVCSJKmvuFCbj9vLpsSfbPy4ZQpM=
-X-Gm-Gg: ASbGncvG0Jdjt/IEekH/ptvTWieCKuyR4usmm0xSvJYze0MTuGDQqyEXTNV+SmGMzJR
-	uXuzd1qwWE+etSZZ3Kx7YmSlD4Z/aKRL+Tl9KqA5OUvbMg0qrZrwmjrFVqmKNMuOwk/dsp/3/h3
-	N0da1n0K3J1c2Hf8xLBOoxDd/5dFAVhxQWV13iyLPjGoi5ECDCVP22UaXW/u9orcUZ28Kd33KE6
-	u9kbet/MlScQj9d9V37opoVn+ZoggZkOPOjrULtRvR2gYt+b2e4SAEIQPQgIpdBHjAogfSbvNXm
-	RQV80md44ZzNVEuGIHuLVh24XDTHOhPNeXqHMw==
-X-Google-Smtp-Source: AGHT+IHZJ6eZKGM0X4E3G3AiVSKpRFA9oT3UOJNHqKpzBidSstN5tYKbajNmdPvNjyMO/2yji8ci1g==
-X-Received: by 2002:a05:600c:4f0e:b0:43b:c0fa:f9dd with SMTP id 5b1f17b1804b1-43ecf9c3224mr81160555e9.25.1744010300476;
-        Mon, 07 Apr 2025 00:18:20 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630f21sm125224455e9.8.2025.04.07.00.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:18:20 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 07 Apr 2025 09:18:15 +0200
-Subject: [PATCH 7/7] iio: addac: ad74115: use new GPIO line value setter
- callbacks
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ThZgJr/w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UavpF6fWfWVmS/zGSRhO6lUn0wFeBxy85uyPL5LbllVfP7CKt8R+I9IlzwXb0WuomuSq169Jk9IFLGnsvvvYOR/cS6Fqrc1Hr8ztPOlViqmk+V8/8V1GxdTUxy7N2GF41S/iNpWH17nTLVLU/5dWbmFAO6u8lEGF1ca4GU6R3T86xrcFgtVcLEu/ZN4dVHQmeoEdk0qlcmNF+HqMv8ukkJINaA7rx6a+oNzULsOM3Lzt46Gl0aUMb7L7QDdO/bereftlOk5bDuc7zckvCk4ARns2BltjjW6ZQ2RutvRhFxtKNA6Bw7H/MGhZyq1ALZIvGz7IWunmvbL63/YZ1iptzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=plncZWp54IVxWWNCLH8XiTMR2lKfeg+TQI/HBHLV7yU=;
+ b=VSA6e5qiD/17XSmrqaEyv7GzR0p65FcycKIeAqbRMm7+XAncywNM42IVbNEHDhs9mPJpPYTBRF7GJbR2Qhq4UXSqaPtXntQQYHAuEYE6vaQoEpzkv0VdGeVwZXoGd1qGtNRGi2bQOq8cz6aoTBF9dMUi27stoTdQKAyzR/Krlukr0bcHbaMn8jrVw5quk9NGPDz8jyNDH1wHASZs1zpqHPzEENL1o/Q4BZjsV5GVYGaLq/fjNoFwjb+RkHCWdl+AYnqoOFmOqPUH5B91TDQ0+eUoqbaU4BV7gswU5jof4iv+DeH223VcR5LtUPLpHkTS4tsC7+UHC0ryxhKuJjK6VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=plncZWp54IVxWWNCLH8XiTMR2lKfeg+TQI/HBHLV7yU=;
+ b=ThZgJr/wPo92Rf7hiaoVtfbP3WGTUD26KB62r6ftq+9WGdWwPZsfLQlm58aMnJsFJBPHnvHsvRBmGmfz6YpO04HYcjO7XkU+HODRxffdgTUJtxBS7CFb0D6wZCLi+LN7gizsPzeUk4/5aCu2gR74SmtO6XvZvf1U+e/42LTyuPIcWlqcsmakwVnK7YMFsa6hhNQlTbhvKkuXI910vZ4UMWiXO3z5ASJ/DtCJp84k2/SVLrV6x3ayRYRh/+0woaQzX9kSwP7XpjmjpgnGnttW5//FRdY9Oh1qRqFJkXZsA2wh/L9d3V3M2b6r5wqx0J4rLbNk5wrUVFMSmqCA2T/jyw==
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com (2603:10a6:10:242::19)
+ by DB8PR04MB6858.eurprd04.prod.outlook.com (2603:10a6:10:113::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 07:18:32 +0000
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37]) by DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37%5]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
+ 07:18:32 +0000
+From: Sherry Sun <sherry.sun@nxp.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Hongxing Zhu <hongxing.zhu@nxp.com>, "l.stach@pengutronix.de"
+	<l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "shawnguo@kernel.org"
+	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
+	<festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Topic: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Index: AQHaLabE+/mqsANsskSLK4N2coNpALOWMC4AgASMryA=
+Date: Mon, 7 Apr 2025 07:18:32 +0000
+Message-ID:
+ <DB9PR04MB8429588E7CF00BDC9CDA863F92AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
+References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+ <20231213092850.1706042-3-sherry.sun@nxp.com>
+ <20250404094130.GA35433@francesco-nb>
+In-Reply-To: <20250404094130.GA35433@francesco-nb>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB9PR04MB8429:EE_|DB8PR04MB6858:EE_
+x-ms-office365-filtering-correlation-id: 0a90a64a-97ab-423d-1db2-08dd75a46780
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?HAPhqp6vLUacYPob+iCQkL697/l1140STVhBs7WDHvwG8g9+Z/UHlC8RuNk/?=
+ =?us-ascii?Q?zHYLLgguDkzapmlisrMSzFPScpB0Wya4vhnlXSgwxWQDsP+v/CD7zGDVnGTE?=
+ =?us-ascii?Q?pBthPR7h6kyXQD1USvBGR5zfdeGAcEIxMq39SoMwKV+BfjlTXVNdntFJ3quD?=
+ =?us-ascii?Q?0cu2pqB9iBjuevshb2s7rFTXGj2cPJ5r6DBrJ7wXrI/FwoLC64MA0ShvCRHs?=
+ =?us-ascii?Q?Vu9aJ7dqzrVbmoNlpAXsuqPLJ8zp2t/qEFhNj2oEuVfHCg7dr32+N9iMPQpt?=
+ =?us-ascii?Q?3jHiWG5dHjBtc5/qdJR5jtHwK3tTthLFZqQJK5s9UTjs5StmknN1R/7fw98p?=
+ =?us-ascii?Q?Jdxj29uCcaJR1Ss7m3vkP3Hk7XEEeUZ8fUTUSQhiMC1u26rYA3lip+mLaeKs?=
+ =?us-ascii?Q?jjsb6I71/jHfYCStEZLeWttOxoaN638IiU05YPoaWJHnZvqUK3Y/RuLzyw8x?=
+ =?us-ascii?Q?2v4zl9n4h4wLe6H4OWSCMNf2KVmo7WxW2R9KaDA/ye+LDiKxCEsLPpbb+jN2?=
+ =?us-ascii?Q?gEKmISgkpM2nka3oX2WQD1ihWZ29hvDP7NsHQX9RcHKl8YNVynKoRW3N9+YZ?=
+ =?us-ascii?Q?E7bCN+VZlovCPHfWE2JmDou5K+cHEebp71oQhKXLTngAApb+yU83YBwmbO55?=
+ =?us-ascii?Q?YE1+x/yU6UbUNlqFb628Ccx3MmYAdBZPEvutbeBrbi5MFH23dqa9lRoFDvkg?=
+ =?us-ascii?Q?y7TrDQytiK03aqUjvjopiUQcPIxCD54i9+e2eqHk5LOsZQNt90wjRmkwoQEL?=
+ =?us-ascii?Q?ZoOS+fb12luCnmdsF7fdXJf8hrS8wnu8Ja8lIY2jMsGm8n8KtJcXkAkX3zBU?=
+ =?us-ascii?Q?M3uqHrSmo8Ri9qlPQpADq17JJqQej0l8+PgM5bFEuHmgPJFuJcXF85gW8naa?=
+ =?us-ascii?Q?gCQePM9LWDzwczCmpyw3nwXgETTdBsSwL2/rr3TglQWnR8xnWmUtBfV5KfLh?=
+ =?us-ascii?Q?yLxfko7zi2tnuCyg9Em6gTaSVIkrGnTrETikjxKlsfG4P87uXn1VzWVxXxG1?=
+ =?us-ascii?Q?loCkjnIHCqAgaY5rkUramWme4Vrpw9uOOAyj1MgLvBp5mM24DKqBz5Mx7wi+?=
+ =?us-ascii?Q?1H7jipQiAm54ePd9B97YrYsh2XX9zOcL3Ts+nynVc+tDzzMfhPEDROw/qd0y?=
+ =?us-ascii?Q?9oiUIA7z3ieI/n5KNd3BG8V+OJusJ4KvqQCykPRgawjTIA9Do2BinAba3XvF?=
+ =?us-ascii?Q?9JtHU+hVMd8JZrmny2y+4jerTkp+28XWMsDbETeXKHf8eGTW1jzgycFQCyi7?=
+ =?us-ascii?Q?xcP9Lmdb+VKBUj0TM0Ry8JnJkwzJK5lf0vqXv6Eq7FE18k2jq20PMiqZxst3?=
+ =?us-ascii?Q?WNwFkk3reRcgVHu9u6WV5EB9s8pChFPixqIOTpdpItmmuHh7Pz/czkpzIQqj?=
+ =?us-ascii?Q?ssyjbUPV2m5KM82O5Hg6bGsA1t/RJX5DvxRf4z1Wuut403rofMunsCxSsoA/?=
+ =?us-ascii?Q?SRQdkXfCWmOPoqbZvy0BnKL2g8B2OVU5?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8429.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?016VoYNL78HCQQnipc75oFX+A1yW+tjZ8wQpsG3zCEtnjZzJDBovdXqdgwpv?=
+ =?us-ascii?Q?S+N6a9odEQ6lCr5BzjW1tJ0+vezyzAhOaKGiTHt5ZVCYOQftLFLqQb69kMUI?=
+ =?us-ascii?Q?JX9OOAOJS3dO5mt3bia4pAdtxEqSBXxkcs1OkQv55Wch7bv6WAawxDmnN4nY?=
+ =?us-ascii?Q?GwmOKjoO1kP84xM+Crdzyfs+Ibzjst/WP+uyOGrmap9PegYswU98RD3MlXts?=
+ =?us-ascii?Q?ZC2jTKLcUfximA6KELQ+Cin6a4AVTnou2e2VFt8WUapXPmEelWIVdpsuBZnr?=
+ =?us-ascii?Q?4aETo+HXl9Qj8TqfzT2mZbdyRBJdt8MgVO8DMqMiyH3pY0ugRfkSHIdbHoD3?=
+ =?us-ascii?Q?UFGKV1nCwkMVDG7aVmxYncWZXXITx/c7Tb+JLonKFBgnMEY/yLyOX3Lpfr8i?=
+ =?us-ascii?Q?KMmcIn2uDMDk7WaCvMp6A0xJrksWqkSzmPib5rku/hqWIr84R7cK73Wi7Vki?=
+ =?us-ascii?Q?MmY4Oy7KV3BhIZHptfXHQJ1gKITCBY3UojzcxtXrLIyLHUhjZzljrmStVWa7?=
+ =?us-ascii?Q?1Skzf6ju42fzk0AC+R5JX9A3TqEMOFbm0L7yZG7oLogU/0qFa6LSOFphgE2q?=
+ =?us-ascii?Q?6VDv4muQvNEI4Uw2qkKz0S7U0LtzpKLm4tsUop3VEzlSgQQ63JAGn1yhXdSi?=
+ =?us-ascii?Q?ilZOV0DiSQg8jbO6QtKhxRNpvPEJQIA0hRR2vM+8KDEFjGcmiIaHdgePTM/S?=
+ =?us-ascii?Q?A0pnBL6sLSV3rWd+BxL3meIv+dCUZ64kWfBkaekQn3pYJq4JFfb/ubsrNqwm?=
+ =?us-ascii?Q?q08rWB5TLWuZGOMcnVmxBuuLAY8LqeAjlTUmlnHXfOKVNiEfaqqGTsRypeMO?=
+ =?us-ascii?Q?g/+PZ0/LsG4ItBWHDeHmUggxTjaQdUKwOA04eItG73e2VFPDU3oRXLqBBqLg?=
+ =?us-ascii?Q?IdVfiXq0xRfG56DvqiQCx1YJHlGQ255DsZ3HJIRgj2cWa4A/Iv3YRRjVWzuY?=
+ =?us-ascii?Q?CRd1bac48fi2H8mP4z9KjJv8ChNmEQIzYLJGlyL2NFsEMdeQDc8bHN+bdTo8?=
+ =?us-ascii?Q?ePt4VRICEC9o42n4k1sOKm01PKdapRdOZUYwiGLJySUI1Ssb4XWC5TaF1s1m?=
+ =?us-ascii?Q?A/5zBWH5Tqk3SaZ8/YBtoqYNGdUH3vJKVBjQynOvX0JDwU45dMcIi03th8zp?=
+ =?us-ascii?Q?j8y7B/H5qcC7gRm4vVDhbp7Kt8X0EBhCR5o0nMkeUerQvf0I/8+hGgOJUKjn?=
+ =?us-ascii?Q?k7k+Th6tPbGh0Ma/fXs0D7gXDwHuHdG3dJ3g8diM3HQesYI2KuDOF1CWDljK?=
+ =?us-ascii?Q?hZvxbcehPhvE7AT/JhBXcOhfbMq8r83mOYOyRNjj8ExzyXT1rZiDHeNKtEKx?=
+ =?us-ascii?Q?K3EwiK7m0+dkZJMCVOdHV/HiyO1hjhCagQixh0/sd+zzfMspe1RM6h8OqE+Z?=
+ =?us-ascii?Q?ExdExispzvLmUr2RrVywLnBHQOK8VVHd5V9ZzSioVxQZrwj+kJYoViODJK6s?=
+ =?us-ascii?Q?woVXTLeQH755LEZVfCxosBoT4qJquuiCZGTYrq6tgBJdx0D2txq0xelr20DY?=
+ =?us-ascii?Q?rW7OnfXargqwWq1GvdjC2pjBNIWeJktl/c5pYb3k4xB/En1nT6csvyHOBQr6?=
+ =?us-ascii?Q?tAaZMKMtrP6TmWfXqJA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-gpiochip-set-rv-iio-v1-7-8431b003a145@linaro.org>
-References: <20250407-gpiochip-set-rv-iio-v1-0-8431b003a145@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-iio-v1-0-8431b003a145@linaro.org>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1869;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=GM/OUTdtJwVfHBffPnM20PvdLToT9f+xlEL0CqiIT9o=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn83w0zT2RcvbxxdDl95J1of6Esp1CJCtG4NnBT
- 9KjTKwWSzGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/N8NAAKCRARpy6gFHHX
- cuv7D/wJ8rQB9Y9DlVg0wZNX4DBaBKetOrAncRCE3OlQmy2QTip8kUA5d2j0dZOLtaYHSuznZ5Y
- ADpgEA95zc1bdV+9kVNSlvEL3nek/u4FYhCBOq7JyMHxGw7BzrS5yGEClJBcswxBIVyZcuMsLK2
- qN93D+ck9WHRZBZE8U8RSOnGXfPUgFTRMSvDOp6DkGPOFfNYauVIudkYRurEjPHNyoezOEQwjxF
- ymy7wzw+lx0gvHkiCXF1LmnmL/e/j2tvJ9XO11pT9tmabmgyMMUaJI6sL+N3N2oLPq/ma+1fLc0
- BnSQks+2lCnB+XVkUTahI+AB+IuIW3yifmZGt3cxK82Wcnjhf2uXswwx8p8W/zCq91/P1rc5L5C
- OCLyH2t3VJMdgkT+qm5LM+RaLkS/Xuq1JYGj/fWtiQy210zvBS32EghCDXv371F1DL4CS5KgtzO
- p/hRzaa6j4vd6MSG8NwXNImPXTUQqIvbdV+DENtr/RYKX8PXmky3LRt5MOvxjtP0x1EUw12SUSL
- ARiECEfbnshwoV1PZN9yywQMSDV3iKFs2vUcSF/5LkHqRa7NDni5yZOlHqWguvxcsxT0Zspi+OV
- VhrRnAS/zN1qr+lqepcZa8lDehr40lw0wA3gKwdz8haFRXS0asf24nMmq9uvTLBL1aRPJQGnuYt
- Gw4w2DyrGQIBw6w==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8429.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a90a64a-97ab-423d-1db2-08dd75a46780
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 07:18:32.7500
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zePYGErRNsxnqe5jRR07qO3ZKpl02JtMxAmZJsogP8KzSk2Ydg4yUlAV572rpE9W9hcstYQ4MamJq9XB+duy+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6858
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/iio/addac/ad74115.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+> -----Original Message-----
+> From: Francesco Dolcini <francesco@dolcini.it>
+> Sent: Friday, April 4, 2025 5:42 PM
+> To: Sherry Sun <sherry.sun@nxp.com>
+> Cc: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> bhelgaas@google.com; krzysztof.kozlowski+dt@linaro.org;
+> conor+dt@kernel.org; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx <linux-
+> imx@nxp.com>; linux-pci@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios prope=
+rty
+>=20
+> Hello
+>=20
+> On Wed, Dec 13, 2023 at 05:28:48PM +0800, Sherry Sun wrote:
+> > Add wake-gpios property that can be used to wakeup the host processor.
+> >
+> > Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > index 81bbb8728f0f..fba757d937e1 100644
+> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > @@ -72,6 +72,12 @@ properties:
+> >        L=3Doperation state) (optional required).
+> >      type: boolean
+> >
+> > +  wake-gpios:
+> > +    description: If present this property specifies WAKE# sideband sig=
+naling
+> > +      to implement wakeup functionality. This is an input GPIO pin for=
+ the
+> Root
+> > +      Port mode here. Host drivers will wakeup the host using the IRQ
+> > +      corresponding to the passed GPIO.
+> > +
+>=20
+> From what I know it is possible to share the same WAKE# signal for multip=
+le
+> root ports. Is this going to work fine with this binding? Same question o=
+n the
+> driver.
+>=20
+> We do have design exactly like that, so it's not a theoretical question.
+>=20
 
-diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
-index a7e480f2472d..2a809e07526b 100644
---- a/drivers/iio/addac/ad74115.c
-+++ b/drivers/iio/addac/ad74115.c
-@@ -542,18 +542,16 @@ static int ad74115_gpio_get(struct gpio_chip *gc, unsigned int offset)
- 	return FIELD_GET(AD74115_GPIO_CONFIG_GPI_DATA, val);
- }
- 
--static void ad74115_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+static int ad74115_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
- {
- 	struct ad74115_state *st = gpiochip_get_data(gc);
--	struct device *dev = &st->spi->dev;
--	int ret;
- 
--	ret = regmap_update_bits(st->regmap, AD74115_GPIO_CONFIG_X_REG(offset),
--				 AD74115_GPIO_CONFIG_GPO_DATA,
--				 FIELD_PREP(AD74115_GPIO_CONFIG_GPO_DATA, value));
--	if (ret)
--		dev_err(dev, "Failed to set GPIO %u output value, err: %d\n",
--			offset, ret);
-+	return regmap_update_bits(st->regmap,
-+				  AD74115_GPIO_CONFIG_X_REG(offset),
-+				  AD74115_GPIO_CONFIG_GPO_DATA,
-+				  FIELD_PREP(AD74115_GPIO_CONFIG_GPO_DATA,
-+					     value));
- }
- 
- static int ad74115_set_comp_debounce(struct ad74115_state *st, unsigned int val)
-@@ -1580,7 +1578,7 @@ static int ad74115_setup_gpio_chip(struct ad74115_state *st)
- 		.direction_input = ad74115_gpio_direction_input,
- 		.direction_output = ad74115_gpio_direction_output,
- 		.get = ad74115_gpio_get,
--		.set = ad74115_gpio_set,
-+		.set_rv = ad74115_gpio_set,
- 	};
- 
- 	return devm_gpiochip_add_data(dev, &st->gc, st);
+Hi Francesco,
+The current design doesn't support such case, maybe some changes in the dri=
+ver could achieve that (mark the wake-gpio as GPIOD_FLAGS_BIT_NONEXCLUSIVE =
+and the interrupt as IRQF_SHARED, etc.).
+But usually each RC has its own WAKE# pin assigned. We have not come across=
+ a case where multiple RC share the same WAKE# pin.
 
--- 
-2.45.2
-
+Best Regards
+Sherry
