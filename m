@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5DB1FC105;
-	Mon,  7 Apr 2025 14:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E98C1FCFF9;
+	Mon,  7 Apr 2025 14:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744036314; cv=none; b=gx3onx2tQ3EMl68WAd4MXxtG81YunvFB/He3I+U0hbsJ9nCn1mXZmIRdaEMZ3xVoGo/hwMGgVh6jwOJabvQ2WT6Sa88C24V997TsWpoXph2Ym5HgiQcYbLlISBqTxpIDIDheoVhh4DJJ3I5/mSAe/jv2iRKwnBG7QWaM5hbRmeU=
+	t=1744036316; cv=none; b=H8USt83SN7NktxsB/dXqhLhCKKvSf7pZgQ/wMJ0x9ZS+DrzVYg6VDr3F6QNaltR8x67HCQy9HN2cEP+698UXusURsPuAU/mQrLn/h6Jf/t/kD18BnRAFvI2OPUFDFOyT5PpShr5oaTIP/ITaElhgsA2hQhqyszDNPOwvVcixeWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744036314; c=relaxed/simple;
-	bh=mEAE8qVpcJZz/32RyOgJAvdA1jfZSC8IGWWd8c3Dgsw=;
+	s=arc-20240116; t=1744036316; c=relaxed/simple;
+	bh=IcmNTyRF7mNxqxfZGrer4fub6LBqC+AYcewV7jJwrto=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=DDvOitEIL5UZHJKrbewqqRERQJSJMIlJ36eH9G3GLKtrgOJrjcjBiIQdEp5zsJMEFPfhDtusim/JYyYEJd/FVM8q798CmAlln5m+odwjxwLHGlUgh2GNDaojRr4xhG3BRPoc6+VITzSvMx4GlLrSGlmziJnKnzsxXRKk96HXHxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aGDoLUA4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QJeMB679; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=NnjI2a6VUC9rZ2UrRCzAdhROHyqvTGggDqG5YRe6LHmIEAOc3EVlo3Zs/Gg748pHBYOfGkSrs/OYRDuV8h0f1vfM01hS85WsjNEJgxfaSapQhv8rIqxilGU/rmDUFKFN6jzQ7PQgjmvWpM39PyEpTu67CWY0O+RcBuG24UHuHoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K5Qa+7Lo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MqD8IM9q; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aGDoLUA4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QJeMB679"
-Date: Mon, 07 Apr 2025 14:31:50 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K5Qa+7Lo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MqD8IM9q"
+Date: Mon, 07 Apr 2025 14:31:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744036311;
+	s=2020; t=1744036313;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wzNm8M7WKVm0dUnozAHq1LmQHXgdk0oLlXMz76vdHqc=;
-	b=aGDoLUA4AZOBzGVX83kSMZYfIjZNZOHs1PyJv8Lt4+NAy85KtRg4ZQvAcnkd+AmMsJIXMM
-	yRhho/LXyHuoI/WeI1XykgcOJuaokcbGErJwNBaozO8wAAdHZz/0k60DuaAg37IHnngc2f
-	wqXAT+uGdApFny8+4ZPaXgJ9bnGbD0E6ZuvOtIAAPar90+BsZA/mhj9o3zqajf+qNu5/yM
-	vQPTbe/A+HnwFEKwP9sWl0XklVtIXTDVAdrjDvjIeUdjP7Q2ke7/Nd7Xb7YQo6d+mXxFfw
-	gV/zTv2WXuRnjSZ/pOlLZYA6BXQrAHNGOv1w2GdYOGlamcRtKmHC5tkquhWslA==
+	bh=RdAx4MYyWqMyN7iu/s3wQCafefi3Xdhsp+l8pHQpqHM=;
+	b=K5Qa+7LokglyzCZtyEpW9PxfmR/vEchStazcsqTrB22M0vmL7EOSUfZoFkfxw5uxg2o6LW
+	ANCeliQFy7cZq8wuK6yDIoh1SRY5UV228Kjf7USgyfisCF+EEWS4FwH5pgYKoaS4R/Wh0w
+	Mzcv5UeMBCFrQ2lREhs3EP3EUglydzfI706ewGNBemNX7r3uj6p77pPwNttGPJjK8Pqet4
+	jgPkGbu5rpRDatFcRX791vnN2fOBlSfq5UjzkJTgYJ+3G5LfISE5b8DOD8Vzpc+Zpai2Ry
+	V88Dm9414Ri2D7mbhbEk1rCyEOWTXeY+ZlxK1tf/ajKylaK1vjF8cc40Y0XosA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744036311;
+	s=2020e; t=1744036313;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wzNm8M7WKVm0dUnozAHq1LmQHXgdk0oLlXMz76vdHqc=;
-	b=QJeMB679fM4/dDDpyJCeesQrr6sZWebfnPV/cbfinxElM61PRHHwF29tx7nkyzbG9qL9ZK
-	vxNXsKrUlQAF89AQ==
+	bh=RdAx4MYyWqMyN7iu/s3wQCafefi3Xdhsp+l8pHQpqHM=;
+	b=MqD8IM9qZQR+wiOnyugggiCZGke4NdFT9pFJ9uy5kvIEpW1QGyu/W0cIKARcHnlMk9oouO
+	5/0gh9Di/vJcO7Dg==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
- locking to guard()
-Cc: Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dhruva Gole <d-gole@ti.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250319105506.203802081@linutronix.de>
-References: <20250319105506.203802081@linutronix.de>
+Subject: [tip: irq/msi] cleanup: Provide retain_ptr()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319105506.083538907@linutronix.de>
+References: <20250319105506.083538907@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174403631040.31282.6425329734954381811.tip-bot2@tip-bot2>
+Message-ID: <174403631219.31282.15932130919927326104.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,55 +68,81 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     d70d21788a602dc9cdd154320e92f1b97e9f4e0f
-Gitweb:        https://git.kernel.org/tip/d70d21788a602dc9cdd154320e92f1b97e9f4e0f
+Commit-ID:     47d482d3dd6e9469f650b34667c4f0faf9f268d0
+Gitweb:        https://git.kernel.org/tip/47d482d3dd6e9469f650b34667c4f0faf9f268d0
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 19 Mar 2025 11:56:42 +01:00
+AuthorDate:    Wed, 19 Mar 2025 11:56:38 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 07 Apr 2025 16:24:55 +02:00
 
-soc: ti: ti_sci_inta_msi: Switch MSI descriptor locking to guard()
+cleanup: Provide retain_ptr()
 
-Convert the code to use the new guard(msi_descs_lock).
+In cases where an allocation is consumed by another function, the
+allocation needs to be retained on success or freed on failure. The code
+pattern is usually:
 
-No functional change intended.
+	struct foo *f = kzalloc(sizeof(*f), GFP_KERNEL);
+	struct bar *b;
+
+	,,,
+	// Initialize f
+	...
+	if (ret)
+		goto free;
+        ...
+	bar = bar_create(f);
+	if (!bar) {
+		ret = -ENOMEM;
+	   	goto free;
+	}
+	...
+	return 0;
+free:
+	kfree(f);
+	return ret;
+
+This prevents using __free(kfree) on @f because there is no canonical way
+to tell the cleanup code that the allocation should not be freed.
+
+Abusing no_free_ptr() by force ignoring the return value is not really a
+sensible option either.
+
+Provide an explicit macro retain_ptr(), which NULLs the cleanup
+pointer. That makes it easy to analyze and reason about.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Nishanth Menon <nm@ti.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-Link: https://lore.kernel.org/all/20250319105506.203802081@linutronix.de
-
-
+Reviewed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Link: https://lore.kernel.org/all/20250319105506.083538907@linutronix.de
 
 ---
- drivers/soc/ti/ti_sci_inta_msi.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ include/linux/cleanup.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
-index c363645..193266f 100644
---- a/drivers/soc/ti/ti_sci_inta_msi.c
-+++ b/drivers/soc/ti/ti_sci_inta_msi.c
-@@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index 7e57047..be4a53a 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -216,6 +216,22 @@ const volatile void * __must_check_fn(const volatile void *val)
  
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
--	if (nvec <= 0) {
--		ret = nvec;
--		goto unlock;
--	}
-+	if (nvec <= 0)
-+		return nvec;
+ #define return_ptr(p)	return no_free_ptr(p)
  
- 	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
- 	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
- 	if (ret)
- 		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
--unlock:
--	msi_unlock_descs(dev);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
++/*
++ * Only for situations where an allocation is handed in to another function
++ * and consumed by that function on success.
++ *
++ *	struct foo *f __free(kfree) = kzalloc(sizeof(*f), GFP_KERNEL);
++ *
++ *	setup(f);
++ *	if (some_condition)
++ *		return -EINVAL;
++ *	....
++ *	ret = bar(f);
++ *	if (!ret)
++ *		retain_ptr(f);
++ *	return ret;
++ */
++#define retain_ptr(p)		((void)__get_and_null(p, NULL))
+ 
+ /*
+  * DEFINE_CLASS(name, type, exit, init, init_args...):
