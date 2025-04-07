@@ -1,100 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589B12135A4;
-	Mon,  7 Apr 2025 06:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2332135A4;
+	Mon,  7 Apr 2025 06:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008109; cv=none; b=IHMXjnsmvqeFTMxFwdk+AiIe9j/GXapSzXjO9MDglAGwMuyZk6Z6w+QDDBmZRYITKVKznX1ra7zdBOPpSk/NX/rMJPrSFEUDJngfVifEG/WiSmOLc7FHuLfCdH8uGkby1UoV9+07mZH943eSFviV2iy73nBRiWm403aQCz15WGI=
+	t=1744008116; cv=none; b=JueOrBZERqponMo1MRoskb7SopE+wnKoy/zRIdtqvNyTE8NYBbKfj7Fbd2DPU1dwdBg/dkVITHLnnjzpTQ4FliUuVMpcQxH7+5TNOnKxA0LTFEOJ6jEMlNwmsQ8VUQmSuYHlfebBZkfRJ+KOzWrL7q6vX9YQRqWPl0lvJLUXgxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008109; c=relaxed/simple;
-	bh=PCQiGG6B2DNaakC53prIZJdI+gBuGzvVt2GLvpU+2cE=;
+	s=arc-20240116; t=1744008116; c=relaxed/simple;
+	bh=DoJUGBL2D6O/z79KhKuE6vrMJER/aoe7N3m1hEHkVgI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTGBA/v3X/ej8jxDBOouuXn83CtoFkCXqp94DWRftffZ4dDuM/I2+sGV2BL0aHPnAeUq00oyk85eLvd498SEpFsRRNcKOiJQgwztoLfMAfmWnx6m3dztNEpOYyVLjozC80l+3+l/sDYFwkQ7/hqj6WU4XWdZR7Cpw8pKZ/kJ1KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gWfKNRQj; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmZzm2KtWjsqayUeWK/oFLG1fpaQLoGLD8n6PsSc4bGx/7PAbzwre7/DVm5ygCMKqFb+l0K90eFE3ErqS9qpB2bdvJQGMgoHOptrfQmGQf5Y8Bk5ENXIALeH/tSbKbP8j6k0Ge2Bn9HcLUN2U8/+I4AyenVmrf/9w2g1JEgMB4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaXnqCXX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gWfKNRQj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744008108; x=1775544108;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PCQiGG6B2DNaakC53prIZJdI+gBuGzvVt2GLvpU+2cE=;
-  b=gWfKNRQjv7tDSGmUXG0+teaqCvd1+vV2KP0WX7wzDcnivYdYKWDWt/zj
-   kGnq/KKlUEPlx7fHskHlu220fYFrneVXjm3W9H/KEeosPUzGEboJMxud5
-   JWwhhAtC7LGI7uEJZHHti5Hg885Q6Okc2glezjQKb6AXffGzUVQ9UMWnf
-   JlQb5bGpzzMBBjJ8ZYTJa5TQkGvFlXBTIAzd+2TQsN1C0anc3JDcThiiZ
-   cgwFaQ4ZDozJH8qf6BKZKho3hthnu9DDESgwvDnYVOdpXZ73BeJFZoP3r
-   UP17hmtt3eq6ks5Yvq4j6oXyLzYcgWIuPbaM9wJKEiqJWeRXtTmRuCm+F
-   Q==;
-X-CSE-ConnectionGUID: CSJ9rAG7T82RQ6MVRr6EVQ==
-X-CSE-MsgGUID: kOVNx4PGSA2YfHVL9G2xuQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="56739012"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="56739012"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:41:47 -0700
-X-CSE-ConnectionGUID: 4PuUPLd0TvK25LbH6hG7Nw==
-X-CSE-MsgGUID: RR+H+9wGQgGAI79CRQ80Aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="158831349"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:41:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1gAv-00000009yco-3xUB;
-	Mon, 07 Apr 2025 09:41:41 +0300
-Date: Mon, 7 Apr 2025 09:41:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/6] gpiolib: acpi: Refactor to shrink the code by ~8%
-Message-ID: <Z_NzpTUiXMPffXmI@smile.fi.intel.com>
-References: <20250403160034.2680485-1-andriy.shevchenko@linux.intel.com>
- <20250404044318.GL3152277@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaXnqCXX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35947C4CEDD;
+	Mon,  7 Apr 2025 06:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744008115;
+	bh=DoJUGBL2D6O/z79KhKuE6vrMJER/aoe7N3m1hEHkVgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UaXnqCXXEuagAk6jCr/F0GwOLDmfUV7bMUTYXIni82xQXgVrf4BhwaiWbAbLN8Sg+
+	 BUlflqPodN6t7s4c+/7U//8mKpr5uw+/ZIvX4gQYfRIOEJnbQmPuZZKsCIaNvyQRvP
+	 kdaUhAY1vfm9EqdZ74ISV4dR2Uz6ob9vMJpgNgNt94EYoNQccmNRsch+mmoiyLSY44
+	 PyE/iwxHnUMDrHMgYETyKdF7rRVJ9JBsyXDsxzmu6Z8mebBMVwclqtALX4UIXmjZRU
+	 1/uoxzRE5jn5Vg+qBG3Fsad0WIxhz2DHwfAfR39ma26MbFCm6f+SBZIvDOVTbTfpgT
+	 Oa+41Q7J3aRlw==
+Date: Mon, 7 Apr 2025 08:41:53 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: ad7380: add AD7389-4
+Message-ID: <20250407-adorable-copper-guillemot-00c44f@shite>
+References: <20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
+ <20250401-iio-ad7380-add-ad7389-4-v1-1-23d2568aa24f@baylibre.com>
+ <20250402-winged-ambitious-sparrow-c988c6@krzk-bin>
+ <847307bf-c612-475e-84bd-31efcbd7239f@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250404044318.GL3152277@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <847307bf-c612-475e-84bd-31efcbd7239f@baylibre.com>
 
-On Fri, Apr 04, 2025 at 07:43:18AM +0300, Mika Westerberg wrote:
-> On Thu, Apr 03, 2025 at 06:59:11PM +0300, Andy Shevchenko wrote:
-> > A simple refactoring of the GPIO ACPI library parts to get an impressive
-> > ~8% code shrink on x86_64 and ~2% on x86_32. Also reduces a C code a bit.
+On Wed, Apr 02, 2025 at 09:39:43AM GMT, David Lechner wrote:
+> On 4/2/25 3:25 AM, Krzysztof Kozlowski wrote:
+> > On Tue, Apr 01, 2025 at 05:50:08PM -0500, David Lechner wrote:
+> >> Add compatible and quirks for AD7389-4. This is essentially the same as
+> >> AD7380-4 but instead of having no internal reference, it has no external
+> >> reference voltage supply.
 > > 
-> > add/remove: 0/2 grow/shrink: 0/5 up/down: 0/-1221 (-1221)
-> > Function                                     old     new   delta
-> > acpi_gpio_property_lookup                    425     414     -11
-> > acpi_find_gpio.__UNIQUE_ID_ddebug478          56       -     -56
-> > acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug480      56       -     -56
-> > acpi_find_gpio                               354     216    -138
-> > acpi_get_gpiod_by_index                      462     307    -155
-> > __acpi_find_gpio                             877     638    -239
-> > acpi_dev_gpio_irq_wake_get_by                695     129    -566
-> > Total: Before=15375, After=14154, chg -7.94%
-
-> Looks good now,
+> > So neither refio nor refin, but your schema says:
+> > 
+> >> +    then:
+> >> +      properties:
+> >> +        refio-supply: false
+> > 
+> > So what about refin, which is also external reference?
 > 
-> Acked-by: Mika Westerberg <westeri@kernel.org>
+> This is already handled by the existing if statement:
+> 
+>   - if:
+>       properties:
+>         compatible:
+>           enum:
+>             - adi,ad7380-4
+>             - adi,adaq4370-4
+>             - adi,adaq4380-4
+>             - adi,adaq4381-4
+>     then:
+>       properties:
+>         refio-supply: false
+>       required:
+>         - refin-supply
+>     else:
+>       properties:
+>         refin-supply: false
+
+The way the if-then are organized there is not how I would expect, so
+thus confusion. Each if: condition has else:, so to understand what
+applies to given model one has to read everything!
+
+And you add here second method - if without else.
+
+This is supposed to be simple:
+if:
+  - model_foo
+then:
+  ...
+
+if:
+  - model_bar
+then:
+  ...
+
+if:
+  - model_baz
+then:
+  ...
 
 
-Pushed to my review and testing queue, thanks!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
