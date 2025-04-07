@@ -1,248 +1,194 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40BD258CC8;
-	Mon,  7 Apr 2025 18:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF2827D786
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049999; cv=none; b=FndgknAitvJ2durW7kT8EDCprDD1wuw+5rKq648lDUBXo5kfv0r1bLFg99G1+C612gH3M9qZBWTHj+ZJqtsJJNeMPXqtvw1EcczzH4KW/p0GpdQ95qJZj/2oF4EfJ8XjUV+RUW4n+HojT9eqJHKTgZ0qH46q2lnBB7MtRerfKfU=
+	t=1744050006; cv=none; b=VjAGTzEdV/+wP1nAoPtnv+CT3Zizd8B5GXnBq30jeT/UWs0MmpQcWpadPQqKvwKgAR6RhV9ty6jQAtObAWtG/0YLwOeZZ76jqcyOnTHdaUC4OupZPdz/25f3+TNTqp1r5+vy4CHwqtq96T/wwWQV1SWyvc7HDTz8lhWldzKYfCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049999; c=relaxed/simple;
-	bh=/sTxE7cUwNP03JWU0ov5YMmOteddb3foGLKf9h+oqsc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p52zkx4VDZCQ7/uCEa3Ur+4IDNgZRblI/EDqCvfZTkqhNwRLQcENDXtv2DC0po2nrSFmc+viUj2vjiYRFpbafJvbulS84GOlu0zGN1dT+5Zonhosr9rWQdv+qyOxYZt2AljG1yFH9nt9ZlcRwXQdwlfpfJ1uLjL+iDFVbDXLyKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fy0TUpZh; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744050006; c=relaxed/simple;
+	bh=U0yc57KBFJXkKeAXGMo8OC+gxXP7nFSHqYX4UiFiRSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABF8hzBPd84CBrvJ8k2jUCvgYeOLbcxUOFhy2bpja50Rs0nTed11cSNaQXy/o2n/PB4lGZdIJyH7Q5KBNsM6ZJ0ifCHGWDZ6NgKQn6pl2wAbdX4jjfgNRn7QDyDMXOkjQLZwzYdhnU3Trg8+6xGXtLHbSAMVi8LsB/J+6mVo+QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=GabRtufS; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fy0TUpZh"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7370a2d1981so3926822b3a.2;
-        Mon, 07 Apr 2025 11:19:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="GabRtufS"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-739be717eddso3619126b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049997; x=1744654797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rbtn07eW9FcgJJbFByfjJRlxec05aBIjcXvAjjhAvsk=;
-        b=fy0TUpZhRzbFIQAQpztwuGUzoIJPzbYe7eLlhLgOn0FaYdRpNwKUypTExzrqqSG4qV
-         gZWH3gUvyz8Z0o3/fbBHKcFo1EN83pj61cRzX/BxdHADD8frZky5g37dJdZqDmTWcD33
-         3gMBtlzEZWTOGAiOZhkHoZW10a6ePlYpmeEii55NsTBQZggsqquUMpvLjaNtFk9TXJ/q
-         B5nAuXmBs15nRGeNYGmCKvfDTornLhpCrmkLq6k02E6QgbaUr4F8lPeAF7nBSAmRJmrI
-         qlC9w32AD8EQh2eO3BSV4XJSiXByLRdps65aGCzc6tb6ev83Zm/sOwZNjmiWiz1WyAPX
-         5ubA==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1744050004; x=1744654804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R+V2vTlPXFRoR4RnOsfulrUnfIyTIkpiYxiS7BOwBDI=;
+        b=GabRtufS5NMzGAv0hDahaU4PGlaLqbnCclzJ5G3uXi+xo/457ZSlkiCxRh7aIYndTk
+         ZGFfqKpuo0+iiX+sJnoXsSVSNQD2kiXk+OXjtmmhMF+zf/HK8chXPb0tA+gIOydKjCoB
+         NuzkankveNZPP6GzpNiunGyLTHn25yvA8esUHUgCaCkSiUJM7dZRQL4WYUMbLjhuKAKX
+         z3rPdB52YsUSckVXifM9Afb1BqAkD2yJPto8AWCYWugl4wzVGFPIMyt9FjZ9c8hGCSPa
+         FZnHASeqAUuGYaF+AjnGe3TJywdY2XmeToo4XcoYcYTEI578oqanKzXdMUKuuMa2DEeK
+         D0Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049997; x=1744654797;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rbtn07eW9FcgJJbFByfjJRlxec05aBIjcXvAjjhAvsk=;
-        b=DWOpg5OEcLNcFY1tSbB+ehMGl4qxhBVpnSpwcFiNw4v70FGv76X8V5rYKwHWQHpOWG
-         oHlv+kfZRfPcOXv9sipAWkDL+TnJs8eDqdkGP3fHOw2ynaUaTUFO39kbTTPMjg08uqEL
-         BsKlI6xuj//Z/oYGqQwGHkMJPFm2xGtg2aG2+Wb7EOlCJdicXlDfvElh8fxeajyiZRvp
-         nCcoWg0O3nmWMq+IYq23Hr5lKs6Vshn5vb8TU3Jr0OAKoxoc8epy/xWE257sy3AJjiiW
-         fRjAn2ApowBvaoi75y11Gl8CZBF3iuYjDcwX5ktTmtmWuXtbo9z8MWAr+X9x+Fbny0Ad
-         5OrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIXBryYQZtvMjRDgnYSrw2Gxq4Ovj1Ck0Tb9mVhw5cfhHwREWQ2LBIeiqTs0uKgdIOBELOrmbv@vger.kernel.org, AJvYcCWZW0gIT6HyvMoelG3gkXDWn+aYAe1lvu71BlbfHWoXtZF9x+geW0G/n9GyKtFJVaS+yWyFN5ZZLqdMzH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMtBeDXjdckhGDjI87Prq45pshjXERhetNnLES/RxsyMPtiirb
-	kKoEB6/skwkDKyt6b8EOox5hBsv4c2tgekdQAl9+snhkSjMKRrs=
-X-Gm-Gg: ASbGnct66HYrTHeCeeWiMt3rBieZxjpkvEddjrohSiu0Sxs7WJb7RUbrq4KLvsPaibh
-	eJNRMnV+2cqdWCUS/zxsuxmH8TIqERT8YnQcgieOyxLGDCqYJbA+6Em1ihRmM7R2igixArNbC96
-	U4TzdC5CF+1xDXMR0VY9n4p1CxG2NpKLZrMoOpvfdvXrRmjVWJB8NM1sNhs5WP7pwPip5TVE3ap
-	1nyRpwIn1vMSC6RfGhHvDDM3iaGqsBISoOHFn4swBiUgLHu3v/dL27lKDvS/IqAkcs7+IeStNhp
-	ha+S3jX6IYBKgGKRmcmY/womXRP/8h9/9X44DG+mlr2Se166r7CRABkgp1SYo0Hm/M3YAYxfaLI
-	=
-X-Google-Smtp-Source: AGHT+IHxWlmdTMzrdpOcsTJINRBdOg8s4X5Z82UlgDY0TXjogz3dae5Hj/vOa1WjWtUd/GwLkoEJaw==
-X-Received: by 2002:a05:6a20:7f9e:b0:1f5:97c3:41b9 with SMTP id adf61e73a8af0-2010444e36dmr19370343637.5.1744049997033;
-        Mon, 07 Apr 2025 11:19:57 -0700 (PDT)
-Received: from L1HF02V04E1.TheFacebook.com ([2620:10d:c090:500::4:6c4e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0bc052sm8809243b3a.156.2025.04.07.11.19.55
+        d=1e100.net; s=20230601; t=1744050004; x=1744654804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+V2vTlPXFRoR4RnOsfulrUnfIyTIkpiYxiS7BOwBDI=;
+        b=XR2T/XWKkvIUTtVMfSjrQIQa7oESmO9CCWBGoT5omWz+9p0PHkfh30R6pqQRvsdiDQ
+         uCAmM83HimlKevzQFPbXUj2meJKa4IRw18QZFxaszltZMmBTJDs/l+TodiwptFSmnqEO
+         8OfE1LNC8CvAUBUMMiPClY0QDoHkdp1ee9cMtnk74PK/gkb0236B1eF5hRKgP8nGy3Bl
+         0f6IFnvwNaCND0YjkRASx935z3pI7nOlC76KyY5cT+YCGG0BlkV4A8wWj7upsjvKBn3u
+         FpwJhQuRCHbDmDfROI7gaK1cEiv2ogwPTOiQPbd1fyVaIJxqGO6InvNbzuqrRZPNIJMK
+         IiuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLg0SrWlX0rhbCthPfGwMSVFWUQXibSrsxKVd0ALXIZezTcuJoCutB8yDjmhpwPijj1sP7Njjcc6tgfHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAv19nbWwIgmypJ+vf4bnZPm5x2EjVWnAfoArSBHwNFLZDl3Cd
+	43UIXaH+pslrIiv4rljg8lK1OTjgBydv0vSgdDnUpir+AOJgCJ/OFX7P8iXMTlo=
+X-Gm-Gg: ASbGncvzd2VU8G7lljpFscbOrgT5dFMCAH0VWejIXG4Xqx3p/+jjvkXonWg3TtrC0Q0
+	4uo8ZcJ8/iOBHLUVSQwo8WdPCzhCSy5UCOFPJxbDl5E/Y+YmW+Z5kB6o5F9mT9Mz5S3EYPjYCJS
+	T1jWUmdeGSZwXdmPuITGiwY2Kaa3ZfPOqoarjIGvXyEYJ5N9pel4OxyfyFZxIGrcE59yMJqSV9j
+	8cgrSf7hZgXvK114HWe1RHMmWhhxPPNiKAgKK1UiNSthgC296RANi3xdExsZwKr75K5xoCRsEtB
+	rPQgh+O+lDUxFnDyVtZNi+b2
+X-Google-Smtp-Source: AGHT+IEl1YxVJk4wofWvZdOA4V1bIqKO6UF883BN6rvABi3IMXJHGdv+VxDSAdya02SSa2rBro1iGw==
+X-Received: by 2002:a05:6a00:3c8f:b0:730:9801:d3e2 with SMTP id d2e1a72fcca58-73b6aa401a6mr12709766b3a.8.1744050003612;
+        Mon, 07 Apr 2025 11:20:03 -0700 (PDT)
+Received: from x1 ([97.115.235.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0deddfsm8878564b3a.162.2025.04.07.11.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:19:56 -0700 (PDT)
-From: kalavakunta.hari.prasad@gmail.com
-To: sam@mendozajonas.com,
-	fercerpav@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: npeacock@meta.com,
-	akozlov@meta.com,
-	Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
-Subject: [PATCH net-next 2/2] net: ncsi: Fix GCPS 64-bit member variables
-Date: Mon,  7 Apr 2025 11:19:49 -0700
-Message-Id: <1ee392cf6a639b47cf9aa648fbc1c11393e19748.1744048182.git.kalavakunta.hari.prasad@gmail.com>
-X-Mailer: git-send-email 2.37.1.windows.1
-In-Reply-To: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
-References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
+        Mon, 07 Apr 2025 11:20:03 -0700 (PDT)
+Date: Mon, 7 Apr 2025 11:20:00 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, guoren@kernel.org,
+	wefu@redhat.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, jszhang@kernel.org,
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 2/3] clk: thead: Add clock support for VO subsystem in
+ T-HEAD TH1520 SoC
+Message-ID: <Z/QXUEFLGwb48eKK@x1>
+References: <20250403094425.876981-1-m.wilczynski@samsung.com>
+ <CGME20250403094432eucas1p112aada697802092266bc36ef863f4299@eucas1p1.samsung.com>
+ <20250403094425.876981-3-m.wilczynski@samsung.com>
+ <Z/B78yemvvSS1oLe@x1>
+ <955e01e2-cfd4-4ac1-9e7b-d624d7d6a2d7@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <955e01e2-cfd4-4ac1-9e7b-d624d7d6a2d7@samsung.com>
 
-From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
+On Mon, Apr 07, 2025 at 06:16:52PM +0200, Michal Wilczynski wrote:
+> 
+> 
+> On 4/5/25 02:40, Drew Fustini wrote:
+> > On Thu, Apr 03, 2025 at 11:44:24AM +0200, Michal Wilczynski wrote:
+> >> The T-Head TH1520 SoC integrates a variety of clocks for its subsystems,
+> >> including the Application Processor (AP) and the Video Output (VO) [1].
+> >> Up until now, the T-Head clock driver only supported AP clocks.
+> >>
+> >> Extend the driver to provide clock functionality for the VO subsystem.
+> >> At this stage, the focus is on implementing the VO clock gates, as these
+> >> are currently the most relevant and required components for enabling and
+> >> disabling the VO subsystem functionality.  Future enhancements may
+> >> introduce additional VO-related clocks as necessary.
+> >>
+> >> Link: https://protect2.fireeye.com/v1/url?k=36dff7e6-5754e2d0-36de7ca9-74fe485cbff1-cfd601a10959d91c&q=1&e=fa692882-d05b-4276-bff3-01f7a237dd97&u=https%3A%2F%2Fopenbeagle.org%2Fbeaglev-ahead%2Fbeaglev-ahead%2F-%2Fblob%2Fmain%2Fdocs%2FTH1520%2520System%2520User%2520Manual.pdf [1]
+> >>
+> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> >> ---
+> >>  drivers/clk/thead/clk-th1520-ap.c | 196 +++++++++++++++++++++++++-----
+> >>  1 file changed, 168 insertions(+), 28 deletions(-)
+> >>
+> >> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+> >> index 4c9555fc6184..ebfb1d59401d 100644
+> >> --- a/drivers/clk/thead/clk-th1520-ap.c
+> >> +++ b/drivers/clk/thead/clk-th1520-ap.c
+> >> @@ -847,6 +847,67 @@ static CCU_GATE(CLK_SRAM1, sram1_clk, "sram1", axi_aclk_pd, 0x20c, BIT(3), 0);
+> >>  static CCU_GATE(CLK_SRAM2, sram2_clk, "sram2", axi_aclk_pd, 0x20c, BIT(2), 0);
+> >>  static CCU_GATE(CLK_SRAM3, sram3_clk, "sram3", axi_aclk_pd, 0x20c, BIT(1), 0);
+> >>  
+> >> +static CCU_GATE(CLK_AXI4_VO_ACLK, axi4_vo_aclk, "axi4-vo-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(0), 0);
+> > 
+> > Is CLKCTRL_GPU_MEM_CLK_EN (bit 2) skipped on purpose?
+> 
+> Hi,
+> This one is marked as "Reserved" in the manual, so yeah it's on purpose.
+> 
+> > 
+> >> +static CCU_GATE(CLK_GPU_CORE, gpu_core_clk, "gpu-core-clk", video_pll_clk_pd,
+> >> +		0x0, BIT(3), 0);
+> >> +static CCU_GATE(CLK_GPU_CFG_ACLK, gpu_cfg_aclk, "gpu-cfg-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(4), 0);
+> >> +static CCU_GATE(CLK_DPU_PIXELCLK0, dpu0_pixelclk, "dpu0-pixelclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(5), 0);
+> >> +static CCU_GATE(CLK_DPU_PIXELCLK1, dpu1_pixelclk, "dpu1-pixelclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(6), 0);
+> >> +static CCU_GATE(CLK_DPU_HCLK, dpu_hclk, "dpu-hclk", video_pll_clk_pd, 0x0,
+> >> +		BIT(7), 0);
+> >> +static CCU_GATE(CLK_DPU_ACLK, dpu_aclk, "dpu-aclk", video_pll_clk_pd, 0x0,
+> >> +		BIT(8), 0);
+> >> +static CCU_GATE(CLK_DPU_CCLK, dpu_cclk, "dpu-cclk", video_pll_clk_pd, 0x0,
+> >> +		BIT(9), 0);
+> >> +static CCU_GATE(CLK_HDMI_SFR, hdmi_sfr_clk, "hdmi-sfr-clk", video_pll_clk_pd,
+> >> +		0x0, BIT(10), 0);
+> >> +static CCU_GATE(CLK_HDMI_PCLK, hdmi_pclk, "hdmi-pclk", video_pll_clk_pd, 0x0,
+> >> +		BIT(11), 0);
+> >> +static CCU_GATE(CLK_HDMI_CEC, hdmi_cec_clk, "hdmi-cec-clk", video_pll_clk_pd,
+> >> +		0x0, BIT(12), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI0_PCLK, mipi_dsi0_pclk, "mipi-dsi0-pclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(13), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI1_PCLK, mipi_dsi1_pclk, "mipi-dsi1-pclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(14), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI0_CFG, mipi_dsi0_cfg_clk, "mipi-dsi0-cfg-clk",
+> >> +		video_pll_clk_pd, 0x0, BIT(15), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI1_CFG, mipi_dsi1_cfg_clk, "mipi-dsi1-cfg-clk",
+> >> +		video_pll_clk_pd, 0x0, BIT(16), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI0_REFCLK, mipi_dsi0_refclk, "mipi-dsi0-refclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(17), 0);
+> >> +static CCU_GATE(CLK_MIPI_DSI1_REFCLK, mipi_dsi1_refclk, "mipi-dsi1-refclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(18), 0);
+> >> +static CCU_GATE(CLK_HDMI_I2S, hdmi_i2s_clk, "hdmi-i2s-clk", video_pll_clk_pd,
+> >> +		0x0, BIT(19), 0);
+> >> +static CCU_GATE(CLK_X2H_DPU1_ACLK, x2h_dpu1_aclk, "x2h-dpu1-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(20), 0);
+> >> +static CCU_GATE(CLK_X2H_DPU_ACLK, x2h_dpu_aclk, "x2h-dpu-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(21), 0);
+> >> +static CCU_GATE(CLK_AXI4_VO_PCLK, axi4_vo_pclk, "axi4-vo-pclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(22), 0);
+> >> +static CCU_GATE(CLK_IOPMP_VOSYS_DPU_PCLK, iopmp_vosys_dpu_pclk,
+> >> +		"iopmp-vosys-dpu-pclk", video_pll_clk_pd, 0x0, BIT(23), 0);
+> >> +static CCU_GATE(CLK_IOPMP_VOSYS_DPU1_PCLK, iopmp_vosys_dpu1_pclk,
+> >> +		"iopmp-vosys-dpu1-pclk", video_pll_clk_pd, 0x0, BIT(24), 0);
+> >> +static CCU_GATE(CLK_IOPMP_VOSYS_GPU_PCLK, iopmp_vosys_gpu_pclk,
+> >> +		"iopmp-vosys-gpu-pclk", video_pll_clk_pd, 0x0, BIT(25), 0);
+> >> +static CCU_GATE(CLK_IOPMP_DPU1_ACLK, iopmp_dpu1_aclk, "iopmp-dpu1-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(27), 0);
+> >> +static CCU_GATE(CLK_IOPMP_DPU_ACLK, iopmp_dpu_aclk, "iopmp-dpu-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(28), 0);
+> >> +static CCU_GATE(CLK_IOPMP_GPU_ACLK, iopmp_gpu_aclk, "iopmp-gpu-aclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(29), 0);
+> >> +static CCU_GATE(CLK_MIPIDSI0_PIXCLK, mipi_dsi0_pixclk, "mipi-dsi0-pixclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(30), 0);
+> >> +static CCU_GATE(CLK_MIPIDSI1_PIXCLK, mipi_dsi1_pixclk, "mipi-dsi1-pixclk",
+> >> +		video_pll_clk_pd, 0x0, BIT(31), 0);
+> >> +static CCU_GATE(CLK_HDMI_PIXCLK, hdmi_pixclk, "hdmi-pixclk", video_pll_clk_pd,
+> >> +		0x4, BIT(0), 0);
+> > 
+> > Did you intentionally skip VOSYS_DPU_CCLK_CFG.VOSYS_DPU_CCLK_CFG and
+> > TEST_CLK_CFG.TEST_CLK_CFG as they aren't needed?
+> 
+> Yeah I couldn't see a use for them even in the vendor kernel so skipped
+> them. I guess they could be added when we figure some way to use them.
 
-Correct Get Controller Packet Statistics (GCPS) 64-bit wide member
-variables, as per DSP0222 v1.0.0 and forward specs. The Driver currently
-collects these stats, but they are yet to be exposed to the user.
-Therefore, no user impact.
+Thanks, for the explanations. This looks good to me.
 
-Statistics fixes:
-Total Bytes Received (byte range 28..35)
-Total Bytes Transmitted (byte range 36..43)
-Total Unicast Packets Received (byte range 44..51)
-Total Multicast Packets Received (byte range 52..59)
-Total Broadcast Packets Received (byte range 60..67)
-Total Unicast Packets Transmitted (byte range 68..75)
-Total Multicast Packets Transmitted (byte range 76..83)
-Total Broadcast Packets Transmitted (byte range 84..91)
-Valid Bytes Received (byte range 204..11)
-
-Signed-off-by: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
----
- net/ncsi/internal.h | 21 ++++++++++-----------
- net/ncsi/ncsi-pkt.h | 27 ++++++++++++++++++---------
- net/ncsi/ncsi-rsp.c | 31 ++++++++++++++++++++-----------
- 3 files changed, 48 insertions(+), 31 deletions(-)
-
-diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
-index 4e0842df5234..2c260f33b55c 100644
---- a/net/ncsi/internal.h
-+++ b/net/ncsi/internal.h
-@@ -143,16 +143,15 @@ struct ncsi_channel_vlan_filter {
- };
- 
- struct ncsi_channel_stats {
--	u32 hnc_cnt_hi;		/* Counter cleared            */
--	u32 hnc_cnt_lo;		/* Counter cleared            */
--	u32 hnc_rx_bytes;	/* Rx bytes                   */
--	u32 hnc_tx_bytes;	/* Tx bytes                   */
--	u32 hnc_rx_uc_pkts;	/* Rx UC packets              */
--	u32 hnc_rx_mc_pkts;     /* Rx MC packets              */
--	u32 hnc_rx_bc_pkts;	/* Rx BC packets              */
--	u32 hnc_tx_uc_pkts;	/* Tx UC packets              */
--	u32 hnc_tx_mc_pkts;	/* Tx MC packets              */
--	u32 hnc_tx_bc_pkts;	/* Tx BC packets              */
-+	u64 hnc_cnt;		/* Counter cleared            */
-+	u64 hnc_rx_bytes;	/* Rx bytes                   */
-+	u64 hnc_tx_bytes;	/* Tx bytes                   */
-+	u64 hnc_rx_uc_pkts;	/* Rx UC packets              */
-+	u64 hnc_rx_mc_pkts;     /* Rx MC packets              */
-+	u64 hnc_rx_bc_pkts;	/* Rx BC packets              */
-+	u64 hnc_tx_uc_pkts;	/* Tx UC packets              */
-+	u64 hnc_tx_mc_pkts;	/* Tx MC packets              */
-+	u64 hnc_tx_bc_pkts;	/* Tx BC packets              */
- 	u32 hnc_fcs_err;	/* FCS errors                 */
- 	u32 hnc_align_err;	/* Alignment errors           */
- 	u32 hnc_false_carrier;	/* False carrier detection    */
-@@ -181,7 +180,7 @@ struct ncsi_channel_stats {
- 	u32 hnc_tx_1023_frames;	/* Tx 512-1023 bytes frames   */
- 	u32 hnc_tx_1522_frames;	/* Tx 1024-1522 bytes frames  */
- 	u32 hnc_tx_9022_frames;	/* Tx 1523-9022 bytes frames  */
--	u32 hnc_rx_valid_bytes;	/* Rx valid bytes             */
-+	u64 hnc_rx_valid_bytes;	/* Rx valid bytes             */
- 	u32 hnc_rx_runt_pkts;	/* Rx error runt packets      */
- 	u32 hnc_rx_jabber_pkts;	/* Rx error jabber packets    */
- 	u32 ncsi_rx_cmds;	/* Rx NCSI commands           */
-diff --git a/net/ncsi/ncsi-pkt.h b/net/ncsi/ncsi-pkt.h
-index 6cf3baac99dd..8560e6fe20e6 100644
---- a/net/ncsi/ncsi-pkt.h
-+++ b/net/ncsi/ncsi-pkt.h
-@@ -254,14 +254,22 @@ struct ncsi_rsp_gcps_pkt {
- 	struct ncsi_rsp_pkt_hdr rsp;               /* Response header            */
- 	__be32                  cnt_hi;            /* Counter cleared            */
- 	__be32                  cnt_lo;            /* Counter cleared            */
--	__be32                  rx_bytes;          /* Rx bytes                   */
--	__be32                  tx_bytes;          /* Tx bytes                   */
--	__be32                  rx_uc_pkts;        /* Rx UC packets              */
--	__be32                  rx_mc_pkts;        /* Rx MC packets              */
--	__be32                  rx_bc_pkts;        /* Rx BC packets              */
--	__be32                  tx_uc_pkts;        /* Tx UC packets              */
--	__be32                  tx_mc_pkts;        /* Tx MC packets              */
--	__be32                  tx_bc_pkts;        /* Tx BC packets              */
-+	__be32                  rx_bytes_hi;       /* Rx bytes                   */
-+	__be32                  rx_bytes_lo;       /* Rx bytes                   */
-+	__be32                  tx_bytes_hi;       /* Tx bytes                   */
-+	__be32                  tx_bytes_lo;       /* Tx bytes                   */
-+	__be32                  rx_uc_pkts_hi;     /* Rx UC packets              */
-+	__be32                  rx_uc_pkts_lo;     /* Rx UC packets              */
-+	__be32                  rx_mc_pkts_hi;     /* Rx MC packets              */
-+	__be32                  rx_mc_pkts_lo;     /* Rx MC packets              */
-+	__be32                  rx_bc_pkts_hi;     /* Rx BC packets              */
-+	__be32                  rx_bc_pkts_lo;     /* Rx BC packets              */
-+	__be32                  tx_uc_pkts_hi;     /* Tx UC packets              */
-+	__be32                  tx_uc_pkts_lo;     /* Tx UC packets              */
-+	__be32                  tx_mc_pkts_hi;     /* Tx MC packets              */
-+	__be32                  tx_mc_pkts_lo;     /* Tx MC packets              */
-+	__be32                  tx_bc_pkts_hi;     /* Tx BC packets              */
-+	__be32                  tx_bc_pkts_lo;     /* Tx BC packets              */
- 	__be32                  fcs_err;           /* FCS errors                 */
- 	__be32                  align_err;         /* Alignment errors           */
- 	__be32                  false_carrier;     /* False carrier detection    */
-@@ -290,7 +298,8 @@ struct ncsi_rsp_gcps_pkt {
- 	__be32                  tx_1023_frames;    /* Tx 512-1023 bytes frames   */
- 	__be32                  tx_1522_frames;    /* Tx 1024-1522 bytes frames  */
- 	__be32                  tx_9022_frames;    /* Tx 1523-9022 bytes frames  */
--	__be32                  rx_valid_bytes;    /* Rx valid bytes             */
-+	__be32                  rx_valid_bytes_hi; /* Rx valid bytes             */
-+	__be32                  rx_valid_bytes_lo; /* Rx valid bytes             */
- 	__be32                  rx_runt_pkts;      /* Rx error runt packets      */
- 	__be32                  rx_jabber_pkts;    /* Rx error jabber packets    */
- 	__be32                  checksum;          /* Checksum                   */
-diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-index 4a8ce2949fae..50a59f4c021e 100644
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -926,16 +926,24 @@ static int ncsi_rsp_handler_gcps(struct ncsi_request *nr)
- 
- 	/* Update HNC's statistics */
- 	ncs = &nc->stats;
--	ncs->hnc_cnt_hi         = ntohl(rsp->cnt_hi);
--	ncs->hnc_cnt_lo         = ntohl(rsp->cnt_lo);
--	ncs->hnc_rx_bytes       = ntohl(rsp->rx_bytes);
--	ncs->hnc_tx_bytes       = ntohl(rsp->tx_bytes);
--	ncs->hnc_rx_uc_pkts     = ntohl(rsp->rx_uc_pkts);
--	ncs->hnc_rx_mc_pkts     = ntohl(rsp->rx_mc_pkts);
--	ncs->hnc_rx_bc_pkts     = ntohl(rsp->rx_bc_pkts);
--	ncs->hnc_tx_uc_pkts     = ntohl(rsp->tx_uc_pkts);
--	ncs->hnc_tx_mc_pkts     = ntohl(rsp->tx_mc_pkts);
--	ncs->hnc_tx_bc_pkts     = ntohl(rsp->tx_bc_pkts);
-+	ncs->hnc_cnt            = (u64)ntohl(rsp->cnt_hi) << 32 |
-+				  (u64)ntohl(rsp->cnt_lo);
-+	ncs->hnc_rx_bytes       = (u64)ntohl(rsp->rx_bytes_hi) << 32 |
-+				  (u64)ntohl(rsp->rx_bytes_lo);
-+	ncs->hnc_tx_bytes       = (u64)ntohl(rsp->tx_bytes_hi) << 32 |
-+				  (u64)ntohl(rsp->tx_bytes_lo);
-+	ncs->hnc_rx_uc_pkts     = (u64)ntohl(rsp->rx_uc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->rx_uc_pkts_lo);
-+	ncs->hnc_rx_mc_pkts     = (u64)ntohl(rsp->rx_mc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->rx_mc_pkts_lo);
-+	ncs->hnc_rx_bc_pkts     = (u64)ntohl(rsp->rx_bc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->rx_bc_pkts_lo);
-+	ncs->hnc_tx_uc_pkts     = (u64)ntohl(rsp->tx_uc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->tx_uc_pkts_lo);
-+	ncs->hnc_tx_mc_pkts     = (u64)ntohl(rsp->tx_mc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->tx_mc_pkts_lo);
-+	ncs->hnc_tx_bc_pkts     = (u64)ntohl(rsp->tx_bc_pkts_hi) << 32 |
-+				  (u64)ntohl(rsp->tx_bc_pkts_lo);
- 	ncs->hnc_fcs_err        = ntohl(rsp->fcs_err);
- 	ncs->hnc_align_err      = ntohl(rsp->align_err);
- 	ncs->hnc_false_carrier  = ntohl(rsp->false_carrier);
-@@ -964,7 +972,8 @@ static int ncsi_rsp_handler_gcps(struct ncsi_request *nr)
- 	ncs->hnc_tx_1023_frames = ntohl(rsp->tx_1023_frames);
- 	ncs->hnc_tx_1522_frames = ntohl(rsp->tx_1522_frames);
- 	ncs->hnc_tx_9022_frames = ntohl(rsp->tx_9022_frames);
--	ncs->hnc_rx_valid_bytes = ntohl(rsp->rx_valid_bytes);
-+	ncs->hnc_rx_valid_bytes = (u64)ntohl(rsp->rx_valid_bytes_hi) << 32 |
-+				  (u64)ntohl(rsp->rx_valid_bytes_lo);
- 	ncs->hnc_rx_runt_pkts   = ntohl(rsp->rx_runt_pkts);
- 	ncs->hnc_rx_jabber_pkts = ntohl(rsp->rx_jabber_pkts);
- 
--- 
-2.47.1
+Reviewed-by: Drew Fustini <drew@pdp7.com>
 
