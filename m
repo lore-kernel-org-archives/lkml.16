@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06B0250C1E;
-	Mon,  7 Apr 2025 12:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7382528FF;
+	Mon,  7 Apr 2025 12:48:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030077; cv=none; b=iYROg6uEW5SP8WWdhd4EOzzQYPp7rrRlC10LoX0K7lNiATq0FM6HhqxFUylVYvTf0vu6iluNjHIkpShnoPgrFMDbM5dc1bBnZHRpWO811/6BEMZNMdOacVAVVkDdHeQ7xKTgOZdXAIPGWMJfrbyP0YxCzBHxtkv8v5BW606ej2s=
+	t=1744030080; cv=none; b=YZBT72dX3uKmzT0xE0d8wjFaijxRn4WaP8MsUV3QCdhsAitR08OLYoM7g3SFsmGcnXFiua9Z+CfCDd/xibIdrU5upis3rywSpjwIoK3qDq05O9wlkMfE+qgHP1vcjvvrA9jsYZTVmKgmYL1g1osnc3lhfm3bpeR5HPlVgFWfud0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030077; c=relaxed/simple;
-	bh=8pg0IaAVYZFUC95tFMo4ZQZdSqJpqLsdAE8soxBwgso=;
+	s=arc-20240116; t=1744030080; c=relaxed/simple;
+	bh=OZdlwwbCwgP1SzXb8AgO6cmeLj3TYPFDSdHnElKKvzw=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=UXD2GQzUoG8tqxtmtnjGEu/Ocy+udXlZ673d2TSjz0b6rfrFoPODz4eGu2iyyml0Nl0SSCCkzpJOEFQQBTjeys9PLnaI/HD8nepd14dEgHOcNQPVFkDWOhGvtHdazagbRGBzHVdMVc77NMqCA+OxxUOE9kjEpPivTcFsaqhbeBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbxisBFp; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=g47YWkiu0GGXKgH5cZKVniY8nn+jo5j19kPTzsgfqR/YuQsilhQpjrNfqpr1ZPQrdROuSFvWbNtQRCwTQKwsBQynKFyrrnkqi226O23QC/y6j/K2h/2iLBuJNUFJD50CPysvjoJ9/xeSA7IjrwG1kYJlMh7c20VQ2emf+7vEoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFhuSO9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbxisBFp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F03C4CEE9;
-	Mon,  7 Apr 2025 12:47:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFhuSO9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38343C4CEE9;
+	Mon,  7 Apr 2025 12:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744030077;
-	bh=8pg0IaAVYZFUC95tFMo4ZQZdSqJpqLsdAE8soxBwgso=;
+	s=k20201202; t=1744030080;
+	bh=OZdlwwbCwgP1SzXb8AgO6cmeLj3TYPFDSdHnElKKvzw=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=UbxisBFpNniJeAn7s9ciXKDlEKSn/dko3/G/IS+qreBSlrZFvLpLIoWyOo/ODkv3L
-	 9WMEdeDouKvLldhEuhRmz1JWi+bXlpR4+93pLOuikjUeIF2ZADnUw4cuYkudNOqA76
-	 3RZBptpjE/B1jV4TatHbuEhXQN2OPaXUYgG/AoiaMPQ3Qp+fKF/HLM5GJk8TjArEwF
-	 +BNmcpSqQtSmVktigkF/+RFaU483DWFH+6fuB8goi95RgFcwUSKSUbdDmiNyGNdvCr
-	 +6pIvlzB6AiwxmDkyC+ENxNt9x0HgPZ5lcCB5WeZMbLQOlm/gf/8/HNZXtQ1b2vD+2
-	 0qa24HwMDP3rA==
-Date: Mon, 07 Apr 2025 07:47:56 -0500
+	b=tFhuSO9p9rtbXdI2wOMl57foaoV+aneCOhhCXAtpAAvGevrFHGKyKORqRIPyr2Zm5
+	 dji6f8x8eepkK/HnRsg3u2SZUw4sIoD2JA7PJOBxHV7FAINf+Y15MW1W83m33rbFGF
+	 4i4HBE+hff6lsdxn8cw8ydaGR919yg7TnqOPuBUKa+5XI5+WRVGzuWUA060btN3ZVn
+	 7zAvw3LXHJt1imt69z9Uw2uvgxdJ4vz6CY1xfaWarR09Nl4xo2+PXaWcFEi60fiDnW
+	 QYaCD3tqIdwUvkWvtifC4dBOMR8rdCt1ylH8SaFWAYdLD1CgHF0tbdCerlMcwLQTQU
+	 boeq/NHZ7/+Pg==
+Date: Mon, 07 Apr 2025 07:47:59 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,34 +36,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: pavel@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, 
- corbet@lwn.net, linux-kernel@vger.kernel.org, lee@kernel.org, 
- linux-leds@vger.kernel.org, krzk+dt@kernel.org
-To: Nam Tran <trannamatk@gmail.com>
-In-Reply-To: <20250405183246.198568-1-trannamatk@gmail.com>
-References: <20250405183246.198568-1-trannamatk@gmail.com>
-Message-Id: <174402971830.1782904.14648060042339616468.robh@kernel.org>
-Subject: Re: [PATCH v4 0/5] leds: add new LED driver for TI LP5812
+Cc: Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+ linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: Aaron Kling <webgeek1234@gmail.com>
+In-Reply-To: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+Message-Id: <174402971861.1782962.14546127758047904369.robh@kernel.org>
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
 
 
-On Sun, 06 Apr 2025 01:32:41 +0700, Nam Tran wrote:
-> This patch series adds support for the Texas Instruments LP5812 LED driver.
-> Patch 1 adds the Device Tree (DT) bindings documentation.
-> Patch 2 introduces the core driver implementation.
-> Patch 3 adds documentation of sysfs ABI interfaces.
-> Patch 4 adds Driver documentation in reStructuredText format.
-> Patch 5 adds the LP5812 device tree node for Raspberry Pi 4B.
+On Sun, 06 Apr 2025 16:12:43 -0500, Aaron Kling wrote:
+> This allows using pstore on all such platforms. There are some
+> differences per arch:
 > 
-> Changes in v4:
-> - Merge leds-lp5812-common.c into leds-lp5812.c
-> - Implemented the core of aeu_pwm[1-4]_{store, show}()
-> - Used kstrdup() instead of kmalloc() for allocating characters array
-> - Add sysfs ABI documentation
-> - Updated device tree binding documentation
+> * Tegra132: Flounder does not appear to enumerate pstore and I do not
+>   have access to norrin, thus Tegra132 is left out of this commit.
+> * Tegra210: Does not support ramoops carveouts in the bootloader, instead
+>   relying on a dowstream driver to allocate the carveout, hence this
+>   hardcodes a location matching what the downstream driver picks.
+> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
+>   size in a node specifically named /reserved-memory/ramoops_carveout,
+>   thus these cannot be renamed.
+> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
+>   compatible, however the dt still does not know the address, so keeping
+>   the node name consistent on Tegra186 and newer.
 > 
-> Best regards,
-> Nam
-> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+>  4 files changed, 61 insertions(+)
 > 
 
 
@@ -82,15 +91,35 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/v6.14-1107-g406fad7698f5 (exact match)
+ Base: using specified base-commit 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/broadcom/' for 20250405183246.198568-1-trannamatk@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/nvidia/' for 20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com:
 
-arch/arm/boot/dts/broadcom/bcm2836-rpi-2-b.dtb: /soc/i2s@7e203000: failed to match any schema with compatible: ['brcm,bcm2835-i2s']
+arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-sim-vdk.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0000.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0008.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0005.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
+arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0001.dtb: ramoops_carveout (ramoops): 'reg' is a required property
+	from schema $id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
 
 
 
