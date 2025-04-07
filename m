@@ -1,102 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A3E277006;
-	Mon,  7 Apr 2025 18:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D15277035;
+	Mon,  7 Apr 2025 18:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049851; cv=none; b=orn3z9vo1dDRyGKkGloIaQVl4Xs31w1lV3d9OrFJ/v9+uqbzZmJRJON5keb6yrbSMXTXWdiE+z/eRa/usVTZfmYhhGohwSk3uL1aaHRltgQnl4hYD1v1W7vWS7nvLmtTyII6AL9XjQIN3vg1S+szt76pohFlBJXJl6Hv7qsqDBo=
+	t=1744049851; cv=none; b=o/omFgiHLg+t20sB2plZz5W3IUpcuFLlSoIUW88C5BmSYDqVp58seo+sJjo0EvWNojnBVtcTLrrT/T83DYDv2TNrX73oWLTQHh94Ke3slxWl9BnQvqHd25AlD0jKTKknebLIaOT8Mty5pEqGenv+Lz5of1ZHK8JeMngneGvrcf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744049851; c=relaxed/simple;
-	bh=73k/0BVysXl85xBXV2b3hE1PzEdgiYsKHfcYo5esxL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VQ/ZbdWbKuEcXXcVkdUw/ZHMgs90PacpIWil0yPsYbNCCcAwr648gg85oZhpSAlAyQvRvrCgwYFtZfITtFEwe2owI34XogFbbDW+LEU8HzYLJCG9uKSoSluJXXST4geTrb/4gcl1DlGeWNLLYcQTb4tbVs/45d2Ca12hT4FwPQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjoMQOEa; arc=none smtp.client-ip=10.30.226.201
+	bh=fzKtl3d3oE77n9RfVMXCK6v216JhpG64+bOr7f0w/dQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IMDu0awmGlWKjIq/M83Yu8p/Rneqchu1/DchTCOz2ehvg2qPyjDC2DAbSdiQeAEsSiMMAv0xrRhAmZ20IzQLGFM2mBK/GvTwLDjVGUpEEOosWIAzNzjdjZoW0kPxGu0xBaodhbPSkBXIZaWq3QsbBGB2fv6z0xuEmXAf2ATmGMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d15m4hWm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjoMQOEa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78793C4CEED;
-	Mon,  7 Apr 2025 18:17:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d15m4hWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA10C4CEE7;
+	Mon,  7 Apr 2025 18:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049849;
-	bh=73k/0BVysXl85xBXV2b3hE1PzEdgiYsKHfcYo5esxL8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FjoMQOEaRJFMQew/UUTFr2hKYDO6hv9g7+V3MPFy4GRbB+KyPzDtsQWqb0ld8BikB
-	 y4LOg5TQyvYkQ8DJEbOPLLHoNeXgNkaPA0XwvhaLhVigaC6TXI8n8dn2M/PqeuGdHA
-	 Xptdo1g80NJBvl9UvVJB59gIpvH0zApI2/kIxk67R88d6xbXktWgXPN+0bBAFkg4aD
-	 MwIM52NSOjHFBfQnFLQNpvkhhVV5/4onKM0L4oziKs1qU03odqFfrlgJ5v4KfkckJL
-	 UEhEhThzNlSVLUJ9c9Q6bYL7LZdoxwaggU3+38Zb3VLBN0h+MI7vRA0LDmCsLGwzNJ
-	 jSLIy7VvcmllQ==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2b2b6019a74so2383896fac.0;
-        Mon, 07 Apr 2025 11:17:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWwH2S+Wq0m6hVmuZKgXvg7ZQOmcuaGcwDYkh5tmpEcB0KYir28z+Y37wcFUGkjy6OX90K3bFWaiMSz06Hb@vger.kernel.org, AJvYcCXtkojFCJsejYO43bZheHnLugFWjgvfHRX6G3HFn/9bbXACh7ffN8iuF09IpienUeqWayE+RhXNwqkd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQjds19HVLhAMTsVOyel4EXN/CRqClmpDpk4ta7D3puqdO0Tv4
-	+dq4odWBBA2B0f72X0gy/oGWfMwRgcQxGoique570Qbsp4jM1cNYruFRx9wu/sIeRDe5E+VKAEP
-	f36iymT4gkvrUx9p4Fdo92Yw4kfs=
-X-Google-Smtp-Source: AGHT+IHb7HQkxQkd/RpdZWzCI+chrPYGzOX2Ou3UAUShksSZYvBwUdp6Xd5oT0itTCl6KmJPHoPBw1Y1/y2y6HBpHOY=
-X-Received: by 2002:a05:6871:2012:b0:2b8:e4b9:47a3 with SMTP id
- 586e51a60fabf-2cca19bec51mr7257158fac.22.1744049848789; Mon, 07 Apr 2025
- 11:17:28 -0700 (PDT)
+	s=k20201202; t=1744049851;
+	bh=fzKtl3d3oE77n9RfVMXCK6v216JhpG64+bOr7f0w/dQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=d15m4hWm+2L7Qp/jrzh2K+7XGAe31d+n3RXCxRG22+asPco+drcbfGJZqe6JlVHjP
+	 UIrI9uYtGn5aJBCYMWLJTpeCCNLDRUmu2LyE2+tlwQJKkkeaZLGOVScIcThLAmrKDO
+	 FVTW/gqWGShTbRxZUPu34X6YQlFjPNScPpcYOwu1QYRbCHYIaqsz4FqAG8OicFOCyx
+	 FDlKnBX7ACycf81ER7Jllw/VI8I1oG1hUeCsCQS8+Z5+OYAQrWuqdqHQRjJetIY7Pd
+	 nAzQAZQ6DTsZiK8+l6tBJHNtwq6oq4wIKKC+xR82JYzyvUiQvqiX0OIiGEfj3+g02X
+	 B5uQjJsNIe4FA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ignacio Encinas <ignacio@iencinas.com>,
+	syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com,
+	syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Sasha Levin <sashal@kernel.org>,
+	ericvh@kernel.org,
+	lucho@ionkov.net,
+	v9fs@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 5/7] 9p/trans_fd: mark concurrent read and writes to p9_conn->err
+Date: Mon,  7 Apr 2025 14:17:16 -0400
+Message-Id: <20250407181718.3184348-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250407181718.3184348-1-sashal@kernel.org>
+References: <20250407181718.3184348-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 7 Apr 2025 20:17:17 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH4SH0U0ivnL3XXp1HsH_vqZucars30DOB9bNLycYszvuikvDD20zwIRSY
-Message-ID: <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.22
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 31, 2025 at 6:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Add a note to the fwnode.h that the header should not be used
-> directly in the leaf drivers, they all should use the higher
-> level APIs and the respective headers.
+From: Ignacio Encinas <ignacio@iencinas.com>
 
-This sounds like a solution to a problem, but the problem statement is miss=
-ing.
+[ Upstream commit fbc0283fbeae27b88448c90305e738991457fee2 ]
 
-What's your motivation?
+Writes for the error value of a connection are spinlock-protected inside
+p9_conn_cancel, but lockless reads are present elsewhere to avoid
+performing unnecessary work after an error has been met.
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/fwnode.h | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 6fa0a268d538..da537c7c30dc 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -2,6 +2,12 @@
->  /*
->   * fwnode.h - Firmware device node object handle type definition.
->   *
-> + * Note, this header is not meant to be used by the leaf drivers.
-> + * It provides the low level data types and definitions for the firmware
-> + * and device property providers. The respective API headers should
-> + * guarantee all the required data types and definitions without includi=
-ng
-> + * this header directly.
-> + *
->   * Copyright (C) 2015, Intel Corporation
->   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->   */
-> --
-> 2.47.2
->
->
+Mark the write and lockless reads to make KCSAN happy. Mark the write as
+exclusive following the recommendation in "Lock-Protected Writes with
+Lockless Reads" in tools/memory-model/Documentation/access-marking.txt
+while we are at it.
+
+Mark p9_fd_request and p9_conn_cancel m->err reads despite the fact that
+they do not race with concurrent writes for stylistic reasons.
+
+Reported-by: syzbot+d69a7cc8c683c2cb7506@syzkaller.appspotmail.com
+Reported-by: syzbot+483d6c9b9231ea7e1851@syzkaller.appspotmail.com
+Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
+Message-ID: <20250318-p9_conn_err_benign_data_race-v3-1-290bb18335cc@iencinas.com>
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/9p/trans_fd.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index 196060dc6138a..791e4868f2d4e 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -191,12 +191,13 @@ static void p9_conn_cancel(struct p9_conn *m, int err)
+ 
+ 	spin_lock(&m->req_lock);
+ 
+-	if (m->err) {
++	if (READ_ONCE(m->err)) {
+ 		spin_unlock(&m->req_lock);
+ 		return;
+ 	}
+ 
+-	m->err = err;
++	WRITE_ONCE(m->err, err);
++	ASSERT_EXCLUSIVE_WRITER(m->err);
+ 
+ 	list_for_each_entry_safe(req, rtmp, &m->req_list, req_list) {
+ 		list_move(&req->req_list, &cancel_list);
+@@ -283,7 +284,7 @@ static void p9_read_work(struct work_struct *work)
+ 
+ 	m = container_of(work, struct p9_conn, rq);
+ 
+-	if (m->err < 0)
++	if (READ_ONCE(m->err) < 0)
+ 		return;
+ 
+ 	p9_debug(P9_DEBUG_TRANS, "start mux %p pos %zd\n", m, m->rc.offset);
+@@ -450,7 +451,7 @@ static void p9_write_work(struct work_struct *work)
+ 
+ 	m = container_of(work, struct p9_conn, wq);
+ 
+-	if (m->err < 0) {
++	if (READ_ONCE(m->err) < 0) {
+ 		clear_bit(Wworksched, &m->wsched);
+ 		return;
+ 	}
+@@ -622,7 +623,7 @@ static void p9_poll_mux(struct p9_conn *m)
+ 	__poll_t n;
+ 	int err = -ECONNRESET;
+ 
+-	if (m->err < 0)
++	if (READ_ONCE(m->err) < 0)
+ 		return;
+ 
+ 	n = p9_fd_poll(m->client, NULL, &err);
+@@ -665,6 +666,7 @@ static void p9_poll_mux(struct p9_conn *m)
+ static int p9_fd_request(struct p9_client *client, struct p9_req_t *req)
+ {
+ 	__poll_t n;
++	int err;
+ 	struct p9_trans_fd *ts = client->trans;
+ 	struct p9_conn *m = &ts->conn;
+ 
+@@ -673,9 +675,10 @@ static int p9_fd_request(struct p9_client *client, struct p9_req_t *req)
+ 
+ 	spin_lock(&m->req_lock);
+ 
+-	if (m->err < 0) {
++	err = READ_ONCE(m->err);
++	if (err < 0) {
+ 		spin_unlock(&m->req_lock);
+-		return m->err;
++		return err;
+ 	}
+ 
+ 	WRITE_ONCE(req->status, REQ_STATUS_UNSENT);
+-- 
+2.39.5
+
