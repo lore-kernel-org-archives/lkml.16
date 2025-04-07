@@ -1,88 +1,111 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFC0217663;
-	Mon,  7 Apr 2025 17:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD2A20FA8F;
+	Mon,  7 Apr 2025 17:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744048017; cv=none; b=SYtNmqUr3SghSlIA2vsP7SvCeS0arCjc4Ojwu8v50bMzkmIUqG6thNpi5jYgvIY4LCP8oiEUYNUsr9RvBvNhSDLFFX2HyiAZN9uE/ddqb84DtdJMC3cn4PcGOR2LmIkzyeXUCUMHTT3sS0mKTty5/sR0c9S5gpZlb3i/wqxnVIc=
+	t=1744048062; cv=none; b=N7YOplXjeG5dho+fGEPDt71qWuCt5AUnYy7XatJq8i/ANX0PE9m3DZdvu9HRvL8qgVAY3bHHxs3++exlQo/KaIZuDVJKOw6r70CJ2ZuBKe77kZ1FEjDGt9Cmw1K4J3YunEkCtHvydalu6eIaDDTZUffZu0zz6PsmkAwxjoErEzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744048017; c=relaxed/simple;
-	bh=3eN6/YjifecY2HB/tUwnGoB4rpyuQ8SNs7xbMNOujKw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ve0nIjTI9gv2YsvrPQImO1/gzLrRy+lF5V66oHJLOQQUaVVoj6oAZ1aqZ3xMEDUalIyL/o2Xh6DmNfLF+wn5WdGG8JMoDHCMtMaPeWH8Qg4QL7ZMeJ1YPOnYkuPj90GZJiPRhSLK3ht1IeLRhcZ0ELGTj6MfNilSqfoeJyRV/EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Q34nmnxa; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744048062; c=relaxed/simple;
+	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D02Ogeh/jzwub94S+5GVVK83ip3h130uJN+CVZnSuIon/fFy7KaaNDAsKx22IAruzzzfQ6Gj8ru1P0T1MLvHRBzdSEGodF46yCGiSo4RBEmVk9027AS8kDT02DZlLLyCHfm8O31ISbSWoLDaVQZ6Ji86sq7C2Xkyp6orSxUKfYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR5yGXWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q34nmnxa"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537HkmVB433156
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Apr 2025 12:46:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744048008;
-	bh=9NeDdgCH1H4EeC0G6DnpevkoDIVJiaLovnZau5WGOP0=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=Q34nmnxaMZ1CS2wyY/kvpvY7APtq9bRgRKyMojLXwf+y8Oe2wXpBU2yoz5nU0mNtp
-	 he4X6tYoXu70yXDFSni2VVptH6W25q6/4rcO/b89JCyZUPNRencgfBh30RYvJ90ZLV
-	 2imXYtQOCLwy1AXg6/L5FWtFCRrT4Q3r89/VoNAI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537HkmaF102999
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 7 Apr 2025 12:46:48 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Apr 2025 12:46:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Apr 2025 12:46:48 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537HkmYQ124236;
-	Mon, 7 Apr 2025 12:46:48 -0500
-Date: Mon, 7 Apr 2025 12:46:48 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Bryan Brattlof <bb@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/3] arm64: dts: ti: k3-am62l: add initial
- infrastructure
-Message-ID: <20250407174648.exd57yivoj4rvson@going>
-References: <20250407-am62lx-v4-0-ce97749b9eae@ti.com>
- <20250407-am62lx-v4-2-ce97749b9eae@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR5yGXWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC93C4CEDD;
+	Mon,  7 Apr 2025 17:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744048062;
+	bh=LCOtNNrpVZmriqn/2j8arDSoQ5pjQNWL+FUtw55KIT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TR5yGXWAMDPR4Zf8/5QuBIhPyonpjHH8ZXYaqFPJEoRCZDMXVUzK+qOOp/kOuS0ou
+	 G+VRvM6rIiom5ygtQDI3uafnbnbXMTdzT30PJidg2AfHJmADqI5Q9BM5x5IOwBFYF0
+	 otvFwv8NKhHT9+9GUJqvtj/SrvKVn9ZMYxa8GrF/qjhdeDJ4TeQfic7wdtmLzTwMAI
+	 wZ3Kr76mUTwsUhxRHUeYSoLUm3xnPwSwICDQmlJB0Vrf87fnuM2aub+uXf/jj/8TME
+	 xuNr+Toh44plbtcmBGQS1H2Ko2y/nfiP955FIEAfcLcIa9VmhujO/iKl+/2gAZWwgo
+	 t4yiAI45WX4+g==
+Date: Mon, 7 Apr 2025 19:47:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	lkft-triage@lists.linaro.org, Nathan Chancellor <nathan@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>, dwmw@amazon.co.uk,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: next-20250407: qemu_x86_64 clang-20, clang-nightly no console
+ log but gcc-13 boot pass
+Message-ID: <Z_QPuPmtrFOnhjeP@gmail.com>
+References: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
+ <CA+G9fYtNcnAEVs70eH2yP5UxRBsfrN2B1nKNcggGQ7FNMAJMmg@mail.gmail.com>
+ <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-am62lx-v4-2-ce97749b9eae@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
 
-On 10:34-20250407, Bryan Brattlof wrote:
-[..]
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
-> new file mode 100644
-> index 0000000000000..697181c2e7f51
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
-> @@ -0,0 +1,672 @@
-> +// SPDX-License-Identifier: GPL-2.0-only or MIT
-> +/*
-> + * Device Tree file for the AM62L main domain peripherals
-> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
 
-Fix the copyright year please. We are in 2025.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+> On Mon, 7 Apr 2025 at 18:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Mon, 7 Apr 2025 at 17:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
+> > > Linux next-20250407 and no console output.
+> > >
+> > > The gcc-13 builds boot pass on qemu-x86_64.
+> > >
+> > > First seen on the next-20250407.
+> > > Bad: next-20250407
+> > > Good:next-20250404
+> > >
+> > > * qemu-x86_64, boot
+> > >  - boot/clang-20-lkftconfig
+> > >  - boot/clang-20-lkftconfig-compat
+> > >  - boot/clang-nightly-lkftconfig
+> > >
+> > > Regression Analysis:
+> > > - New regression? Yes
+> > > - Reproducibility? Yes
+> > >
+> > > Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Anders bisected this and found,
+> > # first bad commit:
+> >    [cc34e658c6db493c1524077e95b42d478de58f2b]
+> >    x86/boot: Move the early GDT/IDT setup code into startup/
+> >
+> > Lore report link,
+> >  - https://lore.kernel.org/all/CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com/
+> >
+> 
+> Thanks for the report. I'll look into this.
+
+I've zapped cc34e658c6db from tip:x86/boot for the time being.
+
+I have the same request as for the other patches applies, please split 
+it up into ~3 patches for better bisectability and ease of review:
+
+ - first the mechanic movement of code, with very few changes (if the 
+   result builds & boots),
+
+ - then drop the RIP_REL_REF() uses in the second patch,
+
+ - and drop __head annotations in the third patch.
+
+Thanks,
+
+	Ingo
