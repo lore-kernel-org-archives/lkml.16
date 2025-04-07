@@ -1,214 +1,196 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012037.outbound.protection.outlook.com [52.101.66.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289708528E;
-	Mon,  7 Apr 2025 19:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744052763; cv=fail; b=FpTKLnekk6lTxA9zHXOIP1yEVsq1JEqTtJhdm8oMwRMnRzUQQWSix4oTTHdcbCS3mMxUYmw8LYd/ihRl0lQEmh9UQcdUN3X7V5NvYI0dSwoAlj8se7Hv9DPorpkzXcvNAPiO3C9RsZvNLNhPa43TtAFaGSF9+zopk8IG27hjv0k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744052763; c=relaxed/simple;
-	bh=byN4LJNQwSTzGB4V0aVK2f1EN69s85o/oOPZRfVTPiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=d7IBWmC49rVSeYaB8O4Z7az5SElEIkgYd4yOpFfUIO3vTZV6vPBCeOT6lkvp8mX18E8yPfw26LecTdjOUutJTf9ehYcKmU1txHQY2PHQ0Ro1GnpWLpS9lTaxZY6/UgvxPlVj5YZqqofXOOPfC1RGHMTuRVvrLV2wVzWnlRAC/oI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DDi7BNvi; arc=fail smtp.client-ip=52.101.66.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DDi7BNvi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ePOfc4cL+diuxPy4iVZcCnfKC3ujoGWercHlIMmBq49kdHuO3QtdFZdsZ9It35yk3l6Kp39CzUue9nvMJtep8EZA/u1Opv07vwqD8pJ9oh131lJfPk/UC9p7HdOmrpE6m6DMG7J90g3hO5XBgazGIJK8FAfaaHRzH+Biy2sDRVy/ZmWc4sv39VDTfsfsFrWsQUKnffrfGt+WNf4BtONm9kPPjIKRKzn7ZhFyMUMw+M6HqLYEnhwjZGfS2TvoW3vENj6xeXAxpGvdWBPGqGLSXWtwCdp7b+btU5dR64jLj9IL4GaWEpwS52qtfxMeB2G3XGpF1wm6YvlOJLb7lkQh8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yFSPB2Esstnw7o9Wizz12Z1D13AxYfacj62fdsuu4pI=;
- b=gK/raIFr0Qvq5JO+OLQ1VwkYTc7yXbcnVW5EpWkhqIZDRjL5T+ftlmu7+Plyhee9GrvZ32vZZk/C9zvkWh7RE4PsZCOpJmx/6c9Om/Iz/VeMRJG9j1cdTQSQh1PPLAqP3Cp11GDD+03sCHvdDbyKvMnP5UtnbfeUx6gdO0Dwu3fO//VXZshHgvOn4HIwt5z6Prateai3fC2yyM/nvpj+5bDTGuRLjMMTvfM/fweWT+sSbGHbbtHgFl5wZJ22JCkgiESQPmnwaRi8noLWC12zz0BBS6ttRW7NAoFv6Rr7aW3MjHuRwOpPSXEjPYew9DzgU2FdSOAPBNtS8WYzp5Of+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yFSPB2Esstnw7o9Wizz12Z1D13AxYfacj62fdsuu4pI=;
- b=DDi7BNviFbo2yzYqjeuQr/VHAOqn2NigZPEYFHNAf5KLmzyUaJU3zWt4/5ou1MQiyYUEz7wRcqWniyAicEHH/jQC7/j5zX6ha3+5AfZSY7u2sAQdHmt7nMFp9ZYC7tqzgSkSH5QjH7Dj+TywQ+rOObpatMOwsTeqQtWrW3u+aL8aKM+IzGv9ODBj2D2yqRrYhRm6hjz05kcBwoP2SzAmE8dC3TIW44jKBjIA/nkPb2PuJa7GuU6tVzHwpICsrNVPIvJ8/68gXb8fY1n/aelmV92sb4wDWZzqhVghSZrkJkFBUMNgIObABh48Vvw8lXYNZR4+muDaiAQVcVWwSlU1Vw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DUZPR04MB10064.eurprd04.prod.outlook.com (2603:10a6:10:4d3::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.43; Mon, 7 Apr
- 2025 19:05:58 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8606.029; Mon, 7 Apr 2025
- 19:05:58 +0000
-Date: Mon, 7 Apr 2025 15:05:49 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v15 3/7] arm64: dts: imx8ulp: add secure enclave node
-Message-ID: <Z/QiDQCgq7utUs54@lizhi-Precision-Tower-5810>
-References: <20250407-imx-se-if-v15-0-e3382cecda01@nxp.com>
- <20250407-imx-se-if-v15-3-e3382cecda01@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-imx-se-if-v15-3-e3382cecda01@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0149.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F099522331C
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 19:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744052786; cv=none; b=Z+J6xvCP04A9g5YX7X3DphOI+1xcqwmhhlATxVUzwuMNSRYJ28LEYKhI+56n5vZY22ZfEnpHjr7z2yqa6B15F4lL618w5/jdbvcuZanJ0uTykzb4oAifiP/Q22/0Zl4b6k8foJp0+f+f7Ht33gmM0V4IVkCyfd7FoVgptaudn8Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744052786; c=relaxed/simple;
+	bh=0AMCrLurcJfZb7kJ53tZu/iAVXNzYknQ/AnFDcVs6i8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ip8dWd2DIT3xVnMSc65Jt2Nl54Ti/HOaHpxeUxYonVvfjTKb4jJreQ09Wu2iJDfzmNSvSPFaNJkqW+c4TVAYSDFCXgVW1Fuk4VW6JxhPlX8YyfGxOOo6SRke9rdCrQ1jxoWwiRP3+sqF3eNSO+7nrLTU9pXesDNG1GUesXKerEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so52381415ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 12:06:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744052784; x=1744657584;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+xVZLm6kqc2an4MKk8zio1UQWD5T1+HUmq4djDHDhvI=;
+        b=uRfsyISl/gQOX+HfaUYiIOdgJU6r2/d5PfhgxbtwN149h7kTWTVxSPOIKJsL+KSIg8
+         rOOQPupS4Zdpkb/hG6DAHl6UVHqiXuSI3jhBeMlidiPP/AdK7OrM28vgGYHnrqukBfyB
+         eU4KQukTKgDl7w4ht732y+7ARU/0LMh9tm4IsmGoyOaJc9stJawiEEaOyOWUeJvGDqgY
+         6Q96gx5aB0FbRozqqcJAKk6ADxrxve/yB0zUyzu+qS2jjcF70dzNlmAWRFV/52Pd22nP
+         9/ABYeQ3WrhkBZpKiGvU0ohTjaUpdMowBbT2EbeUQZsJmw00Y/JCPZfxOBo86UEjwWmn
+         PKQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvra8el9K+/uqEVDgd0kJJ99t8bdmNkro5LjbB27T05CyIIqqx4/Z28Lj0EAcOcN49XZczGNrhLkWDUgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlEiD98TWnrgMH/LKRfSyvUg1DmXm3tApmZC+2qCDeCvNtFZrz
+	8YVgqItYQta5ESv0+I5HauaSSs1Ae/KRGs30k+mat0F7kuPJn7EJTJLckn4LoG7jE1Uf2zXNjcl
+	2Bb0Tyag3zyeYQLfaDpr2bdOJ1a2huMdYo4YjFBE0oReY6RafeoyH7NI=
+X-Google-Smtp-Source: AGHT+IHPbTLpASg7R6uZalh6iNPCdDRAruLRQxDMs2Na9CqjWqglBRYeBtAG9F5rnxwzQLPUgb1SJwsnAXR2audcNkGslBuCQH/Z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DUZPR04MB10064:EE_
-X-MS-Office365-Filtering-Correlation-Id: cacd1586-c281-4159-24c1-08dd76073af1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8k2mpa8/Y7YVziwJoPunQRYpl3Y+umhkGWV+txwU9Pr8vTOJNJcVBe1k3OD0?=
- =?us-ascii?Q?qftVOR2J1970SJm5Yw02KnwQarlIBUMGvG5ba0yPzdYr7A4om/Mdw1mYjGpv?=
- =?us-ascii?Q?0zBDuGRToiBFBe+jDfZjbsuSTE8tULuZRAi6K1wOQJ067Agpuce3cG2L2F0U?=
- =?us-ascii?Q?cm9YFUEgGomeins3msp70K/wNAIzQden7wuKMIBCDdcxLeDfDDeKBF2QfAvA?=
- =?us-ascii?Q?AO4zgOw96U6TBhTvncdmOHS/9IbHRIfJYO8wGBIJLUI7MRISxyZtUui9axRr?=
- =?us-ascii?Q?5SwN+ptL/0VODPnZ9AwtJs8f1V9UU1E1+zaBzgA8g6sNzjAfLsBN4WgdAQWt?=
- =?us-ascii?Q?AXLWhUVeXpaxFxh1DB4Xyz5NxDVlHrykmJwrA0jO90EIkgxPM7DmEDqVVh8j?=
- =?us-ascii?Q?Ur/tkEtxT0geLyjjKhkJgirMEo78BCnFUmQd7aWNa6EKUf/FtwhKh2v1WnRW?=
- =?us-ascii?Q?vbdyKl7+0oFGMmYMaK6dN57XGioxtgtCA49B32KzXLL0zI0lPxMZE+7kkKBh?=
- =?us-ascii?Q?9h+uaJgoYh/blNTmnhuX762fkYAa3x+UZ2S7pgr0Yddbe2cqbfTiBVH0ASAW?=
- =?us-ascii?Q?/rR0ysPHoW77Fv+LT/CAMU0F1d9RKHgHgXfLKL+/A8vcVD0J/hH6VlVeG7rk?=
- =?us-ascii?Q?+98aM+qPMAu60H92pZAKsrBWxQPUlMdRYjbJfJAAKZQCCHqzilkMEkQm6iuM?=
- =?us-ascii?Q?XpCGdZMo/dvKcgIT+EC3ct8noTfNoHA5bWntfZlZqsnF9WXdfS/BHA+/VB/b?=
- =?us-ascii?Q?LcBQgr11+TKJm6VFc9bxHcHrEAnJcBpmi0Xv734xe/fBO4de26r0mpVe+pXH?=
- =?us-ascii?Q?xUwN2Ov5z+TNtc2Z2vIqcgp8P+JGayO1G0dy1LXNVgUEYCEwbs1TNDPZaFNL?=
- =?us-ascii?Q?HHP319lex/AHGnNXM0+rkU5Lo8ZsZWM3qTG8sbLcv2RTFm0+M2zj2T9VvN3A?=
- =?us-ascii?Q?fzTurgzjMm4I9L3TW49fAe1h5bSOGfE6PSj8deB705N7ccKun+M/2dqJ4F9M?=
- =?us-ascii?Q?qvWkpJ2arDoBRzFNxWrt1hp00eUfYYVv4q64hSROpdxfMxbQ+4p+hWWZ+VEN?=
- =?us-ascii?Q?YUuD342iXsmbpPKjxvel423KrcLl2ZDGkz5MLrkvDWEhQo77KjVVQB21HGqq?=
- =?us-ascii?Q?eOOgKS2dmE92W9wslM64z30qqcrK7/BDjprMuYQv+le1E6by8sbeFDBqfr4n?=
- =?us-ascii?Q?BijA1UFF73/JUJoS7tFc5C40vEGej7A1muV0s0lrPQTSAlavYjltXFx1YSW3?=
- =?us-ascii?Q?wcc93PnZRDpJdsMsMWgymyDP7du2kBBA+jEUzg5wxdVUKBA07g6j0uUNtncC?=
- =?us-ascii?Q?QFFgxjjJYZlnSwAjo2u1PUZ4C1fxDGNw9uzNHawaMb91Z7JZNQDLn19Ngc1a?=
- =?us-ascii?Q?AsoAsSCMNTgQ2Fr7zn0K2GOT+dwlxmU0zP/w6Fk2VoC0Ry7gplSc9q7al/Ng?=
- =?us-ascii?Q?zcyhQ+bbkIs8k0kxU57rSyBoeIpRNc7M?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LtLKwW0bDxl3WUYEdUSON2fclgdmjW4rnU1xz2SCxzzFde2D17LvH5DXu8FG?=
- =?us-ascii?Q?LSMoM/1iGRO82KTXvHkbp2ybbo4FQTFmLSKG5tYpXa/SqnwGcwtn6t5Jgsm1?=
- =?us-ascii?Q?km01ioEThOwgQ2Ry9gMrUWsWB0QBlEVMhD3MzKwS1PevM4KD/PXwQkiquDeY?=
- =?us-ascii?Q?Q9eWhH25w5u3u4p3T1qScRcmbTuxLrdf5ZgaGtaxO+cYB6XX2Cbi+otOxxnG?=
- =?us-ascii?Q?rL9cRE4CYt9c51m9KCdY3Jtn+Pjhw6bQ1HNxZBfrdPS/xw5huQfK8Sq/qgcK?=
- =?us-ascii?Q?32hCbMRv0nuEUqFfKywER5f8mTprq/npgg3Z5H9K6kiKer/y5AcIhJyGxTi0?=
- =?us-ascii?Q?CbLi7P3lWTyZNgpehE9z9Gy19nbmatJipP5FY6psMa2S3k4K0ux71BEJtmKe?=
- =?us-ascii?Q?PVxPsoRjbILWGQ6d9GgJstmeVraX4pezvU4rQYlEs37bh/oaCIuTT18d2I3m?=
- =?us-ascii?Q?RiKhNTQPMAFEG4i7poDSrbKtgxIpti+i8IB/CMoeIMV44RJxvqITrWXpXiIX?=
- =?us-ascii?Q?y/51pV5WZeRV+l+dgyNDdfh3BBnqbMF5TTPgCtEbtup47hahgiHv1i4GHdom?=
- =?us-ascii?Q?5S1BWCMUB+ybafBJauAGz2PVN7lvHb3U6KNDER3tT3ntsPGjuhk+TbrcOimK?=
- =?us-ascii?Q?HgO+kmVpEfoMkSCzIBHPRcHBaCoWUuy5PGxE3aROBz9YbkJJ1iYSG1eJVo0J?=
- =?us-ascii?Q?cl1MPPo8hBxMjDI2RJlOEM7AvvrLXIItSRD7s0AxgwtNGnWYrRGYOZKIJHZd?=
- =?us-ascii?Q?uvqWARZ/XGj0IlUkBJ0h4u41ElEoI4V1GX6L3jOhaJwe3+hWoPgyg03OdnFD?=
- =?us-ascii?Q?399EVUP82zhEpfIaU5oouo9zuzJIByqjmLKEGEbdSyu73O2RiCFs2ac6tqEe?=
- =?us-ascii?Q?M/sJVNhAkg97KhUC9/MPow+2nOwRm23HbaF+Bns8KDx7DitA3q6pF6O3ydf2?=
- =?us-ascii?Q?B7QP4gu2NhlMEYXLPl59AsbaoUg/T5YNW0tSBzruzi6DNEJfeV5UDIj9iyBg?=
- =?us-ascii?Q?OLdmkHyoj62hr0fhMACrXsdG90YVyrXazzvwzkBrOfgNUDFiqdi92EbSMtwA?=
- =?us-ascii?Q?tsVD+I0yVJEHfQoEguxeJbOk4KNxQsOwdUD8fo1av+l2CMJm2yHWqL/zotUg?=
- =?us-ascii?Q?aBNubIq6kMj3DBdnkQ4e6aclTxssC6sR2Ka2oBAlVk9ALt7PEfgv1hDxuwbN?=
- =?us-ascii?Q?ffyugeqGWBNn6a0pS9I2nnFBBnsz5L+W6dnPkTEX4rxPomtGvFHSG2HzektN?=
- =?us-ascii?Q?1tJO8vT8olUDLYHl+iscrhSi/xRKa+/NPUqaQdB/Zt0abgYcP8L7YKe/eNLo?=
- =?us-ascii?Q?tY1+wwBENkwTPJbS4VBDkYepR6jHoOfp240g5fWChpGxoXgqa65kw/0qfWL2?=
- =?us-ascii?Q?myyIVNCn5QQ9aB6CQKRc94V3m9aG+6aWgtOG3T5jfxDvLI9NRRUWp8KJ3wxr?=
- =?us-ascii?Q?bKG9tWP3zJ3LiK5edldCZ3086LiaD8BeKnyWBbOAoLcSVDQiDrnJiaF4WY2Y?=
- =?us-ascii?Q?SiWUws5u8he7qNF6c+xuD8AxgbchblZylA1bEuFcEt2uK/Fvk4FOKg+p9zAO?=
- =?us-ascii?Q?sqIjrl96Rw5STzAdI+PxxO7pmksYrQVgaKWUahtD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cacd1586-c281-4159-24c1-08dd76073af1
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 19:05:58.3872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J8XyVLBBq9K9mNvsTw3lgd49hvlppM8KK+E3TKhe/BqVUggpRbn6IH/k9ABKS84lH/zTaby1A5oc7qQUdHtvyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10064
+X-Received: by 2002:a05:6e02:3783:b0:3d6:d0e1:73eb with SMTP id
+ e9e14a558f8ab-3d6e531e535mr133514345ab.7.1744052784008; Mon, 07 Apr 2025
+ 12:06:24 -0700 (PDT)
+Date: Mon, 07 Apr 2025 12:06:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f4222f.050a0220.396535.0552.GAE@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in bch2_rename2 (2)
+From: syzbot <syzbot+fa540e3a6e6f0bc4edc8@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 07, 2025 at 09:50:19PM +0530, Pankaj Gupta wrote:
-> Add support for NXP secure enclave called EdgeLock Enclave
-> firmware (se-fw) for imx8ulp-evk.
+Hello,
 
-Pleas wrap at 75 chars to use screen width efficiently.
+syzbot found the following issue on:
 
->
-> Add label sram0 for sram@2201f000 and add secure-enclave node
->
-> Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-> ---
+HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14f03b4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66996a2350ef05e0
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa540e3a6e6f0bc4edc8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Move dts patches to last patch because generally driver patches was picked
-up firstly then dts files. driver part Maintainer will pick first N patch
-is easy than skip some in middile.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Frank
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0af2f6be.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3fcfb8eefe4d/vmlinux-0af2f6be.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e06a39be2bd8/bzImage-0af2f6be.xz
 
-> changes from v14 to v15
-> - Updated the commit message.
-> - split the current patch into two:
->   -- 3/7 for board dts, and
->   -- 4/7 for chip dts
->
-> Note: copied the change logs for v13 to v14, to cover letter.
-> ---
->  arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> index 2562a35286c2..05db47668b7e 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->  /*
-> - * Copyright 2021 NXP
-> + * Copyright 2021, 2025 NXP
->   */
->
->  #include <dt-bindings/clock/imx8ulp-clock.h>
-> @@ -154,7 +154,7 @@ sosc: clock-sosc {
->  		#clock-cells = <0>;
->  	};
->
-> -	sram@2201f000 {
-> +	sram0: sram@2201f000 {
->  		compatible = "mmio-sram";
->  		reg = <0x0 0x2201f000 0x0 0x1000>;
->
-> @@ -186,6 +186,13 @@ scmi_sensor: protocol@15 {
->  				#thermal-sensor-cells = <1>;
->  			};
->  		};
-> +
-> +		hsm0: secure-enclave {
-> +			 compatible = "fsl,imx8ulp-se-ele-hsm";
-> +			 mbox-names = "tx", "rx";
-> +			 mboxes = <&s4muap 0 0>, <&s4muap 1 0>;
-> +			 sram = <&sram0>;
-> +		 };
->  	};
->
->  	cm33: remoteproc-cm33 {
->
-> --
-> 2.43.0
->
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fa540e3a6e6f0bc4edc8@syzkaller.appspotmail.com
+
+bcachefs (loop0): running explicit recovery pass reconstruct_snapshots (21), currently at snapshots_read (7)
+ done
+bcachefs (loop0): check_allocations...
+bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ac62141f8dc7e261 written 24 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0, fixing
+bcachefs (loop0): bucket 0:26 data type btree ptr gen 0 missing in alloc btree
+  while marking u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ac62141f8dc7e261 written 24 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0, fixing
+bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 7589ab5e0c11cc7a written 24 min_key POS_MIN durability: 1 ptr: 0:38:0 gen 0, fixing
+bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 9aa2895aefce4bdf written 24 min_key POS_MIN durability: 1 ptr: 0:41:0 gen 0, fixing
+bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq c0bef60d07ceb940 written 16 min_key POS_MIN durability: 1 ptr: 0:35:0 gen 0, fixing
+bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
+  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq e81e1ed936acf3df written 32 min_key POS_MIN durability: 1 ptr: 0:29:0 gen 0, fixing
+bcachefs (loop0): bucket 0:15 gen 0 has wrong data_type: got free, should be journal, fixing
+bcachefs (loop0): bucket 0:15 gen 0 data type journal has wrong dirty_sectors: got 0, should be 256, fixing
+bcachefs (loop0): bucket 0:26 gen 0 has wrong data_type: got free, should be btree, fixing
+bcachefs (loop0): bucket 0:26 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
+bcachefs (loop0): bucket 0:32 gen 0 has wrong data_type: got btree, should be need_discard, fixing
+bcachefs (loop0): bucket 0:32 gen 0 data type need_discard has wrong dirty_sectors: got 256, should be 0, fixing
+ done
+bcachefs (loop0): going read-write
+bcachefs (loop0): journal_replay... done
+bcachefs (loop0): check_lrus... done
+bcachefs (loop0): check_backpointers_to_extents... done
+bcachefs (loop0): check_extents_to_backpointers...
+bcachefs (loop0): scanning for missing backpointers in 4/128 buckets
+ done
+bcachefs (loop0): reconstruct_snapshots...
+bcachefs (loop0): snapshot node 4294967295 from tree 4294967295 missing, recreating
+ done
+bcachefs (loop0): check_inodes... done
+bcachefs (loop0): resume_logged_ops... done
+bcachefs (loop0): delete_dead_inodes... done
+bcachefs (loop0): Fixed errors, running fsck a second time to verify fs is clean
+bcachefs (loop0): check_lrus... done
+bcachefs (loop0): check_backpointers_to_extents... done
+bcachefs (loop0): check_extents_to_backpointers...
+bcachefs (loop0): scanning for missing backpointers in 1/128 buckets
+ done
+bcachefs (loop0): reconstruct_snapshots... done
+bcachefs (loop0): check_inodes... done
+bcachefs (loop0): resume_logged_ops... done
+bcachefs (loop0): delete_dead_inodes... done
+bcachefs (loop0): done starting filesystem
+bcachefs (loop0): dirent to missing inode:
+  u64s 7 type dirent 4096:189491840996961599:U32_MAX len 0 ver 0: file0 -> 4098 type dir
+  
+------------[ cut here ]------------
+kernel BUG at fs/bcachefs/fs.c:990!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:bch2_rename2+0x20c6/0x20d0 fs/bcachefs/fs.c:990
+Code: ff 44 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c 44 f2 ff ff 4c 89 ff e8 3a 3b bb fd e9 37 f2 ff ff e8 20 3e be 07 e8 3b 12 51 fd 90 <0f> 0b e8 33 12 51 fd 90 0f 0b 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000d317520 EFLAGS: 00010283
+RAX: ffffffff847242e5 RBX: 0000000000001002 RCX: 0000000000100000
+RDX: ffffc9000e102000 RSI: 00000000000059ca RDI: 00000000000059cb
+RBP: ffffc9000d317ab0 R08: ffffffff84723605 R09: 1ffff1100ac9903a
+R10: dffffc0000000000 R11: ffffed100ac9903b R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000001005 R15: ffff8880550b9e60
+FS:  00007f9ddb8926c0(0000) GS:ffff88808c596000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffe65a81b18 CR3: 00000000441b8000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ vfs_rename+0xbce/0xf10 fs/namei.c:5086
+ do_renameat2+0xc8d/0x1290 fs/namei.c:5235
+ __do_sys_renameat2 fs/namei.c:5269 [inline]
+ __se_sys_renameat2 fs/namei.c:5266 [inline]
+ __x64_sys_renameat2+0xce/0xe0 fs/namei.c:5266
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9dda98d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9ddb892038 EFLAGS: 00000246 ORIG_RAX: 000000000000013c
+RAX: ffffffffffffffda RBX: 00007f9ddaba5fa0 RCX: 00007f9dda98d169
+RDX: 0000000000000006 RSI: 00002000000001c0 RDI: 0000000000000006
+RBP: 00007f9ddaa0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000200000000200 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f9ddaba5fa0 R15: 00007ffcbe6f4818
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:bch2_rename2+0x20c6/0x20d0 fs/bcachefs/fs.c:990
+Code: ff 44 89 f9 80 e1 07 80 c1 03 38 c1 0f 8c 44 f2 ff ff 4c 89 ff e8 3a 3b bb fd e9 37 f2 ff ff e8 20 3e be 07 e8 3b 12 51 fd 90 <0f> 0b e8 33 12 51 fd 90 0f 0b 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000d317520 EFLAGS: 00010283
+RAX: ffffffff847242e5 RBX: 0000000000001002 RCX: 0000000000100000
+RDX: ffffc9000e102000 RSI: 00000000000059ca RDI: 00000000000059cb
+RBP: ffffc9000d317ab0 R08: ffffffff84723605 R09: 1ffff1100ac9903a
+R10: dffffc0000000000 R11: ffffed100ac9903b R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000001005 R15: ffff8880550b9e60
+FS:  00007f9ddb8926c0(0000) GS:ffff88808c596000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9ddb870fd8 CR3: 00000000441b8000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
