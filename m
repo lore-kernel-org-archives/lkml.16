@@ -1,132 +1,139 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6270822CBF6;
-	Mon,  7 Apr 2025 12:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE0F22D4C3;
+	Mon,  7 Apr 2025 12:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744029847; cv=none; b=PDvkzPZY6c64/9/SPVCqHPlb3qXxC+pvGTtVczroGtdRMkiGd/rRLhnneyeuG122aidxIV+/ZI7YE2b7A7YpFLhqrwVtomxWsgwWSebfMq7wXy0LJHsh1MDLYavK+mORr3h3D2FpriA5fm0p4iI1F1g4GZhDfXnRNzxeeilpHKU=
+	t=1744029939; cv=none; b=saAREuGulwr462xZcltMJrox4Gt+zaa2aQ72pfCRKikVfTO2pEUbySm8Ag+v+jDarO5/mAkYo+yRK9cEGGMZjm55oOzQAj8YXoVH22pklr0fu0WDt92tqesTod/PCixJaVJ+y1xdpJXGb2I2/foMXna31eG/LgbBOKL/DFaqm4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744029847; c=relaxed/simple;
-	bh=vqjWZuPQlIOFlSltHzsekIKSiLr4Qp8Wgn5s0hWzFFs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tZB04KsO4ZesKz9tJ98K/K5DunAPa1eElQB8bQq6l9YjkBpI/DqtrDFTXGoCbpEn44dtp1E9FDlWNuZWS65xOpEOkire+8Nr3V2yELgNOQz+2JL7uVeArYQYk8oj/KdbxPcWnOw63uoZTqcXW2CmruKvUSXay+dF9xCUZHE9+iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ECbq8sd2; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744029939; c=relaxed/simple;
+	bh=oi7xvK7sq6Mk30ayGug3Cz0ce7Qbzy8vn4VUDnl94Fk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIsQCgYTAL6C4wzXWcxwKGpP8mQ1zJoFym0WAHD9ItPf8nM+1x5jZbpnBBz5XX/rd+yYtKP6zw3y+N2qWvMY/BMQZJEZ61xjkuMUaChIWbCM/T17YBLRL4LlcyeHJodxDEPWcDTLYynhBIBDMLOrTvP2Jb3pBxfI5LLLPi6aKEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4DkUFiO; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ECbq8sd2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=dHe9y
-	qn4Y0WIUpRuMWGYKVK2uUqqPhweadp6diItowU=; b=ECbq8sd26lexrWpr38c91
-	eDK9rfQtgGV7IurdL2zBZOA4rcNIfR1hFLuEoYQoTEU/H/nHZ2PRgx75hLmpsEK0
-	hiECOA4xIH6wD2eXffRF5PlX1z3Q0DHEeVXhIsoQmKLtorkrh6Zcv7059yDDF1kK
-	JqqD3jc6tA6c1H9KDiARkY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXovl1yPNnuhoaEw--.58685S2;
-	Mon, 07 Apr 2025 20:43:35 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: christophe.jaillet@wanadoo.fr,
-	manivannan.sadhasivam@linaro.org,
-	thierry.reding@gmail.com,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	jonathanh@nvidia.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [v3] PCI: tegra194: Fix debugfs directory creation when CONFIG_PCIEASPM is disabled
-Date: Mon,  7 Apr 2025 20:43:31 +0800
-Message-Id: <20250407124331.69459-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4DkUFiO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744029937; x=1775565937;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oi7xvK7sq6Mk30ayGug3Cz0ce7Qbzy8vn4VUDnl94Fk=;
+  b=Q4DkUFiOhFowklIqPzGtu3CwTt1Ua2c3AnBn0Easq2fyZfO1Gcm0NPzg
+   InRLUH9+Mr/4ccMFnYrY5Q7M9hqDtZqT/CHAoK8YdqhQ5qw4szTej+2AC
+   Ay8SkNFFQ7d/SUm5X+LMI1T0UeJCJhPkw42dHy5tEyDGSFzx0nzd0kiFk
+   tfvbrvzByZsct/keSi+Da9NiR9SSZizHbTX0MKoKmMJiDfZQpi4ZKCCoU
+   9btS4r4Wq9ZR8NLYhqi+WkGONyuTDFV69gKtcIbj9jA2/hVVv50JZKSCr
+   Z7Zu578OGubQI0QUgtBc6BlZ6gr92u0v0G4+D6UCV6CwKDTqym0L61/UF
+   Q==;
+X-CSE-ConnectionGUID: pXrqrFN/Sr+4zIAyrmGRJQ==
+X-CSE-MsgGUID: aXZ3tTynQv6eWt25y4c34Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44660999"
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="44660999"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 05:45:37 -0700
+X-CSE-ConnectionGUID: 9P08ZSozR0Kdsb1iejdrkw==
+X-CSE-MsgGUID: S8frljUTRLKrkL7PDqw5QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
+   d="scan'208";a="127829153"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 07 Apr 2025 05:45:34 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1lr2-0003OR-0T;
+	Mon, 07 Apr 2025 12:45:32 +0000
+Date: Mon, 7 Apr 2025 20:45:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: Re: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
+Message-ID: <202504072041.Bv9mOk4o-lkp@intel.com>
+References: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXovl1yPNnuhoaEw--.58685S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGr1furWkWr47XFy3uFykKrg_yoW5Xryfpa
-	95GFWYkr4kAa1fXrsrZa1UZr1SyrZayrZ7J34fuw1Ivr4DCr98tFy8KFyYqFy7CrWDtw1U
-	ZF4rt3Wqkr45JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_EfOUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx0oo2fzxwYbfQABs-
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407095852.215809-3-andriy.shevchenko@linux.intel.com>
 
-Previously, the debugfs directory was unconditionally created in
-tegra_pcie_config_rp() regardless of the CONFIG_PCIEASPM setting.
-This led to unnecessary directory creation when ASPM support was disabled.
+Hi Andy,
 
-Move the debugfs directory creation into init_debugfs() which is
-conditionally compiled based on CONFIG_PCIEASPM. This ensures:
-- The directory is only created when ASPM-related debugfs entries are
-  needed.
-- Proper error handling for directory creation failures.
-- Avoids cluttering debugfs with empty directories when ASPM is disabled.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v2:
-https://lore.kernel.org/linux-pci/20250406134355.49036-1-18255117159@163.com/
+[auto build test ERROR on wsa/i2c/for-next]
+[also build test ERROR on linus/master v6.15-rc1 next-20250407]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- Maintainer recommends ignoring the devm_kasprintf return value. The
-  module should still work correctly. So just a return;
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/i2c-core-Drop-duplicate-check-before-calling-OF-APIs/20250407-180528
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+patch link:    https://lore.kernel.org/r/20250407095852.215809-3-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 2/6] i2c: core: Unify the firmware node type check
+config: arc-randconfig-002-20250407 (https://download.01.org/0day-ci/archive/20250407/202504072041.Bv9mOk4o-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504072041.Bv9mOk4o-lkp@intel.com/reproduce)
 
-Changes since v1:
-https://lore.kernel.org/linux-pci/20250405145459.26800-1-18255117159@163.com/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504072041.Bv9mOk4o-lkp@intel.com/
 
-- The first version was committed incorrectly because the judgment
-  parameter in "debugfs_remove_recursive" was not noticed.
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+All error/warnings (new ones prefixed by >>):
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 5103995cd6c7..bc419688527a 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -713,7 +713,16 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
- 
- static void init_debugfs(struct tegra_pcie_dw *pcie)
- {
--	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
-+	struct device *dev = pcie->dev;
-+	char *name;
-+
-+	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
-+	if (!name)
-+		return;
-+
-+	pcie->debugfs = debugfs_create_dir(name, NULL);
-+
-+	debugfs_create_devm_seqfile(dev, "aspm_state_cnt", pcie->debugfs,
- 				    aspm_state_cnt);
- }
- #else
-@@ -1634,7 +1643,6 @@ static void tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
- static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- {
- 	struct device *dev = pcie->dev;
--	char *name;
- 	int ret;
- 
- 	pm_runtime_enable(dev);
-@@ -1664,13 +1672,6 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- 		goto fail_host_init;
- 	}
- 
--	name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
--	if (!name) {
--		ret = -ENOMEM;
--		goto fail_host_init;
--	}
--
--	pcie->debugfs = debugfs_create_dir(name, NULL);
- 	init_debugfs(pcie);
- 
- 	return ret;
+   drivers/i2c/i2c-core-slave.c: In function 'i2c_detect_slave_mode':
+>> drivers/i2c/i2c-core-slave.c:117:17: error: implicit declaration of function 'for_each_child_node_scoped'; did you mean 'for_each_child_of_node_scoped'? [-Wimplicit-function-declaration]
+     117 |                 for_each_child_node_scoped(fwnode, child) {
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                 for_each_child_of_node_scoped
+>> drivers/i2c/i2c-core-slave.c:117:52: error: 'child' undeclared (first use in this function)
+     117 |                 for_each_child_node_scoped(fwnode, child) {
+         |                                                    ^~~~~
+   drivers/i2c/i2c-core-slave.c:117:52: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/i2c/i2c-core-slave.c:117:58: error: expected ';' before '{' token
+     117 |                 for_each_child_node_scoped(fwnode, child) {
+         |                                                          ^~
+         |                                                          ;
+>> drivers/i2c/i2c-core-slave.c:115:21: warning: unused variable 'reg' [-Wunused-variable]
+     115 |                 u32 reg;
+         |                     ^~~
 
-base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
+
+vim +117 drivers/i2c/i2c-core-slave.c
+
+    97	
+    98	/**
+    99	 * i2c_detect_slave_mode - detect operation mode
+   100	 * @dev: The device owning the bus
+   101	 *
+   102	 * This checks the device nodes for an I2C slave by checking the address
+   103	 * used in the reg property. If the address match the I2C_OWN_SLAVE_ADDRESS
+   104	 * flag this means the device is configured to act as a I2C slave and it will
+   105	 * be listening at that address.
+   106	 *
+   107	 * Returns true if an I2C own slave address is detected, otherwise returns
+   108	 * false.
+   109	 */
+   110	bool i2c_detect_slave_mode(struct device *dev)
+   111	{
+   112		struct fwnode_handle *fwnode = dev_fwnode(dev);
+   113	
+   114		if (is_of_node(fwnode)) {
+ > 115			u32 reg;
+   116	
+ > 117			for_each_child_node_scoped(fwnode, child) {
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
