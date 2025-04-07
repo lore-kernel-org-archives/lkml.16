@@ -1,223 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2042.outbound.protection.outlook.com [40.107.20.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164411F8BDF
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744038294; cv=none; b=KaYmLHFj3B4JBIbkCEfw8Raum7je0UFe6GUarKmRAq9G2HDBZjEH6QBT7uNBb39oxhXMmnABup/5PPtceOOhAazrTeQh5CmgXw3C6LSYtaX89LxgXs5TImZmJ1RqTR0ODHhSDPJYtLuHf1lBWYu6YZCXaZe+TMAt+t2c3t3k8g8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744038294; c=relaxed/simple;
-	bh=qtd8eJm0kj1uRbmZJldLWMWtv34L+mx4rknM+vjQCJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYnoi+jMXH1gqVhQOxw+mc7eRFwmqzBqzTvRPuscyZAkE3fhJk6oN/BbJMNU/bTr0g5ZjZmEjPvUnAlV5mYVcF0zVM9nwROOBJWitzLnmBY2c8NSnA/z0nQAxstm1KEKNa4TkvQR6UVtF7HzejThXAgXWJHwT/d2J6Yp/7ohYWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V3b9y7O8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4AB1F8BBC;
+	Mon,  7 Apr 2025 15:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744038305; cv=fail; b=l1sMrau/W7e/+1jJXOxXllSxlZWZZyXK30+PH9M+YFa2RLDkjY5Wnrt/7I2FOmNY7MzsHmWOn05uRdhLQgCEhlEswbNzVdFZhqSFcCWJ1VTe61V6Vce7cbR4J16HyEXDJKrLrHBZdV0hNh8pltlsFJRll5e5Th9LfbH5/KgxjQY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744038305; c=relaxed/simple;
+	bh=38o/6SOILwWjWj3TmZjxVMS4a33CWUdXSkmdUCDbvxU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=fZHEbQPL+MqCSSEX+s8i1lxaNcJlBiW/QFKdQsYEIR1Z5XvgXB0W6WKC8SZkpnoqYubhqa1e+ucEAvBA+/fW40i8jThyL5hLtVCjFBqWWjK0OjTBeUM0L6lkeKHem89A7y/o8AbbA+MfUVhh4cM05stqbxjYWixLMlGgBL5prYg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=h41QXx+1; arc=fail smtp.client-ip=40.107.20.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3b9y7O8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744038291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4pI+0M75xO3MrNBc+acv21YxAgUvB92AQFOacEzIcxQ=;
-	b=V3b9y7O8mRhwnhBLGuWerq8RDpJeoZncEhat1G9m4zZRmO5K9qUvOt4xkomPgF1hyWShgp
-	v8Ylrj8WBE7QbGDk5wqpzwFwHOdpOqK1mlQaFOszk9+RYzahf+xEE6mAlVTcNm3zQnBM4k
-	+cVEkc3vM3rGn+2ESXXNP7ZhujX+VSM=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-401-HfGe_zBkPk-hXgjnaxPtkA-1; Mon, 07 Apr 2025 11:04:50 -0400
-X-MC-Unique: HfGe_zBkPk-hXgjnaxPtkA-1
-X-Mimecast-MFC-AGG-ID: HfGe_zBkPk-hXgjnaxPtkA_1744038288
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5498ec88462so2060533e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:04:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744038288; x=1744643088;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4pI+0M75xO3MrNBc+acv21YxAgUvB92AQFOacEzIcxQ=;
-        b=edQUFVDCPnHFobg837+7+mq7p8GOA9fP8vy/Gz7OFut0l3gtDABnFRFKARA30VmH+h
-         emEx7h4PwGN/1Hq0WvOKb07P/z2XdHWn1JF1TLRI2mvsaxyz6f00BLegBwHzHUYLXf/V
-         eNCgWNIF5g8xHpisJeLgbtfZI/lDcuaUH63xh7vgGKrMEiUkweA949UwFuCRFpvNBGhe
-         NODAjqJgoFiGeBUq9NVb30rBP6HRu2pDSU6nNVNypL6SB/D5r519MNtoElPOlTH06Cs2
-         CY3/ZblznRqSsKk69HQ+0pDdym6uw1hCl7sxbOMwYXUAb6LB/io5gy04ixIoMJhySl8T
-         2G0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ+8wdHm+BXahKpiv0KrmZ8IXzC+MttzO6C9b/OscnJsOFTpdmNYi/O6tkV3MKY1YLSBOVSxmGUDxsOXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSpp2KYqcv4aQVlKKoGT5Ts9Ob41Afen4hcjD0Aacuy++23XLS
-	zzE3lsA8+Si6AGC7PkMKxyZQ3aPr5OhdWJoeZZKmOqUdMNf1KmD1YQEx/Fte7KIql9e48vqrB94
-	bki0tVMwE1a02JmO5h3BlGvwFb3P+vBRXddQmmusadSS+/qCvDqky7N8LxqWdvg==
-X-Gm-Gg: ASbGncsu0EcUztTLAZ9WkoOzwC3I7AMT5m/2SchrooDVMzhkVWscP0gZwOxqLfWiilE
-	hX2u3SVsxZ5qqkooBXUP0QPH7rRMgXYLVIskBkWjlyDSKoQhJkME8WV8P0t2qRfVWxsy8saZ4aA
-	PzYxUMWMS0F1zOEvY6KxPDcpHDUTKd48C9wk3TkluKpaP9bu3H9dnCVRijpDaP2vsaIKgAtL3ZO
-	BJRGMml8SN+wit223kHGQbHD31+g35uypZiJRQ2GgUMCFJ4qBepxFc/JrWsRokknAX58W8q20aF
-	FXGKN9s/11ZQOaUFI8qJ+2C6O0lq9zHCooPs7JLfkwzf6f25YNUNrVfPRsDX0BxqRoh/PyqJqER
-	xuCalX5iPY5fUZhCu6uJWxR4GBTBKfINB2yh1x/XbrOM=
-X-Received: by 2002:a05:6512:68c:b0:549:31e4:9ea with SMTP id 2adb3069b0e04-54c2338b38cmr3425127e87.52.1744038286315;
-        Mon, 07 Apr 2025 08:04:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHT43rq9hlptiHvp0tySM9Lx1pw1Wq5za64lIJaQaGWA9GKcGUfUwUJ8pQBgrNquv3+5zedZg==
-X-Received: by 2002:a05:6512:68c:b0:549:31e4:9ea with SMTP id 2adb3069b0e04-54c2338b38cmr3425031e87.52.1744038285106;
-        Mon, 07 Apr 2025 08:04:45 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c1efesm1311513e87.78.2025.04.07.08.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 08:04:44 -0700 (PDT)
-Message-ID: <61e36a73-2c8c-4897-9ba5-3b2d59f57b5d@redhat.com>
-Date: Mon, 7 Apr 2025 17:04:42 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="h41QXx+1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sp6Th/xzoKVxq5EYF+ypg+Yj01j7ESJaSiPoMf9sekgFeb/exPg6E695wB3dCv3bDW19mF4HrusOILY/Hr4YtnwnUfqUf/nWyA/Bt0cNHnFYE2U7bhwqb1j099a64dpytXEO0S4X4kPU6q0kBl5yPlwT0IcVgtmLw2w22N5mUvhnNjZKoa9hINdwgP3gv+Hnqh/bwnoeBHzvn/TQG1qxyvPQOa9H/FraqaKpxq5aqubTT9QugfbnrzvJmQTHs5MxMmAAtKg7/KEhUVcZnTbaPH/b3VdI8TMuf1GT8gj0Ps7EV+uq+VcVSKvC3UL6MQkXcahjHLzc4tRc71rEDT5BTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=48Rl4AZwHqHllrCfIUnj8ATHUeVAsimQcluMR/c/dIQ=;
+ b=n950gm99wzRpRv6XaAAM6yVNY2bWpCZ1A1eetgyVA8OujROeZkPJEXVC8Rnlea36WYzyX2Hu4KZxS4z8nqEDpDORyxx0PuDNbDGtRE4KwJI/Sus7vLH8zTvPE1Q61hM2/bl9GTu44PR2d5IHrRs8NlcKTrEO80emHdTOM4YwfBhXvXlJ39sAexNq5q4sTrxdoRRv8nzk1B2LdOfMt3bJTV+qYfDzcH8+/GszK6JSfpV9b259DDdhR93phUopvXS8jlSzbs5Mjpn3YxoytHPd15U40gXfxoGRuzH+F0FEx/54E+Th0KbHWVSo9Rj0vKf/5jwcpLL9Q5iJM0nfasMPeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=48Rl4AZwHqHllrCfIUnj8ATHUeVAsimQcluMR/c/dIQ=;
+ b=h41QXx+1zEGM73vmZHV2vfNKzTGD5DPywZtT14WfCa+9+2ZxtQtXXUzHt2Ts02UsRf/hXU/FEkzMeggkGf0DtBu+gTztrFzMWmtIG7v3+7jz0ia7lSgcNtxAtLEh/EAk+ask3/EYZndISBKjf4sceOcq2lmD+4neKBSjKduQjD1ZJzHuPPEKsOstfMj3E1iZQSfSnbu7hvo8eOzpbxaCXpBKqXpW1roUC6MZGIah0mIHAxKD0MineBTv1YkvbERF1lGP8XbAkRVrlZC7il0vERovUBuKBu7uNz578FGDxVdkprY1WmZ3s+x3qEiv+ZuceDX5pUt/OYrq9SqoFdtf+Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by AM8PR04MB7236.eurprd04.prod.outlook.com (2603:10a6:20b:1d9::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Mon, 7 Apr
+ 2025 15:05:00 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8606.027; Mon, 7 Apr 2025
+ 15:04:59 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: krzk@kernel.org,
+	robh@kernel.org
+Cc: Frank.Li@nxp.com,
+	Laurent.pinchart@ideasonboard.com,
+	agx@sigxcpu.org,
+	airlied@gmail.com,
+	andrzej.hajda@intel.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	imx@lists.linux.dev,
+	jernej.skrabec@gmail.com,
+	jonas@kwiboo.se,
+	krzk+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	robert.chiras@nxp.com,
+	simona@ffwll.ch,
+	tzimmermann@suse.de
+Subject: [PATCH RESEND V2 1/1] dt-bindings: display: nwl-dsi: Allow 'data-lanes' property for port@1
+Date: Mon,  7 Apr 2025 11:04:42 -0400
+Message-Id: <20250407150442.2778299-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR3P281CA0199.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a5::16) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests: mincore: fix tmpfs mincore test failure
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <9a00856cc6a8b4e46f4ab8b1af11ce5fc1a31851.1744025467.git.baolin.wang@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <9a00856cc6a8b4e46f4ab8b1af11ce5fc1a31851.1744025467.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AM8PR04MB7236:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa050cc4-950d-4f21-0800-08dd75e590eb
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|1800799024|52116014|366016|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?7w9/OTV1PotljVtojwu2fkNlw6bsYZOia54yIE55vge7SrwGsiWZs3Jq4NoE?=
+ =?us-ascii?Q?7Siy4ZT9zNgwe2o1S+AlqvkiRK6HWi8FPfgf0fglaw3Qn4NenTiEvdBisbJK?=
+ =?us-ascii?Q?KCji71eYQqSh7jxNTMrNS8lpcLAr3/B+39/D40Q4gTq97eFAAyZ5HM7i6pm3?=
+ =?us-ascii?Q?z8ynThLWs020/R+RC/Y8XlCJDU3MNtMs73+tKu08DEKf3l3YZrvGAwBETGtG?=
+ =?us-ascii?Q?wjeFBV6CBncZ4pTufh4XqFXKGZ4UQWbS6MClvf9uwWHT78T3i/JHo4K3Lhso?=
+ =?us-ascii?Q?D5zLkz5E+NFCta87SBrLnhzwvhzhvunkpeqOmem5tUeFMXMMyHJjGOXSw8Es?=
+ =?us-ascii?Q?VsBdIFMyG91O+cp5x7MWTTAPiZdIN/4sxu1gxbiwTWBEuf2sLs7bgKULkF21?=
+ =?us-ascii?Q?5NH+5HNZVMLjjwtscgHgjaRA5H5k2wS4FqijXJPLCDxNds8avazm82Aw9mjZ?=
+ =?us-ascii?Q?ys9vf/FpK8bpOPSQNjMAY41nnrh2KbH42B16jcvw//mouZbmczJCmMMoFhQ2?=
+ =?us-ascii?Q?YMD/KCWUCIQ5fSVwqQ8wAmht9rbuAc14aw1zr6RBNm2xTgZ1OAWQKh2N4aHa?=
+ =?us-ascii?Q?+e2bUB2V79lWc7BtPEVonLqyjoolEbuC76KaQYxj6U7cjLMVpLUFeuxwi/QF?=
+ =?us-ascii?Q?3xrwrO1HpXqIcl4H3VbW9DybJa/7ENY6F+TL9pSQ+rfc/rjNBJkquriY7JKT?=
+ =?us-ascii?Q?QXoE15uFdn5Xmz8S5TcVD48pyl/CWyhaS6dFF7iNx18MaYI+e8geLh6EGL/4?=
+ =?us-ascii?Q?zfokTuIbsd5S1c4THkL06MoalzY7wAylPNlbc6tepfraEM8KobnTwKmv8+dc?=
+ =?us-ascii?Q?JCeN86LVipouXGdyT+Agdk2AfJv6YJIVJG2O9CbRcowkxhstZj25iQyE4wbl?=
+ =?us-ascii?Q?ApaWQKj7z24IsnDgq6B+Q8xIw+/XlZZQNm/3KcxOXy1+lGdbxGSrizAbJwsW?=
+ =?us-ascii?Q?AwXASgEVBaL7R/K5V3f2blE152Epi+CinaHdIhlpb4OajHGq078fW+YvFFyc?=
+ =?us-ascii?Q?+lIT3Zum+5gqD+YSZY0sgn1vh3yMSPhAUWze2zO+wE9C2TgQg+u+XDRxBe6T?=
+ =?us-ascii?Q?czjT+bhyZD/T+caR+ttTRKSUUMQgEzqmMwMfhLL4euf0PdLDJAdM00Ol3luW?=
+ =?us-ascii?Q?t/2KJGQ2wQa20uGpWEYIjJmF0R3rwNsVDYPobS8he8uyBiC4O0VmdEZz0U0h?=
+ =?us-ascii?Q?4KbolJfQLRmRA/uIXlU0NLsRfX2x8eqBZrWbVb0adyZjlMdX7iplBIH7M07D?=
+ =?us-ascii?Q?ZWmpgfAFQ+Ub7+T7aCHXUHrRsxat+/FG1FBSkOBCu7rXWNaCwv2vzNC59Drt?=
+ =?us-ascii?Q?heabLVFYi0dWfBILmmrAd9qUOjqogk12KhGALUUdQgk/Db5r58VuiAbjG1xy?=
+ =?us-ascii?Q?+nD8RJBDa5eFjK40qe+aTCESaUj5Drc7zlUKlqOKDH6DtkWGOg=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(366016)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?IUuMRxCIR4v2B0I4s9baL9TvdeQaKnfq5GddAAlNU7C3KSZANMFW0MEvreWG?=
+ =?us-ascii?Q?/4rQF0MasGozVKxeXjpUJ3HCLrFrTT9bSuwOJgEDylxvR943ryzK6D6izrzU?=
+ =?us-ascii?Q?9amjxSHFLUZ61CaN8Bmku2ufCcHf3G3a9mZrxEisE2HL046TE/5L0DM/Ga2E?=
+ =?us-ascii?Q?bwDEWnO+vE+Mm8kvfbfrER0Qlu54zC+c4iDo/7hN56cjA+w3ye4QhkUjdCyI?=
+ =?us-ascii?Q?LFn38LBznf/bcJSpnubHcWjMKhbq/Xb1ERggb6hRhARBXWqehpuBAscX4ixa?=
+ =?us-ascii?Q?7ZV0uVPzRUTLFLnGWYatlEdEje65jgBondggPmFsw0BSsXIFlcrH+w4u+OMZ?=
+ =?us-ascii?Q?qUEdZkQONEKic+y4yIC5Df3e97bb0UHpPAxo7FgX9nuswvFXrSP+3JlzO3lE?=
+ =?us-ascii?Q?YpVefLG9YtU+DQs3g3uXdhQvFxwc8HUx1ONjb03hKx9slGqP0Hk/UWfP7Ji0?=
+ =?us-ascii?Q?FCqyZ9FZPLecZO1VBvPQufLIaNelsZa5l33hSx33UHSBogbifxV7X8RonRk+?=
+ =?us-ascii?Q?W1t9bEyxrrdhNS+X4Jz1EHRtxoLH088Nkbr/u1FpMrLzS/1ltS/LsC4Xjid5?=
+ =?us-ascii?Q?UNKu/yTqIPmNVGI74UMTDO9yPBT8WO2K+6dpeX6xPnZYoHjop5SLj66a5vjH?=
+ =?us-ascii?Q?LUbKYrJKJONu2hA2YghkKruC3sKxZLrXQ5Xt+OHtKAeEerlU6hM+No2kHzIG?=
+ =?us-ascii?Q?0C7aEl05c/BuejAcUdlzr5h3w1wuNpANVwSE++VtB8vrpgBPgzgvn5Y1JKg/?=
+ =?us-ascii?Q?YCpnqRyK23gV5HbClRbiYXYtGEUllKVtnkKkZ4HL8X6ax8z+3NYjfUSdWLQe?=
+ =?us-ascii?Q?jSHxV/sEdTeAQx8wbm+pB+zs118buGjXo66CpbTZbgioBmmGbzHX7g0q/i7s?=
+ =?us-ascii?Q?DsyetU1w3LnarNhGU4xI/U6dxQVIdBrhqNSwjUPsx8rvo80+RS1+G1pgZPwT?=
+ =?us-ascii?Q?U+lCubYgTphIlD2DtkQyj3cUuDbaYu/WV4a0ztBjETXqWIwP+RodSrxxqmRb?=
+ =?us-ascii?Q?3vaXQswAlk8w1mYPfDBYAMcFAkGBjSn4DHmuxUHxMWuF9vm+b8lisi/QNUAC?=
+ =?us-ascii?Q?KI1rvWohVzQxzNDnFz6xntzm9naOPDEvypdsHG5ZfCUgfsGiJvL3yzp3OmhU?=
+ =?us-ascii?Q?O8iJIjfTJqeqBBeh6IPwMX6L8z+kUD6iwtcsY2UaItQEtRvqlqqS9TcCO8/G?=
+ =?us-ascii?Q?njj+Ntb25OwLx3bBUM7m99YICecHlUJKbraaE3IZtmKTKCQYwkt42XL2eaeL?=
+ =?us-ascii?Q?l4vn99Hz2c+u+cZJRw5Q27q+REOYvQGgRaNgNd/zFz3hm+xn8Qf4AHmTG6ea?=
+ =?us-ascii?Q?jboq9zSsZTDRVnWQNvltltNYjp96MDdPYoI1uTYk3wz+umnVMRZ5HyZGUc7i?=
+ =?us-ascii?Q?A9NDiL/Lke8ZGy/vvdJwArnc64ZAEwz7QHExaELeGNzUNgrqYwNBSgNGSQwG?=
+ =?us-ascii?Q?HDLK4fVT23ZWwFZUms3gomdthkaAJ+WrnjjyKmUtvuXpelhf1mWFEWOmCwJI?=
+ =?us-ascii?Q?yQbY2nb64/kLOZgcv0B7MruaGCQrFwbngD9c2y+vweqqnlheG4FmBxEFpB1+?=
+ =?us-ascii?Q?z56GGpSclAlcWupa8K5mFHKjDipNM34KquPPuVfq?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa050cc4-950d-4f21-0800-08dd75e590eb
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 15:04:59.8253
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HN1xM5xdmYomWGhzuClUD5fS2c8dK3TBdnUBqKvMpKVvuN+sr5jB6gpRS8pGyXcYbVd9om3HADORT9hSpVFASA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7236
 
-On 07.04.25 13:31, Baolin Wang wrote:
-> When running mincore test cases, I encountered the following failures:
-> 
-> "
-> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 (0)
-> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in memory
-> check_tmpfs_mmap: Test terminated by assertion
->            FAIL  global.check_tmpfs_mmap
-> not ok 5 global.check_tmpfs_mmap
-> FAILED: 4 / 5 tests passed
-> "
-> 
-> The reason for the test case failure is that my system automatically enabled
-> tmpfs large folio allocation by adding the 'transparent_hugepage_tmpfs=always'
-> cmdline. However, the test case still expects the tmpfs mounted on /dev/shm to
-> allocate small folios, which leads to assertion failures when verifying readahead
-> pages.
-> 
-> As discussed with David, there's no reason to continue checking the readahead
-> logic for tmpfs. Drop it to fix this issue.
-> 
+This controller support scalable data lanes from 1 to 4. Add the
+'data-lanes' property to configure the number of MIPI display panel lanes
+selected for boards.
 
-BTW, should we add a Fixes: ? Could only be tmpfs support that changed 
-the behavior but didn't fixup the test case.
+Change $ref of port@1 from 'port' to 'port-base' and add 'endpoint'
+property referencing video-interfaces.yaml. Allow 'data-lanes' values
+1, 2, 3, and 4 for port@1.
 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
-> Changes from v1:
->   - Drop the readahead logic check, per David.
-> ---
->   .../testing/selftests/mincore/mincore_selftest.c | 16 ++--------------
->   1 file changed, 2 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mincore/mincore_selftest.c b/tools/testing/selftests/mincore/mincore_selftest.c
-> index e949a43a6145..0fd4b00bd345 100644
-> --- a/tools/testing/selftests/mincore/mincore_selftest.c
-> +++ b/tools/testing/selftests/mincore/mincore_selftest.c
-> @@ -286,8 +286,7 @@ TEST(check_file_mmap)
->   
->   /*
->    * Test mincore() behavior on a page backed by a tmpfs file.  This test
-> - * performs the same steps as the previous one. However, we don't expect
-> - * any readahead in this case.
-> + * performs the same steps as the previous one.
->    */
->   TEST(check_tmpfs_mmap)
->   {
-> @@ -298,7 +297,6 @@ TEST(check_tmpfs_mmap)
->   	int page_size;
->   	int fd;
->   	int i;
-> -	int ra_pages = 0;
->   
->   	page_size = sysconf(_SC_PAGESIZE);
->   	vec_size = FILE_SIZE / page_size;
-> @@ -341,8 +339,7 @@ TEST(check_tmpfs_mmap)
->   	}
->   
->   	/*
-> -	 * Touch a page in the middle of the mapping. We expect only
-> -	 * that page to be fetched into memory.
-> +	 * Touch a page in the middle of the mapping.
->   	 */
->   	addr[FILE_SIZE / 2] = 1;
->   	retval = mincore(addr, FILE_SIZE, vec);
-> @@ -351,15 +348,6 @@ TEST(check_tmpfs_mmap)
->   		TH_LOG("Page not found in memory after use");
->   	}
->   
-> -	i = FILE_SIZE / 2 / page_size + 1;
-> -	while (i < vec_size && vec[i]) {
-> -		ra_pages++;
-> -		i++;
-> -	}
-> -	ASSERT_EQ(ra_pages, 0) {
-> -		TH_LOG("Read-ahead pages found in memory");
-> -	}
-> -
->   	munmap(addr, FILE_SIZE);
->   	close(fd);
->   	free(vec);
+Fix below CHECK_DTB warnings:
+arch/arm64/boot/dts/freescale/imx8mq-tqma8mq-mba8mx-lvds-tm070jvhg33.dtb:
+ dsi@30a00000: ports:port@1:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpected)
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Missed v6.15 merge windows.
 
+This one elimiate last two lines warning under arm64: dts/freescale
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Resend V2: include Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+tags.
+
+Original v2 thread:
+https://lore.kernel.org/imx/c5y6mocsd77wj5lah6n47vtteqc5ekcrbdod6z5vtcnxhleudw@kfhpyoiylqqp/
+
+Change from v1 to v2
+- Add the reason why need 'data-lanes' property in commit message.
+---
+ .../bindings/display/bridge/nwl-dsi.yaml       | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+index 350fb8f400f02..5952e6448ed47 100644
+--- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -111,11 +111,27 @@ properties:
+         unevaluatedProperties: false
+ 
+       port@1:
+-        $ref: /schemas/graph.yaml#/properties/port
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
+         description:
+           DSI output port node to the panel or the next bridge
+           in the chain
+ 
++        properties:
++          endpoint:
++            $ref: /schemas/media/video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              data-lanes:
++                description: array of physical DSI data lane indexes.
++                minItems: 1
++                items:
++                  - const: 1
++                  - const: 2
++                  - const: 3
++                  - const: 4
++
+     required:
+       - port@0
+       - port@1
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
