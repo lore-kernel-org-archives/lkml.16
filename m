@@ -1,109 +1,143 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62CE18BC3D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826302376E2;
+	Mon,  7 Apr 2025 11:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744025384; cv=none; b=dodG9EYIsjlWsur6rFVnYtPq+SZf9qDvOC+s6JF2SNEBgxU99r1txTopMaBOVUCAHfHMR6kRVaoYtqW4hrNlXMkf0vDmJVR/8E0UQGHCOxOXApkembaynyKB3uleAJwImKDLT11Nc9RJDBqf8x7+y504XT1/yo7WCxcZoUucLOY=
+	t=1744025410; cv=none; b=PwtV84XX+YHQhVKN2YmuIzhQtf7gf/+EojBPs9EPpjAo8993Jdwh4PcN/OZyqz10BI4fWmTL6UTCkFh8jUSeagYB5cpcNU7qtgmPj4ji+Fi2FsbDk1pdsEXIkD0p9DN1dHwmxcWO6BftA1Pc9Uym9LjsksEnKtnHlroZ3fjbjO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744025384; c=relaxed/simple;
-	bh=0fGIZENTMQIPAw17Sd9aY6GAyDelwBiQOA99Hzg9RuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MOMORDTCnOLhw0Vus8248kX3S51mfbb0+kHg9gCoqneKZFT8VYAqAbtVbSc3Ksh7U6MusIItrlpZsJMMA5u+Y1UcEc3FkmkK3vxZWysUZ+ja7RuQ7e+McwxifoTPqJzWQRDq2/RFfxtApxvH5Oa/yiVHEMuqhv9CUwrQhMn5twk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLRvD1K8; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744025410; c=relaxed/simple;
+	bh=u90GVaNUUo76YLN6SKbqib+18pDw2l0zRWHHUjFm3as=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubIYfqCmvvfKVC2HuKOqw9ft5OH0rUUZvH5tr/KYtDqAtsGvpxEhRKukUTmiDEvkPcGiHVsC9DIAGGhIBVu+cfV0HkTyqW5BcWvtYoJvE227c6+0hjkSOIDFXuqqaL/2I3T7DroDgBM8OOraH2iKR4VWbPpomQMoZnHIcPdWD78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llN8+xbS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLRvD1K8"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736bfa487c3so3282658b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744025380; x=1744630180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lf8+vIzUcQqtKLZgTtvxYBmzYrBDNAglzFOwESNjG6Y=;
-        b=NLRvD1K85ax6q+py3sCK3bg6HpBx+1DU5MOaEkdQUObv3n5GxRDY0AfJdu6Lw0v4/o
-         JA/Yv7owrt4qtaVlnmfPr6hNwRcbhMckQdRC9yGK09OJTgK1NrF8Kf+YYo24fk66/KX5
-         79Zr44EbhfvvKMkc30Xbi9lsl7nQYmcnnqzL6hdLJ9GOKCegoaPA0o2dllVG3x6sNXue
-         3dbuI9cfg0dbfJo3fHAAl1rwAEJLtUJy3eKo3/wX2HnJjbA3Vd5TQROtiKRBqgJnKmfN
-         y3PA5Xbke/PekMjAwnnt/AUA7BRIuIAvKo+YxkEMLeo7qNL6V5Ig6Vc3glu80AQzVVTM
-         ZSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744025380; x=1744630180;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lf8+vIzUcQqtKLZgTtvxYBmzYrBDNAglzFOwESNjG6Y=;
-        b=WDdzmlvZ8snAimd1LnBwiqgbijBBs8a2RmcPHkmmfwrwRhBzUhm6wDoWT7FBBCN2LR
-         GA7DJuQYk1FPc7Nk17w+4URXnCyfWSJ1GjA0eP/pBpDDxDzMAzDvViarXoRQTjeSCOpi
-         IIkpJYYxBWD3U23f0FJw6SPGrAf3z4rs11UyQj+SWd0d4zpvzu8SEI4MTlzztmJM0/wU
-         pJFGuWNu8bYfKacktCuuYMfU/eByS7Gq2/n9uNI0VrtMJlRPjgD4qWaz21599YQ1nXFh
-         08avfaGDIG/0xxB1S72pyMeV6/JwhNA1sAuoSLI53VtSeIT29X4XbqgDeFowk5PWxyRf
-         eqwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ1eAn6GUf5FKoVubI/2tUh9tgC51Twn9v8GQhYlWtanTNEZPBCABEtebEXdslO0hV97qVzlUGkvUWgtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwweSdKvbIJ7ZI6wZslROJSKrfhGLyQPz0BYHBmIdFx9xNLH70Z
-	jD3kYJSdkXWEdL7Rh9qj6ydsoT+Geyziw3IGSaeMQDWTFpAIxhfr
-X-Gm-Gg: ASbGncuZu1moUmOvT3NyehXCKsLYMybivgtOv7DCEIOSpZhjRnBND8+sOkSemPjuLwx
-	Z5/po2YTBXnN0YcJ+nq1AFpbzkhxpKUb2lg+EZ+2fNFEDPkTX6mpdqBEnDJKt+bCrNRIcitrQjI
-	t37UJPEtzODpOWCgCL//Ke2MVKFPvblH3v7UjsqAIehi0RsLcrrjLbyefEaK4/Wb2lXuMzejG2p
-	5b+qM8GbhEiBK5F1fDbY993fGlBmsciFlzRq3c4rRWPmpeAxdPvYeuFWk/PboHKPt2UHJHNcS5v
-	u0vs2lDMvx+djpylry3GmojzqmyK3VxaGEBjxGIuI/FcAaFp0mFVjQ==
-X-Google-Smtp-Source: AGHT+IEslLNpb0YOIy1A/qjmVIdbvXfSixkGkpSL6RFXFfKsMNi/OQA55y6POTyk+LQwAlUKNy7sjQ==
-X-Received: by 2002:a05:6a21:e8d:b0:1f5:8479:dfe2 with SMTP id adf61e73a8af0-20104591150mr18811048637.6.1744025380049;
-        Mon, 07 Apr 2025 04:29:40 -0700 (PDT)
-Received: from EBJ9932692.tcent.cn ([43.134.231.248])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b9608sm8258637b3a.154.2025.04.07.04.29.36
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Apr 2025 04:29:39 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: xavier_qy@163.com
-Cc: akpm@linux-foundation.org,
-	baohua@kernel.org,
-	catalin.marinas@arm.com,
-	ioworker0@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	ryan.roberts@arm.com,
-	will@kernel.org
-Subject: Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant operations
-Date: Mon,  7 Apr 2025 19:29:22 +0800
-Message-ID: <20250407112922.17766-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250407092243.2207837-1-xavier_qy@163.com>
-References: <20250407092243.2207837-1-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llN8+xbS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BEDC4CEDD;
+	Mon,  7 Apr 2025 11:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744025410;
+	bh=u90GVaNUUo76YLN6SKbqib+18pDw2l0zRWHHUjFm3as=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=llN8+xbS7zazGfzUGA1WFZphuPkSIBLxMdii7M0vqEbEp38Ifvz9TfkFMp1BvsZ3d
+	 xV/EvfVLdIBjh+Gi7m84ZRajTEngrnXkdwHfcxgI6s9zMOtYFRcNQX4mLhdLnF9goV
+	 6S+JUklyeoXGK36lUhD314sgiSKGmSAx5SHu8AAwJE5WEaaBxpB3k+3WG3SFcMb+vI
+	 li08zR6BSkj/XAYX/BOh0S7ClxD5q0T4scHihZBvirPJtrSM1Bj9c1OuYyGKV+90jl
+	 FgHcYjbLf7VW3kxNTGgpxeCEUR9kr0+qiABOTIvCin6/RNq5zAyHh3NHBzLC+1UZWr
+	 YJ0ApstZK5a7A==
+Date: Mon, 7 Apr 2025 14:30:05 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: keyrings@vger.kernel.org, stable@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v3] tpm: Mask TPM RC in tpm2_start_auth_session()
+Message-ID: <Z_O3PU5XDbDirlUO@kernel.org>
+References: <20250407071731.78915-1-jarkko@kernel.org>
+ <20250407072057.81062-1-jarkko@kernel.org>
+ <2mjtwprr3dujf4wbu5licb3jtzxujimcz5iahrgqymu6znwbbq@cslxwt7ejva3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2mjtwprr3dujf4wbu5licb3jtzxujimcz5iahrgqymu6znwbbq@cslxwt7ejva3>
 
-Thanks for the patch. Would the following change be better?
+On Mon, Apr 07, 2025 at 10:04:09AM +0200, Stefano Garzarella wrote:
+> On Mon, Apr 07, 2025 at 10:20:57AM +0300, Jarkko Sakkinen wrote:
+> > tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+> > 
+> > [   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+> > 
+> > Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+> > error codes.
+> > 
+> > Cc: stable@vger.kernel.org # v6.10+
+> > Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+> > Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+> > Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+> > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > ---
+> > v3:
+> > - rc > 0
+> > v2:
+> > - Investigate TPM rc only after destroying tpm_buf.
+> > ---
+> > drivers/char/tpm/tpm2-sessions.c | 31 +++++++++++++++++--------------
+> > include/linux/tpm.h              |  1 +
+> > 2 files changed, 18 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+> > index 3f89635ba5e8..abd54fb0a45a 100644
+> > --- a/drivers/char/tpm/tpm2-sessions.c
+> > +++ b/drivers/char/tpm/tpm2-sessions.c
+> > @@ -40,11 +40,6 @@
+> >  *
+> >  * These are the usage functions:
+> >  *
+> > - * tpm2_start_auth_session() which allocates the opaque auth structure
+> > - *	and gets a session from the TPM.  This must be called before
+> > - *	any of the following functions.  The session is protected by a
+> > - *	session_key which is derived from a random salt value
+> > - *	encrypted to the NULL seed.
+> >  * tpm2_end_auth_session() kills the session and frees the resources.
+> >  *	Under normal operation this function is done by
+> >  *	tpm_buf_check_hmac_response(), so this is only to be used on
+> > @@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
+> > }
+> > 
+> > /**
+> > - * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+> > - * @chip: the TPM chip structure to create the session with
+> > + * tpm2_start_auth_session() - Create an a HMAC authentication session
+> > + * @chip:	A TPM chip
+> >  *
+> > - * This function loads the NULL seed from its saved context and starts
+> > - * an authentication session on the null seed, fills in the
+> > - * @chip->auth structure to contain all the session details necessary
+> > - * for performing the HMAC, encrypt and decrypt operations and
+> > - * returns.  The NULL seed is flushed before this function returns.
+> > + * Loads the ephemeral key (null seed), and starts an HMAC authenticated
+> > + * session. The null seed is flushed before the return.
+> >  *
+> > - * Return: zero on success or actual error encountered.
+> > + * Returns zero on success, or a POSIX error code.
+> >  */
+> > int tpm2_start_auth_session(struct tpm_chip *chip)
+> > {
+> > @@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+> > 	/* hash algorithm for session */
+> > 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+> > 
+> > -	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
+> > +	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
+> > 	tpm2_flush_context(chip, null_key);
+> > 
+> > 	if (rc == TPM2_RC_SUCCESS)
+> > @@ -1032,6 +1024,17 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+> > 
+> > 	tpm_buf_destroy(&buf);
+> > 
+> > +	if (rc > 0) {
+> 
+> To avoid the nesting blocks, can we include `TPM2_RC_SUCCESS` case in the
+> switch or move the `if (rc == TPM2_RC_SUCCESS)` before it?
 
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index 55107d27d3f8..64eb3b2fbf06 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -174,6 +174,9 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
- 
- 		if (pte_young(pte))
- 			orig_pte = pte_mkyoung(orig_pte);
-+
-+		if (pte_young(orig_pte) && pte_dirty(orig_pte))
-+			break;
- 	}
- 
- 	return orig_pte;
--- 
+What do you mean by "avoiding nesting blocks"?
 
-We can check the orig_pte flags directly instead of using extra boolean
-variables, which gives us an early-exit when both dirty and young flags
-are set.
+> 
+> Thanks,
+> Stefano
 
-Also, is this optimization really needed for the common case?
-
-Thanks,
-Lance
+BR, Jarkko
