@@ -1,121 +1,106 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5998022E412
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 09:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F45922A7EE;
+	Mon,  7 Apr 2025 09:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016660; cv=none; b=d2Du/+3GF3R8FVif366MyLv+EESWApvb+FRlaqNenoIQky7UJLxumZcd6X7ILHaztmPWdIyzYgyVSlpbp/ybkjK9HotGJm1cebKPegQYzePTcLNJCPSrc4g7E2Rt2GIzRM+2AAvfQfvMLCd0LHwvKkHG/7kPw8Q6d4d3cbjvOAA=
+	t=1744016752; cv=none; b=HP74sBBqxuvRlQkYOqq80uIZaToJ9n9uPsd5/zAPcYxk748kLRgr+eESFTnL6MBaj4QiVgOs7VNuE3KeR5HbeQAi+3OKRHicF/u+VIoFjyZLtdLWXOcPukr/XDwtu58TOjXx+zVNeYGkpp29nOcECG/HjkkOi/4B/Zn8WJ5Kiac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016660; c=relaxed/simple;
-	bh=iqoN+wUuUnOuLAL2yag/p3e39+tGVOKR9kF12dHb6lM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VkKl+3GhoqA+NBY8oiyyHTkZRkzRyAS72gQ+E0fIgowdKZf8E+0NbCyxFzXzguub8pdNPcC9LbLikY4lLO7DMFQKq8l2IgU2FIl2YumOYj1a8HehNy9ZRUPxXpate5UBQ1RtWhL8YiZwFF3B6ePyd13+ZtrkHEQfBri8/zdoLHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F7MRokof; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744016752; c=relaxed/simple;
+	bh=3+d8GF/W5pSv010EdvZImpFaSTGyBae92FfD7EJsK+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aakBIH5iqEe7DkGiy3tki2nxG/wsohkBtT1Dcu6rOlea0MXHaZLTLYzksg81T+uYRFUR5tAJSQ8CueMoLJidHsS/XmM8w2Mofxm25PM67ZUMZo03CWo9rZhDqGcKRKqpNey7ATD0CGvoDFQGl+8aRJL+nMH34Hsm8yUpkrby2eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GF4li4Ab; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7MRokof"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so21653065e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 02:04:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744016656; x=1744621456; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mjc1Y+yTBBrDmieRT6oEJnnJtw+qsXJp/dvlQ9n6z4A=;
-        b=F7MRokofS7GOHOlEa2Y/IcRMQaLHA/mcZOzKjZZz9COPVbSo8MexKdCZT/Cb8rla0Z
-         St66w17w+UU3O3py69hv6fYCDLUV2MBq9CDCsQKopVMWxi5pwzHOTWiaMG64ptXUSQjC
-         2lCBLs4aCdLTy058gXTuylZPJ1fJ0sYvSLt+k3L8nxdOb2y7e9j53ffSTHvzgyef+Z0R
-         tMfyoBE8i+cOKBw7xa0nOxPrTNeAN4jasfILZX7UxpptjSt5WKmGcOLhAXrP0SOqd8R+
-         dcQKf6zEubqpDjXygknq5z0afp3SWyIyyzGTFEDXd5GYUgm6pcpNsFdc/jF1J/ZdJtpG
-         lkqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744016656; x=1744621456;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mjc1Y+yTBBrDmieRT6oEJnnJtw+qsXJp/dvlQ9n6z4A=;
-        b=ftDh7/iC1O/p7HRn7oRYE9Czg0DhCf0C+hVYFaFpw5UJtC/yX7i6i2EyLolCHQ6Idb
-         JtSilUqhkq0Y6j52HhACUhncO/GvUMBQivpYJgofEALYH+07z+NJXt8xEc92rNgjS6Eg
-         xC2eR+r3w6mwzxPCMPSv1EWpsw+fERUZQYXVoYdBWx5Y9AjcQOYKgJFiGkeeYDT124Ma
-         db+FtsjvCLa9EyGE6oPuUfuDDoWovVrkn4YTwkimY77W8ahQyZIa98d4Rcar2+Yv+UWF
-         KER00Y7Y0IjHmGq49LTA6SG9N9zZSTix9ak2QIoTSPQysAoIhVCj486V509ZcA6DFFNK
-         H8iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJN9iEekcXuK+ym3ZR3IIZVuW2MpbMdMyKBRuZPPZKNfnwjyeLcO6nESRripuyh1RoDBzraFRi3XcxUl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOpJ1ev+bAYfXPdOkAnxX6/nus+qdHFg+8cLH8XFFzr/8Oi9+V
-	eov6hWp0Ky91oTI5ES3X8B9aWq5dOUnskPOXe8gRzHarvUjfGw+JEUSgSo0JK9I=
-X-Gm-Gg: ASbGncsCvufSAop5jfzigWWks40m3MccT/VuEsyV7vAo7F4w3spYuyhip3/CVtuxazV
-	7zLcHBWecKTZ6WW0N3SC2o3wOkqxAFMYLea6otBVm3eups8wTiz5BnmijoTJxNRPsOiNJtbK1Pz
-	XykD8ehHdI6bsOFu9MEHD4D0Yfld8LpAmryySlvUim72tcxzQVyC5uj7hf+lFaiKzHOXsFLL23L
-	ORrFoH7VNKvBXyuni7zA6B8SLYIYKQkk4NReDgv8Rup7HVI+7zkWN9DQ8gbW5L6jaynHlztzgBZ
-	IX7Z7ow//uSB/LQFPQ2HQLxJe05W8t0FL2T3XQhLYvfiZJ6whsOBSkCf5LhhVHuk7wB68pkQdFt
-	Z2B357fP2rQ==
-X-Google-Smtp-Source: AGHT+IHqiLtGTmRqnpWpvYCAC7ffTJvnLRZkBR4aIwuAQ3CmyK5RdU7aVIzfT+V2SRxkUVqIof16+Q==
-X-Received: by 2002:a5d:6da7:0:b0:39c:141a:6c67 with SMTP id ffacd0b85a97d-39d0de66aacmr9192901f8f.45.1744016656623;
-        Mon, 07 Apr 2025 02:04:16 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096ed7sm11148889f8f.8.2025.04.07.02.04.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 02:04:16 -0700 (PDT)
-Message-ID: <22b1c835-b0d2-47d1-97ee-1976d31beaf9@linaro.org>
-Date: Mon, 7 Apr 2025 10:04:15 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GF4li4Ab"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=9u7S8Ul3QZSlWc4Utovw3OWnYr/ONFL7Jukfpg7e3/E=; b=GF4li4AbYyalo0lDtNb7eS6HYq
+	Zj4GfxYgB6a+oK5zaCLpyA5/lkSmpXPgPKQxM+osplK9RjB0swIhBRcvH3oiXbLrVzJjdJ4IBIjHm
+	56FusUGZq4xOKDuTxSSRcrVFrzcQL/Piww4Y/+JlSFUQCQ4VImDhyWrn9lh+7E0IVBS4oNkpv8Unc
+	Y6tJ9nSObcZCS2CUyljNRugEZrmPa7Ix4BLmcqWeFvV8WHp+oMN6xTQ0PPJ0+O4u+pHRhMqtxqa2Z
+	KrZv46QeLzTdRjdp7bHCfJjuPNclgS8aRpsuX+8JfuGf+fyuzyuWtK9+TSCJ1XZiiVwtFtNhuCdcl
+	bw6pxVAQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1iQP-0000000H7uS-3ScJ;
+	Mon, 07 Apr 2025 09:05:49 +0000
+Date: Mon, 7 Apr 2025 02:05:49 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	virtio-comment@lists.linux.dev, Claire Chang <tientzu@chromium.org>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
+	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	graf@amazon.de
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+Message-ID: <Z_OVbRNHU1LXU368@infradead.org>
+References: <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
+ <20250404040838-mutt-send-email-mst@kernel.org>
+ <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+ <20250404043016-mutt-send-email-mst@kernel.org>
+ <F30D33D5-38CC-4397-8DC8-9EE1B0FEF40D@infradead.org>
+ <5cc2f558b0f4d387349c3a2936ff00430804536d.camel@infradead.org>
+ <20250404062409-mutt-send-email-mst@kernel.org>
+ <7fd789b61a586417add2115f6752ebec5e7b81bf.camel@infradead.org>
+ <Z_N_DNXq9VbPvTfA@infradead.org>
+ <f54f46399aa2d0066231d95ef9e98526cf217115.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: qcom: camss: csid: suppress CSID log spam
-To: Johan Hovold <johan+linaro@kernel.org>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Depeng Shao <quic_depengs@quicinc.com>
-References: <20250407085125.21325-1-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250407085125.21325-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f54f46399aa2d0066231d95ef9e98526cf217115.camel@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 07/04/2025 09:51, Johan Hovold wrote:
-> A recent commit refactored the printing of the CSID hardware version, but
-> (without it being mentioned) also changed the log level from debug to
-> info.
+On Mon, Apr 07, 2025 at 08:54:46AM +0100, David Woodhouse wrote:
+> On Mon, 2025-04-07 at 00:30 -0700, Christoph Hellwig wrote:
+> > On Fri, Apr 04, 2025 at 12:15:52PM +0100, David Woodhouse wrote:
+> > > We could achieve that by presenting the device with a completely new
+> > > PCI device/vendor ID so that old drivers don't match, or in the DT
+> > > model you could make a new "compatible" string for it. I chose to use a
+> > > VIRTIO_F_ bit for it instead, which seemed natural and allows the
+> > > device model (under the influence of the system integrator) to *choose*
+> > > whether a failure to negotiate such bit is fatal or not.
+> > 
+> > Stop thinking about devices.  Your CoCo VM will have that exact same
+> > limitation for all devices, because none of them can DMA into random
+> > memory.
 > 
-> This results in repeated log spam during use, for example, on the Lenovo
-> ThinkPad X13s:
+> Nah, most of them are just fine because they're actual passthrough PCI
+> devices behind a proper 2-stage IOMMU.
+
+Except for all virtual devices.
+
+> > > Then the OS would need to spot this range in the config space, and say
+> > > "oh, I *do* have a swiotlb pool this device can reach", and use that.
+> > 
+> > Yes, that's largely how it should work.
 > 
-> 	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-> 	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-> 	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-> 	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-> 	qcom-camss ac5a000.camss: CSID:0 HW Version = 1.0.0
-> 
-> Suppress the version logging by demoting to debug level again.
-> 
-> Fixes: f759b8fd3086 ("media: qcom: camss: csid: Move common code into csid core")
-> Cc: Depeng Shao <quic_depengs@quicinc.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->   drivers/media/platform/qcom/camss/camss-csid.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
-> index d08117f46f3b..5284b5857368 100644
-> --- a/drivers/media/platform/qcom/camss/camss-csid.c
-> +++ b/drivers/media/platform/qcom/camss/camss-csid.c
-> @@ -613,8 +613,8 @@ u32 csid_hw_version(struct csid_device *csid)
->   	hw_gen = (hw_version >> HW_VERSION_GENERATION) & 0xF;
->   	hw_rev = (hw_version >> HW_VERSION_REVISION) & 0xFFF;
->   	hw_step = (hw_version >> HW_VERSION_STEPPING) & 0xFFFF;
-> -	dev_info(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
-> -		 csid->id, hw_gen, hw_rev, hw_step);
-> +	dev_dbg(csid->camss->dev, "CSID:%d HW Version = %u.%u.%u\n",
-> +		csid->id, hw_gen, hw_rev, hw_step);
->   
->   	return hw_version;
->   }
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> The problem in ACPI is matching the device to that SWIOTLB pool. I
+> think we can expose a `restricted-dma-pool` node via PRP0001 but then
+> we need to associate a particular device (or set of devices) to that
+> pool. In DT we do that by referencing it from a `memory-region` node of
+> the device itself.
+
+I don't think you actually _need_ to have an explicity device vs pool
+match.  All pools in host memory (assuming there is more than one)
+should be usable for all devices bar actual addressing limits that are
+handled in the dma layer already.  The only things you need is:
+
+ a) a way to declare one or more pools
+ b) a way to destinguish between devices behind a two stage IOMMU vs not
+    to figure out if they need to use a pool
+
