@@ -1,160 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E7022A4F2;
-	Mon,  7 Apr 2025 07:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C8322A4F2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744010465; cv=none; b=UE2D7dQiVcxZ5cS0pUg8dTYt7uZDY/4NEU7B83u/NNNgn99P6+HKYhrXokH2OG54u869tZCU4i2176TafUJwFxtMduRv2Mo8wMi8VCKp5EaqjGGvzOcA5CH3rOMmOsTzOcTEg4aKSBGObK/ndLWVX61UbRavW4jSRxu8+nJiBEM=
+	t=1744010484; cv=none; b=gaF6PXMXb3BzilyF+9snIVL/rZFQKs1Rz7HHOSYa0SjUI3G5Sdp18K34jZ83GLiJ1II8E+IrKMCXfZ+yJjLfZokyx/HMbHuznv/+lDs5nROWBghYADf3a5o2N+XMpRWmZwJFJTOHWWqfPqhtH6tV7M92rCtLXDuNEqfID/ricyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744010465; c=relaxed/simple;
-	bh=zTKxNvvZtoxntBZKdgelRQVrZfzC919L3UJ4SOuheOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qRy3hfGN0SbgpIptvHhs+5pOlsZl4K2sU498as7UMp1qPonqUgjzGmVI5BAcD6pjetTjnhw18p2tVzZSA1lEfvdBw2tihhb7iVLCtNYemEeWQka1kWh4okKd6OW8rUe01WJVNYspAAm3X5JFPeiKZJEK5E92AcHRRkUPtLyfcgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCq1aAlo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744010484; c=relaxed/simple;
+	bh=/F/iBzjj16HR5A1tU/0Iqh0+C6+AwZaA15eTTFZRf+Q=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PK8SN+re+SbnrFmHtRwhohKdM1jl11N78ioIqNuVqIAL12vYrH32nRL+u1HfFRuaY8nscGyS6jJZJjXzHm96+Y4o40fut5XRJ3V0JXsfbHDl4lRf/xyaV11hhI6wVY2dib0fZrpdhh9UMISqvRL146D+CcvxbQWZDWce5K7Dr3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vSENOmfC; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCq1aAlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62AEC4CEDD;
-	Mon,  7 Apr 2025 07:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744010464;
-	bh=zTKxNvvZtoxntBZKdgelRQVrZfzC919L3UJ4SOuheOY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FCq1aAlo0vKB5iK30TDh0dwYwkTE9k6HIdVkmRBqOgSMPrrA0vD71QlInKossJaqm
-	 JLpclX2Wi+vFme1QPFfH6776jm9285u2ye0CGmfmxCfjznnoDHyDTLu27pJXdE00wP
-	 kvXIDuGpYun8/Rach9/O02hoGskjYIKB3e5Kg3ZpUf67Kxr3fRfK5g5beGpc7X2/0J
-	 U6r4eMwLf+JBM3vPCIyzj8Zeyw3bePvZA6+bNR7mdpq438kX4Ebbd7mo8Ok6UlfefC
-	 j6Tf0htUtJTOnMSjVxHRkLHfisJvAR4Anz9hrxNl/40y94/0q9x/7XaexjrLPNc0F/
-	 AMWc4VCctJnkA==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	stable@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: [PATCH v3] tpm: Mask TPM RC in tpm2_start_auth_session()
-Date: Mon,  7 Apr 2025 10:20:57 +0300
-Message-Id: <20250407072057.81062-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407071731.78915-1-jarkko@kernel.org>
-References: <20250407071731.78915-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vSENOmfC"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso43401135e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744010481; x=1744615281; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MPzcXHfwhTdJf1G6SrL4mmAYOzD/PgqXyH9Vw5LY4tI=;
+        b=vSENOmfCIvh+7wAIvBberLDCOLdppjpMMnI53wSCNAXAym6V6wGWOm3zVLadGBvfnt
+         vg5TVxaZvgmSkm+wRqtP0wHaskqoCgflLeMR3IaYtuYfAPhmCAMuUXWEYanqe2eFbTY0
+         CfHiroY2uvrdvONpwxEQDlmjqfV5WQKh97v0IK/hWjkd8aD1E0/ZZsSlIIDiK+sJcvEE
+         nu2QP7xMYa0C5LPy0Dz0yP/OiwG0UeRNnQcUfXh7NI/YfRVdaXmpDBAp2hbQGKyAuNBE
+         /AG5WyPqBr5dQnhIhkD1ALZ6h3wmViA9b5pmXv2U9HvGuuURoxwMnVE8bpA2d4iXO1DY
+         ckAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744010481; x=1744615281;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MPzcXHfwhTdJf1G6SrL4mmAYOzD/PgqXyH9Vw5LY4tI=;
+        b=L0zO0tS7C4fvd5YbSaFHVM6vwnaco2TBNJhp4ySZ4IVux2axZWGlraOaf3J4IEAnmm
+         Ubakg4kqB2dzfTA6nsf/eLQv+76qh/Vk8cnwucjf0xfD4kw/hCjLhkHaD3VYnkspiEwl
+         1SVU6LX8t7cbKRgFZgffuoCc8XnOw5fpXqLx0LQ8Fx81Taam01Qx39o/FIrBFsvhXXn6
+         6nKX0DjtIk/YsnZ1YmP+tJVOlfbD2cwLbWc/CUlmcXkcYLgUJ6fr1x4EhH5WhcRZ0UhU
+         dy7ZG8M8EtFldwlVkzi58SwycnXQBChaMu7C++CglaO0rVLUECrbbB6SruNEL7RtvQ3j
+         Zsug==
+X-Forwarded-Encrypted: i=1; AJvYcCXtmGhNn2ql7Rrdpj68IjCnb9T7DTOC+PFR5A93E4eTh6SXcAagkk8rJ+pYfYC1RlkIwsbbCtBtsXkA7ws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxChuGpTYhCCosHUK8tzLhITMNYDouJrqylGhZL2QsX2TBpPFI9
+	2jq0Bdk8Hv4ilsECtRWEXFIeBW0g6uZIrJ7GsHjpUtWtgJ0u/SVi0aMREa2iRMQ=
+X-Gm-Gg: ASbGncuW3nzLRrdKuK0KKRZ2D1o2qjNf0WAVP5nEP8tqM77Lh2/cFvDF3Ok30lgakWx
+	47loj/Yom4toeTNJGcJkTfIVm5GBD1IlxDFWYBSSUtcwvZg9kBIf8DPzBb+id2nZAWIwLkcxAjS
+	TLtcNqqx0M8DtNUyJwW1Mz8Gi4g3ClVITlOUCMxL93+c1prlRuYhNBLb8XXRbNKo8qrSz1e16wV
+	RPN3Rtq8JYyD5UyTGnCmyAmU7B/OFfLzVVwU2+OABPNvyZuYoJZovKbm0G4RFqX8coZqZvWN8L4
+	d0MpL3QXs+eRA5g4rGdb7rV6lOoMrXIiTvRsqUXuQdNu/tzxhep+VZcPl2k2bcyYPRS6RIUnsXE
+	tZvesKwpURmjmGBdoI54qUw==
+X-Google-Smtp-Source: AGHT+IFJ3CMu84fXDTqeLnCZf0ZAv7p6xftmF7goGvJ/KQTlLSUGGhXyq2rtRBXb/kV7Ak897AXDFg==
+X-Received: by 2002:a05:600c:3b08:b0:43c:fb5b:84d8 with SMTP id 5b1f17b1804b1-43ed0c50883mr87435595e9.16.1744010480636;
+        Mon, 07 Apr 2025 00:21:20 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f2a4:b974:cba3:a605? ([2a01:e0a:3d9:2080:f2a4:b974:cba3:a605])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec36699e0sm120966035e9.35.2025.04.07.00.21.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 00:21:20 -0700 (PDT)
+Message-ID: <3ab630f4-8b1e-46ea-a8c6-a2878cfff78b@linaro.org>
+Date: Mon, 7 Apr 2025 09:21:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm8650: add the missing l2 cache node
+To: Pengyu Luo <mitltlatltl@gmail.com>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250405105529.309711-1-mitltlatltl@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250405105529.309711-1-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+On 05/04/2025 12:55, Pengyu Luo wrote:
+> Only two little a520s share the same L2, every a720 has their own L2
+> cache.
+> 
+> Fixes: d2350377997f ("arm64: dts: qcom: add initial SM8650 dtsi")
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>   arch/arm64/boot/dts/qcom/sm8650.dtsi | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> index a2b3d97ab..f47f29ec8 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> @@ -187,7 +187,7 @@ cpu3: cpu@300 {
+>   			power-domain-names = "psci";
+>   
+>   			enable-method = "psci";
+> -			next-level-cache = <&l2_200>;
+> +			next-level-cache = <&l2_300>;
+>   			capacity-dmips-mhz = <1792>;
+>   			dynamic-power-coefficient = <238>;
+>   
+> @@ -203,6 +203,13 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ACTIVE_ONLY>,
+>   					 &epss_l3 SLAVE_EPSS_L3_SHARED>;
+>   
+>   			#cooling-cells = <2>;
+> +
+> +			l2_300: l2-cache {
+> +				compatible = "cache";
+> +				cache-level = <2>;
+> +				cache-unified;
+> +				next-level-cache = <&l3_0>;
+> +			};
+>   		};
+>   
+>   		cpu4: cpu@400 {
 
-[   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
-
-Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
-error codes.
-
-Cc: stable@vger.kernel.org # v6.10+
-Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
-Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
-v3:
-- rc > 0
-v2:
-- Investigate TPM rc only after destroying tpm_buf.
----
- drivers/char/tpm/tpm2-sessions.c | 31 +++++++++++++++++--------------
- include/linux/tpm.h              |  1 +
- 2 files changed, 18 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
-index 3f89635ba5e8..abd54fb0a45a 100644
---- a/drivers/char/tpm/tpm2-sessions.c
-+++ b/drivers/char/tpm/tpm2-sessions.c
-@@ -40,11 +40,6 @@
-  *
-  * These are the usage functions:
-  *
-- * tpm2_start_auth_session() which allocates the opaque auth structure
-- *	and gets a session from the TPM.  This must be called before
-- *	any of the following functions.  The session is protected by a
-- *	session_key which is derived from a random salt value
-- *	encrypted to the NULL seed.
-  * tpm2_end_auth_session() kills the session and frees the resources.
-  *	Under normal operation this function is done by
-  *	tpm_buf_check_hmac_response(), so this is only to be used on
-@@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
- }
- 
- /**
-- * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
-- * @chip: the TPM chip structure to create the session with
-+ * tpm2_start_auth_session() - Create an a HMAC authentication session
-+ * @chip:	A TPM chip
-  *
-- * This function loads the NULL seed from its saved context and starts
-- * an authentication session on the null seed, fills in the
-- * @chip->auth structure to contain all the session details necessary
-- * for performing the HMAC, encrypt and decrypt operations and
-- * returns.  The NULL seed is flushed before this function returns.
-+ * Loads the ephemeral key (null seed), and starts an HMAC authenticated
-+ * session. The null seed is flushed before the return.
-  *
-- * Return: zero on success or actual error encountered.
-+ * Returns zero on success, or a POSIX error code.
-  */
- int tpm2_start_auth_session(struct tpm_chip *chip)
- {
-@@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
- 	/* hash algorithm for session */
- 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
- 
--	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
-+	rc = tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession");
- 	tpm2_flush_context(chip, null_key);
- 
- 	if (rc == TPM2_RC_SUCCESS)
-@@ -1032,6 +1024,17 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
- 
- 	tpm_buf_destroy(&buf);
- 
-+	if (rc > 0) {
-+		switch (rc) {
-+		case TPM2_RC_SESSION_MEMORY:
-+			rc = -ENOMEM;
-+			goto out;
-+		default:
-+			rc = -EFAULT;
-+			goto out;
-+		}
-+	}
-+
- 	if (rc == TPM2_RC_SUCCESS) {
- 		chip->auth = auth;
- 		return 0;
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 6c3125300c00..c1d3d60b416f 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -257,6 +257,7 @@ enum tpm2_return_codes {
- 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
- 	TPM2_RC_REFERENCE_H0	= 0x0910,
- 	TPM2_RC_RETRY		= 0x0922,
-+	TPM2_RC_SESSION_MEMORY	= 0x0903,
- };
- 
- enum tpm2_command_codes {
--- 
-2.39.5
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
