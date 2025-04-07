@@ -1,266 +1,1217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B9E4C6D
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CA5225A29
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744012176; cv=none; b=QGue9fAPfaeKiJgwBjgPI5bAx0e452VMmvrRq1wpv9xTqsHGZ475VkVMX8E2lz1kDObxl7ATZA7tAUWPf0VtQnsxHuiPF1t9vo2MCRVmI4GoKjOtKttjwwyP/mRz69/sn58sQsAk38p/cn5x54T2YEu+/2vsSvKcsXTZKAsdv+s=
+	t=1744012230; cv=none; b=Tc29TEoa+MicPaRljJSThQm/msw9tw48PFcqLOfr1YQnDT4s9gYYoaeNxgOuzjslk7ulf552TRXVymRAtLA+GEDfnUkc+zq5sBYLsn46JC8Dr9tw66bGwhTr925LfEvSxR5Cj6MyRHuflAA2amIdkawqSN13B0zejgB5JtK0FDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744012176; c=relaxed/simple;
-	bh=eRT560s3jqlBgQiBs4bJ9YChX1kc7vARtQ81FyXEKaQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOr54CjFH02wlDMibMR7c0slly7zOvfDhWIihKK9FMYmslzlcNd217rjWyo/L7jmfDRjVOcGuUp2M1kmKtPeoBDdMEFPsRpYeQSevEyJY0wwS6FaEPLWi7o2rHjmpQjUeDhnvbkGzDVRCmmWyvBDO3pKnotcTh5jmaoKTZoqTkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+dhxDf/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744012230; c=relaxed/simple;
+	bh=wVr42V/0M/6BE/H+WqShAYhE9ijurdTzcZTiQM5hCF0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iNDfuYA+hA/UKNx7c6CmsP1Qkfj068bFt2eAlZVcKLA8LbHPLEV827bk33XNufDIK84brRtIXQ69vTiSe+pxLXNIk1UQkS/min+s/Vv9DTZXyDq0Xd+SOnUd+15bB+MYEGNPEPu8MEkUa1I6CGYSUz7DZGzCl+DOzpWCWY7962A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ltdMnHK8; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+dhxDf/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744012173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yJDG8HeQmppAHEwc4ioqpzaFR7IYOXt5Zxb5p3GrAuo=;
-	b=T+dhxDf/MHdyMx0g/ZlCk4wPlOF8pofXr7yBl1/8j2VO4Sc2pzXoshJI6WspEjHW25rXPB
-	5iTO/y0ySwdn+1il6mojZLS13DqiOAiRp4KNJa+P/mA7Cr5QBa+gDj86/rZRin9nU89Qhu
-	O2MZqPE73UKmlzoKvRjEPmof6F9pZJU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-186-ZF3R2Cg3PdGhr3nV9BzNug-1; Mon, 07 Apr 2025 03:49:30 -0400
-X-MC-Unique: ZF3R2Cg3PdGhr3nV9BzNug-1
-X-Mimecast-MFC-AGG-ID: ZF3R2Cg3PdGhr3nV9BzNug_1744012169
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39123912ff0so1657493f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:49:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ltdMnHK8"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so3269291f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744012225; x=1744617025; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N+7D2Lw1cnC0mBQAVLALUlSAGNOZGs96tIybsN/dfPA=;
+        b=ltdMnHK8WJKWejqN0AbuCyIC6bdUBSL6MvYz1aSL99rb/LuRWNckA5+Kd2pZZ9NPMr
+         thKbh7CzN6z4qLn8dxX822Kr9JimlLQgLlx4+/7uu2sOE9V92f+pCapDTm5tJlS2HSli
+         NEmV6WhmLKCyjeDYiGsRkoNndJfRFaHlMGLE4OU4XXqk+RU1LLxuTDeZEEKV+OPFpTn7
+         to0WsjdBPp4GsMXhEFyz3lsoxpkXh4M/rgzKS9TnxEbN7nOTDkwqB419vyf5IcdQJ+ak
+         lf347GHgDc5Fk0Njdgt3PKHBqsAn794KuaqlLaF5m3ChL381B5PIhF5oBZoqRPEfPaKs
+         MP5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744012169; x=1744616969;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yJDG8HeQmppAHEwc4ioqpzaFR7IYOXt5Zxb5p3GrAuo=;
-        b=uexqDYDTw/acGvc0mt0B3O72itWsMVMGRcnXOX11t22ACH2IsbOm1f07Hb2+jG3N9W
-         c+oJZueUMFnwR+dXkGUVTj+l3cbZrjlB3zBWaihAiKXyqTf/Ktq3LONaF4v89+DPRbP6
-         I7vNPLgDXDf910CSROAypMvNlR0CE9vKNAQiUaDkcT9aSMhTwmY5IVkpCrZqbZktr7Gf
-         Pl2GqF5bXavTspOf81MuvbYpWcTQS5k+SzoMtziffBJSXVCpoRqIvX84QvwGvdgA8VAt
-         lcklwkLNYZFAWC1nT/vj77mTWQPHjlvwJ6ZeGoZuuusSUGnpXi6MuVEehR7USfuHwgeB
-         NahA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFXe/4FnU+XJdCj1oo+OXlrZvrPKlc46yfNrCmmTYHFNytlopcZkCkBiTh8krA5bJkbkEAGF+09s0Mv8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQDI0u1vv6xxi7TwKSalkWYO5XoWHraoNiHPlR4flzI5kK5AKB
-	nGvMujMCi04Dj/SVq0BxUAE+403V0wYhgmNa3gn6RQdzmIVohl62TwdbuKTwEQF6QoqoCgG4b53
-	pcrOm0DP3/WgI2cbOrCNx12kmq7VYO7CsM/ufpvcKxrfDMk6QCvQ62QL5THiMmg==
-X-Gm-Gg: ASbGnctH4pLB4SCBz+axSROYLmfbWVn1MDsXYtt6r0X34NMGCy0BpsIfVnd1tR4fc8n
-	TwksIzk/Js90CeY/MW3dpFLzZd+G7wO9TJOVs4eAmKjYGLs+AvpumJRAQFwLp8r/qrHD4QQ9QuS
-	XmElWfUhh9NigbaRZbqwxnKxRKuGF5BK2LbwfQhRC7FVKif7JloYuY6kYVJJkVL4IvXwjVDdXhN
-	5IQORomX9b/B0MG/QgrIf63BAT4oS79UqAND03cxMR8GSKL5lN7CzYREAug1JenkJdumsOVEssm
-	xyMYV71p0PvO/iI6IOaUGTb7ID2qRRF1zH4SFup1l0tj3gUpOlaW1tx7REOsk73bZJX/jYzuKJM
-	XDWGxNq1LlC8wnsc8IIYa6LLvIlDDDViF+mA8PqI7V6c=
-X-Received: by 2002:a05:6000:178d:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39d0de6285fmr7737112f8f.40.1744012169207;
-        Mon, 07 Apr 2025 00:49:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkm+tulOb5ASAkgNNphvd4C9BTz8ynNupsAVHvrmjUIX1fSowZZvqz0hqigr4tdQObDH5ilA==
-X-Received: by 2002:a05:6000:178d:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39d0de6285fmr7737090f8f.40.1744012168854;
-        Mon, 07 Apr 2025 00:49:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec169b8a3sm123957385e9.19.2025.04.07.00.49.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 00:49:28 -0700 (PDT)
-Message-ID: <662ad650-8c68-40ef-a109-2e489658880d@redhat.com>
-Date: Mon, 7 Apr 2025 09:49:27 +0200
+        d=1e100.net; s=20230601; t=1744012225; x=1744617025;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N+7D2Lw1cnC0mBQAVLALUlSAGNOZGs96tIybsN/dfPA=;
+        b=lnpm0Uzn3lQ5KDxCKttanPz1ChimsO8KrYOVQyLYI2SelZO+GPGBI3ZP7JF+xtdXbZ
+         7NooPGOZhG4PursmEyvsX32jourPFclG72poWid5rgIuC3g8NvX7Nd0IIqw8BWZcYk8g
+         zv68L/v5pCO6hqEkndAwanVDCChPrlQk8FhTloslhCEt0GCAP9ebwzFPsgZElMU1cnHM
+         IWMFjTK8fzR9ThE5BdqFeXc/MqknU3xH8KnRWVqHGxDZ1q7+a9gMibeJYJhic8BkG2Hs
+         X1SXxSkeu8is5OBExUMUAlLED2Coh+T7aUkZYUFgnG2RQAMqPgUQ0pxU1kM73OVk71Jo
+         VcyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgo5Hf+fO5bWO9BI5YpAIFgfXQGHNcEc6rbrt+H8Ud0qPGT8/137+o3FSm/tB0vrb/0YzysF3/XpyGJh8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJEkcoGHBnfxExtBL06VqWnbqoeBN7IC80xSXXCKEUAf1cisob
+	kDbdDlvrb0dks7BNya1xg+kXuqyKFWOSHPD/t7W0LCm53trE7aZ6xH8T6MoXf/Y=
+X-Gm-Gg: ASbGncsomog5n9ix2EdIjpiSfkjL0FPHoWeWlNPzfqjTJ9VQ6uX1XQUwzTbHOp20151
+	UNXQSVZmxdg0/uzjNbILdZyY8ExRCXUnrzkZyK4/J2KY12oqnjsdLpT8ENqL8ehbWvnkmPZSNQe
+	dLmgPxr9FyuqF0qlQn79e3JnvvsvPwgVDZIPtXnw6upkfd4+6F4N/8FKgECpDzxufH80S3eeEI3
+	SImkTIULjq4Z6j7w++6NEMGzpqSCn8LHoTYbm3PiXRhZpWkqUmM+U+Jy0z204SKjqRoNAusw08z
+	8k1gUkkXl5WprHZ4qTJ/pRepliMKpHm6G+jaNQ==
+X-Google-Smtp-Source: AGHT+IHiYAQ03u0S9TIoPX3SlKIxpp1LdTra87HIw/xS2sgpplwEEfiPzZCH6ukrHiyXkqM1TmgKRQ==
+X-Received: by 2002:a5d:5986:0:b0:391:466f:314e with SMTP id ffacd0b85a97d-39d0de17029mr8487613f8f.16.1744012224977;
+        Mon, 07 Apr 2025 00:50:24 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8c64:734d:705a:39a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eda4662a0sm83103105e9.36.2025.04.07.00.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:50:24 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 07 Apr 2025 09:50:12 +0200
+Subject: [PATCH] ARM: davinci: remove support for da830
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] selftests: mincore: fix tmpfs mincore test failure
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
- <99a3e190d38b08a2b96ede952a29893bffdb3432.1742960003.git.baolin.wang@linux.alibaba.com>
- <9000c5c1-34be-4bc9-b1c0-11548264eaa6@redhat.com>
- <cefb4920-36ad-404f-b058-f50eea52c418@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <cefb4920-36ad-404f-b058-f50eea52c418@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+X-B4-Tracking: v=1; b=H4sIALOD82cC/x3MQQqAIBBA0avErBNM0aSrRAvRsWaRhoIE4t2Tl
+ m/xf4OCmbDANjXIWKlQigPLPIG7bDyRkR8GwYXiUqzM20rREct4p4qDRnImtFWaBxtQGhjpkzH
+ Q+2/3o/cPa2ahMWYAAAA=
+To: Russell King <linux@armlinux.org.uk>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: David Lechner <dlechner@baylibre.com>, 
+ Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=37850;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=ezin2mQgZEDytaY3aPuUICxChw//P8VpLBGpiHZaajI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn84O8VZo+5/SmvSQlL5K5Afg3YtetdS6B7+JL1
+ IZMhS6Q4+uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/ODvAAKCRARpy6gFHHX
+ ciXuD/9Ie0s7mw5YoiQhSccMkmiAq81EgXcYR6Lzqvqtah5U4OVqfoIbe3LyQM1g4NTV8FX9JHi
+ g+U3EqDMKjy0R2qqDjkB4kog8i25mwm/zppQm2rQ6p2QidZ+SCuooPrn1Sfgm81e3adbOXDYKrO
+ dC7wcKu+IWDydJQPktIGnRZFfp3OzxM4m9Yz9kI7jkvOarsNMUFSN/ILCeTCyFmdqNIdQyrCeQg
+ iCcLlgzil+MtPKmqH0i0qFyh9tStft0/aLYJ02SqGMFkaYsY/q9CHf558xsPGmzAHxgsOXV2gSK
+ pJBtK0z5Ru2UV6DaaOCZdw/mg3LP+xoPojPJlSZZp5hxuAcrxSNgyosFX3lWPRwi08dECf8EQGZ
+ NE28xD3dDRkJuWrdPOUFt/EE78NBvQaaa+OrEaltTJwDn3xNQjUx2UhIg8GmEWjd33cK8vJ7JWo
+ 9iYGPPeTnaSM+3jBrEqXnr35QLGy6Nt9RJWGfzbhz7oNsptZv7OtGohnk0OMAwRamyOoPeTZBDK
+ s8BEmsAgSGvCaIxTzZO/8FmKOybw/hcfY+yReIp1nw/I53AmIw6pojgE2cOZAo1FdLpb9J1gdIm
+ LRUUpt8MM1UIl2cBOc1thS21QsEjJhIr03rQ1/a0rqyMOvsQEAqd+ZDTAWuOdoRMDwje7waKkOY
+ ZbY72KdPL6n9f9A==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On 07.04.25 05:49, Baolin Wang wrote:
-> 
-> 
-> On 2025/4/1 20:54, David Hildenbrand wrote:
->> On 26.03.25 04:38, Baolin Wang wrote:
->>> When running mincore test cases, I encountered the following failures:
->>>
->>> "
->>> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 (0)
->>> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in memory
->>> check_tmpfs_mmap: Test terminated by assertion
->>>             FAIL  global.check_tmpfs_mmap
->>> not ok 5 global.check_tmpfs_mmap
->>> FAILED: 4 / 5 tests passed
->>> "
->>>
->>> The reason for the test case failure is that my system automatically
->>> enabled
->>> tmpfs large folio allocation by adding the
->>> 'transparent_hugepage_tmpfs=always'
->>> cmdline. However, the test case still expects the tmpfs mounted on
->>> /dev/shm to
->>> allocate small folios, which leads to assertion failures when
->>> verifying readahead
->>> pages.
->>>
->>> To fix this issue, remount tmpfs to a new test directory and set the
->>> 'huge=never'
->>> parameter to avoid allocating large folios, which can pass the test.
->>>
->>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> ---
->>>    .../selftests/mincore/mincore_selftest.c      | 25 +++++++++++++++++--
->>>    1 file changed, 23 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/mincore/mincore_selftest.c
->>> b/tools/testing/selftests/mincore/mincore_selftest.c
->>> index e949a43a6145..e8d7a3a4739f 100644
->>> --- a/tools/testing/selftests/mincore/mincore_selftest.c
->>> +++ b/tools/testing/selftests/mincore/mincore_selftest.c
->>> @@ -12,6 +12,7 @@
->>>    #include <unistd.h>
->>>    #include <stdlib.h>
->>>    #include <sys/mman.h>
->>> +#include <sys/mount.h>
->>>    #include <string.h>
->>>    #include <fcntl.h>
->>> @@ -283,7 +284,7 @@ TEST(check_file_mmap)
->>>        free(vec);
->>>    }
->>> -
->>> +#define INPUT_MAX 80
->>>    /*
->>>     * Test mincore() behavior on a page backed by a tmpfs file.  This test
->>>     * performs the same steps as the previous one. However, we don't
->>> expect
->>> @@ -291,6 +292,9 @@ TEST(check_file_mmap)
->>>     */
->>>    TEST(check_tmpfs_mmap)
->>>    {
->>> +    char tmpfs_template[] = "/tmp/check_tmpfs_XXXXXX";
->>> +    const char *tmpfs_loc = mkdtemp(tmpfs_template);
->>> +    char testfile[INPUT_MAX];
->>>        unsigned char *vec;
->>>        int vec_size;
->>>        char *addr;
->>> @@ -300,6 +304,10 @@ TEST(check_tmpfs_mmap)
->>>        int i;
->>>        int ra_pages = 0;
->>> +    ASSERT_NE(NULL, tmpfs_loc) {
->>> +        TH_LOG("Can't mkdir tmpfs dentry\n");
->>> +    }
->>> +
->>>        page_size = sysconf(_SC_PAGESIZE);
->>>        vec_size = FILE_SIZE / page_size;
->>>        if (FILE_SIZE % page_size)
->>> @@ -311,7 +319,18 @@ TEST(check_tmpfs_mmap)
->>>        }
->>>        errno = 0;
->>> -    fd = open("/dev/shm", O_TMPFILE | O_RDWR, 0600);
->>> +    /* Do not use large folios for tmpfs mincore testing */
->>> +    retval = mount("tmpfs", tmpfs_loc, "tmpfs", 0,
->>> "huge=never,size=4M");
->>> +    ASSERT_EQ(0, retval) {
->>> +        TH_LOG("Unable to mount tmpfs for testing\n");
->>> +    }
->>> +
->>> +    retval = snprintf(testfile, INPUT_MAX, "%s/test_file", tmpfs_loc);
->>> +    ASSERT_GE(INPUT_MAX, retval) {
->>> +        TH_LOG("Unable to create a tmpfs for testing\n");
->>> +    }
->>> +
->>> +    fd = open(testfile, O_CREAT|O_RDWR, 0664);
->>>        ASSERT_NE(-1, fd) {
->>>            TH_LOG("Can't create temporary file: %s",
->>>                strerror(errno));
->>> @@ -363,6 +382,8 @@ TEST(check_tmpfs_mmap)
->>>        munmap(addr, FILE_SIZE);
->>>        close(fd);
->>>        free(vec);
->>> +    umount(tmpfs_loc);
->>> +    rmdir(tmpfs_loc);
->>>    }
->>>    TEST_HARNESS_MAIN
->>
->> Is there anything that cleans up the mount in case something goes wrong
->> (we run into an assertion), or will the directory+mount stick around
->> forever?
-> 
-> Good point, will cleanup the mount in the next version.
-> 
->>
->> But I also wonder whether check_tmpfs_mmap() should be changed to live
->> with the fact that readahead ("faultaround") could now happen. What's
->> the reason for not doing that?
-> 
->   From this test case's description, it doesn't expect any readahead.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes, but why are we testing for that *at all*? We don't make such 
-assumptions/tests for anon memmory ("no faultaround happened").
+We no longer support any boards with the da830 SoC in mainline linux.
+Let's remove all bits and pieces related to it.
 
-Why not simply remove the "We expect only that page to be fetched into 
-memory." documentation + checking?
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ arch/arm/configs/davinci_all_defconfig |   1 -
+ arch/arm/configs/multi_v5_defconfig    |   1 -
+ arch/arm/mach-davinci/Kconfig          |   7 -
+ arch/arm/mach-davinci/Makefile         |   1 -
+ arch/arm/mach-davinci/cputype.h        |   1 -
+ arch/arm/mach-davinci/da830.c          | 506 ---------------------------------
+ arch/arm/mach-davinci/da850.c          |   1 -
+ arch/arm/mach-davinci/da8xx.h          |   2 -
+ arch/arm/mach-davinci/devices-da8xx.c  |   1 -
+ arch/arm/mach-davinci/irqs.h           |  27 --
+ arch/arm/mach-davinci/mux.h            | 404 --------------------------
+ arch/arm/mach-davinci/psc.h            |   3 -
+ 12 files changed, 955 deletions(-)
 
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index 3474e475373a..5e972a1c14e9 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -14,7 +14,6 @@ CONFIG_ARCH_MULTIPLATFORM=y
+ CONFIG_ARCH_MULTI_V5=y
+ # CONFIG_ARCH_MULTI_V7 is not set
+ CONFIG_ARCH_DAVINCI=y
+-CONFIG_ARCH_DAVINCI_DA830=y
+ CONFIG_ARCH_DAVINCI_DA850=y
+ CONFIG_DAVINCI_MUX_DEBUG=y
+ CONFIG_DAVINCI_MUX_WARNINGS=y
+diff --git a/arch/arm/configs/multi_v5_defconfig b/arch/arm/configs/multi_v5_defconfig
+index db81862bdb93..d1352773b58f 100644
+--- a/arch/arm/configs/multi_v5_defconfig
++++ b/arch/arm/configs/multi_v5_defconfig
+@@ -12,7 +12,6 @@ CONFIG_MACH_ASPEED_G4=y
+ CONFIG_ARCH_AT91=y
+ CONFIG_SOC_AT91SAM9=y
+ CONFIG_ARCH_DAVINCI=y
+-CONFIG_ARCH_DAVINCI_DA830=y
+ CONFIG_ARCH_DAVINCI_DA850=y
+ CONFIG_ARCH_MXC=y
+ CONFIG_SOC_IMX25=y
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index 8f66de0405d9..6cd6d29a2c9d 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -19,13 +19,6 @@ if ARCH_DAVINCI
+ 
+ comment "DaVinci Core Type"
+ 
+-config ARCH_DAVINCI_DA830
+-	bool "DA830/OMAP-L137/AM17x based system"
+-	select ARCH_DAVINCI_DA8XX
+-	# needed on silicon revs 1.0, 1.1:
+-	select CPU_DCACHE_WRITETHROUGH if !CPU_DCACHE_DISABLE
+-	select DAVINCI_CP_INTC
+-
+ config ARCH_DAVINCI_DA850
+ 	bool "DA850/OMAP-L138/AM18x based system"
+ 	select ARCH_DAVINCI_DA8XX
+diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
+index 31d22a5d8e1e..7a210db669f4 100644
+--- a/arch/arm/mach-davinci/Makefile
++++ b/arch/arm/mach-davinci/Makefile
+@@ -10,7 +10,6 @@ obj-y 					:= common.o sram.o devices-da8xx.o
+ obj-$(CONFIG_DAVINCI_MUX)		+= mux.o
+ 
+ # Chip specific
+-obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= da830.o
+ obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= da850.o pdata-quirks.o
+ 
+ obj-y					+= da8xx-dt.o
+diff --git a/arch/arm/mach-davinci/cputype.h b/arch/arm/mach-davinci/cputype.h
+index 148a738391dc..a8f5330aaad1 100644
+--- a/arch/arm/mach-davinci/cputype.h
++++ b/arch/arm/mach-davinci/cputype.h
+@@ -25,7 +25,6 @@ struct davinci_id {
+ };
+ 
+ /* Can use lower 16 bits of cpu id  for a variant when required */
+-#define	DAVINCI_CPU_ID_DA830		0x08300000
+ #define	DAVINCI_CPU_ID_DA850		0x08500000
+ 
+ #endif
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+deleted file mode 100644
+index a044ea5cb4f1..000000000000
+--- a/arch/arm/mach-davinci/da830.c
++++ /dev/null
+@@ -1,506 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * TI DA830/OMAP L137 chip specific setup
+- *
+- * Author: Mark A. Greer <mgreer@mvista.com>
+- *
+- * 2009 (c) MontaVista Software, Inc.
+- */
+-#include <linux/clk-provider.h>
+-#include <linux/clk/davinci.h>
+-#include <linux/gpio.h>
+-#include <linux/init.h>
+-#include <linux/io.h>
+-
+-#include <clocksource/timer-davinci.h>
+-
+-#include <asm/mach/map.h>
+-
+-#include "common.h"
+-#include "cputype.h"
+-#include "da8xx.h"
+-#include "irqs.h"
+-#include "mux.h"
+-
+-/* Offsets of the 8 compare registers on the da830 */
+-#define DA830_CMP12_0		0x60
+-#define DA830_CMP12_1		0x64
+-#define DA830_CMP12_2		0x68
+-#define DA830_CMP12_3		0x6c
+-#define DA830_CMP12_4		0x70
+-#define DA830_CMP12_5		0x74
+-#define DA830_CMP12_6		0x78
+-#define DA830_CMP12_7		0x7c
+-
+-#define DA830_REF_FREQ		24000000
+-
+-/*
+- * Device specific mux setup
+- *
+- *	     soc      description	mux    mode    mode   mux	dbg
+- *					reg   offset   mask   mode
+- */
+-static const struct mux_config da830_pins[] = {
+-#ifdef CONFIG_DAVINCI_MUX
+-	MUX_CFG(DA830, GPIO7_14,	0,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, RTCK,		0,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_15,	0,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMU_0,		0,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMB_SDCKE,	0,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_CLK_GLUE,	0,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_CLK,		0,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, NEMB_CS_0,	0,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_CAS,	0,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_RAS,	0,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_WE,		0,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_BA_1,	1,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_BA_0,	1,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_0,		1,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_1,		1,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_2,		1,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_3,		1,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_4,		1,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_5,		1,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, GPIO7_0,		1,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_1,		1,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_2,		1,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_3,		1,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_4,		1,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_5,		1,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_6,		1,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_7,		1,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMB_A_6,		2,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_7,		2,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_8,		2,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_9,		2,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_10,	2,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_11,	2,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_A_12,	2,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_31,	2,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, GPIO7_8,		2,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_9,		2,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_10,	2,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_11,	2,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_12,	2,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO7_13,	2,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_13,	2,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMB_D_30,	3,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_29,	3,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_28,	3,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_27,	3,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_26,	3,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_25,	3,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_24,	3,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_23,	3,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_22,	4,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_21,	4,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_20,	4,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_19,	4,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_18,	4,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_17,	4,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_16,	4,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_WE_DQM_3,	4,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_WE_DQM_2,	5,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_0,		5,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_1,		5,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_2,		5,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_3,		5,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_4,		5,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_5,		5,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_6,		5,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, GPIO6_0,		5,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_1,		5,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_2,		5,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_3,		5,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_4,		5,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_5,		5,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_6,		5,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMB_D_7,		6,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_8,		6,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_9,		6,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_10,	6,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_11,	6,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_12,	6,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_13,	6,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMB_D_14,	6,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, GPIO6_7,		6,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_8,		6,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_9,		6,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_10,	6,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_11,	6,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_12,	6,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_13,	6,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO6_14,	6,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMB_D_15,	7,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_WE_DQM_1,	7,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMB_WE_DQM_0,	7,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, SPI0_SOMI_0,	7,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, SPI0_SIMO_0,	7,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, SPI0_CLK,	7,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, NSPI0_ENA,	7,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NSPI0_SCS_0,	7,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, EQEP0I,		7,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, EQEP0S,		7,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, EQEP1I,		7,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUART0_CTS,	7,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUART0_RTS,	7,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, EQEP0A,		7,	24,	0xf,	4,	false)
+-	MUX_CFG(DA830, EQEP0B,		7,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO6_15,	7,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_14,	7,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_15,	7,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_0,		7,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_1,		7,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_2,		7,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_3,		7,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_4,		7,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, SPI1_SOMI_0,	8,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, SPI1_SIMO_0,	8,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, SPI1_CLK,	8,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, UART0_RXD,	8,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, UART0_TXD,	8,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_10,		8,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_11,		8,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NSPI1_ENA,	8,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, I2C1_SCL,	8,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, I2C1_SDA,	8,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, EQEP1S,		8,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, I2C0_SDA,	8,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, I2C0_SCL,	8,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, UART2_RXD,	8,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, TM64P0_IN12,	8,	12,	0xf,	4,	false)
+-	MUX_CFG(DA830, TM64P0_OUT12,	8,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO5_5,		8,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_6,		8,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_7,		8,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_8,		8,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_9,		8,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_10,	8,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_11,	8,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO5_12,	8,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, NSPI1_SCS_0,	9,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, USB0_DRVVBUS,	9,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, AHCLKX0,		9,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, ACLKX0,		9,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, AFSX0,		9,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AHCLKR0,		9,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, ACLKR0,		9,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, AFSR0,		9,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, UART2_TXD,	9,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, AHCLKX2,		9,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, ECAP0_APWM0,	9,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_MHZ_50_CLK,	9,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, ECAP1_APWM1,	9,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, USB_REFCLKIN,	9,	8,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO5_13,	9,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_15,	9,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_11,	9,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_12,	9,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_13,	9,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_14,	9,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_15,	9,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_12,	9,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, AMUTE0,		10,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_0,		10,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_1,		10,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_2,		10,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_3,		10,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_4,		10,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_5,		10,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_6,		10,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, RMII_TXD_0,	10,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_TXD_1,	10,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_TXEN,	10,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_CRS_DV,	10,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_RXD_0,	10,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_RXD_1,	10,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, RMII_RXER,	10,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, AFSR2,		10,	4,	0xf,	4,	false)
+-	MUX_CFG(DA830, ACLKX2,		10,	8,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR2_3,		10,	12,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR2_2,		10,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR2_1,		10,	20,	0xf,	4,	false)
+-	MUX_CFG(DA830, AFSX2,		10,	24,	0xf,	4,	false)
+-	MUX_CFG(DA830, ACLKR2,		10,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, NRESETOUT,	10,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_0,		10,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_1,		10,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_2,		10,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_3,		10,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_4,		10,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_5,		10,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_6,		10,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, AXR0_7,		11,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_8,		11,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, UART1_RXD,	11,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, UART1_TXD,	11,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR0_11,		11,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AHCLKX1,		11,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, ACLKX1,		11,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, AFSX1,		11,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, MDIO_CLK,	11,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, MDIO_D,		11,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, AXR0_9,		11,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, AXR0_10,		11,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM0B,		11,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM0A,		11,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWMSYNCI,	11,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, AXR2_0,		11,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, EPWMSYNC0,	11,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO3_7,		11,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_8,		11,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_9,		11,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_10,	11,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_11,	11,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_14,	11,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO3_15,	11,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_10,	11,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, AHCLKR1,		12,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, ACLKR1,		12,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, AFSR1,		12,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, AMUTE1,		12,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_0,		12,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_1,		12,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_2,		12,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_3,		12,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, ECAP2_APWM2,	12,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, EHRPWMGLUETZ,	12,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, EQEP1A,		12,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, GPIO4_11,	12,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_12,	12,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_13,	12,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_14,	12,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_0,		12,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_1,		12,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_2,		12,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_3,		12,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, AXR1_4,		13,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_5,		13,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_6,		13,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_7,		13,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_8,		13,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, AXR1_9,		13,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_0,		13,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_1,		13,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, EQEP1B,		13,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM2B,		13,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM2A,		13,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM1B,		13,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, EPWM1A,		13,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_0,	13,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_1,	13,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_0,	13,	24,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_1,	13,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO4_4,		13,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_5,		13,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_6,		13,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_7,		13,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_8,		13,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO4_9,		13,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_0,		13,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_1,		13,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMA_D_2,		14,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_3,		14,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_4,		14,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_5,		14,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_6,		14,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_7,		14,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_8,		14,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_9,		14,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_2,	14,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_3,	14,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_4,	14,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_5,	14,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_6,	14,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_DAT_7,	14,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_8,	14,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_9,	14,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_2,	14,	0,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_3,	14,	4,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_4,	14,	8,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_5,	14,	12,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_6,	14,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HD_7,	14,	20,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_8,		14,	24,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_9,		14,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO0_2,		14,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_3,		14,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_4,		14,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_5,		14,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_6,		14,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_7,		14,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_8,		14,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_9,		14,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMA_D_10,	15,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_11,	15,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_12,	15,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_13,	15,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_14,	15,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_D_15,	15,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_0,		15,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_1,		15,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, UHPI_HD_10,	15,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_11,	15,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_12,	15,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_13,	15,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_14,	15,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HD_15,	15,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_7,		15,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, MMCSD_CLK,	15,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_10,	15,	0,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_11,	15,	4,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_12,	15,	8,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_13,	15,	12,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_14,	15,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, LCD_D_15,	15,	20,	0xf,	4,	false)
+-	MUX_CFG(DA830, UHPI_HCNTL0,	15,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO0_10,	15,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_11,	15,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_12,	15,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_13,	15,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_14,	15,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO0_15,	15,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_0,		15,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_1,		15,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMA_A_2,		16,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_3,		16,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_4,		16,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_5,		16,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_6,		16,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_7,		16,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_8,		16,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_9,		16,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, MMCSD_CMD,	16,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_6,		16,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_3,		16,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_2,		16,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_1,		16,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_0,		16,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_PCLK,	16,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_HSYNC,	16,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HCNTL1,	16,	0,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO1_2,		16,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_3,		16,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_4,		16,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_5,		16,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_6,		16,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_7,		16,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_8,		16,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_9,		16,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMA_A_10,	17,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_11,	17,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_A_12,	17,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_BA_1,	17,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_BA_0,	17,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_CLK,		17,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, EMA_SDCKE,	17,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_CAS,	17,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, LCD_VSYNC,	17,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, NLCD_AC_ENB_CS,	17,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_MCLK,	17,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_5,		17,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, LCD_D_4,		17,	16,	0xf,	2,	false)
+-	MUX_CFG(DA830, OBSCLK,		17,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, NEMA_CS_4,	17,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HHWIL,	17,	12,	0xf,	4,	false)
+-	MUX_CFG(DA830, AHCLKR2,		17,	20,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO1_10,	17,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_11,	17,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_12,	17,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_13,	17,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_14,	17,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO1_15,	17,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_0,		17,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_1,		17,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, NEMA_RAS,	18,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_WE,		18,	4,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_CS_0,	18,	8,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_CS_2,	18,	12,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_CS_3,	18,	16,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_OE,		18,	20,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_WE_DQM_1,	18,	24,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_WE_DQM_0,	18,	28,	0xf,	1,	false)
+-	MUX_CFG(DA830, NEMA_CS_5,	18,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, UHPI_HRNW,	18,	4,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUHPI_HAS,	18,	8,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUHPI_HCS,	18,	12,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUHPI_HDS1,	18,	20,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUHPI_HDS2,	18,	24,	0xf,	2,	false)
+-	MUX_CFG(DA830, NUHPI_HINT,	18,	28,	0xf,	2,	false)
+-	MUX_CFG(DA830, AXR0_12,		18,	4,	0xf,	4,	false)
+-	MUX_CFG(DA830, AMUTE2,		18,	16,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR0_13,		18,	20,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR0_14,		18,	24,	0xf,	4,	false)
+-	MUX_CFG(DA830, AXR0_15,		18,	28,	0xf,	4,	false)
+-	MUX_CFG(DA830, GPIO2_2,		18,	0,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_3,		18,	4,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_4,		18,	8,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_5,		18,	12,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_6,		18,	16,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_7,		18,	20,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_8,		18,	24,	0xf,	8,	false)
+-	MUX_CFG(DA830, GPIO2_9,		18,	28,	0xf,	8,	false)
+-	MUX_CFG(DA830, EMA_WAIT_0,	19,	0,	0xf,	1,	false)
+-	MUX_CFG(DA830, NUHPI_HRDY,	19,	0,	0xf,	2,	false)
+-	MUX_CFG(DA830, GPIO2_10,	19,	0,	0xf,	8,	false)
+-#endif
+-};
+-
+-static struct map_desc da830_io_desc[] = {
+-	{
+-		.virtual	= IO_VIRT,
+-		.pfn		= __phys_to_pfn(IO_PHYS),
+-		.length		= IO_SIZE,
+-		.type		= MT_DEVICE
+-	},
+-	{
+-		.virtual	= DA8XX_CP_INTC_VIRT,
+-		.pfn		= __phys_to_pfn(DA8XX_CP_INTC_BASE),
+-		.length		= DA8XX_CP_INTC_SIZE,
+-		.type		= MT_DEVICE
+-	},
+-};
+-
+-/* Contents of JTAG ID register used to identify exact cpu type */
+-static struct davinci_id da830_ids[] = {
+-	{
+-		.variant	= 0x0,
+-		.part_no	= 0xb7df,
+-		.manufacturer	= 0x017,	/* 0x02f >> 1 */
+-		.cpu_id		= DAVINCI_CPU_ID_DA830,
+-		.name		= "da830/omap-l137 rev1.0",
+-	},
+-	{
+-		.variant	= 0x8,
+-		.part_no	= 0xb7df,
+-		.manufacturer	= 0x017,
+-		.cpu_id		= DAVINCI_CPU_ID_DA830,
+-		.name		= "da830/omap-l137 rev1.1",
+-	},
+-	{
+-		.variant	= 0x9,
+-		.part_no	= 0xb7df,
+-		.manufacturer	= 0x017,
+-		.cpu_id		= DAVINCI_CPU_ID_DA830,
+-		.name		= "da830/omap-l137 rev2.0",
+-	},
+-};
+-
+-static const struct davinci_soc_info davinci_soc_info_da830 = {
+-	.io_desc		= da830_io_desc,
+-	.io_desc_num		= ARRAY_SIZE(da830_io_desc),
+-	.jtag_id_reg		= DA8XX_SYSCFG0_BASE + DA8XX_JTAG_ID_REG,
+-	.ids			= da830_ids,
+-	.ids_num		= ARRAY_SIZE(da830_ids),
+-	.pinmux_base		= DA8XX_SYSCFG0_BASE + 0x120,
+-	.pinmux_pins		= da830_pins,
+-	.pinmux_pins_num	= ARRAY_SIZE(da830_pins),
+-};
+-
+-void __init da830_init(void)
+-{
+-	davinci_common_init(&davinci_soc_info_da830);
+-
+-	da8xx_syscfg0_base = ioremap(DA8XX_SYSCFG0_BASE, SZ_4K);
+-	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
+-}
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 287dd987908e..706f8241b5e7 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -4,7 +4,6 @@
+  *
+  * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+  *
+- * Derived from: arch/arm/mach-davinci/da830.c
+  * Original Copyrights follow:
+  *
+  * 2009 (c) MontaVista Software, Inc.
+diff --git a/arch/arm/mach-davinci/da8xx.h b/arch/arm/mach-davinci/da8xx.h
+index 54a255b8d8d8..70d14f7f3520 100644
+--- a/arch/arm/mach-davinci/da8xx.h
++++ b/arch/arm/mach-davinci/da8xx.h
+@@ -68,8 +68,6 @@ extern void __iomem *da8xx_syscfg1_base;
+ #define DA8XX_SHARED_RAM_BASE	0x80000000
+ #define DA8XX_ARM_RAM_BASE	0xffff0000
+ 
+-void da830_init(void);
+-
+ void da850_init(void);
+ 
+ int da850_register_vpif_display
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 5e73a725d5da..4e9ac55ae92d 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -33,7 +33,6 @@
+ #define DA8XX_PRUSS_MEM_BASE		0x01c30000
+ #define DA8XX_MMCSD0_BASE		0x01c40000
+ #define DA8XX_SPI0_BASE			0x01c41000
+-#define DA830_SPI1_BASE			0x01e12000
+ #define DA8XX_LCD_CNTRL_BASE		0x01e13000
+ #define DA850_SATA_BASE			0x01e18000
+ #define DA850_MMCSD1_BASE		0x01e1b000
+diff --git a/arch/arm/mach-davinci/irqs.h b/arch/arm/mach-davinci/irqs.h
+index b1ceed81e9fa..23e8da5025ab 100644
+--- a/arch/arm/mach-davinci/irqs.h
++++ b/arch/arm/mach-davinci/irqs.h
+@@ -101,33 +101,6 @@
+ #define IRQ_DA8XX_ECAP2			71
+ #define IRQ_DA8XX_ARMCLKSTOPREQ		90
+ 
+-/* DA830 specific interrupts */
+-#define IRQ_DA830_MPUERR		27
+-#define IRQ_DA830_IOPUERR		27
+-#define IRQ_DA830_BOOTCFGERR		27
+-#define IRQ_DA830_EHRPWM2		67
+-#define IRQ_DA830_EHRPWM2TZ		68
+-#define IRQ_DA830_EQEP0			72
+-#define IRQ_DA830_EQEP1			73
+-#define IRQ_DA830_T12CMPINT0_0		74
+-#define IRQ_DA830_T12CMPINT1_0		75
+-#define IRQ_DA830_T12CMPINT2_0		76
+-#define IRQ_DA830_T12CMPINT3_0		77
+-#define IRQ_DA830_T12CMPINT4_0		78
+-#define IRQ_DA830_T12CMPINT5_0		79
+-#define IRQ_DA830_T12CMPINT6_0		80
+-#define IRQ_DA830_T12CMPINT7_0		81
+-#define IRQ_DA830_T12CMPINT0_1		82
+-#define IRQ_DA830_T12CMPINT1_1		83
+-#define IRQ_DA830_T12CMPINT2_1		84
+-#define IRQ_DA830_T12CMPINT3_1		85
+-#define IRQ_DA830_T12CMPINT4_1		86
+-#define IRQ_DA830_T12CMPINT5_1		87
+-#define IRQ_DA830_T12CMPINT6_1		88
+-#define IRQ_DA830_T12CMPINT7_1		89
+-
+-#define DA830_N_CP_INTC_IRQ		96
+-
+ /* DA850 speicific interrupts */
+ #define IRQ_DA850_MPUADDRERR0		27
+ #define IRQ_DA850_MPUPROTERR0		27
+diff --git a/arch/arm/mach-davinci/mux.h b/arch/arm/mach-davinci/mux.h
+index 05fd3902df65..6325ea5a2730 100644
+--- a/arch/arm/mach-davinci/mux.h
++++ b/arch/arm/mach-davinci/mux.h
+@@ -21,410 +21,6 @@ struct mux_config {
+ 	bool debug;
+ };
+ 
+-enum da830_index {
+-	DA830_GPIO7_14,
+-	DA830_RTCK,
+-	DA830_GPIO7_15,
+-	DA830_EMU_0,
+-	DA830_EMB_SDCKE,
+-	DA830_EMB_CLK_GLUE,
+-	DA830_EMB_CLK,
+-	DA830_NEMB_CS_0,
+-	DA830_NEMB_CAS,
+-	DA830_NEMB_RAS,
+-	DA830_NEMB_WE,
+-	DA830_EMB_BA_1,
+-	DA830_EMB_BA_0,
+-	DA830_EMB_A_0,
+-	DA830_EMB_A_1,
+-	DA830_EMB_A_2,
+-	DA830_EMB_A_3,
+-	DA830_EMB_A_4,
+-	DA830_EMB_A_5,
+-	DA830_GPIO7_0,
+-	DA830_GPIO7_1,
+-	DA830_GPIO7_2,
+-	DA830_GPIO7_3,
+-	DA830_GPIO7_4,
+-	DA830_GPIO7_5,
+-	DA830_GPIO7_6,
+-	DA830_GPIO7_7,
+-	DA830_EMB_A_6,
+-	DA830_EMB_A_7,
+-	DA830_EMB_A_8,
+-	DA830_EMB_A_9,
+-	DA830_EMB_A_10,
+-	DA830_EMB_A_11,
+-	DA830_EMB_A_12,
+-	DA830_EMB_D_31,
+-	DA830_GPIO7_8,
+-	DA830_GPIO7_9,
+-	DA830_GPIO7_10,
+-	DA830_GPIO7_11,
+-	DA830_GPIO7_12,
+-	DA830_GPIO7_13,
+-	DA830_GPIO3_13,
+-	DA830_EMB_D_30,
+-	DA830_EMB_D_29,
+-	DA830_EMB_D_28,
+-	DA830_EMB_D_27,
+-	DA830_EMB_D_26,
+-	DA830_EMB_D_25,
+-	DA830_EMB_D_24,
+-	DA830_EMB_D_23,
+-	DA830_EMB_D_22,
+-	DA830_EMB_D_21,
+-	DA830_EMB_D_20,
+-	DA830_EMB_D_19,
+-	DA830_EMB_D_18,
+-	DA830_EMB_D_17,
+-	DA830_EMB_D_16,
+-	DA830_NEMB_WE_DQM_3,
+-	DA830_NEMB_WE_DQM_2,
+-	DA830_EMB_D_0,
+-	DA830_EMB_D_1,
+-	DA830_EMB_D_2,
+-	DA830_EMB_D_3,
+-	DA830_EMB_D_4,
+-	DA830_EMB_D_5,
+-	DA830_EMB_D_6,
+-	DA830_GPIO6_0,
+-	DA830_GPIO6_1,
+-	DA830_GPIO6_2,
+-	DA830_GPIO6_3,
+-	DA830_GPIO6_4,
+-	DA830_GPIO6_5,
+-	DA830_GPIO6_6,
+-	DA830_EMB_D_7,
+-	DA830_EMB_D_8,
+-	DA830_EMB_D_9,
+-	DA830_EMB_D_10,
+-	DA830_EMB_D_11,
+-	DA830_EMB_D_12,
+-	DA830_EMB_D_13,
+-	DA830_EMB_D_14,
+-	DA830_GPIO6_7,
+-	DA830_GPIO6_8,
+-	DA830_GPIO6_9,
+-	DA830_GPIO6_10,
+-	DA830_GPIO6_11,
+-	DA830_GPIO6_12,
+-	DA830_GPIO6_13,
+-	DA830_GPIO6_14,
+-	DA830_EMB_D_15,
+-	DA830_NEMB_WE_DQM_1,
+-	DA830_NEMB_WE_DQM_0,
+-	DA830_SPI0_SOMI_0,
+-	DA830_SPI0_SIMO_0,
+-	DA830_SPI0_CLK,
+-	DA830_NSPI0_ENA,
+-	DA830_NSPI0_SCS_0,
+-	DA830_EQEP0I,
+-	DA830_EQEP0S,
+-	DA830_EQEP1I,
+-	DA830_NUART0_CTS,
+-	DA830_NUART0_RTS,
+-	DA830_EQEP0A,
+-	DA830_EQEP0B,
+-	DA830_GPIO6_15,
+-	DA830_GPIO5_14,
+-	DA830_GPIO5_15,
+-	DA830_GPIO5_0,
+-	DA830_GPIO5_1,
+-	DA830_GPIO5_2,
+-	DA830_GPIO5_3,
+-	DA830_GPIO5_4,
+-	DA830_SPI1_SOMI_0,
+-	DA830_SPI1_SIMO_0,
+-	DA830_SPI1_CLK,
+-	DA830_UART0_RXD,
+-	DA830_UART0_TXD,
+-	DA830_AXR1_10,
+-	DA830_AXR1_11,
+-	DA830_NSPI1_ENA,
+-	DA830_I2C1_SCL,
+-	DA830_I2C1_SDA,
+-	DA830_EQEP1S,
+-	DA830_I2C0_SDA,
+-	DA830_I2C0_SCL,
+-	DA830_UART2_RXD,
+-	DA830_TM64P0_IN12,
+-	DA830_TM64P0_OUT12,
+-	DA830_GPIO5_5,
+-	DA830_GPIO5_6,
+-	DA830_GPIO5_7,
+-	DA830_GPIO5_8,
+-	DA830_GPIO5_9,
+-	DA830_GPIO5_10,
+-	DA830_GPIO5_11,
+-	DA830_GPIO5_12,
+-	DA830_NSPI1_SCS_0,
+-	DA830_USB0_DRVVBUS,
+-	DA830_AHCLKX0,
+-	DA830_ACLKX0,
+-	DA830_AFSX0,
+-	DA830_AHCLKR0,
+-	DA830_ACLKR0,
+-	DA830_AFSR0,
+-	DA830_UART2_TXD,
+-	DA830_AHCLKX2,
+-	DA830_ECAP0_APWM0,
+-	DA830_RMII_MHZ_50_CLK,
+-	DA830_ECAP1_APWM1,
+-	DA830_USB_REFCLKIN,
+-	DA830_GPIO5_13,
+-	DA830_GPIO4_15,
+-	DA830_GPIO2_11,
+-	DA830_GPIO2_12,
+-	DA830_GPIO2_13,
+-	DA830_GPIO2_14,
+-	DA830_GPIO2_15,
+-	DA830_GPIO3_12,
+-	DA830_AMUTE0,
+-	DA830_AXR0_0,
+-	DA830_AXR0_1,
+-	DA830_AXR0_2,
+-	DA830_AXR0_3,
+-	DA830_AXR0_4,
+-	DA830_AXR0_5,
+-	DA830_AXR0_6,
+-	DA830_RMII_TXD_0,
+-	DA830_RMII_TXD_1,
+-	DA830_RMII_TXEN,
+-	DA830_RMII_CRS_DV,
+-	DA830_RMII_RXD_0,
+-	DA830_RMII_RXD_1,
+-	DA830_RMII_RXER,
+-	DA830_AFSR2,
+-	DA830_ACLKX2,
+-	DA830_AXR2_3,
+-	DA830_AXR2_2,
+-	DA830_AXR2_1,
+-	DA830_AFSX2,
+-	DA830_ACLKR2,
+-	DA830_NRESETOUT,
+-	DA830_GPIO3_0,
+-	DA830_GPIO3_1,
+-	DA830_GPIO3_2,
+-	DA830_GPIO3_3,
+-	DA830_GPIO3_4,
+-	DA830_GPIO3_5,
+-	DA830_GPIO3_6,
+-	DA830_AXR0_7,
+-	DA830_AXR0_8,
+-	DA830_UART1_RXD,
+-	DA830_UART1_TXD,
+-	DA830_AXR0_11,
+-	DA830_AHCLKX1,
+-	DA830_ACLKX1,
+-	DA830_AFSX1,
+-	DA830_MDIO_CLK,
+-	DA830_MDIO_D,
+-	DA830_AXR0_9,
+-	DA830_AXR0_10,
+-	DA830_EPWM0B,
+-	DA830_EPWM0A,
+-	DA830_EPWMSYNCI,
+-	DA830_AXR2_0,
+-	DA830_EPWMSYNC0,
+-	DA830_GPIO3_7,
+-	DA830_GPIO3_8,
+-	DA830_GPIO3_9,
+-	DA830_GPIO3_10,
+-	DA830_GPIO3_11,
+-	DA830_GPIO3_14,
+-	DA830_GPIO3_15,
+-	DA830_GPIO4_10,
+-	DA830_AHCLKR1,
+-	DA830_ACLKR1,
+-	DA830_AFSR1,
+-	DA830_AMUTE1,
+-	DA830_AXR1_0,
+-	DA830_AXR1_1,
+-	DA830_AXR1_2,
+-	DA830_AXR1_3,
+-	DA830_ECAP2_APWM2,
+-	DA830_EHRPWMGLUETZ,
+-	DA830_EQEP1A,
+-	DA830_GPIO4_11,
+-	DA830_GPIO4_12,
+-	DA830_GPIO4_13,
+-	DA830_GPIO4_14,
+-	DA830_GPIO4_0,
+-	DA830_GPIO4_1,
+-	DA830_GPIO4_2,
+-	DA830_GPIO4_3,
+-	DA830_AXR1_4,
+-	DA830_AXR1_5,
+-	DA830_AXR1_6,
+-	DA830_AXR1_7,
+-	DA830_AXR1_8,
+-	DA830_AXR1_9,
+-	DA830_EMA_D_0,
+-	DA830_EMA_D_1,
+-	DA830_EQEP1B,
+-	DA830_EPWM2B,
+-	DA830_EPWM2A,
+-	DA830_EPWM1B,
+-	DA830_EPWM1A,
+-	DA830_MMCSD_DAT_0,
+-	DA830_MMCSD_DAT_1,
+-	DA830_UHPI_HD_0,
+-	DA830_UHPI_HD_1,
+-	DA830_GPIO4_4,
+-	DA830_GPIO4_5,
+-	DA830_GPIO4_6,
+-	DA830_GPIO4_7,
+-	DA830_GPIO4_8,
+-	DA830_GPIO4_9,
+-	DA830_GPIO0_0,
+-	DA830_GPIO0_1,
+-	DA830_EMA_D_2,
+-	DA830_EMA_D_3,
+-	DA830_EMA_D_4,
+-	DA830_EMA_D_5,
+-	DA830_EMA_D_6,
+-	DA830_EMA_D_7,
+-	DA830_EMA_D_8,
+-	DA830_EMA_D_9,
+-	DA830_MMCSD_DAT_2,
+-	DA830_MMCSD_DAT_3,
+-	DA830_MMCSD_DAT_4,
+-	DA830_MMCSD_DAT_5,
+-	DA830_MMCSD_DAT_6,
+-	DA830_MMCSD_DAT_7,
+-	DA830_UHPI_HD_8,
+-	DA830_UHPI_HD_9,
+-	DA830_UHPI_HD_2,
+-	DA830_UHPI_HD_3,
+-	DA830_UHPI_HD_4,
+-	DA830_UHPI_HD_5,
+-	DA830_UHPI_HD_6,
+-	DA830_UHPI_HD_7,
+-	DA830_LCD_D_8,
+-	DA830_LCD_D_9,
+-	DA830_GPIO0_2,
+-	DA830_GPIO0_3,
+-	DA830_GPIO0_4,
+-	DA830_GPIO0_5,
+-	DA830_GPIO0_6,
+-	DA830_GPIO0_7,
+-	DA830_GPIO0_8,
+-	DA830_GPIO0_9,
+-	DA830_EMA_D_10,
+-	DA830_EMA_D_11,
+-	DA830_EMA_D_12,
+-	DA830_EMA_D_13,
+-	DA830_EMA_D_14,
+-	DA830_EMA_D_15,
+-	DA830_EMA_A_0,
+-	DA830_EMA_A_1,
+-	DA830_UHPI_HD_10,
+-	DA830_UHPI_HD_11,
+-	DA830_UHPI_HD_12,
+-	DA830_UHPI_HD_13,
+-	DA830_UHPI_HD_14,
+-	DA830_UHPI_HD_15,
+-	DA830_LCD_D_7,
+-	DA830_MMCSD_CLK,
+-	DA830_LCD_D_10,
+-	DA830_LCD_D_11,
+-	DA830_LCD_D_12,
+-	DA830_LCD_D_13,
+-	DA830_LCD_D_14,
+-	DA830_LCD_D_15,
+-	DA830_UHPI_HCNTL0,
+-	DA830_GPIO0_10,
+-	DA830_GPIO0_11,
+-	DA830_GPIO0_12,
+-	DA830_GPIO0_13,
+-	DA830_GPIO0_14,
+-	DA830_GPIO0_15,
+-	DA830_GPIO1_0,
+-	DA830_GPIO1_1,
+-	DA830_EMA_A_2,
+-	DA830_EMA_A_3,
+-	DA830_EMA_A_4,
+-	DA830_EMA_A_5,
+-	DA830_EMA_A_6,
+-	DA830_EMA_A_7,
+-	DA830_EMA_A_8,
+-	DA830_EMA_A_9,
+-	DA830_MMCSD_CMD,
+-	DA830_LCD_D_6,
+-	DA830_LCD_D_3,
+-	DA830_LCD_D_2,
+-	DA830_LCD_D_1,
+-	DA830_LCD_D_0,
+-	DA830_LCD_PCLK,
+-	DA830_LCD_HSYNC,
+-	DA830_UHPI_HCNTL1,
+-	DA830_GPIO1_2,
+-	DA830_GPIO1_3,
+-	DA830_GPIO1_4,
+-	DA830_GPIO1_5,
+-	DA830_GPIO1_6,
+-	DA830_GPIO1_7,
+-	DA830_GPIO1_8,
+-	DA830_GPIO1_9,
+-	DA830_EMA_A_10,
+-	DA830_EMA_A_11,
+-	DA830_EMA_A_12,
+-	DA830_EMA_BA_1,
+-	DA830_EMA_BA_0,
+-	DA830_EMA_CLK,
+-	DA830_EMA_SDCKE,
+-	DA830_NEMA_CAS,
+-	DA830_LCD_VSYNC,
+-	DA830_NLCD_AC_ENB_CS,
+-	DA830_LCD_MCLK,
+-	DA830_LCD_D_5,
+-	DA830_LCD_D_4,
+-	DA830_OBSCLK,
+-	DA830_NEMA_CS_4,
+-	DA830_UHPI_HHWIL,
+-	DA830_AHCLKR2,
+-	DA830_GPIO1_10,
+-	DA830_GPIO1_11,
+-	DA830_GPIO1_12,
+-	DA830_GPIO1_13,
+-	DA830_GPIO1_14,
+-	DA830_GPIO1_15,
+-	DA830_GPIO2_0,
+-	DA830_GPIO2_1,
+-	DA830_NEMA_RAS,
+-	DA830_NEMA_WE,
+-	DA830_NEMA_CS_0,
+-	DA830_NEMA_CS_2,
+-	DA830_NEMA_CS_3,
+-	DA830_NEMA_OE,
+-	DA830_NEMA_WE_DQM_1,
+-	DA830_NEMA_WE_DQM_0,
+-	DA830_NEMA_CS_5,
+-	DA830_UHPI_HRNW,
+-	DA830_NUHPI_HAS,
+-	DA830_NUHPI_HCS,
+-	DA830_NUHPI_HDS1,
+-	DA830_NUHPI_HDS2,
+-	DA830_NUHPI_HINT,
+-	DA830_AXR0_12,
+-	DA830_AMUTE2,
+-	DA830_AXR0_13,
+-	DA830_AXR0_14,
+-	DA830_AXR0_15,
+-	DA830_GPIO2_2,
+-	DA830_GPIO2_3,
+-	DA830_GPIO2_4,
+-	DA830_GPIO2_5,
+-	DA830_GPIO2_6,
+-	DA830_GPIO2_7,
+-	DA830_GPIO2_8,
+-	DA830_GPIO2_9,
+-	DA830_EMA_WAIT_0,
+-	DA830_NUHPI_HRDY,
+-	DA830_GPIO2_10,
+-};
+-
+ enum davinci_da850_index {
+ 	/* UART0 function */
+ 	DA850_NUART0_CTS,
+diff --git a/arch/arm/mach-davinci/psc.h b/arch/arm/mach-davinci/psc.h
+index acfef063295f..6c365a2e87fe 100644
+--- a/arch/arm/mach-davinci/psc.h
++++ b/arch/arm/mach-davinci/psc.h
+@@ -97,9 +97,7 @@
+ #define DA8XX_LPSC1_CPGMAC		5
+ #define DA8XX_LPSC1_EMIF3C		6
+ #define DA8XX_LPSC1_McASP0		7
+-#define DA830_LPSC1_McASP1		8
+ #define DA850_LPSC1_SATA		8
+-#define DA830_LPSC1_McASP2		9
+ #define DA850_LPSC1_VPIF		9
+ #define DA8XX_LPSC1_SPI1		10
+ #define DA8XX_LPSC1_I2C			11
+@@ -111,7 +109,6 @@
+ #define DA8XX_LPSC1_PWM			17
+ #define DA850_LPSC1_MMC_SD1		18
+ #define DA8XX_LPSC1_ECAP		20
+-#define DA830_LPSC1_EQEP		21
+ #define DA850_LPSC1_TPTC2		21
+ #define DA8XX_LPSC1_SCR_P0_SS		24
+ #define DA8XX_LPSC1_SCR_P1_SS		25
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250327-davinci-remove-da830-26a560fafe38
+
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
