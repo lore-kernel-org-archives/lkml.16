@@ -1,97 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C5B22E40A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAB922C35B
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 11:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744026026; cv=none; b=PFiL1HosOZcYv/FF5LxL3Yex9PGd6peinZ5VY8J1pIArW7mx98VnryAKSD0NjC/e1j+YwzKXLEuu0ZbpPpEQAJ7/xqCIYjdmzB2qPAJ9wuAHgBVBg4gUFsuEG+KAfSYqmRF1OINwpfOGhHvuxFACGLUbglKUhGFr/Rxr2/Gw/kQ=
+	t=1744026084; cv=none; b=j5G067dtPYMBnMMWwXQuaOkUuI15Ii3cQAy9UnkPmflG2YLreAjVKT1Ljp8XTKbwIAGDmNlsdbmcf67Qu/L+ZAtl7SCCs7sUMJ7HTNF1H2xjdKH3rzJ3TYziS11xJF5jQ/IxIVFX0vm+djSrxZdqcFVgSVqbJz2WnLwkRaYj9j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744026026; c=relaxed/simple;
-	bh=XndVDOO7lIn8/A94yXyhdJAIhkY5WjCTTAdVJ8dOLA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FHqAVMTsbLtLMo8RoucmKN2akZ8139IZSusIDT2IIpOwSK7k5W2m7XUEIgbkPg+dpScATkh2Rs2uWE+9iDJpLHB6ETBn+hkVJ4s0pObFHEOfWmOJf6LpJQ72MGsP3isZUG/mM9CAPUA/VeNQ1UMgc9hL+rJuIVkNAa8Q/4iNJdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZAhycO7q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744026084; c=relaxed/simple;
+	bh=hZf9aBKMYg9drwsY1ZL3tP8lX7Ry40MXQxQH6VX6yLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqcM7RRPM4qh3pic7RyBZGWvPC1v9zwfZ7G1aPaBepQ3vBuhRtZSFG8/lGAFnGQ92QSPTD/3UD6tjGb5yeVrKjaKAwe6ZMMflfhcdNNl3hR8zynS8ticBTSVCaXotMF6JTd0FWbxzZVCAnevTHabvG73e6h12pI3no7pvsBIJ+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=TKVvAOKg; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZAhycO7q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744026023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fHbPi1JEW/89my5vo0fU+kVo3zInspEejiOOz7JNSc8=;
-	b=ZAhycO7qku7LWgAxYwbupTDVXLUxOk53WwF/izZtH2VP9WGjf9BGw0hel2Lq8wF8GS/z1b
-	KcgMyMFtL6oluKgkWpXro204UptZWwcR9qTHqxstDpRaNffYtiGV8cg9Cc1Eh2tUloo312
-	SW7tFV8tB6EHIXyx+AlUOJTAt4RN6WQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-tzx01GQ1OQWyu-mSribLXw-1; Mon,
- 07 Apr 2025 07:40:18 -0400
-X-MC-Unique: tzx01GQ1OQWyu-mSribLXw-1
-X-Mimecast-MFC-AGG-ID: tzx01GQ1OQWyu-mSribLXw_1744026016
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2BEF91956080;
-	Mon,  7 Apr 2025 11:40:16 +0000 (UTC)
-Received: from ws.net.home (unknown [10.45.224.198])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 324F31955BC0;
-	Mon,  7 Apr 2025 11:40:11 +0000 (UTC)
-Date: Mon, 7 Apr 2025 13:40:08 +0200
-From: Karel Zak <kzak@redhat.com>
-To: Sheng Yong <shengyong2021@gmail.com>
-Cc: xiang@kernel.org, hsiangkao@linux.alibaba.com, chao@kernel.org, 
-	zbestahu@gmail.com, jefflexu@linux.alibaba.com, dhavale@google.com, 
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sheng Yong <shengyong1@xiaomi.com>, 
-	Wang Shuai <wangshuai12@xiaomi.com>
-Subject: Re: [PATCH v3 2/2] erofs: add 'offset' mount option for file-backed
- & bdev-based mounts
-Message-ID: <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
-References: <20250407110551.1538457-1-shengyong1@xiaomi.com>
- <20250407110551.1538457-2-shengyong1@xiaomi.com>
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="TKVvAOKg"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e6df1419f94so3240938276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 04:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1744026082; x=1744630882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p6bubJ2d+BmHRmgs70y+zlLbzWUmkntEheMY266sG6w=;
+        b=TKVvAOKg0TBr3B5Kiq8MJxmlziDzie3v6l1PCQp5ym6lNVef2dYPbCzsepK9Y8VPEs
+         zshjdtaCA/6thT2DLnQCAKvmioMuLqQhmtCRtF40O9HzTTks1ag14odFMVx+6TbUpXPA
+         nj44aL4vG9WCejRi7xdBHhLzSb88muj1YPhS+loAYfLmLRe0lOvvnnDXdkRsQvrrPSJw
+         7JdogvB2FYFaIeaPWMz8OcouKnNC4Fe8HAekztPyJjOoNdlL8h+wOG0AHtXHX99aufv+
+         354gXaaGuVc6avnHZ3o0Jxak2lMiKfuK4m+ePPhF0rvWLly2Q9oWPMmJBBq16HBrl/6D
+         OXSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744026082; x=1744630882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p6bubJ2d+BmHRmgs70y+zlLbzWUmkntEheMY266sG6w=;
+        b=rBYnuNSmPntOReyN1YMT5st9ssQbqJ5Oo2ko9W/MhttiEGqnLQVqMn7YNekr4qSZgZ
+         LKZO3/YqLjhyZ51Ly3v4fIUZPOOQTCn1fPQD0tvpuR5aElp6ZKq+yhT10nhC5KnA33hk
+         cOXFl0xNOKXg8vik1S/BM1ouQ2gd98iHYDhFGFDmStpowWoH7byzDrwsaBIZC5QsyWL2
+         vKPyYyrhs5JcT+0FWPtyILK3+ihqwfxEgjjqdMxYMlU0jK9ZJy0OM8kT8HWqVMRpWyAG
+         bqBjg/vqy/fv08Nya/LzgahtPDCdssKY+dycyloTwmAM5h4TT0tMFaA10LhLVy5HcXbR
+         6hOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3xzILiPL4tQXlFkH0pzgwg951B7+EhpOkGz0o4FO9Nc7k8JqW+4C3j3EKcMv1v/26DaQjFQC9MNQUwt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVAapJhIVeKIQlmzWQapUvHfjdlVPfiSsxVP7Rb1EA05ksnDSo
+	n60WXoftWgk1y3ZZg/QQVL6z5KyfS7dEJ+QAoI+PMzjbme1YzpHnfYQWURSoi7M=
+X-Gm-Gg: ASbGncv0E2g1sIuZJXiJKsCoH5Xm2OqvdjVo3AFpAPLQbwerohNg4VSDw7R7kN0CswB
+	TG9GDKi2NYBc0kP7BtEfMmQ3fm7sFFHS4Z00K2noF9x6IC6IH89GPVTmwGoiHx467f/rbBieGNL
+	SPumWWmqutDjZIvJOxeAVIJWbKyhbni/zWtDF2mPbotwMbJfrBamamvQtT8sRZ8hGDuSHVF8Wfd
+	bTDkjFTOgOAN5RGr0NPWg2znxYa8uDTLLIHRQuIwZkAMubZZ3m0qon2ICZLDhD92W7AELEwzGaG
+	dwyw7W7nC9DDIep9y91e1szqHjssSxm2tAvxuUypaNYPHsdbznhxwLu+nYhdpRAtLrx7MtnDPfu
+	ZKiLR2az/k/fF4EIZLw==
+X-Google-Smtp-Source: AGHT+IEH2+urCNhcYCnjnsCmCmufxjCnfY74JrlqFCW51UfpadBY73PwrLHZ9pw8pkedOhJGBs1p1w==
+X-Received: by 2002:a05:690c:3345:b0:6ff:1fac:c4fc with SMTP id 00721157ae682-703e3358b44mr203631067b3.37.1744026081737;
+        Mon, 07 Apr 2025 04:41:21 -0700 (PDT)
+Received: from fedora.. (cpe-109-60-82-221.zg3.cable.xnet.hr. [109.60.82.221])
+        by smtp.googlemail.com with ESMTPSA id 00721157ae682-703d1e2fe51sm24841567b3.9.2025.04.07.04.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 04:41:21 -0700 (PDT)
+From: Robert Marko <robert.marko@sartura.hr>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	arnd@arndb.de,
+	soc@lists.linux.dev
+Cc: Robert Marko <robert.marko@sartura.hr>,
+	Daniel Machon <daniel.machon@microchip.com>
+Subject: [PATCH v6] arm64: lan969x: Add support for Microchip LAN969x SoC
+Date: Mon,  7 Apr 2025 13:40:28 +0200
+Message-ID: <20250407114116.3211383-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407110551.1538457-2-shengyong1@xiaomi.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 07:05:51PM +0800, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> When attempting to use an archive file, such as APEX on android,
-> as a file-backed mount source, it fails because EROFS image within
-> the archive file does not start at offset 0. As a result, a loop
-> device is still needed to attach the image file at an appropriate
-> offset first. Similarly, if an EROFS image within a block device
-> does not start at offset 0, it cannot be mounted directly either.
+This adds support for the Microchip LAN969x ARMv8-based SoC switch family.
 
-Does it work with mount(8)? The mount option offset= has been defined
-for decades as userspace-only and is used for loop devices. If I
-remember correctly, libmount does not send the option to the kernel at
-all. The option also triggers loop device usage by mount(8).
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Acked-by: Daniel Machon <daniel.machon@microchip.com>
+---
+Changes in v6:
+* Rebase on top of next-20250407
 
-In recent years, we use the "X-" prefix for userspace options.
-Unfortunately, loop=, offset=, and sizelimit= are older than any
-currently used convention (I see the option in mount code from year
-1998).
+Changes in v5:
+* Rebase on top of next-20250131
 
-We can improve it in libmount and add any if-erofs hack there, but my
-suggestion is to select a better name for the mount option. For
-example, erofsoff=, erostart=, fsoffset=, start=, or similar.
+Changes in v4:
+* Rebase on top of next-20250115
+* Pickup Acked-by from Daniel
 
-    Karel
+Changes in v3:
+* Rebase on top of next-20250107
 
+Changes in v2:
+* Add forgotten LAN969x architecture support itself
 
+ arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8b76821f190f..77f2b481238a 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -133,6 +133,20 @@ config ARCH_SPARX5
+ 	  security through TCAM-based frame processing using versatile
+ 	  content aware processor (VCAP).
+ 
++config ARCH_LAN969X
++	bool "Microchip LAN969X SoC family"
++	select PINCTRL
++	select DW_APB_TIMER_OF
++	help
++	  This enables support for the Microchip LAN969X ARMv8-based
++	  SoC family of TSN-capable gigabit switches.
++
++	  The LAN969X Ethernet switch family provides a rich set of
++	  switching features such as advanced TCAM-based VLAN and QoS
++	  processing enabling delivery of differentiated services, and
++	  security through TCAM-based frame processing using versatile
++	  content aware processor (VCAP).
++
+ config ARCH_K3
+ 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
+ 	select PM_GENERIC_DOMAINS if PM
 -- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+2.49.0
 
