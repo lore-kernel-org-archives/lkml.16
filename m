@@ -1,175 +1,123 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB421F4E21
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035880; cv=fail; b=tu8Zw5aoY5JzXB/t3AEWTVzk99dxpMvFmgCeduVrXalh2pgc4c9nX8+StuzlJmMkn7RxPlqrciKIFEk/zgsElJ3hWQZ66VEHC/IMxNU5PRtgTL8ck12vMfxqd4o/oXlrqGlceTqOY740Bn7fA+3af4VQZSHZP7CzPNoCT9kW/OI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035880; c=relaxed/simple;
-	bh=5izLL/EwcjzoeG7HCyqdGT7uYc5UYkY7jlatg1ikIRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hKUwMtGIkPcPa4YhbaFvq9gH2f8a/LoDcxmQm8Ekuq219jq/h8Ll5UuxCNiXdBRHugaZ6KHcGfOGzqpLh4GJsbTyNIdRx+BylqwQaKyeZe34P8Svag7XKKLBdBS5ska2ZCgeL3CKRjGF/0p3VxQScrsFwJfkMWMHd7jfF6yAQrE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=d6s9RHpl; arc=fail smtp.client-ip=40.107.93.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209CF1DE2C8;
+	Mon,  7 Apr 2025 14:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744035882; cv=none; b=Tsp4g8vD7ay0wEJQR0T1B4yNMNhJlR0CLGqmM1irwEAr87SWgZAYga/uy9himWMFrhTU7YLYumGeVqtxffYdPunotx7czJRskgPjLqymNFDz4U1hygAijQgDhdpefvGWLwLHIwaDQ3y1MTTGW7xiz8nviYnzJMNN3HsDTCjSKW4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744035882; c=relaxed/simple;
+	bh=NTxV+NDOlFFfAC/XZv9o+b40poh7481WejyrJX9CWlk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jk0HpPlk0uwcaFJNQrXuNTgQEy1PHFL/Eqec4huwHZu1Z7fI1qk3QyyveqCs6kbkzHURbAtPUH1JFJS+Kjc3Mpp5WcV299PqE/nh6wNK1NRam9xMI33CVIJhvLaYBeNLBRdV8TeWtlXPoLrNPGqVEBEyXxYtJy07ldij5ZWBm5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aZS6BPBa; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="d6s9RHpl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m2kVa5ow9H+l1SUbiZHfHq47ePGsxZIwAR9yc56Z6L0oux2Zd9Rw5agA9pvPgvR6NDmssnS6VvIA8IE0Ats35qZA7sv3phOJUjXzVbwgegIQkgtl2AThdasNibIas9IbIg6rThYlpuke658w2rCgHHxYmDz/gr85nG35XXvq8FWf1FuaUVQoxAosNOfjfpHlq0Spq3YdUQlZD3eagCm0MQsSO50x2q730wBZGfD8/wz+cf8o9/hTQup7xIPZ6/zSjvL9Cn9Hc31ZWgXwTtTbfBFwbqGFjCfAdYq0yp84UiOwrIpx566L0r8ok8K/AX1eZk9rgJWQ5PFSHNo3WkEnxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NNyOlytN7u+tGt6CtdjyrqXop5de2f1ReKufoRdabOI=;
- b=IPrixl6t8jK2ClCLamQcAkjqLHeQLsF3Ww2FvHSOYBXNS+XNrJdS76qsZPFJqLn74E+2w7pl8e0vzLEtAn4P9doBYrDZBv9+MSfUwA9aB+JXX6JpiDu6TwFFrX5LDcC/mqzABQ+oZfpyk7kQXMJuUYLx2o7DlIHCBu8XcOY2WwSZHjg+rIHgzJmZv974hVQnnmNUw+lC42qvsoCxbj3aMwCn96trvSsYjBN11xGBh4CcTAcnaGHShJz+6abTHOQLh1moXMgMGms5rwtCLn5XAiS1Y1L6hD+bxFiUU6L7/0Ps/TJp+vUA3mJLrQ6IjKE7doQwRcXWSk+PoboTv4f7hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNyOlytN7u+tGt6CtdjyrqXop5de2f1ReKufoRdabOI=;
- b=d6s9RHplRQfRlSutd4iE0dqybt2TZEnE375TGrtLIfIE6ZmGST5SM2TRs5LnBbJss0fiFsqz5mqZotcmWJHlovmcKvUTwO+T/darCtEKmPRQRHWCViYbF9yYDJc4clw2ajp4omfI2WI3Itd2OLe4hE7lvGPnm6SQCBSZN67JqYCeoXxdW64VARSZY36KJo7+2JPEmDV85qpgiTEZG1PNMZqGrzIzqLPp8cn412pusdARMBtOPm2CGANL1B4keGxpMj2flZrOAVWyw7QgMpSCiiC1ZS/WvkTn7dH+4qemJ58+6RZX1KiSkVjo2GB3oL98xCbOVu0+08wMiz/dU2PjMw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- MN6PR12MB8590.namprd12.prod.outlook.com (2603:10b6:208:47c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Mon, 7 Apr
- 2025 14:24:35 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
- 14:24:34 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
- david@redhat.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: mincore: fix tmpfs mincore test failure
-Date: Mon, 07 Apr 2025 10:24:32 -0400
-X-Mailer: MailMate (2.0r6238)
-Message-ID: <E4EAA455-4AB0-4122-92B6-F0F5FE56041A@nvidia.com>
-In-Reply-To: <9a00856cc6a8b4e46f4ab8b1af11ce5fc1a31851.1744025467.git.baolin.wang@linux.alibaba.com>
-References: <9a00856cc6a8b4e46f4ab8b1af11ce5fc1a31851.1744025467.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MN0PR02CA0014.namprd02.prod.outlook.com
- (2603:10b6:208:530::19) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aZS6BPBa"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C629143281;
+	Mon,  7 Apr 2025 14:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744035878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AB0IAhO4R7Udo7Y4L4gNpZublBPLZole63NVpY8cdPk=;
+	b=aZS6BPBaT9dFZkinWqde717qYLuOPCc8PMZ7XoNNQlKoeJJRF/s3+OQ0boCV9RXh0SiJ1s
+	DXiyWUl2/lkk650DVDrgBNULVi+TSv57AeCB7KO16KiFJU8o7M4SV0zRDBFY4PG8zy41Np
+	CawKg0g9Br93HXXNiUwSF32emwBcYF5q9M6RV3JS2j2DXG0Os4fKD+UiqGlMf1hDCm6OsV
+	VLoJmA5rWu+RV1j7URrNGQE3ktXS0Og2ooLN9ZsYZE+jLpWLFFXI6CshLxQtAcEo7FxViJ
+	Y6a+MX/XcZ+f7SI5SCEjyzPpMlDNNz57PbDqC5b4+D7vF1dWUKszN82zfH9taA==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Mon, 07 Apr 2025 16:23:27 +0200
+Subject: [PATCH 12/34] drm/bridge: tda998x: convert to
+ devm_drm_bridge_alloc() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MN6PR12MB8590:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45797d99-a377-40e4-3e54-08dd75dfeb5b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JbbHlxb+za63wGOFdhPpL6545MPSj2UauyjTxrgU/tAW50laxtGkNCm3SdHl?=
- =?us-ascii?Q?BDAr990XqRYWx1wSWTyibUK7dZ8Iy0440VZPBolEGmS5yZTKJrsilMs/2cuv?=
- =?us-ascii?Q?MIlm9W3F6lWUhpzdcDdyJX9sH4U1OKDnOlXWhly1fan9bXK2bZwIHics13HY?=
- =?us-ascii?Q?a44dbcpvEKtlk331Ulg/ysGz7+AC8dZ4ieJIsS8NuZUN+DiPaj/J0T/eNymX?=
- =?us-ascii?Q?q0i3ymjST0pLaA+GZW89ky8zU5DRrp8Ly6hK1BcaRHW+k39sGbBao85K130q?=
- =?us-ascii?Q?vxU4P9Jw2XY6ppqKzPC2seQFT1D8bflm4FpasaYjpJe9VuoMfkJYaUxcPPZX?=
- =?us-ascii?Q?dLRIISqWQPcz0Q39nKXUh+4vSSfQVgai3K5nWuudZ7T0RFihh8DxzUZnyHwX?=
- =?us-ascii?Q?mdgzzi5BwmSNsRxZWPskMiqX+pYgiVJZH+au3RpxgDBpwSHI3Q4ipS9e/tKR?=
- =?us-ascii?Q?SV60/S/nfsluefnN7wTnntqg3zhE2UA8KwJV1wVKaY8bS3BJ4oCGXrM3SFsh?=
- =?us-ascii?Q?G17usWeCdu6DkGVK59WpubZxWwEvnXj+z5q1a53Dj5kLQyl/JzJft+Zf/EaU?=
- =?us-ascii?Q?VYjWGVfNSi9GHDCRhDRfWa32bD6Mr1J/biIn16380hNRb7aoohYhJnm8CRMF?=
- =?us-ascii?Q?sfIGgn8wbn97bZewT26094UpxSWB43NMBHsW+1S8xLhOMlN4SA+SCyWs3PAG?=
- =?us-ascii?Q?/3If94Db/9epg6PfDcT53eTNNNwIVsto28AoSF3HEidyC99+YrXUto3Xxws8?=
- =?us-ascii?Q?LA0w79zDI/vfyh6hlG9g5diIGRN4ea7GDwRJj8q1281SSMPKFGiXFZJoWbjX?=
- =?us-ascii?Q?Fx5ofIeJGibJRbb78QrvXtcTAZTEXCmF3oFupPgiaj0Y3ObugZcyoASiOgSi?=
- =?us-ascii?Q?a/5fwjtLprgpP+d/DQ3hEFRH2pmDuV9+vBofY8j6Svh79ZzIwhcH2biqD4HT?=
- =?us-ascii?Q?Hzhyilm8MlZaoCyiJqB9e85ofStyK3sMMf/ThroVmufrZAT19Hfa0mbbZl0Q?=
- =?us-ascii?Q?XagumJ124tuxwgz588NvI0LMPs++ftRuB2CYwHtwTRjNIIHcZkanA1GSiK0d?=
- =?us-ascii?Q?6bI9j7dTkIQg3/5urx9zCJiIKfBpZpnY7JkkyR2QVEXW1m9wOUbagQJvwRE+?=
- =?us-ascii?Q?LsD3ruRithC69lGBvmOWKCbkCyntgVyZHBMetN0FYUynIa4CrxM21vLBN3Ke?=
- =?us-ascii?Q?qrRqqitIsdnbAhMD/Bm14DQurSp+NN96qKVLsDk4UNGsHwFHohtpM5BMyOZ0?=
- =?us-ascii?Q?etvgeC2DV/ro4WOskDZIgEP4yBpxplG7nw8ePf2RsNGUZ+a/Ix5VUMXsG1pP?=
- =?us-ascii?Q?WMOR6ShUBoKLBSnS/vUP4GqH8HojvOzE4L+I+Sf70shu01FmoS7LUuyISUBM?=
- =?us-ascii?Q?PI+o3rAFe6ckRBOu5fZR3rgNhlFQ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kK8RNwJvn/fuVjOie7LqKxt50R6bYPxjv1lKL4zp/H0n3R6BOFJkoj8XF5z9?=
- =?us-ascii?Q?vMtmR8u9YrW7JO21hVGP76qf6D/qtDygdJWgs6/tR5XOB1YpG6hRBE48yMvW?=
- =?us-ascii?Q?KupVcWdiHNVMf3jFL1sdPvUZLZHrNo60p2TkIhe4Z/v+0oyJ7mslMcX9oaVs?=
- =?us-ascii?Q?YSb8D4bCcssa3iw49rUrNgn4RGoz6CpfIwM7JBGeQJlpXLg1Xk7r2ZCGh2X/?=
- =?us-ascii?Q?CI6tFnzaWKqHVnSYHbwJbX/r7RfC7RRJYUQhl2zsiQP9d9LNbkE7v2QAdPMc?=
- =?us-ascii?Q?CMX+DEqD2ifZjaaDugni2yuF1p4lteX6LCYGuQad7AOv1/RjkkBkTKKCs+Pm?=
- =?us-ascii?Q?oTr/IMV/FzCORJ2upqrR5cQ9JVPv+vFsz2Ovf9/I37/qlhta4dC3d6QJEDrJ?=
- =?us-ascii?Q?0s8Y+a4lyTW+Dh8xewI7Ywn/keLlmGhVBTjUOZP9jcoz2neTb6Yv/6z3PTxh?=
- =?us-ascii?Q?kCDx7ESFM9dEyPPqTkBGVheycDX7iDDcW/S+t6EqjjIpGcFbrpGRQ35TGasi?=
- =?us-ascii?Q?GqNijp5RVmX9hnjwZKzeYqDk2JPzwbmjHlYQoa3d80yf7gc+T/FoMBNjfKHd?=
- =?us-ascii?Q?bUFyjipr/SA/6jJIcIOhQV+QRXtYhK/Q3KnWn8ns+8xlgsyqOte+ZyZ4AmKD?=
- =?us-ascii?Q?pKVwjvSDM3549+u7tTd2WzNY7Iokel125xjqk3sylXT5mQ9w9kNzP74+cbjz?=
- =?us-ascii?Q?ltk/U8hLmAHKpp77n52uEVGgelrv5/UAp32RFT+b+pwARgsRGxm/MM8EdePQ?=
- =?us-ascii?Q?OQBBVH2Y646R2/Iq1ePYNNIRNOjSl3CAzjPFuJpEvrz7jYaJSu5eEQUKcAu7?=
- =?us-ascii?Q?fVOdfrMZU9IGC6Wmg4JSqIXJLtJXXJ1V5FUqCgMyrtKdqo9qHJ7QBIF5LcR2?=
- =?us-ascii?Q?zRok5h/H1Lth19Sz0MvQuSyMr7eOmDVXljfRXAWiEg01/22lJTiyE2C6VjZg?=
- =?us-ascii?Q?3zO6PWgWiLYjsk+LqFrfxAzfgL5abZl5orKYbOMBCK+BHEgVcBxwOjeyIrvN?=
- =?us-ascii?Q?yT8RYzzMpmPjKGNo9WkHYsgc8pv/RKy1JwwXbR1ZzGF+HeYXzW5bwnSTJC8+?=
- =?us-ascii?Q?138zySjxFpxkUNombAm2nc4CJRhxUJqS9Bex4p74JuJXxDdf3iLWWUYQMSZ5?=
- =?us-ascii?Q?XXFuUF9wdD2TG+SO/zt6UdOgegRw8YDjMTZ3Ql4tBoiGLdeIwKSDfsxZYDAR?=
- =?us-ascii?Q?V1+nwhD5ft8NpdR493LOF5qEWbfguI+rJFcd/xfpSwWnu8srfC15lItmUnv2?=
- =?us-ascii?Q?5xsS9K47TyM2EAav4CC9V9gLhVVJCaSYG21OoIqLQfX/yrDJdmFYdf1ZcU1w?=
- =?us-ascii?Q?89ssNUKRtl4m50UokhX0c/lPlH+w9DmoN0enHs2HmjEDVYdy80YEFUsPUOv8?=
- =?us-ascii?Q?QO2EYpl+O0iBewolMBFcMdUZflK7uFTu3Fs20O8WCF4mpoXqSrGpXXRZ1OEh?=
- =?us-ascii?Q?tdKkd3F7/u3u0NVO8vowwPzYYW6e/w666rgOMb6dwLbad4Xd7XuMoQEBsrXA?=
- =?us-ascii?Q?7TCUi+iUcUe7wpIUgm0zLXfHfhRVRC444SMzV6B4/FsNFDQ/XybDFJ5tCpbh?=
- =?us-ascii?Q?lH6OPP0VZTv9PXxPdQaMzDFKJUUsYzFK0twpk12F?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45797d99-a377-40e4-3e54-08dd75dfeb5b
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2025 14:24:34.4330
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OP1XeAZd/pVfXWCwZYx8nvRK/QJTKscJLa0KCXwnxZd55YoIhzQZmoJu6j7W0Ikn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8590
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-12-42113ff8d9c0@bootlin.com>
+References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Russell King <linux@armlinux.org.uk>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedvpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirghtvghksehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhmpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 7 Apr 2025, at 7:31, Baolin Wang wrote:
+This is the new API for allocating DRM bridges.
 
-> When running mincore test cases, I encountered the following failures:
->
-> "
-> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 (0)
-> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in memory
-> check_tmpfs_mmap: Test terminated by assertion
->           FAIL  global.check_tmpfs_mmap
-> not ok 5 global.check_tmpfs_mmap
-> FAILED: 4 / 5 tests passed
-> "
->
-> The reason for the test case failure is that my system automatically enabled
-> tmpfs large folio allocation by adding the 'transparent_hugepage_tmpfs=always'
-> cmdline. However, the test case still expects the tmpfs mounted on /dev/shm to
-> allocate small folios, which leads to assertion failures when verifying readahead
-> pages.
->
-> As discussed with David, there's no reason to continue checking the readahead
-> logic for tmpfs. Drop it to fix this issue.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
-> Changes from v1:
->  - Drop the readahead logic check, per David.
-> ---
->  .../testing/selftests/mincore/mincore_selftest.c | 16 ++--------------
->  1 file changed, 2 insertions(+), 14 deletions(-)
->
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Acked-by: Zi Yan <ziy@nvidia.com>
+---
 
---
-Best Regards,
-Yan, Zi
+Cc: Russell King <linux@armlinux.org.uk>
+---
+ drivers/gpu/drm/bridge/tda998x_drv.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/tda998x_drv.c b/drivers/gpu/drm/bridge/tda998x_drv.c
+index 9c5bb2a1676986c89f47e23fe33dfa391a3de30a..9372e26d96a85f223a5f2d107ac01c2b4c9ba88c 100644
+--- a/drivers/gpu/drm/bridge/tda998x_drv.c
++++ b/drivers/gpu/drm/bridge/tda998x_drv.c
+@@ -1781,9 +1781,9 @@ static int tda998x_create(struct device *dev)
+ 	u32 video;
+ 	int rev_lo, rev_hi, ret;
+ 
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
++	priv = devm_drm_bridge_alloc(dev, struct tda998x_priv, bridge, &tda998x_bridge_funcs);
++	if (IS_ERR(priv))
++		return PTR_ERR(priv);
+ 
+ 	dev_set_drvdata(dev, priv);
+ 
+@@ -1948,7 +1948,6 @@ static int tda998x_create(struct device *dev)
+ 			tda998x_audio_codec_init(priv, &client->dev);
+ 	}
+ 
+-	priv->bridge.funcs = &tda998x_bridge_funcs;
+ #ifdef CONFIG_OF
+ 	priv->bridge.of_node = dev->of_node;
+ #endif
+
+-- 
+2.49.0
+
