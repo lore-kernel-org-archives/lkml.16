@@ -1,241 +1,208 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDD3202973;
-	Mon,  7 Apr 2025 15:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7528C1FF7D1
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040555; cv=none; b=QaZk2uHxCXp8onmUM8iASarhRJB8a+oaY+6X+q8Y+7K6xTmH8w6W/fn99xOS6EqHZnh6hMeWEdIC/B0UeaIrvc7bIsCqfZwl5iFfuIRrOOjnDAQQSY0kZLoubUqu5cqKIRX9DNZar2HDjyfToOPBRl0uJvCm8QYR/KD3V9Q9cOg=
+	t=1744040586; cv=none; b=G3vU/23c0wb4LiQv6ubKklzZnO7RN6RNbEJdhb96wEAU7VozcTS+acoD9MNCZsbE6NrtTKcWWNp/7vxwNS/vUHap1b1HDMPNGqze+5x2Xo3Fl+VUUkAzYakqTXABYaAvJRAQ2CuD6L6++m1VW8QLXfAfps5IzzaNP7i9nEJAEWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040555; c=relaxed/simple;
-	bh=yPfzbYwfYsZAnZVLHNRkMj2YFdxKeiRsoAYHu5QBxh0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dbhjG6tZz/cz99gLF1DGaFwX3Y7xamygnKdxGHRWtXEvrwWDYRFC9aHF6vwtH/td6OStGfwaS+wY6egDPkzSH+KTwDEEJu65olGCqhkzd5QEfDv2FHmLAMGOPbKp64kyPXeGenqBvsw6iP8NPRtLlH3PRyhbXm5aOM4ae+wp7sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GjL3OIYe; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744040586; c=relaxed/simple;
+	bh=icEhyVJTzHXg7jgkZ1zmlJ9l7uEXbXUXe7dmfY43wT0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q6a6qhaHSg+304osx/6Nl1TJL4dSnTp9SJuzyRYi1mBiZNvBnogf0HzfOdb7DBsY9qfd9nJVm7p5J4DWbyU/KU0/KT4fUxxQDTbZzUCa3y78fDjrMxLbaTirA25oFTKhtipsvYrGv/f9AcotKH+wXSpd6yA80kjdYF3qK9HBZDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZEvPhcAe; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GjL3OIYe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744040550;
-	bh=yPfzbYwfYsZAnZVLHNRkMj2YFdxKeiRsoAYHu5QBxh0=;
-	h=From:Date:Subject:To:Cc:From;
-	b=GjL3OIYekEJ2DhTKuyXPHbGVbffgZt0uVi537TbqYYHRx0JfQOzjXu54/KE4gDqcA
-	 NUPOIOYYOe/k6tFZCH42lRHjpkp+sHSmB5x6Qvt8cGuM4p0mzdgR+pvWlWYbUcmXvf
-	 Oa8Y73J7jjWqDjvYazTMl+dy6kY69E8PFDeATjjOgCydoVmluP2D1PSvE5dory+7uo
-	 6VtrUvc9ro+Y0lpN0czS56rLP+KovFWCrjUsM60HDo+0k+3ISFVcdSxqkpA4nDZGVl
-	 xlLHFgtcUDHHUHmJpxW0bmDGmXTmAyt0ZICZTTtohsEYcvUGeXYq9ZVEt76FUqpHcE
-	 Sy9BXSiAZB++g==
-Received: from [192.168.1.63] (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2C5DE17E0EC0;
-	Mon,  7 Apr 2025 17:42:29 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 07 Apr 2025 11:42:03 -0400
-Subject: [PATCH] docs: automarkup: Move common logic to add and resolve
- xref to helper
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZEvPhcAe"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3393860f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744040582; x=1744645382; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UwKS83gjL8otXan3IgVJgr6hS9y5Lec7kMgl8CrxX/s=;
+        b=ZEvPhcAeF+3s9zScpS/aFZxoQOF5wYYe0MF4AYUscD+mwoWcoAt5f2w73VTB6fUrCC
+         wGaOHxaGvIh8YTwoHv2AFBt0B2frQMje4cCh2BOj8YoB2SnWc9zeTwi38FGMJACeyr9L
+         eFoCtJD7PYDd3RvlalyNLuQqeFwqGLTwK8K9ObV/UNVLTiI4D0WypretjJlwOQX1pG32
+         4sgh40Z6sPeQ/EtQOuft/oZs8GW84LanBZhuul5Ncmq3LErgvZgK+mH67Unzo9iPluCW
+         qiLwh/iRAJermdFO9UCg6SiYrDjAP62uUVv5kXnyDXQN6V/LMdmW6JzBcJdPBe3ElkRN
+         o7bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744040582; x=1744645382;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UwKS83gjL8otXan3IgVJgr6hS9y5Lec7kMgl8CrxX/s=;
+        b=b8qo1qfyHs0kQitCir/yZgOVaAKMxzWY8s7Rh4bi4hIQHNg2RINJn3CSHG2kLtl7ag
+         /X9XySkYz6HCmP+ucMbzO0MS9ApQ1BHSLx5FNRTVPs0QmJczMbizZzokPk9Ql4597fVV
+         6pg0cWesMKEdOUVSHu0ZMzN5PK4/dfZgEeeOdU9EpRNsCzGX7bksnGC+ghGRmHQST74u
+         2+551bO48X9bYHC6X36jSjJK2hXKqAPQNQi0bVUvkUleE3gTgw/Q9dKYuR1cxWM3AndF
+         L04NH6MVjrKP5oiUPxHcRBEzsw0TpKH1LZmgUpm/HrAgDhyvEmOLBtFpX7sLkGYSPiea
+         YjuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVroEe9Bsb2XIoXDLrUjLiFPu4KciWeaycybXft2d2cO4d7P227D8cmQTQdBsUlrQKQn/0Rr7iUvS6zPw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6VrOqmxyY1zIUP3WVj46J0oaoKSbMfY/801xdGCE0iSS6xezW
+	CtoKk7cGSrosOnCWwaHPi8hT9t5t0Pn4Y5p4C0/iUKuQ84um7Ua/2jJENChPaYE=
+X-Gm-Gg: ASbGncudieldoAJDAmBI/YLKhY/MyaB/T8qsX28TlGB/nclrQXT+NTxFk3+xQOxwblT
+	MujEisGn4AjfD9tZuBk91FR0vPI8HKed2xzKi//YYS3J34h1UtNMkB1dxfiH97zgY0JLIkmrNL7
+	YPU5yL0wOZLLthBt61wtP5Tl8Sywav9sB834sTr/qsYdmQ0Ats8FrjpOdG25elt9neSWgrEox7n
+	xst3sIU8Smv5GWs3mVt2dfumx8pSwVZ59K6v/hPBQPhi7YTWml1v0nsz0O6SaT9134VGwTW8A05
+	Oj9F+iSgqsMc+u6DGwtX6levN/X6EY3fbhbLzRAej9mEzdq+yXQ84j4=
+X-Google-Smtp-Source: AGHT+IEvLb0NTyDHj4c780QWtXn9xkplpLX5dvvjj3YvSoxW0R3QPk0BF940mrnTtyAAxjx1VydCvA==
+X-Received: by 2002:a05:6000:2a5:b0:39a:ca04:3e4d with SMTP id ffacd0b85a97d-39d6fc00aabmr7580240f8f.7.1744040581642;
+        Mon, 07 Apr 2025 08:43:01 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:1122:cb29:d776:d906])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a0a90sm12335092f8f.21.2025.04.07.08.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 08:43:01 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Krzysztof
+ =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Kishon Vijay Abraham I
+ <kishon@kernel.org>,
+  Bjorn Helgaas <bhelgaas@google.com>,  Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,  Jon Mason <jdmason@kudzu.us>,  Dave Jiang
+ <dave.jiang@intel.com>,  Allen Hubbe <allenbh@gmail.com>,  Christoph
+ Hellwig <hch@lst.de>,  Sagi Grimberg <sagi@grimberg.me>,  Chaitanya
+ Kulkarni <kch@nvidia.com>,  Marek Vasut <marek.vasut+renesas@gmail.com>,
+  Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,  Yuya Hamamachi
+ <yuya.hamamachi.sx@renesas.com>,  linux-pci@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  ntb@lists.linux.dev,
+  linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v3 2/3] PCI: endpoint: improve fixed_size bar handling
+ when allocating space
+In-Reply-To: <Z_Pw3I2xO7BMSGWW@ryzen> (Niklas Cassel's message of "Mon, 7 Apr
+	2025 17:35:56 +0200")
+References: <20250407-pci-ep-size-alignment-v3-0-865878e68cc8@baylibre.com>
+	<20250407-pci-ep-size-alignment-v3-2-865878e68cc8@baylibre.com>
+	<Z_Pw3I2xO7BMSGWW@ryzen>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 07 Apr 2025 17:43:00 +0200
+Message-ID: <1jjz7wvuyj.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-automarkup-resolve-xref-helper-v1-1-9cac06ad580f@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAEry82cC/x2NwQqDMBAFf0X27EIMFmt/RTyE5KlLrQmbKoL47
- w09DgMzF2WoINOrukhxSJa4FWjqivzithksoTBZYx+mNR27/Rs/Tt97YkWO6wE+FRMvWBOUQx8
- 8vOnbyT6pRFJxcv4Hw3jfP1l6E4lwAAAA
-X-Change-ID: 20250407-automarkup-resolve-xref-helper-d9dcec094f28
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: kernel@collabora.com, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-Several of the markup functions contain the same code, calling into
-sphinx's pending_xref and resolve_xref functions to add and resolve a
-cross-reference, with only a few of the parameters changed (domain,
-reference type, markup content). Move this logic to its own function and
-reuse it in the markup functions.
+On Mon 07 Apr 2025 at 17:35, Niklas Cassel <cassel@kernel.org> wrote:
 
-No functional change.
+> Hello Jerome,
+>
+> On Mon, Apr 07, 2025 at 04:39:08PM +0200, Jerome Brunet wrote:
+>> When trying to allocate space for an endpoint function on a BAR with a
+>> fixed size, the size saved in the 'struct pci_epf_bar' should be the fixed
+>> size. This is expected by pci_epc_set_bar().
+>> 
+>> However, if the fixed_size is smaller that the alignment, the size saved
+>> in the 'struct pci_epf_bar' matches the alignment and it is a problem for
+>> pci_epc_set_bar().
+>> 
+>> To solve this, continue to allocate space that match the iATU alignment
+>> requirement but save the size that matches what is present in the BAR.
+>> 
+>> Fixes: 2a9a801620ef ("PCI: endpoint: Add support to specify alignment for buffers allocated to BARs")
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/pci/endpoint/pci-epf-core.c | 25 +++++++++++++++++--------
+>>  1 file changed, 17 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+>> index b7deb0ee1760b23a24f49abf3baf53ea2f273476..fb902b751e1c965c902c5199d57969ae0a757c2e 100644
+>> --- a/drivers/pci/endpoint/pci-epf-core.c
+>> +++ b/drivers/pci/endpoint/pci-epf-core.c
+>> @@ -225,6 +225,7 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+>>  	struct device *dev;
+>>  	struct pci_epf_bar *epf_bar;
+>>  	struct pci_epc *epc;
+>> +	size_t size;
+>>  
+>>  	if (!addr)
+>>  		return;
+>> @@ -237,9 +238,12 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+>>  		epf_bar = epf->sec_epc_bar;
+>>  	}
+>>  
+>> +	size = epf_bar[bar].size;
+>> +	if (epc_features->align)
+>> +		size = ALIGN(size, epc_features->align);
+>
+> Personally, I think that you should just save the aligned_size / mem_size /
+> backing_mem_size as a new struct member, as that avoids the risk that someone
+> later modifies pci_epf_alloc_space() but forgets to update
+> pci_epf_free_space() accordingly.
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- Documentation/sphinx/automarkup.py | 78 ++++++++++----------------------------
- 1 file changed, 20 insertions(+), 58 deletions(-)
+I tried but it looked a bit silly to store that when it was only a
+matter of calling ALIGN() with parameters we already had, and it is
+supposed to be only used in those two functions.
 
-diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-index ecf54d22e9dc6ab459a91fde580c1cf161f054ed..8b129835e521428c0bafdc1584c8ce69252a668d 100644
---- a/Documentation/sphinx/automarkup.py
-+++ b/Documentation/sphinx/automarkup.py
-@@ -128,13 +128,11 @@ def note_failure(target):
- # own C role, but both match the same regex, so we try both.
- #
- def markup_func_ref_sphinx3(docname, app, match):
--    cdom = app.env.domains['c']
-     #
-     # Go through the dance of getting an xref out of the C domain
-     #
-     base_target = match.group(2)
-     target_text = nodes.Text(match.group(0))
--    xref = None
-     possible_targets = [base_target]
-     # Check if this document has a namespace, and if so, try
-     # cross-referencing inside it first.
-@@ -146,22 +144,8 @@ def markup_func_ref_sphinx3(docname, app, match):
-             if (target not in Skipfuncs) and not failure_seen(target):
-                 lit_text = nodes.literal(classes=['xref', 'c', 'c-func'])
-                 lit_text += target_text
--                pxref = addnodes.pending_xref('', refdomain = 'c',
--                                              reftype = 'function',
--                                              reftarget = target,
--                                              modname = None,
--                                              classname = None)
--                #
--                # XXX The Latex builder will throw NoUri exceptions here,
--                # work around that by ignoring them.
--                #
--                try:
--                    xref = cdom.resolve_xref(app.env, docname, app.builder,
--                                             'function', target, pxref,
--                                             lit_text)
--                except NoUri:
--                    xref = None
--
-+                xref = add_and_resolve_xref(app, docname, 'c', 'function',
-+                                            target, contnode=lit_text)
-                 if xref:
-                     return xref
-                 note_failure(target)
-@@ -188,13 +172,11 @@ def markup_c_ref(docname, app, match):
-                    RE_typedef: 'type',
-                    }
- 
--    cdom = app.env.domains['c']
-     #
-     # Go through the dance of getting an xref out of the C domain
-     #
-     base_target = match.group(2)
-     target_text = nodes.Text(match.group(0))
--    xref = None
-     possible_targets = [base_target]
-     # Check if this document has a namespace, and if so, try
-     # cross-referencing inside it first.
-@@ -206,21 +188,9 @@ def markup_c_ref(docname, app, match):
-             if not (match.re == RE_function and target in Skipfuncs):
-                 lit_text = nodes.literal(classes=['xref', 'c', class_str[match.re]])
-                 lit_text += target_text
--                pxref = addnodes.pending_xref('', refdomain = 'c',
--                                              reftype = reftype_str[match.re],
--                                              reftarget = target, modname = None,
--                                              classname = None)
--                #
--                # XXX The Latex builder will throw NoUri exceptions here,
--                # work around that by ignoring them.
--                #
--                try:
--                    xref = cdom.resolve_xref(app.env, docname, app.builder,
--                                             reftype_str[match.re], target, pxref,
--                                             lit_text)
--                except NoUri:
--                    xref = None
--
-+                xref = add_and_resolve_xref(app, docname, 'c',
-+                                            reftype_str[match.re], target,
-+                                            contnode=lit_text)
-                 if xref:
-                     return xref
- 
-@@ -231,7 +201,6 @@ def markup_c_ref(docname, app, match):
- # cross reference to that page
- #
- def markup_doc_ref(docname, app, match):
--    stddom = app.env.domains['std']
-     #
-     # Go through the dance of getting an xref out of the std domain
-     #
-@@ -239,22 +208,8 @@ def markup_doc_ref(docname, app, match):
-     target = match.group(2)
-     if absolute:
-        target = "/" + target
--    xref = None
--    pxref = addnodes.pending_xref('', refdomain = 'std', reftype = 'doc',
--                                  reftarget = target, modname = None,
--                                  classname = None, refexplicit = False)
--    #
--    # XXX The Latex builder will throw NoUri exceptions here,
--    # work around that by ignoring them.
--    #
--    try:
--        xref = stddom.resolve_xref(app.env, docname, app.builder, 'doc',
--                                   target, pxref, None)
--    except NoUri:
--        xref = None
--    #
--    # Return the xref if we got it; otherwise just return the plain text.
--    #
-+
-+    xref = add_and_resolve_xref(app, docname, 'std', 'doc', target)
-     if xref:
-         return xref
-     else:
-@@ -265,7 +220,6 @@ def markup_doc_ref(docname, app, match):
- # with a cross reference to that page
- #
- def markup_abi_ref(docname, app, match, warning=False):
--    stddom = app.env.domains['std']
-     #
-     # Go through the dance of getting an xref out of the std domain
-     #
-@@ -280,7 +234,15 @@ def markup_abi_ref(docname, app, match, warning=False):
-             kernel_abi.log.warning("%s not found", fname)
-         return nodes.Text(match.group(0))
- 
--    pxref = addnodes.pending_xref('', refdomain = 'std', reftype = 'ref',
-+    xref = add_and_resolve_xref(app, docname, 'std', 'ref', target)
-+    if xref:
-+        return xref
-+    else:
-+        return nodes.Text(match.group(0))
-+
-+def add_and_resolve_xref(app, docname, domain, reftype, target, contnode=None):
-+    dom_obj = app.env.domains[domain]
-+    pxref = addnodes.pending_xref('', refdomain = domain, reftype = reftype,
-                                   reftarget = target, modname = None,
-                                   classname = None, refexplicit = False)
- 
-@@ -289,8 +251,8 @@ def markup_abi_ref(docname, app, match, warning=False):
-     # work around that by ignoring them.
-     #
-     try:
--        xref = stddom.resolve_xref(app.env, docname, app.builder, 'ref',
--                                   target, pxref, None)
-+        xref = dom_obj.resolve_xref(app.env, docname, app.builder, reftype,
-+                                    target, pxref, contnode)
-     except NoUri:
-         xref = None
-     #
-@@ -298,8 +260,8 @@ def markup_abi_ref(docname, app, match, warning=False):
-     #
-     if xref:
-         return xref
--    else:
--        return nodes.Text(match.group(0))
-+
-+    return None
- 
- #
- # Variant of markup_abi_ref() that warns whan a reference is not found
+>
+> But I will leave the decision to the PCI endpoint maintainers.
+>
 
----
-base-commit: a4cda136f021ad44b8b52286aafd613030a6db5f
-change-id: 20250407-automarkup-resolve-xref-helper-d9dcec094f28
+Ultimately, I do not have a strong opinion on this. Either way is fine
+by me.
 
-Best regards,
+>
+> Kind regards,
+> Niklas
+>
+>
+>> +
+>>  	dev = epc->dev.parent;
+>> -	dma_free_coherent(dev, epf_bar[bar].size, addr,
+>> -			  epf_bar[bar].phys_addr);
+>> +	dma_free_coherent(dev, size, addr, epf_bar[bar].phys_addr);
+>>  
+>>  	epf_bar[bar].phys_addr = 0;
+>>  	epf_bar[bar].addr = NULL;
+>> @@ -266,7 +270,7 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>>  			  enum pci_epc_interface_type type)
+>>  {
+>>  	u64 bar_fixed_size = epc_features->bar[bar].fixed_size;
+>> -	size_t align = epc_features->align;
+>> +	size_t aligned_size, align = epc_features->align;
+>>  	struct pci_epf_bar *epf_bar;
+>>  	dma_addr_t phys_addr;
+>>  	struct pci_epc *epc;
+>> @@ -287,12 +291,17 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>>  			return NULL;
+>>  		}
+>>  		size = bar_fixed_size;
+>> +	} else {
+>> +		/* BAR size must be power of two */
+>> +		size = roundup_pow_of_two(size);
+>>  	}
+>>  
+>> -	if (align)
+>> -		size = ALIGN(size, align);
+>> -	else
+>> -		size = roundup_pow_of_two(size);
+>> +	/*
+>> +	 * Allocate enough memory to accommodate the iATU alignment requirement.
+>> +	 * In most cases, this will be the same as .size but it might be different
+>> +	 * if, for example, the fixed size of a BAR is smaller than align
+>> +	 */
+>> +	aligned_size = align ? ALIGN(size, align) : size;
+>>  
+>>  	if (type == PRIMARY_INTERFACE) {
+>>  		epc = epf->epc;
+>> @@ -303,7 +312,7 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>>  	}
+>>  
+>>  	dev = epc->dev.parent;
+>> -	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
+>> +	space = dma_alloc_coherent(dev, aligned_size, &phys_addr, GFP_KERNEL);
+>>  	if (!space) {
+>>  		dev_err(dev, "failed to allocate mem space\n");
+>>  		return NULL;
+>> 
+>> -- 
+>> 2.47.2
+>> 
+
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+Jerome
