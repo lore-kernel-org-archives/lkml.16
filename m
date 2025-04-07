@@ -1,180 +1,175 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769701A23B0;
-	Mon,  7 Apr 2025 07:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D4D79F2
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 07:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744011059; cv=none; b=eb/gJI7lkJLFPBPDr04cnkk13KBZovLzI9xb28UtYyNcBtQnSy7PuIyIfrPQh8aaOQoIeI65yMngG4AT+kbQhgmSxTBJqGshJSLC0q7NQQQf6LH36xUFxSkXbVi0snNnSxAsXTins1nHOKEVU5FejEzgBWkS1sqYSR3VoNe/iio=
+	t=1744011095; cv=none; b=o7U52l6VGrMTHGhgwenlAidPI6IyTw/WF01k0Nx3AIRror2I1Kjo7vwTehJwpGCfsKCpFEit0FnSXOXU+3zMEtknPwC+3sAY0cUUcRkjylZ1U5EUARDxt/LclbpRbGuE6djNyDEejTh79JYsh0sMa+Vz2uVRv+YNmYHlfYBbflg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744011059; c=relaxed/simple;
-	bh=s1C/uB/imEJ2jPfVYjph52XrHhRjVbQgv0oywjeaPzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WH4v5SUwy5h+QvYqMlAaOxAaqCb6dxeswn5lgW8fDB/BpZiXSz/gAnarujOC/TEvbBNUWclYi2qjc8hZTwqLNoZFGyWMG6rPoqPLLn8HZb04HXHaqkG2qIiepBy3RaecFgPkkYK0W88OeXAJS62vYYy20xl960j4rCsG3HqrTFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFmrq6Pq; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744011095; c=relaxed/simple;
+	bh=P79AB40idj6Dfczhk1WELPjg31facOxkbCuN+/gQ1AI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O56reAHeLuSCvUNN/tustyJzuK40BQwclRi4Cdc33KsyMZFHNiwhKKNKCPCBCDcykqM66bDxnPmYmNb7ZYmzvmD1Wi4M5mNwzyIOyOm83Y44o6s12CMClzTjYJFLvzgrRmXxV5/1LQWfuKcJug9Opyz6xUMsO96HmsX12qK45rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=hxhYMpBC; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFmrq6Pq"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so52687471fa.1;
-        Mon, 07 Apr 2025 00:30:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="hxhYMpBC"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54b0d638e86so4876428e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 00:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744011055; x=1744615855; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=clTcm2By8sht0apfSlqORw6MuX9pSKCaD9NP9i7hUL8=;
-        b=QFmrq6PqLbfrFUBMQMRXGvg0zyRQ3W5CqbZA3JPzuAkBv70z1OM1yG7gtbRgvgNsO2
-         CvjlAd2Dh3IEtbL1u8yVWQgwq1HntrvV462YTdHFa2Tn4I5qKPl0SIhCqsI6VHtg9FpQ
-         R2lVFMbJdyB3jpiz7xApX0ug7+r+OsTbyeRCfXu5mNi6KyRqy7S+VaO45C6HSmapv1a+
-         HV0kI9V/yFr8GZ69D49QAtTnouJjFD364LcNhbE64BmcW6Gqj0tsGKvibqHWDcSBs0h/
-         tH/6yzsGWW9TOgE4pINn8gVieRK7YP8ha4W/u9pTeVo8gpzHhMahmE5AYU6CfS9DdUKn
-         vddw==
+        d=rasmusvillemoes.dk; s=google; t=1744011090; x=1744615890; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+FsyiVxgrsALzOGSoH1DnqIv36lge3vR/AnQvANcFA=;
+        b=hxhYMpBC6VG+4DlIL3ckEQt3Rc10nsfwqDJ+j9+7Xf/C8syqlgvrKvp026MfSXi6Rp
+         kOrv8Mx/a5z6/rKTXLOzctz0a24oPxvlqbKGhpG82gqSp7V2Fh1vNrzbYpID8jBrv745
+         Wcn/6M829sugGaWhXmmcRt+qWHLpuoTrkwHVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744011055; x=1744615855;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=clTcm2By8sht0apfSlqORw6MuX9pSKCaD9NP9i7hUL8=;
-        b=V+ts0YKmGKy3lSG/bzObZVZ0fRe5u8xE+JcCnMZld0DAmA2815HLZOmTdfRwEA6w2v
-         rvgnkbO/I+MkXfTMxWZqUhv/yZo50nYOWJ4X9NH60VtQEOBRF8D8TYUiNRRpDelicQ4U
-         7+bmoTuYAboAPx7TRFY0BIvBtWsS1lZeVopM6UCdFp4tKrDGjYPl0uOEJZYCqxwryLY1
-         uuuCGJmDJnayuSyAjstL6leZMnx3VTTSLzFbk6wDUoRoWKYE8qAkIXoRd+4UfXJw/2ji
-         BmV81Xe4lbPJp5XMnxtDAfteeCy+Wqn8V/50966sS4TpEtLnD129y2bhic3tqfLrvbhf
-         7VTg==
-X-Forwarded-Encrypted: i=1; AJvYcCV88nFHC2xQMSDAEOE0aMXggkROFZQeJCX+nluefpLEsngsuG1z/+JD+OFjUM1apZP3CiILLdLE0BMOQUiy@vger.kernel.org, AJvYcCWfTkQtO4SzOu5MaCLIX0jrG6A9RCg4Pr+FlGZrBKnjcHltDemN6ihB/QAH7dsC5NA5L0qp1f6gk1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn0FyS5lKI7OH3M3AWZuVrjQTWMHHjvJwAj/T1utTQWsBgXnSL
-	594Fh3+qpvnUNiI/wPJMuQWruizjGoSYymP5MhYGoPUM3FFzj/JI
-X-Gm-Gg: ASbGncuL+W7D/+tZEHhDQ/0BRue4EBmqV6rJbZYQGqdTV+lSEL6IRZ1+dzPlEoFARe7
-	9uuyawxNps/t3sW4AYdfdduV6vBEzSPaDDjMVaZ8iy7XutJiXPeKC7pvpqFknuHyU0G8lTZpksA
-	+cF9upKe0JP3e71aFQHQqnO+byPh8pJJm6gwDT+Vsv68+sfhNsLWb2EPg3MFNuF8pJ82WubJOCn
-	/UstuqUruoD6k8MHK0tRQgKl1IqEFOPWrZ54jNEUCDVxtZPPH6e9D9kPX9cSJELk9fKSvY5ufPm
-	XLTJtXqa7bfAoSuSJYkaDtRv1GbUZRMi04UqVPwGUsJ96MxYQjjV8OOOfmJx/Q==
-X-Google-Smtp-Source: AGHT+IEM3aTsP/5N9kPBJapIvwVUcRHJzmjjoanH+9ead7Knc5q/F15ef5LMrwvlGX5NAQ6lpuresg==
-X-Received: by 2002:a2e:bd02:0:b0:30b:f0da:3ae7 with SMTP id 38308e7fff4ca-30f0a70e09dmr32749071fa.14.1744011055304;
-        Mon, 07 Apr 2025 00:30:55 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f0314b343sm14943791fa.49.2025.04.07.00.30.53
+        d=1e100.net; s=20230601; t=1744011090; x=1744615890;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+FsyiVxgrsALzOGSoH1DnqIv36lge3vR/AnQvANcFA=;
+        b=a4WEqHmy+Ts+9b2bzg1FVReO6tMfwESKKZ6gm27vHmbZqRNouGjtTzoOx50yQ0dNh2
+         S1raJCL3hEF3BEIXV6QVUIWAUUrQH/0aGwNwsk95+lbv0jqJLAzBKL2gBRUQ6AfrAA7H
+         ca62E+KjSb1BXxAbAKYrpegY4HKPRkS6MPvz/irVG3+WFUAyxIGeJmDsN6CVFx7MmEjx
+         Gb8mncoyGUPC1A/Bkg/BNDRmoZzyy2h7iz2t+hWfu/1Bz3BDZNaQJJTLWjeZ3VASGiki
+         kEQM9SD7eusLTfAZTJZcpb05Z9JX/81Nv1LK5DlA23vxEteJ/Nxyyjtkukqhb50vPt+a
+         MsZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW64BLOiCRUp5MGim1q5hGiPQ9oX5au4bng9ku1Jr3vMHaYqapljbKvKuGlaymoSzt0Sk5/CfEvvsGfMAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwapU0BT5kIRDE9yq852+axGR0Ig3oObTXMT7BbBc3dOPwVi65
+	2y+nPqNTuxlQh/bzEVP6DE7AT9uylzmOUXpEcEvsLThMUHNYJCBaFn2DLBjTrWvLHDT+dF8DJuT
+	ydBE=
+X-Gm-Gg: ASbGncssuG3wMv7xDnTC6LKn+fxspnlCLI2lWtirETu5NCi0HQUc/BYf4eNyAHLCgZ9
+	/TE40W+vyM0K92l4H9xj0djNqULUDdKp/A04wi+fQCUAO3ogw+XEkDhf7huJJiM6IewLSxrUteS
+	P89hTUqe6k5iF4cGPBCxQAsl+5PdSm92s9IVZg41lMhbDzUkkyw+gVks93XzTalKXIbF8KD23br
+	H22cEC/aBqZKHBy8MBtlM8hJwvrthce2wVtlPyjedx/7cZbhHH7jhBhl5OuMjjMhPYokyNCIYfZ
+	YDX2Snh7HUVzxAiw1PwcjDc/3mXxin2hXIFkN3Yrcg0xzw==
+X-Google-Smtp-Source: AGHT+IGvfCDZmH37Rku3/6brkNRCFnNVTT4+L3+viZzCFFTWFfGF0W6PoQouzKsU9D+T5t6fCyWK/g==
+X-Received: by 2002:a05:651c:b23:b0:30c:16cd:8818 with SMTP id 38308e7fff4ca-30f0a109f5emr34850011fa.16.1744011090190;
+        Mon, 07 Apr 2025 00:31:30 -0700 (PDT)
+Received: from localhost ([81.216.59.226])
+        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-30f031ce889sm14676201fa.98.2025.04.07.00.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 00:30:54 -0700 (PDT)
-Date: Mon, 7 Apr 2025 10:30:47 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: bd79124: Use set_rv and set_multiple_rv
-Message-ID: <Z_N_J52IZ2IaWawl@mva-rohm>
+        Mon, 07 Apr 2025 00:31:29 -0700 (PDT)
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>,  Andy Shevchenko
+ <andy.shevchenko@gmail.com>,  Nathan Chancellor <nathan@kernel.org>,  Petr
+ Mladek <pmladek@suse.com>,  Steven Rostedt <rostedt@goodmis.org>,  Sergey
+ Senozhatsky <senozhatsky@chromium.org>,  linux-kernel@vger.kernel.org,
+  llvm@lists.linux.dev
+Subject: Re: [PATCH 0/2] vsprintf: Use __diag macros to disable
+ '-Wsuggest-attribute=format'
+In-Reply-To: <CAHk-=whC15F9=fQqr-5moPA0SXFc-fAx_15=jzbYELg1TCWsqg@mail.gmail.com>
+	(Linus Torvalds's message of "Sat, 5 Apr 2025 10:26:53 -0700")
+References: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+	<20250405101126.7a2627a6@pumpkin>
+	<CAHk-=whC15F9=fQqr-5moPA0SXFc-fAx_15=jzbYELg1TCWsqg@mail.gmail.com>
+Date: Mon, 07 Apr 2025 09:31:28 +0200
+Message-ID: <87zfgs5sxb.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WiRUV7c9FT6YZaSm"
-Content-Disposition: inline
+Content-Type: text/plain
 
+On Sat, Apr 05 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
---WiRUV7c9FT6YZaSm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sat, 5 Apr 2025 at 02:11, David Laight <david.laight.linux@gmail.com> wrote:
+>>
+>> Perhaps the compilers ought to support __attribute__((format(none)))
+>> to disable the warning.
+>
+> D'oh, that's a good idea.
+>
+> And gcc already supports it, even if we have to hack it up.
+>
+> So let's remove this whole horrible garbage entirely, and replace it
+> with __printf(1,0) which should do exactly that.
+>
+> The 1 is for the format string argument number, and we're just *lying*
+> about it. But there is not format string argument, and gcc just checks
+> for 'is it a char pointer).
+>
+> The real format string argument is va_fmt->fmt, but there's no way to
+> tell gcc that.
+>
+> And the 0 is is to tell gcc that there's nothing to verify.
+>
+> Then, if you do that, gcc will say "oh, maybe you need to do the same
+> for the 'pointer()' function". That one has a real 'fmt' thing, but
+> again nothing to be checked, so we do the same '__printf(1,0)' there
+> too.
+>
+> There it makes more sense, because argument 1 _is_ actually a format
+> string, so we're not lying about it.
+>
+> IOW, something like this:
+>
+>   --- a/lib/vsprintf.c
+>   +++ b/lib/vsprintf.c
+>   @@ -1700,9 +1700,10 @@ char *escaped_string(...
+>    }
+>
+>   -#pragma GCC diagnostic push
+>   -#ifndef __clang__
+>   -#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
+>   -#endif
+>   -static char *va_format(char *buf, char *end, struct va_format *va_fmt,
+>   +/*
+>   + * The '__printf(1,0)' thing is a hack make gcc not ask us to use a
+>   + * a format attribute. 'buf' is *not* the format, 'va_fmt->fmt' is.
+>   + */
+>   +static __printf(1,0)
+>   +char *va_format(char *buf, char *end, struct va_format *va_fmt,
+>                        struct printf_spec spec)
+>    {
+>   @@ -1718,5 +1719,4 @@ static char *va_format(...
+>         return buf;
+>    }
+>   -#pragma GCC diagnostic pop
+>
+>    static noinline_for_stack
+>   @@ -2429,5 +2429,5 @@ early_param(...
+>     * See rust/kernel/print.rs for details.
+>     */
+>   -static noinline_for_stack
+>   +static noinline_for_stack __printf(1,0)
+>    char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>               struct printf_spec spec)
+>
+> Does that work for people who see this warning?
 
-The new GPIO callbacks 'set_rv' and 'set_multiple_rv' allow returning a
-success code to indicate failures when setting GPIO status. Use them to
-allow callers to know when things go south.
+IMHO, this is much worse.
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
- drivers/iio/adc/rohm-bd79124.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+Yes, as I also said in the previous thread, I consider the
+warning/suggestion here a gcc bug, as it shouldn't make that suggestion
+when one doesn't pass any of the function's arguments as the fmt
+argument to another __format__(()) annotated-function.
 
-diff --git a/drivers/iio/adc/rohm-bd79124.c b/drivers/iio/adc/rohm-bd79124.c
-index 13673f4347d4..bb7c93ae4055 100644
---- a/drivers/iio/adc/rohm-bd79124.c
-+++ b/drivers/iio/adc/rohm-bd79124.c
-@@ -196,17 +196,18 @@ static int bd79124gpo_direction_get(struct gpio_chip =
-*gc, unsigned int offset)
- 	return GPIO_LINE_DIRECTION_OUT;
- }
-=20
--static void bd79124gpo_set(struct gpio_chip *gc, unsigned int offset, int =
-value)
-+static int bd79124gpo_set(struct gpio_chip *gc, unsigned int offset, int v=
-alue)
- {
- 	struct bd79124_data *data =3D gpiochip_get_data(gc);
-=20
--	regmap_assign_bits(data->map, BD79124_REG_GPO_VAL, BIT(offset), value);
-+	return regmap_assign_bits(data->map, BD79124_REG_GPO_VAL, BIT(offset),
-+				  value);
- }
-=20
--static void bd79124gpo_set_multiple(struct gpio_chip *gc, unsigned long *m=
-ask,
-+static int bd79124gpo_set_multiple(struct gpio_chip *gc, unsigned long *ma=
-sk,
- 				    unsigned long *bits)
- {
--	unsigned int all_gpos, set_gpos;
-+	unsigned int all_gpos;
- 	int ret;
- 	struct bd79124_data *data =3D gpiochip_get_data(gc);
-=20
-@@ -219,17 +220,15 @@ static void bd79124gpo_set_multiple(struct gpio_chip =
-*gc, unsigned long *mask,
- 	 */
- 	ret =3D regmap_read(data->map, BD79124_REG_PINCFG, &all_gpos);
- 	if (ret)
--		return;
-+		return ret;
-=20
- 	if (all_gpos ^ *mask) {
- 		dev_dbg(data->dev, "Invalid mux config. Can't set value.\n");
--		/* Do not set value for pins configured as ADC inputs */
--		set_gpos =3D *mask & all_gpos;
--	} else {
--		set_gpos =3D *mask;
-+
-+		return -EINVAL;
- 	}
-=20
--	regmap_update_bits(data->map, BD79124_REG_GPO_VAL, set_gpos, *bits);
-+	return regmap_update_bits(data->map, BD79124_REG_GPO_VAL, *mask, *bits);
- }
-=20
- static int bd79124_init_valid_mask(struct gpio_chip *gc,
-@@ -247,8 +246,8 @@ static int bd79124_init_valid_mask(struct gpio_chip *gc,
- static const struct gpio_chip bd79124gpo_chip =3D {
- 	.label			=3D "bd79124-gpo",
- 	.get_direction		=3D bd79124gpo_direction_get,
--	.set			=3D bd79124gpo_set,
--	.set_multiple		=3D bd79124gpo_set_multiple,
-+	.set_rv			=3D bd79124gpo_set,
-+	.set_multiple_rv	=3D bd79124gpo_set_multiple,
- 	.init_valid_mask	=3D bd79124_init_valid_mask,
- 	.can_sleep		=3D true,
- 	.ngpio			=3D 8,
+But we have this __diag infrastructure exactly to silence special cases
+(and sorry I forgot about that when suggesting the #pragma approach to
+Andy), and this is very much a special case: It's the only place in the
+whole codebase that has any reason to dereference that va_fmt, and any
+other function anywhere calling a vsprintf()-like really should have
+gotten the format string that goes along with the varargs from its
+caller.
 
-base-commit: e3ee177e2a3e21ef4502f68336023154049d2acd
---=20
-2.49.0
+As this is apparently some newer gcc that has started doing this, you
+just risk the next version turning the wrongness to 11 and complaining
+that "buf" or "fmt" is not passed to a vsprintf-like function. Let's not
+do "a hack make gcc not ask us to use a format attribute" when we have
+a proper way to selectively silence such false-positives. If this was
+something happening all over, we'd do -Wno-suggest-attribute=format, not
+spread these annotations. But this really is a special case in the guts
+of our printf implementation.
 
+So, FWIW, ack on Nathan's fixups, nak on this one.
 
---WiRUV7c9FT6YZaSm
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfzfyQACgkQeFA3/03a
-ocUFlwgAo+Lo08XziQm2EZru6mEOwYFAofIyUGzYtrDUrN2XwQiHtg+AtiPL/KjI
-pjP034GkRBeowVOGSTK2A9Tw9hxeGgKc5L4o5OD2zsOn7CW0Pi60ywGlk0FvFb7C
-UNJCTq/Sr8YXTzUdCZzMB3JQcs8osYd+ktb2hTJx0eAPouF0eNYge0o4WTDN//ie
-vd5oN9KBtahFP6lsjmd55C+b30VyZrxuXCZkqrRU/mgfU1BCkiSh6ey4PqNPpymJ
-OLeI46yyQjfNzsJ/VcrUEnQSlg8Kd0rwBma1WVckNZyGb3e6GDL+uZATfmjmOpoH
-KhmJnJRM9Vfti3tF9f4uuFSaK/Ezlg==
-=8gQl
------END PGP SIGNATURE-----
-
---WiRUV7c9FT6YZaSm--
+Rasmus
