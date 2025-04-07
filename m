@@ -1,165 +1,99 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38CEA20E6EC;
-	Mon,  7 Apr 2025 01:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1002C9A;
+	Mon,  7 Apr 2025 01:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743988642; cv=none; b=aBV8oZLRDQx13ouI8eCzf+bcpKWYICFEyvu7H/lx7HrwH7lAXPqG1B5o1SgYCujPdQoqW/i38kqEAoBZdT6HWWf28mgHT4lBlz/3fNEjJ6icVwO7pYstIghd57M5qnqOhlS06azPW42RFB5CH7HmgC/awhtJPhKFgHK/4KMitr0=
+	t=1743988796; cv=none; b=a3Hx2l2TDUbX12cbAcoNmMg14E4NgYKYIKS3Lt2+PJJvT9z+mtphaFun0S5xaxeaXaglPO2ASMB+ZQCxym2t2P4UtZgx4k+BnAmRxRlI/V3bWAEjBahyY8hVr2BN4qKqwbtvZlLQtla189dTCWIHRM1IYBRsFh5lS+rB+fp+XaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743988642; c=relaxed/simple;
-	bh=jTxtvHUQTiieJDKEaeHc+Dcy9dp+8XVM1kYkT75QTrY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GwjP6NmCgoS9mkTsuzg9P+wAcqnbSGSsBeAYCvtL9bwdaqyr/eKZ4Z+y5qXZ952Fd/K7z7346oMB0wWtfrHai/0CG/CHw6C4qtxI8SIekbS3xQkusLZlmsuQpmzaqFmP80ECF2upd7AUUtZDz47QJjKrzqt3KxWECpVhCF++Y34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eYW7R0s3; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eYW7R0s3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=tyETaFYY/JUiWihlfOzZwF2bXPr6FQIVTqdDJM+AwWM=;
-	b=eYW7R0s3sqixY+4EyMqgiRBmm61SMYjAVWxwnwjr0r2msVAPN3Vk9KD6qRcawE
-	Gt1mMFO8eobEPLmNi/6gVr8MIHMWvP/sXCnUGpMbOVsZPb5rBEB8vrHTHEWLlGnV
-	loX1aiDj8Ji43n7ZbjrTK9MHctdDL6fniSiI/FKHQXDAY=
-Received: from [192.168.142.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3NzlxJ_NnbeWaEg--.62095S2;
-	Mon, 07 Apr 2025 09:16:35 +0800 (CST)
-Message-ID: <c0582215-e09e-44f7-a225-7c255e26d29f@163.com>
-Date: Mon, 7 Apr 2025 09:16:33 +0800
+	s=arc-20240116; t=1743988796; c=relaxed/simple;
+	bh=/rtGmp1BKP5QH3NPTyxbJNYhJGjIem08YMhb3wvAbAY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZWE1IG4y8jnLymlfPMrohrH5OyhZWtSTtaFoyGFXZ6GMW0nOb32rOhmNcQ69eaI957OT/fd+yJS9r16TvELP+GvfWx0Jtg+4KBfDi32Ig0QG7ZUqnB9pzqIlUNRjIcsBz5Oohx6W0di01FaTzLmJ/olHNaPJUcPQ5C76jO8DCPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWBFT5ygcz4f3lVc;
+	Mon,  7 Apr 2025 09:19:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B5AD71A058E;
+	Mon,  7 Apr 2025 09:19:50 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe180KPNnLkvyIg--.40926S3;
+	Mon, 07 Apr 2025 09:19:50 +0800 (CST)
+Subject: Re: [PATCH RFC v2 02/14] md/md-bitmap: pass discard information to
+ bitmap_{start, end}write
+To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, axboe@kernel.dk,
+ agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+ <20250328060853.4124527-3-yukuai1@huaweicloud.com>
+ <Z--mgctoFieWvuM0@infradead.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <17eebb9f-8ee9-d872-abe0-aa8351755c4d@huaweicloud.com>
+Date: Mon, 7 Apr 2025 09:19:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2] PCI: tegra194: Fix debugfs directory creation when
- CONFIG_PCIEASPM is disabled
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-References: <20250406134355.49036-1-18255117159@163.com>
- <c51bbf38-0c6a-418f-b1e2-763d621186ff@wanadoo.fr>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <c51bbf38-0c6a-418f-b1e2-763d621186ff@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <Z--mgctoFieWvuM0@infradead.org>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3NzlxJ_NnbeWaEg--.62095S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxury8Ar4rArW5uw4xGF1Dtrb_yoWrGF1rpa
-	95JFWYkw4xAa13WrZ3Za1DZr1SyrsayrZ7J34S9w1vvr1DAr98tFW8GryYqas7CrZ2qF18
-	Ar4YkFnrCr15XrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UpBTrUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxooo2fzIeX3LgAAsX
+X-CM-TRANSID:gCh0CgAXe180KPNnLkvyIg--.40926S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtry5XF1kCw1DZryxArWrZrb_yoW3CrXEg3
+	4DCF1qgasxXrnaqF13Gwn8CrWDGw4rJr9rCF4DWFy0qFy8t34rCFyI9a93CryxZ3y5Ar42
+	9ry2qr1fua12gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-
-On 2025/4/7 02:10, Christophe JAILLET wrote:
-> Le 06/04/2025 à 15:43, Hans Zhang a écrit :
->> Previously, the debugfs directory was unconditionally created in
->> tegra_pcie_config_rp() regardless of the CONFIG_PCIEASPM setting.
->> This led to unnecessary directory creation when ASPM support was 
->> disabled.
->>
->> Move the debugfs directory creation into init_debugfs() which is
->> conditionally compiled based on CONFIG_PCIEASPM. This ensures:
->> - The directory is only created when ASPM-related debugfs entries are
->>    needed.
->> - Proper error handling for directory creation failures.
->> - Avoids cluttering debugfs with empty directories when ASPM is disabled.
->>
->> Signed-off-by: Hans Zhang <18255117159-9Onoh4P/yGk@public.gmane.org>
->> ---
->> Changes since v1:
->> https://lore.kernel.org/linux-pci/20250405145459.26800-1-18255117159-9Onoh4P/yGk@public.gmane.org
->>
->> - The first version was committed incorrectly because the judgment
->>    parameter in "debugfs_remove_recursive" was not noticed.
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 27 +++++++++++++---------
->>   1 file changed, 16 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c 
->> b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index 5103995cd6c7..f048b2342af4 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -711,16 +711,27 @@ static void init_host_aspm(struct tegra_pcie_dw 
->> *pcie)
->>       dw_pcie_writel_dbi(pci, PCIE_PORT_AFR, val);
->>   }
->> -static void init_debugfs(struct tegra_pcie_dw *pcie)
->> +static int init_debugfs(struct tegra_pcie_dw *pcie)
+�� 2025/04/04 17:29, Christoph Hellwig д��:
+>>   	int (*startwrite)(struct mddev *mddev, sector_t offset,
+>> -			  unsigned long sectors);
+>> +			  unsigned long sectors, bool is_discard);
+>>   	void (*endwrite)(struct mddev *mddev, sector_t offset,
+>> -			 unsigned long sectors);
+>> +			 unsigned long sectors, bool is_discard);
 > 
-> I would keep it a void function.
-> If devm_kasprintf() fails, which is unlikely, then the module should 
-> still work correctly. So just a return; should be fine IMHO.
+> a bool discard is not a very good interface.  I'd expect an op enum or a set
+> of flag to properly describe it.
+
+Will update in the next version.
+
 > 
-> Usually, errors related to debugfs are silently ignored as is does not 
-> prevent this to work.
+> But is start/end write really the right interface for discard or should it
+> have it's own set of ops?
+
+Yes, this is historical issue. The old bitmap handle discard the same as
+normal write, while new bitmap handle them differently. And I agree that
+add a new ops for discard is better in the long term.
+
+Thanks,
+Kuai
+
 > 
-
-Hi Christophe,
-
-Thanks your for reply. Will change.
-
-Best regards,
-Hans
-
-> CJ
+> .
 > 
->>   {
->> -    debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", 
->> pcie->debugfs,
->> +    struct device *dev = pcie->dev;
->> +    char *name;
->> +
->> +    name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
->> +    if (!name)
->> +        return -ENOMEM;
->> +
->> +    pcie->debugfs = debugfs_create_dir(name, NULL);
->> +
->> +    debugfs_create_devm_seqfile(dev, "aspm_state_cnt", pcie->debugfs,
->>                       aspm_state_cnt);
->> +
->> +    return 0;
->>   }
->>   #else
->>   static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { 
->> return; }
->>   static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { 
->> return; }
->>   static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { 
->> return; }
->> -static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
->> +static inline int init_debugfs(struct tegra_pcie_dw *pcie) { return 0; }
->>   #endif
->>   static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
->> @@ -1634,7 +1645,6 @@ static void tegra_pcie_deinit_controller(struct 
->> tegra_pcie_dw *pcie)
->>   static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->>   {
->>       struct device *dev = pcie->dev;
->> -    char *name;
->>       int ret;
->>       pm_runtime_enable(dev);
->> @@ -1664,14 +1674,9 @@ static int tegra_pcie_config_rp(struct 
->> tegra_pcie_dw *pcie)
->>           goto fail_host_init;
->>       }
->> -    name = devm_kasprintf(dev, GFP_KERNEL, "%pOFP", dev->of_node);
->> -    if (!name) {
->> -        ret = -ENOMEM;
->> +    ret = init_debugfs(pcie);
->> +    if (ret < 0)
->>           goto fail_host_init;
->> -    }
->> -
->> -    pcie->debugfs = debugfs_create_dir(name, NULL);
->> -    init_debugfs(pcie);
->>       return ret;
->>
->> base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
 
