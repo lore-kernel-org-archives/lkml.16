@@ -1,100 +1,51 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82041EF0A1;
-	Mon,  7 Apr 2025 21:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0651F1EF0A1;
+	Mon,  7 Apr 2025 21:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744060118; cv=none; b=Ki3KsAWm0tzdIEpMgD3EnMsAXeURdWcMOniFJRbVtUf1a24XpuGyrUuj05ZSHkEncE22Upz3HXISNNMs00qUKTXzzk2vaNA0b0tWUX4OOd2gmquvRdp9OK4gO7/32Z2SK3PvmBTo2hn3eZf0jhWUl9GN4Dho4UaPsDtzpp3A+wE=
+	t=1744060166; cv=none; b=G6TNGdVbeSU7uVDY6lM+PbwTaJHrBy67gj+YyYiRp0p/iQ563pLXCo2DJSFpqo2Bwu4Oe4J1Z7QxZzhvnwCNQfe/5PW824UmK/jfJYkh8sltYVRPxr9YAqXYS8iSyPpFKmvATed4Pw5la5uaqqROReObdV5oE8TCC0BngDs2CCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744060118; c=relaxed/simple;
-	bh=WkcvTRYspnESz6gLqavJF30kPibHjQxjvDEtMkjjOPw=;
+	s=arc-20240116; t=1744060166; c=relaxed/simple;
+	bh=wUocLj4Fyt1h9daFXhG7uB7c0V0HiExXAxXLAZEYlB0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUZxhC3SFOan3yUV6ZPGueWpNY2+0nNDQAjPRzomUQDd1Dft9sBybwwEpL4OgiMIN9dbg+OS+q6bZi4MTfCbcgs/31dkLAZsHhiAhKIIlpxhTyMo9mH4k0OhM+EuTbKzX3VXxysctpVQzeGVoD/el8ePAUYHttCE9IDt1GYpXLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=dVgljzSM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZaHWAluz; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	 Content-Type:Content-Disposition:In-Reply-To; b=ucVTainy3/zeAj6eIqoP9MuDEGmRLkkebnrDyG5CzQ4ScK8lwVl3n+9akwjmpUithYYwbageHb+wX3+fzJwTTev+2OAZ1oZ6Ow0drHkx5WJvwKIOw0nLjiUBmC0LIK0vYhVOOWDiAENw8tqROxj5CO5mXbKTvwDFSRwoj+670qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=K7ghY3cr; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="dVgljzSM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZaHWAluz"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id ED2A613811B0;
-	Mon,  7 Apr 2025 17:08:33 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Mon, 07 Apr 2025 17:08:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1744060113; x=
-	1744146513; bh=h1peeUsk7FcP1jakLjVZgwWrgqF1Mde4rlg/PA+xMpQ=; b=d
-	VgljzSMbZWrgPrS3o5cSEtrnxusAVgdDTirUvcEI6/A36Ks0NRYZyg441rwUGbQ/
-	O0pKNxldMuedgBxH+F/p1qpReCAlqfCe0pvfErsKlckeZS6C+x4IuyfnaM0d/SCe
-	R9L271tJonV9FsbFCD7ZfQzPyHM5OKsKSo7ity7npgML7appEnu8rY962R6Aa7W1
-	M0Vhrr38FtWDyafOUaiEuVVgoa+n4LC/qvhSAd2ijdHSUI0nGrqcFAavb4JAL+a1
-	zumLQUY8xkXYbHHKWIiVuh8XZ9cg4LZ62xi/ECumsbjdYf/TEEr7t67Z8FT0CPCD
-	MuqPnIAqbbiS2NVX5MGxg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744060113; x=1744146513; bh=h1peeUsk7FcP1jakLjVZgwWrgqF1Mde4rlg
-	/PA+xMpQ=; b=ZaHWAluz1rXePNQnICfvFitFCXmQoI9a1xr5JUxF2C+qbCyT+Ph
-	L+wCkqB7+xFZGly2Su505Y4Zd3hBUjDTsHP92/hNreMc2SE5HELdcn9o4pmlN/8C
-	VRDW2Jpa/8swDqIm06W8RW3bYljR5JLOUDc6UthCMapHgkFAl6wQlAFJ5o0aTIFD
-	18K4XeBvq/9HyVzsPmw3okLcQrQnkdgBcExGhnJUngJtVHNHaYuWdFoSrQnax/p0
-	Qiu3bOsdsLP8GcOkX9hJud/uuUpkLvNutzbUNNJVvaBCgnDDa0cvb5F9Go9yFsAL
-	KHvHsP1wdGQKYG1+8X+CcwC4ob2ikT72PEQ==
-X-ME-Sender: <xms:0D70Z-5RJaTazvew3m-h0gp3_ILffdHENyp5EOAgrX36_aGbaquYpA>
-    <xme:0D70Z37S3Z6qapQ_bCLQmduVM4vmDbSOiUqWCrGtVX9beJf6MyspfVKDZGKXLXE1d
-    BkU3XBrsM4VUK7PSPY>
-X-ME-Received: <xmr:0D70Z9crGDeezMSSXb8dE25VdJC7eMgBmd_ODAvoRvvCym95PX_ejW9pAz5ZO7A27vpAXg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduvdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhinhhgohes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslh
-    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguihhonhhnrghglhgriigvsehg
-    ohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgdoghhithesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgr
-    shdrlhgvnhgurggtkhihsegrmhgurdgtohhm
-X-ME-Proxy: <xmx:0T70Z7JAxU1jzTWV-RNGCHhdsSqe7Mg_VaygbtkPiAOrfok80HM1eQ>
-    <xmx:0T70ZyI8eJEzWYQxzR7leU6YesWMaeoJBc-dd707B00vL2igy1g24A>
-    <xmx:0T70Z8zCdmLxsRrxHcsSD0Lz_EVm4XknA-WS6W6MnQV44GlYkZaoFA>
-    <xmx:0T70Z2LKQY5664dZApn1cBh4ZEoTQ0nrNb_IIcfXLc0cbLnqmGq8MA>
-    <xmx:0T70Z1a23ls62NLy-qXRZoDlT7cVb77pGEHLWM3KWNsLj7hgS2jDdWQ->
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 7 Apr 2025 17:08:29 -0400 (EDT)
-Date: Tue, 8 Apr 2025 00:08:25 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
- SEV-SNP
-Message-ID: <7u74hxavnqqtcaciqco4ra37rep7k4f4cnv65mk5rmcu3fuo6n@kdhc2oceeu2p>
-References: <20250404082921.2767593-5-ardb+git@google.com>
- <20250404082921.2767593-8-ardb+git@google.com>
- <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
- <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
- <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
- <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
- <Z_QA6GwqoxdW6D0e@gmail.com>
- <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
- <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
- <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="K7ghY3cr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=w/GtE5xw2y5Msi3kroTiKAeUWr169xRkWtJLd0TQeUk=; b=K7ghY3crjNSJIkM6o1sa3rxtGA
+	nvKkNkAIVALxvgqfvDSfCRlp4PdgFRfnleQXWgGmGxk3V76MD8wKAowkP7XGN/4DoMNA/0Sz64RQJ
+	b130NZlQpqQAgfuMbh/vQcY6LY/6qLcjKhZkOQpXVaek4GXkH4OqKNH2gXECbG7d5xy0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u1tiU-008J3u-0W; Mon, 07 Apr 2025 23:09:14 +0200
+Date: Mon, 7 Apr 2025 23:09:13 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
+Message-ID: <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-6-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -103,52 +54,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
+In-Reply-To: <20250407172836.1009461-6-ivecera@redhat.com>
 
-On Mon, Apr 07, 2025 at 07:45:59PM +0200, Ard Biesheuvel wrote:
-> On Mon, 7 Apr 2025 at 19:33, Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> >
-> > On Mon, Apr 07, 2025 at 07:21:17PM +0200, Ard Biesheuvel wrote:
-> > > On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
-> > > >
-> > > >
-> > > > * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
-> > > >
-> > > > > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
-> > > > > > If the GHCB is available, we should always prefer it.
-> > > > >
-> > > > > I believe we should consider the cost of code duplication in this
-> > > > > situation.
-> > > > >
-> > > > > If the non-early version is only used in the kexec path, it will not be
-> > > > > tested as frequently and could be more easily broken. I think it would be
-> > > > > acceptable for kexec to be slightly slower if it results in more
-> > > > > maintainable code.
-> > > >
-> > > > Absolutely so.
-> > > >
-> > >
-> > > It would be nice if someone could quantify 'slightly slower' - I am
-> > > leaning to the same conclusion but I have no clue what the actual
-> > > performance impact is.
-> >
-> > If we can survive the performance of the initial boot, we can live with it
-> > for kexec.
-> >
+On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
+> Add register definitions for components versions and report them
+> during probe.
 > 
-> The initial boot does not occur via the decompressor, but via the EFI
-> stub, where memory acceptance is handled by the firmware (as it
-> should).
-
-I wounder what protocol BIOS uses.
-
-> Given that the traditional decompressor carves out an allocation from
-> the raw E820 map without using any of the higher level APIs, it has to
-> accept the memory itself if it is marked as unaccepted in the table.
+> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+>  drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> Perhaps the decompressor should try to avoid unaccepted memory?
+> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+> index 39d4c8608a740..b3091b00cffa8 100644
+> --- a/drivers/mfd/zl3073x-core.c
+> +++ b/drivers/mfd/zl3073x-core.c
+> @@ -1,10 +1,19 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/module.h>
+>  #include <linux/unaligned.h>
+>  #include <net/devlink.h>
+>  #include "zl3073x.h"
+>  
+> +/*
+> + * Register Map Page 0, General
+> + */
+> +ZL3073X_REG16_DEF(id,			0x0001);
+> +ZL3073X_REG16_DEF(revision,		0x0003);
+> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
+> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
+> +
+>  /*
+>   * Regmap ranges
+>   */
+> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
+>  
+>  int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>  {
+> +	u16 id, revision, fw_ver;
+>  	struct devlink *devlink;
+> +	u32 cfg_ver;
+> +	int rc;
+>  
+>  	devm_mutex_init(zldev->dev, &zldev->lock);
+>  
+> +	scoped_guard(zl3073x, zldev) {
 
-It limits KASLR. I would rather wait more on kexec.
+Why the scoped_guard? The locking scheme you have seems very opaque.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> +		rc = zl3073x_read_id(zldev, &id);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_revision(zldev, &revision);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
+> +		if (rc)
+> +			return rc;
+> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
+> +		if (rc)
+> +			return rc;
+
+Could a parallel operation change the ID? Upgrade the firmware
+version?
+
+	Andrew
