@@ -1,168 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E74F20550A
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19B21B0F32
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041783; cv=none; b=O5c8ibwrOr23yBRu8JIGiHgd/ksE+1Eb6DmlJb+d3v31P6cOMMyImQVD4JD543U9vE/AgFh0UGo6LazQxY5leWPKFTeD+IaIBDl8lSMZSNViaAbBSGypxPAPKsHdxOQ3Sdt5xLyIma0qkVKAaF70mG1Kk6cNxnBJA7z5zRBcLNs=
+	t=1744041815; cv=none; b=WAnJ3P46XChi8qxf11MuXf2tAM3F5fxd1yZBlukoZq+XevzxEE4L9xB7GA7vmdmIeL3hMDOwG09f3u3aMZrQAZQsn3EExPF2cR1HO4vizbUAkxcRsm/boy+CJBeacdmjOq3nBA+jjQzUqaXfsuuuFNdfoCzZnksQb7hJmDEgWiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041783; c=relaxed/simple;
-	bh=qnQ15yrqgtf8+nUymYIJht5OkQzulisk9s00Sw4mRMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qVM03G6i2zaIhTjwbRur2tSJB3PFB+lzFCVk3Rh4zPHu+98WEdpWxvaXiXXAdrlt3Ff8BLlKHLd/zubMRJI0FfFZ/URy05Hd1EySB00yQ0MNBD7io7rnNF2KOa+wFilO6FcDVOPGCCYTxGl4rAiyXRfcSUGDmWvakRjVl5XPZHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LhrKWVdB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744041815; c=relaxed/simple;
+	bh=1z5coohKCAy18YJrpW1n9XP0W7BqvNtsMS+ALKwtsNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TIH+fQ/lWIwpMZSSSxSbwV+/BBMUwjA3RWTz+/h3r9JtVWgsnda+4/fGX+EDDzB6GDhoRX9zS1MRhoks9pomJcQAqoz9Q5ikfXAAE3yv1HfWMMyGaLywquP7+Kr+VsnCmV9AlZPZE+kaKJu058J4QfsrQuxKLXwLCfRoysLT4Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TrHQ87mJ; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LhrKWVdB"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5378dmiM010426
-	for <linux-kernel@vger.kernel.org>; Mon, 7 Apr 2025 16:03:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fc3XwojJ5GFfdF94r7F5k7ZenDcWsyFJvzqBaDf4v4E=; b=LhrKWVdB0XApgiSi
-	353Kx+c8j0G1MEQPLZS1YUKrFV/20lOlvVl+YLT7USlQXdf8LLogfhBC23nD1Ch4
-	yE4zq3OMN6Hmy6UX1oWEBMkk8uQDaXiRe//l6AewLCu27L2z6+tZxByzRYalFM1q
-	cj434Xz8yPb/C2ZV41WC7+73j6iqFrLlzbnRPi9DNjcstlwgOzsXWEcCCFGzrFYD
-	PjFZPFWjLJi7H76w2fytPAYkrCrh7koGIfqc7vrYHY5pznJFi5IAtg8uamO+n+X0
-	cD6jxRUCopbEC5Yap3+i3I15uJlUi63JIjhqmQMg2h4cLzPHob9twNKVgEjY+27B
-	Nn0gOQ==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2mt36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 16:03:00 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2255ae39f8fso58984055ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:03:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrHQ87mJ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38f2f391864so2535776f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744041812; x=1744646612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TiStBVa5XzJJaIZh/XlbDgxRXeOzZkZMSa77cVqU2Rk=;
+        b=TrHQ87mJeDSEPLEjSGW4MPQO/YAIIgWXIMQSnAtD0MzfNrDigYsiOkp1m3a+OwzC6F
+         nRsOhagQE4RV2bPZiHv9FrMCD7Fm9+XGW9dtzxmRXbzNbUblOvlTsA1TOMGmZFNVWiQc
+         r3H7cJ8jYhkB3fpWHNgXTOR6CWnR0y8M+1qT8XYbAw30XKlPgtLEyk0dJ3SeM3gJgW7P
+         YLOCWnfnz1d97cscUSD4L4QjfJF/cU5LjyMoSW1OlRguMuiwp52/sR4TxrdpP74hX+i+
+         gCrvSw2t6lC8T8x7nPArO3wt5mSibsind9RU5oRcIsPmo0d/kUBfZIxqE+1SKgedE0Fr
+         kBfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744041779; x=1744646579;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fc3XwojJ5GFfdF94r7F5k7ZenDcWsyFJvzqBaDf4v4E=;
-        b=XX9ReoYWvQEoWN6yR2SuRYEEUnlhAjMcmrfzfjd+TwwQA+dIDzigM9LIJxWsnJKQKl
-         /6AKz31rRDAFS7RWXvdsyW+P44St6DUZzV8CP8nssYmoV5LbQQI5VsoFqbiqGbX4c4qm
-         JSuj7ErqsfTwv7q3Qh0DSAKSS16Bp+ZxiDi5CVrIZydvLs0xQZIij4v7o/Ja5zHfSNFc
-         FfjB2i45xQlTaHfxE051DWi4x5eT8ZHBJBu6JefF4Ti30ThfYiRuZZ8Eog6RBMf+C2y2
-         zYqAIh+rU3tpHpdV56B2OvhPldabiXToSkPYJDEwrEa2R47LHmfdodeZG8b6GOGqzJOr
-         kPPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkJQuL7Sm0IfbZg6SCmIWV78EdLBopCNipCB3/qjG/Fi1nY0M/BHSOJZnwnbGGrusWrasjXDpNf5E+pNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuMveC88cwKJQWQPX/DDJmsCFva1voUQa2JKd70fn4fRHbyIud
-	C++Zzye4PWN2xh5jZnhU2ZqCUE700kgJkiKa9oeBAOwrc3nbGMTgc+hO64tzAJNbBaEYCJDpcsP
-	4XnQDPztLggjV2OHIbqcYdeRd0oiMkRxWgHPdYlxX2OkxVJsy6Rf3KqchjUwC6KA=
-X-Gm-Gg: ASbGncsmYfsrRpSsbQIh4ys9EF08gWw4oLulRln+RSPjCZf4DGmnbuJ7HA+d/9TlLcE
-	UL+bxgFBLq0m7TeQaz3ssa1S5/3lEchzY2CyVra+bjNo8kCA0EAFlwsGlZogkN5fkxZ0qnzLRwy
-	QNoTglk26hGOWti+8QkQcxF4EP6/oqOKTOYF9QejpqHpHpWBFKg7WfUbtZZBVL/9QS3WXq5aD5A
-	BFrCJ/+qqeTZYQzNxnKbxm+bdpf1NDLVukCujZ/1EKJhKsKbOuIxbkq1DAj3hH3JtImfiiJp4lZ
-	FE31ZfALgtwBoazz5zOjbukId7Vijy2EWu1paosQYPO3rHbvWfVOnuKR9YclB/we3g==
-X-Received: by 2002:a17:903:2a8f:b0:225:abd2:5e5a with SMTP id d9443c01a7336-22ab5df1b0dmr455755ad.4.1744041779630;
-        Mon, 07 Apr 2025 09:02:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQkBFjjP+ONLlvzzb1gd0pTO1LSFOf1s2n0EEL7fUMEzu7Ove5cxahF9Lf52ILh1wQo+2pDg==
-X-Received: by 2002:a17:903:2a8f:b0:225:abd2:5e5a with SMTP id d9443c01a7336-22ab5df1b0dmr454955ad.4.1744041779170;
-        Mon, 07 Apr 2025 09:02:59 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f2fd3sm8971891b3a.69.2025.04.07.09.02.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 09:02:58 -0700 (PDT)
-Message-ID: <cd94dff9-d28d-42f5-a071-26e9dd0c3490@oss.qualcomm.com>
-Date: Mon, 7 Apr 2025 10:02:52 -0600
+        d=1e100.net; s=20230601; t=1744041812; x=1744646612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TiStBVa5XzJJaIZh/XlbDgxRXeOzZkZMSa77cVqU2Rk=;
+        b=jKFGddIu0FJKKScMUzdUgAU3UpG/1+UuwaNHRZzIBmf2SzWU4Cg4D2zUQEH7MHvX8T
+         XDijQbtrKme5N8hGiSlzJ39LpMryus0ro0BwSQ8/oYDBXUmABN1ZkZ4yiem19W/frIAw
+         GPF3+5sSV6c9LjBWU7pOJWe1oD4THo2ihSXyKHq1wg7vLz3hSBtvH7IHiMzVIhioz3zB
+         uf50hjtQDQnMMi5k9ZDI+Os+yp+4oOgsnE4QkaAdnNdbNDF0IV7bm3Vw6Wd9Eol3fRgT
+         bE0hC3LUfsbxyvIOviCfRg/TesRVKYFhKfxCbv1N5ft0ad141+FmgyMDX6afozW30WjL
+         Oefw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDfrG7lNNMqXA8MuogV/Mo9BbD3QKWzDeKv3hTa3vINQ3S4+w0IhArFAcb95wzDhv0ALQiN/Dws2Gvepw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywRFxWFk+EWwO0ehwU9N0Pmk1Nz1m5WCq6gyaDvtzFP5X0t2Zs
+	P5xWBnpV79s6WZ+Sh63IENJxu/hyK6CmxxZGv2AEppkAl+FhHEERUE1M2AVQ3NU=
+X-Gm-Gg: ASbGncvgStTaJlS1ej7nf8+bRD4hsBs4j6Bmrt0MmeE5StZf82uIVx0ywS2D+SL25UF
+	uEleS0pI7igkDb6h+xARri0dPiwTyqp65RAwPCfCpYRKrUEd4l7ifOB4zG2B5YhOKnEkkcno2fZ
+	uaq+EJYKJt3iC6HZzM3zAKxQB8jK2YOdXTcU7qEPoRXhafqauX7hg1wGpwKJAIB3MfVIuXb0h7P
+	M3Ol7OS7ueVKY5TOG+K9svzB1pEkJl/VJBpmP7Q4KGLLe5PXlzqE5lrnN0ciSW976CkGAhME/e0
+	A9QwBfUcEaJRYSqqnZyVFrHD1rng64rrwoMDu5UZ7jmAgw4MLw31VlPyysoyjMWQlhFjSrk=
+X-Google-Smtp-Source: AGHT+IGemrKXA8sM5DSUXZe2Dlbj6ooDA8zRnimiTYWgxUHTL8ryZb5AmO96jlogYy2tdpj5y3+bGw==
+X-Received: by 2002:a5d:588a:0:b0:391:23de:b19a with SMTP id ffacd0b85a97d-39d0de3b163mr11548003f8f.31.1744041811910;
+        Mon, 07 Apr 2025 09:03:31 -0700 (PDT)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec17b3572sm137701205e9.39.2025.04.07.09.03.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 09:03:31 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: wim@linux-watchdog.org
+Cc: linux@roeck-us.net,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	S32@nxp.com,
+	ghennadi.procopciuc@nxp.com,
+	thomas.fossati@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] Add the NXP S32 Watchdog
+Date: Mon,  7 Apr 2025 18:03:15 +0200
+Message-ID: <20250407160318.936142-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] PCI: add CONFIG_MMU dependency
-To: Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Carl Vanderlip <quic_carlv@quicinc.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Takashi Sakamoto
- <o-takashi@sakamocchi.jp>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Jocelyn Falempe <jfalempe@redhat.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Tian Tao <tiantao6@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Yongqin Liu
- <yongqin.liu@linaro.org>,
-        John Stultz <jstultz@google.com>,
-        Sui Jingfeng <suijingfeng@loongson.cn>, Lyude Paul <lyude@redhat.com>,
-        Danilo Krummrich <dakr@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
-        Zack Rusin <zack.rusin@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Saurav Kashyap <skashyap@marvell.com>,
-        Javed Hasan <jhasan@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Lijo Lazar <lijo.lazar@amd.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, amd-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, virtualization@lists.linux.dev,
-        spice-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, kvm@vger.kernel.org
-References: <20250407104025.3421624-1-arnd@kernel.org>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <20250407104025.3421624-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: z35rvm5UiC99GJkqp_A_Aa-pmTaW3U9m
-X-Proofpoint-GUID: z35rvm5UiC99GJkqp_A_Aa-pmTaW3U9m
-X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f3f734 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=ZLGELXoPAAAA:8 a=EUspDBNiAAAA:8 a=mM23EaL7GqIQzlWAp5AA:9
- a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22 a=CFiPc5v16LZhaT-MVE1c:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=687 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504070112
+Content-Transfer-Encoding: 8bit
 
-On 4/7/2025 4:38 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> It turns out that there are no platforms that have PCI but don't have an MMU,
-> so adding a Kconfig dependency on CONFIG_PCI simplifies build testing kernels
-> for those platforms a lot, and avoids a lot of inadvertent build regressions.
-> 
-> Add a dependency for CONFIG_PCI and remove all the ones for PCI specific
-> device drivers that are currently marked not having it.
-> 
-> Link: https://lore.kernel.org/lkml/a41f1b20-a76c-43d8-8c36-f12744327a54@app.fastmail.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/accel/qaic/Kconfig              | 1 -
+The NXP S32 watchdog, referenced in the documentation as the Software
+Watchdog Timer is actually a hardware watchdog. The system has one
+watchdog per core but an assertation does not directly reset the
+system as this behavior relies on a particular setup and another
+component which is not part of these changes. However the first
+watchdog on the system, tied with the Cortex-M4 #0 is a particular
+case where it will reset the system directly. This is enough for the
+watchdog purpose on Linux.
 
-For qaic:
-Acked-by: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+The watchdog relies on the default timeout described in the device
+tree but if another timeout is needed at boot time, it can be changed
+with the module parameter.
+
+If the kernel has to service the watchdog in place of the userspace,
+it can specify the 'early-enable' option at boot time.
+
+And finally, if starting the watchdog has no wayback then the option
+'nowayout' can be also specified in the boot option.
+
+Changelog:
+
+ - v3:
+    - Add the clocks for the module and the register (Ghennadi Procopciuc)
+    - Use the clock name from the driver
+    - Removed Review-by tag from Krzysztof Kozlowski as the bindings changed
+
+ - v2:
+    - Removed debugfs code as considered pointless for a such simple
+      driver (Arnd Bergmann)
+    - Replaced __raw_readl / __raw_writel by readl and writel (Arnd Bergmann)
+    - Reordered alphabetically the headers (Guenter Roeck)
+    - Enclosed macro parameter into parenthesis (Guenter Roeck)
+    - Fixed checkpatch reported errors (Guenter Roeck)
+    - Clarified a ping on a stopped timer does not affect it (Guenter Roeck)
+    - Used wdt_is_running() to save an extra IO (Guenter Roeck)
+    - Fixed a misleading comment about starting the watchdog at boot time (Guenter Roeck)
+    - Replaced allocation size sizeof(struct ...) by sizeof(*var) (Krzysztof Kozlowski)
+    - Drop old way of describing the module and use table module device (Krzysztof Kozlowski)
+    - Replaced additionalProperties by unevaluatedProperties (Rob Herring)
+    - Removed the DT bindings description as it is obvious (Ghennadi Procopciuc)
+    - Fixed DT bindings compatible string (Krzysztof Kozlowski)
+
+ - v1: initial posting
+
+
+Daniel Lezcano (2):
+  dt-bindings: watchdog: Add NXP Software Watchdog Timer
+  watchdog: Add the Watchdog Timer for the NXP S32 platform
+
+ .../bindings/watchdog/nxp,s32g2-swt.yaml      |  56 ++++
+ drivers/watchdog/Kconfig                      |   9 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/s32g_wdt.c                   | 313 ++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
+ create mode 100644 drivers/watchdog/s32g_wdt.c
+
+-- 
+2.43.0
+
