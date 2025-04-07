@@ -1,135 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C398122423A;
-	Mon,  7 Apr 2025 06:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DCB210198
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744005902; cv=none; b=Z+ZABvSh+3fW/q7o9ysrbOvzWCjKkL73ooP3OJVMo8/69xtajlk9r4aZcd0roAK1PykYHS5kRX7OZ/xntCQ2jlBWdf+sQyQl9BqDTbayLnz4wR+pEqnHY5hxlBbx3pDRY6IsBInuMRI5H/vQP7AZyc4SjF+k4ODeoqS2/C39R9s=
+	t=1744006118; cv=none; b=UuzMnsJ/6CGZ3CVRCQyfccEF2mq2bZVe0usxC/pTDQxkpdxK5U1IV0mF+7oF3qd+teBo/LyP72Jbl/uPQ8Cfsd/gQczgPzbBnr+hzMiurzy3FC3Ik1u2lUeNa1oYM5LQeSUBiB4qG4CI5x8JxHo7GDfDctwV1i36AtolN0OV6JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744005902; c=relaxed/simple;
-	bh=QdlPTuGFDzHLTqGSHvpyqeL+wyYF1szxTKJZUAoSyAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PM/cnrdzoURnsgkt53FSwMe5AaY5y69EFbuh4bf2Bv9iEDgL8LQ0RZq9CUA1vbaAutoj+xaIddVJSWw+Hd3T3y0SO0n3OC/0j3QE4kTEZ64N2txgiBIU80UDUPJGQxPFaVg2OtVaPPjHfo4Qu9hooXy4LZn0efsQPlBzfB2qvsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLHkWsYj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLHkWsYj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1E6C4CEDD;
-	Mon,  7 Apr 2025 06:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744005902;
-	bh=QdlPTuGFDzHLTqGSHvpyqeL+wyYF1szxTKJZUAoSyAs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lLHkWsYj5spzqNUuH90Xd8qyXgoOZloNmjJ0gHK4EvJvTCrNLAwG+3nIJ1Y0l7CuZ
-	 8mUzIFqjh6IqSYAnZFL1cUspFhtUhYFTsJ7Dja2j9XI2Gg20dwN9Dyx2uxZrv1fQRZ
-	 2gcqVR2csGTopegBDIC3qjkr4RVCKJOGV4m/9voKS8eYYavf86BKA7FFRwKTnKznK2
-	 /rDyDVzfe/HHv7a42+Iuw4CxJRwpkRSe3JU8w96H5SsHCwSHvGktXSzNUeEwdWC63c
-	 w9V+Q4gQkFmABRMbrJbUEiNiHKAR8X4QFDRjrgiQOswgD1hY1YXbrtt+okKtKsU7gn
-	 oCjUqy44ya8Kg==
-Message-ID: <befe7d30-1727-4540-9072-f21ef96ea504@kernel.org>
-Date: Mon, 7 Apr 2025 08:04:57 +0200
+	s=arc-20240116; t=1744006118; c=relaxed/simple;
+	bh=1XUFDFTQaz0LuYdxM8uPaQsUJ28Sya2ULD6CTPTaZJI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hLXxaB7Wg3MRPph/BBu8SbPBB+zraRDe09fLxSD9yuuNQEP1EtcWQsFgm5GADP1MEns1z0oBiMXZjF0OWM9A5Bv/KUMstgLFS1yh+U5QsQirT18y+YuQvFkNIOrzD51XzKuFwciRBdpdJ4VlzSndy+9l4tSgSVlFlqzmtDESVYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85d9a52717aso577467439f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:08:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744006116; x=1744610916;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5/KgWplF9dPNYbjdfFLAHHlYvNMnSVx8I1yTmpszd84=;
+        b=EhHcRrKwbkm8cU0zXdU6ay84XemeWWJMGsngUbtTN8qFvqHlE1ZfIvbGq/40i+Dtyg
+         f4FyRH2A3abh5TKmEDo9EtrhEEdH7HY6vuPSKrCnvkDVCAVXGI/8/UVcKjF/Hu52QLRB
+         cyCNiK2sGf9rU3ZxCqh+kr3rNPF1qm8yBquLf9i/Xf1rfxCfg1Z+CSXZqDL/orzRd4i3
+         kOjyYAza5hpbVZb8G+Roqg02hTjtkK1XCeQknlENw2JCOY4xsFKKwxxImE1VtmmktPCX
+         nHhGu9lpFIhBX4kd3hlpjgFbZj/Rc6Z+MhHLKRv2KV+QL4PBWoZpTh4fr7DRriKtU7zC
+         91Og==
+X-Forwarded-Encrypted: i=1; AJvYcCWcZ69Dq7waoOmiijrUOyU4lOnwWKC7VjMjDc3wi9vHqCSnTtemLUVV1NbooLnIPfphnpx6og/LC9SbAWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWtElgzKH64n4gESG0Iy9U+kzvnU+3sPw1CA9TCRY7YECyc8mU
+	SvSOkpUQ6aAlZ5fZILuk1kwTPkT9q/+4mMDTPWjavSz8ZsDq7Gst4y1rZPJ1xs9JT6NauX9BVbd
+	i42BH1TuLBCozS1n4/boUdF7qlaObbbqgR4UiTXmOPsQ7ujVNn5hMET4=
+X-Google-Smtp-Source: AGHT+IFOu+JBb/IA55NbLTkjn0k9i5GFcRsLwDL+8WOvZiKl4NGApXhoFO6dLuk8aewfQRxrV+JvNZ+vkoPZV2Yv4HgCxjoeV4YK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
-To: Faraz Ata <faraz.ata@samsung.com>, alim.akhtar@samsung.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- rosa.pila@samsung.com, dev.tailor@samsung.com, suyash.bitti@samsung.com
-References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
- <20250318075635.3372599-1-faraz.ata@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250318075635.3372599-1-faraz.ata@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3e04:b0:3d3:fdb8:1792 with SMTP id
+ e9e14a558f8ab-3d6e5876e66mr102311675ab.14.1744006115815; Sun, 06 Apr 2025
+ 23:08:35 -0700 (PDT)
+Date: Sun, 06 Apr 2025 23:08:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f36be3.050a0220.0a13.0282.GAE@google.com>
+Subject: [syzbot] [net?] possible deadlock in team_vlan_rx_kill_vid
+From: syzbot <syzbot+cefa9e687471ee7f359a@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	jiri@resnulli.us, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 18/03/2025 08:56, Faraz Ata wrote:
-> +
-> +		usi_17: usi@10d800c0 {
+Hello,
 
-Messed order. Keep nodes sorted by unit address (see DTS coding style).
+syzbot found the following issue on:
 
-> +			compatible = "samsung,exynosautov920-usi",
-> +				     "samsung,exynos850-usi";
-> +			reg = <0x10d800c0 0x20>;
-> +			samsung,sysreg = <&syscon_peric1 0x1040>;
-> +			samsung,mode = <USI_V2_UART>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
-> +				 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
-> +			clock-names = "pclk", "ipclk";
-> +			status = "disabled";
-> +
-> +			serial_17: serial@10d80000 {
-> +				compatible = "samsung,exynosautov920-uart",
-> +					     "samsung,exynos850-uart";
-> +				reg = <0x10d80000 0xc0>;
-> +				interrupts = <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&uart17_bus>;
-> +				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
-> +					 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
-> +				clock-names = "uart", "clk_uart_baud0";
-> +				samsung,uart-fifosize = <64>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->  		pwm: pwm@109b0000 {
->  			compatible = "samsung,exynosautov920-pwm",
->  				     "samsung,exynos4210-pwm";
+HEAD commit:    16cd1c265776 Merge tag 'timers-cleanups-2025-04-06' of git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12459fb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+dashboard link: https://syzkaller.appspot.com/bug?extid=cefa9e687471ee7f359a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/18e42a5dca85/disk-16cd1c26.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/866f5ebb32ef/vmlinux-16cd1c26.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4476a8f83564/bzImage-16cd1c26.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cefa9e687471ee7f359a@syzkaller.appspotmail.com
+
+veth1_macvtap: left allmulticast mode
+veth1_macvtap: left promiscuous mode
+veth0_macvtap: left promiscuous mode
+veth1_vlan: left promiscuous mode
+veth0_vlan: left promiscuous mode
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-syzkaller-13546-g16cd1c265776 #0 Not tainted
+------------------------------------------------------
+kworker/u8:5/83 is trying to acquire lock:
+ffff888053410e00 (team->team_lock_key#2){+.+.}-{4:4}, at: team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
+
+but task is already holding lock:
+ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: unregister_netdevice_many_notify+0x5a1/0x2510 net/core/dev.c:11947
+
+which lock already depends on the new lock.
 
 
-Best regards,
-Krzysztof
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&dev_instance_lock_key#3){+.+.}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       netdev_lock include/linux/netdevice.h:2751 [inline]
+       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+       dev_set_mtu+0x11c/0x270 net/core/dev_api.c:246
+       team_port_add drivers/net/team/team_core.c:1215 [inline]
+       team_add_slave+0x83b/0x28b0 drivers/net/team/team_core.c:1989
+       do_set_master+0x579/0x730 net/core/rtnetlink.c:2946
+       do_setlink+0x111d/0x43a0 net/core/rtnetlink.c:3159
+       rtnl_changelink net/core/rtnetlink.c:3769 [inline]
+       __rtnl_newlink net/core/rtnetlink.c:3928 [inline]
+       rtnl_newlink+0x17e2/0x1fe0 net/core/rtnetlink.c:4065
+       rtnetlink_rcv_msg+0x80f/0xd70 net/core/rtnetlink.c:6955
+       netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:712 [inline]
+       __sock_sendmsg+0x221/0x270 net/socket.c:727
+       ____sys_sendmsg+0x523/0x860 net/socket.c:2566
+       ___sys_sendmsg net/socket.c:2620 [inline]
+       __sys_sendmsg+0x271/0x360 net/socket.c:2652
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (team->team_lock_key#2){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
+       vlan_kill_rx_filter_info net/8021q/vlan_core.c:222 [inline]
+       __vlan_vid_del net/8021q/vlan_core.c:362 [inline]
+       vlan_vid_del+0x483/0x770 net/8021q/vlan_core.c:387
+       vlan_device_event+0x23c/0x1e00 net/8021q/vlan.c:390
+       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+       call_netdevice_notifiers net/core/dev.c:2235 [inline]
+       dev_close_many+0x33e/0x4c0 net/core/dev.c:1738
+       unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
+       unregister_netdevice_many net/core/dev.c:12044 [inline]
+       default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
+       ops_exit_list net/core/net_namespace.c:177 [inline]
+       cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
+       process_one_work kernel/workqueue.c:3238 [inline]
+       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+       kthread+0x7b7/0x940 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&dev_instance_lock_key#3);
+                               lock(team->team_lock_key#2);
+                               lock(&dev_instance_lock_key#3);
+  lock(team->team_lock_key#2);
+
+ *** DEADLOCK ***
+
+5 locks held by kworker/u8:5/83:
+ #0: ffff88801bef6148 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
+ #0: ffff88801bef6148 ((wq_completion)netns){+.+.}-{0:0}, at: process_scheduled_works+0x990/0x18e0 kernel/workqueue.c:3319
+ #1: ffffc900015d7c60 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+ #1: ffffc900015d7c60 (net_cleanup_work){+.+.}-{0:0}, at: process_scheduled_works+0x9cb/0x18e0 kernel/workqueue.c:3319
+ #2: ffffffff900f0850 (pernet_ops_rwsem){++++}-{4:4}, at: cleanup_net+0x17c/0xd60 net/core/net_namespace.c:608
+ #3: ffffffff900fd388 (rtnl_mutex){+.+.}-{4:4}, at: default_device_exit_batch+0xde/0x880 net/core/dev.c:12522
+ #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ #4: ffff888060b1cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: unregister_netdevice_many_notify+0x5a1/0x2510 net/core/dev.c:11947
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 83 Comm: kworker/u8:5 Not tainted 6.14.0-syzkaller-13546-g16cd1c265776 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: netns cleanup_net
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
+ check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+ __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+ lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+ team_vlan_rx_kill_vid+0x36/0xe0 drivers/net/team/team_core.c:1933
+ vlan_kill_rx_filter_info net/8021q/vlan_core.c:222 [inline]
+ __vlan_vid_del net/8021q/vlan_core.c:362 [inline]
+ vlan_vid_del+0x483/0x770 net/8021q/vlan_core.c:387
+ vlan_device_event+0x23c/0x1e00 net/8021q/vlan.c:390
+ notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+ call_netdevice_notifiers net/core/dev.c:2235 [inline]
+ dev_close_many+0x33e/0x4c0 net/core/dev.c:1738
+ unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
+ unregister_netdevice_many net/core/dev.c:12044 [inline]
+ default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
+ ops_exit_list net/core/net_namespace.c:177 [inline]
+ cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+pim6reg (unregistering): left allmulticast mode
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
