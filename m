@@ -1,65 +1,43 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210B4DDD3;
-	Mon,  7 Apr 2025 06:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744006212; cv=none; b=mLq48o+IExLT/n9J5NcW1uewiqz7gVl5q8XIdyrP/F+c81ieY8SSFFwVKIDgvC/8d9z2sr4XCUVJjcUH2xVW0Ecy9eZtcIA1BWbRLman2o/LhxlUtHEyf4OQZtmuU1g1aNEVDTb2hOPPlfZkjx8JCFpG3g7jj/QftauSs33YEeE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744006212; c=relaxed/simple;
-	bh=WHptMty8/X/ube0FQL8nrBNpTd+8qRvV8oDKOCjRJ/Y=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F552135A4;
+	Mon,  7 Apr 2025 06:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744006266; cv=pass; b=jfyib8dQNq1mYoTPBHE3LrqYWYqQu5BcRYyU8Ey/+ssbtgt4N/gaJhGGMqOiMyASc4dPzp4WYNUl5hEeEB5/Zig8uzjvG+zLFg2vnmmUePxlrU2ufGOx/JquEOPG2XisQsnEP2hjRrPaCQU2gVhc2wk+O7ixQEQ4556R4/z3ucI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744006266; c=relaxed/simple;
+	bh=HJnxSu2wXA5Q3mOn5vriohSJ54Ww2I1nuUo6mgUqmrQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ssJibcDNM3aZDhWuOBYZBrauhkfJqLsRd8wL/mSAMaKAluMu65sEHMjF8l03JzDM9ZPMJ8QnIWLv7MssHO4AV1Jlk/B0l7X7J8igEJ9Re4sAIxeosaVDiIGMBtp/gUYHuM5gVGxsxepujaUXfrtHjdVmoBzxN3alrhnIfHqNMpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ql55X4yx; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=BDviRav0aPoAk7tQnWVEtTeueyCOqSv3oifDu1rpWnjiVDl1zG2JlgZOEzrQUt7u+2DZf+PppW8ikCYUtY5rjFiFUCE+l+7UWTFa37cWmfrxq7w7ZdvvqeQz0aA1CD7ZvNuEtaolkATagtr0xbmXMGHwA1mfrm8fnEXVTKaz2Xo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=OAOhuUEO; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql55X4yx"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54954fa61c9so1492947e87.1;
-        Sun, 06 Apr 2025 23:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744006208; x=1744611008; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8tQt3XJvixzCS8l8Xq4o4BtUJ6YS65Te0LIUOY4NnHk=;
-        b=Ql55X4yxHd/gwcN9Ai2a5moMPA0InDNCJI2WPgH7REoyAnUbusstFrD5xyzKquh7Kh
-         k4vFlfG8rB5fUcjkfQcyTDFY/a1x5RGi0If8BL6vUtzRCBBFI3wBkbf5OHzuMCyM6cAu
-         okrjVfqokEcLKDpROiVtLShrzL+GnEMhvPMDHW8KLd4KnNC1qZ5p2Gc6RWMc5mFI41xv
-         JYmHBNXr8Cq+0zu1RGmfJrA2ERDJjGVu5cTm8WCzADfvdITgfBjqk89FfUx+U1IXQbbX
-         f2KIctMU/y2Y/HbBKXpZH1dBLkKXjntD+deYmhePUEQd5UCquoT9A/IBKKlyFT91J1k2
-         V9AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744006208; x=1744611008;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8tQt3XJvixzCS8l8Xq4o4BtUJ6YS65Te0LIUOY4NnHk=;
-        b=PsXvrhXlbBeZIq7A8o0XeRqZtKMKxbyVTRYW67veBORtCtgZQFX9x00+Ta+cbaz58M
-         jvlMAI1IzZL9sNzDq+gfOBEUplAaT+OkOXbreMKRix15jkamYtwh7Etqr4q3nyYMsBmF
-         790qSE4Vfi+HuRYDORn9In/3MmfCg1o0NOrxt4quciwY63uQpPoQvdANqb3SLRr1aMci
-         f08hh6nz6p4jCczJjS1AVkJNyPYDA/kqVnprRZtBRkp/IwG4OyU63OjJ1ET9r0nPAbtN
-         5cXz76wSkEEDNgDHZkw+JxKVO2JoJg3H8+L4eq6ZumLqhndlRmNrzXdjX0c7KRpOdWFj
-         YvJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwsaFkX9f+pa9vQeus47O/aFzmJxcxMaSZ1jsKXEJnV45OG3dUv+V47M/N6irBD37FWc4R6ij8aAob@vger.kernel.org, AJvYcCWK6c9eg+5F6IPzmTHs28PHfnFhoF3ueZvaWqV7asBmyRLkoGQzUrEfzCaNH+vgdhkHRy0m5lyyOT9R@vger.kernel.org, AJvYcCXPNAYsKPoCDqAoMAR8Tp9Y0gKfAO9G/VhxRe3imm+4HYBSAk9C8VD9xYyMPXWtHV39PhYBnRFUDv6ig5u3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsAOcMLdKUNzLZ+BCG6l3zn4lZwP3X8n6IkEieRW1MVGH4xWFg
-	Hv9oryGhezXv/2nJwX9EuazlM76n6YJmrjhfjcL5YD+iZfhZu4GN
-X-Gm-Gg: ASbGncs2CTp29OrdwJXpEGziLvfbKXWDHSypMzQFVrl/VorFJ+q46CUmsMGAAMyyk1s
-	wow6unLFe4YpmpweNuLSClnEG2d1cqj8CwSOV0AGeaWWru1p9v0y/AyHj3O9TOZRpRB30pNZT+I
-	gaSw9yw84KGZggiJytrTTROeydIcKDZVF2EoiSaBQvk7o4oeoaoX8i61KsJJfNHOxW97gXzs7oN
-	LzoRrzlbG9aNs7nBoXN/+80qGuuFHdpz3qWoWjXrYIdrkbQv263vGdnSbkcYbRS5h5C9zG6xrpW
-	uOKWydHBwziAA+jzVpktOyQOGhk0fUKrIUf5ZZ9z0yaNmHFtb3f2xR/Olvq7l0uo3U4JHYHd5CV
-	Ikfxu9eJh4HWkFXpdKAvIzF9yFQ==
-X-Google-Smtp-Source: AGHT+IGQciRZD1LR83G4S8zlR0hZxoK4W9ubK7Hlcuv4dP4RJxWWqZW4WXzMhLTpCHd17H+HQihVkw==
-X-Received: by 2002:a05:6512:e9a:b0:54a:cc75:3d81 with SMTP id 2adb3069b0e04-54c22769a54mr2960657e87.4.1744006207979;
-        Sun, 06 Apr 2025 23:10:07 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c2158sm1138523e87.93.2025.04.06.23.10.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 23:10:06 -0700 (PDT)
-Message-ID: <99d1d972-d9a5-4ca3-811a-b22083bea4e6@gmail.com>
-Date: Mon, 7 Apr 2025 09:10:05 +0300
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="OAOhuUEO"
+ARC-Seal: i=1; a=rsa-sha256; t=1744006245; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LOb1LOo6e6FrVjbcXFkZDOf5RiK5UB6Jrz87D+3e1zb4ZMsmH7CNKJwd5VOQjGNTdwPsBZOLdyWhwjWssCm7LAqX6TQ6EhcZrJG/y/EsGp29bI+xmmxKS/mE2YcwGZJW+gnxGE3tmJtqBwT5Zp0uLvyb1oW5bMnEsOMdh3qDnHE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744006245; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=wyu8LmD8rRUC3H0Pg/fx0A4u+L35MGgNu7fRwBGIKp4=; 
+	b=ECymkep1DL6hSSXoJQQ+kMnroVf5TE2RqHhu0wscziYFUChQbpUiPUo+P9dSDcwy3fTzGa33y4Zz0WCL+pq0cdYWqLhjZ7sRkAo+rT1xirplfLotzRafUOYoa/MYbCRr/lXn6YqrHLUR0iF/7J3vEJLyP41jVxmv8zoL77SiKDI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744006245;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=wyu8LmD8rRUC3H0Pg/fx0A4u+L35MGgNu7fRwBGIKp4=;
+	b=OAOhuUEOalrd40FBWJdb5hHRC3xV9D9li5BaIfAhfPLYrmwo9ay0d2AhBXglxW09
+	WsqAhzMxA6MWrOXQnS8EIs5cROkNUoCoFiZ3ga9asseCpmW2FPjOz+Dy0g2vLwebmZ3
+	UvLCFXSVtuhQIoGCenxG6O9dGDSfGE97Fx6mMisA=
+Received: by mx.zohomail.com with SMTPS id 1744006225872305.6751632388572;
+	Sun, 6 Apr 2025 23:10:25 -0700 (PDT)
+Message-ID: <deb343df-39be-4bf9-9288-179a73154ad0@zohomail.com>
+Date: Mon, 7 Apr 2025 14:10:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,124 +45,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
- <8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
- <20250331122247.05c6b09d@jic23-huawei>
- <a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
- <20250405184346.3c4b1234@jic23-huawei>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250405184346.3c4b1234@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] cxl : fix cxlctl_validate_hw_command() warn: always true
+ condition
+To: xiaopeitux@foxmail.com, Pei Xiao <xiaopei01@kylinos.cn>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <tencent_30DA5E4827F37333AE881122DCE054DC9008@qq.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <tencent_30DA5E4827F37333AE881122DCE054DC9008@qq.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112278ed2c46ca8c805236446b2150000005dc0fbd22db3673912ec2d41b9135561f10ce0509cd0d9ee:zu080112275498a79d7e5acc0f086d7c010000ae28deadba607b8c68279e1fdfd9c2f67face246f4817df21b:rf0801122dac3b15604d8ae45714d9bf6100004e3000f8d706d8d0385c8fc4328e3f2be30f05ac6b798f19480a0b50def7f0:ZohoMail
+X-ZohoMailClient: External
 
-On 05/04/2025 20:43, Jonathan Cameron wrote:
-> On Tue, 1 Apr 2025 15:33:15 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
->> On 31/03/2025 14:22, Jonathan Cameron wrote:
->>> On Mon, 31 Mar 2025 11:03:58 +0300
->>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
->>>    
->>>> The ROHM BD79104 ADC has identical SPI communication logic as the
->>>> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
->>>> started when the CS is pulled low, and channel selection is done by
->>>> writing the channel ID after two zero bits. Data is contained in
->>>> big-endian format in the last 12 bits.
->>>
->>> Nicely found match.  Sometimes these are tricky to spot.
->>>    
->>>>
->>>> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
->>>> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
->>>> the driver expects finding these from the device-tree, instead of having
->>>> the "vref" only as TI's driver.
->>>>
->>>> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
->>>> have two voltage inputs as well. Pins are called Va (analog reference)
->>>> and Vd (digital supply pin) - but I keep the existing driver behaviour
->>>> for the TI's IC "as is", because I have no HW to test changes, and
->>>> because I have no real need to touch it.
->>>>
->>>> NOTE II: The BD79104 requires SPI MODE 3.
->>>>
->>>> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
->>>> this board I had to drop the SPI speed below the 20M which is mentioned
->>>> in the data-sheet [2]. This, however, may be a limitation of the EVK
->>>> board, not the component itself.
->>>>
->>>> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
->>>>
->>>> [2]:
->>>> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
->>>>   
->>> Prefer Datasheet tags with # [1]
->>> after them for the cross references.
->>>
->>> Those belong here in the tag block (no blank lines)
->>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>>
->>> One request for an additional cleanup precursor patch given you are
->>> touching the relevant code anyway.   It's a small one that you can
->>> test so hope you don't mind doing that whilst here.
->>>
->>> I'm relying on the incredibly small chance anyone has a variable
->>> regulator wired up to the reference that they are modifying at runtime.
->>> I have seen that done (once long ago on a crazy dev board for a really
->>> noisy humidity sensor) when the reference was VDD but not on a separate
->>> reference pin.  That means we almost certainly won't break the existing
->>> parts and can't have a regression on your new one so we should be fine
->>> to make the change.
->>
->> The change you ask for is indeed small. I have no real objections
->> against implementing it (and I actually wrote it already) - but I am
->> still somewhat hesitant. As you say, (it seems like) the idea of the
->> original code is to allow changing the vref at runtime. It looks to me
->> this might've been intentional choice. I am not terribly happy about
->> dropping the working functionality, when the gained simplification isn't
->> particularly massive.
-> 
-> Hmm. I suspect this was added at my request (or copied from where I requested
-> it)  Back when we did this there was no advantage in doing it at probe
-> as it was just a question of store a value or store a pointer we had
-> to get anyway.  So I tended to advocate what I now think was a bit silly,
-> that someone elses board might have it changing...
-> 
-> User space wise, what code checks for random scaling changes?  So it
-> was best effort at best anyway!
+On 4/7/2025 11:41 AM, xiaopeitux@foxmail.com wrote:
+> From: Pei Xiao <xiaopei01@kylinos.cn>
+>
+> smatch warnings:
+>     drivers/cxl/core/features.c:441 cxlctl_validate_hw_command()
+>     warn: always true condition '(scope >= 0) => (0-u32max >= 0)'
+>
+> remove always true condition.
+>
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
+>  drivers/cxl/core/features.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index f4daefe3180e..fdca93c984ce 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -616,9 +616,8 @@ static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
+>  	case CXL_MBOX_OP_GET_FEATURE:
+>  		if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
+>  			return false;
+> -		if (scope >= FWCTL_RPC_CONFIGURATION)
+> +		else
+>  			return true;
+> -		return false;
+>  	case CXL_MBOX_OP_SET_FEATURE:
+>  		if (cxl_mbox->feat_cap < CXL_FEATURES_RW)
+>  			return false;
 
-Ah, right. I suppose this should've been accompanied with scale setting 
-which could've changed the regulator voltage - and I have no idea if 
-such hardware would make any sense.
+Already have a patch posted for this issue.
 
-The slim chance I can imagine is that the reference voltage can't be 
-set/known at probe time.
+https://lore.kernel.org/linux-cxl/67f02de69d89c_9fe8529481@iweiny-mobl.notmuch/T/#m84c3093032b5eb167bbb1d0a787019d0387f4ae8
 
->> Because of this, I am thinking of adding the patch dropping the
->> functionality as an RFC. Leaving that floating on the list for a while
->> would at least have my ass partially covered ;)
->>
->> I'd rather not delayed the support for the BD79104 though. So - would it
->> be okay if I didn't implement the clean-up as a precursory patch, but
->> did it as a last patch of the series? That will make it a tad more
->> complex to review, but it'd allow taking the BD79104 changes in while
->> leaving the RFC to float on a list. (Also, I'm not sure if you can push
->> an RFC in next without taking it in for the cycle?)
-> 
-> I'll probably just merge it even as an RFC :)  That way it's my
-> fault if we break someone and they shout!
-
-That's fine for me. Well, doing it this way around (as a last patch) 
-should ease reverting, should it be needed.
-
-Yours
-	-- Matti
