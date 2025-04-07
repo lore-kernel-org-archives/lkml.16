@@ -1,48 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538F7264FB3;
-	Mon,  7 Apr 2025 18:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D8721B192;
+	Mon,  7 Apr 2025 18:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049655; cv=none; b=kAWiyohB+IwWxMCR9foVQmDd/0q/BJOosj+uaJ3BWjLZoZvbkEweO2Q5RR8Joe4kONuKi7tATACsSbQDXu0PzjWz6fmBVzsdumUj95lJYARG0Ol/pL/2aIC/przMdRm/XnFAv8vp7nAxsiMufXFx9bR8Y+ZxEmeQqywpmlX7fiI=
+	t=1744049662; cv=none; b=qQvBQUl65Kcb/e5ZoV5fdhDSBn9f+R31oGwnXjdMU0MMj+OMVmsILBf7ul6k8DpRtI4Bysbt3VYK+rMS0uhB9a8UgOtnYaUhX3bAYieZKBzlwU820RLsOkGCwUcusSMVtFrJS2wuw8ChkaEUe1r64NKCjYdLA/KpquKNKoSoaj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049655; c=relaxed/simple;
-	bh=HUUon//Jhnm++nSXg4SODznjq7cHjuBfxI2rWh8ozpI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=deZvOfb7oGAJc4YaUGVXDxOCzAajTwRrviaToMyG8hFs5rgE/MGj+giu5zdgJ5PFxFtITH0ROjelLK+NRo4jtB1DLxVbmxHpGYjkKZ/9q0xTLybe29wnSR8VRQETxjnYTeFTNVhRiFfnFEdlhsWnakgtkf032GlFQvsAD9kdKiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVuk3Qw6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049662; c=relaxed/simple;
+	bh=8IzQwhNTnITNU7a9AzWO4JF7R8CLHfsNu5oPkLHN5yI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oGWP2FJZr2Cz9eOYnYD0j24BabTr712rj906HpXozbZD4X5iPjnHM7cIY3JTr0AxmUgsAdkc3CaL19q9ThHWoouBjcTiqVrOmAUTYoTgEeITFQiQ9xyw9dJSLx6ezZLXX7VzjgmxcXOyGKZb4/FkNRsUkOiTOvg50FKszUq3LBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh0rJlDm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVuk3Qw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E11C4CEE7;
-	Mon,  7 Apr 2025 18:14:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh0rJlDm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60337C4CEDD;
+	Mon,  7 Apr 2025 18:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049655;
-	bh=HUUon//Jhnm++nSXg4SODznjq7cHjuBfxI2rWh8ozpI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SVuk3Qw69WQlu91/UFG3TvsETthcLAdpIQ1efGgjHIsoTsxUS7pRPWoDwZV+IeecS
-	 CbX4JTKl2qEfsc73lcXyztljvU2W/S/FAceqIQYb6h2217fezJGQIjXI9pqY/GGTHk
-	 jvBdUWe5RuFTmfRmxNY/lj0KAJEu0orFjYKAfM8hixMB9nrsd6Uvn6IbRUuF7IKz/M
-	 CsW7RIQkaPhgtk2G4U1PvRHjAmZ0ZlPCuFFj8UtlDDNw7aLeKiJ9+fRtGPupenroK4
-	 pC24JxV8a/QJsj7fpFzO48ggzp9OqnanQPYOqguwiDfk+2rYFPnOqJXCTPVtIVbu1i
-	 BO4TZJ7/w086A==
+	s=k20201202; t=1744049662;
+	bh=8IzQwhNTnITNU7a9AzWO4JF7R8CLHfsNu5oPkLHN5yI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oh0rJlDmrQVXLKI1S8/Yopsy/0DeMBU1t9zV0bPNLDZ8172RiYgZ9XXXqpnQQqqtv
+	 493Vh2cIYp/poFW2k2QPADcr9Eqn3NtXkAR8AgMTSY9s2Es1t1Ow75Re+A0MVBotN3
+	 cWmpoTnCH/1Uv0ih/+XOLf3VERjTYbAm1vDHRXk5JsKHpsJBQJC2nUaVath3mONzNx
+	 oWi1CAxadTRDxfZGAb7F62Xyzdo6plMZAVmXp+qQhr2jgt/kzeZpDJmK7ZSplnXeov
+	 DzYd9jxXwXBmdYeiCnCnC2hQfgaeQ6QjWmjgz/oJsvYxEUMGHemUKvgkQ9ojxE+SzD
+	 SRkyj4xGyNtsg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
+Cc: Alexander Stein <alexander.stein@mailbox.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.12 22/22] objtool, lkdtm: Obfuscate the do_nothing() pointer
-Date: Mon,  7 Apr 2025 14:13:32 -0400
-Message-Id: <20250407181333.3182622-22-sashal@kernel.org>
+	Sasha Levin <sashal@kernel.org>,
+	mark.tomlinson@alliedtelesis.co.nz,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/15] usb: host: max3421-hcd: Add missing spi_device_id table
+Date: Mon,  7 Apr 2025 14:14:01 -0400
+Message-Id: <20250407181417.3183475-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181333.3182622-1-sashal@kernel.org>
-References: <20250407181333.3182622-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,87 +45,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.22
+X-stable-base: Linux 6.6.86
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Alexander Stein <alexander.stein@mailbox.org>
 
-[ Upstream commit 05026ea01e95ffdeb0e5ac8fb7fb1b551e3a8726 ]
+[ Upstream commit 41d5e3806cf589f658f92c75195095df0b66f66a ]
 
-If execute_location()'s memcpy of do_nothing() gets inlined and unrolled
-by the compiler, it copies one word at a time:
+"maxim,max3421" DT compatible is missing its SPI device ID entry, not
+allowing module autoloading and leading to the following message:
+ "SPI driver max3421-hcd has no spi_device_id for maxim,max3421"
 
-    mov    0x0(%rip),%rax    R_X86_64_PC32    .text+0x1374
-    mov    %rax,0x38(%rbx)
-    mov    0x0(%rip),%rax    R_X86_64_PC32    .text+0x136c
-    mov    %rax,0x30(%rbx)
-    ...
+Fix this by adding the spi_device_id table.
 
-Those .text references point to the middle of the function, causing
-objtool to complain about their lack of ENDBR.
-
-Prevent that by resolving the function pointer at runtime rather than
-build time.  This fixes the following warning:
-
-  drivers/misc/lkdtm/lkdtm.o: warning: objtool: execute_location+0x23: relocation to !ENDBR: .text+0x1378
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/30b9abffbddeb43c4f6320b1270fa9b4d74c54ed.1742852847.git.jpoimboe@kernel.org
-Closes: https://lore.kernel.org/oe-kbuild-all/202503191453.uFfxQy5R-lkp@intel.com/
+Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
+Link: https://lore.kernel.org/r/20250128195114.56321-1-alexander.stein@mailbox.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/perms.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/usb/host/max3421-hcd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index 5b861dbff27e9..6c24426104ba6 100644
---- a/drivers/misc/lkdtm/perms.c
-+++ b/drivers/misc/lkdtm/perms.c
-@@ -28,6 +28,13 @@ static const unsigned long rodata = 0xAA55AA55;
- /* This is marked __ro_after_init, so it should ultimately be .rodata. */
- static unsigned long ro_after_init __ro_after_init = 0x55AA5500;
- 
-+/*
-+ * This is a pointer to do_nothing() which is initialized at runtime rather
-+ * than build time to avoid objtool IBT validation warnings caused by an
-+ * inlined unrolled memcpy() in execute_location().
-+ */
-+static void __ro_after_init *do_nothing_ptr;
-+
- /*
-  * This just returns to the caller. It is designed to be copied into
-  * non-executable memory regions.
-@@ -65,13 +72,12 @@ static noinline __nocfi void execute_location(void *dst, bool write)
- {
- 	void (*func)(void);
- 	func_desc_t fdesc;
--	void *do_nothing_text = dereference_function_descriptor(do_nothing);
- 
--	pr_info("attempting ok execution at %px\n", do_nothing_text);
-+	pr_info("attempting ok execution at %px\n", do_nothing_ptr);
- 	do_nothing();
- 
- 	if (write == CODE_WRITE) {
--		memcpy(dst, do_nothing_text, EXEC_SIZE);
-+		memcpy(dst, do_nothing_ptr, EXEC_SIZE);
- 		flush_icache_range((unsigned long)dst,
- 				   (unsigned long)dst + EXEC_SIZE);
- 	}
-@@ -267,6 +273,8 @@ static void lkdtm_ACCESS_NULL(void)
- 
- void __init lkdtm_perms_init(void)
- {
-+	do_nothing_ptr = dereference_function_descriptor(do_nothing);
-+
- 	/* Make sure we can write to __ro_after_init values during __init */
- 	ro_after_init |= 0xAA;
+diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
+index a219260ad3e6c..cc1f579f02de1 100644
+--- a/drivers/usb/host/max3421-hcd.c
++++ b/drivers/usb/host/max3421-hcd.c
+@@ -1946,6 +1946,12 @@ max3421_remove(struct spi_device *spi)
+ 	usb_put_hcd(hcd);
  }
+ 
++static const struct spi_device_id max3421_spi_ids[] = {
++	{ "max3421" },
++	{ },
++};
++MODULE_DEVICE_TABLE(spi, max3421_spi_ids);
++
+ static const struct of_device_id max3421_of_match_table[] = {
+ 	{ .compatible = "maxim,max3421", },
+ 	{},
+@@ -1955,6 +1961,7 @@ MODULE_DEVICE_TABLE(of, max3421_of_match_table);
+ static struct spi_driver max3421_driver = {
+ 	.probe		= max3421_probe,
+ 	.remove		= max3421_remove,
++	.id_table	= max3421_spi_ids,
+ 	.driver		= {
+ 		.name	= "max3421-hcd",
+ 		.of_match_table = max3421_of_match_table,
 -- 
 2.39.5
 
