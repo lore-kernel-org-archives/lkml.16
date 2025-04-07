@@ -1,347 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012062.outbound.protection.outlook.com [52.101.71.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CE5224B1F;
-	Mon,  7 Apr 2025 09:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744018712; cv=none; b=Wejmt547k6ERvKa6HEOU8ufy58YuuA7y1O8iOOBH7C3CPofXE680om5YJR6qiVjMLwV8MRVghMxVO8Y/c8M5CmIqeMg/aqzFKmq5HeK4L0oOETgB9u2TpruXkMz6v8qiE43WFW9c3wEPO4sEDhbqVkmeqe8RPPJ+XeQXiXvd0/g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744018712; c=relaxed/simple;
-	bh=6w3eFSHcGfr21TV3uewsU0b1m9Ul2CRPKvz+z6S4aBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CmRPonia2ma52d/AvN+JPftZp4jEHzEW/zNNqE4d+RoyLnQ/YBZfGcreo38+lKxKaY3sRJJwpVYyyZnZIRmmGGhRZH4ykKWkVOzTKW+F2q8qR/Q+QAiIjzaHIXMiuu7RHxdlo5oMfmZErkOE1CFs3DaltLoWqy4ZTGpH+Cqrg5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9R4+8vZ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCFD156230;
+	Mon,  7 Apr 2025 09:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744018742; cv=fail; b=reuw/6Ej2C0XnWsJ1bOOnmCaFpwbF/EcEUegMW3SEkHtg4sgsMgTrHGkYmVNeXbULd/TqMSfnZ8Q5qtWYLrxjaEfFeYGZvy4zfJp5zaoVoyFcsCE1TBTJm5WhnNRV1y6L2cycQsCaJ/67AhHGYtxUpeTjZbq604/5IG5ogHgV18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744018742; c=relaxed/simple;
+	bh=lXAtiGTvKo3GBdXFmfPp2R607NFAw6GqvwopRV3M0eA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y3lOUAb9IMDGaFfcWBfUnvXn+BU4HcvUM1TrBfQre3HntMmxnIZ2qM/wKOawAJiTk1nYkTbJy+hWY2cHfjo1cKScnwklkmEQkk1gDOe632gDGX50VZidxKvFVUjN+1ijKsY/dSBX0oZLbBx5B363GzkQkkJZfCfusdkjKtuBa/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Jhu1QqBK; arc=fail smtp.client-ip=52.101.71.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9R4+8vZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B23C4CEDD;
-	Mon,  7 Apr 2025 09:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744018710;
-	bh=6w3eFSHcGfr21TV3uewsU0b1m9Ul2CRPKvz+z6S4aBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s9R4+8vZCq6IlmhaWl2Jy5wcRcJzMrxa2CdIvPMkG4H6ckvCj9a6pjxNzeGtcsk1u
-	 KSQXBY7lsEhi+aJA/Kd4qs5+Ii99z7jkRfyhSJNXtsOGNdn0NWPPmOTx2BgsF1OaBv
-	 pWceKRJPm0VGpIR1figoCYaMDBtXHetoCjzKVL2Grl4EuKpUpJ0Mw1+6Dp4d9PJCnE
-	 wfXTo8LJ6CA/UAg1wDmiMj51Vpq6dmUyPxlR2jIlmcNYfccBHFN1b9bTHmgXgw6AJz
-	 +cMTAmdHkr+bFlocUSMgBoYkoSUSc46t6vFHgzDEIgI3MXlz6vf4oPhkkPmbUrtR16
-	 dkdeqG1mCKT6Q==
-Date: Mon, 7 Apr 2025 11:38:27 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Longbin Li <looong.bin@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, ghost <2990955050@qq.com>, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] pwm: sophgo: add driver for SG2044
-Message-ID: <jnvlo3su4xzsvzte2s3noosycxae5uxhi3vusefpgq462ymqst@jgta6xxmcbtd>
-References: <20250407072056.8629-1-looong.bin@gmail.com>
- <20250407072056.8629-3-looong.bin@gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jhu1QqBK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DiYsCI9Ct8qsXnEPnvzOh/5LlUPxjPWSxTxh8x6zUdS/anC+aUoqUx//sUIjY3wIAhFkYMy1U7lnUyOxsRTlaIU315UveIwc0RMzez05hkOtSwM82EC5VibbiZ3myrvnEvVwbnpJcTHjApLRnjnRs3c0+FtxI4UZ7rnvBddmV0h5+KwrJls9rJT7BUzEm9UOo+oMrzALNBeZVQZn6t/OlHKDvwZfBZhKGP73qdQ9p5cieuVyzJGcCNQs+i0WaPxeQLcvA0LBYAUkN7HTAqE7oRbr9vzTjUDZd8OtZ348B5Z63DbVJYKDr4yOtomqMtUD5t+V14rSN3vrFfBEOcHpAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pYVrZ/LKT23EGAPlyxyawMRqc4dMa3w514Ce/QtC5Qo=;
+ b=Y7XZPLyCkvk7NJDq0QFrWARxoDzeE4CbIS70w/4LSJoNAQ1loiNJDcLnkBQeWEOfayRl9nzSm3fNEBjaXzRhbVFBxCJ2a73WKwmllLOyoy0A89jQs7ZGes3sqxTFW92FpvBN72sMAqt5h4fry/60kOjqg5/hRl4utP2XHX7XRXG1xTShrvWbIh8UWu0ir7PcTere2wMFVYzR+qMeh2jmlgF07GwBOKUKnXJK/wO7NMXiliBqnXwTy2wopq+SAk1flBl1pO23/6IcH72zaS7ZUz+PPg9jW6DLytexIbRP0qJ5Xn3bR4IPkwF+vOzYv8tIuFLRkpebe+piv+n9YH7BwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pYVrZ/LKT23EGAPlyxyawMRqc4dMa3w514Ce/QtC5Qo=;
+ b=Jhu1QqBKJXgtY6qJGhmn4ouB6IS30IHuew5I6BE1OB9InLbKEKkDCd3YM6mO9IeGfnYApLhMWuA48iYMmHc4RfiTTJZDuxKVwyAF0lomrz9XyS/Ya+qbHr0Qqp1RsblVbAcUjmSeOTTE6oqWetenGvMleuqtFy5EZGrLRHw1aAkEVRnaCtlsFehrVavJDMoG022ze1D08ILfMlRx3aLFdwQj1pqS5UnhjS0jW6GSIwsZj9msi8TqSOUbSBdJMYxR+yeW25AoKg6NxMJll/bKKxRdBMxEsfQRc0OogVPSAXT9eVCRvGQb4129IAqEuFRgpu1uuGKrFpatSescjvleZA==
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com (2603:10a6:10:242::19)
+ by PA1PR04MB10098.eurprd04.prod.outlook.com (2603:10a6:102:45b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Mon, 7 Apr
+ 2025 09:38:57 +0000
+Received: from DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37]) by DB9PR04MB8429.eurprd04.prod.outlook.com
+ ([fe80::2edf:edc4:794f:4e37%5]) with mapi id 15.20.8583.041; Mon, 7 Apr 2025
+ 09:38:56 +0000
+From: Sherry Sun <sherry.sun@nxp.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Hongxing Zhu <hongxing.zhu@nxp.com>, "l.stach@pengutronix.de"
+	<l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "shawnguo@kernel.org"
+	<shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com"
+	<festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Topic: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Thread-Index: AQHaLabE+/mqsANsskSLK4N2coNpALOWMC4AgASMryCAAAO/AIAAJLrA
+Date: Mon, 7 Apr 2025 09:38:56 +0000
+Message-ID:
+ <DB9PR04MB8429618213357F5CE918C68292AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
+References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+ <20231213092850.1706042-3-sherry.sun@nxp.com>
+ <20250404094130.GA35433@francesco-nb>
+ <DB9PR04MB8429588E7CF00BDC9CDA863F92AA2@DB9PR04MB8429.eurprd04.prod.outlook.com>
+ <Z_N9cO64FZwONcK9@gaggiata.pivistrello.it>
+In-Reply-To: <Z_N9cO64FZwONcK9@gaggiata.pivistrello.it>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DB9PR04MB8429:EE_|PA1PR04MB10098:EE_
+x-ms-office365-filtering-correlation-id: 90350a73-8bb2-42ce-8325-08dd75b80475
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?jWiSnjvWmqxKvUWflhfSNcSCsVh1p3tkDn8ABDayGDRI0KUZAbg1MdA3vrRo?=
+ =?us-ascii?Q?pCdC781QERgcB/vz77BbuH0NQBkq+BsAFklmXXsU+GEAkFFXFIeNvZFbPSC3?=
+ =?us-ascii?Q?JFQAsww9Gm62vs6/4CimVgP5JsQfTMrMYWVvEY0pVR1f6k8ceKpaJEVUvgcZ?=
+ =?us-ascii?Q?a2Sc97QAax5Gfm8bilY3gffOaLjsf+Dp9s8/uXVqIyMy9wAHafCBlb+Skn2v?=
+ =?us-ascii?Q?TJk3k4KmRJ4nzfGzB01C1sG9fW+zMJsGHS5iFcyJisy8pIA5WlsWDC1O0urp?=
+ =?us-ascii?Q?vq63H09VEp3WfbCJNGI7yLvSQKzoQncFMnW7pomUKxGqMqiENYwV9D6E2ygg?=
+ =?us-ascii?Q?WROFtToV/GCs3ojSRUDkD8FljpIrvnpiHGstS33AO0zcc95FhAq1F+G6tYwM?=
+ =?us-ascii?Q?pts9beh215p8fXuDovJHBV0pOK4+sTytkNqOLxI3tOw9x0la+d80mSDPyaKf?=
+ =?us-ascii?Q?W8VkRsR/spZAtkwQJaJLcKiStAk6MPbOq4LACSrz9OI/0jI/iFcvqa2okt/y?=
+ =?us-ascii?Q?W30xPJm+5z9Ihslh1GdIHCnsRJDPPdRms+z5FUKP7qNsftzuIecTN7mjcSPn?=
+ =?us-ascii?Q?jZgTkpYYOzoD6kPQlLlyi2EFM1HZ+VV5kFCOSyvbB3AJWbsML62UrVwVXeNW?=
+ =?us-ascii?Q?AagCO/nA+X966NIcZOlMmTmvQxgNYJj6v5mXsZ2sUrJFc+rvxtqKG9V6LP8D?=
+ =?us-ascii?Q?dyTrJvyn2Wpfc4Rm72PQI1F/AMOWmYxxkjned+29nPHVxz92skbuPNTYFXE0?=
+ =?us-ascii?Q?ueQzU+B4uRt1d5fkfOOOnLBXEI1GJzrWUIGTo5etfzRK09MsDncSw7nudW8d?=
+ =?us-ascii?Q?zTPeTtC/4r5Q54m2DECru5xzXvqAX0tJaOnZKox3QOpxVe9ayliHkhBapeAv?=
+ =?us-ascii?Q?neZhKSD8+MWqjC+/x2thlskcexUdFEc/VPZSQ6mRTwgf7tVNr7dFLC0AQ0AD?=
+ =?us-ascii?Q?Z+PQIY/0tlaXUhW91ZE6BtMlMGmKwB42VFi4Yoe7HJZFnYOejGo1CgARK/Bj?=
+ =?us-ascii?Q?zH9PEAnH+GCWBbO5jMtbZP3QY95Le9HbWgKDl5bWHv7/xVb6EqBtUwcK6vw/?=
+ =?us-ascii?Q?Fo0Kwk275WFtJVKF0QYw+/MeMsuZXJhbFgAVGRlROPxcwh/WHgKiLkQA0hln?=
+ =?us-ascii?Q?NdxZnYVxSoFBLsGeCSlDoUYlj6YiahWhoYFT+9DSht3yvp4a/wI1fxkyiJ+/?=
+ =?us-ascii?Q?QZ6ZcI6RCGJEetJkG8VV0jP4GVhhC7AS0j8FxFVseIOOCTXhRa59B18JU1gh?=
+ =?us-ascii?Q?mUWFs7mNDmM93yPQpyA34WkH/95CEpyq1ngn2f824DVAStdG/0UUPxtH4Itd?=
+ =?us-ascii?Q?4WOY9RvCfXze5WkldgsKZ0zGFeLV3Yy1MVseSA6l3sjyzcV7k53XxHuri1gn?=
+ =?us-ascii?Q?gf5XyUOckD6v6penP4ClznIqQk+ZFqxcSmSWVUKyZnktoQQGX3aXkN9jLBDn?=
+ =?us-ascii?Q?qkEYRlmjeaQIolBaaQL3pfa+9YGqMzh5?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8429.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?row+HwUe/epL29ZOp+CBgGiIfJGQxcezHy41AKm0Q0yuFhToz4Y3D7oYS6KS?=
+ =?us-ascii?Q?38R+oclEUY2ZSpUXzyTuLhWC9xVJN3MzDzp6TlNsMc7COGR7Cv9Mj4hDP/R0?=
+ =?us-ascii?Q?ZUVIA8homl/sw3fIBQFVgWWyYPSx9N7nAGSABbJ5pwn0whPCOgnhM6f3GR9u?=
+ =?us-ascii?Q?BxV/9hrCJX1hvX2oI1U3r2zYIfQx36GAP5Jqkr9xTPXdOTa5Z1SF3hV2GPD7?=
+ =?us-ascii?Q?9yClPF3D0kRPoEPlAscntSNqQyl5HtNs8zkEhtQdfG0JFOvnJCCoLTfskOSX?=
+ =?us-ascii?Q?JMLfkEcFmAKxOjx4LbaD2rA6Q6JB7HA772dERj5OtKJOd+OWf6Rzd9SQr0xa?=
+ =?us-ascii?Q?yYBa3kOcjpsg4n4is51F5nD+iL/Xx2kq/gECJ1JXA9YcqHkttpoqrFxugZxX?=
+ =?us-ascii?Q?XJZVIJj7W//ksiGkqgMdKGQ+D/b/zd+khOoWLBATL5UMGvyi5dFrZD5jRnWb?=
+ =?us-ascii?Q?4uuk0d+iPdXNujVXi/3rGfBca2QE/x4qDzprDnPH25votn/pN0RNj4jPOrTM?=
+ =?us-ascii?Q?9PD38gUmW8vhH8+t3z7eeORmwGG0KX/ghgKWoKlZk2+/5/YsWnyCchn+xZx9?=
+ =?us-ascii?Q?q6+MeX8viL0ehy00NDvSgoJvPSveZdofu01kzEcPbqdPI8Oo7qiYflfEuiOY?=
+ =?us-ascii?Q?tjTbbFB3oanKFyBga1fj4meZBj1rnpN1UtEDtDF8/Qp1o+pF4CQSpHaSSGTf?=
+ =?us-ascii?Q?xa9DmBeKBLgHsq73NQaZGRWU3INfNhDGicyTSr2HWiZ+UW/i8EWZo17TCuWM?=
+ =?us-ascii?Q?KUu02nlNRYMh6lJN2+kPCjET3GJUlxLLYjoz+lYho3osLdAFvqjwGvf2oOZe?=
+ =?us-ascii?Q?2ZXKeNTTDM0HXKzmNAuaDnLbwHmtxqbXOzJIE/CFyG+Ui4UnbCZN2puRgT2x?=
+ =?us-ascii?Q?sM/ftpfmiKUTzA4bAkRc6SBvqLBMzxVRW1m0fsKCijJW3HyS34lstaWgm875?=
+ =?us-ascii?Q?JC9slF4WrZSilITVAJhXOCn+tZjQfyqDeostBqB1C8557xlO/VywjzBxcd1S?=
+ =?us-ascii?Q?3ICMY33Zj681WZ7GyVt7/f677iBzGKWdrQxPHH0sAtmajBUV+n/epI4Q2z3m?=
+ =?us-ascii?Q?rT+E2arjfAJMxYkrukodvAQ7ewFgC050+aSVhpNCyPu7x3OwA3+c7kVGRsyu?=
+ =?us-ascii?Q?V4O3NtT+cYy9DLdiRIgamJ4dOVISo7TkbJXGqikNos3PBxXzCNum0AVaRuDD?=
+ =?us-ascii?Q?iX/ukjjVP030vZmzAaQYUqP6HzBssR+bQzpGK2IiNvevnhANBUGdbMAkKFNf?=
+ =?us-ascii?Q?uRSAvJef/izAxohDRdZovu9dhPh6paXC5gusamVdzjgPxvkL9SOPiWY6Uf1Q?=
+ =?us-ascii?Q?JYI2HRUhnrYFC2S0tAvzIKBiDj+XiYnN730Zn+zcvExX6wGc0mwtFyhyUtLC?=
+ =?us-ascii?Q?eG/Ku5zNBAAcrASm8e0SxgzkhqhGDztjKy89hpnxLExyFIVsnnEEwIM61RHy?=
+ =?us-ascii?Q?wkh54S3qLRTsl41wvDIAf9GUbKdCSiOtqGE8ZBr1qxY5PO3vZ5IHeYTkJY+i?=
+ =?us-ascii?Q?0hpUTzcwJec//Z6fFzNUvyWT6iilqK6ksEvihIIxDhOClcU22QGhRqzpekD0?=
+ =?us-ascii?Q?xKwYa0llXfWRmZmh/io=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pdievs2tczsk2og6"
-Content-Disposition: inline
-In-Reply-To: <20250407072056.8629-3-looong.bin@gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8429.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90350a73-8bb2-42ce-8325-08dd75b80475
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2025 09:38:56.5425
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2OuJRtATHa+0eSoGTHsyNqThQQOfywWqMjxOSPhQcJM8fodfqnYTwoJ/ipW7YS1jqlZQwED8opmpJy6rwk7SZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10098
 
 
---pdievs2tczsk2og6
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] pwm: sophgo: add driver for SG2044
-MIME-Version: 1.0
 
-On Mon, Apr 07, 2025 at 03:20:39PM +0800, Longbin Li wrote:
-> From: ghost <2990955050@qq.com>
-
-Huh, is that a real name?
-
-> Add PWM controller for SG2044.
+> -----Original Message-----
+> From: Francesco Dolcini <francesco@dolcini.it>
+> Sent: Monday, April 7, 2025 3:23 PM
+> To: Sherry Sun <sherry.sun@nxp.com>
+> Cc: Francesco Dolcini <francesco@dolcini.it>; Hongxing Zhu
+> <hongxing.zhu@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> kw@linux.com; robh@kernel.org; bhelgaas@google.com;
+> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
+> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; linux-
+> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios prope=
+rty
 >=20
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> ---
->  drivers/pwm/pwm-sophgo-sg2042.c | 162 +++++++++++++++++++++++++++-----
->  1 file changed, 138 insertions(+), 24 deletions(-)
+> On Mon, Apr 07, 2025 at 07:18:32AM +0000, Sherry Sun wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Francesco Dolcini <francesco@dolcini.it>
+> > > Sent: Friday, April 4, 2025 5:42 PM
+> > > To: Sherry Sun <sherry.sun@nxp.com>
+> > > Cc: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > bhelgaas@google.com; krzysztof.kozlowski+dt@linaro.org;
+> > > conor+dt@kernel.org; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx <linux-
+> > > imx@nxp.com>; linux-pci@vger.kernel.org; linux-arm-
+> > > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org
+> > > Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios
+> > > property
+> > >
+> > > Hello
+> > >
+> > > On Wed, Dec 13, 2023 at 05:28:48PM +0800, Sherry Sun wrote:
+> > > > Add wake-gpios property that can be used to wakeup the host process=
+or.
+> > > >
+> > > > Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> > > > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 6
+> > > > ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > index 81bbb8728f0f..fba757d937e1 100644
+> > > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> > > > @@ -72,6 +72,12 @@ properties:
+> > > >        L=3Doperation state) (optional required).
+> > > >      type: boolean
+> > > >
+> > > > +  wake-gpios:
+> > > > +    description: If present this property specifies WAKE# sideband
+> signaling
+> > > > +      to implement wakeup functionality. This is an input GPIO
+> > > > + pin for the
+> > > Root
+> > > > +      Port mode here. Host drivers will wakeup the host using the =
+IRQ
+> > > > +      corresponding to the passed GPIO.
+> > > > +
+> > >
+> > > From what I know it is possible to share the same WAKE# signal for
+> > > multiple root ports. Is this going to work fine with this binding?
+> > > Same question on the driver.
+> > >
+> > > We do have design exactly like that, so it's not a theoretical questi=
+on.
+> > >
+> > The current design doesn't support such case, maybe some changes in
+> > the driver could achieve that (mark the wake-gpio as
+> > GPIOD_FLAGS_BIT_NONEXCLUSIVE and the interrupt as IRQF_SHARED,
+> etc.).
 >=20
-> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2=
-042.c
-> index ff4639d849ce..c62e8c758d87 100644
-> --- a/drivers/pwm/pwm-sophgo-sg2042.c
-> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
-
-The Limitations paragraph needs updating. E.g. SG2044 seems to support
-polarity while SG2042 doesn't.
-
-> @@ -26,20 +26,22 @@
->  #include <linux/pwm.h>
->  #include <linux/reset.h>
+> Can you consider implementing this?
 >=20
-> -/*
-> - * Offset RegisterName
-> - * 0x0000 HLPERIOD0
-> - * 0x0004 PERIOD0
-> - * 0x0008 HLPERIOD1
-> - * 0x000C PERIOD1
-> - * 0x0010 HLPERIOD2
-> - * 0x0014 PERIOD2
-> - * 0x0018 HLPERIOD3
-> - * 0x001C PERIOD3
-> - * Four groups and every group is composed of HLPERIOD & PERIOD
-> - */
-> -#define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
-> -#define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
-> +#define REG_HLPERIOD		0x0
-> +#define REG_PERIOD		0x4
-> +#define REG_GROUP		0x8
-
-REG_GROUP belongs to a different category than REG_PERIOD. So please use
-a different schema to name it (or drop it, see below).
-
-> +#define REG_POLARITY		0x40
-> +
-> +#define REG_PWMSTART		0x44
-> +#define REG_PWMUPDATE		0x4C
-> +#define REG_SHIFTCOUNT		0x80
-> +#define REG_SHIFTSTART		0x90
-
-REG_SHIFTCOUNT and REG_SHIFTSTART are unused.
-
-> +#define REG_PWM_OE		0xD0
-
-Actually I liked the old prefix better. E.g. "REG_POLARITY" looks more
-generic that it actually is.
-
-> +
-> +#define PWM_REG_NUM		0x80
-
-This is unused?
-
-> +
-> +#define PWM_POLARITY_MASK(n) BIT(n)
-> +#define PWM_HLPERIOD(chan) ((chan) * REG_GROUP + REG_HLPERIOD)
-> +#define PWM_PERIOD(chan) ((chan) * REG_GROUP + REG_PERIOD)
-
-((chan) * 8 + 0) is IMHO better. I guess this is subjective because at
-least the *8 is repeated several times, but the advantage of not using a
-define for 8 (and 0 and 4) is that by looking at
-
-	#define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
-
-you immediatly see the offsets of the HLPERIOD register, while for
-
-	#define PWM_HLPERIOD(chan) ((chan) * REG_GROUP + REG_HLPERIOD)
-
-you have to lookup two additional symbols.
-
-Also PWM is a prefix that is too generic.
-
->  #define SG2042_PWM_CHANNELNUM	4
+> > But usually each RC has its own WAKE# pin assigned. We have not come
+> > across a case where multiple RC share the same WAKE# pin.
 >=20
-> @@ -51,6 +53,12 @@
->  struct sg2042_pwm_ddata {
->  	void __iomem *base;
->  	unsigned long clk_rate_hz;
-> +	struct mutex lock;
-
-What does this lock protect? Note that there is a chip lock that is held
-when .apply() is called, to serialize apply calls for a single chip. I
-guess this can and should be dropped.
-
-> +};
-> +
-> +struct sg2042_chip_data {
-> +	const struct pwm_ops ops;
-> +	bool atomic;
->  };
+> We do have such design, with an NXP iMX95 SoC, available now.
 >=20
->  /*
-> @@ -62,8 +70,8 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata *=
-ddata, unsigned int chan,
->  {
->  	void __iomem *base =3D ddata->base;
->=20
-> -	writel(period_ticks, base + SG2042_PWM_PERIOD(chan));
-> -	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
-> +	writel(period_ticks, base + PWM_PERIOD(chan));
-> +	writel(hlperiod_ticks, base + PWM_HLPERIOD(chan));
 
-The register renaming adds really quite some noise that is actually
-unrelated to this patch. If you really think the register defines need
-renaming, do that in a separate patch (and justify it well).
+Hi Francesco,
 
->  }
->=20
->  static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> @@ -104,8 +112,8 @@ static int pwm_sg2042_get_state(struct pwm_chip *chip=
-, struct pwm_device *pwm,
->  	u32 hlperiod_ticks;
->  	u32 period_ticks;
->=20
-> -	period_ticks =3D readl(ddata->base + SG2042_PWM_PERIOD(chan));
-> -	hlperiod_ticks =3D readl(ddata->base + SG2042_PWM_HLPERIOD(chan));
-> +	period_ticks =3D readl(ddata->base + PWM_PERIOD(chan));
-> +	hlperiod_ticks =3D readl(ddata->base + PWM_HLPERIOD(chan));
->=20
->  	if (!period_ticks) {
->  		state->enabled =3D false;
-> @@ -123,13 +131,112 @@ static int pwm_sg2042_get_state(struct pwm_chip *c=
-hip, struct pwm_device *pwm,
->  	return 0;
->  }
->=20
-> -static const struct pwm_ops pwm_sg2042_ops =3D {
-> -	.apply =3D pwm_sg2042_apply,
-> -	.get_state =3D pwm_sg2042_get_state,
-> +static void pwm_sg2044_config(struct sg2042_pwm_ddata *ddata, struct pwm=
-_device *pwm, bool enabled)
-> +{
-> +	u32 pwm_value;
-> +
-> +	pwm_value =3D readl(ddata->base + REG_PWMSTART);
-> +
-> +	if (enabled)
-> +		writel(pwm_value | BIT(pwm->hwpwm), ddata->base + REG_PWMSTART);
-> +	else
-> +		writel(pwm_value & ~BIT(pwm->hwpwm), ddata->base + REG_PWMSTART);
-> +}
-> +
-> +static void pwm_sg2044_set_outputenable(struct sg2042_pwm_ddata *ddata, =
-struct pwm_device *pwm,
-> +					bool enabled)
-> +{
-> +	u32 pwm_value;
-> +
-> +	pwm_value =3D readl(ddata->base + REG_PWM_OE);
-> +
-> +	if (enabled)
-> +		writel(pwm_value | BIT(pwm->hwpwm), ddata->base + REG_PWM_OE);
-> +	else
-> +		writel(pwm_value & ~BIT(pwm->hwpwm), ddata->base + REG_PWM_OE);
-> +}
-> +
-> +static int pwm_sg2044_set_polarity(struct sg2042_pwm_ddata *ddata, struc=
-t pwm_device *pwm,
-> +				   const struct pwm_state *state)
-> +{
-> +	enum pwm_polarity polarity;
-> +	u32 pwm_value;
-> +
-> +	pwm_value =3D readl(ddata->base + REG_POLARITY);
-> +
-> +	polarity =3D state->polarity;
-> +
-> +	if (polarity =3D=3D PWM_POLARITY_NORMAL)
-> +		pwm_value &=3D ~BIT(pwm->hwpwm);
-> +	else
-> +		pwm_value |=3D BIT(pwm->hwpwm);
-> +
-> +	writel(pwm_value, ddata->base + REG_POLARITY);
+Now the patch set is pending, please check the comment under
+https://patchwork.kernel.org/project/linux-pci/cover/20231213092850.1706042=
+-1-sherry.sun@nxp.com/ .
+Seems this property should be put into the common PCI root port schema,
+now it relies on the pci-bus.yaml splitting job Rob is doing.
 
-I like this idiom better than the one used in
-pwm_sg2044_set_outputenable() and pwm_sg2044_config(). However drop the
-local variable polarity.
-
-> +	return 0;
-> +}
-> +
-> +static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
-> +	u32 hlperiod_ticks;
-> +	u32 period_ticks;
-> +
-> +	if (!state->enabled) {
-> +		pwm_sg2044_config(ddata, pwm, false);
-> +		return 0;
-> +	}
-> +
-> +	pwm_sg2044_set_polarity(ddata, pwm, state);
-> +
-> +	/*
-> +	 * Duration of High level (duty_cycle) =3D HLPERIOD x Period_of_input_c=
-lk
-> +	 * Duration of One Cycle (period) =3D PERIOD x Period_of_input_clk
-> +	 */
-> +	period_ticks =3D min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->per=
-iod,
-> +					       NSEC_PER_SEC), U32_MAX);
-> +	hlperiod_ticks =3D min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->d=
-uty_cycle,
-> +						 NSEC_PER_SEC), U32_MAX);
-
-This is the same calculation as for sg2042. I think I'd put that in a
-function that is used by both variants.
-
-> +	dev_dbg(pwmchip_parent(chip), "chan[%u]: PERIOD=3D%u, HLPERIOD=3D%u\n",
-> +		pwm->hwpwm, period_ticks, hlperiod_ticks);
-
-Now that there are more register values, please add them all to the
-debug output.
-
-> +	pwm_sg2042_config(ddata, pwm->hwpwm, period_ticks, hlperiod_ticks);
-> +
-> +	guard(mutex)(&ddata->lock);
-> +
-> +	/*
-> +	 * re-enable PWMSTART to refresh the register period
-> +	 */
-> +	pwm_sg2044_config(ddata, pwm, false);
-
-pwm_sg2044_config() is conceptually different to pwm_sg2042_config().
-This is irritating, so please find a better name.
-
-> +	pwm_sg2044_set_outputenable(ddata, pwm, true);
-> +	pwm_sg2044_config(ddata, pwm, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct sg2042_chip_data sg2042_chip_data =3D {
-> +	.ops =3D {
-> +		.apply =3D pwm_sg2042_apply,
-> +		.get_state =3D pwm_sg2042_get_state,
-> +	},
-> +	.atomic =3D true,
-> +};
-> +
-> +static const struct sg2042_chip_data sg2044_chip_data =3D {
-> +	.ops =3D {
-> +		.apply =3D pwm_sg2044_apply,
-> +		.get_state =3D pwm_sg2042_get_state,
-> +	},
-> +	.atomic =3D false,
-
-If you drop the mutex don't forget to drop this one, too.
-
->  };
-
-Best regards
-Uwe
-
---pdievs2tczsk2og6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfznREACgkQj4D7WH0S
-/k5IGQgAuKXpR7T10Khnr9B2l20fU/CYqEoy5dSxjYN0+CoYrIAQuN06iXb2kGk7
-L62b9E0X9INBEJZClH5a6BpNVCOhkcDc+rs2XYL7Aq8248jVS74ybVoZByyRqi/b
-B5sKVoGbh+cHPJjmtVxzvUr83hedydWfqNt43tUfjhjsa5zUPmk+zUvsZ6qh2Jzw
-wH9jLYMmMH13kGrEo0szGFqM3DLI6UldaTIUBueFnZjHHxxct5cxFUwdLWGNoUvK
-xwmykjwSxOKLWqT0kQuot0gG9bxZFsd6O3s0Y9SADPcaUMYckc0uptjWaaQNifr5
-miGS4qqA5OBH+ZCZlche16tmPnzvxw==
-=xehm
------END PGP SIGNATURE-----
-
---pdievs2tczsk2og6--
+Best Regards
+Sherry
