@@ -1,216 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1011DE890
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF39C1DF724;
+	Mon,  7 Apr 2025 14:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037217; cv=none; b=Cx+ymkJgidIQ3V1RDsJKq4lag602yuG7w1VuyIvvdjAWUnrR/2TvNZ1lNeU6SC7T/i4BGzrx8qSQfzQHm27+jfvpJzEOVj8aucuOqwwguVjDaCQPZGVVjSDAGNK+yI4BwvqNyAusPDACDG+zg0ALGYPwbO7dPArcrXObmZQZF7M=
+	t=1744037390; cv=none; b=s3gyz/Lk1H67HtntjlkM2jfNgqhnshNE+JzAZi7S19Azo7YO8CdgsdwmtpiWVHeBB+qaNirD7g8AYWP09vYF8pE1WnVT/dis9vrGh03ZkLXtb78u0w86iK2uX9adweuOCVFdL3XG26yRW/xiSQz8wqV1V91dd906ctqpEFMHU1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037217; c=relaxed/simple;
-	bh=W2t77E0tmbGgfvb+IN2IWQmKxzIvGnpJmucLEFBRxzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XVE2VmkKVMADuzGtTZMIIIfPGr7TSRNal2xadeVgIzYyi1+kYC08+LEQhybT3TV45xdPbeKrldwEfdWw3GGJnf5m2NUMjrjYG8CH8S3UDpX4D+96j3Qf33dTTsk6qZEAvSDCCxEOr06FnRejGu0mxIE5NaYhS7kD6KE1fgjz3Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpkZD/fF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744037390; c=relaxed/simple;
+	bh=t8MuHn26ogD3YZ+VawM4zCp0dmjmSqrLzD4RK6IAnnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UCJyr6WOTepnR4dTxncuWUp9q4TvObvhetMZMxfAPkA/U7KUaqMVN0ZWcOO0/lOSrtqRYMt0hV2oWpLR8PlUOXk9VpSqw6p+meFlQnqKU35iVCmNBUA5AfEBZSVnMyJcP85wWDcqrg36TupLQ53fwNaOxgH347EQVDE9UTHXMxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKZns8XN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpkZD/fF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744037214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+JBzs/lfPTMTyDZad0L+1TztRElX/AUHjw0pErz4yOQ=;
-	b=TpkZD/fF0i2LmfdIxJ6SGjNS4Cpp/7glW7mF9WOWCHah6i4Y9hKTwiJcR2aktga9UjM1xJ
-	qeZ/vjpppbSP4Fy1fDgh8oBN/3AghJDkfGMAfBh+hy1RIXGySypJvAlBQWjY/7pxrnMo6J
-	rWedqHIUWLBLrCNG3B2nn1t1xCjIZPk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-NL-dHqbGOCuhqpec71sJrA-1; Mon, 07 Apr 2025 10:46:52 -0400
-X-MC-Unique: NL-dHqbGOCuhqpec71sJrA-1
-X-Mimecast-MFC-AGG-ID: NL-dHqbGOCuhqpec71sJrA_1744037212
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so29209185e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 07:46:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744037211; x=1744642011;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+JBzs/lfPTMTyDZad0L+1TztRElX/AUHjw0pErz4yOQ=;
-        b=sGb6MaL/txWUMcB6mo/Esk5oZ14Tf3NQJMS1xKUjkm5dzDIkl3M6FiN6jFe+frhNDR
-         5Ddf91R/kef6tpACd6PIyPY350/DFc7l95awsywZdbzQ0ojtoCGR+g+sq6sUsNvpuMFm
-         IcnyoTaMzmm4d0jW3LCQQHnFpWtMwSii0uC/1a2rOlPKcovMMq5hTvUgx2w+go0u6fgr
-         ceLWo0k+wqCSqV9FR33nd4uBlVJCqnm7IFKii2JfL8gcoT2IoPcyllV6dVyvjyQ0zX2A
-         hjbazWN5CPhZLkE9WnRpeu8Nu9ZRTPaGNQlR84AXgsO0trCWeP5k91K0dTJ5XqTnlJgN
-         8Kng==
-X-Forwarded-Encrypted: i=1; AJvYcCUej5+iP4E8wkk36sgF8G0c40S2W1nnZbRXo++F7BjxYsq/PZhhRviw8K50uSmOb/Ky0VfcV6Gt5QgHeDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8MWyUBSngP+ndtyGYHKf/xuuGrwY52eLJIhyFm2qgt3RDtQ1d
-	7zx4rXdJUSoSdX4tpfKLJqjHCT0b95QektR16EjCY6fXEKbJ+hu7PrgJj0abbvE0TQ575M9lFFs
-	WiSISY+DI1MZkqdKIJAvAbKAg2DboRGpFpMtbJiBoz9ESDnOpMWXilGV8591/3g==
-X-Gm-Gg: ASbGncuryalKHzsFConO+N3RBzf/u6N+S2xWn79UlcTlf8TojM4rzmIXiNB688pjdlI
-	2tmQ7ero2Zdaah/xjX5M3HSwdKflKmIEpDxPJOR2dbFUZ7/d91OPAs6Otn09gMoXGSI7Iy4tIpS
-	2jsyPC7QFr/9Idhskg+MQiR3F5wNlyGaTU8k5c/LcL87/FR5lGJR2fH0hhI771u4y5cy5AmTsEm
-	3FPj9XrITp+nxmghTKZd0oEgaxu4TGu1sr8eUUxB1ihA/BJ9zrCCTV2J9XELkYEEShaW70PbjBm
-	OPHguVhrzRLW7sQ0Bicxn5EOQBEF+TK5fO/8qUkP9/QCyTkeYT8XeCjKwAaRwP0wOfDua/TtNwf
-	dGKQ9WU7c29IRVhV4nC78FdA1xOdtggAw14GDOyObZDU=
-X-Received: by 2002:a05:600c:4fcd:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-43eda5d4356mr89961845e9.6.1744037211689;
-        Mon, 07 Apr 2025 07:46:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkMDYiysHhg4FAH45/4sqicxO4DSMEK914rVRpEQcqCPyzF4nOkGiqDPxNFvJdev5DmLnpWQ==
-X-Received: by 2002:a05:600c:4fcd:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-43eda5d4356mr89961405e9.6.1744037211224;
-        Mon, 07 Apr 2025 07:46:51 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c738:3c00:8b01:4fd9:b833:e1e9? (p200300cbc7383c008b014fd9b833e1e9.dip0.t-ipconnect.de. [2003:cb:c738:3c00:8b01:4fd9:b833:e1e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec36699e0sm132802575e9.35.2025.04.07.07.46.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 07:46:50 -0700 (PDT)
-Message-ID: <9326367c-977d-4d55-80bd-f1ad3673f375@redhat.com>
-Date: Mon, 7 Apr 2025 16:46:48 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKZns8XN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2196C4CEDD;
+	Mon,  7 Apr 2025 14:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744037390;
+	bh=t8MuHn26ogD3YZ+VawM4zCp0dmjmSqrLzD4RK6IAnnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bKZns8XNwkKsKzJPMlf2XX8Via/GsVSFkbr+ESGP7e6nbkTaIxe7sZeKDWDbDcpG7
+	 aELCLqK4H0PbRNAw8q6tm7A9oc51U5WbGGOlV+UVWk2lAnwBDPOXUKisl+irN6274r
+	 xj087zQXaX7QoibvX1pcx/yDr+nD1LBf8pMjfKS/1q3oiBoiJZSBjCAXnzlNemFd9a
+	 P+pZ5sNz5t+/Yw/QpIkc8XKsKfeVJeltASy3gEDPkivg9UESVhKJOYvmq7J1a1aHyP
+	 1r4LRbgr018FlojmYZqVaO5nl21sw9pXpde0avYSxSjslaBlWgppBnDC0TDy+vlEBQ
+	 fxyhQ0c7GYOzA==
+Date: Mon, 7 Apr 2025 15:49:45 +0100
+From: Simon Horman <horms@kernel.org>
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH] docs: tproxy: fix formatting for nft code block
+Message-ID: <20250407144945.GL395307@horms.kernel.org>
+References: <CFD0AAF9D7040B1E+20250407031727.1615941-1-chenlinxuan@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] KVM: guest_memfd: support for uffd minor
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Nikita Kalyazin <kalyazin@amazon.com>, Ackerley Tng
- <ackerleytng@google.com>, Vishal Annapurve <vannapurve@google.com>,
- Fuad Tabba <tabba@google.com>, akpm@linux-foundation.org,
- pbonzini@redhat.com, shuah@kernel.org, viro@zeniv.linux.org.uk,
- brauner@kernel.org, muchun.song@linux.dev, hughd@google.com,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
- jannh@google.com, ryan.roberts@arm.com, jthoughton@google.com,
- peterx@redhat.com, graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk,
- derekmn@amazon.com, nsaenz@amazon.es, xmarcalx@amazon.com
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <2iggdfimgfke5saxs74zmfrswgrxmmsyxzphq4mdfpj54wu4pl@5uiia4pzkxem>
- <e8abe599-f48f-4203-8c60-9ee776aa4a24@amazon.com>
- <63j2cdjh6oxzb5ehtetiaolobp6zzev7emgqvvfkf5tuwlnspx@7h5u4nrqwvsc>
- <ba93b9c1-cb2b-442f-a4c4-b5530e94f88a@amazon.com>
- <2bohfxnbthvf3w4kz5u72wj5uxh5sb5s3mbhdk5eg2ingkpkqg@ylykphugpydy>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <2bohfxnbthvf3w4kz5u72wj5uxh5sb5s3mbhdk5eg2ingkpkqg@ylykphugpydy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CFD0AAF9D7040B1E+20250407031727.1615941-1-chenlinxuan@uniontech.com>
 
-On 07.04.25 16:24, Liam R. Howlett wrote:
-> * Nikita Kalyazin <kalyazin@amazon.com> [250407 10:05]:
->>
++ Pablo, Jozsef, netfilter-devel, coreteam
+
+On Mon, Apr 07, 2025 at 11:17:27AM +0800, Chen Linxuan wrote:
+
+Hi Chen,
+
+A description of why this change is being made should go here.
+
+As this is a patch for Netfilter documentation, it should probably be
+targeted at nf-next like this:
+
+  Subject: [PATCH nf-next] ...
+
+And Pablo, Jozsef, netfilter-devel and coreteam should be CCed.
+
+If you do post a follow-up, please do allow 24h between it and your
+original post as per:
+
+https://docs.kernel.org/process/maintainer-netdev.html
+
+The documentation update itself looks good to me.
+
+
+Pablo and Jozef,
+
+Should we add tproxy.rst to the MAINTAINERS entry for NETFILTER
+so that get_maintainer.pl does the right thing?
+
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
+>  Documentation/networking/tproxy.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> ...
+> diff --git a/Documentation/networking/tproxy.rst b/Documentation/networking/tproxy.rst
+> index 7f7c1ff6f159..75e4990cc3db 100644
+> --- a/Documentation/networking/tproxy.rst
+> +++ b/Documentation/networking/tproxy.rst
+> @@ -69,9 +69,9 @@ add rules like this to the iptables ruleset above::
+>      # iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
+>        --tproxy-mark 0x1/0x1 --on-port 50080
+>  
+> -Or the following rule to nft:
+> +Or the following rule to nft::
+>  
+> -# nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
+> +    # nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
+>  
+>  Note that for this to work you'll have to modify the proxy to enable (SOL_IP,
+>  IP_TRANSPARENT) for the listening socket.
+> -- 
+> 2.48.1
 > 
->>>
->>> All of this is extremely confusing because the onus of figuring out what
->>> the final code will look like is put on the reviewer.  As it is, we have
->>> issues with people not doing enough review of the code (due to limited
->>> time).  One way to get reviews is to make the barrier of entry as low as
->>> possible.
->>>
->>> I spent Friday going down a rabbit hole of patches referring to each
->>> other as dependencies and I gave up.  It looks like I mistook one set of
->>> patches as required vs them requiring the same in-flight ones as your
->>> patches.
->>>
->>> I am struggling to see how we can adequately support all of you given
->>> the way the patches are sent out in batches with dependencies - it is
->>> just too time consuming to sort out.
->>
->> I'm happy to do whatever I can to make the review easier.  I suppose the
->> extreme case is to wait for the dependencies to get accepted, effectively
->> serialising submissions, but that slows the process down significantly.  For
->> example, I received very good feedback on v1 and v2 of this series and was
->> able to address it instead of waiting for the dependency.  Would including
->> the required patches directly in the series help?  My only concern is in
->> that case the same patch will be submitted multiple times (as a part of
->> every depending series), but if it's better, I'll be doing that instead.
-> 
-> Don't resend patches that someone else is upstreaming, that'll cause
-> other problems.
-> 
-> Three methods come to mind:
-> 
-> 1. As you stated, wait for the dependencies to land.  This is will mean
-> what you are working against is well tested and won't change (and you
-> won't have to re-spin due to an unstable base).
-> 
-> 2. Combine them into a bigger patch set.  I can then pull one patch set
-> and look at the parts of interest to the mm side.
-> 
-> 3. Provide a git repo with the necessary changes together.
-> 
-> I think 2 and 3 together should be used for the guest_memfd patches.
-> Someone needs to be managing these to send upstream.  See the discussion
-> in another patch set on guest_memfd here [1].
-
-The issue is that most extensions are fairly independent from each 
-other, except that they built up on Fuad's mmap support,
-
-Sending all together as one thing might not be the best option.
-
-Once basic mmap support is upstream, some of the extensions (e.g., 
-directmap removal) can go in next.
-
-So until that is upstream, I agree that tagging the stuff that builds up 
-on that is the right thing to do, and providing git trees is another 
-very good idea.
-
-I'll prioritize getting Fuad's mmap stuff reviewed. (I keep saying that, 
-I know)
-
--- 
-Cheers,
-
-David / dhildenb
-
