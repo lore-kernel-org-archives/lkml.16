@@ -1,208 +1,199 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57368252916
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EEF22FDEF
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 13:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030984; cv=none; b=nFPdr2AJEuTuwV6rEGW718gqFuRTcUuKX+PfJ0KFWZ2/+IyEY+mkr0Rhy8uctWpFMK6Byxhd3fJDgOMDlTbPz12mIyqKdxceV7OxkndBEk0CSzt999aQF2pnfscI4IwmMrUi6fTYK1o0vEdakOKjA6sMZfKkUcwrrsqtqpv5EAE=
+	t=1744031018; cv=none; b=DG0yqCT9YAZf8AMFuBdl5tcd/u5faxME6uVKkPUR6JE8AXcC6DdYVYTNZnBUKK6gSuuLkGcxw6f37KZfOicXB6oZ+0WJr9Eekpuu/P3IEw3FbvmY/ckIeZMyUMnY12kzNj013jEsEbVSy/WfCBvrjytSCdqE+jomyUBSDDWoGj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030984; c=relaxed/simple;
-	bh=eWQPgI8XSPxRiYYryfl8uQnSfNBvxwSJhnDq76893Fc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9tUxFHEPlLxgZX7tppOohQFIkVnYmWTZX8xpeC/vwbkiB5txOL7JcBzqzrr5pVn7t32SvFDQ8LVmVsJhXoeJoa6HlIgFFzFF6qUz13OtAcqwU6ko0Dn1DhrhypRgbxTCECTSOT5mH5gfpLgnr0FPRRNhEo95BjahUtNwboSNdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vHXqawzj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kCpajPkj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vHXqawzj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kCpajPkj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744031018; c=relaxed/simple;
+	bh=wpl/vPTJcLkrNzhp1xfRr6rd+jBzkVczwVjNbI+aCoA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hL2hf41ZYup7bcecwTKy+XQ+9KFY3OH3SfMTPjI9ZutOPl4HJW2DMyF71wuhHDnk625SgsxIkWY15ESQnwAVwg1oTAXX1Dm5Sw05DuKSZs7yvcK3k0ufd29VsAiwccA59PU7ScU8Me69pd5qegDQYpX5CNQmDmG+w6qA2uR8CoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s9Qg/bNE; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vHXqawzj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kCpajPkj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vHXqawzj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kCpajPkj"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5DADD1F388;
-	Mon,  7 Apr 2025 13:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744030979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
-	b=vHXqawzjFpkWyVcPcgkHdGxWOoRHjbu+Z43399bXGkcC9/x9uGRV8wtFB2ngBkzeZN41XO
-	s0qZS22zEq5c5gDSJcrU+KAV7wiAehRs0IYEQK6WEHP3l8W9fh3nzjaWtMPgsVjTuruB8O
-	gP7261s9hQTN2h7zktDluNgRHqMtwdU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744030979;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
-	b=kCpajPkj7sgkHbQK596rrHxDh6C/7EVSq1taHyEInxIrPJl9RFbi4/49OMRzdvBaQuHI2g
-	V3Bc4djqlHooP2CA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744030979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
-	b=vHXqawzjFpkWyVcPcgkHdGxWOoRHjbu+Z43399bXGkcC9/x9uGRV8wtFB2ngBkzeZN41XO
-	s0qZS22zEq5c5gDSJcrU+KAV7wiAehRs0IYEQK6WEHP3l8W9fh3nzjaWtMPgsVjTuruB8O
-	gP7261s9hQTN2h7zktDluNgRHqMtwdU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744030979;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ts9MnOf3nqjoKJZUrQWgTAssq3+KWbI9ih4Wh/9+zYs=;
-	b=kCpajPkj7sgkHbQK596rrHxDh6C/7EVSq1taHyEInxIrPJl9RFbi4/49OMRzdvBaQuHI2g
-	V3Bc4djqlHooP2CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5115113691;
-	Mon,  7 Apr 2025 13:02:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WY3EEwPN82dlDQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 07 Apr 2025 13:02:59 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 00A91A08D2; Mon,  7 Apr 2025 15:02:58 +0200 (CEST)
-Date: Mon, 7 Apr 2025 15:02:58 +0200
-From: Jan Kara <jack@suse.cz>
-To: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-Cc: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Eric Sandeen <sandeen@redhat.com>, Jan Kara <jack@suse.cz>, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, stable@vger.kernel.org
-Subject: Re: [PATCH] ext4: fix off-by-one error in do_split
-Message-ID: <odgkvml62unm4ux3sbnympgyzj22z7dwjgdvdmlbgtiybq4j7z@gnnaygdp7muw>
-References: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s9Qg/bNE"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso22180035e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 06:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744031015; x=1744635815; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nSsCIjvR/DpqlZr0dy0a5YzR+QYHTqH+auQ/wAPHhtA=;
+        b=s9Qg/bNEC1zsYHUP7WTkNbEyjWTFjmO3PhdNFGkrF6aWyg86zC1VmP82bRN4P6p8+0
+         141XYcjeOjSI+h/6i2B1mHiq6ckV4s3d6W5xPMjCLe4T96kZcfVk40BzhtbcvWVei7Mb
+         rakpH85gSfmNNQwHTSq9BCBlhQulGFBKfDxO9ZfxHTHsx597xKu0cR+UNRskcvDFP4+p
+         HR1Pdf10eG4mPFGd0dVtXUTaw6RSfGjKDDJXAHVyYl0LcG7u56J/Kwd1BwaNYUMOZyzT
+         a8UHNJDlknqtWOD0xz3iH9EdnlBAR9/oiRo7KWgm4ErUCPjbaQn4U+l0yRoC0fWXmmCX
+         SmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744031015; x=1744635815;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nSsCIjvR/DpqlZr0dy0a5YzR+QYHTqH+auQ/wAPHhtA=;
+        b=YXEp8n2MzyluEUDAaiYl6Ds7UbnTaYMjculXEef3o2bW9XgBy+ccpj1GXF7GQNHXWh
+         yyzRoO3cZV9VO2zb/Uq/KgGm7hzrOFs5l6X4HI5qjMW9AxDNj9j31QFaTXZUs3gVElC5
+         eu6iO8VlVGWC1zmUdPa36h8JLQVSdnZh4jLT9U/04yj/aplS1jPPMcemWb29CaY+fXem
+         No2FLCbMSnajTJDoMhVbxY3jU6yx7/vfcid3E6fDcanwCRXY1yH/UJV+K6ZG4iks0o7s
+         eZzTriO1GTQVTkP2AB61rPEUZAddUMML2r+q6hHs67Io5TAQ5ehVPnNkjTEYVY89unbM
+         MRRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUihB471AHAMNAx2T3zzGHKzLnnmN4OBilp7tuyfBDM4pnywycCmVB800kIvHQWCS5u+sQ646BDaIeBNLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAj0DiwrDyWatB3WNAoKSFOYdu0lsVpH3eLXDJbauDK/KlsTEc
+	50+zWdoKNm3foQhQvAxIQ5N9V6DeqyctJYbc3bQMDXqzxDxUbCvhyfBkmsCl9WvEBSe4TDbyoBs
+	K
+X-Gm-Gg: ASbGncu4zUYhp1L7/ZAgtFUjHPDAhDtMJMKvlDfIH1z3e6fOlPeJV1RwdFywNUyEbs3
+	/qq4jyUWkSXCEdHFa7MQ2iFQFuUocQ/R3qg6IERRA+nvDudj26ALrxR0HL9hxRa9RDfsspINBYt
+	AprXbcfXHkoqyAtly8Tjh1tPHq23HFCBZKIEQyBqWRgZupznfaw42X8WtuBarrQxhlfPuJerIRg
+	sfj2kw3YA0pcmmk/MWrOoZIMzSTsriLR86Mkf7gysKr+gieY6MF/9zJ80d9ZnxYrBcc9c+axMxw
+	oAEbfw5XPCjKQXWlFU9cIKIFMqVD4lHAidHxGSvHFr5o2eK6OlMCw4czL+Em0zAwsqlE2ha6UAp
+	z
+X-Google-Smtp-Source: AGHT+IFZFK3wlUpqJmXsUYZAFYQdGzjNd2OpaoMVWxUm3lsHacq8ir6Y2bAW4zwcoS+f8h+LqzPWpg==
+X-Received: by 2002:a05:600c:4f0e:b0:43b:c0fa:f9dd with SMTP id 5b1f17b1804b1-43ecf9c3224mr92276095e9.25.1744031014549;
+        Mon, 07 Apr 2025 06:03:34 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec36691b3sm131378805e9.34.2025.04.07.06.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 06:03:33 -0700 (PDT)
+From: neil.armstrong@linaro.org
+Date: Mon, 07 Apr 2025 15:03:33 +0200
+Subject: [PATCH] arm64: dts: qcom: sm8550: add iris DT node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACTN82cC/x2Nuw6DMAwAfwV5xlIaEpryKxUDD0M9AJGdIiTEv
+ xMx3g13JygJk0JTnCC0s/K2ZniVBQy/bp0JecwM1lhvnHlj2iIPqEs4vMF/1CTULcjCisFnNSa
+ 0wdW9+1RUews5FIUmPp7Jt72uGxxmO3l0AAAA
+X-Change-ID: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2896;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=l3nK4t1N1vFrdEqqSpqgF3jrixKbP18uRVCFWMPfPcM=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn880lawvXbf94lmICeZiwP1vz1AnoHVwVXBSiW5KJ
+ pejden2JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/PNJQAKCRB33NvayMhJ0RwDD/
+ 9FsCB7SMM2Gf2eXR6KHOzE6Cw8f7vmaM2JSjzmPcXiw/KIJNhQszWBmjC9JvhI33+FUOLPG21Oj0eU
+ 0+wpslo+x8AchcY+onkXEXsp5hQCxpab49dPF3MYtjmgTcqejcYSj3XjQ593jmCYxoVs4chyJsZN1N
+ MtddWUTq5/lX281sjKwpnX/t/j4jlTKY3aCNxN9OScc1K0Um0xxEWG4O7L8r/Aqd9bEg6fniYsnOis
+ qHqVlNz5l2XzT5+b2ZrToIR71AWWmuQrKKLcs75EwWr+UrZjhMeH0TqrrbI9RG9QkM4SoBgvrM6vIS
+ aB0k0mdYZfkVWrYfwFzM9J95k9TfMn//wYVNwPxe+O98xHiT3O3QHy5ydS9lLXrOGUVwFSwa74zXyE
+ ic0PrXrsEDcbwZPkFMEckP5KWBXGf5b3TNF0EYY6RJ39ZUn3J/cTx8ep7CyJrIu0xkS17RyexgCQH/
+ 2HtMU88UM0i7tzZbM+KaRTXDPslk7z9Qz+6GHdLuAXlIs3qh0W8w3mipmtJt29Q1WcdBKmSpSoaNUe
+ V/cLUch7CiCNmOcgI2QPQaeclrukQ/AG18EqJz7IDqnur9m7q61AjNYoi6U+QCbDwBtskMr5wsbeLn
+ XAaRUqLhPTGTFOEdz5XRS3DA8gj4yQfWJbwQtXZyLtg5UEW9MuJq3Odtj+8Q==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Fri 04-04-25 08:28:05, Artem Sadovnikov wrote:
-> Syzkaller detected a use-after-free issue in ext4_insert_dentry that was
-> caused by out-of-bounds access due to incorrect splitting in do_split.
-> 
-> BUG: KASAN: use-after-free in ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
-> Write of size 251 at addr ffff888074572f14 by task syz-executor335/5847
-> 
-> CPU: 0 UID: 0 PID: 5847 Comm: syz-executor335 Not tainted 6.12.0-rc6-syzkaller-00318-ga9cda7c0ffed #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->  print_address_description mm/kasan/report.c:377 [inline]
->  print_report+0x169/0x550 mm/kasan/report.c:488
->  kasan_report+0x143/0x180 mm/kasan/report.c:601
->  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
->  __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
->  ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
->  add_dirent_to_buf+0x3d9/0x750 fs/ext4/namei.c:2154
->  make_indexed_dir+0xf98/0x1600 fs/ext4/namei.c:2351
->  ext4_add_entry+0x222a/0x25d0 fs/ext4/namei.c:2455
->  ext4_add_nondir+0x8d/0x290 fs/ext4/namei.c:2796
->  ext4_symlink+0x920/0xb50 fs/ext4/namei.c:3431
->  vfs_symlink+0x137/0x2e0 fs/namei.c:4615
->  do_symlinkat+0x222/0x3a0 fs/namei.c:4641
->  __do_sys_symlink fs/namei.c:4662 [inline]
->  __se_sys_symlink fs/namei.c:4660 [inline]
->  __x64_sys_symlink+0x7a/0x90 fs/namei.c:4660
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->  </TASK>
-> 
-> The following loop is located right above 'if' statement.
-> 
-> for (i = count-1; i >= 0; i--) {
-> 	/* is more than half of this entry in 2nd half of the block? */
-> 	if (size + map[i].size/2 > blocksize/2)
-> 		break;
-> 	size += map[i].size;
-> 	move++;
-> }
-> 
-> 'i' in this case could go down to -1, in which case sum of active entries
-> wouldn't exceed half the block size, but previous behaviour would also do
-> split in half if sum would exceed at the very last block, which in case of
-> having too many long name files in a single block could lead to
-> out-of-bounds access and following use-after-free.
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
 
-Thanks for debugging this! The fix looks good, but I'm still failing to see
-the use-after-free / end-of-buffer issue. If we wrongly split to two parts
-count/2 each, then dx_move_dirents() and dx_pack_dirents() seem to still
-work correctly. Just they will make too small amount of space in bh but
-still at least one dir entry gets moved? Following add_dirent_to_buf() is
-more likely to fail due to ENOSPC but still I don't see the buffer overrun
-issue? Can you please tell me what I'm missing? Thanks!
+Add DT entries for the sm8550 iris decoder.
 
-Anyway, since the fix looks obviously correct feel free to add:
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8550.dtsi | 69 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index f78d5292c5dd5ec88c8deb0ca6e5078511ac52b7..ab49329a435d87107a4ff20cb7b9eeacbaf63247 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -3220,6 +3220,75 @@ opp-202000000 {
+ 			};
+ 		};
+ 
++		iris: video-codec@aa00000 {
++			compatible = "qcom,sm8550-iris";
++
++			reg = <0 0x0aa00000 0 0xf0000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
++					<&videocc VIDEO_CC_MVS0_GDSC>,
++					<&rpmhpd RPMHPD_MXC>,
++					<&rpmhpd RPMHPD_MMCX>;
++			power-domain-names = "venus", "vcodec0", "mxc", "mmcx";
++			operating-points-v2 = <&iris_opp_table>;
++
++			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
++				 <&videocc VIDEO_CC_MVS0C_CLK>,
++				 <&videocc VIDEO_CC_MVS0_CLK>;
++			clock-names = "iface", "core", "vcodec0_core";
++
++			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
++					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "cpu-cfg", "video-mem";
++
++			/* FW load region */
++			memory-region = <&video_mem>;
++
++			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
++			reset-names = "bus";
++
++			iommus = <&apps_smmu 0x1940 0x0000>,
++				 <&apps_smmu 0x1947 0x0000>;
++			dma-coherent;
++
++			iris_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-240000000 {
++					opp-hz = /bits/ 64 <240000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_low_svs>;
++				};
++
++				opp-338000000 {
++					opp-hz = /bits/ 64 <338000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_svs>;
++				};
++
++				opp-366000000 {
++					opp-hz = /bits/ 64 <366000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>,
++							<&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_turbo>,
++							<&rpmhpd_opp_turbo>;
++				};
++
++				opp-533333334 {
++					opp-hz = /bits/ 64 <533333334>;
++					required-opps = <&rpmhpd_opp_turbo_l1>,
++							<&rpmhpd_opp_turbo_l1>;
++				};
++			};
++		};
++
+ 		videocc: clock-controller@aaf0000 {
+ 			compatible = "qcom,sm8550-videocc";
+ 			reg = <0 0x0aaf0000 0 0x10000>;
 
+---
+base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+change-id: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
 
-								Honza
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 5872331b3d91 ("ext4: fix potential negative array index in do_split()")
-> Signed-off-by: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-> ---
->  fs/ext4/namei.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-> index cb5cb33b1d91..e9712e64ec8f 100644
-> --- a/fs/ext4/namei.c
-> +++ b/fs/ext4/namei.c
-> @@ -1971,7 +1971,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
->  	 * split it in half by count; each resulting block will have at least
->  	 * half the space free.
->  	 */
-> -	if (i > 0)
-> +	if (i >= 0)
->  		split = count - move;
->  	else
->  		split = count/2;
-> -- 
-> 2.43.0
-> 
+Best regards,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Neil Armstrong <neil.armstrong@linaro.org>
+
