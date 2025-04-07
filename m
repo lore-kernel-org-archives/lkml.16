@@ -1,97 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DBF20898C;
-	Mon,  7 Apr 2025 18:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE825F97D;
+	Mon,  7 Apr 2025 18:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051079; cv=none; b=DZSh3YySGx6A9jhvkfbeFIRExZlziBB11HZgSJ5GBL/g2+2Ahq/ItZgZi3AgqYQZmJ2uGNfKxQ5wlKhOT2RFL0a7U7/x08fuIU7Q9uumMzqtF1o2vuu7hsLGLiQN3T1hUeHrB2ckakJSoKUAmlq9K+CyK+Fxh2BxrCcBnlO293Q=
+	t=1744051080; cv=none; b=oc8OxU818gknDdzLxBEbvo0QylLLn705FhdPYv0CoNy+GinUjauUzQO+mYxBnPpyciNi1qlOa9HBSoPUn619XPZ0NZlbBtuVog/saFhqHb7EiimX5wfrwCoc+1UkBhICKgybSXttRTfHCiUiThfvS8oy6couCOeMxsoulODKsT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051079; c=relaxed/simple;
-	bh=q8KGRHuOSc7xz+NvnDVSZTtg4Ny5rvebOBGvxJwpKoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRPQgSO/AfgQzbw1yfsOdIdeLGb82nwIF66J7AX6MGICVe/ebU5blPYU7FM57f5YCfrK/nUdgbDd9d4O+hk4b4QYbvcOrD5atPhZwu4n9KVPKDeVRCVfHW8O4Hi/m9LCfl0RDtD8RbnzxnHOMjHhPbycp9qzvdwA0Orx2AF6Md4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioosVxHw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744051080; c=relaxed/simple;
+	bh=zk8wUrlmuDMDL1PuhRcv1wh0/L1IcyraU6qKme+S0p0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bs7nlr/uiIFz6YXeNOab5xn3RB+mGHU3vTnke1y3KsIz+yJkbqt09TRAKXDonIN+cZ6mxYStmRhEClpB/2ya1WifqEBB3sshiP8gW5EYA8xw62KemZ49Lz7bY+lkLio0swAQM4RNWAmMIbozHdoYSQMe4qfiGhK1/pu8pE1xIdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAuAhWCK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioosVxHw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4FFC4CEE7;
-	Mon,  7 Apr 2025 18:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAuAhWCK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F3A5C4CEDD;
+	Mon,  7 Apr 2025 18:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744051078;
-	bh=q8KGRHuOSc7xz+NvnDVSZTtg4Ny5rvebOBGvxJwpKoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ioosVxHwp9x00u08Cn5gP67i2I2QTE8nn/V7eABcJLZ208uAciSoGlHpwjko8caex
-	 9p6E/gi7PUgZGMFYH7dJ7SGVQLhSdnEITtI6yA0jqH9Fd72aqK3kdjKRyFMqIp8wGz
-	 /PP5c7HJ40hsljDWrK141AexKB1W6P5r9z3KIiuGJYzYL1Updn1tfea1Aw/WcyUV/y
-	 4axj+EPV37kPDwxM0VdSiBjbyF6rBiLsiKh7lhbRJbHAoC9XnI1MyXQ1H1sknPM4wn
-	 W3p2dL9xp4RhHizRXFE6JV908quBesbaOhGhOztsbdSZ7aav4M/t/EQ9avsAplPOAP
-	 OE4AjbwEpMd2w==
-Date: Mon, 7 Apr 2025 11:37:54 -0700
-From: Kees Cook <kees@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: pm80xx: Add __nonstring annotations for
- unterminated strings
-Message-ID: <202504071136.73E5C22D0B@keescook>
-References: <20250310222553.work.437-kees@kernel.org>
- <98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
+	s=k20201202; t=1744051079;
+	bh=zk8wUrlmuDMDL1PuhRcv1wh0/L1IcyraU6qKme+S0p0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZAuAhWCKuHgT1/ExnFqAZETSS+WPVhtKy6L/znez7KMIIeY7D4KIJhTcBAjUMi1Xs
+	 iVNys8Y9yQ6d7vMo9nMZa3bBiotopWU8shZ79s8Kw+K1huZLFUTpcU5toVSn+4udU9
+	 1HqUBOMv3TOK4AlAbw9Qq8AOfC7FOj6ohEBmLkyMVBfVI+igw6s48yu8YBbI5N+jMM
+	 9gSVuS0ubG4a5VuVZGXaGuZ9dAy6VFSDLPZxJ8UqPe9Dx10PQvOoT52g35g9iJe28q
+	 nxQWr0j1LzdE08hAU/bfnI19AhPdKyLKFqRth4yIvfblv27n1zlT1Qs2wRh4a3x7ST
+	 hN1Z1WeMWURhw==
+Date: Mon, 7 Apr 2025 11:37:58 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Joseph Huang <joseph.huang.2024@gmail.com>
+Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Roopa
+ Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon
+ Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ bridge@lists.linux.dev
+Subject: Re: [Patch v3 net-next 0/3] Add support for mdb offload failure
+ notification
+Message-ID: <20250407113758.2fee3e4a@kernel.org>
+In-Reply-To: <af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
+References: <20250404212940.1837879-1-Joseph.Huang@garmin.com>
+	<20250407102941.4331a41e@kernel.org>
+	<af01e665-08bb-4b60-ba0b-1784dd8a5ce3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98ca3727d65a418e403b03f6b17341dbcb192764.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10, 2025 at 06:38:01PM -0400, James Bottomley wrote:
-> On Mon, 2025-03-10 at 15:25 -0700, Kees Cook wrote:
-> > When a character array without a terminating NUL character has a
-> > static
-> > initializer, GCC 15's -Wunterminated-string-initialization will only
-> > warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-> > with __nonstring to and correctly identify the char array as "not a C
-> > string" and thereby eliminate the warning.
-> > 
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-> > Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> > Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > Cc: linux-scsi@vger.kernel.org
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> >  drivers/scsi/pm8001/pm8001_ctl.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/scsi/pm8001/pm8001_ctl.c
-> > b/drivers/scsi/pm8001/pm8001_ctl.c
-> > index 85ff95c6543a..7618f9cc9986 100644
-> > --- a/drivers/scsi/pm8001/pm8001_ctl.c
-> > +++ b/drivers/scsi/pm8001/pm8001_ctl.c
-> > @@ -644,7 +644,7 @@ static DEVICE_ATTR(gsm_log, S_IRUGO,
-> > pm8001_ctl_gsm_log_show, NULL);
-> >  #define FLASH_CMD_SET_NVMD    0x02
-> >  
-> >  struct flash_command {
-> > -     u8      command[8];
-> > +     u8      command[8] __nonstring;
-> 
-> This looks a bit suboptimal ... is there anywhere in the kernel u8[] is
-> actually used for real strings?  In which case it would seem the better
-> place to put the annotation is in the typedef for u8 arrays.
+On Mon, 7 Apr 2025 14:15:31 -0400 Joseph Huang wrote:
+> - Should the re-post be v3 (no change) or v4 (bump)?
 
-I answered this in a merged thread[1]. Can this get picked up?
+Doesn't matter much, but probably v4 is less confusing.
 
-Thanks!
+> - Do I re-post after 6.15 is released? Around what time frame (so that I 
+> can set a reminder)?
 
--Kees
-
-[1] https://lore.kernel.org/lkml/202503111520.CF7527A@keescook/
-
--- 
-Kees Cook
+No, no, I mean very soon. Like tomorrow. The merge window is when
+maintainers merge their tress up, rather than when we merge code
+from contributors. It's a bit confusing. Merge window open ==
+normal contribution closed, and vice versa.
