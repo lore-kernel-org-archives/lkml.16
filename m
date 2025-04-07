@@ -1,103 +1,90 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D4B15B554
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 21:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5084515B554;
+	Mon,  7 Apr 2025 21:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744061642; cv=none; b=FbZtZiTu4CtKLng6B0lmqFzCjQfmkwuNMafOE1ldX8loUrHycY2Whyff5BDRey+sHDsqo4q0pnkelnFFnjk4LGIvWU05DZGvE3SCmm9AXFPHulM8QRExzaKyfMaZP5rMkGzQKU4XnHckcMsVzVjxjmbyeGelImT1TgfEZwXdsLY=
+	t=1744061678; cv=none; b=Dgzpo0GhImVeYOuk6GopXgmDfGpS7M9S/t7OofU+W5yaOM+uDYCfEDjpBnxUliVwYLaeifZ4dhYib+DFS+0/U1MZnInU3ih1LoXU9vaJYmvlEuOFT7L1KQfBCyYIUsU56BGFWZWewPuEPsGPpEgzi2QgN8XbKEYUaqNRE/je23w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744061642; c=relaxed/simple;
-	bh=c1iUpbhcrXzPl8Azbq+GjxoxxV7VV/BdFZJ0L+31bsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sk6AaiJGcJkDJwrnc8WXKam0kQXcj5L1VVPo6AgMt08kIvnBKbsNVIE3anE3ceUgp2A/lobgs3pjER3YZvOWaVoCYQPqzZg3PjzmV24PIUxVdsy3nxeIeB0KUIZpffccCSNLKXKzL25ezorJfUSpW1lq96WIigQhMiKlyWVZBe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dfZQRy89; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744061678; c=relaxed/simple;
+	bh=diYSXx9lBmoAqlgbO65iylXkx2XNDbAAYunEOK8li2o=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tw/FNuMCSjYN0sbQHtd9HV6cOpG4RjGXel3yfmECh0rDxyCAPH3JniYKzr4neKfuBmHj0VHwKpFFqDF+BxEuh3diMEDQImSxsPfDyafiVDTABBlQACmTKXCcK1QcBo6QtATWuPeBP1zXDPIi6hq9+nk2BLGcKMpnO1lX03RhI6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GEQfehUG; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dfZQRy89"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso6597185a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 14:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744061638; x=1744666438; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypbOCgQfA8w2KdlopYIWQGlt+OxpNY3XdMomop2Fvk4=;
-        b=dfZQRy89UQxnn5a8yKYYkbPuEyiGMUlg6c9qtJ5M/zpJSajErcgPQfbUls4bGL7DMr
-         Rsku9FTJDrN2o0y9b+un/p4rFp/WX8LeeyXY8u5dHjCg5iBAaY7z7imlEwbFvaCuiFiU
-         AH/RNM4MA0t+ZHOT6CXsKinruIRIkx7956eTs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744061638; x=1744666438;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ypbOCgQfA8w2KdlopYIWQGlt+OxpNY3XdMomop2Fvk4=;
-        b=NMPQZ8NrVfyW/NbHjokniAZ3esZkRj3lCotjjpqQuDToHvFHv/eex3Qv+yPqGdsA5h
-         TCTHNuLMd2lRWsjeC5snivsC3Bj+Ij/BVy+9ucgqvhBhl5cjyjIQyYnTfqbhwPXOq2iJ
-         PhliUyuLSy9MYzXgEaOl/xgJ8WXnVoJon5VBa8ctTeL6sMXlW+H1lLrENkmowwYt5pCd
-         QjnZZit8D3XD7qHyk0ujdaJcokeWypNXq+RLatKHoaYVFdoc996pR5S1K/a9XGxSlx6B
-         TFz0AdHRn7WSjKA1MQQhZP5BzRuiDtNiZm1KpFxuogD+HcLMleMa40U44/dmc1UciY1I
-         rYLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2QDg/aDAU+DzujCNH2EVIzhNQZpERl2E0BG6ffQo0sGWvw4CZ466qzrdZToJdrO9MIJWpEExqmdmgR2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi66MxX9Zd6seSVFYTlsnessC6R1e/NlDXcoTmVOII8x36Xpdt
-	5fnxcO5niyRL31Iy174ZT542OH4qCj4+N3Y4CGxIpM7DvOXV1nruzEIW40JeDyJDpO6jaM1uZgx
-	Ia9g=
-X-Gm-Gg: ASbGncvCRD7a/26irgJ6/D6f1Noad/NTFIloW6Q1/UfOEya9f8Ca7k49Ii+NaLBKBe7
-	sBYS5bomhkJWdXwDZnnTSiOYio8Nw5nDaRxS988t4n0MSJy0Xs2zW//jBJ/c6QK3EgRvpIwWLF0
-	W2mA22aWRGEe+gWViX1kvTMdhzh7d2iLK+THKIQSRXuyaM8qYQ+wbhJxWCkijKuvoVLkL7D/EtU
-	hxVbWd2aKJT5tuN9PCpOnPRF/gC17Ud6vS3JnhJkpX1kgMHBNh2aRbQa1BsU/3T91bLwN62nP7P
-	qI76ycaWQNLmmzTKsPuRfkZijOQyr5ecqqEVOhSEhV/W+L2VTROVN8bR/OyR+9dnpgKkg8p4GpR
-	OT6BeAiBoEC0brQ5xwz4=
-X-Google-Smtp-Source: AGHT+IHtRDJtCfRr+9OhPbrOVE6HjwLexGP+eDR6I84MlPfQrqPzN8oa538yvYWxCCJ6WQFonrnWKw==
-X-Received: by 2002:a17:907:9615:b0:ac2:9841:3085 with SMTP id a640c23a62f3a-ac7d17d8763mr1257437266b.30.1744061637877;
-        Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f80dsm796645866b.119.2025.04.07.14.33.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2963dc379so801240666b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 14:33:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhD+G+zA/Ax99SrCa6KmUGpYEY60xrRdeyR9cX3eGGfATsY1mLOIGlUAKvy1KFTBBae2R9YONqZKJwyeQ=@vger.kernel.org
-X-Received: by 2002:a17:907:3d87:b0:abf:6aa4:924c with SMTP id
- a640c23a62f3a-ac7d17747cfmr1256778866b.17.1744061636768; Mon, 07 Apr 2025
- 14:33:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GEQfehUG"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 537LYRec1024896
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 16:34:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744061667;
+	bh=eYWazmmfD/ANxoGU9LJS/ciQ9FZGln7uKvv9Wh4ZZrw=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=GEQfehUG3BYjl1WUo1gBNftT/qaJEGcrPyaodQ8+yWcuZLE4taqN3rJUd4GFpuJGG
+	 wPdyuJzcgBAhLawpXMK3YuO2HkWoxsckBGq1ygmY8mqAD/yeARsJFJWQvg0dMnKORu
+	 4NgRWggKwCZjzmHgOYaH7Zu9JjR5A7KKeXzX/wE8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 537LYRWZ027597
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 16:34:27 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 16:34:26 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 16:34:27 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 537LYQSA015167;
+	Mon, 7 Apr 2025 16:34:26 -0500
+Date: Mon, 7 Apr 2025 16:34:26 -0500
+From: Bryan Brattlof <bb@ti.com>
+To: Nishanth Menon <nm@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/3] arm64: dts: ti: k3-am62l: add initial
+ infrastructure
+Message-ID: <20250407213426.gkhes7oh5f7vg36q@bryanbrattlof.com>
+X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
+References: <20250407-am62lx-v4-0-ce97749b9eae@ti.com>
+ <20250407-am62lx-v4-2-ce97749b9eae@ti.com>
+ <20250407174648.exd57yivoj4rvson@going>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
-In-Reply-To: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 7 Apr 2025 14:33:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
-X-Gm-Features: ATxdqUGKkDY0PVxsE-mkdFJ1IAX_JWpY62Qh1ZEnaMl7fepQQaa7Zys4sYl5c8g
-Message-ID: <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20250407174648.exd57yivoj4rvson@going>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 7 Apr 2025 at 14:10, Mark Brown <broonie@kernel.org> wrote:
->
-> Arnd bisected this to c56f649646ec ("landlock: Log mount-related
-> denials") but that commit is fairly obviously not really at fault here,
-> most likely this is an issue in the plugin.  Given how disruptive having
-> key configs like this failing let's disable the plugins for compile test
-> builds until a fix is found.
+On April  7, 2025 thus sayeth Nishanth Menon:
+> On 10:34-20250407, Bryan Brattlof wrote:
+> [..]
+> > diff --git a/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
+> > new file mode 100644
+> > index 0000000000000..697181c2e7f51
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/ti/k3-am62l-main.dtsi
+> > @@ -0,0 +1,672 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only or MIT
+> > +/*
+> > + * Device Tree file for the AM62L main domain peripherals
+> > + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+> 
+> Fix the copyright year please. We are in 2025.
 
-I'm not against this, but I do want to bring up the "are the plugins
-worth having at all" discussion again.
+Ah thanks, time flies. I'll update that.
 
-They've been a pain before. Afaik, the actual useful cases are now
-done by actual real compiler support (and by clang, at that).
-
-Who actually *uses* the gcc plugins? They just worry me in general,
-and this is not the first time they have caused ICE problems.
-
-            Linus
+~Bryan
