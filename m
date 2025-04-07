@@ -1,75 +1,77 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741071898FB
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A55614B950
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008405; cv=none; b=cFA662zUVftAbqO2gZrrB8i26NeK4u4S5FGqW4dUO1DyxsxT9NIm2ahcFC+PG1XoGVdFNlp84otptZNOZ35kH+pbK82WuO5wSXzZHqPs3lMkXVRkGX6+JQ791SdYhIcmdb4BCnhz9LcFRzd9p+AM1cERoon6MPzefSkFECnCp8A=
+	t=1744008434; cv=none; b=RroYWVvPHDtGYCYqqfIGiCybzaRS8uRuQ2sMdMwsG9sKz1iQVfAbTyVG6eb4f6er7mh44GiWwKsBzvt4VcZbuzNQ+cGN5RlHjwBs4t4c2vPeeTZp5cHlwsf80c8R+TceUPtgLtmKfW6IzdNp+iByNIvU3JJufO946rzT/4dNJl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008405; c=relaxed/simple;
-	bh=QIQBNikOm9JQVuL2m9gPJaSBOUZpZSxyQALLn5fWLdg=;
+	s=arc-20240116; t=1744008434; c=relaxed/simple;
+	bh=ccZN2lS+M3ZhqMKO3KcrCSac4MB9XtO/AGqThFv4LUI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=loUeRLFYT8Ypp2pHYRKZ3gBtmnEZqDKC6NGd2E9F66DgzBuqE7Wrt1KIH7FOwrHtUTMrIxiCtedlHQaoaH+Ms0rYTNC7Lsgj/HGHfUusX9mnCDYYgCf2a2fEQmw/Mh7HlzlWCV7fcZ+gqlC22aRuwJCx0LdIRH/g4QN9UxxxCfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SGxs1oDo; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version:Content-Type; b=HRAOolHmliIEnr6GBP9aK4jXHo473epy9+UFR0/10yINyLqlNqGAWUlAU4f/t/ooRrupj1UwfoJqfsFLwLswvIDEwpMoU+/mav5adcEhgo/SA2+drMEEpfBi9rk/Ibz42N1h8Lktr0IlWOVk1fiGO4ewXw+ImK6v+yczijuqHf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+KmUO58; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGxs1oDo"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39973c72e8cso440399f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:46:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+KmUO58"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3913290f754so492392f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 23:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744008401; x=1744613201; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744008431; x=1744613231; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5u5FktG9IlugroLpcsECtmu752LY+bRbkT7BdZa6KAc=;
-        b=SGxs1oDobn8d4axzhEnRMDpTuLsdRfpIfco69wNiXFiCi86DJS69/POirupHAxw2CH
-         8MSGEy9oR7ORBEKpRu41AGyxPstfsHt7Jo59VAgOTV2OrnUh9BapfEMBsDPrQ6iNlVJK
-         LI3OMxl1OoUgnKQMsMIyIZSuls+gwSnIx9yW1ycUt5i6w4enZKHRTg7/iMHPDcZIDB3+
-         ps6DSHgdidPydMP6LxmzZuZoZVp/uukfAebiZstmhwbDkSsw7FjfVhf3Umn4eeF+syji
-         gTO/KTRz22w2oASggXDj7t3o0qlespUhXNU4qdSOyiJZHktc7MxhKaFaOPC3BowdbggO
-         n/QQ==
+        bh=XX4Jkq7F2MHTZ19HnSyenZ2sT8C/TpJOx93V1M+Do4Q=;
+        b=O+KmUO58yXANYtVlLfT/O/5cm9BgiujVsWaloSWbri6pMeQWzQIzkWQFxUD8dpEtBV
+         MQj3QrGB5np90FZQ8aSPEjgtH9nJA23kZdw9LboI75QI1aik2IqS9RCvOoyUeidqsw8g
+         vU8ZiTEyryqwg9xseoSXApOUBhUaCNvFTsrarNE1JfLwoSWRjowQQNr3p7RiQCIvbcje
+         /8/Fh5MdVa7c3f5VpgJWJ6gmWcEqRvAQ5gGQF0vj8vehmyvOvqvdhfu1/QvrpqzwS6qW
+         Eu5nYaCykjdJOhRe2Sl88nqk/f3XXP8YuPppdEbX1cI0dk+xlo0ACLalqhRhpjqVnJD/
+         ZP7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744008401; x=1744613201;
+        d=1e100.net; s=20230601; t=1744008431; x=1744613231;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5u5FktG9IlugroLpcsECtmu752LY+bRbkT7BdZa6KAc=;
-        b=ccXV208GGJa3CJY5KSGsGmaZbjYoYypJadd/f+ewVolAJ86MKT6Jqmx1jufDS4o7WA
-         Hv238znTVT4I9ReTEDe+QC59aPeEU6su6qd4RrAkkUD9rq0xYR1SOn6Mn/PYlWBwrSzY
-         rbYFm15jnl46A/r7+DJOPr9+icpTxDq9Fxm5DYRGSpAQge4wbS/33wsR5EUoNaX8xI5z
-         cdFvMUpx4wfMwJfMfbsq4qfkuQwHWqlU/y2Nuy0FZelk6nXrydecFvX3ODHlF2LcBeWi
-         p9dMGVroeeZN8ezWqqnWphaDVpAEib6P7a+0GSKpu3vkbLoe0KLiSE40y8G71CcBZe7D
-         wLnw==
-X-Gm-Message-State: AOJu0YxbUstcEpRIAxbzxiyTJCDAbIOPGQLI4gWkE/fOac62okCKLSEL
-	9UIqJEzGcVroejTaAeaclLwcUbEdnvKYgIaAwSOeGOf/d9BMJJTBqt0u0TeOhki610lqhY2gaol
-	3
-X-Gm-Gg: ASbGncv1tuD2CJjrvSanCV5CGK1pAIQsaq1xKx3jqM2tfCfqCGlfodxMLEAL1+CDRMp
-	gQjvcf8N/rf0uldrTku4vSeiyrvE3AvSQKg6VR9sDcEIbHN3kL3pSji/g3JUx8CXiInDaCgFHJP
-	6HIlvdELmzx3M38WqZHk9P7rveQuRjsqEnh5sBU9RxmHtRuH3jByttyjw6pLV7MYe/IxYRESw2A
-	aku+Bzr8R2i4YcJ/V3XE4Jh4mEma7tQoCpfJWFgBagNwWIzgPxfGiZfKy9JvdnwnFHAquo/P9eJ
-	RYPyN3FjJhdRuVZTJUsSD9cz0pDuooIQ/KqbaVo23RT8A6vNCVdso40IK/ppK9Q=
-X-Google-Smtp-Source: AGHT+IGqmlxqnNGM23w6BRI1UAXmI3OhloB05XrhhY8e+PLrXg++1wpTvBi0oPkEaf9kaYA6FPVh9Q==
-X-Received: by 2002:a05:6000:1445:b0:39c:cc7:3d3b with SMTP id ffacd0b85a97d-39cb35aca60mr3056611f8f.8.1744008401279;
-        Sun, 06 Apr 2025 23:46:41 -0700 (PDT)
+        bh=XX4Jkq7F2MHTZ19HnSyenZ2sT8C/TpJOx93V1M+Do4Q=;
+        b=GeEBF1QM0eWKeBUEbvVkC0nAKlXZoh4m+KW4/qCia5wLztpYocGWMIF1DKzyrbL06e
+         1OA3BQKYWzNEKdzsv0xfYFDY2KnSZ2GzcduvV3qDskG2VBLUdWGQZk8EMVMsCSdFXfU+
+         fZz/NVr9EZBbzF3Qs1e3TyVh5SIxObkL76sB+FLI3dUmXQOLebUsYT3HiCSAFz74Luhn
+         5cLoo4qX9P48AaslX3wWzPSKAP5KhJpFULJKQ0BmLrTmaVh6hWn+ABY2obXF5MSgrcYL
+         LMYRCqU42eov+IQBiEdIv/uFQcDQDXL9AZ1EmuJJHfRaqvBWm8KX1jCoWiXWcW4xBXH1
+         JwyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIz/Iaw69xwTtnrSUWxwOSsMbP1BWp8mWj2SRpzvzKpBG3zddO3WpxyuPD3IU7JFCvj/OegHsKiQX9+Dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXxCMMeF/jiwo3JFK0pQB9OXqOKSb9R3btRUSdzp9bV81pNfEs
+	ypbwPmBRFi+hg3KQ+VmbwEoDDl0y+xSdaHVX+h+WuvTvBZcbzHznv/CkUBASUSA=
+X-Gm-Gg: ASbGncs9SiXXS9dpBA/gKhMq/9s8lVgVt+tizaOsPEepG1baswFHaEf8IT0rVO67vvo
+	REybqtnIeX8dZGiXP7cGxAJjAwTJBasjVR+ScQEwlII1at08AqFmZeOoe8y5MJ9Lqt1sh+nyMzS
+	ducKmjNmNPaGdltVSRDYaGweJ5PRtBI04z8xKXsS/wJibe7jYhx4BLpBgd3qnchj2ca4XfhYDYw
+	V0sWM6NGVStHbddi2a3nJ/hW1GNccLUk9RhDNNKoW/NJYl+ufiYVGnuWoEnHLFhsj3PK8jaoKWo
+	aQkoqUMGvWeW+OUgKBtK7dJRABZraOB+KjaNZ5gHga65SGqfC2Z1P0Vo0jYqzM0=
+X-Google-Smtp-Source: AGHT+IFPlo+ogc8IoUpTutl/PEc1yBD2j3zf2hRxADVMO+meHMTOAqAONXCBpw+hbR5fT9xhQjl9zw==
+X-Received: by 2002:a05:6000:2511:b0:391:320d:95de with SMTP id ffacd0b85a97d-39cb359e2b0mr3957525f8f.4.1744008431518;
+        Sun, 06 Apr 2025 23:47:11 -0700 (PDT)
 Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226a12sm11031276f8f.83.2025.04.06.23.46.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a67a1sm11024855f8f.24.2025.04.06.23.47.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 23:46:40 -0700 (PDT)
+        Sun, 06 Apr 2025 23:47:11 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
  Alim Akhtar <alim.akhtar@samsung.com>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, peter.griffin@linaro.org, 
- andre.draszik@linaro.org, willmcvicker@google.com, kernel-team@android.com
-In-Reply-To: <20250324-acpm-drained-rx-queue-v1-1-577774335151@linaro.org>
-References: <20250324-acpm-drained-rx-queue-v1-1-577774335151@linaro.org>
-Subject: Re: [PATCH] firmware: exynos-acpm: check saved RX before bailing
- out on empty RX queue
-Message-Id: <174400839995.38188.1104536537739192922.b4-ty@linaro.org>
-Date: Mon, 07 Apr 2025 08:46:39 +0200
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20250325-acpm-atomic-v3-0-c66aae7df925@linaro.org>
+References: <20250325-acpm-atomic-v3-0-c66aae7df925@linaro.org>
+Subject: Re: [PATCH v3 0/2] firmware: exynos-acpm: allow use during system
+ shutdown
+Message-Id: <174400843030.38277.2924199101043205009.b4-ty@linaro.org>
+Date: Mon, 07 Apr 2025 08:47:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,24 +79,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 24 Mar 2025 12:35:41 +0000, Tudor Ambarus wrote:
-> When we're polling for responses and get a response that corresponds to
-> another request, we save the RX data in order to drain the RX queue.
+On Tue, 25 Mar 2025 09:46:06 +0000, André Draszik wrote:
+> One user of this ACPM driver is a PMIC driver that needs to communicate
+> with the PMIC during late system shutdown [1] and at that time we are
+> not allowed to sleep anymore.
 > 
-> If the response for the current request is not found in the request's
-> iteration of the queue, or if the queue is empty, we must check whether
-> the RX data was saved by a previous request when it drained the RX queue.
+> This series address this by switching the code to using udelay() in the
+> specific case of system shutdown. This approach was inspired by I2C's
+> i2c_in_atomic_xfer_mode(), which has to deal with a similar corner
+> case.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] firmware: exynos-acpm: check saved RX before bailing out on empty RX queue
-      https://git.kernel.org/krzk/linux/c/2908ffa53f8ed487ab4285635c79d4911cced93c
+[1/2] firmware: exynos-acpm: use ktime APIs for timeout detection
+      https://git.kernel.org/krzk/linux/c/d2098981eb7b7d20edd294a8431908f8a0d2f9c0
+[2/2] firmware: exynos-acpm: allow use during system shutdown
+      https://git.kernel.org/krzk/linux/c/2d14c680e92f09d18b984cd1a8fae437f9ebc2ab
 
 Best regards,
 -- 
