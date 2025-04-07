@@ -1,116 +1,154 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56CB1EF0A1;
-	Mon,  7 Apr 2025 21:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82041EF0A1;
+	Mon,  7 Apr 2025 21:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744059894; cv=none; b=hZ5HtYYBMu0IKEQ1V/bG01BfxnDGnot1M6AYyac55BqNFRLhczDEEbG98+nXdiZTdkJ8RNrlDN16NGiq4f9K+kqNL4jaDf50TKjlextSdVQFnLAizLVy0WUWcX6YRiW96M99KearHvIFJzg5lNZMIeBY4XuiRDHqzzCsBkJkoaM=
+	t=1744060118; cv=none; b=Ki3KsAWm0tzdIEpMgD3EnMsAXeURdWcMOniFJRbVtUf1a24XpuGyrUuj05ZSHkEncE22Upz3HXISNNMs00qUKTXzzk2vaNA0b0tWUX4OOd2gmquvRdp9OK4gO7/32Z2SK3PvmBTo2hn3eZf0jhWUl9GN4Dho4UaPsDtzpp3A+wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744059894; c=relaxed/simple;
-	bh=G5uP7XPUQhSzLLH8UfxXZM/eGXXHzeObBp2N9j2yJtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qn/aGuD9SJSDVxPTzUEX5AMXJsYuzUZvUe2fH+Iii30z1PUYi1eFFjG8x33imbS0lOWARPMaZJD13ry948DLuyWds2mwEQfgCe+iTpMq7o0vZs7QSZYHKcowziMxYU3LO59No22q69fNbphz61fsh+7EgWh5B3Sl0mHEu5htJQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=T+1blWtA; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1744060118; c=relaxed/simple;
+	bh=WkcvTRYspnESz6gLqavJF30kPibHjQxjvDEtMkjjOPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TUZxhC3SFOan3yUV6ZPGueWpNY2+0nNDQAjPRzomUQDd1Dft9sBybwwEpL4OgiMIN9dbg+OS+q6bZi4MTfCbcgs/31dkLAZsHhiAhKIIlpxhTyMo9mH4k0OhM+EuTbKzX3VXxysctpVQzeGVoD/el8ePAUYHttCE9IDt1GYpXLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=dVgljzSM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZaHWAluz; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="T+1blWtA"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22435603572so45649345ad.1;
-        Mon, 07 Apr 2025 14:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1744059892; x=1744664692; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mjEuDsYSQYIFtKozQixkgJ48XkY++Le1XcPNNG/znKI=;
-        b=T+1blWtA24hvKqapGKEKDfBgY20FnDlVz+Rn68gemLAvRIY48Sp+u3g7giBfyYmuL7
-         9AssRSlq2+dBEcSmUHWpocMwp6ZfTMpAhtwlgjUwX9u8h+ZuA9ecR8vUSSajjvw/CnYN
-         uVT4vWtDVl0ahKA1ew9R3eK+kYoKiB0zMBQPo3fTiGFhbpD+C5XroV2GzKu5GfPdAv1h
-         YIrnRrkKmLa59eIfh7TAVi15TLVYfHej1Brkuy1LMIzJTzHxJXhabfwhuIGMFy9HUJeY
-         xR4pca1EmrTtewtRhOKSNUOIMhLXe58TvOk5MhRgHe8KRdHYw7A6lJ3IfVNbRZjcvoqJ
-         vAvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744059892; x=1744664692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mjEuDsYSQYIFtKozQixkgJ48XkY++Le1XcPNNG/znKI=;
-        b=Sk5Bosk/f0Z/zimLJEbgfDOQ4DqUduYyDYLhx37X6nUSQA89gfWSh9VLQEunA53age
-         WvNiwiMqIXjcCmd2Bf0Tqma70m+sQraWQP/fm1o58eujG6YpYc2w+FC8p0dbEgcuLX4M
-         svaHTltO1PqgHMqpvsI0re4SqqI9v41pN7fxuHgY4+5G8cXX8frT4fZ4Tnv9UeAa6FvQ
-         oa0wG/ouiUAr5IU8LMktVOeCNi9spG84dSw1ajkcDLCESgxrylaf0P1aVQN0HqqwyMW1
-         0iJjCYKA7fYor/QSCdE9bybiMfbVvuwwRv+ZIM4KhPogaA76R6i1cUwsxWXDTGoq61cx
-         495w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHD7tv/yNVuqUkA9iEu/3153Sbl6xfTCgpbkLVpqM5+UmhHj7+ClfOMXwDy7/3jb7ciCWq9zdiLsc2tMo=@vger.kernel.org, AJvYcCWhCfBzlM/X9DQZh5jOjSJ5llToDNQGhPNJdlhVvZa66fyFvlKatVWUTMBdmcb3rX8nRHQlHQiVC9KBmp46qu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLfoK96UqBpoYw78/wJPp638oUUC2RPbzz1mlmGAwkDm7BVnEV
-	yXZSgY8d6tWVSlYYfIc0qxqSogXYnaZWJ4hXtY7POMIN7GWPr3ZNwx4Enpf4wRFu6nCtkV2d9Jp
-	4T8H7P0QVSlTPTw4uw9VoAxnVLfVcIyvp
-X-Gm-Gg: ASbGncsiHOX/wu97OYB4LDs6uy9hkcJ3U/UiHROXF7zDlOrynrEJAAUm5PHOBbXJux+
-	oDJ3CVHPDNuS52WjrjRMVga6F+aQuLAvUAR6EbuXPOt0CisSKTkQ/HrwoNQJ66wDtt8koi0lXjE
-	6tiaZsvYV53TS32RSEB4pUJJIc96zq3JARhvVBkdZR+e3gGLL5Cg4nR9gPSoU=
-X-Google-Smtp-Source: AGHT+IHH5RMcyXoke2jciSka6ApKKu5PaRcMFCyvwlM+9FhNJj7Gsbcz5Irffj5p7yNZ6rp1qnSYGHbGKPjzHlpkikg=
-X-Received: by 2002:a17:902:ec8a:b0:224:3c9:19ae with SMTP id
- d9443c01a7336-22a8a8cedb3mr188635745ad.34.1744059891810; Mon, 07 Apr 2025
- 14:04:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="dVgljzSM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZaHWAluz"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfout.phl.internal (Postfix) with ESMTP id ED2A613811B0;
+	Mon,  7 Apr 2025 17:08:33 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Mon, 07 Apr 2025 17:08:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1744060113; x=
+	1744146513; bh=h1peeUsk7FcP1jakLjVZgwWrgqF1Mde4rlg/PA+xMpQ=; b=d
+	VgljzSMbZWrgPrS3o5cSEtrnxusAVgdDTirUvcEI6/A36Ks0NRYZyg441rwUGbQ/
+	O0pKNxldMuedgBxH+F/p1qpReCAlqfCe0pvfErsKlckeZS6C+x4IuyfnaM0d/SCe
+	R9L271tJonV9FsbFCD7ZfQzPyHM5OKsKSo7ity7npgML7appEnu8rY962R6Aa7W1
+	M0Vhrr38FtWDyafOUaiEuVVgoa+n4LC/qvhSAd2ijdHSUI0nGrqcFAavb4JAL+a1
+	zumLQUY8xkXYbHHKWIiVuh8XZ9cg4LZ62xi/ECumsbjdYf/TEEr7t67Z8FT0CPCD
+	MuqPnIAqbbiS2NVX5MGxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744060113; x=1744146513; bh=h1peeUsk7FcP1jakLjVZgwWrgqF1Mde4rlg
+	/PA+xMpQ=; b=ZaHWAluz1rXePNQnICfvFitFCXmQoI9a1xr5JUxF2C+qbCyT+Ph
+	L+wCkqB7+xFZGly2Su505Y4Zd3hBUjDTsHP92/hNreMc2SE5HELdcn9o4pmlN/8C
+	VRDW2Jpa/8swDqIm06W8RW3bYljR5JLOUDc6UthCMapHgkFAl6wQlAFJ5o0aTIFD
+	18K4XeBvq/9HyVzsPmw3okLcQrQnkdgBcExGhnJUngJtVHNHaYuWdFoSrQnax/p0
+	Qiu3bOsdsLP8GcOkX9hJud/uuUpkLvNutzbUNNJVvaBCgnDDa0cvb5F9Go9yFsAL
+	KHvHsP1wdGQKYG1+8X+CcwC4ob2ikT72PEQ==
+X-ME-Sender: <xms:0D70Z-5RJaTazvew3m-h0gp3_ILffdHENyp5EOAgrX36_aGbaquYpA>
+    <xme:0D70Z37S3Z6qapQ_bCLQmduVM4vmDbSOiUqWCrGtVX9beJf6MyspfVKDZGKXLXE1d
+    BkU3XBrsM4VUK7PSPY>
+X-ME-Received: <xmr:0D70Z9crGDeezMSSXb8dE25VdJC7eMgBmd_ODAvoRvvCym95PX_ejW9pAz5ZO7A27vpAXg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdduvdefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
+    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
+    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
+    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
+    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhinhhgohes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslh
+    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguihhonhhnrghglhgriigvsehg
+    ohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgdoghhithesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgr
+    shdrlhgvnhgurggtkhihsegrmhgurdgtohhm
+X-ME-Proxy: <xmx:0T70Z7JAxU1jzTWV-RNGCHhdsSqe7Mg_VaygbtkPiAOrfok80HM1eQ>
+    <xmx:0T70ZyI8eJEzWYQxzR7leU6YesWMaeoJBc-dd707B00vL2igy1g24A>
+    <xmx:0T70Z8zCdmLxsRrxHcsSD0Lz_EVm4XknA-WS6W6MnQV44GlYkZaoFA>
+    <xmx:0T70Z2LKQY5664dZApn1cBh4ZEoTQ0nrNb_IIcfXLc0cbLnqmGq8MA>
+    <xmx:0T70Z1a23ls62NLy-qXRZoDlT7cVb77pGEHLWM3KWNsLj7hgS2jDdWQ->
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 7 Apr 2025 17:08:29 -0400 (EDT)
+Date: Tue, 8 Apr 2025 00:08:25 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
+ SEV-SNP
+Message-ID: <7u74hxavnqqtcaciqco4ra37rep7k4f4cnv65mk5rmcu3fuo6n@kdhc2oceeu2p>
+References: <20250404082921.2767593-5-ardb+git@google.com>
+ <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
+ <Z_QA6GwqoxdW6D0e@gmail.com>
+ <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
+ <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
+ <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402160310.996141-1-zhen.xin@nokia-sbell.com> <9d908c7c77684260818470225b8a0980@realtek.com>
-In-Reply-To: <9d908c7c77684260818470225b8a0980@realtek.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Mon, 7 Apr 2025 23:04:40 +0200
-X-Gm-Features: ATxdqUHdwlTYqa-87bWtMFU8vcYwUQsHhYog4COWy0x487fj0A6vMNEqROGKoBc
-Message-ID: <CAFBinCD6fcTaJ3VE-0HBv=Vd_yhkqAgMH_8v9MVV1UMCO5m6vw@mail.gmail.com>
-Subject: Re: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Zhen XIN <zhen.xin@nokia-sbell.com>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHcdT8X8uUyd+9eEF1Nc=CBNj2M4z172DUU7g_pJ5BHuw@mail.gmail.com>
 
-Hi Ping-Ke,
-
-On Mon, Apr 7, 2025 at 5:30=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.com> wr=
-ote:
->
-> Hi Martin,
->
-> I replied original mail, because I think discussion would be clearer.
-makes sense, thank you!
-
-[...]
-> > @@ -1195,7 +1195,7 @@ static void rtw_sdio_indicate_tx_status(struct rt=
-w_dev *rtwdev,
-> >         skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
+On Mon, Apr 07, 2025 at 07:45:59PM +0200, Ard Biesheuvel wrote:
+> On Mon, 7 Apr 2025 at 19:33, Kirill A. Shutemov <kirill@shutemov.name> wrote:
 > >
-> >         /* enqueue to wait for tx report */
-> > -       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
-> > +       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS && queue <=3D =
-RTW_TX_QUEUE_VO) {
->
-> Is this because you have seen "failed to get tx report"?
-> Have you tried to increasing RTW_TX_PROBE_TIMEOUT?
->
-> If it still can't get TX report, we might take this workaround with comme=
-nts
-> to mention why we need it. Or a local variable with proper naming to poin=
-t out
-> this, like
->
->         bool queue_has_no_tx_report =3D queue > RTW_TX_QUEUE_VO;
->
->
-> By the way, USB behavior is very like to SDIO, but TX report seems to wor=
-k well.
-On my RTL8822CS I can confirm your thought:
-I don't notice any extra "failed to get tx report" messages regardless
-of whether I have "&& queue <=3D RTW_TX_QUEUE_VO" or not.
+> > On Mon, Apr 07, 2025 at 07:21:17PM +0200, Ard Biesheuvel wrote:
+> > > On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
+> > > >
+> > > >
+> > > > * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
+> > > >
+> > > > > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+> > > > > > If the GHCB is available, we should always prefer it.
+> > > > >
+> > > > > I believe we should consider the cost of code duplication in this
+> > > > > situation.
+> > > > >
+> > > > > If the non-early version is only used in the kexec path, it will not be
+> > > > > tested as frequently and could be more easily broken. I think it would be
+> > > > > acceptable for kexec to be slightly slower if it results in more
+> > > > > maintainable code.
+> > > >
+> > > > Absolutely so.
+> > > >
+> > >
+> > > It would be nice if someone could quantify 'slightly slower' - I am
+> > > leaning to the same conclusion but I have no clue what the actual
+> > > performance impact is.
+> >
+> > If we can survive the performance of the initial boot, we can live with it
+> > for kexec.
+> >
+> 
+> The initial boot does not occur via the decompressor, but via the EFI
+> stub, where memory acceptance is handled by the firmware (as it
+> should).
 
+I wounder what protocol BIOS uses.
 
-Best regards,
-Martin
+> Given that the traditional decompressor carves out an allocation from
+> the raw E820 map without using any of the higher level APIs, it has to
+> accept the memory itself if it is marked as unaccepted in the table.
+> 
+> Perhaps the decompressor should try to avoid unaccepted memory?
+
+It limits KASLR. I would rather wait more on kexec.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
