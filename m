@@ -1,96 +1,81 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2187320FA94;
-	Mon,  7 Apr 2025 17:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE46D215063
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744046385; cv=none; b=PFOdbwAMm2MdgN2imY1XlrZS4ktFAkWW1W8dN94McKZiEyMxlq+dVQvGGjSttfX3yopAX5RVHHL5dY1xJ0Xp3MY/lOtPhqJkyq2Z7vfulDye9PLfgQEqe31MgAngGnf3c4Y4WSEG6h4+A+4M64RRYfd0O8ugyz0ubO+uw15sPMI=
+	t=1744046420; cv=none; b=l4/A9nIk4PhZtKNNvbhKw/zP0+UMn2ph4flW/YDGI9QY7nwyk3AoBZ+UmpH4XL3WQIRN5xJDsmCToJx/h05uVsu3W97M7RYUF1Z+WeQO6hrNjAEu5Io+VPpt9CCcotzppKDDRXRQ3OcJ4XpH315DTawj0m/uSjUCgQZMaucCnPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744046385; c=relaxed/simple;
-	bh=0BkM1zrmMLAP62omqbt45d4s44rgMzHxSwOjgbuHJV8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VmsmC8P5etCAiliAodbcn1aU3mMfc1OK7iAr0lyM9vrF1kCtmj4JtGJXyiTj9hd1ovouAYmGh6k1vHs7uLskc6Jo2ajUOxrKfjT1aPSQsNS5W7mM0dFl9LvnPa25hNYnk3qbGGyFCaUCGN/o8ysNwqneT7EpyPVKbGCLduAbaH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=eaR2odb1; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744046420; c=relaxed/simple;
+	bh=y3CDgjgxAq1nXRptrpLEI4T8Vt0KRTqKCS1gk3hO2FU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0L1B00CUKcE6zcoDEYlYQqKQgUi+Hgj6nvntkVa0qtgRX4LKCYpglpJ/n5tABMOy6UnZiLW9CwTHx8bUy+8oEMHPc5SUaJHJjCbWpZUnYjhJfyVfPCowZO1M4+WYuEb5oDAax0ZhDAnRhTBuwFgN/ZYwxuHGHli9UY0O0UR6iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lzv9tFx5; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eaR2odb1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744046383; x=1775582383;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4c5PRsn7O6BsPB6gXPg8wPIUVPeFNKSYbt0iMRi41U8=;
-  b=eaR2odb138pBvOBR3DWoQYkRxLagAPFmrheJbBPE1ct+jYCCYuv9zeQp
-   2SH0G1Z7+tEvh0Wei3JTN6IC/N+4STDTlnraIN+89B0dQmLgTafGWwwnz
-   UYt43/jnY3G5+rf2Erlk50yuV0Y4S4HnGZNabm9FGxRRlLJPcpobW+fL4
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.15,194,1739836800"; 
-   d="scan'208";a="81542275"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:19:39 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:46951]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.195:2525] with esmtp (Farcaster)
- id 8729d04d-4f18-40af-b169-77f6624111b8; Mon, 7 Apr 2025 17:19:39 +0000 (UTC)
-X-Farcaster-Flow-ID: 8729d04d-4f18-40af-b169-77f6624111b8
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 7 Apr 2025 17:19:37 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 7 Apr 2025 17:19:34 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <hch@lst.de>
-CC: <axboe@kernel.dk>, <gechangzhong@cestc.cn>, <kbusch@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-	<netdev@vger.kernel.org>, <sagi@grimberg.me>, <shaopeijie@cestc.cn>,
-	<zhang.guanghui@cestc.cn>, <kuniyu@amazon.com>
-Subject: Re: [PATCH v2] nvme-tcp: Fix netns UAF introduced by commit 1be52169c348
-Date: Mon, 7 Apr 2025 10:18:18 -0700
-Message-ID: <20250407171925.28802-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407143121.GA11876@lst.de>
-References: <20250407143121.GA11876@lst.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lzv9tFx5"
+Message-ID: <44dcfd6b-66c1-4d3d-a75a-10ff50e54000@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744046415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BClHdxstGh3jFQkV9pe5yGI/1UV+EncLjPVq1x2L2Gw=;
+	b=Lzv9tFx5ICSIixEoc57fHyAv2E5T3JKXkYuvm+TSe6jSOZ7b09RwSYREpDN8brPDtsrclJ
+	wUokCg1vQKz6NiHKtU/Rn1/br5AEkOL3dq8MxZwWiW32+dIbmZvcWgQCnJB6CSOnOFnJnE
+	FO5AX1ROscTQcFArRx/CTDHXijzXWSc=
+Date: Mon, 7 Apr 2025 22:49:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D035UWB002.ant.amazon.com (10.13.138.97) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Subject: Re: [PATCH v2 01/18] drm/tidss: Fix missing includes and struct decls
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-1-4a093eaa5e27@ideasonboard.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-1-4a093eaa5e27@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 7 Apr 2025 16:31:21 +0200
-> I had another look at this patch, and it feels wrong to me.  I don't
-> think we are supposed to create sockets triggered by activity in
-> a network namespace in the global namespace even if they are indirectly
-> created through the nvme interface.  But maybe I'm misunderstanding
-> how network namespaces work, which is entirely possible.
+
+
+On 02/04/25 19:00, Tomi Valkeinen wrote:
+> Fix missing includes and struct declarations. Even if these don't cause
+> any compile issues at the moment, it's good to have them correct.
 > 
-> So to avoid the failure I'd be tempted to instead revert commit
-> 1be52169c348 until the problem is fully sorted out.
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/tidss/tidss_dispc.h       | 3 +++
+>  drivers/gpu/drm/tidss/tidss_drv.h         | 2 ++
+>  drivers/gpu/drm/tidss/tidss_plane.h       | 2 ++
+>  drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 ++
+>  4 files changed, 9 insertions(+)
+> 
 
-The followup patch is wrong, and the correct fix is to take a reference
-to the netns by sk_net_refcnt_upgrade().
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 
----8<---
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 26c459f0198d..72d260201d8c 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1803,6 +1803,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- 		ret = PTR_ERR(sock_file);
- 		goto err_destroy_mutex;
- 	}
-+
-+	sk_net_refcnt_upgrade(queue->sock->sk);
- 	nvme_tcp_reclassify_socket(queue->sock);
- 
- 	/* Single syn retry */
----8<---
+-- 
+Regards
+Aradhya
+
