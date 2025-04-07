@@ -1,64 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE8204879;
-	Mon,  7 Apr 2025 15:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4FF204F87;
+	Mon,  7 Apr 2025 15:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040932; cv=none; b=bj9Gu8s1qyFHNYQ+AsgE9HIJSKWdXU1ZhIWG2zqpow0tu5M7V1jMhQczC+QWbn7wQ1VLB/28//lwzhSHQX329fFiGhbo+PmIH4AuGaRYygGfY9SMhAxuQYVF4QrnB4pZRzUhGShrl3eLHsYoTXSpYnIoaiSs4tq9OPTtMgr96Tw=
+	t=1744040971; cv=none; b=r2I0tiBtJ+PE7BG8pnzHCh89H1JSgyTiNjf2+f0kKIodM1kLrRhtGUZoNq+d84ZFj1MM5KnwR3ZwzAFlSkQB+IBvGlZGlzlykIeWeV0QUVspeWQOC+wO2dO56GyNsnQSTJ9odyYj7suyEC+wfbbU2kCjZXeu58sUe1WUNWYbJ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040932; c=relaxed/simple;
-	bh=cXlAM7rZ33X+JzSByHY+99QsCWDsAzEWY+O1mXU5b5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2LoIn91/pyYiGjfuu3S0Ug519TeJCBDXNSMzLJeDswwMISgI7Pdo6v9MHA1+kuRE76UvoujMoGR1InykuAPbmMjBvCQfhcUcHLZ9/4HpzkRWBmkWFiYB7Gt+/S80fFVdn62YdRhgJrhlejOnHIIjxl0EcvehG46aPzsl0dv7zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkDFHFLu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkDFHFLu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0001CC4CEDD;
-	Mon,  7 Apr 2025 15:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744040932;
-	bh=cXlAM7rZ33X+JzSByHY+99QsCWDsAzEWY+O1mXU5b5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VkDFHFLukG529Eem400b0fyx8KA3ZciF240CH/ar1z6AZxGR5KW1Um2H00xzsakwI
-	 uznTUp+3aZopEdSxbm4QanFh5sHuE1eBExljfeBw4VZ+XfKh8qlSbic2VpBLtLnk+n
-	 eorr+ItFodt/2s2gwBHqADMrZj1kgvdQXpErScJPJvswdxH6OhRh43/yIUVUStsm4u
-	 TQJYeCG9QwlSlwmX1s3PsEFuT/uCLJUHq+A9EZHh3nONGnQRW/AMfWNDQFRXr0DNZ9
-	 231Q23Zuz48ARyAgNDSrFMdAbAm5OkgY6szAqBvze7/70Dk9PriKdHlBeD3W9bXlFj
-	 tmsBeutNB3Tzw==
-Date: Mon, 7 Apr 2025 16:48:46 +0100
-From: Simon Horman <horms@kernel.org>
-To: Julian Vetter <julian@outer-limits.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Louis Peens <louis.peens@corigine.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Arthur Kiyanovski <akiyano@amazon.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] eth: nfp: remove __get_unaligned_cpu32 from netronome
- drivers
-Message-ID: <20250407154846.GP395307@horms.kernel.org>
-References: <20250407083306.1553921-1-julian@outer-limits.org>
+	s=arc-20240116; t=1744040971; c=relaxed/simple;
+	bh=z1Vo+dwaof12v9FJV1zldoq4gxlfm8goG7zQDI0UfYg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QQcSCpEr/dkk9E9jxqMv/UZC4HJPDW8lQ28tdpkhnBQfUT/GGV2f9Dulx4Bu0aoHHBkbRm9JchE08GbEHkNqCRsIMK4KIDJTe/05435WSr3nRaE2pjGLam64RNYG8mYShMpdTxxOvtoqSFshM185pwUeouPriKtjH59ZmooJoSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824D1C4CEDD;
+	Mon,  7 Apr 2025 15:49:31 +0000 (UTC)
+Received: from wens.tw (localhost [127.0.0.1])
+	by wens.tw (Postfix) with ESMTP id C8D385F9F2;
+	Mon,  7 Apr 2025 23:49:28 +0800 (CST)
+From: Chen-Yu Tsai <wens@csie.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Andre Przywara <andre.przywara@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, 
+ Thomas Gleixner <tglx@linutronix.de>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, linux-phy@lists.infradead.org
+In-Reply-To: <20250307005712.16828-1-andre.przywara@arm.com>
+References: <20250307005712.16828-1-andre.przywara@arm.com>
+Subject: Re: (subset) [PATCH v3 00/15] arm64: dts: allwinner: Add basic
+ Allwinner A523 support
+Message-Id: <174404096879.829294.8545896192881134098.b4-ty@csie.org>
+Date: Mon, 07 Apr 2025 23:49:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407083306.1553921-1-julian@outer-limits.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Mon, Apr 07, 2025 at 10:33:06AM +0200, Julian Vetter wrote:
-> The __get_unaligned_cpu32 function is deprecated. So, replace it with
-> the more generic get_unaligned and just cast the input parameter.
+On Fri, 07 Mar 2025 00:56:57 +0000, Andre Przywara wrote:
+> this in an update to the series introducing the basic DT support for the
+> Allwinner A523 SoC. It now comes with DTs for three boards, using
+> slightly different packages of that SoC.[1]
+> Functionality-wise it relies on the pinctrl[2] and clock[3] support
+> series, though there are no direct code dependency series between the
+> series. Two binding patches from there are required to pass dtbs_check,
+> git put their patch IDs in the footer below.
+> Compared to v2 only small fixes in the NMI controller driver: renaming
+> the struct to better reflect its new usage, add adding the DS pin to
+> the eMMC pingroup list. Adding accrued tags on the way, many thanks to
+> the diligent reviewers! More detailed changelog below.
 > 
-> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> [...]
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Applied to dt-for-6.16 in git@github.com:linux-sunxi/linux-sunxi.git, thanks!
+
+[08/15] arm64: dts: allwinner: Add Allwinner A523 .dtsi file
+        commit: 35ac96f796649346c9b0440413dc6c5138249b3e
+[09/15] dt-bindings: vendor-prefixes: Add YuzukiHD name
+        commit: acf5b947cff1b991ceb7fa53c66555242ff4c87b
+[10/15] dt-bindings: arm: sunxi: Add new board names for A523 generation
+        commit: f9d55227839199e928a41574e41089288a43a2d6
+[11/15] arm64: dts: allwinner: a523: add Avaota-A1 router support
+        commit: 3a1883f32b9b5083883624f9b39a3c6edfa6d490
+[12/15] arm64: dts: allwinner: a523: add X96Q-Pro+ support
+        commit: 66611715c473a9820b65322c94401a367711acd7
+[13/15] arm64: dts: allwinner: a523: add Radxa A5E support
+        commit: 80e0fb4e491b4994434e42c33c1387a46b7986bc
+[14/15] dt-bindings: arm: sunxi: Add YuzukiHD Chameleon board name
+        commit: 7273c0e2e4229bca42c70e6f3c33f1756902301a
+[15/15] arm64: dts: allwinner: h616: add YuzukiHD Chameleon support
+        commit: 6d1cb8de157382facedf50f1a80ee033243b8494
+
+Best regards,
+-- 
+Chen-Yu Tsai <wens@csie.org>
+
