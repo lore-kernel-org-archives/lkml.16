@@ -1,109 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72156248886;
-	Mon,  7 Apr 2025 13:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF682253B4B;
+	Mon,  7 Apr 2025 13:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032283; cv=none; b=QIS4Hiqm0hgOEhZYhl2Ll7BPZp3Cxi5vyL664uzBRAUC8f01Ic2u1oW3hq5iVyqVSQAWKeRKi2ZqA6YtyysQeMmkyfvLjaPIYUNk0Ue/F067WRAcLbiIgTUhWnmQTAT+1cLTdmrVTBdeE9myBJYslbgygQLND0fXKoCrKKc65Jc=
+	t=1744032289; cv=none; b=oSxZb/QZHOBvDmDFu6MFTLj9D13X0Gv98CxDM/gZA6MKlIp3jCPzDIep2q9xkRMNCMUvDU6MYth/hxNCKqOxs1mBCyZM3AHFmsUic/Nw9CcQQOrY/XVxP9qZNqrd9Ut17LzXIQbW6BwsLr55WbwH/Nx0llpLkCahELJIWqSnTJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032283; c=relaxed/simple;
-	bh=+9gPZPSDv2wNcAMbjjivmev/ujdwUF4GBTXDi52r2VI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Auc1D8nW4AF1Kq6GwN5/rWpx6skfb6NCe0IoxnbLcw4Zq12qYH/jjE491cWuViYU3nxizzvGGKWCXCjQuLpHtTFTXQmQmmHXChwXEjRQnCSYSAZ+JqPDU4h8otwRlJroM/oK8IICqPZoLr9ArE7tFS/jcdo8yJVU94jj4LVQDPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSWUA/oA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744032289; c=relaxed/simple;
+	bh=phz+W/y/P98TEbJzgV0y5Ve9zvJ2zXTVkoIK4Sd0Rz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PrfS5GF4/5FRBHm9YNAjLYt6v9B2m6ap9AL4lzJ4VunG/tCV2VBe4Y9bPmjGMgHjKsY9k1H1FIKG0TlleY1pSNKyR7vujFyC3zAnKyIuae69dItNB7gqNyfpQuUA5gekbbHadhB+DU2HaClQedQjS+q9zeTYLidzCj5pV6U+4gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMPH9s83; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSWUA/oA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF927C4CEDD;
-	Mon,  7 Apr 2025 13:24:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMPH9s83"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6D7C4CEDD;
+	Mon,  7 Apr 2025 13:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744032281;
-	bh=+9gPZPSDv2wNcAMbjjivmev/ujdwUF4GBTXDi52r2VI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSWUA/oA+LzLk8M6mOf0OxZyK6hM2RXXTf1rLcYdl8VdLnxN9EACrXBcrouSoI79O
-	 rWR+NCQK2ZBBi0FtBv+O73+iVK/bKt+ljCEEJQS3NqKnPCZwBijjTeQdSu2TbFWTYR
-	 zCvcW2AkVy+OhjmFVt6md3YUsTdhuyEa1mJ+8DywWim3KfCzmWjJmuGgC5QgqStuqk
-	 Hm9IS9M2Y8/uZ8ewkAtPMX9t63SRVHocdrVVz12k2IBeuZGaYWiAy4TeWyrKfvLUfB
-	 v/AB+0lWR6JRDzgEvLA03dkDG1K9oRGMyhi1whws9B20JbH3UM277k3R3VS5p3fPH1
-	 qx70rlmYHJPvA==
-Date: Mon, 7 Apr 2025 14:24:38 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	s=k20201202; t=1744032288;
+	bh=phz+W/y/P98TEbJzgV0y5Ve9zvJ2zXTVkoIK4Sd0Rz0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cMPH9s83obHD/J4Ik3GrucvSZ1HvxqMFUaVBhBsE3ECURdL3gO0LMM+1wzfO+2Nl0
+	 msMJIbdgl6bqFjf9LW3gMuy/IdtAhjyZabrVLFlZP9ni28+XAA2QvxaqEsuZbwu6qU
+	 eT1wYu2AUHehWodKeTcx0yvWhAd0qboDezG4HVQZyX0cB8jvIsxj6QMjDrbrCbRpjw
+	 h5WhU5otun52iDmd2aWnsBjuFFxu5uTJB4foYrIEUONew7GP5GyLPHyfZJgju/mkWH
+	 Yn0EQegdKgTzPqRbxD2OWXVcQUdNqLPClwq+U7FTKQByobcUnrY+T9m7Nt7pdFDvB0
+	 5UbxZyrOEIvPw==
+From: Christian Brauner <brauner@kernel.org>
+To: Vivek Goyal <vgoyal@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	eperezma@redhat.com,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Xiangsheng Hou <xiangsheng.hou@mediatek.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	virtualization@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-Message-ID: <c16d3116-256d-470d-96dd-7f3dbe3334c3@sirena.org.uk>
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk>
- <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk>
- <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk>
- <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
- <a484f0b2-c09a-4a6a-a30e-4c8660d755a6@sirena.org.uk>
- <CAMRc=MeFqvJ3g3GhrZzto+jfgCUhtcRRyWqx51gCkKhYUqtsGg@mail.gmail.com>
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	benliang.zhao@mediatek.com,
+	bin.zhang@mediatek.com
+Subject: Re: [RESEND] virtiofs: add filesystem context source name check
+Date: Mon,  7 Apr 2025 15:24:32 +0200
+Message-ID: <20250407-erzeugen-granit-5fdd39986bfd@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
+References: <20250407115111.25535-1-xiangsheng.hou@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8eKsoMU1YD45uGgH"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeFqvJ3g3GhrZzto+jfgCUhtcRRyWqx51gCkKhYUqtsGg@mail.gmail.com>
-X-Cookie: Meester, do you vant to buy a duck?
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1025; i=brauner@kernel.org; h=from:subject:message-id; bh=phz+W/y/P98TEbJzgV0y5Ve9zvJ2zXTVkoIK4Sd0Rz0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR/viR+uDh1wTkdg2mVAqyb9F9PjM/5EuUp+WuDsM4ji +1hxcsKOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYS9prhn9mM5ufHhQ6aZO9W Sj5W8KfH77Dxml8ORjnFaRM6rnde3s7wV2rV5Dd+oj93p21bwVGiemdh7qntsfvfRakuDHkSuq9 lJhcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+On Mon, 07 Apr 2025 19:50:49 +0800, Xiangsheng Hou wrote:
+> In certain scenarios, for example, during fuzz testing, the source
+> name may be NULL, which could lead to a kernel panic. Therefore, an
+> extra check for the source name should be added.
+> 
+> 
 
---8eKsoMU1YD45uGgH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-On Mon, Apr 07, 2025 at 03:15:13PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 2, 2025 at 4:08=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> > > I believe pwrseq could actually be used to hide the enable counting
-> > > for GPIOs behind a faux GPIO chip and the consumer would never see a
-> > > pwrseq handle - they would instead use GPIO consumer interfaces and
-> > > we'd have to agree on what logic would we put behind gpiod_set_value()
-> > > (should it effectively work as gpiod_enable() meaning: value is 1 as
-> > > long as at least one user sets it to 1?) and
-> > > gpiod_direction_input()/output() (same thing: highest priority is
-> > > gpiod_direction_output(HIGH) and as long as at least one user sets it
-> > > as such, we keep it).
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-> > Like I say that doesn't do the right thing since other users need to be
-> > able to see when something changes on the GPIO.  If that just happens on
-> > normal gpiolib then that complicates usage for the default case since
-> > they now have to worry about things not actually happening when
-> > requested which doesn't seem ideal.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-> If I understand correctly, regulator_ena_gpio_ctrl()[1] changes the
-> GPIO value (even if it's shared) and then notifies regulator consumers
-> about a DISABLE event. Now if we'd be implicitly sharing the GPIO with
-> an enable-counter, we could possibly emit an event that's a
-> false-positive?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-Yes (or vice versa for enable).  If the device thinks power got pulled
-when it didn't it might get confused about what the hardware is doing.
-
---8eKsoMU1YD45uGgH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz0hUACgkQJNaLcl1U
-h9Cewwf5Ab55AZQCzieD6PAuihjLD8YNWTElHlJkT42x9vbqJ3IYevAHnRrjdyc/
-U9Q0uAz1wtG8rZAuGxWXhprjDOi7oikFyTo7zQrvFnplwoYAFZYRdNoacmwCwzFu
-XkFJ3aravtqsECl+bap0J++PFCb73gUlL7fUxIH5XoHsrytHpnhn/43I6SliVJJv
-zFA3/ex0Jm29yW5NeYuTnAmpOTjQ7JlQBBrs/mC+aNN4MB7/vAXn2cABMkUku5y6
-vjYgVc9TUxffkcHOil205YsX+uF/cIBXEZU5pbbgr4oaTKr2RWSe8t+8MNDUPr1A
-9k1/BPLc9q6ehqpLJjGNfS1LO97njQ==
-=7Xha
------END PGP SIGNATURE-----
-
---8eKsoMU1YD45uGgH--
+[1/1] virtiofs: add filesystem context source name check
+      https://git.kernel.org/vfs/vfs/c/a94fd938df2b
