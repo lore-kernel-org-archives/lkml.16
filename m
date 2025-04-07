@@ -1,132 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5189B27D76C;
-	Mon,  7 Apr 2025 18:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4C21CA0D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 18:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049907; cv=none; b=VibMXnDv0ZD6lgCDt3N236gfmQkKfIz17fqLzXZiC2tPgDiUH7LU6RP5zCoJw1RTbke5cPRdxsVGKAlHQsnHoQ8k3N8vCH+Sffie9DPSXpoXuOdnLKkeBYoGq5tmfT53MIi4eYw+m31nSjQM6PpMxtYbhTxzEXE2gJUUglnTBms=
+	t=1744049928; cv=none; b=nAjWQRc6zdaqpV5isWU89KFrJeFMt7FOEAkrLUXFAHg5MepJjlVEcQ4sUhR10NVmExLgv5KCAuwT3NVlNsOGBtqExXCBGLynfdS+XPs6XmgQ1O3ShtonS5/lJ9wgej42KaLRn5Q/PXQt1EU08UXIhDd0xzUcexkXy+vs04ARmcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049907; c=relaxed/simple;
-	bh=mdIifArwyXz4/ZczMIaCq+iUjcqbunI0QzXvWx8/oew=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o5ag5yDTx5Tc6TBVAnZfHZoDN+9yf7NB/Y5MYkI+prQMCn+Vvcb6oxobIHMAIDixaHx1UkAI4aY5WbxaMy52lbzS63MmQw/4eZn2LAXfdqSbLveTSLd7KPKDdqBqDd0U31rilcl3ipmr6CO3T3aiC4UDCB3biXr3iFIQOZ0cpbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+3+0/l/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049928; c=relaxed/simple;
+	bh=ZF42jBZwi4dUSiyBs4Y9tJOjXavkr3L3giGFfMbphEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EkRWT3XDcAsW881yUaIql4sYj3VrnTBBykqPpevsOOmQ9oYZecLnBsreRFIHjVteUSiyMD4sl6fH70KsaHEsahzw2GlFkVrzlqubNImhouQAqXgNiYXCeP1U9qHzp1WJwwgq3uunP/vZBeYbysBHmBY4fwMFTXDoOgs/130E5tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g+eQSuql; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+3+0/l/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B550BC4CEDD;
-	Mon,  7 Apr 2025 18:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049907;
-	bh=mdIifArwyXz4/ZczMIaCq+iUjcqbunI0QzXvWx8/oew=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e+3+0/l/ismCrXnJmv0eFfkor15ACpWgu70WAAMaMnFd86fYdTX/ntomTvsCDYipQ
-	 I1gT1DNpNh2IFdv+HxoXEYp+YnfaaBoJP1BZ5D2phJEPnokoeaI7COdmhz0aQZaO8z
-	 YQGR8HUVV+mLu8agF1R3laCphZwVZsuyuWL7vZOD6CGV2yC1X+vbQtMWPvPggjqmLF
-	 5Bao5acuA4tZqeYmnmM/AXPSiKB5yxjgUkl3/ni4zX3ByhBuumJIJjB4qQzkxhkwAR
-	 /Knb7UOb9W8C00J2JKR61NG2bQUgzC5fpSge4K8vrxdjfzlK0UZKMZ20GIYTfvoCSH
-	 eVGHw7XndSHRQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <lkp@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>,
-	Sasha Levin <sashal@kernel.org>,
-	allenbh@gmail.com,
-	bhelgaas@google.com,
-	fancer.lancer@gmail.com,
-	pstanner@redhat.com,
-	zhangjiao2@cmss.chinamobile.com,
-	ntb@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.4 2/2] ntb: reduce stack usage in idt_scan_mws
-Date: Mon,  7 Apr 2025 14:18:19 -0400
-Message-Id: <20250407181819.3184695-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181819.3184695-1-sashal@kernel.org>
-References: <20250407181819.3184695-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+eQSuql"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2240aad70f2so34015ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 11:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744049926; x=1744654726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MFbNZd4DwARKKfdWQ+Cu/tmGujuqrB3Wcc2GX+USUd0=;
+        b=g+eQSuqldQRevWblw93blLcukQKl4ufF1jC1PLGB/8rrw8tWdQAnYAbn/PiJQbY0Xu
+         VdAwF8B96dmz2wBjN0L/OtkRL7vr/wXRWiDDvG43R1aAxyfx08cGfoXOYMAIvjes6fSf
+         vJ3Dn9J8HtRfE+KwqyLD8myxtfK0R9W7yxJZa/zG7+ogSLs6REu1iMKRJOEoQzjko862
+         6lYPlldP5pGU7PJfqvlQ4Fnm2+m2JmrHzFMNjJjLMEZAkas3+K/O63RZ9qKgRxsENojo
+         hjoPJgDyQlg5dAWzMKo6G/3bbQY9gf1MtwDo55kg0VQZA82H/3WqvdNx0xULv688Ay8t
+         hP2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744049926; x=1744654726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFbNZd4DwARKKfdWQ+Cu/tmGujuqrB3Wcc2GX+USUd0=;
+        b=JLkXbruzfggxA9wHZOfW8ty8w8P/ZzyLIDgGraKcRtk5+SHHg7Shz59SNbFOl8W6g4
+         HueJ8SMLeculVw7AIov1CYxaGiNF+mgTw/Of4JSXQkznFdF/Tp2F3OfdH9rEf4chfR8k
+         HZtBtsgE7Yc6wwaWQpFkrz9ibSbKRDAuhFSl7DItjSK4FuCUjkYC5wqWWaCdL582a7Fj
+         DhUTpjal5EHLX0WjAzyl4lXatOAkM06Lp8auVdgUQh0dmLOrZmVNOFCvsRDLtTFfOgmA
+         soG84+tuZ/UOaJBIyh4iGqOhir3EIsxJQbxHgl6VSF5dXT50QNcxxqbtdJYRelUKcXwK
+         yxxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjTawLsQtUU0ghK9aWziEQ5Edzy5L5DLcMVMcPT9rD7A0NBbMCdefcuXePV2LAQ14eKmkJwEuur5aiQW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv1opA0gGbgDyq/VtDphPbI6g9RiBEROF0A6gTqBgzWIYZEuv0
+	6iymRMgzCIHrMxSO/OFPN1I+QSr+oqA2rCgtyoyjotDO8WyE5Qxc711iORanNg==
+X-Gm-Gg: ASbGncskF7dj15f4JdiXx4i/3uK4D2rFLOvj5b7xx1VZpu6pLapXuKCI5wLSddjtktV
+	PVdXv1URGEVmxei5Hto15WHXQcCaUvcb76F7GOzsYQ31cGSBtsWrMtthq8EsYgIgtX5eD0oTQxX
+	AdMvA9IP1uyjijnFUAedQyEgCLyzo7LoMn9I4PWrhlq76SJYdDuLbcOeA6zRrrId0nfwCTTY4lq
+	4k5GdfmKC+5y8Snmpo8EqGbrhh/itpgtrxAVC3bHNZeJtRHCy8KcB0QartaWzRKCBMCxjJLYYe2
+	sgtStArlZBw8IOaZ15MZcpT1RHZQHyVy0gKpDhO1m19TyYKh5xk5O1TAdK168RtryapC8rDIRKN
+	rQZLp
+X-Google-Smtp-Source: AGHT+IGln/Izgg3nWrLuWhL1QVjnKuf8O6IzSSF669Fhi9ozJGHYGsvvwP2dWH2ZoxjYcV7iVO8o8A==
+X-Received: by 2002:a17:902:6b0c:b0:215:86bf:7e46 with SMTP id d9443c01a7336-22ab69e49ffmr102315ad.7.1744049925946;
+        Mon, 07 Apr 2025 11:18:45 -0700 (PDT)
+Received: from google.com (24.21.230.35.bc.googleusercontent.com. [35.230.21.24])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305827d70a4sm9243096a91.3.2025.04.07.11.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 11:18:45 -0700 (PDT)
+Date: Mon, 7 Apr 2025 11:18:40 -0700
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
+ consistently
+Message-ID: <Z_QXAA5Mq1kFP4Ao@google.com>
+References: <20250403212924.306782-1-ipylypiv@google.com>
+ <Z-_JExGDyO9pVTON@ryzen>
+ <Z_AweMPLRJgBIBF3@google.com>
+ <Z_OSQzA04-5v7SR0@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.291
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_OSQzA04-5v7SR0@ryzen>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, Apr 07, 2025 at 10:52:19AM +0200, Niklas Cassel wrote:
+> On Fri, Apr 04, 2025 at 12:18:16PM -0700, Igor Pylypiv wrote:
+> > 
+> > Agree. ATA Status Return sense data descriptor for ATA PASS-THOUGH commands
+> > already contains the ATA LBA in bytes [6..11] so it seems redundant to
+> > also include the same in the Information sense data descriptor.   
+> 
+> Damien and I talked about this.
+> 
+> Since this patch only affects non-PT commands, what it this patch actually
+> solving?
 
-[ Upstream commit aff12700b8dd7422bfe2277696e192af4df9de8f ]
+For ATA PASS-THROUGH + fixed format sense data + NCQ autosense, this patch
+eliminates reduntant writes to set the INFORMATION field and the VALID bit.
 
-idt_scan_mws() puts a large fixed-size array on the stack and copies
-it into a smaller dynamically allocated array at the end. On 32-bit
-targets, the fixed size can easily exceed the warning limit for
-possible stack overflow:
+First write: scsi_set_sense_information() sets the INFORMATION field
+to ATA LBA (which is incorrect for ATA PASS-THROUGH).
 
-drivers/ntb/hw/idt/ntb_hw_idt.c:1041:27: error: stack frame size (1032) exceeds limit (1024) in 'idt_scan_mws' [-Werror,-Wframe-larger-than]
+Second write: ata_scsi_set_passthru_sense_fields() sets the INFORMATION
+field to ATA ERROR/STATUS/DEVICE/COUNT(7:0) as per SAT spec.
 
-Change it to instead just always use dynamic allocation for the
-array from the start. It's too big for the stack, but not actually
-all that much for a permanent allocation.
+User space should not see an issue because second write overwrites
+the incorrect data from the first write. I think we should still fix
+this in case someone updates the code to remove the second write in
+the future.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/all/202205111109.PiKTruEj-lkp@intel.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ntb/hw/idt/ntb_hw_idt.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index a0091900b0cfb..c74d958ffc62f 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -1041,7 +1041,7 @@ static inline char *idt_get_mw_name(enum idt_mw_type mw_type)
- static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 				       unsigned char *mw_cnt)
- {
--	struct idt_mw_cfg mws[IDT_MAX_NR_MWS], *ret_mws;
-+	struct idt_mw_cfg *mws;
- 	const struct idt_ntb_bar *bars;
- 	enum idt_mw_type mw_type;
- 	unsigned char widx, bidx, en_cnt;
-@@ -1049,6 +1049,11 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 	int aprt_size;
- 	u32 data;
- 
-+	mws = devm_kcalloc(&ndev->ntb.pdev->dev, IDT_MAX_NR_MWS,
-+			   sizeof(*mws), GFP_KERNEL);
-+	if (!mws)
-+		return ERR_PTR(-ENOMEM);
-+
- 	/* Retrieve the array of the BARs registers */
- 	bars = portdata_tbl[port].bars;
- 
-@@ -1103,16 +1108,7 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 		}
- 	}
- 
--	/* Allocate memory for memory window descriptors */
--	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
--			       GFP_KERNEL);
--	if (!ret_mws)
--		return ERR_PTR(-ENOMEM);
--
--	/* Copy the info of detected memory windows */
--	memcpy(ret_mws, mws, (*mw_cnt)*sizeof(*ret_mws));
--
--	return ret_mws;
-+	return mws;
- }
- 
- /*
--- 
-2.39.5
+How I found this issue?
 
+In commit 38dab832c3f4 (ata: libata-scsi: Fix offsets for the fixed format
+sense data) the offsets of fixed format sense data were updated to match 
+the SAT spec. To simplify the migration from old incorrect offsets to
+the new correct offsets I was considering using the VALID bit to determine
+what offsets to use in user space during the migration. The problem is that
+for ATA PASS-THROUGH + fixed format sense data + NCQ autosense the VALID bit
+is also being set by the scsi_set_sense_information() so we cannot use
+the VALID bit to reliably determine if kernel uses the correct fixed sense
+data offsets or not.
+
+> 
+> Since for non-PT commands, sense data is not returned to the user.
+> 
+> So unless SCSI core does some specific handling based on the INFORMATION
+> field (and AFAICT, SCSI core only looks at SK/ASC/ASCQ), I can't see how
+> this patch can actually solve anything.
+
++1 the patch does not seem to solve any issues for non-PT commands besides
+a spec compliance which is not visible to a user.
+
+Deleting ata_scsi_set_sense_information() should work as well. If SCSI core
+does not use the INFORMATION field perhaps there is no need to set it at all?
+This will eliminate the reduntant writes for ATA PASS-THROUGH as well.
+
+
+Thanks,
+Igor
+
+> 
+> 
+> Kind regards,
+> Niklas
