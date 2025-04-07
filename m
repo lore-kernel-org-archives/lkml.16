@@ -1,117 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0315E2571D2;
-	Mon,  7 Apr 2025 18:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54AB2561B9;
+	Mon,  7 Apr 2025 18:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051742; cv=none; b=uRLnyzWJfCzO0Xi47GURedO5WV+y3zmT/jod+IQRy3Qcrjxn08+3aa0Xi2eFIwmFxGcsMGP/JfkRyTXuXOA94Bd9ykWWqhKIpk79CiNYHMJ+RZfYuRzWT7piOpRaNT5DqDCwhjuyau2SKWlN3X1VsTd+skYRft6EOhqFvLmgmF8=
+	t=1744051785; cv=none; b=OIFhV4kQSrVxZr3Mz5CTs7toWcF9TDLdqN2OtXs5Yi5bA5C7Ic7+nMndMRUB4xkDMv1J8YNVftIlfjbBI1Pv0i546chCmOlt6KprrUvDHd7Lw0QPxw3St+E3kZtJs5G8+ioT12EQoR01WLWff0mtbf3t+uCrn0uKJx0MvVzyvz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051742; c=relaxed/simple;
-	bh=XJBBZbjJ7YLAsq+ynvqXWj2U8yQIx7KVxRbf4FSRfo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k3mMUsH0Ta4qfFDBZO8FcM66iJypI9Ek1M/5WJtS4gI35K6KsjY+Ua3dn+QAfi08FjE86Twmla+dcmhNuWp3yypNYSiU/D9NpFxT+qAyMIvGhmGBO2XiSiOSTaQg3/9i//Jr4QebHNU3WDnplos34nn78uhUvx4OWq2xiBrIZYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnX5z7NF; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744051785; c=relaxed/simple;
+	bh=DBR6tIZcX9SUviEcWkcmXfotauokDmL7FEuYM/rfV74=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qa2zoyvptegJCOKKA06lw+3mJ93bAXi1YeLw5RNKfBxdcS7qRW73GoB8HSN1Qf8XDMKZlXr4yfB4AbW1ODMJz8YzQINyYifQX6XVi6DiMCjEV2E/BqCt87dN2hod13HqqhW8Zj1azl1ltMLmtMamWB3AsrE97hFAOMW+ZPalEEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMgoJ5ut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnX5z7NF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744051741; x=1775587741;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=XJBBZbjJ7YLAsq+ynvqXWj2U8yQIx7KVxRbf4FSRfo0=;
-  b=CnX5z7NF4fknJpUWD7anu233w/xuFJ1/0RAtXBTl4NvyEceD29HXFawh
-   QiY4cv0G+Ygv0Pa8iJTZCG+ZIar10Kuqt6ZafBNcj0xHEry58G6qeJsvd
-   BZOnBKTq/1T93k50PFGpje7rxjp5FWDx1Ynd/wOeQr9wusmWliCYQ9lGO
-   MfFNYNoamDbVjHdnMSI0FxxVwmYe4FLq0mS8H0HAa34BooiETgqRtPL0R
-   gLoYV2Em3k1e6OP5cTs+TyeoMqKUcr+p60clHI7BGlnkbFVM/JL+AfRz/
-   z4LK/VXS4fxMN5X/wjegIIpFUs2jYUEJihBndctaJa+lDg05Ivee38Fct
-   g==;
-X-CSE-ConnectionGUID: yS/FLCQASwatbl/V+sifHA==
-X-CSE-MsgGUID: 0Zw4Z8ieTCqrtddsR5IWpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45167726"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45167726"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:49:00 -0700
-X-CSE-ConnectionGUID: gGwWYoGRQhG7e8jP45MWWg==
-X-CSE-MsgGUID: /WK4fOOdS7qJWPeRZOD6OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="133011605"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 11:48:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1rWh-0000000AAQj-0BdE;
-	Mon, 07 Apr 2025 21:48:55 +0300
-Date: Mon, 7 Apr 2025 21:48:54 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
-Message-ID: <Z_QeFmdDH1ls-cRI@smile.fi.intel.com>
-References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0gcbnWA4Whyn-x7uaqEbPow9Sqa3_GO4Z_cBcpYLcF3RQ@mail.gmail.com>
- <Z_QbFgSFMv58-QmM@smile.fi.intel.com>
- <CAJZ5v0hFNqUTVn4wVqigzhHTnmPU63+Z8iFwv++=gx8P7A-cow@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMgoJ5ut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6291C4CEDD;
+	Mon,  7 Apr 2025 18:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744051785;
+	bh=DBR6tIZcX9SUviEcWkcmXfotauokDmL7FEuYM/rfV74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TMgoJ5utj/EVTXZU/G6ORYKhsQn7vjf8a9p+cAMJQRzSAoautoqPv9lMChKUpjZiM
+	 nJf0pygyhAMNxjkdk46joUqQFhBco2V3KvHN/38kwRyKmkvbEN/5usNbi9Z3jLPUAL
+	 fpCpfv6NZ1Xz7yYAaAZPUPGDQq9Or0FC9tpuuvZT8kUzJ803cQ4hgLqIYS3QIFESER
+	 Aw4uRz3I0VO7TTwM5TqTvJQweyVFGmMGMMulfdQullwOJhs6vPa1ZHYRKRIiHOVezk
+	 NjXsdV/qlDronbZnSC81sGGNpj0nFhq3GXpoks1qlbZRb/+ljOS1JdTDEV6dFck5Cd
+	 Qm24Q+X1vmpow==
+Date: Mon, 7 Apr 2025 19:49:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] iio: adc: ti-adc128s052: Simplify using
+ be16_to_cpu()
+Message-ID: <20250407194937.097b7709@jic23-huawei>
+In-Reply-To: <4f099833-5aa6-47cc-917c-7a466cb644b9@gmail.com>
+References: <cover.1743573284.git.mazziesaccount@gmail.com>
+	<feeabbfd3d3916c7497dfd94423ff83ef5f654f1.1743573284.git.mazziesaccount@gmail.com>
+	<4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
+	<1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
+	<20250405182947.06d5e67f@jic23-huawei>
+	<4f099833-5aa6-47cc-917c-7a466cb644b9@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hFNqUTVn4wVqigzhHTnmPU63+Z8iFwv++=gx8P7A-cow@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 08:44:20PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Apr 7, 2025 at 8:36 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Apr 07, 2025 at 08:17:17PM +0200, Rafael J. Wysocki wrote:
-> > > On Mon, Mar 31, 2025 at 6:32 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > Add a note to the fwnode.h that the header should not be used
-> > > > directly in the leaf drivers, they all should use the higher
-> > > > level APIs and the respective headers.
-> > >
-> > > This sounds like a solution to a problem, but the problem statement is missing.
-> >
-> > > What's your motivation?
-> >
-> > Found a few drivers that are mistakenly include fwnode.h while they meant to
-> > have either of.h or more likely property.h.
-> 
-> I see.
-> 
-> I would then say
-> 
-> "This header file provides low-level data types and definitions for
-> firmware and device property providers.  The respective API header
-> files supplied by them should contain all of the requisite data types
-> and definitions for end users, so including it directly should not be
-> necessary."
-> 
-> And I would mention that the purpose is to give guidance to driver
-> writers to avoid repeating a common mistake.
+On Mon, 7 Apr 2025 08:23:07 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-A-ha, thanks for the suggestion, since there is also a v2, which almost
-the same, I will incorporate it into v3.
+> On 05/04/2025 20:29, Jonathan Cameron wrote:
+> > On Thu, 3 Apr 2025 08:16:43 +0300
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> On 03/04/2025 00:04, David Lechner wrote:  
+> >>> On 4/2/25 1:09 AM, Matti Vaittinen wrote:  
+> >>>> The register data is 12-bit big-endian data. Use be16_to_cpu() to do
+> >>>> the conversion, and simple bitwise AND for masking to make it more
+> >>>> obvious.
+> >>>>
+> >>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> >>>> ---
+> >>>> Revision history:
+> >>>> v1 => v2:
+> >>>>    - Fix commit msg to reflect the fact there was no bug
+> >>>>    - Drop Fixes tag
+> >>>>    - Use union for rx / tx buffer to avoid casting
+> >>>>    - Keep the shared message protected by the mutex
+> >>>> ---
+> >>>>    drivers/iio/adc/ti-adc128s052.c | 18 ++++++++++--------
+> >>>>    1 file changed, 10 insertions(+), 8 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> >>>> index a456ea78462f..3e69a5fce010 100644
+> >>>> --- a/drivers/iio/adc/ti-adc128s052.c
+> >>>> +++ b/drivers/iio/adc/ti-adc128s052.c
+> >>>> @@ -28,32 +28,34 @@ struct adc128 {
+> >>>>    	struct regulator *reg;
+> >>>>    	struct mutex lock;
+> >>>>    
+> >>>> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
+> >>>> +	union {
+> >>>> +		__be16 rx_buffer;
+> >>>> +		u8 tx_buffer[2];  
+> > As below. Maybe
+> > 		__be16 buffer16;
+> > 		u8 buffer[2];  
+> 
+> Ok.
+> 
+> >>>> +	} __aligned(IIO_DMA_MINALIGN);
+> >>>>    };
+> >>>>    
+> >>>>    static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> >>>>    {
+> >>>>    	int ret;
+> >>>> +	char *msg = &adc->tx_buffer[0];
+> >>>>    
+> >>>>    	mutex_lock(&adc->lock);
+> >>>>    
+> >>>> -	adc->buffer[0] = channel << 3;
+> >>>> -	adc->buffer[1] = 0;
+> >>>> +	msg[0] = channel << 3;
+> >>>> +	msg[1] = 0;
+> >>>>    
+> >>>> -	ret = spi_write(adc->spi, &adc->buffer, 2);
+> >>>> +	ret = spi_write(adc->spi, msg, sizeof(adc->tx_buffer));  
+> > 
+> > I'd get rid of msg as it's now just confusing given we are
+> > using the sizeof() here.  
+> 
+> Ok.
+> 
+> >>>>    	if (ret < 0) {
+> >>>>    		mutex_unlock(&adc->lock);
+> >>>>    		return ret;
+> >>>>    	}
+> >>>>    
+> >>>> -	ret = spi_read(adc->spi, &adc->buffer, 2);
+> >>>> -
+> >>>> +	ret = spi_read(adc->spi, &adc->rx_buffer, 2);  
+> > 
+> > sizeof(adc->rx_buffer)  
+> 
+> I was thinking of this but went with raw 2 - because we need to read 
+> exactly 2 bytes from the device. Sizeof buffer is matter of software 
+> where as the 2 bytes is dictated by the device. (Sure the size of buffer 
+> needs to be large enough).
+> 
+> I don't care it that much though, so I can go with the sizeof() if 
+> that's what you prefer. Just explaining that the '2' here was a 
+> conscious choice :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hmm. If we have a case where we read less than 2 bytes into that buffer
+then fair enough.  Otherwise it's correctly sized so having sizeof(buffer)
+and having to check that size in only one place is a tiny bit preferable.
 
+
+> 
+> >>>>    	mutex_unlock(&adc->lock);
+> >>>> -
+> >>>>    	if (ret < 0)
+> >>>>    		return ret;
+> >>>>    
+> >>>> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> >>>> +	return be16_to_cpu(adc->rx_buffer) & 0xFFF;  
+> >>>
+> >>>
+> >>> The cast isn't exactly beautiful, but this would save a lot of
+> >>> lines of diff and a few lines of code by avoiding the need for
+> >>> the union and the local msg variable.
+> >>>
+> >>> 	return be16_to_cpup((__be16 *)adc->buffer) & 0xFFF;  
+> > 
+> > The cast only works because we have forced the alignment for DMA safety.
+> > That to me is a little fragile.
+> > 
+> > You could do get_unaligned_be16() which doesn't need the cast then carry
+> > on using the original buffer.  
+> >>
+> >> Thanks again for the review David :)
+> >>
+> >> I am unsure which way to go. I kind of like having the __be16 in the
+> >> struct, as it immediately yells "data from device is big-endian". OTOH,
+> >> I've never loved unions (and, it silences the above "yelling" quite a
+> >> bit). I still think this might be the first time I really see a valid
+> >> use-case for an union :) And, you're right this adds more lines,
+> >> besides, the cast doesn't look that ugly to me. Yet, I originally had a
+> >> cast probably as simple as this (and I also had the __be16 in the
+> >> struct), and Jonathan suggested using union to avoid it...
+> >>
+> >> At the end of the day, I suppose I am Okay with any of these 3
+> >> approaches. Original cast, union or this cast you suggest. Jonathan, any
+> >> preferences on your side?  
+> > 
+> > Majority of the diff is really about renaming buffer to tx_buffer.
+> > Could just not bother doing that and instead have buffer and buffer16
+> > as the two union elements. With msg gone as suggested above, then the diff
+> > becomes only a few lines and you get to keep the nicety of it being either
+> > a pair of u8s or a __be16.  
+> 
+> I was tempted to try using the spi_write_then_read() - but I suppose 
+> this may be kind of a hot path.
+
+Given it's small, I doubt it would make any noticeable difference in
+performance.
+
+> 
+> I'll go with (not)renaming the buffer and dropping the msg, to squeeze 
+> the diff.
+
+Works for me.
+
+J
+> 
+> Yours,
+> 	-- Matti
 
