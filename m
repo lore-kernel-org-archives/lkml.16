@@ -1,139 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFAB200BA9;
-	Mon,  7 Apr 2025 15:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137681FDA83
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040453; cv=none; b=keLyWKf8XJMNLigOPqm/SVC6smErikj9X9nUaxpjo+U1PHIW1Oq6UTfKxhwmBpsiCTPygSzdOQC+l5FR8HcG+VuieDAWHPIpz5ysag+TvQTqZDBViOerza1nsRZGJuD6Ge9v9Z5IaKmW9tRBGOOCHPfArso9AP+bDc0WFws0aL8=
+	t=1744040517; cv=none; b=suMqBUlS278zBnco3Ia+ynJVs9oCECFgsW8VuUFV2dunUzdz1srSx4/YRQVgoMsY2jYrJJUsWVejWIIuIVX5UPwchPHsmSe7I5kzMiQn4+JT9DO6pYfJOyqsPND6gqAZ+P6fTkuZFM6e8w8mAkk9BNmVOxwzfrGSzi1K85c4HxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040453; c=relaxed/simple;
-	bh=YV6q4DU/TzjXug7xwkUcpIGhmfVKBbrnpQR1f68Rq2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XVTO/y3GmMYaV05U5rAS3KZeMF8PBwukiN3IOE1eIiaGy/DL3kXqmR/M9SWevX3ddxPa2Djw3tbjLxb+YxfRgBL+it7LpdDVz3QSDdcmdwkE05pvbv4BZLRTzAYsIVpcnMEVizhs+zMdBwkfP6WeqtRPkPgF/O4Br35SftPJzjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LAdjKIvb; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744040517; c=relaxed/simple;
+	bh=c+r3gZcw9sRz7g/dxPPMH5rBFO2oV0s/05FUVQt1ycw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BxcrkWionhS47TQbypv6zcqC01L7N13808fhgFbLdSoooXuC7u8LICcvkSydMMN6ndU9TDpi9qgU1mWXMa+F3FWETZGZkOz6JjB/QoBCgPZY6uPO7KP/pB4BM6A6+BuykqdKmWM8Lw6QVMjUtYPqoMnIs/Z+oXKdxoElpqWWo6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C18FyNCo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vup9tjxh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C18FyNCo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vup9tjxh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LAdjKIvb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744040452; x=1775576452;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YV6q4DU/TzjXug7xwkUcpIGhmfVKBbrnpQR1f68Rq2U=;
-  b=LAdjKIvbYpmSmoiP3+PM1UcJK39/MUyz8BB3wGsJ5Upg9vxjsEHdWFbm
-   evpyj4acHyZu5KqERuPLXWNgjiTY8ZSoRenQK3+2NTPOn2qhfaExvqlgp
-   dC0b/md0wHFlotu8DJf3rY6Ym+Ti+IR7FI7EgnaMJ3iCrHuye2/FDbZv0
-   +ADkjJyO5A5Oj71yGHu2yH49Q5smqlUCtf7l1HynqupqVIOdKvlD2Ya4m
-   NeMBQfR8o+hRind8LoRdfylY4FbrWaojU83+CZtJxvc4oG1Jwg2sJQgct
-   EeCYZGvWF/JwSewzt58Fnd7VWvhH2VDRmj94yPMN68zLgffXGr6pbNXKU
-   g==;
-X-CSE-ConnectionGUID: BxqUjtbXT/OfKu4sCvwBvQ==
-X-CSE-MsgGUID: KRv/ZGQuTCSzspz3qvurlQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45603380"
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="45603380"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:40:51 -0700
-X-CSE-ConnectionGUID: lAjlpR38SVmSojvCK9H2Pw==
-X-CSE-MsgGUID: Q3qlp6hHR6aZBR6VAO0MDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="132715896"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 08:40:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u1oab-0000000A73r-3sQr;
-	Mon, 07 Apr 2025 18:40:45 +0300
-Date: Mon, 7 Apr 2025 18:40:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Marek Vasut <marek.vasut@gmail.com>, stable@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
-Message-ID: <Z_Px_ajf96J_LlcD@smile.fi.intel.com>
-References: <20250326173838.4617-1-francesco@dolcini.it>
- <174368202234.27533.1000100252310062471.b4-ty@linaro.org>
- <Z-6TGnGUEd4JkANQ@black.fi.intel.com>
- <CAMRc=Me15MyNJiU9E-E2R9yHZ4XaS=zAuETvzKFh8=K0B4rKPw@mail.gmail.com>
- <02cab60d-9748-4227-a4aa-33373ea0be38@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C18FyNCo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vup9tjxh";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C18FyNCo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vup9tjxh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2B4561F769;
+	Mon,  7 Apr 2025 15:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744040513; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iTvPtaU4waFCJGiSOKXC4jb0EXXLdWq6voKpUkzh9h0=;
+	b=C18FyNCoh+5ACbUk5PODUxCvuM1VlL5jCcmdo3DZSwXWuz1R7RsGmu7M9jl3TByLMwn/+x
+	FQ38Dt3PrIlhgH+VeQZ7qitNxcS8CYWancdEZ00Mv4ZikDsY8AQHOjpMs2ANYvLc/+egH+
+	COAA4TDzmG2obVVCO4bAsgj7Y+YOyT0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744040513;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iTvPtaU4waFCJGiSOKXC4jb0EXXLdWq6voKpUkzh9h0=;
+	b=vup9tjxhOk3P9qiY9ZZRovp/fc2sYRYrUNxvNqL4c7W7XPy4iKFzEWczTVuNNG+6EetT7o
+	WQsw///tFxk1QsBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=C18FyNCo;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=vup9tjxh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744040513; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iTvPtaU4waFCJGiSOKXC4jb0EXXLdWq6voKpUkzh9h0=;
+	b=C18FyNCoh+5ACbUk5PODUxCvuM1VlL5jCcmdo3DZSwXWuz1R7RsGmu7M9jl3TByLMwn/+x
+	FQ38Dt3PrIlhgH+VeQZ7qitNxcS8CYWancdEZ00Mv4ZikDsY8AQHOjpMs2ANYvLc/+egH+
+	COAA4TDzmG2obVVCO4bAsgj7Y+YOyT0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744040513;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iTvPtaU4waFCJGiSOKXC4jb0EXXLdWq6voKpUkzh9h0=;
+	b=vup9tjxhOk3P9qiY9ZZRovp/fc2sYRYrUNxvNqL4c7W7XPy4iKFzEWczTVuNNG+6EetT7o
+	WQsw///tFxk1QsBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB03213A4B;
+	Mon,  7 Apr 2025 15:41:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id acH9M0Dy82cyQgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 07 Apr 2025 15:41:52 +0000
+Date: Mon, 07 Apr 2025 17:41:52 +0200
+Message-ID: <87zfgsashr.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-hardening@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: azt2320: Replace deprecated strcpy() with strscpy()
+In-Reply-To: <20250407090832.743255-1-thorsten.blum@linux.dev>
+References: <20250407090832.743255-1-thorsten.blum@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02cab60d-9748-4227-a4aa-33373ea0be38@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 2B4561F769
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,linux.dev:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Apr 07, 2025 at 05:11:14PM +0200, Emanuele Ghidoli wrote:
-> On 03/04/2025 15:56, Bartosz Golaszewski wrote:
-> > On Thu, Apr 3, 2025 at 3:54 PM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> >>
-> >> +Cc: Geert
-> >>
-> >> On Thu, Apr 03, 2025 at 02:07:05PM +0200, Bartosz Golaszewski wrote:
-> >>> On Wed, 26 Mar 2025 18:38:38 +0100, Francesco Dolcini wrote:
-> >>
-> >>>> If an input changes state during wake-up and is used as an interrupt
-> >>>> source, the IRQ handler reads the volatile input register to clear the
-> >>>> interrupt mask and deassert the IRQ line. However, the IRQ handler is
-> >>>> triggered before access to the register is granted, causing the read
-> >>>> operation to fail.
-> >>>>
-> >>>> As a result, the IRQ handler enters a loop, repeatedly printing the
-> >>>> "failed reading register" message, until `pca953x_resume` is eventually
-> >>>> called, which restores the driver context and enables access to
-> >>>> registers.
-
-[...]
-
-> >>> Applied, thanks!
-> >>
-> >> Won't this regress as it happens the last time [1]?
-> >>
-> >> [1]: https://lore.kernel.org/linux-gpio/CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com/
-> >>
-> > 
-> > Ah, good catch. I'm wondering what the right fix here is but don't
-> > really have any ideas at the moment. Any hints are appreciated.
-> > 
-> > For now, I'm dropping it.
-> > 
-> > Bart
+On Mon, 07 Apr 2025 11:08:29 +0200,
+Thorsten Blum wrote:
 > 
-> I’ve found another possible solution: disable the PCA953x IRQ in
-> pca953x_suspend() and re-enable it in pca953x_resume().
-> This would prevent the ISR from being triggered while the regmap is in
-> cache-only mode.
-> The wake-up capability is preserved, since an IRQ can still wake the system
-> even when disabled with disable_irq(), as long as it has wake enabled.
-
-Can you enable IRQ debugfs and dump the state of the wake* nodes for the
-respective interrupts? In this case we will be 100% sure it works as expected.
-
-> This should avoid introducing regressions and still handle Geert’s use case
-> properly.
+> strcpy() is deprecated, use strscpy() instead.
 > 
-> Andy, Bart, Geert - what do you think?
+> Link: https://github.com/KSPP/linux/issues/88
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Sounds okay, but please double check the above.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Applied now.  Thanks.
 
 
+Takashi
