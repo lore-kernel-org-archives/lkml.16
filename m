@@ -1,164 +1,161 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A682156230
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 08:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01C82253B7;
+	Mon,  7 Apr 2025 08:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744013726; cv=none; b=qUYAQ1xfaaG2loPCy2jmscRIOcmYKz5u9mkejPG/RF7ctnyceYCJqH8bdsqxISBDBUpq4GhelL9l0jlgEqEK0cXNNhLOkqM/p/AHs2Bm4SF+lbFg8mLkJcqKiXCPpiTRdjqGl/PtxtDQwwgezd0pXyF76ZjbG5M/wA+ljukL/bY=
+	t=1744013826; cv=none; b=RtlYCadek+ZBWKdvE5a+Hd4K2YJAlEGjXoG7yA7TjwNKP4CLeSkWgjX56VlXK+WcQaW/RrCaGATKc9seSkiiXR4YCQFIQppU5SKss5MEfMWHRq4Ez9ZMeaJPtI9MQAPAWL1BDhWoORoGTYCu23FpoeoyXrLX+mcNcl4seFUESKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744013726; c=relaxed/simple;
-	bh=7eKwR+8NelLDqbmRwgY2SrOwJJmgSMiDGnzt6L51nLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I5pvv2SFFCHZ3yr2YxOR9N+ItCBfHLSoT/1kp7i7gsbF8pTWXRUGKaw+oUUCTx9gNbVBGyBJr/X0HWVsDatNZSiuMDiyJx7g0yrNyzRSXJSrUczByG6NoXVYQl0hqSrghjDFnCEIGaSmr+5E/pOEXoJU0wLYVNFg+IDT9zoX+gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=YYwi1oc0; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1744013826; c=relaxed/simple;
+	bh=XyBtcSlcZdGNBXvueFeCr4yhVGyfP64cK/j8eqDM/zA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fBjXjVwQqUzlJP7d0xB3tq5xfshOBEfnuxWkRWP5oFnQaVzTyD3VYKI8YnZ4o/sdkKepC51FuXrnG6no1794oOU70C+0VCvW2vgdcmjjIZgaNnBFdIaDt1X1VYdVtRbhnhOAuwVojjy05dbnfEm3STLBvgD9rqC2XALgNXVuAuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TfYaQwIs; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="YYwi1oc0"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso5917585a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 01:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744013722; x=1744618522; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rxhNXhmOXrXU9cn3uuap3d3f1w/9DGD5pG/vOAg+GCU=;
-        b=YYwi1oc0edop/Av6fSOshDK2XvLhHx/X1pdYQfkv3n0Mtd7JUFaxmTBkwfnIgtUINR
-         EayPdUV46tfcXzwNS32vprlnmr25IvKLSDb5eEpaINdTlE3nmrv5kw0pfIIpASzfX7vU
-         AtP0bwpTELTB0xfR6oG4yLF+v4Cl318a5797Zb78XX4UkcqpBo+bnu+L4lMMBeP9VqOf
-         n6eT1JnePywHVn25oQij55/2jVwORFV62hV+NjxQz+ZM0ggcICSQZWMPEX0bOWLA0N3D
-         +i9QeX9bncGroT5P+aGd2bhnWGpw5VN2oi1LsaNITE0PQV1pc8MTGBtLJSA9ULPuqUDD
-         ID+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744013722; x=1744618522;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rxhNXhmOXrXU9cn3uuap3d3f1w/9DGD5pG/vOAg+GCU=;
-        b=h6/KuVufWvusCEwpJ+JZtOCt7IuGB6W3To970tZ8lldO87nMhdhuTuiQqSPXFwielv
-         ALM0MuSDWk3XbJ9Plm7xb1hthVK/6GKkEsOkObCUUfdydFg8n3XFREgdg4hjn5L30dnQ
-         lpaKzA5FEFKQIB/pr3KMGSgNdEEAnfUtcNZmLaAwNGTOuEmLKW6kQQM5FzuwNO1zC5s/
-         SJiiO/FHWM27z6+UFttemjQXLi18HMbkNIZiqwCWRFHc/knt6LyYOjAXLfc+cbg79ZBb
-         FUPeCyvchW6sAuOytrnP1KfaSNNbCjBmBSy2QtmQWIrRmkJQ30ZPA+H97a5kuplGEPRo
-         gxRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhLhjxNl9n4UnY/4sj6P0ufcQ2Gn8prUCvv+zPr1ruRBN6PyOfx4UehuV8Zx4UBoe+sLVynTSX6m8xQ6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd++90asiSCYWH+6AkGlCkzErMjia8vC7z0XUt/9dsMov2skEs
-	tA8S6qwDGhcDisObYt9jh0IBvNmTdSBqwxriJdsyUdV4G2p/MT+u3tDxesEjfKoWaL5L/u2kDPQ
-	SoeRRmyWaxDcCx/9qB/TmlDJCUGStDRau9S6W5N0HXIue+sG/
-X-Gm-Gg: ASbGncuVBEo7CsIpuJs/IojlKaoEOVJCt0X/4rBGTzH6haVyyTq4oT/HqwsXIa4WPnv
-	ojsNmJERdeLYJt61s2VcfuaQGp7QJlKoVy7yUywa/cmWDripkNnkfLC+SHIwy9tJaynyl3ckjBS
-	23lIrQrS7GMubjw8t2uzNhw1ms6b/xIa6JGxhvG1dWLGWrwRZiEivW4tx4
-X-Google-Smtp-Source: AGHT+IGgzEsWY+FDt77Og8y5aNWXUnnOo8nRCNX9z9AS6T2kxW12Ew+hSRh5KhztpZghUinGFQgeBKUpUrZ7kM/dDF0=
-X-Received: by 2002:a05:6402:3489:b0:5de:c9d0:6742 with SMTP id
- 4fb4d7f45d1cf-5f0db80a5ebmr5551794a12.9.1744013722372; Mon, 07 Apr 2025
- 01:15:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TfYaQwIs"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536MGZZu028164;
+	Mon, 7 Apr 2025 08:16:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=nabt4M
+	TzF21qlD7olPmRrgXeKPdV2cuXz31d6xns7pk=; b=TfYaQwIsEXj0+xl/be2u3N
+	Sfq6LSaTC8uXkIWwKYeIbOtt9EPT59/boI0gkBhdagb8tMlwJZyI5t4ZK2MYa8z8
+	QFK181Ubw/S8LHF6ivpB8U23+daactok/GrDx4KzH0fLYouxkC4O0o4CSbe1Otw+
+	vRGk/ZJVOZMQnIfeeCvW8j7KtR5EZIAqdDve1zXY38+Q6dhFW3lSdqU28/92RQY8
+	DLzit2IQSqT0DwDGoTb/evs4yVYZ5e8y4cZiVmef+OC9rR1XXxQSju8izu2ooID4
+	kdzD5cGAH+NqsAIQBzM4UFu9gub9/fkxMCRCPbEZ5SApxY5wzWQQ7Rt8WrpynErg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uwswtnvq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 08:16:30 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5378FFoK018849;
+	Mon, 7 Apr 2025 08:16:30 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45uwswtnvm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 08:16:30 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5375iRVK025562;
+	Mon, 7 Apr 2025 08:16:29 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ugbkmvda-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 08:16:29 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5378GPIu56623414
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 08:16:25 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B98A2004B;
+	Mon,  7 Apr 2025 08:16:25 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B555D20043;
+	Mon,  7 Apr 2025 08:16:20 +0000 (GMT)
+Received: from [9.203.115.62] (unknown [9.203.115.62])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  7 Apr 2025 08:16:20 +0000 (GMT)
+Message-ID: <873f3934-e964-49d4-a312-1debb1c77255@linux.ibm.com>
+Date: Mon, 7 Apr 2025 13:46:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403134200.385077-1-alexghiti@rivosinc.com>
- <CAMj1kXGzrn6i20LvUBnz_mGi946=GCogNHHUL=mNsv513qYv7A@mail.gmail.com>
- <2874fc20-9135-4b13-b825-43fb350ce552@ghiti.fr> <CAK7LNAT5sDhh1v3U2xUuVnrbhNXp3SJ_ngxSqAgwmZL0E2QGpA@mail.gmail.com>
-In-Reply-To: <CAK7LNAT5sDhh1v3U2xUuVnrbhNXp3SJ_ngxSqAgwmZL0E2QGpA@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 7 Apr 2025 10:15:11 +0200
-X-Gm-Features: ATxdqUF5a3kGXRp3r7uxE0Bhe9AOdQ046v-EZyv9hJ2EImaWyVHa56ABPSTHfBg
-Message-ID: <CAHVXubgZ+Dwx70vU03R9MZ7BjkzbdR21y-Ort6pBngFmFYs-uw@mail.gmail.com>
-Subject: Re: [PATCH v2] scripts: Do not strip .rela.dyn section
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Ard Biesheuvel <ardb@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Charlie Jenkins <charlie@rivosinc.com>, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch (v6.14)
+To: Shung-Hsi Yu <shung-hsi.yu@suse.com>, "Naveen N. Rao"
+ <naveen@kernel.org>,
+        bpf@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+        Mark Rutland
+ <mark.rutland@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vishal Chourasia <vishalc@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
+References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CiVB0C82QOgMH9tKUtHz9g8EIftRWHzy
+X-Proofpoint-ORIG-GUID: m4LySXxzR5w3uK0HEcFy_rQKR8xuJbln
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_02,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 adultscore=0 clxscore=1011
+ phishscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504070056
 
-Hi Masahiro,
+Hi Shung-Hsi Yu
 
-On Fri, Apr 4, 2025 at 5:25=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
-g> wrote:
->
-> On Fri, Apr 4, 2025 at 12:45=E2=80=AFAM Alexandre Ghiti <alex@ghiti.fr> w=
-rote:
-> >
-> > Hi Ard,
-> >
-> > On 03/04/2025 17:11, Ard Biesheuvel wrote:
-> > > On Thu, 3 Apr 2025 at 16:42, Alexandre Ghiti <alexghiti@rivosinc.com>=
- wrote:
-> > >> riscv uses the .rela.dyn section to relocate the kernel at runtime b=
-ut
-> > >> that section is stripped from vmlinux. That prevents kexec to
-> > >> successfully load vmlinux since it does not contain the relocations =
-info
-> > >> needed.
-> > >>
-> > > Maybe explain that .rela.dyn contains runtime relocations, which are
-> > > only emitted if they are actually needed - as opposed to the static
-> > > relocations that are not emitted as SHF_ALLOC sections, and are not
-> > > considered to be part of the runtime image in the first place.
-> >
-> >
-> > Ok I'll do.
-> >
-> >
-> > > It
-> > > would be nice if we could use --remove-relocations=3D here, which onl=
-y
-> > > removes static relocations, but unfortunately, llvm-objcopy does not
-> > > support this.
-> > >
-> > > Also, I wonder if this should apply to all of .rel.dyn, .rela.dyn and
-> > > .relr.dyn, as they all carry runtime relocations.
-> >
-> >
-> > Ok, I'll add them to the next version.
-> >
-> >
-> > >
-> > > Finally, I'd be curious to know why RISC-V relies on --emit-relocs in
-> > > the first place? Is the relocs check really needed? If not, it would
-> > > be a nice opportunity to get rid of Makefile.postlink entirely.
-> >
-> >
-> > So I had to check and it happens that this was an issue with the
-> > toolchain, I should check if that still happens with newer ones.
-> >
-> > commit 559d1e45a16dcf1542e430ea3dce9ab625be98d0
-> > Author: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Date:   Wed Mar 29 06:53:29 2023 +0200
-> >
-> >      riscv: Use --emit-relocs in order to move .rela.dyn in init
->
->
->
->
-> So,
->
-> Fixes: 559d1e45a16d ("riscv: Use --emit-relocs in order to move
-> .rela.dyn in init")
->
-> Is this the correct tag?
+Thanks for reporting this.
 
-This is the initial culprit yes, but if we use this tag, the fix won't
-apply. So I decided to pick Ard's patch so that this fix can be easily
-backported to 6.14, and I'll come up with a new version for previous
-releases. Is that ok with you?
+On 31/03/25 6:49 pm, Shung-Hsi Yu wrote:
+> Hi all,
+> 
+> On ppc64le (v6.14, kernel config attached), I've observed that fentry
+> BPF programs stop being invoked after the target kernel function is live
+> patched. This occurs regardless of whether the BPF program was attached
+> before or after the live patch. I believe fentry/fprobe on ppc64le is
+> added with [1].
+> 
+> Steps to reproduce on ppc64le:
+> - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
+>    with fentry (kfunc is the older name bpftrace used for fentry, used
+>    here for max compatability)
+> 
+>      bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
+> 
+> - Run `cat /proc/cmdline` and observe bpftrace output
+> 
+> - Load samples/livepatch/livepatch-sample.ko
+> 
+> - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
+>    output, but no new bpftrace output.
+> 
+> Note: once the live patching module is disabled through the sysfs interface
+> the BPF program invocation is restored.
+> 
+> Is this the expected interaction between fentry BPF and live patching?
+> On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
+> unintended. Any insights appreciated.
 
-Thanks,
+As Naveen updated in another thread already, this behavior is expected
+as ppc64le does not handle it. Will take a stab at fixing it.
 
-Alex
+> 
+> Thanks,
+> Shung-Hsi Yu
+> 
+> 1: https://lore.kernel.org/all/20241030070850.1361304-2-hbathini@linux.ibm.com/
 
->
->
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+fwiw, the above patch was necessary for fentry, but the support was
+complete with:
+
+  
+https://lore.kernel.org/all/20241018173632.277333-18-hbathini@linux.ibm.com/
+
+Thanks
+Hari
