@@ -1,109 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820691FBEAD;
-	Mon,  7 Apr 2025 16:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2156B20F061
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 16:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744044146; cv=none; b=K58BgB6Y9UtfuZ7K4u0DNAmKO2Hmn5A6yYmZuqUGJ7MFsM4ZPtnu1OikGatrQ3iWb16ivUYp1+h8yckwWqjtGaMiPdGdkT+T9qFX5zzSo0a5sLzubFk8fizKW0Xbe1avUKwB/xO1H6BuuwXdYV/hBMDivG1lZW+3EHCnio0jsaE=
+	t=1744044233; cv=none; b=Nf3AtMC4y7EtleO60IdZWgyD+kNp/OJsobZOgTstEmyOoEva0Fb8dXAqkQtCBuTBqZPmDTiNC1AEZSWOzsZ18C29mgwDNroscvYyIw9heYMxqI+xZusazCM15WMWRlkyVPQ4lp8cg2rUIAVWfvZZ+oPwFq61VmZManezno5CFaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744044146; c=relaxed/simple;
-	bh=WrQXXjBpiM94b86oVqkh0KjxV+FLNSgpsVk43vl3Tf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=edUJGQ0m0rv9TT9loMTBzx7ZRMZcOHIc4/F2xdRlV/kp1m7SnRQwdlLwpdpj/lx9UdYJdsQGm3ce4vLu2xThxdoGbG8W+nOysFKMJfr/8O02+Jsa7vRXCR6VCqHJMTY6lsHbfr38OCLB0EbLX1dGmNrXWI4M+zDSj0FNPLHDSuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kR1RFSB5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744044233; c=relaxed/simple;
+	bh=cvAoqYYxoVMrWTFQTgtR+e3WJRdshdcv4fcS4uv/p7U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YeHx1DsXft9bdos7d7UX50E/pbaExta2wRhMJjl3ImGV4dNYETfidar7OxNK/y8gWVwmjgDDZVSCyksEzEG9W9ywdXSW3y1IibV+VCJ0umXThUiEvHW/3tb7cVB96pMKu18sA4oybXYQaVgnzZDCqcqsROmbunVYdbVcAu4L7Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jbyGMIgn; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kR1RFSB5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7458C4CEDD;
-	Mon,  7 Apr 2025 16:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744044146;
-	bh=WrQXXjBpiM94b86oVqkh0KjxV+FLNSgpsVk43vl3Tf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kR1RFSB519J3NaTdfH64WZVjxAA0DmrzaSfvysqfhPHPSE8GD0zOJrG6or64tljvZ
-	 iDeQjpZn/TNO6Dcf+21b5P2CcdosYJR3YJBjdikABzJG/foql1BWJWy+HhCjb5HG/e
-	 tNfGfdWUpMgqPCFUukBimnl+VrAb4Pt+tLM4Nuuyv7rLkLVHePMjai+yOEMzHQRvbb
-	 VbqIL7Ky+yiH3IdHqUzzwptRWSiqd5FWIIkbypA8igThHDh6+QQ5BBZbHmsA9yL8au
-	 yb0jviDpLmVJTA5Q1MBPNx1mzTBVLxi1IMetrNcayeOeovwuc70f1YhCowg3G2xCia
-	 ZUBy/sN9oKt+w==
-Date: Mon, 7 Apr 2025 17:42:21 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: sbhatta@marvell.com, sgoutham@marvell.com, gakula@marvell.com,
-	hkelam@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] octeontx2-pf: Add error log
- forcn10k_map_unmap_rq_policer()
-Message-ID: <20250407164221.GT395307@horms.kernel.org>
-References: <20250407081118.1852-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jbyGMIgn"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736d30d2570so3932766b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 09:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744044231; x=1744649031; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZnT3kn0lZwBedm0uGPv3h/z1Jk4dbKRxwN+6F5eRc0=;
+        b=jbyGMIgnJ5TYN8YHX65tcA9bwq/lzeA5KK1mDAZ8lPNqo/zVWjsjalrU3i534t0RSa
+         MSp5AeYUt92roveKjIzHuxo9t4mt6P6Suzt2DLGZlAoSOvXdZM6m3Dvdip2lrsdtQJpH
+         JN3uTLtcx2SDuNXav8wopqJhOIb3KrRZ9iIXCGmRuQQyXWLV8yxm6XalRNhSHtVaH94L
+         MIm6UBp82R3f0cgTN4Vhb2/lsNq2XwT9Jdys6FPCPhLHwbGVMCCzhVjHw3V286mMX+RA
+         60k0d5Fdou7k1y+BLfuLIWq6uKSvMmRfrb0B5va5Dpmpe0uwYyrj+AUmYme9DC6PNH7I
+         oxgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744044231; x=1744649031;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZnT3kn0lZwBedm0uGPv3h/z1Jk4dbKRxwN+6F5eRc0=;
+        b=I1WFBCLkF7+CZYbOKrw53IOZFYT00IT0LeXz1ZUsohSdMSp5OlFOB9BlFA3ueanawj
+         bHJag6eXCPJj2clXaxbYvO4rhSifjTdReqtp7fShiEy92j2UOsbUny68Ti/iKLYgHDCM
+         7hEX7oEXHi9t5ocVBwVPFvXQl5QYbiukM81XgSZ0DCnrCgYLJE8DE93hD6fLBrCuRn7Z
+         LT09Vj/7+ZQptVYD1Q8063ytCeCN+kgEmgMnDrOI3Phu12CQCTgI/Y23ZqVP+fABTyZO
+         EE16+iWUnCOr5x9vF58IZ12qDhf6S3b+mA2dV0NqyWK00OmvRgtBVkKLrRl3d7UHr6or
+         RvWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsFgGpffDdTgSI3imvlKr31Dc2jNfjtA6NiOXnihFJ9XfUwIB5pNEOlWCMvkIGvf3HMxHVlC3eD7pQd9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcwpgsWOmez+skSXyf5aETwkw6bIXdXAhz94UHj37ysaMbLfvJ
+	iDZRwpxbQjgH+kZLg/HvkOtUPWvy//8rKx8D8V2TaBny6lxuG7jRj8FPW8/mxSnow4PFldz9oD3
+	I7w==
+X-Google-Smtp-Source: AGHT+IGF8eBnjAYFXIPI8U2dRPCijHocf42fEz6xwJrtVSsRVB6bz3zjqLRx5gwWh1OyqfcDjPG12qk0yPY=
+X-Received: from pfbhu13.prod.google.com ([2002:a05:6a00:698d:b0:732:51fc:618f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:2d04:b0:1f5:7b6f:f8e8
+ with SMTP id adf61e73a8af0-20113c095fdmr14665309637.6.1744044231220; Mon, 07
+ Apr 2025 09:43:51 -0700 (PDT)
+Date: Mon, 7 Apr 2025 09:43:50 -0700
+In-Reply-To: <20250407161540.GG1557073@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407081118.1852-1-vulab@iscas.ac.cn>
+Mime-Version: 1.0
+References: <Z9s7r2JocpoM_t-m@arm.com> <SA1PR12MB7199C7BD48EB39F536DD34DBB0A62@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <Z-QU7qJOf8sEA5R8@google.com> <86y0wrlrxt.wl-maz@kernel.org>
+ <Z-QnBcE1TKPChQay@google.com> <86wmcbllg2.wl-maz@kernel.org>
+ <Z-RGYO3QVj5JNjRB@google.com> <20250331145643.GF10839@nvidia.com>
+ <Z_PtKWnMPzwPb4sp@google.com> <20250407161540.GG1557073@nvidia.com>
+Message-ID: <Z_QAxiEWEyMpfLgL@google.com>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+From: Sean Christopherson <seanjc@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Marc Zyngier <maz@kernel.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "will@kernel.org" <will@kernel.org>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "shahuang@redhat.com" <shahuang@redhat.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "david@redhat.com" <david@redhat.com>, 
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, 
+	Kirti Wankhede <kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, 
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>, 
+	Alistair Popple <apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, 
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Uday Dhoke <udhoke@nvidia.com>, 
+	Dheeraj Nigam <dnigam@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>, 
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, 
+	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com" <coltonlewis@google.com>, 
+	"kevin.tian@intel.com" <kevin.tian@intel.com>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, 
+	"ardb@kernel.org" <ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
+	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"ddutile@redhat.com" <ddutile@redhat.com>, "tabba@google.com" <tabba@google.com>, 
+	"qperret@google.com" <qperret@google.com>, "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 07, 2025 at 04:11:17PM +0800, Wentao Liang wrote:
-> The cn10k_free_matchall_ipolicer() calls the cn10k_map_unmap_rq_policer()
-> for each queue in a for loop without checking for any errors.
+On Mon, Apr 07, 2025, Jason Gunthorpe wrote:
+> On Mon, Apr 07, 2025 at 08:20:09AM -0700, Sean Christopherson wrote:
+> > On Mon, Mar 31, 2025, Jason Gunthorpe wrote:
+> > > On Wed, Mar 26, 2025 at 11:24:32AM -0700, Sean Christopherson wrote:
+> > > > > I don't know how you reconcile the lack of host mapping and cache
+> > > > > maintenance. The latter cannot take place without the former.
+> > > > 
+> > > > I assume cache maintenance only requires _a_ mapping to the physical memory.
+> > > > With guest_memfd, KVM has the pfn (which happens to always be struct page memory
+> > > > today), and so can establish a VA=>PA mapping as needed.
+> > > 
+> > > This is why we are forcing FWB in this work, because we don't have a
+> > > VA mapping and KVM doesn't have the code to create one on demand.
+> > 
+> > I don't follow.  As it exists today, guest_memfd doesn't touch the direct map,
+> > i.e. there's already a kernel mapping, KVM doesn't need to create one.
 > 
-> Check the return value of the cn10k_map_unmap_rq_policer() function during
-> each loop, and report a warning if the function fails.
-> 
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
-> v3: Add failed queue number and error code to log.
-> v2: Fix error code
-> 
->  drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> index a15cc86635d6..9113a9b90002 100644
-> --- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-> @@ -353,8 +353,10 @@ int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
->  
->  	/* Remove RQ's policer mapping */
->  	for (qidx = 0; qidx < hw->rx_queues; qidx++)
-> -		cn10k_map_unmap_rq_policer(pfvf, qidx,
-> -					   hw->matchall_ipolicer, false);
-> +		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
-> +		if (rc)
-> +			dev_warn(pfvf->dev, "Failed to unmap RQ %d's policer (error %d).",
-> +				 qidx, rc);
->  
->  	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
+> This is not about guest_memfd..
 
-I think that you need brackets for the for loop now
-that it covers more than one statement. Like this:
+Heh, my part of the thread was.  I was responding to Marc's comment:
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-index c3b6e0f60a79..7f6a435ac680 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-@@ -357,9 +357,12 @@ int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
- 	mutex_lock(&pfvf->mbox.lock);
- 
- 	/* Remove RQ's policer mapping */
--	for (qidx = 0; qidx < hw->rx_queues; qidx++)
--		cn10k_map_unmap_rq_policer(pfvf, qidx,
--					   hw->matchall_ipolicer, false);
-+	for (qidx = 0; qidx < hw->rx_queues; qidx++) {
-+		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
-+		if (rc)
-+			dev_warn(pfvf->dev, "Failed to unmap RQ %d's policer (error %d).",
-+				 qidx, rc);
-+	}
- 
- 	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
- 
+ : Remind me how this work with stuff such as guestmemfd, which, by
+ : definition, doesn't have a userspace mapping?
 
-Flagged by allmodconfig W=1 builds.
-
--- 
-pw-bot: changes-requested
+I'm pretty sure we're on the same page.
