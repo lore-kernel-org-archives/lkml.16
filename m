@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39D022A1E9
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30A0228C9D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744069250; cv=none; b=B0xKbsD+YY2UKH2mc5l5fXTmcQ5Oh7WcPXRcqJqLshKyS/e/DyGzzOEWgzazxxDG37/DSxe/W1eo06girHX1Vxg7QPmZRZshEXRD+ZDLR0uQG1HlVTYjrS3ahu2cctIgYdINuZonl71SFcb/ocJCGG6vB53LyS8G7gxBqCo6iVg=
+	t=1744069249; cv=none; b=h1UeFWrIeU/MSduhfoDP4YYUoq59ro4MiqPLwz7+2XdIf3Mfxan4xEcFBHAQggtqXABjtQm8BgKo0c5Fo8zFE7h4XPPwCyRq/4Dpp7cPzgQWyRokGXXd9Yd05L0EUUwH0+aCiFuk22PRV4U79EfKmYuoaW9hpdan69UDDdGjaO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744069250; c=relaxed/simple;
-	bh=lnFgMXtArObRN3GbXncQyTuX28vMzGs5CIA3S4aIH1k=;
+	s=arc-20240116; t=1744069249; c=relaxed/simple;
+	bh=PbAmaYUfs3cYnTUyhKKObGUQYfLatjVDLhG5ft36Q3I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jqU87gu+HzNxW3aCmSfdSbx2B2aQVXtbUSilcSzpfL2AGdd/jUPKCrZdtvW625eGaBkpJmD+kdkk4b27VlRzNWYVoDhoXzmRebA7XuALTk4gB+8/mONMVdGgRhILP8lKZ5kbQuNm83Xf8GKkhu3ME2G9V5OUItBHVUQAWZVuz+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cuk+L6fr; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=maq31Qitg/9mbuC908iUF23xBDOqKck+GUvHO388jcJuOo0K4iYSJA/IoztmnRQMB7mJOsh2dYl4FeVSJSkdUdz9p0hC9nogDMgAugojm2TMjzuR1wwGW8JnkPUdKvy++OqXQVSe6oxpzLgSSTCZ15rY/XJzMu1n5FEfT/DTjVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEtS3K3f; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cuk+L6fr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEtS3K3f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744069249; x=1775605249;
+  t=1744069248; x=1775605248;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lnFgMXtArObRN3GbXncQyTuX28vMzGs5CIA3S4aIH1k=;
-  b=Cuk+L6frH5FdixaCjXK8IZfO86APPk+UgzXuS5Z2WvfbmQ5zvwxJeV7A
-   xA7DxFWShnt0WFGhxo9z2iteUCaZzkMQc7DxdFaK2RBV35TT+sImDB3bp
-   wX3PnvixKmIkSScr+BRK0YYGcC9pd+4em9576TVt56HXwtwTtHVzbBgpy
-   XDf8f06+hq8WP51f+HJ7Xwu2pjw0yeG1N00Fv7wXH9oDrTcVoO9sCDuyd
-   im4FTi2BC+BQwiBtg9e5NlhV/ad5FjyfQZb8do2y5pNNZDABRsH03eZJT
-   yEdl1S6XNkSQCQxxcwN1TADMpE3JWrB7llyVVKlg/P4nsj8id74vEWMab
-   g==;
-X-CSE-ConnectionGUID: 1HxSu7axS7apOsXssJQirA==
-X-CSE-MsgGUID: pCIfNSrvT7ipMZfdxy1nWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193136"
+  bh=PbAmaYUfs3cYnTUyhKKObGUQYfLatjVDLhG5ft36Q3I=;
+  b=JEtS3K3f0c4ifCuW/RVqTJVEh2TZgR+h1ILuxXqEPqiZDLhitOjrN5W8
+   hUOqcEu5lNhyc0tQ6dt/9vQnhtwsWH2CwOCtOHu2cjkfrxmLsh73wb5jG
+   3Hzn6dxhWdV1Ms6HxY4P4n7/LnoF0E7JoJjf7imYSE3OLPdJ5pPpuaGV/
+   cbhFGFqU8X58PBjhI3511t0RETHjIPmxRDsa9MU7kxnnTxltdFqMd+fRm
+   MI+7XjhOUl+nXYuqoFBLu84Ywwr9xrE70b7sfAlGQaaRWY17cD57zjLDU
+   gmEmZYTCmQuTIARFepZkj++pJ1ZrJ22jR3KRPDFJia+J3VBchU0wpoFPH
+   A==;
+X-CSE-ConnectionGUID: ZzWIEwueRNqqSiGUetj0Ew==
+X-CSE-MsgGUID: FfXC6IjaSpSpHgNh1XgiTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48193129"
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="48193136"
+   d="scan'208";a="48193129"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:46 -0700
-X-CSE-ConnectionGUID: CDHgIGQ8Rc28HnppEKH+FQ==
-X-CSE-MsgGUID: 98pjoFMHSXKpMXZOdfKK7A==
+X-CSE-ConnectionGUID: EfZ3o3v/RZWENunGoIdVUw==
+X-CSE-MsgGUID: RIpgCKW+SHeYXq99PvsPjg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="165315455"
+   d="scan'208";a="165315452"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:40:45 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -56,9 +56,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 04/26] fs/resctrl: Set up Kconfig options for telemetry events
-Date: Mon,  7 Apr 2025 16:40:06 -0700
-Message-ID: <20250407234032.241215-5-tony.luck@intel.com>
+Subject: [PATCH v3 03/26] fs/resctrl: Change how events are initialized
+Date: Mon,  7 Apr 2025 16:40:05 -0700
+Message-ID: <20250407234032.241215-4-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250407234032.241215-1-tony.luck@intel.com>
 References: <20250407234032.241215-1-tony.luck@intel.com>
@@ -70,49 +70,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enumeration support is provided by the Intel PMT subsystem.
+New monitor events break some assumptions:
 
-arch/x86 selects this option based on:
+1) New events can be in resources other than L3.
+2) Enumeration of events may not be complete during early
+   boot.
 
-X86_64: Counter registers are in MMIO space. There is no readq()
-function on 32-bit. Emulation is possible with readl(), but there
-are races. Running 32-bit kernels on systems that support this
-feature seems pointless.
+Prepare for events in other resources.
 
-CPU_SUP_INTEL: It is an Intel specific feature.
+Delay building the event lists until first mount of the resctrl
+file system.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/Kconfig                       | 1 +
- drivers/platform/x86/intel/pmt/Kconfig | 6 ++++++
- 2 files changed, 7 insertions(+)
+ fs/resctrl/internal.h |  3 +++
+ fs/resctrl/monitor.c  | 30 +++++++++++++++++++-----------
+ fs/resctrl/rdtgroup.c |  2 ++
+ 3 files changed, 24 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index ea29d22a621f..44a195ee7a42 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -504,6 +504,7 @@ config X86_CPU_RESCTRL
- 	bool "x86 CPU resource control support"
- 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
- 	depends on MISC_FILESYSTEMS
-+	select INTEL_AET_RESCTRL if (X86_64 && CPU_SUP_INTEL)
- 	select ARCH_HAS_CPU_RESCTRL
- 	select RESCTRL_FS
- 	select RESCTRL_FS_PSEUDO_LOCK
-diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/intel/pmt/Kconfig
-index e916fc966221..b282910b49ef 100644
---- a/drivers/platform/x86/intel/pmt/Kconfig
-+++ b/drivers/platform/x86/intel/pmt/Kconfig
-@@ -38,3 +38,9 @@ config INTEL_PMT_CRASHLOG
+diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
+index 7a65ea02d442..08dbf89939ac 100644
+--- a/fs/resctrl/internal.h
++++ b/fs/resctrl/internal.h
+@@ -76,6 +76,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
+  */
+ struct mon_evt {
+ 	enum resctrl_event_id	evtid;
++	enum resctrl_res_level	rid;
+ 	char			*name;
+ 	bool			configurable;
+ 	struct list_head	list;
+@@ -390,6 +391,8 @@ int rdt_lookup_evtid_by_name(char *name);
  
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_pmt_crashlog.
+ char *rdt_event_name(enum resctrl_event_id evt);
+ 
++void resctrl_init_mon_events(void);
 +
-+config INTEL_AET_RESCTRL
-+	bool
-+	help
-+	  Architecture config should "select" this option to enable
-+	  support for RMID telemtry events in the resctrl file system.
+ #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
+ int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
+ 
+diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+index 66e613906f3e..472754d082cb 100644
+--- a/fs/resctrl/monitor.c
++++ b/fs/resctrl/monitor.c
+@@ -846,14 +846,17 @@ static struct mon_evt all_events[QOS_NUM_EVENTS] = {
+ 	[QOS_L3_OCCUP_EVENT_ID] = {
+ 		.name	= "llc_occupancy",
+ 		.evtid	= QOS_L3_OCCUP_EVENT_ID,
++		.rid	= RDT_RESOURCE_L3,
+ 	},
+ 	[QOS_L3_MBM_TOTAL_EVENT_ID] = {
+ 		.name	= "mbm_total_bytes",
+ 		.evtid	= QOS_L3_MBM_TOTAL_EVENT_ID,
++		.rid	= RDT_RESOURCE_L3,
+ 	},
+ 	[QOS_L3_MBM_LOCAL_EVENT_ID] = {
+ 		.name	= "mbm_local_bytes",
+ 		.evtid	= QOS_L3_MBM_LOCAL_EVENT_ID,
++		.rid	= RDT_RESOURCE_L3,
+ 	},
+ };
+ 
+@@ -878,22 +881,29 @@ char *rdt_event_name(enum resctrl_event_id evt)
+ }
+ 
+ /*
+- * Initialize the event list for the resource.
++ * Initialize the event list for all mon_capable resources.
+  *
+- * Note that MBM events are also part of RDT_RESOURCE_L3 resource
+- * because as per the SDM the total and local memory bandwidth
+- * are enumerated as part of L3 monitoring.
+- *
+- * mon_put_default_kn_priv_all() also assumes monitor events are only supported
+- * on the L3 resource.
++ * Called on each mount of the resctrl file system when all
++ * events have been enumerated. Only needs to build the per-resource
++ * event lists once.
+  */
+-static void l3_mon_evt_init(struct rdt_resource *r)
++void resctrl_init_mon_events(void)
+ {
++	struct rdt_resource *r;
++	static bool only_once;
+ 	int evt;
+ 
+-	INIT_LIST_HEAD(&r->evt_list);
++	if (only_once)
++		return;
++	only_once = true;
++
++	for_each_mon_capable_rdt_resource(r)
++		INIT_LIST_HEAD(&r->evt_list);
+ 
+ 	for_each_set_bit(evt, rdt_mon_features, QOS_NUM_EVENTS) {
++		r = resctrl_arch_get_resource(all_events[evt].rid);
++		if (!r->mon_capable)
++			continue;
+ 		list_add_tail(&all_events[evt].list, &r->evt_list);
+ 	}
+ }
+@@ -922,8 +932,6 @@ int resctrl_mon_resource_init(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	l3_mon_evt_init(r);
+-
+ 	if (resctrl_arch_is_evt_configurable(QOS_L3_MBM_TOTAL_EVENT_ID)) {
+ 		all_events[QOS_L3_MBM_TOTAL_EVENT_ID].configurable = true;
+ 		resctrl_file_fflags_init("mbm_total_bytes_config",
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 8d15d53fae76..1433fc098a90 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -2574,6 +2574,8 @@ static int rdt_get_tree(struct fs_context *fc)
+ 		goto out;
+ 	}
+ 
++	resctrl_init_mon_events();
++
+ 	ret = rdtgroup_setup_root(ctx);
+ 	if (ret)
+ 		goto out;
 -- 
 2.48.1
 
