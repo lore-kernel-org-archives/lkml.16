@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D343C19995B
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8AE221F0A
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 20:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056517; cv=none; b=j/4S862oyGi2EgJm3+MplO25CKb4Jw6ppfjXwinb7oL2d5LD9cX0yx5GK7Df4fixUhkDWEhwkW7wc/OdnYEh7NyK2iVXsMBgscJyy3ogxVwiv/EKtw6NSIG9CDVhxopHpuKlNEtRHUD7WAOamyh24KnjRCIJaPivlAKa7VQfPJQ=
+	t=1744056526; cv=none; b=F7y3KagVOcEujeuIToq4UEs9NSP74Ythcx9hXznjROFpvScfOWCyfCo5RcTUA3AR9kz1Tp9CitdpSQJCMd445PKE2d/synOOGP/okVDXlz8Wi+9Zf5KVkc5vZD52BGeFDOxo/JUpZq4nyQF3fz5vdeNEc8sqrhDD65qnw2ebQ+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056517; c=relaxed/simple;
-	bh=YFkv2xrGf8QvVfd/cTf69ZsNoNo3ocUwPEXvSbzUklg=;
+	s=arc-20240116; t=1744056526; c=relaxed/simple;
+	bh=HZIZaVl2bEe53GZHe8WBcxpNZcp4LZRz27De2uC9pfk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=reQoIyteZoHQKLfYPbAwJVxW/Dhc4Noc2s0bkkq1wJaTnUa150AwNNzWzrWiAeLjyFuaYMM0KvGuigmuJRBke9MQaIdXjU6Y3aodWq5M5nLrH+N61z7oA0MZpqCQGYNzGe2WLu/BrHZiTNzhvnVZ7ViVmezlkiOlt97tL2C433I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OvpjEnsr; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Z3un2Tf2mk7vk7qXmcamCcq1gi2w6GBwCAYYLd9JYQdd7zYNHdMWIRe88GSXt619EK0ByCATQ/Sld57nRR0chBTq7F54R73M7hPx4K1vhsg8MZe4eoVrFCtVOjiIUl45G9qWMuG7MMpPYuTZM3332teWT2G4mGHzj0CmEwwxPoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Pf8JAjbv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OvpjEnsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A52C4CEDD;
-	Mon,  7 Apr 2025 20:08:36 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Pf8JAjbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91DE5C4CEDD;
+	Mon,  7 Apr 2025 20:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744056517;
-	bh=YFkv2xrGf8QvVfd/cTf69ZsNoNo3ocUwPEXvSbzUklg=;
+	s=korg; t=1744056526;
+	bh=HZIZaVl2bEe53GZHe8WBcxpNZcp4LZRz27De2uC9pfk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OvpjEnsrsDS0fai5lh82ccGbdb9k2glmYLy9bJfLMuuASpTn33hX7nx6PGsH7DaJh
-	 yQcJGizpxC2g9Zb+DkxolzKnUCHIw9F40ytzoXn/2bFoBUdq20dYA1Rb+K+YyPs2T2
-	 3MChtUfmWenelSIUO+DXyyBCNBgguVPATFEa7bJs=
-Date: Mon, 7 Apr 2025 13:08:36 -0700
+	b=Pf8JAjbvk4W2rB1P0Gd//vzbTgFSpDW4jLiXl+Z8XsBG23sg4bSIWCFX8YKpcFecp
+	 HpOM38aQQXkGp+cr/Mx6NZOtUWKu74TxywKIEZcSHLmaL6+jkxLi+sKy6nLI1t30WE
+	 WSSz5tplSPyjFg0Ngog4qTNrKpY26XJOjeOIv/ms=
+Date: Mon, 7 Apr 2025 13:08:45 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Lance Yang <ioworker0@gmail.com>
 Cc: will@kernel.org, peterz@infradead.org, mingo@redhat.com,
@@ -34,7 +34,7 @@ Cc: will@kernel.org, peterz@infradead.org, mingo@redhat.com,
  jstultz@google.com, Mingzhe Yang <mingzhe.yang@ly.com>
 Subject: Re: [PATCH v4 2/3] hung_task: show the blocker task if the task is
  hung on semaphore
-Message-Id: <20250407130836.5e52ab2aa2e77c67f890637b@linux-foundation.org>
+Message-Id: <20250407130845.3c3501a03963f1d44835c755@linux-foundation.org>
 In-Reply-To: <20250320064923.24000-3-ioworker0@gmail.com>
 References: <20250320064923.24000-1-ioworker0@gmail.com>
 	<20250320064923.24000-3-ioworker0@gmail.com>
@@ -50,30 +50,20 @@ Content-Transfer-Encoding: 7bit
 
 On Thu, 20 Mar 2025 14:49:22 +0800 Lance Yang <ioworker0@gmail.com> wrote:
 
-> Inspired by mutex blocker tracking[1], this patch makes a trade-off to
-> balance the overhead and utility of the hung task detector.
-> 
-> Unlike mutexes, semaphores lack explicit ownership tracking, making it
-> challenging to identify the root cause of hangs. To address this, we
-> introduce a last_holder field to the semaphore structure, which is
-> updated when a task successfully calls down() and cleared during up().
-> 
-> The assumption is that if a task is blocked on a semaphore, the holders
-> must not have released it. While this does not guarantee that the last
-> holder is one of the current blockers, it likely provides a practical hint
-> for diagnosing semaphore-related stalls.
-> 
-> With this change, the hung task detector can now show blocker task's info
-> like below:
+> --- a/kernel/locking/semaphore.c
+> +++ b/kernel/locking/semaphore.c
+> @@ -33,12 +33,14 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/ftrace.h>
+>  #include <trace/events/lock.h>
+> +#include <linux/hung_task.h>
+>  
+>  static noinline void __down(struct semaphore *sem);
+>  static noinline int __down_interruptible(struct semaphore *sem);
+>  static noinline int __down_killable(struct semaphore *sem);
+>  static noinline int __down_timeout(struct semaphore *sem, long timeout);
+>  static noinline void __up(struct semaphore *sem);
+> +static inline void __sem_acquire(struct semaphore *sem);
 
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-
-It looks pretty simple to reduce the amount of ifdeffery which this
-patch adds.
+It feels Just Weird to forward declare a static inline.  Is there a
+special reason for doing this?
