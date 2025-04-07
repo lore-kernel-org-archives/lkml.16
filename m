@@ -1,243 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F0A254B09
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 17:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDB121B9F7;
+	Mon,  7 Apr 2025 17:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744047221; cv=none; b=tgLPQYNSjSbRGfGk55fL+/9q/MxOaSSDVRTlKEhFOyWf3lI2sonF+BUOHfxsGVk1qgKn/IfMyeJsB/iN41H57pTQiNR8pqoKgmcC6NBLiCtDRMSifBzQBhLo8llcqMjlFAV14++GuLon6/73pb8EltA6ionxOftnjHPOa4XgtVA=
+	t=1744047229; cv=none; b=PRY/7ESxl2UsfJhB6e5t5MOU7HENkJTumHqoDUiA4h5yS4i10jgu3i131kIFhhteaYi5vAPMcA61qG0wTafDcgzOQgAFY0/8C+IEKtYvgZS77kideH0W5l5WLVNwFdDXTMUqd4OzlWY8eKFzNwsR4304xxdsw6HryWBzuP00YlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744047221; c=relaxed/simple;
-	bh=DRCfWmbveIiLL0d5tqLyI8lBbAe/vx7B4mNE/zCKgCA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wab6nA0/3lm8RmGwQvDpQ4bk5A3UXgJ4yHL+RyakfdnVQ0mV1Qo+sQDGAs5k/yq7zLdeY8XbpUMTZiGLf3VqqzqkBuEslpf8I5q8Ngf62Hv7sWNamguwZuVwycaUlOrylGoFKzAoPmei4V/6/NghQcfmXcCUpKfdSsCvvPNncPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L8DPFXY/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744047229; c=relaxed/simple;
+	bh=43EUjzsJrbIj5lwOeksbNo3oJD//CY9Yr3R4TUrVDs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ih+hMArIRrnfYA2ZtHqoTV/monNrgbGIx8p9Ydj8eEGIymSv0IGugLW0HOS+Ty/wzSvoVH0U4UhB6lDGUNwvakq/wdAZTGzzHPcHuLGDySbAnpjMwrWsWY0OMTKzY7C3/tdxTOPQkoPfIJuh+ZERgnIsKv42oZ7/EkA3/DjDIJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=fVJdzCDe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MjrhbkZi; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L8DPFXY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744047219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yc4/9CW3rJH+yqhkuOfWo/UTCk+B5f4doeNIHMtXuqY=;
-	b=L8DPFXY/oCRfjaoPuY/1xuvLVDJG7s+ppFOBOxE34EjMu6KnNAikj4U66py6lfrFZQQrGR
-	37lH8RBIq8w8uIpXt14kz+/acKFazxw2O0mwSJItsgcya/aDI9+GY7xrYFME/iguQ1imaB
-	kuKGNd1Xde57Kw0apoIyoAdIcTnQwlg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-230-AeDdyyApPemMDy3V-V-27g-1; Mon,
- 07 Apr 2025 13:33:36 -0400
-X-MC-Unique: AeDdyyApPemMDy3V-V-27g-1
-X-Mimecast-MFC-AGG-ID: AeDdyyApPemMDy3V-V-27g_1744047213
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B8C11180AF65;
-	Mon,  7 Apr 2025 17:33:33 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.32.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EAF131828A80;
-	Mon,  7 Apr 2025 17:33:27 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Michal Schmidt <mschmidt@redhat.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 24/28] dpll: zl3073x: Read pin supported frequencies from firmware
-Date: Mon,  7 Apr 2025 19:32:57 +0200
-Message-ID: <20250407173301.1010462-5-ivecera@redhat.com>
-In-Reply-To: <20250407172836.1009461-1-ivecera@redhat.com>
-References: <20250407172836.1009461-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="fVJdzCDe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MjrhbkZi"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 73609114017C;
+	Mon,  7 Apr 2025 13:33:45 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 07 Apr 2025 13:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1744047225; x=
+	1744133625; bh=rOJzUg2Z5K8abGAZ6cTAjToJiu9EAfJ9aa8qOahrQmQ=; b=f
+	VJdzCDeLdqn3xJxSLqXhQOmDzk8oDAEY0guunfyBSbz0cG0/NpjJ/i/fh+QP0evn
+	UlB8x0SZk6/42mbV8Ru3ino0HSFVohqFxkZPqRZkEUJnuPtv5VjGjCVoOqnPoPuL
+	GLVxVnAXVyFwnW8q1bg9WK1+fzWzciuUXLVOP3Lw+6HV5DJgo6zPNwlLVz3qtwp9
+	QdMuaCZva5+ZF2FEbBblhNa4zwNKu48DNtY0dOsDAuEvL3BXVDVc1KEUNuRarapb
+	ak+ft+4W3NsNPEY7KIOxFJ5UGR842XtHTDUi94HpQe1dOrI4BAMdW4XiNooEkavM
+	L8HV7VnD2blR1TUbvUWnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744047225; x=1744133625; bh=rOJzUg2Z5K8abGAZ6cTAjToJiu9EAfJ9aa8
+	qOahrQmQ=; b=MjrhbkZiFT0ljg5hOuwZCPpBavvRiXba4TXQEIXWIbjp2Emgh7M
+	GSwj6fREyoSLeLH11GxCTAcKF58NHA5dZAtDDv753eHKQGkmgnM4nCFOz0oNYQe3
+	pQiUUetIvCWhH7JKi4y2Kw++Un5rLvK0tafsWAU/ijQqjXaZ3Y6Nf2bkUhGgWaHK
+	6IMrtWHYAcj6kUXg/eeMCc00hqEVnvtsfNSIzCrKxu25BSd/q3HUr0xgfJ8t53Uj
+	3acRl9hvwX5ulvpWZvRdLpTKjHsKEbQVA5CSWc7PQ3SEcdztcWMWvOob1xN/R/x9
+	sDLnFosfgpNie1eTDqUzCRygDRlqqoGjiYw==
+X-ME-Sender: <xms:eAz0ZwjHnpJgtanECsN6naUH00uYVcMFlVM-58W-MFlU2HCkbkJR6g>
+    <xme:eAz0Z5AKwsfhy-kbm5Jk_1dEd1xvfZsv83AWMU78Wn4X6EzroSN6dFEuuHpy9GyBB
+    5ctmSw1e_16RCTev9k>
+X-ME-Received: <xmr:eAz0Z4E3PPdC0YIyeso4hI7M-GZ1ywdocoVTn9M59q8sG2Vu90EizoneXfklDrc__jC1Qg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtkeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
+    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
+    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
+    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
+    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepuddupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhinhhgohes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhirhhilhhlrdhshhhuthgvmhhovheslh
+    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguihhonhhnrghglhgriigvsehg
+    ohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgdoghhithesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgr
+    shdrlhgvnhgurggtkhihsegrmhgurdgtohhm
+X-ME-Proxy: <xmx:eAz0ZxT0UKzcOcivwsNglq4oowhd-Mr8Htp5NBrJLCxyD8Rw-cD1Rw>
+    <xmx:eAz0Z9yodbCpMEKGy0PpSI-r1fDEcIkTRkFENQT9pKzB_iM9oBGhWA>
+    <xmx:eAz0Z_4phctABvZGCT7dDRLY-rit4buJB5Or7mGrZiIfulo9IS6Csw>
+    <xmx:eAz0Z6ymMrhDNFI15-U80FCa0nL8ICFGhwIfK-wfEmZu89YAwppVWA>
+    <xmx:eQz0Z9k3U8O9p9okIOZjokXBTkB6Ecg9S_R_i4gkUITs-vjb25b77pG5>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 7 Apr 2025 13:33:40 -0400 (EDT)
+Date: Mon, 7 Apr 2025 20:33:37 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Borislav Petkov <bp@alien8.de>, Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
+ SEV-SNP
+Message-ID: <grmalijxenphqg664brbqbreitq3qkancb7qv32yjdwzfoqowy@6tavdslt75i7>
+References: <20250404082921.2767593-5-ardb+git@google.com>
+ <20250404082921.2767593-8-ardb+git@google.com>
+ <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+ <CAMj1kXGwnTkb1bUDaRpkh3ES8thcUVQE7+qgfZQw+RORtvtv-g@mail.gmail.com>
+ <CAAH4kHbxMDGQy3v9ef1ZdqK0TNzpm==BJgx1KiUpRP-CRKDx4w@mail.gmail.com>
+ <ldrma6tce2bwhenu5kobjzvk7cz445ubfmpcynwadqudgvzuh3@aibigcdzui6m>
+ <Z_QA6GwqoxdW6D0e@gmail.com>
+ <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGWPopQupteK0=mqd5z29Oj4Ye6KyPfgup-nHQO863Qow@mail.gmail.com>
 
-The firmware (DT, ACPI...) can specify what frequencies are supported
-for particular pins. Load the frequencies from the appropriate property
-and use them during pin registation. The unsupported frequencies that
-cannot be represented in device are filtered out.
+On Mon, Apr 07, 2025 at 07:21:17PM +0200, Ard Biesheuvel wrote:
+> On Mon, 7 Apr 2025 at 18:44, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
+> >
+> > > On Fri, Apr 04, 2025 at 08:07:03AM -0700, Dionna Amalie Glaze wrote:
+> > > > If the GHCB is available, we should always prefer it.
+> > >
+> > > I believe we should consider the cost of code duplication in this
+> > > situation.
+> > >
+> > > If the non-early version is only used in the kexec path, it will not be
+> > > tested as frequently and could be more easily broken. I think it would be
+> > > acceptable for kexec to be slightly slower if it results in more
+> > > maintainable code.
+> >
+> > Absolutely so.
+> >
+> 
+> It would be nice if someone could quantify 'slightly slower' - I am
+> leaning to the same conclusion but I have no clue what the actual
+> performance impact is.
 
-Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/dpll/dpll_zl3073x.c | 113 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 112 insertions(+), 1 deletion(-)
+If we can survive the performance of the initial boot, we can live with it
+for kexec.
 
-diff --git a/drivers/dpll/dpll_zl3073x.c b/drivers/dpll/dpll_zl3073x.c
-index 07a547aaee0f1..c920904008e22 100644
---- a/drivers/dpll/dpll_zl3073x.c
-+++ b/drivers/dpll/dpll_zl3073x.c
-@@ -1246,6 +1246,50 @@ zl3073x_dpll_pin_info_package_label_set(struct zl3073x_dpll_pin *pin,
- 	pin_info->props.package_label = pin_info->package_label;
- }
- 
-+/**
-+ * zl3073x_dpll_check_frequency - verify frequency for given pin
-+ * @pin: pointer to pin
-+ * @freq: frequency to check
-+ *
-+ * The function checks the given frequency is valid for the device. For input
-+ * pins it checks that the frequency can be factorized using supported base
-+ * frequencies. For output pins it checks that the frequency divides connected
-+ * synth frequency without remainder.
-+ *
-+ * Returns true if the frequency is valid or false if not.
-+ */
-+static bool
-+zl3073x_dpll_check_frequency(struct zl3073x_dpll_pin *pin, u64 freq)
-+{
-+	if (zl3073x_dpll_is_input_pin(pin)) {
-+		u16 base, mult;
-+		int rc;
-+
-+		/* Check if the frequency can be factorized */
-+		rc = zl3073x_dpll_input_ref_frequency_factorize(freq, &base,
-+								&mult);
-+		if (!rc)
-+			return true;
-+	} else {
-+		struct zl3073x_dev *zldev = pin_to_dev(pin);
-+		u64 synth_freq, rem;
-+		u8 synth;
-+
-+		/* Get output pin synthesizer */
-+		synth = zl3073x_dpll_pin_synth_get(pin);
-+
-+		/* Get synth frequency */
-+		synth_freq = zl3073x_synth_freq_get(zldev, synth);
-+
-+		/* Check the frequency divides synth frequency */
-+		div64_u64_rem(synth_freq, freq, &rem);
-+		if (!rem)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /**
-  * zl3073x_dpll_pin_info_get - get pin info
-  * @pin: pin whose info is returned
-@@ -1253,7 +1297,8 @@ zl3073x_dpll_pin_info_package_label_set(struct zl3073x_dpll_pin *pin,
-  * The function looks for firmware node for the given pin if it is provided
-  * by the system firmware (DT or ACPI), allocates pin info structure,
-  * generates package label string according pin type and its order number
-- * and optionally fetches board label from the firmware node if it exists.
-+ * and optionally fetches board label and supported frequencies from
-+ * the firmware node if they exist.
-  *
-  * Returns pointer to allocated pin info structure that has to be freed
-  * by @zl3073x_dpll_pin_info_put by the caller and in case of error
-@@ -1264,7 +1309,10 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
- {
- 	struct zl3073x_dev *zldev = pin_to_dev(pin);
- 	struct zl3073x_dpll_pin_info *pin_info;
-+	struct dpll_pin_frequency *ranges;
-+	int i, j, num_freqs, rc;
- 	const char *pin_type;
-+	u64 *freqs;
- 
- 	/* Allocate pin info structure */
- 	pin_info = kzalloc(sizeof(*pin_info), GFP_KERNEL);
-@@ -1315,7 +1363,67 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
- 				 pin_type);
- 	}
- 
-+	/* Read supported frequencies property if it is specified */
-+	num_freqs = fwnode_property_count_u64(pin_info->fwnode,
-+					      "supported-frequencies");
-+	if (num_freqs <= 0)
-+		/* Return if the property does not exist or number is 0 */
-+		return pin_info;
-+
-+	/* The firmware node specifies list of supported frequencies while
-+	 * DPLL core pin properties requires list of frequency ranges.
-+	 * So read the frequency list into temporary array.
-+	 */
-+	freqs = kcalloc(num_freqs, sizeof(*freqs), GFP_KERNEL);
-+	if (!freqs) {
-+		rc = -ENOMEM;
-+		goto err_alloc_freqs;
-+	}
-+
-+	/* Read frequencies list from firmware node */
-+	fwnode_property_read_u64_array(pin_info->fwnode,
-+				       "supported-frequencies", freqs,
-+				       num_freqs);
-+
-+	/* Allocate frequency ranges list and fill it */
-+	ranges = kcalloc(num_freqs, sizeof(*ranges), GFP_KERNEL);
-+	if (!ranges) {
-+		rc = -ENOMEM;
-+		goto err_alloc_ranges;
-+	}
-+
-+	/* Convert list of frequencies to list of frequency ranges but
-+	 * filter-out frequencies that are not representable by device
-+	 */
-+	for (i = 0, j = 0; i < num_freqs; i++) {
-+		struct dpll_pin_frequency freq = DPLL_PIN_FREQUENCY(freqs[i]);
-+
-+		if (zl3073x_dpll_check_frequency(pin, freqs[i])) {
-+			ranges[j] = freq;
-+			j++;
-+		} else {
-+			dev_warn(zldev->dev,
-+				 "Unsupported frequency %llu Hz in firmware node\n",
-+				 freqs[i]);
-+		}
-+	}
-+
-+	/* Save number of freq ranges and pointer to them into pin properties */
-+	pin_info->props.freq_supported = ranges;
-+	pin_info->props.freq_supported_num = j;
-+
-+	/* Free temporary array */
-+	kfree(freqs);
-+
- 	return pin_info;
-+
-+err_alloc_ranges:
-+	kfree(freqs);
-+err_alloc_freqs:
-+	fwnode_handle_put(pin_info->fwnode);
-+	kfree(pin_info);
-+
-+	return ERR_PTR(rc);
- }
- 
- /**
-@@ -1327,6 +1435,9 @@ zl3073x_dpll_pin_info_get(struct zl3073x_dpll_pin *pin)
- static void
- zl3073x_dpll_pin_info_put(struct zl3073x_dpll_pin_info *pin_info)
- {
-+	/* Free supported frequency ranges list if it is present */
-+	kfree(pin_info->props.freq_supported);
-+
- 	/* Put firmware handle if it is present */
- 	if (pin_info->fwnode)
- 		fwnode_handle_put(pin_info->fwnode);
 -- 
-2.48.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
