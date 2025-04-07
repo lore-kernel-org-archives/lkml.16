@@ -1,151 +1,191 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD98219E0;
-	Mon,  7 Apr 2025 06:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F01221DAB
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 06:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007556; cv=none; b=oZ/EfX4z1tSfJQu3JdmYmoZPH9NbvnxmyTCLM2P5ZNIxPWbnPsjUv+s4VQpP108kJCh4kWJczYpKpG/5tKjvYrRfxn6Z+2gpJpbsk1h6eJvNeImOg+ewQssSllYUKFLQ3c3j+wvWe0/9DSXjQKE0ZuaFzTEiYBt5uAuC3GuWbZ8=
+	t=1744007629; cv=none; b=ETyFXwTcblacP/sPPsYTfaaUZlYJVROugcZZ0wV/5Thkfq4WtEYvZBD0Lyesyw5GeqNngqjPtyAzF7CHX5EMJEhDk4zQrjq4DHvhGspl6NcavXB+4i+w/sq9sYmDp5CRcQh2kc9LgkTNnLVpPtaEzq/WWNnKct1ZeiRdlNy1hTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007556; c=relaxed/simple;
-	bh=rgWmwjZniGKCkXyoowbdyQSPJAgjIxa6HwiniR6YaQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hHPrNsuUcpguiLF7hXbYklbQH0iYxCaOp9vIVi756nkzMTt82EniPRuEw28Fuva8AQQcyfNk5eUxcKKthbneamazEPuoDUPKPu/3U8fEsF7bVEtLbwmdY6J1oQP39cwLKMcjjCtv8YsAx9SdGr/OyX3t21Mp8R45xrOfBpaBMm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9VCdnuw; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744007629; c=relaxed/simple;
+	bh=4LA6bPmEZCqBMKfqP8QmdNeHq01xK3hVs3A90O3N2vM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LRHHh8Cmwbd6Yr95HZkHxlUZMd00c1V9xd3JUMNVvheD/re1P9Kdk02bo/Z/fZ6KlBj7wcup/HIIA615tMjbPlzI86dKBnbw6TXFHO/T4Q7/dt7Ffl9SLDSUatmEDomIaR9RxozER1KdK+jx1TONMzPTv1R9clyE+snf2OVirj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=DwvkZ5pd; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9VCdnuw"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264aefc45dso49798295ad.0;
-        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744007554; x=1744612354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
-        b=A9VCdnuwZW4Q1NG49habGkgwf9CUuw2TiVd+pUvcSbyZ5cQ09Hp3czpHV1jZQJIDKI
-         zrWW59vIvpLIq3hWHJUE8pce7EPPjQ24VzQg4Q863rgAvcbk/cwu3JfPCVp67kg6GV2G
-         wEyqVxvUpdH5kEx9t95KHFm11D2hQQFaMzfSbGjrnLgA19ofq6XeTAGNxIJSnj+ykr26
-         mpykPLJYSd8fydQbCFlugoFlmHt3/a3u5BfQrJHGt0tnU+EvTg7I2uVL37ZXk+Kuv/GY
-         2hhRAL2nitnsVCMXekymusE0xn9s3S1zwMCjAyxkb2dM+yCx5f7lMd9ISx6QX2jFLi/c
-         teWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744007554; x=1744612354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p+FgwxOm7aFKO8+Yjp585HwY/8KQoU+DtbqgD3z9mVQ=;
-        b=RGBKSwe+Q1Go5+3nw7li7Wbyet8F6k8HmvJ//A7N12V9b7LnL0ekgnh8Xo+EEmXhzE
-         wU8xdtYBHBgIFTLsQGOR3Fyz9TrN/QZFbqmuNxWq6p/Qk1nwESn4U8XhydAU7yCFu/ap
-         Q8QwezRxuJBwKR76IOcbMNy2/nj4lD1+OPALwwk/V5E0dkkt6q2alq7OvlSYRY9LW1IU
-         2dg5N0gfyGSZGZWtrzPzCeKKOmDEciAH8A3FEQUIdpXkWuyPyjDiVYP8AWbb/Lruwg7i
-         MGCeOTre+VoQ/aE0lKdqYO4OgGdSExi2XNqbq2X0dKk8v5GHWOb/UQ37DnSLDln2/msV
-         Fscg==
-X-Forwarded-Encrypted: i=1; AJvYcCVViiG+CzSj8IjIj32KewlkEc+zmMDDFIHPBocTFqVkUU5bjAvdKM0TL3gczjM3hnuAlmU530ZJcwYeKps=@vger.kernel.org, AJvYcCWobK6IRSql+6aWIv75uVyqVpMChUbGLQdFaoCYihM1HkeVbdVJ50tOtaOgK4H4jHdTsT9FKzN92qsP40KhT3Hhag==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpUqZvVNo+tlkk9uKzPAgETJQvXQDwmLbcWdW0Q9W2Op7QcrEK
-	+iX9QKv8J+YAp53H7Bp8NCGDAqu9kzpJb6WrzIrWpiYwW19Cdvu/
-X-Gm-Gg: ASbGnctZOBKCrECLcFczCkcQ93S3/mInx8RpsuJjxgbel3frK/aWhgfteUnjWtx+ix2
-	Cjl42vcUmm90NlEQm6uFD2Z+sJUFXo2VztqPhtNS1un/ER0ZWKmW3M4pokSLGKnAhZ1Vtp8JgTv
-	SuBcjNw1w1BmxJCAyZ32N/kXu3zvpba1LHQQUfHT+AqwPrIF8CLKglO7htksMqzVLMpMbBy/Yc7
-	Lme77kar/ok2SqcnXDLXHpi+Ly33pBnvXE/Yvp2c+DQI1ucrbbjRszFc26K7B9vodM5dKO2h8EQ
-	np1gTLKoX/xznBYj824KKsuVQ1gjxHNwi/GFq+PtkA0BBsFLV8ax8lyTXkw=
-X-Google-Smtp-Source: AGHT+IHqfdC2hAwF+iHvluludcTR0crAZTyeQqY1dFdw+RUMqBj5erLa4Mr2mQeYTN3YlEylkAXOrA==
-X-Received: by 2002:a17:902:cec2:b0:223:2aab:4626 with SMTP id d9443c01a7336-22a8a84ea52mr138936315ad.11.1744007554389;
-        Sun, 06 Apr 2025 23:32:34 -0700 (PDT)
-Received: from localhost.localdomain ([103.221.69.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d980598csm7694095b3a.77.2025.04.06.23.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 23:32:33 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-amlogic@lists.infradead.org (open list:AMLOGIC DDR PMU DRIVER),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING AND DEBUGGING),
-	linux-perf-users@vger.kernel.org (open list:ARM PMU PROFILING AND DEBUGGING),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1] perf/amlogic: Replace smp_processor_id() with raw_smp_processor_id() in meson_ddr_pmu_create()
-Date: Mon,  7 Apr 2025 12:02:03 +0530
-Message-ID: <20250407063206.5211-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="DwvkZ5pd"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744007616; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=KcRhuW9PUbZW9/kAH2D13dhIoDb6tqrn1VA1EdFByS8=;
+	b=DwvkZ5pdvM6RQ5IBNGEYhB26bMVo7porqh8jXPko/CI5g+/pWIL4AUkWwBvJrZATcwBQH/0YxsiKM6xn8njpOqWdJ2/Yhf8sJrxJka6SnD+AdaIPTNqkAFAM6ZIEou7kq2m5bF6mvp5DbABK54eYbtv3iXiMv1jaGfIHzjdMKFk=
+Received: from 30.74.144.125(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WVoJvbb_1744007614 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Apr 2025 14:33:35 +0800
+Message-ID: <fbfbfe84-0422-425c-ab0a-77627deb9d16@linux.alibaba.com>
+Date: Mon, 7 Apr 2025 14:33:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
+ large folios
+To: David Hildenbrand <david@redhat.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, akpm@linux-foundation.org, hughd@google.com
+Cc: willy@infradead.org, 21cnbao@gmail.com, ziy@nvidia.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
+ <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
+ <54886038-3707-4ea0-bd84-00a8f4a19a6a@arm.com>
+ <f6f4f4ff-0074-4ba7-b2a5-02727661843c@linux.alibaba.com>
+ <145ec273-7223-45b8-a7f6-4e593a3cc8ee@arm.com>
+ <d17b69a1-2f22-4a8d-8260-ddea38ebc7b0@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <d17b69a1-2f22-4a8d-8260-ddea38ebc7b0@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The Amlogic DDR PMU driver meson_ddr_pmu_create() function incorrectly uses
-smp_processor_id(), which assumes disabled preemption. This leads to kernel
-warnings during module loading because meson_ddr_pmu_create() can be called
-in a preemptible context.
 
-Following kernel warning and stack trace:
-[   31.745138] [   T2289] BUG: using smp_processor_id() in preemptible [00000000] code: (udev-worker)/2289
-[   31.745154] [   T2289] caller is debug_smp_processor_id+0x28/0x38
-[   31.745172] [   T2289] CPU: 4 UID: 0 PID: 2289 Comm: (udev-worker) Tainted: GW 6.14.0-0-MANJARO-ARM #1 59519addcbca6ba8de735e151fd7b9e97aac7ff0
-[   31.745181] [   T2289] Tainted: [W]=WARN
-[   31.745183] [   T2289] Hardware name: Hardkernel ODROID-N2Plus (DT)
-[   31.745188] [   T2289] Call trace:
-[   31.745191] [   T2289]  show_stack+0x28/0x40 (C)
-[   31.745199] [   T2289]  dump_stack_lvl+0x4c/0x198
-[   31.745205] [   T2289]  dump_stack+0x20/0x50
-[   31.745209] [   T2289]  check_preemption_disabled+0xec/0xf0
-[   31.745213] [   T2289]  debug_smp_processor_id+0x28/0x38
-[   31.745216] [   T2289]  meson_ddr_pmu_create+0x200/0x560 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
-[   31.745237] [   T2289]  g12_ddr_pmu_probe+0x20/0x38 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
-[   31.745246] [   T2289]  platform_probe+0x98/0xe0
-[   31.745254] [   T2289]  really_probe+0x144/0x3f8
-[   31.745258] [   T2289]  __driver_probe_device+0xb8/0x180
-[   31.745261] [   T2289]  driver_probe_device+0x54/0x268
-[   31.745264] [   T2289]  __driver_attach+0x11c/0x288
-[   31.745267] [   T2289]  bus_for_each_dev+0xfc/0x160
-[   31.745274] [   T2289]  driver_attach+0x34/0x50
-[   31.745277] [   T2289]  bus_add_driver+0x160/0x2b0
-[   31.745281] [   T2289]  driver_register+0x78/0x120
-[   31.745285] [   T2289]  __platform_driver_register+0x30/0x48
-[   31.745288] [   T2289]  init_module+0x30/0xfe0 [meson_ddr_pmu_g12 8095101c49676ad138d9961e3eddaee10acca7bd]
-[   31.745298] [   T2289]  do_one_initcall+0x11c/0x438
-[   31.745303] [   T2289]  do_init_module+0x68/0x228
-[   31.745311] [   T2289]  load_module+0x118c/0x13a8
-[   31.745315] [   T2289]  __arm64_sys_finit_module+0x274/0x390
-[   31.745320] [   T2289]  invoke_syscall+0x74/0x108
-[   31.745326] [   T2289]  el0_svc_common+0x90/0xf8
-[   31.745330] [   T2289]  do_el0_svc+0x2c/0x48
-[   31.745333] [   T2289]  el0_svc+0x60/0x150
-[   31.745337] [   T2289]  el0t_64_sync_handler+0x80/0x118
-[   31.745341] [   T2289]  el0t_64_sync+0x1b8/0x1c0
 
-Changes replaces smp_processor_id() with raw_smp_processor_id() to
-ensure safe CPU ID retrieval in preemptible contexts.
+On 2025/4/1 21:04, David Hildenbrand wrote:
+> On 01.04.25 12:45, Ryan Roberts wrote:
+>> On 30/03/2025 15:57, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2025/3/27 22:08, Ryan Roberts wrote:
+>>>> On 25/03/2025 23:38, Baolin Wang wrote:
+>>>>> When I tested the mincore() syscall, I observed that it takes 
+>>>>> longer with
+>>>>> 64K mTHP enabled on my Arm64 server. The reason is the 
+>>>>> mincore_pte_range()
+>>>>> still checks each PTE individually, even when the PTEs are contiguous,
+>>>>> which is not efficient.
+>>>>>
+>>>>> Thus we can use folio_pte_batch() to get the batch number of the 
+>>>>> present
+>>>>> contiguous PTEs, which can improve the performance. I tested the 
+>>>>> mincore()
+>>>>> syscall with 1G anonymous memory populated with 64K mTHP, and 
+>>>>> observed an
+>>>>> obvious performance improvement:
+>>>>>
+>>>>> w/o patch        w/ patch        changes
+>>>>> 6022us            1115us            +81%
+>>>>>
+>>>>> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
+>>>>> see any obvious regression.
+>>>>>
+>>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>> ---
+>>>>>    mm/mincore.c | 27 ++++++++++++++++++++++-----
+>>>>>    1 file changed, 22 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/mincore.c b/mm/mincore.c
+>>>>> index 832f29f46767..88be180b5550 100644
+>>>>> --- a/mm/mincore.c
+>>>>> +++ b/mm/mincore.c
+>>>>> @@ -21,6 +21,7 @@
+>>>>>      #include <linux/uaccess.h>
+>>>>>    #include "swap.h"
+>>>>> +#include "internal.h"
+>>>>>      static int mincore_hugetlb(pte_t *pte, unsigned long hmask, 
+>>>>> unsigned long
+>>>>> addr,
+>>>>>                unsigned long end, struct mm_walk *walk)
+>>>>> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, 
+>>>>> unsigned long
+>>>>> addr, unsigned long end,
+>>>>>        pte_t *ptep;
+>>>>>        unsigned char *vec = walk->private;
+>>>>>        int nr = (end - addr) >> PAGE_SHIFT;
+>>>>> +    int step, i;
+>>>>>          ptl = pmd_trans_huge_lock(pmd, vma);
+>>>>>        if (ptl) {
+>>>>> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, 
+>>>>> unsigned long
+>>>>> addr, unsigned long end,
+>>>>>            walk->action = ACTION_AGAIN;
+>>>>>            return 0;
+>>>>>        }
+>>>>> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
+>>>>> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
+>>>>>            pte_t pte = ptep_get(ptep);
+>>>>>    +        step = 1;
+>>>>>            /* We need to do cache lookup too for pte markers */
+>>>>>            if (pte_none_mostly(pte))
+>>>>>                __mincore_unmapped_range(addr, addr + PAGE_SIZE,
+>>>>>                             vma, vec);
+>>>>> -        else if (pte_present(pte))
+>>>>> -            *vec = 1;
+>>>>> -        else { /* pte is a swap entry */
+>>>>> +        else if (pte_present(pte)) {
+>>>>> +            if (pte_batch_hint(ptep, pte) > 1) {
+>>>>> +                struct folio *folio = vm_normal_folio(vma, addr, 
+>>>>> pte);
+>>>>> +
+>>>>> +                if (folio && folio_test_large(folio)) {
+>>>>> +                    const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
+>>>>> +                                FPB_IGNORE_SOFT_DIRTY;
+>>>>> +                    int max_nr = (end - addr) / PAGE_SIZE;
+>>>>> +
+>>>>> +                    step = folio_pte_batch(folio, addr, ptep, pte,
+>>>>> +                            max_nr, fpb_flags, NULL, NULL, NULL);
+>>>>> +                }
+>>>>> +            }
+>>>>
+>>>> You could simplify to the following, I think, to avoid needing to 
+>>>> grab the folio
+>>>> and call folio_pte_batch():
+>>>>
+>>>>              else if (pte_present(pte)) {
+>>>>                  int max_nr = (end - addr) / PAGE_SIZE;
+>>>>                  step = min(pte_batch_hint(ptep, pte), max_nr);
+>>>>              } ...
+>>>>
+>>>> I expect the regression you are seeing here is all due to calling 
+>>>> ptep_get() for
+>>>> every pte in the contpte batch, which will cause 16 memory reads per 
+>>>> pte (to
+>>>> gather the access/dirty bits). For small folios its just 1 read per 
+>>>> pte.
+>>>
+>>> Right.
+>>>
+>>>> pte_batch_hint() will skip forward in blocks of 16 so you now end up 
+>>>> with the
+>>>> same number as for the small folio case. You don't need all the 
+>>>> fancy extras
+>>>> that folio_pte_batch() gives you here.
+>>>
+>>> Sounds reasonable. Your suggestion looks simple, but my method can 
+>>> batch the
+>>> whole large folio (such as large folios containing more than 16 
+>>> contiguous PTEs)
+>>> at once.
+>>
+>> Sure but folio_pte_batch() just implements that with another loop that 
+>> calls
+>> pte_batch_hint(), so it all amounts to the same thing. In fact there 
+>> are some
+>> extra checks in folio_pte_batch() that you don't need so it might be a 
+>> bit slower.
 
-Cc: Jiucheng Xu <jiucheng.xu@amlogic.com>
-Fixes: 2016e2113d35 ("perf/amlogic: Add support for Amlogic meson G12 SoC DDR PMU driver")
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/perf/amlogic/meson_ddr_pmu_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right. I tested your suggestion, yes, much better.
 
-diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-index 07446d784a1a..c1e755c356a3 100644
---- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
-+++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
-@@ -511,7 +511,7 @@ int meson_ddr_pmu_create(struct platform_device *pdev)
- 
- 	fmt_attr_fill(pmu->info.hw_info->fmt_attr);
- 
--	pmu->cpu = smp_processor_id();
-+	pmu->cpu = raw_smp_processor_id();
- 
- 	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, DDR_PERF_DEV_NAME);
- 	if (!name)
+> I don't enjoy open-coding the batching, especially if only cont-pte 
+> users will benefit from it. But I also don't enjoy the open-coded 
+> pte_batch_hint() :)
+> 
+> But we really don't need the folio here, so I assume the short variant 
+> you (Ryan) suggest is alright to just avoid the ptep_get().
+> 
+> As Oscar says, these details might soon be hidden inside a new page 
+> table walker API (even though it will likely end up using 
+> folio_pte_batch() internally, TBD).
 
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
--- 
-2.49.0
-
+OK. I can drop this patch if it will be addressed in the following patches.
