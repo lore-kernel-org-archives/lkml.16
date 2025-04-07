@@ -1,91 +1,88 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA243224883;
-	Mon,  7 Apr 2025 06:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE46188A0E;
+	Mon,  7 Apr 2025 06:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744007017; cv=none; b=C9Wn4PcvDWMY0Cn/VBjMMh9CtheLH8IvhIoVoI/aB5g8LeuyjsQu1Q0IDy9IUm9gS08UyFOBXc9xEvH7bmQAa6mW7sTwWnVUtGLdp2wNeQjgGSSWIxABJeU/Y37vefBkQJ6L4mnwigmp2VOceiPflwUeA/tkMV3+7SkNRGGawNk=
+	t=1744007091; cv=none; b=QGgbBKtr6CE/UePaMQ90gqiTL1f9d4g+wYmtEguhXqNS7pmMHSKNOnRpXR4VzMAGuImkZiOTBTAli50m08/aNVPadCieK/CmCEDAkX9pXfhUoU2uap8KHAb2b82BP3xhCPN0GjqDRCVTH+X/xK0LRk2pO0+okC19j18G+1IkJPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744007017; c=relaxed/simple;
-	bh=TyYBkwgsXtht/1q0+sgnW3QamkOkK6zr816aZPw6WXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LgGPGfGhJa5cxDTc7P4rzzvOI2xb3SSZBhCgQl+iYjTySQcS6yYqURUqZYHY0ULL3trNbUITtzt43UGO6KxYfMuQrpmGPKApOLGbqJdH+vc7pUroL5cixdPEZ9QjdFJm/Rw3GijmAgctNBiHVouLpQuYi2U+uA+m7EZDUTQsF64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYY88FCP; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYY88FCP"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso6455826a12.2;
-        Sun, 06 Apr 2025 23:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744007014; x=1744611814; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TyYBkwgsXtht/1q0+sgnW3QamkOkK6zr816aZPw6WXk=;
-        b=OYY88FCPky+0jWgiQkFjwcm2fV4ozWo2iSGGILCU5jEFYUpTmLZc1Gtwi2Cz2+pfOB
-         WJGW8UgewE+hbSdSNri7GQXBT7W1kiv1vXO1lFk3PGurP5wqUHrGWKZzfEkucnWp7xIK
-         3wZhY0QStEvTSvx1613FLZ4Atxxw/JmPMTCrRQ4+5pjBSG+YMHG65UawQPvQClcYT/OC
-         +JGvugCM9KiV/IFV7Bddzepv6OKm6FEwCQHd3VyFD2xce8lkCnLDCaErpWhYg1u8VEpT
-         kKhOw7OWzJGbLPB4F22FUPwi7KbPkaAfd9Tp9+QK2kOwJ7Sz6Kyztu2qHHK25QFhO2dm
-         iFQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744007014; x=1744611814;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TyYBkwgsXtht/1q0+sgnW3QamkOkK6zr816aZPw6WXk=;
-        b=Wv1b+ivVjlTq7M/gkOJjfvPNk0QraK13sz2QdPP+7AN3Yy6KNSzfYQG5RMJAk/D3ro
-         TmBGcaGVkfPHcZJRtOT8Gd8tpUsrqmhu7Wk40c/K+A2TGFiuzLKSygWJHaFGsihGkgTS
-         CepRwDLXrl77S7sbMXtrfCA53guN2nGgADD3NHRUwIHn2gowv6W9+4iiyy0LVUxOSUvq
-         DlzJcTH5fFrrOXcmjOv004ZpMH0bOCXO4TIW7KYKg9YZjATgsWEMmgFgDGd5+YtnRKgy
-         1a6PaX5w/ldlSGQG92IZHtmxuajhsRP4ztXHFlfSVHFLEQ0BZ4AAKBZU95ODiWMVlAqd
-         A4bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdlUkSq7eirgPCXDprW09LeUesAVZDKsLU3BbXYs0ZQNcxg5qWeMo58Zqo1KQDSlw49AmTlMNOs2o/FKzP@vger.kernel.org, AJvYcCXTmjz9Yfwi38EXSb3TDd6PEWiYGzKe/etpqC4RfRL3eOuv1Xxuj2Huxa1sVx7IhoAonRKXtszvuHdlZQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTTzBP6ngQKEh4k43BAfM35MH1Wg+l55ZCsh0r0jz+sU3Lvncn
-	1mKdCT/0AmrK5tu57VlSssweSiSfQQxD9h0/q4hso0DE1vn9DaQB9x1gcyHoLYp56NhYOC4bIxH
-	t24+b0lbXwcJ3m16EWVe+ZuouVBE=
-X-Gm-Gg: ASbGnctHKg1ctkonN56lJuusbzUx8xRVNtoJ4y0nMxoB9lA1tYqqtHnItxFhgp1tGD3
-	piCZwj+BfaGoCR5PfDaRmAHHThfU9iUYw2cfrnWVdYb3a3TwMEuzHu6wPN8E87+kOY4WP9O6o1o
-	mZO80UVUeDr3IwTCynomLOvokW
-X-Google-Smtp-Source: AGHT+IGqalXkH8jwQneb6G+HA2MFJkBI8UgaY+XXpORTBearNKmKeH+qC8U0We4DWz3sqDep+zKwZSn0M0zPtKBWZrc=
-X-Received: by 2002:a05:6402:27cf:b0:5e6:4ee9:f043 with SMTP id
- 4fb4d7f45d1cf-5f0db88a0a6mr5612161a12.26.1744007013996; Sun, 06 Apr 2025
- 23:23:33 -0700 (PDT)
+	s=arc-20240116; t=1744007091; c=relaxed/simple;
+	bh=JXgUrF4nrWx7Zygv7RhQXfb2sqjBHu0OJ3p4aMH81YM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jQPm+oG8Fulk9bZog87sRqjcE+S79ggBfsgLZRb3adwg+cCIZuJVt31oiakHdTh03Tnk6T/AFPgYXTRh/SleY5+edhlqwK7D/Jed5oMLRIWXBELIe8PNqKLU+JqQW8muIu5TD1OwIwFbOQsMrxoNTjJAyey7jn7b5QHY7OdjqZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowABHdv6kb_Nn4QjQBg--.9517S2;
+	Mon, 07 Apr 2025 14:24:37 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shenghao-ding@ti.com,
+	colin.i.king@gmail.com,
+	linus.walleij@linaro.org,
+	afd@ti.com,
+	robh@kernel.org,
+	viro@zeniv.linux.org.uk,
+	gehao@kylinos.cn
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] ASoC: pcm6240: Remove unnecessary NULL check before release_firmware()
+Date: Mon,  7 Apr 2025 14:23:52 +0800
+Message-Id: <20250407062352.2771861-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743857160.git.princerichard17a@gmail.com>
- <2025040538-breeze-espionage-dc6e@gregkh> <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
- <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
- <CAMyr_bLkvFBTpYehG4fs-tqVE18YBf53okddU2=i7+Rr-zbCsw@mail.gmail.com> <2025040711-refutable-monetary-f0c4@gregkh>
-In-Reply-To: <2025040711-refutable-monetary-f0c4@gregkh>
-From: Richard Akintola <princerichard17a@gmail.com>
-Date: Mon, 7 Apr 2025 07:23:21 +0100
-X-Gm-Features: ATxdqUG9UKRPAVgDWlaipT9LjzuBKxae31dI3bYorVW2m8bsiBkNNZsH_tYfNvI
-Message-ID: <CAMyr_bJuX1vYxBhE2FvpTvjPy9jovqOmapUr-WFpO8r=5uJvAQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev, 
-	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABHdv6kb_Nn4QjQBg--.9517S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4ktr4xXry8JrW5KFg_yoW3JrX_A3
+	48u3ykXF4FqrZrZ34jyr4SyrZ3ZF93uFW0vFn2yrWUJFn7uF4Fqw1UX398ua1fX3yxJa43
+	ZFnI9r1UAryUKjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU7uciUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, Apr 7, 2025 at 7:01=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
+release_firmware() checks for NULL pointers internally.
+Remove unneeded NULL check for fmw here.
 
-> Yes.
->
-> Think about it from our side, what would you want to see if you had to
-> review hundreds of different patches a day?
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ sound/soc/codecs/pcm6240.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thank you for the clarification Greg K-H, the change in perspective made
-it clear, would send them in as soon as I get hold of my PC.
+diff --git a/sound/soc/codecs/pcm6240.c b/sound/soc/codecs/pcm6240.c
+index b2bd2f172ae7..75af12231d1d 100644
+--- a/sound/soc/codecs/pcm6240.c
++++ b/sound/soc/codecs/pcm6240.c
+@@ -1642,8 +1642,7 @@ static int pcmdevice_comp_probe(struct snd_soc_component *comp)
+ 	}
+ 	ret = pcmdev_profile_ctrl_add(pcm_dev);
+ out:
+-	if (fw_entry)
+-		release_firmware(fw_entry);
++	release_firmware(fw_entry);
+ 
+ 	mutex_unlock(&pcm_dev->codec_lock);
+ 	return ret;
+-- 
+2.25.1
 
-Richard Akintola
