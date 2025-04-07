@@ -1,97 +1,139 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B0212D65
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E246520FAAC
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743991801; cv=none; b=SwTSaPiOlzyTiJAyt4YEpL9HdQgd+Wy90r3ZUCL63VCQWWWG/voUV4QPfjV2NXDkDG0kGrDcMXas4PAeZUPVvTPybwh3Z9ky8LpvwIUCx7gganpIY6RQdb4kSKDooTHvW7SHW3rpCyAj+TNjmsn5jKZQ3GBBCUR2rK+UF6xMRLc=
+	t=1743991830; cv=none; b=D3o2QKrfIPgF6Eq+9bj9Dz9BRFm8aMUCBzrRzNJBXNmikJ5JaTvXVOoVb6HJP3n7/9T4WvTRzfutZkB6vY2fGX1HpmT+b3jf/Fy7shPTqUgAYgct8nBpLAfXt7R10PbhVqGsZ/WS6fOSReo1tZQpLLn7yX0MJiL0ZClW+4MemMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743991801; c=relaxed/simple;
-	bh=W5PvpIs3YYQPP/nm47aShabS05J2uCrQMtCbey8iOOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r0v+EFLq9QpEv6oLWO1YoeqKMNOzXkzM318Jg+xRKKkHFWZr0aSWj9iLl4VLNqka62VMCuHcxsGBJQv2+724TkGbbbsu3TOSdRKXVCPSXaz+BqKl6OnQVwDs/6urhBiVzFQ9aCCW6g0kxVHRBTct/7zznyKTKRk0PgQ8e/ubbyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAA3dQ3gM_NnLGnGBg--.8741S2;
-	Mon, 07 Apr 2025 10:09:42 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] mtd: nand: Add error log for marvell_nfc_end_cmd()
-Date: Mon,  7 Apr 2025 10:09:16 +0800
-Message-ID: <20250407020917.1242-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743991830; c=relaxed/simple;
+	bh=XfcLzj4u9hEabd0szkloLzxLYdzD/t+nSwjBELOsAWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fqf9m2IRIMTBsZmQy+RvOpXNbZI05iGcnbrvzaiy6gJybj8djFaduiRMziVrNGW/7hyJwufpIQ2bZqJ3P8RGyv2SayJhjIhtw27F8sQB1ybP03nkfJNecnYkKp7Z51l1gKvYaXeJnF64hIU9w7MBNk9gHkrDEOMBVHvd7dl85Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/jSChcO; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/jSChcO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743991829; x=1775527829;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=XfcLzj4u9hEabd0szkloLzxLYdzD/t+nSwjBELOsAWM=;
+  b=K/jSChcOIAOFVCbexhzkhPnQbkHQIgFDkps8kcWkR8H2nU/9lfRV3pEx
+   NDevq8dut+YFOn03vtlVakh7T46bXZhpnBbw16X8QyEHb95KFOpAfN1PN
+   C/wLtHQoXg+09I4M2Q6WpzV0Psv5ACWkChO89YQL2CikdozEQKUWY6hwD
+   XfTkMu9ZvGFAWPfsLUzbdmcnQrCfS3hiBipEHE9ZROgtIEJ65d+3PrLlh
+   4B3B3t+3iHQ9EtZTkr+XUgY/cw9eWwyia+ALfn/mWrsUPqEKpzFeVU8CT
+   w9NqEtnuh3BtFkNGY3urSSSX/3TTclbkugte99mDzqLP+xxtnr1hscai0
+   g==;
+X-CSE-ConnectionGUID: WjZ5QxE8S9qU3yphgZjeqA==
+X-CSE-MsgGUID: rBQeSdp6Twyy2ants5elkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67834845"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="67834845"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 19:10:28 -0700
+X-CSE-ConnectionGUID: gTwHepnPQy+/87yJ/JnJNg==
+X-CSE-MsgGUID: /vCHT+ryR/ijaSKwWumzNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="128331273"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 06 Apr 2025 19:10:27 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1bwO-0002t9-1m;
+	Mon, 07 Apr 2025 02:10:24 +0000
+Date: Mon, 7 Apr 2025 10:10:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>
+Subject: sound/soc/soc-ops-test.c:520:1: warning: the frame size of 1304
+ bytes is larger than 1280 bytes
+Message-ID: <202504071003.NtmGvvqC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3dQ3gM_NnLGnGBg--.8741S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urWrZw1xWw1UtFW8AF4fXwb_yoW8AryDpw
-	4rZFW5KF40ya1YyrnxJa1DuFy5t3Z3K348K3Wvva4j9r4xGF4jgrsFya40gF1UAayfAw1a
-	qrZxKr9Y9Fn0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUYdgADUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAFA2fytf-jFwAAs0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The function marvell_nfc_hw_ecc_bch_read_chunk() calls the function
-marvell_nfc_end_cmd(), but dose not check its return value. Since it
-is incorrect to bail from the loop if the marvell_nfc_end_cmd() fails,
-an error log is necessary to prevent silent failure.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0af2f6be1b4281385b618cb86ad946eded089ac8
+commit: 7a24b876ad8cdd56457e881d384a038922b508c3 ASoC: ops-test: Add some basic kunit tests for soc-ops
+date:   3 weeks ago
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250407/202504071003.NtmGvvqC-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504071003.NtmGvvqC-lkp@intel.com/reproduce)
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/mtd/nand/raw/marvell_nand.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504071003.NtmGvvqC-lkp@intel.com/
 
-diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
-index 303b3016a070..1069a17dae9d 100644
---- a/drivers/mtd/nand/raw/marvell_nand.c
-+++ b/drivers/mtd/nand/raw/marvell_nand.c
-@@ -1351,16 +1351,20 @@ static void marvell_nfc_hw_ecc_bch_read_chunk(struct nand_chip *chip, int chunk,
- 	 * Length is a multiple of 32 bytes, hence it is a multiple of 8 too.
- 	 */
- 	for (i = 0; i < data_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
--		marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
--				    "RDDREQ while draining FIFO (data)");
-+		err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
-+					  "RDDREQ while draining FIFO (data)");
-+		if (err)
-+			dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
- 		marvell_nfc_xfer_data_in_pio(nfc, data,
- 					     FIFO_DEPTH * BCH_SEQ_READS);
- 		data += FIFO_DEPTH * BCH_SEQ_READS;
- 	}
- 
- 	for (i = 0; i < spare_len; i += FIFO_DEPTH * BCH_SEQ_READS) {
--		marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
--				    "RDDREQ while draining FIFO (OOB)");
-+		err = marvell_nfc_end_cmd(chip, NDSR_RDDREQ,
-+					  "RDDREQ while draining FIFO (OOB)");
-+		if (err)
-+			dev_err(nfc->dev, "Fail to confirm the NDSR.RDDREQ");
- 		marvell_nfc_xfer_data_in_pio(nfc, spare,
- 					     FIFO_DEPTH * BCH_SEQ_READS);
- 		spare += FIFO_DEPTH * BCH_SEQ_READS;
+All warnings (new ones prefixed by >>):
+
+   sound/soc/soc-ops-test.c: In function 'soc_ops_test_access':
+>> sound/soc/soc-ops-test.c:520:1: warning: the frame size of 1304 bytes is larger than 1280 bytes [-Wframe-larger-than=]
+     520 | }
+         | ^
+
+
+vim +520 sound/soc/soc-ops-test.c
+
+   475	
+   476	static void soc_ops_test_access(struct kunit *test)
+   477	{
+   478		struct soc_ops_test_priv *priv = test->priv;
+   479		const struct access_test_param *param = test->param_value;
+   480		struct snd_kcontrol kctl = {
+   481			.private_data = &priv->component,
+   482			.private_value = (unsigned long)&param->mc,
+   483		};
+   484		struct snd_ctl_elem_value result;
+   485		unsigned int val;
+   486		int ret;
+   487	
+   488		ret = regmap_write(priv->component.regmap, 0x0, param->init);
+   489		KUNIT_ASSERT_FALSE(test, ret);
+   490		ret = regmap_write(priv->component.regmap, 0x1, param->init);
+   491		KUNIT_ASSERT_FALSE(test, ret);
+   492	
+   493		result.value.integer.value[0] = param->lctl;
+   494		result.value.integer.value[1] = param->rctl;
+   495	
+   496		ret = param->put(&kctl, &result);
+   497		KUNIT_ASSERT_EQ(test, ret, param->ret);
+   498		if (ret < 0)
+   499			return;
+   500	
+   501		ret = regmap_read(priv->component.regmap, 0x0, &val);
+   502		KUNIT_ASSERT_FALSE(test, ret);
+   503		KUNIT_EXPECT_EQ(test, val, (param->init & ~param->lmask) | param->lreg);
+   504	
+   505		ret = regmap_read(priv->component.regmap, 0x1, &val);
+   506		KUNIT_ASSERT_FALSE(test, ret);
+   507		KUNIT_EXPECT_EQ(test, val, (param->init & ~param->rmask) | param->rreg);
+   508	
+   509		result.value.integer.value[0] = 0;
+   510		result.value.integer.value[1] = 0;
+   511	
+   512		ret = param->get(&kctl, &result);
+   513		KUNIT_ASSERT_GE(test, ret, 0);
+   514	
+   515		KUNIT_EXPECT_EQ(test, result.value.integer.value[0], param->lctl);
+   516		if (param->layout != SOC_OPS_TEST_SINGLE)
+   517			KUNIT_EXPECT_EQ(test, result.value.integer.value[1], param->rctl);
+   518		else
+   519			KUNIT_EXPECT_EQ(test, result.value.integer.value[1], 0);
+ > 520	}
+   521	
+
 -- 
-2.42.0.windows.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
