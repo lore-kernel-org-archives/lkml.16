@@ -1,254 +1,118 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2300E1E8330
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 14:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041C01EB5CE;
+	Mon,  7 Apr 2025 14:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744035865; cv=none; b=cXPNUWw4BD/o8lNi6CXVukjgDnsVkjod681I/3ZDPr+2PghLulJf2kQK6aVAsUdDyKDYvaBlRAd4JC27Yipx1v34fw5GABzSMyUY6ZaczvyRjSJS2wIDyBllUVrGGdrg5oAfwrvPgNX78r6IB1hfjqxFQfM+HN+TUssodGIYX/I=
+	t=1744035867; cv=none; b=a031iblZH5CortNI9r+4/eICRW9iui4q87sCJ0zvXeeEiBKfFJdVuyHtHG6IJFWCwU+1ZYsbc6I5qBa89Wtz2ioZLh0Jk52l+lUu0BCIk7cWizh6/suGiFwToMpJ7PWnUFJpG4l5XD6TuP9kE9Ub5gieXNGkXff7ghtHk/Rnung=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744035865; c=relaxed/simple;
-	bh=CYydr1lnhZpTw6zfhhlnXyQ75xM40zXrRZyqQdrReaw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EFtUK6OLBfzg01IU7WzS2y1GKU5DTSxxBYGTMUIcHvCUUfH2YEeZ1EhnFES046wjrNBT0G78wyFz7FXg/TKK9x6nr6tcJo1ap4fBib+ZOEMpGD+MkTDhZRY8nkm3bfh3/zwwaQBAE+W5g3LTSngBo25slxYtljM35ik6r6BvqHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FIR+CEEV; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744035867; c=relaxed/simple;
+	bh=ntgbMDQQdysZg1NL5x1qdG4O03BY4OuHM3TsUmG1hRU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WxTc5Jr4pn69mWEr8q0w+xC9xXL/hyf8nZs9hncyI4tlzrRGKVXF0Y7pLVS8Cm/ne9x/aCxv5kSPBsjFoNsgDkK/NEZdrZeFq5knIjMKp0mSTs2Uou3imOKIPJ/VL6WAEcmcmx3QBLnaLy1WMCb79yysSAGhSktcxWmYuWFUjYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gvb9Ef1f; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FIR+CEEV"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744035861;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gvb9Ef1f"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D056442B6;
+	Mon,  7 Apr 2025 14:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744035863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kzON6JbiW/9Bf96HZECRlAjLMnxZfxHXOjdop7YDGLg=;
-	b=FIR+CEEVkWgAunIWPdtOValKsy6DoRQduo318c8j6d2IiU0iTBjSvRGmaXiKScU2lfg2In
-	puh6i1A5SIYLWkgOEjDra4X9RtD4R4xTvwku/6HoC/Ywp5TrJZBnmaD4VggcSmBmYmNTtd
-	8sQ8qI2qJ0borqpXs4IUECyW3Hj76DE=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 3/4] bpf, sockmap: Fix panic when calling skb_linearize
-Date: Mon,  7 Apr 2025 22:21:22 +0800
-Message-ID: <20250407142234.47591-4-jiayuan.chen@linux.dev>
-In-Reply-To: <20250407142234.47591-1-jiayuan.chen@linux.dev>
-References: <20250407142234.47591-1-jiayuan.chen@linux.dev>
+	bh=jsGI7zLMLEptOY92QCgZnp7NLPJpnGIfItx5r9mRyww=;
+	b=gvb9Ef1f4FHrteKdP63SALZMdKy15lDXh9pghE3xkA14RGq8o7aNLF4z51TL5OFdV2pbTC
+	Z1glSmQUE5uexS0GBLDg7oeiE41LNeIN554P25fvwWI5qyO9vSCBneVAc4ZM9AFIMM9M+s
+	/nz30u9vaZSeTOGImJi1f2Dbp4vnAZPKeR1g1TvzZPXWlaZ6UBJtK21Msu+JfpMTngwolq
+	to4Q6hYHnCt7YpOI1liXZNsIWq0WkcTlmN+fFpMymU+FBJ6crPbL+4QyARwMBfJe10a3ey
+	AXUqzrSZ/PNofEXk/09UFKnPGkh7ED6sgBJqykJoopgw49OGdvz3TlMoyA/BWw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Mon, 07 Apr 2025 16:23:22 +0200
+Subject: [PATCH 07/34] drm/bridge: lt9611uxc: convert to
+ devm_drm_bridge_alloc() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-drm-bridge-convert-to-alloc-api-v1-7-42113ff8d9c0@bootlin.com>
+References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddtgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirghtvghksehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhmpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-The panic can be reproduced by executing the command:
-./bench sockmap -c 2 -p 1 -a --rx-verdict-ingress --rx-strp 100000
+This is the new API for allocating DRM bridges.
 
-Then a kernel panic was captured:
-'''
-[  657.460555] kernel BUG at net/core/skbuff.c:2178!
-[  657.462680] Tainted: [W]=WARN
-[  657.463287] Workqueue: events sk_psock_backlog
-...
-[  657.469610]  <TASK>
-[  657.469738]  ? die+0x36/0x90
-[  657.469916]  ? do_trap+0x1d0/0x270
-[  657.470118]  ? pskb_expand_head+0x612/0xf40
-[  657.470376]  ? pskb_expand_head+0x612/0xf40
-[  657.470620]  ? do_error_trap+0xa3/0x170
-[  657.470846]  ? pskb_expand_head+0x612/0xf40
-[  657.471092]  ? handle_invalid_op+0x2c/0x40
-[  657.471335]  ? pskb_expand_head+0x612/0xf40
-[  657.471579]  ? exc_invalid_op+0x2d/0x40
-[  657.471805]  ? asm_exc_invalid_op+0x1a/0x20
-[  657.472052]  ? pskb_expand_head+0xd1/0xf40
-[  657.472292]  ? pskb_expand_head+0x612/0xf40
-[  657.472540]  ? lock_acquire+0x18f/0x4e0
-[  657.472766]  ? find_held_lock+0x2d/0x110
-[  657.472999]  ? __pfx_pskb_expand_head+0x10/0x10
-[  657.473263]  ? __kmalloc_cache_noprof+0x5b/0x470
-[  657.473537]  ? __pfx___lock_release.isra.0+0x10/0x10
-[  657.473826]  __pskb_pull_tail+0xfd/0x1d20
-[  657.474062]  ? __kasan_slab_alloc+0x4e/0x90
-[  657.474707]  sk_psock_skb_ingress_enqueue+0x3bf/0x510
-[  657.475392]  ? __kasan_kmalloc+0xaa/0xb0
-[  657.476010]  sk_psock_backlog+0x5cf/0xd70
-[  657.476637]  process_one_work+0x858/0x1a20
-'''
-
-The panic originates from the assertion BUG_ON(skb_shared(skb)) in
-skb_linearize(). A previous commit(see Fixes tag) introduced skb_get()
-to avoid race conditions between skb operations in the backlog and skb
-release in the recvmsg path. However, this caused the panic to always
-occur when skb_linearize is executed.
-
-The "--rx-strp 100000" parameter forces the RX path to use the strparser
-module which aggregates data until it reaches 100KB before calling sockmap
-logic. The 100KB payload exceeds MAX_MSG_FRAGS, triggering skb_linearize.
-
-To fix this issue, just move skb_get into sk_psock_skb_ingress_enqueue.
-
-'''
-sk_psock_backlog:
-    sk_psock_handle_skb
-       skb_get(skb) <== we move it into 'sk_psock_skb_ingress_enqueue'
-       sk_psock_skb_ingress____________
-                                       ↓
-                                       |
-                                       | → sk_psock_skb_ingress_self
-                                       |      sk_psock_skb_ingress_enqueue
-sk_psock_verdict_apply_________________↑          skb_linearize
-'''
-
-Note that for verdict_apply path, the skb_get operation is unnecessary so
-we add 'take_ref' param to control it's behavior.
-
-Fixes: a454d84ee20b ("bpf, sockmap: Fix skb refcnt race after locking changes")
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- net/core/skmsg.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/bridge/lontium-lt9611uxc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 9533b3e40ad7..276934673066 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -530,16 +530,22 @@ static int sk_psock_skb_ingress_enqueue(struct sk_buff *skb,
- 					u32 off, u32 len,
- 					struct sk_psock *psock,
- 					struct sock *sk,
--					struct sk_msg *msg)
-+					struct sk_msg *msg,
-+					bool take_ref)
- {
- 	int num_sge, copied;
- 
-+	/* skb_to_sgvec will fail when the total number of fragments in
-+	 * frag_list and frags exceeds MAX_MSG_FRAGS. For example, the
-+	 * caller may aggregate multiple skbs.
-+	 */
- 	num_sge = skb_to_sgvec(skb, msg->sg.data, off, len);
- 	if (num_sge < 0) {
- 		/* skb linearize may fail with ENOMEM, but lets simply try again
- 		 * later if this happens. Under memory pressure we don't want to
- 		 * drop the skb. We need to linearize the skb so that the mapping
- 		 * in skb_to_sgvec can not error.
-+		 * Note that skb_linearize requires the skb not to be shared.
- 		 */
- 		if (skb_linearize(skb))
- 			return -EAGAIN;
-@@ -556,7 +562,7 @@ static int sk_psock_skb_ingress_enqueue(struct sk_buff *skb,
- 	msg->sg.start = 0;
- 	msg->sg.size = copied;
- 	msg->sg.end = num_sge;
--	msg->skb = skb;
-+	msg->skb = take_ref ? skb_get(skb) : skb;
- 
- 	sk_psock_queue_msg(psock, msg);
- 	sk_psock_data_ready(sk, psock);
-@@ -564,7 +570,7 @@ static int sk_psock_skb_ingress_enqueue(struct sk_buff *skb,
- }
- 
- static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb,
--				     u32 off, u32 len);
-+				     u32 off, u32 len, bool take_ref);
- 
- static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
- 				u32 off, u32 len)
-@@ -578,7 +584,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
- 	 * correctly.
- 	 */
- 	if (unlikely(skb->sk == sk))
--		return sk_psock_skb_ingress_self(psock, skb, off, len);
-+		return sk_psock_skb_ingress_self(psock, skb, off, len, true);
- 	msg = sk_psock_create_ingress_msg(sk, skb);
- 	if (!msg)
- 		return -EAGAIN;
-@@ -590,7 +596,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
- 	 * into user buffers.
- 	 */
- 	skb_set_owner_r(skb, sk);
--	err = sk_psock_skb_ingress_enqueue(skb, off, len, psock, sk, msg);
-+	err = sk_psock_skb_ingress_enqueue(skb, off, len, psock, sk, msg, true);
- 	if (err < 0)
- 		kfree(msg);
- 	return err;
-@@ -601,7 +607,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb,
-  * because the skb is already accounted for here.
-  */
- static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb,
--				     u32 off, u32 len)
-+				     u32 off, u32 len, bool take_ref)
- {
- 	struct sk_msg *msg = alloc_sk_msg(GFP_ATOMIC);
- 	struct sock *sk = psock->sk;
-@@ -610,7 +616,7 @@ static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb
- 	if (unlikely(!msg))
- 		return -EAGAIN;
- 	skb_set_owner_r(skb, sk);
--	err = sk_psock_skb_ingress_enqueue(skb, off, len, psock, sk, msg);
-+	err = sk_psock_skb_ingress_enqueue(skb, off, len, psock, sk, msg, take_ref);
- 	if (err < 0)
- 		kfree(msg);
- 	return err;
-@@ -619,18 +625,13 @@ static int sk_psock_skb_ingress_self(struct sk_psock *psock, struct sk_buff *skb
- static int sk_psock_handle_skb(struct sk_psock *psock, struct sk_buff *skb,
- 			       u32 off, u32 len, bool ingress)
- {
--	int err = 0;
--
- 	if (!ingress) {
- 		if (!sock_writeable(psock->sk))
- 			return -EAGAIN;
- 		return skb_send_sock(psock->sk, skb, off, len);
+diff --git a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+index 20bf1a3c786d8ecc10ac58225f28e5c519fd1bf9..22703390ac88df904eeba0cdc3dd92a374373c96 100644
+--- a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
++++ b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+@@ -775,9 +775,9 @@ static int lt9611uxc_probe(struct i2c_client *client)
+ 		return -ENODEV;
  	}
--	skb_get(skb);
--	err = sk_psock_skb_ingress(psock, skb, off, len);
--	if (err < 0)
--		kfree_skb(skb);
--	return err;
-+
-+	return sk_psock_skb_ingress(psock, skb, off, len);
- }
  
- static void sk_psock_skb_state(struct sk_psock *psock,
-@@ -1019,7 +1020,7 @@ static int sk_psock_verdict_apply(struct sk_psock *psock, struct sk_buff *skb,
- 				off = stm->offset;
- 				len = stm->full_len;
- 			}
--			err = sk_psock_skb_ingress_self(psock, skb, off, len);
-+			err = sk_psock_skb_ingress_self(psock, skb, off, len, false);
- 		}
- 		if (err < 0) {
- 			spin_lock_bh(&psock->ingress_lock);
+-	lt9611uxc = devm_kzalloc(dev, sizeof(*lt9611uxc), GFP_KERNEL);
+-	if (!lt9611uxc)
+-		return -ENOMEM;
++	lt9611uxc = devm_drm_bridge_alloc(dev, struct lt9611uxc, bridge, &lt9611uxc_bridge_funcs);
++	if (IS_ERR(lt9611uxc))
++		return PTR_ERR(lt9611uxc);
+ 
+ 	lt9611uxc->dev = dev;
+ 	lt9611uxc->client = client;
+@@ -856,7 +856,6 @@ static int lt9611uxc_probe(struct i2c_client *client)
+ 
+ 	i2c_set_clientdata(client, lt9611uxc);
+ 
+-	lt9611uxc->bridge.funcs = &lt9611uxc_bridge_funcs;
+ 	lt9611uxc->bridge.of_node = client->dev.of_node;
+ 	lt9611uxc->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID;
+ 	if (lt9611uxc->hpd_supported)
+
 -- 
-2.47.1
+2.49.0
 
