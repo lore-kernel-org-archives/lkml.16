@@ -1,97 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B4204C11
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9022054E6;
+	Mon,  7 Apr 2025 15:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744041420; cv=none; b=KsBM4O0IML4XNAyczfgNgEZqv5IPFLWBUNYK9enCUy+36O10vBKWdih9JQo8OhRjI2gntklbs9TjWAvc8w3AqNirVlmFUXSdH7E+829AXGcbqIDEqx51jxV8XmUSJm5YvZnnzsD246Fqklb8yHGrr0/rYGPopqMRXqOfVb5LwLA=
+	t=1744041456; cv=none; b=qN6rhTeRqgnIGuQmwrHZqHB03bdMPCInnh4D19hCMdANrBOVcB+8vHLFzypyo30wjdP4ZIid5cx4ul1tcDMOg12vsf8paH/o5rvkt6MTwc0hS0LG3QzX4MRyHdW0oRqb3o8OO3QOKPBfgtEm1B7sYj20i+pwAulYzasRgi0AM8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744041420; c=relaxed/simple;
-	bh=y1WkJ8RK4R5I+bfkziFddIwn9rr/OZt308PQdVyLGqE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JUH6ouk42xjilHHHDu1PnlSaWfnc3TpEWgqJsksYg59U5nwRrdAuTsQIPoY3pssqgfMv8Q7gctqsQVUBYAiV/Jb6MJIcigHJXKSVGnJ76SRxQ5+EHttKfcTnDHeb2QUq16q4nZvjOQsCsemW7ZhnZG0PSGHm4UCCASo1llkJjYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j18y4rDI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744041456; c=relaxed/simple;
+	bh=P6WfDcKUG6ij+O3XNj8oJSkT957LTNnQmlpDyjZOrAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4ZEBW5h4pJ2mjCY1MOhB6exiBX+01Q+RLyXHOzpkLt2fF+lL3s7W9UJ7b0Qh927l/14VxWjX3aHwOHv5g8Q5Qo2CKRnGe5z2Zw+1cGo5XUXVePp487SFXUZ2rdVRzWCRJxC89t4L+gLRbxL6DnHVJekV1JfgYCyOikopklZNSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZCBiS9n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j18y4rDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C79C4CEEA
-	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 15:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZCBiS9n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EE1C4CEDD;
+	Mon,  7 Apr 2025 15:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744041419;
-	bh=y1WkJ8RK4R5I+bfkziFddIwn9rr/OZt308PQdVyLGqE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=j18y4rDI3LtczPBpRMckYw3GYEL2CmMDusR+9BPHKz9/whWysmi2Hnml9kse+AJxl
-	 ojuBS6MtlBc4/eYXrMm2SVpITOx9qvC29Kk1n0XGzpWcMxpWXr1BrtkBhn6wJhcPHE
-	 wopOfVpCv/Hccoelw46bDH9DwHM+0aUvxdAIzwmJlhqN2V2mGjZWvMp6iutp0jKqTV
-	 B6/VK+GiwhaZ4P9OxpaFrg1EaxJIEDkCO0tor8wcUCEXomlLJ2MPCyeqpBfFAi1asp
-	 rlg+w8lg29rBOXFADU58MXK6bD/IgAIGBGCDrr2vHojxfxR5DlMuFF9DC0FkOb34CM
-	 ZMdyxQorW6w0g==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so5206027e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 08:56:59 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxSHikHlOkD5qKjRC3IqKKU4HymtAk4wrTy2vP51MZ0okNGdoqb
-	lLjk6APhCA/ilg17VayRlAgHE6kbulykx9bwhCYQQOKmsTS7nbJOrPGkJkiMNx0oGAXX5iXP0o/
-	zLhAYceSqjNHEYjgCUfQTDxFxGmU=
-X-Google-Smtp-Source: AGHT+IGPw3FeSYmOtLl1u72XQMszT2qRdbXc8KmHVnxDCIYKuvvnq8stLO4GG/fqNj1/X5CkaOXMIfXQWBcVSU0iFlk=
-X-Received: by 2002:a2e:bd17:0:b0:30d:626e:d004 with SMTP id
- 38308e7fff4ca-30f0a1318ccmr40111781fa.20.1744041418323; Mon, 07 Apr 2025
- 08:56:58 -0700 (PDT)
+	s=k20201202; t=1744041456;
+	bh=P6WfDcKUG6ij+O3XNj8oJSkT957LTNnQmlpDyjZOrAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DZCBiS9nOSxiZcN7m5z0UG9ItN5pgt9XGQ+z+kz6T6gCVe2uFdzd6ylx8hwJih+he
+	 l0fEmrm/6/U6Rcg7FvJEXlwWz6rrUv1PZCSixGhKMAcrNNZSoAOiLGKcwEOf9ED9LA
+	 R+JjurDItjiKJVKA0i7Ex8b6XaMt/+5vRxA4dYT5v0J9Qi6EWHRZjn8qvzbjbo8br4
+	 R0TCsVaGKoUGKaewTu1n0Jl/XWDQI2Y9I3jtv6SBiJF2VupvWINP1o9R6ubsWAzqKP
+	 pEuZ8YXmHR1IZD6XVQf/y4ma6urkf0xa2QoH/WDU7LyhqeYwhZPwwNQXLegqj36/Ym
+	 NoVyXEi7ByxPw==
+Date: Mon, 7 Apr 2025 16:57:32 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Johann Neuhauser <jneuhauser@dh-electronics.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 0/3] regulator: userspace-consumer: Add regulator event
+ uevents
+Message-ID: <c74e44b7-87f7-46bd-93d7-fdb1568bae90@sirena.org.uk>
+References: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
+ <b5fa7d1a-16bf-4031-8990-f559cf589b67@sirena.org.uk>
+ <a18c4ad3b9f647c08d71b4550b5f1cf9@dh-electronics.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com>
- <CA+G9fYtNcnAEVs70eH2yP5UxRBsfrN2B1nKNcggGQ7FNMAJMmg@mail.gmail.com>
-In-Reply-To: <CA+G9fYtNcnAEVs70eH2yP5UxRBsfrN2B1nKNcggGQ7FNMAJMmg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 7 Apr 2025 18:56:44 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHp222YPhP23ektNqMueWbU-f1MSn6nyKwoX3FCBWhckI2Ak6ZRrH9iexQ
-Message-ID: <CAMj1kXH+z4zAhxMucg5NeaOpfp2p69=sqL78JiwvEsWNjFaJOQ@mail.gmail.com>
-Subject: Re: next-20250407: qemu_x86_64 clang-20, clang-nightly no console log
- but gcc-13 boot pass
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	Nathan Chancellor <nathan@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, Ingo Molnar <mingo@kernel.org>, 
-	dwmw@amazon.co.uk, "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DcO1LR1dPcZocI6S"
+Content-Disposition: inline
+In-Reply-To: <a18c4ad3b9f647c08d71b4550b5f1cf9@dh-electronics.com>
+X-Cookie: Meester, do you vant to buy a duck?
 
-On Mon, 7 Apr 2025 at 18:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Mon, 7 Apr 2025 at 17:15, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > Regressions on qemu-x86_64 with clang-20 and clang-nightly on the
-> > Linux next-20250407 and no console output.
-> >
-> > The gcc-13 builds boot pass on qemu-x86_64.
-> >
-> > First seen on the next-20250407.
-> > Bad: next-20250407
-> > Good:next-20250404
-> >
-> > * qemu-x86_64, boot
-> >  - boot/clang-20-lkftconfig
-> >  - boot/clang-20-lkftconfig-compat
-> >  - boot/clang-nightly-lkftconfig
-> >
-> > Regression Analysis:
-> > - New regression? Yes
-> > - Reproducibility? Yes
-> >
-> > Boot regression: qemu_x86_64 clang-20, clang-nightly no console log
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Anders bisected this and found,
-> # first bad commit:
->    [cc34e658c6db493c1524077e95b42d478de58f2b]
->    x86/boot: Move the early GDT/IDT setup code into startup/
->
-> Lore report link,
->  - https://lore.kernel.org/all/CA+G9fYt4VVa3kUDR+ze05xM+fRmMBVfbBTsypUq5oOpAfuzjfg@mail.gmail.com/
->
 
-Thanks for the report. I'll look into this.
+--DcO1LR1dPcZocI6S
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 07, 2025 at 02:17:10PM +0000, Johann Neuhauser wrote:
+> From: Mark Brown <broonie@kernel.org>
+> >On Fri, Apr 04, 2025 at 03:40:06PM +0200, Johann Neuhauser wrote:
+
+> >> This series adds support for regulator event reporting via uevents to =
+the
+> >> userspace-consumer regulator driver. The goal is to provide userspace =
+with
+> >> a straightforward mechanism to monitor and respond to important regula=
+tor
+> >> events such as overcurrent conditions, voltage changes, and enable/dis=
+able
+> >> transitions.
+
+> >This sounds like you're trying to use userspace-consumer in production
+> >rather than as a test bodge...   what's the actual use case here?
+
+> We have a hardware setup where the USB-A port is directly connected (D+/D-
+> lines) to the SoC, while its VBUS line is driven by an external I=B2C-bas=
+ed PMIC.
+> If a connected USB device attempts to draw more than approximately 800mA,
+> the PMIC detects an overcurrent condition, automatically disables the out=
+put,
+> and communicates an overcurrent event via the regulator framework.
+
+You absolutely should not be using the userspace consumer for this.
+
+> Currently, the generic USB HCD drivers lack a built-in mechanism for hand=
+ling
+> or recovering from such regulator-related events, particularly for report=
+ing or
+> re-enabling regulator outputs after an OC condition occurs. The DA8xx OHCI
+> driver is one exception, as it indeed provides such functionality, but
+> integrating similar support into the generic USB HCD drivers seemed unlik=
+ely to
+> be accepted upstream.
+
+Why not?  This seems like a perfectly reasonable thing to want to do, if
+only as far as generating notifications to userspace.
+
+> While I was aware that using the userspace-consumer driver might be seen =
+as
+> somewhat of a workaround for special cases, I did not fully consider that=
+ it
+> was intended primarily as a temporary testing solution and perhaps not su=
+itable
+> for this kind of production usage. I'd be grateful for any suggestions or=
+ advice you
+> might have on the appropriate approach or alternative solutions you could
+> recommend for upstream integration.
+
+I'd expect the consumer driver to be listening for events and offering
+some sort of handling and/or interface for this that's joined up with
+whatever the consumer is doing.  That basically means that your initial
+thought above sounds about right to me.
+
+--DcO1LR1dPcZocI6S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfz9esACgkQJNaLcl1U
+h9BMrgf9FRUpRdRSIzST7RGtwJ/rq8bRqv+jgbQq06eOIsvLQI+nLOZ+17Kc5CQe
+AvPXgaY2fXCuMz+Kctu7ytlRxOh/A3wCRd2i8pvgoVugMLMoxSLuoTmfaTp9Sba9
+y9dZWE8lxNfpjG5UU6JM5qNs1y8SH8iJ8YUpfkKhm/pJIPaxLfLWwYY/45Lpgz2c
+AYvAVEmZ0RyyO6Byp999PRVb3Tjhdnro8ulN0nhP3pU6k0AwSuU5x3468MkfyfMI
+a3BPI5EhYSMU9Np4BGkB0z4j5PU23ggUmfLEEm0h1lTPAErtJInpxEkYp8wuLsQ/
+yEyrcXpQJirBFyHVw8JQf/tDKJBPDA==
+=+dGy
+-----END PGP SIGNATURE-----
+
+--DcO1LR1dPcZocI6S--
