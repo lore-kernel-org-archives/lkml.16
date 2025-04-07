@@ -1,164 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CEB1EE032;
-	Mon,  7 Apr 2025 19:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F7D2236E0;
+	Mon,  7 Apr 2025 19:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744055847; cv=none; b=Y6MnzNKkFg8Uw0c+bO3j2OiuqD/glHEJbm6aF0DHppNVXw2YT0Sp93AxpgIkz0+aCxfK/IGo+WX6ORO/hvbsVdGIVtwg0NQl3KO1UoWqdavqWIzY7HDTGvIzhuRse0xR2qOaL51SlpnLuUS59YVlLUwcPPK/a1axJdu+juCqL4g=
+	t=1744055869; cv=none; b=hSNRpLH98ISguYrDAnLRCSjhwLfcgXd/Ifk+dPqdhokcGZUhqNunKUO0u/U6wQX75Vkgsms0lNpqH4li5av2E57aGhfrwd8OGvow8vsRHLM1uJllKbEHnxgd3NUd+g3iDB1rrDTMgsapQbaTl2J/tlRy4lbuXulee3bFj7ozckg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744055847; c=relaxed/simple;
-	bh=0w8yAQJiPOZnV0UHv/R8A2XVkSYUyrYq+ByRjE1W+QM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nyjp0CWMofKlK9Agu+g15hJ2WFrXEeNGoy0msrY1Hl1P1Dufk2TizR1y63tFVtq94pVTonIrQuKYKb2dmUY0koS7bpbc7DmkPcqw/3Lg/f5CRDuQ1SMDwtEmkjPXlHlqo9T5D5OE9Xjw1x7k1EbWE/b9VZRQOqjZKylNnmm0ddk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9n3ckJL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744055869; c=relaxed/simple;
+	bh=BcFYwrrUvlWqghmgRn3eq2YEAKq4QVcILIm1acwgZio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1JuDIGVSaSqvsGT88CnXT+oeXLGB97zn3JTqjR9os7vpacV+d+E3g6RTWUUqf3Y0fR3I5GE/RQQLivyzzkvN0hYYyhzIzj3lpKRiq4NWDo2UjdDUJO3dNaYn8dLvDLz60bv8brsghgMed67S6Jh+MXiCn4Dj60Xz6SJKIUgABU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mAYinYCb; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9n3ckJL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6306FC4CEEA;
-	Mon,  7 Apr 2025 19:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744055846;
-	bh=0w8yAQJiPOZnV0UHv/R8A2XVkSYUyrYq+ByRjE1W+QM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=g9n3ckJLHDizLaYQFqISwBpcKh6rPB7Q7FB9LLQuU3K6UXc6/kry4ZI56J1gNXNo7
-	 C+0Gwr9ywQtlSuurppRpdm+NuDA5c6rDv2a6PMUzu7ANmLx1NIhAZ3Cb+udNn0AWdN
-	 nRcc8xebQKc7PX37OUdlXFLf9liwkdZkJARAbwPDCQuINe/KvJ6kDNnV7KAeAef975
-	 35INPp8CP0omVOOaM72C64Mp9rdfLWlno+YTj8gDjNAyWwsmcqRumd7zXHI5NUmzWB
-	 1aKQfzDoSsmVFzxd+dLCcduo9f/o1RUd7tsNI/SAVeYsmQ2J5g4cdR2TULDELIWnJy
-	 yP5lGHciGc8iw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E645C369A4;
-	Mon,  7 Apr 2025 19:57:26 +0000 (UTC)
-From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Date: Mon, 07 Apr 2025 21:57:17 +0200
-Subject: [PATCH v2 2/2] iio: imu: inv_icm42600: switch to use generic name
- irq get
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mAYinYCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744055864;
+	bh=BcFYwrrUvlWqghmgRn3eq2YEAKq4QVcILIm1acwgZio=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mAYinYCbNAeIX1DWVSf1aQ7fQ6goCEva8SkneIcLZBbvxm8sQvw7GSq6pw924DhZc
+	 z+kCAueRMW3HXX04KVA8buPPxdYn7A81sXaaYH6QOwDg2UWf6UoAa6Jwz+Ngtd7Fko
+	 5hIhHBFzH/uybzDROa1glUlgn1LF4MypslEOT+i3MsdP3e9Fm76LGNHaiWpOR4AqQd
+	 7L9b7b17KfTtAzrkV0MM62jsM4yI5qwG1bcK6p7899tU82nYhT0Pu7v/Takayut/nX
+	 iSApwnUYeBV/qEpAsdNvC5OTbfzOjpRcw22UH4qG8OdWEdxuLFRIBrSWeXMUW7sq9R
+	 cW+L678MNIB3A==
+Received: from notapiano (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7F3EF17E0CBE;
+	Mon,  7 Apr 2025 21:57:43 +0200 (CEST)
+Date: Mon, 7 Apr 2025 15:57:41 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: automarkup: Move common logic to add and resolve
+ xref to helper
+Message-ID: <b06fff0d-7e15-45ac-877c-62479526a1aa@notapiano>
+References: <20250407-automarkup-resolve-xref-helper-v1-1-9cac06ad580f@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-iio-imu-inv-icm42600-rework-interrupt-using-names-v2-2-c278acf587b2@tdk.com>
-References: <20250407-iio-imu-inv-icm42600-rework-interrupt-using-names-v2-0-c278acf587b2@tdk.com>
-In-Reply-To: <20250407-iio-imu-inv-icm42600-rework-interrupt-using-names-v2-0-c278acf587b2@tdk.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744055845; l=4065;
- i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=/VtK2uQ40gbKTy8BClZYWTjqk6A7kwyWnfPM64PZuwk=;
- b=HTTaFHOjNygAhaaE+ihAi5Ein9GCd0uQOmNqA89j/teBbBEzXxZxrScJRMGNkcl1j6FSwX/E3
- WjQwV8y9CUbDoTT2CHNAuo7DVPpKEQak6BwAkXeWW2ujC2Rv4Zu6kfQ
-X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
- pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
-X-Endpoint-Received: by B4 Relay for
- jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
-X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Reply-To: jean-baptiste.maneyrol@tdk.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407-automarkup-resolve-xref-helper-v1-1-9cac06ad580f@collabora.com>
 
-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+On Mon, Apr 07, 2025 at 11:42:03AM -0400, Nícolas F. R. A. Prado wrote:
+> Several of the markup functions contain the same code, calling into
+> sphinx's pending_xref and resolve_xref functions to add and resolve a
+> cross-reference, with only a few of the parameters changed (domain,
+> reference type, markup content). Move this logic to its own function and
+> reuse it in the markup functions.
+> 
+> No functional change.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>  Documentation/sphinx/automarkup.py | 78 ++++++++++----------------------------
+>  1 file changed, 20 insertions(+), 58 deletions(-)
+> 
+> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+> index ecf54d22e9dc6ab459a91fde580c1cf161f054ed..8b129835e521428c0bafdc1584c8ce69252a668d 100644
+> --- a/Documentation/sphinx/automarkup.py
+> +++ b/Documentation/sphinx/automarkup.py
+> @@ -128,13 +128,11 @@ def note_failure(target):
+>  # own C role, but both match the same regex, so we try both.
+>  #
+>  def markup_func_ref_sphinx3(docname, app, match):
+> -    cdom = app.env.domains['c']
+>      #
+>      # Go through the dance of getting an xref out of the C domain
+>      #
 
-Use generic fwnode_irq_get_byname() for getting interrupt pin using
-interrupt name. Only INT1 is supported by the driver currently.
+I just noticed I missed these comments, they refer to the code that was moved to
+the helper. I'll delete them in the markup functions for v2.
 
-If not found fallback to first defined interrupt to keep compatibility.
-
-Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
----
- drivers/iio/imu/inv_icm42600/inv_icm42600.h      |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c | 17 +++++++++++++++--
- drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c  |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c  |  2 +-
- 4 files changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-index 18787a43477b89db12caee597ab040af5c8f52d5..f893dbe6996506a33eb5d3be47e6765a923665c9 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-@@ -426,7 +426,7 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
- int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
- 			     unsigned int writeval, unsigned int *readval);
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup);
- 
- struct iio_dev *inv_icm42600_gyro_init(struct inv_icm42600_state *st);
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-index ef9875d3b79db116f9fb4f6d881a7979292c1792..8ce817a4d5aa78cc8b228ee3064083b336c2c357 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-@@ -683,12 +683,13 @@ static void inv_icm42600_disable_pm(void *_data)
- 	pm_runtime_disable(dev);
- }
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup)
- {
- 	struct device *dev = regmap_get_device(regmap);
- 	struct inv_icm42600_state *st;
--	int irq_type;
-+	struct fwnode_handle *fwnode;
-+	int irq, irq_type;
- 	bool open_drain;
- 	int ret;
- 
-@@ -697,6 +698,18 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
- 		return -ENODEV;
- 	}
- 
-+	/* get INT1 only supported interrupt or fallback to first interrupt */
-+	fwnode = dev_fwnode(dev);
-+	if (!fwnode)
-+		return -ENODEV;
-+	irq = fwnode_irq_get_byname(fwnode, "INT1");
-+	if (irq < 0 && irq != -EPROBE_DEFER) {
-+		dev_info(dev, "no INT1 interrupt defined, fallback to first interrupt\n");
-+		irq = fwnode_irq_get(fwnode, 0);
-+	}
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");
-+
- 	irq_type = irq_get_trigger_type(irq);
- 	if (!irq_type)
- 		irq_type = IRQF_TRIGGER_FALLING;
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-index 04e440fe023aa3869529b0f0be003ea0544bfb8d..38cc0d7834fcb96dabc401f29d613cf9fc75b8f5 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-@@ -67,7 +67,7 @@ static int inv_icm42600_probe(struct i2c_client *client)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, client->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_i2c_bus_setup);
- }
- 
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-index 2bd2c4c8e50c3fe081e882aca6c64736510b474c..f40a09c4cbfc673e76922d13d61a3634785300ec 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-@@ -64,7 +64,7 @@ static int inv_icm42600_probe(struct spi_device *spi)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_spi_bus_setup);
- }
- 
-
--- 
-2.49.0
-
-
+Thanks,
+Nícolas
