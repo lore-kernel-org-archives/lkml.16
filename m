@@ -1,106 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D35218ABA;
-	Mon,  7 Apr 2025 23:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4356C228C9D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 23:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744068150; cv=none; b=LUtbGtENGjDze0c1uoaw1CDN9+0ARvCNZP73fXmLqieAF8oCaQI9taYFcpiGff/2XOBgIAZJwjF1j5rfINQh4MmEOc1u+w1ex752Bb38r145yIrom9s9uT1QtcNuxm8EIhN7XBZfx7m8l7nyIx9OAmSRckkK10JKkTP+Nd9xBT0=
+	t=1744068164; cv=none; b=Aq+yneksNZJS95Xj7diCVtp7phpEmWkANwUc3tJUOCAlCZxs1SbUdiBhRolh/9qYy55OEZUCCl6csC9xpRd5tVXDK/hVR7hQS1ODpSJZIAq163SxV/u4IcGMBZ+NQ6zMf2JC8JT0hbBIjidnwyGtDVwhm7Xbs+wX8mWHDes0iE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744068150; c=relaxed/simple;
-	bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VYFPVUYOJ6J8+/3pmRFxU9bg18DDCpvkAT+xRN+w6LYVzIsZoi4o6s6frHeRn+HOT5KM/y1utb/d7W3+4dpAkwSL7B9U4ng99r53e2nXoNY2XalruzdWriHk5h+5Kj3qHSkZQYe9K8FAMD4ZZhCTWAZHkctGWYHrBw+a32vPhOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnOYkPeg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744068164; c=relaxed/simple;
+	bh=80ZGVNCb1le4Kw9QAhQ1/FSPErr0GaBFWW7iDJ175EY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cvFHttySaXXPA4WDV1kuN1aIrj9FEcCUGboJ0W0ynENFyrBdT7Uj/LMD13zTueJEwgILGOkVE0/HHNEZ4CpSURRM+VeyU7hESTLlGWo63Xb8l2LJnWD8nBxa9GSU7f+9H1i88JHxoQs2EywFdNhCT2VFPZZf3uoYdQIhQ8KIzDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cmcVeA5+; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnOYkPeg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A88A7C4CEE8;
-	Mon,  7 Apr 2025 23:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744068149;
-	bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ZnOYkPeg+6MV5/3EgmQKlfeGvSukYVXEBNOuI++ZIqpO2sBtZUL95/+qQ2P5dSeKF
-	 oSPu4sN8mFyyNOZe8mZiTgX7pC/l4ug0jOOqzLqgiMVRbj4Pu1FPiObGrouvOJJowI
-	 6ep3fZqpJEYm+3fRpsNujSFWQTKiN/EmdMob5AdvmEr4UyiGQST4uYQxjZWo1A+9Lu
-	 Q9GgAS01ILv9vqFzxq3lvytNllwrTIv+QoI8Q9/4AU0NVnPQnz0r1sflx+97TIro2t
-	 RDTxxKfm9DvU4hPk1Gcop4mxa/qk+rcjsSiJxBi8k7bXhwCbcsDWO2tIqpJvY9y8dV
-	 IlXPtZwcNoWAw==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Mon, 07 Apr 2025 16:22:12 -0700
-Subject: [PATCH] kbuild: Add '-fno-builtin-wcslen'
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cmcVeA5+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744068162; x=1775604162;
+  h=date:message-id:from:to:cc:subject:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=80ZGVNCb1le4Kw9QAhQ1/FSPErr0GaBFWW7iDJ175EY=;
+  b=cmcVeA5+1BfIs3iUGwi9nG154ZzQ+/DgLAJdBk1uybtSi3+p2MfEce3i
+   93fvJ26bwPvtQ0ybIh4dVGqXHs8CtkL7JTELKIIyeq2RCbVEw4xCQjZOb
+   GACbvj3HD/B2FRd34hsfMtdSLtdUcMuXa4uzjT0WCyPkza/zjJrN0ypkC
+   LI80vu/86AlueBAzK+Xjk26kU1+EU0hpBcQTq4+hQkRSNXm12fy79XpZ2
+   PhzztEGYCvXnTFk+GZMFZ9kq90amG9qca6ffoyV8t/GaX5LapWF0f04rm
+   rAqtQER8v/NYKm+0u1zJpWCzSR6c7zL1oYuixTu8hUebmQ0JvnO0NSdfW
+   Q==;
+X-CSE-ConnectionGUID: 3jRSUfdlR+u6qAV58eHajw==
+X-CSE-MsgGUID: m8cuLDeiT2CzAOdXc7UUUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49328011"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="49328011"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:22:41 -0700
+X-CSE-ConnectionGUID: l/iskZYpQnmABjwIMSeaqg==
+X-CSE-MsgGUID: gTDvxkaDQd6Vw+v4Y0W+RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="151281706"
+Received: from orsosgc001.jf.intel.com (HELO orsosgc001.intel.com) ([10.165.21.142])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 16:22:41 -0700
+Date: Mon, 07 Apr 2025 16:22:40 -0700
+Message-ID: <85a58rsgjj.wl-ashutosh.dixit@intel.com>
+From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: imre.deak@intel.com,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang
+ <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Joel Selvaraj <jo@jsfamily.in>,
+	Douglas Anderson <dianders@chromium.org>,
+	<dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] panel/auo-a030jtn01: Use refcounted allocation in place of devm_kzalloc()
+In-Reply-To: <Z_P0A9lxWD0aAdjp@ideak-desk.fi.intel.com>
+References: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
+	<20250401-b4-drm-panel-mass-driver-convert-v1-4-cdd7615e1f93@redhat.com>
+	<Z_P0A9lxWD0aAdjp@ideak-desk.fi.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/29.4 (x86_64-redhat-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-fno-builtin-wcslen-v1-1-6775ce759b15@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACNe9GcC/x3MSQqAMAxA0auUrA3U0uJwFXFRNWpAorROIN7d4
- vIt/n8gUmCKUKsHAp0ceZWEPFPQz14mQh6SwWjjtNUFjrJid/Cys+DVx4UEK+1LV3oqBmchhVu
- gke9/2rTv+wFljN1dZAAAAA==
-X-Change-ID: 20250407-fno-builtin-wcslen-90a858ae7d54
-To: Linus Torvalds <torvalds@linux-foundation.org>, 
- Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, stable@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1685; i=nathan@kernel.org;
- h=from:subject:message-id; bh=Ls50zjk2LjsxfiQDbwMNPBoaTS7Qfm52P87Ua4vzBSg=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOlf4ozvNQY8YpTnm1DMN23RuQOm005tNI0+u/bw2k9xr
- YtvN3TYd5SyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJGNoz/FPrSH7FqHx6o7SF
- udY3j7inkQU18ZfUD6brpOi9+pcssZ+R4WBf1qTeeceyFiYyqy5cJMjY3/7x0bMl93MndZ8Lk1V
- 9wgUA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-7
+Content-Transfer-Encoding: quoted-printable
 
-A recent optimization change in LLVM [1] aims to transform certain loop
-idioms into calls to strlen() or wcslen(). This change transforms the
-first while loop in UniStrcat() into a call to wcslen(), breaking the
-build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
+On Mon, 07 Apr 2025 08:49:23 -0700, Imre Deak wrote:
+>
+> Hi,
+>
+> On Tue, Apr 01, 2025 at 12:03:47PM -0400, Anusha Srivatsa wrote:
+> > Move to using the new API devm_drm_panel_alloc() to allocate the
+> > panel.
+> >
+> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> > ---
+> >  drivers/gpu/drm/panel/panel-auo-a030jtn01.c | 10 ++++------
+> >  1 file changed, 4 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c b/drivers/gpu/=
+drm/panel/panel-auo-a030jtn01.c
+> > index 77604d6a4e72c915c40575be0e47810c90b4ed71..83529b1c2bac2e29f41efaf=
+4028950214b056a95 100644
+> > --- a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
+> > +++ b/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
+> > @@ -200,9 +200,10 @@ static int a030jtn01_probe(struct spi_device *spi)
+> >
+> >	spi->mode |=3D SPI_MODE_3 | SPI_3WIRE;
+> >
+> > -	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > -	if (!priv)
+> > -		return -ENOMEM;
+> > +	panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, panel,
+> > +				     &a030jtn01_funcs, DRM_MODE_CONNECTOR_DPI);
+>
+> This doesn't compile and (yet) it's pushed already to drm-tip. AFAIU
+> it's supposed to be
+>	priv =3D devm_drm_panel_alloc(...);
 
-  ld.lld: error: undefined symbol: wcslen
-  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
-  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
-  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
-  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+Yes:
 
-Disable this optimization with '-fno-builtin-wcslen', which prevents the
-compiler from assuming that wcslen() is available in the kernel's C
-library
+drivers/gpu/drm/panel/panel-auo-a030jtn01.c: In function =A1a030jtn01_probe=
+=A2:
+drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: error: =A1panel=A2 undec=
+lared (first use in this function)
+  203 |         panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, panel,
+      |         ^~~~~
+drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: note: each undeclared id=
+entifier is reported only once for each function it appears in
 
-Cc: stable@vger.kernel.org
-Link: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d [1]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+Please turn on the config options for particular module if you are making
+changes to that module.
 
-diff --git a/Makefile b/Makefile
-index 38689a0c3605..f42418556507 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1068,6 +1068,9 @@ ifdef CONFIG_CC_IS_GCC
- KBUILD_CFLAGS   += -fconserve-stack
- endif
- 
-+# Ensure compilers do not transform certain loops into calls to wcslen()
-+KBUILD_CFLAGS += -fno-builtin-wcslen
-+
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
- KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250407-fno-builtin-wcslen-90a858ae7d54
-
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
-
+>
+> > +	if (IS_ERR(panel))
+> > +		return PTR_ERR(panel);
+> >
+> >	priv->spi =3D spi;
+> >	spi_set_drvdata(spi, priv);
+> > @@ -223,9 +224,6 @@ static int a030jtn01_probe(struct spi_device *spi)
+> >	if (IS_ERR(priv->reset_gpio))
+> >		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio), "Failed to get re=
+set GPIO");
+> >
+> > -	drm_panel_init(&priv->panel, dev, &a030jtn01_funcs,
+> > -		       DRM_MODE_CONNECTOR_DPI);
+> > -
+> >	err =3D drm_panel_of_backlight(&priv->panel);
+> >	if (err)
+> >		return err;
+> >
+> > --
+> > 2.48.1
+> >
