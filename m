@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF89226CEF;
-	Mon,  7 Apr 2025 06:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A5B226183;
+	Mon,  7 Apr 2025 06:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008787; cv=none; b=FvKGU/+dVYuFHemSLYgheN4RFQVgderNv4CMtl1sa7vIwcodXm0wNzkW/xUcmJWAqC4XvspA7UZn0zzqAOyrpeM/ffnNMGJ09GUunkoZodqQ0/vokZpf3L+7w748ly08Id2PohKkOMnn1PPEul1eFVmRzI+Ee2wkwB60VVawAPg=
+	t=1744008786; cv=none; b=H8lFamxJJVStWRU4qzE0Kj+AzkV+CmKlHdHRxAkg+fNHRgQm/J76MGh7NiUnhsl9EQN1hf7zTgdeKcxlg6EzDrkh0lq7layKZxFF3QJUuMZ5i7xFyWH7bM3f3kAPGcztvYCjohD9eKyP50kVRZBbA2OF0Cgu7/2mFfVEuA+JJXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008787; c=relaxed/simple;
-	bh=BVT171KPOVJVjfzTPXmBhG+I/rvwg4GYgQn0y8XhdF0=;
+	s=arc-20240116; t=1744008786; c=relaxed/simple;
+	bh=+dslTYWYeJwxZbZ+0Wm4R7ANchBW/ILHYihcJOyZL/s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LqO53ILp4Vjv4q1Pm0g3cQOBuYVOgcMgG1JFKw58Htx1MwJ2/mOlU1CrsiM6pVho3QAu3qrv7+smXtkDNQ6dqEpvJTML7HHeQtawTJ7ZVLFbGhA41LOYa/HT/RhUAEAsp1A25XxC+JS8xoaad0H3/IxGT0ldyHqhAmZdqV2HIHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=119EFkKa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=brpD5Vq0; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Bi7vm5ydAP5Kw/qJTGLaZtNxy2//jVM7CmoZeoRWO4xBlx7aWc+POGeZ7aWUkO/5b2tV6LT+mf5p5vv3aAJbOTgYSuscpgrG9qW4iFVkLUfURgnz5k2DvxRpQYnidDqOfxdGCYImaRt6tlY5q8BRzlD+VXoh6T/XCPs+fMhrW4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V38+wXGL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=31mmJ2cW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="119EFkKa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="brpD5Vq0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V38+wXGL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="31mmJ2cW"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744008784;
+	s=2020; t=1744008783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PfHP6lDLf5mEBPgKe6QaxYDp7DWXdQcn3ptsh2iol5E=;
-	b=119EFkKaDIyTry59mhF6Nj6Q8i7IqCcSaEij1XCc1mx/ic9n0pXXKk6e7oNKqnLWaHGkJf
-	ldRmSURSE8UsakW5GFO/dt74mmrVATJcVUp6Xx4bEvNuiTrL24/OCoiaOynD11XmV2NlIJ
-	wMsAGRg5D9wFMkxWBrTGWHt1os6cYBFwrWBi07IZ4IMVMmM1W2yr9TdPk4qRaMyKQ/Ec6B
-	bTUTeY9DDqM6Uk3S5HHxbITusezgF/D5OnDwpKgffDp0tEZzp/nek0l6KpOs1V14t7HOol
-	71T+6/kvczJYNY+3vbIgYwZCCTqnpW0HmwnZt/udOO/zYCYfuFVCE1aF3CxmVw==
+	bh=TmiOiBbSMjseKwrhLLCFNenUe0eZoM7FizEqWVEk5UQ=;
+	b=V38+wXGLOtUhDQla3uWydkWVzU/I/vE0Sv+vxPQegruk6c7uKp7NRe3BWl+PTFMJfCu3T+
+	6cruUq7VApZ9h/L4pQQXTzgmZeo+Zp+UCqnfYbCHi3EZs76FIVgy0RYX89HrDpb7AQzQNv
+	95uNnqI4zt91mh1ltjsP0QzcBvbkoYTeXls46HyT79XdePDFrR6yYwPWS+EOQRnjE/hRAe
+	CPp916RfgPAheXshQ0ytH1n8GEukDeKDVfmhL5MZUDMbHG9nOfLZZpKO1wIwHxehKH2Zy/
+	UnVXSIf01O1NOswqfVAGd4kc70UKbSvyeeqbRnR3vRf+rBIovSYSXYlzGlpGcg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744008784;
+	s=2020e; t=1744008783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PfHP6lDLf5mEBPgKe6QaxYDp7DWXdQcn3ptsh2iol5E=;
-	b=brpD5Vq0BTZ60J3GCjNOOZ9F9JyPzhxGSaA5sCouL/MGLReltn+Hy0hP45hxlAXZzER1nR
-	OMgBH6tFovjADcBQ==
-Date: Mon, 07 Apr 2025 08:52:32 +0200
-Subject: [PATCH v2 09/32] selftests: harness: Always provide "self" and
- "variant"
+	bh=TmiOiBbSMjseKwrhLLCFNenUe0eZoM7FizEqWVEk5UQ=;
+	b=31mmJ2cWW9pklYy1+PczYNiK+fXn4qANvpSDmYczbse4/CNHgwZaTxNbo25/HvBC5Odk0X
+	KwJLfFRkPbnfqbCQ==
+Date: Mon, 07 Apr 2025 08:52:30 +0200
+Subject: [PATCH v2 07/32] selftests: harness: Implement test timeouts
+ through pidfd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250407-nolibc-kselftest-harness-v2-9-f8812f76e930@linutronix.de>
+Message-Id: <20250407-nolibc-kselftest-harness-v2-7-f8812f76e930@linutronix.de>
 References: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 In-Reply-To: <20250407-nolibc-kselftest-harness-v2-0-f8812f76e930@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -58,54 +58,143 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=1726;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744008776; l=4071;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=BVT171KPOVJVjfzTPXmBhG+I/rvwg4GYgQn0y8XhdF0=;
- b=EVaqUXTX8S9p1Cg05h5IAzL1hFWtZWPygOsiGMSM2xZxIZYd0RG4EAh48/iKnVjIo+l+BSYgT
- xW1vK0VlblZCEl37Zi1EzwYnJZkbex40hwjlCfLlnknujFbK/sA0/cQ
+ bh=+dslTYWYeJwxZbZ+0Wm4R7ANchBW/ILHYihcJOyZL/s=;
+ b=cu7SgK/T4ZELMNP3Tmj+zwV3v0cZxgO3eB92D9yGauWiobLp6z+dEfdCfAzNyvyo7rysI63LH
+ J+5wjIygrtEAu955RJN0C6shUs0RlpQpKIpG+eKQTmuqyaHdMy5DgZQ
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Some upcoming changes to the assertion macros need those two symbols
-also to be available for tests without fixtures.
-Provide them with a NULL value.
+Make the harness compatible with nolibc which does not implement signals
+by replacing the signal logic with pidfds.
+The code also becomes simpler.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/kselftest_harness.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 72 ++++++++++-------------------
+ 1 file changed, 25 insertions(+), 47 deletions(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 905986debbfb0ce8c9659dbd52b6c67c6759cae7..4038ceeb42a870a2b77c6888df8a7bb4c4a258ba 100644
+index 7ec4f66d0e3d7f129f6c2a45ff58310dabe5d03f..1e459619fe8657d7d213a7b16d7bcbc58e76e892 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -173,13 +173,13 @@
- #define TEST_SIGNAL(test_name, signal) __TEST_IMPL(test_name, signal)
+@@ -56,6 +56,8 @@
+ #include <asm/types.h>
+ #include <ctype.h>
+ #include <errno.h>
++#include <linux/unistd.h>
++#include <poll.h>
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+@@ -914,7 +916,6 @@ struct __test_metadata {
+ 	int exit_code;
+ 	int trigger; /* extra handler after the evaluation */
+ 	int timeout;	/* seconds to wait for test timeout */
+-	bool timed_out;	/* did this test timeout instead of exiting? */
+ 	bool aborted;	/* stopped test due to failed ASSERT */
+ 	bool setup_completed; /* did setup finish? */
+ 	jmp_buf env;	/* for exiting out of test early */
+@@ -964,75 +965,52 @@ static inline void __test_check_assert(struct __test_metadata *t)
+ 		abort();
+ }
  
- #define __TEST_IMPL(test_name, _signal) \
--	static void test_name(struct __test_metadata *_metadata); \
-+	static void test_name(struct __test_metadata *_metadata, void *self, const void *variant); \
- 	static void wrapper_##test_name( \
- 		struct __test_metadata *_metadata, \
- 		struct __fixture_variant_metadata __attribute__((unused)) *variant) \
- 	{ \
- 		if (setjmp(_metadata->env) == 0) \
--			test_name(_metadata); \
-+			test_name(_metadata, NULL, NULL); \
- 		__test_check_assert(_metadata); \
- 	} \
- 	static struct __test_metadata _##test_name##_object = \
-@@ -193,7 +193,9 @@
- 		__register_test(&_##test_name##_object); \
- 	} \
- 	static void test_name( \
--		struct __test_metadata __attribute__((unused)) *_metadata)
-+		struct __test_metadata __attribute__((unused)) *_metadata, \
-+		void __attribute__((unused)) *self, \
-+		const void __attribute__((unused)) *variant)
+-struct __test_metadata *__active_test;
+-static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
+-{
+-	struct __test_metadata *t = __active_test;
+-
+-	/* Sanity check handler execution environment. */
+-	if (!t) {
+-		fprintf(TH_LOG_STREAM,
+-			"# no active test in SIGALRM handler!?\n");
+-		abort();
+-	}
+-	if (sig != SIGALRM || sig != info->si_signo) {
+-		fprintf(TH_LOG_STREAM,
+-			"# %s: SIGALRM handler caught signal %d!?\n",
+-			t->name, sig != SIGALRM ? sig : info->si_signo);
+-		abort();
+-	}
+-
+-	t->timed_out = true;
+-	/* signal process group */
+-	kill(-(t->pid), SIGKILL);
+-}
+-
+ static void __wait_for_test(struct __test_metadata *t)
+ {
+-	struct sigaction action = {
+-		.sa_sigaction = __timeout_handler,
+-		.sa_flags = SA_SIGINFO,
+-	};
+-	struct sigaction saved_action;
+ 	/*
+ 	 * Sets status so that WIFEXITED(status) returns true and
+ 	 * WEXITSTATUS(status) returns KSFT_FAIL.  This safe default value
+ 	 * should never be evaluated because of the waitpid(2) check and
+-	 * SIGALRM handling.
++	 * timeout handling.
+ 	 */
+ 	int status = KSFT_FAIL << 8;
+-	int child;
++	struct pollfd poll_child;
++	int ret, child, childfd;
++	bool timed_out = false;
  
- /**
-  * FIXTURE_DATA() - Wraps the struct name so we have one less
+-	if (sigaction(SIGALRM, &action, &saved_action)) {
++	childfd = syscall(__NR_pidfd_open, t->pid, 0);
++	if (childfd == -1) {
+ 		t->exit_code = KSFT_FAIL;
+ 		fprintf(TH_LOG_STREAM,
+-			"# %s: unable to install SIGALRM handler\n",
++			"# %s: unable to open pidfd\n",
+ 			t->name);
+ 		return;
+ 	}
+-	__active_test = t;
+-	t->timed_out = false;
+-	alarm(t->timeout);
+-	child = waitpid(t->pid, &status, 0);
+-	if (child == -1 && errno != EINTR) {
++
++	poll_child.fd = childfd;
++	poll_child.events = POLLIN;
++	ret = poll(&poll_child, 1, t->timeout * 1000);
++	if (ret == -1) {
+ 		t->exit_code = KSFT_FAIL;
+ 		fprintf(TH_LOG_STREAM,
+-			"# %s: Failed to wait for PID %d (errno: %d)\n",
+-			t->name, t->pid, errno);
++			"# %s: unable to wait on child pidfd\n",
++			t->name);
+ 		return;
++	} else if (ret == 0) {
++		timed_out = true;
++		/* signal process group */
++		kill(-(t->pid), SIGKILL);
+ 	}
+-
+-	alarm(0);
+-	if (sigaction(SIGALRM, &saved_action, NULL)) {
++	child = waitpid(t->pid, &status, WNOHANG);
++	if (child == -1 && errno != EINTR) {
+ 		t->exit_code = KSFT_FAIL;
+ 		fprintf(TH_LOG_STREAM,
+-			"# %s: unable to uninstall SIGALRM handler\n",
+-			t->name);
++			"# %s: Failed to wait for PID %d (errno: %d)\n",
++			t->name, t->pid, errno);
+ 		return;
+ 	}
+-	__active_test = NULL;
+ 
+-	if (t->timed_out) {
++	if (timed_out) {
+ 		t->exit_code = KSFT_FAIL;
+ 		fprintf(TH_LOG_STREAM,
+ 			"# %s: Test terminated by timeout\n", t->name);
 
 -- 
 2.49.0
