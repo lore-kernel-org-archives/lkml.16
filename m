@@ -1,123 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CA224888D;
-	Mon,  7 Apr 2025 12:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21124110D
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 12:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744030162; cv=none; b=rBIcdq3FZyRiY2cntIolExl5MmQjiEczOu9aOhwMcFBv43jLl6hR0TP9hdBRzLyPS6UKnODueLeCmJ5VxQaE5Tc5mHEyWgu05rHWuFrUg+9NB5L7Tyl2XauPATAIo3GyJPT5/79dYzeUN7Sh9qNYOrjniSc8ooYeCz54VVz0GzM=
+	t=1744030182; cv=none; b=GJErnipD25CyS3kxIHplQXfiRKqgUzoX3yRVhwL7ngiXpHb0DRWknnkV0RarvskCz9G8MTj1idd8KgpZL8Z3kiVvoFy9Xze97nebw71VpmM8s/NjPd7stHej+LQ7y6Q4PgZk/aQUuRScPoczDY0tjEhEAz/ZoA9DKKozZ6CMV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744030162; c=relaxed/simple;
-	bh=+B7zKeUdb4vhO3I+2ufYAN6NeJofvMlAuG64Ted7aW4=;
+	s=arc-20240116; t=1744030182; c=relaxed/simple;
+	bh=5Rjt0OmOgyBh0Hk9qKotl7Tw8k0MIV3Ui8TfkTavLRc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=baNs5PO/pZgXFLU8VFb1Ef4qPRX47S2VwwzpKCKncyuPKHZKLaSpbGvfzfvuUifz72ox0/WrNK9ZFJ8w5Di7BKiPSYFqZ0dSNa1sK9Yn7GkxXDfMXRl58H0UapMki+hAjJ0AjbkjcGYiaDAut1/bhs0UFtTCT2S6TYjhnbKiYPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qK15qn+4; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=rxJHf5qbqBmmBlxSffP72ELO2tW5FCczrk79yydI/iNcctU5nXVfAZwOHUwbeAwRC9HpDow8k5M1nEbL/BN62XwNaPmHy9Z5v2k7mexjbpqYZ4xy4vX9wKTIJnATEhiLtrAm6Ph847JEDfoYQDVeRAV+BN6U0aAaD5Mjan0nloU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oU5PXqDW; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qK15qn+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 915FBC4CEF3;
-	Mon,  7 Apr 2025 12:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744030162;
-	bh=+B7zKeUdb4vhO3I+2ufYAN6NeJofvMlAuG64Ted7aW4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qK15qn+4XDBux6uFbNeNhwEi2hTl9qrQlhxa+iPQu3pfCNYk0TGSpt6kV7em1bTJM
-	 vUljZeXsRzR7Jj8NuzkMZTYi/9u3Yh2lORMvrA2WvRMeyyoBzIohPTgjigRudqmNPN
-	 WCmBlDx+nk5sKJyfK9ktF0xU8btt+NV60wmriw/nmO6i89bCszDcDKQbX7pX1j6TC0
-	 Xd/3FGyHAth4HgZCQUn37Zqh6wg+Ro8M103g9aum/kNYd1KAOExeFkxcGRv+EeHVZ3
-	 0RBql7KPbo+Oc3mCIikCkfjSG2W2lDAgrpUCmM33RaND4LwR3y6IonYd3dKod/jNWr
-	 FKe526FHkDDIA==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaecf50578eso694862266b.2;
-        Mon, 07 Apr 2025 05:49:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/qKQw6RNCFaZk9vtB6ZqHQx72sFrPat3RMBElSgAdR3sAaXHajezRSTOm5C+HdCxzff7Oj50cSstlf6KgN85LB5M=@vger.kernel.org, AJvYcCUbGZGLeVhhuYQayEE+YYxV+/A6T93w+BFmVwJzKKDEKJgJTVlG3ThwMuXiMHrw4ILltyl1PLj9plwxw09V8w==@vger.kernel.org, AJvYcCVZlj3c41QNNOPXQGcbSTHDjcISgpBK1ad9JASV1e8kLshMv2G4f14ZeXzTO2PSBY0KTQ+jZr/Bnig=@vger.kernel.org, AJvYcCVkoXNZI4C9Nu1HRKFmI3VSSDgjOXHznQuysWuSneY4Fo/pUIuzJQMsPcLHIawW3k1N7qsBTq2T/gCoSw==@vger.kernel.org, AJvYcCX1oML6q5iGI8a88sRAP+7kSx3UftJHpou6Qio9Dga6KXkBto9ETjRPuIIAhviOMgp6bqn/fp9ZRRFUdaHW@vger.kernel.org, AJvYcCXBu35nCMFofo17fU+eE9IiDFldYrnFPEcvlpxgfrZ77QtBb2byHawe6C1S+NeNCqT2KFgUE+8AvlHJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+0ZCi7Su+ce0Yz1INh3SW9BV3pFz5Eru4yFvJG7jYAg3EhnDy
-	0JqxEEbD+UzXPyOyuJ2YLo+FehX/duJM/BbyVOok2YEotxWvlBHLcM/ecEbpiznSnVPlWD13IZp
-	6d+kpKccae6bsnhhr1Dn4MX8JIw==
-X-Google-Smtp-Source: AGHT+IHDXKnPQLm3ONu11Ll77borMYreC4A7vgRQSv5YVZin37244aX9wUO7LUzP2WcSyOBSKvvGgd7SCFS9hjbiqWA=
-X-Received: by 2002:a17:907:7f0f:b0:ac7:3323:cfdc with SMTP id
- a640c23a62f3a-ac7e7120321mr823783266b.10.1744030161025; Mon, 07 Apr 2025
- 05:49:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oU5PXqDW"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a59so45777691fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 05:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744030178; x=1744634978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cG8Bhzh73CareWikA5dmwBfOw2vAqPOPb9zdHSUnIjw=;
+        b=oU5PXqDWcEMJ9U9C5nhuIuBWipWV4ck9VrbPmBiIjTQdYYDiVRtB2RevUJc8uPSrss
+         sWc50/eQ7tb/u36jy8/rc/vbcJG+gVIHOSmzyL4XMeB14QVL+NpuYx9t6S3N1zssjGs2
+         QKlV0nsYLiOKfI1/32vbyADpcHp/mNQv2ncQI9JdFDuhzlUal/UlXV6Ch+9LbjEx9/fe
+         MAv750DMedC0jN08BbCYnW9YkvV/0hdmfPmCDWiLv1GODldPFa3vvqpkisxtv+gds/cM
+         wpFJuRP3iPMzPr2vRQDksXtu5CfiVpWrgMjw2e+9a6Ze0KfcPvFR9+9XJ+M5EVjZRwxP
+         +pOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744030178; x=1744634978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cG8Bhzh73CareWikA5dmwBfOw2vAqPOPb9zdHSUnIjw=;
+        b=Lvsk+M/PGShXnhwbFYShjQoAwFSimvkT6aFOIG6pNz0iMtd1fJbLbzEk0TPv37FHf0
+         UeKDL//TGRAE3AZ/7ZNZTBzNH8JIu2Xpiu3JFXNkkIhVarx8kf6N27QGH5R98JyBXqnJ
+         rAp49pQuFfCbiZSRRfae+X7R7ReEY+Sb42G5ofTFsMWv/t6wzxCxq4UEjD/EAGrnb5De
+         Nm+n2J61nGeYvnzjpW88qSKcptC61dsxvUAOxcsyuVP+Gf7UPoahv7BiLOZFHtz1yjQS
+         BW2c+cm3JRA+29ve8OTqbzxv59BRpyiSeppIbikzDTib0kLWCdcUU5eUXnewGQX1I5DN
+         O02w==
+X-Forwarded-Encrypted: i=1; AJvYcCXDEFdicJFdC/DM3ZIeGZmITn50bEnItlDbOAUb2GDutfkZB8CYslYNiOwHMQA215mTwVvpytlm5Wdp/Cg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdpnXEpoAGI2gahGMznnQ1RJw4WoH6ZvJLOWWB9vh/knqtmSfg
+	E8KNAW2LdYoSHlh1l6KYLqYXeCjaaUMcq7JIvESpg7VSnVbNdi9a3jcQUaoS0xPbEoPCE7TDSYd
+	3XM5SWNpgBlL2IeQD/KgVi7Rv0hKOUXFcE5ghqA==
+X-Gm-Gg: ASbGncsSxQFApmR4PQWSVm9EZ1EsjzklYJaAd+/dvVcUA6OUcRDcxVMEt2Er/0tBYkG
+	qPnvhMmyIYU5O15n8RT+k75w1MUaBJoghEhkMRMD27i8wAKT/lKVGO3dQJ/fmKUmg8XSJEpATeS
+	NWHqO0t6XAbnqjx1Aj17YFS0hhqECLMCkRC/Ax7q+23Nx+CYER2cgwQmAFgg==
+X-Google-Smtp-Source: AGHT+IFyk5MBLzW+HJxDNWm25Qd2OJklXuf9B/7SyoM0ktCHQBbFPpai+73EoGhyTZSFIUdntbI2hMp+pXO45Mpy6DE=
+X-Received: by 2002:a05:651c:989:b0:30b:a185:47d8 with SMTP id
+ 38308e7fff4ca-30f0be05e8fmr31888031fa.4.1744030178422; Mon, 07 Apr 2025
+ 05:49:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
- <20250407-aloof-fox-of-relaxation-62963a@sudeepholla>
-In-Reply-To: <20250407-aloof-fox-of-relaxation-62963a@sudeepholla>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 7 Apr 2025 07:49:09 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+6GG3j3_S94SYLwdGN7x8fjf5WuGL4uHfmgW-fFb=dKQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG97FKlHBXmze0JeAjms2C3uLqc9HHI86LZOz8ldRdp0AMtBpiWM_qROsw
-Message-ID: <CAL_Jsq+6GG3j3_S94SYLwdGN7x8fjf5WuGL4uHfmgW-fFb=dKQ@mail.gmail.com>
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
-	zhouyanjie@wanyeetech.com, Conor Dooley <conor@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
-	UNGLinuxDriver@microchip.com, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
+ <Z-5BHzTEed607Afz@smile.fi.intel.com> <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
+ <Z-5uJxij4jmhint3@smile.fi.intel.com> <CAMRc=MdPiz_YD451Arrm4mT-SwU_OdK1U-WozPxsvt11mHsLZQ@mail.gmail.com>
+ <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com>
+In-Reply-To: <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 7 Apr 2025 14:49:27 +0200
+X-Gm-Features: ATxdqUHDB8wRBWK_IOb2X8iX7ngS4W9_fJCR7LfAjHD5CevMDBBHFxmwamyJr2g
+Message-ID: <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 7, 2025 at 7:30=E2=80=AFAM Sudeep Holla <sudeep.holla@arm.com> =
-wrote:
+On Thu, Apr 3, 2025 at 3:22=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Fri, Apr 04, 2025 at 12:36:33PM +0200, Ulf Hansson wrote:
-> > On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrote:
+> On Thu, Apr 03, 2025 at 02:23:24PM +0200, Bartosz Golaszewski wrote:
+> > On Thu, Apr 3, 2025 at 1:17=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > > But this encourages people to get sloppy and just ignore
+> > > > > > error pointers returned from gpiod_get()?
+> > > > >
+> > > > > From where did you come to this conclusion, please? We have many =
+subsystems
+> > > > > that ignore invalid resource on the release stage, starting from =
+platform
+> > > > > device driver core.
+> > > >
+> > > > The fact that many people do something does not mean it's correct.
 > > >
-> > > The "power-domains" and "power-domains-names" properties are missing =
-any
-> > > constraints. Add the constraints and drop the generic descriptions.
-> > >
-> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Docume=
-ntation/devicetree/bindings/arm/cpus.yaml
-> > > index 6f74ebfd38df..5bd5822db8af 100644
-> > > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > @@ -313,19 +313,15 @@ properties:
-> > >      maxItems: 1
-> > >
-> > >    power-domains:
-> > > -    description:
-> > > -      List of phandles and PM domain specifiers, as defined by bindi=
-ngs of the
-> > > -      PM domain provider (see also ../power_domain.txt).
-> > > +    maxItems: 1
+> > > And it doesn't tell it is incorrect either. We are going to conclude =
+that there
+> > > are pros and cons on each of the approaches, but I don't see much a p=
+oint in
+> > > yours, sorry.
 > >
-> > There are more than one in some cases. The most is probably three, I th=
-ink.
-> >
+> > My point is:
 >
-> +1, there are users using "perf" and "psci" together now.
+> I understand your point, but I disagree with the omni appliance of 3.
+>
+> > You get a descriptor with gpiod_get_optional(). You can get three
+> > types of a pointer back:
+> >
+> > 1. Valid descriptor: you can use it in all GPIO consumer functions.
+> > 2. NULL-pointer: you can still use it in all GPIO consumer functions.
+> > They will act as if they succeeded. This is expected as this is how
+> > the "optional" functionality is implemented. Had it been written in
+> > rust, we'd do it better but we use the tools we have. It's very much a
+> > "valid" value to pass to gpiod routines.
+> > 3. IS_ERR() value. If you try to pass it to any of the GPIO consumer
+> > functions, they will return it back to you and print a warning. Why?
+> > Because it's an invalid object. And there's no reason to make
+> > gpiod_put() an exemption.
+>
+> No, the release is special as it's used in error paths and there often
+> it is simpler for all just to ignore invalid pointers rather then put
+> a burden on the driver developers. The gpiod_set_*() and gpiod_get_*() ov=
+er
+> _assumed requested_ descriptor of course should fail any attempt to be su=
+pplied
+> with an invalid pointer.
+>
+> > You never could have used an IS_ERR()
+> > correctly. Look at what devres does - if it got an IS_ERR(), it never
+> > schedules a release action.
+>
+> This is again unrelated. devres is an upper layer and we don't care about=
+ its
+> implementation which is logically correct since we assume to put on the l=
+ist
+> only _valid_ resources.
+>
+>
+> > > > Many other subsystem scream loudly when that happens, so I would be=
+ ok
+> > > > with adding a big WARN_ON(IS_ERR(desc)).
+> > >
+> > > I disagree. This is not that case where passing an error pointer shou=
+ld be
+> > > an issue.
+> > >
+> > > > > > Also: all other calls error out on IS_ERR(desc) so why would we=
+ make it an
+> > > > > > exception?
+> > > > >
+> > > > > Because it's _release_ stage that participates in the cleaning up=
+ of
+> > > > > the allocated resources in error paths. It's a common approach in
+> > > > > the kernel. I would rather ask what makes GPIOLIB so special abou=
+t it?
+> > > >
+> > > > Just because it's the release stage, does not mean you shouldn't ca=
+re
+> > > > about the correctness of the consumer code. Passing an IS_ERR(descr=
+)
+> > > > to any of the GPIO APIs can happen if the user ignores an error
+> > > > returned by gpiod_get(). That's not alright.
+> > >
+> > > Have you ever seen such a code in the cases when it's okay (like in p=
+latform
+> > > device driver users)? I do not. So, the above is based on the hypothe=
+tical
+> > > assumption that somebody will make silly things. If you _really_ care=
+ about
+> > > checking the error, add __must_check to the respective functions.
+> >
+> > They already have but people do the following (like in the affected SPI=
+ driver):
+> >
+> > struct driver_data *data =3D kzalloc();
+> >
+> > Then elsewhere:
+> >
+> > data->gpiod =3D gpiod_get();
+> > if (IS_ERR(data->gpiod))
+> >     return PTR_ERR(data->gpiod);
+> >
+> > The data struct now contains the IS_ERR() value. I don't think it
+> > makes any sense for it to carry it around and I don't want to enable
+> > it.
+>
+> It's up to the driver developer.
+>
+> Again, if you want the result of gpiod_get() to be tested, mark it so.
+> That's why I think your initial point is mistargetting.
+>
 
-Where? That's just wrong.
+It's already annotated, I said it before.
 
-Rob
+> Ask yourself, why we don't fail kfree() on a NULL object? (from kfree() p=
+.o.v.
+> it's an invalid one) Or if you want to be more precise in analogue with t=
+he
+> gpiod_get_optional(), consider
+>
+>         p =3D kmalloc(0);
+>         kfree(p);
+>
+> and this is valid code despite p being not NULL!
+
+We're discussing an interface returning an object, not a simple buffer
+so it's a bad example. Try feeding an IS_ERR() to regmap_exit() or
+numerous other deinit functions and tell me if that works.
+
+I explained why I believe this change is wrong and I will allow myself
+to not accept it unless Linus is very positively in favor.
+
+Bartosz
