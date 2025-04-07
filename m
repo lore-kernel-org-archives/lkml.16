@@ -1,98 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8241A8F60;
-	Mon,  7 Apr 2025 02:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7149212FA8
+	for <linux-kernel@vger.kernel.org>; Mon,  7 Apr 2025 02:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743992002; cv=none; b=E6wOvKGtqSzGjWzq/v7OMh9H/OMsVvVsTYp5EiJQLRIEFyuBcVpO9UhssaSSDe3B11CXYK1/OBMCXDHQ9PDAmBdf+BKTKcjn6x+iGo2uqa9Xjkw2zsteXYM6mnonRYnsuGU2L4vuzN6R0NpVf5nGNueIG7RepQoThTTSN8fwSCQ=
+	t=1743992108; cv=none; b=B6yW+Tu8pQB1/QWgABuK4x8DSDmxxAXsyWOyLpQdkgItM5ToFU46N7y8+ep5Vt2j3CGRwKHWOo5OpYPF7EET+U3Si1uW77PLqzCmHPlHfK7/26rWzn6efdyQQLskMoAY1M5XDU0VKUwxF0z+ILHlh9/w/RrUdHnItj/xzatI/Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743992002; c=relaxed/simple;
-	bh=o4z3lShe5fWdIHOHh/S+LH5XWcmb3GCdzef4vuTNzr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sIBmN08Z8IcQ1FXVBv9ULFcajzXXTaBHSFbn91hqbZtiwksJOSxRxwNkMf3B3sXQAa64DEUib+3SMp23GRqb6HFKe80Zqo2puiPosp3xlXQ0pdcVCx+tziItYQuT3Vz2+3vivLOtDD2JyknTwkjmyNFRJfJkFWNhWBcQ654D/Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwX7Cit3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743992108; c=relaxed/simple;
+	bh=5iGnaKTdh8qdUpTGBnIaXxXw7Npl7YWIGBbllmqoExE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d4pPRVxD0xEuNCLe7ST20veYKynA/j63EFtXvT2IQkz2QJg/daNtSL5+IYy11GaolEmNyOBlhHeAGp84dWFFZ4Vxu79imjV1c1dxx6aPHJB/hVBAaQOLIn7XOYcDrTxIffejdL9DFbyJ+P2HySOlKlMe3nZX5tEgzR5QqCmpUHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JwLcE8MQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwX7Cit3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49FA3C4CEE7;
-	Mon,  7 Apr 2025 02:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743992001;
-	bh=o4z3lShe5fWdIHOHh/S+LH5XWcmb3GCdzef4vuTNzr0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cwX7Cit32NcnoA4V0nWHvtDo6VEeOxOMtuNZdyDm76v6LLAm4m6m2wlED28x19Br+
-	 7txtKy6jywWU/sn/V9b8ZYXwq5vFHQ6WlVph5+VxqAFGzUIUMYwK+eZwHLhrpg+QIj
-	 lLbssbxGLatk252iUDug1V4N1xvf7CcLWUecnuefwOOtT+yinw8D7tXQq7cei4lOdP
-	 7LwnqdUO/4KT1WTI3tsCffK5XKzL2ChOv7EnnIv8Y5PJxYzG02HrzbDbUPGPan6Gim
-	 EipdknXnZ2O1vs3n8Q81yDJ2kKVUzLXu7hKrQLNiRVhTeEt8EtHbNiji5mxSXJUefO
-	 p+GNL4M6VbcbQ==
-Date: Mon, 7 Apr 2025 10:11:54 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: mchehab@kernel.org, yujiaoliang@vivo.com, hverkuil@xs4all.nl,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH] media: dvb: Add error checking for bcm3510_writeB()
-Message-ID: <20250407101154.191f87cd@sal.lan>
-In-Reply-To: <20250401041141.2016-1-vulab@iscas.ac.cn>
-References: <20250401041141.2016-1-vulab@iscas.ac.cn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwLcE8MQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743992105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5iGnaKTdh8qdUpTGBnIaXxXw7Npl7YWIGBbllmqoExE=;
+	b=JwLcE8MQsdv0WhuBZVzPSpW1luxfBlpUyqiMMZqIF/qQa3w40ziGZD4fTZTJJWYhccsJHo
+	evyO5Nj7nE+TnglDmmiSf+QVfAtmKSm0HYxX9X+5B9twsenEj4xrrWKAb1xrk2bGSXRlqC
+	Mk+GsYZI7xiKaie51GsWjMk3Y672tVo=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-78-xfqn310TOPGEo3YTMRUrAg-1; Sun, 06 Apr 2025 22:15:04 -0400
+X-MC-Unique: xfqn310TOPGEo3YTMRUrAg-1
+X-Mimecast-MFC-AGG-ID: xfqn310TOPGEo3YTMRUrAg_1743992103
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-736c89461d1so5992248b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 19:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743992102; x=1744596902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5iGnaKTdh8qdUpTGBnIaXxXw7Npl7YWIGBbllmqoExE=;
+        b=Pj2x3r2tg20AfLRkpbdnUK6dnA8vi2jLydqSFK/BT96OOomdJL9NTHBe3NvjWU7tRU
+         3bh9+PhuGHtxjtyuffgPFwF65W89eoq0piFTveqUcum/Ai6TEmVVtIAELECWX/gg/hd+
+         VH5rxDrisyckRCL/AXaGkBe6EjDxKLptX/NaBr5tP8Ka3jHtq7hUZUp9DshHnhNES55z
+         8ZXxGcC4ftNbwjNYuwj2tYlOdCtzZwjj+dOaRZH+4Qm+griiX+S2McSFbIIoQxCbpu8D
+         NU3CechxBrEgojOcjrp0wX7NKDvUITcTDmHgsxV/AvLepuDRhe3yr6sh4Q5t16X7i9RE
+         iihA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLn1d4YCXEgb8wu7qaJRGNb+1c8bArkuDwP7vHEc5FlxTb3fkfKReWtu2ddzJ0rFVvX5SOlea04ixtJ7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJlizhgmdEPQ1vVdEhVLESaYJEU92AmUzgEE4tI0VRnsdWMfQP
+	UcenpR5bSN4q81Uzq/K0FkLMllwaaTAY2EKjEP2IbRrX+oA7aic6Rjc7/+6pGoefztrIghTkS+V
+	UKXWIZar/bhPWf+h7du56WWPtSqlIcd+/S7RItQb3gYs0SYJUgto9ljXt1w/28agBcMeal1JNd2
+	2lWnaB5Vu6nHliyzDcEXrw3/9LnK146nBRMhvByqI3uDKEhugxMtTk
+X-Gm-Gg: ASbGnct7dq5Dnj/bI8TO122zOQbuXKyHrazBEDdZF3KX3YvYki3ZcsCVJGiGTUleAqh
+	BY179mcdBvbjqHo1k0bb+9Gh5E7sKs/ryfZ6ldadwsgqWWMK5JT7Vz7ELQkYOyGcc/XhqKw==
+X-Received: by 2002:a05:6a21:6f01:b0:1f5:8655:3287 with SMTP id adf61e73a8af0-201081894f9mr15997600637.40.1743992102453;
+        Sun, 06 Apr 2025 19:15:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG2xrRUCjmDh8gU4TsrPWubO4RaHlHA1/mZMFsc3k0pvCi4jb3ExJetOAjK+ODkU/PKVNydcIKM1LkzsCQTKWs=
+X-Received: by 2002:a05:6a21:6f01:b0:1f5:8655:3287 with SMTP id
+ adf61e73a8af0-201081894f9mr15997577637.40.1743992102154; Sun, 06 Apr 2025
+ 19:15:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250404145241.1125078-1-jon@nutanix.com>
+In-Reply-To: <20250404145241.1125078-1-jon@nutanix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 7 Apr 2025 10:14:51 +0800
+X-Gm-Features: ATxdqUHS0zfr8JGoyzsGJ5km2ABwTqNENhD1uX4yKsHGytOkPk4bkII2gJMMLUM
+Message-ID: <CACGkMEsFc-URhXBCGZ1=CTMZKcWPf57pYy1TcyKLL=N65u+F0Q@mail.gmail.com>
+Subject: Re: [PATCH] vhost/net: remove zerocopy support
+To: Jon Kohler <jon@nutanix.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Tue,  1 Apr 2025 12:11:41 +0800
-Wentao Liang <vulab@iscas.ac.cn> escreveu:
+On Fri, Apr 4, 2025 at 10:24=E2=80=AFPM Jon Kohler <jon@nutanix.com> wrote:
+>
+> Commit 098eadce3c62 ("vhost_net: disable zerocopy by default") disabled
+> the module parameter for the handle_tx_zerocopy path back in 2019,
+> nothing that many downstream distributions (e.g., RHEL7 and later) had
+> already done the same.
+>
+> Both upstream and downstream disablement suggest this path is rarely
+> used.
+>
+> Testing the module parameter shows that while the path allows packet
+> forwarding, the zerocopy functionality itself is broken. On outbound
+> traffic (guest TX -> external), zerocopy SKBs are orphaned by either
+> skb_orphan_frags_rx() (used with the tun driver via tun_net_xmit())
 
-> In  bcm3510_bert_reset(), the function performed multiple writes
-> without checking the return value of bcm3510_writeB(). This could
-> result in silent failures if the writes failed, leaving the BER
-> counter in an undefined state.
+This is by design to avoid DOS.
 
-Did you actually had an issue here with a real hardware? If do, please
-describe what happened.
+> or
+> skb_orphan_frags() elsewhere in the stack,
 
-> 
-> Add error checking for each bcm3510_writeB call and propagate any
-> errors immediately. This ensures proper error handling and prevents
-> silent failures during BER counter initialization.
-> 
-> Fixes: 55f51efdb696 ("[PATCH] dvb: flexcop: add BCM3510 ATSC frontend support for Air2PC card")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/media/dvb-frontends/bcm3510.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
-> index d935fb10e620..fc5853fc9595 100644
-> --- a/drivers/media/dvb-frontends/bcm3510.c
-> +++ b/drivers/media/dvb-frontends/bcm3510.c
-> @@ -270,10 +270,18 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
->  	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
->  		return ret;
->  
-> -	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
-> -	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
-> -	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
-> -	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
-> +	b.BERCTL_fa.RESYNC = 0;
-> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
-> +		return ret;
-> +	b.BERCTL_fa.RESYNC = 1;
-> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
-> +		return ret;
-> +	b.BERCTL_fa.RESYNC = 0;
-> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
-> +		return ret;
-> +	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
-> +	if ((ret = bcm3510_writeB(st,0xfa,b)) < 0)
-> +		return ret;
->  
->  	/* clear residual bit counter TODO  */
->  	return 0;
+Basically zerocopy is expected to work for guest -> remote case, so
+could we still hit skb_orphan_frags() in this case?
+
+> as vhost_net does not set
+> SKBFL_DONT_ORPHAN.
+>
+> Orphaning enforces a memcpy and triggers the completion callback, which
+> increments the failed TX counter, effectively disabling zerocopy again.
+>
+> Even after addressing these issues to prevent SKB orphaning and error
+> counter increments, performance remains poor. By default, only 64
+> messages can be zerocopied, which is immediately exhausted by workloads
+> like iperf, resulting in most messages being memcpy'd anyhow.
+>
+> Additionally, memcpy'd messages do not benefit from the XDP batching
+> optimizations present in the handle_tx_copy path.
+>
+> Given these limitations and the lack of any tangible benefits, remove
+> zerocopy entirely to simplify the code base.
+>
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
+
+Any chance we can fix those issues? Actually, we had a plan to make
+use of vhost-net and its tx zerocopy (or even implement the rx
+zerocopy) in pasta.
+
+Eugenio may explain more here.
+
+Thanks
+
