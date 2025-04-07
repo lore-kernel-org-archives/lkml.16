@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E219923815A;
-	Mon,  7 Apr 2025 10:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEAF23815A;
+	Mon,  7 Apr 2025 10:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744023021; cv=none; b=ukkd1QRuUIbPRQeEpgMVsPrvqqffILwa+5qg/USwQTt2RrB1ft02qtVFm5oLzxQiFFFX3xpuAZOcxn+9y+FkUeEsBoVLYmcjs3X902SWL7Z6GnfX8AqFZ8KFk6euD9pZSI7q2K8mpqYv3Md1ZaYH0EFsW3VKHz8NNgsQXdTV2BQ=
+	t=1744023029; cv=none; b=feFD3arRrz9QJDzs6Dq4e+XqC2KeSZu8gB7lnz1QYnmhS+XzgK4EbR71nLDsyTvMCdbMQ3r3T91xXzdzUOXYJPl5Su/fiVKGc2Hdl50dlWrQRzn7J8eqhSAdZo3EHao6eWpUOqQ4h9BY2/127wdMpyUecjbzIB0ccuXtfC1ZjJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744023021; c=relaxed/simple;
-	bh=ox9GRWY6nvbeZArMaOwT3nxrycWzZcSJyn51bD8Zrh4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qvdcu7TFNcHegFaNIoWDVFxv92SIIGwZnj5L0X2Xow3+NJ5y9DLzVkccCU8A8oOLBl4rOeO/emTROJPtALxFodDDEHXQiePGVRfPyWCfdyTwznWfrV06p6t56T3OGd2BDTvcBSnLc8Fouq7+s5E5s61z+aXTCyi0XV1mzOwPUWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIFd1DHF; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1744023029; c=relaxed/simple;
+	bh=Gszh3eqxlJO6JcJ+S8IHd+SMm1KIYAxiLl0NsfPIPec=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iLSTppG9FAHShxrKsHHlwON7KDxD/Pg15p1bWLaB7tttTESDfT/gd2FKhio/gIgYuHI119GwpaJ5vRDWKuRhpGKc5PS1sweblniOvHMJCLalSVDrJF7MGRqHcXaZJZvyYNGb+ydbCQGiU5RYwOfl3hKULiKvKxuWB/kgWKhF044=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dxp0mSjS; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIFd1DHF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dxp0mSjS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744023020; x=1775559020;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=ox9GRWY6nvbeZArMaOwT3nxrycWzZcSJyn51bD8Zrh4=;
-  b=HIFd1DHF0LBBsGHBm1sQzGlewoHk1bqN+loJsrcj1LyXpB41qo4eaWFw
-   xhYAT4kgz5toVkmZBdYTkKMfTuukcE5L4WyCqy93K2L1YtsV7R3vF4Sef
-   gdbkKvCrN1Z3cNJT+YU+Jd0IVKWGqK/cJSFI7ZQY6+dhrXejCmftf2Y1W
-   1oh6b5G5GWK7Xu1xDQgbgtyZU1GYoYyNWpCkV41/ZpN/AhLeyvciMjsj9
-   aT5wK76cHgv7FY90ZwHtQT6dOf0FBxCvOIaVjdQu7fqCYmQ74i4t7KLjO
-   MMJLdefEgz/+JxcTifIPGa778/oxtsDQm9niWDacO8Qcaq8RfP9acTBcB
+  t=1744023028; x=1775559028;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=Gszh3eqxlJO6JcJ+S8IHd+SMm1KIYAxiLl0NsfPIPec=;
+  b=Dxp0mSjSP94Ijzhf0NcpH0hWuCPiSqCHZhACrO5f514l4F+TPj5l40kO
+   ilB8z0qW+l47+uopSJ2h7x7iZw7m4gi80BJ1bdCPYy+3JpBKdIg8FcYuf
+   nFmksCEPsu5Lslt1v9loW1YvVsUkpgyji66hxGEG8yvIFq2/fEjZWUDB9
+   4QTRLSt4w5le7iK+LgZeXB2wJnzupB7uvhy6TbJ36EVUPfwhNJjqmxXGZ
+   8FlZrrsaW+wmdQgnKDw7Stwk5M+iNbccvXpFHhrPoAHOaEfTF4+B73ai0
+   PGD/F7rAFDDBbPrQGcmNO3V4lXIqI+B/yqltig2whoA/Lbu7E9r28NiVj
    A==;
-X-CSE-ConnectionGUID: 8UfJmuWbQKiFVg/n3/bIFg==
-X-CSE-MsgGUID: dF2p5X5MSmGr9TUopMWR0g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="44545325"
+X-CSE-ConnectionGUID: OYUAcLoQSsGK30xjslY4oQ==
+X-CSE-MsgGUID: C8pb2WeURbK6+DmekaQMCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="67875039"
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="44545325"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:19 -0700
-X-CSE-ConnectionGUID: f1nTuujKQLm3g9jP4N2ZZg==
-X-CSE-MsgGUID: REmFyb67QcqdX9ffKAQDcw==
+   d="scan'208";a="67875039"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:27 -0700
+X-CSE-ConnectionGUID: 6L10EDg6TaGjRaElhF5k9A==
+X-CSE-MsgGUID: EcxYejMiRWWEyzGYNXPaEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,194,1739865600"; 
-   d="scan'208";a="133130367"
+   d="scan'208";a="132058478"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:17 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 03:50:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mattia Dongili <malattia@linux.it>, Hans de Goede <hdegoede@redhat.com>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <Z-WlhL_tAP11M02G@kspp>
-References: <Z-WlhL_tAP11M02G@kspp>
-Subject: Re: [PATCH][next] platform/x86: Avoid
- -Wflex-array-member-not-at-end warning
-Message-Id: <174402301172.2251.17175317523714748552.b4-ty@linux.intel.com>
-Date: Mon, 07 Apr 2025 13:50:11 +0300
+To: mitltlatltl@gmail.com, hdegoede@redhat.com, bryan.odonoghue@linaro.org, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Chen Ni <nichen@iscas.ac.cn>
+In-Reply-To: <20250327025244.1790897-1-nichen@iscas.ac.cn>
+References: <20250327025244.1790897-1-nichen@iscas.ac.cn>
+Subject: Re: [PATCH] platform: arm64: huawei-gaokun-ec: Remove unneeded
+ semicolon
+Message-Id: <174402301956.2251.11043011225525757063.b4-ty@linux.intel.com>
+Date: Mon, 07 Apr 2025 13:50:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,16 +63,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 27 Mar 2025 13:22:44 -0600, Gustavo A. R. Silva wrote:
+On Thu, 27 Mar 2025 10:52:44 +0800, Chen Ni wrote:
 
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 > 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct acpi_resource_irq` is a flexible structure --a structure
-> that contains a flexible-array member.
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -82,8 +77,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: Avoid -Wflex-array-member-not-at-end warning
-      commit: a62372b6c9284ed42c68a0d8b3148f2dde61b4e4
+[1/1] platform: arm64: huawei-gaokun-ec: Remove unneeded semicolon
+      commit: 70081121e24cacbef8b3be849cc13bea31f8a158
 
 --
  i.
