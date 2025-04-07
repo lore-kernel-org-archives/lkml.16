@@ -1,63 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10547322B;
-	Mon,  7 Apr 2025 06:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1042322B;
+	Mon,  7 Apr 2025 06:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744008603; cv=none; b=IGiB7LuOlVwStXKRrX4y8YhV8TeLu1vZp9Qi55lVT0W81bgtp/udiMd1U0NhkE6YnJmEqmV6tcJ6axnV3KjmQJH54PvCz7AUps9//ZFIzo/Y71CrTG1tIBq/67C/7zhEkNZZSi6e/0CT3ApdqYk+gYVovP3TdkZh5gIDXEakd8c=
+	t=1744008680; cv=none; b=B6rrxZu7u5YCMtzetStoO9r13krJmV5EVJy422PaZxTv3FD57JBGlANF1fSC2xJvEE4YzyKhFdKbqaqHfjVjWvYtOEWFft2K3I0fA1Auprs0e6L+jagSgY4O48TeUf0FdjfhpdQIKWinhO0aEudS+y4n8sbGksHhk706TVYIi40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744008603; c=relaxed/simple;
-	bh=vImhmLDXzhhro9H5oYdIA7H6KMQDeNwFAMg4t/FZqJA=;
+	s=arc-20240116; t=1744008680; c=relaxed/simple;
+	bh=tzBmK7cmEirE67951CjBYF7TlBQ2fFR57orfuBTWVgk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fj3+RjPouXdsipynvWD30UuIx2tzrjS6DrT70nHsVaiJNjsi/OKSsAJMhTnC2zWZguDZyOIFyZ/CdGW/VlhWqXTb7zinx894NUkL7Z6CIkb8fBOEpTZFifYhOOeLGmRrZR2pu08z4fMLjiigoTT/4kUZ7D7msQ/O7IpmpEfg46s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePGCw0+j; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePGCw0+j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744008602; x=1775544602;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vImhmLDXzhhro9H5oYdIA7H6KMQDeNwFAMg4t/FZqJA=;
-  b=ePGCw0+jDkcC+AmzCKZrxN16UUYwRSemdL2xjYNl+h5BQWggJhXhXCKh
-   ZxqFqb845uj8VQfQmVdrYlydgnIhihgW9hFqEXusT2H37DkRrwg+IxBUJ
-   JptzYTYVgZlkqz8pDrooNfeKRmO+oGAQqU+rZS3giihh1Ck2TFFZwgSeC
-   mpAesX7HD1wiunAaA/FoIzvi0zSSqro7AFLYtBd6t1PL7UzG2tX7JTcng
-   sYOPs2KNXiNZrWGxinTyp6VtJ3FkIeSwHCYeX5gx6dMwI+byfAxUItsfR
-   8K11YCfvrg18Yd+OE3IkJrI8RuMPr1gmWjR+Zb07/8nT14ZMm84EJ7oKB
-   g==;
-X-CSE-ConnectionGUID: ET9OV+C4QxmshXeYG1mYCA==
-X-CSE-MsgGUID: f2NCMX3pRdqMYheilqLibA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="45496957"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="45496957"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:50:01 -0700
-X-CSE-ConnectionGUID: gpSUIEjATwGcv3cm791E7g==
-X-CSE-MsgGUID: Zwym3cJHTW6qXsApxMnhPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128185449"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 23:49:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u1gIu-00000009ylW-0B0M;
-	Mon, 07 Apr 2025 09:49:56 +0300
-Date: Mon, 7 Apr 2025 09:49:55 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: perex@perex.cz, tiwai@suse.com, dan.carpenter@linaro.org,
-	baojun.xu@ti.com, broonie@kernel.org, ckeepax@opensource.cirrus.com,
-	nathan@kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/tas2781: Remove unnecessary NULL check before
- release_firmware()
-Message-ID: <Z_N1kyRiCVNg8QNK@smile.fi.intel.com>
-References: <20250407061939.2771803-1-nichen@iscas.ac.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgRMw79NHr6UQlk4I6FgqyRvEXtplcsk37ckB9aZBClFKWb/xGBNogUa3Gtp9I3hXm9uY/BJ7vkWE4A/OL2WV01MSBQli197X92l24E7hN73nBWLJujomvjbDm3LSuILvW7pxYibNnYc+bIreStrqClEOm3gUEQxpCM+dSpAgeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 540DE68BFE; Mon,  7 Apr 2025 08:51:11 +0200 (CEST)
+Date: Mon, 7 Apr 2025 08:51:11 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, alx@kernel.org, brauner@kernel.org,
+	djwong@kernel.org, dchinner@redhat.com, linux-man@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] statx.2: Add stx_atomic_write_unit_max_opt
+Message-ID: <20250407065111.GA18891@lst.de>
+References: <20250319114402.3757248-1-john.g.garry@oracle.com> <20250320070048.GA14099@lst.de> <c656fa4d-eb76-4caa-8a71-a8d8a2ba6206@oracle.com> <20250320141200.GC10939@lst.de> <7311545c-e169-4875-bc6c-97446eea2c45@oracle.com> <20250323064029.GA30848@lst.de> <5485c1ad-8a20-40bc-aa75-68b820de5e1c@oracle.com> <20250404090601.GA12163@lst.de> <aab0aa19-f279-42b4-9ab7-0cc6e2fa3b9f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,17 +36,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407061939.2771803-1-nichen@iscas.ac.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <aab0aa19-f279-42b4-9ab7-0cc6e2fa3b9f@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Apr 07, 2025 at 02:19:39PM +0800, Chen Ni wrote:
-> release_firmware() checks for NULL pointers internally.
-> Remove unneeded NULL check for fmw here.
+On Fri, Apr 04, 2025 at 10:23:09AM +0100, John Garry wrote:
+>> that optimized case will not involve the usual hardware offload.
+>>
+>>
+> stx_atomic_write_unit_max_opt it is then.
+>
+> Or stx_atomic_write_unit_max_optimal or stx_atomic_write_unit_max_fast. Or 
+> similar..
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+As we've used opt in various other ABIs I'd stick to that.
 
