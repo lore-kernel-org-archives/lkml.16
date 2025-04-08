@@ -1,195 +1,189 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9467D2676DE;
-	Tue,  8 Apr 2025 11:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112249; cv=fail; b=jvhV1L2X48NypJLvB8j4WH1GjWXmR1bcWehmg+Q2CPeOBnJCVGP9APFZT2iDoeEIkRTI0KFHVHY4M3Knw+lXR1hMSHKxQ5mHcK1lFTc4cxPAfIl9JvzsJ2UQsMetdLR3JcSVv1yO0nLzgP7Oen0+8PnjvMb/sN1SWoFX673wvyU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112249; c=relaxed/simple;
-	bh=87V7v/HcQcoI0/CklgVIMwPoJmAio6fFjpRphA28C0c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VDuZ2VjiDgiAzarSJU5m0Jk9F+R0wWTeKZqCiomGKZYXOpJVfEvCNGLE1i0698TEkeVjrGQ9NcS1Z+NXjrhdzhQfV3kVVNOcaGEpnt63yDMGjWSqQmIh0E7/VfkSXc1FOd22UE673mCdxZ3uuJf8Ur6L1gURoHHI0KcQZIOeJhU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4VqMUEGC; arc=fail smtp.client-ip=40.107.92.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA3022257E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744112336; cv=none; b=WukuZ2t/bAffZKPj/c/QLvoX3jhnQ5Kx8QOUOBbS77WEddIvdJyjUFkr8L5+vR8MtccTPJ/NGfbIPwD35T9XZgm9b/Hrxweuz5s8uHu1gn2v6ie7a4UwUy0JuFwysxEmeiBbw094hXtDyFrgMz25FSnse4N6TILrNGkOLy8pVsQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744112336; c=relaxed/simple;
+	bh=kpZJ3p3+Ei11yz4vXSapgIwBGtEJqC036Y2YaN9pwWk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M1Cgfl/m/yto1sVCzJOkhoFWnSTvtuAViUHNE4eOVu0NvzTENUYKy/yI5AuinQ3+gn3rqaU0e+zXYB92qYcOCc9fhF3TOcWEH7qFDEjz7TmDj0nsS/Cvf989sGV6Gqj99m30HguUayEqSmU0pbELGFQVShmDprDlZSgu9PXK58o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M4f8Xowq; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4VqMUEGC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lUeGnlEWtam+JQNh8J0/nnHc4a0HEkN9XhvuttCcKM+pozU40DDWi9ylcS1/0eSVz96c0lpIpvTL6IOiTCNjGVolsKx0EoZK2Xpt/aeupfbKl7E1gfhvlqn0ApWxH4+Oz3GG9pU5AE9szJzkBjc4LPKgmHJH72ian1XRAw0BprTuyz7WO5ylcPXpTkpVDcnG8zv2iuCX4h+rsr2dlNTUj15nUoyLgD250jl6aI3QJ0x9wUn1rNgz1soNOOX2NJ04jRmN+MV1bCfy01TfBAkbssuHFdd5rBO0lsnzHU+1N/4L0dlj/1pQxq/O3Qw6p3yCh7xdNl+f27UfdrOnd/4Dmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2SR5LUd9wmw9minZVXH7D3MxjwGyk+Xhr57j+7ZwOuY=;
- b=Z30hiu2msp6nnzLTA+ZQWTXYeTtfCPy3P9gkjmi8WEaAbOZgzrYj3RqbLJzktWJ/ydJN3WZp7mIuDO14dyRWJvomfh5pv2+n1PjJ3Rt9D0DOIkyAAdsO8hveD+PcHA7blxEyQMyyi0NadEqtXsyyh7DMNK9/pSFEqvgF3FFOQMmG8suNdsR1HUQSMrMjt65nLW1X5/Y8jR21h8sgFFHqZRIMLgT+a6vSKufpx60Yo0rG2DIv+SZ5dtpKeGWJo1r9LXeeXi2HR3P1Amv/Qu6m+Aq6L3XWCHxdvXyph8cKi0O8a7FJjnp6u/Rj9iKGrbVystMg3H8JYwQwbGhMw/8Pig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2SR5LUd9wmw9minZVXH7D3MxjwGyk+Xhr57j+7ZwOuY=;
- b=4VqMUEGC0BUAN+tXtxz6hKdJTCqG0wEP5TQbX38YNw1CEWocec63XNQ0KEfhCWEuNhqkPWhwCTHyZAIAlDJnBzIUiK1n/QpdzWlTw4GHyYxVRk2s0MGBh11guAX7n8EkJe3080+Fo+ydHhh4W7s1DkmZxEk0GRM/iEYeeRtnyow=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SJ1PR12MB6074.namprd12.prod.outlook.com (2603:10b6:a03:45f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 8 Apr
- 2025 11:37:24 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8583.045; Tue, 8 Apr 2025
- 11:37:23 +0000
-Message-ID: <f8810b13-01d1-4615-b6e2-2e791c48b466@amd.com>
-Date: Tue, 8 Apr 2025 13:37:17 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [lvc-project] [PATCH] drm/amdgpu: check a user-provided number of
- BOs in list
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Denis Arefev <arefev@swemel.ru>, Alex Deucher
- <alexander.deucher@amd.com>, Simona Vetter <simona@ffwll.ch>,
- Andrey Grodzovsky <andrey.grodzovsky@amd.com>, lvc-project@linuxtesting.org,
- Chunming Zhou <david1.zhou@amd.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- stable@vger.kernel.org, David Airlie <airlied@gmail.com>
-References: <20250408091755.10074-1-arefev@swemel.ru>
- <e6ccef21-3ca5-4b5a-b18a-3ba45859569c@amd.com>
- <bmdour3gw4tuwqgvvw764p4ot3nnltqm4e7n3edlbtpfazvp5c@cqe5dwgc66uy>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <bmdour3gw4tuwqgvvw764p4ot3nnltqm4e7n3edlbtpfazvp5c@cqe5dwgc66uy>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0166.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b4::18) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4f8Xowq"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso27985195e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744112332; x=1744717132; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/FBWzeg0+ZCf4A8fXrkY1rmJAliXUxuxCPzLRVcmGk=;
+        b=M4f8XowqfIaqQIwwW9+P2Xy12BGVZJFJxqC2gOLUvCprllR/PO/D3ZuAgIJbu9qZgI
+         ha5NzLYgubtPu/Hgz+h28ZFsb+vL5uMRG0LzH5Cs+TWL02NqXGJZiXVUPRLIYcz0s/l2
+         mwAfdAaTVmx5kMB/pjMO0duX3K8dtF4pfHIr6exYP/i5nHe66dX8bfuh+tiwWYtL8Vhv
+         6wEGsSiZ1+Z3PKbaoBlY9IfocomylpaDRVsWkTezLahwOL+cS1jvWD8/ngHFr+2bYBAY
+         0BAf1k+ruyxzC3IMEycObcMGYTL6q4GbOzyH6S3B80R0RGTeYTLS1YFQ9q126Y8c50oY
+         gddA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744112332; x=1744717132;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5/FBWzeg0+ZCf4A8fXrkY1rmJAliXUxuxCPzLRVcmGk=;
+        b=o8BEFJrp4FwlS0ViJ60rIHH86hM3Gl6wrmsDBK8NIBdX+KhDd/OhGbgM0c7NuHLAf2
+         kN6fM2Q1NZ2oRmiSCle1S5YEu9g4Al5/gRGOFqCbuJi88lbZen1qJ/AVomydYfIGFn/q
+         laVdEEhvxdABUYos5fawxYugtZOaplmD3diGh4yh1rCxiPWSCygB0qcy0BMS4ZK2IoZA
+         OMdu+xdBzKzA86FHVjBZVGyh2oEMEn91yOJsN7joy63scfPdJR2Qsav5SndvQsyKfFvX
+         y8H5yxufCJLBGeHtCMe/6OCp2ZKH0nU8iahF83KUdiRgdyyZgDg3/XiMRAiAnV1ceM7b
+         vCWg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6AQSl8eDX6C3qx1WTZDAGM6fKVCtXLkYU/UP5MlIiPT5VcnwO1td0M9aSI+sw3llaagOwjYrW6WDBxOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhlDF+gTMQjBJqnLWA2loLwcUW2sbu4RRTPieJXL2TfwZLLwGi
+	AfU4VrXJ3z3F9X/jlj/1WtYAKRhQGPM1X+IxhVpLXddP8aSapPoUpKuOfDsEIcbfBHgbU6wD91c
+	P
+X-Gm-Gg: ASbGnculMVn0vATroMBTHc7CVgVtLgU79yNn5LOx65aUjxwUFdcvPQa8IB/IDdgLGv1
+	5z+Vix1vPbXLEx14XqGZamG4sOZFao4X7aoVfe6ONmITfmMAODPWVHxrULxGApkOd8qD11HW5BV
+	fWcwMKr6vngQzROKRdYpPtbKS3svi5VjsV1pnlVmGVpE5uWWYMQlsMHsqpPP1NiuQLqE5Aedtdu
+	KWBtIIhDh4YA/TblHS1eBFzXe80q9A9r+RIsQMvNUwE5BN4CVROkInh22yYlyWyYZ9dqgz84o+F
+	0PDt5JFHrk9oEdkgWUOm1C+dtr/JDvs5jtvc8VfXmDqrtAwUiDeuF0l9cshxjDJJNe6HtQ==
+X-Google-Smtp-Source: AGHT+IHdC8zFootrYV47QAuc493nshO5OIqjtfco256NhQOrJ/t6KiHXd7JiTKrrAZAkcejY1qH0aA==
+X-Received: by 2002:a05:600c:4443:b0:43c:fa24:8721 with SMTP id 5b1f17b1804b1-43ecf8d1b10mr168181105e9.17.1744112332326;
+        Tue, 08 Apr 2025 04:38:52 -0700 (PDT)
+Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:a515:3b2a:eb67:e90e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bbd9csm157085715e9.20.2025.04.08.04.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 04:38:51 -0700 (PDT)
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Date: Tue, 08 Apr 2025 13:38:42 +0200
+Subject: [PATCH RESEND] arm64: dts: qcom: apq8016-sbc-d3-camera: Convert to
+ DT overlay
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SJ1PR12MB6074:EE_
-X-MS-Office365-Filtering-Correlation-Id: cabfcbfe-f86f-43e8-6e52-08dd7691ba7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eDBsRlI5ZXcxSGNwR2F3V04zU3BYNHRENzZKV0hnb21hSzRHcWlEbUhUV1Bk?=
- =?utf-8?B?UlI1cWtlN2NpRnBKWWIzVjVvMjhJbHJYMlVNa1ROcklSSjhWSlFRdHJKbHc1?=
- =?utf-8?B?V2ZlbDB0YUxsMzVqektPb0NQZ3RxaDlRZHp1NkVLRzlXZk9jMWhTUlZNdmYz?=
- =?utf-8?B?d2FHTnN0bmk5d0FwdzV4YkhGTkVsUitJRmhOTUFoN244ak5rMllnUUx0MUxF?=
- =?utf-8?B?WWZlcDdvQy8yWnRZTUZtMGVkNmViVi9JQjBxTHdxM3VkL0xGNkxWd3ZDMkpk?=
- =?utf-8?B?RC9jUlZKaWJVVnNSU1owSU50c0J6aUhrbndOWVI4eCtCU1Z6UGgrMTREYjNp?=
- =?utf-8?B?Ui9QU1I2Q05MZXp1eWppbTRMMXFlR2VSY0lnRW5jL0VJUVovVVgvSmNIV3JX?=
- =?utf-8?B?QzZxOVFjN1RGQ0FrclNDQTJhK2d3dDN2SVNsNGlwWHB5WWpJVXF3aGR2dStI?=
- =?utf-8?B?UkVSYVRQZ1VLMGl5UFdySzlkUGc0WFRvdDdaMlFVd01qVGpXMWcrMElobVVM?=
- =?utf-8?B?NnNBd0VneDNpZGJ0QXYvSW1ueFg1NzdYd210STVPb0F0eHgxc0pxUXVyZk5a?=
- =?utf-8?B?ZGVGbExMZlpuZW1pUUJ2eVB0VFMrejlZM0JlV09FN2dhZ0ZVMnp1Q2lsTHZo?=
- =?utf-8?B?Tmo0dk1wbWhkTzhWUWYzYXc0aStKTXhSTm94MmgzOGYyZWtCT2k2NHpHMS9r?=
- =?utf-8?B?Mk42RDdBT2ZaejBpMUswNjlrVGkycStFcGR4WHBXMmJJZ09vamZBYmtKOGRH?=
- =?utf-8?B?dEpuZXpqMzhUUE1vemd1OHNFR2thU2V1VGFRV3JjWStJQmJqTEF1WFJlMVND?=
- =?utf-8?B?dXBwc3E4Ym03UEYyYjIwN1B4UzJPTjdDOTNLVUJPRTY1anBQU2R0eERFYUht?=
- =?utf-8?B?WjFYME1pMG1Tc3hTdEJ3L2t2dzhEWDE3RDF3ZkR1YVlKVThpQlRCbCtkWnFi?=
- =?utf-8?B?ckN2VTJJUmJZWjdDS1VoTzdhQjVQeUlWdG90SW1VTm54OVJpQWFuK1R1TkQv?=
- =?utf-8?B?ZkZKM25aOXdpZ01jTVc3YjJLL1QvREtoRXNPNHd5c0JJMEVMQUhpaXJZMXNL?=
- =?utf-8?B?VG1wM0w2WVE3NTIvRGJmVk5LdUdMU0x0emFRWEdBUGxEdzZNVDlBVisvbW43?=
- =?utf-8?B?eUhRWU0wNmYzaGhITERsL3N1YkZBYTFabzRVOWErYkJhSW9HcVBjdjBXTjJ2?=
- =?utf-8?B?R3JZSDRxWHluTGwvczM4VzN5a29ZUzNXTWk1SkJjS2lkcTQ5SXJlRHdkTkVI?=
- =?utf-8?B?dXl0RnBrREd6dC9Dem9ZQTFQd1FGVWwrS2V2STRhU3h2N3BqUFhEV2gwU1l6?=
- =?utf-8?B?K2w5UWx6UE9iQUFVQXlnWDIrVkR2azVKVXlkVTdlUlVzQVpPc0UydVdPL1Fp?=
- =?utf-8?B?dWtvQ2RqbzlxZFRkc3FOM0ZLaHhMV1FMdlFpZERHN05uR0J1TGtVT3FzQVVa?=
- =?utf-8?B?K00vMlpmdXFuazZ3MkMwclZGSnp3Sm4wVC9uQUlra2plVmNWMExIWU54ZjV0?=
- =?utf-8?B?SGNEcHhHVGtJRk1TWkJGdTlqcUNUaHpYSG05b3BqcHBqUndXQ1JFdm9CM1JO?=
- =?utf-8?B?dlo2Zldwenl6UUtVYjB4OGtBbXlPSC91OFhTMDJMZlJIdWU5VjRKNWZhTXNL?=
- =?utf-8?B?RlM0L1Z1U0doeFBuOWlJakg2Y3plRXlacGZqWktEelpkMXV0QklGb2ROQXRj?=
- =?utf-8?B?OFBsSms2ZXIvcDAyTk1hTFhmMC9lRUp6MlBPdzczS1VxNnQvQi81UGFOdlpO?=
- =?utf-8?B?TjF2VmlaVkFTVmFkNnRFUWZJc2diSTdDMnJDd1ZvOW5kTnN5TzhMWklKU1li?=
- =?utf-8?B?Tk9aZCtacWh2T09pRDVtNkRPRFR0R0RuMWxjSnpwblkvbHRoRjBSU3Y0eWhk?=
- =?utf-8?Q?n/td4oZir6bKq?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ck92U3hrUFBoQW9wNnZKSzFnTHVXNmRQU1JoMmlhVlRGR2k2LzVNSnBJUHRs?=
- =?utf-8?B?L1cxTmdINzNub2Myc3BCbm5UV0REaEs2S3V3R2RXRkRhMzhkclVISm85NmhF?=
- =?utf-8?B?aDJqUCt3WmdEK2N5SlcrWkkwTmdtUURGZEFtZ2kvWkNRU1JiZU9nM1k4eHla?=
- =?utf-8?B?R2tuMTNkQzcwZ0JkTm5ncHpQbjNZQ3Y5RzhNVGtmemt2ZkhodjlSQWlMQkJH?=
- =?utf-8?B?R2N5T1R4MVZ0YzhjVTJNWWo2Zkd6ZkU1bXRVSElXUUhHaVlOcHpsZEtlUkJV?=
- =?utf-8?B?azVxMjlzQjhkRHVuaW9hUjJpWTRKSXRza2FGdU42WnBxSXM4YmY3c2p0UEtO?=
- =?utf-8?B?dnRoaktCVHJuTHBTYWhpQ0tUS0VsT3RrY3ZpMmRpNnRpK3Fzam5hbml3M1cv?=
- =?utf-8?B?T1c3OWZXd0tkWTdaWldaeGEzWGZRL21aemc2dVBPVHpoaDZlZmphSElkVWJQ?=
- =?utf-8?B?bHZvaDMxcWJZK2ZwcjFvU0dpdXgxRDlHUHdIOVo1VWR1YTBlOFJWbjVqU3VI?=
- =?utf-8?B?aDJqTXEzMEhGbzdmRmU5TElvcVRKOFMxRmxIeW9CNHJDWEUyeERuY05IWmpX?=
- =?utf-8?B?dUpKS2lmM0xhOWZIeWVYWHR6cUFiT2NzVWdCWk9PVXVEWWlxekVwUnA0SGxt?=
- =?utf-8?B?cjczSllMb1p4SXVucFZyUnhXNkF5V3dmVXE3YWhJOEV0dlBOT2JjVTZyWm5U?=
- =?utf-8?B?eVpNZ2VPTGpIMDJBK0Rra1huZW51ZFRpMVRzT0RRb1kxZEZSZEdDdEhDT0Rk?=
- =?utf-8?B?U2dCOTZ6YUtGRHA5SS9hTmwwSDhpSW1IZUU1WkNTeUg5NlRsOWNNbklHZC9V?=
- =?utf-8?B?Wko5RExUeTRua0U2NExTdDFwUWcvd1ZieXVJZ3J4TjltR2l1VEdYZ09KK1RP?=
- =?utf-8?B?VXBLb0ZaZkJvaUFoWUtveEZHTkhaSTJ1UjBkSDZHRnNaWHZvVyt0SXdvNXdE?=
- =?utf-8?B?MkFBOUtCNkdFQnNpeC9VQlcwdnMxV1V0NWZaSlNiZmZ3NWRNYWRaNURSaUV1?=
- =?utf-8?B?UVdyZGV1VVVTNldJZHZ0VTdsMHhicm9TcXZ4VTRoWTRkNlNvT29Db1Q3SXNJ?=
- =?utf-8?B?UEpNL3djd2RjWDUwNTlqMCs0eDIwQXhKU2RtMjQ2S09aS1hkOEU1c2REWGZ6?=
- =?utf-8?B?VEtwZ0dOc3pVMzdWS05mNVl4eFZrSVcwTlhwTkUya2RqWTFpNzlyUlVmejVT?=
- =?utf-8?B?dzNQb05YdlBmOEtpMnFkM01NNldaemNCaGhsenF1M1UwVGFhT0c4blB3ZU1D?=
- =?utf-8?B?L1puajM5NEVoQnNjWnNQWnhORVJqODVkUFlYVytLM0NydGovK0JZSXJuQUQ5?=
- =?utf-8?B?VzYyM0Y4YmJHY1c0aEFaaFVHUlBpODFEVE8vOEw1V1gwaW52K2tTRWJFcEpW?=
- =?utf-8?B?elJWSWV2T0gycWxlcTJBU0Nld3B2cFc4TDhGa2lMZ09MU0dDZWNQLzduMkQx?=
- =?utf-8?B?S1FYSmxqVnI2ZHVHOHRvY3NJRkREZ2JSaW9OaTBiZHBCTUcrN0lud1U5bmxi?=
- =?utf-8?B?YkRDMnA0VjZnQXRJVGF4cFc5S3czczExMDFCOFljK29iMG5FZkVySnNnQXh6?=
- =?utf-8?B?YVBCQlRnRTE1UmJMand5QWZTL3ErcVhBWTFodkxsdFVaNFIwMEd3NjBEZzV6?=
- =?utf-8?B?RDVYaml0Zng0bCtaek10ZDJGeWpaQWFETEh4dTU3Y1M5NHFHSWppMDNJc1Ba?=
- =?utf-8?B?N2ZwYXRrY2t3dVpZM0wyL1ZyUDhUMTQ1MVRRd1Q5NFoyUGhhQU5Qa2ZFbmhQ?=
- =?utf-8?B?N0VXaDhkakpGU1lzUzdPQ0xWQnNkNEpvaW4ralNhdlZGVmNybVlNTU9BWVZn?=
- =?utf-8?B?ZEc3U3NlNFVXVDBLbHc2Zmk2SG1wSUdSWjVRN211dEltRVZ6NmtiWWY0bEMy?=
- =?utf-8?B?a1ZNd2xxZnVHeWoyTWlhTy9Ma3dPOVlYVlY0WWNHYUIyZjh5WEY2NWZwN0hw?=
- =?utf-8?B?dDRxS0h1Qm1xMjVNS2JrSDFhTUdpV1BJRDdNK2xNNml5eVpJWjd3ZHRURTdV?=
- =?utf-8?B?NGh4WTV2QkY0ZmYyYkhrcGhWME53dTA4amxPN05wQU9GOHQybmxZMXQrM0Iv?=
- =?utf-8?B?MFZ2ZWh0SFB4bHBRWFBLVVlQMCtTT1FWLzVBVjQvQnFMbWRjWXo5NS9JNnh3?=
- =?utf-8?Q?g4cDRBTuBeF4G8O88UAOf5pDg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cabfcbfe-f86f-43e8-6e52-08dd7691ba7f
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 11:37:23.0792
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WyDnuBSVs3beNWpOXtn3djvJj1XPxSG5uQ55mE3OR+JOFIKDeM/4tJSHZGaxujer
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6074
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-apq8016-sbc-camera-dtso-v1-1-cdf1cd41bda6@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAMEK9WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDSyMj3cSCQgsDQzPd4qRk3eTE3NSiRN2UkuJ83TQjE/Ok1EQTgzRLSyW
+ g7oKi1LTMCrDJ0UpBrsGufi5KsbW1AC1TaSJxAAAA
+X-Change-ID: 20230922-apq8016-sbc-camera-dtso-f247bea40f99
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Stephan Gerhold <stephan@gerhold.net>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+X-Mailer: b4 0.14.2
 
-Am 08.04.25 um 11:39 schrieb Fedor Pchelkin:
-> On Tue, 08. Apr 11:26, Christian König wrote:
->> Am 08.04.25 um 11:17 schrieb Denis Arefev:
->>> The user can set any value to the variable ‘bo_number’, via the ioctl
->>> command DRM_IOCTL_AMDGPU_BO_LIST. This will affect the arithmetic
->>> expression ‘in->bo_number * in->bo_info_size’, which is prone to
->>> overflow. Add a valid value check.
->> As far as I can see that is already checked by kvmalloc_array().
->>
->> So adding this additional check manually is completely superfluous.
-> Note that in->bo_number is of type 'u32' while kvmalloc_array() checks for
-> an overflow in 'size_t', usually 64-bit.
->
-> So it looks possible to pass some large 32-bit number, then multiply it by
-> (comparatively small) in->bo_info_size and still remain in 64-bit bounds.
->
-> And later that would likely result in a WARNING in
->
-> void *__kvmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
-> {
-> ...
-> 	/* Don't even allow crazy sizes */
-> 	if (unlikely(size > INT_MAX)) {
-> 		WARN_ON_ONCE(!(flags & __GFP_NOWARN));
-> 		return NULL;
-> 	}
->
-> But the commit description lacks such details, I admit.
+From: Stephan Gerhold <stephan@gerhold.net>
 
-Yeah, so what? I'm perfectly aware that this can result in a warning, but that is just not something worth fixing.
+Follow the example of the recently added apq8016-sbc-usb-host.dtso and
+convert apq8016-sbc-d3-camera-mezzanine.dts to a DT overlay that can be
+applied on top of the apq8016-sbc.dtb. This makes it more clear that
+this is not a special type of DB410c but just an addon board that can
+be added on top.
 
-Christian.
+Functionally there should not be any difference since
+apq8016-sbc-d3-camera-mezzanine.dtb is still generated as before
+(but now by applying the overlay on top of apq8016-sbc.dtb).
+
+Since dtc does not know that there are default #address/size-cells in
+msm8916.dtsi, repeat those in the overlay to avoid dtc warnings because
+it expects the wrong amount of address/size-cells.
+
+It would be nice to have a generic overlay for the D3 camera mezzanine
+(that can be applied to all 96Boards) but that's much more complicated
+than providing a board-specific DT overlay as intermediate step.
+
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+This patch was already applied by Bjorn on Sun, 28 Jan 2024 11:45:55 -0600
+as commit ea689ec32bf0d885277d3f58450a85df5149c98b [1]. However, unlike the
+first patch in the series, this one never made it into the repository for
+some reason.
+
+[1]: https://lore.kernel.org/linux-arm-msm/170646395036.64610.14333204830178417809.b4-ty@kernel.org/
+---
+ arch/arm64/boot/dts/qcom/Makefile                            |  5 +++--
+ ...ra-mezzanine.dts => apq8016-sbc-d3-camera-mezzanine.dtso} | 12 ++++++++++--
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index adb4d026bcc4b24d73de92e204db8d525b0770e6..465b3791f15e66883717ecd59a2ade9461472df7 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,12 +1,13 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+ 
+-apq8016-sbc-usb-host-dtbs	:= apq8016-sbc.dtb apq8016-sbc-usb-host.dtbo
++apq8016-sbc-d3-camera-mezzanine-dtbs	:= apq8016-sbc.dtb apq8016-sbc-d3-camera-mezzanine.dtbo
++apq8016-sbc-usb-host-dtbs		:= apq8016-sbc.dtb apq8016-sbc-usb-host.dtbo
+ 
+ dtb-$(CONFIG_ARCH_QCOM) += sar2130p-qar2130p.dtb
+ 
+-dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-usb-host.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3-camera-mezzanine.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-usb-host.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-schneider-hmibsc.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8039-t2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8094-sony-xperia-kitakami-karin_windy.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dtso
+similarity index 89%
+rename from arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dts
+rename to arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dtso
+index f9cbf8c1d6891108e208f4626aa7667c74ee413b..d739ece6b44ff25960f92088a4023ef794215712 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dts
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3-camera-mezzanine.dtso
+@@ -5,10 +5,12 @@
+  */
+ 
+ /dts-v1/;
++/plugin/;
+ 
+-#include "apq8016-sbc.dts"
++#include <dt-bindings/clock/qcom,gcc-msm8916.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+-/ {
++&{/} {
+ 	camera_vdddo_1v8: regulator-camera-vdddo {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "camera_vdddo";
+@@ -38,6 +40,9 @@ &camss {
+ 	status = "okay";
+ 
+ 	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		port@0 {
+ 			reg = <0>;
+ 			csiphy0_ep: endpoint {
+@@ -53,6 +58,9 @@ &cci {
+ };
+ 
+ &cci_i2c0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
+ 	camera@3b {
+ 		compatible = "ovti,ov5640";
+ 		reg = <0x3b>;
+
+---
+base-commit: 7483c7cc0b2cebf842ec0f5902e354650c4a0d29
+change-id: 20230922-apq8016-sbc-camera-dtso-f247bea40f99
+
+Best regards,
+-- 
+Stephan Gerhold <stephan.gerhold@linaro.org>
+
