@@ -1,160 +1,169 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010011.outbound.protection.outlook.com [52.103.68.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86178BE7;
-	Tue,  8 Apr 2025 01:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744074123; cv=none; b=Ewg+AG+iDbjAvMXQSHFfLN5iWQK0AsEbqoUMD7cY96sop4wXEyC8eD38V1pKj30m0sEEQs2aRDYzjWzFayktjzeElLMXakA++7E6hBAs3WYjvjmzaugbw76Q5Pea2qIVu7+mQ0npcionfjL9HUjQLtNzX9jZ3AWOvMungslQXAw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744074123; c=relaxed/simple;
-	bh=xthHPC7SRWEOtbq9bg+gsGajUW9yHOxjdMU7Vtz7yJM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PRW2C4pgNY0Cg15lulTImYz0xo0p/+zNq8fzReesJV3dUPhsMDzdGIz+IN5DOLRu1uFwpzafRIxZXBhHspjQNBywxgHEuHyD4DkwRA7MCaD6ufLg3jcbTsB8iTJ+3pbOp2I89AmWAzu6+rBVWELhfaUCUP1NPxwbVIPca1hTHaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=vBze/HkM; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE931F19A;
+	Tue,  8 Apr 2025 01:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744074165; cv=fail; b=qryj8cAGJl9mt7n/19kIb3VwnILIjxhRUM216FafVv0Ow9DqfmkJK6pvkXKZUGpIRldFNKpiOMLbJVknNBMX3XVSCvCO7KdEDuReFZj/+PSxY927zhppXTzsfSImU0bE9lG46166IKte4r+hFnqoePiP/VewNbkVMpnBbLpMJDc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744074165; c=relaxed/simple;
+	bh=wfmVkwS57RzVTL7JAfTneAtjBGVcj3/UV5y9gDZqxnE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TzwN+xks9mN3h2yIt5ItY7ZVXtJAeFmXu57eynvePXYMNGlXFAnsRJyICACxLd+Uc2+HPHORk+pA+jex1eMALO2sBXacRwa13v0Af+36mSta/aJZNwcn0oAjofzdfdcKLwHGbsOxkHB/0huIDtoZxZG8NM8Yjomph7tpTvs0Y5A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cvKPMdKE; arc=fail smtp.client-ip=52.103.68.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vBze/HkM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744074122; x=1775610122;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8Q70fFtFs3+YdS6ursyNJrgOZLIsKzA94oTFp4aZASk=;
-  b=vBze/HkMi7tOtU7s2iTw5fCbKDnF32qgyZ5Z9luSRs0vDH81iZJkggks
-   6wAKoc59r6DfgfxOZ9GfYjTO0Pj5UVStPq1dsLeqFqlH1RT1zEa8jQO6O
-   oDJkH2Ct1g+U5z+k1oG1217OcliYzkuV3KYds6yywEYMAqJqeC1vPU5SE
-   E=;
-X-IronPort-AV: E=Sophos;i="6.15,196,1739836800"; 
-   d="scan'208";a="733684599"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:01:56 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:7433]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
- id 3cfa9373-684f-4a17-aabf-b3c076aa83ec; Tue, 8 Apr 2025 01:01:56 +0000 (UTC)
-X-Farcaster-Flow-ID: 3cfa9373-684f-4a17-aabf-b3c076aa83ec
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 01:01:55 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 01:01:51 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
-	<yonghong.song@linux.dev>
-Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
-Date: Mon, 7 Apr 2025 18:00:35 -0700
-Message-ID: <20250408010143.11193-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
-References: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cvKPMdKE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=q+WSWhAHcT/zRWga6pjRTyc2rGHHy+XZ9ve6ZRi1bdDMW/VGv5U64TolLPXswEPYt/jhB22Pm2dqesSNSo73hUEyzJwdlURYEDPvQph/tIm3xGUy24yWZaPPX0TOF0GxY7m5A+2LzyGewuQbaWoLoLSX+UtPdp556NhfGfRD2KPPxSCCfsQEzFtcSUxsMffj8TrReq1BVc4paV47d5rR4BvmFja5p5i55ZsULirbPKBUalbuJJgAKa5VHCDvQOqMt906erOtPUdc9ZA6rfuPKE+lneS4cvIjETBVGFIe2wq2bM/SsTnTzXsTenwirdGsLyruUiUgn/VSsGmGYTZBuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0Xw7TzHFkJizfToxcVyK1e7m1J8hPgMRM18s6vFQdew=;
+ b=BSJ9ECwn1BPFdSFRQWu6IXziUW5wDb7ClkS1YEwykZwVH4ZZf3QcjNpvyMLdpsP8cTOECFKxh5eQpNnaONsJG2dBJm8PwCeI+TcZf15TOI9zIeuVwwPGXG8z3GakKrgXW4Kz6Mx3Z1+1qYh1LGc9eWE9pTvPDNOMPo4rveDlkv6/sN+DGP8WnGLV1o2hKfsh9eMiI66q0PCymtMLM6vDmaKs0hoqp+LH/Npp7zUcwXoJqMzg/hiFOZHYHQe1o65OLmMLnF9B1VPApgMZUCg2RbWaiy5O/qHU0e7VEAoWKQrUmqbD0D7P15KucUEUPMCoYwuaH++x+zah4D7E2wUkxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Xw7TzHFkJizfToxcVyK1e7m1J8hPgMRM18s6vFQdew=;
+ b=cvKPMdKEiOucnT0mynxdaa6+Zq7U9HnH3wGrZo6YtrBH8+aJKcDEsMRNqkNcGTQUdt70TfT6HrcQIU+iHs+QBU5LUBLVTV2a2tVosaVMPrDDlqCXqY7KOFAYCMZKXIsUC1nmm1d3DuJ60pKpqHJi/sMYjhK0/uy5u7m9FOngRxhCQ/2vBA5DCIBWtmq1bnBIXUqx8Fx8tqX9d0mPrsgjW8k/Y6+FOzNIvPMb87eWSlKTl2jKiwYjz5oSmEKSxentsV/MEPaupJjD2uFdlSVuXYp9zmx0LAm2iuWX49KEDAh1cgf+AZtPM/2T+vkg8SmBwybi7gjKmqP7R0uNdUkKlg==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN2P287MB1838.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1aa::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 01:02:35 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 01:02:35 +0000
+Message-ID:
+ <MA0P287MB2262DDC10B2983C2AA5D3074FEB52@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Tue, 8 Apr 2025 09:02:29 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] pwm: sophgo: add driver for SG2044
+To: Longbin Li <looong.bin@gmail.com>
+Cc: ghost <2990955050@qq.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, sophgo@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+References: <20250407072056.8629-1-looong.bin@gmail.com>
+ <20250407072056.8629-3-looong.bin@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250407072056.8629-3-looong.bin@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR04CA0211.apcprd04.prod.outlook.com
+ (2603:1096:4:187::19) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <6f81b548-d884-4e8d-94f8-e5dac757a048@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWB002.ant.amazon.com (10.13.139.179) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 07 Apr 2025 06:40:44 -0700
-> Add a tracepoint to monitor TCP send operations, enabling detailed
-> visibility into TCP message transmission.
-> 
-> Create a new tracepoint within the tcp_sendmsg_locked function,
-> capturing traditional fields along with size_goal, which indicates the
-> optimal data size for a single TCP segment. Additionally, a reference to
-> the struct sock sk is passed, allowing direct access for BPF programs.
-> The implementation is largely based on David's patch and suggestions.
-> 
-> The implementation is largely based on David's patch[1] and suggestions.
-
-nit: duplicate sentences.
-
-
-> 
-> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  include/trace/events/tcp.h | 24 ++++++++++++++++++++++++
->  net/ipv4/tcp.c             |  2 ++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index 1a40c41ff8c30..cab25504c4f9d 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -259,6 +259,30 @@ TRACE_EVENT(tcp_retransmit_synack,
->  		  __entry->saddr_v6, __entry->daddr_v6)
->  );
->  
-> +TRACE_EVENT(tcp_sendmsg_locked,
-> +	TP_PROTO(const struct sock *sk, const struct msghdr *msg,
-> +		 const struct sk_buff *skb, int size_goal),
-> +
-> +	TP_ARGS(sk, msg, skb, size_goal),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(const void *, skb_addr)
-> +		__field(int, skb_len)
-> +		__field(int, msg_left)
-> +		__field(int, size_goal)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->skb_addr = skb;
-> +		__entry->skb_len = skb ? skb->len : 0;
-> +		__entry->msg_left = msg_data_left(msg);
-> +		__entry->size_goal = size_goal;
-> +	),
-> +
-> +	TP_printk("skb_addr %p skb_len %d msg_left %d size_goal %d",
-> +		__entry->skb_addr, __entry->skb_len, __entry->msg_left,
-> +		__entry->size_goal));
-> +
->  DECLARE_TRACE(tcp_cwnd_reduction_tp,
->  	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
->  		 int newly_lost, int flag),
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index ea8de00f669d0..270ce2c8c2d54 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -1160,6 +1160,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->  		if (skb)
->  			copy = size_goal - skb->len;
->  
-> +		trace_tcp_sendmsg_locked(sk, msg, skb, size_goal);
-
-skb could be NULL, so I think raw_tp_null_args[] needs to be updated.
-
-Maybe try attaching a bpf prog that dereferences skb unconditionally
-and see if the bpf verifier rejects it.
-
-See this commit for the similar issue:
-
-commit 5da7e15fb5a12e78de974d8908f348e279922ce9
-Author: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Fri Jan 31 19:01:42 2025 -0800
-
-    net: Add rx_skb of kfree_skb to raw_tp_null_args[].
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN2P287MB1838:EE_
+X-MS-Office365-Filtering-Correlation-Id: 798d23c9-1682-4e03-2c08-08dd76390b65
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|8060799006|461199028|19110799003|5072599009|15080799006|7092599003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a01WRml1UUw1M241Mjk4RzlIalEzL2RwdW0zK1czdzZ5dnlxSzRCczRkM29M?=
+ =?utf-8?B?ZERjeGtQY2ZKckJzNHcvY0pJbGQyd3JQUkNFcUtLOVRQME11b0FPUkg0b1JC?=
+ =?utf-8?B?SmMwMUd3N3ZCSnMvODZMM2hhYWVnRmh5RS9IaXUzd2pjRGpDd0plbnVTUUVJ?=
+ =?utf-8?B?T1JrVlRRUDdaMmcxdkJWT0R4VzVYUHBwazJ3RTlqazlMSlFDY3ZTUGhDcUhu?=
+ =?utf-8?B?aDh0Nm9MWHA5dWNKc2x5SndZQlhja0UzUFdZaVgvZEQ3WnlMK0tVeno1dVRH?=
+ =?utf-8?B?VUtSZzVXenZjRWg1c0tCelljbjgxdEpFV0toMnhNZDN4VStSSGIwb0E0KzdT?=
+ =?utf-8?B?S05BY3hzWitIZEM2YXFlVlRLQ2Y3RWRYNXNXOWsrOXVSS0NzUGdEREQ3emVj?=
+ =?utf-8?B?SXRXZWM0Mi9wT0JVR01oL3c5QnFXb3B0T0RGdXozR1J2Q25TZ0JGVkdzVXdj?=
+ =?utf-8?B?dDVrWDBFSnE4bjJ5Ujhodmh4bXd2aVdkaExDMGFVZVRoK0tXcm12MmRQNUFU?=
+ =?utf-8?B?THEyUzlPbzhHbVRQUVBIMkV6T3Zxa1hCUWxYbkxrcVRHOGtmUlBYVUpCMndt?=
+ =?utf-8?B?Y3JFYlB6WmtzWEZwS2xQYnFGTVhXSlNqOUdrUDlTZkZBbkRxMVJmK2MvUGFV?=
+ =?utf-8?B?K1dBbGJPT2F0aHpUUzUwa29Xa2NnYU5lOGl3Z2VPK0lpZ0lNNXhQWFViTm9L?=
+ =?utf-8?B?Ykx6OEdiVWx6UENhRzM3YWFLVFQ5eXZmc1ZtbnFFMUZ5TkE3TG1lNTZ6M3ZM?=
+ =?utf-8?B?Um1YVFAvRC9Fc0RzTElwcXM5NkQ2aUxzQ1FRVUNzMXUydHptbUlYQUNrQ0pC?=
+ =?utf-8?B?T01pelZXZjJ6d0RoRFowZzVGMTNrMUZuYjEraUJ6WFNQMzE1TnlJM0p5c3d1?=
+ =?utf-8?B?LzZCZ0ovT2tXN0xzc3EzMjBRaXBZMFNvQkc0cmdTL25vb0p2dFZzVHdCRXQw?=
+ =?utf-8?B?d0RkS245eGdkOE1aTjdIM1FTa3F0UUFwSXo4UFlTRnUzTjE0RE4zbXpEZ0R0?=
+ =?utf-8?B?Q1BTZHhUYkh1MUo1anFYamEvUlB3Z3NiOVNRYW02eUIveUR6TGd3VTY0aVVK?=
+ =?utf-8?B?MXQyaUZMMWxaNFBYMXNIREIzVzNodHpCQkt6YXpIZ1NrdGRpM0NJZnpkTnJ1?=
+ =?utf-8?B?WlhTNXhHbFBiUkowVytrMlpmaU5xRkNUS3RvUkViRVdiYkNqYlRTYys4UEJo?=
+ =?utf-8?B?VW5mVThlMVBXbDhUK3lwbHVWV0tRWGUvekE2SmtkR05HSGxDMXJQTzZrYzZl?=
+ =?utf-8?B?UU9teUNVM2VrWHhpZUxQVkJ6UHQyUmVtWldyKzE3NWtlTkFIbVkrQ2VjQTR1?=
+ =?utf-8?B?bnhCY1dVdTZoODRTbUU3bjQ4bEdpRTdxT05YbHFleFZuQ2VHcXllZjQwWk5u?=
+ =?utf-8?B?aktTNkdJTlN3NXd1c3M5ZWc4Q1FaMVBQT21DY3oxcTFZNDdueU9FaE1UVnF4?=
+ =?utf-8?B?NlFvNG5nQUdseC95cTJIOEJBclpTVWR5dTFzUE1xTDJScXBGVS9NWHVDTHY1?=
+ =?utf-8?B?RitnRVdYZjdpSHBqampkS2M1WGhSdTdjRVc0OVYwaEhOMDZOaU14TlRoNG5h?=
+ =?utf-8?B?U0VXUT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bGJnRzhHSTdORGwrZGhxQTk2WU9WeE5hV2R5QTlIYXY1Q3E1NWlHOVBxM3V2?=
+ =?utf-8?B?TzI1MG15MXNDYTZHOCtJeG5GR05kRldlWlYwUVJSUksyU1Rwc0FQLzNYSXlC?=
+ =?utf-8?B?THZPMkFxWkcxcmdFdEhEa1l5RTVybEVQVnQwZnBNN2hZWnk0WWVpZlFtWFF6?=
+ =?utf-8?B?MmFyQmFPOVJnckd5UENyU09vb0tEN1ZPUjJUcWNwOHhOamFCWndIVXh6UFJT?=
+ =?utf-8?B?ZTdjdDYrbzdsL0xqVXB6TUNrdHdYZXNJTGFJUUFUYkhnSktMZDhUSm5pNjJn?=
+ =?utf-8?B?SE05czE2SWVpV3JkZkJjdWNmU1JjM3dXbFBMWWRYK0lXUkFVMTFSeWVkV2ls?=
+ =?utf-8?B?NU51MmZ3THBwb3VobGtyZVdaaEJ1Ym5KRFNTeklVaHRuQlVyVTlMUSt3SEpT?=
+ =?utf-8?B?WTRLbEVxZ3dkM3B1MmRNa1lHTHRpcjlYa3FPREZsS3Y1djlPcjkxSmlBbmhn?=
+ =?utf-8?B?OEYvMkUvL3RlY0M0WlBPNnFkRmd5dEhiMnNZMWJmcFB0b0hYUGNwVzduQlRz?=
+ =?utf-8?B?RnRCOEI3UG0yWFZ3MnRiTzNUV1NSWXhYd2pCZEx4NmN1UWVZR1AwQnFQemhq?=
+ =?utf-8?B?UVlVRmNEZWR4RnlaSXRVU2lGWFErcHNjMEhDb092U3ZOUjRKYWJmeUdEeSsv?=
+ =?utf-8?B?bFJGOFlwRlFqNFhSeEpYSjJZeFluV09hZjBPRFZxamM3Nzh2ZmR1MDN2Wndk?=
+ =?utf-8?B?SGxqWWZzZDBTTk1FT0hPeXNPeXk1RmRPbDZSM045ZTNrZXdONmY3dmdJKzNj?=
+ =?utf-8?B?UXBQYWNqWUNid0ZZaFBFTlFndTkyQUJXYTRhL29HM292MnM1WDRKaEtjV240?=
+ =?utf-8?B?d3lzTXNhNnR2c3MvemlMYXR6R1VEWUVXdVU5MG5CTWtLKzBiWVVMMjNRNWdL?=
+ =?utf-8?B?eEk1M2YrdDl4Zkd6Z2gxMFNTeFlvOWZjMkRyeVkxOFpDRjFTUzBjOVU5L2xw?=
+ =?utf-8?B?L2ZMeVdUZ3ZHb01pSThBbERUODRmaE1yZzFMUTNlTGc3aS9WK0VJdTJSd0ly?=
+ =?utf-8?B?RjREeDNvMWsySHBwcDg2K3RWSTBHTEZwQW15NllKcExOQ0NSOFZ4L1B0RVYy?=
+ =?utf-8?B?YlRwSUMyRkpXVncyKzRaZzNzS3hwdm9JdnluNkxDRkRSYnFPZDdPVTdtUjFI?=
+ =?utf-8?B?c1U4YlFjOXFHdUNkaDVBQkZlNDRDeGR2K3QzRklaZHhFMlNQS2ZFSDlJeW1m?=
+ =?utf-8?B?VmRnTE8yS2dPUjNOVXpnL084cHozSXNkRUtWTUdScjhkWUpvemg2OWdDVHU2?=
+ =?utf-8?B?eXZzZkkwQ3lBRFlSUlhlNzVvUWVNUkczZ0FCQTd0eUJONysyOHZrYnBTdWNK?=
+ =?utf-8?B?RFhYNmprY2djSkJJTFpwVmNCYmZYWittWmJFVGVLMHdIbSsxWU0ydUNpMHl0?=
+ =?utf-8?B?ZXZwQndsLys4TzQ5V0VDQnNEdU02SktJQmhucVkyalhDZFNLNitHdWpvUldM?=
+ =?utf-8?B?d2Zqa3ZWRXlwUi9qYkN5djduTW1WdmxlYVFSL0NXN0ZHd0xwOFUxQ3VFL3h6?=
+ =?utf-8?B?M1BYV0VBUlFhN1VWTWdKRWl2T2V5bGNhUUw1NFdNR2hxNnVPY2ZkaDlRYUZj?=
+ =?utf-8?B?dFFPbHh3RzVyOHM2TjdWbCthSE9iM1lvZ08xc3h0cTE3c2F1R0xYRWtEc2xi?=
+ =?utf-8?B?NzAySzEwc0Nuc0J1dlJCaS9HTmRTd1JjOUdtU1ZRVkI1YUFjYWNqVFVCUjVq?=
+ =?utf-8?B?TThzcERXazFPRFZEclJ4dDJZSVVGMDhweERSNklCeXA1bjg4MVNJcHMvdXAy?=
+ =?utf-8?Q?GgRJ32U/PhHZ5lfG+ITELL1XNS+mBvJh0F7E+w+?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 798d23c9-1682-4e03-2c08-08dd76390b65
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 01:02:33.6180
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2P287MB1838
 
 
-> +
->  		if (copy <= 0 || !tcp_skb_can_collapse_to(skb)) {
->  			bool first_skb;
->  
-> 
-> -- 
-> 2.47.1
+On 2025/4/7 15:20, Longbin Li wrote:
+> From: ghost <2990955050@qq.com>
+>
+> Add PWM controller for SG2044.
+>
+> Signed-off-by: Longbin Li <looong.bin@gmail.com>
+
+Consider updating "MODULE_AUTHOR" (add your name) and 
+"MODULE_DESCRIPTION"(add SG2044).
+
+Thanks,
+
+Chen
+
+[......]
+
+
