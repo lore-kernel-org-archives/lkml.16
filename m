@@ -1,266 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692B23E34F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091823E235
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134692; cv=none; b=uK2awB0FZf+FwGjSvWPE2zZHfCV0bAp8YxNgKYcV+JDX5znHHWU1x6UXR7mveoEld7DrzYbIY1as+wbbANnBng+M1N5KG9r3iXq90ZjjV4W6gkLYHbgfGkSqzdMARGcLoTWqFykXh24vMFbbzVWqgIghm1dG+WlJrEA3PRBaRXM=
+	t=1744134713; cv=none; b=Zf5R6XoM0KLFwcz2fbO89OmJjg2nLG8q4J1HpVJW8TgX1N9DKXW8rLn7ywNnmELR+HbbP/H9rMjmqmW1zwgqWXwC+uhdrSQgtykYjZFiIkMU5WGxUV58fbhddJaPfvvpV+QO9TP5TTXtg79YVoko0tc9G7cZNTuzjdBZXkGWQrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134692; c=relaxed/simple;
-	bh=O9yVBnVA0VV37RgA5y4nQzjG05tKLNm5p8JUvBWBnOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j5rVZDecATcoO+UHMRpTSubewMf7CwdD7vsecxrGFmCTflY8fErMhvfgJfvq8RR7O81THRP27ppfu5zp6WERGP2HB3Xi6TOJdHHHqYTRf5VK4f9BCXSjRRlfyg0SQGKqZMlQiiM/xuaEybQAmOaFdZ40+aIJZ41jSGNjJsNIic0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQac4EFn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744134713; c=relaxed/simple;
+	bh=pfNiNb8Fe/zcwQj8jQmkgpYm3CZKoam63wk0H25fTyA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=imi1wVFQZSdHFwfErpgIUKtXUOwMOFHKQs67Bxqfu8EwWgtU4p0u/4rfCdlYNq6ci3R0pO0TJBAnlVOA2xincuOHRe5vx8jq86UZEq4QXFkYnM2ZlLgkcbDZ4/AzQTXk658BuhK+IaZZ/UmTj2y1+AJy+cec9Ea6YIDaAAZQXqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ag4ZO0o6; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQac4EFn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744134689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jVmRUiQDLWJ203tqLnD/OuMwczvhDUm4XHoxY85XOIs=;
-	b=PQac4EFnCGphPfQxnflW2uO0RsuTanvFT+Sq0DWMQv5kBCRkHzJCOoK8Wrenu7tduSPk3I
-	34GyKMNlQUGVCHPq71kRXAd9/Hk6TmPzelVS89SYy3NL9RSndJrXRPkjsWwT3VCdHgy6p7
-	PPIri5LX4hWjsYKg6opoH6qBxskse28=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-nfL-1SuPN4CV4f5-bGPB2Q-1; Tue, 08 Apr 2025 13:51:28 -0400
-X-MC-Unique: nfL-1SuPN4CV4f5-bGPB2Q-1
-X-Mimecast-MFC-AGG-ID: nfL-1SuPN4CV4f5-bGPB2Q_1744134687
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3d175fe71so394895566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:51:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ag4ZO0o6"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-85b40c7d608so503580739f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744134711; x=1744739511; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EXZ0+VsyT3ItyrY8CgiqoYB+yPWPKWB+ae2oWOWvhgI=;
+        b=ag4ZO0o61M7o/cV47ct6rJR7RnMvZyYnZK8YvTvri2+iGPVp95JX0DuBqKg2Pp3/HG
+         iURoLCsYBdri1agZI3VSs0e/uThFjVo7ZJljNZEAj5afuIGUx54thzQ1xXBpMjd6Cu/A
+         6FNifwFG75MFSkQKrRyU+nTy4nm5srHh8RlXGZnsLWjWGtYThzw2si6GDcNbRp+F9e7m
+         +aCDKEHzozcOPuIh9UZWIJUC3ZGsqO+nZ26zgCNderBziI4KSM1ZkG/kvmDzED6bEAzc
+         YNXP7nnlRPqh+bQZ09TFgcKkPqBZfG+CcxMBOdccP9/YIjPnadIVz02ABpBz7RORI4KZ
+         /mxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744134687; x=1744739487;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jVmRUiQDLWJ203tqLnD/OuMwczvhDUm4XHoxY85XOIs=;
-        b=J7cOQ0s3VwMOS4jUKMub+zRqjMFEYczcvoSSCVBaPspFH+Y23NseACADlanbo2/XfK
-         nh72QaiapPhxYTGGIr/xWFORG5I5xF5SOtU6C/uprx8JKPQqLHy6NmsfDEty29/Ax8Ul
-         WHoGMbQpVQMuG0HqqtIlxN39MTMyuJ77bnwJIdhqWgxvOS5yQxzrRaOSqtIdfxAE5hmF
-         1VFI8qKa4t3wmVEX/Yc0m4IbAeoS86xY2sfmmVbE+saPX/ps1WX4PjTx2KDDH3K5B2Hg
-         I8GMiH/MS6jnLwrKvXcdgjV8BAmRbaLN9Ht6LNpvoqzjVhMq87vepG3L3WHymN/Q8+vV
-         qymA==
-X-Forwarded-Encrypted: i=1; AJvYcCUy3GAaqbCaw4qAzoeDi/hnwWjU1SNRBSCdLaEXoe5Zq6PFM4GdXXJGLnMH7QsH0/ixzDoB4CSgDS3Kt/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgqFhG+3utLW1ZrCKaf/rHSaT3DuQ9kAqt1xChp5cdMNNJc83x
-	ydmzq/i9GLbJj7UW4zhq7Ms5Vm7AfYqU2ydzPwe/FXGMDgeOgx835+b8cjg9/F8C5P8mQA9m3TB
-	UryJ9ylHZrIgzak6rAZtzofdFF8mf7F2taMQiUpkJZ1wFeqeYOkEyLM0zZ96x1w==
-X-Gm-Gg: ASbGncvhS43kyPZqwYGVguX860dolsxwTLXec+QEX/Jrc+x8TWUQRj4FLigY5SXgjo4
-	nUtFmvRXC5VuxigqbcjiVto8/OUQzm4rpo+fU1fXw8hypRoazBccbp3J1evGCsV2KAQXOb/rgil
-	f31QdCfjnvw9m+SzX6KoHBj0JLXZ3aFGRjCQBJscpeuE8trr92eiMF6oqyhpM04TIvdZRqR94es
-	oXFcSMjjWHgGL9xlFBwA2pTOcoEsveQJgLNFzDQnkVZ5prVzZhJiXC4xC8MIPbeGG3UuaMjsAQI
-	myU5ELGYyupIGJ4wUWiD
-X-Received: by 2002:a17:907:3f26:b0:ac7:3817:d8da with SMTP id a640c23a62f3a-aca9b7718b1mr8155266b.52.1744134686867;
-        Tue, 08 Apr 2025 10:51:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGEAzVZ7/qwQFMPt/QXOHxFTFozQku5BHeCETp2tWjKJ3IsbjhXd6GGXO545EnliOM3B7HwGA==
-X-Received: by 2002:a17:907:3f26:b0:ac7:3817:d8da with SMTP id a640c23a62f3a-aca9b7718b1mr8153966b.52.1744134686436;
-        Tue, 08 Apr 2025 10:51:26 -0700 (PDT)
-Received: from [192.168.10.48] ([151.49.197.100])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7bfea10f6sm945030566b.71.2025.04.08.10.51.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 10:51:25 -0700 (PDT)
-Message-ID: <d3bdaa2e-c268-4828-8f85-75fd0f859887@redhat.com>
-Date: Tue, 8 Apr 2025 19:51:24 +0200
+        d=1e100.net; s=20230601; t=1744134711; x=1744739511;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EXZ0+VsyT3ItyrY8CgiqoYB+yPWPKWB+ae2oWOWvhgI=;
+        b=SDPtJFXw7Rt+IzdRRnCNLFsIhsF1I6s4528FglC0jFBmpW7MU/y2ANWbc+3Uh+2VUF
+         uckpjiE+ffN1m/lLVuP65xIfKbrQv2oksvLyOrDwQSDI1BNpyB0qtuKOmDgh5mWTDCco
+         OeRPmHI0Zc1t4shO2DI2065txce99/7e0IkI0rW0xLgt4z9e3zkY0VVqgg1SUs/70OTH
+         AAoDqbmUqYoqjkhp6kWVtDULxQwdR7UBMoyCYZnMdnr/br6n2xP3/NE3BpfwANBa9VFG
+         KW2ztR1DQ8pMINy9TjlMJtFB/8UMYmIVts6BwD2xs49sSuRDdlTEDKKmHh12BTQRXhTW
+         yoOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXoGjUJi/Ho05G1/ch+k+3acYktlOxVNwlrPXc0tG9tWrwewKfACuORMl1BC8z4Bww7ekif7CQ/HCS/7RM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG9AfdglD2FntqOm4KbvavY+bU1ZNE/482LJ9CEVeQK5BYZxN8
+	9fRxr/t0W7B5sUZy0wVOPnp4VhSBtZrZGjKQz3r6Ha1zfSrVNlwjOFfXex257W0=
+X-Gm-Gg: ASbGncstbzQ+Q1zhxq+9/1lNzSELPWB1dqTgYYS0WQtKFaPuVgp5xqOMXSYQnlPiEiK
+	Ty0+1J8blScw6X0GZi6YmKJMul4uB+LuF1I30AdLcw/piLNvzKoouQAUujW0SUUPyY+x1NNa4Pg
+	gpYBAVbFU4JQShrspIn0VKsgc/O2EBINC+VzwwhzWouQlmJRVNVJvNxeXJAh97LsrzGCGhNhqwF
+	Qk/LWi+BbYT8GwU1RTdJwOLrwsxq0xkQ8rNhW4cmAsTI/k5m2AbIpoBZuUtPkoIn7XsLJ/otmDQ
+	MRWIM3HtGl0DAsRDVj+cNSFLlaDN1ivSM7DS6pqNDoFZBCIgF2tjW0iEBQ33KGdrsd3/w2kQn9y
+	gsrFcR8Gs7ZNLBSR1GEH6bEV4IOEr
+X-Google-Smtp-Source: AGHT+IGVxxwmqJkqflwzOHKjV4l4VlvMzZwjLfYihFRtDlDdDH3ptiChk4kVDxgr5Yqkd4y8bj8J5A==
+X-Received: by 2002:a05:6602:3995:b0:85b:601d:dfb9 with SMTP id ca18e2360f4ac-8616118207amr9274439f.3.1744134711088;
+        Tue, 08 Apr 2025 10:51:51 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4f44e26fcsm595914173.120.2025.04.08.10.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 10:51:50 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: benjamin.larsson@genexis.eu,
+	bastien.curutchet@bootlin.com,
+	andriy.shevchenko@linux.intel.com,
+	u.kleine-koenig@baylibre.com,
+	lkundrak@v3.sk,
+	devicetree@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: serial: 8250: support an optional second clock
+Date: Tue,  8 Apr 2025 12:51:42 -0500
+Message-ID: <20250408175146.979557-2-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250408175146.979557-1-elder@riscstar.com>
+References: <20250408175146.979557-1-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 62/67] KVM: SVM: Don't check vCPU's blocking status when
- toggling AVIC on/off
-To: Sean Christopherson <seanjc@google.com>, Joerg Roedel <joro@8bytes.org>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Maxim Levitsky <mlevitsk@redhat.com>,
- Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
-References: <20250404193923.1413163-1-seanjc@google.com>
- <20250404193923.1413163-63-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20250404193923.1413163-63-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/4/25 21:39, Sean Christopherson wrote:
-> Don't query a vCPU's blocking status when toggling AVIC on/off; barring
-> KVM bugs, the vCPU can't be blocking when refrecing AVIC controls.  And if
+The SpacemiT UART driver requires a bus clock to be enabled in addition
+to the primary function clock.  Add the option to specify two clocks
+for an 8250-compatible UART, named "core" and "bus".
 
-refrecing -> refreshing
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+ Documentation/devicetree/bindings/serial/8250.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Paolo
-
-> there are KVM bugs, ensuring the vCPU and its associated IRTEs are in the
-> correct state is desirable, i.e. well worth any overhead in a buggy
-> scenario.
-> 
-> Isolating the "real" load/put flows will allow moving the IOMMU IRTE
-> (de)activation logic from avic_refresh_apicv_exec_ctrl() to
-> avic_update_iommu_vcpu_affinity(), i.e. will allow updating the vCPU's
-> physical ID entry and its IRTEs in a common path, under a single critical
-> section of ir_list_lock.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/svm/avic.c | 65 +++++++++++++++++++++++------------------
->   1 file changed, 37 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index 0425cc374a79..d5fa915d0827 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -838,7 +838,7 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu)
->   		WARN_ON_ONCE(amd_iommu_update_ga(cpu, ir->data));
->   }
->   
-> -void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> +static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   {
->   	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
->   	int h_physical_id = kvm_cpu_get_apicid(cpu);
-> @@ -854,16 +854,6 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   	if (WARN_ON_ONCE(vcpu->vcpu_id * sizeof(entry) >= PAGE_SIZE))
->   		return;
->   
-> -	/*
-> -	 * No need to update anything if the vCPU is blocking, i.e. if the vCPU
-> -	 * is being scheduled in after being preempted.  The CPU entries in the
-> -	 * Physical APIC table and IRTE are consumed iff IsRun{ning} is '1'.
-> -	 * If the vCPU was migrated, its new CPU value will be stuffed when the
-> -	 * vCPU unblocks.
-> -	 */
-> -	if (kvm_vcpu_is_blocking(vcpu))
-> -		return;
-> -
->   	/*
->   	 * Grab the per-vCPU interrupt remapping lock even if the VM doesn't
->   	 * _currently_ have assigned devices, as that can change.  Holding
-> @@ -898,31 +888,33 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
->   }
->   
-> -void avic_vcpu_put(struct kvm_vcpu *vcpu)
-> +void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> +{
-> +	/*
-> +	 * No need to update anything if the vCPU is blocking, i.e. if the vCPU
-> +	 * is being scheduled in after being preempted.  The CPU entries in the
-> +	 * Physical APIC table and IRTE are consumed iff IsRun{ning} is '1'.
-> +	 * If the vCPU was migrated, its new CPU value will be stuffed when the
-> +	 * vCPU unblocks.
-> +	 */
-> +	if (kvm_vcpu_is_blocking(vcpu))
-> +		return;
-> +
-> +	__avic_vcpu_load(vcpu, cpu);
-> +}
-> +
-> +static void __avic_vcpu_put(struct kvm_vcpu *vcpu)
->   {
->   	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   	unsigned long flags;
-> -	u64 entry;
-> +	u64 entry = svm->avic_physical_id_entry;
->   
->   	lockdep_assert_preemption_disabled();
->   
->   	if (WARN_ON_ONCE(vcpu->vcpu_id * sizeof(entry) >= PAGE_SIZE))
->   		return;
->   
-> -	/*
-> -	 * Note, reading the Physical ID entry outside of ir_list_lock is safe
-> -	 * as only the pCPU that has loaded (or is loading) the vCPU is allowed
-> -	 * to modify the entry, and preemption is disabled.  I.e. the vCPU
-> -	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
-> -	 * recursively.
-> -	 */
-> -	entry = svm->avic_physical_id_entry;
-> -
-> -	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
-> -	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
-> -		return;
-> -
->   	/*
->   	 * Take and hold the per-vCPU interrupt remapping lock while updating
->   	 * the Physical ID entry even though the lock doesn't protect against
-> @@ -942,7 +934,24 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
->   		WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
->   
->   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-> +}
->   
-> +void avic_vcpu_put(struct kvm_vcpu *vcpu)
-> +{
-> +	/*
-> +	 * Note, reading the Physical ID entry outside of ir_list_lock is safe
-> +	 * as only the pCPU that has loaded (or is loading) the vCPU is allowed
-> +	 * to modify the entry, and preemption is disabled.  I.e. the vCPU
-> +	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
-> +	 * recursively.
-> +	 */
-> +	u64 entry = to_svm(vcpu)->avic_physical_id_entry;
-> +
-> +	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
-> +	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
-> +		return;
-> +
-> +	__avic_vcpu_put(vcpu);
->   }
->   
->   void avic_refresh_virtual_apic_mode(struct kvm_vcpu *vcpu)
-> @@ -983,9 +992,9 @@ void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
->   	avic_refresh_virtual_apic_mode(vcpu);
->   
->   	if (activated)
-> -		avic_vcpu_load(vcpu, vcpu->cpu);
-> +		__avic_vcpu_load(vcpu, vcpu->cpu);
->   	else
-> -		avic_vcpu_put(vcpu);
-> +		__avic_vcpu_put(vcpu);
->   
->   	/*
->   	 * Here, we go through the per-vcpu ir_list to update all existing
+diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+index dc0d52920575f..1adf935b7f36f 100644
+--- a/Documentation/devicetree/bindings/serial/8250.yaml
++++ b/Documentation/devicetree/bindings/serial/8250.yaml
+@@ -135,7 +135,11 @@ properties:
+   clock-frequency: true
+ 
+   clocks:
+-    maxItems: 1
++    oneOf:
++      - maxItems: 1
++      - items:
++          - const: core
++          - const: bus
+ 
+   resets:
+     maxItems: 1
+-- 
+2.45.2
 
