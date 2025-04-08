@@ -1,115 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2481E22D784;
-	Tue,  8 Apr 2025 18:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABD7232786
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136313; cv=none; b=YyFIFQw3mXWf12C82vM5/3WMwzdXUXX+bfbU/Tg798WOLYbfiI796udlcjnKaQ0Cp9kCfReEcF9DcnLr6wZkrT7aZO30SJcE6kRKRStbMvN19ouAzHeKzQer0Q6vQjmH9E5wAeaKaPdShbK29bwIKF66sftMBbptPoDqpgnVsKg=
+	t=1744136323; cv=none; b=qvgf4iwqwfQGJA4AB5Kvv+6cZNh495pzjgcGJLoQ/PXHhwDacRmwEYKnvh+D8Ml2EsBcRAOccYSs67R3iO7Ag8RxC7TrsIMx55PByhKl9BD2Kht78Eb4DQnHUcGxFH5TxWkLih40GevP9twncuxQe9pgFNNgqLBWuiML75DayO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136313; c=relaxed/simple;
-	bh=fiOaarTH28gh7dXloDOEQyvC6j9WQz+3HHwW0u7rdGM=;
+	s=arc-20240116; t=1744136323; c=relaxed/simple;
+	bh=33JDFRyvDs8HR1vl7NYCjQs8vBWEkaxL/bF60gGL8Uc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EHuhzrG897c3h5zVT4kyX2rTrBQeEvynVqOhcyMAtXvDS5ABjO6jaUZzTdfcEvfmJ3OIkSNc3E/tu786IOZARjnHAU/yOkSLha2deunF9x3yrlst38AlWe4CfNAcypKDkaOYJt5CAcLtdnqSr48o33Vz8PMOR0Lh0fJ0ogR01iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T539n5lK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UVFFC17r/+l9jvHGDNotbKxHWorR+FZ84H16BjVgM4GrRLi9C2OFUfJu6uKDAYldLxMuPaRb94RNKN1ip9oNCC3Ac040wv2/rxlMezTYQkdihqcdO4HCZPXRX3+p1hoZb0FDKKYDWC3ZG22JUeBmSKWjDZ/5wUJD1uKHcTmc54A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a3tEIf5o; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T539n5lK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F2C6C4CEE8;
-	Tue,  8 Apr 2025 18:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744136312;
-	bh=fiOaarTH28gh7dXloDOEQyvC6j9WQz+3HHwW0u7rdGM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T539n5lKTXzrZK96AlrM10be9wv0SIgWr4Q4u4vKIjNuCHsMSWvwgRqsPgPCD859U
-	 2SKMzC9PNmQry1HR8DYjhkKA1vJQkML3JW1JFfZjGn3S0fzxgq3wqqiiugZ2yPGVtw
-	 3icsghcSxatpLbXLHCqbBYKzy7cXM8z33VD0IrPXt6NtKdbPThBf9396qMVJamoyL5
-	 jbm5Rb0X3mpufGgRnrcx8oGJseVJWNnYVcl1rKo6I2zTkskDpkkeWEan4XGtNDqOFR
-	 pdckD4/t4Opu+OXYxAajy+N5fmpCOPuf0c082ps030x1fgipRJ/sb5aLhW+Fgp6Rh0
-	 IFLSyvMDnyGOA==
-Message-ID: <df253016-81df-4cc9-8a8c-f92fd1cb8aea@kernel.org>
-Date: Tue, 8 Apr 2025 20:18:26 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3tEIf5o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744136320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=a5MNTcQLVVXVMARql3CFcEx28D/XK8NJIFEW1cH0fos=;
+	b=a3tEIf5oKiW8ZtT2gfpSq1LBkMZMqc51MPJoHR0Ped3ECoIB5UwX51zs0+Mw93ZPY6B4Kv
+	XhZRyY5lVus5E4vJBbnyDcK5VQZ+biZs4ltn9p4kPGYzYmp1p3HMTp+8b7QPeMgEzB0/GY
+	ysOg0SFgt3SZ9wHbCiHtncN8zoho7RI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-20-WoD2pnRsPAi-pUFTOlHCRQ-1; Tue, 08 Apr 2025 14:18:38 -0400
+X-MC-Unique: WoD2pnRsPAi-pUFTOlHCRQ-1
+X-Mimecast-MFC-AGG-ID: WoD2pnRsPAi-pUFTOlHCRQ_1744136317
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso34704475e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:18:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744136317; x=1744741117;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a5MNTcQLVVXVMARql3CFcEx28D/XK8NJIFEW1cH0fos=;
+        b=SzV3b7OFw1r3wa3T/tRgIuazU5AkszHgJV0q86fNVKQVn7Yapo68cDFWXC26uYQ1O3
+         iwqKwQb7scIUwC3oegcfSuHU/LY1s9gspFjN6VRFdyXTmxOaIk3Zkid7lYfhBTQKaILX
+         0ksIyqt8LFCuEaPdysjf8mFUtrTwpEcwJZxvMio8YxOHKwPfBxhM6panfuUn3ZYCYhuB
+         INcsRta1C7MA3pl9+Jzv3orAdhLZRdirSDU3lD/2ubA+4/PCOdXNUAb1toRHeqBUOK1O
+         mGNC5+NCACrj5x12oLgOv5rX2DJyVYwZzOFxpP9IT+qnWQO3wxEkSbwpd+bzylmX/K9b
+         1Vow==
+X-Forwarded-Encrypted: i=1; AJvYcCWTuC4Buy9MOO0QPfqwGq93wIqp0StpgAd6DGv8I6TWgxYKriJNu3loWZNoxzTOguaUbtAgChM5iyJ2/wA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQw9NiEQAhCP3oAh5u/FPPKKhaiKn62TR60qbKmHM5zwi6H+CZ
+	k2DlsI6bOGsoJLxC6UsgKSjzRKErjL3TAzWfa76ikkzXuub+1t7SW+e5XNn5pm2LPyZf4yX1THC
+	hNPlBswsXcpfe7ymHu/1pvjLP4dpbXxQrKpT2zXqgiN2YFwZMlUJ2VV7RzE294A==
+X-Gm-Gg: ASbGnctCH6AmL35sezHfreOZC4ovA56QtpA4wadKGcfgGIkwFOpFt7MQexSbJtW/yGl
+	CRdjKFE1d2Yq7h2kH2CQJE32KSfVtcD0IP7uo+fBGiuCScKPclJNdxPImviUbY9WQxHmgaJpxzY
+	4lw4VjzatCJjpPhm/bghW5IhtQP7nraTNnkwg9nn+HN+UM7jAVL7t2IFPgu6BrglIsoA9z02ZmH
+	khAlPhtqKmbIP4ZfghMABciWB2G0V4zOMIcUVYy5LoSdSjdcCg944BzZZ/kLxqVw2CNt+l6Oq0J
+	vYzbP2ji0QOasmOewa4PujWYVldyv4suMj0Y8rpWyNE2AItaN6scyjyqmthRn2tG0pQQtFGsGXr
+	xDxSMv6KnTaNhvB3NmYmRQ12C//daOlqhtW6B9sDg
+X-Received: by 2002:a05:600c:cc7:b0:439:9737:675b with SMTP id 5b1f17b1804b1-43f1ef4ed59mr687675e9.7.1744136317494;
+        Tue, 08 Apr 2025 11:18:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHt6LtzhtOCodKlEDsv24JUxo5GCvyjuPDd1u+OK+hcqeg+gGGG7/Q1UKS8qILxl7CGg59mw==
+X-Received: by 2002:a05:600c:cc7:b0:439:9737:675b with SMTP id 5b1f17b1804b1-43f1ef4ed59mr687595e9.7.1744136317185;
+        Tue, 08 Apr 2025 11:18:37 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4f00:a44a:5ad6:765a:635? (p200300cbc7074f00a44a5ad6765a0635.dip0.t-ipconnect.de. [2003:cb:c707:4f00:a44a:5ad6:765a:635])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630ddesm172061645e9.5.2025.04.08.11.18.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 11:18:33 -0700 (PDT)
+Message-ID: <60ae4d6b-3ace-482b-9945-1261003f3785@redhat.com>
+Date: Tue, 8 Apr 2025 20:18:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] configs/debug: run and debug PREEMPT
-Content-Language: en-GB, fr-BE
-To: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, paulmck@kernel.org, joel@joelfernandes.org,
- steven.price@arm.com, akpm@linux-foundation.org, anshuman.khandual@arm.com,
- linux-kernel@vger.kernel.org
-References: <20250402172305.1775226-1-sdf@fomichev.me>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250402172305.1775226-1-sdf@fomichev.me>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] mm,slub: Do not special case N_NORMAL nodes for
+ slab_nodes
+To: Vlastimil Babka <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, linux-cxl@vger.kernel.org
+References: <20250408084153.255762-1-osalvador@suse.de>
+ <20250408084153.255762-2-osalvador@suse.de>
+ <92ff4f7f-90d2-48ab-8f7d-7fc3485276b5@redhat.com> <Z_UwPmyxyu8YNLG_@harry>
+ <b26b32c9-6b3a-4ab4-9ef4-c20b415d5483@redhat.com>
+ <d581417f-7756-4ce7-8a5a-49149db33b8c@suse.cz>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d581417f-7756-4ce7-8a5a-49149db33b8c@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Stanislav,
+On 08.04.25 19:55, Vlastimil Babka wrote:
+> On 4/8/25 16:25, David Hildenbrand wrote:
+>> On 08.04.25 16:18, Harry Yoo wrote:
+>>> On Tue, Apr 08, 2025 at 12:17:52PM +0200, David Hildenbrand wrote:
+>>>> On 08.04.25 10:41, Oscar Salvador wrote:
+>>>>> Currently, slab_mem_going_going_callback() checks whether the node has
+>>>>> N_NORMAL memory in order to be set in slab_nodes.
+>>>>> While it is true that gettind rid of that enforcing would mean
+>>>>> ending up with movables nodes in slab_nodes, the memory waste that comes
+>>>>> with that is negligible.
+>>>>>
+>>>>> So stop checking for status_change_nid_normal and just use status_change_nid
+>>>>> instead which works for both types of memory.
+>>>>>
+>>>>> Also, once we allocate the kmem_cache_node cache  for the node in
+>>>>> slab_mem_online_callback(), we never deallocate it in
+>>>>> slab_mem_off_callback() when the node goes memoryless, so we can just
+>>>>> get rid of it.
+>>>>>
+>>>>> The only side effect is that we will stop clearing the node from slab_nodes.
+>>>>>
+>>>>
+>>>> Feel free to add a Suggested-by: if you think it applies.
+>>>>
+>>>>
+>>>> Do we have to take care of the N_NORMAL_MEMORY check in kmem_cache_init() ? Likely it
+>>>> would have to be a N_MEMORY check.
+>>>>
+>>>>
+>>>> But, I was wondering if we could get rid of the "slab_nodes" thingy as a first step?
+>>>
+>>> The following commit says that SLUB has slab_nodes thingy for a reason...
+>>> kmem_cache_node might not be ready yet even when N_NORMAL_MEMORY check
+>>> says it now has normal memory.
+>>
+>> node_states_set_node() is called from memory hotplug code after
+>> MEM_GOING_ONLINE and after online_pages_range().
+>>
+>> Pages might be isolated at that point, but node_states_set_node() is set
+>> only after the memory notifier (MEM_GOING_ONLINE) was triggered.
+>>
+>> So I don't immediately see the problem assuming that we never free the
+>> structures.
+> 
+> Hm, I think it still exists. So consider:
 
-On 02/04/2025 19:23, Stanislav Fomichev wrote:
-> Recent change [0] resulted in a "BUG: using __this_cpu_read() in
-> preemptible" splat [1]. PREEMPT kernels have additional requirements
-> on what can and can not run with/without preemption enabled.
-> Expose those constrains in the debug kernels.
+Ah, now I understand the problem, thanks for pointing that out.
 
-Good idea to suggest this to find more bugs!
+> 
+> - slab_mem_going_online_callback() creates kmem_cache_node for the new node
+> for existing caches under the mutex
+> 
+> Then a cache creation races with "node_states_set_node() is set only after
+> the memory notifier (MEM_GOING_ONLINE) was triggered" in a way that it
+> doesn't see the node set yet - kmem_cache_node for the new node on the new
+> cache will be missing.
+> 
+> The root issue is node_states_set_node() doesn't happen under slab_mutex.
+> slab_nodes update happens under the slab_mutex to avoid this race.
 
-I did some quick tests on my side with our CI, and the MPTCP selftests
-seem to take a bit more time, but without impacting the results.
-Hopefully, there will be no impact in slower/busy environments :)
+We could by grabbing the mutex in MEM_GOING_ONLINE and putting it in 
+MEM_CANCEL_ONLINE / MEM_ONLINE when a node is going online.
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+We use something similar in virtio-mem code to sync over the whole 
+onlining period.
 
-Cheers,
-Matt
+Of course, if someone would try creating a cache from inside a notifier, 
+it would be problematic. (unlikely, but pointing it out)
+
+Onlining a node is not a particularly common operation, so maybe ... 
+good enough.
+
+Let me think about other alternatives that require minimal adjustments.
+
 -- 
-Sponsored by the NGI0 Core fund.
+Cheers,
+
+David / dhildenb
 
