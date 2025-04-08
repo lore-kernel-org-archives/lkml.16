@@ -1,454 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE9E2571AB;
-	Tue,  8 Apr 2025 21:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A9220E32F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744148888; cv=none; b=HDsksdjID+BLKwEXmMDs3Mfq91F3FTfZerWvWd1m0lXxYi7C3pPL7FsxKB+1wFz93N/4vaWrxhWdBrMAH+Rw0vXOreVNBYEJEjOJRuOCPZytPGmbfC8unIh01dY8wJmc/CfXjFBIX+pnNukztax4OK7D2FTKEVLFjpqPzMZmpyo=
+	t=1744149105; cv=none; b=QvHH4kBu8IWDZdLO1BfrxAkLv5RF+SaIWcmFfO3YuB0XF1rEAiMWCCEFDebSVtaP3uGSypaFA0Hvap9WIWvqf/3yoFqUO3H2xQSNW6g7GLsl/EfzzHoLasmAPjH/MD/eCLW5Di6gygoLdCGaww/SLAzU02Es7TPolYolZp9jv8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744148888; c=relaxed/simple;
-	bh=eUq71EDl7QGLTGkIQlL6tybA0cR6VZXg0BIIhD3uU1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XbUSSNDxeDPOOhmLyVrfHy+SHG2bYptdIPMKlYXhMu23XK5T4JocjNdjDHZvtoG92Cm6mRvbAnkdyQiaT/yRmNUG39VUFm/VKVdy43OWjZxGjVhNnAuSmYz90YiS0O4iKgNbrCQFQ9tAdNfrlPm/j9jiZj1qrT9m6wAgojhvW60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zu8WwXKF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744149105; c=relaxed/simple;
+	bh=SO5j5WgpKL3BcXKO5kOdxByCJcvTLcn9ijCoQY04dpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PmNb9LtsJ6k+eEpIQEza/1pRATkmjV0cW0g7/KFZ8+NFscLxPd8RtrRndsd+SVz3S144W4JORXc3mqhu0DDTudGLyeRDpnFF3YxuYX1FYR2aiFG5fJlm0Er4gnqWCH35LSFkHD3TuPAA4rJYq02QJw8Xl1E6BAvsTgI5owXi/QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fHN20sUj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zu8WwXKF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD193C4CEE5;
-	Tue,  8 Apr 2025 21:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744148887;
-	bh=eUq71EDl7QGLTGkIQlL6tybA0cR6VZXg0BIIhD3uU1Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zu8WwXKFWjibNEDxARfLyPtWdtLp6fu2WgiC7oT1N5xXJsYWuXiNqOXqR8uBKlPA8
-	 JCfsHundc/K19fdwIu20r4yfKv5pUgGxDSw7SdSr0Gsn0YemToplwIjHFk/RI3wN1Q
-	 kqMJ4pXAehyXhUydCbp4JLS2wgC4xYpyFheZHnW88FyjfMzAtq2bphK1yr3BPFXerb
-	 csoAG5bhAwwDXIwK4KO383xbhVTRyPFbXX6ETUfAXgXYIZE+FdnUKOhYhld26njRDJ
-	 aFlGc7BLG8VutwlmzFWQBXavIPhs22pAZ0YSne2g82XiIlt07NPfUZSaJhkAR4gUkm
-	 w4PDlPnE/duwA==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	amit@kernel.org,
-	kvm@vger.kernel.org,
-	amit.shah@amd.com,
-	thomas.lendacky@amd.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	pawan.kumar.gupta@linux.intel.com,
-	corbet@lwn.net,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	seanjc@google.com,
-	pbonzini@redhat.com,
-	daniel.sneddon@linux.intel.com,
-	kai.huang@intel.com,
-	sandipan.das@amd.com,
-	boris.ostrovsky@oracle.com,
-	Babu.Moger@amd.com,
-	david.kaplan@amd.com,
-	dwmw@amazon.co.uk,
-	andrew.cooper3@citrix.comm,
-	nik.borisov@suse.com
-Subject: [PATCH v4 6/6] x86/bugs: Add RSB mitigation document
-Date: Tue,  8 Apr 2025 14:47:35 -0700
-Message-ID: <ab73f4659ba697a974759f07befd41ae605e33dd.1744148254.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1744148254.git.jpoimboe@kernel.org>
-References: <cover.1744148254.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fHN20sUj"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JZ0Au023085
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 21:51:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4qYMmx1cwwXQQRUe4B443jnoYMCJS9Y4BrBHvddUYs0=; b=fHN20sUjyr6/tJLY
+	VFhatTXDYbz76Q0DK5zR2QYW9X9Y/auQ1nlJ7HFpRTshffjRlcLSirXqIxTLYqXN
+	w9ZEOnVuhOGlCcoyLHhIlt8tdrbPluKXVrQurRD6TS6/lva/R+tq9uDsvFZ0xQ+Z
+	a8oBH20Ljg9CewBtye8yMMArv4aaBjMQDRJ5jO0eqoUpthRtmP68Ac4hWhMDDm5g
+	y/cf6cS5DuNI8wypYHE7MXHll3Esx3tiBVKMMI9PAOg77sogXsoWndhNgaO91H7w
+	ttTbf4MUUpKSARWg9BevWtu+FFt5XOHTPhBZob3Dbve218YHPWsWynBBu7NIsiLf
+	LJtPTQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twfkh4vw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 21:51:41 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-227ed471999so50146065ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:51:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744149100; x=1744753900;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4qYMmx1cwwXQQRUe4B443jnoYMCJS9Y4BrBHvddUYs0=;
+        b=I0qnMC4nvXdi38rORSlSexle9nWcdBftNK/lFt3mgQo068MZ+evzYKTsXCz33nxGgX
+         zabHe3pxENQdixeKHKDXl1l4VFyQlkvn7xMrfTG1pWdYQdiGPips9dBFc4jvTH7wA8PV
+         6AJg+wDF0M1uO7QRbWycyh5jfVbgzHdX+X+2ymVvOlAHwBMCX765wopx01b5vHrKGi9h
+         9oRH1xSUWlhVmVh+RuV/oJGvG4MDuOsUt3I6/VgSUKkiqGS8qKV+imJBOeE5pBiI+Cqc
+         zEIzl8xXhO4AwEwhaX78+6nGsWycoJX9UvIdo9hNvkxuWarB2L7fQpjXRpMDzibg34It
+         rwWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmYGcUpZfNvICETJ0oOY2M0dx89nldgRZyLtVFXiCggKvcq0Dvd5yKK1IiVBQGPL1v1AbfUYd4s0/fMWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf7FarlMwHW4rLm0VLJtAH5kjNUN1bFPTMy8J7idmv3z6sZF8v
+	ZvNmUVrC1MNVxI1KF8M2es85Bae41bmeN66V4t6tTdnF7Z+Smi2rtA/S2uN7rjZJgmgH302kQ5q
+	uPH86pFa4ChipsbB7LfWpTR4jX8eiaZestsHOyuqfxMdH/ywm2VsJxZuE39zA/ig=
+X-Gm-Gg: ASbGncvLPG7Igm+oEd6OZhK6clNJArs1zR8Vldwbph3coAkC4ngTCiOXfvbLpU1KSVN
+	sxQZGzbOK8KRpNXc5Juh7XlYSkRVTCqQ7xn3TMyz5EDHkZgCP2V/vewX8neJIsJi7vaeyYhvKbQ
+	kMSwoo000beNOpsG8974zDRTFzBJE2RsW+ooyb2sBHBq/a8Qh7x5zktnryS9StqZO/bZ2PqCY1W
+	TxNjOXCo6GXOBySfUU8SiVC2avQNt1DIIICXDV1UGQTohZFQf7hs2Hk6tkpPeNiYg9xMf4sQfF/
+	0Z/JT2Mt5SaOKvyrAjqmWBfwq9pU/vPgSY35YjGeSzwG7wJRJwtR44hBCjhXz04CIQ5occOr5oM
+	LL4xL6A==
+X-Received: by 2002:a17:903:1245:b0:221:7b4a:476c with SMTP id d9443c01a7336-22ac2992a09mr8608965ad.18.1744149099657;
+        Tue, 08 Apr 2025 14:51:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCNranT1CO/GEUVT0ohp6e+mD5pBJVFGlgN+QUZlRKj2YbWbEFTNk7ni641yJ3KvIeudhivw==
+X-Received: by 2002:a17:903:1245:b0:221:7b4a:476c with SMTP id d9443c01a7336-22ac2992a09mr8608705ad.18.1744149099281;
+        Tue, 08 Apr 2025 14:51:39 -0700 (PDT)
+Received: from [10.71.114.173] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ada60sm106004875ad.3.2025.04.08.14.51.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 14:51:38 -0700 (PDT)
+Message-ID: <de34c654-5b9c-4c21-aee3-e732f6ed374f@oss.qualcomm.com>
+Date: Tue, 8 Apr 2025 14:51:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5 RESEND] thermal: qcom-spmi-temp-alarm: Add support
+ for new TEMP_ALARM subtypes
+From: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+To: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
+        daniel.lezcano@linaro.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, david.collins@oss.qualcomm.com,
+        srinivas.kandagatla@linaro.org, stefan.schmidt@linaro.org,
+        quic_tsoni@quicinc.com, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmitry.baryshkov@linaro.org
+References: <20250320202408.3940777-1-anjelique.melendez@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250320202408.3940777-1-anjelique.melendez@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 5Wzi5sOZbnzn1Xxgf-EX6wEwH59c7xJ3
+X-Proofpoint-ORIG-GUID: 5Wzi5sOZbnzn1Xxgf-EX6wEwH59c7xJ3
+X-Authority-Analysis: v=2.4 cv=b7Oy4sGx c=1 sm=1 tr=0 ts=67f59a6d cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=p-nOP-kxAAAA:8 a=EUspDBNiAAAA:8
+ a=P6RHbN-0fNZ3JhbA0IsA:9 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22 a=TjNXssC_j7lpFel5tvFf:22 a=XN2wCei03jY4uMu7D0Wg:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_09,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 mlxscore=0 impostorscore=0 phishscore=0
+ clxscore=1015 spamscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080151
 
-Create a document to summarize hard-earned knowledge about RSB-related
-mitigations, with references, and replace the overly verbose yet
-incomplete comments with a reference to the document.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- Documentation/admin-guide/hw-vuln/index.rst |   1 +
- Documentation/admin-guide/hw-vuln/rsb.rst   | 268 ++++++++++++++++++++
- arch/x86/kernel/cpu/bugs.c                  |  64 +----
- 3 files changed, 282 insertions(+), 51 deletions(-)
- create mode 100644 Documentation/admin-guide/hw-vuln/rsb.rst
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index ff0b440ef2dc..451874b8135d 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -22,3 +22,4 @@ are configurable at compile, boot or run time.
-    srso
-    gather_data_sampling
-    reg-file-data-sampling
-+   rsb
-diff --git a/Documentation/admin-guide/hw-vuln/rsb.rst b/Documentation/admin-guide/hw-vuln/rsb.rst
-new file mode 100644
-index 000000000000..21dbf9cf25f8
---- /dev/null
-+++ b/Documentation/admin-guide/hw-vuln/rsb.rst
-@@ -0,0 +1,268 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+RSB-related mitigations
-+=======================
-+
-+.. warning::
-+   Please keep this document up-to-date, otherwise you will be
-+   volunteered to update it and convert it to a very long comment in
-+   bugs.c!
-+
-+Since 2018 there have been many Spectre CVEs related to the Return Stack
-+Buffer (RSB) (sometimes referred to as the Return Address Stack (RAS) or
-+Return Address Predictor (RAP) on AMD).
-+
-+Information about these CVEs and how to mitigate them is scattered
-+amongst a myriad of microarchitecture-specific documents.
-+
-+This document attempts to consolidate all the relevant information in
-+once place and clarify the reasoning behind the current RSB-related
-+mitigations.  It's meant to be as concise as possible, focused only on
-+the current kernel mitigations: what are the RSB-related attack vectors
-+and how are they currently being mitigated?
-+
-+It's *not* meant to describe how the RSB mechanism operates or how the
-+exploits work.  More details about those can be found in the references
-+below.
-+
-+Rather, this is basically a glorified comment, but too long to actually
-+be one.  So when the next CVE comes along, a kernel developer can
-+quickly refer to this as a refresher to see what we're actually doing
-+and why.
-+
-+At a high level, there are two classes of RSB attacks: RSB poisoning
-+(Intel and AMD) and RSB underflow (Intel only).  They must each be
-+considered individually for each attack vector (and microarchitecture
-+where applicable).
-+
-+----
-+
-+RSB poisoning (Intel and AMD)
-+=============================
-+
-+SpectreRSB
-+~~~~~~~~~~
-+
-+RSB poisoning is a technique used by SpectreRSB [#spectre-rsb]_ where
-+an attacker poisons an RSB entry to cause a victim's return instruction
-+to speculate to an attacker-controlled address.  This can happen when
-+there are unbalanced CALLs/RETs after a context switch or VMEXIT.
-+
-+* All attack vectors can potentially be mitigated by flushing out any
-+  poisoned RSB entries using an RSB filling sequence
-+  [#intel-rsb-filling]_ [#amd-rsb-filling]_ when transitioning between
-+  untrusted and trusted domains.  But this has a performance impact and
-+  should be avoided whenever possible.
-+
-+  .. DANGER::
-+     **FIXME**: Currently we're flushing 32 entries.  However, some CPU
-+     models have more than 32 entries.  The loop count needs to be
-+     increased for those.  More detailed information is needed about RSB
-+     sizes.
-+
-+* On context switch, the user->user mitigation requires ensuring the
-+  RSB gets filled or cleared whenever IBPB gets written [#cond-ibpb]_
-+  during a context switch:
-+
-+  * AMD:
-+	On Zen 4+, IBPB (or SBPB [#amd-sbpb]_ if used) clears the RSB.
-+	This is indicated by IBPB_RET in CPUID [#amd-ibpb-rsb]_.
-+
-+	On Zen < 4, the RSB filling sequence [#amd-rsb-filling]_ must be
-+	always be done in addition to IBPB [#amd-ibpb-no-rsb]_.  This is
-+	indicated by X86_BUG_IBPB_NO_RET.
-+
-+  * Intel:
-+	IBPB always clears the RSB:
-+
-+	"Software that executed before the IBPB command cannot control
-+	the predicted targets of indirect branches executed after the
-+	command on the same logical processor. The term indirect branch
-+	in this context includes near return instructions, so these
-+	predicted targets may come from the RSB." [#intel-ibpb-rsb]_
-+
-+* On context switch, user->kernel attacks are prevented by SMEP.  User
-+  space can only insert user space addresses into the RSB.  Even
-+  non-canonical addresses can't be inserted due to the page gap at the
-+  end of the user canonical address space reserved by TASK_SIZE_MAX.
-+  A SMEP #PF at instruction fetch prevents the kernel from speculatively
-+  executing user space.
-+
-+  * AMD:
-+	"Finally, branches that are predicted as 'ret' instructions get
-+	their predicted targets from the Return Address Predictor (RAP).
-+	AMD recommends software use a RAP stuffing sequence (mitigation
-+	V2-3 in [2]) and/or Supervisor Mode Execution Protection (SMEP)
-+	to ensure that the addresses in the RAP are safe for
-+	speculation. Collectively, we refer to these mitigations as "RAP
-+	Protection"." [#amd-smep-rsb]_
-+
-+  * Intel:
-+	"On processors with enhanced IBRS, an RSB overwrite sequence may
-+	not suffice to prevent the predicted target of a near return
-+	from using an RSB entry created in a less privileged predictor
-+	mode.  Software can prevent this by enabling SMEP (for
-+	transitions from user mode to supervisor mode) and by having
-+	IA32_SPEC_CTRL.IBRS set during VM exits." [#intel-smep-rsb]_
-+
-+* On VMEXIT, guest->host attacks are mitigated by eIBRS (and PBRSB
-+  mitigation if needed):
-+
-+  * AMD:
-+	"When Automatic IBRS is enabled, the internal return address
-+	stack used for return address predictions is cleared on VMEXIT."
-+	[#amd-eibrs-vmexit]_
-+
-+  * Intel:
-+	"On processors with enhanced IBRS, an RSB overwrite sequence may
-+	not suffice to prevent the predicted target of a near return
-+	from using an RSB entry created in a less privileged predictor
-+	mode.  Software can prevent this by enabling SMEP (for
-+	transitions from user mode to supervisor mode) and by having
-+	IA32_SPEC_CTRL.IBRS set during VM exits. Processors with
-+	enhanced IBRS still support the usage model where IBRS is set
-+	only in the OS/VMM for OSes that enable SMEP. To do this, such
-+	processors will ensure that guest behavior cannot control the
-+	RSB after a VM exit once IBRS is set, even if IBRS was not set
-+	at the time of the VM exit." [#intel-eibrs-vmexit]_
-+
-+    Note that some Intel CPUs are susceptible to Post-barrier Return
-+    Stack Buffer Predictions (PBRSB) [#intel-pbrsb]_, where the last
-+    CALL from the guest can be used to predict the first unbalanced RET.
-+    In this case the PBRSB mitigation is needed in addition to eIBRS.
-+
-+AMD RETBleed / SRSO / Branch Type Confusion
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+On AMD, poisoned RSB entries can also be created by the AMD RETBleed
-+variant [#retbleed-paper]_ [#amd-btc]_ or by Speculative Return Stack
-+Overflow [#amd-srso]_ (Inception [#inception-paper]_).  The kernel
-+protects itself by replacing every RET in the kernel with a branch to a
-+single safe RET.
-+
-+----
-+
-+RSB underflow (Intel only)
-+==========================
-+
-+RSB Alternate (RSBA) ("Intel Retbleed")
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Some Intel Skylake-generation CPUs are susceptible to the Intel variant
-+of RETBleed [#retbleed-paper]_ (Return Stack Buffer Underflow
-+[#intel-rsbu]_).  If a RET is executed when the RSB buffer is empty due
-+to mismatched CALLs/RETs or returning from a deep call stack, the branch
-+predictor can fall back to using the Branch Target Buffer (BTB).  If a
-+user forces a BTB collision then the RET can speculatively branch to a
-+user-controlled address.
-+
-+* Note that RSB filling doesn't fully mitigate this issue.  If there
-+  are enough unbalanced RETs, the RSB may still underflow and fall back
-+  to using a poisoned BTB entry.
-+
-+* On context switch, user->user underflow attacks are mitigated by the
-+  conditional IBPB [#cond-ibpb]_ on context switch which effectively
-+  clears the BTB:
-+
-+  * "The indirect branch predictor barrier (IBPB) is an indirect branch
-+    control mechanism that establishes a barrier, preventing software
-+    that executed before the barrier from controlling the predicted
-+    targets of indirect branches executed after the barrier on the same
-+    logical processor." [#intel-ibpb-btb]_
-+
-+* On context switch and VMEXIT, user->kernel and guest->host RSB
-+  underflows are mitigated by IBRS or eIBRS:
-+
-+  * "Enabling IBRS (including enhanced IBRS) will mitigate the "RSBU"
-+    attack demonstrated by the researchers. As previously documented,
-+    Intel recommends the use of enhanced IBRS, where supported. This
-+    includes any processor that enumerates RRSBA but not RRSBA_DIS_S."
-+    [#intel-rsbu]_
-+
-+  However, note that eIBRS and IBRS do not mitigate intra-mode attacks.
-+  Like RRSBA below, this is mitigated by clearing the BHB on kernel
-+  entry.
-+
-+  As an alternative to classic IBRS, call depth tracking (combined with
-+  retpolines) can be used to track kernel returns and fill the RSB when
-+  it gets close to being empty.
-+
-+Restricted RSB Alternate (RRSBA)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Some newer Intel CPUs have Restricted RSB Alternate (RRSBA) behavior,
-+which, similar to RSBA described above, also falls back to using the BTB
-+on RSB underflow.  The only difference is that the predicted targets are
-+restricted to the current domain when eIBRS is enabled:
-+
-+* "Restricted RSB Alternate (RRSBA) behavior allows alternate branch
-+  predictors to be used by near RET instructions when the RSB is
-+  empty.  When eIBRS is enabled, the predicted targets of these
-+  alternate predictors are restricted to those belonging to the
-+  indirect branch predictor entries of the current prediction domain.
-+  [#intel-eibrs-rrsba]_
-+
-+When a CPU with RRSBA is vulnerable to Branch History Injection
-+[#bhi-paper]_ [#intel-bhi]_, an RSB underflow could be used for an
-+intra-mode BTI attack.  This is mitigated by clearing the BHB on
-+kernel entry.
-+
-+However if the kernel uses retpolines instead of eIBRS, it needs to
-+disable RRSBA:
-+
-+* "Where software is using retpoline as a mitigation for BHI or
-+  intra-mode BTI, and the processor both enumerates RRSBA and
-+  enumerates RRSBA_DIS controls, it should disable this behavior."
-+  [#intel-retpoline-rrsba]_
-+
-+----
-+
-+References
-+==========
-+
-+.. [#spectre-rsb] `Spectre Returns! Speculation Attacks using the Return Stack Buffer <https://arxiv.org/pdf/1807.07940.pdf>`_
-+
-+.. [#intel-rsb-filling] "Empty RSB Mitigation on Skylake-generation" in `Retpoline: A Branch Target Injection Mitigation <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/retpoline-branch-target-injection-mitigation.html#inpage-nav-5-1>`_
-+
-+.. [#amd-rsb-filling] "Mitigation V2-3" in `Software Techniques for Managing Speculation <https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/software-techniques-for-managing-speculation.pdf>`_
-+
-+.. [#cond-ibpb] Whether IBPB is written depends on whether the prev and/or next task is protected from Spectre attacks.  It typically requires opting in per task or system-wide.  For more details see the documentation for the ``spectre_v2_user`` cmdline option in Documentation/admin-guide/kernel-parameters.txt.
-+
-+.. [#amd-sbpb] IBPB without flushing of branch type predictions.  Only exists for AMD.
-+
-+.. [#amd-ibpb-rsb] "Function 8000_0008h -- Processor Capacity Parameters and Extended Feature Identification" in `AMD64 Architecture Programmer's Manual Volume 3: General-Purpose and System Instructions <https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/24594.pdf>`_.  SBPB behaves the same way according to `this email <https://lore.kernel.org/5175b163a3736ca5fd01cedf406735636c99a>`_.
-+
-+.. [#amd-ibpb-no-rsb] `Spectre Attacks: Exploiting Speculative Execution <https://comsec.ethz.ch/wp-content/files/ibpb_sp25.pdf>`_
-+
-+.. [#intel-ibpb-rsb] "Introduction" in `Post-barrier Return Stack Buffer Predictions / CVE-2022-26373 / INTEL-SA-00706 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/post-barrier-return-stack-buffer-predictions.html>`_
-+
-+.. [#amd-smep-rsb] "Existing Mitigations" in `Technical Guidance for Mitigating Branch Type Confusion <https://www.amd.com/content/dam/amd/en/documents/resources/technical-guidance-for-mitigating-branch-type-confusion.pdf>`_
-+
-+.. [#intel-smep-rsb] "Enhanced IBRS" in `Indirect Branch Restricted Speculation <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/indirect-branch-restricted-speculation.html>`_
-+
-+.. [#amd-eibrs-vmexit] "Extended Feature Enable Register (EFER)" in `AMD64 Architecture Programmer's Manual Volume 2: System Programming <https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/24593.pdf>`_
-+
-+.. [#intel-eibrs-vmexit] "Enhanced IBRS" in `Indirect Branch Restricted Speculation <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/indirect-branch-restricted-speculation.html>`_
-+
-+.. [#intel-pbrsb] `Post-barrier Return Stack Buffer Predictions / CVE-2022-26373 / INTEL-SA-00706 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/post-barrier-return-stack-buffer-predictions.html>`_
-+
-+.. [#retbleed-paper] `RETBleed: Arbitrary Speculative Code Execution with Return Instruction <https://comsec.ethz.ch/wp-content/files/retbleed_sec22.pdf>`_
-+
-+.. [#amd-btc] `Technical Guidance for Mitigating Branch Type Confusion <https://www.amd.com/content/dam/amd/en/documents/resources/technical-guidance-for-mitigating-branch-type-confusion.pdf>`_
-+
-+.. [#amd-srso] `Technical Update Regarding Speculative Return Stack Overflow <https://www.amd.com/content/dam/amd/en/documents/corporate/cr/speculative-return-stack-overflow-whitepaper.pdf>`_
-+
-+.. [#inception-paper] `Inception: Exposing New Attack Surfaces with Training in Transient Execution <https://comsec.ethz.ch/wp-content/files/inception_sec23.pdf>`_
-+
-+.. [#intel-rsbu] `Return Stack Buffer Underflow / Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html>`_
-+
-+.. [#intel-ibpb-btb] `Indirect Branch Predictor Barrier' <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/indirect-branch-predictor-barrier.html>`_
-+
-+.. [#intel-eibrs-rrsba] "Guidance for RSBU" in `Return Stack Buffer Underflow / Return Stack Buffer Underflow / CVE-2022-29901, CVE-2022-28693 / INTEL-SA-00702 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/return-stack-buffer-underflow.html>`_
-+
-+.. [#bhi-paper] `Branch History Injection: On the Effectiveness of Hardware Mitigations Against Cross-Privilege Spectre-v2 Attacks <http://download.vusec.net/papers/bhi-spectre-bhb_sec22.pdf>`_
-+
-+.. [#intel-bhi] `Branch History Injection and Intra-mode Branch Target Injection / CVE-2022-0001, CVE-2022-0002 / INTEL-SA-00598 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/branch-history-injection.html>`_
-+
-+.. [#intel-retpoline-rrsba] "Retpoline" in `Branch History Injection and Intra-mode Branch Target Injection / CVE-2022-0001, CVE-2022-0002 / INTEL-SA-00598 <https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/branch-history-injection.html>`_
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index e2a672f925e3..362602b705cc 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1594,25 +1594,25 @@ static void __init spec_ctrl_disable_kernel_rrsba(void)
- static void __init spectre_v2_select_rsb_mitigation(enum spectre_v2_mitigation mode)
- {
- 	/*
--	 * Similar to context switches, there are two types of RSB attacks
--	 * after VM exit:
-+	 * WARNING! There are many subtleties to consider when changing *any*
-+	 * code related to RSB-related mitigations.  Before doing so, carefully
-+	 * read the following document, and update if necessary:
- 	 *
--	 * 1) RSB underflow
-+	 *   Documentation/admin-guide/hw-vuln/rsb.rst
- 	 *
--	 * 2) Poisoned RSB entry
-+	 * In an overly simplified nutshell:
- 	 *
--	 * When retpoline is enabled, both are mitigated by filling/clearing
--	 * the RSB.
-+	 *   - User->user RSB attacks are conditionally mitigated during
-+	 *     context switches by cond_mitigation -> write_ibpb().
- 	 *
--	 * When IBRS is enabled, while #1 would be mitigated by the IBRS branch
--	 * prediction isolation protections, RSB still needs to be cleared
--	 * because of #2.  Note that SMEP provides no protection here, unlike
--	 * user-space-poisoned RSB entries.
-+	 *   - User->kernel and guest->host attacks are mitigated by eIBRS or
-+	 *     RSB filling.
- 	 *
--	 * eIBRS should protect against RSB poisoning, but if the EIBRS_PBRSB
--	 * bug is present then a LITE version of RSB protection is required,
--	 * just a single call needs to retire before a RET is executed.
-+	 *     Though, depending on config, note that other alternative
-+	 *     mitigations may end up getting used instead, e.g., IBPB on
-+	 *     entry/vmexit, call depth tracking, or return thunks.
- 	 */
-+
- 	switch (mode) {
- 	case SPECTRE_V2_NONE:
- 		break;
-@@ -1832,44 +1832,6 @@ static void __init spectre_v2_select_mitigation(void)
- 	spectre_v2_enabled = mode;
- 	pr_info("%s\n", spectre_v2_strings[mode]);
- 
--	/*
--	 * If Spectre v2 protection has been enabled, fill the RSB during a
--	 * context switch.  In general there are two types of RSB attacks
--	 * across context switches, for which the CALLs/RETs may be unbalanced.
--	 *
--	 * 1) RSB underflow
--	 *
--	 *    Some Intel parts have "bottomless RSB".  When the RSB is empty,
--	 *    speculated return targets may come from the branch predictor,
--	 *    which could have a user-poisoned BTB or BHB entry.
--	 *
--	 *    AMD has it even worse: *all* returns are speculated from the BTB,
--	 *    regardless of the state of the RSB.
--	 *
--	 *    When IBRS or eIBRS is enabled, the "user -> kernel" attack
--	 *    scenario is mitigated by the IBRS branch prediction isolation
--	 *    properties, so the RSB buffer filling wouldn't be necessary to
--	 *    protect against this type of attack.
--	 *
--	 *    The "user -> user" attack scenario is mitigated by RSB filling.
--	 *
--	 * 2) Poisoned RSB entry
--	 *
--	 *    If the 'next' in-kernel return stack is shorter than 'prev',
--	 *    'next' could be tricked into speculating with a user-poisoned RSB
--	 *    entry.
--	 *
--	 *    The "user -> kernel" attack scenario is mitigated by SMEP and
--	 *    eIBRS.
--	 *
--	 *    The "user -> user" scenario, also known as SpectreBHB, requires
--	 *    RSB clearing.
--	 *
--	 * So to mitigate all cases, unconditionally fill RSB on context
--	 * switches.
--	 *
--	 * FIXME: Is this pointless for retbleed-affected AMD?
--	 */
- 	spectre_v2_select_rsb_mitigation(mode);
- 
- 	/*
--- 
-2.49.0
+On 3/20/2025 1:24 PM, Anjelique Melendez wrote:
+> Add support in the qcom-spmi-temp-alarm driver for the new PMIC
+> TEMP_ALARM peripheral subtypes: GEN2 rev 2 and LITE. The GEN2 rev 2
+> subtype provides greater flexibility in temperature threshold
+> specification by using an independent register value to configure
+> each of the three thresholds. The LITE subtype utilizes a simplified
+> set of control registers to configure two thresholds: warning and
+> shutdown. While at it refactor the qcom-spmi-temp-alarm driver to limit
+> code reuse and if/else statements when deciphering between TEMP_ALARM
+> peripheral subtypes.
+> 
+> Also add support to avoid a potential issue on certain versions of
+> the TEMP_ALARM GEN2 subtype when automatic stage 2 partial shutdown
+> is disabled.
+> 
+> This patch series is a continuation of older series from 7/2024
+> (https://lore.kernel.org/all/20240729231259.2122976-1-quic_amelende@quicinc.com/)
+> but current series has been reworked to address the change in thermal framework to
+> update .set_trip_temp() callback function variables
+> (https://lore.kernel.org/all/8392906.T7Z3S40VBb@rjwysocki.net/)
+> 
+> Changes since v2:
+>    - Updated function name to include "gen1" in patch 2/5
+>    - Added Dmitry's reviewed-by tag in patch 2/5
+>    - link: https://lore.kernel.org/all/20250225192429.2328092-1-anjelique.melendez@oss.qualcomm.com/
+> Changes since v1:
+>    - Remove unnecessary moving of code
+>    - Added new v2 patch 3/5 add a preparation patch to v1 patch 2/5
+>    - Updated temp alarm data function names to be consistently named
+>    - link: https://lore.kernel.org/all/20250213210403.3396392-1-anjelique.melendez@oss.qualcomm.com/
+> 
+> Anjelique Melendez (4):
+>    thermal: qcom-spmi-temp-alarm: Add temp alarm data struct based on HW
+>      subtype
+>    thermal: qcom-spmi-temp-alarm: Prepare to support additional Temp
+>      Alarm subtypes
+>    thermal: qcom-spmi-temp-alarm: add support for GEN2 rev 2 PMIC
+>      peripherals
+>    thermal: qcom-spmi-temp-alarm: add support for LITE PMIC peripherals
+> 
+> David Collins (1):
+>    thermal: qcom-spmi-temp-alarm: enable stage 2 shutdown when required
+> 
+>   drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 515 ++++++++++++++++++--
+>   1 file changed, 464 insertions(+), 51 deletions(-)
+> 
+Hi Amit and Thara,
+Can you take a look at changes when you have a chance.
 
+Thanks,
+Anjelique
