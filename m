@@ -1,709 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC826B080;
-	Tue,  8 Apr 2025 10:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A219268FDB;
+	Tue,  8 Apr 2025 10:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744109515; cv=none; b=ocUQYhWPaBTOhd3eIW7Y29tn3gknX9/spgdNwfsP+rCgEcZl+fY5c+PGBbUyxSPhWdv2VEZiTuOBW2vxEbyg5j8PYjjQ/rn+cKOFuy7/jaGH7zhhfLkrJU0KmYMPsSn9etHSmh4zTq0HYGIht6BXCY+4kFUvfR0Q901YI+p2egM=
+	t=1744109523; cv=none; b=kyBqmR1FBZ3UtVw1pPq05B49lInAyer6LKG3mDHDK2NMvex6d6RhoF0pCRtGJZdgcvh1iJbthlGj0s+okNNZavRBW8utIZvq02gIVywkSxlUDeevsLBIIv9fVDmljrFJfpD/0nJ8rCUIumUs57jXbbbwGSJL/RTawClgExrMHcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744109515; c=relaxed/simple;
-	bh=nJ8ExirTmfRpxgLbitQ00fQuZneCF/UWvT0+5dUuNfw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=vENAAuFXTCBzHnuMSEJxXm7VjL04pxTHvhG7ozRDy48YtRY+2/Pf7QkUGZnIvmLC55/epZE81X50UwXQxTsq5HRGJF7DTbXVCqSIvrlvL7HndmUMSjnFi8f1EmloPZmNwADB2IFEuO9x4a5wAouahuoMXq3w8rsBqN4XtbFOJdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ec8YIM7u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ec8YIM7u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D12BDC4CEE7;
-	Tue,  8 Apr 2025 10:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744109514;
-	bh=nJ8ExirTmfRpxgLbitQ00fQuZneCF/UWvT0+5dUuNfw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ec8YIM7uRax3tcIOQg7yxBAd1I377q0V4FSE+Iz6kfPqYhJw+vIG1lmjqNZqtvcMQ
-	 vkbKWLApMguARbdzTlawwtdhTweTw0w9dAE0lt80Fw7D+yuFZ249OkXhnR5lqS962N
-	 G6bJk9W+M9aUgpzlCZL15LPDrBMOGwSC+GtU7dPEvfQXFVVeFH2QIjsZctseebYR+3
-	 IWp0Fzno5d3UrIm2kak4O4UznXxzJmvfXAPTTtVjZEaLIQDhd8ZTI0vqPSR+haipQ5
-	 KLBJuefZF5IIutkO8RCFeAgFkEWz1xVuNJEw8UdxX4CDtCjWMCElHSDJeFNWsIUdxT
-	 reTkt+fyrslNw==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 08 Apr 2025 12:50:17 +0200
-Subject: [PATCH 18/24] irqchip/gic-v5: Add GICv5 PPI support
+	s=arc-20240116; t=1744109523; c=relaxed/simple;
+	bh=qdyfGchOgczDeIWDi2AZQbVlzbLP0tVBpIdNaPkXiQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FsFWfwd8+Iwsh1+2el/kbrO/+37iu5hTxZVvSotw8WeHUt9nsX6txYZ9XQ10awOVZsAk4JroXGDNpBlxoesMWDRmn4hplHdHwCPy8w+LVGNJv4iV8X1SitiPn7tYC1Ej1tjAGEYlHLiDZso4u37GhMXN1RYDP2psvnXcfLLDBvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3856F2047C;
+	Tue,  8 Apr 2025 10:51:46 +0000 (UTC)
+Message-ID: <3f9c48a6-1256-4e52-a26a-7f80f3b7c05a@ghiti.fr>
+Date: Tue, 8 Apr 2025 12:51:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 11/28] riscv/shstk: If needed allocate a new shadow
+ stack on clone
+Content-Language: en-US
+To: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com,
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
+ rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-11-e51202b53138@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250314-v5_user_cfi_series-v12-11-e51202b53138@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gicv5-host-v1-18-1f26db465f8d@kernel.org>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
-In-Reply-To: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Sascha Bischoff <sascha.bischoff@arm.com>, 
- Timothy Hayes <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeegledprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegsp
+ hesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-The GICv5 CPU interface implements support for PE-Private Peripheral
-Interrupts (PPI), that are handled (enabled/prioritized/delivered)
-entirely within the CPU interface hardware.
 
-To enable PPI interrupts, implement the baseline GICv5 host kernel
-driver infrastructure required to handle interrupts on a GICv5 system.
+On 14/03/2025 22:39, Deepak Gupta wrote:
+> Userspace specifies CLONE_VM to share address space and spawn new thread.
+> `clone` allow userspace to specify a new stack for new thread. However
+> there is no way to specify new shadow stack base address without changing
+> API. This patch allocates a new shadow stack whenever CLONE_VM is given.
+>
+> In case of CLONE_VFORK, parent is suspended until child finishes and thus
+> can child use parent shadow stack. In case of !CLONE_VM, COW kicks in
+> because entire address space is copied from parent to child.
+>
+> `clone3` is extensible and can provide mechanisms using which shadow stack
+> as an input parameter can be provided. This is not settled yet and being
+> extensively discussed on mailing list. Once that's settled, this commit
+> will adapt to that.
 
-Add the exception handling code path and definitions for GICv5
-instructions.
 
-Add GICv5 PPI handling code as a specific IRQ domain to:
+What's the status of this discussion? Can you provide a Link to it?
 
-- Set-up PPI priority
-- Manage PPI configuration and state
-- Manage IRQ flow handler
-- IRQs allocation/free
-- Hook-up a PPI specific IRQchip to provide the relevant methods
 
-PPI IRQ priority is chosen as the minimum allowed priority by the
-system design (after probing the number of priority bits implemented
-by the CPU interface).
+>
+> Reviewed-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>   arch/riscv/include/asm/mmu_context.h |   7 ++
+>   arch/riscv/include/asm/usercfi.h     |  25 ++++++++
+>   arch/riscv/kernel/process.c          |   9 +++
+>   arch/riscv/kernel/usercfi.c          | 120 +++++++++++++++++++++++++++++++++++
+>   4 files changed, 161 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/asm/mmu_context.h
+> index 8c4bc49a3a0f..dbf27a78df6c 100644
+> --- a/arch/riscv/include/asm/mmu_context.h
+> +++ b/arch/riscv/include/asm/mmu_context.h
+> @@ -48,6 +48,13 @@ static inline unsigned long mm_untag_mask(struct mm_struct *mm)
+>   }
+>   #endif
+>   
+> +#define deactivate_mm deactivate_mm
+> +static inline void deactivate_mm(struct task_struct *tsk,
+> +				 struct mm_struct *mm)
+> +{
+> +	shstk_release(tsk);
+> +}
+> +
+>   #include <asm-generic/mmu_context.h>
+>   
+>   #endif /* _ASM_RISCV_MMU_CONTEXT_H */
+> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
+> index 5f2027c51917..82d28ac98d76 100644
+> --- a/arch/riscv/include/asm/usercfi.h
+> +++ b/arch/riscv/include/asm/usercfi.h
+> @@ -8,6 +8,9 @@
+>   #ifndef __ASSEMBLY__
+>   #include <linux/types.h>
+>   
+> +struct task_struct;
+> +struct kernel_clone_args;
+> +
+>   #ifdef CONFIG_RISCV_USER_CFI
+>   struct cfi_status {
+>   	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+> @@ -17,6 +20,28 @@ struct cfi_status {
+>   	unsigned long shdw_stk_size; /* size of shadow stack */
+>   };
+>   
+> +unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
+> +				       const struct kernel_clone_args *args);
+> +void shstk_release(struct task_struct *tsk);
+> +void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size);
+> +unsigned long get_shstk_base(struct task_struct *task, unsigned long *size);
+> +void set_active_shstk(struct task_struct *task, unsigned long shstk_addr);
+> +bool is_shstk_enabled(struct task_struct *task);
+> +
+> +#else
+> +
+> +#define shstk_alloc_thread_stack(tsk, args) 0
+> +
+> +#define shstk_release(tsk)
+> +
+> +#define get_shstk_base(task, size) 0UL
+> +
+> +#define set_shstk_base(task, shstk_addr, size)
+> +
+> +#define set_active_shstk(task, shstk_addr)
+> +
+> +#define is_shstk_enabled(task) false
+> +
+>   #endif /* CONFIG_RISCV_USER_CFI */
+>   
+>   #endif /* __ASSEMBLY__ */
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index 7c244de77180..99acb6342a37 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -29,6 +29,7 @@
+>   #include <asm/vector.h>
+>   #include <asm/cpufeature.h>
+>   #include <asm/exec.h>
+> +#include <asm/usercfi.h>
+>   
+>   #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+>   #include <linux/stackprotector.h>
+> @@ -211,6 +212,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   	unsigned long clone_flags = args->flags;
+>   	unsigned long usp = args->stack;
+>   	unsigned long tls = args->tls;
+> +	unsigned long ssp = 0;
+>   	struct pt_regs *childregs = task_pt_regs(p);
+>   
+>   	/* Ensure all threads in this mm have the same pointer masking mode. */
+> @@ -229,11 +231,18 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   		p->thread.s[0] = (unsigned long)args->fn;
+>   		p->thread.s[1] = (unsigned long)args->fn_arg;
+>   	} else {
+> +		/* allocate new shadow stack if needed. In case of CLONE_VM we have to */
+> +		ssp = shstk_alloc_thread_stack(p, args);
+> +		if (IS_ERR_VALUE(ssp))
+> +			return PTR_ERR((void *)ssp);
+> +
+>   		*childregs = *(current_pt_regs());
+>   		/* Turn off status.VS */
+>   		riscv_v_vstate_off(childregs);
+>   		if (usp) /* User fork */
+>   			childregs->sp = usp;
+> +		/* if needed, set new ssp */
+> +		ssp ? set_active_shstk(p, ssp) : 0;
 
-Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- MAINTAINERS                         |   2 +
- arch/arm64/include/asm/arch_gicv5.h |  38 +++
- drivers/irqchip/Kconfig             |   5 +
- drivers/irqchip/Makefile            |   1 +
- drivers/irqchip/irq-gic-v5.c        | 497 ++++++++++++++++++++++++++++++++++++
- drivers/irqchip/irq-gic-v5.h        |  19 ++
- 6 files changed, 562 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f3ed84466da19906953b5396a5f4b50e878c376e..cdeceb6782355a4a18609135bf7f03249d8b0bb5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1907,6 +1907,8 @@ M:	Marc Zyngier <maz@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
-+F:	arch/arm64/include/asm/arch_gicv5.h
-+F:	drivers/irqchip/irq-gic-v5*.[ch]
- 
- ARM HDLCD DRM DRIVER
- M:	Liviu Dudau <liviu.dudau@arm.com>
-diff --git a/arch/arm64/include/asm/arch_gicv5.h b/arch/arm64/include/asm/arch_gicv5.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..e86cda5e5b3295c4f9c784d92adad1c6df6dbc34
---- /dev/null
-+++ b/arch/arm64/include/asm/arch_gicv5.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2025 ARM Ltd.
-+ */
-+#ifndef __ASM_ARCH_GICV5_H
-+#define __ASM_ARCH_GICV5_H
-+
-+#include <asm/sysreg.h>
-+
-+#ifndef __ASSEMBLY__
-+
-+#define GICV5_OP_GIC_CDDI		sys_insn(1, 0, 12, 2, 0)
-+#define GICV5_OP_GIC_CDEOI		sys_insn(1, 0, 12, 1, 7)
-+#define GICV5_OP_GICR_CDIA		sys_insn(1, 0, 12, 3, 0)
-+
-+#define gicr_insn(insn)			read_sysreg_s(insn)
-+#define gic_insn(v, insn)		write_sysreg_s(v, insn)
-+
-+#define GSB_ACK				__emit_inst(0xd5000000 | sys_insn(1, 0, 12, 0, 1) | 31)
-+
-+#define gsb_ack()			asm volatile(GSB_ACK : : : "memory")
-+
-+/* Shift and mask definitions for GIC CDDI */
-+#define GICV5_GIC_CDDI_TYPE_MASK	GENMASK_ULL(31, 29)
-+#define GICV5_GIC_CDDI_TYPE(r)		FIELD_GET(GICV5_GIC_CDDI_TYPE_MASK, r)
-+#define GICV5_GIC_CDDI_ID_MASK		GENMASK_ULL(23, 0)
-+#define GICV5_GIC_CDDI_ID(r)		FIELD_GET(GICV5_GIC_CDDI_ID_MASK, r)
-+
-+/* Shift and mask definitions for GICR CDIA */
-+#define GICV5_GIC_CDIA_VALID_MASK	BIT_ULL(32)
-+#define GICV5_GIC_CDIA_VALID(r)		FIELD_GET(GICV5_GIC_CDIA_VALID_MASK, r)
-+#define GICV5_GIC_CDIA_TYPE_MASK	GENMASK_ULL(31, 29)
-+#define GICV5_GIC_CDIA_TYPE(r)		FIELD_GET(GICV5_GIC_CDIA_TYPE_MASK, r)
-+#define GICV5_GIC_CDIA_ID_MASK		GENMASK_ULL(23, 0)
-+#define GICV5_GIC_CDIA_ID(r)		FIELD_GET(GICV5_GIC_CDIA_ID_MASK, r)
-+
-+#endif /* __ASSEMBLY__ */
-+#endif /* __ASM_ARCH_GICV5_H */
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index cec05e443083b8982b3e72f4212d808a22883914..160a4761d5d85f6dbf36f3142fd619c114733e36 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -54,6 +54,11 @@ config ARM_GIC_V3_ITS_FSL_MC
- 	depends on FSL_MC_BUS
- 	default ARM_GIC_V3_ITS
- 
-+config ARM_GIC_V5
-+	bool
-+	select IRQ_DOMAIN_HIERARCHY
-+	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
-+
- config ARM_NVIC
- 	bool
- 	select IRQ_DOMAIN_HIERARCHY
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 365bcea9a61ff89e2cb41034125b3fc8cd494d81..3f8225bba5f0f9ce5dbb629b6d4782eacf85da44 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
- obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
- obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
- obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
-+obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o
- obj-$(CONFIG_HISILICON_IRQ_MBIGEN)	+= irq-mbigen.o
- obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
- obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..996e2c992ef33e5ec8d2680ad4026b725ca39b04
---- /dev/null
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -0,0 +1,497 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-+ */
-+
-+#define pr_fmt(fmt)	"GICv5: " fmt
-+
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/wordpart.h>
-+
-+#include <asm/cpufeature.h>
-+#include <asm/exception.h>
-+
-+#include "irq-gic-v5.h"
-+
-+static u8 pri_bits = 5;
-+#define GICV5_IRQ_PRIORITY_MASK 0x1f
-+#define GICV5_IRQ_PRIORITY_MI \
-+		(GICV5_IRQ_PRIORITY_MASK & GENMASK(4, 5 - pri_bits))
-+
-+static bool gicv5_cpuif_has_gcie(void)
-+{
-+	return this_cpu_has_cap(ARM64_HAS_GCIE);
-+}
-+
-+struct gicv5_chip_data {
-+	struct fwnode_handle *fwnode;
-+	struct irq_domain *ppi_domain;
-+};
-+
-+static struct gicv5_chip_data gicv5_global_data __read_mostly;
-+
-+static void gicv5_ppi_priority_init(void)
-+{
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR0_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR1_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR2_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR3_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR4_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR5_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR6_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR7_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR8_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR9_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR10_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR11_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR12_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR13_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR14_EL1);
-+	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRIORITY_MI),
-+				 SYS_ICC_PPI_PRIORITYR15_EL1);
-+
-+	/*
-+	 * Context syncronization required to make sure system
-+	 * register writes effects are synchronized
-+	 */
-+	isb();
-+}
-+
-+static void gicv5_ppi_irq_mask(struct irq_data *d)
-+{
-+	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-+
-+	if (d->hwirq < 64)
-+		sysreg_clear_set_s(SYS_ICC_PPI_ENABLER0_EL1, hwirq_id_bit, 0);
-+	else
-+		sysreg_clear_set_s(SYS_ICC_PPI_ENABLER1_EL1, hwirq_id_bit, 0);
-+
-+	/*
-+	 * Ensure that the disable takes effect
-+	 */
-+	isb();
-+}
-+
-+static void gicv5_ppi_irq_unmask(struct irq_data *d)
-+{
-+	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-+
-+	if (d->hwirq < 64)
-+		sysreg_clear_set_s(SYS_ICC_PPI_ENABLER0_EL1, 0, hwirq_id_bit);
-+	else
-+		sysreg_clear_set_s(SYS_ICC_PPI_ENABLER1_EL1, 0, hwirq_id_bit);
-+}
-+
-+static void gicv5_hwirq_eoi(u32 hwirq_id, u32 hwirq_type)
-+{
-+	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-+
-+	gic_insn(cddi, GICV5_OP_GIC_CDDI);
-+
-+	gic_insn(0, GICV5_OP_GIC_CDEOI);
-+}
-+
-+static void gicv5_ppi_irq_eoi(struct irq_data *d)
-+{
-+	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_PPI);
-+}
-+
-+static int gicv5_ppi_set_type(struct irq_data *d, unsigned int type)
-+{
-+	/*
-+	 * The PPI trigger mode is not configurable at runtime,
-+	 * therefore this function simply confirms that the `type`
-+	 * parameter matches what is present.
-+	 */
-+	u64 hmr;
-+
-+	if (d->hwirq < 64)
-+		hmr = read_sysreg_s(SYS_ICC_PPI_HMR0_EL1);
-+	else
-+		hmr = read_sysreg_s(SYS_ICC_PPI_HMR1_EL1);
-+
-+	switch (type) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+	case IRQ_TYPE_LEVEL_LOW:
-+		if (((hmr >> (d->hwirq % 64)) & 0x1) != GICV5_PPI_HM_LEVEL)
-+			return -EINVAL;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_EDGE_FALLING:
-+		if (((hmr >> (d->hwirq % 64)) & 0x1) != GICV5_PPI_HM_EDGE)
-+			return -EINVAL;
-+		break;
-+	default:
-+		pr_debug("Unexpected PPI trigger mode");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-+					   enum irqchip_irq_state which,
-+					   bool *val)
-+{
-+	u64 pendr, activer, enabler, hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-+
-+	switch (which) {
-+	case IRQCHIP_STATE_PENDING:
-+		if (d->hwirq < 64)
-+			pendr = read_sysreg_s(SYS_ICC_PPI_SPENDR0_EL1);
-+		else
-+			pendr = read_sysreg_s(SYS_ICC_PPI_SPENDR1_EL1);
-+
-+		*val = !!(pendr & hwirq_id_bit);
-+
-+		return 0;
-+	case IRQCHIP_STATE_ACTIVE:
-+		if (d->hwirq < 64)
-+			activer = read_sysreg_s(SYS_ICC_PPI_SACTIVER0_EL1);
-+		else
-+			activer = read_sysreg_s(SYS_ICC_PPI_SACTIVER1_EL1);
-+
-+		*val = !!(activer & hwirq_id_bit);
-+
-+		return 0;
-+	case IRQCHIP_STATE_MASKED:
-+		if (d->hwirq < 64)
-+			enabler = read_sysreg_s(SYS_ICC_PPI_ENABLER0_EL1);
-+		else
-+			enabler = read_sysreg_s(SYS_ICC_PPI_ENABLER1_EL1);
-+
-+		*val = !(enabler & hwirq_id_bit);
-+
-+		return 0;
-+	default:
-+		pr_debug("Unexpected PPI irqchip state\n");
-+		return -EINVAL;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int gicv5_ppi_irq_set_irqchip_state(struct irq_data *d,
-+					   enum irqchip_irq_state which,
-+					   bool val)
-+{
-+	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-+
-+	switch (which) {
-+	case IRQCHIP_STATE_PENDING:
-+		if (val) {
-+			if (d->hwirq < 64)
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_SPENDR0_EL1);
-+			else
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_SPENDR1_EL1);
-+
-+		} else {
-+			if (d->hwirq < 64)
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_CPENDR0_EL1);
-+			else
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_CPENDR1_EL1);
-+		}
-+
-+		return 0;
-+	case IRQCHIP_STATE_ACTIVE:
-+		if (val) {
-+			if (d->hwirq < 64)
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_SACTIVER0_EL1);
-+			else
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_SACTIVER1_EL1);
-+		} else {
-+			if (d->hwirq < 64)
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_CACTIVER0_EL1);
-+			else
-+				write_sysreg_s(hwirq_id_bit,
-+					       SYS_ICC_PPI_CACTIVER1_EL1);
-+		}
-+
-+		return 0;
-+	case IRQCHIP_STATE_MASKED:
-+		if (val)
-+			gicv5_ppi_irq_mask(d);
-+		else
-+			gicv5_ppi_irq_unmask(d);
-+		return 0;
-+	default:
-+		pr_debug("Unexpected PPI irqchip state\n");
-+		return -EINVAL;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct irq_chip gicv5_ppi_irq_chip = {
-+	.name			= "GICv5-PPI",
-+	.irq_mask		= gicv5_ppi_irq_mask,
-+	.irq_unmask		= gicv5_ppi_irq_unmask,
-+	.irq_eoi		= gicv5_ppi_irq_eoi,
-+	.irq_set_type		= gicv5_ppi_set_type,
-+	.irq_get_irqchip_state	= gicv5_ppi_irq_get_irqchip_state,
-+	.irq_set_irqchip_state	= gicv5_ppi_irq_set_irqchip_state,
-+	.flags			= IRQCHIP_SET_TYPE_MASKED |
-+				  IRQCHIP_SKIP_SET_WAKE	  |
-+				  IRQCHIP_MASK_ON_SUSPEND
-+};
-+
-+static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-+					  struct irq_fwspec *fwspec,
-+					  irq_hw_number_t *hwirq,
-+					  unsigned int *type)
-+{
-+	if (is_of_node(fwspec->fwnode)) {
-+		if (fwspec->param_count < 3)
-+			return -EINVAL;
-+
-+		if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-+			return -EINVAL;
-+
-+		*hwirq = fwspec->param[1];
-+		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-+
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int gicv5_irq_ppi_domain_alloc(struct irq_domain *domain,
-+				      unsigned int virq, unsigned int nr_irqs,
-+				      void *arg)
-+{
-+	unsigned int type = IRQ_TYPE_NONE;
-+	struct irq_fwspec *fwspec = arg;
-+	irq_hw_number_t hwirq;
-+	int ret;
-+
-+	if (WARN_ON(nr_irqs != 1))
-+		return -EINVAL;
-+
-+	ret = gicv5_irq_ppi_domain_translate(domain, fwspec, &hwirq, &type);
-+	if (ret)
-+		return ret;
-+
-+	irq_set_percpu_devid(virq);
-+	irq_domain_set_info(domain, virq, hwirq, &gicv5_ppi_irq_chip, NULL,
-+			    handle_percpu_devid_irq, NULL, NULL);
-+
-+	return 0;
-+}
-+
-+static void gicv5_irq_ppi_domain_free(struct irq_domain *domain,
-+				      unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *d;
-+
-+	if (WARN_ON(nr_irqs != 1))
-+		return;
-+
-+	d = irq_domain_get_irq_data(domain, virq);
-+
-+	irq_set_handler(virq, NULL);
-+	irq_domain_reset_irq_data(d);
-+}
-+
-+static int gicv5_irq_ppi_domain_select(struct irq_domain *d,
-+				       struct irq_fwspec *fwspec,
-+				       enum irq_domain_bus_token bus_token)
-+{
-+	/* Not for us */
-+	if (fwspec->fwnode != d->fwnode)
-+		return 0;
-+
-+	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI) {
-+		// only handle PPIs
-+		return 0;
-+	}
-+
-+	return (d == gicv5_global_data.ppi_domain);
-+}
-+
-+static const struct irq_domain_ops gicv5_irq_ppi_domain_ops = {
-+	.translate	= gicv5_irq_ppi_domain_translate,
-+	.alloc		= gicv5_irq_ppi_domain_alloc,
-+	.free		= gicv5_irq_ppi_domain_free,
-+	.select		= gicv5_irq_ppi_domain_select
-+};
-+
-+static inline void handle_irq_per_domain(u32 hwirq)
-+{
-+	u32 hwirq_id;
-+	struct irq_domain *domain = NULL;
-+	u8 hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, hwirq);
-+
-+	hwirq_id = FIELD_GET(GICV5_HWIRQ_ID, hwirq);
-+
-+	if (hwirq_type == GICV5_HWIRQ_TYPE_PPI)
-+		domain = gicv5_global_data.ppi_domain;
-+
-+	if (generic_handle_domain_irq(domain, hwirq_id)) {
-+		pr_err("Could not handle, hwirq = 0x%x", hwirq_id);
-+		gicv5_hwirq_eoi(hwirq_id, hwirq_type);
-+	}
-+}
-+
-+static asmlinkage void __exception_irq_entry
-+gicv5_handle_irq(struct pt_regs *regs)
-+{
-+	u64 ia;
-+	bool valid;
-+	u32 hwirq;
-+
-+	ia = gicr_insn(GICV5_OP_GICR_CDIA);
-+	valid = GICV5_GIC_CDIA_VALID(ia);
-+
-+	if (!valid)
-+		return;
-+
-+	/*
-+	 * Ensure that the CDIA instruction effects (ie IRQ activation) are
-+	 * completed before handling the interrupt.
-+	 */
-+	gsb_ack();
-+
-+	/*
-+	 * Ensure instruction ordering between an acknowledgment and subsequent
-+	 * instructions in the IRQ handler using an ISB.
-+	 */
-+	isb();
-+
-+	hwirq = FIELD_GET(GICV5_HWIRQ_INTID, ia);
-+
-+	handle_irq_per_domain(hwirq);
-+}
-+
-+/*
-+ * Disable IRQs for the executing CPU
-+ */
-+static void gicv5_cpu_disable_interrupts(void)
-+{
-+	u64 cr0;
-+
-+	// Disable interrupts for the Interrupt Domain
-+	cr0 = FIELD_PREP(ICC_CR0_EL1_EN, 0);
-+	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
-+}
-+
-+/*
-+ * Enable IRQs for the executing CPU
-+ */
-+static void gicv5_cpu_enable_interrupts(void)
-+{
-+	u64 cr0, pcr;
-+
-+	write_sysreg_s(0, SYS_ICC_PPI_ENABLER0_EL1);
-+	write_sysreg_s(0, SYS_ICC_PPI_ENABLER1_EL1);
-+
-+	gicv5_ppi_priority_init();
-+
-+	// Explicitly set the physical interrupt priority of the CPU
-+	pcr = FIELD_PREP(ICC_PCR_EL1_PRIORITY, GICV5_IRQ_PRIORITY_MI);
-+	write_sysreg_s(pcr, SYS_ICC_PCR_EL1);
-+
-+	// Enable interrupts for the Interrupt Domain
-+	cr0 = FIELD_PREP(ICC_CR0_EL1_EN, 1);
-+	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
-+}
-+
-+static int gicv5_starting_cpu(unsigned int cpu)
-+{
-+	if (WARN(!gicv5_cpuif_has_gcie(),
-+	    "GICv5 system components present but CPU does not have FEAT_GCIE"))
-+		return -ENODEV;
-+
-+	gicv5_cpu_enable_interrupts();
-+
-+	return 0;
-+}
-+
-+static void __init gicv5_free_domains(void)
-+{
-+	if (gicv5_global_data.ppi_domain)
-+		irq_domain_remove(gicv5_global_data.ppi_domain);
-+}
-+
-+static int __init gicv5_init_domains(struct fwnode_handle *handle)
-+{
-+	gicv5_global_data.fwnode = handle;
-+	gicv5_global_data.ppi_domain = irq_domain_create_linear(
-+		handle, 128, &gicv5_irq_ppi_domain_ops, NULL);
-+
-+	if (WARN_ON(!gicv5_global_data.ppi_domain))
-+		return -ENOMEM;
-+	irq_domain_update_bus_token(gicv5_global_data.ppi_domain,
-+				    DOMAIN_BUS_WIRED);
-+
-+	return 0;
-+}
-+
-+static void gicv5_set_cpuif_pribits(void)
-+{
-+	u64 icc_idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
-+
-+	switch (FIELD_GET(ICC_IDR0_EL1_PRI_BITS, icc_idr0)) {
-+	case ICC_IDR0_EL1_PRI_BITS_4BITS:
-+		pri_bits = 4;
-+		break;
-+	case ICC_IDR0_EL1_PRI_BITS_5BITS:
-+		pri_bits = 5;
-+		break;
-+	default:
-+		pr_err("Unexpected ICC_IDR0_EL1_PRI_BITS value, default to 4");
-+		pri_bits = 4;
-+		break;
-+	}
-+}
-+
-+static int __init gicv5_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	int ret;
-+
-+	ret = gicv5_init_domains(&node->fwnode);
-+	if (ret)
-+		return ret;
-+
-+	gicv5_set_cpuif_pribits();
-+
-+	ret = gicv5_starting_cpu(smp_processor_id());
-+	if (ret) {
-+		gicv5_free_domains();
-+		return ret;
-+	}
-+
-+	ret = set_handle_irq(gicv5_handle_irq);
-+	if (ret) {
-+		gicv5_free_domains();
-+		gicv5_cpu_disable_interrupts();
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
-diff --git a/drivers/irqchip/irq-gic-v5.h b/drivers/irqchip/irq-gic-v5.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..d8b797cdea2f786646fd88d9c8f60d483380991c
---- /dev/null
-+++ b/drivers/irqchip/irq-gic-v5.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2025 ARM Limited, All Rights Reserved.
-+ */
-+#ifndef __LINUX_IRQCHIP_GIC_V5_H
-+#define __LINUX_IRQCHIP_GIC_V5_H
-+
-+#include <asm/arch_gicv5.h>
-+
-+#define GICV5_HWIRQ_ID			GENMASK(23, 0)
-+#define GICV5_HWIRQ_TYPE		GENMASK(31, 29)
-+#define GICV5_HWIRQ_INTID		GENMASK_ULL(31, 0)
-+
-+#define GICV5_HWIRQ_TYPE_PPI		UL(0x1)
-+
-+#define GICV5_PPI_HM_EDGE		UL(0x0)
-+#define GICV5_PPI_HM_LEVEL		UL(0x1)
-+
-+#endif
+The use of the ternary here is weird, can you change that to a if 
+statement?
 
--- 
-2.48.0
 
+>   		if (clone_flags & CLONE_SETTLS)
+>   			childregs->tp = tls;
+>   		childregs->a0 = 0; /* Return value of fork() */
+> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+> index 24022809a7b5..73cf87dab186 100644
+> --- a/arch/riscv/kernel/usercfi.c
+> +++ b/arch/riscv/kernel/usercfi.c
+> @@ -19,6 +19,41 @@
+>   
+>   #define SHSTK_ENTRY_SIZE sizeof(void *)
+>   
+> +bool is_shstk_enabled(struct task_struct *task)
+> +{
+> +	return task->thread_info.user_cfi_state.ubcfi_en ? true : false;
+> +}
+> +
+> +void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size)
+> +{
+> +	task->thread_info.user_cfi_state.shdw_stk_base = shstk_addr;
+> +	task->thread_info.user_cfi_state.shdw_stk_size = size;
+> +}
+> +
+> +unsigned long get_shstk_base(struct task_struct *task, unsigned long *size)
+> +{
+> +	if (size)
+> +		*size = task->thread_info.user_cfi_state.shdw_stk_size;
+> +	return task->thread_info.user_cfi_state.shdw_stk_base;
+> +}
+> +
+> +void set_active_shstk(struct task_struct *task, unsigned long shstk_addr)
+> +{
+> +	task->thread_info.user_cfi_state.user_shdw_stk = shstk_addr;
+> +}
+> +
+> +/*
+> + * If size is 0, then to be compatible with regular stack we want it to be as big as
+> + * regular stack. Else PAGE_ALIGN it and return back
+> + */
+> +static unsigned long calc_shstk_size(unsigned long size)
+> +{
+> +	if (size)
+> +		return PAGE_ALIGN(size);
+> +
+> +	return PAGE_ALIGN(min_t(unsigned long long, rlimit(RLIMIT_STACK), SZ_4G));
+> +}
+> +
+>   /*
+>    * Writes on shadow stack can either be `sspush` or `ssamoswap`. `sspush` can happen
+>    * implicitly on current shadow stack pointed to by CSR_SSP. `ssamoswap` takes pointer to
+> @@ -142,3 +177,88 @@ SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsi
+>   
+>   	return allocate_shadow_stack(addr, aligned_size, size, set_tok);
+>   }
+> +
+> +/*
+> + * This gets called during clone/clone3/fork. And is needed to allocate a shadow stack for
+> + * cases where CLONE_VM is specified and thus a different stack is specified by user. We
+> + * thus need a separate shadow stack too. How does separate shadow stack is specified by
+> + * user is still being debated. Once that's settled, remove this part of the comment.
+> + * This function simply returns 0 if shadow stack are not supported or if separate shadow
+> + * stack allocation is not needed (like in case of !CLONE_VM)
+> + */
+> +unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
+> +				       const struct kernel_clone_args *args)
+> +{
+> +	unsigned long addr, size;
+> +
+> +	/* If shadow stack is not supported, return 0 */
+> +	if (!cpu_supports_shadow_stack())
+> +		return 0;
+> +
+> +	/*
+> +	 * If shadow stack is not enabled on the new thread, skip any
+> +	 * switch to a new shadow stack.
+> +	 */
+> +	if (!is_shstk_enabled(tsk))
+> +		return 0;
+> +
+> +	/*
+> +	 * For CLONE_VFORK the child will share the parents shadow stack.
+> +	 * Set base = 0 and size = 0, this is special means to track this state
+> +	 * so the freeing logic run for child knows to leave it alone.
+> +	 */
+> +	if (args->flags & CLONE_VFORK) {
+> +		set_shstk_base(tsk, 0, 0);
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * For !CLONE_VM the child will use a copy of the parents shadow
+> +	 * stack.
+> +	 */
+> +	if (!(args->flags & CLONE_VM))
+> +		return 0;
+> +
+> +	/*
+> +	 * reaching here means, CLONE_VM was specified and thus a separate shadow
+> +	 * stack is needed for new cloned thread. Note: below allocation is happening
+> +	 * using current mm.
+> +	 */
+> +	size = calc_shstk_size(args->stack_size);
+> +	addr = allocate_shadow_stack(0, size, 0, false);
+> +	if (IS_ERR_VALUE(addr))
+> +		return addr;
+> +
+> +	set_shstk_base(tsk, addr, size);
+> +
+> +	return addr + size;
+> +}
+> +
+> +void shstk_release(struct task_struct *tsk)
+> +{
+> +	unsigned long base = 0, size = 0;
+> +	/* If shadow stack is not supported or not enabled, nothing to release */
+> +	if (!cpu_supports_shadow_stack() || !is_shstk_enabled(tsk))
+> +		return;
+> +
+> +	/*
+> +	 * When fork() with CLONE_VM fails, the child (tsk) already has a
+> +	 * shadow stack allocated, and exit_thread() calls this function to
+> +	 * free it.  In this case the parent (current) and the child share
+> +	 * the same mm struct. Move forward only when they're same.
+> +	 */
+> +	if (!tsk->mm || tsk->mm != current->mm)
+> +		return;
+> +
+> +	/*
+> +	 * We know shadow stack is enabled but if base is NULL, then
+> +	 * this task is not managing its own shadow stack (CLONE_VFORK). So
+> +	 * skip freeing it.
+> +	 */
+> +	base = get_shstk_base(tsk, &size);
+> +	if (!base)
+> +		return;
+> +
+> +	vm_munmap(base, size);
+> +	set_shstk_base(tsk, 0, 0);
+> +}
+>
