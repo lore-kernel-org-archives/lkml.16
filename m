@@ -1,293 +1,161 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B863617A2EB
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58370143748
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117372; cv=none; b=qKt+mX76tNh/hrYsmFNt+WBH8qG+XeILTz5+LOmWNiNORCEy16t8iAeMrJ7Y/aP2+H0Cci9MABLG1ZgVuieEoor9HU+XqWY4fqe/O10L/tZnM06wY3IlkLgTuLiMAktxQ9K1+NGkYXuDjV9Aw5DL0WYdf8PwVP8f549H/KA1aa0=
+	t=1744117397; cv=none; b=Vl1bNl239Pfum63qQgzqrZA4Gqyr+shMN4wW886R2DmZXgXzHpdDbtYdPykiN1HHBd2Hx+pYW8O7NWDABDQbekrj9WVOCaS8d1FwpRRZItAGwuzD4K5lngAkYf//KzHA5h4QPX/afHEqznCEskoSv437IB+1mAWB3xGedezzru4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117372; c=relaxed/simple;
-	bh=JdlMXxUwizN2ti92XXyxVJFjwtOn6Nq4gI0Xlewt8tI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Mkm+1VBTYtRBQMiAAUmQDTl8vUgqhs366JhAa7XxQhiqDKvGwtg14kxy1gSiRDN4rHKzQ4PNeHJw3CjwXuPxW1lXX2WgoHt+FjJFoBFsBxYBPAVwfPaBIDOkiGOh3FzAE4LvpUol/DWzOGB0C5t/3Xn65ZinXFPkFnK+FaInP1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MU3QPD55; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744117397; c=relaxed/simple;
+	bh=cXZ8U54y2F9J9ZC0hcxlPN/URhXSYrp+nU2r8w6MOHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfuH2iOuh9/2GWvSiqhcVOrhQr7EIw7UlPXtPFZ7biKgxrIu0NFhaNt4T7FJAaLvdmgIR1yc4M8Kira7Ax7bAxq8F0TJWuMBgIdzXkysfIng1TIiJRm5hD7AUMbdrvhDwwX+zpoXg/gySd5qjtk6iwKC40n1zrHXHpi0HpfhW/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=jPW0Xhe9; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MU3QPD55"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538Bmdl1015965
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 13:02:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=C99IbYsybOI0qp7XxA4lc+
-	KIHKOFmr7JRjwEaTrZLy8=; b=MU3QPD55N9DA2pJuMf56VhN6m09g5P9xHnGDw0
-	2GCTx8MvJlWt3jtXA9MH8Gn0Z5bS7LMNbHbfvkx5DvjZ+Dln/8+LGpfgNaVbHb5O
-	bOuOW6k1nBuaKWCStWmwGorfPayYPSgwL1uiOFgLk+PoK7UHJ4qXxVnSv0aGwCr5
-	RtzN+GItoymdF0pIv3jAMzn05AwNi17bdQqXswPi2ZlKfL9+hLdCIHrcCNWU76/h
-	W4gzNKLGScWRQpdCtWu+2pC3mSzr+uDaYJaZpxgXihSyvKR7WsmvohT3Chaeo+YK
-	RHTHD2W41mvVCoxZqtz1HnPn4fNsAEtiHgF02nt6g2lnjssw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftfq3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:02:49 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5c9abdbd3so541203985a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:02:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="jPW0Xhe9"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43690d4605dso37463435e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1744117393; x=1744722193; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yariCUXscgT6CSzi8mecIIs82gQSGVlzPNHiSOA5TSA=;
+        b=jPW0Xhe9sQoYf1QuinSaNidhsyVUYNEnc/7qLaTozPBtzB9Wfd23IgB3fxh9bu3U4f
+         Q6u3D2cYwNhZxLEZFnlGdDItJWEjcsvJE6bLi++48y+NE4dnSmITqFvb5s2bajXxiL+B
+         WOq1bKyfnjXMJzcneIREhINVkjwjRt8CyyPCF8BRC3AcQoLtpAuI3MG23oB19RH5o31X
+         RotDm7KTaM9P+iO8/PGlNcA89ZQKipd8Zw8NDyjNwXcvaIuvPLKnd1XuqOa86iRM1A24
+         NAf7trYjIh9GwXO+fBoEA6da/Bbb9MO/V0zjL8C3BnRHpFzTse6PydIqTBI0uUyLEaPt
+         CdCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744117368; x=1744722168;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C99IbYsybOI0qp7XxA4lc+KIHKOFmr7JRjwEaTrZLy8=;
-        b=RWAqa5l60UsFUiOqx8HKbSmsB81x4XAoxywxQA/etVW/6h+yzDQQG7XuVu33de00Xa
-         l25iVdBFnlHRJ8aJ2zj7Yj3qlb/nFMWvigpa0N6QD6PVYBAblDJGiXsPqr0JnfGgMl46
-         SXHk285fDwdYUBQ9kvsePTw+bK1ncX6dKCU1iQmICVgxSjOXbEq3erK1DURVcSWaxeYp
-         bz6ewch5VeqN5UUWZD9OkaHOAiWZbGDHWSgjol/5xWTKvOkJKEFMYCbAFBq24RI6zBAL
-         Qe/KfLcPCnZ6BihM4lgz4W7neyIKST54EdVGofN6qz2AR3dr94A9TXclWANMsW+LSoqt
-         hj3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUBvjl+9ZV8vM5M3zwUFA7345gv5g1D24HnKt25KF8t0oTydu1uuvGpOEje0dAN23GXOzAqgUBDMLVZVsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAl73rjnzg0NBdJuE/hGRRICY5nolfIVmt/uR9UVrmaJSPun5I
-	wfIB2yzehFPIbGrHr+qx8sL01qaC8f7aCHbF8xvTZ/dVBNsPWZFfrvu5lao8LdlY7B6985spddB
-	fjAz21MqYw6R2Er6PrE82G2yp3IrMkBQXnUFIXbPIeoTv6JFCOmj5hgfLZ2DbwvF1t62AHcw=
-X-Gm-Gg: ASbGncu2lHe+7yGf3sYgrExzxpWnwMMeinHXxiO2wc3xg2Y2uZjlT6fdXE7kyn19akL
-	TVRG1rZjYr8UMXuASIURQy+wJ4794W0Xx991r8YSfqEhe1eggKMnbBIdObLs7cTsB4DcdOYJexG
-	3OtsZIhNOnt95sgNLPMskhu2IlPIA+H77ZT7kDA9CciStfETg19zGKAbK8UTgHnkPCmxl69eAT3
-	LNV0TR8veXIYQenOvyLtDsrur1n/tbCC7XcExGjJjRBYcWT5V5jNtPZKcWuQwym4HdvQFil8LZs
-	QNfHzaFv+WmgKNncbVcRSJ8To7pbiF1UNybzGHd2qhUON2VXPxSSFY5aFtJA85IhupUNaweD2T4
-	kbd0HLyYSClyfx1BgFbPYvtU0Divh
-X-Received: by 2002:a05:620a:404d:b0:7c5:4be5:b0b1 with SMTP id af79cd13be357-7c775abf4demr2156431985a.35.1744117367599;
-        Tue, 08 Apr 2025 06:02:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGaECUNZdRzJhLeXw75QE0R57Qpn6GFw1WDUnaDhh01xqCeMB3cxE/BN2Oc2HzYpAvyKc0/7w==
-X-Received: by 2002:a05:620a:404d:b0:7c5:4be5:b0b1 with SMTP id af79cd13be357-7c775abf4demr2156423685a.35.1744117366999;
-        Tue, 08 Apr 2025 06:02:46 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e670d1bsm1560613e87.214.2025.04.08.06.02.44
+        d=1e100.net; s=20230601; t=1744117393; x=1744722193;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yariCUXscgT6CSzi8mecIIs82gQSGVlzPNHiSOA5TSA=;
+        b=hG3RoW0a1Oz6CDi6jQ1D4J9EKONio7/FSzkmvVnXdCzxDpUEIdOGz7a7qPX/6TFkbi
+         joOrNSTGMFlNrg45GRPULObsw6wMTYzMNxzYH7MgJ0F9oSjoszZ+JtxIfMvKdS7B7gj7
+         OvkLXZxFNPEtxGsEXzu/zXKsOa5waOUOKIUK0qSugn79JHFiwFGIOFZVEJWTypkgrv5u
+         TXU0SCehPmdwD1OMdaP/IgwurGiCPdaAz/Ifdvcv1G57oS5PFa4OoV28WKCEc2xcOUmu
+         O6AkqzB2inUJVJka6X+XNcX84QNTeKl6uNOAhAN9pvKSUS5zITMLuhGG5MW0hBtBwjB7
+         znBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQHhTFyutGmA5cQeFld/4Kp/RiTXlI+4dM/AmQyQnFM4UvWUvsCeHYHtjnL0yTeoGl6fl68yBFJFMgVt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcClwqy0IvROuQ2pUS64A/iLKNC8aQ5d0A+mhadKHYcPIJm/lK
+	63Ki2dwzOcz7cePAbk9iXX2+4g3Zj0eYOTWn7c3PuYaJ+ILJM5yV4VJ55SVsykg=
+X-Gm-Gg: ASbGncu+PWXHx9RxF5NFvbMoZJZCBsVuKUmsvCz9YR8MQoZVDMi2gNxkBQ2PL1Jv8kn
+	Nt3NgwmdAjMt0BO2sJkyvMQmzsnLfFb5KYi+7i65axaNGjhHmIglFXmaKLyaw38ng0ll9T7IpcQ
+	AcYOG3MVroH4wMNm4S8eU/FVp/vAKHEnOOkMZ3pQqJ34OfzWn3z4mRz8VigEKDAIoggZXgfe5f8
+	t+RDWZJoKashaRBYLIzPjjkLvpgtxQBevKMlpdNO0uKOC7CXO08kHOOsic7e0fE1881X0Jy0yOd
+	+g8MVWkDFp0Mxd4/wIXwnwpRjY/Z+he+
+X-Google-Smtp-Source: AGHT+IF2Vv0rmz/WwZXEsLPeSJxbfCLrHKkL9DK4fFs4t2QUhn6W9THc1pNDbAlCQHOWVpb2Kmxavg==
+X-Received: by 2002:a05:600c:c8a:b0:43c:f597:d584 with SMTP id 5b1f17b1804b1-43ecfa0704amr151411075e9.29.1744117391094;
+        Tue, 08 Apr 2025 06:03:11 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::31af])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16ba978sm164456275e9.23.2025.04.08.06.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 06:02:46 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Tue, 08 Apr 2025 16:02:44 +0300
-Subject: [PATCH] drm/msm/dpu: drop rogue intr_tear_rd_ptr values
+        Tue, 08 Apr 2025 06:03:10 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:03:09 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	charlie@rivosinc.com, cleger@rivosinc.com, alex@ghiti.fr, 
+	Anup Patel <apatel@ventanamicro.com>, corbet@lwn.net
+Subject: Re: [PATCH v3 7/8] riscv: Add parameter for skipping access speed
+ tests
+Message-ID: <20250408-f3b5934a901bd24c1c800c8d@orel>
+References: <20250304120014.143628-10-ajones@ventanamicro.com>
+ <20250304120014.143628-17-ajones@ventanamicro.com>
+ <CAMuHMdWVMP0MYCLFq+b7H_uz-2omdFiDDUZq0t_gw0L9rrJtkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-dpu-drop-intr-rd-ptr-v1-1-eeac337d88f8@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAHMe9WcC/x2MQQqAIBAAvxJ7bkElK/pKdKjcai8qa0Ug/T3pN
- MxhJkMiYUowVBmEbk4cfBFdV7Aes98J2RUHo4xVjerRxQudhIjsT0FxGAu6drGm0e2qjYWSRqG
- Nn387Tu/7Ae5Oh7tmAAAA
-X-Change-ID: 20250408-dpu-drop-intr-rd-ptr-76b52416c125
-To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8183;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=JdlMXxUwizN2ti92XXyxVJFjwtOn6Nq4gI0Xlewt8tI=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBn9R50D8d8SZ21NDKudMR43W7rVbh+XQ/JeL46E
- rTpKwT/QwOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ/UedAAKCRCLPIo+Aiko
- 1TBAB/9CG/SR1t4i7Zbc+3thhGxKeEe1SkmXyismu5gPfIWoRcjUOkzRJRDqJHynfQRE5ujp9Tb
- rsKr28RJPLvgHJjHVU2fy2eHDVBL/0Ef6+nfwQhd+FnXvr6fx8Ccdha2/1t6rR61NLn0+K0l12O
- g0FUDyCblRJeM90M6KFVcDZreLRx1ym+I1g693JRWhpLwEvwdA3E888oa1KU6WCCIMP2/F6rHvf
- P5xWunufE4HbFzgCEfQK5n+3hpokY906G9NsZeFm50qsFO5sQIZ+vDQI+r0ao0h1MDKfVq6+csS
- sa9VQffKBsgBuoMt/4AtYS8HNL6Py0dhfujMIifTyPhLdVSh
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f51e79 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=ZZee45BDSTTCXVxweLkA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: yZdQF1Unru-htCH74Zxmo5OU9o02FY0T
-X-Proofpoint-ORIG-GUID: yZdQF1Unru-htCH74Zxmo5OU9o02FY0T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_05,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080092
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWVMP0MYCLFq+b7H_uz-2omdFiDDUZq0t_gw0L9rrJtkQ@mail.gmail.com>
 
-The commit 5a9d50150c2c ("drm/msm/dpu: shift IRQ indices by 1") shifted
-IRQ indices by 1, making 'NO_IRQ' to be 0 rather than -1 (and allowing
-to skip the definition if the IRQ is not present).
-Several platform files were sketched before that commit, but got applied
-afterwards. As such, they inherited historical (and currently incorrect)
-setting of .intr_tear_rd_ptr = -1 for 'NO_IRQ' value.
+On Tue, Apr 08, 2025 at 02:25:12PM +0200, Geert Uytterhoeven wrote:
+> Hi Andrew,
+> 
+> On Tue, 4 Mar 2025 at 13:02, Andrew Jones <ajones@ventanamicro.com> wrote:
+> > Allow skipping scalar and vector unaligned access speed tests. This
+> > is useful for testing alternative code paths and to skip the tests in
+> > environments where they run too slowly. All CPUs must have the same
+> > unaligned access speed.
+> >
+> > The code movement is because we now need the scalar cpu hotplug
+> > callback to always run, so we need to bring it and its supporting
+> > functions out of CONFIG_RISCV_PROBE_UNALIGNED_ACCESS.
+> >
+> > Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+> 
+> > --- a/arch/riscv/kernel/unaligned_access_speed.c
+> > +++ b/arch/riscv/kernel/unaligned_access_speed.c
+> 
+> >  static int __init check_unaligned_access_all_cpus(void)
+> >  {
+> >         int cpu;
+> >
+> > -       if (!check_unaligned_access_emulated_all_cpus())
+> > +       if (unaligned_scalar_speed_param == RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN &&
+> > +           !check_unaligned_access_emulated_all_cpus()) {
+> >                 check_unaligned_access_speed_all_cpus();
+> > -
+> > -       if (!has_vector()) {
+> > +       } else {
+> > +               pr_info("scalar unaligned access speed set to '%s' by command line\n",
+> > +                       speed_str[unaligned_scalar_speed_param]);
+> >                 for_each_online_cpu(cpu)
+> > -                       per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+> > -       } else if (!check_vector_unaligned_access_emulated_all_cpus() &&
+> > -                  IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
+> > +                       per_cpu(misaligned_access_speed, cpu) = unaligned_scalar_speed_param;
+> > +       }
+> > +
+> > +       if (!has_vector())
+> > +               unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+> > +
+> > +       if (unaligned_vector_speed_param == RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN &&
+> > +           !check_vector_unaligned_access_emulated_all_cpus() &&
+> > +           IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
+> >                 kthread_run(vec_check_unaligned_access_speed_all_cpus,
+> >                             NULL, "vec_check_unaligned_access_speed_all_cpus");
+> > +       } else {
+> > +               pr_info("vector unaligned access speed set to '%s' by command line\n",
+> > +                       speed_str[unaligned_vector_speed_param]);
+> 
+> On SiPEED MAiXBiT, unaligned_scalar_speed_param is zero, and it prints:
+> 
+>     scalar unaligned access speed set to '(null)' by command line
 
-Drop that setting for all the affected platforms.
+Thanks, Geert. I think unaligned_scalar_speed_param is likely 1 in this
+case and we should be printing 'emulated', but I neglected to add that
+string to speed_str[].
 
-Fixes: 62af6e1cb596 ("drm/msm/dpu: Add support for MSM8917")
-Fixes: c079680bb0fa ("drm/msm/dpu: Add support for MSM8937")
-Fixes: 7a6109ce1c2c ("drm/msm/dpu: Add support for MSM8953")
-Fixes: daf9a92daeb8 ("drm/msm/dpu: Add support for MSM8996")
-Fixes: 7204df5e7e68 ("drm/msm/dpu: add support for SDM660 and SDM630 platforms")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h | 2 --
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h | 3 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h  | 4 ----
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h   | 3 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h   | 2 --
- 6 files changed, 15 deletions(-)
+I'll fix this too.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-index 1f32807bb5e5d49b696832c4eab54c05106bfd4b..ad60089f18ea6c22160533874ea0cc54c352e064 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
-@@ -132,7 +132,6 @@ static const struct dpu_intf_cfg msm8937_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_2", .id = INTF_2,
- 		.base = 0x6b000, .len = 0x268,
-@@ -141,7 +140,6 @@ static const struct dpu_intf_cfg msm8937_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 28),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 29),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-index 42131959ff22020a83c0ea65d79a56fd57c800f9..a1cf89a0a42d5f3c909798c30901fe8796b15075 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
-@@ -118,7 +118,6 @@ static const struct dpu_intf_cfg msm8917_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-index 2b4723a5c67606d68dea905d947cd691bb28eda0..eea9b80e2287a86448ab4e1a5914c1914d5a2090 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
-@@ -131,7 +131,6 @@ static const struct dpu_intf_cfg msm8953_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 24),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 25),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_1", .id = INTF_1,
- 		.base = 0x6a800, .len = 0x268,
-@@ -140,7 +139,6 @@ static const struct dpu_intf_cfg msm8953_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_2", .id = INTF_2,
- 		.base = 0x6b000, .len = 0x268,
-@@ -149,7 +147,6 @@ static const struct dpu_intf_cfg msm8953_intf[] = {
- 		.prog_fetch_lines_worst_case = 14,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 28),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 29),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-index 5cf19de71f060818d257f95aa781b91ec201d4e4..ae18a354e5d2a3d2e073f2099e4d970bff5ed085 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-@@ -241,7 +241,6 @@ static const struct dpu_intf_cfg msm8996_intf[] = {
- 		.prog_fetch_lines_worst_case = 25,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 24),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 25),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_1", .id = INTF_1,
- 		.base = 0x6a800, .len = 0x268,
-@@ -250,7 +249,6 @@ static const struct dpu_intf_cfg msm8996_intf[] = {
- 		.prog_fetch_lines_worst_case = 25,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_2", .id = INTF_2,
- 		.base = 0x6b000, .len = 0x268,
-@@ -259,7 +257,6 @@ static const struct dpu_intf_cfg msm8996_intf[] = {
- 		.prog_fetch_lines_worst_case = 25,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 28),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 29),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_3", .id = INTF_3,
- 		.base = 0x6b800, .len = 0x268,
-@@ -267,7 +264,6 @@ static const struct dpu_intf_cfg msm8996_intf[] = {
- 		.prog_fetch_lines_worst_case = 25,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 30),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 31),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-index 4f2f68b07f203a11529f7a680fb87b448305d80a..bb89da0a481dec053e06369dee8b0854a3427aaf 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-@@ -202,7 +202,6 @@ static const struct dpu_intf_cfg sdm660_intf[] = {
- 		.prog_fetch_lines_worst_case = 21,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 24),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 25),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_1", .id = INTF_1,
- 		.base = 0x6a800, .len = 0x280,
-@@ -211,7 +210,6 @@ static const struct dpu_intf_cfg sdm660_intf[] = {
- 		.prog_fetch_lines_worst_case = 21,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_2", .id = INTF_2,
- 		.base = 0x6b000, .len = 0x280,
-@@ -220,7 +218,6 @@ static const struct dpu_intf_cfg sdm660_intf[] = {
- 		.prog_fetch_lines_worst_case = 21,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 28),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 29),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-index c70bef025ac4190347f81d75caf4777786fbeaf7..7caf876ca3e30cc9230cbc6f19b9d3d1b954e2e0 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-@@ -147,7 +147,6 @@ static const struct dpu_intf_cfg sdm630_intf[] = {
- 		.prog_fetch_lines_worst_case = 21,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 24),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 25),
--		.intr_tear_rd_ptr = -1,
- 	}, {
- 		.name = "intf_1", .id = INTF_1,
- 		.base = 0x6a800, .len = 0x280,
-@@ -156,7 +155,6 @@ static const struct dpu_intf_cfg sdm630_intf[] = {
- 		.prog_fetch_lines_worst_case = 21,
- 		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 26),
- 		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 27),
--		.intr_tear_rd_ptr = -1,
- 	},
- };
- 
+Thanks,
+drew
 
----
-base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-change-id: 20250408-dpu-drop-intr-rd-ptr-76b52416c125
-
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
+> 
+> 
+> > +               for_each_online_cpu(cpu)
+> > +                       per_cpu(vector_misaligned_access, cpu) = unaligned_vector_speed_param;
+> >         }
+> >
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
