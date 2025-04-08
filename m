@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6DA256C71
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 23:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D94255E31
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 23:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744153584; cv=none; b=ulZf83HP7Hh9qrm+0p+28C/74a1saSpXlVxMI4MjlLqXP2kSsYN4nsTbucmmOlZBGK8WsxZ4F/Rl55ip1xjRbM7PDISObcuAaYfpgtma6gnYp/UUpAybuRSJ93AcytqRmpUOICPl+dlto0a8Y+IM4lyfRDqJ0wJ5uQtpmgdE4io=
+	t=1744153585; cv=none; b=j+XkXaLs9hjDonvmHuQ5QxrmXf6MOpocxrKplCngS8DSRjmFD6fDw2+pAgau42QHrNeHdj/Yxa/FngturmGysr8mdkkTYHLbFVXVxT1SwAFSw6qY5cVzVnL4xRuAEEUijJ3f2KvMPaJbSw94tTsEXGtGKbIK6/36whD07GYp0U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744153584; c=relaxed/simple;
-	bh=87HXKthJ9DcWAWsCYfLiTR83KvCQwFMhYPTbnDWHapk=;
+	s=arc-20240116; t=1744153585; c=relaxed/simple;
+	bh=o70De11W/n8lSRKzGVooizY/b0DBWiKqbWk0eYOT+ew=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a0f1rAzi5KRVu7M8hx2y0znYO120pGMcXEFD4QaCA+kcBXadEDjRC6rrx+VpDM0kjuPgmTFdEG+gPQkss2fZXmhsbb7wbvLTbztafTcWmQOG5nC4ybXl5fdqhOG88b+WyLCImFNl7tG0FCwb24i33j348hIyIl2fxVkpE0KXwHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWJFlAkY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qDGOgn4Scf9/vtRaiR41sEjA02Yf9iBWOlAb6i8FT7zVohd9dxK1dhDjwQaGUiLt4iEeg8lPdLb6/0tXpBQH4WBKv/bcFH6YdpvEJ7ngaLm9MJZxDk8prdpa1wdVT7C3Y5Q+q4tR18c59F4btNjabzNx3xpFC/jrpbGC+rNzcZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stx74oVn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWJFlAkY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405A8C4CEE5;
-	Tue,  8 Apr 2025 23:06:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stx74oVn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A2DC4CEE5;
+	Tue,  8 Apr 2025 23:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744153583;
-	bh=87HXKthJ9DcWAWsCYfLiTR83KvCQwFMhYPTbnDWHapk=;
+	s=k20201202; t=1744153584;
+	bh=o70De11W/n8lSRKzGVooizY/b0DBWiKqbWk0eYOT+ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HWJFlAkYuQaOqlkMZ/N6000Qx9UvTlslD/FhkJ7XkAtHzCRHiXw9e1h92mc+nPcRU
-	 lcg+lXUbwurBv7oSZ7KiFD+GiRW2CqewkPbipPTrFmSfmNGqBHKc3yKTFDttG5kkg+
-	 lsu0g6MT02HpDsHxN2FEc+d54tSgE69z6lUNo6GwdY2pPiAkeGPkj+wT9e0WWwVekP
-	 bBpcpYrs4+cl1Z8ddm/zY6vn+1/bbVSowfOU1kWI0ghVTRTjFHIOHH17Re0WIB4YzU
-	 Ayz45tvXxsGMyGBasp3ornFVnckgCuR+S6GCHwXKaoO9q/bSj5tn5ojRRxbOLmEPae
-	 lTaus4jW6XW4w==
+	b=stx74oVn7YESoRARDsKsRjRdpvABZSsZ8zhBCJv9sEAUPU/UBZ8BFph4xpu8c+wM7
+	 iXu8JYNv2VJDLzUHB66z/X7I4m0KijQeNAGRGuXIPUMky1JepZvV6k0zzhHuOsPQtH
+	 NfWcFAmJtLIXi7+6e16C8LsLFvrlixTbtPOBztlHw5bH76SbBMnZOh5eSK/zAv8XJ2
+	 GcNgxUDSz43lk/7ukmvBeOSKe5WlAeq+2T73QLCGGlICWHB8Uqmc+y6tYLW/ZuYB4W
+	 WXsg08nC0gC/QWmkDL6ZcsTLxjJRniqenYjs1MQasZrnobUmNKSb3RvHarBLgYnvF9
+	 w8OUNFfjsNong==
 From: Tejun Heo <tj@kernel.org>
 To: void@manifault.com,
 	arighi@nvidia.com,
@@ -33,9 +33,9 @@ To: void@manifault.com,
 Cc: linux-kernel@vger.kernel.org,
 	sched-ext@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 2/5] sched_ext: Remove scx_ops_enq_* static_keys
-Date: Tue,  8 Apr 2025 13:06:02 -1000
-Message-ID: <20250408230616.2369765-3-tj@kernel.org>
+Subject: [PATCH 3/5] sched_ext: Remove scx_ops_cpu_preempt static_key
+Date: Tue,  8 Apr 2025 13:06:03 -1000
+Message-ID: <20250408230616.2369765-4-tj@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250408230616.2369765-1-tj@kernel.org>
 References: <20250408230616.2369765-1-tj@kernel.org>
@@ -47,95 +47,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-scx_ops_enq_last/exiting/migration_disabled are used to encode the
-corresponding SCX_OPS_ flags into static_keys. These flags aren't hot enough
-for static_key usage to make any meaningful difference and are made
-static_keys mostly because there was no reason not to. However, global
-static_keys can't work with the planned hierarchical multiple scheduler
-support. Remove the static_keys and test the ops flags directly.
+scx_ops_cpu_preempt is used to encode whether ops.cpu_acquire/release() are
+implemented into a static_key. These tests aren't hot enough for static_key
+usage to make any meaningful difference and are made to use a static_key
+mostly because there was no reason not to. However, global static_keys can't
+work with the planned hierarchical multiple scheduler support. Remove the
+static_key and instead use an internal ops flag SCX_OPS_HAS_CPU_PREEMPT to
+record and test whether ops.cpu_acquire/release() are implemented.
 
 In repeated hackbench runs before and after static_keys removal on an AMD
 Ryzen 3900X, I couldn't tell any measurable performance difference.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- kernel/sched/ext.c | 22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+ kernel/sched/ext.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 022343518f99..1e685e77b5e4 100644
+index 1e685e77b5e4..1adf5c299cce 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
-@@ -924,9 +924,6 @@ static struct sched_ext_ops scx_ops;
+@@ -173,6 +173,11 @@ enum scx_ops_flags {
+ 					  SCX_OPS_SWITCH_PARTIAL |
+ 					  SCX_OPS_BUILTIN_IDLE_PER_NODE |
+ 					  SCX_OPS_HAS_CGROUP_WEIGHT,
++
++	/* high 8 bits are internal, don't include in SCX_OPS_ALL_FLAGS */
++	__SCX_OPS_INTERNAL_MASK		= 0xffLLU << 56,
++
++	SCX_OPS_HAS_CPU_PREEMPT		= 1LLU << 56,
+ };
+ 
+ /* argument container for ops.init_task() */
+@@ -924,7 +929,6 @@ static struct sched_ext_ops scx_ops;
  static bool scx_warned_zero_slice;
  
  DEFINE_STATIC_KEY_FALSE(scx_ops_allow_queued_wakeup);
--static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_last);
--static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_exiting);
--static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_migration_disabled);
- static DEFINE_STATIC_KEY_FALSE(scx_ops_cpu_preempt);
+-static DEFINE_STATIC_KEY_FALSE(scx_ops_cpu_preempt);
  
  static struct static_key_false scx_has_op[SCX_OPI_END] =
-@@ -2144,14 +2141,14 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 		goto direct;
+ 	{ [0 ... SCX_OPI_END-1] = STATIC_KEY_FALSE_INIT };
+@@ -2931,7 +2935,7 @@ static int balance_one(struct rq *rq, struct task_struct *prev)
+ 	rq->scx.flags |= SCX_RQ_IN_BALANCE;
+ 	rq->scx.flags &= ~(SCX_RQ_BAL_PENDING | SCX_RQ_BAL_KEEP);
  
- 	/* see %SCX_OPS_ENQ_EXITING */
--	if (!static_branch_unlikely(&scx_ops_enq_exiting) &&
-+	if (!(scx_ops.flags & SCX_OPS_ENQ_EXITING) &&
- 	    unlikely(p->flags & PF_EXITING)) {
- 		__scx_add_event(SCX_EV_ENQ_SKIP_EXITING, 1);
- 		goto local;
- 	}
- 
- 	/* see %SCX_OPS_ENQ_MIGRATION_DISABLED */
--	if (!static_branch_unlikely(&scx_ops_enq_migration_disabled) &&
-+	if (!(scx_ops.flags & SCX_OPS_ENQ_MIGRATION_DISABLED) &&
- 	    is_migration_disabled(p)) {
- 		__scx_add_event(SCX_EV_ENQ_SKIP_MIGRATION_DISABLED, 1);
- 		goto local;
-@@ -3022,8 +3019,8 @@ static int balance_one(struct rq *rq, struct task_struct *prev)
- 	 * Didn't find another task to run. Keep running @prev unless
- 	 * %SCX_OPS_ENQ_LAST is in effect.
+-	if (static_branch_unlikely(&scx_ops_cpu_preempt) &&
++	if ((scx_ops.flags & SCX_OPS_HAS_CPU_PREEMPT) &&
+ 	    unlikely(rq->scx.cpu_released)) {
+ 		/*
+ 		 * If the previous sched_class for the current CPU was not SCX,
+@@ -3160,7 +3164,7 @@ static void switch_class(struct rq *rq, struct task_struct *next)
  	 */
--	if (prev_on_rq && (!static_branch_unlikely(&scx_ops_enq_last) ||
--	     scx_rq_bypassing(rq))) {
-+	if (prev_on_rq &&
-+	    (!(scx_ops.flags & SCX_OPS_ENQ_LAST) || scx_rq_bypassing(rq))) {
- 		rq->scx.flags |= SCX_RQ_BAL_KEEP;
- 		__scx_add_event(SCX_EV_DISPATCH_KEEP_LAST, 1);
- 		goto has_tasks;
-@@ -3228,7 +3225,7 @@ static void put_prev_task_scx(struct rq *rq, struct task_struct *p,
- 		 * which should trigger an explicit follow-up scheduling event.
- 		 */
- 		if (sched_class_above(&ext_sched_class, next->sched_class)) {
--			WARN_ON_ONCE(!static_branch_unlikely(&scx_ops_enq_last));
-+			WARN_ON_ONCE(!(scx_ops.flags & SCX_OPS_ENQ_LAST));
- 			do_enqueue_task(rq, p, SCX_ENQ_LAST, -1);
- 		} else {
- 			do_enqueue_task(rq, p, 0, -1);
-@@ -4728,9 +4725,6 @@ static void scx_disable_workfn(struct kthread_work *work)
+ 	smp_store_release(&rq->scx.pnt_seq, rq->scx.pnt_seq + 1);
+ #endif
+-	if (!static_branch_unlikely(&scx_ops_cpu_preempt))
++	if (!(scx_ops.flags & SCX_OPS_HAS_CPU_PREEMPT))
+ 		return;
+ 
+ 	/*
+@@ -4725,7 +4729,6 @@ static void scx_disable_workfn(struct kthread_work *work)
  	for (i = SCX_OPI_BEGIN; i < SCX_OPI_END; i++)
  		static_branch_disable(&scx_has_op[i]);
  	static_branch_disable(&scx_ops_allow_queued_wakeup);
--	static_branch_disable(&scx_ops_enq_last);
--	static_branch_disable(&scx_ops_enq_exiting);
--	static_branch_disable(&scx_ops_enq_migration_disabled);
- 	static_branch_disable(&scx_ops_cpu_preempt);
+-	static_branch_disable(&scx_ops_cpu_preempt);
  	scx_idle_disable();
  	synchronize_rcu();
-@@ -5372,12 +5366,6 @@ static int scx_enable(struct sched_ext_ops *ops, struct bpf_link *link)
  
+@@ -5367,7 +5370,7 @@ static int scx_enable(struct sched_ext_ops *ops, struct bpf_link *link)
  	if (ops->flags & SCX_OPS_ALLOW_QUEUED_WAKEUP)
  		static_branch_enable(&scx_ops_allow_queued_wakeup);
--	if (ops->flags & SCX_OPS_ENQ_LAST)
--		static_branch_enable(&scx_ops_enq_last);
--	if (ops->flags & SCX_OPS_ENQ_EXITING)
--		static_branch_enable(&scx_ops_enq_exiting);
--	if (ops->flags & SCX_OPS_ENQ_MIGRATION_DISABLED)
--		static_branch_enable(&scx_ops_enq_migration_disabled);
  	if (scx_ops.cpu_acquire || scx_ops.cpu_release)
- 		static_branch_enable(&scx_ops_cpu_preempt);
+-		static_branch_enable(&scx_ops_cpu_preempt);
++		scx_ops.flags |= SCX_OPS_HAS_CPU_PREEMPT;
  
+ 	/*
+ 	 * Lock out forks, cgroup on/offlining and moves before opening the
 -- 
 2.49.0
 
