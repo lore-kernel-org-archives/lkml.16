@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A9E267393;
-	Tue,  8 Apr 2025 09:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AB92673AF;
+	Tue,  8 Apr 2025 09:24:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104275; cv=none; b=Oa7kxofKb5vGw1aqkJ0/CdvCYw7+xiWNR1Pa5tIJRQndbnf1iCN6E9UtXmQ7+av6m+7olHH0jgZ8SJbKykA3rTdZxknauTm49M0oSogmIFDOP/ovXPl96m7PE6V2WboHk3X/Nt1eSQGiLsKYLKXnHUl40imKPStnwQcKLWfqAUI=
+	t=1744104277; cv=none; b=Fmd5+MKaZ8+wvozqwk5mYmjNooICUR0T5ZrgijotbGdpWFXxL7CpjWDD070tRJ2QZRXRj3q97a3Kp7XjEJIXx+RFdPMzRvDIZpHYuqzpoW8lKhscbxwebTHDpBH6E3EwEQYAKw5HPHv5G2CUhYILx5vn2Uh29EoEXyw6SNVnH5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104275; c=relaxed/simple;
-	bh=CGy2xPNTNPMeUYQCJLS8Ysv/1ENW+iVpqG/OJCgJdMc=;
+	s=arc-20240116; t=1744104277; c=relaxed/simple;
+	bh=HopQX1is+y4nSn+cadv8Wukn0LOUaYj9jBEPdHsCekc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=N27fOVXKifR+y2tuYwIBFJ6CbouRlv/0hENlTA5bCXfr4jrp2C+gTIWpPBm5CyELq0lA/UDHL/zY0EijP73we+zWVkbjEFpb3MrvL5zmaMmhzGdXsL4Vf9QApBPXDdF8ZZFleaxQFWFRAQxA+sHeb6JY92paHW/IbuQV/H6D44E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7ISsU9W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Qhl+XWsEtJmRpfQC3gBcQ91xPWZ/uiIo7Wl35ltL5wQ373vFa46I02KfcTxgr/pgMJjNLG3jN+kJY49CSo8svrblw1l8or2wmNq1I3O5Gof2kM97rR+wBf81Q5r+bPQxQaVD7FgbGboQRiACiKEnNwyA8y1CVBVEA8fYwAwMgWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JW631gBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7ISsU9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0897EC4CEE8;
-	Tue,  8 Apr 2025 09:24:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JW631gBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20726C4CEEB;
+	Tue,  8 Apr 2025 09:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744104274;
-	bh=CGy2xPNTNPMeUYQCJLS8Ysv/1ENW+iVpqG/OJCgJdMc=;
+	s=k20201202; t=1744104277;
+	bh=HopQX1is+y4nSn+cadv8Wukn0LOUaYj9jBEPdHsCekc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=S7ISsU9WmQA2ICz7i+TuSAw3dDDby7jWtiiPkEghmKx5UJWXqhUyM2osZ6VnNgRFQ
-	 YvMTQDjOPBWm7Ck8rLrocWzyk/HXX22MCZgL4zAScjutwa6Sr3JLAwYzw4HzTQvCI+
-	 3o5W/W28IEpD8JjNCqvfuyJKEbrT/9PSpOcA1lua+FIWDiCWpOD9jtm0S3RKxPWId9
-	 0RpKTbIN5+5b57bF4p8uhiyRKycWl4OGMgMt369B5XGJnNsYCD4gXQePzjHvJbbpgW
-	 e9mnU6uEinJFd5nGMGuyb5DDXWOAPpG67uPKp2vBEgKBY5eQP8nzfLQZ3l3U3IOv0r
-	 x029FVPeMU3fw==
+	b=JW631gBMukquwdjQPaYFhhbPjZFpUOCWIUiYAol9bdYB4jxlnh874ZvzvjjLU13Nw
+	 pfjU3tUJ3fIBVquMQTLeKXjjJg0eDTznP0u9PlIgs+9VFYko1Rffh8FHlE16NkPURh
+	 QNNph94A4Kc2SbbNb34G/qpsD4zioDSNgcAw78F4RecfeI601Lbbpjg8Cq6I8QcduI
+	 v9BLoAEwNLtsGMrs1KR3+zx7CYJ8BFT5daf9vgJmyjAg6V5wOqzlC43IJe9zNRffnE
+	 Ub3NmOUS/80YiBum6tr5cReGJ9+mhWsfOx1SZQykgZDVUeEEZrjeIOSKQx8ZYB2wPp
+	 0CDuyOtVd/+kQ==
 From: Mark Brown <broonie@kernel.org>
-To: shenghao-ding@ti.com, kevin-lu@ti.com, baojun.xu@ti.com, 
- lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- Chen Ni <nichen@iscas.ac.cn>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250407063011.2771977-1-nichen@iscas.ac.cn>
-References: <20250407063011.2771977-1-nichen@iscas.ac.cn>
-Subject: Re: [PATCH] ASoC: tas2781-fmwlib: Remove unnecessary NULL check
- before release_firmware()
-Message-Id: <174410427277.1933566.13201223090251190652.b4-ty@kernel.org>
-Date: Tue, 08 Apr 2025 10:24:32 +0100
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: andriy.shevchenko@intel.com
+In-Reply-To: <20250406010532.1212894-1-peng.fan@oss.nxp.com>
+References: <20250406010532.1212894-1-peng.fan@oss.nxp.com>
+Subject: Re: [PATCH V2] ASoC: codec: ak5386: Convert to GPIO descriptors
+Message-Id: <174410427487.1933566.10804541979221140495.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 10:24:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,14 +45,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 07 Apr 2025 14:30:11 +0800, Chen Ni wrote:
-> release_firmware() checks for NULL pointers internally.
-> Remove unneeded NULL check for fmw here.
+On Sun, 06 Apr 2025 09:05:23 +0800, Peng Fan (OSS) wrote:
+>  of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor.
+>  - Use gpiod_set_value to configure output value.
 > 
+> With legacy of_gpio API, the driver set GPIO value 1 to power up
+> AK5386, and set value 0 to power down.
+> Per datasheet for PDN(reset_gpio in the driver):
+>  Power Down & Reset Mode Pin
+>  “H”: Power up, “L”: Power down & Reset
+>  The AK5386 must be reset once upon power-up.
 > 
+> [...]
 
 Applied to
 
@@ -59,8 +68,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: tas2781-fmwlib: Remove unnecessary NULL check before release_firmware()
-      commit: 348679ffe7f30f6eb05013bc485fd295d9f5441c
+[1/1] ASoC: codec: ak5386: Convert to GPIO descriptors
+      commit: 82d8d3360c16687aad3bac617601f98ae9c35147
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
