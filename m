@@ -1,124 +1,154 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B82027E1CA
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE25C27EC93;
+	Tue,  8 Apr 2025 12:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117156; cv=none; b=UdYRHFvGTnL341O8Zg8nK7ru6ZUkejW4pj+ZEmhL16HFW0Q3mjPggx3/Msq0DlEy9AnRGAYbzMmEkZThVcrfm38E6Z3QMqukLYZH+Vn12umf4gGXyvZygnP3FKkHI7M7+DiICccuMH/uYWzj+2RLHDM/t9uorkiZeA4YMuWy9Ag=
+	t=1744117173; cv=none; b=I5Qw+WKw7BsWeNIuoOsxypALLgjFhzStV9pwWW51+xUjPtc8Wkfenv+qMwPumzxpJT758g1r/Xy9lxxdi0g0P2OduTuzZBe2VXv4ZNm2NeUIOk0ejrYZCjsUmCFnlmerT1QcUximZClp1vYdnkfjOr3pFKq//BumxYBopb982FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117156; c=relaxed/simple;
-	bh=FQZjWIuKGxUW5PukAyM0+CslUNDfnoA/RUSx9EJ79nk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AwHq3KyVDEHWN+qDW6rg3MjbK3SOWnEFoxmh64M2/ZyxlBUTc2JlFYUe4Nynw0PZGSHlRFt4TSSPsfpccGJpAgjbmvFI9djo0v6KvxNNkVidJPbV7ttis3mN3i1M4r3ufm3LJXff1xiazpnvQNjt8M35qC2f/KBUK/ar5e26ml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S8ztezM/; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744117173; c=relaxed/simple;
+	bh=6taOoSBMc4t0d84vgfEO//D6rrjXzREcl3ttgTziOjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZOCskDK7VN4pqpMPbMs5W3pf+Ot6pQuxRU2mbZRpWa6dyZP6S24gHg1+ph1506kKelCuYNV50WshLCTU7SVxjCVQaMjZfRKQ5erepcP+pFswewb/0djPNj28tdp+uuFqqpfYSbVm+hxX+tgUWlAnOYcmJo59sF2h8g5/k7o4+/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PEx4yupa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S8ztezM/"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so38375295e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744117153; x=1744721953; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xC7Jkoxgu+y5LjBLMSQ5GqgYTO+aEYr+nviHv0yufAw=;
-        b=S8ztezM/F8BvH4p8AEW5bk8AlABlke8l+9gMqgmNDRYs/RonkZpte0SUdFEnxTzOh8
-         o+4ocwl+o1O5oyPtLE76ZVS/EIzY+WZbw/n75ohYT85Nb+3udseN0S5a2bFAP90FE/TG
-         kxArBJaGfGjl/eYLwO/kxLbd8LtW6JmwfvF+KdDb3JYn/ENOmkYfingOJEujclpPWjVK
-         W4hL1mxzXSKvyvyduT3NxX6/PQLwI8Yf6ZT83U1wmAFN/XTkjAgBoF4oI6XDWfT2Vqe8
-         Ty+XR7U5zZZPDrgvJk9nZCFZLjwhAgixMsRimLTd7RPAcCM4KlQtELWIvy/WfIQ5/Xk5
-         4BYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744117153; x=1744721953;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xC7Jkoxgu+y5LjBLMSQ5GqgYTO+aEYr+nviHv0yufAw=;
-        b=BkTtHCYkD0fA4KlBHX4nfwKRV5KIvKN5jCMt82z4TP7DRj8djItAZcPqRq4apqrgRq
-         o18DoIOJOHUtj1IznGTyhne9gy+HfoDQ2tuRarngNBp1wmgfs2/FSiCt/Hl9B4+q4xDC
-         gGRDCvR/DcXdjCmTgy2lIcxEPIgYSr6CLuNRuOuN5Ga9NS0era9x+aXnsMSrZ8k2Bzkl
-         qxxk3tLa5GsAEtfVPNyTTF0ztUqrhrOQQt4575uAbGvE/AVyvYw44fC4447DwWH3lxU6
-         SKrIP8fO+rBq9jxKkF6WaZK5CEAqcTgfwpXIgALeKOx/Wnl3jhgj/tjcDh9Ym0kPEf80
-         CT3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVSwL46K8GVNVR5L0R3vWvbhiiYBmv9wN0CeO1yoxq5xvAoGvTse3NZ4SAtmFt3w3KMLtLPKu0D7rBrf0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiAc5PR5vDd1tWn5rgAAeCCYWg8DQlSP7Uh8V3P76h1CYllyCv
-	eifCt1vG74x/2UvLdoPIjJC4j4JzJnz+FltHh3KK3PhuihBdiCBmBSI7I1MdcOk=
-X-Gm-Gg: ASbGncvo/KdV3de+SUBWwY64/rPR+WME8Ce+6B8t1SzxFQprGGuTxuzNHq9Fub+kDDx
-	Zk91EzkvRtHMKToGvzUKiBHD4KlGW01fpd1mW0/mMXsk+8XuMEcEgoS6jtA27SfjEzUwoZCXmtS
-	Z1sW2lA/U2SlFEMJ1wdjCJ9gJOLcCVz4pUtzEt2JlVHJuBWmgXap2NWAcxKhxKxSFZy2IIC0mVu
-	+/4NQ184Epq+Uw1p+/dok/gL0x5g1ZxwY1e1hhNjeIueIJgFc/KjgY04aRLajGE2c+jhAZ2dm31
-	RBgdRy1HqkORbOUe/id4semFLv2DuJEJsKyySg==
-X-Google-Smtp-Source: AGHT+IHOqKUDjWNFzhyrC1vPbVn5ueeBqsa9rjMrKDRuijSChqNRcfKd91U8xq/H8SCGcZzERbsKmg==
-X-Received: by 2002:a05:600c:1e0a:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-43ed0c50ab7mr173508295e9.16.1744117153502;
-        Tue, 08 Apr 2025 05:59:13 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16a5776sm165820155e9.22.2025.04.08.05.59.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 05:59:12 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 14:59:06 +0200
-Subject: [PATCH 6/6] gpio: tn48m: enable building the module with
- COMPILE_TEST=y
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PEx4yupa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40AF2C4CEE5;
+	Tue,  8 Apr 2025 12:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744117173;
+	bh=6taOoSBMc4t0d84vgfEO//D6rrjXzREcl3ttgTziOjo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PEx4yupa/XPK2qJCTU2lAWTI+fHgauayOxTywk8q0vy9rsqAQTRqDEr/HfX3kTyCV
+	 /aIg2NRWy65Q8t9cv6uUJVsEh8dkt0gVVRSDz4aRz7lpVvLBWYZ3L31Akyx8lQNAQI
+	 Q0+d+a7unq7GtYJMFP1fD9oZuTNVEeBOEyWGMXs4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Jakub Acs <acsjakub@amazon.de>,
+	Theodore Tso <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mahmoud Adam <mngyadam@amazon.com>,
+	security@kernel.org
+Subject: [PATCH 6.12 411/423] ext4: fix OOB read when checking dotdot dir
+Date: Tue,  8 Apr 2025 12:52:17 +0200
+Message-ID: <20250408104855.490793009@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408104845.675475678@linuxfoundation.org>
+References: <20250408104845.675475678@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpio-compile-test-v1-6-140e108e9392@linaro.org>
-References: <20250408-gpio-compile-test-v1-0-140e108e9392@linaro.org>
-In-Reply-To: <20250408-gpio-compile-test-v1-0-140e108e9392@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=709;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=NWqzy1FXeHle8xe6Nk4bTIHcxAly3mq2NB21x2oVzRU=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9R2bGh9ZxwiI2EISS23+EhVRG9YEgD3ghI+fG
- 0MwrEA7+AaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/UdmwAKCRARpy6gFHHX
- coI1D/9dcwnJ/zuLo6kyKNpJE5neL/nTWHDIwgg13uZwMo6vetsEZmpwCRfzHROL8+PvNpV8Znk
- qOfwAt/0eLTUdlcao4StcSeN/Hl0215B9dWbGqKto9o0suyt77HZcb5kntu8sL+Thi4AujMX3W/
- phe68wxiPZSWdoBKhYXQqW5pJdD6leDH6vxoWts/LFi+GI1BwZueblTYKVIz5E8Moo2QO935QTv
- TtMX1PLXUp0cEkc2D3xE3d94DFVXP16Ka0mcE1eQA80gf4FDVCpgHclb3y1mAZOCo/QMXwP03a6
- imflZvpy3lhS6R5a9FBeSCbWvc7ybaDHVrjnGC1yl/xUXjaX1ITzyXAYsV50n0hh3VJIEqy39Xf
- DRqpjqT+tqL5phwqG3mU+Z2J/t2qFMFbI4thftwBh3dZkWRDAIE9wHrFZmOYGe31bdNg5mh4Smd
- dSfovVg7UvYn7Xq5MCdMW81byAfd/Ld+GHXfTvHZDwOWYJAz3a15Ep3s8IjuCFtp3LIzY6bJ5t8
- eLhbNwBAgjZAqDKcqMBTMzfmQmhHvgmlqLm5CjqnHiEKqx9J+HOwFk8P3ICrxeS3YOQu9uTIHh8
- Qi0QB7D733oSVOpjaEBFL8bkP70QAFUX1U9RSwwxOy62lEKy7fEq4qv5xdpVbFn5j7qCgvIbPPJ
- rU7vnFXzSMFTZ3A==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
-Extend the build coverage by allowing to build the module with
-COMPILE_TEST enabled.
+------------------
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Acs, Jakub <acsjakub@amazon.de>
+
+commit d5e206778e96e8667d3bde695ad372c296dc9353 upstream.
+
+Mounting a corrupted filesystem with directory which contains '.' dir
+entry with rec_len == block size results in out-of-bounds read (later
+on, when the corrupted directory is removed).
+
+ext4_empty_dir() assumes every ext4 directory contains at least '.'
+and '..' as directory entries in the first data block. It first loads
+the '.' dir entry, performs sanity checks by calling ext4_check_dir_entry()
+and then uses its rec_len member to compute the location of '..' dir
+entry (in ext4_next_entry). It assumes the '..' dir entry fits into the
+same data block.
+
+If the rec_len of '.' is precisely one block (4KB), it slips through the
+sanity checks (it is considered the last directory entry in the data
+block) and leaves "struct ext4_dir_entry_2 *de" point exactly past the
+memory slot allocated to the data block. The following call to
+ext4_check_dir_entry() on new value of de then dereferences this pointer
+which results in out-of-bounds mem access.
+
+Fix this by extending __ext4_check_dir_entry() to check for '.' dir
+entries that reach the end of data block. Make sure to ignore the phony
+dir entries for checksum (by checking name_len for non-zero).
+
+Note: This is reported by KASAN as use-after-free in case another
+structure was recently freed from the slot past the bound, but it is
+really an OOB read.
+
+This issue was found by syzkaller tool.
+
+Call Trace:
+[   38.594108] BUG: KASAN: slab-use-after-free in __ext4_check_dir_entry+0x67e/0x710
+[   38.594649] Read of size 2 at addr ffff88802b41a004 by task syz-executor/5375
+[   38.595158]
+[   38.595288] CPU: 0 UID: 0 PID: 5375 Comm: syz-executor Not tainted 6.14.0-rc7 #1
+[   38.595298] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   38.595304] Call Trace:
+[   38.595308]  <TASK>
+[   38.595311]  dump_stack_lvl+0xa7/0xd0
+[   38.595325]  print_address_description.constprop.0+0x2c/0x3f0
+[   38.595339]  ? __ext4_check_dir_entry+0x67e/0x710
+[   38.595349]  print_report+0xaa/0x250
+[   38.595359]  ? __ext4_check_dir_entry+0x67e/0x710
+[   38.595368]  ? kasan_addr_to_slab+0x9/0x90
+[   38.595378]  kasan_report+0xab/0xe0
+[   38.595389]  ? __ext4_check_dir_entry+0x67e/0x710
+[   38.595400]  __ext4_check_dir_entry+0x67e/0x710
+[   38.595410]  ext4_empty_dir+0x465/0x990
+[   38.595421]  ? __pfx_ext4_empty_dir+0x10/0x10
+[   38.595432]  ext4_rmdir.part.0+0x29a/0xd10
+[   38.595441]  ? __dquot_initialize+0x2a7/0xbf0
+[   38.595455]  ? __pfx_ext4_rmdir.part.0+0x10/0x10
+[   38.595464]  ? __pfx___dquot_initialize+0x10/0x10
+[   38.595478]  ? down_write+0xdb/0x140
+[   38.595487]  ? __pfx_down_write+0x10/0x10
+[   38.595497]  ext4_rmdir+0xee/0x140
+[   38.595506]  vfs_rmdir+0x209/0x670
+[   38.595517]  ? lookup_one_qstr_excl+0x3b/0x190
+[   38.595529]  do_rmdir+0x363/0x3c0
+[   38.595537]  ? __pfx_do_rmdir+0x10/0x10
+[   38.595544]  ? strncpy_from_user+0x1ff/0x2e0
+[   38.595561]  __x64_sys_unlinkat+0xf0/0x130
+[   38.595570]  do_syscall_64+0x5b/0x180
+[   38.595583]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Fixes: ac27a0ec112a0 ("[PATCH] ext4: initial copy of files from ext3")
+Signed-off-by: Jakub Acs <acsjakub@amazon.de>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Mahmoud Adam <mngyadam@amazon.com>
+Cc: stable@vger.kernel.org
+Cc: security@kernel.org
+Link: https://patch.msgid.link/b3ae36a6794c4a01944c7d70b403db5b@amazon.de
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/dir.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 5258f260b527..b3d0bfcca1ef 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1526,7 +1526,7 @@ config GPIO_TIMBERDALE
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -104,6 +104,9 @@ int __ext4_check_dir_entry(const char *f
+ 	else if (unlikely(le32_to_cpu(de->inode) >
+ 			le32_to_cpu(EXT4_SB(dir->i_sb)->s_es->s_inodes_count)))
+ 		error_msg = "inode out of bounds";
++	else if (unlikely(next_offset == size && de->name_len == 1 &&
++			  de->name[0] == '.'))
++		error_msg = "'.' directory cannot be the last in data block";
+ 	else
+ 		return 0;
  
- config GPIO_TN48M_CPLD
- 	tristate "Delta Networks TN48M switch CPLD GPIO driver"
--	depends on MFD_TN48M_CPLD
-+	depends on MFD_TN48M_CPLD || COMPILE_TEST
- 	select GPIO_REGMAP
- 	help
- 	  This enables support for the GPIOs found on the Delta
 
--- 
-2.45.2
 
