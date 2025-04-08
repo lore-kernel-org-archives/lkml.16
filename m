@@ -1,130 +1,264 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512A9190674
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DA5170826
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744119655; cv=none; b=GjH84gi5av9X/XQGXVVPxfGMhhddzrOjWCmxgZru90T/PKLb7clYyUx6HcdXC/Fc/TkriNwgmamcPzJ0Yv7qqN/kbShwxBBIknzlIaFtphImH/NKJfW8nXSlWmcNg8v0bBHrg2ErOUZtFK8zdCW2Hhf7l8M0dNAuqHQCFi+AzPE=
+	t=1744119694; cv=none; b=nU6iT5Rm+R/yJM1E2LqPSAqA0Y0dL4MT5dOeyDVMRtYitz3WnyQXPIrEm2oXvSdFB8sDayKtBL6UZ4Ew380q1m0d9abCFmU1HnhHyJxWKAklLQboeOZJHCRwPd2JLc14Gx8G7HFIUNTlLzuVtJzRpwXkydTQ5623+5o/26qacYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744119655; c=relaxed/simple;
-	bh=0PXxni6fsewK1S4ZVVBO5KssS3Qt+9QyBqP4u4gWtG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PVJe2LWe6ng8lVVGY8fCk5J0/EuvGYr4sg31CHb9Z3v0Nz0KpMK0JwxRI2Hi620BxC8c4iAoh553lPqxfiIwUVWIEB1zyACsk8L11LK9sZmbOvEuGAq2rimXLLcXzybctmW8PalqBO+QyKZ23gmDTRAvzYoZta8aC/Z873wqT4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SbstPJDL; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744119694; c=relaxed/simple;
+	bh=ascLXQfARhHSzi851xNKkCwST5leRtzxKcYOE4Jx9iM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jR8TE6hXMMqNzKNxUX3H5huzKJaa67bhSpoZloSyJB0ddyVu+GAjCU4tZtXLjSDVf7TM/qN6DpgWf0mNgWKkzffZN3/kTSn6uzB5Mwsio4GXUIIQRTw5z9CK8oGEsylZXizxeq9rdpRM9/KjKG5y3eDhNP7DoE1DP3HKZuyw36I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ndVeUD8/; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SbstPJDL"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3418497f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744119651; x=1744724451; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eg77wDzokPhOUUiNUpCayNpB51AV/GCoS3X3s8Fozm4=;
-        b=SbstPJDL3rKxcMmbQETCbFqBQMBQRP9+NSDhDlldfyQFvMHDTeEV7/AIFQJW4ZL8/q
-         WcCo7gyAxOv37GoNqixedFSTv9bSYNbW1Bv3UWjWb5eA6lVM6YbMu3FM0aeGnVXjsOzI
-         RmoOmTB41kCoPTRYeUs9KMy3/4BgC6VvgCaSfJ1fleMOTEQ7/ZyIUxkqMxZ8Nclxk/+Z
-         +INegSokZ5Dz3OgIbWXbXXt6QdJarJDQDF13tYnnxMfGv+BSYBlarzR3RETMqGNNREc0
-         lUpmtjG9LDPZhIGLZUVmjZVliQkK+ROKSscnm0wpZ4YtW6p380RZ+JF0eDbyIK0DmVZa
-         SbgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744119651; x=1744724451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eg77wDzokPhOUUiNUpCayNpB51AV/GCoS3X3s8Fozm4=;
-        b=RtLrb+se6edEcop0GtREnAkJyC4NTy30HLgIqJehL7wWOvYfMbUnFHACSfMbtCFEBW
-         03Gv9CzEHbT6WGMmz7DIGiRDvekWAMXiwFkSpbZ5rQc6Hju+Zz7PkXTCtG9tGrLIoPnz
-         wAo3rZw1IttpB1SPOQUMGlwk8hFBvNKMHpPeyXYt67zSdP02D537Ltc09BMajVBXi05w
-         eba16P1l70mhY2BrozSHM6ZJ0F51bTeL8vmMG3V6Ei/UaIQSdL5n77cpS7178tJXsRGm
-         r6Jwo9NTC4vbXFuNNOgWIxeSVv2K+S08QZ/wYNANMBXZ23XnCQ1iuMORVNrI2W6SyAd9
-         qrXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUszfnOsND1F9J2OaD7Z2bE+tC7hlYOkJlICEoRPi3GSKUOER76plm96omAFLEBc6kzZEUaIvv6O7DRzqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb/kZpoR+zD6id29KDRHcPsqDtysk5eFxiG1/c3y8cwh7viUYU
-	qypwJMBtu3F8x36pwZ/VvI/5TffuA++gXPdB0mu7KiND828JReFfo/HMydQEQMOLlqIjl1y+CvG
-	bfAHHnfY/7LpiL8MpNDjsCAvuUMtabRgsP/+E
-X-Gm-Gg: ASbGncsxKD1bWJYT2HQxAmrWBUNywWj2tNKg49VR8omPiux6eKhHQPqya0POeJMIKNA
-	dpcHw2Ipbuy4f0JUAI9YTjVFp4DS36XAmJaEXdbpBJ6cpkXRwyOJLIW5Pj16/CE6BI6CMsqD8Te
-	Ii/oyn4kGrWC7F0k5y3/51isy1yGQc9fX2WdE7v7rYBZNanh9J40DDBiCEfkFE+AuFHY0=
-X-Google-Smtp-Source: AGHT+IHUdwAYXndD2IxBfvKUGB4B2WEZU1eWNr/IWvZ03v1DbWS9pIy/StZEp1VYuQeeYss8TTBcqfwHh4Ai8pVKE74=
-X-Received: by 2002:a05:6000:2509:b0:39c:30d8:3290 with SMTP id
- ffacd0b85a97d-39cb35b196bmr12354472f8f.7.1744119651284; Tue, 08 Apr 2025
- 06:40:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ndVeUD8/"
+Message-ID: <94a1f5bf-5b6d-47cc-a344-753a8a5272bd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744119688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UJ24xdldXfdfyi1hupLmHyJNywDoo6R03YHUziiP89M=;
+	b=ndVeUD8/kmEJGa0tXr+U2XGei6GsKw6VxzY1HY/8dfxqLJXpDOk3JwaAWHvPTzlganu84O
+	FTxfRsXeLa5VY5i5pvXul53pqFATDlZYfrWCQiynWbpVdOfLi9AY64rOMtFLNkbJ0n0S+b
+	QCr/G4TBZyYWYZqUE4WroZ/OTQRGGM4=
+Date: Tue, 8 Apr 2025 19:10:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408-box_trait_objs-v1-1-58d8e78b0fb2@nvidia.com>
- <D916LG7Z9Q31.5RVNMYM38E2D@proton.me> <CANiq72k9Lo-M5v338iWWSiwrnU+JwP+aEZeLiR291xc2c+ESOg@mail.gmail.com>
- <D91ACTUAWQTF.2AZ98BUA5ZKJ6@nvidia.com>
-In-Reply-To: <D91ACTUAWQTF.2AZ98BUA5ZKJ6@nvidia.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 8 Apr 2025 15:40:39 +0200
-X-Gm-Features: ATxdqUHcSfbrhbrkbAA3P6H8qVSDNJBnahQ-PQSx6ciuIP6ROiS3xSXuswsTLlA
-Message-ID: <CAH5fLghYwmTO6KmoSPQxjmN=nDrQOCRoigQA9OWYnPve+sYL0g@mail.gmail.com>
-Subject: Re: [PATCH] rust: alloc: allow coercion from `Box<T>` to `Box<dyn U>`
- if T implements U
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: Re: [PATCH v2 12/18] drm/bridge: cdns-dsi: Drop checks that shouldn't
+ be in .mode_valid()
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-12-4a093eaa5e27@ideasonboard.com>
+ <46dc6803-47f0-4434-9794-08307604e450@linux.dev>
+ <daa8c462-e2c7-47fa-9ccd-b72dc3c6b9cc@ideasonboard.com>
+ <03142c89-fc5a-45cf-9233-549ec1b9a469@ideasonboard.com>
+Content-Language: en-US
+In-Reply-To: <03142c89-fc5a-45cf-9233-549ec1b9a469@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 8, 2025 at 3:19=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
-om> wrote:
->
-> On Tue Apr 8, 2025 at 7:35 PM JST, Miguel Ojeda wrote:
-> > On Tue, Apr 8, 2025 at 12:22=E2=80=AFPM Benno Lossin <benno.lossin@prot=
-on.me> wrote:
-> >>
-> >> You forgot to add the `A: Allocator` generic here and in the impl belo=
-w.
-> >
-> > Yeah, for this sort of changes (ideally, all patches, really), please
-> > test with both the minimum supported version and the latest.
->
-> Apologies for that, I had no idea how to build using a specific
-> toolchain and did the wrong thing, which is sending without proper
-> testing.
->
-> I had some trouble finding how to 1) find out the minimum supported Rust
-> version, and 2) how to build using a specific toolchain.
->
-> For 1) I eventually found a hardcoded version in
-> scripts/min-tool-version.sh ; and 2) is somehow documentated in the
-> Quick Start guide that mentions the `rustup override set stable`
-> command.
->
-> I can send a patch against the Coding Guidelines adding a section to
-> encourage testing against the minimum version and explain how to force a
-> specific Rust version if you can confirm this would be helpful (and that
-> min-tool-version.sh is the correct way to check the minimum supported
-> Rust version).
->
-> >
-> > For instance, there is another issue, `#[pointee]` is only applicable
-> > when you have the feature:
-> >
-> >     error: cannot find attribute `pointee` in this scope
-> >      --> rust/kernel/alloc/kbox.rs:66:18
-> >       |
-> >     66 | pub struct Box<#[pointee] T: ?Sized, A:
-> > Allocator>(NonNull<T>, PhantomData<A>);
->
-> Mmm that one is trickier to address - I don't know of a way to make this
-> `#[pointee]` attribute depedent on `CONFIG_RUSTC_HAS_COERCE_POINTEE`...
-> Only solution I see if having two separate declarations for `Box`, and
-> then we have the problem of bindings the rustdoc to the declaration that
-> is picked at build time... Any idea for how to best address this?
+Hi Tomi,
 
-This might work:
-struct Box<#[cfg_attr(CONFIG_RUSTC_HAS_COERCE_POINTEE, pointee)] T>
+On 08/04/25 12:39, Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 08/04/2025 09:09, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> On 07/04/2025 20:59, Aradhya Bhatia wrote:
+>>> Hi Tomi,
+>>>
+>>> On 02/04/25 19:00, Tomi Valkeinen wrote:
+>>>> The docs say about mode_valid():
+>>>>
+>>>> "it is not allowed to look at anything else but the passed-in mode, and
+>>>> validate it against configuration-invariant hardware constraints"
+>>>>
+>>>> We're doing a lot more than just looking at the mode. The main issue
+>>>> here is that we're doing checks based on the pixel clock, before we
+>>>> know
+>>>> what the pixel clock from the crtc actually is.
+>>>>
+>>>> So, drop the checks from .mode_valid(). This also allows us to remove
+>>>> the 'mode_valid_check' parameter from internal functions, and the
+>>>> related code.
+>>>>
+>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>> ---
+>>>>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 44 +++++++
+>>>> +------------------
+>>>>   1 file changed, 14 insertions(+), 30 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/
+>>>> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>> index e85c8652c96e..cf783680b1b4 100644
+>>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>> @@ -469,25 +469,17 @@ static unsigned int dpi_to_dsi_timing(unsigned
+>>>> int dpi_timing,
+>>>>   static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>>>>                    const struct drm_display_mode *mode,
+>>>> -                 struct cdns_dsi_cfg *dsi_cfg,
+>>>> -                 bool mode_valid_check)
+>>>> +                 struct cdns_dsi_cfg *dsi_cfg)
+>>>>   {
+>>>>       struct cdns_dsi_output *output = &dsi->output;
+>>>>       u32 dpi_hsa, dpi_hbp, dpi_hfp, dpi_hact;
+>>>>       bool sync_pulse;
+>>>>       int bpp;
+>>>> -    if (mode_valid_check) {
+>>>> -        dpi_hsa = mode->hsync_end - mode->hsync_start;
+>>>> -        dpi_hbp = mode->htotal - mode->hsync_end;
+>>>> -        dpi_hfp = mode->hsync_start - mode->hdisplay;
+>>>> -        dpi_hact = mode->hdisplay;
+>>>> -    } else {
+>>>> -        dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
+>>>> -        dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+>>>> -        dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
+>>>> -        dpi_hact = mode->crtc_hdisplay;
+>>>> -    }
+>>>> +    dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
+>>>> +    dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+>>>> +    dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
+>>>> +    dpi_hact = mode->crtc_hdisplay;
+>>>>       memset(dsi_cfg, 0, sizeof(*dsi_cfg));
+>>>> @@ -518,8 +510,7 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+>>>>   static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+>>>>                     struct cdns_dsi_cfg *dsi_cfg,
+>>>>                     struct phy_configure_opts_mipi_dphy *phy_cfg,
+>>>> -                  const struct drm_display_mode *mode,
+>>>> -                  bool mode_valid_check)
+>>>> +                  const struct drm_display_mode *mode)
+>>>>   {
+>>>>       struct cdns_dsi_output *output = &dsi->output;
+>>>>       unsigned long long dlane_bps;
+>>>> @@ -549,11 +540,11 @@ static int cdns_dsi_adjust_phy_config(struct
+>>>> cdns_dsi *dsi,
+>>>>       if (dsi_htotal % lanes)
+>>>>           adj_dsi_htotal += lanes - (dsi_htotal % lanes);
+>>>> -    dpi_hz = (mode_valid_check ? mode->clock : mode->crtc_clock) *
+>>>> 1000;
+>>>> +    dpi_hz = mode->crtc_clock * 1000;
+>>>>       dlane_bps = (unsigned long long)dpi_hz * adj_dsi_htotal;
+>>>>       /* data rate in bytes/sec is not an integer, refuse the mode. */
+>>>> -    dpi_htotal = mode_valid_check ? mode->htotal : mode->crtc_htotal;
+>>>> +    dpi_htotal = mode->crtc_htotal;
+>>>>       if (do_div(dlane_bps, lanes * dpi_htotal))
+>>>>           return -EINVAL;
+>>>> @@ -569,27 +560,25 @@ static int cdns_dsi_adjust_phy_config(struct
+>>>> cdns_dsi *dsi,
+>>>>   static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+>>>>                      const struct drm_display_mode *mode,
+>>>> -                   struct cdns_dsi_cfg *dsi_cfg,
+>>>> -                   bool mode_valid_check)
+>>>> +                   struct cdns_dsi_cfg *dsi_cfg)
+>>>>   {
+>>>>       struct cdns_dsi_output *output = &dsi->output;
+>>>>       struct phy_configure_opts_mipi_dphy *phy_cfg = &output-
+>>>> >phy_opts.mipi_dphy;
+>>>>       unsigned int nlanes = output->dev->lanes;
+>>>> -    int mode_clock = (mode_valid_check ? mode->clock : mode-
+>>>> >crtc_clock);
+>>>>       unsigned long req_hs_clk_rate;
+>>>>       int ret;
+>>>> -    ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg, mode_valid_check);
+>>>> +    ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg);
+>>>>       if (ret)
+>>>>           return ret;
+>>>> -    ret = phy_mipi_dphy_get_default_config(mode_clock * 1000,
+>>>> +    ret = phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
+>>>>                              mipi_dsi_pixel_format_to_bpp(output-
+>>>> >dev->format),
+>>>>                              nlanes, phy_cfg);
+>>>>       if (ret)
+>>>>           return ret;
+>>>> -    ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode,
+>>>> mode_valid_check);
+>>>> +    ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode);
+>>>>       if (ret)
+>>>>           return ret;
+>>>> @@ -635,8 +624,7 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge
+>>>> *bridge,
+>>>>       struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+>>>>       struct cdns_dsi *dsi = input_to_dsi(input);
+>>>>       struct cdns_dsi_output *output = &dsi->output;
+>>>> -    struct cdns_dsi_cfg dsi_cfg;
+>>>> -    int bpp, ret;
+>>>> +    int bpp;
+>>>>       /*
+>>>>        * VFP_DSI should be less than VFP_DPI and VFP_DSI should be at
+>>>> @@ -654,10 +642,6 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge
+>>>> *bridge,
+>>>>       if ((mode->hdisplay * bpp) % 32)
+>>>>           return MODE_H_ILLEGAL;
+>>>> -    ret = cdns_dsi_check_conf(dsi, mode, &dsi_cfg, true);
+>>>> -    if (ret)
+>>>> -        return MODE_BAD;
+>>>> -
+>>>>       return MODE_OK;
+>>>>   }
+>>>> @@ -996,7 +980,7 @@ static int cdns_dsi_bridge_atomic_check(struct
+>>>> drm_bridge *bridge,
+>>>>       adjusted_crtc_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC |
+>>>> DRM_MODE_FLAG_PVSYNC);
+>>>>       adjusted_crtc_mode->flags |= DRM_MODE_FLAG_NHSYNC |
+>>>> DRM_MODE_FLAG_NVSYNC;
+>>>> -    return cdns_dsi_check_conf(dsi, mode, dsi_cfg, false);
+>>>> +    return cdns_dsi_check_conf(dsi, mode, dsi_cfg);
+>>>
+>>> With this patch, the driver shifts to using the crtc_* values during the
+>>> check phase, and then, it is brought back to using non crtc_* values in
+>>> the next patch.
+>>>
+>>> Should this patch just drop the cdns_dsi_check_conf() check from
+>>> .mode_valid() instead, and let the next patch phase out the
+>>> mdoe_valid_check parameter as the driver simultaneously shifts to using
+>>> the non crtc_* values throughout?
+>>
+>> Yes.
+> 
+> Actually, this patch doesn't change the crtc_* vs non-crtc_* behavior.
+> After dropping the cdns_dsi_check_conf() call in mode_valid(), the
+> 'mode_valid_check' is always false. So this patch removes the parameter,
+> and any code paths for the true-case.
+> 
+> Should the atomic_check() have been using 'true' for the
+> 'mode_valid_check'? The atomic_check code was added in
+> a53d987756eab40678f241d7cd0eb7e1ca42bba7.
+> 
+
+You are right. I had lost a bit of context there.
+
+Upon seeing the change logs, and history for my DSI patches, it seems
+that the _atomic_check() was added as a replacement for the check that
+was taking place in the _(atomic)_enable(), because the enable-path was
+not the right place to do so.
+
+Since the enable-path worked on crtc_* values, the check used to happen
+with crtc_* values. And then the _atomic_check() continued to use the
+crtc_* values after the patch.
+
+But, since the crtc_* values don't get populated before the bridge's
+check-phase, the crtc_* values shouldn't be used at this stage for any
+checks.
+They are getting populated in this case, via the fbdev_client_setup, if
+I understand that right. But it's not right to depend on fbdev as it can
+be disabled.
+
+So, it would make sense to use 'true' for the `mode_valid_check`
+parameter here. And, I will post a fix for this.
+
+
+However, we have another question. How would the driver verify the
+crtc_* values then, if not during the enable-path? Effectively, it might
+not matter for this driver, but there should be a general guideline.
+
+
+--
+Regards
+Aradhya
