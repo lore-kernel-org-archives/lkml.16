@@ -1,88 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9FE263F2C;
-	Tue,  8 Apr 2025 08:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708A3263F21;
+	Tue,  8 Apr 2025 08:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100173; cv=none; b=L7cZZknYNveORG+iJucD6Uqp2wWzUF+j1JUh4ygad3ouykpiKj4NqpJGt9wwNNQfI4HRYiMx4QY/ziq7oLLDeu4YqVTq+6u7QpGTcd0SgtGL+ak7kHG/fKLcZNfWEEMIt4CsH9ogPU85VclZM+bDwgptEKEcIqSR5HLjOVDXd2Q=
+	t=1744100174; cv=none; b=kra0zxnCrOg+AtfZtl5J/wNuHcy4y33NIVmpJ9NjkyvfZbf7KmUJUAiXBPRrfdlK6HEu3Lkwp2eJySpjQJdU5LF6ZKBdcMeUek/4pLqu7Q79skwdxWpKdXxoBYPZR3rqbsZy2M4EHoR3oNhf4Ihbd1d/muea3wUvgztpnVOJtKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100173; c=relaxed/simple;
-	bh=a0cHsypMDGBoj1KQFM5mwYajqEJrx4jAOqxJNpZ+kzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pnBDIA0zWGDA2LWw462ZZEkp4tXLgKL20UFew2y92LT1UbhThKLv3sgC9I3by2wlCDjGeioMcTrxF1085IeeHoIGg0Huifr1ALZCSbABWPBdIXqRgKQpWXOQ2Q+nOKfW4pUg5kWyyy/NYXK/BDYLZiLJAw4Jpx/N7ZRioStpaKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTbuCqJe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744100174; c=relaxed/simple;
+	bh=FiJ5NF+1WARuSYMtETcpimlKIydq+Nlvvyv4konBGaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bnLzjuYVeOTS3IGXE18ZOWT3+xjd28QYtJ09Fhw77QBdY0nS0BeY6NhLaU4QSCf6G60itc45cmwRz12/vUIGc/cHwTxJsRJuiAIA0IMeHLyKE6Rh3vfGWcdv7hbh9XaK61q6NbjgEn9yKg4UaJlgh4ZwbcFtbU/2a5ib/y7/7xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IcygTj4i; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTbuCqJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1ED2C4CEEB;
-	Tue,  8 Apr 2025 08:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744100173;
-	bh=a0cHsypMDGBoj1KQFM5mwYajqEJrx4jAOqxJNpZ+kzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mTbuCqJetua5Pl89eRSq+KlSTASP0RslqlF95iKaZ1238IoDHob5PfyjcI9b1TjzW
-	 oRS9ccNNBVgaFxO6Xn0/xrrYjvwRF67tgr2Q/lVjc52IBDfXbp9/+bS1RZ1DsbfIOr
-	 M3XEap2gKGIDF8vSkJU3YvnVVWMMlKpuA6S7jBu1K6Md7TQJ7y6UKAny/rt8JYyxdx
-	 IFdTX4ONhmFkxnvg+N5Kx+cNhc4Bjv9jVsoXS/WZuoZfo5uzB+bSpRnInEiXNEiMqo
-	 Dq4QZuYjQq/kE4ajtkQ+kbMFU1g5rKcVGLFsuMFtWZLCTz2qJdF2fxoi/fLxxkUgoL
-	 zB+LZD52kI6nQ==
-Date: Tue, 8 Apr 2025 10:16:04 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-	linux-kbuild@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Brian Gerst <brgerst@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
-Message-ID: <Z_TbRGgRTDvyQyfs@gmail.com>
-References: <20250407094116.1339199-1-arnd@kernel.org>
- <20250407164151.GB2536@sol.localdomain>
- <0d087503-88d5-4d66-aa52-161ca6e0df06@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IcygTj4i"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A9AAC42EF5;
+	Tue,  8 Apr 2025 08:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744100164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bc4rwIDLF1iVOu2eAJ6iVj5b+ZsPv7fwVYGZIcqecA8=;
+	b=IcygTj4iqLO/e5Hcdqx2PnwRMhLfXla5rawBBIrb8gMpuRrjIqixAa6XGpxlnWl/8yat/v
+	ixBtroYN7vLS6evxjGrD1af5t2soGjwlE+2c2TxHPvYZbuFytJ0BRg6G9DpzPf6kOIklas
+	pDEcOzEytjje/xCF/dua5wgcBoIcNIqUzDRai93yN9fDjkqfPlbff5xdSgA8MyC9avsuu+
+	zv9OhC8mnkAl3rnZLQ2Kl3ffo1DVrdV74FzUB2uZRD2RCHHy57NM+BHx5d6XO+iJh+F+lB
+	2lLBi4VdatUpUYjrJIRE6Y5BgJGmPMthuZZtSaDhuIhcRRqFukEijInQouvGAA==
+Date: Tue, 8 Apr 2025 10:16:01 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Peter Ujfalusi
+ <peter.ujfalusi@gmail.com>, Oder Chiou <oder_chiou@realtek.com>, Shenghao
+ Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu
+ <baojun.xu@ti.com>, David Rhodes <david.rhodes@cirrus.com>, Richard
+ Fitzgerald <rf@opensource.cirrus.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ patches@opensource.cirrus.com, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 08/12] ASoC: codecs: idt821034: use new GPIO line value
+ setter callbacks
+Message-ID: <20250408101601.110c407a@bootlin.com>
+In-Reply-To: <20250408-gpiochip-set-rv-sound-v1-8-dd54b6ca1ef9@linaro.org>
+References: <20250408-gpiochip-set-rv-sound-v1-0-dd54b6ca1ef9@linaro.org>
+	<20250408-gpiochip-set-rv-sound-v1-8-dd54b6ca1ef9@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d087503-88d5-4d66-aa52-161ca6e0df06@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehpvghrvgigsehpvghrvgigrdgtiidprhgtphhtthhopehtihifr
+ ghisehsuhhsvgdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehpvghtvghrrdhujhhfrghluhhsihesghhmrghilhdrtghomhdprhgtphhtthhopehouggvrhgptghhihhouhesrhgvrghlthgvkhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
+Hi Bartosz,
 
-* Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, 08 Apr 2025 09:38:26 +0200
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> On Mon, Apr 7, 2025, at 18:41, Eric Biggers wrote:
-> > On Mon, Apr 07, 2025 at 11:41:12AM +0200, Arnd Bergmann wrote:
-> >
-> > This is intended to supersede the patches from Uros that removed checks for
-> > binutils < 2.25, right?  See:
-> >
-> > * 
-> > https://lore.kernel.org/linux-crypto/20250404074135.520812-1-ubizjak@gmail.com/
-> > * 
-> > https://lore.kernel.org/linux-crypto/20250404074135.520812-2-ubizjak@gmail.com
-> > * 
-> > https://lore.kernel.org/linux-crypto/20250404074135.520812-3-ubizjak@gmail.com/
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> I missed these, but it does sounds we easy to work out, either
-> by rebasing my patch or dropping Uros' version.
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  sound/soc/codecs/idt821034.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
 
-It's a trivial conflict resolution AFAICS, already done in today's 
--next.
+Acked-by: Herve Codina <herve.codina@bootlin.com>
 
-Thanks,
-
-	Ingo
+Best regards,
+Hervé
