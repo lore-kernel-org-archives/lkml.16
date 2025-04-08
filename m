@@ -1,123 +1,82 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5B51EB194;
-	Tue,  8 Apr 2025 15:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83BD39ACF;
+	Tue,  8 Apr 2025 15:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124666; cv=none; b=smOkkuvSwcVpjXsqELiVO5B79R+ZtKSdX2pjK0ZgmwNjZMvjhredsWbojilLxfwnKVCQVwg+/a786ZG0Q6Az5G5WAwiy+a0rWAzUkwUurIX2gwN6qsQdCr1cltXjmmRHVOoUL6zcah9V5gkvyI99/xVWq3X5c4IKjs+qyMcwCZs=
+	t=1744124698; cv=none; b=H4QBYEWY8OzGw/sEQhPNcgi1s4xEiJFOUtuNlv7Y+W9EeqnPT7V2qckXghQ3Hxe0plQdHRGWTbCohlzbyCJYAfvdEc+ZG+PgV+Ue9n4EXgMd8Nd76rfcQLi/SdsxeXwyphgg4PF6AxKZOcmplW+hXpnxHhu0Prnu0hsPTw3syjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124666; c=relaxed/simple;
-	bh=0idBfCTzKenTxIiSwgSu/KdenyNnfTy6Efd7dSG2ssA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YO5rqUwwPAfNx/7IwFva8lsOM2WU2r96iZJ5+CEcyRPDaEoZxxR50n9Y623iAEgpSVbRcTM/i0dtXUYbWhivKK6UI3Ti70vCheDsOCVsonN7roT881lGJyJBzJ7UffktSM2fC5iVrjQ31n4xGk8W0tU/+8uK5vIlPtSBuz2gQBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kti8LqJJ; arc=none smtp.client-ip=209.85.210.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744124698; c=relaxed/simple;
+	bh=2+2EeO/FRxguVYSwn8sg/lqPp2YHwHAXzAYVDNKOfr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8sJzpYKZW4FOMY5UCZkaN2rpeCUTH5NSpWIcHMigwBaFVIbquvSP2qQ3lclMC+jy2D7lt0T6EVhFLau3FywvfB4ioh5Ot1CMIuA4KJ+IWu4cNTkCLbd5etrVXckOyiZcj/HKlq3Kh2diKH51tyT22S0wrtwaa4HPz+tzSjO52Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPUv1iPY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kti8LqJJ"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7399838db7fso5134960b3a.0;
-        Tue, 08 Apr 2025 08:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744124663; x=1744729463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hW0uMB23s6rTN+79K6wuOhxoVdGvng8abYobjgd2dY0=;
-        b=Kti8LqJJze+WRxQ1rmG31G9KAtsEOF2oSivBpKHgAsE8cnV16wdW1tw6QTyUkc4npZ
-         UN65CsEkICj6nR+s5l1XhYbx1CEgV9a3SsddDg1bEML6t63R3VcPQac2rehXVVuizGdQ
-         MBkMCpyFp/CJRKN+D0y1i/fS5yigH/NENkupU7+EtgTfVsnLR1J0bkkKowD1rDTPbvJk
-         2utHrp8+iju1Wq/3Nb9hCLq+lVnMD5yIY44NgTHnJ3ejSJUotvN0gAOLfYZ0gamX+wQ/
-         5Z2JyIKUdnJyF27x1V/hAMcaXhlG077nWme9TXYkKLtwYj5Dzhn+xuWDAqs9IyZM/Me1
-         R5Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744124663; x=1744729463;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hW0uMB23s6rTN+79K6wuOhxoVdGvng8abYobjgd2dY0=;
-        b=OwK/vTDCp5x1kFskCkQkZMt2IufC8yssXszTjuhslWFJ7gG1SNtcpJkKraIs3Wgq2g
-         oAUzn1/770WhfpjhRZBg9LcLLYYY0hIEUMCV3DdjGBmyLSVza6LhcVpS9jqr3zWJxtX7
-         TE4qw5cfBu/1fltqqM9hR/xHiQR0wU7zepif5IooR21gMHKgo6X6lN8B04U9gzT2RcTX
-         0/Zqkhg26eOvLgFgHebevpBq95U30jSvxCQAN6bwQdTn8q6ULokzMrRw+mwkib+1Btdv
-         PKgH94FFmivUWZNC+LY8iJPnC4fmaikuk8DvuiBtzh4kpjc2/eHTa0EkYs8OQ+I13nmG
-         cvVg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/88P7nQzSZd7eAmRGIxUoM0JiKv6y8MK4uRKpqSQcK0d+JUNnzEKY+kLtniqLq+en4KvlpiiYQxfu2JA=@vger.kernel.org, AJvYcCW7ZwFfrLCdE9mhSowBw4NFdSp8Vci6GlIhK+PLGxSNRUQG5BjuwusybuM+gPY+sl4P9tunuBsbDZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+UznuYE/FZwCkMnbWpIhwAeBC5RmGsnvAiQbJepYv0Moby2Qp
-	lZohrCSoeHOnYvGO2g/SvRY7gBVP1Z+cjNrNT4EuUxfmI07rlzuF
-X-Gm-Gg: ASbGnctl/X6bN/IIbiTchp2Oo6O753pdvVWAAx5ApNXkDzPQRdFc572Z0Q2FcZciCSJ
-	UGxAhT4RPK5Nlmuma9KfQLo5khQ7ubXu3SLRYJfWIoTQjK+j+mWM+9axFRVZXpl4rTsWRitgwn+
-	tfol3sox6B6CdZAK8O88YjcwKfgo5TSxJuRxPTT5Xl8/e4PSKxK4bWy2Dqmj4AgZP3FeNlXVj+r
-	IrV9ocb0c4A9X190zZZXrKMXqbn1JsEXWMS8Q//fczU0aZeBnsls18ALck1p+1Jioym9QTM7UMi
-	9YYSttmwll19KgPtp85Z9KwIukqNoA6Ou1FkhTzBL0IaGEHu8mOfLJ6RHkLkhaKH+zcFCZ45xFC
-	mwdzWhw==
-X-Google-Smtp-Source: AGHT+IFcrw32IadEZbTZ2yTefdbGLJ4deVn8ImGq3fcHBOxM9j/Ojp5mMqxmgwQ1EbK8z0e1SyOJQw==
-X-Received: by 2002:aa7:875a:0:b0:736:b3cb:5db with SMTP id d2e1a72fcca58-73b9d4019ddmr4916731b3a.11.1744124663010;
-        Tue, 08 Apr 2025 08:04:23 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.133])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9ea097asm11068474b3a.90.2025.04.08.08.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 08:04:22 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org
-Cc: arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v2 2/2] cpufreq: scpi: Fix null-ptr-deref in scpi_cpufreq_get_rate()
-Date: Tue,  8 Apr 2025 23:03:54 +0800
-Message-Id: <20250408150354.104532-3-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
-References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPUv1iPY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE65FC4CEE5;
+	Tue,  8 Apr 2025 15:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744124697;
+	bh=2+2EeO/FRxguVYSwn8sg/lqPp2YHwHAXzAYVDNKOfr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CPUv1iPYQg4/vLZOL9XZvswfETybzAhiBYIV3rDwDTtdjBQifsTzSp7XJjpt0U6du
+	 abZoGNeDQuYNy6No19E80HOasP/xc413LHJPE/Ga50FethVJBPlAm/I+DwMsymcGBJ
+	 hInvRkmkvV5+0Hdv8xSz1mySTGm3qc1t7Bjly83smJuH3Oqn9H5e2CSyq0G30NFQxB
+	 RV1zg5Z65pLsOoaS9ESmYCq5nAcpmhXZnZ5JXZm1NWdIDhuRGAU+RQRHzIbZiYeE3o
+	 3UrKm87xxdGyD+goywTTwoNrSU4Jc8wSWFbDiYh8/kftySnKnaVhgNszgCdTy4AAMZ
+	 LxZG4f0egyzDg==
+Date: Tue, 8 Apr 2025 16:04:50 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/268] 6.6.87-rc1 review
+Message-ID: <fff4ab4b-0a02-48a9-b49a-9ebc7dee2a0a@sirena.org.uk>
+References: <20250408104828.499967190@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mVYU3NcEub45wxd4"
+Content-Disposition: inline
+In-Reply-To: <20250408104828.499967190@linuxfoundation.org>
+X-Cookie: Meester, do you vant to buy a duck?
 
-cpufreq_cpu_get_raw() can return NULL when the target CPU is not present
-in the policy->cpus mask. scpi_cpufreq_get_rate() does not check for
-this case, which results in a NULL pointer dereference.
 
-Fixes: 343a8d17fa8d ("cpufreq: scpi: remove arm_big_little dependency")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
-V1 -> V2: Use `if (unlikely(!policy))` instead of `if (!policy)`
+--mVYU3NcEub45wxd4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- drivers/cpufreq/scpi-cpufreq.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+On Tue, Apr 08, 2025 at 12:46:51PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.87 release.
+> There are 268 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
-index 17cda84f00df..dcbb0ae7dd47 100644
---- a/drivers/cpufreq/scpi-cpufreq.c
-+++ b/drivers/cpufreq/scpi-cpufreq.c
-@@ -29,9 +29,16 @@ static struct scpi_ops *scpi_ops;
- 
- static unsigned int scpi_cpufreq_get_rate(unsigned int cpu)
- {
--	struct cpufreq_policy *policy = cpufreq_cpu_get_raw(cpu);
--	struct scpi_data *priv = policy->driver_data;
--	unsigned long rate = clk_get_rate(priv->clk);
-+	struct cpufreq_policy *policy;
-+	struct scpi_data *priv;
-+	unsigned long rate;
-+
-+	policy = cpufreq_cpu_get_raw(cpu);
-+	if (unlikely(!policy))
-+		return 0;
-+
-+	priv = policy->driver_data;
-+	rate = clk_get_rate(priv->clk);
- 
- 	return rate / 1000;
- }
--- 
-2.34.1
+Tested-by: Mark Brown <broonie@kernel.org>
 
+--mVYU3NcEub45wxd4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1OxEACgkQJNaLcl1U
+h9D6ewf9FtZBNtnHZCDEHZ7YAmtIkETj4lVj+PfkvSui7StSJB2qIXTJyKogX9U8
+iuJCit1KkSjlSWulYN2nQm8VIwPHA+n2OCoJXvsV/TQoIOvnBya0ExjRMy6DgGXR
+NU+QTOums6DlPv1XLlQ9h2MOa4XuYQi69Cj1yA0DY+0zw4xTA8ytsVAad6L2v0fH
+/lMWdERzdEZTkHwuw2brH69hhCA/zEb4vsaKTaQ8joUYWstNj7O+WC1xl+qsBydo
+KU/hQcHl9WliRjrwHCl+lb2WVKQna/HzThHlzz7abED70gULBxEhWRmd6Y+KG2bF
+q4J7DoGjqRwVYJOzI5ikkHWcp7aZyA==
+=scdj
+-----END PGP SIGNATURE-----
+
+--mVYU3NcEub45wxd4--
