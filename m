@@ -1,62 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89CF25F7AA
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EFA1D86D6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744081123; cv=none; b=V5LjJpBRAq9ECduwaJl8VWKGOpirT/xHCszhom+1BSAb2Ni+gCtO6bB+PYtrnPOFpnzUcWuRLqCZmjT9lefrvtdhbgOIUPUW8B1bwe6f2anB+B10uWmSuFu62+/1UkNP/gnYKVdqfML/q5+cuMQDU7HoTHK0xlvKx3UiRZicYLk=
+	t=1744081158; cv=none; b=cmTqVdFRuILPJ2h8yoT0fRh4R3GrNInrpP1aQigoDZukfntlnWqjfhTDJbxq2CfI5UCpW+5vQLRuNgaWhoI+XYiuU9TJRik67Hycf5X8K3bDS3XC4rEh9INrAcfMFycLh4Fa3Z7DfDv3bv7RnvlTYqRByG1vzoYTCQ/Jl3Mty6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744081123; c=relaxed/simple;
-	bh=7JUffUBNK5M/+Y/oT2ouv6ujQQPH6yKbolK49qymFSs=;
+	s=arc-20240116; t=1744081158; c=relaxed/simple;
+	bh=+67ZGNOqIDdLmDAgZZ04izq2rizy6C/3AVLNfdHPStQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mb6vv9zlEzWgPDzoQGXHSPewzf/sY4U8o+VgVs+YIC0mPpSeIvlxSr6C1d2YFdyfkQ1EcAuf/D/EHGUIjqRR18r/r7v7Zjls4UCWGuPGFeSgC1mw6CBQKHJn4xER7H3rsMiFRhAEYsAFr0rnVxDAy98cu4oSJmkC7O6SY7C1oeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VeGSOw4f; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZfB9zQ883x+Tz13z9IulWRwuACzASuVCDZZI4Yk9fLc5DrUACnrbbdG3m8uuqJmCeMrwCJKsHBO3id6bQXxhkge+c4Z1bg981aeJTMV8Fxx1YClZNHIdG0UFHmt60CzuP30Br+BXMJ0bX8/ia2OzfDZqZnPm3Ot6Q9zr97YALX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFlSJ9Bt; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VeGSOw4f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744081116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaJaXSVbP57MvATcjgNBp7/OlnZPTiwF4HxV8S9Zb0k=;
-	b=VeGSOw4fYH+Bie3vm8tKjUxXMMuk7RH8puzMjIopOmjvld3yWYdZEj0QIDLaJvOD/2Thib
-	IeXmv9GibdHYz8HcHX3l9fkDLCiCBJC+I+7AaVdCEEnQsAL6o1ABzJ+euj0zY8qFTqSNLN
-	/8cH/hb0ZasqhHAxyCWQlPWhcIlez/8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-mIpEH9ViNumXuntP7aeqvQ-1; Mon,
- 07 Apr 2025 22:58:32 -0400
-X-MC-Unique: mIpEH9ViNumXuntP7aeqvQ-1
-X-Mimecast-MFC-AGG-ID: mIpEH9ViNumXuntP7aeqvQ_1744081110
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 869991955DC6;
-	Tue,  8 Apr 2025 02:58:29 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.61])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 982FB1801752;
-	Tue,  8 Apr 2025 02:58:26 +0000 (UTC)
-Date: Tue, 8 Apr 2025 10:58:21 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v11 2/9] ima: define and call ima_alloc_kexec_file_buf()
-Message-ID: <Z/SQzacXBH5lP4pt@MiWiFi-R3L-srv>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-3-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFlSJ9Bt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744081156; x=1775617156;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+67ZGNOqIDdLmDAgZZ04izq2rizy6C/3AVLNfdHPStQ=;
+  b=aFlSJ9BttybN5+4AmcoQoKtaLl71p1L6l673kMORtABLMAxuGiVLvym+
+   lwbroY5jlHJCPdZbIas+H2sQ6+eG/CN3K9vCPVIWqtn1a5942nDBELgqk
+   M2/Q9z0cfv69LwCALWxVq95mWUGTc1x5qc3hHVZI1qCw4SF9aUlGj3yhh
+   Z0WxVDwwdJ2HBRhca+FpJ+C6kw01CTdy/RAmfSaeiSPxaWoHxYEHEUTK2
+   R8B7n+i7RHU9r15nGe1xcEEDVZGRAIHmf2t6t5sSCUyhCBX06TVqcExpD
+   dxU5SjbZiCHaBciZWwYCEIaQXLyeHWFudrYCx/Un4xygFYFez+HVuGWqZ
+   A==;
+X-CSE-ConnectionGUID: +dTu4PX3TReJzhwlx4ZoHQ==
+X-CSE-MsgGUID: 5y8IWEyIQeSqre6Oh/gODw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56158588"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="56158588"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:59:16 -0700
+X-CSE-ConnectionGUID: U4zE16mqTrSd5ZRauvA7QA==
+X-CSE-MsgGUID: 3oVwmc/QQi2ljZT733hBRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="133104693"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Apr 2025 19:59:13 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1zB9-00043V-0d;
+	Tue, 08 Apr 2025 02:59:11 +0000
+Date: Tue, 8 Apr 2025 10:58:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Colin Ian King <colin.king@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Song Liu <song@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] md/raid6 algorithms: scale test duration for speedier
+ boots
+Message-ID: <202504081059.IWn9WLkl-lkp@intel.com>
+References: <20250407143105.60-1-colin.king@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,119 +67,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402124725.5601-3-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250407143105.60-1-colin.king@intel.com>
 
-On 04/02/25 at 05:47am, steven chen wrote:
-> In the current implementation, the ima_dump_measurement_list() API is 
-> called during the kexec "load" phase, where a buffer is allocated and 
-> the measurement records are copied. Due to this, new events added after
-> kexec load but before kexec execute are not carried over to the new kernel
-> during kexec operation
-> 
-> To allow the buffer allocation and population to be separated into distinct
-> steps, make the function local seq_file "ima_kexec_file" to a file variable.
-> 
-> Carrying the IMA measurement list across kexec requires allocating a
-> buffer and copying the measurement records.  Separate allocating the
-> buffer and copying the measurement records into separate functions in
-> order to allocate the buffer at kexec 'load' and copy the measurements
-> at kexec 'execute'.
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_kexec.c | 46 +++++++++++++++++++++++-------
->  1 file changed, 35 insertions(+), 11 deletions(-)
+Hi Colin,
 
-LGTM,
+kernel test robot noticed the following build errors:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+[auto build test ERROR on akpm-mm/mm-nonmm-unstable]
+[also build test ERROR on akpm-mm/mm-everything linus/master v6.15-rc1 next-20250407]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 650beb74346c..b12ac3619b8f 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -15,26 +15,46 @@
->  #include "ima.h"
->  
->  #ifdef CONFIG_IMA_KEXEC
-> +static struct seq_file ima_kexec_file;
-> +
-> +static void ima_free_kexec_file_buf(struct seq_file *sf)
-> +{
-> +	vfree(sf->buf);
-> +	sf->buf = NULL;
-> +	sf->size = 0;
-> +	sf->read_pos = 0;
-> +	sf->count = 0;
-> +}
-> +
-> +static int ima_alloc_kexec_file_buf(size_t segment_size)
-> +{
-> +	ima_free_kexec_file_buf(&ima_kexec_file);
-> +
-> +	/* segment size can't change between kexec load and execute */
-> +	ima_kexec_file.buf = vmalloc(segment_size);
-> +	if (!ima_kexec_file.buf)
-> +		return -ENOMEM;
-> +
-> +	ima_kexec_file.size = segment_size;
-> +	ima_kexec_file.read_pos = 0;
-> +	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-> +
-> +	return 0;
-> +}
-> +
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  				     unsigned long segment_size)
->  {
-> -	struct seq_file ima_kexec_file;
->  	struct ima_queue_entry *qe;
->  	struct ima_kexec_hdr khdr;
->  	int ret = 0;
->  
->  	/* segment size can't change between kexec load and execute */
-> -	ima_kexec_file.buf = vmalloc(segment_size);
->  	if (!ima_kexec_file.buf) {
-> -		ret = -ENOMEM;
-> -		goto out;
-> +		pr_err("Kexec file buf not allocated\n");
-> +		return -EINVAL;
->  	}
->  
-> -	ima_kexec_file.file = NULL;
-> -	ima_kexec_file.size = segment_size;
-> -	ima_kexec_file.read_pos = 0;
-> -	ima_kexec_file.count = sizeof(khdr);	/* reserved space */
-> -
->  	memset(&khdr, 0, sizeof(khdr));
->  	khdr.version = 1;
->  	/* This is an append-only list, no need to hold the RCU read lock */
-> @@ -71,8 +91,6 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  	*buffer_size = ima_kexec_file.count;
->  	*buffer = ima_kexec_file.buf;
->  out:
-> -	if (ret == -EINVAL)
-> -		vfree(ima_kexec_file.buf);
->  	return ret;
->  }
->  
-> @@ -111,6 +129,12 @@ void ima_add_kexec_buffer(struct kimage *image)
->  		return;
->  	}
->  
-> +	ret = ima_alloc_kexec_file_buf(kexec_segment_size);
-> +	if (ret < 0) {
-> +		pr_err("Not enough memory for the kexec measurement buffer.\n");
-> +		return;
-> +	}
-> +
->  	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
->  				  kexec_segment_size);
->  	if (!kexec_buffer) {
-> -- 
-> 2.25.1
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Colin-Ian-King/md-raid6-algorithms-scale-test-duration-for-speedier-boots/20250407-225435
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
+patch link:    https://lore.kernel.org/r/20250407143105.60-1-colin.king%40intel.com
+patch subject: [PATCH] md/raid6 algorithms: scale test duration for speedier boots
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20250408/202504081059.IWn9WLkl-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504081059.IWn9WLkl-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504081059.IWn9WLkl-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: lib/raid6/algos.o: in function `raid6_choose_gen.constprop.0':
+>> algos.c:(.text.unlikely+0xa8): undefined reference to `__udivdi3'
+>> m68k-linux-ld: algos.c:(.text.unlikely+0x122): undefined reference to `__udivdi3'
+   m68k-linux-ld: algos.c:(.text.unlikely+0x1be): undefined reference to `__udivdi3'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
