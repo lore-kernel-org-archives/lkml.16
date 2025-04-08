@@ -1,104 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF6288B1;
-	Tue,  8 Apr 2025 13:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5001CB663
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744118035; cv=none; b=Uj/CtZMlZaKE3vuKD4OAPkWpVzMFHtfdYHVC3igH141TODvcOMmyasEYPTvUiASNPBJ0PpmdhKAAGDVxv8tkohqWR3wDanPh8KVZunoHvuCQedrt8nDeQjxZOHPJ1jTwKQfxvZ+Kx24QTy9a7gh3J9Q6f10HUoATWPHTijFrHuY=
+	t=1744118122; cv=none; b=k3JhTzkMEeJLZK3JSUO098TyrTSZP51Olrq4Y0EPUBAoL6UINkUDeqFlcg3rsHsIASSzrt5qiX1iwh0BHC3k6FG5o4SusYG3JII5xjlzfxymOS0sBMBYgSLs1tScfDFM2UCur4IpjS0Nb9AEoleLDoy0um9W9/ZSn+8NyAUwQBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744118035; c=relaxed/simple;
-	bh=RtWJsLdfsF5FuefGDDBVSYMGNCOsbla7o3mG81ggG3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z02DNBHNjZxdpQbvFIox4jBF80o8TTOQezKkVHLvY7m38UxUZhQPyN+W0cqHMY8QwWiny5iRsIeyvepjoXIEmXdmnymGszCSQUc85/+e/UnZfDV2ZT7q2D3JIF9YPA2CzQyVfmx6tlZpeYleQBoWByS4qwoqExRl5DvcJbxbU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZPGEJlH; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744118122; c=relaxed/simple;
+	bh=fQl564sdX1Zq7qf8P/njzEEWjIjcEfPMr51NmTthVPc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SxpXDGB9GFpDPmAMrNrhLffQQPSK8u1+RapKBfHNtMn/SuMMuT+FO4UaJcQE4evFnBVqlWPSCQlu+vhkI+lEf+N/RjbNBl9IK7AG2KbunbR+xEmg4xVcWEgmuna1PiexfT8Uhzio17Qem7lHGvWmJitAIzNeeGU1q4d8/XAzyx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rMdHR0Ku; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZPGEJlH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744118034; x=1775654034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RtWJsLdfsF5FuefGDDBVSYMGNCOsbla7o3mG81ggG3Q=;
-  b=FZPGEJlH95KWktQWP1tjKcPhe++OKe1w9JcRRtWBEVRNhFTLytN/FOsJ
-   rTZaFjcLHzKSjeuvteZI0kAQ7aPGv9j3PoFjhNkgfmXkx65lHKkPzElWq
-   2aJSY/CdnsNmtQ6ERvsP7ykgetWqxPihDa3QLDEzLNtNvxamKAi4QZWJR
-   nebX8F6v08Vbpkyac9rMyf3Ls4rMCMf0iWjHohb+hSNqrB0VwIuL9tucT
-   TpZPPNmvNAnFbsIFoTXlPc0OGZOtq4HdqE/F1AES7g4ERZHd7Vs37UbB/
-   mKnLMFfRT6VXBtaGD8nhujl3Ggl9xhIZyzwApjl4o6tkO5QraDDYYur+D
-   Q==;
-X-CSE-ConnectionGUID: 3t303aABSaCXFbwMg8O+Yg==
-X-CSE-MsgGUID: HOzs4p0TTNmdBwTwV+2TsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45435772"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="45435772"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:13:53 -0700
-X-CSE-ConnectionGUID: /a8O9W8cQo+w1L3WxOLlzw==
-X-CSE-MsgGUID: koJ63wdhTdqIZp1M6sJbqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="159263408"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 08 Apr 2025 06:13:51 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u28lw-0007PX-1B;
-	Tue, 08 Apr 2025 13:13:48 +0000
-Date: Tue, 8 Apr 2025 21:13:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zijun Hu <zijun_hu@icloud.com>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Zijun Hu <zijun_hu@icloud.com>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "Rob Herring (Arm)" <robh@kernel.org>
-Subject: Re: [PATCH 1/2] lib/string: Improve strstarts() performance
-Message-ID: <202504082037.VtV65Bnb-lkp@intel.com>
-References: <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMdHR0Ku"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736cd36189bso7501267b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744118120; x=1744722920; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cxLpLDM+FUDC2hLdYZi+8IO3v26+YR2oUAk1Ds34yFQ=;
+        b=rMdHR0KuTVIrZOHf7jg3z51GBm6mkYnQeA8X67PW0wi9ieqrHfMhYzd5NYK8O63YUo
+         QBawx2/MPdbbEz5JVGvuifNEayIwbmEAyWxvVo57AblFYYNprU7AlpUnc4kTXiNzFEon
+         yReaH4atqDcZAELIui5gZuaP9B1I1HpmMRmdEcIcpuIY597uCqDxjaqDMlkJHEB3UnIp
+         2/NHRPDv1itgrhIAyzG0i0QaryJECGfjpVFyRTximEWvK+y15AAxAeyVOyG47yc31oMO
+         Nygeq5Ad0yV/Zi2Yiqbvr/9eTHSlMqSJ0pOByAD583lUJsWeA92EZgHMGuH8A07wtcNN
+         K79A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744118120; x=1744722920;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cxLpLDM+FUDC2hLdYZi+8IO3v26+YR2oUAk1Ds34yFQ=;
+        b=MFkO/WGik4kQ8hewqle4PDFCGYpiddcGwFvJP3l4Zj6J1TPnoEjEE43iLs73yYpRYi
+         IP+ldR+MusVSfrYHwY2ptChckH2cjq9xicb04l1zCqzxcsooqR2F/Ejp4VoKxR0lXdf5
+         VBN5dPsIZOkhYRiIXfJUZacSKfwivBxDSD3JloNiBItMqRXDzFWTIqwJVMb62xj1t/P8
+         jybujp9si2w7imPCC9RXW7kCyBNGSZ+5Pn9pic8jE1VjbPY1sqnBCo1ZsaIAnyq1l+sy
+         33UGHVtGCCNQNDBPm3ady0Q75/f7bohoNStHNh/cjV+8SKAPxoegZ9WXJsmA+UWTsBT/
+         we0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXrMSuawpSXmgGWxlLO/kHqPOMrw27vi+QlEIYPywOZuOemR3Vh7yb/kX59F+hZ9MDr9ZpMKwe02RaL0Bs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwduEML8prjo/nBtFp+5O1ezXRL9Oyj0Cw+IRQH9qrKIip0pxqR
+	Iqs7jJxIj2ERHyygrE8HY2rgkW0LG+GJAJnkkwIhXakgKvfO1ya1gXZdf8XoSmO50RhA/7B6a6X
+	6NWMgCr7bUzynoiDSkEueLw==
+X-Google-Smtp-Source: AGHT+IHc2KZ6S3me8LAZPWuOPQtdwMC6ueKm8WjFNg1zLp+TVvJCgzOLJp2DH3B70CYmWq8BmZbUIxmhoP8HCKyyGQ==
+X-Received: from pfbjc20.prod.google.com ([2002:a05:6a00:6c94:b0:736:451f:b9f4])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:5085:b0:201:b65:81ab with SMTP id adf61e73a8af0-2010b658353mr18982327637.23.1744118120501;
+ Tue, 08 Apr 2025 06:15:20 -0700 (PDT)
+Date: Tue, 08 Apr 2025 06:15:18 -0700
+In-Reply-To: <20250408-wegrand-eifrig-355127b5d3a3@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+Mime-Version: 1.0
+References: <20250404154352.23078-1-kalyazin@amazon.com> <2iggdfimgfke5saxs74zmfrswgrxmmsyxzphq4mdfpj54wu4pl@5uiia4pzkxem>
+ <e8abe599-f48f-4203-8c60-9ee776aa4a24@amazon.com> <63j2cdjh6oxzb5ehtetiaolobp6zzev7emgqvvfkf5tuwlnspx@7h5u4nrqwvsc>
+ <ba93b9c1-cb2b-442f-a4c4-b5530e94f88a@amazon.com> <2bohfxnbthvf3w4kz5u72wj5uxh5sb5s3mbhdk5eg2ingkpkqg@ylykphugpydy>
+ <9326367c-977d-4d55-80bd-f1ad3673f375@redhat.com> <20250408-wegrand-eifrig-355127b5d3a3@brauner>
+Message-ID: <diqzv7reu74p.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [PATCH v3 0/6] KVM: guest_memfd: support for uffd minor
+From: Ackerley Tng <ackerleytng@google.com>
+To: Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nikita Kalyazin <kalyazin@amazon.com>, 
+	Vishal Annapurve <vannapurve@google.com>, Fuad Tabba <tabba@google.com>, akpm@linux-foundation.org, 
+	pbonzini@redhat.com, shuah@kernel.org, viro@zeniv.linux.org.uk, 
+	muchun.song@linux.dev, hughd@google.com, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	lorenzo.stoakes@oracle.com, jannh@google.com, ryan.roberts@arm.com, 
+	jthoughton@google.com, peterx@redhat.com, graf@amazon.de, jgowans@amazon.com, 
+	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es, 
+	xmarcalx@amazon.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Zijun,
+Christian Brauner <brauner@kernel.org> writes:
 
-kernel test robot noticed the following build errors:
+> On Mon, Apr 07, 2025 at 04:46:48PM +0200, David Hildenbrand wrote:
+>
+> <snip>
+>
+> Fwiw, b4 allows to specify dependencies so you can b4 shazam/am and it
+> will pull in all prerequisite patches:
+>
+> b4 prep --edit-deps           Edit the series dependencies in your defined $EDITOR (or core.editor)
 
-[auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Zijun-Hu/lib-string-Improve-strstarts-performance/20250407-212519
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250407-imp_str_perf-v1-1-ed95d52964a4%40quicinc.com
-patch subject: [PATCH 1/2] lib/string: Improve strstarts() performance
-config: riscv-randconfig-002-20250408 (https://download.01.org/0day-ci/archive/20250408/202504082037.VtV65Bnb-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504082037.VtV65Bnb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504082037.VtV65Bnb-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined hidden symbol: __efistub_strstarts
-   >>> referenced by gop.c:119 (drivers/firmware/efi/libstub/gop.c:119)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced by gop.c:42 (drivers/firmware/efi/libstub/gop.c:42)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced by gop.c:42 (drivers/firmware/efi/libstub/gop.c:42)
-   >>>               gop.stub.o:(__efistub_efi_parse_option_graphics) in archive ./drivers/firmware/efi/libstub/lib.a
-   >>> referenced 3 more times
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thank you for this tip! On this note, what are some good CONFIGs people
+always enable during development?
