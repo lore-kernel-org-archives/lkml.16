@@ -1,136 +1,133 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8216126773A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E79264A76
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112662; cv=none; b=JO0l/nFdvc6s+Xy8XDKe2Nxq1zO6NFx4nIp1d2WQlxfHi+0xAZx7CPyeRswxmsAZ7nEtWX9fbcIGhSoSWJaE7P/FLT6m5IVI3vcZP4K0tRsfBa7igomt8bSP7ZtQdJ/kTfGcW70UtvqY52u0YJLWbvhs/vg+0kKt4CgXy7jWfDM=
+	t=1744112690; cv=none; b=cpI/MxQERrpMOeQtomZVsBhtnWh3lJs5ua3MpJWiHnOA8goxZegoMuBvNucvWAnC2vRLb2zTpRfIOFMt2IEq81eBHeGjdMjo3MvgtMHeszRm5Z8TBjHPI94y8yAKfJZghK5QlmErgxhmUwLKY/CrDl9zNnbpU0zzR4/3BERxhjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112662; c=relaxed/simple;
-	bh=DAkJSOh9oR6R2NnPl6o248WpYSHSAEwaTPnUb+BYUBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnmoT+kFWOtblLhjYYi9aKqj36e+15Igb8AH/AYoOfjTPq1t3vsUYyGz6b8azqgDcLu6d/GfbAOZ6IB8hu+ZvcUzQMTM4YhQhxjrX1krFdV9QcmVTJaI5Iec3kN6kJFP5xMyz4XNK7dWsR+cXSamWWyEEyZaTIjgvS0fcwsXgAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EUpQTWNF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744112690; c=relaxed/simple;
+	bh=sVnWWYifDzNHWDD5ZdDHNMXXvkM1H7Mr10Ssgl0n+6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KTzyhBYx9G20UwmWfWKnShwpRzcFxx1O4Ctrj4mASHpkHcFYFQCvzU0KB7VB0hXPO4HKGZ9OhLmrV7WS73SlH2CrJvb8Qtvjph54MSpN5BsdLWANco9C+wC/OmZRMicBlaobdiij+GEjF5CuHKmw576U2pbhm59JzToUrzvNdnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEDnffPo; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EUpQTWNF"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BFsIE019576
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 11:44:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=QiH0xgG4cw0AZfAy/Vvm2ZJJ
-	V+VbLE6k/8voYBHRRpk=; b=EUpQTWNF0QGjiTo5X2CUR/GYtBQCAM9kje5bNJN9
-	7w6PzBw9QzAnLVlko7o/QmN5PcSfHqy2A44CsEXISrPWbijoFz+Dn9C6+SJIyudi
-	3SjrY8xKY7uSwSoQNhD7xLhUIPW7K8u2jEEwa16LB8F6aneBmvMJT8jc3rD+MWqr
-	xagh561hbh8IWhPdTmtSzqXfVVSTnJnNj8s9COV7vvx9nxcwELPHgT0T6evxo9qN
-	bOyanp+H2LMmb1TsA6EXlZeUcSDJ8KpdZ5Eg9ufPBJU03vQcwby6wwjL1AA0Zza6
-	VT7j4O191SllL2CKQYz5bHsgjVwgcl2A/vcG2w7E53SY8g==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3fkmm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:44:19 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5d9d8890fso1230178585a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:44:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEDnffPo"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30c461a45f8so53524271fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744112687; x=1744717487; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JrYauhzusPrI0iXB3x51m5sg6uFNXWBUmKbASQyHV2k=;
+        b=gEDnffPoi/BaYCY/J0wQAXVy/xuJWs0K1YXcXKq+noC3BsdYmtR5bE+9n25XPFai04
+         AUK9YLeLUJ0uGcpgf0cn5swmDSIuv6gCUL3B1BlkxQ3zek2kR3j0TWU+rOPnUGxeRL4E
+         r70lAnJg2Yqq6aU0jAn5hpTug2In0gbLnP+jfJpNhpb82xmV7BB32Vf1xdKyp0mG4dni
+         RJ33XTbj7v8rCotisfpi3K5J8G+hdoC2BHXxONUPQikSsH4YJgASgdBg4Rd69E1HtGX7
+         hn6MvEn+bs09blcdaXc9NQrvHWvePjzQxO/Rqx0GVkMbhbzQPuISgDxiZi/k8s/LsWMH
+         oJhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744112658; x=1744717458;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QiH0xgG4cw0AZfAy/Vvm2ZJJV+VbLE6k/8voYBHRRpk=;
-        b=PeIqn32pdJRo47P0rFcxUkkY6V13jIegri7QDIG1/IaV9rjpBwnVl0051MLdaVgTtt
-         tdNSfDWM6DfWcKqCFon5VwkcqzaCDNipEdcAATYozKLGA94a65BeiRukZJV3/ruOhR/v
-         JAr93GcnoJs3VbRq2nI/2LQhkY533lQSAD3Xlh890q+8YthhlhYG3cGOynlvaEDUUJUt
-         Ak5aqH2T5f/qgQrUcujnRs/4L4FRj4PPAJm4rZlUeV25k6Dtafj40znPmwnIiTUEOJfS
-         eyrq8EFBtEI++Zp6hEUc0o5n2LtYriUJfjV3Buv+i71ooE/Chq30ruf5i2aUV2ICbYmr
-         cLcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWS1KQzhdMbb4/cM3uoJN9uLZxOAfbL/NYKzqYZoxph549z50FeaasNmggpsonxStL8q1sJVSUK8d2aA2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgLv1Yr7Fw+6UvjwlK67lTqD/XMvBfWzp3AGMlMze1CYntQHRS
-	0QRIYkydfqqP+GbQilrjnsVbemax+VJnKaMTOQQfTpbBErOvEGCtkMXP3SOONLD0UJkglCsrYgV
-	PBGkkjtxtWhFpbdJnzfMMtOdt2qD6FIyuiif8tajJZiMzmGQok12tFfdiJupQ3fQ=
-X-Gm-Gg: ASbGncuksb8/RlN2jGqSjKSqHwnu6hl6nBoRtSIAoRk6iXgzWr5/SZ+VQevSqjRYgNW
-	EWy4BJr34myd8ManPp2SwM4qbfgkTeqaw2BgC7QTU4yE4oHBV3/RPLibe/tZvXVku5kYKIkKw1i
-	a5hDppMhu/KNFAikf6CIq+m9CgrbxllbcBAHv0PfTqz+xzhZFREHikvvhyZscsk7nr442osj4P/
-	p+qsuD18VPsCwV2LPcJiDlrhvBAjQETolxv0DUIOep3mTmh3WxtunwfZdRvHY5+vVgYhckWWfLk
-	JF+eRoBabDRvVrsqnA9Gmmb5ayRCQsfPwVjKAiPcZUkaEENuqFYveVh2WJ0pn5SXR3EvEd8Sgd9
-	N/v4=
-X-Received: by 2002:a05:620a:1a85:b0:7c2:f39d:d0e0 with SMTP id af79cd13be357-7c79405806amr399833685a.3.1744112658504;
-        Tue, 08 Apr 2025 04:44:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9w/HQSwcn+z9yoY59a3SkR++9C/Xa/l18tIcBrY3nXcExKTwVPb0rBd71tZyAyXxczD6fRg==
-X-Received: by 2002:a05:620a:1a85:b0:7c2:f39d:d0e0 with SMTP id af79cd13be357-7c79405806amr399830485a.3.1744112658207;
-        Tue, 08 Apr 2025 04:44:18 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031246acsm19338721fa.16.2025.04.08.04.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:44:17 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:44:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com
-Subject: Re: [PATCH v2 03/10] dt-bindings: display: msm: document DSI
- controller and phy on SA8775P
-Message-ID: <zpmr6cpiixyu2sj7r7oqpqsge6dcqw6xszldf7ugznmcrxqsme@efiwnggcn5qx>
-References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
- <20250311122445.3597100-4-quic_amakhija@quicinc.com>
- <20250312-calm-steadfast-cricket-fe9dd8@krzk-bin>
- <654d409e-2325-46e7-a064-ed9e64277e69@quicinc.com>
- <a168a473-c363-4041-8e3e-84fa44e92b10@kernel.org>
+        d=1e100.net; s=20230601; t=1744112687; x=1744717487;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JrYauhzusPrI0iXB3x51m5sg6uFNXWBUmKbASQyHV2k=;
+        b=UWZcXsRO12oEhz9Y34uch1bIYJp5suPZCg+1uCgSbhINzRna5p0+LNVyJR1InknYSW
+         jJ8zZ/fu/o6L7AbQwBM0MNOioisHNN2U+jK7eNcTLqNHZZ75VnmAy/65tJIWYv+k+KhG
+         u4A09TVCINQHImP9npBP+I0jG7GoFzLRtoTK9Ch3TtI9KmXXE0UHFuup66rGDrh7VemS
+         ZKaET7bxD3lvOFr1ut69InpybfOaWjWXG2TAq7akIPJH9fJldG8AS/pR+wW3LUMbpEfs
+         wEvbzKWdR7sVg5xF3wGU8K4GBqejl9xtBM0Jaq800Fns01CfwzpUKrtp7GUHAn1go8QB
+         +ULQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNu/H2JGSz7ubWyxEqTPyvhAjxDVWyne/+t8I7jkN2X1ACZGvNUBWZawccPizTuhYT+D2ene0TDzAo2uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd2BUzb1b+tAXAYVYpCeiFUT73b9XqKhVynNUpssxHWZtFeAbC
+	YmhzsPxiaOLvN6DoNlIMwP1fvz5PGp2cy8C7OGTUgLdUdg/FXTjpXI9TSWJENpPpLZwXTEaNvRJ
+	aEdw3C+rhH/A37Axo5Tupq3EpbdWkKjrcCjAxZQ==
+X-Gm-Gg: ASbGnctZxrbOWSAbsO5X72exFIE0p+Dps0f/k8hSym4EOLbJXXvaC2twH93uQOrQXvu
+	JlplQxbnmBv17ovbJRQMsGtQ7T2hxiqMPRMFIkO0NdCwunKZiPJDO4xCEdSMyczG1/Ymxwe9uuN
+	yHM7bzN3KGWnirpyITTsyCmHcyEPJ0tAI=
+X-Google-Smtp-Source: AGHT+IHjL36c4DD0hqrS7NUmvzOjx/3kG/kPwxU+j7cHEhXKV/Zh3wqhtcKt/lEg9h3aP4E8pKAxMXueT2IArw3DOF0=
+X-Received: by 2002:a05:651c:882:b0:307:9555:dc5e with SMTP id
+ 38308e7fff4ca-30f0be04016mr46411251fa.3.1744112686911; Tue, 08 Apr 2025
+ 04:44:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a168a473-c363-4041-8e3e-84fa44e92b10@kernel.org>
-X-Proofpoint-GUID: wuieXj6GyhhB-sXEZKbuJD_K3BKZjKNK
-X-Proofpoint-ORIG-GUID: wuieXj6GyhhB-sXEZKbuJD_K3BKZjKNK
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f50c13 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VUUUEbkTROAwnXgzEp4A:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=750 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080082
+References: <cover.1740504232.git.nicolinc@nvidia.com> <f205a4e2f5971cd4b1033d7cac41683e10ebabfb.1740504232.git.nicolinc@nvidia.com>
+ <CABQgh9Fuh2HdBH7pyAteawZBpa55ZzfR9dv2K4RF=Ps4yhREbw@mail.gmail.com> <Z/QSuMzJVGOcTx60@nvidia.com>
+In-Reply-To: <Z/QSuMzJVGOcTx60@nvidia.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Tue, 8 Apr 2025 19:44:34 +0800
+X-Gm-Features: ATxdqUE5HzSx71KLyQAI3wDnKvY_BQRF_RJmPVNkaKt2N6Ua3aAx7RZCkWtktDg
+Message-ID: <CABQgh9FObG8-Qsp-nqoTP-fC7VkPoi1ooHPQ1=s5uW_2BTL9vw@mail.gmail.com>
+Subject: Re: [PATCH v8 12/14] iommu/arm-smmu-v3: Introduce struct arm_smmu_vmaster
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, 
+	joro@8bytes.org, suravee.suthikulpanit@amd.com, robin.murphy@arm.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org, 
+	mshavit@google.com, shameerali.kolothum.thodi@huawei.com, smostafa@google.com, 
+	ddutile@redhat.com, yi.l.liu@intel.com, praan@google.com, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 08, 2025 at 01:03:53PM +0200, Krzysztof Kozlowski wrote:
-> On 08/04/2025 12:38, Ayushi Makhija wrote:
-> >>> +    properties:
-> >>> +      compatible:
-> >>> +        items:
-> >>
-> >> contains
-> >>
-> >>> +          - const: qcom,sa8775p-dsi-ctrl
-> >>> +          - const: qcom,mdss-dsi-ctrl
-> >>
-> >> Drop fallback
-> >>
-> >  
-> > Hi Krzysztof,
-> > 
-> > I couldn't understand the meaning of "Drop fallback", could please elaborate it ?
-> Look at SM8750 example on the lists. Keep only front compatible.
+On Tue, 8 Apr 2025 at 02:00, Nicolin Chen <nicolinc@nvidia.com> wrote:
+>
+> On Mon, Apr 07, 2025 at 08:08:57PM +0800, Zhangfei Gao wrote:
+> > Hi, Nico
+> >
+> > On Wed, 26 Feb 2025 at 01:35, Nicolin Chen <nicolinc@nvidia.com> wrote:
+> > >
+> > > Use it to store all vSMMU-related data. The vsid (Virtual Stream ID) will
+> > > be the first use case. Since the vsid reader will be the eventq handler
+> > > that already holds a streams_mutex, reuse that to fenche the vmaster too.
+> > >
+> > > Also add a pair of arm_smmu_attach_prepare/commit_vmaster helpers to set
+> > > or unset the master->vmaster point. Put these helpers inside the existing
+> > > arm_smmu_attach_prepare/commit().
+> > >
+> > > For identity/blocked ops that don't call arm_smmu_attach_prepare/commit(),
+> > > add a simpler arm_smmu_master_clear_vmaster helper to unset the vmaster.
+> > >
+> > > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > Reviewed-by: Pranjal Shrivastavat <praan@google.com>
+> > > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > > ---
+> >
+> > >
+> > > +int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
+> > > +                                   struct arm_smmu_nested_domain *nested_domain)
+> > > +{
+> > > +       struct arm_smmu_vmaster *vmaster;
+> > > +       unsigned long vsid;
+> > > +       int ret;
+> > > +
+> > > +       iommu_group_mutex_assert(state->master->dev);
+> > > +
+> > > +       /* Skip invalid vSTE */
+> > > +       if (!(nested_domain->ste[0] & cpu_to_le64(STRTAB_STE_0_V)))
+> > > +               return 0;
+> >
+> > Why this is removed in v9 and 6.15-rc1?
+> >
+> > I tested 6.15-rc1 the qemu failed to boot with qemu branch:
+> > for_iommufd_veventq-v8
+> > "failed to attach the bypass pagetable"
+>
+> Here is the problem: v9 isn't compatible with v8 :)
+>
+> Would you please try for-v9 version?
+> https://github.com/nicolinc/qemu/commits/wip/for_iommufd_veventq-v9
 
-Why?
+Thanks Nico
 
--- 
-With best wishes
-Dmitry
+I tried this branch, it works with 6.15-rc1
+
+Thanks
