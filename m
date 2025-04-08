@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D47B263F44
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42726263F49
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100488; cv=none; b=PeVfEtNZNYBs1dmgy4wyMwr26vA/Cs2G2M4XmgxUhw+fDHJFoiFkOz4IOsw9ZLHMlvYgT6KQaotDPUauHS+ykmKtIkc5P5f9CL+EgvQTHpWG1X3WBTE0VzoAsx5HdIhix1Cj1C+hKFSeTzf1XV5ly4iKZKim5CPEQK937vUsl/k=
+	t=1744100488; cv=none; b=pjA7GBybTwiuW4aphgXZZgfojVpp61R9sLhupQgDPm7SzD/AL9lua3gB7/7xV4UnOZaco9QfF38mG9b7+erfDKV60JyFLTvNdCDoNFYUQ79gXJtO9xcHS6ikEwSP+0wzyA6SnsDPvwxl1IPIBkOK4qwk+EhOcn9n3P9BaRvc3l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744100488; c=relaxed/simple;
-	bh=BFxGxGhS95knSx6gCE3mMHsG8u8tZ7dQkfm8+7hymJI=;
+	bh=k6bnnSwlEHgFA+riTMEYB1mSt8DFIyiepASBiJ7AxcM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N47kxaTltBNowI1F3nrHwub2K6iOWiyCVghE2sfT5HQFnZy1YQ1ZM/6neGyWc7Xb6zV48GdSrrGY8+0i9d2tAtz9X5iwY/Jdx6S2K0Ju6E2nPqQLpitv7X8rGvdXBC1m0QwblUKdwNMLh1qt/AeDeYk9roLqf7v+g1vvwQ035PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mb25JYUz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YcLBQSakMoc2R/575qq2K1JEu6317gllWlwzS2Tch/s3u1Mbadc0IDkTDiVV0pr6TmJwut/c6dudAvxfdMrY+2c8UiCaTjvdCkIzylLEthTSzxCQcseIaTc3JeilJP51GeNmhQDp8eG/J2hGyU5w56IwjkotvaycPzN8Y6aE8J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjILnKe9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mb25JYUz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E738C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjILnKe9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B801DC4CEEA;
 	Tue,  8 Apr 2025 08:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744100487;
-	bh=BFxGxGhS95knSx6gCE3mMHsG8u8tZ7dQkfm8+7hymJI=;
+	s=k20201202; t=1744100488;
+	bh=k6bnnSwlEHgFA+riTMEYB1mSt8DFIyiepASBiJ7AxcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mb25JYUzXC7p940p6v1/j8cT9iPgXtp0r39GL1FJl11uIQivXLKjjV6RmXGHZ2fNi
-	 vTXnVD7dF8/2gAXuHvIInETgGFKt+03BFdAC4Z9UVdj+nZD2m+w4nszfEilUVpDL9x
-	 d2vl4mR343+c/hR56aqRFBXJzhszcrUFiO/Oec02ZX7Q9V5kMDt5Jfrfz12hQHugjP
-	 24lhL/9sD9q1eNyNFA5HWDshHLu+U87ig4Z2GyXugd786u4ita9/KD/oCHKYSIWA/V
-	 vnM4/EaNxzpVmlFPizrqbz/LVum00WCBKq+T0OpNreq9UENMddAqFG96BEp4hQtFYa
-	 m4lHMuU34cZ1A==
+	b=QjILnKe9EtX4PjZMFZ71m3m72cHJcRAUn8jsGof/0oGnjjEGczY8KcsjulTpNBFNy
+	 H4YYdNuYYj35gmgF5ISnUCVSEsJfPUWw7CeYsUWxqZ/HexjNJC517SXh7ip/w0QMBk
+	 XMli3oO824wplaKuZne9woPRqQgakDGrerD+dsWyIYuVMa1NqaaYI1NRdhL8DS6YKR
+	 RJEThCViB4tfyT73hclew+akX1aJOO6ByGuyLjOVZ83Tp/EtS/+hUeh/afCbvrjWGM
+	 mqXwh8AA1LFxzq0EWgS7hW5nE2AsccXYT+qPsXEATFBV9uulr47Bp2Ymo90kdS76dJ
+	 ENSJAXEExtr4w==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH RFC 2/5] objtool, x86/hweight: Remove ANNOTATE_IGNORE_ALTERNATIVE
-Date: Tue,  8 Apr 2025 01:21:15 -0700
-Message-ID: <e2be2dfe46dbe432375f2fafcb1dbdce1143af99.1744098446.git.jpoimboe@kernel.org>
+Subject: [PATCH RFC 3/5] noinstr: Use asm_inline() in instrumentation_{begin,end}()
+Date: Tue,  8 Apr 2025 01:21:16 -0700
+Message-ID: <7cb41fe7e87a003fc925164d5cc18efd8e95fcc0.1744098446.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744098446.git.jpoimboe@kernel.org>
 References: <cover.1744098446.git.jpoimboe@kernel.org>
@@ -46,55 +46,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since objtool's inception, frame pointer warnings have been manually
-silenced for __arch_hweight*() to allow those functions' inline asm to
-avoid using ASM_CALL_CONSTRAINT.
+Use asm_inline() to prevent the compiler from making poor inlining
+decisions based on the length of the objtool annotations.
 
-The potentially dubious reasoning for that decision over nine years ago
-was that since !X86_FEATURE_POPCNT is exceedingly rare, it's not worth
-hurting the code layout for a function call that will never happen on
-the vast majority of systems.
+For a defconfig kernel built with GCC 14.2.1, bloat-o-meter reports a
+0.18% text size increase:
 
-However, those functions actually started using ASM_CALL_CONSTRAINT with
-the following commit:
+  add/remove: 88/433 grow/shrink: 967/487 up/down: 87579/-52630 (34949)
+  Total: Before=19448407, After=19483356, chg +0.18%
 
-  194a613088a8 ("x86/hweight: Use ASM_CALL_CONSTRAINT in inline asm()")
-
-And rightfully so, as it makes the code correct.  ASM_CALL_CONSTRAINT
-will soon have no effect for non-FP configs anyway.
-
-With ASM_CALL_CONSTRAINT in place, ANNOTATE_IGNORE_ALTERNATIVE no longer
-has a purpose for the hweight functions.  Remove it.
+Presumably the text growth is due to increased inlining.  A net total of
+345 functions were removed.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/arch_hweight.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ include/linux/instrumentation.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
-index cbc6157f0b4b..b5982b94bdba 100644
---- a/arch/x86/include/asm/arch_hweight.h
-+++ b/arch/x86/include/asm/arch_hweight.h
-@@ -16,8 +16,7 @@ static __always_inline unsigned int __arch_hweight32(unsigned int w)
- {
- 	unsigned int res;
+diff --git a/include/linux/instrumentation.h b/include/linux/instrumentation.h
+index bf675a8aef8a..b1007407d272 100644
+--- a/include/linux/instrumentation.h
++++ b/include/linux/instrumentation.h
+@@ -9,7 +9,7 @@
  
--	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
--				"call __sw_hweight32",
-+	asm_inline (ALTERNATIVE("call __sw_hweight32",
- 				"popcntl %[val], %[cnt]", X86_FEATURE_POPCNT)
- 			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
- 			 : [val] REG_IN (w));
-@@ -46,8 +45,7 @@ static __always_inline unsigned long __arch_hweight64(__u64 w)
- {
- 	unsigned long res;
- 
--	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
--				"call __sw_hweight64",
-+	asm_inline (ALTERNATIVE("call __sw_hweight64",
- 				"popcntq %[val], %[cnt]", X86_FEATURE_POPCNT)
- 			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
- 			 : [val] REG_IN (w));
+ /* Begin/end of an instrumentation safe region */
+ #define __instrumentation_begin(c) ({					\
+-	asm volatile(__stringify(c) ": nop\n\t"				\
++	asm_inline volatile(__stringify(c) ": nop\n\t"			\
+ 		     ANNOTATE_INSTR_BEGIN(__ASM_BREF(c))		\
+ 		     : : "i" (c));					\
+ })
+@@ -47,7 +47,7 @@
+  * part of the condition block and does not escape.
+  */
+ #define __instrumentation_end(c) ({					\
+-	asm volatile(__stringify(c) ": nop\n\t"				\
++	asm_inline volatile(__stringify(c) ": nop\n\t"			\
+ 		     ANNOTATE_INSTR_END(__ASM_BREF(c))			\
+ 		     : : "i" (c));					\
+ })
 -- 
 2.49.0
 
