@@ -1,101 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71B01C5F0E
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9741C5F0E;
+	Tue,  8 Apr 2025 15:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124509; cv=none; b=VEFxWylnY6tds/wwrzPUYCFqEU3BXuVglwjmm+jXB5ICiN3bCRb3AVFqZDwFYfJsT1plSu0m4ZGzHcKbh+I0Ch3q0h1LWmoKEFKXHP77Ia28zqaADwe5tYJHZwfktHzQ8UrM8BNq3yfigKSB/v+TJQeUsAR3nQfNxrbSXXykSI0=
+	t=1744124519; cv=none; b=RMI5z1WCrRgQ+0P5j0O8sOsqJvoHCuc+w7PNlY/gTHKGF7ifTb83JKhghyY38LTPtDHdYE1/L5qrFLSEgQwaeYcL6EPRbfdc/aEeYTPHdcrepAGmP96ifgsRMIaPClZQIcukoBdayelsQJ1UrqwfMLE5A3jc89wk0w6IqTN5BE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124509; c=relaxed/simple;
-	bh=9kRj2spyKPNFwHaCLDgA8I2/TDsPBVMLkpsDtRAXe78=;
+	s=arc-20240116; t=1744124519; c=relaxed/simple;
+	bh=tzx7Cxt+g8APcFJQDQGkcEAoJ/wSmHCI5D33TrHAK4o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADLfoLhZkBAVC7ujZNYgKIkHuy+lkvi8+r2JyXNfZDQyN/LKzcoTtcpe6kCy/RZkPYTfdz2mkmrVCo8z0+aIYYUd6hHcXAtNGXrhDfgX0wbIcuMQxCf53DWLY8t/cctCKjiGXm6U9mz+bNmO4yZRlNo1YHCkNQbNCG38WDparBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Waw3JEa4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pC/G/l3GVexVU7tsxOOOKi8ND7LCC2Rf5zU68pm0cdgxtdvPuY1P+JVpLGROp1RqfI1njm/erETQ2N9wHHA4XeKd8QpwSlGnOArqj3hbnXQghTw+lu18VW06F+3eni7Cayf1D/agZ3URuyEfqeOdlde/msWmhafBG/ja87iTCS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlpYYpgj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Waw3JEa4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744124506;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VJhlibnoGKLKtO+j+4h33e2pnR8Ge+2erGKyKrpo/po=;
-	b=Waw3JEa4kEiTtqD6NZUX6WSn670StIOtNPW4JnPg9vOLCwGsbak+L1qleQsZmo2ULKThx/
-	+vTbkOE5Fm4Gtja113HCQRQK+yqgbXaNenc9uZIJVu8d/d1gx4cmBjsJTX0BtSbqzWB53W
-	Cbipt/0RguPqqXpYNHvvb1A6dqAzJvI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-dsSkjsuyNW-JITMTF5MWtA-1; Tue,
- 08 Apr 2025 11:01:40 -0400
-X-MC-Unique: dsSkjsuyNW-JITMTF5MWtA-1
-X-Mimecast-MFC-AGG-ID: dsSkjsuyNW-JITMTF5MWtA_1744124499
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22C2D180035E;
-	Tue,  8 Apr 2025 15:01:39 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.61])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C239A1955DCE;
-	Tue,  8 Apr 2025 15:01:37 +0000 (UTC)
-Date: Tue, 8 Apr 2025 23:01:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-	mingo@kernel.org, yanjun.zhu@linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] mm/gup: fix wrongly calculated returned value in
- fault_in_safe_writeable()
-Message-ID: <Z/U6TTyJXjzdiO8d@MiWiFi-R3L-srv>
-References: <20250407030306.411977-1-bhe@redhat.com>
- <20250407030306.411977-2-bhe@redhat.com>
- <Z_TvDwA6xGfXMiED@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlpYYpgj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B931C4CEE5;
+	Tue,  8 Apr 2025 15:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744124518;
+	bh=tzx7Cxt+g8APcFJQDQGkcEAoJ/wSmHCI5D33TrHAK4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FlpYYpgjCeRPhKTEwx9i2R8fxaePCMjCLEKzy/19PMPypxSsjfKfIdUKFINERJl3p
+	 tkRnikSXzl7yxJa6TmhgyA/C7fndsOu5jpbN6zarsbs+T67Zhvb7flIl/OKq1i8BPz
+	 awFA1fvt+lqtlxk8v9j1y8uOZ3xK7m39QyrelvbYbrMKoIYpymk4oeU2vffg/Cyacp
+	 RWggO+NOt0hDg5IlHLhlr1jXDN4yCdMy3StafXUo07iKeUNqYbycJFZaSQc9Z19t6D
+	 7zAWAiJ7U/2ORmV3jjeg93VZ+NNgIXIRvp2gz2Gw/yQM/8XxAel25Xp3Dr36vz2MWT
+	 Gnb2KqDCZmw5w==
+Date: Tue, 8 Apr 2025 16:01:52 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc1 review
+Message-ID: <5c330e19-79d0-4800-a118-35094fc8bb18@sirena.org.uk>
+References: <20250408104845.675475678@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jOVoemtQG2pZBf3z"
+Content-Disposition: inline
+In-Reply-To: <20250408104845.675475678@linuxfoundation.org>
+X-Cookie: Meester, do you vant to buy a duck?
+
+
+--jOVoemtQG2pZBf3z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_TvDwA6xGfXMiED@localhost.localdomain>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 04/08/25 at 11:40am, Oscar Salvador wrote:
-> On Mon, Apr 07, 2025 at 11:03:04AM +0800, Baoquan He wrote:
-> > Not like fault_in_readable() or fault_in_writeable(), in
-> > fault_in_safe_writeable() local variable 'start' is increased page
-> > by page to loop till the whole address range is handled. However,
-> > it mistakenly calcalates the size of handled range with 'uaddr - start'.
->                 ^^ calculates
+On Tue, Apr 08, 2025 at 12:45:26PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.23 release.
+> There are 423 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Will fix, thanks.
-> > 
-> > Here fix the code bug in fault_in_safe_writeable(), and also adjusting
-> > the codes in fault_in_readable() and fault_in_writeable() to use local
-> > variable 'start' to loop so that codes in these three functions are
-> > consistent.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> 
-> The fix for the bug in fault_in_safe_writeable() looks good to me.
-> But I think that David suggested the other way around wrt. uaddr and
-> start variables in those three functions? I think he had in mind that
-> fault_in_safe_writeable() follows fault_in_safe_writeable() and
-> fault_in_readable() lead.
+This is showing the same issues as v6.13 was for me.
 
-Right, will follow the way he suggested in another sub-thread, thanks
-for careful reviewing.
+--jOVoemtQG2pZBf3z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Other than that looks good to me.
-> 
-> 
-> -- 
-> Oscar Salvador
-> SUSE Labs
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1OmAACgkQJNaLcl1U
+h9DRYwf/QMlABTdCNXUDIb92kERSOFqdaHqx1v9KkL0p1135RrfKHmUHVYCIv1+9
+Rjr1oj2hxnUEQP9t3fKK2igbJ7H3PgGVjjTgtwWoLnfNfMu+SedLAi2RZCpFHfOz
+JQLKjNTNdHqY2CNnKSx8nQDQTYOvJe+/wukegchTeWG/7iqbEKGgTadUfvTP9OJ2
+gayD6X0uNMgte/AZGv2ozdiDCH1NTj6DiYg1+xU9qAhI8+edILGpgCRw1gERq7Z3
+Ctx/TwTIIfbwKEowPi20GVtejTRwdMdMCvIAQHsfB/H73FDNmn0GdztPla+U4gBP
+4J5RT+TkMjznI+M4xSKsc2QYajtayA==
+=TirL
+-----END PGP SIGNATURE-----
+
+--jOVoemtQG2pZBf3z--
