@@ -1,176 +1,142 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2062.outbound.protection.outlook.com [40.107.237.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9FA1990CD;
-	Tue,  8 Apr 2025 22:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744153048; cv=fail; b=Cc2gvAA3KSXb5yAdBYG5Pl0Al8zZQFI8KTOjaCi4NfxW3hjyp1mFFNvVIfh4nRasy3oIdckWtEi+KYdKGfuueHF+dTdeR5VlJIp3mgr8KOBU+cbSgupj9N/5qKzbzsNpAo7szhzUjcS3GjIZKiPJLMkyTTd0Al3wswaZ39qy/Vg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744153048; c=relaxed/simple;
-	bh=BjKM6P9xk+XMqczgiMFEywTeNqeI/Y70rTLLBqIDmNo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r2FFPgHXiqEhlLgQuXCD9KClRHCJIgFnegfKtKSbEK1Vj6vQumF0kKE5jmChEACIZMFMy7C0mW0KmHENPtV8JMGfhABv23i8RXG3nUvmnP1gfxKil0HosmW2bObt8ED5OV5QXS7KU2Ql9owTfXsi/hxNKxJLAeXiTs2pFZe6IpI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ag7ZPnZL; arc=fail smtp.client-ip=40.107.237.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594361990CD;
+	Tue,  8 Apr 2025 22:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744153176; cv=none; b=dE5qYXdiGYLjWSZkNOwhxjdXjicN78q/hyqJn1bao/sX/DgllV9wVqKakc3S3udPWAlgpMNB0dsfQViCQk0SVWFONsyVDs+OrMeb2W8QReIi4htYSSz3gpOM7nKkxORZUzQtVwe846a2XomkPfh+4/2/n45nwYsp6ktDdKwFgHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744153176; c=relaxed/simple;
+	bh=l/3XS5nIqJsAU3kB74Nag1324TqFZCJpfxHsp40JYXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QUuyoYrH+MFs7z/Z1Q2rdepi28MtyRwDV1Mv1oTIOeq5Tq3HiydCAKandgcHIUvbmIU52tFI+4TOfJUGKld0X9+3fw5BDdXaqkg2OZzVjkXbKWh07PtZFqsVcI7kOD1QIn7nREpxGDcNu48KLElNkQO+p/eotqzecIRHOz4/8qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jtYp6JAk; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ag7ZPnZL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w/9CdL4k3otNmThvJ9lMuFl7CDASQelKSQt6zJqUEwnvUHRlR6w+OhB0zUrL/Qi3rmMQMimGNjpxp1nwsmDKdQ8YH2dAInY/Er1dwdlWj/MSQXO4IYy30Fv07jEhhJ8oNX8Z0zNNdXbTIQX1yrcE6H/QKDFMpKCktSoyK8LSFL16j6mP3lT5ea86tPuRN5ed7yiHtwZB/VX6Qi/vJp9iQ8P2Uj62uOj7a21FCGqwirFFJWtqT9llLR2R7hgBYhlCLM7L7wc8MFCrCya+9rmsUz8sHT6iMxxWGTdFTqDkgurYWgcK0nbOdO2ftq4oFYeX7E50G2G3F84s05IpPCmabA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=esmMgPwekb3CdOfYKArgV2NEMfNseuNIL4+mqIpMPSA=;
- b=vNJNeMqPM2durwwnrYdE8u6O5nXZvrT/PyFojpq36NqaM3uFQqHM+wI0vsenzcpiVXQjCJ60rDkPB/JKVfMWYU8XhAa8AObw/leqzCL23Tr5WqFUeUcDElxIGuBRCSqtKlKstGyTDzviVJSXobsonVwcTxsny6vI6tW2nhWCmVNRCWP+C09bOT92iE3F3jOK2l30GredGZSuowRrkT4Fd/JnagY/CSKCE5Jb6Zd4N7eDf7GlkmERjt2gnjg0WxanyGgl1xGxaijq8aQ8GkdA1zlcqLEI3n2G/VGJ3VreRf+cvkmigR1cXaxEHbqCPfEdnGefRsjkXV93aXxaCRUuog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=esmMgPwekb3CdOfYKArgV2NEMfNseuNIL4+mqIpMPSA=;
- b=Ag7ZPnZLIhSb4fJyo9bv1S20QbfCcT3EomYYUs3ule0aoqlGhvmE8wccWtI3nF517clBLfHQjbdqDD+VRtoA3YMpW4hR8bhx+cAVQ/78leyM8aXfAntOVKgJZ7fMUraONz5xjDizaXLIXq3TPTTXEGOp2sa22+uLPRfduHk31GU=
-Received: from SA9PR13CA0086.namprd13.prod.outlook.com (2603:10b6:806:23::31)
- by DM6PR12MB4468.namprd12.prod.outlook.com (2603:10b6:5:2ac::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Tue, 8 Apr
- 2025 22:57:24 +0000
-Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
- (2603:10b6:806:23:cafe::6c) by SA9PR13CA0086.outlook.office365.com
- (2603:10b6:806:23::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Tue,
- 8 Apr 2025 22:57:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Tue, 8 Apr 2025 22:57:23 +0000
-Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
- 2025 17:57:21 -0500
-From: Babu Moger <babu.moger@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <seanjc@google.com>, <pbonzini@redhat.com>
-CC: <x86@kernel.org>, <hpa@zytor.com>, <daniel.sneddon@linux.intel.com>,
-	<jpoimboe@kernel.org>, <pawan.kumar.gupta@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <perry.yuan@amd.com>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-Subject: [PATCH] x86/cpufeatures: Define X86_FEATURE_PREFETCHI (AMD)
-Date: Tue, 8 Apr 2025 17:57:09 -0500
-Message-ID: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtYp6JAk"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c1caacc1f7so3695936fac.3;
+        Tue, 08 Apr 2025 15:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744153174; x=1744757974; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pkDcBJ/oOVKPcufA8BKKqayVLGOZ4HCiJgAEI5ThhLg=;
+        b=jtYp6JAk4666BQPI0iymZrq+XWefkjMFUVNPz6bY10Y1R87DoeGyRUYlwJYLaeen1a
+         pv/aEmT9HWPxEWzr8RzG8oAxuyCntckijjkLwJK+oa7XN0vlLPf5k8cCQZ5auKtqJgJY
+         VtvLN5zIs2d9bJl9zCgCZ/k1yE0JMWpD7tqL8S0dq7CWCfrx/IuX2Z2VL4i7aq7Hh75S
+         Jclwj+3k/bQbVVRVFPmWKOEl3rDEaPkO+2MQU5VjxP9tzZDZKKJmj+7aRGCM4WS1ybZQ
+         IuDhbFzq06n12L4KHgW9bFOk+GSrwttQEY51nMrOq9r7Lj4ajdATaekFJ5MnvHntpRJO
+         S7Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744153174; x=1744757974;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pkDcBJ/oOVKPcufA8BKKqayVLGOZ4HCiJgAEI5ThhLg=;
+        b=eJWltND3vAQkLhHn2nFrv7SjlAojqbVDtTEIMW3FmhtH9CPJiSckMFxvYDf3HWDznZ
+         3kF9HSBgYqMWaruulCJh2RHHBkFuW3/PrE9edxvoMvhk7l/PhItxbKQxxKr/YJ06anOC
+         Eolx395bAsNAB6SSxBbB8M/+q1EjWfdkSTTfn1EgqDLdVsb7oHmmFoKlkTPvmWmMFnMN
+         VzVSwLfssnGRPva1HIQwpWYTfCrOsCSt45HKe3Uvij5gW/rl362KVi7moXYPRjnAFuIg
+         SZCktW5kgzSh4Z1DW8ikZ4WC9bSub+EsR5JY4jRiLjoNObWY3URRwnzGmCO2jWDOxJvN
+         dTXg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9M0VIK7gQan1jS1Mm71JmSBd37AVrCmKtsrtX84TZmX3E0JEndwYLBZTWuM9mJ0zWWH3PyTR4@vger.kernel.org, AJvYcCXSY04JK5HGhM74k18pLmDkqTVWStBK3uIJInzA6ltQ43fZifAAQhsemfhPTuiiHe/fTWk7CY4s5HjSdKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgYpeIQwIZ++qMk5i0wm54nFA07LgRTehFM97dAT6y3XFC4g30
+	Qp6Gn20fD/sXknrxMu9XsY/RIogOcAKQnZKQkl30KLtSEhV18wNk
+X-Gm-Gg: ASbGncsZF4xKd9pT2+jFeA6cJaD7Z+6yvJIuhI4gE8sjj34THl9ri3bc6nr6X6w+idr
+	8x2CBhrRZL0Q7khkP/S/o084KQziIKIFgaM2JV7bcOgt+ad1raoWOH3TvLkgYd/xX4IXP1HdaVy
+	GiZaDNZ9FVbeLbyh4pMvos89IDgIHKuG79fjCsTnAS+TIcKx5By7GBVuJE5qona/MmiRw9WOmlN
+	M4P3FkvJkuh1OsWcveCXLx49Aa+L/lGDm80j3dyz+srL0Pbca3WbOxpgnxDDMAUEHnu3YbOOldJ
+	VZJqKYSbTRDINgAwMqiMDCY4U1gZN8RO5pNLOyNxOicWjVZmeQUOgsF77vWACBiy9A8yuwwA
+X-Google-Smtp-Source: AGHT+IHpim01rEPiZ6UQ/H6fSpIL5PifTJj3vLc9mXL8VSN6dgPKWlZ1swy0NMpJLPIS+W4pMfJzqA==
+X-Received: by 2002:a05:6871:6504:b0:2cc:3586:294f with SMTP id 586e51a60fabf-2d08dd7faddmr514579fac.9.1744153174245;
+        Tue, 08 Apr 2025 15:59:34 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e6515c503sm624443a34.11.2025.04.08.15.59.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 15:59:33 -0700 (PDT)
+Message-ID: <c3a72fdd-6344-4f53-b4a7-eb87e346cd1f@gmail.com>
+Date: Tue, 8 Apr 2025 15:59:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|DM6PR12MB4468:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6257e5d0-7c82-4df7-3747-08dd76f0b97e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Vb9aZlFLtlhOI0FZfXPB1iZBcFudA3l4UbtKid+DXhlf0zOl5lxdcqsPyXVT?=
- =?us-ascii?Q?FMLcUolbQBv65BG7x8y5ZZZHshggXLTSJ0wm57S6Ba6pIv2qHUkhb8R6Eq3i?=
- =?us-ascii?Q?4KykCAqLOYwK3klT5v08NeiMTblNL111o4GF3P+WXbvyovITDsaB2IqPGw2e?=
- =?us-ascii?Q?CP1C0nBsazMskFwroENbqApSJDMJwvEry6u+a/D0h+yx5nxvDULKlLwkHp+H?=
- =?us-ascii?Q?zmOgcAuS9otWsFzzlEzFy4W+e6Qf1VK0N/yh1tY6Zz/v3wsQiwZ3bsBV6+iz?=
- =?us-ascii?Q?TgxWcSEIwATwYxAN22yU6XlfOzODYfUpT6pX4/wZsO+lvm6Y60Lmsthr8xJz?=
- =?us-ascii?Q?Rd2XoracVdvsevH6JqP6bO4ZK6Mrmg5L2l/uko73qYhnomYc0aMW3GsKcyUI?=
- =?us-ascii?Q?I9Yh5yuPkOaENGWJ4qnSe8FFhM5q9oNWK5E6CJsreVd0QJ4+Wh8CSkXaMYMX?=
- =?us-ascii?Q?cJa50xVU6W0R5hKKf1VAiaotVMsdZKjSsVeI8d07YEO1iq/hfeYy0yRLJuii?=
- =?us-ascii?Q?kzGilff7MD4oX2/0WLKJ7Gc5ZVl3J/Ph655Mv48gGIsyXQWlCtm6/Zy/VAqO?=
- =?us-ascii?Q?bO5TCRJFAgoartAaZW3v2mey0fuVnSlpvsfAOj1H5kfoCYxffteMzi4VXopY?=
- =?us-ascii?Q?ZbchTM5DIqO2coIkH3/RAF748skCJzXWXgmPTXB+HRqVcNbxzCA6zFhxVjUp?=
- =?us-ascii?Q?Ad9hKbHBpUHggNbOgMvGPp0Zhg0+FZn0DLlYmylWCLz3TNYAvNb5XboQuZLd?=
- =?us-ascii?Q?joONnRpJazBNulPe+r8qw+oYwqcYZwkrJizxdJVduXARESdWOgiIk0tCHm10?=
- =?us-ascii?Q?5sfmBe9cF3gOY/nq6NXK8e0B54HY+SrcQAhQsSFyerkZDcokk0KeLPW53vDx?=
- =?us-ascii?Q?4/gkexhIx/3Y4eOFxj3KrbSqTsFJrreJqlbD1vZUgBTp5rKD3FTbcZ8MYkPF?=
- =?us-ascii?Q?VtrPdz/2aa8w2r7QX1rKhIISjW5UBhKwCUuSIH9foN/JSNeCaC8mk1MwCrj+?=
- =?us-ascii?Q?jKQdnCQrVQ/ELYfm7T21cgaAMhtijktMt/t4IYuHh9nNq1qk42ACs7BY2Oa9?=
- =?us-ascii?Q?8oZfVSxpIBQ0R8ZniyvusxPSB6WDbACSVm3HwMhv0Fp3T41jInzk6iuMuziO?=
- =?us-ascii?Q?vKBFGUr1ZCuBrJx/LbDyYOeAqcK3F975lg660Rdtowmk+6jlnpUkKqEvsDHJ?=
- =?us-ascii?Q?LIs0zvCSTaC/dkV7GWBzshy7GMEduHirYNOeJwLXYlVVoe/RDWLc/n1xBOfS?=
- =?us-ascii?Q?snq7y/mH2WGyvU/YU9OC/c1+/bDhdGYnQ9eW3MeR3VKNFHK3fq5FPNk0U6qG?=
- =?us-ascii?Q?+rxnq9PZLx4FC+o0oO4JiQKAjQRXU+jKUeWGAlHhLHP10lxMCfYw5I1XmhmW?=
- =?us-ascii?Q?BOY/2s/pTBECThOmT8DA1qXwf88ih6m6Nc4yEAfTg1ZsZrfxTR+CFFuRDSde?=
- =?us-ascii?Q?HmAvcoQsjwpVYANpSY/h+TQpQS7gFvF0tyPc5S81gG3rXcnNsKE3N8n0ug/o?=
- =?us-ascii?Q?wC1cZMHwK4qxMXzwBhs2P/Lkn52XZOOsJGsF?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 22:57:23.2138
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6257e5d0-7c82-4df7-3747-08dd76f0b97e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3F.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4468
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.13 000/500] 6.13.11-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250408154123.083425991@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250408154123.083425991@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The latest AMD platform has introduced a new instruction called PREFETCHI.
-This instruction loads a cache line from a specified memory address into
-the indicated data or instruction cache level, based on locality reference
-hints.
+On 4/8/25 08:54, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.11 release.
+> There are 500 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 10 Apr 2025 15:40:28 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.11-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Feature bit definition:
-CPUID_Fn80000021_EAX [bit 20] - Indicates support for IC prefetch.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-This feature is analogous to Intel's PREFETCHITI (CPUID.(EAX=7,ECX=1):EDX),
-though the CPUID bit definitions differ between AMD and Intel.
-
-Expose the feature to KVM guests.
-
-The feature is documented in Processor Programming Reference (PPR)
-for AMD Family 1Ah Model 02h, Revision C1 (Link below).
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Signed-off-by: Babu Moger <babu.moger@amd.com>
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kvm/cpuid.c               | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 6c2c152d8a67..7d7507b3eefd 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -457,6 +457,7 @@
- #define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* Automatic IBRS */
- #define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* SMM_CTL MSR is not present */
- 
-+#define X86_FEATURE_PREFETCHI		(20*32+20) /* Prefetch Data/Instruction to Cache Level */
- #define X86_FEATURE_SBPB		(20*32+27) /* Selective Branch Prediction Barrier */
- #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* MSR_PRED_CMD[IBPB] flushes all branch type predictions */
- #define X86_FEATURE_SRSO_NO		(20*32+29) /* CPU is not affected by SRSO */
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 5e4d4934c0d3..fba018a730ab 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -1178,6 +1178,7 @@ void kvm_set_cpu_caps(void)
- 		/* SmmPgCfgLock */
- 		F(NULL_SEL_CLR_BASE),
- 		F(AUTOIBRS),
-+		F(PREFETCHI),
- 		EMULATED_F(NO_SMM_CTL_MSR),
- 		/* PrefetchCtlMsr */
- 		F(WRMSR_XX_BASE_NS),
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.34.1
-
+Florian
