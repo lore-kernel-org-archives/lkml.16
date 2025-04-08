@@ -1,239 +1,148 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DE720B7EC;
-	Tue,  8 Apr 2025 08:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D49320B7EF;
+	Tue,  8 Apr 2025 08:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101434; cv=none; b=cnuAZaY9KC7rJ3aUrftQ16Ajbn/uRR2R6x4Hm5G0VG1gbPw+Xyt36v1ZHgdpxS45O5aCjT5kG7/qIymsIJSxPpzz42oOnNIOfVDpeFSjHp4Khk+EYn1bZkfCGcconBc9brFLiZ18CNMazBbgK+oubLbgTWyg9efKVKqTt1NNiCw=
+	t=1744101447; cv=none; b=UbMDXEBc8X0JLNkCQf/RqtkB6/3c6TbUe5oJW/mYGxepkDfRBdf4JVAXWD7tjc6JN0/0VLWISjN2NJ+7Meltz9SMmNqCPEMuH+btfkmoFR8wW17DnpvO/8Tgjux6j6juo//+3z2hDQWBVGnaXTs66qiJduKZUunaYsUBtzUJhbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101434; c=relaxed/simple;
-	bh=K9C0JphMEsB+BGyp/ZiBIvH6E0mI+CzVtAzpoaBH0Dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dSEgAw+dRTpgKrGy7RLZMJt2ghxTovBWq+5w945YpUi/+lNZwTdkvSM2RFp7nk/iSeErzO2UcolT2DFaVpencARzRzy20J7B9IDu7fjfsgutI86KwvjxgGGbc5BxhuAiEeJMgf05srCBy3qOE3nzETXkpz2YmNl8uV1017lDvSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 34BE243291;
-	Tue,  8 Apr 2025 08:36:53 +0000 (UTC)
-Message-ID: <d5684f27-9676-4393-833a-390ccc244b73@ghiti.fr>
-Date: Tue, 8 Apr 2025 10:36:53 +0200
+	s=arc-20240116; t=1744101447; c=relaxed/simple;
+	bh=SvXSy4Bwc8FNM6LghY0/XjdUPptV5lIp/P0jRiL6ISQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UKMsTCGD+6X+PizKMr5Y2vBrzyrJJZfTaDvNiI7p195AKefeRlO83cW611sXvt6WO1Sv8gSXCT3D9I/UalDZki4Shjt/IKr5/mGU+v6q6pvKpknvNNMMMOae2X7SFsO4mJrzD8BSNa9Q46JTxwmMLSHEk++wjTbF0aMIgPBKIag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yp4ZVFaS; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yp4ZVFaS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744101446; x=1775637446;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SvXSy4Bwc8FNM6LghY0/XjdUPptV5lIp/P0jRiL6ISQ=;
+  b=Yp4ZVFaSQpqGEYLu8ekNDOaaYlTNkOUuohFUTNz4WNThBtGYMcJNzLDG
+   z0pCHK/o+7DF24wbNb3q0g71QPrkKIhybJ6ZSRWnbpg5OlTmnf4O+f4Gn
+   1dtn8j2HtXO/BFj1uRp9ovKFLsH5f9fqx2zSBvBVYWnceEId/km4Ehk0u
+   d2VrptegYZSNj4mBiQGsSx9t5cOSOIMYin0VxF5oEY40D1y8p4OVaLI8O
+   cTIpmDrMRuy+dYVboG6Ijgo+glsHxHAHJSHhin59rtE2jXkdS6ftbIfw3
+   Gocb120mGJGSyVj8TlpyD3cp1OJ8q4tGsUmexIXQI65eMVTT7KLtScnyL
+   Q==;
+X-CSE-ConnectionGUID: gvtAdtUSTJymApEX919Tug==
+X-CSE-MsgGUID: pqcemKqCRvmcZ353Ayq4Wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="67994266"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="67994266"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:37:25 -0700
+X-CSE-ConnectionGUID: jpTNmXQaT9+L7DNYwIqmJw==
+X-CSE-MsgGUID: ikIri5WYRNCpI9WfHswheQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="128533582"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:37:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u24SN-0000000ALAx-1TUY;
+	Tue, 08 Apr 2025 11:37:19 +0300
+Date: Tue, 8 Apr 2025 11:37:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	devicetree@vger.kernel.org,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/2] device property: Add optional nargs_prop for
+ get_reference_args
+Message-ID: <Z_TgP0epJ3cJzlUt@smile.fi.intel.com>
+References: <20250407223714.2287202-1-sean.anderson@linux.dev>
+ <20250407223714.2287202-2-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 26/28] riscv: Documentation for landing pad / indirect
- branch tracking
-Content-Language: en-US
-To: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Christian Brauner <brauner@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com,
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
- rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-26-e51202b53138@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-26-e51202b53138@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddviedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeegledprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegsp
- hesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407223714.2287202-2-sean.anderson@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Mon, Apr 07, 2025 at 06:37:13PM -0400, Sean Anderson wrote:
+> get_reference_args does not permit falling back to nargs when nargs_prop
+> is missing. This makes it difficult to support older devicetrees where
+> nargs_prop may not be present. Add support for this by converting nargs
+> to a signed value. Where before nargs was ignored if nargs_prop was
+> passed, now nargs is only ignored if it is strictly negative. When it is
+> positive, nargs represents the fallback cells to use if nargs_prop is
+> absent.
 
-On 14/03/2025 22:39, Deepak Gupta wrote:
-> Adding documentation on landing pad aka indirect branch tracking on riscv
-> and kernel interfaces exposed so that user tasks can enable it.
->
-> Reviewed-by: Zong Li <zong.li@sifive.com>
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   Documentation/arch/riscv/index.rst   |   1 +
->   Documentation/arch/riscv/zicfilp.rst | 115 +++++++++++++++++++++++++++++++++++
->   2 files changed, 116 insertions(+)
->
-> diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
-> index eecf347ce849..be7237b69682 100644
-> --- a/Documentation/arch/riscv/index.rst
-> +++ b/Documentation/arch/riscv/index.rst
-> @@ -14,6 +14,7 @@ RISC-V architecture
->       uabi
->       vector
->       cmodx
-> +    zicfilp
->   
->       features
->   
-> diff --git a/Documentation/arch/riscv/zicfilp.rst b/Documentation/arch/riscv/zicfilp.rst
-> new file mode 100644
-> index 000000000000..a188d78fcde6
-> --- /dev/null
-> +++ b/Documentation/arch/riscv/zicfilp.rst
-> @@ -0,0 +1,115 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +:Author: Deepak Gupta <debug@rivosinc.com>
-> +:Date:   12 January 2024
-> +
-> +====================================================
-> +Tracking indirect control transfers on RISC-V Linux
-> +====================================================
-> +
-> +This document briefly describes the interface provided to userspace by Linux
-> +to enable indirect branch tracking for user mode applications on RISV-V
+And what is the case to support old DTs on most likely outdated hardware?
 
+...
 
-s/RISV-V/RISC-V and add a dot at the end of the line.
+>  	ret = fwnode_call_int_op(fwnode, get_reference_args, prop, nargs_prop,
+> -				 nargs, index, args);
+> +				 nargs_prop ? -1 : nargs, index, args);
 
+>  	return fwnode_call_int_op(fwnode->secondary, get_reference_args, prop, nargs_prop,
+> -				  nargs, index, args);
+> +				  nargs_prop ? -1 : nargs, index, args);
+
+I don't understand why it's needed here. The nargs_prop is passed to the callee.
+
+...
+
+> -				 unsigned int nargs, unsigned int index,
+> +				 int nargs, unsigned int index,
+
+As per above.
+
+...
+
+>  		error = property_entry_read_int_array(ref->node->properties,
+>  						      nargs_prop, sizeof(u32),
+>  						      &nargs_prop_val, 1);
+> -		if (error)
 
 > +
-> +1. Feature Overview
-> +--------------------
-> +
-> +Memory corruption issues usually result in to crashes, however when in hands of
+
+Stray blank line.
+
+> +		if (error == -EINVAL) {
+
+Why do we need an explicit error code check? This is fragile. Just check the
+parameter before calling the above.
+
+> +			if (nargs < 0)
+> +				return error;
+> +		} else if (error) {
+>  			return error;
+> -
+> -		nargs = nargs_prop_val;
+> +		} else {
+> +			nargs = nargs_prop_val;
+> +		}
+
+...
+
+>  of_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
+>  			     const char *prop, const char *nargs_prop,
+> -			     unsigned int nargs, unsigned int index,
+> +			     int nargs, unsigned int index,
+>  			     struct fwnode_reference_args *args)
+
+Same comments as per above.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-s/in to/into?
-
-
-> +an adversary and if used creatively can result into variety security issues.
-
-
-"into a variety of security issues" ?
-
-
-> +
-> +One of those security issues can be code re-use attacks on program where adversary
-> +can use corrupt function pointers and chain them together to perform jump oriented
-> +programming (JOP) or call oriented programming (COP) and thus compromising control
-> +flow integrity (CFI) of the program.
-> +
-> +Function pointers live in read-write memory and thus are susceptible to corruption
-> +and allows an adversary to reach any program counter (PC) in address space. On
-> +RISC-V zicfilp extension enforces a restriction on such indirect control
-> +transfers:
-> +
-> +- indirect control transfers must land on a landing pad instruction ``lpad``.
-> +  There are two exception to this rule:
-> +
-> +  - rs1 = x1 or rs1 = x5, i.e. a return from a function and returns are
-> +    protected using shadow stack (see zicfiss.rst)
-> +
-> +  - rs1 = x7. On RISC-V compiler usually does below to reach function
-> +    which is beyond the offset possible J-type instruction::
-> +
-> +      auipc x7, <imm>
-> +      jalr (x7)
-> +
-> +	Such form of indirect control transfer are still immutable and don't rely
-> +    on memory and thus rs1=x7 is exempted from tracking and considered software
-> +    guarded jumps.
-> +
-> +``lpad`` instruction is pseudo of ``auipc rd, <imm_20bit>`` with ``rd=x0`` and
-> +is a HINT nop. ``lpad`` instruction must be aligned on 4 byte boundary and
-> +compares 20 bit immediate withx7. If ``imm_20bit`` == 0, CPU don't perform any
-
-
-s/withx7/with x7
-
-s/don't/doesn't
-
-
-> +comparision with ``x7``. If ``imm_20bit`` != 0, then ``imm_20bit`` must match
-> +``x7`` else CPU will raise ``software check exception`` (``cause=18``) with
-> +``*tval = 2``.
-> +
-> +Compiler can generate a hash over function signatures and setup them (truncated
-> +to 20bit) in x7 at callsites and function prologues can have ``lpad`` with same
-> +function hash. This further reduces number of program counters a call site can
-> +reach.
-> +
-> +2. ELF and psABI
-> +-----------------
-> +
-> +Toolchain sets up :c:macro:`GNU_PROPERTY_RISCV_FEATURE_1_FCFI` for property
-> +:c:macro:`GNU_PROPERTY_RISCV_FEATURE_1_AND` in notes section of the object file.
-> +
-> +3. Linux enabling
-> +------------------
-> +
-> +User space programs can have multiple shared objects loaded in its address space
-> +and it's a difficult task to make sure all the dependencies have been compiled
-> +with support of indirect branch. Thus it's left to dynamic loader to enable
-> +indirect branch tracking for the program.
-> +
-> +4. prctl() enabling
-> +--------------------
-> +
-> +:c:macro:`PR_SET_INDIR_BR_LP_STATUS` / :c:macro:`PR_GET_INDIR_BR_LP_STATUS` /
-> +:c:macro:`PR_LOCK_INDIR_BR_LP_STATUS` are three prctls added to manage indirect
-> +branch tracking. prctls are arch agnostic and returns -EINVAL on other arches.
-> +
-> +* prctl(PR_SET_INDIR_BR_LP_STATUS, unsigned long arg)
-> +
-> +If arg1 is :c:macro:`PR_INDIR_BR_LP_ENABLE` and if CPU supports ``zicfilp``
-> +then kernel will enabled indirect branch tracking for the task. Dynamic loader
-
-
-s/will enabled/will enable
-
-
-> +can issue this :c:macro:`prctl` once it has determined that all the objects
-> +loaded in address space support indirect branch tracking. Additionally if there
-> +is a `dlopen` to an object which wasn't compiled with ``zicfilp``, dynamic
-> +loader can issue this prctl with arg1 set to 0 (i.e.
-> +:c:macro:`PR_INDIR_BR_LP_ENABLE` being clear)
-> +
-> +* prctl(PR_GET_INDIR_BR_LP_STATUS, unsigned long arg)
-> +
-> +Returns current status of indirect branch tracking. If enabled it'll return
-> +:c:macro:`PR_INDIR_BR_LP_ENABLE`
-> +
-> +* prctl(PR_LOCK_INDIR_BR_LP_STATUS, unsigned long arg)
-> +
-> +Locks current status of indirect branch tracking on the task. User space may
-> +want to run with strict security posture and wouldn't want loading of objects
-> +without ``zicfilp`` support in it and thus would want to disallow disabling of
-> +indirect branch tracking. In that case user space can use this prctl to lock
-> +current settings.
-> +
-> +5. violations related to indirect branch tracking
-> +--------------------------------------------------
-> +
-> +Pertaining to indirect branch tracking, CPU raises software check exception in
-> +following conditions:
-> +
-> +- missing ``lpad`` after indirect call / jmp
-> +- ``lpad`` not on 4 byte boundary
-> +- ``imm_20bit`` embedded in ``lpad`` instruction doesn't match with ``x7``
-> +
-> +In all 3 cases, ``*tval = 2`` is captured and software check exception is
-> +raised (``cause=18``)
-> +
-> +Linux kernel will treat this as :c:macro:`SIGSEV`` with code =
-> +:c:macro:`SEGV_CPERR` and follow normal course of signal delivery.
->
