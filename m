@@ -1,86 +1,103 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from wiki.archlinuxcn.org (wiki.archlinuxcn.org [104.245.9.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20302267F70;
-	Tue,  8 Apr 2025 10:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AA82206A2;
+	Tue,  8 Apr 2025 10:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.245.9.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108244; cv=none; b=eflYHZ44NbDdKRSqsP5r3SdhGSKTOGYjxAP18X6VIfXDqF9zz70cf+WxkRTns8BC6R7QD/ytSE0BGtUZyRonHojDOvIJ0pGesGirWlPFVliPSnqhJ43bZ2LtjimhM9drkyNdUy/0KXCa9/hgHnOdjEsV+0on05B/x1iaAnSv600=
+	t=1744108309; cv=none; b=ZOOXVsmvBP6M37MAtaPYRH0dRCvWIjuCN5+ckvk7RfLwnr+fznmwFarjujN8D3r7OXWj70kpHboP5QJIBt//CY644/vbsJw9QSWYgYMnWD/64oArrTiZ9BTRRjzqmynl1xdwFbynQj048gWz5300lZv+zpOm6vbxpZbEAZt0wKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108244; c=relaxed/simple;
-	bh=P6q7ocM2fZ/JCZfHXicwSxGd25qScXXfymOe1Sn5MXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GG3Zs3edl8Z3x1ptR6XvjA7YpNC8cGvVPBD54CSn5k5UUm2E89el1vhb6bsAxkmj8jew/Z+c4NTttWxsEw6wDKsdEz7NBIeSUytJCW6xYdkAtjZAeC1b0qXMueW+lMfKlJFcwb5JZyT0n9XNguNOrzVeLZcFcqmftx3KHKlpp5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=mUZpaISE; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744108309; c=relaxed/simple;
+	bh=PJ/j1iUqd0Rk3qLfk/yW/HjEuRuM5rVtIl+dWeNuOPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K2jmeYqoXHJWYNSwdZRr0piQcWtKAMmgpkIjXl5I7Uzp84FmP9vxiHMF/U0eJr7UqJh86yOL3QpbXc7hsftBpp+Fo8fvActlmubpf+hycXvqkOrq/PWzTSA9hgFNtpd92axIG+ahNCCOtE7tLEI+Joz7TWJL0a5Uc7A0DZDhJJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=archlinuxcn.org; spf=pass smtp.mailfrom=archlinuxcn.org; dkim=pass (2048-bit key) header.d=archlinuxcn.org header.i=@archlinuxcn.org header.b=vyftkwxj; arc=none smtp.client-ip=104.245.9.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=archlinuxcn.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinuxcn.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mUZpaISE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=aPK8UeRUdmmCTq0T/PPSZ9uFgrIh4Dpxqt0k3+h/cv8=; b=mUZpaISEpFvcYPJ+/0U5A7pk/T
-	u14ZK/VEpYGBy5UZ+sRus7i+I/C8uQ+nIVlS5qoRNmcKvta2OYRd44tAg42Ftb9c6MH0SKg1Ed3wK
-	fFpvoKGwqn2Od2duEMsfwKEEc7sHgNZPORuBbVJm85McUZ6DeuoPV4B6dVx51UwnheAQRnCbqLh0y
-	ZGQ1yNgZM7UdQH7MY6Y9Q8DlUZkde7j+1Ni6RYkJgLunNjrJ9/v4uvGAuyMWErwBpLEq5NjuAu7PX
-	4TIYM+c1sVbbd0cYbx4k9KdkJyZR2pGgu6Rkd+z1twmYCbfOtt7bv1Z1QoBBoKk2cA6w+c1E55gbr
-	R4KvywQA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53706)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u26Du-0007CZ-0P;
-	Tue, 08 Apr 2025 11:30:30 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u26Dm-0001Lq-1p;
-	Tue, 08 Apr 2025 11:30:22 +0100
-Date: Tue, 8 Apr 2025 11:30:22 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Frank Sae <Frank.Sae@motor-comm.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
-	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
-	horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
-	geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
-	fei.zhang@motor-comm.com, hua.sun@motor-comm.com
-Subject: Re: [PATCH net-next v4 00/14] yt6801: Add Motorcomm yt6801 PCIe
- driver
-Message-ID: <Z_T6vv013jraCzSD@shell.armlinux.org.uk>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+	dkim=pass (2048-bit key) header.d=archlinuxcn.org header.i=@archlinuxcn.org header.b="vyftkwxj"
+DKIM-Signature: a=rsa-sha256; bh=fBUwH/TXDriRMaqhNspfOTIAoeBApUAl/ZQPgSW7+mU=;
+ c=relaxed/relaxed; d=archlinuxcn.org;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@archlinuxcn.org; s=default; t=1744108296; v=1; x=1744540296;
+ b=vyftkwxjpX1Qlrdyh2TgaHRRPlUM6JtIvTwaeuo2de0v1LEvQE52ZONZjtwKAcFRUUX4tpqf
+ xy+R9nB9fIou/qAi2rBoQryFDYyKN3qWfx9/pMxsW6w3wo4Z9326lJTfnJLhUZjMoL+vCtQ0WM8
+ SyfiFBubjkMkB1+UpXGbaP7VC/3Y1kQVwKNyWwPJylXXO1J9d5bHOPdDfpmkFDUqoGvGmZX7/lS
+ b8I1g6kpe3rfjwJRpaqjti+tkHmwfxQ4ziOmndjSxhjdEzPkzMoVUgJbeFpZ2aHHpuIOqM0EmYc
+ 8va/Jf4gHS2+OISQehKjgJ32ITm2xAvUTpRQp0WFE5Stw==
+Received: by wiki.archlinuxcn.org (envelope-sender
+ <integral@archlinuxcn.org>) with ESMTPS id b79ffc12; Tue, 08 Apr 2025
+ 18:31:36 +0800
+From: Integral <integral@archlinuxcn.org>
+To: kent.overstreet@linux.dev
+Cc: integral@archlinuxcn.org,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] bcachefs: indent error messages of invalid compression
+Date: Tue,  8 Apr 2025 18:31:29 +0800
+Message-ID: <20250408103129.61829-1-integral@archlinuxcn.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <sd4nbvk24h5aiooqkzczyqfc33t7triwlsrp4neyd6wovmodak@lwvvuurcehbu>
+References: <sd4nbvk24h5aiooqkzczyqfc33t7triwlsrp4neyd6wovmodak@lwvvuurcehbu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 05:28:21PM +0800, Frank Sae wrote:
-> This series includes adding Motorcomm YT6801 Gigabit ethernet driver
->  and adding yt6801 ethernet driver entry in MAINTAINERS file.
-> YT6801 integrates a YT8531S phy.
+This patch uses printbuf_indent_add_nextline() to set a consistent
+indentation level for error messages of invalid compression.
 
-What is different between this and the Designware GMAC4 core supported
-by drivers/net/ethernet/stmicro/stmmac/ ?
+In my previous patch [1], the newline is added by using '\n' in
+the argument of prt_str(). This patch replaces prt_str() with
+prt_printf() to make indentation level work correctly.
 
-Looking at the register layout, it looks very similar. The layout of the
-MAC control register looks similar. The RX queue and PMT registers are
-at the same relative offset. The MDIO registers as well.
+[1] Link: https://lore.kernel.org/20250406152659.205997-2-integral@archlinuxcn.org
 
-Can you re-use the stmmac driver?
+Signed-off-by: Integral <integral@archlinuxcn.org>
+---
+ fs/bcachefs/compress.c | 4 ++--
+ fs/bcachefs/opts.c     | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
+index d68c3c7896a3..1bca61d17092 100644
+--- a/fs/bcachefs/compress.c
++++ b/fs/bcachefs/compress.c
+@@ -714,7 +714,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+ 
+ 	ret = match_string(bch2_compression_opts, -1, type_str);
+ 	if (ret < 0 && err)
+-		prt_str(err, "invalid compression type\n");
++		prt_printf(err, "invalid compression type\n");
+ 	if (ret < 0)
+ 		goto err;
+ 
+@@ -729,7 +729,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
+ 		if (!ret && level > 15)
+ 			ret = -EINVAL;
+ 		if (ret < 0 && err)
+-			prt_str(err, "invalid compression level\n");
++			prt_printf(err, "invalid compression level\n");
+ 		if (ret < 0)
+ 			goto err;
+ 
+diff --git a/fs/bcachefs/opts.c b/fs/bcachefs/opts.c
+index cd7b0cd293c7..f35fde896253 100644
+--- a/fs/bcachefs/opts.c
++++ b/fs/bcachefs/opts.c
+@@ -365,6 +365,7 @@ int bch2_opt_parse(struct bch_fs *c,
+ 		   struct printbuf *err)
+ {
+ 	ssize_t ret;
++	printbuf_indent_add_nextline(err, 2);
+ 
+ 	switch (opt->type) {
+ 	case BCH_OPT_BOOL:
+
+base-commit: 4d37602fceff942694069cf33cc55863277bd1c2
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.49.0
+
