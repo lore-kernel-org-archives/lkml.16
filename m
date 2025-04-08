@@ -1,144 +1,145 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D0C1E4BE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB4421ABAC
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096526; cv=none; b=GerOZWSnl+4au5A2s/z28v5sTEasCtMnh1zrvev8KEBr2j/hTfY+wILKvrRpqByj8LZo7JhVbBzQxPK21/u2LQrIj6ZALAr8foXuzaVHcvClNAqcWbfSnVDpdbvcsR5SMWNTl9b5rXNu1GHPuikBuKsLuYnoHQK449vbYYkIJcQ=
+	t=1744096671; cv=none; b=VJR0/EEJabbC0kLzigSQzT9CBWEs3su2D8mpUIcQzPf7KsHzuNBKGHs/EGV2VLKI7m9edG5cAh8V88na+OzWHY0kHWWS02icCtwxTuTx7r9ehHEYwkS+PoEfhyAt/rpdm6/5Srl10AGtnujC603mxXOHvnT9q05YIypZQZCMGgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096526; c=relaxed/simple;
-	bh=2OQmR7mRWtvtKjyh0z/59iR1+/cvbohWxA1sKXFqnDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ML+spqnNcGOumjjcq32IXgdSs0cbJ1h9xU7IYnH3Clz9ruxUBNMNkrutlt/zBqs6AS2yR7ddipFzPiBPmmlViQV0fr4zAQ5p7512HZeAB0pA15wRnJYOlmWRASfdIPeikpydMRVcTeY0uS4uRlIMt6uC2qdgtH8cRhnq0PeN3Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fZaJeQRE; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744096671; c=relaxed/simple;
+	bh=URqhQAHIhJ98p7iATPuB6NMM3MUefZcysEx+qAGhUqs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X6smfQF7bfU6+L0hv8kbvFoqTY7/NYH0DNJXMj9k/7wBWYer1g5T2Xn73PeARkQzvkiNhqXPIl1zElJF/b3Y00XKsPmaqxe3Qe5Jz3tmRc/IBPCf+hgsUX68GA4OY9h9ilYXXzBV0KpFKmRM3hM1+hMZ+LlvG0Lm1+/BKXqU3Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=thM1J1Ny; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fZaJeQRE"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so8965060a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:15:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="thM1J1Ny"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso33113945e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744096523; x=1744701323; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O+i2Xik3+39ZL2udNnhfnH82XMLPSIJDczg397VweSM=;
-        b=fZaJeQRE32txkkiZfBTljjaK8RFg84IFtPt/Vy7E4bvpt0jLfYuZu+9CdOMQPlV3Hd
-         nq0cDJxeKlNe7zfD0S6iAdz0iFFnl7LadJW2eBCYI2QBxBz0rqlKT6pcNeYp8qjuSBvz
-         d9idzTHpmPgStRAPbuUqYcRTGDVZGrqnC/8hmIeWMIyOHkrPzNPsek5JmUxbOmGvWv9a
-         CP98xiHV007J1o0PaCj7fnJn6RVjLhQOI961Dn5fw1EAh5BZ8uVrwPCIYwQbOZUPPoZm
-         DgPPYSHeYuSTK8WgktKYVMg0JuZNyI50OD0BCK4yC5a5l50WTqQIsxK1ZYYyipRYrMMh
-         bGGw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744096668; x=1744701468; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yx1TIqghntnSkzos2ma1rb18OugfZ01/6UPIvIRogGo=;
+        b=thM1J1NytIHO2cLBvpxQqvX8wGgVuJ9IjMPwo9IgujQAsy7VLy0ZjVVcT9BzbXPF5e
+         1rY6FiB/taonIfXLO6MXUatIsFdmNmTSprki4swLcJfjMA+Rikg2norOIZkt9NguC6kO
+         /LQchKEGRkmKSscJDHRSVNqiAn/cjxncgHOxSxWxzhtEgi8JWeAchXGzXMSOXX9aA0Gm
+         1kWqoUokbgfeGkH+2hX5LVa8iN2yT5d1agSJ4r+5BmT4vkZ+eXifDQ6Awb1CCGtMSXdl
+         bHtWCajDePN2rVl50M+Vo2fiN9UIb2z/4vBYps+v9r0eyvkRVpBfU2GIjTBu9zSLByLT
+         Fm/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744096523; x=1744701323;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O+i2Xik3+39ZL2udNnhfnH82XMLPSIJDczg397VweSM=;
-        b=cnVdvxHxicBg/TRwD3kQwihnAqK6mkdm4dMxS+Qy1DkkIapB44t8sdtv+N0RtgPRA1
-         gIv9Bue+EZCwmSuXOcGjTTT/R/ZF8ILHPXeK8vRSc5xjhhHNhb1aebuDz5gfX9P/3DSb
-         o8CnjYk99FHyR2WJPLgscxGMfxtsUDrUVXlUtN4iiia+la7CUf2EfwESgLoA01b3Gv+l
-         2Q55PKkyuqIw8fIVIQnfnqEULXg1GL4rnFnFvZBApL5l97tKLJcORkLkrXl6rna5/Ppd
-         qb6i6By3Ble5PS1h6OaOnrCOZyHTtY525jly6S6MQzLtSV0BjLZ7mAIR62kmwhhxqrPg
-         66yA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8S0OI0FoAcQqCYu1HHErUaH7OI8jjw6EwwsrRvMf8RY9LnnI1si5ibLsfSjz5jIr8mgdsChdQBPBXTZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWeBDYwDF9yKdWHcW7AE+MGnOgCTgr5jbJnqb1Ju6KQZBvefBJ
-	+9Q2KAbfFEHIUQUJJTI1IeqdrJ5NgYckV8Uy8IK/UYL5UHnsauma7vT/wF22hT0=
-X-Gm-Gg: ASbGncuNljEytf7e7PSkg4U46JV0zkHh2PzrcgvDQuG+akZh54GU685FpzpLOcNex9Z
-	ybP3oOhLcBPjMatgfQ7XZN0sZmcp/0oFCuCh4Szjmp0eUztkX/vPVLqfKosWujmEJuy7/Dq2lYu
-	H8Biu0k9O+mhb4QzJCx4AK+BWou5DB9zJ5Kcn0G8LPEmoU20RhqLIohjMDJR3uacrk8J4P3YptE
-	fX57Y/8X8fzeaVfjncWqoBN36YTWaR+E0EkpvzNlEY1bU9JMGx8DMy8U61T3U1CrDBm/HtXQDX2
-	xsnx2ZaoBCTrQBMlFHfn4+zzA+jWaa93uAQi0+nnhmSTFeMCwA==
-X-Google-Smtp-Source: AGHT+IFhUpOqIsWkQdwVxQ7C/6KZC+/pD1emRBUF9cWPtulP0plPyoTTI1Vt9BX41dH3B2vSU/uYIQ==
-X-Received: by 2002:a05:6402:3489:b0:5e7:b015:c636 with SMTP id 4fb4d7f45d1cf-5f0b3b65b4cmr10076863a12.6.1744096522642;
-        Tue, 08 Apr 2025 00:15:22 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.133.214])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f08771a1c6sm7825812a12.11.2025.04.08.00.15.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 00:15:22 -0700 (PDT)
-Message-ID: <68b2f901-c179-4a53-8464-d9644371ce42@suse.com>
-Date: Tue, 8 Apr 2025 10:15:20 +0300
+        d=1e100.net; s=20230601; t=1744096668; x=1744701468;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yx1TIqghntnSkzos2ma1rb18OugfZ01/6UPIvIRogGo=;
+        b=D1WMBZl5sX8Wdh7cFyhpB4m601nPkOiYYKwaTNFFQto52hl5gKxXW2z48pAeMxtpgB
+         pYJvuany77tqyMWcezRYdeuFrXbgTUYjQwTvMAWoYj2kvdto4QIgxcng3iVcVKZhOG0b
+         /NP1E6OTGtto2rRQW7APui9GPtgv/a0aW32HXXObl3b2UaBYGhstXahB98JW2el2TS8N
+         tRIHUVAjP/3H7QjL5UUL3NOjG2kYkwTU38smJhxEzE339njGRvG0hOp+NGgSS3QlWNN8
+         R1vDnc8BzVcgZv+uCydIUb1AudWtwjnwogjKs0CB5EUVT0t8s24sxZrGuYouEtTrcXLg
+         4gZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFmN34cjTqEI7XXAtkxHd8fS+v4DjOdo6XOFPvMP49QsAlrzbQMXCu1tHQmZ8kKZ1vwblBX9KRr7eFbrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAhKueyHlz6zrVMocgZSPJ/dEEN8Txks/zTNcB2awgM8OkoIGe
+	H428Lw++1PFsG6t0se23p+D6IXl9mNHPVXiRkIdRYkG40pZYAL36Ja+y9EYaPrmxNceqnQR9u1Y
+	v9Fg=
+X-Gm-Gg: ASbGncskk7DKM2ERKnAFH04+tzCDkSsRVZ47cwRxysE1w93s6H0Ut0DU+pCglq9vJ2x
+	SUMVgKwL9Bb3Bw5PR2MtWTVBQCbSlWv+6lCtHP/XhSzt4ca9+7JxeZduyUJODZwjz7BoTErV4zx
+	y+CU3RGY2fNpVCiuDZY/QPCiMiY2/JMOsqJAOkIuhBiIYDPX/6U4kW4FH/0yU/q/zltS06uh8hZ
+	GS3gkvzRSjjlIgtCwEEmW1PcnHYyrhpdFkzeva0j7CXmE68+8Qv5OyUjBI0h1SWqTXw/I2v1pIv
+	zeMq6QJDB7LUdjQ79ZFSufP9KjbqYiVZsN9OOQ==
+X-Google-Smtp-Source: AGHT+IEkbTOHKioAtONGgwkvAsGOsKfAqzUbUYimlR3mk/qE5gxQcFOeHUOtlCWwIcIjPL5dhBZ8bQ==
+X-Received: by 2002:a05:600c:5394:b0:43e:bdf7:7975 with SMTP id 5b1f17b1804b1-43ed0db4aa5mr109160625e9.32.1744096668295;
+        Tue, 08 Apr 2025 00:17:48 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:17:47 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/10] pinctrl: convert GPIO chips to using new value
+ setters
+Date: Tue, 08 Apr 2025 09:17:37 +0200
+Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/6] x86/bugs: Fix RSB clearing in
- indirect_branch_prediction_barrier()
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
- kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
- bp@alien8.de, tglx@linutronix.de, peterz@infradead.org,
- pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
- dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
- pbonzini@redhat.com, daniel.sneddon@linux.intel.com, kai.huang@intel.com,
- sandipan.das@amd.com, boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
- david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
-References: <cover.1743617897.git.jpoimboe@kernel.org>
- <27fe2029a2ef8bc0909e53e7e4c3f5b437242627.1743617897.git.jpoimboe@kernel.org>
- <d5ad36d8-40da-4c13-a6a7-ed8494496577@suse.com>
- <ioxjh7izpnmbutljkbhdqorlpwtm5iwosorltmhkp3t7nyoqlo@tiecv24hnbar>
- <86903805-569a-41d5-93d8-df8169e61cef@suse.com>
- <j75r3jm5sujsn3hhf5prto3vcnl4nitsiqb5fp4rlwgqhlwylu@ofi3g6valzu2>
-Content-Language: en-US
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <j75r3jm5sujsn3hhf5prto3vcnl4nitsiqb5fp4rlwgqhlwylu@ofi3g6valzu2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJHN9GcC/x3MwQqDMAwA0F+RnA003RS3X5EdJMs0IDWkRQbiv
+ 1s8vss7IIurZHg3B7jsmnVLFdQ2wMuUZkH9VkMMsQuP2ONsuvGihlkK+o6miYuvaJMXQg5CQsO
+ LOD6hHuby0//9j5/zvAB86B6ZbwAAAA==
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1922;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=URqhQAHIhJ98p7iATPuB6NMM3MUefZcysEx+qAGhUqs=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2VxiGLfOGc8w7N9uwqlmDQaQy+QYBveZRbX
+ IiqtfRBBzyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNlQAKCRARpy6gFHHX
+ cnsRD/9ICdXa8mwRQHn7n5c64t6ndqQWY8pEkRiqIbPQmkznn9iJP58U1NzQQ8sefnwUleqgAEE
+ R5FhdR//yzS06E0Ysx0XCDSeqHGzP5jCtZhVqs6swdonrx3uWzWjg5KKLb+rERYLO/PQ2DHua5q
+ Q/j8m8DsnDyNbSyxT5fdV4QgwF0n4f63Lfex3iZbzKr/xapVvgZuEIsOKLHwPE7/mzUO6y/e5Yj
+ HcHloTKFv/uQHvWbsZcAgFM/QtH2SGQip3cdTnDr/KcSIH29DnzdoXka4ZxVHL4iAapQhhZVUJ5
+ m7y3e+r4jHZEsTI7agyFD1QUfvzFDT/Xdrz0WmEZU9ChuHEEMedVnuDjPxJwtZd5aHXI7IOWT2Z
+ 329DjZ/YDcVXMG4I9X6e0nbLFIEjyJdoAXOwVUmab3gVTzLQKqLbMq1+17hDJ4U0zDX3HZ35Vko
+ yHsqspCRKZSsmnXFjMhDXr0EBqhWfJ+GO9eH2J8FuZMxf/lSHqmWWc7p9WeV6a2xZXKxeHU3X9C
+ XJIJZAMqh+rv5lFnE/iaTBzT180rr4tNSDyO1YSx/Zb8NL+FVg3ODUkOSYCZwfWXX/0z6OEGnoH
+ p3cEU9ef8U6YcFbt+uPm+pdhD4QY/KaM947VDfxr8SK9xopbXadzRaI/lAAa4kqwUd5OFwtIexS
+ oJ5sbidkFTFEqUA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of
+converting all GPIO drivers to using the new API. This series converts
+the first part of pinctrl GPIO controllers.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (10):
+      pinctrl: at91-pio4: use new GPIO line value setter callbacks
+      pinctrl: rk805: use new GPIO line value setter callbacks
+      pinctrl: abx500: enable building modules with COMPILE_TEST=y
+      pinctrl: abx500: use new GPIO line value setter callbacks
+      pinctrl: meson: use new GPIO line value setter callbacks
+      pinctrl: amlogic-a4: use new GPIO line value setter callbacks
+      pinctrl: sx150x: enable building modules with COMPILE_TEST=y
+      pinctrl: sx150x: use new GPIO line value setter callbacks
+      pinctrl: ocelot: use new GPIO line value setter callbacks
+      pinctrl: cy8c95x0: use new GPIO line value setter callbacks
 
-On 5.04.25 г. 3:56 ч., Josh Poimboeuf wrote:
-> On Sat, Apr 05, 2025 at 01:56:59AM +0300, Nikolay Borisov wrote:
->> On 4.04.25 г. 18:17 ч., Josh Poimboeuf wrote:
->>> On Fri, Apr 04, 2025 at 05:45:37PM +0300, Nikolay Borisov wrote:
->>>>
->>>>
->>>> On 2.04.25 г. 21:19 ч., Josh Poimboeuf wrote:
->>>>> IBPB is expected to clear the RSB.  However, if X86_BUG_IBPB_NO_RET is
->>>>> set, that doesn't happen.  Make indirect_branch_prediction_barrier()
->>>>> take that into account by calling __write_ibpb() which already does the
->>>>> right thing.
->>>>
->>>> I find this changelog somewhat dubious. So zen < 4 basically have
->>>> IBPB_NO_RET, your patch 2 in this series makes using SBPB for cores which
->>>> have SRSO_NO or if the mitigation is disabled. So if you have a core which
->>>> is zen <4 and doesn't use SBPB then what happens?
->>>
->>> I'm afraid I don't understand the question.  In that case write_ibpb()
->>> uses IBPB and manually clears the RSB.
->>>
->>
->> Actually isn't this patch a noop. The old code simply wrote the value of
->> x86_pred_cmd to the IA32-PRED_CMD register iff FEATURE_IBPB was set. So
->> x86_pred_cmd might contain either PRED_CMD_IBPB or PRED_CMD_SBPB, meaning
->> the correct value was written.
->>
->> With your change you now call __write_ibpb() which does effectively the same
->> thing.
-> 
-> Hm, are you getting SBPB and IBPB_NO_RET mixed up?  They're completely
-> separate and distinct:
-> 
->    - SBPB is an AMD feature which is just like IBPB, except it doesn't
->      flush branch type predictions.  It can be used when the SRSO
->      mitigation isn't needed.  That was fixed by the previous patch.
-> 
->    - AMD has a bug on older CPUs where IBPB doesn't flush the RSB.  Such
->      CPUs have X86_BUG_IBPB_NO_RET set.  That's fixed with this patch due
->      to the fact that write_ibpb() has this:
-> 
-> 	/* Make sure IBPB clears return stack preductions too. */
-> 	FILL_RETURN_BUFFER %rax, RSB_CLEAR_LOOPS, X86_BUG_IBPB_NO_RET
-> 
-> So you're right in that this patch doesn't change SBPB behavior.  But
-> that's not what it intends to do :-)
+ drivers/pinctrl/Kconfig                    |  2 +-
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c |  8 ++++----
+ drivers/pinctrl/meson/pinctrl-meson.c      |  6 +++---
+ drivers/pinctrl/nomadik/Kconfig            |  8 ++++----
+ drivers/pinctrl/nomadik/pinctrl-abx500.c   | 12 ++++--------
+ drivers/pinctrl/pinctrl-at91-pio4.c        | 14 +++++++++-----
+ drivers/pinctrl/pinctrl-cy8c95x0.c         | 17 +++++++++--------
+ drivers/pinctrl/pinctrl-ocelot.c           | 17 +++++++++--------
+ drivers/pinctrl/pinctrl-rk805.c            | 26 +++++++++++++-------------
+ drivers/pinctrl/pinctrl-sx150x.c           | 23 ++++++++++++-----------
+ 10 files changed, 68 insertions(+), 65 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250326-gpiochip-set-rv-pinctrl-part1-c0e1e1891c24
 
-Fair enough, it just wasn't obvious from the diff context that there is 
-the FILL_RETURN_BUFFER , my bad for not looking at __write_ibpb.
-
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
