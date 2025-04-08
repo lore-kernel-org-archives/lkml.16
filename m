@@ -1,82 +1,163 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C6D26A1D5;
-	Tue,  8 Apr 2025 12:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3108269AE4
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114046; cv=none; b=pH72iR3dcfUOA/jHrmUGQUgKf+IYqZeyqw8GutcpH+S9P2y6P3jqdwDYKLYihqRgDfmIwlqETwwuw7byjnobADLs76yGHGBTg9vopd6uwg9b57i1rgMB1K8f5HWX5XFFCIerwZeVtiYL6VqFEuaoTIpxsDIYJwBIU65yJNjtvjQ=
+	t=1744114072; cv=none; b=kZrg6j+9m1Sp7kwQLmUZyTqVPDU+1bLvo04GT84n9TIcql7L5s1oiIVBooBSlpw6ZmgQp1O7kqoOSXofhtkd88JxYUKuGirWZBcKOv64FgkkDDe85BvONNCAnrtHClkly3SVhuY0FKpQK9QqS5Zc1fjWra1/9I6WLneyajdH3lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114046; c=relaxed/simple;
-	bh=4xk3N2B6Mc9xDyAGaMLZ2BFi+v4fW/GstaPpYxvbW2Y=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=n1Fp15tP18CUSPqcFa148ba5N9hN2bSl0c+iXARouyLQa/w7WfpTT3YuS6ps0EJ0g/rdOHtb+FGK4vX17xRCdnG7GlrZZDrshG902ee1nSJsfw2krsl6uiU6LtD1Qe3aRbNfkqzv0JdIP91fvAoEuOdmMyONkyrwfSqwV76fgls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8Bx32t3EfVnsye1AA--.39812S3;
-	Tue, 08 Apr 2025 20:07:19 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMAxTsVzEfVnhbB0AA--.35019S2;
-	Tue, 08 Apr 2025 20:07:17 +0800 (CST)
-Subject: Re: [PATCH v7 3/6] crypto: loongson - add Loongson RNG driver support
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: lee@kernel.org, davem@davemloft.net, peterhuewe@gmx.de,
- jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250403024645.4427-1-zhaoqunqin@loongson.cn>
- <20250403024645.4427-4-zhaoqunqin@loongson.cn>
- <Z_NOsSBRWUEToa7_@gondor.apana.org.au>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <1d890c5f-2bae-1a44-d79b-ab1614b51203@loongson.cn>
-Date: Tue, 8 Apr 2025 20:06:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1744114072; c=relaxed/simple;
+	bh=UvUkLlMxuXlCVavDuuLvtfi9LoKgLxoLDqPAAI+Q180=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNdZPpX3hoSlYPlCuW8DtTyStyXy+undqsX4GEawSXj3GPs2T1qMf8FtFxeaomGOMPx0UIpXWq+QzcyvWPbF1D7TV2/QY1TJ/J2Bwcp2GOG5M3tNr2qdM4JrlrtZ2p+TuZZ3ADShgIN9iegnwyQNhIWSwpYZtrLdP6Wat0wMzvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZpAYgcak; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=prrnFnBM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZpAYgcak; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=prrnFnBM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZpAYgcak";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="prrnFnBM";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZpAYgcak";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="prrnFnBM"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF3EF21180;
+	Tue,  8 Apr 2025 12:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744114068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNx8nRN5Z1aOgb10aduLsC1MU3LMq+2ylBkd8wKaqVE=;
+	b=ZpAYgcakn510lpDwwU5TzMkOeM+OJOI7pt07sadagUDeTdWf14msHVXJcbembqed/+h/ix
+	H1ncIESX8spPNmDLG9ZUpEgmG88ervGgaeKHywTWAIOgsee/Q1apOUl+IG2UY6GbPx+QaL
+	uG4w4Jwq+ODI2qfxuQzrFTjyJEp4T0g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744114068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNx8nRN5Z1aOgb10aduLsC1MU3LMq+2ylBkd8wKaqVE=;
+	b=prrnFnBMgEXODm31PcgxqaHK7weN+cmZEh9R9V1O+ECeg4iGPHsooFIPVL7tRPRG6m7Ln3
+	/u4fXYzdV1PXNqDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744114068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNx8nRN5Z1aOgb10aduLsC1MU3LMq+2ylBkd8wKaqVE=;
+	b=ZpAYgcakn510lpDwwU5TzMkOeM+OJOI7pt07sadagUDeTdWf14msHVXJcbembqed/+h/ix
+	H1ncIESX8spPNmDLG9ZUpEgmG88ervGgaeKHywTWAIOgsee/Q1apOUl+IG2UY6GbPx+QaL
+	uG4w4Jwq+ODI2qfxuQzrFTjyJEp4T0g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744114068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNx8nRN5Z1aOgb10aduLsC1MU3LMq+2ylBkd8wKaqVE=;
+	b=prrnFnBMgEXODm31PcgxqaHK7weN+cmZEh9R9V1O+ECeg4iGPHsooFIPVL7tRPRG6m7Ln3
+	/u4fXYzdV1PXNqDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5B3A13A1E;
+	Tue,  8 Apr 2025 12:07:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EX89MJQR9WcIGAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 08 Apr 2025 12:07:48 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7E36AA0968; Tue,  8 Apr 2025 14:07:48 +0200 (CEST)
+Date: Tue, 8 Apr 2025 14:07:48 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fs: unconditionally use atime_needs_update() in
+ pick_link()
+Message-ID: <ygscd5g4qhpkekidplxvwprtxf34gc3aylohxsk5qr2meehk33@n54hljzo53y7>
+References: <20250408073641.1799151-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Z_NOsSBRWUEToa7_@gondor.apana.org.au>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMAxTsVzEfVnhbB0AA--.35019S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUPCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY1x02
-	62kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43
-	ZEXa7IU82g43UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408073641.1799151-1-mjguzik@gmail.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.998];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.991];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On Tue 08-04-25 09:36:41, Mateusz Guzik wrote:
+> Vast majority of the time the func returns false.
+> 
+> This avoids a branch to determine whether we are in RCU mode.
+> 
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-ÔÚ 2025/4/7 ÏÂÎç12:04, Herbert Xu Ð´µÀ:
-> On Thu, Apr 03, 2025 at 10:46:42AM +0800, Qunqin Zhao wrote:
->> Loongson's Random Number Generator is found inside Loongson security
->> engine.
-> Is this a hardware RNG or a pseudo RNG? If it's pseudo, it should
-> provide a means of reseeding.
+Looks good! Feel free to add:
 
-Will provide a means of reseeding.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thanks for your comments.
+								Honza
 
-BR, Qunqin.
-
-> If it's a hardware RNG it should register with hwrng.
->
-> Cheers,
-
+> ---
+>  fs/namei.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 360a86ca1f02..ae2643ff14dc 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1905,13 +1905,13 @@ static const char *pick_link(struct nameidata *nd, struct path *link,
+>  			unlikely(link->mnt->mnt_flags & MNT_NOSYMFOLLOW))
+>  		return ERR_PTR(-ELOOP);
+>  
+> -	if (!(nd->flags & LOOKUP_RCU)) {
+> +	if (unlikely(atime_needs_update(&last->link, inode))) {
+> +		if (nd->flags & LOOKUP_RCU) {
+> +			if (!try_to_unlazy(nd))
+> +				return ERR_PTR(-ECHILD);
+> +		}
+>  		touch_atime(&last->link);
+>  		cond_resched();
+> -	} else if (atime_needs_update(&last->link, inode)) {
+> -		if (!try_to_unlazy(nd))
+> -			return ERR_PTR(-ECHILD);
+> -		touch_atime(&last->link);
+>  	}
+>  
+>  	error = security_inode_follow_link(link->dentry, inode,
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
