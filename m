@@ -1,100 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DDC22D4C0;
-	Tue,  8 Apr 2025 17:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692B23E34F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134689; cv=none; b=Dair+vheJ1ehB29UabdrSVMFaVQxvc5BnUzRrdwHCOv+ugtjI6SMCBkMooZ9NmcFDuV1LUzuuSlD4cJl1a4f+RlmTBXvq5c55cuhjRl+gRqJpfmzyp8eumt/v46bqZFWyWAXv8Y61yNijDiJDRuZtgeAGdDU5rM6lUlaYS5t9uA=
+	t=1744134692; cv=none; b=uK2awB0FZf+FwGjSvWPE2zZHfCV0bAp8YxNgKYcV+JDX5znHHWU1x6UXR7mveoEld7DrzYbIY1as+wbbANnBng+M1N5KG9r3iXq90ZjjV4W6gkLYHbgfGkSqzdMARGcLoTWqFykXh24vMFbbzVWqgIghm1dG+WlJrEA3PRBaRXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134689; c=relaxed/simple;
-	bh=YJcCFBlWegUtNSWytIrTHoO8XOROx/f/2uidCc2O6hg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HqYH6LP1p0pjOnZ6NjVC5TvZyU2YP/hFNSKmV3Qg39NurozM/mcThcusBHBJRtF1jgRRnr6uggFJ5hfAjul9jZKFMk1FqhsqEIQmOnfsbpEUfDhS3UUnOam042nroAJ/rq/e3HJtCNusIXa4yjS9XzqHdit2EYZ3Qbq6o2MnhOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/KVKiFt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744134692; c=relaxed/simple;
+	bh=O9yVBnVA0VV37RgA5y4nQzjG05tKLNm5p8JUvBWBnOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j5rVZDecATcoO+UHMRpTSubewMf7CwdD7vsecxrGFmCTflY8fErMhvfgJfvq8RR7O81THRP27ppfu5zp6WERGP2HB3Xi6TOJdHHHqYTRf5VK4f9BCXSjRRlfyg0SQGKqZMlQiiM/xuaEybQAmOaFdZ40+aIJZ41jSGNjJsNIic0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQac4EFn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/KVKiFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46800C4CEE5;
-	Tue,  8 Apr 2025 17:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744134689;
-	bh=YJcCFBlWegUtNSWytIrTHoO8XOROx/f/2uidCc2O6hg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=B/KVKiFtzQASAkPFeJUpxNAxfGXTsURausjF6DqDuQlKBRulDHYL2oMLKekwib22i
-	 xrB97gQ0qTDukkUti/Fe3otw9qbP5rEx8U6mCZlX49BBMsvS9mfGatOUpLlldr3vre
-	 fEEHG34JCeB6EB56HYIcQpOC/Q51cIonYI9PizyE9xiW7ffl+RYhffMBvYx4x1k0IC
-	 NdZRAl4eQxV0FonN5WXkamv5Y9zayR6uityBoB27+1KDOcDaAUqTYAUvbSw4K4FRbV
-	 FS23BqHhSuNON0DZT4RhIK5IFV2qRiljUs0jKo8Qkqsjzlj1ty4hkH4MwZxduNhZhb
-	 ONukmH8aYEfjw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Andy Yan <andy.yan@rock-chips.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] drm/bridge/synopsys: avoid field overflow warning
-Date: Tue,  8 Apr 2025 19:51:06 +0200
-Message-Id: <20250408175116.1770876-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQac4EFn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744134689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jVmRUiQDLWJ203tqLnD/OuMwczvhDUm4XHoxY85XOIs=;
+	b=PQac4EFnCGphPfQxnflW2uO0RsuTanvFT+Sq0DWMQv5kBCRkHzJCOoK8Wrenu7tduSPk3I
+	34GyKMNlQUGVCHPq71kRXAd9/Hk6TmPzelVS89SYy3NL9RSndJrXRPkjsWwT3VCdHgy6p7
+	PPIri5LX4hWjsYKg6opoH6qBxskse28=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-nfL-1SuPN4CV4f5-bGPB2Q-1; Tue, 08 Apr 2025 13:51:28 -0400
+X-MC-Unique: nfL-1SuPN4CV4f5-bGPB2Q-1
+X-Mimecast-MFC-AGG-ID: nfL-1SuPN4CV4f5-bGPB2Q_1744134687
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3d175fe71so394895566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:51:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744134687; x=1744739487;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jVmRUiQDLWJ203tqLnD/OuMwczvhDUm4XHoxY85XOIs=;
+        b=J7cOQ0s3VwMOS4jUKMub+zRqjMFEYczcvoSSCVBaPspFH+Y23NseACADlanbo2/XfK
+         nh72QaiapPhxYTGGIr/xWFORG5I5xF5SOtU6C/uprx8JKPQqLHy6NmsfDEty29/Ax8Ul
+         WHoGMbQpVQMuG0HqqtIlxN39MTMyuJ77bnwJIdhqWgxvOS5yQxzrRaOSqtIdfxAE5hmF
+         1VFI8qKa4t3wmVEX/Yc0m4IbAeoS86xY2sfmmVbE+saPX/ps1WX4PjTx2KDDH3K5B2Hg
+         I8GMiH/MS6jnLwrKvXcdgjV8BAmRbaLN9Ht6LNpvoqzjVhMq87vepG3L3WHymN/Q8+vV
+         qymA==
+X-Forwarded-Encrypted: i=1; AJvYcCUy3GAaqbCaw4qAzoeDi/hnwWjU1SNRBSCdLaEXoe5Zq6PFM4GdXXJGLnMH7QsH0/ixzDoB4CSgDS3Kt/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgqFhG+3utLW1ZrCKaf/rHSaT3DuQ9kAqt1xChp5cdMNNJc83x
+	ydmzq/i9GLbJj7UW4zhq7Ms5Vm7AfYqU2ydzPwe/FXGMDgeOgx835+b8cjg9/F8C5P8mQA9m3TB
+	UryJ9ylHZrIgzak6rAZtzofdFF8mf7F2taMQiUpkJZ1wFeqeYOkEyLM0zZ96x1w==
+X-Gm-Gg: ASbGncvhS43kyPZqwYGVguX860dolsxwTLXec+QEX/Jrc+x8TWUQRj4FLigY5SXgjo4
+	nUtFmvRXC5VuxigqbcjiVto8/OUQzm4rpo+fU1fXw8hypRoazBccbp3J1evGCsV2KAQXOb/rgil
+	f31QdCfjnvw9m+SzX6KoHBj0JLXZ3aFGRjCQBJscpeuE8trr92eiMF6oqyhpM04TIvdZRqR94es
+	oXFcSMjjWHgGL9xlFBwA2pTOcoEsveQJgLNFzDQnkVZ5prVzZhJiXC4xC8MIPbeGG3UuaMjsAQI
+	myU5ELGYyupIGJ4wUWiD
+X-Received: by 2002:a17:907:3f26:b0:ac7:3817:d8da with SMTP id a640c23a62f3a-aca9b7718b1mr8155266b.52.1744134686867;
+        Tue, 08 Apr 2025 10:51:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEAzVZ7/qwQFMPt/QXOHxFTFozQku5BHeCETp2tWjKJ3IsbjhXd6GGXO545EnliOM3B7HwGA==
+X-Received: by 2002:a17:907:3f26:b0:ac7:3817:d8da with SMTP id a640c23a62f3a-aca9b7718b1mr8153966b.52.1744134686436;
+        Tue, 08 Apr 2025 10:51:26 -0700 (PDT)
+Received: from [192.168.10.48] ([151.49.197.100])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7bfea10f6sm945030566b.71.2025.04.08.10.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 10:51:25 -0700 (PDT)
+Message-ID: <d3bdaa2e-c268-4828-8f85-75fd0f859887@redhat.com>
+Date: Tue, 8 Apr 2025 19:51:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 62/67] KVM: SVM: Don't check vCPU's blocking status when
+ toggling AVIC on/off
+To: Sean Christopherson <seanjc@google.com>, Joerg Roedel <joro@8bytes.org>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Maxim Levitsky <mlevitsk@redhat.com>,
+ Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+References: <20250404193923.1413163-1-seanjc@google.com>
+ <20250404193923.1413163-63-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250404193923.1413163-63-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 4/4/25 21:39, Sean Christopherson wrote:
+> Don't query a vCPU's blocking status when toggling AVIC on/off; barring
+> KVM bugs, the vCPU can't be blocking when refrecing AVIC controls.  And if
 
-clang-16 and earlier complain about what it thinks might be an out of
-range number:
+refrecing -> refreshing
 
-drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c:348:8: error: call to __compiletime_assert_579 declared with 'error' attribute: FIELD_PREP: value too large for the field
-                     PHY_SYS_RATIO(tmp));
-                     ^
-drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c:90:27: note: expanded from macro 'PHY_SYS_RATIO'
- #define PHY_SYS_RATIO(x)                FIELD_PREP(GENMASK(16, 0), x)
+Paolo
 
-I could not figure out if that overflow is actually possible or not,
-but truncating the range to the maximum value avoids the warning and
-probably can't hurt.
-
-Fixes: 0d6d86253fef ("drm/bridge/synopsys: Add MIPI DSI2 host controller bridge")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c
-index 5fd7a459efdd..440b9a71012f 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c
-@@ -342,7 +342,7 @@ static void dw_mipi_dsi2_phy_ratio_cfg(struct dw_mipi_dsi2 *dsi2)
- 	/*
- 	 * SYS_RATIO_MAN_CFG = MIPI_DCPHY_HSCLK_Freq / MIPI_DCPHY_HSCLK_Freq
- 	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(phy_hsclk << 16, sys_clk);
-+	tmp = min(DIV_ROUND_CLOSEST_ULL(phy_hsclk << 16, sys_clk), GENMASK(16, 0));
- 	regmap_write(dsi2->regmap, DSI2_PHY_SYS_RATIO_MAN_CFG,
- 		     PHY_SYS_RATIO(tmp));
- }
--- 
-2.39.5
+> there are KVM bugs, ensuring the vCPU and its associated IRTEs are in the
+> correct state is desirable, i.e. well worth any overhead in a buggy
+> scenario.
+> 
+> Isolating the "real" load/put flows will allow moving the IOMMU IRTE
+> (de)activation logic from avic_refresh_apicv_exec_ctrl() to
+> avic_update_iommu_vcpu_affinity(), i.e. will allow updating the vCPU's
+> physical ID entry and its IRTEs in a common path, under a single critical
+> section of ir_list_lock.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/avic.c | 65 +++++++++++++++++++++++------------------
+>   1 file changed, 37 insertions(+), 28 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> index 0425cc374a79..d5fa915d0827 100644
+> --- a/arch/x86/kvm/svm/avic.c
+> +++ b/arch/x86/kvm/svm/avic.c
+> @@ -838,7 +838,7 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu)
+>   		WARN_ON_ONCE(amd_iommu_update_ga(cpu, ir->data));
+>   }
+>   
+> -void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> +static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   {
+>   	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
+>   	int h_physical_id = kvm_cpu_get_apicid(cpu);
+> @@ -854,16 +854,6 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   	if (WARN_ON_ONCE(vcpu->vcpu_id * sizeof(entry) >= PAGE_SIZE))
+>   		return;
+>   
+> -	/*
+> -	 * No need to update anything if the vCPU is blocking, i.e. if the vCPU
+> -	 * is being scheduled in after being preempted.  The CPU entries in the
+> -	 * Physical APIC table and IRTE are consumed iff IsRun{ning} is '1'.
+> -	 * If the vCPU was migrated, its new CPU value will be stuffed when the
+> -	 * vCPU unblocks.
+> -	 */
+> -	if (kvm_vcpu_is_blocking(vcpu))
+> -		return;
+> -
+>   	/*
+>   	 * Grab the per-vCPU interrupt remapping lock even if the VM doesn't
+>   	 * _currently_ have assigned devices, as that can change.  Holding
+> @@ -898,31 +888,33 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+>   }
+>   
+> -void avic_vcpu_put(struct kvm_vcpu *vcpu)
+> +void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> +{
+> +	/*
+> +	 * No need to update anything if the vCPU is blocking, i.e. if the vCPU
+> +	 * is being scheduled in after being preempted.  The CPU entries in the
+> +	 * Physical APIC table and IRTE are consumed iff IsRun{ning} is '1'.
+> +	 * If the vCPU was migrated, its new CPU value will be stuffed when the
+> +	 * vCPU unblocks.
+> +	 */
+> +	if (kvm_vcpu_is_blocking(vcpu))
+> +		return;
+> +
+> +	__avic_vcpu_load(vcpu, cpu);
+> +}
+> +
+> +static void __avic_vcpu_put(struct kvm_vcpu *vcpu)
+>   {
+>   	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
+>   	struct vcpu_svm *svm = to_svm(vcpu);
+>   	unsigned long flags;
+> -	u64 entry;
+> +	u64 entry = svm->avic_physical_id_entry;
+>   
+>   	lockdep_assert_preemption_disabled();
+>   
+>   	if (WARN_ON_ONCE(vcpu->vcpu_id * sizeof(entry) >= PAGE_SIZE))
+>   		return;
+>   
+> -	/*
+> -	 * Note, reading the Physical ID entry outside of ir_list_lock is safe
+> -	 * as only the pCPU that has loaded (or is loading) the vCPU is allowed
+> -	 * to modify the entry, and preemption is disabled.  I.e. the vCPU
+> -	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
+> -	 * recursively.
+> -	 */
+> -	entry = svm->avic_physical_id_entry;
+> -
+> -	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
+> -	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
+> -		return;
+> -
+>   	/*
+>   	 * Take and hold the per-vCPU interrupt remapping lock while updating
+>   	 * the Physical ID entry even though the lock doesn't protect against
+> @@ -942,7 +934,24 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
+>   		WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
+>   
+>   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+> +}
+>   
+> +void avic_vcpu_put(struct kvm_vcpu *vcpu)
+> +{
+> +	/*
+> +	 * Note, reading the Physical ID entry outside of ir_list_lock is safe
+> +	 * as only the pCPU that has loaded (or is loading) the vCPU is allowed
+> +	 * to modify the entry, and preemption is disabled.  I.e. the vCPU
+> +	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
+> +	 * recursively.
+> +	 */
+> +	u64 entry = to_svm(vcpu)->avic_physical_id_entry;
+> +
+> +	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
+> +	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
+> +		return;
+> +
+> +	__avic_vcpu_put(vcpu);
+>   }
+>   
+>   void avic_refresh_virtual_apic_mode(struct kvm_vcpu *vcpu)
+> @@ -983,9 +992,9 @@ void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
+>   	avic_refresh_virtual_apic_mode(vcpu);
+>   
+>   	if (activated)
+> -		avic_vcpu_load(vcpu, vcpu->cpu);
+> +		__avic_vcpu_load(vcpu, vcpu->cpu);
+>   	else
+> -		avic_vcpu_put(vcpu);
+> +		__avic_vcpu_put(vcpu);
+>   
+>   	/*
+>   	 * Here, we go through the per-vcpu ir_list to update all existing
 
