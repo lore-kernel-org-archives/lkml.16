@@ -1,274 +1,205 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38171268C43
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4530F267F68;
+	Tue,  8 Apr 2025 11:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744113218; cv=none; b=YoFr8PeTXwDHChxxgJf/adzomjNCQOcAabMManTJCVV6iPouSptCOOKKcyKnyuWaZr2Z+USZ6f36dFUle+ugxgn5+wx3/YaQeMFuoR+La/CpQWdUTaIzBXXCp5TxTkDZInnZeWP3L/PqDyU1hItnAjfrBIcktfuNGn9iAOIFEMs=
+	t=1744113223; cv=none; b=aLtKe/ctrA/uCdynxVq84aeLnSCHMRX0wWGxmFpGwLRLsaJV1qbt/iUhX/ZmqboH3i2pcn8+HVA9r9Cq0l0SpEGkdvku98AcMSz242PLZ9CtNl2+d20b/eXv/Za0faa1OFVOrsZ3Zgvkpu8Jd9Glyi61P90YyP9OekUg2M8fxhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744113218; c=relaxed/simple;
-	bh=orQmC8douUBCMe7A+rGO1OMONi3j02y+HFy6esDvlo4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G40DLGXqq5bw2f7BE4nnSFaQvpl2t4GVT7txFkzc2TiDDTHGEQZZZ2GsVoUtI5T9xElQDjmUpICMREddG6mEoKOMlrhx7NL1/A/kzHxrk3OOvCTPdtQTnTgBx4v/+WmI1lG4HN1OC1a4Fr02ZPG//VKAI5wKNfdRxK44Y6QklLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d458e61faaso57395515ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:53:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744113215; x=1744718015;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yyKIF+kDQ+OyPVEZulRdmjSzR121gPzyDZOV6/tx19I=;
-        b=RGbsKheQZwtkB7bDKxUZHrR1mVsBF2kKQcQ0GoOPELr7J3/LlHEA01GZ2rSlAu3S9j
-         vMzA5LTtv5ihEKZ1hssUVs5s6gtuvNBAr/yPPpnoy9NKVNGtzPQPKRaUd57i/DVSgykh
-         mX/vDab34/IsvYPUdBqBB764YMbQkfWMT1/O8VAZKDMCd/wVOvgNRc7z/PpK2oAztNDQ
-         dF7ObWxY5hWenX3+lLNSlYh354TlmE2ehwWzJt3oLka3PwGheRhIPoTBozOebU2NvC8D
-         UJUmATzdnGMEJceJZED4vJbPrbxlH8DVUJ3KP2jTty1oBH/XtNXZHBSA+HRCN88xK2sc
-         oJ9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXejWXooTb2GC7ZDa3LKO9+TH3yypdws9dvOhB9fEiGaR6IjcbxwjjlH1MCSjCY74KIrxEjdZb2x6GseOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzU3OXl+oHsZ2V8+N9cIh6gx2My1ZUtokkw6B5uK9/dqlBfPqH
-	2Lf5ZsMTi+FuVG3LFCHAMNH92JHp0IvZ1Wzz5lMjNYd3tsx6kihh1KSHlc7H0lApCgmKzd/jISi
-	YmvLJYZ891Z9RstwYLVJ5xrMfm7Df4FyGrAFePPXVsAG+FgsyQTKk9O0=
-X-Google-Smtp-Source: AGHT+IFKdIiz5f4uYk7nxY+6Yf7xd6gTJSr/6moDZGfVo9sX1dqUiG9kzMvaZAbbhrwGBE4BloxtWHhjgYHM3drtF+orMe4yWIvM
+	s=arc-20240116; t=1744113223; c=relaxed/simple;
+	bh=yEZ3iY0IJGUA0pMyK15jl0dVzY+YMjwJliFMFMiyufA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=THMpV3M1shf9J/QV5s1d02uVerMorkIDNBPWyxBarEQGFSJy/aLiSfQSmJw3LReY0E+/1P2P/scVXmaup1CZhz5pp1X06o0loOYK+BGietSEBK8+o7DgFjccxLGFROBSvPZle5bDFWJ8rp9FXlWqWGNgpl43PPNvflKfd7hRSJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y/r4LR2l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y/r4LR2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9508C4CEE7;
+	Tue,  8 Apr 2025 11:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744113223;
+	bh=yEZ3iY0IJGUA0pMyK15jl0dVzY+YMjwJliFMFMiyufA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y/r4LR2lNDUbcYPeVIlRIJHszUZHnYVJdMwpKpvFnnCtRvHzNkhhuRzIRBq6IBdQQ
+	 UDtbA2UWUBCUldyeu1N68gmQ03pWua3+abxpQ9weorQ3yNaH+RjEmGqtXCD86Wal0i
+	 HWjH8z7/H+mHmWz4r+ndRrh8yKvUeqf4lX3LACDg=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.6 080/268] RDMA/core: Dont expose hw_counters outside of init net namespace
+Date: Tue,  8 Apr 2025 12:48:11 +0200
+Message-ID: <20250408104830.653450393@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408104828.499967190@linuxfoundation.org>
+References: <20250408104828.499967190@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d8e:b0:3d4:2acc:81fa with SMTP id
- e9e14a558f8ab-3d70368ba91mr30895135ab.2.1744113215317; Tue, 08 Apr 2025
- 04:53:35 -0700 (PDT)
-Date: Tue, 08 Apr 2025 04:53:35 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f50e3f.050a0220.396535.0562.GAE@google.com>
-Subject: [syzbot] [net?] [bpf?] possible deadlock in xsk_diag_dump
-From: syzbot <syzbot+4ebb06d5f6e3597279c0@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bjorn@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, jonathan.lemon@gmail.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com, 
-	magnus.karlsson@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
-syzbot found the following issue on:
+------------------
 
-HEAD commit:    61f96e684edd Merge tag 'net-6.15-rc1' of git://git.kernel...
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=11923b4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=4ebb06d5f6e3597279c0
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+From: Roman Gushchin <roman.gushchin@linux.dev>
 
-Unfortunately, I don't have any reproducer for this issue yet.
+[ Upstream commit a1ecb30f90856b0be4168ad51b8875148e285c1f ]
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a3119b4324e8/disk-61f96e68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ee1ca254d083/vmlinux-61f96e68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ed04807ee582/bzImage-61f96e68.xz
+Commit 467f432a521a ("RDMA/core: Split port and device counter sysfs
+attributes") accidentally almost exposed hw counters to non-init net
+namespaces. It didn't expose them fully, as an attempt to read any of
+those counters leads to a crash like this one:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4ebb06d5f6e3597279c0@syzkaller.appspotmail.com
+[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[42021.814463] #PF: supervisor read access in kernel mode
+[42021.819549] #PF: error_code(0x0000) - not-present page
+[42021.824636] PGD 0 P4D 0
+[42021.827145] Oops: 0000 [#1] SMP PTI
+[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
+[42021.841697] Hardware name: XXX
+[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
+[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
+[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
+[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
+[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
+[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
+[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[42021.949324] Call Trace:
+[42021.951756]  <TASK>
+[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
+[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
+[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
+[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
+[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
+[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
+[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
+[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
+[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
+[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
+[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
+[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-13305-g61f96e684edd #0 Not tainted
-------------------------------------------------------
-syz.2.908/8961 is trying to acquire lock:
-ffff88805c6b06f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_diag_fill net/xdp/xsk_diag.c:113 [inline]
-ffff88805c6b06f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_diag_dump+0x5be/0x19d0 net/xdp/xsk_diag.c:166
+The problem can be reproduced using the following steps:
+  ip netns add foo
+  ip netns exec foo bash
+  cat /sys/class/infiniband/mlx4_0/hw_counters/*
 
-but task is already holding lock:
-ffff88805e529c58 (&net->xdp.lock){+.+.}-{4:4}, at: xsk_diag_dump+0x18e/0x19d0 net/xdp/xsk_diag.c:158
+The panic occurs because of casting the device pointer into an
+ib_device pointer using container_of() in hw_stat_device_show() is
+wrong and leads to a memory corruption.
 
-which lock already depends on the new lock.
+However the real problem is that hw counters should never been exposed
+outside of the non-init net namespace.
 
+Fix this by saving the index of the corresponding attribute group
+(it might be 1 or 2 depending on the presence of driver-specific
+attributes) and zeroing the pointer to hw_counters group for compat
+devices during the initialization.
 
-the existing dependency chain (in reverse order) is:
+With this fix applied hw_counters are not available in a non-init
+net namespace:
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
+    /sys/class/infiniband/mlx4_0/ports/1/hw_counters
+    /sys/class/infiniband/mlx4_0/ports/2/hw_counters
+    /sys/class/infiniband/mlx4_0/hw_counters
 
--> #3 (&net->xdp.lock){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       xsk_notifier+0x8b/0x230 net/xdp/xsk.c:1644
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       unregister_netdevice_many_notify+0x1572/0x2510 net/core/dev.c:11980
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       unregister_netdevice_queue+0x383/0x400 net/core/dev.c:11896
-       unregister_netdevice include/linux/netdevice.h:3374 [inline]
-       _cfg80211_unregister_wdev+0x163/0x590 net/wireless/core.c:1256
-       ieee80211_remove_interfaces+0x4f1/0x700 net/mac80211/iface.c:2316
-       ieee80211_unregister_hw+0x5d/0x2c0 net/mac80211/main.c:1681
-       mac80211_hwsim_del_radio+0x2c6/0x4c0 drivers/net/wireless/virtual/mac80211_hwsim.c:5665
-       hwsim_exit_net+0x5c3/0x670 drivers/net/wireless/virtual/mac80211_hwsim.c:6545
-       ops_exit_list net/core/net_namespace.c:172 [inline]
-       cleanup_net+0x814/0xd60 net/core/net_namespace.c:654
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-       kthread+0x7b7/0x940 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+  ip netns add foo
+  ip netns exec foo bash
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
 
--> #2 (&rdev->wiphy.mtx){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       class_wiphy_constructor include/net/cfg80211.h:6092 [inline]
-       cfg80211_netdev_notifier_call+0x1b3/0x1430 net/wireless/core.c:1547
-       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
-       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
-       call_netdevice_notifiers net/core/dev.c:2235 [inline]
-       __dev_close_many+0x15d/0x760 net/core/dev.c:1680
-       dev_close_many+0x250/0x4c0 net/core/dev.c:1734
-       unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
-       unregister_netdevice_many net/core/dev.c:12044 [inline]
-       default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
-       ops_exit_list net/core/net_namespace.c:177 [inline]
-       cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-       kthread+0x7b7/0x940 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #1 (&dev_instance_lock_key#3){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       netdev_lock include/linux/netdevice.h:2751 [inline]
-       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-       xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
-       __sys_bind_socket net/socket.c:1810 [inline]
-       __sys_bind+0x1de/0x290 net/socket.c:1841
-       __do_sys_bind net/socket.c:1846 [inline]
-       __se_sys_bind net/socket.c:1844 [inline]
-       __x64_sys_bind+0x7a/0x90 net/socket.c:1844
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&xs->mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       xsk_diag_fill net/xdp/xsk_diag.c:113 [inline]
-       xsk_diag_dump+0x5be/0x19d0 net/xdp/xsk_diag.c:166
-       netlink_dump+0x678/0xeb0 net/netlink/af_netlink.c:2309
-       __netlink_dump_start+0x5a2/0x790 net/netlink/af_netlink.c:2424
-       netlink_dump_start include/linux/netlink.h:340 [inline]
-       xsk_diag_handler_dump+0x1de/0x270 net/xdp/xsk_diag.c:193
-       sock_diag_rcv_msg+0x3dc/0x5f0 net/core/sock_diag.c:-1
-       netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x221/0x270 net/socket.c:727
-       sock_write_iter+0x2d9/0x3f0 net/socket.c:1131
-       do_iter_readv_writev+0x71f/0x9d0 fs/read_write.c:-1
-       vfs_writev+0x38d/0xbc0 fs/read_write.c:1055
-       do_writev+0x1b8/0x360 fs/read_write.c:1101
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &xs->mutex --> &rdev->wiphy.mtx --> &net->xdp.lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&net->xdp.lock);
-                               lock(&rdev->wiphy.mtx);
-                               lock(&net->xdp.lock);
-  lock(&xs->mutex);
-
- *** DEADLOCK ***
-
-2 locks held by syz.2.908/8961:
- #0: ffff88805c6b76c8 (nlk_cb_mutex-SOCK_DIAG){+.+.}-{4:4}, at: __netlink_dump_start+0x119/0x790 net/netlink/af_netlink.c:2388
- #1: ffff88805e529c58 (&net->xdp.lock){+.+.}-{4:4}, at: xsk_diag_dump+0x18e/0x19d0 net/xdp/xsk_diag.c:158
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 8961 Comm: syz.2.908 Not tainted 6.14.0-syzkaller-13305-g61f96e684edd #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
- check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
- xsk_diag_fill net/xdp/xsk_diag.c:113 [inline]
- xsk_diag_dump+0x5be/0x19d0 net/xdp/xsk_diag.c:166
- netlink_dump+0x678/0xeb0 net/netlink/af_netlink.c:2309
- __netlink_dump_start+0x5a2/0x790 net/netlink/af_netlink.c:2424
- netlink_dump_start include/linux/netlink.h:340 [inline]
- xsk_diag_handler_dump+0x1de/0x270 net/xdp/xsk_diag.c:193
- sock_diag_rcv_msg+0x3dc/0x5f0 net/core/sock_diag.c:-1
- netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:727
- sock_write_iter+0x2d9/0x3f0 net/socket.c:1131
- do_iter_readv_writev+0x71f/0x9d0 fs/read_write.c:-1
- vfs_writev+0x38d/0xbc0 fs/read_write.c:1055
- do_writev+0x1b8/0x360 fs/read_write.c:1101
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f466eb8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f466fa3a038 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 00007f466eda6160 RCX: 00007f466eb8d169
-RDX: 0000000000000001 RSI: 0000200000019440 RDI: 0000000000000007
-RBP: 00007f466ec0e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f466eda6160 R15: 00007ffcf86fb978
- </TASK>
-
-
+Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Maher Sanalla <msanalla@nvidia.com>
+Cc: linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://patch.msgid.link/20250227165420.3430301-1-roman.gushchin@linux.dev
+Reviewed-by: Parav Pandit <parav@nvidia.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/infiniband/core/device.c | 9 +++++++++
+ drivers/infiniband/core/sysfs.c  | 1 +
+ include/rdma/ib_verbs.h          | 1 +
+ 3 files changed, 11 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 56dd030045a20..6769c42e46d4f 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -543,6 +543,8 @@ static struct class ib_class = {
+ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 			      struct ib_device *dev, struct net *net)
+ {
++	bool is_full_dev = &dev->coredev == coredev;
++
+ 	/* This BUILD_BUG_ON is intended to catch layout change
+ 	 * of union of ib_core_device and device.
+ 	 * dev must be the first element as ib_core and providers
+@@ -554,6 +556,13 @@ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 
+ 	coredev->dev.class = &ib_class;
+ 	coredev->dev.groups = dev->groups;
++
++	/*
++	 * Don't expose hw counters outside of the init namespace.
++	 */
++	if (!is_full_dev && dev->hw_stats_attr_index)
++		coredev->dev.groups[dev->hw_stats_attr_index] = NULL;
++
+ 	device_initialize(&coredev->dev);
+ 	coredev->owner = dev;
+ 	INIT_LIST_HEAD(&coredev->port_list);
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index 9f97bef021497..210092b9bf17d 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -988,6 +988,7 @@ int ib_setup_device_attrs(struct ib_device *ibdev)
+ 	for (i = 0; i != ARRAY_SIZE(ibdev->groups); i++)
+ 		if (!ibdev->groups[i]) {
+ 			ibdev->groups[i] = &data->group;
++			ibdev->hw_stats_attr_index = i;
+ 			return 0;
+ 		}
+ 	WARN(true, "struct ib_device->groups is too small");
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index bc459d0616297..c7e9ec9e9a802 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -2738,6 +2738,7 @@ struct ib_device {
+ 	 * It is a NULL terminated array.
+ 	 */
+ 	const struct attribute_group	*groups[4];
++	u8				hw_stats_attr_index;
+ 
+ 	u64			     uverbs_cmd_mask;
+ 
+-- 
+2.39.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
