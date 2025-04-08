@@ -1,94 +1,147 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E42219E99
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978BB22257F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744103054; cv=none; b=CC3ISohcvgp9Nq3JYkL7eDY3XQPOWUWuxqjPxrVIJlN91WkPgsT+FLKw8yPdZJG9wI9kI8saGaIbdhdxvB77qpUkcVfKuL1zzLHo2P5Blj8o4dJ4jwedSPzAKepshJGzRqwaWoySGBf4+xoMlE7arXvyOBhzGP9Kci9tyUEAC7s=
+	t=1744103072; cv=none; b=vDThTQy4OkCcazJtDnK3tF+JKQRxKs5g+8d9khuKpB1LpRTJ2DcIgaXtOPCvCNI5aB4VTTwa1OBck6jjOg02IxkzkLcmNmRfIZ1P+VPsJnpopVCti+JY0KxoGgscvlS6yFbWn5zgXmA0YFlPky1SFnnzG+nbebkzadvj25TvyM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744103054; c=relaxed/simple;
-	bh=n3yPhKBmkrZrKNmGGkYKVNWI2VnNkodGMszFRz7nRK4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZtqN4DEZ6D8aBycOx3Mk2gNB6BS8k9mai6R9xNiTVSBUYCvgdGj9iJSXoHaTeXa6A+YGOQK3RKKn7go4OCsihjZw3OMkWAaZeDh6F04PXaCPSi9EcWKeI17ZhoJFWb51UhemIQsLOMrZRlL7jJsP8X8cAnLHkKePvhWcCaDbawU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QD72MVim; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744103072; c=relaxed/simple;
+	bh=yYfvPE1w1pc8keRbvI/GaEEjWYkeqEZp3BkO2j/JcfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n1xpPvob7166agmZW2FSjD5OtZg3dImmo8jt8ZzI9TYACSCf5KZiS6w8TBPqTLd4BGudGu5kA3anEAH6Gtm+K205gj7iKcp7+9qDz2jB3EWXPeAT4Ut0PLHgFznO5WVlwywx4+s6eVT3OHtF77+2RjrgYlizxR+vDzOeXNMnCbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FhzLihHh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F+8UFiFX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FhzLihHh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=F+8UFiFX; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QD72MVim"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549b116321aso6082653e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744103051; x=1744707851; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LtKT5PB+I8jgGburlz5n6UrHfPzs2dxAk/yRT6NP0dQ=;
-        b=QD72MVimVL18kNyZqWYZ65q0JLA0IAAJx4h25n3YGjruMeQ579ZnBItiigguRReXR/
-         LbzwEJoFvqmVkV2BC2lbfHFimpKoUTPOQc0/9Ktu83X5OhRSR88JuFQtVBJyncFvel6M
-         8nsHoJiLX3J+/BKMHA4E6lfo3SnJ4bOB92s28tAUUZndQrVGv4ocewJ3Uh18b1VO1TQU
-         qug8G13AhM5vI+zFz5moQvPUKZZNVdI5p+sp9O0cuNTWYDMzf1ga2Vgg9ym0BqSrd+PJ
-         UNIe7/8D5kIq3zd0ZTWtcp9Jfz8WnSSS8SEiKwcY/su5VTUNhCmChsKnVdU9opF0cIfi
-         Qkzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744103051; x=1744707851;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LtKT5PB+I8jgGburlz5n6UrHfPzs2dxAk/yRT6NP0dQ=;
-        b=ahAE/gtzt2cZpNFFtfjf4iHOIYuu+ZhY6JmiViLVQWkLk7lJxFvXInxf+hTkXxVbBb
-         wBG+lKqsli3jicNNwQZBeaWKKeI0vj1VFz/RCJLKO4iqZVPMcft9HoswP8ObG0K2V2Ok
-         vwCTmdLTn1JJ+PWFjm3bQ95nIZN37gkVuG3iSQYDlOnx3FJkfrcwP15gK3BwhInIeK+p
-         UteoSL/Fhah3g3JdaYcg0OeWI2tPgmX7Na4HDq8QpDUorRkx4J10q2zsibjePswjW9WR
-         IuXC2RgUg0yIYCfZe4cksq/HlTOB+faApJvqm1L6KirezUtnLI2pQ8zXfCJrxA0Klk4W
-         xNpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5m2H7iMXHej+InDMehS7PYGwbqBJA+3lVB9CmSorEM1y7bJtz+MU6pe6uy1E0hg04ecTsDaFvNSbQcGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQFePdwIghG4JbyI89MBOKRbyiZ4ywZP2nwj5nPHr/dbfSlGvV
-	EKv47bk8agHkuoto4sqzQE+zStHe5z04JU3BAacBPRCfNfqzVLhMmKoIm058j286dTY3IjuH7DQ
-	pyRe2py+lJF7ixSNgBox70uCg5FB6UM/bNnQvdA==
-X-Gm-Gg: ASbGnctjXiTVwR4/ue0o0bVrJJ9HBX+HfsCWCdp+ODthk1vlHxd7J4r6+DQBlR1p5hx
-	4d0ZwghEYh1CMlJ39h+Y9P89o3iiZTE7cyrMWnkQESbgzNujxGmZHglCklGD73/VsCczPXCH/pJ
-	dZdjZMO2rbEjiz4Ek+KZTV91Q49RgXHj9fS+UYBp54p9o3kancO52HvwqYXw==
-X-Google-Smtp-Source: AGHT+IF2WUkxm68ddIms01ocssUC4e0WNcZHFUed8nlsJd3SMfdqBt0sV6DP/H5TRFqdUI/lrkaIskfxxDirqwxdZyw=
-X-Received: by 2002:a05:6512:3f16:b0:549:8c86:9bf6 with SMTP id
- 2adb3069b0e04-54c227dc869mr4261598e87.39.1744103050753; Tue, 08 Apr 2025
- 02:04:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FhzLihHh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F+8UFiFX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FhzLihHh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="F+8UFiFX"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C5BBB21180;
+	Tue,  8 Apr 2025 09:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744103068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ckfo8fOph7ZzwdOOHPG1tC3S5ShhyBJ/++mhVbO/yPQ=;
+	b=FhzLihHhlSf62m8rXTUc5p7euJYsU209Yu9iQ90Esc9RJT3/XCJh4c1rkcEbDdWjcFPit5
+	ACcfgrMQ3xUyRwhN9Q0ASVDRxNpUyj4FrifSph9bbWOLotAsguOTNUpNGq1kKu2KAv/9Ro
+	gpjI+HjU57AVTuai+f9ffX2gMHtOREY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744103068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ckfo8fOph7ZzwdOOHPG1tC3S5ShhyBJ/++mhVbO/yPQ=;
+	b=F+8UFiFXWK3Bl3yRApuRZSLF8/+RBwilbV4lkv+MPGv/UicQOEofqCPfLb21Hr8sgFCo5n
+	cu5mSMhhPwV8/yDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744103068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ckfo8fOph7ZzwdOOHPG1tC3S5ShhyBJ/++mhVbO/yPQ=;
+	b=FhzLihHhlSf62m8rXTUc5p7euJYsU209Yu9iQ90Esc9RJT3/XCJh4c1rkcEbDdWjcFPit5
+	ACcfgrMQ3xUyRwhN9Q0ASVDRxNpUyj4FrifSph9bbWOLotAsguOTNUpNGq1kKu2KAv/9Ro
+	gpjI+HjU57AVTuai+f9ffX2gMHtOREY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744103068;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ckfo8fOph7ZzwdOOHPG1tC3S5ShhyBJ/++mhVbO/yPQ=;
+	b=F+8UFiFXWK3Bl3yRApuRZSLF8/+RBwilbV4lkv+MPGv/UicQOEofqCPfLb21Hr8sgFCo5n
+	cu5mSMhhPwV8/yDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 56C7013691;
+	Tue,  8 Apr 2025 09:04:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +y1lEpzm9GdEXQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 08 Apr 2025 09:04:28 +0000
+Date: Tue, 8 Apr 2025 11:04:22 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+	mingo@kernel.org, yanjun.zhu@linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] mm/gup: remove unneeded checking in
+ follow_page_pte()
+Message-ID: <Z_Tmljh8dfhRMtCM@localhost.localdomain>
+References: <20250407030306.411977-1-bhe@redhat.com>
+ <20250407030306.411977-3-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org> <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
-In-Reply-To: <20250326-04-gpio-irq-threecell-v3-2-aab006ab0e00@gentoo.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Apr 2025 11:03:59 +0200
-X-Gm-Features: ATxdqUGccJrFjcEWKyhVa646awyIsRz2HGjGAguvah1n6zT984GzRInZSF_52-w
-Message-ID: <CAMRc=McnW0YRMmikwu6qWSdWD5Zu227dBRwd4VeWZcfcEFUMDg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpiolib: support parsing gpio three-cell
- interrupts scheme
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407030306.411977-3-bhe@redhat.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Tue, Mar 25, 2025 at 11:08=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->
-> gpio irq which using three-cell scheme should always call
-> instance_match() function to find the correct irqdomain.
->
-> The select() function will be called with !DOMAIN_BUS_ANY,
-> so for specific gpio irq driver, it need to set bus token
-> explicitly, something like:
->   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
->
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
+On Mon, Apr 07, 2025 at 11:03:05AM +0800, Baoquan He wrote:
+> In __get_user_pages(), it will traverse page table and take a reference
+> to the page the given user address corresponds to if GUP_GET or GUP_PIN
+> is set. However, it's not supported both GUP_GET and GUP_PIN are set.
+> Even though this check need be done, it should be done earlier, but not
+> doing it till entering into follow_page_pte() and failed.
+> 
+> Furthermore, this checking has been done in is_valid_gup_args() and all
+> external users of __get_user_pages() will call is_valid_gup_args() to
+> catch the illegal setting. We don't need to worry about internal users
+> of __get_user_pages() because the gup_flags are set by MM code correctly.
+> 
+> Here remove the checking in follow_page_pte(), and add VM_WARN_ON_ONCE()
+> to catch the possible exceptional setting just in case.
+> 
+> And also change the VM_BUG_ON to VM_WARN_ON_ONCE() for checking
+> (!!pages != !!(gup_flags & (FOLL_GET | FOLL_PIN))) because the checking
+> has been done in is_valid_gup_args() for external users of __get_user_pages().
 
-This doesn't apply on top of my gpio/for-next branch. Please rebase
-your patch and resend. Patch 1/2 is already on that branch.
+I will also note that you changed the flags check to VM_WARN_ON_ONCE.
+I guess this is fine as we have the WARN_ON_ONCE version in
+is_valid_gup_args().
 
-Bartosz
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+
+LGTM,
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+
+-- 
+Oscar Salvador
+SUSE Labs
