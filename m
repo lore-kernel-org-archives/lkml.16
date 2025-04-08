@@ -1,112 +1,138 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B0822577E;
-	Tue,  8 Apr 2025 18:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E74222577E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136120; cv=none; b=qtBZkpBjy3y9GR75nM8UDjCo0iL+o+6/H5jCfSWunIIjEpgOex6orJSMdQk7RCt/6fxeBViy850RTfUcPMUt4us5IpxjGcoeByDlHAnoV/xB93FERnfmZKvskKguYRzQUN8nSlMGye0TiWg3ZT+pviF0VxnZkBYGTYr1QPb6Llg=
+	t=1744136156; cv=none; b=ZM4DxuG5TeLBclyXw3pIVLLVEePmBunek9+4maLViUPc04Q3nFxANOOoqiyz1H8EOLnXaiVOtD3PJuzX47fhSP+0lkpZV0eNC7qbwXWWAtyYkvBZtPBdyrSktsLrmpMoLXtH33vWhTBQYlkAQXuI/TDnszDL8IEaeUoJdA+rjQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136120; c=relaxed/simple;
-	bh=QI0LuiJv1QGct6vF6T/kJ4ThegGdqEHlXTWUcLe8Ae8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=es+DclslyDIL3Oee22vjb0bnFIs6GvF0fwtBn+HqOmKpKs9ueLno47U4axKpMYLvvbELn/3bhklQEUKbBgP12YG/6wD3VW6ZhnjKyzWMCOXbzWtR0IPexSzuh6fxRzfCW4OsmpyYvWm/aAKN3DIn8UmsDrbsTlxYpcbEixQIajA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V9J/P5yq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V9J/P5yq"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2089140E019F;
-	Tue,  8 Apr 2025 18:15:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 4ud9fw2qBZaA; Tue,  8 Apr 2025 18:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744136111; bh=c5pCLnMyOcxedFh7XU+XAOcb2LrvDEUAYiCWmCSsZXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V9J/P5yqIu3ftRiOgoNB4OmjpT3Dem8qsH4AeBk2kfMDGzwDfcZ2/kqCHuMaGJN5l
-	 9SGNUmDTIFxHci9LfkPzsC22122TXjkj1lQuqSjeDk4yw1kmVM/+ZRESASiqpOaF9F
-	 ndMGXh8lBNgvFM9e3vHjAhIORcDbZqSsiMvtUlSQiSYLh9GwzDAdcV7Bytz33piv+R
-	 yWN6l6OwAVUvQLJBxqD5GyHnpoPQjBM6H/B44Tk1qmsTt+zTE9jqldjVdXbBW5j8UO
-	 H4av+eKbYpcbOug8Sv4vFnzzLwhKIO7DYLNDrrg4y4t2igkS9Vq1/fta2hJkz6K48A
-	 HNbcG/0lPOPTHe9vjUlNg3yL5IwiljlkX1XYGhW3qTY6FPin6pAZcEjZo051VEAEcr
-	 pWHgExohHS4ByqfVxtiHesB56584UFtD143m9fGaugTBf5XhfJX0lxfie0E+QLzN6e
-	 Ck6R9AzCsHxLvDP12RjYZWMw0QolS61+m6ws4ncpRQCE5ylsgxjPGOiPsNhhzXXk09
-	 F3qbznhT3gMj8LZw+k2aslmHrA5MsIe+0AbQ5Jr2qZLL1hTk2/EZpOR9LGDfsMnPXu
-	 yEe6w2PgPIOw8MZNEDc4CM5ADvHnYONslmcmTi/PJvKGLYg68qMbxHfKt715w9GE+L
-	 1HqKS/leFwV504aYM5OXKSBY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7CD5640E015D;
-	Tue,  8 Apr 2025 18:15:00 +0000 (UTC)
-Date: Tue, 8 Apr 2025 20:14:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
-Message-ID: <20250408181451.GFZ_Vnm6JXaItfwVpK@fat_crate.local>
-References: <20250408174726.3999817-1-superm1@kernel.org>
- <20250408174726.3999817-2-superm1@kernel.org>
+	s=arc-20240116; t=1744136156; c=relaxed/simple;
+	bh=zuLTOwLuHsYDzMbkf+aBznMLg7hEW/VvEFThYjA/tNo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G5i0i/dVExycCXTRWCn2zaRmcC/GST8rjJ/ZjjusLMlgX6A9qMgjntM/FPEDR/ElMUCF2oHqTTq09M/EV0Df8TecmTUwgB2qViI/Piwt5EC+uJ2p3dKi0JkW2KF172jvCGZ20GynuhHH/iZcp6ZG3pLAdtG/8Td15NtB07wZ+ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4ZXDYv65lwz4x5Q0
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 20:07:15 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a74f:875e:25d1:823b])
+	by albert.telenet-ops.be with cmsmtp
+	id ai772E0090XRBii06i77zS; Tue, 08 Apr 2025 20:07:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1u2DLn-000000009xH-3KiT;
+	Tue, 08 Apr 2025 20:07:07 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1u2DLn-00000002s7k-2ssL;
+	Tue, 08 Apr 2025 20:07:07 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] genirq/generic-chip: Fix incorrect lock guard conversions
+Date: Tue,  8 Apr 2025 20:07:02 +0200
+Message-ID: <514f94c5891c61ac0a4a7fdad113e75db1eea367.1744135467.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408174726.3999817-2-superm1@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 12:47:26PM -0500, Mario Limonciello wrote:
-> diff --git a/Documentation/admin-guide/amd/amd-reboot-reason.csv b/Documentation/admin-guide/amd/amd-reboot-reason.csv
-> new file mode 100644
-> index 0000000000000..c31c7a0464c38
-> --- /dev/null
-> +++ b/Documentation/admin-guide/amd/amd-reboot-reason.csv
-> @@ -0,0 +1,21 @@
-> +Bit, Type, Reason
-> +0, Pin, Thermal trip (BP_THERMTRIP_L)
-> +1, Pin, Power button
-> +2, Pin, SHUTDOWN# pin
-> +4, Remote, Remote ASF power off command
-> +9, Internal, Thermal trip (internal)
-> +16, Pin, User reset (BP_SYS_RST_L)
-> +17, Software, PCI reset (PMIO 0xC4)
-> +18, Software, CF9 reset (0x04)
-> +19, Software, CF9 reset (0x06)
-> +20, Software, CF9 reset (0x0E)
-> +21, Sleep, Power state or ACPI state transition
-> +22, Pin, Keyboard reset (KB_RST_L)
-> +23, Internal, Internal CPU shutdown
-> +24, Hardware, Failed boot timer
-> +25, Hardware, Watchdog timer
-> +26, Remote, Remote ASF reset command
-> +27, Internal, Data fabric sync flood event due to uncorrected error
-> +29, Internal, MP1 Watchdog timer timeout
-> +30, Internal, Parity error
-> +31, Internal, SW sync flood event
-> \ No newline at end of file
+When booting BeagleBone Black:
 
-Do we need that table now?
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4398 lockdep_hardirqs_on_prepare+0x23c/0x280
+    DEBUG_LOCKS_WARN_ON(early_boot_irqs_disabled)
+    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
+    Hardware name: Generic AM33XX (Flattened Device Tree)
+    Call trace:
+     unwind_backtrace from show_stack+0x10/0x14
+     show_stack from dump_stack_lvl+0x6c/0x90
+     dump_stack_lvl from __warn+0x70/0x1b0
+     __warn from warn_slowpath_fmt+0x1d4/0x1ec
+     warn_slowpath_fmt from lockdep_hardirqs_on_prepare+0x23c/0x280
+     lockdep_hardirqs_on_prepare from trace_hardirqs_on+0x68/0xb4
+     trace_hardirqs_on from _raw_spin_unlock_irq+0x20/0x38
+     _raw_spin_unlock_irq from irq_map_generic_chip+0x144/0x190
+     irq_map_generic_chip from irq_domain_associate_locked+0x68/0x164
+     irq_domain_associate_locked from irq_create_fwspec_mapping+0x34c/0x43c
+     irq_create_fwspec_mapping from irq_create_of_mapping+0x64/0x8c
+     irq_create_of_mapping from irq_of_parse_and_map+0x54/0x7c
+     irq_of_parse_and_map from dmtimer_clkevt_init_common+0x54/0x15c
+     dmtimer_clkevt_init_common from dmtimer_systimer_init+0x41c/0x5b8
+     dmtimer_systimer_init from timer_probe+0x68/0xf0
+     timer_probe from start_kernel+0x4a4/0x6bc
+     start_kernel from 0x0
+    irq event stamp: 0
+    hardirqs last  enabled at (0): [<00000000>] 0x0
+    hardirqs last disabled at (0): [<00000000>] 0x0
+    softirqs last  enabled at (0): [<00000000>] 0x0
+    softirqs last disabled at (0): [<00000000>] 0x0
+    ---[ end trace 0000000000000000 ]---
 
-If so, why not integrate it into debugging.rst?
+and:
 
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 0 at init/main.c:1022 start_kernel+0x4e8/0x6bc
+    Interrupts were enabled early
+    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G        W           6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
+    Tainted: [W]=WARN
+    Hardware name: Generic AM33XX (Flattened Device Tree)
+    Call trace:
+     unwind_backtrace from show_stack+0x10/0x14
+     show_stack from dump_stack_lvl+0x6c/0x90
+     dump_stack_lvl from __warn+0x70/0x1b0
+     __warn from warn_slowpath_fmt+0x1d4/0x1ec
+     warn_slowpath_fmt from start_kernel+0x4e8/0x6bc
+     start_kernel from 0x0
+    irq event stamp: 0
+    hardirqs last  enabled at (0): [<00000000>] 0x0
+    hardirqs last disabled at (0): [<00000000>] 0x0
+    softirqs last  enabled at (0): [<00000000>] 0x0
+    softirqs last disabled at (0): [<00000000>] 0x0
+    ---[ end trace 0000000000000000 ]---
+
+Fix this by correcting two misconversions of
+raw_spin_{,un}lock_irq{save,restore}() to lock guards.
+
+Fixes: 195298c3b11628a6 ("genirq/generic-chip: Convert core code to lock guards")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ kernel/irq/generic-chip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 8014bfecb948e862..bf59e37d650ad27e 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -330,7 +330,7 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 				goto err;
+ 		}
+ 
+-		scoped_guard (raw_spinlock, &gc_lock)
++		scoped_guard (raw_spinlock_irqsave, &gc_lock)
+ 			list_add_tail(&gc->list, &gc_list);
+ 		/* Calc pointer to the next generic chip */
+ 		tmp += gc_sz;
+@@ -467,7 +467,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 
+ 	/* We only init the cache for the first mapping of a generic chip */
+ 	if (!gc->installed) {
+-		guard(raw_spinlock_irq)(&gc->lock);
++		guard(raw_spinlock_irqsave)(&gc->lock);
+ 		irq_gc_init_mask_cache(gc, dgc->gc_flags);
+ 	}
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
