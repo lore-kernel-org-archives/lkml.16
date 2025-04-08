@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F25267B64;
-	Tue,  8 Apr 2025 10:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9BD2676CC;
+	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106998; cv=none; b=UXUcdljZxt7g969D51qe2yyVe8ukDUXHp4k0gm8RfTeAeIih6Fb2M3N58GnzK9Aqp3JXW8g0Br4sn0lb6hkmuR12G50F5Lpg43HdLrDLHWRsQFo07sGvYgpjdmTYTVrfHSgrnBl5Y/04d/laLVIK08PhgTU9YxaDvetQou9QYBY=
+	t=1744106997; cv=none; b=Fa0+FyT+6VVTRmORbEmRCnKXU65xOsN7FB45p6H0FIo4Wmzbalb0+bGpiNxKxubql04mSMjthe03EEyGpAh6nLvTjxVeAU8XasiNJAgkC6IO1gyNSqNge/ORNvLRbtmav7iUieGaoyebSSpS6/T/7deMyQtIsb2rXsRkIEzRvPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106998; c=relaxed/simple;
-	bh=QcroL1J/9cJK+bUU6dPs9SthSAPzqPI/VmikKkYQHtU=;
+	s=arc-20240116; t=1744106997; c=relaxed/simple;
+	bh=U8UoBsYILY5xqJ321naGG+BcFzDB5+hrgzzoiF2VkSo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F07OJGz14moWJOHRXll5PRxSp3EsAqJm86CT0XpFckPQTrRziuZZnzFM8sQN8Edbc0ZC+keXeeRMjeDA1sN/GOoZSNG6877GpsgFgYq31iyjOy56EMje/rom7DmXpxytUgRMK4mkeSJTuv6BP0ZrrervZd1jTInx93TWET5Evp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVs2nqUe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q7OJS7IRyqYpLTRBRTEkWdo/E/CcuoZrqndqMZ3RnIuGVpnqMrPFVWguwtXEfZ19QPHYeJcrTo6i/UQLAPnk/IYwSf3iKHYJlKDBVw3lep0hxediXt+xnbuwGWlSst4cBe7Af49qa00Tq//urS7vq0TFcCuI/1A+shddGkbjfXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcOE7OfE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVs2nqUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5FD9C4CEEA;
-	Tue,  8 Apr 2025 10:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcOE7OfE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8249C4CEF2;
+	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744106997;
-	bh=QcroL1J/9cJK+bUU6dPs9SthSAPzqPI/VmikKkYQHtU=;
+	s=k20201202; t=1744106996;
+	bh=U8UoBsYILY5xqJ321naGG+BcFzDB5+hrgzzoiF2VkSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oVs2nqUeylUWX925gqfZfO1q0jHpNa0IoeNIuqo2yaA4TLW7Md1l3o4yvaDUxsX92
-	 5yt9pk1V3UKvvXynp+f0ULtGwOmA5sCt85y7FNMO5dXaY6xHL+g9my6NNTVZmOoy9f
-	 UE3iBB0VyARBb9zMZFM/kk5OPQIT7DRFFgmvy40rGJPxzF4RwTgX1q64dsXVFNMnmR
-	 jP31Nan6uY/SFrigGTCzRqr67eXFhFaPeh7CjfI4Wd+xIvKxk/81oJKhxS0uC/6Kw9
-	 1IASIfa3OLbRLI3VIr04tWl30hUI7YMryalIFKP7vOul1l/YxZkgtpNgwY+XYVET7e
-	 JFDNJsJzFKtrw==
+	b=rcOE7OfEnieJBl+Dh4TzJjVksZuBjv4swHs2xJ/RgtmarrCnRoG0xxaT0g72EZMnk
+	 TPeyvfqnMUs7R5z0uqwMB+jseH+9kvaW0hoBYzPa+Xgni6kanVQhLtRSkfEZBjcfhV
+	 QnK6nqczbewWFNgb95N2OQSLrFjPiJAG/3fa72Luk0mFH4oVPPe29O4L3i6RHRretT
+	 eTja0OLeUMjUVyGON8iMtgynz208cU9UJpo82fEunPAxxEkJrB8SBk3PpXi+VYRi8x
+	 YIyLk9/aHxxXoV1YLBAfKEdMV4VhGWvsXU2dAInmOO/MQ2JGSnoiUoVNcqJHABl9+5
+	 sPua4WDcKjTXw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RWq-30YM;
+	id 1u25tt-00000008RWG-1qN7;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
-Cc: Sean Anderson <sean.anderson@linux.dev>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v3 33/33] scripts: kernel-doc: fix parsing function-like typedefs (again)
-Date: Tue,  8 Apr 2025 18:09:36 +0800
-Message-ID: <e0abb103c73a96d76602d909f60ab8fd6e2fd0bd.1744106242.git.mchehab+huawei@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 21/33] docs: sphinx: kerneldoc: use kernel-doc.py script
+Date: Tue,  8 Apr 2025 18:09:24 +0800
+Message-ID: <a81d8db099d9cef5161deaef40ac9056bf9802a3.1744106242.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -53,52 +50,40 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-From: Sean Anderson <sean.anderson@linux.dev>
+Switch to the new version when producing documentation.
 
-Typedefs like
-
-    typedef struct phylink_pcs *(*pcs_xlate_t)(const u64 *args);
-
-have a typedef_type that ends with a * and therefore has no word
-boundary. Add an extra clause for the final group of the typedef_type so
-we only require a word boundary if we match a word.
-
-[mchehab: modify also kernel-doc.py, as we're deprecating the perl version]
-
-Fixes: 7d2c6b1edf79 ("scripts: kernel-doc: fix parsing function-like typedefs")
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc.pl           | 2 +-
- scripts/lib/kdoc/kdoc_parser.py | 2 +-
+ Documentation/Makefile | 2 +-
+ Documentation/conf.py  | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kernel-doc.pl b/scripts/kernel-doc.pl
-index af6cf408b96d..5db23cbf4eb2 100755
---- a/scripts/kernel-doc.pl
-+++ b/scripts/kernel-doc.pl
-@@ -1325,7 +1325,7 @@ sub dump_enum($$) {
-     }
- }
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index 63094646df28..c022b97c487e 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -60,7 +60,7 @@ endif #HAVE_LATEXMK
+ # Internal variables.
+ PAPEROPT_a4     = -D latex_paper_size=a4
+ PAPEROPT_letter = -D latex_paper_size=letter
+-KERNELDOC       = $(srctree)/scripts/kernel-doc
++KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+ KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
+ ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
+ ifneq ($(wildcard $(srctree)/.config),)
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 3dad1f90b098..b126f6760b5f 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -540,7 +540,7 @@ pdf_documents = [
+ # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
+ # the Docs). In a normal build, these are supplied from the Makefile via command
+ # line arguments.
+-kerneldoc_bin = '../scripts/kernel-doc'
++kerneldoc_bin = '../scripts/kernel-doc.py'
+ kerneldoc_srctree = '..'
  
--my $typedef_type = qr { ((?:\s+[\w\*]+\b){1,8})\s* }x;
-+my $typedef_type = qr { ((?:\s+[\w\*]+\b){0,7}\s+(?:\w+\b|\*+))\s* }x;
- my $typedef_ident = qr { \*?\s*(\w\S+)\s* }x;
- my $typedef_args = qr { \s*\((.*)\); }x;
- 
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index f60722bcc687..4f036c720b36 100755
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1067,7 +1067,7 @@ class KernelDoc:
-         Stores a typedef inside self.entries array.
-         """
- 
--        typedef_type = r'((?:\s+[\w\*]+\b){1,8})\s*'
-+        typedef_type = r'((?:\s+[\w\*]+\b){0,7}\s+(?:\w+\b|\*+))\s*'
-         typedef_ident = r'\*?\s*(\w\S+)\s*'
-         typedef_args = r'\s*\((.*)\);'
- 
+ # ------------------------------------------------------------------------------
 -- 
 2.49.0
 
