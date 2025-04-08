@@ -1,52 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A6425FA26;
-	Tue,  8 Apr 2025 07:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF425FA18
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096195; cv=none; b=fOPy/d3k0PDdZ5s+kSnr7/tYUvDT5fsP1soiIAtGBvQoKulFyvA0irWptI08A/Ht5gANOG9aTWGMyeku8dgYSPATaD/fneEXrYWOliyOnckVvWdvui4JnOHoyHZKCepUgbvuwYRXYZB1jywz7dBS+snbk8AMjcKoWAcKiijR5aM=
+	t=1744096313; cv=none; b=eUy/B2dJm/StWwzKipibjJrtcIyG8b83MxGSnyqCAwOvkZ6d8dqJubf9vTG8vL5sOY4JG98ZKMWBMvEcwrG2P5C85vCR1U2HTFsCghxe/V+j+ZuY6SSjIpkjGBfpCagYgueLKrLFT7XZvI5Ly5rfuscXA4+PgOXqQ0d64omcxy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096195; c=relaxed/simple;
-	bh=/sJ/o1RT3knUIms6vniTsTj4eZSX251vKaMc5Y5zJTs=;
+	s=arc-20240116; t=1744096313; c=relaxed/simple;
+	bh=R+AnY8n1hFCUT/IU1nGYweKFNmEKd2QGUczeNaF+u6w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=diB578EjENUIK8/m2FNYoL2pssFH+Kt/B6b8yZZJE+vuFWMryhroGREqgZx7WWR+O2+ahsu2vlNkB9tAayCGwrFEG9cCsLES5I05BqCGlg4tp6rBAwtBpmvN82BFE90VfKIT9oN0RX/qj+0nskveYJeUkqa6l9nAdzLT5ZuexI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXJhyEEi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/iWM4hWDN9TKm8KuQB7wDsefVRSh00XiC+Fu8f+PfdFIVmP7zbjk0sxvS6cg4PeSFp/v76IXQMQnOEk/+QYiAPq+5MSV4RDM0b5JsdUEzxYFvv9Qcuzg5IDSUzhvK0Kr+BvKt2qnDgMpHowA4itc72CaCQHKdywaKBllAJ64rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ww3Begjh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXJhyEEi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E783C4CEE5;
-	Tue,  8 Apr 2025 07:09:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ww3Begjh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62E01C4CEE5;
+	Tue,  8 Apr 2025 07:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744096195;
-	bh=/sJ/o1RT3knUIms6vniTsTj4eZSX251vKaMc5Y5zJTs=;
+	s=k20201202; t=1744096312;
+	bh=R+AnY8n1hFCUT/IU1nGYweKFNmEKd2QGUczeNaF+u6w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WXJhyEEi5E76JHjySCjt5VT3TtCKTzxf1CdveOLdnOBm8T8RWH8otR4Ssk/ZetZGi
-	 rpTkA8zgZtQAf5Bd2/HwT+fgslfRXjAa0lPZFX3Y3kGKbHgScXqO3M9BAH/FU/g6ht
-	 fB36kWhByqz7kcy+ppYFFurUVGjePdsfrrlWYG42jknZyV5VO5o/ik0/vB4vBo1KTA
-	 o+HGonS+eOcDSiok/WLEHTqu8IrD45w9mrw+wnIbFeKO29h7NMF8dWzewuUL8TJ/ed
-	 JP+AmVFnoh6+bV688T2SkHyUkvJr2EERJ/CDEDmdlohbLTqSnHfSKcKV0e8X7kdnEK
-	 9AzHzpOIbRZBg==
-Date: Tue, 8 Apr 2025 09:09:50 +0200
+	b=Ww3Begjh8eQX6WC1LpfoRdBWAWlnYJMy+N0cl1jFYSIgJGmpDLN1iVW5k/0cVZjPZ
+	 +SlqPTMEsLg24ahncZInps4beRQ3/X6oZ7NDj5rETv3qDwLXJveakdaj2qDlaPdqha
+	 jRlqfSbkNsxnN6lUGZt15pvuxatfWGSUFys9Bg1iwi2estjW7m6xsl8JwNSvP5lLda
+	 AbZLhtCQyxUNWgYUD2Pi8837qAUpWRT5wCq7yris0xozQHV5mu2eRYiq7DxQ/r17Wc
+	 6aj0F8kOC2tmTrr2HzkHk9bvW3zKU70Fe58MwXrLoO3DpGhQjJB3SDsa+BhatfkWmD
+	 FVpvaQmiKSpuw==
+Date: Tue, 8 Apr 2025 09:11:48 +0200
 From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 2/2] x86/CPU/AMD: Print the reason for the last reset
-Message-ID: <Z_TLvoBDmCRRy12t@gmail.com>
-References: <20250407162525.1357673-1-superm1@kernel.org>
- <20250407162525.1357673-2-superm1@kernel.org>
- <Z_Qdn_WYAalNAHOi@gmail.com>
- <ebfaae8d-7186-454f-ba06-b86fea357d03@kernel.org>
- <20250407214624.GEZ_RHsCPSfyM4r56w@fat_crate.local>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH v4 0/4] objtool: Fix INSN_CONTEXT_SWITCH
+Message-ID: <Z_TMNOHY4iEDMOB8@gmail.com>
+References: <cover.1744095216.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,33 +43,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407214624.GEZ_RHsCPSfyM4r56w@fat_crate.local>
+In-Reply-To: <cover.1744095216.git.jpoimboe@kernel.org>
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
+* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-> On Mon, Apr 07, 2025 at 01:56:57PM -0500, Mario Limonciello wrote:
-> > Boris, your thoughts please?
+> I decided to keep the "unsupported instruction in callable function"
+> warning, it's not hurting anything.  As a result we now have
+> INSN_SYSCALL and INSN_SYSRET.
 > 
-> Right, how hard would it be to decode those as much as possible without
-> having users go look somewhere first?
+> v4:
+> - split up patches
+> - don't get rid of "unsupported instruction in callable function" warning
+> - split INSN_CONTEXT_SWITCH -> INSN_SYSCALL / INSN_SYSRET
 > 
-> I mean, we can always go look somewhere for more info but for starters we
-> should display as much useful information as possible.
+> v3: https://lore.kernel.org/9b23e4413873bee38961e628b0c73f6d3a26d494.1743799705.git.jpoimboe@kernel.org
+> 
+> Josh Poimboeuf (4):
+>   objtool: Fix INSN_CONTEXT_SWITCH handling in validate_unret()
+>   objtool: Split INSN_CONTEXT_SWITCH into INSN_SYSCALL and INSN_SYSRET
+>   objtool: Stop UNRET validation on UD2
+>   objtool, xen: Fix INSN_SYSCALL / INSN_SYSRET semantics
+> 
+>  arch/x86/xen/xen-asm.S               |  4 +---
+>  tools/objtool/arch/x86/decode.c      | 18 ++++++++++-------
+>  tools/objtool/check.c                | 29 +++++++++++++++++++++-------
+>  tools/objtool/include/objtool/arch.h |  3 ++-
+>  4 files changed, 36 insertions(+), 18 deletions(-)
 
-Yeah, and I also have an admittedly selfish reason to ask for this: I 
-have a Zen 15h system that is at times unreliable and will 
-spontaneously reboot, and I'd *love* to see whether this reboot-reason 
-register gives me any further insight as to the root cause. :-) 15h 
-appears to be the family when this feature was introduced?
-
-Having it printed early straight on bootup in decoded text is very 
-useful for another reason as well: if a system is unreliable it might 
-not make it to userspace to run any tooling ...
-
-But I think a more structured sysfs entry would be useful as well in 
-addition to the bootup printout (for the raw value if nothing else), if 
-any sysadmin tooling wants to pick up on this register.
+I'm wondering about the timing: can this wait for v6.16, or does it 
+trigger on some popular config/build-tools combination?
 
 Thanks,
 
