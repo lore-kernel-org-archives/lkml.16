@@ -1,120 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5071F582C;
-	Tue,  8 Apr 2025 14:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F081DF991;
+	Tue,  8 Apr 2025 14:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124023; cv=none; b=QZVZXQenTOi6PXYzhynZWJPGpzG1kzT2gzp+6rBYGCvZAFNGOPGFkNIDtAOg+k+w+q1Emfhu8FWu/DfoEtTmW/IyTpJnQpf2CcQK0/Wiz9mw8/I37x5eCuPl/l0OIYB3iEq2YdWkSaEf01Ld1Hw7n390drqWH8QTIy1sYT8VHFE=
+	t=1744124100; cv=none; b=bi0OdIPd07csK3ZXBsEtWblcZwkPh/76w7eF97LuwpqqE5G1Om7ZLTghRzrEbb1Ys8u2qBXBK6Wv2I0GiLNYPoTgZwHDhhJW/72d57pOXUjpw8T5CgiZZBFglYLJeu9OyjBIAwuPJpNiEqE3LxvDoVT1Nq8XTtZM3+742i0a/qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124023; c=relaxed/simple;
-	bh=gTJsDnTp1L4bSMY7tC7A/z2FtBDVtOYUqwQSxdOm8fY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r9sy+sGbRS1XddKueOdzWq4x6VqW3WpeVxyOhxRwsodHHMy4wyb32o6cbsRjpDE+r6bNvuL122MZa9tZLKkvq/zSGMZ3D1btLB9T14vOkHAcLWXMX2sPgPCTn3yWrVqYvIP6NwtxL63W1Wgv9z6jwVmaHntgNJ3l+Z4g1zl2FYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uCUW96J6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744124100; c=relaxed/simple;
+	bh=nZ1yhl1scTXfkiPAhPmxOZZ2j4lMgnCcL0OYg+kZnOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8KakP7ANeB2wYBnFgyVsNAYEdvv94sZkehHN9+LRcV13WX3pmbQaAoIEComUhsvheuEwGV1sgEnWomECkns6ucOf7LBPX3mjSQz/+xnP6jNpX1cBAQs8YoTXV03EVuebWTxQxMi+a3MnxL5bYAENmiLgPMCYnuXHXqBopFjLFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hrJdad6m; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uCUW96J6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B1EC4CEEC;
-	Tue,  8 Apr 2025 14:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744124023;
-	bh=gTJsDnTp1L4bSMY7tC7A/z2FtBDVtOYUqwQSxdOm8fY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uCUW96J6UP+79EgwdzXM7xKXQLhbxEc7QN/UNfTJhpI7YR3lJwJKk604pZLMcMbAi
-	 yC7ix3DJM1ZhPCTPX/I9Y7QntHLi+YUe/mpkkMKbqSBNk/DoAGRY33986FfsgfIaIl
-	 rODGrWzViWbV2+1J1kLpj2glrxzF5OqCJHTsfidxHRf0sYjIWxYR8J9iitRa5vniW+
-	 KSfneRL0kF3kSPyyjlL6fvI+440GjCLgPjsxXawC+N+yu6IocM5/7lp0Wzybo5cl+d
-	 p/HCdQHAgKvVkJDaElK72Wj4J2Y6yfobdeTH/airvFIG9awR++URotw0geWKmJq6Ix
-	 rNUASh8SviWxg==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so9380761a12.2;
-        Tue, 08 Apr 2025 07:53:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXM2hMdSmDVdT8oZ1VYCyQ5DFsWXW5C8p9diE4PUSu94d25twPobh/qV2myPjMC+iULyzlUazfwAZHVPoJ@vger.kernel.org, AJvYcCVehXcmG3XsH7xLfzbvQ4HsD1OxnNeUhaZIJB7TxIFBVpUJKXfLnpjsZBMYJHzAcBJkPauWVY0bY/GtjA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/90Gg5HbUePKqxTz8oO95FOclDpPJZoNlXfB+jQDTR7HAXRHN
-	1Ie+wkyudwvrrLa6+/HWPe9ghGe0l6yFIeVetmIwUeY/If0ljh+TEmxAQzSeXjWfVOtQ1O4y4uI
-	hlXPvCNRtB0JwVF3G5KeZWBxsr+0=
-X-Google-Smtp-Source: AGHT+IH67g8qwU75Ow54CtjFFP/+oeE+MFw5PXwIURCefOPl6V/Y2jnK/gEYbPNMz7ja+KzZsdf9N6R9g63qATIu9JQ=
-X-Received: by 2002:a17:907:970b:b0:ac3:cab6:719e with SMTP id
- a640c23a62f3a-ac7d1854ad4mr1355933966b.11.1744124021627; Tue, 08 Apr 2025
- 07:53:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hrJdad6m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744124099; x=1775660099;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nZ1yhl1scTXfkiPAhPmxOZZ2j4lMgnCcL0OYg+kZnOo=;
+  b=hrJdad6m+u0HSoz/A+wVlEevl30pNDYgH86h6m6GrNCYKk/1a1t2HRQK
+   HXpO2X144PRS5uXqYk9VI5oKBgqdqmNu8f47D1vQmYoTCvXKyxKRSCkeu
+   /MI3fGOYzlUVLf7OADuG0bD/Zax+5cNXwBFnZB/0ssNsDKgpqeHIJ1pqg
+   6TzAdWFRSmhWWOACCDQkG1Kq/JWwCiPoxkGbe7BdzCbIa3wp/JbpDgSZs
+   Ti0lg+42uFa/tFy+7pt4bogHMgO4StOfNoeTmqMwnvsTLJVsUfjqFH9m4
+   wkVEMcCGmtZ+9lqmp48JiG3r9gp0W4OhkodFPI9VNlo8QeZEIjboWO9/b
+   A==;
+X-CSE-ConnectionGUID: 598SdRxUSFGYmF3DMkCd6Q==
+X-CSE-MsgGUID: wqli1UHVTlW9MDFYP00OpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="55744639"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="55744639"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:54:58 -0700
+X-CSE-ConnectionGUID: LXRmzx/nS3yEKVJw8+IY+A==
+X-CSE-MsgGUID: Pgo2jEVpQ7iIn6rvOz0LpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128022280"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:54:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u2ALj-0000000AR1D-3Wgo;
+	Tue, 08 Apr 2025 17:54:51 +0300
+Date: Tue, 8 Apr 2025 17:54:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
+Cc: dakr@kernel.org, djrscally@gmail.com, gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com, jgg@nvidia.com,
+	kevin.tian@intel.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nicolinc@nvidia.com,
+	rafael@kernel.org, sakari.ailus@linux.intel.com,
+	syzkaller-bugs@googlegroups.com, yi.l.liu@intel.com
+Subject: Re: [syzbot] [acpi?] KASAN: slab-use-after-free Read in
+ software_node_notify_remove
+Message-ID: <Z_U4uxxjGLF52m2q@smile.fi.intel.com>
+References: <67f26778.050a0220.0a13.0265.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <20250408122933.121056-4-frank.li@vivo.com>
-In-Reply-To: <20250408122933.121056-4-frank.li@vivo.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Tue, 8 Apr 2025 15:53:04 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H7BS6juCS0eRdo6sqM4jzeMMi1o=huG38wgKYumD7qmmw@mail.gmail.com>
-X-Gm-Features: ATxdqUFPx3hKSJXKNZwNPCum0SY93yIVS3AchSMgEFM7yEdIBRGy2IzNzbS33_k
-Message-ID: <CAL3q7H7BS6juCS0eRdo6sqM4jzeMMi1o=huG38wgKYumD7qmmw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] btrfs: Fix transaction abort during failure in del_balance_item()
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67f26778.050a0220.0a13.0265.GAE@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 8, 2025 at 1:19=E2=80=AFPM Yangtao Li <frank.li@vivo.com> wrote=
-:
->
-> Handle errors by adding explicit btrfs_abort_transaction
-> and btrfs_end_transaction calls.
+On Sun, Apr 06, 2025 at 04:37:28AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=15a807cf980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=24f9c4330e7c0609
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109077b0580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13717c3f980000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/e4bfa652b34a/disk-acc4d5ff.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/3d19beb8bb92/vmlinux-acc4d5ff.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/e7298ccc6331/bzImage-acc4d5ff.xz
+> 
+> The issue was bisected to:
+> 
+> commit 9eb59204d5197b4add63968c8c5b7633631f9a5a
+> Author: Yi Liu <yi.l.liu@intel.com>
 
-Again, like in the previous patch, why?
-This provides no reason at all why we should abort.
-And the same comment below.
+Liu, have you looked at the issue? It has a good reproducibility ratio and
+definitely something with your patch, but it might be still that it revealed
+a lurking bug in software node implementation or driver core, however I don't
+see it.
 
->
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/volumes.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> index 347c475028e0..23739d18d833 100644
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -3777,7 +3777,7 @@ static int del_balance_item(struct btrfs_fs_info *f=
-s_info)
->         struct btrfs_trans_handle *trans;
->         BTRFS_PATH_AUTO_FREE(path);
->         struct btrfs_key key;
-> -       int ret, err;
-> +       int ret;
->
->         path =3D btrfs_alloc_path();
->         if (!path)
-> @@ -3800,10 +3800,13 @@ static int del_balance_item(struct btrfs_fs_info =
-*fs_info)
->         }
->
->         ret =3D btrfs_del_item(trans, root, path);
-> +       if (ret)
-> +               goto out;
-> +
-> +       return btrfs_commit_transaction(trans);
->  out:
-> -       err =3D btrfs_commit_transaction(trans);
-> -       if (err && !ret)
-> -               ret =3D err;
-> +       btrfs_abort_transaction(trans, ret);
-> +       btrfs_end_transaction(trans);
 
-A transaction abort will turn the fs into RO mode, and it's meant to
-be used when we can't proceed with changes to the fs after we did
-partial changes, to avoid leaving things in an inconsistent state.
-Here we don't abort because we haven't done any changes before using
-the transaction handle, so an abort is pointless and will turn the fs
-into RO mode unnecessarily.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks.
 
->         return ret;
->  }
->
-> --
-> 2.39.0
->
->
