@@ -1,402 +1,235 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2072.outbound.protection.outlook.com [40.107.236.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B499C18784A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744119835; cv=none; b=SU+hPiJJxNTWttt2GxmMtfkmewPP22AuZ1nPOctU9mHiSrY6E/y3qfy2/5jl9kx74oAVk4+Ls1x6JivgZqYQ8vH8r3RL2TeU7XclR+l3AhB2PazPVYl8zFaNzPhgWGnWK3sVdoXsJygP53w3sg41MJAfbtHABT3iIApHYFM+KW0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744119835; c=relaxed/simple;
-	bh=2qHhThrnOTWPUjl99ltiubZEVCpfALKofqfiBBBxp7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+oqDpT/+w8oq7OH5UmD7bzrQQ8oTko+f2Ojb2gKOE00kvtzO2oyy1kEE2VlKgIR3puMFal0+lHG5KAk8BM63CeGxtGuD8ky4dl+jBcnUkKFf1lIUNhWj1/WHKwpDNAZI1VNXQco+q7qBXhPx3FcRXZ3ASrgF3aK/mO9RjffSWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1u29Eq-00012g-Is; Tue, 08 Apr 2025 15:43:40 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1u29Eq-003wQM-0v;
-	Tue, 08 Apr 2025 15:43:40 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1u29Eq-006Zph-0T;
-	Tue, 08 Apr 2025 15:43:40 +0200
-Date: Tue, 8 Apr 2025 15:43:40 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de,
-	Alvin =?iso-8859-15?Q?=A6ipraga?= <alsi@bang-olufsen.dk>,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH 2/3] clk: add TI CDCE6214 clock driver
-Message-ID: <Z_UoDCZKQpeID50C@pengutronix.de>
-References: <20250408-clk-cdce6214-v1-0-bd4e7092a91f@pengutronix.de>
- <20250408-clk-cdce6214-v1-2-bd4e7092a91f@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D61199236
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744119842; cv=fail; b=KyaF2nre8+EGLGyuSaaVwyMkW9FXebc7bk5vVs3zL1qYFHsWlsK6Mpl50tOuKg56sXQigLWfKMPcIqx2C+eZJdCuqsiTjDwVCY1sbIAT7J1o/ANlQoeQr0rTrn8WLVXxAs0ulWO5RggIQZceH1uOxhMABOSCSyx0sHsFTdKZTpU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744119842; c=relaxed/simple;
+	bh=ApK3mf0/DNrggMxY0DoSJx1dveU4Qsj2DZ+OZcka9c8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=l8oVZ67YPSsbH/xgdYAZXkUDKedvRPQmLAIGu5CWoQrb3yrhMnSeTBfX0ZSSIl0NYjpH6o2zv6TVS/D4qKAp/fPYEgx66LWF64cgXc8IUZzV/yBJcG1gKp3u78PLAuWzr26m3iJHvbTIJtKPjEDhtxVZTNL8BSvnK2rNLHfDarU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ozE/yDTK; arc=fail smtp.client-ip=40.107.236.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ozE/yDTK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h5CQi6JVAVeYsOVVvJNyyRKqM6WLD6tHsBny8dpTWpR9rdgCFdi99vkZyDkOj+Xk4vvxMXZSiif1kinzEe6oZ6SCWRl/POxvWdiyBZv3fLbEAP7VTT47nWC0d/xdLLqGcDzPwatho1KcAr/jIDp9yyHG/p5j0HBwbE4VR7add19QCVRHBLeDJ4krhMoG2w1z3HRgXw1umYNYDhNS+zWWmUNC5hMs4MP/TLPM8kMep/IdPBGJc4EcgSwexTaRPMesawjJ0ThvwXGTbWkZGtQVQZi35sO7cKh78yUUf3AtG2HsuZ40sJNGA445JoLufva+dmdwrYQzvvnLvqjTWRPA/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gxArG4Y2PQ1YwvaH/cWWlVFo+TPMDftuJ+mDKrdlgIo=;
+ b=igfMRtT/hIM/ovuAbDq8nt+3neqdykjauhiL+9k7hSVtlLUZYyrMeT47N7P2pT8JA36Ow2W0T3zed6kdHD0LcVdlDB8FyHRmpJTYZZHzFW2OrIYjUCkJbtuNVpFtGFeW3zuTF5tOdmONNX1HqmhoqSBQdHgLRfXvY+MYzVdP4yFBU65c6OSDfoQbPGSIU7sL3voEWO6giT3bTcZcgRU/SnZBXNWPKVlkaSl6Bq/QyVoG00G6UY2IE54i76kHawq6lcSQE8w3/xQAwRlqMPy3J9z1qF6+D2l/2Lc34RrUZXXWGsnnsjCLv6tNXC7zIenmxsWQCGciTF1+d8x19piWCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gxArG4Y2PQ1YwvaH/cWWlVFo+TPMDftuJ+mDKrdlgIo=;
+ b=ozE/yDTKWl7skY6lvh4n6cg3hdYJ7khsgvymN5SgXtFouR7+QkR6dhScCbepSCWynRttDAMEwQBSSOp3aArJ0p644ixKBXRSwSN6zafrApJjmEkRyUeUQpHeC9KCCEL7ZS643S3vFi+VwRfpfyGOUb5uEO7dKEuOc3Ln8ztBlb8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by SA1PR12MB7247.namprd12.prod.outlook.com (2603:10b6:806:2bb::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Tue, 8 Apr
+ 2025 13:43:58 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8632.017; Tue, 8 Apr 2025
+ 13:43:57 +0000
+Message-ID: <1bc4c506-57ad-38aa-d56d-ed058f54708e@amd.com>
+Date: Tue, 8 Apr 2025 08:43:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [RFC PATCH] x86/sev: Disallow userspace access to BIOS region for
+ SEV-SNP guests
+Content-Language: en-US
+To: Naveen N Rao <naveen@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
+ Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>,
+ Kevin Loughlin <kevinloughlin@google.com>
+References: <20250403120228.2344377-1-naveen@kernel.org>
+ <67eedc35be77d_464ec29462@dwillia2-xfh.jf.intel.com.notmuch>
+ <l34f6nqq3up23cvrgmebbufztqkvfil5eahecukw5bnqekccpj@6nbciquhwxxc>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <l34f6nqq3up23cvrgmebbufztqkvfil5eahecukw5bnqekccpj@6nbciquhwxxc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0094.namprd11.prod.outlook.com
+ (2603:10b6:806:d1::9) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250408-clk-cdce6214-v1-2-bd4e7092a91f@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|SA1PR12MB7247:EE_
+X-MS-Office365-Filtering-Correlation-Id: c328165e-1108-4122-1a14-08dd76a3696f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L3pSVDBQTG04Mi9pcU1RRGdNN0pRSFdXYm93UVFKbk5Bd2dFbDIrdUNnSXpq?=
+ =?utf-8?B?d2d6ZHdBajI4S0o0VFFrK3FtQkVGQ2ZFa3BSUDM1Z1loMEYwN3drUTZCRWdJ?=
+ =?utf-8?B?OFpXaFJmZVlZenFEcGpQeW9VZlp0ZXRwbmVhQmNoNmdCemNDaTNRa2pCdkxP?=
+ =?utf-8?B?RWd0VUFiZGluNVBFVkV2Z0tRcTdoZnFSaVduU3ozSXpCK1V4WDNWMlorREZO?=
+ =?utf-8?B?U0JmdEpsTUkxeWo1T0oxUjdIRlJRL2RGU0hDdm5VNE5RL09UdGFyNmx0NTN3?=
+ =?utf-8?B?TUVHOTZsdks4SnlodVlkbExEbVlJNlljSDJML1pzTHVkakRWZ3ovWUxFSEVN?=
+ =?utf-8?B?Zm1EU1JZeGRRd1BWY3ByZ2NKVzJJbHpGOUlsaFR2cXBTbHUwa1ZydXR5RkQ4?=
+ =?utf-8?B?RzA3ZmZ5VkdWZnZtSHdEMHB2cEdwNkw3UEk2cDRVTjQ0dmFNOHhwZmJydE1a?=
+ =?utf-8?B?Yi82N3BhRGVJSGw3U0NVVGg5SjMxSFFDQTZHUlBEWjA5dHhwemI4VXZseFJk?=
+ =?utf-8?B?OWFTZHpLaURtR1FZVk5QQXgrQno2MDF2MEN1NHZVVElDeEdzSTg0aG9EMURs?=
+ =?utf-8?B?bUlSU3hOM1ZTQ0w1OVFpb3RpL2cwMDNEZ1hEVUllR21wTnpONkZieTlQdTk2?=
+ =?utf-8?B?S0YyQWhBT2NERU1DK3BBUDc1VWRXbFBxSWc2ZktpSWhIZDFRVWNkOGlpSWt3?=
+ =?utf-8?B?d2wzTTd2ajlpd3p0UG82M0k2N1diSGZCNW9pSW9ycWpKd1UxUHBwQVY5dVkv?=
+ =?utf-8?B?L3ZzNitUTzgwRFJNVTd1bVVnZklDR3J3TCtQY3ZPOXVzeVYvZmNMRmM2L0xp?=
+ =?utf-8?B?YUN5Snc2R0NIT3lXdzdxSWpDMWxhZXhHVVE5Z3kvcUU0djZQYkMwamgwMjc1?=
+ =?utf-8?B?eFFYekZqT0M5cm5BZUtIZVI5YllLbFF2dkN4UXE4T09GaGc4em01V081MGVv?=
+ =?utf-8?B?ekQvSWdtY2tMUExjbmpyNGdKZk1tOXdoalUyelpWY21ja1MrUnYyVWRWWmpR?=
+ =?utf-8?B?bnlXUkQwOHRWNjZpWTV2Nmc1VURDSFUxdEFvdG5FaVB2WEJYczVnYWNuZ3E5?=
+ =?utf-8?B?cnpLMmZvWU1MalR5YTk2OWUzeVlFQ1prMFFrTnBvNWlBazlTVjBTT0FMNlJ6?=
+ =?utf-8?B?ZmlhQm1jQXJ6Rmd5OTR5NHR2WEdYUDBCUlB5VnFRK0VsbGRmSG01eVZxdmF5?=
+ =?utf-8?B?eGRTb0NsOUp1MVdLMEU4eHl4bmpHakFsd2ordjhVZi85TExpNEd4TEd3eFB0?=
+ =?utf-8?B?cm84aFlVSU03RXNoTThqUEZ1MlhqV1RSK2Fha3BpcWNFdURweEI4T0FpZ0d0?=
+ =?utf-8?B?QmhyMCt4eS9nTFFoeVJIN3VtOWdhNUY1YTFOdmFhUlczdUI2QkpERVMzTlg1?=
+ =?utf-8?B?MG15aFE0QzlITFJUcnBpTlR5Z0ptRDhna0lSQ0w4Yktad0pSclVyWE5MMGs4?=
+ =?utf-8?B?bTlJZTR6TTFDaFplNndEeEcycHovN1N4OEREcDQ3aldleGYxaFJFaGcxTERP?=
+ =?utf-8?B?OGtxNkZsMk5JSUNYdGFCMFkydFlLWHkwcEhMbUtVUmpMZ211UHNYd2NiTWxG?=
+ =?utf-8?B?UGcrcHJSblRYWnlPMno2RnZ1Rm1OeXZ3OEJGMlhvUHoxcTQ5UnlJY1NSclcw?=
+ =?utf-8?B?aTNndmVqbTNFb1Nua1JPbkhHZXhHSmZCL201MFdqRE11KytwZGdBbFlVR29s?=
+ =?utf-8?B?SlloM2JNYnNaNFQ5VmxwMXNBa1RXNzB2NEN1RTBTeVBqWThiNHo0ZStxc0E3?=
+ =?utf-8?B?ZDMycGNneDVIVzEvdVJUN1RhbjNQOXdCNUNJVWJ5bWwyUG1pTVFFMkFnazZG?=
+ =?utf-8?B?VkFBMTRWWjVWT2p6eVhGY3JLVXovM2NuK3FoZEV0d0pJRlpsdDd1dTg1LzFT?=
+ =?utf-8?Q?DFRk8IE48z5mb?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ajViZ21OWFVzaWxuR2RKN3gvQ1dMVGQzL0x0RW1YUGFIaGdRUkFhSkNpQTFp?=
+ =?utf-8?B?eWtYZ1BhRytqbTd5bG1DaldFbHNnenBXQXpkTGVTMGhzcHpyQVp0VlhURTJC?=
+ =?utf-8?B?R1hkMlB4SHNiRTdXQ28zK213WVdLMSt3VjFNVzUyQ3dUdm5MV2IxRHhzajBa?=
+ =?utf-8?B?cnpYdVFIOEZyVmplNm1xU3M4aXN0d2x5ZXE2a3U4b0JrY0paRlNleTVYOXN6?=
+ =?utf-8?B?dndQVHJjNE93OUdMYWt3QUVXKytqMDd6V2hrMVF4dCtzaDRiK2hzbWRnb3Yr?=
+ =?utf-8?B?NzdKaGR5dnZKR056dGZaK1d0bTdBTWx4N0wvOEltSzYzSXZvQlg0MWZGNzFQ?=
+ =?utf-8?B?QkxQUVoycnVyaVMvUGdCYmtUMUxqSnlXVisrRUJadnVTcVZubjZpQXpTNWNT?=
+ =?utf-8?B?SkRYOWs3QkJOMWRaNis5aDd2bGN6R3hXZWFrM0hJWGVOQWQxYkhsNjZWSkZk?=
+ =?utf-8?B?NS83M1MzZ3lZdjczYkhseGY2L0MwYngzRXFVYWh4TzRQcFlJc0MzSCt1azlT?=
+ =?utf-8?B?Uk8vQmVWWGplZFpsRzVnTjVjaTBQUFpycGVTZ2pQR1gxZWVwcGZ1MGRRaUZk?=
+ =?utf-8?B?azFIanp0Mko1WFVLVVVqeWczeFpCWjA3LzBBaEFKYWxZL1NQTjhXSU90ZkV6?=
+ =?utf-8?B?bUVZb0NSbUtjYUd6N2orcW5FdVR1UG5nb3ZySnNrOVBEbG5JMXhmQUwrRzFZ?=
+ =?utf-8?B?TDZmMThKMnV4U2Iya3NEamJ0WlYwNlFvckRNVnhxVVAzQWRSZ1BGakozNlVl?=
+ =?utf-8?B?VUttVzNuZm9HWis2NExPL3Y3U0YvZWR1YXRhREJlZW5vUGtRMmVhRThKb01F?=
+ =?utf-8?B?My9HY09hME43WFFEcVNKYzhqOHJ6Z3pPdnB2QXRocGdoMHZueGFkM0FGTDA3?=
+ =?utf-8?B?aEM4ZWZnay9aZXYyK0Q3ckc2amhyVVZpSHpva1JBaFMyejJWYWYva1dpQWN4?=
+ =?utf-8?B?aTlzcVJqQkswcEZieXpYSHRxS2RWMEdOR3hFcFBVV2hNb3pReUdrckdPSFJS?=
+ =?utf-8?B?WnF1d2txek85T2R6TU0rSUlhN01SOWV6MWl5elp2cTQ5QzAxZExCYkNlNWZh?=
+ =?utf-8?B?aUZ5SzhsaEFacG5EbXRYamhRS1hWck9jZlZaaHVCVm8xOE9JbGZ6djlnemVs?=
+ =?utf-8?B?WVdFSnBMTW1CWVNvbXRBeWtVTFFwVjdZQmlmTDNiaTZsNjk5VXlMb3FGWGVR?=
+ =?utf-8?B?cXY0cmwrZXZZcnREdHJqZTQrTU1tUk01aHdqL1NCSEh3MEFOMVUrYTJDQnJO?=
+ =?utf-8?B?SkF4bnkrcU5ldTY0UXdjUXgxUFQ2VjZDMDdMelRneG5JN3lleXdUSE9JMkJH?=
+ =?utf-8?B?R0ZyNEpwTHJIc3F0Ty9wTkpjbG8ydENPSUdSSzZjWXkyMURjRTFmYmtNUHRq?=
+ =?utf-8?B?bXZSVEljeUo1eFhITUxpTW5vNUx4c1VaY0RzdXJyQ0F5bUh0Q2tCdGt5czRR?=
+ =?utf-8?B?TXNkMnZwR09iWk5zeDF1cllrcjVEQzgwaWI1bFJFYjU1Ri9uUndCMDYycVE5?=
+ =?utf-8?B?Sk5ucnh4UlVHSVp1ckE1cWxSZVFid21UTFd6WTc3RGRZOG5YZVErbHV5T3Rv?=
+ =?utf-8?B?eTVNUDdhdDlIS2hKSDNsRnBOc3czeVVxSzZjMnlBQXJaRDJRSjRtd3Mydmxh?=
+ =?utf-8?B?VXVOYTZaTS92ZitFL2h4TFlzdk5TWGVuZTdTTTVrN3pSa1lLUDBKblRqTXM1?=
+ =?utf-8?B?N0tpVXZRSmgrOENHMjl2aDF3MkhTMWMyMHdCODBjaWVtVkhoQ09WQVZCYjlZ?=
+ =?utf-8?B?UmlKUE9sWUVEYzVBZ1AxUU1DenIyWFFlQUFubzNId3R4VFExU281VU5sa0g1?=
+ =?utf-8?B?andjdlhrcUV0Y1ZiZFRvTmFSdEVMTDBiVVU3WUU2VU9IQjlMSVI3TjR3Ymw4?=
+ =?utf-8?B?RExpZy9NMWhPd3M4NDc3MVhMak9aS283VGdMbkVoa2t1Rnd4RFZMTlpuN2ZJ?=
+ =?utf-8?B?N3NReXpyTjlrS3BxVEhLMklQSXQ4azhCdktPbitvNzk1RTVyblAvZUU5KzNE?=
+ =?utf-8?B?ZzZ5Y1Mzd1pyU2FOWEdwK2N5UUF0U3JUT0kwZUs3cXVGQ2hCYktuSzJaaS82?=
+ =?utf-8?B?NVBTVFQzMTNBOHB1QTNVdnVua3ZXR09Vam8yOTBpNGxwS3VzRUZuNkVpRysy?=
+ =?utf-8?Q?NooYhR8nKcNHJzcyfKMLBihBd?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c328165e-1108-4122-1a14-08dd76a3696f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 13:43:57.9206
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KxXRqDK/UkHeQHVrbJ+VNtvl82kKyUBc78tinOF0FMFRc1nt2ZcbKKg7un5vancPwTi4Ow3SeVvtcr7iNCQAgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7247
 
-On Tue, Apr 08, 2025 at 02:00:23PM +0200, Sascha Hauer wrote:
-> The CDCE6214 is a Ultra-Low Power Clock Generator With One PLL, Four
-> Differential Outputs, Two Inputs, and Internal EEPROM. This patch adds
-> a common clk framework driver for this chip.
+On 4/7/25 08:13, Naveen N Rao wrote:
+> On Thu, Apr 03, 2025 at 12:06:29PM -0700, Dan Williams wrote:
+>> Naveen N Rao (AMD) wrote:
+>>> Commit 9704c07bf9f7 ("x86/kernel: Validate ROM memory before accessing
+>>> when SEV-SNP is active") added code to validate the ROM region from
+>>> 0xc0000 to 0xfffff in a SEV-SNP guest since that region can be accessed
+>>> during kernel boot. That address range is not part of the system RAM, so
+>>> it needed to be validated separately.
+>>>
+>>> Commit 0f4a1e80989a ("x86/sev: Skip ROM range scans and validation for
+>>> SEV-SNP guests") reverted those changes and instead chose to prevent the
+>>> guest from accessing the ROM region since SEV-SNP guests did not rely on
+>>> data from that region. However, while the kernel itself no longer
+>>> accessed the ROM region, there are userspace programs that probe this
+>>> region through /dev/mem and they started crashing due to this change. In
+>>> particular, fwupd (up until versions released last year that no longer
+>>> link against libsmbios) and smbios utilities such as smbios-sys-info
+>>> crash with a cryptic message in dmesg:
+>>>   Wrong/unhandled opcode bytes: 0x8b, exit_code: 0x404, rIP: 0x7fe5404d3840
+>>>   SEV: Unsupported exit-code 0x404 in #VC exception (IP: 0x7fe5404d3840)
+>>>
+>>> Deny access to the BIOS region (rather than just the video ROM range)
+>>> via /dev/mem to address this. Restrict changes to CONFIG_STRICT_DEVMEM=y
+>>> which is enabled by default on x86. Add a new x86_platform_ops callback
+>>> so Intel can customize the address range to block.
+>>>
+>>> Fixes: 0f4a1e80989a ("x86/sev: Skip ROM range scans and validation for SEV-SNP guests")
+>>> Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+>>> ---
+>>>  arch/x86/coco/sev/core.c        | 13 +++++++++++++
+>>>  arch/x86/include/asm/sev.h      |  2 ++
+>>>  arch/x86/include/asm/x86_init.h |  2 ++
+>>>  arch/x86/kernel/x86_init.c      |  2 ++
+>>>  arch/x86/mm/init.c              |  3 +++
+>>>  arch/x86/mm/mem_encrypt_amd.c   |  1 +
+>>>  6 files changed, 23 insertions(+)
+>>>
+> <snip>
+>>
+>> Is there any driving need to allow devmem at all for TVM access at this
+>> point?
+>>
+>> I would be in favor of making this clearly tied to devmem, call it
+>> ".devmem_is_allowed" for symmetry with the mm/init.c helper, and make
+>> the default implementation be:
+>>
+>> static bool platform_devmem_is_allowed(unsigned long pfn)
+>> {
+>> 	return !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+>> }
+>>
+>> ...if a TVM technology wants more leniency, it can override.
 > 
-> - Two inputs (PRIREF and SECREF)
-> - Programmable 8bit divider or x2 multiplier between input and PLL
-> - 16b integer / 24bit fractional PLL
-> - Two programmable /4, /5, /6 dividers after PLL (PSA/PSB)
-> - Four outputs (OUT1-OUT4) with programmable 14b dividers,
->   muxable between PSA, PSB and PLL input
-> - One output (OUT0) fed from PLL input
+> I'm not fully aware of the history here, but I suppose a TVM should 
+> appear as any other VM for userspace. For that reason, I didn't want to 
+> block access to /dev/mem any more than was necessary. Admittedly, I have 
+> limited insight into which utilities may be using /dev/mem today.
 > 
-> - PRIREF can be configured as LVCMOS or differential input
-> - SECREF can be configured as LVCMOS, differential or oscillator input
-> - OUT0 is a LVCMOS output
-> - OUT1 and OUT4 can be configured as LVDS, LP-HCSL or LVCMOS outputs
-> - OUT2 and OUT3 can be configured as LVDS or LP-HCSL outputs
+> Tom/Boris, do you see a problem blocking access to /dev/mem for SEV 
+> guests?
+
+Not sure why we would suddenly not allow that.
+
+Thanks,
+Tom
+
 > 
-> All clocks are registered without parent rate propagation, so each of
-> the clocks must be configured separately via device tree or consumer.
 > 
-> Signed-off-by: Alvin ¦ipraga <alsi@bang-olufsen.dk>
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/clk/Kconfig                     |    7 +
->  drivers/clk/Makefile                    |    1 +
->  drivers/clk/clk-cdce6214.c              | 1105 +++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/ti,cdce6214.h |   24 +
->  4 files changed, 1137 insertions(+)
+> - Naveen
 > 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 713573b6c86c7..499fd610c0467 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -170,6 +170,13 @@ config COMMON_CLK_BM1880
->  	help
->  	  This driver supports the clocks on Bitmain BM1880 SoC.
->  
-> +config COMMON_CLK_CDCE6214
-> +	tristate "Clock driver for TI CDCE6214 clock synthesizer"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  This driver supports TI CDCE6214 programmable 1-PLL clock synthesizer.
-> +
->  config COMMON_CLK_CDCE706
->  	tristate "Clock driver for TI CDCE706 clock synthesizer"
->  	depends on I2C
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index bf4bd45adc3a0..0f87b13b137b5 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -49,6 +49,7 @@ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+= clk-axi-clkgen.o
->  obj-$(CONFIG_ARCH_AXXIA)		+= clk-axm5516.o
->  obj-$(CONFIG_COMMON_CLK_BD718XX)	+= clk-bd718x7.o
->  obj-$(CONFIG_COMMON_CLK_BM1880)		+= clk-bm1880.o
-> +obj-$(CONFIG_COMMON_CLK_CDCE6214)	+= clk-cdce6214.o
->  obj-$(CONFIG_COMMON_CLK_CDCE706)	+= clk-cdce706.o
->  obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
->  obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
-> diff --git a/drivers/clk/clk-cdce6214.c b/drivers/clk/clk-cdce6214.c
-> new file mode 100644
-> index 0000000000000..a825cd71bb11b
-> --- /dev/null
-> +++ b/drivers/clk/clk-cdce6214.c
-> @@ -0,0 +1,1105 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for the TI CDCE6214 clock generator
-> + *
-> + * Copyright (c) 2023 Alvin ¦ipraga <alsi@bang-olufsen.dk>
-> + * Copyright (c) 2025 Sascha Hauer <s.hauer@pengutronix.de>
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/of.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <dt-bindings/clock/ti,cdce6214.h>
-> +
-> +#define RO_I2C_A0			BIT(15)
-> +#define RO_PDN_INPUT_SEL		BIT(14)
-> +#define RO_GPIO4_DIR_SEL		BIT(13)
-> +#define RO_GPIO1_DIR_SEL		BIT(12)
-> +#define RO_ZDM_CLOCKSEL			BIT(10)
-> +#define RO_ZDM_EN			BIT(8)
-> +#define RO_SYNC				BIT(5)
-> +#define RO_RECAL			BIT(4)
-> +#define RO_RESETN_SOFT			BIT(3)
-> +#define RO_SWRST			BIT(2)
-> +#define RO_POWERDOWN			BIT(1)
-> +#define RO_MODE				BIT(0)
-> +
-> +#define R1_GPIO4_INPUT_SEL		GENMASK(15, 12)
-> +#define R1_GPIO3_INPUT_SEL		GENMASK(11, 8)
-> +#define R1_GPIO2_INPUT_SEL		GENMASK(7, 4)
-> +#define R1_GPIO1_INPUT_SEL		GENMASK(3, 0)
-> +
-> +#define R2_GPIO4_OUTPUT_SEL		GENMASK(9, 6)
-> +#define R2_GPIO1_OUTPUT_SEL		GENMASK(5, 2)
-> +#define R2_REFSEL_SW			GENMASK(1, 0)
-> +
-> +#define R3_DISABLE_CRC			BIT(13)
-> +#define R3_UPDATE_CRC			BIT(12)
-> +#define R3_NVMCOMMIT			BIT(11)
-> +#define R3_REGCOMMIT			BIT(10)
-> +#define R3_REGCOMMIT_PAGE		BIT(9)
-> +#define R3_FREQ_DEC_REG			BIT(6)
-> +#define R3_FREQ_INC_REG			BIT(5)
-> +#define R3_FREQ_INC_DEC_REG_MODE	BIT(4)
-> +#define R3_FREQ_INC_DEC_EN		BIT(3)
-> +
-> +#define R4_CH4_PD			BIT(7)
-> +#define R4_CH3_PD			BIT(6)
-> +#define R4_CH2_PD			BIT(5)
-> +#define R4_CH1_PD			BIT(4)
-> +#define R4_POST_EE_DLY			GENMASK(3, 0)
-> +
-> +#define R5_PLL_VCOBUFF_LDO_PD		BIT(8)
-> +#define R5_PLL_VCO_LDO_PD		BIT(7)
-> +#define R5_PLL_VCO_BUFF_PD		BIT(6)
-> +#define R5_PLL_CP_LDO_PD		BIT(5)
-> +#define R5_PLL_LOCKDET_PD		BIT(4)
-> +#define R5_PLL_PSB_PD			BIT(3)
-> +#define R5_PLL_PSA_PD			BIT(2)
-> +#define R5_PLL_PFD_PD			BIT(1)
-> +
-> +#define R7_NVMCRCERR			BIT(5)
-> +#define R7_LOCK_DET_S			BIT(1)
-> +#define R7_LOCK_DET			BIT(0)
-> +
-> +#define R9_NVMLCRC			GENMASK(15, 0)
-> +
-> +#define R10_NVMSCRC			GENMASK(15, 0)
-> +
-> +#define R11_NVM_RD_ADDR			GENMASK(5, 0)
-> +
-> +#define R12_NVM_RD_DATA			GENMASK(15, 0)
-> +
-> +#define R13_NVM_WR_ADDR			GENMASK(5, 0)
-> +
-> +#define R14_NVM_WR_DATA			GENMASK(15, 0)
-> +
-> +#define R15_EE_LOCK			GENMASK(15, 12)
-> +#define R15_CAL_MUTE			BIT(5)
-> +
-> +#define R24_IP_PRIREF_BUF_SEL		BIT(15)
-> +#define R24_IP_XO_CLOAD			GENMASK(12, 8)
-> +#define R24_IP_BIAS_SEL_XO		GENMASK(5, 2)
-> +#define R24_IP_SECREF_BUF_SEL		GENMASK(1, 0)
-> +#define R24_IP_SECREF_BUF_SEL_XTAL	0
-> +#define R24_IP_SECREF_BUF_SEL_LVCMOS	1
-> +#define R24_IP_SECREF_BUF_SEL_DIFF	2
-> +
-> +#define R25_IP_REF_TO_OUT4_EN		BIT(14)
-> +#define R25_IP_REF_TO_OUT3_EN		BIT(13)
-> +#define R25_IP_REF_TO_OUT2_EN		BIT(12)
-> +#define R25_IP_REF_TO_OUT1_EN		BIT(11)
-> +#define R25_IP_BYP_OUT0_EN		BIT(10)
-> +#define R25_REF_CH_MUX			BIT(9)
-> +#define R25_IP_RDIV			GENMASK(7, 0)
-> +
-> +#define R27_MASH_ORDER			GENMASK(1, 0)
-> +
-> +#define R30_PLL_NDIV			GENMASK(14, 0)
-> +
-> +#define R31_PLL_NUM_15_0		GENMASK(15, 0)
-> +
-> +#define R32_PLL_NUM_23_16		GENMASK(7, 0)
-> +
-> +#define R33_PLL_DEN_15_0		GENMASK(15, 0)
-> +
-> +#define R34_PLL_DEN_23_16		GENMASK(7, 0)
-> +
-> +#define R41_SSC_EN			BIT(15)
-> +
-> +#define R42_SSC_TYPE			BIT(5)
-> +#define R42_SSC_SEL			GENMASK(3, 1)
-> +
-> +#define R43_FREQ_INC_DEC_DELTA		GENMASK(15, 0)
-> +
-> +#define R47_PLL_CP_DN			GENMASK(12, 7)
-> +#define R47_PLL_PSB			GENMASK(6, 5)
-> +#define R47_PLL_PSA			GENMASK(4, 3)
-> +
-> +#define R48_PLL_LF_RES			GENMASK(14, 11)
-> +#define R48_PLL_CP_UP			GENMASK(5, 0)
-> +
-> +#define R49_PLL_LF_ZCAP			GENMASK(4, 0)
-> +
-> +#define R50_PLL_LOCKDET_WINDOW		GENMASK(10, 8)
-> +
-> +#define R51_PLL_PFD_DLY_EN		BIT(10)
-> +#define R51_PLL_PFD_CTRL		BIT(6)
-> +
-> +#define R52_PLL_NCTRL_EN		BIT(6)
-> +#define R52_PLL_CP_EN			BIT(3)
-> +
-> +#define R55_PLL_LF_3_PCTRIM		GENMASK(9, 8)
-> +#define R55_PLL_LF_3_PRTRIM		GENMASK(7, 6)
-> +
-> +#define R56_CH1_MUX			GENMASK(15, 14)
-> +#define R56_CH1_DIV			GENMASK(13, 0)
-> +
-> +#define R57_CH1_LPHCSL_EN		BIT(14)
-> +#define R57_CH1_1P8VDET			BIT(12)
-> +#define R57_CH1_GLITCHLESS_EN		BIT(9)
-> +#define R57_CH1_SYNC_DELAY		GENMASK(8, 4)
-> +#define R57_CH1_SYNC_EN			BIT(3)
-> +#define R57_CH1_MUTE_SEL		BIT(1)
-> +#define R57_CH1_MUTE			BIT(0)
-> +
-> +#define R59_CH1_LVDS_EN			BIT(15)
-> +#define R59_CH1_CMOSN_EN		BIT(14)
-> +#define R59_CH1_CMOSP_EN		BIT(13)
-> +#define R59_CH1_CMOSN_POL		BIT(12)
-> +#define R59_CH1_CMOSP_POL		BIT(11)
-> +
-> +#define R60_CH1_DIFFBUF_IBIAS_TRIM	GENMASK(15, 12)
-> +#define R60_CH1_LVDS_CMTRIM_INC		GENMASK(11, 10)
-> +#define R60_CH1_LVDS_CMTRIM_DEC		GENMASK(5, 4)
-> +#define R60_CH1_CMOS_SLEW_RATE_CTRL	GENMASK(3, 0)
-> +
-> +#define R62_CH2_MUX			GENMASK(15, 14)
-> +#define R62_CH2_DIV			GENMASK(13, 0)
-> +
-> +#define R63_CH2_LPHCSL_EN		BIT(13)
-> +#define R63_CH2_1P8VDET			BIT(12)
-> +#define R63_CH2_GLITCHLESS_EN		BIT(9)
-> +#define R63_CH2_SYNC_DELAY		GENMASK(8, 4)
-> +#define R63_CH2_SYNC_EN			BIT(3)
-> +#define R63_CH2_MUTE_SEL		BIT(1)
-> +#define R63_CH2_MUTE			BIT(0)
-> +
-> +#define R65_CH2_LVDS_CMTRIM_DEC		GENMASK(14, 13)
-> +#define R65_CH2_LVDS_EN			BIT(11)
-> +
-> +#define R66_CH2_LVDS_CMTRIM_IN		GENMASK(5, 4)
-> +#define R66_CH2_DIFFBUF_IBIAS_TRIM	GENMASK(3, 0)
-> +
-> +#define R67_CH3_MUX			GENMASK(15, 14)
-> +#define R67_CH3_DIV			GENMASK(13, 0)
-> +
-> +#define R68_CH3_LPHCSL_EN		BIT(13)
-> +#define R68_CH3_1P8VDET			BIT(12)
-> +#define R68_CH3_GLITCHLESS_EN		BIT(9)
-> +#define R68_CH3_SYNC_DELAY		GENMASK(8, 4)
-> +#define R68_CH3_SYNC_EN			BIT(3)
-> +#define R68_CH3_MUTE_SEL		BIT(1)
-> +#define R68_CH3_MUTE			BIT(0)
-> +
-> +#define R70_CH3_LVDS_EN			BIT(11)
-> +
-> +#define R71_CH3_LVDS_CMTRIM_DEC		GENMASK(10, 9)
-> +#define R71_CH3_LVDS_CMTRIM_INC		GENMASK(5, 4)
-> +#define R71_CH3_DIFFBUF_IBIAS_TR	GENMASK(3, 0)
-> +
-> +#define R72_CH4_MUX			GENMASK(15, 14)
-> +#define R72_CH4_DIV			GENMASK(13, 0)
-> +
-> +#define R73_CH4_LPHCSL_EN		BIT(13)
-> +#define R73_CH4_1P8VDET			BIT(12)
-> +#define R73_CH4_GLITCHLESS_EN		BIT(9)
-> +#define R73_CH4_SYNC_DELAY		GENMASK(8, 4)
-> +#define R73_CH4_SYNC_EN			BIT(3)
-> +#define R73_CH4_MUTE_SEL		BIT(1)
-> +#define R73_CH4_MUTE			BIT(0)
-> +
-> +#define R75_CH4_LVDS_EN			BIT(15)
-> +#define R75_CH4_CMOSP_EN		BIT(14)
-> +#define R75_CH4_CMOSN_EN		BIT(13)
-> +#define R75_CH4_CMOSP_POL		BIT(12)
-> +#define R75_CH4_CMOSN_POL		BIT(11)
-> +
-> +#define R76_CH4_DIFFBUF_IBIAS_TRIM	GENMASK(9, 6)
-> +#define R76_CH4_LVDS_CMTRIM_IN		GENMASK(5, 4)
-> +#define R76_CH4_CMOS_SLEW_RATE_CTRL	GENMASK(3, 0)
-> +
-> +#define R77_CH4_LVDS_CMTRIM_DEC		GENMASK(1, 0)
-> +
-> +#define R78_CH0_EN			BIT(12)
-> +
-> +#define R79_SAFETY_1P8V_MODE		BIT(9)
-> +#define R79_CH0_CMOS_SLEW_RATE_CTRL	GENMASK(3, 0)
-> +
-> +#define R81_PLL_LOCK_MASK		BIT(3)
-> +
-> +#define CDCE6214_VCO_MIN 2335000000
-> +#define CDCE6214_VCO_MAX 2625000000
-> +#define CDCE6214_DENOM_DEFAULT (1 << 24)
-> +
-> +static char *clk_names[] = {
-> +	[CDCE6214_CLK_PRIREF] = "priref",
-> +	[CDCE6214_CLK_SECREF] = "secref",
-> +	[CDCE6214_CLK_OUT0] = "out0",
-> +	[CDCE6214_CLK_OUT1] = "out1",
-> +	[CDCE6214_CLK_OUT2] = "out2",
-> +	[CDCE6214_CLK_OUT3] = "out3",
-> +	[CDCE6214_CLK_OUT4] = "out4",
-> +	[CDCE6214_CLK_PLL] = "pll",
-> +	[CDCE6214_CLK_PSA] = "psa",
-> +	[CDCE6214_CLK_PSB] = "psb",
-> +};
-> +
-> +#define CDCE6214_NUM_CLOCKS	ARRAY_SIZE(clk_names)
-> +
-> +struct cdce6214;
-> +
-> +struct cdce6214_clock {
-> +	struct clk_hw hw;
-> +	struct cdce6214 *priv;
-> +	int index;
-> +};
-> +
-> +struct cdce6214_config {
-> +	const struct reg_default *reg_default;
-> +	int reg_default_size;
-> +};
-
-This is unused. I'll remove it next round.
-
-> +static const struct of_device_id cdce6214_ids[] = {
-> +	{
-> +		.compatible = "ti,cdce6214-24mhz",
-
-Should be ti,cdce6214. Will fix next round.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
