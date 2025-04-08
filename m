@@ -1,211 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A94230251
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B519C22FAD4
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131479; cv=none; b=Qsd0XrwC6R7jWZqIdM8gdBxNcd4+NXaQXlSE4e2yvoP5UJHL7worMDxKJULawU8dgZYsibWpABUi8Jv1vwoLZYngeltj4Z6ZUyfZkjcQAKjGdgFdsJB4BDfTD09m3QV9NYU//VK6kHOV8Awb5KMKZyYCbqdiNuetSyHQTpZFSlE=
+	t=1744131490; cv=none; b=lNmi9qtirlHfT0e6wDiEgG7CHL2D/8wPVH/6aOfjL8yKl1qB5vUA1ZgiBgqE8uWewr9qT7ATfPGPVqXfMPttf26JgO+urCgdrTvGUXo/6tkrA2PYP6HpXZEj3ZZQNG+oTjogw1Hv7n8Tc6wDr2h8NZ0GtCWyVXjkYPWZpxe+UcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131479; c=relaxed/simple;
-	bh=E/UgzG4NaYP4/YEsbqahDbER43TJcbSBQEzVlGvZq6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kVcOJVaOHBHeVkhBWrbNlMoo4XN8+JCXATPiu/Hj9+DK8ioneza+O+eIfWiifuZrV3eGQ2Efk30NK6ABW3bvnnMU95z054nQVOWjLHaJwpREjOnWrngeikeg3go/u08V3yjBovGRqVIaYiy+lyZ5ScV8805dLPSmnBg3WEAMMbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=US0wp8ep; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744131490; c=relaxed/simple;
+	bh=rV3IzZIww9h+n+TZSLe0bsGFVsLuLTB1QeJQm73XtYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tMj+8E68BxvRZeEO9QiJ4FRTxRJt0ohmG+QyjBQVkcRqAFLo6Dw85lVtZEEEA2SNz6T82zNoApIzZDXVSgQyDeQwW5vBhqlsKn5WPrpgnwmcRU5kdh5hjUcTlYSz0agzUyHTbgVUO42j+h2X2ojdZel0oSJVLgTudLfNPxhiXMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Bu52mfrR; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="US0wp8ep"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744131476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Ur0KNcNU+Bbe3ulpEE4AO76I8ACxlXZkuuWpkfCf0Jc=;
-	b=US0wp8epZT/kxH/tS7JMGKEgBlevO0yfGNNxL0z7lN7HbwSyaXhZleS5jWcbWYa318S1Zi
-	SD4kc0ZW05cflIbNM/hbyyqbA/ig1EruCNrAXHNDrPC/iOz4hCWceTmvbpg9qG7b3OPxZ7
-	+FZi2TFQgS9s8gDz1uGVce3ek05dXXs=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-rNJt4UI1Op69BWBfLoRhXA-1; Tue, 08 Apr 2025 12:57:55 -0400
-X-MC-Unique: rNJt4UI1Op69BWBfLoRhXA-1
-X-Mimecast-MFC-AGG-ID: rNJt4UI1Op69BWBfLoRhXA_1744131474
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac6ce5fe9bfso53787766b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:57:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Bu52mfrR"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3913958ebf2so5140504f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744131487; x=1744736287; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8uGIqPGo3/RzZiaVHiqgzYEtP/BWLkkvzIhLsqEr0Mg=;
+        b=Bu52mfrR9gg/GsWJn1mi1Yu52lTp3lnp8bPjxi8/qQofmR7/pZNZE4+q2LQe17kNW2
+         k6EjwJlh8RniJlTaPPL2gy+vRgScx8Dz5Tycjow42+MLm9tDvRISje/2wbd2UdcJ+sSL
+         vEE6tPLag1/dmvt6UkUptbJqBy0AOUN/uP0Z/hi12ILxsJeDvefkJAZ2IdOJk4gLocna
+         3tZwJEeFWfCZVf1UvFkEsRRoppLwQ9ajRtwT/N5Vhhj9IT2b/9uX1VCvmQ0IcPCF+4Qj
+         KsUIMnFXlFOzW6HRknABFSn/M7/U9sVEYTYGbdy+/5KAqAQsPVheHvBzqnwDc4x9q92K
+         7uEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744131473; x=1744736273;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ur0KNcNU+Bbe3ulpEE4AO76I8ACxlXZkuuWpkfCf0Jc=;
-        b=R1Za6wvHeSdUxNx/+7mU7owdq2EPAKXd3y1m8ijCbEbQxsiUe0t+W27nMq3ni/IJfK
-         DSd+5EmJI+R4bGZZHU9DjvnTgZ8nvy3EOllHzbKWoAQ8zdLrtDh3S9hJiS5EgrEt+Kv5
-         NMLrWv9CmnfB8ukYbN77gxyCveFyCe8O3BXvGFs7wNb+ziyCIQtrGPDAVs5MCD5dYMgc
-         O3XDitHE3RVJcw0g9eukCR0g33+bXt1jU2lkId5Vl8DXQAFNhutUYRYVWELp1Eq17dDp
-         0tbMPYocsoxFpMNnvSvDJ3+2OZkTz1VopB74RKD3xyLG1BpRlPAJ7P+sdovWCU1tBmcz
-         L75g==
-X-Forwarded-Encrypted: i=1; AJvYcCX2jq7V6zP7jHqDDLhdblNEilQzCFm94vZg+joOW0QidDt6AWsLhir6V1IIw7aQ5IBRCHKFe4KwpVayosA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp4u+a2YENacP1wLewyhFReiLJOoxGnlUmVgrE/9gAcBW2BtHK
-	cA+5jBWIXYc4f/kUQodtRGp5jb/JKXoUmuIPOhRlIP6YhEBe+JEqW3L7U7kiG+H7buCtmGnF9oj
-	mTnfJyvPss6vpooYiHTi9xFXAuZnat8Qmzb7d17QacRbyHWso2dEZHFNf/qsvAL/I10wuJQ==
-X-Gm-Gg: ASbGnctl9Tx8L84r1EYQC78jLH9HKH94J0nmAgh0WghxipDEk+KAGoF4lo0APRPjB8H
-	ePol39rlQzKtQzFlA+6iOV2R0i5UlRdL99aY+7Xh5J/jJ0IJlM2OKlBlcajY1qHfJOK5QL1fENX
-	4xrD+gDMgAHEPEFdZSXiiI8iacTz9WvtfBIbYhBGW1V3N+Z+xBW2byPbnzjz88oCGRZJ5ktyqq3
-	0mUJJBfWJl+qFxWVKOGukuHdzl4uU0iEBlo+cJaMUT0Fv/yOE0npqoaMUOSupyvjO3U2o/7C12Q
-	bvBBf9FImfaZA4jw3d/w
-X-Received: by 2002:a17:906:6c91:b0:ac7:f348:b8bc with SMTP id a640c23a62f3a-ac7f348c1a4mr846857866b.61.1744131472354;
-        Tue, 08 Apr 2025 09:57:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGoJBXVzWDsYpEAyABHK22MH5Y16LHSd5i/jqdw+5ay+0S5ZKY/E+1W+Hg+xuoMz9rwwMee0Q==
-X-Received: by 2002:a17:906:6c91:b0:ac7:f348:b8bc with SMTP id a640c23a62f3a-ac7f348c1a4mr846855866b.61.1744131471892;
-        Tue, 08 Apr 2025 09:57:51 -0700 (PDT)
-Received: from [192.168.10.48] ([151.49.197.100])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ac7c01c2e6dsm953029866b.174.2025.04.08.09.57.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 09:57:51 -0700 (PDT)
-Message-ID: <8b061b2d-7137-498e-93b2-0cb714824d7b@redhat.com>
-Date: Tue, 8 Apr 2025 18:57:49 +0200
+        d=1e100.net; s=20230601; t=1744131487; x=1744736287;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8uGIqPGo3/RzZiaVHiqgzYEtP/BWLkkvzIhLsqEr0Mg=;
+        b=RxY1lRwUCAwZ2sa29e9fK/pHGnD88o8ux33zu72DuivDEjjBIpWVAQdoFxh+mIeC1R
+         JzLn9Ps12Xvg217g0ORe4AiJZJ2Ozi/5sEw5Im1rj0VHnnsGv4NPZOwu2GdEq1ylFrF0
+         Q/J+zN+dZ7knT1zS8xZPWi2oXpm/i9920j4ZpDW7VG5TZa02O8QYZyhzBeCHXHVfG2f5
+         U/pSX2BEz/7RaUBYBiqwvMKPTTVTnmZL5Ehh+d/ywNCFYC6iTOQDOxiC1MtNPlUkV9tU
+         jhdJHAFgj+eiaUjT5VzlJdKg0OwyAKPX3ao6fpx4IaeZhScnpBZbMsuBm4bbtYVzQqmJ
+         Tj9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUxoS0gMLF0YxZViitQY0Srz7S7mpLD8jo378h4TM9ywrZNC8dzL/j7iBY90fvLBU6R6nSEL0m3pY3PjJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGfoxL7NSSNGFwu6cCwleDvac/6nAAJ9BOtv3g/1lzXEbuaTd2
+	jkRTKn1qVdrPNg/DhjqV1Sp+QcFg1L9440VbZDtno4zDfrwt0OPWdJ2KK9QEgQM=
+X-Gm-Gg: ASbGncu5ULsSrO3kBB2hOjsYiI+YWeYm0fx6Wzp2kgtUp8X9zFiKLs98RumFhxRup01
+	yJIvf9mgHbyQZ5bPks6BD9zHGGQLXhTAX1KbAEUoYc9yMsDQfgKYR5wxrrg91J59g7RSZldtsxE
+	27egDNscmPMys56QZDX6YAiKjDVGA0ZvxI88wAZUD+MmsJz8tdfi0sngKKdZ/zUK/CLH2V75TnH
+	MRikRSCFnbl2yRm3rNcqFoYap5uXB14JgP7Q/g9uMEu2dqUnm0OUXFp6Fjd0MOJJMgSmWsr9/+6
+	SivZMiSkMqtuRwVUmWbBlQnY6+nNg2o5WOZWKzBip2d6
+X-Google-Smtp-Source: AGHT+IFGsRSNGsLurl8DoyFapSJyV7TtJ4uGe3SGSEX3BrkLYJ/yVCM++z6f1tjo7zrernLeUKYo4Q==
+X-Received: by 2002:a5d:5f4e:0:b0:390:f9d0:5df with SMTP id ffacd0b85a97d-39d6fd3647fmr10095287f8f.52.1744131486678;
+        Tue, 08 Apr 2025 09:58:06 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6a60sm15141709f8f.29.2025.04.08.09.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 09:58:06 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Yixun Lan <dlan@gentoo.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alex Elder <elder@riscstar.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts scheme
+Date: Tue,  8 Apr 2025 18:58:05 +0200
+Message-ID: <174413148280.131421.6673320812296091453.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
+References: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 26/67] iommu/amd: KVM: SVM: Delete now-unused
- cached/previous GA tag fields
-To: Sean Christopherson <seanjc@google.com>, Joerg Roedel <joro@8bytes.org>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Maxim Levitsky <mlevitsk@redhat.com>,
- Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
-References: <20250404193923.1413163-1-seanjc@google.com>
- <20250404193923.1413163-27-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20250404193923.1413163-27-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 4/4/25 21:38, Sean Christopherson wrote:
-> Delete the amd_ir_data.prev_ga_tag field now that all usage is
-> superfluous.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This can be moved much earlier (maybe even after patch 10 from a cursory 
-look), can't it?  I'd do that to clarify what has been cleaned up at 
-which point.
 
-Paolo
-
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/svm/avic.c             |  2 --
->   drivers/iommu/amd/amd_iommu_types.h |  1 -
->   drivers/iommu/amd/iommu.c           | 10 ----------
->   include/linux/amd-iommu.h           |  1 -
->   4 files changed, 14 deletions(-)
+On Tue, 08 Apr 2025 23:11:20 +0800, Yixun Lan wrote:
+> gpio irq which using three-cell scheme should always call
+> instance_match() function to find the correct irqdomain.
 > 
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index 9024b9fbca53..7f0f6a9cd2e8 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -943,9 +943,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   		/**
->   		 * Here, pi is used to:
->   		 * - Tell IOMMU to use legacy mode for this interrupt.
-> -		 * - Retrieve ga_tag of prior interrupt remapping data.
->   		 */
-> -		pi.prev_ga_tag = 0;
->   		pi.is_guest_mode = false;
->   		ret = irq_set_vcpu_affinity(host_irq, &pi);
->   	} else {
-> diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
-> index 23caea22f8dc..319a1b650b3b 100644
-> --- a/drivers/iommu/amd/amd_iommu_types.h
-> +++ b/drivers/iommu/amd/amd_iommu_types.h
-> @@ -1060,7 +1060,6 @@ struct irq_2_irte {
->   };
->   
->   struct amd_ir_data {
-> -	u32 cached_ga_tag;
->   	struct amd_iommu *iommu;
->   	struct irq_2_irte irq_2_irte;
->   	struct msi_msg msi_entry;
-> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-> index 635774642b89..3c40bc9980b7 100644
-> --- a/drivers/iommu/amd/iommu.c
-> +++ b/drivers/iommu/amd/iommu.c
-> @@ -3858,23 +3858,13 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *vcpu_info)
->   	ir_data->cfg = irqd_cfg(data);
->   	pi_data->ir_data = ir_data;
->   
-> -	pi_data->prev_ga_tag = ir_data->cached_ga_tag;
->   	if (pi_data->is_guest_mode) {
->   		ir_data->ga_root_ptr = (vcpu_pi_info->pi_desc_addr >> 12);
->   		ir_data->ga_vector = vcpu_pi_info->vector;
->   		ir_data->ga_tag = pi_data->ga_tag;
->   		ret = amd_iommu_activate_guest_mode(ir_data);
-> -		if (!ret)
-> -			ir_data->cached_ga_tag = pi_data->ga_tag;
->   	} else {
->   		ret = amd_iommu_deactivate_guest_mode(ir_data);
-> -
-> -		/*
-> -		 * This communicates the ga_tag back to the caller
-> -		 * so that it can do all the necessary clean up.
-> -		 */
-> -		if (!ret)
-> -			ir_data->cached_ga_tag = 0;
->   	}
->   
->   	return ret;
-> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
-> index 4f433ef39188..deeefc92a5cf 100644
-> --- a/include/linux/amd-iommu.h
-> +++ b/include/linux/amd-iommu.h
-> @@ -19,7 +19,6 @@ struct amd_iommu;
->    */
->   struct amd_iommu_pi_data {
->   	u32 ga_tag;
-> -	u32 prev_ga_tag;
->   	bool is_guest_mode;
->   	struct vcpu_data *vcpu_data;
->   	void *ir_data;
+> The select() function will be called with !DOMAIN_BUS_ANY,
+> so for specific gpio irq driver, it need to set bus token
+> explicitly, something like:
+>   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
+> 
+> [...]
 
+Applied, thanks!
+
+[1/1] gpiolib: support parsing gpio three-cell interrupts scheme
+      https://git.kernel.org/brgl/linux/c/27986833e8e675b6c17654d13623590a46f9033e
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
