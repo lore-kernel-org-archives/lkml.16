@@ -1,113 +1,139 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+Received: from server4.hayhost.am (server4.hayhost.am [2.56.206.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC432641C0;
-	Tue,  8 Apr 2025 09:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104005; cv=pass; b=NK8jy2gbp+Mw71Df9N4T4lF6556YwlRD/R0wqxEhjFEutEQtBnlTmxTwsF15rJNCMFlmceWKMV22bN8R4ps8FCe2cuipkfovVc2cNuRJFqXklh5ffdZxk27TF97mEU8ybvTtPc4IvM05qMods0x+odJQuGlpQ2B/5XdKMaij2f8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104005; c=relaxed/simple;
-	bh=e2gPr6MiECXyJe/SmVpOUVDcZR2UTM66yOOf0w6g9LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=k36IikbCO9n0soxYpuFSLc2p+bZQrlBArRgu/SIAdDIh368NQYdiNVryF6dnirHquwaKsDV6ZjfXBWr5ozQFEC9Ylc6lRRs0IBni+WUlKAgxOun7es04sK4AqMQx2bViunoXuTLFaSbEi9VCL55KTodV50viMOz6iPOu5RR1Lc4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=Uym02xd3; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=okpd5tum; arc=pass smtp.client-ip=85.215.255.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0601F263C6B
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.56.206.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744104017; cv=none; b=s0CW09B1hphkJgsaQMXM/Ib4yIR02o/oMEi3LaiOoc5ZKz34JQrCZj0+lWjD8t0Cw0pvc6WkThnFXEvrXHesLRPfcAuU+AXDbIku+bqub2MTbL6I4T08rWSJk/8EM62I7MuZWTjuzg3JIDFp5/JTIxbwp4FK95VHFbxBUGfdtaE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744104017; c=relaxed/simple;
+	bh=64S+PkRIUcFcRN0fVvTv5oJaDycqRQerfUane5nk2yo=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=iV14rgK0vVpL4qwqUqgxU7zDUkFi+SGo3olOqdBDDy7yeaex9hsIaMhoKShEyApXjxL3np2ln88lMxOKPJX5J4gGErtBL1j6Q+D+5wRk/ZX8nwT4HPw4N86A5X7yvsKfOTw9QP1X9X4Q3qPArg17pIjvRt5Wp2Je/NJ1Gxaa1Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am; spf=pass smtp.mailfrom=beldev.am; dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b=GVPQta/d; arc=none smtp.client-ip=2.56.206.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beldev.am
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="Uym02xd3";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="okpd5tum"
-ARC-Seal: i=1; a=rsa-sha256; t=1744103994; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=TbWc5BC21rJRcIZSSRiyIEVZhiD40LlCC1V/+kvX67kYNzYld3C6Tka/6mCjYGsRDD
-    zBdk/mq5KxAUQQ05gjwftScORfYB/jBJRI3+QpIhA/QNOvlGFkdx1ddbo5Bz3v6m/ikk
-    2LvFPopctBU5Qd6DJreXwjZ5bwDVib2CZUTgI1beHS8Pl2WKuZQo71ifrwKBAlKt5SyK
-    5TbE3sYRhxP4gyHUaaBbmo/WmMi9IEjYb1hjzh7m7ZhgnjNEUaKfEwTke3QP88Mtnrgv
-    /Y/9yd3bC1XALNdTlBI8YRaUj2u7iCqVg1lja7nLSrEOXT1GVKk1NCgIbVgDaVq1qrbK
-    v0KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103994;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
-    b=a1GK1ClTWT5IcmjLr1r4PolyEVPqbGMbvjD0bv2a0Alj29TUnsMyOCq+/s8e0B8iqZ
-    x9WF6bhN/3PAjknTleVDTySAZy+KTeB0h4ad+cTvt6N+nn21GUGqmxUUUlOWrEeOpP30
-    rBd1LrSDRz/9uKCK96kk9yL7scfMtd73Mq5Bm4ZTQFiOZEE29iUBKY7TCYHOGDxDYPTs
-    +YsjDZzaxm74ag2JvbPHllvKAa9FDexS9N2X3Xs0OdpOuFad7fK6i1dU5ybW68AbrIkr
-    iY2rdM/azTruXlhFOp4wiS7eqvoPOi9a15nMFJ/A7KUdLMJFCuU/dHxBgGwJtz165/LY
-    c0+Q==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103994;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
-    b=Uym02xd3bcg42Lj1X0V5+fSgIxtI6OlDaJKRKjbdRWDZwPoiRGua3v3sTyxa1KP6Ud
-    LeHtECNqiDJigBV+ORAvwIiwoLaaMMPEGSNbGp/eOXttdit87on/86bCOQ8nuQn9jO3y
-    rRpYWo6A7Qb+qMtkr7v9Vid7SLTkQB4iKNBxSQ3G4oJI2+tey8zUjld5MudLwwV7wVmp
-    ae7cbSgiRhr8CD7BwOhcCbk7leykBWsx7tet2Y91o6Xhl+34vW3Gr2jhUB9ZPc5f7IpO
-    OxZUhjx90WciyrtpQ2BpkSJPImwr7+1Nd/Sev5wzOQAsmnL9Po5xVDQ6lPDps8NyJzLf
-    Rb5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744103994;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
-    b=okpd5tum1sdCZ6nXBWTwpOv2fXLo0tX1UK6Kr+eYSsTHhxvea1wnHcivtJxpf+ZBms
-    u1CCPxXR2AKq+7m9gOBQ==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b1101389JrXB5
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 8 Apr 2025 11:19:53 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Guillaume Nault <gnault@redhat.com>,
-	Yue Haibing <yuehaibing@huawei.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] net: ipvlan: remove __get_unaligned_cpu32 from ipvlan driver
-Date: Tue,  8 Apr 2025 11:19:46 +0200
-Message-Id: <20250408091946.2266271-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b="GVPQta/d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=beldev.am;
+	s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=FAQWLddjvIhGD1mEzeXztnSrdDH1xu8SvzVV71X0s+Q=; b=GVPQta/duSWT/7npKbIqcotLfD
+	rWw3Ak71SAn9sapYmxbgLQO/hwFOKp7lcfl37tYF2A33hKQ3ksQsg7OQx4rL80vnD1QflsfrJ8bxL
+	GV+JqQaLHplrdBL6xP7dQgw5RMazLxKDAKunz7yYKr5IO2ROctl+uFrj51X+m270T2HpljIMWxrIE
+	B/kk20YoaY96Vq6OasH90PRR0VjpiRuxbqppKqdAXlsIczyovYQgUYhhWSoJ5fAlVsY/Kg2/i/v4c
+	dDqS9iw4u7jGn+wou3Tjy89I6x8ouCM5K8DCqe5aWcd9QpNGMM3y/6F/Ru02WQrT6y+pO9K5G9uAd
+	loHe2L9A==;
+Received: from [::1] (port=60520 helo=server4.hayhost.am)
+	by server4.hayhost.am with esmtpa (Exim 4.98.1)
+	(envelope-from <igor.b@beldev.am>)
+	id 1u257t-000000005Eo-3K7b;
+	Tue, 08 Apr 2025 13:20:13 +0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+Date: Tue, 08 Apr 2025 13:20:11 +0400
+From: Igor Belousov <igor.b@beldev.am>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: vitaly.wool@konsulko.se, Johannes Weiner <hannes@cmpxchg.org>,
+ linux-mm@kvack.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v2] mm: add zblock allocator
+In-Reply-To: <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
+References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
+ <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
+ <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
+ <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
+ <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
+ <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.6.9
+Message-ID: <3f013184c80e254585b56c5f16b7e778@beldev.am>
+X-Sender: igor.b@beldev.am
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server4.hayhost.am
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - beldev.am
+X-Get-Message-Sender-Via: server4.hayhost.am: authenticated_id: igor.b@beldev.am
+X-Authenticated-Sender: server4.hayhost.am: igor.b@beldev.am
 
-The __get_unaligned_cpu32 function is deprecated. So, replace it with
-the more generic get_unaligned and just cast the input parameter.
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
----
- drivers/net/ipvlan/ipvlan_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> >> >>> Do you have zswap/zswapped meminfo metrics from these tests?
+>> >> >> Yep, and those look somewhat similar:
+>> >> >>  - zblock:
+>> >> >> Zswap:            234128 kB
+>> >> >> Zswapped:         733216 kB
+>> >> >> -  zsmalloc:
+>> >> >> Zswap:            286080 kB
+>> >> >> Zswapped:         774688 kB
+>> >> >
+>> >> > I tested the kernel build on a 4-core virtual machine with allocated 4
+>> >> > GB RAM running on a Ryzen 9.
+>> >> >
+>> >> > The results are the following:
+>> >> [...]
+>> >>
+>> >> Now what's funny is that when I tried to compare how 32 threaded build
+>> >> would behave on a 8-core VM I couldn't do it because it OOMs with
+>> >> zsmalloc as zswap backend. With zblock it doesn't, though, and the
+>> >> results are:
+>> >> real    12m14.012s
+>> >> user    39m37.777s
+>> >> sys     14m6.923s
+>> >> Zswap:            440148 kB
+>> >> Zswapped:         924452 kB
+>> >> zswpin 594812
+>> >> zswpout 2802454
+>> >> zswpwb 10878
+>> >>
+>> >> /Igor
+>> >
+>> > May I ask what compression algorithm you are using?
+>> 
+>> It's LZ4 for all the test runs.
+> 
+> Can you try zstd and let me know how it goes :)
 
-diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
-index ca62188a317a..8ccbde16ddfa 100644
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -219,7 +219,7 @@ void *ipvlan_get_L3_hdr(struct ipvl_port *port, struct sk_buff *skb, int *type)
- 
- unsigned int ipvlan_mac_hash(const unsigned char *addr)
- {
--	u32 hash = jhash_1word(__get_unaligned_cpu32(addr+2),
-+	u32 hash = jhash_1word(get_unaligned((u32 *)(addr + 2)),
- 			       ipvlan_jhash_secret);
- 
- 	return hash & IPVLAN_MAC_FILTER_MASK;
--- 
-2.34.1
+Sure. zstd/8 cores/make -j32:
 
+zsmalloc:
+real	7m36.413s
+user	38m0.481s
+sys	7m19.108s
+Zswap:            211028 kB
+Zswapped:         925904 kB
+zswpin 397851
+zswpout 1625707
+zswpwb 5126
+
+zblock:
+real	7m55.009s
+user	39m23.147s
+sys	7m44.004s
+Zswap:            253068 kB
+Zswapped:         919956 kB
+zswpin 456843
+zswpout 2058963
+zswpwb 3921
+
+>> > And does the zswpwb come from zswap shrinker?
+>> 
+>> Haven't looked into that, to be honest.
+> 
+> Can you check:
+> 
+> /sys/module/zswap/parameters/shrinker_enabled
+
+It's 'Y' so the answer is yes.
+
+/Igor
