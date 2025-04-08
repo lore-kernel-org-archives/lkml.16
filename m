@@ -1,95 +1,96 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D3D22ACF1;
-	Tue,  8 Apr 2025 18:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17BB134B0
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136987; cv=none; b=M0kTugRdmJtziM6OS12PPsjdHKw+CVRdXAYIRrNOGWykdQzij5zroAadY3MmmLsodi+Cd+LRoyefUoq2qzj65BBr/AjwLNZaXf0DW1VMfcM/XQ7zfpVVMgciUFgMFGiQRE+28orakWagE7eh7v3EXxgvGkhkJzQYmHLDLVybDYE=
+	t=1744137073; cv=none; b=DKLGw1fDmq7eBmEXsAkj2SzrV2euAyuOoYT+DsoBwBPrxdBIDCQoumBIpy1u1WStqHO5ttf7jR82WhVv7H3Ro5XAaCJFE6t/tjx43Ixs1fjWls4GUlLdcasU74W66SQ4V7YRPKmDvJUjMwczAR5wd7c2AsBEHxL44o3b6Nr2R70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136987; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lPP2phxJybdD4sPAWigh8txl0e/EdPtB6rJJCuIM0jbyRlMVwNiEYkioDgoiqLszQAK9JbXvmVRXwB9wn8CaDyc62AtfyErqmzgMxxKkjhbDs81km1bgCHFCvbWUpS/W3ypYA+EWmY2LT9aCDNK+gHTQEccAicfNN3RxkhYD630=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=inUK64hQ; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744137073; c=relaxed/simple;
+	bh=/Yvd/AATECuw7tf1K+68aZf1ZUg27wWNq8i7/NpbeDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBx3lwDZqN4Ew/5rQBd8pRXNrS2+4jjECRvA8NSqo7QB857DJogNfx/Y+qqL/XCwXTQFVW7sNedmjHVe/BeQVUL+RBmmkMs2m43H5ETxvR9LXq5bOIeUqRZQcrZ8WWnTftv0azwzoZeRg6F8jzRW3ukbQ8KkdQz7qhCxsmpPd6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LM7r/Iid; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="inUK64hQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744136977; x=1744741777; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=inUK64hQV6HkN/kDU3G5FxtNbI7gp1MMDMhvgzq7ygGe8RxMbJJC9gTwsx357JVI
-	 vYfsHMtRO8UPclzQ2UNkK+MQKvl0MFkrQNJ39qlMV8FJrmgnlo3iEss8vIh0r36XZ
-	 Y1lci5keNcXty421+tipGcm7J+DYHU9Wjh1YciIuNuZBzp4ZJLkQzVz1lhPeuzKLz
-	 5H/Nq6FwCwo4hqeSNE8usFrHznBm2HnTQyklLeM1l0jGC0dR+ytQo8nkJOH0MlfVF
-	 fPtnk1NurEIrjtCP+p+DLxvqecqB6KCymyfV7n7XJ5ue8bEoJn+FVCAT+zUApsndS
-	 IhvCVZb1jCMmBMaOUQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.33.88]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3Rs-1tmCDv1OCE-00RrTC; Tue, 08
- Apr 2025 20:29:37 +0200
-Message-ID: <985aa948-5f3c-4c06-8c96-5f382578f409@gmx.de>
-Date: Tue, 8 Apr 2025 20:29:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LM7r/Iid"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7FBAC4CEE5;
+	Tue,  8 Apr 2025 18:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744137073;
+	bh=/Yvd/AATECuw7tf1K+68aZf1ZUg27wWNq8i7/NpbeDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LM7r/IidoyCX+j+Xf8wptiQ+Z9sqGWEmlfCa2Q2buxF3AaJtnqrKOW571K46pIeV/
+	 7fueTumgrFuUnrFXPODLeDx9hoB+lGdOCVLcbr28Uqx7ZNDOjY/VRXH9+Zqz2P98ik
+	 jylgpDNMMBSVLxH9ry6aQidc/UJP5fieCheSpJ1cBkLbbaZEnv+ro43QyzGoXj28Si
+	 eklD0LpuftYzIrxXwMiXLuvn19B8nZ6bwoswZCpf0zJXmFP0jJjjmo/yXGQThmFs5s
+	 pbqReCAH2vFroRdDHqAu71MVPmLTu9Lm9E6oWUO+ztpzep4+AsiEJHdXnNedWTHja0
+	 aq5tOdcW5wM+w==
+Date: Tue, 8 Apr 2025 08:31:12 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 sched_ext/for-6.15-fixes] sched_ext: Mark
+ SCX_OPS_HAS_CGROUP_WEIGHT for deprecation
+Message-ID: <Z_VrcMkl2w7EIPC0@slm.duckdns.org>
+References: <Z_RdpDkLCXm140RT@slm.duckdns.org>
+ <Z_TXIe2fVpAt-CAg@gpd3>
+ <Z_VnKbElcEWWg4CH@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408154144.815882523@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250408154144.815882523@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ktH0YbfbJENydWsqHGG74iFQU3+HEAd9iZoNxVC+4mYQsWVjaau
- WJmWxkr+TKuZnp0V+IgjqCUmow+3fYmmgzCXBcd4/Yn5i9akzIYxFRlJy5Evtd7mx3IwY+T
- ANWilG2pJU+2/h3TwFxw8XjofWhhSOVSmAO8wU99J8TAUJd68Ya5kAAX7fYtGPPMy5nX5rD
- uI1Db0LoXAGD7UojFSUzg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/t7vKCRv9tA=;S7haPercSpKNHEyHGYNrtXNozci
- cGY7sTkynyNVEHBySODjRJXd+vWPqYB5b8iKcn9F6i7x3uyQgmI3ZQEuC6z4S1SSNjodTdGZK
- a8EuX8YDvb08TFdT2OufaMh7ErrOU+j5UQqXb6lfSAc0MzyPruA9GjDOOC06y41PUd3yOYjxI
- N/lKS21iYgF41VV0uvV9IpXUXUtLmEoMppUl/9EGlfID4NOBGtez45AlOWjMcehvc9Rj88Ock
- Mc6g3GGiVjXDulARkMx3QavizpkRWZJW4edgGz9ZtDV+YaoHbbuKdX6RsO4vZblAbfQH0Ulwj
- bbfTpy6t4XgQrQJQOKuqubMw9GVccn/men5/dXfrza7OtfnrkM6Tc4wjXA7BERjFP87Kn8st+
- AgAkYo0kM1V5YtKBI+MkFvqwJjhqekw8+S3gWubl2eEa2YsGemRWZluCN+H+ZolCWg2qshjU1
- eqXgE4tKhYDkR30FXanaeWy5y3WZwOHBEiQxZ+asDvnBXf2TWj1OVVO/DQy6HppUlCfGRxq17
- Zq94a7e/oXEY5u392PRb20Trh+IR49Zg5hGLFslQ9cbsiML7OWpw6KjPiQxSu0ykj1lqN6e2C
- mwADuOwixm+j2xSC7izGlvu0WkzaJBlpxF4/qtNnKgElEHN6Yf7v9V8kSpFWf9l4fyEyAR/4l
- lNaKBSCHi9tEgQIiZas7+psZzqRp8Mo9k8mQDVFH2UVOHj5ztW8DnY4vvXYJJCLePN5YIXoV5
- iP/zV5CbFAe/3KX5AKlQjwGIw8VAqJYeZ68z0W3uZ2XVwmk/+gFyyuEf40lnVk84zrc3X18sz
- nklQ33SoL75qKwvPN1AvGokRCLVVAUjeQlxzImSG673T5KSpbp8QUm3cRcPUMOsxpmm0jX49G
- KFKZstHmYMUaX/ZpxfEATvxANlkonJq7UEzgYCREdliSLp0p+4F7dk9KDrGjzHT6nc6nrbpVT
- BJLu8HLah14jOUE5e+Dy0/Vu/p2kq6nJqh33QWQR5HI3YlkmVlrwWt5bO9J4H0l99MI3C8vze
- 552I8kmbm1Bjxb/Py1y+VkOGsQXxwqAicx6dBHKpZezBinPMK7eEgYGJLCs+IHbRQkcmmbRFw
- giSvbtBFDWIz5bgYW/3IUKSgKwced4TvGjXOKZ5oCNOMdib8QHakoQkCIVssgPmA9Dx8mlRCg
- 0N8Fmr1a2S7V0n8uhJtL+08Qcc8X8h0/RG80W8ptVTTyMU05wBUhe/+BdAeyRfmcaAfg9DuFK
- ETKRCgoLuHbuR4zdJQA+p1zx+ua2U+Nr+n+PUS1qTu8Y6l34cgYdGNYPOQqiikaQyU80BVU02
- lKTEmQ3YYMt4JIUpH4yI3GrKGvU1CIY3GILzyJhULFB1xXxxYwvMAVYgbqGu2MGtZsbH6ZUO/
- 5TPwkkX7Up9hpHZAsLoc58NNGYVpSRnXUMCDLL17Q83itTjA3dFfbkKVv9eMBNsCWsQy1iG4T
- WWTmF4qcR1ETy38HgdcFl1q3EEt4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_VnKbElcEWWg4CH@slm.duckdns.org>
 
-Hi Greg
+SCX_OPS_HAS_CGROUP_WEIGHT was only used to suppress the missing cgroup
+weight support warnings. Now that the warnings are removed, the flag doesn't
+do anything. Mark it for deprecation and remove its usage from scx_flatcg.
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+v2: Actually include the scx_flatcg update.
 
-Thanks
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Andrea Righi <arighi@nvidia.com>
+---
+ kernel/sched/ext.c               |    5 ++++-
+ tools/sched_ext/scx_flatcg.bpf.c |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
-
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 21eaf081d336..fdbf249d1c68 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -163,7 +163,7 @@ enum scx_ops_flags {
+ 	/*
+ 	 * CPU cgroup support flags
+ 	 */
+-	SCX_OPS_HAS_CGROUP_WEIGHT = 1LLU << 16,	/* cpu.weight */
++	SCX_OPS_HAS_CGROUP_WEIGHT = 1LLU << 16,	/* DEPRECATED, will be removed on 6.18 */
+ 
+ 	SCX_OPS_ALL_FLAGS	= SCX_OPS_KEEP_BUILTIN_IDLE |
+ 				  SCX_OPS_ENQ_LAST |
+@@ -5213,6 +5213,9 @@ static int validate_ops(const struct sched_ext_ops *ops)
+ 		return -EINVAL;
+ 	}
+ 
++	if (ops->flags & SCX_OPS_HAS_CGROUP_WEIGHT)
++		pr_warn("SCX_OPS_HAS_CGROUP_WEIGHT is deprecated and a noop\n");
++
+ 	return 0;
+ }
+ 
+diff --git a/tools/sched_ext/scx_flatcg.bpf.c b/tools/sched_ext/scx_flatcg.bpf.c
+index 2c720e3ecad5..fdc7170639e6 100644
+--- a/tools/sched_ext/scx_flatcg.bpf.c
++++ b/tools/sched_ext/scx_flatcg.bpf.c
+@@ -950,5 +950,5 @@ SCX_OPS_DEFINE(flatcg_ops,
+ 	       .cgroup_move		= (void *)fcg_cgroup_move,
+ 	       .init			= (void *)fcg_init,
+ 	       .exit			= (void *)fcg_exit,
+-	       .flags			= SCX_OPS_HAS_CGROUP_WEIGHT | SCX_OPS_ENQ_EXITING,
++	       .flags			= SCX_OPS_ENQ_EXITING,
+ 	       .name			= "flatcg");
