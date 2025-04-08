@@ -1,36 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D9525FA0D;
-	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D62219A76;
+	Tue,  8 Apr 2025 07:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095844; cv=none; b=tIkcGtyNd+wkjxvq/umQj8CNcRTEUgxBV9rmSuEAdbgxmoWr4Qly8QmLP0r7+0YmYIF/3+Xns/2PwzYsJiwW8J0p+2WORUsN3nUiE5+dLSthZB/n/drzqj88vBNEO5OJexXFBYLIKiIxrGCZ1FHLeirUSoePSx74YCd2kKUkpVo=
+	t=1744095901; cv=none; b=RVzJNh2ckgQYgcEsAyZdcg/7AgNp4Qg1OZtM6h9Nh3Li1xGrja/INDGIOnQoA6AcaP8ZnRPUpuzcAua9cj2YGALzZt51aNgRCAbwfL0BEALmZehjCFfGi19UkxLJ0VEK/sHp58H22HRjHsOKKDAmYuiWzRe6TWzrefvSAC6s5pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095844; c=relaxed/simple;
-	bh=fdd64doT3ZUCmvsoRtRL1uM7nadg2Erx2MdHF1BDcyY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CfrRvPZQNcNJU/PYv+ceJdzXKWiwz+sHnF+5AjQpxScfsj8YG11MnewF5LEgY3DiJZSBOQkqtP0gv5JlU/MoOUzWlIgnQjdF97ShPc8XmHCfoD2DOJAq5veAHCQRZTTj4btRdO2IhZPlE+PPP4UqqPWnZ+YDVb94yzHRSEvIqmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6BWOmxV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744095901; c=relaxed/simple;
+	bh=eEpZz8tbfoFeBVxKAYzPIl0JRGnarfa94dGMMm/aZIE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tN6NA/RwkmgrXvIogPLJQSPEfxgRabQg66bMsywwv4zd4C6SK7kBToUtwcUWrSjptJZDyniedBKy/QN8r9YHlP0gqyvNPqNXQsAivE5qYK5c7zL5VxJSxi6DMyzfusLxuUcyw0JpFeeC+/BqoLQWOfUskd2IQ9U8gcecxZVBra8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOZbtrFc; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6BWOmxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EA90C4CEE9;
-	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744095843;
-	bh=fdd64doT3ZUCmvsoRtRL1uM7nadg2Erx2MdHF1BDcyY=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=r6BWOmxVRabHmMcraz60OK43gNEsbPHAshAOQsFAMGDo6z2beXBxh+Bp+vmx9uT9/
-	 K0qGl4HdZiR61ycc53ENHsM7vWBY3aZ3YT5sO5vuJsm2xqT8DU5Lt17qr1DVUCH6HE
-	 VR2GNNuSTGsl9zNObAuxnFyj8RL4aG/+9HRdPYi5o8HTshpJy4HncIYretMe4/iHCH
-	 aGzwuv4MlVOyTpmcbJ7OB0lNsGDZSsIN6mzREaqDRobUuVyif7QTivVqPqA3Kj+t6K
-	 BAsrJqIFMP18rutfdIHu3H9oVizvzpSc5kOcgChIVING4HEgLuKCQvf6T/q0dioq9p
-	 2sufQcw6bWLsg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2A6C3600C;
-	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Tue, 08 Apr 2025 15:04:01 +0800
-Subject: [PATCH] spi: meson-spicc: add DMA support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOZbtrFc"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c091b54aaso47312261fa.3;
+        Tue, 08 Apr 2025 00:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744095898; x=1744700698; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z9RvH6nJLCGwOS3IUf0/jo5Vvg4n1Cl/DgCkb9I5L20=;
+        b=kOZbtrFcPHj+kGLKsqDAPHFsWDhdozP1/Ze7mip1LzAnbjjhncrv+qvYvQYGa5qk/j
+         nudlGbletrjfNdnfpc4wLh1qt2RxC1sGtgyXZ7hKV8xiKrWvRKFXxaEB+ydikZsYjC2q
+         l27oUFzLNNNYB/unOCsS/IGV3JPFF/WrQjAiXw44TBYHa44isoYzoRu6yW7UGnENGC32
+         Z6Sn7wjigRj9t/9oGUmFOsWJU5kgJ4A/T3U2fewC1DnZG+fpO/IbHr8hATH0ksULrFts
+         jvoKznWWy5HQePP+KnMBu4n6mOpfgxbvMsZ/id+asTs9m3voq1l7kcC25ZHce3SmIuQF
+         wxhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744095898; x=1744700698;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z9RvH6nJLCGwOS3IUf0/jo5Vvg4n1Cl/DgCkb9I5L20=;
+        b=eERWF2F++NEneED4qmLyeigV6Q8h0j3Z56VU50cD2oOaAZWX38M8nLSO9LXrStEa/o
+         xNKDWCMK0+Gc+powVU9uc9KQqr68pwOe5iuUxdZeO8bKlYJ9eQx2/2kxDoZekd9yHFSg
+         93IkuKuCB92N03bxD/qpKcHFow8jLfYZ1+fn7d+7lAip8Wcmlk+wYhFQPauWPhVT+WOS
+         5Nb1D5syDxMRaMtBpVMX1ynb2wv3IBuYXqIY1+sGWww9mBWxqBBpEb2u3mP2HUG9ogoG
+         rLBDDuiT/cSVJculh40e8O7cBqulnOYyzHFiYjLGDyWWYmy0okgziP18tj1TVYa5eTeW
+         eQ2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcx+ci957tPN85O6ZmYRkoah+p/nBGG6/eGj6EiFegD0qqR0S3jp628POcmySo8qsTDEqi5TqPN2FG@vger.kernel.org, AJvYcCXn2BbwTTjASLFdfjYr4qy/biIkRBQiHHxCXASUQEkF7TztK4fb2d0GrhxBs/3H0USKuLL19QbYRmKCroHq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA7obK16g4gRHBIz2gUesm3JwYr6o8DODo7P7XlV8h7BvsRvcu
+	jtdraROmzIZplqdtKICWv17NzhakCR8rDenAwjCtVsc3hfNOhF4twX3dqjHC854=
+X-Gm-Gg: ASbGncspCaM1bJ20Qr0+1EH/wHewSnANjkGWD2bGggIkhSZwLuebU0+FUgHGzbuKarw
+	hQeyNAYiWZnG7NKmZZELeqA53D9RaeFvDDaM5BGXGpzqARfjdMd+bnNeV0qbVF/M426cTFPz8nI
+	dyZu1D/nSAX2oaBc2xDepJKNGA0nYTO25BbX0D4fL1af5t6AOeolxfkfujAU+ym60/qIrUSztZp
+	qG1cP+WwJcdlb7rnSa5tunP1kW8tcZFp2tb3RCscnHSSNjC2DMv0vc5ozQsoUcylOJxgEGgegeB
+	Og32zJqfrvhLnSlPVTLkyAAaQh1arRToic+TC2SWA4Nwwqtc803QUmVltWbWUBOYx5N4Le0OqB/
+	g9O9B4ei+K1t1snjxpF3gJgI=
+X-Google-Smtp-Source: AGHT+IGHZ5XDw5CVJD6Mj7fkx1Ax4avmRtdNAL/FMZrSclddvl9CK4M3rbRK8XAjnFF8Yiqd4LfUnA==
+X-Received: by 2002:a2e:a0c5:0:b0:30c:11ef:98ea with SMTP id 38308e7fff4ca-30f1650ebb9mr22936511fa.15.1744095897589;
+        Tue, 08 Apr 2025 00:04:57 -0700 (PDT)
+Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcd37sm19252841fa.76.2025.04.08.00.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:04:56 -0700 (PDT)
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: [PATCH v3 0/3] Add support for Sitronix ST7571 LCD controller
+Date: Tue, 08 Apr 2025 09:04:27 +0200
+Message-Id: <20250408-st7571-v3-0-200693efec57@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,364 +68,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAGDK9GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEwML3eKCTN2U3ETdZBNLyzRTM4MUI0tTJaDqgqLUtMwKsEnRsbW1ACx
- sJVRZAAAA
-To: Mark Brown <broonie@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Sunny Luo <sunny.luo@amlogic.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744095841; l=11051;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=HoQngfucDhq8Rc3lBesyjBYIgN9TUaxT6bDfj5vDpZY=;
- b=LCuBOKvTVtOq4fONF3GKDsl2aycldIHGZMpCbjNdsFyagqAM/E+wFfih8p3Iox5DlC9SGMYLi
- d/7sAJuvOhMALJT8Jgwwu4th7/+vvSOf9hzMx0+YIM3QdRLEsIkGfku
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+X-B4-Tracking: v=1; b=H4sIAHzK9GcC/1WOywqDMBBFf0Vm3ZQ8q3bV/yhdxDjqQH2QSGgR/
+ 71RsLTLc5lzmAUCesIA12wBj5ECjUMCdcrAdXZokVGdGCSXhmsuWJhzkwtWqkJWpWscVw2k48l
+ jQ689dH8k7ijMo3/v3Si29UjIIxEF40wZUV+qErHS9tb2lp5nN/awJaL81fRXk0nTLi+sTQ/U5
+ k9b1/UDbhadJtMAAAA=
+X-Change-ID: 20250401-st7571-9382b9cfc03f
+To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>, 
+ Thomas Zimmermann <tzimmrmann@suse.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1950;
+ i=marcus.folkesson@gmail.com; h=from:subject:message-id;
+ bh=eEpZz8tbfoFeBVxKAYzPIl0JRGnarfa94dGMMm/aZIE=;
+ b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn9MqDYL4Rhfhi8V+kf9Zem2olB5P2Qq/M3efES
+ knX7dZ79KmJAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ/TKgwAKCRCIgE5vWV1S
+ MvNaD/sGDNFrhZRmkpqyysOxA57JnfIB2WFb37egut7976M91VnMr0YN/Rs3Cn0MtEkHjVDNHVU
+ MbypurmU/NsWEgM9BP5ghIenoCn2xtAcU6dmpQz0MSDZep9xIQCm/sK6z723NysZ7QIDHA9XnaN
+ Iysrkr99XbVU7EGymnoR9arbKya5PfTTnFf9KWsHwKKjolw0p5fTM79UmEMC/1N2FmHsaYFX2PC
+ XimwRJIm2qqxlEI0xBBeWI5Pb97pu0DoejnFzCDoyjMVJwZjUxBRNiP9Im/OhM2TsktyX5DNLII
+ LDOU4hKIa/UEXWHTbchvX/ZpZI/DBwh8nbYHzuU0eDReZBdCf3zcFiZNxW4VakjC/TwicqvkiVv
+ fcD6iIC6G5zeIUwn397ZZqRzidgX+1DPI+DBtX0+md8Oh7VPSOHJRrAuaVNV/lNSH5lieH7vdXI
+ FxSYQIQSg/Unm8PGgaF0e8owc/617Es0USBBJL7mRRQ+uaLKpP6JuvkxfktxYQVQzD4YBCmZKsA
+ yZqIL5eV0opXtAa2j/qTqKGl9UxLyzvBxvAtCm9Vzphojzs1QL3ST3/ZnpPVX9VTB3yoEBJflvK
+ sCmf6hkiuDvY5lcd66ABAmfjNmQ4DxA2mzEX00NLU9lDM/wgRLmuwCikZj5XwNzBRCoYSQAsGHY
+ d5qXODS/H3OxT3Q==
+X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
+ fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+This series add support for the ST7571 LCD Controller.
+It is a 4 gray scale dot matrix LCD controller that supports several
+interfaces such as SPI, I2C and a 8bit parallell port.
 
-Add DMA support for spicc driver.
+This driver only supports the I2C interface, but all common parts could
+easily be put into a common file to be used with other interfaces.
+I only have I2C to test with.
 
-DMA works if the transfer meets the following conditions:
-1. 64 bits per word;
-2. The transfer length must be multiples of the dma_burst_len,
-   and the dma_burst_len should be one of 8,7...2,
-   otherwise, it will be split into several SPI bursts.
+The device is a little defiant, it tends to NAK some commands, but all
+commands takes effect, hence the I2C_M_IGNORE_NAK flag.
 
-Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 ---
- drivers/spi/spi-meson-spicc.c | 243 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 232 insertions(+), 11 deletions(-)
+Changes in v3:
+- (dt-binding) Use 'Controller' rather than 'Panel' in texts
+- (dt-binding) Constrain the reg property
+- (dt-binding) Remove panel-timing description
+- (dt-binding) Change description
+- Mostly cosmetic changes in the driver code
+- Don't call drm_atomic_helper_shutdown() in remove()
+- Link to v2: https://lore.kernel.org/r/20250404-st7571-v2-0-4c78aab9cd5a@gmail.com
 
-diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-index df74ad5060f8..81e263bceba9 100644
---- a/drivers/spi/spi-meson-spicc.c
-+++ b/drivers/spi/spi-meson-spicc.c
-@@ -21,6 +21,7 @@
- #include <linux/interrupt.h>
- #include <linux/reset.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/dma-mapping.h>
- 
- /*
-  * The Meson SPICC controller could support DMA based transfers, but is not
-@@ -33,6 +34,20 @@
-  * - CS management is dumb, and goes UP between every burst, so is really a
-  *   "Data Valid" signal than a Chip Select, GPIO link should be used instead
-  *   to have a CS go down over the full transfer
-+ *
-+ * DMA achieves a transfer with one or more SPI bursts, each SPI burst is made
-+ * up of one or more DMA bursts. The DMA burst implementation mechanism is,
-+ * For TX, when the number of words in TXFIFO is less than the preset
-+ * reading threshold, SPICC starts a reading DMA burst, which reads the preset
-+ * number of words from TX buffer, then writes them into TXFIFO.
-+ * For RX, when the number of words in RXFIFO is greater than the preset
-+ * writing threshold, SPICC starts a writing request burst, which reads the
-+ * preset number of words from RXFIFO, then write them into RX buffer.
-+ * DMA works if the transfer meets the following conditions,
-+ * - 64 bits per word
-+ * - The transfer length in word must be multiples of the dma_burst_len, and
-+ *   the dma_burst_len should be one of 8,7...2, otherwise, it will be split
-+ *   into several SPI bursts by this driver
-  */
- 
- #define SPICC_MAX_BURST	128
-@@ -128,6 +143,29 @@
- 
- #define SPICC_DWADDR	0x24	/* Write Address of DMA */
- 
-+#define SPICC_LD_CNTL0	0x28
-+#define VSYNC_IRQ_SRC_SELECT		BIT(0)
-+#define DMA_EN_SET_BY_VSYNC		BIT(2)
-+#define XCH_EN_SET_BY_VSYNC		BIT(3)
-+#define DMA_READ_COUNTER_EN		BIT(4)
-+#define DMA_WRITE_COUNTER_EN		BIT(5)
-+#define DMA_RADDR_LOAD_BY_VSYNC		BIT(6)
-+#define DMA_WADDR_LOAD_BY_VSYNC		BIT(7)
-+#define DMA_ADDR_LOAD_FROM_LD_ADDR	BIT(8)
-+
-+#define SPICC_LD_CNTL1	0x2c
-+#define DMA_READ_COUNTER		GENMASK(15, 0)
-+#define DMA_WRITE_COUNTER		GENMASK(31, 16)
-+#define DMA_BURST_LEN_DEFAULT		8
-+#define DMA_BURST_COUNT_MAX		0xffff
-+#define SPI_BURST_LEN_MAX	(DMA_BURST_LEN_DEFAULT * DMA_BURST_COUNT_MAX)
-+
-+enum {
-+	DMA_TRIG_NORMAL = 0,
-+	DMA_TRIG_VSYNC,
-+	DMA_TRIG_LINE_N,
-+};
-+
- #define SPICC_ENH_CTL0	0x38	/* Enhanced Feature */
- #define SPICC_ENH_CLK_CS_DELAY_MASK	GENMASK(15, 0)
- #define SPICC_ENH_DATARATE_MASK		GENMASK(23, 16)
-@@ -171,6 +209,9 @@ struct meson_spicc_device {
- 	struct pinctrl			*pinctrl;
- 	struct pinctrl_state		*pins_idle_high;
- 	struct pinctrl_state		*pins_idle_low;
-+	dma_addr_t			tx_dma;
-+	dma_addr_t			rx_dma;
-+	bool				using_dma;
- };
- 
- #define pow2_clk_to_spicc(_div) container_of(_div, struct meson_spicc_device, pow2_div)
-@@ -202,6 +243,155 @@ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
- 	writel_relaxed(conf, spicc->base + SPICC_ENH_CTL0);
- }
- 
-+static int meson_spicc_dma_map(struct meson_spicc_device *spicc,
-+			       struct spi_transfer *t)
-+{
-+	struct device *dev = spicc->host->dev.parent;
-+
-+	if (!(t->tx_buf && t->rx_buf))
-+		return -EINVAL;
-+
-+	t->tx_dma = dma_map_single(dev, (void *)t->tx_buf, t->len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, t->tx_dma))
-+		return -ENOMEM;
-+
-+	t->rx_dma = dma_map_single(dev, t->rx_buf, t->len, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(dev, t->rx_dma))
-+		return -ENOMEM;
-+
-+	spicc->tx_dma = t->tx_dma;
-+	spicc->rx_dma = t->rx_dma;
-+
-+	return 0;
-+}
-+
-+static void meson_spicc_dma_unmap(struct meson_spicc_device *spicc,
-+				  struct spi_transfer *t)
-+{
-+	struct device *dev = spicc->host->dev.parent;
-+
-+	if (t->tx_dma)
-+		dma_unmap_single(dev, t->tx_dma, t->len, DMA_TO_DEVICE);
-+	if (t->rx_dma)
-+		dma_unmap_single(dev, t->rx_dma, t->len, DMA_FROM_DEVICE);
-+}
-+
-+/*
-+ * According to the remain words length, calculate a suitable spi burst length
-+ * and a dma burst length for current spi burst
-+ */
-+static u32 meson_spicc_calc_dma_len(struct meson_spicc_device *spicc,
-+				    u32 len, u32 *dma_burst_len)
-+{
-+	u32 i;
-+
-+	if (len <= spicc->data->fifo_size) {
-+		*dma_burst_len = len;
-+		return len;
-+	}
-+
-+	*dma_burst_len = DMA_BURST_LEN_DEFAULT;
-+
-+	if (len == (SPI_BURST_LEN_MAX + 1))
-+		return SPI_BURST_LEN_MAX - DMA_BURST_LEN_DEFAULT;
-+
-+	if (len >= SPI_BURST_LEN_MAX)
-+		return SPI_BURST_LEN_MAX;
-+
-+	for (i = DMA_BURST_LEN_DEFAULT; i > 1; i--)
-+		if ((len % i) == 0) {
-+			*dma_burst_len = i;
-+			return len;
-+		}
-+
-+	i = len % DMA_BURST_LEN_DEFAULT;
-+	len -= i;
-+
-+	if (i == 1)
-+		len -= DMA_BURST_LEN_DEFAULT;
-+
-+	return len;
-+}
-+
-+static void meson_spicc_setup_dma(struct meson_spicc_device *spicc, u8 trig)
-+{
-+	unsigned int len;
-+	unsigned int dma_burst_len, dma_burst_count;
-+	unsigned int count_en = 0;
-+	unsigned int txfifo_thres = 0;
-+	unsigned int read_req = 0;
-+	unsigned int rxfifo_thres = 31;
-+	unsigned int write_req = 0;
-+	unsigned int ld_ctr1 = 0;
-+
-+	writel_relaxed(spicc->tx_dma, spicc->base + SPICC_DRADDR);
-+	writel_relaxed(spicc->rx_dma, spicc->base + SPICC_DWADDR);
-+
-+	/* Set the max burst length to support a transmission with length of
-+	 * no more than 1024 bytes(128 words), which must use the CS management
-+	 * because of some strict timing requirements
-+	 */
-+	writel_bits_relaxed(SPICC_BURSTLENGTH_MASK, SPICC_BURSTLENGTH_MASK,
-+			    spicc->base + SPICC_CONREG);
-+
-+	len = meson_spicc_calc_dma_len(spicc, spicc->xfer_remain,
-+				       &dma_burst_len);
-+	spicc->xfer_remain -= len;
-+	dma_burst_count = DIV_ROUND_UP(len, dma_burst_len);
-+	dma_burst_len--;
-+
-+	if (trig == DMA_TRIG_LINE_N)
-+		count_en |= VSYNC_IRQ_SRC_SELECT;
-+
-+	if (spicc->tx_dma) {
-+		spicc->tx_dma += len;
-+		count_en |= DMA_READ_COUNTER_EN;
-+		if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
-+			count_en |= DMA_RADDR_LOAD_BY_VSYNC
-+				    | DMA_ADDR_LOAD_FROM_LD_ADDR;
-+		txfifo_thres = spicc->data->fifo_size - dma_burst_len;
-+		read_req = dma_burst_len;
-+		ld_ctr1 |= FIELD_PREP(DMA_READ_COUNTER, dma_burst_count);
-+	}
-+
-+	if (spicc->rx_dma) {
-+		spicc->rx_dma += len;
-+		count_en |= DMA_WRITE_COUNTER_EN;
-+		if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
-+			count_en |= DMA_WADDR_LOAD_BY_VSYNC
-+				    | DMA_ADDR_LOAD_FROM_LD_ADDR;
-+		rxfifo_thres = dma_burst_len;
-+		write_req = dma_burst_len;
-+		ld_ctr1 |= FIELD_PREP(DMA_WRITE_COUNTER, dma_burst_count);
-+	}
-+
-+	writel_relaxed(count_en, spicc->base + SPICC_LD_CNTL0);
-+	writel_relaxed(ld_ctr1, spicc->base + SPICC_LD_CNTL1);
-+	writel_relaxed(((trig == DMA_TRIG_NORMAL) ? SPICC_DMA_ENABLE : 0)
-+		    | SPICC_DMA_URGENT
-+		    | FIELD_PREP(SPICC_TXFIFO_THRESHOLD_MASK, txfifo_thres)
-+		    | FIELD_PREP(SPICC_READ_BURST_MASK, read_req)
-+		    | FIELD_PREP(SPICC_RXFIFO_THRESHOLD_MASK, rxfifo_thres)
-+		    | FIELD_PREP(SPICC_WRITE_BURST_MASK, write_req),
-+		    spicc->base + SPICC_DMAREG);
-+}
-+
-+static void meson_spicc_dma_irq(struct meson_spicc_device *spicc)
-+{
-+	if (readl_relaxed(spicc->base + SPICC_DMAREG) & SPICC_DMA_ENABLE)
-+		return;
-+
-+	if (spicc->xfer_remain) {
-+		meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
-+	} else {
-+		writel_bits_relaxed(SPICC_SMC, 0, spicc->base + SPICC_CONREG);
-+		writel_relaxed(0, spicc->base + SPICC_INTREG);
-+		writel_relaxed(0, spicc->base + SPICC_DMAREG);
-+		meson_spicc_dma_unmap(spicc, spicc->xfer);
-+		complete(&spicc->done);
-+	}
-+}
-+
- static inline bool meson_spicc_txfull(struct meson_spicc_device *spicc)
- {
- 	return !!FIELD_GET(SPICC_TF,
-@@ -293,6 +483,11 @@ static irqreturn_t meson_spicc_irq(int irq, void *data)
- 
- 	writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + SPICC_STATREG);
- 
-+	if (spicc->using_dma) {
-+		meson_spicc_dma_irq(spicc);
-+		return IRQ_HANDLED;
-+	}
-+
- 	/* Empty RX FIFO */
- 	meson_spicc_rx(spicc);
- 
-@@ -426,9 +621,6 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
- 
- 	meson_spicc_reset_fifo(spicc);
- 
--	/* Setup burst */
--	meson_spicc_setup_burst(spicc);
--
- 	/* Setup wait for completion */
- 	reinit_completion(&spicc->done);
- 
-@@ -442,11 +634,40 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
- 	/* Increase it twice and add 200 ms tolerance */
- 	timeout += timeout + 200;
- 
--	/* Start burst */
--	writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
-+	if (xfer->bits_per_word == 64) {
-+		int ret;
- 
--	/* Enable interrupts */
--	writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
-+		/* must tx */
-+		if (!xfer->tx_buf)
-+			return -EINVAL;
-+
-+		/* dma_burst_len 1 can't trigger a dma burst */
-+		if (xfer->len < 16)
-+			return -EINVAL;
-+
-+		ret = meson_spicc_dma_map(spicc, xfer);
-+		if (ret) {
-+			meson_spicc_dma_unmap(spicc, xfer);
-+			dev_err(host->dev.parent, "dma map failed\n");
-+			return ret;
-+		}
-+
-+		spicc->using_dma = true;
-+		spicc->xfer_remain = DIV_ROUND_UP(xfer->len, spicc->bytes_per_word);
-+		meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
-+		writel_relaxed(SPICC_TE_EN, spicc->base + SPICC_INTREG);
-+		writel_bits_relaxed(SPICC_SMC, SPICC_SMC, spicc->base + SPICC_CONREG);
-+	} else {
-+		spicc->using_dma = false;
-+		/* Setup burst */
-+		meson_spicc_setup_burst(spicc);
-+
-+		/* Start burst */
-+		writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
-+
-+		/* Enable interrupts */
-+		writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
-+	}
- 
- 	if (!wait_for_completion_timeout(&spicc->done, msecs_to_jiffies(timeout)))
- 		return -ETIMEDOUT;
-@@ -853,10 +1074,10 @@ static int meson_spicc_probe(struct platform_device *pdev)
- 	host->num_chipselect = 4;
- 	host->dev.of_node = pdev->dev.of_node;
- 	host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
--	host->bits_per_word_mask = SPI_BPW_MASK(32) |
--				   SPI_BPW_MASK(24) |
--				   SPI_BPW_MASK(16) |
--				   SPI_BPW_MASK(8);
-+	/* DMA works at 64 bits, but it is invalidated by the spi core,
-+	 * clr the mask to avoid the spi core validation check
-+	 */
-+	host->bits_per_word_mask = 0;
- 	host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
- 	host->min_speed_hz = spicc->data->min_speed_hz;
- 	host->max_speed_hz = spicc->data->max_speed_hz;
+Changes in v2:
+- Reworked pretty much the whole driver to not use obsolete code.
+- Use panel and timing bindings to specify resolution and panel size
+- Link to v1: https://lore.kernel.org/r/20250402-st7571-v1-0-351d6b9eeb4a@gmail.com
 
 ---
-base-commit: 49807ed87851916ef655f72e9562f96355183090
-change-id: 20250408-spi-dma-c499f560d295
+Marcus Folkesson (3):
+      dt-bindings: display: Add Sitronix ST7571 LCD Controller
+      drm/st7571-i2c: add support for Sitronix ST7571 LCD controller
+      MAINTAINERS: add entry for Sitronix ST7571 LCD Controller
+
+ .../bindings/display/sitronix,st7571.yaml          |  70 ++
+ MAINTAINERS                                        |   6 +
+ drivers/gpu/drm/tiny/Kconfig                       |  11 +
+ drivers/gpu/drm/tiny/Makefile                      |   1 +
+ drivers/gpu/drm/tiny/st7571-i2c.c                  | 721 +++++++++++++++++++++
+ 5 files changed, 809 insertions(+)
+---
+base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
+change-id: 20250401-st7571-9382b9cfc03f
 
 Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
-
+Marcus Folkesson <marcus.folkesson@gmail.com>
 
