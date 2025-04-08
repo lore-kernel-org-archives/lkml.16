@@ -1,111 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E4A265CD3
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A237B264A90;
+	Tue,  8 Apr 2025 09:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105609; cv=none; b=skVQu4/7GxT/13rUFq92N4/oZ4tpd5HVWvHWqMyIDOaEGrs2hB6UK3ICBBEHxpxjS/x418V/if0N0O/KVIwSoxz3fJX2kwto8lgoxqJ0t7QmHXy/V56Q8GHOY7ljL34A/JpgRowSuPSAC9pznmEmS1l6mTARRJUKlgjI4CtrJx0=
+	t=1744105791; cv=none; b=qsTWT8JN8w/8q4lZswMEaKCKSShRY2Uf3e4Byw2gsiihOUB6BuYg1+nMiHwF+ZDxkqT2Iomv7g3UpHZqNnK/fOhVyRAPe2u36G9YZqMX1NeyO5QmOr4Yoiq7N8gFFtETXQFPQxGWDkTyxie9DE5/yAJP5ABiDAStL0Yh53FWM5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105609; c=relaxed/simple;
-	bh=kFJHApLzkjjQTZd748UbOGNjaj3R6uugruxTfXbZkHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mnb+2bGUr+owAbPgNqIjdD0MQVaLR6O6HHYAROKWeLBvpBk63hwEvXaPJCtFtOOR+sL+j9m4L0tpNiLqzTvDbJRhsPuXb8VdeoF6LIU8rTwGrQ+2rJjLXM8Uox1QOyLIdBofUXDWtGW8rHWf6H+p60Ds6BkFb60MP35uvnt1rfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PkA6KqER; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744105791; c=relaxed/simple;
+	bh=bFCnm0GdpJ+8/3SW70uX/rfhSQ34AaKkttnigv8qhE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZid47tF2RMd6GeQJ9tG0K/PwuCCqdcprQz973CSrS60xwwJ75yqEqzQ6UXJ9pOz38yxsQnvsoMuBzaHrcwTZ8GCQgSAWuXmrg8ixZ2rRQYKCHSefQY8TIQ04i6WbsJOJ5iaxof2O1NpoAXP9FWWYbae8k6PBfaoDmX1X6ijHp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yY0X+bly; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PkA6KqER"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744105606;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kFJHApLzkjjQTZd748UbOGNjaj3R6uugruxTfXbZkHU=;
-	b=PkA6KqER8YJkXNODKomHLkiuSyNXmuuEhloqMqqb9n18Hd6LQoXUEW0nqzn2m5RBzj6ZPl
-	frrhwOIZRTtQiML9ZngGhmPLoBWiehrSPIrb9n3QByp9pXQE6xtKGCI2S78R0NixYRXXCy
-	LZfT/eZQalOyzYNF8K/yOnGVPm50Rgg=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-804mxMOkNtS5pcph1npMqg-1; Tue, 08 Apr 2025 05:46:45 -0400
-X-MC-Unique: 804mxMOkNtS5pcph1npMqg-1
-X-Mimecast-MFC-AGG-ID: 804mxMOkNtS5pcph1npMqg_1744105604
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4767348e239so105368571cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:46:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744105604; x=1744710404;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kFJHApLzkjjQTZd748UbOGNjaj3R6uugruxTfXbZkHU=;
-        b=p0H92cmyQ68v20JqcR5C4rjXuil5wLhmPSWbRQi7Qw9F9HwnlsPdQ/lIKTJpbnEdwF
-         ZUkJj8xsm9OMseMvHUBIdVntn/gYANySd8E/FOxQdtL1zIUB9CQrx9uS/9NNqxCrjQLf
-         bCHpYDixuK6HK7rHX9vNuf3JvNjbVo6aiCIXZopxPskI7cp/VWqRDb2Vb9H7/TUF2MFI
-         BNCSHn86fEWJs7duBtT64PMnfc7xpZ7KkKoc1JwToYXuBmD/OjYw60XP91c65JXeleB0
-         fps5Y7+yvEZsKVF5rsZoROdIHPgF3oC7zhAQkhgrmz0RDnWVcZqtN+Eksnnqf6TNFtK0
-         CUKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqljdygnAorj5NGdN7c5CBTduLriA70cZYgJUF+0mS8DFw8CCSx/q0I8Cm2s59dTc0w+jWDe64vOmIvH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmbwlN5y0u/NaE2bN2aWTQw0qMHskV+2rpRrdrFG0bnHTl9EQJ
-	luYjLvGWYpIwfwcO2D7S/x1qsbd3/1/fniKopRTtX7uDHfzUHdbPXZYSh/YCERQkccdk6YyPaC3
-	fkC02guxJKToehgFWSPAam3nRQGxwAXN1KT/66HNiB+Km3UFRaS+6lZIsB64QCr0InPRETgzhcx
-	jVgUloa9YmCfltnwr9oM9PCIU2N89lcUBJF0CX
-X-Gm-Gg: ASbGnctIWa+cgyUyKKIxRzuPPiDV293aW/tp3m/3ZsY4iq1mzJLoJxDczcJoGAZMCtx
-	acLR+NDtUvRXz39HwGJ9qjj+H6/xAlgOyIMGzcPj7oWXtape8qx3tXV3iHR4FIdUeGfFtIJwmCw
-	==
-X-Received: by 2002:ac8:5987:0:b0:477:4224:9607 with SMTP id d75a77b69052e-47930f92246mr194565681cf.12.1744105604577;
-        Tue, 08 Apr 2025 02:46:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUGe1WMgdw3266Ixamciimi7c04VwM13sorCvBAziX4GsTGnRMZpS8YF7Y0r3w9ErgRv4v1FDTdG6BwI33w3U=
-X-Received: by 2002:ac8:5987:0:b0:477:4224:9607 with SMTP id
- d75a77b69052e-47930f92246mr194565531cf.12.1744105604319; Tue, 08 Apr 2025
- 02:46:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yY0X+bly"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yNuzb0y3T0Wr9cRTZpqL81gOwuVIgxYtUC+nntQrY6g=; b=yY0X+blypVlqRanJe9AmzqVx+t
+	JWcrcd3vYieIy/0O4hHwUoYk9NkjROSPRA5cABgJEbwmyAELET7XOLRFidk44K2hYU3dx/iHazCzs
+	RlS+JfOYwfXteVUYGlJWF1NP5jvm4Lj0Xq1Cau4Qwxk3X9Gt4uJLyuANZaPowzZFIkIyqtlXe7yvP
+	4zc+IYBvvOMexkFQDu+SMn2dc+1AQRCMrHKD68Ze+S2CkJNvSoK+CS8soDYO7y5YpZnRi6tX2RZr3
+	adFICd3IG+tT8XIi9kAazsJGJqPQrTLAwIgzVahoSsIE4W+wLQqj5RKPiAoe3j8Ts5Z+2b/8Oj21X
+	1lT/yZag==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57402)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u25aH-00075W-1p;
+	Tue, 08 Apr 2025 10:49:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u25aD-0001K4-2M;
+	Tue, 08 Apr 2025 10:49:29 +0100
+Date: Tue, 8 Apr 2025 10:49:29 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: dimitri.fedrau@liebherr.com
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for
+ changing the MAC termination
+Message-ID: <Z_TxKajbkVFOdPvq@shell.armlinux.org.uk>
+References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
+ <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328100359.1306072-1-lulu@redhat.com> <20250328100359.1306072-5-lulu@redhat.com>
- <20250407041540-mutt-send-email-mst@kernel.org> <76a7e782-6a7c-4704-b7c1-2459254c1362@oracle.com>
-In-Reply-To: <76a7e782-6a7c-4704-b7c1-2459254c1362@oracle.com>
-From: Cindy Lu <lulu@redhat.com>
-Date: Tue, 8 Apr 2025 17:45:58 +0800
-X-Gm-Features: ATxdqUEdI-_9frRvmATT_TQ83vcEeyygOtNToq3q3kw5ZPITDti5dWdb32chlc4
-Message-ID: <CACLfguXfRvLLiCF7ysidPLcn7GftU1Jyuem2Q9xr_SMGnP_16A@mail.gmail.com>
-Subject: Re: [PATCH v8 4/8] vhost: Introduce vhost_worker_ops in vhost_worker
-To: Mike Christie <michael.christie@oracle.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, jasowang@redhat.com, sgarzare@redhat.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Apr 8, 2025 at 12:06=E2=80=AFAM Mike Christie
-<michael.christie@oracle.com> wrote:
->
-> On 4/7/25 3:17 AM, Michael S. Tsirkin wrote:
-> > On Fri, Mar 28, 2025 at 06:02:48PM +0800, Cindy Lu wrote:
-> >> Abstract vhost worker operations (create/stop/wakeup) into an ops
-> >> structure to prepare for kthread mode support.
-> >>
-> >> Signed-off-by: Cindy Lu <lulu@redhat.com>
-> >
-> > I worry about the overhead of indirect calls here.
-> >
-> > We have the wrappers, and only two options,
-> > why did you decide to add it like this,
-> > with ops?
-> >
-> That was from my review comment. Originally, I thought we
-> could share more code. For example I thought
-> vhost_run_work_kthread_list from patch 2 in this thread and
-> kernel/vhost_task.c:vhost_task_fn could be merged.
->
-Hi Mike
-I guess you mean function vhost_run_work_list and vhost_run_work_kthread_li=
-st?
-sure, I will try to merge these two functions in next version
-Thanks
-Cindy
+On Tue, Apr 08, 2025 at 09:45:34AM +0200, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> 
+> The dp83822 provides the possibility to set the resistance value of the
+> the MAC termination. Modifying the resistance to an appropriate value can
+> reduce signal reflections and therefore improve signal quality.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+
+Thanks!
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
