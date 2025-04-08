@@ -1,101 +1,139 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BBA23FC4B;
-	Tue,  8 Apr 2025 23:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A96B13AD38;
+	Tue,  8 Apr 2025 23:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744154412; cv=none; b=mWpddCslTuAfUlhkEDred5t6DawSJVnwtDW0ULztZw9MEJ+Xrb6SiAKkcUfMFm7NuwOuW8PKyMtk9tJgUmvPuBiPdZxU5GpWRujw7pHl83a7M6d0xlWhDzNsNrggryjKUrnKg16I279F8iQrh8k4XdTlpF1EXYOuDg3Vjs+2+aE=
+	t=1744154492; cv=none; b=oIjtY7E0ULGZoSYYV72t8oDqUEJgVRYEkeOuMrkX8tmCzk1xWpJUC9dEy8vozb7hhup0Bogy8+6WoynbTaEU1uMwMdAe5+5S9bOmG05mXNLPJHTvDDTFvaDjrXZ7W+allczH5hIwcJ+qTj8PVsF3N/dfKDYkq8r0htf8tM/VQXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744154412; c=relaxed/simple;
-	bh=NPGSlYJwNwAIxWuWfIwr5rYkydh732r7iTc8MzULjA4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iQovUW7Qh8f7JM1ZnUETv4i4h5dAI5q7WBoFNw+kI7T61UAKuufkJtS4IdG0iLjnEzfrwOFvyEE7Q38QmvgzHY82t+nx4G6MDQB21NhtFa302UMTWVjm55DCDizuH+ojcBXo4TFnwht24RU/L8rOpEotfQP/HIe8NviX8zxLrqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dqBulqHr; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744154492; c=relaxed/simple;
+	bh=6d8DS2c1XUJ/qszREAImQZ2aWdY7e6kZYhcPZ2KqisM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8jQAxJd/q9dYe/6bKL9CGO5QmimsGg+R632scBzFyVKe6Wno6Co+BKkSZd40hkieTQQFuSvF1rE7kr53JN1X/h3vru1PlTnXPBMqteYLl5nEnPCCCqXpiJnX/10R3rNOEeZy1z03hkZJ0PksIsr9qVOXwaANHpkZ+lmZlktfUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKoNIRl3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqBulqHr"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e53a91756e5so5864967276.1;
-        Tue, 08 Apr 2025 16:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744154409; x=1744759209; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0fB+IKeLyIRbapePVfANbbyhFuIZhjPV0fgnOr+ssQ=;
-        b=dqBulqHrmblt+oNEOjMCpVCP/3SENubuwzUb9paCrUxeuiHCQhQhI7dtMb/H39QCQh
-         lClrDsm92lKLL0g6UYf7W0Q6aPFex5fHdqDG49JVu/cEP2mm1vNiRCG3IjiPYZi7vg6d
-         4jDzLd+Kup3V0ogQsSMNaUJF+zm/osep5vMeSHN5Q2Mm2BN18aOQGFeEFNWgbAJpl3wX
-         eXqjGI+V6E1VZxaOYRzBYLbPdZ1z3t1KvqiQoiMJ6k5Cru/DzkYVovQQdurVD63OEjSI
-         dTIuQRdMXieeO2bvLMOy1giOVTRAILOodyP8uuFrAZr12bJ1hn7BX3hiN+lp+g4TbOzi
-         A3oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744154409; x=1744759209;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q0fB+IKeLyIRbapePVfANbbyhFuIZhjPV0fgnOr+ssQ=;
-        b=BdKeAsFGr81URV1LPmEkeMKzh3VkcDT1LrR+pftohGYDnxrMFHgcQt5GOEGJlhbJVR
-         38Szz0+goXNnaDhTI7bvNNiCZustpXDh4e5pdBJlFrGiDbzzGdq1cJiJrKINMANsphLX
-         NeexFDw//dkNtat94lGSUOkyUK4KIYWD0rrr43puecK1xzO74STui6wNL3/lDuPJtVF2
-         AKyHpEiqnuV2Hx17mEwBmLDyF0FiCi2MBWiamr6tbC7s0p1yZLmLFh3wKDIVRQbfj7vy
-         P3ot9joPDW05X72+gR6WsDYhJsnBA485/uZ6uekn2FnjUX4Q734ODzUPKHVhrPT8vojn
-         5ApA==
-X-Forwarded-Encrypted: i=1; AJvYcCVd2xRMg50RPPEKMpFhKXZuexbF4V0oe2TKHF+Hfo3AUzxTYoc9ZMoiOCbi42odWHgoJtStI1su13vrlWBL@vger.kernel.org, AJvYcCXxOCVZSaqL4UErR8GytuG0Y5SwwyJArJTdVw5ALPIjWhYhoS4dmoPCfmkVzETPqDIdMLYnFWjKs6+H@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJY8Xh30GJdRW7yj4Q2zfAI/XHsDFJbrP/t8v5AVnEmo6Wuktv
-	Fku/qOleIeqaqnDclsv6vP1RBQInKxb9VKFsgrlPgildDywofXTvqk+6CO4+uzyGLMHKQtGWj8P
-	T81gSm6BXXbE5Ez13Uen7W5tWZ48=
-X-Gm-Gg: ASbGncs6ql83gsRinaf8r0ih+qz3bqSo7v/gD3ychutCFDr4HzhvFYAzA/rnE/ngvAx
-	aox6AjYo+85SsKtCW3UPYix0mnar2K39JrkQlK9rrVa/iVnDV7TwihLoqV7cGJIjUywByUyWNee
-	To5K2J9pZ0wGj6lKBJShCyOIh6Fo0OuZPtNP9FVQ==
-X-Google-Smtp-Source: AGHT+IFpDe4WZSyDgZhnjQhwlrjTlvrI4BE2l3Nj2Xpuah2KBF9AOZ056+dpJFQvlFIchgOZLbDivnYaGNNGCRdpSoM=
-X-Received: by 2002:a05:6902:981:b0:e39:8e5f:adab with SMTP id
- 3f1490d57ef6-e702f06db4dmr1162901276.39.1744154409254; Tue, 08 Apr 2025
- 16:20:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKoNIRl3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D9BC4CEE5;
+	Tue,  8 Apr 2025 23:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744154492;
+	bh=6d8DS2c1XUJ/qszREAImQZ2aWdY7e6kZYhcPZ2KqisM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vKoNIRl3AfJ6MpOlDh2bENqi4sqXN8MN0J8Hhv3PMsHen1hiyo9AJ714mRJ+xiDyy
+	 JdENxrecA1Tnmtde/N0Upfa9gxycU7ONjZwFhyN96fc4hfl7/j2tUKUDpptoOJmNxL
+	 gqE0X7Lo3DiZwcQCJoPXnvNVZuVH830YxKtFiepQ91OgheKbOMvWxEgk2alhUcBarK
+	 s9hs1Hmg7UIlp3hVy9LBXzjai9nozWNG9VUC7B64GysUNtyzwe2smGQdLT5c1gW8p8
+	 OzkoyDElVWAm7FZSoHEVCA0QgIxxF1twdjw3RkQXNOlSHsD3g+/w7CsXfGUejqkKG0
+	 awVimNjrkq57A==
+Date: Tue, 8 Apr 2025 16:21:31 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 02/12] xfs: add helpers to compute log item overhead
+Message-ID: <20250408232131.GK6307@frogsfrogsfrogs>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-3-john.g.garry@oracle.com>
+ <Z_WoUawfJ_QFF5kP@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408231823.826163-1-robertcnelson@gmail.com> <20250408231823.826163-2-robertcnelson@gmail.com>
-In-Reply-To: <20250408231823.826163-2-robertcnelson@gmail.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 8 Apr 2025 18:19:42 -0500
-X-Gm-Features: ATxdqUEqOr2dxKhn-iktIhobKCO_F83ejdgGyZozs2sb1C-LOU6OcOG2UtmJ-zU
-Message-ID: <CAOCHtYhFKO=LRN8qp-w+rkTGKJ8t-LnqgqbQW9P6CO3=EeuufA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>, 
-	Andrew Davis <afd@ti.com>, Roger Quadros <rogerq@kernel.org>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
-	Judith Mendez <jm@ti.com>, Andrei Aldea <a-aldea@ti.com>, Dhruva Gole <d-gole@ti.com>, 
-	Jason Kridner <jkridner@beagleboard.org>, Deepak Khatri <lorforlinux@beagleboard.org>, 
-	Ayush Singh <ayush@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_WoUawfJ_QFF5kP@dread.disaster.area>
 
-On Tue, Apr 8, 2025 at 6:18=E2=80=AFPM Robert Nelson <robertcnelson@gmail.c=
-om> wrote:
->
-> BeagleBoard.org PocketBeagle 2 is an upgraded version of the popular
-> PocketBeagle.  It is based on Texas Instruments AM6232 or AM6254 SoC.
-> Its dual or quad A53 cores can provide higher performance than classic
-> PocketBeagle. The new design comes with pre-soldered headers, a 3-pin
-> JST-SH 1.00mm UART debug port, a USB-C port, Texas Instruments
-> MSPM0L1105 Cortex-M0+ MCU for ADC, 512MB RAM, and a LiPo Battery charger.
->
-> https://www.beagleboard.org/boards/pocketbeagle-2
-> https://openbeagle.org/pocketbeagle/pocketbeagle-2
+On Wed, Apr 09, 2025 at 08:50:57AM +1000, Dave Chinner wrote:
+> On Tue, Apr 08, 2025 at 10:41:59AM +0000, John Garry wrote:
+> > From: "Darrick J. Wong" <djwong@kernel.org>
+> > 
+> > Add selected helpers to estimate the transaction reservation required to
+> > write various log intent and buffer items to the log.  These helpers
+> > will be used by the online repair code for more precise estimations of
+> > how much work can be done in a single transaction.
+> > 
+> > Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_trans_resv.c |  6 +++---
+> >  fs/xfs/libxfs/xfs_trans_resv.h |  4 ++++
+> >  fs/xfs/xfs_bmap_item.c         | 10 ++++++++++
+> >  fs/xfs/xfs_bmap_item.h         |  3 +++
+> >  fs/xfs/xfs_buf_item.c          | 19 +++++++++++++++++++
+> >  fs/xfs/xfs_buf_item.h          |  3 +++
+> >  fs/xfs/xfs_extfree_item.c      | 10 ++++++++++
+> >  fs/xfs/xfs_extfree_item.h      |  3 +++
+> >  fs/xfs/xfs_log_cil.c           |  4 +---
+> >  fs/xfs/xfs_log_priv.h          | 13 +++++++++++++
+> >  fs/xfs/xfs_refcount_item.c     | 10 ++++++++++
+> >  fs/xfs/xfs_refcount_item.h     |  3 +++
+> >  fs/xfs/xfs_rmap_item.c         | 10 ++++++++++
+> >  fs/xfs/xfs_rmap_item.h         |  3 +++
+> >  14 files changed, 95 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+> > index 13d00c7166e1..ce1393bd3561 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_resv.c
+> > +++ b/fs/xfs/libxfs/xfs_trans_resv.c
+> > @@ -47,7 +47,7 @@ xfs_buf_log_overhead(void)
+> >   * will be changed in a transaction.  size is used to tell how many
+> >   * bytes should be reserved per item.
+> >   */
+> > -STATIC uint
+> > +uint
+> >  xfs_calc_buf_res(
+> >  	uint		nbufs,
+> >  	uint		size)
+> > @@ -84,7 +84,7 @@ xfs_allocfree_block_count(
+> >   * in the same transaction as an allocation or a free, so we compute them
+> >   * separately.
+> >   */
+> > -static unsigned int
+> > +unsigned int
+> >  xfs_refcountbt_block_count(
+> >  	struct xfs_mount	*mp,
+> >  	unsigned int		num_ops)
+> > @@ -129,7 +129,7 @@ xfs_rtrefcountbt_block_count(
+> >   *	  additional to the records and pointers that fit inside the inode
+> >   *	  forks.
+> >   */
+> > -STATIC uint
+> > +uint
+> >  xfs_calc_inode_res(
+> >  	struct xfs_mount	*mp,
+> >  	uint			ninodes)
+> > diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
+> > index 0554b9d775d2..e76052028cc9 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_resv.h
+> > +++ b/fs/xfs/libxfs/xfs_trans_resv.h
+> > @@ -97,6 +97,10 @@ struct xfs_trans_resv {
+> >  
+> >  void xfs_trans_resv_calc(struct xfs_mount *mp, struct xfs_trans_resv *resp);
+> >  uint xfs_allocfree_block_count(struct xfs_mount *mp, uint num_ops);
+> > +unsigned int xfs_refcountbt_block_count(struct xfs_mount *mp,
+> > +		unsigned int num_ops);
+> > +uint xfs_calc_buf_res(uint nbufs, uint size);
+> > +uint xfs_calc_inode_res(struct xfs_mount *mp, uint ninodes);
+> 
+> Why are these exported? They aren't used in this patch, and any code
+> that doing calculate log reservation calculation should really be
+> placed in xfs_trans_resv.c along with all the existing log
+> reservation calculations...
 
-dmesg:
+I've redone this in a different manner, will send a full patchset after
+it runs through QA.
 
-https://gist.github.com/RobertCNelson/c68c96a8a1dc6e4d39d8c48fc13ca1c1
+--D
 
-Regards,
-
---=20
-Robert Nelson
-https://rcn-ee.com/
+> -Dave
+> -- 
+> Dave Chinner
+> david@fromorbit.com
