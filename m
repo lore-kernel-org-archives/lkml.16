@@ -1,146 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C2A1EB3D
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B88C24501C
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143818; cv=none; b=OiC1SZptEfO+v5NyuBKAT4o6P+aN0jNxW/0rYYXtnCwY/fyr+vnM4fXM2zecFBnAjQU3cUcNlEM8Vh1VwZkPt8ltEwLDWYUUDP3aGqsPOOLVE8viVxzQBVOJtUXyRnsSPPLdqiYc+KVmByUbA6fVOOZtPrscB/mOdKg2YGGkU/k=
+	t=1744144026; cv=none; b=UoCZYXNGHtV5yyOV1/fb1N9HgTuMhkbtPw2OufKEfdXKMtWSIlQ4iNyXQ43bzoSN8emw9hYVDahYkHUROKnp/3yNCz5j4MrmJHpw+J0024edxugB1LglTosohfftn//jpY/9un24gjSIFlPjekCDwM48RJkcxPJoPlzkplskQ6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143818; c=relaxed/simple;
-	bh=t4dpsxhoSJicILQ+ZU+F72OUh+2j3XDJDE9iB0faTV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T1nQkQB3tDYI7SyDtpJmasdcV9NPVWVyBS9uPInIXUNVjQPljWblC9fvgpW03v1EpQi7OLDxVmdO0Ff+t8pm2pNeMVnkHlqNLRXZuhvZ+9yRQRvhDsgKBm6BdCJkQeBtDyo4FEX5RfmjrjWizYzChe/OaYi1NRhgXk7LojgT3qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u00QKcuc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744144026; c=relaxed/simple;
+	bh=lmxJkzFzN55CvpHITqysrbpyojnZyXakGvg4sdUShRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XlzkJSY4UaJua3L8lsn8F+zpz190wqWY7vfN2EadEqM0pDQFhAIqYrx00z/9uRxlnq7837RlnW5ypjUwXAvmsdFCvjO+zjGLFjTBecW5fGVBNt/Bo4ixnuftDNxwVQiw4UzVKfRmNYCrNNeZgTB4U/9zsxoC4pA3M8Y2YCE1EPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aGQZHq6/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u00QKcuc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48AB7C4CEE5;
-	Tue,  8 Apr 2025 20:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744143817;
-	bh=t4dpsxhoSJicILQ+ZU+F72OUh+2j3XDJDE9iB0faTV0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u00QKcucJGpBXB3S05SDZ5ju4wOe8gmgglIm6qzGf+1mieBEz9ZCNrdb5nchtdWkV
-	 MWk+P+3KB7HDCtvi96OWsm2rLP/MuItrwpysYu5UByPPee3zyOcVPDdnJuBot5qv/s
-	 1ogUpy3rRhcMPpJ7lrQtcU65yGk/HV/JHRCsx4ZiAoxguBoLbGjFWxxJlkDFuaQ08G
-	 SWfsKi3tRsRha7RpudPzb1kJY8E3QcbBAzDf2BWGVGBze8XKINxdyOfrE2N8Wnb/wA
-	 n3Wmk+xkydv4WZOo7vtq0f1bW7+TPZ2VKacjQLvDJW1YU+B3yQRMZh71wi90RUk84A
-	 rZ9SR2c2Trf5g==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R.Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 0/4] mm/madvise: batch tlb flushes for MADV_DONTNEED and MADV_FREE
-Date: Tue,  8 Apr 2025 13:23:35 -0700
-Message-Id: <20250408202335.63434-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <f06859c3-c7bf-470e-b0bb-2dd352f3afe9@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aGQZHq6/"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JYqr7026657
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 20:27:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cqXN69eJjj53VercbPPDUqUwXi+7djq/bqmM04r34T4=; b=aGQZHq6/nEayjBSQ
+	x17b6vBaVffK69+9jySaswTU4QZWqd8ZQrUvDNbMHcTmNAJYKuR8aoXnVCMHLbAr
+	A7SvqTj6dV9eitGJBU3zY1VVO6N9P460NjnTifSBAc57hM/OABHO94pWKvmcIklB
+	SKer5dCA3KW6/KpcbVwrZ+UJh9hfhWr578Bn1W9PmhP7Ag0GdSyv7RhJgIsHJ7j8
+	60dKkVgPxeyDoBLzdWO3L4RDYAKxJBJxsJILtCbzdBuHLpGfuOKsrRINjzwk2W4x
+	xzYNsl6rKwWh8qLSks3ZUmVsAQXlTehBEw+NwKwzC2HiXRBSUKRTC1oMgZFxleGK
+	TeuFjw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgh5h9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 20:27:03 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c57f80d258so1943714785a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:27:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744144023; x=1744748823;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cqXN69eJjj53VercbPPDUqUwXi+7djq/bqmM04r34T4=;
+        b=tu0dOftdbw7QUcK6W/fpL3969A0rvXZWPwzJ0iHkHcmOJiiofaKTCp+gZ5kNAEKWVM
+         bcN3Qk61ZDzpXkHQBRRS5yVLLS+SGntVh/Mj+a3lTj7/FLrskiEsBnJEOgkuxePrDcDd
+         qtTcsV5YLlL00TfVS9IW0fCHP8caPtsXYOuB4eF7tb6RvF30whJ/9KMO6t3iFW729KAy
+         e6cAWvEG8x3fuewJK3XAfB8Rp2z89DBJykSlrE4HAAi/3Hh2UeSvAr9inK8p49nhccvY
+         4FlgY3EAcyNAHx8Ly64M4Th0P6NE1aeqYs/A3DoHxNJnUlTnIc5Qy2VAsLpN8/r0NRZC
+         BxLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXk0k/mNyX5FljpA6bP6Lbtjn/beaN08Sf8j8F2auU+7HmExWhTdQnV0c5dEQdzMSc7kDKnC9W3iTag8kg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxu42KQ9GcFINfcnxHSAmG/aYirnq/F4Cjf3TuVFXv0gMTbUlh
+	gRONP7IYwMwOwXAwVUo3xdh+0r8ENax300bfMMsT/ps1kNZBhtsIyLPZnvAf4HcBTgHjUz8Ikbu
+	tUhlUftytGouw+C6S83NNCtr6GVciWMzH9/6Z/DUSGmtxNIC3sMdm/y1FeVX7YqM=
+X-Gm-Gg: ASbGnctyqJfJh8OIlvZLKa3DIAnONYE1G5kf1+d4LmRv3o5yh8VfjelU4qizQxGkddC
+	rF+USyrdL1S270Bk2UO1/CsWTEqxFiCo1uUCjDaIYSiIosRBmoTMmgwz1SAlGQ4vsdBnYNWhQQv
+	B+in9G9PkphfkOSrKFAxgXsVhEV2i0axWLATSL1I/Uu0aSWNoMJU4PVXAAECifbK5SOld8+Cpjg
+	79s9MSGt+4Kjr+D8hXU1ZeCoHeVGkNxBx84MfIFuQmwmyXFaOWofVpObHZvkoOJxabW0DQlCTml
+	rviDdH+iPO7SuzonSPLUAotM5uUlteFmIJl/J5iLmq5dWnZgxU2vmDj1eOsBrSEmvnb5uVI=
+X-Received: by 2002:a05:620a:408c:b0:7c5:6c02:4c25 with SMTP id af79cd13be357-7c79cbeb80emr99554985a.25.1744144023100;
+        Tue, 08 Apr 2025 13:27:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFa91aTShNdMl7VmKxRQdJAndH07tT2U427MXJh74EQlfRPx/O/pMOjC+hvL+QXxIcw4lHwVA==
+X-Received: by 2002:a05:620a:408c:b0:7c5:6c02:4c25 with SMTP id af79cd13be357-7c79cbeb80emr99549385a.25.1744144022716;
+        Tue, 08 Apr 2025 13:27:02 -0700 (PDT)
+Received: from [10.187.209.180] (37-33-188-210.bb.dnainternet.fi. [37.33.188.210])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f0314b908sm20034721fa.55.2025.04.08.13.27.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 13:27:01 -0700 (PDT)
+Message-ID: <767e11cd-e338-4e00-a8e7-2e15f3da84b4@oss.qualcomm.com>
+Date: Tue, 8 Apr 2025 23:26:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/10] dt-bindings: display: msm: document DSI
+ controller and phy on SA8775P
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
+ <20250311122445.3597100-4-quic_amakhija@quicinc.com>
+ <20250312-calm-steadfast-cricket-fe9dd8@krzk-bin>
+ <654d409e-2325-46e7-a064-ed9e64277e69@quicinc.com>
+ <a168a473-c363-4041-8e3e-84fa44e92b10@kernel.org>
+ <zpmr6cpiixyu2sj7r7oqpqsge6dcqw6xszldf7ugznmcrxqsme@efiwnggcn5qx>
+ <a654d62e-502a-4a47-96c4-a44c14860e54@kernel.org>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <a654d62e-502a-4a47-96c4-a44c14860e54@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f58697 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=gh1egkeLKbPt9jDVRuYeUQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=0U3iGMtbaPiC_UXuCSIA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: LmoC_s4vWzQOFnZwGp7LBMnLL8VdLP7y
+X-Proofpoint-GUID: LmoC_s4vWzQOFnZwGp7LBMnLL8VdLP7y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_08,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=802 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080142
 
-On Tue, 8 Apr 2025 14:44:40 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> On Fri, Apr 04, 2025 at 02:06:56PM -0700, SeongJae Park wrote:
-> > When process_madvise() is called to do MADV_DONTNEED[_LOCKED] or
-> > MADV_FREE with multiple address ranges, tlb flushes happen for each of
-> > the given address ranges.  Because such tlb flushes are for same
+On 08/04/2025 21:42, Krzysztof Kozlowski wrote:
+> On 08/04/2025 13:44, Dmitry Baryshkov wrote:
+>> On Tue, Apr 08, 2025 at 01:03:53PM +0200, Krzysztof Kozlowski wrote:
+>>> On 08/04/2025 12:38, Ayushi Makhija wrote:
+>>>>>> +    properties:
+>>>>>> +      compatible:
+>>>>>> +        items:
+>>>>>
+>>>>> contains
+>>>>>
+>>>>>> +          - const: qcom,sa8775p-dsi-ctrl
+>>>>>> +          - const: qcom,mdss-dsi-ctrl
+>>>>>
+>>>>> Drop fallback
+>>>>>
+>>>>   
+>>>> Hi Krzysztof,
+>>>>
+>>>> I couldn't understand the meaning of "Drop fallback", could please elaborate it ?
+>>> Look at SM8750 example on the lists. Keep only front compatible.
+>>
+>> Why?
 > 
-> Nit: for _the_ same.
+> To make things simpler and shorter.
 
-Thank you for kindly finding and suggesting fixes for these mistakes.  I will
-update following your suggestions here and below.
-
-[...]
-> > Similar optimizations might be applicable to other madvise behaviros
-> 
-> Typo: behaviros -> behavior (or 'behaviors', but since behavior is already plural
-> probably unnecessary).
-> 
-> > such as MADV_COLD and MADV_PAGEOUT.  Those are simply out of the scope
-> > of this patch series, though.
-> 
-> Well well, for now :)
-
-Yes.  Hopefully we will have another chance to further improve the cases.
-
-[...]
-> > Test Results
-> > ============
-> >
-> > I measured the latency to apply MADV_DONTNEED advice to 256 MiB memory
-> > using multiple process_madvise() calls.  I apply the advice in 4 KiB
-> > sized regions granularity, but with varying batch size per
-> > process_madvise() call (vlen) from 1 to 1024.  The source code for the
-> > measurement is available at GitHub[1].  To reduce measurement errors, I
-> > did the measurement five times.
-> 
-> Be interesting to see how this behaves with mTHP sizing too! But probably a bit
-> out of scope perhaps.
-
-Obviously we have many more rooms to explore and get fun :)
-
-> 
-> >
-> > The measurement results are as below.  'sz_batch' column shows the batch
-> > size of process_madvise() calls.  'Before' and 'After' columns show the
-> > average of latencies in nanoseconds that measured five times on kernels
-> > that built without and with the tlb flushes batching of this series
-> > (patches 3 and 4), respectively.  For the baseline, mm-new tree of
-> > 2025-04-04[2] has been used.  'B-stdev' and 'A-stdev' columns show
-> > ratios of latency measurements standard deviation to average in percent
-> > for 'Before' and 'After', respectively.  'Latency_reduction' shows the
-> > reduction of the latency that the 'After' has achieved compared to
-> > 'Before', in percent.  Higher 'Latency_reduction' values mean more
-> > efficiency improvements.
-> >
-> >     sz_batch   Before        B-stdev   After         A-stdev   Latency_reduction
-> >     1          110948138.2   5.55      109476402.8   4.28      1.33
-> >     2          75678535.6    1.67      70470722.2    3.55      6.88
-> >     4          59530647.6    4.77      51735606.6    3.44      13.09
-> >     8          50013051.6    4.39      44377029.8    5.20      11.27
-> >     16         48657878.2    9.32      37291600.4    3.39      23.36
-> >     32         43614180.2    6.06      34127428      3.75      21.75
-> >     64         42466694.2    5.70      26737935.2    2.54      37.04
-> >     128        42977970      6.99      25050444.2    4.06      41.71
-> >     256        41549546      1.88      24644375.8    3.77      40.69
-> >     512        42162698.6    6.17      24068224.8    2.87      42.92
-> >     1024       40978574      5.44      23872024.2    3.65      41.75
-> 
-> Very nice! Great work.
-> 
-> >
-> > As expected, tlb flushes batching provides latency reduction that
-> > proportional to the batch size.  The efficiency gain ranges from about
-> > 6.88 percent with batch size 2, to about 40 percent with batch size 128.
-> >
-> > Please note that this is a very simple microbenchmark, so real
-> > efficiency gain on real workload could be very different.
-> 
-> Indeed, accepted, but it makes a great deal of sense to batch these operations,
-> especially when we get to the point of actually increasing the process_madvise()
-> iov size.
-
-Cannot agree more.
-
-Thank you for your kind review with great suggestions for this patchset.  I
-will post the next spin with the suggested changes, soon.
+I'd prefer consistency. Previous platforms use qcom,mdss-dsi-ctrl.
 
 
-Thanks,
-SJ
-
-[...]
+-- 
+With best wishes
+Dmitry
