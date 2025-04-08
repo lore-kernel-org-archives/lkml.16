@@ -1,90 +1,87 @@
-Received: from out199-3.us.a.mail.aliyun.com (out199-3.us.a.mail.aliyun.com [47.90.199.3])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601F267F4F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB3268685;
+	Tue,  8 Apr 2025 11:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112715; cv=none; b=n8TTe7HGUf6a/R3XS5MGc2tj7UqZU6VpuAQ8Fq4uqNfRifMXIP1w+07pP8UUK2I63NVW3FNw3GnxgLeb+Rbi+0Z71b8D4B+Wa/D4ZBKvePgnSnkzh5eWiGiIw3N4/Sguk1XotbnyqyspoEIXk9MkNS9zq+Qhos8kKgjqPnJJmr8=
+	t=1744112730; cv=none; b=UsL11N7umtPnhsSbTTFJLfLAte4JVv5JOEtYsyvs+nB+3Ra/RNwKjMy4BbDCbDakmODrzbpH9zaFVtl5XvevtffWYikjrVmeM79i/0Rr/ELu31FVfFgPhkKtgCratD6mfOdYrGdYnLrWent9xUgDYgtMlaeURkwfXmagHCmHctI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112715; c=relaxed/simple;
-	bh=OxvsdwO5BJ0SGFz2h/H9piJywcIMuXB4a6lwWl8UWNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UGgiMYsSr7Wq8aXMCaYIaAj49zB55KejAqqx9Dedm4cyTtzDbDJYZJ7zTe1N9bPjkuigLet+tQ9JuCwvvA7H6ieq5yENEmVY/BYRiXpMdlEylJEkJODOtwbg0HRjq5IJyaRGamDF9G8//VOqZqPaIC/TNq7PwDGAm4gr0h+4nHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SvXYPPVL; arc=none smtp.client-ip=47.90.199.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744112730; c=relaxed/simple;
+	bh=UfAGAq1uM73HfrpCl5Vj+aGnQLcoqXUA1Vjstvd9R34=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n7gs6kT/HwZoTab7NO5xx7SvZEc/9PuLT9Sdt4Pm1pYCy1ONSy8kx7xxhL2cWF/cjwNdK3X8nB7Mzs+frc1j5CZz6tRBRnHWFLk9VjA24o6xk2Ix0SYILBcRYCXMl9aPnsGZLUm7YwRf4tBqQeOb8DjRlX51jr4o+qAVMUzkfNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Pm7SXfXd; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SvXYPPVL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744112695; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=BqZWTIZ7e6ej2vIjCy7sCUZGfP06XjXg1jXPbyRYLgU=;
-	b=SvXYPPVLlUlic+KIlKtwmOX+FaTYMIxj4RCTAB8W0+rG4vVo0BgloPJoq5+owWCqrTCNbFuWDNcxEcP3JcG8Q6CJjF9lg9SVdhQjCfY+gNh3Mi+52OUXXDuvUcrzsvaePUBoiPrRX1w0n0FNgXBzDdXR6aP/PEghrjmxhJPRl8U=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WWFISUC_1744112689 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 19:44:54 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH 1/2] erofs: add __packed annotation to union(__le16..)
-Date: Tue,  8 Apr 2025 19:44:47 +0800
-Message-ID: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Pm7SXfXd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B637F44264;
+	Tue,  8 Apr 2025 11:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744112725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t64EARht6TK5Jq+Wml7aUmb8e8pNkBosWFXWFTuYQv8=;
+	b=Pm7SXfXdOajDa3e15aaOh51BZPbAyj+UW/BW5B2Tn+E6UnRcN+I2TpFCv5X631TbWbDL8j
+	TI+dR53k0FNkxkneBEG2UHVNBxkgGfE/C+/72RtdKd4CmYVdqE+gHMqSKkHAr7iNO4b+yP
+	Gfm5MEUtuC8dHkhwf0Y5CAsZs+jbLOHUYoMAwWASg6XNhnEvXxl9SapB3ONzpcBkPJdYM3
+	vVfxZygEa1Jw2GyzxR0iBlJNygwNp8CIsNuB4MedBUmUpFl2CKUIxQdrB1qqLs7AxgJN4D
+	LZ/afSoUlCuaQt+MJ8x9zl8QX+MAXljA72YJe8fJIESc7TefgSBUiELr1labwA==
+Date: Tue, 8 Apr 2025 13:45:20 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vladimir Oltean <olteanv@gmail.com>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "Chester A.
+ Unal" <chester.a.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>,
+ DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Simon
+ Horman <horms@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, upstream@airoha.com
+Subject: Re: [net-next PATCH v14 06/16] net: mdio: regmap: prepare support
+ for multiple valid addr
+Message-ID: <20250408134520.2fb42343@fedora.home>
+In-Reply-To: <20250408095139.51659-7-ansuelsmth@gmail.com>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+	<20250408095139.51659-7-ansuelsmth@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeftddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheprghnshhuvghlshhmthhhsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkr
+ hiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-I'm unsure why they aren't 2 bytes in size only in arm-linux-gnueabi.
+Hi Christian,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202504051202.DS7QIknJ-lkp@intel.com
-Fixes: 61ba89b57905 ("erofs: add 48-bit block addressing on-disk support")
-Fixes: efb2aef569b3 ("erofs: add encoded extent on-disk definition")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/erofs_fs.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Tue,  8 Apr 2025 11:51:13 +0200
+Christian Marangi <ansuelsmth@gmail.com> wrote:
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 61a5ee11f187..94bf636776b0 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -56,7 +56,7 @@ struct erofs_super_block {
- 	union {
- 		__le16 rootnid_2b;	/* nid of root directory */
- 		__le16 blocks_hi;	/* (48BIT on) blocks count MSB */
--	} rb;
-+	} __packed rb;
- 	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
- 	__le64 epoch;		/* base seconds used for compact inodes */
- 	__le32 fixed_nsec;	/* fixed nanoseconds for compact inodes */
-@@ -148,7 +148,7 @@ union erofs_inode_i_nb {
- 	__le16 nlink;		/* if EROFS_I_NLINK_1_BIT is unset */
- 	__le16 blocks_hi;	/* total blocks count MSB */
- 	__le16 startblk_hi;	/* starting block number MSB */
--};
-+} __packed;
- 
- /* 32-byte reduced form of an ondisk inode */
- struct erofs_inode_compact {
-@@ -369,9 +369,9 @@ struct z_erofs_map_header {
- 			 * bit 7   : pack the whole file into packed inode
- 			 */
- 			__u8	h_clusterbits;
--		};
-+		} __packed;
- 		__le16 h_extents_hi;	/* extent count MSB */
--	};
-+	} __packed;
- };
- 
- enum {
--- 
-2.43.5
+> Rework the valid_addr and convert it to a mask in preparation for mdio
+> regmap to support multiple valid addr in the case the regmap can support
+> it.
 
+Nice to see more users for this !
+
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+
+Maxime
