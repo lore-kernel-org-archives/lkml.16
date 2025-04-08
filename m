@@ -1,76 +1,45 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9852C1C863C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640891D8DF6;
+	Tue,  8 Apr 2025 14:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122063; cv=none; b=Bblxo50+AeuBL9iHYQpBAG6nq9EPTFadorbWjoZarz0zGUF4VpT8cs8TwNqYzjqD6luG+tS/ZyTFkxlWp1r8kRHhSWQ0YNaMlUaaUfkGor9aNP396Mxka77w1KHFP6s7mM9JGC4HZfgt39GPokgO4KaW1K42wjTW8awFYz167OA=
+	t=1744122065; cv=none; b=TVQL2eMG8s+5u8S9lpmyTlRyi0nAnH3NZWlAUEEPIxrBv1wEF0JIDFy7VgGzzHZ1PQhLasOnc+NEdS8vGEd4B54VyeNe7koBmxrnIItr+nUtMtFNxayp33nMXHkq8IxGw2on4Mz68iYrCn/d3oVk+Dh9LjpSkNzYnx8GTqoIrrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122063; c=relaxed/simple;
-	bh=2Za3cLRtM7U0gO0EIvM/IkgVzkWdWwiibIb4Fc41G4A=;
+	s=arc-20240116; t=1744122065; c=relaxed/simple;
+	bh=cAQI760n7YkqAtzL4hcAIR55fHa1dxos0epYJ6MikR0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooMgHM4A1Kz7dYoCcIsfAxfQUxfmRvSvMDjwtEgSGXKy0iwOLN049kVpObyle2oxn4l7uGycA8uZ9immaQMk0uN5qlF8pG1h1mzbD5SqjZW5aflKu+g+LEmRA7wRTPLW4LEmQz/ZwxkaTCXmz09ALjP76+NUQEJq3PMR6UUERak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cpoYX3Rz; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cpoYX3Rz"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2242ac37caeso158815ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744122060; x=1744726860; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=50rhH0P4C6X37y8/XrUykTYL68bxlRnwKFJu2ki7lY4=;
-        b=cpoYX3RziCQiFfPMraMNdcIExBuanIO6sS7o41qMAjayp1EeTN3Mpvn2lIhHQV8oCz
-         d9NzBr/MhLPyIhEz5peMO02rBbQ1D/xEdUNzxOWtoYegnc+5ansihwJn1z+x09YjPCmV
-         N+U3P80nw/0qeeme0a6I+j70WzY5z/tBzF3mpVAC2EgZxXO0B7cRxeUf2Srqu9A0ikBc
-         njfLghHsjqAL1wnccBdTxMlH3KI8HPitdHbKWnwYTmY5eavzd2Evo9hwib275B/YpNPP
-         NJ5nMpd3ZLh6SvsMKt3oiZ00mKjLXdeXWKlFJmW26oGIXSf63o4ht2NnFGHJNI1dtBEs
-         kB1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744122060; x=1744726860;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50rhH0P4C6X37y8/XrUykTYL68bxlRnwKFJu2ki7lY4=;
-        b=Ww9P5s6kwCLf9hOnUHqSIe/lmqAjmZz+h/TIIJeUy8f2nc1w9EQehj87WFrkYl9Oq+
-         MlgJSufJM40sqAa0LES/39wWHvcm3tySzMd1x2M9Ye5D6jN9ySsBTD/J9/XwB1PwmSi2
-         qTv832kc56ng9IDtTz9XzWL63wL/JHd3HHJ1SqRjFFTbxWWQy+QKvIpPRrMyNQo1xh+A
-         7UdyVHVdspVYNKyUol2IGHSGBE6vtpetXMj2vkAn4UOcGFbermqbwu4VuYPiHQGAh6d3
-         B1ynOLo34XsWCflXWVB+t9AYZJKLaT/99A1lCiZobtCPNcpW9eavHn5WwJxc8WfDFEli
-         +RuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJsU5p8CyL4MI9Mw7mfhmwZglnRNr4ZUFfUqXo73M+NHpCA4NXWzVeCHJ7R1NGIIuC9fzb9vDMstrqL3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVMN66hk4BA/cIx4QQ6chkavwgb7rsrY45RtkaxQQIGQBhxXzX
-	swzeRmANz0K1re2SWixEPleEReGIV+UkvK5UMOXxP4WHZKyDFAscpzqRAdb3Jw==
-X-Gm-Gg: ASbGnctyAO7B8THa5RnQfaHGv+Kdqog9UTSxUmbHwlKxNxGW6fZTO6ImxaWOoGTDJdc
-	yFbobgQo3LB3TD0PQMLuIVW205GMiraWAIiAPXWBi/lZa4lkaHESo9LpfvxGIO5OOypxj/AbGQv
-	BhMslmkULac50eJ09bTo8myu2y4ZNdfQ8wEgA+ED/H1/qelRs3Mbfec5vlXi3eToXxcBvMWhRrV
-	8V+HnYbRGEPxB7XtUpva5L+SgU+T4ACvLdD6ASxI8Fm1vsVg+K/7MUJI1GN0ZfsixFyz86rziYG
-	xt5Bo0zXFJgzeieXVUEqBpl3DzKMm7uTtJg2BBSZJyeJ/ExuNxAYHBNhNeEx0rzdg4zVt86aLd6
-	6IJo=
-X-Google-Smtp-Source: AGHT+IE4iRRh4X4YLUZunHgPf+vwd/X5Yt1E655M4r0NMhwn9qwL0MFydS3s1KuHykiWXHRTrO7ZHQ==
-X-Received: by 2002:a17:902:db03:b0:20c:f40e:6ec3 with SMTP id d9443c01a7336-22ab7136fa8mr2614455ad.22.1744122059590;
-        Tue, 08 Apr 2025 07:20:59 -0700 (PDT)
-Received: from google.com (188.152.87.34.bc.googleusercontent.com. [34.87.152.188])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc32382dsm9155045a12.28.2025.04.08.07.20.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 07:20:59 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:20:51 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, will@kernel.org,
-	robin.murphy@arm.com, joro@8bytes.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH v1 3/4] iommu/arm-smmu-v3: Decouple vmid from S2
- nest_parent domain
-Message-ID: <Z_Uww4PdJesOoA8N@google.com>
-References: <cover.1741150594.git.nicolinc@nvidia.com>
- <0429d554fb0f54f6d79bdacacb3fb3e7877ca8f7.1741150594.git.nicolinc@nvidia.com>
- <Z_OuLJ7RGnChDckY@google.com>
- <20250407165220.GH1557073@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHDN0cRCYCGWhorIv14ZcAgyyg01pdHl8i+5zECAqQqp/d7nXcNh9Slh4ief1IhEP04a5gN6DNNIg0WZSBhcRUEM0rLXV0camw0BPR1vRtR2by4kvOoW5ENuT0yPQC9sFQ2mDk/CCAk/LpSL7DKtokQpDcQQ2XKDd0fDLwiyh4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B5431688;
+	Tue,  8 Apr 2025 07:21:01 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3508A3F6A8;
+	Tue,  8 Apr 2025 07:20:56 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:20:53 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
+Message-ID: <Z_Uwxe46_o5nYkMB@J2N7QTR9R3.cambridge.arm.com>
+References: <20250407094116.1339199-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,49 +48,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407165220.GH1557073@nvidia.com>
+In-Reply-To: <20250407094116.1339199-1-arnd@kernel.org>
 
-On Mon, Apr 07, 2025 at 01:52:20PM -0300, Jason Gunthorpe wrote:
-> On Mon, Apr 07, 2025 at 10:51:24AM +0000, Pranjal Shrivastava wrote:
-> > > @@ -381,15 +401,24 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
-> > >  	    !(smmu->features & ARM_SMMU_FEAT_S2FWB))
-> > >  		return ERR_PTR(-EOPNOTSUPP);
-> > >  
-> > > +	vmid = ida_alloc_range(&smmu->vmid_map, 1, (1 << smmu->vmid_bits) - 1,
-> > > +			       GFP_KERNEL);
-> > > +	if (vmid < 0)
-> > > +		return ERR_PTR(vmid);
-> > > +
-> > 
-> > Probably a basic question, I hope we'll have one vSMMU per VM? 
+On Mon, Apr 07, 2025 at 11:41:12AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> A VIOMMU is tied to the physical SMMU, it cannot be shared across
-> physical SMMU, so this is the right sort of way to get the ID
+> x86 already requires gcc-8.1 since linux-6.15-rc1, which led me to
+> actually go through all  version checks and make this is the minimum
+> for all architectures.
+
+I am very much in favour of this, so for the series:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Is the aim to get this in for v6.15?
+
+I believe this will permit a number of further cleanups for arm64, and
+if it's possible to get this in for v6.15, it'd be a bit easier to start
+preparing those for v6.16. No big problem if that's not the case.
+
+Mark.
+
 > 
-> > Even if that's not the case then the VMM should take care of
-> > invalidating contexts of all associated vSMMUs anyway? (Just
-> > thinking if we should allocate a VMID per VM or per vSMMU)
+> Most of the actual resulting changes are actually for raising the
+> binutils version, which eliminates version checks on x86 and arm64.
 > 
-> If the VMM wants to present a single vSMMU to the VM then the VMM
-> needs to replicate invalidations as required to all the physical
-> VIOMMU objects. This will prevent using the HW accelerated
-> invalidation paths, so I expect that the VMM will have one vSMM per
-> physical.
+> Arnd Bergmann (4):
+>   kbuild: require gcc-8 and binutils-2.30
+>   raid6: skip avx512 checks
+>   x86: remove checks for binutils-2.30 and earlier
+>   arm64: drop binutils version checks
 > 
-
-Makes sense. Thanks!
-
-> > Nit: Does it makes sense to create a helper like `arm_smmu_vmid_alloc`
-> > and call it here and finalise_s2?
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas@fjasle.eu>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-crypto@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-raid@vger.kernel.org
+> Cc: x86@kernel.org
 > 
-> Maybe so
+>  Documentation/admin-guide/README.rst          |  2 +-
+>  Documentation/kbuild/makefiles.rst            |  4 +-
+>  Documentation/process/changes.rst             |  4 +-
+>  .../translations/it_IT/process/changes.rst    |  4 +-
+>  .../translations/zh_CN/admin-guide/README.rst |  2 +-
+>  arch/arm64/Kconfig                            | 37 +--------------
+>  arch/arm64/Makefile                           | 21 +--------
+>  arch/arm64/include/asm/rwonce.h               |  4 --
+>  arch/arm64/kvm/Kconfig                        |  1 -
+>  arch/arm64/lib/xor-neon.c                     |  2 +-
+>  arch/um/Makefile                              |  4 +-
+>  arch/x86/Kconfig.assembler                    | 29 ------------
+>  arch/x86/crypto/Kconfig                       |  2 +-
+>  arch/x86/crypto/Makefile                      | 12 +++--
+>  arch/x86/crypto/aes-ctr-avx-x86_64.S          |  2 -
+>  arch/x86/crypto/aes-xts-avx-x86_64.S          |  2 -
+>  arch/x86/crypto/aesni-intel_glue.c            | 21 +--------
+>  arch/x86/crypto/aria-aesni-avx-asm_64.S       | 10 -----
+>  arch/x86/crypto/aria-aesni-avx2-asm_64.S      | 10 +----
+>  arch/x86/crypto/aria_aesni_avx2_glue.c        |  4 +-
+>  arch/x86/crypto/aria_aesni_avx_glue.c         |  4 +-
+>  arch/x86/crypto/blake2s-core.S                |  4 --
+>  arch/x86/crypto/blake2s-glue.c                |  6 +--
+>  arch/x86/crypto/chacha_glue.c                 |  6 +--
+>  arch/x86/crypto/poly1305-x86_64-cryptogams.pl |  8 ----
+>  arch/x86/crypto/poly1305_glue.c               |  4 +-
+>  arch/x86/crypto/sha1_ssse3_glue.c             | 10 -----
+>  arch/x86/crypto/sha256_ssse3_glue.c           | 10 -----
+>  include/linux/unroll.h                        |  4 +-
+>  kernel/gcov/gcc_4_7.c                         |  4 --
+>  lib/raid6/algos.c                             |  6 ---
+>  lib/raid6/avx512.c                            |  4 --
+>  lib/raid6/recov_avx512.c                      |  6 ---
+>  lib/raid6/test/Makefile                       |  3 --
+>  lib/test_fortify/Makefile                     |  5 +--
+>  scripts/Makefile.compiler                     |  2 +-
+>  scripts/gcc-plugins/gcc-common.h              | 45 -------------------
+>  scripts/min-tool-version.sh                   |  6 +--
+>  38 files changed, 36 insertions(+), 278 deletions(-)
 > 
-
-I recently saw Shameer's patch [1] using a different vmid allocation
-scheme, so I guess it's okay if we don't share this function..
-
-
-Thanks,
-Praan
-
-[1] https://lore.kernel.org/linux-arm-kernel/20250319173202.78988-5-shameerali.kolothum.thodi@huawei.com/
+> -- 
+> 2.39.5
+> 
