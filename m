@@ -1,166 +1,129 @@
-Received: from mailrelay4-3.pub.mailoutpod3-cph3.one.com (mailrelay4-3.pub.mailoutpod3-cph3.one.com [46.30.212.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF94A21
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 23:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082F204F9B;
+	Tue,  8 Apr 2025 23:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744153968; cv=none; b=pBHJsBz1brwFgf3V6ddTySxBu4jQQqoy4dAP+/vAsadKm/eevnwblKPHAtUpMDwlh87qxlWwVQn04uHSwW9SlusKPrkI9X3iE14NqtV3iFXCoBRLHK7q+ZSQ+WM44q1rgT+tkizqE9EGMTwTvfTx4FYQwF/UGxMmZXK3/rGpOC0=
+	t=1744154310; cv=none; b=bWP26t6jF8iX/pnYbmxFTXj7ZOf+0bNXFG1OdqQYy/Xm4aswvHrdERLfGcGzXKOHjM+wHE4MDYYytCb4KSGKL2SszlkfKsG/ojpGGgcPNNhxFX5JUfhH5c+JlcNLPgNn6YnMAOD9izTl/Ay+uH/mRsWp5XwgEduTtWW9QAFKyKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744153968; c=relaxed/simple;
-	bh=h9DDZOmUzxP2zKuD0TuYJdDRKLvWdLZ3WGLWuUbG0Pk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JBJ6DEgDp2LY7lpyc3YklIKC0YosVZdXDMl22pMQmkUfvUR2l/OxSiINvWuS3elegj5EI/CUqMiY6tPilKvZ3BlW34hG8CJEyWLOoKDlYj20A6TOnsjq9vp7EVZ3r+Lu7Ipb9DgBoxL3OvbXqr60GdYsmZTvLzyS29x0td2rvJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=vvSWBgNZ; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=Aoke+BTH; arc=none smtp.client-ip=46.30.212.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1744154310; c=relaxed/simple;
+	bh=TG4EQWqRrbUu9xl4AKd5LNrgTm0mSdNLmmatHbdF0n4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBD3kcAL0nYpZwxP9Rih1RGtUNGkOB0Bdzw8bVvd3dJXMVkCuka3qMIFIrwz+1RCccRyZI6EdnXjGm2k95YrcJdv1K1Pg4nz8VOEcAA6wOAzdvvNea5uBjtXA7+UdsD1LwSbH8vTlN3AhGgiKPmlXAodvWisGwyJVkT1d8HU3JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afC2FybB; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="vvSWBgNZ";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="Aoke+BTH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744153959; x=1744758759;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=Y+YiStRvb9f3Iob4ax1/jWCFHRVxG9qjdqNePl5lmL4=;
-	b=vvSWBgNZUyj0z4H+0cV1bylSZnOy0qTLeMI4htnAI8WeJcQJ1IhntC6jXkuCQgrjfd/50uKAf3KyY
-	 eFA9rK65tJjlR6N/6LcAafhjboFdEn7AcDYLPYK1+UVLHwfuMS600T59UD0p7CBBbY2j1BaanLPdTY
-	 n8kC2sWM6/eFLM8OcSZLGvDz7Wsp53+LPQ4x9koUuB+cPJfW1dNhuEg2gHPkPTl6gBKWRafha74W0O
-	 sNIr4xbsjXGrsXElg74DzRTEb1pQ3f3JSMCnNjkNuqYmwlhfhPeXCadczUgYa+TkG0ApsW7cKhzdHX
-	 1oBH3VzsBJ8SDBCH063e9t2ltLP0LsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744153959; x=1744758759;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=Y+YiStRvb9f3Iob4ax1/jWCFHRVxG9qjdqNePl5lmL4=;
-	b=Aoke+BTH8IDPVT4OO+RoxOsvU2gYpEEwASCH+iny4aVBwfUpBtEKu+pgQEbnRfyYQJWlX6/MNonaQ
-	 /nGW4fPBg==
-X-HalOne-ID: f5ff7cc9-14ce-11f0-94d3-29b2d794c87d
-Received: from [192.168.10.245] (host-90-233-218-222.mobileonline.telia.com [90.233.218.222])
-	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id f5ff7cc9-14ce-11f0-94d3-29b2d794c87d;
-	Tue, 08 Apr 2025 23:12:39 +0000 (UTC)
-Message-ID: <ed517e4a-70db-4e80-9fbe-b1a4cfe3a11c@konsulko.se>
-Date: Wed, 9 Apr 2025 01:12:38 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afC2FybB"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85b5e49615aso558030139f.1;
+        Tue, 08 Apr 2025 16:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744154307; x=1744759107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jSfFK6BUAK+Qxfp2fpBiU7pkFHlfyZI9MOMS3C7WUDQ=;
+        b=afC2FybBFRzpPOgasKUTcunWN85N3n0/OaeYDHGklLbu/Fr1iDOuzPrPnfzyeiX7mp
+         EHISjNfvo9tEz3WsG5Umj+sHUqliVcHPVsWKgQ24AOf6Q4bN+Y248bQE4WugIfRUkUYi
+         vAzOqvXr8OZIT4nOKwSEsgZiSoCzfRHRecNYVPDrdWoAWvZt65soMN1hbNJexUC17DJI
+         FcTw7P/5iRrJlrVeHa+VP54i5z1jFX9OsU2/uC6FmtQCgUNvlsBC/33yLgq/aXR03Xe/
+         P4Qrh6mCwxTEWjcs8DzgwWE35z6ySGHX9GlTk+araURL/fAmhIUYFeg8uqBCkzZV0/4n
+         Ka8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744154307; x=1744759107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jSfFK6BUAK+Qxfp2fpBiU7pkFHlfyZI9MOMS3C7WUDQ=;
+        b=UPkqhyaaaAerFZ+GZAsxBHtpbDcUxN5vODKE9s/KNEB3s+8v9PA1lUqcHlwRrsQCn4
+         iYkgp1WdebBaM3fpshHcTPanlM/GdAOTexJSTknBKZkgtdqXR6xwnEbMPxpReejBQWpV
+         rclMvK8eMZ5kLj7siRhB23BO3UJdE0lsl0v83NP58Q/xTdUZLGUtIes49zlXENLayh45
+         Z+CaWfL5kUpnS2gfYr/fJlMJw+LE6gJ99A7CLLK/JPt2f8xw0aolrttLKwO5is1VyWgB
+         Qx8cFF4Cx1Dr5R/3yM/V2RhVsl7hte36Wk00flyymEd2/y0wTAd4GCFy673/E1c2/oe9
+         8COw==
+X-Forwarded-Encrypted: i=1; AJvYcCXd+eIYdriaBlInSUqJ9HNzRMrcF81aKw5beYceZeyBgEC0cvckmiP/zdo7E+zMFBYp6p7z/XqeTOSOPS0B@vger.kernel.org, AJvYcCXkrTATx6sCW0uZblzPhl/s+1qqMHfydpahUJ4f0Aop/OgdoU27Ovn5jbOb/I8R6GUth4oWyU1fddzR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmqC17vwgHr234sYymrjfe0RjxcVCy85F/yBYt9Uip8zKndSCC
+	6t+0f+8ElqPTxlsYuGtOGdj8y/6FKei1dwTMAdTviXQKsEgHdzHFg+aTGA==
+X-Gm-Gg: ASbGncvfD5L5lcr0lrMpZpdLX53Flujatnm6w54JepgUJsD2uelXzPgMyfUEUaotPPX
+	lUSqweW07IU1mIBJvUVcp4UfsrK1TNWIIjzueXgL2JalRuuryzU72d9kyCyhdTyRTW9w3wLvHOs
+	eiAV9cq6Xg6lZKIKpdYxpd6pgNbLsdMSBMTdPRCSseAWHxHLSeaIlOSHM66RB8PG9p1tog62REm
+	B+89ILG2fA+vDEqeGPmxCpoIUhHCfDbCELMsXYBVFjQ0v+s79tm8CIsCiZHLL4sxf2j/ATLPk0z
+	P7jY+Xdrn0kWXAVfz7+NvJGMm5u22LdtPTuJhj0q3rQLOtloPAFHaJppiyq+QJmnLDF2XlxpHb7
+	EzcNP
+X-Google-Smtp-Source: AGHT+IHYg4dISZi5MgFUiEYdRjYsvIUqdiL+bhUuYp/Fy7sbHYzH9I/h1mFQvjX09fR0NQhMOw2CjA==
+X-Received: by 2002:a05:6602:408d:b0:85b:5564:2d51 with SMTP id ca18e2360f4ac-86161265dfamr143772739f.11.1744154307543;
+        Tue, 08 Apr 2025 16:18:27 -0700 (PDT)
+Received: from hestia.. (24-220-158-153-dynamic.midco.net. [24.220.158.153])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4f44e2759sm724244173.128.2025.04.08.16.18.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 16:18:26 -0700 (PDT)
+From: Robert Nelson <robertcnelson@gmail.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: Robert Nelson <robertcnelson@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Davis <afd@ti.com>,
+	Andrei Aldea <a-aldea@ti.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Ayush Singh <ayush@beagleboard.org>
+Subject: [PATCH v2 1/2] dt-bindings: arm: ti: Add PocketBeagle2
+Date: Tue,  8 Apr 2025 18:18:22 -0500
+Message-ID: <20250408231823.826163-1-robertcnelson@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: add zblock allocator
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Igor Belousov <igor.b@beldev.am>,
- linux-mm@kvack.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Shakeel Butt <shakeel.butt@linux.dev>, Yosry Ahmed <yosryahmed@google.com>
-References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
- <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
- <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
- <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
- <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
- <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
- <3f013184c80e254585b56c5f16b7e778@beldev.am>
- <20250408195533.GA99052@cmpxchg.org>
- <24e77aad-08ca-41c4-8e64-301fcc9370b1@konsulko.se>
- <CAKEwX=Pf3qA=u7KBcknnkYnfJ48YmUj8FYN=X5C8OCXrsMW9=w@mail.gmail.com>
-Content-Language: en-US
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <CAKEwX=Pf3qA=u7KBcknnkYnfJ48YmUj8FYN=X5C8OCXrsMW9=w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This board is based on ti,am625 family using the am6232 and am6254 variations.
 
->>> So zstd results in nearly double the compression ratio, which in turn
->>> cuts total execution time *almost in half*.
->>>
->>> The numbers speak for themselves. Compression efficiency >>> allocator
->>> speed, because compression efficiency ultimately drives the continuous
->>> *rate* at which allocations need to occur. You're trying to optimize a
->>> constant coefficient at the expense of a higher-order one, which is a
->>> losing proposition.
->>
->> Well, not really. This is an isolated use case with
->> a. significant computing power under the hood
->> b. relatively few cores
->> c. relatively short test
->> d. 4K pages
->>
->> If any of these isn't true, zblock dominates.
->> !a => zstd is too slow
->> !b => parallelization gives more effect
->> !c => zsmalloc starts losing due to having to deal with internal
->> fragmentation
->> !d => compression efficiency of zblock is better.
->>
->> Even !d alone makes zblock a better choice for ARM64 based servers.
->>
->> ~Vitaly
-> 
-> Could you expand on each point? And do you have data to show this?
-> 
-> For b, we run zswap + zsmalloc on hosts with hundreds of cores, and
-> have not found zsmalloc to be a noticeable bottleneck yet, FWIW.
+https://www.beagleboard.org/boards/pocketbeagle-2
+https://openbeagle.org/pocketbeagle/pocketbeagle-2
 
-I don't have the numbers at hand, I think Igor will be able to provide 
-those tomorrow.
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+CC: Nishanth Menon <nm@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Conor Dooley <conor+dt@kernel.org>
+CC: Andrew Davis <afd@ti.com>
+CC: Andrei Aldea <a-aldea@ti.com>
+CC: Dhruva Gole <d-gole@ti.com>
+CC: Jason Kridner <jkridner@beagleboard.org>
+CC: Deepak Khatri <lorforlinux@beagleboard.org>
+CC: Ayush Singh <ayush@beagleboard.org>
+---
+Changes since v1:
+ - Apply acked-by from Conor Dooley
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> For c - in longer runs, how does zblock perform better than zsmalloc?
-> In fact, my understanding is that zsmalloc does compaction, which
-> should help with internal fragmentation over time. zblock doesn't seem
-> to do this, or maybe I missed it?
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 18f155cd06c8..b7f6cd8d4b9e 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -46,6 +46,7 @@ properties:
+       - description: K3 AM625 SoC
+         items:
+           - enum:
++              - beagle,am62-pocketbeagle2
+               - beagle,am625-beagleplay
+               - ti,am625-sk
+               - ti,am62-lp-sk
+-- 
+2.47.2
 
-The thing is, zblock doesn't have to. Imagine a street with cars parked 
-at side. If you have cars of different lengths which drive in and out, 
-you'll end up with spaces in between that longer cars won't be able to 
-squeeze in to. This is why zsmalloc does compaction.
-
-Now for zblock you can say that only same length cars are allowed to 
-park on one street and therefore that street is either full or you will 
-have a place.
-
-> For d too. I see that you hard code special configurations for zblock
-> blocks in the case of 0x4000 page size, but how does that help with
-> compression efficiency?
-
-Well, to be able to answer that I need to dig more into zsmalloc 
-operation, but i would guess that zsmalloc's chunks are just multiplied 
-by 4 in case of 16K page and thus you lose all the granularity you used 
-to have, but I'm not completely certain.
-
-Meanwhile I did a quick measurement run with zblock and zsmalloc on a 
-Raspberry Pi 5 (native kernel build test) with zstd as the compression 
-backend and the results are the following:
-
-1. zsmalloc
-*** The build was OOM killed ***
-real    26m58.876s
-user    95m32.425s
-sys     4m39.017s
-Zswap:            250944 kB
-Zswapped:         871536 kB
-zswpin 108
-zswpout 54473
-663296  /mnt/tmp/build/
-
-2. zblock
-real    27m31.579s
-user    96m42.845s
-sys     4m40.464s
-Zswap:             66592 kB
-Zswapped:         563168 kB
-zswpin 243
-zswpout 35262
-1423200 /mnt/tmp/build/
-
-You can see by the size of the build folder that the first run was 
-terminated prematurely not at all close to the end of it.
-
-So, I can re-run the tests on 8-core high performance ARM64 with 16K 
-pages tomorrow, but so far everything we have seen points in one 
-direction: zblock is clearly superior to zsmalloc in 16K page configuration.
-
-Besides, zblock can do even better if we extend that very hardcoded 
-table you mentioned (and BTW, it can be automatically generated at init 
-but I don't see the point in that).
-
-~Vitaly
