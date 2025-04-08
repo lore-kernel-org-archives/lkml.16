@@ -1,107 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F7222F392;
-	Tue,  8 Apr 2025 16:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5D322F167
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744130604; cv=none; b=oPHejroiPU/2wVNl0bBG3eF3kY5uQk20Kmhe5lZJIoRXlOghFts4OqSlV8OLsCYvYa2465yx1re4YrdLjFbsQCg0oe3C4Ja1w2uY1ctg/f9hS29yhy0PaOmar3CCxElAK8n+Nrn5tHPr1ukp+JntyeWVgkZnucDavZd2ZyRx8+A=
+	t=1744130617; cv=none; b=V0d2pjY3DOqVW+Re2TReEsD6NLyhIaaG98XoL9EZFj00R3xJ7dr+qZSv/YjmH0kSXPdaCJPqMt0OvgcXIzPVx52OqzqDtlE8v7lPUQouTbw1tHkTKR/xh5gcFqsrgXJQNHYeh9RpGc7hFVSFXYO1N5MwNoPCc/5/OquKvQl6twM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744130604; c=relaxed/simple;
-	bh=raJz/ai0ZijncBOlpXxt8uuwgqGiy01W9ag8yTzBix8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A1bsGQN2VUQd/cVxvw9UHzwADqlh6cxF8NMSmdBJfc/p8klNNsithLuXyTXD49CtoPM+Yq/yHDurHuJo8FF/fYNtT/5AYIdP4fKN6yKCpNIPkoml1YTkn10Ukq9uudVQzPqDlDp6fiVtkVXk1WFp/v/8+iWiyjJOrrztuM2oKk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CN5QCqo8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744130617; c=relaxed/simple;
+	bh=EMGJL06zBcH8/bK3L8ffU+XphSEbrqEm5rUSMYBj7/0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qVO8G7yF5dWYQNtSYxUsg2wzfdsVvJeEdLnUT5lBDClRIirUCpu6TNmFHbkpDsMKcvieHhXTJG8kZRAtfvsxHwXW6LbYC6uecycE3KCyrRC5UEjjDAv+NDLC5u5KeI7JlnLuvQbnNmO9pljxc8brlCRECz2ZlV6TPT1h0Sb/EYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vNQahXzs; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CN5QCqo8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35166C4CEE5;
-	Tue,  8 Apr 2025 16:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744130604;
-	bh=raJz/ai0ZijncBOlpXxt8uuwgqGiy01W9ag8yTzBix8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CN5QCqo8FfJuS+kH2SrW9SXisJd5pHEXM8AdUowcpWagegjOXBQVbBANE07oZlmzQ
-	 li5c+mCiTm83gAQ3bOAX+pfgdLKJBTZvlL2u7f3xCCNDIQEeWP1a60PccTMgN8wXtO
-	 bMrQt1hXozSe81baudtBer5uThmcSifBWXLWrigdtGK6mwSX5oKw8vkizKf8RKZxnZ
-	 JETomvJV5XQZnyZFxsKx/aGxKNE8xkAQU8wlrIgL7jdZqAvJxcCeBRcyD2g1s3k43m
-	 I7sEGUcGFtK3bnTaQQhzLyWWJA2oKRJz+mDPuaJ2APbfB5vh7NgeA3IDvVjL2LrwE8
-	 eFV0zUGdNCPaw==
-Date: Tue, 8 Apr 2025 17:43:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	tglx@linutronix.de, daniel.lezcano@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, tim609@andestech.com
-Subject: Re: [PATCH 7/9] riscv: dts: andes: add QiLai SoC device tree
-Message-ID: <20250408-activism-botany-351c2e49b4e9@spud>
-References: <20250407104937.315783-1-ben717@andestech.com>
- <20250407104937.315783-8-ben717@andestech.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNQahXzs"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47666573242so3431cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744130614; x=1744735414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1FiKiNCaVFv2Cyr7Q7f6YrTxmfWsn+IwY5nbyf35odU=;
+        b=vNQahXzsxZQPqCDqJ2G3MUDKA3glypyAPy45iqIf/f7jNW4dqbxT7rKfiVHoxcrQEo
+         /C0dWzRQlJys1QyVpq8F4OwYo5xnd8ajx8ywWEQkBjDPYb8n737jqq3+rnI4CGfoN/5v
+         spFKxUS9+CSnumPNJIwBlSOR3V3SxKXGzi0KgoVYsywwSYzcaf38ts9ouifDDCAxZvru
+         yPYVRXrTBnVQ9dk1IdVs/6mwY58L/5nGSqJwp7k/04IGmWXs3dgWh2zKuXCcv+loENsO
+         div/IDFazsntD7jM29aGBdl+jfpuO79SlX4qVnkXCrQWG8gftS8Vpcotq+3iYCHp3zVS
+         MHBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744130614; x=1744735414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1FiKiNCaVFv2Cyr7Q7f6YrTxmfWsn+IwY5nbyf35odU=;
+        b=fsPFWsjDhwrTvO075bIXtc8Z9HId4OR0IIA2b+rHfHNCieMmRxdIifwIBg0mCFI71O
+         a+5eM7xCJXa9kmHJNhMiAMhGt25DWL+axjYxHgy8lfz6TY/up4VS6eWsErpxnrmqF6IA
+         KfTrtleLex4g+mtgg1bbNSGYJnApKz+iDzCD4gIEXR8PUGwN+s4/kZFQwaT42Xuei/on
+         0+rI4MShs+FG8t40GIXk3/LAlRsIvx3Tsb9Z6cYppwKjxk7s2RI+UQ7fHNQooUXTCTzi
+         AEJ1hZwEIBzgnuWUR0jKMLsZi6gov3hPSCloKX7F3U9dKfBUzzf5ILtURmG1zf+MNnlF
+         PTcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZlZKFs7V+rYdmkWuhyPJUNyrqHGR5Zr4t9jPtICW6ApdrXXT94X2FfNTZRDWajdJIpUa/YPqruqlyC9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3NsPM4s5EEwTglpaY/zzy1J/0Vm5goA8sosRHyNOYIiQREaKs
+	Iw8wZvXjIP8nSrqEYx8SxcIBCQvIukk9s4QFnOQvmYNuXScx6hB6Ve/5WgI040fn3WoxJr7t2Lo
+	48I1d6RBf+5sx830NpMh6o+D802gwZlznmJBo
+X-Gm-Gg: ASbGnct7bmlTtUV8gba0IaTKCe+RukKEhVwGVKFpyT4ZMK8PlQ+V7+u7wTTgoaNcPcp
+	mbjalh87NZCAgz1iRz5gG6RZq0zuB6AyVLUDpQSFE3MbEPtB6eXYBHJtuQ9M9bSsL+lK4v1hfSG
+	Gbv4z75Wyt1V/v5nbMzL6JG5LR0oYEQc4e9fqBM0/MWRVxygbf7rIih/iZgA5wR+0QQ5w=
+X-Google-Smtp-Source: AGHT+IHUWQvLcrCIeytX8WdQFcIxjeAwfPlwbo7B6E6aJQhKTc0WFzSxKyLGGdC974vlRDvFfaEJkQN1B0nRXBOv2FI=
+X-Received: by 2002:a05:622a:198e:b0:477:86aa:8829 with SMTP id
+ d75a77b69052e-47956216f1cmr3920371cf.3.1744130614272; Tue, 08 Apr 2025
+ 09:43:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="awb5ELcIZKsHge4i"
-Content-Disposition: inline
-In-Reply-To: <20250407104937.315783-8-ben717@andestech.com>
-
-
---awb5ELcIZKsHge4i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250407200508.121357-3-vbabka@suse.cz> <20250407200508.121357-4-vbabka@suse.cz>
+ <D91BI0ICWA7L.3P7ILKPYMKGMZ@google.com>
+In-Reply-To: <D91BI0ICWA7L.3P7ILKPYMKGMZ@google.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 8 Apr 2025 09:43:23 -0700
+X-Gm-Features: ATxdqUGBt28o8ERjPE6GWLD7R0zA_rTTTrRVJtvv2fQ4PNvjAZyr1xF_AaXtqn8
+Message-ID: <CAJuCfpEgFTvfAgfrsks_gSTLNfDF0Ehf5tX6FLPwj4piPPC60g@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] MAINTAINERS: add MM subsection for the page allocator
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Mel Gorman <mgorman@techsingularity.net>, 
+	Michal Hocko <mhocko@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 06:49:35PM +0800, Ben Zong-You Xie wrote:
-> Introduce the initial device tree support for the Andes QiLai SoC.
->=20
-> For further information, you can refer to [1].
->=20
-> [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/q=
-ilai-chip/
->=20
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  MAINTAINERS                          |   1 +
->  arch/riscv/boot/dts/andes/qilai.dtsi | 194 +++++++++++++++++++++++++++
->  2 files changed, 195 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/andes/qilai.dtsi
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d1e1b98dfe7b..b974e83c9f10 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20731,6 +20731,7 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plic=
-sw.yaml
->  F:	Documentation/devicetree/bindings/riscv/andes.yaml
->  F:	Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
-> +F:	arch/riscv/boot/dts/andes/
+On Tue, Apr 8, 2025 at 7:13=E2=80=AFAM Brendan Jackman <jackmanb@google.com=
+> wrote:
+>
+> On Mon Apr 7, 2025 at 8:05 PM UTC, Vlastimil Babka wrote:
+> > Add a subsection for the page allocator, including compaction as it's
+> > crucial for high-order allocations and works together with the
+> > anti-fragmentation features. Volunteer myself as a reviewer.
+>
+> Thanks for volunteering and thanks for proposing this update.
+>
+> > Extra reviewers would be welcome, including/not limited the people I
+> > Cc'd based on my recollection and get_maintainers --git
+> > Also if I missed any related file please lmk. Thanks.
+>
+> If this is a "more the merrier" situation I'd also be happy to be
+> an R: here:
+>
+> +R:     Brendan Jackman <jackmanb@google.com>
 
-New platform, but your maintainers entry contains no git tree. Who are
-you expecting to apply patches and send PRs to the soc maintainers for
-this platform? Hint: I really hope it is you.
+Same here.
 
-If it is you, please look at the soc platform maintainers documentation
-entry:
-https://docs.kernel.org/process/maintainer-soc.html
++R:     Suren Baghdasaryan <surenb@google.com>
 
-Cheers,
-Conor.
-
---awb5ELcIZKsHge4i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/VSJwAKCRB4tDGHoIJi
-0vZcAP9RbDFg/af3ECEvZAxIZ+AZ8LsCFlFr9kWSatf+nA5aEAEAtS1YMjdLacjF
-5TjTqZ65HkYhQTbXoa6mn6dLiR1j6gE=
-=oOMV
------END PGP SIGNATURE-----
-
---awb5ELcIZKsHge4i--
+Thanks Vlastimil!
