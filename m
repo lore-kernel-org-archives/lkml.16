@@ -1,150 +1,118 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9804C8F5A;
-	Tue,  8 Apr 2025 15:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E7A1A8407
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126372; cv=none; b=HUkmgSc/EZ0+ZEVMs4G9IPHZSuZE7Nrr1ddNmQBTvY3JpMGN7h1pYdP5tp5LgudnXwVvf64on8AhKtScz+1vSBlFFPyTMIqHj+HTxmM3lOzwjY7xMsnz989k9T8M8GzSILzF0b1OlRoZfbVRqFXa1ffvwyI42Kr4We6uSfVPfWg=
+	t=1744126394; cv=none; b=BEcYojI+qlJ37REGM9AP1BmjObruP4V2oLP6At21ekelJfDa00D62klzIxJeySM471L7x3eGF5TJYGiYN33fRwmgQJBg6dvRWQCE1H5ljfaZQaC51TisFB3RZWp0YTXiHnweHGzd1scS3mwoblV9Tct5BFUF6TPMrS5qY44BBqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126372; c=relaxed/simple;
-	bh=+SSZrN8wkNSkmcTPKV2yxkI5mq1uBPzghaYSVyoz1kM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qbw4IvKVbcTvURVSTqdqDo4XQ2SQoWFXyajBbcQx0sX8p8ck4a5l0QiUiP4sf0QReYiwQPlnjowAXi2zpVffOCNZU4hXrVm9cxfRm86p1Uc2d4UNunPtju6geZJ8n/loD+wR0KEK4XBAFNOxBW7tDSbtRQF0Tlvwvv6i1JnfNkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c592764e24so609777585a.0;
-        Tue, 08 Apr 2025 08:32:49 -0700 (PDT)
+	s=arc-20240116; t=1744126394; c=relaxed/simple;
+	bh=fZSe9cOE6+lN1PYsZGWt0c0EBhhVZMgfo7/QsrayYj8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=pKzr/UaeaByQYvER/8+DEzfTZGA697hI9dObKBuBgZ4lqFZgNYNbVXbYTjB4pksotzqlmvGKzxSMfBzcgcOepBMwWKB99eW+hB6mckcyiCqt0Q1d2gmA0z5gZjxy7VBbzO1GTBfcqHzFb2ObcuPzmHmfeesg8G1u/HeRrDOHAKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=XoRvZiXm; arc=none smtp.client-ip=209.85.166.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XoRvZiXm"
+Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3cf82bd380bso55154585ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:33:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744126366; x=1744731166;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sWauuTJeBzaymof//eJXjaRWpKnp1jf/EjofEIpiwYM=;
-        b=rJkYVdUM9T9zUTnBCTlEoIDocRsli4DGBTO8bgBomQGIhzPN9dhv/Zi4QDuRrr0M/t
-         YRxpoufH1/hYgoDV6ayVrXUQiO/4OJzhX21WJCXMPgQ6vo6LaFoVD8FK50SOIzTfEFOo
-         2LPGEYgFZIcNy5uqFihHLAItfLYtiwSJGf6Sol+A7PRcJ+LbO9OGdSLTxUJhQGoZ5DhI
-         WX5ySE0HNgazLW3zSJKbwZSBa9+cUbD9LyYXh7/aaEpCr9JzdBA3nFcJRNUfdoAoLAnn
-         0fx4O8RTw/GE4MPIylIXYOfgCKswV6qHUEbZOsYHtPvVpK9rRTLV2MLvJJNYpcGNmXZQ
-         7l6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWHxZxu3YVExsB5pFHH1H8JhMB2mZ9cXMZNXXxpdBSBGHHBKMXPXcfFzIplDrNbZ0+UqTN1YYQQ0jmEyQxo@vger.kernel.org, AJvYcCXvHflDVvgVMkORnxGLI0MS1Uc+k8+/LTJmzmhLzcl+v2fa0gqIj8nF4pliTgwoUCa/JNDK0iQURjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEdaoeggrP8OqAoKpCASXW+pJfm64WNNYJr1lLTMvseHwoGSuY
-	HXo0ZkZ6pKSAKhaumXcQGCJ4KAwj78ZZGqxkV5Kw5gWPiKETlubK4IfRm2i7
-X-Gm-Gg: ASbGncuw5AYD/VdzgcY78MaF7UlhKTuX49UZbqHmM4K8eLh6X48YYza+DyxQ2l0rmjt
-	Ku6KZsnAXBadZS5fHU/uMg2JREA1/CLiFn70mhNZZkACdAJ3+0jrrddpZ5Q7pUNtYdRVyKEG3eH
-	5nTDcMRNDnybWnWU7SxPRQyTjGA3mhGaBdiV82JLmIrJUZxFrJc3QzG5/5U/WfMDaZCZ1aw14zF
-	kbT+Fr1js4dz3uQR+wdn1sKfbcxVU+yJl0/GFIgwoDLaBE6wytY+v/k8dJiwbLNBsH9oN/TdPv1
-	ADJeZ+ci26dAzgQuwfvgpidQCkTjoLSpX5Ll62zOUOKd9Cqkgdo2SZvBtNIbPyrkco41dGPS04T
-	4qKm8YrsfAH0=
-X-Google-Smtp-Source: AGHT+IEnSFlTWDZfMJvUU/4uP24DOXtgkU62MH/Q/dBTDsUnHEqB2uN53fLWdR7eyScBn51RG/GyvQ==
-X-Received: by 2002:a05:620a:2889:b0:7c5:94ec:5114 with SMTP id af79cd13be357-7c79409bf63mr553112485a.18.1744126366028;
-        Tue, 08 Apr 2025 08:32:46 -0700 (PDT)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76eaacff9sm775018985a.116.2025.04.08.08.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 08:32:45 -0700 (PDT)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c54f67db99so644762285a.1;
-        Tue, 08 Apr 2025 08:32:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUL/6as5KGbJiouwF8WqWoagu0I/h8FuGneNwELWOly3XNUc8AglEmPTnBjyOaIzPt88Ek9CEqGUw+WKh2J@vger.kernel.org, AJvYcCVyM4Hr15y91RT2Q0ZSKlNw9FVZOq0iwUl57hrFj6Mdd2rLbR/zksYh8xoYciGybWW+Zd0Br5uMRWM=@vger.kernel.org
-X-Received: by 2002:a05:620a:4150:b0:7b1:7508:9f38 with SMTP id
- af79cd13be357-7c79408f423mr535672885a.16.1744126365206; Tue, 08 Apr 2025
- 08:32:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744126392; x=1744731192;
+        h=content-transfer-encoding:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZIp5HkuCecJrXO42LNENOtR2HpJcHzON18/VgrUWA2U=;
+        b=Ow+jnFZqm6jmGmCKwtp68fvS8/xhVobonijn7snZxXO/z3Xn+l6rKcI8DtnrV4jGOF
+         dc/dZ3UhJ0QlicU8tizV5IyRwd8CCxOixuVfg0NUZOhbSofn0NOLjDS22QKf/rnh5mhf
+         uYVEd2+CP81Yh/WxhSMT3KAjCBhBl/kqZTazu4s2P4KYtniOC340YkEZ5qExLzr0S4fW
+         +DjXxBuCaiZbiTAG8j+lhH1+6dVE9/5CrPFdTCjWRdnaiZ8B13wvQN/Fg8cNwaNqzJAc
+         pgvTfV3UIjThiiiV7vJFqt3MyskIoeoO5OtC0lV3zVUqmGeQ8Q6/kZ7Bmznz689vxY4v
+         UNKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlOsjszp1tQybUav3eim+SwZS5t5On+GZB3ke39SsC+pXgpnoCZudMswfwkM9K+7K/avYBoDOUDodkkhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM4hZEpvX//pg39URwYTNIq8ol5qIPGoDXcOai2ZmiGv0drCCi
+	ZklTtk4W+FNZs0Ts20eoI2Dyr2Tl94E1Ih9ZYBThk9nHbVPq6Qqt2wACrdABUvMCR73HEPFGF/R
+	gcf5K0qkJzhbZnVImvBjFD6kn9IQLCw==
+X-Gm-Gg: ASbGncsQ0VY/RwIL6/dtERO1CYhZKCTE6gAtQ1jCLfrxo0+tc7mlYZLnBB9VkdmeoLc
+	KJMy3LpF3I4xKvgI0mNNCgUOoMrBC1pf56u593D6GAMHPsQxLseQs4qkCWszE78rR2QthYUvF8I
+	pCtgOMIvJ3dYgJyKiHetzu2qiv9GSGzid9YYzEfjiNimXtCxVFVE0rsPBOt6eQQpv/ZmtkhvObW
+	TlyNtrZa1N2YtP2+hOsNi5S20qLvbVpE9f2wUe4pkE+ys2x7ym9QikLWGf+02+zGax13Fiu2jyX
+	FfCORRQQlki+ayUQAH3jNC7eMTk=
+X-Google-Smtp-Source: AGHT+IG0bJHf8yVxArmgqdUB1VjG2+cLxcbev3xbFIUcyxf0dWKFoKc1j1VYHlHpJORlLSCMN8zrwdAyYHgg
+X-Received: by 2002:a05:6e02:2484:b0:3d5:8923:faa5 with SMTP id e9e14a558f8ab-3d6ec536c51mr139672185ab.10.1744126392378;
+        Tue, 08 Apr 2025 08:33:12 -0700 (PDT)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d703c0b600sm1161445ab.53.2025.04.08.08.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 08:33:12 -0700 (PDT)
+X-Relaying-Domain: arista.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1744126391;
+	bh=ZIp5HkuCecJrXO42LNENOtR2HpJcHzON18/VgrUWA2U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XoRvZiXmLdRa7ky3oaLJGb1Tqv3cqnbOyHOEdxKTMssua1ZAFg5cxhRrQ8iRbaNOG
+	 9/9zQqEjQcKIamZ4YTOx7abJNoRNPtv8sdb+oc46Hlu3PzFvtul41m8DUhDs4OULze
+	 shlA2AgFZY1ZmsK07+atJJ5xX/pM8ATUOH41E58xaKu98tjjjRdq3PSbYb45vIEXLL
+	 cjbf3rmmQO6NrOcc80HFEPL33TM8RDgMz4+DJm3Op4TL8IxNWO9/gCf8rRPwzTSeKi
+	 skiPf5i2kJDf1WDPXZ0LNIt1XeILe/I6Q95BmdJPlWbNUXv4pw4QnIupz97xDoNsC+
+	 Nv5jLsfOCR45Q==
+Received: from mpazdan-home-zvfkk.localdomain (mpazdan-home-zvfkk.sjc.aristanetworks.com [10.244.168.54])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id 81F2A100242;
+	Tue,  8 Apr 2025 15:33:11 +0000 (UTC)
+Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
+	id 79EE640B1B; Tue,  8 Apr 2025 15:33:11 +0000 (UTC)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Marek Pazdan <mpazdan@arista.com>
+To: andrew@lunn.ch
+Cc: aleksander.lobakin@intel.com,
+	almasrymina@google.com,
+	andrew+netdev@lunn.ch,
+	anthony.l.nguyen@intel.com,
+	daniel.zahka@gmail.com,
+	davem@davemloft.net,
+	ecree.xilinx@gmail.com,
+	edumazet@google.com,
+	gal@nvidia.com,
+	horms@kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	jianbol@nvidia.com,
+	kory.maincent@bootlin.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	mpazdan@arista.com,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	przemyslaw.kitszel@intel.com,
+	willemb@google.com
+Subject: Re: [Intel-wired-lan] [PATCH 1/2] ethtool: transceiver reset and presence pin control
+Date: Tue,  8 Apr 2025 15:32:30 +0000
+Message-ID: <20250408153311.30539-1-mpazdan@arista.com>
+In-Reply-To: <8b8dca4d-bdf3-49e4-b081-5f51e26269bb@lunn.ch>
+References: <8b8dca4d-bdf3-49e4-b081-5f51e26269bb@lunn.ch>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250304120014.143628-10-ajones@ventanamicro.com>
- <20250304120014.143628-17-ajones@ventanamicro.com> <CAMuHMdWVMP0MYCLFq+b7H_uz-2omdFiDDUZq0t_gw0L9rrJtkQ@mail.gmail.com>
- <20250408-f3b5934a901bd24c1c800c8d@orel>
-In-Reply-To: <20250408-f3b5934a901bd24c1c800c8d@orel>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 8 Apr 2025 17:32:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW8DBfGNVkeY6qLv-eN=mjRKW3qUbXvEn7sLdA61QRfcA@mail.gmail.com>
-X-Gm-Features: ATxdqUEIXkJ1UlfuGjCURKEaeAQ-DRYOLV6RZU-cgg5H0QCozGCmtM1pj04if88
-Message-ID: <CAMuHMdW8DBfGNVkeY6qLv-eN=mjRKW3qUbXvEn7sLdA61QRfcA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] riscv: Add parameter for skipping access speed tests
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	charlie@rivosinc.com, cleger@rivosinc.com, alex@ghiti.fr, 
-	Anup Patel <apatel@ventanamicro.com>, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Andrew,
+On Mon, 7 Apr 2025 22:39:17 +0200 Andrew Lunn wrote:
+> How do you tell the kernel to stop managing the SFP? If you hit the
+> module with a reset from user space, the kernel is going to get
+> confused. And how are you talking to the module? Are you going to
+> hijack the i2c device via i2-dev? Again, you need to stop the kernel
+> from using the device.
 
-On Tue, 8 Apr 2025 at 15:03, Andrew Jones <ajones@ventanamicro.com> wrote:
-> On Tue, Apr 08, 2025 at 02:25:12PM +0200, Geert Uytterhoeven wrote:
-> > On Tue, 4 Mar 2025 at 13:02, Andrew Jones <ajones@ventanamicro.com> wrote:
-> > > Allow skipping scalar and vector unaligned access speed tests. This
-> > > is useful for testing alternative code paths and to skip the tests in
-> > > environments where they run too slowly. All CPUs must have the same
-> > > unaligned access speed.
-> > >
-> > > The code movement is because we now need the scalar cpu hotplug
-> > > callback to always run, so we need to bring it and its supporting
-> > > functions out of CONFIG_RISCV_PROBE_UNALIGNED_ACCESS.
-> > >
-> > > Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-> >
-> > > --- a/arch/riscv/kernel/unaligned_access_speed.c
-> > > +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> >
-> > >  static int __init check_unaligned_access_all_cpus(void)
-> > >  {
-> > >         int cpu;
-> > >
-> > > -       if (!check_unaligned_access_emulated_all_cpus())
-> > > +       if (unaligned_scalar_speed_param == RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN &&
-> > > +           !check_unaligned_access_emulated_all_cpus()) {
-> > >                 check_unaligned_access_speed_all_cpus();
-> > > -
-> > > -       if (!has_vector()) {
-> > > +       } else {
-> > > +               pr_info("scalar unaligned access speed set to '%s' by command line\n",
-> > > +                       speed_str[unaligned_scalar_speed_param]);
-> > >                 for_each_online_cpu(cpu)
-> > > -                       per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> > > -       } else if (!check_vector_unaligned_access_emulated_all_cpus() &&
-> > > -                  IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
-> > > +                       per_cpu(misaligned_access_speed, cpu) = unaligned_scalar_speed_param;
-> > > +       }
-> > > +
-> > > +       if (!has_vector())
-> > > +               unaligned_vector_speed_param = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
-> > > +
-> > > +       if (unaligned_vector_speed_param == RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN &&
-> > > +           !check_vector_unaligned_access_emulated_all_cpus() &&
-> > > +           IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
-> > >                 kthread_run(vec_check_unaligned_access_speed_all_cpus,
-> > >                             NULL, "vec_check_unaligned_access_speed_all_cpus");
-> > > +       } else {
-> > > +               pr_info("vector unaligned access speed set to '%s' by command line\n",
-> > > +                       speed_str[unaligned_vector_speed_param]);
-> >
-> > On SiPEED MAiXBiT, unaligned_scalar_speed_param is zero, and it prints:
-> >
-> >     scalar unaligned access speed set to '(null)' by command line
->
-> Thanks, Geert. I think unaligned_scalar_speed_param is likely 1 in this
-> case and we should be printing 'emulated', but I neglected to add that
-> string to speed_str[].
+This is something to implement in driver code. For ice driver this reset will
+be executed through AQ command (Admin Queue) which is communication channel
+between driver and firmware. What I probably need to do is to add additional PHY
+state (like USER_MODULE_RESET) and check it when driver wants to execute AQ command.
 
-No, the value of unaligned_scalar_speed_param is zero.
+> Before you go any further, i think you need to zoom out and tell us
+> the big picture....
 
-> I'll fix this too.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+In my use case I need to have ability to reset transceiver module. There are 
+several reasons for that. Most common is to reinit module if case of error state.
+(this according to CMIS spec). Another use case is that in our switch's cli there
+is a command for transceiver reinitialisation which involves transceiver reset.
