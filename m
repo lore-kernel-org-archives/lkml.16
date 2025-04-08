@@ -1,83 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA79E223714;
-	Tue,  8 Apr 2025 18:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A411223714;
+	Tue,  8 Apr 2025 18:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744137272; cv=none; b=rSVwHXPYQ0FR5cb4cILbYDOvgTHK/H3mjWKORuf5lWL4NxuuOZvt3TjS79lQRMyi19odAf+nQuDVprfiKghHX0++frPeMnB+pMZAt1r1JzLUHs6PbTcoI1YcaC2QumqQ7qPCcpo7O4dk9NiTJ2anHhewSqQYbZOqEqoEn4mBXnc=
+	t=1744137277; cv=none; b=KXTEMrdQUsrX1mDEcyj+R8yOMy4AFcoc8CPj/hoz7gZol3NLj5A7XxAVicvTg5HrHelEQhgoiRKjriKjLSklFEMEuuWTTfjFstO11pXV34LNwIW2hphkxZPf/CtKBK0Ku46v+dYcOqV3XmiUi5Ozhpiy6S1bfC0p2ZrlSBXhTJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744137272; c=relaxed/simple;
-	bh=wZHfmO+4ijZiRV61lTcI2ea64PpOjZEPTdYCKaYTEyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RBor2pq9YUuDWAQShFd1WDQU4glsk3RKfs+3cIVpvUhmh7L3rzVu7K7RXuxKKxvcxGPDEEzd9B6mvqNyVUOXF4WSKKUsPwxgJHly45v5eucoA7DBhORUuvJ+pCNl/UpJCy5kENLr1vOrDZq1HCQc48aqbvefeX8Qc+OANtjDSjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAjP511F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744137277; c=relaxed/simple;
+	bh=0sZJJExaQ91TPDvwSrGsR8vheFg2V6WnKKctpJC0AIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LziPlJzKmv9PT/lkz6NwT78k5ZOyVkY4ZUCd9vrYYgiNe1/g/DiLjC8nN9rmtHSd1w3vTwhvp/z81LoqxKlyQDPJVQ3gVNBs38kmLb/BUAmkC+eEkLXVKfVMcMylAC2SyHiLwdCfzMJhC7PTDDdPv0CReVznLQ3hIx+NOVL7rRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQr42NUm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAjP511F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B92CC4CEE5;
-	Tue,  8 Apr 2025 18:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQr42NUm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 815AEC4CEE8;
+	Tue,  8 Apr 2025 18:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744137272;
-	bh=wZHfmO+4ijZiRV61lTcI2ea64PpOjZEPTdYCKaYTEyY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lAjP511FGl3+5xNEOTJyCdh7GTA04W+rLvvZgdYNWTBLz6jLM+Vw2uIu+J6y68xAN
-	 hIwg92dMbjwuoTQ01rahC40TufDu1C0u1LjwamjWjNUyHelXbQf3WHIl5IfctmrOVQ
-	 e/ZNNAI0niTbGEqH+2hHknrna4scuUE4c6lHwYqoyWwxoXV6VuYgKmf/KBT8X9wPrz
-	 d3JZMRDhDnRTKT28OTCq5sUOsk2UIC2+6NtWbzBTitt0YjLU7mOUUFrBCCpCCWcR4/
-	 TLiB7nBZ7Z2tX4A49yt5eBuAlOpjbBgdOrqFeFRivNrtK1LxLruW+QlmJDl+IB4tnD
-	 KwMYuIu3dWN9A==
-Message-ID: <5788aca2-2565-4c7d-9760-6a08509eb014@kernel.org>
-Date: Tue, 8 Apr 2025 13:34:30 -0500
+	s=k20201202; t=1744137276;
+	bh=0sZJJExaQ91TPDvwSrGsR8vheFg2V6WnKKctpJC0AIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nQr42NUmcE7b5R+cW2+tbsT7qO66bsMGbcbi9sMVlSyk75SwX2iNzKLMVy4A1L51d
+	 QPgjrkWHMU4euO2YcFVVZbMQruHCW4ikEzmf1xGEV3PZmwQfnbRJQH2UlKkdknk5Eh
+	 8MUWZMSJDM9VtW01wvqzaMiSY4Eh6snhrV21kipVPlF/u4YTDpgyr33gGuz4/qlHl6
+	 0nY+TQmovtydnex7MWUw1Kg9NHwSUATgF1oFShWuy6XLpB5/gfQXVqJGib2RDgF6KL
+	 +Ami9tcY0OstBW+j8bgrBhyGuWEbgJCYfhGhOjIuUhogfiLEgFcKwK0dphzXllFeJB
+	 REYxgvoC9rrlg==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2cc36b39545so2151740fac.1;
+        Tue, 08 Apr 2025 11:34:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqhtxfYi1n6aFmIPB9AiAJoSMpCU5GtPOe5Iu6yEbPvsaiRCI2vBQhpYrOErt3S90tqwZcnu/GHM0=@vger.kernel.org, AJvYcCX0/6H4T0ZNXDIybvRjVYRguNEQrt0PrUfGpk5X+pWXSo1xcKgPo57ZfUjMI+aOqoZdYicJFfV3HtLaCMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYBo55f0M8v7xiNnb2XeXdE2bpZbCIotfDWBqxbrn5AGaLmdDS
+	qiPtYHx1WCFHQgmlkWhaAILmSfC2rmbcvaIzwW3WklmAMKykOeDurHTOeEryAnIH+ef6Mi1t29Q
+	4SFE3gAExPNsyIj2LlDhNAQ5TgrE=
+X-Google-Smtp-Source: AGHT+IG/tFyu4CHjzqr5TuSGmA+9Zy6vwaCIjvPWzPUyqDSdzWJT8gBoepKM7Suk+Q8NTl0kcIAPmKkak9PjufJrxDw=
+X-Received: by 2002:a05:6871:20c4:b0:2c2:37db:dad with SMTP id
+ 586e51a60fabf-2d08dc8ee6amr87182fac.1.1744137275808; Tue, 08 Apr 2025
+ 11:34:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
-To: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- Yazen Ghannam <yazen.ghannam@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250408174726.3999817-1-superm1@kernel.org>
- <20250408174726.3999817-2-superm1@kernel.org>
- <20250408181451.GFZ_Vnm6JXaItfwVpK@fat_crate.local>
- <a8bed98e-0393-4b0a-8b5b-3007015a9af6@kernel.org>
- <9be828dc-94d0-4760-a78f-e8f92d92bcbd@intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <9be828dc-94d0-4760-a78f-e8f92d92bcbd@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <4651448.LvFx2qVVIh@rjwysocki.net> <8560367.NyiUUSuA9g@rjwysocki.net>
+ <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+ <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
+ <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
+ <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com> <6346af9942a0e6730fd6b26f2586b82e6fc04d4c.camel@linux.intel.com>
+In-Reply-To: <6346af9942a0e6730fd6b26f2586b82e6fc04d4c.camel@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 8 Apr 2025 20:34:24 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0htfoQzL48=-JcocfiV7hN5N5Bjn36vZ+zLCQ=Lathcfg@mail.gmail.com>
+X-Gm-Features: ATxdqUGbcDgnIvD-diYgGnd22eZM6rrXCUoJJJNCfX6jx4cnh6QZdqwI3T3olyw
+Message-ID: <CAJZ5v0htfoQzL48=-JcocfiV7hN5N5Bjn36vZ+zLCQ=Lathcfg@mail.gmail.com>
+Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to ->update_limits()
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/8/2025 1:28 PM, Dave Hansen wrote:
-> On 4/8/25 11:19, Mario Limonciello wrote:
->> I think it's still valuable to have it in documentation for anyone who
->> wants to read more about this.  As we get issues that come out of the
->> woodwork I could see people punching the string into a search engine and
->> then being spit at debugging.rst and we can adjust documentation to tell
->> them what to do with it when it's not clear.
-> 
-> How would that work when the documentation:
-> 
->> +31, Internal, SW sync flood event
-> 
-> and the string don't match:
-> 
->> +	if (value & BIT(31))
->> +		return "software sync flood event";
-> 
-> ?
+On Tue, Apr 8, 2025 at 7:47=E2=80=AFPM srinivas pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Tue, 2025-04-08 at 15:37 +0200, Rafael J. Wysocki wrote:
+> > On Tue, Apr 8, 2025 at 1:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
+.org>
+> > wrote:
+> > >
+> > > On Tue, Apr 8, 2025 at 12:28=E2=80=AFAM srinivas pandruvada
+> > > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > >
+> > > > On Mon, 2025-04-07 at 20:48 +0200, Rafael J. Wysocki wrote:
+> > > > > On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki
+> > > > > <rjw@rjwysocki.net>
+> > > > > wrote:
+> > > > > >
+> > > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > >
+> > > > > > Since cpufreq_update_limits() obtains a cpufreq policy
+> > > > > > pointer for
+> > > > > > the
+> > > > > > given CPU and reference counts the corresponding policy
+> > > > > > object, it
+> > > > > > may
+> > > > > > as well pass the policy pointer to the cpufreq driver's -
+> > > > > > > update_limits()
+> > > > > > callback which allows that callback to avoid invoking
+> > > > > > cpufreq_cpu_get()
+> > > > > > for the same CPU.
+> > > > > >
+> > > > > > Accordingly, redefine ->update_limits() to take a policy
+> > > > > > pointer
+> > > > > > instead
+> > > > > > of a CPU number and update both drivers implementing it,
+> > > > > > intel_pstate
+> > > > > > and amd-pstate, as needed.
+> > > > > >
+> > > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >
+> > > > Hi Rafael,
+> > > >
+> > > > > Hi Srinivas,
+> > > > >
+> > > > > If you have any concerns regarding this patch, please let me
+> > > > > know
+> > > > > (note that it is based on the [05/10]).
+> > > > >
+> > > > Changes looks fine, but wants to test out some update limits from
+> > > > interrupt path.
+> > > > Checked your branches at linux-pm, not able to locate in any
+> > > > branch to
+> > > > apply.
+> > > > Please point me to a branch.
+> > >
+> > > I'll put it in 'testing' later today.
+> >
+> > Now available from
+> >
+> > git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+> > testing
+> >
+> Looks good.
+>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Good catch.
+Thanks!
 
-If we're in agreement in the value of having the strings in the kernel 
-and then also in this table I'll make sure both sets of strings are the 
-same.
-
+IIUC this applies to both [5/10] and [10/10], or please let me know if
+that's not the case.
