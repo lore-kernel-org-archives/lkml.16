@@ -1,101 +1,102 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F8B2686B1
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5551A2686B1
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111669; cv=none; b=epDozOYJOBs4Cdji1Ss2xcxArpd7B36+n5ckGTXfJHdO20wvnFCGAd3VzVAghhB0OuVJdOL9UxF0HViK2J96oqUMdhHizb+ONlvGQ6eh/4DqAumNUEOJCcMyIhbXDlv0YCvVnKryeGvR4c/lNSV0cQiWPnHWPUa6l0xQuE4OXbA=
+	t=1744111673; cv=none; b=fHLUaw9wA1X+2nys6pOaf3PtKVZwvDb3qQCcMDPE3J75itksBxtfeccZRCEHH4sZoX09arqVketX6gAf2Y12lU/Z4oKrEXKOCMG95HSTLNudhrTTx+mCvys/2sWI6a6S8jS1dx3r7chFouufPmEWXkwVnNxLI3WQDMrkqstmHsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111669; c=relaxed/simple;
-	bh=9/SI4TkAJnViIG+zH8NnrAYsWGamcMlzfn1L2zXyGUY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fd4XO8BW0CbX8xB8od2v96oNr5Bnx5yM5nDc5PUIcnqZH58wrZIMSLu1fOJhjCUW2TpaQp1FSAxuRZ4yQpVdnZPPKQT8SCdfdw5NGP/4sK+TFRbyOuclFyAqUhhx72BYn2HyFdLtA2N3TPvP1XxfbMIPBE7+LRjJsaBLXQEufmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22435603572so51108545ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:27:46 -0700 (PDT)
+	s=arc-20240116; t=1744111673; c=relaxed/simple;
+	bh=f0wyTvRh5lpgWiiGO9fwyzoCdEcKmYS3jgl7pHv8Jw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Raz+arVsnRz3L3s8jF+FDwQf9dGE07JR4glFqa/gPRi5GeTMKVOocywtex6MiXt/6cYfQtCyNpYR/aQMSmA2ak5w/W1I8hRgpjB0csIuempjYuTW4Hg0wX+KTDw9bLEd2ZXJ0eiufz04mXFis1BB+PlhF61WB3EPRJ0zPZGsN20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VXMquUIR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXMquUIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744111671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oiJcUwgw3G77cyBQmbSkkpxoJDuSwz/pqjPj/WDvIhE=;
+	b=VXMquUIRy1MxC5SRZVdpqzIwZsbMDv+RFq3/Y5220aLZtiRnz27yRuZ/Wx5EBDWmSajekE
+	pFDg7OWp51KfI3J5j7fXIhaTxI3aPlei9wm3mYvYgzyMBs7Qw3alqgfNar7J2UYSvxobHf
+	X4GtIiEkGXSk9MPfL4m0OnUGlg+1e7c=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-nbDrglSvM12m8j_hjX-FIg-1; Tue, 08 Apr 2025 07:27:49 -0400
+X-MC-Unique: nbDrglSvM12m8j_hjX-FIg-1
+X-Mimecast-MFC-AGG-ID: nbDrglSvM12m8j_hjX-FIg_1744111669
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso39740425e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:27:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744111666; x=1744716466;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sWNuU4PXGcFFUxJOOD6+vUejwIulJeOU2+PZK360UKs=;
-        b=OdxcOt2K5v+kCcBAv98UVNfDb8ctAAsMK6qnHxkfDshLrNw5HJxX+ByfjfXdbom//z
-         QFQ3znXpcmh1CGjeOvBVsNkYstak5kZMBFgazOK4+8sxy7IatrX1v7ShfOdrWvxUrgP4
-         KEBO+Go29EVpkzft4KZSK3SuXQZeXKpC7y4QgaEM0EWa7NDLjDrY+e3fSoLQrSvb24sI
-         tlsS965doan++XDd5qwH9k2diCh9/Y5y/z7Hn+2x18KrTlR8KeAcnYdWu/rE+IR6WkmF
-         i5C86QwFcMOzMvr5dkaI6ghz8xSaJV685wvZTJMSM0/wtsdpevC5B/bMHztUPoKUFneQ
-         t9SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6iBnuBjb01tnjYIssxffHQIgczfdR7GrhKBx/u58VL5e4nYc8IDsDdmLUNQFfelsWm5103THUTdIz5YM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnNiHHmqljUwKdImf5YWeZUQcL4B3HMoJ/N3Mfe0GyGq/SJpNP
-	fktr7cpX+m7NS/vNhs3GOPVTv4Lus97F7KehZca9Ne/JzmVjgwP/
-X-Gm-Gg: ASbGncuShDnF6FD0nKKLtbP9yyNWoMXxJq42DCmNsPVGQw+1ZkjJBeBjKk8LbVopYG9
-	0QI6hXvVb8t1Fd/T/RZ66wq+6wDdIfntf+Si4lSl7I2gUu3C85MI/SJEYHacXH4TpT3dvaeQfLc
-	Nlr7/575DntR0BNmp8/4Pm0sLIo+5OddBd+2bFuC7PX/Zy2xCAOc8+l9+fF4kpGeGj7r1s7lLsB
-	9HsWgO1OMlz8FmG3PqQzHgrLxxHsthN6Xd3dTqlLUkq+QI/z4UrCgumLi8+hyF13X59qYq4bu1k
-	YvIrNqIGbp+XffqBbA8FtZxF8j7xgkz6zlO2tkgU0dAu0mbXjsF4lcnhcsXj
-X-Google-Smtp-Source: AGHT+IHq28UvQIqWAknFOlE8tIbb/hwfHmeUHFw2eZnKNEbxo/0KO+z2EsthClTeQucSfsOEE2tUVw==
-X-Received: by 2002:a17:902:f684:b0:224:2a6d:55ae with SMTP id d9443c01a7336-22a8a8e44camr224245775ad.48.1744111665988;
-        Tue, 08 Apr 2025 04:27:45 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c0127sm97708895ad.91.2025.04.08.04.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:27:45 -0700 (PDT)
-From: jiangfeng@kylinos.cn
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	rodrigo.vivi@intel.com,
-	christian.koenig@amd.com,
-	raag.jadav@intel.com,
-	andrealmeid@igalia.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Feng Jiang <jiangfeng@kylinos.cn>
-Subject: [PATCH v2] drm: Fix the length of event_string in drm_dev_wedged_event()
-Date: Tue,  8 Apr 2025 19:27:28 +0800
-Message-Id: <20250408112728.244146-1-jiangfeng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1744111668; x=1744716468;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oiJcUwgw3G77cyBQmbSkkpxoJDuSwz/pqjPj/WDvIhE=;
+        b=eWya7ACUSrd5nrnHW23XgFZLDs6w+j1FLzs7Dxw5dbjzPB4WN2bP2eFAlEfwG7+lbE
+         8rVAQBkHJ3hKQzouvhiQBEJTnPnVkgFKFGS/0EYiAuyyhxN+bWaLFMPcxEeOkrLOo5iA
+         L/sZ61s4iod+wIXdmaGmw3aSuAO5ypF0Z+XltPXJq5mPr4ClGtAozRrTeb+RlenW7crc
+         U1wGrWcqUhJY5ZYzQkxwvhsdjovJuCbQ/jdgqiyf7u5Qf8OZ3sVtCclFLTXEM/RW6CYF
+         gBdKF6eZB3T94HNoskCHGewjQ/1q2Z60x8yayHe9uTDx0+eE15fypZWibsUoam+QC+YK
+         OrPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgPLN5aRbPWSZhcoDRji46lbswBnGR/dlZjdKu5X3FWeG9XHCKphwlAta9y2TW53Ci311X95EfuowNmJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM2u43FcM+mCZoSgzW1nbv3UX59wiQEeC2z68e2RS/FZ3ZbZJU
+	YINSX7leKeS4T6PAYpwFafKSK82hG9vSTbXW2s2tEE+KPgK4ansooC/IGiMB7YA7LMkiyilh21E
+	0ELl7PDqcUVvDm9a7PXP40c5uerzFMoRP+GPnG8YdYY4VPAAlRVocvDkwpXq7sg==
+X-Gm-Gg: ASbGncs7HS4WTf/zu0kdLOg8jEaDoWCo3k1WFCxsdt4xoNRnccQp1beSfdxyHJ4aoMC
+	pr9EsL/zpXpxoFIP1dUKncQSXxvqjHzVQpubHfjV4NCwCQiEyP1jvXx9YRtRZcL5YhFvlzTgjG1
+	3K87o3PgPeVTtbc8NaibEGvBR/AgnbR7E0o5uNLMTUXI1HlHqxlcVcy4fsUxDqP8kNQw6Zc/iF0
+	hmYixP9D5y6jGciFcs5/cuff98E5XU6TZ8cPVYNX69KeYYvL+5J1XQIzG1D00vYl6KFOj+dTvUm
+	oCNWH4j1gl49+Zd0OEi5J0H1cLlhLLXNU0K4UaDozbM=
+X-Received: by 2002:a05:600c:4e52:b0:43c:fab3:4fad with SMTP id 5b1f17b1804b1-43ee069569fmr126983665e9.16.1744111668624;
+        Tue, 08 Apr 2025 04:27:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJoXZ2/VTIioZNKN80gDIxGBXzvfyGiFohuL9wpJ/xqRl2/l2496Uw3iNHljUOTZLrUqMGVg==
+X-Received: by 2002:a05:600c:4e52:b0:43c:fab3:4fad with SMTP id 5b1f17b1804b1-43ee069569fmr126983395e9.16.1744111668288;
+        Tue, 08 Apr 2025 04:27:48 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-84-24.dyn.eolo.it. [146.241.84.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bf193sm156859775e9.24.2025.04.08.04.27.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 04:27:47 -0700 (PDT)
+Message-ID: <f8f98783-0aad-4ff7-9fd6-0ebc8c734abc@redhat.com>
+Date: Tue, 8 Apr 2025 13:27:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] amd-xgbe: Convert to SPDX identifier
+To: Raju Rangoju <Raju.Rangoju@amd.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shyam-sundar.S-k@amd.com
+References: <20250407102913.3063691-1-Raju.Rangoju@amd.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250407102913.3063691-1-Raju.Rangoju@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Feng Jiang <jiangfeng@kylinos.cn>
+On 4/7/25 12:29 PM, Raju Rangoju wrote:
+> Use SPDX-License-Identifier accross all the files of the xgbe driver to
+> ensure compliance with Linux kernel standards, thus removing the
+> boiler-plate template license text.
+> 
+> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-When calling scnprintf() to append recovery method to event_string,
-the second argument should be `sizeof(event_string) - len`, otherwise
-there is a potential overflow problem.
+You targeted the net tree, but this is IMHO net-next material. Applying
+there as such.
 
-Fixes: b7cf9f4ac1b8 ("drm: Introduce device wedged event")
-Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
----
-v2:
-- update commit message
-- keep scnprintf() as a single line
----
- drivers/gpu/drm/drm_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 17fc5dc708f4..60e5ac179c15 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -549,7 +549,7 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
- 		if (drm_WARN_ONCE(dev, !recovery, "invalid recovery method %u\n", opt))
- 			break;
- 
--		len += scnprintf(event_string + len, sizeof(event_string), "%s,", recovery);
-+		len += scnprintf(event_string + len, sizeof(event_string) - len, "%s,", recovery);
- 	}
- 
- 	if (recovery)
--- 
-2.25.1
+Paolo
 
