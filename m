@@ -1,112 +1,183 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52514269CF7;
-	Tue,  8 Apr 2025 12:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17CB26AA9C
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114653; cv=none; b=WP+rWRHCs/iwJ4S7nhfwuSL7g1TJ8ewh5HuUqDj1xGsIoxOanHYo9gK9HHjrkRV0Mo2ihUqhtkC/vxecvZOIEDsCVzuo7itoJwkXHNq/ng/SVqDVmvxU3YxcsurKziXqXoEIzIWFGcy+eVMMPllzyLFJOC8j7uoNgNa22+43ybg=
+	t=1744114667; cv=none; b=PqUGS8uu/y9jsFHdGONuTiwIKspUCCFfdEGnZo/DwcBgjB61a8nWvbZrrF/PCcKV5539ryvAW7bCDom6HuykhQ19oIq0rnpxxl6GypOrc635/WC1EZFUCh7L08NeF3Iq2efLKFEotKymh/tQ5mIfzS+dckO2gQBNgJPfEuaJNyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114653; c=relaxed/simple;
-	bh=7MIQ9HHSB2bH2AFr+0VI1B0l0NJu73hsXo5dH0HrwKI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUYN/Zu6xB0mLgZkxqchzN3Pw4fmwxi6f4KhIT+f5VpbUuo36jcnZjvigWIAU9wg2QXPKjuTAU3oUTbyGkI2f+B4FboU/3F7dP3O24TuMZcqH69et/VTbEEZAh+w0SHMGmUfZ2ZVHiwP+J/BKdtVkLHLZFKEay5IeGe38nggH7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PWhd/3lX; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744114667; c=relaxed/simple;
+	bh=zrTv3Igv/b40jizFm6EQbXgK0TIclob8WTp61FIgQrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SQhjYgz08s/6NJTaq9ziL0piaBWGRblhPtTDWyipLKCJEKiebqX1/ZHsRkYyaDc9kYbqgTOKSNvmLX7j0iP5Y2Nz8rDvWGMkYF9SgjI18JjHfvuNFVHJOP+MJxzdzPP0m8GCY43uPKUFoL9dOaIz0mahFzJNZaBQt7UzA7OqFtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DmAkTUsQ; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PWhd/3lX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:To:From:Date:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kV+poe5wqojrBL+yWUAaYGMQtjRzHk+4Yf5T5cMCjWE=; b=PWhd/3lXU32H5fKoyfO3jNBLZr
-	PqLirgjLch0awcFc0ZGkz6HGrU/fgiC5+4TAeDV7bJUdpypw4f0100ekTCGWQ4IZNsBa6b1uwfmT1
-	S+AyorDOa9VhA5dessSUieUKMPeNyZW71j/oQqmJ4de7++9njBXAGlkEKxf+9e2Lj5Jc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u27tH-008NtL-Ru; Tue, 08 Apr 2025 14:17:19 +0200
-Date: Tue, 8 Apr 2025 14:17:19 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Joe Damato <jdamato@fastly.com>, Michael Klein <michael@fossekall.de>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND net-next v5 1/4] net: phy: realtek: Group RTL82* macro
- definitions
-Message-ID: <96fcff68-6a96-49fe-b771-629d3bef03ea@lunn.ch>
-References: <20250407182155.14925-1-michael@fossekall.de>
- <20250407182155.14925-2-michael@fossekall.de>
- <Z_SPgqil9HFyU7Y6@LQ3V64L9R2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DmAkTUsQ"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7023843e467so52177437b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744114663; x=1744719463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XgQfANebtdqnI5c6U+NPo92x9wLAySpUrYEpuKhqRpM=;
+        b=DmAkTUsQJnJNTUy70pA1EP+YbwSCQFwvpsh5BzKyy2I5xXJOwKPp/MjuyD7Iyvr6wr
+         5lUThj3lRMnhqedjtfRP8J7zDGx0uSK+/VQeMcv8WYxuNchnWCouB6Y9hd1MaJ5j+t5v
+         r+ghHoPGlhagvFh9cQfVJgJHdXNAO4YVRyK61MBQ2x557tIEYYN094pzYGp77sdkROxK
+         EXd1sAvNMiWdvAPUqeqnz+Bhct3FNTbp0bsbtJ7Px8MW+yHMOyEFGSVmdWphUHs58gBq
+         Xhkt+pVwRR9zBHyq0aSEVbDq88LFxyGJDcXxm4MUpMPkXY+cAj1P4wuUVIO5AMpLVVAn
+         4X+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744114663; x=1744719463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XgQfANebtdqnI5c6U+NPo92x9wLAySpUrYEpuKhqRpM=;
+        b=C2svIQfh8skrDujMewn7M2ZdMXX7UXBduGlThWAJFpIWyUTY+UCxgsXhXNAHmr5dZW
+         o3QO0QK/eB2XYerT/vsMWFnVpd4HtYL8jU5MWtdXQM3LUYokmaOvzlDxAmUyZJFEzlC7
+         7thZVfjvCnOS7SYYhASMuBv/1r5tKR7uAeopWgK3HIBHKyb6ijBGDyc2llDDXMbtuhvg
+         68xDjiEvyazVNy2Tr2pcuIAR3SzoqWwAjUM9lPLVfyCQhnEY08vcsv8/q6NwJVq3VOLj
+         +/NZQPzxm2Wd6b9bbk7plhS/g1CsUjUfhdjeAqmTHDG+oUArj57+d7izqp+3OkBksEia
+         1jdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX4CkFofHmxJ7a7O7IIAPNSjGAlqwyz/zLXXXhclfn9G/Koh2ZHDgyt5VO1WJ848Y30PdVlzWnc2I84yU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeQIt02xZeAEd9iBXxtDLznLKNHMYQZzMFRmsbwpHJFsdLe3st
+	8w17tac2Dywa2BfCb4XRz3A5UaLy8Hg54GAN6RkIMxc5524QwP2K01MEQePaHdhsxAVBOXIWFjH
+	hdXDjL1QbIfCLT2mzS22SMkhACvhzYrJrEce/8w==
+X-Gm-Gg: ASbGncsf5y5FEAJaeBbor2tsXQCB7GPRHH0v+Cf1XEOCBxrOU+P0xejqWByB/dSxyNm
+	8KMMOdkURS4Te+Hd4FmRNyX+uIKRx8YTf1Nf9weFR0y/182fHw0fQtteBOCoiV2LaHObfprxtBW
+	S/l75pB7srOJdHjb8hPC9FpC6hdRg=
+X-Google-Smtp-Source: AGHT+IE9ys53OzSUdrwDVzPrCpJ3j0rVw9UiRXdXpPHOiJneCGTZtJTMxzg8Xq2rdR9GYtx0ZTNP05CFJHjGpzcayc8=
+X-Received: by 2002:a05:690c:67c4:b0:6ff:28b2:50e1 with SMTP id
+ 00721157ae682-703e14ffd3dmr297170407b3.2.1744114663553; Tue, 08 Apr 2025
+ 05:17:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_SPgqil9HFyU7Y6@LQ3V64L9R2>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
+ <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
+ <CAPDyKFoHQdHED0hHUR7VKin0XG6SVnYXuvPjB=Xe+1o2hpiPJA@mail.gmail.com> <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 8 Apr 2025 14:17:07 +0200
+X-Gm-Features: ATxdqUE7frfhfuxoKUlf3DinAq4W783EiniruawsYcgTKF9-ms73Ag05S_dZWTY
+Message-ID: <CAPDyKFoKdj-Y4-dCwYRG7TLdS1HcSH=i9EN-b9Cpyo50kMmC5Q@mail.gmail.com>
+Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
+To: Rob Herring <robh@kernel.org>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 07:52:50PM -0700, Joe Damato wrote:
-> On Mon, Apr 07, 2025 at 08:21:40PM +0200, Michael Klein wrote:
-> > Group macro definitions by chip number in lexicographic order.
-> > 
-> > Signed-off-by: Michael Klein <michael@fossekall.de>
-> > ---
-> >  drivers/net/phy/realtek/realtek_main.c | 30 +++++++++++++-------------
-> >  1 file changed, 15 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-> > index 893c82479671..b27c0f995e56 100644
-> > --- a/drivers/net/phy/realtek/realtek_main.c
-> > +++ b/drivers/net/phy/realtek/realtek_main.c
-> > @@ -17,6 +17,15 @@
-> >  
-> >  #include "realtek.h"
-> >  
-> > +#define RTL8201F_ISR				0x1e
-> > +#define RTL8201F_ISR_ANERR			BIT(15)
-> > +#define RTL8201F_ISR_DUPLEX			BIT(13)
-> > +#define RTL8201F_ISR_LINK			BIT(11)
-> > +#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
-> > +						 RTL8201F_ISR_DUPLEX | \
-> > +						 RTL8201F_ISR_LINK)
-> > +#define RTL8201F_IER				0x13
-> 
-> If sorting lexicographically, wouldn't RTL8201F_IER come before
-> RTL8201F_ISR ?
++ Stephan Gerhold
 
-The change log says "chip_number" lexicographic order. RTL8201F is the
-chip number, ISR is the register name.
+On Mon, 7 Apr 2025 at 18:50, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Apr 7, 2025 at 11:23=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> >
+> > On Fri, 4 Apr 2025 at 15:09, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linar=
+o.org> wrote:
+> > > >
+> > > > On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wr=
+ote:
+> > > > >
+> > > > > The "power-domains" and "power-domains-names" properties are miss=
+ing any
+> > > > > constraints. Add the constraints and drop the generic description=
+s.
+> > > > >
+> > > > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
+> > > > >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Do=
+cumentation/devicetree/bindings/arm/cpus.yaml
+> > > > > index 6f74ebfd38df..5bd5822db8af 100644
+> > > > > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> > > > > @@ -313,19 +313,15 @@ properties:
+> > > > >      maxItems: 1
+> > > > >
+> > > > >    power-domains:
+> > > > > -    description:
+> > > > > -      List of phandles and PM domain specifiers, as defined by b=
+indings of the
+> > > > > -      PM domain provider (see also ../power_domain.txt).
+> > > > > +    maxItems: 1
+> > > >
+> > > > There are more than one in some cases. The most is probably three, =
+I think.
+> > >
+> > > Unless I missed it, testing says otherwise. What would the names be i=
+f
+> > > more than 1 entry?
+> >
+> > "psci", "perf", "cpr", etc
+> >
+> > The "psci" is always for CPU power management, the other is for CPU
+> > performance scaling (which may be more than one power-domain in some
+> > cases).
+> >
+> > I would suggest changing this to "maxItems: 3". That should be
+> > sufficient I think.
+>
+> Again, my testing says 1 is enough. So where is a .dts file with 3 or 2?
 
-You would normally sub sort register number, so i would of put
-IER=0x13 before ISR=0x1e, within RTL8201F.
+Right! I assume those with 3 or 2 just haven't made it upstream yet,
+but sure they are cases. If you prefer to update the binding later,
+that's fine by me, but I just wanted to avoid unnecessary churns for
+you.
 
-> 
-> >  #define RTL821x_PHYSR				0x11
-> >  #define RTL821x_PHYSR_DUPLEX			BIT(13)
-> >  #define RTL821x_PHYSR_SPEED			GENMASK(15, 14)
-> > @@ -31,6 +40,10 @@
-> >  #define RTL821x_EXT_PAGE_SELECT			0x1e
-> >  #define RTL821x_PAGE_SELECT			0x1f
-> >  
-> > +#define RTL8211E_CTRL_DELAY			BIT(13)
-> > +#define RTL8211E_TX_DELAY			BIT(12)
-> > +#define RTL8211E_RX_DELAY			BIT(11)
-> 
-> Maybe I'm reading this wrong but these don't seem sorted
-> lexicographically ?
+For example, msm8916 seems to be one case that already uses "psci",
+but requires an additional two power-domains for performance-scaling.
+At least according to earlier discussions [1] with Stephan Gerhold.
 
-This i don't follow, you normally keep register bits next to the
-register. This is particularly important when the register bits don't
-have the register name embedded within it.
+Moreover, it's perfectly fine to also describe CPU's idle-states by
+using the power-domains/domain-idle-states DT bindings, according to
+the bindings for PSCI [2] (no matter of PSCI OSI/PC mode). In other
+words, for all those that only have a "perf" or "cpr" power-domain
+today (or whatever name is used for the performance-scaling domain),
+those could easily add a "psci" power-domain too, depending on how
+they choose to describe things in DT.
 
-    Andrew
+Kind regards
+Uffe
 
----
-pw-bot: cr
+[1]
+https://lore.kernel.org/all/ZRcC2IRRv6dtKY65@gerhold.net/
+[2]
+Documentation/devicetree/bindings/arm/psci.yaml
