@@ -1,148 +1,203 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309FF1C2324
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412EAEEB3;
+	Tue,  8 Apr 2025 15:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127327; cv=none; b=cdorZCRUis+x9jo3g7i7j49Qct8k/ZXZJvf6ihJAPCK9isCcjI383LtjTvFv2wwK0JxZxhgvgbXjiBiiTBACtPhuxIgQ9St3QOuv+01zcOrZF5UJdavnuC2yQse/Mb8t2lQFL6aTgyWv4hW9zuctzvE6tS7CPQNAwQJ/kztPW5A=
+	t=1744127380; cv=none; b=Zx5oahLKuLWzjx4sScnO0IgpPnuyuOf/G8XafvyYKbb2NHWT2OS4gz5G11ZiOUY7bvTD53J3c4Flxqxh8IEQ4dzkD306MFjnrmF3Yii/z3NbXWatUUlOt31aMh8SVAyRQmA5v+O0LI7zNwdatp/wnFaPStCLoZnr8LCVWmZPSEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127327; c=relaxed/simple;
-	bh=RC6Cpx1V8yAPRFKIwkSicxdBp6XOQdt3wSek5RBuI/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O+6aW305PIJJFnMtx2v6ADSdYd6eGkPuV9iDd0WD/7E4hCquANj3BxzXLgOiBSOxCviqnMzUsPEoYbA41VlC48k2E6ZzmXFt2zUQlnTCzmy9rM5+oVtg5+u/9lxJBJREEViulLhPlUMfERN0u9tpVdZEvzsnj8ls1ECpHlrRuLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y5vxAdCv; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744127380; c=relaxed/simple;
+	bh=xSrK7LAUSSUCi4ZzH6O6Ty3z7EDtkJ5DhOg5gEePWLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tq1Gd61vRoDnzJAynLuTXZ5xNIGY1AAOXuPUJ6KzsIoKPo3/noIpwWCJp0q52Jep7xsDJmLNjbjXStz7wsncwTzDa7FQ6NC2rRO2G3r6RvcpXQIWUasir93xbCEyiBikOVW5uwuOhDYb9p05F+s8NrnA1amB6P6bwdVGRvH/B8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Of749uDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y5vxAdCv"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774611d40bso324651cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744127325; x=1744732125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HChHYMT19CAAjwRKcO44l6baW5S92cXq7xYcS0sntkc=;
-        b=y5vxAdCvbvrmvQ2KizF0Aet2zEryzjUu6ndg8JtVXAGhbBeKwgzTD49utUx/LWPldP
-         501zptnme4qpPh5Csq+vIQp+pj+J1Na5wtX1Z5gZyfr/YG9RCgIcMinK9z0s1gFe6ass
-         EXgXa8lr6rijqy7pOhQDp32kYkMmdepcws20qsieRXCLDaN7h9T3SlDpN+lspw/BGhlJ
-         aQtziV/pI56y0ErfB+mKJskEse/S8XihDYsUJVJG3gsRFsgRHKOgRZ9JIXGS6WWanpuV
-         6FvBI7oS6D4ySh+FHMXZ+oYH4WKhZtMLKgarJR/wvzb5v6kAoszO4OJb/JZ+7gscjgnJ
-         1yJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744127325; x=1744732125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HChHYMT19CAAjwRKcO44l6baW5S92cXq7xYcS0sntkc=;
-        b=AjXxJ/9IsG6y9C876x0xhpCmnyBgMO9HaK2XnknqgPLEXUAtu7WMdkPM9wecW7CVBD
-         hsL0k/udC+cMgrqqHrlqjkw5ZstzlX695t+cwpbn3iyPxPZcGkmgek5sbL4mQGSWSs8i
-         BzrrAH22TcmOOtwUIvWqf2QUs1vejLaEAPlPXZJtQ8SUtIYpON27GIpF7ymGzQfBK60H
-         1ZY/DkkC8wab2/n4o4zoURtyN7XKWVESUd2Ixtw5+BtFv2ng77m0NkNV0/IyQH1tq4nq
-         J0iTqLEOgMtLPVb2JObvuRRuANAlY2MA4yKx8AGxsDNdF02f3sYQovXIKxfr/8Cm+zpE
-         k8/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUD8/G+sDAhm7LY8zZaXOGGnXgO1sUTuI/MxKhBGVAkWnc9BswN2RWBAY+7/jN6q2nZEpqIZZShrxhV140=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzANqh45COxPLZlESn2KnhCtd3jDf8tvpHwW40/B0cQ8/cbigR+
-	fVohh5ROKNzKgsOyISC/7O8iJICGFgEzCPW/0u2F7jP37504RLRg4irIAE9BJ13I04R73gWG53j
-	4FO5Jfh+9sOI2FHrD7wUwyyp6Y0E7LDDGKCb2
-X-Gm-Gg: ASbGncurspBRfdP7J1gcmej9mtHzpPSQrca838PqUoF2KfrwTFk8U6FIddntO8VSwFv
-	v9gjpsneGOdHt65yoZezrOvhGIr+n8BX4hyreRzTh8rx6jfdRg1x4v6BV3riQ3hB7qVA+Z5cepo
-	AqQnE3inQSY526mimz9H8QQmU=
-X-Google-Smtp-Source: AGHT+IF9VVNpziqW+dyk31xqzQBcnnW7MNMprL13YRhaXAX0XIZc2Ds4SBXJT8rQq90Zgkg2HrJYH8ieK1DCEoRHkfg=
-X-Received: by 2002:a05:622a:19a7:b0:476:f4e9:314e with SMTP id
- d75a77b69052e-47956378b7amr4383311cf.25.1744127324824; Tue, 08 Apr 2025
- 08:48:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Of749uDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF94CC4CEE5;
+	Tue,  8 Apr 2025 15:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744127379;
+	bh=xSrK7LAUSSUCi4ZzH6O6Ty3z7EDtkJ5DhOg5gEePWLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Of749uDuTgz7/WgXpLcGSOGpAPy4TPUi/Z0rrk3K+bntaoiSBHvd9I4dNHqkpmyS3
+	 Vf55OSR20730/zkiAfflhyHamswWsCCDRaC66oF2N0tEvNw2mMHB+5NWvXV60lKtGi
+	 Dj3LDrKpeBPGl9C/BraLMv0R3bXlwqmNXUhhXHqyynQ2E2LvlZ7l30OUYKRh7w7ORt
+	 Vw4NPl7+LDuhZBewQeOPC3+IL1mfuZsgiDSyhXb77zgRz2clfcvmv5jqwFHiBf8DEq
+	 3TUyegXPg2J+YZwdS3eKPtjytOsJ2B+dfmA1oACgzpmA98a1VteK1lfLbgcpcsCiQj
+	 76S9xtadpKA8A==
+Date: Tue, 8 Apr 2025 16:49:34 +0100
+From: Simon Horman <horms@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Russell King <rmk+kernel@armlinux.org.uk>
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <20250408154934.GZ395307@horms.kernel.org>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+ <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402205613.3086864-1-fvdl@google.com> <Z_Uqiu75bXhqpwm4@localhost.localdomain>
-In-Reply-To: <Z_Uqiu75bXhqpwm4@localhost.localdomain>
-From: Frank van der Linden <fvdl@google.com>
-Date: Tue, 8 Apr 2025 08:48:33 -0700
-X-Gm-Features: ATxdqUERDLs5ZmGAg6XIviO_kdQUuaBhgMOkQJccFFxKfnrrT-WebuFMeWNu_UI
-Message-ID: <CAPTztWZCEvgoy-s553nTcd_qyRknaEcw3OU56H_kfePHzi3WdA@mail.gmail.com>
-Subject: Re: [PATCH] mm/hugetlb: use separate nodemask for bootmem allocations
-To: Oscar Salvador <osalvador@suse.de>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, david@redhat.com, luizcap@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
 
-On Tue, Apr 8, 2025 at 6:54=E2=80=AFAM Oscar Salvador <osalvador@suse.de> w=
-rote:
->
-> On Wed, Apr 02, 2025 at 08:56:13PM +0000, Frank van der Linden wrote:
-> > Hugetlb boot allocation has used online nodes for allocation since
-> > commit de55996d7188 ("mm/hugetlb: use online nodes for bootmem
-> > allocation"). This was needed to be able to do the allocations
-> > earlier in boot, before N_MEMORY was set.
-> >
-> > This might lead to a different distribution of gigantic hugepages
-> > across NUMA nodes if there are memoryless nodes in the system.
-> >
-> > What happens is that the memoryless nodes are tried, but then
-> > the memblock allocation fails and falls back, which usually means
-> > that the node that has the highest physical address available
-> > will be used (top-down allocation). While this will end up
-> > getting the same number of hugetlb pages, they might not be
-> > be distributed the same way. The fallback for each memoryless
-> > node might not end up coming from the same node as the
-> > successful round-robin allocation from N_MEMORY nodes.
-> >
-> > While administrators that rely on having a specific number of
-> > hugepages per node should use the hugepages=3DN:X syntax, it's
-> > better not to change the old behavior for the plain hugepages=3DN
-> > case.
-> >
-> > To do this, construct a nodemask for hugetlb bootmem purposes
-> > only, containing nodes that have memory. Then use that
-> > for round-robin bootmem allocations.
-> >
-> > This saves some cycles, and the added advantage here is that
-> > hugetlb_cma can use it too, avoiding the older issue of
-> > pointless attempts to create a CMA area for memoryless nodes
-> > (which will also cause the per-node CMA area size to be too
-> > small).
->
-> Hi Frank,
->
-> Makes sense.
+On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote:
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
+> timestamping the egress and ingress of packets, but does not support
+> any packet modification.
+> 
+> The PHYs support hardware pins for providing an external clock for the
+> TAI counter, and a separate pin that can be used for event capture or
+> generation of a trigger (either a pulse or periodic).  This code does
+> not support either of these modes.
+> 
+> The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
+> drivers.  The hardware is very similar to the implementation found in
+> the 88E6xxx DSA driver, but the access methods are very different,
+> although it may be possible to create a library that both can use
+> along with accessor functions.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> Add support for interruption.
+> Fix L2 PTP encapsulation frame detection.
+> Fix first PTP timestamp being dropped.
+> Fix Kconfig to depends on MARVELL_PHY.
+> Update comments to use kdoc.
+> 
+> Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-Hi Oskar, thanks for looking at the patch.
+Hi Kory,
 
->
-> There something I do not quite understand though
->
-> > @@ -5012,7 +5039,6 @@ void __init hugetlb_bootmem_alloc(void)
-> >
-> >       for_each_hstate(h) {
-> >               h->next_nid_to_alloc =3D first_online_node;
-> > -             h->next_nid_to_free =3D first_online_node;
->
-> Why are you unsetting next_nid_to_free? I guess it is because
-> we do not use it during boot time and you already set it to
-> first_memory_node further down the road in hugetlb_init_hstates.
+Some minor feedback from my side.
 
-Yes, that's exactly it - it's not used, so there was no need to set
-it, and I made sure it's set later.
->
-> And the reason you are leaving next_nid_to_alloc set is to see if
-> there is any chance that first_online_node is part of hugetlb_bootmem_nod=
-es?
+> ---
+> 
+> Russell I don't know which email I should use, so I keep your old SOB.
 
-next_nid_to_alloc is used to remember the last node that was allocated
-from in __alloc_bootmem_huge_page(), so that the next call will
-continue at the node after the one that was successfully allocated
-from. The code there looks a bit confusing, since the macro
-for_each_node_mask_to_alloc is used there not really as a for loop,
-but simply as a way of saying "try this node and remember the next
-one".
+Russell's SOB seems to be missing.
 
-I've been meaning to clean that code up for several reasons, but
-didn't get around to it, it's a separate issue.
+...
 
-- Frank
+> diff --git a/drivers/net/phy/marvell/marvell_tai.c b/drivers/net/phy/marvell/marvell_tai.c
+
+...
+
+> +/* Read the global time registers using the readplus command */
+> +static u64 marvell_tai_clock_read(const struct cyclecounter *cc)
+> +{
+> +	struct marvell_tai *tai = cc_to_tai(cc);
+> +	struct phy_device *phydev = tai->phydev;
+> +	int err, oldpage, lo, hi;
+> +
+> +	oldpage = phy_select_page(phydev, MARVELL_PAGE_PTP_GLOBAL);
+> +	if (oldpage >= 0) {
+> +		/* 88e151x says to write 0x8e0e */
+> +		ptp_read_system_prets(tai->sts);
+> +		err = __phy_write(phydev, PTPG_READPLUS_COMMAND, 0x8e0e);
+> +		ptp_read_system_postts(tai->sts);
+> +		lo = __phy_read(phydev, PTPG_READPLUS_DATA);
+> +		hi = __phy_read(phydev, PTPG_READPLUS_DATA);
+> +	}
+
+If the condition above is not met then err, lo, and hi may be used
+uninitialised below.
+
+Flagged by W=1 builds with clang 20.1.2, and Smatch.
+
+> +	err = phy_restore_page(phydev, oldpage, err);
+> +
+> +	if (err || lo < 0 || hi < 0)
+> +		return 0;
+> +
+> +	return lo | hi << 16;
+> +}
+
+...
+
+> +int marvell_tai_get(struct marvell_tai **taip, struct phy_device *phydev)
+> +{
+> +	struct marvell_tai *tai;
+> +	unsigned long overflow_ms;
+> +	int err;
+> +
+> +	err = marvell_tai_global_config(phydev);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	tai = kzalloc(sizeof(*tai), GFP_KERNEL);
+> +	if (!tai)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&tai->mutex);
+> +
+> +	tai->phydev = phydev;
+> +
+> +	/* This assumes a 125MHz clock */
+> +	tai->cc_mult = 8 << 28;
+> +	tai->cc_mult_num = 1 << 9;
+> +	tai->cc_mult_den = 15625U;
+> +
+> +	tai->cyclecounter.read = marvell_tai_clock_read;
+> +	tai->cyclecounter.mask = CYCLECOUNTER_MASK(32);
+> +	tai->cyclecounter.mult = tai->cc_mult;
+> +	tai->cyclecounter.shift = 28;
+> +
+> +	overflow_ms = (1ULL << 32 * tai->cc_mult * 1000) >>
+> +			tai->cyclecounter.shift;
+> +	tai->half_overflow_period = msecs_to_jiffies(overflow_ms / 2);
+> +
+> +	timecounter_init(&tai->timecounter, &tai->cyclecounter,
+> +			 ktime_to_ns(ktime_get_real()));
+> +
+> +	tai->caps.owner = THIS_MODULE;
+> +	snprintf(tai->caps.name, sizeof(tai->caps.name), "Marvell PHY");
+> +	/* max_adj of 1000000 is what MV88E6xxx DSA uses */
+> +	tai->caps.max_adj = 1000000;
+> +	tai->caps.adjfine = marvell_tai_adjfine;
+> +	tai->caps.adjtime = marvell_tai_adjtime;
+> +	tai->caps.gettimex64 = marvell_tai_gettimex64;
+> +	tai->caps.settime64 = marvell_tai_settime64;
+> +	tai->caps.do_aux_work = marvell_tai_aux_work;
+> +
+> +	tai->ptp_clock = ptp_clock_register(&tai->caps, &phydev->mdio.dev);
+> +	if (IS_ERR(tai->ptp_clock)) {
+> +		kfree(tai);
+
+tai is freed on the line above, but dereferenced on the line below.
+
+Flagged by Smatch.
+
+> +		return PTR_ERR(tai->ptp_clock);
+> +	}
+> +
+> +	ptp_schedule_worker(tai->ptp_clock, tai->half_overflow_period);
+> +
+> +	spin_lock(&tai_list_lock);
+> +	list_add_tail(&tai->tai_node, &tai_list);
+> +	spin_unlock(&tai_list_lock);
+> +
+> +	*taip = tai;
+> +
+> +	return 0;
+> +}
+
+...
