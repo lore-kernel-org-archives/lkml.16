@@ -1,87 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571261B6CE5;
-	Tue,  8 Apr 2025 14:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA141B6CE5;
+	Tue,  8 Apr 2025 14:50:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123850; cv=none; b=Xfm3AgpghcPGAW8x3X86IvNRrH+joONuFMR+87e7cHnwo/Dsw/MoP1ZHbeDcjnXVE/lCC1CuWYzsacxT6pcwwF3UaTuaFqSbMKg+Vr1y5n4A2s4Jmms5fJzLUpe7qrlpx8gg4fSdzfyG7gUv2LRBIA+AOx4t0slnwSP3qSPZKJA=
+	t=1744123854; cv=none; b=A2UA8JcsjYe1iWrNxsx3tJ8Kjp4XImxol6FoTI5B18xkA1z4WWLKyqvSZxvzYSU4AAYFzHaZxTXZVssaubGXrglQV4BLq8msISvrQtB0VMZsrwoQLuWpB8RajYV5W2eN+w6bsZ20ojXIGs7MPkCGnpVwarr8u5tHhWlvow9rgb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123850; c=relaxed/simple;
-	bh=iippsYe8qLb/2X9/I9NX6d/fzC9lDY7Hh/+44sczz4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOTPjnP0bdLaMceaM9YEhfPBd6btnj+0ZSqlxy/rwfMXjvlrjyy6/VKqFsbJGnF7xI68s3cS+6sJ7DfCn/yb01JVIErdq58W3goerRPmeM/77TbjVGhwwXV5cZv/6wzwgxu+JirMn9fZnTubZI/DTO4C2iQMeDxV9XdNVAGMuRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSMi+sI6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744123854; c=relaxed/simple;
+	bh=F1gXfDTkprcTVTuQ1eClCfByLT07tIDnQSkinFWdSag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qClfc+v1KNeaqqCYok9GWaEwRqEA70eTZtPCcZ4SMg25dtaKkgN9t2XQXZXLWQUWquASUqlD8OFod8JTAW9XNWfk2gUOj/lguc3y0R9v7zQa+pB0A8XqHhrQFwDw8Uww2Nz5sKz3GmWr0iGH1TpNU3gdjsgJZ9zirJmS4RtIRDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb1uNjcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSMi+sI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2297AC4CEE5;
-	Tue,  8 Apr 2025 14:50:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb1uNjcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFAAC4CEE5;
+	Tue,  8 Apr 2025 14:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744123849;
-	bh=iippsYe8qLb/2X9/I9NX6d/fzC9lDY7Hh/+44sczz4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NSMi+sI6BfxNdjGVuI7k1YPEEB3cI1ZteuMz/i77RX6ZKVVtc7G5wTT1aSxozuebA
-	 XMflo8Dg43jH0NMQTNts8wq5qxJk/KX2JwIt/jhxJDVCZ4nfBlEdutImR4Y8TcCGYr
-	 a/LZp8xVwK5rZ8s5TpytyreXMUjrkSIDT3dfjZA+mKTMjzNxb00w63F9LCi2sDaXhM
-	 TIDpgJYw9Skn+WXlBrEQ6c6lH13pqYKgkqZjUgH+ju6TbeV8JhlZv2pzeLBH9H8w9a
-	 hApED5WPIbOVRA8ssP34+b8l6uizHChdo0YvbYvAoSbbprKSYOk6daNln8naVIVuOY
-	 ngrqmh3HwUXXQ==
-Date: Tue, 8 Apr 2025 07:50:47 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S .
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org, upstream@airoha.com, Christian Marangi
- <ansuelsmth@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Kory
- Maincent <kory.maincent@bootlin.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Clark Wang <xiaoning.wang@nxp.com>, Claudiu
- Beznea <claudiu.beznea@microchip.com>, Claudiu Manoil
- <claudiu.manoil@nxp.com>, Conor Dooley <conor+dt@kernel.org>, Ioana Ciornei
- <ioana.ciornei@nxp.com>, Jonathan Corbet <corbet@lwn.net>, Joyce Ooi
- <joyce.ooi@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Madalin
- Bucur <madalin.bucur@nxp.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Michal Simek <michal.simek@amd.com>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Radhey Shyam Pandey
- <radhey.shyam.pandey@amd.com>, Rob Herring <robh+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
- Saravana Kannan <saravanak@google.com>, UNGLinuxDriver@microchip.com,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Wei Fang <wei.fang@nxp.com>,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [net-next PATCH v2 00/14] Add PCS core support
-Message-ID: <20250408075047.69d031a9@kernel.org>
-In-Reply-To: <20250407231746.2316518-1-sean.anderson@linux.dev>
-References: <20250407231746.2316518-1-sean.anderson@linux.dev>
+	s=k20201202; t=1744123853;
+	bh=F1gXfDTkprcTVTuQ1eClCfByLT07tIDnQSkinFWdSag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yb1uNjclOMw/7/4tbGQjBfBRgfbioiToBykUskc2CHJlW490ftj23eQdN6rxxIIuY
+	 fUkfXMB52HKOnOJByUOhyo18QqdkGptlSXi10WUetNcuX4ACT/dJbzkaycvG02ka0p
+	 OjgyxDCa1bfEtkSzZTP6XBqs6UclD15OBCp4u95nh9+TL7KAAXoPFeWw2useLNgn+T
+	 O034SUJD2Af1O9UZIbM+CT8Rl1bJlFvgLr3RAqahoH3DuWOw8D9l8ARNPC+n0DKoxc
+	 y8lxEYvTvKdRYJqa49Y3XDu3HVn3Wz7lSMiuB2WaAJr/YXKyRioEwfHjrFNVJ28KE1
+	 aL8TBcQHVnyiA==
+Date: Tue, 8 Apr 2025 07:50:53 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Cengiz Can <cengiz.can@canonical.com>,
+	Attila Szasz <szasza.contact@gmail.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lvc-patches@linuxtesting.org, dutyrok@altlinux.org,
+	syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
+	stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+Message-ID: <20250408145053.GJ6266@frogsfrogsfrogs>
+References: <20241019191303.24048-1-kovalev@altlinux.org>
+ <Z9xsx-w4YCBuYjx5@eldamar.lan>
+ <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
+ <2025032402-jam-immovable-2d57@gregkh>
+ <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
+ <2025032404-important-average-9346@gregkh>
+ <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
+ <20250407-biegung-furor-e7313ca9d712@brauner>
+ <20250407190814.GB6258@frogsfrogsfrogs>
+ <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com>
 
-On Mon,  7 Apr 2025 19:17:31 -0400 Sean Anderson wrote:
-> This series depends on [1,2], and they have been included at the
-> beginning so CI will run. However, I expect them to be reviewed/applied
-> outside the net-next tree.
+On Tue, Apr 08, 2025 at 12:11:36PM +0200, Richard Weinberger wrote:
+> On Mon, Apr 7, 2025 at 9:08 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> > It's also the default policy on Debian 12 and RHEL9 that if you're
+> > logged into the GUI, any program can run:
+> >
+> > $ truncate -s 3g /tmp/a
+> > $ mkfs.hfs /tmp/a
+> > $ <write evil stuff on /tmp/a>
+> > $ udisksctl loop-setup -f /tmp/a
+> > $ udisksctl mount -b /dev/loopX
+> >
+> > and the user never sees a prompt.  GNOME and KDE both display a
+> > notification when the mount finishes, but by then it could be too late.
+> > Someone should file a CVE against them too.
+> 
+> At least on SUSE orphaned and other problematic filesystem kernel modules
+> are blacklisted. I wonder why other distros didn't follow this approach.
 
-These appear to break the build:
+Maximal flexibility, I'm assuming.  It's at least somewhat comforting
+that RHEL doesn't enable HFS in Kconfig so it's a nonissue for them, but
+some day it's going to be ext4/XFS/btrfs that creates a compromise
+widget.
 
-drivers/acpi/property.c:1669:39: error: initialization of =E2=80=98int (*)(=
-const struct fwnode_handle *, const char *, const char *, int,  unsigned in=
-t,  struct fwnode_reference_args *)=E2=80=99 from incompatible pointer type=
- =E2=80=98int (*)(const struct fwnode_handle *, const char *, const char *,=
- unsigned int,  unsigned int,  struct fwnode_reference_args *)=E2=80=99 [-W=
-incompatible-pointer-types]
- 1669 |                 .get_reference_args =3D acpi_fwnode_get_reference_a=
-rgs,   \
+> > You can tighten this up by doing this:
+> >
+> > # cat > /usr/share/polkit-1/rules.d/always-ask-mount.rules << ENDL
+> > // don't allow mounting, reformatting, or loopdev creation without asking
+> > polkit.addRule(function(action, subject) {
+> >         if ((action.id == "org.freedesktop.udisks2.loop-setup" ||
+> >              action.id == "org.freedesktop.udisks2.filesystem-mount" ||
+> >              action.id == "org.freedesktop.udisks2.modify-device") &&
+> >             subject.local == true) {
+> >                 return polkit.Result.AUTH_ADMIN_KEEP;
+> >         }
+> > });
+> > ENDL
+> 
+> Thanks for sharing this!
+> 
+> > so at least you have to authenticate with an admin account.  We do love
+> > our footguns, don't we?  At least it doesn't let you do that if you're
+> > ssh'd in...
+> 
+> IMHO guestmount and other userspace filesystem implementations should
+> be the default
+> for such mounts.
 
-Could you post as RFC until we can actually merge this? I'm worried=20
-some sleep deprived maintainer may miss the note in the cover letter
-and just apply it all to net-next..
---=20
-pw-bot: cr
+Agree.  I don't know if they (udisks upstream) have any good way to
+detect that a userspace filesystem driver is available for a given
+filesystem.  Individual fuse drivers don't seem to have a naming
+convention (fusefat, fuse2fs) though at least on Debian some of them
+seem to end up as /sbin/mount.fuse.$FSTYPE.
+
+guestmount seems to boot the running kernel in qemu and use that?  So I
+guess it's hard for guestmount itself even to tell you what formats it
+supports?  I'm probably just ignorant on that issue.
+
+--D
+
+> //richard
+> 
