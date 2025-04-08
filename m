@@ -1,145 +1,291 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1249E22F39F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A051288D2
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744135823; cv=none; b=UyUkfI8WU2AWZiuIIN3+E73DaKCuyw+91GwJsWP++H5SNbmRCG9TmsleglrlaSMWzobiZ2gzpZwzKMykyp+XUld+EbZKzbK+X2o2zTSjGQfWd1DbsvnpeQWvuOHHY+reoHQV9HgH3NtbVisdQ8yVCftVmzmwzfi7a/wOPk0mBFw=
+	t=1744135839; cv=none; b=LsEvhNI/4VVybfuwZ1HlSt3fow1+hLb5fOcd6iN6y+nqqNV7Qyzo7YvMjb2Do0mTXi32HfwLZ3SpMKEiS0wQFUk7S9cNGV4nL9Sdt8PJCF5j0WUxK0ouYKHH1/rAgZ70Bep2B17DUSbETFCW6yzsfP9HPdNaOjCaFG3kKePls5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744135823; c=relaxed/simple;
-	bh=uUwPvmcHkJhjMjUdNgSFgwUWiW1CgHzEHSwQ6u4hBk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lpl9XiA80C4pKLwvJaI2Z4cktFLvALvHnj8cy6BhJ2q/QqosbQ3eWBnffouCcKh07SwHJLmfeRZnZugdme/D5R5D8pnWF2fTfD+zpPytEBXMY8hkH7kyohUfFrCVMGfNygwwz7xNVNUWgoAsv0AJbCtM3RqhX4ilZr4/rQqgmIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c554d7dc2aso959626785a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:10:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744135819; x=1744740619;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z9waQqUciDIKf2OGaUGdjEc76EpaWRZahK7BUBpwDcY=;
-        b=KDcWxgHN5sYHwycavzA2bDRzmponiL/wuekyxqeS7tCv/8RRznPsj3I7T2OmIBHXLv
-         Vs8LcXZyUvyCMsL91erm/ZCDObsYddunFf3OjOsKNcroxr8LJ4J8EV3ySzz11+UYrEqq
-         rUuiaaJejDrB23By/aXMEl8cVnW307uTJCedeKOOALOMygToF5wNxm/P6Tj+5Ak4/5KA
-         9fS7PC1ZpgDklE2rUwVsJUQ6xtJwwzPRdABjB8cKm5MX43UqXDAMeNPAPD6E3pJl0hnZ
-         XG1OJ5NPUs3O4V3mBOcG8Bo1qbfO8fmPHF73ZXPaxNrGn9JqxbXeTzVOhv1BTT59qsM/
-         +KvQ==
-X-Gm-Message-State: AOJu0YxdJ6XptWFNyndtlp6t/ALHWsTvvTcNeyvSPCyQzvlP9kvuiVpz
-	1UW5fqmCfc9HxkXrNuACjWTKUxlUuwOegXcJSjhjBarUl3wlZSRE9QPGPjYW
-X-Gm-Gg: ASbGncsoE3IQFud3Y/pMDXvr77JiE6gbBsVLD5g59YQ0ck3pfDhOjXvTybfc/FSu3dO
-	7V8ea9whjx3ZTCm1mnmjKuYmROev6GnrCeYQgu+JioadkM2ZhcYexK2hxSTxKHYchDMzpNWH2AO
-	J47oJBwcl5s+m/0I6neFz5oH03gvJKDh7WmctKj6DKDk84Vm3QfQPjeSMbNNzWh8B2zU+dUa+aF
-	hUNgtioi976Pxj5JeI1dy89TwBKrpdHBr4tgaTT8z8bu+O8Zn5wttiAlbF7ypVjHf2bU7gg2IAe
-	Hs2Q6cT9sCfTiR5uGxy1knGKNni+fPj2fCkcDb/6+2lo2uu0UUjrjwpSLu9fnbm5a2pxDKgxX3C
-	WQjVNfDX4sHU=
-X-Google-Smtp-Source: AGHT+IEzFhJetuoZQqSBdAQZKKKFf1NfW3uVt1/svR7xDR7AQaSeuZE9460nRPsut0xplfIqO6CcWw==
-X-Received: by 2002:a05:620a:430e:b0:7c5:4cb7:ac97 with SMTP id af79cd13be357-7c79cbca854mr19020185a.1.1744135818907;
-        Tue, 08 Apr 2025 11:10:18 -0700 (PDT)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com. [209.85.222.172])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e96cf01sm788691885a.55.2025.04.08.11.10.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 11:10:18 -0700 (PDT)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c54b651310so791398785a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:10:18 -0700 (PDT)
-X-Received: by 2002:a05:620a:8396:b0:7c5:3e89:c6df with SMTP id
- af79cd13be357-7c79cbcbba5mr18703985a.12.1744135818636; Tue, 08 Apr 2025
- 11:10:18 -0700 (PDT)
+	s=arc-20240116; t=1744135839; c=relaxed/simple;
+	bh=CRYNZL7wx3ySZCZ3RPL/sRT5R2HDnhGnZWOTrQc1SbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlOej/pIMGsZF4R/6Y1rVgrg9fkUNwiX1Tivy+X/KAJIogE24+jA+2xvXuMsbNnnqVYjKR02lgSGgAoH6CFnBwiqP5Pe48LHYa1Muvirk3UjkrwHu5ST7yWOZ5U4gSMzfytW2gHqYZI1/bACcMp2+MxT9TJw4Dw4L+KRuMqceug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2DOH-0006O8-0P; Tue, 08 Apr 2025 20:09:41 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2DOC-003yjn-2S;
+	Tue, 08 Apr 2025 20:09:36 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u2DOC-006eVd-1x;
+	Tue, 08 Apr 2025 20:09:36 +0200
+Date: Tue, 8 Apr 2025 20:09:36 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 04/13] net: pse-pd: Add support for PSE power
+ domains
+Message-ID: <Z_VmYMvqfrBPR1l5@pengutronix.de>
+References: <20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com>
+ <20250408-feature_poe_port_prio-v7-4-9f5fc9e329cd@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313142404.896902416@linutronix.de> <20250313142524.073826193@linutronix.de>
-In-Reply-To: <20250313142524.073826193@linutronix.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 8 Apr 2025 20:10:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUkEpo4qPZe271H1=nBHRhKkKy5X70s9OSqxACxT3HJxw@mail.gmail.com>
-X-Gm-Features: ATxdqUHEvw7NfKjidAV-WhdwgNBcIDBLbokd5YcUmHD6sPSE5Rml4gkomkj1-Iw
-Message-ID: <CAMuHMdUkEpo4qPZe271H1=nBHRhKkKy5X70s9OSqxACxT3HJxw@mail.gmail.com>
-Subject: Re: [patch 2/7] genirq/generic-chip: Convert core code to lock guards
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Gregory Clement <gregory.clement@bootlin.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Talel Shenhar <talel@amazon.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Guo Ren <guoren@kernel.org>, 
-	Herve Codina <herve.codina@bootlin.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250408-feature_poe_port_prio-v7-4-9f5fc9e329cd@bootlin.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Kory,
 
-On Thu, 13 Mar 2025 at 15:37, Thomas Gleixner <tglx@linutronix.de> wrote:
-> Replace the irq_gc_lock/unlock() pairs with guards. There is no point to
-> implement a guard wrapper for them as they just wrap around raw_spin_lock*().
->
-> Switch the other lock instances in the core code to guards as well.
->
-> Conversion was done with Coccinelle plus manual fixups.
->
-> No functional change.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+here are some points
 
-Thanks for your patch, which is now commit 195298c3b11628a6
-("genirq/generic-chip: Convert core code to lock guards") in
-irqchip/irq/drivers.
+On Tue, Apr 08, 2025 at 04:32:13PM +0200, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> Introduce PSE power domain support as groundwork for upcoming port
+> priority features. Multiple PSE PIs can now be grouped under a single
+> PSE power domain, enabling future enhancements like defining available
+> power budgets, port priority modes, and disconnection policies. This
+> setup will allow the system to assess whether activating a port would
+> exceed the available power budget, preventing over-budget states
+> proactively.
+> 
+> Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> ---
+> Changes in v7:
+> - Add reference count and mutex lock for PSE power domain in case of PSE
+>   from different controllers want to register the same PSE power domain.
+> 
+> Changes in v6:
+> - nitpick change.
+> 
+> Changes in v4:
+> - Add kdoc.
+> - Fix null dereference in pse_flush_pw_ds function.
+> 
+> Changes in v3:
+> - Remove pw_budget variable.
+> 
+> Changes in v2:
+> - new patch.
+> ---
+>  drivers/net/pse-pd/pse_core.c | 138 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pse-pd/pse.h    |   2 +
+>  2 files changed, 140 insertions(+)
+> 
+> diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+> index 8755c2e00b6a..d26045e6ca85 100644
+> --- a/drivers/net/pse-pd/pse_core.c
+> +++ b/drivers/net/pse-pd/pse_core.c
+> @@ -13,8 +13,12 @@
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/machine.h>
+>  
+> +#define PSE_PW_D_LIMIT INT_MAX
+> +
+>  static DEFINE_MUTEX(pse_list_mutex);
+>  static LIST_HEAD(pse_controller_list);
+> +static DEFINE_XARRAY_ALLOC(pse_pw_d_map);
+> +static DEFINE_MUTEX(pse_pw_d_mutex);
+>  
+>  /**
+>   * struct pse_control - a PSE control
+> @@ -35,6 +39,18 @@ struct pse_control {
+>  	struct phy_device *attached_phydev;
+>  };
+>  
+> +/**
+> + * struct pse_power_domain - a PSE power domain
+> + * @id: ID of the power domain
+> + * @supply: Power supply the Power Domain
+> + * @refcnt: Number of gets of this pse_power_domain
+> + */
+> +struct pse_power_domain {
+> +	int id;
+> +	struct regulator *supply;
+> +	struct kref refcnt;
+> +};
+> +
+>  static int of_load_single_pse_pi_pairset(struct device_node *node,
+>  					 struct pse_pi *pi,
+>  					 int pairset_num)
+> @@ -440,6 +456,123 @@ devm_pse_pi_regulator_register(struct pse_controller_dev *pcdev,
+>  	return 0;
+>  }
+>  
+> +static void __pse_pw_d_release(struct kref *kref)
+> +{
+> +	struct pse_power_domain *pw_d = container_of(kref,
+> +						     struct pse_power_domain,
+> +						     refcnt);
+> +
+> +	regulator_put(pw_d->supply);
+> +	xa_erase(&pse_pw_d_map, pw_d->id);
+> +}
+> +
+> +/**
+> + * pse_flush_pw_ds - flush all PSE power domains of a PSE
+> + * @pcdev: a pointer to the initialized PSE controller device
+> + */
+> +static void pse_flush_pw_ds(struct pse_controller_dev *pcdev)
+> +{
+> +	struct pse_power_domain *pw_d;
+> +	int i;
+> +
+> +	for (i = 0; i < pcdev->nr_lines; i++) {
+> +		if (!pcdev->pi[i].pw_d)
+> +			continue;
+> +
+> +		pw_d = xa_load(&pse_pw_d_map, pcdev->pi[i].pw_d->id);
+> +		if (!pw_d)
+> +			continue;
+> +
+> +		kref_put_mutex(&pw_d->refcnt, __pse_pw_d_release,
+> +			       &pse_pw_d_mutex);
+> +	}
+> +}
+> +
+> +/**
+> + * devm_pse_alloc_pw_d - allocate a new PSE power domain for a device
+> + * @dev: device that is registering this PSE power domain
+> + *
+> + * Return: Pointer to the newly allocated PSE power domain or error pointers
+> + */
+> +static struct pse_power_domain *devm_pse_alloc_pw_d(struct device *dev)
+> +{
+> +	struct pse_power_domain *pw_d;
+> +	int index, ret;
+> +
+> +	pw_d = devm_kzalloc(dev, sizeof(*pw_d), GFP_KERNEL);
+> +	if (!pw_d)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret = xa_alloc(&pse_pw_d_map, &index, pw_d, XA_LIMIT(1, PSE_PW_D_LIMIT),
+> +		       GFP_KERNEL);
+> +	if (ret)
+> +		return ERR_PTR(ret);
 
-> --- a/kernel/irq/generic-chip.c
-> +++ b/kernel/irq/generic-chip.c
-> @@ -340,9 +330,8 @@ int irq_domain_alloc_generic_chips(struc
->                                 goto err;
->                 }
->
-> -               raw_spin_lock_irqsave(&gc_lock, flags);
-> -               list_add_tail(&gc->list, &gc_list);
-> -               raw_spin_unlock_irqrestore(&gc_lock, flags);
-> +               scoped_guard (raw_spinlock, &gc_lock)
-> +                       list_add_tail(&gc->list, &gc_list);
->                 /* Calc pointer to the next generic chip */
->                 tmp += gc_sz;
->         }
-> @@ -459,7 +448,6 @@ int irq_map_generic_chip(struct irq_doma
->         struct irq_chip_generic *gc;
->         struct irq_chip_type *ct;
->         struct irq_chip *chip;
-> -       unsigned long flags;
->         int idx;
->
->         gc = __irq_get_domain_generic_chip(d, hw_irq);
-> @@ -479,9 +467,8 @@ int irq_map_generic_chip(struct irq_doma
->
->         /* We only init the cache for the first mapping of a generic chip */
->         if (!gc->installed) {
-> -               raw_spin_lock_irqsave(&gc->lock, flags);
-> +               guard(raw_spinlock_irq)(&gc->lock);
->                 irq_gc_init_mask_cache(gc, dgc->gc_flags);
-> -               raw_spin_unlock_irqrestore(&gc->lock, flags);
->         }
->
->         /* Mark the interrupt as installed */
+Missing "kref_init(&pw_d->refcnt);" ?
 
-These two conversions are wrong. I have sent a patch:
-https://lore.kernel.org/514f94c5891c61ac0a4a7fdad113e75db1eea367.1744135467.git.geert+renesas@glider.be
+> +	pw_d->id = index;
+> +	return pw_d;
+> +}
+> +
+> +/**
+> + * pse_register_pw_ds - register the PSE power domains for a PSE
+> + * @pcdev: a pointer to the PSE controller device
+> + *
+> + * Return: 0 on success and failure value on error
+> + */
+> +static int pse_register_pw_ds(struct pse_controller_dev *pcdev)
+> +{
+> +	int i, ret = 0;
+> +
+> +	mutex_lock(&pse_pw_d_mutex);
+> +	for (i = 0; i < pcdev->nr_lines; i++) {
+> +		struct regulator_dev *rdev = pcdev->pi[i].rdev;
+> +		struct pse_power_domain *pw_d;
+> +		struct regulator *supply;
+> +		bool present = false;
+> +		unsigned long index;
+> +
+> +		/* No regulator or regulator parent supply registered.
+> +		 * We need a regulator parent to register a PSE power domain
+> +		 */
+> +		if (!rdev || !rdev->supply)
+> +			continue;
+> +
+> +		xa_for_each(&pse_pw_d_map, index, pw_d) {
+> +			/* Power supply already registered as a PSE power
+> +			 * domain.
+> +			 */
+> +			if (regulator_is_equal(pw_d->supply, rdev->supply)) {
+> +				present = true;
+> +				pcdev->pi[i].pw_d = pw_d;
+> +				break;
+> +			}
+> +		}
+> +		if (present) {
+> +			kref_get(&pw_d->refcnt);
+> +			continue;
+> +		}
+> +
+> +		pw_d = devm_pse_alloc_pw_d(pcdev->dev);
+> +		if (IS_ERR_OR_NULL(pw_d)) {
 
-Gr{oetje,eeting}s,
+s/IS_ERR_OR_NULL/IS_ERR
 
-                        Geert
+devm_pse_alloc_pw_d() is not returning NULL.
 
+> +			ret = PTR_ERR(pw_d);
+> +			goto out;
+> +		}
+> +
+> +		supply = regulator_get(&rdev->dev, rdev->supply_name);
+> +		if (IS_ERR(supply)) {
+> +			xa_erase(&pse_pw_d_map, pw_d->id);
+> +			ret = PTR_ERR(supply);
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Here:
+Either we need to ensure pse_flush_pw_ds() handles incomplete setups
+or immediately clean up earlier entries in the loop when an error
+occurs.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +			goto out;
+> +		}
+> +
+> +		pw_d->supply = supply;
+> +		pcdev->pi[i].pw_d = pw_d;
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&pse_pw_d_mutex);
+> +	return ret;
+> +}
+ 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
