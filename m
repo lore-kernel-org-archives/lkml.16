@@ -1,77 +1,109 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC23D1DE3A9;
-	Tue,  8 Apr 2025 14:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F721C460A;
+	Tue,  8 Apr 2025 14:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123331; cv=none; b=hw25EIQMhJKEYW7040VJI0CpJZND59PazwtWnQBXgWG8JxF5lA5F02OIATvVmBNN7JEqq8PkTrD6+gh0Q1ehOCdXRTMCCzndYJ7y5r7vEFTz7cIhvgl0FAvJDZEV80hg9LEACtV/z9tekIOjczFnbyhoz89sZEwXg1AFy1vSMMI=
+	t=1744123380; cv=none; b=LgdVeJ5gIzj8gb133qztexg5TNW1Ea2WplNOptBqG1SyUSvvbYmPIBBLgAojR2JQziA3iHpYGm/Gp9OUIr5UxWyZ56XLQ8c69WL9f5TTPXymMX/1K+cDoQzkty/LY5RxNMVyQ46TjfCxuM8i4Z2VQ4ROX4f+tgce2NaAFXa3nj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123331; c=relaxed/simple;
-	bh=9ImBzIZtqGsJ1SHaUVZ01p2SwfBctJtqfs9D1vh30+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eW03V/UzL+HXzjLF79q/RfvcAdp//mYPlXRfTWrIiE3uAwt0/jeNvEBgcuFIKfBt097V1oFXEhG1r7AmIm5MuR10bEJD0p2ZMykj3yRr/dxCy6I1Wti4RB/O8s8pmi8LZAGNrQ7T6npxX7lEaQkUFX3rdifYFPATnhweuWmWvv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jEKgs8sd; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744123380; c=relaxed/simple;
+	bh=l6oFyVAt4wXLWA2TqcIrqoKCFya7/t3LgR8BVOx+Hr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8tGAreNEz0/XaMuMaKMktujGip0QT2zHKBQGK4q/FCzUkztfG8FU0iyN83Gl/wB6YiFtLw8a0njNHke+3HnbwnmaPSoeZ0H2AKS1qKNR1A2XNxE9yzkc12wp6e5Vw1hTpZNms7ugaTWGv/L92Q9nQDpmhZhTJ3LjNFDXuYB9fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jA6iJuvh; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jEKgs8sd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E1020442C3;
-	Tue,  8 Apr 2025 14:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744123328;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iULc9f9XDkhckPow9uXWfLJLBIlhOd96cLfxtQCU/7k=;
-	b=jEKgs8sdKKpEVq8+rB9cOuVLko8jabUBt44MMm/m+LfV4xYeG/G7YfG3lgFUiTy0ZeVGN2
-	4Q0KFzA6NvA9fKG0djDNzoyeIPOe2IWzeUmKmM8DJWfy7IUNmAymDmmxDfTl17JvEZS927
-	kr+8echwkdXE/iqXFMgMC3Rux3qd/vOZ7dwS3818bw7RdNoeFU8sjMMTWUKepHnhOlbpR2
-	XWySaTqFiKUNQ0bhNay59MzwVm2LvbVTY7PKJBr31TOmG5YjXeo6CQbMvZ4z+sCI5xvteX
-	B/nu8hkXtDgexD714/tAvcrA8blQbFUHApSaOQP7MmVOpG6NqTuu9kyzFTrvGQ==
-From: alexandre.belloni@bootlin.com
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rtc: interface: silence KMSAN warning
-Date: Tue,  8 Apr 2025 16:42:03 +0200
-Message-ID: <20250408144203.3869821-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jA6iJuvh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744123378; x=1775659378;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l6oFyVAt4wXLWA2TqcIrqoKCFya7/t3LgR8BVOx+Hr4=;
+  b=jA6iJuvhnMwFea+hWNjG5cLf1/0OBvjyW7MAfaz98UVjAgnO9WkNxUOs
+   hofZTqqcQKh+kSEqrgAot4zwagbbhZEnHSIzlhokaGvS9zTJUCGAwTC4b
+   iNfGIwO+2LnntNs3s3sa1qYX58NbiEXUQLb0utpgZwJ83auZIXmQrSvDK
+   fBsIS9+bpHTeUeHcM9N4tSkkQBhCyTDjNSYz+rWvqU1WXQI5e2S5IYBDN
+   ZgGv6RnK4juIPztxJjwqOmuWOxWngaRA/r8jqKax5gctqGVVYvD6E6uRA
+   IvEQlQ3gtT+ropfdmdCgb6XceKsOkpTseM32PeNs1mlS1GcunrajQOqcW
+   g==;
+X-CSE-ConnectionGUID: kPNw0k0pQk+kRzdKmSCjDg==
+X-CSE-MsgGUID: 7A6h67r2Q42tbDwXkgpYxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56930298"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="56930298"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:42:57 -0700
+X-CSE-ConnectionGUID: rDljgZRaQVOzQN6NsrB8lA==
+X-CSE-MsgGUID: IfKpmEYYTYyH6fkZzxJdKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128275222"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:42:55 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 0E2C111F74E;
+	Tue,  8 Apr 2025 17:42:52 +0300 (EEST)
+Date: Tue, 8 Apr 2025 14:42:51 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v3 6/7] i2c: core: Deprecate of_node in struct
+ i2c_board_info
+Message-ID: <Z_U162kNEPSZI3zD@kekkonen.localdomain>
+References: <20250407154937.744466-1-andriy.shevchenko@linux.intel.com>
+ <20250407154937.744466-7-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -85
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogetfedtuddqtdduucdludehmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmnecuggftrfgrthhtvghrnhepgedtffeugeeftedtfffhiedtjeefieeuveelffetledvueeludeggedtjefgveevnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkv
- ghrnhgvlhdrohhrgh
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407154937.744466-7-andriy.shevchenko@linux.intel.com>
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Hi Andy,
 
-KMSAN complains that alarm->time can be used uninitialized. Pass 0 to
-trace_rtc_read_alarm in case it has not been set.
+On Mon, Apr 07, 2025 at 06:45:02PM +0300, Andy Shevchenko wrote:
+> Two members of the same or similar semantics is quite confusing to begin with.
+> Moreover, the fwnode covers all possible firmware descriptions that Linux kernel
+> supports. Deprecate of_node in struct i2c_board_info, so users will be warned
+> and in the future remote it completely.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Too long lines, should be up to 75 characters long only.
 
-diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-index aaf76406cd7d..dc741ba29fa3 100644
---- a/drivers/rtc/interface.c
-+++ b/drivers/rtc/interface.c
-@@ -205,7 +205,7 @@ static int rtc_read_alarm_internal(struct rtc_device *rtc,
- 
- 	mutex_unlock(&rtc->ops_lock);
- 
--	trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
-+	trace_rtc_read_alarm(err?0:rtc_tm_to_time64(&alarm->time), err);
- 	return err;
- }
- 
+> 
+> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/i2c.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 2e4903b7f7bc..cc1437f29823 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -405,7 +405,7 @@ static inline bool i2c_detect_slave_mode(struct device *dev) { return false; }
+>   * @addr: stored in i2c_client.addr
+>   * @dev_name: Overrides the default <busnr>-<addr> dev_name if set
+>   * @platform_data: stored in i2c_client.dev.platform_data
+> - * @of_node: pointer to OpenFirmware device node
+> + * @of_node: **DEPRECATED** - use @fwnode for this
+>   * @fwnode: device node supplied by the platform firmware
+>   * @swnode: software node for the device
+>   * @resources: resources associated with the device
+
 -- 
-2.48.1
+Regards,
 
+Sakari Ailus
