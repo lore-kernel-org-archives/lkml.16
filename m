@@ -1,55 +1,85 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18842266EF6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0E7264A7F;
+	Tue,  8 Apr 2025 10:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107391; cv=none; b=V+f+w2MwvdjtlHeKcgkBc6xhII8WPLix7irLHD6T8751KgkTQr9W5pq0prfAsefy8OcwmRbmnsEqwcKLFtcuTGwrItPvgWpdd1AncmNaxwMXENnerVffJgplXAc0zwoPQBFchI0qiR1QbJMTZ/DNqN0VnChcHnRmeod47JW4D4I=
+	t=1744107406; cv=none; b=VS6cNcy8daL3mFRyO/YatyqgLOHsLBZgUhGTTAbflwO++oNMqE1CUi667Wl7mQzBNYsNL0g3LaKoFxtdduiq5gyYkBIw6Q/Q9+xTGULmkI40FJYXKJ5wtHPEqAbXhHtfzNRTuNmdmMPfgVpVSNQILYSeheYgmbm5V/20p9RYcLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107391; c=relaxed/simple;
-	bh=x/Vq1ulfJyLt/8bph2k3JJ9FH8R/3+iOzyNqANplotM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sp+BzYwVsCCTsO+U7Mh09JUovjW8aX+EhdxPS4af8ywrCsTX5p12pFrr3xGOtgQSo8PahUWUm22I7B/ggsso2GMrz7EzKhvZxUfAH05nlePG0xmq77+Lu5Pq56OC6q93hEB6VCpTGOvRO/pR3MQwqceIKQkXC0Cj/NUrbqqKpN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id ECBE392009C; Tue,  8 Apr 2025 12:16:26 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id E915D92009B;
-	Tue,  8 Apr 2025 11:16:26 +0100 (BST)
-Date: Tue, 8 Apr 2025 11:16:26 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Borislav Petkov <bp@alien8.de>
-cc: Kevin Koster <lkml@ombertech.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, 
-    Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-In-Reply-To: <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-Message-ID: <alpine.DEB.2.21.2504081107390.29566@angie.orcam.me.uk>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
- <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1744107406; c=relaxed/simple;
+	bh=GM94/DwbdeD/EixIRO4/7Qdl2Fn77Hgpz80fPy0XYZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpBebmYPnitthvaGoW6HTQOSz1rORLEd5EV88qF643x1CLnu+dZWcCDFuSmJyFF14lAIu8mLpiOqLcmjIJo1OIgYDeMMv9KdMA8JSzrK62zUMJAkbeilgmY/hXktTqeq6fcYij7X4UbP+2VwVuJWLHrTel3vl5aYi5rHIUy9PKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0WB7Vnn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0WB7Vnn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21B4C4CEE5;
+	Tue,  8 Apr 2025 10:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744107405;
+	bh=GM94/DwbdeD/EixIRO4/7Qdl2Fn77Hgpz80fPy0XYZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E0WB7Vnnprhfns88GDgxgpthJobuwLuqlaEkuGIFU4sbnXzucIzlv00Zh22CPiNnX
+	 izPgm+NK894+RgTEMf3jVH3dTZEsG9Ro5IX/yyFwm1LD3UBkuSkKTP3kOMspIywCzN
+	 /zTaBaeJzzp1waztcCE/LELFYzjYvmV8ckFH+lCv3sTjMbaXaqjcHptINT1QC/Ux/F
+	 uD1W3j7/PijrcpnziAwaiAoCJEUbiXvcsQrbdZ2poyJnQ52vOBZocVIFupxH8IR9C1
+	 e8X+H97OV9m1lPDNchMHJI994xq07R5/jCkAqKNN1aVzexr7J9wdGc+QyhkY89MeVA
+	 vU5fCuD9sC+1w==
+Date: Tue, 8 Apr 2025 11:16:40 +0100
+From: Simon Horman <horms@kernel.org>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: ecree.xilinx@gmail.com, habetsm.xilinx@gmail.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-net-drivers@amd.com,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	"Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
+Subject: Re: [PATCH v2] sfc: Propagate the return value of
+ devlink_info_serial_number_put()
+Message-ID: <20250408101640.GV395307@horms.kernel.org>
+References: <20250407131110.2394-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407131110.2394-1-vulab@iscas.ac.cn>
 
-On Sun, 6 Apr 2025, Borislav Petkov wrote:
++ Alejandro
 
-> > But if I move "cpuid_1_eax = native_cpuid_eax(1);" to after the
-> > microcode_loader_disabled() check in amd.c, like in the first patch, it
-> > boots fine!
+On Mon, Apr 07, 2025 at 09:11:10PM +0800, Wentao Liang wrote:
+> The function efx_devlink_info_board_cfg() calls the function
+> devlink_info_serial_number_put(), but does not check its return
+> value.
 > 
-> Yeah, I noticed that too last night. Here's a hopefully better version after
-> I ran it on my 32-bit Atom - I don't have your old rust and maybe you should
-> simply throw it in the garbage - that thing is probably not worth the
-> electricity it uses to power up... :-)
+> Return the error code if either the devlink_info_serial_number_put()
+> or the efx_mcdi_get_board_cfg() fails.The control flow of the code is
+> changed a little bit to simplify the code. The functionality of the
+> code remain the same.
+> 
+> Fixes: 14743ddd2495 ("sfc: add devlink info support for ef100")
+> Cc: stable@vger.kernel.org # v6.3+
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 
- C'mon, these are good room heaters with nice extra side effects. ;)
+Hi Wentao,
 
-  Maciej
+In his review of v1 Edward Cree said:
+
+  "Looking at the rest of the file, all the calls to
+    devlink_info_*_put() in this driver ignore the return value, not
+    just this one.  I think this may have been an intentional decision
+    to only report errors in getting the info from FW, which seems
+    reasonable to me.
+  "If not, then all the calls need fixing, not just this one.
+    CCing Alejandro, original author of this code, for his opinion.
+
+I have CCed Aljandro on this email to see if he can help.
+And in any case, I think we need to come to a consensus on
+Ed's point before moving forwards with this patch.
+
+-- 
+pw-bot: changes-requested
