@@ -1,116 +1,150 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B353FD4
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7026264A98;
+	Tue,  8 Apr 2025 09:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104202; cv=none; b=DBWN0I4x6qNmzHSDbOQ2Wby2uTcXSFNuP77vr46yJH6miXu/8sZlXRswHz/PIp3821/EL3xkaun34oIMtQ1YIMPUqzenS/1xjwgovpkOLDpRU+yvfruDRyN3g0BPsbvpxsKVo9x3KHh43kfHAt481UcDFFnydbQgaJlgu/f7/Bo=
+	t=1744104202; cv=none; b=frJVJKQrx0/vricWnABDKWclR/qP/Q28y9fX2yxK5jV0ztslEmdB9U0+Djw4mZCrDOwTmSkupsdgtoFHAjxmYJo9JhaRI2Vom3K2yBwZGH1zqi5itv91dbPIYmURSNTnZvhjd2mqsPtKe+wrhjTFznOASBQjgWx6P6pIEyFYbXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744104202; c=relaxed/simple;
-	bh=bdnFDgVEI5AOqZfbKX9QQbECCPESHem01GmKSzkyHbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XJo5gPfQsvJ2NPruOWTOniBHu0LXgR5Q+LSplrXqm/SZfo4LK37Sb6drgjFDpXa0AbTKUSvKOriVMAYc2Er5D9KWmHBytJlpSsj7iKPxq6AW0v2K6YXVEODrI+QjCncQ1s0KX/tHrg/wrmcIxdNPA/54n0R0ZmNxc8V/+uO5mY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G1t1zwKH; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=TmR/0z7qOdbQJh5BzlGPXNobyhBL1J7fuSAD4uQxkQg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Cht8ubE69+2Dgcfl3ZnY9ViMbk0AGwqYTI7rEocIcwEjT1itC5jMNbVNXoF+nD7q0WoLUae6UCaf9dBbtTRGX04bpjZrT82qqL8mfChKUOaaOGSz4aeqeEXtNxYj97Gr/YYpo8vx5osfGPkbC+6D4wRmUvU6Q5BxgWjOXgSvozs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YUGrFE6c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eEls9xHu; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G1t1zwKH"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2295d78b433so50441685ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744104200; x=1744709000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNUnjAwr3K7/bh0YQuGEFB/xa4tI2s8atXnUMP1mg7g=;
-        b=G1t1zwKHcBaPUVCJs4l/312aX70OROcWJzXZ1oIy7/S0peYjPesBrBeVgwDWro/epG
-         5dsKXfsxIJvfDK5+85594bIu9dcSq7ViuWBVmvt7sKfTg9hs0H4AzMrFx00bY5ZdA174
-         cFxc3hmyFCFXiUhaRzmmcrb0Uudq43XlEd4Wo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744104200; x=1744709000;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DNUnjAwr3K7/bh0YQuGEFB/xa4tI2s8atXnUMP1mg7g=;
-        b=hMuZ0ATK1uOfMZnsrarEt5yv3/QSyvgt7IqlWlOI4Dny4yRppBlV7XOUtu+KUsrBj5
-         t9vYeIVh2VOrFrv1CIsvrEFORupmxgJ7WrKkLb7pU+4YbFBdJRfHS70vP4mBkJCqjWjT
-         iFkRcuDezOByxEtqrZWulch68eNfvTH72K4Fw5zNZD2EhkWXygKDuwGKz9iI9kUf6j9Z
-         CJuVGfyNFWUeDoIsBC02nmIB4/7VJWNDnuQzieWT5btf+cAMQXLh6u++gnHWq2cOQC/+
-         VFk2zHYV+7ZKDIEgOBgpMmbvoanhSgKqnzPFbxLYa4DSJD2+jSYfunoajRR0mB5q6Uxr
-         6bTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWR5lGd3vXf+IuKrsvbd6gYKlPhUBQWaXKvQa11KA82M3nvfgEguQoCxxnYnORuMk09qGn6VfgXl4AcWco=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyysw8bMCPAtSPJODIf6V/hDOZg70+LZmng8/QlSKjngo9e6BXe
-	O9wgOQRA7WiFhPUbXJMmhL59MGcsxBaAomDy6RYB6ub9JON5xUVYE11mlwLa4A==
-X-Gm-Gg: ASbGnctV8L8OlfM1p9MQd2Jh/qJ/nbaE0ZkfsQBIfD8sKvAyNQqzyzFZJeRaTsyLAVp
-	n7GCUALBavO6qtZUCpLQIjguS4rI/bL7TFMK2KunIOvlBYOC9ecUL/Tqcp8kDq1n5qbwhBfbC4P
-	mjsFs3jw3JdPS6cK8AjajAQagTPb5oAm7qjIVeVXwRZGT2hebs21yCyQ2JZCeXpnT8dRSPLPJX3
-	CA9PNm9pNXd6FhcqhixKzEC/aYcYHP8xKvtZB5kCtQjGZi5abMp5Pl9V8jczIckf8jkBxdagIq6
-	y0KDVbWcViDrrzb2N/4NQDhD0N6zU9WBoLMlOWqidQhQCTq4xWUxZ01zWdSr4cg=
-X-Google-Smtp-Source: AGHT+IGPhkSRb5R3PVNGCzYv1a6SJZoNU3t0aIi0QTJm3JWsa/HB1uZ+jzdpdKOIXFpq6puPuDXpRQ==
-X-Received: by 2002:a17:902:da85:b0:224:f12:3735 with SMTP id d9443c01a7336-22a8a06b38dmr169101945ad.31.1744104200152;
-        Tue, 08 Apr 2025 02:23:20 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:79d9:c941:96f6:ac1c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e477sm95651655ad.122.2025.04.08.02.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 02:23:19 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	devicetree@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Chengci . Xu" <chengci.xu@mediatek.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] arm64: dts: mediatek: mt8188: Fix IOMMU device for rdma0
-Date: Tue,  8 Apr 2025 17:23:02 +0800
-Message-ID: <20250408092303.3563231-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YUGrFE6c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eEls9xHu"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id ABE26138014C;
+	Tue,  8 Apr 2025 05:23:18 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 05:23:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744104198;
+	 x=1744190598; bh=lkUJ8TgO3ooNDZY0G1GBRHyyAS9TWfqRd6Szv2PjLyo=; b=
+	YUGrFE6cju58jVKO1KkDFmeuF2owX0fjBHC/bhbeghn2yC1UOqCLnnstPyEoT4G6
+	JuJr1RKyrN4CNwkjZX50i38xy1jIy4TQHJlMaoDYpfEWB7luuNFiJH0+JwPV+6hw
+	ZnW6lRTqBE+j58EgoWN9euADHwazBdujrDG9pj0BE3taz+9tiv8X1Qk1WXibAox2
+	4s7+jibrdjobG3HbxL8eHM5b9m4hrPx6uUzTlnbGiIkI55iUbEdD58IzZFU2Scr4
+	BNPSXbzx6SWvJVXkSUbYuVIA2yuop/022o0P+OEj0SQV7Es98fLHH+hR9D44edOg
+	dv/x1gJ0/9WX+Mo6Njc8AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744104198; x=
+	1744190598; bh=lkUJ8TgO3ooNDZY0G1GBRHyyAS9TWfqRd6Szv2PjLyo=; b=e
+	Els9xHuDDQlhi4oUB0+qIo3rwL5nqnHZGhlihMthRVVB97orxMZHS06o/IrOMd3t
+	K5DVb8vKzK1yMYyY7bbJuh9yG1yCZxT/QXMj0NSlQ7jBez2f03xBhJRP6wMfGOYe
+	Iryqdyzz1/zR7CVlYSJnEjFGeBpfOBEJbSlpDVXMfZ51n4ICzgyyDb++96g94Bac
+	MB+/DF9PGsjG8rVPx9MIitWwut4PmOtti6PQr6XmLT/9YheX7n6VMREDStZ4Shz8
+	vlQtYq4CBLKpTBmzd1HhAQYrboMg+bAR6cAYYaM3vZqLBWcQ1Db+D4ZUPeY2epKL
+	r9oRmI86ZOaFyLMZgo1cg==
+X-ME-Sender: <xms:Buv0Z5v3mg_Qnws88A6GcwiDfTbx7q8IqN-Y1CtY0qiNaH4YnwZ3pA>
+    <xme:Buv0ZyfLStQtYduitttDbT2YpDRTTT_tOYhDgbl3PHAqd8eGV06rtyknrLB7tSeCY
+    hwYipnAXPRQGkLPtOY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvjedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepgefgjedujedvieejgeelgfdthfduffeiteef
+    udeghfffkeejfeehtdejfeejteefnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepghhnohgrtghk
+    sehgohhoghhlvgdrtghomhdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
+    vghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugi
+    dqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghn
+    ihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhs
+    vggtuhhrihhthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:Buv0Z8zhsacruqlaxm7DRqwQQx4uXWDDUbpvm-dTIL5Yy8Vwuf3HBw>
+    <xmx:Buv0ZwPYjYwGPS9TI7cT90g_ucXLe9nPwY_6QUImVsVFp5PfjKu7Ig>
+    <xmx:Buv0Z59vf0FKcY21Y5ouQRC8r9kYlwKoa5Sl7VfMyPtQoxeWwqDltQ>
+    <xmx:Buv0ZwX9BauKZWKsQ-5FTelze0y59_NhGPB8QF6kCJ7zt9mQE6oazQ>
+    <xmx:Buv0Z9VvkNJgs0Fjx7WLD-pvnqWQd3rSvCTTjTPvuw8RbF20YsvkK-gH>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 12EBB2220073; Tue,  8 Apr 2025 05:23:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T00187b92ccd5616f
+Date: Tue, 08 Apr 2025 11:22:52 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mark Brown" <broonie@kernel.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: "Kees Cook" <kees@kernel.org>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, "Ard Biesheuvel" <ardb@kernel.org>
+Message-Id: <08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com>
+In-Reply-To: <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
+References: 
+ <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <CAHk-=wjTbWiYwfj2wF9iP8SSVk2A_cZFDr5hu1bgU_PfxhyiiA@mail.gmail.com>
+ <8cbe0cac-2952-47b6-9b0d-1400aec0bf25@sirena.org.uk>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Based on the comments in the MT8188 IOMMU binding header, the rdma0
-device specifies the wrong IOMMU device for the IOMMU port it is
-tied to:
+On Tue, Apr 8, 2025, at 00:02, Mark Brown wrote:
+> On Mon, Apr 07, 2025 at 02:33:40PM -0700, Linus Torvalds wrote:
+>> On Mon, 7 Apr 2025 at 14:10, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > Arnd bisected this to c56f649646ec ("landlock: Log mount-related
+>> > denials") but that commit is fairly obviously not really at fault here,
+>> > most likely this is an issue in the plugin.  Given how disruptive having
+>> > key configs like this failing let's disable the plugins for compile test
+>> > builds until a fix is found.
+>
+>> I'm not against this, but I do want to bring up the "are the plugins
+>> worth having at all" discussion again.
+>
+>> They've been a pain before. Afaik, the actual useful cases are now
+>> done by actual real compiler support (and by clang, at that).
+>
+>> Who actually *uses* the gcc plugins? They just worry me in general,
+>> and this is not the first time they have caused ICE problems.
+>
+> There was a bit of discussion of that on IRC which didn't summon up huge
+> enthusiasm for them.  Arnd noted that:
+>
+>     https://github.com/nyrahul/linux-kernel-configs
+>
+> indicates that Talos 1.9.1 uses latent_entropy (but we didn't check how
+> accurate that survey is).
 
-    This SoC have two MM IOMMU HWs, this is the connected information:
-    iommu-vdo: larb0/2/5/9/10/11A/11C/13/16B/17B/19/21
-    iommu-vpp: larb1/3/4/6/7/11B/12/14/15/16A/17A/23/27
+Talos also uses stackleak. I also see that alpine and qubes have the
+same two gcc plugins enabled.
 
-rdma0's endpoint is M4U_PORT_L1_DISP_RDMA0 (on larb1), which should use
-iommu-vpp, but it is currently tied to iommu-vdo.
+On the other hand none of the other 60 distros on that list use any
+plugins, and most of those kernels appear to be built with a compiler
+that doesn't support plugins. A few notable ones (Arch, Fedora
+CoreOS 35, RHEL 9) in the list have CONFIG_GCC_PLUGINS=y but then
+don't enable any of them.
 
-Somehow this went undetected until recently in Linux v6.15-rc1 with some
-IOMMU subsystem framework changes that caused the IOMMU to no longer
-work. The IOMMU would fail to probe if any devices associated with it
-could not be successfully attached. Prior to these changes, only the
-end device would be left without an IOMMU attached.
+>  He also noted that GCC_PLUGIN_SANCOV is
+> obsolete as of GCC 6 (!) and both CC_HAVE_STACKPROTECTOR_TLS and
+> GCC_PLUGIN_STRUCTLEAK_BYREF_ALL as of GCC 12, Ard indicated he wasn't
+> worried about loosing CC_HAVE_STACKPROTECTOR_TLS.
 
-Fixes: 7075b21d1a8e ("arm64: dts: mediatek: mt8188: Add display nodes for vdosys0")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8188.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I've drafted patches to remove these three now: even if we're
+only moving from gcc-5 to gcc-8 as the minimum supported version,
+I don't think there is much intersection between users of those
+plugins and those that are stuck on gcc-11 or earlier.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-index 69a8423d3858..29d35ca94597 100644
---- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-@@ -2579,7 +2579,7 @@ rdma0: rdma@1c002000 {
- 			reg = <0 0x1c002000 0 0x1000>;
- 			clocks = <&vdosys0 CLK_VDO0_DISP_RDMA0>;
- 			interrupts = <GIC_SPI 638 IRQ_TYPE_LEVEL_HIGH 0>;
--			iommus = <&vdo_iommu M4U_PORT_L1_DISP_RDMA0>;
-+			iommus = <&vpp_iommu M4U_PORT_L1_DISP_RDMA0>;
- 			power-domains = <&spm MT8188_POWER_DOMAIN_VDOSYS0>;
- 			mediatek,gce-client-reg = <&gce0 SUBSYS_1c00XXXX 0x2000 0x1000>;
- 
--- 
-2.49.0.504.g3bcea36a83-goog
-
+      Arnd
