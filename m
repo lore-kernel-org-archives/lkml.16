@@ -1,113 +1,191 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D28C33CA
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABB22222DA
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102743; cv=none; b=VaHYxv1kdzjlkSje/j/KVG+w9Xbs/noKwROTLqKLunFX9xv/ar7nOf40kqtwmvj/o7jNYzIGCsjusUQyw4Z/uBdNt12P/0OywX/exZVc9NdrogVEolt2msemaBc3Nkycp+Oqubwq7snPbwOF/3rT2mtAiU0C8Ev28vIHzHURuqw=
+	t=1744102781; cv=none; b=YcZuMXO01hNHluT6SOV9cOGJOUHUv353YBO/S/ZBJ6dw7E/kb9CysOA7YajnpafK9+OI/1o4wwfKMBllIJSGFr8ggiDs7zvgg3nmNVNhIEpykhRHNNToWLybqmaX+jndZUMcfKV4bfjmzLtybvul6DlwAaDwZwkb7KRYSKx/Yi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102743; c=relaxed/simple;
-	bh=72jwfitser1aQb9gjC6pY+/0SixGdsnc79rvI3BbmAk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q2ro/kJZGSFdAXFeo27RAi9iG6yqGfGKhONDU0jpWZ97jFJkWTzHNxdnOwfj6I7BDCFRJ9ueZak2kWtjC2RNDduGYHXBHhOi0ggZ0l/7IcuQFGXLdpA1Wamu4gIcXQXrI/Avl8xq6loy5vuV8hZ8pbVZovRfSJ1A8lX8/FZIcLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DZ5qJ+c0; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744102781; c=relaxed/simple;
+	bh=9GDIO++JNka8swO6s9giWNyq+Tl4y4O2HaqtgHOSTTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPRHgLeB6rcjknFVuGLNVmcyk57jHdHTwq7UUc52haLXo50R+Ns7PFD9+bXITnjMmu8NRDkCS9j+bunbIgSrfWXYm0H9MAAfEpVySajsEFFo1++b2/K6un+j+sQzO2lkDEG48Cfa0ZIlTmhy8Be61M9YlFNbI1wGpgPaKeaqAbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QGM+TbXw; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DZ5qJ+c0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=zKhG9
-	qiEMRLJS/mGX8jO8pyM5ReATHHbxqdxWWXsPx8=; b=DZ5qJ+c0PnOUua2pWcX9w
-	MAkfLRn2tolNjzPPBDRwOJ/120UmLBKlssIdgsWiCq1umm/otz5XdwNI/7UuOqk+
-	vo7XJPCRlnBwwkRmiUkM3XWUhfPqmuHgXBSpc4W5uJ3P5SxJboDpkQmPLNr8xsmA
-	xl/yBB/UfBP2cuGTFh5E0g=
-Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCHF00m5fRnQGxPEw--.37725S2;
-	Tue, 08 Apr 2025 16:58:14 +0800 (CST)
-From: Xavier <xavier_qy@163.com>
-To: dev.jain@arm.com,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	ryan.roberts@arm.com,
-	catalin.marinas@arm.com,
-	ioworker0@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	xavier_qy@163.com
-Subject: [PATCH v2 1/1] mm/contpte: Optimize loop to reduce redundant operations
-Date: Tue,  8 Apr 2025 16:58:09 +0800
-Message-Id: <20250408085809.2217618-2-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250408085809.2217618-1-xavier_qy@163.com>
-References: <027cc666-a562-46fa-bca5-1122ea00ec0e@arm.com>
- <20250408085809.2217618-1-xavier_qy@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QGM+TbXw"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe574976so36370095e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744102778; x=1744707578; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UW5UEBIC2fvLgEE7aqaeWlqxDj1Xfvs+TW5wbP5DlME=;
+        b=QGM+TbXw+bR6uUsQcybe0GvK4OEq+mJDkqO+5Ni9DRRwNJRBxiRarSJm98/r1c+Oyk
+         huoM5j2TEl125nkPXNzqNTcJiFjpl2xdgEJAPlQWFsify52DeinV8xwDdn0ExNTSq6Qf
+         a2Wjt3MgDmIc+EJ0Jed0/oVZWLCLQpOMejd5A21k0cU5GRPIVCqosamuBgxhj380mAKB
+         e6WMmskCiU4u0zZA3s+1O4rYUODKZYuklbwVacTNXqlhXlJ1BPrwnTycbxUtMhzIDyb0
+         bfmipBpo3MecKD3iyk/BprJsw55U9n/FKXo6WtYX5B7EeQtGupvPWzbi6C1xM0YvEeuM
+         GTZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744102778; x=1744707578;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UW5UEBIC2fvLgEE7aqaeWlqxDj1Xfvs+TW5wbP5DlME=;
+        b=KfloE/Knopas3xQEGKttkBg4RlXjjZG11wr0JlKt7mPOuIPTfi+freRrLw0sl5oYUf
+         pz91RG+Bi9u65Z6hYhKPQtsTv0CPKazcBzL0Y15PXpVKtprgLzWPzPy1B3mVuADSJeJL
+         Etd6dJPvknr8slnDGInLLflvH+CcRNybNfp9StolZcWSbk5BWyLVhkYtW/fE84zMSqTK
+         n8UN6GTEilotPAyDyrPgnoK3kAw0ymDAG3ViV578ENIXpx5SQurf+uH/QJAK2JY2BSZb
+         1qCWslbQf8PB9qmRWvsyz4hN1T9/AlCH6SPAN3mU+D8eysFu4F4VEZuxH3wKWFlGFLfk
+         kNQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdFf2vtplOlewvL69L1poRHe9kSZZZlnbnjQAi8BxtXDMOxOihABOnAyDyslrLS9sT8EliAFeINk3gNFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZgwz9w1zlN71irP8+jk0srxvKV18oPO5Yl7/pepRlU0B3mRSJ
+	T/xVXI2+32edN23g4ATrKJbvwEqkD7UvE7YAjq5HEuzpFqYjbqEyaeV5GQJqIHU=
+X-Gm-Gg: ASbGnct55+zevvL/x5uYGivAub5lJM25vz0eGhaRSnINUl19kPL6xSXR7oDiW5pVlxk
+	Ly8mow34EUbKIiQC41oFRaxvEeXPJjfz/SPk9D80MC1+qubpkYtEjVdmYrY0JOY4QffRX5nV8KI
+	E3TsATmFwTMum6bl0oh8cep/EtGB0am8e0BA5PhPH+EBVFywGUYlH0fVCQrz+atVx1MOkBJaGjr
+	etqXXu4jVXB4aCZgBzwL9P2v0jaBySRbvHZHE631HLyv4bZFVDVXr4D0xDLek2x9Uc8BKQHlGTY
+	bwIQpXh8eu6AtI13p8zN+h3rj44il2d42XLeyMzUZvFGNv5KxT3sQ7I=
+X-Google-Smtp-Source: AGHT+IHEfD0DEw0nhPMBkT/vzIF8/zOBJoBPD+hGdZb0j1wbN2G+PRbTcfFssvpUFnD8uApO8cUzMQ==
+X-Received: by 2002:a05:600c:1e23:b0:43b:c95f:fd9 with SMTP id 5b1f17b1804b1-43ecf81c304mr140398715e9.5.1744102777838;
+        Tue, 08 Apr 2025 01:59:37 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:5d6b:d01c:7ee:e98f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec169b8a3sm156634925e9.19.2025.04.08.01.59.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 01:59:36 -0700 (PDT)
+Date: Tue, 8 Apr 2025 10:59:31 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Sultan Alsawaf <sultan@kerneltoast.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
+ by need_freq_update
+Message-ID: <Z_Tlc6Qs-tYpxWYb@linaro.org>
+References: <20241212015734.41241-1-sultan@kerneltoast.com>
+ <20241212015734.41241-2-sultan@kerneltoast.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHF00m5fRnQGxPEw--.37725S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ww18ZFWxZrykJw17ZFy3twb_yoW8Xw4xpr
-	y8CwnIqr17JFnxG393Jw1rJry5Jws3tFW7ArnIya1UJryF9rn5u34Fk34a9rWUGrZ5X3y8
-	Zw1UtrnruFW7CF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piXyCJUUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiTQwpEGf03i7+0gAAs3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241212015734.41241-2-sultan@kerneltoast.com>
 
-This commit optimizes the contpte_ptep_get function by adding early
- termination logic. It checks if the dirty and young bits of orig_pte
- are already set and skips redundant bit-setting operations during
- the loop. This reduces unnecessary iterations and improves performance.
+Hi,
 
-Signed-off-by: Xavier <xavier_qy@163.com>
----
- arch/arm64/mm/contpte.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
+> From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
+> 
+> A redundant frequency update is only truly needed when there is a policy
+> limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMITS.
+> 
+> In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS receive a
+> frequency update _all the time_, not just for a policy limits change,
+> because need_freq_update is never cleared.
+> 
+> Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update also leads
+> to a redundant frequency update, regardless of whether or not the driver
+> specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequency is the
+> same as the current one.
+> 
+> Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LIMITS
+> when there's a policy limits change, and clearing need_freq_update when a
+> requisite redundant update occurs.
+> 
+> This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS test
+> and instead setting need_freq_update to false in sugov_update_next_freq().
+> 
+> Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 28c77904ea74..e51d5ce730be 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+>  
+>  	if (unlikely(sg_policy->limits_changed)) {
+>  		sg_policy->limits_changed = false;
+> -		sg_policy->need_freq_update = true;
+> +		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+>  		return true;
+>  	}
+>  
+> @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
+>  				   unsigned int next_freq)
+>  {
+>  	if (sg_policy->need_freq_update)
+> -		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
+> +		sg_policy->need_freq_update = false;
+>  	else if (sg_policy->next_freq == next_freq)
+>  		return false;
+>  
 
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index bcac4f55f9c1..034d153d7d19 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -152,6 +152,18 @@ void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
- }
- EXPORT_SYMBOL_GPL(__contpte_try_unfold);
- 
-+#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
-+	do { \
-+		int _start = start; \
-+		pte_t *_ptep = ptep; \
-+		while (_start++ < CONT_PTES) { \
-+			if (pte_##flag(__ptep_get(_ptep++))) { \
-+				orig_pte = pte_mk##flag(orig_pte); \
-+				break; \
-+			} \
-+		} \
-+	} while (0)
-+
- pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
- {
- 	/*
-@@ -169,11 +181,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
- 	for (i = 0; i < CONT_PTES; i++, ptep++) {
- 		pte = __ptep_get(ptep);
- 
--		if (pte_dirty(pte))
-+		if (pte_dirty(pte)) {
- 			orig_pte = pte_mkdirty(orig_pte);
-+			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
-+			break;
-+		}
- 
--		if (pte_young(pte))
-+		if (pte_young(pte)) {
- 			orig_pte = pte_mkyoung(orig_pte);
-+			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
-+			break;
-+		}
- 	}
- 
- 	return orig_pte;
--- 
-2.34.1
+This patch breaks cpufreq throttling (e.g. for thermal cooling) for
+cpufreq drivers that:
 
+ - Have policy->fast_switch_enabled/fast_switch_possible set, but
+ - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
+
+There are several examples for this in the tree (search for
+"fast_switch_possible"). Of all those drivers, only intel-pstate and
+amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
+
+I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
+laptop:
+
+ 1. I added some low temperature trip points in the device tree,
+    together with passive cpufreq cooling.
+ 2. I run a CPU stress test on all CPUs and monitor the temperatures
+    and CPU frequencies.
+
+When using "performance" governor instead of "schedutil", the CPU
+frequencies are being throttled as expected, as soon as the temperature
+trip points are reached.
+
+When using "schedutil", the CPU frequencies stay at maximum as long as
+the stress test is running. No throttling happens, so the device heats
+up far beyond the defined temperature trip points. Throttling is applied
+only after stopping the stress test, since this forces schedutil to
+re-evaluate the CPU frequency.
+
+Reverting this commit fixes the problem.
+
+Looking at the code, I think the problem is that:
+ - sg_policy->limits_changed does not result in
+   sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
+   anymore, and
+ - Without sg->policy->need_freq_update, get_next_freq() skips calling
+   cpufreq_driver_resolve_freq(), which would normally apply the policy
+   min/max constraints.
+
+Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
+that set policy->fast_switch_possible? If I'm reading the documentation
+comment correctly, that flag is just supposed to enable notifications if
+the policy min/max changes, but the resolved target frequency is still
+the same. This is not the case here, the target frequency needs to be
+throttled, but schedutil isn't applying the new limits.
+
+Any suggestions how to fix this? I'm happy to test patches with my
+setup.
+
+Thanks,
+Stephan
+
+#regzbot introduced: 8e461a1cb43d69d2fc8a97e61916dce571e6bb31
