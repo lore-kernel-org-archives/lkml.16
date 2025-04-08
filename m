@@ -1,93 +1,168 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11151DE3A9;
-	Tue,  8 Apr 2025 16:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D63188CDB
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744130310; cv=none; b=VEbyMzpcA1kGoM0Tr8ry8Hn/yTf1Wu1U60ktuqnixNZAVsbJq8vAeAD/VajV1SxDh3Q4W096/PKGmAnJfxh/FfcO9Ow22kRyc/KZOsc6v/+KcKFuXCcPSyyKG26Mz8FO21LLOTKiD/f2KwHoMKLH1HLtvj3dxNIMrYYmX6sFlFU=
+	t=1744130409; cv=none; b=D6HRPuw+ONhQdVKN3Kh1ZANLMr9JQma+xhRpfhNaBJy0zIYm8QFevQQNpV34x/SjWtxfiN1lZOe+QTjBzTfWrEuj4HLjqqTu4azREAblm7TDQO1aGdxXNKguoyQqggnMFwc6TqSudUcg4X+VbaYPJMRzwNC2WDdpH9zghriYgSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744130310; c=relaxed/simple;
-	bh=+eU1l90ug4VLQCFWctk77ffIqdBjl5mOtKRYScVzcGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnORTq08n62xVm8gZiIBfYq8gM5hoUmb/322x1y7Kmxn51e7mxQrcREB69bhYz/N5vCAwRFXzfitD4ejBtpUZKaO/sKqmvHTJ9qg/xQfe1+ZoLSIaOqUBDurSBWlw6WvR2bW0T8bKYlGsLEatfLU7W9EIN4nXUzeadsFzNnfTnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t9QSCPFK; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744130409; c=relaxed/simple;
+	bh=vJraGZAUkC5Ri6nsMBNEEyxQwHjHXg4jLVpBhPsSR4I=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GzRpJxF62w3r6jKqaY7EWxcu9I2ni5dn4CszVSZm3ajlWIOg0oBT6VE5wh9fz01sdXeSJFyYMeBbyj/PhvGYGLKbZ56nYpMRjtLF17OKtQ/okFzdXTip1Wu6JeHM1Sr4vlz6qxvXcqZe8F+D+YYCWI9CSymybdjMBnzmO6R0vLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BIiSKV5m; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t9QSCPFK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=q8c5kGuEjzUrixCQz8SJfmiMTtSSZ6M/pup07QMbIZo=; b=t9QSCPFKWRX+IEXLLTG7nFPvtv
-	qDrwtyW8ndHz9ADtdBvDwK9R1/b7GawfLb9Ry+HoJokPfkHZsWEY8kmm+jpBlq6UtOttGJYiUw7RR
-	YQcU45qxxKziWZ2wo5RrV8K7L++OSyA0Pg6W4VCgKFlOrXroMKnLYbVxn6C0iXMlaNBqc55NZ+7ry
-	DAQLC5cv7ugIBp7R5NUNcrnkv6P4QXcnyZrwaQNIPaFmW3FgZted7FwYDS5UBdqKAJDVf5IQeUvr3
-	Gezyf9Lp+/2LMaVmh9DL4kYQDtD4GOp47bbpeRMV5gu/qNM87gpbm6R4yQ33Abl/XS2ElP+tzf6AO
-	XyawnGVw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2Bx2-0000000GpOB-0hye;
-	Tue, 08 Apr 2025 16:37:28 +0000
-Date: Tue, 8 Apr 2025 17:37:27 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Will Deacon <will@kernel.org>,
-	Yang Shi <yang@os.amperecomputing.com>, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v2 02/12] x86: pgtable: Always use pte_free_kernel()
-Message-ID: <Z_VQxyqkU8DV7QGy@casper.infradead.org>
-References: <20250408095222.860601-1-kevin.brodsky@arm.com>
- <20250408095222.860601-3-kevin.brodsky@arm.com>
- <409d2019-a409-4e97-a16f-6b345b0f5a38@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BIiSKV5m"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736c7df9b6cso7516456b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744130407; x=1744735207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gBC1sLJQZwJnKDlXbyYuAnn0xSTsMYHN3avTvc3kulQ=;
+        b=BIiSKV5mq5TwlAE6bclqmv0XIR9Bw+SpgpY4ZNxbx5+dkhQI8CChHBjRy0hSrm/O7k
+         UvH1JFyHkEqj4yta/RPeC3h+BVCd6dRtzKK2hRnLm5r5dvZE+DCSCVP/dS33NuNhXKpK
+         Ni9Q03JUImV7narwYpDCvY1ttjwE5cOYUCAE/AW3deE7H4mnZoQz3KC4S60IogJt+D0Z
+         bLCn7YlfPr03AQi7llASipdhZ3lKDWCnTwEcHkuYfe5NK6c+Xn6sBltb7TLWht2ztGFU
+         h31WLQMWtcIqKeuaXA10Cn+YiY4RdJPQovkeL4PIzzS2zaXhbWFNcnpV229V+E6fncJD
+         08ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744130407; x=1744735207;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gBC1sLJQZwJnKDlXbyYuAnn0xSTsMYHN3avTvc3kulQ=;
+        b=f/kQI33UF2PaXYJCU4WJRnmLEhmtifaFzPrrzFFCZsbOdAiJr2oNwHZBE++070xgDL
+         rNW3pvB9zdmEAENHrXbK8gYEAUBb18hOfcsk3bOwBNh+8ZcP7nZWY3wZPF8BU7CG+bFJ
+         MCw1oG2Z382MRduphg91wAmBNtPzk5ZL1YZZlU0Tv1rzCDmm/PI12hKUPwFM+Kai8hyu
+         HWoFHwZXCQ/94RnnCiLt26wP71LnYUtfQz7rCA9zMYVwlMyFgfJPHAenAILUcpBLagLa
+         Od9DEYhwRyZLdbaforJ+qzPO8sPEz6hhwacs2zNxTw7xzkGFYWjZm9HUBJmf9RScdHjF
+         k/lA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFn9lt6ZQVDCWZjIcFsO+zUf9S9owTuyZ3ZCP/d5zbKhmTdpyfy6aIF6ASeSKe3i3/AnarhcR/0vHknW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcKZ4anPhl7dXwIUDDQBPQqvmZT5wYlC6162smH4tpYIzEFAI3
+	XLi/LCkW/iPW7RWuxUZHaJt+4QUHBgy7pB1v9al0OqOR207ay+Y4Hwp9bRZP4j19rCYjIw==
+X-Google-Smtp-Source: AGHT+IExffKl5VV/YVWLgCHPNE/zWYqSSOjhsEEwE9JsaKtkrh21oqkcO58rcvsZIGPYCkdwm1CNFn6s
+X-Received: from pfgs23.prod.google.com ([2002:a05:6a00:1797:b0:732:6425:de9a])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:398f:b0:730:9752:d02a
+ with SMTP id d2e1a72fcca58-739e48cefc2mr25043956b3a.4.1744130407061; Tue, 08
+ Apr 2025 09:40:07 -0700 (PDT)
+Date: Tue,  8 Apr 2025 16:40:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <409d2019-a409-4e97-a16f-6b345b0f5a38@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250408164000.3215690-1-fvdl@google.com>
+Subject: [PATCH v2] mm/cma: report base address of single range correctly
+From: Frank van der Linden <fvdl@google.com>
+To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Cc: Frank van der Linden <fvdl@google.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 08, 2025 at 08:22:47AM -0700, Dave Hansen wrote:
-> Are there any tests for folio_test_pgtable() at free_page() time? If we
-> had that, it would make it less likely that another free_page() user
-> could sneak in without calling the destructor.
+The cma_declare_contiguous_nid code was refactored by
+commit c009da4258f9 ("mm, cma: support multiple contiguous
+ranges, if requested"), so that it could use an internal
+function to attempt a single range area first, and then
+try a multi-range one.
 
-It's hidden, but yes:
+However, that meant that the actual base address used for
+the !fixed case (base == 0) wasn't available one level up
+to be printed in the informational message, and it would
+always end up printing a base address of 0 in the boot
+message.
 
-static inline bool page_expected_state(struct page *page,
-                                        unsigned long check_flags)
-{
-        if (unlikely(atomic_read(&page->_mapcount) != -1))
-                return false;
+Make the internal function take a phys_addr_t pointer to
+the base address, so that the value is available to the
+caller.
 
-PageTable uses page_type which aliases with mapcount, so this check
-covers "PageTable is still set when the last refcount to it is put".
+Fixes: c009da4258f9 ("mm, cma: support multiple contiguous ranges, if requested")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Closes: https://lore.kernel.org/linux-mm/CAMuHMdVWviQ7O9yBFE3f=ev0eVb1CnsQvR6SKtEROBbM6z7g3w@mail.gmail.com/
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Frank van der Linden <fvdl@google.com>
+---
+ mm/cma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-I don't think we really use the page refcount when allocating/freeing
-page tables.  Anyone want to try switching it over to using
-alloc_frozen_pages() / free_frozen_pages()?  Might need to move that API
-out of mm/internal.h ...
+diff --git a/mm/cma.c b/mm/cma.c
+index b06d5fe73399..15632939f20a 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -35,7 +35,7 @@
+ struct cma cma_areas[MAX_CMA_AREAS];
+ unsigned int cma_area_count;
+ 
+-static int __init __cma_declare_contiguous_nid(phys_addr_t base,
++static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
+ 			phys_addr_t size, phys_addr_t limit,
+ 			phys_addr_t alignment, unsigned int order_per_bit,
+ 			bool fixed, const char *name, struct cma **res_cma,
+@@ -370,7 +370,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
+ 			phys_addr_t align, unsigned int order_per_bit,
+ 			const char *name, struct cma **res_cma, int nid)
+ {
+-	phys_addr_t start, end;
++	phys_addr_t start = 0, end;
+ 	phys_addr_t size, sizesum, sizeleft;
+ 	struct cma_init_memrange *mrp, *mlp, *failed;
+ 	struct cma_memrange *cmrp;
+@@ -384,7 +384,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
+ 	/*
+ 	 * First, try it the normal way, producing just one range.
+ 	 */
+-	ret = __cma_declare_contiguous_nid(0, total_size, 0, align,
++	ret = __cma_declare_contiguous_nid(&start, total_size, 0, align,
+ 			order_per_bit, false, name, res_cma, nid);
+ 	if (ret != -ENOMEM)
+ 		goto out;
+@@ -580,7 +580,7 @@ int __init cma_declare_contiguous_nid(phys_addr_t base,
+ {
+ 	int ret;
+ 
+-	ret = __cma_declare_contiguous_nid(base, size, limit, alignment,
++	ret = __cma_declare_contiguous_nid(&base, size, limit, alignment,
+ 			order_per_bit, fixed, name, res_cma, nid);
+ 	if (ret != 0)
+ 		pr_err("Failed to reserve %ld MiB\n",
+@@ -592,14 +592,14 @@ int __init cma_declare_contiguous_nid(phys_addr_t base,
+ 	return ret;
+ }
+ 
+-static int __init __cma_declare_contiguous_nid(phys_addr_t base,
++static int __init __cma_declare_contiguous_nid(phys_addr_t *basep,
+ 			phys_addr_t size, phys_addr_t limit,
+ 			phys_addr_t alignment, unsigned int order_per_bit,
+ 			bool fixed, const char *name, struct cma **res_cma,
+ 			int nid)
+ {
+ 	phys_addr_t memblock_end = memblock_end_of_DRAM();
+-	phys_addr_t highmem_start;
++	phys_addr_t highmem_start, base = *basep;
+ 	int ret;
+ 
+ 	/*
+@@ -722,12 +722,15 @@ static int __init __cma_declare_contiguous_nid(phys_addr_t base,
+ 	}
+ 
+ 	ret = cma_init_reserved_mem(base, size, order_per_bit, name, res_cma);
+-	if (ret)
++	if (ret) {
+ 		memblock_phys_free(base, size);
++		return ret;
++	}
+ 
+ 	(*res_cma)->nid = nid;
++	*basep = base;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void cma_debug_show_areas(struct cma *cma)
+-- 
+2.49.0.504.g3bcea36a83-goog
+
