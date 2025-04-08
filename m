@@ -1,231 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EE8218845;
-	Tue,  8 Apr 2025 15:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FCD1B4236;
+	Tue,  8 Apr 2025 15:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125958; cv=none; b=inwO0ywAsHNyOjoRVqrUXwt5WwAVWsVe/ztNy/uuzXydIbkorYictI3ksNuNIbyWmRL5qy8m7AXM7zhzAxz5vryA2BC7VRQHb1mxGiDb1JMcIYiXIjg77IVth4pE5U/QFlxluotriYeTVimGxeLaxfuz8Y4LR++Yno4RnJXMjBs=
+	t=1744125979; cv=none; b=ZFLIlZjCWoB7GL+MW3rXlNaDNEGbD86S3WPFgSkStOTOwmMLiupXrWGvTkuY0FvGtlwBxv2zaU+6jMdcUFFxjP4ukVigjjaqUSSDPbQwRDS7ZMHdRxVOcRRSHLoHRRpfk5x5AfE/Xy+SznVg6WJvu2ktCLnqgaGrdKSlU7kTpvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125958; c=relaxed/simple;
-	bh=yuI/cONYo5jk3KMIQmLPYSuRaUFLK1KbDTV531UBS4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NRFMCypYVtv/GrCJm1YFMFsso+kPjLZEc893Qo8BdZ7GLWr2tQGB7rnOvm+WOhlb1s1jPdg5YljECXou27cRCPwkhCF0uuSZw0B6Hq/jlHMxX/kEz0NcVUIdBIryooBhE4on3EdT/K6c4E83QvM6KgfndN+TqMeOEe/PA/ilR2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CF20C4CEE5;
-	Tue,  8 Apr 2025 15:25:57 +0000 (UTC)
-Date: Tue, 8 Apr 2025 11:27:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Allow the top level trace_marker to write into
- another instance
-Message-ID: <20250408112714.403a4368@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744125979; c=relaxed/simple;
+	bh=/kGtS8/BtmaNVNliS+L8soxs5sdtkhO9WztZgJbV9t8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XZop2geLSFMt/dOl2SFPpKGs5IrYZcl7fyotJzUfyPqPVssyl3uwGwnUqpEzdo2Ieh+mL+arRjWnWHu370uyQnqpOOReLgZ2Z4PbRfG5VtnyBX6HLxKxns+yzeDzVBOwrJFG43B3Z0blA5TXIJctwyXgHmbDFySSDDD6rF9sCnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JAPahznK; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JAPahznK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744125975;
+	bh=/kGtS8/BtmaNVNliS+L8soxs5sdtkhO9WztZgJbV9t8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JAPahznKpbfsqrB8MbGLRGL6q6jT45uotHSYCPtg1ADGJmpOQ/SnGFCs01g0wLu/u
+	 ZEdaQkMsR3KEC7kgzonuqqXBjcaDdN0Nn4G2dmHhrDvLk8LNjZeZxBBo02k2CERw/R
+	 UZbeeVsazM4tJCGc+BfOcwal1gbRTCTkAJX7mRKHhYpNf6k7u4bwziyXKiN3zLFCeS
+	 Zm8jPO/BxL8jZ4xUjCP6FOCGXLuN3b6O8/L1u+M6BxTxGHKBQ3DAeLh9hKrljjniGn
+	 xmR9b3I5BxygaWPpQjQvXrR9HAIigrenayOs/lmhjruZATjfUZ66VHJIgtK/JrR6ug
+	 3hAmuMgm4YTtg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9B6C117E0D13;
+	Tue,  8 Apr 2025 17:26:14 +0200 (CEST)
+Date: Tue, 8 Apr 2025 17:26:10 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v4 4/4] drm/panthor: show device-wide list of DRM GEM
+ objects over DebugFS
+Message-ID: <20250408172610.428f689d@collabora.com>
+In-Reply-To: <20250402115432.1469703-5-adrian.larumbe@collabora.com>
+References: <20250402115432.1469703-1-adrian.larumbe@collabora.com>
+	<20250402115432.1469703-5-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed,  2 Apr 2025 12:54:29 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-There are applications that have it hard coded to write into the top level
-trace_marker instance (/sys/kernel/tracing/trace_marker). This can be
-annoying if a profiler is using that instance for other work, or if it
-needs all writes to go into a new instance.
+> +static void panthor_gem_debugfs_bo_print(struct panthor_gem_object *bo,
+> +					 struct seq_file *m,
+> +					 struct gem_size_totals *totals)
+> +{
+> +	unsigned int refcount =3D kref_read(&bo->base.base.refcount);
+> +	char creator_info[32] =3D {};
+> +	bool has_flags =3D false;
+> +	size_t resident_size;
+> +
+> +	/* Skip BOs being destroyed. */
+> +	if (!refcount)
+> +		return;
+> +
+> +	resident_size =3D bo->base.pages !=3D NULL ? bo->base.base.size : 0;
+> +
+> +	snprintf(creator_info, sizeof(creator_info),
+> +		 "%s/%d", bo->debugfs.creator.process_name, bo->debugfs.creator.tgid);
+> +	seq_printf(m, "%-32s%-16d%-16d%-16zd%-16zd%-16lx",
+> +		   creator_info,
+> +		   bo->base.base.name,
+> +		   refcount,
+> +		   bo->base.base.size,
+> +		   resident_size,
+> +		   drm_vma_node_start(&bo->base.base.vma_node));
+> +
+> +	seq_puts(m, "(");
+> +	has_flags =3D panfrost_gem_print_flag("imported", bo->base.base.import_=
+attach !=3D NULL,
+> +					    has_flags, m);
+> +	has_flags =3D panfrost_gem_print_flag("exported", bo->base.base.dma_buf=
+ !=3D NULL,
+> +					    has_flags, m);
+> +	if (bo->base.madv < 0)
+> +		has_flags =3D panfrost_gem_print_flag("purged", true, has_flags, m);
+> +	else if (bo->base.madv > 0)
+> +		has_flags =3D panfrost_gem_print_flag("purgeable", true, has_flags, m);
 
-A new option is created called "redirect_trace_marker". By default, the
-top level has this set, as that is the default buffer that writing into
-the top level trace_marker file will go to. But now if an instance is
-created and sets this option, all writes into the top level trace_marker
-will be redirected into that instance buffer just as if an application
-were to write into the instance's trace_marker file.
+I would probably go:
 
-Only one instance can have this option set. If the option is set in
-another instance, then it will clear the option from the previous
-instance.
+	has_flags =3D panfrost_gem_print_flag("purged", bo->base.madv < 0, has_fla=
+gs, m);
+	has_flags =3D panfrost_gem_print_flag("purgeable", bo->base.madv > 0, has_=
+flags, m);
 
-The top level instance can set this option but it can not clear it, and
-it will bring the writing of the trace_marker back to its buffer.
+to keep it one line per flag.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Documentation/trace/ftrace.rst | 15 +++++++++
- kernel/trace/trace.c           | 60 +++++++++++++++++++++++++++++++---
- kernel/trace/trace.h           |  1 +
- 3 files changed, 71 insertions(+), 5 deletions(-)
+BTW, most of those flags are encoding the GEM state, so maybe the column
+should be named state, and the helper panfrost_gem_print_state_flag().
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index c9e88bf65709..6b3915139347 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1205,6 +1205,21 @@ Here are the available options:
- 	default instance. The only way the top level instance has this flag
- 	cleared, is by it being set in another instance.
- 
-+  redirect_trace_marker
-+	This is similar to the trace_printk_dest option above, but it works
-+	for the top level trace_marker (/sys/kernel/tracing/trace_marker).
-+	If there are applications that hard code writing into the top level
-+	trace_marker file, and the tooling would like it to go into an
-+	instance, this option can be used. Create an instance and set this
-+	option, and then all writes into the top level trace_marker file will
-+	be redirected into that instance.
-+
-+	This flag cannot be cleared by the top level instance, as it is the
-+	default instance. The only way the top level instance has this flag
-+	cleared, is by it being set in another instance. By setting this flag
-+	in the top level instance, it will put the writing into the
-+	trace_marker file back into the top level instance buffer.
-+
-   annotate
- 	It is sometimes confusing when the CPU buffers are full
- 	and one CPU buffer had a lot of events recently, thus
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ddf6b17215c..ec7e15434759 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -493,7 +493,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
- 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
- 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
--	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
-+	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
-+	 TRACE_ITER_REDIRECT_MARKER)
- 
- /* trace_options that are only supported by global_trace */
- #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
-@@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 
- /* trace_flags that are default zero for instances */
- #define ZEROED_TRACE_FLAGS \
--	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
-+	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK | \
-+	 TRACE_ITER_REDIRECT_MARKER)
- 
- /*
-  * The global_trace is the descriptor that holds the top-level tracing
-@@ -512,6 +514,7 @@ static struct trace_array global_trace = {
- };
- 
- static struct trace_array *printk_trace = &global_trace;
-+static struct trace_array *marker_trace = &global_trace;
- 
- static __always_inline bool printk_binsafe(struct trace_array *tr)
- {
-@@ -534,6 +537,16 @@ static void update_printk_trace(struct trace_array *tr)
- 	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
- }
- 
-+static void update_marker_trace(struct trace_array *tr)
-+{
-+	if (marker_trace == tr)
-+		return;
-+
-+	marker_trace->trace_flags &= ~TRACE_ITER_REDIRECT_MARKER;
-+	marker_trace = tr;
-+	tr->trace_flags |= TRACE_ITER_REDIRECT_MARKER;
-+}
-+
- void trace_set_ring_buffer_expanded(struct trace_array *tr)
- {
- 	if (!tr)
-@@ -4755,8 +4768,22 @@ int tracing_single_release_file_tr(struct inode *inode, struct file *filp)
- 
- static int tracing_mark_open(struct inode *inode, struct file *filp)
- {
-+	struct trace_array *tr = inode->i_private;
-+	int ret;
-+
- 	stream_open(inode, filp);
--	return tracing_open_generic_tr(inode, filp);
-+
-+	/* The top level marker can have it redirected to an instance */
-+	if (tr == &global_trace)
-+		tr = marker_trace;
-+
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
-+
-+	filp->private_data = tr;
-+
-+	return 0;
- }
- 
- static int tracing_release(struct inode *inode, struct file *file)
-@@ -4799,7 +4826,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 
- int tracing_release_generic_tr(struct inode *inode, struct file *file)
- {
--	struct trace_array *tr = inode->i_private;
-+	struct trace_array *tr = file->private_data;
- 
- 	trace_array_put(tr);
- 	return 0;
-@@ -5189,7 +5216,8 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- {
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
- 	    (mask == TRACE_ITER_RECORD_CMD) ||
--	    (mask == TRACE_ITER_TRACE_PRINTK))
-+	    (mask == TRACE_ITER_TRACE_PRINTK) ||
-+	    (mask == TRACE_ITER_REDIRECT_MARKER))
- 		lockdep_assert_held(&event_mutex);
- 
- 	/* do nothing if flag is already set */
-@@ -5220,6 +5248,25 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 		}
- 	}
- 
-+	if (mask == TRACE_ITER_REDIRECT_MARKER) {
-+		if (enabled) {
-+			update_marker_trace(tr);
-+		} else {
-+			/*
-+			 * The global_trace cannot clear this.
-+			 * It's flag only gets cleared if another instance sets it.
-+			 */
-+			if (marker_trace == &global_trace)
-+				return -EINVAL;
-+			/*
-+			 * An instance must always have it set.
-+			 * by default, that's the global_trace instane.
-+			 */
-+			if (marker_trace == tr)
-+				update_marker_trace(&global_trace);
-+		}
-+	}
-+
- 	if (enabled)
- 		tr->trace_flags |= mask;
- 	else
-@@ -9897,6 +9944,9 @@ static int __remove_instance(struct trace_array *tr)
- 	if (printk_trace == tr)
- 		update_printk_trace(&global_trace);
- 
-+	if (marker_trace == tr)
-+		update_marker_trace(&global_trace);
-+
- 	tracing_set_nop(tr);
- 	clear_ftrace_function_probes(tr);
- 	event_trace_del_tracer(tr);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 79be1995db44..602457eda8e8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1368,6 +1368,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
-+		C(REDIRECT_MARKER,	"redirect_trace_marker"),\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
- 		FUNCTION_FLAGS					\
--- 
-2.47.2
+> +	if (!has_flags)
+> +		seq_puts(m, "none");
+> +	seq_puts(m, ")");
+> +
+> +	seq_printf(m, "%-6s0x%-2x", "", bo->debugfs.bo_mask);
+
+It's probably better if we print the debugfs flags like the GEM flags
+(one string per flag, with a ',' separator). We can even make it a
+helper function taking a list of flags and their associated strings so
+we can use it for both panthor_gem_object::flags and
+panthor_gem_object::debugfs::flags.
+
+static void
+panthor_gem_debugfs_print_flags(const char *names,
+				u32 name_count,
+				u32 flags)
+{
+	bool first =3D true;
+
+	seq_puts(m, "(");
+
+	if (!flags)
+		seq_puts(m, "none");
+
+	while (flags) {
+		u32 bit =3D fls(flags) - 1;
+
+		if (!first)
+			seq_puts(m, ",");
+
+		if (bit >=3D name_count || !names[bit])
+			seq_printf(m, "unknown-bit%d", bit);
+		else
+			seq_puts(m, name);
+
+		first =3D false;
+		flags &=3D ~BIT(bit);
+	}
+
+	seq_puts(m, ")");
+}
+
+> +
+> +	mutex_lock(&bo->label.lock);
+> +	seq_printf(m, "%-6s%-60s", "", bo->label.str ? : NULL);
+> +	mutex_unlock(&bo->label.lock);
+> +	seq_puts(m, "\n");
+> +
+> +	totals->size +=3D bo->base.base.size;
+> +	totals->resident +=3D resident_size;
+> +	if (bo->base.madv > 0)
+> +		totals->reclaimable +=3D resident_size;
+> +}
+> +
+> +void panthor_gem_debugfs_print_bos(struct panthor_device *ptdev,
+> +				   struct seq_file *m)
+> +{
+> +	struct gem_size_totals totals =3D {0};
+> +	struct panthor_gem_object *bo;
+> +
+> +	seq_puts(m, "created-by                      global-name     refcount  =
+      size            resident-size   file-offset     flags     kflags     =
+label\n");
+> +	seq_puts(m, "----------------------------------------------------------=
+---------------------------------------------------------------------------=
+-----------\n");
+> +
+> +	scoped_guard(mutex, &ptdev->gems.lock) {
+> +		list_for_each_entry(bo, &ptdev->gems.node, debugfs.node)
+> +			panthor_gem_debugfs_bo_print(bo, m, &totals);
+> +	}
+> +
+> +	seq_puts(m, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n");
+> +	seq_printf(m, "Total size: %zd, Total resident: %zd, Total reclaimable:=
+ %zd\n",
+> +		   totals.size, totals.resident, totals.reclaimable);
+> +}
+> +#endif
+> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
+hor/panthor_gem.h
+> index 49daa5088a0d..22ecc0d39d5e 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gem.h
+> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
+> @@ -15,6 +15,32 @@ struct panthor_vm;
+> =20
+>  #define PANTHOR_BO_LABEL_MAXLEN	PAGE_SIZE
+> =20
+> +#define PANTHOR_BO_KERNEL	BIT(0)
+
+s/PANTHOR_BO_KERNEL/PANTHOR_DEBUGFS_BO_FLAG_KERNEL/
+
+> +#define PANTHOR_BO_FW_MAPPED	BIT(1)
+
+s/PANTHOR_BO_FW_MAPPED/PANTHOR_DEBUGFS_BO_FLAG_FW_MAPPED/
+
+And it'd be better if those flags were documented.
+
+I would also add a
+
+#define PANTHOR_DEBUGFS_BO_FLAG_INITIALIZED BIT(0)
+
+and move the other flags one bit left.
+
+> +
+> +/**
+> + * struct panthor_gem_debugfs - GEM object's DebugFS list information
+> + */
+> +struct panthor_gem_debugfs {
+> +	/**
+> +	 * @node: Node used to insert the object in the device-wide list of
+> +	 * GEM objects, to display information about it through a DebugFS file.
+> +	 */
+> +	struct list_head node;
+> +
+> +	/** @creator: Information about the UM process which created the GEM. */
+> +	struct {
+> +		/** @creator.process_name: Group leader name in owning thread's proces=
+s */
+> +		char process_name[TASK_COMM_LEN];
+> +
+> +		/** @creator.tgid: PID of the thread's group leader within its process=
+ */
+> +		pid_t tgid;
+> +	} creator;
+> +
+> +	/** @bo_mask: Bitmask encoding BO type as {USER, KERNEL} x {GPU, FW} */
+> +	u32 bo_mask;
+
+s/bo_mask/flags/ and mention that it's a combination of
+PANTHOR_DEBUGFS_BO_FLAG_xxx in the doc.
+
+> +};
+> +
+>  /**
+>   * struct panthor_gem_object - Driver specific GEM object.
+>   */
+> @@ -62,6 +88,10 @@ struct panthor_gem_object {
+>  		/** @lock.str: Protects access to the @label.str field. */
+>  		struct mutex lock;
+>  	} label;
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +	struct panthor_gem_debugfs debugfs;
+> +#endif
+>  };
+> =20
+>  /**
+> @@ -157,4 +187,9 @@ panthor_kernel_bo_create(struct panthor_device *ptdev=
+, struct panthor_vm *vm,
+> =20
+>  void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
+> =20
+> +#ifdef CONFIG_DEBUG_FS
+> +void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
+> +				   struct seq_file *m);
+> +#endif
+> +
+>  #endif /* __PANTHOR_GEM_H__ */
 
