@@ -1,147 +1,412 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2089.outbound.protection.outlook.com [40.107.105.89])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0075BD2FB
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744119348; cv=fail; b=k9NvRAdcaDa24GqswZKDlOUrkj/Smz1bslMHLP3s4bBsgOzJj9v/m6o/TsNmmCevdE0z9KkKEZ8WEtoDE6h44ZdeiCF4Je0MVB/9SiKP1rmxJX//rVnleurRBjxJLqAw3H0clsaTyTiG3dXX5SIZieQ9uRPzsLW/6b+EbJy5znc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744119348; c=relaxed/simple;
-	bh=R9Py1VYOVrbFHLAL5zM9/pWH5j7kDmsNZVQ9taEHasg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nmJe+pyS7JpcXENFuMEGZzNNqyoOjLejBsEur0H4I8izMm0fnBrNNr+dHyiuSFUkp/ZK3ecj6+dvaDVB8myOYwJgCncBaekWUBNQXhXXuBA655ZZj5R8uWjCyRcpNRVBLeo50QHhI5I0LYp+1HDkR0lsKUsEg88itL99WjO8uhE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DBFdsrRX; arc=fail smtp.client-ip=40.107.105.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48191139CE3;
+	Tue,  8 Apr 2025 13:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744119381; cv=none; b=TuqEcJmkgb53FZL3uOS8nu7DWxlTb3Yp4UaQfl5W1itljFSYMrBSd5pXL+bXDOpyvtB7NZ3jB6irxCo9BQg5cLBqktCX68Cqzet5Rhq2x4SxvbOVXmeYtffes47x22X+E6D1zS8NVLRePXJZ4X8y0eBb6aJvVJSFWxyPGYs3Koo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744119381; c=relaxed/simple;
+	bh=H2PscPWunraiBg0ScO12ZaZc0uwQWNSJKj9yV4CHsN4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ej7e4KIA6T7Y4r7pNdvJKhThQHifeJIQ4hRB6OUTjPEe055PhWdCjWTvotwPS8I6TrUN+b4aig0d6R1RhP3jKsxzXN8Dz5fWKHF1zK/v4F5n6jA8W3SwQ/Bw8vVE5OqsLapPPJ7ExMgcs5Pkw7uPtzqccmXX2ONh621LxLH4fR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lF4gQM5z; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DBFdsrRX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WF9xJXDNEFgTpS9w8V+0fXXad6P512nG2saZQqauY2ClsDvmDoTkGSUkaIOcbUhL8lqYYcA3UYiNQCPpJ3QvtteL1qAcy87dn1Z+XODjUHnF27Tvybg0+7lIomcFZx9cEMujWIdfFK5kJWPbZIMr+atdjRm5sZKw5ETkFBBXf5+mUaqOrSzHrccTbK8ZSu6xYgF7HJ9jMxgG6CZRIB3GnmDaYnW9BNNgiMwgM+hbqF9oQzOqILtdB263Oy1tzrgnXPy1uvsrMIORL5a9TFVpM18e4QsG5zZ+xIj6KDueX4asCHHY2w+/3r2CGP2GjSt4/uHstKmi1XZ6gwVdSPeoBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OhvVTc+/gX9mTDuvNSMMNAJVT6OpgSGMna+kvt1qO94=;
- b=d94Af0getVXpjsjqbZDd2TZoBi45K2+a2xgavHZJcqQTEMkmmqrR4FRL0V8dMjUmH8RXaLro7Oc5yOM/krPAl4r4WxdiD/iMaKYQ1wmPGhnb+NgpHmkkm1x41yx9F/V7m532+CbrTUs2wE0NOBeHNExGMVF6Jth6zZnJZ3599XRKDrKoHTr/cUvrKQaDrMMbjjEQiF3ivDAGIp4O4Cl4LxOjgblSPS5OlIvSr5tfcHTgt8L41FYzegejuXO4yEzxaRGtd8YqKqWjsqnTM49106Hb0J5ClrsK9SoKkzCmdHtZV2eyh4jAMXUHtT60S6rDP5lTpZ6fYEZmwhTE+odTHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OhvVTc+/gX9mTDuvNSMMNAJVT6OpgSGMna+kvt1qO94=;
- b=DBFdsrRXPucmxxJMz9RJRvq8efdjkmjXpP/Fu/F4ER2twLf3t0FUdNvnX43h/AYZ6+geE9SPZjQwh81g5O032N3LXGimRlc0h/TrSNZyXdFjLIQ3erYeE4aUrQtCoOLTLOOJQjAkl78I3jWPMoSZSVrhnIlHBHUZkIkBCR0tGuUAlAbUD04apNkUX/ZCk8R0uLlgem3bZkrZXbfZkeej36MbN/Zd5j1B7l7BoYPO+PTcXVF//vQIoiZVSaG0NWcZIAO35cmKcwXvCaiRyhEshbSS/k2kSdnblbsmjcCP3oJF8VqgBet+qcL2d7vcWjCJh1AHvHOgcxvccGHsav0s2A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by VI0PR04MB10101.eurprd04.prod.outlook.com (2603:10a6:800:24a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
- 2025 13:35:42 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%5]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
- 13:35:41 +0000
-Date: Tue, 8 Apr 2025 16:35:38 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: fsl: Do not enable DPAA2_CONSOLE by default during
- compile testing
-Message-ID: <iet2fsgwhe6bnkznz2z3xgidkbfhxas7madnzlflui5di2qbjl@wr36cskvjvje>
-References: <20250404112407.255126-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404112407.255126-1-krzysztof.kozlowski@linaro.org>
-X-ClientProxiedBy: AS4P189CA0063.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:659::13) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lF4gQM5z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744119376;
+	bh=H2PscPWunraiBg0ScO12ZaZc0uwQWNSJKj9yV4CHsN4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lF4gQM5zOFKoM6M+Ko3FykuNEQrtrHRekNO9X4ytNLouekBn3lrHkC4of1XVbQ9o8
+	 sO9XiuMmbpBjx1MCBhCQzVnl1aHhM0MuFjQL0NxfrDCwEOp8dwb/1oP4ZGj7Eh9Ai8
+	 X0cZuOzYtwjDn9mojS0wcqI4gpoeigQoEMekFjFu9I48HZFtHKyVfbQBlUw3yuXWxi
+	 Ih+dJHKS2hDqjGOL68lrb9s+HRm7Ui/p3pUnVkK6I8x03THJqvHC/wePF3MqzZkshF
+	 UMmwl4EZEI/b7W7EnvffNwTQDXtO8+ML0ZNgHTfbnPoSK1C/pzMW+RYVG3oJfoF3Dh
+	 QILFPEgn1AcDA==
+Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4B8FE17E1068;
+	Tue,  8 Apr 2025 15:36:14 +0200 (CEST)
+Message-ID: <1747c9d2f653a07418422157f4b1613246f39a6c.camel@collabora.com>
+Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Boris Brezillon	
+ <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>, Alex Bee
+ <knaerzche@gmail.com>, Benjamin Gaignard	
+ <benjamin.gaignard@collabora.com>, Detlev Casanova	
+ <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+ Jonas Karlman <jonas@kwiboo.se>, Christopher Obbard
+ <christopher.obbard@linaro.org>
+Date: Tue, 08 Apr 2025 09:36:11 -0400
+In-Reply-To: <35d34100-7013-4acb-a5a6-3408e0f45d9d@xs4all.nl>
+References: 
+	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+	 <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
+	 <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
+	 <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
+	 <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
+	 <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
+	 <35d34100-7013-4acb-a5a6-3408e0f45d9d@xs4all.nl>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|VI0PR04MB10101:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea520ca6-fb38-4939-008f-08dd76a241ac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cW1qbUlFBcwGiNEevAdntIs4qmYHRlkKJEkECv54tNtncuUhOE19KblVPf2g?=
- =?us-ascii?Q?qYF5XPE+hseTGidF1N4HfsX8sgHzF/xXXeQT/DgXePUBwYiRLt+uAaWAtqVm?=
- =?us-ascii?Q?dBi9MVnBM/NcpnCMaPJcyyU8oM0Tq/lo8jWryik3q17CpByCLHWciuT70AWm?=
- =?us-ascii?Q?/+jSdPSdo8+cHuq3slcbM9+5r/h6NWe5pDwwl1DWG1OQzS7mmim16M/b+csC?=
- =?us-ascii?Q?LYOFxgZfiFQuc+N/G9gC0UxOJVS68f+kWhZvtcJ01jsmeyM5BRSVMoUFUQV2?=
- =?us-ascii?Q?ntliNsfoVxJpMFhUm+KhLPwVZelm6ma/U3EfbxgLBi79ET1rRA1MirdczORg?=
- =?us-ascii?Q?GAe1OlFv+yxsHAMaVjl9df+3FuthWgDyjAbtrq7FZoMHzbKf/eVJ2M/LYH2x?=
- =?us-ascii?Q?vxrIFaK7fW39mrfTfSUYWgSZg+W8hK8Um+IavxYCYRdp+yE/6a730+93N3fD?=
- =?us-ascii?Q?EZAXwqdIYVPtIPU/XXimefO1T14cb/9vg+GFpW0Y4/YThtM/MCAfdELvn1zF?=
- =?us-ascii?Q?wA/HF9ZXb5vZt/WGBL6x5sATYwMHt23D7mUKBTlMJTagHufoRQmKoWH366Al?=
- =?us-ascii?Q?3N46MsnUkzgVW/0ANUphVYw7DsDvcKnFjLBmfHTyrfwi32pqys62hXN2xNGn?=
- =?us-ascii?Q?ldpz/4HETqdm4kTRZkRtJW/2d/MVawWtZuXa7x1rBiZ8xfd9uXgW4we91xjJ?=
- =?us-ascii?Q?GX2qWCyJsji+qJTFgrB2oAayVdBSBdxpro7Qs/3QU/6T0i4Uk6Heyr7rgJLR?=
- =?us-ascii?Q?yf9COF6xfkHXt8RAti0Xqgk33GKYsunfTxfZlPWFHNgNuGpiO9KdO7Jf/UqA?=
- =?us-ascii?Q?DT1L73gzaED7cMvfITPi+Jdlk+Q9cbpNEf0kwCbQWLwImt6+/Nw9LrkW6ag6?=
- =?us-ascii?Q?EeFucKMbw4LFPF6Rl/WasyKLyR7VgaJWkWnx+nO53J0RgnOvgHBo3jcy5esL?=
- =?us-ascii?Q?uNTZxCdMk34i2hde9dDx+0T3AiF+MQqGRyTpn51sr9oIaGwVfJfH9AVKMr23?=
- =?us-ascii?Q?Tm2mzwxx6agoae5D6RSqoJbGmF+rhw7oNon4KLCqKm9rvFLk0PXW1tia2pn2?=
- =?us-ascii?Q?OE+Sl7WGm0RDklMWGniCCm1ulwy4pKHfepSa08/MwZ3TDpJWgsHASuF2Oq1m?=
- =?us-ascii?Q?butQBCLdCGA4bO5FlBX9UNksMmcvHi7tJZ+xJAOnhTCyPpHhSxXt5ktOk3HT?=
- =?us-ascii?Q?+duiizK/m4dCEj9ETp8Mx5K+nBR0rXzvE8941CwpMVdrMM38G179qoTtR18j?=
- =?us-ascii?Q?mTUmCRMxuBnnFNCXhBGzICGDPl9yy6v49bwrFYlJ+C/6vjLrTQWiDC8UJ9TD?=
- =?us-ascii?Q?+BiweIRFfu9f2TuJIv47p7ZxZo86fBtf3IDmvlz27cIAxnWDSSby2uLZQ6p7?=
- =?us-ascii?Q?oIW8xXrSa/F0RliFRJ7fzsNRISH9?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DxmzN1q7NIgrquDBdA9gC4RYj59trIgZL1tKFqj0lmKBNGjJd3N7Vr/mJoWY?=
- =?us-ascii?Q?SDf9fLMLPI18iy96cMaBvXzqlG5O7t3JWBLl8pswpy7GeQRNtIHygfRHjKTg?=
- =?us-ascii?Q?sBbz3EnfzPXx1h78adWMbqaOa1mwb1/So0n87+UtJ+K7n7N7WVB2y67wzqrz?=
- =?us-ascii?Q?jyRCKGJoVVYEGUfgUtpIWBbOY1m/vdBRBP+/GTcUMVBBRKHvI1sg2181k/Mn?=
- =?us-ascii?Q?tLegAU0Pr99KZfMIhRYO9T3Fvwom8ePDG28UZ1E/cnIFMjeTY0OIIXwxBoAv?=
- =?us-ascii?Q?MbwfX9OwAHDPP3SawkCEp1pp1bRfCor0ebCrNMtcTCr51QbZRtuxHyvzrAHa?=
- =?us-ascii?Q?DnnKx94+VSmsMk80KPDSnBUExpTnXa03EcfDbu+EuIsJLMi8GycuaQQluem5?=
- =?us-ascii?Q?D38W1tGMZh0UcnQNBSzYrxS3BPMC+jXQ4T8AdB2Wi4AYlYhYq48T96EaY/AL?=
- =?us-ascii?Q?yY46UYXZz0H5+FqDkRi7F0Yatxmnhlw5+nqKAiT3pUy4T4hEOHTf6eTbxQKx?=
- =?us-ascii?Q?WDTLrgSd6ESrvPGSp18wygrSZ+zB0/gAn4XkBp9+vfbR46Zt9GVGTQI+/7ew?=
- =?us-ascii?Q?97zriA1SiGT/7DAiI69wFxZkIESa2Id+QrGGvoI5zWSxny2YqPKHn96TGcaD?=
- =?us-ascii?Q?LS4cnxrrFM2YSWYABTGoPEWqIbZlklO17e6yxZwsgk68A8IhnW7m6pstJX5a?=
- =?us-ascii?Q?OmtBfyj8v3b3b/RZsHaVPXmI9ASrRzp9IaGPynmAe1L7m6zV4ku02ozscsPi?=
- =?us-ascii?Q?1E+//y2nkabqEYZdmFBr/e4htrXeEllswv0bbohSHWkEQdePdIW33KgsIctu?=
- =?us-ascii?Q?I/cfiL081LduZirehRA64PPqK7XJpFSCf6HbWV2dRX3H0pj5yc5Dll5p55SG?=
- =?us-ascii?Q?nWGz2H20JwjCMvm2/Y+YRyw4KcNkdba6EH6cLCSqAmRnGLzTEfEXi2lBQzGL?=
- =?us-ascii?Q?uF4KvmQezkLh1rJxEwcxqKHk1P3d3Gzazq9cIvfD/etbbJ3aOJW+WqZbJbqK?=
- =?us-ascii?Q?cxqo5fS7x8IALcdrlRhaz64p3iDrEEEJV53q91eU17s/uNhqxjBTlng2NIyj?=
- =?us-ascii?Q?irJvoNvwvqM9LqbUBJ0WfBvVUtfjTUfurh9ThQpe5V8DashlQ94yhNIDCPlu?=
- =?us-ascii?Q?tJZzpa7DQNWgGbyHQbE0BRYczffEDyrDzjaWU4hWEoz7UjxT+HcsBjLIhNZQ?=
- =?us-ascii?Q?iYljVa5tduLZyV4swQdqJhVqUc+T9Q6WPoETjJkdCWbDGJN9TM278Fv8QeLK?=
- =?us-ascii?Q?l4HhmnCA2jg/zeWPQ6BlvF8X/smT5KaKmLSpTYE+/qnGtUVtENkpEqZDVlb9?=
- =?us-ascii?Q?ddGAtGhu2JDzdWGP4mEfFpkdeKRGdfrEwSRW1G0MZa2rpQ4ZvLbHhCW0rpEX?=
- =?us-ascii?Q?mwaXaSz7zWBAhpDid/Oqb1qqbfTgSkVJXm+b/LY81vnWDK3fSAvFZGye5hbg?=
- =?us-ascii?Q?+QTFfZYmkwE6Qz42+Wm79nEp7gEhMwOXPO7lOE+2F68nz/2t3qg3dPjbbadG?=
- =?us-ascii?Q?V+s2uS7FCT7LPVyj0takvWslMAEugz0ts945qb9TXFy6WItuoGqjUnD8g090?=
- =?us-ascii?Q?2Gu9I/E3gp3z8UGxo8K6P6RBZOfpY7cRWhQbFUzs?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea520ca6-fb38-4939-008f-08dd76a241ac
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 13:35:41.6701
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8IgMeWjUyLPLyUsHPtWknfNmLXoDgynkN8v6xJ351DXUx+SJMUlsdfYypkMoX7lwbE97IxKee32Y0MP/IaoaTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10101
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 01:24:07PM +0200, Krzysztof Kozlowski wrote:
-> Enabling the compile test should not cause automatic enabling of such
-> drivers.
+Hi Hans,
+
+Le mardi 08 avril 2025 à 10:28 +0200, Hans Verkuil a écrit :
+> On 07/04/2025 16:59, Nicolas Dufresne wrote:
+> > Le lundi 07 avril 2025 à 16:17 +0200, Hans Verkuil a écrit :
+> > > On 07/04/2025 15:52, Nicolas Dufresne wrote:
+> > > > Le lundi 07 avril 2025 à 13:09 +0200, Hans Verkuil a écrit :
+> > > > > On 25/02/2025 10:40, Sebastian Fricke wrote:
+> > > > > > From: Jonas Karlman <jonas@kwiboo.se>
+> > > > > > 
+> > > > > > Add support for a get_image_fmt() ops that returns the required image
+> > > > > > format.
+> > > > > > 
+> > > > > > The CAPTURE format is reset when the required image format changes and
+> > > > > > the buffer queue is not busy.
+> > > > > > 
+> > > > > > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> > > > > > Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > > > > > Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > > > > > Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+> > > > > > ---
+> > > > > >  drivers/staging/media/rkvdec/rkvdec.c | 49 +++++++++++++++++++++++++++++++++--
+> > > > > >  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
+> > > > > >  2 files changed, 49 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> > > > > > index 70154948b4e32e2c439f259b0f1e1bbc8b52b063..5394079509305c619f1d0c1f542bfc409317c3b7 100644
+> > > > > > --- a/drivers/staging/media/rkvdec/rkvdec.c
+> > > > > > +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> > > > > > @@ -111,15 +111,60 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+> > > > > >  {
+> > > > > >  	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+> > > > > >  	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+> > > > > > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+> > > > > > +	enum rkvdec_image_fmt image_fmt;
+> > > > > > +	struct vb2_queue *vq;
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	if (desc->ops->try_ctrl) {
+> > > > > > +		ret = desc->ops->try_ctrl(ctx, ctrl);
+> > > > > > +		if (ret)
+> > > > > > +			return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (!desc->ops->get_image_fmt)
+> > > > > > +		return 0;
+> > > > > >  
+> > > > > > -	if (desc->ops->try_ctrl)
+> > > > > > -		return desc->ops->try_ctrl(ctx, ctrl);
+> > > > > > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+> > > > > > +	if (ctx->image_fmt == image_fmt)
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > > +	if (rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, image_fmt))
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > > +	/* format change not allowed when queue is busy */
+> > > > > > +	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
+> > > > > > +			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> > > > > > +	if (vb2_is_busy(vq))
+> > > > > > +		return -EINVAL;
+> > > 
+> > > Looking closer, this code is just wrong. It does these format change
+> > > tests for any control, so if more controls are added in the future, then
+> > > those will be checked the same way, which makes no sense.
+> > 
+> > "Just wrong" should be kept for code that is semantically incorrect,
+> > just a suggestion for choice of wording.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Having vb2_is_busy in a try function (whether trying a control or a format)
+> is simply wrong. Having these checks at a high level (i.e. being done for
+> any control) is asking for problems in the future. It only works right
+> now because there is just one control.
 
-Acked-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Your main rejection argument has been that this is done for any
+control. Jonas invalidated your argument yesterday:
 
+> Please elaborate how this code is just wrong, it is only called for sps
+> ctrl, as intended, try will report an error as suggested in docs and set
+> will reset the decoded fmt to match the new sps ctrl value.
+
+> 
+> > 
+> > > 
+> > > These tests belong to the actual control that you 'try'. In this case
+> > > rkvdec_h264_validate_sps(). This function already checks the width and
+> > > height, but it should also check the image format. It is all in the
+> > > wrong place.
+> > 
+> > We can do that too. Though, this was generalized since once you enable
+> > the other codecs, you endup with code duplication. I know this series
+> > is an extract from a larger one.
+> > 
+> > So let's suggest to make a helper that combines rkvdec_is_valid_fmt()
+> > and the busy check. Though on that, please reply to my comment below
+> > (which you skipped).
+> 
+> Absolutely, this needs a helper function.
+
+In the next version, We should ake sure this is renamed, so readers
+understand its already a helper, and is only called for specific CID.
+Jonas comment also invalid my wrong suggestion here.
+
+> 
+> > 
+> > > 
+> > > > > 
+> > > > > This makes no sense to me. This just tries a control, and that should just
+> > > > > work, regardless of vb2_is_busy(). It's a 'try', so you are not actually
+> > > > > changing anything.
+> > > > 
+> > > > See comment below, notice that this code is only reached if the control
+> > > > introduce parameters that are not compatible with the current capture
+> > > > queue fmt. The entire function uses "success" early exit, so the
+> > > > further down you get in the function, the less likely your control is
+> > > > valid.
+> > > > 
+> > > > > 
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
+> > > > > > +{
+> > > 
+> > > If there is a try_ctrl op specified, then the control framework
+> > > will call that first before calling s_ctrl. So any validation that
+> > > try_ctrl did does not need to be done again in s_ctrl.
+> > > 
+> > > The same comment with try_ctrl is valid here as well: if there are
+> > > image format checks that need to be done, then those need to be done
+> > > per control and not as a generic check. If new controls are added in
+> > > the future, then you don't want the same checks to apply to the new
+> > > controls as well.
+> > 
+> > I don't think the behaviour of try_ctrl and that being embedded in set
+> > calls was being questioned by anyone. Can you reply to the last
+> > paragraph below ?
+> > 
+> > > 
+> > > Regards,
+> > > 
+> > > 	Hans
+> > > 
+> > > > > > +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+> > > > > > +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
+> > > > > > +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
+> > > > > > +	enum rkvdec_image_fmt image_fmt;
+> > > > > > +
+> > > > > > +	if (!desc->ops->get_image_fmt)
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > > +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
+> > > > > > +	if (ctx->image_fmt == image_fmt)
+> > > > > > +		return 0;
+> > > > > 
+> > > > > If you really can't set a control when the queue is busy, then that should
+> > > > > be tested here, not in try_ctrl. And then you return -EBUSY.
+> > > > > 
+> > > > > Am I missing something here?
+> > > > 
+> > > > When I reviewed, I had imagine that s_ctrl on a request would just run
+> > > > a try. Now that I read that more careful, I see that it does a true set
+> > > > on separate copy. So yes, this can safely be moved here.
+> > > > 
+> > > > Since you seem wondering "If you really can't set a control", let me
+> > > > explain what Jonas wants to protect against. RKVdec does not have any
+> > > > color conversion code, the header compound control (which header
+> > > > depends on the codec), contains details such as sub-sampling and color
+> > > > depth. Without color conversion, when the image format is locked (the
+> > > > busy queue), you can't request the HW to decode a frame witch does not
+> > > > fit. This could otherwise lead to buffer overflow in the HW,
+> > > > fortunately protected by the iommu, but you don't really want to depend
+> > > > on the mmu.
+> > > > 
+> > > > I've never used try_ctrl in my decade of v4l2, so obviously, now that I
+> > > > know that s_ctrl on request is not a try, I'm fine with rejecting this
+> > > > PR, sending a new version and making a PR again. But if I was to use
+> > > > this API in userspace, my intuitive expectation would be that this
+> > > > should fail try(), even if its very rarely valid to check the queue
+> > > > state in try control.
+> > 
+> > Here, since we seem to disagree on the behaviour try should have for
+> > this specific validation. What you asked on first pass is to make it so
+> > that TRY will succeed, and SET will fail. I don't really like that
+> > suggestion.
+> 
+> Ah, no, that's not what I asked.
+> 
+> There are two independent issues:
+> 
+> 1) The tests for a valid image format are done for all controls instead of
+>    just the control that really needs it. That's asking for problems, and
+>    that needs to be addressed by creating a helper function and using it
+>    in the relevant control code. Alternatively, just check against the
+>    control id in try_ctrl/s_ctrl explicitly. That's fine too, although I
+>    prefer a helper function.
+
+This is false, this is done only the the relevant controls as explained
+by Jonas.
+
+> 
+> 2) vb2_is_busy() does not belong in try_ctrl. 'try' should never depend
+>    on whether buffers are allocated. You have two options here:
+
+I read this statement as try_ctrl cannot fail when setting an SPS while
+the queue is active. Since you don't have rationale for it, but really
+want to see that, we will sacrifice the symmetry of TRY/SET in the next
+version. TRY will pass, and SET will reset the capture format if the
+queue is not busy, and return busy otherwise. Nobody ever wanted
+try_ctrl for stateless decoders, its not even mention in the specific
+documentation. This is effectively option b) below.
+
+> 
+>    a) try_ctrl checks if the image_fmt is valid for the current format,
+>       and it returns -EINVAL if it isn't. This requires that userspace
+>       then selects a different format first. No call to vb2_is_busy is
+>       needed.
+
+That shows you don't really know what this is about. Please read how
+the initialization process works, up to point 2. A call to
+S_FMT(CAPTURE) is optional. Its the driver that select the CAPTURE
+format based on the bitstream parameters (and bitstream format /
+CAPTURE). Everything is design with input and output in mind. The
+application sets the input format and parameters, the driver choses the
+output (CAPTURE queue) format. With the very strict rule that nothing
+in the parameters that can be against the locked capture format can
+ever be set.
+
+https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/dev-stateless-decoder.html#initialization
+
+
+> 
+>    b) try_ctrl doesn't check image_fmt against the current format, it just
+>       accepts any value. Instead s_ctrl does the check: if it invalid, then
+>       it returns -EBUSY if vb2_is_busy() is true, or it updates the format.
+
+That contradicts slightly your answer "Ah, no, that's not what I
+asked.". But can be done without any spec violation like option a)
+includes.
+
+> 
+> I see that cedrus also has vb2_is_busy() in try_ctrl, and worse, it actually
+> updates the capture format in the try_ctrl, which is definitely a cedrus bug
+> (try should never have side-effects).
+
+I think looking at another work-in-progress driver is distraction. We
+all know that try should not change the driver state (regardless the
+type of try). If you are correct, then it should be fixed there too,
+you should inform Jernej and Paul.
+
+> 
+> The core question is whether changing the V4L2_CID_STATELESS_H264_SPS should
+> make format changes. I can't off-hand think of any other control that does
+> that. It is certainly not documented.
+
+That is also wrong, it is well documented. Its not because you don't
+understand a problem that its by definition wrong.
+
+> 
+> The only control that comes close is V4L2_CID_ROTATE, and I think that control
+> was a huge mistake. It was also never properly documented how it should behave.
+
+Documentation says:
+> Rotating the image to 90 and 270 will reverse the height and
+> width of the display window.
+
+> It is necessary to set the new height
+> and width of the picture using the
+> :ref:`VIDIOC_S_FMT <VIDIOC_G_FMT>` ioctl according to the
+>  rotation angle selected.
+
+The link is confusing, but S_ and G_ share the same link. So its well
+documented that the users must call S_FMT and manually flip the width
+and height.
+
+I was never involved with that one, but its a very different approach.
+I think its written with single queue in mind (not M2M). It means you
+can have pending control state. This for stateless CODEC would be so
+complex to handle. For request based driver, we should probably never
+allow that kind of API. If you need to set a control in the future, use
+a request. This, when that control should be applied becomes very
+explicit and can be synchronized across multiple queues.
+
+> 
+> My preference is option a. Controls shouldn't change the format, it is really
+> confusing. If you do want option b, then all drivers that use this control
+> have to be checked first to ensure that they all behave the same, and the
+> control documentation must be updated.
+
+Option b) it is, since there is no option a).
+
+Nicolas
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > 
+> > Nicolas
+> > 
+> > > > 
+> > > > Nicolas
+> > > > 
+> > > > > 
+> > > > > Regards,
+> > > > > 
+> > > > > 	Hans
+> > > > > 
+> > > > > > +
+> > > > > > +	ctx->image_fmt = image_fmt;
+> > > > > > +	if (!rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, ctx->image_fmt))
+> > > > > > +		rkvdec_reset_decoded_fmt(ctx);
+> > > > > >  
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >  
+> > > > > >  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
+> > > > > >  	.try_ctrl = rkvdec_try_ctrl,
+> > > > > > +	.s_ctrl = rkvdec_s_ctrl,
+> > > > > >  };
+> > > > > >  
+> > > > > >  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+> > > > > > diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+> > > > > > index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
+> > > > > > --- a/drivers/staging/media/rkvdec/rkvdec.h
+> > > > > > +++ b/drivers/staging/media/rkvdec/rkvdec.h
+> > > > > > @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
+> > > > > >  		     struct vb2_v4l2_buffer *dst_buf,
+> > > > > >  		     enum vb2_buffer_state result);
+> > > > > >  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
+> > > > > > +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
+> > > > > > +					       struct v4l2_ctrl *ctrl);
+> > > > > >  };
+> > > > > >  
+> > > > > >  enum rkvdec_image_fmt {
+> > > > > > 
+> > > > 
+> > 
