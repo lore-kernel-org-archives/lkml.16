@@ -1,83 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9670157A72;
-	Tue,  8 Apr 2025 20:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91EA157A72;
+	Tue,  8 Apr 2025 20:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143547; cv=none; b=nRDAhTuKA9DpC0Nl62O3+LRfg1qcnBZz/nF/oftb8wY53D0aTd9+89GDl0/xSqY32njcVwl0bOVkzGymKqSVPJFhzYGAvYGZEShxvkFgAN7dCsEA5wgf9w6ax1p0V6Ez/Bif7XopIbFHxMe9+vuEqHx/170nux2Fw2N8bfjycUg=
+	t=1744143571; cv=none; b=mHGJ9zHh16z3YJiATrql8hvEJ0IIM5dIJXgWN6EfBA2u4COTswJWsFKMvHIB0pfBumhfBgbCOqqx0H0XEgY4+cbbkQEfBg9TieLp5P2fbEQeH5IeEbwXulLLdGgy6MRkLREGvbMQAAkoxa0FLtJUvGqOmxNQd6jj9UzHQ6Tucls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143547; c=relaxed/simple;
-	bh=wKH39dCKyTi3SknpBUHRbciVLX/AZ84HXR8FWQkWQOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YznY/iVjvWuELd5+xWolpfp9iqagOQl0IzCzvMR9ICKNAlAOOgrvVXEvyiVGeKvYShjPObZ9ApY4AF5nFJ/FV7k1sQ2+I+WO31WYiptGrXzz/AE6K2DOR5LQtN4OD7bTcLEhu35lzTgafuEkLaP0oCL23r9uZdTGKXswEMwN9A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EG2zVh2i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744143571; c=relaxed/simple;
+	bh=8DxBHdaCsnQq1alPWYBxe7geh2qcYCwnyHzf4Mu7E6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V4MrcFXw/zuUqh6cYNaV06Thryelr1g39sbCOMgKYodqRh5HOrZmrpvR7QbNcb9V5KnHTyy0QbC42CBuGoNTcBdedtky7KecMqW1nP9iO0r0+wlmjg9akA3VKCX9EGa0hOKmo1BQj79p37inaSVGJeDp9rEsGkkE5Ecw93kkeA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=LNfxLNJK; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EG2zVh2i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220D2C4CEE5;
-	Tue,  8 Apr 2025 20:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744143547;
-	bh=wKH39dCKyTi3SknpBUHRbciVLX/AZ84HXR8FWQkWQOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EG2zVh2iSIcIoH0MzhnB693PCEvanZ07/xdjlybD3TJ15NllvTl5xinGVQS2MiBO5
-	 fqDm2TApalnKt1N/VnYidQcvpBu1U/gk8Y8C74FT5lEKO8+9IbJSL4xx9KGGkRk4AH
-	 cdbS1y/ICvnvLI3DZ3uiWj6NipyZgam4liIvyRFC0h56CPn+qC31IpjNtgYlD+CvT1
-	 r1QXuYde+MJF261PMRhdCcaACExolK7ceHk5PHPCyUALcu1zOEdfXJZc9cQZPJ0s46
-	 CazJirN8ETdN9BlQmD+y9fiC3DPjyaEjITVu7SsxllZgCKWay2GZJZO/2SxppgeJui
-	 ST+RIDnkEPqgg==
-Date: Tue, 8 Apr 2025 21:19:02 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 09/14] regulator: bd96801: Support ROHM BD96802
-Message-ID: <189ec906-53fa-41af-a317-fe2f635f1e1b@sirena.org.uk>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
- <2fb2d0d4997c32d18bfa32cea4564352c00eebc8.1744090658.git.mazziesaccount@gmail.com>
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="LNfxLNJK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1744142967; bh=8DxBHdaCsnQq1alPWYBxe7geh2qcYCwnyHzf4Mu7E6Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LNfxLNJKXkH4rrx0+HEkW33W8OLwXaAWNjn6Q6heeWmxFDVUf+OI82EdBCMaB7Gr0
+	 qeaiuK6571AXAm1NneWny8lguRtVuqZrB1zG1RxrHTw5ZdoyK5Zd6fcSlPphQOjgU7
+	 QmI1PLX1Ar7OU2H9UA9GfBt+QvG/0wQupjjU1ksD1W8qmjgjSMk0qJrYQimo63a6em
+	 93BnHDYutz7m+KRIS66cnN0xf7BdD0xjsX7MWSQ2cyrtGRT7x1BmuhHOctfmVujgfV
+	 1QQJav7x9syS4hs81UjWcQYbqWhkUpkyANoUHQssdivIVOOR7WGBikLO8BcYwu5pFJ
+	 NgjaikNkLPVr7iu8PkCgh7fu7b9gcR6mOi6MuH9vksg0C0RScx70CiGanQVG+7z5v+
+	 V0c78nTiG9Ij0p3yw7OfVCLH8H1n3Fba01mnLZWsANVIp0UK6enG5LBiQAz5vc+MYp
+	 Dy2sUYVx/+RBsAdmOJyFjiGBPgp6OWD73SDZsoas7/1eQyA+Gx4TI+KiblPozu4L+J
+	 nptfzI1T82zK7BSJ/COy6ylYltczr6ttKKv593OkNvjZ6gMcPyoskELWDfd32ZO0C8
+	 1RQZ/5OopDG9P2HLtG4Z3cdAuT6jKmkS+X5CtRO0/1DIu+4oeauTj+Je8hZEawldm1
+	 dL4US5EsOwbTYcmKCJdFwnAk=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 7BFD51633EB;
+	Tue,  8 Apr 2025 22:09:27 +0200 (CEST)
+Message-ID: <9715c8dd-38df-48fd-a9d1-7a78163dc989@ijzerbout.nl>
+Date: Tue, 8 Apr 2025 22:09:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UuISoavhl7Dof7A9"
-Content-Disposition: inline
-In-Reply-To: <2fb2d0d4997c32d18bfa32cea4564352c00eebc8.1744090658.git.mazziesaccount@gmail.com>
-X-Cookie: Meester, do you vant to buy a duck?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] gpiolib: acpi: Deduplicate some code in
+ __acpi_find_gpio()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <westeri@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20250403160034.2680485-1-andriy.shevchenko@linux.intel.com>
+ <20250403160034.2680485-7-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20250403160034.2680485-7-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
---UuISoavhl7Dof7A9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 08, 2025 at 11:46:16AM +0300, Matti Vaittinen wrote:
-> The ROHM BD96802 PMIC is primarily intended to be used as a companion
-> PMIC extending the capabilities of the BD96802 but it can be used on
-> it's own as well. When used as a companion PMIC, the start-up and
-> shut-down sequences are usually intitiated by the master PMIC using IF
-> pins.
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---UuISoavhl7Dof7A9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1hLUACgkQJNaLcl1U
-h9B0ogf+KEcqFFZe5UKYVIZs/p7vVKLeBJmgnKluHFLvylx0CoNZtw/OsmjV8eUo
-Gtv66Xypv9udQ5a9fmJEgSELhL3MdpCLvUun3ZcnWRN/AME0vpNttp70dlKpT4NB
-PsjZDI0VxJEDpuzRY+OpT1IpnazHI92V8Jc8RoY9XJ6ZApyEwX1nKeC3m050LvAM
-e259AQ0zKJjzSs6lZSQtm9MskQNnx6K9b8t0hUd16raWMISKpVVZPsdv/gzm7kiI
-hA4wVP3rUxflHo6UMO1EqBYrg5L3/qKTKewmag8asOLOGtf+ckmNH4oOInKAV8eL
-mqFb1YGLPF+f4GqYa/LFSdsmmB9VAQ==
-=fcQy
------END PGP SIGNATURE-----
-
---UuISoavhl7Dof7A9--
+Op 03-04-2025 om 17:59 schreef Andy Shevchenko:
+> __acpi_find_gpio() calls two functions depending on the supplied con_id
+> and possibility to fallback to _CRS lookup. Those functions have the same
+> pieces of code that can be done only in one place. Do it so.
+>
+> This gives an impressive shrink of the generated code for x86_64:
+>
+> add/remove: 0/2 grow/shrink: 0/4 up/down: 0/-1204 (-1204)
+> Function                                     old     new   delta
+> acpi_find_gpio.__UNIQUE_ID_ddebug478          56       -     -56
+> acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug480      56       -     -56
+> acpi_find_gpio                               354     216    -138
+> acpi_get_gpiod_by_index                      456     307    -149
+> __acpi_find_gpio                             877     638    -239
+> acpi_dev_gpio_irq_wake_get_by                695     129    -566
+> Total: Before=15358, After=14154, chg -7.84%
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/gpio/gpiolib-acpi.c | 101 +++++++++++++++++-------------------
+>   1 file changed, 48 insertions(+), 53 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index f44d25df15cb..b3fcb9d5a39f 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> [...]
+> @@ -983,17 +966,24 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
+>   		 bool can_fallback, struct acpi_gpio_info *info)
+>   {
+>   	struct acpi_device *adev = to_acpi_device_node(fwnode);
+> +	struct acpi_gpio_lookup lookup;
+>   	struct gpio_desc *desc;
+>   	char propname[32];
+> +	int ret;
+> +
+> +	memset(&lookup, 0, sizeof(lookup));
+> +	lookup.params.crs_entry_index = idx;
+>   
+>   	/* Try first from _DSD */
+>   	for_each_gpio_property_name(propname, con_id) {
+>   		if (adev)
+> -			desc = acpi_get_gpiod_by_index(adev,
+> -						       propname, idx, info);
+> +			ret = acpi_get_gpiod_by_index(adev, propname, &lookup);
+>   		else
+> -			desc = acpi_get_gpiod_from_data(fwnode,
+> -							propname, idx, info);
+> +			ret = acpi_get_gpiod_from_data(fwnode, propname, &lookup);
+> +		if (ret)
+> +			continue;
+> +
+> +		desc = lookup.desc;
+>   		if (PTR_ERR(desc) == -EPROBE_DEFER)
+>   			return desc;
+>   
+> @@ -1002,8 +992,13 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
+>   	}
+>   
+>   	/* Then from plain _CRS GPIOs */
+> -	if (can_fallback)
+> -		return acpi_get_gpiod_by_index(adev, NULL, idx, info);
+> +	if (can_fallback) {
+> +		ret = acpi_get_gpiod_by_index(adev, NULL, &lookup);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+> +
+> +		return lookup.desc;
+> +	}
+>   
+>   	return ERR_PTR(-ENOENT);
+>   }
+Please, check the changes in this function again.
+`__acpi_find_gpio` doesn't fill `info` anymore. The callers of this 
+function will continue with
+an uninitialized struct.
+-- 
+Kees
