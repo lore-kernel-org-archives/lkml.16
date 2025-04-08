@@ -1,97 +1,97 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2742B22E3FD;
-	Tue,  8 Apr 2025 17:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94DA23C8CF;
+	Tue,  8 Apr 2025 17:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744133393; cv=none; b=WY/4iBuXNreXL8TDmBxmkZVLBjfuQquOjZ9UuhK3YYDgSOVyQ18fwxfZcU6Gp//phkyzWn3uzmpBGddtVvh4p4Z4mtddlSBXkkX3JNkZYBm0Avoewkfjow7PcdwfK1ez/MvJd4/xKzhiKwAm3yEB23LOzj2uObpCUrywYyTI9t4=
+	t=1744133401; cv=none; b=Luei5zIMNgZfRELj3+/RtmjTPTZtGorLZ7UseQvGD0Ge733KueHQp4JEqQD2xWt+nzbPzVgJJjoKSN2z/tTPHo6ZxUhYGN6aqjMHWPWYROG58qnchGCiq9MnoXgKODpwCvlLIufsB80iM3xeS3qaw1HUmHS/hxp4OI3OXyT5oy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744133393; c=relaxed/simple;
-	bh=npn242A2W/TEDA2uAEasMq1QFf+FdVgQvy3Kx/Py/CQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ikdsws/nHFFaDDFRWlsl0OYf80og+QdQ+Chk8uqEWzwJeIiTcWv+Z49XwAhEwannPavIt3MuH0ExwGn69n3TDzTmxYsgh/2GwTU/nvgc24zScf8ESi8ck9H6TFF9v+Ezh3ExrvKQQqpPh851gN5jka0S6okHmt/rvAHrTIDSVFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=mCsSiias; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1744133401; c=relaxed/simple;
+	bh=B3JNE/RJaHRf+FsK6E2+qovWjVp+i+WpEhj5NootNbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EXN3F8bg43F2qNij7PHBBIkpUUUAnD9yR5k2tNh/EMLI+0BQLZ1+h8I9PtZByB+PRo+K4AILae+MYCXEjggCR1F0hAWvAxwhE6vFPhvGRrfz7uzrHO8RCUvehEZxQBJEl9qXUJrfY/TgTOS/LQOnoZsgrPWBs7ZcJeCe6QPuKTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=l7axJdpP; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="mCsSiias"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1744130239;
-	bh=npn242A2W/TEDA2uAEasMq1QFf+FdVgQvy3Kx/Py/CQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=mCsSiias1qzrbUjlmat1qOSORLBNGyrFTWYZ10hRcOc3WLqxurH4aYDOPT7GMstwp
-	 wfuLdqnG209+70DONPS+lYYNwr+tuLknOP80aU0l6AyQemovxzzQEwg8EuBoZzQ+Tb
-	 Hzz2mJHcKXWOAcdA4aQNTdEdP4Sbq2Cu/1+yMVCM=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 0153D4028A; Tue,  8 Apr 2025 09:37:18 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id F40B8401F1;
-	Tue,  8 Apr 2025 09:37:18 -0700 (PDT)
-Date: Tue, 8 Apr 2025 09:37:18 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-cc: Sweet Tea Dorminy <sweettea@google.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-    linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-    "Paul E. McKenney" <paulmck@kernel.org>, 
-    Steven Rostedt <rostedt@goodmis.org>, 
-    Masami Hiramatsu <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
-    Tejun Heo <tj@kernel.org>, Martin Liu <liumartin@google.com>, 
-    David Rientjes <rientjes@google.com>, christian.koenig@amd.com, 
-    Shakeel Butt <shakeel.butt@linux.dev>, 
-    Johannes Weiner <hannes@cmpxchg.org>, 
-    Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-    "Liam R . Howlett" <Liam.Howlett@Oracle.com>, 
-    Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-    Christian Brauner <brauner@kernel.org>, 
-    Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
-    Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-    linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-    Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-    Matthew Wilcox <willy@infradead.org>
-Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
-In-Reply-To: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
-Message-ID: <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
-References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="l7axJdpP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744133371;
+	bh=JlHpHHiZ4Xge+vx1XrJwPQSvBNDkpNFpAIMsyEk8JRg=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=l7axJdpPFiRN+JhCfL79Tp8lAK5vdlWYBcWoRMvisKX2GbsBVMZvW9CnJGYChOHee
+	 Y2WdND/+srRxWGjjnlcl5aDyNJnyOvb6NCCGFD0/VpMXQQPI7g6+l3Fm7J6D9GBxBL
+	 EMo5hnJc584mrWa3Bk05K7Oszsv6GRI3PYzzazvA=
+X-QQ-mid: izesmtpsz21t1744133366t2b0302
+X-QQ-Originating-IP: /o+76Ijt+bW3YgZYdCmv0p/YEdX6GjSFegE+xnYizTo=
+Received: from localhost.localdomain ( [125.76.217.162])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 09 Apr 2025 01:29:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11347015374347384928
+EX-QQ-RecipientCnt: 7
+From: Gou Hao <gouhao@uniontech.com>
+To: brauner@kernel.org,
+	djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wangyuli@uniontech.com,
+	gouhaojake@163.com
+Subject: [PATCH] iomap: skip unnecessary ifs_block_is_uptodate check
+Date: Wed,  9 Apr 2025 01:29:24 +0800
+Message-Id: <20250408172924.9349-1-gouhao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: izesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz7a-0
+X-QQ-XMAILINFO: MvUCj+jJbjsSjSYGtTEID3b5MqeBUxiHsF8GryNIwKvcN26m6Eifn3VE
+	LYTJDmr1ry+G0BNgfNAB+sMF6KGCrToKL8hZ8tfqtUKJM17OX+u1sYumuRx1n33pHex+kNI
+	7uZhG5nZitvaQ/C8nB3YZzWa31+sZvr2+TrQkFKDW2FhlOECoqbSQZxYMkICdd4QS7kwE/T
+	MGDdNDEbKXfAqnlDJbo312t8n2oR1BcPwb8p74Cwm6hlMI/Nr2BpW2UYaw6PD7YiwGSVQqW
+	cHZYIWJ26/Rsjybtyk1OR8tgMW8bIwt9puIofLLNm1L/44Rrw+60h8N+LBM/hXE1iQEbNvB
+	MDeIrLMm7LC1iCO1HCqacrVf6dHid3bgZqxsNDq/C51Sjlg6fINDFX+GnUje7CIy1s0Dxn+
+	iY+cHA5xNi65+ZK/LTBKP+7JCLq5umUXI2XQwFCv0ngozwSnrPzax1PX2+Pw01BDni+cV1c
+	7HsgFc682rrA2GNC3KHCAd5O+w6EB/VLPIoJuTKY0hb1z6EeWf1PbN2SvZ++FABRBL3XoEq
+	emObgpNSq4W+c0SVmiSDBN6sG10pwzYC+m9Nv6HvD5n6OUmnLygvBYwxWMXmzC3x/EREMn/
+	PKgBwzwKQvpfdO2JfUE0L+RI0jKEi5woaoGFPaA/VwGk0Se3ZCGXNszqUi9nbbUbe8e5VGs
+	alueoAJkYqjqKbJQbNHLgTu9ElFyE0pR5jGlikrbeoNAKgw2YVzCyeDXkjagOUYxwjR9Xb9
+	ZEtf35n/dv6q+cSIY7U4cByNA4RkmXLDARjdUYzGtGzUJVMmBHJP6WFebBeQfOi285l2GMj
+	A2VC8DHkaEtBY8EvBh5rqSFnfm31yYhwdY8KaOW64jjSiRJu0dQ6u5N1nSsOejKKcQOLv1R
+	PiqZN2Bjl1ixgVUNeAzxmwPiLonsBSodw3s3vOZLSI4hDmAALRORRuTqlQHlzQF8UMeeEfZ
+	8mHS0fgtIDBlpMnRVDn2MOsw3MvjrAJUYA06oX0KyzC74spvaqGzKNQfR2ZdLYDGuS71SWc
+	bZArL5qiVyFok/tb7R
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Tue, 8 Apr 2025, Mathieu Desnoyers wrote:
+After the first 'for' loop, the first call to
+ifs_block_is_uptodate always evaluates to 0.
 
-> - Minimize contention when incrementing and decrementing counters,
-> - Provide fast access to a sum approximation,
+Signed-off-by: Gou Hao <gouhao@uniontech.com>
+---
+ fs/iomap/buffered-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In general I like this as a abstraction of the Zoned VM counters in
-vmstat.c that will make the scalable counters there useful elsewhere.
-
-> It aims at fixing the per-mm RSS tracking which has become too
-> inaccurate for OOM killer purposes on large many-core systems [1].
-
-There are numerous cases where these issues occur. I know of a few I could
-use something like this.
-
-> The hierarchical per-CPU counters propagate a sum approximation through
-> a binary tree. When reaching the batch size, the carry is propagated
-> through a binary tree which consists of log2(nr_cpu_ids) levels. The
-> batch size for each level is twice the batch size of the prior level.
-
-A binary tree? Could we do this N-way? Otherwise the tree will be 8 levels
-on a 512 cpu machine. Given the inflation of the number of cpus this
-scheme better work up to 8K cpus.
-
-> +int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter);
-> +int percpu_counter_tree_precise_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b);
-> +int percpu_counter_tree_precise_compare_value(struct percpu_counter_tree *counter, int v);
-
-Precise? Concurrent counter updates can occur while determining the global
-value. People may get confused.
-
-Also maybe there would be a need for a function to collape the values into
-the global if f.e. a cpu goes off line or in order to switch off OS
-activities on a cpu.
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 31553372b33a..2f52e8e61240 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -259,7 +259,7 @@ static void iomap_adjust_read_range(struct inode *inode, struct folio *folio,
+ 		}
+ 
+ 		/* truncate len if we find any trailing uptodate block(s) */
+-		for ( ; i <= last; i++) {
++		for (i++; i <= last; i++) {
+ 			if (ifs_block_is_uptodate(ifs, i)) {
+ 				plen -= (last - i + 1) * block_size;
+ 				last = i - 1;
+-- 
+2.20.1
 
