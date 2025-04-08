@@ -1,137 +1,86 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E81A266B73
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BC4267B02;
+	Tue,  8 Apr 2025 10:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108796; cv=none; b=ma19sK+3A9wyfFpzrDP6kbBxwDC4AJHy9JG0r76qTTZmQm5DDMSDn+n1Vbv+9LoTiPNeBhW4OMhdV+9VN3y0dptjrWOT8Z0av9IVwL0+PHTz7D2WoNZNzu2TNzdZloV3oCvOwRuIG0ZnnYZOzO7gljspivDt/200JzVgJeNwcRE=
+	t=1744108796; cv=none; b=mIm6x2HnUSS/l+END3HBXobOxFCoIxqUPM7sgTPPMDMVgWTJ+oxpStzUWp7q0oWgryc2w3Ziq+S65EQ7M3H5QO1bQPCZwechMlaOf94UH8ATdiz7sjsJDg2/LaJQ3B18DaY2k5wpoSJ2VUSREBgn87N816ZZVgqoGkAA4y3qr5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744108796; c=relaxed/simple;
-	bh=WVA4MPIQJhEssJzTsJTk2+UnoVJTaUrnUwN8ABmgA+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bzwefV0+UcH5cX+uUEJQSDbM7c+7Bcolseqd+KC94cVXG8swpCXvMjrxzkS2787u9sHFneQEsqiLajwCvxdBWMVvT4p9ERettufmvfMYuRZuPXqIjM3X6dEKC+KdKc8EzCM/8ok4ITWaNZh47PDtzh3+l6/Q/sRTr00pUB6NKqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PwIcb/iH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wSi2WvPf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PwIcb/iH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wSi2WvPf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	bh=plkz3MQ7BX+/KhcbHoMa+ajqqg0T2So5u3ho8UX1XWY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=elsSz/p9OvitzGjzVkJOzi8cSRIhrOGv1AWHTxWMUiFumHgrap/z51cvaZtpYMTSj7pgO+3I7p7008WNHo7JvnD3eIUtNfkpr+rt7wAj09LoEPt63nrC1uI701jxddQLb7SC9/cA9GHKuqXSefXrY1B3LDAZg6Zl57odzhrjzk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk9VhJuE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PwIcb/iH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wSi2WvPf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PwIcb/iH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wSi2WvPf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BAFCB21185;
-	Tue,  8 Apr 2025 10:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744108792; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zU5/w2QWN/1fvqB3YV1G99E2WQUMsP30QTD81AV/x90=;
-	b=PwIcb/iH/7IQUk1/bKaF23HJtqcFvHGsy4f5bwMMs/tq6tXO6DsiA2UysdcS5wd/tTcNYP
-	PO77TLLI0g7kce5mRCZKSI/sdlG1cSjnm8jACl0C8vb4LfFkWgnQX1+Y2qhHTC0RI538d0
-	I1kXVEKOecnDn2B57q1NimfyCHArjkc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744108792;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zU5/w2QWN/1fvqB3YV1G99E2WQUMsP30QTD81AV/x90=;
-	b=wSi2WvPfIRCGzIpleqINSVL7779sMm8p+HvBQr5H5TTh8OFzEHTcU23AvFQe8G5lVcvyZb
-	yKh/p5cqsJuiUGCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744108792; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zU5/w2QWN/1fvqB3YV1G99E2WQUMsP30QTD81AV/x90=;
-	b=PwIcb/iH/7IQUk1/bKaF23HJtqcFvHGsy4f5bwMMs/tq6tXO6DsiA2UysdcS5wd/tTcNYP
-	PO77TLLI0g7kce5mRCZKSI/sdlG1cSjnm8jACl0C8vb4LfFkWgnQX1+Y2qhHTC0RI538d0
-	I1kXVEKOecnDn2B57q1NimfyCHArjkc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744108792;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zU5/w2QWN/1fvqB3YV1G99E2WQUMsP30QTD81AV/x90=;
-	b=wSi2WvPfIRCGzIpleqINSVL7779sMm8p+HvBQr5H5TTh8OFzEHTcU23AvFQe8G5lVcvyZb
-	yKh/p5cqsJuiUGCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ADAE413691;
-	Tue,  8 Apr 2025 10:39:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vl9hKvj89GelegAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 08 Apr 2025 10:39:52 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 624C8A098A; Tue,  8 Apr 2025 12:39:52 +0200 (CEST)
-Date: Tue, 8 Apr 2025 12:39:52 +0200
-From: Jan Kara <jack@suse.cz>
-To: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: Jan Kara <jack@suse.cz>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Carlos Maiolino <cem@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: Recent changes mean sb_min_blocksize() can now fail
-Message-ID: <ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
-References: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk9VhJuE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD5EFC4CEEB;
+	Tue,  8 Apr 2025 10:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744108795;
+	bh=plkz3MQ7BX+/KhcbHoMa+ajqqg0T2So5u3ho8UX1XWY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Wk9VhJuEOIUVgOXTynT2cMDOvQOoJKCe6+LqoryH/MkIdqpkB1+ltLjusrLhjaK8+
+	 8cpM9hBLMWP4VFkHNtvgzYNxT/k8cJKPMl001qqLVSnU/0GA+0Lh3NcfXOqeH299Q4
+	 vCzT/thPjIOHOoKy1tYBWy9OpCY9n82to4PK17MxRWaxARR4wzTm62E49LdbRIrie9
+	 sx8fF3vcqNcU32Otq3UJrNrllNRvRWPZ6iw7MazhFZjmrlR4kFralkPASBnN+v3hJg
+	 5sY87IoGWAVM5OF2JQEPRLx/rW4ybABjsWTIZLhN8dMt1zbgjqFPMz1ieqzAovATkK
+	 p3IWs9FfNjpIQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 713AD38111D4;
+	Tue,  8 Apr 2025 10:40:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Subject: Re: [net PATCH] octeontx2-pf: qos: fix VF root node parent queue index
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174410883327.1866615.2642781055524417737.git-patchwork-notify@kernel.org>
+Date: Tue, 08 Apr 2025 10:40:33 +0000
+References: <20250407070341.2765426-1-hkelam@marvell.com>
+In-Reply-To: <20250407070341.2765426-1-hkelam@marvell.com>
+To: Hariprasad Kelam <hkelam@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+ bbhushan2@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, naveenm@marvell.com
 
-Hi!
+Hello:
 
-On Tue 08-04-25 06:33:53, Phillip Lougher wrote:
-> A recent (post 6.14) change to the kernel means sb_min_blocksize() can now fail,
-> and any filesystem which doesn't check the result may behave unexpectedly as a
-> result.  This change has recently affected Squashfs, and checking the kernel code,
-> a number of other filesystems including isofs, gfs2, exfat, fat and xfs do not
-> check the result.  This is a courtesy email to warn others of this change.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Mon, 7 Apr 2025 12:33:41 +0530 you wrote:
+> The current code configures the Physical Function (PF) root node at TL1
+> and the Virtual Function (VF) root node at TL2.
 > 
-> The following emails give the relevant details.
+> This ensure at any given point of time PF traffic gets more priority.
 > 
-> https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk/
-> https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-6455ee564dda@squashfs.org.uk/
+>                     PF root node
+>                       TL1
+>                      /  \
+>                     TL2  TL2 VF root node
+>                     /     \
+>                    TL3    TL3
+>                    /       \
+>                   TL4      TL4
+>                   /         \
+>                  SMQ        SMQ
+> 
+> [...]
 
-Indeed. Thanks for the heads up!
+Here is the summary with links:
+  - [net] octeontx2-pf: qos: fix VF root node parent queue index
+    https://git.kernel.org/netdev/net/c/b7db94734e78
 
-								Honza
+You are awesome, thank you!
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
