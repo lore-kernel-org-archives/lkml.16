@@ -1,144 +1,155 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C3A261589;
-	Tue,  8 Apr 2025 07:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4488261593
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097044; cv=none; b=HwbQSs8yeJwGZLTXWqGu3IKjIYYxnq5191SN9X6abggDWM11Os+Vf2pZRFjoqh2VrDNEn1EX4DUhpuLGJWyfeLs9t97TUqQMZ4GNn6YgWTRwtOK7iiiByeftGDncyyJVQAK328nX9jGwXlqfehoUpVgaffEi9PhIgC2XhOHG2dY=
+	t=1744097053; cv=none; b=hx4y9MSTkCH7Ar2eHh2NihzBvWEwUCleKYJp91bMQgYvmK6p8JI0wZbERoQEIXISkABJaM5CSP3uco6QarVHnMk1fYfedPa7BYHARd0HOwp1yHuSw9ON/lp2aUBYu8XZAWIk4UheD11zV5bMXlKp/PQ2l+B3lTH5FziEp6WESJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097044; c=relaxed/simple;
-	bh=iTDpusoco6Y+4k6a2+IWTCtigaSRBwJqfYGPmGoeLII=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mvAJZIKUwLzpRA+dJiTY+PieIkwb7iWjTuTXiPZCFwL38AbHVqUm1tDndyyKQXzT0D6rm7oStgjVsEGH2qXH5H9HEP2nPYWpt9D6wJFNGFNccdqUIQ73EQQ743WoJnebb4qQeaNz7vpFT0IDAxZtF67l8bguLIqFBBMQSCAnl1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-51eb18130f9so2795370e0c.3;
-        Tue, 08 Apr 2025 00:24:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097041; x=1744701841;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+	s=arc-20240116; t=1744097053; c=relaxed/simple;
+	bh=hmSxWGIiK/DtDwGKJHp041KAlwlf/8OprB/NVG8dke8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aeyJNWUAj8Iq6CthuzINYyCMgLZLHzJDqSsWpvLKxPCX6wQ0GeVf8hIDkfQ1BZoZKH0PZF8N1Klw4Pu6q4/LWjZNePlspONL3+e7e6LIF4VrGBe1JZlHxlHjRiQzQXA7yWxPE96NgJSFR5/P6nM1vIN1jXoCBkUOlDOOaNTJOBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BjmtHDyu; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BjmtHDyu"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac339f53df9so909675566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097050; x=1744701850; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=710dm2DYp+gy41dXZbNWGaKY57T4AIMJf61TXzyo8AQ=;
-        b=pbcKGj9E2sAWv4fdfRvCdF/zLXGA/j5bxnMweoN8ZMRXbD+31KOLcTcKHX6dSHAWGR
-         Rx+Y///7m51W2r3A6BMWAC/A2WSBjZm6vgCh71rMnAT4tHAomhBoXouYM9SySZLjvvEG
-         0VW6OQ4tKKuncjBkFVlEDef9JGdvS2izqHGvfhHHiCHfoflE8Td/AyLRkqLP9UOTDoI1
-         3U+8q9nLy7mfId+jJmSayIJ3z+H6sRS7/CYoN+A6OgrBPOTavSExdoEIoHz924DqJups
-         uak67xC9b7U54bkrsAjDh55u05P5V5CHUE6RyJZ6bny+j9Ylhrs4Xhav6Drbmx3oQA2N
-         OHNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPJbwbprMiB2AKu6JmP8L16CjtHQS8xRMqPXxp5antlx86yFSo4sNnpS4JRX4CtEwUtlEridVOQHmnrf8b@vger.kernel.org, AJvYcCUPeJjfrSadSJ0NHmouJF1zNXGiLoUM18JzFaykcB/JzceVMa7s+YRnIInmJt4r6Q0RBffdw74aSa7m@vger.kernel.org, AJvYcCVDJ/SsjGw65jgPEOpPL3Mk/bWpx2cQyPWm8zaZkhiKHjha8S+rbl+SYiZ6QzTGjnwk/4+NekTwOe7wNA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3G22BGHnvoeLuCc/hP7kRvQvAbQtLM2qUqADSzdiAaxZvygBM
-	04KqjkYo+KfgwmARkPg0tEA2MbjwoTjp6QRfqCg372PomlYIIDWuC0lvINZ0
-X-Gm-Gg: ASbGnctwg7OcI6qlBt8OyH421BO2vl4tjJrQOXDDASRvgY2q7aLOjqY7tu+jYvet3mW
-	Ql7tATgOaVYp2fXu4mStDEWDKP16RnknYm6n7SgYMIJCc3B1qrYlX3mc7rp0/4fr8qE9CAM65gH
-	iTf2RtgcOTHhjgETVRwwHkclkvmUiCoxquWqvipQ6lL+VOC3jYCXdOCvzjFVEcSHbXiptfbZURI
-	bvsKJI/JZGLnBzzFBWEgPX0Z7UgrQrbukP39KvxsQIIT6rShitqdcxu4w73EOu7RCOF94hCRSS8
-	wqXXXXyj6DLINA3/2EB4b5hRhtY559Yk0EFM1riZ8+62lGZnEABU5OQrCZwwfFEu5OqhGd6o2lC
-	EZIH+vfQ=
-X-Google-Smtp-Source: AGHT+IHXLB/4lChI27Q1TOSUxDf5kKCJBourXFVGUUh/cssJjtbt8qWYZRmFvq3W6L0m+qvpiQPiJA==
-X-Received: by 2002:a05:6102:1485:b0:4bb:d062:43e with SMTP id ada2fe7eead31-4c8551ce16bmr13850886137.0.1744097041129;
-        Tue, 08 Apr 2025 00:24:01 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-873ca8d0f27sm215567241.15.2025.04.08.00.24.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 00:24:00 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d42f08219so2189425241.0;
-        Tue, 08 Apr 2025 00:24:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUhDuieywCZ5tmbDcchfbwaaKYXWaN5BlyROb1gux096k+a+uendw3dhe0CRpnb1HpKFowit3v9Fm2VNQ==@vger.kernel.org, AJvYcCWCUzVsCRN3l4a+S0RgznBtO/32rcNwdgEY6PXHVW1wE8sV4w7Medsu3d/JAXUuIj2DFLVcmq4cY3oLUTFq@vger.kernel.org, AJvYcCX0CgoeZinr7DNfwt9RUNeNy14YX7NovZIYnKAfzUg/etXLsNU0KQinYUNN6wrA2ozktCg2wRWFX4wb@vger.kernel.org
-X-Received: by 2002:a05:6102:38c8:b0:4bb:c490:7d6c with SMTP id
- ada2fe7eead31-4c8553ba032mr12630312137.9.1744097040243; Tue, 08 Apr 2025
- 00:24:00 -0700 (PDT)
+        bh=XOjNNeHzyY58LMv3k+FTJZV8HBjSzUrYs1slCEoFb4s=;
+        b=BjmtHDyuKnlFfBK0vH6M3+3br0zZ2mFCf22sAkLEhxDNfcqlU3zP7hvE1HrwBN6SLJ
+         Ihz59AlOM5u0OSx1n8DQqBBIjQS/HulxCk/79pe/RVPCo1aYjP/vS802U4vTgtLxDuQd
+         Mxo7bDrP3q9U++6m8FD3s/ic8arsNtg266LUPDoQ1dveybzWmn0F4NRobCsJ84xtYMxn
+         I8Rng74pSBwBvo81xVo+zQLySQKMY8mGBGiHlgHWzDedurJNP+haXpE3nQeZ9WGStw+c
+         SpOXkg7eaOfz2E+ZS78WVMrZ0rC7GoZeH1vbQP8ZyMScu53Ns0QuBBQfF1t0JBIRQ7tx
+         XIQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744097050; x=1744701850;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XOjNNeHzyY58LMv3k+FTJZV8HBjSzUrYs1slCEoFb4s=;
+        b=viy4fKeZUgMYM61drhEr8aRKKpnRpJdskHZ0IMgtBUNaUGnF1zGlXHHX1rEZcBZwiX
+         g6Iq5C3W1CVQbUToeOGGxRX0okmAiSMSovE1KqAYuMX5B69FNS9Tbe9IdG0cbsofUauu
+         ocBwRwSXAp7ppybbF2hdFOSsY62yGc4OPyDxTnqIRvc96D58xq0s5K36sx34dMeljLNp
+         5PMq1PNZ4QAO6giQXfY/aaZFaFqGWy/Lbkn2Nu/qSTQMD1FCYarHPLs9kXQN01Av5J1i
+         +sYL1n5frY9PyBylC6bHutfwFqXUIsTcXcbkP404uyd6WkZNeT7yDaqj6gTlNSWkyYzL
+         mpMw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3zds2c0Y5FGoG9iXuSZ9oC9SuyxCofn50lFDrvwl6rh0OgyCXEbaDxy2IJP4fm3eWxCuJx5wq6ozEdVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZddhb9IMyLIBvkievHN05fUkQUQhMyVWRgnvIqtZLI04tSnsU
+	PAd6P3begZxQYy5nR/r1h0S4NscphD4980R7IkedACAKQCmOD2UX25ZEzT3SDkHVNj6HG9XWuKk
+	cfwk=
+X-Gm-Gg: ASbGnculZazMo3DtsAI96Vx87OIJeSxdBg0qn4pJrYuTSGJBOCtUcd89QPbREeP4iwj
+	CYtdu3+87li/t6Cr08sxWn5FWjVf7e6YYQY0zgqcioBrNEyGExu+kMfEehfcLCruQUCaL9XrAO0
+	LQVJK5TVOLhCDVNUJOr3SJnnYU6/nJ9VbPv/oqqiXfXlRcAMOJJtavk+v5gIWmy1Q8vJl88lnvk
+	tRY02myytGk7Xek05IkLiOPuX/lRszeD6wjfbEvQpADoGRfOJdi5MXIbzpxTzDwW7Fd4Ny7TVr7
+	U77Y5RmE+OoCGMrJh0fFSc+mgjawVOfrrIumFw==
+X-Google-Smtp-Source: AGHT+IGDlv/Wz2Tv0JI+8Hx2njCPUM9rczyDR5EAPHa4oqor0nd3oFYHO3dEgeKjIpQ3eleoyeURtg==
+X-Received: by 2002:a5d:59ae:0:b0:39c:27cc:7ba3 with SMTP id ffacd0b85a97d-39cb35aa8ecmr14702868f8f.33.1744096676320;
+        Tue, 08 Apr 2025 00:17:56 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:17:55 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 08 Apr 2025 09:17:43 +0200
+Subject: [PATCH 06/10] pinctrl: amlogic-a4: use new GPIO line value setter
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
-In-Reply-To: <20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 8 Apr 2025 09:23:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX8ES618Hr+6xq-p11S573HcFKdRrz8sUc685yDa=cDGA@mail.gmail.com>
-X-Gm-Features: ATxdqUGYGVzv3sgPFJoJZKKUaDCZ3SrbEz5zs3DshQWEXWWo_KwIHTOtR51_N8M
-Message-ID: <CAMuHMdX8ES618Hr+6xq-p11S573HcFKdRrz8sUc685yDa=cDGA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] gpio: irq: support describing three-cell interrupts
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Thomas Gleixner <tglx@linutronix.de>, Alex Elder <elder@riscstar.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1680;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=zFDAJ44H3rDElvqiaNPmVwvOeCsvopBV8K2+vzPv+N0=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2aCcCPhwuF/Scl+dWhUvbWutpdgADlyzo6E
+ dkwEIOpAkiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmgAKCRARpy6gFHHX
+ cnRjEACRE1eo2DpKjHGbPlQbMpv86tO6SMwS6frSIq+KfYxOaODnxG0vYoNPl1XeTMMPfKWxuKo
+ MspJKWTkvUN0QuIxmjcZ8vBjIh2Ssf2biltkgH+3Ut1/ExIvxXr/M7gT0UOy2/r94+c7DkVzBEK
+ MXr/4KXQXVZ4OSvLf588xywzpAYfsAPShtYaqDz9OdGk8uc9fPG5lzGH4ccc++V5cuv0ZlY9tD3
+ ZXnb+hLdVs0BvC1ESV29eq9xcIkTRj/KhdzH4WdJDJB4Fx4xRvCBxuTrv9+Hv2FE6VyVgnX8Knt
+ wPQY7lA3cwjzj0sWtwauKnLeZ0x1DD6IMexNhfxrfvgGpEXh0w3i09yOn6vnAvTxetgrzUoiZsq
+ 5210n+9CVXDRsBqfEUuqtBOx2/HJBwMibEOeyf/tK8wVBtbrEFq1ji769lP5H/PGJUFNT0bPXLd
+ vnKVHrJiJUiyX0REr7gSm1AjTYXZb/jNq6PcBIY1JG8vYGaruh/7KsvN5PbWlmeIxn2DIKitoEB
+ 5c3paQ4gObhMQ1lHal6NduGavNkTb99awzhp7MjrFLQ7vHEkk6LWPVdn1/obav1Qnh7bwi6/RYI
+ rfIeivF5Tge1zaLyASFLrEOQUIffbwsDEofBTf4iFicbK3EDjEXXtUNKuD4DDgO+q2/1XPzUYDj
+ IgJ4xDux3XMrr+w==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-CC devicetree
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The first patch was already applied as commit 0a02e1f4a54ace74
-("irqdomain: Support three-cell scheme interrupts") in irqchip/irq/core.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-On Tue, 25 Mar 2025 at 23:08, Yixun Lan <dlan@gentoo.org> wrote:
-> In this patch [1], the GPIO controller add support for describing
-> hardware with a three-cell scheme:
->
->     gpios = <&gpio instance offset flags>;
->
-> It also result describing interrupts in three-cell as this in DT:
->
->     node {
->             interrupt-parent = <&gpio>;
->             interrupts = <instance hwirq irqflag>;
->     }
->
-> This series try to extend describing interrupts with three-cell scheme.
->
-> The first patch will add capability for parsing irq number and flag
-> from last two cells which eventually will support the three-cells
-> interrupt, the second patch support finding irqdomain according to
-> interrupt instance index.
->
-> Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [1]
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
-> Changes in v3:
-> - explicitly introduce *_twothreecell() to support 3 cell interrupt
-> - Link to v2: https://lore.kernel.org/r/20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org
->
-> Changes in v2:
-> - introduce generic irq_domain_translate_cells(), other inline cells function
-> - hide the OF-specific things into gpiolib-of.c|h
-> - Link to v1: https://lore.kernel.org/r/20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org
->
-> ---
-> Yixun Lan (2):
->       irqdomain: support three-cell scheme interrupts
->       gpiolib: support parsing gpio three-cell interrupts scheme
->
->  drivers/gpio/gpiolib-of.c |  8 +++++++
->  drivers/gpio/gpiolib-of.h |  6 +++++
->  drivers/gpio/gpiolib.c    | 22 +++++++++++++++----
->  include/linux/irqdomain.h | 20 ++++++++---------
->  kernel/irq/irqdomain.c    | 56 +++++++++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 98 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250227-04-gpio-irq-threecell-66e1e073c806
-> prerequisite-change-id: 20250217-gpio-ranges-fourcell-85888ad219da:v3
-> prerequisite-patch-id: 9d4c8b05cc56d25bfb93f3b06420ba6e93340d31
-> prerequisite-patch-id: 7949035abd05ec02a9426bb17819d9108e66e0d7
->
-> Best regards,
-> --
-> Yixun Lan
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+index ee7bbc72f9b3..a76f266b4b94 100644
+--- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
++++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+@@ -806,15 +806,15 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+ 				  value ? BIT(bit) : 0);
+ }
+ 
+-static void aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
++static int aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+ {
+ 	struct aml_gpio_bank *bank = gpiochip_get_data(chip);
+ 	unsigned int bit, reg;
+ 
+ 	aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
+ 
+-	regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+-			   value ? BIT(bit) : 0);
++	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
++				  value ? BIT(bit) : 0);
+ }
+ 
+ static int aml_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+@@ -832,7 +832,7 @@ static const struct gpio_chip aml_gpio_template = {
+ 	.request		= gpiochip_generic_request,
+ 	.free			= gpiochip_generic_free,
+ 	.set_config		= gpiochip_generic_config,
+-	.set			= aml_gpio_set,
++	.set_rv			= aml_gpio_set,
+ 	.get			= aml_gpio_get,
+ 	.direction_input	= aml_gpio_direction_input,
+ 	.direction_output	= aml_gpio_direction_output,
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.45.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
