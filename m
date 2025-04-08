@@ -1,300 +1,205 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF1926A08B;
-	Tue,  8 Apr 2025 12:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915E219DF6A;
+	Tue,  8 Apr 2025 12:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744116338; cv=none; b=SfD1POkLO+1sk6iMdXTJJxhfDtk052qvutJhlo8JcIDy98Jg9lumzrsW8wXu0hjsZKi4GwTP2Ve4N8kfAaamZVvQyStVA6v8PiKFfThW+D9iuH+PtW+ENd5uQdiOiyn57i8fhsWjNA3JQN5vsygzjx4qlKPCgJNib6aXtBVtiB4=
+	t=1744116434; cv=none; b=G2Dj5pExUHPCZyHyAsSnxu783X2FIqTZWMPP6xNi7fNPWCzm9ScrsnCvHETL1SsBW8jp8Jmh5j29Gu7LRJmfJP7JVpWCcGj2F2uTx5TtQDyI6mY5WkQ1abRDeUlcqYFKpnD16p3cZFF9N9f/91oKKgqTOI+hiut+ocfuau3/osU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744116338; c=relaxed/simple;
-	bh=XsDdFxw2/94hD3jA90zPjew2cMEKPvGv+xMalZkkkLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N5IvnCMuD3t0g2Qn6UZR+37ixrd5EJh2M1Z+BI4V6EqQOdzSb+2ZnoL72kh85IDRQlhett5dbOJeuft6wxRVaVmfEdbsyBox208nE7Yw9H8h7JOJzuwNyhzDBRIkk2K8vPAo+Y0EFCJPyZdOhjs+ppA2GwEetuXS764nPBau3HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E2F944340A;
-	Tue,  8 Apr 2025 12:45:25 +0000 (UTC)
-Message-ID: <4f6a0c65-7c3a-4457-8b0b-cd39f40931c8@ghiti.fr>
-Date: Tue, 8 Apr 2025 14:45:25 +0200
+	s=arc-20240116; t=1744116434; c=relaxed/simple;
+	bh=lVKBnExVPLHyOhfr8k4QV80GXVye7BYkGvRSkydPhlw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T9NSN/nmLe6uJrgYnyDsRYncrpFNKpRg+WJToGQ6NYtfrs93UsVncTDEo0w5y0EnRhht63Yr9bOT5lOUqa7BipjmCSiEUIDos828FNV2Fi4XJHAnzZuUTIUds4l4S0+C8Yqz64AC8GDGUTmxHzgCFVjfGdDYzL664Knd83bG/Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mOQTEqLQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mOQTEqLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210FBC4CEE5;
+	Tue,  8 Apr 2025 12:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744116434;
+	bh=lVKBnExVPLHyOhfr8k4QV80GXVye7BYkGvRSkydPhlw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mOQTEqLQusQyrXaPX5sIYW4AnA6oMb2SkjWUpMO/Wd15xJEW6qvIwpbWGoB6qAVd0
+	 qfHsHCiJAT02MgJC8uFbGpDbsO25Pf1Kk37Jb7LyR8cxlKU3M72G+nrWbAcFRv4hyU
+	 qrkI5iUn3pzJ3r8l/t29I5K4mCxMlu2emPZagmys=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.12 132/423] RDMA/core: Dont expose hw_counters outside of init net namespace
+Date: Tue,  8 Apr 2025 12:47:38 +0200
+Message-ID: <20250408104848.801683040@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408104845.675475678@linuxfoundation.org>
+References: <20250408104845.675475678@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 24/28] arch/riscv: compile vdso with landing pad
-Content-Language: en-US
-To: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Christian Brauner <brauner@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com,
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
- rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-24-e51202b53138@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-24-e51202b53138@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefuddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetgffgkeefteduhefgjeekjeelieejtdekvefhfffhudetkeejhfeuhefgtdekteenucffohhmrghinhepghhnuhdrphhrohhpvghrthihpdgsohhothhlihhnrdgtohhmpdhflhhushhhpghitggrtghhvgdrshgspdhgvghttghpuhdrshgspdhrthgpshhighhrvghtuhhrnhdrshgspdhshihspghhfihprhhosggvrdhssgenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegsudgurgemudeitgegmehfrgefkeemjeeigedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegsudgurgemudeitgegmehfrgefkeemjeeigedvpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegsudgurgemudeitgegmehfrgefkeemjeeigedvngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtt
- hhopeegledprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+
+6.12-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Roman Gushchin <roman.gushchin@linux.dev>
+
+[ Upstream commit a1ecb30f90856b0be4168ad51b8875148e285c1f ]
+
+Commit 467f432a521a ("RDMA/core: Split port and device counter sysfs
+attributes") accidentally almost exposed hw counters to non-init net
+namespaces. It didn't expose them fully, as an attempt to read any of
+those counters leads to a crash like this one:
+
+[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[42021.814463] #PF: supervisor read access in kernel mode
+[42021.819549] #PF: error_code(0x0000) - not-present page
+[42021.824636] PGD 0 P4D 0
+[42021.827145] Oops: 0000 [#1] SMP PTI
+[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
+[42021.841697] Hardware name: XXX
+[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
+[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
+[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
+[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
+[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
+[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
+[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[42021.949324] Call Trace:
+[42021.951756]  <TASK>
+[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
+[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
+[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
+[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
+[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
+[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
+[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
+[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
+[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
+[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
+[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
+[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
+
+The problem can be reproduced using the following steps:
+  ip netns add foo
+  ip netns exec foo bash
+  cat /sys/class/infiniband/mlx4_0/hw_counters/*
+
+The panic occurs because of casting the device pointer into an
+ib_device pointer using container_of() in hw_stat_device_show() is
+wrong and leads to a memory corruption.
+
+However the real problem is that hw counters should never been exposed
+outside of the non-init net namespace.
+
+Fix this by saving the index of the corresponding attribute group
+(it might be 1 or 2 depending on the presence of driver-specific
+attributes) and zeroing the pointer to hw_counters group for compat
+devices during the initialization.
+
+With this fix applied hw_counters are not available in a non-init
+net namespace:
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
+    /sys/class/infiniband/mlx4_0/ports/1/hw_counters
+    /sys/class/infiniband/mlx4_0/ports/2/hw_counters
+    /sys/class/infiniband/mlx4_0/hw_counters
+
+  ip netns add foo
+  ip netns exec foo bash
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
+
+Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Maher Sanalla <msanalla@nvidia.com>
+Cc: linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://patch.msgid.link/20250227165420.3430301-1-roman.gushchin@linux.dev
+Reviewed-by: Parav Pandit <parav@nvidia.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/device.c | 9 +++++++++
+ drivers/infiniband/core/sysfs.c  | 1 +
+ include/rdma/ib_verbs.h          | 1 +
+ 3 files changed, 11 insertions(+)
+
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index e029401b56805..9de3236873429 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -544,6 +544,8 @@ static struct class ib_class = {
+ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 			      struct ib_device *dev, struct net *net)
+ {
++	bool is_full_dev = &dev->coredev == coredev;
++
+ 	/* This BUILD_BUG_ON is intended to catch layout change
+ 	 * of union of ib_core_device and device.
+ 	 * dev must be the first element as ib_core and providers
+@@ -555,6 +557,13 @@ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 
+ 	coredev->dev.class = &ib_class;
+ 	coredev->dev.groups = dev->groups;
++
++	/*
++	 * Don't expose hw counters outside of the init namespace.
++	 */
++	if (!is_full_dev && dev->hw_stats_attr_index)
++		coredev->dev.groups[dev->hw_stats_attr_index] = NULL;
++
+ 	device_initialize(&coredev->dev);
+ 	coredev->owner = dev;
+ 	INIT_LIST_HEAD(&coredev->port_list);
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index 9f97bef021497..210092b9bf17d 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -988,6 +988,7 @@ int ib_setup_device_attrs(struct ib_device *ibdev)
+ 	for (i = 0; i != ARRAY_SIZE(ibdev->groups); i++)
+ 		if (!ibdev->groups[i]) {
+ 			ibdev->groups[i] = &data->group;
++			ibdev->hw_stats_attr_index = i;
+ 			return 0;
+ 		}
+ 	WARN(true, "struct ib_device->groups is too small");
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index 67551133b5228..c2b5de75daf25 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -2737,6 +2737,7 @@ struct ib_device {
+ 	 * It is a NULL terminated array.
+ 	 */
+ 	const struct attribute_group	*groups[4];
++	u8				hw_stats_attr_index;
+ 
+ 	u64			     uverbs_cmd_mask;
+ 
+-- 
+2.39.5
 
 
-On 14/03/2025 22:39, Deepak Gupta wrote:
-> From: Jim Shu <jim.shu@sifive.com>
->
-> user mode tasks compiled with zicfilp may call indirectly into vdso (like
-> hwprobe indirect calls). Add landing pad compile support in vdso. vdso
-> with landing pad in it will be nop for tasks which have not enabled
-> landing pad.
-> This patch allows to run user mode tasks with cfi eanbled and do no harm.
->
-> Future work can be done on this to do below
->   - labeled landing pad on vdso functions (whenever labeling support shows
->     up in gnu-toolchain)
->   - emit shadow stack instructions only in vdso compiled objects as part of
->     kernel compile.
->
-> Signed-off-by: Jim Shu <jim.shu@sifive.com>
-> Reviewed-by: Zong Li <zong.li@sifive.com>
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   arch/riscv/Makefile                   |  5 +++-
->   arch/riscv/include/asm/assembler.h    | 44 +++++++++++++++++++++++++++++++++++
->   arch/riscv/kernel/vdso/Makefile       | 12 ++++++++++
->   arch/riscv/kernel/vdso/flush_icache.S |  4 ++++
->   arch/riscv/kernel/vdso/getcpu.S       |  4 ++++
->   arch/riscv/kernel/vdso/rt_sigreturn.S |  4 ++++
->   arch/riscv/kernel/vdso/sys_hwprobe.S  |  4 ++++
->   7 files changed, 76 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> index 13fbc0f94238..eca94246cda6 100644
-> --- a/arch/riscv/Makefile
-> +++ b/arch/riscv/Makefile
-> @@ -88,9 +88,12 @@ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
->   # Check if the toolchain supports Zabha
->   riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZABHA) := $(riscv-march-y)_zabha
->   
-> +KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-> +export KBUILD_BASE_ISA
-> +
->   # Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
->   # matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
-> -KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
-> +KBUILD_CFLAGS += $(KBUILD_BASE_ISA)
->   
->   KBUILD_AFLAGS += -march=$(riscv-march-y)
->   
-> diff --git a/arch/riscv/include/asm/assembler.h b/arch/riscv/include/asm/assembler.h
-> index 44b1457d3e95..a058ea5e9c58 100644
-> --- a/arch/riscv/include/asm/assembler.h
-> +++ b/arch/riscv/include/asm/assembler.h
-> @@ -80,3 +80,47 @@
->   	.endm
->   
->   #endif	/* __ASM_ASSEMBLER_H */
-> +
-> +#if defined(CONFIG_RISCV_USER_CFI) && (__riscv_xlen == 64)
-> +.macro vdso_lpad
-> +lpad 0
-> +.endm
-> +#else
-> +.macro vdso_lpad
-> +.endm
-> +#endif
-> +
-> +/*
-> + * This macro emits a program property note section identifying
-> + * architecture features which require special handling, mainly for
-> + * use in assembly files included in the VDSO.
-> + */
-> +#define NT_GNU_PROPERTY_TYPE_0  5
-> +#define GNU_PROPERTY_RISCV_FEATURE_1_AND 0xc0000000
-> +
-> +#define GNU_PROPERTY_RISCV_FEATURE_1_ZICFILP      (1U << 0)
-> +#define GNU_PROPERTY_RISCV_FEATURE_1_ZICFISS      (1U << 1)
-> +
-> +#if defined(CONFIG_RISCV_USER_CFI) && (__riscv_xlen == 64)
-> +#define GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT \
-> +	(GNU_PROPERTY_RISCV_FEATURE_1_ZICFILP)
-> +#endif
-> +
-> +#ifdef GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT
-> +.macro emit_riscv_feature_1_and, feat = GNU_PROPERTY_RISCV_FEATURE_1_DEFAULT
-> +	.pushsection .note.gnu.property, "a"
-> +	.p2align        3
-> +	.word           4
-> +	.word           16
-> +	.word           NT_GNU_PROPERTY_TYPE_0
-> +	.asciz          "GNU"
-> +	.word           GNU_PROPERTY_RISCV_FEATURE_1_AND
-> +	.word           4
-> +	.word           \feat
-> +	.word           0
-> +	.popsection
-> +.endm
-> +#else
-> +.macro emit_riscv_feature_1_and, feat = 0
-> +.endm
-> +#endif
-> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-> index 9a1b555e8733..daa10c2b0dd1 100644
-> --- a/arch/riscv/kernel/vdso/Makefile
-> +++ b/arch/riscv/kernel/vdso/Makefile
-> @@ -13,12 +13,18 @@ vdso-syms += flush_icache
->   vdso-syms += hwprobe
->   vdso-syms += sys_hwprobe
->   
-> +ifdef CONFIG_RISCV_USER_CFI
-> +LPAD_MARCH = _zicfilp
-> +endif
-> +
->   # Files to link into the vdso
->   obj-vdso = $(patsubst %, %.o, $(vdso-syms)) note.o
->   
->   ccflags-y := -fno-stack-protector
->   ccflags-y += -DDISABLE_BRANCH_PROFILING
->   ccflags-y += -fno-builtin
-> +ccflags-y += $(KBUILD_BASE_ISA)$(LPAD_MARCH)
-> +asflags-y += $(KBUILD_BASE_ISA)$(LPAD_MARCH)
->   
->   ifneq ($(c-gettimeofday-y),)
->     CFLAGS_vgettimeofday.o += -fPIC -include $(c-gettimeofday-y)
-> @@ -40,6 +46,12 @@ endif
->   CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->   CFLAGS_REMOVE_hwprobe.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->   
-> +# Disable profiling and instrumentation for VDSO code
-> +GCOV_PROFILE := n
-> +KCOV_INSTRUMENT := n
-> +KASAN_SANITIZE := n
-> +UBSAN_SANITIZE := n
 
-
-So I looked into this and it seems it is not needed. All the profilers 
-above only add their corresponding "clags" if the object 
-"is-kernel-object" 
-(https://elixir.bootlin.com/linux/v6.14-rc6/source/scripts/Makefile.lib#L147) 
-which is not the case for hwprobe.c since it is not added to obj-y.
-
-
-> +
->   # Force dependency
->   $(obj)/vdso.o: $(obj)/vdso.so
->   
-> diff --git a/arch/riscv/kernel/vdso/flush_icache.S b/arch/riscv/kernel/vdso/flush_icache.S
-> index 8f884227e8bc..e4c56970905e 100644
-> --- a/arch/riscv/kernel/vdso/flush_icache.S
-> +++ b/arch/riscv/kernel/vdso/flush_icache.S
-> @@ -5,11 +5,13 @@
->   
->   #include <linux/linkage.h>
->   #include <asm/unistd.h>
-> +#include <asm/assembler.h>
->   
->   	.text
->   /* int __vdso_flush_icache(void *start, void *end, unsigned long flags); */
->   SYM_FUNC_START(__vdso_flush_icache)
->   	.cfi_startproc
-> +	vdso_lpad
->   #ifdef CONFIG_SMP
->   	li a7, __NR_riscv_flush_icache
->   	ecall
-> @@ -20,3 +22,5 @@ SYM_FUNC_START(__vdso_flush_icache)
->   	ret
->   	.cfi_endproc
->   SYM_FUNC_END(__vdso_flush_icache)
-> +
-> +emit_riscv_feature_1_and
-> diff --git a/arch/riscv/kernel/vdso/getcpu.S b/arch/riscv/kernel/vdso/getcpu.S
-> index 9c1bd531907f..5c1ecc4e1465 100644
-> --- a/arch/riscv/kernel/vdso/getcpu.S
-> +++ b/arch/riscv/kernel/vdso/getcpu.S
-> @@ -5,14 +5,18 @@
->   
->   #include <linux/linkage.h>
->   #include <asm/unistd.h>
-> +#include <asm/assembler.h>
->   
->   	.text
->   /* int __vdso_getcpu(unsigned *cpu, unsigned *node, void *unused); */
->   SYM_FUNC_START(__vdso_getcpu)
->   	.cfi_startproc
-> +	vdso_lpad
->   	/* For now, just do the syscall. */
->   	li a7, __NR_getcpu
->   	ecall
->   	ret
->   	.cfi_endproc
->   SYM_FUNC_END(__vdso_getcpu)
-> +
-> +emit_riscv_feature_1_and
-> diff --git a/arch/riscv/kernel/vdso/rt_sigreturn.S b/arch/riscv/kernel/vdso/rt_sigreturn.S
-> index 3dc022aa8931..e82987dc3739 100644
-> --- a/arch/riscv/kernel/vdso/rt_sigreturn.S
-> +++ b/arch/riscv/kernel/vdso/rt_sigreturn.S
-> @@ -5,12 +5,16 @@
->   
->   #include <linux/linkage.h>
->   #include <asm/unistd.h>
-> +#include <asm/assembler.h>
->   
->   	.text
->   SYM_FUNC_START(__vdso_rt_sigreturn)
->   	.cfi_startproc
->   	.cfi_signal_frame
-> +	vdso_lpad
->   	li a7, __NR_rt_sigreturn
->   	ecall
->   	.cfi_endproc
->   SYM_FUNC_END(__vdso_rt_sigreturn)
-> +
-> +emit_riscv_feature_1_and
-> diff --git a/arch/riscv/kernel/vdso/sys_hwprobe.S b/arch/riscv/kernel/vdso/sys_hwprobe.S
-> index 77e57f830521..f1694451a60c 100644
-> --- a/arch/riscv/kernel/vdso/sys_hwprobe.S
-> +++ b/arch/riscv/kernel/vdso/sys_hwprobe.S
-> @@ -3,13 +3,17 @@
->   
->   #include <linux/linkage.h>
->   #include <asm/unistd.h>
-> +#include <asm/assembler.h>
->   
->   .text
->   SYM_FUNC_START(riscv_hwprobe)
->   	.cfi_startproc
-> +	vdso_lpad
->   	li a7, __NR_riscv_hwprobe
->   	ecall
->   	ret
->   
->   	.cfi_endproc
->   SYM_FUNC_END(riscv_hwprobe)
-> +
-> +emit_riscv_feature_1_and
->
