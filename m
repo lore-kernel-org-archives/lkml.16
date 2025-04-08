@@ -1,170 +1,167 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606B21EEE6;
-	Tue,  8 Apr 2025 04:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25839201013
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 04:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744085297; cv=none; b=NyGlWVsacckOlj2CfvDig78nTbc5S+oBsEQhAC4CexWXYAuw0vFmRWoouY8W2JfPB7OdJPwSr9e7btL/B35NlZkjWkAKPCQbp+AE7ZT8tjF4X36HN7jCtUaGzE7pdiuX95pfHg6VmloSrgRWg+zmBOH5AVZ7QZsuV8gjoNCES6Y=
+	t=1744085680; cv=none; b=F8KCsJOvqF5oHRfO+si8N5/bfsRjx88OR1KikW7S9BMJQiVe1BlcJpOvv9P0sR84yWs7zCN1GIJ1V0IVnQiL9vv/24X9XtKH/iwrs/sLPvAHzzk97KkGHoLQ8qXmd4vsWY84BMTcXzSaPcglCLZg0l0zZkHhv09rwJHCz87QGsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744085297; c=relaxed/simple;
-	bh=DYeA2wsO6ArvCKziyYkKG8gWhY0EpSVzQ9VmIsxilR8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r9QmL2m+d4ksBqOWc/wwccnGs2RBnUbOc4W+tAC32PgNMuMeLh8UNTSfD/Tz9aWPeagNZj0N5vJEAeYFUn0Nx/cTV3EBgznSSTqxkTk8oWVKr/TayY3GMhVx6UZL2lMly6CRDfJqvsHMi4RxTHm42S8ivyYMiQDiOMKXJqKGrIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HbuQvAxe; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744085680; c=relaxed/simple;
+	bh=rdvQO3CSDi3IpktTW4wLDn3YVJLvdBDVeCcG2prAs6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WAEJomoGNcfgTZpMvkiNRlrPNMKc50HD9QTwVBmbaHrTtSinBpSt94JEMqeb6QwFkcXCF8kYWVPdD//Z04EEcklgyZ8b8hp+9O8i6jHjinAn3cGceEHuBLI1uanLrBkwlZ/O+eF4zgfhTRMFlF2x5YGQTA0rDaHHQQjJjY4505M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=q+wZzNye; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HbuQvAxe"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537KcxuV029216;
-	Tue, 8 Apr 2025 04:07:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=YvB+GC
-	v95InVqLU0AIlukc3jsAEcfMFGSNvBp6QgU0E=; b=HbuQvAxeFtnI124hzczh2Q
-	T+TB4CwUzHI8HJxsgOu9mJbITu3rrCV9mnuj6+27RbUP3fu1wKWc7+Qn13VpDsIP
-	sRZcd/c6Up9HKLRnXZmCbQIY0FY4WAPB/awzoScKEWzvJdRvSKZFl6rEG+lhlzDo
-	1sWWeS4eybBI/C6vS+3dSuAH30LGw+OGzf5vWZH5wQShfQVw8dfZjDTCyIx90Z4R
-	8PCtM+z88xgp6ySPwG4eZLO3wPXGJ/mlY08iXCW8t7ufCXNJDGud+doyuqUMtz26
-	x/I0+vD7h0q6t772j+Zl9Mck5SerKQy3BEaR0bOSzmrGKBD73AdSINxKH8FWBQmA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnx0hcy8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 04:07:46 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5383Ru7I013932;
-	Tue, 8 Apr 2025 04:07:45 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufungyfk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 04:07:45 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53847il140894916
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 04:07:44 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8ABB558045;
-	Tue,  8 Apr 2025 04:07:44 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B006558056;
-	Tue,  8 Apr 2025 04:07:42 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.146.87])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  8 Apr 2025 04:07:42 +0000 (GMT)
-Message-ID: <a293ed27094f7fa7a36f1641a9e6b17a49e26fa0.camel@linux.ibm.com>
-Subject: Re: [PATCH v11 2/9] ima: define and call ima_alloc_kexec_file_buf()
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Tue, 08 Apr 2025 00:07:42 -0400
-In-Reply-To: <20250402124725.5601-3-chenste@linux.microsoft.com>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
-	 <20250402124725.5601-3-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="q+wZzNye"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5aecec8f3so725705285a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 21:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1744085678; x=1744690478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YxylarJR1WfRQR4vudg24nlR2rF7SNaVZ/wz82/8qPI=;
+        b=q+wZzNyenXL1NFCfvVNSS4L7eamPbsFhBBtZLh4aY7Oh19UjM0humj6q4i6So2oW2g
+         Z4owt8FTDFeHwonmNYoSLjp85kPkP3GZefQIgEonqjTZOKhCaWyDq62cfzKIia9Jh28G
+         XKhuuQ6y8JYnDT0iDIQxgWROA5fhzKqDQWlr+dwcul3DEI1rcxiOIh26+qPIrUI+85TJ
+         7Shh1Nj61Z8NElLq/Gb5MC6jdm+BSFLwOoxQB+OfV0W+q+FEKh59av3xGPbusxsjDE3Y
+         p9MNPVLOYctZsmqqYkwVuyN0O1CD9ZdTeCcnOzlfg3ZVjV/dskd2onWEk6ULViw1rSek
+         aM7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744085678; x=1744690478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YxylarJR1WfRQR4vudg24nlR2rF7SNaVZ/wz82/8qPI=;
+        b=BqwyBpX2YXU9TTuuLdaxdwgRYnkwkebZysCSTA2MCbfkR44j/xngiPzVulNUXgDh9i
+         Bqie2IHzyap6c8+JDuMp5m/cTbQ/wudDiN6Tx/xDvlGLLlizxWzXLj0MhLTMtZz8+rvk
+         FoZc3SWGMLJs1LqqAX95Hd2VvRX5ZCl/lgGGoycg6dcOBWenG378Ig4y5sWslNZY2Yes
+         QKJ2+CqwBk+syZKAYvRmi//pIClU0YQZBK9L7psBTI/J/aQsQsIYWeGSGs2g76/WQiiJ
+         16DJDHUvcK/bk7KaCd1d5vkCU+/RoZX6JMx76Ln9RGnAM9qDEFRa7Wm4igVFqMxNzDwW
+         SmRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRsL9BFMICxmw8hni+kLvMX8mHzxquF6+oIIrtSxahc2NKp2L4DfszJhSFhBwUZsC/PnGe+VZqaK/b36Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOaylfCO4oU8Dxfsj1sWIxdx4c0IPKMmJzte8raICSoLwevhKj
+	tJOchey8lFEJAWnFMDLWIKs+1I/n0NBbVISKafO0EXar7BwHKZFAP4zlMZXlHh1q7hajGM2gnZa
+	k
+X-Gm-Gg: ASbGncvGwWhPX+aL4dZUH9/3daSY2VL7cET6waSAqs28q45GZq2j6y27pb2yEDlBte4
+	P/mZkK8RjzZqXMV4NHCYokAExrCoamU+fif+2sN1MIaTWMbJFITrf/dZbujuyiGHFtOB1RRaPVL
+	Doeoc6YzeGkLHRIdFJe63c+wY3OxcYPqAclS8eoid6+XMKMd4fpayHUd+p8tewlBsrmvt3jlr9G
+	wkhPUb3M/d9bp5GFtgcjotG5dIDKxnENZB+qCTYuM2iPnFpSP/1y4FptLio2oEIieiRGKbu4SxH
+	6UOU2aptMaBQane8LvJI7t2eURG74TSP7wA6kspf/A4Fi2m9TcWd3TumBRSuDSa9Z9T5ghJf0i4
+	SQFEp6c32B5MiPuPQeHaYknWLdQcneOu57UpbrA==
+X-Google-Smtp-Source: AGHT+IG1fG6kfVEFdWk0CSWBtlYn13aGmNvut/72B2/Nbw/wJRvYa17H6rgmfkWBfGCZtZESEG8UjA==
+X-Received: by 2002:a05:620a:2942:b0:7c5:5f58:9158 with SMTP id af79cd13be357-7c774d14899mr2510471785a.9.1744085678001;
+        Mon, 07 Apr 2025 21:14:38 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea59cd8sm699226085a.69.2025.04.07.21.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 21:14:37 -0700 (PDT)
+Date: Tue, 8 Apr 2025 00:14:35 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Message-ID: <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
+ <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
+ <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
+ <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Qq2Ty_CRuz33wUrMjLXD0GCtcegHGBk6
-X-Proofpoint-ORIG-GUID: Qq2Ty_CRuz33wUrMjLXD0GCtcegHGBk6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 adultscore=0 spamscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504080026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
 
-On Wed, 2025-04-02 at 05:47 -0700, steven chen wrote:
-> In the current implementation, the ima_dump_measurement_list() API is=20
-> called during the kexec "load" phase, where a buffer is allocated and=20
-> the measurement records are copied. Due to this, new events added after
-> kexec load but before kexec execute are not carried over to the new kerne=
-l
-> during kexec operation
+On Tue, Apr 08, 2025 at 03:10:24AM +0000, Zhijian Li (Fujitsu) wrote:
+> >> On 07/03/2025 07:56, Gregory Price wrote:
+> >>> What if instead, we had two 256MB endpoints on the same host bridge?
+> >>>
+> >>> ```
+> >>> CEDT
+> >>>              Subtable Type : 01 [CXL Fixed Memory Window Structure]
+> >>>                   Reserved : 00
+> >>>                     Length : 002C
+> >>>                   Reserved : 00000000
+> >>>        Window base address : 0000000100000000   <- Memory Region
+> >>>                Window size : 0000000020000000   <- 512MB
+> >>> Interleave Members (2^n) : 00                 <- Not interleaved
+> >>>
+> >>> Memory Map:
+> >>>     [mem 0x0000000100000000-0x0000000120000000] usable  <- SPA
+> >>>
+> >>> Decoders
+> >>>                               decoder0.0
+> >>>                     range=[0x100000000, 0x120000000]
+> >>>                                   |
+> >>>                               decoder1.0
+> >>>                     range=[0x100000000, 0x120000000]
+> >>>                     /                              \
+> >>>               decoded2.0                        decoder3.0
+> >>>     range=[0x100000000, 0x110000000]   range=[0x110000000, 0x120000000]
+> >>> ```
+> >>
+> >> It reminds me that during construct_region(), it requires decoder range in the
+> >> switch/host-bridge is exact same with the endpoint decoder. see
+> >> match_switch_decoder_by_range()
+> 
+> 
+>  From the code, we can infer this point. However, is this just a solution implemented in software,
+> or is it explicitly mandated by the CXL SPEC or elsewhere? If you are aware, please let me know.
+> 
 
-Repeating this here is unnecessary.
->=20
-> To allow the buffer allocation and population to be separated into distin=
-ct
-> steps, make the function local seq_file "ima_kexec_file" to a file variab=
-le.
+The description you've quoted here is incorrect, as I didn't fully
+understand the correct interleave configuration.  I plan on re-writing
+this portion with correct configurations over the next month.
 
-This change was already made in [PATCH v11 1/9] ima: rename variable the
-set_file "file" to "ima_kexec_file".  Please remove.
+Linux does expect all decoders from root to endpoint to be programmed
+with the same range*[2].
 
->=20
-> Carrying the IMA measurement list across kexec requires allocating a
-> buffer and copying the measurement records.  Separate allocating the
-> buffer and copying the measurement records into separate functions in
-> order to allocate the buffer at kexec 'load' and copy the measurements
-> at kexec 'execute'.
->=20
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_kexec.c | 46 +++++++++++++++++++++++-------
->  1 file changed, 35 insertions(+), 11 deletions(-)
->=20
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/=
-ima_kexec.c
-> index 650beb74346c..b12ac3619b8f 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -15,26 +15,46 @@
->  #include "ima.h"
-> =20
->  #ifdef CONFIG_IMA_KEXEC
-> +static struct seq_file ima_kexec_file;
-> +
-> +static void ima_free_kexec_file_buf(struct seq_file *sf)
-> +{
-> +	vfree(sf->buf);
-> +	sf->buf =3D NULL;
-> +	sf->size =3D 0;
-> +	sf->read_pos =3D 0;
-> +	sf->count =3D 0;
-> +}
-> +
-> +static int ima_alloc_kexec_file_buf(size_t segment_size)
-> +{
-> +	ima_free_kexec_file_buf(&ima_kexec_file);
+please keep an eye on [1] for updates, i won't be updating this thread
+with further edits.
 
-After moving the vfree() here at this stage in the patch set, the IMA
-measurement list fails to verify when doing two consecutive "kexec -s -l"
-with/without a "kexec -s -u" in between.  Only after "ima: kexec: move IMA =
-log
-copy from kexec load to execute" the IMA measurement list verifies properly=
- with
-the vfree() here.
+> I have been trying for days to find documentary evidence to persuade our firmware team that,
+> during device provisioning, the programming of the HDM decoder should adhere to this principle:
+> The range in the HDM decoder should be exactly the same between the device and its upstream switch.
+> 
 
-> +
-> +	/* segment size can't change between kexec load and execute */
-> +	ima_kexec_file.buf =3D vmalloc(segment_size);
-> +	if (!ima_kexec_file.buf)
-> +		return -ENOMEM;
-> +
-> +	ima_kexec_file.size =3D segment_size;
-> +	ima_kexec_file.read_pos =3D 0;
-> +	ima_kexec_file.count =3D sizeof(struct ima_kexec_hdr);	/* reserved spac=
-e */
-> +
-> +	return 0;
-> +}
-> +
+In general, everything included in this guide does not care about what
+the spec says is possible - it only concerns itself with what linux
+supports.  If there is a mechanism described in the spec that isn't
+supported, it is expected that an interested vendor will come along to
+help support it.
 
+However, the current Linux driver absolutely expects the range in the
+HDM decoders should be exactly the same from root to endpoint*.
+
+My reading of the 3.1 spec suggests this is also defined by implication
+of the "Implementation Notes" at the end of section
+
+8.2.4.20 CXL HDM Decoder Capability Structure
+
+IMPLEMENTATION NOTE
+CXL Host Bridge and Upstream Switch Port Decode Flow
+
+IMPLEMENTATION NOTE
+Device Decode Logic
+
+The host bridge/USP implementation note describes extracting bits for
+routing, while the device decode logic describes active translation from
+HPA to DPA.
+
+~Gregory
+
+[1] https://gourryinverse.github.io/cxl-boot-to-bash/
+
+^ with the exception of Zen5 [2], which I don't recommend you replicate
+[2] https://lore.kernel.org/linux-cxl/20250218132356.1809075-1-rrichter@amd.com/T/#t
