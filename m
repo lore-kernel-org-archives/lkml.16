@@ -1,155 +1,170 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3CC266583
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F9263F29;
+	Tue,  8 Apr 2025 08:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102413; cv=none; b=skQkm7tobZHZpGo+znzlNkjc4p8+qN1GHCbLVW39omrrcbZEehnloVqwrtiWc80CZbBkDTd8dQLtshiQ/G203WlA7GRSXYOc85Vl1ZArMI4ChUOqWTkrnsRgvya52OfeKVQasTQJsL4zmDf3cPwAK2FfUHeqeZxp9iYCLJX2/LE=
+	t=1744102507; cv=none; b=iNIlgLDB49oOOqZszyLCdLXSSFFWJEAhhEog40HnQRJhvDspW+qlLEGoh5sRWwrPi/mWhFhXO7xlgEcAJuqY7Pfp+GafaN5With/ZWX6MRc/1X+/N4HcUu1/tG3frqWnwKTcuncOMxNMC3MsSpQRGSzh5B4JL814OEfpDyIkvFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102413; c=relaxed/simple;
-	bh=nMTMqzq37ZDdZSy/ASJb7GM4lqZTMOHxEOCfZ5XR4c8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AQSrSIIaH7Ooi0cYCF1JAhh8ueIsE/qeph256OHgAw/Wr4MYi+SkjDjxcQbu5Vmi11OuNUf8OxGvqAEHU1Kkv5Rl15R4boDMOp4SpL5YhTZXZ3JU2aCukF/PANahpisZJFPrRdIgtAho3m0v8YzuIwA2EVNWUNAOysN9M9owTPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ou2OvDhq; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1744102507; c=relaxed/simple;
+	bh=Oy4zyY35cVd8Vsi31C/w3Gbc3g9hy5UKD99ZO8twaRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PGYrqoXlJ9s3+xb+3wJKYA+Oh6SGkHQcxI6yYXFfF5BpfRHQwN1RcDD5Dpb/e8RLwcIt4MGM6LBGwMJeia9P9M7rQdmy2jATCQahmnTDtLT6DXRsJA2YIt/nUMge4YfimZsKTFBVZzNgTJSbX5DUafmKsG74C4T/nt3Cck/73Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imbwMl+2; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ou2OvDhq"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so40068135e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744102409; x=1744707209; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bu1M3/PvdkhGWlHIRkQzAzcvhk8sTE/2aa4WDt4cxm0=;
-        b=Ou2OvDhqh0F1r2X1jAwfX2upSEP+PcLqN/rT1Us36IXDGNF3qxlIwKBAgzk6iZrsQ5
-         xVEElmYCNo63KgwSGlPqSsGpDBtMP8cjOUH95MlsQHDDDZkv+zIGRLoVqNdX4UhqZGS/
-         j+5xEXk/UaerEG6IXxz54pP1r+DuHs9bxMiB7NDG+GcGdQwE5v7YjRYTV3D3oZgHCEWh
-         +AH4CxIGF8T5z3yEf1shxdqalq6MrYs8pYAeCczvV+7jmk39i44XVwXstd5mkdEUQjiS
-         SXRvDpN5+NcclY6Ws0yn18fu1+mUxj9VYGOhglCASYRK/doejtdrA/UB6zT3LL8m4uW3
-         5gVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744102409; x=1744707209;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bu1M3/PvdkhGWlHIRkQzAzcvhk8sTE/2aa4WDt4cxm0=;
-        b=YVWp02F9HeBEqUWrU9qRCpJDn9YkMI8yfMVt5/nhuDNn8i4GuzppnvDnOkmgPde3sc
-         wXSpwSEWT/xw4qYmvel0GSazmm2/OUH3Biv7wLzY2c1fxjqPNxCN4JmdEUI/DtPSNcGH
-         wsGPj+D1oB9eExzbDwL+W7RzqUCp5rgKBzDSyhqgqUULb46sC9AtkDRYYnHvgqsLILFM
-         VQTLIl7o1zEQgaAn9/OpGtkmeje+FPAEOAir6mFq2CreTyqcj8Y4S5SMuDpPQdOUNgFS
-         lO19VhHdKwpSe6IUa0urqhHTbvrSPRJznQ11o40imsN2ESUX4ujZOczR16Y28ftVyMkE
-         7IXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXArS2cqe0Eb+oGJoLB37dpcqv/mbFmygDS+D30JJJsrNX66NWWGyib+pALjqNamwZ+vBnv+iCY7ct3SYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww8dI3gqL8v2Aib2uPCShYmmhju7jriGC1UmYaL0p/JR6C/63S
-	pV3d1PftSY7EpWVsAzZ64yA5Pz8tvDaxSjyGZ25sOG+VMBIrmBeRgZEfA7lDrLpyhMAB/w==
-X-Google-Smtp-Source: AGHT+IE/uHSaVtNKee/dmkihc8dBSaKxeFeUFpLQgCV3qUZJUtmlBi/YqSX0r50x/1aUdAmTZhKi+Myg
-X-Received: from wmcq3.prod.google.com ([2002:a05:600c:c103:b0:43d:41a2:b768])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1e89:b0:43c:f184:2e16
- with SMTP id 5b1f17b1804b1-43ee06134f3mr112581425e9.5.1744102409707; Tue, 08
- Apr 2025 01:53:29 -0700 (PDT)
-Date: Tue,  8 Apr 2025 10:53:02 +0200
-In-Reply-To: <20250408085254.836788-9-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imbwMl+2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744102505; x=1775638505;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Oy4zyY35cVd8Vsi31C/w3Gbc3g9hy5UKD99ZO8twaRk=;
+  b=imbwMl+2XqRSho35M6RG/pU+XqKEUdI+No7tGoCqpIv9asHo7AjHJHSx
+   FmAKGI0O82dOrmyRD+zQ9fdIt5ShcjbZoZmzLD4Fi8JpVvj7pjEGtBoOr
+   6ZNl7hq3Wv/g2ocXkr7QkJBHM87jpY3VIe6w12AONjTFtYKYkieftSwCo
+   oPiBIuDKBhoM+4urRTKrrLDj72O5aZwDUuakxwTy3Sa7I8a/9PKamUJH3
+   DKJLzOdW7TUWruXwXdRW4K1mx9002Tl7H1VyUWLADU3K4zRqv+8ZQOFJr
+   j1M7WX6rw3l8BCqnB6K/87f8yfIkDjG9+gEOYUsrgO+Z3pfsnZCbGN1k+
+   g==;
+X-CSE-ConnectionGUID: eRD6XxHaS+2w8rRXzezcZw==
+X-CSE-MsgGUID: UarmKgngRI6J8fIyVngUtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45615917"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="45615917"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:55:05 -0700
+X-CSE-ConnectionGUID: ogfWw3c6RCC6+P8wPO+YkQ==
+X-CSE-MsgGUID: bwuLyhs+Rm2lKu9mt74pEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="128729154"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 08 Apr 2025 01:55:02 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u24jT-0004LX-1x;
+	Tue, 08 Apr 2025 08:54:59 +0000
+Date: Tue, 8 Apr 2025 16:54:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Robert Lin <robelin@nvidia.com>, thierry.reding@gmail.com,
+	daniel.lezcano@linaro.org, jonathanh@nvidia.com, tglx@linutronix.de,
+	pohsuns@nvidia.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, sumitg@nvidia.com,
+	Robert Lin <robelin@nvidia.com>
+Subject: Re: [PATCH v3 2/3] clocksource/drivers/timer-tegra186: fix watchdog
+ self-pinging
+Message-ID: <202504081506.0KaQZjFQ-lkp@intel.com>
+References: <20250407102323.2690911-3-robelin@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250408085254.836788-9-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2567; i=ardb@kernel.org;
- h=from:subject; bh=HHqxACxmdTzUBkBumD23I1ULhjlW30p2Zg7pYMcwt7Y=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3L448arJuLf4nqf91whyWSa+EJ42CPa6UX9+39nhZjm
- eN+8vzMjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRoksM/71OLbmk/1CnadfT
- by8Y94YeZPL2Ypwfkbj5irzG2pB4Xg+G/wk87GJ1Fzlfrdxhb3yM3cgoi8dvMtMDlxvVC56+Xaa zhgsA
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250408085254.836788-16-ardb+git@google.com>
-Subject: [PATCH v3 7/7] x86/boot: Drop RIP_REL_REF() uses from SME startup code
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: x86@kernel.org, mingo@kernel.org, linux-kernel@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407102323.2690911-3-robelin@nvidia.com>
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Robert,
 
-RIP_REL_REF() has no effect on code residing in arch/x86/boot/startup,
-as it is built with -fPIC. So remove any occurrences from the SME
-startup code.
+kernel test robot noticed the following build warnings:
 
-Note the SME is the only caller of cc_set_mask() that requires this, so
-drop it from there as well.
+[auto build test WARNING on tip/timers/core]
+[also build test WARNING on linus/master v6.15-rc1 next-20250408]
+[cannot apply to daniel-lezcano/clockevents/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/startup/sme.c        | 11 +++++------
- arch/x86/include/asm/coco.h        |  2 +-
- arch/x86/include/asm/mem_encrypt.h |  2 +-
- 3 files changed, 7 insertions(+), 8 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Lin/clocksource-drivers-timer-tegra186-add-WDIOC_GETTIMELEFT-support/20250407-182954
+base:   tip/timers/core
+patch link:    https://lore.kernel.org/r/20250407102323.2690911-3-robelin%40nvidia.com
+patch subject: [PATCH v3 2/3] clocksource/drivers/timer-tegra186: fix watchdog self-pinging
+config: sh-randconfig-001-20250408 (https://download.01.org/0day-ci/archive/20250408/202504081506.0KaQZjFQ-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504081506.0KaQZjFQ-lkp@intel.com/reproduce)
 
-diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
-index 23d10cda5b58..5738b31c8e60 100644
---- a/arch/x86/boot/startup/sme.c
-+++ b/arch/x86/boot/startup/sme.c
-@@ -297,8 +297,7 @@ void __head sme_encrypt_kernel(struct boot_params *bp)
- 	 * instrumentation or checking boot_cpu_data in the cc_platform_has()
- 	 * function.
- 	 */
--	if (!sme_get_me_mask() ||
--	    RIP_REL_REF(sev_status) & MSR_AMD64_SEV_ENABLED)
-+	if (!sme_get_me_mask() || sev_status & MSR_AMD64_SEV_ENABLED)
- 		return;
- 
- 	/*
-@@ -524,7 +523,7 @@ void __head sme_enable(struct boot_params *bp)
- 	me_mask = 1UL << (ebx & 0x3f);
- 
- 	/* Check the SEV MSR whether SEV or SME is enabled */
--	RIP_REL_REF(sev_status) = msr = __rdmsr(MSR_AMD64_SEV);
-+	sev_status = msr = __rdmsr(MSR_AMD64_SEV);
- 	feature_mask = (msr & MSR_AMD64_SEV_ENABLED) ? AMD_SEV_BIT : AMD_SME_BIT;
- 
- 	/*
-@@ -560,8 +559,8 @@ void __head sme_enable(struct boot_params *bp)
- 			return;
- 	}
- 
--	RIP_REL_REF(sme_me_mask) = me_mask;
--	RIP_REL_REF(physical_mask) &= ~me_mask;
--	RIP_REL_REF(cc_vendor) = CC_VENDOR_AMD;
-+	sme_me_mask	= me_mask;
-+	physical_mask	&= ~me_mask;
-+	cc_vendor	= CC_VENDOR_AMD;
- 	cc_set_mask(me_mask);
- }
-diff --git a/arch/x86/include/asm/coco.h b/arch/x86/include/asm/coco.h
-index e7225452963f..e1dbf8df1b69 100644
---- a/arch/x86/include/asm/coco.h
-+++ b/arch/x86/include/asm/coco.h
-@@ -22,7 +22,7 @@ static inline u64 cc_get_mask(void)
- 
- static inline void cc_set_mask(u64 mask)
- {
--	RIP_REL_REF(cc_mask) = mask;
-+	cc_mask = mask;
- }
- 
- u64 cc_mkenc(u64 val);
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 1530ee301dfe..ea6494628cb0 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -61,7 +61,7 @@ void __init sev_es_init_vc_handling(void);
- 
- static inline u64 sme_get_me_mask(void)
- {
--	return RIP_REL_REF(sme_me_mask);
-+	return sme_me_mask;
- }
- 
- #define __bss_decrypted __section(".bss..decrypted")
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504081506.0KaQZjFQ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/clocksource/timer-tegra186.c: In function 'tegra186_timer_probe':
+>> drivers/clocksource/timer-tegra186.c:420:22: warning: variable 'irq' set but not used [-Wunused-but-set-variable]
+     420 |         unsigned int irq;
+         |                      ^~~
+
+
+vim +/irq +420 drivers/clocksource/timer-tegra186.c
+
+42cee19a9f839f Thierry Reding 2022-07-04  415  
+42cee19a9f839f Thierry Reding 2022-07-04  416  static int tegra186_timer_probe(struct platform_device *pdev)
+42cee19a9f839f Thierry Reding 2022-07-04  417  {
+42cee19a9f839f Thierry Reding 2022-07-04  418  	struct device *dev = &pdev->dev;
+42cee19a9f839f Thierry Reding 2022-07-04  419  	struct tegra186_timer *tegra;
+42cee19a9f839f Thierry Reding 2022-07-04 @420  	unsigned int irq;
+42cee19a9f839f Thierry Reding 2022-07-04  421  	int err;
+42cee19a9f839f Thierry Reding 2022-07-04  422  
+42cee19a9f839f Thierry Reding 2022-07-04  423  	tegra = devm_kzalloc(dev, sizeof(*tegra), GFP_KERNEL);
+42cee19a9f839f Thierry Reding 2022-07-04  424  	if (!tegra)
+42cee19a9f839f Thierry Reding 2022-07-04  425  		return -ENOMEM;
+42cee19a9f839f Thierry Reding 2022-07-04  426  
+42cee19a9f839f Thierry Reding 2022-07-04  427  	tegra->soc = of_device_get_match_data(dev);
+42cee19a9f839f Thierry Reding 2022-07-04  428  	dev_set_drvdata(dev, tegra);
+42cee19a9f839f Thierry Reding 2022-07-04  429  	tegra->dev = dev;
+42cee19a9f839f Thierry Reding 2022-07-04  430  
+42cee19a9f839f Thierry Reding 2022-07-04  431  	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
+42cee19a9f839f Thierry Reding 2022-07-04  432  	if (IS_ERR(tegra->regs))
+42cee19a9f839f Thierry Reding 2022-07-04  433  		return PTR_ERR(tegra->regs);
+42cee19a9f839f Thierry Reding 2022-07-04  434  
+42cee19a9f839f Thierry Reding 2022-07-04  435  	err = platform_get_irq(pdev, 0);
+42cee19a9f839f Thierry Reding 2022-07-04  436  	if (err < 0)
+42cee19a9f839f Thierry Reding 2022-07-04  437  		return err;
+42cee19a9f839f Thierry Reding 2022-07-04  438  
+42cee19a9f839f Thierry Reding 2022-07-04  439  	irq = err;
+42cee19a9f839f Thierry Reding 2022-07-04  440  
+42cee19a9f839f Thierry Reding 2022-07-04  441  	/* create a watchdog using a preconfigured timer */
+42cee19a9f839f Thierry Reding 2022-07-04  442  	tegra->wdt = tegra186_wdt_create(tegra, 0);
+42cee19a9f839f Thierry Reding 2022-07-04  443  	if (IS_ERR(tegra->wdt)) {
+42cee19a9f839f Thierry Reding 2022-07-04  444  		err = PTR_ERR(tegra->wdt);
+42cee19a9f839f Thierry Reding 2022-07-04  445  		dev_err(dev, "failed to create WDT: %d\n", err);
+42cee19a9f839f Thierry Reding 2022-07-04  446  		return err;
+42cee19a9f839f Thierry Reding 2022-07-04  447  	}
+42cee19a9f839f Thierry Reding 2022-07-04  448  
+42cee19a9f839f Thierry Reding 2022-07-04  449  	err = tegra186_timer_tsc_init(tegra);
+42cee19a9f839f Thierry Reding 2022-07-04  450  	if (err < 0) {
+42cee19a9f839f Thierry Reding 2022-07-04  451  		dev_err(dev, "failed to register TSC counter: %d\n", err);
+42cee19a9f839f Thierry Reding 2022-07-04  452  		return err;
+42cee19a9f839f Thierry Reding 2022-07-04  453  	}
+42cee19a9f839f Thierry Reding 2022-07-04  454  
+42cee19a9f839f Thierry Reding 2022-07-04  455  	err = tegra186_timer_osc_init(tegra);
+42cee19a9f839f Thierry Reding 2022-07-04  456  	if (err < 0) {
+42cee19a9f839f Thierry Reding 2022-07-04  457  		dev_err(dev, "failed to register OSC counter: %d\n", err);
+42cee19a9f839f Thierry Reding 2022-07-04  458  		goto unregister_tsc;
+42cee19a9f839f Thierry Reding 2022-07-04  459  	}
+42cee19a9f839f Thierry Reding 2022-07-04  460  
+42cee19a9f839f Thierry Reding 2022-07-04  461  	err = tegra186_timer_usec_init(tegra);
+42cee19a9f839f Thierry Reding 2022-07-04  462  	if (err < 0) {
+42cee19a9f839f Thierry Reding 2022-07-04  463  		dev_err(dev, "failed to register USEC counter: %d\n", err);
+42cee19a9f839f Thierry Reding 2022-07-04  464  		goto unregister_osc;
+42cee19a9f839f Thierry Reding 2022-07-04  465  	}
+42cee19a9f839f Thierry Reding 2022-07-04  466  
+42cee19a9f839f Thierry Reding 2022-07-04  467  	return 0;
+42cee19a9f839f Thierry Reding 2022-07-04  468  
+42cee19a9f839f Thierry Reding 2022-07-04  469  unregister_osc:
+42cee19a9f839f Thierry Reding 2022-07-04  470  	clocksource_unregister(&tegra->osc);
+42cee19a9f839f Thierry Reding 2022-07-04  471  unregister_tsc:
+42cee19a9f839f Thierry Reding 2022-07-04  472  	clocksource_unregister(&tegra->tsc);
+42cee19a9f839f Thierry Reding 2022-07-04  473  	return err;
+42cee19a9f839f Thierry Reding 2022-07-04  474  }
+42cee19a9f839f Thierry Reding 2022-07-04  475  
+
 -- 
-2.49.0.504.g3bcea36a83-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
