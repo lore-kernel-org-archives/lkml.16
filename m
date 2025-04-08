@@ -1,188 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2991C5485;
-	Tue,  8 Apr 2025 14:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958C3187FEC
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121044; cv=none; b=JvLKsWyAOgvMUrcaS7OgtNEkbDsmzXqIDZZPwp/rfKPlWu1+pKGIlJ9okP6O68+zAfUm48eEREuwJKtf5wCkQ27zzvIDwigu18aXimCI4TG93S3SSkgtz2elPa/EBG2BRJzyEq49BOPuP7rC4i9Dz6+PAa+lvFHQhtjvgI1rz5E=
+	t=1744121055; cv=none; b=SECPXN07m7nudHFVAt4Xc1LiHqDjiWgWMT7+A8XQz4h9PLEtZ3TjgXP6SYQc4OI1KnTMZhAgdoZBcB213mW+f7cbuh8VNhkNNRlxKEA9EarUFTDoHmmeHmWiXnRc/2vEOSnT4fD2ZWBF99fYCFMDFR5WXvtK79/u6KenkuOvTRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121044; c=relaxed/simple;
-	bh=BzFbZA1m9dFOlKsy5ES02lDgkZDWoW80YEBIeHHNu+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0Eftc2i6zA+krKBHqIExK63Ip9uf3FTF+6SgliWc2yr/AXFeDiZnEj+ChkvZRio6UDb/D9boNf90vxPZYNhWgr3mDf5XLbTsOkrb/KzICf/9jm3CwoyBasK9EyMl6R3yvSnNnTxbF1slrObY86TsAs0n7WfPOavO+kxUo+ZNZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FP+SRwJ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744121055; c=relaxed/simple;
+	bh=QszLQxpdOJMZeh4hhcXWlTx6vi5m5h3fin16cF2jQZw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tkR/k7yJwHUWQU9piJMMaB0doXQOCk1fUYsbi3xCFwOuWEutDgA0mO2BC5ulL7lqNO33nWackcm9MKPJUbDhhacd1iiMirrndy8P8lQKqXjO07tJkwKaTU2vQYvzJNniT9jVxoTC7DrnVpBImGfqijFk4rgQFETsqsux5IKAmwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CtVsP47+; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FP+SRwJ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66C9C4CEE5;
-	Tue,  8 Apr 2025 14:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744121043;
-	bh=BzFbZA1m9dFOlKsy5ES02lDgkZDWoW80YEBIeHHNu+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FP+SRwJ8NwtZ6RWvC+sp2R+vSOyb/SVNnj+502MfqxHqobE254c3WPy05xy9friP4
-	 gVDbaV14c31Exg+Ww8M0fHQxK7a1M8AcvIKXwrN78CKmfq9fJseo9trjqpDKcXfhsh
-	 wpQ3bxziDcAZVqD11IkMZdI+YDcQyaKiZCLBZFmQ=
-Date: Tue, 8 Apr 2025 16:02:29 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Justin Forbes <jforbes@fedoraproject.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
-Message-ID: <2025040857-disdain-reprocess-0891@gregkh>
-References: <20250408104914.247897328@linuxfoundation.org>
- <c06b17f2-fc80-47a9-b108-8e53be3d4a76@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CtVsP47+"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so36320355e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744121052; x=1744725852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9XuywzePAIgnrVesJkRqbK4EXd6ZTvUCScbqcLqpJI4=;
+        b=CtVsP47+sIVDSRP32fVo9Uon3scYz/hGcxXEUHzN5+n8SjlUmD8j4Sg9XpuAs9Yht4
+         rwout1qeQfkLdHLZKE1cY8WzvY+88STBYhUPVbh4m2pILEE/VN4eZPG24ObYWWEc/0NM
+         iQQM0zWX7mR++KUcPh4udxl60Sq9bVSIDxLZKMeWuzf2N33rb+13JIvJcA4eXD1GW+OV
+         b4NZKPQXZSunGRcc8bOQS9b511bUDC1PIbHA5eeJqYU4rdotqq6GDzS/6bkZqDdRiwl7
+         Ac9yfGyxx2lf7EBiv1+xwqrU1jr0cvs53JA3EYOvfCHYP7pRGfoiDH9YZI0HCNPjYDXt
+         wJOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744121052; x=1744725852;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9XuywzePAIgnrVesJkRqbK4EXd6ZTvUCScbqcLqpJI4=;
+        b=VpMwoSq3wFwl4rIctl80vh7FcKO6VYrdVuyJ+YB64lVgEeNno53yl5wfKewmLv6x6R
+         VhWRGEnqZBzpI13EHbgalFBle6aLk+1iHILZlPe4k4dcIGib2NiuwCLlhZhmOyTMHVmJ
+         zT81QjD2CERFxAYJRq6UJbzMIogz52rYIi9LPdUkn90dxPFnErRI3K8wd2VVGywGWMir
+         MyKCz7baJAcrSA0zZ4AbiD6+7SSU+uswRaTwfnTnEW8v0FLYV5H3dFoNMkBB/SORqEHp
+         tTIfvBlBQ/6VOlUTXER6evtVUsjYHPBcInPgLtsBJagATgY9jRfCsfBVmZUTldOQ+18W
+         YJDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFv4vWSafooofnsXyAf49oju8rVS11Rj6UYvdcDkrQB+V7GS+loYX8S1IwHb4JU0ysNR2BcpV2nOlCEEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxif+V4eh43fVvwY9NuA87huIIwWO5oDOvgLPyxi5FDzlOO7cJe
+	Y5L+77GOMVgHBO6ZyXFUz9V5kZVy0+zEeO4uPiAG3MxtWxqlIf078hDlH+BN/ofsz1pc60O0ETi
+	CpNynl/xG4g==
+X-Google-Smtp-Source: AGHT+IG6jAdiCw3blTh9N+MXOZQBHsfQ70S/42on8m9V9q2s13qGmJAHFfrODzkQ6jC014vOm7p4ce7FR5W3sA==
+X-Received: from wmcx8-n2.prod.google.com ([2002:a05:600c:c1c8:20b0:43d:9f1:31a9])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4fd6:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43ee0616f6fmr131307195e9.2.1744121051903;
+ Tue, 08 Apr 2025 07:04:11 -0700 (PDT)
+Date: Tue, 08 Apr 2025 14:04:09 +0000
+In-Reply-To: <CAOzc2pyKFJKxkTs989rMzRaMSwR+EBXDiCB-2xBRTiu=Y8FLvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c06b17f2-fc80-47a9-b108-8e53be3d4a76@leemhuis.info>
+Mime-Version: 1.0
+References: <20250131001806.92349-1-vishal.moola@gmail.com>
+ <20250130164836.1163f66bede77ec4bcc9d4b9@linux-foundation.org> <CAOzc2pyKFJKxkTs989rMzRaMSwR+EBXDiCB-2xBRTiu=Y8FLvw@mail.gmail.com>
+X-Mailer: aerc 0.20.1-1-g87e37b93d34f
+Message-ID: <D91BB945EKGW.UZSCJRUM034H@google.com>
+Subject: Re: [PATCH 0/2] vmalloc: Introduce vmap_file()
+From: Brendan Jackman <jackmanb@google.com>
+To: Vishal Moola <vishal.moola@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <hch@infradead.org>, 
+	<urezki@gmail.com>, <intel-gfx@lists.freedesktop.org>, 
+	Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 03:16:31PM +0200, Thorsten Leemhuis wrote:
-> On 08.04.25 12:38, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.14.2 release.
-> > There are 731 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> Compiling for Fedora failed for me:
-> 
-> 
-> """
-> error[E0412]: cannot find type `Core` in module `device`
->   --> rust/kernel/pci.rs:69:58
->    |
-> 69 |         let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
->    |                                                          ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/pci.rs:240:35
->     |
-> 240 |     fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>;
->     |                                   ^^^^ not found in `device`
-> 
-> error[E0405]: cannot find trait `DeviceContext` in module `device`
->    --> rust/kernel/pci.rs:253:32ich of
->     |
-> 253 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
->     |                                ^^^^^^^^^^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Normal` in module `device`
->    --> rust/kernel/pci.rs:253:56
->     |
-> 253 | pub struct Device<Ctx: device::DeviceCchangeontext = device::Normal>(
->     |                                                        ^^^^^^ not found in `device`
->     |
-> help: there is an enum variant `core::intrinsics::mir::BasicBlock::Normal` and 1 other; try using the variant's enum
->     |
-> 253 | pub struct Device<Ctx: device::DeviceContext = core::intrinsics::mir::BasicBlock>(
->     |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 253 | pub struct Device<Ctx: device::DeviceContext = core::num::FpCategory>(
->     |                                                ~~~~~~~~~~~~~~~~~~~~~
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/pci.rs:411:21
->     |
-> 411 | impl Device<device::Core> {
->     |                     ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/pci.rs:425:31
->     |
-> 425 | impl Deref for Device<device::Core> {
->     |                               ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/pci.rs:439:27
->     |
-> 439 | impl From<&Device<device::Core>> for ARef<Device> {
->     |                           ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/pci.rs:440:34
->     |
-> 440 |     fn from(dev: &Device<device::Core>) -> Self {
->     |                                  ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->   --> rust/kernel/platform.rs:65:58
->    |
-> 65 |         let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
->    |                                                          ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/platform.rs:167:35
->     |
-> 167 |     fn probe(dev: &Device<device::Core>, id_info: Option<&Self::IdInfo>)
->     |                                   ^^^^ not found in `device`
-> 
-> error[E0405]: cannot find trait `DeviceContext` in module `device`
->    --> rust/kernel/platform.rs:182:32
->     |
-> 182 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
->     |                                ^^^^^^^^^^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Normal` in module `device`
->    --> rust/kernel/platform.rs:182:56
->     |
-> 182 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
->     |                                                        ^^^^^^ not found in `device`
->     |
-> help: there is an enum variant `core::intrinsics::mir::BasicBlock::Normal` and 1 other; try using the variant's enum
->     |
-> 182 | pub struct Device<Ctx: device::DeviceContext = core::intrinsics::mir::BasicBlock>(
->     |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 182 | pub struct Device<Ctx: device::DeviceContext = core::num::FpCategory>(
->     |                                                ~~~~~~~~~~~~~~~~~~~~~
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/platform.rs:193:31
->     |
-> 193 | impl Deref for Device<device::Core> {
->     |                               ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/platform.rs:207:27
->     |
-> 207 | impl From<&Device<device::Core>> for ARef<Device> {
->     |                           ^^^^ not found in `device`
-> 
-> error[E0412]: cannot find type `Core` in module `device`
->    --> rust/kernel/platform.rs:208:34
->     |
-> 208 |     fn from(dev: &Device<device::Core>) -> Self {
->     |                                  ^^^^ not found in `device`
-> 
-> error: aborting due to 15 previous errors
-> 
-> Some errors have detailed explanations: E0405, E0412.
-> For more information about an error, try `rustc --explain E0405`.
-> make[2]: *** [rust/Makefile:482: rust/kernel.o] Error 1
-> make[1]: *** [/builddir/build/BUILD/kernel-6.14.2-build/kernel-6.14.2-rc1/linux-6.14.2-0.rc1.300.vanilla.fc42.x86_64/Makefile:1283: prepare] Error 2
-> make: *** [Makefile:259: __sub-make] Error 2
-> """
-> 
-> 
-> >From a quick look there seem to be three changes in this set that touch
-> rust/kernel/pci.rs; if needed, I can take a closer look later or tomorrow
-> what exactly is causing trouble (I just hope it's no new build requirement
-> missing on my side or something like that).
+On Mon Feb 3, 2025 at 6:53 PM UTC, Vishal Moola wrote:
+> On Thu, Jan 30, 2025 at 4:48=E2=80=AFPM Andrew Morton <akpm@linux-foundat=
+ion.org> wrote:
+>>
+>> On Thu, 30 Jan 2025 16:18:04 -0800 "Vishal Moola (Oracle)" <vishal.moola=
+@gmail.com> wrote:
+>>
+>> > Currently, users have to call vmap() or vmap_pfn() to map pages to
+>> > kernel virtual space. vmap() requires the page references, and
+>> > vmap_pfn() requires page pfns. If we have a file but no page reference=
+s,
+>> > we have to do extra work to map them.
+>> >
+>> > Create a function, vmap_file(), to map a specified range of a given
+>> > file to kernel virtual space. Also convert a user that benefits from
+>> > vmap_file().
+>> >
+>>
+>> Seems like a pretty specialized thing.  Have you identified any other
+>> potential users of vmap_file()?  I couldn't see any.
+>>
+>> If drm is likely to remain the only user of this, perhaps we should
+>> leave the code down in drivers/gpu/drm for now?
+>
+> This function is generally useful for file-systems that use the pagecache=
+.
+> I simply chose to highlight the most obvious user that benefits from it (=
+and
+> so that the function is introduced with a user).
+>
+> I haven't identified any other specific users of vmap_file() myself. I kn=
+ow
+> Matthew has some other ideas for it; I've cc-ed him so he can chime in.
 
-Hm,  odd, I thought I was testing Rust builds on my build system but
-obviously not.  I'll go work on this later tonight...
+Not much to add but just to confirm - yep, this seems like it might be
+useful as a part of the solution to the page cache perf issue[1] with
+ASI that I spoke about (briefly and chaotically) at the end of the
+LSF/MM/BPF session[0] on ASI this year.
 
-thanks,
+[0] https://lwn.net/Articles/1016013/
+[1] https://lore.kernel.org/linux-mm/20250129144320.2675822-1-jackmanb@goog=
+le.com/
 
-greg k-h
+But, for the moment this is all still pretty vague stuff, not at all
+clear yet that this idea makes total sense. Hopefully I'll be able to
+follow up in a few weeks after I've made some time to stare at/prototype
+things.
