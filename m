@@ -1,46 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0961C244EAB;
-	Tue,  8 Apr 2025 22:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AD8255255
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744150881; cv=none; b=gVQwrzVUvZLCKvtvbGKKZV09SxSQYyHkn+yIFebWlAfWzyHzvcqZS+7XdZYsFVJ7kvq6NHFfnuHIlBU+Ef6VAetNGM1CiOwOE04+wKek7UWbPAW4lttJ9CUGNoJll5/sp3+Rb3X1vjWTelm/6Kw/IWh1OQtF08PTOV1rpg3ZQcA=
+	t=1744150992; cv=none; b=RCev1FCA4m5sVGIt3GYGi+C3JibFgYCazq2w39cLxk8T0xjvu253RZL8FAntm0U2Z73EH1mZ5ya/k/JVKBh1Xon+ULwU7+ivHisGOefy3yDrahpoo49K4KHs36Jys2adPFZkXCtzdRY5yzdMswQpkbOoWtdl/MEvJxQ9LWSwcz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744150881; c=relaxed/simple;
-	bh=NWS839TG5Vm1Sg8n5S04N6bKuX4zID63zZ78pUCvvL4=;
+	s=arc-20240116; t=1744150992; c=relaxed/simple;
+	bh=wvvzta72QEmE5Gx/4J/NhwpLTLMel558Hz++rS/+MT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g7nSYAudn+iENd82f0XYbGcvpSiB3ypET6JdAu+Oe5L3Uc9554J01tINutACA4S9Mx9Z5sYHdDiFHUQ17U9XDyZqO0ex1J4z3aedfJKXOPzV9FrCfGuSXsqDGix0uKCDie3/fg8ImjMTuVGK+50Gw8djMOv3fCupcOoFm4ISOJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X03YeStb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P3TTq1/zIrz6BAEPQAhlR59sHQ0iHq3UId0rVopGtsPUp5IVCiVweTzRdEn0v7GxYNfjFdE6JR8sMeJ5ebyxQYTiVCSBHLWt6UqNeJUKhaNuXGT1D3lHuRSWdccX4aAfGlLiqZu4X2fautd7Zd6sIRgdwfAx3qTwwkA11BDkOqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TcoBLalr; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X03YeStb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79550C4CEE5;
-	Tue,  8 Apr 2025 22:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744150880;
-	bh=NWS839TG5Vm1Sg8n5S04N6bKuX4zID63zZ78pUCvvL4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=X03YeStbBBdBcw/7vH+TFlmxL4s+Vjn/K4Mj7/fX068keMlogIoeKATjU4NayOMtV
-	 uNBL7Xt2VI50aITx/ayf/FSJKTv4zSvzTYNAfDIeUOd3BcmHNbn2klbbh0169PU3n/
-	 2axzYLTr6b+GcvKyNBMpMCgLuj4U/laVJrm+/9k/adkiCxgwQTEB27SbqC5Q0CLV06
-	 xf01q6Plvzx/JvH3SGOwXQ2OgKsrsYMtHKwIb7Ww0hmeA4p76cCNNEN40IYadS2xqE
-	 mbLgnlI8PxwOCY4QyIRlRx+AZGGPfVRVN7GiKtewmVhh6skfXnnz1T74KEytfcnaUd
-	 kB6Mldc8T8plg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 220A7CE0F64; Tue,  8 Apr 2025 15:21:20 -0700 (PDT)
-Date: Tue, 8 Apr 2025 15:21:20 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: rcu <rcu@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
-	kernel-team <kernel-team@meta.com>, rostedt <rostedt@goodmis.org>
-Subject: Re: [v2,05/12] rcutorture: Add tests for SRCU up/down reader
- primitives
-Message-ID: <6fddad7f-0d07-4d41-a8a1-3445c873ea9a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250331210314.590622-5-paulmck@kernel.org>
- <174414348524.117.7223153072511748144@patchwork.local>
- <8ee04d0a-dc22-4eb1-8c22-1777f94fd9fb@paulmck-laptop>
- <702640f3-170c-41be-861c-7ec436a02dad@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TcoBLalr"
+Date: Tue, 8 Apr 2025 22:22:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744150978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vzxu9RqZfgCag2kaUjY8CYVmo1wIXtQPZ42lCWTw8iY=;
+	b=TcoBLalr58CwOZhSnic9nJcluUplJlVYgdbXYy86g3MFATiR2nLoyxOIfXJzq6VYNDHRNN
+	Nh7H7/+JYKH03Mw4gmcNyLOTeYpIIUGATAk4J2BXOGw1+NzorwG7tkExOmInn5G61Sc99w
+	QBt34DnligOA4US0OCv1a5JNq63JjSM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Waiman Long <longman@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] selftests: memcg: Increase error tolerance of
+ child memory.current check in test_memcg_protection()
+Message-ID: <Z_Wht7kyWyk62IBU@google.com>
+References: <20250406024010.1177927-1-longman@redhat.com>
+ <20250406024010.1177927-3-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,76 +51,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <702640f3-170c-41be-861c-7ec436a02dad@nvidia.com>
+In-Reply-To: <20250406024010.1177927-3-longman@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 08, 2025 at 06:05:19PM -0400, Joel Fernandes wrote:
+On Sat, Apr 05, 2025 at 10:40:10PM -0400, Waiman Long wrote:
+> The test_memcg_protection() function is used for the test_memcg_min and
+> test_memcg_low sub-tests. This function generates a set of parent/child
+> cgroups like:
 > 
+>   parent:  memory.min/low = 50M
+>   child 0: memory.min/low = 75M,  memory.current = 50M
+>   child 1: memory.min/low = 25M,  memory.current = 50M
+>   child 2: memory.min/low = 0,    memory.current = 50M
 > 
-> On 4/8/2025 4:58 PM, Paul E. McKenney wrote:
-> > On Tue, Apr 08, 2025 at 08:18:05PM -0000, Joel Fernandes wrote:
-> >> Hello, Paul,
-> >>
-> >> On Tue, 8 Apr 2025 20:16:08 GMT, "Paul E. McKenney" wrote:
-> >>> This commit adds a new rcutorture.n_up_down kernel boot parameter
-> >>> that specifies the number of outstanding SRCU up/down readers, which
-> >>> begin in kthread context and end in an hrtimer handler.  There is a new
-> >>> kthread ("rcu_torture_updown") that scans an per-reader array looking
-> >>> for elements whose readers have ended.  This kthread sleeps between one
-> >>> and two milliseconds between consecutive scans.
-> >>>
-> >>> [ paulmck: Apply kernel test robot feedback. ]
-> >>> [ paulmck: Apply Z qiang feedback. ]
-> >>>
-> >> [...]
-> >>> +	for (i = 0; i < n_up_down; i++) {
-> >>> +		init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
-> >>> +		hrtimer_init(&updownreaders[i].rtorsu_hrt, CLOCK_MONOTONIC,
-> >>> +			     HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> >>
-> >> This will now fail to build and needs the following: I will squash it into my
-> >> for-next branch into this patch, but let me know if you prefer to provide an
-> >> update.
-> > 
-> > Please feel free to squash it in with your "[]" tag like shown above.
+> After applying memory pressure, the function expects the following
+> actual memory usages.
 > 
-> Yep done already. :-)
+>   parent:  memory.current ~= 50M
+>   child 0: memory.current ~= 29M
+>   child 1: memory.current ~= 21M
+>   child 2: memory.current ~= 0
 > 
-> > 
-> > As you say, you will be sending them all out soon enough anyway.  ;-)
+> In reality, the actual memory usages can differ quite a bit from the
+> expected values. It uses an error tolerance of 10% with the values_close()
+> helper.
 > 
-> True. ;-)
+> Both the test_memcg_min and test_memcg_low sub-tests can fail
+> sporadically because the actual memory usage exceeds the 10% error
+> tolerance. Below are a sample of the usage data of the tests runs
+> that fail.
 > 
-> > 
-> > My plan is to rebase on your stack once you finish your first long-form
-> > round of testing.
+>   Child   Actual usage    Expected usage    %err
+>   -----   ------------    --------------    ----
+>     1       16990208         22020096      -12.9%
+>     1       17252352         22020096      -12.1%
+>     0       37699584         30408704      +10.7%
+>     1       14368768         22020096      -21.0%
+>     1       16871424         22020096      -13.2%
 > 
-> Perfect, my first long-form test should be done by tomorrow AM.
+> The current 10% error tolerenace might be right at the time
+> test_memcontrol.c was first introduced in v4.18 kernel, but memory
+> reclaim have certainly evolved quite a bit since then which may result
+> in a bit more run-to-run variation than previously expected.
+> 
+> Increase the error tolerance to 15% for child 0 and 20% for child 1 to
+> minimize the chance of this type of failure. The tolerance is bigger
+> for child 1 because an upswing in child 0 corresponds to a smaller
+> %err than a similar downswing in child 1 due to the way %err is used
+> in values_close().
+> 
+> Before this patch, a 100 test runs of test_memcontrol produced the
+> following results:
+> 
+>      17 not ok 1 test_memcg_min
+>      22 not ok 2 test_memcg_low
+> 
+> After applying this patch, there were no test failure for test_memcg_min
+> and test_memcg_low in 100 test runs.
 
-Very good, I have fired off overnight tests on v6.15-rc1.  Perhaps a
-bit more than overnight in one case.  ;-)
+Ideally we want to calculate these values dynamically based on the machine
+size (number of cpus and total memory size).
 
-							Thanx, Paul
+We can calculate the memcg error margin and scale memcg sizes if necessarily.
+It's the only way to make it pass both on a 2-CPU's vm and 512-CPU's physical
+server.
 
-> >>     Fix build error by converting hrtimer_init to hrtimer_setup, see:
-> >>     https://lore.kernel.org/all/174384280127.31282.2714486346304643188.tip-bot2@tip-bot2/
-> >>
-> >> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> >> index 4f0a00a8bdee..14a22ef3b56f 100644
-> >> --- a/kernel/rcu/rcutorture.c
-> >> +++ b/kernel/rcu/rcutorture.c
-> >> @@ -2480,9 +2480,8 @@ static int rcu_torture_updown_init(void)
-> >>         }
-> >>         for (i = 0; i < n_up_down; i++) {
-> >>                 init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
-> >> -               hrtimer_init(&updownreaders[i].rtorsu_hrt, CLOCK_MONOTONIC,
-> >> -                            HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> >> -               updownreaders[i].rtorsu_hrt.function = rcu_torture_updown_hrt;
-> >> +               hrtimer_setup(&updownreaders[i].rtorsu_hrt,
-> >> rcu_torture_updown_hrt, CLOCK_MONOTONIC,
-> >> +                             HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> >>                 torture_random_init(&updownreaders[i].rtorsu_trs);
-> >>                 init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors,
-> >>                                                 &updownreaders[i].rtorsu_trs);
-> >>
-> >> Thanks.
-> 
+Not a blocker for this patch, just an idea for the future.
+
+Thanks!
