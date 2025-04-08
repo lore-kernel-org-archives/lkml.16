@@ -1,170 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F9263F29;
-	Tue,  8 Apr 2025 08:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D9821504F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102507; cv=none; b=iNIlgLDB49oOOqZszyLCdLXSSFFWJEAhhEog40HnQRJhvDspW+qlLEGoh5sRWwrPi/mWhFhXO7xlgEcAJuqY7Pfp+GafaN5With/ZWX6MRc/1X+/N4HcUu1/tG3frqWnwKTcuncOMxNMC3MsSpQRGSzh5B4JL814OEfpDyIkvFU=
+	t=1744102622; cv=none; b=IWcpCZ6bTaOxh/7HzuAiHxaNX3KJcTn0ffeWHPkx42mRhrEWfOIUdF5qXvpThtsUx2Bz05aaa6zIV8zpE6Ubq28E4Q6zYVY/HeI381b/pzH3B/HYyQSxsFZdadjrE/R02kDIRDAr47yOimqv7UiZJTpGHSVSUBU8O9o7bjXqN0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102507; c=relaxed/simple;
-	bh=Oy4zyY35cVd8Vsi31C/w3Gbc3g9hy5UKD99ZO8twaRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGYrqoXlJ9s3+xb+3wJKYA+Oh6SGkHQcxI6yYXFfF5BpfRHQwN1RcDD5Dpb/e8RLwcIt4MGM6LBGwMJeia9P9M7rQdmy2jATCQahmnTDtLT6DXRsJA2YIt/nUMge4YfimZsKTFBVZzNgTJSbX5DUafmKsG74C4T/nt3Cck/73Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imbwMl+2; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744102622; c=relaxed/simple;
+	bh=mO6tgaOe8Z5JSxtKwXL9kUbbLucxdFSgSkaOgFnu0ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KrxmtJCwEtXSj4M0Gdsb6FqDsiptv1SZy0sDpJG9LQMd/IWDHUonA5hzsKBXcztcTjfhrvXE2pYR5+/Kgh1hjFxFkZgLOEbtpMY3OEG67QoCc2cQxBcwRzMS/OG3WmQxP8hmUNP32p5a1inQMyXzwGfH+NqzvZFmWShTrBN6kOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NVustdQq; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imbwMl+2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744102505; x=1775638505;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Oy4zyY35cVd8Vsi31C/w3Gbc3g9hy5UKD99ZO8twaRk=;
-  b=imbwMl+2XqRSho35M6RG/pU+XqKEUdI+No7tGoCqpIv9asHo7AjHJHSx
-   FmAKGI0O82dOrmyRD+zQ9fdIt5ShcjbZoZmzLD4Fi8JpVvj7pjEGtBoOr
-   6ZNl7hq3Wv/g2ocXkr7QkJBHM87jpY3VIe6w12AONjTFtYKYkieftSwCo
-   oPiBIuDKBhoM+4urRTKrrLDj72O5aZwDUuakxwTy3Sa7I8a/9PKamUJH3
-   DKJLzOdW7TUWruXwXdRW4K1mx9002Tl7H1VyUWLADU3K4zRqv+8ZQOFJr
-   j1M7WX6rw3l8BCqnB6K/87f8yfIkDjG9+gEOYUsrgO+Z3pfsnZCbGN1k+
-   g==;
-X-CSE-ConnectionGUID: eRD6XxHaS+2w8rRXzezcZw==
-X-CSE-MsgGUID: UarmKgngRI6J8fIyVngUtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45615917"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="45615917"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:55:05 -0700
-X-CSE-ConnectionGUID: ogfWw3c6RCC6+P8wPO+YkQ==
-X-CSE-MsgGUID: bwuLyhs+Rm2lKu9mt74pEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="128729154"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 08 Apr 2025 01:55:02 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u24jT-0004LX-1x;
-	Tue, 08 Apr 2025 08:54:59 +0000
-Date: Tue, 8 Apr 2025 16:54:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Robert Lin <robelin@nvidia.com>, thierry.reding@gmail.com,
-	daniel.lezcano@linaro.org, jonathanh@nvidia.com, tglx@linutronix.de,
-	pohsuns@nvidia.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, sumitg@nvidia.com,
-	Robert Lin <robelin@nvidia.com>
-Subject: Re: [PATCH v3 2/3] clocksource/drivers/timer-tegra186: fix watchdog
- self-pinging
-Message-ID: <202504081506.0KaQZjFQ-lkp@intel.com>
-References: <20250407102323.2690911-3-robelin@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NVustdQq"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39727fe912cso2286328f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744102618; x=1744707418; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NlrL4zXaJRiVzmccsssqwmA6IrlfBxz76fjvGhSaRWM=;
+        b=NVustdQqUcbzsDgezdlU1okpXJ/hRuZd1MIxzTu402R+uQM2u998bWr8Cm7u+u5bME
+         zDmSj/3aiVZtbpcGoNWwb2HtZWeX925zv569sTdjBKWnk1uYaLgW/xZCjHf5A5mfa/8t
+         rqa0t4/baMtmJuHaOWEz3X1hv28mFT3oW1YKe76OdawwQlNJZQgsN3hX2sRpJfWLhlSv
+         dOtsvFoowlJjdgquN/wMHf7ZCB5IF5n54KY1AW1WxJPJG/eeqtqxk+WBiuxh5ggEY98V
+         uq63FCzpI5SjdlqdOI7PXLvxFKEi5y9ePYQRoS3ovUqtIN5ta5GFtt3ZwnfuuR1An3qt
+         flYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744102618; x=1744707418;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NlrL4zXaJRiVzmccsssqwmA6IrlfBxz76fjvGhSaRWM=;
+        b=iFDqssBP557zoKeHHWCIRK++RIwtOe+SKGZYnP9BI4z8uptbA2PVtRKFjLoY/llo9u
+         lsE3yvEa9NvWcnblsluc1pTiB4x70XKmIIhAmbfrrZy/GSWQZ+eUjkULNGu/OybfaXo7
+         ETL942eIt2nZ0/jG8jx3cD5Oxs7YLm/hGbHjrP0vuyAgtP/O1tw2psxUglM+0ADFM+oR
+         YWkr4SUh3Flj0LQmLpW8xhzgHLUjUD8gFIGUPP872dAgkHFEP1ZbVOwb0MPyhE7rTt/x
+         tWp8nSHjz8hXFpK9diKTcfbRVCJSe/1q1Sc0gRpTLq8HMw+iVdSV1L5dI3+sYQEUfojg
+         hM8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXigX6bhXiRV8okUmzQIdDYkWIjBzI9xZ5YSukme1Ofs4rbnLWrUOe4p34Bdo6lqRWHqAzPxe3ljvgeaMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymCJBhvsjX24CZ6NfDZsDdcyP9FidVswoDKyfpFx0Z3Mnw8Wg2
+	G1pCt8OkH7q7tL7L4P8CkkYZuFpYhwicRimrH/7cYoEXe1SxnBXoJPwCCQ2jZ8k=
+X-Gm-Gg: ASbGncud0w+S/acHBJ8+pRhc20spgvuuukXO61n/h25z913blvPh77SNe25ZSGbwtt1
+	0pGIHskrWRLefSX5i9T4anOy3kcc+j30RZFdPpDGYmL/kV++Id78z1QI9TfXNZmI5sio7Pr/Usd
+	603ZxfwnEve/y+/eignLSt2csUfLH0j0VYkQAsS4yiKq+S0sGbastXgMI9xqflpIn5D1k0ys3CR
+	R5CDQssMcjK9rZ4chopaG0P28AZarW7lsnIHSJUpphKQ9X+yTsCW93yrxjoIunOySv+WsQmRJ5A
+	Ki0tLw1nL99zlMG+Te+oepxszwtdi3Y5U8E/OUH/NL4y
+X-Google-Smtp-Source: AGHT+IH+3XHGTXWwLQ8aHwnlELIPNmZTRMwkmMqzpY2GuqnkctbVgWOC3EDFl2D0p0YtAgR3d4+z2w==
+X-Received: by 2002:a05:6000:2287:b0:38f:23f4:2d7a with SMTP id ffacd0b85a97d-39d6fce1200mr8698026f8f.40.1744102618452;
+        Tue, 08 Apr 2025 01:56:58 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d66csm14778725f8f.63.2025.04.08.01.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 01:56:58 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: mpc8xxx: Fix wakeup source leaks on device unbind
+Date: Tue,  8 Apr 2025 10:56:56 +0200
+Message-ID: <174410261480.40984.15525439488118757533.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250406202245.53854-1-krzysztof.kozlowski@linaro.org>
+References: <20250406202245.53854-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407102323.2690911-3-robelin@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Robert,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on tip/timers/core]
-[also build test WARNING on linus/master v6.15-rc1 next-20250408]
-[cannot apply to daniel-lezcano/clockevents/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Robert-Lin/clocksource-drivers-timer-tegra186-add-WDIOC_GETTIMELEFT-support/20250407-182954
-base:   tip/timers/core
-patch link:    https://lore.kernel.org/r/20250407102323.2690911-3-robelin%40nvidia.com
-patch subject: [PATCH v3 2/3] clocksource/drivers/timer-tegra186: fix watchdog self-pinging
-config: sh-randconfig-001-20250408 (https://download.01.org/0day-ci/archive/20250408/202504081506.0KaQZjFQ-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504081506.0KaQZjFQ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504081506.0KaQZjFQ-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/clocksource/timer-tegra186.c: In function 'tegra186_timer_probe':
->> drivers/clocksource/timer-tegra186.c:420:22: warning: variable 'irq' set but not used [-Wunused-but-set-variable]
-     420 |         unsigned int irq;
-         |                      ^~~
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-vim +/irq +420 drivers/clocksource/timer-tegra186.c
+On Sun, 06 Apr 2025 22:22:44 +0200, Krzysztof Kozlowski wrote:
+> Device can be unbound, so driver must also release memory for the wakeup
+> source.
+> 
+> 
 
-42cee19a9f839f Thierry Reding 2022-07-04  415  
-42cee19a9f839f Thierry Reding 2022-07-04  416  static int tegra186_timer_probe(struct platform_device *pdev)
-42cee19a9f839f Thierry Reding 2022-07-04  417  {
-42cee19a9f839f Thierry Reding 2022-07-04  418  	struct device *dev = &pdev->dev;
-42cee19a9f839f Thierry Reding 2022-07-04  419  	struct tegra186_timer *tegra;
-42cee19a9f839f Thierry Reding 2022-07-04 @420  	unsigned int irq;
-42cee19a9f839f Thierry Reding 2022-07-04  421  	int err;
-42cee19a9f839f Thierry Reding 2022-07-04  422  
-42cee19a9f839f Thierry Reding 2022-07-04  423  	tegra = devm_kzalloc(dev, sizeof(*tegra), GFP_KERNEL);
-42cee19a9f839f Thierry Reding 2022-07-04  424  	if (!tegra)
-42cee19a9f839f Thierry Reding 2022-07-04  425  		return -ENOMEM;
-42cee19a9f839f Thierry Reding 2022-07-04  426  
-42cee19a9f839f Thierry Reding 2022-07-04  427  	tegra->soc = of_device_get_match_data(dev);
-42cee19a9f839f Thierry Reding 2022-07-04  428  	dev_set_drvdata(dev, tegra);
-42cee19a9f839f Thierry Reding 2022-07-04  429  	tegra->dev = dev;
-42cee19a9f839f Thierry Reding 2022-07-04  430  
-42cee19a9f839f Thierry Reding 2022-07-04  431  	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
-42cee19a9f839f Thierry Reding 2022-07-04  432  	if (IS_ERR(tegra->regs))
-42cee19a9f839f Thierry Reding 2022-07-04  433  		return PTR_ERR(tegra->regs);
-42cee19a9f839f Thierry Reding 2022-07-04  434  
-42cee19a9f839f Thierry Reding 2022-07-04  435  	err = platform_get_irq(pdev, 0);
-42cee19a9f839f Thierry Reding 2022-07-04  436  	if (err < 0)
-42cee19a9f839f Thierry Reding 2022-07-04  437  		return err;
-42cee19a9f839f Thierry Reding 2022-07-04  438  
-42cee19a9f839f Thierry Reding 2022-07-04  439  	irq = err;
-42cee19a9f839f Thierry Reding 2022-07-04  440  
-42cee19a9f839f Thierry Reding 2022-07-04  441  	/* create a watchdog using a preconfigured timer */
-42cee19a9f839f Thierry Reding 2022-07-04  442  	tegra->wdt = tegra186_wdt_create(tegra, 0);
-42cee19a9f839f Thierry Reding 2022-07-04  443  	if (IS_ERR(tegra->wdt)) {
-42cee19a9f839f Thierry Reding 2022-07-04  444  		err = PTR_ERR(tegra->wdt);
-42cee19a9f839f Thierry Reding 2022-07-04  445  		dev_err(dev, "failed to create WDT: %d\n", err);
-42cee19a9f839f Thierry Reding 2022-07-04  446  		return err;
-42cee19a9f839f Thierry Reding 2022-07-04  447  	}
-42cee19a9f839f Thierry Reding 2022-07-04  448  
-42cee19a9f839f Thierry Reding 2022-07-04  449  	err = tegra186_timer_tsc_init(tegra);
-42cee19a9f839f Thierry Reding 2022-07-04  450  	if (err < 0) {
-42cee19a9f839f Thierry Reding 2022-07-04  451  		dev_err(dev, "failed to register TSC counter: %d\n", err);
-42cee19a9f839f Thierry Reding 2022-07-04  452  		return err;
-42cee19a9f839f Thierry Reding 2022-07-04  453  	}
-42cee19a9f839f Thierry Reding 2022-07-04  454  
-42cee19a9f839f Thierry Reding 2022-07-04  455  	err = tegra186_timer_osc_init(tegra);
-42cee19a9f839f Thierry Reding 2022-07-04  456  	if (err < 0) {
-42cee19a9f839f Thierry Reding 2022-07-04  457  		dev_err(dev, "failed to register OSC counter: %d\n", err);
-42cee19a9f839f Thierry Reding 2022-07-04  458  		goto unregister_tsc;
-42cee19a9f839f Thierry Reding 2022-07-04  459  	}
-42cee19a9f839f Thierry Reding 2022-07-04  460  
-42cee19a9f839f Thierry Reding 2022-07-04  461  	err = tegra186_timer_usec_init(tegra);
-42cee19a9f839f Thierry Reding 2022-07-04  462  	if (err < 0) {
-42cee19a9f839f Thierry Reding 2022-07-04  463  		dev_err(dev, "failed to register USEC counter: %d\n", err);
-42cee19a9f839f Thierry Reding 2022-07-04  464  		goto unregister_osc;
-42cee19a9f839f Thierry Reding 2022-07-04  465  	}
-42cee19a9f839f Thierry Reding 2022-07-04  466  
-42cee19a9f839f Thierry Reding 2022-07-04  467  	return 0;
-42cee19a9f839f Thierry Reding 2022-07-04  468  
-42cee19a9f839f Thierry Reding 2022-07-04  469  unregister_osc:
-42cee19a9f839f Thierry Reding 2022-07-04  470  	clocksource_unregister(&tegra->osc);
-42cee19a9f839f Thierry Reding 2022-07-04  471  unregister_tsc:
-42cee19a9f839f Thierry Reding 2022-07-04  472  	clocksource_unregister(&tegra->tsc);
-42cee19a9f839f Thierry Reding 2022-07-04  473  	return err;
-42cee19a9f839f Thierry Reding 2022-07-04  474  }
-42cee19a9f839f Thierry Reding 2022-07-04  475  
+Applied, thanks!
 
+[1/2] gpio: mpc8xxx: Fix wakeup source leaks on device unbind
+      https://git.kernel.org/brgl/linux/c/da47605e43af9996eb46c8a060f259a8c34cc3c5
+[2/2] gpio: zynq: Fix wakeup source leaks on device unbind
+      https://git.kernel.org/brgl/linux/c/c5672e310ad971d408752fce7596ed27adc6008f
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
