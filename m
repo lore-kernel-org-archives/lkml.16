@@ -1,189 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EC1253331;
-	Tue,  8 Apr 2025 20:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358C921517D;
+	Tue,  8 Apr 2025 20:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744144222; cv=none; b=LHBukOguoUcInt5/AprYBuxYQovQVUcPVEoe3PQxYG9riVhR3+8dRT7OkQlF50CjpSaDpYcnjVzMlGI4yfwMN5S4mAlVx/rpChS0tqFTLDDb17sWUwwHtfB1zhYkb5PALaxLsUvDEeBT52cS4uLMJXTtvcWj0ovGEgPugMBpIF0=
+	t=1744144282; cv=none; b=Zwvc14VVAjWfE/bcWew44+EEpbd4432TMtk+NFbS4/X1yrC1xgpz3qT1bRAcUygUJmfE8NFsDo4mMlqvfrA21oagLBCV9+vUhpO6rwDf9nICjwYAPszW5TJtSUzJGFiW/s8eWBTPQYeUnGFDA87IZCToINeGlDbSI3xkOeR5DM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744144222; c=relaxed/simple;
-	bh=VLSMlFX8MHlSUtQUTu5mk0CYrZpnr3KFN4CqZqLwFhk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mE9W4g3H1F4dK6PXHhP9U7UwEV6JlAprZkbNQvkdV8w3ic0k0Nw5wfdy7UwG/av0cy1d5HJcQSpKgwC6unwrHrXhR0EWzNMGXZ7PDDu07rkFSkmWn8c/JWzY0/zm5eOuiv1BgwMnW9/l/vZkq4iu01CVaY+jqVl469adiDRwwhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxuVBUPE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744144282; c=relaxed/simple;
+	bh=DMjZ1/RAZgEsuBn5HCdCnHNlTOYxIgcnTcp3ByTgwos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGyTsR61RqbIyVegoeFIY/nHMCCKA8WYCfyBPZtqk4IJfKgxFgr8RWPe5qgiICcTUWPo395+ROmOlfJ63RXGRQBpxWOIeeJ1Bw6Y3g4mAcvZZt6hU55W1E4OSLtcE3cwqeUa6jFf1JM3eDXKHyIo3ex4/YZY6Z3d2XmPMO9Jkok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NARKNKLj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxuVBUPE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F86AC4CEF0;
-	Tue,  8 Apr 2025 20:30:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NARKNKLj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E14C4CEE5;
+	Tue,  8 Apr 2025 20:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744144222;
-	bh=VLSMlFX8MHlSUtQUTu5mk0CYrZpnr3KFN4CqZqLwFhk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lxuVBUPE/2yNgwdZKDjbI4KgbOyBQI7hO9OJMd+JRBXoTO6kMg69iPwcJx8Ks9p8u
-	 hfjzAcGH2a8jW1gThMpyJ4E+/OUHQUUmyr+oB6GUpzg9NQnZwrOrhsRHdpz7sSRLyr
-	 awDSdJaWGFekc1ou0gSMYpcH5gHAb7AFj1Z1MXzhjMpdz7dUXdmGy5N/vtHz6AlIW8
-	 n+NrpfIJx4mTO3+7ep9lCg0z3ZzeGdVGSGpwmKCaOJTK2asP3qXm+ytnzdw28Eu0bp
-	 ZdmL5g07r9pdv230uBje4nTM4PxQOmH2bkGKUPGzZKLVzziiqIi9IisLMH5ZFUNQ+S
-	 fdHDQ5yeJ6m0g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47312C369A6;
-	Tue,  8 Apr 2025 20:30:22 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Tue, 08 Apr 2025 15:30:01 -0500
-Subject: [PATCH v2 4/4] arm64: tegra: Wire up cec to devkits
+	s=k20201202; t=1744144281;
+	bh=DMjZ1/RAZgEsuBn5HCdCnHNlTOYxIgcnTcp3ByTgwos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NARKNKLjS4L3Drr8clmsRxD7yfH2dqRL2fHdj5qiVNMEvUBhvoGY0QM7dnFK0JjlR
+	 Dq5pVs7/d2Uck1UyGdfYQ/MDRx8QEM7naCVDkf4WWJxX0ZQQfdJwbmD4/ys58b0B0Y
+	 Pm58XV2T06p0YsenRmzpg0lvPQODOWMqbUaaE3F/bwMuBKP2J7Kt2qgSlQTQU7Orl4
+	 /rFiSGVKgqpLzwePYcoWzkWo/3LioKv/t7ewxzw09tL1xhXs9Cwm23xohetRlVxr6y
+	 sZgcjUjFdwRfhZREks/BAGwug8fBeFuWxARlwTNfHVPbH2/RGfyX4/Pf8mgwFxIZK+
+	 nmkL14WG+ADKQ==
+Date: Tue, 8 Apr 2025 22:31:15 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
+Message-ID: <Z_WHk4jP0inUSt7T@gmail.com>
+References: <20250408174726.3999817-1-superm1@kernel.org>
+ <20250408174726.3999817-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-tegra-cec-v2-4-2f004fdf84e8@gmail.com>
-References: <20250408-tegra-cec-v2-0-2f004fdf84e8@gmail.com>
-In-Reply-To: <20250408-tegra-cec-v2-0-2f004fdf84e8@gmail.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744144221; l=4050;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=/KKv/TYqLGMeib4RLCtBAkuSb2lVtoCy1X50R5bg7FY=;
- b=hxvO21PIrWljF/jP5m1TrN/R4morWIR0YmOLoLcWs64IwHg47+h7mATHDUYzxU90M+Qx/5Jmp
- Ynl/Qm2J8VlD2xayhwHfec7kjug4XeIPqfyJX+unxLZPLfGWduDzSLo
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
-
-From: Aaron Kling <webgeek1234@gmail.com>
-
-This enables hdmi cec and routes it to the hdmi port on all supported
-Tegra210, Tegra186, and Tegra194 devkits.
-
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts            | 6 ++++++
- arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts | 6 ++++++
- arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts            | 6 ++++++
- arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi           | 6 ++++++
- arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts            | 6 ++++++
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts            | 6 ++++++
- 6 files changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-index 15aa49fc450399c7bd525adcdb6e92a27a185805..90155e4ff1feb609f79416a410c3666ebef8b634 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -2394,6 +2394,12 @@ usb@3550000 {
- 		phy-names = "usb2-0";
- 	};
- 
-+	cec@3960000 {
-+		status = "okay";
-+
-+		hdmi-phandle = <&sor1>;
-+	};
-+
- 	i2c@c250000 {
- 		/* carrier board ID EEPROM */
- 		eeprom@57 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts b/arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts
-index 26f71651933d1d8ef32bbd1645cac1820bd2e104..a6d7fec2e84fb917018aff843845b02c34fede33 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts
-@@ -712,6 +712,12 @@ usb@3550000 {
- 		phy-names = "usb2-0";
- 	};
- 
-+	cec@3960000 {
-+		status = "okay";
-+
-+		hdmi-phandle = <&sor1>;
-+	};
-+
- 	hsp@3c00000 {
- 		status = "okay";
- 	};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index c32876699a43e9f57b3888c5bc0f5da73c5b95b5..ea6f397a27926e3dcd54002177f68749bc1cc309 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -2121,6 +2121,12 @@ usb@3610000 {
- 			phy-names = "usb2-0", "usb2-1", "usb2-3", "usb3-0", "usb3-2", "usb3-3";
- 		};
- 
-+		cec@3960000 {
-+			status = "okay";
-+
-+			hdmi-phandle = <&sor2>;
-+		};
-+
- 		i2c@c240000 {
- 			typec@8 {
- 				compatible = "cypress,cypd4226";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi
-index 4a17ea5e40fd034c6f4acb023cd7908d6800f710..16cf4414de599baea96362b494be40c800a8197f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi
-@@ -2174,6 +2174,12 @@ usb@3610000 {
- 			phy-names = "usb2-1", "usb2-2", "usb3-2";
- 		};
- 
-+		cec@3960000 {
-+			status = "okay";
-+
-+			hdmi-phandle = <&sor1>;
-+		};
-+
- 		host1x@13e00000 {
- 			display-hub@15200000 {
- 				status = "okay";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-index a6a58e51822d90f8815df880ea7e668caff1b1ec..627abf51a5a472ddcc42fdc1d783876b0a03da47 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts
-@@ -90,6 +90,12 @@ eeprom@57 {
- 		};
- 	};
- 
-+	cec@70015000 {
-+		status = "okay";
-+
-+		hdmi-phandle = <&sor1>;
-+	};
-+
- 	clock@70110000 {
- 		status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-index 0ecdd7243b2eb1abba9adbe9a404b226c29b85ef..ec0e84cb83ef9bf8f0e52e2958db33666813917c 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-@@ -419,6 +419,12 @@ pmc@7000e400 {
- 		nvidia,sys-clock-req-active-high;
- 	};
- 
-+	cec@70015000 {
-+		status = "okay";
-+
-+		hdmi-phandle = <&sor1>;
-+	};
-+
- 	hda@70030000 {
- 		nvidia,model = "NVIDIA Jetson Nano HDA";
- 
-
--- 
-2.48.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408174726.3999817-2-superm1@kernel.org>
 
 
+* Mario Limonciello <superm1@kernel.org> wrote:
+
+> +static inline char *get_s5_reset_reason(u32 value)
+> +{
+> +	if (value & BIT(0))
+> +		return "trip of thermal pin BP_THERMTRIP_L";
+> +	if (value & BIT(1))
+> +		return "power button";
+> +	if (value & BIT(2))
+> +		return "shutdown pin";
+> +	if (value & BIT(4))
+> +		return "remote ASF power off command";
+> +	if (value & BIT(9))
+> +		return "internal CPU thermal trip";
+> +	if (value & BIT(16))
+> +		return "user reset via BP_SYS_RST_L pin";
+> +	if (value & BIT(17))
+> +		return "PCI reset";
+> +	if (value & BIT(18) ||
+> +	    value & BIT(19) ||
+> +	    value & BIT(20))
+> +		return "CF9 reset";
+> +	if (value & BIT(21))
+> +		return "power state of acpi state transition";
+> +	if (value & BIT(22))
+> +		return "keyboard reset pin KB_RST_L";
+> +	if (value & BIT(23))
+> +		return "internal CPU shutdown";
+> +	if (value & BIT(24))
+> +		return "failed boot timer";
+> +	if (value & BIT(25))
+> +		return "watchdog timer";
+> +	if (value & BIT(26))
+> +		return "remote ASF reset command";
+> +	if (value & BIT(27))
+> +		return "data fabric sync flood event due to uncorrected error";
+> +	if (value & BIT(29))
+> +		return "MP1 watchdog timer timeout";
+> +	if (value & BIT(30))
+> +		return "parity error";
+> +	if (value & BIT(31))
+> +		return "software sync flood event";
+> +	return "unknown reason";
+
+Can multiple bits be set in principle, belonging to different reasons?
+
+Also, wouldn't a clean, readable text array and find_first_bit() result 
+in more readable and more maintainable code?
+
+Which can be initialized thusly:
+
+  static const char *s6_reset_reason_txt[] = {
+
+	[0] = "trip of thermal pin BP_THERMTRIP_L",
+	[1] = "power button",
+	[2] = "shutdown pin",
+	[4] = "remote ASF power off command",
+	[9] = "internal CPU thermal trip",
+	...
+
+  };
+
+Also the text should probably be expanded into standard noun+verb 
+sentences or so, to make it all less ambiguous:
+
+  static const char *s6_reset_reason_txt[] = {
+
+	[0] = "thermal pin BP_THERMTRIP_L was tripped",
+	[1] = "power button was pressed",
+	[2] = "shutdown pin was shorted",
+	[4] = "remote ASF power off command was received",
+	[9] = "internal CPU thermal limit was tripped",
+	...
+  };
+
+etc. Note the deliberate use of past tense, to make it clear this 
+refers to a previous event, while usually syslog events indicate 
+current events.
+
+> +	/*
+> +	 * FCH::PM::S5_RESET_STATUS
+> +	 * PM Base = 0xFED80300
+> +	 * S5_RESET_STATUS offset = 0xC0
+> +	 */
+> +	addr = ioremap(0xFED803C0, sizeof(value));
+
+0xFED803C0 is a magic number, please define a symbol for it.
+
+> +	if (!addr)
+> +		return 0;
+> +	value = ioread32(addr);
+> +	iounmap(addr);
+> +
+> +	pr_info("System was reset due to %s (0x%08x)\n",
+> +		get_s5_reset_reason(value), value);
+
+Please make the source of this printout a bit more specific, something 
+like:
+
+      x86/amd/Fam17h: Previous system reset reason [%0x08x]: %s
+
+or so? Also note how grepped output will be easier to read due to 
+flipping the fixed-width numeric and the variable-length text output:
+
+ # Before:
+
+        x86/amd/Fam17h: Previous system reset reason: thermal pin BP_THERMTRIP_L was tripped (0x00000001)
+        x86/amd/Fam17h: Previous system reset reason: power button was pressed (0x00000002)
+        x86/amd/Fam17h: Previous system reset reason: shutdown pin was shorted (0x00000004)
+        x86/amd/Fam17h: Previous system reset reason: remote ASF power off command was received (0x00000010)
+        x86/amd/Fam17h: Previous system reset reason: internal CPU thermal limit was tripped (0x00000200)
+
+ # After:
+
+        x86/amd/Fam17h: Previous system reset reason: [0x00000001]: thermal pin BP_THERMTRIP_L was tripped
+        x86/amd/Fam17h: Previous system reset reason: [0x00000002]: power button was pressed
+        x86/amd/Fam17h: Previous system reset reason: [0x00000004]: shutdown pin was shorted
+        x86/amd/Fam17h: Previous system reset reason: [0x00000010]: remote ASF power off command was received
+        x86/amd/Fam17h: Previous system reset reason: [0x00000200]: internal CPU thermal limit was tripped
+
+Thanks,
+
+	Ingo
