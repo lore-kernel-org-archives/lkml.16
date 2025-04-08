@@ -1,82 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167ED22DFB2
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA8B288CC
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128820; cv=none; b=fgnoOMDiXRIkQAF0WMjJKbdnpGB8A5/0drGdTNI5B9VwSIed071OdDYTS4Yz+uju/crGHs5NA4b1YaA6Zaro/AyFUNcAOQU8TzoH8K3NWcoHrlwEAIAj1j0Zh1qNR7vsfPcdqzWDhfnzb/5J9PDuDZlAOppOWoVIHQDTh1dzdvQ=
+	t=1744128862; cv=none; b=TpEo8/GugCLjaQ3EqIS72dYdx3HLI9o/WbyoGj5EfXltyJ6rVvZQzTLi4sLYr9HdwAH+elSzb5w60sz4RFuHKUDjxQAeWEZbMj56FTaoe8mRjXEhWPzRVNzSkkw0L5YnhatTHow+D97Dfk+rnfCilh58hGSeD+cBa85Rvbwkzco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128820; c=relaxed/simple;
-	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGmcDtb92KdxmxO2HUyhxAwieReyDQ56WxTYD0sAePbmk3ruN8kyXao9jA2cPCxDnFWbd03SJaGmQmwYq7yVz3al+Xb64XwueahpY6DhB3FqDkHnPbtZU/WPjgM06UgAhNFkdZ/L+kMuMz6Db/YXQi/qSEH9Sne2njPRwBAJZ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1bwh1C7T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UwrMdjxl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744128862; c=relaxed/simple;
+	bh=C6ukl8x0/ghLtDCKRtgYCae3sNn5WYbGaA1IAinZTgc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=r6xMmapsj0RisX8pRvBNdWG5N5I58OB8G7V2uRbdE9FDUPbb2edf7j4PSZ1ptpAQz8IehDuftaT8Q+VF27J/nXZT0Y/GIqRiUfEeC4b+1H/83WudqIOwO1H2NInartf8UNSG7zqHtHSjimMyweJPka3F97PgwnsiX6JVInuzg4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WN/Y6nFO; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1bwh1C7T";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UwrMdjxl"
-Date: Tue, 8 Apr 2025 18:13:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744128816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
-	b=1bwh1C7Tru+vHvPWRbPESE9S/80UR3OYGugOBXQc7ZT/Vt8t+WmeIDOX2nBBqoAjMw3xwV
-	Xxb7oiBqsEr6aljxMZ63b7j5z2ict0zPWSegeCbwWxQV0+ibTJXpmTku+xGjO7miFgfJzE
-	h9y+NbXLKQK0EY29FObBkmHWfG4m+g1U6q2ZyJKXH8GelMmYf8OI4RSeETIbU/C3Dfp0wV
-	Ztdso4eg2QQerF2cl5JR/lFe+iUTPOY1uB4lRcssq4MAXQ2B/4HrzZkjB35UQNOYyuwbq0
-	pxKzsqqJgjEzG+h0NOC6dJ+CAKjj34b9crFzE33k1ntQd7VpTF59MfOV8w8I7Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744128816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
-	b=UwrMdjxlY5e20i7ws2Go7wK8LCzeN6KNKEZbnUw0s7sV8z2o5xC/QuqmhzmZA0BU9bkPW5
-	rB3t/rUruhNW9HBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
-Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v11 00/19] futex: Add support task local hash maps,
- FUTEX2_NUMA and FUTEX2_MPOL
-Message-ID: <20250408161335.rAuKGKP_@linutronix.de>
-References: <20250407155742.968816-1-bigeasy@linutronix.de>
- <df442511-8a3d-496b-bd7f-a1c7b0973a3c@igalia.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WN/Y6nFO"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AVUj2018786
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 16:14:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=JChD1O+yvBzCtKJYKyDcBQ
+	V0cXUyrIoaCqUHMw537Mw=; b=WN/Y6nFOrDT1UqPuXYnL6kcEPZ3GE6wdWWvZJS
+	mrQkLkuCkMLwTL1T6gF75IgU+U41DniIV/Vqd5vM8j+nd7wwspRcYG1t9/VYMyt1
+	wPIjp0AxGpzrquaVgP2asBqRSBu2gZy03WmC1hdPjk1LkitKor5hqubFG7owVlZd
+	1KTK97lhdULYJ77dd0jmBykLzPZGl6UpKHT7LZ9geLUebjHur8nMDMn+WOkcAM0U
+	z0lE80k6+b6A4EneHJV93zyWDsKnRaSE7sltgPA0ryCvIoYBL6kjLeRf1Qa3sfTM
+	dagWWD3c1KevuHngcaJIkJ2gbTRkyEIE4SkeDAfXmLD39MXA==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdggdnc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 16:14:19 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so5048225a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:14:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744128858; x=1744733658;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JChD1O+yvBzCtKJYKyDcBQV0cXUyrIoaCqUHMw537Mw=;
+        b=K7jo38TY3VrrqBhN/WogVicIXYKhPNJkh82p6yuNmfjdXJUl4b8ws0YfsTm0wHhADm
+         kXtvG5TPwEJTSKuPeMf6w/0qGScaua/7ohT2C6QAkP38iH6BxDKsgfCvEZTI1CYEpPNw
+         VhVPZ4xHaVz/4mxEVKeqSwka5SMG3dpuaX175Ku6SfMu0nFSQHw7eTK+zkxe3HYtOw7x
+         zRgZIL8y3f7kWskYNVfyzQaVGMRH/uJC0W+kXK3+Ect0V4kDgUTyH4sdM/PpxYh8BXDO
+         jeUogn+2X2rR1wvYXeTiIzElu+jGozIJd6KivQJ8CjS+Zq/rUjq5TjTMmwHvAtMUuprm
+         RUKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqK6xVM3QK6mz9qv/BDNikc15MVYF+ltFnUZ+RwSd1zfuSAM0iBx2AI2NMc4ar9tHDIJMTd2pwfIGAJfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykSva9/qyFbR1pIFOjwSCXWAfQW2M+VjEAAK+epLnOjLwAR48G
+	hcVfnq7ZDvfxTxlqL9g4XGX3s9EgJ47/KAYE2AWaoQp2XwCYDgbr7WZTPdDgwgWBt3mTKsNEchK
+	xc9cujxpnsNWaYxt1PgMCvvbNHwWiliny7busAicsCRLhE2n6b2ytOg2DQUl9EkI=
+X-Gm-Gg: ASbGnctkmzxPKWHGPSBt/a3N+8BF8moUJ+jLLUYqgHsWnI4np6IZLJNwSTU7SlD8Cke
+	TE+4pBuo5fxvGIS0MxGie1b9BUxNXPqEqyA41nmGZ25QEnpsZrtFk/zS/wgGKaR3bO0dhzZcrwL
+	oeTbujwPsN6zATf7BQqwjISm4gCxSyALJ0S8EjVBREPiLiRVwMQ7p88AkMKW0EQWp6N/27/MVd6
+	XuJuVowCW8EXlJm4ZjVoQYs2Vqvun6K9QChSpiX/RtMPDj4aEd7EsG6jPPRGkMozF1FL0uu7++Q
+	S8QpNQn+D6cnnsMNzfU8pzYA3XRBhxvTDQYbNLrRlbiCeRV9oL6w
+X-Received: by 2002:a17:90b:568b:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-306a6153940mr24692354a91.14.1744128857880;
+        Tue, 08 Apr 2025 09:14:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFOioE+oyWgP7nuMALMOBlPvbaof1KJ+SidMoWLQ93dXA/LLo0o1Vnym6X8fAaQxiq3YX1F3w==
+X-Received: by 2002:a17:90b:568b:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-306a6153940mr24692273a91.14.1744128856950;
+        Tue, 08 Apr 2025 09:14:16 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a32066sm11217405a91.27.2025.04.08.09.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 09:14:16 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Date: Tue, 08 Apr 2025 09:14:12 -0700
+Subject: [PATCH ath-next] wifi: ath12k: ahb: Replace del_timer_sync() with
+ timer_delete_sync()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <df442511-8a3d-496b-bd7f-a1c7b0973a3c@igalia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-timer_delete_sync-v1-1-4dcb22f71083@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAFNL9WcC/4WOQQ6CMBBFr0K6tqStUNSV9zCGTMsgTaDVthII4
+ e4W1kY3k/z8vPdnIQG9wUAu2UI8jiYYZ1Pgh4zoDuwDqWlSJoKJkhXsRKMZ0NcN9hixDrPVVEk
+ NR1k1ooGWJO7psTXT7rwRiB21OEVyT42CgFR5sLrbnFs3gLEb1JkQnZ/3P0a+oz8mR045VWeQH
+ AWXqmJXF0L+ekOv3TDk6ex7o/grEkmkJTJWSF22WHwRrev6AZ6aBkInAQAA
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+X-Mailer: b4 0.14.0
+X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f54b5b cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=bC-a23v3AAAA:8 a=rOUgymgbAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=L6nWsz-Al0U9Y10IXFUA:9 a=QEXdDO2ut3YA:10 a=-FEs8UIgK8oA:10 a=rl5im9kqc5Lf4LNbBjHf:22 a=FO4_E8m0qiDe52t0p3_H:22 a=MP9ZtiD8KjrkvI0BhSjB:22
+X-Proofpoint-ORIG-GUID: -FqvqG3LYh8SA8OlX86_oYNrUZUIXeTL
+X-Proofpoint-GUID: -FqvqG3LYh8SA8OlX86_oYNrUZUIXeTL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080112
 
-On 2025-04-08 10:51:29 [-0300], Andr=C3=A9 Almeida wrote:
-> Hi Sebastian,
-Hi,
+A linux-next build error was reported in [1].
 
-> Thanks for your patchset. I think the perf support is great, but usually
-> those new uAPI options should come with some selftests too.
+This is the result of a treewide timer cleanup [2].
 
-You mean "tools/testing/selftests/futex/functional" ?
-I could add something once it is merged. The API changed in this
-submission vs the previous one where the "immutable" argument was added.
-And I am waiting for some feedback on that.
+The ath12k AHB support has not yet landed in the tree where the
+cleanup occurred, and hence a new call to del_timer_sync() was not
+addressed by the treewide cleanup.
 
-The MPOL & NUMA bits could use also some documentation. Slowly once we
-get there=E2=80=A6
+So fix that one instance.
 
-Sebastian
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://msgid.link/20250408105146.459dfcf5@canb.auug.org.au # [1]
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=8fa7292fee5c5240402371ea89ab285ec856c916 # [2]
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+---
+ drivers/net/wireless/ath/ath12k/ahb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
+index 1c2171e2bb73..a9d9943a73f4 100644
+--- a/drivers/net/wireless/ath/ath12k/ahb.c
++++ b/drivers/net/wireless/ath/ath12k/ahb.c
+@@ -334,7 +334,7 @@ static void ath12k_ahb_stop(struct ath12k_base *ab)
+ 		ath12k_ahb_ce_irqs_disable(ab);
+ 	ath12k_ahb_sync_ce_irqs(ab);
+ 	ath12k_ahb_cancel_workqueue(ab);
+-	del_timer_sync(&ab->rx_replenish_retry);
++	timer_delete_sync(&ab->rx_replenish_retry);
+ 	ath12k_ce_cleanup_pipes(ab);
+ }
+ 
+
+---
+base-commit: ac17b1211841c98a9b4c2900ba2a7f457c80cf90
+change-id: 20250408-timer_delete_sync-b6ca367d2daf
+
