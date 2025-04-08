@@ -1,94 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85122D786
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EAE22DFA4;
+	Tue,  8 Apr 2025 17:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744133929; cv=none; b=uSjRJlOEWqDO1O38Q2BOPftbX05tlWSyCddaKFIWZPAEnOwpdFQS1CPfdXL470iNZdVaYTA5cpWT2GoLcIfvh0+Bmy5nJVfwXCLFIigVlPPHc3pm5Y0FgFv0Enwhlts3CBFRlx89vCy53CVd9Lf1yDkuWlB1K0geQqL8VHtJdrQ=
+	t=1744134018; cv=none; b=OJqMvpF+9R/W93RWHHyXjWIL01L2tzFyiLqui4E9Q2f7BHCS9yp5GxGN6Y4qeFw9t86V6sD8fIm8e0Gi8axRpuKh6SEy86ME2Awe9UFkiVesna31HP3Wrb67TCukZn+WeBFXNtGZ0eJoFgNiwCeNXet4UJio+88/2dB/lmbsZHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744133929; c=relaxed/simple;
-	bh=AkuP0bUUMlSOQKFownX9JGiZ0AtO1qOpMcVVRDDfLNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kx414gl3ifmr5IOrepPAClZ7/rkrB/kxNlBranCenld8Tls4oGnIXdoUXICL3L4zsU2FsjaH1mvPYTuTok8Id0nkwfSHDtH0AXmRf7Z/djbyGrpLEC9mY3/jz76mtr3qlrCF/L2DlyY9qQvW7zV994cA1SIdEOVTbQjmimfgH3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ix0cOZeI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744134018; c=relaxed/simple;
+	bh=ZoBMwdYlPj8YLGM8IDapyHFDVDxXMdmPb7Zir1vyW34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kiRquIEYePD3f0Y3FGltuZcSkvXTipImNl3HOtCt1nJfSZYdvqB65/5PWiYlEe4zOgpTFcbzvk4pzprPQNw7BZSQf5dq5sGRyR19oc6V3FPLNii9tltvKPiTmUGPWO5h4bBG9AHssaoCRjjfGEC9REInFiKY/EI/7WWFL5JaZI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KOx/f5Uy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ix0cOZeI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744133927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=itYmtHonV37X5He5iLoB2zIL/ZP2GM0njYcsfBzTAtA=;
-	b=ix0cOZeI5aSsDF2j89gfmS6acu5oQnFOF02/bB+xxKt7Sr4IPKoJsSrMyAY2HFghr0YF+n
-	9bTQ598YAPGOetFAGM+NfNZogeTfzPEJd07tsHGwE9IBCzKfkS0N8RNg90NIWMjYRvcNGK
-	otdE61bjmkioeUQHPEcJucH0/iCX0/M=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-CAxqeKhHNMOGODJUYiZQ0g-1; Tue,
- 08 Apr 2025 13:38:43 -0400
-X-MC-Unique: CAxqeKhHNMOGODJUYiZQ0g-1
-X-Mimecast-MFC-AGG-ID: CAxqeKhHNMOGODJUYiZQ0g_1744133922
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F40E1800266;
-	Tue,  8 Apr 2025 17:38:42 +0000 (UTC)
-Received: from f39.redhat.com (unknown [10.45.224.220])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56AAD19560AD;
-	Tue,  8 Apr 2025 17:38:40 +0000 (UTC)
-From: Eder Zulian <ezulian@redhat.com>
-To: vinicius.gomes@intel.com,
-	dave.jiang@intel.com,
-	vkoul@kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Eder Zulian <ezulian@redhat.com>
-Subject: [PATCH] dmaengine: idxd: Remove unused pointer and macro
-Date: Tue,  8 Apr 2025 19:38:29 +0200
-Message-ID: <20250408173829.892317-1-ezulian@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KOx/f5Uy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5tE/97qDLNInhrSv41O24hz6k5it7lrWx1B8nzMlNNY=; b=KOx/f5UyipuUZDxVD5jHE+qtD2
+	eu74DLpYFMC1h+xs/K+Yc3/IGk3Plq8aRYPYtEobrVYMeFJvoXpTOtoRRqrUJBUPtc/oY9cvtp/lD
+	gKRIIV5K3Ay5rO73pxFfgDEaeM4l+kvMJBV/UxCy4LKTUvAXPVBmtE0chmbr9c2fpSmrm4V1I0bvt
+	qVHlSwz6Tx3BeDuT4Zh7G7fi3wuMGEI1XTtoz+ESpsT2mM38529r1gpY1IKCfBTHF7RDItD5mxBJ7
+	Wah2MxhHtGeY0sW+tFM+xPtnysJSl7HjGpXBzLxKQwN1mbRbcboMHLNFuI3tvLHMlCUzQg23htLGm
+	jl0FA5PQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2Cvg-00000000Iq7-25G6;
+	Tue, 08 Apr 2025 17:40:08 +0000
+Date: Tue, 8 Apr 2025 18:40:08 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v2 02/12] x86: pgtable: Always use pte_free_kernel()
+Message-ID: <Z_VfeFgrj23Oa0fX@casper.infradead.org>
+References: <20250408095222.860601-1-kevin.brodsky@arm.com>
+ <20250408095222.860601-3-kevin.brodsky@arm.com>
+ <409d2019-a409-4e97-a16f-6b345b0f5a38@intel.com>
+ <Z_VQxyqkU8DV7QGy@casper.infradead.org>
+ <9247436d-ae01-4eb8-bd5d-370b2fb2eebc@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9247436d-ae01-4eb8-bd5d-370b2fb2eebc@intel.com>
 
-The pointer 'extern struct kmem_cache *idxd_desc_pool' and the macro
-'#define IDXD_ALLOCATED_BATCH_SIZE 128U' were introduced in commit
-bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
-accelerators") but they were never used.
+On Tue, Apr 08, 2025 at 09:54:42AM -0700, Dave Hansen wrote:
+> On 4/8/25 09:37, Matthew Wilcox wrote:
+> > On Tue, Apr 08, 2025 at 08:22:47AM -0700, Dave Hansen wrote:
+> >> Are there any tests for folio_test_pgtable() at free_page() time? If we
+> >> had that, it would make it less likely that another free_page() user
+> >> could sneak in without calling the destructor.
+> > It's hidden, but yes:
+> > 
+> > static inline bool page_expected_state(struct page *page,
+> >                                         unsigned long check_flags)
+> > {
+> >         if (unlikely(atomic_read(&page->_mapcount) != -1))
+> >                 return false;
+> > 
+> > PageTable uses page_type which aliases with mapcount, so this check
+> > covers "PageTable is still set when the last refcount to it is put".
+> 
+> Huh, so shouldn't we have ended up in bad_page() for these, other than:
+> 
+>         pagetable_dtor(virt_to_ptdesc(pmd));
+>         free_page((unsigned long)pmd);
 
-Signed-off-by: Eder Zulian <ezulian@redhat.com>
----
- drivers/dma/idxd/idxd.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 214b8039439f..74e6695881e6 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -19,7 +19,6 @@
- 
- #define IDXD_DRIVER_VERSION	"1.00"
- 
--extern struct kmem_cache *idxd_desc_pool;
- extern bool tc_override;
- 
- struct idxd_wq;
-@@ -171,7 +170,6 @@ struct idxd_cdev {
- 
- #define DRIVER_NAME_SIZE		128
- 
--#define IDXD_ALLOCATED_BATCH_SIZE	128U
- #define WQ_NAME_SIZE   1024
- #define WQ_TYPE_SIZE   10
- 
--- 
-2.49.0
-
+I think at this point in Kevin's series, we don't call the ctor for
+these pages, so we never set PageTable() on them.  I could be wrong;
+as Kevin says, this is all very twisty and confusing with exceptions and
+exceptions to exceptions.  This series should reduce the confusion.
