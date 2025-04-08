@@ -1,118 +1,249 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F7F267F5B;
-	Tue,  8 Apr 2025 12:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD45269AE4;
+	Tue,  8 Apr 2025 12:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114429; cv=none; b=MlmhWBRU6qqtVAB+4yXFZmHEELY21rcagZWRDoGhqYcgUGdjsjf87ZMCUvNfn79ktZLUgXuIvO70g2pCIMgcMSedRzFHSg07AUKY3u2kuNRoMyIAo7lRFd8ZDrm57ACRoJpXkEW5fmuPUr1X7vRJrgSbwKw5Sbn54fC3AnUwyPo=
+	t=1744114560; cv=none; b=BjzuH0xaiUzQtKcFypEiKLgD7/PxOdB33nvea2iNJ/lrKtxVLOlnxctt/ao2YPs60aCHKF+Nv4pq9e5XjS2/Mv6jdZl51kdrT8l7mKGYrBek1aAuIC3s7UGrihknEMK4JqHfFJqIVRi2iW5fpEhufiNuz/6vpxNBZgw3h89KxCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114429; c=relaxed/simple;
-	bh=B8PTwaDj7K59RujK2e0J/WXmp9xxoOcYfe4vkX2JjI0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=jD1m2G9/Huz1lm3CwzsSbwU70tCK3IosWTW8nXM0mx8JdtkPEckrpNp/uU9luNb4HmoQP0DXAhqYB+4mulXwUw1cQt4201sA8V1dTcmyc7jQR2i5UOmA7slGhATSr4w+NyvGgloT8vWgefW14WkrGpgQbrVRc6r0BeuIhROwJ84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Ix6CQ+a2 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744114560; c=relaxed/simple;
+	bh=0At7IzwdatWGZBhdK9Dv1ozq8/63R2hw8yDEq6H5d7g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ATllasZ8vMopjI++Y80TTNfWYsJnxoe8bCJy/eXCIAtl+CAjWWHRttLWazaMPLcOLlPGktBhPh1HdfLqS4upfo32cSAy3hpLyasbohmvLlse+DPWGW5LsbiVO93W38iDdQusdFX0gwfSp1kUomW3P39R+I3cDakxtGFK2FjnXp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ABdse7Ux; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Ix6CQ+a2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=ILA1Emj1QLC1c231nW4rM5keKBvhKOxLvHOZgZlnRr8=; b=I
-	x6CQ+a2FSvO5Qo5ExDJs63EszJSbZphGNR0FsT6uxiEkN+19w/wOIaz0QIC3Fd3i
-	+OBkizvL5GxBJjxaTSIe6ySFEgGvsb+hFq9bLW1VjDt6vk0FJkhZc003MgGsM/MI
-	/oxeF4zBMwnlM094SLXhaqcJ+c78/SJMqMVKahA8a0=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-119 (Coremail) ; Tue, 8 Apr 2025 20:12:29 +0800 (CST)
-Date: Tue, 8 Apr 2025 20:12:29 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Alex Bee" <knaerzche@gmail.com>
-Cc: heiko@sntech.de, conor+dt@kernel.org, krzk+dt@kernel.org,
-	robh@kernel.org, hjc@rock-chips.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com,
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	"Andy Yan" <andy.yan@rock-chips.com>
-Subject: Re:Re: [PATCH v3 7/7] drm/rockchip: inno-hdmi: Convert to drm
- bridge
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <680a40a8-07c1-4dde-93b2-337ab15f7afe@gmail.com>
-References: <20250402123150.238234-1-andyshrk@163.com>
- <20250402123150.238234-8-andyshrk@163.com>
- <680a40a8-07c1-4dde-93b2-337ab15f7afe@gmail.com>
-X-NTES-SC: AL_Qu2fBv2au0sv7ySQZOkfmkcVgOw9UcO5v/Qk3oZXOJF8jD7p+iM7bGVSOVjpzuO0ATqGmgmGbTRc5OZaT5NBc5I6aLpXBZMdvZ3O/9vr63+/wg==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ABdse7Ux"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744114558; x=1775650558;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0At7IzwdatWGZBhdK9Dv1ozq8/63R2hw8yDEq6H5d7g=;
+  b=ABdse7UxQZJ4Zi5fZSqMFzTxirookbxQDfKYdMFUqe+Qh+x1+jrWIagJ
+   p/CWRf/Hm0S2OnOK6/dY0BOMN6uSCbued9OdTG2D+uaVtvp5TzdTMmTjq
+   UvTFCgWAe9BO6mIkdL3UgOGFYk6G43p7MTLJ+ghNE4B2wIxHLS5aawy22
+   cUkuOKSF8OWA1Ll1B5uHK/2qlY2gv25mGjqvKL1t0iHrhnJ/sJsV/pzJP
+   2cDNpmnC8hH07XNF//zVcSzAm7aUM6QypmeIywcbygCcSybPvzZ2ymsFi
+   S2C6y4kaGW7Sye3+0+nG5DRaCDSdtrA2ubWFPnEcobJ6B+9th/nyqXR0u
+   A==;
+X-CSE-ConnectionGUID: i4wsa2yARUi20GMtvOBeRw==
+X-CSE-MsgGUID: EgQvmsjFSYGgdYgPeGLoug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="62945043"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="62945043"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:15:57 -0700
+X-CSE-ConnectionGUID: tX5oH5FaT6CZwQ54XW+SAw==
+X-CSE-MsgGUID: 1KzW7T8WS3m8zK1CA5ghJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128773776"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:15:51 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 8 Apr 2025 15:15:48 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 2/6] platform/x86: Add lenovo-wmi-helpers
+In-Reply-To: <20250408012815.1032357-3-derekjohn.clark@gmail.com>
+Message-ID: <a1eb6081-74ed-6413-9534-42e1d38ed96e@linux.intel.com>
+References: <20250408012815.1032357-1-derekjohn.clark@gmail.com> <20250408012815.1032357-3-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <618c65eb.b8a8.1961550f5ae.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:dygvCgCnr56tEvVnldSSAA--.23618W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAYpXmf1CbLjmQACsw
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=US-ASCII
 
-CgpIaSBBbGV477yMCgpBdCAyMDI1LTA0LTAzIDAxOjI0OjIyLCAiQWxleCBCZWUiIDxrbmFlcnpj
-aGVAZ21haWwuY29tPiB3cm90ZToKPgo+SGkgQW5keSwKPgo+PiBGcm9tOiBBbmR5IFlhbiA8YW5k
-eS55YW5Acm9jay1jaGlwcy5jb20+Cj4+IAo+PiBDb252ZXJ0IGl0IHRvIGRybSBicmlkZ2UgZHJp
-dmVyLCBpdCB3aWxsIGJlIGNvbnZlbmllbnQgZm9yIHVzIHRvCj4+IG1pZ3JhdGUgdGhlIGNvbm5l
-Y3RvciBwYXJ0IHRvIHRoZSBkaXNwbGF5IGRyaXZlciBsYXRlci4KPj4gCj4+IFNpZ25lZC1vZmYt
-Ynk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4gCj4+IC0tLQo+PiAKPj4g
-Q2hhbmdlcyBpbiB2MzoKPj4gLSBGaXJzdCBpbmNsdWRlZCBpbiB2Mwo+PiAtIExpbmsgdG8gVjI6
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2RyaS1kZXZlbC8yMDI1MDMyNTEzMjk0NC4xNzExMTEt
-MS1hbmR5c2hya0AxNjMuY29tLwo+PiAKPj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
-aWcgICAgICAgICAgICAgICAgfCAgIDcgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFr
-ZWZpbGUgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAgLi4uL2lubm9faGRtaS5jID0+IGJyaWRn
-ZS9pbm5vLWhkbWkuY30gICAgICAgIHwgOTI0ICsrKysrKysrKystLS0tLS0tLQo+PiAgIGRyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICB8ICAgMSArCj4+ICAgZHJp
-dmVycy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgIHwgICAyICstCj4+ICAg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC5jIHwgMTg3ICsrKysK
-Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmggICAgICAgICAgfCAzNDkg
-LS0tLS0tLQo+PiAgIGluY2x1ZGUvZHJtL2JyaWRnZS9pbm5vX2hkbWkuaCAgICAgICAgICAgICAg
-ICB8ICAzMyArCj4+ICAgOCBmaWxlcyBjaGFuZ2VkLCA3NDEgaW5zZXJ0aW9ucygrKSwgNzYzIGRl
-bGV0aW9ucygtKQo+PiAgIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve3JvY2tjaGlwL2lubm9faGRt
-aS5jID0+IGJyaWRnZS9pbm5vLWhkbWkuY30gKDUyJSkKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS1yb2NrY2hpcC5jCj4+ICAgZGVsZXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAo+PiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2RybS9icmlkZ2UvaW5ub19oZG1pLmgKPj4KPgo+Li4u
-Cj4KPj4gKyNkZWZpbmUgbV9SWF9ET05FCQkJKDEgPDwgMCkKPj4gKwo+PiArI2RlZmluZSBIRE1J
-X0NFQ19UWF9JTlQJCQkweGRhCj4+ICsjZGVmaW5lIEhETUlfQ0VDX1JYX0lOVAkJCTB4ZGIKPj4g
-KyNkZWZpbmUgSERNSV9DRUNfQlVTRlJFRVRJTUVfTAkJMHhkYwo+PiArI2RlZmluZSBIRE1JX0NF
-Q19CVVNGUkVFVElNRV9ICQkweGRkCj4+ICsjZGVmaW5lIEhETUlfQ0VDX0xPR0lDQUREUgkJMHhk
-ZQo+PiArCj4+ICAgc3RydWN0IGlubm9faGRtaV9pMmMgewo+PiAgIAlzdHJ1Y3QgaTJjX2FkYXB0
-ZXIgYWRhcDsKPj4gICAKPj4gQEAgLTY4LDQxICszOTUsMTggQEAgc3RydWN0IGlubm9faGRtaV9p
-MmMgewo+PiAgIAo+PiAgIHN0cnVjdCBpbm5vX2hkbWkgewo+PiAgIAlzdHJ1Y3QgZGV2aWNlICpk
-ZXY7Cj4+IC0KPj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7Cj4+ICAgCXN0cnVjdCBjbGsg
-KnBjbGs7Cj4+ICAgCXN0cnVjdCBjbGsgKnJlZmNsazsKPj4gICAJdm9pZCBfX2lvbWVtICpyZWdz
-Owo+PiAgIAlzdHJ1Y3QgcmVnbWFwICpncmY7Cj4+ICAgCj4+IC0Jc3RydWN0IGRybV9jb25uZWN0
-b3IJY29ubmVjdG9yOwo+PiAtCXN0cnVjdCByb2NrY2hpcF9lbmNvZGVyCWVuY29kZXI7Cj4+IC0K
-Pj4gICAJc3RydWN0IGlubm9faGRtaV9pMmMgKmkyYzsKPj4gICAJc3RydWN0IGkyY19hZGFwdGVy
-ICpkZGM7Cj4+IC0KPj4gLQljb25zdCBzdHJ1Y3QgaW5ub19oZG1pX3ZhcmlhbnQgKnZhcmlhbnQ7
-Cj4+ICsJY29uc3Qgc3RydWN0IGlubm9faGRtaV9wbGF0X2RhdGEgKnBsYXRfZGF0YTsKPj4gKwl1
-bnNpZ25lZCBpbnQgY29sb3JpbWV0cnk7Cj4KPnRoYW5rcyBhIGxvdCBmb3IgZG9pbmcgdGhlIGJy
-aWRnZSBjb252ZXJzaW9uIGZvciB0aGlzIGRyaXZlci4KPlBsZWFzZSBrZWVwIHRoZSBjdXN0b20g
-Y29ubmVjdG9yIHN0YXRlIHdoaWNoIHdhcyBpbnRyb2R1Y2VkIGFmdGVyIE1heGltJ3MKPnJldmll
-dyBkdXJpbmcgdGhlIGxhc3QgcmV3b3JrIG9mIHRoaXMgWzBdIGRyaXZlci4gVGhlIGNvbG9yaW1l
-dHJ5IGlzIG5vdAo+cGFydCBvZiB0aGUgZGV2aWNlLCBidXQgb2YgdGhlIGNvbm5lY3RvciBhbmQg
-dGh1cyBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlCj5kZXZpY2Ugc3RydWN0Lgo+SXQncywgaG93
-ZXZlciwgbGlrZWx5IHRoYXQgdGhlIGNvbW1vbiAoaGRtaS0pY29ubmVjdG9yIGZyYW1ld29yayB3
-aWxsIG9uY2UKPmhvbGQgaXRzIG93biBjb2xvcmltZXRyeSBwcm9wZXJ0eSBhbmQgdGhlbiB0aGUg
-Y3VzdG9tIGNvbm5lY3RvciBzdGF0ZSBpbgo+dGhpcyBkcml2ZXIgY2FuIGdvIGF3YXksIGJ1dCB1
-bnRpbCB0aGFuIHdlIGhhdmUgdG8ga2VlcCBpdCBoZXJlLgoKQWZ0ZXIgY29udmVydGluZyB0byBh
-IGJyaWRnZSBkcml2ZXIsIHRoaXMgZHJpdmVyIG5vIGxvbmdlciBoYXMgYSBjb25uZWN0b3IuIApJ
-biB0aGlzIGNhc2UsIGhvdyBzaG91bGQgSSBjcmVhdGUgY3VzdG9taXplZCBjb25uZWN0b3Igc3Rh
-dGVzPwoKPgo+VGhhbmtzLAo+QWxleAo+Cj5bMF0KPmh0dHBzOi8vd2ViLmdpdC5rZXJuZWwub3Jn
-L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZD1j
-ZWViMGYwMTA0YTYyYzg2NzY1NmMyNzMwYTUxZGY0N2U3MzUwYjhmCj4KPgo+PiAgIH07Cj4+ICAg
-Cj4+IC1zdHJ1Y3QgaW5ub19oZG1pX2Nvbm5lY3Rvcl9zdGF0ZSB7Cj4+IC0Jc3RydWN0IGRybV9j
-b25uZWN0b3Jfc3RhdGUJYmFzZTsKPj4gLQl1bnNpZ25lZCBpbnQJCQljb2xvcmltZXRyeTsKPj4g
-LX07Cj4+IC0KPj4gLXN0YXRpYyBzdHJ1Y3QgaW5ub19oZG1pICplbmNvZGVyX3RvX2lubm9faGRt
-aShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4+IC17Cj4+IC0Jc3RydWN0IHJvY2tjaGlw
-X2VuY29kZXIgKnJrZW5jb2RlciA9IHRvX3JvY2tjaGlwX2VuY29kZXIoZW5jb2Rlcik7Cj4+IC0K
-Pj4gLQlyZXR1cm4gY29udGFpbmVyX29mKHJrZW5jb2Rlciwgc3RydWN0IGlubm9faGRtaSwgZW5j
-b2Rlcik7Cj4+IC19Cj4+IC0KPj4gLXN0YXRpYyBzdHJ1Y3QgaW5ub19oZG1pICpjb25uZWN0b3Jf
-dG9faW5ub19oZG1pKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCj4uLi4K
+On Mon, 7 Apr 2025, Derek J. Clark wrote:
+
+> Adds lenovo-wmi-helpers, which provides a common wrapper function for
+> wmidev_evaluate_method that does data validation and error handling.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v5:
+>  - Fixes from v4 review.
+>  - Combine all previous methods into a single function that takes a
+>    buffer for the wmi method arguments.
+> v4:
+>  - Changed namespace to LENOVO_WMI_HELPERS from LENOVO_WMI.
+>  - Changed filenames to lenovo-wmi-helpers from lenovo-wmi.
+>  - Removed structs and functions implemented by other drivers.
+> ---
+>  MAINTAINERS                               |  2 +
+>  drivers/platform/x86/Kconfig              |  4 ++
+>  drivers/platform/x86/Makefile             |  1 +
+>  drivers/platform/x86/lenovo-wmi-helpers.c | 74 +++++++++++++++++++++++
+>  drivers/platform/x86/lenovo-wmi-helpers.h | 20 ++++++
+>  5 files changed, 101 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 675f4b26426d..3a370a18b806 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13164,6 +13164,8 @@ L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>  F:	Documentation/wmi/devices/lenovo-wmi-other.rst
+> +F:	drivers/platform/x86/lenovo-wmi-helpers.c
+> +F:	drivers/platform/x86/lenovo-wmi-helpers.h
+
+You can use a wildcard so you don't need to give .c and .h separately.
+
+-- 
+ i.
+
+>  
+>  LENOVO WMI HOTKEY UTILITIES DRIVER
+>  M:	Jackie Dong <xy-jackie@139.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 43407e76476b..bece1ba61417 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -459,6 +459,10 @@ config IBM_RTL
+>  	 state = 0 (BIOS SMIs on)
+>  	 state = 1 (BIOS SMIs off)
+>  
+> +config LENOVO_WMI_HELPERS
+> +	tristate
+> +	depends on ACPI_WMI
+> +
+>  config IDEAPAD_LAPTOP
+>  	tristate "Lenovo IdeaPad Laptop Extras"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 650dfbebb6c8..5a9f4e94f78b 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+>  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+>  obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
+>  obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> +obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
+>  
+>  # Intel
+>  obj-y				+= intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-helpers.c b/drivers/platform/x86/lenovo-wmi-helpers.c
+> new file mode 100644
+> index 000000000000..166e87fef156
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-helpers.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo Legion WMI helpers driver.
+> + *
+> + * The Lenovo Legion WMI interface is broken up into multiple GUID interfaces
+> + * that require cross-references between GUID's for some functionality. The
+> + * "Custom Mode" interface is a legacy interface for managing and displaying
+> + * CPU & GPU power and hwmon settings and readings. The "Other Mode" interface
+> + * is a modern interface that replaces or extends the "Custom Mode" interface
+> + * methods. The "Gamezone" interface adds advanced features such as fan
+> + * profiles and overclocking. The "Lighting" interface adds control of various
+> + * status lights related to different hardware components. Each of these
+> + * drivers uses a common procedure to get data from the WMI interface,
+> + * enumerated here.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#include "lenovo-wmi-helpers.h"
+> +
+> +/**
+> + * lwmi_dev_evaluate_int() - Helper function for calling WMI methods that
+> + * return an integer.
+> + * @wdev: Pointer to the WMI device to be called.
+> + * @instance: Instance of the called method.
+> + * @method_id: WMI Method ID for the method to be called.
+> + * @buf: Buffer of all arguments for the given method_id.
+> + * @size: Length of the buffer.
+> + * @retval: Pointer for the return value to be assigned.
+> + *
+> + * Calls wmidev_valuate_method for Lenovo WMI devices that return an ACPI
+> + * integer. Validates the return value type and assigns the value to the
+> + * retval pointer.
+> + *
+> + * Return: 0 on success, or on error.
+> + */
+> +int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+> +			  unsigned char *buf, size_t size, u32 *retval)
+> +{
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *ret_obj __free(kfree) = NULL;
+> +	struct acpi_buffer input = { size, buf };
+> +	acpi_status status;
+> +
+> +	status = wmidev_evaluate_method(wdev, instance, method_id, &input,
+> +					&output);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	if (retval) {
+> +		ret_obj = output.pointer;
+> +		if (!ret_obj)
+> +			return -ENODATA;
+> +
+> +		if (ret_obj->type != ACPI_TYPE_INTEGER)
+> +			return -ENXIO;
+> +
+> +		*retval = (u32)ret_obj->integer.value;
+> +	}
+> +	return 0;
+> +};
+> +EXPORT_SYMBOL_NS_GPL(lwmi_dev_evaluate_int, "LENOVO_WMI_HELPERS");
+> +
+> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo WMI Helpers Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/lenovo-wmi-helpers.h b/drivers/platform/x86/lenovo-wmi-helpers.h
+> new file mode 100644
+> index 000000000000..b76633603dcc
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-helpers.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +
+> +/* Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
+> +
+> +#ifndef _LENOVO_WMI_HELPERS_H_
+> +#define _LENOVO_WMI_HELPERS_H_
+> +
+> +#include <linux/types.h>
+> +
+> +struct wmi_device;
+> +
+> +struct wmi_method_args_32 {
+> +	u32 arg0;
+> +	u32 arg1;
+> +};
+> +
+> +int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+> +			  unsigned char *buf, size_t size, u32 *retval);
+> +
+> +#endif /* !_LENOVO_WMI_HELPERS_H_ */
+> 
