@@ -1,190 +1,111 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010013.outbound.protection.outlook.com [52.103.68.13])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE77227B88;
-	Tue,  8 Apr 2025 01:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744076268; cv=fail; b=SmRFoJnRuIA6O3tF8GnrkUx3hsa69RPz4y9jR6tbynT7julrZGidyOa5aRFXVq1UXvSXmgWXGh4KikxZsG7ojhHD3Rwi1GxpyX953AOBvJRAcAjICuSJa6NxmTSrSMof3qp/WPgRO+hWctVOl3daKjCbsk39Yf6f7afVzxJ7FK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744076268; c=relaxed/simple;
-	bh=6UcyHaXLn+j+Z5NXMakpZr2FWAqrUD9X/LQJ2Mp3V9E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HGDTD+Cs72k+xwWSMs/FtcdXUDYAZZ5BpALxDwGJmDMcHirunPHllUdEYr/inQsYnTGd2kICQKJQoqB/J6HnAmj1ctED/ejrjQkQknFlwZ4HkNMMJofRTxyDOywVKuFfWj+59WlCF3WhbRuoTH803xtQA1momnbZwDaJPmPv9i0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=K6VRaQlh; arc=fail smtp.client-ip=52.103.68.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5E124EA87;
+	Tue,  8 Apr 2025 01:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744076273; cv=none; b=INcX5VmLl9AJjjGo7VsTNRLCbMfrERhAzVb83Wj3zjG7vWNdGHkQqyBNm3lY0mBR7LqC6u4nLL1fO5BbgRMGJX7rvuyqzURRPvrjj+7Pxr2HusJEpRW0n4TwsvudPag5ZJt66Terk1FwY1qTLNaMMWHtW63t7i7gB1gEe6CGVIc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744076273; c=relaxed/simple;
+	bh=SrAi/YcBE+Fo3fFoM3bY+Bo9lqvkwLPyiX0ifJOflEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EgbnjvocwpH56fyxcvIq71tTtz6PEgltzjJaF3qCWdVpY9TorjWWNZTb/fmQL0iyy1fbjl6GIXcFo96H6QW3sQstkRr7/M6z6dKFdA3nPWEv4gCv705/wCISQ9XtJhtuXhUogebHg4c2vtqPdUy7jcY9ucXy/Zu2Yu8jpfq0hso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QBOxgWCG; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="K6VRaQlh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VaYLfaFz5QZqc7oxOhhs9eGqMU0Xg8jRXtR6ELaUVCCuYRAEliM7z3GSu1PDiGr6HhI9ywLxcTzXOtw8HTINdJ5xPoNcBzkpw8hjdawTV/fpy83zszbzqoyuP55twDozyOMYocEm3cJPbE0nEYJadXug03bizqSHVGAeyv2SFd9IYXqpBZMsDi0X2xtaAXfwPEEZ0X/T0AhKmdFuWPfX+D9IaFOg1SS7DTbsdh4oHSQbazjngE3kwbRzzV/9CTTy8L/Jxn5cnhEQ9aDWzIzj2pFuwkEOPyUpygch5Lfm4MKuUs1zU2Rmy9TiJgRZKQiQWV3MGTbH7rdqWe9Pr4hiGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D231PLI0jsT7sP7bcp80FnNybPAiTH51sVgAeOhSEp4=;
- b=NYIzOWUKDNoGGdJR6xsfUpTDyz0n4XeacGbq7Q/p00TvK/EPEc5vEuBuNRttoG9fmZEnLu8FIVYIwYWlDfmXLE0d0jl+1hLjEA5lMCLgk6+QUDAlJLYHeVDrM9lYcR8YwDtdqg7WlXtfOjrMyMLM9JcPBA3zXeBrbgJknMg3T2pXw2GS/x9s5QytWdXxgjkhAcsjqqh8mT+OVia+LK9kZspVZJlUD1tsWApBFtJpaq4sd0+qzIOwQiHkd4et2kRguRkSh9P+0g1hwyzBzVGeaqlqUnvkD2mdEfuF95BB9gJgOQ0EiR3ZbUE7QZ7NcDDcqyfLbxTkzUX3rclCdfe2kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D231PLI0jsT7sP7bcp80FnNybPAiTH51sVgAeOhSEp4=;
- b=K6VRaQlhCI09yBg1mNatgQBVAxU1ZRMoWBfJKbAZGUzDsSgYimuXD/1jRe0nlbryUUI1F+oiE4Pf7OwJnGd52lIuKIN1fzc6BZYaai7Z7m2VmaEDUoCvwdg4TWVTw5WIDVFGeqhliQwtX0GZxIqwqctBkBNyeSjAmhcDvAoFFrxH7DWV9w0qCekHn+YDy5VcoEeVP70HgNiMFMOsc06EEmj1PtSjI682DI2meYaVWHb3OTXukOeHWQeSZqIWSmxRMzVqz9N0C5NjAukJcii0sMIhdM14PyUqoCN3Hq+9MuDLnsM+6GDr8fR7wYMdcLFHDhtgi/OKVHXBGuVAv1SIUQ==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by PN0P287MB0931.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:16a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
- 2025 01:37:35 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
- 01:37:34 +0000
-Message-ID:
- <MA0P287MB2262DFED49F9E86E9A3BF5A8FEB52@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Tue, 8 Apr 2025 09:37:28 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/9] dt-bindings: riscv: sophgo: Add SG2044 compatible
- string
-To: Inochi Amaoto <inochiama@gmail.com>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>, ghost
- <2990955050@qq.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
- Longbin Li <looong.bin@gmail.com>
-References: <20250407010616.749833-1-inochiama@gmail.com>
- <20250407010616.749833-9-inochiama@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250407010616.749833-9-inochiama@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR01CA0122.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::26) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <20b037c2-3cd0-4351-b9c1-c35ab9789b24@outlook.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QBOxgWCG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744076268;
+	bh=pry0XYR1bNyVtjgGwwK1T2iqph7egXui1QMVMr15pE4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QBOxgWCGVDM0mYWO28VCIVWVP1Hw1VF8KkrN8UfnnXQXCF/o3+f0Spx7FqUpA3nvQ
+	 znMFWNBRGKqO2Qqy8UGMl2+uUBz8VSqYTP5wCe7P8xQcKGqnlwTUrTkZ3gJdM0N28h
+	 dkNQLX8X658IsZEaIzPNipKXC+m0XzavPo48+AFBH7GMf2HzqtDTNTcTr+F1PtbDxt
+	 oURF5M+zzKYnbLUV+W8bO5yEPGlTNT3UisYNBA6iddu778xeoiJKICqbZ2Lp/8YMR2
+	 ODrG2MNQDsSbL/AkAdTV5EH8eBGFEgLa38pu6sd7+R6vh86MDtpFYhm+ARQEaH8eiP
+	 lT7bAOKsB2tqA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWpcD1Nvmz4x8Y;
+	Tue,  8 Apr 2025 11:37:47 +1000 (AEST)
+Date: Tue, 8 Apr 2025 11:37:47 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+ Balamurugan S <quic_bselvara@quicinc.com>, Jeff Johnson
+ <jeff.johnson@oss.qualcomm.com>, P Praneesh <quic_ppranees@quicinc.com>,
+ Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, Ath10k List
+ <ath10k@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the ath-next tree
+Message-ID: <20250408113747.3a10275a@canb.auug.org.au>
+In-Reply-To: <Z_R2lEVjqn2Y3_sP@gallifrey>
+References: <20250408105146.459dfcf5@canb.auug.org.au>
+	<Z_R2lEVjqn2Y3_sP@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN0P287MB0931:EE_
-X-MS-Office365-Filtering-Correlation-Id: 505f03c0-e257-4fb4-5274-08dd763defc8
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|15080799006|7092599003|461199028|8060799006|19110799003|5072599009|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WG1sZHViRFpuQXpVNWdOdjNKK1BqQ3RHbEZJZTJPUVRmeHhtZS9idDczVHFw?=
- =?utf-8?B?SFVXbWlmc1RyaTcyc21EVGJUeTQ3OGp2WjVFWkVrV3FwNForNE4wazlIZ1dk?=
- =?utf-8?B?TVFHT3V5U1VndnRGdWNGQ3k2V2QwZnB3VjlvSTdYNTd1L2Z3UkNmY2lXQ3dH?=
- =?utf-8?B?MTZRTlBzMGRyNUtya2d6V3pwTkdMSnVnWkIwaE5hbEtYdk5jeXRIZWN6ZnF3?=
- =?utf-8?B?c2Q0dmRNNGFuNlBXa2lMcFJwQ1hNU3dVdy9CMW9hZVA0S2cxZ0htb2xsTWcr?=
- =?utf-8?B?QXREZDhFMlRxU2pLSElJSHdZRTJjd2pENjBZVjM2ZlkxOEZUMkxld0Zzakt2?=
- =?utf-8?B?bThyZkhPWkNQbVlXY29weUt6LzFpSW01MWJMT0NyeG83S1pOOGJUWVFSVy82?=
- =?utf-8?B?M3h5a0NaOVJ3SmZVMzN1V3NGQ3cyYUZ6Z3VpRm1uSCswVHBCZHM4dTkzY05q?=
- =?utf-8?B?TE1WcnJOQzdJK1pWR3VmVkE5Vm1EMHhXZWlnT3VJVTREYlozK3FoRnlTVWlX?=
- =?utf-8?B?OVJ2dFBOdHVRclBYNTd3TFpCMmorR2dXNTlpcEpFdy92MkgyZDhHVGxsMHA3?=
- =?utf-8?B?Z1gzTVJEd0R5aVR6S3h4NnNQMmsreEt3MTFqOG5SL1p2a3NlVHdJRW5iRWNm?=
- =?utf-8?B?M0pXRXpxa2Via3kvbk9KSzZQUHY0TVQ5eGg3aUFiWGx0enhmNjBtdHBmY2J1?=
- =?utf-8?B?THgxZUF4NWFaWWZoQnpQc1VsQU5pOHkwbGZMUVgrMmtBa092cjBGaWlvdGZX?=
- =?utf-8?B?dW90ZnMwdUhRNGxGSXZ6VlRDR3FEL08yT3lXNExTaEFsY1Avb2lNN0J5U2dD?=
- =?utf-8?B?Y0s0T0NuOTh3RzJMUlp2OEJ0WCtNSVV6Q0IzSjhiSllVWEQwYm1hMlh6dTNm?=
- =?utf-8?B?Ryt1ekFjc1VxL3d2d0VORko2YW1CT205bWtUcGhKKytBbEw0QzN1eU53V1JC?=
- =?utf-8?B?TE9NNHFWaTdvSFhqOTJiSmtrRitieWdCY2lnRjFPQ1hhL25TVUVocDBRaFNJ?=
- =?utf-8?B?bWh4eTVXK3ZRTlVsQmpZQkxCQkJYcGRaTENZVFNyMXo3akVNbDMzSGJTY1d1?=
- =?utf-8?B?Z2dDWWxjeEtOUlQ4RmNqOEVDWDRNTTJsWjU5NVQxZVk4SjNwMk9LSzg1eWwz?=
- =?utf-8?B?d011S3lQR0ZseWNteG0zWjJ1bmZFUWw5UzdZRHZoK0FBV0NwSUYyTFVERHQz?=
- =?utf-8?B?MmcySGNGaHlKdlF3bDR3V0dzM0ZXTDRNdVhGRVI4dGVRNkNIYVdYU1JJUzc2?=
- =?utf-8?B?RUY4dE8wNzFiZ2k4UTgydS84WndBSkgvOGJudXR1RXQ3aE1xWE15d3M0N1BF?=
- =?utf-8?B?Zk5rVVNZanRGUUVod0NFKzB2dUE1WUpwdzBiMmJWVHlpcEpSaDhXSGFsdXRS?=
- =?utf-8?B?OVM1OUxWcWR0aElMeWI2OHRvcm1Ec3YvRzI5N2hHTlk2SFlkeEJ0Q2lpTUE1?=
- =?utf-8?B?K1RkeHJVdWNjNzliUHNTblpqV3c3ZnI3cjBEb2lROVk3NjdlZmxJYWs1QzFo?=
- =?utf-8?B?b3BJMWRqMlVKSGcrMUZvV0NtTlRsQm1rVk9GYUcxSE9mekliTHk1NTlPbW8w?=
- =?utf-8?B?WDQ5QT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WkZlZEpmL0hQQUNJVDNHaDNLMjhmbzZmNnlrZ1JDeVNsblp0OW1xUllmV0xW?=
- =?utf-8?B?QXFnOHJDakFHbzVkQmpkSnJHTnNDTWtDdlRMVDlHQy9YYnJ1UGEzclg3dnNl?=
- =?utf-8?B?RzRhMmNJMVJ0STBxWjlVUUxTVFAyd00zZzFVejAxcncvN3RvQ0hrdnZkZGVO?=
- =?utf-8?B?TE05V2FWc3ROdTZSMm8yZ0t1TVRnYldpRlgwK0VCZDVlMjQ3aS81QXlMRTJr?=
- =?utf-8?B?MGN2R3Z0TWI5MitDUjRzamRTK1RhK0VnYWh2UENUa3RZTjYzVlZFUUpPRlhl?=
- =?utf-8?B?dk85eCsxMEVSZ1E5M3F1bGdRSmJmVzN5QUQzU0R1OHNSTlA4VytDWDFTZUdS?=
- =?utf-8?B?VVF0Nm8wOUpZYTNNODRlTVZabnQvdWJHbUYzUUpmU3VFTml4ME9nRzlaeUNG?=
- =?utf-8?B?R25teDN6VFh2enVncjhlYWkzRFhwUFhVQVFzQ25RZ1FKcWsvMCt6VURKVmNU?=
- =?utf-8?B?WXpiYy9Ea2VLa2NFZUg3NmJ4cmdGUml4U1lUNm55Mjg2K2Q5YWpTemFWS2Rx?=
- =?utf-8?B?ZWhoeFlFZEx4d3VQbnJFMzY5VGFWeFNKZFlMUTh1czI4dnIrd2FVUWljelQv?=
- =?utf-8?B?Z2c4V2Zkd1ZTZ0h1c293c0ZMSEVoNkNSZUZDMlBkTS9PeGFRQ1JjTFgrR3g3?=
- =?utf-8?B?S0NWNjN3K0VXbVhoNllhVWRDVDJGOElNLzhEM2Q1dHJOUlBlRkkyMTVhRGt5?=
- =?utf-8?B?YTROL00yaFJ0VTdtVDNiTTZMS3E1RWVIQUN4TERXeEFhMDBGOUJWQkF5NjJX?=
- =?utf-8?B?QmE1QUp0eXl1TzRIdEp6NU5kZmFxazVvbHl4R0MxZk11QnNST3JEdUJRVENL?=
- =?utf-8?B?R21odmJxRkZsUnRxOUZIdnY4cmZySGNtWTNlNTZoVUdRK1I4SC9QZFgvWlVj?=
- =?utf-8?B?akZReEU2c0hqczB0NkVlRVhCZStSRVE2aGRHT2Z0QmljTFp5MElkaDlJQUMy?=
- =?utf-8?B?M0JOdVVYYzludVY5L1VBTnpQQUlYRjhKUWlWUW1YelptZHkwalp5dDk0RWQ3?=
- =?utf-8?B?QzgvNkt1UFo2Y0RBZ1FpaXlyYWJDWlVwSFArVEtOM0hpcmx0bEU0NXlNc05D?=
- =?utf-8?B?QUtveEZiYkxrb08zb0k1dFJMa1lkTmZlQnFpWW9YZVdOZ1Voc1EyU2VCUVBy?=
- =?utf-8?B?UWJMZG0zcEZGSnhmeEtVWFkxdTVZZUZYd09rSVFoMmFwV05oaGJrMGR1Qkxj?=
- =?utf-8?B?MWZvTC9KK3llTklna3NTRFMzUmt5d0JCQ0hIWjZrWFU5aTFsR01TaGtzdUkz?=
- =?utf-8?B?dnMvdGpyMmdRUzJnK2cvMFJQTmRCMmZ0K2lubG1YcmRhakQxQVBBS2I2d2RM?=
- =?utf-8?B?RFlkc1c4ZTkvUzFkVCtQNGdIOElOdzhWNFdGUW5TUTlIcHYvQjVpN2NncHBo?=
- =?utf-8?B?dlFJbm5tb01wRG5leituaVdmUzVQQVRUUUtjOXg4WkFpalpSY0tLa0o4TUtp?=
- =?utf-8?B?VEZqUW1vYmhTSkRDQ1ViRTBFamlSNm9nZkVxMWpaaUFDYTc3ekZBOVVQakZi?=
- =?utf-8?B?eEphdW9Jd1JPNkoyMzJPTUFmMDdCMWw1aXlkdDg1MWpvR3dFaW1VdllLcHg4?=
- =?utf-8?B?MGlISCt3cUlhd1k1SHo5Q0VVYjJ6OTZaNFFHTmJMYVpQTklKQ2ZwS1FzbHho?=
- =?utf-8?B?ZldRUDJWQ0Q2d1dBeE8yT2djcmF3MUdIbThmSUJUWG5lOUpES3R1U2V1enBE?=
- =?utf-8?B?YWt3ejVWSmN3c3hnQlpzZ2tGVFlkUDcraXMxNGYwV0hGN3BzQk1hYUxXVW5w?=
- =?utf-8?Q?Z1NeNXo5rH/fq/n97u4HgI8DXoAm+L+6H0gAFch?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 505f03c0-e257-4fb4-5274-08dd763defc8
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 01:37:34.6764
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0931
+Content-Type: multipart/signed; boundary="Sig_/+gp7kqPae4FJqvCGp=VvsLM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/+gp7kqPae4FJqvCGp=VvsLM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/4/7 9:06, Inochi Amaoto wrote:
-> Add compatible string for the Sophgo SG2044 SoC and the SRD3-10
-> board.
+Hi Dave,
+
+On Tue, 8 Apr 2025 01:06:28 +0000 "Dr. David Alan Gilbert" <linux@treblig.o=
+rg> wrote:
 >
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->   Documentation/devicetree/bindings/riscv/sophgo.yaml | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/riscv/sophgo.yaml b/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> index a14cb10ff3f0..b4c4d7a7d7ad 100644
-> --- a/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> @@ -35,6 +35,10 @@ properties:
->             - enum:
->                 - milkv,pioneer
->             - const: sophgo,sg2042
-> +      - items:
-> +          - enum:
-> +              - sophgo,srd3-10
-> +          - const: sophgo,sg2044
->   
->   additionalProperties: true
->   
+> * Stephen Rothwell (sfr@canb.auug.org.au) wrote:
+> >=20
+> > After merging the ath-next tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > drivers/net/wireless/ath/ath12k/ahb.c: In function 'ath12k_ahb_stop':
+> > drivers/net/wireless/ath/ath12k/ahb.c:337:9: error: implicit declaratio=
+n of function 'del_timer_sync'; did you mean 'dev_mc_sync'? [-Wimplicit-fun=
+ction-declaration]
+> >   337 |         del_timer_sync(&ab->rx_replenish_retry);
+> >       |         ^~~~~~~~~~~~~~
+> >       |         dev_mc_sync
+> >=20
+> > Caused by commit
+> >=20
+> >   6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
+> >=20
+> > I have used the ath-next tree from next-20250407 for today. =20
+>=20
+> I guess a clash with the recent:
+> Fixes: 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
 
-Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+I will try that out tomorrow.
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/+gp7kqPae4FJqvCGp=VvsLM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0fesACgkQAVBC80lX
+0GyIFQgAnISd1YyFiTjCOFbapwzs/ZBqzyIaYKnXBnGbnTnv6ZTNeXYaY1EvGsXr
+Hlz5cvbtV4JETqIlMCBSfx0/gGBTTka4uqeV+110Grsh+lWSip5jKDEHevtjJehF
+7T9dvr6RY6VGlc0sAyT91aWruLlLJzKeuZW8cgdMSkH04FKhIs6HRwpVLGJj0wU1
+yU/a+5/8PQiOZZpZY2ZSGfk7rlZRwddzhlV2kFpgMb2fCUWmX/RUiXUVRy8dB9KQ
+cWLepciql773B3DLZePmJ0PULy2iLek9m1V8AHn40vNbFHtijjk9dYjKk0e3i1FJ
++4wjUfH15h6KoDDlzRGjMTiePFKfsw==
+=Hs2Q
+-----END PGP SIGNATURE-----
+
+--Sig_/+gp7kqPae4FJqvCGp=VvsLM--
