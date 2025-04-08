@@ -1,338 +1,194 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A219268FDB;
-	Tue,  8 Apr 2025 10:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B949526B2D3;
+	Tue,  8 Apr 2025 10:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744109523; cv=none; b=kyBqmR1FBZ3UtVw1pPq05B49lInAyer6LKG3mDHDK2NMvex6d6RhoF0pCRtGJZdgcvh1iJbthlGj0s+okNNZavRBW8utIZvq02gIVywkSxlUDeevsLBIIv9fVDmljrFJfpD/0nJ8rCUIumUs57jXbbbwGSJL/RTawClgExrMHcs=
+	t=1744109525; cv=none; b=Dxcm8vAMh0WeFV8ugBekCblaAWxBREYjbVDqziI9kcFjM3IuEq1JJ5rNOBaoH5hJdNBb96JwslOvZJ1Z6ycZ8C139VJihdiUkuB4S9XQqDWGygQSaPngXHw+fljFp+oaeiLJl21AL737a/eVMsdQ3uA5pPmqumzz0R/VYVxNHGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744109523; c=relaxed/simple;
-	bh=qdyfGchOgczDeIWDi2AZQbVlzbLP0tVBpIdNaPkXiQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FsFWfwd8+Iwsh1+2el/kbrO/+37iu5hTxZVvSotw8WeHUt9nsX6txYZ9XQ10awOVZsAk4JroXGDNpBlxoesMWDRmn4hplHdHwCPy8w+LVGNJv4iV8X1SitiPn7tYC1Ej1tjAGEYlHLiDZso4u37GhMXN1RYDP2psvnXcfLLDBvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3856F2047C;
-	Tue,  8 Apr 2025 10:51:46 +0000 (UTC)
-Message-ID: <3f9c48a6-1256-4e52-a26a-7f80f3b7c05a@ghiti.fr>
-Date: Tue, 8 Apr 2025 12:51:45 +0200
+	s=arc-20240116; t=1744109525; c=relaxed/simple;
+	bh=D/+rC6w5Q4F5lWg5Dnv7jXrhOy3R2o7m8ettK5W6kbo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YyvQdIluE7auS9UDoaVFXsURgw8SVaCXeFGoMLHTQdh8VEk/woZdEY0J6AeydO5/odH7Fl8t+rMlJBuaiK6kCNvlGaI21eE1MDOqil4/I6AUZo6SwWEzH+yPuShJYlD4FNf04r/8dRwZEIdhJBV+YWf8Nfdgk2L27xEAVQmFg9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwsJN+JI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwsJN+JI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C6FAC4CEEC;
+	Tue,  8 Apr 2025 10:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744109525;
+	bh=D/+rC6w5Q4F5lWg5Dnv7jXrhOy3R2o7m8ettK5W6kbo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=JwsJN+JIUpF4no0YRkWLBYsTjWq/YvmA9FgsFGAtB3SyzR7dfvtH+0YPU0CvTRsTD
+	 m0qlfqyYwVfgD1hu/TwVbkB6LAFkr0/ZT1W6DErcM1IR1o7rl0vln6YPBGACW4rljK
+	 jvUZpvjmS6wJknzfhzrQZydfElElk/3lZ/+A8pCQBaVg7AoCFdxJm9ltYIDsUZOvav
+	 8+kG62nigGokhXoNoFKd0P80gj4/O8tpdxEQDohAGrKCtqAQjQMUOZIYsldZEmChdI
+	 1jYZxJzLaye/6ntNPRsx2cBIgeLbihhBPAu9jAbEtHtxPt42YTyXEHpKtxnNA6brgg
+	 YyFoDwPuF4Img==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Tue, 08 Apr 2025 12:50:20 +0200
+Subject: [PATCH 21/24] irqchip/gic-v5: Enable GICv5 SMP booting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 11/28] riscv/shstk: If needed allocate a new shadow
- stack on clone
-Content-Language: en-US
-To: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Christian Brauner <brauner@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com,
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
- rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-11-e51202b53138@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-11-e51202b53138@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeegledprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegsp
- hesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
-X-GND-Sasl: alex@ghiti.fr
+Message-Id: <20250408-gicv5-host-v1-21-1f26db465f8d@kernel.org>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+In-Reply-To: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.14.2
 
+Set up IPIs by allocating IPI IRQs for all cpus and call into
+arm64 core code to initialise IPIs IRQ descriptors and
+request the related IRQ.
 
-On 14/03/2025 22:39, Deepak Gupta wrote:
-> Userspace specifies CLONE_VM to share address space and spawn new thread.
-> `clone` allow userspace to specify a new stack for new thread. However
-> there is no way to specify new shadow stack base address without changing
-> API. This patch allocates a new shadow stack whenever CLONE_VM is given.
->
-> In case of CLONE_VFORK, parent is suspended until child finishes and thus
-> can child use parent shadow stack. In case of !CLONE_VM, COW kicks in
-> because entire address space is copied from parent to child.
->
-> `clone3` is extensible and can provide mechanisms using which shadow stack
-> as an input parameter can be provided. This is not settled yet and being
-> extensively discussed on mailing list. Once that's settled, this commit
-> will adapt to that.
+Implement hotplug callback to enable interrupts on a cpu
+and register the cpu with an IRS.
 
+Implement hotplug callback to check the IRS affinity setup
+for IPIs on each CPU in order to ensure that each CPU's IPIs
+affinity is what it is expected to be.
 
-What's the status of this discussion? Can you provide a Link to it?
+Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v5.c | 84 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
+diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+index 85d951bfd807fc1b67b616dbadeebc150848293f..24789e9590115e6de7007cd4a74376ae34702ed6 100644
+--- a/drivers/irqchip/irq-gic-v5.c
++++ b/drivers/irqchip/irq-gic-v5.c
+@@ -5,6 +5,7 @@
+ 
+ #define pr_fmt(fmt)	"GICv5: " fmt
+ 
++#include <linux/cpuhotplug.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+ #include <linux/maple_tree.h>
+@@ -992,6 +993,68 @@ static void gicv5_cpu_enable_interrupts(void)
+ 	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+ }
+ 
++static int base_ipi_virq;
++
++static int gicv5_check_ipi_affinity(unsigned int cpu)
++{
++	int ret;
++	u64 cdrcfg, icsr;
++	u16 programmed_iaffid, requested_iaffid;
++	struct irq_data *d;
++	unsigned int i, virq_base = base_ipi_virq + cpu * GICV5_IPIS_PER_CPU;
++
++	for (i = 0; i < GICV5_IPIS_PER_CPU; i++) {
++		d = irq_get_irq_data(virq_base + i);
++
++		if (WARN_ON(!d))
++			return -ENODEV;
++
++		/*
++		 * We need to know the actual LPI that is being used, rather
++		 * than the IPI domain hwirq.
++		 *
++		 * Hence, use the hwirq from the parent (LPI domain) here.
++		 */
++		cdrcfg = d->parent_data->hwirq |
++			 FIELD_PREP(GICV5_HWIRQ_TYPE, GICV5_HWIRQ_TYPE_LPI);
++		preempt_disable();
++		gic_insn(cdrcfg, GICV5_OP_GIC_CDRCFG);
++		isb();
++		icsr = read_sysreg_s(SYS_ICC_ICSR_EL1);
++		preempt_enable();
++
++		if (FIELD_GET(ICC_ICSR_EL1_F, icsr)) {
++			pr_err("SYS_ID_ICC_ICSR_EL1 is not valid");
++			return -ENXIO;
++		}
++
++		if (!FIELD_GET(ICC_ICSR_EL1_Enabled, icsr)) {
++			pr_err("interrupt is disabled");
++			return -ENXIO;
++		}
++
++		if (FIELD_GET(ICC_ICSR_EL1_IRM, icsr)) {
++			pr_debug("Interrupt not using targeted routing");
++			return -ENXIO;
++		}
++
++		programmed_iaffid = (u16)FIELD_GET(ICC_ICSR_EL1_IAFFID, icsr);
++
++		ret = gicv5_irs_cpu_to_iaffid(cpu, &requested_iaffid);
++		if (ret)
++			return ret;
++
++		if (programmed_iaffid != requested_iaffid) {
++			pr_err("Mismatch between programmed_iaffid (%u) and requested_iaffid (%u)",
++			       programmed_iaffid, requested_iaffid);
++
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
+ static int gicv5_starting_cpu(unsigned int cpu)
+ {
+ 	if (WARN(!gicv5_cpuif_has_gcie(),
+@@ -1003,6 +1066,25 @@ static int gicv5_starting_cpu(unsigned int cpu)
+ 	return gicv5_irs_register_cpu(cpu);
+ }
+ 
++static void __init gicv5_smp_init(void)
++{
++	unsigned int num_ipis = GICV5_IPIS_PER_CPU * nr_cpu_ids;
++
++	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
++				  "irqchip/arm/gicv5:starting",
++				  gicv5_starting_cpu, NULL);
++
++	base_ipi_virq = irq_domain_alloc_irqs(gicv5_global_data.ipi_domain,
++					  num_ipis, NUMA_NO_NODE, NULL);
++	if (WARN(base_ipi_virq <= 0, "IPI IRQ allocation was not successful"))
++		return;
++
++	set_smp_ipi_range_percpu(base_ipi_virq, GICV5_IPIS_PER_CPU, nr_cpu_ids);
++
++	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "irqchip/arm/gicv5:online",
++				  gicv5_check_ipi_affinity, NULL);
++}
++
+ static void __init gicv5_free_domains(void)
+ {
+ 	if (gicv5_global_data.ppi_domain)
+@@ -1133,6 +1215,8 @@ static int __init gicv5_of_init(struct device_node *node,
+ 		return ret;
+ 	}
+ 
++	gicv5_smp_init();
++
+ 	return 0;
+ }
+ IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
 
->
-> Reviewed-by: Zong Li <zong.li@sifive.com>
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   arch/riscv/include/asm/mmu_context.h |   7 ++
->   arch/riscv/include/asm/usercfi.h     |  25 ++++++++
->   arch/riscv/kernel/process.c          |   9 +++
->   arch/riscv/kernel/usercfi.c          | 120 +++++++++++++++++++++++++++++++++++
->   4 files changed, 161 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/asm/mmu_context.h
-> index 8c4bc49a3a0f..dbf27a78df6c 100644
-> --- a/arch/riscv/include/asm/mmu_context.h
-> +++ b/arch/riscv/include/asm/mmu_context.h
-> @@ -48,6 +48,13 @@ static inline unsigned long mm_untag_mask(struct mm_struct *mm)
->   }
->   #endif
->   
-> +#define deactivate_mm deactivate_mm
-> +static inline void deactivate_mm(struct task_struct *tsk,
-> +				 struct mm_struct *mm)
-> +{
-> +	shstk_release(tsk);
-> +}
-> +
->   #include <asm-generic/mmu_context.h>
->   
->   #endif /* _ASM_RISCV_MMU_CONTEXT_H */
-> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
-> index 5f2027c51917..82d28ac98d76 100644
-> --- a/arch/riscv/include/asm/usercfi.h
-> +++ b/arch/riscv/include/asm/usercfi.h
-> @@ -8,6 +8,9 @@
->   #ifndef __ASSEMBLY__
->   #include <linux/types.h>
->   
-> +struct task_struct;
-> +struct kernel_clone_args;
-> +
->   #ifdef CONFIG_RISCV_USER_CFI
->   struct cfi_status {
->   	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
-> @@ -17,6 +20,28 @@ struct cfi_status {
->   	unsigned long shdw_stk_size; /* size of shadow stack */
->   };
->   
-> +unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
-> +				       const struct kernel_clone_args *args);
-> +void shstk_release(struct task_struct *tsk);
-> +void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size);
-> +unsigned long get_shstk_base(struct task_struct *task, unsigned long *size);
-> +void set_active_shstk(struct task_struct *task, unsigned long shstk_addr);
-> +bool is_shstk_enabled(struct task_struct *task);
-> +
-> +#else
-> +
-> +#define shstk_alloc_thread_stack(tsk, args) 0
-> +
-> +#define shstk_release(tsk)
-> +
-> +#define get_shstk_base(task, size) 0UL
-> +
-> +#define set_shstk_base(task, shstk_addr, size)
-> +
-> +#define set_active_shstk(task, shstk_addr)
-> +
-> +#define is_shstk_enabled(task) false
-> +
->   #endif /* CONFIG_RISCV_USER_CFI */
->   
->   #endif /* __ASSEMBLY__ */
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index 7c244de77180..99acb6342a37 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -29,6 +29,7 @@
->   #include <asm/vector.h>
->   #include <asm/cpufeature.h>
->   #include <asm/exec.h>
-> +#include <asm/usercfi.h>
->   
->   #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
->   #include <linux/stackprotector.h>
-> @@ -211,6 +212,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
->   	unsigned long clone_flags = args->flags;
->   	unsigned long usp = args->stack;
->   	unsigned long tls = args->tls;
-> +	unsigned long ssp = 0;
->   	struct pt_regs *childregs = task_pt_regs(p);
->   
->   	/* Ensure all threads in this mm have the same pointer masking mode. */
-> @@ -229,11 +231,18 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
->   		p->thread.s[0] = (unsigned long)args->fn;
->   		p->thread.s[1] = (unsigned long)args->fn_arg;
->   	} else {
-> +		/* allocate new shadow stack if needed. In case of CLONE_VM we have to */
-> +		ssp = shstk_alloc_thread_stack(p, args);
-> +		if (IS_ERR_VALUE(ssp))
-> +			return PTR_ERR((void *)ssp);
-> +
->   		*childregs = *(current_pt_regs());
->   		/* Turn off status.VS */
->   		riscv_v_vstate_off(childregs);
->   		if (usp) /* User fork */
->   			childregs->sp = usp;
-> +		/* if needed, set new ssp */
-> +		ssp ? set_active_shstk(p, ssp) : 0;
+-- 
+2.48.0
 
-
-The use of the ternary here is weird, can you change that to a if 
-statement?
-
-
->   		if (clone_flags & CLONE_SETTLS)
->   			childregs->tp = tls;
->   		childregs->a0 = 0; /* Return value of fork() */
-> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
-> index 24022809a7b5..73cf87dab186 100644
-> --- a/arch/riscv/kernel/usercfi.c
-> +++ b/arch/riscv/kernel/usercfi.c
-> @@ -19,6 +19,41 @@
->   
->   #define SHSTK_ENTRY_SIZE sizeof(void *)
->   
-> +bool is_shstk_enabled(struct task_struct *task)
-> +{
-> +	return task->thread_info.user_cfi_state.ubcfi_en ? true : false;
-> +}
-> +
-> +void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size)
-> +{
-> +	task->thread_info.user_cfi_state.shdw_stk_base = shstk_addr;
-> +	task->thread_info.user_cfi_state.shdw_stk_size = size;
-> +}
-> +
-> +unsigned long get_shstk_base(struct task_struct *task, unsigned long *size)
-> +{
-> +	if (size)
-> +		*size = task->thread_info.user_cfi_state.shdw_stk_size;
-> +	return task->thread_info.user_cfi_state.shdw_stk_base;
-> +}
-> +
-> +void set_active_shstk(struct task_struct *task, unsigned long shstk_addr)
-> +{
-> +	task->thread_info.user_cfi_state.user_shdw_stk = shstk_addr;
-> +}
-> +
-> +/*
-> + * If size is 0, then to be compatible with regular stack we want it to be as big as
-> + * regular stack. Else PAGE_ALIGN it and return back
-> + */
-> +static unsigned long calc_shstk_size(unsigned long size)
-> +{
-> +	if (size)
-> +		return PAGE_ALIGN(size);
-> +
-> +	return PAGE_ALIGN(min_t(unsigned long long, rlimit(RLIMIT_STACK), SZ_4G));
-> +}
-> +
->   /*
->    * Writes on shadow stack can either be `sspush` or `ssamoswap`. `sspush` can happen
->    * implicitly on current shadow stack pointed to by CSR_SSP. `ssamoswap` takes pointer to
-> @@ -142,3 +177,88 @@ SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsi
->   
->   	return allocate_shadow_stack(addr, aligned_size, size, set_tok);
->   }
-> +
-> +/*
-> + * This gets called during clone/clone3/fork. And is needed to allocate a shadow stack for
-> + * cases where CLONE_VM is specified and thus a different stack is specified by user. We
-> + * thus need a separate shadow stack too. How does separate shadow stack is specified by
-> + * user is still being debated. Once that's settled, remove this part of the comment.
-> + * This function simply returns 0 if shadow stack are not supported or if separate shadow
-> + * stack allocation is not needed (like in case of !CLONE_VM)
-> + */
-> +unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
-> +				       const struct kernel_clone_args *args)
-> +{
-> +	unsigned long addr, size;
-> +
-> +	/* If shadow stack is not supported, return 0 */
-> +	if (!cpu_supports_shadow_stack())
-> +		return 0;
-> +
-> +	/*
-> +	 * If shadow stack is not enabled on the new thread, skip any
-> +	 * switch to a new shadow stack.
-> +	 */
-> +	if (!is_shstk_enabled(tsk))
-> +		return 0;
-> +
-> +	/*
-> +	 * For CLONE_VFORK the child will share the parents shadow stack.
-> +	 * Set base = 0 and size = 0, this is special means to track this state
-> +	 * so the freeing logic run for child knows to leave it alone.
-> +	 */
-> +	if (args->flags & CLONE_VFORK) {
-> +		set_shstk_base(tsk, 0, 0);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * For !CLONE_VM the child will use a copy of the parents shadow
-> +	 * stack.
-> +	 */
-> +	if (!(args->flags & CLONE_VM))
-> +		return 0;
-> +
-> +	/*
-> +	 * reaching here means, CLONE_VM was specified and thus a separate shadow
-> +	 * stack is needed for new cloned thread. Note: below allocation is happening
-> +	 * using current mm.
-> +	 */
-> +	size = calc_shstk_size(args->stack_size);
-> +	addr = allocate_shadow_stack(0, size, 0, false);
-> +	if (IS_ERR_VALUE(addr))
-> +		return addr;
-> +
-> +	set_shstk_base(tsk, addr, size);
-> +
-> +	return addr + size;
-> +}
-> +
-> +void shstk_release(struct task_struct *tsk)
-> +{
-> +	unsigned long base = 0, size = 0;
-> +	/* If shadow stack is not supported or not enabled, nothing to release */
-> +	if (!cpu_supports_shadow_stack() || !is_shstk_enabled(tsk))
-> +		return;
-> +
-> +	/*
-> +	 * When fork() with CLONE_VM fails, the child (tsk) already has a
-> +	 * shadow stack allocated, and exit_thread() calls this function to
-> +	 * free it.  In this case the parent (current) and the child share
-> +	 * the same mm struct. Move forward only when they're same.
-> +	 */
-> +	if (!tsk->mm || tsk->mm != current->mm)
-> +		return;
-> +
-> +	/*
-> +	 * We know shadow stack is enabled but if base is NULL, then
-> +	 * this task is not managing its own shadow stack (CLONE_VFORK). So
-> +	 * skip freeing it.
-> +	 */
-> +	base = get_shstk_base(tsk, &size);
-> +	if (!base)
-> +		return;
-> +
-> +	vm_munmap(base, size);
-> +	set_shstk_base(tsk, 0, 0);
-> +}
->
