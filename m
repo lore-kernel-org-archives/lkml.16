@@ -1,122 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADF220459F;
-	Tue,  8 Apr 2025 08:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03922620E8
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099805; cv=none; b=hZqtBqnGg+9i6ReaWQDgqQBRT9YidN3N+Q6t8POSm8/PuWsNggq3Y8wBTyKQA12fZMTBYWOZMh1kcnxQgtn3teNqRQOqALRs3GhoOLul5zQG4jhz3YmYdg/3+7NRFdciUOL7y4zJpA4HeH+fmLefcQUaxJHJR4Vr0jlkkIbUSUA=
+	t=1744099884; cv=none; b=LwhFxc4TKN/jaryzaeIol/wedkTTFnbUNVzfuIV3c18sRM1QpMlSghBvSpkm8zcUklbIP2vudj1UMrm37cnT06+jl+WHpdpxiLIc+stJZ/Oz+1GuM+uhoZeRv3plcv8w9exzHSDd+R4Kq8/KQeIzRfYR6cgTnLPOFcUDZ00rWxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099805; c=relaxed/simple;
-	bh=KuTOWjeh1mKtEtTStWh2LsIuxKIuB+Nc0WiTwPf/dYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQ62gqob5b47MywqSmx+b2dyej2C5Moe746JuzNLVr3s9ga8bL7rh8pcY/T5ccdTKqcOYZilM06mI/4QilwAeEksph39fB3xyg684FcLyomdlOBsYhA4ExR+4p/rweMW5+EicPrWIvQ2Xzb/AMn/po1nPSeUgV93vVeLUcp1aUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQoqcgoS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744099884; c=relaxed/simple;
+	bh=HNeRbYF4/v2655du+OhPlrYqgFpc4HO0WwSrHFA5Wvk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bYA9v18GTvy7RPVKP1uBOf4lP1R77jBKBrUhMz1UkWUtZwI1Jku47E4Alw/ozLKYuOI5dcjczeJu9BsGkYKCev2rZVSGEhHnK+cEomFKw6OjE0EdwwAMeC+Uk9jOO6FeohFh3VDi52hUg+TcvFOzHbr3lzLsXiVnybY5cGwDbRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fIIoJFUd; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQoqcgoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271AAC4CEE5;
-	Tue,  8 Apr 2025 08:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744099804;
-	bh=KuTOWjeh1mKtEtTStWh2LsIuxKIuB+Nc0WiTwPf/dYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SQoqcgoSrZuDSLOM4aBawP4yEXKXh1leZyLF2XgXF7P/P7wvzSU8Dwecwfen73Pgy
-	 GC3RsB/XhCizUx+AcG5ydDy4drxJqwE04ocNLxscB8cgyIahM9nab2jXD3V9zsHbkL
-	 8EGtu4H5gc2KHE1lo4DvPaxYswmtRhYq/PMxl1p89yVP3tBE5FlDoDixDUeD3vyZiv
-	 Ew6KqSp4CkM8gJYPjq+VKOyVYiq8yLlIFHAFcas3F40N6p5UnIRkVamFmeE77MX8CT
-	 GDzNt+E7w3dFZdLC5IqTVKpMrTslDPIsY/kp98mZ0t9wsqh64L+foU+hGB8JMwQ0Eb
-	 e/lI6rkaQSNiA==
-Date: Tue, 8 Apr 2025 10:09:59 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Malaya Kumar Rout <malayarout91@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3] selftests/x86/lam: fix resource leak in do_uring()
- and allocate_dsa_pasid()
-Message-ID: <Z_TZ138UxQ_uZzys@gmail.com>
-References: <Z_QXURMplbCtx-YB@gmail.com>
- <20250407193449.461948-1-malayarout91@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fIIoJFUd"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224171d6826so72477565ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744099881; x=1744704681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HNeRbYF4/v2655du+OhPlrYqgFpc4HO0WwSrHFA5Wvk=;
+        b=fIIoJFUdoObj6pLnLKymgmHqDL1Kn+AYCSRTQyNUsdbRbH1Z24unMEj8egSOgIlQ4w
+         MwUjlWuYlKj2prZlIJQI/FHgbLjcXCYwWt3AfuLgErb/zm/YoDxSFFXJoVyNnqFfURlN
+         0v3Avb+D7sLQf1IYh6VXeX/lyAOSmaqI+xAFjhbkoNYRTShz3DWE2d4w7nMeikKESUx2
+         VaRtB1MpBTNd3szxMp9I1321TGWYD6Xw/63Kd8AnYeR0jfWmq8rKKyvl7RAJmMFtC1u8
+         8XM/S8dpGFa1Gw/9RJ70E0Y8+0c5V7Ivik/4ZPpFtgaoBA7HagD2aPfdUuqdIy17I0RM
+         DWLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744099881; x=1744704681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HNeRbYF4/v2655du+OhPlrYqgFpc4HO0WwSrHFA5Wvk=;
+        b=vikO/42o5zgn6ikjmdHFJjAB+fpmCcv8t5UDeyB5BqoF8NLKXt+4HlvZiaAfjV5KvE
+         lLRZHWtZzANvHpWFu3yBm2+wbAhVMAwp9tnQ1t+PZnumjNSc9Z+VfpV19Okhbvtx1537
+         DyhEb8ifE2yjAteJDdp5Lk3/9dZHjnvYgvsn4y5wCCswFod5MOjo+nnbdzdk4ujrLaR9
+         MuxpZMP+pHNOikkq14yZ6y1wPap8OteumiOl+ylM1d2+SMuY709yAN9IpFf+RZ2KwNQE
+         83ED1BBo8sCKoZflREWYzy0rZu0vCxSLHPWuo34K5rUe7cZU+o4tl0EkN+Fj6z1VATGC
+         WbGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwvcRqRnJK6p5H2no9uSq25NNcOxyTZAJKCO6hj4ZehvjlSIQywMoxEvC2rwg90tMKtIYq3uH2q3uDaaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNqLWai81OW85cExjN1mcgIsQovFDSWakTBWGMLVIyQQ8ZFW9R
+	1/RodaZUBWCyv6c3K93xG2B/LlcU0buhV6JHTGJuEg4WiVpjI4xnL/eYBzSLaTXCT9y5Cn3RcPX
+	RxlvRjmea+JW1ieKos0CZrPpDtoJwC7PgLETH
+X-Gm-Gg: ASbGnctFJwZoALMM85s/Yvtl9KHlbAcr7DSDVeUFcnVfH4LY10EHfZdVUvlw9T/vpsy
+	+oZnqB8b1ultSZBW5Wf92SRyRXr9ZkhzPAPWRsLCykYs2Et9wVbjVgqBO7EyFco6PSZxdkFsThj
+	0bpgxH3kDGA0TzNHpVqceb0HFyxMYQG1nimprYxEdrTqRXv2q+471B9kuA
+X-Google-Smtp-Source: AGHT+IFQWcX8la3mf3erxygnc0Yxk6VdfJlO+R1O7xgLJNRsvV6Nb+bNzo3lRucwwrpQVJHAsLqHfIHBTUxDqrFrZkE=
+X-Received: by 2002:a17:903:1cb:b0:21f:7a8b:d675 with SMTP id
+ d9443c01a7336-22a8a0428b8mr221441315ad.4.1744099880739; Tue, 08 Apr 2025
+ 01:11:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407193449.461948-1-malayarout91@gmail.com>
+References: <Z_PfCosPB7GS4DJl@mini-arch> <20250407161308.19286-1-kuniyu@amazon.com>
+In-Reply-To: <20250407161308.19286-1-kuniyu@amazon.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 8 Apr 2025 10:11:09 +0200
+X-Gm-Features: ATxdqUEJdhoVuF1kE17SFFqgm4y9d22GopYGugK8_wlLPzMs2KTVHWjwqJHr5p4
+Message-ID: <CANp29Y5RjJD3FK8zciRL92f0+tXEaZ=DbzSF3JrnVRGyDmag2A@mail.gmail.com>
+Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
+To: Kuniyuki Iwashima <kuniyu@amazon.com>, Dmitry Vyukov <dvyukov@google.com>
+Cc: stfomichev@gmail.com, andrew@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 7, 2025 at 6:13=E2=80=AFPM 'Kuniyuki Iwashima' via syzkaller-bu=
+gs
+<syzkaller-bugs@googlegroups.com> wrote:
+>
+> From: Stanislav Fomichev <stfomichev@gmail.com>
+> Date: Mon, 7 Apr 2025 07:19:54 -0700
+> > On 04/07, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot has tested the proposed patch but the reproducer is still trig=
+gering an issue:
+> > > unregister_netdevice: waiting for DEV to become free
+> > >
+> > > unregister_netdevice: waiting for batadv0 to become free. Usage count=
+ =3D 3
+> >
+> > So it does fix the lock unbalance issue, but now there is a hang?
+>
+> I think this is an orthogonal issue.
+>
+> I saw this in another report as well.
+> https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@google.com=
+/
+>
+> syzbot may want to find a better way to filter this kind of noise.
+>
 
-* Malaya Kumar Rout <malayarout91@gmail.com> wrote:
+Syzbot treats this message as a problem worthy of reporting since a
+long time (Cc'd Dmitry who may remember the context):
+https://github.com/google/syzkaller/commit/7a67784ca8bdc3b26cce2f0ec9a40d2d=
+d9ec9396
 
-> Exception branch returns without closing
-> the file descriptors 'file_fd' and 'fd'
-> 
-> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
-> ---
->  tools/testing/selftests/x86/lam.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
-> index 18d736640ece..88482d8112de 100644
-> --- a/tools/testing/selftests/x86/lam.c
-> +++ b/tools/testing/selftests/x86/lam.c
-> @@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
->  		return 1;
->  
->  	if (fstat(file_fd, &st) < 0)
-> -		return 1;
-> +		goto cleanup;
->  
->  	off_t file_sz = st.st_size;
->  
-> @@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
->  
->  	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
->  	if (!fi)
-> -		return 1;
-> +		goto cleanup;
->  
->  	fi->file_sz = file_sz;
->  	fi->file_fd = file_fd;
-> @@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
->  	ring = malloc(sizeof(*ring));
->  	if (!ring) {
->  		free(fi);
-> -		return 1;
-> +		goto cleanup;
->  	}
->  
->  	memset(ring, 0, sizeof(struct io_ring));
-> @@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
->  	}
->  
->  	free(fi);
-> +cleanup:
-> +	close(file_fd);
->  
->  	return ret;
->  }
-> @@ -1192,6 +1194,7 @@ void *allocate_dsa_pasid(void)
->  	if (wq == MAP_FAILED)
->  		perror("mmap");
->  
-> +	close(fd);
->  	return wq;
+Since v6.15-rc1, we do observe it happen at least 10x more often than
+before, both during fuzzing and while processing #syz test commands:
+https://syzkaller.appspot.com/bug?extid=3D881d65229ca4f9ae8c84
 
-So in your previous patch you closed the file before the perror(), 
-presumably so that file-leak detection in Valgrind or whatever tool you 
-are using doesn't trigger.
-
-But here it's done after the perror() call, why? It's perfectly fine to 
-close the mapping fd straight after an mmap() call.
-
-Finally, it would be nice to quote the before/after output of the leak 
-detection tool you are using.
-
-Thanks,
-
-	Ingo
+--=20
+Aleksandr
