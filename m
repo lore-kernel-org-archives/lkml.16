@@ -1,168 +1,145 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F7D24503E;
-	Tue,  8 Apr 2025 18:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E012356CC;
+	Tue,  8 Apr 2025 18:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138349; cv=none; b=uawEA9InkznoufNdUmwFhKtl3i5REBNJ6dxNtRK7ddwBMW5RNpVVqwZFA5UHOgU1/RHxwZnCpHvjLhHHH1JkkWynbb7JOvihAQ9iCdhDpyzTYqZrIBeMJTFY9tzOatuBMw7UiTk5R5t/dfQS3FtHluHQ9DDV1J4DmQXucsnXm3A=
+	t=1744138389; cv=none; b=BjyyrpqMMbyLVKqNRMJ61IEXgJW6xla9PYg3BsPoHj6wtZw0Y2o4NJfzOGV9dX7lTkZQEu3YvQbYJcZZahKuH6MRlVrI+fqkFBriCWPg3LjFsNsrNBnKboxlqpj7f6X54E7EgZAjE9fKX10aUuJIMVsaq2MyLagKKTM0qlMrEwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138349; c=relaxed/simple;
-	bh=1AIAOmc4+BL1MwEPjQncGsite0L/q+UqJSY/JgPuTKU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=joIoPnUXGkMQ9Jc4DNmNX4UZF3dy8k1pzsTjFBWz0r3efXER/p928SoZPCcQGfjsXI+oUxtAh7kM96W+5RukgJaxLxY/Tcc/CldGNqpjAlKenyv6jVcO6z02ngLXXjtTuLMF6R4kO78MxdhlI5B06vY7fEWg2SLulof9pKX4lKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEmfND6n; arc=none smtp.client-ip=209.85.219.43
+	s=arc-20240116; t=1744138389; c=relaxed/simple;
+	bh=t4ntxsD59AauSomOOTSJBPia12h5IlpOu402MCxtBk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AM2OCFTdZsaGOTYLcxw94yoTkR3Y5vdHg6uI1hiO76zlI1cx1F28+FRlhPmKumRj7Pz9wTvrNuF8luHM2BpJGlISia1mJeuHfjSFt+0xjKZcHLHrDj/6bt+77QyyeUEVjhXb3ua7SsX4B7vunrkyqPOERvuJP7F5frtIUOvf1BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SIfVKk6g; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEmfND6n"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecfc7ed0c1so50705146d6.3;
-        Tue, 08 Apr 2025 11:52:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIfVKk6g"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224341bbc1dso53122405ad.3;
+        Tue, 08 Apr 2025 11:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744138344; x=1744743144; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cXzbNqX21KINjlwvOBtDTLvAt43XUqMC0bq2LYlTQao=;
-        b=QEmfND6nuTXRD37/Oqd2maIRDJ9m5JGSsn/TNPmdqr1DFzPXxjr1gDlN1/ni9joKNw
-         NYzp0m2ZRAxRKajPYO/w+pVSZEKz7vntdBdIJXYmxkt/45Cz3vzBDqrvFHO/mWqrXY2P
-         6hgY702dZore6bKdK+WpvSXyHw+Oaass7/pa7Vt1JuVGfyffD+6tQue4A64OF4+mvXtJ
-         d6zPE2+iDKdeCUe+p1BZnfcS9V5H9SZi1SMyPJc+qYNJ1Q44y5GbH3R4fhLGBI3n+rO4
-         0UcJGWq+qX6mRCcnaWjZVDPDooSRvR45SXK/06RyoJsnOfWMEGGZ0dFBGcRP9/idCWKO
-         eiew==
+        d=gmail.com; s=20230601; t=1744138387; x=1744743187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SlTNyadWIt0Y/k7BO39BMe8cnK8/su0vGORgpd0j3a0=;
+        b=SIfVKk6gE3kuAbb/y88FJsWjEaWoN4/Fuiz+9WhLeFaJMPt61fHF9/fAwvRPUpfrLd
+         BnOs3ouprW3z8Nbof4/nQxDStyIrV+nJzdHhTnmRuZROQYRdm25Xm6hKsW7HDTEpcK5X
+         BcSp1i1y6T1YnORpYdv4dSkXKwWlNd7OrN7TmMQjGURzr7J1bdXfa8igdr9vM7UezYfv
+         cy8U9vxX5t4qYNPNKtCCPIBH5wtj4q8yMO5tH5yKqLCkNUZBnOfxyP9EofncND4gVzfb
+         52uU/cYzAPoeP1o02g3dSR+maAoqOW02PmDRtMQfFpGlRjDRr3zMCG79SsvLQ8nL02x7
+         VDAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744138344; x=1744743144;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cXzbNqX21KINjlwvOBtDTLvAt43XUqMC0bq2LYlTQao=;
-        b=uScUCNS/AwQfpYDvTxPaPslPawAGWY2fynZmQRl7/LsYp+yrnS2iGKsv/m9Iu/nAyL
-         if9kj9bLT1ruc+95oLOZUIhHCsXUv7ZTtUQaeGMXnpSKPHYSBSqgiULxKCirC4GOLPgP
-         m8NxbjNpkwQAcbFDJ5I9bt4s4Lgk/v3bfuGJD8FCplgwWYOBPD1RLr4yNZ9RuBYCMH2+
-         ZGcLF/AhzQsjozE+RxVhBtFiFMmY57jO4H7TeRHL1d5btJQK/IiNMwJp2o1oz7XPPrtp
-         3PWyuHd1gush175T9UQRtxqDc0LP/vJh2Zf7BmpscD61JxEwDxXinZc4r2/o9TSeULFa
-         Olmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIELeexx3VwNrtqBtOgrDiw4jq3zy3IS9sxRbe31rspKW8S8XVIme1WKPZEY9jD98Z66UhlxHBqx6Lw0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT1ozdjcQfxy2bmd/q2qSWfJBJT/fiVxBEVrlfYWuBh0tIBdPi
-	jmpt4YjEIEVH+hB0kML1odXVcHkT4qvvKP9lhgjC5tr4mVxxfL99Nr92sugf
-X-Gm-Gg: ASbGnct7Fj0TgtzseugdeUSRpG2eIjUjMwtc6jhcsyN+cbG8aPwsn1mBUat/4YH48RU
-	Xk+6L0L/RGhsa3+/3I5ofWvXIgkawR41ul5OnGEzU5qOVKbetNOCk6QKBQi3OWu5Djxvbnl32+h
-	ix3mxGTMzadBLMIV3tRaAZtm7R6nilmYAIuQyzVxLv0GRYdzvO9CmqoXBvX+0BSVtl1+Gcj75kg
-	wWbWs3983aEvuyQZ2NP6PU0RM1cAyBhdzgq0lOw/ays2Om9VZEI7hWaU2V8ZVSO7hREqoQEJevV
-	p/XFDMF7T43YrHORWLR1ETNDwZgs0RG7yCgRy4a+biyefZB30uzkYD7mH57gj38iGD16w6KwpYX
-	LRGgko3tW7MBTXuZTp1gOQxH/sHl0bzVw9Ipy6CR4FcWa+xlf
-X-Google-Smtp-Source: AGHT+IFl9Eh6ffoEeDMkQbqKK2M9fcPQhiIKpO1IBqsjJ4FbhPIIAFpmCmH2h8Wexiy8S62bnJL3Ig==
-X-Received: by 2002:a05:6214:258a:b0:6e8:97d2:99a2 with SMTP id 6a1803df08f44-6f0dbc75c96mr3901876d6.39.1744138344472;
-        Tue, 08 Apr 2025 11:52:24 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3b8c])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f0476adsm77472306d6.52.2025.04.08.11.52.23
+        d=1e100.net; s=20230601; t=1744138387; x=1744743187;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SlTNyadWIt0Y/k7BO39BMe8cnK8/su0vGORgpd0j3a0=;
+        b=wFXb5PtpR2/GvM7TVrhKiELzyPeIK3rtMVpGiGpV96J3Q1S+n6QIA3tlnXNbbRY7PV
+         XUIwplzVGr9wEXd8RF85Y55uoIuAPZokYRYfLgfVBwGluxNV8BJyPUqbOEIgN47yuJ7F
+         TLedSlCEfLX2TA4qk8HWqS6DfFJf/ko4MPrEbM6pgDHf1jim/GqzKoHK1lCO4UGbNi04
+         A1ScA0FkB99dC9HwSSfterz8E3UGrElsQlwlAD/Jh7XPyeUd6HtHXMuecGD8yt8lLQ83
+         pUyAXy3l8BlcyvGOzfhzS07xv2naPUMeB3i/mYbO2CsH2m5E39oq+fu9OQ75paeaC6za
+         ng2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVcMCVQak61Fv4A2FBAEKl7y/2YldT/Ghv6NMyG70/5epqsM82/UBeJfhlB56wiiJgjfFdJ9ohUoGWzfFvVGFcZ@vger.kernel.org, AJvYcCWZs3mVarDHzWgefLpNuvey15lbltwohcy5wJtroGZUsCLzj+6GnGYmCr7Y+Qn3kq4+GYuLHnlA0qTwEhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVbMyKii/CTAV/IUVsvQ5Okx8pMa6gAKqNd+8P2rCJJ4uti3O9
+	sSwVAgVOTjAH+kyUcfbqzupYmS7gCWygiJo3x5Tgsl++jpoXn6Gg
+X-Gm-Gg: ASbGncvstUGKZKlht1soXGBN7F7MSdIdNKmIm6szv9ouROj8N3vAvCNri5lfpwoWwp7
+	RKaYaNbxtOQneFknk5SytH+wEL5oiE2JOfYh6QUC2NG9jAfLIO7TkdH0N25vNQNtIvU6bS+W8g1
+	SMOJDX8WHBqfxzU7e/9pIaF3KORRhMDXipw/bsNUZGy0Uo7X+1/q12S+KmECwZbu4Pldc/h6Hwy
+	Yc5a6X0/QJPlyXn3tMcmJimQELuBwUW3VRygsIH5Vi4EHZ+7kgMu6rI/Pddl1YyxOM5D+EXPEd0
+	itElBeoilYL8BhBea/DnkPxqwZXWTOMAORiD1q8UPSvnUbNsIyV/cvvwrHxg2w85BiAwuEyaMUO
+	rBJUZg+94pwVldyk8+i/IQLk4nu0=
+X-Google-Smtp-Source: AGHT+IFm+gcLss+dKyd4t6lqJ37o2rU8f2lNWS+cne/WUF3ng/HI2286W9C3sdmE686OBfpVpUSqQQ==
+X-Received: by 2002:a17:903:904:b0:224:e2a:9ff5 with SMTP id d9443c01a7336-22ac297fe6emr4250915ad.9.1744138387049;
+        Tue, 08 Apr 2025 11:53:07 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978772746sm104284585ad.223.2025.04.08.11.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 11:52:23 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 08 Apr 2025 14:52:22 -0400
-Subject: [PATCH] rust: remove spurious compiler_builtins dependents
+        Tue, 08 Apr 2025 11:53:06 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: mingo@kernel.org
+Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: RE:[PATCH RESEND x86-next v4] selftests/x86/lam: fix resource leak in do_uring() and allocate_dsa_pasid()
+Date: Wed,  9 Apr 2025 00:22:45 +0530
+Message-ID: <20250408185248.7722-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_TZ138UxQ_uZzys@gmail.com>
+References: <Z_TZ138UxQ_uZzys@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-rust-remove-compiler-builtins-deps-v1-1-4fda4f187190@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAGVw9WcC/x3NQQrCMBBG4auUWTuQhCriVcSFJn90oE3CTFuE0
- rsbXH6b93YyqMDoNuyk2MSklg5/Gih+nuUNltRNwYWzG92VdbWFFXPdwLHOTSYov1aZFinGCc3
- YZ3fxLowpR1APNUWW739yfxzHDz4uN/Z0AAAA
-X-Change-ID: 20250408-rust-remove-compiler-builtins-deps-1f061024dfce
-To: Miguel Ojeda <ojeda@kernel.org>, Lukas Fischer <kernel@o1oo11oo.de>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Transfer-Encoding: 8bit
 
-The dependency on `compiler_builtins.o` was first added in commit
-2f7ab1267dc9 ("Kbuild: add Rust support") to `alloc` which matches the
-standard library[0] but was copied to other targets in:
-- commit ecaa6ddff2fd ("rust: add `build_error` crate")
-- commit d072acda4862 ("rust: use custom FFI integer types")
-- commit 4e1746656839 ("rust: uapi: Add UAPI crate")
-- commit d7659acca7a3 ("rust: add pin-init crate build infrastructure")
+Exception branch returns without closing
+the file descriptors 'file_fd' and 'fd'
 
-The alloc crate was removed in commit 392e34b6bc22 ("kbuild: rust:
-remove the `alloc` crate and `GlobalAlloc`"). As fas as I can tell none
-of the other dependencies are required; it is only required that
-compiler_builtins be linked into the rust-enabled kernel. In the
-standard library, compiler_builtins is a dependency of std[1].
-
-Remove these dependency edges. Add a dependency edge from
-`compiler_builtins` to `core` to `scripts/generate_rust_analyzer.py` to
-match `rust/Makefile`. This has been incorrect since commit 8c4555ccc55c
-("scripts: add `generate_rust_analyzer.py`")
-
-Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2faca8d34818339/library/alloc/Cargo.toml#L19 [0]
-Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2faca8d34818339/library/std/Cargo.toml#L21 [1]
-Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/rust-analyzer.20improvements/near/510200959
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 ---
- rust/Makefile                     | 6 +++---
- scripts/generate_rust_analyzer.py | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ tools/testing/selftests/x86/lam.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/rust/Makefile b/rust/Makefile
-index fa0eea8a9eca..eb0590a77e95 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -501,16 +501,16 @@ $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FORCE
- $(obj)/pin_init.o: private skip_gendwarfksyms = 1
- $(obj)/pin_init.o: private rustc_target_flags = --extern pin_init_internal \
-     --extern macros --cfg kernel
--$(obj)/pin_init.o: $(src)/pin-init/src/lib.rs $(obj)/compiler_builtins.o \
-+$(obj)/pin_init.o: $(src)/pin-init/src/lib.rs \
-     $(obj)/$(libpin_init_internal_name) $(obj)/$(libmacros_name) FORCE
- 	+$(call if_changed_rule,rustc_library)
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 18d736640ece..0873b0e5f48b 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
+ 		return 1;
  
- $(obj)/build_error.o: private skip_gendwarfksyms = 1
--$(obj)/build_error.o: $(src)/build_error.rs $(obj)/compiler_builtins.o FORCE
-+$(obj)/build_error.o: $(src)/build_error.rs FORCE
- 	+$(call if_changed_rule,rustc_library)
+ 	if (fstat(file_fd, &st) < 0)
+-		return 1;
++		goto cleanup;
  
- $(obj)/ffi.o: private skip_gendwarfksyms = 1
--$(obj)/ffi.o: $(src)/ffi.rs $(obj)/compiler_builtins.o FORCE
-+$(obj)/ffi.o: $(src)/ffi.rs FORCE
- 	+$(call if_changed_rule,rustc_library)
+ 	off_t file_sz = st.st_size;
  
- $(obj)/bindings.o: private rustc_target_flags = --extern ffi
-diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
-index cd41bc906fbd..b573349d688c 100755
---- a/scripts/generate_rust_analyzer.py
-+++ b/scripts/generate_rust_analyzer.py
-@@ -81,7 +81,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
-     append_crate(
-         "compiler_builtins",
-         srctree / "rust" / "compiler_builtins.rs",
--        [],
-+        ["core"],
-     )
+@@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
  
-     append_crate(
-@@ -94,7 +94,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
-     append_crate(
-         "build_error",
-         srctree / "rust" / "build_error.rs",
--        ["core", "compiler_builtins"],
-+        ["core"],
-     )
+ 	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
+ 	if (!fi)
+-		return 1;
++		goto cleanup;
  
-     append_crate(
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250408-rust-remove-compiler-builtins-deps-1f061024dfce
-
-Best regards,
+ 	fi->file_sz = file_sz;
+ 	fi->file_fd = file_fd;
+@@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
+ 	ring = malloc(sizeof(*ring));
+ 	if (!ring) {
+ 		free(fi);
+-		return 1;
++		goto cleanup;
+ 	}
+ 
+ 	memset(ring, 0, sizeof(struct io_ring));
+@@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
+ 	}
+ 
+ 	free(fi);
++cleanup:
++	close(file_fd);
+ 
+ 	return ret;
+ }
+@@ -1189,6 +1191,7 @@ void *allocate_dsa_pasid(void)
+ 
+ 	wq = mmap(NULL, 0x1000, PROT_WRITE,
+ 			   MAP_SHARED | MAP_POPULATE, fd, 0);
++	close(fd);
+ 	if (wq == MAP_FAILED)
+ 		perror("mmap");
+ 
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.43.0
 
