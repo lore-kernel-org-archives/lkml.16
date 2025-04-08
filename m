@@ -1,143 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F1E2571B2
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 23:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82189221F0E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 23:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744154652; cv=none; b=hJZDSfrGff0R46h0Eg5jy2+TR67PnNNg4hyrzliJcjnFp78dYBbvIoUuGBQn2ScT85Gn9AmLD54ZkvQLJl/YGiFKCMwFg42LbsGhOwoWly9IS0dQzT1jvW36KdvF5QQOcpoWZhNVKsuWT0ZPNedDG9Lg1eltRJOJFL4LeJsoQHE=
+	t=1744154742; cv=none; b=E9DRzFd6oeOW8Q+M85+/Jx8AOpdjtvGjszcBMJJLU1iA/XygLoFAfkSVivAUffaWllyc84beH+5Q7nNUg3tVl1WN/54RNXC9N0lR/wUwfeznT07D7i3apoiQ4MWrPt3rHdvb5jPn2/K7KC1si/HJEB8rGC0rp5K3bjN6hlO5Vx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744154652; c=relaxed/simple;
-	bh=Z+y+TvvbX6H4MZSWf6kxTQkHX4zoax64bXySg9jfE/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IwXwnxj4aKBouUHZnQZLvgqFqPuTSk29AF6bLJSv4VGEau7UyqE6cNg2J6Q9lkJtzuJHcTAfow/UfKr5zuPJR6rbG0+wq3SzE3MXmTSZ9yEev4ViocFheEHRoTbh5kzk53lJU096/I/2IkDWShRBOO6V+B2T6nFcEcr4OuspECM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/hvt4AH; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744154742; c=relaxed/simple;
+	bh=yaG+cNw3thGzK/uMl7ZE2Fba3N0gTNuNWI1pEKzcOXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OZwP/Kwg2+pElMs0HCfhvzpcHX4GVSECWRI50JfmJoSvwIkj6OIWMF4GDTvMmJsTWVkZ+YwknysMYs+qgCkHwohZlY/CNgYLleK36BDfdLzpaNRz1Xygr4mwTolRygHfUfsZmP+PcXie5EGvaqCHpAlnM6ajv4mYslOi2ibdR2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=F55VCcMy; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/hvt4AH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744154651; x=1775690651;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Z+y+TvvbX6H4MZSWf6kxTQkHX4zoax64bXySg9jfE/Q=;
-  b=K/hvt4AHJC9svbfBftvfGl+cPuKhf+Hp/JpKFrGfIKkxnZzLQQ5oxUlk
-   vGaQ8kpK8k4maPsvvyPqHc7X8/L6kWJbDx+cDVXtK35q1b1lpfkuUiqwi
-   f1RJ1AYrPtI055oq+yYkxDvO8cd+j1XbDef0r2DASvoiJVheLixUdDZ85
-   q1pmnlTwMqtGqPH4eIBZrFaJqAMN2hk+4S+7TW/Kgc3eiUrv/KmBQyU1f
-   mQh6ljBHo0WwC3UuPlldzVyJCldHJ3VGPgRodSYgIX9vBWkRUjTlR5OCA
-   ajzFYYPLWzj+9tMzgZs8duopTHq6jg1ozIfbvT+5tMPWH5V5BBRUxn85f
-   w==;
-X-CSE-ConnectionGUID: TyWG+S7gTKWBVcGshJspeQ==
-X-CSE-MsgGUID: Um8OflU6Q22yFfFKVz/Bvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48318155"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="48318155"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 16:24:10 -0700
-X-CSE-ConnectionGUID: /1fLLVCGSayODjVfxoFgPw==
-X-CSE-MsgGUID: OzRJ/k2PQoaIkhLenW6lUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="128944671"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 08 Apr 2025 16:24:08 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2IIY-00084V-1P;
-	Tue, 08 Apr 2025 23:24:06 +0000
-Date: Wed, 9 Apr 2025 07:23:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: fs/namei.c:232:6: error: unexpected token, expected comma
-Message-ID: <202504090937.ZGGFamL2-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="F55VCcMy"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff6a98c638so6291729a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 16:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=neverthere.org; s=google; t=1744154739; x=1744759539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QdaIenzsmWJTTujQ9Rnj1L0tl/QFO/K85i0DJLh7p2M=;
+        b=F55VCcMy+cnhMtoTmdLumY4ABnI2lyS97Fw1jDAfDrYEh/NS5ZLogyLujSncliNyje
+         Wr82YEgD8JRl3OEXmIsUtcah/YOHZbvl0iNYnnsUdsc88hwsIBPX5KPdE+wtYXb+vhb7
+         Fwmdi+WrZbSQV4ZSLivRYpTw0cERqF0zIqdsTdZmB8YEbV06u2iIIcH3fQ1X4ZDWDmPS
+         w63x6WFwKl70/QcnEnE8Q6tOIwGZShN2S9Ix+YiJ7tj6B53JgoiYsgAN/iyq8sCAnTqu
+         D+07dBzkPmk8AIXl5RBjrWk7g9XFn8dC3SkenOoMVSiCt13zPrMVpOP0o0Qc0LsfWC2/
+         F1XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744154739; x=1744759539;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QdaIenzsmWJTTujQ9Rnj1L0tl/QFO/K85i0DJLh7p2M=;
+        b=txGdXfB04yOKyvhb5PwffvgfmJD4o5EksrMyiMI0TbHELoVOjbkEq+RXmW/E/5EFaW
+         tCAy10ZQBjiiQ1XI8qZLzjnuCCV96S4xO1PJBPdvjEssMa4ZdfboJjmlVLsmQ6Q4w8AG
+         RUEy7enI9DU/RzAMBZQCeJYqLwl4MG88FmzVugDdp7I7PnQGEN5cT5NInFm0wrnzgZ7H
+         rQoiM9b+tpgFvDrym9G1ts1moW1wXezvldoUjNL8KcWmE8isFIeJMZ2vajtVkEU2cpks
+         /sljIh/IvSsU7hb8cfnaA1StWkG9frFP7B7nph5ykbmYGGskW9/wkqhroB07E3eHc64v
+         wgaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYcBK+jett2QkXa4jqX2AvpIYzYExwA1oU1CO4eatIfUU6GIqDmBGnU6zadn8ZnTjXKivhjzUL4gLrEU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMOgqapezJasU9s7j1qC3N9rFnzBtWb3bO6wJv3cTf35OXiGkU
+	KwLXdcE4WBGW0qoLNx32auybLb7/3Zormt8FXTOBB2QC5QQ66dPi1JRy4m/9Ng==
+X-Gm-Gg: ASbGncuqMOUuJcecn6OWRRVDq5SpbSl3jbf5t8koa+pr9tbwNCh/EVCGamZM0VnNKF7
+	wdMwDP+0Q+Gs7TuhU+SuD4dKZDo5M4yNwl+jF6Tth5MinZLWn/sj6y2TG/wQ7JLSAefAf4ky+QW
+	qeKXYFjrG7BzxX0fSx9kenLbKO0ma+QFKDRRMjILZugjeZn3UNuKpJsrqRf5QWiotGEQUYgnXNu
+	gbo2Bktfl7qPaqXUzHWryr1+uuLLCjxC6V9WZ24wQnwT8ty7Ld9PbiAP5f3t0SiXPR7dOgz49uJ
+	dUy4uYRbH4wRMdeU4guK29BIXzx073d+XBlxPbR7jKCkbDTkHNGlLxNcq1/VKaLX5H6zTuruO9z
+	qgJ6Z1KyLy+Zuth0Kt7YI
+X-Google-Smtp-Source: AGHT+IHdNvvZeYZEkWu5hl2Ax+3ZQOzgnn/I6tXchKkRcxPGcuGKRXDFSRdslYshlPTmMcdFAUw0pg==
+X-Received: by 2002:a17:90b:2f0b:b0:2ee:db1a:2e3c with SMTP id 98e67ed59e1d1-306dd31f6bamr403489a91.1.1744154738672;
+        Tue, 08 Apr 2025 16:25:38 -0700 (PDT)
+Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd187263sm142158a91.42.2025.04.08.16.25.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 16:25:38 -0700 (PDT)
+From: Michael Rubin <matchstick@neverthere.org>
+To: gregkh@linuxfoundation.org,
+	dpenkler@gmail.com
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Michael Rubin <matchstick@neverthere.org>
+Subject: [PATCH v1 0/7] staging: gpib: Removing typedefs
+Date: Tue,  8 Apr 2025 23:25:28 +0000
+Message-ID: <20250408232535.187528-1-matchstick@neverthere.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   bec7dcbc242c6c087cede1a6fdfaeb5d6eaf25bf
-commit: e896474fe4851ffc4dd860c92daa906783090346 getname_maybe_null() - the third variant of pathname copy-in
-date:   6 months ago
-config: mips-randconfig-r064-20250408 (https://download.01.org/0day-ci/archive/20250409/202504090937.ZGGFamL2-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504090937.ZGGFamL2-lkp@intel.com/reproduce)
+Removing various typedefs to adhere to Linux code style.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504090937.ZGGFamL2-lkp@intel.com/
+Reported by checkpatch.pl
 
-All errors (new ones prefixed by >>):
+In general, a pointer, or a struct that has elements that can reasonably be
+directly accessed should never be a typedef.
 
-   In file included from fs/namei.c:25:
-   In file included from include/linux/pagemap.h:8:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> fs/namei.c:232:6: error: unexpected token, expected comma
-     232 |         if (get_user(c, pathname))
-         |             ^
-   arch/mips/include/asm/uaccess.h:97:33: note: expanded from macro 'get_user'
-      97 |         access_ok(__p, sizeof(*__p)) ? __get_user((x), __p) :           \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:177:23: note: expanded from macro '__get_user'
-     177 |                 __get_data_asm((x), user_lb, __gu_ptr);                 \
-         |                                     ^
-   <inline asm>:3:10: note: instantiated into assembly here
-       3 |         .set    eva
-         |                    ^
-   fs/namei.c:232:6: error: instruction requires a CPU feature not currently enabled
-     232 |         if (get_user(c, pathname))
-         |             ^
-   arch/mips/include/asm/uaccess.h:97:33: note: expanded from macro 'get_user'
-      97 |         access_ok(__p, sizeof(*__p)) ? __get_user((x), __p) :           \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:177:23: note: expanded from macro '__get_user'
-     177 |                 __get_data_asm((x), user_lb, __gu_ptr);                 \
-         |                                     ^
-   <inline asm>:4:2: note: instantiated into assembly here
-       4 |         lbe $3, 0($4)
-         |         ^
-   1 warning and 2 errors generated.
+* Patch 1: Removing gpib_event_queue_t for struct gpib_event_queue
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [m]:
-   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
+* Patch 2: Removing gpib_interface_list_t for struct gpib_interface_list
 
+* Patch 3: Removing gpib_event_t for struct gpib_event
 
-vim +232 fs/namei.c
+* Patch 4: Removing gpib_status_queue_t for struct gpib_status_queue
 
-   225	
-   226	struct filename *__getname_maybe_null(const char __user *pathname)
-   227	{
-   228		struct filename *name;
-   229		char c;
-   230	
-   231		/* try to save on allocations; loss on um, though */
- > 232		if (get_user(c, pathname))
-   233			return ERR_PTR(-EFAULT);
-   234		if (!c)
-   235			return NULL;
-   236	
-   237		name = getname_flags(pathname, LOOKUP_EMPTY);
-   238		if (!IS_ERR(name) && !(name->name[0])) {
-   239			putname(name);
-   240			name = NULL;
-   241		}
-   242		return name;
-   243	}
-   244	
+* Patch 5: Removing status_byte_t for struct gpib_status_bye
+
+* Patch 6: Removing gpib_descriptor_t for struct gpib_descriptor
+
+* Patch 7: Removing gpib_file_private_t for struct gpib_file_private
+
+Michael Rubin (7):
+  staging: gpib: Removing typedef gpib_event_queue
+  staging: gpib: Removing gpib_interface_list_t
+  staging: gpib: Removing gpib_event_t typedef
+  staging: gpib: Removing typedef gpib_status_queue
+  staging: gpib: Removing typedef of status_byte
+  staging: gpib: Removing typedef gpib_descriptor_t
+  staging: gpib: Remove typedef gpib_file_private_t
+
+ drivers/staging/gpib/common/gpib_os.c     | 155 +++++++++++-----------
+ drivers/staging/gpib/common/iblib.c       |  12 +-
+ drivers/staging/gpib/common/ibsys.h       |  11 +-
+ drivers/staging/gpib/include/gpibP.h      |   4 +-
+ drivers/staging/gpib/include/gpib_proto.h |   8 +-
+ drivers/staging/gpib/include/gpib_types.h |  38 +++---
+ 6 files changed, 116 insertions(+), 112 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
