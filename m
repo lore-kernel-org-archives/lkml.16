@@ -1,118 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A82673A4
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A4266B52;
+	Tue,  8 Apr 2025 10:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108497; cv=none; b=GC0EZ4A8OC/SlTS9uSt7N8l2Di2cTWcAN/W3cDlQHn4NfoOg9T1VEZDyKj1RLX+GXFrDslwYKOeuP/Jh6t4GdE60o606qh47vGkZ4xBUalBqe/BAPLPzGWr6xCDyuchrrqSn5cqkEDFqtMTsDGyYlBwNr+iXsRFp/5WADJOHOAI=
+	t=1744108557; cv=none; b=nNn8YWGzBrEfiSUdR9NyQws92UFD+Hg83pugvGaOcPb/TW/3DrHZhT78nQTidrKEGxdBOlLiUdI2ZpMCv1qp8M82BGXGC474AXYUeDyGrL62hBxFFOl/oATOxQoPUODIh+l/9bnZ6lnYiCyS5XQqHzpqQ+xd4BTWMeNKOYgsHsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108497; c=relaxed/simple;
-	bh=dIUSGCQJMkWXHVB5T0uBKfCutdPuOePLOlNcmB0Cw8A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FJ9mxmfbgmLimAfwxE2yIbwpIi9rTwGn9txkxWkPGSWR/nOVFK0baVhifKMLNfoVpMsgpxZZLSU9+5uSuQJUzLgwoNkvcIpCxvu1Ueg3424yQxK/T7+JRxjhwx3dg7tp8WNtLog8AKfwQGSfEVQL9WrbgYqinSBHxE0eV8RXxbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jlty5irL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744108557; c=relaxed/simple;
+	bh=Hs5PawQM2WOdSP5JwOusufifAnZKTVHPO4QSUYxTA/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QTZHiR2tQvtDd0wjUKwWsHpJriRPZs+If7Uy30JiXmBPU1aNm0ZB32c8GKYcZ/VUJ5TBS1ccmGp2MuSYMktjMdFdBjDHblOgrABzEyGC4LXGCBAMrsZRBRE5e8eRx+7THmdTNTUCbvPS0FvdTpJ6tM/nGyXfK+i6q1SiGEGkNus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AKT5vBtR; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jlty5irL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744108494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z1kLDCuy0LJWaq40XfbBnptvlV3cFoN35q8yUrDYBAo=;
-	b=Jlty5irLdbVVLkbKZpnR/fTezSo3p16sIE/BU6XwLdBaaoX98pdCMCAn6LEQMCQYBm/nOH
-	LTG8G5nzsMdBmMI6bWJbZlS7XkEKp8LXk38gnsnROmX14LRU5e3ELwwuAw6tbQNBgLTP+l
-	zgMr9U4LRKNvCXkmh6LoejF/OTWJRzc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-qOTULbL_N3WhHfAkleVrJQ-1; Tue, 08 Apr 2025 06:34:53 -0400
-X-MC-Unique: qOTULbL_N3WhHfAkleVrJQ-1
-X-Mimecast-MFC-AGG-ID: qOTULbL_N3WhHfAkleVrJQ_1744108492
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so40772415e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:34:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKT5vBtR"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af8cb6258bcso322943a12.3;
+        Tue, 08 Apr 2025 03:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744108555; x=1744713355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iQlwjJ2p3uIQ1WJnPIDIqEOJSPAOfdW0m47XOoSjXlI=;
+        b=AKT5vBtRKLGFLhDRXbnTJkEJrWMNkSb3BjfnZ9eIlspennyV+O/jBisqJDOJio3/hR
+         Uvx7wsA+Imyzh2QWsOomtPlKi5mdwDy/MJ9v1T1HoRstwSI+N2AS7OPrve29A4G1irlj
+         EO7YLFo8H0aBMs3PO65K3EY8nn96zfyUsxqNki7NxovUueVza0QpTL6WZOHaCBnmkgdT
+         q6n8M5ROW1Aq4DF73lepquDrwAiAq7v2lgXgFYFRsi6Pxu9lpxyTV9B4zLS8PHMGckj7
+         z9EKQTAoyN1qVTEU8XO1WcANXJUePRrc6CuA1AUChUAg+ZrnCn3Doex2WpDwvpBHxBAP
+         XCIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744108492; x=1744713292;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z1kLDCuy0LJWaq40XfbBnptvlV3cFoN35q8yUrDYBAo=;
-        b=nAcPwtiJj9tni9jL2jCxEW71cCGwWQ1FRX47+LG9ARZBxuB7QScnQYWfhajJqGT6uc
-         Fq1qC3TI32/m+kRPZEqmcW6CZmCp/5DVwtZdAFyds2ji+q6dA4ARVkuW5XgY1EKq9S8J
-         YUF0642QgsrrLTLlktUfQCOSA6EiZ1Ies/UZmG2q2ycCJWbdckvxWYWfIYxn1CZuIeIg
-         5EnxjdjmRSd61Tl90mqKhVk/8ImpQzQHGsAW0dk+kPQWUi8uJ0bX0yao5z1mx/qYvmGK
-         gdwQqN7Eb48DId46PfyC+5VMp/J6wvTOwnwWK1eeloZ/VlmhXUxcWO97HczMSoZrw7CP
-         UDuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEE8gilQw0vZ4Dq+EkBeV729iX/yKEKyPISfUsb2VyC7BvmB0BfIL55K9h2S57yrSy3Cb7EdQntC2J9Zk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4IoJuQErir5xqecHlTCvkOEevfg21cOhCaTXYhicEXI9q7/Z/
-	ZNlD8iQoH8hYlVb8+fJZWt2r/KIROnih5qg830s0Q1L1IYFy5bGUEo5OsHvPC8/yJkPVAWsq6iS
-	s+Btdixbg8jnXj/5k5ghZ2UjUrvkwiJs2SeQWqU80pHhXWogNBu0gynqIERfvSQ==
-X-Gm-Gg: ASbGncusLVXB4wOZMQm+zs7parnPrwTTKVqNoN3UWrLFYn5r+YXGqXel+JrDJtYGztG
-	iLMURPpp3DyrHGDtgEInEtCWdo+wZxERj8hSDNPbcrWn0DOYUicgsd3Ypx90Slj02q9oxycjDF2
-	EaI57n4ujkLtXNxt3yFKwemqt3K34LgS5ZeYo0gD1SFTxxihg9wZrQ/GfDl+VcPTL6KrxaQbTgE
-	jNBCeOW18gn44iswF6NfEPYNl+bFhASv94psa+AD5vJHJFGUNPMzqX0kynrP5jEzpsDMbyRnz3F
-	VTi8/RYiamDnQYvEi9X2XNYtNuzl3BGrlzYOsBsDoGY=
-X-Received: by 2002:a05:600c:46d5:b0:43d:fa:1f9a with SMTP id 5b1f17b1804b1-43ee077feeamr114018945e9.30.1744108492244;
-        Tue, 08 Apr 2025 03:34:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNrx9b+C4sy+Jf7jez9bNmGMXH7wVN/rHcn9k1wVEeZvgkM6nisFU/CRDVij2cqGe7/JrW2w==
-X-Received: by 2002:a05:600c:46d5:b0:43d:fa:1f9a with SMTP id 5b1f17b1804b1-43ee077feeamr114018755e9.30.1744108491905;
-        Tue, 08 Apr 2025 03:34:51 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-84-24.dyn.eolo.it. [146.241.84.24])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f121d720fsm8632615e9.1.2025.04.08.03.34.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 03:34:51 -0700 (PDT)
-Message-ID: <89f9194a-e7dd-423b-ae54-c082f42edf51@redhat.com>
-Date: Tue, 8 Apr 2025 12:34:50 +0200
+        d=1e100.net; s=20230601; t=1744108555; x=1744713355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iQlwjJ2p3uIQ1WJnPIDIqEOJSPAOfdW0m47XOoSjXlI=;
+        b=tl+ejDMDt8F7wVEcqupFdk6RSKc3cLv5HcYsRRGWx5NGeOptczqQAkDtQDx3RZ58hr
+         A8syBn/Mj4BNUdI6o0Dsnl9oASjETkrgiK9ZnBqSOr0iHHKI1i80gfBswT+MDyJghFIk
+         EBauLxRPtqIwc6zZfuHZ+4+X+cMC6KF8m3VsvjQrISEYm3a77HCX80nNtItTAr5SbvXb
+         C9OvZsFIXTgFtvv4dlGWWbBSgscFGwAtUbXWcDbw5MdWxXJ5x78NuSeEAwjfZNy+vWgg
+         3E6eMMqbTMx30wn5qy9xr10OIw2dLjnCGqXiuUpagbSx/DNP8Ip5DzU5r+zFevHAPusJ
+         ISrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVElqR8EL0pB3Pl1rrcmHW4GaOwXaOqk3gMr5bEOvX70PFG6lb5m0ppNvQRcuc8hYGtc8ZhPQmlL/ggZyL3GIo=@vger.kernel.org, AJvYcCXRr/2QvH4Jlj451BUaZoshTbUUw4xu3bk0coRuJls23FRJmXjoj12HxnBO3q4dXF9ZJ6u80+mjMoYorPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrmfcWLg+Hwy9B+bVLC4pgy//UA9ypb3zACiO5KidxEc6v3y6Z
+	eXmbR6Soownht4d/h534tUoBN/eWu1QAW+eXey6OGtwE9joSai6ZPTMRd/xSgszjAc+a5nz4jEl
+	eANns5ijqal/9uhW872KFdOLqyIc=
+X-Gm-Gg: ASbGncufEcu9iirFgZj/HzTmemqg0ybVm/Dc0aHqiKb2boN65/6J9k/xLl0eIL5K8GN
+	dwXbuV3Gv/kAYj8LPQnhELpVuSBU2L7sVbyXimANf/0jPmBEqhm3p1RHB/Y48Qt68m6uzEJm6mz
+	OUGgPIYu9lDXHGJN4F0Xn35XtP4WSnnJfN2jcf
+X-Google-Smtp-Source: AGHT+IHG0bNsfNxD/bffZ1WEADVVWD5Z4FZXXeo6nGPGofnX5l5qeHWJst+e/L0ClQBdKnDo45M/UccxZy7Vo6+22pw=
+X-Received: by 2002:a17:90a:d006:b0:306:b6ae:4d7a with SMTP id
+ 98e67ed59e1d1-306b6ae4e3bmr4961351a91.3.1744108555055; Tue, 08 Apr 2025
+ 03:35:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] net: wwan: Add error handling for
- ipc_mux_dl_acb_send_cmds().
-To: Wentao Liang <vulab@iscas.ac.cn>, m.chetan.kumar@intel.com,
- loic.poulain@linaro.org, ryazanov.s.a@gmail.com, johannes@sipsolutions.net,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250405115236.2091-1-vulab@iscas.ac.cn>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250405115236.2091-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250408-box_trait_objs-v1-1-58d8e78b0fb2@nvidia.com> <D916LG7Z9Q31.5RVNMYM38E2D@proton.me>
+In-Reply-To: <D916LG7Z9Q31.5RVNMYM38E2D@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 8 Apr 2025 12:35:42 +0200
+X-Gm-Features: ATxdqUHL4PfNxPSYXiMHqmeMcyHw_IssZCc34uipmaO88JKUWSemU7j-HOIFMxc
+Message-ID: <CANiq72k9Lo-M5v338iWWSiwrnU+JwP+aEZeLiR291xc2c+ESOg@mail.gmail.com>
+Subject: Re: [PATCH] rust: alloc: allow coercion from `Box<T>` to `Box<dyn U>`
+ if T implements U
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/5/25 1:52 PM, Wentao Liang wrote:
-> The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
-> but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
-> This makes it difficult to detect command sending failures. A proper
-> implementation can be found in ipc_mux_dl_cmd_decode().
-> 
-> Add error reporting to the call, logging an error message using dev_err()
-> if the command sending fails.
-> 
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+On Tue, Apr 8, 2025 at 12:22=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> You forgot to add the `A: Allocator` generic here and in the impl below.
 
-This has been posted while net-next was still closed for the merged
-window.
+Yeah, for this sort of changes (ideally, all patches, really), please
+test with both the minimum supported version and the latest.
 
-You should have waited for the 'net-next is open' announcement on the
-ML, or checked the status page, see:
+For instance, there is another issue, `#[pointee]` is only applicable
+when you have the feature:
 
-https://elixir.bootlin.com/linux/v6.13.7/source/Documentation/process/maintainer-netdev.rst#L35
+    error: cannot find attribute `pointee` in this scope
+     --> rust/kernel/alloc/kbox.rs:66:18
+      |
+    66 | pub struct Box<#[pointee] T: ?Sized, A:
+Allocator>(NonNull<T>, PhantomData<A>);
 
-in the interest of fairness towards those who correctly wait
-for the tree to be open I will ask you to repost this again,
-in a couple of days.
-
-When reposting, you can retain the already collected tags.
+By the way, I would suggest taking the chance to move the sentence in
+the docs below to the "Examples section" and providing one.
 
 Thanks!
 
-Paolo
-
+Cheers,
+Miguel
