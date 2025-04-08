@@ -1,96 +1,156 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B734E267711
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98B6265629;
+	Tue,  8 Apr 2025 09:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105177; cv=none; b=e6kCe5wzfMrUckOtKX+d+crH4PedDPoEHzzTmYyGgY8OLPRtKKiGwTMMO6zkojDHGRrCjqLx4FlpVCd5oF6V5SlSO2wsyWLDOg+rO5VXdV9DBvOod3Ge8XuyeKZAcAAgX6z5YAQ22ifvGXB7Fgg5ikZasfXdOjKXtMUSjeg06Xc=
+	t=1744105186; cv=none; b=dF5Cjo2B54HdyMGSWQaJXMKfpZAC7omcUjhqlxA/ymqkIOCzVdcp4h9gjSHHVdSulH1URDVnOqqfbNAO56sPQ+yDH6HpbZrqKZ6U90XGX687WhryVtvsr78aA49khzuvTB5LC0JR6LezTebXu+lAAETvl7FtaE9fL+hwitf6x7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105177; c=relaxed/simple;
-	bh=IkYBTEY6JhvGb7MAKQi0he4gyc4Ltpd1gFbX323IaCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=esDiVCNPfwwAwHOk9JKjUlEeqy+mQfauKAdI6FM/2NoA+N5qAZnxQt4AkH9g2uZVAGRjlDGRutA3F2XxT5kfS4lrWzdfKaVPIBDOUmfehaOGy0qmxS+3F970uvr6ke99mdHrJvqJptbB0IzAMcUu4z7E0tdR05SqeQuJMvyKKfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=aLL9h1an; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Oepx9Jh9 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744105186; c=relaxed/simple;
+	bh=bLDDurUkL1v70P2v2SwPIpdQFVc5IT27gFgTvVDyEGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CoYfsRzLyWAYLLrRWLM2Xk2ktbLd+gwqMw/eOPn+6HHtEdUyiczwGvGGJ7zywxSHnr0+CKN3A2NMvQLjibZ77FdP7w3sFs7WZE8nVhzVeUsvK8oOcQZhEvUCNyLnO828Qh5vurqVAXP7G1YhGT0GjVpp/vXups+7uuTaIVK/RJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HW/yyuVb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aLL9h1an";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Oepx9Jh9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744105176; x=1775641176;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HU7g7r1daBdnZNOhq0DQ0MLmTBrujJofZRa/dyTPJIw=;
-  b=aLL9h1anO3bu48DZZzvuWkHXuu4M8awTqmJWS2v0jSIrctCN5Q4YHai/
-   ikUL/W0RtPrOjBVEMy4VpvyxlXwQITj592vX9AKR6AfIM8xfjH6yTGrg5
-   tnZZE+RBsJUgiCSk4MhnmnKGXWSE4IU7R/1AiNtHz1lh9+wZdd7JG51KI
-   CyvsQwH5pQXZW8N7l0pwqwuDWHAh1TqB7aHAMMamnQeUBjDsz3gFCF2Uy
-   sY6aoZ+IK34vnVDhc2GUwC2xmSzibdDu5UvFiuQQbRZXaQKmKNF/jbVjs
-   giZyTchJqQLg/pAywXvENF9d1vdEMn0p2Ra/bYiyzKpDZWVF0qJyt1kt7
-   g==;
-X-CSE-ConnectionGUID: hzs8KWMxQxGAzt1+U9BmKw==
-X-CSE-MsgGUID: 7eOUdWqzTXybavMJaetD4A==
-X-IronPort-AV: E=Sophos;i="6.15,197,1739833200"; 
-   d="scan'208";a="43397721"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 08 Apr 2025 11:39:33 +0200
-X-CheckPoint: {67F4EED5-1C-B1D34AC3-DEA5B19F}
-X-MAIL-CPID: 5DE4081C7AAE060DB9A2527449C61BD9_4
-X-Control-Analysis: str=0001.0A006377.67F4EECF.0011,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E1F2D169628;
-	Tue,  8 Apr 2025 11:39:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744105169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HU7g7r1daBdnZNOhq0DQ0MLmTBrujJofZRa/dyTPJIw=;
-	b=Oepx9Jh9X5FqQhfDWbNUPuu2O97KuqOoKERIBMVRZUWgtArj1oXIWKimDfBYqpeAiNYJTE
-	kvdCqeFADrMUz8MZ6NnwnX5WeIVxViXrepYP3S+yXhVQq+YWsSm5h5qc0QAlpGzCZ2EnuY
-	vH14jUfYGQlHw/h0J6i0Ub8GWX0nEw2VZZOv6QwA9jKmfxSkjfL5Drrd9262+o8E5kkSzV
-	f9MMcxELhMbxPQojRnZmA9r9sodAb1IWaWCUkVZyxzdOpc8NETt7i3GeE1swQ8PhLVeWV3
-	xoLKScsazfea9JHPGlYPspzR7mldUuZU5tk/Pw2su9DXfbfmscS7xj4abrAwXQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	imx@lists.linux.dev
-Subject: [PATCH 1/1] MAINTAINERS: Add i.MX team to all arm NXP platforms
-Date: Tue,  8 Apr 2025 11:39:26 +0200
-Message-ID: <20250408093926.554091-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HW/yyuVb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A976C4CEE5;
+	Tue,  8 Apr 2025 09:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744105185;
+	bh=bLDDurUkL1v70P2v2SwPIpdQFVc5IT27gFgTvVDyEGI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HW/yyuVbcmWB9qjOM8QSxuQI8sTWkhCrZWcKpldl4z04l3A7CoezphVb/VwVhSMf8
+	 1xDSqb6Phy7Lm5ANnsu3uq5ip3HnulmP9vA1ash2YLjFNCrHWG7AUQlwOheqzAHYT+
+	 2oII4lXlDNp5Txym6O5xZc4jPKkfPt+w7pgCJdLvGsbYiqaC4/THnK1MmzHBse+pBn
+	 9r90p5LiToTy6N215iH6p+KGkMfuz+JjGwBb+O7z9RyCObPte/r+P4OD/lYgzXciBY
+	 m71dc84+YPxPeKaTtSL/hxoY0+jfHwfcThEj6iEGCoXNAroZ3nioNLx9Vieq1ahF4+
+	 jPEytPsGBWq3Q==
+Message-ID: <981498bb-70d8-4304-9b53-065576ae8dc7@kernel.org>
+Date: Tue, 8 Apr 2025 11:39:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250407160318.936142-1-daniel.lezcano@linaro.org>
+ <20250407160318.936142-2-daniel.lezcano@linaro.org>
+ <094855d6-a99b-4ca5-bc8f-ab6faccfd332@kernel.org>
+ <1e3d9e34-133d-451c-9ce6-6c974a781305@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1e3d9e34-133d-451c-9ce6-6c974a781305@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-i.MX team maintains layerscape as well, so add the whole
-arch/arm/boot/dts/nxp directory as requested in [1].
+On 08/04/2025 11:03, Daniel Lezcano wrote:
+> On 08/04/2025 10:21, Krzysztof Kozlowski wrote:
+>> On 07/04/2025 18:03, Daniel Lezcano wrote:
+>>> +
+>>> +allOf:
+>>> +  - $ref: watchdog.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - const: nxp,s32g2-swt
+>>> +      - items:
+>>> +          - const: nxp,s32g3-swt
+>>> +          - const: nxp,s32g2-swt
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  clocks:
+>>> +    items:
+>>> +      - description: Counter clock
+>>> +      - description: Module clock
+>>> +      - description: Register clock
+>>> +    minItems: 1
+>>
+>> Why clocks are flexible? The SoC does not change between boards. It
+>> should be a fixed list - block receives that number of clocks or does
+>> not... unless you meant that different instances of the block have
+>> different clocks?
+> 
+> The documentation describe the watchdog module with a clock for the 
+> counter, a clock for the register and the last one for the module.
+> 
+> IIUC, these clocks are enabled when the system is powered-on or exits 
+> suspend.
+> 
+> The driver does not have a control on them.
+> 
+> The only usage of the clock is to retrieve the rate of the counter in 
+> order to compute the maximum timeout. So only one is needed.
+> 
+> However Ghennadi would like to describe the register and the module 
+> clocks in case there is SoC variant where it is possible to have control 
+> on them [1]
 
-[1] https://lore.kernel.org/all/Z+Vs+pHZs2fMP%2Fp3@lizhi-Precision-Tower-5810/
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- MAINTAINERS | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Different SoC means different compatible, so I don't get why this is
+relevant here. Either these clocks inputs are there in the hardware or not.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8627b2024cee4..b1fac2a3bc948 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2519,8 +2519,7 @@ L:	imx@lists.linux.dev
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
--F:	arch/arm/boot/dts/nxp/imx/
--F:	arch/arm/boot/dts/nxp/mxs/
-+F:	arch/arm/boot/dts/nxp/
- F:	arch/arm64/boot/dts/freescale/
- X:	arch/arm64/boot/dts/freescale/fsl-*
- X:	arch/arm64/boot/dts/freescale/qoriq-*
--- 
-2.43.0
+> 
+> The goal is to give the description the flexibility to describe just one 
+> because the other ones are not needed for this s32g2/3 platform.
 
+But bindings are not meant to be flexible but accurately describe the
+hardware. If hardware always has these clock inputs, then they are
+supposed to be always provided.
+
+
+Best regards,
+Krzysztof
