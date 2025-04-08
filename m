@@ -1,47 +1,62 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C8A2F44;
-	Tue,  8 Apr 2025 00:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86178BE7;
+	Tue,  8 Apr 2025 01:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744073984; cv=none; b=kaFXigp8K2MIbU+W6nQVn4AGf6+3ICcrvkEivKxk9ooMWLIewNZaExBuncObbqW2XOmoUrbwgJOucjssr9g0wzaS5PIdzsJMOa7U0T4XQIwpw49hHI2rdc2d8xmjZ7KrxBsu1AFM7gWdRHGcHcVwDsRglUPKBIUwAntuUUu7jVk=
+	t=1744074123; cv=none; b=Ewg+AG+iDbjAvMXQSHFfLN5iWQK0AsEbqoUMD7cY96sop4wXEyC8eD38V1pKj30m0sEEQs2aRDYzjWzFayktjzeElLMXakA++7E6hBAs3WYjvjmzaugbw76Q5Pea2qIVu7+mQ0npcionfjL9HUjQLtNzX9jZ3AWOvMungslQXAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744073984; c=relaxed/simple;
-	bh=530cCthsBxJGAnh29VV+3qHeJI8/he7x9Z7tJ7Ive7Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EtZhaYvq0s+RX5V+s7yBMWQxPpaFumdyD/4fOcnDen1tgAKJ25OpawLUSz1bYqwvo2NkkwaDvkGtqctb8PPcOp6gOK8YoV/cy9+9K6JBgVvrrAiNy9ivWtBLTmHWlFSLKZQzIHRUroFneZ2RDjOwL1JqZjU6SJyKQkplQBMSR4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5380R3sF032020;
-	Tue, 8 Apr 2025 00:59:23 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tug8k4ch-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 08 Apr 2025 00:59:23 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 7 Apr 2025 17:59:21 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 7 Apr 2025 17:59:17 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <Tim.Huang@amd.com>, <Jesse.Zhang@amd.com>, <patches@lists.linux.dev>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <harry.wentland@amd.com>,
-        <sunpeng.li@amd.com>, <Rodrigo.Siqueira@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <Xinhui.Pan@amd.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <chiahsuan.chung@amd.com>, <alex.hung@amd.com>,
-        <daniel.wheeler@amd.com>, <hersenxs.wu@amd.com>
-Subject: [PATCH 5.10.y] drm/amd/pm: Fix negative array index read
-Date: Tue, 8 Apr 2025 08:59:16 +0800
-Message-ID: <20250408005916.3362084-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744074123; c=relaxed/simple;
+	bh=xthHPC7SRWEOtbq9bg+gsGajUW9yHOxjdMU7Vtz7yJM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PRW2C4pgNY0Cg15lulTImYz0xo0p/+zNq8fzReesJV3dUPhsMDzdGIz+IN5DOLRu1uFwpzafRIxZXBhHspjQNBywxgHEuHyD4DkwRA7MCaD6ufLg3jcbTsB8iTJ+3pbOp2I89AmWAzu6+rBVWELhfaUCUP1NPxwbVIPca1hTHaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=vBze/HkM; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vBze/HkM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744074122; x=1775610122;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8Q70fFtFs3+YdS6ursyNJrgOZLIsKzA94oTFp4aZASk=;
+  b=vBze/HkMi7tOtU7s2iTw5fCbKDnF32qgyZ5Z9luSRs0vDH81iZJkggks
+   6wAKoc59r6DfgfxOZ9GfYjTO0Pj5UVStPq1dsLeqFqlH1RT1zEa8jQO6O
+   oDJkH2Ct1g+U5z+k1oG1217OcliYzkuV3KYds6yywEYMAqJqeC1vPU5SE
+   E=;
+X-IronPort-AV: E=Sophos;i="6.15,196,1739836800"; 
+   d="scan'208";a="733684599"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:01:56 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:7433]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
+ id 3cfa9373-684f-4a17-aabf-b3c076aa83ec; Tue, 8 Apr 2025 01:01:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 3cfa9373-684f-4a17-aabf-b3c076aa83ec
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 01:01:55 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 01:01:51 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
+	<yonghong.song@linux.dev>
+Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+Date: Mon, 7 Apr 2025 18:00:35 -0700
+Message-ID: <20250408010143.11193-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
+References: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,97 +65,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: 7PQuZLHbPOKsCVgyxeGy_nUbdk4xh-_p
-X-Authority-Analysis: v=2.4 cv=YJefyQGx c=1 sm=1 tr=0 ts=67f474eb cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=U7fDvu6cvwUxRHWrC4cA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: 7PQuZLHbPOKsCVgyxeGy_nUbdk4xh-_p
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1011 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504080005
+X-ClientProxiedBy: EX19D041UWB002.ant.amazon.com (10.13.139.179) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Jesse Zhang <jesse.zhang@amd.com>
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 07 Apr 2025 06:40:44 -0700
+> Add a tracepoint to monitor TCP send operations, enabling detailed
+> visibility into TCP message transmission.
+> 
+> Create a new tracepoint within the tcp_sendmsg_locked function,
+> capturing traditional fields along with size_goal, which indicates the
+> optimal data size for a single TCP segment. Additionally, a reference to
+> the struct sock sk is passed, allowing direct access for BPF programs.
+> The implementation is largely based on David's patch and suggestions.
+> 
+> The implementation is largely based on David's patch[1] and suggestions.
 
-[ Upstream commit c8c19ebf7c0b202a6a2d37a52ca112432723db5f ]
+nit: duplicate sentences.
 
-Avoid using the negative values
-for clk_idex as an index into an array pptable->DpmDescriptor.
 
-V2: fix clk_index return check (Tim Huang)
+> 
+> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  include/trace/events/tcp.h | 24 ++++++++++++++++++++++++
+>  net/ipv4/tcp.c             |  2 ++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 1a40c41ff8c30..cab25504c4f9d 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -259,6 +259,30 @@ TRACE_EVENT(tcp_retransmit_synack,
+>  		  __entry->saddr_v6, __entry->daddr_v6)
+>  );
+>  
+> +TRACE_EVENT(tcp_sendmsg_locked,
+> +	TP_PROTO(const struct sock *sk, const struct msghdr *msg,
+> +		 const struct sk_buff *skb, int size_goal),
+> +
+> +	TP_ARGS(sk, msg, skb, size_goal),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(const void *, skb_addr)
+> +		__field(int, skb_len)
+> +		__field(int, msg_left)
+> +		__field(int, size_goal)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->skb_addr = skb;
+> +		__entry->skb_len = skb ? skb->len : 0;
+> +		__entry->msg_left = msg_data_left(msg);
+> +		__entry->size_goal = size_goal;
+> +	),
+> +
+> +	TP_printk("skb_addr %p skb_len %d msg_left %d size_goal %d",
+> +		__entry->skb_addr, __entry->skb_len, __entry->msg_left,
+> +		__entry->size_goal));
+> +
+>  DECLARE_TRACE(tcp_cwnd_reduction_tp,
+>  	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
+>  		 int newly_lost, int flag),
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index ea8de00f669d0..270ce2c8c2d54 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -1160,6 +1160,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+>  		if (skb)
+>  			copy = size_goal - skb->len;
+>  
+> +		trace_tcp_sendmsg_locked(sk, msg, skb, size_goal);
 
-Signed-off-by: Jesse Zhang <Jesse.Zhang@amd.com>
-Reviewed-by: Tim Huang <Tim.Huang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- .../gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c   | 21 ++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+skb could be NULL, so I think raw_tp_null_args[] needs to be updated.
 
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-index a7773b6453d5..0af9ee3a520a 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
-@@ -900,19 +900,22 @@ static int navi10_get_current_clk_freq_by_table(struct smu_context *smu,
- 					   value);
- }
- 
--static bool navi10_is_support_fine_grained_dpm(struct smu_context *smu, enum smu_clk_type clk_type)
-+static int navi10_is_support_fine_grained_dpm(struct smu_context *smu, enum smu_clk_type clk_type)
- {
- 	PPTable_t *pptable = smu->smu_table.driver_pptable;
- 	DpmDescriptor_t *dpm_desc = NULL;
--	uint32_t clk_index = 0;
-+	int clk_index = 0;
- 
- 	clk_index = smu_cmn_to_asic_specific_index(smu,
- 						   CMN2ASIC_MAPPING_CLK,
- 						   clk_type);
-+	if (clk_index < 0)
-+		return clk_index;
-+
- 	dpm_desc = &pptable->DpmDescriptor[clk_index];
- 
- 	/* 0 - Fine grained DPM, 1 - Discrete DPM */
--	return dpm_desc->SnapToDiscrete == 0 ? true : false;
-+	return dpm_desc->SnapToDiscrete == 0 ? 1 : 0;
- }
- 
- static inline bool navi10_od_feature_is_supported(struct smu_11_0_overdrive_table *od_table, enum SMU_11_0_ODFEATURE_CAP cap)
-@@ -964,7 +967,11 @@ static int navi10_print_clk_levels(struct smu_context *smu,
- 		if (ret)
- 			return size;
- 
--		if (!navi10_is_support_fine_grained_dpm(smu, clk_type)) {
-+		ret = navi10_is_support_fine_grained_dpm(smu, clk_type);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (!ret) {
- 			for (i = 0; i < count; i++) {
- 				ret = smu_v11_0_get_dpm_freq_by_index(smu, clk_type, i, &value);
- 				if (ret)
-@@ -1127,7 +1134,11 @@ static int navi10_force_clk_levels(struct smu_context *smu,
- 	case SMU_UCLK:
- 	case SMU_FCLK:
- 		/* There is only 2 levels for fine grained DPM */
--		if (navi10_is_support_fine_grained_dpm(smu, clk_type)) {
-+		ret = navi10_is_support_fine_grained_dpm(smu, clk_type);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret) {
- 			soft_max_level = (soft_max_level >= 1 ? 1 : 0);
- 			soft_min_level = (soft_min_level >= 1 ? 1 : 0);
- 		}
--- 
-2.34.1
+Maybe try attaching a bpf prog that dereferences skb unconditionally
+and see if the bpf verifier rejects it.
 
+See this commit for the similar issue:
+
+commit 5da7e15fb5a12e78de974d8908f348e279922ce9
+Author: Kuniyuki Iwashima <kuniyu@amazon.com>
+Date:   Fri Jan 31 19:01:42 2025 -0800
+
+    net: Add rx_skb of kfree_skb to raw_tp_null_args[].
+
+
+> +
+>  		if (copy <= 0 || !tcp_skb_can_collapse_to(skb)) {
+>  			bool first_skb;
+>  
+> 
+> -- 
+> 2.47.1
