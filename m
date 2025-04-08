@@ -1,603 +1,189 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2069.outbound.protection.outlook.com [40.107.22.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D9822D7AA;
-	Tue,  8 Apr 2025 16:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128324; cv=none; b=vFOlxOemFsTACkk7QrqrLwFNIuvUUoIQR9fPZLbUMKFnTp8r0TXMyA9G/KbE7vN11rHpgXBs3K/dVlhngEpFYM5SERKvHOvRdCKzBk5b7UN2eLC1UElSlxUUG5tcRMaVd10BcSVPw/fY6NgIiM0SDEYFSEIvEV7YDJMx4BN5FoQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128324; c=relaxed/simple;
-	bh=30nP+t9oyZ1F0fRLjqbXH1OPlVwPLFQRPahG/PJCRkI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=C01rcPDSVBJyPOqbkt4NhKDf21QCO5jMK4CtJ3sUcAIOQrqnOeBdV/p+HsVf8gc1Wgl3OH5rOt7pbUXvV7DLE2JhWYfKN9BHP42iBZLs1zlT+d0xixxUtXT0CibdPPyyoYIbwnVphfi+rJECC3bjA3ecAXaOrlFiDUW7x3mS3uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=DMJNR1lt; arc=none smtp.client-ip=158.69.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D91D22FE13;
+	Tue,  8 Apr 2025 16:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744128340; cv=fail; b=kdh1HDuD3eFYtBPbVflYKEMxwld4nYp0bjXGdYIoJI0R+Wxy4TU01ZVpB2QU2nGMaC3UMIDbEklZnJspv5Y30B42XSj8dgbjKKPwXt6og0/BaMP4n4CDJMjaR8JMxDWsawV1/r5MvfNyek2AYmrT7jyLTLI0+BXyDT5Ar9R1WBA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744128340; c=relaxed/simple;
+	bh=S84BTZKXqmsYzqhTSOf1VP1+vVkv1tvMOYqMlCP2qMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=j55pBRJeA0DRBuCzgW5O4p2Hkfsifl3gwTJz16uueUUNfajW1ZFCUW4ByWFQuavQi+QawExrHM5bcRUxA9mUHgYOQeQ0SdPbaBFD1LDnYly4YgXK3sWLf7HaQPkhYd8oYhgvmUSLmuxjTq2RJX/iqqTKGWatu8ChLSIzPZrBr9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OSllZqlo; arc=fail smtp.client-ip=40.107.22.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DMJNR1lt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1744128315;
-	bh=30nP+t9oyZ1F0fRLjqbXH1OPlVwPLFQRPahG/PJCRkI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DMJNR1ltTOJSyotfY1foVwYw+MAd6XhPR9Kyl1q0uADQ2SJqbuiOIbRzs8ITyqfL5
-	 sc0xyB0k9CFAi3Kmyy9ycS0RWXW6QpJnDsGQvUH4TUCPEGtpyvvcsIO1FFK1HT3THS
-	 rLFEGRfU2qtbWlEaqY64sIaIP+LIOvRBzfJPwdqxZuBx/uQiRZ+He5iajdXVfoHqJH
-	 g18vn1KEOKtSbq/AZKXsfLB+rC8vGSbpu6Qpd4nhU55UQEuss8GRg5A9Y8BWqjt87O
-	 Dr8ZIJpreMtMNf8oJkeZ4mOFf5dbk8987H5mmjYx7F9sN2nfDaS+V3RqDldb+NDs8A
-	 d+QY8UCldvm8Q==
-Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4ZX9s63lBPz1Cv3;
-	Tue,  8 Apr 2025 12:05:14 -0400 (EDT)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Sweet Tea Dorminy <sweettea@google.com>,
-	Mateusz Guzik <mjguzik@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>,
-	christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@Oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
-Date: Tue,  8 Apr 2025 12:05:08 -0400
-Message-Id: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OSllZqlo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tSBYlGsYryAzpOqkPBz8EpEtYnyTZvS8Xz+lmzZ+xghRTWmV/BOZfAjdyTI5CnxjfmReurjyGl8L5dqA6MXJ+9ieD6vn6ZjsTjx+A2lrD0JDt5GyYZPivBhItJ0poFw7imPdDqJehflg3l5b1QHqiKPUou9lgRs746GVWwoE0tftC1UbGfX+7Lhda6FDr9N/tLNeQ6Eg3WEGKjyfgyeXvQSh/phaH7/dGzhCojHtGw/HceGpvLzD4RO7YFHqRBtqDtZ4UJUVmwdcNzY0lCrqpQnlmUMlob3ltEql7qMiSpM/16St7R2s/Zx+b5NuXWQ6iq13jIpHDSqHc3kIsqfNGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yjiU1jGWY/rNNiz7dw7xsADmeUAhF9YX6eQ31yBIdI4=;
+ b=Yoedv0v+0nPoQJV2M1N9ShENxyEk6lSn+iohQAlTOp4AaidFf6umD3y/g4XhAlKcNPYXSyeElScf3r0bCCZlaOCXcGV4wA9+nVKHBco+o2wHZT3fIvTzje5OAGEfBeuAU+Dwo6qLlaHH2jh7OVJOIewWwwQlraUMNZipjvkRoGKoq9yIkqQm+KI3gGRtKad8s4xOlk0oSX7NfqvE7+VyGdMpk6kt4NgoB7RtPM3J9R274Pdt5acsSxUAGoKS7d/4SnNvu7Os3vkVqM8zzNRL4uwjUHQKY5VSqitNDvleQaVWoO4RoA1XkrmAAXc8lqgKBr2yo8s9bEwD8UOuUT9N5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yjiU1jGWY/rNNiz7dw7xsADmeUAhF9YX6eQ31yBIdI4=;
+ b=OSllZqlovZ1I+LKtaXeRt2YRgYIFKszlj/fiUpARVAHPEEvkZtO1ipx4lU/tGycqSv5lsFJ/bltDH6wPttG0PRwGJLqHFL3HsOpZXtbNqRknASNCzJBTKkXJVb7UhTei89ItLegeHO/kAVnGeMv19nBE4H+D8s5zE7YRn/bf14qA5ccsJWMHiGz5XBJ8dWoJWiOf3hsTUJGaMO+lX7LOVCU4Jlmf2fzRKytfDXcPVXsep5GaZQRLLiH8riV1oAxOHnuQeK9tRBOp8GxDDIGQkQdqpVoRrZbQb5WgeZ6sZ7VGikSobNJxxENje4puMaaMCFRR9+kzFI3K+6Rlw1naug==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM7PR04MB6984.eurprd04.prod.outlook.com (2603:10a6:20b:de::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 8 Apr
+ 2025 16:05:35 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
+ 16:05:35 +0000
+Date: Tue, 8 Apr 2025 12:05:26 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
+Subject: Re: [PATCH 1/1] arm64: dts: tqma8mpql-mba8mpxl-lvds: Rename overlay
+ to include display name
+Message-ID: <Z/VJRsjZF6Tsbnx0@lizhi-Precision-Tower-5810>
+References: <20250408140856.1143290-1-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408140856.1143290-1-alexander.stein@ew.tq-group.com>
+X-ClientProxiedBy: PH8PR02CA0032.namprd02.prod.outlook.com
+ (2603:10b6:510:2da::11) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB6984:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9496320-ee26-4581-0c7f-08dd76b7321a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1u3Z/ApxrjhXK+pxME62cv2AwASjSJiJvsO2CjarRrpv5NcfkVq6gLqiH+JW?=
+ =?us-ascii?Q?4VZ5O2780sKIcISWUMUQRZ9OAXgXFFFFPYpLY4KFyZMUxQS8XkyMABMD1g5n?=
+ =?us-ascii?Q?fNdq23kSoYurbinNxfeU9st0v771BWqBRNwUcB27igA2RhQjeR32zV88aahk?=
+ =?us-ascii?Q?13Kx757tm7CetkJr8g+vn2Q0ovmaxeRaylsDiRj8uygghpfqzhcbM6s/yRmY?=
+ =?us-ascii?Q?iyF000e5PzTueUzmk1dhIRnx8olV5Qn6nUHQxT5csErMKAwf1BDIpc6yYe/m?=
+ =?us-ascii?Q?YX3DLtDi0r6AthZNJN8ZaqW/hjic8E8OIJfF7qkj+LQpFfFdGdqWGbfkAV6E?=
+ =?us-ascii?Q?3oj+wQk6pK5CnqRDSTHgqQdSmyz25LSlOtWK8S16hcvNnaLFvCSE0o7S967u?=
+ =?us-ascii?Q?8EGnb6Zx8nnzHOVr3u0+/QrzWoPUTbiVOrSXHgvWqztr9zJWcNkKtFvYMRrO?=
+ =?us-ascii?Q?Gg/DY5pkyYAGxI6FYDIU8JOW4uwHCjvkPRbmUl/a+lst+eIWGnLYiZM4bGUN?=
+ =?us-ascii?Q?plgZXHXgyCU2ssPaNAAtHaHYQ9eo+aRuGjPUx7wrrwL0YG4Wsx/+sQpFWCfZ?=
+ =?us-ascii?Q?HCFDE3qS8BoBiwUt7um6BhCHd9JYFapKcGxhMlSsGHtsCTxrPwlSu8CxxU+/?=
+ =?us-ascii?Q?Q7E8eWt5TA2AueNvKoDpRxQvcJjfk/kMH3bIcPHs36RQ8azaiTl4XoZ6xj57?=
+ =?us-ascii?Q?I6wnFeJ/N2buMEYdpNT1lpmbfTRA/diA7Y9oETCWYY7zSVEPsrBcscbYQsFU?=
+ =?us-ascii?Q?YoSctMcqWixfTB0vAkqhCjgzrFTHNjSIL91pL5gAS4knSuKsMrDFZKLshy9i?=
+ =?us-ascii?Q?qLi7c/A1jn8Zkd9Np9wDUKiw8Iue03ezAlQardhSEQ+4uxgiAtt0zDaoDMiA?=
+ =?us-ascii?Q?hK0e/hzOpIOC6SjmbvYoI+yrdG5M/43MVYHqggBzBFqQDWpZPuzmgfscxe39?=
+ =?us-ascii?Q?RSUdICUBSfAr0zNmIHqYW6l8dzKYvYhQBU7wMZHo1MIS6nIxyiFYw8FxITcd?=
+ =?us-ascii?Q?k3OnOpRl3HdOCX3b3fas6oJPEdk3dUfBfSWJEa5gvPt9fGlqYujZQi4mLEce?=
+ =?us-ascii?Q?AP3oerdggviE2OjSAHaK8fUpPlL77AcGYHQWiclLvySeicIiM/5EksM7aoYg?=
+ =?us-ascii?Q?9G5yFFaSXg7DaZAMi40Cf2HyAZPM10W13Bf45wwQ+we4pncLD0Efh4guBIqp?=
+ =?us-ascii?Q?2pruE8watp0zUTY+kglNCp7MEdQJIEub8y7YWHYp4rQtpYmQ3TxdrWB+G9uK?=
+ =?us-ascii?Q?Tev0GozgL8n0xvmiXFmciin9GGz5VTIIUdDaHCXoGQEQS5PIhUJNO97dgpfn?=
+ =?us-ascii?Q?zFxtfnD79PJspxTvzBCV5a2kOZ9Y0ulxgAYHT0xmvzt27RZxpYPnb+HRJsnQ?=
+ =?us-ascii?Q?Xttdd3whbAdDBGjK4EONUgW79hdRV4mDQd2TmcdtoNI6jFrxlitWUoKJeie8?=
+ =?us-ascii?Q?feVgjQ6jTg+qP6chyito8/jy12u/4kWP83JiHE0V5hFbrjDcpD1BRA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zL9ySrOA19Ge7OQz1qBcb8EfZ4gfw5Q3QmTnMrSh7XjhQkhvNyKdpibkSNBu?=
+ =?us-ascii?Q?gtXXYR2lSfx+vC9Vx0S6gMJtOWpRX6TqRr8XuGacph2CkqeF4JAZOh3xWspE?=
+ =?us-ascii?Q?hS2LtIu4b/aMDYlzqlZy3bwlegfr38OoCX0l0IqcjVnOTiNqO171jO8R+4Ti?=
+ =?us-ascii?Q?EJo1HDbKePFE8AzTX016Nxb4UjEFiHV6OQ+yKoCNyh907Np3vp+HKtTcPtyh?=
+ =?us-ascii?Q?ltYCWbjpHvxRPUy+qXeVh75iIXUUzD5df/yZsSRMECtC4N2ZYZFZpa0vsVJI?=
+ =?us-ascii?Q?D0ngQxlsxOGKgOz46TqbfYbDSGOVNscnkttuDRXk7I1cgozxEO1F5uMJ02wh?=
+ =?us-ascii?Q?qe8U8MXBD+ciVwEDPYjduItxyC+0HSctxwnvYXcYoUxReRK9/D8Tqev9PBm2?=
+ =?us-ascii?Q?FrMa77z37xZg2Jeb2PoUtfMyTRXWzZIbfXUjS3BF7FudeCtNhTddRUfac3Ui?=
+ =?us-ascii?Q?pM/y/FgLGTuUhSckQvvvwLKd83uqq7di19S/cowBbmb5NuMiJ3uYHk3oqPzI?=
+ =?us-ascii?Q?ggK8r9CYEKWEfyNLlCH9PORlF3xWVv683xR9IheZ7ErVAStvPSM/cKIbMY3s?=
+ =?us-ascii?Q?JxAk5KpCQWkURbKSsRttvkGjhBmjvWubyHqfC4gnJljdl+u0dJ/y/ZO5ooYo?=
+ =?us-ascii?Q?lUzZG534MqLkb4SFDE8MKL/E5eMM8YzB7pL2uLvzJ4KMvAINg+QOEhxC2onB?=
+ =?us-ascii?Q?hCtSeSzt7hKSXgjBFwjR5rFbbUVHq9tHVvKDwmSdWmbKlwAC5D0myboED+bp?=
+ =?us-ascii?Q?uA0FSdwL17b5ehirj5E7zJaTG1Z6CTSuoVfhqlfou7aGRzVGA3UqF/jCJftx?=
+ =?us-ascii?Q?B5zd/njeTGXvfV/wF8qVPTIEuAa7CQSq57IW8tr2Zrxiyn36vBwu5Tm5GfX1?=
+ =?us-ascii?Q?JoFx4TRrJ3NTHiaJCxfTYvYh7N3xO607dVXdJ/sYwapMUGnD/FAl9jV7lxM/?=
+ =?us-ascii?Q?w9s/MDkvO17B/R9SWiT4QyJfsJ1Csjof+xIwefahU4mFg8sM8WhBqTIZpx2u?=
+ =?us-ascii?Q?c4gFM+5oz0+MM/Cjo4j1nvjTTvj4cNIadV1eT3A/Qf02Qxk/+GGwaBVJlP1e?=
+ =?us-ascii?Q?KczjrnulE4E+40swwlib4/+El+3065NxV4Wce3VV/DEF7fUkcp1NPV4JHYi4?=
+ =?us-ascii?Q?3Jngu4ZZxLXby6jCJwY7BDk1wQnd4lW4M16D6V922cxkjKAwtKW6VVn977cD?=
+ =?us-ascii?Q?2VC/jYpNHmJ4wzACwElq2Ut6P98p91mPvIW0HobQCFx2ahVMLvw6Sufrzmne?=
+ =?us-ascii?Q?Tz8XuDvyZEpkZCFimEzObxbiN14iJxGg8gJclKJfRKu9ffTwEMu1s6A58pOk?=
+ =?us-ascii?Q?XPraqlMG8tiW+XLSNKWQACAw9VXSSpUz2Wib0jmKhwkIxr+1UFnFS59+TEHD?=
+ =?us-ascii?Q?Rdl5DENvSi4bdjSSJOab2hCWA7NonNRNvOhSnnzjmyPW5sWogZXw/tHBCWyr?=
+ =?us-ascii?Q?3W7lxAg68JcsqTjcw7FA1ZA4tPoJru4ZMaB6pYAnXjzGIzD91YllU1JOTaSG?=
+ =?us-ascii?Q?9IElLv+0v5KK2gNYiirH4u3tqfVSS4Xp5r2U4pvUnwceDP+F0j+joLI02xm5?=
+ =?us-ascii?Q?aHyddYRR6yYKTS+Z/SWpRdZ5gyv722clzuv05Y+c?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9496320-ee26-4581-0c7f-08dd76b7321a
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 16:05:34.9860
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GX89F5suO8+ZC5/d4VekeKp715qXjezaEE2c7voGs1tqrMn7lVl1LhoiPU59tTGh1U94dFNFGE54oDOpQQf9ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6984
 
-* Motivation
+On Tue, Apr 08, 2025 at 04:08:55PM +0200, Alexander Stein wrote:
+> This platform supports several displays, so rename the overlay to reflect
+> the actual display being used. This also aligns the name to the other
+> TQMa8M* modules.
+>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
 
-The purpose of this hierarchical split-counter scheme is to:
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-- Minimize contention when incrementing and decrementing counters,
-- Provide fast access to a sum approximation,
-- Provide a sum approximation with an acceptable accuracy level when
-  scaling to many-core systems.
-- Provide approximate and precise comparison of two counters, and
-  between a counter and a value.
-
-It aims at fixing the per-mm RSS tracking which has become too
-inaccurate for OOM killer purposes on large many-core systems [1].
-
-* Design
-
-The hierarchical per-CPU counters propagate a sum approximation through
-a binary tree. When reaching the batch size, the carry is propagated
-through a binary tree which consists of log2(nr_cpu_ids) levels. The
-batch size for each level is twice the batch size of the prior level.
-
-Example propagation diagram with 8 cpus:
-
-Level 0:  0    1    2    3    4    5    6    7
-          |   /     |   /     |   /     |   /
-          |  /      |  /      |  /      |  /
-          | /       | /       | /       | /
-Level 1:  0         1         2         3
-          |       /           |       /
-          |    /              |    /
-          | /                 | /
-Level 2:  0                   1
-          |               /
-          |         /
-          |   /
-Level 3:  0
-
-The maximum inaccuracy is bound by: batch_size * log2(nr_cpus) * nr_cpus
-which evolves with O(n*log(n)) as the number of CPUs increases.
-
-Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Martin Liu <liumartin@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: christian.koenig@amd.com
-Cc: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Sweet Tea Dorminy <sweettea@google.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: Yu Zhao <yuzhao@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
----
-Changes since v1:
-- Remove percpu_counter_tree_precise_sum_unbiased from public header,
-  make this function static,
-- Introduce precise and approximate comparisons between two counters,
-- Reorder the struct percpu_counter_tree fields,
-- Introduce approx_sum field, which points to the approximate sum
-  for the percpu_counter_tree_approximate_sum() fast path.
----
- include/linux/percpu_counter_tree.h | 102 +++++++++
- lib/Makefile                        |   1 +
- lib/percpu_counter_tree.c           | 313 ++++++++++++++++++++++++++++
- 3 files changed, 416 insertions(+)
- create mode 100644 include/linux/percpu_counter_tree.h
- create mode 100644 lib/percpu_counter_tree.c
-
-diff --git a/include/linux/percpu_counter_tree.h b/include/linux/percpu_counter_tree.h
-new file mode 100644
-index 000000000000..aac5a711de3e
---- /dev/null
-+++ b/include/linux/percpu_counter_tree.h
-@@ -0,0 +1,102 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
-+/* SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> */
-+
-+#ifndef _PERCPU_COUNTER_TREE_H
-+#define _PERCPU_COUNTER_TREE_H
-+
-+#include <linux/cleanup.h>
-+#include <linux/preempt.h>
-+#include <linux/atomic.h>
-+#include <linux/percpu.h>
-+
-+struct percpu_counter_tree_level_item {
-+	atomic_t count;
-+} ____cacheline_aligned_in_smp;
-+
-+struct percpu_counter_tree {
-+	/* Fast-path fields. */
-+	unsigned int __percpu *level0;
-+	unsigned int level0_bit_mask;
-+	atomic_t *approx_sum;
-+	int bias;			/* bias for counter_set */
-+
-+	/* Slow-path fields. */
-+	struct percpu_counter_tree_level_item *items;
-+	unsigned int batch_size;
-+	unsigned int inaccuracy;	/* approximation imprecise within ± inaccuracy */
-+	unsigned int nr_levels;
-+	unsigned int nr_cpus;
-+};
-+
-+int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size);
-+void percpu_counter_tree_destroy(struct percpu_counter_tree *counter);
-+void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc);
-+int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter);
-+int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b);
-+int percpu_counter_tree_approximate_compare_value(struct percpu_counter_tree *counter, int v);
-+int percpu_counter_tree_precise_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b);
-+int percpu_counter_tree_precise_compare_value(struct percpu_counter_tree *counter, int v);
-+void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias);
-+void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v);
-+unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter);
-+
-+/* Fast paths */
-+
-+static inline
-+int percpu_counter_tree_carry(int orig, int res, int inc, unsigned int bit_mask)
-+{
-+	if (inc < 0) {
-+		inc = -(-inc & ~(bit_mask - 1));
-+		/*
-+		 * xor bit_mask: underflow.
-+		 *
-+		 * If inc has bit set, decrement an additional bit if
-+		 * there is _no_ bit transition between orig and res.
-+		 * Else, inc has bit cleared, decrement an additional
-+		 * bit if there is a bit transition between orig and
-+		 * res.
-+		 */
-+		if ((inc ^ orig ^ res) & bit_mask)
-+			inc -= bit_mask;
-+	} else {
-+		inc &= ~(bit_mask - 1);
-+		/*
-+		 * xor bit_mask: overflow.
-+		 *
-+		 * If inc has bit set, increment an additional bit if
-+		 * there is _no_ bit transition between orig and res.
-+		 * Else, inc has bit cleared, increment an additional
-+		 * bit if there is a bit transition between orig and
-+		 * res.
-+		 */
-+		if ((inc ^ orig ^ res) & bit_mask)
-+			inc += bit_mask;
-+	}
-+	return inc;
-+}
-+
-+static inline
-+void percpu_counter_tree_add(struct percpu_counter_tree *counter, int inc)
-+{
-+	unsigned int bit_mask = counter->level0_bit_mask, orig, res;
-+
-+	if (!inc)
-+		return;
-+	/* Make sure the fast and slow paths use the same cpu number. */
-+	guard(migrate)();
-+	res = this_cpu_add_return(*counter->level0, inc);
-+	orig = res - inc;
-+	inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
-+	if (!inc)
-+		return;
-+	percpu_counter_tree_add_slowpath(counter, inc);
-+}
-+
-+static inline
-+int percpu_counter_tree_approximate_sum(struct percpu_counter_tree *counter)
-+{
-+	return (int) ((unsigned int)atomic_read(counter->approx_sum) +
-+		      (unsigned int)READ_ONCE(counter->bias));
-+}
-+
-+#endif  /* _PERCPU_COUNTER_TREE_H */
-diff --git a/lib/Makefile b/lib/Makefile
-index d5cfc7afbbb8..d803a3a63288 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -201,6 +201,7 @@ obj-$(CONFIG_TEXTSEARCH_KMP) += ts_kmp.o
- obj-$(CONFIG_TEXTSEARCH_BM) += ts_bm.o
- obj-$(CONFIG_TEXTSEARCH_FSM) += ts_fsm.o
- obj-$(CONFIG_SMP) += percpu_counter.o
-+obj-$(CONFIG_SMP) += percpu_counter_tree.o
- obj-$(CONFIG_AUDIT_GENERIC) += audit.o
- obj-$(CONFIG_AUDIT_COMPAT_GENERIC) += compat_audit.o
- 
-diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
-new file mode 100644
-index 000000000000..b530ba9dd61b
---- /dev/null
-+++ b/lib/percpu_counter_tree.c
-@@ -0,0 +1,313 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+// SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-+
-+/*
-+ * Split Counters With Binary Tree Approximation Propagation
-+ *
-+ * * Propagation diagram when reaching batch size thresholds (± batch size):
-+ *
-+ * Example diagram for 8 CPUs:
-+ *
-+ * log2(8) = 3 levels
-+ *
-+ * At each level, each pair propagates its values to the next level when
-+ * reaching the batch size thresholds.
-+ *
-+ * Counters at levels 0, 1, 2 can be kept on a single byte (±128 range),
-+ * although it may be relevant to keep them on 32-bit counters for
-+ * simplicity. (complexity vs memory footprint tradeoff)
-+ *
-+ * Counter at level 3 can be kept on a 32-bit counter.
-+ *
-+ * Level 0:  0    1    2    3    4    5    6    7
-+ *           |   /     |   /     |   /     |   /
-+ *           |  /      |  /      |  /      |  /
-+ *           | /       | /       | /       | /
-+ * Level 1:  0         1         2         3
-+ *           |       /           |       /
-+ *           |    /              |    /
-+ *           | /                 | /
-+ * Level 2:  0                   1
-+ *           |               /
-+ *           |         /
-+ *           |   /
-+ * Level 3:  0
-+ *
-+ * * Approximation inaccuracy:
-+ *
-+ * BATCH(level N): Level N batch size.
-+ *
-+ * Example for BATCH(level 0) = 32.
-+ *
-+ * BATCH(level 0) =  32
-+ * BATCH(level 1) =  64
-+ * BATCH(level 2) = 128
-+ * BATCH(level N) = BATCH(level 0) * 2^N
-+ *
-+ *            per-counter     global
-+ *            inaccuracy      inaccuracy
-+ * Level 0:   [ -32 ..  +31]  ±256  (8 * 32)
-+ * Level 1:   [ -64 ..  +63]  ±256  (4 * 64)
-+ * Level 2:   [-128 .. +127]  ±256  (2 * 128)
-+ * Total:      ------         ±768  (log2(nr_cpu_ids) * BATCH(level 0) * nr_cpu_ids)
-+ *
-+ * -----
-+ *
-+ * Approximate Sum Carry Propagation
-+ *
-+ * Let's define a number of counter bits for each level, e.g.:
-+ *
-+ * log2(BATCH(level 0)) = log2(32) = 5
-+ *
-+ *               nr_bit        value_mask                      range
-+ * Level 0:      5 bits        v                             0 ..  +31
-+ * Level 1:      1 bit        (v & ~((1UL << 5) - 1))        0 ..  +63
-+ * Level 2:      1 bit        (v & ~((1UL << 6) - 1))        0 .. +127
-+ * Level 3:     25 bits       (v & ~((1UL << 7) - 1))        0 .. 2^32-1
-+ *
-+ * Note: Use a full 32-bit per-cpu counter at level 0 to allow precise sum.
-+ *
-+ * Note: Use cacheline aligned counters at levels above 0 to prevent false sharing.
-+ *       If memory footprint is an issue, a specialized allocator could be used
-+ *       to eliminate padding.
-+ *
-+ * Example with expanded values:
-+ *
-+ * counter_add(counter, inc):
-+ *
-+ *         if (!inc)
-+ *                 return;
-+ *
-+ *         res = percpu_add_return(counter @ Level 0, inc);
-+ *         orig = res - inc;
-+ *         if (inc < 0) {
-+ *                 inc = -(-inc & ~0b00011111);  // Clear used bits
-+ *                 // xor bit 5: underflow
-+ *                 if ((inc ^ orig ^ res) & 0b00100000)
-+ *                         inc -= 0b00100000;
-+ *         } else {
-+ *                 inc &= ~0b00011111;           // Clear used bits
-+ *                 // xor bit 5: overflow
-+ *                 if ((inc ^ orig ^ res) & 0b00100000)
-+ *                         inc += 0b00100000;
-+ *         }
-+ *         if (!inc)
-+ *                 return;
-+ *
-+ *         res = atomic_add_return(counter @ Level 1, inc);
-+ *         orig = res - inc;
-+ *         if (inc < 0) {
-+ *                 inc = -(-inc & ~0b00111111);  // Clear used bits
-+ *                 // xor bit 6: underflow
-+ *                 if ((inc ^ orig ^ res) & 0b01000000)
-+ *                         inc -= 0b01000000;
-+ *         } else {
-+ *                 inc &= ~0b00111111;           // Clear used bits
-+ *                 // xor bit 6: overflow
-+ *                 if ((inc ^ orig ^ res) & 0b01000000)
-+ *                         inc += 0b01000000;
-+ *         }
-+ *         if (!inc)
-+ *                 return;
-+ *
-+ *         res = atomic_add_return(counter @ Level 2, inc);
-+ *         orig = res - inc;
-+ *         if (inc < 0) {
-+ *                 inc = -(-inc & ~0b01111111);  // Clear used bits
-+ *                 // xor bit 7: underflow
-+ *                 if ((inc ^ orig ^ res) & 0b10000000)
-+ *                         inc -= 0b10000000;
-+ *         } else {
-+ *                 inc &= ~0b01111111;           // Clear used bits
-+ *                 // xor bit 7: overflow
-+ *                 if ((inc ^ orig ^ res) & 0b10000000)
-+ *                         inc += 0b10000000;
-+ *         }
-+ *         if (!inc)
-+ *                 return;
-+ *
-+ *         atomic_add(counter @ Level 3, inc);
-+ */
-+
-+#include <linux/percpu_counter_tree.h>
-+#include <linux/cpumask.h>
-+#include <linux/percpu.h>
-+#include <linux/atomic.h>
-+#include <linux/errno.h>
-+#include <linux/slab.h>
-+#include <linux/math.h>
-+
-+int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size)
-+{
-+	/* Batch size must be power of 2 */
-+	if (!batch_size || (batch_size & (batch_size - 1)))
-+		return -EINVAL;
-+	counter->nr_levels = get_count_order(nr_cpu_ids);
-+	counter->nr_cpus = 1UL << counter->nr_levels;
-+	counter->batch_size = batch_size;
-+	counter->level0_bit_mask = 1UL << get_count_order(batch_size);
-+	counter->inaccuracy = counter->nr_levels * batch_size * counter->nr_cpus;
-+	counter->bias = 0;
-+	counter->level0 = alloc_percpu(unsigned int);
-+	if (!counter->level0)
-+		return -ENOMEM;
-+	counter->items = kzalloc(counter->nr_cpus - 1 *
-+				 sizeof(struct percpu_counter_tree_level_item),
-+				 GFP_KERNEL);
-+	if (!counter->items) {
-+		free_percpu(counter->level0);
-+		return -ENOMEM;
-+	}
-+	counter->approx_sum = &counter->items[counter->nr_cpus - 2].count;
-+	return 0;
-+}
-+
-+void percpu_counter_tree_destroy(struct percpu_counter_tree *counter)
-+{
-+	free_percpu(counter->level0);
-+	kfree(counter->items);
-+}
-+
-+/* Called with migration disabled. */
-+void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc)
-+{
-+	struct percpu_counter_tree_level_item *item = counter->items;
-+	unsigned int level_items = counter->nr_cpus >> 1;
-+	unsigned int level, nr_levels = counter->nr_levels;
-+	unsigned int bit_mask = counter->level0_bit_mask;
-+	unsigned int cpu = smp_processor_id();
-+
-+	for (level = 1; level < nr_levels; level++) {
-+		atomic_t *count = &item[cpu & (level_items - 1)].count;
-+		unsigned int orig, res;
-+
-+		bit_mask <<= 1;
-+		res = atomic_add_return_relaxed(inc, count);
-+		orig = res - inc;
-+		inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
-+		item += level_items;
-+		level_items >>= 1;
-+		if (!inc)
-+			return;
-+	}
-+	atomic_add(inc, counter->approx_sum);
-+}
-+
-+/*
-+ * Precise sum. Perform the sum of all per-cpu counters.
-+ */
-+static
-+int percpu_counter_tree_precise_sum_unbiased(struct percpu_counter_tree *counter)
-+{
-+	unsigned int sum = 0;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu)
-+		sum += *per_cpu_ptr(counter->level0, cpu);
-+	return (int) sum;
-+}
-+
-+int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter)
-+{
-+	return percpu_counter_tree_precise_sum_unbiased(counter) + READ_ONCE(counter->bias);
-+}
-+
-+/*
-+ * Do an approximate comparison of two counters.
-+ * Return 0 if counters do not differ by more than the sum of their
-+ * respective inaccuracy ranges,
-+ * Return -1 if counter @a less than counter @b,
-+ * Return 1 if counter @a is greater than counter @b.
-+ */
-+int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b)
-+{
-+	int count_a = percpu_counter_tree_approximate_sum(a),
-+	    count_b = percpu_counter_tree_approximate_sum(b);
-+
-+	if (abs(count_a - count_b) <= (a->inaccuracy + b->inaccuracy))
-+		return 0;
-+	if (count_a < count_b)
-+		return -1;
-+	return 1;
-+}
-+
-+/*
-+ * Do an approximate comparison of a counter against a given value.
-+ * Return 0 if the value is within the inaccuracy range of the counter,
-+ * Return -1 if the value less than counter,
-+ * Return 1 if the value is greater than counter.
-+ */
-+int percpu_counter_tree_approximate_compare_value(struct percpu_counter_tree *counter, int v)
-+{
-+	int count = percpu_counter_tree_approximate_sum(counter);
-+
-+	if (abs(v - count) <= counter->inaccuracy)
-+		return 0;
-+	if (count < v)
-+		return -1;
-+	return 1;
-+}
-+
-+/*
-+ * Do a precise comparison of two counters.
-+ * Return 0 if the counters are equal,
-+ * Return -1 if counter @a less than counter @b,
-+ * Return 1 if counter @a is greater than counter @b.
-+ */
-+int percpu_counter_tree_precise_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b)
-+{
-+	int count_a = percpu_counter_tree_approximate_sum(a),
-+	    count_b = percpu_counter_tree_approximate_sum(b);
-+
-+	if (abs(count_a - count_b) <= (a->inaccuracy + b->inaccuracy)) {
-+		if (b->inaccuracy < a->inaccuracy) {
-+			count_a = percpu_counter_tree_precise_sum(a);
-+			if (abs(count_a - count_b) <= b->inaccuracy)
-+				count_b = percpu_counter_tree_precise_sum(b);
-+		} else {
-+			count_b = percpu_counter_tree_precise_sum(b);
-+			if (abs(count_a - count_b) <= a->inaccuracy)
-+				count_a = percpu_counter_tree_precise_sum(a);
-+		}
-+	}
-+	if (count_a > count_b)
-+		return -1;
-+	if (count_a > count_b)
-+		return 1;
-+	return 0;
-+}
-+
-+/*
-+ * Do a precise comparision of a counter against a given value.
-+ * Return 0 if the value is equal to the counter,
-+ * Return -1 if the value less than counter,
-+ * Return 1 if the value is greater than counter.
-+ */
-+int percpu_counter_tree_precise_compare_value(struct percpu_counter_tree *counter, int v)
-+{
-+	int count = percpu_counter_tree_approximate_sum(counter);
-+
-+	if (abs(v - count) <= counter->inaccuracy)
-+		count = percpu_counter_tree_precise_sum(counter);
-+	if (count < v)
-+		return -1;
-+	if (count > v)
-+		return 1;
-+	return 0;
-+}
-+
-+void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias)
-+{
-+	WRITE_ONCE(counter->bias, bias);
-+}
-+
-+void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v)
-+{
-+	percpu_counter_tree_set_bias(counter,
-+				     v - percpu_counter_tree_precise_sum_unbiased(counter));
-+}
-+
-+unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter)
-+{
-+	return counter->inaccuracy;
-+}
--- 
-2.39.5
-
+>  arch/arm64/boot/dts/freescale/Makefile                        | 4 ++--
+>  ...s.dtso => imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtso} | 0
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>  rename arch/arm64/boot/dts/freescale/{imx8mp-tqma8mpql-mba8mpxl-lvds.dtso => imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtso} (100%)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 93cbd8d5081b3..38ce3d1c41c10 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -263,7 +263,7 @@ imx8mp-tqma8mpql-mba8mpxl-imx327-isp1-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8
+>  imx8mp-tqma8mpql-mba8mpxl-imx327-isp2-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-isp2.dtbo imx8mp-tqma8mpql-mba8mpxl-imx327.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-imx327-isi1-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-isi1.dtbo imx8mp-tqma8mpql-mba8mpxl-imx327.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-imx415-isp1-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-isp1.dtbo imx8mp-tqma8mpql-mba8mpxl-imx415.dtbo
+> -imx8mp-tqma8mpql-mba8mpxl-lvds-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
+> +imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-lvds-lb070wv8-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-lb070wv8.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-ov9281-isi1-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb  imx8mp-isi1.dtbo imx8mp-tqma8mpql-mba8mpxl-ov9281.dtbo
+> @@ -277,7 +277,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-imx327-isp1.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-imx327-isp2.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-imx327-isi1.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-imx415-isp1.dtb
+> -dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds-lb070wv8.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-ov9281-isi1.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl-lvds.dtso b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtso
+> similarity index 100%
+> rename from arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl-lvds.dtso
+> rename to arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl-lvds-tm070jvhg33.dtso
+> --
+> 2.43.0
+>
