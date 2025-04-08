@@ -1,130 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0F2218AD2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3784C2505AF
 	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143392; cv=none; b=OW7+A6i4CBqLmGsNC0LEGacSMRzioQjWI3UO8pF4md3WiU0qbzbp0bDYUrYX1HgATaEO0NQPC/5QrkDW7u43szRhOabEDBcuK1ZrlD/4qEpyuzJIJc7ZJcndPhEIL2rndFoeDCMK7G2xI36FgqKW7AOGnetVvcn+s0QivpU1P9Q=
+	t=1744143394; cv=none; b=Z1KkmQMfAb6mLlIZ1u5CYQOz9W1FNY5qdJY/3ZT+wDDscCZ+xwgVyQ+lFRzcD8HlU1DveBM0ehD0Ez4RoeyEu/pl5Z9oKJA9MFenVCBZlGtrUongi1UO1VtpFug93zkN98rFgLkDdtYPoeP5xeW3ArGVQaf9aXAGj26EWH5caVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143392; c=relaxed/simple;
-	bh=4F2PLkKE9ucfJzfR1uPhQJZXYEmbnlCLXGg63cq/2tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q7+eiTZMErrNTr+v4Ov5d0GuQWmdKOPhelCIeidNDG3AerxfnDuAMjIYm7nRNgduLYvWudFYRSXzwA6TnPszU64Sij78ItC1W8GlA4lFW5Qazk03/G0UdYnxD5v4x4nzNdVGXl+ZLFnnEG709KSxyoT9i4uC8Y2nD60ZmnCdSIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUpHJJkE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744143394; c=relaxed/simple;
+	bh=+Otf9WjrrPKgfg6yGiXwo0l1zq0oKhjye6gLTZS6yvE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tk0E4C/az3rL//Sy5eiJKwtwtYsPccRjC4M1RHILc7FuX/SKG9rnicuNjFfY6AqgvCrJwZtVqCGtByAQUA5dT8jtubeXB8nvKEemEjHjY4TwPfFzbZQTmnNgmeoLb02MItu16ivWujGIKHgcNInFpsV7BOTCIyqA3v2zv+ZLHP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bTdQvuDK; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUpHJJkE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0A2C4CEE5;
-	Tue,  8 Apr 2025 20:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744143392;
-	bh=4F2PLkKE9ucfJzfR1uPhQJZXYEmbnlCLXGg63cq/2tA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iUpHJJkE/qPceoctndxDxWssPXnJD5r73Fo04+/EvTfBsFwxBqUPenxe5nxkMrVjP
-	 MdOc4kZyh2H90xFnHDVwcoJespJIrka136ECo11Rx7ZANq5u4jlGj/OPKK8tgJNqh5
-	 04vpMZtPtSqMUzoqklq/23qPaftB3RCXI2wsKPglKi+D9OiCSoNZm2q240WwX18L0E
-	 gdkI/x5tV0+fVgp6d6wbB0Xdc2Q2uC2O/0gr241UGvfJqpTc+Z2wp1qMOQa7nsrv7j
-	 y3PVeyiZuuonqj60K7q7v3H3EsDg+JOpykv5t2j4UzY49vI+6B3TUiIa6jB1aSyD6D
-	 jYhowzAbfH6sg==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R.Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 4/4] mm/madvise: batch tlb flushes for MADV_DONTNEED[_LOCKED]
-Date: Tue,  8 Apr 2025 13:16:29 -0700
-Message-Id: <20250408201629.63324-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <fd26ba1e-9730-4288-a03b-ad07b6fe9ca5@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTdQvuDK"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3031354f134so4591477a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744143392; x=1744748192; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mehwUiVlz7/z5KHfhV+Q1AQQejmAf7B/NmHE2o7479g=;
+        b=bTdQvuDKzEOTNigjdl43O4VVLPxHsZROSIYkYX8YcyxI7yDFoYxoomuluH8SOotlGr
+         UARyog2wi1y0/eVfQTQ09vGGrrQgo2ysmQly4rrbZrHUkiNqi2UX+9E1S2YtahotA8Fp
+         q+HM+ONx3X8hyTi5MQhCU+KvNEjkEZeZHPmew7uIqfJteN7GKRl1HTB/9eBog0nuTjc0
+         OCjUMRF69hplpUI68bCKqPXa0K4qI52lBg8IXAYndUBb0wTrr6M+nd1mcLPcmAbrnhz/
+         Ugs+GOn0r0392mVd/AESzaGXmU0yODtNc4fY5OESdKZBGnSV9dFRYmXy8ZTeYM2OhxSd
+         MtbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744143392; x=1744748192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mehwUiVlz7/z5KHfhV+Q1AQQejmAf7B/NmHE2o7479g=;
+        b=T024U96Lufj3cHN6PTVlyIxOEoKf3OTws9rbLtCXi7VpCFLAY8ZL/68b7vHTIPVm5L
+         W0oZQKNJ4Et6vWjMx7oBoNtjtYFhu2KZIpSof2cKBDwmLxUIVdrUy9QrSVGMTBtRM4S0
+         bMIy71mdSWbfdDL8Zv2Wi1GJt8Wi4e+bNYQSAdhIajqm4kXsHIFyc46htCEbiME9L7s7
+         YFTYQH6JK0KaIEzqXy+TyEMtNEo2Pwv/aNePvq3y4llZoH41VjtZiKBPCTQsdKuMW2Q1
+         7oSqvyASGqnzjEZO6JcCCvFnDfh/oySALensoLpZY6uZhIL1PLNxow3jaDKjoLf8xko7
+         q3YA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqsL6ty0pHOFszO7O7HigCErECg/DCa3W2eqX6+FjbpbDb8Mi7JMJuWhvj7SJbOky4zqpQQVMOKT5FSKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpxYPL1oJCb2EKcUsvUjWj3EIW7So10PDVyTFR74ciFFo8gWQ6
+	9anwwOvuqkpIOe4nAyY4T2N5Gve8ZdrT0LEK8YPQ1+LQM98Y/0eK60y8B+42068hVCk7CCK4ZBd
+	az87xeXeuUiQ0iPpuZ6tVbWFrY5QHXqmDgLfB
+X-Gm-Gg: ASbGncuQu3On+iCs/F988bHc6W73HfagbYdVnbSVPGV57boOjlgetvCHIXlCgCkoLiE
+	nLj9QGQ1O17b9F9IUB3vmSIB7JPbXulDzHofy5/ktsXPptPJMT0U080Znjz2Db1OMjg8UE2kmuS
+	2wOrGdEKlADapxhLiP4z2fsj4hTrDmF2hz73NhMEKHtzXpKCQLC0h9AMgFLyqxYVCak3ajaA==
+X-Google-Smtp-Source: AGHT+IGtGWb6eUUkWxY8GmMQBNcnqZvHvFajRSqQv+lShjf9d+63mfLe+tk4nhM5dqhBVZdhJLi8weQ9qbY2tJuGVlA=
+X-Received: by 2002:a17:90b:2590:b0:2f2:ab09:c256 with SMTP id
+ 98e67ed59e1d1-306dbc3aeecmr798843a91.33.1744143392218; Tue, 08 Apr 2025
+ 13:16:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z_PfCosPB7GS4DJl@mini-arch> <20250407161308.19286-1-kuniyu@amazon.com>
+ <CANp29Y5RjJD3FK8zciRL92f0+tXEaZ=DbzSF3JrnVRGyDmag2A@mail.gmail.com>
+ <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com> <CANn89iK=SrbwSN20nKY5y71huhsabLEdX=OGsdqwMPZOmNW8Gw@mail.gmail.com>
+In-Reply-To: <CANn89iK=SrbwSN20nKY5y71huhsabLEdX=OGsdqwMPZOmNW8Gw@mail.gmail.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 8 Apr 2025 22:16:19 +0200
+X-Gm-Features: ATxdqUHZ4TqwrSVVIkJror92e58_nqzO6Pz7ZoMxbuIXg9lHE1m-GgA4mZ4g9FM
+Message-ID: <CANp29Y5cTga9UrkySy6GiOco+nOHuDnFOWSb5PF-P0i6hU+hnA@mail.gmail.com>
+Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
+To: Eric Dumazet <edumazet@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, stfomichev@gmail.com, 
+	andrew@lunn.ch, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 8 Apr 2025 14:36:18 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> On Fri, Apr 04, 2025 at 02:07:00PM -0700, SeongJae Park wrote:
-> > Batch tlb flushes for MADV_DONTNEED[_LOCKED] for better efficiency, in a
-> > way that very similar to the tlb flushes batching for MADV_FREE.
-> 
-> This seems like a rather succinct commit message under the circumstances :) can
-> we put some meat on the bone?
-> 
-> Perhaps explain why one might want to do so, propagating some of your excellent
-> cover letter contents here, etc.
-> 
-> Also you're doing more than this, you're also exporting the (soon to be renamed,
-> ideally :) notify_unmap_single_vma() function, let's mention this here please,
-> and also mention why.
-
-Good points, thank you.  I will update the commit message in the next spin
-following your suggestions.
-
-> 
+On Tue, Apr 8, 2025 at 1:33=E2=80=AFPM Eric Dumazet <edumazet@google.com> w=
+rote:
+>
+> On Tue, Apr 8, 2025 at 12:44=E2=80=AFPM Dmitry Vyukov <dvyukov@google.com=
+> wrote:
 > >
-> > Signed-off-by: SeongJae Park <sj@kernel.org>
-> > ---
-> >  mm/internal.h | 3 +++
-> >  mm/madvise.c  | 9 ++++++---
-> >  mm/memory.c   | 4 ++--
-> >  3 files changed, 11 insertions(+), 5 deletions(-)
+> > On Tue, 8 Apr 2025 at 10:11, Aleksandr Nogikh <nogikh@google.com> wrote=
+:
+> > >
+> > > On Mon, Apr 7, 2025 at 6:13=E2=80=AFPM 'Kuniyuki Iwashima' via syzkal=
+ler-bugs
+> > > <syzkaller-bugs@googlegroups.com> wrote:
+> > > >
+> > > > From: Stanislav Fomichev <stfomichev@gmail.com>
+> > > > Date: Mon, 7 Apr 2025 07:19:54 -0700
+> > > > > On 04/07, syzbot wrote:
+> > > > > > Hello,
+> > > > > >
+> > > > > > syzbot has tested the proposed patch but the reproducer is stil=
+l triggering an issue:
+> > > > > > unregister_netdevice: waiting for DEV to become free
+> > > > > >
+> > > > > > unregister_netdevice: waiting for batadv0 to become free. Usage=
+ count =3D 3
+> > > > >
+> > > > > So it does fix the lock unbalance issue, but now there is a hang?
+> > > >
+> > > > I think this is an orthogonal issue.
+> > > >
+> > > > I saw this in another report as well.
+> > > > https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@goog=
+le.com/
+> > > >
+> > > > syzbot may want to find a better way to filter this kind of noise.
+> > > >
+> > >
+> > > Syzbot treats this message as a problem worthy of reporting since a
+> > > long time (Cc'd Dmitry who may remember the context):
+> > > https://github.com/google/syzkaller/commit/7a67784ca8bdc3b26cce2f0ec9=
+a40d2dd9ec9396
+> > >
+> > > Since v6.15-rc1, we do observe it happen at least 10x more often than
+> > > before, both during fuzzing and while processing #syz test commands:
+> > > https://syzkaller.appspot.com/bug?extid=3D881d65229ca4f9ae8c84
 > >
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index e9695baa5922..be0c46837e22 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -435,6 +435,9 @@ void unmap_page_range(struct mmu_gather *tlb,
-> >  			     struct vm_area_struct *vma,
-> >  			     unsigned long addr, unsigned long end,
-> >  			     struct zap_details *details);
-> > +void notify_unmap_single_vma(struct mmu_gather *tlb,
-> > +		struct vm_area_struct *vma, unsigned long addr,
-> > +		unsigned long size, struct zap_details *details);
-> 
-> Yeah I know I said in 3/4 but I really hate this name. We need to change it... :)
-
-Yes, I will change the name in the next revision.
-
-> 
-> >  int folio_unmap_invalidate(struct address_space *mapping, struct folio *folio,
-> >  			   gfp_t gfp);
+> > IIUC this error means a leaked reference count on a device, and the
+> > device and everything it references leaked forever + a kernel thread
+> > looping forever. This does not look like noise.
 > >
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 564095e381b2..c7ac32b4a371 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -851,7 +851,8 @@ static int madvise_free_single_vma(
-> >   * An interface that causes the system to free clean pages and flush
-> >   * dirty pages is already available as msync(MS_INVALIDATE).
-> >   */
-> > -static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> > +static long madvise_dontneed_single_vma(struct madvise_behavior *behavior,
-> 
-> Again, let's go with madv_behavior for now please. Otherwise we have a weird
-> inconsistency that sometimes behavior = the int 'behavior' value and sometimes
-> it's a pointer to the helper struct.
+> > Eric, should know more. Eric fixed a bunch of these bugs and added a
+> > ref count tracker to devices to provide better diagnostics. For some
+> > reason I don't see the reftracker output in the console output, but
+> > CONFIG_NET_DEV_REFCNT_TRACKER=3Dy is enabled in the config.
+>
+> I think that Kuniyuki patch was fixing the original syzbot report.
+>
+> After fixing this trivial bug, another bug showed up,
+> and this second bug triggered "syzbot may want to find a better way to
+> filter this kind of noise." comment.
 
-Ye, I will do so.
+FWIW I've just bisected the recent spike in "unregister_netdevice:
+waiting for batadv0 to become free" and git bisect pointed to:
 
-> 
-> > +					struct vm_area_struct *vma,
-> >  					unsigned long start, unsigned long end)
-> >  {
-> >  	struct zap_details details = {
+00b35530811f2aa3d7ceec2dbada80861c7632a8
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu Feb 6 14:04:22 2025 +0000
+
+    batman-adv: adopt netdev_hold() / netdev_put()
+
+    Add a device tracker to struct batadv_hard_iface to help
+    debugging of network device refcount imbalances.
 
 
-Thanks,
-SJ
+Eric, could you please have a look?
 
-[...]
+>
+>
+> -ETOOMANYBUGS.
