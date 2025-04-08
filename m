@@ -1,95 +1,90 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0262824886B;
-	Tue,  8 Apr 2025 20:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC680244195;
+	Tue,  8 Apr 2025 20:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744144029; cv=none; b=n5aqFgW62d8lyt108nlgEavM1+PHBMYFtv57W0Vmf7oOwbQRYmhyifdV2Euk8x7sVleNCmN4o+9Qae5yG05MlvE1ulxgVeCiMAwn+fIANHq3rkBrlV0UoN8xs+3CyzCg8wk94pg5LVgx8BxUe2fWZVc1SxoPyo9kTON5HPyVu6A=
+	t=1744144039; cv=none; b=aZQ25vkizRVlWwmNf5Cdnr0udxjvQUZfJqHH/nKyJ3sK1mJL6h7J4DCsr4OwYLqPblRbPHScukPJBOxxAKCgmsk3MEU8UPI5WHZsJyPNOiFYV6zs8y/fvlYMtchJDXPR3Vt4OwDstmYW2XpDrwoP83tm48bp4u3rBm/7Q4L22yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744144029; c=relaxed/simple;
-	bh=PMfPJkfYCA5FLy35kmGiTNL94yNxRroKCmDLM+iqoTo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=skNtDLtM9bnA7JJ7ieIRUvL/9rlJHjbRgXunnuQlOU5V5mmVBy7O2rj9G0NSDrFpu6GRvX0z/goXQxmKp6wEnHyC8G7nG5u/r5UQfvkZjV+SOaobWTHiDStsW8jyGj1CknVxlSFKYb0oBaDK9Xsq5Tdv90pUEZrwX+G3Y4FvPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=cTpjVuaW; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1744144039; c=relaxed/simple;
+	bh=jlmyjTBJP5R5t3jfNaCh/io/w2i5bY2uI2PlMtGd2gQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjM5ZpA8CHoMByPqNUMk2mZZkUwcxp0YwEJmqVSnSpPFGbdI+k98d8H5vIAgaOY2gvpEJdb/5jvUZ4+SnZPlyVcano0rp+RUnf73bvWq/Q3KLJ4oxPB8ftGrv36gnVRVutQ6/omkF3Mu+ZWjAFt6hOF7+IAL8NlPs7hPFV8wt+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CJHUbtz3; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="cTpjVuaW"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id CDED01F9EA;
-	Tue,  8 Apr 2025 22:27:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744144023;
-	bh=V5Rhzl+UaSq7NkWq0KZryRLkoi/5M8dAQSxp5ngWDmI=; h=From:To:Subject;
-	b=cTpjVuaWekEYhcb7/2HVXTC8QJpR2hXnQ3HLHRKFHoYwAhlF2TKWCiPZE+A5xLJNn
-	 Xl0xZxbLpKrgPLKJHEXDXTNkVfq3rFgLnqK2wqNu1vsDnN9B9WcHfHov7P5pGAMhlA
-	 hTfnlxKj17+XG7tD4ybZCx6UhsAhSbyUibGrEgWTCO/2YTXcRzRYUf+Qtx6DbMjQgM
-	 zQ4LipkNXDuoIxTcBXyEnkv3ZkA/XTc3llUx2FthTbghqiV6kUL4usvWn9t2hMUGXi
-	 ZOXu5idauxq/vFSSeYeGYW6zeFMmExnbatSnGO39uQljyFk/o/HRz8aiSkhEl7/yDc
-	 UVB5KfOMXcl9g==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: ti: k3-am625-verdin: Add EEPROM compatible fallback
-Date: Tue,  8 Apr 2025 22:26:55 +0200
-Message-Id: <20250408202655.6329-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CJHUbtz3"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 188BA102F673A;
+	Tue,  8 Apr 2025 22:27:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1744144028; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=cU9iZhE/mM+SRIcVkqUG49B37dJgawFyqHRBBpou7SM=;
+	b=CJHUbtz3z/U9QUu0qRehRN5O9uCrTNRHA3c3T7GMQbR9di/iohPk/JcIKql6TYUxPfWuMn
+	NVh6xC9JIpsd/WIuRe5/df0YUHJpeNwJNavCtllh6oFw7Fr0GvHUctkQmLI+vNX557M80t
+	Lbj10kgnIWThOD7DiK7vLNYnkoYqrzazPf+S9Pb0pbLgwf9b/pefV3b4xC2Ir+pdfd5eFc
+	ZDapaKvpxerCZBZhxT6M5GL43UNJtC+2RHBn/3vTCO8OgvkTm0dbj+VQ+7ED7xnlWZ5Yqs
+	VNnjiCTVemoT8Uuoigg3PQ5Ooa1+iTh3Dq23pDPbB0KNNmkKZBEgxIuBpRlqSQ==
+Date: Tue, 8 Apr 2025 22:26:58 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 5.10 000/227] 5.10.236-rc1 review
+Message-ID: <Z/WGkiuWIGYlJP+F@duo.ucw.cz>
+References: <20250408104820.353768086@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b6iNVzDXMYwu7Slw"
+Content-Disposition: inline
+In-Reply-To: <20250408104820.353768086@linuxfoundation.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-According to the AT24 EEPROM bindings the compatible string should
-contain first the actual manufacturer, and second the corresponding
-atmel model.
+--b6iNVzDXMYwu7Slw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add the atmel compatible fallback accordingly.
+Hi!
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi | 2 +-
- arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> This is the start of the stable review cycle for the 5.10.236 release.
+> There are 227 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
-index fcc4cb2e9389..2b5f5e50b578 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-dahlia.dtsi
-@@ -114,7 +114,7 @@ sensor@4f {
- 
- 	/* EEPROM */
- 	eeprom@57 {
--		compatible = "st,24c02";
-+		compatible = "st,24c02", "atmel,24c02";
- 		reg = <0x57>;
- 		pagesize = <16>;
- 	};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi
-index 7372d392ec8a..9a2483cf5d70 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-verdin-yavia.dtsi
-@@ -118,7 +118,7 @@ sensor@4f {
- 
- 	/* EEPROM */
- 	eeprom@57 {
--		compatible = "st,24c02";
-+		compatible = "st,24c02", "atmel,24c02";
- 		reg = <0x57>;
- 		pagesize = <16>;
- 	};
--- 
-2.39.5
+CIP testing did not find any problems here:
 
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+5.10.y
+
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--b6iNVzDXMYwu7Slw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ/WGkgAKCRAw5/Bqldv6
+8osOAKCZe7CxRBAyNiVmAVW0XHfenpu2QACfdBl84ywjI4Xpawk2jQw/uzkfAeY=
+=MrrE
+-----END PGP SIGNATURE-----
+
+--b6iNVzDXMYwu7Slw--
