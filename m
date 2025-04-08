@@ -1,154 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9E023E34F;
-	Tue,  8 Apr 2025 17:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B8123E23F;
+	Tue,  8 Apr 2025 17:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134465; cv=none; b=qg6xy1Qb5OYzeZYQ+dSA6PiZfhdPOEBqX4bZGHFGkFtTLJcIVUUxpBZJWK2tUIiSLwymN1rBilOqVwJSY7n/XljVaRJWw7U2oJhCOl508iF8u8JONeLhQ/FYsiAHfuZdtXhbLMvPRoHjIxUf0ykmW6fJRPVC3tcSiiejc6Cqjbc=
+	t=1744134469; cv=none; b=LXy3M0d+fQ3UeC4P3VvSmMHUyCLImM9L3pEi3p97YYlCoqceJJYHw+jxXxEHHF/4L0FjBKZlkQ0d0SFdKpVfAjDxm8s2awvyLCXK3Goa6hftRZMSw5Db1vJ7Y1764trPBVMRBe7Gp+GyK5rMpvZ4hZ+Dh9qYvaUuODm+EnHkdrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134465; c=relaxed/simple;
-	bh=zptJOXWD95DsZZXqKCKA4a7kcU5OVsuiSy9vlDH7JOs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WHpgArCzSzgTwd2mnUi4uJk5gAw99VC+ywh7tPP0owjIUsXNliXtL7lvAxDa/qOuuAma6XpNnuP9xvMkuW3H/yXvCI812Mg1A01VLkcFVysAH3qN0S8efP0blXVfrLHDNUe6jhchPXT7EjrDSVk5S8iFGVEPBvZKNYkK/1MDNjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJW8peCx; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744134469; c=relaxed/simple;
+	bh=R0H4qB2DWVusKSacLmBvQoYOkD35Q2qxSrY8UFIpCvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mb4bzVQWdIrl7QAQSlgtHm8JitZvCktd+1jTnAzzsuCBvPvdB7Sire5AzNM3vvFDR1BiF+CVT1UTyaeyUsabZNwxJ/jnX31LcBpGtoKpwyj7aMBuCcJ2eZ+we7dlxv9FgSz3PTLpRjGDzUZOxP85o+9QtA/xDkZyKoVldYqpR/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6gm00BS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJW8peCx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744134464; x=1775670464;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=zptJOXWD95DsZZXqKCKA4a7kcU5OVsuiSy9vlDH7JOs=;
-  b=ZJW8peCxEDz72iYwVvX7VU1wRx3iJPFJA4N+WFD17p05xtFb6mHHkrtY
-   40pKVjGNAVb7FYZxqqfHR//7FFG3YXIDvLVfJG6AQk09Zxnf5oaW9uQDQ
-   3FJG0PCj/N7+1Lhtk2AzD523GZeIcMt674Hc/NxUU8hsQSZWlnDYeiwz6
-   BoCV25zt+/VxZMmzSExVHrNupmgc0Ng5WeugFxIU1uDgkRRHBERlof5Ho
-   lUrqB1TflTdjm5Tv6GKY+vdrTr83wej06fmbQGnd9eySmCrPfJe0JO2vT
-   rKNz2Kz8azTVrHwty+7uKDCurb2wc+aIQd4DLqVpXBVH1iXYgdTcW02qa
-   g==;
-X-CSE-ConnectionGUID: rig7wPmpTJaL8tgNlyIVEw==
-X-CSE-MsgGUID: PBWViyWjTjya+2knapHscw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48291859"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="48291859"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 10:47:43 -0700
-X-CSE-ConnectionGUID: onU/gqSRQ+OL7P3AtSBxvA==
-X-CSE-MsgGUID: pYnWEB7kROCZ9N3gYR11mQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="159335040"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.121])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 10:47:42 -0700
-Message-ID: <6346af9942a0e6730fd6b26f2586b82e6fc04d4c.camel@linux.intel.com>
-Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to
- ->update_limits()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
- <linux-pm@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>, Viresh
- Kumar <viresh.kumar@linaro.org>, Mario Limonciello
- <mario.limonciello@amd.com>, Sudeep Holla <sudeep.holla@arm.com>
-Date: Tue, 08 Apr 2025 10:47:42 -0700
-In-Reply-To: <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com>
-References: <4651448.LvFx2qVVIh@rjwysocki.net>
-	 <8560367.NyiUUSuA9g@rjwysocki.net>
-	 <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
-	 <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
-	 <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
-	 <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6gm00BS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13BFC4CEE5;
+	Tue,  8 Apr 2025 17:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744134469;
+	bh=R0H4qB2DWVusKSacLmBvQoYOkD35Q2qxSrY8UFIpCvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g6gm00BSrUC9a67VqfO6wzWEjAiHCtHL+S0ONbWlZMdtU1RGAA1v7JyzyXBXm7oSF
+	 KWVxyk524MPRmVUAXoOjqyy4XmLat4bzEnXeICTAI7M/iXAG/DfNTO5TZZKyaz4YsX
+	 Bo3rtDRoRI1SfJkbJ4gFnuNg4WKEKp1x7kJcK4QbPLDo5ycUvUouZonsO/zCJvwPpZ
+	 ldDNwn1Tb4+9MCZVY8ms0z8w+ON0h4iyZ/frlBQjdm7lWsEf1EGE16myKTLJthgtqJ
+	 T7L+/DmJH52x5aDEygZvRGYbYNULH/VQ3VuFk71ev3vNdUzfF/xwpP5V77GJG3c5NX
+	 l+GMF4NLDc27g==
+Date: Tue, 8 Apr 2025 12:47:47 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>, upstream@airoha.com,
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-mediatek@lists.infradead.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, devicetree@vger.kernel.org,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: Re: [net-next PATCH v14 03/16] dt-bindings: net: dsa: Document
+ support for Airoha AN8855 DSA Switch
+Message-ID: <174413446086.2421916.12520938934401150643.robh@kernel.org>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+ <20250408095139.51659-4-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408095139.51659-4-ansuelsmth@gmail.com>
 
-On Tue, 2025-04-08 at 15:37 +0200, Rafael J. Wysocki wrote:
-> On Tue, Apr 8, 2025 at 1:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
-rg>
-> wrote:
-> >=20
-> > On Tue, Apr 8, 2025 at 12:28=E2=80=AFAM srinivas pandruvada
-> > <srinivas.pandruvada@linux.intel.com> wrote:
-> > >=20
-> > > On Mon, 2025-04-07 at 20:48 +0200, Rafael J. Wysocki wrote:
-> > > > On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki
-> > > > <rjw@rjwysocki.net>
-> > > > wrote:
-> > > > >=20
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >=20
-> > > > > Since cpufreq_update_limits() obtains a cpufreq policy
-> > > > > pointer for
-> > > > > the
-> > > > > given CPU and reference counts the corresponding policy
-> > > > > object, it
-> > > > > may
-> > > > > as well pass the policy pointer to the cpufreq driver's -
-> > > > > > update_limits()
-> > > > > callback which allows that callback to avoid invoking
-> > > > > cpufreq_cpu_get()
-> > > > > for the same CPU.
-> > > > >=20
-> > > > > Accordingly, redefine ->update_limits() to take a policy
-> > > > > pointer
-> > > > > instead
-> > > > > of a CPU number and update both drivers implementing it,
-> > > > > intel_pstate
-> > > > > and amd-pstate, as needed.
-> > > > >=20
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >=20
-> > > Hi Rafael,
-> > >=20
-> > > > Hi Srinivas,
-> > > >=20
-> > > > If you have any concerns regarding this patch, please let me
-> > > > know
-> > > > (note that it is based on the [05/10]).
-> > > >=20
-> > > Changes looks fine, but wants to test out some update limits from
-> > > interrupt path.
-> > > Checked your branches at linux-pm, not able to locate in any
-> > > branch to
-> > > apply.
-> > > Please point me to a branch.
-> >=20
-> > I'll put it in 'testing' later today.
->=20
-> Now available from
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
-> testing
->=20
-Looks good.
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On Tue, 08 Apr 2025 11:51:10 +0200, Christian Marangi wrote:
+> Document support for Airoha AN8855 5-port Gigabit Switch.
+> 
+> It does expose the 5 Internal PHYs on the MDIO bus and each port
+> can access the Switch register space by configurting the PHY page.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  .../net/dsa/airoha,an8855-switch.yaml         | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/airoha,an8855-switch.yaml
+> 
 
-Thanks,
-Srinivas
+
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
+
+Missing tags:
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
+
+
