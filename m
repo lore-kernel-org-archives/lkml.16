@@ -1,170 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DE625F79E;
-	Tue,  8 Apr 2025 07:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968BE12CDAE;
+	Tue,  8 Apr 2025 07:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098340; cv=none; b=OsnF1RGR5sDL3EYUY/S4XFKqXt3AVQ+K9HJ55KvgmIk6EuxFQq41C2dQKfZGb7ojHEoLby2vT5YYLuFprSOFp1WJaeXChryDXr5qT6hJptL7o5cyuRUeAZlK+7qULaRTWizPIeMtIFTCfOBydoYoxs0QTSyG2Kj7HKQ4s7De3hE=
+	t=1744098391; cv=none; b=dU4opwW/6m9Ux9Bx4fVj/ioPBDtzaamVXNg5ZabPyXoK//rScyFfDIDRpV+b9R64Io06ocg+8CJfXmUUf6Quiyaj0XfjaV9OX6YdTZRT3Q09EGSPGwLuK+toivNIFVw5vpZPCca+DNx94OvZJlAbyEcWp85/kOsm8bAA5B3a+8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744098340; c=relaxed/simple;
-	bh=B84DeuW12H5b3bBfEOf4ObuDbt+tx3UhEmjpcBCFxDg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mZRDKBwCZCHbNgYdxSa1b5PDsZO8pXdoQC32lNzL7OSRdRU4m5T0BfUAT0zwWmA7555Nv3OeYSuSFJuwD1Bufigcw8N5Fy3VQ1HintyrmtaOzsG8tyEtHvszKSji35tREO3wcxgH0Uvrd/+x6sAvZvUYKAt2A5DQ3JQm75GqLtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5OLauJX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744098391; c=relaxed/simple;
+	bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTqzgOUmGvzU7IU/d0th+To8w6/ez86G0msY32yK5ZHwxEdjYSa4Oah2IpC26pBmdfuO+v/1tIRn5p//FiIsEmQFhdzSXzZZJ3JSfmRLUADzywvCoSSmk8kjZc9E9n4Yhb5RbLifP4qCkUF6ERgQzxx70OFiC/1+MLdZRMv1SXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyQLQ8xT; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5OLauJX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 25DB7C4CEED;
-	Tue,  8 Apr 2025 07:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744098340;
-	bh=B84DeuW12H5b3bBfEOf4ObuDbt+tx3UhEmjpcBCFxDg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=L5OLauJXElm0ow49GaNBkFnUvt+9nWlP7IEW0cFkJUZkSW1NMyh4WTrxLMJpUI6Nb
-	 PKWYQb3uH2vfxVrUr4mi1CwdgC5FoyybDdqvXOF1Qrz0THOGFUmeg7dPK7yVVDGcmL
-	 RdhySwi/KoUM71SbMPiGFKb+yoXkJ4mYEO2nfkUML18AINmjhVia/fos8Hys+4Jl8A
-	 P1foODHpdYRllVEiVK/ldgu5PFxzyCGVdFLnyLg5p5oWVB0d4syodyLQgm7mGuJrd1
-	 5qqTgpBRhyUW29z0zVmifFCHVcMbZSh0ggSwltUufyJyCK2e0PriAcze40SxfnhD1B
-	 AfLG7NOX7AU4Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183EFC369A1;
-	Tue,  8 Apr 2025 07:45:40 +0000 (UTC)
-From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Date: Tue, 08 Apr 2025 09:45:34 +0200
-Subject: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for
- changing the MAC termination
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyQLQ8xT"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so8667425a12.2;
+        Tue, 08 Apr 2025 00:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744098388; x=1744703188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+        b=XyQLQ8xTk3VMWKkzGctVxVLDtavM4QgjwNOnhWJ6Q1ZHInFUTIRGj6a8IE+9JJNjJw
+         cI1JatD6DGiszy07MUdVoV6NIEmdFKvkkC444HxQRrY8kXviwCqOk86Y01RLatUm3o5A
+         tlIliT1MSfB30mZYA3tJzf756eVc0LK5Tj9pQ5lP21zdrjGxAZoRg7UtxmnFVAFOZACw
+         jG9zu7W5pUR5qJ+eU29dbe9MwQ0XKw6Hw4kbOyBkhB4koYs2svEgUlg1aJbEMYo2ejUA
+         TWHRbu51F1MqsdCCurhD2BQBAWJzed6RrPAgBy8zmaY2tRhd/PfyMr3Mkjf+m+60jWxf
+         N0vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744098388; x=1744703188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+        b=T3uX1GRAoLM4g7Jv66rwC6M6/p2mez1iS+dKc7kRhVy/OjBl2ZMTqzUUVuMu3NolCh
+         eM3uW2ID+vmn/AEJ5MZdnFpBOl+Fy6mYbB9P4PH4VtzZ/xVtfYpfxxnjhay8bnhOowm2
+         FZ0HrHd8SXSMyqPluUIu9NroLyg39yuxqBaxocNKxS3/K/Rz/VzEv2RV9QogmqCDvt2L
+         2YsrBZmsFzZRT7GH3BpfVkYVO70dnctj/qdOTwYFcU053OfTkKYwzaG5StFoK1AdaB2W
+         adJYRaoKZKjtiE/mgGa5XkA/Twgqp3w1eBLp+gdhaBTpdinM2fE4MtsC6h3pdrwSHtB0
+         /m4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYDH5DGMP8iSr8R4UfOl97Y8FQmAlVvWy46x4UB4BWGZFz+PItyF4m5KjVSJ6Db6tgINrK0nFm5poSM+Y=@vger.kernel.org, AJvYcCUmYPvQrjp54ouEcPFaw2DIQY+gjG3cRxofvQL00wVtdtAP+Mye682S+HNRK0TAYwmaMWHFvSfSW8Mh1gzv/Q1D2chV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOEoMenkgSIECEDsY1KkLTbrPJhMfFdU58hSckDa2/jQFY5hmn
+	WvE73SebqgZX90XnZcb6PoDxeUxL8Iu4PIrMbIthN13LfOwkLERteIZM3ZRZ+Ww78o3yczeZ71N
+	9ulyQ6zK/vQseCcL7iyGA21wlJcg=
+X-Gm-Gg: ASbGncvpsbflzkQbL9FH5t+qTAo9VL3RNLrTyq4JQXXXxOnWi/D68VYxlZitiaHU5qf
+	h4LWMNi8OCZoX86hKqcpcR20F5absfmSQTeZTsVts8UNzTETHvNhod4jvUy4a5aF/A+xsGyA+lA
+	UupyAjJZNXjy0vAFV5VIDcOoZ6
+X-Google-Smtp-Source: AGHT+IFmG6MLnSUDQL0TyguKXOKi9sZPAf8BJ1l0ld/2h6vDza1UJsGTRfqurp3q32bdQUAB0t99uhb/N1ovjRQpxIM=
+X-Received: by 2002:a05:6402:1ece:b0:5e6:466e:5866 with SMTP id
+ 4fb4d7f45d1cf-5f0b6606682mr13812283a12.25.1744098387736; Tue, 08 Apr 2025
+ 00:46:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
-References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
-In-Reply-To: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
- Dimitri Fedrau <dima.fedrau@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744098338; l=3142;
- i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=uqjFbEaYL6in0znuVFxVSZRGnoMMf/E8l1gq/kbmCFc=;
- b=RcUpgLTX51RLZ/1goSlYifFqe2FHeIkjOLMB9SMHeSorYgXKQHJidYLmXNRTaWG4m5M+9L9gV
- lDaiQXMWPdRBdMXKsEuO71hSj4zPWLtofUQOZCvE3uRHD8hCPCG6aAo
-X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
- pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
-X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
- with auth_id=290
-X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Reply-To: dimitri.fedrau@liebherr.com
+References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+ <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com>
+ <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com> <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+In-Reply-To: <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 8 Apr 2025 09:46:15 +0200
+X-Gm-Features: ATxdqUEpX6XFuXeA6vg0-rN_JsZ2MEwWgX3OKplmGxlA9qwyfA2V1kLMwyG-s0c
+Message-ID: <CAGudoHHQ4y0Z_A0yzpfim_wGFVUuF3NaLgNtWUiquiCby6Ppkg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
+	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On Fri, Apr 4, 2025 at 6:51=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrote=
+:
+>
+> On Thu, Apr 3, 2025 at 10:31=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com>=
+ wrote:
+> > Note there are 2 unrelated components in that patchset:
+> > - one per-cpu instance of rss counters which is rolled up on context
+> > switches, avoiding the costly counter alloc/free on mm
+> > creation/teardown
+> > - cpu iteration in get_mm_counter
+> >
+> > The allocation problem is fixable without abandoning the counters, see
+> > my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
+> > counters). This aspect has to be solved anyway due to mm_alloc_cid().
+> > Providing a way to sort it out covers *both* the rss counters and the
+> > cid thing.
+>
+> It's not just about the fork performance, on some servers there could
+> be ~100K processes and ~200 CPUs, that will be hundreds of MBs of
+> memory just for the counters.
+>
+> And nowadays it's not something uncommon for a desktop to have ~64
+> CPUs and ~10K processes.
+>
+> If we use a single shared "per-cpu" counter (as in the patch), the
+> total consumption will always be only about just dozens of bytes.
+>
 
-The dp83822 provides the possibility to set the resistance value of the
-the MAC termination. Modifying the resistance to an appropriate value can
-reduce signal reflections and therefore improve signal quality.
+I agree there is a tradeoff here and your approach saves memory in
+exchange for more work during a context switch.
 
-Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
----
- drivers/net/phy/dp83822.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+I have no opinion which way to go here.
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 14f36154963841dff98be5af4dfbd2760325c13d..490c9f4e5d4e4dc866ef99f426f7497b5e1b49b4 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -33,6 +33,7 @@
- #define MII_DP83822_MLEDCR	0x25
- #define MII_DP83822_LDCTRL	0x403
- #define MII_DP83822_LEDCFG1	0x460
-+#define MII_DP83822_IOCTRL	0x461
- #define MII_DP83822_IOCTRL1	0x462
- #define MII_DP83822_IOCTRL2	0x463
- #define MII_DP83822_GENCFG	0x465
-@@ -118,6 +119,9 @@
- #define DP83822_LEDCFG1_LED1_CTRL	GENMASK(11, 8)
- #define DP83822_LEDCFG1_LED3_CTRL	GENMASK(7, 4)
- 
-+/* IOCTRL bits */
-+#define DP83822_IOCTRL_MAC_IMPEDANCE_CTRL	GENMASK(4, 1)
-+
- /* IOCTRL1 bits */
- #define DP83822_IOCTRL1_GPIO3_CTRL		GENMASK(10, 8)
- #define DP83822_IOCTRL1_GPIO3_CTRL_LED3		BIT(0)
-@@ -202,6 +206,7 @@ struct dp83822_private {
- 	u32 gpio2_clk_out;
- 	bool led_pin_enable[DP83822_MAX_LED_PINS];
- 	int tx_amplitude_100base_tx_index;
-+	int mac_termination_index;
- };
- 
- static int dp83822_config_wol(struct phy_device *phydev,
-@@ -533,6 +538,12 @@ static int dp83822_config_init(struct phy_device *phydev)
- 			       FIELD_PREP(DP83822_100BASE_TX_LINE_DRIVER_SWING,
- 					  dp83822->tx_amplitude_100base_tx_index));
- 
-+	if (dp83822->mac_termination_index >= 0)
-+		phy_modify_mmd(phydev, MDIO_MMD_VEND2, MII_DP83822_IOCTRL,
-+			       DP83822_IOCTRL_MAC_IMPEDANCE_CTRL,
-+			       FIELD_PREP(DP83822_IOCTRL_MAC_IMPEDANCE_CTRL,
-+					  dp83822->mac_termination_index));
-+
- 	err = dp83822_config_init_leds(phydev);
- 	if (err)
- 		return err;
-@@ -736,6 +747,10 @@ static const u32 tx_amplitude_100base_tx_gain[] = {
- 	93, 95, 97, 98, 100, 102, 103, 105,
- };
- 
-+static const u32 mac_termination[] = {
-+	99, 91, 84, 78, 73, 69, 65, 61, 58, 55, 53, 50, 48, 46, 44, 43,
-+};
-+
- static int dp83822_of_init_leds(struct phy_device *phydev)
- {
- 	struct device_node *node = phydev->mdio.dev.of_node;
-@@ -852,6 +867,23 @@ static int dp83822_of_init(struct phy_device *phydev)
- 		}
- 	}
- 
-+	ret = phy_get_mac_termination(phydev, dev, &val);
-+	if (!ret) {
-+		for (i = 0; i < ARRAY_SIZE(mac_termination); i++) {
-+			if (mac_termination[i] == val) {
-+				dp83822->mac_termination_index = i;
-+				break;
-+			}
-+		}
-+
-+		if (dp83822->mac_termination_index < 0) {
-+			phydev_err(phydev,
-+				   "Invalid value for mac-termination-ohms property (%u)\n",
-+				   val);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	return dp83822_of_init_leds(phydev);
- }
- 
-@@ -931,6 +963,7 @@ static int dp8382x_probe(struct phy_device *phydev)
- 		return -ENOMEM;
- 
- 	dp83822->tx_amplitude_100base_tx_index = -1;
-+	dp83822->mac_termination_index = -1;
- 	phydev->priv = dp83822;
- 
- 	return 0;
+> >
+> > In your patchset the accuracy increase comes at the expense of walking
+> > all CPUs every time, while a big part of the point of using percpu
+> > counters is to have a good enough approximation somewhere that this is
+> > not necessary.
+>
+> It usually doesn't walk all CPUs, only the CPUs that actually used
+> that mm_struct, by checking mm_struct's cpu_bitmap. I didn't check if
+> all arch uses that bitmap though.
+>
+> It's true that one CPU having its bit set on one mm_struct's
+> cpu_bitmap doesn't mean it updated the RSS counter so there will be
+> false positives, the false positive rate is low as schedulers don't
+> shuffle processes between processors randomly, and not every process
+> will be ran at a period.
+>
+> Also per my observation the reader side is much colder compared to
+> updater for /proc.
+>
 
--- 
-2.39.5
+Per my comment, the read thing happens a lot for mmap and munmap so it
+cannot be taken lightly. You can check yourself with bpftrace.
 
+While I can agree vast majority of processes are not very thread-heavy
+and vast majority of machines out there don't have hundreds of cores,
+this does have to behave sanely for the cases which *do* exhibit these
+conditions. For example a box with > 200 cores and 200+ threads to
+boot, all running on the entirety of the box.
 
+In your patch as posted fetching the value will force the walk *a lot*
+and is consequently a no-go. This aspect needs to be dealt with for
+the patchset to be ok. Otherwise few months down the road someone else
+will show up and complain about a new slowdown stemming from it.
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
