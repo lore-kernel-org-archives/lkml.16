@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F4126461E
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D6926463A
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097673; cv=none; b=N+06YAP+DnVbHCr5dUE4ErL03OmplmC0f6hb4ZVkulzpput0raxKFpdCQnjI2D9OkDinlfQno2oLTWeywqOlS2Btta/JEXEJ5LhSh+0mlIYOoKzMrRrk5t0/LPHfhwPejehwQ3CS0xcclTxeKNBNJzO6SDGJ3OSLjZGY9lJQb8Q=
+	t=1744097676; cv=none; b=HoRHKBAyoCNH75GcwghGV+/1e3nsJGjXG+r8rymoT5AM/DKFaHubp47l16xA8t9lvzHd/pHiG/g1CssUKXU5tJHeEk9lb4BpGU0sl1dwk48jcPE71+k1TmnIu0suGrqM0POtnlss6sfqdosn1WMFz68+qFS9+N3nG2Bc/ZQQPqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097673; c=relaxed/simple;
-	bh=F3ezxU5SGoiD8ddVs6HKsPqrpZe4wJCeXDRAqLCrgfE=;
+	s=arc-20240116; t=1744097676; c=relaxed/simple;
+	bh=ghSfrPXI2nSYR1VXeWBWO2imBz8Oggxn/25Nh3fSTVo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k4n6kKpydwPrW+eKITVaUk1yW8W4qNFrXa0p98gyWnyVs6/zefStLPXQGRit//DXEVwqr7aMa/M9yUD7tcwjmO7LoVkyF0rCSI/OkdwZxe1cQrakU9yE7Rp1ByNoDPh5M7n0ZUc8+2CojxH3DBRnIIErVTvoVhbwoN5q3TKGmQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gy0vGJzC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RDp5zN7DTnP4OcDwgUSxAMRVXnqkG2xA6drRnE+YenSJNBd4Wb8L0As2BHeq5o3gZsicn8JPDhnV6j8bYxBTSo203dLe4AwSkf9I3LIIJEHrK8gMJ8jIIpZ0Pic7uFaD5SOL52dI1OQtVkZXP5MqVOxLqYU4e425080azdNIxbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbCrWC8O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gy0vGJzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58274C4CEEA;
-	Tue,  8 Apr 2025 07:34:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbCrWC8O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286A6C4CEEA;
+	Tue,  8 Apr 2025 07:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744097672;
-	bh=F3ezxU5SGoiD8ddVs6HKsPqrpZe4wJCeXDRAqLCrgfE=;
+	s=k20201202; t=1744097675;
+	bh=ghSfrPXI2nSYR1VXeWBWO2imBz8Oggxn/25Nh3fSTVo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gy0vGJzC/pEAbHi72fmc/r6c6bIAohnAiPm+1QhM8tia49diFhfTHdkiweferQA99
-	 lPhNmf1xAMHtcoJ+9LZIQot38+uuf9yC89Tv2hbli2PlkEcUoNHTHf55SgxgKVm8Y+
-	 ZHokJjpdeWbwX0KTXvFxRBJ9nt6QP78z0U0Qp3jBVKu/oQISiIoaQekER0BklOeVFO
-	 /TZbTNQkAYXMxxNVPISMBP8+utPAZCvqHn8RlE2oTFv2KHw9Oneh+KxEBxAgZU5tQv
-	 Tuy/U/bjJyA01AW3EH4a4WsAp1SoK9pMZdA4AsK+16QNFGU0LKAc4AGHVfh1DinN31
-	 7oZhsQtfTIdrw==
+	b=kbCrWC8Owu23aMKrSZAaT70K6soBdil82f2Kxo6ZxkQ/fK/fmBy5jtbJK+PlL88wD
+	 OiRVTF2wbM/j35kg3DqQTABxamJjCKIOEC9gt+cuci3/6C2PghOtDZziMkDEfgezVG
+	 jPgnLJ4uH/lOET8DVrQWYJfcOOdYF4LNf0uiSSYwAOXQrJZVUZyCLVOL8im4ZOPqOj
+	 npCC5W3EnqlyzdlN1cmdlyNtCy2Oz1ZRE0ClIG4Pv8zvIM8AQLlUqXcPHxoh6Wg/pV
+	 ffgE3+sw63LQ7GNLp4ZDvJ7JMtMmb0DaAxzYh3R/hfWwoh8ZnR5OJAbYazk7a/X/FR
+	 6vdl9xpvJpw6w==
 From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 08 Apr 2025 09:34:10 +0200
-Subject: [PATCH 4/7] drm/tests: cmdline: Fix drm_display_mode memory leak
+Date: Tue, 08 Apr 2025 09:34:11 +0200
+Subject: [PATCH 5/7] drm/tests: modes: Fix drm_display_mode memory leak
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-4-996305a2e75a@kernel.org>
+Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-5-996305a2e75a@kernel.org>
 References: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 In-Reply-To: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -46,65 +46,128 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: Philipp Stanner <phasta@mailbox.org>, dri-devel@lists.freedesktop.org, 
  linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2008; i=mripard@kernel.org;
- h=from:subject:message-id; bh=F3ezxU5SGoiD8ddVs6HKsPqrpZe4wJCeXDRAqLCrgfE=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLlaI/Io94ij+L+3p8qlxSfMiVZb8Ocm/8nj9Br6wy
- TdvMaeGdJSyMIhxMciKKbLECJsviTs163UnG988mDmsTCBDGLg4BWAifhGMDK9THM2LM8+auAq+
- qd7altqqzxO084wxT+NL7zkOcr8V9jEy3Eq6eZ+xMc9w/tEbs7MP1HBE7avI+Nd+7HtAyLSdomt
- TGQE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3907; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=ghSfrPXI2nSYR1VXeWBWO2imBz8Oggxn/25Nh3fSTVo=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLlbavc39oB+hkVtpymzvM3ERwwtJqbD5cr2TJm2T2
+ nxgft6EjlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAEykQ4Thn3ZL5JqMHCYjTz+e
+ NYf7buY9WH3dPDtFON7Xdbbkstv54gx/eP+dutTgofEowF5m7sY9+2S2RwmeXRDHpPhhvaVO/xZ
+ PTgA=
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
 drm_analog_tv_mode() and its variants return a drm_display_mode that
-needs to be destroyed later one. The drm_test_cmdline_tv_options() test
-never does however, which leads to a memory leak.
+needs to be destroyed later one. The drm_modes_analog_tv tests never
+do however, which leads to a memory leak.
 
 Let's make sure it's freed.
 
 Closes: https://lore.kernel.org/dri-devel/a7655158a6367ac46194d57f4b7433ef0772a73e.camel@mailbox.org/
-Fixes: e691c9992ae1 ("drm/modes: Introduce the tv_mode property as a command-line option")
+Fixes: 4fcd238560ee ("drm/modes: Add a function to generate analog display modes")
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/gpu/drm/tests/drm_cmdline_parser_test.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tests/drm_modes_test.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/gpu/drm/tests/drm_cmdline_parser_test.c b/drivers/gpu/drm/tests/drm_cmdline_parser_test.c
-index 59c8408c453c2ef8f18c7c887b0405418e9e1f99..1cfcb597b088b4d159a5fb10a309338cb73abbe9 100644
---- a/drivers/gpu/drm/tests/drm_cmdline_parser_test.c
-+++ b/drivers/gpu/drm/tests/drm_cmdline_parser_test.c
-@@ -5,10 +5,11 @@
-  */
+diff --git a/drivers/gpu/drm/tests/drm_modes_test.c b/drivers/gpu/drm/tests/drm_modes_test.c
+index 6ed51f99e133c96db7c1deafea9be1c00eebe7a1..7ba646d87856f52f99b0f9bcfed0c31d848c798d 100644
+--- a/drivers/gpu/drm/tests/drm_modes_test.c
++++ b/drivers/gpu/drm/tests/drm_modes_test.c
+@@ -38,17 +38,21 @@ static int drm_test_modes_init(struct kunit *test)
  
- #include <kunit/test.h>
- 
- #include <drm/drm_connector.h>
-+#include <drm/drm_kunit_helpers.h>
- #include <drm/drm_modes.h>
- 
- static const struct drm_connector no_connector = {};
- 
- static void drm_test_cmdline_force_e_only(struct kunit *test)
-@@ -953,12 +954,19 @@ struct drm_cmdline_tv_option_test {
- };
- 
- static void drm_test_cmdline_tv_options(struct kunit *test)
+ static void drm_test_modes_analog_tv_ntsc_480i(struct kunit *test)
  {
- 	const struct drm_cmdline_tv_option_test *params = test->param_value;
--	const struct drm_display_mode *expected_mode = params->mode_fn(NULL);
-+	struct drm_display_mode *expected_mode;
- 	struct drm_cmdline_mode mode = { };
+ 	struct drm_test_modes_priv *priv = test->priv;
+ 	struct drm_display_mode *mode;
 +	int ret;
-+
-+	expected_mode = params->mode_fn(NULL);
-+	KUNIT_ASSERT_NOT_NULL(test, expected_mode);
-+
-+	ret = drm_kunit_add_mode_destroy_action(test, expected_mode);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
  
- 	KUNIT_EXPECT_TRUE(test, drm_mode_parse_command_line_for_connector(params->cmdline,
- 									  &no_connector, &mode));
- 	KUNIT_EXPECT_TRUE(test, mode.specified);
- 	KUNIT_EXPECT_EQ(test, mode.xres, expected_mode->hdisplay);
+ 	mode = drm_analog_tv_mode(priv->drm,
+ 				  DRM_MODE_TV_MODE_NTSC,
+ 				  13500 * HZ_PER_KHZ, 720, 480,
+ 				  true);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, mode);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	KUNIT_EXPECT_EQ(test, drm_mode_vrefresh(mode), 60);
+ 	KUNIT_EXPECT_EQ(test, mode->hdisplay, 720);
+ 
+ 	/* BT.601 defines hsync_start at 736 for 480i */
+ 	KUNIT_EXPECT_EQ(test, mode->hsync_start, 736);
+@@ -68,34 +72,45 @@ static void drm_test_modes_analog_tv_ntsc_480i(struct kunit *test)
+ 
+ static void drm_test_modes_analog_tv_ntsc_480i_inlined(struct kunit *test)
+ {
+ 	struct drm_test_modes_priv *priv = test->priv;
+ 	struct drm_display_mode *expected, *mode;
++	int ret;
+ 
+ 	expected = drm_analog_tv_mode(priv->drm,
+ 				      DRM_MODE_TV_MODE_NTSC,
+ 				      13500 * HZ_PER_KHZ, 720, 480,
+ 				      true);
+ 	KUNIT_ASSERT_NOT_NULL(test, expected);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, expected);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	mode = drm_mode_analog_ntsc_480i(priv->drm);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, mode);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	KUNIT_EXPECT_TRUE(test, drm_mode_equal(expected, mode));
+ }
+ 
+ static void drm_test_modes_analog_tv_pal_576i(struct kunit *test)
+ {
+ 	struct drm_test_modes_priv *priv = test->priv;
+ 	struct drm_display_mode *mode;
++	int ret;
+ 
+ 	mode = drm_analog_tv_mode(priv->drm,
+ 				  DRM_MODE_TV_MODE_PAL,
+ 				  13500 * HZ_PER_KHZ, 720, 576,
+ 				  true);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, mode);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	KUNIT_EXPECT_EQ(test, drm_mode_vrefresh(mode), 50);
+ 	KUNIT_EXPECT_EQ(test, mode->hdisplay, 720);
+ 
+ 	/* BT.601 defines hsync_start at 732 for 576i */
+ 	KUNIT_EXPECT_EQ(test, mode->hsync_start, 732);
+@@ -115,20 +130,27 @@ static void drm_test_modes_analog_tv_pal_576i(struct kunit *test)
+ 
+ static void drm_test_modes_analog_tv_pal_576i_inlined(struct kunit *test)
+ {
+ 	struct drm_test_modes_priv *priv = test->priv;
+ 	struct drm_display_mode *expected, *mode;
++	int ret;
+ 
+ 	expected = drm_analog_tv_mode(priv->drm,
+ 				      DRM_MODE_TV_MODE_PAL,
+ 				      13500 * HZ_PER_KHZ, 720, 576,
+ 				      true);
+ 	KUNIT_ASSERT_NOT_NULL(test, expected);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, expected);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	mode = drm_mode_analog_pal_576i(priv->drm);
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
++	ret = drm_kunit_add_mode_destroy_action(test, mode);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
+ 	KUNIT_EXPECT_TRUE(test, drm_mode_equal(expected, mode));
+ }
+ 
+ static void drm_test_modes_analog_tv_mono_576i(struct kunit *test)
+ {
 
 -- 
 2.49.0
