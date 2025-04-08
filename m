@@ -1,571 +1,348 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691C27462
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8B31BCA07
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120629; cv=none; b=ezi26GW7zNkkX5dPBbeqfnD/IstlCI7hFj/kPmQzYHnBEpgc1g5dGb7C7qQPnNZ/EVqGlE/BQoJZbtx6Fuo5Ji/fP5dDsBBDYVsS+1luAI/e6CCnTH+ypuQgZBcTlHCvwVUq2zU4H1cXN+CqZ/q+qrd4M8O0upXFu8H8rfSudcQ=
+	t=1744120647; cv=none; b=J5Cif1cF+fGzEtyK/FMOq2IYQpa/yi0dwVAHGP8czRoy+BijeKzsI5EukuTpNpIi8rRZK94CVP87AcqJT0Fb+rS/aEjTDKH6l/4kkqx9wSU9fnG+zr5uIe3RuOVNCa622a2qvuUBUk9e3OZ/81+1tf87i+wwnepBi94xDMx7Yks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120629; c=relaxed/simple;
-	bh=2so92eGIuLP/Dz48O8WH4Wzz5lLMtSv7e/gqN2nblHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BaMOqQFc2W5me3anV4dirLeaxmy492gpzLAzfOB2Hr6dOwRrr3Cr7M9iqpRav9b7RJxfxIX8L10kv2L53HNTMfQYOhfpuv9UZw+fmlwJuR++lR360RnWBzhS//nIxwfTN7XIHWeHJMzsGjQVST4s3TfDJsXlBoenbg9wmZTs6IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zQMZDdlp; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744120647; c=relaxed/simple;
+	bh=MnIylkOCyO7VgIlJ9Yt/QeaX07sdPWPl15WLwsIwM1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NODuSp8W5fU6b6CLVlxAxOjuw7s/QzuMOp221raO3Mqjop/k1+JSmeb63/V1jx+yha6AX9ReQs0fPti9e00kxFmXmANzsjGm2FovlCdg5ldNDbWTfafy0PrY+turzuba7d6R1TMlfOvQmU4FDuNL4Lo6vzI/AmMHte6K4RXW5iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SqYZq+dZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VP6rSTAk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SqYZq+dZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VP6rSTAk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zQMZDdlp"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac25520a289so981457366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744120625; x=1744725425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eKjdH4Pw3NpQPLkg+gCbs76LHGbj5tkScdwQ0i1YzGA=;
-        b=zQMZDdlproWmSYuoyr3TRVkvE6oQJrUFM+F1je0Gfp/mzWBvym3oxxE24F+XzPRHyx
-         nYWx1I086PHSufzp2DlG21J0CCcpPK1GVppy62mPZ9NBcBxp1Jpv0PoTVYEg+SknyuRq
-         yo9MAUqhTkQV9NVc1sAly3SFK/pVFiu86OOvMw5H4gCGlRQ/ElK56m26Dw4QvXNidPc+
-         /ADtCNAd2VRUYKEtF8Gmm0NEnVlTk+uAXdEk/qKyiw1S6hxf527axHSc8AW6k/hcTcgG
-         Hno2WTTmq1IkVRXErHdaFSvkKX2Q9bluGeZ3CGS2uRS3PNeWeL3MW5h66IJ7N3TsjDCc
-         IRug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744120625; x=1744725425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eKjdH4Pw3NpQPLkg+gCbs76LHGbj5tkScdwQ0i1YzGA=;
-        b=ka+4TfuyN6FA+DigbU84cdli5DndCoGKmVqXZJSVycGiHCbbOmsfjSaxCkgNuE1TNa
-         ZksTaxqWZh8P/kvVL07+Zvih00uEZzkGEexzwaqEsZsNm4EjWGSEn81GlsCIiATG7m86
-         dWB8guY12kxNgyI6dLgQVfDbAOYCGYvl0AkhMbf1zWjafQh0rmR6QdSXiRpOkQuTeJda
-         lsfTADdN/m+SDuI1uyHKzg/wm0NNxQ5O207jOkqPH3TFMGTIGHVAcolu0uZ9BkqMJsqA
-         slU2BdSxotMWHqVqoyPeQLhfxKOOyTu5xiKc86fy91aF5f9VkMObCNLCfT9VecshC/ay
-         7exQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6JDxfU46dSrqa+HvYNkXDGqrZviuNMy7Z9ugpvz+zz4fziyUki1npZ0dyhdvEN3l9KB24zlRZsvXqhpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsdtZmGHGmhxCSiZBdUpsuj6mGOs9nl62Jy230AEAhYnfZC1UQ
-	xYNzOGc8VaawS7uTp9CQadNLaoyR6Jbmw7EfQy9ddEY3ZX0u/rRboA07XvSvbjJ28L6l0NgfFZd
-	Cr39gJPCWBrv90exR0SNAEL8MfFKDzrj9mb+j7w==
-X-Gm-Gg: ASbGncvN/QnD2+MF25pUpInYq/r+0Q9UQITlfnyT7XOyz8WtFE3SppaEavMj7Yl6EnZ
-	3l3COEh9O9oiu4Zthy/s4o9Xlmz5fRFlCl7grk0MlX9Slakq2NTCj9KcN4SgEnxPF+9FMmVO8HH
-	yfNy2BoHqYH9YwNty5YeTEVB9fWpUfrLx65rSwJ97wJuJ1tyLecQTYiTSi31qz
-X-Google-Smtp-Source: AGHT+IF48flZYNk+YO92lTcI4xK0KZJsxFwCMsBP9ivkrbDJj57LOF+fPF5jQfMsA9Cn6stG3kjzEOQY6ms+eoLQc1s=
-X-Received: by 2002:a17:906:f587:b0:ac1:e881:8997 with SMTP id
- a640c23a62f3a-ac7d6c9f74fmr1690319666b.3.1744120624595; Tue, 08 Apr 2025
- 06:57:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SqYZq+dZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VP6rSTAk";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SqYZq+dZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VP6rSTAk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6E5241F388;
+	Tue,  8 Apr 2025 13:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744120643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
+	b=SqYZq+dZ8ouwZX0Dr94LxcGgWkRJb+48XdmwF6KR5SnDhZPsaop01qTbgtZgqfN1haFJiL
+	9ABr2APArJ1O/ukOAWSUPAFm/1HacrltJvB+A6gkQD12cVxD1R6N9Y9pmpNRHZymKZoPhm
+	/a2g0QS7up8kZRpl139e3zNm2EJ+/Uc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744120643;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
+	b=VP6rSTAknTqlAyprqO2Jze+7x9fa+q1yhTNwagZpv+wRYBQyMNYaPaimIJZHYCKLu9pDSZ
+	/ZYSvH0kloivdgDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744120643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
+	b=SqYZq+dZ8ouwZX0Dr94LxcGgWkRJb+48XdmwF6KR5SnDhZPsaop01qTbgtZgqfN1haFJiL
+	9ABr2APArJ1O/ukOAWSUPAFm/1HacrltJvB+A6gkQD12cVxD1R6N9Y9pmpNRHZymKZoPhm
+	/a2g0QS7up8kZRpl139e3zNm2EJ+/Uc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744120643;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
+	b=VP6rSTAknTqlAyprqO2Jze+7x9fa+q1yhTNwagZpv+wRYBQyMNYaPaimIJZHYCKLu9pDSZ
+	/ZYSvH0kloivdgDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1475213A1E;
+	Tue,  8 Apr 2025 13:57:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fcXMA0Mr9WdbPAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 08 Apr 2025 13:57:23 +0000
+Message-ID: <05fa4ac7-db09-401d-8680-0d71112d2239@suse.de>
+Date: Tue, 8 Apr 2025 15:57:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122-add-mtk-isp-3-0-support-v8-0-a3d3731eef45@baylibre.com>
- <20250122-add-mtk-isp-3-0-support-v8-4-a3d3731eef45@baylibre.com> <b68208ea56f297fab0a0c290e73a8671366735b6.camel@mediatek.com>
-In-Reply-To: <b68208ea56f297fab0a0c290e73a8671366735b6.camel@mediatek.com>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Tue, 8 Apr 2025 15:56:51 +0200
-X-Gm-Features: ATxdqUFS9UWyQm5VlU8vEK9QeSLji9-pVMuKN2hnPjsQ_fZ62HhsLvXH6NYRKbg
-Message-ID: <CAEHHSvYcet16TrWRbE=nkyS-0jXNbB+=knL0zUKLbnqcYBaSpA@mail.gmail.com>
-Subject: Re: [PATCH v8 4/5] media: platform: mediatek: isp: add mediatek
- ISP3.0 camsv
-To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-Cc: "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, 
-	=?UTF-8?B?QW5keSBIc2llaCAo6Kyd5pm655qTKQ==?= <Andy.Hsieh@mediatek.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"mchehab@kernel.org" <mchehab@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"paul.elder@ideasonboard.com" <paul.elder@ideasonboard.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"fsylvestre@baylibre.com" <fsylvestre@baylibre.com>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
-	"pnguyen@baylibre.com" <pnguyen@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
+ LCD controller
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Zimmermann <tzimmrmann@suse.de>
+References: <20250408-st7571-v3-0-200693efec57@gmail.com>
+ <20250408-st7571-v3-2-200693efec57@gmail.com>
+ <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
+ <Z_Uin2dvmbantQU4@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <Z_Uin2dvmbantQU4@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[dt];
+	FREEMAIL_TO(0.00)[gmail.com,redhat.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,vger.kernel.org,suse.de];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Le jeu. 20 mars 2025 =C3=A0 03:18, CK Hu (=E8=83=A1=E4=BF=8A=E5=85=89) <ck.=
-hu@mediatek.com> a =C3=A9crit :
->
-> On Wed, 2025-01-22 at 14:59 +0100, Julien Stephan wrote:
-> > External email : Please do not click links or open attachments until yo=
-u have verified the sender or the content.
-> >
-> >
-> > From: Phi-bang Nguyen <pnguyen@baylibre.com>
-> >
-> > This driver provides a path to bypass the SoC ISP so that image data
-> > coming from the SENINF can go directly into memory without any image
-> > processing. This allows the use of an external ISP.
-> >
-> > Signed-off-by: Phi-bang Nguyen <pnguyen@baylibre.com>
-> > Signed-off-by: Florian Sylvestre <fsylvestre@baylibre.com>
-> > [Paul Elder fix irq locking]
-> > Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
-> > Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Co-developed-by: Julien Stephan <jstephan@baylibre.com>
-> > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-> > ---
->
-> [snip]
->
-> > +
-> > +void mtk_camsv_setup(struct mtk_cam_dev *cam_dev, unsigned int count,
-> > +                    u32 w, u32 h, u32 bpl, u32 mbus_fmt)
-> > +{
-> > +       const struct mtk_cam_conf *conf =3D cam_dev->conf;
-> > +       const struct mtk_cam_format_info *fmtinfo;
-> > +       struct mtk_cam_dev_buffer *buf;
-> > +       unsigned long flags;
-> > +       unsigned int i;
-> > +       u32 tmp;
-> > +
-> > +       for (i =3D 0; i < count; i++)
-> > +               mtk_camsv_fbc_inc(cam_dev);
->
-> I think you should call mtk_camsv_fbc_inc() only after mtk_camsv_update_b=
-uffers_add().
->
-> > +
-> > +       fmtinfo =3D mtk_cam_format_info_by_code(mbus_fmt);
-> > +
-> > +       mtk_camsv_tg_write(cam_dev, CAMSV_TG_SEN_MODE, conf->tg_sen_mod=
-e);
-> > +
-> > +       mtk_camsv_tg_write(cam_dev, CAMSV_TG_SEN_GRAB_PXL,
-> > +                            (w * fmtinfo->w_factor) << 16U);
-> > +
-> > +       mtk_camsv_tg_write(cam_dev, CAMSV_TG_SEN_GRAB_LIN, h << 16U);
-> > +
-> > +       /* YUV_U2S_DIS: disable YUV sensor unsigned to signed */
-> > +       mtk_camsv_tg_write(cam_dev, CAMSV_TG_PATH_CFG, 0x1000U);
-> > +
-> > +       /* Reset cam */
-> > +       mtk_camsv_write(cam_dev, CAMSV_SW_CTL, CAMSV_SW_RST);
-> > +       mtk_camsv_write(cam_dev, CAMSV_SW_CTL, 0x0U);
-> > +       mtk_camsv_write(cam_dev, CAMSV_SW_CTL, CAMSV_IMGO_RST_TRIG);
-> > +
-> > +       readl_poll_timeout_atomic(cam_dev->regs + CAMSV_SW_CTL, tmp,
-> > +                                 (tmp =3D=3D (CAMSV_IMGO_RST_TRIG |
-> > +                                          CAMSV_IMGO_RST_ST)), 10, 200=
-);
-> > +
-> > +       mtk_camsv_write(cam_dev, CAMSV_SW_CTL, 0x0U);
-> > +
-> > +       mtk_camsv_write(cam_dev, CAMSV_INT_EN, INT_ST_MASK_CAMSV);
-> > +
-> > +       mtk_camsv_write(cam_dev, CAMSV_MODULE_EN,
-> > +                         conf->module_en | fmtinfo->module_en_pak);
-> > +       mtk_camsv_write(cam_dev, CAMSV_FMT_SEL, fmtinfo->fmt_sel);
-> > +       mtk_camsv_write(cam_dev, CAMSV_PAK, fmtinfo->pak);
-> > +
-> > +       mtk_camsv_img0_write(cam_dev, CAMSV_IMGO_SV_XSIZE, bpl - 1U);
-> > +       mtk_camsv_img0_write(cam_dev, CAMSV_IMGO_SV_YSIZE, h - 1U);
-> > +
-> > +       mtk_camsv_img0_write(cam_dev, CAMSV_IMGO_SV_STRIDE,
-> > +                              fmtinfo->imgo_stride | bpl);
-> > +
-> > +       mtk_camsv_img0_write(cam_dev, CAMSV_IMGO_SV_CON, conf->imgo_con=
-);
-> > +       mtk_camsv_img0_write(cam_dev, CAMSV_IMGO_SV_CON2, conf->imgo_co=
-n2);
-> > +
-> > +       /* Set buf addr */
-> > +       spin_lock_irqsave(&cam_dev->buf_list_lock, flags);
-> > +       buf =3D list_first_entry_or_null(&cam_dev->buf_list,
-> > +                                      struct mtk_cam_dev_buffer,
-> > +                                      list);
-> > +       if (buf)
-> > +               mtk_camsv_update_buffers_add(cam_dev, buf);
-> > +       spin_unlock_irqrestore(&cam_dev->buf_list_lock, flags);
-> > +
-> > +       /* CMOS_EN first */
-> > +       mtk_camsv_tg_write(cam_dev, CAMSV_TG_SEN_MODE,
-> > +                            mtk_camsv_tg_read(cam_dev, CAMSV_TG_SEN_MO=
-DE) |
-> > +                            CAMSV_TG_SEN_MODE_CMOS_EN);
-> > +
-> > +       /* finally, CAMSV_MODULE_EN : IMGO_EN */
-> > +       mtk_camsv_write(cam_dev, CAMSV_MODULE_EN,
-> > +                         mtk_camsv_read(cam_dev, CAMSV_MODULE_EN) |
-> > +                         CAMSV_MODULE_EN_IMGO_EN);
-> > +}
-> > +
->
-> [snip]
->
-> > +
-> > +static int mtk_camsv_runtime_resume(struct device *dev)
-> > +{
-> > +       struct mtk_cam_dev *cam_dev =3D dev_get_drvdata(dev);
-> > +       struct vb2_queue *vbq =3D &cam_dev->vdev.vbq;
-> > +       struct mtk_cam_dev_buffer *buf;
-> > +       unsigned long flags =3D 0;
-> > +       int ret;
-> > +
-> > +       ret =3D clk_bulk_prepare_enable(cam_dev->num_clks, cam_dev->clk=
-s);
-> > +       if (ret) {
-> > +               dev_err(dev, "failed to enable clock:%d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       if (vb2_is_streaming(vbq)) {
-> > +
-> > +               spin_lock_irqsave(&cam_dev->buf_list_lock, flags);
-> > +               buf =3D list_first_entry_or_null(&cam_dev->buf_list,
-> > +                                              struct mtk_cam_dev_buffe=
-r,
-> > +                                              list);
-> > +               if (buf)
-> > +                       mtk_camsv_update_buffers_add(cam_dev, buf);
->
-> I don't know, when suspend, the register value would be kept or not.
-> If register is not kept, I think you should re-program all register in mt=
-k_camsv_setup().
-> But it seems it's not necessary, so the register is kept and you don't ne=
-ed to set register again.
-> So this mtk_camsv_update_buffers_add() is redundant.
->
-> > +
-> > +               spin_unlock_irqrestore(&cam_dev->buf_list_lock, flags);
-> > +
-> > +               /* Stream on the sub-device */
-> > +               ret =3D v4l2_subdev_enable_streams(&cam_dev->subdev,
-> > +                                                cam_dev->subdev_pads[M=
-TK_CAM_CIO_PAD_VIDEO].index,
-> > +                                                BIT(0));
-> > +
-> > +               if (ret)
-> > +                       goto fail_no_stream;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +fail_no_stream:
-> > +       mtk_cam_vb2_return_all_buffers(cam_dev, VB2_BUF_STATE_QUEUED);
-> > +       return ret;
-> > +}
-> > +
-> > +static const struct dev_pm_ops mtk_camsv_pm_ops =3D {
-> > +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> > +                               pm_runtime_force_resume)
-> > +       SET_RUNTIME_PM_OPS(mtk_camsv_runtime_suspend,
-> > +                          mtk_camsv_runtime_resume, NULL)
-> > +};
-> > +#endif
-> > +
->
-> [snip]
->
-> > +/* -------------------------------------------------------------------=
-----------
-> > + * Format Information
-> > + */
-> > +
-> > +static const struct mtk_cam_format_info mtk_cam_format_info[] =3D {
-> > +       {
-> > +               .fourcc =3D V4L2_PIX_FMT_SBGGR8,
-> > +               .code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
-> > +               .bpp =3D 8,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_8
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_8,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGBRG8,
-> > +               .code =3D MEDIA_BUS_FMT_SGBRG8_1X8,
-> > +               .bpp =3D 8,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_8
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_8,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGRBG8,
-> > +               .code =3D MEDIA_BUS_FMT_SGRBG8_1X8,
-> > +               .bpp =3D 8,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_8
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_8,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SRGGB8,
-> > +               .code =3D MEDIA_BUS_FMT_SRGGB8_1X8,
-> > +               .bpp =3D 8,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_8
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_8,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SBGGR10,
->
-> In stream_out_fmts[], it does not declare V4L2_PIX_FMT_SBGGR10.
-> So you may remove it in mtk_cam_format_info[], or add it in stream_out_fm=
-ts[].
->
-> > +               .code =3D MEDIA_BUS_FMT_SBGGR10_1X10,
-> > +               .bpp =3D 10,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_10
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_10,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGBRG10,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SGBRG10_1X10,
-> > +               .bpp =3D 10,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_10
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_10,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGRBG10,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SGRBG10_1X10,
-> > +               .bpp =3D 10,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_10
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_10,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SRGGB10,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SRGGB10_1X10,
-> > +               .bpp =3D 10,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_10
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_10,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SBGGR12,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SBGGR12_1X12,
-> > +               .bpp =3D 12,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_12
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_12,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGBRG12,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SGBRG12_1X12,
-> > +               .bpp =3D 12,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_12
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_12,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SGRBG12,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SGRBG12_1X12,
-> > +               .bpp =3D 12,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_12
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_12,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_SRGGB12,
->
-> Ditto.
->
-> > +               .code =3D MEDIA_BUS_FMT_SRGGB12_1X12,
-> > +               .bpp =3D 12,
-> > +               .w_factor =3D 1,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_EN,
-> > +               .pak =3D CAMSV_PAK_PAK_MODE_RAW_12
-> > +                       | CAMSV_PAK_PAK_DBL_MODE_2_PIXELS,
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_TG1_FMT_RAW_12,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_32,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_UYVY,
-> > +               .code =3D MEDIA_BUS_FMT_UYVY8_1X16,
-> > +               .bpp =3D 16,
-> > +               .w_factor =3D 2,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_SEL,
-> > +               .pak =3D 0, /* ignored */
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_IMGO_BUS_SIZE_16
-> > +                       | CAMSV_FMT_SEL_TG1_FMT_YUV422,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_16,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_VYUY,
-> > +               .code =3D MEDIA_BUS_FMT_VYUY8_1X16,
-> > +               .bpp =3D 16,
-> > +               .w_factor =3D 2,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_SEL,
-> > +               .pak =3D 0, /* ignored */
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_IMGO_BUS_SIZE_16
-> > +                       | CAMSV_FMT_SEL_TG1_FMT_YUV422,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_16,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_YUYV,
-> > +               .code =3D MEDIA_BUS_FMT_YUYV8_1X16,
-> > +               .bpp =3D 16,
-> > +               .w_factor =3D 2,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_SEL,
-> > +               .pak =3D 0, /* ignored */
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_IMGO_BUS_SIZE_16
-> > +                       | CAMSV_FMT_SEL_TG1_FMT_YUV422,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_16,
-> > +       }, {
-> > +               .fourcc =3D V4L2_PIX_FMT_YVYU,
-> > +               .code =3D MEDIA_BUS_FMT_YVYU8_1X16,
-> > +               .bpp =3D 16,
-> > +               .w_factor =3D 2,
-> > +               .module_en_pak =3D CAMSV_MODULE_EN_PAK_SEL,
-> > +               .pak =3D 0, /* ignored */
-> > +               .fmt_sel =3D CAMSV_FMT_SEL_IMGO_BUS_SIZE_16
-> > +                       | CAMSV_FMT_SEL_TG1_FMT_YUV422,
-> > +               .imgo_stride =3D CAMSV_IMGO_SV_STRIDE_BUS_SIZE_EN
-> > +                       | CAMSV_IMGO_SV_STRIDE_BUS_SIZE_16,
-> > +       },
-> > +};
-> > +
->
-> [snip]
->
-> > +
-> > +static void mtk_cam_vb2_buf_queue(struct vb2_buffer *vb)
-> > +{
-> > +       struct mtk_cam_dev *cam =3D vb2_get_drv_priv(vb->vb2_queue);
-> > +       struct mtk_cam_dev_buffer *buf =3D to_mtk_cam_dev_buffer(vb);
-> > +       unsigned long flags;
-> > +
-> > +       /* Add the buffer into the tracking list */
-> > +       spin_lock_irqsave(&cam->buf_list_lock, flags);
-> > +       if (vb2_start_streaming_called(vb->vb2_queue) && list_empty(&ca=
-m->buf_list))
-> > +               mtk_camsv_update_buffers_add(cam, buf);
-> > +
-> > +       list_add_tail(&buf->list, &cam->buf_list);
-> > +       spin_unlock_irqrestore(&cam->buf_list_lock, flags);
-> > +       if (vb2_start_streaming_called(vb->vb2_queue))
-> > +               mtk_camsv_fbc_inc(cam);
->
-> I think you should call mtk_camsv_fbc_inc() just after mtk_camsv_update_b=
-uffers_add();
->
+Hi
 
-Hi CK,
+Am 08.04.25 um 15:20 schrieb Marcus Folkesson:
+[...]
+>>
+>>> +static int st7571_set_pixel_format(struct st7571_device *st7571,
+>>> +				   u32 pixel_format)
+>>> +{
+>>> +	switch (pixel_format) {
+>>> +	case DRM_FORMAT_C1:
+>>> +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_BLACKWHITE);
+>>> +	case DRM_FORMAT_C2:
+>>> +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_GRAY);
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>> These should be DRM_FORMAT_R1 and DRM_FORMAT_R2 and not C{1,2}. The former
+>> is for displays have a single color (i.e: grey) while the latter is when a
+>> pixel can have different color, whose values are defined by a CLUT table.
+>>
+> I see.
+> Does fbdev only works with CLUT formats? I get this error when I switch
+> to DRM_FORMAT_R{1,2}:
+>
+> [drm] Initialized st7571 1.0.0 for 0-003f on minor 0
+> st7571 0-003f: [drm] format C1   little-endian (0x20203143) not supported
+> st7571 0-003f: [drm] No compatible format found
+> st7571 0-003f: [drm] *ERROR* fbdev: Failed to setup emulation (ret=-22)
 
-Is there any particular reason? I moved it at the bottom, to reduce
-the spinlock region as you requested in v7.. OR maybe I am missing
-something ?
+For testing purposes, you can add the _R formats to the switch case at
 
-Cheers
-Julien
+https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/drm_fb_helper.c#L1246
 
-> > +}
-> > +
->
-> [snip]
->
-> > +
-> > +static int mtk_cam_vidioc_try_fmt(struct file *file, void *fh,
-> > +                                 struct v4l2_format *f)
-> > +{
-> > +       struct mtk_cam_video_device *vdev =3D file_to_mtk_cam_video_dev=
-ice(file);
-> > +       struct v4l2_pix_format_mplane *pix_mp =3D &f->fmt.pix_mp;
-> > +       const struct mtk_cam_format_info *fmtinfo;
-> > +
-> > +       /* Validate pixelformat */
-> > +       if (!mtk_cam_dev_find_fmt(vdev->desc, pix_mp->pixelformat))
-> > +               pix_mp->pixelformat =3D vdev->desc->fmts[0];
->
-> In [1], it says return EINVAL when driver not support this buffer format.
->
-> [1] https://docs.kernel.org/userspace-api/media/v4l/vidioc-g-fmt.html#des=
-cription
->
-> Regards,
-> CK
->
-> > +
-> > +       pix_mp->width =3D clamp_val(pix_mp->width, IMG_MIN_WIDTH, IMG_M=
-AX_WIDTH);
-> > +       pix_mp->height =3D clamp_val(pix_mp->height, IMG_MIN_HEIGHT,
-> > +                                  IMG_MAX_HEIGHT);
-> > +
-> > +       pix_mp->num_planes =3D 1;
-> > +
-> > +       fmtinfo =3D mtk_cam_format_info_by_fourcc(pix_mp->pixelformat);
-> > +       calc_bpl_size_pix_mp(fmtinfo, pix_mp);
-> > +
-> > +       /* Constant format fields */
-> > +       pix_mp->colorspace =3D V4L2_COLORSPACE_SRGB;
-> > +       pix_mp->field =3D V4L2_FIELD_NONE;
-> > +       pix_mp->ycbcr_enc =3D V4L2_YCBCR_ENC_DEFAULT;
-> > +       pix_mp->quantization =3D V4L2_QUANTIZATION_DEFAULT;
-> > +       pix_mp->xfer_func =3D V4L2_XFER_FUNC_DEFAULT;
-> > +
-> > +       return 0;
-> > +}
-> > +
+and see how it goes.
+
+Best regards
+Thomas
+
 >
 >
-> ************* MEDIATEK Confidentiality Notice ********************
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be
-> conveyed only to the designated recipient(s). Any use, dissemination,
-> distribution, printing, retaining or copying of this e-mail (including it=
-s
-> attachments) by unintended recipient(s) is strictly prohibited and may
-> be unlawful. If you are not an intended recipient of this e-mail, or beli=
-eve
-> that you have received this e-mail in error, please notify the sender
-> immediately (by replying to this e-mail), delete any and all copies of
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+>> ...
+>>
+>>> +
+>>> +static const uint32_t st7571_primary_plane_formats[] = {
+>>> +	DRM_FORMAT_C1,
+>>> +	DRM_FORMAT_C2,
+>>> +};
+>>> +
+>> I would add a DRM_FORMAT_XRGB8888 format. This will allow your display to
+>> be compatible with any user-space. Your st7571_fb_blit_rect() can then do
+>> a pixel format conversion from XRGB8888 to the native pixel format.
+> This were discussed in v2, but there were limitations in the helper
+> functions that we currently have.
+>
+> I will look into how this could be implemented in a generic way, but maybe that is
+> something for a follow up patch?
+>
+>
+> [...]
+>>> +
+>>> +static const struct drm_plane_helper_funcs st7571_primary_plane_helper_funcs = {
+>>> +	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+>>> +	.atomic_check = st7571_primary_plane_helper_atomic_check,
+>>> +	.atomic_update = st7571_primary_plane_helper_atomic_update,
+>>> +};
+>> Maybe you want an .atomic_disable callback that clears your screen ?
+> Good point, yes, I will add that.
+>
+>>
+>>> +
+>>> +/*
+>>> + * CRTC
+>>> + */
+>>> +
+>>> +static const struct drm_crtc_helper_funcs st7571_crtc_helper_funcs = {
+>>> +	.atomic_check = drm_crtc_helper_atomic_check,
+>> I think you could have an .mode_valid callback that just checks the fixed mode.
+> Got it.
+>
+>>> +/*
+>>> + * Encoder
+>>> + */
+>>> +
+>>> +static const struct drm_encoder_funcs st7571_encoder_funcs = {
+>>> +	.destroy = drm_encoder_cleanup,
+>>> +};
+>> I recommend to have an encoder .atomic_{en,dis}able callbacks to init and turn
+>> off your display respectively. That way, the driver can call st7571_lcd_init()
+>> only when the display is going to be used instead of at probe time.
+> I will look into this as well.
+>
+>> ...
+>>
+>>> +static enum drm_mode_status st7571_mode_config_mode_valid(struct drm_device *dev,
+>>> +						       const struct drm_display_mode *mode)
+>>> +{
+>>> +	struct st7571_device *st7571 = drm_to_st7571(dev);
+>>> +
+>>> +	return drm_crtc_helper_mode_valid_fixed(&st7571->crtc, mode, &st7571->mode);
+>>> +}
+>> The fact that you are calling a drm_crtc_helper here is an indication that probably
+>> this should be done in a struct drm_crtc_helper_funcs .mode_valid callback instead,
+>> as mentioned above.
+> I will move it to drm_crtc_helper_funcs.
+>
+>>> +
+>>> +static const struct drm_mode_config_funcs st7571_mode_config_funcs = {
+>>> +	.fb_create = drm_gem_fb_create_with_dirty,
+>>> +	.mode_valid = st7571_mode_config_mode_valid,
+>> And that way you could just drop this handler.
+> Yep, thanks.
+>
+>>> +	.atomic_check = drm_atomic_helper_check,
+>>> +	.atomic_commit = drm_atomic_helper_commit,
+>>> +};
+>>> +
+>> ...
+>>
+>>> +static int st7571_probe(struct i2c_client *client)
+>>> +{
+>>> +	struct st7571_device *st7571;
+>>> +	struct drm_device *dev;
+>>> +	int ret;
+>>> +
+>>> +	st7571 = devm_drm_dev_alloc(&client->dev, &st7571_driver,
+>>> +				    struct st7571_device, dev);
+>>> +	if (IS_ERR(st7571))
+>>> +		return PTR_ERR(st7571);
+>>> +
+>>> +	dev = &st7571->dev;
+>>> +	st7571->client = client;
+>>> +	i2c_set_clientdata(client, st7571);
+>>> +
+>>> +	ret = st7571_parse_dt(st7571);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	st7571->mode = st7571_mode(st7571);
+>>> +
+>>> +	/*
+>>> +	 * The chip nacks some messages but still works as expected.
+>>> +	 * If the adapter does not support protocol mangling do
+>>> +	 * not set the I2C_M_IGNORE_NAK flag at the expense * of possible
+>>> +	 * cruft in the logs.
+>>> +	 */
+>>> +	if (i2c_check_functionality(client->adapter, I2C_FUNC_PROTOCOL_MANGLING))
+>>> +		st7571->ignore_nak = true;
+>>> +
+>>> +	st7571->regmap = devm_regmap_init(&client->dev, &st7571_regmap_bus,
+>>> +					   client, &st7571_regmap_config);
+>>> +	if (IS_ERR(st7571->regmap)) {
+>>> +		dev_err(&client->dev, "Failed to initialize regmap\n");
+>> If you use dev_err_probe(), you can give some indication to users about
+>> what failed. It prints messages in the /sys/kernel/debug/devices_deferred
+>> debugfs entry.
+> Got it, thanks.
+>
+>>> +
+>>> +static void st7571_remove(struct i2c_client *client)
+>>> +{
+>>> +	struct st7571_device *st7571 = i2c_get_clientdata(client);
+>>> +
+>>> +	drm_dev_unplug(&st7571->dev);
+>> I think you are missing a drm_atomic_helper_shutdown() here.
+> This is a change for v3. As the device has been unplugged already, it
+> won't do anything, so I removed it.
+>
+> Isn't it right to do so?
+>
+>
+>> And also a struct i2c_driver .shutdown callback to call to
+>> drm_atomic_helper_shutdown() as well.
+>>
+>> -- 
+>> Best regards,
+>>
+>> Javier Martinez Canillas
+>> Core Platforms
+>> Red Hat
+>>
+> Best regards,
+> Marcus Folkesson
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
