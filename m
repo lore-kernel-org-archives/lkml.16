@@ -1,118 +1,146 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69836216396;
-	Tue,  8 Apr 2025 18:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879C71DE4C8;
+	Tue,  8 Apr 2025 18:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744135495; cv=none; b=AS4tKqiuiOZlrvvRm6EbA71m+azIxN2mLCUtGDNSmWDvoRzzNS4D4yyB5w54Llv73hGOS27+r9ffzdE9crAi9llZPBfa0DJqaUyZmsXCWRYjG5YgS/Qw6fWlZg6PyZF/23jCrv4Jg5nTsvrcBFg61DFfTQy1JY8ghnGQoWFLBf4=
+	t=1744135574; cv=none; b=XwMo0OKyA/LqhssSxotnndtgVOZsYXv6SwQJ+BR9lfoQNtPL9gIMSnOuEI0wbbWxlSlh4JzhZnh0ks8pbwXdvQW6ZeWOgD14c/0DKhNAoTlbPHJR9xzfejR7+H1ERWTj8B/Q5oZaZLvB8M2lcIY575ZgEa8js4dRCP7ihl7Gug0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744135495; c=relaxed/simple;
-	bh=WkJ8XS18rE5C0eRyAl8hfeBNNEHeDURwT6xhMR8HWTk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j+4E0togY3Xp1oFH9+Tw6QxuiOeyf5PGkCMnJoeZmNhclyRfgLdX7MceI8o9GAAmt/YgFCygb/4dIlN3n54zQ93hcanR8hL6c2yGsR/6C1/eH8UALb/756yUamySpGCwafwmXWVB9dwau/0yyNjqzy4vyDC6xiSlKp9H9jwuISg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwJqyP4F; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744135574; c=relaxed/simple;
+	bh=MEM3eLWv8YwIwPSTBm2ajJ9VUi67Pzml5rfhOmKhVo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q5fyaLTtMTGXLPjU2+EIG2KsI3MdSyWYBhAOc4Y1ruhtquTeOYwDyIXywT5Y6TgrDvkmA3mY69eMigtg4wB0nzsXiYgcWpBqzItIRt2rPmPzQ7GPgtRmLcc78/RcLuBYTMWBUX5lDA4xI5JwCMxPe2HUQedj+x4FD7MgIDoEsLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwJqyP4F"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf680d351so40924065e9.0;
-        Tue, 08 Apr 2025 11:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744135492; x=1744740292; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YcOUVWVG1AAUU/kF4IJvSl+9zDVrwqBtFVUW2rq0rjY=;
-        b=NwJqyP4F5/KKlbsNQq5uw7Nb4vpPvyz7ZWTFa+FblNBsJEbLyTmZEBmgrKbfFzuyGo
-         t5f8Dix8agpo74a23wKYnZMrgyc8GgsLiWHRqmjpRvdbhVGWYVsaYCyFiJMwP6UPIbU4
-         VwAq4s21LlR7+0ijkfNTvZ3U1cFYF8e6fUtXO6HfZ4Ere1znpt5srk9V8dd9cvbqL9X8
-         jerMfo1LvwHS7Lu9nBV7DtMK3yBm8MZ9aesN3SprjAdVAV+JxzNUJsnbS2NvlJ2RASdQ
-         BtAlckBbYSJ+McSV4Vvc7HTs8DDXH+EjmOa4n48rAlhxbyteYkI/YPAs07OIr3eHKkAA
-         Laww==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac7bd86f637so1060650566b.1;
+        Tue, 08 Apr 2025 11:06:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744135492; x=1744740292;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YcOUVWVG1AAUU/kF4IJvSl+9zDVrwqBtFVUW2rq0rjY=;
-        b=vRFM4ocGzCqEyA3b4iN4dw3Cs3P939eotUhCsk7iV8RqZk4lQ2DUxzte54X8cU31VL
-         cGCasOeZT1XUifhHqcMCjDEfeFp2mi7+pyDvAPenmqVCySrkFKStykgUpmtx12Gtg5Ej
-         B8cf7Ml5sH4EdqGsQIIAtGVoAH/9uHkdOIrzLj6vp3JF0+xvQdkJ+vOS/1hIaQfp39lW
-         cM93THJ/IXYgIeRmy/Qg/o3ipqM5z9O8ajeJUP1MgpjKeD2NmpiPm1XL6oC9JfRfleUc
-         FWCjZaFPdFjPjpBi2A7GinVowLNUGkhhH7D0j2oojRKNGD4VH82jD2sm8e1dfAz+6fT1
-         MdLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrbRCWs7q+l1tAu9bXG8cFi1JzRWaCQHLTYwk7qabEsIoscXVFavkH9IUawyOdtgg4oG1M0381cPFnh08=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkgPZBKVF2TVh3wIoSbKW8RQV792L+9IYsGZHmbcys9hyW3F/A
-	kIXiJ7zP5FXr/PZY3nNKwO2NU0LHfBabukGTI4wdfQgJhVUhtDHK
-X-Gm-Gg: ASbGnctIUfedsfgc6xEolN8vVlbkZAAY7SDX2qzE9R97zUvlt3ZA0fq8xwnlHETKvbf
-	RSfBSQI3lVmnEsvrvSfUNxU29ujtbZU7gWmAcDs0yG2oVmu7koQY0eX/6ylxPQI4ENC4ivOZ5YN
-	iK6rmE8TCIkfEcoBK8/qigo6aEcdDtlW09aJK0NK27Az6TZXiZi7CZ5LvfsLIuSJZwKcGBRCHW9
-	2TbfiHCH8Sp96QX1QgPgWWhWHzE6WVJxhyc3UNaYyqmJomMJHoa3jGM3BEx0lpSThqndZ1tf0mj
-	j5ALS85XzHRRKM7Q+RiuLHji9F5aP+lgxGF/hBZ97phD1g==
-X-Google-Smtp-Source: AGHT+IFW4ID2IVLIJJSO6AIqnzG5sx6n8ibzh5IQ9vxzEszMDqEO1Q5l1iqmcRSrWTuGE6wSfEs9sg==
-X-Received: by 2002:a05:6000:2289:b0:39c:30f7:a599 with SMTP id ffacd0b85a97d-39d820f7f4emr4042317f8f.18.1744135491468;
-        Tue, 08 Apr 2025 11:04:51 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:5b45:5642:beb0:688f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec147c9dbsm176684525e9.0.2025.04.08.11.04.50
+        d=1e100.net; s=20230601; t=1744135571; x=1744740371;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PQ7WvhSaBKz65YTYircyVA6dGRl86ZCozAY66YUdD6U=;
+        b=p2dBEAmDaZb+sL8dYlnS9HDQDRRDSgz6M5TELKVIY1OOxQVp48zs2hNXtM2UYMGwbo
+         7C7WR/OyxaCdJax9Hb2v3K4PM3no184H6F9Pli+4L9LeR6HN92yRdggsclwpzO1/cp40
+         vJQrimUxmWRyvKlXxtmI5SiISGt+3NNfp9K7GeDe7oW4Uo5KfNxVDIzqjHWnVoCnBIaq
+         n842+NZliGet4qLsTEADjVnlqGTDlPzPNpPwb+9x2lMAQDqBZ/RmEwBsdQmdopaphPfw
+         plURmBkq3KBCBg8+fQaakboNaXLdoL2XvX2YsOdI55nKbNdc9n/t22Euqj/BxT9KAjIW
+         GQFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVArnbb7nflEADh4FvsqwWWrshQpSkOHQh438nv0lVrFwbhmd2MwD5TAY1IcqqlqQbDxo8Ju/o1@vger.kernel.org, AJvYcCW7D//d3afnC+YU4A90FtnymMUwotfBImwbWrzHeGyGnZS+KW8DVxy4t7HXccjIn+tX9q1Ej8ICZdfCLwU=@vger.kernel.org, AJvYcCWff7d1Wd3eS7RDpSfS0E1owFp1epqftT3NHJhMIPMSEO4rxvG7HNhgKbHULtS2IzPK2w+BI2M34mF+x29Ud/rx8PpR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPjdwUUsymngLdIjj9rseb4OVSQ36+ZtysNq0u4lHFvNnPYckS
+	47jF97FB2oX4k6m9ION9sog6xQmGJIs0jwjlQDbMH9lWh+9sy7P1
+X-Gm-Gg: ASbGncuInjuLw+t41CG06lS8lI2EGGTjLUjjPZfIc+MCmQtO1qx7Kpw2bLNw0bXEgjo
+	klM9pWm3RbJkeLgY3hg0kVGNLXNf40s8o3x7LvRY8GIbwfW/obkaj8tDTFZM8yn0Vihci7biRzD
+	4PY5vtlUX9crHkHapHwBbf9HGX2JsJOpw/XgcdB3lym76qpBQ9tbN1PkJUsDhDyZjnPBFr8KY21
+	ExvxP/7XPvP7fEA8vyqY+MFACo1uIaxTmr2v1jnQjlAB+vdrZHeZFB2emSbWaMzLnRmtsyMOWUY
+	tAJiu7sqtAoLHxXRs736LHm7uaDId+O/K6rS
+X-Google-Smtp-Source: AGHT+IE7XyApbMkoq5dPAWGYwa2E3548c5jkf6HBcy+ewPwX4TKbincTREYaKorp7jTpFIKpzJxkQw==
+X-Received: by 2002:a17:907:7f0b:b0:ac7:b8d3:df9c with SMTP id a640c23a62f3a-aca9bfb1039mr3878766b.1.1744135570441;
+        Tue, 08 Apr 2025 11:06:10 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:73::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfee46fbsm952504766b.75.2025.04.08.11.06.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 11:04:51 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chui-hao.chiu@mediatek.com,
-	Bo.Jiao@mediatek.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH RESEND] wifi: mt76: mt7996: avoid null deref in mt7996_stop_phy()
-Date: Tue,  8 Apr 2025 19:04:48 +0100
-Message-Id: <20250408180448.19274-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Tue, 08 Apr 2025 11:06:10 -0700 (PDT)
+Date: Tue, 8 Apr 2025 11:06:07 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	horms@kernel.org, kernel-team@meta.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	ncardwell@google.com, netdev@vger.kernel.org, pabeni@redhat.com,
+	rostedt@goodmis.org, song@kernel.org, yonghong.song@linux.dev
+Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for
+ tcp_sendmsg_locked()
+Message-ID: <Z/Vlj7KPkwgEgsZu@gmail.com>
+References: <Z/VWUVk+mHXTENms@gmail.com>
+ <20250408171231.35951-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408171231.35951-1-kuniyu@amazon.com>
 
-In mt7996_stop_phy() the mt7996_phy structure is 
-dereferenced before the null sanity check which could 
-lead to a null deref.
+On Tue, Apr 08, 2025 at 10:12:14AM -0700, Kuniyuki Iwashima wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Tue, 8 Apr 2025 10:01:05 -0700
+> > On Tue, Apr 08, 2025 at 09:16:51AM -0600, David Ahern wrote:
+> > > On 4/8/25 8:27 AM, Breno Leitao wrote:
+> > > > 
+> > > > 	SEC("tracepoint/tcp/tcp_sendmsg_locked")
+> > > 
+> > > Try `raw_tracepoint/tcp/tcp_sendmsg_locked`.
+> > > 
+> > > This is the form I use for my tracepoint based packet capture (not tied
+> > > to this tracepoint, but traces inside our driver) and it works fine.
+> > 
+> > Thanks. I was not able to get this crashing as well. In fact, the
+> > following program fails to be loaded:
+> > 
+> > 	SEC("raw_tracepoint/tcp/tcp_sendmsg_locked")
+> 
+> Try SEC("tp_btf/tcp_sendmsg_locked") and access the raw argument
+> (struct sk_buff *skb) instead of bpf_raw_tracepoint_args.
 
-Fix by moving the dereference operation after the 
-sanity check.
+Nice, I was able to crash the host, with the following code:
 
-Fixes: 69d54ce7491d ("wifi: mt76: mt7996: switch to single multi-radio wiphy")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/net/wireless/mediatek/mt76/mt7996/main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+	SEC("tp_btf/tcp_sendmsg_locked")
+	int BPF_PROG(tcp_sendmsg_locked, struct sock *sk, struct msghdr *msg, struct sk_buff *skb, int size_goal)
+	{
+		bpf_printk("skb->len %d\n", skb->len);
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-index 66575698aef1..88e013577c0d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-@@ -68,11 +68,13 @@ static int mt7996_start(struct ieee80211_hw *hw)
- 
- static void mt7996_stop_phy(struct mt7996_phy *phy)
- {
--	struct mt7996_dev *dev = phy->dev;
-+	struct mt7996_dev *dev;
- 
- 	if (!phy || !test_bit(MT76_STATE_RUNNING, &phy->mt76->state))
- 		return;
- 
-+	dev = phy->dev;
-+
- 	cancel_delayed_work_sync(&phy->mt76->mac_work);
- 
- 	mutex_lock(&dev->mt76.mutex);
--- 
-2.39.5
+		return 0;
+	}
 
+This is the unusually expected stacktrace. :-)
+
+	 BUG: kernel NULL pointer dereference, address: 0000000000000070
+	 #PF: supervisor read access in kernel mode                                                                                                                                            "virtme-ng" 11:03 08-Apr-25
+	 #PF: error_code(0x0000) - not-present page
+	 PGD 10ca78067 P4D 0
+	 Oops: Oops: 0000 [#1] SMP DEBUG_PAGEALLOC NOPTI
+	 CPU: 13 UID: 0 PID: 1020 Comm: nc Tainted: G            E    N 6.14.0-upstream-05880-g14fbb7a1a500 #73 PREEMPT(undef)
+	 Tainted: [E]=UNSIGNED_MODULE, [N]=TEST
+	 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+	 RIP: 0010:bpf_prog_5b31430a4390397c_tcp_sendmsg_locked+0x18/0x37
+	 Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc f3 0f 1e fa 0f 1f 44 00 00 0f 1f 00 55 48 89 e5 f3 0f 1e fa 48 8b 7f 10 <8b> 57 70 48 bf d8 d9 03 06 01 00 11 ff be 0d 00 00 00 e8 15 f4 4c
+	 RSP: 0018:ffa0000003c03bd0 EFLAGS: 00010282
+	 RAX: 5aab7562e1de3200 RBX: ffa0000003be4000 RCX: 0000000000000018
+	 RDX: 0000000000000000 RSI: ffa0000003be4048 RDI: 0000000000000000
+	 RBP: ffa0000003c03bd0 R08: 000000000006043d R09: ffffffffffffffff
+	 R10: 0000000000000000 R11: ffffffffa000096c R12: ff11000104ae5b00
+	 R13: ff1100010610a3c0 R14: ffffffff814d34ef R15: 0000000000000000
+	 FS:  00007fd67d550740(0000) GS:ff110005a40a9000(0000) knlGS:0000000000000000
+	 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+	 CR2: 0000000000000070 CR3: 000000010d9ec002 CR4: 0000000000771ef0
+	 PKRU: 55555554
+	 Call Trace:
+	  <TASK>
+	  ? __die_body+0xaf/0xc0
+	  ? page_fault_oops+0x35b/0x3c0
+	  ? do_user_addr_fault+0x6d4/0x730
+	  ? srso_alias_return_thunk+0x5/0xfbef5
+	  ? exc_page_fault+0x5f/0xe0
+	  ? asm_exc_page_fault+0x26/0x30
+	  ? bpf_trace_run4+0xbf/0x240
+	  ? 0xffffffffa000096c
+	  ? bpf_prog_5b31430a4390397c_tcp_sendmsg_locked+0x18/0x37
+	  bpf_trace_run4+0x14c/0x240
+	  ? trace_event_raw_event_tcp_sendmsg_locked+0xc3/0xf0
+	  __traceiter_tcp_sendmsg_locked+0x44/0x60
+	  tcp_sendmsg_locked+0x10c8/0x15b0
+	  ? __local_bh_enable_ip+0x166/0x1c0
+	  ? srso_alias_return_thunk+0x5/0xfbef5
+	  tcp_sendmsg+0x2c/0x50
+	  ? __pfx_inet6_sendmsg+0x10/0x10
+	  sock_sendmsg_nosec+0xa0/0x100
+	  __sys_sendto+0x1b4/0x1f0
+	  __x64_sys_sendto+0x26/0x30
+	  do_syscall_64+0x83/0x170
+	  entry_SYSCALL_64_after_hwframe+0x76/0x7e
