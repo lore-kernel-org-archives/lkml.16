@@ -1,107 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B2C1ADC8D;
-	Tue,  8 Apr 2025 15:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D961C22A4D6;
+	Tue,  8 Apr 2025 15:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125540; cv=none; b=PQ4mJRuZaVAqO9Uqv/li2rH0h4ClM03J7h82nJuBJ1KUzAPYbfh5D9ERCR1JrdpPOl2eHY+mr10D/xnk5Fh4jrQXEU3/XnZ9yzBOH+SoNnXlTQdB7EAqG2ACr5SZjjd2XfKou3IIwcI73DrRDE5btSL1q8RG2MJN67eob4LDGRM=
+	t=1744125544; cv=none; b=jn3X+HXsKYKj50oairkaBU/S7iIK9Iq/0p7UYrCEbm/uaqwZRP/6j+a9csLWjGnrOt2H1PXjGoceZ/q67hX3SwQmWtzioOZJXBB2jZJZXavxHlELdau8GTQ6v+MeQuCztNTMTRmZWinxRcG2f/g16flJ/6ZFAGrjOQqNnpgSydg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125540; c=relaxed/simple;
-	bh=5UoJUCBT3LAaHEfHe9iTZOH67O24WbB9WsSvXP1s2hA=;
+	s=arc-20240116; t=1744125544; c=relaxed/simple;
+	bh=muzGjO6WVJ7RFBCN3eTmJV8m55muVdlhk1Ebh/yVj5c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b71Gw2h+vF7MjnUz0SDzbBRzyQ/UKkvqop66dy6RTyNPjLtozURFZTB8JBgvKTZ3IZcZ4yoSPcwAlrC0VAIEprydfwXDJzxsWoSFM2o7FyZdmmxl09bAh8q3U4MmjezEfPlbikEdsY5xzCsKl2SEDIBCn6ep5j58Jd/1IvhkFXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Fr4PbX8H; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4OScmpF3GJ3cOQS+H9kLZpP1XTe4PvlH3qpnWsMM2IAJJ6Ok7hcnHoW+IcG0hsTztVHZHJNqzLTnty0o9GVOEnp+9GMyv/9azzFfMo+yiq70+1+w7a681/2ozKxR7TewmOUqCM0YZ10ui6IiaP/BWyuo+Qr0lkrvqbECzwgh1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=i77/t7ZE; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Fr4PbX8H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C62DC4CEE5;
-	Tue,  8 Apr 2025 15:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744125540;
-	bh=5UoJUCBT3LAaHEfHe9iTZOH67O24WbB9WsSvXP1s2hA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fr4PbX8HNhnunVIWXCWIz4V6g1mV9B0LLvyZ+/RYDaHReGUVB5dEfDb9gsAWyVOG+
-	 TZ05f5iSPywTAG/U5ex7OOG+B3xdVJ6pu+896gN/UY8a1Sx7M9aEagkfg85jFDmmcK
-	 ISYlZuxvNSN5w11FR2z0ONClaTack/zG0f7BIaug=
-Date: Tue, 8 Apr 2025 17:17:26 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	Justin Forbes <jforbes@fedoraproject.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 6.13 000/499] 6.13.11-rc1 review
-Message-ID: <2025040818-iodine-theater-7e1f@gregkh>
-References: <20250408104851.256868745@linuxfoundation.org>
- <7d11f01f-9adc-467c-95bc-c9ff4bbf6a0f@leemhuis.info>
- <CAP-5=fVCADCyXeeLZT4EpU1OtOxMKB8omf5FFpDHmKgOWetW2A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i77/t7ZE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=+vt9+VZDiPwgZiCaktIzImIK5YgSg2O6izIQtC6HzeY=; b=i77/t7ZEtZtab+fE0SvLKoYiBY
+	cIQe0n5eHBmEaS+eBHGSsieAtJVc06yqZqGXOdZrroshp0+D+GdK+mY2/v+0gFTxj/dcakyj/Q9zn
+	CgTxXoWUnXUT1Tg+IXwpvi1V/lQdArGz4S09lXqjtQrn3sFMZxfg/duxsdgdrLJvhl20=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2Ais-008PgN-Vu; Tue, 08 Apr 2025 17:18:46 +0200
+Date: Tue, 8 Apr 2025 17:18:46 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Lucien.Jheng" <lucienx123@gmail.com>
+Cc: linux-clk@vger.kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
+	kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, daniel@makrotopia.org, ericwouds@gmail.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	joseph.lin@airoha.com, wenshin.chung@airoha.com,
+	lucien.jheng@airoha.com
+Subject: Re: [PATCH v7 net-next PATCH 1/1] net: phy: air_en8811h: Add clk
+ provider for CKO pin
+Message-ID: <29710c4e-b106-4922-8278-c19159c16756@lunn.ch>
+References: <20250408150118.54478-1-lucienx123@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVCADCyXeeLZT4EpU1OtOxMKB8omf5FFpDHmKgOWetW2A@mail.gmail.com>
+In-Reply-To: <20250408150118.54478-1-lucienx123@gmail.com>
 
-On Tue, Apr 08, 2025 at 08:07:09AM -0700, Ian Rogers wrote:
-> On Tue, Apr 8, 2025 at 6:09 AM Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >
-> > On 08.04.25 12:43, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 6.13.11 release.
-> > > There are 499 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> >
-> > Compiling for Fedora failed:
-> >
-> > util/stat.c: In function ‘evsel__is_alias’:
-> > util/stat.c:565:16: error: implicit declaration of function ‘perf_pmu__name_no_suffix_match’ [-Wimplicit-function-declaration]
-> >   565 |         return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
-> >       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > From a *very very* quick look I wonder if it might be due to this change,
-> > as it seems to depend on 63e287131cf0c5 ("perf pmu: Rename name matching
-> > for no suffix or wildcard variants") [v6.15-rc1]:
-> >
-> > > Ian Rogers <irogers@google.com>
-> > >     perf stat: Don't merge counters purely on name
-> >
-> > But as I said, it was just a very very quick look, so I might be totally
-> > off track there.
+On Tue, Apr 08, 2025 at 11:01:18PM +0800, Lucien.Jheng wrote:
+> EN8811H outputs 25MHz or 50MHz clocks on CKO, selected by GPIO3.
+> CKO clock operates continuously from power-up through md32 loading.
+> Implement clk provider driver so we can disable the clock output in case
+> it isn't needed, which also helps to reduce EMF noise
 > 
-> Thanks Thorsten, I repeated the failure and reverting that patch fixes
-> the build. Alternatively, cherry-picking:
-> 
-> ```
-> commit 63e287131cf0c59b026053d6d63fe271604ffa7e
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Fri Jan 31 23:43:18 2025 -0800
-> 
->    perf pmu: Rename name matching for no suffix or wildcard variants
-> 
->    Wildcard PMU naming will match a name like pmu_1 to a PMU name like
->    pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
->    the match. No suffix matching will match pmu_10 to either pmu_1 or
->    pmu_2. Add or rename matching functions on PMU to make it clearer what
->    kind of matching is being performed.
-> 
->    Signed-off-by: Ian Rogers <irogers@google.com>
->    Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->    Link: https://lore.kernel.org/r/20250201074320.746259-4-irogers@google.com
->    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ```
-> 
-> Also fixes the build.
+> Signed-off-by: Lucien.Jheng <lucienx123@gmail.com>
+>  #include <linux/property.h>
+>  #include <linux/wordpart.h>
+>  #include <linux/unaligned.h>
+> +#include <linux/clk-provider.h>
 
-Now added to both queues, thanks.
+We try to keep thinks sorted in order. The includes are not quite
+correct, but still clk-provider.h should be first.
 
-greg k-h
+>  #define EN8811H_PHY_ID		0x03a2a411
+> 
+> @@ -112,6 +113,11 @@
+>  #define   EN8811H_POLARITY_TX_NORMAL		BIT(0)
+>  #define   EN8811H_POLARITY_RX_REVERSE		BIT(1)
+> 
+> +#define EN8811H_CLK_CGM		0xcf958
+> +#define   EN8811H_CLK_CGM_CKO		BIT(26)
+> +#define EN8811H_HWTRAP1		0xcf914
+> +#define   EN8811H_HWTRAP1_CKO		BIT(12)
+> +
+>  #define EN8811H_GPIO_OUTPUT		0xcf8b8
+>  #define   EN8811H_GPIO_OUTPUT_345		(BIT(3) | BIT(4) | BIT(5))
+
+and registers should be in order, so 0xcf958 goes after 0xcf8b8.
+
+> +static int en8811h_clk_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
+> +	struct phy_device *phydev = priv->phydev;
+> +	int ret;
+> +	u32 pbus_value;
+
+Reverse Christmas tree please. Sort them longest to shortest.
+
+	Andrew
