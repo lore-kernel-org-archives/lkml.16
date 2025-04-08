@@ -1,53 +1,54 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A182528ED;
-	Tue,  8 Apr 2025 19:05:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41D253B42;
+	Tue,  8 Apr 2025 19:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139109; cv=none; b=eQsDIX9h7TvmUbLKS+pXGPebMAJsEDhlRH152JfjXtaz75+MWyYCGaUJU+zpy3CXAqrV81knLmc3/9ZDfHWxL6aZb1ndEwTym1j7Pj46Wn3IxGF6im0/t4+2dNnQ5/8jQ0owwlHo8Ce2RQrD5XJRkPDXkI5DHFNH7+cyC8WQFK4=
+	t=1744139109; cv=none; b=uvLCwqY+zwuM6Vg9qVSuGeanCc2UQRyVb9q2muP/NJ77Lv+H/c6NtBBW04WSROtgHtMQiIillr+RKpkWS2JDWzr9vbEDRmTxMyn9wAETQz61oR6iSsBn80pIuF9OFtazJ/hN8Csvh2vENqwluSCjvCyaRJSlc2IxrcorBp+jaRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744139109; c=relaxed/simple;
-	bh=/ai1heGd72j5PThisRlYees80ah3AMc9rQi5nwAAwGQ=;
+	bh=oPgmhWsz4TQavAmb2Lh3JnNdsz4SJE0zEGPpKpgB1Nk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=pCUNR1JeFP3qrLmDWpIlXprv/964x0eLlG7FfUtucs2oLmzutF9z7iF3buTX2vqHcKhyd7AakBQaVkd+zPkPTZoVs+QM2pzkjeJryiHCIwdXQpd6E04PdlaaYcg8Xtv6SbzFx2a0393neYY9VowRk0eQSMPfWAPIh84i0GLw8/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gJxZbRJZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gr9s7HH5; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=HwJLA5BBNu24pzpkrYiqLvelDdtN94GMsDcBKDvyzrZkAksR1QUHOewjXLNPNn1rjupsDCA3mA7dw6UrgIaHLuuIpFBSWLNd18COWCo1koSF7biriEF9dVSfJ+lnXjJDMZh/sQdDef+8gbufLdxK0d2yGAq01yH+tyEJDypkKfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NFzLKjXZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yaaBt46p; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gJxZbRJZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gr9s7HH5"
-Date: Tue, 08 Apr 2025 19:05:04 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NFzLKjXZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yaaBt46p"
+Date: Tue, 08 Apr 2025 19:05:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139105;
+	s=2020; t=1744139106;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gLCwYNFocq6ShE2lDB25ZIRbAWEGo8QgOQcJOT7ZIWA=;
-	b=gJxZbRJZwHKBJVIQ/GgOmUIsM+p1tPwLXR84xCaj295YIhyDOWADiqG+TrqcuWGN1NtoxN
-	PGuZH7GB6VH8DpOq2rqn5J1VPd+PEg6aoPYBbPF7NYkiPIHPg7Sn1UCpcC2ZSEl34qchT/
-	mcKcycAh6Ca4v5vimmiXMVFMZzNsV60kFiubFc/dqJpmRAUb2wDw7zGcizGRUTRHEnLumW
-	X4vnitqYOYARjQJbyYxO0NRr/3s6d0d/yt4quZAQQpqd/29iJxO4hQtBdM8CTrn3PZeZSc
-	6ZLxOMPEzlpKKUSfM6ZA5iqyFn3U1ZdBNGM9f2ANtBtoJ05H+Vbh3j3Xwdr8mA==
+	bh=432bzppfCCDS99zJysHZrpLMYDROQidyikzV2QBabN0=;
+	b=NFzLKjXZWeqRTdPAWH8eLzwU03Huz5+JUc5xwue2syuIYzWDZSoP8cfml7T3UQL98s2RqK
+	CDVz5yes6bIZAjB1Dct+bvIyYYbfl+O6nb5fIfRgJ35wGMBnMdeZEFEwz8ZfZ++bWck8MX
+	wuPSezmpkMpgKxFHwxSczUlbq2WAEs8FmB1N64+kwmW6tWfFcRjkSexuWpCOWDoLsn6QeD
+	UqD8wNIh5YL5u4sEz9x5ffJRRvub0vftf6NfTMZqx/cwEEn4oxcTShWnGL2u9QEtWjJpFd
+	kSXLJLlb/ptKkIA6vRfwO6SBf47ZZ37ndXEgG4C6WDktIMzX7jaVw2jckR+iVw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139105;
+	s=2020e; t=1744139106;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gLCwYNFocq6ShE2lDB25ZIRbAWEGo8QgOQcJOT7ZIWA=;
-	b=Gr9s7HH5kp34XAajw21RLVwnNQir2HSLEl6UvOEOtA5FFOHGqfpDgSv0t5Ck7jidSc27Yi
-	JbrVbocAiDiWICCA==
+	bh=432bzppfCCDS99zJysHZrpLMYDROQidyikzV2QBabN0=;
+	b=yaaBt46pkoM+Jd5c278Ow8el4wV4LlfA9GCbaaJ3pvd4nmLRqS74amhYkQKi18P6T8JGDN
+	5aYMkU8zNKtWgDDQ==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Simplify child event tear-down
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org,
+Subject:
+ [tip: perf/core] perf: Ensure bpf_perf_link path is properly serialized
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 In-Reply-To: <20250307193305.486326750@infradead.org>
 References: <20250307193305.486326750@infradead.org>
@@ -57,7 +58,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413910477.31282.11766952801429346476.tip-bot2@tip-bot2>
+Message-ID: <174413910546.31282.13108128229694254483.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,55 +68,97 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     0a00a43b8c200df5b9ca2b3e1726479b5916264b
-Gitweb:        https://git.kernel.org/tip/0a00a43b8c200df5b9ca2b3e1726479b5916264b
+Commit-ID:     7ed9138a72829d2035ecbd8dbd35b1bc3c137c40
+Gitweb:        https://git.kernel.org/tip/7ed9138a72829d2035ecbd8dbd35b1bc3c137c40
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 17 Jan 2025 15:25:23 +01:00
+AuthorDate:    Fri, 17 Jan 2025 10:54:50 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 08 Apr 2025 20:55:46 +02:00
 
-perf: Simplify child event tear-down
+perf: Ensure bpf_perf_link path is properly serialized
 
-Currently perf_event_release_kernel() will iterate the child events and attempt
-tear-down. However, it removes them from the child_list using list_move(),
-notably skipping the state management done by perf_child_detach().
+Ravi reported that the bpf_perf_link_attach() usage of
+perf_event_set_bpf_prog() is not serialized by ctx->mutex, unlike the
+PERF_EVENT_IOC_SET_BPF case.
 
-Crucially, it fails to clear PERF_ATTACH_CHILD, which opens the door for a
-concurrent perf_remove_from_context() to race.
-
-This way child_list management stays fully serialized using child_mutex.
-
+Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Link: https://lkml.kernel.org/r/20250307193305.486326750@infradead.org
 ---
- kernel/events/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/events/core.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a85d63b..3c92b75 100644
+index e93c195..a85d63b 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2325,7 +2325,11 @@ static void perf_child_detach(struct perf_event *event)
- 	if (WARN_ON_ONCE(!parent_event))
- 		return;
+@@ -6239,6 +6239,9 @@ static int perf_event_set_output(struct perf_event *event,
+ static int perf_event_set_filter(struct perf_event *event, void __user *arg);
+ static int perf_copy_attr(struct perf_event_attr __user *uattr,
+ 			  struct perf_event_attr *attr);
++static int __perf_event_set_bpf_prog(struct perf_event *event,
++				     struct bpf_prog *prog,
++				     u64 bpf_cookie);
  
-+	/*
-+	 * Can't check this from an IPI, the holder is likey another CPU.
-+	 *
- 	lockdep_assert_held(&parent_event->child_mutex);
-+	 */
+ static long _perf_ioctl(struct perf_event *event, unsigned int cmd, unsigned long arg)
+ {
+@@ -6301,7 +6304,7 @@ static long _perf_ioctl(struct perf_event *event, unsigned int cmd, unsigned lon
+ 		if (IS_ERR(prog))
+ 			return PTR_ERR(prog);
  
- 	sync_child_event(event);
- 	list_del_init(&event->child_list);
-@@ -5759,8 +5763,8 @@ again:
- 		tmp = list_first_entry_or_null(&event->child_list,
- 					       struct perf_event, child_list);
- 		if (tmp == child) {
--			perf_remove_from_context(child, DETACH_GROUP);
--			list_move(&child->child_list, &free_list);
-+			perf_remove_from_context(child, DETACH_GROUP | DETACH_CHILD);
-+			list_add(&child->child_list, &free_list);
- 		} else {
- 			var = &ctx->refcount;
- 		}
+-		err = perf_event_set_bpf_prog(event, prog, 0);
++		err = __perf_event_set_bpf_prog(event, prog, 0);
+ 		if (err) {
+ 			bpf_prog_put(prog);
+ 			return err;
+@@ -11069,8 +11072,9 @@ static inline bool perf_event_is_tracing(struct perf_event *event)
+ 	return false;
+ }
+ 
+-int perf_event_set_bpf_prog(struct perf_event *event, struct bpf_prog *prog,
+-			    u64 bpf_cookie)
++static int __perf_event_set_bpf_prog(struct perf_event *event,
++				     struct bpf_prog *prog,
++				     u64 bpf_cookie)
+ {
+ 	bool is_kprobe, is_uprobe, is_tracepoint, is_syscall_tp;
+ 
+@@ -11108,6 +11112,20 @@ int perf_event_set_bpf_prog(struct perf_event *event, struct bpf_prog *prog,
+ 	return perf_event_attach_bpf_prog(event, prog, bpf_cookie);
+ }
+ 
++int perf_event_set_bpf_prog(struct perf_event *event,
++			    struct bpf_prog *prog,
++			    u64 bpf_cookie)
++{
++	struct perf_event_context *ctx;
++	int ret;
++
++	ctx = perf_event_ctx_lock(event);
++	ret = __perf_event_set_bpf_prog(event, prog, bpf_cookie);
++	perf_event_ctx_unlock(event, ctx);
++
++	return ret;
++}
++
+ void perf_event_free_bpf_prog(struct perf_event *event)
+ {
+ 	if (!event->prog)
+@@ -11130,7 +11148,15 @@ static void perf_event_free_filter(struct perf_event *event)
+ {
+ }
+ 
+-int perf_event_set_bpf_prog(struct perf_event *event, struct bpf_prog *prog,
++static int __perf_event_set_bpf_prog(struct perf_event *event,
++				     struct bpf_prog *prog,
++				     u64 bpf_cookie)
++{
++	return -ENOENT;
++}
++
++int perf_event_set_bpf_prog(struct perf_event *event,
++			    struct bpf_prog *prog,
+ 			    u64 bpf_cookie)
+ {
+ 	return -ENOENT;
