@@ -1,126 +1,133 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C163F7FBD6;
-	Tue,  8 Apr 2025 10:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00412266585;
+	Tue,  8 Apr 2025 10:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107111; cv=none; b=qje83R6Vedwub53pTdPlb/sYxGGPWfN6Sc574qkY02d5bukFAqYWDOqtDGPwMjP4rcNb+820rYIEKC1m6gGsxTPFlnMlBH/MaO/0fGS2/oOM3wfyMw36+kTHdcv6ImIX/j8hl7ubA3KNsEk5oLrJajasQxi9gEMVpmjx7g2aYTU=
+	t=1744107207; cv=none; b=DSo5C+W9Rb/5Eih9NnLvRISYLPBLqjsBuFkfNfm2G9AAxQ2zC8ACNFDl2Vo6/g7dIBIQbi77KQTazpINf9e/rHAmaMXm/nV1kMc57H5lcZ0vY0voyIui6AseJMynvrksqzMswc0cQc9xkbjKQwXxB+DZhzzMv5p7WCBayUb6v6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107111; c=relaxed/simple;
-	bh=rEOk4CBly4AlRVttK5V5QQUlaR69H0x+24xY/q+krdg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p+cYqmrJY4l+WtgYNPZ6NNt7AcluE49kzvdjC5kngxdXK2hUkZgQPsMgZSvviOt0efWqYA+oM716D7gQXYPWOBp6J3pHVZFRuGFjLVIQ9i5OMg2Pty4hvjQgpiTGbb8T8ErBhkjnkfNETG70y1HHbe62gtymzjwIoJUQmHioY9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMoltob2; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744107207; c=relaxed/simple;
+	bh=eVlUao8+2H4sq9uDxSotSHajHwx7ErY75Ibnc/bVBjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FiKdkXYEWMWORrcLdlIeu+zcacL4KGoRAMFmgVQYU1WiljQIGaFdpa1OdUpcm/ZO1+neo7a6g0tR2i0SNMmuX9dRLL7D4eWEkphE3fVqMXx9Xt5+Mr8eNZh1rOBiOXV79XnmHjjU5TPzg8vdgF5OZS5CKmD3qWQrH2dbIAsOFoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=f+j3YOJo; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMoltob2"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so4549849b3a.0;
-        Tue, 08 Apr 2025 03:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744107109; x=1744711909; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LTVPSXCmMLq6EC4r2uIbhTrhstuJngMRN9cKMT6ddPE=;
-        b=gMoltob2ydWJ7IxtVcYbmMWbu3bdZ+ZcLQV+irFkbPPJFS3YX9JmFWIBgiEdGPm7vp
-         fwiK7SeEPnrgwk7iizIG9XFAiqFWyB4Av1lqLNTb69CJ7aITXtxE/M9fgLza4VnrmBOL
-         8R1+jw/CRnrXmIHVXCJopk3IPgRhQhuhhzkYyVwz4gBqxGfBfchOk9e8Wj1aaRMpP2Az
-         IFjHOGsOANS+CN8ruM35vEFDI/RGAQQshubjxt8H7AZtgI9gD/GyMlqVXKhi00Ebih1Z
-         Q5ktPUQWU5cqOSnVOyKTYQVTd8JEScPN69bRsosKJJU6yHgn3JBIEGWbyA0lnayyZa/Y
-         SdvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744107109; x=1744711909;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LTVPSXCmMLq6EC4r2uIbhTrhstuJngMRN9cKMT6ddPE=;
-        b=OAnj1BDPbpeY4TGMzm2iAFhoP0MgQPRa19EtEkhQehp/+s7UinfBOLooxXX2GTUxYo
-         XKQACKWaa05zQr1CoC3xPoA+mj3s9eFyB+wvCmikw1/RA7pdYznLcZ4XQ4K0OGb+sIJQ
-         W4k6elmc3ynHvpkiU7M56bTY+Y+AdiocV2Ct6ynIc49d+syl8tGZPD55b3WjytP1jbQb
-         EyfoQorFp1UpCx2EVcywkYWe7b5/6ebv9F1EeOgG83jwFTJ2dZQs0Fw4fWTu/Szwhh05
-         yLIRYb+ZCWMKSNGh1EQ49dJba4t5BoGH/UU5vxjToMNH2b9kcde4ZD26ztzxnClkAHKw
-         W5Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjfSrZYvyC0oXPO4hKqW5xZsP1XNf9n0YPigt5qy0rnME+8hG52pN7TuhA7CKzsz+kWKb8BSG/WqfC0sj6@vger.kernel.org, AJvYcCWg9F9gtKo+VuAawO7glmNhiA7pfPKcpQrM6vBlpGvdxTxJw0tPZFFMdkWk4jBoEl1ax6FHsOQXwjW03MfI@vger.kernel.org, AJvYcCXgNQm+TzemmgJsBPryUSZMbfGIyUx89yR9zFOmdUGu9HpsKg8QEKvncS9K7iYWpDYmDNC78461@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIUw6kkk1GyzSzosfE/+GYYrEtU+I2zdkMKwBlR5bJnVwEhmr/
-	jl5tNnHT3PxiI3FlgKCjiGwpivnc7qymSbYfUOd3z7nhSYAmv+LUe4MJNTqUL3N1z4YeAr21UHT
-	OskJQ5HONilwM2wki+ZJB/EkCrM0=
-X-Gm-Gg: ASbGncsdMt7gZ/L2z7tb8oxy8e2+HTswUsQmNgWN7Pqf0DkHdtjDqgah/KqUPXCX8eA
-	bgJ4ItB8sVOPR0OSaejMugAYyom1aJ3ophpSdTrEnc1c1asqquqTuuMFC1C/Dz5+c91cYXIGl19
-	3APsHGP0Oz58FlOucir3V2QXA5
-X-Google-Smtp-Source: AGHT+IFhEirAccPm6diooe5A56ckmlLwkK2C0zEsLm8HntfBxz5BRD+WrLEptloFT/6kAAaD8cz1blHSA7D0fDgTFCY=
-X-Received: by 2002:a17:90b:2711:b0:2ee:d433:7c50 with SMTP id
- 98e67ed59e1d1-306af788dbbmr12565246a91.23.1744107108986; Tue, 08 Apr 2025
- 03:11:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="f+j3YOJo"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DA5BA6EC;
+	Tue,  8 Apr 2025 12:11:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744107080;
+	bh=eVlUao8+2H4sq9uDxSotSHajHwx7ErY75Ibnc/bVBjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f+j3YOJoFlKzCzQjj/x+HggUUOs31ZdRa3TK3/id3W1/MhTouFnp8JHFj0v+9oz7r
+	 EUIiHvdo6i1cDXNuu4WSVe534JIYvwW+ozoETgZYWjksiZ5LuK1XRtRJ6JBBjdATbR
+	 /mCW7xYlk6Da4itc+Yl6ehFkCPfwFUlX3YC22/u4=
+Date: Tue, 8 Apr 2025 13:12:52 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media: i2c: thp7312: use fwnode_for_each_child_node()
+Message-ID: <20250408101252.GB31475@pendragon.ideasonboard.com>
+References: <Z90qM33DvkTMGg_x@mva-rohm>
+ <20250321104100.GC25483@pendragon.ideasonboard.com>
+ <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241019191303.24048-1-kovalev@altlinux.org> <Z9xsx-w4YCBuYjx5@eldamar.lan>
- <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
- <2025032402-jam-immovable-2d57@gregkh> <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
- <2025032404-important-average-9346@gregkh> <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
- <20250407-biegung-furor-e7313ca9d712@brauner> <20250407190814.GB6258@frogsfrogsfrogs>
-In-Reply-To: <20250407190814.GB6258@frogsfrogsfrogs>
-From: Richard Weinberger <richard.weinberger@gmail.com>
-Date: Tue, 8 Apr 2025 12:11:36 +0200
-X-Gm-Features: ATxdqUGUflWhsc7_t9EwiCgdbFbM8FViOml_3iPU3I88ZbHoy2WAA1j9TB8rW0o
-Message-ID: <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com>
-Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, Cengiz Can <cengiz.can@canonical.com>, 
-	Attila Szasz <szasza.contact@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, 
-	Salvatore Bonaccorso <carnil@debian.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org, 
-	dutyrok@altlinux.org, syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com, 
-	stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
 
-On Mon, Apr 7, 2025 at 9:08=E2=80=AFPM Darrick J. Wong <djwong@kernel.org> =
-wrote:
-> It's also the default policy on Debian 12 and RHEL9 that if you're
-> logged into the GUI, any program can run:
->
-> $ truncate -s 3g /tmp/a
-> $ mkfs.hfs /tmp/a
-> $ <write evil stuff on /tmp/a>
-> $ udisksctl loop-setup -f /tmp/a
-> $ udisksctl mount -b /dev/loopX
->
-> and the user never sees a prompt.  GNOME and KDE both display a
-> notification when the mount finishes, but by then it could be too late.
-> Someone should file a CVE against them too.
+Hi Sakari,
 
-At least on SUSE orphaned and other problematic filesystem kernel modules
-are blacklisted. I wonder why other distros didn't follow this approach.
+On Tue, Apr 08, 2025 at 08:48:45AM +0000, Sakari Ailus wrote:
+> On Fri, Mar 21, 2025 at 12:41:00PM +0200, Laurent Pinchart wrote:
+> > On Fri, Mar 21, 2025 at 10:58:27AM +0200, Matti Vaittinen wrote:
+> > > When fwnode_for_each_available_child_node() is used on the device-tree
+> > > backed systems, it renders to same operation as the
+> > > fwnode_for_each_child_node(), because the fwnode_for_each_child_node()
+> > > does only iterate through those device-tree nodes which are available.
+> > 
+> > This makes me wonder why the OF backend implements
+> > fwnode_for_each_child_node() as fwnode_for_each_available_child_node().
+> > Is that on purpose, or is it a bug ?
+> 
+> I discussed this with Rafael and he didn't recall why the original
+> implementation was like that. The general direction later on has been not
+> to present unavailable nodes over the fwnode interface.
+> 
+> So I'd say:
+> 
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> 
+> We should also change the documentation of the fwnode API accordingly.
 
-> You can tighten this up by doing this:
->
-> # cat > /usr/share/polkit-1/rules.d/always-ask-mount.rules << ENDL
-> // don't allow mounting, reformatting, or loopdev creation without asking
-> polkit.addRule(function(action, subject) {
->         if ((action.id =3D=3D "org.freedesktop.udisks2.loop-setup" ||
->              action.id =3D=3D "org.freedesktop.udisks2.filesystem-mount" =
-||
->              action.id =3D=3D "org.freedesktop.udisks2.modify-device") &&
->             subject.local =3D=3D true) {
->                 return polkit.Result.AUTH_ADMIN_KEEP;
->         }
-> });
-> ENDL
+Does that also mean that the fwnode_for_each_available_child_node()
+function will be dropped ? It's used by few drivers (5 in addition to
+the thp7312 driver, plus 3 call sites in drivers/base/core.c), so a
+patch series to drop it should be easy.
 
-Thanks for sharing this!
+> > > The thp7312 uses the fwnode_for_each_available_child_node() to look up
+> > > and handle nodes with specific names. This means the code is used only
+> > > on the device-tree backed systems because the node names have little
+> > > meaning on ACPI or swnode backed systems.
+> > > 
+> > > Use the fwnode_for_each_child_node() instead of the
+> > > fwnode_for_each_available_child_node() In order to make it clearly
+> > > visible that the 'availability' of the nodes does not need to be
+> > > explicitly considered here. This will also make it clearly visible that
+> > > the code in this driver is suitable candidate to be converted to use the
+> > > new fwnode_for_each_named_child_node()[2] when it gets merged.
+> > > 
+> > > [1]: https://lore.kernel.org/all/Z9rhfJUlCbi7kA2m@kekkonen.localdomain/
+> > > [2]: https://lore.kernel.org/all/9c3880f74476436f39d796b5c10c540ae50b722c.1742225817.git.mazziesaccount@gmail.com/
+> > > 
+> > > Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > > 
+> > > ---
+> > > Revision history:
+> > > v1 => v2:
+> > >  - rephrase the commit message to not claim the 'availability' has no
+> > >    well defined meaning on the DT backed systems. Instead, explain that
+> > >    the fwnode_for_each_available_child_node() only iterates through the
+> > >    available nodes on the DT backed systems and is thus functionally
+> > >    equivalent to the fwnode_for_each_child_node().
+> > > 
+> > > NOTE: The change is compile tested only! Proper testing and reviewing is
+> > > highly appreciated (as always).
+> > > ---
+> > >  drivers/media/i2c/thp7312.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/media/i2c/thp7312.c b/drivers/media/i2c/thp7312.c
+> > > index 8852c56431fe..4b66f64f8d65 100644
+> > > --- a/drivers/media/i2c/thp7312.c
+> > > +++ b/drivers/media/i2c/thp7312.c
+> > > @@ -2067,7 +2067,7 @@ static int thp7312_parse_dt(struct thp7312_device *thp7312)
+> > >  		return -EINVAL;
+> > >  	}
+> > >  
+> > > -	fwnode_for_each_available_child_node(sensors, node) {
+> > > +	fwnode_for_each_child_node(sensors, node) {
+> > >  		if (fwnode_name_eq(node, "sensor")) {
+> > >  			if (!thp7312_sensor_parse_dt(thp7312, node))
+> > >  				num_sensors++;
+> > > 
+> > > base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
 
-> so at least you have to authenticate with an admin account.  We do love
-> our footguns, don't we?  At least it doesn't let you do that if you're
-> ssh'd in...
+-- 
+Regards,
 
-IMHO guestmount and other userspace filesystem implementations should
-be the default
-for such mounts.
-
-//richard
+Laurent Pinchart
