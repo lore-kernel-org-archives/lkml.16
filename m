@@ -1,104 +1,91 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ECD263C8E;
-	Tue,  8 Apr 2025 09:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96B426656D
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104890; cv=none; b=ILSPJCgPbZ2FKPfSxWF/H8IBFifS1b9ZbDcHJLAZKMLsMyT0Oi3iHQOyBDRoiszABxC7A6Wrapfsj7uTg4pW+frXJvQIyoW+taLZlW6h1VHdEt5RIl0GOAhpkKBr1BJUXO8gL+bfr19Pu2JD2EX8sEe2lpYxrPeJjUvHAWT4dwQ=
+	t=1744104912; cv=none; b=upqFEW3afn/jkCYcdVw0x9Mm2J7M/r8K6T4lHCe0enV82V5qwjFLbp1S64gu9IZVTUce7DHVIpXGhRqMM4ro/vHGBu8Ifsxd8VlmD2p+L0rimRtGu3n9lC6fHqyPncWOvFrwc+TAyrZdaXFvTVlGe/W9KxxLaqods30PYc+QvBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104890; c=relaxed/simple;
-	bh=PtTeReiTLp+RqAL/cLFtmFLCbjN4w5rpWp84zoyWVVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SBiy5kufmFb3e+WcMTht0PRjOQwvUoh6tOjuFjFY6sHBnwcz0HAiyp/oxDfmfVFggpn7ztzWIIXAyoL741bWLzz1sLO7xjwGAkWvR8PayCsFDmi8NLIyVH/p0WNpAHLVPAGLQQhQfGpX3phfGDZOsANI+WwSfNlIE6hamV0JdZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TESI965T; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TESI965T"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c0cf1922bso613841a34.0;
-        Tue, 08 Apr 2025 02:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744104888; x=1744709688; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g7Bg64jM6tSWnXjFr3goi8956rwlNjPV/077kclDS9I=;
-        b=TESI965Thjp7J12xnvY6T6sWo+7ztWU7FgzEgfkKwA5B/gm74mnQmV04Nn9/IZScEL
-         FTY27fFz+9Uz4M/Vsc8snJjOr5+eh7UCz+Y42voJ1kpnxlMbaZrFVnWIL125rE8oEoRT
-         a0plu39udGtdbQcglFmTnnF10asXbWgfr6Ix9TZs+J0RQZHea7E8U3PvXadnRoTa0BGO
-         Yf20xSNV7UxD3eAdSqJLrPNOS29e/fjL9WabH753dG1XjyVAQUw5dj0M2Iw1REYKBaMQ
-         Q00snLVscY8msZgDf9bxZ2572pZfPBlHllZCsGubuZ/8Vjyy6TPDwfsH73iFDU+jLZN7
-         ybkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744104888; x=1744709688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g7Bg64jM6tSWnXjFr3goi8956rwlNjPV/077kclDS9I=;
-        b=M1bkVFo9nCDi15RYXZT6sSMlZj/OnzzhQ33+7hnZlVp+3iCLKuASjZttFSsHdl/iBW
-         lm3D1YBGe2vJEpgcK3NVf0fGOWyvKfU657LcR+ctOx0tk+9NH3r0CtnLoG+5ZiJhvJCs
-         u4hIErErxzqRnMbeu0L6pyRwfXwXhTh3PeQMcWuB7Mjrbfu8OzCjVkZ63U2wq5qMRwqj
-         bM4Qlp/OVubiXTCws5W64Da0HAR39g4Da6AbG9wOTjml/sat1XTVIDYTMFgXMCgpmmiP
-         M5+XqQJbgK2wls6m2r6JHypC668HWasYvz8w5Mh5qkuIHnvfw4k3sUMGzCwWXOuP1uea
-         bIrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNjMW52JnhZ3mYp7UhlZhUXYoh9YD7ZnI9dsRN2CNBXpNRImXuYCgBHWpxjojW37zeMFb+gYPWDe+GPW34@vger.kernel.org, AJvYcCWwSY90ciCn3kWFnqnVfoTT0LrHx+3wpzuinoLu6ttXJYvvPCIffLONkcvcYApn0lLN6n4S+FbO6sg8ZZEO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPZTy8pOSwYD/vwln0LwGs13QKno98j6m3ePhqIcIi8aEGA4e+
-	YCDTf9hthsgHlzVYUq281PmCCk5TiarfyYWfW5THec5Zlo7mVYQPZFpY9XjvbtZAKLFDYiOr1/j
-	q3qFvw7DZOdIf1icsU2Z0fbejY5Q=
-X-Gm-Gg: ASbGncswbf/rJ/Kj25V40VO5ImMJ7yi3/y1Dz0zgjHLdz1hftkuQyeNGdvB7EuehRFb
-	kHFrYd4Z1Tof6oQQ4XsdntI+z6IveuBdxzlXW2sASl28c+Cq6U3PNwwrDsKngCvZ7A0UZ/+lnbB
-	qXLVKuhInczWwVgZQQWkNuLHUgiqM9
-X-Google-Smtp-Source: AGHT+IF0RL92qSZNzUfU40xIFIvrvGm2xvag6WpHMC5o7D5ttqQSxe1/GUnQ2Gjqq953tDRmDPDtxGBEWbXMsdqtCLE=
-X-Received: by 2002:a05:6830:6c10:b0:72b:a3f3:deb6 with SMTP id
- 46e09a7af769-72e3665915emr9937036a34.4.1744104887890; Tue, 08 Apr 2025
- 02:34:47 -0700 (PDT)
+	s=arc-20240116; t=1744104912; c=relaxed/simple;
+	bh=meg8T1f2j9qmjDA75iYwFYqIY6mdsFqngS70291dSDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=af22cnO/yZHzSlT0QPg0eUqLs8i7vXjW4LkG9L2OYDljnLKFCcfg5b8WoNskisPQvJGxBZK2gt6UIdPRUpEv8X8oyizaZO2kKWycEBlK14Vpk0F9wZH9CoiZ2CpJVp2zKSxt3ElXEu22X1F8CYRiUNui6Til17UL4mOlzklzXpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: gV2tUCd2SB+L7+zScfHgIQ==
+X-CSE-MsgGUID: lGc2HkpGTuy60kLxEOR/cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56506726"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="56506726"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:35:10 -0700
+X-CSE-ConnectionGUID: Nt5rjS7JQEW77MsFy3Mg5Q==
+X-CSE-MsgGUID: bs+LmZQgSpyq701fU7/ZrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="159206889"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:35:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1u25MH-0000000AM3W-47Xy;
+	Tue, 08 Apr 2025 12:35:05 +0300
+Date: Tue, 8 Apr 2025 12:35:05 +0300
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Samuel Abraham <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org,
+	julia.lawall@inria.fr, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org
+Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Add white spaces around
+ binary operators
+Message-ID: <Z_TtyXwkOBK1MXGy@smile.fi.intel.com>
+References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
+ <4ccdbfd3e8d74d99679927f294f71cfb694fcc6c.1744061673.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vfp8Je1fUavSwTDAM_5_rDaDfXETa2oM5f0CjL1mxWX_Q@mail.gmail.com>
+ <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
- <20250407-unmodern-abkam-ce0395573fc2@brauner> <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
- <20250408-regal-kommt-724350b8a186@brauner> <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
- <20250408-vorher-karnickel-330646f410bd@brauner>
-In-Reply-To: <20250408-vorher-karnickel-330646f410bd@brauner>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Tue, 8 Apr 2025 14:34:37 +0500
-X-Gm-Features: ATxdqUE9g2rEeeo1yAbwscarMFto7S559Ky8HZPkBzoWbN-Fw3wbmzlUemspT4o
-Message-ID: <CABXGCsO56m1e6EO82JNxT6-DGt6isp-9Wf1fk4Pk10ju=-zmVA@mail.gmail.com>
-Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
- systemd-nspawn on my system
-To: Christian Brauner <brauner@kernel.org>
-Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, lennart@poettering.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 8, 2025 at 2:18=E2=80=AFPM Christian Brauner <brauner@kernel.or=
-g> wrote:
-> I'm confused why that's an issue:
->
-> > git reset --hard 474f7825d5335798742b92f067e1d22365013107
-> HEAD is now at 474f7825d533 fs: add copy_mount_setattr() helper
->
-> > git revert --no-edit 474f7825d5335798742b92f067e1d22365013107
-> [work.bisect e5673958d85c] Revert "fs: add copy_mount_setattr() helper"
->  Date: Tue Apr 8 11:14:31 2025 +0200
->  1 file changed, 33 insertions(+), 40 deletions(-)
+On Tue, Apr 08, 2025 at 10:22:44AM +0100, Samuel Abraham wrote:
+> On Tue, Apr 8, 2025 at 8:20 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Tue, Apr 8, 2025 at 12:54 AM Abraham Samuel Adekunle
+> > <abrahamadekunle50@gmail.com> wrote:
 
-> git reset --hard v6.15-rc1
-HEAD is now at 0af2f6be1b42 Linux 6.15-rc1
-> git revert -n 474f7825d5335798742b92f067e1d22365013107
-Auto-merging fs/namespace.c
-CONFLICT (content): Merge conflict in fs/namespace.c
-error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
-hint: after resolving the conflicts, mark the corrected paths
-hint: with 'git add <paths>' or 'git rm <paths>'
-hint: Disable this message with "git config set advice.mergeConflict false"
+...
 
---=20
-Best Regards,
-Mike Gavrilov.
+> > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) & 0xfff;
+> >
+> > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+> > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) & 0xfff;
+> >
+> > You mentioned Linux coding style, which also requires lines not to be
+> > so long. These lines are. That's why a few versions ago I suggested
+> > you to change these to be two lines each. I don't know how many times
+> > to repeat this (it's third one).
+> 
+> Okay, sorry
+> I will add a third patch for a line break before the patch for %
+> operations since each patch should handle a single thing.
+
+I am not sure you need a third patch for that. It lies into category of space
+and indentation fix.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
