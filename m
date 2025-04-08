@@ -1,202 +1,116 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD72221DB0;
-	Tue,  8 Apr 2025 14:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75DB1DF99C
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123899; cv=none; b=qEuxBHwPUWlK3FZJsObiAgAThCbLS6e3oeOZTnJihpC1uIsdOAwqJY/aaShvHazvMYD1197G1kDVIWPUlrtS8b/ZDFOyhVMoN/1sHUAk3+SXvmMwF+oniPIyA416VVVNEugXF7cIenW4stkMhreFb25aAI8iB9HdYYZUb+DV3t8=
+	t=1744123931; cv=none; b=gNGAD4/BvPkWdssLFETIqQzxHRHkLNiPXRDB6xJQTTFTORP2VbEzv1Dwnk9zzIEwGAzBGiXGDRK54rEGZjYNFHlWIiTHI0lXgbDskhcqWJE0U+h/hN81xuf58dO4TLlrGZyHVmUiza6dJTUX/S2OxpQONWwOF/oVj/LL/7SR5+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123899; c=relaxed/simple;
-	bh=qHKVhMeNu+6uyMJqrkcJu9sxTEx1ISyc3gVts+BKlVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CQPJARpVaUes1d8N8lSk+3NhAfFCB8ELhGl3wozFaj4t9S4uYLuoyszZbBvT6+Ye//FMeZi3glVmoEWSHSbGAWBE9JqcsDASdJ+f3SOQfAyuXkRCwgq6XPK8FEJn2KY+oxapgkV76VqXtf6jh+a3/QM+HmpcGslC8NBwezX2K2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oO1x1MwF; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744123931; c=relaxed/simple;
+	bh=dkh/98yD4kXhtEKPe+HK8ikqP0ZY141EiqYtwVGcXm4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uX3Jc2rVDD3gAmr80Tdcwm60YU4BNcHOxJmXWuBfuu48TCeho/GgcpeDCrBh2LqnGMev/M+w0zfj3RCvhtpCbOrM3TS9x7JM8x1Y3a9bf8YU8+B6Rn/mVXNsMoMaEUoL65o92YVyXDi+JhRXBmA/vNk2oFxzGuBiPQ96GkmOrZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PW+18Ek3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oO1x1MwF"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AxRGf008721;
-	Tue, 8 Apr 2025 16:51:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	3RQmySbuo/UCyRNQmzbHNRcOJc6ylALW0myadTLuAJI=; b=oO1x1MwF4IqH7lel
-	i7TxuO7cgSSQ2R1sZZWjEkr09m7XArQeSZ3GF5TRsACoc0jhtT9lnauTQRF0qSrR
-	zxvQ8MUe+KMXhpetm4bw+9cJ4hjautcsdL6MWFc8L1M5etZUhZW9hOgV40hA9/xC
-	7HewaMMiBZpYYE5CQ9BTbg+O5+/CnTc0UJLfg9nBeoZ/0PwUoXzFAWktktQPQsk1
-	5nA/ovi6Rkd9Ualzuk0+s7EzZqeSxJt+J3QOaXxd+9iCs6YnsX+6VBFklsP5R/9F
-	nXUtFZ9J4lHj1mQq3BUxFgmHk28f7sOIH2nnaY1ib7CywwEy91aCU3POrtXM0DSy
-	3fm8cw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw2gwmpt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 16:51:12 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A351040045;
-	Tue,  8 Apr 2025 16:50:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 196509245C5;
-	Tue,  8 Apr 2025 16:48:52 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
- 2025 16:48:51 +0200
-Received: from [10.252.0.136] (10.252.0.136) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
- 2025 16:48:50 +0200
-Message-ID: <d66bd978-820a-4700-92c2-ba52d7db4efb@foss.st.com>
-Date: Tue, 8 Apr 2025 16:48:50 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PW+18Ek3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DD4C4CEE5;
+	Tue,  8 Apr 2025 14:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744123930;
+	bh=dkh/98yD4kXhtEKPe+HK8ikqP0ZY141EiqYtwVGcXm4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PW+18Ek3XAbcHQkGvhfLQ5tsAJ/zpAlfljO9hdR3BuLaI0Q2JH6C997h2WKNN+2MQ
+	 xQ3Ejq06d3SZorw44irBRrDN0wKSEeCxVr91B8Z6Z8xMrwbVLBsZB5OZwgO9aq5SVI
+	 ekMO6gMB+l6ZnrnXyvTsJdQ011xANihVY3an3fDWU8HIIRmtvXvsn/EWxM0VaOqe0m
+	 WNSIhJkzlf4esKK7pbv9rWEcO7HFazR1ZbOrFWuhuqhyJTX7XIIU+hC9UER7HJpG80
+	 49LWg2MRjAWDkT7KNXr5bkmt4l750hZyjrvrYj9CpTuV6zMIs3Prx7BA75ofD88G0y
+	 6H9tKtSy2Fn2A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Cheng Ming Lin <linchengming884@gmail.com>
+Cc: tudor.ambarus@linaro.org,  pratyush@kernel.org,  mwalle@kernel.org,
+  miquel.raynal@bootlin.com,  richard@nod.at,  vigneshr@ti.com,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  alvinzhou@mxic.com.tw,  leoyu@mxic.com.tw,  Cheng Ming Lin
+ <chengminglin@mxic.com.tw>
+Subject: Re: [PATCH v2 3/3] mtd: spi-nor: macronix: Add fixups for MX25L3255E
+In-Reply-To: <20250407075400.1113177-4-linchengming884@gmail.com>
+References: <20250407075400.1113177-1-linchengming884@gmail.com>
+	<20250407075400.1113177-4-linchengming884@gmail.com>
+Date: Tue, 08 Apr 2025 14:52:07 +0000
+Message-ID: <mafs0semipuy0.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] clocksource: stm32-lptimer: add support for
- stm32mp25
-To: <lee@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC: <krzk+dt@kernel.org>, <jic23@kernel.org>, <conor+dt@kernel.org>,
-        <ukleinek@kernel.org>, <robh@kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <devicetree@vger.kernel.org>, <wbg@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
- <20250314171451.3497789-5-fabrice.gasnier@foss.st.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250314171451.3497789-5-fabrice.gasnier@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+Content-Type: text/plain
 
-On 3/14/25 18:14, Fabrice Gasnier wrote:
-> On stm32mp25, DIER (former IER) must only be modified when the lptimer
-> is enabled. On earlier SoCs, it must be only be modified when it is
-> disabled. There's also a new DIEROK flag, to ensure register access
-> has completed.
-> Add a new "set_evt" routine to be used on stm32mp25, called depending
-> on the version register, read by the MFD core (LPTIM_VERR).
-> 
-> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+On Mon, Apr 07 2025, Cheng Ming Lin wrote:
+
+> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+>
+> SFDP of MX25L3255E is JESD216, which does not include the Quad
+> Enable bit Requirement in BFPT. As a result, during BFPT parsing,
+> the quad_enable method is not set to spi_nor_sr1_bit6_quad_enable.
+> Therefore, it is necessary to correct this setting by late_init.
+>
+> In addition, MX25L3255E also supports 1-4-4 page program in 3-byte
+> address mode. However, since the 3-byte address 1-4-4 page program
+> is not defined in SFDP, it needs to be configured in late_init.
+>
+> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
 > ---
-> Changes in V4:
-> - Daniel suggests to encapsulate IER write into a separate function
->   that manages the enabling/disabling of the LP timer. In addition,
->   DIEROK and ARROK flags checks have been added. So adopt a new routine
->   to set the event into ARR register and enable the interrupt.
-
-Hi all, Daniel,
-
-Does anybody else have additional remarks on this driver ?
-
-I think Lee is waiting for review, before merging the MFD part (at least).
-
-Best Regards,
-Thanks,
-Fabrice
-
-> Changes in V2:
-> - rely on fallback compatible as no specific .data is associated to the
->   driver. Use version data from MFD core.
-> - Added interrupt enable register access update in (missed in V1)
-> ---
->  drivers/clocksource/timer-stm32-lp.c | 51 +++++++++++++++++++++++++---
->  1 file changed, 47 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
-> index 928da2f6de69..e58932300fb4 100644
-> --- a/drivers/clocksource/timer-stm32-lp.c
-> +++ b/drivers/clocksource/timer-stm32-lp.c
-> @@ -27,6 +27,7 @@ struct stm32_lp_private {
->  	u32 psc;
->  	struct device *dev;
->  	struct clk *clk;
-> +	u32 version;
->  };
->  
->  static struct stm32_lp_private*
-> @@ -47,12 +48,37 @@ static int stm32_clkevent_lp_shutdown(struct clock_event_device *clkevt)
+>  drivers/mtd/spi-nor/macronix.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
+> index 07e0bd0b70a0..4bbd3b651cec 100644
+> --- a/drivers/mtd/spi-nor/macronix.c
+> +++ b/drivers/mtd/spi-nor/macronix.c
+> @@ -58,6 +58,31 @@ macronix_qpp4b_post_sfdp_fixups(struct spi_nor *nor)
 >  	return 0;
 >  }
 >  
-> -static int stm32_clkevent_lp_set_timer(unsigned long evt,
-> -				       struct clock_event_device *clkevt,
-> -				       int is_periodic)
-> +static int stm32mp25_clkevent_lp_set_evt(struct stm32_lp_private *priv, unsigned long evt)
->  {
-> -	struct stm32_lp_private *priv = to_priv(clkevt);
-> +	int ret;
-> +	u32 val;
+> +static int
+> +mx25l3255e_late_init_fixups(struct spi_nor *nor)
+> +{
+> +	/*
+> +	 * SFDP of MX25L3255E is JESD216, which does not include the Quad
+> +	 * Enable bit Requirement in BFPT. As a result, during BFPT parsing,
+> +	 * the quad_enable method is not set to spi_nor_sr1_bit6_quad_enable.
+> +	 * Therefore, it is necessary to correct this setting by late_init.
+> +	 */
+> +	nor->params->quad_enable = spi_nor_sr1_bit6_quad_enable;
 > +
-> +	/* Enable LPTIMER to be able to write into IER and ARR registers */
-> +	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
-> +	/* set next event counter */
-> +	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
-> +	/* enable ARR interrupt */
-> +	regmap_write(priv->reg, STM32_LPTIM_IER, STM32_LPTIM_ARRMIE);
+> +	/*
+> +	 * In addition, MX25L3255E also supports 1-4-4 page program in 3-byte
+> +	 * address mode. However, since the 3-byte address 1-4-4 page program
+> +	 * is not defined in SFDP, it needs to be configured in late_init.
+> +	 */
+> +	struct spi_nor_flash_parameter *params = nor->params;
+
+Please don't have variable declarations in the middle of the function.
+It looks odd. Though neither checkpatch nor cc seem to complain about
+this. I thought they did...
+
+Anyway, no need for a new revision, this can be fixed when applying by
+me or Tudor.
+
+Acked-by: Pratyush Yadav <pratyush@kernel.org>
+
 > +
-> +	/* Poll DIEROK and ARROK to ensure register access has completed */
-> +	ret = regmap_read_poll_timeout_atomic(priv->reg, STM32_LPTIM_ISR, val,
-> +					      (val & STM32_LPTIM_DIEROK_ARROK) ==
-> +					      STM32_LPTIM_DIEROK_ARROK,
-> +					      10, 500);
-> +	if (ret) {
-> +		dev_err(priv->dev, "access to LPTIM timed out\n");
-> +		/* Disable LPTIMER */
-> +		regmap_write(priv->reg, STM32_LPTIM_CR, 0);
-> +		return ret;
-> +	}
-> +	/* Clear DIEROK and ARROK flags */
-> +	regmap_write(priv->reg, STM32_LPTIM_ICR, STM32_LPTIM_DIEROKCF_ARROKCF);
+> +	params->hwcaps.mask |= SNOR_HWCAPS_PP_1_4_4;
+> +	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_4_4],
+> +				SPINOR_OP_PP_1_4_4, SNOR_PROTO_1_4_4);
 > +
 > +	return 0;
 > +}
->  
-> +static void stm32_clkevent_lp_set_evt(struct stm32_lp_private *priv, unsigned long evt)
-> +{
->  	/* disable LPTIMER to be able to write into IER register*/
->  	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
->  	/* enable ARR interrupt */
-> @@ -61,6 +87,22 @@ static int stm32_clkevent_lp_set_timer(unsigned long evt,
->  	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
->  	/* set next event counter */
->  	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
-> +}
 > +
-> +static int stm32_clkevent_lp_set_timer(unsigned long evt,
-> +				       struct clock_event_device *clkevt,
-> +				       int is_periodic)
-> +{
-> +	struct stm32_lp_private *priv = to_priv(clkevt);
-> +	int ret;
-> +
-> +	if (priv->version == STM32_LPTIM_VERR_23) {
-> +		ret = stm32mp25_clkevent_lp_set_evt(priv, evt);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		stm32_clkevent_lp_set_evt(priv, evt);
-> +	}
->  
->  	/* start counter */
->  	if (is_periodic)
-> @@ -176,6 +218,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	priv->reg = ddata->regmap;
-> +	priv->version = ddata->version;
->  	priv->clk = ddata->clk;
->  	ret = clk_prepare_enable(priv->clk);
->  	if (ret)
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
