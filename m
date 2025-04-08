@@ -1,193 +1,108 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438A32AE86;
-	Tue,  8 Apr 2025 20:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD0413CFB6;
+	Tue,  8 Apr 2025 20:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145166; cv=none; b=tMCIdqFagF4Tna0kMuUyTNSoLAuEGInC9iKArVom8zwxE9uQu7LZ2xhTY+yRF2scXy/FJYh8yRXL2yfZ8WMJHq8Q/YXHGN/N0uw+sEebfhuujOa9v04LNOL1YY6/F33VOyInxAvrXXcYqbYKkB+ovR4/r2+Ztl5e7j8Wd6+geKQ=
+	t=1744145177; cv=none; b=pqcbAqyltqqYpeS54oLV6MSN2SetRZHoSjTR0pa7HvWNSttnXmRYiqj+xveY3sc3E7pswBOozb96rObjVeKxKjw1JJqrV5rQuipCOs6AGbh888Aq3Fe0isV0GRvuaKwtPj39wCToi8jPSWjv+4gpfBldHp3pi248r4rc6iWJipM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145166; c=relaxed/simple;
-	bh=BGn19BNZNaod4cVdTZOMUKKliOPbXHKLsOjaavarhzI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=maLryQnWduFCNHrZEAYne6j7Y4utepwoLsLUapYMlAjLBAZr9SKzHTwc2iALd5otBRYrhu9WWxPay1K/ky01uNzaF3JggLe/Qx1AEyxjqRQj7tDVuzmlt3P1X6ujAe+u4AelILKVPocKZbPfqjsGglqnxpwYmP6qYdh+0jp1y9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dHjqO6Pm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9UGv4goT; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744145177; c=relaxed/simple;
+	bh=u39T35B34fYXsBnCwvMFidu0oqxlNOBHbamzZN8WIpY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BLRK5mPct3TX0+Nuspbz+brjwp96SB9rEVf5fycHmGBfEOC4r7fSveK+J23LVGeXkpZTt1G0Wbs9zkRZgzcIrrL97e6OWTHOK25uIs9VoZbUZOEoMJLuCNITa9YkmtML2s1MRV5c8D/VxahrAm04UzKCWqAb0Z0DGXNDhjeflOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N3Lf5SWX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8KIlSZQZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dHjqO6Pm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9UGv4goT"
-Date: Tue, 08 Apr 2025 20:45:51 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N3Lf5SWX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8KIlSZQZ"
+From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744145160;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020; t=1744145172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jOlUqtV6zzR2sS24S2cBRoEY5VIl1D1KZLAfo9l7wa4=;
-	b=dHjqO6PmXUv3qulFTJL6ZbKHi2jZI5yyS52P7jx5IkE8EOGV0jZxegrGPw9K5JQ7L3hPE9
-	D7GDBVaM6MFmvwPNWD4xoHT0PJ3L/UJPNW3iF/8KctpPH60gHieJYCqm5mHAn05KtSNg1U
-	4f7te9G5WtQjf5anXpf2Y97JSb3tm8ye/k3a3Z6Od7xIi7YAkoQLmYjlM8zOwWUh3FlVyA
-	YRSavJCKduLuV/rwm2IL31tkxN68G1R1bZhHnE3A+9CZI7rq+0nXK2XNfz2WcHpCJk1EqZ
-	fnL45Rv3DYM/ofuDd+YeFNSz0saqnVM6EKGzAl/BRPzm8M0obJgK3I7e5hb/Ew==
+	bh=LHO1UWAx+rQVZhZ6xiO8xRwG9UO76flaCcgfv2XvOAw=;
+	b=N3Lf5SWXqan5qexbq5HkKtyCja0aTFOm5S58qHEzNYUeMbm2sikAKQqIJ4bpzVCLN+3n33
+	Q7B1hJ5ER2NuFwPOkbu6odJLxj3gcjd4zGEAuG+dcvlyxd6l8wrsZTdhnUXq+MtA38Ibie
+	1KwAtdVFa1QP0PlTH5TLVbyxZnbd/QXeZaPTYlrZC4bNWn5fZ46HcZW9Mjqbnw8PBYxYVh
+	Gk/VMeg6knYgowR5cgbOUilosA8zwX4AzvzEQ7e14h5iiqnFkh2vj73PeYDxfuS5jl+YTk
+	Cshcj1DRBmP9jBeor+N5BuIxfQDOve4RIM4KiSFr7iCO4yk633Tv0gocDtYSrg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744145160;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020e; t=1744145172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jOlUqtV6zzR2sS24S2cBRoEY5VIl1D1KZLAfo9l7wa4=;
-	b=9UGv4goTb4B2cnubmIqzRUwbGFEjUkK698vAfO7xdnVcu27i1QoAxoZnhVG/PTT96blopb
-	UW2yu1lmosEuOTDg==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool: Remove ANNOTATE_IGNORE_ALTERNATIVE
- from CLAC/STAC
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <fc972ba4995d826fcfb8d02733a14be8d670900b.1744098446.git.jpoimboe@kernel.org>
-References:
- <fc972ba4995d826fcfb8d02733a14be8d670900b.1744098446.git.jpoimboe@kernel.org>
+	bh=LHO1UWAx+rQVZhZ6xiO8xRwG9UO76flaCcgfv2XvOAw=;
+	b=8KIlSZQZy1zxpwG55jbCCbtoV6tIGVFf8OSjMqluR9YwqbSREVUDUY5uVZl1UjsFZAl5Fk
+	rczOqaqWKfGersBQ==
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+ James.Bottomley@HansenPartnership.com, Jonathan.Cameron@huawei.com,
+ allenbh@gmail.com, d-gole@ti.com, dave.jiang@intel.com,
+ haiyangz@microsoft.com, jdmason@kudzu.us, kristo@kernel.org,
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, logang@deltatee.com,
+ manivannan.sadhasivam@linaro.org, martin.petersen@oracle.com,
+ maz@kernel.org, mhklinux@outlook.com, nm@ti.com, ntb@lists.linux.dev,
+ peterz@infradead.org, ssantosh@kernel.org, wei.huang2@amd.com,
+ wei.liu@kernel.org, spasswolf@web.de
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+In-Reply-To: <f303b266172050f2ec0dc5168b23e0cea9138b01.camel@web.de>
+References: <20250408120446.3128-1-spasswolf@web.de> <87iknevgfb.ffs@tglx>
+ <87friivfht.ffs@tglx>
+ <f303b266172050f2ec0dc5168b23e0cea9138b01.camel@web.de>
+Date: Tue, 08 Apr 2025 22:46:12 +0200
+Message-ID: <87a58qv0tn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174414515158.31282.6804487200090840468.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-The following commit has been merged into the objtool/urgent branch of tip:
+On Tue, Apr 08 2025 at 18:20, Bert Karwatzki wrote:
+> Am Dienstag, dem 08.04.2025 um 17:29 +0200 schrieb Thomas Gleixner:
+>> > Can you please decode the lines please via:
+>> >
+>> >     scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+>> >     scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
+>>
+>
+> I had to recompile with CONFIG_DEBUG_INFO=Y, and reran the test, the calltrace
+> is identical.
+>
+> $ scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+> msi_domain_first_desc+0x4/0x30:
+> msi_domain_first_desc at kernel/irq/msi.c:400
+>
+> So it seems msi_domain_first_desc() is called with dev = NULL.
 
-Commit-ID:     2d12c6fb78753925f494ca9079e2383529e8ae0e
-Gitweb:        https://git.kernel.org/tip/2d12c6fb78753925f494ca9079e2383529e8ae0e
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Tue, 08 Apr 2025 01:21:14 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Apr 2025 22:03:51 +02:00
+Yup
 
-objtool: Remove ANNOTATE_IGNORE_ALTERNATIVE from CLAC/STAC
+> $ scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
+> msix_setup_interrupts+0x23b/0x280:
+> msix_update_entries at drivers/pci/msi/msi.c:647 (discriminator 1)
 
-ANNOTATE_IGNORE_ALTERNATIVE adds additional noise to the code generated
-by CLAC/STAC alternatives, hurting readability for those whose read
-uaccess-related code generation on a regular basis.
+Aaarg. The patch below should fix that.
 
-Remove the annotation specifically for the "NOP patched with CLAC/STAC"
-case in favor of a manual check.
+Thanks,
 
-Leave the other uses of that annotation in place as they're less common
-and more difficult to detect.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/fc972ba4995d826fcfb8d02733a14be8d670900b.1744098446.git.jpoimboe@kernel.org
+        tglx
 ---
- arch/x86/include/asm/smap.h | 12 ++++++------
- tools/objtool/check.c       | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/include/asm/smap.h b/arch/x86/include/asm/smap.h
-index 55a5e65..4f84d42 100644
---- a/arch/x86/include/asm/smap.h
-+++ b/arch/x86/include/asm/smap.h
-@@ -16,23 +16,23 @@
- #ifdef __ASSEMBLER__
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 4027abcafe7a..77cc27e45b66 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -680,8 +680,8 @@ static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *ent
+ 	if (ret)
+ 		return ret;
  
- #define ASM_CLAC \
--	ALTERNATIVE __stringify(ANNOTATE_IGNORE_ALTERNATIVE), "clac", X86_FEATURE_SMAP
-+	ALTERNATIVE "", "clac", X86_FEATURE_SMAP
- 
- #define ASM_STAC \
--	ALTERNATIVE __stringify(ANNOTATE_IGNORE_ALTERNATIVE), "stac", X86_FEATURE_SMAP
-+	ALTERNATIVE "", "stac", X86_FEATURE_SMAP
- 
- #else /* __ASSEMBLER__ */
- 
- static __always_inline void clac(void)
- {
- 	/* Note: a barrier is implicit in alternative() */
--	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP);
-+	alternative("", "clac", X86_FEATURE_SMAP);
+-	retain_ptr(dev);
+ 	msix_update_entries(dev, entries);
++	retain_ptr(dev);
+ 	return 0;
  }
  
- static __always_inline void stac(void)
- {
- 	/* Note: a barrier is implicit in alternative() */
--	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP);
-+	alternative("", "stac", X86_FEATURE_SMAP);
- }
- 
- static __always_inline unsigned long smap_save(void)
-@@ -59,9 +59,9 @@ static __always_inline void smap_restore(unsigned long flags)
- 
- /* These macros can be used in asm() statements */
- #define ASM_CLAC \
--	ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP)
-+	ALTERNATIVE("", "clac", X86_FEATURE_SMAP)
- #define ASM_STAC \
--	ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP)
-+	ALTERNATIVE("", "stac", X86_FEATURE_SMAP)
- 
- #define ASM_CLAC_UNSAFE \
- 	ALTERNATIVE("", ANNOTATE_IGNORE_ALTERNATIVE "clac", X86_FEATURE_SMAP)
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 69f94bc..b649049 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3505,6 +3505,34 @@ next_orig:
- 	return next_insn_same_sec(file, alt_group->orig_group->last_insn);
- }
- 
-+static bool skip_alt_group(struct instruction *insn)
-+{
-+	struct instruction *alt_insn = insn->alts ? insn->alts->insn : NULL;
-+
-+	/* ANNOTATE_IGNORE_ALTERNATIVE */
-+	if (insn->alt_group && insn->alt_group->ignore)
-+		return true;
-+
-+	/*
-+	 * For NOP patched with CLAC/STAC, only follow the latter to avoid
-+	 * impossible code paths combining patched CLAC with unpatched STAC
-+	 * or vice versa.
-+	 *
-+	 * ANNOTATE_IGNORE_ALTERNATIVE could have been used here, but Linus
-+	 * requested not to do that to avoid hurting .s file readability
-+	 * around CLAC/STAC alternative sites.
-+	 */
-+
-+	if (!alt_insn)
-+		return false;
-+
-+	/* Don't override ASM_{CLAC,STAC}_UNSAFE */
-+	if (alt_insn->alt_group && alt_insn->alt_group->ignore)
-+		return false;
-+
-+	return alt_insn->type == INSN_CLAC || alt_insn->type == INSN_STAC;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -3625,7 +3653,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			}
- 		}
- 
--		if (insn->alt_group && insn->alt_group->ignore)
-+		if (skip_alt_group(insn))
- 			return 0;
- 
- 		if (handle_insn_ops(insn, next_insn, &state))
