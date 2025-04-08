@@ -1,62 +1,69 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0875223024C;
-	Tue,  8 Apr 2025 17:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473AE1B422A;
+	Tue,  8 Apr 2025 17:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132372; cv=none; b=YJu8OccKPFGAMMn+J5VmxTVioEX5M58SMEPNohlu3qd0PTnmHDBn08S2Ep1znB1GphZouEBW0ebJxuy6w5OsqyVUuO+vQhy00CSgx/4z4q4tTSN1Cd+UcuB8IDSk8oKs1L3ngzcxM9DzVWkBzi1Jc+UEZ5kc0TOzPYRdU5GDtWI=
+	t=1744132391; cv=none; b=ORWWns6G1RHFh5AwqrRECiapuurwusaKUTVEIkZdAEhtSWVzkOPg7VN9CwC8eMMmc8RkqwfEsCuHUkyaQ0S8sT/rlNCiiEC2sKeSAy6pyMqX8mxeP/mXFpMvRFTAuF0mL2wQwTCcL9v0LkSx1Ui3AFqR//xaC8mo1kzVSbRK9nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132372; c=relaxed/simple;
-	bh=Pj34+P8socyPgDvsKTOjkxt1ShfPBwPzx2cS+bfx3+8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=spciSKqeLq7nJ0FC0P2hnuvwLkfcTRlsy33yQrB7+7pLQlKPMMrQSnEeSW3WKwkjCj+PeLVtaG6uCAKQewRmN1phfkQ1pSUKmJTbn6AHQoO+UtJj5jqLnjt55YYyHlHZ2jvvE0Ie5CDrP2krUiFsHI8gNIMFjUUpPG6i649G4rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JG3m4znX; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744132391; c=relaxed/simple;
+	bh=ZmKKaF88TDW5BhsqNDRVpPFhYgW4wUtMCyjmNc6OQI4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NK+Kz/dWd4opJIlBFrEhl4FX2FPBIv5fx5dZVdKBmyjVJooaa/1CYoYn5TQoE21JnPpP4cRMHX+wtjS99JuNNCGV9GkQKgeEuNm9neF6aA5IpryoTyX6q0bb1ndcm0vEuXflE0SeX/28IVWBVvqsZTx8t3ALWOMjT7mWjZ70IMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N+LYhooy; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JG3m4znX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744132372; x=1775668372;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KiccT77guSl05qwq/f8E1x1Iwhvgdns3YBbXrIazhCo=;
-  b=JG3m4znXJR1B+uHXHOaXqgN2TtbUD2mGflo29pSaSmCARhyqY/o1ct2o
-   /Zb/eKaQ7TGbfi8BjKmpKMubfU0/vtPRH6yR3qLio/EDucwAgWM2Jh6Cy
-   Pca6g20R1p6DN7xfCpt4ksRz4WJVb6ziE6K+ypsJQigynLdMyguWU8MUO
-   s=;
-X-IronPort-AV: E=Sophos;i="6.15,198,1739836800"; 
-   d="scan'208";a="487678219"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 17:12:48 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:13538]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.159:2525] with esmtp (Farcaster)
- id c75f37ee-019c-4161-b594-54f7ed1f0739; Tue, 8 Apr 2025 17:12:47 +0000 (UTC)
-X-Farcaster-Flow-ID: c75f37ee-019c-4161-b594-54f7ed1f0739
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 17:12:45 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.100.5) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 17:12:40 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
-	<yonghong.song@linux.dev>
-Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
-Date: Tue, 8 Apr 2025 10:12:14 -0700
-Message-ID: <20250408171231.35951-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <Z/VWUVk+mHXTENms@gmail.com>
-References: <Z/VWUVk+mHXTENms@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N+LYhooy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744132387;
+	bh=ZmKKaF88TDW5BhsqNDRVpPFhYgW4wUtMCyjmNc6OQI4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=N+LYhooyQkLc4kOLhP8SJHaiNWekPAzmDrAUOC36on+9cwi20BvQRvfQNKoQnvJgI
+	 brR9vh2Y284w75RfWBCOWMaX5WSR4e7QM8tw1fAPVkqXKRFlTLP4E/aRJuSZTUM/hD
+	 KHqw85ddoinhSpHsfdKMdo3Eof1MFPCGSpqhwS19I8yK1aMeq4V1gO/GgNoOH9bv6F
+	 SLmwTeshxovOM25iBuDnKwEIhSl+X1cvaNET0pDIs+Cgl7XqTIj+ddkgZCJT8LaebE
+	 h+3EJfn5y1A1plsZKqLCBOSoaWFENw+mgTBvw0Ac+FlFAfQFhcdl39Uco78WlELXWq
+	 VOHuyrr4Yti2g==
+Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 87EC617E07FD;
+	Tue,  8 Apr 2025 19:13:05 +0200 (CEST)
+Message-ID: <af5275a0017bc802379ee63df23fcafd44c8c285.camel@collabora.com>
+Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Boris Brezillon	
+ <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Mauro
+ Carvalho Chehab <mchehab+huawei@kernel.org>, Alex Bee
+ <knaerzche@gmail.com>, Benjamin Gaignard	
+ <benjamin.gaignard@collabora.com>, Detlev Casanova	
+ <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+ Jonas Karlman <jonas@kwiboo.se>, Christopher Obbard
+ <christopher.obbard@linaro.org>
+Date: Tue, 08 Apr 2025 13:13:03 -0400
+In-Reply-To: <5cd6e8d3-fa51-4225-a3b8-9727cfd95062@xs4all.nl>
+References: 
+	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+	 <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
+	 <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
+	 <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
+	 <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
+	 <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
+	 <35d34100-7013-4acb-a5a6-3408e0f45d9d@xs4all.nl>
+	 <1747c9d2f653a07418422157f4b1613246f39a6c.camel@collabora.com>
+	 <5cd6e8d3-fa51-4225-a3b8-9727cfd95062@xs4all.nl>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,64 +71,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWA004.ant.amazon.com (10.13.139.85) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 8 Apr 2025 10:01:05 -0700
-> On Tue, Apr 08, 2025 at 09:16:51AM -0600, David Ahern wrote:
-> > On 4/8/25 8:27 AM, Breno Leitao wrote:
-> > > 
-> > > 	SEC("tracepoint/tcp/tcp_sendmsg_locked")
-> > 
-> > Try `raw_tracepoint/tcp/tcp_sendmsg_locked`.
-> > 
-> > This is the form I use for my tracepoint based packet capture (not tied
-> > to this tracepoint, but traces inside our driver) and it works fine.
-> 
-> Thanks. I was not able to get this crashing as well. In fact, the
-> following program fails to be loaded:
-> 
-> 	SEC("raw_tracepoint/tcp/tcp_sendmsg_locked")
+(just trimmed a bit)
 
-Try SEC("tp_btf/tcp_sendmsg_locked") and access the raw argument
-(struct sk_buff *skb) instead of bpf_raw_tracepoint_args.
+Le mardi 08 avril 2025 à 16:32 +0200, Hans Verkuil a écrit :
+> So can we agree on the following (I think):
+> 
+> 1) rkvdec_try_ctrl no longer checks the image_fmt. Effectively this means that there
+>    is no longer any need to change rkvdec_try_ctrl in this patch.
 
-The original report used it and I was able to reproduce it
-at that time.
+Correct.
 
-https://lore.kernel.org/netdev/Z50zebTRzI962e6X@debian.debian/
+> 
+> 2) in rkvdec_s_ctrl we do the image_fmt check: if it changes, but vb2_is_busy is true,
+>    then return -EBUSY, otherwise call rkvdec_reset_decoded_fmt(). This code is specific
+>    for V4L2_CID_STATELESS_H264_SPS, so just make sure it is under an if/switch for that
+>    control ID.
 
+Correct. In practice, the IOCTL implementation function will be renamed
+to what Jonas proposed (translated to s_ctrl instead of try), with some
+name like s_sps_ctrl() (can't remember exactly). This is because
+upcoming HEVC will endup sharing this code. Its going to be 1 control
+per codec that supports 10bit.
 
-> 	int bpf_tcp_sendmsg_locked(struct bpf_raw_tracepoint_args *ctx)
-> 	{
-> 		void *skb_addr = (void *) ctx->args[0];
 > 
-> 		bpf_printk("deref %d\n", *(int *) skb_addr);
+> 3) I'll see if I can make a patch to clarify in the control documentation that setting
+>    it can change the format.
+
+Thanks.
+
 > 
-> 		return 0;
-> 	}
-> 
-> libbpf refuses to load it, and drumps:
-> 
-> 	libbpf: prog 'bpf_tcp_sendmsg_locked': BPF program load failed: Permission denied
-> 	libbpf: prog 'bpf_tcp_sendmsg_locked': -- BEGIN PROG LOAD LOG --
-> 	0: R1=ctx() R10=fp0
-> 	; void *skb_addr = (void *) ctx->args[0]; @ tcp_sendmsg_locked_bpf.c:18
-> 	0: (79) r1 = *(u64 *)(r1 +0)          ; R1_w=scalar()
-> 	; bpf_printk("deref %d\n", *(int *) skb_addr); @ tcp_sendmsg_locked_bpf.c:20
-> 	1: (61) r3 = *(u32 *)(r1 +0)
-> 	R1 invalid mem access 'scalar'
-> 	processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-> 	-- END PROG LOAD LOG --
-> 	libbpf: prog 'bpf_tcp_sendmsg_locked': failed to load: -13
-> 	libbpf: failed to load object 'tcp_sendmsg_locked_bpf.o'
-> 	Failed to load BPF object: -13
-> 
-> > As suggested, you might need to update raw_tp_null_args
-> 
-> Thanks for confirming it. I will update raw_tp_null_args, assuming that
-> the problem exists but I am failing to reproduce it.
-> 
-> I will send an updated version soon.
+> 4) I'll make a patch for the cedrus driver as well to align with the approach in rkvdec.
+
+Thank you ! Glad we got to the bottom of it. As for rkvdec TODO, I will
+prepare an upstaging patch series, and fix anything needed.
+
+Nicolas
