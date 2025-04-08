@@ -1,130 +1,78 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B67124501C;
-	Tue,  8 Apr 2025 19:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180712405F5;
+	Tue,  8 Apr 2025 19:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744140738; cv=none; b=t+sJrKnTwUObBZvwOEhGxPIMJqiAeZHgoR/25MfUmlRlxd+cTS/viKwQv+qWQ8VDXrb0OzhjWQynnL0oDkz2HQ2cGq+iksc/UeRXOEYuz3lLhUDQrhS5MBaCS2AgmKexJhIy1C6XjMB7DDQougRXCQy1B/FguW3YPRoZHjt2ELI=
+	t=1744140754; cv=none; b=twEBVeLMNrcketxJEhT1UI5QDzTg9pPVNLakZIO6vXCorNHO1FJE3wtua5uE9+BGxQM69T+sLRBxH6G2imZeAvZUpVgtkR1mIoxtRp6x3Ccei14kNBSkfUz6ioXw/CtP2qEW4WbViEbqIIrbB50UkRLgBdmvQpPe4PArVsODSwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744140738; c=relaxed/simple;
-	bh=/g5m4elKq5diPwjXu3QJwc7cOXThinhGSJN3hT85NhM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q00NJlegG9/BXaorQx8kdmnhSB2DPmpJinXK3IycTyxVXtGV+1Hk2yJ5geBk68fdXvT7l7HcqaGeN3y1NN5xKkM0pLm6aCn4k+Au2KOQ4f9BQKlO9E0JXubAE2lQf97kI+TcBwAvHldfHHraKj7KXL1CIKbhQaN6noHKEBgQlMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCAjdMpR; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744140754; c=relaxed/simple;
+	bh=W2dDfp+6u530Uuogb1eaOEl6QW1bQx+CZ05zi1+pviA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eQu35ere/I5bIk7L9OgjztKdtL+iHajrIf7eJG7UgBG1vZuL3/JZAvzAi+qRmhhMXGB1CewVVh134ODjOboYrEEUJQyc3MXFtLRXc+fXLng4Qj3nM7E/RajIoICO/jdBazzVmsnuLl3GoSeLqLnukj/wR8IG5CscyitTEQbWfuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kpacp7lY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCAjdMpR"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso31055445e9.3;
-        Tue, 08 Apr 2025 12:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744140735; x=1744745535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sIgqXH9EYtYBlKfhIB28wi5x+Stg0Aqe9nHItTMya/c=;
-        b=eCAjdMpR4ZaWzYUI59ywDF9h3ri0VaUqXKjPoIb+u3aou4WKF/zdMjU+v6CZxrzhSu
-         uucJ5OA8uH63rJXmXEGFi817PV9G9ox7+V/zLL+1VCs0IuY/fuRBOfnqiWZhOTQZpGah
-         f/O7tabz+Og96R6aLruwp21jRrJYRZ4wG6E658f+2P82i8jUDfrFKhNHBV3e/kpf6qAa
-         BiHG2qpJ9dzhRCxJirdWkJI5EHZClJdPZJ3FqiLHzr4ZsEReQg1r1dFOltEvdH0/R+Ev
-         2DWcgd/Kb8de6SHbm/9V8B5Ld15KvDvlsbba3ySToSMQiMTG7B0K1k+R7RDrWOHWhsVy
-         idmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744140735; x=1744745535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sIgqXH9EYtYBlKfhIB28wi5x+Stg0Aqe9nHItTMya/c=;
-        b=Alk2lATmyG3Gsmd2SH+uzAmf7vWp/FiZABujoHlm8VMpyQsq/odiSb1V+spPUQLU6f
-         c5vULI/OQZp0KU3jtSrwKu9xibeWiLQqWlTqhVaOX4hJxSikRtCvB70e+RnJlqtKvmJ3
-         hROsmrtrNBjygippvEO/BknKPaJl04R+S6eWpx6CH8LkIIcYmbMBBBLDaGTc1PXd9zSb
-         nHJQ7R9CSTVIjjZLvjVlIJW92YUPb7/0P/4c9Pt0ZW3N8euJUPDTQfRQ6bgMLm5uppxh
-         R/07SqgnmLZzq8smblO49XTbSJPsMBpvoynqcD8byC7mvPhh+ti+fPYsXTcsna69+y5Z
-         NdIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHCkYuG5TA2nRQS0VyZimF6J0XMLW3OViP45GVTDRpXS2wsFIDgNpdCq8tG8H24GlsPN3q0JkjMn6lOlC+@vger.kernel.org, AJvYcCWL6PVfsJAc0fMz8PYxO/RJuuLkNcoFPIHqpI4IV2uH+S4sbBWD3J3aYl2Ow6gy3ItiYyva2qXXkL0MVy0=@vger.kernel.org, AJvYcCXwWiO+9a0WGgZ6V7rb823b59tV9I0cMELO5kivQC5u6gDtc0lCuuH9LhPfHnwI+3nh0ZfPXPOeOtAu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/F6MeGSWGS5TqzR9P0i3N4eGv7iEE6mUwlJYnmSIsKrduvRp2
-	TQRQZkJnI66AcVMdbzpLyOzCnXsU4t0mJW6Zox5u3jwz3yTxInnt
-X-Gm-Gg: ASbGncvfke1HIPAmbg13riEeUMDQR8wybnjoyq/JtiTgBGzbYRB4BXDsyLr03/erU+8
-	6sW4R9B+QJEarkgqb4T+leUTAmu3yWelL3/Qkk6CLJqh7Fd58qHhdtAsy+l/1n3rd3xDBNVGJAk
-	d8ALnqqPDZvW/LpOWOVuwy1fNECOiB8tQtPUf2qNa6iLNfSN50lR+NT1GYSTof5LpbOkRB4dT3X
-	eFTmDlnUfwr53xBScbD4iMUR7FJHruuBiFssDIgPpsftXqS2aPAmtPF+TUTBbEUKmX4I8FmmTOC
-	ffAvt6BOqbYpROAyl0RGDyX/7kv3y/YfhGs2kygFshukcvawQVa9aAdNLShXRFx1B+vK13GIX6U
-	RHqE=
-X-Google-Smtp-Source: AGHT+IGJ7TavDmi5cnvixHdygBLphuogQnSr41VmoPm0hPhwRRo9xCnj/ZnigqpcM9JunaCcx1yX+g==
-X-Received: by 2002:a05:600c:1f0c:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-43f1ecabff4mr3658045e9.12.1744140734495;
-        Tue, 08 Apr 2025 12:32:14 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:469:6216:b7f8:fc55])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364ec90sm170209395e9.27.2025.04.08.12.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 12:32:13 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/2] media: dt-bindings: media: renesas,fcp: Document RZ/V2H(P) SoC
-Date: Tue,  8 Apr 2025 20:31:58 +0100
-Message-ID: <20250408193158.80936-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408193158.80936-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250408193158.80936-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kpacp7lY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF541C4CEE8;
+	Tue,  8 Apr 2025 19:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744140753;
+	bh=W2dDfp+6u530Uuogb1eaOEl6QW1bQx+CZ05zi1+pviA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kpacp7lYjuknjeAUWo5lS7cD5D5R+2q49I1ToQQmf3CwzY2vKGxLFvIl/+yMDjTND
+	 8z/bPR/98nlFDyN1yZUcQgYmuybBx4nVHL8XDlMtMNzVYgzxRIRMaVjImdkTzM37+L
+	 SmfNM2mC1lkqirTYweGVBb2sYCFaozT69SxJG/q6J7Tew2e5jc9xxUDJ5psd+akeHH
+	 pOZ3YS//QOzJveCqT9R1ZkBg+drHdvnvOvi4re2ewjDrV8Ko/0DJlG7p/yRxzahwXQ
+	 nfJFLIORTZjE+OTzvN8e24ILmdssYNetW2JarrgM5ZJNKk1FuE8lLHbA/ga07uFNZh
+	 7SVSbMgh7g4Fg==
+Message-ID: <fcf2d508-d44e-43c3-b381-8f33fec11859@kernel.org>
+Date: Tue, 8 Apr 2025 13:32:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 2/2] trace: tcp: Add tracepoint for
+ tcp_sendmsg_locked()
+Content-Language: en-US
+To: Breno Leitao <leitao@debian.org>, Eric Dumazet <edumazet@google.com>,
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20250408-tcpsendmsg-v3-0-208b87064c28@debian.org>
+ <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 4/8/25 12:32 PM, Breno Leitao wrote:
+> Add a tracepoint to monitor TCP send operations, enabling detailed
+> visibility into TCP message transmission.
+> 
+> Create a new tracepoint within the tcp_sendmsg_locked function,
+> capturing traditional fields along with size_goal, which indicates the
+> optimal data size for a single TCP segment. Additionally, a reference to
+> the struct sock sk is passed, allowing direct access for BPF programs.
+> The implementation is largely based on David's patch[1] and suggestions.
+> 
+> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  include/trace/events/tcp.h | 24 ++++++++++++++++++++++++
+>  kernel/bpf/btf.c           |  1 +
+>  net/ipv4/tcp.c             |  2 ++
+>  3 files changed, 27 insertions(+)
+> 
 
-The FCPVD block on the RZ/V2H(P) SoC is identical to the one found on the
-RZ/G2L SoC.
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-No driver changes are required, as `renesas,fcpv` will be used as a
-fallback compatible string on the RZ/V2H(P) SoC.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/media/renesas,fcp.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.yaml b/Documentation/devicetree/bindings/media/renesas,fcp.yaml
-index f94dacd96278..5ed9427fb757 100644
---- a/Documentation/devicetree/bindings/media/renesas,fcp.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,fcp.yaml
-@@ -30,6 +30,7 @@ properties:
-               - renesas,r9a07g043u-fcpvd # RZ/G2UL
-               - renesas,r9a07g044-fcpvd # RZ/G2{L,LC}
-               - renesas,r9a07g054-fcpvd # RZ/V2L
-+              - renesas,r9a09g057-fcpvd # RZ/V2H(P)
-           - const: renesas,fcpv         # Generic FCP for VSP fallback
- 
-   reg:
-@@ -66,6 +67,7 @@ allOf:
-               - renesas,r9a07g043u-fcpvd
-               - renesas,r9a07g044-fcpvd
-               - renesas,r9a07g054-fcpvd
-+              - renesas,r9a09g057-fcpvd
-     then:
-       properties:
-         clocks:
--- 
-2.49.0
 
