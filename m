@@ -1,135 +1,170 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571C325FA34
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7522925FA34
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097006; cv=none; b=Gp+oBUg8h141HuEDNMaNyIFyGJi2WPazk7QJoUryRx+pROg4WYPK+M/8nh7lUcbN/81MRUPKhg+2Y+lQI1uShXGu4knUE4lPyTswp/9GkYHTuCfKdYgkZQH6GQ9lzJxHSeq9EMLV1jUjTOa/Y6K8DdxENrW/U7hOKzICTXiBftE=
+	t=1744097026; cv=none; b=c0donwD69qinQjIGDG8HcDgerKuzhn3bRVmpGTD9K+KmOOCw1vxEYx9LPmsy4GF3RIeX9S+BwRLiszwmxym44fLHdXoepJ2rV6QE3NUyNqkYz6uOsgHT8TEJEa7LcfE5UR9n3fXxDAPRjOBJmli48r9Il9+oWYPnNKgPPJTDbs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097006; c=relaxed/simple;
-	bh=1pHaIND2KYP7IQR016ZtHvkE+J/KYHTFCXPcGNsWjjg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M9ubdfM7HQgJmdpRWmre5B4tlWh4ckTUuZKs9rXlli0Q1nD0Y+mHXSvDBXDoi9Kux7dpJNLouLkooT5r8qvxY8UPJ4aBMZZ3fPhj1eWNgOrJnE3BwYgG382VYhHEIU7OMLHrx0KV69JW+XpmiiC7Ql2k2+YupB62uY7Ro/vOuK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sRcFrueT; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744097026; c=relaxed/simple;
+	bh=rL5dGpnFjOxWd3LsB+ItQyiyXmnHrcABj2M4ZSlcHDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B8YpntAJrqPWmbnA0MayMg5/CYSFOv+1uXVelas6mUi9dLHJtL3p5oeZvjuINmucCI8MzV97Z0ZsmOyr+zDiZQDrJztHBozfP9Uw5JvHBTegus/HgkAqOeUeTT3oN1CvgtDTiU5KOawHLHVS49/g0Nyu6cnV1T3rS8ue7OWXRDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uJbsUz5X; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sRcFrueT"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so51277915e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:23:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJbsUz5X"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso67134405ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097003; x=1744701803; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o6prcSe997utkmrj2Wk6sqfMRushEUX5sURGCDCfQ/A=;
-        b=sRcFrueTQ99Ls4ZePpZRhqqjFiEhdr00YQ2x18TcI754TcEF/sO+fins1dCOC9nfyA
-         GXfylqJEnhiOzZ7j/dCTQE89Vi30wMuU8NMDruU07O7Iy0w6c4LHourIbNGVIMFKlLv2
-         2eJI0KM42SOTKWTTlDPtGcTXiYdNjUHf6VC2VDIyY36ckfSOp8S4LzbA8YJK9Ln/Q3Ql
-         GRetzl4AwxI0xTaQNbxa+55+RPyOKq4phmGXNju11NvLg/9A54i57Soi7lHoS+AKhsiT
-         Xr2mEs6tv+i89rS9xh8jA0njfa6mhkmfdm8TXVDoCj6ByYOLgpd8kvKy/Svw0GNfVrTW
-         xW9g==
+        d=linaro.org; s=google; t=1744097024; x=1744701824; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gVo2aw8e68tzNUEBR5LrT7OG8JEIu/cx6FavvcXXg2o=;
+        b=uJbsUz5XeE6hxVIz5jX8ptxHA5XoKb+yTII+mdK+VOU7n1YmxMjAIOqbp7MsJq9tuw
+         fE/pRLuWpTe5MEcbttBT+ABUx2FcGa2bF2tRVsjR4IlRavwF4hNN7WtSg3UGWwV39y93
+         q++HJR7nkTc3dDktm1oeOggH/r/N/BzIeZIz9iaspPnCWJRkmQqCB7VBKwgXe6B2XTM7
+         Nb43SEZ0SdzmDVRkGl0ltxjtUen8jIPMLuu4ZwCgTmxLp9Yw1LQfXutIzg1IRUBLCUax
+         y49lXwVhHFZD5JkuBW0QuMlX8DHReYRIz9ZYZTZ+qz4tAZ4KMeFz+VzNHOWncqej62tQ
+         9gaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097003; x=1744701803;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o6prcSe997utkmrj2Wk6sqfMRushEUX5sURGCDCfQ/A=;
-        b=baXiq/04ujPd41P3VhGqEvmtd+r5xdIRRMDN3t6RS6zeW78APjT5ICFX+CYzj2CZ1o
-         qBES7gSiTmp3qtu8t3AjP8aOiqrZuk3mgD5XN6VkeHiieKVPvotxTlOck9DtTkIM/exf
-         V8LOsgCpt680Z+bhmsJg5JgSEAA67ov2aLEabkko6+/atN9A9+Z9FcVmw9M8+ZIj1gWx
-         7bGBwkTLFOtA6GkA4BPLWB2AfzE7yWKtK6+13s3sUZsc+JLnjMSnT+DmUXAXyoJj7F7H
-         SExIg+N/F0/4ofajJW7Zwqy4AEOQVtNoJfgklfgy7zkT0HCt4zKYFmhssSR4Ti8T+fw/
-         7MYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwj3ftjQfx+Ip0Mi5JBJW0XxD19eyZkXgxayzmg3N4Qs9xnO+dQ5rqkqBxtZ9msyRhQtMdYzJTAZTuRms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYCP5FQoBE3Wyv1G/lP4mJcXzUoA550P2qhzRU91SWqVdGSo5m
-	mRLHZTtiTZvQuMotQmiudEvtC3QFHsV7Bi98x6GAl7MbhOhY9F7ywEb1YMsSrxLCId7pClUFp+g
-	eyd4=
-X-Gm-Gg: ASbGncvvAzeO1tqCL1+ks3vGFE20FKaWdE6UJq0fa2LuH2u3KPEJDPkWICAoYbwB+GQ
-	wUn0Q/7G9jxmxZ+ktQ2MRqiMAo/60hhrRDxzSb+J8V8vLYCMQBOTB+cEI+HYIBC2/GpD8bqaV43
-	gN4LNzoFZmmXPGWlGsqclDZG05QWiRhOTrE3KF/OEexRvi6FjZS/1V5uD8+gE78QT6qbC2xo0VX
-	J9Ro3qF3ZV32KObcE2H7Q2eMtfcHwxZAJikyq7tdhG88lQqpowg1SOfNfLZMfS/Js6QCRtF8Av/
-	km8xrO7xWv005HQ1aDz4FpxwR4PJxLj9W7G5Yg==
-X-Google-Smtp-Source: AGHT+IHzySH+p8lRsbpEKp8XdjRw3BmN8WdHjMLgCKHMXaLLom4rGv3xsF4growXW8khurtrZ60whA==
-X-Received: by 2002:a05:6000:1846:b0:390:eb6f:46bf with SMTP id ffacd0b85a97d-39cb36b298fmr15212511f8f.5.1744096677281;
-        Tue, 08 Apr 2025 00:17:57 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.56
+        d=1e100.net; s=20230601; t=1744097024; x=1744701824;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gVo2aw8e68tzNUEBR5LrT7OG8JEIu/cx6FavvcXXg2o=;
+        b=lrAXh9Y3k73ijQEbxqUk7WjFB82WnXciMlK4PbrJSOqVC5Ji7orT7GlC8v0VCfv32u
+         Op5CG+8oKkiNJiNxdwYmMPB3lAqKmCdgXjB1D7I9rjiEFrGGXeV206TJZ3pEVodgKI1S
+         r2UC8FeDYMuYJRLH1cu7J1W8FkDd4VU2sQQCmCHSdOWabztvx07KwdJDoEQdP/UQdM79
+         OmIzSYpgz/2CuGnOtLIDxVt5kDLpeaYcrg1Q8bQ7EGn+h9tkuSZ5RT/4PBVl4No6pgdj
+         hUyLLYL5hjtx0iJ/tQsr8qnRNi476GMrnuyTuzeNcR0Y3BuxSM93bxhfnPySawDRt0Jl
+         juww==
+X-Forwarded-Encrypted: i=1; AJvYcCV5AJENfpR0vfEoebABsEm9MqovOpUOGs3pDoW3Jb0lDnmkqC5/jscX2VzkYJ74yiPC1Z195Gg5LXlqKHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUIOh2o9EEToYId+RIc/WfzTYDF8GWxOxRchSySr1v1BIH9aCK
+	uNl+vtiuwFFFKlSkxN5hj+YYgOL5oZmdDU/BQOdZYJ5oLYyEMx+jcsMip8FzYejv5og/tmgOrlk
+	=
+X-Gm-Gg: ASbGnct0OgWc8vlPvFNrgFJDPU9noUft9ljhkko+qAVYJDuHx3fjpl++ezWSz8PLJcw
+	tBJP5TqcMiXbaImbUtexpqREZOn1sZCWHKrZSWHwFXl8yjwp50WVUoUe3WG1g635jISnj/zOh4K
+	zQ0IR6QQqj3lBEsaO23fUQd6XOof3GhNE2yXcus7k6zbGBH3/aXaFgY/4Mkwfa4EX0wqQgVTsUi
+	aArtDRxVx7JrdCRr9P0Fy1PhDTpmpKHy1al7l5BSn4zww448pLMwHRoypsQfFgyVoQqUtYhVz9+
+	Lu8nFejJO3h4XUhX/rYO7ZtUXXuGKNFHLgiPIuqlibkrEoa4PMrMtZ/e
+X-Google-Smtp-Source: AGHT+IFPM9/HimoR1iqD87ojIqSwcwz9XpIsOOx/gkGl8C+bQirMDZCXalGm8Chz/NcPiOQyGMeqew==
+X-Received: by 2002:a17:902:d484:b0:223:6180:1bea with SMTP id d9443c01a7336-22a955734cfmr159838375ad.37.1744097023770;
+        Tue, 08 Apr 2025 00:23:43 -0700 (PDT)
+Received: from thinkpad ([120.60.134.231])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787776f8sm92798135ad.256.2025.04.08.00.23.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:17:57 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:17:44 +0200
-Subject: [PATCH 07/10] pinctrl: sx150x: enable building modules with
- COMPILE_TEST=y
+        Tue, 08 Apr 2025 00:23:43 -0700 (PDT)
+Date: Tue, 8 Apr 2025 12:53:37 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: MANISH PANDEY <quic_mapa@quicinc.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
+	quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com, quic_cang@quicinc.com, 
+	quic_nguyenb@quicinc.com
+Subject: Re: [PATCH V2 2/2] scsi: ufs: introduce quirk to extend
+ PA_HIBERN8TIME for UFS devices
+Message-ID: <l6xao2ubcvv3ho56dv6qfr3b62ve3olfbhvywg2is2xdhod27r@2nyjfwinrxzm>
+References: <20250404174539.28707-1-quic_mapa@quicinc.com>
+ <20250404174539.28707-3-quic_mapa@quicinc.com>
+ <hcguawgzuqgi2cyw3nf7uiilahjsvrm37f6zgfqlnfkck3jatv@xgaca3zgts2u>
+ <d09641c7-c266-4f0a-a0e3-56f63d8c9ce3@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>, 
- Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=667;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=YmzRn8TzGA6hsDQ4Ls1ViAlvgo7b9jMn9Wlo//Y9vfE=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2a3aI8tyRJWFB0j50+lYKjuGbu/ifeaeFQ/
- 4M0t4m17MyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmgAKCRARpy6gFHHX
- cnJ4EACh4EPB2PiBQrpFxrQpn3I5/hHOewyCLs6D3bGW26OisrbJ6BrXg5SN88KZnurmvDHsuP3
- MvwP+6leXhNTitXtnj5TQxtJin6NVZ0Al8MJyd9xwa21k8YTlRMm7rgA4Vx9CNvjDV9gf5XOdBF
- o3JYv1QhJr/SgcdkDr5Ox/diUgdt5Z+bjO2zMLW0i90TN8XxW/blNaWT5xnj070aBbwHIva6E+l
- v1y1VlHp/I4MrpZmV4MtqxBFHCOAQZEOd+itR+n/S8LP50+qens7NAVqfZhfaQQ7KSmLbRKJpm5
- kiG1CDXKTkVqJunSULnVtRahqu1J6ZcmwDJeXTo5PtKQZiFIlUHRjOs60Av24wdhwd+FY4ptQOp
- pU+EYeQcKSLcEMkga3AqSlN+IrU5XJAo9Y4FLczzGc6/9kTe7Y/MLq04J3fmVsp5KDuJR98aytJ
- 6m/1/sJrIyiE38hKgq9Ta2I/s9/NjynRehGmP87FTcRsCV1bnl97G4/o6CZtPg/knk7WmCFCogS
- WBIkWDQrNxAYw16mjSeY+350vXO3jYh+7OIbRVqdjqYiZKSAy9A2h4HULcXVra+fEX2z6ALsNmI
- gsWEWEJpEXYy62lnL9J9OTf1+ihsnQZFt0jOnnge9cZzyJTQW7bhCj2GDkVkcgK5wezSQQbuork
- C6IVZWbEkEfQnFg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d09641c7-c266-4f0a-a0e3-56f63d8c9ce3@quicinc.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Apr 08, 2025 at 11:07:58AM +0530, MANISH PANDEY wrote:
+> 
+> 
+> On 4/7/2025 12:05 AM, Manivannan Sadhasivam wrote:
+> > On Fri, Apr 04, 2025 at 11:15:39PM +0530, Manish Pandey wrote:
+> > > Some UFS devices need additional time in hibern8 mode before exiting,
+> > > beyond the negotiated handshaking phase between the host and device.
+> > > Introduce a quirk to increase the PA_HIBERN8TIME parameter by 100 µs
+> > > to ensure proper hibernation process.
+> > > 
+> > 
+> > This commit message didn't mention the UFS device for which this quirk is being
+> > applied.
+> > 
+> Since it's a quirk and may be applicable to other vendors also in future, so
+> i thought to keep it general.
+> 
 
-Increase the build coverage by enabling the sx150x modules with
-COMPILE_TEST=y.
+You cannot make commit message generic. It should precisely describe the change.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Will update in next patch set if required.
+>  >> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+> > > ---
+> > >   drivers/ufs/core/ufshcd.c | 31 +++++++++++++++++++++++++++++++
+> > >   include/ufs/ufs_quirks.h  |  6 ++++++
+> > >   2 files changed, 37 insertions(+)
+> > > 
+> > > diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> > > index 464f13da259a..2b8203fe7b8c 100644
+> > > --- a/drivers/ufs/core/ufshcd.c
+> > > +++ b/drivers/ufs/core/ufshcd.c
+> > > @@ -278,6 +278,7 @@ static const struct ufs_dev_quirk ufs_fixups[] = {
+> > >   	  .model = UFS_ANY_MODEL,
+> > >   	  .quirk = UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
+> > >   		   UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE |
+> > > +		   UFS_DEVICE_QUIRK_PA_HIBER8TIME |
+> > >   		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS },
+> > >   	{ .wmanufacturerid = UFS_VENDOR_SKHYNIX,
+> > >   	  .model = UFS_ANY_MODEL,
+> > > @@ -8384,6 +8385,33 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
+> > >   	return ret;
+> > >   }
+> > > +/**
+> > > + * ufshcd_quirk_override_pa_h8time - Ensures proper adjustment of PA_HIBERN8TIME.
+> > > + * @hba: per-adapter instance
+> > > + *
+> > > + * Some UFS devices require specific adjustments to the PA_HIBERN8TIME parameter
+> > > + * to ensure proper hibernation timing. This function retrieves the current
+> > > + * PA_HIBERN8TIME value and increments it by 100us.
+> > > + */
+> > > +static void ufshcd_quirk_override_pa_h8time(struct ufs_hba *hba)
+> > > +{
+> > > +	u32 pa_h8time = 0;
+> > 
+> > Why do you need to initialize it?
+> > 
+> Agree.. Not needed, will update.>> +	int ret;
+> > > +
+> > > +	ret = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
+> > > +			&pa_h8time);
+> > > +	if (ret) {
+> > > +		dev_err(hba->dev, "Failed to get PA_HIBERN8TIME: %d\n", ret);
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/* Increment by 1 to increase hibernation time by 100 µs */
+> > 
+> >  From where the value of 100us adjustment is coming from?
+> > 
+> > - Mani
+> > 
+> These values are derived from experiments on Qualcomm SoCs.
+> However this is also matching with ufs-exynos.c
+> 
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 464cc9aca157..94eb41bb9cf2 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -541,7 +541,7 @@ config PINCTRL_STMFX
- 
- config PINCTRL_SX150X
- 	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
--	depends on I2C=y
-+	depends on I2C=y || COMPILE_TEST
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
+Okay. In that case, you should mention that the 100us value is derived from
+experiments on Qcom and Samsung SoCs. Otherwise, it gives an assumption that
+this value is universal.
+
+- Mani
 
 -- 
-2.45.2
-
+மணிவண்ணன் சதாசிவம்
