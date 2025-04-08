@@ -1,105 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07EB25F78A;
-	Tue,  8 Apr 2025 00:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744073669; cv=none; b=NbHb1KXum7YESarPOuwUZsBMU2kMd/jgKZgSovSthaxT68jIEwBQxQWTVK+79OUTHCqy9hyBU79OqRbBCuQw5V4TRaNB2ZohWkgHQ8w2g8RB4avustmpJVxMxAddYX/apLMPl9zmSSObXlinMlewibv5ZC7JQTC0fOvqNcdDKjQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744073669; c=relaxed/simple;
-	bh=+QwO1WLnO79Bu7Zo5cxOUyEMBOqZlMWoTt+shk687wk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U7+eVYPyBCo0DK1276J7wVSTCxlDbC4qlnymJQJsWom0DkQl+9f0ZKSV9PbY3L7NCA6CmlTxL4iDa2rbr2Jb3PFJdj+Z8VkE1mHCdAc+/2SB6AKztz7sHFQNr+opTogws8Q/S74EVpX3w63Avx8bFdteHtWgc6xuH3gkcINVvpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LL9lq5dd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LL9lq5dd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 219FFC4CEE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADC525F789;
 	Tue,  8 Apr 2025 00:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744073669;
-	bh=+QwO1WLnO79Bu7Zo5cxOUyEMBOqZlMWoTt+shk687wk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LL9lq5ddAion7TfNYvlhBE6d2ksG4ckHS3BQvqKowffHmaRju3UJWfzPUHi42ItCr
-	 CyJt1+KT9huOpMT33BVhE0TQRH71ByR2dUET2+c4cuySSC0lqlM2SzRXwexwwPcI1H
-	 vF2S72wVTBdDpvZ0TEzsNoPLRgSAeKE7jCVPJJ0WRQaJW7l6+fPhB5MLhafxh4PzTf
-	 RWIsYEHeRKx9Krd4grPICjwf32sNAb/U34lbG6an7xm+QsiRg7TSPnbGrQ2yT2Wq78
-	 KBxbT+IGjGuN1YioX4hPi3oV91w2b8uuUFKMEEKfhbeMKlJEcyKvKF5PeG1tyIAOTA
-	 xPoTSIebSWOfg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	kernel test robot <lkp@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	ojeda@kernel.org,
-	aliceryhl@google.com,
-	akpm@linux-foundation.org,
-	masahiroy@kernel.org,
-	tj@kernel.org,
-	mmaurer@google.com,
-	yoann.congal@smile.fr,
-	jeffxu@chromium.org,
-	roman.gushchin@linux.dev,
-	chenridong@huawei.com,
-	axboe@kernel.dk,
-	jannh@google.com,
-	mark.rutland@arm.com,
-	vincent.guittot@linaro.org,
-	brgerst@gmail.com
-Subject: [PATCH AUTOSEL 5.15] sched/isolation: Make CONFIG_CPU_ISOLATION depend on CONFIG_SMP
-Date: Mon,  7 Apr 2025 20:54:23 -0400
-Message-Id: <20250408005424.3334978-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744073670; cv=none; b=CB8sAidRE9AU7fC4LoWiIDPEXMZzBEgwJe+BhFNwkrjAQjrsc5v0INYNKkEJ3cUY3yQydAK3VoNx9b2CEJbT7wAZRqj3Yp2NZkG8SiljTV/e+tLgbzUCFF2yAuc3mLH51ofVpj8ICWvX/6kmuDZ1O22zouUq77Stp1yI4J3ZS94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744073670; c=relaxed/simple;
+	bh=pJpeS6UDHGbVjpYImIei67eeZth3rh0ZwvC8QX8E05s=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lm+X3UQzaMir/W3rfZtFGm5cFjseo699ZQavqx3r+Y1+35MwT75SvFKqq5GYcRnVLwdkDen0XyCfm2iEesgyGEQ8WqZzf16OyDEa0wrTQ89XLwm8EMFNPeXMb7tItX7nGdgZjlMzlHmXKGomjb2P5t8K6oC6G2NXs+7/R+ZIWgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Fo7neAck; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Fo7neAck"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744073668; x=1775609668;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UgadiJU1w8yj5XJQ01I/QKqBYxUhyf+os7wrkgro9Yg=;
+  b=Fo7neAck6FmZuZtKWG6DCUY7jugp1rUXNWauz+IvKS+ukOYNVKJRDvKR
+   YOdyV6q0Mi2R99EjqC1ei9yaCcPagsaiYy5snm/TP7emMftLyADEZ/MGR
+   yeCjYiNdRnZWDTh5FMiFu/9odeF0wmVFf0miYfXk5ThZjUT3bjNIBme1r
+   s=;
+X-IronPort-AV: E=Sophos;i="6.15,196,1739836800"; 
+   d="scan'208";a="711903701"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 00:54:24 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:34745]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.222:2525] with esmtp (Farcaster)
+ id 735bb698-a981-4318-8a7b-aa579c2e66da; Tue, 8 Apr 2025 00:54:23 +0000 (UTC)
+X-Farcaster-Flow-ID: 735bb698-a981-4318-8a7b-aa579c2e66da
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 00:54:23 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 00:54:18 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
+	<yonghong.song@linux.dev>
+Subject: Re: [PATCH net-next v2 1/2] net: pass const to msg_data_left()
+Date: Mon, 7 Apr 2025 17:53:48 -0700
+Message-ID: <20250408005404.10223-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250407-tcpsendmsg-v2-1-9f0ea843ef99@debian.org>
+References: <20250407-tcpsendmsg-v2-1-9f0ea843ef99@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.179
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D035UWA004.ant.amazon.com (10.13.139.109) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Breno Leitao <leitao@debian.org>
+Date: Mon, 07 Apr 2025 06:40:43 -0700
+> The msg_data_left() function doesn't modify the struct msghdr parameter,
+> so mark it as const. This allows the function to be used with const
+> references, improving type safety and making the API more flexible.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit 975776841e689dd8ba36df9fa72ac3eca3c2957a ]
-
-kernel/sched/isolation.c obviously makes no sense without CONFIG_SMP, but
-the Kconfig entry we have right now:
-
-	config CPU_ISOLATION
-		bool "CPU isolation"
-		depends on SMP || COMPILE_TEST
-
-allows the creation of pointless .config's which cause
-build failures.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250330134955.GA7910@redhat.com
-
-Closes: https://lore.kernel.org/oe-kbuild-all/202503260646.lrUqD3j5-lkp@intel.com/
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- init/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/init/Kconfig b/init/Kconfig
-index dafc3ba6fa7a1..c7d81fc823964 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -674,7 +674,7 @@ endmenu # "CPU/Task time and stats accounting"
- 
- config CPU_ISOLATION
- 	bool "CPU isolation"
--	depends on SMP || COMPILE_TEST
-+	depends on SMP
- 	default y
- 	help
- 	  Make sure that CPUs running critical tasks are not disturbed by
--- 
-2.39.5
-
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
