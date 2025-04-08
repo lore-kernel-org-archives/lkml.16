@@ -1,49 +1,65 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779F51FBCB2;
-	Tue,  8 Apr 2025 09:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18872627FC
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102933; cv=none; b=Irtg3yjyDmPfQeJa9DvFf3Ui/NsQwM15z4DR/BbbNHI3M+GkiLhQb/fSPr4Krn1WgsMnjPe8sOyy1PErTdm16Z4I0mbyl8SduB8ntypQb55QRV91AkkU9H9lib4MNsZTXgKNBpMOXiUaZdo2d+EdJbceTfimsScrlPZsCFgJHyI=
+	t=1744103004; cv=none; b=k4w8SKj8stekdsF2wHJJ7kuAQmW0ow5RT32SsoBk7YLxHTDTpOYU/wF4wTJLWgdtKChIHloGPblUL9DAUjskltUp8hont1DhTXTdxX+Nn4oK0+qcoIfme8SgAUIgQlDdsccOdc7Hym4gVZiOal0XY65ic1v1+M7OYEwLP0Peeek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102933; c=relaxed/simple;
-	bh=z7Cha15V0ILDrcP5b0jRZklccvtk7v7vO6gT5GgZFFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b/QDS2oD1N9MuMQsE5thULLmlX79gF1Mzf+WjJSCnGU7NUpqpqjBQfWrVcuuPj3d5kJ51r8fkTc+bKbLigkNCg3OlsUW08weKafUXb2U89pgAhhzbt4fWIdUUolRCNt5+h0rO59FVMQL+dUC8c2HfWzIZFz7OOADv4Gh8w/VwwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JOkLFO3x; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744103004; c=relaxed/simple;
+	bh=jyNWNielaFZNC8x7ge6GPxBZUjXlMnqCK7elcflhkqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qep7UkoK4MTuKGzrkwErWfDMsD5/ivHpe/0SBCzzNs0uCJKfonT7hy9hQUaDj6qiJQRe95uP+1HXXH7cRn3OH/oHh7ZCz+uRk8RfI7i4Q+q1Aci3v8YUbbiCslLSB77i3cMyeZImf4NAWCIzTitFBYz3qEvH7FzE9bZA1cLeWW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FIrF3yHz; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JOkLFO3x"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53891hi11160287
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 04:01:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744102903;
-	bh=rrO5+3jLA9u6YmdlYq07ISlibfw3+DurUYygTV//ofg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=JOkLFO3xUToYd/3n7owkQSKS7En/kxmM0K9OB3M57N7mEAnePlon7ZipaD19H72SM
-	 aDjEp7Z5mVR9nQ0po4zpI+gx6cP9pkhfZwoX1gsFCuy9rtRE/VFjF+z96brCVBwbNe
-	 0RRMPjd0JFmcXmkveJtIfCygdZBGzEn6izsX3Rzk=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53891hYc094144
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 8 Apr 2025 04:01:43 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
- Apr 2025 04:01:42 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 8 Apr 2025 04:01:42 -0500
-Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53891cZ8017127;
-	Tue, 8 Apr 2025 04:01:39 -0500
-Message-ID: <c1762c69-6a76-4f89-ab64-e6d9215e1be2@ti.com>
-Date: Tue, 8 Apr 2025 14:31:38 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FIrF3yHz"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso35624675e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744103001; x=1744707801; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v65PC4QNaexxwzfjQafXjEr0ZPne6aP7FPOvE5lZvcA=;
+        b=FIrF3yHzOYrwO3qD/MQ1xznKAMcCMrkUSkkzQ4PzwlmfqV2JHENVqpwDvPFs/RVbX3
+         fUcdzVgdMnwe5qhg0DE6sQJ1IaKBJ/th6P+YqvRkOpmv2z+7Bbcht6l3EkFYWHnNVIcH
+         uSBbh1eZTjOvL6D1T8sjzOgW3P5CEV1mrZ4xDu34y/s6wtKpdNj2V3++krMiSl+pA9KU
+         ZMf26delNyJd+suj1qJ2pqcxgnsVon1O30ROsjePprAGitx6C37I5rLjXBgVu13okS3q
+         /73HBjJz4HWmehlEcscv6uyShy/7b+THMthq9aP5xebXg/IXHxnM49drxSprIJQd+e24
+         rdUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744103001; x=1744707801;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v65PC4QNaexxwzfjQafXjEr0ZPne6aP7FPOvE5lZvcA=;
+        b=VcmWd1ImzUHTIv4+MFlzKg8uRpW/JYoNizaT42VrojgMu4Fr7kKNX/WkXo5BvhO9Oz
+         DsbF9JOi6Rgfquq0+51vAocZGcCMdrHFX5aspskVpQPRHeWqWuBa8daWuochcX0XguRm
+         yP3Lth1zgSTUYVhl0PfupzoWLAPJuG6SKPQyMll5M2Pf+7aJkANlI25bDV6oMVCvJYeq
+         LWdjIO6QTsWvo7r4/+CVP0rH69ZEBfJji/lyYTQwWoar5PrtsGbyDy0XUh8cImh3CZOF
+         jL61ZHKTINofyHQakeQuvQVba2cAIzdgZn7bLG5utwDAe7DGwRoH775MZUw4otXMp3na
+         8Hbw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0oZhS4ToYQBiLbC3FtRZxTwrqS5BxNbWutAFaO0YUHjurYXVC/d4r0z/aoG8uKoiPOH81Nl4rVtFF7r4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPbQ3beU6dSmoTsPhrejTz6A+5pBsBgCrdJABEV74KuxW+p9tY
+	Hz+Xm7LNh+iN2Jvhiamd+z80xMWk3dGRuAGSy9w/BW4kPm8QsxOMSrUotJ/l40I=
+X-Gm-Gg: ASbGncuW64cjmK5ODRaoYE4dXz83GdICtFX/Ijz2fUFW6cMhAEQH/q3LLRzLxTs15Qe
+	61Fac/xePbup9XocDEVj8J7R2f/+m5DzbND6oSo/4YO72H/YvJMvGfvst3V6/U559xCdOw3IxE5
+	cYV4JFDvmTAApo45uAmDEjUUr7ShE/upKRRFD5fjJYs2TgR081JvcpbatUsOSHacUSZZ5VBLXXP
+	s+FudERpTiD+cw+83BqATkuSL65zooBqXYm4ydUVoU6oXf6N/nbeCOQB9dA64lWREshQa24yega
+	r8qLZi3Ov14pfr8qMc04p0jmSO/gbKwP2rW2ZUGVL+xM1xD346Lb1lktZ+/xDzEFUjh1fDfRmcY
+	qkn56/fNo
+X-Google-Smtp-Source: AGHT+IF59mR/Y3gCWpGgqEsAY2RKfJDBH8CAcpxTKw2Uqi3PNlCOWS3dudcLSJmJZMiC+3LMt4kLng==
+X-Received: by 2002:a05:600c:500c:b0:43d:bb9:ad00 with SMTP id 5b1f17b1804b1-43ecf8cf6b2mr177755405e9.15.1744103000892;
+        Tue, 08 Apr 2025 02:03:20 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39d75ac6d66sm8004445f8f.14.2025.04.08.02.03.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 02:03:20 -0700 (PDT)
+Message-ID: <1e3d9e34-133d-451c-9ce6-6c974a781305@linaro.org>
+Date: Tue, 8 Apr 2025 11:03:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,120 +67,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] arm64: dts: ti: k3-j721e-sk: Fix dtbs_check warnings
- in IMX219 overlay
-To: Nishanth Menon <nm@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
-        <jai.luthra@linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
-References: <20250401114053.229534-1-y-abhilashchandra@ti.com>
- <20250401114053.229534-4-y-abhilashchandra@ti.com>
- <20250407134523.d56rjpydflmkw2ze@privatize>
+Subject: Re: [PATCH v3 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Krzysztof Kozlowski <krzk@kernel.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250407160318.936142-1-daniel.lezcano@linaro.org>
+ <20250407160318.936142-2-daniel.lezcano@linaro.org>
+ <094855d6-a99b-4ca5-bc8f-ab6faccfd332@kernel.org>
 Content-Language: en-US
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-In-Reply-To: <20250407134523.d56rjpydflmkw2ze@privatize>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <094855d6-a99b-4ca5-bc8f-ab6faccfd332@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Nishanth,
-
-On 07/04/25 19:15, Nishanth Menon wrote:
-> $subject - the patch adds description for the supplies for the sensor.
-> Please fix the description.
+On 08/04/2025 10:21, Krzysztof Kozlowski wrote:
+> On 07/04/2025 18:03, Daniel Lezcano wrote:
+>> +
+>> +allOf:
+>> +  - $ref: watchdog.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - const: nxp,s32g2-swt
+>> +      - items:
+>> +          - const: nxp,s32g3-swt
+>> +          - const: nxp,s32g2-swt
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Counter clock
+>> +      - description: Module clock
+>> +      - description: Register clock
+>> +    minItems: 1
 > 
+> Why clocks are flexible? The SoC does not change between boards. It
+> should be a fixed list - block receives that number of clocks or does
+> not... unless you meant that different instances of the block have
+> different clocks?
 
-In this patch, I am addressing all dtbs_check warnings generated from 
-this overlay:
+The documentation describe the watchdog module with a clock for the 
+counter, a clock for the register and the last one for the module.
 
-1. Adding the missing regulator node
-2. Removing the incorrectly added clock-names property
+IIUC, these clocks are enabled when the system is powered-on or exits 
+suspend.
 
-Due to the inclusion of both changes, I opted for a more generic commit 
-title.
-Please let me know if you want me to split this patch into two separate 
-patches
-with specific commit titles and commit messages.
+The driver does not have a control on them.
 
-Thanks and Regards
-Yemike Abhilash Chandra
+The only usage of the clock is to retrieve the rate of the counter in 
+order to compute the maximum timeout. So only one is needed.
 
-> On 17:10-20250401, Yemike Abhilash Chandra wrote:
->> The device tree bindings mandate three regulator nodes for the IMX219
->> sensor: VANA (analog), VDIG (digital core), and VDDL (digital I/O). Add the
->> necessary regulator nodes in the device tree overlay and also the device
->> tree bindings do not include a clock-names property. Remove the incorrectly
->> added clock-names entry to avoid dtbs_check warnings.
->>
->> Fixes: f767eb918096 ("arm64: dts: ti: k3-j721e-sk: Add overlay for IMX219")
->> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->> ---
->>   .../dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  | 35 +++++++++++++++++--
->>   1 file changed, 33 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
->> index 47bb5480b5b0..4eb3cffab032 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
->> +++ b/arch/arm64/boot/dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso
->> @@ -19,6 +19,33 @@ clk_imx219_fixed: imx219-xclk {
->>   		#clock-cells = <0>;
->>   		clock-frequency = <24000000>;
->>   	};
->> +
->> +	reg_2p8v: regulator-2p8v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "2P8V";
->> +		regulator-min-microvolt = <2800000>;
->> +		regulator-max-microvolt = <2800000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->> +
->> +	reg_1p8v: regulator-1p8v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "1P8V";
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->> +
->> +	reg_1p2v: regulator-1p2v {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "1P2V";
->> +		regulator-min-microvolt = <1200000>;
->> +		regulator-max-microvolt = <1200000>;
->> +		vin-supply = <&vdd_sd_dv>;
->> +		regulator-always-on;
->> +	};
->>   };
->>   
->>   &csi_mux {
->> @@ -34,7 +61,9 @@ imx219_0: imx219-0@10 {
->>   		reg = <0x10>;
->>   
->>   		clocks = <&clk_imx219_fixed>;
->> -		clock-names = "xclk";
->> +		VANA-supply = <&reg_2p8v>;
->> +		VDIG-supply = <&reg_1p8v>;
->> +		VDDL-supply = <&reg_1p2v>;
->>   
->>   		port {
->>   			csi2_cam0: endpoint {
->> @@ -56,7 +85,9 @@ imx219_1: imx219-1@10 {
->>   		reg = <0x10>;
->>   
->>   		clocks = <&clk_imx219_fixed>;
->> -		clock-names = "xclk";
->> +		VANA-supply = <&reg_2p8v>;
->> +		VDIG-supply = <&reg_1p8v>;
->> +		VDDL-supply = <&reg_1p2v>;
->>   
->>   		port {
->>   			csi2_cam1: endpoint {
->> -- 
->> 2.34.1
->>
-> 
+However Ghennadi would like to describe the register and the module 
+clocks in case there is SoC variant where it is possible to have control 
+on them [1]
+
+The goal is to give the description the flexibility to describe just one 
+because the other ones are not needed for this s32g2/3 platform.
+
+
+[1] 
+https://lore.kernel.org/all/93d83df2-d3bc-e32d-70a6-158571504275@oss.nxp.com/
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
