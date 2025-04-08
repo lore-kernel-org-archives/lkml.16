@@ -1,132 +1,90 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD06C17332C;
-	Tue,  8 Apr 2025 17:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93EF22F39F;
+	Tue,  8 Apr 2025 17:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134557; cv=none; b=CUpqxPHqykStHrRYUH7OT6e5D2TEQ5roI5gFlrBmr09jszlnzc4BeGQR+WjD0H7D6DMR9D0qf70sdbYUR0gfZr+8RapG+DthkKTI7BknCPRE1cDSXpLF4+peQ5hL1k78bOqsR/UZPGDVFtxvvOOwpQXUMdtgk8honZN1DK0Tbkw=
+	t=1744134595; cv=none; b=qJMKnmRikZvAGtwZcGSniZo5Xb+7KNDhibhU6TsRpCspzoON1bDrgDf7PSAurVXW0apiRzPU7HWG2aDrhgnqMPssY1bgDRNoG0xaVYrYDnIaExADE3eRBgCKVfqgA95qZbPZWWCw/EqCi+2Nl3QZJj39UJnbWteNcQrs3nHXH8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134557; c=relaxed/simple;
-	bh=nYE/GPBKgV5rdH3Np+KQo5T8RRPSiFT/CZ2aYXPJSFI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q/NdRagCdq1jtejEkcAjO53oAP+2+CZ0erNJfr0F0kbhQ0lkCPluW2xNPG1EBhP/6kJA1z6Bw72md6fPsMLd6LsBhI6BZRYe5TGEmzGOwjOYvq67zXzqYW2r53bMwhL9u7GnWTpU1h4XNclet/98Uq2jDglrlNFYbg0DBuGaGfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IOE887h2; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1744134595; c=relaxed/simple;
+	bh=McapW7Tdxv9cDfYGpj7wLy91s53L74xcZuYJsNm6kbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNRJWhlyDzwI8DPgJgbio7qxxAKNJlQSkeRyDJCnuXLtEAyaD1Bn0ntr7Tb1jFzjeq6liHnDirxikVAT19L5bj2S84+kzW5clMU45tP3s28hRsFQ7Zpq4EgRKFrckedlxY2NWQ+G3zQ6g7e6RcOk3uSUfgHDh0aEDAQGxLDvJ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddlG1ooM; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IOE887h2"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso39953435e9.3;
-        Tue, 08 Apr 2025 10:49:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddlG1ooM"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30185d00446so5047833a91.0;
+        Tue, 08 Apr 2025 10:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744134554; x=1744739354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ZR2UVpqmeFDPx4PfDo4Uk4g9Hsu2oDRhSNi1KzWe7k=;
-        b=IOE887h2YwD20uA2b17zSIrZHaoR+e4aP88BrsMnEgjcG0nFD1Lq4zzjQ2BOt8IA3I
-         uXuFiXnct5ljgKjxmz50rdx5MOwueZQQ8+NQVha75wtK7S4TGHJEqQu4XjfDClub0t41
-         3ESrgXGBfujQvxIXbu3HbwSGTdOZQJ5WSi47W2SCM1FOsNO0UFzvn490fDXNtcisd8fo
-         uCbJNhNMf8kxENPfEyQC/qrli2gzHFlVwOGq0hNoMDFj7cs9Yslnt/ebnBJ1Dm/+/uAT
-         R0jB+dheKF92WDW5V2JDfKcfrkjdZk2SeIYTpS6dd9OcKjF0EmZalti47rx6qpzM2bn5
-         ueGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744134554; x=1744739354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1744134593; x=1744739393; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ZR2UVpqmeFDPx4PfDo4Uk4g9Hsu2oDRhSNi1KzWe7k=;
-        b=lTDjt7GcYMBvuZl5WyQDLl1GCNOP1BoPxY0HBfRS1SWKSabH4Eeu2CEkZ0P6PWGrPk
-         D6RjEh0E/soxYoj6JTuVcVg7ISYLZYqiG2HS60IcG4bstEYLjFjLtralc4ECGoXWsyOk
-         hhiE1C8A6cXLHzgKfiVBBwHED1VkTpeYgdB6MGPffKzLFjgSbqQNSy5negeY7QCapn1a
-         YJQb6oTtZIa5AAotQveezdnUl7cCFR+APGF+pJ0oPRK5Y7Ak1YFRu3aIpHpABsEuIosB
-         qC+SUHIx9ffyU/24HOHQHgQ3ZXFcualATly6bNxmlbceNe9gM0EQhN8dzBxZU8Ypqb2X
-         P+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2erIU27GeF4HXwlcZCbGLX33m1DK08tK09yFri42aRPMoWs4hpvX8Hhgs8ORuCcIramf6zOZfcdyWzh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8yunjuVeBaVP45k56B0rubYryDONSb6IcDih6VINN+yF1FjPH
-	BQQixTmYlZPcYGAFmCGBH6kX1o+/JrX2zPv7ZaRgQ94D02WElxKh
-X-Gm-Gg: ASbGncvU2Wfl/ggUJWsAqgrK4ZJsx1FNAXaAZ43W9XeLFKnwXzv6EUwf1LZlcDcyVxV
-	ygvL/lhzoPMqp6bq+NBzOV6/sjWr7zONMPfP7WOGR+vKdB5s+sEXRDmL/fO+vcv7VKYs+2beneD
-	bbqJr40wb/IrJ6FuQCstik7Jly2VleR77ILypUnSTIeD8547pEssBO/x75ZhblNIF6xWfZdv7U5
-	XAZp5VvhQokQJPhGB/1dcIGNw57cwPhfXa8JHmCAMCQ9eLaCjlbnj/6e6sG2M5Cp/9QV0kmSNCK
-	Ow/FetaSUqK5xfc6Um/waV/xqFZK/37txES60wn1voJi9A==
-X-Google-Smtp-Source: AGHT+IEZ3U5D/EEyRNJJA0h121CkODT3waTKE0XhCx7gpizhS9Xryu5e5ySB2/sFUv+P+fwP9Vnchg==
-X-Received: by 2002:a05:600c:1e20:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f1ed6727bmr189225e9.30.1744134553902;
-        Tue, 08 Apr 2025 10:49:13 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:5b45:5642:beb0:688f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16a5776sm173535645e9.22.2025.04.08.10.49.13
+        bh=Dn45RFW+Y+tJBdcvwcvFy2VtsffN9mizJNsrN/ynpig=;
+        b=ddlG1ooM1P/k17nG+FEGTXHu9K/D+weobFPNWcLRLulWEkedtv1oMKHHhXUFR6zvpw
+         eaIfJob49pYECX1TzBynu3U1KVPBXeL4V+qHSzEtQug73B8ovbGEat6VXC+PEQQJ2DFZ
+         lH8P/QZUIsJ554WQVwm1zOp95kiVd+wNXl1xzWSJX3QlhOeoWrHbymsYf3Qq4Tmn4gz2
+         VZtkXK0+XyGQfPOS89kofNK0HFVtES1E9/zwx1NarZrrBtUYt2QhIBgvPpHhGo5Yb5Ti
+         LgKD8qd8IDNEflONnzPKh2TRcvf7Trq155ntxwt4cP8Ggoftt5rKGejGvCMNz6EB7mDg
+         K+ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744134593; x=1744739393;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dn45RFW+Y+tJBdcvwcvFy2VtsffN9mizJNsrN/ynpig=;
+        b=Ms8NsgnAHVD8aEEVNf2LLmxfJUSvkwax7OJtBEgfTrITgkvIPG7RJXafGvtUnwaPdF
+         JAVmnpAW9Fz81FB1YDU7OxW8tU06WbFjn3mac0PVmlRUei/Gp5K0Jo08Nrx4FXkZqNF7
+         pSZBtl9rnkvQedCI0xFoVkPjFusqCSisguBvrbRth+UmsMWKQYjYIHLfZ5WvwIQ/Qyes
+         59We73JhcRKjALEuPVFHKtp/0VHPfNfEDy9NSSj/JqYEet6r6NCEAvNksD3dalPfDUfM
+         a2HFfFfRNkuj3P24wUVhVhvJNBJlPMaRwp8DIrjLwm42lIgS6/tQUipftZSUk53p7tZ/
+         BG4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUmeW8U/ue3Lq33U3ChBclo+tw6dw3iIW98GfNwZEyW1W//IGTBMbXhL0NBqcfkDUNEDmcahNLjT2hKbw==@vger.kernel.org, AJvYcCXjB+p+xECRW3hyoniIAaQfdpPYRL/ukRKhWed+64djFakJQy/fn+l032gObn3zuhf+233VEyTVtQd/fLgF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/fKx9WI/nkCZXiVMpjvmMIvWsS9Oh4hzGlJQsb8/D5vDTt1pl
+	czpL1HnyOys4qjvAxIB+ZQoxdzHgghwzRzpccltj7+UcmF5+Lblj
+X-Gm-Gg: ASbGncs6QPWuQMI2zFhG8WVEfKz3VNZ1nAVohvozxydWFmsVZd4h4W+/oePTfNBuswC
+	JfHsaFK+tDvrugPXeIoUEhFRHFUEeYEQzF9Lq0VDWFqFdfWbwDVbZQh+8N4nUe4f3E6QTXAc5Eq
+	m9gAzY9t+gT1iUc7z27mUUcGqnGRVGFUXrX0YoRDVO/NF25xQQ3NCSlgVXwG6aiB34Mxc23nfYk
+	eid5m16cal8cSg+hPBt2qWhlY+rIrgE96kIy9zk9iJqnReNhm3/2no9Zf2M2rl665k6P8Cv8jKw
+	ZCrPX4tbudMQXih1BbTjXxV6nwQY41oU+xX6FaLzQg3RsR0Ud7mjG9stSg==
+X-Google-Smtp-Source: AGHT+IH6VKEvUBmgLvDk9adusjfBPlOMNGINejw5pCa7n7hppoQJtEtQWZm11F4bJ4tpGCEt+Geh3w==
+X-Received: by 2002:a17:90a:e18b:b0:2ff:6e58:89f5 with SMTP id 98e67ed59e1d1-306d0bf1da5mr5434182a91.6.1744134592669;
+        Tue, 08 Apr 2025 10:49:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983d7f57sm12612001a91.41.2025.04.08.10.49.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 10:49:13 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chui-hao.chiu@mediatek.com,
-	Bo.Jiao@mediatek.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 RESEND] wifi: mt76: mt7996: prevent uninit return in mt7996_mac_sta_add_links
-Date: Tue,  8 Apr 2025 18:48:58 +0100
-Message-Id: <20250408174858.15847-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Tue, 08 Apr 2025 10:49:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 8 Apr 2025 10:49:50 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] hwmon: (gpio-fan) Add regulator support
+Message-ID: <de21cc25-3562-487a-9523-d9a49ca3cf98@roeck-us.net>
+References: <20250408102145.576852-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408102145.576852-1-alexander.stein@ew.tq-group.com>
 
-If link_conf_dereference_protected() or mt7996_vif_link()
-or link_sta_dereference_protected() fail the code jumps to
-the error_unlink label and returns ret which is uninitialised.
+On Tue, Apr 08, 2025 at 12:21:44PM +0200, Alexander Stein wrote:
+> FANs might be supplied by a regulator which needs to be enabled as well.
+> This is implemented using runtime PM. Every time speed_index changes from
+> 0 to non-zero and vise versa RPM is resumed or suspended.
+> Intitial RPM state is determined by initial value of speed_index.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Fix this by setting err before jumping to error_unlink.
- 
-Fixes: c7e4fc362443 ("wifi: mt76: mt7996: Update mt7996_mcu_add_sta to MLO support")
-Fixes: dd82a9e02c05 ("wifi: mt76: mt7996: Rely on mt7996_sta_link in sta_add/sta_remove callbacks")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
-v2:
-- Added missing semi-colon as pointed out by Jonas Gorski
+Applied.
 
- drivers/net/wireless/mediatek/mt76/mt7996/main.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-index 91c64e3a0860..70823bbb165c 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-@@ -998,16 +998,22 @@ mt7996_mac_sta_add_links(struct mt7996_dev *dev, struct ieee80211_vif *vif,
- 			continue;
- 
- 		link_conf = link_conf_dereference_protected(vif, link_id);
--		if (!link_conf)
-+		if (!link_conf) {
-+			err = -EINVAL;
- 			goto error_unlink;
-+		}
- 
- 		link = mt7996_vif_link(dev, vif, link_id);
--		if (!link)
-+		if (!link) {
-+			err = -EINVAL;
- 			goto error_unlink;
-+		}
- 
- 		link_sta = link_sta_dereference_protected(sta, link_id);
--		if (!link_sta)
-+		if (!link_sta) {
-+			err = -EINVAL;
- 			goto error_unlink;
-+		}
- 
- 		err = mt7996_mac_sta_init_link(dev, link_conf, link_sta, link,
- 					       link_id);
--- 
-2.39.5
-
+Thanks,
+Guenter
