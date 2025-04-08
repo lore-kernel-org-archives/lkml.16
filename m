@@ -1,113 +1,94 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344AE18E75A;
-	Tue,  8 Apr 2025 14:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD453217F54
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123492; cv=none; b=G0GHA5+YJPbbqhitC7u1ayDSYl05Wjx3oTfyBuGgtCJUBc/gpTjyUgU/0gjCLL14s79F08S5fyBkT+au66zLgxOIsC52qAbvpLLt7CZeqAZeBH5yp3kTpR7GCeYt8xYr9mQhLiswvLIsxmj6MMjyHvffsXDeUTReKrWAk3fTav8=
+	t=1744123496; cv=none; b=UcCxUyjAvrFuPHJ7rsbdpacxEHGDj2fa/NfVmO0wEMmave2AGaR2XlmAdBnXx1VRr3+vEEmpUEaMYFXD91lJBZ2e0w9NckvrAZaqxTjqOQCaJiqxBTUyMqk2PcoA/yDpKdO9Yl49d5IG/EEtGoJ3vjFxpa2qNtN/lP+0i529gq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123492; c=relaxed/simple;
-	bh=uE7S/ykKBA+F4uBfxgSOxwKaFbesP06UyxIwdr8A5fQ=;
+	s=arc-20240116; t=1744123496; c=relaxed/simple;
+	bh=qKfLUJOVmjIhLZ5rBf6uzzEt80+a0moD3VpVZ5BMQNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/EwDY9AeUeSZloAdCLnZSa9olj7ouMrnCB4RU0twJRmN8cy894PIQQ4DvrnlVB72kmmlnjKPR9lYjLqdXhagNR6DO/Qk3zsFIn7FoSdbsnP89bq2n9JeHpACqSUCquxt56FgYR6NxZrf4QtYcGyCNskQDZB2XB/wTF25r7thik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jfQl1bWj; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jfQl1bWj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 78A6844346;
-	Tue,  8 Apr 2025 14:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744123488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5nmvsBSW6ruA3VHmjOYi5BlHpcx0V3rnt1Hh0gBhaoY=;
-	b=jfQl1bWjU3Gm3/ktsT+5L3jBi0rAZgoz2/Ir10OsHBfr4PCEAQ1zOah9y23oo1As98/PN5
-	PD7ykcVKYZ+1ZwrpKVckfRLH2ar4VSKk4ldgFPbjp0WDP0jrVbGEdMiDrFhe4LqJTO2aYL
-	Y1BMpIi61UM9b9Js8kngkQw5ntyjOBVZQ4q3MfAJ0BoEK5rMS8yqKwe3biXTrjKHCUGVrd
-	mta0bGDaQ+VddqgV+2IClT02l+LEaXUQ6vYRfPahis1blqQ3p/YN0ulqvsWRjIwii3CXt6
-	gGRZTZQbJVrb3x6ExcLU0Zi7o1OLLZpE33RFo+SJCF42KRob4OS6hKkxTkReVw==
-Date: Tue, 8 Apr 2025 16:44:48 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Cc: linux-rtc@vger.kernel.org, shuah@kernel.org,
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] rtc: fix use of uninit struct in rtc_read_alarm_internal
-Message-ID: <2025040814444859857143@mail.local>
-References: <20250317183349.346399-1-bharadwaj.raju777@gmail.com>
- <2025031721511050987ca2@mail.local>
- <CAPZ5DTHKSzg6UV0bT5U9Xet7jL1c__n+GgfYz-38GybGzerYNQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WBjyab319SwvsR7eYqkkp7h++YDiP5lFEi+fB6aDSFwFxA13hLsPkvtyVkROvLdq2hoMdAfUpCzkPMZrDOjhLn75OCzvvcd8at64ES74KUP75jHhkMhatXDBBVUHjg0kC0PsSSE2aYH9OeHF7NNLZBYSNuHkIPRMG10Owm1cH8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: D44sYblnRa+t9WOKxjchXQ==
+X-CSE-MsgGUID: vHHPhFLjQzaUhGWHNX6ukw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68035629"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="68035629"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:44:54 -0700
+X-CSE-ConnectionGUID: GWlHOfUWTo6sn7jOkSFpgw==
+X-CSE-MsgGUID: MZP0rQ4JTeON+y0zx0hDVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="129139183"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:44:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u2AC1-0000000AQry-2MQZ;
+	Tue, 08 Apr 2025 17:44:49 +0300
+Date: Tue, 8 Apr 2025 17:44:49 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org
+Subject: Re: [PATCH v7 1/2] staging: rtl8723bs: Add spaces and line breaks to
+ improve readability
+Message-ID: <Z_U2YXpteKmxXriG@smile.fi.intel.com>
+References: <cover.1744117091.git.abrahamadekunle50@gmail.com>
+ <8e582c7166200e618ff56ec10ed16b4a4e73eece.1744117091.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPZ5DTHKSzg6UV0bT5U9Xet7jL1c__n+GgfYz-38GybGzerYNQ@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgheeuieeikefhgfdvhfehiedvhffgjeetfffgtefhudfgtefffeevledtleejteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepsghhrghrrggufigrjhdrrhgrjhhujeejjeesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgp
- dhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlqdhmvghnthgvvghssehlihhsthhsrdhlihhnuhigrdguvghv
-X-GND-Sasl: alexandre.belloni@bootlin.com
+In-Reply-To: <8e582c7166200e618ff56ec10ed16b4a4e73eece.1744117091.git.abrahamadekunle50@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
-
-On 29/03/2025 19:59:46+0530, Bharadwaj Raju wrote:
-> On Tue, Mar 18, 2025 at 3:21 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > On 18/03/2025 00:03:43+0530, Bharadwaj Raju wrote:
-> > > The trace call invokes rtc_tm_to_time64 on a
-> > > potentially uninitialized alarm->time. Move the
-> > > trace call to the path where we do successfully
-> > > initialize and read that struct.
-> > >
-> > > This fixes a KMSAN warning.
-> > >
-> > > Fixes: 29a1f599c0cc ("rtc: Add tracepoints for RTC system")
-> > >
-> > > Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-> > > ---
-> > >  drivers/rtc/interface.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
-> > > index aaf76406cd7d..82ba33bf478b 100644
-> > > --- a/drivers/rtc/interface.c
-> > > +++ b/drivers/rtc/interface.c
-> > > @@ -201,11 +201,12 @@ static int rtc_read_alarm_internal(struct rtc_device *rtc,
-> > >               alarm->time.tm_yday = -1;
-> > >               alarm->time.tm_isdst = -1;
-> > >               err = rtc->ops->read_alarm(rtc->dev.parent, alarm);
-> > > +             if (!err)
-> > > +                     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
-> > >       }
-> > >
-> > >       mutex_unlock(&rtc->ops_lock);
-> > >
-> > > -     trace_rtc_read_alarm(rtc_tm_to_time64(&alarm->time), err);
-> >
-> > This removes the tracepoint when there is an error, rendering it les
-> > useful.
-> >
-> > Also, as discussed about a year ago, alarm-time being uninitialized is
-> > not actually an issue as mktime64 can handle whatever is the input so
-> > this will never cause any problem so this isn't really a fix.
-> >
-> > I suggest the following:
+On Tue, Apr 08, 2025 at 01:31:41PM +0000, Abraham Samuel Adekunle wrote:
+> The code contains no spaces around binary operators with long lines
+> which reduces readability thereby not adhering to Linux kernel coding
+> style.
 > 
-> Thanks for reviewing. Would you like me to make a second version of
-> the patch with this suggestion?
+> Add white spaces around the binary operators and use line breaks to
+> increase readability and ensure adherence to Linux kernel coding
+> styles.
 
-I've sent my patch now.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+See one nit-pick below.
+
+...
+
+>  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
+> +							(tx_seq + 1) & 0xfff;
+>  
+>  						pattrib->ampdu_en = true;/* AGG EN */
+>  					} else {
+> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
+> +							(pattrib->seqnum + 1) & 0xfff;
+
+Probably it deserves a blank line here as in the above case.
+But it was in the original like this, so at least it not worse
+than that.
+
+>  						pattrib->ampdu_en = true;/* AGG EN */
+>  					}
 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
