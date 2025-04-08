@@ -1,142 +1,97 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B5022A4F6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13DC1E8348;
+	Tue,  8 Apr 2025 15:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124953; cv=none; b=EfczJBSjQw2GTr8o1SAp9/bBp1ii+85yTn5bHiNGNpX6rka5j6CCIQczZ/5rWx9Q7xdCcBUe1i+klNvnwP9yhe3QaZDQbnAx7MJWtshJedQXIJUy1kpKzciLaBzwq1EMu4lQnW3mJb2B2crNCvlo7eTqRpYYCOkCtK8QepR9zdg=
+	t=1744124962; cv=none; b=iCM7pBfIbdQc6+9sDGxlYTuPEm49DUbuTW1bnhObRqcqqlcYXbsI175hQL6b8FpBOZv+TC0OvT7KvRew3cOj6RZp0PGERW09KhEbdnocSZfYQhaKu8frNkHwJ/5jUEsy5Nd007LdxwZ0+czjQR8oVOz6ZyENCy/qye+qYPgOB6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124953; c=relaxed/simple;
-	bh=DPtNxNE+awhfgbfCzrEemVYPnMctjJbIu3cTdoxmhmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZK958p/VXWob8Y/jPm2T9UvMD6FS0v8g0FoNRCnP9mYE5oYqWfZxmXrxahk6k/DJb0czRhGLWvvaXk4uIVFq6Eb8tnTjD0aNr8oAXf6csbW0HI/Qe0Ka2lheLXicYrrvuo5cgrvlV0xDDzrJ3PGrYc7JKRUSI1dxIwG/kqhIUNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kcWlkfMA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744124962; c=relaxed/simple;
+	bh=KfZp5sOMLhUjS958RvECX1/aPL/JVAyn8rQO3+gzo4g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nPDdgUCFqaXebx2kWPJ85S0b9l+mAoJwlmjI4OLH5Vjuy5yCJTYoqC80bAjYJkmsv3wEiOp+NWYIkOtbgAevdwLruikLrZDdIVNih99PH8xuGe7ub0vYNdEtCjv6qOi1WVeMNRP27khdakNvjYLBP4gW8YnEX+wyQWnEXebSlho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vQ0SxnBR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A7yhWpVz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kcWlkfMA"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538Aj83H008077
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 15:09:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pctFuou7K6UODLPKxKTgI/jveEjfklrGVfRqNLl+hro=; b=kcWlkfMAIyTvGUK2
-	O78nkAl7Eb6+80JcljLlCLB9xTnZRvYCnbpJcQ2jIYgUQ7miDpf5v0JUizGurTiO
-	0+R7mVlR21PvylbpxztvklnLCxeTAG1MwWrcSs0J5SGqBSQSrYhq9GOcfurK28Kq
-	VOPdo3WwtY1lc+ZxbYyJZqO7M/vnll9klrFQSkTuTIxLkD7u80EvHtsFl+1sxbqM
-	We9/mPsmkgMomHtqo+BMVSC0HqYAVo0K//7oA5cf48jZFgFjTjaNh8gUDJopCbLb
-	rCJXhG5ZgHD1SQsMFx9SJ7g4UIikkkIRi4hHwsRj2jZW32lZCR0hW6iMaiwZ+APK
-	7uRy+w==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtb08br-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:09:10 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2240c997059so72114135ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:09:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744124950; x=1744729750;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pctFuou7K6UODLPKxKTgI/jveEjfklrGVfRqNLl+hro=;
-        b=gp5n8/ldqbVqqyR4Ch7M1FeDlZjEqW5v7ygBGFtoMaY61yPgI6qK8GVkvXD3efejzF
-         piUAxK1MGkNdsGHcy6P3XZyORExtuRosfoxwY9RUL3h+9LVdhjjqFDLrRlobyAtBlllF
-         uu0sWqa1XkoV66S9jn4qwAuai+TafqpO80xV3vdnDOxXLwjmQ6vI1cbBovaICa17RhGl
-         9rXqFe666ktIqtSP3edmmhiZd9dGaH5hRKWSAcFkoK4QzUHoGrFhtV0TvzGjV/A+tPIV
-         OQ1sTJYuW9L6mmVKAtn6++ywC1up9LvKtjHlpW8MyfXMgfjxN547DPpDJhR92xUsIskm
-         5hHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaDKga5gVsVJdl0R7WIlSgoiTdwl1LKrD0pmHOSslOviMMBdfs3F23a7gBMK6UJsIIrLNiaMgD13Da4WA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPkjIJcqrq7fGHsyHhXXMFLtD/XfvQaaaqgTZYrhCtmqctzI7U
-	MJ6jYxFbcyhNNiEsLT5iTRIqdkMYq5hCMT6K/pXfggsHf6tws5Gx6hT5jc9azz5lvWEVhh6YQyF
-	kZrMyAkU07LbO9ALdPJ5a+rBEPlqBquJPiJElChO6vBPkYWEYj94RMXHy5tC5sfs=
-X-Gm-Gg: ASbGncu5A0o4h2stXOqpB+U6mIb+ayW2g+qMroxJ4WGzgGT05NZbxm9aIshGXMBKcZf
-	6aUVcbk/dvHeL8yDcesWXz3YxwFm/GyhkudXj6BJsO/KKHowtlLXQOOYs3dFa/y0jG5UPwy6wII
-	ivUkvOITQZhG7FBXvttGVm5NG06RK8YynaSjO/4ZIo4v8tIevnw3inNrusuM1sZpOX8FHlFnicB
-	n+T8+6tctmvh5rD7kslh+fW0/56my7RQ0r1IDU8fKkybZY/TJAi3IWHsIJWbmH72NW/W0LGPYSA
-	fDcIEp4uIkw986linbetHU3RhHqmsJ8uwdPCv7fm/byP2flqIwapUiQme6vMq1A+fz9tVh0=
-X-Received: by 2002:a17:903:19c4:b0:216:3d72:1712 with SMTP id d9443c01a7336-22a95587be7mr216673425ad.48.1744124949796;
-        Tue, 08 Apr 2025 08:09:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNrtrSw2E1SAGUq7CqH0A6kBJG37r/+rnOESKXQy0U2GuSemu5naPzR5orh59B/fwt9z1wGQ==
-X-Received: by 2002:a17:903:19c4:b0:216:3d72:1712 with SMTP id d9443c01a7336-22a95587be7mr216672525ad.48.1744124949072;
-        Tue, 08 Apr 2025 08:09:09 -0700 (PDT)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866eca9sm101503035ad.170.2025.04.08.08.09.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 08:09:08 -0700 (PDT)
-Message-ID: <26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
-Date: Tue, 8 Apr 2025 08:09:05 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vQ0SxnBR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A7yhWpVz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744124953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLZRLH/712vh97T+Cj7EHgs1xlJmlFXKT4+PuzmWYVE=;
+	b=vQ0SxnBRBFif4SBTr1JHxo86wY2TiqcahO4BLbwviSFg+TxUs/TqpUAzI+A9H+qrecT47n
+	uaAZLehOFtO2cS0aMrwyMratDAIFf3LRdXSs8D5ksrr1jao2lYsSHb4HkT/JHgrJcIkGdQ
+	P4c0n5scFjUFKChtVVKksGBoSDjOw4zExsifB73w509bnSCEGJK3cAQ021jvWZwKP9rKuM
+	uUEFOakfJB5C21bGfOEMv883Bh0RTGrbDbr/6m2kmycVI1NK0Z/n7OlVCPHgEbYyQMTg1X
+	ZurYgDqxO0tkBqaMG3AavucoBcutqttybAB/qrhs+ZKPM59FkSxfm/pE1rzflw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744124953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLZRLH/712vh97T+Cj7EHgs1xlJmlFXKT4+PuzmWYVE=;
+	b=A7yhWpVzxzZ7h8xWz+gWEdgrzFDb3axJw4JoyUoRRn5JJG4ybMGxSjrN/VqG3a6AE6v1FQ
+	3r2s0FKn/eRUvAAA==
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bert Karwatzki <spasswolf@web.de>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
+ Jonathan.Cameron@huawei.com, allenbh@gmail.com, d-gole@ti.com,
+ dave.jiang@intel.com, haiyangz@microsoft.com, jdmason@kudzu.us,
+ kristo@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+ logang@deltatee.com, manivannan.sadhasivam@linaro.org,
+ martin.petersen@oracle.com, maz@kernel.org, mhklinux@outlook.com,
+ nm@ti.com, ntb@lists.linux.dev, peterz@infradead.org, ssantosh@kernel.org,
+ wei.huang2@amd.com, wei.liu@kernel.org
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+In-Reply-To: <20250408120446.3128-1-spasswolf@web.de>
+References: <20250408120446.3128-1-spasswolf@web.de>
+Date: Tue, 08 Apr 2025 17:09:12 +0200
+Message-ID: <87iknevgfb.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the ath-next tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Balamurugan S <quic_bselvara@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
-        Ath10k List <ath10k@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250408105146.459dfcf5@canb.auug.org.au>
- <Z_R2lEVjqn2Y3_sP@gallifrey> <20250408113747.3a10275a@canb.auug.org.au>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250408113747.3a10275a@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: oKgwpZCdk6tPgI3qAt2FTX4uYXpMTBQA
-X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f53c16 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=3WJfbomfAAAA:8 a=rOUgymgbAAAA:8 a=4uOVVYVnsCJchGKozvwA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22 a=1cNuO-ABBywtgFSQhe9S:22 a=MP9ZtiD8KjrkvI0BhSjB:22 a=IwZ_ZZASwsaSaAdrsfNp:22
-X-Proofpoint-ORIG-GUID: oKgwpZCdk6tPgI3qAt2FTX4uYXpMTBQA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=903 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080105
+Content-Type: text/plain
 
-On 4/7/2025 6:37 PM, Stephen Rothwell wrote:
-> Hi Dave,
-> 
-> On Tue, 8 Apr 2025 01:06:28 +0000 "Dr. David Alan Gilbert" <linux@treblig.org> wrote:
->>
->> * Stephen Rothwell (sfr@canb.auug.org.au) wrote:
->>>
->>> After merging the ath-next tree, today's linux-next build (x86_64
->>> allmodconfig) failed like this:
->>>
->>> drivers/net/wireless/ath/ath12k/ahb.c: In function 'ath12k_ahb_stop':
->>> drivers/net/wireless/ath/ath12k/ahb.c:337:9: error: implicit declaration of function 'del_timer_sync'; did you mean 'dev_mc_sync'? [-Wimplicit-function-declaration]
->>>   337 |         del_timer_sync(&ab->rx_replenish_retry);
->>>       |         ^~~~~~~~~~~~~~
->>>       |         dev_mc_sync
->>>
->>> Caused by commit
->>>
->>>   6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
->>>
->>> I have used the ath-next tree from next-20250407 for today.  
->>
->> I guess a clash with the recent:
->> Fixes: 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
-> 
-> I will try that out tomorrow.
+On Tue, Apr 08 2025 at 14:04, Bert Karwatzki wrote:
+> Since linux-next-20250408 I get a NULL pointer dereference when booting:
+>
+> [  T669] BUG: kernel NULL pointer dereference, address: 0000000000000330
+> [  T669] #PF: supervisor read access in kernel mode
+> [  T669] #PF: error_code(0x0000) - not-present page
+> [  T669] PGD 0 P4D 0
+> [  T669] Oops: Oops: 0000 [#1] SMP NOPTI
+> [  T669] CPU: 2 UID: 0 PID: 669 Comm: (udev-worker) Not tainted 6.15.0-rc1-next-20250408-master #788 PREEMPT_{RT,(lazy)}
+> [  T669] Hardware name: Micro-Star International Co., Ltd. Alpha 15 B5EEK/MS-158L, BIOS E158LAMS.107 11/10/2021
+> [  T669] RIP: 0010:msi_domain_first_desc+0x4/0x30
+> [  T669] Code: e9 21 ff ff ff 0f 0b 31 c0 e9 f3 8c da ff 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa <48> 8b bf 68 02 00 00 48 85 ff 74 13 85 f6 75 0f 48 c7 47 60 00 00
+> [  T669] RSP: 0018:ffffcec6c25cfa78 EFLAGS: 00010246
+> [  T669] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000008
+> [  T669] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000c8
+> [  T669] RBP: ffff8d26cb419aec R08: 0000000000000228 R09: 0000000000000000
+> [  T669] R10: ffff8d26c516fdc0 R11: ffff8d26ca5a4aa0 R12: ffff8d26c1aed0c8
+> [  T669] R13: 0000000000000002 R14: ffffcec6c25cfa90 R15: ffff8d26c1aed000
+> [  T669] FS:  00007f690f71a980(0000) GS:ffff8d35e83fa000(0000) knlGS:0000000000000000
+> [  T669] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  T669] CR2: 0000000000000330 CR3: 0000000121b64000 CR4: 0000000000750ef0
+> [  T669] PKRU: 55555554
+> [  T669] Call Trace:
+> [  T669]  <TASK>
+> [  T669]  msix_setup_interrupts+0x23b/0x280
 
-Yes, looks like you'll need to carry a patch:
-s/del_timer_sync/timer_delete_sync/
+Can you please decode the lines please via:
 
-Until that renaming patch makes it down to my tree and we rename.
+    scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+    scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
 
+Thanks,
 
-
+        tglx
