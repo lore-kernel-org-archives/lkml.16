@@ -1,120 +1,100 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6597226659C;
-	Tue,  8 Apr 2025 10:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F123266595
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108725; cv=none; b=Oj8OLydy0Nb2t2boDc9LVPxFR8Z0tCj7fcGf48zVW8faUCXr5fZW9QHZ+kXUVO1Gc2gtYuGnZv8MVWEx1QRV0zMY7wZOLk0+Nm99itazNlzMVEg2BwVtYdxRQHsINitpk0xTWHTxJ5xuKm4TBFRZ7bKI+2MI48tJlFwYVMElWSU=
+	t=1744108742; cv=none; b=bGH05FgPZLx2RotPrn3y1BLkwqcvRybe4A0f2+mSvV5wszVngVVn2hTTvH0GM1agDG7d/taCyFRzYvZWz4/fGYhttDZthCuMRxfrm+EnNi8m+nclEDKgQLx1dG/TB8GkoDf3q6qrJ3d256+3xmn+VGci95P48veC0XE7NREEgZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108725; c=relaxed/simple;
-	bh=ClASX4VBDVwAzQdSceNylf/BZKDO4TwJQdbNrAChR4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fyjZT8PRcYYIs9uSazQc+L3T/Qsd/p0qQV92OqHt7TqVzZtfHoF3FG1GXSq+ljFN7eqf5Ket9sfpFNeMm5A9iE7gBI4ii8lRO0uV0DQPAbEIctNGyxmjrBl83HEpp4BGnE1NtDLgx/2SJrXftta66/3UPBTpxx4kxIzIuFJ4IS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVtF8ce6; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744108742; c=relaxed/simple;
+	bh=UtJcel0JU1hta3JXEWACt1YiMTzGWnMckV/cVy4L82Q=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=HiqBQkXrOYE6qmtaAQdgPDzxMWijMQSny/S9+gKsJOynv9EpO1XUQebPKdf1AEZ/OlquxEYhNckkcmueYsutMgvX4u/lMeR76450qdreVGdst4/35rTt1yx0OJsOOl0HpxI9EGFr3y0TIfgSfOCwEpQ5xzJLcog8KUVy01l6c+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MWRtkm1C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tr+2xp50; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVtF8ce6"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso10937598a12.3;
-        Tue, 08 Apr 2025 03:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744108719; x=1744713519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aLaSOgwbcr+Il2t2O6boJjLPotCqperIiZ1qWfjVdnY=;
-        b=WVtF8ce6OjIUqqzDcJx7MAvYrNhl4kDzC39ErxKOoj3FuLAwdfNLGxP+8oWBMqLPK3
-         vuqbByNmNhuIAmepL4Tepfyjj+TtQxbMMKzkNSeI9ZIyktmsY9/mvvVnrs5jDAAbx76f
-         i3aYwHymc9SP3NLPUGiRI9CpfquUfQKHmpLl0Cc7KfyT53fRwM7WJri+ZUk2C3rsBA3z
-         0NySltE5mLLqBEHVzcV4E8ygv+DM4+2EIzCl/Cq32ZvDgkC1Zsy+/cITTu7MxAi8SWjX
-         OcO0gIXSJXvRY4/T/Io5PZ7P6Tzjc70UHW9qV13tbqQrfOoXFmJ/QMzKqB1m79yoQfSD
-         jKmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744108719; x=1744713519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aLaSOgwbcr+Il2t2O6boJjLPotCqperIiZ1qWfjVdnY=;
-        b=taE4MILIeBRhJLUg9TSa4W9TGAC3GxpIEEfnHsJ/b3kMfIuHIxbI6SadnIOO9XkF1L
-         iaj+5VE9gvi59hIUxfsJ38FaFNtcxem5zduyXH8SEQc6IwiqErgX18L8K+ud8aEqHGeT
-         YMUPIvK9nbPlGtOFZ9PTN5obcCcbUk+BWeZlv+3HO0gf8In8IZmlS4ESriFDzzlsurw6
-         M0XPgUgwTm4NiyDvQUuAhru4Xq0VQD9Irx5Blh73Qm+vhfMZnHD2sHMRrs4QGT6tkCvd
-         HiNOFrI/3Pplhdl285vie5Lq1jQafC9fRmYNqdFk6oh5MurX1gEIM/Q6SBOMp0gTcDcN
-         mang==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Hh901KajZiMezMZRoBHP6/OVHBWWOa9hpe03RVZWQZvkpApuw+P6LW1bHrnqCQEk580Fqn9fi33AwL3Y@vger.kernel.org, AJvYcCWUmUojnomx/eBcqNZN+EV+RfUbPN/BbZMNiSxidufjYWwuWEO/OR2CA+5RgIN0Ln0u1NvPQAj4+ViWxQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkdZy+bkXwaghOsqBVRqaCoZyizVRUiM7Ibp2QqF2mF8RuSnHR
-	p+fvR8BPzwvL25CGQnOCmImaRudAFXqLtdC4n6cfKLejP+ocAFa6PtHxdkV00kvw/ulwrpnTLTA
-	KXp1bGEx4IyY8FL/04dxefrFplww=
-X-Gm-Gg: ASbGncujsuwNOWLHAH5l07Wtv7qfdRM8hF4q02XR6vgBOiH+JOfILplpMOS4QZtuERn
-	uF2TimTckJP5JlJs2GrPlYP2rY9HDQreMW/Q53AUFKnnKZRzowXB3kglZdl7mn1PLJpm1W+KhcD
-	BqCb+Aabu/Ibrm9xM6JcIIgjq718o=
-X-Google-Smtp-Source: AGHT+IG1OkLi2dBwtZHj8xh6E4uTxeL61LbO5cEWBcFX3jqGDmARdYvh3vX315w/re8lZ0aqREIlR0wet3AJ2lKZaAc=
-X-Received: by 2002:a05:6402:5194:b0:5e7:b02b:6430 with SMTP id
- 4fb4d7f45d1cf-5f0b45001b9mr13069758a12.23.1744108719601; Tue, 08 Apr 2025
- 03:38:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MWRtkm1C";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tr+2xp50"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744108738;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KkK9CyClgQ6E9W2Xdc3k95qWykv82a5QP+EJFRJHIqM=;
+	b=MWRtkm1C904AxbbcUyf3+3kBHSCtHHdCPxDsVW50zirYdFg1Yd5q5yh48MTAo6y3SozBeu
+	MiYYmgHyin1ZsD0NuUgN6xM4PRxW5zMi5SpEgvwSxu5EageK+BEfxOZlNQXecuzZLmV670
+	exQ/Ppf/H1q4/zIvukmV9jB56kCmYT+gC0Oyuoorm6on+jH8IzKt1Fs8d7vE0vaVp1Us1q
+	kbo+QKFQ+rlgZ972cuN8i8pmb1dHDBiTi/p8j0fffWZk+2rgT91uO5tP03MtRB9EinunDU
+	XpjMZ+vbvGp3kLG/eteMdHLrtQJ5W6vMYKaXA21PE9UbpuDlQOyBckk0tABErw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744108738;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KkK9CyClgQ6E9W2Xdc3k95qWykv82a5QP+EJFRJHIqM=;
+	b=Tr+2xp50I9tV7Vv+SLcA8dtFGjkZ0okWG6E1DrxR6vb2pOlkgsCEcjdeR1dRuleS4trQz6
+	1HFK+V7ZlA0ny6CQ==
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] hrtimer: Use ACCESS_PRIVATE() for hrtimer::function
+Date: Tue,  8 Apr 2025 12:38:54 +0200
+Message-Id: <20250408103854.1851093-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743857160.git.princerichard17a@gmail.com>
- <2025040538-breeze-espionage-dc6e@gregkh> <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
- <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
- <CAMyr_bLkvFBTpYehG4fs-tqVE18YBf53okddU2=i7+Rr-zbCsw@mail.gmail.com> <2025040711-refutable-monetary-f0c4@gregkh>
-In-Reply-To: <2025040711-refutable-monetary-f0c4@gregkh>
-From: Richard Akintola <princerichard17a@gmail.com>
-Date: Tue, 8 Apr 2025 11:38:28 +0100
-X-Gm-Features: ATxdqUED4mJO0oYd1IguyXKnR51UPXRuHJL-QRIDRwetTTWsHh880oNHQC9O1UU
-Message-ID: <CAMyr_bKgveKkpRdOWw+VfZDWridLirHp4VoeG_F-wwgSY5jpgQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev, 
-	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 7, 2025 at 7:01=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Mon, Apr 07, 2025 at 06:57:38AM +0100, Richard Akintola wrote:
-> > On Sat, Apr 5, 2025 at 3:16=E2=80=AFPM Samuel Abraham
-> > <abrahamadekunle50@gmail.com> wrote:
-> >
-> > > This looks like a new version of a previously submitted patch, but yo=
-u
-> > >   did not list below the --- line any changes from the previous versi=
-on.
-> > >   Please read the section entitled "The canonical patch format" in th=
-e
-> > >   kernel file, Documentation/process/submitting-patches.rst for what
-> > >   needs to be done here to properly describe this.
-> >
-> >
-> > Hi Samuel,
-> >
-> > I sent the patches individually before, but I was instructed to send a
-> > patch series.
-> >
-> > Given that I didn't change any code, should I still add version number
-> > and sending
-> > patch series as the difference?
->
-> Yes.
->
-> Think about it from our side, what would you want to see if you had to
-> review hundreds of different patches a day?
->
-> thanks,
->
-> greg k-h
+The "function" field of struct hrtimer has been changed to private, but
+some hrtimer code has not been converted to use ACCESS_PRIVATE().
 
-Hi Greg,
+Convert the rest to use ACCESS_PRIVATE().
 
-I have sent the new version, please do have a look at it.
-Thank you.
+Fixes: 04257da0c99c ("hrtimers: Make callback function pointer private")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504071931.vOVl13tt-lkp@int=
+el.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202504072155.5UAZjYGU-lkp@int=
+el.com/
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ include/linux/hrtimer.h | 2 +-
+ kernel/time/hrtimer.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Richard Akintola
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 1adcba3ddd76..1ef867bb8c44 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -345,7 +345,7 @@ static inline void hrtimer_update_function(struct hrtim=
+er *timer,
+ 	if (WARN_ON_ONCE(!function))
+ 		return;
+ #endif
+-	timer->function =3D function;
++	ACCESS_PRIVATE(timer, function) =3D function;
+ }
+=20
+ /* Forward a hrtimer so it expires after now: */
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 517ee2590a29..30899a8cc52c 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -366,7 +366,7 @@ static const struct debug_obj_descr hrtimer_debug_descr;
+=20
+ static void *hrtimer_debug_hint(void *addr)
+ {
+-	return ((struct hrtimer *) addr)->function;
++	return ACCESS_PRIVATE((struct hrtimer *)addr, function);
+ }
+=20
+ /*
+--=20
+2.39.5
+
