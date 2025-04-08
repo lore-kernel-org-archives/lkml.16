@@ -1,118 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E11B21ADAE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAC2686B9;
+	Tue,  8 Apr 2025 11:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744110529; cv=none; b=oco0eKpnMsgoiWArYyhaTS6fu2lYVMetMm+fX8at8Dz2ILSZR6ONbozhGzoF5P2qvtzZ58SIDyvaSnLIsbryDMl237CbWApbMLGkrxnsUcKLdPA7xyGPjM2wmOLejwgPMCAZSggjCtv3IvRAyTPXIUIZJvfARm8ZTuCUNgmXgMU=
+	t=1744110538; cv=none; b=JqRTJPLQL28r1mYztbr4ZTCt4ISeK8eKnhB27To5ML9pfRwEGiKMaK2bZFXdK/NL8UIKgfy+3XtMnURuoQwjIBU8CbpUbxdPjVfOTO7pGEbsvEKm+aqOJoe5QOAH+f3Tiha8zYi8/VgNZ3zy94QV0JLjhA7jeXq/a1uT6xaxWR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744110529; c=relaxed/simple;
-	bh=pNXa2XEAZKwmP0PbFXg1zjrzFXFnWgnsxFsJ8P7Mpk4=;
+	s=arc-20240116; t=1744110538; c=relaxed/simple;
+	bh=Q9qhVI0VAXu8TAAa28jWHMGKiF8kAlOH841EdjjYeWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uafBs84k+c60oMKOu8E4PHPmJ1xPbtWpPb872O6aVie41Wr0WChjPerznyxdT/iA0HCOZ6Eullf/Tu93QiSmlafkieDm3TlsOffaxelSxhYa6S8wDc/2QioNsxNCPf6XO3cQZmlIJG92Q5tAJbxmdsEdIKelKrzWVnuuC/hGMNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=At/ucYRj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3jzVEaKuO7gMvCtB7dC5TpNmZmRGxbyM5/wWmVBVe2Z3Zc0HhXjZ7+ozq2TduGRgbyeidifrs9CbWLnzHjp+cpzz2DjLTH53BDGAHaa6zM5d9HYWkKWkkl5DVozuJ3urVc7Sypck5BDSM0ZrrjLYood2saSTW50HVQbZEMFVqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfLYF6uo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="At/ucYRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744110526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CiWKsYWjlXVdW0Vl66KeGe+yfVSaUjilRJLGAs2qAqY=;
-	b=At/ucYRj3Xyod35WMmis9NIQT+J74tl41NMkmwq2Zjub1u4VGlegE3UrkdvT8pF0LCNqUz
-	n/OoqMjeOy1ExlGC1oxpuGIVKXb8poAcEJgZ3QNINYI4/5hgYbrtBkROPQMzuy7QF7KGYq
-	6UoEjB7v/NVjqGqhYV4X/J89niW3BME=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-0YuvXZFjNSqtUu2-wTahsA-1; Tue, 08 Apr 2025 07:08:43 -0400
-X-MC-Unique: 0YuvXZFjNSqtUu2-wTahsA-1
-X-Mimecast-MFC-AGG-ID: 0YuvXZFjNSqtUu2-wTahsA_1744110522
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so41024685e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:08:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744110522; x=1744715322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CiWKsYWjlXVdW0Vl66KeGe+yfVSaUjilRJLGAs2qAqY=;
-        b=KFMWYY8AP7wKGvlU0/pW7N+d1ekZdMqEfcjSjl2HYYO72CBC/dcWx4SStFl26xuJEN
-         4skmhuHRZ78Q6nv1/XH3tQbmEWz0qnz/B9P7nnvDJwuAdkstMQM2qb9R81yIhBKwC6HY
-         Ay6nQGgDAhn9Dw5iWgiJu96AbWgBcuybhdr/L2S4BSGxmvOgh9hLtTqPD3GUWPGLLDtV
-         ngXlgjDCNPAhEgDPVNGdsW19d7hFChZhk9CbCOVD0JSoYbgEgy21xn/9lrhafzAGgSv8
-         2e5MYeXaNZ7ZUC4tpdnEdr3A3I34nvT2vOHNarO+yb/vAomtB1ly0rwjBh1oJkHy/pQ4
-         U3Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCU8B/BPo8vc2Znuq85GPSaX8udFvq6LYhsxgrSpaykYSz/KFb7rErGgYow0riiT8jE7sWF0GVLwMIwIOsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhaVjgBPgbqIv5qk/cf/MvqXXdszWKPNY/89v/lEpEzzP211+q
-	k7sQZCDoQTrttxb6sOlwvKyUOkYTbucxXg3NR7StI+bNeuSbGjZxdkR0t3sr6wjFJplMJd0ajVc
-	kks00jBm7x9KLiP2say12qm9WGNYn2Fj8vz1mNU8ssipGYpp/8e41+q4Jgo1Pdg==
-X-Gm-Gg: ASbGncvDr4lV4x+aXq1uEjrtJeokKB4gQ+YyQzjF9KBGXYPxQHZVfViagg31e6SiLz+
-	fXdgo5DLUDlVWrfASY/rnr642EUT8QHtHGn+ot4ooS2qZk89cT1G92b6UIj1HjQkAuHvFfBxhlq
-	2tED81OvY+NfNskKpzq/oM+DeXwCWQGhRtTFVHvOQeUU+mcUFJIz0t1xCe+D3gsjMcEsMOIYe79
-	wBbuddngowJSNa+PxgXGyOz0U4eRIQgoez9DDCwwstttVRpekXuzBeMBW6Mi/oBu5eJexmGJigw
-	YN7p6u9vn0dzS/DspMLqGuSo/PY4dQ70xxJyjHde30ByqOk2z2uZeq2XRsVxbKtF
-X-Received: by 2002:a05:600c:1c17:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-43ee063fbc7mr118525055e9.8.1744110522181;
-        Tue, 08 Apr 2025 04:08:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWienIwYQBLsRDfxpLTrW6mxw6sjcpGYF27rjIKiWUTsuRHwg0Muagv8RixgT6kwQsR+HJNg==
-X-Received: by 2002:a05:600c:1c17:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-43ee063fbc7mr118524765e9.8.1744110521621;
-        Tue, 08 Apr 2025 04:08:41 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1f27a55sm160617895e9.2.2025.04.08.04.08.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:08:40 -0700 (PDT)
-Date: Tue, 8 Apr 2025 13:08:36 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Joerg Roedel <jroedel@suse.de>, Dionna Glaze <dionnaglaze@google.com>, 
-	Claudio Carvalho <cclaudio@linux.ibm.com>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
-Message-ID: <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
- <20250403100943.120738-5-sgarzare@redhat.com>
- <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfLYF6uo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3F1C4CEE5;
+	Tue,  8 Apr 2025 11:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744110538;
+	bh=Q9qhVI0VAXu8TAAa28jWHMGKiF8kAlOH841EdjjYeWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IfLYF6uonVzCl+5YV62WoOsQu1L1n3sxGoh4t8L4Go3e5nIi5HcU6P/JU/kFd/eci
+	 H72zYs1zngshpn/qkJjjP+YiS+nbdeNtQuXxBNxG8Js+BLJ8e4mv2VxKAJotDv81a8
+	 W7W6k1RmekDv7UiW73hsN1wckSl3nfvCd0kh+tVq2A0Aa9XgprABgKPwSbvZC1a1OV
+	 t2UUMGaa4ZogPOG2eqKu1wZZLiBW9U4Hg4rlPpS2qNMxAKY8AElb1ilqWl/ImJRLtq
+	 pscroOsGuYiL03y7jrvQn9KknI6EjVHoNyC/22602LYra8hfowQWaWHtb4xu+SSk/k
+	 QeLfooM0WbxkQ==
+Date: Tue, 8 Apr 2025 12:08:54 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] regulator: adp5055: Add driver for adp5055
+Message-ID: <201f221c-1fc0-4a90-a2f3-7ae8dc31a7e5@sirena.org.uk>
+References: <20250408-upstream-adp5055-v5-0-dc58d98a7a3d@analog.com>
+ <20250408-upstream-adp5055-v5-2-dc58d98a7a3d@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="COwVgEfJDcml99cf"
 Content-Disposition: inline
-In-Reply-To: <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
+In-Reply-To: <20250408-upstream-adp5055-v5-2-dc58d98a7a3d@analog.com>
+X-Cookie: Meester, do you vant to buy a duck?
 
-On Tue, Apr 08, 2025 at 01:00:12PM +0200, Borislav Petkov wrote:
->On Thu, Apr 03, 2025 at 12:09:42PM +0200, Stefano Garzarella wrote:
->> @@ -2697,6 +2702,9 @@ static int __init snp_init_platform_device(void)
->>  	if (platform_device_register(&sev_guest_device))
->>  		return -ENODEV;
->>
->> +	if (platform_device_register(&tpm_svsm_device))
->> +		return -ENODEV;
->
->So I don't understand the design here:
->
->You've exported the probe function - snp_svsm_vtpm_probe() - and you're
->calling it in tpm_svsm_probe().
->
->So why aren't you registering the platform device there too but are doing this
->unconditional strange thing here?
 
-We discussed a bit on v3, but I'm open to change it:
-https://lore.kernel.org/linux-integrity/nrn4ur66lz2ocbkkjl2bgiex3xbp552szerfhalsaefunqxf7p@ki7xf66zrf6u/
+--COwVgEfJDcml99cf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  I tried to keep the logic of whether or not the driver is needed all in 
-  the tpm_svsm_probe()/snp_svsm_vtpm_probe() (where I check for SVSM).
-  If you prefer to move some pieces here, though, I'm open.
+On Tue, Apr 08, 2025 at 12:25:49PM +0800, Alexis Czezar Torreno wrote:
+> Add ADI ADP5055 driver support. The device consists
+> of 3 buck regulators able to connect to high input voltages of up to 18V
+> with no preregulators.
 
-Thanks,
-Stefano
+This breaks an x86_64 allmodconfig build with clang-19:
 
+/build/stage/linux/drivers/regulator/adp5055-regulator.c:169:3: error: variable 'i' is incremented both in the loop header and in the loop body [-Werror,-Wfor-loop-analysis]
+  169 |                 i++;
+      |                 ^
+/build/stage/linux/drivers/regulator/adp5055-regulator.c:160:34: note: incremented here
+  160 |         for (i = 0; i < ADP5055_NUM_CH; i++) {
+      |                                         ^
+
+--COwVgEfJDcml99cf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1A8UACgkQJNaLcl1U
+h9AOIAf9H4Z5VTOk/dUuzFJLSjE6ZkxlYsZ9kBaOdF/1tZhKUTFVyLvtUTHEN0pf
+orDYbwzIr3NYBva/mB3hZKpv3DNowvtflM9VhUdNZBPJM3ou6O3VbDF0c3VkxTaX
+7sjGXHNwvUzq4IYIbkC5n/xN4OeinqMju3FNH1+OOfc76EpGD0WEmTvfSwp5/aok
+JheOUS+lmyZlG+qn7L+tq0Iu1wtrG5fC3BnzZTkPeZfl2Db1A2KbFkzWlU55454o
+IrwDYPw7gcwfpHBQKZmcqGYVFdT7m3tNsQqEwzS0P5JfGI8EVD4Us1bd5vTN1paD
+q/6PZ7Ih9D64jxlQ1kYFPlY3toUX0w==
+=EZ7U
+-----END PGP SIGNATURE-----
+
+--COwVgEfJDcml99cf--
