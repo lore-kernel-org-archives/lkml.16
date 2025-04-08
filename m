@@ -1,73 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102CC2641CF;
-	Tue,  8 Apr 2025 09:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744103937; cv=none; b=Li5VuE4IT2gc1ZHNlQe7Otm1VtT8o5WAMBRnsrp5RFQvoT3gy2MFAaOMwS3RSZc9UcWDHGVByQVRboiKg/fcHFDndAJWVxAN+9aB8PPR7fVNzyuxaisOXuu+bAyIfX/UU1qicEDQhScwKB7qk0YyoJD1OXVnj45vO8c+rYNeLEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744103937; c=relaxed/simple;
-	bh=gdN27oqe8+qDCSK3WveLJNIwqSYAw2GA8bfzlRTA7MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XP7gh9nakmSc543Q4WoWapshbHtm8KlN/CNB1RDlhFTO899LHKIoYKdzUKVvJTpUsuWwG8fbtjn5wwAC6kD+DSxOydXfO8r1tLdNMo7UGmjP/bsesnyu/Rf1RBkwEU9NuSD4yMMrqu0PUaAnOUYpEQRqji6uRrtmyxNU/022g4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hn9XzIFi; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC432641C0;
+	Tue,  8 Apr 2025 09:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744104005; cv=pass; b=NK8jy2gbp+Mw71Df9N4T4lF6556YwlRD/R0wqxEhjFEutEQtBnlTmxTwsF15rJNCMFlmceWKMV22bN8R4ps8FCe2cuipkfovVc2cNuRJFqXklh5ffdZxk27TF97mEU8ybvTtPc4IvM05qMods0x+odJQuGlpQ2B/5XdKMaij2f8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744104005; c=relaxed/simple;
+	bh=e2gPr6MiECXyJe/SmVpOUVDcZR2UTM66yOOf0w6g9LU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=k36IikbCO9n0soxYpuFSLc2p+bZQrlBArRgu/SIAdDIh368NQYdiNVryF6dnirHquwaKsDV6ZjfXBWr5ozQFEC9Ylc6lRRs0IBni+WUlKAgxOun7es04sK4AqMQx2bViunoXuTLFaSbEi9VCL55KTodV50viMOz6iPOu5RR1Lc4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=Uym02xd3; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=okpd5tum; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hn9XzIFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43A8C4CEE5;
-	Tue,  8 Apr 2025 09:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744103936;
-	bh=gdN27oqe8+qDCSK3WveLJNIwqSYAw2GA8bfzlRTA7MA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hn9XzIFiynhT/cg7oP+0wJZhoMi+pEhYRyFHmwiRDMbYhwXcveDwUYaCrZ70TMeiN
-	 epufLlobnej/RC6NRWqq5KAzYyjuYQLTc2787FLimbnqkQ0FzDVRAR4tsWI1gCsCPr
-	 njlUrDFdGVjYEy3gbzVPWKH0uEb7nDjNgG5x7as+XXoe/Q7I6/UtEktOnFI6BJWK2u
-	 kw1sNn8o5LP3AWZ86+v77mtO2kfJm9WEnhGmMD3Eq5vovHa+2r+7eAgB3G52pVy4Xp
-	 jVkAo0wqXYt2M4pw5rYcY7IhqnxpT+5GBb69S+W/1fyNg3adwxmrYIF8mb3IQ+qdmn
-	 1Fk+XYAkn9OIQ==
-Date: Tue, 8 Apr 2025 11:18:50 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	lennart@poettering.net
-Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
- systemd-nspawn on my system
-Message-ID: <20250408-vorher-karnickel-330646f410bd@brauner>
-References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
- <20250407-unmodern-abkam-ce0395573fc2@brauner>
- <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
- <20250408-regal-kommt-724350b8a186@brauner>
- <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="Uym02xd3";
+	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="okpd5tum"
+ARC-Seal: i=1; a=rsa-sha256; t=1744103994; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=TbWc5BC21rJRcIZSSRiyIEVZhiD40LlCC1V/+kvX67kYNzYld3C6Tka/6mCjYGsRDD
+    zBdk/mq5KxAUQQ05gjwftScORfYB/jBJRI3+QpIhA/QNOvlGFkdx1ddbo5Bz3v6m/ikk
+    2LvFPopctBU5Qd6DJreXwjZ5bwDVib2CZUTgI1beHS8Pl2WKuZQo71ifrwKBAlKt5SyK
+    5TbE3sYRhxP4gyHUaaBbmo/WmMi9IEjYb1hjzh7m7ZhgnjNEUaKfEwTke3QP88Mtnrgv
+    /Y/9yd3bC1XALNdTlBI8YRaUj2u7iCqVg1lja7nLSrEOXT1GVKk1NCgIbVgDaVq1qrbK
+    v0KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103994;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
+    b=a1GK1ClTWT5IcmjLr1r4PolyEVPqbGMbvjD0bv2a0Alj29TUnsMyOCq+/s8e0B8iqZ
+    x9WF6bhN/3PAjknTleVDTySAZy+KTeB0h4ad+cTvt6N+nn21GUGqmxUUUlOWrEeOpP30
+    rBd1LrSDRz/9uKCK96kk9yL7scfMtd73Mq5Bm4ZTQFiOZEE29iUBKY7TCYHOGDxDYPTs
+    +YsjDZzaxm74ag2JvbPHllvKAa9FDexS9N2X3Xs0OdpOuFad7fK6i1dU5ybW68AbrIkr
+    iY2rdM/azTruXlhFOp4wiS7eqvoPOi9a15nMFJ/A7KUdLMJFCuU/dHxBgGwJtz165/LY
+    c0+Q==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103994;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
+    b=Uym02xd3bcg42Lj1X0V5+fSgIxtI6OlDaJKRKjbdRWDZwPoiRGua3v3sTyxa1KP6Ud
+    LeHtECNqiDJigBV+ORAvwIiwoLaaMMPEGSNbGp/eOXttdit87on/86bCOQ8nuQn9jO3y
+    rRpYWo6A7Qb+qMtkr7v9Vid7SLTkQB4iKNBxSQ3G4oJI2+tey8zUjld5MudLwwV7wVmp
+    ae7cbSgiRhr8CD7BwOhcCbk7leykBWsx7tet2Y91o6Xhl+34vW3Gr2jhUB9ZPc5f7IpO
+    OxZUhjx90WciyrtpQ2BpkSJPImwr7+1Nd/Sev5wzOQAsmnL9Po5xVDQ6lPDps8NyJzLf
+    Rb5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744103994;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=xc/XoPImOuzC0siJVvkk5j/5irT3nJLsjEZdGp+le1s=;
+    b=okpd5tum1sdCZ6nXBWTwpOv2fXLo0tX1UK6Kr+eYSsTHhxvea1wnHcivtJxpf+ZBms
+    u1CCPxXR2AKq+7m9gOBQ==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
+Received: from ws2104.lan.kalrayinc.com
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id J2b1101389JrXB5
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 8 Apr 2025 11:19:53 +0200 (CEST)
+From: Julian Vetter <julian@outer-limits.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Yue Haibing <yuehaibing@huawei.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Julian Vetter <julian@outer-limits.org>
+Subject: [PATCH] net: ipvlan: remove __get_unaligned_cpu32 from ipvlan driver
+Date: Tue,  8 Apr 2025 11:19:46 +0200
+Message-Id: <20250408091946.2266271-1-julian@outer-limits.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Apr 08, 2025 at 01:50:16PM +0500, Mikhail Gavrilov wrote:
-> On Tue, Apr 8, 2025 at 1:24 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > I have a hard time seeing what that would caused by. I'll try to look
-> > into it but it's not a lot to go by and this just shows a hanging FUSE
-> > request which seems very unrelated to the change you point to.
-> >
-> 
-> I could perform another bisect and identify the subsequent commit that
-> caused the issue if I could revert 474f7825d533.
+The __get_unaligned_cpu32 function is deprecated. So, replace it with
+the more generic get_unaligned and just cast the input parameter.
 
-I'm confused why that's an issue:
+Signed-off-by: Julian Vetter <julian@outer-limits.org>
+---
+ drivers/net/ipvlan/ipvlan_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> git reset --hard 474f7825d5335798742b92f067e1d22365013107
-HEAD is now at 474f7825d533 fs: add copy_mount_setattr() helper
+diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
+index ca62188a317a..8ccbde16ddfa 100644
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -219,7 +219,7 @@ void *ipvlan_get_L3_hdr(struct ipvl_port *port, struct sk_buff *skb, int *type)
+ 
+ unsigned int ipvlan_mac_hash(const unsigned char *addr)
+ {
+-	u32 hash = jhash_1word(__get_unaligned_cpu32(addr+2),
++	u32 hash = jhash_1word(get_unaligned((u32 *)(addr + 2)),
+ 			       ipvlan_jhash_secret);
+ 
+ 	return hash & IPVLAN_MAC_FILTER_MASK;
+-- 
+2.34.1
 
-> git revert --no-edit 474f7825d5335798742b92f067e1d22365013107
-[work.bisect e5673958d85c] Revert "fs: add copy_mount_setattr() helper"
- Date: Tue Apr 8 11:14:31 2025 +0200
- 1 file changed, 33 insertions(+), 40 deletions(-)
