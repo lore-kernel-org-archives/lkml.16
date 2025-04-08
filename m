@@ -1,129 +1,76 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7380E26738B;
-	Tue,  8 Apr 2025 11:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EF126738B;
+	Tue,  8 Apr 2025 11:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111004; cv=none; b=uR82CPrpA3ycjtbBQzaey9PmREIRyTcmpJjlrGoDwV+q5bz/mHPDHd0kF/2IHcjTI0OHEIMqccmjR0BONJ9n58w9PjxDjlDy8vhyCvTABA7pXsOPZCFw4T0uQrAg0UdeCQHZyTcAwKKKmyw6At+VyxTd+09GDHgStWSH0jKYppM=
+	t=1744111195; cv=none; b=C1w4YfDW6CVdIiJElbsyKJK+FZyI/dYpbXLAdWnH9rzBqs15R859XDIhWAJaJ18TzCdg6cYVWXfzL9FHBjdmu32O+c8TF02bpRB/zR5WynD0LSzr4GCPowDRaThgjgtq592HiTOu4XBRc3ZJCxPMIL6//cJWnomXBhYatg5Ick8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111004; c=relaxed/simple;
-	bh=Rs1VDrfkKYspHuvyPdg5qkfl/f18RpD/0VWPjsoz9AA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clJ3InL+6WNbUWIKI3EEmHEBwTHwRLOVezsDic7fN/cVHe2OYlaKkDHaLWO7+389n/6p0RYoNGkiUPCI+aoiRH7joFK42iFk+nDgv4RkviAZSmhp13AXcE0sUiWzcpXIaTcNGwEua49REiMRH4FBJIbm/7tYleGdINI1bggIhhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fBI6Y0Pd; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744111195; c=relaxed/simple;
+	bh=YIYWQIhz48YbSQFZb89VL/7r46qg0r/A90qlSIfSg20=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Ic2heAvqW1EvtPbVC+KM+tuT3dETpRyK8F8LYeiHt/hSRWvtIKjGBVBC6uADWbXx9DHFbiEmytNMq8YRV/dThlom2cl0GJTwQanxyKnlnB5+KbwKGXw1HaMYZj3uzyVVYSTRzIZQlHSfe7ycA8/NoPnWyB/aFvQKvjd1zgwi8DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYXGqoDw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fBI6Y0Pd"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DDBCD78E;
-	Tue,  8 Apr 2025 13:14:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744110881;
-	bh=Rs1VDrfkKYspHuvyPdg5qkfl/f18RpD/0VWPjsoz9AA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fBI6Y0Pdl8J5Ng5N9UaqZo3SizMvHnr34sFg4UcRdurTRV+H+QanOe1aW36FBjmqk
-	 V+klsKZEeZP0BT8U4iVyAe8TUgBm3UXQp+1EizvjMCEaVGYSuAoRMLtw/8lcZvY7fa
-	 IrFgyDcWvdsQZZhuUENepJrjpcQHvMvorW8E3upE=
-Date: Tue, 8 Apr 2025 14:16:13 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: i2c: thp7312: use fwnode_for_each_child_node()
-Message-ID: <20250408111613.GC31475@pendragon.ideasonboard.com>
-References: <Z90qM33DvkTMGg_x@mva-rohm>
- <20250321104100.GC25483@pendragon.ideasonboard.com>
- <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
- <20250408101252.GB31475@pendragon.ideasonboard.com>
- <3d8546b9-92bd-40da-a61a-4534ba7779db@gmail.com>
- <Z_T8N8aHR-2OzHAO@kekkonen.localdomain>
- <6f6a0ade-09fd-49eb-a8ae-ac8849b8ce92@gmail.com>
- <Z_UDmqZoPtybJr95@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYXGqoDw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E41C4CEE5;
+	Tue,  8 Apr 2025 11:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744111194;
+	bh=YIYWQIhz48YbSQFZb89VL/7r46qg0r/A90qlSIfSg20=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LYXGqoDwq15gOXcrI/rcYT6+0inOmXP2je0Zu2OZG6mUGSC48nVLtI1JPPbvl2s0O
+	 AO4mgfcSQ+9hBNlCZLNgMsEg5fT43tZxMA2i0ud0tMJxANKzXl8gWPvCSfPkYpRrpa
+	 HgvcNbpAWnW0eki06ch8uX5ZTOxVXJIceLUM0Omu1aNlWM21lac72MZGVHWnZ6ewfW
+	 2y35KqrJPn9zIOkBdmYhEn6iGV6mScRGogYk3yjMz0FeyDvtJmFTtxZ+mhc6xT4SSh
+	 6mQKbuvl9wZyAIFgDrD5SDurdVeV2vyn8if1llKHsJPDBX1W54aybSDcoq9QsvIoJw
+	 gu2cTbpcOYEhQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7197038111D4;
+	Tue,  8 Apr 2025 11:20:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z_UDmqZoPtybJr95@kekkonen.localdomain>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] rocker: Simplify if condition in ofdpa_port_fdb()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174411123226.1881371.3532819555367926213.git-patchwork-notify@kernel.org>
+Date: Tue, 08 Apr 2025 11:20:32 +0000
+References: <20250407091442.743478-1-thorsten.blum@linux.dev>
+In-Reply-To: <20250407091442.743478-1-thorsten.blum@linux.dev>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: jiri@resnulli.us, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Apr 08, 2025 at 11:08:10AM +0000, Sakari Ailus wrote:
-> Moi,
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Mon,  7 Apr 2025 11:14:42 +0200 you wrote:
+> Remove the double negation and simplify the if condition.
 > 
-> On Tue, Apr 08, 2025 at 01:42:12PM +0300, Matti Vaittinen wrote:
-> > On 08/04/2025 13:36, Sakari Ailus wrote:
-> > > Hei Laurent, Matti,
-> > > 
-> > > On Tue, Apr 08, 2025 at 01:26:42PM +0300, Matti Vaittinen wrote:
-> > > > On 08/04/2025 13:12, Laurent Pinchart wrote:
-> > > > > Hi Sakari,
-> > > > > 
-> > > > > On Tue, Apr 08, 2025 at 08:48:45AM +0000, Sakari Ailus wrote:
-> > > > > > On Fri, Mar 21, 2025 at 12:41:00PM +0200, Laurent Pinchart wrote:
-> > > > > > > On Fri, Mar 21, 2025 at 10:58:27AM +0200, Matti Vaittinen wrote:
-> > > > > > > > When fwnode_for_each_available_child_node() is used on the device-tree
-> > > > > > > > backed systems, it renders to same operation as the
-> > > > > > > > fwnode_for_each_child_node(), because the fwnode_for_each_child_node()
-> > > > > > > > does only iterate through those device-tree nodes which are available.
-> > > > > > > 
-> > > > > > > This makes me wonder why the OF backend implements
-> > > > > > > fwnode_for_each_child_node() as fwnode_for_each_available_child_node().
-> > > > > > > Is that on purpose, or is it a bug ?
-> > > > > > 
-> > > > > > I discussed this with Rafael and he didn't recall why the original
-> > > > > > implementation was like that. The general direction later on has been not
-> > > > > > to present unavailable nodes over the fwnode interface.
-> > > > > > 
-> > > > > > So I'd say:
-> > > > > > 
-> > > > > > Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > > > 
-> > > > > > We should also change the documentation of the fwnode API accordingly.
-> > > > > 
-> > > > > Does that also mean that the fwnode_for_each_available_child_node()
-> > > > > function will be dropped ? It's used by few drivers (5 in addition to
-> > > > > the thp7312 driver, plus 3 call sites in drivers/base/core.c), so a
-> > > > > patch series to drop it should be easy.
-> > > > > 
-> > > > 
-> > > > I assume the fwnode_for_each_available_child_node() still makes sense for
-> > > > ACPI backed users, no?
-> > > 
-> > > Not really (see my earlier explanation in
-> > > <Z9mQPJwnKAkPHriT@kekkonen.localdomain>).
-> > 
-> > I capture that the _named_ available nodes don't have value as ACPI names
-> > aren't really what is expected by the _named_ callers. What I didn't pick is
-> > that the fwnode_for_each_available_child_node() - which should iterate all
-> > available child nodes ignoring the name - wouldn't be useful.
+> No functional changes intended.
 > 
-> Fair enough. I don't think we need to support enumerating unavailable ACPI
-> device nodes in this API. I'd indeed change the behaviour so that only
-> available nodes are enumerated. I can post a patch for that.
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/net/ethernet/rocker/rocker_ofdpa.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Unless there's a specific reason against it that I wouldn't be aware of,
-I would also very much favour merging the fwnode_for_each_child_node()
-and fwnode_for_each_available_child_node() functions into a single one
-that only enumerates available nodes, with a consistent behaviour across
-all backend. Having fwnode_for_each_child_node() return unavailable ACPI
-nodes but not unavailable DT nodes would be really confusing.
+Here is the summary with links:
+  - [net-next] rocker: Simplify if condition in ofdpa_port_fdb()
+    https://git.kernel.org/netdev/net-next/c/4acdd3de31c8
 
-> > > I think all the *available* stuff
-> > > should be removed from include/linux/property.h, apart from
-> > > fwnode_device_is_availble(), which should be turned to work on struct
-> > > device to signal its availability for device nodes only.
-> > 
-> > I am not saying I have any understanding of the uses of the 'unavailable'
-> > nodes. As such I am not arguing over what you say here :)
-
+You are awesome, thank you!
 -- 
-Regards,
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Laurent Pinchart
+
