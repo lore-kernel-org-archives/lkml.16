@@ -1,276 +1,233 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31331DDA17
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125379; cv=none; b=YiScFKxPTJcJjSxRWz19Y3HrS00DhLpBk3ahiO1bbKPWu6sJbOHFBY3cVFw2LWW7wfvUqWcNO+kj57zoiWDO2uQZBxylI0/mBBB0m4QvbeKgAwFoH7cft5a94u11p8yuCuHMKbJECLpDyO6TkpaioOYIO97FUx80l3AhqdElpaE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125379; c=relaxed/simple;
-	bh=y93OEpcvQTfRreoASyUGxgT7/yvoosa5h99mf4uZzdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=knYjEbyMb3l1JJxdca+az22zmj+/+w9um5vMZD5f5FG8HeitzR8Y13n1d1wrzc2oE0gLlgoyXAneVQsLHPZ+gnPsVD9bSCBYGsiVPN1Vi9XaU+I73AoCilBIlLCubETsZ3hK0qiRWnoZFBi1rpFvwlwSQogrjRMxYW0YIKZFqPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=digW3D/B; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CEC224252;
+	Tue,  8 Apr 2025 15:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744125399; cv=fail; b=uxiXd4uTxCCXH56VwOiHHXXBmuMtOQHC/M8Zv5R9rsyMy1sMxLnjZ91+HRXaxz900JaN/nD9m9cNJq2w8KiPKzf/UCQrUuJK1xIrhBM41Ry363TdmuMgmprihBkpcx2GUeFwlwfTSVLdxdEcVgcXQMQWub8LgWpnh0ohveORJE0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744125399; c=relaxed/simple;
+	bh=+Bi2wmUMfHzCz0iccwsXxLx7xBHqadP2Uq5pZHeOVdc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mJPx1Fas1l67OP9SvRlzSpTRFu/H5ip3+yGtoAj2XMInDJKdON3yJg5LuzfSwNskA2iv2bmkHEOOXsGOjcnGRFi/0iMseFmvi/lgQHa8IYJCWNo8ZpYUYRsUh6jQr+6Da4m+D+NV/+noYvIVBLH+SRKfaZLW2xIyfD8BefFrtZw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=P6+qgA2j; arc=fail smtp.client-ip=40.107.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="digW3D/B"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AuQjK020678
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 15:16:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GUOig53W24iOjPA1XcY3WSqZ/ZqeWElsBfbuyxJUtIQ=; b=digW3D/BFMr5qasc
-	Tt8wAbmK9jYiCBp+ihAuezLc5pS/L1r5eO2f6iKkP5SiEKOj/EOBiFjSDXe0Ub+Z
-	I8M74Ow8J39WLsomAX8/A03RtO21QL+FEPekxgaOJZVtmK83JUfD/ZlY8tfSJgZF
-	KQmu4W2wSZyO/23BxNlWJ3cjaRNd6ot24ZfHk3tZnA99oraQK5CcigpXjwq+/1z7
-	gfMVR2U5+HZ+KkhmceQEOAsn6wpiadh2z0B+fQYFY13pY8i9UTeBuNz8qyWRqrWk
-	oPr9LE4LkTlrpa0+6FhhidRmVde9qY5nXQTkPNnFVMIngHvbT6ItF8s4wrSJnrVJ
-	RVIG1g==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgg7r5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:16:10 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3032f4ea8cfso5867360a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:16:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744125369; x=1744730169;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GUOig53W24iOjPA1XcY3WSqZ/ZqeWElsBfbuyxJUtIQ=;
-        b=TFM4SNgjoy/vEwhOZKcXWyVYuA68elAnvSreic0+6Qk/ohqlTovncbw/ouatGNQEcp
-         OLr3aFNTTtBw5jWNXoTFTAcG/5QvFQ8tMSWa6xxt7EpjNm+HeWAwUmus96Blg50IeLW9
-         Zyes7yv+c4m31/Kr6tNQ0u2c2yp1kqam1TkTinJM+PfmMBKji/Xsh+JqPUdj2dkIHcpX
-         20IBGiwVxVror/3R4UMtptg8T+hefk8BKiRwbxv500g68hAMXMimcL9xmjUdjYLjwY3w
-         FhR1nv8R9iHZti2oxIVWk3bToCVt5okvc8amUsZR0ON5Vys0Flt+1Syy+bB8zrLnGJa6
-         6uLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWx/qljJU+4EEbYgCtjJxxB/8ZCkTGIpSD5BhVS4zNmr0pyta8Y2x0Vl4rXSUfHVkJWt1AKwAZQC6ow/Mk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj7rfExyEwuJxTqYwIBMsQ3iO4pTIkAOI5+lRdzUhLtKQdNNTi
-	4lfYjHcYUsj0KJq4KVLee6mmz/7ejHlNGexIDQvn8i41l0UjYDsUNz4vgx4G5auLe+9YnNFRJOL
-	+ftkCq6LqQ4Hxuy4qRZxiQfPWUtmjvfbXiZGsAp9v+xA44jSA6m1xwJo95DI5yx0=
-X-Gm-Gg: ASbGnctXLygEnI5VBZFCq56ywc58p/Uu8Nm1Ue+KzXyq8sChRMF3XqGsHOjSa0EI0XO
-	ubXEzuOsBvuSznc7tG7tkvVu7i2E6WBOgnFLxbRgrYMGxYBWfdc5VgLUB1Qp5/yVX5+a0Z8VSP6
-	cv+xlV6l1GRZR207+3XtKC2Bj1sucsg4ji2B8sRWISjEf9G2NCsbmB+lRTMmjuKe7GYAOP9bHoP
-	XEqyveF7M/IiDA0ffXqq30jG+2gczYcvEd/6yjQOkvKEVdD739PpcCoO2YYri/5IuHEQAbG1JDK
-	eHI8ZL0renACzhJlycfw4Ab1TdpdJUg9O1xTv3t7A4c4Fawjkd7InRGmAOgjli2RkKudRbnmFQ=
-	=
-X-Received: by 2002:a17:90a:d88d:b0:2ff:58a4:9db3 with SMTP id 98e67ed59e1d1-306a492058bmr25083698a91.35.1744125369563;
-        Tue, 08 Apr 2025 08:16:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXxrXIZKfwkOZmrZDvMkp4fCYxwmYKHFndjOAryY6UMfq8uI9Wk2SXDQaOfc62/yTo1StXwg==
-X-Received: by 2002:a17:90a:d88d:b0:2ff:58a4:9db3 with SMTP id 98e67ed59e1d1-306a492058bmr25083655a91.35.1744125369184;
-        Tue, 08 Apr 2025 08:16:09 -0700 (PDT)
-Received: from [10.222.168.90] (Global_NAT1_IAD_FW.qualcomm.com. [129.46.232.65])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983b976asm11061159a91.30.2025.04.08.08.16.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 08:16:08 -0700 (PDT)
-Message-ID: <b0052a1e-4089-44de-a02d-a39143d5d9c3@oss.qualcomm.com>
-Date: Tue, 8 Apr 2025 10:16:06 -0500
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="P6+qgA2j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DaDbxarhkWYXSz6h0HC+sH4DT4Mo+sB+biftEhssoSPOXUUxj3u+L3FNc8qK6+RHwq21ejzk3se1yYbd3yU82OJgISBkiMyAgztN2KYgSXzDBPfym0lddu6fIqNLNQt2WPGSGZ+40IuUCPjjP7z4AZ6TquPOSdbfGUS+RmDTS4nWqj9POJfiv/ai0+xCNnyNypYGWLMolQFMfHfdTEmLtun1wFZp6rQwbR7yfu5zmzKll99ayH2obxRMgF2HFftZNnPo6Y/+8hKP3llhtVT9Bv1TDhUqnDCwJL1UNwJxBqX6qpEeoOYs4zRF8wxa9nbUiOmYTEV52HGQMYwu66QvOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=J7ZC9FNCurL25DbhwFhrSaZiuWtpBPrLFlGd2DgFNYI=;
+ b=vRvuq+DcaE0HQ4WpmujpoJGRvuV3HyE1wpSq80jz2i4k+/qDutW1u8Caf2K5/tl/iY/GqyK8FBp8ddEFf//4w5I7hyqK1XN7iQxJQ/PgLnXnCYIQt4pdvA4cAFnCVrxnm4t9bvj04Lgeh7+ruSNT5abo0RW/tuk5+dMQtJJNOO+nsMZo3y4UHSulzJGJoM42t4wZFznmVJ8IbFZ+4wFEYOTmtksSic2i6MuXs2PaK4UKAUdOLULvMdTS11324gPS4/1IQS99jKzAVDnZ+da5sNKQXX+/7JOc9qRMeqz80BZvAIS0bdN/WwG/bRqSmMuMa8OKHPZ4V37OjdAFq73MxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J7ZC9FNCurL25DbhwFhrSaZiuWtpBPrLFlGd2DgFNYI=;
+ b=P6+qgA2jTboBHjuRF7cYmN/v/RMR650/QRoREr0EBwAcxhB9XS4w7ut4LpefWdGAsjnNhr1T/8rKDioUUj4ni/UgAQzVO9ytp8q6Vk+PRGCFogFc0YOKeynim8bwJuHalH+GySiG1dIcTqvG1XfmsEMYl7qccarwuAV9YWqDpOFV26a3qTuQy1OYPSEiuZ0kTzNAhEWVLcvqxmdXv0O+5QvOrgXmgpfE/fWl14NlNFF4dRRYFyJnGGk6dL0Pxbi6QSIak5RoRs+AiKM1yc5NbioBw8EifB727mmRHyBpyPAReswuasJO61NBBJDFhZMozNjyNTCNJpoeMhlHg7uorA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB7548.namprd12.prod.outlook.com (2603:10b6:610:144::12)
+ by BL3PR12MB6401.namprd12.prod.outlook.com (2603:10b6:208:3b1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 15:16:34 +0000
+Received: from CH3PR12MB7548.namprd12.prod.outlook.com
+ ([fe80::e8c:e992:7287:cb06]) by CH3PR12MB7548.namprd12.prod.outlook.com
+ ([fe80::e8c:e992:7287:cb06%5]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 15:16:34 +0000
+Message-ID: <8948a9d5-0b0d-4df7-9958-dc6f8f300e2f@nvidia.com>
+Date: Tue, 8 Apr 2025 18:16:31 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] net/mlx5e: fix potential null dereference in
+ mlx5e_tc_nic_create_miss_table
+To: Charles Han <hanchunchao@inspur.com>,
+ Tariq Toukan <ttoukan.linux@gmail.com>
+Cc: saeedm@nvidia.com, tariqt@nvidia.com, leon@kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, lariel@nvidia.com, paulb@nvidia.com,
+ maord@nvidia.com, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <9ae1228039dcba4ff24853ac72410ad67-4-25gmail.com@g.corp-email.com>
+ <2bfd9684-7ef0-40b0-b35d-abb0a3453935@gmail.com>
+ <Z_TK3uIIlJ5y3fWy@locahost.localdomain>
+Content-Language: en-US
+From: Mark Bloch <mbloch@nvidia.com>
+In-Reply-To: <Z_TK3uIIlJ5y3fWy@locahost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR3P281CA0007.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::6) To CH3PR12MB7548.namprd12.prod.outlook.com
+ (2603:10b6:610:144::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/41] hexagon: Replace __ASSEMBLY__ with __ASSEMBLER__ in
- non-uapi headers
-To: Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-hexagon@vger.kernel.org
-References: <20250314071013.1575167-1-thuth@redhat.com>
- <20250314071013.1575167-14-thuth@redhat.com>
-Content-Language: en-US
-From: Brian Cain <brian.cain@oss.qualcomm.com>
-In-Reply-To: <20250314071013.1575167-14-thuth@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f53dbb cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=C3Dk8TwHQYyIj7nOf9RCJw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=DQpVxa5VyoaRFQlObUkA:9
- a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-ORIG-GUID: XLkYnakijmUBlQ-L8oOefq3jZ-3GJpcx
-X-Proofpoint-GUID: XLkYnakijmUBlQ-L8oOefq3jZ-3GJpcx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 clxscore=1011 adultscore=0 malwarescore=0 spamscore=0
- impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080107
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB7548:EE_|BL3PR12MB6401:EE_
+X-MS-Office365-Filtering-Correlation-Id: 336ccc93-4d4b-42ff-1b84-08dd76b0596c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UXB4TGZCUUlvaCt6QXlnZHpVVlZPbjU2aE5JTmNRTXN1SkRRVWNJNWxCUVlv?=
+ =?utf-8?B?YmwzL3YvcTY5SUI4dlR3ckNOZ1BkMHB0Ui8veUFwRWJzekdjRVkvL0RCUGJZ?=
+ =?utf-8?B?dTM4ZzZ5UU9meHJGV1JxeVFOdlJjL1g5anhmL2tUOWQvQ0M5NXI5RHdETmNN?=
+ =?utf-8?B?RnB1MllNdXA2YUJha2YxNlVSa2FjenFacjhObDlKOUU1Y3VnZ0dJcWtzZTV5?=
+ =?utf-8?B?WERuQWNaQzlYQ0VIa2t6Vk1BWXE5VllQSDg0OHdnU2ppU05qWm5JUWFPWWIr?=
+ =?utf-8?B?M2lJL3J1SXFReHlkQUp4emllZWlJYUtQNTBqc1MxZDFxYVA3dEJYNVVnbzVP?=
+ =?utf-8?B?UGw1TjcreWthcGxOMENpR0pIdG5GRlhhOXdybURNQ3NvUkVNMjM2UE9JN29o?=
+ =?utf-8?B?eEpRRFU4VVB1VWE0U3FGTlJLYk5reVQwdmE5aEhaUkF4R1NYeW1wZmN3TThr?=
+ =?utf-8?B?VXJXQ0pITVNUS1QyQVlQaU1MQ1N6dVdac3VURVBySUxsdWx4ZTdpVlFOY25z?=
+ =?utf-8?B?UE15U1Z5OVRHZGh4YytBa25jV2VYYkNNcndkSXp2NDhRZ2lKYXJsRmlDMi9P?=
+ =?utf-8?B?Y0hXaGZtck5VWFdESE01STdYVGhKZGp2b1puZk1idlJ5SXhPYWhXTktMNUNM?=
+ =?utf-8?B?d3NrWVI5elhtVEdGZDdIekNXUE1va3p4OXF5ODBQckdkenJVTVY4QSs1MkR5?=
+ =?utf-8?B?QlJwT2EyWWhETHRGRUV4MDd0QmcrSmZJSHlpd2ZOZUVJcCtSRFhrbmJCbXUw?=
+ =?utf-8?B?S3Ewa2ZvK0pCSDViVFR1NjgxZGJFYXhWOGlBenVmWkFJSVRkeGtWNWx1K3NB?=
+ =?utf-8?B?cEZWSXZlS3BjUDVDbkRkeXc3ckpPRlQzV2VaR2pidGVQQTBvS1duYURnakVG?=
+ =?utf-8?B?VWUzc1dCeDBhNDM1RTVSSlBWYmU1eGFHVFZ5UUY2dTE3ZUhwTCtLd1BKN0h2?=
+ =?utf-8?B?OWU1ZU9TeGpaU2RBMjlhMFNNWWpaOGlzTUlraExwZjhiYXBwbjFxVDBWdDlF?=
+ =?utf-8?B?SlVETzgwWG5xNVJvSU9nWEIwMzZJRXhoWGVGZjVKb1pVYm5xYURsS3VWUEU1?=
+ =?utf-8?B?R21SbWZuNXRIRTFJU0kxRFY5OEd4Q2RTMjNKYWFmWjhKYVEwTlUrd0RGZndm?=
+ =?utf-8?B?TlNTZnNIMWNKL0pPc2JCaHU1cWN5OWNGVURUaXRFeitYdEdJclRESVBMRU5s?=
+ =?utf-8?B?ald2Y0JsODlVdVQ3TmVHRUw3b2k2QTc3NEpib1ozc1JkWjFGRklyTDZDZmlU?=
+ =?utf-8?B?K3BROTBiUXgvTE1sZlpITGtUMUQ4cTJ1T1FlU2QvVWs5M2lrV2s1bFBPRGE0?=
+ =?utf-8?B?TDd3eXkwWkxyNUZmK0NUVEMwVVR0VE5lQkdYRVoyMzVvNnA2aG15NnM4MnpR?=
+ =?utf-8?B?QlVOQXFkbUZWUDlrdlU0VGJuR1dmYXU5MzNkUUpQSkJwaDFQZ3pNaUtvR002?=
+ =?utf-8?B?WVpPcFMwazlReTVBUHNQZzA0cUQ0TW5UMWF5K0RmMzhkclMxbE9rWlNrN1k2?=
+ =?utf-8?B?dVl3K0xjZGp3dHF0VG4zdXZoOTRQUDN0eXdaSG5hOFQzVWc5VGFrSDh2WVRI?=
+ =?utf-8?B?a3NjS0wwTitaZ2tWU2ZRQUVwbW5vTTgrQW40MVBVbWJJRmJhSVRnRW9VYVVm?=
+ =?utf-8?B?ODlKRko3MzNETlB3ZVRkWm9YU0UzSzRuV0VoRHNNc0ZEUHNTZzBlNHFHQXBn?=
+ =?utf-8?B?T1lqbzQ4OWpFbnRCUm5QVjBzbjJJRG5ndE5IU25GRXpWL25kbEZxbTE1bFZX?=
+ =?utf-8?B?Z09CZW1mOXp5aW5nUGVTZUZFWGZSbXpCUTV1MWFHYWJiYUtNeXk3Y1RwQ3lD?=
+ =?utf-8?B?MWJYUzQ5TWRkamI2SUxlOTNoQUxpd0xKU0h4VWNqTEZqeE8rbjNkTjZZUHFy?=
+ =?utf-8?Q?uAXCAVT3Vz71C?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7548.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U2N2ZDI0ZVRGdTZjVTV3Z3U3Y3F0R1ZTRGdvOVRyTlRNZER4U0xrTXZUMlpV?=
+ =?utf-8?B?VUhNbDlLOS8walB3RkxlVWMrRVhNbWRHOHBNN3U2MEVYTlYxVDE2MlR4OFRK?=
+ =?utf-8?B?a1puV1Bic29hQ3gvZjN6NHE2OEhpWUhnbjRiaFlJK0RTVUh6Rmp0ZFV0RFJl?=
+ =?utf-8?B?RGI3SVg2a0VZcmhyb2kySzZvZVFDVHZXVEd2bTZHRE9NWlEwNDFSaWtXQzJx?=
+ =?utf-8?B?OGdNekJQSS9qRkdOWkc3dW1ZZUdCYmx0VmxKYnFLcjIrQStqbm5MWXFhRjJs?=
+ =?utf-8?B?OEM3OUk2ang3bTViTWNGQ1R0dVNRbXkyY1FiQTI5R0RuMUdVb2tVd2ZwbzBC?=
+ =?utf-8?B?VVFCU2NRais3dkh2OHVHQU1ZeVNmUDRjRmRua25uNHpXOVBaWXp6Rmg3THJv?=
+ =?utf-8?B?R0xrTnVIczlZRlJiUDh0SmU3TDVmdnpNWThJeEpxdFBLM2p3M25DMXkvamY4?=
+ =?utf-8?B?MmcrSXZNRmlJN05jRWFBRTEyUVRWcDdSZ2R2NjVBcGVrU0R2c2tRR0FoTVhN?=
+ =?utf-8?B?TU5VbFJ5Q01PYno1YmpTSnVlSVl0eW5CQ2R2ZmprVVBBbE1FRkRidlRuSGsv?=
+ =?utf-8?B?R2gzaWdFcEZ4Mmp6T040VDFyc1RvNzk1NEkzSldLZXBGV05kN21leGhjMW9B?=
+ =?utf-8?B?NEtRSHRrNkhiT3pLZW5XV2VvZitmazVUVURUQmx6V1VYVjRvMENQdUtFSHBw?=
+ =?utf-8?B?dTNyYkNzV1lxbmhxTTNZOWpjMjFVQmswcFB2MnRzR3VKR1RTWlMwY0UzMWZo?=
+ =?utf-8?B?OEF3MEkyTVV5TzB2a0plRkJlQUw0Mk1sYm92YVFaYm5wR0szOFRmSUkxQmN0?=
+ =?utf-8?B?bGFJMjV6NHMzSTRUSUtNMWswcmgwdURESFJYUVdMRVN0ajVFUDFLWnR1b3FI?=
+ =?utf-8?B?em9hUE5iWkRzN3U2THd5b3RTWXg2VVVUVEVQM1puSlkvWHBXVFppNmEyT1VV?=
+ =?utf-8?B?enpsdzYrZWMwbEFiZm1UaXhmOXlMWU1aQzQwUEVUVXVRc2tFSlVQWGZsZTF3?=
+ =?utf-8?B?SUlYUkF5SW9MSE01UWV3ZFQ1ZW5TbVFrQjJXWUxhRjRDSjVhOFJZdnd1TjRK?=
+ =?utf-8?B?OGo5RFN3anFUMjlDMXpTTGNOUEg4UGxmaVlOaUlLMGc5Z2hNV1V5M0NXUk9z?=
+ =?utf-8?B?NjkwUURMSkFqSWNxbzIxa2dRVE92aS8ybzZJZjB2SU1BSU9SeU9Wd2ZsUE9m?=
+ =?utf-8?B?RjIyczQ0MitGTXJwQk03S0xXbVNreEtzK3RKeGlZVGFmV1JWbVgvNlBiY2dp?=
+ =?utf-8?B?QXppNTZFQWZIY21XdlJOYWpsTlovREpIWFVtcmxadkNVdXcyN0ZqcUs4NjdG?=
+ =?utf-8?B?T2JQSVBvYmtzOFdTdHlhbUJ1NjN2Y0lFUGlmNisvSXZxMThBS3A2SUJVV2xt?=
+ =?utf-8?B?THhsR1JRRy93LytwUXBuY1UzS1c0VXJhcVN1Vk10V0g4eUxIeU1KbUxuY0tr?=
+ =?utf-8?B?OHo5dHo3Y2ltaVFVelNtbm5DaGFhaVgwMFZxTXRWR1ZDUlcvQzhEemFJeUhs?=
+ =?utf-8?B?dWZwZUk1YW5aV0IzSDFTandNR3M5c1BmK0dVZEJNdDhPeUpGVnUxbGs5ZCt4?=
+ =?utf-8?B?YXpMQUR4RXE3QlZRa0RqV0YzUk1CNDRDM2pQRGI4d3lBKzJzb01NWnBYWkps?=
+ =?utf-8?B?K0lvbVdnaGtJbkI5QWVIMW9zYnpLVStqclRlQ3ZoblNXaGQ4NXZOaVdRWnpO?=
+ =?utf-8?B?MUVJeWRMZzJWZC9MVkdGaFF2UHJycHpVSVZGTUJHZDI1QmZKWUk0bEduVFlE?=
+ =?utf-8?B?NU9xWXZLRm1Kb3V3ODh1MHVoZUxBNkZxcXdzR201Sk5tZmx2MXJNQWg5UVd2?=
+ =?utf-8?B?RVpGWFF2QlRLU011eTR1bFhPdlVXVWJINU1JYmNWK3l0NGs5UjM5RmNYdDFO?=
+ =?utf-8?B?Qkw3NG01NU9MWTFxdG0rMFdiQ0h1VE5CTUF4VEFKNWIvWTFaeC9wNW5RWTJ1?=
+ =?utf-8?B?NkRwdjhyMFlnMUJyWm1CSjEzcW9WRFovL3BUT0d3MUl0aklQcm9FNU1mRlBz?=
+ =?utf-8?B?QVZPdzhyQ29wTCtZMy9vTGZudUphWEU5UFpQcXpScEVqS2JzUi9mRlA1WkR5?=
+ =?utf-8?B?a3dGOXpyNlcrVFdWSm5DNVpCaytrQlhWOTNjeEYzcVp4YWxxckFJQlhlZWwz?=
+ =?utf-8?Q?4YVvUm/BTctJiKBCoOFnOA0kb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 336ccc93-4d4b-42ff-1b84-08dd76b0596c
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7548.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 15:16:34.4821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Ln8DUoKYiApAlDzLmaE29iyzIAyWnb/tzmUprrlm8Ms8I5NzRfMGCZtVHZN8TaWB9H1N9IsjimBhCEu+wEFRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6401
 
 
-On 3/14/2025 2:09 AM, Thomas Huth wrote:
-> While the GCC and Clang compilers already define __ASSEMBLER__
-> automatically when compiling assembly code, __ASSEMBLY__ is a
-> macro that only gets defined by the Makefiles in the kernel.
-> This can be very confusing when switching between userspace
-> and kernelspace coding, or when dealing with uapi headers that
-> rather should use __ASSEMBLER__ instead. So let's standardize on
-> the __ASSEMBLER__ macro that is provided by the compilers now.
->
-> This is a completely mechanical patch (done with a simple "sed -i"
-> statement).
->
-> Cc: Brian Cain <brian.cain@oss.qualcomm.com>
-> Cc: linux-hexagon@vger.kernel.org
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
 
+On 08/04/2025 10:06, Charles Han wrote:
+> On Mon, Apr 07, 2025 at 12:29:22PM +0300, Tariq Toukan wrote:
+>>
+>>
+>> On 07/04/2025 10:20, Charles Han wrote:
+>>> mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
+>>> without NULL check may lead to NULL dereference.
+>>> Add a NULL check for ns.
+>>>
+>>> Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
+>>> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+>>> ---
+>>>   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>>> index 9ba99609999f..c2f23ac95c3d 100644
+>>> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+>>> @@ -5216,6 +5216,10 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
+>>>   	ft_attr.level = MLX5E_TC_MISS_LEVEL;
+>>>   	ft_attr.prio = 0;
+>>>   	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
+>>> +	if (!ns) {
+>>> +		netdev_err(priv->mdev, "Failed to get flow namespace\n");
+>>> +		return -EOPNOTSUPP;
+>>> +	}
+>>>   	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
+>>>   	if (IS_ERR(*ft)) {
+>>
+>> Same question here, did it fail for you, or just saw it while reading the
+>> code?
+> I just saw it while reading the code.
+> I've been working on code vulnerability scanning recently.
+> 
 
-Acked-by: Brian Cain <brian.cain@oss.qualcomm.com>
+I don't believe this scenario can actually occur.
+The function mlx5e_tc_nic_init() is called from mlx5e_init_nic_rx(),
+and before that, we invoke mlx5e_create_flow_steering().
 
+In mlx5e_create_flow_steering(), the first operation is:
 
->   arch/hexagon/include/asm/hexagon_vm.h  |  4 ++--
->   arch/hexagon/include/asm/mem-layout.h  |  6 +++---
->   arch/hexagon/include/asm/page.h        |  4 ++--
->   arch/hexagon/include/asm/processor.h   |  4 ++--
->   arch/hexagon/include/asm/thread_info.h | 12 ++++++------
->   5 files changed, 15 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/hexagon/include/asm/hexagon_vm.h b/arch/hexagon/include/asm/hexagon_vm.h
-> index 9aa2493fe7863..e1e702eb9e12a 100644
-> --- a/arch/hexagon/include/asm/hexagon_vm.h
-> +++ b/arch/hexagon/include/asm/hexagon_vm.h
-> @@ -39,7 +39,7 @@
->   #define HVM_TRAP1_VMGETREGS		22
->   #define HVM_TRAP1_VMTIMEROP		24
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   enum VM_CACHE_OPS {
->   	hvmc_ickill,
-> @@ -178,7 +178,7 @@ static inline long __vmintop_clear(long i)
->   
->   #else /* Only assembly code should reference these */
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   /*
->    * Constants for virtual instruction parameters and return values
-> diff --git a/arch/hexagon/include/asm/mem-layout.h b/arch/hexagon/include/asm/mem-layout.h
-> index e2f99413fe56e..8bad920d8928a 100644
-> --- a/arch/hexagon/include/asm/mem-layout.h
-> +++ b/arch/hexagon/include/asm/mem-layout.h
-> @@ -25,7 +25,7 @@
->    */
->   
->   #ifdef CONFIG_HEXAGON_PHYS_OFFSET
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   extern unsigned long	__phys_offset;
->   #endif
->   #define PHYS_OFFSET	__phys_offset
-> @@ -44,7 +44,7 @@ extern unsigned long	__phys_offset;
->   #define STACK_TOP			TASK_SIZE
->   #define STACK_TOP_MAX			TASK_SIZE
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   enum fixed_addresses {
->   	FIX_KMAP_BEGIN,
->   	FIX_KMAP_END,  /*  check for per-cpuism  */
-> @@ -101,7 +101,7 @@ extern int max_kernel_seg;
->    * and pkmap_base begins.
->    */
->   #define VMALLOC_END (PKMAP_BASE-PAGE_SIZE*2)
-> -#endif /*  !__ASSEMBLY__  */
-> +#endif /*  !__ASSEMBLER__  */
->   
->   
->   #endif /* _ASM_HEXAGON_MEM_LAYOUT_H */
-> diff --git a/arch/hexagon/include/asm/page.h b/arch/hexagon/include/asm/page.h
-> index 137ba7c5de481..7e651428a08c0 100644
-> --- a/arch/hexagon/include/asm/page.h
-> +++ b/arch/hexagon/include/asm/page.h
-> @@ -48,7 +48,7 @@
->   #include <vdso/page.h>
->   
->   #ifdef __KERNEL__
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   /*
->    * This is for PFN_DOWN, which mm.h needs.  Seems the right place to pull it in.
-> @@ -128,7 +128,7 @@ static inline unsigned long virt_to_pfn(const void *kaddr)
->   /* XXX Todo: implement assembly-optimized version of getorder. */
->   #include <asm-generic/getorder.h>
->   
-> -#endif /* ifdef __ASSEMBLY__ */
-> +#endif /* ifdef __ASSEMBLER__ */
->   #endif /* ifdef __KERNEL__ */
->   
->   #endif
-> diff --git a/arch/hexagon/include/asm/processor.h b/arch/hexagon/include/asm/processor.h
-> index 0cd39c2cdf8f7..b93c2cc4be22e 100644
-> --- a/arch/hexagon/include/asm/processor.h
-> +++ b/arch/hexagon/include/asm/processor.h
-> @@ -8,7 +8,7 @@
->   #ifndef _ASM_PROCESSOR_H
->   #define _ASM_PROCESSOR_H
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   #include <asm/mem-layout.h>
->   #include <asm/registers.h>
-> @@ -124,6 +124,6 @@ struct hexagon_switch_stack {
->   	unsigned long		lr;
->   };
->   
-> -#endif /* !__ASSEMBLY__ */
-> +#endif /* !__ASSEMBLER__ */
->   
->   #endif
-> diff --git a/arch/hexagon/include/asm/thread_info.h b/arch/hexagon/include/asm/thread_info.h
-> index e90f280b9ce3e..a0da6c694c87b 100644
-> --- a/arch/hexagon/include/asm/thread_info.h
-> +++ b/arch/hexagon/include/asm/thread_info.h
-> @@ -10,7 +10,7 @@
->   
->   #ifdef __KERNEL__
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   #include <asm/processor.h>
->   #include <asm/registers.h>
->   #include <asm/page.h>
-> @@ -20,7 +20,7 @@
->   #define THREAD_SIZE		(1<<THREAD_SHIFT)
->   #define THREAD_SIZE_ORDER	(THREAD_SHIFT - PAGE_SHIFT)
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   /*
->    * This is union'd with the "bottom" of the kernel stack.
-> @@ -47,13 +47,13 @@ struct thread_info {
->   	unsigned long		sp;
->   };
->   
-> -#else /* !__ASSEMBLY__ */
-> +#else /* !__ASSEMBLER__ */
->   
->   #include <asm/asm-offsets.h>
->   
-> -#endif  /* __ASSEMBLY__  */
-> +#endif  /* __ASSEMBLER__  */
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   #define INIT_THREAD_INFO(tsk)                   \
->   {                                               \
-> @@ -73,7 +73,7 @@ struct thread_info {
->   register struct thread_info *__current_thread_info asm(QUOTED_THREADINFO_REG);
->   #define current_thread_info()  __current_thread_info
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   /*
->    * thread information flags
+<snip>
+int mlx5e_create_flow_steering(struct mlx5e_flow_steering *fs,
+                               struct mlx5e_rx_res *rx_res,
+                               const struct mlx5e_profile *profile,
+                               struct net_device *netdev)
+{
+        struct mlx5_flow_namespace *ns = mlx5_get_flow_namespace(fs->mdev,
+                                                                 MLX5_FLOW_NAMESPACE_KERNEL);
+        int err;
+
+        if (!ns)
+                return -EOPNOTSUPP;
+</snip>
+
+Note that MLX5_FLOW_NAMESPACE_KERNEL is allocated and initialized at
+driver startup (as most/all namespaces), and it does not
+change dynamically.
+
+If mlx5e_create_flow_steering() fails, it indicates that
+something fundamental isn't functioning correctly, and we
+never proceed to the more advanced functionality (like tc).
+
+Mark
+
