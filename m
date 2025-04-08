@@ -1,148 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D49320B7EF;
-	Tue,  8 Apr 2025 08:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB81620B7EF;
+	Tue,  8 Apr 2025 08:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101447; cv=none; b=UbMDXEBc8X0JLNkCQf/RqtkB6/3c6TbUe5oJW/mYGxepkDfRBdf4JVAXWD7tjc6JN0/0VLWISjN2NJ+7Meltz9SMmNqCPEMuH+btfkmoFR8wW17DnpvO/8Tgjux6j6juo//+3z2hDQWBVGnaXTs66qiJduKZUunaYsUBtzUJhbk=
+	t=1744101457; cv=none; b=e1GcLF3+bvoSwPnkfh2FggT+q/2vvqd1QeDDDO6pa7CmEGjUVsk75D+S1+9wwbtJsk4G6DRjwL0BEkB5DvU4x3q+DwULEmq93xVW/m5CrFOIPtO5LOebOYuK+99/Dj0KBnwGms8jkri4A1k4R+LuwHgwjew3r5GPc+2ZqjNrxWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101447; c=relaxed/simple;
-	bh=SvXSy4Bwc8FNM6LghY0/XjdUPptV5lIp/P0jRiL6ISQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UKMsTCGD+6X+PizKMr5Y2vBrzyrJJZfTaDvNiI7p195AKefeRlO83cW611sXvt6WO1Sv8gSXCT3D9I/UalDZki4Shjt/IKr5/mGU+v6q6pvKpknvNNMMMOae2X7SFsO4mJrzD8BSNa9Q46JTxwmMLSHEk++wjTbF0aMIgPBKIag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yp4ZVFaS; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744101457; c=relaxed/simple;
+	bh=zYwN5AXNDb9BX5Xil/czoYAh3N+dUlbKkka0+Eyt2hg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uWkWyPp1FcdmsZELRygNpiUJhTITKUx7t/xLmE8nn6zhKGqPQhH3Y93O9zlzaNaaQy4yxlTA4xOglT29aIVLIpweaU625R+ePU2T1RopK+AT69gvqZYMzGjabt7psG7d7PLlw+2VPvyRzHGL0ZqBloOIqA3kyHdPicem6obXKJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=G1U5Xdxl; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yp4ZVFaS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744101446; x=1775637446;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SvXSy4Bwc8FNM6LghY0/XjdUPptV5lIp/P0jRiL6ISQ=;
-  b=Yp4ZVFaSQpqGEYLu8ekNDOaaYlTNkOUuohFUTNz4WNThBtGYMcJNzLDG
-   z0pCHK/o+7DF24wbNb3q0g71QPrkKIhybJ6ZSRWnbpg5OlTmnf4O+f4Gn
-   1dtn8j2HtXO/BFj1uRp9ovKFLsH5f9fqx2zSBvBVYWnceEId/km4Ehk0u
-   d2VrptegYZSNj4mBiQGsSx9t5cOSOIMYin0VxF5oEY40D1y8p4OVaLI8O
-   cTIpmDrMRuy+dYVboG6Ijgo+glsHxHAHJSHhin59rtE2jXkdS6ftbIfw3
-   Gocb120mGJGSyVj8TlpyD3cp1OJ8q4tGsUmexIXQI65eMVTT7KLtScnyL
-   Q==;
-X-CSE-ConnectionGUID: gvtAdtUSTJymApEX919Tug==
-X-CSE-MsgGUID: pqcemKqCRvmcZ353Ayq4Wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="67994266"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="67994266"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:37:25 -0700
-X-CSE-ConnectionGUID: jpTNmXQaT9+L7DNYwIqmJw==
-X-CSE-MsgGUID: ikIri5WYRNCpI9WfHswheQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="128533582"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:37:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u24SN-0000000ALAx-1TUY;
-	Tue, 08 Apr 2025 11:37:19 +0300
-Date: Tue, 8 Apr 2025 11:37:19 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	devicetree@vger.kernel.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 1/2] device property: Add optional nargs_prop for
- get_reference_args
-Message-ID: <Z_TgP0epJ3cJzlUt@smile.fi.intel.com>
-References: <20250407223714.2287202-1-sean.anderson@linux.dev>
- <20250407223714.2287202-2-sean.anderson@linux.dev>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="G1U5Xdxl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744101413;
+	bh=oCA2zRVnBob9l6TGh97Bpu7K3K5rJPTxMgimLHEAx7Y=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=G1U5Xdxllz4cCuWgOiaht8dO3wA8zb/VEz1xFXSb1OuSAj73s6lP04qpdF86bKAV6
+	 JN+yNnFrGcYfbbjoMciN0ZEz8CTUFshPBcM8HJ/T2Ak4MsyZ3UT+zoNkg5gPsmWUQO
+	 kmnvUYniyyPr15PEYELFP/KI2FJLmRz9ddJidFk0=
+X-QQ-mid: bizesmtpip4t1744101365tea48f4
+X-QQ-Originating-IP: SYyhI77PtA9jQTEoZCNoOyln5/n1sEdZfmwMWVdWlX4=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 08 Apr 2025 16:36:03 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10433558673128327035
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com
+Cc: guanwentao@uniontech.com,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev,
+	niecheng1@uniontech.com,
+	petr.pavlu@suse.com,
+	samitolvanen@google.com,
+	zhanjun@uniontech.com
+Subject: [PATCH v3] kbuild: rpm-pkg: Add (elfutils-devel or libdw-devel) to BuildRequires
+Date: Tue,  8 Apr 2025 16:35:58 +0800
+Message-ID: <8F253522AA2663E6+20250408083558.66575-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+References: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407223714.2287202-2-sean.anderson@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MAV4M+M/KN87dR5mjMdEn2fCex3vV0EF5iKl+tNfgcP/+Rtzkro1GzKK
+	p0jCHT+uYXuajLKZ/94UnwmLtTOAV2ISsWMmwB3jCK/+EYr+fFWpDzbVsxyVJY3XD4iLHTw
+	WCTRVCOpDDoJsAidpLOPbWcwbA4xyVrkj4KPOs4Y2o9wuSCPo1Fe6jzvfvlUL4Ysr/iUfl0
+	hXzQRkHgWewsfQAFjfZFhETZLSvrvGKvCzlXIAevISXTx7kl+fprKZ97SsG52xoshOjBU3a
+	IDTfPyorJ5tF9xkTltkVsl+Ja4rCGbDgoopZpxHEXaqXswOweHTvnL/cCR2xtKxI/o4dMcy
+	zn1PguAiaZ52stf/FFOzLN9loC6QvAtN2cBGEKWhpPS9kFR7rZ99w0865d0JeAh3WF8Lgg/
+	miUwI/u4lYvf+CpPStqwD9I477SpABAD4UuWAtb7RJqEcBmcPg8RpnHd4uJjONbykPER/vQ
+	nBxzq8kRhWcj2akpCbLZdoH7sAYLQRCBzEuU00iGno9cfSg/mE0xc+nmCq78JIbQBgmTIM7
+	jo4jWf9cBgk1o68hs+uRqb0hn9NTnBRjZVg5A+rJmPyUyPsQNyQlJIBlqJglEz2U78pEZ41
+	H2wlsBYkfufcRkvuo5WiXbQKkWqF/d8EugW5bxUWGsPEev4IaeoiNm+Rdnqdd7fMGxMpGCl
+	j8m2KBaD6X+qG7x8vRnYXCq3ajjkwyGqzNzRLPy3OrDn+3oh2w7+dnJ2WcmQPLZfZaacUNs
+	3WAsXbZ8cR2I0n4q8bnduuR45jKlIgDq7i+OpsJc6Nlb7lavPRAToLFmeMnL1U1aq3hBSa8
+	I23+bjYYrjDEERb7odYMy0QTtxGRJv/Ej1LTRn/zTWvi3Z3v1ab8/9TsyMw8kzk+7zIKnrc
+	cA8NQWnTlXGgUIiHcuLvGjUJdjDFmr2Xco3fiHGFVILZhLeykFJW1vHbHZvng09Naq+1nE5
+	HzhzMYVfmh4WTdQgZqZwge8tEIPCUW4nwoqag1ZYZFD3K2fBT6lH+0pverB8R6MrZZ7GL0n
+	QUPLVf7w==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 07, 2025 at 06:37:13PM -0400, Sean Anderson wrote:
-> get_reference_args does not permit falling back to nargs when nargs_prop
-> is missing. This makes it difficult to support older devicetrees where
-> nargs_prop may not be present. Add support for this by converting nargs
-> to a signed value. Where before nargs was ignored if nargs_prop was
-> passed, now nargs is only ignored if it is strictly negative. When it is
-> positive, nargs represents the fallback cells to use if nargs_prop is
-> absent.
+The dwarf.h header, which is included by
+scripts/gendwarfksyms/gendwarfksyms.h, resides within elfutils-devel
+or libdw-devel package.
 
-And what is the case to support old DTs on most likely outdated hardware?
+This portion of the code is compiled under the condition that
+CONFIG_GENDWARFKSYMS is enabled.
 
-...
+Consequently, add (elfutils-devel or libdw-devel) to BuildRequires to
+prevent unforeseen compilation failures.
 
->  	ret = fwnode_call_int_op(fwnode, get_reference_args, prop, nargs_prop,
-> -				 nargs, index, args);
-> +				 nargs_prop ? -1 : nargs, index, args);
+Fix follow possible error:
+  In file included from scripts/gendwarfksyms/cache.c:6:
+  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
+      6 | #include <dwarf.h>
+        |          ^~~~~~~~~
 
->  	return fwnode_call_int_op(fwnode->secondary, get_reference_args, prop, nargs_prop,
-> -				  nargs, index, args);
-> +				  nargs_prop ? -1 : nargs, index, args);
+Link: https://lore.kernel.org/all/3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com/
+Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
+Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+Changelog:
+ *v3: Fix commit message.
+---
+ scripts/package/kernel.spec | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't understand why it's needed here. The nargs_prop is passed to the callee.
-
-...
-
-> -				 unsigned int nargs, unsigned int index,
-> +				 int nargs, unsigned int index,
-
-As per above.
-
-...
-
->  		error = property_entry_read_int_array(ref->node->properties,
->  						      nargs_prop, sizeof(u32),
->  						      &nargs_prop_val, 1);
-> -		if (error)
-
-> +
-
-Stray blank line.
-
-> +		if (error == -EINVAL) {
-
-Why do we need an explicit error code check? This is fragile. Just check the
-parameter before calling the above.
-
-> +			if (nargs < 0)
-> +				return error;
-> +		} else if (error) {
->  			return error;
-> -
-> -		nargs = nargs_prop_val;
-> +		} else {
-> +			nargs = nargs_prop_val;
-> +		}
-
-...
-
->  of_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
->  			     const char *prop, const char *nargs_prop,
-> -			     unsigned int nargs, unsigned int index,
-> +			     int nargs, unsigned int index,
->  			     struct fwnode_reference_args *args)
-
-Same comments as per above.
-
+diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+index 726f34e11960..98f206cb7c60 100644
+--- a/scripts/package/kernel.spec
++++ b/scripts/package/kernel.spec
+@@ -16,6 +16,7 @@ Source1: config
+ Source2: diff.patch
+ Provides: kernel-%{KERNELRELEASE}
+ BuildRequires: bc binutils bison dwarves
++BuildRequires: (elfutils-devel or libdw-devel)
+ BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
+ BuildRequires: gcc make openssl openssl-devel perl python3 rsync
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
