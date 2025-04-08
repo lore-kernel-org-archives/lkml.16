@@ -1,125 +1,69 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926DB269816
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77F9B2686A0
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108620; cv=none; b=INA+WnDtkzl4soaXF3f2B0y9uwj/tcUczjvGYHWW7ABeskpi4305SLOcEzr3xZBCL6iktDt6oqGmqztnJ+jhbW34ljYNZE6GtBOZCR3AiLehh3GKE0hDRePc7vhnWBflppge87ulC8684laeywPp61RjJNzRkwwugRW2vQSlreQ=
+	t=1744108627; cv=none; b=NaW+v2jI2f+0lXcoPVqmOb0LYx8rrvdc3kcxpGvCjNVXDtmRawlvBZhMsLSmP42TaBATzq2759ob3d0Csdeo72diVA9WgktIdwcEz6SLBv0oFFmWEFTKjHREoJhIf6FzLD7JxYyK8IZopB/lytxQAadqu8spBSogB+7pJZAwIDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108620; c=relaxed/simple;
-	bh=z6yPF9uOlyPYwnYcyCbUHbrjMWRaBMiD7QCPSnGxte4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzX9uOXj6K3GNvvsxGJbMj5wrnXxOYlDNi0DrNtKK3Cf2Kx+4fDbeJqx1an4x4KJ67Od+21OzoN9ugjpqHhO+lZo8x6rPNWYrJHiohAbNUnZnV27yjgH0rosUgtfzDcbB20HM77hReu2/MzcpSWkZgeBVwmJxrxH4a/Og3kbBrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rJzrZy6R; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJzrZy6R"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso5858172f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744108617; x=1744713417; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sG5zgBeaBnx+L7h2Ew9MdPNsbBnWrTWwGOQbfcDyH0Y=;
-        b=rJzrZy6R5Kpln99jfUPCUNKqQJl+0SKajWWxTuKX/pfD+NcfY3ubT9c0Q4DNtNzdWl
-         7qAQilYZRKwuHJx61bgsvkqQwok0ufeiB2r4mL6Yok2My3UFJk6ktkFp1lvXZEF3L9m7
-         eyWNfm5mBPV2dG8Vi2xTwDy6sZNcdXRlFXkalv7sJrhtRga3sVGRlI4G1rDRG9Ag10rT
-         SRbp3g6LLIagY5SaVsO+TBDsy3JMAIMB3ZUWf9AFA1ma5cP3yfQdhwvHG0a6tIksS6Sd
-         LLE9aZqdOAPCpktWxVQ2CBZ3pcz/te6J5pJNWbRAaiSjuJfRPhCmp4ZOwftN8ZaddVkL
-         5vEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744108617; x=1744713417;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sG5zgBeaBnx+L7h2Ew9MdPNsbBnWrTWwGOQbfcDyH0Y=;
-        b=eZhjsAV0wXYOipBA9jmHI88VRhF/ODIY+00ptnAk3x7m8xBQTvTi+8REoRWfEOnuL3
-         sWxqCRS9BYEBcMhgdIvtBJdPXPjABcpf/hP7fnlA0wChOQVmJpmYVRdR+J1b9Oq2aEZj
-         vXorCK5LklqsHu68FCrNZBXZBLU7mnHbj5fQ10Wf3ff0WdtAo6pvX6JhUwAt04WUtO9q
-         rad3BjuuT/G3wfLO0xh43jS6ijY92i3CBtK3KQvwYVv6FkOGee0Njlu/NeRm2LSNn7Jy
-         8VIJDB781srOlQcyRrlcVmtoG05UhlzOEtm95QeUfS14TnMN1iWvE6z/sdh2HjvA8JfR
-         pN6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUsQyZyf2f15clsRmKlrL+wk5TyTzR31btzWZX8kDmfP+151S8Q7dYJH19FzWAq12jdNSRduAYZYxV2Vng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVpM6cdQhMUH0nRDcjoKepnrd16kR9H0xH7HCGbMCqTqEsepno
-	t3sTBRZqk7MCpmOfJknsJo4ePi48cPcHABpxXDp3qRDzEjmKMRntQcLoi1utnFM=
-X-Gm-Gg: ASbGnctt9C2cWIqBjiF7jY/v1ibMY0Fv6koAQ+SEVoRF0OYwTAsaxzpqmFXxOLi34um
-	icCxTcJjz2UGZ2N3rlFEw+ENiyuctZQ9Ucqn7DfTryoDtlx9TSCONBpda3D+zrKYNTFI0n3XCQb
-	bZvy6Xf9GSk6hTUs6HrmxogM5b63ivIpv3kzHK/LtaDigDA1hSB9R1QIJWLy2Tb2iyAPtokqlXj
-	kRxpY4fdozhhzMcT8yT89jdE8e2vk8rovpj4GhrLSRNZeRdyiHsTP5iRqpx50KDcE0P0KkdCqEI
-	ffm0ZXREdJTGnaPyKw6edGtWoY0juqVU6K5SlH65k+jfsDf/5gEYaLKZ9YeV
-X-Google-Smtp-Source: AGHT+IGtPTU+zuWSgGfB7w18BXvfTFGqbzfm5r9SrIrzLuQfA8Y5CPDOZv1Q0DcjrDiDvt4vtBbAOw==
-X-Received: by 2002:a05:6000:2509:b0:391:2fe4:de0a with SMTP id ffacd0b85a97d-39d6fc0c1d6mr8986003f8f.2.1744108616902;
-        Tue, 08 Apr 2025 03:36:56 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a727bsm14422827f8f.27.2025.04.08.03.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 03:36:56 -0700 (PDT)
-Date: Tue, 8 Apr 2025 13:15:08 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev,
-	gregkh@linuxfoundation.org, julia.lawall@inria.fr,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	david.laight.linux@gmail.com
-Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Add white spaces around
- binary operators
-Message-ID: <b89c8837-4aa1-4073-bb09-f71f37b5dcc6@stanley.mountain>
-References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
- <4ccdbfd3e8d74d99679927f294f71cfb694fcc6c.1744061673.git.abrahamadekunle50@gmail.com>
- <CAHp75Vfp8Je1fUavSwTDAM_5_rDaDfXETa2oM5f0CjL1mxWX_Q@mail.gmail.com>
- <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
- <Z_TtyXwkOBK1MXGy@smile.fi.intel.com>
+	s=arc-20240116; t=1744108627; c=relaxed/simple;
+	bh=RKIzGkJ9K6o+c6b2EpnYpCH+wdgLRLW0kNgcGBhVPwE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fL5g+KyRCkg+SDgWh578npNpHtf5+NBlMiUsBoQk/+QjN0exxmzRtoyb5CysUhQjRni8Rfk9Za6l6q6ZAAY1Sa8pS/O5OAkbZY6WqQEOKNov6qP8iQLlq+m1/Dzgx2mR7AmjyaPY/eagS5OQU2I/s/hoyi2ErCczGx+KBLVzg4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id C2BDF92009C; Tue,  8 Apr 2025 12:37:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id BB7FF92009B;
+	Tue,  8 Apr 2025 11:37:02 +0100 (BST)
+Date: Tue, 8 Apr 2025 11:37:02 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Oerg866 <oerg866@googlemail.com>
+cc: Borislav Petkov <bp@alien8.de>, Kevin Koster <lkml@ombertech.com>, 
+    Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+    Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+In-Reply-To: <CANpbe9Vyss7wEd0rQA7Z=mfi6WTkm5JjCJjTkcsqGCd0mGA2aw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2504081115310.29566@angie.orcam.me.uk>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+ <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local> <20250407095848.7933a358c9f450fe03fb8234@ombertech.com> <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local> <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+ <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local> <CANpbe9Vyss7wEd0rQA7Z=mfi6WTkm5JjCJjTkcsqGCd0mGA2aw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_TtyXwkOBK1MXGy@smile.fi.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Apr 08, 2025 at 12:35:05PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 08, 2025 at 10:22:44AM +0100, Samuel Abraham wrote:
-> > On Tue, Apr 8, 2025 at 8:20 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Apr 8, 2025 at 12:54 AM Abraham Samuel Adekunle
-> > > <abrahamadekunle50@gmail.com> wrote:
-> 
-> ...
-> 
-> > > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> > > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) & 0xfff;
-> > >
-> > > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-> > > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) & 0xfff;
-> > >
-> > > You mentioned Linux coding style, which also requires lines not to be
-> > > so long. These lines are. That's why a few versions ago I suggested
-> > > you to change these to be two lines each. I don't know how many times
-> > > to repeat this (it's third one).
-> > 
-> > Okay, sorry
-> > I will add a third patch for a line break before the patch for %
-> > operations since each patch should handle a single thing.
-> 
-> I am not sure you need a third patch for that. It lies into category of space
-> and indentation fix.
-> 
+On Mon, 7 Apr 2025, Oerg866 wrote:
 
-Yeah.  Let's not go crazy.  Do the white space change as one patch.  The
-rules are there to make reviewing easier.  Splitting it up into three
-patches doesn't help anyone.
+> One of my projects uses a modern Linux kernel to install Windows 9x (sorry!)
+> onto a legacy (or modern, if that's your thing) systems, including
+> magical things like VESA Local Bus 486 systems, way faster than the
+> official MS installer ever could. There's quirks here and there, especially
+> with regards to libata and obscure IDE/SCSI controllers, but other than
+> that the kernel does its job and it does it extremely well.
 
-In staging we say, "Fix one type of checkpatch warning at a time."
-That's because it's a simple rule to explain and it stops people from
-sending us huge patches that fix every checkpatch warning.  But this
-patch is small and everything is related and it's easy to review.
+ FWIW I run a plain EISA 486 box to verify our defxx driver keeps working 
+with an EISA FDDI network interface, one of the host bus attachments the 
+driver supports.  I also run a dual Pentium MMX box (i430HX chipset), 
+which I recently used for i386 GNU toolchain/C library verification in the 
+course of upstreaming some stuff for my day job (it's the very box I used 
+for APIC fiddling some 25 years ago, which Ingo may remember).
 
-regards,
-dan carpenter
+ Both machines are permanently wired for continuous use and remote control 
+in my remote lab and run fairly recent versions of the kernel (as my time 
+permits upgrading).
 
+ I note that the lack of support for SW DMA mode in libata has degraded 
+performance of a PATA drive (the rest is SCSI) in the MMX box compared to 
+old IDE code, forcing the drive to use PIO 1.  Alas, I've found no time so 
+far to look into porting that stuff over and said drive is not essential 
+for that system.
+
+  Maciej
