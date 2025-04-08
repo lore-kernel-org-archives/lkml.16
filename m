@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B9026B951;
-	Tue,  8 Apr 2025 12:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127A526B951;
+	Tue,  8 Apr 2025 12:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114594; cv=none; b=lkkWK6FZANbDgPKmChO9ba+I4VzhkD0D8jBVSd2akBBmp3T+QxGe2AoNzo1ReRHl/u++hRQTnjWKxkBNIB56xWnlPRaZz969kJmEzg/tOnWRTn2WZWK4k90KdClrB0ojVQmnXMQK9ka2ncAAuNOm20mxmx3KTfE3JMze4rr0G8k=
+	t=1744114598; cv=none; b=N6jWRqGgxLzidQtvs0jbfFPju0qKt12Q9t/zt2+EHi+bF382fh7S58/TVnZELZYBzPinckF5Fio0nGjALQFLeaE9OByQcJVgW0JvikgNRU3GXWdW5x/GaMHp3wtw75tiqpt+OY1ZSCOgDEJ4v49JGaIMXF6+oLikkAXgL7fVgEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114594; c=relaxed/simple;
-	bh=Q4ajw4npvDMQ+FYVreDn+ZF7G53aam/tnthwemUkbgw=;
+	s=arc-20240116; t=1744114598; c=relaxed/simple;
+	bh=AEUJ6Wd7pOjKauMOFiCeSqvh9KCOER+sDjq82RyaCRc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k2oVylOiyrQx9vnu1UzTLPgTAjfOEpqk3ttJ7h6R3rjU7unMX7BpkCZOCN/3ylFxokaEESXOfsFcrWo40DG4eIZ38mxgniuVtPe8kWf3Vi17EYfHc5zlF3KOQgx/Nd8N775xLrjGX/ywjWUua91ouvmlBs0axCkKigAbICZjb+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EM80qa3B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=nf8hyApNPF/6QI86uCHKITa568YmzLWLJdKvXE4Hnuj1EC+dcdb0v807UUpnMQSfY8eNQSsJZPAL+Xghjy3G1ABXdpJaig6UvTQ8LAfPwZ0r/TDUNUEBYa7qzerZcZXKv0r7ZzkHqq1qDYNW9tmxz1Bs42XAOD1LBqTYjR9aAQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjVjKMtl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EM80qa3B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983A6C4CEE5;
-	Tue,  8 Apr 2025 12:16:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjVjKMtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86269C4AF09;
+	Tue,  8 Apr 2025 12:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744114593;
-	bh=Q4ajw4npvDMQ+FYVreDn+ZF7G53aam/tnthwemUkbgw=;
+	s=k20201202; t=1744114597;
+	bh=AEUJ6Wd7pOjKauMOFiCeSqvh9KCOER+sDjq82RyaCRc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=EM80qa3BghiuO6Dc6f411fzGB1T5gck3H6EVZEh9N/W8tVRQHyRzBmzet/cYKGyR9
-	 ag9P7EAwbCLDHzcPwwUpLZNtRv2j9Sme/MYU8/2Ux+s1MfSwNM+cij7+lkjkmduPge
-	 Hvp7yJ05ARwlKfuRKisyEC6eAnqQ++rMIWSwEesSl7eKD008ihhbaNz5+cY23SzaJx
-	 s61prD7uNmaqcjcRAGU8sAfdUofwkTMXTZCFd17DYRWGpP+51Heevz2tspjYqnEwzQ
-	 jV1lve9cI2VJ78FXOYxhngrLx6gdd/fp1ihVPghGKpA7+7nyPF2fRLlYrWvl2IPSSr
-	 kFA2ARyW66EdQ==
+	b=RjVjKMtlTA1GNuA6CCo/cd3mR5/s0vuo4ObQz1DRpqarOpULL1XgDG86AV25gdTxi
+	 hjPkW+4Fl9Gfcja9mGGJZVUQH+ndtVDR4dGVYMYcGE2V1Tqg8Pe92913cpXHTj/FiC
+	 d+vYPhJJY3Cx5E8TOu0EDB4s9hL02rLrmgWWzXF8hrAJ/juUNT01XXQ9q/Tszl+pXd
+	 9Lfb3TFUvDPl5fYOsocOLiess0zAcKo5kUVWWMQZyJWTfFTdwI4Ci3PvCbic/jcHnX
+	 H7b9Sc7n6x7727A6G5kNm+zndIbKNXRVxMPgS9A73MeNcZghyHlHRwqKAoRC5qJJlT
+	 MqDVbUFHBFdEA==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Lyude Paul" <lyude@redhat.com>
 Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
@@ -37,15 +37,15 @@ Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
  <bjorn3_gh@protonmail.com>,  "Benno
  Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
   "Trevor Gross" <tmgross@umich.edu>
-Subject: Re: [PATCH 3/6] rust: hrtimer: Add HrTimerClockBase
-In-Reply-To: <20250402214109.653341-4-lyude@redhat.com> (Lyude Paul's message
-	of "Wed, 02 Apr 2025 17:40:31 -0400")
+Subject: Re: [PATCH 4/6] rust: hrtimer: Add HrTimerClockBase::time()
+In-Reply-To: <20250402214109.653341-5-lyude@redhat.com> (Lyude Paul's message
+	of "Wed, 02 Apr 2025 17:40:32 -0400")
 References: <20250402214109.653341-1-lyude@redhat.com>
-	<macQi3_uAE5HRvQ4WbOU1frRp0yxObm0X7mfxWH8564aAiNqSWnZXfj-CL6-Y3A_kZi8pF_CNLUYgpCqSQkpzw==@protonmail.internalid>
-	<20250402214109.653341-4-lyude@redhat.com>
+	<xSUp_ccwbO6iB2teXXkhQM_lCfMGwvI6OLC9-N0yjSyOdcNrRMG2VSszh7eUg9fPKUMD3X7gp6LlVqwdq6G5xA==@protonmail.internalid>
+	<20250402214109.653341-5-lyude@redhat.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 08 Apr 2025 13:58:51 +0200
-Message-ID: <87jz7uj24k.fsf@kernel.org>
+Date: Tue, 08 Apr 2025 14:00:09 +0200
+Message-ID: <87ecy2j22e.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,44 +56,30 @@ Content-Type: text/plain
 
 "Lyude Paul" <lyude@redhat.com> writes:
 
-> This adds a simple wrapper for the hrtimer_clock_base struct, which can be
-> obtained from a HrTimerCallbackContext. We'll use this in the next commit to
-> add a function to acquire the current time for the base clock driving a
-> hrtimer.
+> This adds a wrapper for the get_time() callback contained within a
+> hrtimer_clock_base struct. We'll use this in the next commit in order to
+> implement HrTimerCallbackContext::forward_now().
 >
 > Signed-off-by: Lyude Paul <lyude@redhat.com>
 > ---
->  rust/kernel/time/hrtimer.rs | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  rust/kernel/time/hrtimer.rs | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
 > diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index c92b10524f892..f633550882247 100644
+> index f633550882247..521ff1a8a5aa8 100644
 > --- a/rust/kernel/time/hrtimer.rs
 > +++ b/rust/kernel/time/hrtimer.rs
-> @@ -165,6 +165,29 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
+> @@ -186,6 +186,16 @@ unsafe fn from_raw<'a>(ptr: *mut bindings::hrtimer_clock_base) -> &'a Self {
+>          // - Our data layout is equivalent to said struct via our type invariants.
+>          unsafe { &*ptr.cast() }
 >      }
->  }
->
-> +/// The timer base for a specific clock.
-> +///
-> +/// # Invariants
-> +///
-> +/// The layout of this type is equivalent to that of `struct hrtimer_clock_base`.
-> +#[repr(transparent)]
-> +pub struct HrTimerClockBase(Opaque<bindings::hrtimer_clock_base>);
 > +
-> +impl HrTimerClockBase {
-> +    /// Retrieve a reference to a [`HrTimerClockBase`] from `ptr`.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `ptr` must point to a live `struct hrtimer_clock_base`.
-> +    unsafe fn from_raw<'a>(ptr: *mut bindings::hrtimer_clock_base) -> &'a Self {
-> +        // SAFETY:
-> +        // - `ptr` is guaranteed to point to a live `struct hrtimer_clock_base` by our safety
-> +        //   contract.
+> +    /// Retrieve the current time from this [`HrTimerClockBase`].
+> +    fn time(&self) -> Ktime {
+> +        // SAFETY: This callback is initialized to a valid NonNull function for as long as this type
+> +        // is exposed to users.
 
-I think this next one should be an `// INVARIANT:` comment.
+Why is that? Is it by C api contract?
 
 
 Best regards,
