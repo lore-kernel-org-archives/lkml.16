@@ -1,149 +1,107 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546A522D4E3;
-	Tue,  8 Apr 2025 18:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADB523FC4B;
+	Tue,  8 Apr 2025 18:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136497; cv=none; b=bRD+TLmP6MFC4N6PSMPAOdqYRIf0py7jOuq92tQKc0n3+OnGx3kcilmrBseBPYWyQrniPUKGkQdMy9APE3CLj3xqp5WOBK40HUg/tyhXJhqkseqvURD8gr1Q4PWcBOCuwd/pJ4gKO5PYGrN93zCE9MY0l+WQZUJ3oBmCpjCPBe8=
+	t=1744136503; cv=none; b=FA2um7Vg6TI65/Cry5Sl01zQh6kD487ewG72xboyulSS8pG4G1qEjRGFS8xvFdyfCO46i8aqM5lGeMxX5sD/K+gjfEZNywrXX2O/AcOKPiRN3bELrrWluFu71IgYqU/xbW2I463MYXZkXgM7PmXDImkqJP+XFs1whe+HXIvCEi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136497; c=relaxed/simple;
-	bh=w/wtZwp4S+W1MVCbnnYE1DIpmI5YnNFyH4JdLkLeeH4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1Rj5Za2eBj5k9KSMfJiGHKfaf8TRkKv5Nly/s9R3BGdML5RcZz4HP96te+E+MqWMAplOGs4X0KkZoS3KMUjPZFT4sNhoyFV7lVrEdeXo73YlrgWoNBAhU1CUVBzgqQxudJZMx1YkMwthKOv4PaR7J+RNfGIEY5g8nrBKyw+zRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=bzy5346g; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744136503; c=relaxed/simple;
+	bh=DyI97cbSCT90VDdKQskKPPcvkJAoF4pYUo/b7c/IU7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fVlDiSP/Nf1IGVK13ZnFADQLTWvh21LlOvz2RIcDXF6yUXGYFhP5XWtXEgVIABuALG8JNcAepeflfvakPVuaQBAIsxN1GrjyQMcUSXUSmcEjkORdZ6PNt1pcxShxmZ/fnK02Qf7CMGSvBHrmOhHsL++mvcebtmJe9oN//fKLMA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fW34edki; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bzy5346g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744136496; x=1775672496;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OEXDD2pAHOlDSkU4MwJdAg7iSPu5cX3tXDgUUdSq4cc=;
-  b=bzy5346gCm2AZlQJjWfYMUEo1Wzc8tSNzTCdNe/tzGbsLvro8faLlh4l
-   pSLp17RncebiuZFgC6HlDvvhkCoL7l4G24XYX49ootbfpMgFABqUM9d3B
-   Ej9HGwDan1QjcbD/n8mdqEZrz22CJjo174ZtpNhr62UhKol4/DQonPjiN
-   g=;
-X-IronPort-AV: E=Sophos;i="6.15,198,1739836800"; 
-   d="scan'208";a="487699298"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 18:21:30 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:12463]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.14.132:2525] with esmtp (Farcaster)
- id b5d6e786-97b8-4ca7-acd1-d064dc9b4553; Tue, 8 Apr 2025 18:21:29 +0000 (UTC)
-X-Farcaster-Flow-ID: b5d6e786-97b8-4ca7-acd1-d064dc9b4553
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 18:21:27 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.100.5) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 18:21:24 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <zijun_hu@icloud.com>
-CC: <dada1@cosmosbay.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <quic_zijuhu@quicinc.com>, <willemb@google.com>,
-	<xemul@openvz.org>
-Subject: Re: [PATCH net-next] sock: Correct error checking condition for assign|release_proto_idx()
-Date: Tue, 8 Apr 2025 11:21:14 -0700
-Message-ID: <20250408182116.45882-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250408-fix_net-v1-1-375271a79c11@quicinc.com>
-References: <20250408-fix_net-v1-1-375271a79c11@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fW34edki"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BFqCO027667;
+	Tue, 8 Apr 2025 18:21:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yawypgTDfQmeut2IdACsl8MD5B/MwSN9qyvRnPW0+3w=; b=fW34edkiLmHxqdvA
+	hdp4DF48388vpWiJco8svJxmUOIrT2jxt+nXbGm6GGCUgXi8ezbyhAjYqbaMZkGp
+	fdJ3a3KKxvKifgMDSbrnXuP551mW53vZNw67Fan6BVzcLVT5CtfBd9zHdiC/n3uB
+	yqwMxkKiSttMTxQAWUqjrlk/1gJLOYdtnevibnioA2DvNvKvRytsCt8Cs27cHh0M
+	4vl4VH7rbbsuhxbwZ2UQww314HmhsoE3d5zSQKzMuYWclSrZKs+9qgkYgsBFjcL6
+	wyB432R+iLBgyQV342x1N12Dsu+m1YGYhZtQUOl5IvPh6FJWY0nexzScx2CEXE5a
+	HnuwYg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd00v9d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 18:21:33 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538ILVCf015403
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 18:21:32 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 11:21:31 -0700
+Message-ID: <181a3138-fce2-47cb-8258-ff08a00c2b3a@quicinc.com>
+Date: Tue, 8 Apr 2025 11:21:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D032UWA002.ant.amazon.com (10.13.139.81) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 RESEND] drm/msm/dpu: reorder pointer operations after
+ sanity checks to avoid NULL deref
+To: Qasim Ijaz <qasdev00@gmail.com>, <robdclark@gmail.com>, <lumag@kernel.org>,
+        <sean@poorly.run>, <marijn.suijten@somainline.org>,
+        <airlied@gmail.com>, <simona@ffwll.ch>, <quic_jesszhan@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>
+References: <20250408172223.10827-1-qasdev00@gmail.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250408172223.10827-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6ZAnYeOiOeNZTdojBCkaKPDn5qGs5enQ
+X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f5692d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8
+ a=Ss2e1SayUNo6jylPtukA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 6ZAnYeOiOeNZTdojBCkaKPDn5qGs5enQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_07,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011 phishscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080126
 
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 08 Apr 2025 21:42:34 +0800
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> assign|release_proto_idx() wrongly check find_first_zero_bit() failure
-> by condition '(prot->inuse_idx == PROTO_INUSE_NR - 1)' obviously.
-> 
-> Fix by correcting the condition to '(prot->inuse_idx == PROTO_INUSE_NR)'
-> Also check @->inuse_idx before accessing @->val[] to avoid OOB.
-> 
-> Fixes: 13ff3d6fa4e6 ("[SOCK]: Enumerate struct proto-s to facilitate percpu inuse accounting (v2).")
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+
+
+On 4/8/2025 10:22 AM, Qasim Ijaz wrote:
+> _dpu_encoder_trigger_start dereferences "struct dpu_encoder_phys *phys"
+> before the sanity checks which can lead to a NULL pointer dereference if
+> phys is NULL.
+>   
+> Fix this by reordering the dereference after the sanity checks.
+>   
+> Fixes: 8144d17a81d9 ("drm/msm/dpu: Skip trigger flush and start for CWB")
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 > ---
->  include/net/sock.h | 5 ++++-
->  net/core/sock.c    | 7 +++++--
->  2 files changed, 9 insertions(+), 3 deletions(-)
+> v2:
+> - Moved Signed-off tag below Fixes tag
+> - Moved dpu_enc declaration to the top and initialisation below sanity checks
 > 
-> diff --git a/include/net/sock.h b/include/net/sock.h
-> index 8daf1b3b12c607d81920682139b53fee935c9bb5..9ece93a3dd044997276b0fa37dddc7b5bbdacc43 100644
-> --- a/include/net/sock.h
-> +++ b/include/net/sock.h
-> @@ -1421,7 +1421,10 @@ struct prot_inuse {
->  static inline void sock_prot_inuse_add(const struct net *net,
->  				       const struct proto *prot, int val)
->  {
-> -	this_cpu_add(net->core.prot_inuse->val[prot->inuse_idx], val);
-> +	unsigned int idx = prot->inuse_idx;
-> +
-> +	if (likely(idx < PROTO_INUSE_NR))
-> +		this_cpu_add(net->core.prot_inuse->val[idx], val);
-
-How does the else case happen ?
-
-
->  }
->  
->  static inline void sock_inuse_add(const struct net *net, int val)
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 323892066def8ba517ff59f98f2e4ab47edd4e63..92f4618c576a3120bcc8e9d03d36738b77447360 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -3948,6 +3948,9 @@ int sock_prot_inuse_get(struct net *net, struct proto *prot)
->  	int cpu, idx = prot->inuse_idx;
->  	int res = 0;
->  
-> +	if (unlikely(idx >= PROTO_INUSE_NR))
-
-Same here.
-
-
-> +		return 0;
-> +
->  	for_each_possible_cpu(cpu)
->  		res += per_cpu_ptr(net->core.prot_inuse, cpu)->val[idx];
->  
-> @@ -3999,7 +4002,7 @@ static int assign_proto_idx(struct proto *prot)
->  {
->  	prot->inuse_idx = find_first_zero_bit(proto_inuse_idx, PROTO_INUSE_NR);
->  
-> -	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR - 1)) {
-> +	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR)) {
->  		pr_err("PROTO_INUSE_NR exhausted\n");
->  		return -ENOSPC;
->  	}
-> @@ -4010,7 +4013,7 @@ static int assign_proto_idx(struct proto *prot)
->  
->  static void release_proto_idx(struct proto *prot)
->  {
-> -	if (prot->inuse_idx != PROTO_INUSE_NR - 1)
-> +	if (prot->inuse_idx != PROTO_INUSE_NR)
->  		clear_bit(prot->inuse_idx, proto_inuse_idx);
->  }
->  #else
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> ---
-> base-commit: 34a07c5b257453b5fcadc2408719c7b075844014
-> change-id: 20250405-fix_net-3e8364d302ff
-> 
-> Best regards,
-> -- 
-> Zijun Hu <quic_zijuhu@quicinc.com>
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
