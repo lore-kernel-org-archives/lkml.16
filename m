@@ -1,156 +1,111 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6D42638B0
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02C02620CD;
+	Tue,  8 Apr 2025 07:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098001; cv=none; b=iJcFvaQZg9qUImfKygWdjPifx2RvMRSspN3xSJizCY5XbGosafJBvCH5m3SuFVw+sOrOHLthLwvPMMfZsSJS/6W90lkpp0pHMkANrfM2tywaq83yk+UqVB7KZ5/a84DqX1F04DNylXxuKJu4BgF9RI+yIL5Ip/z6j4jin43cX8A=
+	t=1744098069; cv=none; b=OhVvMH7H8qt6I8sGUkc5gAlfPqA55q0t2m13GwJaGFQJkLkYryyL+d3vpUZyQKZUvklecopDwXYC00+ExnCjoSdIzDYZinpFLkxb0903r980y7fvQm5bZz7pyl8KhrYM3r2b0QD6R155uuQcrWftfi6cOSWbn7F04vEkt/B9oog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744098001; c=relaxed/simple;
-	bh=yY1vgyDd8wMt1OyJ1nZ5GgiLWpilaKVfdLDAwj4zDMY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NGaSX2SPemcFWGc8c3vTUJj+Qu+/gb8egdWQ1V8Z1gR7hLi15ZjMlqfVl5DBCG0HHgSOf/8Y4A2qka3Fa/CadGNEicVTbOfFWTmF/r1r0v+plhPeq/fJsfq3YDc9YGbr4p6VN51Gwlq+ueOdQMmxINtKdxgzydjq2SW6KObLtd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Rq9GXA5S; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744098069; c=relaxed/simple;
+	bh=VmrdJVDpTY1Y3BF9QzGsEsk2pkeTQKYXt41LsIyEfyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nU6dQWWxVXG6nBWU1sBK4QBJrSJ73ZEEvkS67otGiJdmOq8qi5sFixBFVxep7WjnqZUV9bvRUoXhbZAxEU5lmRiomXwrJfFpXwoMUvc77bVOEQDDTwwX8kfc2QpFvv6UZpFSqmwfgI+M0Zj0gTWJrjihqL6MtExQcauJcH8JzYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BKLZSlXi; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Rq9GXA5S"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so3189497f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097998; x=1744702798; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RzLFKKzd5monlWcdI4nxf5Z84XCk4SaHNdQAmnWtjA0=;
-        b=Rq9GXA5SZNqCeQD2mYgl+xXE3NpNwlNOpkRtoQzwZCzLK9YZXZybYlN0kdVmptL368
-         AkS3xs8CYhlIlbIYpeEqhkvdktsp4EL9QnzWCcH0JsyXPjzt1g4+kv2OiGQ1H/hbdUqo
-         exW9THMAmU9cKcjC5UgBnsCIAk2cajLMt0D6ujO3BB+0WpmqZ8O3ghzm6d/nxo1YpSeN
-         IKMakU8fcvffezuFWPBFLmZM5F0ZDSO+YOAMYk4QVRQi7ivYe6Atv0THVBTAVpoNpFdh
-         W4GSWMwqGStPIn+PQHzw3rtinYiiTTB8X1Ho3wwiSy760lSmXiuoFSZrpZazmq9q4CWj
-         cZBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097998; x=1744702798;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RzLFKKzd5monlWcdI4nxf5Z84XCk4SaHNdQAmnWtjA0=;
-        b=cFQUyey71RjoBkYSiXdr2tn44/txP4HrUMdYqKf/7EPaj9PjfZECPFX97FeMSQCiNS
-         PiG4Sipw/K8/s+fog1FKE3z0YuNmIFIhA5v2BInAv20v/L31rredcbMqwXTjh+hpCXsG
-         iExLey1of5rosdZbGCCFhr43wPiOefKR+d2Mqxf/fG1V0H1ZkRPs8lesVYy1st7GMdok
-         Z6WKyqrbospO83AvJ5QY6z0jRWUnDpLpeSjB4tTRmbZhCCxjCGUdZQ22x6hW8p35PmzV
-         r6B+S0zJYw8Q4/IiUtb0n2j/KcKD6okwJ65FtEnVBxvONTI/fUfi21J3WIL0LuZvFZ1Q
-         4nSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkBJTIOKjJxaIEFkxuY7gTykMQtc7O1EoT06E18uh/IFQy6/f8it8d/S+CoKmq9kx/cKpTCvWDJdCvQjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLYi81ZPYdTGlBHJViBkRZbWzPzY9GNE7Hg7vG61jb+Pylypl+
-	3YIRYlLvOeeRGGIPut3SZCsyV35y6x0MV57LFHGmKb0jUKWuuTBZE90zUNsD0bWKtcFSfWoiRRC
-	dqas=
-X-Gm-Gg: ASbGncupJ56hPKWrkrVux52kCQIWq6mG3imeTR5PpZjXXO3e5fIxrLVTm3LtTAqFGbv
-	tBjtWb7dmarGrDl39gWWAU3fB45eMerBulQjSRA8PkvCw+k8ciPjs8KDegDf7oqEM6DmYHZcvRb
-	8T7fQB4GKJJHVKdGMMav7UCShqsH0XvPjisPoFMhNf8tFZKeXE1cznNBIFiuGChPUzAerqIn2hU
-	6FmtPtB82utv3riHchSXpjZve31uxmKFGWY7Td7JWpPfX8vzl0dSQWhZ10Tohj6wQIj7cfrvb7Y
-	nguV7les4UE6d21sqXf5e1yBYma7E2XvzY24/g==
-X-Google-Smtp-Source: AGHT+IFBnscSTWeNc0kbRfBnMhse9CS3IWIkjIUMwm6j+QpSpPJjYHjtNIkqyww/lRRFUe7Se/td3Q==
-X-Received: by 2002:a05:6000:2906:b0:39c:142a:35f9 with SMTP id ffacd0b85a97d-39cb3575bfamr13615953f8f.10.1744097997952;
-        Tue, 08 Apr 2025 00:39:57 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec342babfsm153692095e9.1.2025.04.08.00.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:39:57 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:39:56 +0200
-Subject: [PATCH] spi: xcomm: use new GPIO line value setter callbacks
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BKLZSlXi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744098047;
+	bh=CwKUleQf27cGcf66047RnWHjOqMcyIi/LBBDO1qSzAM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=BKLZSlXiwOS0ObJ8zdUczG1rUS1ZL2dEPFY1urmf19WwO2hi1pyfZKZz17LsAyV9B
+	 f/u/M4HoLlv9WY6YV8EssNEPQyRxdGH2d2AF+mcduMmLOKtqs3HNv0BLLAFSpzjh/w
+	 8oDqoRKsctdG9NWWKeWP9IoFCTPlXglH4CIVhfN4=
+X-QQ-mid: bizesmtpsz4t1744098041tb64312
+X-QQ-Originating-IP: YLpLnDErj1dtfcCfWuO3BojoYWQCqOM0zq8eEbVCJxE=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 08 Apr 2025 15:40:39 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8994852775391133971
+EX-QQ-RecipientCnt: 14
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 nf-next] docs: tproxy: fix formatting for nft code block
+Date: Tue,  8 Apr 2025 15:35:50 +0800
+Message-ID: <E25F951CDC9F22B2+20250408073550.3319892-2-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-spi-v1-1-597660766654@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAMvS9GcC/x3MMQqAMAxA0atIZgM1VYpeRRykxjaLlkZEKN7d4
- viG/wsoZ2GFqSmQ+RaV86jo2gZ8XI/AKFs1kKHBWHIYkpw+SkLlC/ONmgQdedON1tLeO6hlyrz
- L81/n5X0/tz0HnmUAAAA=
-To: Mark Brown <broonie@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1971;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=UWSVaYTx9qsHllGeuLrfbRAZU1erxA1Jg78sg4AxvDg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NLNSNlnAzpqfJnJvAMCxXAHB6VrSPj/6kR2x
- zhNgJWqJv6JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TSzQAKCRARpy6gFHHX
- ck9jD/4xPWmB+Fni73N7cNG6zM+2V5MMthqOUGvEdwLf4iQG13MYHJn0kWkt1OOLf5M/iFMOP/C
- OI6s+vyvU/kiUf1vmZgju05+1htuxjRnXWQjP3FY/UIgJXVrIlTb2LJp1IZwRJFBMmD4ebjRz5G
- WXg5RYQhyT1mgKFn2NKMdhvRhYu0E3TDOAQ4eVHWwe7B/5RMKvo0FHYOAvPLYYhCJZPoIP2eaKn
- zOA7qjZgA0eUmJT8JxIX70Up+6Ag5X5SI9Vq8kM3Vn+ky67KFQfHTP1BLSYBlKm1GFhyR3wL4Rk
- izNm4QeVas/ZLdbRl7AfOHlOhYMVprk8DWR6GGoctr+KtRwLIOKUhpaK4MYeB8ISY+ZIFbw2BLK
- A+PLEop321r41E3CubUm8DA/P2qO7onyIBR5Z8pcu4C0rawreqShv0BOrqIWlnj8EQpt9+vTCqK
- ABk7ltP45GuDWsdw8x6byH77AaRpvcKFfBGbyjB1KO0FDqalSE9ckjgRkJU7cRtAVJNdYWZBTec
- dG8A5SlZxJ7WuCg7prHi5MvO6h41iwASCMO1nrdpFoJpkB0Kc7AYuwFyRpp1VbacOLe/TuN10rW
- prIxhDPWdPzf3wg9Kr/9yjGhO/7nsMk0tPF+CirmxtrhyOwni8sQnXR3aCtEEi06MDgP3lP+R56
- fqQBKO2M4GagZKg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: MMREUZv4wJ7/uOrne6X5SSbeT+Yka9zVShie8oIcWhB2JdLJ5WW4MiZr
+	EcNaNn5OQy4bG0OswoJSKhKIxzRSTx8Ji7+YbJzGszsZ8swRuLITYCvaV75cop7PcdiT53B
+	Tv7gyq+M57NR8SB4wgCAM9Za1FVwoE7GLC2D0d7uJ5/eASbI4KET6cJJwKrNoBONKOPt6ZK
+	zhgULO6RkpBxK639RfIcrXaO5fmMxhpCoTi11CT8ViQimX2togtb6AC4vPfm5lsDzJ2wi54
+	Xk8ruXvnMBGOZzFyMTewDewcl4hSax4NknF/qpnG879YSKMRYWopOklFOisHVy+IDv3kfyc
+	E5FP+wSmH7Mh8Yv3mCk4id7pYXqxnFtE0ICnSUgPJBbPVpSodbLh5+DWNKtdQ6TILvQLkby
+	kVxVC1glPfD0e4hLg1A/1F37cqJZJxtKJR/X3UiC8SQCwJ6ObNth0QFb5MF+04L9GxMp28i
+	YN/+VoGG0SwWME66wZWCXhtYVYvMiTLTjbNhVPwaQa6MDjt2sL8jIKVPS8cJe8pnugeVdwn
+	f3vaUEbY8GHZwM4SE8loBmWQeZQAPGRAQNiannu2ZUsw5bNHtOWjrE0GMbnuLL6bGJ9KBbM
+	4MH1SqsuSL/aR/LlDtSWShsx1UyNy3kEiQu3cK3LXzPKw+iuipmLOgAB5LbkGFXa78aMa08
+	XcZR8u+ljZtIKTsbyeaMZW3RgG73Gf8TqBiOKW1CI02vsvznzkiiZ8K0CJ4CkuXapzUyzqs
+	U/CHkHFGQkyocjPZYxkajOOuOqs5NfWIyg8hSALnrQ+jk+wviR46TfyiGyn3NzOc/be4v2T
+	bpGsWOh6JyvHKz2flezWYgXJb09DfHzt1aBj7F8gdtaNjetsLUsxUKKku3/JO78xazNwsXK
+	o9cJriTCtnByBjDEIf54djXIGwmsKc4l8lC9GevAYyN9l9CAG9UXQzY/og/IBFV7FM+H76L
+	vxK9Dvm1Xl55Uj/pE1lX3+QYIOJcuIiVwZ7+o4MtD7qmun35OMrdZaGam
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The nft command snippet for redirecting traffic isn't formatted
+in a literal code block like the rest of snippets.
+Fix the formatting inconsistency.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 ---
-Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-values") added new line setter callbacks to struct gpio_chip. They allow
-to indicate failures to callers. We're in the process of converting all
-GPIO controllers to using them before removing the old ones.
+v2:
+  - Update commit message according to suggestion from Bagas
+v1: https://lore.kernel.org/all/CFD0AAF9D7040B1E+20250407031727.1615941-1-chenlinxuan@uniontech.com/
 ---
- drivers/spi/spi-xcomm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/networking/tproxy.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-xcomm.c b/drivers/spi/spi-xcomm.c
-index 3bd0149d8f4e..1a40c4866ce1 100644
---- a/drivers/spi/spi-xcomm.c
-+++ b/drivers/spi/spi-xcomm.c
-@@ -44,8 +44,8 @@ struct spi_xcomm {
- 	u8 buf[63];
- };
+diff --git a/Documentation/networking/tproxy.rst b/Documentation/networking/tproxy.rst
+index 7f7c1ff6f159..75e4990cc3db 100644
+--- a/Documentation/networking/tproxy.rst
++++ b/Documentation/networking/tproxy.rst
+@@ -69,9 +69,9 @@ add rules like this to the iptables ruleset above::
+     # iptables -t mangle -A PREROUTING -p tcp --dport 80 -j TPROXY \
+       --tproxy-mark 0x1/0x1 --on-port 50080
  
--static void spi_xcomm_gpio_set_value(struct gpio_chip *chip,
--				     unsigned int offset, int val)
-+static int spi_xcomm_gpio_set_value(struct gpio_chip *chip,
-+				    unsigned int offset, int val)
- {
- 	struct spi_xcomm *spi_xcomm = gpiochip_get_data(chip);
- 	unsigned char buf[2];
-@@ -53,7 +53,7 @@ static void spi_xcomm_gpio_set_value(struct gpio_chip *chip,
- 	buf[0] = SPI_XCOMM_CMD_GPIO_SET;
- 	buf[1] = !!val;
+-Or the following rule to nft:
++Or the following rule to nft::
  
--	i2c_master_send(spi_xcomm->i2c, buf, 2);
-+	return i2c_master_send(spi_xcomm->i2c, buf, 2);
- }
+-# nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
++    # nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
  
- static int spi_xcomm_gpio_get_direction(struct gpio_chip *chip,
-@@ -70,7 +70,7 @@ static int spi_xcomm_gpio_add(struct spi_xcomm *spi_xcomm)
- 		return 0;
- 
- 	spi_xcomm->gc.get_direction = spi_xcomm_gpio_get_direction;
--	spi_xcomm->gc.set = spi_xcomm_gpio_set_value;
-+	spi_xcomm->gc.set_rv = spi_xcomm_gpio_set_value;
- 	spi_xcomm->gc.can_sleep = 1;
- 	spi_xcomm->gc.base = -1;
- 	spi_xcomm->gc.ngpio = 1;
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250327-gpiochip-set-rv-spi-72c019332f47
-
-Best regards,
+ Note that for this to work you'll have to modify the proxy to enable (SOL_IP,
+ IP_TRANSPARENT) for the listening socket.
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.48.1
 
