@@ -1,76 +1,125 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9C0191F79;
-	Tue,  8 Apr 2025 17:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5A7191F79;
+	Tue,  8 Apr 2025 17:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132103; cv=none; b=Fk1g3qDG0eUPiE4VzcEt1BKqQWrWo3LCBT2qUSEl+z79/py1VZiE47FOs+6yRouMCbHPwVV70os3cg58Tiu/M18rKcpCTzfxIZ/14/DMETOQVGn8WrgYPmeGsPVV7+VfuOVU6ziUGZLmfSlKc1letu3c1gFI1kwWHQwnWwvdS8s=
+	t=1744132199; cv=none; b=g+8HLNFPFS4Qfe24pqPRu4AgmqRAtGJVOdtQyO6veeAmZdPuTzwLgdqTTgBrFz1mpwwyncHhUgL8KCWCoLPQgPM6EQD2G2Hix7xUKGmZSaloF8qdCe3aK9suGHmXaLFslQvJhpArx2zZoSyVOwtwG76xNDpp2wVmIZDA7RX8NT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132103; c=relaxed/simple;
-	bh=ISpJuPdPfR789eM2c+XnQY2Ua5fwbfPzALomy5gPpfc=;
+	s=arc-20240116; t=1744132199; c=relaxed/simple;
+	bh=EgmeW83G8jhcI4IjVa+l3i7sUzA33Jc14b4TmgoCBZU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/yWBwtX9F0roosrXNV5U2J0VKF6+Ea9HOZ+MLcmZMBOxUN9huU+ehWvVYHBaLQCat9yNDV5+HEEPOHEgxF8VLLO5NTsQnT0yEPp2QYQ0j3zkMjmew1BMj2zKE3PVi7wytMP32dcNwfxrHwjppCYrUvVTcud1NG0q7l5//iGp1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WN85ll5G; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=YEMmTaLQqeyJh0s0sTkbxL4Yz1S7lS3sbwWaiRW3h0H1wJ7QdFHShIxnmZgBN1E/iOi7PwJTGJXrUhAl3vkfJkQPi3Yaw3K22UVINFVEw3rBgae8rTjmf1mu7BLdQwKDrkdDSwMX9ym/72zzlnb+gZEsFbwBEFxirFOPM64KVMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOQ1kAhN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WN85ll5G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=m6Zahi0sarElgNiROhFmUN7IZ3Qj0JsjaKqp3OqQl2s=; b=WN85ll5GnP8jm4E5CPBNiYzgcw
-	Nv//yxrxKFc0F5lxcSLQv23LrGyGOuzPv5ortcl1X5SXrJtaoEfCjwvmA5DWY81euYVe2P5nvI/Ph
-	Frgbh6motOShBQOA+igX6ZZT+N3HCHRS6g4pOeTuLjHYsbBka1YP1pNeP3D27uZ+Hymo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2CQb-008QXY-97; Tue, 08 Apr 2025 19:08:01 +0200
-Date: Tue, 8 Apr 2025 19:08:01 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Simon Horman <horms@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.or
-Subject: Re: [net-next PATCH 2/2] net: phy: mediatek: add Airoha PHY ID to
- SoC driver
-Message-ID: <7e60d851-1b70-4084-a63f-c8ff7bf81425@lunn.ch>
-References: <20250408155321.613868-1-ansuelsmth@gmail.com>
- <20250408155321.613868-2-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOQ1kAhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF252C4CEE5;
+	Tue,  8 Apr 2025 17:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744132198;
+	bh=EgmeW83G8jhcI4IjVa+l3i7sUzA33Jc14b4TmgoCBZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nOQ1kAhN0C5XGe3KPvC5Jz8AcGjCoYiY1qudcrTwiItZIvCUC4PYJz0QiuxrJ+TWT
+	 RGLFIV3C068/dBUbqsqMWtdAh/OjbAEUn62/QneV+2K0dPRjs8mtA770yGnsx5GhP5
+	 2sy/XecRKrE/sJEed8v/MSFp7kGuLH9XMI99fx/6tRvTL30zdR4kvp5ChXDcJC6cSx
+	 GZDUUxiDxNUbUAb09AD4itsPJ2mdaNftB+UEWicIHhLB40lfFXGHXk1cTLjbAL+qHT
+	 ac6naQNjuGeb77Po+2RSrFTL0zyBoQ8DeTaVNSYvCt5UJ1wYgWuItnldmSPuW8huNl
+	 GnQUO2jxse6Ew==
+Date: Tue, 8 Apr 2025 10:09:56 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
+	jack@suse.cz, rafael@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	hch@infradead.org, david@fromorbit.com, djwong@kernel.org,
+	pavel@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH 0/6] power: wire-up filesystem freeze/thaw with
+ suspend/resume
+Message-ID: <Z_VYZAgHNGEqF7ZB@bombadil.infradead.org>
+References: <20250331-work-freeze-v1-0-6dfbe8253b9f@kernel.org>
+ <20250401-work-freeze-v1-0-d000611d4ab0@kernel.org>
+ <ddee7c1ce2d1ff1a8ced6e9b6ac707250f70e68b.camel@HansenPartnership.com>
+ <20250402-radstand-neufahrzeuge-198b40c2d073@brauner>
+ <2d698820ebd2e82abe8551425d82e9c387aefd66.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250408155321.613868-2-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d698820ebd2e82abe8551425d82e9c387aefd66.camel@HansenPartnership.com>
 
-On Tue, Apr 08, 2025 at 05:53:14PM +0200, Christian Marangi wrote:
-> Airoha AN7581 SoC ship with a Switch based on the MT753x Switch embedded
-> in other SoC like the MT7581 and the MT7988. Similar to these they
-> require configuring some pin to enable LED PHYs.
+On Tue, Apr 08, 2025 at 11:43:46AM -0400, James Bottomley wrote:
+> On Wed, 2025-04-02 at 09:46 +0200, Christian Brauner wrote:
+> > On Tue, Apr 01, 2025 at 01:02:07PM -0400, James Bottomley wrote:
+> > > On Tue, 2025-04-01 at 02:32 +0200, Christian Brauner wrote:
+> > > > The whole shebang can also be found at:
+> > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.freeze
+> > > > 
+> > > > I know nothing about power or hibernation. I've tested it as best
+> > > > as I could. Works for me (TM).
+> > > 
+> > > I'm testing the latest you have in work.freeze and it doesn't
+> > > currently work for me.  Patch 7b315c39b67d ("power: freeze
+> > > filesystems during suspend/resume") doesn't set
+> > > filesystems_freeze_ptr so it ends up being NULL and tripping over
+> > > this check 
+> > 
+> > I haven't pushed the new version there. Sorry about that. I only have
+> > it locally.
+> > 
+> > > 
+> > > +static inline bool may_unfreeze(struct super_block *sb, enum
+> > > freeze_holder who,
+> > > +                               const void *freeze_owner)
+> > > +{
+> > > +       WARN_ON_ONCE((who & ~FREEZE_FLAGS));
+> > > +       WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
+> > > +
+> > > +       if (who & FREEZE_EXCL) {
+> > > +               if (WARN_ON_ONCE(sb->s_writers.freeze_owner ==
+> > > NULL))
+> > > +                       return false;
+> > > 
+> > > 
+> > > in f15a9ae05a71 ("fs: add owner of freeze/thaw") and failing to
+> > > resume from hibernate.  Setting it to __builtin_return_address(0)
+> > > in filesystems_freeze() makes everything work as expected, so
+> > > that's what I'm testing now.
+> > 
+> > +1
+> > 
+> > I'll send the final version out in a bit.
 > 
-> Add support for the PHY ID for the Airoha embedded Switch and define a
-> simple probe function to toggle these pins. Also fill the LED functions
-> and add dedicated function to define LED polarity.
+> I've now done some extensive testing on loop nested filesystems with
+> fio load on the upper. I've tried xfs on ext4 and ext4 on ext4.
+> Hibernate/Resume has currently worked on these without a hitch (and the
+> fio load burps a bit but then starts running at full speed within a few
+> seconds). What I'm doing is a single round of hibernate/resume followed
+> by a reboot. I'm relying on the fschecks to detect any filesystem
+> corruption. I've also tried doing a couple of fresh starts of the
+> hibernated image to check that we did correctly freeze the filesystems.
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> The problems I've noticed are:
+> 
+>    1. I'm using 9p to push host directories throught and that
+>       completely hangs after a resume. This is expected because the
+>       virtio server is out of sync, but it does indicate a need to
+>       address Jeff's question of what we should be doing for network
+>       filesystems (and is also the reason I have to reboot after
+>       resuming).
+>    2. Top doesn't show any CPU activity after resume even though fio is
+>       definitely running.  This seems to be a suspend issue and
+>       unrelated to filesystems, but I'll continue investigating.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+To be clear, on the fio run -- are you running fio *while*
+suspend/resume cycle on XFS? That used to stall / break suspend
+resume. We may want to test dd against a drive too, that will use
+the block device cache, and I forget if we have a freeze/thaw for it.
 
-    Andrew
+  Luis
