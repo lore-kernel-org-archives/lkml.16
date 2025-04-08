@@ -1,225 +1,270 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F54926B953
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C424B26772C;
+	Tue,  8 Apr 2025 09:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106030; cv=none; b=oMpCtB536YlcaLxXCiMz4nRMECQgHbXvEQ71jkuInuTfiXdbeuuTWiihlViWNFovet3mHgaEbDaGKnvGZIslKnhZAnP0Ib9ZZIubx/ki4yUxfsmvGVMCl7F45zWAivOc4iyMr9HSXZYkyLhlrbPC8qwRi6Z6Jdg0Pdu9SfsFT+0=
+	t=1744106030; cv=none; b=Woo2fzWOcWpy3rgNCVfVYUnNp6uDJU89utY0YJoA9B1ZdNczkl5r7pK0l8yK/FAfg0XIQ3OwvC1K/zPjpdNzm5o7whJ6EtBdOctDf5zHKKJZ2ElL457N1dSLU92Him7jp6YSXkIbNv1GrNEupl9tJB5DuGZvO4pm8M3NloHeSOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106030; c=relaxed/simple;
-	bh=aseVWcwOiuOOsVnwmB7NyVV1Aaj07Tjl86/72NMeQIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Cj8YPDPKeyjmyTOiXGdmc54UpdzsO/myD/V05512IqsHWCtomufJISAYhnC3WHNJFir4J0pMIsrsCLUyX4UTN4NBgeJ/7EXtcUseXr29Sw+wN5gX/Jp+4Y/Ev96kXjWv1s90ecvkWfs1iRIkcrzHnAcJsaC5OTASEbIZoRFfHG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZX1dC5bp2z27hZb;
-	Tue,  8 Apr 2025 17:54:23 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C8951401F3;
-	Tue,  8 Apr 2025 17:53:43 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 8 Apr 2025 17:53:42 +0800
-Message-ID: <485f47cc-669e-49b2-827e-bf5ab84b28e3@huawei.com>
-Date: Tue, 8 Apr 2025 17:53:42 +0800
+	bh=dOf1JRoMub1nYzFKZp8phk8MhMzCLqdcpqvhC8KTFh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fUuIvfqsO8wZbrIHgPY3TM/RrisBbbmPIiacP18oe0hFzqmJw1VFQMVfuGDG0TbRh4AobsrW8dkDGIcDZPS016dYYGUjabF9WSri5YOnpVWT9lQJDeB5vRN/gZE06+7EhAeTAv0q/2rNMjcMpb1W9/AxlNyT9qv3F1R2rheZ1us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC0D71688;
+	Tue,  8 Apr 2025 02:53:48 -0700 (PDT)
+Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABBF53F6A8;
+	Tue,  8 Apr 2025 02:53:43 -0700 (PDT)
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-openrisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v2 08/12] arm64: mm: Use enum to identify pgtable level instead of *_SHIFT
+Date: Tue,  8 Apr 2025 10:52:18 +0100
+Message-ID: <20250408095222.860601-9-kevin.brodsky@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250408095222.860601-1-kevin.brodsky@arm.com>
+References: <20250408095222.860601-1-kevin.brodsky@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
-To: Barry Song <21cnbao@gmail.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>
-References: <20250212022718.1995504-1-xiaqinxin@huawei.com>
- <20250212022718.1995504-3-xiaqinxin@huawei.com>
- <CAGsJ_4x7u00HVsa11cw_r6Mb3x0Ls-9tCg2HcUs=KvoVX=Vhvg@mail.gmail.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <CAGsJ_4x7u00HVsa11cw_r6Mb3x0Ls-9tCg2HcUs=KvoVX=Vhvg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemj200003.china.huawei.com (7.202.194.15)
 
+Commit 90292aca9854 ("arm64: mm: use appropriate ctors for page
+tables") introduced pgtable ctor calls in pgd_pgtable_alloc(). To
+identify the pgtable level and call the appropriate ctor, the
+*_SHIFT value associated with the pgtable level is used. However,
+those values do not unambiguously identify a level, because if a
+given level is folded, the *_SHIFT value will be equal to that of
+the upper level (e.g. PMD_SHIFT == PUD_SHIFT if PMD is folded).
 
-在 2025/4/7 13:50, Barry Song 写道:
-> On Wed, Feb 12, 2025 at 3:27 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
->> Support for dma scatter-gather mapping and is intended for testing
->> mapping performance. It achieves by introducing the dma_sg_map_param
->> structure and related functions, which enable the implementation of
->> scatter-gather mapping preparation, mapping, and unmapping operations.
->> Additionally, the dma_map_benchmark_ops array is updated to include
->> operations for scatter-gather mapping. This commit aims to provide
->> a wider range of mapping performance test  to cater to different scenarios.
->>
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> ---
->>   include/linux/map_benchmark.h |   1 +
->>   kernel/dma/map_benchmark.c    | 102 ++++++++++++++++++++++++++++++++++
->>   2 files changed, 103 insertions(+)
->>
->> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
->> index 054db02a03a7..a9c1a104ba4f 100644
->> --- a/include/linux/map_benchmark.h
->> +++ b/include/linux/map_benchmark.h
->> @@ -17,6 +17,7 @@
->>
->>   enum {
->>          DMA_MAP_SINGLE_MODE,
->> +       DMA_MAP_SG_MODE,
->>          DMA_MAP_MODE_MAX
->>   };
->>
->> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
->> index d8ec0ce058d8..b5828eeb3db7 100644
->> --- a/kernel/dma/map_benchmark.c
->> +++ b/kernel/dma/map_benchmark.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/module.h>
->>   #include <linux/pci.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/scatterlist.h>
->>   #include <linux/slab.h>
->>   #include <linux/timekeeping.h>
->>
->> @@ -111,8 +112,109 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
->>          .do_unmap = dma_single_map_benchmark_do_unmap,
->>   };
->>
->> +struct dma_sg_map_param {
->> +       struct sg_table sgt;
->> +       struct device *dev;
->> +       void **buf;
->> +       u32 npages;
->> +       u32 dma_dir;
->> +};
->> +
->> +static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data *map)
->> +{
->> +       struct scatterlist *sg;
->> +       int i = 0;
->> +
->> +       struct dma_sg_map_param *mparam __free(kfree) = kzalloc(sizeof(*mparam), GFP_KERNEL);
->> +       if (!mparam)
->> +               return NULL;
->> +
->> +       mparam->npages = map->bparam.granule;
-> Please add comments explaining that "granule" serves as  nents in SG
-> mode, and that each SG entry corresponds to a single page.
-> Otherwise, in single mode, the granule represents what we map and
-> unmap as a whole in a single operation.
-> I mean, make the code below clearly express what you are doing:
->
-> __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
->
-Okay, I'll add comments here in next version, thank you for your advice!
->> +       mparam->dma_dir = map->bparam.dma_dir;
->> +       mparam->dev = map->dev;
->> +       mparam->buf = kmalloc_array(mparam->npages, sizeof(*mparam->buf),
->> +                                   GFP_KERNEL);
->> +       if (!mparam->buf)
->> +               goto err1;
->> +
->> +       if (sg_alloc_table(&mparam->sgt, mparam->npages, GFP_KERNEL))
->> +               goto err2;
->> +
->> +       for_each_sgtable_sg(&mparam->sgt, sg, i) {
->> +               mparam->buf[i] = (void *)__get_free_page(GFP_KERNEL);
->> +               if (!mparam->buf[i])
->> +                       goto err3;
->> +
->> +               if (mparam->dma_dir != DMA_FROM_DEVICE)
->> +                       memset(mparam->buf[i], 0x66, PAGE_SIZE);
->> +
->> +               sg_set_buf(sg, mparam->buf[i], PAGE_SIZE);
->> +       }
->> +
->> +       return_ptr(mparam);
->> +
->> +err3:
->> +       while (i-- > 0)
->> +               free_page((unsigned long)mparam->buf[i]);
->> +
->> +       pr_err("dma_map_sg failed get free page on %s\n", dev_name(mparam->dev));
->> +       sg_free_table(&mparam->sgt);
->> +err2:
->> +       pr_err("dma_map_sg failed alloc sg table on %s\n", dev_name(mparam->dev));
->> +       kfree(mparam->buf);
->> +err1:
->> +       pr_err("dma_map_sg failed alloc mparam buf on %s\n", dev_name(mparam->dev));
->> +       return NULL;
-> I assume allocation failures will already trigger their own warnings, so your
-> pr_err isn't necessary. BTW, please replace err1, err2, err3 with something
-> meaningful.
-Okay, I'll delete these unnecessary prints and make the label changes 
-more meaningful in the next version.
->> +}
->> +
->> +static void dma_sg_map_benchmark_unprepare(void *arg)
->> +{
->> +       struct dma_sg_map_param *mparam = arg;
->> +       int i;
->> +
->> +       for (i = 0; i < mparam->npages; i++)
->> +               free_page((unsigned long)mparam->buf[i]);
->> +
->> +       sg_free_table(&mparam->sgt);
->> +
->> +       kfree(mparam->buf);
->> +       kfree(mparam);
->> +}
->> +
->> +static int dma_sg_map_benchmark_do_map(void *arg)
->> +{
->> +       struct dma_sg_map_param *mparam = arg;
->> +
->> +       int sg_mapped = dma_map_sg(mparam->dev, mparam->sgt.sgl,
->> +                                  mparam->npages, mparam->dma_dir);
->> +       if (!sg_mapped) {
->> +               pr_err("dma_map_sg failed on %s\n", dev_name(mparam->dev));
->> +               return -ENOMEM;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static int dma_sg_map_benchmark_do_unmap(void *arg)
-> void
-Initially for future expansion considerations, but I think, as you 
-suggested, we could make it 'void' first.
->> +{
->> +       struct dma_sg_map_param *mparam = arg;
->> +
->> +       dma_unmap_sg(mparam->dev, mparam->sgt.sgl, mparam->npages,
->> +                    mparam->dma_dir);
->> +
->> +       return 0;
-> drop it.
-Okay, I'll fix it in the next version.
->> +}
->> +
->> +static struct map_benchmark_ops dma_sg_map_benchmark_ops = {
->> +       .prepare = dma_sg_map_benchmark_prepare,
->> +       .unprepare = dma_sg_map_benchmark_unprepare,
->> +       .do_map = dma_sg_map_benchmark_do_map,
->> +       .do_unmap = dma_sg_map_benchmark_do_unmap,
->> +};
->> +
->>   static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
->>          [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
->> +       [DMA_MAP_SG_MODE] = &dma_sg_map_benchmark_ops,
->>   };
->>
->>   static int map_benchmark_thread(void *data)
->> --
->> 2.33.0
->>
-> Thanks
-> Barry
+As things stand, there is probably not much damaged done by calling
+the ctor for a different level, and ARCH_ENABLE_SPLIT_PMD_PTLOCK is
+only selected if PMD isn't folded (so we don't needlessly initialise
+pmd_ptlock). Still, this is pretty confusing, and it would get even
+more confusing when adding ctor calls for the remaining levels.
+
+Let's simplify all this by using an enum to identify the pgtable
+level instead; this way folding becomes irrelevant. This is inspired
+by one of the m68k pgtable allocators
+(arch/m68k/include/asm/motorola_pgalloc.h).
+
+Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
+---
+ arch/arm64/mm/mmu.c | 54 +++++++++++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 21 deletions(-)
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 8c5c471cfb06..eca324b3a6fc 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -46,6 +46,13 @@
+ #define NO_CONT_MAPPINGS	BIT(1)
+ #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+ 
++enum pgtable_type {
++	TABLE_PTE,
++	TABLE_PMD,
++	TABLE_PUD,
++	TABLE_P4D,
++};
++
+ u64 kimage_voffset __ro_after_init;
+ EXPORT_SYMBOL(kimage_voffset);
+ 
+@@ -107,7 +114,7 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ }
+ EXPORT_SYMBOL(phys_mem_access_prot);
+ 
+-static phys_addr_t __init early_pgtable_alloc(int shift)
++static phys_addr_t __init early_pgtable_alloc(enum pgtable_type pgtable_type)
+ {
+ 	phys_addr_t phys;
+ 
+@@ -192,7 +199,7 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 				unsigned long end, phys_addr_t phys,
+ 				pgprot_t prot,
+-				phys_addr_t (*pgtable_alloc)(int),
++				phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+ 				int flags)
+ {
+ 	unsigned long next;
+@@ -207,7 +214,7 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pmdval |= PMD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pte_phys = pgtable_alloc(PAGE_SHIFT);
++		pte_phys = pgtable_alloc(TABLE_PTE);
+ 		ptep = pte_set_fixmap(pte_phys);
+ 		init_clear_pgtable(ptep);
+ 		ptep += pte_index(addr);
+@@ -243,7 +250,7 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 
+ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 		     phys_addr_t phys, pgprot_t prot,
+-		     phys_addr_t (*pgtable_alloc)(int), int flags)
++		     phys_addr_t (*pgtable_alloc)(enum pgtable_type), int flags)
+ {
+ 	unsigned long next;
+ 
+@@ -277,7 +284,8 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 				unsigned long end, phys_addr_t phys,
+ 				pgprot_t prot,
+-				phys_addr_t (*pgtable_alloc)(int), int flags)
++				phys_addr_t (*pgtable_alloc)(enum pgtable_type),
++				int flags)
+ {
+ 	unsigned long next;
+ 	pud_t pud = READ_ONCE(*pudp);
+@@ -294,7 +302,7 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pudval |= PUD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pmd_phys = pgtable_alloc(PMD_SHIFT);
++		pmd_phys = pgtable_alloc(TABLE_PMD);
+ 		pmdp = pmd_set_fixmap(pmd_phys);
+ 		init_clear_pgtable(pmdp);
+ 		pmdp += pmd_index(addr);
+@@ -325,7 +333,7 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+ 
+ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 			   phys_addr_t phys, pgprot_t prot,
+-			   phys_addr_t (*pgtable_alloc)(int),
++			   phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+ 			   int flags)
+ {
+ 	unsigned long next;
+@@ -339,7 +347,7 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			p4dval |= P4D_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		pud_phys = pgtable_alloc(PUD_SHIFT);
++		pud_phys = pgtable_alloc(TABLE_PUD);
+ 		pudp = pud_set_fixmap(pud_phys);
+ 		init_clear_pgtable(pudp);
+ 		pudp += pud_index(addr);
+@@ -383,7 +391,7 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 
+ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 			   phys_addr_t phys, pgprot_t prot,
+-			   phys_addr_t (*pgtable_alloc)(int),
++			   phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+ 			   int flags)
+ {
+ 	unsigned long next;
+@@ -397,7 +405,7 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 		if (flags & NO_EXEC_MAPPINGS)
+ 			pgdval |= PGD_TABLE_PXN;
+ 		BUG_ON(!pgtable_alloc);
+-		p4d_phys = pgtable_alloc(P4D_SHIFT);
++		p4d_phys = pgtable_alloc(TABLE_P4D);
+ 		p4dp = p4d_set_fixmap(p4d_phys);
+ 		init_clear_pgtable(p4dp);
+ 		p4dp += p4d_index(addr);
+@@ -427,7 +435,7 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ 					unsigned long virt, phys_addr_t size,
+ 					pgprot_t prot,
+-					phys_addr_t (*pgtable_alloc)(int),
++					phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+ 					int flags)
+ {
+ 	unsigned long addr, end, next;
+@@ -455,7 +463,7 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+ 				 unsigned long virt, phys_addr_t size,
+ 				 pgprot_t prot,
+-				 phys_addr_t (*pgtable_alloc)(int),
++				 phys_addr_t (*pgtable_alloc)(enum pgtable_type),
+ 				 int flags)
+ {
+ 	mutex_lock(&fixmap_lock);
+@@ -468,10 +476,11 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+ extern __alias(__create_pgd_mapping_locked)
+ void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+ 			     phys_addr_t size, pgprot_t prot,
+-			     phys_addr_t (*pgtable_alloc)(int), int flags);
++			     phys_addr_t (*pgtable_alloc)(enum pgtable_type),
++			     int flags);
+ #endif
+ 
+-static phys_addr_t __pgd_pgtable_alloc(int shift)
++static phys_addr_t __pgd_pgtable_alloc(enum pgtable_type pgtable_type)
+ {
+ 	/* Page is zeroed by init_clear_pgtable() so don't duplicate effort. */
+ 	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
+@@ -480,23 +489,26 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
+ 	return __pa(ptr);
+ }
+ 
+-static phys_addr_t pgd_pgtable_alloc(int shift)
++static phys_addr_t pgd_pgtable_alloc(enum pgtable_type pgtable_type)
+ {
+-	phys_addr_t pa = __pgd_pgtable_alloc(shift);
++	phys_addr_t pa = __pgd_pgtable_alloc(pgtable_type);
+ 	struct ptdesc *ptdesc = page_ptdesc(phys_to_page(pa));
+ 
+ 	/*
+ 	 * Call proper page table ctor in case later we need to
+ 	 * call core mm functions like apply_to_page_range() on
+ 	 * this pre-allocated page table.
+-	 *
+-	 * We don't select ARCH_ENABLE_SPLIT_PMD_PTLOCK if pmd is
+-	 * folded, and if so pagetable_pte_ctor() becomes nop.
+ 	 */
+-	if (shift == PAGE_SHIFT)
++	switch (pgtable_type) {
++	case TABLE_PTE:
+ 		BUG_ON(!pagetable_pte_ctor(NULL, ptdesc));
+-	else if (shift == PMD_SHIFT)
++		break;
++	case TABLE_PMD:
+ 		BUG_ON(!pagetable_pmd_ctor(NULL, ptdesc));
++		break;
++	default:
++		break;
++	}
+ 
+ 	return pa;
+ }
+-- 
+2.47.0
+
