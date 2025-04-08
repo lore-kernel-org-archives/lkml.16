@@ -1,269 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781532505AF
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143171; cv=none; b=NOp1RXaFVX+JpLfekV9vw93mtGOuydYKhC73votfDdlvxumJpBzTxvHTaZrT/2R/rcftkWPZmGQ8MoTIG+MQQFA7kskmsmsV0bhy9KFXb/IqReImMlEydwyNox5DFBT73lSr0oJz8bYZ56+/U+erTIWU/d4T6QnMH5jWqugkwjg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143171; c=relaxed/simple;
-	bh=P3KWCOTDid2P74uDKVMxyQ07KZxWbqExJx3LbL13i8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A2yIeHgI+hVOibfsAVAP0R6H9k7b8gl/8+DNhPyTPMNwB6z5nkl37G3t4gACoC8RwQrPkuLHYF6b4ZZaZd7sGBN5mwBGmtSGmB229R2eLwRrH/QVxjnaDMUqR7gFTuswGQ4gZwLmDt9MqIS8KoDvRYYGa3TnVLZCjyTQ2R8WBE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pc3C9ZNh; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8FB22F145;
+	Tue,  8 Apr 2025 20:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744143357; cv=fail; b=MbFmPyFq8FqaDV3FSYLMX4VV6nxYG5s+gphLm1HVtOnjojSN1beT9kntS8KHLAGIfPtorhqh7vfmzjNsKnxr8Ky5gwBlwiUWFk/T0I13oeTeT0J0aduB8u33rHZHcB8agGbxdRmqOXv61OLVGV6NiAAELvthWgt0b2T5iq7Kkk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744143357; c=relaxed/simple;
+	bh=/Eskmb8VKxW+cAFpMrq7hEhEJ3jmRgoYL6tnU/fhEhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kkjuzPubtda09dv4U4SYyHT7lLf/fpv/JWpOXRxNxreDZBUUi8/eQv0nFIynvSv1Y0LXsfbJUZe4rDTPqu69oTb2RaYRdb6bjtZeZA4O/LZePT130vlggJGnUUlCiMN7oESNlHCgrdeKJQtIOQy76pTbsWvu/GtQ4mx7OX4BlfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Y9fwznix; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pc3C9ZNh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49F4C4CEE5;
-	Tue,  8 Apr 2025 20:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744143171;
-	bh=P3KWCOTDid2P74uDKVMxyQ07KZxWbqExJx3LbL13i8I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pc3C9ZNhu2OsczFzUKrha6qBFvj8rL3JaJ7ckdjFU5DIjkG934gOabPgCK2VGWn/L
-	 Pp7bk6u/bTn8v7YLmyATZ8HK4ms36phDaWW1QnfO/j5hGlEecxH3dtfZ4O26Bsiu2e
-	 X/Ek5cvS7jnXUFxnqxnfrhUAlNw9W47/NSAo8EYA1UfouJBSYvgbPG3Ca0y9aVivh7
-	 yAdcRntQUtLqa0Pe1wBa/f9YndX7pNZp6tErkasgionYglkGCDJSuFV02ygi6lqPXv
-	 ijDU/cfy4+sici3sQYAtRaaYYHtewClQcKZgMBBj2UZ3K7vFi8Tu+Jipw6Lm+t6ovy
-	 MaC8xSXeruIWQ==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R.Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 3/4] mm/memory: split non-tlb flushing part from zap_page_range_single()
-Date: Tue,  8 Apr 2025 13:12:48 -0700
-Message-Id: <20250408201248.63244-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <8e79ba42-a229-4a55-ae26-cd049bf85144@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Y9fwznix"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NjJ9jCq5LLBr5BCRp4Cew74eMTZn3BeMCXZedCoLIUu6KW+BSy/wDan1EyKE+8DFJClYA49yNWyDCtHs0PPPUHmY0Kv5cny37lgItmH6iyt+qa34DOAuafiatVngIxEmR0w5GHcFFVKbqktclxyKBRZDGmdSrJUm7AyixCSvkcxDoeb1djasxMeV1XkIT3SIfv2raYJLjOkrgU56dLyJP3AjX0MD23xnrvkCjezFwBosnwsGXKaQiLOdYoGwAeyeOlmGcWr6KbwAH7pvsnX+UuyM3o+/VTAgvsYzfIrJoBSWOAMHYzWjDIK9wSasdqMTZC5SBn4qCA/EMBMj9O8CkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=22z+dJ+9N5V3RbvkDI+5IevITqHIMTMyOLozZiw8+jI=;
+ b=RDdSV68Sua9NDx4lpWfWpPco5FtvhukTyfSzkmeruKNnNByB/CaBeNib/Hkqd9zYDQqlj2RCmuruGPi/WfQC35KxKpAye4LxpggPXZ/x0Z0TQMu87tUJzxs6HJOgvzxYIUUAuBOdGQXcdg3fRM4+leLE9c4dl2UJEN8lYZ9X+MiBF1PGbp/VrSuuiEwV1yrw/Q0ZH8FQCqMD/6ShOn/3phl0mJareFXWYwROZJuVOaesXfBQKQa8h4ULI7qb2XRZwtAOPoIWgLsiVQZyS3rT1rhkU1bps3kOYp2ODFrYI/lMcaCsZ8lqZ2KXBwe3sDea+TDXK1qbgO20GPqyn81DBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=22z+dJ+9N5V3RbvkDI+5IevITqHIMTMyOLozZiw8+jI=;
+ b=Y9fwznixrZpBnUwqZQOPzzC8V5Yl8hyrld3BOU17UbJufLljFf1BGL2Qg3D6N64e56lMcPyxC8kWh+sJxQHo4wK5N4dw8EzOXBZBmqKGfuYKHVM0MTnLmIY8UlgayW9voWkSNc+LxlkYO9FHSn2v4yvQgFUUk81PBnZ9A0U+flqROBIZMlYyn5pZOBvrjwe9g3N6lC2ff2MJvax2EB+gMxB8BC9QhOFLAvjaqGWTwaxepdwDk/zygxLglYQwpOnwk6zjy5EYFPLAVdpS8Lqw6IZzgTcXWVaZZgtGLh3KFP6clO5dA2YB5wU59bpgV2Tf3F11FqhQ3DoH75Yuetv+5g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN2PR12MB4126.namprd12.prod.outlook.com (2603:10b6:208:199::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 20:15:51 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Tue, 8 Apr 2025
+ 20:15:51 +0000
+Date: Tue, 8 Apr 2025 17:15:50 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	linux-kbuild@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2 0/4] kbuild: resurrect generic header check facility
+Message-ID: <20250408201550.GH1778492@nvidia.com>
+References: <20250402124656.629226-1-jani.nikula@intel.com>
+ <CAK7LNAS6o_66bUB6-qj6NnaTRNKvu5ycxOP+kGfizYVBNjZAyw@mail.gmail.com>
+ <878qoczbhn.fsf@intel.com>
+ <20250407171209.GJ1557073@nvidia.com>
+ <871pu3ys4x.fsf@intel.com>
+ <20250408160127.GD1778492@nvidia.com>
+ <87friixzoj.fsf@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87friixzoj.fsf@intel.com>
+X-ClientProxiedBy: BN9PR03CA0259.namprd03.prod.outlook.com
+ (2603:10b6:408:ff::24) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN2PR12MB4126:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f0ce1e7-d100-434b-a3a0-08dd76da2877
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WaOlOyPnGCZ5ZE6UrK8EnTgMoePWECbwBrtfAI/UCv+/KyarkMC5B7B+ywm9?=
+ =?us-ascii?Q?A5L1oamd4mIuaggZu6OCZnGKuB9warVgOyIjXzROoiVntG8y/g8f40Jc2cum?=
+ =?us-ascii?Q?DUNFBVXY61nLT6AdpgrZo/tUsi8iO81pAMJD+GSGYetJICQvS4FLIlhYL2kW?=
+ =?us-ascii?Q?yzPqbaljxjasY2NEaSCbDJQJSMEicKCOGKbFJOafHe8LgYRC2dV0wF/tbZrs?=
+ =?us-ascii?Q?nCoKvn/8iVLEXB4tfhbdB3nB7S5yhXq+G5Vizh6jr2ndyKShRwxf7BF6TjGk?=
+ =?us-ascii?Q?mhkinbnvZGHHYIBDd1pUP09YJehky4iLcJIz5Nh9q1zJL8bhCC9cNOsa7xpy?=
+ =?us-ascii?Q?9uxP94WTyM4tusD/T6Pvrihf3E3JJPKeCzLK87eUw2JPDXOhTLLPXYSShv3l?=
+ =?us-ascii?Q?pMdOCTiqyrCwOV5MP/T7y0fGWQ43eGvSSWOFgZMjYiP5dSyZIuRTxCvEI6ij?=
+ =?us-ascii?Q?pmahPt8sOyg3AI3VV7xMlUwEXUtAqfwCICdRSY1cW9ELPR4uxFqFH+uuorxP?=
+ =?us-ascii?Q?f4I/luMlRIlo+ONX2M/tddsYYI6doj3Hpl+1Xqf1aE312ObZGlATwhyEeGYx?=
+ =?us-ascii?Q?Fwv32hNn9KmUTiVxJ/6WowuYs32UJOxPjvjLO5qDM0Hbu9nLe/djma0nOCGl?=
+ =?us-ascii?Q?oNljScF/8uEWuDmmrLUNfNn3lYQG3bVbpgor77H6Z76t26I2CqJ/NJI9dLKR?=
+ =?us-ascii?Q?6ToUa3hvlIsZCPL3RCjCPQhh6hrWCt6IBEbjrYEbUdvPKCsQbaU3vPDcs1hM?=
+ =?us-ascii?Q?Diq15+bdfUOE9PnWn6NCtTN3LI7JDKnPNl8bgaVGUBwyO8Zep61LpRTp0guL?=
+ =?us-ascii?Q?3OTZC8mTIbUT5jTYW9ZAIl/INJC3E4NhswWoGjzWYlv2USZJZ2hedKmpWBcO?=
+ =?us-ascii?Q?A1ctZjVj/vO9lNoDT4AGJMtkLar6IIXxVK40Mc+3jDpZjEuPzHNxPQ8m3s1+?=
+ =?us-ascii?Q?9iz27O6nqMZ0rTdqfSOFaR3MhXyrfn2HV8jfBuRh0HW60aqO4VaOjqM/LNod?=
+ =?us-ascii?Q?Zsjva3hSSid04fUclPt2pmzNulBxQDYwijnjWZhGvlckehA1iiMyhbcIKogr?=
+ =?us-ascii?Q?plgH3MbdWhhFeDSos7K7ofKUArQ2QxzaG7ekcHeTIARIczMpgXYuknhaFAEx?=
+ =?us-ascii?Q?2iL5V7PhtGP0bPWqTfY7ZKxodsfJ8n2HvNIvS1kwkyJzKk5mhE1GodedjsN3?=
+ =?us-ascii?Q?hpdjmnLcsg1mRk6TjE3ryf7WU74qBiO/EJy98dszTqbyz3UegHq7VlFVMGwK?=
+ =?us-ascii?Q?9RgtT1KPQgLr1reAxvrcoxM7Ys1xbOhWsbtkP5fccuj1TOd10je581qADXTc?=
+ =?us-ascii?Q?yiHxFOjNcHHl0adTyQSKQZuNO0krw6hAeFkiis+B7I2Ax/Ouxpx/9vt/7QDn?=
+ =?us-ascii?Q?Idzzje3n+pbQWq3CP/3UXuCIN9Ip?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Hee4xbMkjjZUidYFd+0rfhcv3sR6dHYXPPXRl5UYFEiSGV5D/ydaKVplAN9Z?=
+ =?us-ascii?Q?fZwQMO31c+tVkQczsgEEZRXKOd4EtXFwN6Sj44AwFbRz1wqoPzIbM/X8tjGo?=
+ =?us-ascii?Q?CrtBd8ot5Z/W+PXgifY3fJxBu+2HO0E8buFcF2T8LY2G3i/h5s0b4pgmnX0M?=
+ =?us-ascii?Q?Nvd4dIMMCMmZFr+Cm1Jm7eOYBFSslyqen7d/IYu4BL+dUDyruScO0AnBWb2F?=
+ =?us-ascii?Q?T1VS5poqOFwaYSx6NZDbKUibkurevAh6EL7xS4bEqMxlCD4Ay7BabBGjJoVj?=
+ =?us-ascii?Q?ujLRMFs+WPQrXwh10UEAPUtp9wG1FKD/iuAjkvuzpWHz7bipKMJfFv9mWOYm?=
+ =?us-ascii?Q?woBda3yb5kL7t6is+FRJZKU5OyRKdkSe9AJoMJEs44phbbhz6X7yMAnInLBD?=
+ =?us-ascii?Q?Q+bxiDQfHCk7rFkr/486gyOeTYlIeAm7M+1tNYECfe6iHuen28qOPec0C7UZ?=
+ =?us-ascii?Q?8dfnTgn5yojwnmcWyBcyxIXHmDLN2aA7qc3WHnl1unimHNsPt34sEon5Rsab?=
+ =?us-ascii?Q?T3B4RxwN/TmRT1eWeFNz5+VVHC8Edv8jDR4uBuBAORdPzkOVlAdIHvqR9S+s?=
+ =?us-ascii?Q?/MUNNd2E/+HShw93ywyeZZZtHvdvPHin7yGtCzuFyoBDc/AJwjzV6qThvf9Z?=
+ =?us-ascii?Q?f0s6Fv5BUgdsyJzfjbaBiHgIBD7iVJ7SI5oP3nuOkeBNKVa+o9RNmkJ1o3XI?=
+ =?us-ascii?Q?Ra+M8NKXR9L49TxBxAVNmoPTvdNJwW75wuqTOl4dabJWoa7GLufR3Q8r2bDi?=
+ =?us-ascii?Q?CHjSiPh6NYW6B3ph63H/8njdDK6qg61afFvWqp+D6tRmq4BKenswL3Yq6+t/?=
+ =?us-ascii?Q?6rs3icgcgQrWHQsaBcweczKs5wbOTZrFdhTVirVGCER/znZz2LPiPvZwm9wk?=
+ =?us-ascii?Q?osbIA1YoGa22BNfbOFnlpaNc3Yi97k9V3TScJgZgVQesR1Y+6qRQ4ymPJ/WO?=
+ =?us-ascii?Q?si+Me+/fTQ2I0XaY4f4/7nkRzWlygd3M6dBgtPkUK9tRVeEenBEkVc4hSKxc?=
+ =?us-ascii?Q?veV2UnqM+bYFpttL3Kmeo4+bSXgjP1CL3+aLhW2M3O/aeclLHhywdKAAYUUf?=
+ =?us-ascii?Q?niIRpBFMLl+76QYSKyjuGTyEs5/HfxdmovXmKeAgtmw1l8QgkaFJLhZDRLb9?=
+ =?us-ascii?Q?5R+KqN63CcLUK6Frq0EQPSU7jlGTSFUJnS3ZshecqB236JZjQzw2vxjLEgWV?=
+ =?us-ascii?Q?3KcgcxTbpAvOjhTp7c0jrXY5oJWvnDmCODmBbGPeog13eOWAEh7br62jA+mK?=
+ =?us-ascii?Q?v5XBYxrzIYtIqVMX5WFISAbD5q2Yf6DUqyQ/DnLRBU14yt+/3EiQ1kyjVSGv?=
+ =?us-ascii?Q?/O0qqFzBdaqkh+SEhxpjunK2xOHc4KnxrhgJjQnbxwV17O8WGAIb44JJqiUO?=
+ =?us-ascii?Q?sO/5gzpfs4U6/K99LHUpvC/BTOqC9c6RQqEuVnnLnccX+ssk3PA5BnZ7d1DU?=
+ =?us-ascii?Q?AWRfXBM3E1I6bhl8llKDvJZ4mVm+pb6VeRUyV4L/6kUkwPyjC5VnLc8EvTJy?=
+ =?us-ascii?Q?P4gYS97bAswiqeWmNEKQHIDA0GqNinyat248ENLDU0L4+AFuAo/VmGTMHHPT?=
+ =?us-ascii?Q?87YJMmS1VaZ7S0kPcCGUFVmheSgmQfyJ8nLUB0Gx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f0ce1e7-d100-434b-a3a0-08dd76da2877
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 20:15:51.4211
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AJpCE0QcOuwd8VzXNZNCKKpb5eTcT0Cng03pyPdzrCFgqHFOwssf0ljdGD5mGS0M
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4126
 
-On Tue, 8 Apr 2025 14:29:41 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> On Fri, Apr 04, 2025 at 02:06:59PM -0700, SeongJae Park wrote:
-> > Some of zap_page_range_single() callers such as [process_]madvise() with
-> > MADV_DONTNEED[_LOCKED] cannot batch tlb flushes because
-> > zap_page_range_single() flushes tlb for each invocation.  Split out the
-> > body of zap_page_range_single() except mmu_gather object initialization
-> > and gathered tlb entries flushing for such batched tlb flushing usage.
+On Tue, Apr 08, 2025 at 09:42:36PM +0300, Jani Nikula wrote:
+> On Tue, 08 Apr 2025, Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > On Tue, Apr 08, 2025 at 11:27:58AM +0300, Jani Nikula wrote:
+> >> On Mon, 07 Apr 2025, Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >> > On Mon, Apr 07, 2025 at 10:17:40AM +0300, Jani Nikula wrote:
+> >> >
+> >> >> Even with Jason's idea [1], you *still* have to start small and opt-in
+> >> >> (i.e. the patch series at hand). You can't just start off by testing
+> >> >> every header in one go, because it's a flag day switch. 
+> >> >
+> >> > You'd add something like 'make header_check' that does not run
+> >> > automatically. Making it run automatically after everything is fixed
+> >> > to keep it fixed would be the flag day change. It is how we have
+> >> > managed to introduce other warning levels in the past.
+> >> 
+> >> That approach does not help *me* or drm, i915 and xe in the least. They
+> >> are already fixed, and we want a way to keep them fixed. This is how all
+> >> of this got started.
 > >
-> > To avoid hugetlb pages allocation failures from concurrent page faults,
-> > the tlb flush should be done before hugetlb faults unlocking, though.
-> > Do the flush and the unlock inside the split out function in the order
-> > for hugetlb vma case.  Refer to commit 2820b0f09be9 ("hugetlbfs: close
-> > race between MADV_DONTNEED and page fault") for more details about the
-> > concurrent faults' page allocation failure problem.
-> 
-> Good lord, I really hate how we do hugetlb.
-> 
+> > I imagine you'd include a way to have the 'make header_check' run on
+> > some subset of files only, then use that in your CI for the interm.
 > >
-> > Signed-off-by: SeongJae Park <sj@kernel.org>
-> > ---
-> >  mm/memory.c | 49 +++++++++++++++++++++++++++++++++++++++----------
-> >  1 file changed, 39 insertions(+), 10 deletions(-)
+> >> Your goal may be to make everything self-contained, but AFAICS there is
+> >> no agreement on that goal. As long as there's no buy-in to this, it's
+> >> not possible fix everything, it's an unreachable goal.
 > >
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 8669b2c981a5..8c9bbb1a008c 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -1989,36 +1989,65 @@ void unmap_vmas(struct mmu_gather *tlb, struct ma_state *mas,
-> >  	mmu_notifier_invalidate_range_end(&range);
-> >  }
-> >
-> > -/**
-> > - * zap_page_range_single - remove user pages in a given range
-> > +/*
-> > + * notify_unmap_single_vma - remove user pages in a given range
-> > + * @tlb: pointer to the caller's struct mmu_gather
-> >   * @vma: vm_area_struct holding the applicable pages
-> > - * @address: starting address of pages to zap
-> > - * @size: number of bytes to zap
-> > + * @address: starting address of pages to remove
-> > + * @size: number of bytes to remove
-> >   * @details: details of shared cache invalidation
-> >   *
-> > - * The range must fit into one VMA.
-> > + * @tlb shouldn't be NULL.  The range must fit into one VMA.  If @vma is for
-> > + * hugetlb, @tlb is flushed and re-initialized by this function.
-> >   */
-> > -void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
-> > +static void notify_unmap_single_vma(struct mmu_gather *tlb,
-> > +		struct vm_area_struct *vma, unsigned long address,
-> >  		unsigned long size, struct zap_details *details)
+> > I didn't see that. I saw technical problems with the implementation
+> > that was presented. I'd be shocked if there was broad opposition to
+> > adding missing includes and forward declaration to most headers. It is
+> > a pretty basic C thing. :\
 > 
-> Don't love this name. It seems to imply that the primary thing here is the MMU
-> notification bit.
-> 
-> This is like unmap_vmas() but for a single VMA, that is - contains the
-> logic unmap_vmas() does for mmu notifier stuff and hugetlb stuff (vom in
-> mouth), deferring heavy lifting to unmap_single_vma().
-> 
-> I think it might be better to just go with the brainless
-> '__zap_page_range_single()' here honestly. Then we at least reduce the mess
-> of confusion in this function naming here.
-> 
-> Of course you intend to un-static this shortly... so maybe that's not so
-> great.
-> 
-> zap_page_range_single_batched()?
+> Unless I'm mistaken, both Linus and Masahiro have said they disagree
+> with headers having to be self-contained as a general rule, regardless
+> of the issues with kconfig and the build artifacts.
 
-Sounds good to me.  I will rename the function so, unless we get other
-opinions.
+Right, no general rule.
 
-> 
-> >  {
-> >  	const unsigned long end = address + size;
-> >  	struct mmu_notifier_range range;
-> > -	struct mmu_gather tlb;
-> > +
-> > +	VM_WARN_ON_ONCE(!tlb);
-> 
-> Maybe pedantic, but we probably want to ensure not only that tlb is set but
-> also has had tlb_gatehr_mmu() performed upon it. Then again probably a bit
-> much given this is a static function called only from
-> zap_page_range_single().
-> 
-> Hm actually you intend to un-static this shortly right? So I guess in that
-> case we do want some kind of check like this, perhaps absracting this bit
-> of tlb_flush_mmu_tlbonly():
-> 
-> 	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
-> 	      tlb->cleared_puds || tlb->cleared_p4ds))
-> 		return;
+But the data I just ran shows the vast majority are already self
+contained (~15% are not) and many are trivially fixable to be self
+contained. There is a fairly small minority that will not and should
+not be self contained.
 
-This code is to see if there are tlb entries to flush.
+So I expect there is alot of headers where people would agree to add
+the missing #include <linux/types.h> for example, which I found
+about 20 of in about 10 mins.
 
-In this function, valid 'tlb' can either have such entries or not.  So this
-code could be good reference but couldn't be used as is.  I think most fields
-of mmu_gather can be arbitrarily updated depending on use cases, so making a
-perfect but simple check wouldn't be easy.
+And a smallish exclusion list to ignore the special cases. Ie I
+started by just regex ignoring all of asm because there was lots of
+interesting stuff in there.
 
-I think tlb->mm shouldn't be changed after the initialization, though.  So
-(tlb->mm == vma->vm_mm) could be a good enough additional check.
+The point is we can probably get to a full kernel check, with a
+minority of special headers excluded, that does not have any errors.
 
+As I said in my first email I think this brings real actual value to
+people using clangd. AFAICT there is no good reason that every day
+normal headers should be missing their #include <linux/types.h> (which
+seems to be the most common error)
+
+This is where I think it is constructive to present what the actual
+proposed header files changes would be.
+
+> > You can run W=1 using a subdirectory build just for your drivers.
 > 
-> Into a separate is_tlb_flushable() helper function or something. Then this
-> warning can become:
-> 
-> /* tlb should be initialised for a new gather operation. */
-> VM_WARN_ON_ONCE(!tlb || is_tlb_flushable(tlb));
+> I don't think there's a way to build the entire kernel while limiting
+> W=1 warnings to a subdirectory, is there? Mixing W=1 and regular builds
+> causes everything to be rebuilt due to dependencies. It's not only for
+> CI, it's also for developers.
 
-If you agree (tlb->mm == vma->vm_mm) is sufficient check, this could be
+You'd have to do the W=0 build then a subdirectory W=1 build.
 
-VM_WARN_ON_ONCE(!tlb || tlb->mm != vma->vm_mm)
+I agree this is annoying and I do wish kbuild had a better solution
+here.
 
-> 
-> >
-> >  	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma->vm_mm,
-> >  				address, end);
-> >  	hugetlb_zap_begin(vma, &range.start, &range.end);
-> 
-> Is it a problem that we invoke this function now _after_ tlb_gather_mmu()
-> has begun?
+> Thanks for the proof-of-concept. It's just that I don't see how that
+> could be bolted to kbuild, with dependency tracking. I don't want to
+> have to rebuild the world every time something changes.
 
-I think it is not a problem since I find no requirements of the ordering.
-Please let me know if I'm missing seomthing.
+I used ninja to run this because it is very easy to get setup and
+going and doesn't leave behind the 'turds'. The main point was to show
+that the .cmd processing and so on works sensibly and does avoid the
+kconfig issues.
 
-> 
-> > -	tlb_gather_mmu(&tlb, vma->vm_mm);
-> >  	update_hiwater_rss(vma->vm_mm);
-> >  	mmu_notifier_invalidate_range_start(&range);
-> >  	/*
-> >  	 * unmap 'address-end' not 'range.start-range.end' as range
-> >  	 * could have been expanded for hugetlb pmd sharing.
-> >  	 */
-> 
-> Oh GOD I HATE THAT WE HANDLE HUGETLB THIS WAY!!!
-> 
-> Anything where you have to open-code concerns about how a specific use case
-> uses something like this is just asking to be broken.
-> 
-> Obviously this is nothing to do with your series and is just a grumble to
-> the sky, but still! *shakes fist at cloud*
-> 
-> > -	unmap_single_vma(&tlb, vma, address, end, details, false);
-> > +	unmap_single_vma(tlb, vma, address, end, details, false);
-> >  	mmu_notifier_invalidate_range_end(&range);
-> > +	if (is_vm_hugetlb_page(vma)) {
-> > +		/*
-> > +		 * flush tlb and free resources before hugetlb_zap_end(), to
-> > +		 * avoid concurrent page faults' allocation failure
-> 
-> Nit: add a full stop (or for those residing in North America 'period' :>)
-> at the end of this sentence. This is very bikesheddy I know, and can only
-> apologise.
+If people agree to stick with ninja for this then you'd use the -MD
+option to gcc and the depfile=foo.d instruction then you get full
+dependency tracking and incremental compilation. Along with a rule to
+rebuild the rule file if any .cmd file changes. I did not show this,
+but it is very easy.
 
-Thank you for kindly suggesting this, I will update as you recommended in the
-next spin.
-
-> 
-> > +		 */
-> > +		tlb_finish_mmu(tlb);
-> > +		hugetlb_zap_end(vma, details);
-> > +		tlb_gather_mmu(tlb, vma->vm_mm);
-> > +	}
-> 
-> OK, so as far as I can tell, after this change, we are still ensuring that
-> the tlb is flushed _prior_ to the invocation of hugetlb_zap_end(), only we,
-> in order to later export this function, need do it here instead... I mean
-> this is horrid, but it's sort of unavoidable really.
-> 
-> So I guess this just undoes the optimisation in the case of hugetlb, which
-> probably doesn't really matter all that much at huge page size
-> anyway... and plus it's hugetlb so.
-
-Yes, that's the intended behavior.
-
-> 
-> Yeah fine, just kind of horrid.
-
-I agree this is not clean, and thank you for understanding the situation.
-Hopefully we will find a chance to revisit for cleanup later.
-
-> 
-> > +}
-> > +
-> > +/**
-> > + * zap_page_range_single - remove user pages in a given range
-> > + * @vma: vm_area_struct holding the applicable pages
-> > + * @address: starting address of pages to zap
-> > + * @size: number of bytes to zap
-> > + * @details: details of shared cache invalidation
-> > + *
-> > + * The range must fit into one VMA.
-> > + */
-> > +void zap_page_range_single(struct vm_area_struct *vma, unsigned long address,
-> > +		unsigned long size, struct zap_details *details)
-> > +{
-> > +	struct mmu_gather tlb;
-> > +
-> > +	tlb_gather_mmu(&tlb, vma->vm_mm);
-> > +	notify_unmap_single_vma(&tlb, vma, address, size, details);
-> >  	tlb_finish_mmu(&tlb);
-> > -	hugetlb_zap_end(vma, details);
-> >  }
-> >
-> >  /**
-> > --
-> > 2.39.5
-
-Thank you for taking your time for reviewing this.  If you have no other
-opinions, I will make the next spin as mentioned above.
-
-
-Thanks,
-SJ
+Jason
