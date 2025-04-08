@@ -1,121 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23B263F46
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764EB263F46
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097682; cv=none; b=vDm4TbH1YLbu1ZV06gFJrfwqwSTKvTvSE+bHtbi5IuuSgYOctEnV3oHK0r6RvOb5dZqA+3BdHq0L2+FmTapiPw+oUaeOAxexjCucneirNjJa/6PjwoCG/awmRE0kG0BQxElAs5KPhQzfYdBMnfWpcC16YTxBGvPKKHWaKe2vqXU=
+	t=1744097692; cv=none; b=sp/QuVsVVjYRfCj5QC6D6XxtaEGt3DnhiCOZvHkDsoGHJNMb3CudJLu9wBO/EBCW4r4HCEi0A0T1ySYgrl1KotpFx/i/lYIt1WFVt7JWDfiXzs7xE3LBC3IGstilgnDRLuCtAn0rg2R1mBshVa2alOT6MM4amk1GY5kL67V4RAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097682; c=relaxed/simple;
-	bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pF0wRBYaSQJ1+y0laNff4d4t2sFaSyKo8qTKYXfaz4QY+OOrxRqroY5hWONvHY4YJtJy+EvwiBppU9ARv/hPvyRJfoIPuPtS2VCd7qFEpqcLZpY6OZ9gRdhdOczEqL+44aY1IP/0AXg8+2e5UaXMf1aDDZOfEkjlWKuk6GM+W9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxqjfCoH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744097692; c=relaxed/simple;
+	bh=Zw+nvfP4oH7YCpjyBFjQXUE7wWFGLtslccfPR5HCSeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mk6como92bM07zuaM6qIefMlULIF/2BF1FPqlkeGwwoJa8d3SQ4MCaxOByUzZ6QO/vtqVS5IjookugD/Ogn35aH/cmOkSVYGgku8mhNnm+fzJbXOFw3LCuJtxMpoSw2whMeA3+UXkZJit0xiSVwGjAmorG64LCiyj5iYY+VhI1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EvZlmC67; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxqjfCoH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC865C4CEE5;
-	Tue,  8 Apr 2025 07:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744097681;
-	bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OxqjfCoHeIzklkN3oG4EVzuqyc9X/pvQAIq/xNsehgw+35KEcE96QHRpS1C7c49JU
-	 f6vrE3zjpamudNu3rGa1qCx0NEoNO5LhpurfO3AUliIQXj80hRuLM7TVjMu9LlCCeu
-	 3fhYvFpCfYiT9pM4hF75gP0EgGi6kUsZzrrUJ/GDJPTbBotd7pGDgaSMyQuIiHKY9l
-	 ntxDpYXuX5o2swJKR1G5HqhEGX2ogxVkApOwowmdBluI/mqyr1Jhnh0lFIjRO9rAzL
-	 +obSiOlp383JzdXmjIKID8AKHyXyjadJb5gHxW0uD7jeYo7QPIv7Dd2UudFApJW/SO
-	 Cj3QaqI/NTLsw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 08 Apr 2025 09:34:13 +0200
-Subject: [PATCH 7/7] drm/tests: probe-helper: Fix drm_display_mode memory
- leak
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EvZlmC67"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744097689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TgX/95pHI72BHQsp4Gb1Pk041dCapFrrBn2uranICwk=;
+	b=EvZlmC67CykixpE2Ell4fSedXehwJHGU1lwhsQt9fo6jflnpRKstIA1iNn9nJC0qmkViVw
+	tYSVul3aMqRX6uRZ6Xkttd8SOlGzANZQo1SznS9BQIEl2I7H3kLbQIog/yqTkOQt22DXGl
+	BRqhmSqRx27GRnYImLH6FgWh8jCzAOM=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-447-PJZl5EIAO8aDU9JNivXj2Q-1; Tue, 08 Apr 2025 03:34:47 -0400
+X-MC-Unique: PJZl5EIAO8aDU9JNivXj2Q-1
+X-Mimecast-MFC-AGG-ID: PJZl5EIAO8aDU9JNivXj2Q_1744097687
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736abba8c5cso6748708b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:34:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744097687; x=1744702487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TgX/95pHI72BHQsp4Gb1Pk041dCapFrrBn2uranICwk=;
+        b=p6odeIdUMOA3L8mH3iB3dc/dQNaxIjV0AFdSIR84kTyKaFujA/Ump+6smy+kWcES5Y
+         p4yViABYN+1lwz8WpqOb8xbRArAv+YwHYtWXUITAbsrzAmkEgCIMDijUXjgehTff90QH
+         eSsaCXDKLlaYmOrTKznPCSgi04gbpSCXGl8xHwW0vUr/WFGOQ7sjncthQ9Imi8OnbwAP
+         osI4p3pir++RP4uaSb9wHmeT2Jx5yEJS/a0PIB8BJaB1UT6A7N+2mmkPP5ULM3oLSqqW
+         mM0bF7Apgqy7bfQiC3wwyjcHoi+m6PqTfGmVGCRDkOR38DzPH/D0xoy9vnuMn92H9cH9
+         zkvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXm8ObFgAvNYIhp3ycjega0boMMCHu/hjmTZUiHMxUmJ/mMO2B0AV/Hmj7r6rpTyIAlUPFTVFlMmzaioQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMySDZWVIO03TUY8q1Jkw+nlWQZc9twTz90q0lBZd4B9PQDx0q
+	Boty7Mhg9WwlKoltCI07dv75lcT+VY9E40ekbanAN4Lnav4lFBZ6I1yy0sV4iFLgk28Sb9YpXgS
+	tDd5sqrF3cBfHQHxVzcLV4uN5vqPMecYACKdTiRKEEboW0nByDgHEGAwNKxipj133u86cgNa5gx
+	xa3q0HblDOnylKj/aA5SMzQRMvhje56Fevk6ly
+X-Gm-Gg: ASbGncsnnunIdvAClWSLLAiYkZ6tjxZVvJtZZlCTuT5SKJ8Xbr411cuS2QPyxB4xzOr
+	G+7QeN/S3u+ag3ptbIejorarFMZK0hEWqIxo5622qhJX+/lLFyIWslDyjvo5seU+eZ74SlvUe
+X-Received: by 2002:a05:6a00:181d:b0:736:520a:58f9 with SMTP id d2e1a72fcca58-739e71136bemr15844027b3a.17.1744097686696;
+        Tue, 08 Apr 2025 00:34:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEebzBktuzT34vutceE0Q+8ZimqM8gtaIQXLjH55vRIG5tqmEkA55owC0umuPvdKpOAEVEgy7rBakY9cJp/e3c=
+X-Received: by 2002:a05:6a00:181d:b0:736:520a:58f9 with SMTP id
+ d2e1a72fcca58-739e71136bemr15843995b3a.17.1744097686309; Tue, 08 Apr 2025
+ 00:34:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-7-996305a2e75a@kernel.org>
-References: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
-In-Reply-To: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: Philipp Stanner <phasta@mailbox.org>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2493; i=mripard@kernel.org;
- h=from:subject:message-id; bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLlat09LI9P9u3f9b1z6mwMYrZV/Uf/n778/LvMj7e
- CRvqffGjlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAExk2glGhrt6G5Zk17iFJfRc
- PjA1tVtnXa/vL8Wjp5zXfv3W+/cuaxUjw17n1h1qgnN1Nv88aHFYY7tOz2PW6scb3zjHBa2Km+h
- dyQgA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+References: <20250404093903.37416-1-minhquangbui99@gmail.com>
+ <1743987836.9938157-1-xuanzhuo@linux.alibaba.com> <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
+In-Reply-To: <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 8 Apr 2025 15:34:33 +0800
+X-Gm-Features: ATxdqUHgOtXPv8x4ai3wnnr72S-UplgKPeU7AsldG5nqKrldqkZgJy1CXzhAwHI
+Message-ID: <CACGkMEs7O7D5sztwJVn45c+1pap20Oi5f=02Sy_qxFjbeHuYiQ@mail.gmail.com>
+Subject: Re: [PATCH] virtio-net: disable delayed refill when pausing rx
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "Michael S . Tsirkin" <mst@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	"David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-drm_analog_tv_mode() and its variants return a drm_display_mode that
-needs to be destroyed later one. The
-drm_test_connector_helper_tv_get_modes_check() test never does however,
-which leads to a memory leak.
+On Mon, Apr 7, 2025 at 10:27=E2=80=AFAM Bui Quang Minh <minhquangbui99@gmai=
+l.com> wrote:
+>
+> On 4/7/25 08:03, Xuan Zhuo wrote:
+> > On Fri,  4 Apr 2025 16:39:03 +0700, Bui Quang Minh <minhquangbui99@gmai=
+l.com> wrote:
+> >> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+> >> napi_disable() on the receive queue's napi. In delayed refill_work, it
+> >> also calls napi_disable() on the receive queue's napi. This can leads =
+to
+> >> deadlock when napi_disable() is called on an already disabled napi. Th=
+is
+> >> scenario can be reproducible by binding a XDP socket to virtio-net
+> >> interface without setting up the fill ring. As a result, try_fill_recv
+> >> will fail until the fill ring is set up and refill_work is scheduled.
+> >
+> > So, what is the problem? The refill_work is waiting? As I know, that th=
+read
+> > will sleep some time, so the cpu can do other work.
+>
+> When napi_disable is called on an already disabled napi, it will sleep
+> in napi_disable_locked while still holding the netdev_lock. As a result,
+> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
+> This leads to refill_work and the pause-then-resume tx are stuck altogeth=
+er.
 
-Let's make sure it's freed.
+This needs to be added to the chagelog. And it looks like this is a fix for
 
-Closes: https://lore.kernel.org/dri-devel/a7655158a6367ac46194d57f4b7433ef0772a73e.camel@mailbox.org/
-Fixes: 1e4a91db109f ("drm/probe-helper: Provide a TV get_modes helper")
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/tests/drm_probe_helper_test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+commit 413f0271f3966e0c73d4937963f19335af19e628
+Author: Jakub Kicinski <kuba@kernel.org>
+Date:   Tue Jan 14 19:53:14 2025 -0800
 
-diff --git a/drivers/gpu/drm/tests/drm_probe_helper_test.c b/drivers/gpu/drm/tests/drm_probe_helper_test.c
-index bc09ff38aca18eb06dc476310e1dbf372bc5545c..db0e4f5df275e8473ec916ed7a7cf16db96b81c5 100644
---- a/drivers/gpu/drm/tests/drm_probe_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_probe_helper_test.c
-@@ -96,11 +96,11 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
- 	const struct drm_connector_helper_tv_get_modes_test *params = test->param_value;
- 	struct drm_probe_helper_test_priv *priv = test->priv;
- 	struct drm_connector *connector = &priv->connector;
- 	struct drm_cmdline_mode *cmdline = &connector->cmdline_mode;
- 	struct drm_display_mode *mode;
--	const struct drm_display_mode *expected;
-+	struct drm_display_mode *expected;
- 	size_t len;
- 	int ret;
- 
- 	if (params->cmdline) {
- 		cmdline->tv_mode_specified = true;
-@@ -132,10 +132,13 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
- 		expected = params->expected_modes[0](priv->drm);
- 		KUNIT_ASSERT_NOT_NULL(test, expected);
- 
- 		KUNIT_EXPECT_TRUE(test, drm_mode_equal(mode, expected));
- 		KUNIT_EXPECT_TRUE(test, mode->type & DRM_MODE_TYPE_PREFERRED);
-+
-+		ret = drm_kunit_add_mode_destroy_action(test, expected);
-+		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	if (params->num_expected_modes >= 2) {
- 		mode = list_next_entry(mode, head);
- 		KUNIT_ASSERT_NOT_NULL(test, mode);
-@@ -143,10 +146,13 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
- 		expected = params->expected_modes[1](priv->drm);
- 		KUNIT_ASSERT_NOT_NULL(test, expected);
- 
- 		KUNIT_EXPECT_TRUE(test, drm_mode_equal(mode, expected));
- 		KUNIT_EXPECT_FALSE(test, mode->type & DRM_MODE_TYPE_PREFERRED);
-+
-+		ret = drm_kunit_add_mode_destroy_action(test, expected);
-+		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	mutex_unlock(&priv->drm->mode_config.mutex);
- }
- 
+    net: protect NAPI enablement with netdev_lock()
 
--- 
-2.49.0
+?
+
+I wonder if it's simpler to just hold the netdev lock in resize or xsk
+binding instead of this.
+
+Thanks
+
+>
+> Thanks,
+> Quang Minh.
+>
 
