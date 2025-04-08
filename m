@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15472676FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F67267712;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106996; cv=none; b=D89HpGvttcCLcayzAx5+73wwzd1s0hPqcKIvfgKi0w2F/20LhaDBXaxAut53bHWaYckzC5FJtpO72p+Vi4VCWo8IxqGDPyyio1rEuekuvbLL6pE744XdjevNcYbLgzSeHdN2Llm5y4s70lIwsXpF3iIwQU3cVkPTKeKL4LsqrlU=
+	t=1744106996; cv=none; b=t0fNUxdRX4AwJddGz/EyoC0+OqjlIc+O0sdWOmHevGNQLiLlJYDwg47fBZxO/WQvN8Hb8v37DU565DrfDQeKEUwpFGOAKPCn+VgVpUnt05BS7fUUwQ1soH9ahgMQcYEZS2dSh3IIoPF9WBm4iNug8GwVuQGBKpv8mzl01f8tHQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106996; c=relaxed/simple;
-	bh=ap4JRnRfz9etkeP/FGAkkiE80UWtsVBLm1sZD3/QPKE=;
+	bh=YknnQNXKSY9zOMID4CuZkIJaoPwVVvWlyNEsLX0P8r8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U+PcAbemn9/563HDm8fjfIp/AIJaPfNgxn4qLJjtYcN4f6t1St1+x5FHT3oNl/5T2v7KM4sd0a2Qhq0OV1NJC14sQc1G521KGUc+CP/y9E7VKsIBSp5sqyCt2nlohrF0eQZ7jfr0NzY/NcK96IbTjkad6V1A7KUqkFZyl3tTycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgmCOUrs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t3im8NncTwFNEwEWdCdEPvQINVsCcVx/sCNK04VrWiP/uJITgd5hoq9lW4cwWFXBu733CJqdEWGz2WLXoBntIX+Dc9MKxWKEkPrzEu4IuuEtCE+3rKDlpXsPy4wdC3oHJN1h6WTKlOkUI39GxEo9ZGOjJtQUGj9dJbB2rzWQw2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2G+KxNA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgmCOUrs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689F8C4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2G+KxNA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E812C4CEF9;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744106996;
-	bh=ap4JRnRfz9etkeP/FGAkkiE80UWtsVBLm1sZD3/QPKE=;
+	bh=YknnQNXKSY9zOMID4CuZkIJaoPwVVvWlyNEsLX0P8r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NgmCOUrsCQtM6L8JEe1XQ5hOwQZbW5TzfAB35TRvNNTXBKQ9oJ6jeTu7n0Agp8CXs
-	 qqLVYkn3aWUGpnS3g8qwJ0NQKiLs9iuY4M34ohATyqOh4gYPgTwxkmFbWWFiUFtAJs
-	 S7OnZi9Wp49dhVFCYw/1+MUERASqeDa1tbzgfl7httFPz5WzTsxl8R7KID7uU6Bn95
-	 32zo76yQFcJk5G3rRkQ4KnxCbn1hHbypgX1io2Rgy3BRaKHF2VMq42kuCg/+GAEZB/
-	 Dulyy/m2nXtANgLdI3LOorgEbTXUiG6FMLnLBzZBuHKw6hMlF7MHSGjYn+k4mrh4cF
-	 JKMIpLyxgMTRg==
+	b=g2G+KxNABV6Nfy9T38lDVc5vC5/3iAXlzZaC5GsDDVeumyylarlckWZIKMhRk+EyO
+	 kSItWJ/d+G7OBFcRQ8owgmQUEhhLepX2nYiudTLysUb0L4BeM7ypo/q9SZwTadmVT3
+	 ZNIZtEGjLU6kUYvEyOYm8exKaLeLZYC9fZTWqkoUBiyLsqEqTdRFFbS1FW1SEvMZMZ
+	 +qNi0JDAw6DQ0u7b6ioaxm5/EhwREHoxf5xqJGRA1F3Z86MR8vS3cQX5op3SoE9FAa
+	 jeHzQMbKh5mOsr49/0doJlGDppFfsC2PcCvzjPBuJg3von5EM2QFTryBt4VIeZv37D
+	 QdQ9CK1iM8jFw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RW4-1SvQ;
+	id 1u25tt-00000008RWS-2DvZ;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sean Anderson <sean.anderson@linux.dev>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 17/33] scripts/kernel-doc.py: postpone warnings to the output plugin
-Date: Tue,  8 Apr 2025 18:09:20 +0800
-Message-ID: <e6344711e390cf22af02a56bb5dd51ca67c0afb6.1744106242.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 25/33] scripts/kernel-doc.py: move modulename to man class
+Date: Tue,  8 Apr 2025 18:09:28 +0800
+Message-ID: <583085e3885b0075d16ef9961b4f2ad870f30a55.1744106242.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -51,192 +51,205 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-We don't want to have warnings displayed for symbols that
-weren't output. So, postpone warnings print to the output
-plugin, where symbol output is validated.
+Only man output requires a modulename. Move its definition
+to the man class.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_output.py | 24 +++++++++++++++----
- scripts/lib/kdoc/kdoc_parser.py | 41 ++++++++++++++++-----------------
- 2 files changed, 39 insertions(+), 26 deletions(-)
+ scripts/kernel-doc.py           |  6 +++---
+ scripts/lib/kdoc/kdoc_files.py  |  6 +-----
+ scripts/lib/kdoc/kdoc_output.py | 12 ++++++------
+ scripts/lib/kdoc/kdoc_parser.py |  9 +--------
+ 4 files changed, 11 insertions(+), 22 deletions(-)
 
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index eca7e34f9d03..6a6bc81efd31 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -186,6 +186,7 @@ def main():
+                         help="Enable debug messages")
+ 
+     parser.add_argument("-M", "-modulename", "--modulename",
++                        default="Kernel API",
+                         help="Allow setting a module name at the output.")
+ 
+     parser.add_argument("-l", "-enable-lineno", "--enable_lineno",
+@@ -273,7 +274,7 @@ def main():
+     logger.addHandler(handler)
+ 
+     if args.man:
+-        out_style = ManFormat()
++        out_style = ManFormat(modulename=args.modulename)
+     elif args.none:
+         out_style = None
+     else:
+@@ -282,8 +283,7 @@ def main():
+     kfiles = KernelFiles(verbose=args.verbose,
+                          out_style=out_style, werror=args.werror,
+                          wreturn=args.wreturn, wshort_desc=args.wshort_desc,
+-                         wcontents_before_sections=args.wcontents_before_sections,
+-                         modulename=args.modulename)
++                         wcontents_before_sections=args.wcontents_before_sections)
+ 
+     kfiles.parse(args.files, export_file=args.export_file)
+ 
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+index e2221db7022a..5a6e92e34d05 100644
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -126,7 +126,7 @@ class KernelFiles():
+     def __init__(self, verbose=False, out_style=None,
+                  werror=False, wreturn=False, wshort_desc=False,
+                  wcontents_before_sections=False,
+-                 logger=None, modulename=None):
++                 logger=None):
+         """
+         Initialize startup variables and parse all files
+         """
+@@ -134,9 +134,6 @@ class KernelFiles():
+         if not verbose:
+             verbose = bool(os.environ.get("KBUILD_VERBOSE", 0))
+ 
+-        if not modulename:
+-            modulename = "Kernel API"
+-
+         if out_style is None:
+             out_style = OutputFormat()
+ 
+@@ -168,7 +165,6 @@ class KernelFiles():
+         self.config.wreturn = wreturn
+         self.config.wshort_desc = wshort_desc
+         self.config.wcontents_before_sections = wcontents_before_sections
+-        self.config.modulename = modulename
+ 
+         self.config.function_table = set()
+         self.config.source_map = {}
 diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index d0c8cedb0ea5..6582d1f64d1e 100755
+index e0ed79e4d985..8be69245c0d0 100755
 --- a/scripts/lib/kdoc/kdoc_output.py
 +++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -116,7 +116,16 @@ class OutputFormat:
+@@ -586,7 +586,7 @@ class ManFormat(OutputFormat):
+     )
+     blankline = ""
  
-         return block
+-    def __init__(self):
++    def __init__(self, modulename):
+         """
+         Creates class variables.
  
--    def check_doc(self, name):
-+    def out_warnings(self, args):
-+        warnings = args.get('warnings', [])
-+
-+        for warning, log_msg in warnings:
-+            if warning:
-+                self.config.log.warning(log_msg)
-+            else:
-+                self.config.log.info(log_msg)
-+
-+    def check_doc(self, name, args):
-         """Check if DOC should be output"""
+@@ -595,6 +595,7 @@ class ManFormat(OutputFormat):
+         """
  
-         if self.no_doc_sections:
-@@ -126,19 +135,22 @@ class OutputFormat:
-             return False
+         super().__init__()
++        self.modulename = modulename
  
-         if self.out_mode == self.OUTPUT_ALL:
-+            self.out_warnings(args)
-             return True
- 
-         if self.out_mode == self.OUTPUT_INCLUDE:
-             if name in self.function_table:
-+                self.out_warnings(args)
-                 return True
- 
-         return False
- 
--    def check_declaration(self, dtype, name):
-+    def check_declaration(self, dtype, name, args):
-         if name in self.nosymbol:
-             return False
- 
-         if self.out_mode == self.OUTPUT_ALL:
-+            self.out_warnings(args)
-             return True
- 
-         if self.out_mode in [self.OUTPUT_INCLUDE, self.OUTPUT_EXPORTED]:
-@@ -147,9 +159,11 @@ class OutputFormat:
- 
-         if self.out_mode == self.OUTPUT_INTERNAL:
-             if dtype != "function":
-+                self.out_warnings(args)
-                 return True
- 
-             if name not in self.function_table:
-+                self.out_warnings(args)
-                 return True
- 
-         return False
-@@ -163,7 +177,7 @@ class OutputFormat:
-             self.out_doc(fname, name, args)
-             return self.data
- 
--        if not self.check_declaration(dtype, name):
-+        if not self.check_declaration(dtype, name, args):
-             return self.data
- 
-         if dtype == "function":
-@@ -328,7 +342,7 @@ class RestFormat(OutputFormat):
-         self.data += "\n"
+         dt = datetime.now()
+         if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+@@ -626,14 +627,13 @@ class ManFormat(OutputFormat):
+                 self.data += line + "\n"
  
      def out_doc(self, fname, name, args):
--        if not self.check_doc(name):
-+        if not self.check_doc(name, args):
-             return
-         self.out_section(args, out_docblock=True)
- 
-@@ -586,7 +600,7 @@ class ManFormat(OutputFormat):
+-        module = args.get('module')
          sectionlist = args.get('sectionlist', [])
          sections = args.get('sections', {})
  
--        if not self.check_doc(name):
-+        if not self.check_doc(name, args):
-                 return
+         if not self.check_doc(name, args):
+             return
  
-         self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
+-        self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
++        self.data += f'.TH "{self.modulename}" 9 "{self.modulename}" "{self.man_date}" "API Manual" LINUX' + "\n"
+ 
+         for section in sectionlist:
+             self.data += f'.SH "{section}"' + "\n"
+@@ -697,7 +697,7 @@ class ManFormat(OutputFormat):
+         sectionlist = args.get('sectionlist', [])
+         sections = args.get('sections', {})
+ 
+-        self.data += f'.TH "{args["module"]}" 9 "enum {args["enum"]}" "{self.man_date}" "API Manual" LINUX' + "\n"
++        self.data += f'.TH "{self.modulename}" 9 "enum {args["enum"]}" "{self.man_date}" "API Manual" LINUX' + "\n"
+ 
+         self.data += ".SH NAME\n"
+         self.data += f"enum {args['enum']} \\- {args['purpose']}\n"
+@@ -727,7 +727,7 @@ class ManFormat(OutputFormat):
+             self.output_highlight(sections[section])
+ 
+     def out_typedef(self, fname, name, args):
+-        module = args.get('module')
++        module = self.modulename
+         typedef = args.get('typedef')
+         purpose = args.get('purpose')
+         sectionlist = args.get('sectionlist', [])
+@@ -743,7 +743,7 @@ class ManFormat(OutputFormat):
+             self.output_highlight(sections.get(section))
+ 
+     def out_struct(self, fname, name, args):
+-        module = args.get('module')
++        module = self.modulename
+         struct_type = args.get('type')
+         struct_name = args.get('struct')
+         purpose = args.get('purpose')
 diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 74b311c8184c..3698ef625367 100755
+index e48ed128ca04..f923600561f8 100755
 --- a/scripts/lib/kdoc/kdoc_parser.py
 +++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -131,23 +131,23 @@ class KernelDoc:
-         # Place all potential outputs into an array
-         self.entries = []
+@@ -791,7 +791,6 @@ class KernelDoc:
  
--    def show_warnings(self, dtype, declaration_name):  # pylint: disable=W0613
--        """
--        Allow filtering out warnings
--        """
--
--        # TODO: implement it
--
--        return True
--
-     # TODO: rename to emit_message
-     def emit_warning(self, ln, msg, warning=True):
-         """Emit a message"""
- 
-+        log_msg = f"{self.fname}:{ln} {msg}"
-+
-+        if self.entry:
-+            # Delegate warning output to output logic, as this way it
-+            # will report warnings/info only for symbols that are output
-+
-+            self.entry.warnings.append((warning, log_msg))
-+            return
-+
-         if warning:
--            self.config.log.warning("%s:%d %s", self.fname, ln, msg)
-+            self.config.log.warning(log_msg)
-         else:
--            self.config.log.info("%s:%d %s", self.fname, ln, msg)
-+            self.config.log.info(log_msg)
- 
-     def dump_section(self, start_new=True):
-         """
-@@ -221,10 +221,9 @@ class KernelDoc:
-         # For now, we're keeping the same name of the function just to make
-         # easier to compare the source code of both scripts
- 
--        if "declaration_start_line" not in args:
--            args["declaration_start_line"] = self.entry.declaration_start_line
--
-+        args["declaration_start_line"] = self.entry.declaration_start_line
-         args["type"] = dtype
-+        args["warnings"] = self.entry.warnings
- 
-         # TODO: use colletions.OrderedDict
- 
-@@ -257,6 +256,8 @@ class KernelDoc:
-         self.entry.struct_actual = ""
-         self.entry.prototype = ""
- 
-+        self.entry.warnings = []
-+
-         self.entry.parameterlist = []
-         self.entry.parameterdescs = {}
-         self.entry.parametertypes = {}
-@@ -328,7 +329,7 @@ class KernelDoc:
-         if param not in self.entry.parameterdescs and not param.startswith("#"):
-             self.entry.parameterdescs[param] = self.undescribed
- 
--            if self.show_warnings(dtype, declaration_name) and "." not in param:
-+            if "." not in param:
-                 if decl_type == 'function':
-                     dname = f"{decl_type} parameter"
-                 else:
-@@ -868,16 +869,14 @@ class KernelDoc:
-             self.entry.parameterlist.append(arg)
-             if arg not in self.entry.parameterdescs:
-                 self.entry.parameterdescs[arg] = self.undescribed
--                if self.show_warnings("enum", declaration_name):
--                    self.emit_warning(ln,
--                                      f"Enum value '{arg}' not described in enum '{declaration_name}'")
-+                self.emit_warning(ln,
-+                                  f"Enum value '{arg}' not described in enum '{declaration_name}'")
-             member_set.add(arg)
- 
-         for k in self.entry.parameterdescs:
-             if k not in member_set:
--                if self.show_warnings("enum", declaration_name):
--                    self.emit_warning(ln,
--                                      f"Excess enum value '%{k}' description in '{declaration_name}'")
-+                self.emit_warning(ln,
-+                                  f"Excess enum value '%{k}' description in '{declaration_name}'")
+         self.output_declaration(decl_type, declaration_name,
+                                 struct=declaration_name,
+-                                module=self.entry.modulename,
+                                 definition=declaration,
+                                 parameterlist=self.entry.parameterlist,
+                                 parameterdescs=self.entry.parameterdescs,
+@@ -869,7 +868,6 @@ class KernelDoc:
  
          self.output_declaration('enum', declaration_name,
                                  enum=declaration_name,
+-                                module=self.config.modulename,
+                                 parameterlist=self.entry.parameterlist,
+                                 parameterdescs=self.entry.parameterdescs,
+                                 parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
+@@ -1040,7 +1038,6 @@ class KernelDoc:
+             self.output_declaration(decl_type, declaration_name,
+                                     function=declaration_name,
+                                     typedef=True,
+-                                    module=self.config.modulename,
+                                     functiontype=return_type,
+                                     parameterlist=self.entry.parameterlist,
+                                     parameterdescs=self.entry.parameterdescs,
+@@ -1055,7 +1052,6 @@ class KernelDoc:
+             self.output_declaration(decl_type, declaration_name,
+                                     function=declaration_name,
+                                     typedef=False,
+-                                    module=self.config.modulename,
+                                     functiontype=return_type,
+                                     parameterlist=self.entry.parameterlist,
+                                     parameterdescs=self.entry.parameterdescs,
+@@ -1102,7 +1098,6 @@ class KernelDoc:
+             self.output_declaration(decl_type, declaration_name,
+                                     function=declaration_name,
+                                     typedef=True,
+-                                    module=self.entry.modulename,
+                                     functiontype=return_type,
+                                     parameterlist=self.entry.parameterlist,
+                                     parameterdescs=self.entry.parameterdescs,
+@@ -1130,7 +1125,6 @@ class KernelDoc:
+ 
+             self.output_declaration('typedef', declaration_name,
+                                     typedef=declaration_name,
+-                                    module=self.entry.modulename,
+                                     sectionlist=self.entry.sectionlist,
+                                     sections=self.entry.sections,
+                                     section_start_lines=self.entry.section_start_lines,
+@@ -1619,8 +1613,7 @@ class KernelDoc:
+             self.output_declaration("doc", self.entry.identifier,
+                                     sectionlist=self.entry.sectionlist,
+                                     sections=self.entry.sections,
+-                                    section_start_lines=self.entry.section_start_lines,
+-                                    module=self.config.modulename)
++                                    section_start_lines=self.entry.section_start_lines)
+             self.reset_state(ln)
+ 
+         elif doc_content.search(line):
 -- 
 2.49.0
 
