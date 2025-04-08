@@ -1,108 +1,116 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B519C22FAD4
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314E91BC09A
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131490; cv=none; b=lNmi9qtirlHfT0e6wDiEgG7CHL2D/8wPVH/6aOfjL8yKl1qB5vUA1ZgiBgqE8uWewr9qT7ATfPGPVqXfMPttf26JgO+urCgdrTvGUXo/6tkrA2PYP6HpXZEj3ZZQNG+oTjogw1Hv7n8Tc6wDr2h8NZ0GtCWyVXjkYPWZpxe+UcA=
+	t=1744131572; cv=none; b=YQ9LyGLmaElM4+V2w3LuKclugEVuIXu6T9ySl2UKMaUuUnvlUOkl+pWkn2tRwEusxcAYsW7DcxjJoE1vEo2RLCb52FFwkDZtingnfSogTjycaXrLKGcG5u3z/4azRmRu8V3DGmkDvTxflYzzilB0AtoJO89kBd6OBy+zejIbMao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131490; c=relaxed/simple;
-	bh=rV3IzZIww9h+n+TZSLe0bsGFVsLuLTB1QeJQm73XtYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tMj+8E68BxvRZeEO9QiJ4FRTxRJt0ohmG+QyjBQVkcRqAFLo6Dw85lVtZEEEA2SNz6T82zNoApIzZDXVSgQyDeQwW5vBhqlsKn5WPrpgnwmcRU5kdh5hjUcTlYSz0agzUyHTbgVUO42j+h2X2ojdZel0oSJVLgTudLfNPxhiXMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Bu52mfrR; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1744131572; c=relaxed/simple;
+	bh=EUen950rVlqD3ijE9T6pVem2TJoWkuc5INbmibM4S0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nvB2POZgtG3fjjphbe3UX8Di2S5E69nRRvMs6IcDH0azg2li7LA471ljZo4IXeKY2Yd5Gi9LODI2wOLPtcM6Ar9W/6uTETC1eR+7xxtqCDNCht0nb7o5S6MGyDOZrcuHGjyetH79vTKKuShu+RWZ7JWs9bMp1w1Kl7PAkc2tXr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yWTcg0Q9; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Bu52mfrR"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3913958ebf2so5140504f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:58:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yWTcg0Q9"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549946c5346so6834190e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744131487; x=1744736287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744131569; x=1744736369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8uGIqPGo3/RzZiaVHiqgzYEtP/BWLkkvzIhLsqEr0Mg=;
-        b=Bu52mfrR9gg/GsWJn1mi1Yu52lTp3lnp8bPjxi8/qQofmR7/pZNZE4+q2LQe17kNW2
-         k6EjwJlh8RniJlTaPPL2gy+vRgScx8Dz5Tycjow42+MLm9tDvRISje/2wbd2UdcJ+sSL
-         vEE6tPLag1/dmvt6UkUptbJqBy0AOUN/uP0Z/hi12ILxsJeDvefkJAZ2IdOJk4gLocna
-         3tZwJEeFWfCZVf1UvFkEsRRoppLwQ9ajRtwT/N5Vhhj9IT2b/9uX1VCvmQ0IcPCF+4Qj
-         KsUIMnFXlFOzW6HRknABFSn/M7/U9sVEYTYGbdy+/5KAqAQsPVheHvBzqnwDc4x9q92K
-         7uEQ==
+        bh=b9bdlMTBH0pZP1vfIIBZfl68hQHlVUhTU84A0dLxWUE=;
+        b=yWTcg0Q9PBfR2Ym2DaddAHf3W8UbbqVkapLAay4CVch/G/aS9nderc0tMxiaqa3ECD
+         BiySVswKx2OQsLHqouOvuM36tX9nflTAmpGV1C5/dEea9PSD6WG8iimMRGi/+t2HbV2N
+         XUrLh8HAvlTyOkRPI9twLp5tOTiTaqgRXY9+DqrBFHOfqDdBamizuZV71WbZf3FWn0mJ
+         x2Nt7Clb76dIGoFjsgAcoH8cVcmsUdnMPhsgKytWeVcNfaIF5RG/yDpq2Hs5MaLEcYQB
+         qA0QfY/lrsEGjMaZdT/ogkt6XLca0UaAfx+D90612FiPVDgiJaADM06R3nIcNnhEKPMU
+         0STQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744131487; x=1744736287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744131569; x=1744736369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8uGIqPGo3/RzZiaVHiqgzYEtP/BWLkkvzIhLsqEr0Mg=;
-        b=RxY1lRwUCAwZ2sa29e9fK/pHGnD88o8ux33zu72DuivDEjjBIpWVAQdoFxh+mIeC1R
-         JzLn9Ps12Xvg217g0ORe4AiJZJ2Ozi/5sEw5Im1rj0VHnnsGv4NPZOwu2GdEq1ylFrF0
-         Q/J+zN+dZ7knT1zS8xZPWi2oXpm/i9920j4ZpDW7VG5TZa02O8QYZyhzBeCHXHVfG2f5
-         U/pSX2BEz/7RaUBYBiqwvMKPTTVTnmZL5Ehh+d/ywNCFYC6iTOQDOxiC1MtNPlUkV9tU
-         jhdJHAFgj+eiaUjT5VzlJdKg0OwyAKPX3ao6fpx4IaeZhScnpBZbMsuBm4bbtYVzQqmJ
-         Tj9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUxoS0gMLF0YxZViitQY0Srz7S7mpLD8jo378h4TM9ywrZNC8dzL/j7iBY90fvLBU6R6nSEL0m3pY3PjJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGfoxL7NSSNGFwu6cCwleDvac/6nAAJ9BOtv3g/1lzXEbuaTd2
-	jkRTKn1qVdrPNg/DhjqV1Sp+QcFg1L9440VbZDtno4zDfrwt0OPWdJ2KK9QEgQM=
-X-Gm-Gg: ASbGncu5ULsSrO3kBB2hOjsYiI+YWeYm0fx6Wzp2kgtUp8X9zFiKLs98RumFhxRup01
-	yJIvf9mgHbyQZ5bPks6BD9zHGGQLXhTAX1KbAEUoYc9yMsDQfgKYR5wxrrg91J59g7RSZldtsxE
-	27egDNscmPMys56QZDX6YAiKjDVGA0ZvxI88wAZUD+MmsJz8tdfi0sngKKdZ/zUK/CLH2V75TnH
-	MRikRSCFnbl2yRm3rNcqFoYap5uXB14JgP7Q/g9uMEu2dqUnm0OUXFp6Fjd0MOJJMgSmWsr9/+6
-	SivZMiSkMqtuRwVUmWbBlQnY6+nNg2o5WOZWKzBip2d6
-X-Google-Smtp-Source: AGHT+IFGsRSNGsLurl8DoyFapSJyV7TtJ4uGe3SGSEX3BrkLYJ/yVCM++z6f1tjo7zrernLeUKYo4Q==
-X-Received: by 2002:a5d:5f4e:0:b0:390:f9d0:5df with SMTP id ffacd0b85a97d-39d6fd3647fmr10095287f8f.52.1744131486678;
-        Tue, 08 Apr 2025 09:58:06 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6a60sm15141709f8f.29.2025.04.08.09.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 09:58:06 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Yixun Lan <dlan@gentoo.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alex Elder <elder@riscstar.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts scheme
-Date: Tue,  8 Apr 2025 18:58:05 +0200
-Message-ID: <174413148280.131421.6673320812296091453.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
-References: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
+        bh=b9bdlMTBH0pZP1vfIIBZfl68hQHlVUhTU84A0dLxWUE=;
+        b=C8nvnJIyzMjxcy1YC/9GMAfj3fRGm5ZI8wYlbLnUZHFSP6j0AYXyFRHF6emykFh++d
+         VeUA5B+wvBH87Z2paiWGfAxIcU597l+onWpwEV5zHHSAOGC6Te6KLb71rVtt0VtutiNH
+         CkYhipUmcEn3pacUU+HAIq4eGQNrB1yieAPt4frBM8n6MvS53+Wu90JrQrrcOMSFw1UQ
+         O1WcXpe5ubWYQghGTyWnSrVg2GbvykKyO5gAKSPjYOXcc8TQI38qa1jMR0i9jUMN9uv6
+         Pk0uOcY5zL5bvrtGXL1zzZhDvlw6WkqzJMygY1uv8XYrtVcDQ3voHq8axXl3Wa8g++Pp
+         AuvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYwgo1E7SmUGU3XGYhzpxMHJBzhR8SALgBt5LDcP/C1cHi4hS2fWLp8pnVstW3wjCCQctRJYz0yILN6aU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAPUOni7rqcTDJxnqkcfLCXU1yRtnsrElY9FkQAVLXn+HvX1xX
+	Z8pxHYLwG0nIOWgvsO95c11tu8D7z7l542kb3E59AjYDeuLN7DJcTWhGS9KPUhH5K8LnAp+KFil
+	x9x1/NMrS1n1zXxirbtJlE1p1IWhByc5BKomelQ==
+X-Gm-Gg: ASbGncs0PKT69ioXn6NpMQkFEbxpxeztp2U44i8aKl+UBYPH0u+LtB+2ROdFZdYTRlm
+	Cc2pHyZmpJePfePblehBJpdPD65nrd2nsw9FDnh9mu0Bkzr5vzmDFYbdKoD2IN5WlooqRHqGssH
+	wIFH0vvar+AL7WWN4o6TCQ2B5BOLg4wslNqym9KUJnJX8L6/eZX8UVT+ySMA==
+X-Google-Smtp-Source: AGHT+IFf+rKu3T7g4RXnGFAVwKLGYMFo6Zqu68CucFmhU42UIICJdAnEONryqtNi8mj8oclBDQsJoWOTWw94ILqOE3w=
+X-Received: by 2002:a05:6512:33d2:b0:545:944:aae1 with SMTP id
+ 2adb3069b0e04-54c22767d83mr4780246e87.12.1744131568769; Tue, 08 Apr 2025
+ 09:59:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org> <6790f337-8578-4ecb-b879-f5a254f109e6@riscstar.com>
+In-Reply-To: <6790f337-8578-4ecb-b879-f5a254f109e6@riscstar.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 8 Apr 2025 18:59:15 +0200
+X-Gm-Features: ATxdqUFebT_4pyoTiD_cVWGxoRBkYoQNT5n1rg0F0zfP1Dh_NRC8OHcIuixy1l8
+Message-ID: <CAMRc=MeEQi0rnr-mA1bsvAZu-NxqKp2Rjg9x9HYaSbuWY1seiQ@mail.gmail.com>
+Subject: Re: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts scheme
+To: Alex Elder <elder@riscstar.com>
+Cc: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Apr 8, 2025 at 6:05=E2=80=AFPM Alex Elder <elder@riscstar.com> wrot=
+e:
+>
+> On 4/8/25 10:11 AM, Yixun Lan wrote:
+> > gpio irq which using three-cell scheme should always call
+> > instance_match() function to find the correct irqdomain.
+> >
+> > The select() function will be called with !DOMAIN_BUS_ANY,
+> > so for specific gpio irq driver, it need to set bus token
+> > explicitly, something like:
+> >    irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
+> >
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> > In this patch [1], the GPIO controller add support for describing
+> > hardware with a three-cell scheme:
+> >
+> >      gpios =3D <&gpio instance offset flags>;
+> >
+> > It also result describing interrupts in three-cell as this in DT:
+> >
+> >      node {
+> >              interrupt-parent =3D <&gpio>;
+> >              interrupts =3D <instance hwirq irqflag>;
+> >      }
+> >
+> > This series try to extend describing interrupts with three-cell scheme.
+> >
+> > The first patch will add capability for parsing irq number and flag
+> > from last two cells which eventually will support the three-cells
+> > interrupt, the second patch support finding irqdomain according to
+> > interrupt instance index.
+>
+> Did you intend to send more than just one patch?        -Alex
+>
 
+That's alright, the original series was 2 patches, Thomas picked up
+the first and now I'm taking the second through the GPIO tree.
 
-On Tue, 08 Apr 2025 23:11:20 +0800, Yixun Lan wrote:
-> gpio irq which using three-cell scheme should always call
-> instance_match() function to find the correct irqdomain.
-> 
-> The select() function will be called with !DOMAIN_BUS_ANY,
-> so for specific gpio irq driver, it need to set bus token
-> explicitly, something like:
->   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] gpiolib: support parsing gpio three-cell interrupts scheme
-      https://git.kernel.org/brgl/linux/c/27986833e8e675b6c17654d13623590a46f9033e
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Bart
