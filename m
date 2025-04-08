@@ -1,257 +1,113 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F262426560F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCC8266EE5;
+	Tue,  8 Apr 2025 10:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108084; cv=none; b=Ukq6KDm3GqhM+aKXT1bY1yeY+aQgtGGZtfCp44OtW8zkPXV1QRa6VOFnT7mvoeCJoZDaWPBCrg1C+BMB/his9W03q2s92a9Vt7XIuZbHNraYKxKrqV+FyzXtPqP1UUGZujOIhlnwr5VzwOsRYnoRfsEWw2y7n0lar12hS+ADWsM=
+	t=1744108168; cv=none; b=F++O3d1MwquTFMW4c+JFwQH9IDYFKoM/wF7SZstcf2zUIoszwDF5eT2CWVRpn1OqMoYKm+LTVUYx7zMpIK6y5vjZBKPibpnNb2htBRSvKeUlWSDidATuEg8n+CkWx4caBzcCQYx47XmfUuIFDPeFOMGfRHRCSyoad9fK3Blo8G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108084; c=relaxed/simple;
-	bh=WrI0lX7+J5s+4CwxTeHTL2V9dJJ7Iqdsj3G+bwSv8Qg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=C4YqBUTz56OYyW+i2iJyzq8aRBoqgsHKaFg837kkqLBq0TZ5jMekNRLlrrcgDF8zzv64YMkLKnKAWFuHhaHOGtHoF3lPFWOIrXItexCfci5bSnNxVdTJbvx385bTXjPE087or/1/QTupmjvMoEZd4DEkvXkIG+PtOhlG44aIk4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=C1BR6YR+; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1744108168; c=relaxed/simple;
+	bh=edxylfQ2WiiwTwhhDLOhVgB9utDb9GDYQ5gc4aOpUlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gnD82e0OY5IZIfEh+G5j3bsB6XVfUOifZUEb1lMRPHAcr6xNwEFBrRqgLwwFQROPHRB+rnRN4M79P/1KzDsfzVhXDhNOXqKgG3vyg1nugTH2Xcdx/VZon54pfBsQ1YS1U4ix/8BdTGSqRx9fC1g4N90dDlloKD5CpitOo0fnZ88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2DkVjpI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="C1BR6YR+"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so7920939a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1744108080; x=1744712880; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pv5rrjrhBcfKnYh0Q7OEJ/yH0eQFOKYhTNlnDBdY1gs=;
-        b=C1BR6YR+nGpAodc2Emag1kg/19o1IQUzGynXJh+FLgOOva8XwJVMOwSaI6FqEvr9gW
-         rfigQNGiU73BOQFNwdI8Z75ud0A2FSqcDi9x+S8hgwrgEJyiagxXgpRz05KyJHBeyXYE
-         LAQ+WDoZBJa052TPGot/7bruib3RqLQMMecrYBCeJCLTdAigo3ab15y0XlR3VimY6kyT
-         6crfKu/MLqFeFaCMRKU/9GUml5olMXEemHGnCYexkvZhC4dAIfAHdRKo8oXX0vmdsYzs
-         xY5kp8bkF4TaTShQHazuuAzHW5ARM59OAlwG7R4wrpi0acSUeq5e++43DEO8evY2+Sbf
-         pM9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744108080; x=1744712880;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Pv5rrjrhBcfKnYh0Q7OEJ/yH0eQFOKYhTNlnDBdY1gs=;
-        b=Qj/S9PB2dmaeiMRkvFiebYK+NqALXidIrxsIZcRiNgZ2TdGqFqweTv59lPCPodRvwi
-         YZZ8/DEaAPjdv8lO4+DSRPt4fSBekC3ir/AgmFUHuul1tPaaoVP55hUKrj0TEyyEUpz8
-         4pKJb4kSxt1btvJ78FYcLxK9u1hLZNNvVFQOcMKvUVwsovYyn6ozdSQXNaTywh+qeFig
-         8D6ULeOqkR5+EjBs9eKRONL7RuOgjcAIiAO1KsOjnNtr7S1XxrqDIbPyDL3njXzpzZGq
-         OWIB0Wl2dZpmM1Jf7DAOSnefJ9MpUd3fBRjOZlUOcI5VSr0B+8JE5ugqknsYaSTv4RkX
-         USgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6K4Q0xCSBo9SReKT/F4xNN3HHgPx+18WkfXrwa+c+GNlHdfkdES/hEoMMnbysZ0YLmebdJGzBt70Zl3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyDFUIlUPLn+U5yR7Rp1Pqjdohne1mE7rHDbWmRMUvoViXKoFo
-	NgQDF/3NLPlRe8YmRJIr8uj0Ti8zT6fms+MWZV5IYtZHEqpij8Gt2z1aqd6L7sM=
-X-Gm-Gg: ASbGnctSL7q8u1IhVM9h0zfMBUWQ7y1OgitQfPLLTinwf4vjxpvYq37GvkNT9EzryOO
-	LzWkhhKBn1SUElTidyCSruWBMIRrDTQTfpq2gNANorm8JkuxtEmZ8TQb2RfV5eSshku6mV2wwVC
-	YAMJ1bVniIP+SxD3X41uLJv8t5DL+uGd/NjugF8apDlZ5hWeFGUa8Lwqe1Z/Mb+MEDbt6z272JB
-	7aflkdzXVJ9NFAmWeCRZpuLcqyYYkxFrz8Se1zYGWsKQASjyurdsjDOsOTgFVegfUAoYMqXKcEC
-	vML734FtT4KbJLsuyF0pP+J+RhsW38PKqu17JbnfWIjLkY98lPy7H1rCAZNTrTud8wb5shSNNaf
-	5FWT2QCzqGwtWkw==
-X-Google-Smtp-Source: AGHT+IESBdUuaEBUx9lGQ+c+tpA4+Swqaw0w+9TY0oUjOWcmr9SgDm/idOrRiIt3O3EZmRZOQ/hskA==
-X-Received: by 2002:a17:906:2b05:b0:ac8:1798:a796 with SMTP id a640c23a62f3a-ac81798a8fdmr245365866b.54.1744108080129;
-        Tue, 08 Apr 2025 03:28:00 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe67e17sm896532566b.34.2025.04.08.03.27.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 03:27:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2DkVjpI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6DDBC4CEE8;
+	Tue,  8 Apr 2025 10:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744108167;
+	bh=edxylfQ2WiiwTwhhDLOhVgB9utDb9GDYQ5gc4aOpUlU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j2DkVjpIXREkl9uM95E7Wh+5van1lz4rDd4L7/hcT+oSd+f6n5xt6mFctmr3V328V
+	 JLE6kVuxK2nkiFWdbMLsU2OIABs/W1E65sPKLSb2Jy0LwX+kiURChKA3I/iPC7LfDK
+	 3eaUtOwH4r8JCxy2Z432a1KdaVLBp2K64+nSq/9nO5hgrR4O5evBKXEjE+Sy2d6kAD
+	 cpQ6nQRFsoNjUx1BKZOD0JFTsPvA1NF0O2zjv2k6sm47FUeAmfHeROjJxriVMRumpQ
+	 rYL+7Vf12UZxwVLY4WxEvKYH8px9/2bTkDVft7T8VcR1+2Y3L5PUSvb7PUu272x3rq
+	 O4ez5LxpcpgXg==
+Date: Tue, 8 Apr 2025 12:29:23 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: syzbot <syzbot+dbb3b5b8e91c5be8daad@syzkaller.appspotmail.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [fs?] KCSAN: data-race in file_end_write /
+ posix_acl_update_mode
+Message-ID: <20250408-stirn-wettkampf-1111f59d44e7@brauner>
+References: <67f4e5e9.050a0220.396535.055c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Apr 2025 12:27:58 +0200
-Message-Id: <D916PQ9VLGEB.Q61B70OVQ9JZ@fairphone.com>
-Cc: "Yassine Oudjana" <yassine.oudjana@gmail.com>,
- <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH 0/3] QRTR bus and Qualcomm Sensor Manager IIO drivers
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Yassine Oudjana" <y.oudjana@protonmail.com>, "Jonathan Cameron"
- <jic23@kernel.org>, "Lars-Peter Clausen" <lars@metafoo.de>, "Bjorn
- Andersson" <andersson@kernel.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Manivannan Sadhasivam"
- <manivannan.sadhasivam@linaro.org>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Masahiro Yamada" <masahiroy@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>, "Alexander Sverdlin"
- <alexander.sverdlin@gmail.com>, "Sean Nyekjaer" <sean@geanix.com>, "Javier
- Carrasco" <javier.carrasco.cruz@gmail.com>, "Matti Vaittinen"
- <mazziesaccount@gmail.com>, "Antoniu Miclaus" <antoniu.miclaus@analog.com>,
- "Ramona Gradinariu" <ramona.gradinariu@analog.com>, "Yo-Jung (Leo) Lin"
- <0xff07@gmail.com>, "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?=
- <barnabas.czeman@mainlining.org>, "Danila Tikhonov" <danila@jiaxyga.com>,
- "Antoni Pokusinski" <apokusinski01@gmail.com>, "Vasileios Amoiridis"
- <vassilisamir@gmail.com>, "Petar Stoykov" <pd.pstoykov@gmail.com>,
- "shuaijie wang" <wangshuaijie@awinic.com>, "Yasin Lee"
- <yasin.lee.x@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, "Tony Luck" <tony.luck@intel.com>,
- "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>, "Ingo Molnar"
- <mingo@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250406140706.812425-1-y.oudjana@protonmail.com>
-In-Reply-To: <20250406140706.812425-1-y.oudjana@protonmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <67f4e5e9.050a0220.396535.055c.GAE@google.com>
 
-Hi Yassine,
+On Tue, Apr 08, 2025 at 02:01:29AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10c98070580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e5bf3e2a48bfe768
+> dashboard link: https://syzkaller.appspot.com/bug?extid=dbb3b5b8e91c5be8daad
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/d90ae40aa6df/disk-0af2f6be.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/616ed7a70804/vmlinux-0af2f6be.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/ed2c418afc9a/bzImage-0af2f6be.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+dbb3b5b8e91c5be8daad@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in file_end_write / posix_acl_update_mode
+> 
+> write to 0xffff888118513aa0 of 2 bytes by task 16080 on cpu 1:
+>  posix_acl_update_mode+0x220/0x250 fs/posix_acl.c:720
+>  simple_set_acl+0x6c/0x120 fs/posix_acl.c:1022
+>  set_posix_acl fs/posix_acl.c:954 [inline]
+>  vfs_set_acl+0x581/0x720 fs/posix_acl.c:1133
+>  do_set_acl+0xab/0x130 fs/posix_acl.c:1278
+>  do_setxattr fs/xattr.c:633 [inline]
+>  filename_setxattr+0x1f1/0x2b0 fs/xattr.c:665
+>  path_setxattrat+0x28a/0x320 fs/xattr.c:713
+>  __do_sys_setxattr fs/xattr.c:747 [inline]
+>  __se_sys_setxattr fs/xattr.c:743 [inline]
+>  __x64_sys_setxattr+0x6e/0x90 fs/xattr.c:743
+>  x64_sys_call+0x28e7/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:189
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> read to 0xffff888118513aa0 of 2 bytes by task 16073 on cpu 0:
+>  file_end_write+0x1f/0x110 include/linux/fs.h:3059
+>  vfs_fallocate+0x3a5/0x3b0 fs/open.c:350
+>  ksys_fallocate fs/open.c:362 [inline]
+>  __do_sys_fallocate fs/open.c:367 [inline]
+>  __se_sys_fallocate fs/open.c:365 [inline]
+>  __x64_sys_fallocate+0x78/0xc0 fs/open.c:365
+>  x64_sys_call+0x295f/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:286
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> value changed: 0x8000 -> 0x8072
 
-On Sun Apr 6, 2025 at 4:07 PM CEST, Yassine Oudjana wrote:
-> Sensor Manager is a QMI service available on several Qualcomm SoCs which
-> exposes available sensors and allows for getting data from them. This
-> service is provided by either:
->
-> - SSC (Snapdragon Sensor Core): Also known as SLPI (Sensor Low Power
->   Island). Has its own set of pins and peripherals to which sensors are
->   connected. These peripherals are generally inaccessible from the AP,
->   meaning sensors need to be operated exclusively through SSC. The only
->   known SoCs in this category are MSM8996 and MSM8998 (and their
->   derivatives).
-> - ADSP (Audio DSP): Shares pins and peripherals with the AP. At least on
->   some devices, these pins could be configured as GPIOs which allows the =
-AP
->   to access sensors by bit-banging their interfaces. Some SoCs in this
->   category are SDM630/660, MSM8953, MSM8974 and MSM8226.
->
-> Before Sensor Manager becomes accessible, another service known as Sensor
-> Registry needs to be provided by the AP. The remote processor that provid=
-es
-> Sensor Manager will then request data from it, and once that process is
-> done, will expose several services including Sensor Manager.
->
-> This series adds kernel drivers for the Sensor Manager service, exposing
-> sensors accessible through it as IIO devices. To facilitate probing of th=
-e
-> Sensor Manager core driver, QRTR is turned into a bus, with services bein=
-g
-> exposed as devices. Once the Sensor Manager service becomes available, th=
-e
-> kernel attaches its device to the driver added in this series. This allow=
-s
-> for dynamic probing of Sensor Manager without the need for static DT
-> bindings, which would also not be ideal because they would be describing
-> software rather than hardware. Sensor Manager is given as a working examp=
-le
-> of the QRTR bus. Kernel drivers for other services may also be able
-> to benefit from this change.
->
-> As previously mentioned, a Sensor Registry server must run on the AP to
-> provide the remote processor (either SLPI or ADSP) with necessary data.
-> A userspace implementation of this server is made[1]. The server can be
-> supplied with the necessary data in the form of a plain-text configuratio=
-n
-> file that can be pulled from the Android vendor partition (sample[2]), or
-> generated from a binary file that can be pulled from the persist partitio=
-n.
-> A more recently developed kernel implementation of the Sensor Registry
-> server[3] can also be used. This last implementation only supports readin=
-g
-> data from the binary file pulled from persist. Sensor Registry remains ou=
-t
-> of the scope of this patch series, as the Sensor Registry server and Sens=
-or
-> Manager client (this series) are fully independent components.
->
-> Due to the total lack of documentation on Sensor Manager, this driver was
-> almost entirely the result of a process of capturing transactions between
-> SSC and the proprietary Android daemons with several methods and manually
-> decoding and interpreting them, sometimes by comparing with values acquir=
-ed
-> from Android APIs. A blog post[4] describes part of this process more
-> detail. A little piece of downstream Android open-source code[5] was also
-> used as reference during later stages of development. All of this, as wel=
-l
-> as a lack of time on my side for the last couple of years, meant that thi=
-s
-> driver had to go through a slow and intermittent development process for
-> more than 3 years before reaching its current state.
->
-> Currently supported sensor types include accelerometers, gyroscopes,
-> magentometers, proximity and pressure sensors. Other types (namely
-> light and temperature sensors) are close to being implemented.
->
-> Some testing instructions may also be found here[6].
+This race is benign.
+file_end_write() and similar helpers check whether this is a regular
+file or not. And the type of a file can never change. The only thing
+that can change here are the permission bits of course.
 
-It's awesome to see this work being sent! I remember trying this quite a
-while ago, so I definitely need to pick this up again and try it out!
-
-I can try on msm8226, msm8974 and msm8953 so lots of platforms which
-will gain sensor support thanks to you!
-
-Regards
-Luca
-
->
-> [1] https://gitlab.com/msm8996-mainline/sns-reg
-> [2] https://github.com/nian0114/android_vendor_xiaomi_scorpio/blob/mkn-mr=
-1/proprietary/etc/sensors/sensor_def_qcomdev.conf
-> [3] https://github.com/sdm660-mainline/linux/pull/57
-> [4] https://emainline.gitlab.io/2022/04/08/Unlocking_SSC_P2.html
-> [5] https://android.googlesource.com/platform/system/chre/+/android-8.0.0=
-_r2/platform/slpi
-> [6] https://gitlab.postmarketos.org/postmarketOS/pmaports/-/merge_request=
-s/4118
->
-> Yassine Oudjana (3):
->   net: qrtr: Turn QRTR into a bus
->   net: qrtr: Define macro to convert QMI version and instance to QRTR
->     instance
->   iio: Add Qualcomm Sensor Manager drivers
->
->  MAINTAINERS                                 |  18 +
->  drivers/iio/accel/Kconfig                   |  10 +
->  drivers/iio/accel/Makefile                  |   2 +
->  drivers/iio/accel/qcom_smgr_accel.c         | 138 ++++
->  drivers/iio/common/Kconfig                  |   1 +
->  drivers/iio/common/Makefile                 |   1 +
->  drivers/iio/common/qcom_smgr/Kconfig        |  16 +
->  drivers/iio/common/qcom_smgr/Makefile       |   8 +
->  drivers/iio/common/qcom_smgr/qcom_smgr.c    | 589 ++++++++++++++++
->  drivers/iio/common/qcom_smgr/qmi/Makefile   |   3 +
->  drivers/iio/common/qcom_smgr/qmi/sns_smgr.c | 711 ++++++++++++++++++++
->  drivers/iio/common/qcom_smgr/qmi/sns_smgr.h | 163 +++++
->  drivers/iio/gyro/Kconfig                    |  10 +
->  drivers/iio/gyro/Makefile                   |   2 +
->  drivers/iio/gyro/qcom_smgr_gyro.c           | 138 ++++
->  drivers/iio/magnetometer/Kconfig            |   9 +
->  drivers/iio/magnetometer/Makefile           |   2 +
->  drivers/iio/magnetometer/qcom_smgr_mag.c    | 138 ++++
->  drivers/iio/pressure/Kconfig                |  10 +
->  drivers/iio/pressure/Makefile               |   1 +
->  drivers/iio/pressure/qcom_smgr_pressure.c   | 106 +++
->  drivers/iio/proximity/Kconfig               |  10 +
->  drivers/iio/proximity/Makefile              |   1 +
->  drivers/iio/proximity/qcom_smgr_prox.c      | 106 +++
->  drivers/soc/qcom/qmi_interface.c            |   5 +-
->  include/linux/iio/common/qcom_smgr.h        |  64 ++
->  include/linux/mod_devicetable.h             |   9 +
->  include/linux/soc/qcom/qrtr.h               |  36 +
->  net/qrtr/af_qrtr.c                          |  23 +-
->  net/qrtr/qrtr.h                             |   3 +
->  net/qrtr/smd.c                              | 250 ++++++-
->  scripts/mod/devicetable-offsets.c           |   4 +
->  scripts/mod/file2alias.c                    |  10 +
->  33 files changed, 2573 insertions(+), 24 deletions(-)
->  create mode 100644 drivers/iio/accel/qcom_smgr_accel.c
->  create mode 100644 drivers/iio/common/qcom_smgr/Kconfig
->  create mode 100644 drivers/iio/common/qcom_smgr/Makefile
->  create mode 100644 drivers/iio/common/qcom_smgr/qcom_smgr.c
->  create mode 100644 drivers/iio/common/qcom_smgr/qmi/Makefile
->  create mode 100644 drivers/iio/common/qcom_smgr/qmi/sns_smgr.c
->  create mode 100644 drivers/iio/common/qcom_smgr/qmi/sns_smgr.h
->  create mode 100644 drivers/iio/gyro/qcom_smgr_gyro.c
->  create mode 100644 drivers/iio/magnetometer/qcom_smgr_mag.c
->  create mode 100644 drivers/iio/pressure/qcom_smgr_pressure.c
->  create mode 100644 drivers/iio/proximity/qcom_smgr_prox.c
->  create mode 100644 include/linux/iio/common/qcom_smgr.h
->  create mode 100644 include/linux/soc/qcom/qrtr.h
-
+The only thing to worry about would be torn writes where somehow the
+file type is written back after the permission bits and so S_ISREG()
+could fail and the freeze protection semaphore wouldn't be released. If
+that is an actual possibility we'd need to READ_ONCE()/WRITE_ONCE() the
+hell out of this. Can this really happen with an unsigned short though?
