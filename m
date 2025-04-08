@@ -1,65 +1,65 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E8122DFFA
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 19:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE1C2459CA
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 19:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744141036; cv=none; b=WrsDpndmCeS2HQw3xIvBwFnavkQHCkmMaoIKtjM7FYAf7g6AadpgPCwBlBRtVeiqa3tGNczly4/B8MUZU/5ruWORS5X71zOzupi0E1tYapaR6vNJHiFtY3o2AT8EDJj1xvfVUhm5WM+22abAWMZnAyAp/dAyYI09iBWrDk18C+8=
+	t=1744141040; cv=none; b=INKSysIzRpW+P9fM+jpHZuozoQGydAoTx8GE6bxzGfwlTVwuLK9AkvpnydiZTZWHzjoM+VOunmkeqjyzi4gNz/i5wBV6X/FMCsjAts6SM9LRK3slWXmt02zTe0MEcmb+tEJbZMYd8xUlDcymLZKPQiohXuYOry0+flfjd9X1lC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744141036; c=relaxed/simple;
-	bh=axfKGKUXl2vKUthGoKeFNG/MEykh/rk4VtDqVGsZVxM=;
+	s=arc-20240116; t=1744141040; c=relaxed/simple;
+	bh=+wJ4mtvJxQV9Of78o4z8T7h5OkoJVVwCiX/s4mTYqrA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7MZuGjEmUshgHIufKAm6b9l0hQqYmneYZmPZrl/IQKLoVBlYUdpfzQAqRC88PsGmimay53PCD4aEqcS8rV9V1icCI5VVX4frBinvwzGpkpbMmTXhEIHeCuUJpvYrqFpuh97CuyXDMnhu1sncM9G2FU0CHiP/UFUeedComNlly8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=xk+VwFb9; arc=none smtp.client-ip=209.85.166.51
+	 In-Reply-To:Content-Type; b=Bb81+fzzQSAYmNzMjpXN4EFI2GAREx+HXP2u4r0hy4AIk7R7DbI05xEnEixUz3fOaUSOdMI/kScXjaKKAdCzUMXCQ4on9ndTEACyanxpC4pzVBe3bzkjfkdJacNdrnPY30SIDHXjqF/aM4jGdfV88PKsao/cmYMhUG7TP+l99ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=tJSQbImF; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="xk+VwFb9"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86135af1045so233267039f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 12:37:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="tJSQbImF"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3ce886a2d5bso57538045ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 12:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744141033; x=1744745833; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744141036; x=1744745836; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ihyuAzlM82lJGBS3f8gR0AvjEGvhK/UKSLKfGaRe3Q=;
-        b=xk+VwFb9CkizKgolbjnKv7Zcf1O27v8Y917vZeMGupDo6o6sSQdwEYP8+LtPraYd92
-         lrh2l3ssqV7iegKSL1BekVMpX5X8BoYpX4uIjvA093sBDTfXfg730VK/Va7TTNz/S2S5
-         lAVSHlyTt5Pr+FoT3ybLB3KlCjXYuRiXVdr7iByhOCNPXqrCIdq7mscwbZuTsXxICuxy
-         WsnQ+RNDwccpstjo9TEsrHfYUU3EY06gMSDpEVV0WnyB4v5nwSkbS01+VgfVbHuUaqaA
-         mHUEB2X2/xPpayzbox5M+JuihS8wTzGz5qWOa5StIFM049+DHoIkjo1JApvUCOugDIFq
-         RiZw==
+        bh=eAVmmFMqgEQoM9IvKCTi8ICmk7vPzjaIgXMu93/RPNo=;
+        b=tJSQbImFSVijnCLVvmFWByGkbQKO16KHNv/e26jfTckNDUccna+3dGH7ij5RUNesrc
+         fA6S9ms64tQZqARKidYYl4bP9qvD7+BCLbQ/tAdwpSCPdRYfEhlbyHb4sF8jkjLaOcGF
+         MeMnHUXzbl3aiDdxbo2tVaAATyBn/3yp6eGEpqf3uwc0lSe9Zka298t6mAKOA+/99vn+
+         enMARJqZ8rAe6eXKuFyv9wQZC2JPONLD1ciGFHKodXIg36M592xJhaDpppU0mJwK+VD6
+         d5+bvXR4HZJAYeW1eNqAv3W7SApOKnaI4/77IlFv2U4dLVzVyK3LQq1T9u/U8N5EOosf
+         2HQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744141033; x=1744745833;
+        d=1e100.net; s=20230601; t=1744141036; x=1744745836;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ihyuAzlM82lJGBS3f8gR0AvjEGvhK/UKSLKfGaRe3Q=;
-        b=HgoX/Z6XoCCYcxvqGpq2jH/rtLH9SIP0lJhxm41rwX2MrEiRKHJYJFVcAdxrs6GsDC
-         VmIFScW/u7FmQT1kW8WktZFPCjxZRLhjnltrY5O3FCSNw03NigX5rI1pPkO+TH1SE+1x
-         9bgsAHIfjLIXvg6cQF8lbklwolu4xu+LXpbNIfDBSPh17Qlcq+8nQBAvwxj/jmFAq5iG
-         MyZ6cQPeVmRiEQzyI4Du7RHsfIPWATUPZX2ZKb6IMdLvrWS+igASA/0A/b6igw+avqEb
-         1oD8eU3T5oD7PextS2eywtCirxFqehn47DfBKmEZuLqFzmWX3dXQ1t0KHAHS/iNVNQhM
-         E8fw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh87QDq851LlFtl06XX7fRWDwrdgvJ1flItBk7hKSdyVS1uslG08MxY9JmDtGslvfUicUxtWlod8kSTy8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7KSSREsVcYKu4eaOu893UCKNywBUz/JmfyNbr4C3bkT0GFVEH
-	kGFgzPRiQY+YoSF9y9IsI496FgZxIuV+RNebv5fhXtVCEy/Y5jJuhGSR1H2BnnA=
-X-Gm-Gg: ASbGncsviW9SCw63GYhtBM4CjzKDfXLjQXevs4t1cUxFQ+3PPqyyupNdZP2hIsCnwe9
-	JHKOYfydVc/FT7CnmWZBLcgCFGCMconkQv/QiSTgSA0SG57gQE+j8twtoLVlPWlXznW7bTpVDQF
-	7taie1qYpy66ht/YT3/38gsLoHeFE2g+/PmriX9A9VBs1vsmsEvWgx2w3m0N4A3hWVBhXGKSY5e
-	0npZI20ipO2d0jxEMOZGgSCk8F5IEv3cozWOwSZLOf8mE7mjJEr69NsaYxsKVQKVG1R18DAJLJI
-	vP2Gp5xKxjeUpBpUQhbV/9utBrUdG6j2kBkvLazFVvFUpYNC/ZgWmoTBkEyjZ27NKmi8klz+w4S
-	+xrecGqmDS1HY7RJmavo=
-X-Google-Smtp-Source: AGHT+IFV+oKnS5Z7XqBCLwJ9/iD/goXUd07nqMhjbhu1QnyS5iUMcUADUnd2WNgGghXi0kGlBzlckg==
-X-Received: by 2002:a05:6602:4804:b0:85b:41cc:f710 with SMTP id ca18e2360f4ac-8616129c13dmr79765839f.12.1744141033044;
-        Tue, 08 Apr 2025 12:37:13 -0700 (PDT)
+        bh=eAVmmFMqgEQoM9IvKCTi8ICmk7vPzjaIgXMu93/RPNo=;
+        b=BkT3Pk+TMXWrpx3GzkpodfBBvSudwsMaoYgsR4CSlF5Y8rvX5xMzD/DVsAIKhGVdqP
+         5KYzZdcoW13QnwocjZsvvox2MyZFvcC1VQQLVTIaTJiS86qHQPotcqDJmuKFeKjH1KOf
+         ZVMSt7pGbQuKKRxBBQDQIF52y9HrvwFEGUbqjSSllem3IYY1x5kv70C806Yte57EE+QC
+         xR1C+tkeH+nvnKnDuToRASKenNROThR/5UnnVCk42VdzeZTOkZWvtz+Kbhqidw263o5W
+         qUmVXyXwTUutf2SrvLUrMee6iRRA2xQtnl2P422Zlta9vvNssEuOWVNAeHP3jyIOeuAG
+         sKxg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+OZSVySfOIWRiAwOCwBsTcSLvxfY4zhBzzvjwoCAe8VX7kiw/0Fb1ogPv7BvKPnu7GrRcLwZ0wzPZBEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvubU0RDrXigmLed83s2UUWQogfO0kc7LqrP1F/JCL7Nhh4Mzd
+	aYFsMvAZ5MKc9Vd2IVOWEuRwJuyNrcDVq3Goh2k051R2h0Dk2+g0WMopU8NxqaQ=
+X-Gm-Gg: ASbGncsqB8AxYGQxY+mlllRMCXMkpgAZfAtiareQa+p1CVWjI0gNPwglW/r60iDduGx
+	HnYYVisLLSsuimPelvTi6/S4fKaVLnLvUyfebFreasi5owWvUpafHfQa/GnuWPa2STMszYpEl7d
+	Ui0h6PffDxC/jssJOBG2w92oMU8LjWnf1SR25hE3TVcCYlaYf9ZMhh/e01eblzeZFyBgf0NEsV4
+	D1tvSwoWA2HoGmlS+jUXZSuoIl4UbU6FiKm0Tq0lK0fIcwJA6NfDc0AlKFGsDPKZo/w9GWpF9Xy
+	bnVYYk9gJ7XIH0mxPMfhWE022fZ8zxaMo/8uGp3g2Ts3VfZCRJvOHyekZu4vGzaDkj9mGthDNwE
+	5QJY0+3S1
+X-Google-Smtp-Source: AGHT+IGulyQQjReVRnDuoSM8kxZarQuWui0Km//IJmjaSJXFEscRj7yZa06+RRBFm+gIsw8pskJdLQ==
+X-Received: by 2002:a05:6e02:1487:b0:3d2:b509:af44 with SMTP id e9e14a558f8ab-3d777165920mr2598035ab.8.1744141036387;
+        Tue, 08 Apr 2025 12:37:16 -0700 (PDT)
 Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4f44e3aa0sm653506173.126.2025.04.08.12.37.11
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4f44e3aa0sm653506173.126.2025.04.08.12.37.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 12:37:12 -0700 (PDT)
-Message-ID: <cdf5d151-7ffb-416f-9032-930ffd230d8c@riscstar.com>
-Date: Tue, 8 Apr 2025 14:37:11 -0500
+        Tue, 08 Apr 2025 12:37:16 -0700 (PDT)
+Message-ID: <6a1a8470-0dde-4fe5-96de-810af39686d1@riscstar.com>
+Date: Tue, 8 Apr 2025 14:37:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/6] Add clock controller support for SpacemiT K1
+Subject: Re: [PATCH v6 1/6] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
 To: Haylen Chu <heylenay@4d2.org>, Michael Turquette
  <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -79,221 +79,336 @@ Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  spacemit@lists.linux.dev, Inochi Amaoto <inochiama@outlook.com>,
  Chen Wang <unicornxdotw@foxmail.com>, Jisheng Zhang <jszhang@kernel.org>,
- Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <20250401172434.6774-1-heylenay@4d2.org>
+ <20250401172434.6774-2-heylenay@4d2.org>
 Content-Language: en-US
 From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250401172434.6774-1-heylenay@4d2.org>
+In-Reply-To: <20250401172434.6774-2-heylenay@4d2.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 4/1/25 12:24 PM, Haylen Chu wrote:
-> The clock tree of SpacemiT K1 is managed by several independent
-> multifunction devices, some of them are
+> Document APMU, MPMU and APBC syscons found on SpacemiT K1 SoC, which are
+> capable of generating clock and reset signals. Additionally, APMU and MPMU
+> manage power domains.
 > 
-> - Application Power Manage Unit, APMU
-> - Main Power Manage Unit, MPMU
-> - APB Bus Clock Unit, APBC
-> - APB Spare, APBS
-> 
-> These four devices provide hardware bits for three purposes: power
-> management, reset signals and clocks. Not every device is capable of all
-> the three functionalities,
-> 
-> - APMU, MPMU: power, reset, clock
-> - APBC: clock, reset
-> - APBS: clock (PLL clocks)
-> 
-> This series adds support for clock hardwares in these four regions,
-> which covers most peripherals except DDR and the realtime processor.
-> 
-> Tested on BananaPi-F3 board. With some out-of-tree drivers, I've
-> successfully brought up I2C, RTC, MMC and ethernet controllers. A clock
-> tree dump could be obtained here[1].
-> 
-> [1]: https://gist.github.com/heylenayy/73df0b6b075615a944990507112cfc5b
+> Signed-off-by: Haylen Chu <heylenay@4d2.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks for your persistence on this.  I've added my Reviewed-by on
-4 of 6 of your patches, and what remains are fairly small things to
-address.
+I think you could update your copyright date, but otherwise
+this looks good to me.
 
-					-Alex
+Reviewed-by: Alex Elder <riscstar.com>
 
-> Changed from v5
-> - Correct "Spacemit" to "SpacemiT" in commit messages and code
-> - Always use space instead of TAB in comments for consistency
-> - dt-bindings
->    - Rename binding header to "spacemit,k1-syscon.h"
->    - apply review tags
-> - driver code
->    - remove "default" properties from Kconfig
->    - misc style and naming improvements
->    - make ccu_read() directly return the read value, drop ccu_poll() and
->      reorder the arguments to ccu_{read,update} macros
->    - drop ccu_common.reg_swcr2
->    - clock tree for K1
->      - define PLL3 with the correct offset of SWCR3 register
->      - synchronize PLL configuration entries with the vendor kernel
->      - reformat clocks definitions
->      - explain why PLLs require the MPMU syscon to function
->      - log a message when failing to register a clock
->      - simplify clock registration with ARRAY_SIZE()
->    - ddn
->      - correctly handle masks which doesn't start from BIT(0) when
->        calculating the best rate
->      - improve precision of frequency calculation
->      - derive _{den,num}_shift from corresponding masks with __ffs()
->    - mix
->      - match the full mask of gate in ccu_gate_is_enabled()
->      - add a note about "frequency change" bit and simplify FC-triggering
->        logic
->      - drop unnecessary local variables and initialization from clock
->        operations
->      - round to the closest rate in ccu_mix_calc_best_rate()
->      - change names of all mix subtypes to follow the order of mux ->
->        factor/div -> gate -> fc
->      - drop unused _flags argument from CCU_GATE_FACTOR_DEFINE()
->    - pll
->      - ensure PLLs are initialized to a known state
->      - drop extra check in ccu_pll_enable()
->      - round to the closest rate in ccu_pll_round_rate()
-> - TWSI8 support
->    - Split cleanly from the main driver commit
-> - devicetree
->    - drop extra "*-cells" and "ranges" properties
-> - Enable SpacemiT K1 CCU in RISC-V defconfig
-> - Link to v5: https://lore.kernel.org/all/20250306175750.22480-2-heylenay@4d2.org/
-> 
-> Changed from v4
-> - bindings:
->    - Drop CLK_*_NUM macros from binding headers
->    - Rename spacemit,k1-ccu.yaml to spacemit,k1-pll.yaml, change to
->      describe only the PLL in APBS region
->    - k1-syscon.yaml
->      - drop spacemit,k1-syscon-apbs, it should be the PLL device
->      - drop child nodes
->      - describe the syscons as clock, reset and power-domain controllers
->      - drop "syscon" from the compatible list, as these syscons aren't
->        compatible with the generic one
-> - driver:
->    - misc style fixes and naming improvements
->    - drop unused fields from data structures
->    - drop unused clock types: CCU_DDN_GATE
->    - ddn type:
->      - improve the comments
->      - dynamically calculate appropriate rates
->      - hardcode the x2 factor
->    - mix type
->      - drop val_{disable,enable} for gate subtype
->      - drop unncessary polling when enabling a gate
->      - encode subtypes directly in struct ccu_mix
->      - generate clock names from identifiers of the data structure
->      - rename CCU_DIV2_FC_MUX_GATE_DEFINE to CCU_DIV_SPLIT_FC_MUX_GATE
->    - pll type:
->      - correctly claim the parent clock
->      - make rate tables const
->      - drop SWCR2-related fields
->      - combine fields of registers as a whole instead of working with
->        each field
->    - clock tree for k1:
->      - removed duplicated offsets
->      - drop the placeholder 1:1 factor, pll1_d7_351p8
->      - workaround the quirk of TWSI8 clocks
->      - fix the definition of ripc_clk, wdt_bus_clk, dpu_bit_clk and
->        timers_*_clk
->      - drop structure spacemit_ccu_priv and spacemit_ccu_data
->      - rework clock registration
->      - split the PCIe clocks correctly (there're three distinct clocks
->        for each PCIe port)
-> - devicetree:
->    - adapt the new binding
-> - Link to v4: https://lore.kernel.org/all/20250103215636.19967-2-heylenay@4d2.org/
-> 
-> Changed from v3
-> - spacemit,k1-ccu binding
->    - allow spacemit,mpmu property only for controllers requiring it
->      (spacemit,k1-ccu-apbs)
-> - spacemit,k1-syscon binding
->    - drop unnecessary *-cells properties
->    - drop unrelated nodes in the example
-> - driver
->    - remove unnecessary divisions during rate calucalation in ccu_ddn.c
->    - use independent clk_ops for different ddn/mix variants, drop
->      reg_type field in struct ccu_common
->    - make the register containing frequency change bit a sperate field in
->      ccu_common
->    - unify DIV_MFC_MUX_GATE and DIV_FC_MUX_GATE
->    - implement a correct determine_rate() for mix type
->    - avoid reparenting in set_rate() for mix type
->    - fix build failure when SPACEMIT_CCU and SPACEMIT_CCU_K1 are
->      configured differently
-> - use "osc" instead of "osc_32k" in clock input names
-> - misc style fixes
-> - Link to v3: https://lore.kernel.org/all/20241126143125.9980-2-heylenay@4d2.org/
-> 
-> Changed from v2
-> - dt-binding fixes
->    - drop clocks marked as deprecated by the vendor (CLK_JPF_4KAFBC and
->      CLK_JPF_2KAFBC)
->    - add binding of missing bus clocks
->    - change input clocks to use frequency-aware and more precise names
->    - mark input clocks and their names as required
->    - move the example to the (parent) syscon node and complete it
->    - misc style fixes
-> - misc improvements in code
-> - drop unnecessary spinlock in the driver
-> - implement missing bus clocks
-> - Link to v2: https://lore.kernel.org/all/SEYPR01MB4221829A2CD4D4C1704BABD7D7602@SEYPR01MB4221.apcprd01.prod.exchangelabs.com/
-> 
-> Changed from v1
-> - add SoC prefix (k1)
-> - relicense dt-binding header
-> - misc fixes and style improvements for dt-binding
-> - document spacemit,k1-syscon
-> - implement all APBS, MPMU, APBC and APMU clocks
-> - code cleanup
-> - Link to v1: https://lore.kernel.org/all/SEYPR01MB4221B3178F5233EAB5149E41D7902@SEYPR01MB4221.apcprd01.prod.exchangelabs.com/
-> 
-> Haylen Chu (6):
->    dt-bindings: soc: spacemit: Add spacemit,k1-syscon
->    dt-bindings: clock: spacemit: Add spacemit,k1-pll
->    clk: spacemit: Add clock support for SpacemiT K1 SoC
->    clk: spacemit: k1: Add TWSI8 bus and function clocks
->    riscv: dts: spacemit: Add clock tree for SpacemiT K1
->    riscv: defconfig: enable clock controller unit support for SpacemiT K1
-> 
->   .../bindings/clock/spacemit,k1-pll.yaml       |   50 +
->   .../soc/spacemit/spacemit,k1-syscon.yaml      |   80 +
->   arch/riscv/boot/dts/spacemit/k1.dtsi          |   75 +
->   arch/riscv/configs/defconfig                  |    2 +
->   drivers/clk/Kconfig                           |    1 +
->   drivers/clk/Makefile                          |    1 +
->   drivers/clk/spacemit/Kconfig                  |   18 +
->   drivers/clk/spacemit/Makefile                 |    5 +
->   drivers/clk/spacemit/apbc_clks                |  100 ++
->   drivers/clk/spacemit/ccu-k1.c                 | 1321 +++++++++++++++++
->   drivers/clk/spacemit/ccu_common.h             |   48 +
->   drivers/clk/spacemit/ccu_ddn.c                |   83 ++
->   drivers/clk/spacemit/ccu_ddn.h                |   47 +
->   drivers/clk/spacemit/ccu_mix.c                |  268 ++++
->   drivers/clk/spacemit/ccu_mix.h                |  218 +++
->   drivers/clk/spacemit/ccu_pll.c                |  157 ++
->   drivers/clk/spacemit/ccu_pll.h                |   86 ++
->   .../dt-bindings/clock/spacemit,k1-syscon.h    |  247 +++
->   18 files changed, 2807 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
+> ---
+>   .../soc/spacemit/spacemit,k1-syscon.yaml      |  80 +++++++
+>   .../dt-bindings/clock/spacemit,k1-syscon.h    | 210 ++++++++++++++++++
+>   2 files changed, 290 insertions(+)
 >   create mode 100644 Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
->   create mode 100644 drivers/clk/spacemit/Kconfig
->   create mode 100644 drivers/clk/spacemit/Makefile
->   create mode 100644 drivers/clk/spacemit/apbc_clks
->   create mode 100644 drivers/clk/spacemit/ccu-k1.c
->   create mode 100644 drivers/clk/spacemit/ccu_common.h
->   create mode 100644 drivers/clk/spacemit/ccu_ddn.c
->   create mode 100644 drivers/clk/spacemit/ccu_ddn.h
->   create mode 100644 drivers/clk/spacemit/ccu_mix.c
->   create mode 100644 drivers/clk/spacemit/ccu_mix.h
->   create mode 100644 drivers/clk/spacemit/ccu_pll.c
->   create mode 100644 drivers/clk/spacemit/ccu_pll.h
 >   create mode 100644 include/dt-bindings/clock/spacemit,k1-syscon.h
 > 
+> diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+> new file mode 100644
+> index 000000000000..30aaf49da03d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/spacemit/spacemit,k1-syscon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SpacemiT K1 SoC System Controller
+> +
+> +maintainers:
+> +  - Haylen Chu <heylenay@4d2.org>
+> +
+> +description:
+> +  System controllers found on SpacemiT K1 SoC, which are capable of
+> +  clock, reset and power-management functions.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - spacemit,k1-syscon-apbc
+> +      - spacemit,k1-syscon-apmu
+> +      - spacemit,k1-syscon-mpmu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: vctcxo_1m
+> +      - const: vctcxo_3m
+> +      - const: vctcxo_24m
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +    description:
+> +      See <dt-bindings/clock/spacemit,k1-syscon.h> for valid indices.
+> +
+> +  "#power-domain-cells":
+> +    const: 1
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - "#clock-cells"
+> +  - "#reset-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: spacemit,k1-syscon-apbc
+> +    then:
+> +      properties:
+> +        "#power-domain-cells": false
+> +    else:
+> +      required:
+> +        - "#power-domain-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    system-controller@d4050000 {
+> +        compatible = "spacemit,k1-syscon-mpmu";
+> +        reg = <0xd4050000 0x209c>;
+> +        clocks = <&osc>, <&vctcxo_1m>, <&vctcxo_3m>, <&vctcxo_24m>;
+> +        clock-names = "osc", "vctcxo_1m", "vctcxo_3m", "vctcxo_24m";
+> +        #clock-cells = <1>;
+> +        #power-domain-cells = <1>;
+> +        #reset-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
+> new file mode 100644
+> index 000000000000..61c8d7360cf8
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
+> @@ -0,0 +1,210 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2024 Haylen Chu <heylenay@outlook.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_SPACEMIT_CCU_H_
+> +#define _DT_BINDINGS_SPACEMIT_CCU_H_
+> +
+> +/* MPMU clocks */
+> +#define CLK_PLL1_307P2		0
+> +#define CLK_PLL1_76P8		1
+> +#define CLK_PLL1_61P44		2
+> +#define CLK_PLL1_153P6		3
+> +#define CLK_PLL1_102P4		4
+> +#define CLK_PLL1_51P2		5
+> +#define CLK_PLL1_51P2_AP	6
+> +#define CLK_PLL1_57P6		7
+> +#define CLK_PLL1_25P6		8
+> +#define CLK_PLL1_12P8		9
+> +#define CLK_PLL1_12P8_WDT	10
+> +#define CLK_PLL1_6P4		11
+> +#define CLK_PLL1_3P2		12
+> +#define CLK_PLL1_1P6		13
+> +#define CLK_PLL1_0P8		14
+> +#define CLK_PLL1_409P6		15
+> +#define CLK_PLL1_204P8		16
+> +#define CLK_PLL1_491		17
+> +#define CLK_PLL1_245P76		18
+> +#define CLK_PLL1_614		19
+> +#define CLK_PLL1_47P26		20
+> +#define CLK_PLL1_31P5		21
+> +#define CLK_PLL1_819		22
+> +#define CLK_PLL1_1228		23
+> +#define CLK_SLOW_UART		24
+> +#define CLK_SLOW_UART1		25
+> +#define CLK_SLOW_UART2		26
+> +#define CLK_WDT			27
+> +#define CLK_RIPC		28
+> +#define CLK_I2S_SYSCLK		29
+> +#define CLK_I2S_BCLK		30
+> +#define CLK_APB			31
+> +#define CLK_WDT_BUS		32
+> +
+> +/* APBC clocks */
+> +#define CLK_UART0		0
+> +#define CLK_UART2		1
+> +#define CLK_UART3		2
+> +#define CLK_UART4		3
+> +#define CLK_UART5		4
+> +#define CLK_UART6		5
+> +#define CLK_UART7		6
+> +#define CLK_UART8		7
+> +#define CLK_UART9		8
+> +#define CLK_GPIO		9
+> +#define CLK_PWM0		10
+> +#define CLK_PWM1		11
+> +#define CLK_PWM2		12
+> +#define CLK_PWM3		13
+> +#define CLK_PWM4		14
+> +#define CLK_PWM5		15
+> +#define CLK_PWM6		16
+> +#define CLK_PWM7		17
+> +#define CLK_PWM8		18
+> +#define CLK_PWM9		19
+> +#define CLK_PWM10		20
+> +#define CLK_PWM11		21
+> +#define CLK_PWM12		22
+> +#define CLK_PWM13		23
+> +#define CLK_PWM14		24
+> +#define CLK_PWM15		25
+> +#define CLK_PWM16		26
+> +#define CLK_PWM17		27
+> +#define CLK_PWM18		28
+> +#define CLK_PWM19		29
+> +#define CLK_SSP3		30
+> +#define CLK_RTC			31
+> +#define CLK_TWSI0		32
+> +#define CLK_TWSI1		33
+> +#define CLK_TWSI2		34
+> +#define CLK_TWSI4		35
+> +#define CLK_TWSI5		36
+> +#define CLK_TWSI6		37
+> +#define CLK_TWSI7		38
+> +#define CLK_TWSI8		39
+> +#define CLK_TIMERS1		40
+> +#define CLK_TIMERS2		41
+> +#define CLK_AIB			42
+> +#define CLK_ONEWIRE		43
+> +#define CLK_SSPA0		44
+> +#define CLK_SSPA1		45
+> +#define CLK_DRO			46
+> +#define CLK_IR			47
+> +#define CLK_TSEN		48
+> +#define CLK_IPC_AP2AUD		49
+> +#define CLK_CAN0		50
+> +#define CLK_CAN0_BUS		51
+> +#define CLK_UART0_BUS		52
+> +#define CLK_UART2_BUS		53
+> +#define CLK_UART3_BUS		54
+> +#define CLK_UART4_BUS		55
+> +#define CLK_UART5_BUS		56
+> +#define CLK_UART6_BUS		57
+> +#define CLK_UART7_BUS		58
+> +#define CLK_UART8_BUS		59
+> +#define CLK_UART9_BUS		60
+> +#define CLK_GPIO_BUS		61
+> +#define CLK_PWM0_BUS		62
+> +#define CLK_PWM1_BUS		63
+> +#define CLK_PWM2_BUS		64
+> +#define CLK_PWM3_BUS		65
+> +#define CLK_PWM4_BUS		66
+> +#define CLK_PWM5_BUS		67
+> +#define CLK_PWM6_BUS		68
+> +#define CLK_PWM7_BUS		69
+> +#define CLK_PWM8_BUS		70
+> +#define CLK_PWM9_BUS		71
+> +#define CLK_PWM10_BUS		72
+> +#define CLK_PWM11_BUS		73
+> +#define CLK_PWM12_BUS		74
+> +#define CLK_PWM13_BUS		75
+> +#define CLK_PWM14_BUS		76
+> +#define CLK_PWM15_BUS		77
+> +#define CLK_PWM16_BUS		78
+> +#define CLK_PWM17_BUS		79
+> +#define CLK_PWM18_BUS		80
+> +#define CLK_PWM19_BUS		81
+> +#define CLK_SSP3_BUS		82
+> +#define CLK_RTC_BUS		83
+> +#define CLK_TWSI0_BUS		84
+> +#define CLK_TWSI1_BUS		85
+> +#define CLK_TWSI2_BUS		86
+> +#define CLK_TWSI4_BUS		87
+> +#define CLK_TWSI5_BUS		88
+> +#define CLK_TWSI6_BUS		89
+> +#define CLK_TWSI7_BUS		90
+> +#define CLK_TWSI8_BUS		91
+> +#define CLK_TIMERS1_BUS		92
+> +#define CLK_TIMERS2_BUS		93
+> +#define CLK_AIB_BUS		94
+> +#define CLK_ONEWIRE_BUS		95
+> +#define CLK_SSPA0_BUS		96
+> +#define CLK_SSPA1_BUS		97
+> +#define CLK_TSEN_BUS		98
+> +#define CLK_IPC_AP2AUD_BUS	99
+> +
+> +/* APMU clocks */
+> +#define CLK_CCI550		0
+> +#define CLK_CPU_C0_HI		1
+> +#define CLK_CPU_C0_CORE		2
+> +#define CLK_CPU_C0_ACE		3
+> +#define CLK_CPU_C0_TCM		4
+> +#define CLK_CPU_C1_HI		5
+> +#define CLK_CPU_C1_CORE		6
+> +#define CLK_CPU_C1_ACE		7
+> +#define CLK_CCIC_4X		8
+> +#define CLK_CCIC1PHY		9
+> +#define CLK_SDH_AXI		10
+> +#define CLK_SDH0		11
+> +#define CLK_SDH1		12
+> +#define CLK_SDH2		13
+> +#define CLK_USB_P1		14
+> +#define CLK_USB_AXI		15
+> +#define CLK_USB30		16
+> +#define CLK_QSPI		17
+> +#define CLK_QSPI_BUS		18
+> +#define CLK_DMA			19
+> +#define CLK_AES			20
+> +#define CLK_VPU			21
+> +#define CLK_GPU			22
+> +#define CLK_EMMC		23
+> +#define CLK_EMMC_X		24
+> +#define CLK_AUDIO		25
+> +#define CLK_HDMI		26
+> +#define CLK_PMUA_ACLK		27
+> +#define CLK_PCIE0_MASTER	28
+> +#define CLK_PCIE0_SLAVE		29
+> +#define CLK_PCIE0_DBI		30
+> +#define CLK_PCIE1_MASTER	31
+> +#define CLK_PCIE1_SLAVE		32
+> +#define CLK_PCIE1_DBI		33
+> +#define CLK_PCIE2_MASTER	34
+> +#define CLK_PCIE2_SLAVE		35
+> +#define CLK_PCIE2_DBI		36
+> +#define CLK_EMAC0_BUS		37
+> +#define CLK_EMAC0_PTP		38
+> +#define CLK_EMAC1_BUS		39
+> +#define CLK_EMAC1_PTP		40
+> +#define CLK_JPG			41
+> +#define CLK_CCIC2PHY		42
+> +#define CLK_CCIC3PHY		43
+> +#define CLK_CSI			44
+> +#define CLK_CAMM0		45
+> +#define CLK_CAMM1		46
+> +#define CLK_CAMM2		47
+> +#define CLK_ISP_CPP		48
+> +#define CLK_ISP_BUS		49
+> +#define CLK_ISP			50
+> +#define CLK_DPU_MCLK		51
+> +#define CLK_DPU_ESC		52
+> +#define CLK_DPU_BIT		53
+> +#define CLK_DPU_PXCLK		54
+> +#define CLK_DPU_HCLK		55
+> +#define CLK_DPU_SPI		56
+> +#define CLK_DPU_SPI_HBUS	57
+> +#define CLK_DPU_SPIBUS		58
+> +#define CLK_DPU_SPI_ACLK	59
+> +#define CLK_V2D			60
+> +#define CLK_EMMC_BUS		61
+> +
+> +#endif /* _DT_BINDINGS_SPACEMIT_CCU_H_ */
 
