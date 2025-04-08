@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCB1263F38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D47B263F44
 	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100487; cv=none; b=hUYDmGXgYpCNRpvPWGLOHsUIj563CA6QnD+KHtjqtrHQU0MghamA5ikkCjIG81PnZkde5VhONsSd434lYNSMBg3a9nQ8nwKpQd8psIz/h68pobj3gz9MSYUDQ2uSFPBTJ6Nb9BOHvjtg+J/XtBmpS43lD3mjQ+x0yBTJ3efDT94=
+	t=1744100488; cv=none; b=PeVfEtNZNYBs1dmgy4wyMwr26vA/Cs2G2M4XmgxUhw+fDHJFoiFkOz4IOsw9ZLHMlvYgT6KQaotDPUauHS+ykmKtIkc5P5f9CL+EgvQTHpWG1X3WBTE0VzoAsx5HdIhix1Cj1C+hKFSeTzf1XV5ly4iKZKim5CPEQK937vUsl/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100487; c=relaxed/simple;
-	bh=3nrms8bo08+6NLT3VdtL3YMYoYdpkWo2StUc6gHDXkM=;
+	s=arc-20240116; t=1744100488; c=relaxed/simple;
+	bh=BFxGxGhS95knSx6gCE3mMHsG8u8tZ7dQkfm8+7hymJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H38iu98mbCGSqvCH/+S2dM3lsSw9YY8oAg101AwPgWwdHECqeROISTAUEGdVmpLlJjcczk+OD4Wn25RdufWbGNq1w3Te+ICk2krNX7zFp52OofrsJpRz66+YUElPNb3+5vXTBvHPhZgV9i+ty1CxM5DnCHf59DeRhn44rU6pdqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCHB6NR4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N47kxaTltBNowI1F3nrHwub2K6iOWiyCVghE2sfT5HQFnZy1YQ1ZM/6neGyWc7Xb6zV48GdSrrGY8+0i9d2tAtz9X5iwY/Jdx6S2K0Ju6E2nPqQLpitv7X8rGvdXBC1m0QwblUKdwNMLh1qt/AeDeYk9roLqf7v+g1vvwQ035PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mb25JYUz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCHB6NR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0314AC4CEE9;
-	Tue,  8 Apr 2025 08:21:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mb25JYUz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E738C4CEED;
+	Tue,  8 Apr 2025 08:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744100487;
-	bh=3nrms8bo08+6NLT3VdtL3YMYoYdpkWo2StUc6gHDXkM=;
+	bh=BFxGxGhS95knSx6gCE3mMHsG8u8tZ7dQkfm8+7hymJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tCHB6NR45bM0ZKk9lkFfxdfhjHfcHzzJo+mP/2EyiqzNS0QJ8xE8E+q9DZvPkYvP6
-	 6Q7qa5aYhK9xWBJyBheF1YPiemHIgjXPkWhagaCvfyFi4ITAO8TCEZVz7mOrOvy2OC
-	 I2kXAT796//CVcqQhG+HNiNOFE6QU4A6LXuyQ1dtNUkeJS18xOCw3LSXWD75FMOqB3
-	 Vs+yORslLOvJMYb8sWGc5zjVATaXrguNDzgFnLZzsOfxbGw5kyGQTvBd11JaQYgPD8
-	 GFRUYWx8Gea4MOEmUPK6GYsfUpBOnzZXNh9+HmPHbb1Qw9/NDy0JkeLU+NYVsdxLLF
-	 Zn6Pi819oC/tw==
+	b=Mb25JYUzXC7p940p6v1/j8cT9iPgXtp0r39GL1FJl11uIQivXLKjjV6RmXGHZ2fNi
+	 vTXnVD7dF8/2gAXuHvIInETgGFKt+03BFdAC4Z9UVdj+nZD2m+w4nszfEilUVpDL9x
+	 d2vl4mR343+c/hR56aqRFBXJzhszcrUFiO/Oec02ZX7Q9V5kMDt5Jfrfz12hQHugjP
+	 24lhL/9sD9q1eNyNFA5HWDshHLu+U87ig4Z2GyXugd786u4ita9/KD/oCHKYSIWA/V
+	 vnM4/EaNxzpVmlFPizrqbz/LVum00WCBKq+T0OpNreq9UENMddAqFG96BEp4hQtFYa
+	 m4lHMuU34cZ1A==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH RFC 1/5] objtool: Remove ANNOTATE_IGNORE_ALTERNATIVE from CLAC/STAC
-Date: Tue,  8 Apr 2025 01:21:14 -0700
-Message-ID: <fc972ba4995d826fcfb8d02733a14be8d670900b.1744098446.git.jpoimboe@kernel.org>
+Subject: [PATCH RFC 2/5] objtool, x86/hweight: Remove ANNOTATE_IGNORE_ALTERNATIVE
+Date: Tue,  8 Apr 2025 01:21:15 -0700
+Message-ID: <e2be2dfe46dbe432375f2fafcb1dbdce1143af99.1744098446.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744098446.git.jpoimboe@kernel.org>
 References: <cover.1744098446.git.jpoimboe@kernel.org>
@@ -46,115 +46,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ANNOTATE_IGNORE_ALTERNATIVE adds additional noise to the code generated
-by CLAC/STAC alternatives, hurting readability for those whose read
-uaccess-related code generation on a regular basis.
+Since objtool's inception, frame pointer warnings have been manually
+silenced for __arch_hweight*() to allow those functions' inline asm to
+avoid using ASM_CALL_CONSTRAINT.
 
-Remove the annotation specifically for the "NOP patched with CLAC/STAC"
-case in favor of a manual check.
+The potentially dubious reasoning for that decision over nine years ago
+was that since !X86_FEATURE_POPCNT is exceedingly rare, it's not worth
+hurting the code layout for a function call that will never happen on
+the vast majority of systems.
 
-Leave the other uses of that annotation in place as they're less common
-and more difficult to detect.
+However, those functions actually started using ASM_CALL_CONSTRAINT with
+the following commit:
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+  194a613088a8 ("x86/hweight: Use ASM_CALL_CONSTRAINT in inline asm()")
+
+And rightfully so, as it makes the code correct.  ASM_CALL_CONSTRAINT
+will soon have no effect for non-FP configs anyway.
+
+With ASM_CALL_CONSTRAINT in place, ANNOTATE_IGNORE_ALTERNATIVE no longer
+has a purpose for the hweight functions.  Remove it.
+
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/x86/include/asm/smap.h | 12 ++++++------
- tools/objtool/check.c       | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 35 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/arch_hweight.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/smap.h b/arch/x86/include/asm/smap.h
-index 55a5e656e4b9..4f84d421d1cf 100644
---- a/arch/x86/include/asm/smap.h
-+++ b/arch/x86/include/asm/smap.h
-@@ -16,23 +16,23 @@
- #ifdef __ASSEMBLER__
- 
- #define ASM_CLAC \
--	ALTERNATIVE __stringify(ANNOTATE_IGNORE_ALTERNATIVE), "clac", X86_FEATURE_SMAP
-+	ALTERNATIVE "", "clac", X86_FEATURE_SMAP
- 
- #define ASM_STAC \
--	ALTERNATIVE __stringify(ANNOTATE_IGNORE_ALTERNATIVE), "stac", X86_FEATURE_SMAP
-+	ALTERNATIVE "", "stac", X86_FEATURE_SMAP
- 
- #else /* __ASSEMBLER__ */
- 
- static __always_inline void clac(void)
+diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+index cbc6157f0b4b..b5982b94bdba 100644
+--- a/arch/x86/include/asm/arch_hweight.h
++++ b/arch/x86/include/asm/arch_hweight.h
+@@ -16,8 +16,7 @@ static __always_inline unsigned int __arch_hweight32(unsigned int w)
  {
- 	/* Note: a barrier is implicit in alternative() */
--	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP);
-+	alternative("", "clac", X86_FEATURE_SMAP);
- }
+ 	unsigned int res;
  
- static __always_inline void stac(void)
+-	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
+-				"call __sw_hweight32",
++	asm_inline (ALTERNATIVE("call __sw_hweight32",
+ 				"popcntl %[val], %[cnt]", X86_FEATURE_POPCNT)
+ 			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
+ 			 : [val] REG_IN (w));
+@@ -46,8 +45,7 @@ static __always_inline unsigned long __arch_hweight64(__u64 w)
  {
- 	/* Note: a barrier is implicit in alternative() */
--	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP);
-+	alternative("", "stac", X86_FEATURE_SMAP);
- }
+ 	unsigned long res;
  
- static __always_inline unsigned long smap_save(void)
-@@ -59,9 +59,9 @@ static __always_inline void smap_restore(unsigned long flags)
- 
- /* These macros can be used in asm() statements */
- #define ASM_CLAC \
--	ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP)
-+	ALTERNATIVE("", "clac", X86_FEATURE_SMAP)
- #define ASM_STAC \
--	ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP)
-+	ALTERNATIVE("", "stac", X86_FEATURE_SMAP)
- 
- #define ASM_CLAC_UNSAFE \
- 	ALTERNATIVE("", ANNOTATE_IGNORE_ALTERNATIVE "clac", X86_FEATURE_SMAP)
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 69f94bc47499..b649049b6a11 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3505,6 +3505,34 @@ static struct instruction *next_insn_to_validate(struct objtool_file *file,
- 	return next_insn_same_sec(file, alt_group->orig_group->last_insn);
- }
- 
-+static bool skip_alt_group(struct instruction *insn)
-+{
-+	struct instruction *alt_insn = insn->alts ? insn->alts->insn : NULL;
-+
-+	/* ANNOTATE_IGNORE_ALTERNATIVE */
-+	if (insn->alt_group && insn->alt_group->ignore)
-+		return true;
-+
-+	/*
-+	 * For NOP patched with CLAC/STAC, only follow the latter to avoid
-+	 * impossible code paths combining patched CLAC with unpatched STAC
-+	 * or vice versa.
-+	 *
-+	 * ANNOTATE_IGNORE_ALTERNATIVE could have been used here, but Linus
-+	 * requested not to do that to avoid hurting .s file readability
-+	 * around CLAC/STAC alternative sites.
-+	 */
-+
-+	if (!alt_insn)
-+		return false;
-+
-+	/* Don't override ASM_{CLAC,STAC}_UNSAFE */
-+	if (alt_insn->alt_group && alt_insn->alt_group->ignore)
-+		return false;
-+
-+	return alt_insn->type == INSN_CLAC || alt_insn->type == INSN_STAC;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -3625,7 +3653,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			}
- 		}
- 
--		if (insn->alt_group && insn->alt_group->ignore)
-+		if (skip_alt_group(insn))
- 			return 0;
- 
- 		if (handle_insn_ops(insn, next_insn, &state))
+-	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
+-				"call __sw_hweight64",
++	asm_inline (ALTERNATIVE("call __sw_hweight64",
+ 				"popcntq %[val], %[cnt]", X86_FEATURE_POPCNT)
+ 			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
+ 			 : [val] REG_IN (w));
 -- 
 2.49.0
 
