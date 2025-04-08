@@ -1,84 +1,112 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B19720459F;
-	Tue,  8 Apr 2025 08:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68D120459F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099715; cv=none; b=kqdZPkik5Jfe6WrIMJej3vPZus/fHOkMFut2m7PIemcTCC6RVx/1wu4blVMrZ9FYkwgm37CxGwZo4zYBb+cZd+9PxGpTz3i0Zw5bCEYfmsViPPMZTLTdIYZyj1HFOWMZdcr3/Nr4G3jw4fmOEVuXpUEVAl5c9G6FDyUikJrqrR8=
+	t=1744099785; cv=none; b=RXnr8KuGORH9/6Wm1XLkdqWnMvcxuGyyryIJMGsmxoAf/CeKdji1Ql3kK12O80a9WZRbPdvFpOdNv1IT9TS5JFRgG/IDsiy6XpCtkAWgyhSYToM9qIY/mF3vRpw2YoKnU9ByXVgJ2k2z/TqTYIJs2gFnCgRkrYxx+gUSDIuvess=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099715; c=relaxed/simple;
-	bh=r+T5hIHBLgYvpmfuRv9rLfqPaPhsXS05wJYQCJNX7Uw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tQed6t/7mmkVNBxrIrr9WoQKy2TB34puYObCcLpYkBlDrKzYNd4FCPXhWonjZvjc2XK9uOJDmQL1baDVw3Uq8KnUQcvDBkLwjhGD5fJbYrYM2iaIulMxhn9UEDmEuI2ZlHeAsNVuD9RaSl/n3VeOUzgJZ/5ru8hC3nE3H/HVYVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZWymr5bcnzHrFr;
-	Tue,  8 Apr 2025 15:45:48 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id B585D1800D1;
-	Tue,  8 Apr 2025 15:49:11 +0800 (CST)
-Received: from [10.174.176.70] (10.174.176.70) by
- kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 8 Apr 2025 15:49:10 +0800
-Message-ID: <bfa5e258-fcca-4bb8-b5e9-50ba8e7fa249@huawei.com>
-Date: Tue, 8 Apr 2025 15:49:09 +0800
+	s=arc-20240116; t=1744099785; c=relaxed/simple;
+	bh=XRf0zAamyphypjWBEWWLCmbvcKPpfe6zqTtigwZbZJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGQzenVsrKYync4yeBQwXhKIdgg5r2nLhCCGesdFQXSd6KdvWwQT87hh7f+HkhA3ZCfglu3I+xMcNDbLr1U6yjn4Em1/DDsT/WxnoXEVgKKLLoQEVIPxljDk1pVz73hvASe4/Xk1zreetfkraF5BLR4BTasS1R3aBQMqa+pLBNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=X8P5a+3R; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="X8P5a+3R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=2ZDu
+	8l/p2Ttljr2CD08dPMjrizR2y53tHnze2nBVxyg=; b=X8P5a+3RjSSds3BZ9v9h
+	I3g3NEZguYT3LwBs3KfFJzTRUgkp8/FB5g9gLdHp3gKw5Gl3vm2TweMiuJ+pQ9NF
+	/wt32td0pMeQBLuzNbmEClBCL4J/TFop2GMOvNEED6OTxgr0gUjah5zHT0TxGGcm
+	oE9EBbgunB5ybom2ctEE2Q0ojhJr3rr8aLbJ9dlXY1RRqky1M/27rMMxwMfxNK4b
+	W3OJxPl6P6k90a3tJV3Wqn+c1898HQxkzZNLiOe3pJaEQgcVSn+LXk0n95UPsRGy
+	lpISKijhXhag2AGFVxdj7HhSCzEJusdKGCdEm+ylhQ+a3CqrHCV8E1oyXWQpMFb9
+	6A==
+Received: (qmail 4105087 invoked from network); 8 Apr 2025 10:09:41 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2025 10:09:41 +0200
+X-UD-Smtp-Session: l3s3148p1@kZrq3z8yPt4gAwDPXyfYALbiJ46yNPq3
+Date: Tue, 8 Apr 2025 10:09:41 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] mmc: core: Further avoid re-storing power to the
+ eMMC before a shutdown
+Message-ID: <Z_TZxXORT8H99qv4@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407152759.25160-1-ulf.hansson@linaro.org>
+ <20250407152759.25160-3-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3] ipv6: sit: fix skb_under_panic with overflowed
- needed_headroom
-To: Paolo Abeni <pabeni@redhat.com>, <davem@davemloft.net>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
-	<horms@kernel.org>, <kuniyu@amazon.com>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250401021617.1571464-1-wangliang74@huawei.com>
- <fe13ece8-67ea-48c0-a155-0cb6d2bcfc52@redhat.com>
-From: Wang Liang <wangliang74@huawei.com>
-In-Reply-To: <fe13ece8-67ea-48c0-a155-0cb6d2bcfc52@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wFaAIlzBKtP9i0pS"
+Content-Disposition: inline
+In-Reply-To: <20250407152759.25160-3-ulf.hansson@linaro.org>
 
 
-在 2025/4/3 19:50, Paolo Abeni 写道:
-> On 4/1/25 4:16 AM, Wang Liang wrote:
->> @@ -1452,7 +1457,9 @@ static int ipip6_tunnel_init(struct net_device *dev)
->>   	tunnel->dev = dev;
->>   	strcpy(tunnel->parms.name, dev->name);
->>   
->> -	ipip6_tunnel_bind_dev(dev);
->> +	err = ipip6_tunnel_bind_dev(dev);
->> +	if (err)
->> +		return err;
->>   
->>   	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
->>   	if (err)
-> I think you additionally need to propagate the error in
-> ipip6_tunnel_update() and handle it in ipip6_changelink() and
-> ipip6_tunnel_change().
+--wFaAIlzBKtP9i0pS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Thanks，I will add it in next patch.
+> @@ -2187,11 +2198,12 @@ static int mmc_shutdown(struct mmc_host *host)
+>  	int err =3D 0;
+> =20
+>  	/*
+> -	 * In a specific case for poweroff notify, we need to resume the card
+> -	 * before we can shutdown it properly.
+> +	 * If the card remains suspended at this point and it was done by using
+> +	 * the sleep-cmd (CMD5), we may need to re-initialize it first, to allow
+> +	 * us to send the preferred poweroff-notification cmd at shutdown.
+>  	 */
+>  	if (mmc_can_poweroff_notify(host->card) &&
+> -		!(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
+> +	    !mmc_host_can_poweroff_notify(host, true))
 
->
-> Side note: possibly other virtual devices are prone to similar issue. I
-> suspect vxlan and gre. Could you please have a look?
+Ooookay, I think I got this logic now. I think it makes sense to make it
+more explicit in the comment, though:
+
+"This is then the case when the card is able to handle poweroff
+notifications in general but the host could not initiate those for
+suspend."
+
+Something like this?
 
 
-Ok, I will try to reproduce the issue in vxvlan/gre scene later.
+--wFaAIlzBKtP9i0pS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Thanks,
->
-> Paolo
->
->
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf02cUACgkQFA3kzBSg
+KbZ6hQ/+JgjDM+tiqwQyiVHY1ME8Pp9vdyk4aU/f4kmFB0OkiTrvhclAvVKoISaY
+o4UkChV0O+1a+6hcltJS6vHzFNXeY/UYFlKtw1b14DFdAUc9829SOT7+D1c4DWvN
+VmfWkJqaeZaXgKfPutJJKYayfe4RX1FqZujSF1Vyc2NKhmYxCfrLBKf9PJdrDM+H
+Kiv9+nOn1ieG+qJWPJp0wqrQe0NnVvVA0LF6X4zaWqLqKcg8Ad6+OtP18nA8OR4L
+nmNczgC1aeFeE30hTb7rONdWucdH45R76ikbutdfGigsv2PCd85xGam56/BQQ811
+kGXfBUTmnkS/WsycWBCR52zX6ZNRPMBfq2/szudJjnboe/vWbxJnLfbcxIHzUeLb
+NYwYmgpEPaIbm22SutpIZdG1lHcmr6GLF60p8AUTTd6P712sLD0mEHlpa5fvBY7I
+DhIF/UBvsjd1/hQqTZui4EbA1rFSWId/qKACg4AKQUqAgX+U4TxHMfNJdDBDHdp0
+SEG3T099X2W+HaQyYIPwE0ccSYRHqEa/7JTO4HSDQLCiCAPawqAmd/FlDwDkrQgi
+IC4+z+MwdmU+K22SGSmJNfUlvsCUPmFsoKmPzcoG2EBzFpN0c8P6s8JDlogi0iwG
+ICBr6LHOf/jg55SeRjFiRZG7wJZ3ujF9pMW5eqQAaziy98io538=
+=PtM2
+-----END PGP SIGNATURE-----
+
+--wFaAIlzBKtP9i0pS--
