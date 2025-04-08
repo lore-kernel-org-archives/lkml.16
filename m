@@ -1,120 +1,115 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800091F098D;
-	Tue,  8 Apr 2025 15:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5835C39ACF
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125243; cv=none; b=YZpPgX34K1okvZ6EitRJ7B24uk99YVu8yINzvZuytcZO+ChYVh5rMhgEh+6RHgR/HH3zFRlXCB4aUvliqDE+t2nio0ATfLVOTek8AMXyZMOEcCHUCdbryj8LXnTgdfz/TWMeuAdvZi+g5UyYXI5der6p0L1yhzi6lR7t4h9i4Pc=
+	t=1744125283; cv=none; b=NC/9MzmEthE+iRLUTaSCZbQ5MtkVYIUt48Y4/qU0WmLKiEC0FoEcLrbqoF+L9XMdH2sBeuExNAXkVSMLIUs3IAKTUfYA0iV2smQc5p/p8eSb9AF3yR0ifIpBvwreA7xMHxhr7vOcc7Z64GvjvzP3/UOvgIRQ7yjnJsra79rUMfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125243; c=relaxed/simple;
-	bh=8p3t0lkqP6MY+gt6AiZADjhwdZ+1gjcjLL6bW89DHiY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=JmoiNPr4Gmv7j17tl6HFjKvWaGWm+xKn7q56N6qJe1qGYqKkAE3JLV6HI26sFzcj1zRjuDxyqDGvRygUMkL2CBi4ptxVGBWyIJN5VY7njz9RzxQiyCdU46m/b8yU8631AqdvRfTiOCM1NlpjJ7DJXDdIXdvbylZaC3GBkeKpjac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e0UNBGod; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744125283; c=relaxed/simple;
+	bh=SPSH2WSE+XljXvfZIgoqUM5llE/o4vKzaxbeTFlVrks=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=GSJ/NHmxxWRH4Wf7gD2ZDUiL5bmfmZFXCz9jiCRzwrK2P2lKNxeKYpeLJBY8MppddxHDZIUtOMiid6d42nrwOkAHE5lvgex8MjL3Eqct1W3N+xUvLDLCAFtdoyvxq8X004YPeLu/CyXqN2ealBSRWpgFxTTtYMWcibIa9t+6UJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=LrDSWY1f; arc=none smtp.client-ip=209.85.166.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e0UNBGod"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9081E44304;
-	Tue,  8 Apr 2025 15:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744125238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ABDY6poh0HThAHrjisqjJxeh621Yt7h0FayEtDXs8a4=;
-	b=e0UNBGodg2EZ86zi6OaGzuuF6bdNAYXjeXAwUVqzhoUgJk2DB2OMM6UbxH+GaL6AF+S6TE
-	WkhDhb3vRWVzj8KS2Vo3uRT9UIX6UrANzHhaZRDIsbJjlyA9j5yw6aIO07XYDvRx3OD9Or
-	++LdKi+50MW2olNWpkpYdKOgu5xHjzLp7FoMmdqO6uRWLkJtd4DE88vXIZKS8nFNgH1eo3
-	cow28PW5jz2i+yrtMIr3ZuGX1iHJFoPmPLgeNBgvsMGdsnS53/bJEG5ob1SoFUe4v5Jplj
-	pwubq7Ej8hXCwX4zDyec0KJ0k9PEgTFo7RNt8rel/Ra1V7jxu6MZmM4zscARAg==
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="LrDSWY1f"
+Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3d57143ee39so45014275ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:14:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744125280; x=1744730080;
+        h=content-transfer-encoding:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R/O97uOoVzQU5zZ/kGe0w5BAxKzZ3HHF/MfBYDQo+ew=;
+        b=HQFLeBknIhmRs+XomvA9T5Wil8QCSMrDyrAkF5d05x3FFyWpp0rdQx4T30sIari1kO
+         Qu70AZ5VrFi4Yq6khgWE/SsivxAx+IXRHOsm+L35ARmHMGlT4TJOABHc/xDp3cZB1fp/
+         KfTJGCy5b3tRNzcTXxBUPD031F4R/e8IcDA4yC/xKQwjPuwrWE9D0naJUqdCM5OHQY95
+         E9ARGImRHUSgBz+aV/yeI66Av2bjeWDQQh0+k80nmol8A/I2RJpRDDdVDzoi3qnafPUX
+         pfFoci4I014dfL34CpFh9zFPHGgmyJzpH5YpshlzSpxLZVJoTuTn7TO+y0tHVGweL9I0
+         nCtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHFJXqmqztrbb36Oxis9fvGyyn8JhnPiFu6NjDbdCNSF77Wd7V0CQ5dxqkNIHnFRtiW3Gnr6cTDtqs+SY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/GsNZyt3zRampXFhBTPEmmy34Nplp3K3Iv5iQHXv0vqT1fAt7
+	reGh77pga8oubaoMfS9HLtevwPYnTZ27yclPM8XLU5tY4e7e9n0wOeGA6dIygoq6vi0WhCGrJR3
+	+cYGJrI4rexG3+AV0F9VEaRrDSdhP+Q==
+X-Gm-Gg: ASbGncu7pxj1WBBsJxOm4gg5uu5dszWWL501H7LDzfeYjoYZNx8U/cNeOL/pFGa4xjD
+	RF8sKDULM2U0pZN68czE0W/8Sd8msiFVrSLfiyIedIzUhUD2Bc+Tr8HatYx+2tGouKm9QuxJYWy
+	roTsgHu6ITRQCnna1tvfnkgsVisLSqZsoiyUxbHaWX5QNnidpofybUM+wXghSJeawyqORCjNqTN
+	KWP4eatF+xsf/KvxoXL27HJYz+xLg6lJjqJ3GD3sLE18DrJyfmXEyvPXIgVRg0VHHKIpaUmA2JF
+	NXhFRuyK3xHE9rkoUOifTsqN3/Q=
+X-Google-Smtp-Source: AGHT+IHRBTG6+uqcyAAc/HKIV+mc/d+bQv8wck3AXmAPQOGb3TE7JsAnfu9/DW9a3DfSEJWosmHZ7CG1JJKH
+X-Received: by 2002:a05:6e02:348f:b0:3d5:df21:8481 with SMTP id e9e14a558f8ab-3d6e3e66be1mr184350015ab.0.1744125280423;
+        Tue, 08 Apr 2025 08:14:40 -0700 (PDT)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4f4f43bb938sm120574173.3.2025.04.08.08.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 08:14:40 -0700 (PDT)
+X-Relaying-Domain: arista.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1744125279;
+	bh=R/O97uOoVzQU5zZ/kGe0w5BAxKzZ3HHF/MfBYDQo+ew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LrDSWY1faZQQFl9QwD7/kcPM83WYFdTHMX5npzlW1T1CrRpVsZKaNI6dYqh9dIkuc
+	 si5P4JoOCqnH5/O+d4FV6NbxTUaZ7GVJijv9lzdewWh5qRutHupZZAT4mCbRY4gTUm
+	 EHsaNZ4A9FA1DG4VVOhFkiDXlqJkBvh/9TY61WNOhhuwZ1ueWHNZSJxmCBokFEBr5c
+	 W+jRD7fHdR/GT1UqTvM7UAtO/dvZZs+rNI/1H46tQjDV+f470+xFjoEqZjbXhSdMGQ
+	 UO88GEFnoKEATLyKVKrsnR/JVwEtsaj/OGnjOVYkvIDAnkF8zLOsxPzgv90IKl8qd0
+	 cIXrdxGhPM3pg==
+Received: from mpazdan-home-zvfkk.localdomain (abran-ibgpevpn-us285.sjc.aristanetworks.com [10.244.168.54])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id 9F23B10023B;
+	Tue,  8 Apr 2025 15:14:39 +0000 (UTC)
+Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
+	id 9864340B19; Tue,  8 Apr 2025 15:14:39 +0000 (UTC)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Marek Pazdan <mpazdan@arista.com>
+To: andrew@lunn.ch
+Cc: aleksander.lobakin@intel.com,
+	almasrymina@google.com,
+	andrew+netdev@lunn.ch,
+	anthony.l.nguyen@intel.com,
+	daniel.zahka@gmail.com,
+	davem@davemloft.net,
+	ecree.xilinx@gmail.com,
+	edumazet@google.com,
+	gal@nvidia.com,
+	horms@kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	jianbol@nvidia.com,
+	kory.maincent@bootlin.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	mpazdan@arista.com,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	przemyslaw.kitszel@intel.com,
+	willemb@google.com
+Subject: Re: [Intel-wired-lan] [PATCH 2/2] ice: add qsfp transceiver reset and presence pin control
+Date: Tue,  8 Apr 2025 14:22:43 +0000
+Message-ID: <20250408151439.29489-1-mpazdan@arista.com>
+In-Reply-To: <6ad4b88c-4d08-4a77-baac-fdc0e2564d5b@lunn.ch>
+References: <6ad4b88c-4d08-4a77-baac-fdc0e2564d5b@lunn.ch>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Apr 2025 17:13:54 +0200
-Message-Id: <D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Shawn Guo"
- <shawnguo@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>, "Fabio Estevam"
- <festevam@gmail.com>, "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Andi Shyti" <andi.shyti@kernel.org>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>, "Peter Rosin"
- <peda@axentia.se>, "Derek Kiernan" <derek.kiernan@amd.com>, "Dragan Cvetic"
- <dragan.cvetic@amd.com>, "Arnd Bergmann" <arnd@arndb.de>, "Rob Herring"
- <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Mark Brown" <broonie@kernel.org>, "Len
- Brown" <lenb@kernel.org>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>, "Daniel Scally" <djrscally@gmail.com>,
- "Heikki Krogerus" <heikki.krogerus@linux.intel.com>, "Sakari Ailus"
- <sakari.ailus@linux.intel.com>, "Wolfram Sang" <wsa@kernel.org>, "Geert
- Uytterhoeven" <geert+renesas@glider.be>, <linux-kernel@vger.kernel.org>,
- <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
- <linux-clk@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-spi@vger.kernel.org>, <linux-acpi@vger.kernel.org>, "Allan Nielsen"
- <allan.nielsen@microchip.com>, "Horatiu Vultur"
- <horatiu.vultur@microchip.com>, "Steen Hegelund"
- <steen.hegelund@microchip.com>, "Luca Ceresoli"
- <luca.ceresoli@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
-To: "Herve Codina" <herve.codina@bootlin.com>, "Andrew Lunn"
- <andrew@lunn.ch>
-X-Mailer: aerc
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
- <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
- <20250408162603.02d6c3a1@bootlin.com>
-In-Reply-To: <20250408162603.02d6c3a1@bootlin.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdfvhhhomhgrshcurfgvthgriiiiohhnihdfuceothhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhgfeijeduheejtdduteffleeggeejieffiedvteefjeefudekvdeggfeihfeivdenucffohhmrghinheplhhptgdrvghvvghnthhspdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegvddprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
-X-GND-Sasl: thomas.petazzoni@bootlin.com
 
-Andrew, Herv=C3=A9,
+On Mon, 7 Apr 2025 22:30:54 +0200 Andrew Lunn wrote:
 
-On Tue Apr 8, 2025 at 4:26 PM CEST, Herve Codina wrote:
+> As the name get/set-phy-tunable suggests, these are for PHY
+> properties, like downshift, fast link down, energy detected power
+> down.
+> 
+> What PHY are you using here?
 
->> What exactly does this DTSO file represent?
->
-> The dsto represents de board connected to the PCI slot and identified
-> by its PCI vendor/device IDs.
-
-If I may extend on that by providing what I believe is a more
-accurate/precise definition.
-
-The DTSO doesn't represent the board, rather it describes the HW
-topology of the devices inside the PCI endpoint. Indeed, the PCI
-endpoint is a full-blown SoC with lots of different HW blocks that
-already have drivers in the kernel (because the same chip can be used
-with Linux running on an ARM core embedded in the SoC, rather than
-access as a PCI endpoint). So the DTSO describes the full topology of
-the HW blocks inside this complex PCI endpoint, just like the DTS
-describes the full topology of the HW blocks inside an SoC.
-
-Please see:
-
-  https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2=
-023%20Non-discoverable%20devices%20in%20PCI.pdf
-
-And most notably slide 6.
-
-Best regards,
-
-Thomas
---=20
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
-
+Thanks for review.
+It's PHY E810-C in this case. According to spreadsheet: E810_Datasheet_Rev2.4.pdf
+(Chapter 17.3.3 E810 SDP[0:7] (GPIO) Connection), it's SDP0 and SDP2 GPIOs 
+are being connected to QSFP Reset and Presence pins correspondingly.
+I assume you may suggest this use case is not directly PHY related. In first approach
+I tried to use reset operation which has following flag in enum ethtool_reset_flags:
+ETH_RESET_PHY           = 1 << 6,       /* Transceiver/PHY */
+but this doesn't allow for reset asserting and later deasserting so I took 'get/set-phy-tunable'.
