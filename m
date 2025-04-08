@@ -1,104 +1,106 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF3253B44;
-	Tue,  8 Apr 2025 20:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9399724886B;
+	Tue,  8 Apr 2025 20:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744144193; cv=none; b=RzjgeKDlZWbq439RNLkICtgQ367hC26nCvGgPuX1gS+LppotEgA/sypSbw8H1GlmR6ORaXPchGh6OwhVidSFdBmoU0pJQk5IiDkscK37haS5Ok5D2FE1U+IdW1YQz+QsdOjL6YoLteMy+yHaS7WrvwgLIZsmrbXf2sM+O6dsRHk=
+	t=1744144222; cv=none; b=hT1vy4qfzYFwjMZpCV+hVnefSHquXy+cRIesr1gsRP6x2NGQx1q8pl4EWzpciXtstGPPzwuau4LtkkLNDpABC1+qjHWqSjhW+wtVIaL62Y0TgQFeU806mONrnRsCI/f4AT26pLYI4G83dcQ3EQH6qmSAzQXlrVRJXz7SPBBwUfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744144193; c=relaxed/simple;
-	bh=b+rNCdbPmnugdFvsNbyI7buVDELrFNjrHA4nS8YF+d4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EJqzuq++YNesbkeiWgjHP3HYMNajccV8Y0WIfpblFw/S1yv0qNxCfq4FWmxoI+rBTMYDVG55Xw4ILfG2V9hpaC1tZqZ/ZMDFLQ9f9JbgThrIQCHJH7NlVkAdh4tKlhhsrUfozeK9QjgkxybFTH7inCevD8RrVdbJdQderFkh5rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=OvHslTzO; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1744144222; c=relaxed/simple;
+	bh=pSNYHP17o7Fgq2T92jXtQMIX7yPDgExcuj9fOGXUZ58=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tVNXRlcU/7cn3d44OJ0WoqX9n8hA1ezur7qq/E0976p6M+734B/7oTMqeQkOfXtKWg8FiuYoNNclbaozsRhPw68thn4M5UH3Ec3wo0UTa0Em/UtaOrfMF/NyVam5RVkldKl2U51KsUzLVpM5HOMCDtr5k4ws9CLQdvSFRBhLdkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eX+kTm7k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="OvHslTzO"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id F40941FB54;
-	Tue,  8 Apr 2025 22:29:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744144189;
-	bh=qfgWLRBolkHkDVKstg0SDAzftES3+Ba6uH8UeszjsEA=; h=From:To:Subject;
-	b=OvHslTzOP5/V/+c/cQ1/XP3c710Pc4o34JCi79Ofpf87b7SOAdw2g+Lzein9UGd+Z
-	 bzrgVqmuswVEqav83nnMaKU7uDqagVNXyHCARkqXtk0w4SGz4xV+ttNUaVsuAht8Ud
-	 3Zl5eUoahWvKw1JZgiRE6oUk3s/eYKQafni+1auAk/1tHVoAWgNTyC3bACVqmUl8Vl
-	 qrQ9N5hjbaYRV1yx9n07o1T/YGp1oIl+0zV4i1MaasPvcmAdI36vFH+BC7+kXbjKc6
-	 FKQnRVQYZCm5PWvrPm+CHw6pu4olvqs/OKTNq09rBugLl7gs0bHzKAW0nipouyRjmR
-	 MZvXTcnNB1xXQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] arm64: dts: freescale: imx8mm-verdin: Add EEPROM compatible fallback
-Date: Tue,  8 Apr 2025 22:29:39 +0200
-Message-Id: <20250408202939.6887-3-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250408202939.6887-1-francesco@dolcini.it>
-References: <20250408202939.6887-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eX+kTm7k"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ECEE2C4CEE5;
+	Tue,  8 Apr 2025 20:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744144222;
+	bh=pSNYHP17o7Fgq2T92jXtQMIX7yPDgExcuj9fOGXUZ58=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=eX+kTm7klUXXhi7gXo7gVqU/F7CkIwCWabnuMSbkSg5iW2R85MPGt1Yqp6+4f4h07
+	 L4mYUBNTtWPo6K7ADiRgoB76izsKPwUzXy7HLyukJSupMBnQjB0l9txUTCg+3pf8qD
+	 QekqpLZ7glnBUiyLNJcHjPeZ13vtQNm8GVGazHlU4y2IT9+hoJop+4GXpvWcHaOZZG
+	 07xqidW0NEIujzGvlhTy5UUhPAPbZ1NLlbvuUf0onhy/xgCPz6Bv1quQWBxJu319cI
+	 AURtyt5pWC6pNp9GCFh3KQYmNqf4mV8GBm0EfKZICcO0wzWUdRv1pnrXEv/dX3/DMZ
+	 rxX9gaADJ+gPQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA14C36010;
+	Tue,  8 Apr 2025 20:30:21 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH v2 0/4] Tegra CEC Updates
+Date: Tue, 08 Apr 2025 15:29:57 -0500
+Message-Id: <20250408-tegra-cec-v2-0-2f004fdf84e8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEWH9WcC/23MQQ7CIBCF4as0s3YMxSLRlfcwXVAY6CS2NNAQT
+ dO7i127/F9evg0yJaYM92aDRIUzx7mGPDVgRzMHQna1QQqpRCc0rhSSQUsWNV2MHsh36uqh/pd
+ Ent+H9exrj5zXmD4HXdrf+k8pLQokqZy7Ka0H5R9hMvw62zhBv+/7FzTJHCGiAAAA
+X-Change-ID: 20250407-tegra-cec-7e3a7bef456f
+To: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744144221; l=1593;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=pSNYHP17o7Fgq2T92jXtQMIX7yPDgExcuj9fOGXUZ58=;
+ b=/4oHnJM10rg/wTNM5JAmmK5r0+5IGk+KmssuLjFh/kfOcHrWh4LaIoENtPMl5ameemKTJqILk
+ OqKaVGF4L6kBQ29G4NSP/Yy4pj+691Mm1WKhTo9o5wPCMlhCjyYuvN/
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+This series updates Tegra hdmi cec support to be usable out of the box
+on Tegra210 through Tegra194.
 
-According to the AT24 EEPROM bindings the compatible string should
-contain first the actual manufacturer, and second the corresponding
-atmel model.
-
-Add the atmel compatible fallback accordingly.
-
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v2:
+- Dropped patch 2, per request
+- Added change to declare fallback compatibles instead, as per request
+- Update patch 1 to allow fallback compatibles
+- Link to v1: https://lore.kernel.org/r/20250407-tegra-cec-v1-0-e25dd9577b5f@gmail.com
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-index 7251ad3a0017..d3d3ebf035db 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-@@ -528,7 +528,7 @@ channel@7 {
- 	};
- 
- 	eeprom@50 {
--		compatible = "st,24c02";
-+		compatible = "st,24c02", "atmel,24c02";
- 		pagesize = <16>;
- 		reg = <0x50>;
- 	};
-@@ -633,7 +633,7 @@ hwmon_temp: sensor@4f {
- 
- 	/* EEPROM on display adapter (MIPI DSI Display Adapter) */
- 	eeprom_display_adapter: eeprom@50 {
--		compatible = "st,24c02";
-+		compatible = "st,24c02", "atmel,24c02";
- 		pagesize = <16>;
- 		reg = <0x50>;
- 		status = "disabled";
-@@ -641,7 +641,7 @@ eeprom_display_adapter: eeprom@50 {
- 
- 	/* EEPROM on carrier board */
- 	eeprom_carrier_board: eeprom@57 {
--		compatible = "st,24c02";
-+		compatible = "st,24c02", "atmel,24c02";
- 		pagesize = <16>;
- 		reg = <0x57>;
- 		status = "disabled";
+---
+Aaron Kling (4):
+      media: dt-bindings: Document Tegra186 and Tegra194 cec
+      arm64: tegra: Add fallback cec compatibles
+      arm64: tegra: Add CEC controller on Tegra210
+      arm64: tegra: Wire up cec to devkits
+
+ .../bindings/media/cec/nvidia,tegra114-cec.yaml           | 15 +++++++++++----
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts        |  6 ++++++
+ .../boot/dts/nvidia/tegra186-p3509-0000+p3636-0001.dts    |  6 ++++++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi                  |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts        |  6 ++++++
+ arch/arm64/boot/dts/nvidia/tegra194-p3509-0000.dtsi       |  6 ++++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi                  |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts        |  6 ++++++
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts        |  6 ++++++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi                  |  9 +++++++++
+ 10 files changed, 58 insertions(+), 6 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250407-tegra-cec-7e3a7bef456f
+
+Best regards,
 -- 
-2.39.5
+Aaron Kling <webgeek1234@gmail.com>
+
 
