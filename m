@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06EB255E31;
-	Tue,  8 Apr 2025 19:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730DC255E46;
+	Tue,  8 Apr 2025 19:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139138; cv=none; b=FCHpUKdD5LgGfLA86FNm/5ajg1lyEmJwD2oxGFe1J/FK9LiU0dTSDGuDeTLYHBq3IrxcdIZnEciyydkx12/irujuQNQHXEfa1diTzgwpCBWgKMzIpHT0XW1Tqsm5WU+aNCJxhjWnqbK0empSefdKGMEo45XzZ2c/3M2/xlYtUK4=
+	t=1744139139; cv=none; b=LNvDTw88+nK7RvqvndSC1btQqm4jR3UwxlcvcuNpIbVveVrlgnT22KvgR3j0/cAfX4mRqFvFpJaBMrnjk1u/EK0T2i2CVCN8sLjBXBkHhsgtjZEEhOGDR5JlRLInH0qM6wU3rtGwYpjYIMSDZIdseFD7Bhy0EO+Mlq9uY5kIchQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139138; c=relaxed/simple;
-	bh=cmEwMf+CdAFxhyvqEcC9fSt/RQTJ0oU/NZ6SWa5sBdc=;
+	s=arc-20240116; t=1744139139; c=relaxed/simple;
+	bh=4V/FJXlz9m+TRArp4odRVVw/03mugJsmMS1kWvqwLlA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=aof8M6KlH3pfQiYRRJVROK9zd4rjZz521CyPVZFiQb3SwpjLyGj7XfxwdyH/3KbuMdHm2POyCtqMiGhVWzzZJ9f3SVgInJQB2nM4BaCIoKSZwfUUhBzSOkEm8eZkaDrgnzDep+ogsMI3laC7QjWg1rf0rVieMVe+xYNllZjmOXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ednHus7U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eJe9PbUI; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=CE9N5a6GEoU4H3khmSI2w5hYN4w2fktBjieFQd8MklK5s8lcD5WzZhviy139rD45UBmha9iq9slYZmiywwuCkBI2Vi1MaFWMNoyRsTbC2vLLZ+/OflrqpO8LS1rfnfNHOmRlGRXNJUSIyd7Po2Sb9n0qGhHwgCNN3wn6R6guc84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2emj2WOI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ny7G0DoC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ednHus7U";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eJe9PbUI"
-Date: Tue, 08 Apr 2025 19:05:34 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2emj2WOI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ny7G0DoC"
+Date: Tue, 08 Apr 2025 19:05:35 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139135;
+	s=2020; t=1744139136;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6TR6KwGETOnn8HsO6nIa7qZ2S/gYo1n0SOCM68DEK5I=;
-	b=ednHus7UZfSpsBulpTzT4OkUHB3SzzvmEBvrLeXPBPfmycwZQdP5oMK7U8J4srjZilVtLy
-	V/013ZXx+viAEjCVLPBg8BFmjTVutFlvniyReNyS0GVI1EZzy90mwzBdIcZ0LaX+X38Z65
-	wEDyZLGYXiaVSFRVDGrpty0ldGSpPkwDz7x0m+ojeXMojZBijXb4i6yc4llASt8a1hAlV3
-	QvOMkGuR2LZEmVP2ZRyf8Rkieypy8W2ysWDjbmL4VyLRtP+801Qz+lc7m0Hxa/slJKQNn/
-	6F1uL9xDz3ngcUQnEOxmTXvUzJmHRXC+2L14zSiS/rYff8uUNiKAEIKvdyhh8Q==
+	bh=4W0bkE13i0Pph0UQo0Fdl307S9NvKfmuvqFM6RYXgJA=;
+	b=2emj2WOIjKaQfyzGIZi4n+2VZCbfjbWe1oGsr5bdn/2+UEtmjx6PjZPjFzhI54y3U/ww0G
+	CQiA/HxKxhWBEmBnS+3Kfl4uP6mtg7AxBlnwwUgfGZbJP2+KXQNwDukgaVoSzi7TuZ5sWZ
+	hc8RbjEOCSAw8maYjChVOAczj6beLC81KNv33pvmmnaXC/AqHMomjVOsYx1CFew5RUs5qx
+	f6FUypYPBy/1TL3ljN9iY4DhbVUqcrsu+/D9SMs5BCo83GCqk8i5JCr3ML2ev2Y+dumCSR
+	uTcb/d89wiKcbpE+P/Xp/yJLlKOnf54m235/0zNjZhCAYyxKumjc6ZzVc51JeQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139135;
+	s=2020e; t=1744139136;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6TR6KwGETOnn8HsO6nIa7qZ2S/gYo1n0SOCM68DEK5I=;
-	b=eJe9PbUIIlwwdr29rBsj8WZ+T8OhSTAaHSuwOxWoo6frqwKyKEl1H/b0U3dRDpO9MYUMSX
-	kSErdD5c3XBcEpAA==
+	bh=4W0bkE13i0Pph0UQo0Fdl307S9NvKfmuvqFM6RYXgJA=;
+	b=Ny7G0DoCgy/LxsKx+81zqM8gTwxaWQDkK9YTotPmXNBxZEazg7wx2Hv607vQYIOhAEskQx
+	iabXiBLNPKGcWyDA==
 From: tip-bot2 for Michal =?utf-8?q?Koutn=C3=BD?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Skip non-root task_groups with disabled
- RT_GROUP_SCHED
+Subject:
+ [tip: sched/core] sched: Add commadline option for RT_GROUP_SCHED toggling
 Cc: mkoutny@suse.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250310170442.504716-6-mkoutny@suse.com>
-References: <20250310170442.504716-6-mkoutny@suse.com>
+In-Reply-To: <20250310170442.504716-5-mkoutny@suse.com>
+References: <20250310170442.504716-5-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413913474.31282.12084749501873134831.tip-bot2@tip-bot2>
+Message-ID: <174413913549.31282.14487045368820805817.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,92 +67,130 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     61d3164fec2ed283645dc17fcc51959e8f361e18
-Gitweb:        https://git.kernel.org/tip/61d3164fec2ed283645dc17fcc51959e8f3=
-61e18
+Commit-ID:     e34e0131fea1b0f63c2105a1958c94af2ee90f4d
+Gitweb:        https://git.kernel.org/tip/e34e0131fea1b0f63c2105a1958c94af2ee=
+90f4d
 Author:        Michal Koutn=C3=BD <mkoutny@suse.com>
-AuthorDate:    Mon, 10 Mar 2025 18:04:37 +01:00
+AuthorDate:    Mon, 10 Mar 2025 18:04:36 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 08 Apr 2025 20:55:53 +02:00
 
-sched: Skip non-root task_groups with disabled RT_GROUP_SCHED
+sched: Add commadline option for RT_GROUP_SCHED toggling
 
-First, we want to prevent placement of RT tasks on non-root rt_rqs which
-we achieve in the task migration code that'd fall back to
-root_task_group's rt_rq.
-
-Second, we want to work with only root_task_group's rt_rq when iterating
-all "real" rt_rqs when RT_GROUP is disabled. To achieve this we keep
-root_task_group as the first one on the task_groups and break out
-quickly.
+Only simple implementation with a static key wrapper, it will be wired
+in later.
 
 Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250310170442.504716-6-mkoutny@suse.com
+Link: https://lkml.kernel.org/r/20250310170442.504716-5-mkoutny@suse.com
 ---
- kernel/sched/core.c  |  2 +-
- kernel/sched/rt.c    |  9 ++++++---
- kernel/sched/sched.h |  7 +++++++
- 3 files changed, 14 insertions(+), 4 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  5 +++-
+ init/Kconfig                                    | 11 +++++++-
+ kernel/sched/core.c                             | 25 ++++++++++++++++-
+ kernel/sched/sched.h                            | 17 +++++++++++-
+ 4 files changed, 58 insertions(+)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/=
+admin-guide/kernel-parameters.txt
+index 3f35d5b..1682023 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6280,6 +6280,11 @@
+ 			Memory area to be used by remote processor image,
+ 			managed by CMA.
+=20
++	rt_group_sched=3D	[KNL] Enable or disable SCHED_RR/FIFO group scheduling
++			when CONFIG_RT_GROUP_SCHED=3Dy. Defaults to
++			!CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED.
++			Format: <bool>
++
+ 	rw		[KNL] Mount root device read-write on boot
+=20
+ 	S		[KNL] Run init in single mode
+diff --git a/init/Kconfig b/init/Kconfig
+index 681f38e..b2c045c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1082,6 +1082,17 @@ config RT_GROUP_SCHED
+ 	  realtime bandwidth for them.
+ 	  See Documentation/scheduler/sched-rt-group.rst for more information.
+=20
++config RT_GROUP_SCHED_DEFAULT_DISABLED
++	bool "Require boot parameter to enable group scheduling for SCHED_RR/FIFO"
++	depends on RT_GROUP_SCHED
++	default n
++	help
++	  When set, the RT group scheduling is disabled by default. The option
++	  is in inverted form so that mere RT_GROUP_SCHED enables the group
++	  scheduling.
++
++	  Say N if unsure.
++
+ config EXT_GROUP_SCHED
+ 	bool
+ 	depends on SCHED_CLASS_EXT && CGROUP_SCHED
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 58d093a..32fb4c1 100644
+index 042c978..58d093a 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -9020,7 +9020,7 @@ void sched_online_group(struct task_group *tg, struct t=
-ask_group *parent)
- 	unsigned long flags;
+@@ -9892,6 +9892,31 @@ static struct cftype cpu_legacy_files[] =3D {
+ 	{ }	/* Terminate */
+ };
 =20
- 	spin_lock_irqsave(&task_group_lock, flags);
--	list_add_rcu(&tg->list, &task_groups);
-+	list_add_tail_rcu(&tg->list, &task_groups);
-=20
- 	/* Root should already exist: */
- 	WARN_ON(!parent);
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 1af3996..efa22ba 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -495,6 +495,9 @@ typedef struct task_group *rt_rq_iter_t;
-=20
- static inline struct task_group *next_task_group(struct task_group *tg)
- {
-+	if (!rt_group_sched_enabled())
-+		return NULL;
++#ifdef CONFIG_RT_GROUP_SCHED
++# ifdef CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED
++DEFINE_STATIC_KEY_FALSE(rt_group_sched);
++# else
++DEFINE_STATIC_KEY_TRUE(rt_group_sched);
++# endif
 +
- 	do {
- 		tg =3D list_entry_rcu(tg->list.next,
- 			typeof(struct task_group), list);
-@@ -507,9 +510,9 @@ static inline struct task_group *next_task_group(struct t=
-ask_group *tg)
- }
-=20
- #define for_each_rt_rq(rt_rq, iter, rq)					\
--	for (iter =3D container_of(&task_groups, typeof(*iter), list);	\
--		(iter =3D next_task_group(iter)) &&			\
--		(rt_rq =3D iter->rt_rq[cpu_of(rq)]);)
-+	for (iter =3D &root_task_group;					\
-+		iter && (rt_rq =3D iter->rt_rq[cpu_of(rq)]);		\
-+		iter =3D next_task_group(iter))
-=20
- #define for_each_sched_rt_entity(rt_se) \
- 	for (; rt_se; rt_se =3D rt_se->parent)
++static int __init setup_rt_group_sched(char *str)
++{
++	long val;
++
++	if (kstrtol(str, 0, &val) || val < 0 || val > 1) {
++		pr_warn("Unable to set rt_group_sched\n");
++		return 1;
++	}
++	if (val)
++		static_branch_enable(&rt_group_sched);
++	else
++		static_branch_disable(&rt_group_sched);
++
++	return 1;
++}
++__setup("rt_group_sched=3D", setup_rt_group_sched);
++#endif /* CONFIG_RT_GROUP_SCHED */
++
+ static int cpu_extra_stat_show(struct seq_file *sf,
+ 			       struct cgroup_subsys_state *css)
+ {
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index d1e591f..898aab7 100644
+index c006348..d1e591f 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2165,6 +2165,13 @@ static inline void set_task_rq(struct task_struct *p, =
-unsigned int cpu)
- #endif
+@@ -1500,6 +1500,23 @@ static inline bool sched_group_cookie_match(struct rq =
+*rq,
+ }
 =20
- #ifdef CONFIG_RT_GROUP_SCHED
-+	/*
-+	 * p->rt.rt_rq is NULL initially and it is easier to assign
-+	 * root_task_group's rt_rq than switching in rt_rq_of_se()
-+	 * Clobbers tg(!)
-+	 */
-+	if (!rt_group_sched_enabled())
-+		tg =3D &root_task_group;
- 	p->rt.rt_rq  =3D tg->rt_rq[cpu];
- 	p->rt.parent =3D tg->rt_se[cpu];
- #endif
+ #endif /* !CONFIG_SCHED_CORE */
++#ifdef CONFIG_RT_GROUP_SCHED
++# ifdef CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED
++DECLARE_STATIC_KEY_FALSE(rt_group_sched);
++static inline bool rt_group_sched_enabled(void)
++{
++	return static_branch_unlikely(&rt_group_sched);
++}
++# else
++DECLARE_STATIC_KEY_TRUE(rt_group_sched);
++static inline bool rt_group_sched_enabled(void)
++{
++	return static_branch_likely(&rt_group_sched);
++}
++# endif /* CONFIG_RT_GROUP_SCHED_DEFAULT_DISABLED */
++#else
++# define rt_group_sched_enabled()	false
++#endif /* CONFIG_RT_GROUP_SCHED */
+=20
+ static inline void lockdep_assert_rq_held(struct rq *rq)
+ {
