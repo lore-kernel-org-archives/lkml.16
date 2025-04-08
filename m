@@ -1,53 +1,62 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24A922F39F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC39B22F392
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134893; cv=none; b=AiudyMqA9SwPyCe2JuDscR1R9kha1JPQnHhvZA3Vua8kbRWPhIHCLuBaRICkzKVfxkjw0BxjmtmWogPu0RiCPxmJgqDhCGwr2fyvM2dtfhEk6kqXZrfhcia/q0pbEQcs7iGwwctQioB2ZB1XOtKejYYQa5HNC4WgDkCp+z84xtk=
+	t=1744134932; cv=none; b=jznqLZkbcgl+GLvoZwUnuQoxxf0dkhsdWPjy56DrWc1/sOggqMJVKiUR/W4Ormnixev9gXBWEdFVBXOvU8vpesoJCkadbziL2SWS5vwMV+4/KRobyAN7zi2loBBkyJhFzqlDHRXrcrZQE+OypHKlLYj04kHfMUY+T3dWjwKSgOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134893; c=relaxed/simple;
-	bh=DLp7+lfnL8KdjgGKxSFd10D0tbhfX1Xaz/s1ljdW/IM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SUV+FhWeXoQ6AjIUGZqq9y5GVMSyzop2rDe0WUpo6mDOzhem4vST4DVzFDLlUye6Udw0ibNCSUmBGC5iCRfkvdzFj8qM/bE1Rv5a3nyi3Af2fDu69OyqI0RDEGJoqtFS0FNma2qP0jc6mkQFNJzG+meX1E5wCuRM2CFbCCiWzB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=Okvnehus; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1744134932; c=relaxed/simple;
+	bh=yRmas3K2xieaNhlmr4YhUVvJP1wdvguN8jnJktPsuaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZ95sVHziusFL5Hj7M3pgmEieluRJCx2n1xRjc04iiRxLy/1F9qnVaeBlDADsKQ/o2/+Q2AWq+f35HKw6xDyrnITSd9OSNS0N1WubtszGLNRHP+50wHFLVaTpHLgL0PfBCA2r1bD95TAETjUfd+mg2951zpNfSvv+CcAg9q9jec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0XE6s/E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="Okvnehus"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1744130623;
-	bh=DLp7+lfnL8KdjgGKxSFd10D0tbhfX1Xaz/s1ljdW/IM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=OkvnehusfA7tseY+u6Umufo9iKk91JOFLnHLF5s7kStz3ls9AC3lb+8AEvavsJKiD
-	 2Q4TtLPgBg8STW39emmX8fSaGNQgetCFLHJ0mQAHxSPO7rdrYBUaYE8L0Ei4e9cbuB
-	 b016a47sQCy0qpouNfVhpWdBOk0ufRmoAikHhpqY=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id B2C3A406F5; Tue,  8 Apr 2025 09:43:43 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id B1E7B401F1;
-	Tue,  8 Apr 2025 09:43:43 -0700 (PDT)
-Date: Tue, 8 Apr 2025 09:43:43 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Harry Yoo <harry.yoo@oracle.com>
-cc: Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
-    Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    patches@lists.linux.dev, Pekka Enberg <penberg@kernel.org>, 
-    Joonsoo Kim <iamjoonsoo.kim@lge.com>, David Rientjes <rientjes@google.com>, 
-    Roman Gushchin <roman.gushchin@linux.dev>
-Subject: Re: [RFC PATCH 1/2] MAINTAINERS: update SLAB ALLOCATOR maintainers
-In-Reply-To: <Z_Qz55SbnHK9LoW1@harry>
-Message-ID: <7edbb6f4-ba0d-3c56-5aef-066b5f4d90e9@gentwo.org>
-References: <20250407200508.121357-3-vbabka@suse.cz> <Z_Qz55SbnHK9LoW1@harry>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0XE6s/E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31262C4CEE5;
+	Tue,  8 Apr 2025 17:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744134932;
+	bh=yRmas3K2xieaNhlmr4YhUVvJP1wdvguN8jnJktPsuaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B0XE6s/EoS129ZTPP03lyNLBNr89ml4RGg/zzFnUTW9DKHiN/H54bAzo4GSoEE6x5
+	 gd7S5RJiCYot2SnEr4iQJufcFBYuQCtdHICy/60HOnlK35L2oB91L7pTpQ+bE1J0e9
+	 +/WvkTYSAXxSi82uHhhmIOKmC6ug254jDQAJKkGAiakhwzDfQotJJcVz5Jrv1aGMHn
+	 2ogNSf8XGixUqMR/Ey99e9r6j/UvC4q9yd9EqVLK3a3YNhVA/v5+EH3Mg4tniOyZ+2
+	 yvQMn2yUVRqEPHLwXBXyr7eGYwjYEg1YWnPaPPbXHR/WaEd4i1vETcO4JSsshNc1mM
+	 QY6Jt/7TGVPQQ==
+Date: Tue, 8 Apr 2025 07:55:31 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH sched_ext/for-6.16] sched_ext: Remove cpu.weight /
+ cpu.idle unimplemented warnings
+Message-ID: <Z_VjE_d9A6wRfZlx@slm.duckdns.org>
+References: <Z_RdpDkLCXm140RT@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_RdpDkLCXm140RT@slm.duckdns.org>
 
+On Mon, Apr 07, 2025 at 01:20:04PM -1000, Tejun Heo wrote:
+> sched_ext generates warnings when cpu.weight / cpu.idle are set to
+> non-default values if the BPF scheduler doesn't implement weight support.
+> These warnings don't provide much value while adding constant annoyance. A
+> BPF scheduler may not implement any particular behavior and there's nothing
+> particularly special about missing cgroup weight support. Drop the warnings.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
 
-Acked-by: Christoph Lameter (Ampere) <cl@linux.com>
+Applied to sched_ext/for-6.16.
 
+Thanks.
+
+-- 
+tejun
