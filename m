@@ -1,126 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D3926F462;
-	Tue,  8 Apr 2025 12:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0BC206F18;
+	Tue,  8 Apr 2025 12:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115960; cv=none; b=ZpBXSfo/tLKwgVb8UQdvliK5L6D5J3QnwCaIyZIlWJy1FAY7EF3/fpbXjoBG8b/321VYLWuNq0ej+PTQoQ1YZ/Jl7FTbouMQhUROOHCgSc28fdygg6ZvkCJcfwroas8wjE60cWTrcwtdJsiEE1k+w3ewh5DizYHNYkvoRMIvA3o=
+	t=1744116005; cv=none; b=qcQZm5fAHArOwH7RnQjaLNGWpVoqj2KfAihhpEyMD4QbI/LqTozjSBUXv6buEz9ft9XR2S9pmY8VdZs22eTnSERWa/mUmRmZaYvMuFpHQ8r1ghTP9jjpJgZtjFFaqg58aPR7HTCdjZrDwCioPCExnJw0T1o9Bfk45RYcG6gmueo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115960; c=relaxed/simple;
-	bh=zdCrsvBkwkAlbHAMoR8vjGyP4JtXAOHDR8/3GQ5F2NU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lX/8CUcAZv9ZUarK8MfiGZBwUjC718AlqGlPneiVbnexbBiwldm1RgZ4sYVQkakq5tRouecvry/7d8KJGecFWvp5UrYzeuiiIgy81ENbu7sgZKE+sYT0tjMZ/09yz1VyuGg6YhBspACppeKgDETni/8KkMc/9B2PoA8tU1d+s/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9ze+47o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744116005; c=relaxed/simple;
+	bh=W2T7YCdGADKb75b9b3DlWwavvOCPJ0/TwhvEwmQo7f4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UYRFFVmUQvWXyDWpa1/oBr7Thb8GZcdeYmcIOSsxMWIj8QIXPOqZJijP9Fh7lpL2HQA44JQi9mZNAwRyCJIcJ/a5eSkvy6jg4hkUuydWD35zCOVP62T74mnbnZF6qGFj/GjTEXkR/OWkYWd4jXvvImzEQnahT3nT+KWzrhhYg3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TCaZdcmO; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9ze+47o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED53C4CEEA;
-	Tue,  8 Apr 2025 12:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744115960;
-	bh=zdCrsvBkwkAlbHAMoR8vjGyP4JtXAOHDR8/3GQ5F2NU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=o9ze+47oXEJjDau0UliiX+wd69R3bkdCG1e4NviVmgYys7L4RgCEcF3SXFhRv1lB1
-	 L17/jBFcA7cJZKvTK8hc06sfpFd+n6AL8zfCvyM7p/Ig+jN7CSjaNDDdI5BMRvTLHf
-	 6urA/yky9MYeVx0SbNlxTrbstytaP++FFIPLuG1t7ygO1pTMosRWB6u4Sjlr9vFgYm
-	 BKK+lA/KPvcigw617O4YIdWwDUNitupXLhE3vRiy/Gz78ZmSpG99MTkElOoBAr4KLo
-	 yaLfPxZ5cLu6Q7W/uSc2HSxa9mrngII2bqp94OiXRjwdKK5CietJ62hvugdqolEgBU
-	 /TlLbWSl698ig==
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id EEF5F1200043;
-	Tue,  8 Apr 2025 08:39:18 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 08:39:18 -0400
-X-ME-Sender: <xms:9hj1Z7YStGxhPJWouy77Luwn3tWvtZAxmT5YqW7-aiLmEEortt-wZw>
-    <xme:9hj1Z6aXOW0fX4RdemxR-_KqIJgCk9oUU6BnMlqBb_S0UXmb5RWNy1dmMHqUBuoSj
-    bi8YT73h4nVDWtH2FM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefuddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
-    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepudefjeetteelhfegudekhfetffehtefh
-    tdevkeehfefgtdehheeghfektdekvdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvg
-    hlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgrhgvghhorhih
-    rdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshgvsggrshhtih
-    grnhdrhhgvshhsvghlsggrrhhthhesghhmrghilhdrtghomhdprhgtphhtthhopehkrhii
-    kheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivg
-    ifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghi
-    jheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvg
-    hlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghnughrvgif
-    sehluhhnnhdrtghh
-X-ME-Proxy: <xmx:9hj1Z98NLfhVvk_WwDWYro-8r2kGMF_kTBz7QrHGLdJnbd5aLv29Iw>
-    <xmx:9hj1ZxquHJbn6HNz8hHt6sNVN62ln_TV4WnBJToT_N5fUAP6hm4YaQ>
-    <xmx:9hj1Z2pB3fZrFsT3Hxe0aczAKDriyFZShNINA2kNSAx32G6RuzKGZw>
-    <xmx:9hj1Z3SymJ-8EfUHR8xHPJcO9tiiZQwDG3xETjIF6Imw05vOCN3MEg>
-    <xmx:9hj1Z-rE5bH55SCa0_P3mna9HYzHJ-fpboXX-IGUR673DMi_bANSM4oJ>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C426D2220073; Tue,  8 Apr 2025 08:39:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TCaZdcmO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=W2T7Y
+	CdGADKb75b9b3DlWwavvOCPJ0/TwhvEwmQo7f4=; b=TCaZdcmOEC/SZynHAHLgD
+	lCdsXB0IaOmQ0WUoOtRqdOPzO1I5js4hWQIu+Hbz3mD9GLipxDvvo7XXlTfdzTg3
+	BQsTpn2YVHv021pE9euB414Zfl7soUMKBdIpWkd4xL4L4cjqzZgP4Bx3sh9FcABN
+	7peCjWyNPtsstIBc0a+Ot8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDnpgLtGPVneK_AEw--.41217S4;
+	Tue, 08 Apr 2025 20:39:10 +0800 (CST)
+From: lvxiafei <xiafei_xupt@163.com>
+To: fw@strlen.de
+Cc: coreteam@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kadlec@netfilter.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvxiafei@sensetime.com,
+	netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	pabeni@redhat.com,
+	pablo@netfilter.org,
+	xiafei_xupt@163.com
+Subject: Re: [PATCH V2] netfilter: netns nf_conntrack: per-netns net.netfilter.nf_conntrack_max sysctl
+Date: Tue,  8 Apr 2025 20:39:08 +0800
+Message-Id: <20250408123908.3608-1-xiafei_xupt@163.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250408095854.GB536@breakpoint.cc>
+References: <20250408095854.GB536@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T1587df106ca63dd0
-Date: Tue, 08 Apr 2025 14:38:48 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Andrew Lunn" <andrew@lunn.ch>
-Cc: "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
- "Gregory Clement" <gregory.clement@bootlin.com>,
- "Russell King" <linux@armlinux.org.uk>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Alim Akhtar" <alim.akhtar@samsung.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-samsung-soc@vger.kernel.org,
- "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
-Message-Id: <18d59ff1-a357-413c-bde2-961ae0c9b5f2@app.fastmail.com>
-In-Reply-To: 
- <CAMRc=MfC7GukR5ZidkZJA8LMZaVXyqeygdUBz9v3oDmw8k+OPA@mail.gmail.com>
-References: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
- <20250407-gpiochip-set-rv-arm-v1-1-9e4a914c7fd4@linaro.org>
- <b032eea6-96c9-4511-8085-da9f5655c252@lunn.ch>
- <CAMRc=MfC7GukR5ZidkZJA8LMZaVXyqeygdUBz9v3oDmw8k+OPA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ARM: orion/gpio: use new line value setter callbacks
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnpgLtGPVneK_AEw--.41217S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw47XrWfAFyfGrWxGw43GFg_yoW8uFW8p3
+	yftrZrAryDtan3A34kKw17Ca1Fy393Ar13KF1UCFy8Cay5KrnI9rWxKF17CF97Cw4kCr1a
+	vr4jvr1kJas5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUhF4_UUUUU=
+X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKBMpU2f05gwTsgACsb
 
-On Tue, Apr 8, 2025, at 14:12, Bartosz Golaszewski wrote:
-> On Tue, Apr 8, 2025 at 2:03=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
-ote:
->>
->> On Mon, Apr 07, 2025 at 09:09:18AM +0200, Bartosz Golaszewski wrote:
->> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> >
->> > struct gpio_chip now has callbacks for setting line values that ret=
-urn
->> > an integer, allowing to indicate failures. Convert the driver to us=
-ing
->> > them.
->> >
->> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> What is you intended merge path for these? Have arm-soc take them as a
->> whole?
->>
->> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->>
+
+On Tue, 8 Apr 2025 11:58:54 Florian Westphal <fw@strlen.de> wrote:
+> That seems the wrong thing to do.
+> There must be some way to limit the netns conntrack usage.
 >
-> That would be best, yes. I'm not sure how many of these platforms are
-> actively maintained.
+> Whats the actual intent here?
 >
-> Arnd: you were not Cc'ed on this (get_maintainer.pl didn't show your
-> address) but could you take this through the arm-soc tree?
+> You could apply max = min(init_net->max, net->max)
+> Or, you could relax it as long as netns are owned
+> by initial user ns, I guess.
+>
+> Or perhaps its possible to make a guesstimate of
+> the maximum memory needed by the new limit, then
+> account that to memcg (at sysctl change time), and
+> reject if memcg is exhausted.
+>
+> No other ideas at the moment, but I do not like the
+> "no limits" approach.
 
-Sure, can you send them once more to soc@lists.linux.dev, either
-as patches or a pull request?
+The original nf_conntrack_max is a global variable.
+Modification will affect the connection tracking
+limit in other netns, and the maximum memory
+consumption = number of netns * nf_conntrack_max
 
-      Arnd
+This modification can make nf_conntrack_max support
+the netns level to set the size of the connection
+tracking table, and more flexibly limit the connection
+tracking of each netns. For example, the initial user ns
+has a default value (=max_factor*nf_conntrack_htable_size).
+The nf_conntrack_max when netns 1 and netns 2 are created
+is the same as the nf_conntrack_max in the initial user ns.
+You can set it to netns 1 1k and netns 2 2k without
+affecting each other.
+
+If you are worried that different netns may exceed the
+initial user limit and memory limit when setting,
+apply max = min(init_net->max, net->max), the value in
+netns is not greater than init_net->max, and the new
+maximum memory consumption <= the original maximum memory
+consumption, which limits memory consumption to a certain
+extent. However, this will bring several problems:
+
+1. Do not allow nf_conntrack_max in other netns to be greater
+than nf_conntrack_max of the initial user. For example, when
+other netns carry north-south traffic, the actual number of
+connection tracking is greater than that of the initial user.
+
+2. If nf_conntrack_max of the initial user is increased, the
+maximum memory consumption will inevitably increase by n copies
+
+3. If nf_conntrack_max of the initial user is reduced, will
+the existing connections in other netns be affected?
+
