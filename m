@@ -1,144 +1,278 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6402627EA;
-	Tue,  8 Apr 2025 08:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD79E20B7EF;
+	Tue,  8 Apr 2025 08:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101494; cv=none; b=OI3uqU9s9AHa8L0VomQ+HXjQthmzgfxc/s3hEf4+0pbWBpeSPK0EMAx+JbwVfSqWe9ZXEmT6zI5GF9fJWrvwl/Vvk9ynxE8j2MToWbN+kXnMxlGIL5jcDWZrV1XH4Q4ni24cIjfL98hvW2IBKkF+3sVHVQG+OSrZkEAjJdnt/j0=
+	t=1744101535; cv=none; b=TEsDpbu0TddU+8U+/7GgOFIf5R1JGuInFgMznmqq/fUV3YYgaDlkowxSK2XrEso2j/ayrAGmBbHI4k5WYJpXz+lzRC/PQOcpBT5sGkvNs78bbkiUgxCavcvBWDCLWUfiWDD8MJywipdW+NA/dhhaxdBV8tJHrRl6Vhf/OGHruOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101494; c=relaxed/simple;
-	bh=XX34lPy+Q29lQ57hsRPpZu70XY8syx0PGiPZ9KWfto4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UcUdXsMaof60w/gMGe6rH1FaTh6GQyvTZ2TAERWT4bmLURbVJAg1n+h/dR7ULNWYrilrx2rtFNusmwvNv2UFDeSsjb/jX9x0wZB3vHS+9OrGk8ZSztK26jssn3+hZ0CugUuYz42s0z1xSsnyims5xlI61eK+8iA2KEsUmN/QJjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d3gSowO5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c0vX2+O/; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744101535; c=relaxed/simple;
+	bh=tD4ZkMVt3jVD7U7yMoRCeDLuNYUNM43WUhXIx7cmSVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=u/eCM7fHjJKYi3VDwo3v4+ejuEQFcKKyls/2E7WrVurKTW11/4CEGIf4JRvpw3GwYPhs9SJxz9o0VW53bNXaQLZjEzNPseI4qX2Fo678AyNqlQ9tDibjUo70l43B47+cTrT0yfW+/pi4RnPn8re0g77LcC/BhFOoiVjsB7IJnRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HUTumJXr; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d3gSowO5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c0vX2+O/"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id C4F48114017C;
-	Tue,  8 Apr 2025 04:38:11 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 04:38:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744101491;
-	 x=1744187891; bh=VlvkU1faDx+thQEdDrOoGOPLhFtXWFIgx9WnhEz6y6Y=; b=
-	d3gSowO5zzowHZ2h4AqNsVzu9wnZXqlT1UveryZFYO11x/R+WzxEbG7SbS0ZCKPd
-	y8bicZcOBeg/URkB010IHD4eZ4BY9pmR23R3IEgF2aStwFFpx/v7+mi022toaFpr
-	9uGD4z3t6Fv6a6HnTPFUpTN/xYmHSG8eOmR1SmwvGW01bcgpV96+Nz6JPvM+SJ2J
-	/Y6FqkFXSghM9MKEt//4vfLMH/n9YKzqohfpd/BiIUYMe12+ysS3Lwq36PeU1x3n
-	2IyOq+6Ksb4fqk0ZKwuhCGAuOyoxmlHrlawmmdhD+UtavNBO4KQ92Nj9pqaEWwJA
-	y2mYP84KYYHZ5wJNf41A/w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744101491; x=
-	1744187891; bh=VlvkU1faDx+thQEdDrOoGOPLhFtXWFIgx9WnhEz6y6Y=; b=c
-	0vX2+O/tBfL+SfZ/cBvm6NUH0nAu6SUQeZe1kW++6GCH0XCzRzHVhkdH+nIcW79Q
-	Id00SH6dNRVSyhObO2J1FIkNCL/93+L+NhMs24v886kOoekO80jyFf6uTHExLTWd
-	2MZoQyfbVFCYtqvt/UFs1oJlmDAaY2hT5U7hCQnYGf3ilwFirYmMlS4GAPOuWpZc
-	mNuIjIckRSmXqskOYZ4CJOhSquM32S4Mi73WkJ0Koe4A3yUu2Iz3tWC+2y6WxjkF
-	ZQdf/u4a1TtcIVYRU0ibiaOZ0PdW6R6+DSdyx/SbwZhcDumnynvG14+xsehBuxb4
-	WrEsNwxeZ5L10Ao7opjLQ==
-X-ME-Sender: <xms:cuD0Zznghr422oPqDPolst399HuAmFd-Clo7xVYEpSpf4Ac0XLubkw>
-    <xme:cuD0Z23KYreNX_nkPYOohrNeTmnZeZrcqHUL_ASDg_jcR8_vTrW1oSoK9YJhlB1aD
-    EhHFzxhgIp8INrtzUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddviedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnmhgrghejsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepmhgrthhtshhtkeeksehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghhrg
-    hrugdrhhgvnhguvghrshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhorhhv
-    rghlughssehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmrg
-    gtrhhosehorhgtrghmrdhmvgdruhhkpdhrtghpthhtohepghhlrghusghithiisehphhih
-    shhikhdrfhhuqdgsvghrlhhinhdruggvpdhrtghpthhtohepihhnkhesuhhnshgvvghnrd
-    hprghrthhspdhrtghpthhtoheplhhinhhugidqrghlphhhrgesvhhgvghrrdhkvghrnhgv
-    lhdrohhrgh
-X-ME-Proxy: <xmx:cuD0Z5p2yvCKgKIGVW4kpMODvptzKgkFKhSjrwpjtl1CCgpuRVZCog>
-    <xmx:cuD0Z7lHnpNeAU1-5Y_dV16uJuIqhP4BJXwcpWr2-nx558x4W_uITg>
-    <xmx:cuD0Zx2EpNc5h69ZU2yEht0pz4693TraFiNHcUMpFq4XDJz146rQDA>
-    <xmx:cuD0Z6vqYBG4PBFu0HbdLrZvGeiipMCwJwyQJ7dASSI2saQ1fo6PRw>
-    <xmx:c-D0Zz5O0f_2t6RPrZkGXiK8j5klBf1TEFNJ5yOBW8jX3idx6r7qqAr8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1F6232220073; Tue,  8 Apr 2025 04:38:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HUTumJXr"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5388cet41115119
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 03:38:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744101520;
+	bh=qsaih3Jo6Z1Xo1D/DfJr19vzt9FO3H4iagoufj6pYzQ=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=HUTumJXrS7JayWUFy5URgF4UrZd/BpJ8Y/ByHx198XIAWCQIsP0tWT0hRn4Zh32wS
+	 CCoWvJ23kEtrCrGjRUbpcCEc7Xw2Y5lXDYiHwhc4OYORfm7eWSyDBfenJOBAmbbWew
+	 Mpc1WkM4D+inqRTm8sKgwHnV0p1PLVFbkcT01o6s=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5388cec5017789
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 8 Apr 2025 03:38:40 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
+ Apr 2025 03:38:40 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 8 Apr 2025 03:38:40 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5388caj6008681;
+	Tue, 8 Apr 2025 03:38:37 -0500
+Message-ID: <7ead4800-3653-49ce-9151-b7a78892bdd6@ti.com>
+Date: Tue, 8 Apr 2025 14:08:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T56050b542f246355
-Date: Tue, 08 Apr 2025 10:37:49 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Richard Henderson" <richard.henderson@linaro.org>,
- "Ivan Kokshaysky" <ink@unseen.parts>, "Matt Turner" <mattst88@gmail.com>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "Magnus Lindholm" <linmag7@gmail.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <e1356a60-525b-4405-ad5b-eb6e93de8fef@app.fastmail.com>
-In-Reply-To: 
- <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
-References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
- <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com>
- <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk>
- <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
- <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
-Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data consistency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 05/26] remoteproc: k3-m4: Use k3_rproc_mem_data
+ structure for memory info
+To: Andrew Davis <afd@ti.com>, <andersson@kernel.org>,
+        <mathieu.poirier@linaro.org>
+CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250317120622.1746415-1-b-padhi@ti.com>
+ <20250317120622.1746415-6-b-padhi@ti.com>
+ <0636d6a8-7de9-4887-82eb-3f5fd8a208d5@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <0636d6a8-7de9-4887-82eb-3f5fd8a208d5@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 8, 2025, at 02:34, Linus Torvalds wrote:
-> On Mon, 7 Apr 2025 at 13:46, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+Hi Andrew,
+
+On 07/04/25 19:13, Andrew Davis wrote:
+> On 3/17/25 7:06 AM, Beleswar Padhi wrote:
+>> The ti_k3_m4_remoteproc.c driver previously hardcoded device memory
+>> region addresses and names. Change this to use the k3_rproc_mem_data
+>> structure to store memory information. This aligns with DSP and R5
+>> drivers, and can be refactored out later.
 >>
->>  So unless I'm proved otherwise (e.g. that all such code paths are now
->> gone from networking, which may or may not be the case: I saw IPX go but I
->> can see AppleTalk still around; or that no sub-longword accesses are ever
->> used in the relevant networking paths), I'm going to keep kernel emulation
->> in v2, because what just used to be wrapped in an unaligned LDQ/STQ pair,
->> which we trapped on and emulated, will now become an LDQ_L/STQ_C loop.
+>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>> ---
+>>   drivers/remoteproc/ti_k3_m4_remoteproc.c | 60 ++++++++++++++++++------
+>>   1 file changed, 45 insertions(+), 15 deletions(-)
 >>
->>  Do you happen to know what the situation is here?
+>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c 
+>> b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> index d0ee7a8d460d..e83bef7cfddf 100644
+>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> @@ -20,9 +20,6 @@
+>>   #include "remoteproc_internal.h"
+>>   #include "ti_sci_proc.h"
+>>   -#define K3_M4_IRAM_DEV_ADDR 0x00000
+>> -#define K3_M4_DRAM_DEV_ADDR 0x30000
+>> -
 >
-> I think networking ends up using 'get_unaligned()' properly for header
-> accesses these days for any of this.
+> So two patches ago when you did this same thing for R5, you kept the
+> K3_R5_TCM_DEV_ADDR define. But here you remove the adress #defines.
+> I don't care if you leave them or keep them, but just do the same
+> either way for both M4 and R5.
+
+
+Actually the K3_R5_TCM_DEV_ADDR define is used in multiple places in the 
+R5 driver even after migrating to `k3_r5_rproc_mem_data`. Ex - 
+k3_r5_core_of_get_internal_memories() uses this define to override the 
+`kproc->mem[i].dev_addr` initially assigned by 
+k3_rproc_of_get_memories() based on `loczrama`.
+
+The M4 driver does not need these defines after migrating to 
+`k3_m4_rproc_mem_data` as its IRAM/DRAM dev addresses are fixed. R5 
+core's ATCM/BTCM dev addresses are not fixed.
+
+Besides, keeping K3_M4_IRAM_DEV_ADDR will throw unused var warnings.
+
+Thanks,
+Beleswar
+
 >
-> If you don't, some architectures will literally silently give you
-> garbage back and not even fault.
+> Andrew
 >
-> Admittedly that's mainly some really broken old 32-bit ARM stuff and
-> hopefully it's all dead by now.
-
-Yes, the last one doing this was EBSA110, which we removed in 2020.
-
-> So unless you actually *see* the unaligned faults, I really think you
-> shouldn't emulate them.
->
-> And I'd like to know where they are if you do see them
-
-FWIW, all the major architectures that have variants without
-unaligned load/store (arm32, mips, ppc, riscv) trap and emulate
-them for both user and kernel access for normal memory, but
-they don't emulate it for atomic ll/sc type instructions.
-These instructions also trap and kill the task on the
-architectures that can do hardware unaligned access (x86
-cmpxchg8b being a notable exception).
-
-     Arnd
+>>   /**
+>>    * struct k3_m4_rproc_mem - internal memory structure
+>>    * @cpu_addr: MPU virtual address of the memory region
+>> @@ -38,15 +35,29 @@ struct k3_m4_rproc_mem {
+>>   };
+>>     /**
+>> - * struct k3_m4_rproc_mem_data - memory definitions for a remote 
+>> processor
+>> + * struct k3_m4_mem_data - memory definitions for a remote processor
+>>    * @name: name for this memory entry
+>>    * @dev_addr: device address for the memory entry
+>>    */
+>> -struct k3_m4_rproc_mem_data {
+>> +struct k3_m4_mem_data {
+>>       const char *name;
+>>       const u32 dev_addr;
+>>   };
+>>   +/**
+>> + * struct k3_m4_dev_data - device data structure for a M4 core
+>> + * @mems: pointer to memory definitions for a M4 core
+>> + * @num_mems: number of memory regions in @mems
+>> + * @boot_align_addr: boot vector address alignment granularity
+>> + * @uses_lreset: flag to denote the need for local reset management
+>> + */
+>> +struct k3_m4_dev_data {
+>> +    const struct k3_m4_mem_data *mems;
+>> +    u32 num_mems;
+>> +    u32 boot_align_addr;
+>> +    bool uses_lreset;
+>> +};
+>> +
+>>   /**
+>>    * struct k3_m4_rproc - k3 remote processor driver structure
+>>    * @dev: cached device pointer
+>> @@ -56,6 +67,7 @@ struct k3_m4_rproc_mem_data {
+>>    * @rmem: reserved memory regions data
+>>    * @num_rmems: number of reserved memory regions
+>>    * @reset: reset control handle
+>> + * @data: pointer to M4-specific device data
+>>    * @tsp: TI-SCI processor control handle
+>>    * @ti_sci: TI-SCI handle
+>>    * @ti_sci_id: TI-SCI device identifier
+>> @@ -71,6 +83,7 @@ struct k3_m4_rproc {
+>>       struct k3_m4_rproc_mem *rmem;
+>>       int num_rmems;
+>>       struct reset_control *reset;
+>> +    const struct k3_m4_dev_data *data;
+>>       struct ti_sci_proc *tsp;
+>>       const struct ti_sci_handle *ti_sci;
+>>       u32 ti_sci_id;
+>> @@ -336,14 +349,13 @@ static void *k3_m4_rproc_da_to_va(struct rproc 
+>> *rproc, u64 da, size_t len, bool
+>>   static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
+>>                          struct k3_m4_rproc *kproc)
+>>   {
+>> -    static const char * const mem_names[] = { "iram", "dram" };
+>> -    static const u32 mem_addrs[] = { K3_M4_IRAM_DEV_ADDR, 
+>> K3_M4_DRAM_DEV_ADDR };
+>> +    const struct k3_m4_dev_data *data = kproc->data;
+>>       struct device *dev = &pdev->dev;
+>>       struct resource *res;
+>>       int num_mems;
+>>       int i;
+>>   -    num_mems = ARRAY_SIZE(mem_names);
+>> +    num_mems = kproc->data->num_mems;
+>>       kproc->mem = devm_kcalloc(kproc->dev, num_mems,
+>>                     sizeof(*kproc->mem), GFP_KERNEL);
+>>       if (!kproc->mem)
+>> @@ -351,17 +363,17 @@ static int k3_m4_rproc_of_get_memories(struct 
+>> platform_device *pdev,
+>>         for (i = 0; i < num_mems; i++) {
+>>           res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> -                           mem_names[i]);
+>> +                           data->mems[i].name);
+>>           if (!res) {
+>>               dev_err(dev, "found no memory resource for %s\n",
+>> -                mem_names[i]);
+>> +                data->mems[i].name);
+>>               return -EINVAL;
+>>           }
+>>           if (!devm_request_mem_region(dev, res->start,
+>>                            resource_size(res),
+>>                            dev_name(dev))) {
+>>               dev_err(dev, "could not request %s region for resource\n",
+>> -                mem_names[i]);
+>> +                data->mems[i].name);
+>>               return -EBUSY;
+>>           }
+>>   @@ -369,15 +381,15 @@ static int k3_m4_rproc_of_get_memories(struct 
+>> platform_device *pdev,
+>>                                resource_size(res));
+>>           if (!kproc->mem[i].cpu_addr) {
+>>               dev_err(dev, "failed to map %s memory\n",
+>> -                mem_names[i]);
+>> +                data->mems[i].name);
+>>               return -ENOMEM;
+>>           }
+>>           kproc->mem[i].bus_addr = res->start;
+>> -        kproc->mem[i].dev_addr = mem_addrs[i];
+>> +        kproc->mem[i].dev_addr = data->mems[i].dev_addr;
+>>           kproc->mem[i].size = resource_size(res);
+>>             dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %pK 
+>> da 0x%x\n",
+>> -            mem_names[i], &kproc->mem[i].bus_addr,
+>> +            data->mems[i].name, &kproc->mem[i].bus_addr,
+>>               kproc->mem[i].size, kproc->mem[i].cpu_addr,
+>>               kproc->mem[i].dev_addr);
+>>       }
+>> @@ -563,12 +575,17 @@ static int k3_m4_rproc_probe(struct 
+>> platform_device *pdev)
+>>   {
+>>       struct device *dev = &pdev->dev;
+>>       struct k3_m4_rproc *kproc;
+>> +    const struct k3_m4_dev_data *data;
+>>       struct rproc *rproc;
+>>       const char *fw_name;
+>>       bool r_state = false;
+>>       bool p_state = false;
+>>       int ret;
+>>   +    data = of_device_get_match_data(dev);
+>> +    if (!data)
+>> +        return -ENODEV;
+>> +
+>>       ret = rproc_of_parse_firmware(dev, 0, &fw_name);
+>>       if (ret)
+>>           return dev_err_probe(dev, ret, "failed to parse 
+>> firmware-name property\n");
+>> @@ -583,6 +600,7 @@ static int k3_m4_rproc_probe(struct 
+>> platform_device *pdev)
+>>       kproc = rproc->priv;
+>>       kproc->dev = dev;
+>>       kproc->rproc = rproc;
+>> +    kproc->data = data;
+>>       platform_set_drvdata(pdev, rproc);
+>>         kproc->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
+>> @@ -650,8 +668,20 @@ static int k3_m4_rproc_probe(struct 
+>> platform_device *pdev)
+>>       return 0;
+>>   }
+>>   +static const struct k3_m4_mem_data am64_m4_mems[] = {
+>> +    { .name = "iram", .dev_addr = 0x0 },
+>> +    { .name = "dram", .dev_addr = 0x30000 },
+>> +};
+>> +
+>> +static const struct k3_m4_dev_data am64_m4_data = {
+>> +    .mems = am64_m4_mems,
+>> +    .num_mems = ARRAY_SIZE(am64_m4_mems),
+>> +    .boot_align_addr = SZ_1K,
+>> +    .uses_lreset = true,
+>> +};
+>> +
+>>   static const struct of_device_id k3_m4_of_match[] = {
+>> -    { .compatible = "ti,am64-m4fss", },
+>> +    { .compatible = "ti,am64-m4fss", .data = &am64_m4_data, },
+>>       { /* sentinel */ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, k3_m4_of_match);
