@@ -1,128 +1,129 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880022063FA;
-	Tue,  8 Apr 2025 05:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8012063FA;
+	Tue,  8 Apr 2025 05:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090979; cv=none; b=JnfXwpMUSO10ik5MuwTFCIz7aM4tAYKTOJDxITCD6lm5NAxjSHXXg7FnHWiVA9W0tDqdww16kDcyCOASBjQjnp0R9H+c5Dtu2WdhjkE4tZnPH0DldRNzNFFpCFPoXdPvfO8BKs7c4bNyBY+44RoVAhGmX1dy9tTTUu4zfLeLzbo=
+	t=1744091030; cv=none; b=QW6nKXywgxV9KwcBIKNIKjDPE0Ao69pn+5pIsQPuiRI8YXERDbxWab2JcFfkijtybUeFllPoL/DWLeSs6NVOcdm4PoNklw6FGQQ3Pxz5iNDeP900z4h5X1DCBT0h1LGmxAN3t3aCeitbaYFc4ZXFkKh3QRk2m9GHEToRSaKSnZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090979; c=relaxed/simple;
-	bh=sYlu/zxZtd7jHwos4fIUG+rHHrsp1iz1KzM6QEIoWrI=;
+	s=arc-20240116; t=1744091030; c=relaxed/simple;
+	bh=sCHT8GHC31TuiceCAaOvubizgy6yRJ5sEi7ftPp0xPQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OxkursEgT6VUYZv2R/1oDWMUU7Jksp1CG1qMutBgx7ARgnhWc2D4qam9FLIjjCYuOVezm+LgbSp22NYir/ywgmz0XpIlRuNymuE7/Sf+lzdHGY4zQ1osTu1++/n1u6ZDBeTQ/9aWN6pmLpfbhF8lFZof+jWLo+bvxyLFTRq7CA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOGe76Xr; arc=none smtp.client-ip=209.85.222.179
+	 To:Cc:Content-Type; b=fKbqIennghA6HsrNVQVQKpy4+JPrDx0mKR8uzfp3IH5JZOJgydNoz990kZleBDWL4b4OhielS5ST2EaioAOq3bSYRni6i43mTGhuQCtGbgnXwqm9JMtJLTIqFvSGYFK5XT3zg4e/672Gj7SXYfbfuqRNo3D7QZAKlXCjtOAzPsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFDLXr2J; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOGe76Xr"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c7913bab2cso122992685a.0;
-        Mon, 07 Apr 2025 22:42:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFDLXr2J"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so50486185e9.3;
+        Mon, 07 Apr 2025 22:43:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744090975; x=1744695775; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744091027; x=1744695827; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BTuC1yLkVLw0KDJ1sl/fXI1uube15Zl0sXYbNMZgOck=;
-        b=mOGe76Xrj7rK7ENLDwlw5vfHJyOgThuDdAejds4MUOvxdDzGxcaOKllMi5LX3Dzrta
-         u7GxfdMZldzbByb1WYNIS8zk5U4VmX0qEFTNdah/U3w5QnX7bp6+k30S0aKoYZXOqioq
-         A+aEMFE027+FEVcxgphjLjhMIES0dxynbSjP0uGa2ihdcgaCTAYieYOv8rqqpmF+ZYop
-         CvLNF+0niyiUXUld1egsvxRMLR/cvtEvyVGtQiUHby+VDZmu5suLH5LJt9RYov+q083M
-         7GSybx1sMy9xQWFAQ2Q2u4jz8XTAUw3FhLPF4J7574a2uAuQuyWhJvvKJ3VFU1KYsmFg
-         8z0A==
+        bh=kAuwdSEHLwB691PFl03qxzJ1K9Zrc8A7QXS5gXOWExk=;
+        b=jFDLXr2JTcGrwXknM7GoG5IwPaQ7P2uxXIAQl55ZKvoCEE8Vp1Ompr7tjtWqvyDT/N
+         y8MPaGwHwpGvCRqxRUH0CQ7GLJtbwktK6GQR+N1TnBimOSko0zBiPBLw4ZZDSy6E6fuQ
+         FZu6vnCMY+pfaICNZilFn1rAyHLA9LxwW6A11/uj7Wf3Xpv8/2P1aBqdYGiarlg+8+R4
+         wcpADjO/BQvwFXQWT0q2CPc6PJWLaOlEoDSvUUNZSocyVu05Rz9V85qspZKdlWdLuy/i
+         uaVaXhdeJFtSFMYqgOtjYhmquEJ0J2mIpxfqI5v5J8zxbUibEd3N4w/ICOFLH8HOufrb
+         73fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744090975; x=1744695775;
+        d=1e100.net; s=20230601; t=1744091027; x=1744695827;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BTuC1yLkVLw0KDJ1sl/fXI1uube15Zl0sXYbNMZgOck=;
-        b=olur+zGa00lHpxjWX2PAAw6VocimtAQIw7WAbE01Tu1WD2QUj/FDEIsu7q2RZQDwFg
-         HplhkECHY1NHg/DYje78F9UHtEAX0oxmoVYrK2PW4f6wFnKfWF3GfA19gKBsgyLdab2K
-         BsNP7+Xj5kK5KxTZ/JnOx3F5SmD5L3QQrDw/11IdInjFDuUcxOkaYnplzQSvaJaEQvtO
-         ewE9W9qOC36uhIfRbs93WO9ZKcHB2ptlZUxLlfCB73fZDNemifYDyHv/o83CgsSns+tS
-         2yD+IszhSmNzN8Xp8wm8J372ceU+q5exsi+E5X4YeV28JFB4E46jvhrBz+omVNwcaLKQ
-         eV9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUJdM28nS3LblcaxY67IrgpAC6ejiuE34UlVPKNZ0FBOtdaGCRzPRUYriHwypAm0tPOwhXiPhU/kFawrD+p@vger.kernel.org, AJvYcCXMraXSlAYuSI90phR/tmw5nma+h1gnsL6UFyykJuqC9j5JjvDO15xg319lTh51pgp1FsWx+tT3sKpiKKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjPcsFXYhFxI6lKKI6oNkJXR+HvvMU0Qq15lyBPBoDX7p/XUZa
-	NiqHcbc5YsL7VfOMLYRirb4MohvzwVaB9NzoMKKf9ZMuQzjLO6pXAgAfdTQl6oHDR3VtswnFVd9
-	EKegBQp8xhWydz265LCOtb8Ls1DM=
-X-Gm-Gg: ASbGnctaJ0Qk/g6WaftN8A1i5IZn7ZBaHWge+n/91FFznPI/jjnrnh13tbPdCiMuV2z
-	Ll+9wJQzBygcZA0gbB119H8y0byfEskHTzdWpmOYZSDOXDS90cEFy72oIzOGpeDGXjYR720cZxe
-	l8g84IQURS9r90SziZ9QTG+CwkY7lUPir2/yD45SM+2wmX+nv6RM0F003IAg==
-X-Google-Smtp-Source: AGHT+IG3Uf49ROht+s7nR72iOxuW28S1zEz3Tl9TWHw9A08Rv7qvVW4zSIDvBxg+BxfLb4weJfS3eDrTmYQc9Xkm7cw=
-X-Received: by 2002:a05:620a:170d:b0:7c5:dfe5:ea78 with SMTP id
- af79cd13be357-7c774d1c4d7mr2354805385a.8.1744090975309; Mon, 07 Apr 2025
- 22:42:55 -0700 (PDT)
+        bh=kAuwdSEHLwB691PFl03qxzJ1K9Zrc8A7QXS5gXOWExk=;
+        b=KUGaZmjmoLLnaajoIncWrHfObgnJMLw+T0so1BLWRaC1sgv6LSmt+ax1x6aBy7/8gh
+         /lZXw0121sqoczsq4DEmUHojs1Lld/TvOdE0V7qGvJ6uJxqtjS5aeYd6JB42V+GAbQif
+         zxDo4i29Q3YUKnwkPkZKLGZ0Cvz+qYJhCFfKmzqd0tpsSFwd9c6TkO62uIGjP3StYDqp
+         wM5zvogAUFS9CpoyDqPCwjIRlKQq3061kyFuoMSqWhGgAtfnRAtuUGjy2tWmxSmy0vGP
+         fCxNqv7FMTODQ9nCL+B5ZMqTFg3uZ1Yp6CqTEvx5FS9d3AWrVUi4nDwWUboJq0xjDBqI
+         oVMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQiX7ym7NXnoziQaUucLcjAZEb63+k2aWRTDjzhj3+GFcQZhoCNhFkxAIbEdPzEf5QOXPbZNzfTtf+@vger.kernel.org, AJvYcCUU+oHjtbuQfiLMt8O/JDYSxCgOWYeDLXH/pVWHKSSkVNeIvi8VV31ALvbZdZ/L0GTvbnxocub+adFy@vger.kernel.org, AJvYcCWyOXK1Ojlzq60QU8STDToOu3lB+UzFELOb2sxsOaYSsqPHu61ZvGPA9+3QXQVFCiQ6x8gjd34YhZI1P/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyubvdR9rLV78Tl/u4qXRKY+/d55LXO4jc+OysnqJZneNh3pSyA
+	M/iZy2JEVL7UlhcDri8LdmZLGtsci4UUm+VajTUUkxjzRlACdpPEwAIngXchoI0Ik/ZmTB4dZqz
+	91DgIqI0dbgzbIbsKbg3ieYbdHcM=
+X-Gm-Gg: ASbGncv7D4FEk9rLGF+nmy8ghjP3RDUiDeezX+VL6oDLTElzjRx4SmQP37FgAhKnLeV
+	Q48sB9XN/C3ru1bYejfiM9HsdoDFw1fdbSiPVEHTJZWT4daESCzp0VM/KTYlAUbZZJMa/xTbb5l
+	tjV6MBKjwP+DSpHxqjg+uA8/1pRqQ=
+X-Google-Smtp-Source: AGHT+IGsPU4TjoAJ3iqho3vhlE0M3rrsyKyjPDbuj1pIel6bfcogzkpm7d9GOd0CHj1Cgh8n5qjmdFjPyPiZ7ndgLYk=
+X-Received: by 2002:a5d:6d88:0:b0:39c:3122:ad0c with SMTP id
+ ffacd0b85a97d-39cb36b2a5fmr14601478f8f.11.1744091027563; Mon, 07 Apr 2025
+ 22:43:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408033322.401680-1-gshahrouzi@gmail.com> <20250408033322.401680-2-gshahrouzi@gmail.com>
- <6s4hsqctezmwk73bgz4u6clielbbndijfk6hpciqfbjc53yzhq@hm4ybp4splhl>
-In-Reply-To: <6s4hsqctezmwk73bgz4u6clielbbndijfk6hpciqfbjc53yzhq@hm4ybp4splhl>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Tue, 8 Apr 2025 01:42:00 -0400
-X-Gm-Features: ATxdqUEDaPQxYlUXn9iw3QrX_i6bAlfEvLqG-LtPUN95gSF_j8N5amPFx0RxHu4
-Message-ID: <CAKUZ0zJUgFmoKv1oDguhEYWYxxFaKthCp6wY-ahsR8KWy-nqKg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bcache: Fix undeclared symbol warning for bcache_is_reboot
-To: Coly Li <colyli@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, linux-bcache@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org
+References: <20250225143501.68966-1-clamor95@gmail.com>
+In-Reply-To: <20250225143501.68966-1-clamor95@gmail.com>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Tue, 8 Apr 2025 08:43:35 +0300
+X-Gm-Features: ATxdqUFmqygoZjQ1jPRy8xHAhI0P-Gqy0pNvzclHkp020md1cOggnjWtfe0KuS4
+Message-ID: <CAPVz0n29m5CrKMW_j8Q0Zz2pCBdYLmMn-3waSZx7ooJZG6ZTOQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] Tegra114: implement EMC support
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Svyatoslav Ryhel <clamor95@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Georgi Djakov <djakov@kernel.org>, Dmitry Osipenko <digetx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 12:55=E2=80=AFAM Coly Li <colyli@kernel.org> wrote:
+=D0=B2=D1=82, 25 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 16:35 Svya=
+toslav Ryhel <clamor95@gmail.com> =D0=BF=D0=B8=D1=88=D0=B5:
 >
-> On Mon, Apr 07, 2025 at 11:33:21PM +0800, Gabriel Shahrouzi wrote:
-> > Add extern declaration for bcache_is_reboot to bcache.h. Ensure proper
-> > visibility for use across multiple files (super.c, sysfs.c) and follow
-> > the declaration pattern for other forward declarations.
-> >
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> >  drivers/md/bcache/bcache.h | 1 +
-> >  drivers/md/bcache/sysfs.c  | 2 --
-> >  2 files changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> > index 785b0d9008fac..531933351b8b8 100644
-> > --- a/drivers/md/bcache/bcache.h
-> > +++ b/drivers/md/bcache/bcache.h
-> > @@ -1007,6 +1007,7 @@ extern struct workqueue_struct *bch_journal_wq;
-> >  extern struct workqueue_struct *bch_flush_wq;
-> >  extern struct mutex bch_register_lock;
-> >  extern struct list_head bch_cache_sets;
-> > +extern bool bcache_is_reboot;
-> >
+> Add support for External Memory Controller found in Tegra 4 SoC along
+> with adjustments required for it to work properly.
 >
-> NACK. It is uncessary to make more .c files to be aware of
-> bcache_is_reboot. Current code is in better form IMHO.
-Ah I see. It's only used in sysfs.c and super.c compared to the other
-forward declarations. Limiting the scope to only those files makes the
-most sense instead of including it in the header file.
+> Tested on ASUS TF701T (T40X) and Nvidia Tegratab (T40S). Both work fine.
 >
+> Svyatoslav Ryhel (9):
+>   ARM: tegra: Add ACTMON support on Tegra114
+>   dt-bindings: memory: Document Tegra114 Memory Controller
+>   drivers: memory: tegra: implement EMEM regs and ICC ops for T114
+>   dt-bindings: memory: tegra114: Add memory client IDs
+>   clk: tegra114: remove emc to mc clock mux
+>   dt-bindings: memory: Document Tegra114 External Memory Controller
+>   memory: tegra: Add Tegra114 EMC driver
+>   ARM: tegra: Add External Memory Controller node on Tegra114
+>   ARM: tegra: Add EMC OPP and ICC properties to Tegra114 EMC and ACTMON
+>     device-tree nodes
 >
-> >  extern const struct kobj_type bch_cached_dev_ktype;
-> >  extern const struct kobj_type bch_flash_dev_ktype;
-> > diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-> > index e8f696cb58c05..47ef0167b9d23 100644
-> > --- a/drivers/md/bcache/sysfs.c
-> > +++ b/drivers/md/bcache/sysfs.c
-> > @@ -17,8 +17,6 @@
-> >  #include <linux/sort.h>
-> >  #include <linux/sched/clock.h>
-> >
-> > -extern bool bcache_is_reboot;
-> > -
-> >  /* Default is 0 ("writethrough") */
-> >  static const char * const bch_cache_modes[] =3D {
-> >       "writethrough",
-> > --
-> > 2.43.0
-> >
+>  .../nvidia,tegra114-emc.yaml                  |  431 +++++
+>  .../nvidia,tegra114-mc.yaml                   |  154 ++
+>  .../dts/nvidia/tegra114-peripherals-opp.dtsi  |  151 ++
+>  arch/arm/boot/dts/nvidia/tegra114.dtsi        |   32 +
+>  drivers/clk/tegra/clk-tegra114.c              |   48 +-
+>  drivers/memory/tegra/Kconfig                  |   12 +
+>  drivers/memory/tegra/Makefile                 |    1 +
+>  drivers/memory/tegra/tegra114-emc.c           | 1487 +++++++++++++++++
+>  drivers/memory/tegra/tegra114.c               |  193 +++
+>  include/dt-bindings/memory/tegra114-mc.h      |   67 +
+>  10 files changed, 2561 insertions(+), 15 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/=
+nvidia,tegra114-emc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/=
+nvidia,tegra114-mc.yaml
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra114-peripherals-opp.dts=
+i
+>  create mode 100644 drivers/memory/tegra/tegra114-emc.c
 >
 > --
-> Coly Li
+> 2.43.0
+>
+
+These patches had no activity/feedback from tegra maintainers for a
+while, so, in case they got lost in the depths of email box, this is a
+friendly reminder that they are still relevant and I would like them
+to move on.
+
+Best regards,
+Svyatoslav R.
