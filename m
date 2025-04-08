@@ -1,73 +1,149 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9BF263C7D;
-	Tue,  8 Apr 2025 08:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A48E263F44
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099895; cv=none; b=E9gdUMdZC+pWv7vHVvSteIW56rYYA/EXFDO6zEFVIJcKyHCK5sjOIrxxKDKTJUCwaBVopkezFfgZvK2mC4hh33wpnsD7hp8yAXf5BaRWpj7IV1BIviM9TtL83LvziRcFGJg76d4+2FGZRFNEorMBckasExxYW/sWBiHkpE1GbHY=
+	t=1744099906; cv=none; b=qSU1DJ3Onz96E13kJW3hqMO6okCkxtgOpn4AKq0PwW1/T871I2OSijSOGqrF+no7yTXXU2mk9Ed8M0ywtQozbcMtpEibFlsDsqwIOEXedyFUGqpGKqRGjEHJv6CdPzh4aQE16wsLOrDDZ/5zc3cZYrZ1zE8Si9HyCbZ6vzePhg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099895; c=relaxed/simple;
-	bh=Eai45pg+sFAqPWgfVpeDnsOdZDsijq3rROuqaPIFgK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fm3+NHLmQo+grxItC2UgfsaoJyHEAi3DvTDcgcPeZw+JzwyjQIQmzPQLpp8LUoD1uI3ALcar//eH1dsedPjmGzuuduu7wN1lXFGdWYixCa620+qJso/DabOBYqglgBINXuSFxc2sOMjnEjxyXwv0/sCejD+oCKkdj/Z0MUyqSZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=LQjnvWYu; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744099906; c=relaxed/simple;
+	bh=uT8ybYJ8z2pWmCOonpXiutxvXE0bYgJTMrPDrLyaYJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NarFYTkUxJ1GtICCKfa2OCAhnYNtKB1I9z/zg/gArcp1dA+6ZRekmqrzC3pJaad3a179yWksdFVhRMrXVphGBxjazcUjcHO9UucAn7mQMwE6ScbFZbLFGWNuEW4toaI+r8mVJlEPVF4oPKXwD4ZF7rJaPPY6YcOw5RjgXe+iPJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=l5HaVzu3; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="LQjnvWYu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=nj/7fcsf30Nl8qf2AjASDTaU9/a5G4x2NM42ScBp3WU=; b=LQjnvWYu3WOigFeuvNGsLhVyeA
-	LSBftwv1jH5BbNLCieyXiqFYEX3BE8h4ymP8FdQ1TXE8KEoTgCBKOBsMdINAIf7mZ9sFBGSyVHx97
-	bj8nOzMPWgRRGd/CEPxvEqyub6YJeRhc866hMUlCIlha1QDfz1R5r0hK9gTNH0tpb7QC8DvPhYgcs
-	GxG81Vp9C61eONYw7rE6F937r9GgLov71RcD4mQZJ9k86q/hlquMkMBDlY6Msh5dS3ld/zSKDr5IZ
-	zlnZizKi8GCOrR4jWnVOPPQV7OftOMeUJ+Zvd4iEoRHbnCFZu00+lNexG2ZP7p4Tk/PomzZcIgu+i
-	dEl7TZwA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u243C-00Donk-01;
-	Tue, 08 Apr 2025 16:11:19 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 08 Apr 2025 16:11:18 +0800
-Date: Tue, 8 Apr 2025 16:11:17 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Cc: clabbe.montjoie@gmail.com, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, wens@csie.org,
-	jernej.skrabec@gmail.com, samuel@sholland.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] crypto: sun8i-ce-hash - fix error handling in
- sun8i_ce_hash_run()
-Message-ID: <Z_TaJWOFdAGNAOyh@gondor.apana.org.au>
-References: <20250401192321.3370188-1-ovidiu.panait.oss@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="l5HaVzu3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744099894; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=9h2K4oXsYeaw5f4qdfa43kBcn/+mZo5xYqKfvGWE2pU=;
+	b=l5HaVzu31dnLGPMSR2DITktYPExJyA/guoigtHnnw92hQN754yEzujVqeLhOsP01MpZrvpIQH2JVOoPxcGLno+0dYDpbNsKOl9KnjVzWGN1cRUeDG7dlOJHFngUBO5mqcTBdfK/29gqH8URyggJNTdgwJ8bbkPhsxCBEPWP/fH0=
+Received: from 30.74.144.107(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WWEMSww_1744099893 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 08 Apr 2025 16:11:34 +0800
+Message-ID: <f0026429-de3e-4e20-8603-39683180a643@linux.alibaba.com>
+Date: Tue, 8 Apr 2025 16:11:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401192321.3370188-1-ovidiu.panait.oss@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests: mincore: fix tmpfs mincore test failure
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <9a00856cc6a8b4e46f4ab8b1af11ce5fc1a31851.1744025467.git.baolin.wang@linux.alibaba.com>
+ <61e36a73-2c8c-4897-9ba5-3b2d59f57b5d@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <61e36a73-2c8c-4897-9ba5-3b2d59f57b5d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 10:23:16PM +0300, Ovidiu Panait wrote:
-> Rework error handling in sun8i_ce_hash_run() to unmap the dma buffers in
-> case of failure. Currently, the dma unmap functions are not called if the
-> function errors out at various points.
+
+
+On 2025/4/7 23:04, David Hildenbrand wrote:
+> On 07.04.25 13:31, Baolin Wang wrote:
+>> When running mincore test cases, I encountered the following failures:
+>>
+>> "
+>> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 (0)
+>> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in memory
+>> check_tmpfs_mmap: Test terminated by assertion
+>>            FAIL  global.check_tmpfs_mmap
+>> not ok 5 global.check_tmpfs_mmap
+>> FAILED: 4 / 5 tests passed
+>> "
+>>
+>> The reason for the test case failure is that my system automatically 
+>> enabled
+>> tmpfs large folio allocation by adding the 
+>> 'transparent_hugepage_tmpfs=always'
+>> cmdline. However, the test case still expects the tmpfs mounted on 
+>> /dev/shm to
+>> allocate small folios, which leads to assertion failures when 
+>> verifying readahead
+>> pages.
+>>
+>> As discussed with David, there's no reason to continue checking the 
+>> readahead
+>> logic for tmpfs. Drop it to fix this issue.
+>>
 > 
-> Fixes: 56f6d5aee88d1 ("crypto: sun8i-ce - support hash algorithms")
-> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-> ---
->  .../crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 34 ++++++++++++-------
->  1 file changed, 21 insertions(+), 13 deletions(-)
+> BTW, should we add a Fixes: ? Could only be tmpfs support that changed 
+> the behavior but didn't fixup the test case.
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I was hesitant about whether a Fixes tag is needed, because this issue 
+can be traced back to the earliest patch set that added THP support to 
+tmpfs. However, the test issue wasn't exposed because the 'huge=' 
+parameter wasn't included when mounting /dev/shm.
+
+After the cmdline 'transparent_hugepage_tmpfs' was added for tmpfs, the 
+issue is exposed easily. So I am inclined to add a Fixes tag for the 
+patch added the 'transparent_hugepage_tmpfs' cmdline.
+
+Fixes: d635ccdb435c ("mm: shmem: add a kernel command line to change the 
+default huge policy for tmpfs")
+
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>> Changes from v1:
+>>   - Drop the readahead logic check, per David.
+>> ---
+>>   .../testing/selftests/mincore/mincore_selftest.c | 16 ++--------------
+>>   1 file changed, 2 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/mincore/mincore_selftest.c 
+>> b/tools/testing/selftests/mincore/mincore_selftest.c
+>> index e949a43a6145..0fd4b00bd345 100644
+>> --- a/tools/testing/selftests/mincore/mincore_selftest.c
+>> +++ b/tools/testing/selftests/mincore/mincore_selftest.c
+>> @@ -286,8 +286,7 @@ TEST(check_file_mmap)
+>>   /*
+>>    * Test mincore() behavior on a page backed by a tmpfs file.  This test
+>> - * performs the same steps as the previous one. However, we don't expect
+>> - * any readahead in this case.
+>> + * performs the same steps as the previous one.
+>>    */
+>>   TEST(check_tmpfs_mmap)
+>>   {
+>> @@ -298,7 +297,6 @@ TEST(check_tmpfs_mmap)
+>>       int page_size;
+>>       int fd;
+>>       int i;
+>> -    int ra_pages = 0;
+>>       page_size = sysconf(_SC_PAGESIZE);
+>>       vec_size = FILE_SIZE / page_size;
+>> @@ -341,8 +339,7 @@ TEST(check_tmpfs_mmap)
+>>       }
+>>       /*
+>> -     * Touch a page in the middle of the mapping. We expect only
+>> -     * that page to be fetched into memory.
+>> +     * Touch a page in the middle of the mapping.
+>>        */
+>>       addr[FILE_SIZE / 2] = 1;
+>>       retval = mincore(addr, FILE_SIZE, vec);
+>> @@ -351,15 +348,6 @@ TEST(check_tmpfs_mmap)
+>>           TH_LOG("Page not found in memory after use");
+>>       }
+>> -    i = FILE_SIZE / 2 / page_size + 1;
+>> -    while (i < vec_size && vec[i]) {
+>> -        ra_pages++;
+>> -        i++;
+>> -    }
+>> -    ASSERT_EQ(ra_pages, 0) {
+>> -        TH_LOG("Read-ahead pages found in memory");
+>> -    }
+>> -
+>>       munmap(addr, FILE_SIZE);
+>>       close(fd);
+>>       free(vec);
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+
+Thanks.
