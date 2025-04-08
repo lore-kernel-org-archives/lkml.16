@@ -1,145 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D402641CC
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49703269AF3
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744113071; cv=none; b=R/o66SFX0ETKBR1UuIOAOHzrEDloNPUu71JXKuwVZAa1rPiB//9OqRl/PAomtxB1yLCfTModPLGdvsxq3tZb7KwNlIns9kUGQLHjlK2sGR/A5k87xpwk4QLQjAnsCMCxUK33t6G+CatelaHHDKt22TSHFJc06nw8PF7aHczypoY=
+	t=1744113074; cv=none; b=TVl3vzsJh9jgxqDj1aByM4M8sK6Lakh6Q8oEz+ton3dZamzGrdbq8dUZHvC/csArQwR1ezYGOzelTMwlQPdBsswF8WcCrB1XEU5IbF0PwRm63XIoxFEpHklE1cuC/xyzosW4HL2JZYm3Fg916s1BiBoMkM60TD+aCSh55/1mb2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744113071; c=relaxed/simple;
-	bh=WrOT0fWauBjGgMOhnAMlyy7tZenwL+/tQlGQFVKiLIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NNEqNLdsf8N5zIq5H+81gRP80sobYzVSbbLK/LLK5b1+zc1YilzFOT1ysKLnUQqoVyC3sxgBTOPDmjhPiX7Na4yTYCN60mht/kuno4OMADf3XMPHYIzzc0c5AOD1P49hmd+d3J0vzguvhceJ9Z/U5gFWBhkrMDz/odbkxMtXNfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AZqDagPC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744113074; c=relaxed/simple;
+	bh=eHSWxmsnGn3NlqRg9ekLwP8NpVdUJpxvgjU0B7HZSxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KF5iVesOyAV5CczBs2nDrv9EOy9RRc+/Li53BtmBy7+kYbY85kY2AKJCIj5M3pRgBikWtoCWE43nYBiVpcKXssv98lkNQH053n6h6l4Sp2mA1J9/QKUwLtzEOVIZC3LaDLYWiZrXa2hBRS/O35KjL9Hpzi+KDl7ZR0r4huFrom8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsfhFbRz; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AZqDagPC"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538B01CC008082
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 11:51:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=IrjwLjYpiapL2b4NcQF3cUbc
-	sBqpPx7YBP0rGh6mfWo=; b=AZqDagPCYqZnHbZxphYPaTvDUdzj//OxPJQF3MG6
-	mYlop+sdD5AG/ebEqB+Xw4Ra8O2OP+DOHDdNZqZWBoN8cS9gm5P8nPodCJYsxRlc
-	3zfq/v/qCqGwUjv7AkPRyYiJFEAI4o1jzG6nb80NYblysP1Ibr8cVRT7PnY/l62S
-	dpLcjReSj2tolCOXRLw7ug8wCruv1zQq0cHNy14YKbFxRbGDaehHuGBqnMaxwpsE
-	hdoPUH31p7k8wT99Fe336jhcdrpkHu6RrZYd+a9lE4PMeVrl7rcn1U2Kmsrvn4N5
-	1hTnkI/HtLouIic4tWrocBXPz26dHNDYJqcDSvAt/pzZzg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtaynv1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:51:09 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4769a1db721so145032431cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:51:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744113067; x=1744717867;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsfhFbRz"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2352375e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:51:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744113072; x=1744717872; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IrjwLjYpiapL2b4NcQF3cUbcsBqpPx7YBP0rGh6mfWo=;
-        b=xOUF7OKxcT7sxgIRl3hvNmNtKVhSzSYT7162nC3kVqiSVL6DRqqVdYo+LUM0QD20v9
-         4ne0Jb8y7Uf4Oqgj6VNeTmPtc5Ia6qFi5tBQUl1aLiYLxPE4qLq8UmJ7SUZo7WY2+0xN
-         r5NpR1FqCtkyg6x0OCKe/pFbypc3tHK9bboK1NKbjYBNbJTs2yqai6F2xH46uG+E/qhP
-         W5poE6LKVf4WSSHBmdN1nlX+iIUK0OxFaR1Dhi0uC+Vdk2h3d0Wz3c8Jz/JeT6/+zMZb
-         Oj4WmbZodTpnjCnGXOEkoAVm42l/FLdjlBBE1Y3B/OsAMEUCEGTrHXB7RVCP7Y9oSEKG
-         tTaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMMIRMBh5OdcCYM+3/kLDldJbo/T9N/g2RbUcI/vrynbPrsjb44xfEv3xFh9W0Bjyy6j20fcrPTRA8UiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytKw2MoWQnmF1/j1PnBMGmek3Iypj3fJC4Fli3UMX6uGXrky3v
-	R2cfdtHczzHaRR9D7xr8JlqnVB46D/haW40QQ2Pu7nDsz5kbJ4ajGGK+gWxGC8+ia1uflGec+BM
-	gCW+9zdBCv7+BSTSZmFcR2gJ/w5l2MmKXwxSUTxzbzkVculP24HiiEsVFpdtDB14jaR26npg=
-X-Gm-Gg: ASbGncvKoD0aBwbN5V4XfrPpNr+rBkFAHV/i/IFRooYn1mWSCmDmfrqAFKl7c+Dz15r
-	nPgf78g3U+det6ZzIbGQvxqlTfV6u3LAKWdtf45MojzOuEl9xsXHALBUSfV34QjH+a7F/w6+28k
-	brR6Woi8Wx3vVprk2GtAlszIdNicGBj4rJ6D2BbCrRTXNNFkosflbcYERlu/zY6BK3XojM6lccf
-	cw7L+kDIcPqgd+oQLkWI0NMdm8f/rLxRKrrIz5YUUMW6E5O+voeZ5eGzP1FX9oeFGJ1OR7b+5zr
-	SD+ggfC4ZjLxXvbst14q6BpFYMdj8qesU+jHH/Y/US+PkVao+KdmwcU+vbkjUBbQ/TRfI7nIcXM
-	JGtg=
-X-Received: by 2002:a05:620a:4112:b0:7c5:5003:81be with SMTP id af79cd13be357-7c774dff6b2mr2505653185a.43.1744113067465;
-        Tue, 08 Apr 2025 04:51:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF52By5kac/rDpLlGHlXOuogfyGJx+/C5ZLmzUghNaX2ahTZuISYrkP/rWOpZVqkkWN8uhxQQ==
-X-Received: by 2002:a05:620a:4112:b0:7c5:5003:81be with SMTP id af79cd13be357-7c774dff6b2mr2505648985a.43.1744113067056;
-        Tue, 08 Apr 2025 04:51:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5ab889sm1498254e87.11.2025.04.08.04.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:51:06 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:51:03 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH RESEND] arm64: dts: qcom: apq8016-sbc-d3-camera: Convert
- to DT overlay
-Message-ID: <gbhlmjrkh2mavymxivli6c2wknlwlgt7nv3hch4yixufgmhldg@dp2vrwckqcoj>
-References: <20250408-apq8016-sbc-camera-dtso-v1-1-cdf1cd41bda6@linaro.org>
+        bh=6c4CK8m8rsz3UQuOMrED8qLpYmmaLeOXkF7GHkb74zQ=;
+        b=BsfhFbRzG4bwu2F0AQatNbaAskx7dYWUDLkl+5pcUIqPAaPE8IdZtNC2wIUPPkVCfG
+         UI7T0YHVyJsocapkgJjz611a6mlzM+xLSnTLceJNhLyi5zArrTjC3zKSzBaWDZBLJQlv
+         Cns+LKj0Ucuu4Iepl8Lxz1UVXsPjbLhjjmFUZavK1Y/niXnwuvSsg37Apmju8mzTT0y9
+         TOws4aDXCd28sC8kltx9YAp0soz3SrXtvm1E9e6m6zC1BvDDUIhqQ7ZNCkgOs7u0L2rc
+         XyZybSVUklq0yMeiBSoK605vU2Q/C3Xw79Rodg8v3hYd77S0aghNVStDwNUeKl1uEiij
+         WgwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744113072; x=1744717872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6c4CK8m8rsz3UQuOMrED8qLpYmmaLeOXkF7GHkb74zQ=;
+        b=ZXd2ckBnVq/MANrbHL+t8t9dxiu1gjsUCLz/vJxwMqYhat8/zxZ4aOK+Ogv6stNOwR
+         oRRuhPVjD/xeT3iNlbxshgt8+7EoEl09aDfDCb3cDCgui6bhNZgOT+wR4objS+vnQ1Iv
+         TFuFIhnww/xJA3x8/zIziR7KOCXaCeVbDkEat0I3ye0JLux02SRXIcMAlrPU5Oqw2B3x
+         s1niPOSLQvtalI12JzIm4T2mbUmo+ICArc/i28xkByvXqaufkk3PQlyS088lO45pxF6u
+         YdRVDVp4nzYF1hARvPwaPUFmgRK5wdqjjoFKLLwogYq78lHvaPbYgnTwSw1EuAdFislh
+         +KrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU97DBoI9mj3pOnL4FJY3IcEcYMfg21cCEnAqh7Pr83NK91FrITzfOe7okS7UVXujszvV6LsqvZZ3JW0XY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe3NbU2B2fXRYUXMRATL5voJreMkmoqgMFLQH4BP5Yq5awo9IK
+	L63QvEGoL3dTf0H52mNQkKmFHUVCR4hZHa8vuavwy0lF1o6t3z+3+lgpzKryv6FPod2sYopSvAe
+	s4tutzL8mRTMHDYL7+pE+4haeuYI=
+X-Gm-Gg: ASbGncsUs2eHkkWRk83Fy91dpEvMUCWcqXSkMCwPVXmMIX9gfXVwHaqvKGaAdTDah4+
+	MmiLwF26M5icu4MN5XqLBTrZmDvIn1bfhe5LgwGYYasb30sqLOLRS5Sic2NtIYPWmJ4YC65PWLJ
+	4tqXpPJwoz3HoO36NzLOp/mA6xBw==
+X-Google-Smtp-Source: AGHT+IEVVZKLLen5djjPelmf+peezMoKleLv6h20DTz9UV6T5Q4wfcMnGzp0gwFgIk6/dV3lXUuNsU0ohCecNTGcWXs=
+X-Received: by 2002:a05:6122:8c04:b0:51f:4154:c1b2 with SMTP id
+ 71dfb90a1353d-527644239a8mr12090161e0c.2.1744113072103; Tue, 08 Apr 2025
+ 04:51:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-apq8016-sbc-camera-dtso-v1-1-cdf1cd41bda6@linaro.org>
-X-Proofpoint-GUID: dS6FJlr7_M6Q2fr8qI1BlBdR6l-qhYuv
-X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f50dad cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=j8Cu_9a8AAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=_dBoWylQQCh29UQNcWIA:9
- a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22 a=A2jcf3dkIZPIRbEE90CI:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: dS6FJlr7_M6Q2fr8qI1BlBdR6l-qhYuv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080084
+References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
+ <4ccdbfd3e8d74d99679927f294f71cfb694fcc6c.1744061673.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vfp8Je1fUavSwTDAM_5_rDaDfXETa2oM5f0CjL1mxWX_Q@mail.gmail.com>
+ <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
+ <Z_TtyXwkOBK1MXGy@smile.fi.intel.com> <b89c8837-4aa1-4073-bb09-f71f37b5dcc6@stanley.mountain>
+In-Reply-To: <b89c8837-4aa1-4073-bb09-f71f37b5dcc6@stanley.mountain>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Tue, 8 Apr 2025 12:51:03 +0100
+X-Gm-Features: ATxdqUE6QlXt5Q2GRjZqUe-Mf0KjLF3Pm0Jgd_V10YDzH4vMsZ87VB8sYMegCVI
+Message-ID: <CADYq+fZ-LmoyGrAFsEHBwM2WJthpqGYhPLmAJ3Ea0B=NvmC8aw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Add white spaces around binary operators
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, outreachy@lists.linux.dev, 
+	gregkh@linuxfoundation.org, julia.lawall@inria.fr, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	david.laight.linux@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 01:38:42PM +0200, Stephan Gerhold wrote:
-> From: Stephan Gerhold <stephan@gerhold.net>
-> 
-> Follow the example of the recently added apq8016-sbc-usb-host.dtso and
-> convert apq8016-sbc-d3-camera-mezzanine.dts to a DT overlay that can be
-> applied on top of the apq8016-sbc.dtb. This makes it more clear that
-> this is not a special type of DB410c but just an addon board that can
-> be added on top.
-> 
-> Functionally there should not be any difference since
-> apq8016-sbc-d3-camera-mezzanine.dtb is still generated as before
-> (but now by applying the overlay on top of apq8016-sbc.dtb).
-> 
-> Since dtc does not know that there are default #address/size-cells in
-> msm8916.dtsi, repeat those in the overlay to avoid dtc warnings because
-> it expects the wrong amount of address/size-cells.
-> 
-> It would be nice to have a generic overlay for the D3 camera mezzanine
-> (that can be applied to all 96Boards) but that's much more complicated
-> than providing a board-specific DT overlay as intermediate step.
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
-> This patch was already applied by Bjorn on Sun, 28 Jan 2024 11:45:55 -0600
-> as commit ea689ec32bf0d885277d3f58450a85df5149c98b [1]. However, unlike the
-> first patch in the series, this one never made it into the repository for
-> some reason.
-> 
-> [1]: https://lore.kernel.org/linux-arm-msm/170646395036.64610.14333204830178417809.b4-ty@kernel.org/
-> ---
->  arch/arm64/boot/dts/qcom/Makefile                            |  5 +++--
->  ...ra-mezzanine.dts => apq8016-sbc-d3-camera-mezzanine.dtso} | 12 ++++++++++--
->  2 files changed, 13 insertions(+), 4 deletions(-)
-> 
+On Tue, Apr 8, 2025 at 11:36=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> On Tue, Apr 08, 2025 at 12:35:05PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 08, 2025 at 10:22:44AM +0100, Samuel Abraham wrote:
+> > > On Tue, Apr 8, 2025 at 8:20=E2=80=AFAM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Tue, Apr 8, 2025 at 12:54=E2=80=AFAM Abraham Samuel Adekunle
+> > > > <abrahamadekunle50@gmail.com> wrote:
+> >
+> > ...
+> >
+> > > > > -                                               psta->BA_starting=
+_seqctrl[pattrib->priority & 0x0f] =3D (tx_seq+1)&0xfff;
+> > > > > +                                               psta->BA_starting=
+_seqctrl[pattrib->priority & 0x0f] =3D (tx_seq + 1) & 0xfff;
+> > > >
+> > > > > -                                               psta->BA_starting=
+_seqctrl[pattrib->priority & 0x0f] =3D (pattrib->seqnum+1)&0xfff;
+> > > > > +                                               psta->BA_starting=
+_seqctrl[pattrib->priority & 0x0f] =3D (pattrib->seqnum + 1) & 0xfff;
+> > > >
+> > > > You mentioned Linux coding style, which also requires lines not to =
+be
+> > > > so long. These lines are. That's why a few versions ago I suggested
+> > > > you to change these to be two lines each. I don't know how many tim=
+es
+> > > > to repeat this (it's third one).
+> > >
+> > > Okay, sorry
+> > > I will add a third patch for a line break before the patch for %
+> > > operations since each patch should handle a single thing.
+> >
+> > I am not sure you need a third patch for that. It lies into category of=
+ space
+> > and indentation fix.
+> >
+>
+> Yeah.  Let's not go crazy.  Do the white space change as one patch.  The
+> rules are there to make reviewing easier.  Splitting it up into three
+> patches doesn't help anyone.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Okay thank you Dan. I have collapsed the spaces and linebreaks into one pat=
+ch
 
--- 
-With best wishes
-Dmitry
+>
+> In staging we say, "Fix one type of checkpatch warning at a time."
+> That's because it's a simple rule to explain and it stops people from
+> sending us huge patches that fix every checkpatch warning.  But this
+> patch is small and everything is related and it's easy to review.
+>
+Thank you very much for the clarity. I understand now.
+
+I already asked Andy, but I would also like to seek your opinion on
+how I should version
+the next patch. I already made this current one v6. Do I send v7 with
+changes in the cover letter,
+or changes in the individual patches?
+Or what is the best way please
+
+Thanks
+
+Adekunle.
