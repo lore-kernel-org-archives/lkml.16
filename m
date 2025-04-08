@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1724264633
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDE926463C
 	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100488; cv=none; b=t6Wb6Fw3z0LhLMo0+wc2zt+6s+Jg8oJAaPl1EtSRBVLrkVcGIDc3oiqVW0oTxudbn9MgM7GTVyzIWEf+JxYWX7dVs2q1wcROI09etpLjH4ymulHYsdEp3gVjl3u2K0W7pYN4Ymk4egOgCrl2xiUy7BaKs0p6YztHoEhxkAPqpiE=
+	t=1744100489; cv=none; b=JdSOiXveqEX/or1kfvPeXlAv9PoH1fZL7x9QC+vivlgEBHUd+uFxCHYyklyH6j3HUiHns8igyu34sU7UYRqhIzmCZvjJYcKlU35A7seMvS7GSRpoX5kjK4Elu85eu4EJXbXJF9TITSX/bA3DqpFQ9cbcOnSTQq0YdEjkNeXa70g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100488; c=relaxed/simple;
-	bh=XpWuCEwoPXT8o8UPr6REZoN2em1Xvh02RO7hc3Rm1Xw=;
+	s=arc-20240116; t=1744100489; c=relaxed/simple;
+	bh=DNXe2cltquMRMBaAJp3jzbgLWlgty9WIo+JVZVQJGRw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZST+JK1cdulUyBUHuOjY6dnwC0+q2eN3pBjH+E4t3aoZ2LXRA49Xfe/m6OEQn2p6eSRZkai5FLM76vVSfrFww5bQOO0v3bbPWiKn7ZA0Rf7FPCQUG+n0/Hqk4mXjhkN3Ri3JicL9rv8Nvhy73T88SqhO9U0GbO2xrHzyXNO/xLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NSPo58Rc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KKC8WFy5JRlljfbITSWjnhYIHLTb4xsH5ZiIkMEcIYjZMCut1jMRUPPBoxyyArezYX92vivyWb6MZou8r/oMsSzorFgb4yHcHq6qaVGhd0poUFPTyTIGuCZtLO4BcuCEWSU0IcwW5yYXz8upal5TOX+kVpA81GbqU1icjxcs+vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GL8Itij/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NSPo58Rc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C962C4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GL8Itij/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9D8C4CEE9;
 	Tue,  8 Apr 2025 08:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744100488;
-	bh=XpWuCEwoPXT8o8UPr6REZoN2em1Xvh02RO7hc3Rm1Xw=;
+	bh=DNXe2cltquMRMBaAJp3jzbgLWlgty9WIo+JVZVQJGRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NSPo58RcJQz3zoH2B3KAHc+x/g9CKL9pf12o+mZyVmLgW/Jn7Dr4mgfE6Rlo3mGDO
-	 X0k7GgwL18iM+a4dYW7S/WaRBI+8k0mqlo978YP7PCWzWjiIrw+72kYwh+axCeY0Mz
-	 ile+Zq9RV4+blooZLQyzrrIxPiuEr8tXP+Xv1FriwA9fLNNFkwEbBgwIrbBLoj4F/T
-	 5FueZTrn9S70Xqes/nxbkjauARhYWIde8yQAalSBs5GxDiNIXyBmOMTz/rlyrSmJP7
-	 kfcTYLu+IaL8MdTRKPsc+JNG1Nez5OR8WzC28YC0VNBTBbH8xfo+dL68UeiV+Livau
-	 iAcOM9M6UQJqQ==
+	b=GL8Itij/tMPdirFnEzoi2iZQFWDbWE7hFWFboPu5By7aM7rYb6Uj4uhAPJ/F1zW6i
+	 f8fBPuNpvaPlg94Yq1516mJMbjcP002LVRU+CPevhx4KVclswWTFMXvLF9NR0KOqFg
+	 pYuiiB/A+qIQfRxzgD1kdskgTgHSU4ainhZ4sgtwnOrkERaAu/wjxOTgxcCAHDhVGP
+	 aZf8oDNYWDNfpzusHDaIsKUskBGTAw+6dNrsmHYwBc0GGgUPdYoJUjt54F1ruPhKlX
+	 BacHRKJgSJZBZmBtVDOM/HHf42ifzvCPaaw4eBPOYMIvGdfwkUY8m1JTpNGKgL7cjk
+	 YKaEG94Hwj4FA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH RFC 5/5] objtool: Improve code generation readability
-Date: Tue,  8 Apr 2025 01:21:18 -0700
-Message-ID: <fa33720aa6022c6fab2336e129e08575177a8009.1744098446.git.jpoimboe@kernel.org>
+Subject: [PATCH RFC 4/5] x86/alternative: Improve code generation readability
+Date: Tue,  8 Apr 2025 01:21:17 -0700
+Message-ID: <35ae5c17e8cc88506b5ae8f3b06d9491f7ef319c.1744098446.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744098446.git.jpoimboe@kernel.org>
 References: <cover.1744098446.git.jpoimboe@kernel.org>
@@ -46,209 +46,241 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Improve the readability and compactness of the objtool annotations.
-This makes it easier to see them and differentiate from other code.
+Improve the readability and compactness of alternatives code.
 
-Before:
--------
+---------------------
+ALTERNATIVE() before:
+---------------------
 
- 911:
-	.pushsection .discard.annotate_insn,"M",@progbits,8
-	.long 911b - .
-	.long 1
-	.popsection
+  	# ALT: oldinstr
+  771:
+  	rep movsb
+  772:
+  # ALT: padding
+  .skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+  773:
+  .pushsection .altinstructions,"a"
+   .long 771b - .
+   .long 774f - .
+   .4byte (((1 << 0) << 16) | ((18*32+ 4)))
+   .byte 773b-771b
+   .byte 775f-774f
+  .popsection
+  .pushsection .altinstr_replacement, "ax"
+  # ALT: replacement
+  774:
+  	call rep_movs_alternative
+  775:
+  .popsection
 
-After:
-------
+--------------------
+ALTERNATIVE() after:
+--------------------
 
- # <ANNOTATE_NOENDBR>
- 911:	.pushsection .discard.annotate_insn,"M",@progbits,8; .long 911b - .; .long 1; .popsection
- # </ANNOTATE_NOENDBR>
+ # <ALTERNATIVE>
+ 771:	rep movsb
+ 772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+ 773:
+ # ALT ENTRY:
+ .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte (((1 << 0) << 16) | ((18*32+ 4)));  .byte 773b-771b;  .byte 775f-774f; .popsection
+ # ALT REPLACEMENT:
+ .pushsection .altinstr_replacement, "ax"
+ 774:	call rep_movs_alternative
+ 775:
+ .popsection
+ # </ALTERNATIVE>
+
+-----------------------
+ALTERNATIVE_2() before:
+-----------------------
+
+ 	# ALT: oldinstr
+ 771:
+ 	# ALT: oldinstr
+ 771:
+ 	jmp 6f
+ 772:
+ # ALT: padding
+ .skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+ 773:
+ .pushsection .altinstructions,"a"
+  .long 771b - .
+  .long 774f - .
+  .4byte ( 3*32+21)
+  .byte 773b-771b
+  .byte 775f-774f
+ .popsection
+ .pushsection .altinstr_replacement, "ax"
+ # ALT: replacement
+ 774:
+ 	jmp .L4	#
+ 775:
+ .popsection
+
+ 772:
+ # ALT: padding
+ .skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+ 773:
+ .pushsection .altinstructions,"a"
+  .long 771b - .
+  .long 774f - .
+  .4byte 297	#
+  .byte 773b-771b
+  .byte 775f-774f
+ .popsection
+ .pushsection .altinstr_replacement, "ax"
+ # ALT: replacement
+ 774:
+
+ 775:
+ .popsection
+
+----------------------
+ALTERNATIVE_2() after:
+----------------------
+
+ # <ALTERNATIVE_2>
+ 771:
+ 771:	jmp 6f
+ 772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+ 773:
+ # ALT ENTRY:
+ .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte ( 3*32+21);  .byte 773b-771b;  .byte 775f-774f; .popsection
+ # ALT REPLACEMENT:
+ .pushsection .altinstr_replacement, "ax"
+ 774:	jmp .L4	#
+ 775:
+ .popsection
+ 772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
+ 773:
+ # ALT ENTRY:
+ .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte 297;  .byte 773b-771b;  .byte 775f-774f; .popsection	#
+ # ALT REPLACEMENT:
+ .pushsection .altinstr_replacement, "ax"
+ 774:
+ 775:
+ .popsection
+ # </ALTERNATIVE_2>
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- include/linux/objtool.h | 97 ++++++++++++++++++++---------------------
- 1 file changed, 47 insertions(+), 50 deletions(-)
+ arch/x86/include/asm/alternative.h | 88 +++++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/objtool.h b/include/linux/objtool.h
-index 366ad004d794..66549603147e 100644
---- a/include/linux/objtool.h
-+++ b/include/linux/objtool.h
-@@ -8,19 +8,31 @@
+diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+index 4a37a8bd87fd..6472d53625dc 100644
+--- a/arch/x86/include/asm/alternative.h
++++ b/arch/x86/include/asm/alternative.h
+@@ -151,46 +151,84 @@ static inline int alternatives_text_reserved(void *start, void *end)
+ #define alt_rlen		"775f-774f"
  
- #include <asm/asm.h>
+ #define OLDINSTR(oldinstr)						\
+-	"# ALT: oldinstr\n"						\
+-	"771:\n\t" oldinstr "\n772:\n"					\
+-	"# ALT: padding\n"						\
+-	".skip -(((" alt_rlen ")-(" alt_slen ")) > 0) * "		\
+-		"((" alt_rlen ")-(" alt_slen ")),0x90\n"		\
++	"771:" oldinstr "\n"						\
++	"772:\t.skip -(((" alt_rlen ")-(" alt_slen ")) > 0) * "		\
++		      "((" alt_rlen ")-(" alt_slen ")),0x90\n"		\
+ 	"773:\n"
  
-+#define __UNWIND_HINT(label, type, sp_reg, sp_offset, signal)	\
-+	.pushsection .discard.unwind_hints;			\
-+	/* struct unwind_hint */				\
-+	.long label - .;					\
-+	.short sp_offset;					\
-+	.byte sp_reg;						\
-+	.byte type;						\
-+	.byte signal;						\
-+	.balign 4;						\
-+	.popsection
+-#define ALTINSTR_ENTRY(ft_flags)					      \
+-	".pushsection .altinstructions,\"a\"\n"				      \
+-	" .long 771b - .\n"				/* label           */ \
+-	" .long 774f - .\n"				/* new instruction */ \
+-	" .4byte " __stringify(ft_flags) "\n"		/* feature + flags */ \
+-	" .byte " alt_total_slen "\n"			/* source len      */ \
+-	" .byte " alt_rlen "\n"				/* replacement len */ \
++#define ALTINSTR_ENTRY(ft_flags)					\
++	"# ALT ENTRY:\n"						\
++	".pushsection .altinstructions,\"a\"; "				\
++	" .long 771b - .; "			/* label           */	\
++	" .long 774f - .; "			/* new instruction */	\
++	" .4byte " __stringify(ft_flags) "; "	/* feature + flags */	\
++	" .byte " alt_total_slen "; "		/* source len      */	\
++	" .byte " alt_rlen "; "			/* replacement len */	\
+ 	".popsection\n"
+ 
+-#define ALTINSTR_REPLACEMENT(newinstr)		/* replacement */	\
++#define ALTINSTR_REPLACEMENT(newinstr)					\
++	"# ALT REPLACEMENT:\n"						\
+ 	".pushsection .altinstr_replacement, \"ax\"\n"			\
+-	"# ALT: replacement\n"						\
+-	"774:\n\t" newinstr "\n775:\n"					\
+-	".popsection\n"
++	"774:\t" newinstr "\n"						\
++	"775:\n"							\
++	".popsection"
+ 
+-/* alternative assembly primitive: */
+-#define ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
 +
-+#define __ASM_ANNOTATE(label, type)				\
-+	.pushsection .discard.annotate_insn,"M",@progbits,8;	\
-+	.long label - .;					\
-+	.long type;						\
-+	.popsection
++#define __ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
+ 	OLDINSTR(oldinstr)						\
+ 	ALTINSTR_ENTRY(ft_flags)					\
+ 	ALTINSTR_REPLACEMENT(newinstr)
+ 
+-#define ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
+-	ALTERNATIVE(ALTERNATIVE(oldinstr, newinstr1, ft_flags1), newinstr2, ft_flags2)
++#define __ALTERNATIVE_2(oldinstr,					\
++			newinstr1, ft_flags1,				\
++			newinstr2, ft_flags2)				\
++	__ALTERNATIVE("\n"						\
++		      __ALTERNATIVE(oldinstr,				\
++				    newinstr1, ft_flags1),		\
++		      newinstr2, ft_flags2)
 +
- #ifndef __ASSEMBLY__
++#define __ALTERNATIVE_3(oldinstr,					\
++			newinstr1, ft_flags1,				\
++			newinstr2, ft_flags2,				\
++			newinstr3, ft_flags3)				\
++	__ALTERNATIVE("\n"						\
++		      __ALTERNATIVE_2(oldinstr,				\
++				      newinstr1, ft_flags1,		\
++				      newinstr2, ft_flags2),		\
++		      newinstr3, ft_flags3)
++
++
++#define ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
++	"\n# <ALTERNATIVE>\n"						\
++	__ALTERNATIVE("\t" oldinstr, newinstr, ft_flags)		\
++	"\n# </ALTERNATIVE>\n"
++
++#define ALTERNATIVE_2(oldinstr,						\
++		      newinstr1, ft_flags1,				\
++		      newinstr2, ft_flags2)				\
++	"\n# <ALTERNATIVE_2>\n"						\
++	__ALTERNATIVE_2("\t"						\
++			oldinstr,					\
++			newinstr1, ft_flags1,				\
++			newinstr2, ft_flags2)				\
++	"\n# </ALTERNATIVE_2>\n"
++
++#define ALTERNATIVE_3(oldinstr,						\
++		      newinstr1, ft_flags1,				\
++		      newinstr2, ft_flags2,				\
++		      newinstr3, ft_flags3)				\
++	"\n# <ALTERNATIVE_3>\n"						\
++	__ALTERNATIVE_3("\t"						\
++			oldinstr,					\
++			newinstr1, ft_flags1,				\
++			newinstr2, ft_flags2,				\
++			newinstr3, ft_flags3)				\
++	"\n# </ALTERNATIVE_3>\n"
  
--#define UNWIND_HINT(type, sp_reg, sp_offset, signal)	\
--	"987: \n\t"						\
--	".pushsection .discard.unwind_hints\n\t"		\
--	/* struct unwind_hint */				\
--	".long 987b - .\n\t"					\
--	".short " __stringify(sp_offset) "\n\t"			\
--	".byte " __stringify(sp_reg) "\n\t"			\
--	".byte " __stringify(type) "\n\t"			\
--	".byte " __stringify(signal) "\n\t"			\
--	".balign 4 \n\t"					\
--	".popsection\n\t"
-+#define UNWIND_HINT(type, sp_reg, sp_offset, signal)		\
-+	"\n# <UNWIND_HINT>\n"					\
-+	"987: "							\
-+	__stringify(__UNWIND_HINT(987b, type, sp_reg,		\
-+				  sp_offset, signal))		\
-+	"\n# </UNWIND_HINT>\n\t"
+ /* If @feature is set, patch in @newinstr_yes, otherwise @newinstr_no. */
+ #define ALTERNATIVE_TERNARY(oldinstr, ft_flags, newinstr_yes, newinstr_no) \
+ 	ALTERNATIVE_2(oldinstr, newinstr_no, X86_FEATURE_ALWAYS, newinstr_yes, ft_flags)
  
- /*
-  * This macro marks the given function's stack frame as "non-standard", which
-@@ -45,23 +57,18 @@
- #define STACK_FRAME_NON_STANDARD_FP(func)
- #endif
- 
--#define ASM_REACHABLE							\
--	"998:\n\t"							\
--	".pushsection .discard.reachable\n\t"				\
--	".long 998b\n\t"						\
--	".popsection\n\t"
+-#define ALTERNATIVE_3(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2, \
+-			newinstr3, ft_flags3)				\
+-	ALTERNATIVE(ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2), \
+-		      newinstr3, ft_flags3)
 -
- #define __ASM_BREF(label)	label ## b
- 
--#define __ASM_ANNOTATE(label, type)					\
--	".pushsection .discard.annotate_insn,\"M\",@progbits,8\n\t"	\
--	".long " __stringify(label) " - .\n\t"			\
--	".long " __stringify(type) "\n\t"				\
--	".popsection\n\t"
--
- #define ASM_ANNOTATE(type)						\
--	"911:\n\t"						\
--	__ASM_ANNOTATE(911b, type)
-+	"\n# <ANNOTATE_" __stringify(type) ">\n"			\
-+	"911:\t"							\
-+	__stringify(__ASM_ANNOTATE(911b, __PASTE(ANNOTYPE_, type)))	\
-+	"\n# </ANNOTATE_" __stringify(type) ">\n\t"
-+
-+#define ASM_ANNOTATE_LABEL(label, type)					\
-+	"\n# BEGIN ANNOTATE_" __stringify(type) "\n"			\
-+	__stringify(__ASM_ANNOTATE(label, __PASTE(ANNOTYPE_, type)))	\
-+	"\n# </ANNOTATE_" __stringify(type) "\n\t"
- 
- #else /* __ASSEMBLY__ */
- 
-@@ -88,15 +95,7 @@
-  */
- .macro UNWIND_HINT type:req sp_reg=0 sp_offset=0 signal=0
- .Lhere_\@:
--	.pushsection .discard.unwind_hints
--		/* struct unwind_hint */
--		.long .Lhere_\@ - .
--		.short \sp_offset
--		.byte \sp_reg
--		.byte \type
--		.byte \signal
--		.balign 4
--	.popsection
-+	__UNWIND_HINT(.Lhere_\@, \type, \sp_reg, \sp_offset, \signal)
- .endm
- 
- .macro STACK_FRAME_NON_STANDARD func:req
-@@ -113,10 +112,7 @@
- 
- .macro ANNOTATE type:req
- .Lhere_\@:
--	.pushsection .discard.annotate_insn,"M",@progbits,8
--	.long	.Lhere_\@ - .
--	.long	\type
--	.popsection
-+	__ASM_ANNOTATE(.Lhere_\@, \type)
- .endm
- 
- #endif /* __ASSEMBLY__ */
-@@ -125,11 +121,12 @@
- 
- #ifndef __ASSEMBLY__
- 
--#define UNWIND_HINT(type, sp_reg, sp_offset, signal) "\n\t"
- #define STACK_FRAME_NON_STANDARD(func)
- #define STACK_FRAME_NON_STANDARD_FP(func)
--#define __ASM_ANNOTATE(label, type) ""
--#define ASM_ANNOTATE(type)
-+
-+#define UNWIND_HINT(type, sp_reg, sp_offset, signal)	""
-+#define ASM_ANNOTATE(type)				""
-+#define ASM_ANNOTATE_LABEL(sym, type)			""
- #else
- .macro UNWIND_HINT type:req sp_reg=0 sp_offset=0 signal=0
- .endm
-@@ -146,30 +143,30 @@
-  * Annotate away the various 'relocation to !ENDBR` complaints; knowing that
-  * these relocations will never be used for indirect calls.
-  */
--#define ANNOTATE_NOENDBR		ASM_ANNOTATE(ANNOTYPE_NOENDBR)
--#define ANNOTATE_NOENDBR_SYM(sym)	asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOENDBR))
-+#define ANNOTATE_NOENDBR		ASM_ANNOTATE(NOENDBR)
-+#define ANNOTATE_NOENDBR_SYM(sym)	asm(ASM_ANNOTATE_LABEL(sym, NOENDBR))
- 
  /*
-  * This should be used immediately before an indirect jump/call. It tells
-  * objtool the subsequent indirect jump/call is vouched safe for retpoline
-  * builds.
-  */
--#define ANNOTATE_RETPOLINE_SAFE		ASM_ANNOTATE(ANNOTYPE_RETPOLINE_SAFE)
-+#define ANNOTATE_RETPOLINE_SAFE		ASM_ANNOTATE(RETPOLINE_SAFE)
- /*
-  * See linux/instrumentation.h
-  */
--#define ANNOTATE_INSTR_BEGIN(label)	__ASM_ANNOTATE(label, ANNOTYPE_INSTR_BEGIN)
--#define ANNOTATE_INSTR_END(label)	__ASM_ANNOTATE(label, ANNOTYPE_INSTR_END)
-+#define ANNOTATE_INSTR_BEGIN(label)	ASM_ANNOTATE_LABEL(label, INSTR_BEGIN)
-+#define ANNOTATE_INSTR_END(label)	ASM_ANNOTATE_LABEL(label, INSTR_END)
- /*
-  * objtool annotation to ignore the alternatives and only consider the original
-  * instruction(s).
-  */
--#define ANNOTATE_IGNORE_ALTERNATIVE	ASM_ANNOTATE(ANNOTYPE_IGNORE_ALTS)
-+#define ANNOTATE_IGNORE_ALTERNATIVE	ASM_ANNOTATE(IGNORE_ALTS)
- /*
-  * This macro indicates that the following intra-function call is valid.
-  * Any non-annotated intra-function call will cause objtool to issue a warning.
-  */
--#define ANNOTATE_INTRA_FUNCTION_CALL	ASM_ANNOTATE(ANNOTYPE_INTRA_FUNCTION_CALL)
-+#define ANNOTATE_INTRA_FUNCTION_CALL	ASM_ANNOTATE(INTRA_FUNCTION_CALL)
- /*
-  * Use objtool to validate the entry requirement that all code paths do
-  * VALIDATE_UNRET_END before RET.
-@@ -177,13 +174,13 @@
-  * NOTE: The macro must be used at the beginning of a global symbol, otherwise
-  * it will be ignored.
-  */
--#define ANNOTATE_UNRET_BEGIN		ASM_ANNOTATE(ANNOTYPE_UNRET_BEGIN)
-+#define ANNOTATE_UNRET_BEGIN		ASM_ANNOTATE(UNRET_BEGIN)
- /*
-  * This should be used to refer to an instruction that is considered
-  * terminating, like a noreturn CALL or UD2 when we know they are not -- eg
-  * WARN using UD2.
-  */
--#define ANNOTATE_REACHABLE(label)	__ASM_ANNOTATE(label, ANNOTYPE_REACHABLE)
-+#define ANNOTATE_REACHABLE(label)	ASM_ANNOTATE_LABEL(label, REACHABLE)
- 
- #else
- #define ANNOTATE_NOENDBR		ANNOTATE type=ANNOTYPE_NOENDBR
+  * Alternative instructions for different CPU types or capabilities.
+  *
 -- 
 2.49.0
 
