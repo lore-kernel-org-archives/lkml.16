@@ -1,121 +1,205 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A8C207E14;
-	Tue,  8 Apr 2025 11:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96E8207E14;
+	Tue,  8 Apr 2025 11:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111296; cv=none; b=MTZjxf7SmBI1fkJQtP0Q3YLwmfvccRPu+ofZ76WL7+R5UbcNrsg/wPveq6Ven4sj9bbPrVABP4QIKLHXt9TvKtc1bUxbvdt3bRD8DNW0nyKfbEfip4q5ZKgtyW1TidbLlU42dzcn4ESfuwdmvhC04IlPK2C03SAA4wdL6I1bZLw=
+	t=1744111328; cv=none; b=stcleN9boyYPCt+M6wXx3yJuNg1rcaNmwf/wcVm3hvxEXwMwAQ3QttU7raUBin8SGV+B48+v8O9qsB/6jo7JQrxj7P3UbXjPCFwytYmMaIJBQRh3FJCPxfwuvrdiAeX5gbEc9bDBb5OngXNrQqcZC6erEvmb/bg3DKwQ6uea90w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111296; c=relaxed/simple;
-	bh=D3tSjslJEG5gUmYqPQBwZcslLuwSvruWXMArraYU17w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uByR9NP5NeiZepniLJK+Lk7siyzQMRoXc4c8YcF7qKKVdHSxD18kxboSi8fzT9AhlSrJmdNOv4cOlb07wtrdRV2ByNrW0ZFnSB+FOzVv2KOVFBuSKN7kKUDnRvlyj8w2XQbIKK0nNVYfmQUvHLYeqtMW3Ao2ec7xX3rCdOtlzV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxHnh1XS; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744111328; c=relaxed/simple;
+	bh=9rixISlH0h3gLJrlq8Oxi2XQJTBimT3/MGOf2hGDi4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kjGlT8EseW9xutQbs8XMf+bldFSwtaKJpzkP6jVtLP62e/eWL4AtG81azoxhG+D+Pf1i3JY507CAadOQLoozLjQafnL/OeoYu2EWlsyZQuiW+FLEJ6LxZ3bLy4T8iAzz+Oq0iRmPXA4rWX8ZbVPaolqw+cVF3njm2s33CoDaNU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PZIW4Eff; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxHnh1XS"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-ad5236e6fd6so4888067a12.0;
-        Tue, 08 Apr 2025 04:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744111295; x=1744716095; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1WTsXHcQYhNYnT0/xU5DpY+xWRau9JN7FZGJGxicCc=;
-        b=VxHnh1XSzI9YwGM53/j8MvFtZ6gFE4ctmwZatm/1EhKFkgJ5iKIcpWvIw31+DIIRc5
-         Zz/F0PlKWTdj1en4yCqKYzD9LLQrgUVKrgR4fVxxKxxy0pKszIxqlUHyuw1VqZwT+st6
-         21mzN2ILVuIBKWz75izkNvltQ0lE9AFENpSeOPxYt8QGGBbp5Vv6JefDiVlCHQGN5uqy
-         QD035zwP9ElPLq+5I54cBL1ZmM8lNHluoKViTslYBrM2mqgiGHATtzOhO6C+IDE5+pKQ
-         NYtrZJVu0c9+m7ZUo95E+MpP+Y7oagGlwcH8/r17No6wn+erU1jInR0QFhq7MAfvtj2x
-         y4hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744111295; x=1744716095;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y1WTsXHcQYhNYnT0/xU5DpY+xWRau9JN7FZGJGxicCc=;
-        b=rmWIGqftYs1vWvePDYsoYNl9m3i3Vyv5CeFTq1UQ7SdXTLYKU4YLjNMJGeKutO5Ni3
-         6x7fY5JmuSaqxPL3XXsc2yf05iaspIo7ayEYj4gULCcVsl5tj1RHQ8hzS7w7fznHugRX
-         kS12GQ8b+Vv5cBz/9kesa2K3V81gB7j842izm5WYFp0PKRcnLhz8DiU96fLM1Fjm0Cya
-         0B9FCXeyGdyesvCzIEo+vnvPHNFQG07dcrts8CAWlHbkkAXQGEUiz7mMTTq+9mT3U3QJ
-         qDkGHa1MIz6jPCE1dpz8zq80JEwZ14mZzgeLC7A7hEp6jS25EO2D4fG2cmRo7aknzvj+
-         Ym4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUiMu9IIWzTZfrO/NM/YKSotZyW3P6+64T442CLOqBjnoCW1D9S/4OelXjK5ghDtwkT+5UlBVUL5Oki@vger.kernel.org, AJvYcCUku2xpFniyRyApCOuu6vvYz06Cclyi9MMeXO2xGRvcTDPojPqO90YQe/h5OkBms/KlrGj+l6Yf9zBkQxbA@vger.kernel.org, AJvYcCXsWhwwsPRHBtrtiAfNTWFkM+pWqCB1szwGFMsURhQj5PxtFRRT4GjFSnTpwNxUspINJp0Wy1MMEoYp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg7cQJ/00N1kFPte2CbNLAu2o/5MiTwdv5TGYSzg17R/qOF577
-	4XjjLQ9S2KT7ZnbJQG10xQjp1GveelkkE/setMzPESegM3rPseo0
-X-Gm-Gg: ASbGncvDbjsABK4az0lDw3ZxrlKogMVdIXNw7MAJ3KdPeMAuZnI0qWVHI3GqtNaPkUU
-	mBhFbI1BN1aVJ55ERG3F4r8qPfHbbrm22A4psK+BCmRASPWxULSFKboYOGh6JWuLQglwSFJdXwT
-	R7+C+M4F2tM+SHpWD0BXNAJ9Dkc5PGVOkoXHIxH5+vuWL6S9X/HpiLx0ud/ITuD4s2hlnBGkheh
-	zsfk3CpyetQtMeF0uFtenh8dppWjhLlaaRxRRorCx75+OyLYvBbeuozZniGDfVGxpVpeH2FP2xO
-	oGQ773SpTbb76gioI+qKzSOM/fCx44e6KkIF56aXvvPIfgc=
-X-Google-Smtp-Source: AGHT+IENHbT7aGSGC2d+Xs3HK0eW2n1NHcpEJC/0ogHOySPZcdktzD7ZPPAXmOKRs/wQ018ClqbpUQ==
-X-Received: by 2002:a17:90b:53c5:b0:2f2:a664:df20 with SMTP id 98e67ed59e1d1-306a47c2e20mr24517484a91.7.1744111294119;
-        Tue, 08 Apr 2025 04:21:34 -0700 (PDT)
-Received: from localhost ([223.80.110.9])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30588a30974sm10619376a91.25.2025.04.08.04.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:21:33 -0700 (PDT)
-Date: Tue, 8 Apr 2025 19:21:28 +0800
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Mark Brown <broonie@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, sophgo@lists.linux.dev, 
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, dlan@gentoo.org
-Subject: Re: [PATCH v4 1/2] spi: dt-bindings: snps,dw-apb-ssi: Add compatible
- for SOPHGO SG2042 SoC
-Message-ID: <qe4qhkbou5t24jccfrufvszsrbrwvj765y6jrj3bnhk2jnh5st@2y4hpbmujo3w>
-References: <20250407-sfg-spi-v4-0-30ac949a1e35@gmail.com>
- <20250407-sfg-spi-v4-1-30ac949a1e35@gmail.com>
- <20250407140739.GA2174606-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PZIW4Eff"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37AA0C4CEE5;
+	Tue,  8 Apr 2025 11:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744111328;
+	bh=9rixISlH0h3gLJrlq8Oxi2XQJTBimT3/MGOf2hGDi4A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PZIW4EffBrz3O1V7dFu+frqWqgAGa7/HVjlDakrI/hRGikIlfJmB8ZP99kr/4yhiS
+	 bWQnNnnKRLbgCVcnfupBaU68SO+tIi4wBE0V7KqHGBjUtom+9Z/i20RMJ4uUcjeBfh
+	 bGAM1dYp9mTbzh6AbQYcs6l/k/V6tgldlSQpy0mI=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Parav Pandit <parav@nvidia.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.14 393/731] RDMA/core: Dont expose hw_counters outside of init net namespace
+Date: Tue,  8 Apr 2025 12:44:50 +0200
+Message-ID: <20250408104923.416610570@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408104914.247897328@linuxfoundation.org>
+References: <20250408104914.247897328@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407140739.GA2174606-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On 25/04/07 09:07AM, Rob Herring wrote:
-> On Mon, Apr 07, 2025 at 02:35:12PM +0800, Zixian Zeng wrote:
-> > add compatible property to include "sophgo,sg2042-spi" for
-> > the SOPHGO SG2042 SoC SPI Controller.
-> > 
-> > Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > index bccd00a1ddd0ad92b437eed5b525a6ea1963db57..94102d94ed5dffe889a8a11c1c637d466713c208 100644
-> > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > @@ -88,6 +88,10 @@ properties:
-> >                - renesas,r9a06g032-spi # RZ/N1D
-> >                - renesas,r9a06g033-spi # RZ/N1S
-> >            - const: renesas,rzn1-spi   # RZ/N1
-> > +      - description: SOPHGO SG2042 SoC SPI Controller
-> > +        items:
-> > +          - const: sophgo,sg2042-spi
-> > +          - const: snps,dw-apb-ssi
-> 
-> This and all the other cases with snps,dw-apb-ssi fallback should be 
-> combined into 1 entry.
-> 
-Sounds good, did you mean conbining "SOPHGO SG2042" "T-HEAD TH1520" and "Renesas RZ/N1" together? But How about the description?
-> >        - description: T-HEAD TH1520 SoC SPI Controller
-> >          items:
-> >            - const: thead,th1520-spi
-> > 
-> > -- 
-> > 2.49.0
-> > 
-Best regards,
-Zixian
+6.14-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Roman Gushchin <roman.gushchin@linux.dev>
+
+[ Upstream commit a1ecb30f90856b0be4168ad51b8875148e285c1f ]
+
+Commit 467f432a521a ("RDMA/core: Split port and device counter sysfs
+attributes") accidentally almost exposed hw counters to non-init net
+namespaces. It didn't expose them fully, as an attempt to read any of
+those counters leads to a crash like this one:
+
+[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[42021.814463] #PF: supervisor read access in kernel mode
+[42021.819549] #PF: error_code(0x0000) - not-present page
+[42021.824636] PGD 0 P4D 0
+[42021.827145] Oops: 0000 [#1] SMP PTI
+[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
+[42021.841697] Hardware name: XXX
+[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
+[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
+[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
+[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
+[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
+[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
+[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[42021.949324] Call Trace:
+[42021.951756]  <TASK>
+[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
+[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
+[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
+[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
+[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
+[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
+[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
+[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
+[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
+[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
+[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
+[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
+
+The problem can be reproduced using the following steps:
+  ip netns add foo
+  ip netns exec foo bash
+  cat /sys/class/infiniband/mlx4_0/hw_counters/*
+
+The panic occurs because of casting the device pointer into an
+ib_device pointer using container_of() in hw_stat_device_show() is
+wrong and leads to a memory corruption.
+
+However the real problem is that hw counters should never been exposed
+outside of the non-init net namespace.
+
+Fix this by saving the index of the corresponding attribute group
+(it might be 1 or 2 depending on the presence of driver-specific
+attributes) and zeroing the pointer to hw_counters group for compat
+devices during the initialization.
+
+With this fix applied hw_counters are not available in a non-init
+net namespace:
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
+    /sys/class/infiniband/mlx4_0/ports/1/hw_counters
+    /sys/class/infiniband/mlx4_0/ports/2/hw_counters
+    /sys/class/infiniband/mlx4_0/hw_counters
+
+  ip netns add foo
+  ip netns exec foo bash
+  find /sys/class/infiniband/mlx4_0/ -name hw_counters
+
+Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Maher Sanalla <msanalla@nvidia.com>
+Cc: linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://patch.msgid.link/20250227165420.3430301-1-roman.gushchin@linux.dev
+Reviewed-by: Parav Pandit <parav@nvidia.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/device.c | 9 +++++++++
+ drivers/infiniband/core/sysfs.c  | 1 +
+ include/rdma/ib_verbs.h          | 1 +
+ 3 files changed, 11 insertions(+)
+
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 0ded91f056f39..8feb22089cbbd 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -528,6 +528,8 @@ static struct class ib_class = {
+ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 			      struct ib_device *dev, struct net *net)
+ {
++	bool is_full_dev = &dev->coredev == coredev;
++
+ 	/* This BUILD_BUG_ON is intended to catch layout change
+ 	 * of union of ib_core_device and device.
+ 	 * dev must be the first element as ib_core and providers
+@@ -539,6 +541,13 @@ static void rdma_init_coredev(struct ib_core_device *coredev,
+ 
+ 	coredev->dev.class = &ib_class;
+ 	coredev->dev.groups = dev->groups;
++
++	/*
++	 * Don't expose hw counters outside of the init namespace.
++	 */
++	if (!is_full_dev && dev->hw_stats_attr_index)
++		coredev->dev.groups[dev->hw_stats_attr_index] = NULL;
++
+ 	device_initialize(&coredev->dev);
+ 	coredev->owner = dev;
+ 	INIT_LIST_HEAD(&coredev->port_list);
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index 9f97bef021497..210092b9bf17d 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -988,6 +988,7 @@ int ib_setup_device_attrs(struct ib_device *ibdev)
+ 	for (i = 0; i != ARRAY_SIZE(ibdev->groups); i++)
+ 		if (!ibdev->groups[i]) {
+ 			ibdev->groups[i] = &data->group;
++			ibdev->hw_stats_attr_index = i;
+ 			return 0;
+ 		}
+ 	WARN(true, "struct ib_device->groups is too small");
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index 0ad104dae2539..43954bb0475a7 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -2750,6 +2750,7 @@ struct ib_device {
+ 	 * It is a NULL terminated array.
+ 	 */
+ 	const struct attribute_group	*groups[4];
++	u8				hw_stats_attr_index;
+ 
+ 	u64			     uverbs_cmd_mask;
+ 
+-- 
+2.39.5
+
+
+
