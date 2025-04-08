@@ -1,131 +1,238 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8C11AB52D;
-	Tue,  8 Apr 2025 14:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7F418E76B;
+	Tue,  8 Apr 2025 14:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121998; cv=none; b=UdPdBslmeqMxEG2E/IYP4fH4pLgZdqkv2iYDcTfZtosbNi0ZsNywDxw6E7oqcSur08Qfcn71N5AW6dJxjUkU71JF33cC87sI/mTSDnKvWOYzrtSKtTs6h4AhQ8yyQVWGcRpYCiM9zSZPa8sg0KEwh1DL81668yY0k7YskPB6Un0=
+	t=1744122013; cv=none; b=ua11x+1fATE0vFNzWtp9gIVLouzIu36c84ViGWd8aPqq/IHixm91N9YLhMGQuFDjOeZO7H6Ilajpgrl95QMBfkeDxlehqXTiEXEfEAY3120rk+twRdQXWg64MRuqu7engR1INysL/0+uGuEWSj14HwaTEhpga0OyOW3KZEJSt44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121998; c=relaxed/simple;
-	bh=vroccB3hc8QzTkaFSHAFq7lrOUzJlHXBEtovGQKNZvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQ/Kq3JD5ktDutrbx/1pI2qZS18EOBKOM5If3xlga1HxQU/5FsPWa0XPmAznRqEBRfxGnRTTeL68A/e8LgjmEDI5E+KeVobeUVSxkcEffn+kRzQY4Y6dYb1vm9Tn3WTiyh2bc9sjSM2m4r7raxQb5FlCKqfemZJfklyld8vPapQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=Arb62mbC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aYdFIflE; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
+	s=arc-20240116; t=1744122013; c=relaxed/simple;
+	bh=k7Mfm0w0xSbJ/AwlZ8WhSRtoVSo4epULalNHQqZi+28=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rmek8ucNdIJMWanVzE5SLgRPmlLTbbr2aOg4xwF74sVhwwt6HfMIZwinMG1VA7GNp/SiGyPUNHSGU4Uy5sTAMeSaYvRYGwkvtf6IJPttsw85kEIh1afG6hBQBAwuYrz6Uvv6FuJKjzCQj1jsLOiT2j36yKEOvmoZw70ajWrTxTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TwcFj/ec; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="Arb62mbC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aYdFIflE"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 2FDFD1380195;
-	Tue,  8 Apr 2025 10:19:55 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Tue, 08 Apr 2025 10:19:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1744121995;
-	 x=1744208395; bh=+b3ara2Q4q4NRQ8QLp9VAkPjxaW2oDNH02MnnVA+1J4=; b=
-	Arb62mbCN7yk6PXSyxSd2tYJQ6ZHVLyurUQCu2mhJYth+eYNEC7ozGRt1DCqvDar
-	UGiYgLesw+vEa8PzJCf9n8EEA+hOkqaB6UpK1KdNCSR2mKWg0MBlGysosptDbJ1w
-	WlG8r061J3pG6mzTo+cAwguEyUwGoEUvcOKwwGvNJzDXnbWwtw/EODEsiW7ijahL
-	AKOE7//RucSxKXRbbzbO6VVoorzOs+5eX2iXtePzo5wG2TPw0Jgyghrm6di/FeLu
-	P5R2D93GViY9+8ZWCg805Glp/+AXYHujXMA4u/7qzNa8ZVEbtfQjpvBmjdHy/WDQ
-	7otjK2HI8epnFGE3OYMwXg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744121995; x=
-	1744208395; bh=+b3ara2Q4q4NRQ8QLp9VAkPjxaW2oDNH02MnnVA+1J4=; b=a
-	YdFIflEf0cK6J2o0jo1ZqQWGhCSWxdgewT6TcdQDloi2dKHLVQhck+FU6BgCYEe7
-	njBZebN6MNbPt5r9qfnyuiP6ewC2J4hKeoF8gK1XIXrsXgsDuAbQaR2doONbi5MZ
-	Gc+2NinAisPcfhqim2qUTC7lleUv4kPw1ehV4a1f3xJYE17tON8Nep4DUSIQasLK
-	DRRROBya1MJvBwnvtkBR1Cc7MOhEsD5bw0SLrJrWuCDcrQ4wFHiUrpUZ+Wlq34b2
-	sB7KPeZ+c2lHUrl/P1djNNLRVFRr+WyW8xuacRSPFOcXR1vLFXE+4Y/6x1xIrqet
-	epQtl5V9jl+UHm6TN425Q==
-X-ME-Sender: <xms:iTD1Z_Bf64ty3rC326EqAGfmLhhbbz5uJ_Ny9MKjp-r6d20P9s1LQQ>
-    <xme:iTD1Z1iVn-SRmxfvRLAXYTut45rmGIMl1j8JeJg84oqyoXJ3XKYZkamos4PnrPUIi
-    9Ef6B5cW9pMY6JI>
-X-ME-Received: <xmr:iTD1Z6n-n6xAJ8pXOcGcPUBCuBMvzPcisqzr-ORquOf8l0oNHZKv5-eTkZKZbGcvesBWzdxYK9a_UIUPHxX6LRn65F2E3h5klHQTHBOFNx0pjRfFYu0A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
-    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
-    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnhepvefhgfdvledt
-    udfgtdfggeelfedvheefieevjeeifeevieetgefggffgueelgfejnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggv
-    rhhtsehfrghsthhmrghilhdrfhhmpdhnsggprhgtphhtthhopeelpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthht
-    ohepjhgrtghosehulhhsrdgtohdriigrpdhrtghpthhtoheplhhinhhugidqfhhsuggvvh
-    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghr
-    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhsthhoph
-    hhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtohepjhhorghnnhgv
-    lhhkohhonhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhguuhhnlhgrphesihhnfh
-    hrrgguvggrugdrohhrghdprhgtphhtthhopehtrhgrphgvgihithesshhprgifnhdrlhhi
-    nhhkpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrdhlihhnuhigsehgmhgrihhlrd
-    gtohhm
-X-ME-Proxy: <xmx:iTD1ZxywmtVD2Yw28OjqZ-XQ_lcbZqeSD4BBtlKFYB_a9vp5ATwXKA>
-    <xmx:iTD1Z0ToKctKC9p8g6Cl5mHk_CtKmWO92tbEIyl_jwV0Yxysh1Srbg>
-    <xmx:iTD1Z0aZG7-b2bxhK0aM2pl4boXRyxRTcFzlTACEf-MQofW6zz7LSg>
-    <xmx:iTD1Z1S4mp1cj5_ot_RZwVi5MHi2dCnNOqyymZBBEVV_Wn1AomD47A>
-    <xmx:izD1Z6aaMCKQflOtEHEHWlXxELXxF-apVqCmTWOJ_WODNzSIr0U1D-rT>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Apr 2025 10:19:52 -0400 (EDT)
-Message-ID: <d42dec00-513c-49d4-b4f3-d7a6ae387a6b@fastmail.fm>
-Date: Tue, 8 Apr 2025 16:19:51 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TwcFj/ec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744122011; x=1775658011;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=k7Mfm0w0xSbJ/AwlZ8WhSRtoVSo4epULalNHQqZi+28=;
+  b=TwcFj/ecNnbF3+kBHF9+76mVAUwTlI9Po6hEWahNaj/0w5p+P6lKCFBX
+   Ow8NDUeQSTqJ41K99LzXTbPwJDnOP069Qa3Bic2fC2D+6GcG/EbA6IpvB
+   P+HhDTkZsuLG2PM6oqBoN6FXUCH+QvdAcMKR9fiZSApO8BstTlgXXVCAl
+   Sp+9mnQ4KdHsXy02cwojtaBzlwBlqmmJPSuQqn5vDrJ+8KLykWpdFbJ7A
+   1+oqCIo9teKnLC8qwoxNRsaBIeEnKn+2Ka5/Fn8N+YtY0rVcqbbwg23aG
+   7OGdyvhfkoc61tFdimj2CES9NuAm7u+tNRkl62gd3K0/Ay+6lHn0juB0K
+   g==;
+X-CSE-ConnectionGUID: 1wpwSD//Tfy9dzrQoLNGiw==
+X-CSE-MsgGUID: MmkQuRlVRSm7txg5Qb2Vlw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44807154"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="44807154"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:20:10 -0700
+X-CSE-ConnectionGUID: LV7nR+smSLyo8L8+kdr3Dw==
+X-CSE-MsgGUID: bqQQEoutSHKU+iUbk5msRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128804113"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:20:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 8 Apr 2025 17:20:04 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v8 4/8] platform/x86: asus-armoury: add apu-mem control
+ support
+In-Reply-To: <20250319065827.53478-5-luke@ljones.dev>
+Message-ID: <f8b310f6-ebfe-64eb-d62c-28f27c753538@linux.intel.com>
+References: <20250319065827.53478-1-luke@ljones.dev> <20250319065827.53478-5-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
- size.
-To: Miklos Szeredi <miklos@szeredi.hu>, Jaco Kroon <jaco@uls.co.za>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
- rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za>
- <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
- <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 19 Mar 2025, Luke Jones wrote:
 
-
-On 4/1/25 17:33, Miklos Szeredi wrote:
-> On Tue, 1 Apr 2025 at 17:04, Jaco Kroon <jaco@uls.co.za> wrote:
+> From: "Luke D. Jones" <luke@ljones.dev>
 > 
->> Because fuse_simple_request via fuse_args_pages (ap) via fuse_io_args
->> (ia) expects folios and changing that is more than what I'm capable off,
->> and has larger overall impact.
+> Implement the APU memory size control under the asus-armoury module using
+> the fw_attributes class.
 > 
-> Attaching a minimally tested patch.
+> This allows the APU allocated memory size to be adjusted depending on
+> the users priority. A reboot is required after change.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/asus-armoury.c        | 114 +++++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |   2 +
+>  2 files changed, 116 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index a299471d78d5..b1d6b0c41669 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -388,6 +388,119 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
+>  WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
+>  ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
+>  
+> +/* Device memory available to APU */
+> +
+> +static ssize_t apu_mem_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					  char *buf)
+> +{
+> +	int err;
+> +	u32 mem;
+> +
+> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_APU_MEM, &mem);
+> +	if (err)
+> +		return err;
+> +
+> +	switch (mem) {
+> +	case 0x100:
+> +		mem = 0;
+> +		break;
+> +	case 0x102:
+> +		mem = 1;
+> +		break;
+> +	case 0x103:
+> +		mem = 2;
+> +		break;
+> +	case 0x104:
+> +		mem = 3;
+> +		break;
+> +	case 0x105:
+> +		mem = 4;
+> +		break;
+> +	case 0x106:
+> +		/* This is out of order and looks wrong but is correct */
+> +		mem = 8;
+> +		break;
+> +	case 0x107:
+> +		mem = 5;
+> +		break;
+> +	case 0x108:
+> +		mem = 6;
+> +		break;
+> +	case 0x109:
+> +		mem = 7;
+> +		break;
+> +	default:
+> +		mem = 4;
+> +		break;
+> +	}
+> +
+> +	return sysfs_emit(buf, "%u\n", mem);
+> +}
+> +
+> +static ssize_t apu_mem_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	int result, err;
+> +	u32 requested, mem;
+> +
+> +	result = kstrtou32(buf, 10, &requested);
+> +	if (result)
+> +		return result;
+> +
+> +	switch (requested) {
+> +	case 0:
+> +		mem = 0x000;
+> +		break;
+> +	case 1:
+> +		mem = 0x102;
+> +		break;
+> +	case 2:
+> +		mem = 0x103;
+> +		break;
+> +	case 3:
+> +		mem = 0x104;
+> +		break;
+> +	case 4:
+> +		mem = 0x105;
+> +		break;
+> +	case 5:
+> +		mem = 0x107;
+> +		break;
+> +	case 6:
+> +		mem = 0x108;
+> +		break;
+> +	case 7:
+> +		mem = 0x109;
+> +		break;
+> +	case 8:
+> +		/* This is out of order and looks wrong but is correct */
+> +		mem = 0x106;
+> +		break;
+> +	default:
+> +		return -EIO;
+> +	}
 
-Just tested this and looks good to me. Could we change to
+Should these switch/cases be just replaced with an array (and loop in one 
+of the functions).
 
--	size_t bufsize = 131072;
-+	size_t bufsize = fc->max_pages << PAGE_SHIFT;
+> +
+> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_APU_MEM, mem, &result);
+> +	if (err) {
+> +		pr_warn("Failed to set apu_mem: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pr_info("APU memory changed to %uGB, reboot required\n", requested);
+> +	sysfs_notify(kobj, NULL, attr->attr.name);
+> +
+> +	asus_set_reboot_and_signal_event();
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					    char *buf)
+> +{
+> +	return sysfs_emit(buf, "0;1;2;3;4;5;6;7;8\n");
 
-?
+I you add the array, would be useful to BUILD_BUG_ON() in this if the 
+ARRAY_SIZE() differs.
 
-I'm testing with that in my branch, going to run xfstests over night.
+> +}
+> +ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
+> +
+>  /* Simple attribute creation */
+>  ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
+>  		       "Show the current mode of charging");
+> @@ -408,6 +521,7 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+>  	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
+>  	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
+>  	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
+> +	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
+>  
+>  	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
+>  	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 62a9adb1af2f..f3494a9efea7 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -137,6 +137,8 @@
+>  /* dgpu on/off */
+>  #define ASUS_WMI_DEVID_DGPU		0x00090020
+>  
+> +#define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+> +
+>  /* gpu mux switch, 0 = dGPU, 1 = Optimus */
+>  #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
+>  #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
+> 
 
+-- 
+ i.
 
-Reviewed-by: Bernd Schubert <bschubert@ddn.com>
-
-
-Thanks,
-Bernd
