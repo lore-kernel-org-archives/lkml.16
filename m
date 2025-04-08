@@ -1,136 +1,175 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FEF269813
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2FC268FE5
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112011; cv=none; b=TGPb90bFu/5QmU4qRObbArR8bAAexuXyvafk63c6wvxMyVZ+Ujs2vqaRo9LQh0IRseTNysv5F/pWjdbhnnrV5DjKw8kpzh4huSDa+sauUeD5rpD961aTjcRQeiq2prop4OVh9nj/SP3BkBDYsWTEVlZ+3P3/7f7kKy9iOap/ak8=
+	t=1744112075; cv=none; b=hUgcyVMa1nirqKsBvyp4ieOZ1NHxu90aJv3eWAt2lMr4zDqKjBYN34fAwF0WJ1e4IBSk69oLarYtxJsp+dAHz9Zk/dS/qtM6np01T5LEy+Z724xtduQdi1xbmC8QQ8mEQMVAFhANCl1GWuIPS+FlYCB0fkrCpikRDAgYMawI/4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112011; c=relaxed/simple;
-	bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ifTJZ1yA65HcLJDjfo0qxMcfjWzMBcZoKNhIpwZQcgt2ftjW9/xsA2JWKn3X0CrWzRwjpc8VNJLN4RSPJ7MTRATqERF4R7oNsM9lU9v0ertYJU4wNFckAfBhAV6yQGX72nrwagHIdWOLwTPUXCiNuQ1MkjKUo0fcpnM9H9enqgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hLDvz2n4; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744112075; c=relaxed/simple;
+	bh=4x59vokfEn4mqffHLLahm5tXLvJ/2uXuqBEPOj6Uy1g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NgaT1fgFSwN81Tm2iRVeRir5jNyfmEczPuEKTrduHrUDGVOEgRnUWFvOZkE+gXxhLEgXGohvNQnY9Miy0HBLgCzvhkMA/TJPi12uq5og4Lg1B+hcAGbqsL8osrWvlBACqsGdo/7F/RSulxFata4xz0h5AguOcVBUW9iTLwZe10U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ypu2W7wq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hLDvz2n4"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47692b9d059so16335781cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744112009; x=1744716809; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
-        b=hLDvz2n4zncsyxwlCeaOot9ouJzADOC+pPLGg14xoZnYiiBN8dnMPxG1pvcNCzQvVT
-         EBNrRvWSAjvx2EoWR79cnWtUPLFL2hJMVXbzlxt5xRkby01eE+07QPUfdahH48Uhfrfy
-         O/TPDaVpGlvR0ihm75KXzzHk6/DlfHrZgZCfYdjnfjqHNUXcdozqLuAfsdbjMFxHkyrK
-         nN5ASQXejQwq5VkKit1c6IYpfiaPqLhw4R/opDzDtg0cg5k713HV+Ogz+DVELURnZ4o0
-         0UKsd6a7LqkfvvcgacM4/0pLOZ4Y1kMow8ZJRAyuohq5y8Mvr/gzG8upCJAhkw1AXkoL
-         HtUA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ypu2W7wq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744112072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PAhKuQb3RoCqJ3z/VKP8lkfDlIZ0rdzLrgCMtYUeatE=;
+	b=Ypu2W7wqIpXpuM2lboTZeljw1dYUbG/c8HvAvINS2OtTBJ+uAgIC/aCW72J4Jh1rFXRue0
+	iaW1B0L4XKfxQy/TrlaQ79POh37O84/se/MCLzvhOs38Nx8Kumzr0K3dEPjHCyg8AGoXxX
+	qIGGD6TEq6MhlN9XWnuiyAtBrd4yCP8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-QphBJrdrPf6ZrfUE36tC1w-1; Tue, 08 Apr 2025 07:34:30 -0400
+X-MC-Unique: QphBJrdrPf6ZrfUE36tC1w-1
+X-Mimecast-MFC-AGG-ID: QphBJrdrPf6ZrfUE36tC1w_1744112070
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913f97d115so2696751f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:34:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744112009; x=1744716809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
-        b=Hi8+OuThDxDzjWiZAyKlrZCT3DiIJW3bDL9e2cxSdiIzpLKCAfM6HAf1u7lb0VUDCS
-         VEIu180RO6BAYhbCleDalDgd1+rAgOlo9kssSjPNMkpXfSyP/mwIfuLFwDcxIr4qRl6b
-         T4hMnTK2OiB3bl16JnLOqJIP83+SFhY7EeYyNWjOfNgxtBnl43UIbIqAqdFlOupmmIWl
-         NEfUrnWlT7AivcdnJmZG61T8MYgmYurnLawps72GiZmLAzJVNwGOGKSGAxM86Pp/zb5u
-         4hptgauICbAbTKKHgjPK00ekgRJl0V2bE+sOJzd7JFamtZ2hTxUCIk5b9ZGvPWEY75mf
-         yduA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkILd0V/CvHjXteBD6ijYMvvC35akc1xOh5dHDC++Q6+gH07M5PFBkzokxF9HIye6uo+XBvN9XmBuyGuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC11z91bngZRHVDd/PW3UdzgIVCdzYmhzs5reojP8sfXen84bR
-	yZT1hCWEOudpmdmQN0zkv2C936NFNHpOujPh/se9wzlH45r2G7ewj3LbCQU5FEAJtLN3fnIUHT2
-	eZwC1QCeRuWRIx9JtZBGAtmBKhHoihqCzwzGj
-X-Gm-Gg: ASbGncv2eJeqrQpYBEyS+q5ZI0/gTqchC+KanQk2v1BNv+uhSLdx3kR6UfdbyKcdaGE
-	49aIOIidFyQM87YwZnrGeTBKbTLRmRMSNWUu3bkBJI8nxMHFKjwuqI9uKRUKqUtHWBpCC+6259H
-	SCIIjDQ8lxBFbLfWnWm5UyrgyUecGLcDhmF77U/w==
-X-Google-Smtp-Source: AGHT+IFHPCsvlmhlWeIsCvIClxZz4k+jha4O3x2y574CMDdrnX/ftbN7RQHvNWavGdipp08MXHA6Nt7AXbYnxhDrnfQ=
-X-Received: by 2002:a05:622a:19a4:b0:477:6f1f:e1d6 with SMTP id
- d75a77b69052e-479249115c3mr252735611cf.3.1744112008415; Tue, 08 Apr 2025
- 04:33:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744112070; x=1744716870;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PAhKuQb3RoCqJ3z/VKP8lkfDlIZ0rdzLrgCMtYUeatE=;
+        b=fbK5QEW1WUYjoCSo1FNwIW4wKTy9xIOEiBQTpSfVozn5MUbHqszlWFOypAUt0NMIns
+         RlLGeU/8+Dab55r9d7DEmGxMSi4pd3B2zcIAGTa5XpH9gnSzfPmlg3cELLAYhMNq8vuN
+         E2NxH6nZTFvGvT50EWKoESzV67xPqfx7lu/limnhMS5pa/dB3s8kVNjQWiUSXwRnOvLp
+         R6T8NUl/9Nx0kXq4SXzW/ZaQ1V+4nWWq1iGLTHXF/+ips7t3J73U1wCgzbwaSwK7H+6z
+         rGM3WkqPMcMy+fUqQutqVHcMdyJQw+8LAP0Iu9DTPDMs4OiNCYwrqNBsbZqF1CBXfG2x
+         anHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkQWyAYx8FdxeKSiJLrzqYxVNcwwJsBQ76PeEzdO/UL8aQSUiF2gKgJ0wlqtAnpvPxg0QxcO9MyROJlVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyICk15SjS78Kur/z08kcAooyn4SqRPoLe51bsY/6ui4ciig2mV
+	OE5eyNBbpkZAH77zIDbBs7FeRWzmXZBP7M+IM3fqC8V4M6Z/kb4DAQl6HmWdo8WFXEaB/RlwCYm
+	FrdqVZqZQFvdp2Eh1NH0kNM70ruuEe5gwg96L4QjgPvLYdGP3uO/gZx+1dF07pg==
+X-Gm-Gg: ASbGncsJP3BJzXY8jG2q1coyStA6IlVv5KGGDzXHMc/1qVsgs1i6HLzbaYikh349pwR
+	nNnhb7lo1IATVvewLBvR7nybpqkQXdrL2F5ujU+JjNb4j++QJ5ATeHZK2PIdHVIxeReT3T1YmCX
+	tckZ6dvgG7weEdLAwnHNJ8p4FoUDaz7UCe1SvBcPzDjxI+9SRflWiIjBUe0qkdQuPD96CP7C4Pn
+	Vxr9EYjW5bs/hmZEbAcnaS3D3scwQqUHLO/Fx7TTzzcll8jE4YlD9klagsYUvGduZrcP8UmNNoA
+	KPR4nMphnrCDqmOWkqNchdtPLjREOtISOdD+p8qiRrl1wh9823EJFQ5ALfMUTdsRGFkbFye16Q=
+	=
+X-Received: by 2002:adf:b605:0:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39d820ab5a7mr1911490f8f.3.1744112069652;
+        Tue, 08 Apr 2025 04:34:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHF7dCMQ395WPISkch1rK8BCQ56JHVKYbHjaY16C0nZdn5ezaBn6zxMmjhUxzXiNWxckPpQoA==
+X-Received: by 2002:adf:b605:0:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39d820ab5a7mr1911463f8f.3.1744112069287;
+        Tue, 08 Apr 2025 04:34:29 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d9cfsm14619063f8f.78.2025.04.08.04.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 04:34:28 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Marcus Folkesson
+ <marcus.folkesson@gmail.com>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmrmann@suse.de>
+Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
+ LCD controller
+In-Reply-To: <c4669293-0d56-4bdd-9075-01281042b002@suse.de>
+References: <20250408-st7571-v3-0-200693efec57@gmail.com>
+ <20250408-st7571-v3-2-200693efec57@gmail.com>
+ <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
+ <c4669293-0d56-4bdd-9075-01281042b002@suse.de>
+Date: Tue, 08 Apr 2025 13:34:27 +0200
+Message-ID: <87iknega4c.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z_PfCosPB7GS4DJl@mini-arch> <20250407161308.19286-1-kuniyu@amazon.com>
- <CANp29Y5RjJD3FK8zciRL92f0+tXEaZ=DbzSF3JrnVRGyDmag2A@mail.gmail.com> <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com>
-In-Reply-To: <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 8 Apr 2025 13:33:17 +0200
-X-Gm-Features: ATxdqUFoxW4EAQ8DWeKoT-eQ2hIeqNReBAeLwQIOMKacF92_AuEB3gUBe-fWFCk
-Message-ID: <CANn89iK=SrbwSN20nKY5y71huhsabLEdX=OGsdqwMPZOmNW8Gw@mail.gmail.com>
-Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Aleksandr Nogikh <nogikh@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, stfomichev@gmail.com, 
-	andrew@lunn.ch, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sdf@fomichev.me, syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Apr 8, 2025 at 12:44=E2=80=AFPM Dmitry Vyukov <dvyukov@google.com> =
-wrote:
+Thomas Zimmermann <tzimmermann@suse.de> writes:
+
+> Hi,
 >
-> On Tue, 8 Apr 2025 at 10:11, Aleksandr Nogikh <nogikh@google.com> wrote:
-> >
-> > On Mon, Apr 7, 2025 at 6:13=E2=80=AFPM 'Kuniyuki Iwashima' via syzkalle=
-r-bugs
-> > <syzkaller-bugs@googlegroups.com> wrote:
-> > >
-> > > From: Stanislav Fomichev <stfomichev@gmail.com>
-> > > Date: Mon, 7 Apr 2025 07:19:54 -0700
-> > > > On 04/07, syzbot wrote:
-> > > > > Hello,
-> > > > >
-> > > > > syzbot has tested the proposed patch but the reproducer is still =
-triggering an issue:
-> > > > > unregister_netdevice: waiting for DEV to become free
-> > > > >
-> > > > > unregister_netdevice: waiting for batadv0 to become free. Usage c=
-ount =3D 3
-> > > >
-> > > > So it does fix the lock unbalance issue, but now there is a hang?
-> > >
-> > > I think this is an orthogonal issue.
-> > >
-> > > I saw this in another report as well.
-> > > https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@google=
-.com/
-> > >
-> > > syzbot may want to find a better way to filter this kind of noise.
-> > >
-> >
-> > Syzbot treats this message as a problem worthy of reporting since a
-> > long time (Cc'd Dmitry who may remember the context):
-> > https://github.com/google/syzkaller/commit/7a67784ca8bdc3b26cce2f0ec9a4=
-0d2dd9ec9396
-> >
-> > Since v6.15-rc1, we do observe it happen at least 10x more often than
-> > before, both during fuzzing and while processing #syz test commands:
-> > https://syzkaller.appspot.com/bug?extid=3D881d65229ca4f9ae8c84
+> lots of good points in the review.
 >
-> IIUC this error means a leaked reference count on a device, and the
-> device and everything it references leaked forever + a kernel thread
-> looping forever. This does not look like noise.
+> Am 08.04.25 um 12:44 schrieb Javier Martinez Canillas:
+> [...]
+>>> Reviewed-by: Thomas Zimmermann <tzimmrmann@suse.de>
+>>> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+>>> ---
+>>>   drivers/gpu/drm/tiny/Kconfig      |  11 +
+>>>   drivers/gpu/drm/tiny/Makefile     |   1 +
+>>>   drivers/gpu/drm/tiny/st7571-i2c.c | 721 ++++++++++++++++++++++++++++++++++++++
+>> I personally think that the tiny sub-directory is slowly becoming a
+>> dumping ground for small drivers. Instead, maybe we should create a
+>> drivers/gpu/drm/sitronix/ sub-dir and put all Sitronix drivers there?
+>>
+>> So far we have drivers in tiny for: ST7735R, ST7586 and ST7571 with
+>> your driver. And also have a few more Sitronix drivers in the panel
+>> sub-directory (although those likely should remain there).
+>>
+>> I have a ST7565S and plan to write a driver for it. And I know someone
+>> who is working on a ST7920 driver. That would be 5 Sitronix drivers and
+>> the reason why I think that a dedicated sub-dir would be more organized.
+>>
+>> Maybe there's even common code among these drivers and could be reused?
+>>
+>> Just a thought though, it's OK to keep your driver as-is and we could do
+>> refactor / move drivers around as follow-up if agreed that is desirable.
 >
-> Eric, should know more. Eric fixed a bunch of these bugs and added a
-> ref count tracker to devices to provide better diagnostics. For some
-> reason I don't see the reftracker output in the console output, but
-> CONFIG_NET_DEV_REFCNT_TRACKER=3Dy is enabled in the config.
+> That sounds like a good idea. But the other existing drivers are based 
+> on mipi-dbi helpers, while this one isn't. Not sure if that's important 
+> somehow.
+>
 
-I think that Kuniyuki patch was fixing the original syzbot report.
+Yeah, I don't know. In any case, the driver / module name is not an ABI so
+we can always move around the files later if needed.
 
-After fixing this trivial bug, another bug showed up,
-and this second bug triggered "syzbot may want to find a better way to
-filter this kind of noise." comment.
+>>
+>>>   3 files changed, 733 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+>>> index 94cbdb1337c07f1628a33599a7130369b9d59d98..33a69aea4232c5ca7a04b1fe18bb424e0fded697 100644
+>>> --- a/drivers/gpu/drm/tiny/Kconfig
+>>> +++ b/drivers/gpu/drm/tiny/Kconfig
+>>> @@ -232,6 +232,17 @@ config TINYDRM_ST7586
+>>>   
+> [...]
+>>> +
+>>> +static const uint32_t st7571_primary_plane_formats[] = {
+>>> +	DRM_FORMAT_C1,
+>>> +	DRM_FORMAT_C2,
+>>> +};
+>>> +
+>> I would add a DRM_FORMAT_XRGB8888 format. This will allow your display to
+>> be compatible with any user-space. Your st7571_fb_blit_rect() can then do
+>> a pixel format conversion from XRGB8888 to the native pixel format.
+>
+> It would be a starting point for XRGB8888 on C1/R1. I always wanted to 
+> reimplement drm_fb_xrgb8888_to_mono() [1] with the generic _xfrm_ 
+> helpers. Once the generic helpers can do such low-bit formats, C2 would 
+> also work easily.
+>
+> [1] 
+> https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/gpu/drm/drm_format_helper.c#L1114
+>
 
+Agreed. But even in its current form that helper is what I had in mind and
+what is used by the ssd130x driver too for XRGB8888 -> R1 conversion. There
+is no drm_fb_xrgb8888_to_gray2(), but that could be added as a part of this
+driver series.
 
--ETOOMANYBUGS.
+> Best regards
+> Thomas
+>
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
