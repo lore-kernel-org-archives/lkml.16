@@ -1,161 +1,407 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E307A267B78
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE001267AFD;
+	Tue,  8 Apr 2025 09:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105946; cv=none; b=stAFBxo9LEPHrD8PtfhnWtHSqANc16jV92SCd4K1g7R2wfSCJXL63tmKdVbT/eorGAqzt2B9xXYMq64bUX5EbuWlKTk0cy5ZDVZDGsCL/038v5TZjwxR5NAUXXlyJdxJOHyB0fd8aDobNvx4sZFwUvkS6+gas24ZlWllqQpAQdE=
+	t=1744105946; cv=none; b=dIwcHPmcaaTDQY9Z3gDvq9xK37dYPjWm4hs7YQ/V46e7oxZVpcLCnUrVa0dMUNEAu9YvC6WZPb5bRQHBp25jdESNkUAzCR0e3G71utqmrpOxb+GXELq9Jyoj9OtIWKEi5vA8qX1VvDUoFHsRpm3P+4dSgBBjt7cPmic6J5Isxps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744105946; c=relaxed/simple;
-	bh=60csaoMkd9b4BLus/GgeNpMVPuRHpVoH48hsGkF0brA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SMAIVB0TjuucLYludLvvCy+whpFFtB4KWzK4s7/FskSsusfgJK5vvKYQtzPrnoHUj/atnBRSimnfTfExQzRRVWii7lxZHiqMitIF7554h9tBABZ1KpHqTFkE1T/w2aycgrx820aF/hHja8sXB2Qa3UB/nryQwIfj1IhRTNMqrFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WHv5fXN7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=yggMNrGklrFWiO5PfnLZDkSdJxP7dDHeBQvYAC+NpIM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cgo+/DCPf3PX5mAvpBMDj3xg5fjZkQ5zWmAIKFYfaHTAUO0zH66cIFGbS7F+qva+zpxdj+hjUU9sjmFzvmfn50/7ZY0mG4jrDUvatByIHoXisWz4X9BKsPy8iCWU3IfvAa3JSr/VqL/xQxCUBpXN7rSgvNVFAtUI4Fv7mqrOiAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TySua8FG; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WHv5fXN7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744105943;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5OZHISnONE4t2902PGwoKIvjQlqckwAUXfpsZ5bT8VE=;
-	b=WHv5fXN7u0YVP7eRLfdCTTD5Zp4RrYncUC6E3wXZ/cheLbRO9uuXiARy4V3Zyxt0R6y6zZ
-	sBwo1KuWHW0Xjr40LpzkUcjCvEuFB6BTGIlGsnbDZ9N809U9yU3UcwniyXHOj/MkBmcB3d
-	0d8M78Ir09aILe2Fwv/AMcz6/kPXrjM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-524-1P6Jm_EpMqq7ujURnNKtJA-1; Tue, 08 Apr 2025 05:52:22 -0400
-X-MC-Unique: 1P6Jm_EpMqq7ujURnNKtJA-1
-X-Mimecast-MFC-AGG-ID: 1P6Jm_EpMqq7ujURnNKtJA_1744105941
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39c1b1c0969so4584384f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:52:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TySua8FG"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac56756f6so4544659f8f.2;
+        Tue, 08 Apr 2025 02:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744105942; x=1744710742; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B/n2TjI2M2VtBMHZFJp0/mcf13FR0dQEfPH18lq5S60=;
+        b=TySua8FGvOv00I/ZbCOoxqw+ZZea4762b8vTq+AgJo0vf7uXpl4D4S8iJ+BcfKjIvu
+         ZgMZwno93mdvcF4x6TkhM49JtDVOoxsTtCyYZtxDmU3uzEDDRvoBB1TGCJK1CgjJoX7w
+         OjnTfH50ucXuYYvt3kkn3BUen5Mj8mlhK2EMaXqeHD3WitoDVByb91aMDaoqFdqgtzpb
+         Rz4lmJsoeDguNOSdFnMf8TmruEOdl9NKm0qVwz/IZS3r9oMiA6wo8lziw67jIgtrVtc8
+         fls90ETKcqSF68MRQ1IPTMeC36hecgmC7s024puZaXq7zZe9gNDMyOQL+yJQw+96nc7h
+         NW/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744105941; x=1744710741;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5OZHISnONE4t2902PGwoKIvjQlqckwAUXfpsZ5bT8VE=;
-        b=eza+mW300f+EOaPCW8pwPuxviyZaRHYHbbyJwo7LiP6ZR9BZMhrsdCyL4hX57d4oF2
-         ceNUVnWx1gA2RJtksYnJnYeM1TT35uKjG9T4NEWMRV4Ojwy570qHWgvaxz1DiIaJzD3y
-         Qq36ys86BJrcosm0ZG57jeBm3lK283esmAtutIuv2sp56xUVi6MeYWkPmzaLzPQcsBzq
-         9yrbwbPLGIJ5hKK6uaOFlgqpTr+2ah+XFRYjfdnN35zJW8YkOV78ifRdq5nDxfAimo2z
-         Xw24IKZXx6b8+RXfpIegdLHFxQ0928bmRmqgFZj0lNvtcxN9FHPjediDaV+sGeGXDSAz
-         KpnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyGcbDfNBVmJ+I4/jb9FQkrF66pJ78kr7KQ+SNWyTDgm9YW2oS4BcTpp26MNGWW57sh7+sZ0aH4gF4nc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8jYStoCD9al0bcO2PmLW+Nag/GPl/AOcqATsTFg3qCi0tjng+
-	4JcbKtOM/d/n5BHMtl+jfg+leJ+8nmyvB7TWpaChsP0FrY5HwBlIh5IrMO5f9xf33sxU0MDqiBp
-	ENyQQnzrPSVf80t0Zpz4aD0UbPwh5QOvXOlh8z4yqQ0UzEz1BgLV/w7Sdki5Zbg==
-X-Gm-Gg: ASbGncvLopEWi1zmhavyhWrl8npYeqFqxg4yrdGmSG08rtJ40n1yn1WEukPIrXH5wqs
-	dYO9KFlVeQ7poC1dbUNnQroJUQF0YXWpilqiXHFvujspmfZlTfWn2e6eBiRUbyfGM3Kjf/cyjsK
-	DbFI5e6KMUqj2PbQsioF514oHzgvfLDMHAvHral73pECypKnK5Xz/7ka61XhvpS0Zcpa1YGMNaA
-	y0lUgWYflkFV0N+YTKfR1FjeLkYxmu76YoBfahL1zUyZAiMsZvxTR3zcqch0CpsTVZYtOqXVGhK
-	EHLA4UY4ew9HhKEnIA4ga2boFdoKhix6zZXG9gvhYRQzcRtFQA+FQHbpNKybJF7zNr2ikhxgiGd
-	rMayw4Yc+dKnXrc0Zz7lZAeee+z0tTn7p3euGK4WQ
-X-Received: by 2002:a05:6000:2702:b0:39c:1257:cc28 with SMTP id ffacd0b85a97d-39cbc73213cmr8872982f8f.59.1744105940822;
-        Tue, 08 Apr 2025 02:52:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2gVGfjfruzCCWFTilzPtgfgunNMxeHGGBQBFO5rsVQP+31PZLP2Be7Tye6UxULUDwvgznqQ==
-X-Received: by 2002:a05:6000:2702:b0:39c:1257:cc28 with SMTP id ffacd0b85a97d-39cbc73213cmr8872975f8f.59.1744105940450;
-        Tue, 08 Apr 2025 02:52:20 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4f00:a44a:5ad6:765a:635? (p200300cbc7074f00a44a5ad6765a0635.dip0.t-ipconnect.de. [2003:cb:c707:4f00:a44a:5ad6:765a:635])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a727bsm14307091f8f.27.2025.04.08.02.52.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 02:52:20 -0700 (PDT)
-Message-ID: <c8bc199d-30e1-4f0c-868c-6cbab1fbc747@redhat.com>
-Date: Tue, 8 Apr 2025 11:52:18 +0200
+        d=1e100.net; s=20230601; t=1744105942; x=1744710742;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B/n2TjI2M2VtBMHZFJp0/mcf13FR0dQEfPH18lq5S60=;
+        b=sa2PAD2BSYaFvsY7O2w4cOqTNCbSOeKPW9zmgnWSvevObuco7Rp8sL9pXE5VkJXlDh
+         iqvtSE0aPXOgH1IEeYBHuiIZPnbsy1HD6DniWGrJD3++GmK3/QQK6VR86XNS/TmPdK/b
+         uj+QJ3HyMUqY3upi5bEXK5pATN+z2rrhAj1WqrHKuVD/z5c5yNqAIzEv7qF54p/bulJr
+         mGu3P+LRmZhjoQ4xH9kdeQvn/SJH4yCpUOBHPPQFHOp9gfHMkgHaVYMneaL5tXBeT9lu
+         5z2VGy07xeA4euCwFhNSWYGcfYSLkXTL1CsSf5xxXIbLhJtcRJcPM0gnwbpbkEKPJ3nQ
+         FY6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUX+W73N4LcB5Unm/jEQFmtG+2QMOLDK6u2K3MWwJOTbBMxmFjI4FvmoIxCnqTqBdPaO78ueBou@vger.kernel.org, AJvYcCUtAtnsL+Hfmqy4f36u7rMSRaRS/ukEE8Z5flNi6jWOiIK3dxBA6PJqUNZDmMSPZeITYT/5mSxQ04tal3qH@vger.kernel.org, AJvYcCVKgRMLh30zFHsmmnl+mk8EOwDIZElSzI489egT5+Vn1i3FloEE0zo2Xvn4iaROpgvksSvm4ryBJDi4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM42EGuPX32TSK0x6azuXIeKfICq9xUQ+zdc98goAAexWxM3we
+	oEoqwoqlkUBAQSSzuaKZ+8l8Jj4iDS01BkETJV+NF7kxTH5Nh5q5
+X-Gm-Gg: ASbGncsWlyCWQIJfvrBkLenRNSAoitOISxWpdKlmrB0r9roL/Z8x5PEYb1WwMuc/AAf
+	K0p/m0hWVyYFunKoLBfjboZVuVOEiIowUTeFFwBJU9zOpMxtRLapVPGmN8kqcSmprWgd5ZsDPGb
+	MR378eiu4Fb+NTh87Lfqt9hSo6Y3SoboweIOmAuiUXOX3ULXQqedCoUqoc98NaAgngX3bnTGxh5
+	Nj+mplDTyHb/5H+1kZpMVPMaoVgRzurLvClFYXd5iJGy1yeO9SnmNRU4efK3Dl9rM/GxfxLDAPg
+	jqVaTgXG+tCficI18JoeKemzquuROSung10hI8S3MxGw1iL6WaIfPLlYSYDVbJFG2UQzZDcKrga
+	zI/OeDtl80KBovg==
+X-Google-Smtp-Source: AGHT+IH3R7VcjDJQU/ug/E8DovK1LG8xkzqoBKVcedT+o9lyrCg3IyGaPsRO5doikyNGRfNi09b8bQ==
+X-Received: by 2002:a05:6000:440e:b0:397:3900:ef83 with SMTP id ffacd0b85a97d-39cba93cfb8mr8318008f8f.32.1744105941913;
+        Tue, 08 Apr 2025 02:52:21 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14493310f8f.72.2025.04.08.02.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 02:52:21 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Simon Horman <horms@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: [net-next PATCH v14 07/16] net: mdio: regmap: add support for C45 read/write
+Date: Tue,  8 Apr 2025 11:51:14 +0200
+Message-ID: <20250408095139.51659-8-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250408095139.51659-1-ansuelsmth@gmail.com>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] mm/gup: fix wrongly calculated returned value in
- fault_in_safe_writeable()
-To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, osalvador@suse.de, mingo@kernel.org,
- yanjun.zhu@linux.dev, linux-kernel@vger.kernel.org
-References: <20250407030306.411977-1-bhe@redhat.com>
- <20250407030306.411977-2-bhe@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250407030306.411977-2-bhe@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07.04.25 05:03, Baoquan He wrote:
-> Not like fault_in_readable() or fault_in_writeable(), in
-> fault_in_safe_writeable() local variable 'start' is increased page
-> by page to loop till the whole address range is handled. However,
-> it mistakenly calcalates the size of handled range with 'uaddr - start'.
-> 
-> Here fix the code bug in fault_in_safe_writeable(), and also adjusting
-> the codes in fault_in_readable() and fault_in_writeable() to use local
-> variable 'start' to loop so that codes in these three functions are
-> consistent.
-> 
+Add support for C45 read/write for mdio regmap. This can be done
+by enabling the support_encoded_addr bool in mdio regmap config and by
+using the new API devm_mdio_regmap_init to init a regmap.
 
-I probably phrased it poorly in my other reply: the confusing part (to 
-me) is adjusting "start". Maybe we should have unsigned long start,end,cur;
+To support C45, additional info needs to be appended to the regmap
+address passed to regmap OPs.
 
-Maybe we should really split the "fix" from the cleanups, and tag the 
-fix with a Fixes:.
+The logic applied to the regmap address value:
+- First the regnum value (20, 16)
+- Second the devnum value (25, 21)
+- A bit to signal if it's C45 (26)
 
-I was wondering if these functions could be simplified a bit. But the 
-overflow handling is a bit nasty.
+devm_mdio_regmap_init MUST be used to register a regmap for this to
+correctly handle internally the encode/decode of the address.
 
+Drivers needs to define a mdio_regmap_init_config where an optional regmap
+name can be defined and MUST define C22 OPs (mdio_read/write).
+To support C45 operation also C45 OPs (mdio_read/write_c45).
+
+The regmap from devm_mdio_regmap_init will internally decode the encoded
+regmap address and extract the various info (addr, devnum if C45 and
+regnum). It will then call the related OP and pass the extracted values to
+the function.
+
+Example for a C45 read operation:
+- With an encoded address with C45 bit enabled, it will call the
+  .mdio_read_c45 and addr, devnum and regnum will be passed.
+  .mdio_read_c45 will then return the val and val will be stored in the
+  regmap_read pointer and will return 0. If .mdio_read_c45 returns
+  any error, then the regmap_read will return such error.
+
+With support_encoded_addr enabled, also C22 will encode the address in
+the regmap address and .mdio_read/write will called accordingly similar
+to C45 operation.
+
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ drivers/net/mdio/mdio-regmap.c   | 170 +++++++++++++++++++++++++++++--
+ include/linux/mdio/mdio-regmap.h |  14 +++
+ 2 files changed, 176 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/mdio/mdio-regmap.c b/drivers/net/mdio/mdio-regmap.c
+index 810ba0a736f0..f263e4ae2477 100644
+--- a/drivers/net/mdio/mdio-regmap.c
++++ b/drivers/net/mdio/mdio-regmap.c
+@@ -15,22 +15,72 @@
+ #include <linux/regmap.h>
+ #include <linux/mdio/mdio-regmap.h>
+ 
++#define MDIO_REGMAP_C45			BIT(26)
++#define MDIO_REGMAP_ADDR		GENMASK(25, 21)
++#define MDIO_REGMAP_DEVNUM		GENMASK(20, 16)
++#define MDIO_REGMAP_REGNUM		GENMASK(15, 0)
++
+ #define DRV_NAME "mdio-regmap"
+ 
+ struct mdio_regmap_priv {
++	void *ctx;
++
++	const struct mdio_regmap_init_config *config;
++};
++
++struct mdio_regmap_mii_priv {
+ 	struct regmap *regmap;
+ 	u32 valid_addr_mask;
++	bool encode_addr;
+ };
+ 
+-static int mdio_regmap_read_c22(struct mii_bus *bus, int addr, int regnum)
++static int mdio_regmap_mii_read_c22(struct mii_bus *bus, int addr, int regnum)
++{
++	struct mdio_regmap_mii_priv *ctx = bus->priv;
++	unsigned int val;
++	int ret;
++
++	if (!(ctx->valid_addr_mask & BIT(addr)))
++		return -ENODEV;
++
++	if (ctx->encode_addr)
++		regnum |= FIELD_PREP(MDIO_REGMAP_ADDR, addr);
++
++	ret = regmap_read(ctx->regmap, regnum, &val);
++	if (ret < 0)
++		return ret;
++
++	return val;
++}
++
++static int mdio_regmap_mii_write_c22(struct mii_bus *bus, int addr, int regnum,
++				     u16 val)
+ {
+-	struct mdio_regmap_priv *ctx = bus->priv;
++	struct mdio_regmap_mii_priv *ctx = bus->priv;
++
++	if (!(ctx->valid_addr_mask & BIT(addr)))
++		return -ENODEV;
++
++	if (ctx->encode_addr)
++		regnum |= FIELD_PREP(MDIO_REGMAP_ADDR, addr);
++
++	return regmap_write(ctx->regmap, regnum, val);
++}
++
++static int mdio_regmap_mii_read_c45(struct mii_bus *bus, int addr, int devnum,
++				    int regnum)
++{
++	struct mdio_regmap_mii_priv *ctx = bus->priv;
+ 	unsigned int val;
+ 	int ret;
+ 
+ 	if (!(ctx->valid_addr_mask & BIT(addr)))
+ 		return -ENODEV;
+ 
++	regnum |= MDIO_REGMAP_C45;
++	regnum |= FIELD_PREP(MDIO_REGMAP_ADDR, addr);
++	regnum |= FIELD_PREP(MDIO_REGMAP_DEVNUM, devnum);
++
+ 	ret = regmap_read(ctx->regmap, regnum, &val);
+ 	if (ret < 0)
+ 		return ret;
+@@ -38,21 +88,25 @@ static int mdio_regmap_read_c22(struct mii_bus *bus, int addr, int regnum)
+ 	return val;
+ }
+ 
+-static int mdio_regmap_write_c22(struct mii_bus *bus, int addr, int regnum,
+-				 u16 val)
++static int mdio_regmap_mii_write_c45(struct mii_bus *bus, int addr, int devnum,
++				     int regnum, u16 val)
+ {
+-	struct mdio_regmap_priv *ctx = bus->priv;
++	struct mdio_regmap_mii_priv *ctx = bus->priv;
+ 
+ 	if (!(ctx->valid_addr_mask & BIT(addr)))
+ 		return -ENODEV;
+ 
++	regnum |= MDIO_REGMAP_C45;
++	regnum |= FIELD_PREP(MDIO_REGMAP_ADDR, addr);
++	regnum |= FIELD_PREP(MDIO_REGMAP_DEVNUM, devnum);
++
+ 	return regmap_write(ctx->regmap, regnum, val);
+ }
+ 
+ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
+ 					  const struct mdio_regmap_config *config)
+ {
+-	struct mdio_regmap_priv *mr;
++	struct mdio_regmap_mii_priv *mr;
+ 	struct mii_bus *mii;
+ 	int rc;
+ 
+@@ -66,12 +120,17 @@ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
+ 	mr = mii->priv;
+ 	mr->regmap = config->regmap;
+ 	mr->valid_addr_mask = BIT(config->valid_addr);
++	mr->encode_addr = config->support_encoded_addr;
+ 
+ 	mii->name = DRV_NAME;
+ 	strscpy(mii->id, config->name, MII_BUS_ID_SIZE);
+ 	mii->parent = config->parent;
+-	mii->read = mdio_regmap_read_c22;
+-	mii->write = mdio_regmap_write_c22;
++	mii->read = mdio_regmap_mii_read_c22;
++	mii->write = mdio_regmap_mii_write_c22;
++	if (config->support_encoded_addr) {
++		mii->read_c45 = mdio_regmap_mii_read_c45;
++		mii->write_c45 = mdio_regmap_mii_write_c45;
++	}
+ 
+ 	if (config->autoscan)
+ 		mii->phy_mask = ~mr->valid_addr_mask;
+@@ -88,6 +147,101 @@ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_mdio_regmap_register);
+ 
++static int mdio_regmap_reg_read(void *context, unsigned int reg, unsigned int *val)
++{
++	const struct mdio_regmap_init_config *config;
++	struct mdio_regmap_priv *priv = context;
++	int addr, regnum;
++	int ret;
++
++	config = priv->config;
++
++	addr = FIELD_GET(MDIO_REGMAP_ADDR, reg);
++	regnum = FIELD_GET(MDIO_REGMAP_REGNUM, reg);
++
++	if (reg & MDIO_REGMAP_C45) {
++		int devnum;
++
++		if (!config->mdio_write_c45)
++			return -EOPNOTSUPP;
++
++		devnum = FIELD_GET(MDIO_REGMAP_DEVNUM, reg);
++		ret = config->mdio_read_c45(priv->ctx, addr, devnum, regnum);
++	} else {
++		ret = config->mdio_read(priv->ctx, addr, regnum);
++	}
++
++	if (ret < 0)
++		return ret;
++
++	*val = ret;
++	return 0;
++}
++
++static int mdio_regmap_reg_write(void *context, unsigned int reg, unsigned int val)
++{
++	const struct mdio_regmap_init_config *config;
++	struct mdio_regmap_priv *priv = context;
++	int addr, regnum;
++
++	config = priv->config;
++
++	addr = FIELD_GET(MDIO_REGMAP_ADDR, reg);
++	regnum = FIELD_GET(MDIO_REGMAP_REGNUM, reg);
++
++	if (reg & MDIO_REGMAP_C45) {
++		int devnum;
++
++		if (!config->mdio_write_c45)
++			return -EOPNOTSUPP;
++
++		devnum = FIELD_GET(MDIO_REGMAP_DEVNUM, reg);
++		return config->mdio_write_c45(priv->ctx, addr, devnum, regnum, val);
++	}
++
++	return config->mdio_write(priv->ctx, addr, regnum, val);
++}
++
++static const struct regmap_config mdio_regmap_default_config = {
++	.reg_bits = 26,
++	.val_bits = 16,
++	.reg_stride = 1,
++	.max_register = MDIO_REGMAP_C45 | MDIO_REGMAP_ADDR |
++			MDIO_REGMAP_DEVNUM | MDIO_REGMAP_REGNUM,
++	.reg_read = mdio_regmap_reg_read,
++	.reg_write = mdio_regmap_reg_write,
++	/* Locking MUST be handled in mdio_write/read(_c45) */
++	.disable_locking = true,
++};
++
++struct regmap *devm_mdio_regmap_init(struct device *dev, void *priv,
++				     const struct mdio_regmap_init_config *config)
++{
++	struct mdio_regmap_priv *mdio_regmap_priv;
++	struct regmap_config regmap_config;
++
++	/* Validate config */
++	if (!config->mdio_read || !config->mdio_write) {
++		dev_err(dev, ".mdio_read and .mdio_write MUST be defined in config\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	mdio_regmap_priv = devm_kzalloc(dev, sizeof(*mdio_regmap_priv),
++					GFP_KERNEL);
++	if (!mdio_regmap_priv)
++		return ERR_PTR(-ENOMEM);
++
++	memcpy(&regmap_config, &mdio_regmap_default_config, sizeof(regmap_config));
++	regmap_config.name = config->name;
++
++	mdio_regmap_priv->ctx = priv;
++	mdio_regmap_priv->config = config;
++
++	return devm_regmap_init(dev, NULL, mdio_regmap_priv,
++				&regmap_config);
++}
++EXPORT_SYMBOL_GPL(devm_mdio_regmap_init);
++
+ MODULE_DESCRIPTION("MDIO API over regmap");
+ MODULE_AUTHOR("Maxime Chevallier <maxime.chevallier@bootlin.com>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/mdio/mdio-regmap.h b/include/linux/mdio/mdio-regmap.h
+index 679d9069846b..504fa2046043 100644
+--- a/include/linux/mdio/mdio-regmap.h
++++ b/include/linux/mdio/mdio-regmap.h
+@@ -17,10 +17,24 @@ struct mdio_regmap_config {
+ 	struct regmap *regmap;
+ 	char name[MII_BUS_ID_SIZE];
+ 	u8 valid_addr;
++	/* devm_mdio_regmap_init is required with this enabled */
++	bool support_encoded_addr;
+ 	bool autoscan;
+ };
+ 
+ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
+ 					  const struct mdio_regmap_config *config);
+ 
++struct mdio_regmap_init_config {
++	const char *name;
++
++	int (*mdio_read)(void *ctx, int addr, int regnum);
++	int (*mdio_write)(void *ctx, int addr, int regnum, u16 val);
++	int (*mdio_read_c45)(void *ctx, int addr, int devnum, int regnum);
++	int (*mdio_write_c45)(void *ctx, int addr, int devnum, int regnum, u16 val);
++};
++
++struct regmap *devm_mdio_regmap_init(struct device *dev, void *priv,
++				     const struct mdio_regmap_init_config *config);
++
+ #endif
 -- 
-Cheers,
-
-David / dhildenb
+2.48.1
 
