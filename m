@@ -1,147 +1,165 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C811D61B9
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7D522A1D4;
+	Tue,  8 Apr 2025 14:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122471; cv=none; b=l5PCq16lSYlA0iv4mnCrBkFppGyJ+M2450L4ZhQ2NawOPQROhLT1OMZXWkeF3SU1bF2bvYrIIh8MCH7tBa+krdLKMiNZlpEJkRM11FgYnDgZx1/ECm1FKB52gv74fAx8vX5WV0RBsZbUp7JJVn4zoKGGC42QeNQ4L1drt/D3eXc=
+	t=1744122476; cv=none; b=QCl7mY612Uo30oRvVe1+ob0sXilymU/BnzKQ50b7mhrHXQ0RTo3zbaOenOWV0eVEppx1FcQmEgDy7j9F/36lM/iYItmPMm0sBezKks50UPm4BlBV8/WgNlyCo2Vm9G2utqHsptCe+7Ivwww0fiAUSApiun1rramMPDf/gI9ZZUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122471; c=relaxed/simple;
-	bh=CDtFymud+fAGNxgNr7trOsagr9iisZY/ePnxZw8eSTY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tHgNE97z4Rl9mDnJYy4Zt7fZ951hXkmTl3J7qnKcfqIseka/7YfvBPPJICzw2J33JzGYPeORM2i/ABvAx6B5E9UOXdMAkfBrZfPsmvSw7Hsz/qSDoooN52XKiTn79lYWMxpsnh9aI/wPdJXIW74wZNBvrNYgf8fRXgsphJ1W52Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YusIxalj; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YusIxalj"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-399749152b4so3017980f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744122468; x=1744727268; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=maYeBHyukcD41Ok36kPrsdL9APyex77i93BMZAgSjDY=;
-        b=YusIxaljRzCQJ5/fkKKLEm/nxmBlFYFRIe0Q3wTpMl9oIi1lr0jTf5vRq0q61TM3w6
-         +aa7vdpVmEHI/8R1CnfHoIgk3vAQFUXzt4IyEdEJbWZBqXaTJVSdamFXYoqKh0EyyNZG
-         e8YYBmCu6w2ODn9adP3aNpqPdtL2GatphnrbGFPO97Ib2gPgpVLwAZtotuUMGY11KRaj
-         Sc5p6gSP5AmC8H5RCsZmpXU8IGI+CtXTGD30hOmPr6OyhKH527CfQOJHi7opauYlbisS
-         PtlFZ9lHmdarZkCBVD+4mjV73MAGYCs0JnW9XV6ntRmOL33B+h8DcIeMYnfad/QkjPkV
-         yPOA==
+	s=arc-20240116; t=1744122476; c=relaxed/simple;
+	bh=xCQx6pVBQuY50n/ThS6l3eDpdCQ0n7uANGpFPi/NPf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uQ5lDWUDJWZ8xCQqULUU1Tx+3C+fWCeo/zWrHRXdnallq5XfQJSgDs7rFO0BW/YWV0YoPsqPTWrL323uyhNkRovoVU0/RgzjkUrmxdyNn4Wv7r+J/DclXwL8GFsfzOj6RWYeQHviZUv0x4j8TvUEt+6X4Mody0Fuu8QylFUE5VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1048706566b.2;
+        Tue, 08 Apr 2025 07:27:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744122468; x=1744727268;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=maYeBHyukcD41Ok36kPrsdL9APyex77i93BMZAgSjDY=;
-        b=irvnd2kyTEFjKqogK8beR8HKBKWquRB1D7LtpZoRayPTUsvyJiR4oWYc4Zvot/aSx5
-         ZTT8aZl9H1Tv+X5MHWqzPV6PC0To5G2qIJNx/pwbVllO5tp8quN7SySuSMrUBKR4n+4K
-         n5Vz0HlKAclEMp0H5tygy/3tOyqlq+50W8dECP4Zz3PPo67byxA7oBLmqnMHadTR2i/4
-         J44nr7GpTv3UfPKqcKqOrcP2vKRA5Jl4sxSPhg0xQuxy/BWew2YOtmJkM5bDdtHwklVb
-         9F2Iw6t3NVh1uQwPOH/tsCIXm7z/bAFNf7dItsxmFbxhuh+8TUHNCCtKtGICy/fngUfx
-         g9Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPegn4ITy3hwuWcLYdZZeCzMXHKIuv2IKJTrXJFrprhIO8POX8DzeDQ8c9okmWMh4t0posXitiG60vO7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu5akT4wRAnPONnfcax+t+Pp4Q9+YETxp4qkr0DE4uTiPgg9bF
-	qZZxs6L0k+o8gUIlkD8ioxyC/GH/Cpjvoac4FJe3kFb1y6Xg59PeV8GPLmWrT1I=
-X-Gm-Gg: ASbGncveKwNVnarWfkyMfiJmjRxuFkHfr3TtxoLDdBqYnl6Jwc6PORsBoeAinKyDGWs
-	yjGp/ohrZJs3M/wRC+daQzzqBhUduFeAwtpXFLvFeQx4ZAH70Oa02bEPQSwh+3yChixNJexTFQh
-	EmKaPsAZBrfiX3V8xk3U7wXDkIHcl8FwSJuotmH3fZGmhS0WMPIAXvhZo+hKIYoXgdk6f+d2xZy
-	XjaSlrwwNpJ470kVULRxrFH9HRts3HrjszT+Z7WyYkA+o+OCE4XjMcR56+9dL1Pe4M4X3LS/xM3
-	1bIGPHc+jFzFNf5rv0hpRBwDoe/Ou+AzJ0koEV/nDS6vuX69BkEtOnHUnfyW64M4zb86mMOmVGU
-	nq1zQneATrhTy1ne0qOo55A==
-X-Google-Smtp-Source: AGHT+IHOQl3NOqzgesmZMaye/+jS53HYFNcdFr4mTBR4HNItRvuMdvVuoVoOZXlrImVcJ2UxCZ7isA==
-X-Received: by 2002:a05:6000:4011:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39cb35b2527mr16291235f8f.5.1744122467955;
-        Tue, 08 Apr 2025 07:27:47 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:3daa:5b6d:6ccb:4c71? ([2a01:e0a:3d9:2080:3daa:5b6d:6ccb:4c71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm161009595e9.19.2025.04.08.07.27.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 07:27:47 -0700 (PDT)
-Message-ID: <81d462fb-b118-4354-82b5-92c33d870b44@linaro.org>
-Date: Tue, 8 Apr 2025 16:27:47 +0200
+        d=1e100.net; s=20230601; t=1744122472; x=1744727272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SznZ6qZnobtkHQp+nWu8KywESKsAZVjAuQpll7td4h0=;
+        b=kM6UYY4ppU0bIHMfIpLqDC0eQd3sg/cMUL933Ejdfz9K8lkLmG4Iiwbw7Fc9NAWRev
+         dZZKfKHlDTiHX7mnxVxn6On4z+R2j04qUdTxs2FByl8pF1vFtSDkaOWB4ONliQAQQhuQ
+         /ltCKywfr5hJqs5Js7rfH8dzcDw/hwQM7cbywWCT8WNS0x+UHn733kiwJdAwYdQHuSYS
+         nwXRDyR2PoEskfkXsE7rnKI1dyyTf5tCsjAZKrNxmZ9GIw4XGEr6dg0oFw+gIuBdXB4I
+         7MNbulBHxq7mka5vb818IuEqRW6It8mPgYuOq0qaSEBBG6zp4vfw3ydJkOdwy9jgl/Qy
+         Litw==
+X-Forwarded-Encrypted: i=1; AJvYcCVL9ufNNsgyPqxTbKBzjZelXuk03yANFDbiMo42HcoIiZ/RsCV9ZWlN4eEe4bjChwCXvmuQ2rm/AAX11dkP+QI1HTeK@vger.kernel.org, AJvYcCVVoFfjgBk1zlVPLiuHDNYuqYNCl3lezs2d1+g21yi0Oes4ThAfhLc5w8GvlEbcC5kly8QAgDTOSslqwJY=@vger.kernel.org, AJvYcCW0JT0KUimyaqVUnGm+UDCTVBfNBR4Mu3mTK6xh5juVqGR7w0RvKccD58yEG6YfxbW+Q1uFUJTq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwhArUAT8ZZUoP3frmYahyNUbrlBy74jln0ArRtVq2VmX5RIJC
+	Kf/m8KlgCY0AEsuJQbQn/MJ3C9WQtMO8pGVtcSMxsNF8QDtbyz5Y
+X-Gm-Gg: ASbGncsLVqHFl6HMeDh8amNCG54qVpwjjheXcpio5ncVhXnv2l+Sb5BHxzSa8tGtONE
+	JwSGb/NLhy4kTjNwf9uIjy4e1Dyq8Vu9AwnO5KJimXuTgnUIi70talVOW2OZ4QENzbwxpYRnxQz
+	te/F1c3mkcbfpn4/Cs+dIBPtSledTwCRV8qeeX/Z1tAC2OqQlSwvYE9GAJdGlw5z455LknjcM7a
+	AO1MhmRP8hVXndreDz6MUGTkz15DS+rwMhmUg1mszP2bsLPrMlI6lPi7mLkrwdVdTVHb5q8/RK0
+	WRw/4IRJcSVaJX9N89aY4Aos0SmAfC2X+PnXY4FYHmuQIdw=
+X-Google-Smtp-Source: AGHT+IGett8TErJin1Ya7KdCWqWrSSa5r8YUYvZ4okNkGjCVk5JAd1RrGPiUJkuyGAwb5+W3jA2waA==
+X-Received: by 2002:a17:907:1c0e:b0:ac3:bdd2:e70c with SMTP id a640c23a62f3a-ac7d195c0e2mr1468071966b.35.1744122472109;
+        Tue, 08 Apr 2025 07:27:52 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:73::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe988b3sm909323166b.40.2025.04.08.07.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 07:27:51 -0700 (PDT)
+Date: Tue, 8 Apr 2025 07:27:48 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	horms@kernel.org, kernel-team@meta.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	ncardwell@google.com, netdev@vger.kernel.org, pabeni@redhat.com,
+	rostedt@goodmis.org, song@kernel.org, yonghong.song@linux.dev
+Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for
+ tcp_sendmsg_locked()
+Message-ID: <Z/UyZNiYUq9qrZds@gmail.com>
+References: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
+ <20250408010143.11193-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 07/10] pinctrl: sx150x: enable building modules with
- COMPILE_TEST=y
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Xianwei Zhao <xianwei.zhao@amlogic.com>,
- Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
- <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408010143.11193-1-kuniyu@amazon.com>
 
-On 08/04/2025 09:17, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello Kuniyuki,
+
+On Mon, Apr 07, 2025 at 06:00:35PM -0700, Kuniyuki Iwashima wrote:
+> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> > index ea8de00f669d0..270ce2c8c2d54 100644
+> > --- a/net/ipv4/tcp.c
+> > +++ b/net/ipv4/tcp.c
+> > @@ -1160,6 +1160,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+> >  		if (skb)
+> >  			copy = size_goal - skb->len;
+> >  
+> > +		trace_tcp_sendmsg_locked(sk, msg, skb, size_goal);
 > 
-> Increase the build coverage by enabling the sx150x modules with
-> COMPILE_TEST=y.
+> skb could be NULL, so I think raw_tp_null_args[] needs to be updated.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   drivers/pinctrl/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Maybe try attaching a bpf prog that dereferences skb unconditionally
+> and see if the bpf verifier rejects it.
+
+I've been trying to dereference skb (while 0), and bpf verifier rejects
+it.
+
+Here is the code I wrote to test:
+
+	SEC("tracepoint/tcp/tcp_sendmsg_locked")
+	int bpf_tcp_sendmsg_locked(struct tcp_sendmsg_locked_args *ctx)
+	{
+		bpf_printk("TCP: skb_addr %p skb_len %d msg_left %d size_goal %d",
+			ctx->skb_addr, ctx->skb_len, ctx->msg_left, ctx->size_goal);
+	
+		return 0;
+	}
+
+And it matches the tracepoint, but, trying to dereference skb_addr fails
+in all forms. I tried with a proper dereference, or, something as simple
+as the following, and the program is not loaded.
+
+	bpf_printk("deref %d\n", *(int *) ctx->skb_addr);
+
+Here is all it returns.
+
+	libbpf: prog 'bpf_tcp_sendmsg_locked': BPF program load failed: Permission denied
+	libbpf: prog 'bpf_tcp_sendmsg_locked': -- BEGIN PROG LOAD LOG --
+	0: R1=ctx() R10=fp0
+	; int bpf_tcp_sendmsg_locked(struct tcp_sendmsg_locked_args *ctx) @ tcp_sendmsg_locked_bpf.c:16
+	0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()
+	; bpf_printk("TCP: skb_addr %p skb_len %d msg_left %d size_goal %d", @ tcp_sendmsg_locked_bpf.c:19
+	1: (79) r1 = *(u64 *)(r6 +8)          ; R1_w=scalar() R6_w=ctx()
+	2: (7b) *(u64 *)(r10 -32) = r1        ; R1_w=scalar(id=1) R10=fp0 fp-32_w=scalar(id=1)
+	3: (61) r1 = *(u32 *)(r6 +16)         ; R1_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R6_w=ctx()
+	4: (67) r1 <<= 32                     ; R1_w=scalar(smax=0x7fffffff00000000,umax=0xffffffff00000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xffffffff00000000))
+	5: (c7) r1 s>>= 32                    ; R1_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff)
+	6: (7b) *(u64 *)(r10 -24) = r1        ; R1_w=scalar(id=2,smin=0xffffffff80000000,smax=0x7fffffff) R10=fp0 fp-24_w=scalar(id=2,smin=0xffffffff80000000,smax=0x7fffffff)
+	7: (61) r1 = *(u32 *)(r6 +20)         ; R1_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R6_w=ctx()
+	8: (67) r1 <<= 32                     ; R1_w=scalar(smax=0x7fffffff00000000,umax=0xffffffff00000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xffffffff00000000))
+	9: (c7) r1 s>>= 32                    ; R1_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff)
+	10: (7b) *(u64 *)(r10 -16) = r1       ; R1_w=scalar(id=3,smin=0xffffffff80000000,smax=0x7fffffff) R10=fp0 fp-16_w=scalar(id=3,smin=0xffffffff80000000,smax=0x7fffffff)
+	11: (61) r1 = *(u32 *)(r6 +24)        ; R1_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R6_w=ctx()
+	12: (67) r1 <<= 32                    ; R1_w=scalar(smax=0x7fffffff00000000,umax=0xffffffff00000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xffffffff00000000))
+	13: (c7) r1 s>>= 32                   ; R1_w=scalar(smin=0xffffffff80000000,smax=0x7fffffff)
+	14: (7b) *(u64 *)(r10 -8) = r1        ; R1_w=scalar(id=4,smin=0xffffffff80000000,smax=0x7fffffff) R10=fp0 fp-8_w=scalar(id=4,smin=0xffffffff80000000,smax=0x7fffffff)
+	15: (bf) r3 = r10                     ; R3_w=fp0 R10=fp0
+	16: (07) r3 += -32                    ; R3_w=fp-32
+	17: (18) r1 = 0xff1100010965cdd8      ; R1_w=map_value(map=tcp_send.rodata,ks=4,vs=63)
+	19: (b7) r2 = 53                      ; R2_w=53
+	20: (b7) r4 = 32                      ; R4_w=32
+	21: (85) call bpf_trace_vprintk#177   ; R0_w=scalar()
+	; bpf_printk("deref %d\n", *(int *) ctx->skb_addr); @ tcp_sendmsg_locked_bpf.c:22
+	22: (79) r1 = *(u64 *)(r6 +8)         ; R1_w=scalar() R6_w=ctx()
+	23: (61) r3 = *(u32 *)(r1 +0)
+	R1 invalid mem access 'scalar'
+	processed 23 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+	-- END PROG LOAD LOG --
+	libbpf: prog 'bpf_tcp_sendmsg_locked': failed to load: -13
+	libbpf: failed to load object 'tcp_sendmsg_locked_bpf.o'
+	Failed to load BPF object: -13
+
+I've pushed this example to the following URL, if you want to experiment
+as well:
+
+	https://github.com/leitao/debug/blob/main/bpf/tracepoint/tcp_sendmsg_locked_bpf.c
+
+> See this commit for the similar issue:
 > 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 464cc9aca157..94eb41bb9cf2 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -541,7 +541,7 @@ config PINCTRL_STMFX
->   
->   config PINCTRL_SX150X
->   	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
-> -	depends on I2C=y
-> +	depends on I2C=y || COMPILE_TEST
->   	select PINMUX
->   	select PINCONF
->   	select GENERIC_PINCONF
+> commit 5da7e15fb5a12e78de974d8908f348e279922ce9
+> Author: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Date:   Fri Jan 31 19:01:42 2025 -0800
+> 
+>     net: Add rx_skb of kfree_skb to raw_tp_null_args[].
 > 
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Thanks for the heads-up. I can populate raw_tp_null_args with this new
+tracepoint function, if that is the right thing to do, even without
+being able to reproduce the issue above.
+
+Thanks for the review,
+--breno
