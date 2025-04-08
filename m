@@ -1,67 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EE318DB0C;
-	Tue,  8 Apr 2025 08:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C692202996
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099214; cv=none; b=Zz+PdRfJx3UdCXYllb5wvlg0Tv+srMCwWzi/fgpov/0Iu/E1c/BkCTmh006p+rgSiDbKZlZCLVqXfKYNH0MBCNu//p4IGj4QMXCW56RDUep8CsF7d8e9//oOay2jmAWwfMkPAb4xSPz4znBY3xjRsFZS8pyo/9qP7eNkHZNc3hQ=
+	t=1744099394; cv=none; b=dx2Us9gdHfpq6U+40lje2MEV6AgarUV1rnemEf1a9TSkwXBTZl3YpjBBTZpHbckeZ5u2VJKg80fTp2ujMe7oK3BigoTN81OlTFwGka+rFqkaEJdZOszpWXd6eyL+VmBh2bntRCWZ+A2qr6Dt7IKU+zI1iBuK2qSXUR6h+R2wmVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099214; c=relaxed/simple;
-	bh=KK+yAxCAYHbE4CX7MKmmtV0S6r4GlgEqDtA/Vmnqw14=;
+	s=arc-20240116; t=1744099394; c=relaxed/simple;
+	bh=eOAw0hyWHLIINvb14CVs1GR58Bxf6TZohiFSnFDaF2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3dkdIYa9kc4uKGz2X6XRiLGWVyg1HkTou1/Gz/Na32RbwgYvJ7LW3A3gPaXt8ZvLPMKqqqhGb+b+udyLOJgIY2SBSECAXm82HffPhjtEihjd3uLpOeZGoSrdbYmfEhqfe9uqi+xy19/luw+rsVewc1q1dhqXe44V0WJoQyX6ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxWS+KQq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXNbgiH8AXpV4dxM4W+MFBx6qIJBAMYiEhkS1Nn6BuFLIRv/b9lt552BASWfsAoYuaJV5xd7ZHZWNACQ6jKpzpu2NBxbxbMpwehuHQRrVSvVL85CKrYMNVHesDYMuk1XS1c2e6Yd6N+C579N32KbNbjpYCppIHxnZshz0JBKANw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YmlTKyVG; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxWS+KQq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1131C4CEE5;
-	Tue,  8 Apr 2025 08:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744099214;
-	bh=KK+yAxCAYHbE4CX7MKmmtV0S6r4GlgEqDtA/Vmnqw14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mxWS+KQqMFp55rsdlhsI+SYIlsHQIcp/+2heYcpWtt5EXZtWfm4p6M8puNwr4YerR
-	 6Kit66apd/SIcvB5hpyyZ37CtCYLIJdHTzI+8jw3zJ1Wt72fljYEaP8fR+ogvASfvp
-	 Vo+/0Drfotut20VRcOy5OBwQa/EUorJo/SiTT//EOt1Jrj96XW+wqzkw2whIHI8UtT
-	 fe5NpiHuq3MiUcR3tfK8NZL22Nce4XbbaDDkPjTaejxOfro3L1NUdXyqZcu+QvIJja
-	 0WCkX8eI/HoJJpGcI1aMtAjBjTGi5cquXDnYyfmpXU9SkyvxCIcaXSGTZBGZXYmi1g
-	 e92+g0Zw+bg+g==
-Date: Tue, 8 Apr 2025 10:00:10 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: dlemoal@kernel.org, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ata: sata_sx4: Add error handling in
- pdc20621_i2c_read()
-Message-ID: <Z/TXilfhUPuVfXLA@x1-carbon>
-References: <20250408073001.3121-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YmlTKyVG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=eOAw
+	0hyWHLIINvb14CVs1GR58Bxf6TZohiFSnFDaF2U=; b=YmlTKyVGuYg4ZkoKlIoi
+	PC2qp9kjkR2bU5Pm9PA8uQ8xV68iSkwgBVeqQW/KsbkFjrcUbI5kt8ce48C+dYIe
+	MbYBFLDhPn8sS/4WLGF/p9s/yYLQkKvcRqnf+DqbX9clAQhKbQvfPrK/Sryfagkl
+	aqH+280eqnHXCcIbqZgGmSeZ+XFEfK12zyQ4nOJx1pETMKx/V9rFy9JkaHWddcvA
+	KhqIajrZb3E+M1wOfMc+nIncIcDWruk6U4uUzGH8Z5BSEfPW5t00T3UJMdQegrNC
+	SSWhJwZkFCZPvutSnAU6U+MCw11kvlJWQJMGhAeAURMUuVP66dkgWPNxmyxJpbRR
+	FA==
+Received: (qmail 4102305 invoked from network); 8 Apr 2025 10:03:07 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2025 10:03:07 +0200
+X-UD-Smtp-Session: l3s3148p1@ahJnyD8yFpcgAwDPXyfYALbiJ46yNPq3
+Date: Tue, 8 Apr 2025 10:03:06 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+Subject: Re: [PATCH v3] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb board
+ device-tree
+Message-ID: <Z_TYOm6xuYcQEt_V@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+References: <20250314-rzn1d400-eb-v3-1-45c4fd3f6e01@bootlin.com>
+ <D8IEWP78KVOE.1SD29H0S51FZM@bootlin.com>
+ <Z_TA46i0KfFq89ch@shikoro>
+ <CAMuHMdWLvqKP6QnLGuR3AT1SEJ_XO5F4119JCqgptv4RFWx8tA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="O0J9fWFvFi2G9MU+"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWLvqKP6QnLGuR3AT1SEJ_XO5F4119JCqgptv4RFWx8tA@mail.gmail.com>
+
+
+--O0J9fWFvFi2G9MU+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408073001.3121-1-vulab@iscas.ac.cn>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 03:30:01PM +0800, Wentao Liang wrote:
-> The function pdc20621_prog_dimm0() calls the function pdc20621_i2c_read()
-> but does not handle the error if the read fails. This could lead to
-> process with invalid data. A proper implementation can be found in
-> /source/drivers/ata/sata_sx4.c, pdc20621_prog_dimm_global(). As mentioned
-> in its commit: bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0
-> might be used uninitialized when pdc20621_i2c_read() fails.
-> 
-> Add error handling to pdc20621_i2c_read(). If a read operation fails,
-> an error message is logged via dev_err(), and return a negative error
-> code.
-> 
-> Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
-> return a negative error code if pdc20621_prog_dimm0() fails.
-> 
-> Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > Please do with the minor review comments addressed. I have some patches
+> > depending on it. Which means that I am using this DTS regularly now and
+> > it works great.
+>=20
+> v4 was posted on March 24th?
+
+Mea culpa, I overlooked it in the list. I am sorry.
+
+
+--O0J9fWFvFi2G9MU+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf02DYACgkQFA3kzBSg
+KbZKlw/6AjOgH6RhHYUZCXliEOaraIhmt7GNbKOGM1poWQNlOa2Wi4qSDbjE8Q/P
+EDdgHu9Kgwfm4C6NOn8Y6heSbnFSxhe2UQFsCHyDiUK5ABVayN1cI4IXldbF0YA2
+C1LL+SxWIYf5dNlQt0m+ZL1g1VkIUDNqKLByqXT854g/rk91Gwak/uhbUljhC/d0
+D31Q1afnNqc2FLAchDEddbpjW2ejJZIZM2MK1a9sF64Xnru5Y2GSuGAzjV5mKdj1
+r3MbgXvj+85GV6UNyoWhiFWhoS8LBe5CpXAoGCjB3zsmgsD6UZlXMnN33fr+1g9B
+ooD9YzWiPjqMRM2Fe2k58sM38mu4o2aAwotVXw/Xud50vs0fHd7inR88do+eq6kK
+dthigEb7wLkHYMHzXhzaGAWCW5m3Xt68wh36guUTQx0uRC3FgoJhBxGr6M5Scyf/
+YMIyu8p5NjE+Aktkjw9CtgC8jvfcICNxwlizqj8pBnGRl0SwQf0saukHf+f28m7P
+mbTTSexNVh1NmAdNubwtGcxA/P2zzyfQfCJfglSf4tSO+8vlBzq4s6gP4rR8br/1
+25AZM+SHFJvysENWujxmrsqVKzJ5svin3CRzSXvFsUmRbHpmTWUUQBe0zykkGFx/
+1jwGRNgo294/N2DpnbhT+Mqi7xQ8nf1pauB6HUUqYbU7lm48zNA=
+=0lay
+-----END PGP SIGNATURE-----
+
+--O0J9fWFvFi2G9MU+--
