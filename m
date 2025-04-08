@@ -1,67 +1,66 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA47267B11
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F74267B88
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104769; cv=none; b=eRYAkyGm3sNMz2afnl1n6wmf2GumhWWOHLrM0fKOsldnIc4gzsL0JKSdgLqeybURaZf+MSHYanSOgfr3N+Stwk+BLn2fslTAOGKQW1f8LKkGjFs0ZPAybiwkonAj9LFY7L7CIprKaolzkZBeLn9Yijscf86S1wiDjs/pVmmt9ao=
+	t=1744104771; cv=none; b=dv0dExqw2yr7jDQA5LckGreCv1/JWE28GqonuH4DrS6twAIvVmgkRd2hwYbZNXnr7K366oE0I3nZcazZ7LGV/slx/uS5CyG2Jrg3CUNv+ncCZeWg4xUvnC/kE5E8W3uU6D6mLZrejV/rBbxz3zXODq/bNREsuGn8vZyHXEqB1qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104769; c=relaxed/simple;
-	bh=wyemaxi9F/WK+ikAwcpVodtyRlnYtOZlK2ouk1iRRPU=;
+	s=arc-20240116; t=1744104771; c=relaxed/simple;
+	bh=iFGdqZHw3eVy6wQKrqHQ6Jd/6PYAgGQLiGcWKrEFasw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nph6uQTUNrttJB5+bGlZKRvnlro1MGku1Z6kStT9TJ3X9kksVXS5IonXH0HK93+NkRt7nw0E9I2pdtULVKNadR4wka55sU124XRbnLunbRnPB5d/K6a1GMlfnW0IGm5XcsbZhBBSDwxAZjusWhGEpMDFeV2Z4HgiZiJfcz/e32A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U9NILFe9; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=aYDGz7FLEgtALiBBvwqAx5APj8h1k4FQ8OpFO12zlyb/wEv3lSJwNxvxQIpkoICWYxvQN9sMkUV1zwHxS8IJN5BQ9WWN4cpiP0v9MgFZOgwvnWCXT60/cZALvP6UcIcS4rZo8vjhwxRcrHZzq4MBKR/vMHclrYuDh0jBQ4f8EdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EIng9QGH; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U9NILFe9"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so3980545e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:32:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EIng9QGH"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so4655635e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:32:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744104766; x=1744709566; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744104767; x=1744709567; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yNXHwX3MjBjZlrv7zfjQGDnKrhbHGVdV4rt7uEzlqwI=;
-        b=U9NILFe9XUrtEEMMzUHgmEKGmItlropp3ZFlYM8ZkNQbQwA5/cgU8EbuAlSE88Ap5+
-         I4tUS0ebh+TEHEhW6WdqAS9CpszQWL19ST0RycXkwyKrFi4L7e4957hdHWbgmByomXw1
-         +YgCHvmo/EhQsMiDoz3y/7Ogsl5uJvMIOZgPM3Bel7oiYIYHAE4VVuI6vRXJJTeXDlOp
-         iFDIcotWQeUJ7P+FUWimQ3d0cNr7umJs+4BYHtyKg9rwqYdxlI94BZ5U5XJ7WKZVjA9C
-         cpdhSmgbzVg81aBBXk+4UO/bwFwD41lFMjmVDW0L7Bd5JYJsk4yu1v/H5enUD5AhP7jE
-         iw1g==
+        bh=7N8vtlUIKAT7uWK8aNXxI9lA9gK3w1bYYIGqJAhN1wU=;
+        b=EIng9QGHyWtv1oq9Uz2IEpuCfme5rTNAk8eZzPxzKYrtp88lVck8+JZh69CHT5x5/F
+         QkcbiS9UmCFRsBGV+DFQE7VmvYEGwlZCGApEbx+dKwTcjM1V6rSz4zGYqlNu5NlLKMUS
+         2ZE7FXvme5knrS6SwzvH2ckMRtb8ZxeW/SEkD65C/1cr0d0peEmFNyi53xaIqN2+ptZW
+         0mCRMrG7WwO0/2BV8RrBf04b0tBZ7FgC5KSUOKotPjxcHPBgI0nAsHtFiFC6smxnVDJb
+         B9YqD5QoSNrRMOvSUXmK5eE+dTQoDTXpthegtNhz2uEZ/3ijD87/7klfXoJvuJjAM/pR
+         muDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744104766; x=1744709566;
+        d=1e100.net; s=20230601; t=1744104767; x=1744709567;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yNXHwX3MjBjZlrv7zfjQGDnKrhbHGVdV4rt7uEzlqwI=;
-        b=G3Ajq1DIm0m9DClP+E+IGot8LR7Cz1XcBWiHOp4vAzLUSsrqd6B1LMzPBXTLg4FXZL
-         pPiFtg4b3/5hrXlj4ldlUEALuVZx28O2HVBXChRqKovPOK9IAhghjQ2QJV3tZ3t0WYUn
-         aTV98ssyPHIJRnIJxZoh6h+NZY/HzKSYLfojW2cGVIrbLSsB8cGfepE8gRj3hAh2G6Zs
-         fWbDog224lntxa/RR1n5WM1t0DggGr2huJHr1fLU20aoEntnpfMNoRM02KagT1Csxtz/
-         Suh5x9uOEYtbObELn6tYm8QxXxS616qHq4JWyDOUwEUcO7FtpT/CVJsYXK3KQ0Eji3yq
-         ncGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnnLgIVhrVRTcpqs8ZxCrkPSRGikU7Xq9TYbtTfCK1bvig8PEn7Bof4zU3yZrVVAOFVLRPRMAp6lw7Jo4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0jetSFN0AQWqMfBhWIE9J9lO4EQ2hjKwFfFnRt16SjgD2Fc45
-	YIInXknzs04cL/G+BiiyDEocsgezla0MM6mkdIOkIniaVG9xDotke/Hf9rkO8cg=
-X-Gm-Gg: ASbGncszosb4moJ1INVfIt4QQuMrtjUjDA8HxneoSSYrxqosAPnTZ40npNogKYU1qVZ
-	y/hubeXwfJLAhtZBw653OMuX36XU0ibGiHx6XV+OT4WmMoywSxjpHRF0p51cCqHxGlh8jUgA7+k
-	22U4PWMJscsJQwLHpo7AYDtRanAl0jGzWNPJAahDslfVB+Fhyn0i1fHHFBshUBBes+bLxV8inDQ
-	U8AtPxRG/eeWWZMPnc3aL0p3WMxprFkbuOahIzYQ4+p3bfzxjThpvfU2J8T4vMBy5M20hgLrQfL
-	erasCKs6AqlFrIafQZP72jVKraKrK4COQixm1utLhiKtd0FxMUmpFjBrOcDxVX5lvxVqMDCCSA=
-	=
-X-Google-Smtp-Source: AGHT+IERxZdoY1wfPSi10ZPhx+Q9Q0+wVMEF5ckSk/Hao4ZtYLIWwgu2JOAUuIeRaUOztnOEqiAs/A==
-X-Received: by 2002:a05:600c:3592:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-43ecfa18f83mr54545325e9.7.1744104765916;
-        Tue, 08 Apr 2025 02:32:45 -0700 (PDT)
+        bh=7N8vtlUIKAT7uWK8aNXxI9lA9gK3w1bYYIGqJAhN1wU=;
+        b=siljMtub7RWWYyKxFbqKsA9p9BzzBsQDlsaL1bj8YFPn7fpEnpZZzaqeTj3bL01SsI
+         li3OsPMm9l/vK5EjxIcZ8Lo2Oea/tRZKSo9kBm++qXS5BC0Zw3DY5bE/Dz/HvLerNqGn
+         dG6lZj9WInXv/idBhzw+f+qS9wTaT6iBvk8DEKAmOuWXeWh+2rjslBrY0Yr0CuA8bs4v
+         HRNnzb+mbLb98QGHZZG+zYv6wNKS9U2VLQvG9pW1l9n1sz50vNuFAHOkTFUtiHx0Mjkb
+         8HnpcSTkdaphtcmj7DfrmQ3JmSjJ2UwYZYWxq67gdkVOGC6FBMi+F9kScZAXLttQU4v4
+         fcUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH6LaLCKy+JYyOw2X9toHJL/BJ1wYVm1xS5I/LiNuj4D8TG+wAqGoYgNtpE6l+kC1eYfHcSAo3ALv3/8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAeFsqfooifWjCcFO9AlpRrvQXnmwF+MEXAePbHpdJIwQZoAJz
+	/CbN3F1d513GAfBQSx2rv3sl6UMolrfltMtofMpohHn+fXMalX4XV04UKoaeocc=
+X-Gm-Gg: ASbGnctUynKwYJ55iYeW6cf+Uut7jrm865EJCGVTBdDVXPHtGobHl21di26+IbBMdpp
+	NmHbR/hrWeRzi9CpS1+ioufWIKNLHJaVeyFYt0nEjKFSirTgu7iGMGsEZLNfGRPOt0XvZkyuTj6
+	5d/669YaK6sHjZ2klDp84Y9Cz1wEvH/ZaoTG/6sEf8R3UUpY8Ap6oMNy1Z+uQo0i0Qw9nxlf57A
+	XJQvtsh9+KCyoPMua02n48mvTMoElOPEoPfdIbHdVQyxGzpnEsu9gG2wN/tHS9JBpHcHPyQcwCw
+	Eiv5+wpWNPnWsnHWrXpCYsovaAF/swGwPsnJJjwCeU5LXinFFVI3iBI8eTEz6MU=
+X-Google-Smtp-Source: AGHT+IGwRwzp8dgc7ekIGJqewdC6lObYgeLAaDHpf2sona7KHrppNyrPjI9IkVJYCqGr1bua4rzL4A==
+X-Received: by 2002:a05:600c:3b9e:b0:439:9595:c8f4 with SMTP id 5b1f17b1804b1-43ecf57e944mr54223735e9.0.1744104767243;
+        Tue, 08 Apr 2025 02:32:47 -0700 (PDT)
 Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm153680085e9.19.2025.04.08.02.32.43
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm153680085e9.19.2025.04.08.02.32.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 02:32:45 -0700 (PDT)
+        Tue, 08 Apr 2025 02:32:46 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 08 Apr 2025 11:32:07 +0200
-Subject: [PATCH v2 10/24] arm64: dts: qcom: qcm2290: Use the header with
- DSI phy clock IDs
+Date: Tue, 08 Apr 2025 11:32:08 +0200
+Subject: [PATCH v2 11/24] arm64: dts: qcom: sc7180: Use the header with DSI
+ phy clock IDs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-dts-qcom-dsi-phy-clocks-v2-10-73b482a6dd02@linaro.org>
+Message-Id: <20250408-dts-qcom-dsi-phy-clocks-v2-11-73b482a6dd02@linaro.org>
 References: <20250408-dts-qcom-dsi-phy-clocks-v2-0-73b482a6dd02@linaro.org>
 In-Reply-To: <20250408-dts-qcom-dsi-phy-clocks-v2-0-73b482a6dd02@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -82,21 +81,21 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
  Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1795;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1964;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=wyemaxi9F/WK+ikAwcpVodtyRlnYtOZlK2ouk1iRRPU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn9O0eLBps0sf65BYJaKrzpQGPZhs6k3fvjpUYa
- /Tj/TEZhxaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/TtHgAKCRDBN2bmhouD
- 1wMRD/9YYLQ6MRHLNtrbIVoj+wekiOAjUrMyQwXRjYYvKo7vMQzUXXhn9nnONuXNHs+bBQa20cB
- yQeVNyBRcU0j9eK3K8PW5PqsygbHBl4cYlX/m4WW8a6MRq4+aelrywE8Law0o+UoeYnp0C6Gdhi
- 4w0yO2CRN282ZwX8KbYdgP/kVaqYpGtd6qcpO7+cSzTl+FhlIwO3Igq4M1yBXwj9lEX0XFf3y42
- AWQseoZ6RNjauI6k0W74Ee7uEJQL4Aez7Ew7zabSO1UnCV6EXurEVl/CwULt1CPXyPW9BTg9+1W
- S3kDJsY4xZ5g4b/9NYsFsQxBI10VaScdtRlTWGkW6p0aWBOt1GDkOg7GPtPpUjxKD8NRhsf8fQY
- 1qhvtW9E1V3tnDtS8q7ati/xR8UOIl6Vjl71ckW3IRcEkxkI76ODaQj6kjXJIhiK6uKf/GUZX5o
- onGdjvXo86WJLPxP3Dc/Wls+0Z8sZ9xI+0BzgkhE5T51NXTUqLXpUtvL3WutndkOpg9pXTJbeh4
- hB3bfh2YdAXDqnSW8+1kox6mv+AKYrW3G2P1KaEL6pltBpjlPAFTZp0jyWltK4oroih5RgIA2dH
- WPUVRwwm6gTYYzNIqKxCElwxtuPDrPvsIkGjkZEsCM7gAFJqgIDPQUejO0hpap9gXNzfbvY/NDR
- +bZgRSz1ZnAmQzw==
+ bh=iFGdqZHw3eVy6wQKrqHQ6Jd/6PYAgGQLiGcWKrEFasw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn9O0f9bBEOMUt8JTOH7MCppRiFrGcVBOiBTZLV
+ uOPVOrsFseJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/TtHwAKCRDBN2bmhouD
+ 1745D/wMs7I7SIYBJ7MXt8NvWkqMNs+ldqF3dlbtu4mkvZbByhztgZzBfNnwExdsK54LiImf8ic
+ qPO5iULIO6vjiCnavpp5pnfyOvORhSJzO2E787hgtVTsubKXTkITh3BxjjiakMZDyuf/4FinerP
+ 08FELvpKbcf2OD1aURL73qEOdDQ3SumUnYCkeOVi4xyp7nZpRtC+NLNOPtqZGm8JMPyMs7R6vQ9
+ yp0Fk3Ya9lCI9IEDEq9Re3kTwLGCY1xoiW69QnpB3rtbaLIow9Cw8xNr1VbxLw/nvNyAUqF+FV1
+ ZksG8BUnRZ3Y59FwYSt0ygUL7RoM3jq7JUEMfIdXyTeR+2nD7AXpyRlHBvC7C7HrZGBohk3mNIX
+ n/qPi+aHLBg0jJdJOB9E0QGwSXrO/ZSr3zjTKi++eUHgWcK3vBX1oU1xe7dZ0LNwh/bE5i9avVK
+ /FD3WH+mGOW2rIYDI8LQ+IwzSYJhO3N7vga4ylF2X53P9GTwxPjo+EfPM0gnUD7Mbz5xzB89P1w
+ t0KEZ9zwPBe2susMYHVtuq9SEFMDXg76cMfEhGTf2eK0HZJ6a3e0w7fFth46akZrjEubqDso29Y
+ 1Tvm5X2h0TZxv4/YQU8UWP4Er8F5Yd4AFFhbRb47FMdWmp9ZqahIrySoqAL5UqPTIUyBQqeOeag
+ aodzyid62jnoDQA==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
@@ -106,43 +105,45 @@ Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcm2290.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-index 496e493c5845c7d75508ecfb8e0ffc37863303ff..e4741342e14c2be336dfb26d91ec9685884ab474 100644
---- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 87c432c12a240f8035753ad10ce8662584a3f1f3..d157863dbc4a18b6861060579a148632f8ae9e3a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
 @@ -6,6 +6,7 @@
   */
  
- #include <dt-bindings/clock/qcom,dispcc-qcm2290.h>
+ #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
 +#include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
- #include <dt-bindings/clock/qcom,gcc-qcm2290.h>
- #include <dt-bindings/clock/qcom,qcm2290-gpucc.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-@@ -1726,8 +1727,8 @@ mdss_dsi0: dsi@5e94000 {
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+ #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+@@ -3284,8 +3285,10 @@ mdss_dsi0: dsi@ae94000 {
+ 					      "iface",
+ 					      "bus";
  
- 				assigned-clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>,
- 						  <&dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
--				assigned-clock-parents = <&mdss_dsi0_phy 0>,
--							 <&mdss_dsi0_phy 1>;
+-				assigned-clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>, <&dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
+-				assigned-clock-parents = <&mdss_dsi0_phy 0>, <&mdss_dsi0_phy 1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>,
++						  <&dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
 +				assigned-clock-parents = <&mdss_dsi0_phy DSI_BYTE_PLL_CLK>,
 +							 <&mdss_dsi0_phy DSI_PIXEL_PLL_CLK>;
  
  				operating-points-v2 = <&dsi_opp_table>;
- 				power-domains = <&rpmpd QCM2290_VDDCX>;
-@@ -1809,8 +1810,8 @@ dispcc: clock-controller@5f00000 {
- 				 <&rpmcc RPM_SMD_XO_A_CLK_SRC>,
+ 				power-domains = <&rpmhpd SC7180_CX>;
+@@ -3433,8 +3436,8 @@ dispcc: clock-controller@af00000 {
+ 			reg = <0 0x0af00000 0 0x200000>;
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>,
  				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
- 				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>,
 -				 <&mdss_dsi0_phy 0>,
--				 <&mdss_dsi0_phy 1>;
+-				 <&mdss_dsi0_phy 1>,
 +				 <&mdss_dsi0_phy DSI_BYTE_PLL_CLK>,
-+				 <&mdss_dsi0_phy DSI_PIXEL_PLL_CLK>;
++				 <&mdss_dsi0_phy DSI_PIXEL_PLL_CLK>,
+ 				 <&usb_1_qmpphy QMP_USB43DP_DP_LINK_CLK>,
+ 				 <&usb_1_qmpphy QMP_USB43DP_DP_VCO_DIV_CLK>;
  			clock-names = "bi_tcxo",
- 				      "bi_tcxo_ao",
- 				      "gcc_disp_gpll0_clk_src",
 
 -- 
 2.45.2
