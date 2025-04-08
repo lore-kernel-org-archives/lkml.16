@@ -1,207 +1,63 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725B81E1C1F;
-	Tue,  8 Apr 2025 15:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542E61D5CCD;
+	Tue,  8 Apr 2025 15:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125664; cv=none; b=gfVU8mwdADDppNPnIvCiLJ2/a4seOkb3RktUN3bV5SPnoDDQtMaCQPMj2Mc4lCZI6pC0dBwmRSXRkqzE5pz6ZFZLpmYjJO/MOE2p5waDGchPe8nL39k/3+cfZa1xmdZ764Mn7SBWoiATrkbbunIcBg/LurVfsKX/PhZCjGUrKHY=
+	t=1744125721; cv=none; b=dyeUjY1ygIuoLqU3XNIugqgcd2+diqMGGlFaBKlFi+7OOSMG+llAKpkPm2sZr2gJsETn5VTam73+JOdvuOfa0mw1Z0xHuPKwzS1wDSqth6uEbC+Wbdfl5jzjzOc1gBw4856QdxD9HUsagMXpiA+pdaTQ5JxXd8kuhLR9fw+TF/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125664; c=relaxed/simple;
-	bh=BjrH2CVJhKWvS2ppzqRbScIuFc7QlVq8GFZa31rH4s4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L6EP0Pl7QalGCNyYX33fEYzz0XDOONTgdGvuzNj5t7fGsktOcnbjq6vxXj80NCFr0Jg7SahWQXiDPur8/YeOS3UBTqgzjBQrWpBAqNgw2PaOfo9OnUc6u+BJ2jkUoVnJkJ+aDchQuBpGs2IQMmweTQ4HbdCUM+Wsv7EIAQUE05g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QeOWHrus; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744125721; c=relaxed/simple;
+	bh=aEccqxi93Pss7RLf1jr/RmT8vl2tP/YjJ/S/HA7brTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwuJocv02zOcvNx1mEKK8uAr1pvbvP/1iKG/VJpoFixE4mP9dWEMItavl5sPE4/3Vv4dvTCTFqVHB1OKkauBT1TEpf7cNEu7HOOr/AcXh6cRPVUAC32YRZ8gcK0FcEg1pJavgMU75WAE8p0nxe3lbNW13lHqTstXs6T2aWewV+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=is+SIRCD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeOWHrus"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so27646356d6.2;
-        Tue, 08 Apr 2025 08:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744125661; x=1744730461; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ey6nWCXg+L3TPWpZ7z3kTJsMGtn+HxgT/Jr3SmGd3uk=;
-        b=QeOWHruszbZ6suu8EyaQt8uMz/BYYLohgt7HvSBX4t+RpbbtkhX9ElLKh3rOM19Kzq
-         cO2n0ZcRLMaNgX66V01LQ+NewDEHombMEUH8Z+sy5kuPdSYd8n0SY2rQ1e3vLlZkwSvb
-         wsZ5Rb/RvFu5QedwDRhC8wLI9rVu59rgOeHQgvFgY6q+Ud8jpQTIiNwKV3Io5bH/9lIC
-         TzrvNzuDJ1qZeNdNhMlc51xm7ZB9I8p0wVIDvhGfD3Hk9uJeP7HS54ftSmeONhV6U3zL
-         Kirb7m40Kn0Vy3L2VVsJvHUW5Ut0O+wzf/a5EXRzt3LgGFDlwX2sQ5COiYeY53yVML8i
-         p2VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744125661; x=1744730461;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ey6nWCXg+L3TPWpZ7z3kTJsMGtn+HxgT/Jr3SmGd3uk=;
-        b=cEL5OkPTxb2zfDlexHg3gzMvuHkyKVzwepMsA/T469KjHNnwfM2hMrtlFGU5I1styS
-         gmvzD+bnIb+Obu1ZCmzNxXGkhgn3OvUM4SjJTGRx9zVBMmW7U5/KrJlRitGEJoZJmTgh
-         t5ZVTtHEM7fMZqTAxfUm5ifZIf3dzqyUVBh2CYV0nVapSUW75frxI4IsVo79B8NKhDTd
-         VsX64idZZ5jLul/YfaKgvBgeiYIILaYBqdt228gnrxWoZNGxfqyeaAVUsrdj3sxKD7cv
-         PdLrZ8L488i0GiuAzEEoc4fAVMjM/HmdnZ+ilGcvdeO+d1obn/8PPUaO6gt4axWt7YaQ
-         tfHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ9raaqseSWMIxvFB5Kt9xusEII4wG8BNqtWE8jaQvbJlgLxxPqggNC8I3rvbRxW09ADuBCstd@vger.kernel.org, AJvYcCVRLuP5uq5pOeST6BQoUFe36nIts9rkskhZ3l4jU5U+EIzEA4EE8249MxZoVGqSEd3wyVXaDlQJklBDft/n@vger.kernel.org, AJvYcCVTbfwMXOkj1iTL2wILIfUzZvD4WQmMxpKCUIJZED2ReKQToANAVTBlKCccDBmSCu2pNNwbTM3ni6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7lBAA+UUAL0d4FbdsgyrWH2EY81WesyookLKQVt35WrN125gg
-	jR4RB2x4ueC9V5wxCaWG7bg51rej3sdNbw1xmLmUatWe0U7QrX+lG5OYTzNz2136uVFQNggFcoi
-	s3SbT6ymEUXpB4TKVRgkU8zuBHqU=
-X-Gm-Gg: ASbGncuNJzVmiQOwQlhIlAYFLcowVPIISKF/2kLtbdQsYW6HZ0QmfnReCP06EegBs0b
-	IGEY/Yf5npnDWaS6xISeFlGITo2aD2h/0Ec2MvGwfipYpi7LDm1CBJD+sxuVTugzEJhcqlSTdrh
-	vcumEW+LLwpufnyPKITfZpJJnRpf+J6xnPgQAs3Jl4n6/N1BKJQQ2FasW22Q==
-X-Google-Smtp-Source: AGHT+IGTRrDxwbNLzuvOqywnxn09Z9MIBiIW8jL7PYmbgeYEi936Vh8zP1vHoGOkooIJWXgAh2kitK9H48FMp+nw93M=
-X-Received: by 2002:a05:6214:4109:b0:6e8:f0fc:d6c4 with SMTP id
- 6a1803df08f44-6f05830f669mr182684556d6.6.1744125660685; Tue, 08 Apr 2025
- 08:21:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="is+SIRCD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0233BC4CEE5;
+	Tue,  8 Apr 2025 15:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744125720;
+	bh=aEccqxi93Pss7RLf1jr/RmT8vl2tP/YjJ/S/HA7brTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=is+SIRCD5eMbA8msQUV/1Xp72zlGAUSaqPkALSxc2MWkN5arcZzU11N8Fr+kg4+Fb
+	 KmeqXkRWt3z+63RZVLk2ViAQHAI+ieliRbKejH+5rASInihb1GOoQejVHOw5rGnmKo
+	 KSSYOq7HYzL7AZZsEDNi8qWicvywpcRWwi8OtgH0=
+Date: Tue, 8 Apr 2025 17:20:26 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
+Message-ID: <2025040811-irate-cold-152e@gregkh>
+References: <20250408104914.247897328@linuxfoundation.org>
+ <0e5aaddf-d149-40e0-8604-b3975f3998bb@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407234223.1059191-1-nphamcs@gmail.com> <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
-In-Reply-To: <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 8 Apr 2025 08:20:49 -0700
-X-Gm-Features: ATxdqUG2C20-NmbiR2-sPu0qDu-T-1hXdwmt4JH5TA7kOt76dOuAJy2oi4SCmNo
-Message-ID: <CAKEwX=Nzp_sRhEV4rYjcOaK5mMnDsRmsFWpjzOt8o2EJagBWKg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
-	len.brown@intel.com, chengming.zhou@linux.dev, kasong@tencent.com, 
-	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
-	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e5aaddf-d149-40e0-8604-b3975f3998bb@sirena.org.uk>
 
-On Tue, Apr 8, 2025 at 6:04=E2=80=AFAM Usama Arif <usamaarif642@gmail.com> =
-wrote:
->
->
->
-> On 08/04/2025 00:42, Nhat Pham wrote:
-> >
-> > V. Benchmarking
-> >
-> > As a proof of concept, I run the prototype through some simple
-> > benchmarks:
-> >
-> > 1. usemem: 16 threads, 2G each, memory.max =3D 16G
-> >
-> > I benchmarked the following usemem commands:
-> >
-> > time usemem --init-time -w -O -s 10 -n 16 2g
-> >
-> > Baseline:
-> > real: 33.96s
-> > user: 25.31s
-> > sys: 341.09s
-> > average throughput: 111295.45 KB/s
-> > average free time: 2079258.68 usecs
-> >
-> > New Design:
-> > real: 35.87s
-> > user: 25.15s
-> > sys: 373.01s
-> > average throughput: 106965.46 KB/s
-> > average free time: 3192465.62 usecs
-> >
-> > To root cause this regression, I ran perf on the usemem program, as
-> > well as on the following stress-ng program:
-> >
-> > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --pagesw=
-ap $(nproc) --pageswap-ops 100000
-> >
-> > and observed the (predicted) increase in lock contention on swap cache
-> > accesses. This regression is alleviated if I put together the
-> > following hack: limit the virtual swap space to a sufficient size for
-> > the benchmark, range partition the swap-related data structures (swap
-> > cache, zswap tree, etc.) based on the limit, and distribute the
-> > allocation of virtual swap slotss among these partitions (on a per-CPU
-> > basis):
-> >
-> > real: 34.94s
-> > user: 25.28s
-> > sys: 360.25s
-> > average throughput: 108181.15 KB/s
-> > average free time: 2680890.24 usecs
-> >
-> > As mentioned above, I will implement proper dynamic swap range
-> > partitioning in a follow up work.
-> >
-> > 2. Kernel building: zswap enabled, 52 workers (one per processor),
-> > memory.max =3D 3G.
-> >
-> > Baseline:
-> > real: 183.55s
-> > user: 5119.01s
-> > sys: 655.16s
-> >
-> > New Design:
-> > real: mean: 184.5s
-> > user: mean: 5117.4s
-> > sys: mean: 695.23s
-> >
-> > New Design (Static Partition)
-> > real: 183.95s
-> > user: 5119.29s
-> > sys: 664.24s
-> >
->
-> Hi Nhat,
->
-> Thanks for the patches! I have glanced over a couple of them, but this wa=
-s the main question that came to my mind.
->
-> Just wanted to check if you had a look at the memory regression during th=
-ese benchmarks?
->
-> Also what is sizeof(swp_desc)? Maybe we can calculate the memory overhead=
- as sizeof(swp_desc) * swap size/PAGE_SIZE?
+On Tue, Apr 08, 2025 at 03:59:40PM +0100, Mark Brown wrote:
+> On Tue, Apr 08, 2025 at 12:38:17PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.14.2 release.
+> > There are 731 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> 
+> This fails to build an arm multi_v7_defconfig for me:
+> 
+> arm-linux-gnueabihf-ld: kernel/sched/build_utility.o: in function `partition_sched_domains_locked':
+> /build/stage/linux/kernel/sched/topology.c:2794:(.text+0x8dd0): undefined reference to `dl_rebuild_rd_accounting'
 
-Yeah, it's pretty big right now (120 bytes). I haven't done any space
-optimization yet - I basically listed out all the required
-information, and add one field for each of them. A couple of
-optimizations I have in mind:
-1. Merged swap_count and in_swapcache (suggested by Yosry).
-2. Unionize the rcu field with other fields, because rcu head is only
-needed for the free paths (suggested by Shakeel for a different
-context, but should be applicable here). Or maybe just remove it and
-free the swap descriptors in-context.
-3. The type field is really only 2 bits - might be able to squeeze it
-in one of the other fields as well.
-4. The lock field might not be needed. I think the in_swapcache bit is
-already used as a form of "backing storage pinning" mechanism, which
-should allow pinners exclusive rights to the backing state.
-
-etc. etc.
-
-The code will get uglier though, so I wanna at least send out one
-version with everything separate for clarity sake, before optimizing
-them away :)
-
->
-> For a 64G swap that is filled with private anon pages, the overhead in MB=
- might be (sizeof(swp_desc) in bytes * 16M) - 16M (zerobitmap) - 16M*8 (swa=
-p map)?
-
-That is true. I will note, however, that in the past the overhead was
-static (i.e it is incurred no matter how much swap space you are
-using). In fact, you have to often overprovision for swap, so the
-overhead goes beyond what you will (ever) need.
-
-Now the overhead is (mostly) dynamic - only incurred on demand, and
-reduced when you don't need it.
-
-
->
-> This looks like a sizeable memory regression?
->
-> Thanks,
-> Usama
->
+Is this a dependancy issue, the function is there in the tree.  Let me
+dig....
