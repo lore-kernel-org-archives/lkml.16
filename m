@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7B123FC6D;
-	Tue,  8 Apr 2025 19:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0588C244EAB;
+	Tue,  8 Apr 2025 19:05:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139104; cv=none; b=IdCSyoHjxl8yFrpOmNd8aSAel00i+jenS72XrFj2uD1kvoKokjkrsQwQq5wc+k0cYGzJuh7fxEpEEPv3VCvyvisn3012J6GWcY2pEUs6wOR81xRB5szWiB0cdJs/Sm9mi4tO18bB5SYG1KF41xe7mg+JDtPrgurx97PkcNv3JR4=
+	t=1744139106; cv=none; b=C43/SwAeA/vR9b/9QJW1NCY6Y3w5I28SulbDKGw/QNMqjfnA8SNdFrAAwjyTk/c7KIboCxfZP4qMFfEMRnixlqbWu4E2uQsjhMAVeDvIgEihgt8sDHQJ9ukzgZCoiYFfVDFosFaluJPMM2qw2FlixxQ/l9kuyhmAL1iUMRyWYs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139104; c=relaxed/simple;
-	bh=s+evPkGMB2EjG5yJYcn8p86MxrJS69bPDbmalgLTUOA=;
+	s=arc-20240116; t=1744139106; c=relaxed/simple;
+	bh=JRhNMd7xTxqboMD0FX/Ihyk/W+msvNQQTYpMLGvBT1Y=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uRJDgutsbPb3QQ3iG8ni7feAa9yTJt8CtYL02rnhe7uV4RZSIy7BX962Zfeq6H3iunwyO6FfD2/fSIrhGuXWdBUUohLmIx/oIpgE2VUFEe+yJpDDmOJ6a0DzgUiwAH6Bggqlr+TLWSOtv9jIywCLJC4LnvkFrZnjrVQcaG+YIqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=abahP1od; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pPNliHrl; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=tm0wuaEvj22xhsXUZ352sQeRswRWNau3WRnfeaa38BOJuFAfpnXDoRjVfUWHUkcbFpHaVRdcWXH46QiwxkFnbg/CGNUXJRDVuaWmgbZHgS4f51KeZWFmlhpdUeYrkOCcw4GmuAcNztcxOt1e5QmSibm9BHr1iqcJ6ImNh1/uN70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s64nWPtg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NlXd84oz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="abahP1od";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pPNliHrl"
-Date: Tue, 08 Apr 2025 19:04:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s64nWPtg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NlXd84oz"
+Date: Tue, 08 Apr 2025 19:05:01 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139100;
+	s=2020; t=1744139102;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w4JKswxk+rSC5t9LiAJgTNTYxRIH+H7+OERZuRJyFTo=;
-	b=abahP1odzyt4dnxaNPO0yY2OOFGk4etRdg0lIaesqZzR/zDHEgccd+avQS5P+1sjBuZJIa
-	KFuiuD5IJzaZY6+IEU4si+qwsbwGpBNc2ppGVymzZxaaVtamDuC0LgwTI7evVxxDnmGCxX
-	CNerRhVCvJQFl5lWPPLT4Nu4gHb7n0umz3M1LDM7PZpp9aE+ZdRJjHNLO68bGBbvQnZydY
-	qfiSblzCXJ1s4PtE2derx705oK/DD6r/tT9ITlJgPlUAE8kkCuz8Ug2taRxHG34G8pbri2
-	eszlyS+HLr4BAsI0lFNc3z7qO9FCAnWo7RNr5/UPr2JUpRpGEvrBRk0g0WQjfw==
+	bh=glmAbEgD3RNqNOkbjLIV1w7OIgaSSIhfghEcLItK2Jc=;
+	b=s64nWPtgyEhqG5N4bKdXz3jUIhaPMjELIHAblC0E79pNYmeG2iJcKdxIxMDooCc618dE2f
+	tQY0hkdkx1tDrtW/3fg6MQ5a2sphnp/cIGcFQAbTTcCZ0YCcubn5ItbGLpkMVmK3H5oq2B
+	rAM0WoooVhCoW2M1brkbkJ0i2rriPJN1lZJXyimnx9iYz91TTFKhr3XwaIv4T9iXjRyrMP
+	54An4C/cSArI0jmpfFN/mA3IPNuoePcjJA2QCLsztGJf+nJ1SQQioybDRDFPBi7R17bpd/
+	awubC7oN5PE+iU0dNoxGNsBzXJkgYC6ywwUDRKgKczm/UtfIefHnnz3NwoKqtA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139100;
+	s=2020e; t=1744139102;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w4JKswxk+rSC5t9LiAJgTNTYxRIH+H7+OERZuRJyFTo=;
-	b=pPNliHrlMqDP2NSkK1V0pHdwWhyV4isSnxR0CSTrbDVxXrcMbczxL7KoxpefMWm2OeVfcc
-	Febz5wlLDH3SEAAg==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+	bh=glmAbEgD3RNqNOkbjLIV1w7OIgaSSIhfghEcLItK2Jc=;
+	b=NlXd84ozL1coM4EYGtdT+gkwg2UgEaEQ8I07oq2dMwpENQtLmUNpP6jOWW6rIl6PcoAbgE
+	qTtpcnES/erEq2Cw==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86: Add dynamic constraint
-Cc: Kan Liang <kan.liang@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Thomas Falcon <thomas.falcon@intel.com>, x86@kernel.org,
+Subject: [tip: perf/core] perf: Rename perf_event_exit_task(.child)
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250327195217.2683619-2-kan.liang@linux.intel.com>
-References: <20250327195217.2683619-2-kan.liang@linux.intel.com>
+In-Reply-To: <20250307193305.486326750@infradead.org>
+References: <20250307193305.486326750@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413909966.31282.14537140922539948654.tip-bot2@tip-bot2>
+Message-ID: <174413910123.31282.973495586484753335.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,147 +67,170 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     4dfe3232cc04325a09e96f6c7f9546ba6c0b132b
-Gitweb:        https://git.kernel.org/tip/4dfe3232cc04325a09e96f6c7f9546ba6c0b132b
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 27 Mar 2025 12:52:13 -07:00
+Commit-ID:     4da0600edae1cf15d12bebacc66d7237e2c33fc6
+Gitweb:        https://git.kernel.org/tip/4da0600edae1cf15d12bebacc66d7237e2c33fc6
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 14 Feb 2025 13:23:45 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 08 Apr 2025 20:55:48 +02:00
 
-perf/x86: Add dynamic constraint
+perf: Rename perf_event_exit_task(.child)
 
-More and more features require a dynamic event constraint, e.g., branch
-counter logging, auto counter reload, Arch PEBS, etc.
+The task passed to perf_event_exit_task() is not a child, it is
+current. Fix this confusing naming, since much of the rest of the code
+also relies on it being current.
 
-Add a generic flag, PMU_FL_DYN_CONSTRAINT, to indicate the case. It
-avoids keeping adding the individual flag in intel_cpuc_prepare().
+Specifically, both exec() and exit() callers use it with current as
+the argument.
 
-Add a variable dyn_constraint in the struct hw_perf_event to track the
-dynamic constraint of the event. Apply it if it's updated.
+Notably, task_ctx_sched_out() doesn't make much sense outside of
+current.
 
-Apply the generic dynamic constraint for branch counter logging.
-Many features on and after V6 require dynamic constraint. So
-unconditionally set the flag for V6+.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Thomas Falcon <thomas.falcon@intel.com>
-Link: https://lkml.kernel.org/r/20250327195217.2683619-2-kan.liang@linux.intel.com
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Link: https://lkml.kernel.org/r/20250307193305.486326750@infradead.org
 ---
- arch/x86/events/core.c       |  1 +
- arch/x86/events/intel/core.c | 21 +++++++++++++++------
- arch/x86/events/intel/lbr.c  |  2 +-
- arch/x86/events/perf_event.h |  1 +
- include/linux/perf_event.h   |  1 +
- 5 files changed, 19 insertions(+), 7 deletions(-)
+ kernel/events/core.c | 62 ++++++++++++++++++++++---------------------
+ 1 file changed, 32 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6866cc5..a0fe51e 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -674,6 +674,7 @@ static int __x86_pmu_event_init(struct perf_event *event)
- 	event->hw.idx = -1;
- 	event->hw.last_cpu = -1;
- 	event->hw.last_tag = ~0ULL;
-+	event->hw.dyn_constraint = ~0ULL;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 85c8b79..985b5c7 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13742,13 +13742,13 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+ 	perf_event_wakeup(event);
+ }
  
- 	/* mark unused */
- 	event->hw.extra_reg.idx = EXTRA_REG_NONE;
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 09d2d66..9724928 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3730,10 +3730,9 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 	if (cpuc->excl_cntrs)
- 		return intel_get_excl_constraints(cpuc, event, idx, c2);
+-static void perf_event_exit_task_context(struct task_struct *child, bool exit)
++static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ {
+-	struct perf_event_context *child_ctx, *clone_ctx = NULL;
++	struct perf_event_context *ctx, *clone_ctx = NULL;
+ 	struct perf_event *child_event, *next;
  
--	/* Not all counters support the branch counter feature. */
--	if (branch_sample_counters(event)) {
-+	if (event->hw.dyn_constraint != ~0ULL) {
- 		c2 = dyn_constraint(cpuc, c2, idx);
--		c2->idxmsk64 &= x86_pmu.lbr_counters;
-+		c2->idxmsk64 &= event->hw.dyn_constraint;
- 		c2->weight = hweight64(c2->idxmsk64);
- 	}
- 
-@@ -4135,15 +4134,19 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		leader = event->group_leader;
- 		if (branch_sample_call_stack(leader))
- 			return -EINVAL;
--		if (branch_sample_counters(leader))
-+		if (branch_sample_counters(leader)) {
- 			num++;
-+			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
-+		}
- 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
- 
- 		for_each_sibling_event(sibling, leader) {
- 			if (branch_sample_call_stack(sibling))
- 				return -EINVAL;
--			if (branch_sample_counters(sibling))
-+			if (branch_sample_counters(sibling)) {
- 				num++;
-+				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
-+			}
- 		}
- 
- 		if (num > fls(x86_pmu.lbr_counters))
-@@ -4943,7 +4946,7 @@ int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
- 			goto err;
- 	}
- 
--	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA | PMU_FL_BR_CNTR)) {
-+	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA | PMU_FL_DYN_CONSTRAINT)) {
- 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
- 
- 		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
-@@ -6665,6 +6668,12 @@ __init int intel_pmu_init(void)
- 	}
+-	child_ctx = perf_pin_task_context(child);
+-	if (!child_ctx)
++	ctx = perf_pin_task_context(task);
++	if (!ctx)
+ 		return;
  
  	/*
-+	 * Many features on and after V6 require dynamic constraint,
-+	 * e.g., Arch PEBS, ACR.
-+	 */
-+	if (version >= 6)
-+		x86_pmu.flags |= PMU_FL_DYN_CONSTRAINT;
-+	/*
- 	 * Install the hw-cache-events table:
+@@ -13761,28 +13761,28 @@ static void perf_event_exit_task_context(struct task_struct *child, bool exit)
+ 	 * without ctx::mutex (it cannot because of the move_group double mutex
+ 	 * lock thing). See the comments in perf_install_in_context().
  	 */
- 	switch (boot_cpu_data.x86_vfm) {
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index f44c3d8..05acd64 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1618,7 +1618,7 @@ void __init intel_pmu_arch_lbr_init(void)
- 	x86_pmu.lbr_nr = lbr_nr;
+-	mutex_lock(&child_ctx->mutex);
++	mutex_lock(&ctx->mutex);
  
- 	if (!!x86_pmu.lbr_counters)
--		x86_pmu.flags |= PMU_FL_BR_CNTR;
-+		x86_pmu.flags |= PMU_FL_BR_CNTR | PMU_FL_DYN_CONSTRAINT;
+ 	/*
+ 	 * In a single ctx::lock section, de-schedule the events and detach the
+ 	 * context from the task such that we cannot ever get it scheduled back
+ 	 * in.
+ 	 */
+-	raw_spin_lock_irq(&child_ctx->lock);
++	raw_spin_lock_irq(&ctx->lock);
+ 	if (exit)
+-		task_ctx_sched_out(child_ctx, NULL, EVENT_ALL);
++		task_ctx_sched_out(ctx, NULL, EVENT_ALL);
  
- 	if (x86_pmu.lbr_mispred)
- 		static_branch_enable(&x86_lbr_mispred);
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 2c0ce0e..f5ba165 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1042,6 +1042,7 @@ do {									\
- #define PMU_FL_MEM_LOADS_AUX	0x100 /* Require an auxiliary event for the complete memory info */
- #define PMU_FL_RETIRE_LATENCY	0x200 /* Support Retire Latency in PEBS */
- #define PMU_FL_BR_CNTR		0x400 /* Support branch counter logging */
-+#define PMU_FL_DYN_CONSTRAINT	0x800 /* Needs dynamic constraint */
+ 	/*
+ 	 * Now that the context is inactive, destroy the task <-> ctx relation
+ 	 * and mark the context dead.
+ 	 */
+-	RCU_INIT_POINTER(child->perf_event_ctxp, NULL);
+-	put_ctx(child_ctx); /* cannot be last */
+-	WRITE_ONCE(child_ctx->task, TASK_TOMBSTONE);
+-	put_task_struct(child); /* cannot be last */
++	RCU_INIT_POINTER(task->perf_event_ctxp, NULL);
++	put_ctx(ctx); /* cannot be last */
++	WRITE_ONCE(ctx->task, TASK_TOMBSTONE);
++	put_task_struct(task); /* cannot be last */
  
- #define EVENT_VAR(_id)  event_attr_##_id
- #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 7f49a58..54dad17 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -158,6 +158,7 @@ struct hw_perf_event {
- 		struct { /* hardware */
- 			u64		config;
- 			u64		last_tag;
-+			u64		dyn_constraint;
- 			unsigned long	config_base;
- 			unsigned long	event_base;
- 			int		event_base_rdpmc;
+-	clone_ctx = unclone_ctx(child_ctx);
+-	raw_spin_unlock_irq(&child_ctx->lock);
++	clone_ctx = unclone_ctx(ctx);
++	raw_spin_unlock_irq(&ctx->lock);
+ 
+ 	if (clone_ctx)
+ 		put_ctx(clone_ctx);
+@@ -13793,12 +13793,12 @@ static void perf_event_exit_task_context(struct task_struct *child, bool exit)
+ 	 * get a few PERF_RECORD_READ events.
+ 	 */
+ 	if (exit)
+-		perf_event_task(child, child_ctx, 0);
++		perf_event_task(task, ctx, 0);
+ 
+-	list_for_each_entry_safe(child_event, next, &child_ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, child_ctx);
++	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
++		perf_event_exit_event(child_event, ctx);
+ 
+-	mutex_unlock(&child_ctx->mutex);
++	mutex_unlock(&ctx->mutex);
+ 
+ 	if (!exit) {
+ 		/*
+@@ -13814,24 +13814,26 @@ static void perf_event_exit_task_context(struct task_struct *child, bool exit)
+ 		 *
+ 		 * Wait for all events to drop their context reference.
+ 		 */
+-		wait_var_event(&child_ctx->refcount,
+-			       refcount_read(&child_ctx->refcount) == 1);
++		wait_var_event(&ctx->refcount,
++			       refcount_read(&ctx->refcount) == 1);
+ 	}
+-	put_ctx(child_ctx);
++	put_ctx(ctx);
+ }
+ 
+ /*
+- * When a child task exits, feed back event values to parent events.
++ * When a task exits, feed back event values to parent events.
+  *
+  * Can be called with exec_update_lock held when called from
+  * setup_new_exec().
+  */
+-void perf_event_exit_task(struct task_struct *child)
++void perf_event_exit_task(struct task_struct *task)
+ {
+ 	struct perf_event *event, *tmp;
+ 
+-	mutex_lock(&child->perf_event_mutex);
+-	list_for_each_entry_safe(event, tmp, &child->perf_event_list,
++	WARN_ON_ONCE(task != current);
++
++	mutex_lock(&task->perf_event_mutex);
++	list_for_each_entry_safe(event, tmp, &task->perf_event_list,
+ 				 owner_entry) {
+ 		list_del_init(&event->owner_entry);
+ 
+@@ -13842,23 +13844,23 @@ void perf_event_exit_task(struct task_struct *child)
+ 		 */
+ 		smp_store_release(&event->owner, NULL);
+ 	}
+-	mutex_unlock(&child->perf_event_mutex);
++	mutex_unlock(&task->perf_event_mutex);
+ 
+-	perf_event_exit_task_context(child, true);
++	perf_event_exit_task_context(task, true);
+ 
+ 	/*
+ 	 * The perf_event_exit_task_context calls perf_event_task
+-	 * with child's task_ctx, which generates EXIT events for
+-	 * child contexts and sets child->perf_event_ctxp[] to NULL.
++	 * with task's task_ctx, which generates EXIT events for
++	 * task contexts and sets task->perf_event_ctxp[] to NULL.
+ 	 * At this point we need to send EXIT events to cpu contexts.
+ 	 */
+-	perf_event_task(child, NULL, 0);
++	perf_event_task(task, NULL, 0);
+ 
+ 	/*
+ 	 * Detach the perf_ctx_data for the system-wide event.
+ 	 */
+ 	guard(percpu_read)(&global_ctx_data_rwsem);
+-	detach_task_ctx_data(child);
++	detach_task_ctx_data(task);
+ }
+ 
+ /*
