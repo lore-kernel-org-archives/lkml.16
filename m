@@ -1,65 +1,31 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D141A20459F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B19720459F;
+	Tue,  8 Apr 2025 08:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099651; cv=none; b=Xlai/BHeGYWCeWNbVUAkypqLyR8we0M0/8xVCh0bZcymLmxCm2/MzFXDCY5qjLLIMRJpnhKEGELJMHnlra7bcHhKc8af1o+JzaVWZeGbDeK76qIOBhGRVoTTGSUfgCR/FAwCBodjLu0zsLEgQENqfNcu+2OmYpDlsUcsdlglYqE=
+	t=1744099715; cv=none; b=kqdZPkik5Jfe6WrIMJej3vPZus/fHOkMFut2m7PIemcTCC6RVx/1wu4blVMrZ9FYkwgm37CxGwZo4zYBb+cZd+9PxGpTz3i0Zw5bCEYfmsViPPMZTLTdIYZyj1HFOWMZdcr3/Nr4G3jw4fmOEVuXpUEVAl5c9G6FDyUikJrqrR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099651; c=relaxed/simple;
-	bh=k9CSGfDZYhat9A7hNdYkbf5OXkvSJrxO9ZA3cNbzaCo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DU8nQoUD3eJxTJX0xagINARgjvQbJcLupR6xVkMvCOKACtZMyVmfwamtg9ooWyb5dZBV2ue1dPqTi6eARBm4+ldq3iTfKYuXwTAYHUa1jZ82qFYn4OI47P11kh+krmrmPZFWdhIYquujRAOLAdOqMXDn3MB5Zp2SJdCpFUzCrx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EBPT1YTL; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBPT1YTL"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf848528aso42057155e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744099648; x=1744704448; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WSDEwc7QWvNnjNYSgC4m4TCyiYUs1psSSUJ0e9qdFNY=;
-        b=EBPT1YTLzyh+CU+bPbQyUw6ybXSipZWvoqLNVEp9WhoDErABX4womSpXpQkSjMBSDC
-         KJkYPRyYCnyEguKQfDV6MFjcjYPv8/LSiC8uhf2oI7Fss7IG6/j12MKg4iyvcNrSst01
-         C4PEc6pL3eVb0YAGosqyRFNsDq9uHcWmrWkuC0JSdlES7yqtok/4N38qPp3oGf/hEtFi
-         aMDVvNYDmiMdII/Wz7mEwTeHuFu25p3xl063Ojlf6HRmu/d3LrRd2gbgl9BDGgVgZ3tH
-         EP88bG15UpPiFLI3xAnVStSN3XEuEITkUBrKWyQIM/hf9m/nTH/HA8lDlRj4Eda6EHB1
-         trXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744099648; x=1744704448;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WSDEwc7QWvNnjNYSgC4m4TCyiYUs1psSSUJ0e9qdFNY=;
-        b=WFnPKeQsE4BwZDA6f/H0jrokGk9u8/W5q1oSddvXlh7O8s9a0A5OQs2Nnzt6jK6tLT
-         B1V8qLANxdOBF6BMJjcYXbQQpw8fKhZUqzg43HhD2boNnCiLrr2+ShkYC8140YWyWClQ
-         Rri6ohEaOIrUqMajqiOy69bK/v/ys5Kk669QqG71hZmd1ktnRH/YwFqjCoDl70y2oS2X
-         ur718aWVnI+S6ddcwTPBV9HwBBiKd1uqd4oKF4rNj5qghNRQSvaLUjycJfcJO05Ddq9M
-         BjPDDrLbSGAYtjF3Cd8Nd/nAVtOxqTfPEcj4brk26o4rM7+YGqDQiPsmLgfiM/iNmK7O
-         hdcA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5poNLMAs2KymDrKhXdj+jtBgWnCb31+FdTG5qi4yb5FlCLdyZYCOD3++IG0jWbCcryaaHhUTew12IskQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOo+p07MHR6EFO1yN1vxHOG4frPn+vyi/Gb6xn/B84DwPjp+Lk
-	qW5PxuuFd2wMtryi0LKY0j1KNZescAe5GhCv9mCc+C6jX5QNeJmHPoUEr/jDJk4=
-X-Gm-Gg: ASbGncvy/Yn1zTsjBMXHIbq9VPMKC5W2Kr2gHfHhKZRaBG75eggmYuDzmor2zKbb9K9
-	AbrUOw2DDFZH+Tf9HSFgq7ZtNgbI5Jk4HfvEs59+rOSsbovF7sRKEvjFeyINXd3JsjD1v8h0fiB
-	pRIQKGkzP3t0yrNKtJHalfnQO/7iQvBxJfUak8T+DMYAxly/pIfT4W4kI49iqtHmnLqGIqZltJ5
-	nwstWx+HZgXE2Vtzd+6qACcS1ZbBs/hE4VAKPqNeAYCKR2FoJezsqfTeeVzXXdcP9MX5uNNoUX7
-	DAk7QwDBxl+NWN0JYZxdI2T1XRhUDUE0kfHavoEUt4X8Y+CdzEqoNWOydxqnqiDJOIVi9yDIAQ=
-	=
-X-Google-Smtp-Source: AGHT+IFDiZ0cnV2ayvj8DA4Rl4xGe57ExDt/t21NR6kpjVQ87p06SQ/qaCpf+bTExejAD5z/3aBKUw==
-X-Received: by 2002:a05:600c:9a5:b0:43c:f78d:82eb with SMTP id 5b1f17b1804b1-43f115eb698mr9593075e9.15.1744099648109;
-        Tue, 08 Apr 2025 01:07:28 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec17b0dbesm156568955e9.33.2025.04.08.01.07.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 01:07:27 -0700 (PDT)
-Message-ID: <7222bbbd-51f7-43b6-9755-29808833cf5f@linaro.org>
-Date: Tue, 8 Apr 2025 09:07:27 +0100
+	s=arc-20240116; t=1744099715; c=relaxed/simple;
+	bh=r+T5hIHBLgYvpmfuRv9rLfqPaPhsXS05wJYQCJNX7Uw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tQed6t/7mmkVNBxrIrr9WoQKy2TB34puYObCcLpYkBlDrKzYNd4FCPXhWonjZvjc2XK9uOJDmQL1baDVw3Uq8KnUQcvDBkLwjhGD5fJbYrYM2iaIulMxhn9UEDmEuI2ZlHeAsNVuD9RaSl/n3VeOUzgJZ/5ru8hC3nE3H/HVYVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZWymr5bcnzHrFr;
+	Tue,  8 Apr 2025 15:45:48 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id B585D1800D1;
+	Tue,  8 Apr 2025 15:49:11 +0800 (CST)
+Received: from [10.174.176.70] (10.174.176.70) by
+ kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 8 Apr 2025 15:49:10 +0800
+Message-ID: <bfa5e258-fcca-4bb8-b5e9-50ba8e7fa249@huawei.com>
+Date: Tue, 8 Apr 2025 15:49:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,78 +33,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] ASoC: q6apm: add q6apm_get_hw_pointer helper
-To: Johan Hovold <johan@kernel.org>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmitry.baryshkov@linaro.org, johan+linaro@kernel.org, stable@vger.kernel.org
-References: <20250314174800.10142-1-srinivas.kandagatla@linaro.org>
- <20250314174800.10142-3-srinivas.kandagatla@linaro.org>
- <Z_O2RhwYp6iy02cM@hovoldconsulting.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <Z_O2RhwYp6iy02cM@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH net v3] ipv6: sit: fix skb_under_panic with overflowed
+ needed_headroom
+To: Paolo Abeni <pabeni@redhat.com>, <davem@davemloft.net>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+	<horms@kernel.org>, <kuniyu@amazon.com>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250401021617.1571464-1-wangliang74@huawei.com>
+ <fe13ece8-67ea-48c0-a155-0cb6d2bcfc52@redhat.com>
+From: Wang Liang <wangliang74@huawei.com>
+In-Reply-To: <fe13ece8-67ea-48c0-a155-0cb6d2bcfc52@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-Thanks Johan,
 
-On 07/04/2025 12:25, Johan Hovold wrote:
-> Hi Srini,
-> 
-> On Fri, Mar 14, 2025 at 05:47:57PM +0000, Srinivas Kandagatla wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> Implement an helper function in q6apm to be able to read the current
->> hardware pointer for both read and write buffers.
->>
->> This should help q6apm-dai to get the hardware pointer consistently
->> without it doing manual calculation, which could go wrong in some race
->> conditions.
->   
->> +int q6apm_get_hw_pointer(struct q6apm_graph *graph, int dir)
->> +{
->> +	struct audioreach_graph_data *data;
->> +
->> +	if (dir == SNDRV_PCM_STREAM_PLAYBACK)
->> +		data = &graph->rx_data;
->> +	else
->> +		data = &graph->tx_data;
->> +
->> +	return (int)atomic_read(&data->hw_ptr);
->> +}
->> +EXPORT_SYMBOL_GPL(q6apm_get_hw_pointer);
-> 
->> @@ -553,6 +567,8 @@ static int graph_callback(struct gpr_resp_pkt *data, void *priv, int op)
->>   		rd_done = data->payload;
->>   		phys = graph->tx_data.buf[hdr->token].phys;
->>   		mutex_unlock(&graph->lock);
->> +		/* token numbering starts at 0 */
->> +		atomic_set(&graph->tx_data.hw_ptr, hdr->token + 1);
+在 2025/4/3 19:50, Paolo Abeni 写道:
+> On 4/1/25 4:16 AM, Wang Liang wrote:
+>> @@ -1452,7 +1457,9 @@ static int ipip6_tunnel_init(struct net_device *dev)
+>>   	tunnel->dev = dev;
+>>   	strcpy(tunnel->parms.name, dev->name);
 >>   
->>   		if (upper_32_bits(phys) == rd_done->buf_addr_msw &&
->>   		    lower_32_bits(phys) == rd_done->buf_addr_lsw) {
-> 
-> 			graph->result.opcode = hdr->opcode;
->                          graph->result.status = rd_done->status;
->                          if (graph->cb)
->                                  graph->cb(client_event, hdr->token, data->payload, graph->priv);
->                  } else {
->                          dev_err(dev, "RD BUFF Unexpected addr %08x-%08x\n", rd_done->buf_addr_lsw,
->                                  rd_done->buf_addr_msw);
->                  }
-> 
-> I just hit the following error on the T14s with 6.15-rc1 that I've never
-> seen before and which looks like it could be related to this series:
-Its unlikely, but the timings have changed here.
-I have not seen it either, but I will try to reproduce this with 6.15-rc1.
-> 
-> 	q6apm-dai 6800000.remoteproc:glink-edge:gpr:service@1:dais: RD BUFF Unexpected addr ffe0d200-00000001
-> 
-> Any ideas about what may be causing this?
-How easy is this to reproduce?
+>> -	ipip6_tunnel_bind_dev(dev);
+>> +	err = ipip6_tunnel_bind_dev(dev);
+>> +	if (err)
+>> +		return err;
+>>   
+>>   	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
+>>   	if (err)
+> I think you additionally need to propagate the error in
+> ipip6_tunnel_update() and handle it in ipip6_changelink() and
+> ipip6_tunnel_change().
 
---srini
-> 
-> Johan
+
+Thanks，I will add it in next patch.
+
+>
+> Side note: possibly other virtual devices are prone to similar issue. I
+> suspect vxlan and gre. Could you please have a look?
+
+
+Ok, I will try to reproduce the issue in vxvlan/gre scene later.
+
+> Thanks,
+>
+> Paolo
+>
+>
