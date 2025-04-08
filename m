@@ -1,81 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3C0224AE0
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F06224AE0;
+	Tue,  8 Apr 2025 18:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744135979; cv=none; b=RJP2MNPHxWQJvIaSPrtakkTotdmVC+rxKBrmosvc2/n5nvuXq5bJuQxRz3GsTM+cKcFtBUi0CU/LIofuEkyCESbMA4P6XD4iLPduORbNgya0UgRaT6bEN50DvDqWjBKoEMiqra2SBXKAhwkc8duhivc6JhRTxwTk+heN2u42jaI=
+	t=1744136015; cv=none; b=g0L5YZ7yM4XUUgTD6FSW4QakIdMIi8UKKUAM3zSfKRUG0uQx4qb/YYBII5mdK2HHMbZCsbDxEvURpPQXR0xGXtl0AA17B47leRYNlZUDvqC4z7EfOWSCdoKVTCdMh4+LzU3pRVq+qYz/kGqB+CB1wJojeE9Isd7Lwqen+iPyP8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744135979; c=relaxed/simple;
-	bh=SEYMtGN2s9cKuK2V1zVNlrzWEmIY+k7uAhMwzkbcrI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OYt5l3GqXTFNLOI7GBWsD1BZzHe3rMfQzv3eDuLIOnHdejl/YRmVrxBjeKKIbeBONwUQPfxpn3oqEydNlXuPj8zFVYaPFrzyRWhPziKjmAF8lXZOTweHP5j++dbx3s9eZzSikHu33Crg4mVlq6fP4vpS1Bctgsq6u6bDR0I/2zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qN6wyJqB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744136015; c=relaxed/simple;
+	bh=wdMng98/x4kl6XcJDgkqzLDlA8cJTi2eaOzpqoSa4b4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dBkVjAepMsnnCN6HAYpfKem38Om6BlvhtduTqf5VNlcMxnacAgE5na7KRY3Uc97EwPob+ma5SILRqGRcciRKimXS/IWmz7zMdSxWCEQtyZDdBymhLwcJKvSd05eV3DL1P1UzpTYDg2KsT9FJqqh3wAVCv7GCPoKywDlK8Hk96sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DbyzvJnU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qN6wyJqB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 138DBC4CEE5;
-	Tue,  8 Apr 2025 18:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744135978;
-	bh=SEYMtGN2s9cKuK2V1zVNlrzWEmIY+k7uAhMwzkbcrI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qN6wyJqBOCnBU4HhCAEQOTQ2O88yVnG7rAG1mDXa3uJflqjaP/UzdHQx47wmN/8Mc
-	 Q9I3JEgJJqI4PtESaCu5kpUzvz1E51Z4dSs1le+WJINn0Ren2MacKptGWlqVNE8trT
-	 uf1G6WqiLISiCegFEyuz3I2QCT4iBzpft/O/TtMvn2mS8M8ZjDmWJmfMOtR6cxQUgO
-	 +sN5wjOayQSlWl7nBA+fZEsVZU6LxppB+jj9CftUKfcNp4v8dFJjKaSQqXSSf2bto1
-	 Ey72vQqRYugjHEa3CeMrSSyPjEo3eQFBow04rgji5LVtRLfHUf54QfKC2kMjj/DXst
-	 Vnj4TZ3mhX3PA==
-Date: Tue, 8 Apr 2025 08:12:57 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH sched_ext/for-6.15-fixes] sched_ext: Mark
- SCX_OPS_HAS_CGROUP_WEIGHT for deprecation
-Message-ID: <Z_VnKbElcEWWg4CH@slm.duckdns.org>
-References: <Z_RdpDkLCXm140RT@slm.duckdns.org>
- <Z_TXIe2fVpAt-CAg@gpd3>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DbyzvJnU"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538B31IJ015072;
+	Tue, 8 Apr 2025 18:13:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0y6b8/5pR/Ib0BDUjpJtu40s1XQAZ2OxuSBQWOHL8RY=; b=DbyzvJnUPDvzHqYm
+	09PoifKgkbJNCbAL2LEtGpOG7SA1xqVdiKx4+1NOEZO/GgbWRRLtIQ6a2dho1I+/
+	V2LGJpdDSG9xhP2RY1Np1qz3tS/f2lqccDx3H9LTaqJHPlJSVIAO5gOv3Dbm4Bf3
+	8FJuoOHSjo5LXl5wRcxlaF38f/WSuCJGnPcm9ZxuIDfycHHuLPXb+tIqkHJ8me9t
+	5xFapYd6qLk0Ho2mve7Ow0l4aHp/B/FK5qr3LRp2QwGwRx+n0rYXOP1cVKSCyVKJ
+	+x+WaPJBwHzrqEzkfpo6Ihako1UBzlb/Db7GpDpOL8FJ3h+gjGZX8xyoLBZxyVSr
+	Wqi+XQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbuguxn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 18:13:25 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538IDPrF006879
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 18:13:25 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 11:13:24 -0700
+Message-ID: <5e64069f-d93e-404f-a4f1-99f2ef101f5f@quicinc.com>
+Date: Tue, 8 Apr 2025 11:13:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_TXIe2fVpAt-CAg@gpd3>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dpu: Fix error pointers in
+ dpu_plane_virtual_atomic_check
+To: Chenyuan Yang <chenyuan0y@gmail.com>, <robdclark@gmail.com>,
+        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
+        <marijn.suijten@somainline.org>, <airlied@gmail.com>,
+        <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250314011004.663804-1-chenyuan0y@gmail.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250314011004.663804-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ry4NnG94CZzaGpJUKZUINO3P1cdbO0Qa
+X-Proofpoint-ORIG-GUID: ry4NnG94CZzaGpJUKZUINO3P1cdbO0Qa
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f56746 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=fWY0QR86pWCIX_IcxasA:9
+ a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_07,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1011 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080125
 
-SCX_OPS_HAS_CGROUP_WEIGHT was only used to suppress the missing cgroup
-weight support warnings. Now that the warnings are removed, the flag doesn't
-do anything. Mark it for deprecation and remove its usage from scx_flatcg.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Suggested-by: Andrea Righi <arighi@nvidia.com>
----
- kernel/sched/ext.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 21eaf081d336..fdbf249d1c68 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -163,7 +163,7 @@ enum scx_ops_flags {
- 	/*
- 	 * CPU cgroup support flags
- 	 */
--	SCX_OPS_HAS_CGROUP_WEIGHT = 1LLU << 16,	/* cpu.weight */
-+	SCX_OPS_HAS_CGROUP_WEIGHT = 1LLU << 16,	/* DEPRECATED, will be removed on 6.18 */
- 
- 	SCX_OPS_ALL_FLAGS	= SCX_OPS_KEEP_BUILTIN_IDLE |
- 				  SCX_OPS_ENQ_LAST |
-@@ -5213,6 +5213,9 @@ static int validate_ops(const struct sched_ext_ops *ops)
- 		return -EINVAL;
- 	}
- 
-+	if (ops->flags & SCX_OPS_HAS_CGROUP_WEIGHT)
-+		pr_warn("SCX_OPS_HAS_CGROUP_WEIGHT is deprecated and a noop\n");
-+
- 	return 0;
- }
- 
+On 3/13/2025 6:10 PM, Chenyuan Yang wrote:
+> The function dpu_plane_virtual_atomic_check was dereferencing pointers
+> returned by drm_atomic_get_plane_state without checking for errors. This
+> could lead to undefined behavior if the function returns an error pointer.
+> 
+> This commit adds checks using IS_ERR to ensure that plane_state is
+> valid before dereferencing them.
+> 
+> Similar to commit da29abe71e16
+> ("drm/amd/display: Fix error pointers in amdgpu_dm_crtc_mem_type_changed").
+> 
+> Fixes: 774bcfb73176 ("drm/msm/dpu: add support for virtual planes")
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
