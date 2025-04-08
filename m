@@ -1,101 +1,132 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A103D81;
-	Tue,  8 Apr 2025 04:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DCC3D81;
+	Tue,  8 Apr 2025 04:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744085809; cv=none; b=Kck6jgaTZq8hgsUT1lo3QCf0AfPq68th8+VshyOuhNU5045IDS+p5OSgPVsZtmLzPWXusGnxNX8YCWxz9eg/VeYro0NEs0GOfVDn65cg2LjPfr8p9nSU7iQQoxqjwgarQmnuCQYOyiOw4VLrLDndgHp5aXOhRKvu1oMCd+LCfiU=
+	t=1744085893; cv=none; b=fqJNsCz1nMN834H4WKIXQAdNZsHX+6qmfIVG503TovSdf1JZlB/+NUvhxgRNhbk6WGa15fYz2ex2VTNsrfYKD1OU7LNXnif6R9Dojogkz3atXmp79bB9V7ChpeSDBApQBd/ISl4JlSShH0ILld1/cgFau+BoGll7oIxrNgbfyZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744085809; c=relaxed/simple;
-	bh=1zDY2PQ7EejFS4wJEh5V7NNvFMuUKFSkFa/g1W1+9Os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SqvDgJj7sh8E151FsT1e53SYbfSMOJMiz2S6m1y3a8UQexSdroNzv0Bi91Ic7uc3tw/Cp1/g9+ppVH5IMiXlrjILZTnSzJ4xbJF66I/S9n746KaSzcqXM4laaRKnkESkcegD0v4+dsxQUEz0XM/mI9IdQMi4Bl6V4oDk8iizBVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXR4Uh6B; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744085893; c=relaxed/simple;
+	bh=O/Tn1U4L5YYmQ1KHlDb+KfX9uYMb4KE782y8YRNBRxc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ua/i7NhxJWCu6PfOB8cfMYf4KUAD0Kahl754L/+ki8pPdgfeKo+xhkDt8efzUnabx2MlLcO6+/iZhpY1nDGWuxouXXsO/DcbxAA1vv3Siiq45BDypSd8iEO8UCw6JIOocOTcOALUuDD2tFvLwKckUo8uxQWIHMpMEvVVYbl4rvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=mGVSFPDQ; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXR4Uh6B"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e90b8d4686so42152306d6.2;
-        Mon, 07 Apr 2025 21:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744085807; x=1744690607; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MhpaoeO7h/qkpEkWkHzuOXqZ0v7YjgSsCtzrFEagf8=;
-        b=eXR4Uh6Bu0PczzUsDosk8z+2N2+wPx80y7YwNYQrDyYuMpfhBdyMrNI2Z5eTUFS5un
-         N1sIz6a+uQD7U8VV8IlYJNyKPUtRLyvhF3Lci1Rtsi9s/xV0pqKuJmfer21/1Mc5Y+lf
-         sAcCs92nIWnY5fzQgbOk3qNan2dEdJuOceAjueyOPvhRXeu4/VCHxbSwOFPkNyZHSazX
-         cwgWUrPWflibZJmP4czc8zZzVfsQxcoY0OJeKD2SBM1Ru3w0M88NxQmnmPZm2iWPGzZo
-         afbSAxW5voonr5G8fkkmL/O0SxOkTNywUuoNdiPFFYTNdRzbb6Hv78c1YOoEu9AC74xc
-         W5qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744085807; x=1744690607;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7MhpaoeO7h/qkpEkWkHzuOXqZ0v7YjgSsCtzrFEagf8=;
-        b=jcxrh+WuDnWkR7zmRWON3d6u/dlCUOxrBCfo3sigf44TDOO6+ZqZdZ2K+HXvv17hWE
-         Lld+lNyN32Jsnow5UzHKuG/v/mioqojRbQwLO20PUJLYQjasKslG64nDXRyld1rqNkef
-         Kp3WGfw0PVOilC7yfj2Zmx4onlG474jzrA3Sxr97mUijsYTmxmremMOi5bCgr+RsJ+cF
-         6727xrXr2/AbvpWynaL+JRSy+BghFwTBJ7c66E5iweiOITL9ZmNFL2pPcUtXy0DrUPi6
-         81wZE/7YjTi3ddMkCvEynd15w9wgYnMYfzNpk/D6h5lvzPP79plDFkX2XiOAJUKyZFWA
-         b0XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaaMDhz6oUesJViLSKExZofdlb78ZgS/bfKl+Tc/qFxcQDcTeqrJJPeKHmfWWAPwlVH83jTmAJGgUi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwaaJY1ATMxBeQy9F3LbmuNQyLWgQUYezNxH8nEiNwUai5r+q+
-	yGFShevKp8ionujXnfnYwUHT+wBJK9fXsguBkgD20tdZi0Y6UrGD
-X-Gm-Gg: ASbGnctMDolp6OzN0mnEb+Y3SBsKxA07BitpNhekQ2E3ZBiZlX6C1neHLRCdh35ueH9
-	aAhssqFdEDqlapTY9KjD/yP87n8cXAtivo0LRJeREdIpaJ57ToeHPLf0hI7rLgcKaFhVDcJxYrc
-	BM3KQzqsjJxHNMSTYntkcF42urjW4bygk7Piuk22Q7dfaIPkfDUR7nmHN65yPL2wkQ30bffbbOk
-	usFVhUyckt1p1E29r0g2k2JrwbQsSzhDtUSpq6TcJ/2Thi7QVA6YrF4PoPyAzMqG4y254JQv7Ab
-	hJ2ZYvyLzKAcyR2dgYavaFbVHdcFpFE=
-X-Google-Smtp-Source: AGHT+IHpkJl0weG7b+4Z2c/EtaTVZb0bclvZQq/iKfwqfKQSUH0SB7w0ljXe5+mA6VKUSb4sI3zcjQ==
-X-Received: by 2002:a05:6214:c64:b0:6e6:6b5b:e559 with SMTP id 6a1803df08f44-6f01e7901c7mr249976466d6.34.1744085807163;
-        Mon, 07 Apr 2025 21:16:47 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f00f2e0sm68304906d6.36.2025.04.07.21.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 21:16:46 -0700 (PDT)
-Date: Tue, 8 Apr 2025 12:16:10 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
-	Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v2 2/2] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
- interrupt controller
-Message-ID: <g5ahbuz3uju43qb56xvhx7vi6yuabn6wlhkzeaqfddhxlbo7eh@4dvxswztbn5a>
-References: <20250307010649.422359-1-inochiama@gmail.com>
- <20250307010649.422359-3-inochiama@gmail.com>
- <87jz9147tl.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="mGVSFPDQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1744085891; x=1775621891;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O/Tn1U4L5YYmQ1KHlDb+KfX9uYMb4KE782y8YRNBRxc=;
+  b=mGVSFPDQxQ2S6/fOlY/FX9AIOW09Og0aHL0l/L4X9FCcwZuJVYfxoThi
+   0WsmF/tP8mQxAzLq0Zm/ax+hQE+UBqzMlrwrk/j6q1khSzE4bvDug6KCx
+   dH6maWnRrodY7YSRbKy1R5IcWJPUvnmnbP0fzIoZ3rKcRgWpRKQg8eD4j
+   Xh5awaPY7oyZgNuwTwoj1LnJyqQPWkuV6vs2WKqnegSnBRz5ldPUI5yH/
+   1EfBr6S67qTfyD9ylaHiaiVMgzVec730N+vy/yS8Li+A5cAYsvbCwEw3y
+   d8CgUxUkhpgF+hggkhy8dh9nR3IwSJbKVlLHQcRy1fN2QaxkRWeXgEBjU
+   w==;
+X-CSE-ConnectionGUID: xdMbCyNxQ9uH2vgM4dalFg==
+X-CSE-MsgGUID: PTUOwp60THqMQBXcua4wvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="194925658"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739804400"; 
+   d="scan'208";a="194925658"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 13:16:59 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 24823DBB87;
+	Tue,  8 Apr 2025 13:16:56 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id D8EEED8AE6;
+	Tue,  8 Apr 2025 13:16:55 +0900 (JST)
+Received: from iaas-rpma.. (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 2F7731A0078;
+	Tue,  8 Apr 2025 12:16:54 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Cc: mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	Erhard Furtner <erhard_f@mailbox.org>
+Subject: [PATCH] crypto/testmgr: Fix acomp_req leak
+Date: Tue,  8 Apr 2025 12:16:47 +0800
+Message-Id: <20250408041647.88489-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87jz9147tl.ffs@tglx>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 07, 2025 at 08:29:42AM +0100, Thomas Gleixner wrote:
-> Inochi!
-> 
-> On Fri, Mar 07 2025 at 09:06, Inochi Amaoto wrote:
-> > Add support for Sophgo SG2044 MSI interrupt controller.
-> 
-> I asked you in my reply to V1 to split this up into two patches:
-> 
->   "The conversion of the existing code to this should be a preparatory patch
->    for ease of review and the support for the new chip built on top."
-> 
-> And yet you come back with a patch doing both things at once. Feel free
-> to ignore me...
-> 
+The kmemleak reported that
+...
+unreferenced object 0xffff888108d6c300 (size 256):
+  comm "cryptomgr_test", pid 183, jiffies 4294700957
+  hex dump (first 32 bytes):
+    00 c1 d6 08 81 88 ff ff 00 cb d6 08 81 88 ff ff  ................
+    50 cd a7 81 ff ff ff ff b8 fb 93 02 00 c9 ff ff  P...............
+  backtrace (crc 29cca632):
+    __kmalloc_noprof+0x2fa/0x430
+    test_acomp+0x174/0x960
+    alg_test_comp+0x6f/0x90
+    alg_test.part.26+0x105/0x410
+    cryptomgr_test+0x20/0x40
+    kthread+0x10c/0x250
+    ret_from_fork+0x30/0x40
+    ret_from_fork_asm+0x1a/0x30
+unreferenced object 0xffff888108d6c100 (size 256):
+  comm "cryptomgr_test", pid 183, jiffies 4294700972
+  hex dump (first 32 bytes):
+    00 1d da 08 81 88 ff ff 00 c3 d6 08 81 88 ff ff  ................
+    50 cd a7 81 ff ff ff ff b8 fb 93 02 00 c9 ff ff  P...............
+  backtrace (crc 3047d62b):
+    __kmalloc_noprof+0x2fa/0x430
+    test_acomp+0x174/0x960
+    alg_test_comp+0x6f/0x90
+    alg_test.part.26+0x105/0x410
+    cryptomgr_test+0x20/0x40
+    kthread+0x10c/0x250
+    ret_from_fork+0x30/0x40
+    ret_from_fork_asm+0x1a/0x30
 
-Sorry for miss this. I will separate this thing in the next version.
+acomp_request will be chained to req[0], however,
+acomp_request_free(), it will not free the whole chain.
 
-Regards,
-Inochi
+Fix it by freeing them one by one.
+
+Fixes: 99585c2192cb ("crypto: testmgr - Add multibuffer acomp testing")
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Closes: https://lore.kernel.org/linux-crypto/20250408002741.089f1e9a@outsider.home/
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+ crypto/testmgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index abd609d4c8ef..7f02feee9fb6 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -3498,10 +3498,10 @@ static int test_acomp(struct crypto_acomp *tfm,
+ 	ret = 0;
+ 
+ out:
+-	acomp_request_free(reqs[0]);
+ 	for (i = 0; i < MAX_MB_MSGS; i++) {
+ 		kfree(output[i]);
+ 		kfree(decomp_out[i]);
++		acomp_request_free(reqs[i]);
+ 	}
+ 	kfree(dst);
+ 	kfree(src);
+-- 
+2.27.0
+
