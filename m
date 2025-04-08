@@ -1,225 +1,173 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51E22D4E3
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6F12C9A;
+	Tue,  8 Apr 2025 20:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744142774; cv=none; b=odSmraUjciUuUxVe4pm+TDC5mjImr33S+GNR9GLR2l1RVpRV5NgNQ1yEUB4KUgqSz0e3VgGrn5secTZQuBHfWcNVz1nTqwfY2HbGdDPfSsWUQJxbWFrzG5cvGVHrM8mfgXPVNtEebcMt+1gYMsnPlwCTMgf7MaV/SyptRcsSgro=
+	t=1744142968; cv=none; b=fD3kwdD7mHFDkQGU9y7fA1banT+vdF+8bJVVPjuOh5nh0oPgLyo7yNqB09wr1RuqvFfS2I2vxcJnqW2C7Yyk2jt2mfMfoJDRyuXaLir1htQm0o9J0/SWxeRrJXWkwOuxwgyg2AY3OGn9A3qA0zc59dnt4HgyI81U/aEpgaJeXt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744142774; c=relaxed/simple;
-	bh=R9PCiNpANQ/2Ogq9pBPCw9qkkYLJ7a61+GaIpIVoMnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ANz/NFJx5Ujor4KaXAbYhNypLsUDhuJ16omaySmr77aXVz5RP8c6WT/7fnEJRSuCH+je6wPrqEWOWexz015w4oWEKC/vboCg44C3/dy7ZDkDuedpESnBhxPec/yl8pb8eKIjkZrML1HxKFy3iTrpO3ZP3tx0VAvr+PlOn4t6vyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xqgaMMh1; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744142968; c=relaxed/simple;
+	bh=aNjMjBImuHWm3Za2GhViisBUEbWGiBpRO0GDHuabOik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HToH6t5CmTA8YG0pxFvCgDyul95cN5FMPQisEGfXOMP1Fp3kDiL+/NsrZnoDLSf0adGNKaJ8Nk7PQEBDfzFzy8dSvR+lFgM+EQonqWaHfDqjCvD7+nv0M28RLr6u6OP/zbi4RQVyeOQi+rWl5KIbSSVMZ9GMgZ12Rmqv1NiHBZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itvuakTL; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xqgaMMh1"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so10795583a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:06:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itvuakTL"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso40791355e9.3;
+        Tue, 08 Apr 2025 13:09:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744142770; x=1744747570; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8JzI2Fad1qStdj7myeloioDMtZwRVS+qT9EnHWQFGp0=;
-        b=xqgaMMh1nx0GMjBkVvbKiCbVry+iksAqWB45zEoRmiZhhd6+72ORQXUNK4BIvcR6ah
-         gIFvsAJWdbm0nmvhWYoC/r8znolp3YfJJAfOozcgCiUgTxt+8LheKre467ENNA8hHsN5
-         iqMME34m3zhVNS+4R8jYZaV2LRKMpYbPHylgzCOLsRER/14FMzTW6V4UfCb+OouOHC6D
-         3aspmi8/Og6x+32ZiLsCA3DHDsL1y9NhQB0s4bXMoPgxwWqSDaDY8yR2nc+PPI2dJL+0
-         gXb+Lg1BUo6uI9K+tE38dlnWaSRd7z2zKAiVZI88tAg2lH5NxGVDdWNM1ZV5sXvVn3oS
-         j5CA==
+        d=gmail.com; s=20230601; t=1744142965; x=1744747765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HxycxmR24mreWb3qYHH41P8fRm9tAvDYgVZJX5g6AZU=;
+        b=itvuakTL3++YyIBr1GCEVegMvmJQnE9Ex3DgDIM3Zna63m6CxZ0QbMEN+DrlnWQ2Sw
+         JGqGsHVtB1KO6XwPXiRMUU/AVjnF9aK9d6xF4C6UPLjiuqVPXFPUx2/8V9KJupIs8ozA
+         vgFWbv6rLwl9YtTKwcqbNwLvNye8VlXS5bNIzyUDXU73OVCU9Epg3FrMMYk0AbUkaAVZ
+         7cQ3w3vFEj2rDIZKmx5YYEXQQIk7MDqj6xrsXDYP8KwtsqfJLZ15zfwazRufC8vQJmuT
+         ObK1zBeTvQ4myn9GiUHJDclYF65kHtQ1afYWKU9cN+NDDiRte1WdwMmHEf0Z77fO+wSQ
+         ybxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744142770; x=1744747570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8JzI2Fad1qStdj7myeloioDMtZwRVS+qT9EnHWQFGp0=;
-        b=kmDiJrJTPSHLv+KAPPtSooQGL0U/EwPVGQ+PZyYHr2aUBSa2ZVuaM2vPu+G+CByws4
-         pzimQSa7LzN2ZI+RYl5CHR81GnXH0z/clvL9T02Ae3sL41xmIEWlypJC7BossUh6wWlA
-         I/6tE/40FBN9ZlJycQEewhdFInjGKA5ZHIWmNYQpqnOTzBaOmpI7C3YswpJIl4lOZPID
-         91LwG5zG09oeDXkfBK83Phvpzq6Zk/C6sDRkvUj31Cc6J/LZejSQ13Av6vjiAr9Vwfw8
-         HYJ6FCp527aSHWlsx1MODbHs7tc/6VNj26dUJh2GH5n2dQVbFFtBztHq9vlQv7jm7NAv
-         67FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAIT8xf5CJpYtHrESCBtxJ8tZK2WP1Mt3W9Hhqs9dqFpUfjFgFPr7p265fj594G+Q3I5S3mKQ9SaqTQvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF00GlOL1TYxzrWKPq1+nUXHREntfQuak7SRn5CnGtQa2OeEzx
-	UE67dwWiuv3fjyxyz2HEvj6+k7NU8/DKYO64Ay0RsulO9jShvWGxzJlzdQv7d7rdZnuRZkIxoTy
-	wv3c=
-X-Gm-Gg: ASbGnctiTinMs77ktNxzuX0TY8JHvCDo++NHkfZMcchjdobK1EJnX9doEVo4yvlag3r
-	hPGZSK+q3s09e4rP0UGOwuLhrfsG1rQQY5u1cgsJhBEC5DxSHWj5q/CEpbAlBkTWB2WQ04ulWzS
-	VkqNb7cW5e33JUcfn++0rCmUCfanfcfXHzvSQhyBm4xXwW7AL0kx8Qptff5X23xUSHam2vxkm2Y
-	LgyfDLfmThat5RG6cRJgwKbF494OuYC35NDGDEhuAwGesu7NiH7RUSNv5fkAJDaCKQIaTFi+fh/
-	KSnEtO0fbMzM2JN5OzopnmRWKNBWg40AcXVAg3Ab3zFood9hS8v7nylhncyU
-X-Google-Smtp-Source: AGHT+IE49M/kqxjtubfVfqnLxbn/lTtUD71TX2aCNejDDB0JUePKUsJRrv4E8awwYqNM81Srnj6e8g==
-X-Received: by 2002:a17:907:9727:b0:ac7:18c9:2975 with SMTP id a640c23a62f3a-aca9b747a88mr39391566b.48.1744142769597;
-        Tue, 08 Apr 2025 13:06:09 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ac7c013fda7sm964912966b.117.2025.04.08.13.06.08
+        d=1e100.net; s=20230601; t=1744142965; x=1744747765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HxycxmR24mreWb3qYHH41P8fRm9tAvDYgVZJX5g6AZU=;
+        b=K78wBAF7BrPS41sYapHnMyB9FZWLEeS/bkBzyL6JyRjXSfH1EMdvFrt5nHo+mnQnad
+         M3whVV+On+RWKXvk0vSI9Q5KmUHwzgT1fEbUzN9hyuGbVC/c0RdIu1D/lVSmcRP9B4eG
+         DfbfzdkCw5Owp/cJIpJ1WTox37UYwiG6rs9BcAQ+eN6e9enCuglceRpK/nIHrSghR6r2
+         y1yFsMNPPVG1VysrQbUuzjkZy1FJo+zaJH2qK9kd9VtwdeujH9NVLyDltLZqedhVDs7l
+         kmZXsbXn7QF0V/5MD2Ab4Frug10HXdWJSvh2VZ8mskJu0IRFNaq4pPrgsuHDHA0if+1K
+         R3jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtfBuTOVgfKzj0BhiQShXeQ+8uBCAby7hai+gy3mWdGfR2Pm/9OvCL9HhU1o3IiHm3km2FPtghqf3h@vger.kernel.org, AJvYcCVgGCnk3RFjyb5n6fImWOz/Nt6rqVLC9XFMmyBVCBD2GJoKvB9x/ac45qA2SDYLvkNUtHlU/Co7SA4HteO9@vger.kernel.org, AJvYcCW8qACsIAcRiXzJGJmtn+y/xsPWodHQdPjA60/tLpXLb8+UUNdMfSbCNnwevk4pFfNA+IK4YqzI79Fl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkaWeihV6ZJPu61nFYzbdSQF6c12HX3+6DY/SSR1Mgj7qqUIRG
+	jY8hKTLgWTk89tsIHNWVe+/5hH90WxpojIMcsFCjF63vGTN+61Ru
+X-Gm-Gg: ASbGnctMvQKWGutjZGqxvfYOicbYl1soF9sYm+ebCQiL4J5BDhsD7AG+Ml0nXNdzMj2
+	CbQnWcpc9XpyJSHl9kjbX3hZ9YQwP9P/w7rAdzWw7fT7uiMD0vjjZY4ZFLTeSAtFkLaNZni4C3y
+	INmHy/9XHmII6sT96taMMX6ss2RCC21FMeh1M/oqTn1t0daTQvbQ13M34bAxDU5UxD0UG8DlOTa
+	LH8paAC6E7qygANfHZPFev8fjC8xZWhELJ30xo+diXfm2OsWFNuGWMV0EK50TLYrRcIMuAvoRdv
+	CoVz+/CxzZLEnK8OMvU3RruR4zo/yB3Umvd/EZUOHWy84iZxLaVdJcDKZMfg7W6pjOFdhoCn98j
+	tYyI=
+X-Google-Smtp-Source: AGHT+IG4pnFJ8kcq862U72zyRWeCt8XlAxDg3swXx2I9PFJY/N49qCA0Jg1JfeOeNkChX7NGEB4opQ==
+X-Received: by 2002:a05:600c:5107:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-43f1fdbf975mr428285e9.4.1744142964596;
+        Tue, 08 Apr 2025 13:09:24 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:469:6216:b7f8:fc55])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1795782sm174892875e9.26.2025.04.08.13.09.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 13:06:09 -0700 (PDT)
-Date: Tue, 8 Apr 2025 22:06:06 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Kent Gibson <warthog618@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] pwm: Add support for pwmchip devices for faster
- and easier userspace access
-Message-ID: <fhcqdkipkqymssquk5d2vx5rthbibqxgxn6p4nu2lez4jjjac7@gwamk3plmet4>
-References: <cover.1744120697.git.ukleinek@kernel.org>
- <f31fea4002d62ba5c1f9f95ca58a182ecc5bc3a6.1744120697.git.ukleinek@kernel.org>
- <6779558a-3ebd-4fab-a0fb-95f2936b726c@baylibre.com>
+        Tue, 08 Apr 2025 13:09:24 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 00/15] Add support for DU and DSI on the Renesas RZ/V2H(P) SoC
+Date: Tue,  8 Apr 2025 21:08:57 +0100
+Message-ID: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qpeszjvxckqxqszi"
-Content-Disposition: inline
-In-Reply-To: <6779558a-3ebd-4fab-a0fb-95f2936b726c@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
---qpeszjvxckqxqszi
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 2/2] pwm: Add support for pwmchip devices for faster
- and easier userspace access
-MIME-Version: 1.0
+Hi All,
 
-Hello David,
+This patch series adds support for the Display Unit (DU) and MIPI DSI
+interface on the Renesas RZ/V2H(P) SoC. The initial patches add PLLDSI
+clocks and reset entries for the DSI and LCDC and the later patches add
+support for the DU and DSI drivers. The DU block is similar to the
+RZ/G2L SoC, but the DSI interface is slightly different. The patches
+include updates to the device tree bindings, clock and reset
+controllers, and the DU driver to accommodate these changes.
 
-first of all thanks for your time and valuable feedback!
+Note, my initial intention was to split the clock patches and the DU/DSI
+driver patches into two separate series. However, I found that sending
+them together will make it easier for the reviewers to understand clock
+related changes.
 
-On Tue, Apr 08, 2025 at 11:20:19AM -0500, David Lechner wrote:
-> On 4/8/25 9:23 AM, Uwe Kleine-K=F6nig wrote:
-> > +	case PWM_IOCTL_GETWF:
-> > +		{
-> > +			struct pwmchip_waveform cwf;
-> > +			struct pwm_waveform wf;
-> > +			struct pwm_device *pwm;
-> > +
-> > +			ret =3D copy_from_user(&cwf,
-> > +					     (struct pwmchip_waveform __user *)arg,
-> > +					     sizeof(cwf));
-> > +			if (ret)
-> > +				return -EFAULT;
-> > +
-> > +			if (cwf.__pad !=3D 0)
-> > +				return -EINVAL;
->=20
-> Since this is get-only (argument is purly output), should we not check th=
-is
-> to allow userspace to be able to pass an unintialized struct without erro=
-r?
+Note, the clock patches apply on top of the below patch series:
+- https://lore.kernel.org/all/20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-No, cwf.hwpwm is an input. So I think it's reasonable to assume cwf is
-properly initialized.
+v1->v2:
+- Rebased the changes on top of v6.15-rc1
+- Kept the sort order for schema validation
+- Added  `port@1: false` for RZ/V2H(P) SoC
+- Added enum for RZ/V2H as suggested by Krzysztof as the list
+  will grow in the future (while adding RZ/G3E SoC).
+- Added Reviewed-by tag from Biju and Krzysztof.
+- Replaced individual flags as reset flag
+- Dropped unused macros
+- Added missing LPCLK flag to rzvv2h info
+- Dropped FCP and VSP documentation patch and sent them separately
 
-> > +			pwm =3D pwm_cdev_get_requested_pwm(cdata, cwf.hwpwm);
-> > +			if (IS_ERR(pwm))
-> > +				return PTR_ERR(pwm);
-> > +
-> > +			ret =3D pwm_get_waveform_might_sleep(pwm, &wf);
-> > +			if (ret)
-> > +				return ret;
-> > +
-> > +			cwf.period_length_ns =3D wf.period_length_ns;
-> > +			cwf.duty_length_ns =3D wf.duty_length_ns;
-> > +			cwf.duty_offset_ns =3D wf.duty_offset_ns;
->=20
-> Odd to use different style for setting struct here compared to the other =
-cases.
-> (I prefer this one since it is less lines of code to read and less indent=
-=2E)
+Cheers,
+Prabhakar
 
-Note there is a semantic difference:
+Lad Prabhakar (15):
+  clk: renesas: rzv2h-cpg: Add support for DSI clocks
+  clk: renesas: r9a09g057: Add clock and reset entries for DSI and LCDC
+  dt-bindings: display: renesas,rzg2l-du: Add support for RZ/V2H(P) SoC
+  dt-bindings: display: bridge: renesas,dsi: Add support for RZ/V2H(P)
+    SoC
+  drm: renesas: rz-du: Add support for RZ/V2H(P) SoC
+  drm: renesas: rz-du: mipi_dsi: Add min check for VCLK range
+  drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Use VCLK for HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Add OF data support
+  drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency
+    calculations
+  drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
+  drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Add function pointers for configuring
+    VCLK and mode validation
+  drm: renesas: rz-du: mipi_dsi: Add support for LPCLK handling
+  drm: renesas: rz-du: mipi_dsi: Add support for RZ/V2H(P) SoC
 
-	cwf =3D (struct pwmchip_waveform) {
-		.period_length_ns =3D wf.period_length_ns,
-		.duty_length_ns =3D wf.duty_length_ns,
-		.duty_offset_ns =3D wf.duty_offset_ns,
-	};
+ .../bindings/display/bridge/renesas,dsi.yaml  | 116 +++-
+ .../bindings/display/renesas,rzg2l-du.yaml    |  23 +-
+ drivers/clk/renesas/r9a09g057-cpg.c           |  63 ++
+ drivers/clk/renesas/rzv2h-cpg.c               | 284 ++++++++
+ drivers/clk/renesas/rzv2h-cpg.h               |  17 +
+ drivers/gpu/drm/renesas/rz-du/rzg2l_du_drv.c  |  11 +
+ .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 608 +++++++++++++++++-
+ .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  36 +-
+ include/linux/clk/renesas-rzv2h-dsi.h         | 207 ++++++
+ 9 files changed, 1299 insertions(+), 66 deletions(-)
+ create mode 100644 include/linux/clk/renesas-rzv2h-dsi.h
 
-initializes all unspecified members (here e.g. hwpwm) to zero. I used
-that idiom for ROUNDWF ioctl with
+-- 
+2.49.0
 
-		.hwpwm =3D cwf.hwpwm,
-
-I guess I'll update to that variant here, too.
-
-> > +			pwm =3D pwm_cdev_get_requested_pwm(cdata, cwf.hwpwm);
-> > +			if (IS_ERR(pwm))
-> > +				return PTR_ERR(pwm);
-> > +
-> > +			return pwm_set_waveform_might_sleep(pwm, &wf,
-> > +							    cmd =3D=3D PWM_IOCTL_SETEXACTWF);
->=20
-> For PWM_IOCTL_SETROUNDEDWF case, should we be copying the modifed wavefor=
-m back
-> to userspace so that it can know what rounding what actually applied with=
-out having
-> to call PWM_IOCTL_GETWF?
-
-Hmm, for pwm_set_waveform_might_sleep() and also pwm_apply_might_sleep()
-the argument isn't modified. So while this might save an ioctl for
-GETWF, but you might have to rewrite your state instead.
-
-> > @@ -2115,7 +2376,13 @@ int __pwmchip_add(struct pwm_chip *chip, struct =
-module *owner)
-> >  	scoped_guard(pwmchip, chip)
-> >  		chip->operational =3D true;
-> > =20
-> > -	ret =3D device_add(&chip->dev);
-> > +	if (chip->id < 256 && chip->ops->write_waveform)
-> > +		chip->dev.devt =3D MKDEV(MAJOR(pwm_devt), chip->id);
->=20
-> if (chip->id >=3D 256 && chip->ops->write_waveform)
-> dev_warn("too many PWM devices, chardev will not be created for ...") ?
-
-I would be surprised to hit that, but I guess it's wise to do that
-before it happens for the first time.
-
-> > +/*
-> > + * Modifies the passed wf according to hardware constraints. All param=
-eters are
-> > + * rounded down to the next possible value, unless there is no such va=
-lue, then
->=20
-> Technically, isn't 0 a possible value (at least for duty length/offset)?
-
-Yes, but not all hardware's support duty_length =3D=3D 0 or duty_offset =3D=
-=3D
-0. For those that do, it's expected that 1 is rounded down to 0 (unless
-they support 1, too). period_length isn't supposed to be round down to
-0.
-
-> So maybe more clear to say that if the requested value is non-zero then t=
-he
-> value will be rounded down unless the result would be zero in which case
-> the resulting value will the be smallest possible non-zero value.
-
-Yes, this applies only to period however.
-
-All your remarks that I removed will be addressed in the next revision.
-
-Best regards
-Uwe
-
---qpeszjvxckqxqszi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf1gaMACgkQj4D7WH0S
-/k7qIQf+OXSbZ1DSeV5vNj1SXGQzlDrwa3agtHtdN67dmANV+iBF2QhcdkzVkm+y
-2AymapDUAicmJLSI2GumGk52UB0OrujWadw4LO7S2HiiWZXUuvjCLuyf7MiEtF9A
-PNT+dyigGnZNGA3zhjgufUJhL1bNpd+LULLtenO6O9l1xuzP4yb9ZljF4GQPj/Ur
-/niCuWl3t0cvU+i7MKe4lCWytfy5+9LxF0gnNlfqCPguJfefgiZu/v3lC1qzygw4
-tz7+bUn8Yh8F3tcKVPnK3DMcddGeUGu+vlmYCmUF+uAJoOVgqHpDas8EbHOc4Rsv
-iSOzjAGlvcFAu9DFcwqHUoShvKl2BQ==
-=yUrO
------END PGP SIGNATURE-----
-
---qpeszjvxckqxqszi--
