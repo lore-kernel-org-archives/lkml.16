@@ -1,108 +1,129 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA71B2673B7;
-	Tue,  8 Apr 2025 11:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7380E26738B;
+	Tue,  8 Apr 2025 11:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744110746; cv=none; b=UEHh2W4Jtcr+3eZ3X+kgyq4TsQ3hhZ1QsZLap63tdOOzxchMfieBCHVwRBcaq9JGeSB4GLKUzT9bwU2jioFTrSJCntfZ5DqmeE0yYEQ+hN1MXiSbI47Fpi+uO+acEF+I7hCyiLPFXzqmBCDEtBu/83uFvWsag7ngrt3FlfdkrsM=
+	t=1744111004; cv=none; b=uR82CPrpA3ycjtbBQzaey9PmREIRyTcmpJjlrGoDwV+q5bz/mHPDHd0kF/2IHcjTI0OHEIMqccmjR0BONJ9n58w9PjxDjlDy8vhyCvTABA7pXsOPZCFw4T0uQrAg0UdeCQHZyTcAwKKKmyw6At+VyxTd+09GDHgStWSH0jKYppM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744110746; c=relaxed/simple;
-	bh=3bA+vF5JVbmC0TnjptRY4rNilWV3bxvP9R94bb5l30E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=lMGwbieJ2Mx3f1nlrY54jfumGgCAXME4RTGV+XfHgNPTL+Au/25LvYPvbtgstlrcEGZPm2EBf/L0DJpq9FtwmU2yBPqnbRNhmCJQOIer6maoo+6+jkVSBGsf5KlG0Wcswjl3F2wHf3f9HgYlcyIX/HVfoiybvJQftaRMFzhNaZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VPQjH5tL; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744111004; c=relaxed/simple;
+	bh=Rs1VDrfkKYspHuvyPdg5qkfl/f18RpD/0VWPjsoz9AA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=clJ3InL+6WNbUWIKI3EEmHEBwTHwRLOVezsDic7fN/cVHe2OYlaKkDHaLWO7+389n/6p0RYoNGkiUPCI+aoiRH7joFK42iFk+nDgv4RkviAZSmhp13AXcE0sUiWzcpXIaTcNGwEua49REiMRH4FBJIbm/7tYleGdINI1bggIhhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fBI6Y0Pd; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VPQjH5tL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744110727; x=1744715527; i=markus.elfring@web.de;
-	bh=qW4+zeMTplvB06ndGSbY7x8YIfv7UeLRUmB1CtDRzyk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=VPQjH5tL29xdPVeLSEJWjd6CboTvZok802+ySqWZY/VSKkgdsh3Rc779cMrZaKMh
-	 6PyQR+qhGVySi542hlmt9o9pdAyUV58O4WpKRsntNX/p1xpWv3Fu7NVZmYEmtYPtZ
-	 GCykoN5l+ZZRCydDU/PLGSu4aejdClaa2OOPJ3iws8zyyC54rLGw4gzmtjhH63hms
-	 OuB77THvaHcXYv5b+q2xklGbDTKBpxTi4KjXamj1Y9pwsH3lXMsSQ/ivXRyZK/TaQ
-	 s1pj9Fju/TADs0MuY+Prd9dIGr9QB4GY5WMU0LdwBFiB05b6wBQGW5GOLy5EmdRc9
-	 yMWE+SyQDudD/zf1OA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.41]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M7Nmo-1typcg3iV2-00GmSL; Tue, 08
- Apr 2025 13:12:06 +0200
-Message-ID: <377e2597-fc15-473d-a191-15281c6c4149@web.de>
-Date: Tue, 8 Apr 2025 13:11:56 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fBI6Y0Pd"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DDBCD78E;
+	Tue,  8 Apr 2025 13:14:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744110881;
+	bh=Rs1VDrfkKYspHuvyPdg5qkfl/f18RpD/0VWPjsoz9AA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fBI6Y0Pdl8J5Ng5N9UaqZo3SizMvHnr34sFg4UcRdurTRV+H+QanOe1aW36FBjmqk
+	 V+klsKZEeZP0BT8U4iVyAe8TUgBm3UXQp+1EizvjMCEaVGYSuAoRMLtw/8lcZvY7fa
+	 IrFgyDcWvdsQZZhuUENepJrjpcQHvMvorW8E3upE=
+Date: Tue, 8 Apr 2025 14:16:13 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media: i2c: thp7312: use fwnode_for_each_child_node()
+Message-ID: <20250408111613.GC31475@pendragon.ideasonboard.com>
+References: <Z90qM33DvkTMGg_x@mva-rohm>
+ <20250321104100.GC25483@pendragon.ideasonboard.com>
+ <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
+ <20250408101252.GB31475@pendragon.ideasonboard.com>
+ <3d8546b9-92bd-40da-a61a-4534ba7779db@gmail.com>
+ <Z_T8N8aHR-2OzHAO@kekkonen.localdomain>
+ <6f6a0ade-09fd-49eb-a8ae-ac8849b8ce92@gmail.com>
+ <Z_UDmqZoPtybJr95@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Cindy Lu <lulu@redhat.com>, virtualization@lists.linux-foundation.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Jason Wang <jasowang@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- Mike Christie <michael.christie@oracle.com>,
- Stefano Garzarella <sgarzare@redhat.com>
-References: <20250328100359.1306072-4-lulu@redhat.com>
-Subject: Re: [PATCH v8 3/8] vhost: Add the cgroup related function
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250328100359.1306072-4-lulu@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UlJYAawipnbT5ZM/bbEThLglIdknanN63vVE3V7Hn+4+qkYtUgz
- sE7aaLgutmAhXuf/9PkW/jRAXLbP4EQxBNEo3oTgQSJeelUvsofQvOG8PLLwKERWGl3gKvu
- Tb89+UTofWmNHFT6ME8l60YegHktrxQ3jIf8ykDsSMx2EmzMwW7xt+PgXbh7Ngh2rb2RG5X
- G3p3+g2WX8jawMbH0H7Ag==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:p8iIsgqLzIA=;5k/sZ9KTfZXf5BFNHxGmMDPGqbM
- omH/sjxgsy6nWBZexohfSC25Yb+XPJidKWc0JCjWG1Ph+T+0n1PFOwpXsdbPqpS1jo5gqwt+R
- x9nXlkyYyWdavQmKwFp6ZVRTgpB/7fBM+9C5kAItHTU/F8bRMCH0Ss9JxDGjETuNzVlCfnTp3
- wUS8H234fcud+awtbZQIhVPtM0C0apYnODTz/O8IdjZbXbL+2HRFEwuE6P+Y0YqA5WHslMvkt
- +TXaj+SfjcsvxURKMeZL4so6dgyODXeSpP7AIn28qi7wf5MR43tz9Twe96Wv9lL/tkg7ZcmEC
- arovWLebZQgATTAMetYu61Oiohg/S7n14emPxgEu5betOBNwNfnOT6/MT1Jsdkv3lpAqLDfrg
- eCzBaAnmNkPcC3G69D7w+KllwO7+1QyTLxtsg5kdBeZDIIn0+cLZCNPVPuD+l7g5c92YVya42
- FtFZdgHQiDoV33NyABArF2lzBxEGgErcR59SaPDErEmv8LBJjuTg7/zQ1iyRmqUMzRxchZB/5
- oU4MuSjKNHAbxOtROKU1/PJIG5HfDdxqLyw6PiM/e/b18nq1T/2pdqBCervAlF7d4LoOP1JT0
- /76ovINCNcP/z58lyAizCxDbMq4DUe1HPHq353Nsnn4j3D3r9eeIEoJSzNnbQQzZtzrnyvQBa
- N+iJnHDRooehx+c1Vz8g8Xs4BjS5tL+XbNgCiPQyvPqKrFDG8XZr1QwNdl82fjeIellxi0XjK
- U5S7i1Bov6A38UTSua7mwgTfo9dgX/ruAOHqc9o5Z9qV9/56C1FudYunLfWpefLO0FzKbaQv1
- WVLBrKZUdP6ctTMWDH11XNTJocXv/epIDUJJUa1K8//vwb3zuzZxwZanectagY00Y3yMXSt/+
- yGQzimCQymjxys5m4EBGCf1l60Ma1fNnCp4fjuQH3DmloDNIppGv/3bXHCAgx8aZeyfu4O13l
- CspAbfJK+vpgsIKWeJk31E7GwzPIf8Q2cCs7WB5xM9aXWVpMja15ATRu3YrFaut+LTOKKWZcu
- 9nVdzphyJP/3jgSFjF2X67HaC9fuj7cBaQpaRQj+MCpKoPOiR2msXJrhJUVWQ+uQCUVK3Irnc
- AJ89kj6hvCX91DiRPmAvxXRViQMqNFdJkp+iQ01nUMUNORG5QBtdAc8zusOyKA5hnx3k0vQYv
- 3233exMP3Phv9sXFTYN62KszGzd2hEKlajRAEGIKDYIRlkJsZkVhwoL6iCFsLyNaVxMYrqo2O
- DGaEr2QlTCM8Fed9VRr8EJx6z9PR9aVrNlH0zW1KEtYIhE4cdR0zvtG9XsjV7vz8EWHeL1057
- mZ2pkwHdtPuoKCKrKZIz5QZ9rE3d6lKfZLSwn37j5O7uShxYVYrCp0QNxdYuH8EY8GG8UXNSW
- cwd17gnxMFAlCmlHpqBzNcKTktX3yAzjxRiqDZmNSf53eWel8txwB3WsspAT6wgsNF9U0GmhA
- We1qb+atlAChTrbGrGuXG2x9PqQDb+kWDSPJDaem7EhYTv4sA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z_UDmqZoPtybJr95@kekkonen.localdomain>
 
-=E2=80=A6
-> +++ b/drivers/vhost/vhost.c
-=E2=80=A6
-> +static int vhost_attach_task_to_cgroups(struct vhost_worker *worker)
-> +{
-=E2=80=A6
-> +	vhost_worker_queue(worker, &attach.work);
-> +
-> +	mutex_lock(&worker->mutex);
-=E2=80=A6
-> +	mutex_unlock(&worker->mutex);
-> +
-> +	return attach.ret;
-> +}
-=E2=80=A6
+On Tue, Apr 08, 2025 at 11:08:10AM +0000, Sakari Ailus wrote:
+> Moi,
+> 
+> On Tue, Apr 08, 2025 at 01:42:12PM +0300, Matti Vaittinen wrote:
+> > On 08/04/2025 13:36, Sakari Ailus wrote:
+> > > Hei Laurent, Matti,
+> > > 
+> > > On Tue, Apr 08, 2025 at 01:26:42PM +0300, Matti Vaittinen wrote:
+> > > > On 08/04/2025 13:12, Laurent Pinchart wrote:
+> > > > > Hi Sakari,
+> > > > > 
+> > > > > On Tue, Apr 08, 2025 at 08:48:45AM +0000, Sakari Ailus wrote:
+> > > > > > On Fri, Mar 21, 2025 at 12:41:00PM +0200, Laurent Pinchart wrote:
+> > > > > > > On Fri, Mar 21, 2025 at 10:58:27AM +0200, Matti Vaittinen wrote:
+> > > > > > > > When fwnode_for_each_available_child_node() is used on the device-tree
+> > > > > > > > backed systems, it renders to same operation as the
+> > > > > > > > fwnode_for_each_child_node(), because the fwnode_for_each_child_node()
+> > > > > > > > does only iterate through those device-tree nodes which are available.
+> > > > > > > 
+> > > > > > > This makes me wonder why the OF backend implements
+> > > > > > > fwnode_for_each_child_node() as fwnode_for_each_available_child_node().
+> > > > > > > Is that on purpose, or is it a bug ?
+> > > > > > 
+> > > > > > I discussed this with Rafael and he didn't recall why the original
+> > > > > > implementation was like that. The general direction later on has been not
+> > > > > > to present unavailable nodes over the fwnode interface.
+> > > > > > 
+> > > > > > So I'd say:
+> > > > > > 
+> > > > > > Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > > > > 
+> > > > > > We should also change the documentation of the fwnode API accordingly.
+> > > > > 
+> > > > > Does that also mean that the fwnode_for_each_available_child_node()
+> > > > > function will be dropped ? It's used by few drivers (5 in addition to
+> > > > > the thp7312 driver, plus 3 call sites in drivers/base/core.c), so a
+> > > > > patch series to drop it should be easy.
+> > > > > 
+> > > > 
+> > > > I assume the fwnode_for_each_available_child_node() still makes sense for
+> > > > ACPI backed users, no?
+> > > 
+> > > Not really (see my earlier explanation in
+> > > <Z9mQPJwnKAkPHriT@kekkonen.localdomain>).
+> > 
+> > I capture that the _named_ available nodes don't have value as ACPI names
+> > aren't really what is expected by the _named_ callers. What I didn't pick is
+> > that the fwnode_for_each_available_child_node() - which should iterate all
+> > available child nodes ignoring the name - wouldn't be useful.
+> 
+> Fair enough. I don't think we need to support enumerating unavailable ACPI
+> device nodes in this API. I'd indeed change the behaviour so that only
+> available nodes are enumerated. I can post a patch for that.
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(mutex)(&worker->mutex);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.14-rc6/source/include/linux/mutex.h#L2=
-01
+Unless there's a specific reason against it that I wouldn't be aware of,
+I would also very much favour merging the fwnode_for_each_child_node()
+and fwnode_for_each_available_child_node() functions into a single one
+that only enumerates available nodes, with a consistent behaviour across
+all backend. Having fwnode_for_each_child_node() return unavailable ACPI
+nodes but not unavailable DT nodes would be really confusing.
 
+> > > I think all the *available* stuff
+> > > should be removed from include/linux/property.h, apart from
+> > > fwnode_device_is_availble(), which should be turned to work on struct
+> > > device to signal its availability for device nodes only.
+> > 
+> > I am not saying I have any understanding of the uses of the 'unavailable'
+> > nodes. As such I am not arguing over what you say here :)
+
+-- 
 Regards,
-Markus
+
+Laurent Pinchart
