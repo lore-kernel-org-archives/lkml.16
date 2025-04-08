@@ -1,112 +1,126 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8583226AAB7
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558ED26A0C5;
+	Tue,  8 Apr 2025 12:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115083; cv=none; b=erd5ThPOu4fCgNT6rYkc9gV3nUB9epeUaPO/o/6SVfuOJ9az4jW2GEt0nyT0OEPvW8G7Rdto7qtZSRxJLFQep8QsED8YbgFU69XyLnwddLeuedzbVhp2GKcWD+QNQz2DHu2z5cFxYHxCOnsj+VdpzQk/wIAXYn1rWYzwkgzgKAw=
+	t=1744115084; cv=none; b=GKURAmXS0OYz0Q7+ibvOC1fWqYrgI2ikbFJfpY5XDp8ytBzsibgaw54Z/Wk8IbszO2KK6bokGJkoQHfnxUPTY7JVnxD+fwHpVD/791qZ+xSUfAsjYzjf3aBoQW22tN61N/xR/5QEv3ksu+oZRbpURh+ZlbXO4dqbEDO6rSSP9to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115083; c=relaxed/simple;
-	bh=BdLZNj/E8geGY6nVcjPsggWpqHTe6vJEthVvFXxtoEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mpZiCTDqMUmPuXinyrCM1fglfEwvrsrNJQx0M+aEJ4Uk1Va/QXihJzxDJ3DRQTanlZHYjHySqxPBMGzte+PI9MePzAfrpkTEHgm1IUNgrWnEVmVs2C8zKyfpwan5E/uRo3BbGZC6Qu8vxyHwvRpzZZBP+oyDKVr6+vflsj9vQeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKy9q/I5; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744115084; c=relaxed/simple;
+	bh=A6GH0730N9005FvryT+2f/BKLA9sdTWfH/OfPZwZa2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/fUY4CNh23INcoH40id9OnTDxY75088xsb4SHe05DWjntLab04aEWD54R/2aKC0qgPZwBJXDcpxhbNzAIdFkC3ahQf3W5hoMwcmQU8EDoYsI8eura3MFVBArrzsvaUDh2BT5rZOeaInxnVxm5d9OJxMGDwuEdxC5kGvzfyyWYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=EiaQFLXK; arc=none smtp.client-ip=212.227.17.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKy9q/I5"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399838db7fso4830020b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:24:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744115081; x=1744719881; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZOptbtbOKUdHNzNg9ygqhPthLmzyP2uo7jPEq6N+YNQ=;
-        b=mKy9q/I5RP2pqYNDiJBud5qMBJP9rUw/54ZPkOxNE5hOK1vieWW7o5BC708tVwD6A/
-         yuzvOa8NM5fdt0I5aMdc8zC+8nkc1xSFJ28/++uyWN0DOOpORZeGTPg05QC0MX71B1/7
-         6NZ7dnNb+f+jl7zmjwjSBAQLshbm34tXe5IWla9htO4lP3nxTAw56uGGbt7Biq/39zYM
-         M8i/pUuE0IB19e7qZfFWhG4iRMGcnxBdkJ67o+S2ckhGNzGb89N59n/n/5M7YODOw0HC
-         LvSwq+irqMMK9b4QKAxyIfMAjJ8x4bdDQWT9nUAFBEXvBn5ZhLg5nChyO7xyRVf+wkb3
-         6qFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744115081; x=1744719881;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZOptbtbOKUdHNzNg9ygqhPthLmzyP2uo7jPEq6N+YNQ=;
-        b=f0G1GQDhuPwTWwDLxI01a/FxC1xTeRlz4oNVYpjhkj/Ao+bSmD2aAqugQZ3n+J6deX
-         FR3rcxoS+X7FsbRxMXa+23BEZp5frXKdCwgXW8udgtnZFdBlkicb4ErTW2/7fLn6VjR4
-         oS7tX5pRHnvPC27ZsicXex8+N0ExG+EC/6CB4qS5RRlSkMrk0xr4VtWSF1pSBs8Fbi1m
-         ZfVa2zqzA1N23e0U6L4I8jQqrruBJJUStyudiZeht8AD/V40sgfPRuG+MaCm0dGP4R8B
-         WrlS1fPkKcR8jUFNG2J84FCx+vskWl+n8rx2Vmmtjm1FGleu6CGkkf58kxUbqDvUjln4
-         E4pA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJaDymKi8E+fjys2O3Xg6BvWBe5fyK7LE+MbdsGThfWB5wSUBFxE66t7M4PYbNSmlEVBNIfQ72s0WwiNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI2PtcZMxacI5bBId6OJ2COahz+mNSacOX+V+8PjMvrdgv6EqL
-	2JiC6X7DOG9UskN7xKfF2GSpCGohdf/trn25tHDrgtcbCSmviPJW
-X-Gm-Gg: ASbGncvOxVxP3KwmiPfUwgfLrbT3GojHkl/gajo6gb1g910MYYFb3R0aMRNDXBSMHc2
-	87fgE4c8UevAHOij6EUsNe0dgrGC9cD22aN4atqTRg83bT0tI6W8//LC9e+3DWEAiXk6Pcrjk75
-	Q7XvHvIVIsHq2uLZCexgUmxEKvtCX3DOFdsgUKhFfjWlgmrluhMD51fy0tMJzwthbnCflhA/WkP
-	/Q7H+Q412eZzfFLg6QfIOTMnJBarGB8jLAeY9RZ+C3Mkq9bL12+duQny0lDAN6lycf4U2AVIAM5
-	3FAlD9cvkIQe5j+l7kta9rZb7TDKdLvQNlMp+cjPTqbwE5S03sU=
-X-Google-Smtp-Source: AGHT+IEHpcmo7Xhh/kVuzYomYKxOSWeOPsROUGdAglsdVSxwiKJVQSvQkVzHe2m4jPEycQAEtJwafA==
-X-Received: by 2002:a05:6a00:114f:b0:736:491b:5370 with SMTP id d2e1a72fcca58-73b9d39ee5fmr4601812b3a.10.1744115080611;
-        Tue, 08 Apr 2025 05:24:40 -0700 (PDT)
-Received: from PC.mioffice.cn ([43.224.245.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b41d4sm10638709b3a.132.2025.04.08.05.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 05:24:40 -0700 (PDT)
-From: Sheng Yong <shengyong2021@gmail.com>
-X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
-To: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com,
-	dhavale@google.com,
-	kzak@redhat.com
-Cc: linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	wangshuai12@xiaomi.com,
-	Sheng Yong <shengyong1@xiaomi.com>
-Subject: [PATCH v4 1/2] erofs: set error to bio if file-backed IO fails
-Date: Tue,  8 Apr 2025 20:23:50 +0800
-Message-ID: <20250408122351.2104507-1-shengyong1@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="EiaQFLXK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1744115033; x=1744719833; i=christian@heusel.eu;
+	bh=u+/mqDgKSZDwMA/1OefEMZrRqMdUu66MZ8QDf1kcPGk=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=EiaQFLXKwN3AoNdw06wg/JJFHG8G1LGb1GKK5OCkCEUHW77XLQd8QZSYDqLrg3Lf
+	 f+j4Nl343OuVCiiVOoOy5COSsvoGIysiOvgBklAummE9pz7aU4FsrorGtMh38W8+u
+	 7hgR6VJKzrup/Nqsnc2P3yZWE0sAs5Rce8+c+BNApwkJVa3okTA4WWfpeON1xyFvn
+	 61IpuMi0X52SgLK4acTx1E1a4NlKlZqfuhfDtJHPNcCEDzgGunnkqDoPY9f7T6v2p
+	 zgcmcMvSr+/uMCuzqesyqLjC0QMw7lDg/hIwxfK8HT2NcCFnWomRk0RqTHl51La7Y
+	 SAH3iiGzZffK6d8pGQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([89.244.90.49]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mlf8e-1tKr632Xbu-00g04s; Tue, 08 Apr 2025 14:23:53 +0200
+Date: Tue, 8 Apr 2025 14:23:51 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
+Message-ID: <fc727793-7b2d-4cd8-aca4-78824cdf477d@heusel.eu>
+References: <20250408104914.247897328@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lygmlimbjvuadv2e"
+Content-Disposition: inline
+In-Reply-To: <20250408104914.247897328@linuxfoundation.org>
+X-Provags-ID: V03:K1:xJLObfOIsGYs3G9tzv2KxMMPmxROXgzsfdd5jG9ok1TZhiuAdR8
+ 9BsmlSVv0FfEC93stkg8tdEDL1NEmeE4kLG1HoH6tG1f4FRRTvBxr4lQovuGOoGi/uTXWaN
+ vkjbFl2dbS6czVvPg97OqYyP42+vA3HzfNIzpqTX3qh90h+gzBfU0YKxHFEEM7i0qGBAN+4
+ 96Ccy6FG110v68Lr2cDqA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KO4HuXsZ7Ec=;6p898VuMUIGSeMx5ydeOIVsRBqy
+ bZ54qd/pC69KH0pih4EJ1hoMjj5ZA3Z32lizRvoW2pVE5JF666QSXkPi+FuZvWgSsTBHckg2R
+ IES5vZe02SfeLnY7h2Be4mRns6ONPTMi/0nL3vDIrGI3Z6Htkar4LS0lfHfbG/MIvcXEW4kSg
+ 3PqvmT938ubnPXPFN5CUzPO/oJKnCcTkc511TGA6f6uV767QfCic/4NdpIrxg1E29c1Q/+bf3
+ 7R4lGQ4wLhPn1s8ecvBSdqopLLtqtXX5qMBQL92KltfZV475ROwJ2574ybBMk3sO194fLMkBa
+ i+tc9yVra957l2vcNTpEp0gGxOGYQONsETFvAI8vU/XDq4wzW51Qw8CZUcfhdDFkN+tW5k1ny
+ /cfZWoOPbHvXD7tcQ1qF5DXFLU3B8vWIZltwZ9T2uwGrX/9z3hJQIL03JXemKg8hHn7MhN1Sb
+ nkclm0/1NkUNRTjkUFwEmZ8kKAawLyd+wwpAZrQguOgG8pVkoKJZ20Vf3X3FOjBn6jvmDG/LH
+ dR8kuYX8DU4RWB3uJFkdoSjLS3oP+nIxT/d+03D7L4ByMuhp43HIBCNhmInAutwXFNHHAM7gt
+ 8TS9LfvNVNc0knIhKKq/CEovFgssl0Oua0RaYtko8PPfT/UE4IbYMjBswvZjOjNd1oIxR3w2V
+ 8RaYuNoObAADXi4h455Cl9iDAU9Q6qI44tm/K+pw87oLAYHCOVEpd9eYXsWwjg7xMsVzPlQTq
+ DMBSAetr/DYKYd5jSp/LEbTQ+tgIUhoHk7wcTgaZOtnNRbalO/7L99dP7wr3c9jXhc2QhJaZ3
+ YBXtE620A9AGrtC44gdChcpdQElp1iYE/DEiPTqQjsV+SDKz2LXhmZTrODOkEPb/NIJhimFv+
+ RF097XHZcE7k2xZiDlzjx5qyIOowwoMTmB5r56DIyFJvBAKlNU3+Qie5FwBcav03rAbJdA//s
+ mBW+92OkTQYT46s1deEsSA2iwruP/HkmrGvw4g1n0Sz8K/Xi6QFtExC5JMbQCzgwtv3F6L0kX
+ jn4n9DKtQgUL7ywNYdJLcg1zmlqygq1/k7ynNIw/EY2qYKRx4IpE0ABNLVXMM9UrbBsS+tLvd
+ NkH++PT+av4ucL1RDwXHwVvoR2ppG+mqflsG8tr0Sf3ZHXxc0hXNtLrpvkmyxHNBswzDSGGwL
+ AbmQzWA51wD2FfzuNsd3tsnHytaPki/NDWWOkw3pd1P+pBvxkvNA05T01PUKz9QmjF86ph6QO
+ RBa05Wxv/oH6kAA1orQjrjk1Xu5aAIRfJ8Dc95n3mX7pTgZ7iQ9jfGJJJQWfZPVAD3EB7/o7W
+ kSKHh3JwaKiRboM2Qz7S5yN7Zzb1gjXlef32/RiGQjCpV58JmtOyBzEVIDzgk8HCu8JdXcLjM
+ lFWi541h+iFC3qt2KsV2DVE3DrkHoztNO7lUE=
 
-From: Sheng Yong <shengyong1@xiaomi.com>
 
-If a file-backed IO fails before submitting the bio to the lower
-filesystem, an error is returned, but the bio->bi_status is not
-marked as an error. However, the error information should be passed
-to the end_io handler. Otherwise, the IO request will be treated as
-successful.
+--lygmlimbjvuadv2e
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
+MIME-Version: 1.0
 
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/fileio.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 25/04/08 12:38PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.2 release.
+> There are 731 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
+> Anything received after that time might be too late.
 
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index bec4b56b3826..4fa0a0121288 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -32,6 +32,8 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
- 		ret = 0;
- 	}
- 	if (rq->bio.bi_end_io) {
-+		if (ret < 0 && !rq->bio.bi_status)
-+			rq->bio.bi_status = errno_to_blk_status(ret);
- 		rq->bio.bi_end_io(&rq->bio);
- 	} else {
- 		bio_for_each_folio_all(fi, &rq->bio) {
--- 
-2.43.0
+Tested-by: Christian Heusel <christian@heusel.eu>
 
+Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
+Steam Deck (LCD variant) aswell as a Framework Desktop.
+
+--lygmlimbjvuadv2e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmf1FVcACgkQwEfU8yi1
+JYVj0Q/+JQVAUATBuO7W53RKR8zORwFzOoxqEgviNSJtEnpew2jG+G4ZmVZvO+fW
+9tF2nc/WpxAXUZzZ1wLAi0jZzvoVWM5ays5d9a5Jj3D6n4kPDNMPfwowt81xOo9P
+drgrB/Vl0jGc1kkCE04YOtYB+fCuZIpP1K+WS/uBvaqh4J6+CaOyZOXjEUYzfE2T
+HsoucAsHxkuPN/NRJjKQJysUdNTDYY7NDOBKDDdIGhXjDj3Myhr8dYLHGBND2Fmg
+EqH7sRiEvEjAH6pK3JJ9xV0K4yASct7vBK/I0KnnrCvnNltKRjC5XYqkeuSi78Nc
+3RYstQu2mCaWCVuT/X5XwLCkGt+x/V7v/QJ6SOIlKiIX5RlDaBqxXfuSF6pVvcL3
+w04fJKP/XKY01clO5tjFwJGFgKKPjNmHyrpL4r2rtTuMeQ/qjnW1in4VHVqEVPEq
+1S6elZ2U+JM1QiC7mTJa/+LzD4C/9KxvurmhhdODyQDo6ElY8KdDX2cGd0VUs/Kn
+RE+Eqrimctxh1wgQopppsuc797ApdhlB4q6oP6SdhIBhx3n5gfqtboYnggNr0bqE
+agtXY8qN7rJ8Di9TLPkqjaxPHsaERs7+lkUg6YrDrh8W2o5HVVN8nZX6uLoPCFJO
+Vml/77goY40D7GXJ3iinV20KKLABQGLkmQjnXrlt8C0P8BEY9pw=
+=EA18
+-----END PGP SIGNATURE-----
+
+--lygmlimbjvuadv2e--
