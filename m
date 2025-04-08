@@ -1,109 +1,227 @@
-Received: from sxb1plsmtpa01-11.prod.sxb1.secureserver.net (sxb1plsmtpa01-11.prod.sxb1.secureserver.net [188.121.53.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8517124C09B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 04:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BC935973
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 04:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744086402; cv=none; b=DsPPuyCDhz+Pb9i5ke2DTPFilCOfCtv5nqT95sSo/SIrQWZwjw5CugSb/sog/r9BNOaIUIW00GbZZW/r29vnaVNyT62UJPDDvop9t06gMuNtolm3wfDdfwQA3+imvRW7qrKv9CDg0+ko4uo4H5b6Kfg/l4ZFReCUQic30lR9YkQ=
+	t=1744086629; cv=none; b=uoU7RUmD+nQCQHUiZjjVh7lSVAUJ/XzKjdmzuHQG/Eof6i0JuiYgMEgkRin8SiR8mr0dzVMhJ3Cb/PyjCin/VWDQmIKMe1YJzh2BoYeeuKUoBJw3FoWPf5kKkjRVeTIoeY1jlBK9YBezi5AB9Up7c8yQugVjH08gVztTRnB8GAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744086402; c=relaxed/simple;
-	bh=UzuV/AjhpXBleB5NLOztvE7OS8zrhXG6Lxp8DshM15U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vw3XhxYuJZOP7osMtbTs5D2zjBAfwWaCQoWKsAuY5y5q+CinIoieb7ZJhM4ZwQFwaPUAjZJYrimC80ByQ8BFU+XSMZf2wjKr3QTXifAQZGDl4aULwdzjsF+rugPo4v5DBf1IgEJNd7JsbP36nTuwJnW0fIexULfuq25tIw1/LxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from [192.168.178.95] ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPSA
-	id 20QJuoRE2oGJS20QLu2IJY; Mon, 07 Apr 2025 21:18:58 -0700
-X-CMAE-Analysis: v=2.4 cv=A9SWP7WG c=1 sm=1 tr=0 ts=67f4a3b3
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=TieKIuElshfLa7FaqJMA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-Message-ID: <129d4f39-6922-44e9-8b1c-6455ee564dda@squashfs.org.uk>
-Date: Tue, 8 Apr 2025 05:18:05 +0100
+	s=arc-20240116; t=1744086629; c=relaxed/simple;
+	bh=iyXwAoHuhvl6gMeqiYjfxKQ6fYCfi84EobhT7OOmjNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lxt8usqdWJ/cOQPq5m9xm6ZHzMon3F5Q4D1ugvtdRcSH1Cd883hRFbCXQMGNXv6MJUnJPCvav63gcKZGC7a0MRUv6B+7c6vngKH775s+Egahb+SjZw/92ex0/ExnPdmuFhM3T2yU4CNm80VrWGGBLRRwd4Owgdxga2i5LySjta0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hWdMTvDP; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hWdMTvDP"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c759bf1b2eso2645121fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 21:30:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744086627; x=1744691427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k4OEy6OZhlILwQSjnmY1MsVbpm/U0GgRRZk6ChIa6gk=;
+        b=hWdMTvDPugpBVtPx8KCTgOfOPxZK2Ss9BCJt9XMckJJwGBEHW3ed32bnE/dT6B556a
+         LdvQUwpSEyY1+Bly9ATUYgxH/DocMVAMkJlESPsesyZ8VfNDjPVYFh9Sw/cKZ2XoWtxm
+         1iM2md0D2xPoMaD6afaYf/8oyZTPBQsq7Q7ng=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744086627; x=1744691427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4OEy6OZhlILwQSjnmY1MsVbpm/U0GgRRZk6ChIa6gk=;
+        b=ofgnu1HJO18IoGb0RuZfclxIiivXaN2IeAnogVGfhbLhCQLeyyJzfHcCjrCNszGHPc
+         msGxrJE9IrwHazJYufSEUMLN/QXPYgK3Ol61mobgF5sbQPa6CffMa/HsR5J1Ey/ZMyr1
+         vmP1MwVBtVM8e14ZVwOZr3PiXJVG+kxgJ/kXnf9MBGTPisepTFsYHz+RsH9v12I3djOl
+         m2708iH7+hQkoFPzK6LxwMh2Ap+7xo+LsxQFuiN5U9NPF/GXPZZ3tIzGIX9xwBMmfLe8
+         7MI6xVl4SH5XhILaTD9qN80EBxRja80dcdEsWp+oOWNmlyYLm8N5llW71Cd2fq6W6a2X
+         u9Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhtMSlLH01Gb3E5qvWmP9pXyaPutdPbNJXizS0xeZpVhwOFdfAV79t48exABa//RHFvoIOf8+uxfA99hY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHzkHS5ZqRbnoVM0qvRsnwgDWlQBXSCmhVwaGbwU1qa1ropWNi
+	IyC5vETL6v7EtU4R0dyyFnEmeqvIpnLP1QEKq9ydMykALaWQJ0SyX50georWQ3T5zrPZ45c2bWw
+	VfzuEAlJ4UjZOT+6/IYnCYKX7l/XeBNi+w9eN
+X-Gm-Gg: ASbGncs4zJkdBC+liGSOumKyzTgelFvBxuHC/PXHt9clYjfcroDHjJgSIS17M7UYrsA
+	kXZbI5L11PaRl8I6B1UepLx4XpW8Y7kpu7fgyNV1MwDTY3ZL6uVY+2jQJy5UzAsoTKhfqMUr+3z
+	TLuMLvobSoBXjlFXJIFNFfXwhOUgN77AIM2dK5gVJQB4+D356aRbBv9g==
+X-Google-Smtp-Source: AGHT+IGIaWa+KfgK8+1VG5ShGQowLo7UFNgp7dmEufosO5bvsNVXRW6PMAFRdrmAeiUK8d7+qNV0I3u3wqhsch7YYTc=
+X-Received: by 2002:a05:6871:a4c2:b0:2c2:d2b8:e179 with SMTP id
+ 586e51a60fabf-2cca187da20mr9125832fac.4.1744086627210; Mon, 07 Apr 2025
+ 21:30:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [squashfs?] UBSAN: shift-out-of-bounds in
- squashfs_bio_read
-To: syzbot+65761fc25a137b9c8c6e@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org, squashfs-devel-owner@lists.sourceforge.net,
- squashfs-devel@lists.sourceforge.net, syzkaller-bugs@googlegroups.com,
- phillip.lougher@gmail.com, Luis Chamberlain <mcgrof@kernel.org>
-References: <67f1f6f6.050a0220.0a13.025a.GAE@google.com>
- <2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk>
-Content-Language: en-US
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfGE8bUnGjcLYUEYUFnE1digrUscMj8xkIdWUdEFjNBEikMOPckN6nMJ0AO0Ls+42hZzAfWoRygr2tbJAsWpCWsIHA5iks5fG9L6RBHZSUohcJUnaaArh
- T19VmDmx20WB93dE2LUc2vDBqz4I6+37hBV81ZUir8RX6K3Z2nKEdLfGcXuydbtT3xeqGnSGyWep1yJZQaYBi6E6eKQNtu6+ogTg1BoDOts6UQLlVZctMhWq
- lvIak6Vlk9Cezu4xywEpa+/t7XkCRCnAVYe5weqx9X+wpQ7BDThGFfAmN75jCirogNaZq637suM5DKEI7YtnxmXm0ueJkP88un9m/9cIO3KhTOW4t35scjXS
- 1urR6u+LWhftN3Ewb2nwJzqFdarDAbhuMUCgsrvP+NXJT/4BYP8TeE8p7zh2W5x07DEyO5tWxo9SHHSk6cY8SSQtpAtS49cL9opv2AykPYxyNshuhobu9wpT
- p03vISfFa0HXP6cnrshr0/7W5K4oArbF5N0IEw==
+References: <20250328082950.1473406-1-treapking@chromium.org> <20250331-loud-micro-booby-e0fd4a@krzk-bin>
+In-Reply-To: <20250331-loud-micro-booby-e0fd4a@krzk-bin>
+From: Pin-yen Lin <treapking@chromium.org>
+Date: Tue, 8 Apr 2025 12:30:16 +0800
+X-Gm-Features: ATxdqUFiEcJNcUtOjwZOM-aq3gBXz60X9bqBSIobqCxKWQP0Fw3DK0sWRPkE5Yo
+Message-ID: <CAEXTbpf9crpkTGctoWseoG1fz=jvUbiTi6e2adZy0JJu78dTgg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: usb: Add binding for PS5511 hub controller
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Kaehlcke <mka@chromium.org>, linux-kernel@vger.kernel.org, 
+	Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/04/2025 06:30, Phillip Lougher wrote:
+Hi Krzysztof,
 
-> Digging deeper into the reproducer, it turns out the reproducer is
-> forking multiple processes which after mounting the Squashfs filesystem,
-> issues a LOOP_SET_BLOCK_SIZE(r0, 0x4c09, 0x8000) ioctl on loopback
-> device /dev/loop0.  Now, if this ioctl occurs at the same time another
-> process is in the process of mounting a Squashfs filesystem on
-> /dev/loop0, the failure occurs.   The ioctl has to be issued in the
-> early part of squashfs_fill_super() before the superblock has been read.
-> When this happens, the following code in squashfs_fill_super() fails.
-> 
-> ----
-> msblk->devblksize = sb_min_blocksize(sb, SQUASHFS_DEVBLK_SIZE);
-> msblk->devblksize_log2 = ffz(~msblk->devblksize);
-> ----
-> 
-> sb_min_blocksize() returns 0, which means msblk->devblksize is set to 0.
+Thanks for the review.
 
-CC'ing Luis Chamberlain <mcgrof@kernel.org>
+On Mon, Mar 31, 2025 at 4:09=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On Fri, Mar 28, 2025 at 04:28:45PM +0800, Pin-yen Lin wrote:
+> > +
+> > +title: PS5511 4+1 Port USB 3.2 Gen 1 Hub Controller
+>
+> s/PS5511/Parade PS5511/
 
-Doing some more digging, what has changed to cause this failure, is a
-post 6.14 change in the behaviour of the LOOP_SET_BLOCK_SIZE ioctl.
+I'll fix this in the next version.
+>
+> > +
+> > +maintainers:
+> > +  - Pin-yen Lin <treapking@chromium.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - usb1da0,5511
+> > +      - usb1da0,55a1
+> > +
+> > +  reg: true
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +  reset-gpios:
+> > +    items:
+> > +      - description: GPIO specifier for GRST# pin.
+> > +
+> > +  vddd11-supply:
+> > +    description:
+> > +      1V1 power supply to the hub
+> > +
+> > +  vdd33-supply:
+> > +    description:
+> > +      3V3 power supply to the hub
+> > +
+> > +  peer-hub:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      phandle to the peer hub on the controller.
+> > +
+> > +  ports:
+> > +    $ref: /schemas/graph.yaml#/properties/ports
+>
+> I don't understand why do you need OF graph here. Children are already
+> defined in patternProperties as usb-devices.
 
-Doing a git bisect, prior to commit 47dd67532303803a87f43195e088b3b4bcf0454d
-Author: Luis Chamberlain <mcgrof@kernel.org>
-block/bdev: lift block size restrictions to 64k
+I would like to describe the connection between the hub and the USB
+connectors, which is similar to commit c44d9dab31d6a9 ("dt-bindings:
+usb: Add downstream facing ports to realtek binding").
 
-Attempts to set the loopback device block size to 0x8000 (32768) failed.
-After the above commit, such attempts succeed.  Having done so, this
-causes the above sb_min_blocksize(sb, SQUASHFS_DEVBLK_SIZE) to fail.
+I'm aware that Rob expects a usb-hub.yaml binding in [1]. Should I do that =
+now?
 
-This may be an unanticipated side effect of the change.
+[1]: https://lore.kernel.org/all/20240301175653.GA2469610-robh@kernel.org/
+>
+> Where is any upstream DTS using this schema?
 
-Checking the kernel code six filesystems fail to check the return
-result of sb_min_blocksize (isofs, gfs2, exfat, fat, squashfs and xfs),
-and so will be affected by this change.
+The device using this schema is still under development. We plan to
+upstream this schema first and then upstream the DT after the device
+is ready.
+>
+> > +
+> > +    properties:
+> > +      port@1:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description:
+> > +          1st downstream facing USB port
+> > +
+> > +      port@2:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description:
+> > +          2nd downstream facing USB port
+> > +
+> > +      port@3:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description:
+> > +          3rd downstream facing USB port
+> > +
+> > +      port@4:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description:
+> > +          4th downstream facing USB port
+> > +
+> > +      port@5:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description:
+> > +          5th downstream facing USB port
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - peer-hub
+> > +
+> > +patternProperties:
+>
+> patternProperties follow immediately properties, so move it up.
 
-But notwithstanding the above, the failure to check the return result of
-sb_min_blocksize() in Squashfs is a bug, and I will send a patch that
-fixes this and the syzbot exploit.  Hopefully this will be tomorrow.
+Will fix this in the next version.
+>
+> > +  '^.*@[1-5]$':
+> > +    description: The hard wired USB devices
+> > +    type: object
+> > +    $ref: /schemas/usb/usb-device.yaml
+> > +    additionalProperties: true
+> > +
+> > +additionalProperties: false
+> > +
+> > +allOf:
+> > +  - $ref: usb-device.yaml#
+> > +  - if:
+> > +      not:
+> > +        properties:
+> > +          compatible:
+> > +            enum:
+> > +              - usb1da0,usb55a1
+> > +    then:
+> > +      properties:
+> > +        port@5: false
+>
+> No such property.
 
-Phillip
+Actually, I meant:
 
-> 
-> As a result, ffz(~msblk->devblksize) returns 64, and
-> msblk->devblksize_log2 is set to 64.
-> 
-> This subsequently causes the
-> 
-> UBSAN: shift-out-of-bounds in fs/squashfs/block.c:195:36
-> shift exponent 64 is too large for 64-bit type 'u64' (aka 'unsigned long long')
-> 
-> The fix is to check for a 0 return by sb_min_blocksize().
-> 
-> I'll send a patch tomorrow.
-> 
-> Phillip
+  - if:
+      not:
+        properties:
+          compatible:
+            enum:
+              - usb1da0,usb55a1
+    then:
+      properties:
+        ports:
+          properties:
+            port@5: false
+
+I'll fix this in the next version.
+
+>
+> Best regards,
+> Krzysztof
+>
+
+Best regards,
+Pin-yen
