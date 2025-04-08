@@ -1,66 +1,66 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2F2217F5D;
-	Tue,  8 Apr 2025 07:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07814261360;
+	Tue,  8 Apr 2025 07:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095902; cv=none; b=hKq4bIwM9Q4L+rZ00lDGyo5P6yqRepWJR6Eq9Yb1k9iGTXvjTQ0Gpg13MoKtpOhR3/46+UXkR2O1K5zbV7+6EAymfTyk7+5v6q6HtbcMrzPDlqi+V03Sgylg672oPGPowppRrLIeFG6Rj9/aLeQzxBCIe0Y9rCbvyNt/p80uj7E=
+	t=1744095905; cv=none; b=cTS0E4RABbwEgmEVWu1k2MQYk1REOrDtkAS8+DCbYpQkWrPcRTL/tB/NZvaHVO7wYSTVAJxW1fRVK5IASPd4IWNQwM2qPvWVXyTBXJAFXjSIgw31i/R3YAM9G3rbdSsmu+tDE+LCl3WmWVllm1U1gs5EsiwLe1sD6UC+I4azwWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095902; c=relaxed/simple;
-	bh=8jsXPoD8/rVl7BQngK3NPkNA5m5l8CicRc1UHvgLl8Q=;
+	s=arc-20240116; t=1744095905; c=relaxed/simple;
+	bh=YCGDQojD8nya6OBnR7iagaQHAlVaXzUTMmVsiIk5blE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TFL19X63qpCu1pEYnNy1QvhYrJQGuTVXfhwhFyivLUF8bQoD1Mnornh/0VAamYkJJ56+5bWLR2wFGYGDTPtelqgTHVcwFt6GtLYo7pRVo0AlzbW19oCPFqkBDpk27U6g8yPvIWfrzBUFRFSjLWnBYCmL258pXLFWwQ+c0u3jWeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DPSM2pbF; arc=none smtp.client-ip=209.85.167.42
+	 In-Reply-To:To:Cc; b=jeSMeICr+ntXjNdIzeO2PpFDfCSZA9Ts8Ov6CJKsIMhdIehylqccrkA3hhsZoiLLGq7/HmHtlOXUcHABmKDmjwu7fXepgj3QwQKLOqFXAZFNAPk+hfsBNCFK3KFl244rb3RtvkpFRMRILg3x6Y/+fky/YnRpucY1GncXv1qDF0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLXn6B/j; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPSM2pbF"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54addb5a139so5830483e87.0;
-        Tue, 08 Apr 2025 00:05:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLXn6B/j"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30c461a45f8so51166551fa.1;
+        Tue, 08 Apr 2025 00:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744095899; x=1744700699; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744095902; x=1744700702; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q29XRV8jow8lez0T1Keu8H56xuoR4eRfKdNnJPNuVxs=;
-        b=DPSM2pbF79T/QVOxCm7PBZpJQGmBji5SmQSVImHMt+VikZwefNvAN/Rih0XrGD26ad
-         Ln9Qap3lKNIVjg3mLOuVO5lLnW4tWk0fCa0/HV9qh1zicYht7KxtuaUVPLy1qGG1oO5G
-         LstIHuWbhG3eMI5O2fX2HLYt4z7MtNAaW+4CDBixSF6BcnzWfv6FfeBSOx8CRnmKgWdi
-         az+Pgroy7nObZMD1lUWahNAwEmEKm+s3yFMSS3EleSTxN2j/iOBQwWRe24BLsDrTmmKC
-         HhAUu4ESGGcLlBmZqnwke0cswMME365viopattdF6pyibfpA+BpvPttwqrBw8Bc8JG05
-         DUqA==
+        bh=i11n14/4d12JDY2DmtQ7aKWTPCB2K2tXSiZI90yPfyM=;
+        b=kLXn6B/j00FfQm/HeFGKXD5QtYhE7Qs0tBfpyccMCeYH4EqY3+Zo3piQ71gsx6DLXQ
+         T24z0/yWlJ3ZdNsHEAG7/RLyTa7P/iSxclGjT/A3LJrAtSJLhCKPgunUJVZeIUUmoh0A
+         qClQLFn5yzkeZTEYPcU6z/g3u+e8R3fxO6nyngTbcrv8mpn9PMxv8hAuWSXkasDnuGiR
+         vUJ9FuiNrrtnzfkNPEv7hGDt2+WBOEHbUreE5StpzUg4hONdR5N3ZYqKSHFOgP+qDC5c
+         qYVNi79Cl6bwN0/RpKpox5LrFNPLrhCp3cvPrD+c6NaCcsnwqKbynGWZPGcqy9VR7oIR
+         I67w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744095899; x=1744700699;
+        d=1e100.net; s=20230601; t=1744095902; x=1744700702;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q29XRV8jow8lez0T1Keu8H56xuoR4eRfKdNnJPNuVxs=;
-        b=o0rNP+I8SMWNL6RkRhd71MZx578aLctrN4cB9DvLpZZPCX2ZJUWCPA0M/fWieyUOTq
-         c6wv6GJOR4v7h0WDeGdBkCMm2kgiD4pCMtScyv7dRzceeJ9hycZZ3NEoDff8ZTopHNL7
-         GYFhukHQEyPdBwzSGdOi0ewwnGXSukBEmxWqLy4uqJY+SD+Z56TYmw4hDFepHGWoIngK
-         MTYu3heMygRJ4pIQCIqsjajceRrT5/xEVI1by3SO10XivbS8ivGls/eGGcDuHAXXFfQN
-         GpFAP5TddDvB4OqoEOrHsDjG0N3BG1SBjru3WyCbNhRNg62Qg36wesi/88fvSL8iwfM9
-         E9mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuxzNU92vPSzUwaEndv0dUMq1E+yyPyfwrPegUdui1Uwk9HP7jpjhgLWPs/gEPwV8eMkzfTWWW6uScsD/l@vger.kernel.org, AJvYcCWfHMnWbSIG3m1pQijTUYTAh01bGVNwNxICEEm6iWLrwvhK0uP+XXPy27rP2ICXsQFYT9GomOnztYB4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqQ9tGJyAVf0QkwNoWCtcK9GLyZEwPI9Ei3B2do3tlOP8Tqyrh
-	dxC1F7d55J5Ic4RW5F+5f7iz5y0d6dqcBYFLZJIV/5bd6g+Mw+E8
-X-Gm-Gg: ASbGnctWdbMV+xAiwwBrwG7ORVWHOkQ3KT8O4yvsYQhnDjBJOgcQ/T6VCWgvK08z4vj
-	GYX1LVZNXeHLrGrTCb+aSlS2SIY8WKjRlB7NhmYd1uH6oYqR5Ac+uiZkFiMrOwc0EXBHOoGt86p
-	FdTwCwmtKLa8d25FXSjNsp6l2Oy+1MK7GQDc8jgLH6px92BDZluc7oy5YLcQw5MRhnjuI0VU35Y
-	vUcqvgsSTxU37Bve3gJkIgHt3SyPWfrQl1rgLq3l4DWVlFQBEveGGdiKSOwhFxzxb/ADKjMeGD0
-	B0aYkMVhfZhCpM7x2pSaEPQfbg9QK6kkEDIf0Pn0ZrhowKI6zRca0QVrkBgZDu08ERs6Ix714yy
-	6IAn6ZVzUpIChISuqq8nhUSE=
-X-Google-Smtp-Source: AGHT+IEXZr3tAghBsf0ciq11I50CFCGHpuS2+SMnSBhb393VI13306cCOCwdFiGQXaSZdEP8pRZ0Ow==
-X-Received: by 2002:a2e:ad90:0:b0:307:dc1f:e465 with SMTP id 38308e7fff4ca-30f0a133afamr53460981fa.22.1744095898940;
-        Tue, 08 Apr 2025 00:04:58 -0700 (PDT)
+        bh=i11n14/4d12JDY2DmtQ7aKWTPCB2K2tXSiZI90yPfyM=;
+        b=d/35hNEUP2p0izjT44I+IBCG8npJtrU7T3w3LuixL1NBrkhc5dPKe2azA+BGqabuTw
+         ZL6VJCvJ7YcqD6FKqip8yUpgtfLr/HiZEJ9p/nhgcK5BVZ5dDPBlvD3KvWD2Py+NeEjJ
+         /Kh7J0tBwJDJip0BVWFij9W1xkB688BtPe1k8O1m4R8MY5Kg6LyrAR7v3/zltrGJ/YKw
+         bVEJLRm/zwthyisla0pGJJcbKHSlH9bPy35pq1vfE3uglgpKNQgJdu0Req8+k6Sn4QKi
+         +0gPeJdpXzfl0vS5OPgmAuJV9ttd2ZW/u6OpwGbYsLzcCygO6rLK6xt7aIut+T0GpQCO
+         4WhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOjKKBPzMaXLpmDMiiD7Rwpht7QENQu0HQvKFrXaqkAleS4Mz8H4vmDLyNLVUF/s6LzmN6grK72vOflEAK@vger.kernel.org, AJvYcCX9j1Oe5lCul70arN/dIYSkNOY7DzhCTcNR2QiBCGzLxFKoZKhk7jk/dIj7tSmDOzaJxKwuvzIATuho@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4usDNOuNb+DOgoVguk1cVFmZbSI7DZahy1HwCe3/47/edUZfG
+	CYGgBPTpolJ/vsjcCWeXeU+HD/DDnGHfwj7QMWwz5HVUP1CRIAJ1
+X-Gm-Gg: ASbGncvYquUKRGYfebGdI6KEt7cHWPk+QrwhvAUZgJM/l1b7M9Qox3KYOfOQZ164iaf
+	nrtg47f8AVNwNzIOtn9D66RhnlN3fXv2mZ6epIlxuXPrSE89Ji5NSJdClH1S7ckq2xL9s2CmFJw
+	JBzW9b4s1JvNRuC7QImgKMQKX2Qr5P4vjOAr5CsKiLeVF7eJ8DUFG2gN6S6G4BWlHHW0W0cetoW
+	KISPuUfCYa8FRqs9P95KJ0b6Ps2D4eKrXLH6IMt5xy9wrSUlKFHKpueMA4kSqGfKZU28ES/JA4A
+	twa898aJduUSyoyRl41mvHCLjCY7viZEpBbOC7CHNJxLSTdmVLDYNgbBa78/M0chQiscVjhm0+O
+	4NiBm5Hx5Mlcd
+X-Google-Smtp-Source: AGHT+IFweT18OMKEwMuPZL1sAyNuy95xRHNHIIz/+725Kq7sjzQyRwU4H6VFXOnMdyuzO5rCuDw9xg==
+X-Received: by 2002:a05:651c:989:b0:309:2ed:72df with SMTP id 38308e7fff4ca-30f0bf50394mr40218871fa.24.1744095901929;
+        Tue, 08 Apr 2025 00:05:01 -0700 (PDT)
 Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcd37sm19252841fa.76.2025.04.08.00.04.57
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcd37sm19252841fa.76.2025.04.08.00.05.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:04:58 -0700 (PDT)
+        Tue, 08 Apr 2025 00:05:00 -0700 (PDT)
 From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Date: Tue, 08 Apr 2025 09:04:28 +0200
-Subject: [PATCH v3 1/3] dt-bindings: display: Add Sitronix ST7571 LCD
+Date: Tue, 08 Apr 2025 09:04:30 +0200
+Subject: [PATCH v3 3/3] MAINTAINERS: add entry for Sitronix ST7571 LCD
  Controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-st7571-v3-1-200693efec57@gmail.com>
+Message-Id: <20250408-st7571-v3-3-200693efec57@gmail.com>
 References: <20250408-st7571-v3-0-200693efec57@gmail.com>
 In-Reply-To: <20250408-st7571-v3-0-200693efec57@gmail.com>
 To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
@@ -81,107 +81,50 @@ To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2216;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=954;
  i=marcus.folkesson@gmail.com; h=from:subject:message-id;
- bh=8jsXPoD8/rVl7BQngK3NPkNA5m5l8CicRc1UHvgLl8Q=;
- b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn9MqI/6MAlJHkJFAGEAFtgGr3nulYXwgfcprBv
- UZsVFY9NFaJAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ/TKiAAKCRCIgE5vWV1S
- MuTCEADWG6b4liMCpVeV5PsvAuNakNCEUFL7uQEazaVoNugFyqXWyvXpsEaWhruzGt7WV0ik7EH
- RcrJiptSDU/0QE7mLKYw7lMdPHGOQBE0P4ARo6gEY1CUPMnTE0RUENvzoA0JQkWbtjPyXiPRHt3
- X40P2JJoe7Yqvom4D6S5PFv2Q+BlR5fna45TO/cP4xy/d0PiKsqJLR4/3GZrDwBW0Z6SRXxac5T
- zdv4f2uc3owp2vIR0tQp2RnpihkmimfOttg4cC4BrTF9tCJirmTLZQt/Whi6yFgu5aONwC5wYMh
- KMRx0NehGGZusaalAwHkWbRkyhAVG3zioY7Pt35q3h3x3M4FmvPKujMAK4jueJRMZRLu2LK4FSU
- FfqzraJSyzchYX4Kh/kNFJDLTOlzPXYdU7lQDfTbqKzrqwOeYpNPOHPrjY6FrwGSmdd5iHi5bSX
- NHuSgrXNLTV+nFyJ8e49V53t7rYtSc8E5l0sG3ViKDulywob/jMfLuCcVdS6Vos+Oc44rXSoFox
- tom9zRA5iinjgmOXzRuaioYKjvsFykGc+L+JX7Y/rvqHMH3ocQg1WsU1oMfMf5eacGP/9w6AdXS
- KJXW/KCEaAmIXYKWSACTNvraVPZiehCXs7/USjKmGRPmrOLU2FIwHZpFpV1R1bJPzj5xI2pPDbg
- WfXOjyIQdnlXLew==
+ bh=YCGDQojD8nya6OBnR7iagaQHAlVaXzUTMmVsiIk5blE=;
+ b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn9MqSKP5h8IxUt3tj8KSjZst0/DK3ePN4fRnIZ
+ RaulY19LpuJAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ/TKkgAKCRCIgE5vWV1S
+ MusgD/0Rm5O0xsoOa0hrInGGh3xTpRan1/qYSMbzqbntwNtFVuAJS2qFMQHUzjRRo876g2wBhrl
+ tVHdOa5Mws9M9WDVXV9gl3Y3YUUhb3A73bPu4fcYFezB+l8EKIM/tWCkccAAEdurADlnhlUJT1g
+ 9KZ433Vf7QjooRYWXmrfs0V2RVyLwKpwtYsncODbhn/psZLl+OCjuEUafXaVUOAnN1HIQgb1vtv
+ PyTZKZ6ksGEdozDboo9Y6HU2R++4LO+3ud6mfg+g98HXE02moXFB0N8d8UK8HBfh7OrqNTBcP5a
+ kCYoRxhFCvXIy98IT/aE3tlC4O1kvV8DD2JoXLnb6mWFqfeBxOm5elx3apa1NNaE/xJgXVeDA1x
+ ZsDYD5aJ5ph61JeRqUkxpO10nrVKxVnSWvfQKkbOA+/ImL7Fy4jcQ1s+YyinLyqWPRJf3dZU5W8
+ rfQUFJ/fZla7z/ZqWEmFCm8Rj+zua78TXUKn7ZR8lNmngNo05TuBSkfwmp0NAJrLPz5mNZJ2Z8M
+ Ogpc71FndO5Ay+Kx8xbmF+69baWDWfoA/WKnsmZKWKbsn4EhNRQPm4mpFcXdVvlu2poBaudsBCy
+ 53CRD1jqvNzr/IIC/B5mzSoY9ts5CJpzUFIRrUEYauwXGnHa/AQY4UsfKlFyNH8uRNsOhZcUEc2
+ QrrWkW8xBQ2fjnA==
 X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
  fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
 
-Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
+Add MAINTAINERS entry for the Sitronix ST7571 dot matrix LCD
+controller.
 
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 ---
- .../bindings/display/sitronix,st7571.yaml          | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sitronix,st7571.yaml b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..a25d2820be27fe580b6d1aaddd9c610383b73b3a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/sitronix,st7571.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 889bd4a59551c9bc125f94944a6e1c7e3ef2de83..eeae24fda846b9f63400ebb08c3fa7f02f3f4b19 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7572,6 +7572,12 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/sitronix,st7586.txt
+ F:	drivers/gpu/drm/tiny/st7586.c
+ 
++DRM DRIVER FOR SITRONIX ST7571 PANELS
++M:	Marcus Folkesson <marcus.folkesson@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/display/sitronix,st7571.yaml
++F:	drivers/gpu/drm/tiny/st7571-i2c.c
 +
-+title: Sitronix ST7571 Display Controller
-+
-+maintainers:
-+  - Marcus Folkesson <marcus.folkesson@gmail.com>
-+
-+description:
-+  Sitronix ST7571 is a driver and controller for up to 4-level gray
-+  scale dot matrix LCD panels.
-+  The controller is designed for use with LCD panels that have
-+  a resolution of up to 128x128 pixels.
-+
-+allOf:
-+  - $ref: panel/panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: sitronix,st7571
-+
-+  reg:
-+    maxItems: 1
-+
-+  reset-gpios: true
-+  width-mm: true
-+  height-mm: true
-+  panel-timing: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - width-mm
-+  - height-mm
-+  - panel-timing
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      display@3f {
-+        compatible = "sitronix,st7571";
-+        reg = <0x3f>;
-+        reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-+        width-mm = <37>;
-+        height-mm = <27>;
-+
-+        panel-timing {
-+          hactive = <128>;
-+          vactive = <96>;
-+          hback-porch = <0>;
-+          vback-porch = <0>;
-+          clock-frequency = <0>;
-+          hfront-porch = <0>;
-+          hsync-len = <0>;
-+          vfront-porch = <0>;
-+          vsync-len = <0>;
-+        };
-+      };
-+    };
+ DRM DRIVER FOR SITRONIX ST7701 PANELS
+ M:	Jagan Teki <jagan@amarulasolutions.com>
+ S:	Maintained
 
 -- 
 2.49.0
