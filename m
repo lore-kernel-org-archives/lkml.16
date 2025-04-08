@@ -1,55 +1,40 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DE92641DE;
-	Tue,  8 Apr 2025 08:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C39D218587
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100473; cv=none; b=UK+Deay3p9eUh6LLx0V1uhAdku0k568DVviEZil1bgc1CIEtDoV+iu+M+iXsvyp2r4jMCISRJIyIf6/J8NxiyCfLCoBxdGWrM5uFRFnQqWsdIj133d/WK3ZrHBKW6iAq7Nkt/WExHxCi4G1492HwYzsoZ90o+carpemrH1s4JQw=
+	t=1744100487; cv=none; b=HpcZq+WbRcoVDPCtujqncguLx7tIhF+nhELZYWOA9xDNH/s8J66H0o3mEuxRprS18nDJFrxth6NN6ueh9U89pB3rmpn6lU+lUp/rMqOCiR2b3Qud35i/CN3358cBj0QJ3IN4XsOwE8JDs65Y6/I1J1JgKhzOi0dy9lA8mNn0RoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100473; c=relaxed/simple;
-	bh=x2c5KdbawGW6p/WQQY1B+ydj7DOJuPlM9xd8MQpj1MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hSjt/UP9Wnzbt+FwP535H/1pb8LSXdIPgiZ7FTq3qFW39qcDD7cGUHD7p40RgWGjoIaXfQPzsmO4VMrr0CPKbqc970/7NiB2/+mSy+dcQ8Cc5zd3or1kyNFlk4dduld+qs2IbmRTkKTEdStUG/wwqxUw9VdxfKeRSCFFg5i1Jls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AYAy9rO7; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744100487; c=relaxed/simple;
+	bh=OzubH/iNw9h8hZuS0TT0EdUvu9fzgbimX42quzovMK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SsE1P3lZpZhOyLzZghV0axYS6k/aOPsloYNFyIn6GgdhBoNE9dfOn4qMibTsW1pshl4BoQUvxMwT09qI0iyrEMUUpbDJQVdlKO2fDKnGZN6sroXcU576UIGx2LN7yDuczTXOGT1NhlsqvZIYYpdoTGeUsR1wt6DLb3MHFAh1dq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOqyAEbv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AYAy9rO7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744100423;
-	bh=YDMcIt5BzRbFs4if5qmFPL9dl5dOuXEMZqyS0Yql9tY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=AYAy9rO7PNbnAl8WYX0BxcNfo8jCo4XUoN00dpNGgWz6nqtMX2CCp662Di4V+CHAd
-	 YK7tPdY/x2lqC8oSxnsjaxmBTco1PCsEYUDX0l4ak7ly7cB1RpEnk8XkPvIEvOqPl2
-	 7l2P7H/fL5iJyWHxgukAw1mfKfyPWeyvUn0qedq8=
-X-QQ-mid: bizesmtpip2t1744100373tda0eb2
-X-QQ-Originating-IP: MyI0N3qeLkwnj2ePB8tsaxOvuShTPSU2LwOhCllz90s=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 08 Apr 2025 16:19:30 +0800 (CST)
-X-QQ-SSF: 0001000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 12505545844404580933
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: guanwentao@uniontech.com,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev,
-	niecheng1@uniontech.com,
-	petr.pavlu@suse.com,
-	samitolvanen@google.com,
-	zhanjun@uniontech.com
-Subject: [PATCH v2 2/2] kbuild: rpm-pkg: Add elfutils-devel to BuildRequires
-Date: Tue,  8 Apr 2025 16:19:21 +0800
-Message-ID: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOqyAEbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998E1C4CEE5;
+	Tue,  8 Apr 2025 08:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744100486;
+	bh=OzubH/iNw9h8hZuS0TT0EdUvu9fzgbimX42quzovMK4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TOqyAEbvBPMglz0f6GonBJBZgmeCD4zWmmV2xSA8BKmbVA2x3n7v5N/DULjsshqeN
+	 qCrDu1I83lDepJT6pGvpcDhhTy3kOhg4pXgfQ/QnW6zWiAQ8A+W5HeYlOMUWk4VT8/
+	 NQG1k5LXomkQF1zkASy/X56K7JzV2ZIAcn7DMUfSl5pZoofe5ZH+HoCLnARdxMakEu
+	 9tstbZHa6r34hMOL002wU7EFWHwsFtsz6Z4ju0DUVKCHLuukb3DjZOk329FmXXKyk1
+	 9EdrqhvlUucL2pL5gUQcTa5fFJ8cisrOiwSpbjSeI2SNiHf5Po5f0Kiq0R6lSNAoVO
+	 qgUnSv1gaEBzA==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH RFC 0/5] x86/asm: Improve code generation
+Date: Tue,  8 Apr 2025 01:21:13 -0700
+Message-ID: <cover.1744098446.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
-References: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,63 +42,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MQ+wLuVvI2LQOZ9QeG4y37PNaliQEyrRjliHmYcT3BU+j2tcmvTEAplo
-	fRRnIWzjCFPAwSv457qwh3Z+vgXaAFKCKgf25qJN+3Gxfv40zBo6F8dARNo65ofs66LIYaW
-	uoPQIAamiZfPcILeSvcwQHuWHT3VnaK6ZKKPruIAsafgrFzbcCc5uLNfx9QF82dVesLjZVq
-	lEof9leCmh0kk917C2inE1W07eMkx5PFq+FlIKp1lnUrJkC8U9ENgrMiEqEMb3IP/nLV5ft
-	Z6jQ0mVYkMWWdzMoBlodJx7VTIUAl0tnoajNFRyqcKmJG9+1hgPOxf0Vxj8oXvrNLJ2C2u5
-	3jcrsBkhhzUuweQodsbU5pVx+DbREOn5uLY83WH71anOpbAzoGyIPVrTFDNp60l75oWf3MP
-	mKbA4Ccy6YAPHUvwqjyv510ycn8VfZdofhQZKcnzxD3vzBLEFx9THpWcNaWULnD5AcqO3PW
-	YOB+MPLHfdeHws/aBy/NIvsnsC6K7vGxQvfJ4jGquGYKuCflVTBdHWTVGr8GdzmUo7FlXrS
-	gU3LUf8cStH+HmCmGlK456tIdI3KVB+5quH/E6G3i2x2mB7xW7yqGNpWpiH+5qOhjaj2Q6I
-	BVTYBjXqvWaSUoEtUc1vs46NhJPewgii6jdfBnSY89zIEy44w+FuRqAwHSVs6s8MGr5M6iE
-	z8aUVaRN+xVMMfsekLLGu3yCXqqmUed+hApQyb+wfC+QVdqNr3q4fZqjvxiYruGWx2sgN9X
-	OfwuGYVhCP5oH7SGeCnaOhr+qcAMqobA4UsZVtMcOkcEqvQ+Jd0KhVsAAFuelis5UwQ4a5P
-	RQG1tS0NYqeEXTK6vATN7IouVx2kUcn88JYyKqBTWV+kh84oEZOIs8WjGa78LIUuRsvOvmR
-	OAwkqQp9QndgFstPJJrbTMifTIvscFKrDqLQ//XrRDXkzaUgB2Xc4qaXP2bVuYpG8ftqin8
-	/ByG6yWp24Nh7mu0USrZQhrS1mPv6M9tDrS49PfWNopjOQ4HfmSeizdJQx2tv1kaThQDvsK
-	HwtzrG5CDRfa5Lxe+E
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
 
-The dwarf.h header, which is included by
-scripts/gendwarfksyms/gendwarfksyms.h, resides within the libdw-dev
-package.
+Some various improvements for inline asm code generation.
 
-This portion of the code is compiled under the condition that
-CONFIG_GENDWARFKSYMS is enabled.
+The "RFC" is really patches 4 and 5, they propose a more readable format
+for alternatives and objtool annotations.  Bikeshedding welcome.
 
-Consequently, add elfutils-devel to BuildRequires to prevent
-unforeseen compilation failures.
+If a general format is agreed upon, we could do similar for other
+annotations like WARN/BUG, static branches/calls, etc.
 
-Fix follow possible error:
-  In file included from scripts/gendwarfksyms/cache.c:6:
-  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
-      6 | #include <dwarf.h>
-        |          ^~~~~~~~~
+Josh Poimboeuf (5):
+  objtool: Remove ANNOTATE_IGNORE_ALTERNATIVE from CLAC/STAC
+  objtool, x86/hweight: Remove ANNOTATE_IGNORE_ALTERNATIVE
+  noinstr: Use asm_inline() in instrumentation_{begin,end}()
+  x86/alternative: Improve code generation readability
+  objtool: Improve code generation readability
 
-Link: https://lore.kernel.org/all/3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com/
-Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
-Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- scripts/package/kernel.spec | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/alternative.h  | 88 ++++++++++++++++++--------
+ arch/x86/include/asm/arch_hweight.h |  6 +-
+ arch/x86/include/asm/smap.h         | 12 ++--
+ include/linux/instrumentation.h     |  4 +-
+ include/linux/objtool.h             | 97 ++++++++++++++---------------
+ tools/objtool/check.c               | 30 ++++++++-
+ 6 files changed, 149 insertions(+), 88 deletions(-)
 
-diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-index 726f34e11960..98f206cb7c60 100644
---- a/scripts/package/kernel.spec
-+++ b/scripts/package/kernel.spec
-@@ -16,6 +16,7 @@ Source1: config
- Source2: diff.patch
- Provides: kernel-%{KERNELRELEASE}
- BuildRequires: bc binutils bison dwarves
-+BuildRequires: (elfutils-devel or libdw-devel)
- BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
- BuildRequires: gcc make openssl openssl-devel perl python3 rsync
- 
 -- 
 2.49.0
 
