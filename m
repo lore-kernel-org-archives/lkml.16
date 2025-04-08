@@ -1,66 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDBE2641CC;
-	Tue,  8 Apr 2025 08:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172B48488
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101010; cv=none; b=GsU5pU0Bu2NTwV9MTNflv2+XQLXdTXJOoiOVlCO+71UZOBvYljxr5Oy2h+4cZqfmcx04s2AxZ7wR4qz0TvPZeNrTTs6ZvCGenafmacPKTYwIbVjR1c+lb9Zfgv2l1i0PjE6vRbOz5AObF6S/01396XmyUJsSRu96HbP/dayDPLk=
+	t=1744101029; cv=none; b=AZOqYv9K5xMSPBotJbjzkp7w3sZ8IYN4byXnLCHefm7gd3x8Cnxp5mYoaSLvL2h3JmQjpOJpFrBSSMi/L+Kg6MDYkjP3H/orD1HV8UmHR8MadKmE+Hw2oRZ3IwjxpeBXAxtFhG/9q36LbyMdvFzH+GQJLqIrLA162Dz2+rbHPVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101010; c=relaxed/simple;
-	bh=mtQ0cgbg65B3Y14wimzpCJkbW0UL7A7exIM5eb44PFI=;
+	s=arc-20240116; t=1744101029; c=relaxed/simple;
+	bh=KY8eqpSZSL2ejUW+DL03KcgssW/4F8yuDgQ6k2zPzyg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3ZPogUyrL4pHHI0EbNu8cWAllEo4NgZdaDfgGUQ34F8RbnbOD+Kwvng38WZT0xk7GHBL28T2PqNmXnK8F5t+R99/W/QDZ7vx3ndjg1StpicA3wUTzksxVFFG03edprq9CbpV02gq7Z79RS0WwoSiUmcGdnXZRnV6JklzpHPfVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TbjRdyZC; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7S03kzn46t6XgGKI8wB+tfVOl0y4qO4VO4vOP3022KPDgmfM28FVRQgJjoqWu5L37mozc/KXYHKf1Ua3v0xcTToA7G0f2YjoesO0+t4lEG3ldsRRiFVBSzEIaN57qfIDBMAyNHs6yFopDFKnkveLDL9cWMAGLHu7j3TiOdVOng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=al8aTuVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TbjRdyZC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744101008; x=1775637008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mtQ0cgbg65B3Y14wimzpCJkbW0UL7A7exIM5eb44PFI=;
-  b=TbjRdyZCO+n53ndhyWeWREL1PoDz9cY+gtH7rczLjTkhv/uXDYTUQzBr
-   K10E6JN4X24uUOZdsuR4W9bUAYZF9mT8UJD5NLIFYNT17ZedIJbJjPI3J
-   IU96tJjNLtuuMVFs0gKPc5tqm2A889RYt2zL0ef7WfgrWsV8qPiB5Q/RM
-   QFX36dGE2xoGDVKAa8PpBeG0g3/BQ4l6IRSkGBtipR4JIpELyogXV+vVf
-   MjU8PHyNBuKX5B7U937l+TTM5knLLFJcZycvzEh9WM4pUCpz+jf8VV8yk
-   uuEm0RAA/+l2B5p8IaPSVlAXv8ZVuFa0ti0MzoaZFH/Lpp4hCLu4Mv+w0
-   w==;
-X-CSE-ConnectionGUID: FJ2ai5R2QUutrbg9K9Flhw==
-X-CSE-MsgGUID: OYsK20KaS2mR2LDSwSIC6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44770229"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="44770229"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:30:07 -0700
-X-CSE-ConnectionGUID: 80DLV24cQKSaJb5P60LKlA==
-X-CSE-MsgGUID: ntoy4gz8TbKZqevi3o7V2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="133402993"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:30:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u24LI-0000000AL5R-1HaE;
-	Tue, 08 Apr 2025 11:30:00 +0300
-Date: Tue, 8 Apr 2025 11:30:00 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Denis Mukhin <dmkhn@proton.me>
-Cc: Denis Mukhin <dmukhin@ford.com>, Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86/early_printk: add MMIO-based UARTs
-Message-ID: <Z_TeiDVh50u7OhIw@smile.fi.intel.com>
-References: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com>
- <Z_P_nWrl4JQJVy2c@black.fi.intel.com>
- <vCbvBjUt9kPZhYP0tXAoVKrIn5hk5ON-HEqi2OjnCECThGJ73vh7S4qAKspAlxtgBAHFv1Sc_k6Hmdeq_nYXReITCt2FNRy1wWZR-udke9c=@proton.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="al8aTuVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59B5C4CEE5;
+	Tue,  8 Apr 2025 08:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744101028;
+	bh=KY8eqpSZSL2ejUW+DL03KcgssW/4F8yuDgQ6k2zPzyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=al8aTuVv9eV9MqMEblsJWD/xfzz1I3eQ9zFnN12RN/Wu8A2dyWnqV/PWDMLUpC1KZ
+	 rLS87n2GUERaGR0Ac/ZY3SJdFgCnJgOrEtMtIMHCCm+0JUN/Hmv+dlmrCcWEfJHxJJ
+	 2jDdlhHWcnhHM9qfIW7hNqeyzOeYpraYnQgFmNqQrUTVRx6PvLhZWOj+SDl4x5euK4
+	 Gt0H1jGRVIwlgw92aMP3mbRrYeVkOjyCbKclhv6m/r4Do4xeqHtIobFKD7fpI1uB0O
+	 NSQNNLKdx8z0EB5yqXV5oYnZ33pteqJvJMPaeZDNOijggyJweDsxjjMEQGoWlYIIAf
+	 /Yz+jKN2iOU+A==
+Date: Tue, 8 Apr 2025 10:30:24 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH RFC 3/5] noinstr: Use asm_inline() in
+ instrumentation_{begin,end}()
+Message-ID: <Z_TeoLQfZA858jk-@gmail.com>
+References: <cover.1744098446.git.jpoimboe@kernel.org>
+ <7cb41fe7e87a003fc925164d5cc18efd8e95fcc0.1744098446.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,52 +46,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <vCbvBjUt9kPZhYP0tXAoVKrIn5hk5ON-HEqi2OjnCECThGJ73vh7S4qAKspAlxtgBAHFv1Sc_k6Hmdeq_nYXReITCt2FNRy1wWZR-udke9c=@proton.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <7cb41fe7e87a003fc925164d5cc18efd8e95fcc0.1744098446.git.jpoimboe@kernel.org>
 
-On Mon, Apr 07, 2025 at 11:04:42PM +0000, Denis Mukhin wrote:
-> On Monday, April 7th, 2025 at 9:38 AM, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > On Mon, Mar 24, 2025 at 05:55:40PM -0700, Denis Mukhin wrote:
 
-> > > During the bring-up of an x86 board, the kernel was crashing before
-> > > reaching the platform's console driver because of a bug in the firmware,
-> > > leaving no trace of the boot progress.
-> > > 
-> > > It was discovered that the only available method to debug the kernel
-> > > boot process was via the platform's MMIO-based UART, as the board lacked
-> > > an I/O port-based UART, PCI UART, or functional video output.
-> > > 
-> > > Then it turned out that earlyprintk= does not have a knob to configure
-> > > the MMIO-mapped UART.
-> > > 
-> > > Extend the early printk facility to support platform MMIO-based UARTs
-> > > on x86 systems, enabling debugging during the system bring-up phase.
-> > > 
-> > > The command line syntax to enable platform MMIO-based UART is:
-> > > earlyprintk=mmio,membase[,{nocfg|baudrate}][,keep]
-> > > 
-> > > Note, the change does not integrate MMIO-based UART support to:
-> > > arch/x86/boot/early_serial_console.c
-> > > 
-> > > Also, update kernel parameters documentation with the new syntax and
-> > > add missing 'nocfg' setting to PCI serial cards description.
-> > 
-> > Just for your information: Have you seen this rather old series of mine?
-> > 
-> > https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot-earlyprintk
+* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+
+> Use asm_inline() to prevent the compiler from making poor inlining
+> decisions based on the length of the objtool annotations.
 > 
-> This is a nice cleanup!
-> Thanks for sharing.
+> For a defconfig kernel built with GCC 14.2.1, bloat-o-meter reports a
+> 0.18% text size increase:
 > 
-> Sorry, I haven't seen the series above, I had to write a patch (which was months ago).
-> It's just I could not post it on the mailing list until recently.
+>   add/remove: 88/433 grow/shrink: 967/487 up/down: 87579/-52630 (34949)
+>   Total: Before=19448407, After=19483356, chg +0.18%
+> 
+> Presumably the text growth is due to increased inlining.  A net total of
+> 345 functions were removed.
 
-No problem. Can you look at
-https://lore.kernel.org/r/20250407172214.792745-1-andriy.shevchenko@linux.intel.com
-? I forgot to Cc you and that is an important fix.
+Since +0.18% puts this into the 'significant' category of .text size 
+increases, it would be nice to see a bit more details about the nature 
+of these function calls removed: were they really explicit calls to 
+__instrumentation_begin()/end(), or somehow tail-call optimized out, or 
+something else?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also, I'm wondering where the 34,949 bytes bloat comes from: with 345 
+functions removed that's 100 bytes per function? Doesn't sound right.
 
+Also, is the bloat-o-meter output limited to the .text section, or does 
+it include growth in out-of-line sections too?
 
+Thanks,
+
+	Ingo
