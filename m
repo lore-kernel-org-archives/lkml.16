@@ -1,171 +1,150 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2257C23ED72;
-	Tue,  8 Apr 2025 18:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75F8235374;
+	Tue,  8 Apr 2025 18:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744137141; cv=none; b=LjuK8mH2HFcwMpzVqEXCV0gJFHHZftmR+ylfBh8QtKN8GKoBjN6++vaVPlcbSH7g9owBsZ4u/5kVBRuOGDIRGwx7wmim4zefh8MRswiboGrjAz9/dcTGGJlwSDQvGin9GKGChycAja45hUrvcenpKIYYpijSNrFu4su5M0Mgz8k=
+	t=1744137180; cv=none; b=ZwbIsc3wSPQgGyEV0cgClwLiHIniFWJoNfnUmgOG6THLIL3ay29ELvYTX5z20A4q8cRyLTn5lvwWu8S3E0OPducV+j4Uk8Ak+14vJHyRDu2snQcXq4yfnj8yT5BCbnC4MNgvyvrP4wJJTDv4XBL3rTDZYBchNMHM/yhXXLujSXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744137141; c=relaxed/simple;
-	bh=rQ8hyR9oiHg2KsZ+lDVGyJ4BSv0od8Sa7HW79HCLVwc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UUoANgISQKhYD/6kCLNtUH2YelLDOpOF9eiOqUSrbpSvPgoHyhKWT3MyZ6pTDi5hr6a7gOn77Xyk5rqh6iyCnYnaVnX2+Toq52ldd4ISH53xXNJrDJTMCFoNEwWB5lPhgOjZZAlK6qdRrtGMkwNTaVmeI8AibHxGD4uf5+kj/pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1744137180; c=relaxed/simple;
+	bh=cz0sFymjpfC/h77fzceNQsL/NvczhkEObHLXu7XO1kY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bDNPqP3A92YuXn3w/2sIjHJSgxleSJOYjxxVd+jOYb3NFYMRN0TJpuQir7vIv28uCsLoksrKt5ndP8aMn5cOHbLAVj0aShxjDcSgaBpkenPMUPFtop5RkFJ78oKeFl21Yd6rGMn8+nCNjDJmPiooyRRYsKVQD9rxZwciomQuJn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dzK+xfLR; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso1054019566b.1;
-        Tue, 08 Apr 2025 11:32:19 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzK+xfLR"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2295d78b433so59274235ad.2;
+        Tue, 08 Apr 2025 11:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744137178; x=1744741978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CsXm6MV5K5BRVbJnpoBwjC4UXp/lFGi2onPtWmwIMd4=;
+        b=dzK+xfLRa7wxYJ0LfdmytMFM4VZ3X28FogVVWRspPQitkXLPa1llfD5Dkwgf/l1rji
+         bPCOc/YDkBxjnIyj30wj/SWovLmvelD79r1E3Zdlb0/FWYD7hRn3GrABNaqzdbBfRJe3
+         GGh3tL9In8pFty7AET0TTcapswFSS4Er+Q4C7oxQ1GZLeq1ZCR0quBkzhZVupur1YfhX
+         xdw1koCnSXSiftqcl1q7ltHHyjrqBeyk4Arn3z13ALt4IdMda1v6fHD2qOLx15SriZHL
+         vm6MlU2oDApzWXcDD4TIFH9NTAcChZpbim7cfK029+/0V9s0FlynIdMNMQWfP6tqbzyX
+         DD+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744137138; x=1744741938;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744137178; x=1744741978;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EhY4Z3oAJKd03SrzATbzNjahPXsmuoOiwYMLC9powFE=;
-        b=uWDCWFNkUL2umIk2xs/FUVxJFCrVTKlpBmerCEf2DJ01cLc91JDlgkn+ulfH1MxVII
-         Zo5/35IxM1sbmCCCmbbf3yT27vDJb33HNajal6r0TpZvhxQw+Ivq0wo/ZkQ/OgCbc0KP
-         5Q7kLX+QC1kjdPi/e24meosU+fLIXRLS1RCuUK3ZmFvdvSeiveVlJoDMk29wSCp8Bjb7
-         WKggaKIgbKUFuqSL+WzRvNnSuIF1K7ma3k+usWu6ztdA+WZ6UcJ/4MssHxwmFwftglo7
-         wAFVMtT53a728Sxz5sPcgzeWfWsrEQKpN2p2lj9Osf+SIqCIomjjaU2HuX9TFxw1p/HH
-         1G0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUfuoBFeHsByEHe61irlXs+yKSY2NCVR7kkG7SC9JFWs9uhPMu5huJPGv/aXLTqI9DpGEGyMKfCXnOO3h8=@vger.kernel.org, AJvYcCWNwgzHioHRng/5Omnnkw41wUnRtUPvQEnh/fLSWoF65m/YpRU2mJo3INuT7WVZk9c4MqRyD0Da@vger.kernel.org, AJvYcCX3N8Tidi80/WNtGz7k0fIUzi3DF+MaIJ7d24qrsve5ZpKHoQ24a5s0YBG+hHjN2aSUse4VPbWLao5N20noSXmhgXgA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHQ6JzTq8+HQ7XhbITjC+is6KCbcvlb4AyzoBxxLd6r8yozklE
-	XBz7t444tAC7aq7281KxBRf4RGl4GCS8l0CYiGf5liwJaSXCupPJp81DnQ==
-X-Gm-Gg: ASbGnctA0Q6QF1R+Bofq2i6qE/4j7OWOfWu+lhQPABIDq7VhZizF9/1C9uj6KrVkHmf
-	swkn2arfs735KELg7X3IJ9g1732lwcaBwhlPKoi0iwZ4QGkoTFrplPfAAgQGq+MZ2JkdrzK5WFq
-	FE4DnV9uKkV38qDdUCGcU5+Ic5BDGVv5l/3A02SdFrp4q2Lt/HUQI6T2AD3MOMEbVl508oI5r4d
-	ZoLY1NvG7D/htxrzwYEWZTEBc/gR/Nie1X5nRb8gUOKaunWhji9YgUJWLNge64B+PZL+lqgItaC
-	p2vtr7X8P/LigyKMknI7aM4ZMz+vFtjaCoSj
-X-Google-Smtp-Source: AGHT+IHrblW6iKvZrDCZZnVsYdIASQfGNg4NSLAsnEK7X08Y/yKOXlfNqlhnRhQefJiJdtPrCRXYeg==
-X-Received: by 2002:a17:907:7f0b:b0:ac7:b8d3:df9c with SMTP id a640c23a62f3a-aca9bfb1039mr10321366b.1.1744137137777;
-        Tue, 08 Apr 2025 11:32:17 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c2ce0sm964609866b.178.2025.04.08.11.32.17
+        bh=CsXm6MV5K5BRVbJnpoBwjC4UXp/lFGi2onPtWmwIMd4=;
+        b=YrtRcqUZGWmytxZvdVA8DZk98ph4SLtX0p+McpA44G70OlGdbyOsxVMlFhAl+3QIte
+         Fw8uEU0Q4LVQ7/h2yKwEfz1YbTz5RkYMZ0v+jNOUMgHzzsL61EckDRxuocqewDo4LMVV
+         Kl/r/+V0LdxKIE6D0YObI0kPG51CW6Yw1TgfkKzeE7gVZkXUu2fCsDqJ4vFToZ9R6HAd
+         dHs2fTbT6cq/vpRBhbLEjHiQpi9HVBVVdn6Rajz37w8wrYUSL4riWkj/Mwqybyf6xF8s
+         2VoAS6DLFhE/jlXc/OpZ6Uy6S1icPfvJYoS415wQrYksXlZKkBbbHBxfPJlW0uJ0PiNR
+         Y7Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ31foE3Kpasz0wVc7wum5YiGJjm+qpcIilWaeza7ny1j67c9YalvyvyojCOEEg7cLeKg=@vger.kernel.org, AJvYcCVY60Z5xYY031PRv1UPjlPeS5sax/J6jm5PV4fVUbR5pWK2Zja+sEN9qQFgUCVvc4zbVm/PrxPccEFtkDS5NPB1@vger.kernel.org, AJvYcCWwaIPwPB3Q0bMme7LL2g8qkg2IF2qP00rVqu0z4qPghs8GPgoaaIVuIT1x7+vwPQHf9HL9azY4OAQiUvFw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzygH8xQAPSC2GDYgmJw/NQ6zlGxoCrRyZAECsmqnRovwNKxadl
+	ysuPdb7IVustweK4MnyexgfYTYn++fA3niOB8hSUJWzhyISe+T1s
+X-Gm-Gg: ASbGncs/L8B1XhhFBIw8IEt0U9vaPYKme92CRthTWpOt3LAiMcnCXfX0kA0p2ZhLCEn
+	X+anCRgpIrIyJlHTzMxnfQyYta+HZz2GgexzSdvGOHpE9dCXMCJ08wNG2x/XaJfT6ieDgbUg6D1
+	j3HdUFFUMl4dn75+9P7/HAZhX8A/vZzWwu6tG/pbhK9umnwHmow0TwXhpfwen5uDAa98y2+LNLf
+	9/e4qlhuKVSVoGdwyWOuYgOJtPcDsc/PBbZBTWtQgAGlmm6Ykd2DPEhwO9PU25d1zHwRVOm4PWB
+	j08U+sx33VoKQweHi1c595flQ+Z4+GjZbBknXdeGyYB06w6tqSoU3XLJCgG2dLOqK259hw/kUWP
+	wqOnEHlsvCBV3r6At
+X-Google-Smtp-Source: AGHT+IFFgN7WMzBD5HsfPDqJ2wUPAWRl9kp6owNScncUOYS4nasPvN1eVgLjKMFFQTsakeZjjrHQxg==
+X-Received: by 2002:a17:902:f686:b0:223:faf5:c82 with SMTP id d9443c01a7336-22ac295cfe8mr2454945ad.8.1744137177911;
+        Tue, 08 Apr 2025 11:32:57 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865fa98sm103806325ad.140.2025.04.08.11.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 11:32:17 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 08 Apr 2025 11:32:02 -0700
-Subject: [PATCH net-next v3 2/2] trace: tcp: Add tracepoint for
- tcp_sendmsg_locked()
+        Tue, 08 Apr 2025 11:32:57 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: houtao@huaweicloud.com
+Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re:[PATCH RESEND bpf-next v2] selftests/bpf: close the file descriptor to avoid resource leaks
+Date: Wed,  9 Apr 2025 00:01:40 +0530
+Message-ID: <20250408183214.6437-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <92596c82-4a12-3afc-6cb2-21a11bef3739@huaweicloud.com>
+References: <92596c82-4a12-3afc-6cb2-21a11bef3739@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
-References: <20250408-tcpsendmsg-v3-0-208b87064c28@debian.org>
-In-Reply-To: <20250408-tcpsendmsg-v3-0-208b87064c28@debian.org>
-To: David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
- kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2727; i=leitao@debian.org;
- h=from:subject:message-id; bh=rQ8hyR9oiHg2KsZ+lDVGyJ4BSv0od8Sa7HW79HCLVwc=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn9WutKMiFYZp21UHtkEtORTCNKpJYNNjokz0CC
- /DzeChP98OJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/VrrQAKCRA1o5Of/Hh3
- bZgND/99YiH/dd+FiIPywZsKOzA3EDGLQCw5AjD8k5DllLCIZcdQVnPV3LKL2paa2RScNtSe977
- 0fN2CbyPteQhQ2UrO6Fu0aLIs2TXSutLumQj9h3sZBLCKmoZ280oeeGczwL/Hl99Jycy4Fxh8fS
- WZtFnVj+lO/Y8ZZrlmVqbA9aQG7wDk1BelsQXgKwoaYZ9t6efYvfzGRmEJUGD8axm0vAQqTI7kz
- zYFjzaR40LsHLDKncuynhgW1TNbvzJc2pKZ8h89dlgfpLBYcdFAeVFF2Vr+Dhvo7nmJW9DYWSqP
- J8T66A3kjny11xZcBHLqU2M1AT1brf9o7vNkVVBCkhgB41aWOqFsORU0EKPiU+Ie3ULIXk+qhd8
- 7tYI+AZ/wYlPJP0zCTmM43qWffjK/q+GRsnJXpVqlXJnMpMrzCI9mqi4BGe3PLKIhOfiTFP+YsQ
- sTacz+/FnhQyc1CjYzpr4/udXCRplhajAHwzac7DEW3DkJ2BV3VkrruntA+tAl+dXkz8h9bJ9pX
- 7MkNT7V7ZQPTa1Z+0IF958H2Xe3ZIaCDrWmCv+mU5aorGWxRJ1FpGZZ9qbERJkUyjOLa0WX9l/+
- yDUFa4BDWhkZiNKMMpvTWoWqVXr9leWNO5qVepIrVo4tK3VjPzAsbpwhF3he0KWXFqxlQdizAXp
- 5GIzx5PscHRZLHg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Transfer-Encoding: 8bit
 
-Add a tracepoint to monitor TCP send operations, enabling detailed
-visibility into TCP message transmission.
+Static Analyis for bench_htab_mem.c with cppcheck:error
+tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
+error: Resource leak: fd [resourceLeak]
+tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
+error: Resource leak: tc [resourceLeak]
 
-Create a new tracepoint within the tcp_sendmsg_locked function,
-capturing traditional fields along with size_goal, which indicates the
-optimal data size for a single TCP segment. Additionally, a reference to
-the struct sock sk is passed, allowing direct access for BPF programs.
-The implementation is largely based on David's patch[1] and suggestions.
+fix the issue  by closing the file descriptor (fd & tc) when
+read & fgets operation fails.
 
-Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 ---
- include/trace/events/tcp.h | 24 ++++++++++++++++++++++++
- kernel/bpf/btf.c           |  1 +
- net/ipv4/tcp.c             |  2 ++
- 3 files changed, 27 insertions(+)
+ tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 3 +--
+ tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c30..75d3d53a3832c 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,6 +259,30 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
+diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+index 926ee822143e..297e32390cd1 100644
+--- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
++++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+@@ -279,6 +279,7 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
+ 	}
  
-+TRACE_EVENT(tcp_sendmsg_locked,
-+	TP_PROTO(const struct sock *sk, const struct msghdr *msg,
-+		 const struct sk_buff *skb, int size_goal),
-+
-+	TP_ARGS(sk, msg, skb, size_goal),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, skb_addr)
-+		__field(int, skb_len)
-+		__field(int, msg_left)
-+		__field(int, size_goal)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->skb_addr = skb;
-+		__entry->skb_len = skb ? skb->len : 0;
-+		__entry->msg_left = msg_data_left(msg);
-+		__entry->size_goal = size_goal;
-+	),
-+
-+	TP_printk("skb_addr %p skb_len %d msg_left %d size_goal %d",
-+		  __entry->skb_addr, __entry->skb_len, __entry->msg_left,
-+		  __entry->size_goal));
-+
- DECLARE_TRACE(tcp_cwnd_reduction_tp,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index eacb701bc2be2..475a1317ad275 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -6518,6 +6518,7 @@ static const struct bpf_raw_tp_null_args raw_tp_null_args[] = {
- 	{ "xprt_put_cong", 0x10 },
- 	/* tcp */
- 	{ "tcp_send_reset", 0x11 },
-+	{ "tcp_sendmsg_locked", 0x100 },
- 	/* tegra_apb_dma */
- 	{ "tegra_dma_tx_status", 0x100 },
- 	/* timer_migration */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index ea8de00f669d0..270ce2c8c2d54 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1160,6 +1160,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
- 		if (skb)
- 			copy = size_goal - skb->len;
+ 	got = read(fd, buf, sizeof(buf) - 1);
++	close(fd);
+ 	if (got <= 0) {
+ 		*value = 0;
+ 		return;
+@@ -286,8 +287,6 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
+ 	buf[got] = 0;
  
-+		trace_tcp_sendmsg_locked(sk, msg, skb, size_goal);
-+
- 		if (copy <= 0 || !tcp_skb_can_collapse_to(skb)) {
- 			bool first_skb;
+ 	*value = strtoull(buf, NULL, 0);
+-
+-	close(fd);
+ }
  
-
+ static void htab_mem_measure(struct bench_res *res)
+diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+index 0b9bd1d6f7cc..10a0ab954b8a 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
++++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+@@ -37,8 +37,10 @@ configure_stack(void)
+ 	tc = popen("tc -V", "r");
+ 	if (CHECK_FAIL(!tc))
+ 		return false;
+-	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
++	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
++		pclose(tc);
+ 		return false;
++	}
+ 	if (strstr(tc_version, ", libbpf "))
+ 		prog = "test_sk_assign_libbpf.bpf.o";
+ 	else
 -- 
-2.47.1
+2.43.0
 
