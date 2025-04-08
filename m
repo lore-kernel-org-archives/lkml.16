@@ -1,820 +1,179 @@
-Received: from out198-16.us.a.mail.aliyun.com (out198-16.us.a.mail.aliyun.com [47.90.198.16])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2057.outbound.protection.outlook.com [40.107.247.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A092C264F87;
-	Tue,  8 Apr 2025 09:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105499; cv=none; b=h6tHUoImeMBS4msdM+nFuUezcmvz8HOCNIphqx5PN7UlpuB24s1P/4UHnS3K5IwfqY1UCl51oNYcc1UjhZoW1NHrQ+OyanTZ7P3iuVmH2vcx52sG4ulAmz8QcUvX4jBckkC5bGn9+r/dOoGWNMTLKGWlmfH6UGBoXpdelHWtt7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105499; c=relaxed/simple;
-	bh=Ak4/P0eqCFkY6AKW/B7Rq5AIPcx/X7Hwl9N/mhG4u4I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kH0VE34jvxPBiLm+P50j3ZraAPQ1eNXByAwW6xmdst0Q6xdj1jFMjL4oeIrSxsidKwovF5SYy4D4Xrbzwla+28NlP3BkezCyQddxDkaFqaJJf1dfmU4rRWe6WcSjAQLI/RjzR4wMi6CXNqjf95tkkxLmXzIXk7nrG03Is4UVfJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=47.90.198.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
-Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cGww7Kv_1744104532 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 17:28:53 +0800
-From: Frank Sae <Frank.Sae@motor-comm.com>
-To: Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frank <Frank.Sae@motor-comm.com>,
-	netdev@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com,
-	linux-kernel@vger.kernel.org,
-	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>,
-	lee@trager.us,
-	horms@kernel.org,
-	linux-doc@vger.kernel.org,
-	corbet@lwn.net,
-	geert+renesas@glider.be,
-	xiaogang.fan@motor-comm.com,
-	fei.zhang@motor-comm.com,
-	hua.sun@motor-comm.com
-Subject: [PATCH net-next v4 03/14] yt6801: Implement pci_driver shutdown
-Date: Tue,  8 Apr 2025 17:28:24 +0800
-Message-Id: <20250408092835.3952-4-Frank.Sae@motor-comm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F7D265612;
+	Tue,  8 Apr 2025 09:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744105602; cv=fail; b=kU3NKMVW95OviiScgUd7V9GgpvFzISbea+HiE71b0SNQUkATpH8QyewOPLfzAw7voWswqXFNTuHdfsqxg8E1WSjuaA0nrlBVv0T7iXFRDjYT/ekakSW/ZtgYYyJTRjXDRIqDyQrvSJ5Qg/OPf7ZP0eWQwn2UZAz+D0vDABOyZ0o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744105602; c=relaxed/simple;
+	bh=BH7xPxTEps6Iw803U7LlBNilX0cZXY0izTunp/LrMBI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PbBYEcpRUPLZCKh5OoXqEcVIOgskHPEPYZ4aVf6W5XaGymUT2n9+8e+cSew+0srbDVUu/oExjd8XoCmnS5aLqzEzwqQNJhwX0bCnghb5HpsjWpSu/Ktw9C83lsz0PWT8qiwNnbkAlJ7NOsjAMDUtjTrTZFzb8ojf2SDGl/5MFS4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CbYZSFHt; arc=fail smtp.client-ip=40.107.247.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CbYZSFHt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QPtwd25BA7NzGwBESgE0aPv14FpWIP8km/YYaemo/yUcnDGRUamBCJNucMN3qmAJmoX2dP5pVw+5ZfSOBY8Z22gJ6thgWik8DcDehyReb7tF0IhpjaTjN84YNwEUBJynvhQ86UVd8RRYLJ9MuVwcA/FrdECvvdnhF781KoaWfZnDVhW9Kti/hnFhuzGSJymgrNxECVi6iqlOMwxLkDgz+uTGuSF+a4EG1R/tqm4H+SjR1+0FeAM42GAPqCQujClCeAvN/c5MHc/T0YMOyjDgrPXsMBmMWK6j199B/piH4PQ+rqxoNt62sYlVEBJfLXbBz2xFOzB6T8KZFDhkFkoiqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BH7xPxTEps6Iw803U7LlBNilX0cZXY0izTunp/LrMBI=;
+ b=ci0+SClbi4Y9zjo+yaUoIXS+p5WkuCZbd1L4cqd2L9/+JpFvONzQ7U86anTlUl+7l6nKo76Uhklkxad2hRrHcuAUw4fRq8OM0MZLbEOPXEOM4FHZW7S0W03oKyPbucW8GIh9X2Fg7+tcnJxigGXQSpv8Iaqo0KeXIQTsDWkdNO9gwBUZx27S/kThH/oi2TQCm9ATA9nNmzm22JGHPXHQ7fRBjZFA4YJXMkh+lbCeHLhaWVo5TGIe00G5f6zJ1DDT6DLCilBGRBI4czMkp1j203Vu9BJnXkseD27Rp/j3m6SyoAisvegKfw3pzhNnrdJnSwdlZ45CIHCK9jHUhaX4Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BH7xPxTEps6Iw803U7LlBNilX0cZXY0izTunp/LrMBI=;
+ b=CbYZSFHt78sVZ/7OIuRs8hjG7KUgY+dOdOL8RM8qV1RJ9lXf7DnoKxpSDPYyclJFmKrb1b+jezR9qNUVr5Z+HVKhJw9gxKzzPfiZro9pZ6JnvWj9vg0LoMUzD+m+rgl6eWO6HZnmjQmAvTEO2mLMSB3x9stA4l+X7xfdR6fTnyoEWRJYmzGVptQjbDQ+HHILlRmqfyuyDRlmuuF3mUGfiMxPAAEeYI4WkutRLk7x+4TV/IQ+StXxFTEDYgT+SIBSXxy7/5OUpNAWz2tQ/MU/8pazAx3jgYIbMbM/qi1w/wMmRFzEQN1HqIOLTRuLaSufkIzDmn73Jc+exSZFkm44yA==
+Received: from GV1PR04MB9183.eurprd04.prod.outlook.com (2603:10a6:150:27::9)
+ by PA2PR04MB10373.eurprd04.prod.outlook.com (2603:10a6:102:416::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 09:46:37 +0000
+Received: from GV1PR04MB9183.eurprd04.prod.outlook.com
+ ([fe80::f8e8:b04f:49bf:f636]) by GV1PR04MB9183.eurprd04.prod.outlook.com
+ ([fe80::f8e8:b04f:49bf:f636%4]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
+ 09:46:37 +0000
+From: Jindong Yue <jindong.yue@nxp.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Re: [PATCH] gpio: vf610: Allow building as a module
+Thread-Topic: Re: [PATCH] gpio: vf610: Allow building as a module
+Thread-Index: AQHbqGsfE6G3R8f16Emw9TlMffk1fQ==
+Date: Tue, 8 Apr 2025 09:46:37 +0000
+Message-ID:
+ <GV1PR04MB91836DE75CB528C1B9CFB8ADFBB52@GV1PR04MB9183.eurprd04.prod.outlook.com>
+References: <20250408082031.582461-1-jindong.yue@nxp.com>
+ <CAMRc=MfuHs=7vda2CaMzHfVDXe41TV3u3ezPmt38xJ9=8JD1sA@mail.gmail.com>
+In-Reply-To:
+ <CAMRc=MfuHs=7vda2CaMzHfVDXe41TV3u3ezPmt38xJ9=8JD1sA@mail.gmail.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: GV1PR04MB9183:EE_|PA2PR04MB10373:EE_
+x-ms-office365-filtering-correlation-id: 1eff1031-634b-41cb-e394-08dd768241b8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?c1NzVkp6bjYzVGxtbGlOU2k4dzdIVm9GbFIrNTJFdjVwdlFndUJRNzhZd3dn?=
+ =?utf-8?B?aEJrNHdxZkl5OWIydTFWSE5vaWtQWmtmK0NGMG5mY0lKQzgwaW54WHZNK1BR?=
+ =?utf-8?B?L3BoWDlDS0dObVVNclJ6TXM2ckVld0YwSy92K09oakRISXVGUXJVc3pWVndw?=
+ =?utf-8?B?QVFzbkNTcUhIMkNlaSsvV3lhcDFYN2pNcCt6Vk1rZ1JGUFJMV2JFNW9PWjhj?=
+ =?utf-8?B?M2ZtdGNvd3RrZWF1MGpnbnh5eUNITlJlZ3RYS3AwR2pPblV4TlVKaHdrZ1dv?=
+ =?utf-8?B?UnBxbTEvWXY5SEIxUlBjUGp3SDdvYjdELzFyNEQzOWJBRStIYWkzZXgveDJD?=
+ =?utf-8?B?OTRONStVTFpaQ3lmYTc0SUxwMWRqcG1xc01Qdk9SaGtuUUpuSDNDZGs4RCtG?=
+ =?utf-8?B?NElmSTM0MzVtaEk2WTU2b3RvSi9tUjVhMHg5dU15czNuckp1cURWck13czlS?=
+ =?utf-8?B?Wk1wcWx2RmlJR1J5dENESUJQOTgrdFZUeXg2b0lZUXhmcFlTcGtnS2RTTEVY?=
+ =?utf-8?B?RUNXdURaTjlzbWQ5U3N6UEUwM3l5YkRzeUdWQXh1b0cvWVVSTFExQ3k3TE1F?=
+ =?utf-8?B?SllGWXlsUGZncncrRFl6ck1TdE5yNFVXN1F1eGlIcWsvTXptUHZoOW5Sc3dF?=
+ =?utf-8?B?bnVrbWx3Sjhxc2gvQzhkcmR4Tk1BK0gwd2JtNFU0aVVmckRqSURKcnBvWWRh?=
+ =?utf-8?B?OVV3L2FsbElzWll6YWxJWHpMZUpBQm80b1NmUjdPZytnMnlrWmhEc09QNE9u?=
+ =?utf-8?B?aUhpcFZJNnR3VXdVQzlqWHFRMkdoQmZRM0NiWTVDUmc4NWpxY0crTThQVVhi?=
+ =?utf-8?B?Z0JHL3VUVFJ4Yk94R0Q2ViswOXZ5V3FOWXZVNkYzblRobjZjaHdHM0hQcFRZ?=
+ =?utf-8?B?NVZJUmlJMDBWTVRocUZlYU5hQlpJZ0YwUFFEelVGV3R1dEp3QXBjaWtXS1Qx?=
+ =?utf-8?B?aUJ2b2FXbFdLVlBhUFVFSzBRRVhaZXlzdzNZVHFJeitQNlp3bGorZWwyL2ZM?=
+ =?utf-8?B?Y0xzWHFQcTFmU3ZSVUt0SkJtUi9lZUFrZnpVRnFsdVRIZVBBbDJYKzZGWU45?=
+ =?utf-8?B?cU4wY2RCZWZtTEdrS1YyTEdlN1JHOElmUENXa2ZHSE0rbHMzckpIUTQ5WEZu?=
+ =?utf-8?B?b3Nwd2FDalNUSXJ3cGZ2ZSs4d1gvemdYN1FXY0ZDYUhxMU5UeG1KQVVWQ2Ur?=
+ =?utf-8?B?SThqdTRPQUE2MnVjTUt5YkZEazJzQ0RwMnpBNEpvYWxmd3JIV0hqTHV1Q3dO?=
+ =?utf-8?B?TnBhclUrUWFGWVJEZ205OGVRNUtUZVM2WDJYTlBRVFNrQmo3NUtETHoyakpu?=
+ =?utf-8?B?SkhEYWpWNWc4UW5KVVduSFBLWXhKYXB6VkhMd1BNa29RbUhOS2c0WldzamZJ?=
+ =?utf-8?B?YldRV0c5SHdWQWJpZ05oRUFwUlRtc0Nkb0U0Yks5Ym5MZ1RRWGM0UHp3V3ZH?=
+ =?utf-8?B?c1czU0tablBxWFVUWTlKVmdLMGlXOTJMOHFjT0VqeWdiVHcxUnZuUXAxSzV5?=
+ =?utf-8?B?c2VDZGNlUGdaY0VmczF2b3lvR3JJNCtpVG9yc3RMWEppTFd6amhPUHlkWmVo?=
+ =?utf-8?B?YVZxb1ZUbFNzVElGcjBtVkg0YUdPL0lleUZCT29mYnE2TXhjMHVEMkR6Wm5l?=
+ =?utf-8?B?SmxlRXNkMU9LME4rQlN0VUhVdkZoc3lLRmxXVjlVa1pSMDl3UDJ3YkZrQ2Mx?=
+ =?utf-8?B?ckhIR0pPZXFXQnJwWGZ4cnlsQzdxSlk3T09CQTJSNDRkaGpnSGpVT2ZaV3R6?=
+ =?utf-8?B?eHh4NmV2amlUV21UL2RWR1dSTEZsbnFDb0pLQUNJdkEvbU1KMGZ1M2JIbUZm?=
+ =?utf-8?B?ZFRJZnd1QU5MaElWQ3RNNUhCZEg5VEptcUdXdjRyQjRWRHJJUk5HNzJ0Rkg1?=
+ =?utf-8?B?dmlQckNJaUVSTmR2SFlFY3AzNVhRTTJNK2dOdjhvWG5hL1djcWtrcVV6cmgr?=
+ =?utf-8?B?VVIvRFhiWHVaNjJyMCtzSERDcEpxVlNFajNrTzlVeWRRbmxPSFViYjQremhU?=
+ =?utf-8?B?dkg3YXFsWGlnPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR04MB9183.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?N2xtVERMZlZXWXBDcjZreGpKWTNlRG1nYUpwRmpEZDloNkh5Vnc0QzY3Zmdx?=
+ =?utf-8?B?TE1CR0pKTElxUlo3cWFueStVQ2dBYUhhdFM3UlFrbzN4VzF6bnl5SkgzYzl3?=
+ =?utf-8?B?cDdsWTdSR1RsMlJ6NVc4YjBDc3lWUVlLT3hYcGh6a0lJck9laDREYnhCVTVr?=
+ =?utf-8?B?N2dZNGxPRVNLdnhXTWhCNG9tVlFTVzhWcWNpZWNDcWhnN2hKckNSNWdtRGZG?=
+ =?utf-8?B?eHVSYWJjckZKa0xoRkptdTd3WGJwT3lxV1NKMUdzVC9OMUprdUQ5ZmZJSVdI?=
+ =?utf-8?B?QXEvbElkZE5iYnQzSStwZGR1N3JNdjFYTjNha2c3ZW5HbWE5Nm8xR2FnVGo3?=
+ =?utf-8?B?YnRVanQ3TERjREozM2dIWlBWT1N1SnNsdytlblhqbGpKY2dLSUpBbGU4UDM5?=
+ =?utf-8?B?Yy9Kd2ZVRnVZeFlPY0ZTQzhnRnYwVnoxWENyUDIvOWgwUWNLMVhLWFMwczFy?=
+ =?utf-8?B?L3NrT1IzblhpdDl0blp0cTRtMVZWMmdUbVpYRGw3am9LQUYvREpra2cxVFo2?=
+ =?utf-8?B?dWl3eXBTWnE1anRJNXh5d2lEYjlwSHN4MGh3THJZS3hvRDgrRkxjUUFMWlJL?=
+ =?utf-8?B?ZGwrYnRsdjNKdWtaUGNVOThWQnR5UkluV2FucEl4QnhMbGdCRWQxNlBHaUNG?=
+ =?utf-8?B?YlYxU2FEZkt6NjZCYk1EOGZwK3JhcEZQanlTd2N3b0p5NUFGSFRBZHZNOGFL?=
+ =?utf-8?B?WFVmL1o4Uno2SnN3RFZZNzJxbzVmcXpmS2YwVzhvSWNtZGY5WVNqWWlkNmVY?=
+ =?utf-8?B?Y1NLcDE0STlyZkRKeVp2Ums1OXZLQk9yWlp0L0FsSXlvVkx2bkoyT3NTVytR?=
+ =?utf-8?B?Wmk1UVA2UHNBcHYweWdGNGhIZzFZakc4MW81S1Z6dC90bDlTUFVWNXlnc0Uz?=
+ =?utf-8?B?L1hZRUdFU00rU1I3OGVCdVIxY3Y5ZllTbDFRTE1UQWM1bTBxc3A0eEoyNVpL?=
+ =?utf-8?B?UmxOdldmNzJjVjJIMnBNTXZSb0EwMmxobjlaQUZLU2pvaXZpU3lTbTNPeUtS?=
+ =?utf-8?B?RkJ2ODl0OFhTaFF6T2ROL2ZzSC9pQ1BvaEJ2Y1AwTFcxdUJ1L0FVYVNMRkY0?=
+ =?utf-8?B?aDlXYXNJZXZXSzhnbXFjRExHUzZBajlyNGpMbTlOSGtqemRlbUV1YWplTU5a?=
+ =?utf-8?B?b3pNcjM0SkZhaXBCM0QrQjZtRmJ2ZDA5VXhtLzJLZWdNU0pTSE8wNnhVY1RF?=
+ =?utf-8?B?bUVmK0Z2NUhGVzJ6VHNUdTFUQzhaVDlGdzdiZ2d3dXJxd2JVSUFBUWNMa01R?=
+ =?utf-8?B?WEI5eDJHRnRwNXkxRHRvK04wSURzakVTMTVLclNvOFRVZXE4TGY2NDJDR3lz?=
+ =?utf-8?B?UUpydzVrbW9SamozMlN4akR3Y01QZDJPeVhBUkMrdWY0WElwdW11eFprNHNq?=
+ =?utf-8?B?UHpOOUI2NHQvN0VIMTVXS2poZHlrRCs0SWN3eUp4NWxIaklBT1czUFIxU1gr?=
+ =?utf-8?B?aGFTaXpOZE5kMmlJZEoyNWxDa3pUZUx4S0dCNDBndXVUendJQnpYUUdxVFpU?=
+ =?utf-8?B?aEkyY04vck9zNXhYdjBIOHB0RmRXMXM3OVh0dUlsYTFiTVQwRnhLWnpXeW9s?=
+ =?utf-8?B?YVN4RGxWOSszelI5dGdjejhyV3ZBQjRxM3ByNHRWbkg0N0tWREhhTWN5eGsz?=
+ =?utf-8?B?ekROdXkwcEVzTyt2OGZOUm5NNTNKdi8xaXNPNjhOQ203Q05jSXpkam5NZmUz?=
+ =?utf-8?B?Q1ZYdVFkczN1YTF5MDkxcHVGYmRFZDVDdllsbXBtZWhHdURLYWxTd1ZacWFH?=
+ =?utf-8?B?WXhUektla2kzS2RLWVRnNTNTRlV0RytEV2Fqd3VnaE5LanRJMm9XOEVyZWNl?=
+ =?utf-8?B?WmE2dWRBbis0SFQ1ZW00UjZpZi9WcGNmMWdiSkJLUUFhbHVmYlNmRUtRZ1gz?=
+ =?utf-8?B?ZUNhblJ1VkQ5NCtMVjNyZWNCUm5KUmFLUG1zR1JOTXVsek9LSVJ1MTVQWXJ0?=
+ =?utf-8?B?QmtVVnFURll3U1Vvd2xGZ3BJWktxcEV6dVBOdzNyZU1FQjdxSmRycUdGYko4?=
+ =?utf-8?B?b2QxT2Q0VzBPakFqTm1KR28xS0JZWThGV2U3L3l5dXlDd3pZVGhLMkIySWxQ?=
+ =?utf-8?B?Q2V2RExUUnFKQlM1WlRTejJSeEF4MEdQN3RmdUZ1YllOSTVQOVg3TEJiOTdw?=
+ =?utf-8?Q?X60jLzjKONo9DMkOs6sAO/jG3?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: GV1PR04MB9183.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eff1031-634b-41cb-e394-08dd768241b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2025 09:46:37.6923
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: giHyTEAOQ0mgDhSoY/BRjRhCHCMtWady8gtIPoux5CP6FiMYq82yc381Q9Z2GCZvQi/kc1VhJSjVc/8cMWI6Tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10373
 
-Implement the pci_driver shutdown function to shutdown this driver.
-Implement the fxgmac_net_powerdown function to stop tx, disable tx,
- disable rx, config powerdown, free rx date and free tx date.
-
-Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
----
- .../ethernet/motorcomm/yt6801/yt6801_desc.c   |  50 +++
- .../ethernet/motorcomm/yt6801/yt6801_desc.h   |  19 ++
- .../ethernet/motorcomm/yt6801/yt6801_main.c   | 310 ++++++++++++++++++
- .../ethernet/motorcomm/yt6801/yt6801_type.h   | 281 ++++++++++++++++
- 4 files changed, 660 insertions(+)
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h
-
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
-new file mode 100644
-index 000000000..a83ebb478
---- /dev/null
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology Co.,Ltd. */
-+
-+#include "yt6801_type.h"
-+#include "yt6801_desc.h"
-+
-+void fxgmac_desc_data_unmap(struct fxgmac_pdata *priv,
-+			    struct fxgmac_desc_data *desc_data)
-+{
-+	if (desc_data->skb_dma) {
-+		if (desc_data->mapped_as_page) {
-+			dma_unmap_page(priv->dev, desc_data->skb_dma,
-+				       desc_data->skb_dma_len, DMA_TO_DEVICE);
-+		} else {
-+			dma_unmap_single(priv->dev, desc_data->skb_dma,
-+					 desc_data->skb_dma_len, DMA_TO_DEVICE);
-+		}
-+		desc_data->skb_dma = 0;
-+		desc_data->skb_dma_len = 0;
-+	}
-+
-+	if (desc_data->skb) {
-+		dev_kfree_skb_any(desc_data->skb);
-+		desc_data->skb = NULL;
-+	}
-+
-+	if (desc_data->rx.hdr.pa.pages)
-+		put_page(desc_data->rx.hdr.pa.pages);
-+
-+	if (desc_data->rx.hdr.pa_unmap.pages) {
-+		dma_unmap_page(priv->dev, desc_data->rx.hdr.pa_unmap.pages_dma,
-+			       desc_data->rx.hdr.pa_unmap.pages_len,
-+			       DMA_FROM_DEVICE);
-+		put_page(desc_data->rx.hdr.pa_unmap.pages);
-+	}
-+
-+	if (desc_data->rx.buf.pa.pages)
-+		put_page(desc_data->rx.buf.pa.pages);
-+
-+	if (desc_data->rx.buf.pa_unmap.pages) {
-+		dma_unmap_page(priv->dev, desc_data->rx.buf.pa_unmap.pages_dma,
-+			       desc_data->rx.buf.pa_unmap.pages_len,
-+			       DMA_FROM_DEVICE);
-+		put_page(desc_data->rx.buf.pa_unmap.pages);
-+	}
-+	memset(&desc_data->tx, 0, sizeof(desc_data->tx));
-+	memset(&desc_data->rx, 0, sizeof(desc_data->rx));
-+
-+	desc_data->mapped_as_page = 0;
-+}
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h
-new file mode 100644
-index 000000000..a4c7a8af2
---- /dev/null
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology Co.,Ltd. */
-+
-+#ifndef YT6801_DESC_H
-+#define YT6801_DESC_H
-+
-+#define FXGMAC_TX_DESC_CNT		256
-+#define FXGMAC_TX_DESC_MIN_FREE		(FXGMAC_TX_DESC_CNT >> 3)
-+#define FXGMAC_TX_DESC_MAX_PROC		(FXGMAC_TX_DESC_CNT >> 1)
-+#define FXGMAC_RX_DESC_CNT		1024
-+#define FXGMAC_RX_DESC_MAX_DIRTY	(FXGMAC_RX_DESC_CNT >> 3)
-+
-+#define FXGMAC_GET_DESC_DATA(ring, idx)	((ring)->desc_data_head + (idx))
-+#define FXGMAC_GET_ENTRY(x, size)	(((x) + 1) & ((size) - 1))
-+
-+void fxgmac_desc_data_unmap(struct fxgmac_pdata *priv,
-+			    struct fxgmac_desc_data *desc_data);
-+
-+#endif /* YT6801_DESC_H */
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-index 39f03b4a4..8baabeb53 100644
---- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-@@ -19,6 +19,7 @@
- 
- #include <linux/module.h>
- #include "yt6801_type.h"
-+#include "yt6801_desc.h"
- 
- #define PHY_WR_CONFIG(reg_offset)	(0x8000205 + ((reg_offset) * 0x10000))
- static int fxgmac_phy_write_reg(struct fxgmac_pdata *priv, u32 reg_id, u32 data)
-@@ -106,6 +107,219 @@ static int fxgmac_mdio_register(struct fxgmac_pdata *priv)
- 	return 0;
- }
- 
-+static void fxgmac_disable_mgm_irq(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_io_wr_bits(priv, MGMT_INT_CTRL0, MGMT_INT_CTRL0_INT_MASK,
-+			  MGMT_INT_CTRL0_INT_MASK_MASK);
-+}
-+
-+static void napi_disable_del(struct fxgmac_pdata *priv, struct napi_struct *n,
-+			     u32 flag)
-+{
-+	napi_disable(n);
-+	netif_napi_del(n);
-+	priv->int_flag &= ~flag;
-+}
-+
-+static void fxgmac_napi_disable(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	u32 rx_napi[] = {INT_FLAG_RX0_NAPI, INT_FLAG_RX1_NAPI,
-+			INT_FLAG_RX2_NAPI, INT_FLAG_RX3_NAPI};
-+
-+	if (!priv->per_channel_irq) {
-+		if (!FIELD_GET(INT_FLAG_LEGACY_NAPI, priv->int_flag))
-+			return;
-+
-+		napi_disable_del(priv, &priv->napi,
-+				 INT_FLAG_LEGACY_NAPI);
-+		return;
-+	}
-+
-+	if (FIELD_GET(INT_FLAG_TX_NAPI, priv->int_flag))
-+		napi_disable_del(priv, &channel->napi_tx, INT_FLAG_TX_NAPI);
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		if (priv->int_flag & rx_napi[i])
-+			napi_disable_del(priv, &channel->napi_rx, rx_napi[i]);
-+}
-+
-+static void fxgmac_free_irqs(struct fxgmac_pdata *priv)
-+{
-+	u32 rx_irq[] = {INT_FLAG_RX0_IRQ, INT_FLAG_RX1_IRQ,
-+			INT_FLAG_RX2_IRQ, INT_FLAG_RX3_IRQ};
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	if (!FIELD_GET(INT_FLAG_MSIX, priv->int_flag) &&
-+	    FIELD_GET(INT_FLAG_LEGACY_IRQ, priv->int_flag)) {
-+		devm_free_irq(priv->dev, priv->dev_irq, priv);
-+		priv->int_flag &= ~INT_FLAG_LEGACY_IRQ;
-+	}
-+
-+	if (!priv->per_channel_irq)
-+		return;
-+
-+	if (FIELD_GET(INT_FLAG_TX_IRQ, priv->int_flag)) {
-+		priv->int_flag &= ~INT_FLAG_TX_IRQ;
-+		devm_free_irq(priv->dev, channel->dma_irq_tx, channel);
-+	}
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		if (priv->int_flag & rx_irq[i]) {
-+			priv->int_flag &= ~rx_irq[i];
-+			devm_free_irq(priv->dev, channel->dma_irq_rx, channel);
-+		}
-+}
-+
-+static void fxgmac_free_tx_data(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	struct fxgmac_ring *ring;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
-+		ring = channel->tx_ring;
-+		if (!ring)
-+			break;
-+
-+		for (u32 j = 0; j < ring->dma_desc_count; j++)
-+			fxgmac_desc_data_unmap(priv,
-+					       FXGMAC_GET_DESC_DATA(ring, j));
-+	}
-+}
-+
-+static void fxgmac_free_rx_data(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	struct fxgmac_ring *ring;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
-+		ring = channel->rx_ring;
-+		if (!ring)
-+			break;
-+
-+		for (u32 j = 0; j < ring->dma_desc_count; j++)
-+			fxgmac_desc_data_unmap(priv,
-+					       FXGMAC_GET_DESC_DATA(ring, j));
-+	}
-+}
-+
-+static void fxgmac_prepare_tx_stop(struct fxgmac_pdata *priv,
-+				   struct fxgmac_channel *channel)
-+{
-+	unsigned long tx_timeout;
-+	unsigned int tx_status;
-+
-+	/* The Tx engine cannot be stopped if it is actively processing
-+	 * descriptors. Wait for the Tx engine to enter the stopped or
-+	 * suspended state.
-+	 */
-+	tx_timeout = jiffies + (FXGMAC_DMA_STOP_TIMEOUT * HZ);
-+
-+	while (time_before(jiffies, tx_timeout)) {
-+		tx_status = fxgmac_io_rd(priv, DMA_DSR0);
-+		tx_status = FIELD_GET(DMA_DSR0_TPS, tx_status);
-+		if (tx_status == DMA_TPS_STOPPED ||
-+		    tx_status == DMA_TPS_SUSPENDED)
-+			break;
-+
-+		fsleep(500);
-+	}
-+
-+	if (!time_before(jiffies, tx_timeout))
-+		dev_err(priv->dev, "timed out waiting for Tx DMA channel  stop\n");
-+}
-+
-+static void fxgmac_disable_tx(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	/* Prepare for Tx DMA channel stop */
-+	fxgmac_prepare_tx_stop(priv, channel);
-+
-+	fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_TE, 0); /* Disable MAC Tx */
-+
-+	/* Disable Tx queue */
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_Q_TQOMR, MTL_Q_TQOMR_TXQEN,
-+			   MTL_Q_DISABLED);
-+
-+	/* Disable Tx DMA channel */
-+	fxgmac_dma_wr_bits(channel, DMA_CH_TCR, DMA_CH_TCR_ST, 0);
-+}
-+
-+static void fxgmac_prepare_rx_stop(struct fxgmac_pdata *priv,
-+				   unsigned int queue)
-+{
-+	unsigned int rx_status, rx_q, rx_q_sts;
-+	unsigned long rx_timeout;
-+
-+	/* The Rx engine cannot be stopped if it is actively processing
-+	 * packets. Wait for the Rx queue to empty the Rx fifo.
-+	 */
-+	rx_timeout = jiffies + (FXGMAC_DMA_STOP_TIMEOUT * HZ);
-+
-+	while (time_before(jiffies, rx_timeout)) {
-+		rx_status = fxgmac_mtl_io_rd(priv, queue, MTL_Q_RQDR);
-+		rx_q = FIELD_GET(MTL_Q_RQDR_PRXQ, rx_status);
-+		rx_q_sts = FIELD_GET(MTL_Q_RQDR_RXQSTS, rx_status);
-+		if (rx_q == 0 && rx_q_sts == 0)
-+			break;
-+
-+		fsleep(500);
-+	}
-+
-+	if (!time_before(jiffies, rx_timeout))
-+		dev_err(priv->dev, "timed out waiting for Rx queue %u to empty\n",
-+			queue);
-+}
-+
-+static void fxgmac_disable_rx(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	u32 i;
-+
-+	/* Disable MAC Rx */
-+	fxgmac_io_wr_bits(priv, MAC_CR,  MAC_CR_CST, 0);
-+	fxgmac_io_wr_bits(priv, MAC_CR,  MAC_CR_ACS, 0);
-+	fxgmac_io_wr_bits(priv, MAC_CR,  MAC_CR_RE, 0);
-+
-+	/* Prepare for Rx DMA channel stop */
-+	for (i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_prepare_rx_stop(priv, i);
-+
-+	fxgmac_io_wr(priv, MAC_RQC0R, 0); /* Disable each Rx queue */
-+
-+	/* Disable each Rx DMA channel */
-+	for (i = 0; i < priv->channel_count; i++, channel++)
-+		fxgmac_dma_wr_bits(channel, DMA_CH_RCR, DMA_CH_RCR_SR, 0);
-+}
-+
-+/**
-+ * fxgmac_set_oob_wol - disable or enable oob wol crtl function
-+ * @priv: driver private struct
-+ * @en: 1 or 0
-+ *
-+ * Description:  After enable OOB_WOL from efuse, mac will loopcheck phy status,
-+ *   and lead to panic sometimes. So we should disable it from powerup,
-+ *   enable it from power down.
-+ */
-+static void fxgmac_set_oob_wol(struct fxgmac_pdata *priv, unsigned int en)
-+{
-+	/* en = 1 is disable */
-+	fxgmac_io_wr_bits(priv, OOB_WOL_CTRL, OOB_WOL_CTRL_DIS, !en);
-+}
-+
-+static void fxgmac_config_powerup(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_set_oob_wol(priv, 0);
-+	/* GAMC power up */
-+	fxgmac_io_wr_bits(priv, MAC_PMT_STA, MAC_PMT_STA_PWRDWN, 0);
-+}
-+
-+static void fxgmac_pre_powerdown(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_set_oob_wol(priv, 1);
-+	fsleep(2000);
-+}
- static void fxgmac_phy_release(struct fxgmac_pdata *priv)
- {
- 	fxgmac_io_wr_bits(priv, EPHY_CTRL, EPHY_CTRL_RESET, 1);
-@@ -117,6 +331,82 @@ static void fxgmac_phy_reset(struct fxgmac_pdata *priv)
- 	fsleep(1500);
- }
- 
-+static void fxgmac_disable_msix_irqs(struct fxgmac_pdata *priv)
-+{
-+	for (u32 intid = 0; intid < MSIX_TBL_MAX_NUM; intid++)
-+		fxgmac_disable_msix_one_irq(priv, intid);
-+}
-+
-+static void fxgmac_stop(struct fxgmac_pdata *priv)
-+{
-+	struct net_device *ndev = priv->ndev;
-+	struct netdev_queue *txq;
-+
-+	if (priv->dev_state != FXGMAC_DEV_START)
-+		return;
-+
-+	priv->dev_state = FXGMAC_DEV_STOP;
-+
-+	if (priv->per_channel_irq)
-+		fxgmac_disable_msix_irqs(priv);
-+	else
-+		fxgmac_disable_mgm_irq(priv);
-+
-+	netif_carrier_off(ndev);
-+	netif_tx_stop_all_queues(ndev);
-+	fxgmac_disable_tx(priv);
-+	fxgmac_disable_rx(priv);
-+	fxgmac_free_irqs(priv);
-+	fxgmac_napi_disable(priv);
-+	phy_stop(priv->phydev);
-+
-+	txq = netdev_get_tx_queue(ndev, priv->channel_head->queue_index);
-+	netdev_tx_reset_queue(txq);
-+}
-+
-+static void fxgmac_config_powerdown(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_RE, 1); /* Enable MAC Rx */
-+	fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_TE, 1); /* Enable MAC TX */
-+
-+	/* Set GAMC power down */
-+	fxgmac_io_wr_bits(priv, MAC_PMT_STA, MAC_PMT_STA_PWRDWN, 1);
-+}
-+
-+static int fxgmac_net_powerdown(struct fxgmac_pdata *priv)
-+{
-+	struct net_device *ndev = priv->ndev;
-+
-+	/* Signal that we are down to the interrupt handler */
-+	if (__test_and_set_bit(FXGMAC_POWER_STATE_DOWN, &priv->power_state))
-+		return 0; /* do nothing if already down */
-+
-+	__clear_bit(FXGMAC_POWER_STATE_UP, &priv->power_state);
-+	netif_tx_stop_all_queues(ndev); /* Shut off incoming Tx traffic */
-+
-+	/* Call carrier off first to avoid false dev_watchdog timeouts */
-+	netif_carrier_off(ndev);
-+	netif_tx_disable(ndev);
-+	fxgmac_disable_rx(priv);
-+
-+	/* Synchronize_rcu() needed for pending XDP buffers to drain */
-+	synchronize_rcu();
-+
-+	fxgmac_stop(priv);
-+	fxgmac_pre_powerdown(priv);
-+
-+	if (!test_bit(FXGMAC_POWER_STATE_DOWN, &priv->power_state))
-+		dev_err(priv->dev, "fxgmac powerstate is %lu when config powe down.\n",
-+			priv->power_state);
-+
-+	/* Set mac to lowpower mode */
-+	fxgmac_config_powerdown(priv);
-+	fxgmac_free_tx_data(priv);
-+	fxgmac_free_rx_data(priv);
-+
-+	return 0;
-+}
-+
- static void fxgmac_init_interrupt_scheme(struct fxgmac_pdata *priv)
- {
- 	struct pci_dev *pdev = to_pci_dev(priv->dev);
-@@ -256,6 +546,25 @@ static void fxgmac_remove(struct pci_dev *pcidev)
- 	}
- }
- 
-+static void __fxgmac_shutdown(struct pci_dev *pcidev)
-+{
-+	struct fxgmac_pdata *priv = dev_get_drvdata(&pcidev->dev);
-+	struct net_device *ndev = priv->ndev;
-+
-+	fxgmac_net_powerdown(priv);
-+	netif_device_detach(ndev);
-+}
-+
-+static void fxgmac_shutdown(struct pci_dev *pcidev)
-+{
-+	rtnl_lock();
-+	 __fxgmac_shutdown(pcidev);
-+	if (system_state == SYSTEM_POWER_OFF) {
-+		pci_wake_from_d3(pcidev, false);
-+		pci_set_power_state(pcidev, PCI_D3hot);
-+	}
-+	rtnl_unlock();
-+}
- #define MOTORCOMM_PCI_ID			0x1f0a
- #define YT6801_PCI_DEVICE_ID			0x6801
- 
-@@ -271,6 +580,7 @@ static struct pci_driver fxgmac_pci_driver = {
- 	.id_table	= fxgmac_pci_tbl,
- 	.probe		= fxgmac_probe,
- 	.remove		= fxgmac_remove,
-+	.shutdown	= fxgmac_shutdown,
- };
- 
- module_pci_driver(fxgmac_pci_driver);
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-index b43952981..124860602 100644
---- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-@@ -34,6 +34,61 @@
- #define EPHY_CTRL_STA_DUPLEX			BIT(2)
- #define EPHY_CTRL_STA_SPEED			GENMASK(4, 3)
- 
-+#define OOB_WOL_CTRL				0x1010
-+#define OOB_WOL_CTRL_DIS			BIT(0)
-+
-+/* MAC management registers */
-+#define MGMT_INT_CTRL0				0x1100
-+#define MGMT_INT_CTRL0_INT_STATUS		GENMASK(15, 0)
-+#define  MGMT_INT_CTRL0_INT_STATUS_RX		0x000f
-+#define  MGMT_INT_CTRL0_INT_STATUS_TX		0x0010
-+#define  MGMT_INT_CTRL0_INT_STATUS_MISC		0x0020
-+#define  MGMT_INT_CTRL0_INT_STATUS_RXTX		0x0030
-+#define MGMT_INT_CTRL0_INT_MASK			GENMASK(31, 16)
-+#define  MGMT_INT_CTRL0_INT_MASK_RXCH		0x000f
-+#define  MGMT_INT_CTRL0_INT_MASK_TXCH		0x0010
-+#define  MGMT_INT_CTRL0_INT_MASK_MISC		0x0020
-+#define  MGMT_INT_CTRL0_INT_MASK_EX_PMT		0xf7ff
-+#define  MGMT_INT_CTRL0_INT_MASK_DISABLE	0xf000
-+#define  MGMT_INT_CTRL0_INT_MASK_MASK		0xffff
-+
-+/* msi table */
-+#define MSI_ID_RXQ0				0
-+#define MSI_ID_RXQ1				1
-+#define MSI_ID_RXQ2				2
-+#define MSI_ID_RXQ3				3
-+#define MSI_ID_TXQ0				4
-+#define MSIX_TBL_MAX_NUM			5
-+
-+/****************  GMAC register. *********************/
-+#define MAC_CR				0x2000
-+#define MAC_CR_RE			BIT(0)
-+#define MAC_CR_TE			BIT(1)
-+#define MAC_CR_LM			BIT(12)
-+#define MAC_CR_DM			BIT(13)
-+#define MAC_CR_FES			BIT(14)
-+#define MAC_CR_PS			BIT(15)
-+#define MAC_CR_JE			BIT(16)
-+#define MAC_CR_ACS			BIT(20)
-+#define MAC_CR_CST			BIT(21)
-+#define MAC_CR_IPC			BIT(27)
-+#define MAC_CR_ARPEN			BIT(31)
-+
-+#define MAC_RQC0R			0x20a0
-+#define MAC_RQC1R			0x20a4
-+#define MAC_RQC2R			0x20a8
-+#define MAC_RQC2_INC			4
-+#define MAC_RQC2_Q_PER_REG		4
-+
-+#define MAC_PMT_STA			0x20c0
-+#define MAC_PMT_STA_PWRDWN		BIT(0)
-+#define MAC_PMT_STA_MGKPKTEN		BIT(1)
-+#define MAC_PMT_STA_RWKPKTEN		BIT(2)
-+#define MAC_PMT_STA_MGKPRCVD		BIT(5)
-+#define MAC_PMT_STA_RWKPRCVD		BIT(6)
-+#define MAC_PMT_STA_GLBLUCAST		BIT(9)
-+#define MAC_PMT_STA_RWKPTR		GENMASK(27, 24)
-+#define MAC_PMT_STA_RWKFILTERST		BIT(31)
- #define MAC_MDIO_ADDR			0x2200
- #define MAC_MDIO_ADDR_BUSY		BIT(0)
- #define MAC_MDIO_ADDR_GOC		GENMASK(3, 2)
-@@ -42,6 +97,153 @@
- #define MAC_MDIO_DATA_GD		GENMASK(15, 0)
- #define MAC_MDIO_DATA_RA		GENMASK(31, 16)
- 
-+/* MTL queue registers */
-+#define MTL_Q_BASE			0x2d00
-+#define MTL_Q_INC			0x40
-+
-+#define MTL_Q_TQOMR			0x00
-+#define MTL_Q_TQOMR_FTQ			BIT(0)
-+#define MTL_Q_TQOMR_TSF			BIT(1)
-+#define MTL_Q_TQOMR_TXQEN		GENMASK(3, 2)
-+#define MTL_Q_DISABLED			0x00
-+#define MTL_Q_EN_IF_AV			0x01
-+#define MTL_Q_ENABLED			0x02
-+
-+#define MTL_Q_RQDR			0x38
-+#define MTL_Q_RQDR_RXQSTS		GENMASK(5, 4)
-+#define MTL_Q_RQDR_PRXQ			GENMASK(29, 16)
-+#define DMA_DSRX_INC				4
-+#define DMA_DSR0				0x300c
-+#define DMA_DSR0_TPS				GENMASK(15, 12)
-+#define  DMA_TPS_STOPPED			0x00
-+#define  DMA_TPS_SUSPENDED			0x06
-+
-+/* DMA channel registers */
-+#define DMA_CH_BASE			0x3100
-+#define DMA_CH_INC			0x80
-+
-+#define DMA_CH_TCR			0x04
-+#define DMA_CH_TCR_ST			BIT(0)
-+#define DMA_CH_TCR_OSP			BIT(4)
-+#define DMA_CH_TCR_TSE			BIT(12)
-+#define DMA_CH_TCR_PBL			GENMASK(21, 16)
-+#define  DMA_CH_PBL_1			1
-+#define  DMA_CH_PBL_2			2
-+#define  DMA_CH_PBL_4			4
-+#define  DMA_CH_PBL_8			8
-+#define  DMA_CH_PBL_16			16
-+#define  DMA_CH_PBL_32			32
-+#define  DMA_CH_PBL_64			64
-+#define  DMA_CH_PBL_128			128
-+#define  DMA_CH_PBL_256			256
-+
-+#define DMA_CH_RCR			0x08
-+#define DMA_CH_RCR_SR			BIT(0)
-+#define DMA_CH_RCR_RBSZ			GENMASK(14, 1)
-+#define DMA_CH_RCR_PBL			GENMASK(21, 16)
-+
-+/* Page allocation related values */
-+struct fxgmac_page_alloc {
-+	struct page *pages;
-+	unsigned int pages_len;
-+	unsigned int pages_offset;
-+	dma_addr_t pages_dma;
-+};
-+
-+/* Ring entry buffer data */
-+struct fxgmac_buffer_data {
-+	struct fxgmac_page_alloc pa;
-+	struct fxgmac_page_alloc pa_unmap;
-+
-+	dma_addr_t dma_base;
-+	unsigned long dma_off;
-+	unsigned int dma_len;
-+};
-+
-+struct fxgmac_tx_desc_data {
-+	unsigned int packets;		/* BQL packet count */
-+	unsigned int bytes;		/* BQL byte count */
-+};
-+
-+struct fxgmac_rx_desc_data {
-+	struct fxgmac_buffer_data hdr;	/* Header locations */
-+	struct fxgmac_buffer_data buf;	/* Payload locations */
-+	unsigned short hdr_len;		/* Length of received header */
-+	unsigned short len;		/* Length of received packet */
-+};
-+
-+struct fxgmac_desc_data {
-+	struct fxgmac_dma_desc *dma_desc;  /* Virtual address of descriptor */
-+	dma_addr_t dma_desc_addr;          /* DMA address of descriptor */
-+	struct sk_buff *skb;               /* Virtual address of SKB */
-+	dma_addr_t skb_dma;                /* DMA address of SKB data */
-+	unsigned int skb_dma_len;          /* Length of SKB DMA area */
-+
-+	/* Tx/Rx -related data */
-+	struct fxgmac_tx_desc_data tx;
-+	struct fxgmac_rx_desc_data rx;
-+
-+	unsigned int mapped_as_page;
-+};
-+
-+struct fxgmac_ring {
-+	struct fxgmac_pkt_info pkt_info;  /* packet related information */
-+
-+	/* Virtual/DMA addresses of DMA descriptor list */
-+	struct fxgmac_dma_desc *dma_desc_head;
-+	dma_addr_t dma_desc_head_addr;
-+	unsigned int dma_desc_count;
-+
-+	/* Array of descriptor data corresponding the DMA descriptor
-+	 * (always use the FXGMAC_GET_DESC_DATA macro to access this data)
-+	 */
-+	struct fxgmac_desc_data *desc_data_head;
-+
-+	/* Page allocation for RX buffers */
-+	struct fxgmac_page_alloc rx_hdr_pa;
-+	struct fxgmac_page_alloc rx_buf_pa;
-+
-+	/* Ring index values
-+	 * cur  - Tx: index of descriptor to be used for current transfer
-+	 *        Rx: index of descriptor to check for packet availability
-+	 * dirty - Tx: index of descriptor to check for transfer complete
-+	 *         Rx: index of descriptor to check for buffer reallocation
-+	 */
-+	unsigned int cur;
-+	unsigned int dirty;
-+
-+	struct {
-+		unsigned int xmit_more;
-+		unsigned int queue_stopped;
-+		unsigned short cur_mss;
-+		unsigned short cur_vlan_ctag;
-+	} tx;
-+} ____cacheline_aligned;
-+
-+struct fxgmac_channel {
-+	char name[16];
-+
-+	/* Address of private data area for device */
-+	struct fxgmac_pdata *priv;
-+
-+	/* Queue index and base address of queue's DMA registers */
-+	unsigned int queue_index;
-+
-+	/* Per channel interrupt irq number */
-+	u32 dma_irq_rx;
-+	char dma_irq_rx_name[IFNAMSIZ + 32];
-+	u32 dma_irq_tx;
-+	char dma_irq_tx_name[IFNAMSIZ + 32];
-+
-+	/* ndev related settings */
-+	struct napi_struct napi_tx;
-+	struct napi_struct napi_rx;
-+
-+	void __iomem *dma_regs;
-+	struct fxgmac_ring *tx_ring;
-+	struct fxgmac_ring *rx_ring;
-+} ____cacheline_aligned;
-+
- struct fxgmac_resources {
- 	void __iomem *addr;
- 	int irq;
-@@ -64,6 +266,16 @@ struct fxgmac_pdata {
- 
- 	void __iomem *hw_addr;			/* Registers base */
- 
-+	/* Rings for Tx/Rx on a DMA channel */
-+	struct fxgmac_channel *channel_head;
-+	unsigned int channel_count;
-+	unsigned int rx_ring_count;
-+	unsigned int rx_desc_count;
-+	unsigned int rx_q_count;
-+#define FXGMAC_TX_1_RING	1
-+#define FXGMAC_TX_1_Q		1
-+	unsigned int tx_desc_count;
-+
- 	/* Device interrupt */
- 	int dev_irq;
- 	unsigned int per_channel_irq;
-@@ -89,6 +301,9 @@ struct fxgmac_pdata {
- 
- 	u32 msg_enable;
- 	enum fxgmac_dev_state dev_state;
-+#define FXGMAC_POWER_STATE_DOWN			0
-+#define FXGMAC_POWER_STATE_UP			1
-+	unsigned long power_state;
- };
- 
- static inline u32 fxgmac_io_rd(struct fxgmac_pdata *priv, u32 reg)
-@@ -119,4 +334,70 @@ fxgmac_io_wr_bits(struct fxgmac_pdata *priv, u32 reg, u32 mask, u32 set)
- 	fxgmac_io_wr(priv, reg, cfg);
- }
- 
-+static inline u32 fxgmac_mtl_io_rd(struct fxgmac_pdata *priv, u8 n, u32 reg)
-+{
-+	return fxgmac_io_rd(priv, reg + n * MTL_Q_INC);
-+}
-+
-+static inline u32
-+fxgmac_mtl_rd_bits(struct fxgmac_pdata *priv, u8 n, u32 reg, u32 mask)
-+{
-+	return fxgmac_io_rd_bits(priv,  reg + n * MTL_Q_INC, mask);
-+}
-+
-+static inline void
-+fxgmac_mtl_io_wr(struct fxgmac_pdata *priv, u8 n, u32 reg, u32 set)
-+{
-+	return fxgmac_io_wr(priv,  reg + n * MTL_Q_INC, set);
-+}
-+
-+static inline void
-+fxgmac_mtl_wr_bits(struct fxgmac_pdata *priv, u8 n, u32 reg, u32 mask, u32 set)
-+{
-+	return fxgmac_io_wr_bits(priv,  reg + n * MTL_Q_INC, mask, set);
-+}
-+
-+static inline u32 fxgmac_dma_io_rd(struct fxgmac_channel *channel, u32 reg)
-+{
-+	return ioread32(channel->dma_regs + reg);
-+}
-+
-+static inline u32
-+fxgmac_dma_rd_bits(struct fxgmac_channel *channel, u32 reg, u32 mask)
-+{
-+	u32 cfg = fxgmac_dma_io_rd(channel, reg);
-+
-+	return FIELD_GET(mask, cfg);
-+}
-+
-+static inline void
-+fxgmac_dma_io_wr(struct fxgmac_channel *channel, u32 reg, u32 set)
-+{
-+	iowrite32(set, channel->dma_regs + reg);
-+}
-+
-+static inline void
-+fxgmac_dma_wr_bits(struct fxgmac_channel *channel, u32 reg, u32 mask, u32 set)
-+{
-+	u32 cfg = fxgmac_dma_io_rd(channel, reg);
-+
-+	cfg &= ~mask;
-+	cfg |= FIELD_PREP(mask, set);
-+	fxgmac_dma_io_wr(channel, reg, cfg);
-+}
-+
-+static inline u32 fxgmac_desc_rd_bits(__le32 desc, u32 mask)
-+{
-+	return FIELD_GET(mask, le32_to_cpu(desc));
-+}
-+
-+static inline void fxgmac_desc_wr_bits(__le32 *desc, u32 mask, u32 set)
-+{
-+	u32 cfg = le32_to_cpu(*desc);
-+
-+	cfg &= ~mask;
-+	cfg |= FIELD_PREP(mask, set);
-+	*desc = cpu_to_le32(cfg);
-+}
-+
- #endif /* YT6801_TYPE_H */
--- 
-2.34.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxicmdsQGJnZGV2LnBsPg0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCA4LCAyMDI1IDU6MDYgUE0N
+Cj4gVG86IEppbmRvbmcgWXVlIDxqaW5kb25nLnl1ZUBueHAuY29tPg0KPiBDYzogbGludXMud2Fs
+bGVpakBsaW5hcm8ub3JnOyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBncGlvOiB2
+ZjYxMDogQWxsb3cgYnVpbGRpbmcgYXMgYSBtb2R1bGUNCj4gDQo+IA0KPiBPbiBUdWUsIEFwciA4
+LCAyMDI1IGF0IDEwOjIw4oCvQU0gSmluZG9uZyBZdWUgPGppbmRvbmcueXVlQG54cC5jb20+IHdy
+b3RlOg0KPiA+DQo+ID4gQ2hhbmdlIHRoZSBjb25maWcgdG8gYSB0cmlzdGF0ZSB0eXBlIGFuZCBh
+ZGQgYSBtb2R1bGUgbGljZW5zZSB0bw0KPiA+IHN1cHBvcnQgYnVpbGRpbmcgaXQgYXMgYSBtb2R1
+bGUuDQo+ID4NCj4gDQo+IEkgY2FuIHRlbGwgd2hhdCB0aGUgcGF0Y2ggaXMgZG9pbmcgZnJvbSB0
+aGUgZGlmZi4gSSdtIG11Y2ggbW9yZSBpbnRlcmVzdGVkIGluIHdoeQ0KPiB0aGlzIGNoYW5nZSBp
+cyBuZWVkZWQuDQpJIGFtIGJ1aWxkaW5nIHRoZSB2ZjYxMCBkcml2ZXIgYXMgYSBtb2R1bGUgZm9y
+IHVzZSBvbiB0aGUgQW5kcm9pZCBwbGF0Zm9ybSBiZWNhdXNlIHRoZSBBbmRyb2lkIGtlcm5lbCAo
+R0tJKSBkb2Vzbid0DQpjb250YWluIGJvYXJkLXNwZWNpZmljIGRyaXZlcnMsIGl0IHJlcXVpcmVz
+IHRoYXQgdGhlc2UgZHJpdmVycyBiZSBidWlsdCBhcyBhIG1vZHVsZSBhbmQgbG9hZGVkIGludG8g
+dGhlIHN5c3RlbS4NCg0KQlJzDQpKaW5kb25nDQo+IA0KPiBCYXJ0DQo=
