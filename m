@@ -1,54 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B622A810;
-	Tue,  8 Apr 2025 15:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE17D3FB1B;
+	Tue,  8 Apr 2025 15:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126294; cv=none; b=i+WqTMkoJ52irMF2dyvbCOAnPZid2colk7wwBMU3b6N7BMx9PJ1vfJiua9KtsbdDr32CCOAh2jwpU6JFIqrhDO3W/+S5GZNVljPscSVR8hN/5WrrOetY9/K+EFmqDt9RmuxEAbGB9f8L7wmUcRF+Jo/yqdSDSoIRCJOl71EURZo=
+	t=1744126343; cv=none; b=GC6+8C2ucS65K9Zpu0QfppPeP10MkdO4QBCr/FnbSW9EXeGkru5sRc+LILpu+Isi44RP2h/YY94O8/b1jEoXaWWbFyRI3Ab/azdaPJubkaYVvygHUBfNLLG7RnvZ5fDBiv8dKPTjwAnD1t2zjBeKYmDtbF+BProvzAoMh+/VjuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126294; c=relaxed/simple;
-	bh=Uq29KL+ro4IRBo8g5H8MypBCBK0Ooc76QGNcWH4alfw=;
+	s=arc-20240116; t=1744126343; c=relaxed/simple;
+	bh=u741l1VQEn0lP1ypM4etmFVddvE3nno24ukni4RpKpE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKTi6jwoTaToT+X/2FTVJ+BUTaJniWajgjCuAr1/3rpK3nGEaHu9pcjcRMCIiz7Jk2zHFsk5u53JBcWcpHKg3Kl2Xa0JKSM1v+1kC4dn2sqCRuGL9HZ+CIKas51C8EGBZ7SED0Ci9OEj2MUo4JJu72HddPbtNeVUXfgmyQgJOcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4UJEaCt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjISLvHBB8x3OyTTdFaL/o2QKW5YZAnaKIeke5VYF91xqPOBhaCN/FpjnbMXXJjpHocbBuCa701V7Lt5SGLqeArbFrUAA8YMwyCt5lk8YtyEWLaQoU2tRjsHuDoNYoiyUpIY1UJ+kFP1u49V+TFEH8GAptyatoZsJ8cpyMRAm0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iSEiTJaR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4UJEaCt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14E9C4CEE5;
-	Tue,  8 Apr 2025 15:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744126294;
-	bh=Uq29KL+ro4IRBo8g5H8MypBCBK0Ooc76QGNcWH4alfw=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iSEiTJaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7136C4CEE5;
+	Tue,  8 Apr 2025 15:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744126342;
+	bh=u741l1VQEn0lP1ypM4etmFVddvE3nno24ukni4RpKpE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P4UJEaCtF61oGuLRw5Uii2z9vVlYo67NwlmwTqICCwpgHdYrc/oIvkhAI0jjnKiYr
-	 Foi1EZ+/FfOtwDutvDlZ9IsQ6EaTcYYiD+reVoWqi4tU8zzV1GPixJdCq3xMn5ULof
-	 keSD4lGX9dDqatRoGU+M0XVaSjc2nQ2FStY95360gQvs2zoe+wDlgAKASUDQjaYgeZ
-	 kQ3WWSvJQ9LkYm40V+PxAHXYZKpuv+S9USOhEty0CogIdTgr+YTMAnmHfwKeorOjfK
-	 lEPaV0ygH0+6jINKFxGVxFPjOV4RS3OnCQKWa9pJFTARzwygN4IV07Gvc2xj2sINKa
-	 D8jpHP3BSx3cg==
-Date: Tue, 8 Apr 2025 18:31:30 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>
-Subject: Re: [PATCH v2 2/4] tpm: support devices with synchronous send()
-Message-ID: <Z_VBUozuHvbxdyB3@kernel.org>
-References: <20250408083208.43512-1-sgarzare@redhat.com>
- <20250408083208.43512-3-sgarzare@redhat.com>
+	b=iSEiTJaRlriF1D01gegE+wTgUM9zgHAgqr44r3f9wT/oZizQaIbm0yUQQTnNwBBw+
+	 6BVlWv5R62TNZ9Dnr+J+FirqY5QhiS0P6V6FJ3a+nHB93yX2ZbJYrDXoW0xhrZg3fX
+	 j3l9Su9ccA4KsCG7QQuSPZqAydu2amtkAGgd+RQY=
+Date: Tue, 8 Apr 2025 17:30:46 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.13 000/499] 6.13.11-rc1 review
+Message-ID: <2025040840-severity-pointy-e3a7@gregkh>
+References: <20250408104851.256868745@linuxfoundation.org>
+ <71339b92-5292-48b7-8a45-addbac43ee32@sirena.org.uk>
+ <2025040810-unpledged-bunkbed-1e2f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,92 +46,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408083208.43512-3-sgarzare@redhat.com>
+In-Reply-To: <2025040810-unpledged-bunkbed-1e2f@gregkh>
 
-On Tue, Apr 08, 2025 at 10:32:06AM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
+On Tue, Apr 08, 2025 at 05:18:31PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Apr 08, 2025 at 04:01:05PM +0100, Mark Brown wrote:
+> > On Tue, Apr 08, 2025 at 12:43:32PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.13.11 release.
+> > > There are 499 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > 
+> > This fails to build an arm multi_v7_defconfig for me:
+> > 
+> > arm-linux-gnueabihf-ld:./arch/arm/kernel/vmlinux.lds:31: syntax error
+> > 
+> > and multi_v5_defconfig gives:
+> > 
+> > arm-linux-gnueabi-ld:./arch/arm/kernel/vmlinux.lds:30: syntax error
+> > 
+> > (presumably the same error)
 > 
-> Some devices do not support interrupts and provide a single synchronous
-> operation to send the command and receive the response on the same buffer.
-> 
-> Currently, these types of drivers must use an internal buffer where they
-> temporarily store the response between .send() and recv() calls.
-> 
-> Introduce a new flag (TPM_CHIP_FLAG_SYNC) to support synchronous send().
-> If that flag is set by the driver, tpm_try_transmit() will use the send()
-> callback to send the command and receive the response on the same buffer
-> synchronously. In that case send() return the number of bytes of the
-> response on success, or -errno on failure.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->  include/linux/tpm.h              |  1 +
->  drivers/char/tpm/tpm-interface.c | 18 +++++++++++++++---
->  2 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 2e38edd5838c..0e9746dc9d30 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -350,6 +350,7 @@ enum tpm_chip_flags {
->  	TPM_CHIP_FLAG_SUSPENDED			= BIT(8),
->  	TPM_CHIP_FLAG_HWRNG_DISABLED		= BIT(9),
->  	TPM_CHIP_FLAG_DISABLE			= BIT(10),
-> +	TPM_CHIP_FLAG_SYNC			= BIT(11),
->  };
->  
->  #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index 3b6ddcdb4051..9fbe84b5a131 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -114,8 +114,17 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->  		return rc;
->  	}
->  
-> -	/* A sanity check. send() should just return zero on success e.g.
-> -	 * not the command length.
-> +	/* Synchronous devices return the response directly during the send()
-> +	 * call in the same buffer.
-> +	 */
+> What is the error?  "syntax error" feels odd.  Any more hints?  Any
+> chance to bisect?
 
-Nit:
-
-/*
- * ...
-
-It's wrong in the existing comment.
-
-> +	if (chip->flags & TPM_CHIP_FLAG_SYNC) {
-> +		len = rc;
-> +		rc = 0;
-> +		goto out_send_sync;
-> +	}
-> +
-> +	/* A sanity check. send() of asynchronous devices should just return
-> +	 * zero on success e.g. not the command length.
->  	 */
->  	if (rc > 0) {
->  		dev_warn(&chip->dev,
-> @@ -151,7 +160,10 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->  	if (len < 0) {
->  		rc = len;
->  		dev_err(&chip->dev, "tpm_transmit: tpm_recv: error %d\n", rc);
-> -	} else if (len < TPM_HEADER_SIZE || len != be32_to_cpu(header->length))
-> +		return rc;
-> +	}
-> +out_send_sync:
-
-out_sync would be sufficient
-
-> +	if (len < TPM_HEADER_SIZE || len != be32_to_cpu(header->length))
->  		rc = -EFAULT;
->  
->  	return rc ? rc : len;
-> -- 
-> 2.49.0
-> 
-
-BR, Jarkko
+Nevermind, got the fix now.
