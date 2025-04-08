@@ -1,169 +1,199 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.fujitsucc.c3s2.iphmx.com (esa6.fujitsucc.c3s2.iphmx.com [68.232.159.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2622B1EE7BE;
-	Tue,  8 Apr 2025 05:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090567; cv=none; b=NlTmpxKPxcDi72ThNTfrz+ziU+GcVSFcC/lQL44Zi3OhZravr8mVFN6vanUdtqfl4lZUM02Hav8MaP1m72Qz2F/y3IfZG4FwMfsseSZrv9c4C3mrt9mrY6dS63sLV2zqnDxJOre8z9arFMq6Dy3+CH1gIJfDQoOBkyguVot2jbE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090567; c=relaxed/simple;
-	bh=bpV5FGMaMPPNBMNGXul9vlBbf0D9HtZpxIRHD5Mb47c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aHmPd1PZv8XklYOTYnVqrJkgLktJSW9u/Rn76iTjWq8Pqyj28bjiNYXI6mdM7KO0Hg73CsQ6vWGkCFnqh4tbwrUE7E3jhmxafU68hh3EC0/6xjucLKVYX/68zfcoq06+oDR+KB8R83PGS9Lgi4KxT8/QRXorlmdX5ChwSPLttrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMsnsnbN; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63202AE74;
+	Tue,  8 Apr 2025 05:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744090718; cv=fail; b=BME0swS0ziLhWFBs6bNYDHqpvAVZKMuDdtDvne97HKfLzSHF5Hh2Rf+/mJLqhnlboKcMZaK2C1hES7+ia9uaL48jcV/dgL8f0K+GsIsdFTitoeXmNnVspcyXIcegETsLMgnGp42PrBEAqzVx2g/RlizfZvNa89D+prExQx2Da4M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744090718; c=relaxed/simple;
+	bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QOAUpLd+Xg/9PeZSbThoZ0JI2FIiSQ1oeLKbXmfYQzVXd95A5S4FCbDZNafwxpi+e1GARLcRLX22o0D9axJ88icLtkDQHe8nvWUw+ws+/gJBsGz/fDr6WUgcuLtta4Y6EP4RGurSO8ZwySTLwkIFPzT4gs8zyM54qqrfBAwD2G8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Y4UWQlQI; arc=fail smtp.client-ip=68.232.159.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMsnsnbN"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c597760323so462006285a.3;
-        Mon, 07 Apr 2025 22:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744090565; x=1744695365; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=66z8xNX7QfE8/G8d9xcH5NpbXBfUgfRudiKLL4Me/eY=;
-        b=XMsnsnbNVOtWnMDi4ZE60AKpNzUYCwaJf/U3p1JyY311FSliLL0I3xTKfJnarWqZyW
-         PZkgGBSAtSAjcAGawl5fYTSYODnWMcPYkiwjR/IwIEOeu7vLxDJIPYL040wlEkfnzQpJ
-         D3KTKZQkeElwM/P+a+AhEppZ4DNsx7ycTE9h5wx1lDy1afKc7sgn6UzD6pSxIORdTAq2
-         lmzk/tCH6mPyROASfSbawbZJvKTSiWQzR3bE6HoEVKYIBw1kYeBJJ6Ro8hNJUSI5TD4G
-         auhP6jYrT+WpmzyIuowejYBBtsaNvBjvHx7FytCbk4IVg+fc1rTvs+NLBNhyDDbUHcql
-         i8Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744090565; x=1744695365;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=66z8xNX7QfE8/G8d9xcH5NpbXBfUgfRudiKLL4Me/eY=;
-        b=R3Ex813dwuD7migflBWe1M25H8NTyWqyFha6TR+bJqA0offKpUdG9LG3kFbtsaxw2d
-         jUVNfvomuvm2vcWFnTY/ID85tk8HpRV9jTlBJpmw4XoLmMBDMiHOd7C/0yzYG2tGhdZS
-         fiebe5ZJj6uqiL+EMtsqicdls6Zu/32mwyHSXARSFzzC65o/V2tK+6aKxlQnBp1uM+jK
-         1mTphI6g2VJHdb47BDLLEPCL1jsWArI6nvL99eRxL44iiCru7/ZZIOHTkb1lR//Cffs7
-         VNn9p5lycMVcAmcT7YFhgKScAOqqm9/uPsnM5zjplItzw8e8fIn2x/sSIGbMvJAGdOxl
-         EyIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPdEZCYh6kVZxyNIDA0LWNqMSYH7800kyi74hycwchxxVAm2YTMTPga7G9vt5o6CttgQmA6JeJ5Fek5oI=@vger.kernel.org, AJvYcCXiK1kEZX7LAi9ZwraJ+t6Q9KPOOnNXzsC+V9aeb3v5ooZulAWo/u0TLK4C5gPBia9uV1Gddq2uG9vePvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNpo4NMwqEMiPmd8sf6iGGc0Si/eh5ZFob/Xa26q4MDIGREw9B
-	JJi5ZTytN2agN5LLaS9IK1zApNl5oQwc73BkNAX56rQzF75F3fHGWm7bPOmegHEEMRSd1j/nyq6
-	AvM7pe9FrXCHBxFCqCO1pmRi0va4=
-X-Gm-Gg: ASbGncuaiTa8lumWp5AP7b/gu4+VXxfd75hRgL9+lsFeaOLzr7sAy5dCh6GxSogUsmM
-	7t2vtgB4DTdKs0bZ/LDTVD8trlCObeTBvawqHYz/lguUfG8Cg/LYE/SVfWXWgfoSWEUCb+FKOcK
-	imYY0B/S/o+Q+cgrc6qHX2Lt8Aa9MzOiBdMYf0WywzxdGEGSvjCuK6+49uaQ==
-X-Google-Smtp-Source: AGHT+IF3zriAobKyOd+EfxBcRPVpJO7KdHPNEN1iPME2bkhFC2JQsEh6Wt5ZpPCetHwqivdlHTSNYgyvuNmoxmCXhqw=
-X-Received: by 2002:a05:620a:70cc:b0:7c7:9349:e468 with SMTP id
- af79cd13be357-7c79349e48fmr395965885a.12.1744090564951; Mon, 07 Apr 2025
- 22:36:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Y4UWQlQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1744090716; x=1775626716;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
+  b=Y4UWQlQIYfe6DwRR6WwWFU9c/5bHcFW2yB3O/j3dSEkYK45KQ4oNq+Pw
+   OlspMkZqnrkRKnOHlS1/tVSMA7rbNoFIjUdulilQAI5jzGi6WiBzSn4sP
+   pqJ9R76qdgDII+pJj9+SGH7jHcw4cjfy+M4m8YEZg9sjwjwLRlVucbO+9
+   BhZOFFAWEL4LGVZ5/YsUeQPdyMJFp+trLs+5Iva/aapL4HYcS1ULUrXhl
+   KWcAFZrUT1jMp3HHD3b34Po0wwKB3RRcdH+/xyCOdC1YAP7g9Vn0YjSpo
+   v+Rxa9oFm8Ldhue9QDkBv4FjLdkDPszXZLFNX2AOWR8sBXOJmKU9fEw48
+   Q==;
+X-CSE-ConnectionGUID: V5W76cD8TU+PifF6IuHZUw==
+X-CSE-MsgGUID: lRqrpqJARcuLdQK74rMn6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="152077252"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739804400"; 
+   d="scan'208";a="152077252"
+Received: from mail-japaneastazlp17010002.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.2])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 14:37:24 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BjWvzqxCN3P4BuiuR4zlhLSn8PF8/ImjvR0gXhFDKbCywFD17n00lBKqEZHFTewvwgjXu5tGEk3tfb43Z7V8EfNpZKBd0/HtnocGexYyRkxjVrpL+Wr12TiArIKOQATn9EyfsG80aiampMRTMH7xVCaECNmUgPGYqOT05pMCIL7CxyAnTaqe2HIFaDVRUmiHFDkDhdNAFi+xc7BcIKCCtFLjBU00u1C+MI+S+vQgeLnCWV4QJ8/is+bDNpN9/nkkyLFwjjPGb/ZBbvCKeZswKUlK8OVtIFwudtJkC2Z8H0xcuGk7BHz3tjbMwrjA4VVFTLGyX1Q+obCyOqdxre1uYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
+ b=fwpujL5TDvK3kSkJ213AfeHLfUSUS42v/t7HfVYVQsnNAkao0FF4Dtfd+6PXJx4hjX7EAU77fACNaSrdrWidWORQd5/12Lvwr3TJDSbsXqUD5JqHRAFk0Lp63X3c2Awx9anvBuOU7ZhH3bz10HOhoQYIwytoHh7x7wDdkrJNa1PxCMqXQAEMVXuBVXtDvoihD7xUMSyvMmpX1Zee4bH0eQoMMb7ja1ylVJgnyK4vtE3oiKE3d/qwc9ho5wac9XH0K5/WIIDUoiGMNBA/ZjfrnohJrv61Z/pQB2SS7baH68ak/4RAWydvb8K2HiMLN3cTLVZ0BPL3xzg9CCgg2pHy2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
+ by TY4PR01MB12733.jpnprd01.prod.outlook.com (2603:1096:405:1ea::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 05:37:17 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377%4]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
+ 05:37:16 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: Gregory Price <gourry@gourry.net>
+CC: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Thread-Topic: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Thread-Index: AQHbjvNia1PhMmp5z06r6vu5ANRYCrOQF8EAgAB+mQCACLNIgIAAEfCAgAAXGIA=
+Date: Tue, 8 Apr 2025 05:37:16 +0000
+Message-ID: <ed9880a0-0dd5-4ae0-a9d0-d871fae200ac@fujitsu.com>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
+ <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
+ <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
+ <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
+ <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
+In-Reply-To: <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TY4PR01MB12733:EE_
+x-ms-office365-filtering-correlation-id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|1580799027;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UEZDV2VBS1dYZmhPeWpNRUlhS05JYXh3MjUyZUVNVmVmaXV2NUo1SFRDRG1a?=
+ =?utf-8?B?dTRueDlrdUZoZkhkWjlGUWtvOTltck1ZOHk2bVdYRSs2Wm1SMWt5V2hJY3hD?=
+ =?utf-8?B?UVdLTGxNbUUyZ1RyQ01GMC83dlg4NUV5SVJ0N3NrclNaL2RsQTUyY0NMM3dn?=
+ =?utf-8?B?M2N4cml3SUk4NXNXQ0xtdE53T3ViL3B6T01GemFSSlZsVWtZb2pxRjByUTBE?=
+ =?utf-8?B?UG1COTl6MGF5UWErK005WGZoaWR2S2w5M1ExRnJPMWFIU3M0QmVCSHF6cUdC?=
+ =?utf-8?B?RGxuM3hIV1VqSndoSmJmeVprcU5zOXZsTkkyRmp5bW9LU3NGdHR5aUNMWWZK?=
+ =?utf-8?B?NDRER3l6dy9DSWxQUitrMFFucDg5VUx5a1J1dTh2a1ZjMXJrbVJMdS83N3BW?=
+ =?utf-8?B?c3dxQWViTWU5R2FGSXNSRTBHSzJvRU9OT0tmYlVvZ0Q2WWtkTktqa0Y4ZEhi?=
+ =?utf-8?B?ZmFuQ01ocTNwaHM2bFJ6eFJkWjlFZzlPalN1RXB1TXFEVHc3bWVrSWFmYkZQ?=
+ =?utf-8?B?Z05BSEZ2RTRKODhFbDIzTEtOTkpITnUvcTcxRmxCMUpESjlBazZSQ05OSktX?=
+ =?utf-8?B?dVVzOHJlcXdDTEZGcDljQnliSkRWL2UweUNBbEs1NVRoRS9vRHZRc21WQUpq?=
+ =?utf-8?B?Y1IxRTJkeDJDY1VKb3lrQTlNK0VadC9PLy9tNzFwQmtraU9VZGJpbWk1cUgr?=
+ =?utf-8?B?aERmNGM2MVB3VmEycUoyOWN6dFZtSHZzaWwyWTd0eG0wNFRUZ2plOTU2cDYz?=
+ =?utf-8?B?VkYwZ3lMZVNPZHRleUZ3bVk3aXFhN1p6elg3dmNZNXc5R2xia1QvVjR4VHp3?=
+ =?utf-8?B?Tmt6eUlQUFV2WVA2ampWdDJ3aC92ekRlMXByYlRBejdKeFpiWm1RZHBnb1ha?=
+ =?utf-8?B?Y0N1dXcvRHNTU3R0TmlLVjRVc0JicGlYRDdINmZEWEhNM2VudUozSnNHM01Y?=
+ =?utf-8?B?NGxYd2lWWmgzbmQ5RGhJSFpKbGY0Zk1nZW1DZ3hQUGZYSEs0eC9PTms4d2V1?=
+ =?utf-8?B?UXJZanpmYmxpL05NZVE3a3VCVjdMZDJkNFhWQ2F6MDFTVE0weFFyNm1mQkR6?=
+ =?utf-8?B?UkpOTjBsam4raG9FUUdZZWM0QUY2N1NxMFY4RzdlSVArQU5TM0R6NXE3VEo5?=
+ =?utf-8?B?S2haZHVMOUJ0R1I4cDQrcUhiVzdTSXBOYmtjZVNOcnltdURrK3p3OVU4U1VF?=
+ =?utf-8?B?UDkxYmw2aGtMQVJsemJYN3UzalJjZmRPQ1J4NjhJb21zdHhwSUVrSW5uV2RS?=
+ =?utf-8?B?MzE2YkEwVEsyaTdqcGFJalFkSTFXSWJxOGUvczdpalJUd3B1K01FMFdHRkdk?=
+ =?utf-8?B?ajZ5RWZBQnBEeStCWEo2Nk1yOFRMS1hGUDdVUDhGT0JUQnVQMk44ZysvRVFG?=
+ =?utf-8?B?dUxhUW1zUTE1RHYwaW9TNXJXTUpCVWJmd3gwVHd3KzBBZzhNeE8wcFI2MWh6?=
+ =?utf-8?B?NXk0dHpzV2FHOTNka2wrL2h5QXo4UmZWOW92MjhRTjJVaGlnU3VsMHNkdzBW?=
+ =?utf-8?B?ZFRWdkpVQmlmdzFrMi9FcEVEYW1XdndCQStCRHlDR1VmTmJXVkpia2c2Z1ZS?=
+ =?utf-8?B?VmhFZm43a0pMRG5QZXF0VWdNeUk1OG1SQXFmM25FUktYNFArRHRpWEg4cndU?=
+ =?utf-8?B?bGd4byt1emVlTFZBR0FMblJtcU9xQUxtZTA1NVVhS0ptc3FkWXh0Um8ybUNz?=
+ =?utf-8?B?YUlwTFFpYm1XdWoyRy84cy9WU2ZXMmVMWnBjdG1xcEhWenVMUzkvNkhoY1hT?=
+ =?utf-8?B?NlROOFZselFKZmhjZE5LT0dBNENFTW9uaE5VNTBHWUdXamphY1A0ZkRwRm5k?=
+ =?utf-8?B?Rk1GNklGYTNRaW56Y050VUZxeEJHRGNQMytveVN1eUhneDVpZHovVXBiaG02?=
+ =?utf-8?B?eGZPdUVZMDRQKzBsTnIwbGhONStMRzBrVllmYmI4QUd4VGxkNFM1dUxRdUNh?=
+ =?utf-8?B?d0tpWUR3NWxlTFEwbXRmT3YvQVoycTRGN2E0M2xlblZ3cXNsR3gvNEZzMy9l?=
+ =?utf-8?B?b0o2S1Z0RG53PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?dmVSc01FU1Q3R2s4d2xhaWRPSG53cEQ5bDF5dHZBNTlTa2NTK2tua20zQXhy?=
+ =?utf-8?B?bzlEK3YzM29xOTA4aERZVmJtd0l2dFQ3NjczdENSWnJxeGRJSEdqcHUzRHRw?=
+ =?utf-8?B?MTNYVVRTMjZUTXMvcHBQbzBMTEhhVCtmMDA2NVlWMG1oam5lNlI5RllLbHNI?=
+ =?utf-8?B?cXh6Q0VaanhuSWhJQXFIM0VmUTZocWVFaGJldmExSy9vSmEvUzJPRWVQM3dW?=
+ =?utf-8?B?QkZKT0RWUUswK0NmckxNa1FIQ2FEQkdiRnhVWDA3MytrQStySldhM0pVelFr?=
+ =?utf-8?B?ak8xbGVVVGYvWHBWNEJ1ektVa2Uvdmo0cDhmcExieC9Lcmh1QmVtLzJKZitu?=
+ =?utf-8?B?azZwekFWTmxReEQ4T2xsdEVESUljMmUyN2ZNblludHVKWHFwMzZJQi9QR2h1?=
+ =?utf-8?B?RGpZbDk3NnlCblo4cFBXNmNrT1lCem4rVFNucENMTmNpV3Vhd1gzWUFxS0M2?=
+ =?utf-8?B?dmVzMFBqL3cwMVRQRkdqenhtYWxYMVovc1NsK3h0VjJodEdQc3JuM29MTFNH?=
+ =?utf-8?B?eG1QY2NQSTgrYWo0cjNEcFBLRDQwTkVvU3VMVkh4WitvNGFSclh4MWl2TVZq?=
+ =?utf-8?B?S2JXMENrK3VhdEdMbTlKQWptdWRTUjg5RnRKTkNBVjZoYUYrdC9abEZBQXZm?=
+ =?utf-8?B?L2FNbHlHdTBuaTV3NGlIaEdzNGFHRC9kQmNINm5nbHFZS0hqbHU2SW8zY2h1?=
+ =?utf-8?B?ZDBkQ2lFdFNvZ3BwaE9YSU9kUHZ2Zmh3NDVndmllbUE0YzNRcDFLU0NzcC9t?=
+ =?utf-8?B?c1dic2xkNHQ0V1pKY0FGT2JaYjB3Y1R3OWxWcWNCYzMvQVIzbG5ubCtDb2li?=
+ =?utf-8?B?QzVsL3RxMWdVZEhLSFo2R2lGaUx2WUVMWVdFdDNqdnlqaVZRdzZQYzNVSTVH?=
+ =?utf-8?B?bkMyNS9WVWJLN2RUSVJVOTVENFo5M25taldvYjFxVnBBNlkzTVBWTkNmRnE5?=
+ =?utf-8?B?UHRHNVFZSkxPS2FSajZUaU9PNGxteVBOOWtYaVU2dVdqYXZNcEw5VGdaUzM2?=
+ =?utf-8?B?b1lpeWZTZk05a3U1UFhRZGpZUGZjK0htei9pVnZXS1FEa2xlL0NkRUYvdlVa?=
+ =?utf-8?B?bkhVZ0pyRUY2aklVWkh0TmJ6R3BhT2xvVkFkQVJTTTNiNW82TFNlamxwK3NC?=
+ =?utf-8?B?bmU5K0VrS216SW53YTFPZVFLeXR2Z2hKMHR4a0h2WGwxRW1BeDlMT3FSVHBB?=
+ =?utf-8?B?QllFRStmMHZxZVRwQ2hiaHdjVDErWmRGYnhvenlXdjg2eEhhVWgxUG9aTDNo?=
+ =?utf-8?B?bE8xTFJKc1daMkhIOXpWQm0wMjZQRlpxakpXS1BSazJ4eXQ3ZnAxYStqTnUw?=
+ =?utf-8?B?ZTJBSUpyNStEUWJpR3E5VHRTcXRBak85NHUxSGZKT0dvckgzTHVuREJ3aEVn?=
+ =?utf-8?B?eHI1N2l1ZElpMzlJUHpPYUQwSldLT2Z0WHhmdXFsWGNReVJtQ1VQOEUvbGx6?=
+ =?utf-8?B?V0lMMkRjeldHOW5tS3FkNjF6Mmd4MXFjaHc1ZzBZbkIvNC9tWStHckRyUXk3?=
+ =?utf-8?B?V2krOXMvZnJ0bjdJVWFIb2U5VE1UdkFaZXJ6NmF5USs4ejhYNUMyYVZKVGdJ?=
+ =?utf-8?B?QS96SEcybjNGdDBXMEQ1QWlLeDdRRDVkUzhhTHg4a3FqL2Z4S2ZGNGQ4WktH?=
+ =?utf-8?B?MTkvR3czRUVXWFFnY2xHVTBOMStNMmZEMkY3ZnhMbGtzaG5FQ1gwd3FoQ3NZ?=
+ =?utf-8?B?SkhMSmV0WUxtRmkvQ2hmSTZodW5pR0JvT0oxMGJxOG9KNjNPU3hLWXJ5UENL?=
+ =?utf-8?B?aGFpUzJKUStBSGNYdzluYVBpTlFTMmdqODZsQmRkdkJDeEg1TENOTnBqMVNp?=
+ =?utf-8?B?SDd1R0ozaktvc1V4M2kwdDB0TDMrT0xBQmxyZEVna1JxdVRUdVFWd0gxR0ZZ?=
+ =?utf-8?B?NWZxSjRGdWJVUVZsMVQwSk5CT2hoY3NlMmxINlB6Wlc2OFFmdU4vK1ludXY0?=
+ =?utf-8?B?NHRiSWY5NkZUN0loelMzL2JSeHlYOVVQai9YQmNpWXpZZmhJd1ZNeTVIcWpY?=
+ =?utf-8?B?ZzVMSVRTNUZScFFVUFoyYVNwQ2JrMk5UN282U3VwZGVmNVJSWmxlb2Nac0Iz?=
+ =?utf-8?B?ckEyTDUvTEJaNVJzdk42dTRkR2dqNm5KS3BqVzdhOU9Na2VFbWREbUM2cmVX?=
+ =?utf-8?B?RGp6V1ZuNi92NmdycEJSaUtCK1NNaEpqNEk4TzJYR3FYcFRvNmhlOU5RT3FZ?=
+ =?utf-8?B?YkE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7D80A90760E4F54F940B6CF18C025748@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
- <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
- <20250326001336.GA23984@pendragon.ideasonboard.com> <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
- <20250402002948.GC4845@pendragon.ideasonboard.com>
-In-Reply-To: <20250402002948.GC4845@pendragon.ideasonboard.com>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Tue, 8 Apr 2025 01:35:00 -0400
-X-Gm-Features: ATxdqUFhO6KYOXY4yVNrKrJ9pclVIZLupMuKBIYL2k0WzLK5KckrSLkKAPiarzg
-Message-ID: <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
-Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	NTxJ6MF2LUTiifi6NlXz9p4i3InrD+HRPPrRbaSYssUELgR8wpuPf5L+rdpAqoNpjhp43L+0AgH2JZELUfUbIM7PlJABUelc65KYJpR6P2jl35/BnzYlOMjYh2aW92NHh2VjX0EzBztZ+fJQPmpmZ9/AKcwlHvBO9LczMnfOuhDyRKaTH9jdB0gTzem0ff6i7jZ5r+4hOzmyLMEWb2dFCOQmt/ZtNVAO1YJgIzfInfzvj2NbQpIyt0tRhYdvoJBKf59W1OSFCuHCSUpqwTU+3vTtsO7DQcBqBuve6GaMcQ+lw3IihTUOD23iwpyyicWPXRME6WcB8AJ1KBz/R4q2dpltc6CoCLAY6s8QhHqGLNAz/uSqE1h9UtsOh4tyYpEoMpUcYzn+78XPiF9ZyHrq+Pq7q0U8LhweVZPoAOh6pF9A9QT2XAQKTeR0odc+bbi4OUNjfQIEAWJGjFWo4K91qz8XW/ItkbeR/cdkUkKkF1jF73/uoHPrW6n8pSTrUWqV6KkyHGsZyFGMuL3nsaiojN4n3mqMn/Ect+QNudIYHoK6OODUjg0Nv1ZlS2ilORL2yb4eH5t6hxBKC4f3gCg10kQR9X75OJR0OvwT558ERDxPiPL5jE9tP4u1ap9jJUe0
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2025 05:37:16.1142
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eePbA50bJTWkV5yJSfiWZ69l8SHyNxq1jUfuMNmtbe2bYMyJl45bJ/7iCafB4oN+ou+mvbPOH4Q9TN2PhX9Gng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB12733
 
-On Tue, Apr 1, 2025 at 8:30=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Gabriel,
->
-> On Sat, Mar 29, 2025 at 01:50:00PM -0400, Gabriel wrote:
-> > Hi Laurent,
-> >
-> > I=E2=80=99ve analyzed the bug report, and the root cause of the
-> > "WARNING-media_create_pad_link" issue is a mismatch in terminal
-> > references in the USB descriptor.
-> >
-> > The format type descriptor references terminal ID 6, while the audio
-> > streaming interface descriptor points to terminal ID 5. This
-> > discrepancy triggers the warning: "No streaming interface found for
-> > terminal 6", followed by the media pad link warning.
->
-> Can you share the USB descriptors.
-The USB descriptors via the Syzkaller reproducer:
-         "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\x02\=
-x03"
-         "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\xff\=
-x01"
-         "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\x00\=
-x00"
-         "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\x02\=
-x00"
-         "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\x24\=
-x03"
-         "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
->
-> > I confirmed this by changing the terminal ID in the format descriptor
-> > from 6 to 5, which eliminates both warnings. This shows the warning is
-> > correctly identifying an invalid descriptor configuration, not a
-> > kernel bug.
->
-> There's still something not quite right. uvc_entity->num_pads should
-> always be equal to the corresponding media_entity->num_pads. That's not
-> the case here, and I think it indicates a bug.
-Ah ok - the mismatch itself shouldn't happen regardless of the descriptor
->
-> > Since the USB descriptor is invalid, I believe the warning is
-> > necessary and should remain. The code should stay as is.
->
-> There should be a warning, but I think it needs to be caught in a
-> different place, earlier.
-Got it.
->
-> > On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart wrote:
-> > >
-> > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
-> > > > Hi Ricardo,
-> > > >
-> > > > > I cannot reach that URL
-> > > > I was unable to access the URL from my email client when I initiall=
-y
-> > > > sent the email, but a couple of hours later, I was able to. Initial=
-ly,
-> > > > copying and pasting the URL into the browser provided a workaround.
-> > > >
-> > > > > Shouldn't it be?:
-> > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for e=
-ach entity")
-> > > > You're right, I incorrectly referenced the wrong commit. However, I=
-=E2=80=99m
-> > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d5=
-7 -
-> > > > '[media] uvcvideo: Ignore entities for terminals with no supported
-> > > > format') as it's the latest commit affecting the line I'm changing =
-or
-> > > > the one you mentioned.
-> > > >
-> > > > > Shouldn't source->num_pads be the same as remote->num_pads?
-> > > > The fuzzer (Syzkaller) that triggered the warning appears to have
-> > > > encountered a case where source->num_pads and remote->num_pads were
-> > > > different. When analyzing the case in GDB, remote->num_pads was 1,
-> > > > while source->num_pads was 0.
-> > >
-> > > This seems like the real bug that should be fixed.
-> > >
-> > > > > Are you sure that your kernel does not contain?
-> > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c101d3a=
-50a68c4629c9055e4c
-> > > > Yes, it should be included since I am running the upstream kernel.
->
-> --
-> Regards,
->
-> Laurent Pinchart
+R3JlZ29yeSwNCg0KDQpPbiAwOC8wNC8yMDI1IDEyOjE0LCBHcmVnb3J5IFByaWNlIHdyb3RlOg0K
+PiBNeSByZWFkaW5nIG9mIHRoZSAzLjEgc3BlYyBzdWdnZXN0cyB0aGlzIGlzIGFsc28gZGVmaW5l
+ZCBieSBpbXBsaWNhdGlvbg0KPiBvZiB0aGUgIkltcGxlbWVudGF0aW9uIE5vdGVzIiBhdCB0aGUg
+ZW5kIG9mIHNlY3Rpb24NCj4gDQo+IDguMi40LjIwIENYTCBIRE0gRGVjb2RlciBDYXBhYmlsaXR5
+IFN0cnVjdHVyZQ0KPiANCj4gSU1QTEVNRU5UQVRJT04gTk9URQ0KPiBDWEwgSG9zdCBCcmlkZ2Ug
+YW5kIFVwc3RyZWFtIFN3aXRjaCBQb3J0IERlY29kZSBGbG93DQo+IA0KPiBJTVBMRU1FTlRBVElP
+TiBOT1RFDQo+IERldmljZSBEZWNvZGUgTG9naWMNCg0KR3JlYXQsIEkgYW0gZ3JhdGVmdWwgZm9y
+IHlvdXIgZW5saWdodGVuaW5nIGd1aWRhbmNlLg0KDQpNYW55IG1hbnkgdGhhbmtzIGFnYWluLg==
