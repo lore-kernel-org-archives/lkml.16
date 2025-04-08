@@ -1,100 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F1229B0E
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CC92236FC
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122975; cv=none; b=FMFPqT6C+/SAbV+ghUhjUtMs9tmWhKSS97HrUagkjnRAEdySM0wPARFGzQGOFwlwx9SAEKkOcY/yPKU1rzTad9jvo/4cVuSqcbNyhG0MNkgcVdATF+h4aLpyNPHeq74ihHPeGB9znT+Gh+RNdgDh9A2A+y8f0gYOSqov7X6XkBg=
+	t=1744122999; cv=none; b=Zy5X2RztHlPA2azwmF93SCwAoiUTA844eqrp3uNHKrSIHm2PNQHLdBryZcxq9hC+JjZo8PS3ybwATlGdL+Nsa75G9XuSwK6NmDV6YUzi3BsFisl4u7FSL6yxcgNaP6IkMZD/7E/t6If65B9T+MiPfcqTL/Kk6zk32Hoj0OQe9hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122975; c=relaxed/simple;
-	bh=1FfTJO/QLlag6WFx411/x8xKsrT7nnIgrMSC3imzVtY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ny7qSWEReTV0FFJqmfS47zqYbOYTHEQhFiYbotYzQJV7D7CV5xNBEvhRZg+LsHEkhr4FbcfchL/JLHuwi/XLq5C0KLO4UWJQkw2XOcxvLwVGZJZLdTWM6ccWnRbISF0PDsFnEMTAj4AL0lNq6zcXbBF8Iy04BzX9Nno5oTekQLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LV7/MKYS; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744122999; c=relaxed/simple;
+	bh=VMDuT2jhj89NF4sxHY78mrJyGiA92w/k0fyZukw4JbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YBXil639MaPS6C7fBayfISfMOl2LNjMMTrMFkw3zfyibpbJAhfOBKXRGreB3Iw7+xRtGUUviV9QSttRFrsnrnQO8v+UvMeS4T4RlTiBo0od0K+1K8Oof5T0I4pb9ITnjXtwM4T/uZxJwap/eQwU5c4LFvjUl8gvkv+GOmIfQyzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hd/+GhPh; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LV7/MKYS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744122974; x=1775658974;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1FfTJO/QLlag6WFx411/x8xKsrT7nnIgrMSC3imzVtY=;
-  b=LV7/MKYSZLv6vzs6s8KqFOgyjVo8xEkQzX/ILUJDonFQFCVFPca7Hr5/
-   BZ7HNuPm6DVFVHn1NNBRYjZVWxpitBN4vsFhkWClqeDJ4PbKfjwIs37Rm
-   mTS0jDxRE+/PkTVXBg3aw3XmsbE3/VvbuwBw+4FJMpj5WeS8U45uQRYDV
-   HIXmteVyWkE2gDvvH/vY2oCURmvC5qs7MgNGsvBQMRujCCpybROGUymXr
-   2yCg52S3kYRC45p+gUJ3Z1sqv+ewjDHwcwOrJEYZ1xJ/9cxj3xtf+YUTT
-   o/XWfw9yqDcr+WVXAhPRFiV8/Fly/G29ginWDfHECkxudyIa3C9clS2RI
-   A==;
-X-CSE-ConnectionGUID: zoLs4jSqQk6Rv9FlXOjrOw==
-X-CSE-MsgGUID: 6tABZv8GSDe/TZgoaRmuyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49218618"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="49218618"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:14 -0700
-X-CSE-ConnectionGUID: 2TbrZd5ATWOS8rTjrm1t2g==
-X-CSE-MsgGUID: I2tCfs2+RZyIG3+tq+DqJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="133157273"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u2A3b-0000000AQkH-0OCL;
-	Tue, 08 Apr 2025 17:36:07 +0300
-Date: Tue, 8 Apr 2025 17:36:06 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v2 1/1] x86/reboot: KVM: Guard
- nmi_shootdown_cpus_on_restart() with ifdeffery
-Message-ID: <Z_U0Vn0V18KYGjkP@smile.fi.intel.com>
-References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com>
- <ZwbazZpTSAn9aAC7@google.com>
- <ZwcT149jx-iOmEfl@surfacebook.localdomain>
- <ZykbvVZ32FKCRT_q@smile.fi.intel.com>
- <Z_UUXOe61BwVkGob@smile.fi.intel.com>
- <f670905f-f14b-4482-83ee-568234647f46@intel.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hd/+GhPh"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39d83782ef6so531293f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744122996; x=1744727796; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wPPvBfN+HGZfLFV1ZtWLMiIkwQz23m7w6sKuYGQlZ7w=;
+        b=hd/+GhPhIt/aavoNYkuoppjGAAZabEhso/V46Aq1c+szqS9myvxDBVdcjeho24Pp41
+         sRnWIoOJ6LhAJRhcSIeWAiOvRd5uqpP4aD4czEYOIVaIa550WEuNqLBHXPBVOaZviCoB
+         RbJFOUjrUSnU0vZcz4wLxpnQS6qelD1ibjto0w1Gow8KtLQLFPjrniLS5C/VOIPFl+T6
+         MuW1QhvUCGF4s/fLB/rOt6HsvVNLMhf+mXOsiUYzYlAlOMGFZ32bbxngQc+UDAh+3Z3b
+         GrMj6NHXet7+u0E875xDB81GsBHvBHeEZbY1tdjSWxEdSip95NGxiKu+56KJ3OH6CUmr
+         3Hlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744122996; x=1744727796;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wPPvBfN+HGZfLFV1ZtWLMiIkwQz23m7w6sKuYGQlZ7w=;
+        b=QtX/Wc/Mmx0XpB10Lz2JXHDUDgrm7KDcS5QA+HzNuRHyVPzmZYkxaF00yIPkeG7o+A
+         otk7/M5Zg/59MX5s/tnUNZXLpg3oYdm6tUcTVbgO8OEJ9wHLVA4rFb8aezhWpMAgPuiC
+         Gei4AsEbv7q6dGHK9Qa34bhaw+hkJiiYzUiohUGV+HtMSQCvSodzcHV0MpyXl1hZB+jo
+         u4wKuhMi0jfyU3F6du0WsObmAJ7PN7IZss9MkBm07zA6EaeaC47ydtb7Ogf657Bl4y62
+         rVAYL7lZraHns3Xi6mcjmFXvUDELKBRud/Z4evMRPKJnCeXsJjx3r7kKJHF06zUywq2Z
+         1rBw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2WqcEmlT1EmOVMvvQy3fh01DZ1HZzk1Ki2gEbDOq8pIlNHb+q8TjLdCZpi+KJWx6hTFbpO821VNgxqf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM1gwD/bvb4uZt57Fh+8Kx/0kbGHuBXA6fS6mewUkhyKPRbsFM
+	aR9v2lFNjln1nq0kbm1Tgecnk8AwWIPNPzIH6B3NIoLMqN+pYwGAZxiwIT1uIj1bwde0jYu7AK9
+	owfo=
+X-Gm-Gg: ASbGncvbfnme7/3VwLe9LOvj097a+iY/kUzGSMs0CHf+78is+Vi3NhnrPZIarCF0o/y
+	gBDB6LvTKe7BAqmN95iqpkFXag60YE3SZQ9bAMjb4cPKYGlUmjlkqC1qPQnRKWhjh/QT2Qg16ER
+	Jo2NBsx1CAjIjK6Y/M6p8iso1F2cONzE66TOBpkt+P3L4h4rKUI2Ml1kcPuWMzcXyuk/azrN/ER
+	SuuKqxu+p4B+Hn4L39ByNdVDlQ40U1WmfwSjEsZf/Vmmvm0UvxqshfPuaj5OKZapFe3ExQjkc2T
+	uM05Gk+tLUcz5pJvOM/L9bMj7U2wYW9gRGA+v8SdVWdZ
+X-Google-Smtp-Source: AGHT+IGs3Xppykht8aj5t+Cb6rFG+nfWJmqODTuMzwxw5i3C8PzwPs3DpgDnmHqpNVBS5pEI3mexfQ==
+X-Received: by 2002:a05:6000:2289:b0:391:2a79:a110 with SMTP id ffacd0b85a97d-39d820ec28bmr3149920f8f.29.1744122995327;
+        Tue, 08 Apr 2025 07:36:35 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a727bsm15003151f8f.27.2025.04.08.07.36.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 07:36:35 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: James Cowgill <james.cowgill@blaize.com>,
+	Matt Redfearn <matt.redfearn@blaize.com>,
+	Neil Jones <neil.jones@blaize.com>,
+	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: blzp1600: drop dependency on OF headers
+Date: Tue,  8 Apr 2025 16:36:29 +0200
+Message-ID: <20250408143629.125576-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f670905f-f14b-4482-83ee-568234647f46@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 07:17:51AM -0700, Dave Hansen wrote:
-> On 4/8/25 05:19, Andy Shevchenko wrote:
-> > Any news here? Build error is still reproducible.
-> 
-> In the end, adding the #ifdefs leads to worse code, less maintainable
-> code. I'll take the occasional actual unused static inline in a .c file
-> over a mess of #ifdefs to make the compiler happy.
-> 
-> I really think that warning needs to go away in some way, shape or form.
-> Either get rid of it entirely, or kick it out of -Wall somehow. It's a
-> super pedantic warning that leads to worse code most of the time.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Does it mean you can take Sean's approach?
+Use the generic boolean device property getter instead of the
+OF-specific variant. This allows us to stop pulling in linux/of.h. While
+at it: drop the of_irq.h inclusion as none of its symbols are used in
+this driver.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-blzp1600.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpio-blzp1600.c b/drivers/gpio/gpio-blzp1600.c
+index 77ad0e596f3e..2760a13c0801 100644
+--- a/drivers/gpio/gpio-blzp1600.c
++++ b/drivers/gpio/gpio-blzp1600.c
+@@ -10,9 +10,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ 
+@@ -217,7 +216,6 @@ static int blzp1600_gpio_set_config(struct gpio_chip *gc, unsigned int offset, u
+ 
+ static int blzp1600_gpio_probe(struct platform_device *pdev)
+ {
+-	struct device_node *node = pdev->dev.of_node;
+ 	struct blzp1600_gpio *chip;
+ 	struct gpio_chip *gc;
+ 	int ret;
+@@ -240,7 +238,7 @@ static int blzp1600_gpio_probe(struct platform_device *pdev)
+ 	gc = &chip->gc;
+ 	gc->set_config = blzp1600_gpio_set_config;
+ 
+-	if (of_property_read_bool(node, "interrupt-controller")) {
++	if (device_property_present(&pdev->dev, "interrupt-controller")) {
+ 		struct gpio_irq_chip *girq;
+ 
+ 		chip->irq = platform_get_irq(pdev, 0);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.45.2
 
