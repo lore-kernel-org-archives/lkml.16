@@ -1,470 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7CE1581F0;
-	Tue,  8 Apr 2025 14:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F372CCC0;
+	Tue,  8 Apr 2025 14:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122731; cv=none; b=U1i16w4JjfhpT8W0aaeCseIeANEQJWd3JRue1ub9mXgbCJfmhFvrKG0357SHSVWVFdYDEy7F97SR3VWWkhrrjLbSJekAQ3lbfJJM+qUhKWqsRIlXOq+w68RBlyh0Ip4lswRkg6jGXkJHwQiMwwytr8gb7WZgoTpdCxExPeIaOUY=
+	t=1744122762; cv=none; b=NMI+6JXg0WGwklnl1pfwxn/c3p1Gq5LPanxhRer1x/zx9NxbOI50xt6pUIMfwvhwpwdC13YMDz9J4I3LRN1fEVsYgQpjQDSYMAGR2GDlefFNNjPWKmjqscooc1VP7u7+hK6HIN4DpwsBXGkbpb8fCj3yaLFNPDmIT/5CVdq4sVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122731; c=relaxed/simple;
-	bh=QLIWQ2JkuQMA+HF6IM3VjoGCCP5NHg9txONutBTSqnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kkaGma1GJHHqKoFhyiG/1t/AnICJN8SEMIBcGct+NNByBT2PDtfGbgF9o2QR5LH1dzHCxY00Qj3h0qBpxGZwVHJ8jsn/cqopVCE7jFrYd1EQPfzB2dHTfo4LYTyKSrljUQ8Llx6XQNBmfk9EunnRvBhXozWqDfr0Cig4pzTeco0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22CBC4CEE7;
-	Tue,  8 Apr 2025 14:32:06 +0000 (UTC)
-Message-ID: <5cd6e8d3-fa51-4225-a3b8-9727cfd95062@xs4all.nl>
-Date: Tue, 8 Apr 2025 16:32:05 +0200
+	s=arc-20240116; t=1744122762; c=relaxed/simple;
+	bh=S8HQFCAgRYCK9VleZ1xfxlvdTab7w9flM6ttpKFL0K0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kSQ/ZQhMfcf+gCS1XiY8zHD9Y7aDP6xYvwdKsY66GlmJg8lbmGkykJb7R7IU3HJQuTnd+ZHW/s7Y4XUZimEKtO5YLpcvImfDJvo8IfwJjnM1SKYsW0hsrXTr8hGk+pcVyRoU/Rhqq8JAtJEYRvV2m07ONRp4bZNAK9DpPfnOREs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QYOYgi25; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QYOYgi25"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 36DDB441AA;
+	Tue,  8 Apr 2025 14:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744122753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jKZ2nZ/YDVQxetnaoa6rVSZtxDIyGQTUnyWlkWNbPEw=;
+	b=QYOYgi251QkCNRplRBx6erON2BBQBzYRDjQWAnm3vJjtX5r/2bDBBees95n8rqtCiY7Wbc
+	PQpHUJKli4z+ftZemcOTqMt+WwdhacCvAiUd8T/vPnX0jXV6WiPakE9zESDw1Swns29JVb
+	7r1KXteWFzC8r4EuEcv3czmf1/grO/4smocbwQYMf5fIrMUiWmjM56cst2fFh+Yo2kIT2+
+	HnOEx6yKX7Plckidry7Vh9kADkh1dhtryIPaRdKi/9IKtU9LBz2glnluqCYE4DJxMjqAfT
+	DsPlOA7suTrNz5VIlt/BECzSYYAdEVEj4fqLn/oabyct73drDjCNAGYPJrg+dg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v7 00/13] Add support for PSE budget evaluation
+ strategy
+Date: Tue, 08 Apr 2025 16:32:09 +0200
+Message-Id: <20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
-Content-Language: en-US
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Sebastian Fricke <sebastian.fricke@collabora.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Alex Bee <knaerzche@gmail.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>,
- Christopher Obbard <christopher.obbard@linaro.org>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
- <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
- <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
- <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
- <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
- <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
- <35d34100-7013-4acb-a5a6-3408e0f45d9d@xs4all.nl>
- <1747c9d2f653a07418422157f4b1613246f39a6c.camel@collabora.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <1747c9d2f653a07418422157f4b1613246f39a6c.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGkz9WcC/3XO3WoDIRAF4FcJXtei49/aq75HCcHq2AitLq5dE
+ sK+e81CScuyF3NxOMw3cyMT1oQTeTncSMU5TankHszTgfizyx9IU+iZAAPJLBc0omvfFU9juU9
+ tp7GmQp3iDoMRAtCTvjtWjOmyum8kY6MZL40ce3NOUyv1uh6c+drfbc4Y7Ngzp4yawTAlo5EY1
+ Ot7Ke0z5WdfvlZzhj+OYHsOdMcqZTUAojRu64iHw4HvOaI7gwBro9NWG7915K+jWH9oz5HdCd5
+ yJzzzfDBbRz0c4MOeo7ojgpODRhWDlv+dZVl+AHGACwzmAQAA
+To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Simon Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduhfevudetfffgkedvhfevheeghedtleeghfffudeiffefvdehfeegieeivdekteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhihlhgvrdhsfigvnhhsohhnsegvshhtrdhtvggthhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgto
+ hhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 4/8/25 15:36, Nicolas Dufresne wrote:
-> Hi Hans,
-> 
-> Le mardi 08 avril 2025 à 10:28 +0200, Hans Verkuil a écrit :
->> On 07/04/2025 16:59, Nicolas Dufresne wrote:
->>> Le lundi 07 avril 2025 à 16:17 +0200, Hans Verkuil a écrit :
->>>> On 07/04/2025 15:52, Nicolas Dufresne wrote:
->>>>> Le lundi 07 avril 2025 à 13:09 +0200, Hans Verkuil a écrit :
->>>>>> On 25/02/2025 10:40, Sebastian Fricke wrote:
->>>>>>> From: Jonas Karlman <jonas@kwiboo.se>
->>>>>>>
->>>>>>> Add support for a get_image_fmt() ops that returns the required image
->>>>>>> format.
->>>>>>>
->>>>>>> The CAPTURE format is reset when the required image format changes and
->>>>>>> the buffer queue is not busy.
->>>>>>>
->>>>>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
->>>>>>> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>>>>>> Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
->>>>>>> Tested-by: Christopher Obbard <chris.obbard@collabora.com>
->>>>>>> ---
->>>>>>>  drivers/staging/media/rkvdec/rkvdec.c | 49 +++++++++++++++++++++++++++++++++--
->>>>>>>  drivers/staging/media/rkvdec/rkvdec.h |  2 ++
->>>>>>>  2 files changed, 49 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
->>>>>>> index 70154948b4e32e2c439f259b0f1e1bbc8b52b063..5394079509305c619f1d0c1f542bfc409317c3b7 100644
->>>>>>> --- a/drivers/staging/media/rkvdec/rkvdec.c
->>>>>>> +++ b/drivers/staging/media/rkvdec/rkvdec.c
->>>>>>> @@ -111,15 +111,60 @@ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
->>>>>>>  {
->>>>>>>  	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
->>>>>>>  	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
->>>>>>> +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
->>>>>>> +	enum rkvdec_image_fmt image_fmt;
->>>>>>> +	struct vb2_queue *vq;
->>>>>>> +	int ret;
->>>>>>> +
->>>>>>> +	if (desc->ops->try_ctrl) {
->>>>>>> +		ret = desc->ops->try_ctrl(ctx, ctrl);
->>>>>>> +		if (ret)
->>>>>>> +			return ret;
->>>>>>> +	}
->>>>>>> +
->>>>>>> +	if (!desc->ops->get_image_fmt)
->>>>>>> +		return 0;
->>>>>>>  
->>>>>>> -	if (desc->ops->try_ctrl)
->>>>>>> -		return desc->ops->try_ctrl(ctx, ctrl);
->>>>>>> +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
->>>>>>> +	if (ctx->image_fmt == image_fmt)
->>>>>>> +		return 0;
->>>>>>> +
->>>>>>> +	if (rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, image_fmt))
->>>>>>> +		return 0;
->>>>>>> +
->>>>>>> +	/* format change not allowed when queue is busy */
->>>>>>> +	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
->>>>>>> +			     V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->>>>>>> +	if (vb2_is_busy(vq))
->>>>>>> +		return -EINVAL;
->>>>
->>>> Looking closer, this code is just wrong. It does these format change
->>>> tests for any control, so if more controls are added in the future, then
->>>> those will be checked the same way, which makes no sense.
->>>
->>> "Just wrong" should be kept for code that is semantically incorrect,
->>> just a suggestion for choice of wording.
->>
->> Having vb2_is_busy in a try function (whether trying a control or a format)
->> is simply wrong. Having these checks at a high level (i.e. being done for
->> any control) is asking for problems in the future. It only works right
->> now because there is just one control.
-> 
-> Your main rejection argument has been that this is done for any
-> control. Jonas invalidated your argument yesterday:
-> 
->> Please elaborate how this code is just wrong, it is only called for sps
->> ctrl, as intended, try will report an error as suggested in docs and set
->> will reset the decoded fmt to match the new sps ctrl value.
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-1) it is confusing since in this function there is no indication that there
-   is just one control.
-2) it is not future proof in case more controls are added.
+This series brings support for budget evaluation strategy in the PSE
+subsystem. PSE controllers can set priorities to decide which ports should
+be turned off in case of special events like over-current.
 
-When I was reviewing this I had to dig into the code before I realized that
-there really was just one control.
+This patch series adds support for two budget evaluation strategy.
+1. Static Method:
 
-So while this code is 'correct' in that it won't break, it is really hard
-to understand.
+   This method involves distributing power based on PD classification.
+   It’s straightforward and stable, the PSE core keeping track of the
+   budget and subtracting the power requested by each PD’s class.
 
-> 
->>
->>>
->>>>
->>>> These tests belong to the actual control that you 'try'. In this case
->>>> rkvdec_h264_validate_sps(). This function already checks the width and
->>>> height, but it should also check the image format. It is all in the
->>>> wrong place.
->>>
->>> We can do that too. Though, this was generalized since once you enable
->>> the other codecs, you endup with code duplication. I know this series
->>> is an extract from a larger one.
->>>
->>> So let's suggest to make a helper that combines rkvdec_is_valid_fmt()
->>> and the busy check. Though on that, please reply to my comment below
->>> (which you skipped).
->>
->> Absolutely, this needs a helper function.
-> 
-> In the next version, We should ake sure this is renamed, so readers
-> understand its already a helper, and is only called for specific CID.
-> Jonas comment also invalid my wrong suggestion here.
-> 
->>
->>>
->>>>
->>>>>>
->>>>>> This makes no sense to me. This just tries a control, and that should just
->>>>>> work, regardless of vb2_is_busy(). It's a 'try', so you are not actually
->>>>>> changing anything.
->>>>>
->>>>> See comment below, notice that this code is only reached if the control
->>>>> introduce parameters that are not compatible with the current capture
->>>>> queue fmt. The entire function uses "success" early exit, so the
->>>>> further down you get in the function, the less likely your control is
->>>>> valid.
->>>>>
->>>>>>
->>>>>>> +
->>>>>>> +	return 0;
->>>>>>> +}
->>>>>>> +
->>>>>>> +static int rkvdec_s_ctrl(struct v4l2_ctrl *ctrl)
->>>>>>> +{
->>>>
->>>> If there is a try_ctrl op specified, then the control framework
->>>> will call that first before calling s_ctrl. So any validation that
->>>> try_ctrl did does not need to be done again in s_ctrl.
->>>>
->>>> The same comment with try_ctrl is valid here as well: if there are
->>>> image format checks that need to be done, then those need to be done
->>>> per control and not as a generic check. If new controls are added in
->>>> the future, then you don't want the same checks to apply to the new
->>>> controls as well.
->>>
->>> I don't think the behaviour of try_ctrl and that being embedded in set
->>> calls was being questioned by anyone. Can you reply to the last
->>> paragraph below ?
->>>
->>>>
->>>> Regards,
->>>>
->>>> 	Hans
->>>>
->>>>>>> +	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
->>>>>>> +	const struct rkvdec_coded_fmt_desc *desc = ctx->coded_fmt_desc;
->>>>>>> +	struct v4l2_pix_format_mplane *pix_mp = &ctx->decoded_fmt.fmt.pix_mp;
->>>>>>> +	enum rkvdec_image_fmt image_fmt;
->>>>>>> +
->>>>>>> +	if (!desc->ops->get_image_fmt)
->>>>>>> +		return 0;
->>>>>>> +
->>>>>>> +	image_fmt = desc->ops->get_image_fmt(ctx, ctrl);
->>>>>>> +	if (ctx->image_fmt == image_fmt)
->>>>>>> +		return 0;
->>>>>>
->>>>>> If you really can't set a control when the queue is busy, then that should
->>>>>> be tested here, not in try_ctrl. And then you return -EBUSY.
->>>>>>
->>>>>> Am I missing something here?
->>>>>
->>>>> When I reviewed, I had imagine that s_ctrl on a request would just run
->>>>> a try. Now that I read that more careful, I see that it does a true set
->>>>> on separate copy. So yes, this can safely be moved here.
->>>>>
->>>>> Since you seem wondering "If you really can't set a control", let me
->>>>> explain what Jonas wants to protect against. RKVdec does not have any
->>>>> color conversion code, the header compound control (which header
->>>>> depends on the codec), contains details such as sub-sampling and color
->>>>> depth. Without color conversion, when the image format is locked (the
->>>>> busy queue), you can't request the HW to decode a frame witch does not
->>>>> fit. This could otherwise lead to buffer overflow in the HW,
->>>>> fortunately protected by the iommu, but you don't really want to depend
->>>>> on the mmu.
->>>>>
->>>>> I've never used try_ctrl in my decade of v4l2, so obviously, now that I
->>>>> know that s_ctrl on request is not a try, I'm fine with rejecting this
->>>>> PR, sending a new version and making a PR again. But if I was to use
->>>>> this API in userspace, my intuitive expectation would be that this
->>>>> should fail try(), even if its very rarely valid to check the queue
->>>>> state in try control.
->>>
->>> Here, since we seem to disagree on the behaviour try should have for
->>> this specific validation. What you asked on first pass is to make it so
->>> that TRY will succeed, and SET will fail. I don't really like that
->>> suggestion.
->>
->> Ah, no, that's not what I asked.
->>
->> There are two independent issues:
->>
->> 1) The tests for a valid image format are done for all controls instead of
->>    just the control that really needs it. That's asking for problems, and
->>    that needs to be addressed by creating a helper function and using it
->>    in the relevant control code. Alternatively, just check against the
->>    control id in try_ctrl/s_ctrl explicitly. That's fine too, although I
->>    prefer a helper function.
-> 
-> This is false, this is done only the the relevant controls as explained
-> by Jonas.
+   Advantages: Every PD gets its promised power at any time, which
+   guarantees reliability.
 
-See my comment above. It's not at all obvious that there is just one control,
-it is just bad coding practice. All I ask is that it is made explicit in the
-code that it is just for one control.
+   Disadvantages: PD classification steps are large, meaning devices
+   request much more power than they actually need. As a result, the power
+   supply may only operate at, say, 50% capacity, which is inefficient and
+   wastes money.
 
-> 
->>
->> 2) vb2_is_busy() does not belong in try_ctrl. 'try' should never depend
->>    on whether buffers are allocated. You have two options here:
-> 
-> I read this statement as try_ctrl cannot fail when setting an SPS while
-> the queue is active. Since you don't have rationale for it, but really
-> want to see that, we will sacrifice the symmetry of TRY/SET in the next
-> version. TRY will pass, and SET will reset the capture format if the
-> queue is not busy, and return busy otherwise. Nobody ever wanted
-> try_ctrl for stateless decoders, its not even mention in the specific
-> documentation. This is effectively option b) below.
+2. Dynamic Method:
 
-VIDIOC_TRY_EXT_CTRLS is always available. Typically it just validates controls
-(i.e. make sure the values are in range, etc). It is really rare that drivers
-need to implement try_ctrl.
+   To address the inefficiencies of the static method, vendors like
+   Microchip have introduced dynamic power budgeting, as seen in the
+   PD692x0 firmware. This method monitors the current consumption per port
+   and subtracts it from the available power budget. When the budget is
+   exceeded, lower-priority ports are shut down.
 
-It is also called by VIDIOC_S_EXT_CTRLS: this avoids that the same validation code is
-implemented in both the try_ctrl and s_ctrl callbacks.
+   Advantages: This method optimizes resource utilization, saving costs.
 
-Unless otherwise stated, controls are independent of whether you have buffers
-allocate or are streaming, you can get/set them any time.
+   Disadvantages: Low-priority devices may experience instability.
 
-> 
->>
->>    a) try_ctrl checks if the image_fmt is valid for the current format,
->>       and it returns -EINVAL if it isn't. This requires that userspace
->>       then selects a different format first. No call to vb2_is_busy is
->>       needed.
-> 
-> That shows you don't really know what this is about. Please read how
-> the initialization process works, up to point 2. A call to
+The UAPI allows adding support for software port priority mode managed from
+userspace later if needed.
 
-You are absolutely right. I should know how it works, but because I rarely
-use it, I forget the details.
+Patches 1-2: Add support for interrupt event report in PSE core, ethtool
+	     and ethtool specs.
+Patch 3: Adds support for interrupt and event report in TPS23881 driver.
+Patches 4,5: Add support for PSE power domain in PSE core and ethtool.
+Patches 6-8: Add support for budget evaluation strategy in PSE core,
+	     ethtool and ethtool specs.
+Patches 9-11: Add support for port priority and power supplies in PD692x0
+	      drivers.
+Patches 12,13: Add support for port priority in TPS23881 drivers.
 
-> S_FMT(CAPTURE) is optional. Its the driver that select the CAPTURE
-> format based on the bitstream parameters (and bitstream format /
-> CAPTURE). Everything is design with input and output in mind. The
-> application sets the input format and parameters, the driver choses the
-> output (CAPTURE queue) format. With the very strict rule that nothing
-> in the parameters that can be against the locked capture format can
-> ever be set.
-> 
-> https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/dev-stateless-decoder.html#initialization
-> 
-> 
->>
->>    b) try_ctrl doesn't check image_fmt against the current format, it just
->>       accepts any value. Instead s_ctrl does the check: if it invalid, then
->>       it returns -EBUSY if vb2_is_busy() is true, or it updates the format.
-> 
-> That contradicts slightly your answer "Ah, no, that's not what I
-> asked.". But can be done without any spec violation like option a)
-> includes.
-> 
->>
->> I see that cedrus also has vb2_is_busy() in try_ctrl, and worse, it actually
->> updates the capture format in the try_ctrl, which is definitely a cedrus bug
->> (try should never have side-effects).
-> 
-> I think looking at another work-in-progress driver is distraction. We
-> all know that try should not change the driver state (regardless the
-> type of try). If you are correct, then it should be fixed there too,
-> you should inform Jernej and Paul.
+Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+---
+Changes in v7:
+- Add reference count and mutex lock for PSE power domain.
+- Add support to retry enabling port that failed to be powered in case of
+  port disconnection or priority change.
+- Use flags definition for pse events in ethtool specs.
+- Small changes in the TPS23881 driver.
+- Link to v6: https://lore.kernel.org/r/20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com
 
-And I will. Cedrus is not really a work-in-progress driver, I think it should
-be moved out of staging. See the topic for the media summit.
+Changes in v6:
+- Few typos.
+- Use uint instead of bitset for PSE_EVENT.
+- Remove report of budget evaluation strategy in the uAPI.
+- Link to v5: https://lore.kernel.org/r/20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com
 
-In any case, if we can agree on the right approach for rkvdec, then I can make
-a patch for cedrus.
+Changes in v5:
+- Remove the first part of the patch series which tackled PSE
+  improvement and already gets merged:
+  https://lore.kernel.org/netdev/20250110-b4-feature_poe_arrange-v3-0-142279aedb94@bootlin.com/
+- Remove the PSE index support which is useless for now. The PSE power
+  domain ID is sufficient.
+- Add support for PD692x0 power supplies other than Vmain which was already
+  in the patch series.
+- Few other small fixes.
+- Link to v4: https://lore.kernel.org/r/20250103-feature_poe_port_prio-v4-0-dc91a3c0c187@bootlin.com
 
-> 
->>
->> The core question is whether changing the V4L2_CID_STATELESS_H264_SPS should
->> make format changes. I can't off-hand think of any other control that does
->> that. It is certainly not documented.
-> 
-> That is also wrong, it is well documented. Its not because you don't
-> understand a problem that its by definition wrong.
+Changes in v4:
+- Remove disconnection policy.
+- Rename port priority mode to budget evaluation strategy.
+- Add cosmetic changes in PSE core.
+- Add support for port priority in PD692x0 driver.
+- Link to v3: https://lore.kernel.org/r/20241121-feature_poe_port_prio-v3-0-83299fa6967c@bootlin.com
 
-It's documented in the stateless decoder doc:
+Changes in v3:
+- Move power budget to regulator core.
+- Add disconnection policies with PIs using the same priority.
+- Several fixes on the TPS23881 drivers.
+- Several new cosmetic patches.
+- Link to v2: https://lore.kernel.org/r/20241030-feature_poe_port_prio-v2-0-9559622ee47a@bootlin.com
 
-https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/dev-stateless-decoder.html
+Changes in v2:
+- Rethink the port priority management.
+- Add PSE id.
+- Add support for PSE power domains.
+- Add get power budget regulator constraint.
+- Link to v1: https://lore.kernel.org/r/20241002-feature_poe_port_prio-v1-0-787054f74ed5@bootlin.com
 
-But not with the control documentation itself:
+---
+Kory Maincent (13):
+      net: ethtool: Add support for ethnl_info_init_ntf helper function
+      net: pse-pd: Add support for reporting events
+      net: pse-pd: tps23881: Add support for PSE events and interrupts
+      net: pse-pd: Add support for PSE power domains
+      net: ethtool: Add support for new power domains index description
+      net: pse-pd: Add helper to report hardware enable status of the PI
+      net: pse-pd: Add support for budget evaluation strategies
+      net: ethtool: Add PSE port priority support feature
+      net: pse-pd: pd692x0: Add support for PSE PI priority feature
+      net: pse-pd: pd692x0: Add support for controller and manager power supplies
+      dt-bindings: net: pse-pd: microchip,pd692x0: Add manager regulator supply
+      net: pse-pd: tps23881: Add support for static port priority feature
+      dt-bindings: net: pse-pd: ti,tps23881: Add interrupt description
 
-https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/ext-ctrls-codec-stateless.html
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  22 +-
+ .../bindings/net/pse-pd/ti,tps23881.yaml           |   8 +
+ Documentation/netlink/specs/ethtool.yaml           |  47 +
+ Documentation/networking/ethtool-netlink.rst       |  49 ++
+ drivers/net/mdio/fwnode_mdio.c                     |  26 +-
+ drivers/net/pse-pd/pd692x0.c                       | 225 +++++
+ drivers/net/pse-pd/pse_core.c                      | 980 ++++++++++++++++++++-
+ drivers/net/pse-pd/tps23881.c                      | 404 ++++++++-
+ include/linux/ethtool_netlink.h                    |   9 +
+ include/linux/pse-pd/pse.h                         |  90 +-
+ include/uapi/linux/ethtool.h                       |  34 +
+ include/uapi/linux/ethtool_netlink_generated.h     |  12 +
+ net/ethtool/netlink.c                              |   7 +-
+ net/ethtool/netlink.h                              |   2 +
+ net/ethtool/pse-pd.c                               |  67 ++
+ 15 files changed, 1923 insertions(+), 59 deletions(-)
+---
+base-commit: cdf176f04d6ce5a3c7a4971265c267141919f42a
+change-id: 20240913-feature_poe_port_prio-a51aed7332ec
 
-I was looking at that, and doesn't mention it. I'll see if I can make a patch for that.
-
-> 
->>
->> The only control that comes close is V4L2_CID_ROTATE, and I think that control
->> was a huge mistake. It was also never properly documented how it should behave.
-> 
-> Documentation says:
->> Rotating the image to 90 and 270 will reverse the height and
->> width of the display window.
-> 
->> It is necessary to set the new height
->> and width of the picture using the
->> :ref:`VIDIOC_S_FMT <VIDIOC_G_FMT>` ioctl according to the
->>  rotation angle selected.
-> 
-> The link is confusing, but S_ and G_ share the same link. So its well
-> documented that the users must call S_FMT and manually flip the width
-> and height.
-
-Not really, if you look at how it is implemented in various drivers, then
-they don't match this doc in at least several cases. In any case, just forget
-about this control. It's all water under the bridge.
-
-> 
-> I was never involved with that one, but its a very different approach.
-> I think its written with single queue in mind (not M2M). It means you
-> can have pending control state. This for stateless CODEC would be so
-> complex to handle. For request based driver, we should probably never
-> allow that kind of API. If you need to set a control in the future, use
-> a request. This, when that control should be applied becomes very
-> explicit and can be synchronized across multiple queues.
-> 
->>
->> My preference is option a. Controls shouldn't change the format, it is really
->> confusing. If you do want option b, then all drivers that use this control
->> have to be checked first to ensure that they all behave the same, and the
->> control documentation must be updated.
-> 
-> Option b) it is, since there is no option a).
-
-So can we agree on the following (I think):
-
-1) rkvdec_try_ctrl no longer checks the image_fmt. Effectively this means that there
-   is no longer any need to change rkvdec_try_ctrl in this patch.
-
-2) in rkvdec_s_ctrl we do the image_fmt check: if it changes, but vb2_is_busy is true,
-   then return -EBUSY, otherwise call rkvdec_reset_decoded_fmt(). This code is specific
-   for V4L2_CID_STATELESS_H264_SPS, so just make sure it is under an if/switch for that
-   control ID.
-
-3) I'll see if I can make a patch to clarify in the control documentation that setting
-   it can change the format.
-
-4) I'll make a patch for the cedrus driver as well to align with the approach in rkvdec.
-
-Regards,
-
-	Hans
-
-> 
-> Nicolas
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>>
->>> Nicolas
->>>
->>>>>
->>>>> Nicolas
->>>>>
->>>>>>
->>>>>> Regards,
->>>>>>
->>>>>> 	Hans
->>>>>>
->>>>>>> +
->>>>>>> +	ctx->image_fmt = image_fmt;
->>>>>>> +	if (!rkvdec_is_valid_fmt(ctx, pix_mp->pixelformat, ctx->image_fmt))
->>>>>>> +		rkvdec_reset_decoded_fmt(ctx);
->>>>>>>  
->>>>>>>  	return 0;
->>>>>>>  }
->>>>>>>  
->>>>>>>  static const struct v4l2_ctrl_ops rkvdec_ctrl_ops = {
->>>>>>>  	.try_ctrl = rkvdec_try_ctrl,
->>>>>>> +	.s_ctrl = rkvdec_s_ctrl,
->>>>>>>  };
->>>>>>>  
->>>>>>>  static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
->>>>>>> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
->>>>>>> index 6f8cf50c5d99aad2f52e321f54f3ca17166ddf98..e466a2753ccfc13738e0a672bc578e521af2c3f2 100644
->>>>>>> --- a/drivers/staging/media/rkvdec/rkvdec.h
->>>>>>> +++ b/drivers/staging/media/rkvdec/rkvdec.h
->>>>>>> @@ -73,6 +73,8 @@ struct rkvdec_coded_fmt_ops {
->>>>>>>  		     struct vb2_v4l2_buffer *dst_buf,
->>>>>>>  		     enum vb2_buffer_state result);
->>>>>>>  	int (*try_ctrl)(struct rkvdec_ctx *ctx, struct v4l2_ctrl *ctrl);
->>>>>>> +	enum rkvdec_image_fmt (*get_image_fmt)(struct rkvdec_ctx *ctx,
->>>>>>> +					       struct v4l2_ctrl *ctrl);
->>>>>>>  };
->>>>>>>  
->>>>>>>  enum rkvdec_image_fmt {
->>>>>>>
->>>>>
->>>
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
