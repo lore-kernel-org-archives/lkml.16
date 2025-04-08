@@ -1,51 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E112F2698AE;
-	Tue,  8 Apr 2025 12:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336642698AE;
+	Tue,  8 Apr 2025 12:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114583; cv=none; b=gPm0c4pvXsdBoD8Rcr23a8pz6LZo3vrFsijTZQKgT3JLifXXbLm5E+vqPLB8znSmnF5/99QXQSmQa0gKqjdj6cCUbs4tOdpuO91UzS/QhupL7Z/zZ/SZFHvWBelJJiFr0NN3ROzaosENgnglWMm4lRfOuthburqWb1j4LdtwtiE=
+	t=1744114586; cv=none; b=O4+zXWERD/lW2bvERIJO7KOsf6NbBIFZXPaGT96oxXWqpeCu+b3DjKDsqnVSK4D5fXKUICkylQje0FyxppDim4AaSqY4DHCjyj/ocuMuQXzlBV09vchWu6+d3my5batXpNdub7FNcnk3ITW20y+f0XBJFGFRRwr+ztTlLMlXjlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114583; c=relaxed/simple;
-	bh=FlvoDL4dD4vmywPtBIrc819XH2xTfJa0KoRzqm1pE3U=;
+	s=arc-20240116; t=1744114586; c=relaxed/simple;
+	bh=cLUSL5AJWhLelR2XbxYl78eWYr9/ATjlBDFozsI2SuE=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mKYShmKvIHqYyNKYNHG6FY7lBnEsEyLLJEIJ1f6sanPtjdY5KzECUSI8nx96ylgdMmsKy0M/Sjxg0bWLnxmGa0MWl2z+6qRElyHmaxcrRQkbQYu8rxg3RNVASzRaIaMbtJalqwZpv+gsTgq48Hm/1haFJurwZV1czIJxKapvnfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/2qovIA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=H6d/ulaHT2qHAs8nrsyIc/8o9Mh2bA1vqCTFHsryV84KAP09kqSuwO85Ni/3/ixk3u3yGf9HiG5n5+h9HrkWKKaWs0pWF6qqajwQNQ3UOX0UepNhz4l2m2axCK2tK7i4OAYFC261VHEiDhXm71YZ2V/D6m/We7nvPkvZYEcLGmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKDbYjre; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/2qovIA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794BBC4CEE7;
-	Tue,  8 Apr 2025 12:16:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKDbYjre"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECB7C4CEE7;
+	Tue,  8 Apr 2025 12:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744114582;
-	bh=FlvoDL4dD4vmywPtBIrc819XH2xTfJa0KoRzqm1pE3U=;
+	s=k20201202; t=1744114586;
+	bh=cLUSL5AJWhLelR2XbxYl78eWYr9/ATjlBDFozsI2SuE=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=H/2qovIAqJGGcy2ejFPLP9TBpWesS3t1Nrdi9xZ9ztwprrl0+zsi6Vbh6+wMnpCe7
-	 bLuMJcijsFZC+FFQkU3KpyNTV+2THJTQFsAMzFqvOhnOaBlEEy2DEuUnBqAUyG2bw2
-	 PnaHqNXjiHjSOw+XQTaK9h+KxVWKSnPfW1Z48mJDdJqxsWhnibLMb1vxDwhpVGZnWd
-	 PS/sVMkSfMMAsrlJo3I4DCLGMahFMpKAIllXq+3lB9c+BXnJGSLUYZcjuRJbaqzpfE
-	 VMqtWKyyVqvZziC2SVFHTZyAHgAyfJwkmy0V6XZFPh7WaOY2qTvih0EKHbMXPPOotA
-	 5SxdJehBTwNqQ==
+	b=OKDbYjrekvQXzbFcIc/ZoxlziiuxS2TvqqWdu2SPcErM1ZJ6FsNMI/Hm3QAAieQ16
+	 RIQAn7kWZArEhwCc8Ft1jgQb6aINknJ3CeHCg3wuksMNFDUEu8dEPBmDC2ZKrLcSzm
+	 PfWDDLYqvHBA5UBGIDrOUbzCGuNR/Y3YnapbEWbh9hpNAzMlWxp/YYuW8walZz1Xzv
+	 q/LxlxG4dmNSxzwuWXYDmgIyahC5c5re7j9mn946/m5cPOU6XkXAR3hP/HHVm5wPP8
+	 jIxuwTnkow8W/lH9GqzuV5G/dycWAJdRb9su97nx76Fw9wgOnf6x6QFGkTOpOnnmLs
+	 sW0/T1CNDsfLw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Lyude Paul" <lyude@redhat.com>
 Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  "Boqun Feng" <boqun.feng@gmail.com>,  "Frederic Weisbecker"
- <frederic@kernel.org>,  "Thomas Gleixner" <tglx@linutronix.de>,
-  "Anna-Maria Behnsen" <anna-maria@linutronix.de>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
+  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
  <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
  <bjorn3_gh@protonmail.com>,  "Benno
  Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
   "Trevor Gross" <tmgross@umich.edu>
-Subject: Re: [PATCH 6/6] rust: hrtimer: Add HrTimerCallback::expires()
-In-Reply-To: <20250402214109.653341-7-lyude@redhat.com> (Lyude Paul's message
-	of "Wed, 02 Apr 2025 17:40:34 -0400")
-References: <20250402214109.653341-1-lyude@redhat.com>
-	<KF4J159g5GKvvA_atpNMRwFdllr-BeBiKtVkJfyTLoBdoy58A9xVVr7K-1MPTVRS8lBLq4jpyeId-53SLew6ag==@protonmail.internalid>
-	<20250402214109.653341-7-lyude@redhat.com>
+Subject: Re: [PATCH 0/6] rust/hrtimer: Various hrtimer + time additions
+In-Reply-To: <20250402214109.653341-1-lyude@redhat.com> (Lyude Paul's message
+	of "Wed, 02 Apr 2025 17:40:28 -0400")
+References: <f6qilrOyPKqI41LxEG6tS9lHm1gKZ1uxYBqonJEDGUzfNeg7JTLx0ygMtZCymEQv07RW8nGgFqhspMslAh8hAg==@protonmail.internalid>
+	<20250402214109.653341-1-lyude@redhat.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 08 Apr 2025 14:16:11 +0200
-Message-ID: <8734eij1bo.fsf@kernel.org>
+Date: Tue, 08 Apr 2025 13:51:44 +0200
+Message-ID: <87plhmj2gf.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,63 +53,26 @@ Content-Type: text/plain
 
 "Lyude Paul" <lyude@redhat.com> writes:
 
-> This adds the ability to read the expiry time of the current timer from the
-> HrTimerCallbackContext.
+> This is a collection of various bindings that I added to hrtimer when I
+> was originally getting it ready to be used in rvkms. I've mostly been
+> waiting for Andreas's hrtimer series to go upstream before submitting
+> these.
 >
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/time/hrtimer.rs | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
+> All of these are currently being used within rvkms for vblank emulation.
 >
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index d52cbb6cfc57f..e28b7895d8f37 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
-> @@ -69,7 +69,7 @@
->
->  use super::ClockId;
->  use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
-> -use core::{marker::PhantomData, ptr::NonNull};
-> +use core::{marker::PhantomData, ptr::{NonNull, addr_of}};
->
->  /// A timer backed by a C `struct hrtimer`.
->  ///
-> @@ -131,7 +131,7 @@ unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
->          // SAFETY: The field projection to `timer` does not go out of bounds,
->          // because the caller of this function promises that `this` points to an
->          // allocation of at least the size of `Self`.
-> -        unsafe { Opaque::raw_get(core::ptr::addr_of!((*this).timer)) }
-> +        unsafe { Opaque::raw_get(addr_of!((*this).timer)) }
->      }
->
->      /// Cancel an initialized and potentially running timer.
-> @@ -163,6 +163,31 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
->          // handled on the C side.
->          unsafe { bindings::hrtimer_cancel(c_timer_ptr) != 0 }
->      }
-> +
-> +    /// Return the time expiry for the given timer pointer.
-> +    ///
-> +    /// This value should only be used as a snapshot, as the actual expiry time could change after
-> +    /// this function is called.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `self_ptr` must point to a valid `Self`.
-> +    unsafe fn raw_expires(self_ptr: *const Self) -> Ktime {
-> +        // SAFETY: self_ptr points to an allocation of at least `HrTimer` size.
-> +        let c_timer_ptr = unsafe { HrTimer::raw_get(self_ptr) };
-> +
-> +        // SAFETY: There's no actual locking here, a racy read is fine and expected.
-> +        Ktime::from_raw(unsafe { core::ptr::read(addr_of!((*c_timer_ptr).node.expires)) })
 
-From what I have picked up about racy reads lately, this should probably
-be a `read_once` when we get that. For now you should use
-`core::ptr::read_volatile` with a `FIXME(read_volatile)`.
+Please note that we are going to get rid of `Ktime` in favor of
+`Instant` and `Duration` [1]. I know you brewed these patches long
+before the instant/duration patches, but I think it would make sense to
+merge instant/duration first and then this series.
+
+Can you rebase on top of the instant/duration patches?
 
 
 Best regards,
 Andreas Hindborg
 
 
+
+[1] https://lore.kernel.org/all/20250406013445.124688-1-fujita.tomonori@gmail.com
 
