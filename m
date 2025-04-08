@@ -1,90 +1,78 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B721859D;
-	Tue,  8 Apr 2025 16:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7978D22D79D
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128799; cv=none; b=NvXO8s+GLnKEGcqKwfzyqCQAZKqbBvTchdBapUPh17hV6RrKPg/2LZSgk9gbC3xJVEzPwFn+/zAF35Aqi2pG/hLGwBT5bUziTs22vIu7mDHFjqIc0DFN3pAq4lkweFlXqkcxJAsC2pZi8R1R27WKaLi9X1o9eu2vKQygYmRnzmI=
+	t=1744128808; cv=none; b=lUsUVwn9xXFkxg+PPZaMatMhsb5JH01unWId4e/LuRpUUt4OXps4Ryg32YHic5b4TxNCsZCqtqp5CMxHQiAWIhGLi2qUOk4n0rEwftx7jqG7DGs/XbM8PucgEoAMLP/nmLLB7IagFZ6xB7nN7iQ/AP585XjD5JWSkJTUHglLeCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128799; c=relaxed/simple;
-	bh=Qc1TY5TBgRWiRlw2g3PMWP+HHylhaLXQ7+7HE1eiRc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eijevH6/NRruoWAaaZbmLZHt9qSsPTBb6me8OFJENyr7ir8QNPHW3o43FJY+EKp/+8jbr/LizyqbBokueNn4H5JS0I2JXy5A2+FmhDq2mBYIy3T/BRefHjiBnPr+I4HLkEYvx+QppzGQIIxZslG2+125QHwVP75CvUV5Kjxl9DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xQHDKD9Z; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744128808; c=relaxed/simple;
+	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=E2ky8HwoXhjxm0ZS23tZnDR/Zlm9FLoaiviBw5yVlO3oan4IpK1PYazIuW3VFIYBTVSJxYCAFWXs6T03pjwSYHuaPH9dRF8fnkJdBModWoVaecnOKy3Q7yQnAAhoHFP/VF9g/FXouExuGGRQ38jzvmLlL5IeryjzpNb7wF64zF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=T9Mw1ZCd; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xQHDKD9Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=iHamA6MmAQln3g+ph5RzN9L5CgRNW7XpNoZqh01YomM=; b=xQHDKD9ZXptDaSK+dQASAxx790
-	Ybh87tS1nZ3FusAZGh77bUylZwpxjm6ICZWRNMCCbeK3BDFf+XrZwIaTUeNHNl2mncQZsxLkl7Acq
-	FR96apk9s3xS4f0APOr0XRJuOag3yS2jFyDzyK/zpm+y9Y37zDhSdhTY1OCd/dS4J8es=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2BZW-008QBU-Ty; Tue, 08 Apr 2025 18:13:10 +0200
-Date: Tue, 8 Apr 2025 18:13:10 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Martyn Welch <martyn.welch@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, kernel <kernel@collabora.com>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	imx <imx@lists.linux.dev>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] arm64: dts: imx8mp: Add device tree for Nitrogen8M
- Plus ENC Carrier Board
-Message-ID: <22e7df8e-51a2-4549-ad80-0e7fd256de0a@lunn.ch>
-References: <20250327123907.542132-1-martyn.welch@collabora.com>
- <cf525617-b895-4d58-8455-a5c7fa9bbeab@lunn.ch>
- <196162332ff.b61ad5b5564260.8672918780815538746@collabora.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="T9Mw1ZCd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744128769;
+	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=T9Mw1ZCdw6VmCwcNeQ8NyuErcuE70NIe6GHvHBoSCslDNc/geczEXqIH8WfJ98S9G
+	 mdzBbKL4IIrSPUAT/tFYhqQw3d4MWElJ55GzfJIjLHUFXq5aQmhK4gKAgP9ieY6nn+
+	 4xM68HH+OwhHKOA0cZlKOFQxEvQvxxGAjH3JmlR4=
+X-QQ-mid: bizesmtpsz9t1744128763tb211cb
+X-QQ-Originating-IP: B3aoT2lfQT7lhb4CK9eX2m41pUeTGC7vlEq6PnA9Zbg=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 09 Apr 2025 00:12:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14729311663327765348
+From: Wentao Guan <guanwentao@uniontech.com>
+To: yangtiezhu@loongson.cn
+Cc: chenhuacai@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
+Date: Wed,  9 Apr 2025 00:12:39 +0800
+Message-Id: <20250408161239.1023788-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250408092907.22856-1-yangtiezhu@loongson.cn>
+References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <196162332ff.b61ad5b5564260.8672918780815538746@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
+X-QQ-XMAILINFO: NRN3UPsLzYKVqIrPzeEpHTRKRq7s/4DCgNDwMWIe0+UiIz4mph4S3ZU1
+	LWI1eS7ChDVbMfg2oou0gd2elwvFTwy7tkX8jL0dEB5GEcANibimH4Z+DsJtGc8TDsL5pjC
+	+zuuWmzuCzd1QXUhoztriJA0ge4o4cBKTikEPsw6SZQDM0RSg8xRStaf0RyBqAAIqNyleSu
+	G8krFAVl5tla39YHVGKUNydR3kzgkuGQ3I5rB7CQtPp56URfMsZUQ3aa+FSe/Qo21XWLKoA
+	FJqm+G65FS8QHEqYrns+LqWsYXOmckxLfSHeVI3x5isZwPKMBMVm1qDgt7LAoLvss0LjrI2
+	5wN4ZjxBJXnXR+YOmGr0GG/+kBOFGUkfArXGFxzfzlyND2QY5R9QDYRZvnP62DeTjTsSAzG
+	Kw+nrNf6KLCBmPu7YiFpCEKKrxro95hL8VkDDL1RNCaY3ZQ3KTqMUFsXy1iTdSommaAwC2p
+	/gulo3Jx0A6qPRL+d5FCFSWX9CQeUHalQDrTBjeXrQQKroRwXy7g4vFMSXS5xlERD3QpiZb
+	XZi0WzhFlsCV5+eM/Ohx9iRtbYeAP96ywt528SPweH55v5kNz+RGwCynIXsmxucQJPe4AIa
+	0ufi/rUjGny1IcKKjOI7Ql7ZUiuePMe6a9I3J+aeLbd8ybK6LeALiokmh+WfGCetvSOOLEc
+	78OSmEiMAMSL8SholdfBahMTcg2dbFT6fuJefdqT123k0FF9Hq2mfsqenzCOYxNY9uVbOmR
+	1McDOixyhdtCBFDlGr0Hl9aFizxtRZoRWDzA1USKlHz0n7SE1PUoLBPesFoIEltWBo4sbJF
+	xqrS7orMkYuxhsPuwF+cpDjC8BLLN3n7Cz7Frib4bf2eYUd630tAMIwT+5LzRb25meN5zmm
+	K8aDA4/1hPCa8A0NgttnVgx8jL57CIa18ySjeNtlLC0DW+Hn405pmKhXS+4mgGelwrclEry
+	UcJPF43fAqLhDnDVpc5hUxG/Qfo1JRYnIal0e1a8+ovzlFPE1yxzJBN/A
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Apr 08, 2025 at 05:02:07PM +0100, Martyn Welch wrote:
->  ---- On Thu, 27 Mar 2025 14:25:38 +0000  Andrew Lunn <andrew@lunn.ch> wrote --- 
->  > > +++ b/arch/arm64/boot/dts/freescale/imx8mp-nitrogen-som.dtsi
->  > > @@ -0,0 +1,415 @@
->  > > +&eqos {
->  > > +    pinctrl-names = "default";
->  > > +    pinctrl-0 = <&pinctrl_eqos>;
->  > > +    phy-handle = <&ethphy0>;
->  > > +    phy-mode = "rgmii-id";
->  > > +    status = "okay";
->  > > +
->  > > +    mdio {
->  > > +        compatible = "snps,dwmac-mdio";
->  > > +        #address-cells = <1>;
->  > > +        #size-cells = <0>;
->  > > +
->  > > +        ethphy0: ethernet-phy@4 {
->  > 
->  > Just conformation, the PHY is on the SOM? Are the magnetics and RJ45
->  > socket on the SOM, or the carrier?
->  > 
-> 
-> The PHY is on the SOM, the magnetics and RJ45 socket are on the carrier.
+Hello Yang,
 
-Thanks. So phy-mode is in the right place.
+I don`t know why change it defination remove "asmlinkage",
+why not explain it in commit message?
 
-> 
->  > > +            compatible = "ethernet-phy-ieee802.3-c22";
->  > > +            reg = <4>;
-
-and the reg value is fixed.
-
-    Andrew
+BRs
+Wentao Guan
