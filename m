@@ -1,149 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1A22C1A2;
-	Tue,  8 Apr 2025 01:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AA72C1A2
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744075409; cv=none; b=kDgSlF8gjBhj/BF2mUtBWNxA4C8kiU/ubfBtb/t1UAJ/60mfE0GvO4VnRxj8bq/Q4CtE+zjsh0G+0ZHp+v4xljCVXc0zcZS1SYHcHz0hZmJl+oL4rC3SNS0MeBRSE1203vowsRF78rh0kK1N76lpMlg6tWLvbBib1mdIR8e10WU=
+	t=1744075415; cv=none; b=ZrVnTDlj/LVkAAkVwf7/rXulNCYta89gEiapvg1MsHLVX+BIPM/OefK2qKpPV9dk+8s4vNLYG3djXPJGxGkgkDIbbK7yyUrPH4GVJqvlPgHI64pB8qslMeb7NBNf7JpkUj5Ujnpk+mBsWcPnJI2JUMC5rOMGogct3Lst0oiLR50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744075409; c=relaxed/simple;
-	bh=84fDVGkUTdJUTtSMGNxjTm2lp64cSjhR44AJkaIZClM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=meCjm7+KgW2BhnYXGL6Dk9/3HxNxNFKM5brbrgvKzCDie+xPkcxZpNbLfUehCeCeh2A7K5hOmm1pEOat4PhhK4aNT7wC3+zt/JbAaGnUgmzH/MBo2RQjZr5wlFapZW3GX7UEK8kQkw+yOhvaNTclnbQ7IdMZsOjOEBVPoT8CKfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0yuj3CX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744075415; c=relaxed/simple;
+	bh=Bcp+7TmVoOvle3zYgHtDxmTwQIjX2KzHedpPulFQWwg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SxRUa9bVVR0WJbTZrnZ8IA4yP/Mz9zYVQ1LIFf9PGy17KpuqWEgcnBsuPB601vQaPBxL+QRAHnHnVRfSMk57DL5PyjgoQ2r75skaPwbwF/yMAlHVaDmp7j1UIvP7vnBv1lT2UgfM1SRGanaulDqTprkgyH+9tHm4wSUvRtFPdaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=hBuX1TG7; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0yuj3CX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B0EC4CEDD;
-	Tue,  8 Apr 2025 01:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744075408;
-	bh=84fDVGkUTdJUTtSMGNxjTm2lp64cSjhR44AJkaIZClM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q0yuj3CXbsGBJDNquyi9xGT7PWLUg6Y+4Q0thl7hHk34amRW7RJeRPi4zHfN8zZDd
-	 ZG3xlqKO0SRlIkQFDoKBppvkRM5uR7JPP/cu1tEgVlmjFftT3mLQmRwibEzKHe9W90
-	 MPJnaUG9KvLZHBgWl83z2uhGvKRN/H5rAUUqa59mJOn9N4T+M7TJoQqvwa0+YKgeMU
-	 UVxPdgktpgYceD15hp3fmVsMxUBHSdu7d/1PM5GhAKX6rpF9bzAlll89L/rArnyU+b
-	 LbHvcubwJ8Iv2yrWtYdApu6hLdScRuB3tmXX9S8JnP5DE+nzfvzmjUxdswjkTnFrdX
-	 ZUyH+CM/sj/1w==
-Date: Mon, 7 Apr 2025 18:23:25 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>, 
-	Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List <linux-mm@kvack.org>, 
-	Alessandro Carminati <acarmina@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
- warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
- reg2[24]=-2-24
-Message-ID: <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
-References: <202504011011.jyZ6NtXx-lkp@intel.com>
- <Z+ttzRArSBMqfABz@rli9-mobl>
- <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
- <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
- <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
- <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="hBuX1TG7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pLYRmTXj5H+BZPPLPixmjl/CjufQapMJcQbm5F8RSe4=; b=hBuX1TG7+24Y6tKxKKOJUjxCs9
+	v6Xc5e1dpZD8W0PN3+Dgy6NBqKNO5jjVQ1yq5mJf23lkBLd0Bhn69zZrlFDR2C3EbxW6D1U3w+tuZ
+	J4gtdgs0+KUMtFZuI7olmovHO7immwx5udPF0g5nC7vbSYJmfu4XF7UpfFy57GW6pvFWWJHhqGxQz
+	t7heFtOUM4SodMREpIg6wzoahG8z0nkC/9TG6JAv4ayXdxfmHfkmRL0Z+CFfpXd6B+qklsO4IBKA0
+	PSnZXylGN755U0pVqJOp2MlS3N51f59WgTkquJxRQ/wsZFwuxti0hk2H4HRh+kE5u8JI39aQG4sBb
+	NPuH9+2g==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u1xgV-00D6oe-F6; Tue, 08 Apr 2025 03:23:27 +0200
+Message-ID: <199773dc-8483-4144-be93-27983ecce5c9@igalia.com>
+Date: Tue, 8 Apr 2025 10:23:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH sched_ext/for-6.16] sched_ext: Remove cpu.weight /
+ cpu.idle unimplemented warnings
+To: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>
+Cc: linux-kernel@vger.kernel.org
+References: <Z_RdpDkLCXm140RT@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z_RdpDkLCXm140RT@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 06:52:10PM +0800, Tiezhu Yang wrote:
-> There is a potential execution path with only using s0 and ra
-> (without using s1, s2, s3, etc): 2d58-->2d70-->2f88-->2e78-->2e84
+Hi Tejun,
 
-[...]
+This makes sense to me.
 
-> From this point of view, it seems that there is no problem for the
-> generated instructions of the current code, it is not a runtime bug,
-> just a GCC optimization.
+Acked-by: Changwoo Min <changwoo@igalia.com>
 
-I don't see how this is responsive to my email.
+Regards,
+Changwoo Min
 
-I described a code path which revealed a GCC bug, specifically with asm
-goto (unless I got something wrong).  Then you responded with a
-*completely different* code path.
-
-How does that prove my original code path isn't possible?
-
-To summarize, the path I found was
-
-  2d58 ... 2d9c -> 2da8 .. 2dc4 -> 2ebc .. 2ec0 (runtime patched static branch) -> 2e78 .. 2e84 (ret)
-
-> (2) Analysis
+On 4/8/25 08:20, Tejun Heo wrote:
+> sched_ext generates warnings when cpu.weight / cpu.idle are set to
+> non-default values if the BPF scheduler doesn't implement weight support.
+> These warnings don't provide much value while adding constant annoyance. A
+> BPF scheduler may not implement any particular behavior and there's nothing
+> particularly special about missing cgroup weight support. Drop the warnings.
 > 
-> In fact, the generated objtool warning is because the break instruction
-> (2ee8) which is before the restoring s1 instruction (2eec) is annotated
-> as dead end.
-
-Actually, it's the opposite.  Objtool would normally consider BREAK to
-be a dead end.  But it's annotated as "reachable", aka "non dead end".
-
-> This issue is introduced by the following changes:
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ---
+>   kernel/sched/ext.c |   40 +---------------------------------------
+>   1 file changed, 1 insertion(+), 39 deletions(-)
 > 
->  #define __WARN_FLAGS(flags)					\
->  do {								\
->  	instrumentation_begin();				\
-> -	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
-> +	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))			\
-> +		__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
->  	instrumentation_end();					\
->  } while (0)
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -3896,34 +3896,6 @@ bool scx_can_stop_tick(struct rq *rq)
+>   
+>   DEFINE_STATIC_PERCPU_RWSEM(scx_cgroup_rwsem);
+>   static bool scx_cgroup_enabled;
+> -static bool cgroup_warned_missing_weight;
+> -static bool cgroup_warned_missing_idle;
+> -
+> -static void scx_cgroup_warn_missing_weight(struct task_group *tg)
+> -{
+> -	if (scx_enable_state() == SCX_DISABLED || cgroup_warned_missing_weight)
+> -		return;
+> -
+> -	if ((scx_ops.flags & SCX_OPS_HAS_CGROUP_WEIGHT) || !tg->css.parent)
+> -		return;
+> -
+> -	pr_warn("sched_ext: \"%s\" does not implement cgroup cpu.weight\n",
+> -		scx_ops.name);
+> -	cgroup_warned_missing_weight = true;
+> -}
+> -
+> -static void scx_cgroup_warn_missing_idle(struct task_group *tg)
+> -{
+> -	if (!scx_cgroup_enabled || cgroup_warned_missing_idle)
+> -		return;
+> -
+> -	if (!tg->idle)
+> -		return;
+> -
+> -	pr_warn("sched_ext: \"%s\" does not implement cgroup cpu.idle\n",
+> -		scx_ops.name);
+> -	cgroup_warned_missing_idle = true;
+> -}
+>   
+>   int scx_tg_online(struct task_group *tg)
+>   {
+> @@ -3933,8 +3905,6 @@ int scx_tg_online(struct task_group *tg)
+>   
+>   	percpu_down_read(&scx_cgroup_rwsem);
+>   
+> -	scx_cgroup_warn_missing_weight(tg);
+> -
+>   	if (scx_cgroup_enabled) {
+>   		if (SCX_HAS_OP(cgroup_init)) {
+>   			struct scx_cgroup_init_args args =
+> @@ -4072,9 +4042,7 @@ void scx_group_set_weight(struct task_gr
+>   
+>   void scx_group_set_idle(struct task_group *tg, bool idle)
+>   {
+> -	percpu_down_read(&scx_cgroup_rwsem);
+> -	scx_cgroup_warn_missing_idle(tg);
+> -	percpu_up_read(&scx_cgroup_rwsem);
+> +	/* TODO: Implement ops->cgroup_set_idle() */
+>   }
+>   
+>   static void scx_cgroup_lock(void)
+> @@ -4268,9 +4236,6 @@ static int scx_cgroup_init(void)
+>   
+>   	percpu_rwsem_assert_held(&scx_cgroup_rwsem);
+>   
+> -	cgroup_warned_missing_weight = false;
+> -	cgroup_warned_missing_idle = false;
+> -
+>   	/*
+>   	 * scx_tg_on/offline() are excluded through scx_cgroup_rwsem. If we walk
+>   	 * cgroups and init, all online cgroups are initialized.
+> @@ -4280,9 +4245,6 @@ static int scx_cgroup_init(void)
+>   		struct task_group *tg = css_tg(css);
+>   		struct scx_cgroup_init_args args = { .weight = tg->scx_weight };
+>   
+> -		scx_cgroup_warn_missing_weight(tg);
+> -		scx_cgroup_warn_missing_idle(tg);
+> -
+>   		if ((tg->scx_flags &
+>   		     (SCX_TG_ONLINE | SCX_TG_INITED)) != SCX_TG_ONLINE)
+>   			continue;
 > 
-> of commit e61a8b4b0d83 ("loongarch: add support for suppressing warning
-> backtraces") in the linux-next.git.
 
-Putting that annotation behind a conditional should not break anything.
-
-> (4) Solution 1
-> One way is to annotate __BUG_ENTRY() as reachable whether
-> KUNIT_IS_SUPPRESSED_WARNING() is true or false, like this:
-> 
-> ---8<---
-> diff --git a/arch/loongarch/include/asm/bug.h
-> b/arch/loongarch/include/asm/bug.h
-> index b79ff6696ce6..e41ebeaba204 100644
-> --- a/arch/loongarch/include/asm/bug.h
-> +++ b/arch/loongarch/include/asm/bug.h
-> @@ -60,8 +60,9 @@
->  #define __WARN_FLAGS(flags)                                    \
->  do {                                                           \
->         instrumentation_begin();                                \
-> -       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))                     \
-> -               __BUG_FLAGS(BUGFLAG_WARNING|(flags),
-> ANNOTATE_REACHABLE(10001b));\
-> +       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))             \
-> +               __BUG_FLAGS(BUGFLAG_WARNING|(flags), "");       \
-> +       __BUG_FLAGS(0, ANNOTATE_REACHABLE(10001b));             \
->         instrumentation_end();                                  \
->  } while (0)
-
-Huh?  That's basically:
-
-	if (!suppress_warning)
-		WARN();
-	BUG();
-
-So it upgrades a conditional WARN to an unconditional BUG???
-
-Not to mention the reachable annotations are backwards: the WARN() is
-annotated as dead end while the BUG() is annotated reachable.
-
-Even if that silences objtool somehow, it will most definitely have the
-wrong runtime behavior.
-
-> (5) Solution 2
-> The other way is to use "-fno-shrink-wrap" to aovid such issue under
-> CONFIG_OBJTOOL at compile-time, like this:
-
-As far as I can tell, that would be a workaround to get objtool to stop
-warning about a legitimate compiler bug.
-
--- 
-Josh
