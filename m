@@ -1,234 +1,151 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA60263C76;
-	Tue,  8 Apr 2025 08:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F23263F2C
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101667; cv=none; b=FD/mZGzdmYbhUgWKAzrNhjp3kjoThcgwHgbzG2rNrgF51R2URo622jiN0IyUam226jwMzyNOFWAvYrOoU6BxbaeiLX7uoCF/wzFlKLqKvePNtCwFIL/OooU3h3xksB4cf/ip5AmbaL4g3tRqrHTaom/4zQ4aUtRuFHqqsuLj1Qw=
+	t=1744101667; cv=none; b=ljt/7EOJO3+mtNydeSNhVh4v32wy3QVX2bXFxA2CV2UXm86KJghyrJbiNvcZXTwFwEvv4tF4wGwRo+euof8xa4bk8QuCOHHpX54zo5ekRQbW/vbhYSMsQ0iawppDV9oiAOztbSb1EIJjg7ZXwTJ8rOFR+8J4X62zyjxhfxuHaS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744101667; c=relaxed/simple;
-	bh=rbA5kWVn72MochhUrr+TIrCjnhGDliNJF7QO6kl6BnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CxekhU8bPRFq4ubUeUDUqBWKvElT+ScTZtjOmYy3Ppl1Q5fKFTxNUsj6EqTdNV0sBkrk9TqH8GZX4XDj5BK34FaITCRhsWfeqhCNUml8Vovyf1dBGeMRaqyWozaoYR90Fo18yrnflpX1E1t7lTdc2xkl4Cw39O3DsJ9LCYe7Xw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUuhzlYB; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=HHjVPooPghWZo3ILRG9A5aix/QJ9AoiqyE9/CoCMg24=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VYmQENDBiaac87nFvLy42nLLtcCJdeXKLfxY3WqCrXDhO7CLzghkzRSwC9MxtbVDj5vlowV31DzGgruGRb1uIcmKq8+k0/ssjMITbbReKF+GmY+6GcAzoikK+qd6c4LsfaXjByjAfxiuvAHKxLngBOA3gm8nlWWwweEAXE3d9gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ayG+zew+; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUuhzlYB"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so65528671fa.1;
-        Tue, 08 Apr 2025 01:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ayG+zew+"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso3116845f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744101663; x=1744706463; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AbaNWwhJf4SYFSK7vy9l8dMqnFKzhciPzyfY7gb2cBo=;
-        b=YUuhzlYBGZz7057cINic6MYzYz0FIlB6EiLlDbAtRfV6j6yxEt/9vaYkQ/OqBJBnFs
-         iqBsgTE10ug6HDzFSwVpGTaqs87DAIVOG5cqGw9/t/61OMJLpPV9LBUlFSAgd+Ngy7bU
-         1ToigcjjHxfrEeJJ8NEfLr3vVfBkCJ594Yx8o508YuVo7I4kS63OtroVRx+UIT8OYrih
-         lvqV/ii9esG6ob/876DMUr9cN7y84Jfl8xCq+HAouetROgY/QWgje7Yc3K1Up7hqJiz9
-         ZrycoTsoBxBbCR0pROhOJDEaaDOiT3M6Mtp/63J6XANNTBhaCVITS/g0CZAQMoV8VgSG
-         99JA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744101663; x=1744706463; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5l/JX2uj1f+6tFDGUnl+gWENA+yeC4c9BhqC6pMEVSA=;
+        b=ayG+zew+8UeU4eVbpb0yJKBhI9uLmlYq/E5oPXWdkmgx2+2cuzEIOV3f3GkdeONSNh
+         O68OtGsh1unsP2uUOpmv+1XJoP96fsnxhhmWktI94HyNOOkItlwCpJArSycbEQ/NtwsQ
+         p//EJl+4zvHNW8QMEOZul2S2YGMQf6p4MwKSsjrobJGij7W54XREE08NvlOiWuUiHnQ7
+         /pmOe70swcQt7fHLWwA/slgShiZ/ZBthY3Ixw5k37/7B/M7MwtuRTpjxfn/WgqlsdPsY
+         SEcql/hA+VOBlJnb59dsq7rah+eUnVGUN1RxVc5l9tr+ubENTp2Ja3HDG2xeBZdQbY2U
+         NHCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744101663; x=1744706463;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AbaNWwhJf4SYFSK7vy9l8dMqnFKzhciPzyfY7gb2cBo=;
-        b=K7ffGktM5sACFd0tftCfh9c2s4GAlr5lfq0ArUWIpEuyyeDhk5j18kfyfLNy7/MXKr
-         bcGUKxavLg2ahIc2BlVbAkXOh3xGcB6Io/9tOzYhU+KNRvRVq/HKSUnQhm0W8Ex2L0EX
-         aL6WL7BQd0aj5I9It1o9l9ktT/eYjhkNLj7M3mQlKEzj6SUXQ8FAIMscBv5YmGycmLaI
-         +q+uBCLRUIsWlCJL1PIGPaQhnM5s1GxSH7Lwf9AKy3UUkqRauN8b7RBDOWZEc1bsFqr8
-         iFQ+fKtTci3oS3QGIdFuJUCcrSJsXuKj78AcVmExbR65lv4Z4m9o1ZG4yYW2F4Ujs6Bz
-         BGMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUy2HxBT2hNKNAmMdp51QJEJLJYisHxNVe4qJJ0fTARUr0wsrl+VuI5AfX3SDgbSOHVNP+RSdT+86bjRFsa@vger.kernel.org, AJvYcCWxMan8rMZwFLFikTznw3oq1oatIOv/sDUPNFzDMw1xpk9Ty4w6+hqq4Jw4Zm9bm4PEsWAgBIdOq9on@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8j8MMTm3NVYsjS2mi2gk6nXcs43oDQGedIUrjZ8OGLm1iZKL4
-	DPm0WirIF0fcaLNyumtfFSm0rMXVY6fdGBfyZqlheVgtV6Q88eQb
-X-Gm-Gg: ASbGncvhJn43Ml03LdZK0Xl2gfSXtnQmxlmgycUj/5wKFI3T6B/vsynCwxA+BYeUa/H
-	b4dOyNGACrpkl62J9QyubKJsewPK+63EE7pKw6pbWl/2Ie3oE9pDno0049Fc8To81bMQTXWUlv9
-	mO9C+MVCJ6ytLcUthy4ojrYdZ3xs3o1fWb40nvcqyGYdiPRlXWHciji5ww5RGRWuZIJURwWKxl/
-	6jaBc6QV59lVCwEPDbBFwt23WovE34oVA0X3IqI44FKtlsVIIWmjuEramWxzDISOMcAlMZ28Yxh
-	sshd1gtXd9albtk6DHfRl9UJJ6zHJG6B8ZttXoO9ytu8c7s=
-X-Google-Smtp-Source: AGHT+IHWmcNXCBMRk5nvKVKyj3/IUAfaW7ZnqctenSVZ/IRv3gGo8Ho4wuyAuY0VgrMTXU+PRKP1zQ==
-X-Received: by 2002:a05:6512:324e:b0:549:68a7:177c with SMTP id 2adb3069b0e04-54c3bb909aemr698149e87.7.1744101663012;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5l/JX2uj1f+6tFDGUnl+gWENA+yeC4c9BhqC6pMEVSA=;
+        b=ibxVCldlJezZP5p6INN11ZxBzUlOYVVRpdyS4ZKl6wa2tW0h1bguJ4pCLMlihbDg0q
+         ARMkMqPmqYhFyJzUTr1/w8jFlgq27G0vMEiUKm6FtfnDfY8W/JXxXdzaBPS7CUuR1U28
+         fP3m8iEkYnqccyC2XL1dD0D6gKveEO0DfyFaFCY0VHM9hWRYCQV0hG7xvi5nGDB/TCf7
+         HDs/+MtMVC3Z7/Ruf/iWPDX747I5A4N/eTrQxLuSNJeGdtawhuZQW83UVn3T4SfIoUy1
+         1JP8ySy5lYT4fPjPmGBtAXkZ6WctbgIJ848LW9F+YJtyAUDW5ec2AqO+JyEyAE2/NNLG
+         zVnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBz7v69ZC46rgy5oOgNp3QjVejmVh3gbDIJcYTirM+lDHY8cfkURquspYdwfIzQVbtCbhA9eXxE/GQ9hs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkN2XJTSZhTiN257S/f52WsX5sWeYhzwIklk71EaWflaPmyUiM
+	NJwDgMKM274CRtjIn0WVbFd47aX8Sv7QYwDWm0O2HZ5JtCKz50hcf36eJqu0fr0=
+X-Gm-Gg: ASbGncvtERfnI1ZN81/jCT6KzJyBV2BFO9ojvHQ283uvrNJeoGLGyYnwqifoUA9EEcF
+	wW3/qIpWynogGQjsR3eZyxOftnXM2yTl4gtosKtGSar8qVdpEDYWEA/GU1lhURNPw3kSALeDPTi
+	xsT4rQpJ4FZFRqMMtyEdknulkugmEeTJxQcsgvDIX3EOzGi+vRm3QQR1LgqT0ccKWUFBU8umZZk
+	AGdcZbyLR84s5ITiH8AfVgXUui4Sbm33JnxyK+LZuWladYm7pRi36NNNg29IyBGsvUptq6c81xE
+	W+b4+mwlB+MY/Ew/5renL/QNoqyT8bk7EJeeYA==
+X-Google-Smtp-Source: AGHT+IFFTs8qEaLD6lNpPGuy+vrOtX/G5FHp1cGs4X1wq9yEqxfxIVjgXVOG+dEYLbN9f/ov+1CCiw==
+X-Received: by 2002:a5d:64e6:0:b0:39c:dcc:f589 with SMTP id ffacd0b85a97d-39d0de286fcmr13737229f8f.20.1744101663528;
         Tue, 08 Apr 2025 01:41:03 -0700 (PDT)
-Received: from mva-rohm ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e67232bsm1462570e87.235.2025.04.08.01.41.01
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14318281f8f.72.2025.04.08.01.41.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 08 Apr 2025 01:41:02 -0700 (PDT)
-Date: Tue, 8 Apr 2025 11:40:56 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/14] dt-bindings: mfd: Add ROHM BD96802 PMIC
-Message-ID: <ed55edffca3b0a2d7e8bcd9ebd8d8abd9a9b7dfe.1744090658.git.mazziesaccount@gmail.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 08 Apr 2025 10:40:57 +0200
+Subject: [PATCH v2] gpio: ds4520: don't check the 'ngpios' property in the
+ driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="amvf/jsfoaly+ZEr"
-Content-Disposition: inline
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-gpio-regmap-ngpios-v2-1-26f254014f57@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABjh9GcC/23NwQ6CMAzG8VchPVuzDUHh5HsYDhPKaKIb6QzRk
+ L27A68ef1/Sf1eIJEwR2mIFoYUjB59hDgX0k/WOkIdsMMpUqjQ1upkDCrmnndFviEi6tpb0qPr
+ mAvlwFhr5vUdvXfbE8RXks/9Y9Lb+cid1/pdbNGqsyNbl2N8HKpvrg72VcAzioEspfQEPvS8Xt
+ QAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1725;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=rOqVoIaD6phSjWEitOWWg2WCfMxGn77E/og0f+Z1p+k=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9OEaGrX5nZAh5c6b1XH5M40GBlSMvKLOvc5Zo
+ zR66E8qBqWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/ThGgAKCRARpy6gFHHX
+ csQnEACU/Cg40nGydr9zvG71is5qj5+a2EQnQBhHXXNfNq7rMtjlgxyBYh3q9aTDWlpbuxNiEzw
+ b3npmNdpTO4/95LSmyO1y4g6zftWaGvR6JIiKzlKsiWGpC7QZRjFBRThE0VC7e/Dw6JsjVbE2y1
+ dDuoGc0fK2oWlueqmzGneEDdZGr8jnIjcVoOh28lIScMkj5BfCKU6p/OfOTLIgLK2SGx5P6/m8K
+ CA//3HzmHirRgokOnTCHxK9ct87bjD7EuW01iBYse3vdeTmSbR/whp0bvP+IsZKOoYOBngntn4T
+ Nhta+eUyMMfmUuG1d97purd4kJtQhpMk8qEybGe+YUh/PvHsoCxO3nhe5I76Dxrp0jm3oD36eyy
+ XkANxWfdnAlAsE6Wl0vxJCuJXfjwAgzpCcTZEdt3gZSoj7tDrkLKpWp2t1CjndjX2izzfpxhhXV
+ upkcVB+iile4PTK4fNN4YBhAugjTReyMly3+F2Tq03vrwLa095B9wgKuEzM2fdBIIq1+WbZ12rw
+ O7xwWAI6Q31t3y3nCEtpNLESyZL9sbY+n1E+N5XkvFOVfd7C7s98uZ9N5eygc4Uw5rZm08gAKb8
+ kG5yPpZ+ynfZ69fBZcGirrcIfPkEec8qkF5y/7FEU7zUYlpoaPRoepGQvI3xf+bHPJTt/Z0V2cr
+ RvGdJohV1498a8g==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---amvf/jsfoaly+ZEr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is already done by the gpio-regmap abstraction by calling
+gpiochip_get_ngpios(). We don't need to do this at the driver level.
 
-BD96802Qxx-C is an automotive grade configurable Power Management
-Integrated Circuit supporting Functional Safety features for application
-processors, SoCs and FPGAs. BD96802 is controlled via I2C, provides two
-interrupt lines and has two controllable buck regulators.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- remove the ngpios variable entirely
+- Link to v1: https://lore.kernel.org/r/20250407-gpio-regmap-ngpios-v1-1-5ea63fcbde39@linaro.org
+---
+ drivers/gpio/gpio-ds4520.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+diff --git a/drivers/gpio/gpio-ds4520.c b/drivers/gpio/gpio-ds4520.c
+index 1903deaef3e9..f52ecae382a4 100644
+--- a/drivers/gpio/gpio-ds4520.c
++++ b/drivers/gpio/gpio-ds4520.c
+@@ -25,7 +25,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
+ 	struct gpio_regmap_config config = { };
+ 	struct device *dev = &client->dev;
+ 	struct regmap *regmap;
+-	u32 ngpio;
+ 	u32 base;
+ 	int ret;
+ 
+@@ -33,10 +32,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Missing 'reg' property.\n");
+ 
+-	ret = device_property_read_u32(dev, "ngpios", &ngpio);
+-	if (ret)
+-		return dev_err_probe(dev, ret, "Missing 'ngpios' property.\n");
+-
+ 	regmap = devm_regmap_init_i2c(client, &ds4520_regmap_config);
+ 	if (IS_ERR(regmap))
+ 		return dev_err_probe(dev, PTR_ERR(regmap),
+@@ -44,7 +39,6 @@ static int ds4520_gpio_probe(struct i2c_client *client)
+ 
+ 	config.regmap = regmap;
+ 	config.parent = dev;
+-	config.ngpio = ngpio;
+ 
+ 	config.reg_dat_base = base + DS4520_IO_STATUS0;
+ 	config.reg_set_base = base + DS4520_PULLUP0;
 
 ---
-Revision history:
- v2 =3D> v3:
-  - Drop the description of 'reg'
-  - Fix the buck node names in the example (to lowercase)
- v1 =3D> v2:
-  - No changes
----
- .../bindings/mfd/rohm,bd96802-pmic.yaml       | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic=
-=2Eyaml
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250326-gpio-regmap-ngpios-e16aae1f0c98
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml b=
-/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-new file mode 100644
-index 000000000000..ccabbebf9a29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd96802-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD96802 Scalable Power Management Integrated Circuit
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  BD96802Qxx-C is an automotive grade configurable Power Management
-+  Integrated Circuit supporting Functional Safety features for application
-+  processors, SoCs and FPGAs
-+
-+properties:
-+  compatible:
-+    const: rohm,bd96802
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The PMIC provides intb and errb IRQ lines. The errb IRQ line is used
-+      for fatal IRQs which will cause the PMIC to shut down power outputs.
-+      In many systems this will shut down the SoC contolling the PMIC and
-+      connecting/handling the errb can be omitted. However, there are cases
-+      where the SoC is not powered by the PMIC. In that case it may be
-+      useful to connect the errb and handle errb events.
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    minItems: 1
-+    items:
-+      - enum: [intb, errb]
-+      - const: errb
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd96802-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+        pmic: pmic@62 {
-+            reg =3D <0x62>;
-+            compatible =3D "rohm,bd96802";
-+            interrupt-parent =3D <&gpio1>;
-+            interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>, <6 IRQ_TYPE_LEVEL_LOW>;
-+            interrupt-names =3D "intb", "errb";
-+
-+            regulators {
-+                buck1 {
-+                    regulator-name =3D "buck1";
-+                    regulator-ramp-delay =3D <1250>;
-+                    /* 0.5V min INITIAL - 150 mV tune */
-+                    regulator-min-microvolt =3D <350000>;
-+                    /* 3.3V + 150mV tune */
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    /* These can be set only when PMIC is in STBY */
-+                    rohm,initial-voltage-microvolt =3D <500000>;
-+                    regulator-ov-error-microvolt =3D <230000>;
-+                    regulator-uv-error-microvolt =3D <230000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+                buck2 {
-+                    regulator-name =3D "buck2";
-+                    regulator-min-microvolt =3D <350000>;
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <3000000>;
-+                    regulator-ov-error-microvolt =3D <18000>;
-+                    regulator-uv-error-microvolt =3D <18000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <1>;
-+                };
-+            };
-+        };
-+    };
---=20
-2.49.0
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-
---amvf/jsfoaly+ZEr
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmf04RcACgkQeFA3/03a
-ocXjkwgAs1J6m1oknfTtFWGNmU85w4nKfNvojb6ByT7t8dElzzq/feMN83XjUO4q
-GufwkutdUKsGOGYl3+i1K6DeCD+xbmPEds1Ta2QZCQwohwk3GkNEGILIGHYU6jH1
-VoA8WNtUBJdTKTlXF5Z88oxPoSU4pauJALWkpgpH1Q5o8Vddu21S3gGTkXsu9n6I
-fyfFG6D3s8bGJNwrYBRetS5DFZkDntRDzKzMcmTdM811aTVFayKec4/wmZleNAj2
-CheA0Lcutyx7USvfH+e9jCD/1cIo/JKYXkcaP5bXomuU7VfiC5EmHTpixWb/DdQP
-RMFf4chOVqBOlqv2g4+QMySxKAgHTA==
-=ugb9
------END PGP SIGNATURE-----
-
---amvf/jsfoaly+ZEr--
