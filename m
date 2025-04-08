@@ -1,202 +1,159 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304AA921
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3E117C91
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744071483; cv=none; b=AQ7inGjx6wT9H381DiQqMyVrTWNve2JbZTPKqpRPWBm1LQR4ShCI+zvzBdTZh6iOAFQSfEmGn4U8an9uWZ4/BbgP+bsCdNLWlmjEWUQP+CdD6TrRMKmjHkcbApVGWauQ6zzRO2ywEzCUl4blfQamB7O2MlahruJ2EqmMC9RjiuQ=
+	t=1744071507; cv=none; b=RYX+x8JeVpIy2bVxo/bmZrtDxQu1MiOOUDhSsjQkpq4Mc25h53sPR0JPVBtkPBbO0GyE8lBBHLEGPtSV/J28YkmATRv+2fRWqPfJXBcqYG4NcWzHu59VW7ZVnfRS0FccVXp4m7Qi0fJjrFBOKJ7z6Hy2SNQ1gvms9GbTUpcqtaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744071483; c=relaxed/simple;
-	bh=zkp5qlPWYg/IdGVqahdxRSzt7Um4YhxDY62rFGi0kZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BhxCX6POIhw3e6ht0bAmSir3u24WISXPe5nNhIpm0RcQFdLA8o7SQNjTkl+oSsIplsMRN8zCsahkh06lcTB1rjsdiirQ0fLjFk1UDybPRARqmqw8mo+tugIoMJl9ZTdh0TTlm0uyAmRimHBFPBmYZU7rsBp+8jHw7I71Me1CUrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HrtumlrC; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744071507; c=relaxed/simple;
+	bh=NEg8ot9+60o0XVU9F8BkVCyIub49xYwxQ7uQrOauiII=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uvaJ3DUfL9VXKjVarRMupm9OYPW8h5UTN6av3RR+JGLbKBmyIbvklBr1JeUfNYIjv59oyMVXZtzRDLpPZ5NC2f0IMDrujR/y2cNdtF3iF2JsoIXKqKDZFmeb+oKpa3n5KgoY+8GUfjuan9wyiWEWY35zrvStR27QRFvZBuaKsjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HuF9mxA3; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HrtumlrC"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-549b159c84cso2723342e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 17:18:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744071479; x=1744676279; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jEVGQPfc6yrZuTVK9rKBMIxWQ+bczHOfNeqGOK471bg=;
-        b=HrtumlrChLOrY6wFmWUoxGyVSA5ratOuQvEXro8yVP7qxx2CGB7F53bxiPdZNkU5Ke
-         PsigxLFE02+6YRenFoUATlmDmbu1Iw9XuZdwYeT1MObc7UNDeFZXyw0eu1r2QrzUQ0HN
-         Pmu0z6XArP72TZCRqgXkx1rF87SjPFlticF/cTCiDxe71wWbMX7fiqr1mgCO90dbpNWS
-         xSyqbs6hLfAZRDK9G2zdJ596gxAcyTXulOmhZbdJ17zDasZD4ka82b+d6K+Er0sGUUPC
-         H+1ULXUdZia8b3EwWVadc1drB/GjJXV/TqTqZFXkk+8D2FsZHj3TOW9CmwMdy/UJUgtx
-         qH/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744071479; x=1744676279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jEVGQPfc6yrZuTVK9rKBMIxWQ+bczHOfNeqGOK471bg=;
-        b=JZaQP1zW5ibhhIEqJDhoOD1i4RYfhUfB6t+bNJR222xzrBYsJML4s+8cGG/59omoj3
-         5gnQVziy4XU+sdeyESp3srFxMliMdYgL4fFXobkCSZYvgSiudVJs6hqpeLjhBU+IWOSr
-         qawTxhoMpZoiGFlzczpil4jo0r0XQMZOwadedH5To83apbAQfo9FWg0jhh4Eqag7WNhb
-         +v+FdGoCYUQem3Dgew0ZE7JOqubLCNvCTJ/4v2qHo8A3G4vU/hZppFGqRQ812MRPgmTs
-         j1YqTATBZYdEVT/+HcG/vCgpF1W3E00s2L5UYcHQbkdsAh16EXwPAm9SEL1qHqPfUb54
-         fEcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmyw2UoqCide51Z5SvtFVxd2l2lvfkIJaRxIYe0LdJqTz8GXBDjgNuxMP3rTV7+wyDXW1Icf60MF2YrOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwylLPf9Ag/mHnSHWNTGZsY3HRcidDcTTO17FU5yEmPX7NpHIkH
-	06+ELLlk+KwZsSlaYn1LIbrzVq8FYbg1fR3/q96O6EuY598X7yhfuAxQDKCjWYvjxKMr/gsxiy7
-	fRytsVSKLUH6A7irrIuQPJtRPKR6IGOzIryn3
-X-Gm-Gg: ASbGncvyAi7T2hBxQDtu+vaixuQmPLvcNdDG9qKZM45eptLAVw20SVNtLvd+uHF2tBf
-	EVW4eHD+v0NKSC9kzGgiH1NEtYFFHnQ598RA2uqQuk+cpLGiMZgDSFHMIxid9Q2SjXXWiHd7niX
-	fAV9cNYIOQaF1ZDTWm/+F3YSrMv1uZB8vfvhwA
-X-Google-Smtp-Source: AGHT+IGuGCo4hFxybL/j3KEZeGYvOtc2MclXy+qWXTfKV79t5s+xu9SE7cA7HRjIVAvcQvwLJR3by2JLdUxUeAIFuuQ=
-X-Received: by 2002:a05:6512:118b:b0:549:8f01:6a71 with SMTP id
- 2adb3069b0e04-54c22808c0amr3838505e87.51.1744071478751; Mon, 07 Apr 2025
- 17:17:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HuF9mxA3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744071506; x=1775607506;
+  h=date:message-id:from:to:cc:subject:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NEg8ot9+60o0XVU9F8BkVCyIub49xYwxQ7uQrOauiII=;
+  b=HuF9mxA30/5uzIvt+LXwMbHEpnOQEt8MznBwJ07eR/W+U2MJFQCc2+bU
+   xGtb3FVCUgvTkVe7ya6R8nRLBH/ZYaS1VX72i8VLwMVK8n3inxlyiAHKC
+   YjTy2fFNZQJhnihGZgOSxgqJrH1xttjBC+G5j89h7OZf+YOKUn8rGZmu6
+   aAj65b2KbPyEVK053bNQvmFfzCVmL59mwK2EyFGGfuCkyyr+1E0YsATS7
+   I3IbjNoYYUMnskHqjijjZGn0brJ7jOBMlW8i6FsPHQZGwXXHU9SXwTmmS
+   0vYFLj1Ja+DEFJyL/r0WhrGRiW3MiticXuFKQk4P+Pzi/06xdYl11pzI8
+   w==;
+X-CSE-ConnectionGUID: rGDqpNSmTcapiTflr0R3JA==
+X-CSE-MsgGUID: cn8BTrdDQlWx0+b4Ko8gnw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44629334"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="44629334"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:18:25 -0700
+X-CSE-ConnectionGUID: t3H/F+gwSFCwxKNA/uREKg==
+X-CSE-MsgGUID: dK9qkXUXS7GHlshAfYP5jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="151291770"
+Received: from ksmithe-mobl1.amr.corp.intel.com (HELO adixit-MOBL3.intel.com) ([10.125.211.148])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:18:25 -0700
+Date: Mon, 07 Apr 2025 17:18:23 -0700
+Message-ID: <87bjt7eca8.wl-ashutosh.dixit@intel.com>
+From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: <imre.deak@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	"Jessica Zhang" <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Joel Selvaraj <jo@jsfamily.in>,
+	Douglas Anderson <dianders@chromium.org>,
+	<dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] panel/auo-a030jtn01: Use refcounted allocation in place of devm_kzalloc()
+In-Reply-To: <85a58rsgjj.wl-ashutosh.dixit@intel.com>
+References: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
+	<20250401-b4-drm-panel-mass-driver-convert-v1-4-cdd7615e1f93@redhat.com>
+	<Z_P0A9lxWD0aAdjp@ideak-desk.fi.intel.com>
+	<85a58rsgjj.wl-ashutosh.dixit@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/29.4 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250331213025.3602082-1-jthoughton@google.com> <20250331213025.3602082-4-jthoughton@google.com>
-In-Reply-To: <20250331213025.3602082-4-jthoughton@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Mon, 7 Apr 2025 17:17:31 -0700
-X-Gm-Features: ATxdqUEkDxP1QjyKSLEQFfB8dkpmmYdTokou6Ni4mo7iv2ZxfsyTcHM8h3zzPxU
-Message-ID: <CALzav=eUpVLeypEB2q9vgNOmREb0TCOtjGGpj7pH5o5oLvB19w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] cgroup: selftests: Move cgroup_util into its own library
-To: James Houghton <jthoughton@google.com>
-Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Yu Zhao <yuzhao@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-7
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 2:30=E2=80=AFPM James Houghton <jthoughton@google.c=
-om> wrote:
+On Mon, 07 Apr 2025 16:22:40 -0700, Dixit, Ashutosh wrote:
 >
-> KVM selftests will soon need to use some of the cgroup creation and
-> deletion functionality from cgroup_util.
+> On Mon, 07 Apr 2025 08:49:23 -0700, Imre Deak wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Apr 01, 2025 at 12:03:47PM -0400, Anusha Srivatsa wrote:
+> > > Move to using the new API devm_drm_panel_alloc() to allocate the
+> > > panel.
+> > >
+> > > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/panel/panel-auo-a030jtn01.c | 10 ++++------
+> > >  1 file changed, 4 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c b/drivers/gp=
+u/drm/panel/panel-auo-a030jtn01.c
+> > > index 77604d6a4e72c915c40575be0e47810c90b4ed71..83529b1c2bac2e29f41ef=
+af4028950214b056a95 100644
+> > > --- a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
+> > > +++ b/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
+> > > @@ -200,9 +200,10 @@ static int a030jtn01_probe(struct spi_device *sp=
+i)
+> > >
+> > >	spi->mode |=3D SPI_MODE_3 | SPI_3WIRE;
+> > >
+> > > -	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > > -	if (!priv)
+> > > -		return -ENOMEM;
+> > > +	panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, panel,
+> > > +				     &a030jtn01_funcs, DRM_MODE_CONNECTOR_DPI);
+> >
+> > This doesn't compile and (yet) it's pushed already to drm-tip. AFAIU
+> > it's supposed to be
+> >	priv =3D devm_drm_panel_alloc(...);
 >
-> Suggested-by: David Matlack <dmatlack@google.com>
-> Signed-off-by: James Houghton <jthoughton@google.com>
-> ---
->  tools/testing/selftests/cgroup/Makefile       | 21 ++++++++++---------
->  .../selftests/cgroup/{ =3D> lib}/cgroup_util.c  |  2 +-
->  .../cgroup/{ =3D> lib/include}/cgroup_util.h    |  4 ++--
->  .../testing/selftests/cgroup/lib/libcgroup.mk | 14 +++++++++++++
->  4 files changed, 28 insertions(+), 13 deletions(-)
->  rename tools/testing/selftests/cgroup/{ =3D> lib}/cgroup_util.c (99%)
->  rename tools/testing/selftests/cgroup/{ =3D> lib/include}/cgroup_util.h =
-(99%)
->  create mode 100644 tools/testing/selftests/cgroup/lib/libcgroup.mk
+> Yes:
 >
-> diff --git a/tools/testing/selftests/cgroup/Makefile b/tools/testing/self=
-tests/cgroup/Makefile
-> index 1b897152bab6e..e01584c2189ac 100644
-> --- a/tools/testing/selftests/cgroup/Makefile
-> +++ b/tools/testing/selftests/cgroup/Makefile
-> @@ -21,14 +21,15 @@ TEST_GEN_PROGS +=3D test_zswap
->  LOCAL_HDRS +=3D $(selfdir)/clone3/clone3_selftests.h $(selfdir)/pidfd/pi=
-dfd.h
+> drivers/gpu/drm/panel/panel-auo-a030jtn01.c: In function =A1a030jtn01_pro=
+be=A2:
+> drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: error: =A1panel=A2 und=
+eclared (first use in this function)
+>   203 |         panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, pan=
+el,
+>       |         ^~~~~
+> drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: note: each undeclared =
+identifier is reported only once for each function it appears in
 >
->  include ../lib.mk
-> +include lib/libcgroup.mk
->
-> -$(OUTPUT)/test_core: cgroup_util.c
-> -$(OUTPUT)/test_cpu: cgroup_util.c
-> -$(OUTPUT)/test_cpuset: cgroup_util.c
-> -$(OUTPUT)/test_freezer: cgroup_util.c
-> -$(OUTPUT)/test_hugetlb_memcg: cgroup_util.c
-> -$(OUTPUT)/test_kill: cgroup_util.c
-> -$(OUTPUT)/test_kmem: cgroup_util.c
-> -$(OUTPUT)/test_memcontrol: cgroup_util.c
-> -$(OUTPUT)/test_pids: cgroup_util.c
-> -$(OUTPUT)/test_zswap: cgroup_util.c
-> +$(OUTPUT)/test_core: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_cpu: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_cpuset: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_freezer: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_hugetlb_memcg: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_kill: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_kmem: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_memcontrol: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_pids: $(LIBCGROUP_O)
-> +$(OUTPUT)/test_zswap: $(LIBCGROUP_O)
-> diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing=
-/selftests/cgroup/lib/cgroup_util.c
-> similarity index 99%
-> rename from tools/testing/selftests/cgroup/cgroup_util.c
-> rename to tools/testing/selftests/cgroup/lib/cgroup_util.c
-> index 1e2d46636a0ca..f047d8adaec65 100644
-> --- a/tools/testing/selftests/cgroup/cgroup_util.c
-> +++ b/tools/testing/selftests/cgroup/lib/cgroup_util.c
-> @@ -17,7 +17,7 @@
->  #include <unistd.h>
->
->  #include "cgroup_util.h"
-> -#include "../clone3/clone3_selftests.h"
-> +#include "../../clone3/clone3_selftests.h"
->
->  /* Returns read len on success, or -errno on failure. */
->  static ssize_t read_text(const char *path, char *buf, size_t max_len)
-> diff --git a/tools/testing/selftests/cgroup/cgroup_util.h b/tools/testing=
-/selftests/cgroup/lib/include/cgroup_util.h
-> similarity index 99%
-> rename from tools/testing/selftests/cgroup/cgroup_util.h
-> rename to tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-> index 19b131ee77072..7a0441e5eb296 100644
-> --- a/tools/testing/selftests/cgroup/cgroup_util.h
-> +++ b/tools/testing/selftests/cgroup/lib/include/cgroup_util.h
-> @@ -2,9 +2,9 @@
->  #include <stdbool.h>
->  #include <stdlib.h>
->
-> -#include "../kselftest.h"
-> -
-> +#ifndef PAGE_SIZE
->  #define PAGE_SIZE 4096
-> +#endif
->
->  #define MB(x) (x << 20)
->
-> diff --git a/tools/testing/selftests/cgroup/lib/libcgroup.mk b/tools/test=
-ing/selftests/cgroup/lib/libcgroup.mk
-> new file mode 100644
-> index 0000000000000..12323041a5ce6
-> --- /dev/null
-> +++ b/tools/testing/selftests/cgroup/lib/libcgroup.mk
-> @@ -0,0 +1,14 @@
-> +CGROUP_DIR :=3D $(selfdir)/cgroup
-> +
-> +LIBCGROUP_C :=3D lib/cgroup_util.c
-> +
-> +LIBCGROUP_O :=3D $(patsubst %.c, $(OUTPUT)/%.o, $(LIBCGROUP_C))
-> +
-> +CFLAGS +=3D -I$(CGROUP_DIR)/lib/include
-> +
-> +EXTRA_HDRS :=3D $(selfdir)/clone3/clone3_selftests.h
-> +
-> +$(LIBCGROUP_O): $(OUTPUT)/%.o : $(CGROUP_DIR)/%.c $(EXTRA_HDRS)
-> +       $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
-> +
-> +EXTRA_CLEAN +=3D $(LIBCGROUP_O)
-> --
-> 2.49.0.472.ge94155a9ec-goog
+> Please turn on the config options for particular module if you are making
+> changes to that module.
 
-This works since KVM selftests already have a lib/ directory. But if
-it didn't, the KVM selftests would fail to link against
-lib/cgroup_util.o. To future proof against using this from other
-selftests (or if someone were to add a subdirectory to
-selftests/cgroup/lib), you can add a rule to create any missing
-directories in the $(OUTPUT) path:
+Though probably, you can argue, that the pre-merge CI build should already
+be doing this. A sort of allmodconfig for the DRM subsystem, so that these
+kinds of issues don't get missed.
 
-LIBCGROUP_O_DIRS :=3D $(shell dirname $(LIBCGROUP_O) | uniq)
 
-$(LIBCGROUP_O_DIRS):
-        mkdir -p $@
-
-Then add $(LIBCGROUP_O_DIRS) as a dependency of $(LIBCGROUP_O).
+>
+> >
+> > > +	if (IS_ERR(panel))
+> > > +		return PTR_ERR(panel);
+> > >
+> > >	priv->spi =3D spi;
+> > >	spi_set_drvdata(spi, priv);
+> > > @@ -223,9 +224,6 @@ static int a030jtn01_probe(struct spi_device *spi)
+> > >	if (IS_ERR(priv->reset_gpio))
+> > >		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio), "Failed to get =
+reset GPIO");
+> > >
+> > > -	drm_panel_init(&priv->panel, dev, &a030jtn01_funcs,
+> > > -		       DRM_MODE_CONNECTOR_DPI);
+> > > -
+> > >	err =3D drm_panel_of_backlight(&priv->panel);
+> > >	if (err)
+> > >		return err;
+> > >
+> > > --
+> > > 2.48.1
+> > >
