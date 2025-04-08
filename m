@@ -1,169 +1,241 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010011.outbound.protection.outlook.com [52.103.68.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE931F19A;
-	Tue,  8 Apr 2025 01:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744074165; cv=fail; b=qryj8cAGJl9mt7n/19kIb3VwnILIjxhRUM216FafVv0Ow9DqfmkJK6pvkXKZUGpIRldFNKpiOMLbJVknNBMX3XVSCvCO7KdEDuReFZj/+PSxY927zhppXTzsfSImU0bE9lG46166IKte4r+hFnqoePiP/VewNbkVMpnBbLpMJDc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744074165; c=relaxed/simple;
-	bh=wfmVkwS57RzVTL7JAfTneAtjBGVcj3/UV5y9gDZqxnE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TzwN+xks9mN3h2yIt5ItY7ZVXtJAeFmXu57eynvePXYMNGlXFAnsRJyICACxLd+Uc2+HPHORk+pA+jex1eMALO2sBXacRwa13v0Af+36mSta/aJZNwcn0oAjofzdfdcKLwHGbsOxkHB/0huIDtoZxZG8NM8Yjomph7tpTvs0Y5A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cvKPMdKE; arc=fail smtp.client-ip=52.103.68.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8044B3595E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744074227; cv=none; b=YS8iWBEuH5tUd/84rm32X7QEpgBRJAQjNS77Rxr2eIqlI3RSB+yyj/aPVOl4iwvQfa0qaaP1rgJAZaEH3eJUDDkJhAJWEp+32ycCOVH/k5NTz9hln8eGh1+M6iY7fpGPqoFtlz6zReq2ipnp3jzkjF7LiTBr2kymh3ZXI7tgPko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744074227; c=relaxed/simple;
+	bh=N3NyAZWcqvz7fu/dk5KWmiijuV2cjTsspWnmvoi+M4g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aGyVYZJDdi1GYvuD3UCmF+1Z4KIOc4vxX1Dt0Yf/I11eHSk95xZB2HEQesv6gPVvG/+uldU6bxgeO3akHKNDBJGDFJzSkHjVTyiYs1u0vYNDQqW/OXtHZKW53feJFPjWizkzmHEAEzW5SC/u1Mq+EPyQbaXG2K5uaD/ztkWlURs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CrGwTkbs; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cvKPMdKE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q+WSWhAHcT/zRWga6pjRTyc2rGHHy+XZ9ve6ZRi1bdDMW/VGv5U64TolLPXswEPYt/jhB22Pm2dqesSNSo73hUEyzJwdlURYEDPvQph/tIm3xGUy24yWZaPPX0TOF0GxY7m5A+2LzyGewuQbaWoLoLSX+UtPdp556NhfGfRD2KPPxSCCfsQEzFtcSUxsMffj8TrReq1BVc4paV47d5rR4BvmFja5p5i55ZsULirbPKBUalbuJJgAKa5VHCDvQOqMt906erOtPUdc9ZA6rfuPKE+lneS4cvIjETBVGFIe2wq2bM/SsTnTzXsTenwirdGsLyruUiUgn/VSsGmGYTZBuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Xw7TzHFkJizfToxcVyK1e7m1J8hPgMRM18s6vFQdew=;
- b=BSJ9ECwn1BPFdSFRQWu6IXziUW5wDb7ClkS1YEwykZwVH4ZZf3QcjNpvyMLdpsP8cTOECFKxh5eQpNnaONsJG2dBJm8PwCeI+TcZf15TOI9zIeuVwwPGXG8z3GakKrgXW4Kz6Mx3Z1+1qYh1LGc9eWE9pTvPDNOMPo4rveDlkv6/sN+DGP8WnGLV1o2hKfsh9eMiI66q0PCymtMLM6vDmaKs0hoqp+LH/Npp7zUcwXoJqMzg/hiFOZHYHQe1o65OLmMLnF9B1VPApgMZUCg2RbWaiy5O/qHU0e7VEAoWKQrUmqbD0D7P15KucUEUPMCoYwuaH++x+zah4D7E2wUkxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Xw7TzHFkJizfToxcVyK1e7m1J8hPgMRM18s6vFQdew=;
- b=cvKPMdKEiOucnT0mynxdaa6+Zq7U9HnH3wGrZo6YtrBH8+aJKcDEsMRNqkNcGTQUdt70TfT6HrcQIU+iHs+QBU5LUBLVTV2a2tVosaVMPrDDlqCXqY7KOFAYCMZKXIsUC1nmm1d3DuJ60pKpqHJi/sMYjhK0/uy5u7m9FOngRxhCQ/2vBA5DCIBWtmq1bnBIXUqx8Fx8tqX9d0mPrsgjW8k/Y6+FOzNIvPMb87eWSlKTl2jKiwYjz5oSmEKSxentsV/MEPaupJjD2uFdlSVuXYp9zmx0LAm2iuWX49KEDAh1cgf+AZtPM/2T+vkg8SmBwybi7gjKmqP7R0uNdUkKlg==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by PN2P287MB1838.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1aa::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
- 2025 01:02:35 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
- 01:02:35 +0000
-Message-ID:
- <MA0P287MB2262DDC10B2983C2AA5D3074FEB52@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Tue, 8 Apr 2025 09:02:29 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pwm: sophgo: add driver for SG2044
-To: Longbin Li <looong.bin@gmail.com>
-Cc: ghost <2990955050@qq.com>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, sophgo@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-References: <20250407072056.8629-1-looong.bin@gmail.com>
- <20250407072056.8629-3-looong.bin@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250407072056.8629-3-looong.bin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR04CA0211.apcprd04.prod.outlook.com
- (2603:1096:4:187::19) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <6f81b548-d884-4e8d-94f8-e5dac757a048@outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CrGwTkbs"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfe808908so28615e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 18:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744074224; x=1744679024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N3NyAZWcqvz7fu/dk5KWmiijuV2cjTsspWnmvoi+M4g=;
+        b=CrGwTkbs2wJqJDaMfh0LNIoTMKfZ4mpoCkYiFMM/TZb9YSydHdQol3TBHyENAhtg7Y
+         ZsC51wNrrFtlZbdoiQvr3XYe8z/LgE0chDm4iY4zOeyiAEGVVgv0E6Sm6aGW4amhIaUy
+         mevcXLs+y8nrskHUXmulJ6XeRwswINBr/LB1x0vD7UtVoEL5zbFSZlPEbwhckFPz7jpn
+         qPmFc9og+OY5I/vx63sT4hm8g9U92YmwZ1I3y1YgLTlpq5niF9mnPePubpjJI6oeT3Yn
+         bVwCjKgu5G/ycz9pMf+uhzRb0jERvxXmAxHIb3rXcQkBgCbE29pHhK8s5VE+KI8opxP6
+         SpYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744074224; x=1744679024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N3NyAZWcqvz7fu/dk5KWmiijuV2cjTsspWnmvoi+M4g=;
+        b=kKide9WJUOyx8UG/zYVZwBKZgPSOEi/sr95f8ieJiyT1x9LfwuTP4uy/RYYglvcWiP
+         395v6eSU2bn/ryyLxrySCVtd58oYBjTB/geD67+S/RgJdSm4iVgSI4yMXIXn+tWrQCWt
+         iHDTpWoafbC8i4pw8XHQ48BzIFqsX28lUWnpoPPj4VJ2bELhr1GsmdHHYa0pBy8m8Fs9
+         WgyocgLKDy3xVvgT1ZiHq7gs5a5+z27tAB6YYgjtuEu9wGRfplm0ZJ1zc1hbUxR2DQgA
+         KxjCOfTD6HEzG9WKaOHLz0R42MWAPTDcYVP+t3cuX3rO53yVHpwkgVhV4bH5dKrtUiJD
+         iERQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs4PmKqMic4a6b+4IKkXyU+HAuVXTMQhTbjF8kKZfoJjmo2cgqqFgBVLp62JS5RGodj7qLbkpWvBaAGwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVMhgB3vrbNsmgi5tQ1UPPPeqQ7c8EQFkNfW8r6sz1uRjOsDYk
+	RZqKd+C6+Cqypfg0GROf3CNYDQ1NHYSytISc1WoSF2UgYLOrJXkEnuJ9ClgIk5KULg3bsXrfADn
+	x8BGhYRC6ND4zDCjIbs1b5sX08S/tJyrKow+/
+X-Gm-Gg: ASbGncvzZvUM/cv4bdT8gTGVqgJmWu1kr5aGFL4qQ5GMQIeqXABVvYvAdbiN0+QuZNF
+	9yhZkQ0THk1Kp/Zc1TU0mnsJ/Y2riKwhLT51E+IUz1ow2gEPFjgjVNg5XY89+4HBfsEksyrwVRX
+	f9sRfhI3AcMb3SeZ9KikE9ejvN
+X-Google-Smtp-Source: AGHT+IF8E+QG4m0isufZWPae8BywR8gPWm5THfralNVOJXPV/1TEOznb4Z/yFAFdMwZHDPMGruIUYT3jCRKLIcIGr/w=
+X-Received: by 2002:a05:600c:512a:b0:439:961d:fc7d with SMTP id
+ 5b1f17b1804b1-43f108d2f14mr622335e9.6.1744074223271; Mon, 07 Apr 2025
+ 18:03:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN2P287MB1838:EE_
-X-MS-Office365-Filtering-Correlation-Id: 798d23c9-1682-4e03-2c08-08dd76390b65
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|8060799006|461199028|19110799003|5072599009|15080799006|7092599003|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a01WRml1UUw1M241Mjk4RzlIalEzL2RwdW0zK1czdzZ5dnlxSzRCczRkM29M?=
- =?utf-8?B?ZERjeGtQY2ZKckJzNHcvY0pJbGQyd3JQUkNFcUtLOVRQME11b0FPUkg0b1JC?=
- =?utf-8?B?SmMwMUd3N3ZCSnMvODZMM2hhYWVnRmh5RS9IaXUzd2pjRGpDd0plbnVTUUVJ?=
- =?utf-8?B?T1JrVlRRUDdaMmcxdkJWT0R4VzVYUHBwazJ3RTlqazlMSlFDY3ZTUGhDcUhu?=
- =?utf-8?B?aDh0Nm9MWHA5dWNKc2x5SndZQlhja0UzUFdZaVgvZEQ3WnlMK0tVeno1dVRH?=
- =?utf-8?B?VUtSZzVXenZjRWg1c0tCelljbjgxdEpFV0toMnhNZDN4VStSSGIwb0E0KzdT?=
- =?utf-8?B?S05BY3hzWitIZEM2YXFlVlRLQ2Y3RWRYNXNXOWsrOXVSS0NzUGdEREQ3emVj?=
- =?utf-8?B?SXRXZWM0Mi9wT0JVR01oL3c5QnFXb3B0T0RGdXozR1J2Q25TZ0JGVkdzVXdj?=
- =?utf-8?B?dDVrWDBFSnE4bjJ5Ujhodmh4bXd2aVdkaExDMGFVZVRoK0tXcm12MmRQNUFU?=
- =?utf-8?B?THEyUzlPbzhHbVRQUVBIMkV6T3Zxa1hCUWxYbkxrcVRHOGtmUlBYVUpCMndt?=
- =?utf-8?B?Y3JFYlB6WmtzWEZwS2xQYnFGTVhXSlNqOUdrUDlTZkZBbkRxMVJmK2MvUGFV?=
- =?utf-8?B?K1dBbGJPT2F0aHpUUzUwa29Xa2NnYU5lOGl3Z2VPK0lpZ0lNNXhQWFViTm9L?=
- =?utf-8?B?Ykx6OEdiVWx6UENhRzM3YWFLVFQ5eXZmc1ZtbnFFMUZ5TkE3TG1lNTZ6M3ZM?=
- =?utf-8?B?Um1YVFAvRC9Fc0RzTElwcXM5NkQ2aUxzQ1FRVUNzMXUydHptbUlYQUNrQ0pC?=
- =?utf-8?B?T01pelZXZjJ6d0RoRFowZzVGMTNrMUZuYjEraUJ6WFNQMzE1TnlJM0p5c3d1?=
- =?utf-8?B?LzZCZ0ovT2tXN0xzc3EzMjBRaXBZMFNvQkc0cmdTL25vb0p2dFZzVHdCRXQw?=
- =?utf-8?B?d0RkS245eGdkOE1aTjdIM1FTa3F0UUFwSXo4UFlTRnUzTjE0RE4zbXpEZ0R0?=
- =?utf-8?B?Q1BTZHhUYkh1MUo1anFYamEvUlB3Z3NiOVNRYW02eUIveUR6TGd3VTY0aVVK?=
- =?utf-8?B?MXQyaUZMMWxaNFBYMXNIREIzVzNodHpCQkt6YXpIZ1NrdGRpM0NJZnpkTnJ1?=
- =?utf-8?B?WlhTNXhHbFBiUkowVytrMlpmaU5xRkNUS3RvUkViRVdiYkNqYlRTYys4UEJo?=
- =?utf-8?B?VW5mVThlMVBXbDhUK3lwbHVWV0tRWGUvekE2SmtkR05HSGxDMXJQTzZrYzZl?=
- =?utf-8?B?UU9teUNVM2VrWHhpZUxQVkJ6UHQyUmVtWldyKzE3NWtlTkFIbVkrQ2VjQTR1?=
- =?utf-8?B?bnhCY1dVdTZoODRTbUU3bjQ4bEdpRTdxT05YbHFleFZuQ2VHcXllZjQwWk5u?=
- =?utf-8?B?aktTNkdJTlN3NXd1c3M5ZWc4Q1FaMVBQT21DY3oxcTFZNDdueU9FaE1UVnF4?=
- =?utf-8?B?NlFvNG5nQUdseC95cTJIOEJBclpTVWR5dTFzUE1xTDJScXBGVS9NWHVDTHY1?=
- =?utf-8?B?RitnRVdYZjdpSHBqampkS2M1WGhSdTdjRVc0OVYwaEhOMDZOaU14TlRoNG5h?=
- =?utf-8?B?U0VXUT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bGJnRzhHSTdORGwrZGhxQTk2WU9WeE5hV2R5QTlIYXY1Q3E1NWlHOVBxM3V2?=
- =?utf-8?B?TzI1MG15MXNDYTZHOCtJeG5GR05kRldlWlYwUVJSUksyU1Rwc0FQLzNYSXlC?=
- =?utf-8?B?THZPMkFxWkcxcmdFdEhEa1l5RTVybEVQVnQwZnBNN2hZWnk0WWVpZlFtWFF6?=
- =?utf-8?B?MmFyQmFPOVJnckd5UENyU09vb0tEN1ZPUjJUcWNwOHhOamFCWndIVXh6UFJT?=
- =?utf-8?B?ZTdjdDYrbzdsL0xqVXB6TUNrdHdYZXNJTGFJUUFUYkhnSktMZDhUSm5pNjJn?=
- =?utf-8?B?SE05czE2SWVpV3JkZkJjdWNmU1JjM3dXbFBMWWRYK0lXUkFVMTFSeWVkV2ls?=
- =?utf-8?B?NU51MmZ3THBwb3VobGtyZVdaaEJ1Ym5KRFNTeklVaHRuQlVyVTlMUSt3SEpT?=
- =?utf-8?B?WTRLbEVxZ3dkM3B1MmRNa1lHTHRpcjlYa3FPREZsS3Y1djlPcjkxSmlBbmhn?=
- =?utf-8?B?OEYvMkUvL3RlY0M0WlBPNnFkRmd5dEhiMnNZMWJmcFB0b0hYUGNwVzduQlRz?=
- =?utf-8?B?RnRCOEI3UG0yWFZ3MnRiTzNUV1NSWXhYd2pCZEx4NmN1UWVZR1AwQnFQemhq?=
- =?utf-8?B?UVlVRmNEZWR4RnlaSXRVU2lGWFErcHNjMEhDb092U3ZOUjRKYWJmeUdEeSsv?=
- =?utf-8?B?bFJGOFlwRlFqNFhSeEpYSjJZeFluV09hZjBPRFZxamM3Nzh2ZmR1MDN2Wndk?=
- =?utf-8?B?SGxqWWZzZDBTTk1FT0hPeXNPeXk1RmRPbDZSM045ZTNrZXdONmY3dmdJKzNj?=
- =?utf-8?B?UXBQYWNqWUNid0ZZaFBFTlFndTkyQUJXYTRhL29HM292MnM1WDRKaEtjV240?=
- =?utf-8?B?d3lzTXNhNnR2c3MvemlMYXR6R1VEWUVXdVU5MG5CTWtLKzBiWVVMMjNRNWdL?=
- =?utf-8?B?eEk1M2YrdDl4Zkd6Z2gxMFNTeFlvOWZjMkRyeVkxOFpDRjFTUzBjOVU5L2xw?=
- =?utf-8?B?L2ZMeVdUZ3ZHb01pSThBbERUODRmaE1yZzFMUTNlTGc3aS9WK0VJdTJSd0ly?=
- =?utf-8?B?RjREeDNvMWsySHBwcDg2K3RWSTBHTEZwQW15NllKcExOQ0NSOFZ4L1B0RVYy?=
- =?utf-8?B?YlRwSUMyRkpXVncyKzRaZzNzS3hwdm9JdnluNkxDRkRSYnFPZDdPVTdtUjFI?=
- =?utf-8?B?c1U4YlFjOXFHdUNkaDVBQkZlNDRDeGR2K3QzRklaZHhFMlNQS2ZFSDlJeW1m?=
- =?utf-8?B?VmRnTE8yS2dPUjNOVXpnL084cHozSXNkRUtWTUdScjhkWUpvemg2OWdDVHU2?=
- =?utf-8?B?eXZzZkkwQ3lBRFlSUlhlNzVvUWVNUkczZ0FCQTd0eUJONysyOHZrYnBTdWNK?=
- =?utf-8?B?RFhYNmprY2djSkJJTFpwVmNCYmZYWittWmJFVGVLMHdIbSsxWU0ydUNpMHl0?=
- =?utf-8?B?ZXZwQndsLys4TzQ5V0VDQnNEdU02SktJQmhucVkyalhDZFNLNitHdWpvUldM?=
- =?utf-8?B?d2Zqa3ZWRXlwUi9qYkN5djduTW1WdmxlYVFSL0NXN0ZHd0xwOFUxQ3VFL3h6?=
- =?utf-8?B?M1BYV0VBUlFhN1VWTWdKRWl2T2V5bGNhUUw1NFdNR2hxNnVPY2ZkaDlRYUZj?=
- =?utf-8?B?dFFPbHh3RzVyOHM2TjdWbCthSE9iM1lvZ08xc3h0cTE3c2F1R0xYRWtEc2xi?=
- =?utf-8?B?NzAySzEwc0Nuc0J1dlJCaS9HTmRTd1JjOUdtU1ZRVkI1YUFjYWNqVFVCUjVq?=
- =?utf-8?B?TThzcERXazFPRFZEclJ4dDJZSVVGMDhweERSNklCeXA1bjg4MVNJcHMvdXAy?=
- =?utf-8?Q?GgRJ32U/PhHZ5lfG+ITELL1XNS+mBvJh0F7E+w+?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 798d23c9-1682-4e03-2c08-08dd76390b65
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 01:02:33.6180
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2P287MB1838
+References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
+ <f5fdc666-dd72-4a4f-9270-b539a3179382@amd.com> <20250310-eccentric-wonderful-puffin-ddbb26@houat>
+ <CAPM=9tzkLXOz=-3eujUbbjMHunR+_5JZ4oQaqNmbrWWF9WZJ0w@mail.gmail.com>
+ <e08f10da-b0cd-444b-8e0b-11009b05b161@amd.com> <CAPM=9twgFt43OKqUY0TNopTmibnR_d891xmV=wFM91n604NUCw@mail.gmail.com>
+ <5ed87c80-6fe3-4f8c-bb98-ca07f1db8c34@amd.com> <20250403-quick-salamander-of-charisma-cab289@houat>
+ <202c3a58-97a3-489c-b3f2-b1fd2735bd19@amd.com> <CABdmKX2LhrcyDM0r1tytt2vKLuCLGsxZaGHgN+u1hUmEMXuGtw@mail.gmail.com>
+ <86a12909-4d40-46ec-95cc-539c346914e4@amd.com>
+In-Reply-To: <86a12909-4d40-46ec-95cc-539c346914e4@amd.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Mon, 7 Apr 2025 18:03:31 -0700
+X-Gm-Features: ATxdqUG1XcwuvWGPoKuoToYV-NskQlGn2cxAGlcz7gx_QBU2p615RFpmzdS5pyY
+Message-ID: <CABdmKX1B9OS0GK51nx0NjYs3E_1UVwCDvmiZOA3UhFjDeZcuxg@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/12] dma: Enable dmem cgroup tracking
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Ben Woodard <woodard@redhat.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2025/4/7 15:20, Longbin Li wrote:
-> From: ghost <2990955050@qq.com>
+On Mon, Apr 7, 2025 at 4:46=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
+ig@amd.com> wrote:
 >
-> Add PWM controller for SG2044.
+> Am 05.04.25 um 03:57 schrieb T.J. Mercier:
+> > On Fri, Apr 4, 2025 at 1:47=E2=80=AFAM Christian K=C3=B6nig <christian.=
+koenig@amd.com> wrote:
+> >> Hi Maxime,
+> >>
+> >> Am 03.04.25 um 17:47 schrieb Maxime Ripard:
+> >>> On Thu, Apr 03, 2025 at 09:39:52AM +0200, Christian K=C3=B6nig wrote:
+> >>>>> For the UMA GPU case where there is no device memory or eviction
+> >>>>> problem, perhaps a configurable option to just say account memory i=
+n
+> >>>>> memcg for all allocations done by this process, and state yes you c=
+an
+> >>>>> work around it with allocation servers or whatever but the behaviou=
+r
+> >>>>> for well behaved things is at least somewhat defined.
+> >>>> We can have that as a workaround, but I think we should approach tha=
+t
+> >>>> differently.
+> >>>>
+> >>>> With upcoming CXL even coherent device memory is exposed to the core
+> >>>> OS as NUMA memory with just a high latency.
+> >>>>
+> >>>> So both in the CXL and UMA case it actually doesn't make sense to
+> >>>> allocate the memory through the driver interfaces any more. With
+> >>>> AMDGPU for example we are just replicating mbind()/madvise() within
+> >>>> the driver.
+> >>>>
+> >>>> Instead what the DRM subsystem should aim for is to allocate memory
+> >>>> using the normal core OS functionality and then import it into the
+> >>>> driver.
+> >>>>
+> >>>> AMD, NVidia and Intel have HMM working for quite a while now but it
+> >>>> has some limitations, especially on the performance side.
+> >>>>
+> >>>> So for AMDGPU we are currently evaluating udmabuf as alternative. Th=
+at
+> >>>> seems to be working fine with different NUMA nodes, is perfectly mem=
+cg
+> >>>> accounted and gives you a DMA-buf which can be imported everywhere.
+> >>>>
+> >>>> The only show stopper might be the allocation performance, but even =
+if
+> >>>> that's the case I think the ongoing folio work will properly resolve
+> >>>> that.
+> >>> I mean, no, the showstopper to that is that using udmabuf has the
+> >>> assumption that you have an IOMMU for every device doing DMA, which i=
+s
+> >>> absolutely not true on !x86 platforms.
+> >>>
+> >>> It might be true for all GPUs, but it certainly isn't for display
+> >>> controllers, and it's not either for codecs, ISPs, and cameras.
+> >>>
+> >>> And then there's the other assumption that all memory is under the
+> >>> memory allocator control, which isn't the case on most recent platfor=
+ms
+> >>> either.
+> >>>
+> >>> We *need* to take CMA into account there, all the carved-out, device
+> >>> specific memory regions, and the memory regions that aren't even unde=
+r
+> >>> Linux supervision like protected memory that is typically handled by =
+the
+> >>> firmware and all you get is a dma-buf.
+> >>>
+> >>> Saying that it's how you want to workaround it on AMD is absolutely
+> >>> fine, but DRM as a whole should certainly not aim for that, because i=
+t
+> >>> can't.
+> >> A bunch of good points you bring up here but it sounds like you misund=
+erstood me a bit.
+> >>
+> >> I'm certainly *not* saying that we should push for udmabuf for everyth=
+ing, that is clearly use case specific.
+> >>
+> >> For use cases like CMA or protected carve-out the question what to do =
+doesn't even arise in the first place.
+> >>
+> >> When you have CMA which dynamically steals memory from the core OS the=
+n of course it should be accounted to memcg.
+> >>
+> >> When you have carve-out which the core OS memory management doesn't ev=
+en know about then it should certainly be handled by dmem.
+> >>
+> >> The problematic use cases are the one where a buffer can sometimes be =
+backed by system memory and sometime by something special. For this we don'=
+t have a good approach what to do since every approach seems to have a draw=
+ back for some use case.
+> > This reminds me of memory.memsw in cgroup v1, where both resident and
+> > swapped memory show up under the same memcg counter. In this dmem
+> > scenario it's similar but across two different cgroup controllers
+> > instead of two different types of system memory under the same
+> > controller.
 >
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> Yeah, nailed it. Exactly that was one of the potential solutions I had in=
+ mind as well.
+>
+> It's just that I abandoned that idea when I realized that it actually wou=
+ldn't help.
+>
+> For example imagine you have 8GiB system and 8GiB local memory. So you se=
+t your cgroup limit to 12GiB. But when an application tries to use full 12G=
+iB as system instead of a combination of the two you still run into the OOM=
+ killer.
 
-Consider updating "MODULE_AUTHOR" (add your name) and 
-"MODULE_DESCRIPTION"(add SG2044).
+Yup to solve this with kernel enforcement, we would need a counter
+that includes both types. Then what if that system memory can be
+swapped and exceeds a swap-only counter. Yet another counter? (dmem,
+dmem+system, dmem+system+swap) :\
 
-Thanks,
+> > memsw doesn't exist in v2, and users are asking for it back. [1] I
+> > tend to agree that a combined counter is useful as I don't see a great
+> > way to apply meaningful limits to individual counters (or individual
+> > controller limits in the dmem+memcg case) when multiple cgroups are
+> > involved and eviction can cause memory to be transferred from one
+> > place to another. Sorry I'm not really offering a solution to this,
+> > but I feel like only transferring the charge between cgroups is a
+> > partial solution since the enforcement by the kernel is independent
+> > for each controller. So yeah as Dave and Sima said for accounting I
+> > guess it works, and maybe that's good enough if you have userspace
+> > enforcement that's smart enough to look in all the different places.
+> > But then there are the folks asking for kernel enforcement. Maybe just
+> > accounting as best we can is a good place to start?
+>
+> So we would account to memcg, but don't apply it's limits?
 
-Chen
+I was thinking just do the accounting independently for each resource
+and not rely on the kernel for enforcement of combinations of
+resources across controllers. (The status quo.) That shouldn't affect
+how memcg enforces limits.
 
-[......]
+If we could compose a "synthetic" counter file in cgroupfs at runtime
+that combines multiple arbitrary existing counters I think that'd help
+address the enforcement side. It'd also conveniently solve the memsw
+problem in v2 since you could combine memory.current and
+memory.swap.current into something like memsw.current and set a
+memsw.max, and only users who care about that combination would pay
+the overhead for it.
 
-
+> Mhm, that's a kind of interesting idea. It at least partially solves the =
+problem.
+>
+> Regards,
+> Christian.
+>
+> >
+> > [1] https://lore.kernel.org/all/20250319064148.774406-5-jingxiangzeng.c=
+as@gmail.com/
+>
