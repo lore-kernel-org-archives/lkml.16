@@ -1,95 +1,50 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38C7263C76
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B861326159B;
+	Tue,  8 Apr 2025 08:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101749; cv=none; b=JShm8m5r7jyT21mNpaiFU4wAOK6pMBcFARrV9HdMWJRuT+tTdHat8fnHK19qhPlo71yHIcr+T3nc4MfHMIBZRas1xIqEXvkhhdwdfTwaVW1ZBCnnwqI1VVJJcDBxgxmHZ5KusUy6YlpZZafNXvWUl6H9bCzY3w9fgfj2Zwjv2lA=
+	t=1744101796; cv=none; b=NWmIGNjd8K6itpVjl4AvO7sIoGl7fsh78dU6jdOFVwQQZiL+tvgiLKUz9R8nqCoZveG+qdhuFJEoAwnpCBbN/P6UlyVEP3GjPajNtxMYPguqkIerFI9fd08w9YSExVo5h6cstHPkhNSmY1eaJcmUd7TY4SnISP5H8QTh4V/1kRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101749; c=relaxed/simple;
-	bh=esPq+m55JjydPKmeP5AvlPLBoUxxnD+A6ZhyJ3fFSW0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DypMzhrsbYSgoadEtHinKgq0kAonsg/BAd8A0bwrQ9s757pczkef6f65FYXtPh3ImdMx+gtHrZPsad2zfkbedfr1Ru/GsJZwmXNZNknn7EMWNQJsxU7c3nTbGhyfT/aBEZe8F8awy71Ej5haqPp/QqD8v+zq4kJJ5mjvfApDWZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G6x6iznC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=x8d0FELz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=G6x6iznC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=x8d0FELz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744101796; c=relaxed/simple;
+	bh=QTCjrxQ/e5rfDTMmD+U3jR19pQGVrX4IP/gtSGx0nDY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TMrECA51/BmAocUw7iAUF7Io9R942h/64cyQJgww9L9clpS9SXc77rwfabFjxOvy6qRXeVIZfpPjfKMz/U+Lps2OtA9sx2na1Yeb7GUWIM1HiXIcp4/UNgwUb+lis1ZrZV0ET6R07QkL4T+4H/SSahlo32y0Ypu2Vhu33B/YvKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Rk5vQxf1; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G6x6iznC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="x8d0FELz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G6x6iznC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="x8d0FELz"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 94EF01F388;
-	Tue,  8 Apr 2025 08:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744101738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EbHqyD5MPLNmbHBByHN31fJenBrFZtOPsSi4jdC01rk=;
-	b=G6x6iznCrdzY0itk2HMicKZH0IC8c06xkBWSokxCN6boaS04LYm+Rw4o8JGBWeRoM9wkYq
-	i8D2RmlNBK3DLacMQwFmpQZvrrg157UV8Oe0q1LA/IDLKU6TZm00onqcqs9UnBCbgVCxz2
-	8nDLXcCD8E1MzdRVdslqdjDVV5JxR54=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744101738;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EbHqyD5MPLNmbHBByHN31fJenBrFZtOPsSi4jdC01rk=;
-	b=x8d0FELzVTCthqRW8sKH9jRxMbo2+4oBUED76yIjwVqCt4WZlh4pnfViRcmW84h7DxCmfA
-	EUU+QMnPB+sS+rCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=G6x6iznC;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=x8d0FELz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744101738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EbHqyD5MPLNmbHBByHN31fJenBrFZtOPsSi4jdC01rk=;
-	b=G6x6iznCrdzY0itk2HMicKZH0IC8c06xkBWSokxCN6boaS04LYm+Rw4o8JGBWeRoM9wkYq
-	i8D2RmlNBK3DLacMQwFmpQZvrrg157UV8Oe0q1LA/IDLKU6TZm00onqcqs9UnBCbgVCxz2
-	8nDLXcCD8E1MzdRVdslqdjDVV5JxR54=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744101738;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EbHqyD5MPLNmbHBByHN31fJenBrFZtOPsSi4jdC01rk=;
-	b=x8d0FELzVTCthqRW8sKH9jRxMbo2+4oBUED76yIjwVqCt4WZlh4pnfViRcmW84h7DxCmfA
-	EUU+QMnPB+sS+rCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 146F313A80;
-	Tue,  8 Apr 2025 08:42:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +LYwAmrh9Gd6VgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 08 Apr 2025 08:42:18 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Rk5vQxf1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=QTCjr
+	xQ/e5rfDTMmD+U3jR19pQGVrX4IP/gtSGx0nDY=; b=Rk5vQxf1dDZh6DHjYtXHf
+	iLtwJ0LiRu5o2kqSfDBuShs5nnDJ4wSOcpSY7GIhTwsi17ryX5GoQ0xLK9LzMST5
+	dEHUHp6uAJDidE2vZRaCwdueFZB0fLLDD5tjkbjHevtt8O0PRTB6XbRfd0VbPmLK
+	2trqy3IK3oJTY9YGPEZfYo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wCHlTrc3fRnuKo+FA--.30056S4;
+	Tue, 08 Apr 2025 16:27:11 +0800 (CST)
+From: lvxiafei <xiafei_xupt@163.com>
+To: ej@inai.de
+Cc: coreteam@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	fw@strlen.de,
+	horms@kernel.org,
+	kadlec@netfilter.org,
+	kuba@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2 3/3] mm,memory_hotplug: Rename status_change_nid parameter in memory_notify
-Date: Tue,  8 Apr 2025 10:41:53 +0200
-Message-ID: <20250408084153.255762-4-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408084153.255762-1-osalvador@suse.de>
-References: <20250408084153.255762-1-osalvador@suse.de>
+	lvxiafei@sensetime.com,
+	netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	pabeni@redhat.com,
+	pablo@netfilter.org,
+	xiafei_xupt@163.com
+Subject: Re: [PATCH] netfilter: netns nf_conntrack: per-netns net.netfilter.nf_conntrack_max sysctl
+Date: Tue,  8 Apr 2025 16:27:08 +0800
+Message-Id: <20250408082708.56208-1-xiafei_xupt@163.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <66ror6q2-7pq2-os23-rq8r-8426ppr6pnps@vanv.qr>
+References: <66ror6q2-7pq2-os23-rq8r-8426ppr6pnps@vanv.qr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,131 +52,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 94EF01F388
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.de:dkim,suse.de:mid,suse.de:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-CM-TRANSID:_____wCHlTrc3fRnuKo+FA--.30056S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Gr4DGw1kAr13Jr47uw47XFb_yoWfCrb_ZF
+	ZrXFnFkw1jvrs7Jry5ta1xZa93KFW8Ar1UA3yrtwsIkr1fXw15GFn2grW3ZF4UGr4ruF15
+	u3WSgw4kurWfujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7VUU9NVDUUUUU==
+X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKBMpU2f03Noc4AAAso
 
-The 'status_change_nid' field was used to track changes in the memory
-state of a numa node, but that funcionality has been decoupled from
-memory_notify and moved to node_notify.
-Current consumers of memory_notify are only interested in which node the
-memory we are adding belongs to, so rename current 'status_change_nid'
-to 'nid'.
+On Mon, 7 Apr 2025 12:56:33
+Jan Engelhardt <ej@inai.de> wrote:
+> By inheriting an implicit limit from the parent namespace somehow.
+> For example, even if you set the kernel.pid_max sysctl in the initial
+> namespace to something like 9999, subordinate namespace have
+> kernel.pid_max=4million again, but nevertheless are unable to use
+> more than 9999 PIDs. Or so documentation the documentation
+> from commit d385c8bceb14665e935419334aa3d3fac2f10456 tells me
+> (I did not try to create so many processes by myself).
+>
+> A similar logic would have to be applied for netfilter sysctls
+> if they are made modifiable in subordinate namespaces.
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
----
- include/linux/memory.h |  2 +-
- mm/memory_hotplug.c    |  4 ++--
- mm/page_ext.c          | 12 +-----------
- 3 files changed, 4 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index a5b8068cf182..241a98e31277 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -117,7 +117,7 @@ struct memory_notify {
- 	unsigned long altmap_nr_pages;
- 	unsigned long start_pfn;
- 	unsigned long nr_pages;
--	int status_change_nid;
-+	int nid;
- };
- 
- struct node_notify {
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 84248f2e36f8..19f2f8a08645 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1192,6 +1192,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 
- 	mem_arg.start_pfn = pfn;
- 	mem_arg.nr_pages = nr_pages;
-+	mem_arg.nid = nid;
- 	node_states_check_changes_online(nr_pages, zone, &node_arg);
- 
- 	if (node_arg.status_change_nid >= 0) {
-@@ -1204,7 +1205,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 	}
- 
- 	cancel_mem_notifier_on_err = true;
--	mem_arg.status_change_nid = node_arg.status_change_nid;
- 	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
- 	if (ret)
-@@ -2018,6 +2018,7 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 
- 	mem_arg.start_pfn = start_pfn;
- 	mem_arg.nr_pages = nr_pages;
-+	mem_arg.nid = node;
- 	node_states_check_changes_offline(nr_pages, zone, &node_arg);
- 
- 	if (node_arg.status_change_nid >= 0) {
-@@ -2029,7 +2030,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	}
- 
- 	cancel_mem_notifier_on_err = true;
--	mem_arg.status_change_nid = node_arg.status_change_nid;
- 	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
- 	if (ret) {
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index c351fdfe9e9a..477e6f24b7ab 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -378,16 +378,6 @@ static int __meminit online_page_ext(unsigned long start_pfn,
- 	start = SECTION_ALIGN_DOWN(start_pfn);
- 	end = SECTION_ALIGN_UP(start_pfn + nr_pages);
- 
--	if (nid == NUMA_NO_NODE) {
--		/*
--		 * In this case, "nid" already exists and contains valid memory.
--		 * "start_pfn" passed to us is a pfn which is an arg for
--		 * online__pages(), and start_pfn should exist.
--		 */
--		nid = pfn_to_nid(start_pfn);
--		VM_BUG_ON(!node_online(nid));
--	}
--
- 	for (pfn = start; !fail && pfn < end; pfn += PAGES_PER_SECTION)
- 		fail = init_section_page_ext(pfn, nid);
- 	if (!fail)
-@@ -436,7 +426,7 @@ static int __meminit page_ext_callback(struct notifier_block *self,
- 	switch (action) {
- 	case MEM_GOING_ONLINE:
- 		ret = online_page_ext(mn->start_pfn,
--				   mn->nr_pages, mn->status_change_nid);
-+				   mn->nr_pages, mn->nid);
- 		break;
- 	case MEM_OFFLINE:
- 		offline_page_ext(mn->start_pfn,
--- 
-2.49.0
+The patch is to use nf_conntrack_max to more flexibly limit the
+ct_count in different netns, which may be greater than the parent
+namespace, belonging to the global (ancestral) limit, and there
+is no implicit limit inherited from the parent namespace
 
