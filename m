@@ -1,107 +1,110 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323B92686B3;
-	Tue,  8 Apr 2025 09:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD076265CBD;
+	Tue,  8 Apr 2025 09:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106195; cv=none; b=VcmTzOdKwIw83Db3q2ExbyfXvP/wXnuGt0DvGpF32NjDuN32XRW3CJ2IT8mVmkCVXzyNl/Cnx7c+fYeTuNUFIoJNgI1upH2DwHCI4qPSYBp4NkfZyhCuivXaP356iSRrd4jM5Y9L17BWZvdISlCh31tACuoatuL6nuIVmDiMfv8=
+	t=1744106240; cv=none; b=udPIUKMRTXOZkHVXq/8OAZRqbzO7oZhw2AOKZfA+JlbIZ2IC7n8MVo/1Y5hCE3pywVWrYgZlIWsdvhDp7Z+IHe3bcdBrIONTjsAQ3yVnnqMc7YDm6yW4hyB9UAEnLHZDcHYO6X8xThz0g1Ah+FdRiQMcgp1WOsJk9xgwFqOHwWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106195; c=relaxed/simple;
-	bh=1jrrJLZeKfqqLPdI5L13owOs8Yf7VtK5PwL/boXdAUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uXV2EECen/UkisBd4wbyd++/t6lNmvfug0Z9sGJfyVnZrZvUHUcG6sx348HE9N+ySne8gMRM1+sfI8fgJ9fSc1/ngPNC2tCvCHIZkl08ekTWgp476PysC3/KToTLQBUecHtVofuJwedAeP+RXEX/Jfx8ZNzorGgCIPPdFJ8rBXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WECP6U3z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744106240; c=relaxed/simple;
+	bh=c2kkyDGmcy0tJfiAWkCKNxeyCjaVZX2wrgt6fLQSKdU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rfQ0KnQFmZO/c1UUGDdrYInPyJerp5o7oTYOn8lrAK3k05ShzUGALflXdyo1BilPcqv6WgqdwX8YkAhGzDYdFGQgz6RLQwExFvVOwjLK3mZmn7xYwrz+aizTG5Rx4d7YFjuDkWfrnN5Khn2Dp34/fjv6exrAqJMFotVd7Ocd9OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VFSvUJFD; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WECP6U3z"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GMgk020155;
-	Tue, 8 Apr 2025 09:56:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Sb7Iimm5wDWCfNBwhI+7bthXA4use/YOhvjncU5Y56Q=; b=WECP6U3zCRTwAkQL
-	zR/MLNEg9S9yUHvGhv72n9YjumCnmqQy2vEg6vsDpP+E37ujKVe6U4jrGt0kV9ZU
-	7dxHjQoHraV9WZ/icObLq5dwcwY3z0lHzlkT33JpnP9jQEZuBBVtqbYN01mvO/KE
-	V6YYJUmVEmqS3I57KwHfbszWte21YpdLwC0hnJp3ll5jRl63IR2drdcQ60vIRuCI
-	aK4ypWlMplbz+AFddWtQV7f1/v3Kng4Ttob6XdOAnL1xdzZ3xV6JOy26lCz9M6JL
-	RMhEWqcr3f9hMa17kl8Da2gDzjKlGaQmcWSKFV/933SnkX6hw260SKQPoDNp/2cN
-	XB8DRQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2qapw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 09:56:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5389uQnj022474
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 8 Apr 2025 09:56:26 GMT
-Received: from [10.216.15.222] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
- 02:56:22 -0700
-Message-ID: <5ba93230-b999-af19-beab-c48b84d993d6@quicinc.com>
-Date: Tue, 8 Apr 2025 15:26:19 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VFSvUJFD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744106239; x=1775642239;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=c2kkyDGmcy0tJfiAWkCKNxeyCjaVZX2wrgt6fLQSKdU=;
+  b=VFSvUJFDaUY6jugkRzu1LZIpMfydR92S5i3RX66hUCy2GRHzQv7wn/6r
+   2E1xm95xuRxYQfnt8Dz6CLSgSx1SXpTBVwGrzi1nrlCwOEn/oxyOzbjpV
+   t6VorHe0BdMUJKD8iKCfVHbPasqlcVdPSRHWoZEGruBmlSYzrZDtbNKNC
+   QmBLl91EZ3mVnQHwn7ewzxyfHA2JLLGNFm+gzRv4OmFFPWgvR+eXPxrwK
+   NXjCrNx+8n3BrUZyU4Kl85PCSxJYFVd1Bo/fmpPhltUlI3dEjwg7s+fvm
+   u0d2DWSevmFld+0rC3WBRazWqFA5Z43V55ymEknIHJ2psbvt8XOaImYI3
+   g==;
+X-CSE-ConnectionGUID: DOFPd1soTFmH7t7bNARwFA==
+X-CSE-MsgGUID: rYcnWhAcSlqDjaz9zSycnw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68002526"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="68002526"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:57:16 -0700
+X-CSE-ConnectionGUID: vj85qJ6DTKeB49jeRpfXEg==
+X-CSE-MsgGUID: GAfGe7p+Tc+MpogH3haAzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="133424452"
+Received: from jlawryno.igk.intel.com ([10.91.220.59])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:57:13 -0700
+From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Karol Wachowski <karol.wachowski@intel.com>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Subject: [PATCH] accel/ivpu: Add handling of VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW
+Date: Tue,  8 Apr 2025 11:57:11 +0200
+Message-ID: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next v4 7/9] wifi: ath12k: handle
- ath12k_core_restart() with hardware grouping
-Content-Language: en-US
-To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Karthikeyan
- Periyasamy" <quic_periyasa@quicinc.com>,
-        Kalle Valo <kvalo@kernel.org>, Harshitha Prem <quic_hprem@quicinc.com>
-CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250408-fix_reboot_issues_with_hw_grouping-v4-0-95e7bf048595@oss.qualcomm.com>
- <20250408-fix_reboot_issues_with_hw_grouping-v4-7-95e7bf048595@oss.qualcomm.com>
-From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
-In-Reply-To: <20250408-fix_reboot_issues_with_hw_grouping-v4-7-95e7bf048595@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jYKvhyRUmfjL6gSNeB7MdJCmYm8ofjIy
-X-Proofpoint-GUID: jYKvhyRUmfjL6gSNeB7MdJCmYm8ofjIy
-X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f4f2cb cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=rjGSAI43ZN_hgyO5uyIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_03,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=864 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080071
+Content-Transfer-Encoding: 8bit
 
+From: Karol Wachowski <karol.wachowski@intel.com>
 
+commit dad945c27a42dfadddff1049cf5ae417209a8996 upstream.
 
-On 4/8/2025 11:36 AM, Aditya Kumar Singh wrote:
-> Currently, when ath12k_core_restart() is called and the ab->is_reset flag
-> is set, it invokes ieee80211_restart_hw() for all hardware in the same
-> group. However, other hardware might still be in the recovery process,
-> making this call inappropriate with grouping into picture.
-> 
-> To address this, add a condition to check if the group is ready. If the
-> group is not ready, do not call ieee80211_restart_hw().
-> 
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-> 
-> Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Trigger recovery of the NPU upon receiving HW context violation from
+the firmware. The context violation error is a fatal error that prevents
+any subsequent jobs from being executed. Without this fix it is
+necessary to reload the driver to restore the NPU operational state.
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+This is simplified version of upstream commit as the full implementation
+would require all engine reset/resume logic to be backported.
+
+Signed-off-by: Karol Wachowski <karol.wachowski@intel.com>
+Signed-off-by: Maciej Falkowski <maciej.falkowski@linux.intel.com>
+Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Signed-off-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250107173238.381120-13-maciej.falkowski@linux.intel.com
+Fixes: 0adff3b0ef12 ("accel/ivpu: Share NPU busy time in sysfs")
+Cc: <stable@vger.kernel.org> # v6.11+
+---
+ drivers/accel/ivpu/ivpu_job.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/accel/ivpu/ivpu_job.c b/drivers/accel/ivpu/ivpu_job.c
+index be2e2bf0f43f0..70b3676974407 100644
+--- a/drivers/accel/ivpu/ivpu_job.c
++++ b/drivers/accel/ivpu/ivpu_job.c
+@@ -482,6 +482,8 @@ static struct ivpu_job *ivpu_job_remove_from_submitted_jobs(struct ivpu_device *
+ 	return job;
+ }
+ 
++#define VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW 0xEU
++
+ static int ivpu_job_signal_and_destroy(struct ivpu_device *vdev, u32 job_id, u32 job_status)
+ {
+ 	struct ivpu_job *job;
+@@ -490,6 +492,9 @@ static int ivpu_job_signal_and_destroy(struct ivpu_device *vdev, u32 job_id, u32
+ 	if (!job)
+ 		return -ENOENT;
+ 
++	if (job_status == VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW)
++		ivpu_pm_trigger_recovery(vdev, "HW context violation");
++
+ 	if (job->file_priv->has_mmu_faults)
+ 		job_status = DRM_IVPU_JOB_STATUS_ABORTED;
+ 
+-- 
+2.45.1
+
