@@ -1,100 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC191A9B32
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A1B216605
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095096; cv=none; b=TFXHenXZSQ62skdODpTLGWIC5NV5cUK9e+G0kTU9GqhfI5yNRYRzPcVGMxd2mxvNlFMJPK5kS4tO0WG2M0JjzT9yh1/ahv+hHKzM7MSqj4XO3XbkDF4YeMIEm3nl3zuu9a0h1svtyolm3RbJ1ZxWBQ6w9ESe90iShBnPxjOpNag=
+	t=1744095147; cv=none; b=U1suLjJyjmpZTAc81AAI98eqfQ4cmdkPP3snk0urrg4GJvDVh7L64OpALW1CZejSvg4G/29y0SHtWPyar/TX7eEyAnagau4XCcOF6FjAdxZQ7gk06t6Yy436iK4mGzZFk+nl6QeGMJePET8oI/mzHcJhQpwPTxAJz9mVXUCw4B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095096; c=relaxed/simple;
-	bh=vXfDKe6A9XOONd93v6d3bmaYZpfSM7WvA/Iu2nJfXI8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YScNV4NQn2+OHJLe4oCOr+SdDunZ7n2U/TsXi259D2PycmYh3u7+pdXY0/+p4aJuDnmyO+DklWHswfQTllS8uddGrPHObeQJiXxNqOMWUqSLpN6Zl6Seh9jzY2yA1cRtDzh5UKsL4agbBX+WrkaFZTpGeE9+3QAhFf8nRTaP+C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhyV461g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744095147; c=relaxed/simple;
+	bh=vf6oJzq/bPFc/YRQCADH9ZXRKMlsCU0j8KOzZ+98lIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DZ5u5rV+blb4LRcQRj3FQ4uxMYWJG8gv+lEPWi3oSfRD8xwWJydxXbledEjagwEcSc3UdsuSa9QUYImbUVIqnnwHI2e4H3cIoTxLw1w26f2MzWCWe7cZnK6fP7/oUM91jjatckl5fr53bY4J76jfECCLPaP8qf0SyxlpdJ4a6I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GIydpwTb; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhyV461g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65C7C4CEE5;
-	Tue,  8 Apr 2025 06:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744095095;
-	bh=vXfDKe6A9XOONd93v6d3bmaYZpfSM7WvA/Iu2nJfXI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BhyV461g3VDb+3omCSWZRyG7dUjFqrG9QgFnx+Vt3r4oi+BHwHj8NOKm4Ixt9aCJx
-	 IgELwBbK+eLuDu6kWKT7Tj454+gc//8567yFEMqBHeibaAyrodclrwHdn0n0VIfivf
-	 bmzMw/SZyhAfUaP/d4t5lL8dvH/JP0XLyqpzbgl0v4a/xCRrVX0UWG7ZW0lj+g8RSq
-	 2XB1mdaf+blM5JBM9i/G3lv/eRGzhKzBvD1oDNaoEpyf/XT8/vqtUbsAUXYQdpThhN
-	 46PN7eFFxeEP1ycmGOOw+cGOrXg+vpYY8Zi6L/HuDjVcsnPxRMERUc+z2qPm1eoKlm
-	 2dP1rtjwxuBBw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u22o1-003JCn-7Z;
-	Tue, 08 Apr 2025 07:51:33 +0100
-Date: Tue, 08 Apr 2025 07:51:32 +0100
-Message-ID: <86tt6zkux7.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Donghyeok Choe <d7271.choe@samsung.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Youngmin Nam <youngmin.nam@samsung.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Ulf Hansson
-	<ulf.hansson@linaro.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com,
-	hajun.sung@samsung.com,
-	joonki.min@samsung.com,
-	ne.yoo@samsung.com
-Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in GICv3 ITS driver
-In-Reply-To: <20250407225146.GA2858456@tiffany>
-References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
-	<Z+Nv8U/4P3taDpUq@perf>
-	<8634f0mall.wl-maz@kernel.org>
-	<Z+TEa8CVAYnbD/Tu@perf>
-	<20250402-messy-wild-squid-7b4da9@sudeepholla>
-	<Z+3kwsesiXyC0hbO@perf>
-	<20250403-rare-wasp-of-management-9bce59@sudeepholla>
-	<20250404041323.GA685160@tiffany>
-	<20250407-amiable-perfect-hummingbird-06ad83@sudeepholla>
-	<20250407225146.GA2858456@tiffany>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GIydpwTb"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54b1095625dso6205722e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 23:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744095143; x=1744699943; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vf6oJzq/bPFc/YRQCADH9ZXRKMlsCU0j8KOzZ+98lIA=;
+        b=GIydpwTbNPedqgAnaJIwidgN/W7voMlgFtnLGRtw7G2AmPn7mcXzizlnHOj2gSGU88
+         jkkPtcik+b9YZJkjQseDT+GxHKJ/ipaDo5bTyr4HPw/kLvOfwccXI2aUpqsg5WsEvRKp
+         JJBev78fFMe4a7Z15hJrtlRhMYj8remMjmX8CgYcQixFk9TUtwtgTxk8THEt+RooapWq
+         nb37END5+D7cns9j5cS7cvGwR8Lv5dWK/i1gnvBMGb+RXzfra6Pw6fG3V+f1iRHtpLUD
+         hRrgFXO6YRb6HeOygr8JQqf4FeLuuCTmbUiwGqp7kOAVu6PXcWNQM/BAT8KOOKYn/Vzw
+         0kbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744095143; x=1744699943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vf6oJzq/bPFc/YRQCADH9ZXRKMlsCU0j8KOzZ+98lIA=;
+        b=qtAJ96axeEzkUA7ym+gBuOCc4D/mVnJAbNc/YF317V6CyD3TWU235AnW5sAUO5aBBc
+         AYcgfgmnd/d+PuKxNJ9Jl0UJzRC8N/+8YResvjSmwk8H0rQDK9qamtmI5F+/dar+PKnX
+         cGlohp/nNw/DbwuYtP+IkB3UNdju5fKn3n4XjToNAKuN5FDZNTQK1U/0o4xQq8UzZZZR
+         ll28DkYglLaQqmnYEJpPSBh5kMxp8Y4FyFkdibs900hRhn8qNTJxhbW9rU1lG49utL7e
+         R/aq+hHIbJkuPhNc9PpeN7XPheEMLKBPe2/IvTvuIU2n1Y/0HU83zZjY52ABs5s40j+7
+         Q01g==
+X-Forwarded-Encrypted: i=1; AJvYcCVdWHjTkd8ogHHPNTBsNrCh0XMcUIwH/nTeDKAixH1czL3fQUzza7uiWZz0GIY8tGsxh/FggiGJyjOfKtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzveolASvTw1Cn2OyJfpErfB+gnonbaKCC3WjH9bKcu+XI3zdRY
+	JXjLPgNOMt3qNvx8jb4gm5UaWA1QKxQCN6j0zaYEgm2CDz7bUZRlmqBVE3Ve1tzXZ+KWGUVa6V/
+	BJVcqO24SOLgktGfbkcUhdWiVFap8a7gPDUwmTPWtSUH7f6LP
+X-Gm-Gg: ASbGncsMwH9HS/YAxRlxu0g1QIBi3a4qbbFmCQZM6DvHcqeb6bWbVPQbGgbDN18QB/s
+	SlsNnL6kNlKAT8q1ts1GF+nDTp4h/CWtGu5MAwqGOiOBCjJV0VJerG3YjlEFXgCYJPc0FUCHSIB
+	7d1RAtz6vvWuoaUV0gdPXM8FLpykQINyglpU6SyNc1kWnIxH25TGXmbnZcfg==
+X-Google-Smtp-Source: AGHT+IECuXwUgttIYmipcRZs483+Xh+G6HX0MYQ2jLg3x657dEkCs1xbA89taTjzPBp/9Tj6/5D3zg4rfFi8yu6LhXI=
+X-Received: by 2002:a05:6512:1191:b0:545:a1a:556f with SMTP id
+ 2adb3069b0e04-54c2280c627mr5194521e87.50.1744095143040; Mon, 07 Apr 2025
+ 23:52:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: d7271.choe@samsung.com, sudeep.holla@arm.com, youngmin.nam@samsung.com, tglx@linutronix.de, saravanak@google.com, ulf.hansson@linaro.org, vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com, hajun.sung@samsung.com, joonki.min@samsung.com, ne.yoo@samsung.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250407-gpiochip-set-rv-hwmon-v1-0-1fa38f34dc07@linaro.org>
+ <20250407-gpiochip-set-rv-hwmon-v1-1-1fa38f34dc07@linaro.org> <134ac671-13f1-4d29-a81b-a0b7285fd049@roeck-us.net>
+In-Reply-To: <134ac671-13f1-4d29-a81b-a0b7285fd049@roeck-us.net>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 8 Apr 2025 08:52:12 +0200
+X-Gm-Features: ATxdqUFQ6EJKtiHczeZsGSim0VXzSIH6RtKdJovw_Wse8g2c6D3jMpykHOalA7Q
+Message-ID: <CAMRc=MfUvhPK55hNy2jkBMp4vdaWkyNtn-W6hxzVFvLNU_jvLg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] hwmon: (ltc2992) Use new GPIO line value setter callbacks
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 07 Apr 2025 23:51:46 +0100,
-Donghyeok Choe <d7271.choe@samsung.com> wrote:
-> 
-> [1  <text/plain; us-ascii (7bit)>]
-> On Mon, Apr 07, 2025 at 10:17:43AM +0100, Sudeep Holla wrote:
+On Tue, Apr 8, 2025 at 12:00=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> On Mon, Apr 07, 2025 at 09:16:16AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > struct gpio_chip now has callbacks for setting line values that return
+> > an integer, allowing to indicate failures. Convert the driver to using
+> > them.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Applied, after fixing the multi-line alignment issue reported by checkpat=
+ch.
+>
 
-> > Do you use any suspend/resume logic in drivers/irqchip/irq-gic-pm.c ?
-> No, there are parts of the GIC that require secure access, so the
-> GIC save/restore is performed by the firmware.
-> Since the GIC-ITS is entirely controlled as a non-secure IP,
-> I think it is more efficient to perform save/restore in the kernel.
+Huh, I always run b4 --check, it didn't report anything.
 
-More efficient? Give me *one* aspect of this save/restore sequence
-that is done in a more efficiently way in the kernel. Dumping MMIO
-accesses into memory has the exact same cost at EL1, El2 or EL3, and
-splitting things along an arbitrary line to paper over bad firmware is
-not a valid argument.
+Anyway, thanks!
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Bart
