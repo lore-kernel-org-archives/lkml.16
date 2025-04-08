@@ -1,212 +1,323 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2E5192B86;
-	Tue,  8 Apr 2025 03:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4AB3FD4;
+	Tue,  8 Apr 2025 03:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744083925; cv=none; b=RB2P3lDwTbkPeoB+ekRaIGr4QxvA47Zkcqen0ck7CHruA/ImGaKrKjfwDS4UQaA/GwcKH7fTJo2mrwpI005N548n/74R0I3vdR6FkO/HbmP0fOHxJZff7J2e/GtTvEFAhpoPcMaR/GOjXtgs0KIC2TRok8Jo0xvf0jwiEwoMNm8=
+	t=1744083983; cv=none; b=cUxE12m61NLBnIxC4/WbgSenMlsVhihLc1MT8hZcC/b1PsMBH+iFDXN/A00SkZbk6p7LvwPCtBASkvPukCfLdvh0ToSlyTqWoRqzRoGG1XH1C3DtOv0xb2W0YkXEYEJUCirJw/zixeUCEucspL+QYwhe9OZ4sGcCZdkg+HppeLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744083925; c=relaxed/simple;
-	bh=VIvUuappJ61Nl5FnOL6jalOsAXNYWQeoX7SDv29+gsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+dtvYbASXwSanANgE2TzKbo9HqWFcfenvWtikFNg9vUyHerFHushz6m4mQdVRscRd07dVydggf1zZrRcCPPnPGGIwgPo28Xc8Q+aNnKz1EuBISIkmtp5Yq3D/6PFQpPF5Kdg2twCJeleZvwlZsuf1voGzlJHduDJYYMy7p4QcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mizH4KWf; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744083983; c=relaxed/simple;
+	bh=ftiJ95s+WRxYQeHttTck0PvuZoukLOdONyC0zBbhFXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r+nDFTWGOrO4ulezw01AJb2EmgYiZKZRUreMC/KpKpnjuaNsgG1zvNAdyeJN6r295vIR1XIJrvLpAKAtXi28bcI+5Tg5y/XCgwu3M849fW1eEcdthnQQZfsV1GpD7D/wS3aZNAzucPvg6RTa34HDL4VQX/AaI+UuZnbn0EvM08g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T2/M0gA/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mizH4KWf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744083923; x=1775619923;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VIvUuappJ61Nl5FnOL6jalOsAXNYWQeoX7SDv29+gsU=;
-  b=mizH4KWfQl90zGWEdn/rwYfihY3v2HnHefk81hkFW6+AwnieERMxGCVF
-   WxigwQyCcSPpE7oxF96MdopAcepEIPhk2gYVq/Anq0e7Oyp8mBc+TJKor
-   7rTkpju9TcJ/9YguuAy0YHb+nrdf+qX5DCVnmRtDxPFyXbAIFXQJJ5imW
-   tRWUSik7fYkm5ry+uuNgqZUwMpoyt300irqAmvI2TNzDKYWbGkmhA0hRH
-   fenWtBp7XvNZ60iBvc2giZjfBUDw5Gx1o84J39WjBEVMZ+/wyMh1PNb6K
-   FOmEZORC/9dtLoZABRn0OOwPTWtGzv3dl4LkZxSa/o2UYCwaofsMd/IwE
-   g==;
-X-CSE-ConnectionGUID: 8V6MhpyKQLigi+HxWjAOyQ==
-X-CSE-MsgGUID: tlq1+g8nSKuyZCnAwdfEMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="63041820"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="63041820"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 20:45:22 -0700
-X-CSE-ConnectionGUID: gHKUOo6YTv2LbvR1DuTrsw==
-X-CSE-MsgGUID: F3gNGv4TSy20YZbdhH0Tvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="133299602"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 07 Apr 2025 20:45:18 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1ztk-00045f-1j;
-	Tue, 08 Apr 2025 03:45:16 +0000
-Date: Tue, 8 Apr 2025 11:45:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>, Jianhua Lu <lujianhua000@gmail.com>,
-	Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, Pengyu Luo <mitltlatltl@gmail.com>
-Subject: Re: [PATCH 3/4] backlight: ktz8866: improve current sinks setting
-Message-ID: <202504081109.E7PjHxpa-lkp@intel.com>
-References: <20250407095119.588920-4-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T2/M0gA/"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537JVObL000328;
+	Tue, 8 Apr 2025 03:46:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BUJUFa
+	B36sJxqSLzap8VGtMLtvbnpP+bEYqH+PwFuIU=; b=T2/M0gA/otPuCIKVC8Hbps
+	AOoK1LvA1Rtbd/l8XbspAWP7G8K3km9g6nrOPpjJnlv+Bc0JOVrzgFJUR8jCGFvm
+	ShjxyIou/TQEyGQ6+GTqDM9CK6fJo/jEwt1okJCmYAt+pJqddKpQqTUmqsDzKV/6
+	OQYnBN37cvu0+az1u7+WLhQrUf8GDBIAxnD3nZiQKnGs+keY0NQ6l1mSAm++8DBq
+	nHKJkayt4Xyr+NR97E5s95iapm6KvfGjVQ/KJih4PCriX6BbeHE/x7EgHZE/HfMB
+	kWf0XDGoHjS4XT6YG2dA0oEenzs9svSqeeGc+h+QI/OJx2G8eSC+qx9YSY9TiTsg
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45ver7bwmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 03:46:09 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53820ohr024583;
+	Tue, 8 Apr 2025 03:46:08 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ueut9388-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 03:46:08 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5383k8iD4588242
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 03:46:08 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 080BD58056;
+	Tue,  8 Apr 2025 03:46:08 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9A7495804E;
+	Tue,  8 Apr 2025 03:46:04 +0000 (GMT)
+Received: from [9.109.245.113] (unknown [9.109.245.113])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  8 Apr 2025 03:46:04 +0000 (GMT)
+Message-ID: <c8f5199c-36ed-4675-a5b7-e23d5f2ecf49@linux.ibm.com>
+Date: Tue, 8 Apr 2025 09:16:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095119.588920-4-mitltlatltl@gmail.com>
-
-Hi Pengyu,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on lee-backlight/for-backlight-next]
-[also build test ERROR on lee-leds/for-leds-next lee-backlight/for-backlight-fixes linus/master v6.15-rc1 next-20250407]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-backlight-kinetic-ktz8866-add-ktz8866-slave-compatible/20250407-175635
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git for-backlight-next
-patch link:    https://lore.kernel.org/r/20250407095119.588920-4-mitltlatltl%40gmail.com
-patch subject: [PATCH 3/4] backlight: ktz8866: improve current sinks setting
-config: riscv-randconfig-002-20250408 (https://download.01.org/0day-ci/archive/20250408/202504081109.E7PjHxpa-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504081109.E7PjHxpa-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504081109.E7PjHxpa-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> drivers/video/backlight/ktz8866.c:73:32: error: incompatible pointer types passing 'unsigned int **' to parameter of type 'unsigned int *'; remove & [-Werror,-Wincompatible-pointer-types]
-      73 |         regmap_read(ktz->regmap, reg, &val);
-         |                                       ^~~~
-   include/linux/regmap.h:1297:69: note: passing argument to parameter 'val' here
-    1297 | int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
-         |                                                                     ^
->> drivers/video/backlight/ktz8866.c:132:13: warning: use of logical '&&' with constant operand [-Wconstant-logical-operand]
-     132 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^  ~~~~~~~~~~~~~~~~~~
-   drivers/video/backlight/ktz8866.c:132:13: note: use '&' for a bitwise operation
-     132 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^~
-         |                           &
-   drivers/video/backlight/ktz8866.c:132:13: note: remove constant to silence this warning
-     132 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^~~~~~~~~~~~~~~~~~~~~
-   1 warning and 1 error generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftest/mm: Make hugetlb_reparenting_test tolerant to
+ async reparenting
+To: Li Wang <liwang@redhat.com>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org
+Cc: Waiman Long <longman@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dev Jain <dev.jain@arm.com>,
+        "Kirill A. Shuemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>
+References: <20250407084201.74492-1-liwang@redhat.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20250407084201.74492-1-liwang@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8trCQhXusk4TAQQ4rTfhU88qiJ9Io20U
+X-Proofpoint-GUID: 8trCQhXusk4TAQQ4rTfhU88qiJ9Io20U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1011 impostorscore=0 adultscore=0 mlxscore=0
+ spamscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080022
 
 
-vim +73 drivers/video/backlight/ktz8866.c
+On 4/7/25 2:12 PM, Li Wang wrote:
+> In cgroup v2, memory and hugetlb usage reparenting is asynchronous.
+> This can cause test flakiness when immediately asserting usage after
+> deleting a child cgroup. To address this, add a helper function
+> `assert_with_retry()` that checks usage values with a timeout-based retry.
+> This improves test stability without relying on fixed sleep delays.
+>
+> Also bump up the tolerance size to 7MB.
+>
+> To avoid False Positives:
+>    ...
+>    # Assert memory charged correctly for child only use.
+>    # actual a = 11 MB
+>    # expected a = 0 MB
+>    # fail
+>    # cleanup
+>    # [FAIL]
+>    not ok 11 hugetlb_reparenting_test.sh -cgroup-v2 # exit=1
+>    # 0
+>    # SUMMARY: PASS=10 SKIP=0 FAIL=1
 
-    69	
-    70	static inline void ktz8866_read(struct ktz8866 *ktz, unsigned int reg,
-    71					unsigned int *val)
-    72	{
-  > 73		regmap_read(ktz->regmap, reg, &val);
-    74	}
-    75	
-    76	static void ktz8866_write(struct ktz8866 *ktz, unsigned int reg,
-    77				  unsigned int val)
-    78	{
-    79		regmap_write(ktz->regmap, reg, val);
-    80	
-    81		if (ktz->slave)
-    82			regmap_write(ktz->slave->regmap, reg, val);
-    83	}
-    84	
-    85	static void ktz8866_update_bits(struct ktz8866 *ktz, unsigned int reg,
-    86					unsigned int mask, unsigned int val)
-    87	{
-    88		regmap_update_bits(ktz->regmap, reg, mask, val);
-    89	
-    90		if (ktz->slave)
-    91			regmap_update_bits(ktz->slave->regmap, reg, mask, val);
-    92	}
-    93	
-    94	static int ktz8866_backlight_update_status(struct backlight_device *backlight_dev)
-    95	{
-    96		struct ktz8866 *ktz = bl_get_data(backlight_dev);
-    97		unsigned int brightness = backlight_get_brightness(backlight_dev);
-    98	
-    99		if (!ktz->led_on && brightness > 0) {
-   100			ktz8866_update_bits(ktz, BL_EN, BL_EN_BIT, BL_EN_BIT);
-   101			ktz->led_on = true;
-   102		} else if (brightness == 0) {
-   103			ktz8866_update_bits(ktz, BL_EN, BL_EN_BIT, 0);
-   104			ktz->led_on = false;
-   105		}
-   106	
-   107		/* Set brightness */
-   108		ktz8866_write(ktz, BL_BRT_LSB, brightness & 0x7);
-   109		ktz8866_write(ktz, BL_BRT_MSB, (brightness >> 3) & 0xFF);
-   110	
-   111		return 0;
-   112	}
-   113	
-   114	static const struct backlight_ops ktz8866_backlight_ops = {
-   115		.options = BL_CORE_SUSPENDRESUME,
-   116		.update_status = ktz8866_backlight_update_status,
-   117	};
-   118	
-   119	static void ktz8866_init(struct ktz8866 *ktz)
-   120	{
-   121		unsigned int val = 0;
-   122	
-   123		if (!of_property_read_u32(ktz->client->dev.of_node, "current-num-sinks", &val)) {
-   124			ktz8866_write(ktz, BL_EN, BIT(val) - 1);
-   125		} else {
-   126			/*
-   127			 * Enable all 6 current sinks if the number of current
-   128			 * sinks isn't specified and the bootloader didn't set
-   129			 * the value.
-   130			 */
-   131			ktz8866_read(ktz, BL_EN, &val);
- > 132			if (!(val && CURRENT_SINKS_MASK))
-   133				ktz8866_write(ktz, BL_EN, CURRENT_SINKS_MASK);
-   134		}
-   135	
-   136		if (!of_property_read_u32(ktz->client->dev.of_node, "kinetic,current-ramp-delay-ms", &val)) {
-   137			if (val <= 128)
-   138				ktz8866_write(ktz, BL_CFG2, BIT(7) | (ilog2(val) << 3) | PWM_HYST);
-   139			else
-   140				ktz8866_write(ktz, BL_CFG2, BIT(7) | ((5 + val / 64) << 3) | PWM_HYST);
-   141		}
-   142	
-   143		if (!of_property_read_u32(ktz->client->dev.of_node, "kinetic,led-enable-ramp-delay-ms", &val)) {
-   144			if (val == 0)
-   145				ktz8866_write(ktz, BL_DIMMING, 0);
-   146			else {
-   147				unsigned int ramp_off_time = ilog2(val) + 1;
-   148				unsigned int ramp_on_time = ramp_off_time << 4;
-   149				ktz8866_write(ktz, BL_DIMMING, ramp_on_time | ramp_off_time);
-   150			}
-   151		}
-   152	
-   153		if (of_property_read_bool(ktz->client->dev.of_node, "kinetic,enable-lcd-bias"))
-   154			ktz8866_write(ktz, LCD_BIAS_CFG1, LCD_BIAS_EN);
-   155	}
-   156	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I was also seeing this failure. I have tested this patch on my powerPC
+setup and it is passing now.
+
+./hugetlb_reparenting_test.sh -cgroup-v2
+cleanup
+
+Test charge, rmdir, uncharge
+mkdir
+write
+Writing to this path: /mnt/huge/test
+Writing this size: 52428800
+Populating.
+Not writing to memory.
+Using method=0
+Shared mapping.
+RESERVE mapping.
+Allocating using HUGETLBFS.
+
+rmdir
+uncharge
+cleanup
+done
+
+
+Test child only hugetlb usage
+setup
+write
+Writing to this path: /mnt/huge/test2
+Writing this size: 52428800
+Populating.
+Not writing to memory.
+Using method=0
+Shared mapping.
+RESERVE mapping.
+Allocating using HUGETLBFS.
+
+Assert memory charged correctly for child only use.
+actual = 10 MB
+expected = 0 MB
+cleanup
+
+
+Feel free to add
+Tested-by Donet Tom <donettom@linux.ibm.com>
+
+
+>
+> Signed-off-by: Li Wang <liwang@redhat.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Dev Jain <dev.jain@arm.com>
+> Cc: Kirill A. Shuemov <kirill.shutemov@linux.intel.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> ---
+>   .../selftests/mm/hugetlb_reparenting_test.sh  | 96 ++++++++-----------
+>   1 file changed, 41 insertions(+), 55 deletions(-)
+>
+> diff --git a/tools/testing/selftests/mm/hugetlb_reparenting_test.sh b/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
+> index 11f9bbe7dc22..1c172c6999f4 100755
+> --- a/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
+> +++ b/tools/testing/selftests/mm/hugetlb_reparenting_test.sh
+> @@ -36,7 +36,7 @@ else
+>       do_umount=1
+>     fi
+>   fi
+> -MNT='/mnt/huge/'
+> +MNT='/mnt/huge'
+>   
+>   function get_machine_hugepage_size() {
+>     hpz=$(grep -i hugepagesize /proc/meminfo)
+> @@ -60,6 +60,41 @@ function cleanup() {
+>     set -e
+>   }
+>   
+> +function assert_with_retry() {
+> +  local actual_path="$1"
+> +  local expected="$2"
+> +  local tolerance=$((7 * 1024 * 1024))
+> +  local timeout=20
+> +  local interval=1
+> +  local start_time
+> +  local now
+> +  local elapsed
+> +  local actual
+> +
+> +  start_time=$(date +%s)
+> +
+> +  while true; do
+> +    actual="$(cat "$actual_path")"
+> +
+> +    if [[ $actual -ge $(($expected - $tolerance)) ]] &&
+> +        [[ $actual -le $(($expected + $tolerance)) ]]; then
+> +      return 0
+> +    fi
+> +
+> +    now=$(date +%s)
+> +    elapsed=$((now - start_time))
+> +
+> +    if [[ $elapsed -ge $timeout ]]; then
+> +      echo "actual = $((${actual%% *} / 1024 / 1024)) MB"
+> +      echo "expected = $((${expected%% *} / 1024 / 1024)) MB"
+> +      cleanup
+> +      exit 1
+> +    fi
+> +
+> +    sleep $interval
+> +  done
+> +}
+> +
+>   function assert_state() {
+>     local expected_a="$1"
+>     local expected_a_hugetlb="$2"
+> @@ -70,58 +105,13 @@ function assert_state() {
+>       expected_b="$3"
+>       expected_b_hugetlb="$4"
+>     fi
+> -  local tolerance=$((5 * 1024 * 1024))
+> -
+> -  local actual_a
+> -  actual_a="$(cat "$CGROUP_ROOT"/a/memory.$usage_file)"
+> -  if [[ $actual_a -lt $(($expected_a - $tolerance)) ]] ||
+> -    [[ $actual_a -gt $(($expected_a + $tolerance)) ]]; then
+> -    echo actual a = $((${actual_a%% *} / 1024 / 1024)) MB
+> -    echo expected a = $((${expected_a%% *} / 1024 / 1024)) MB
+> -    echo fail
+> -
+> -    cleanup
+> -    exit 1
+> -  fi
+> -
+> -  local actual_a_hugetlb
+> -  actual_a_hugetlb="$(cat "$CGROUP_ROOT"/a/hugetlb.${MB}MB.$usage_file)"
+> -  if [[ $actual_a_hugetlb -lt $(($expected_a_hugetlb - $tolerance)) ]] ||
+> -    [[ $actual_a_hugetlb -gt $(($expected_a_hugetlb + $tolerance)) ]]; then
+> -    echo actual a hugetlb = $((${actual_a_hugetlb%% *} / 1024 / 1024)) MB
+> -    echo expected a hugetlb = $((${expected_a_hugetlb%% *} / 1024 / 1024)) MB
+> -    echo fail
+> -
+> -    cleanup
+> -    exit 1
+> -  fi
+> -
+> -  if [[ -z "$expected_b" || -z "$expected_b_hugetlb" ]]; then
+> -    return
+> -  fi
+> -
+> -  local actual_b
+> -  actual_b="$(cat "$CGROUP_ROOT"/a/b/memory.$usage_file)"
+> -  if [[ $actual_b -lt $(($expected_b - $tolerance)) ]] ||
+> -    [[ $actual_b -gt $(($expected_b + $tolerance)) ]]; then
+> -    echo actual b = $((${actual_b%% *} / 1024 / 1024)) MB
+> -    echo expected b = $((${expected_b%% *} / 1024 / 1024)) MB
+> -    echo fail
+> -
+> -    cleanup
+> -    exit 1
+> -  fi
+>   
+> -  local actual_b_hugetlb
+> -  actual_b_hugetlb="$(cat "$CGROUP_ROOT"/a/b/hugetlb.${MB}MB.$usage_file)"
+> -  if [[ $actual_b_hugetlb -lt $(($expected_b_hugetlb - $tolerance)) ]] ||
+> -    [[ $actual_b_hugetlb -gt $(($expected_b_hugetlb + $tolerance)) ]]; then
+> -    echo actual b hugetlb = $((${actual_b_hugetlb%% *} / 1024 / 1024)) MB
+> -    echo expected b hugetlb = $((${expected_b_hugetlb%% *} / 1024 / 1024)) MB
+> -    echo fail
+> +  assert_with_retry "$CGROUP_ROOT/a/memory.$usage_file" "$expected_a"
+> +  assert_with_retry "$CGROUP_ROOT/a/hugetlb.${MB}MB.$usage_file" "$expected_a_hugetlb"
+>   
+> -    cleanup
+> -    exit 1
+> +  if [[ -n "$expected_b" && -n "$expected_b_hugetlb" ]]; then
+> +    assert_with_retry "$CGROUP_ROOT/a/b/memory.$usage_file" "$expected_b"
+> +    assert_with_retry "$CGROUP_ROOT/a/b/hugetlb.${MB}MB.$usage_file" "$expected_b_hugetlb"
+>     fi
+>   }
+>   
+> @@ -174,7 +164,6 @@ size=$((${MB} * 1024 * 1024 * 25)) # 50MB = 25 * 2MB hugepages.
+>   
+>   cleanup
+>   
+> -echo
+>   echo
+>   echo Test charge, rmdir, uncharge
+>   setup
+> @@ -195,7 +184,6 @@ cleanup
+>   
+>   echo done
+>   echo
+> -echo
+>   if [[ ! $cgroup2 ]]; then
+>     echo "Test parent and child hugetlb usage"
+>     setup
+> @@ -212,7 +200,6 @@ if [[ ! $cgroup2 ]]; then
+>     assert_state 0 $(($size * 2)) 0 $size
+>   
+>     rmdir "$CGROUP_ROOT"/a/b
+> -  sleep 5
+>     echo Assert memory reparent correctly.
+>     assert_state 0 $(($size * 2))
+>   
+> @@ -224,7 +211,6 @@ if [[ ! $cgroup2 ]]; then
+>     cleanup
+>   fi
+>   
+> -echo
+>   echo
+>   echo "Test child only hugetlb usage"
+>   echo setup
