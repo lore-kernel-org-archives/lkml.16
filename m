@@ -1,92 +1,120 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81208266593;
-	Tue,  8 Apr 2025 09:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5708C205ABB;
+	Tue,  8 Apr 2025 09:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104939; cv=none; b=XF447oFQ0f+UNPz8y2XzvaTMWruoAA/VEi2FOLuQR0tqbZOIfVNaKIsGpKLt4dEa0zC0k8zYB7C9IH0Kry/ffRPJDiWRit9aTZohkP0pc8zwVu7cPFqrDxy3VE0pgpfF5mOjdlnuTNJKBb6wywQyzw8kRk9Qrw0Tq9XZCGruuYI=
+	t=1744104999; cv=none; b=fFL2Ep4uN6ZW0SHYDCZIjt362D8bPvOFGc0UmkBmYMIEs8AmieW8gg0Bbmg6gDh58dqQDAbMqkzBqFCZ2qFqbKvVIBf+qB0+UICR0l4Up6p/7rFsRXYPOXIjxzXoCZHrtiYeOkT7FQxFvk0sevg5FJrGgHQN1+fHz9a18eQBPyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104939; c=relaxed/simple;
-	bh=EJSHMKpGhViqTfouoTjG+vkCRWxUv1idSyLcCyeRa1Q=;
+	s=arc-20240116; t=1744104999; c=relaxed/simple;
+	bh=NhA7bxfJCNkME8DTstpV9tqh1cqwE1796oGVhCFkVEw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FowtkyRXLclY4D5BWZUHH8gEapeI9B+ojKAZz9fq83QD/WuJUmNNaKaNZO3LYPR6vAUVMPRYXC41xE3G40WrL2wfIGP9kQwYjfVsoSBFA5KfRFWIppJPKh2tz3tKmT2WdcsblUQrJWi9eGz8Zqk0GHOgXQl+ONAg6cnLD1nzADo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=kRPeka47; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmARImHi1oNu5Xg8c8bebiNnCY6q7Nyt6ciHdlVDbb2iCSb2pT1KpgYcGW8UkPa7JaC7sy2rbx1j8y8tL2645oaPL844qnTTvZ/Xhi+IsHDjNnHXfcEUYQiJPRvS0d6wItxIRE1lpzRqD2GqEYYcAlGmK6KXpyVDRV1AC+ZtW8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwQoubic; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="kRPeka47"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 7B98F1F9BC;
-	Tue,  8 Apr 2025 11:35:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744104935;
-	bh=epFMM6E3b5n0AAjQqhCMwFutqLu+axl/bDlyBr62jpM=;
-	h=Received:From:To:Subject;
-	b=kRPeka47FL9mUb/LiDd/KpngGvLjxHugS25K7j24KcMayZUKVJPhJdJic4fXTaRVi
-	 fPOKGwxQ9qqLyl/6RhA+Mkw+mSUUotd/VLHTPRETb8/UwuMohmuRXW2/8U1bs6f4VH
-	 Oi86j2bfeCOn5i5AOeFvnjiAxLLKcY1NZFy8sbaYmOVOVxEuQogIE6orN3NX/x1J8h
-	 YqBnKXKQ9DHpF+MV9LJeyRylGN9US8ePAGtJBC4+Ph1R1G+T1m6qPROnW/SZtOPqNl
-	 HOkkaWNeoZ7K7vLm7xW/IvqQLofWQOA+ODX83FJvJAcIHsqOYm8yU5rO7K+M2NBmFz
-	 tJS0d65nIZHLw==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 328987F8D5; Tue,  8 Apr 2025 11:35:35 +0200 (CEST)
-Date: Tue, 8 Apr 2025 11:35:35 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Amitkumar Karwar <amitkumar.karwar@nxp.com>,
-	Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-serial@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-Message-ID: <Z_Tt58Ar9TAUy4gB@gaggiata.pivistrello.it>
-References: <20250408083512.GA26035@francesco-nb>
- <a8e7171b-d859-4611-9681-e4c614f29d64@molgen.mpg.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwQoubic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0753EC4CEE5;
+	Tue,  8 Apr 2025 09:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744104998;
+	bh=NhA7bxfJCNkME8DTstpV9tqh1cqwE1796oGVhCFkVEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qwQoubicBlwx2gQbUo50rP967w+XMv47NsMLywWTYtyGuAp1td/sdBTgSUn8+kPQB
+	 fpkInfJ3IGClbrwHkVDrV9MC+bK01DWfRDA1k5ibOWFPhQu2r90hhfRXaHkC7rI8CY
+	 JmhEnPFE8w7BFzhcup9gIkcEfo/IE7x/NIBy3VPyvrInTBz4TChPjqZu0BjRI05Z6N
+	 BVNWN2qR+IrTuL9p/hSVuWoRl08X/dWaW/rfSgZ1zsPdAx6OFJUdqjTJvzfi88TtdY
+	 PFVAim52t2E2+80SXPdL/ZjYKHresFPgLByNe23qr9h/1xYb//iLbIutdrlTPY3NOP
+	 7GyL0i9pp8UBQ==
+Date: Tue, 8 Apr 2025 11:36:32 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ntb@lists.linux.dev, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v3 2/3] PCI: endpoint: improve fixed_size bar handling
+ when allocating space
+Message-ID: <Z_TuIP-k1yLbjcys@ryzen>
+References: <20250407-pci-ep-size-alignment-v3-0-865878e68cc8@baylibre.com>
+ <20250407-pci-ep-size-alignment-v3-2-865878e68cc8@baylibre.com>
+ <Z_Pw3I2xO7BMSGWW@ryzen>
+ <1jjz7wvuyj.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a8e7171b-d859-4611-9681-e4c614f29d64@molgen.mpg.de>
+In-Reply-To: <1jjz7wvuyj.fsf@starbuckisacylon.baylibre.com>
 
-Hello,
-
-On Tue, Apr 08, 2025 at 11:26:47AM +0200, Paul Menzel wrote:
-> [Cc: +regressions@]
+On Mon, Apr 07, 2025 at 05:43:00PM +0200, Jerome Brunet wrote:
+> On Mon 07 Apr 2025 at 17:35, Niklas Cassel <cassel@kernel.org> wrote:
 > 
-> #regzbot introduced: v6.14..v6.15-rc1
+> > Hello Jerome,
+> >
+> > On Mon, Apr 07, 2025 at 04:39:08PM +0200, Jerome Brunet wrote:
+> >> When trying to allocate space for an endpoint function on a BAR with a
+> >> fixed size, the size saved in the 'struct pci_epf_bar' should be the fixed
+> >> size. This is expected by pci_epc_set_bar().
+> >> 
+> >> However, if the fixed_size is smaller that the alignment, the size saved
+> >> in the 'struct pci_epf_bar' matches the alignment and it is a problem for
+> >> pci_epc_set_bar().
+> >> 
+> >> To solve this, continue to allocate space that match the iATU alignment
+> >> requirement but save the size that matches what is present in the BAR.
+> >> 
+> >> Fixes: 2a9a801620ef ("PCI: endpoint: Add support to specify alignment for buffers allocated to BARs")
+> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> >> ---
+> >>  drivers/pci/endpoint/pci-epf-core.c | 25 +++++++++++++++++--------
+> >>  1 file changed, 17 insertions(+), 8 deletions(-)
+> >> 
+> >> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> >> index b7deb0ee1760b23a24f49abf3baf53ea2f273476..fb902b751e1c965c902c5199d57969ae0a757c2e 100644
+> >> --- a/drivers/pci/endpoint/pci-epf-core.c
+> >> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> >> @@ -225,6 +225,7 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+> >>  	struct device *dev;
+> >>  	struct pci_epf_bar *epf_bar;
+> >>  	struct pci_epc *epc;
+> >> +	size_t size;
+> >>  
+> >>  	if (!addr)
+> >>  		return;
+> >> @@ -237,9 +238,12 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+> >>  		epf_bar = epf->sec_epc_bar;
+> >>  	}
+> >>  
+> >> +	size = epf_bar[bar].size;
+> >> +	if (epc_features->align)
+> >> +		size = ALIGN(size, epc_features->align);
+> >
+> > Personally, I think that you should just save the aligned_size / mem_size /
+> > backing_mem_size as a new struct member, as that avoids the risk that someone
+> > later modifies pci_epf_alloc_space() but forgets to update
+> > pci_epf_free_space() accordingly.
 > 
-> 
-> Thank you for your report.
-> 
-> Am 08.04.25 um 10:35 schrieb Francesco Dolcini:
-> 
-> > I do have the following kernel warning with 6.15-rc1, on a TI AM62
-> > platform (arm64), single CPU core, using btnxpuart driver, any idea?
-> > PREEMPT_RT is enabled, if it matters.
-> > 
-> > Either the issue is not systematic, or multi cores SoCs are not affected
-> > (no error on the exact same image on a dual nor on quad core TI AM62).
-> > 
-> > 
-> > [   23.139080] Voluntary context switch within RCU read-side critical section!
-> > [   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
+> I tried but it looked a bit silly to store that when it was only a
+> matter of calling ALIGN() with parameters we already had, and it is
+> supposed to be only used in those two functions.
 
-...
+Another advantage is that you could kill patch 1/3 in this series, as
+there would be no need to supply epc_features to pci_epf_free_space().
 
-> As I understood, that it’s a regression, and you can reproduce it, would it
-> be possible, that you bisected the issue?
 
-I am not sure if this is a regression. It's possible that the issue is not new,
-and it is just non systematic. For sure it was reproduced by our CI on v6.15-rc1.
-
-Francesco
-
+Kind regards,
+Niklas
