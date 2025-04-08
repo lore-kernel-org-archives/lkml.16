@@ -1,270 +1,278 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4293325F79F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 03:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88627A921;
+	Tue,  8 Apr 2025 04:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744084761; cv=none; b=jup5FH/7rmnIuhiW7OCvMt11zkZ4CZwSeEdDTMxJ/1aFvdjcLSfrlgY+JomOQG/MOfS5JML+wyd9EPi5CZC4KSnjewIEFaFU2f+C2brUAD9tdaWjeffeyvl0xTv0KYVf7nhaBI7fycvsFNQjmAM10HGzES6aWBD216cniBwdrQU=
+	t=1744084835; cv=none; b=LMfyXhCzCRPHhRnx2d2lz5FgWxSqqu+3xdPMm4hsQBgGDjNPDo9tCOcOPRCSqxT0LP3sJv5cUXSQhkk3aopmCgaouVrslxQm7pr7qSHcAhLJJ3WF6fPFYqgeUtOxB+zJuoe5HEV7xtuxu7hCDjiD7FfSzurDVv5zRhkh+JhNTuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744084761; c=relaxed/simple;
-	bh=N8IOtk+KCPgxRChOUScSPuKKtNbqdNsY+7biU5NAWu4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jhaM/JbuIJUXWn794ciHZl5ZtJIs+NvrN0izOlHT9mfz31H7Kt+gCJWhiVhMSMT48geGjcAtTACjDhbM9U11k1WRuTRjvFnnU9ezlcLzLfOMXL9blCkHAVUQaKkhGeg2hpmKKccxQ9pNUTc1+HVabwJofVqqp/FCc6XLDKmtEAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=na+nb6SM; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--guanyulin.bounces.google.com
+	s=arc-20240116; t=1744084835; c=relaxed/simple;
+	bh=jsGlcWPI9BniZmGj49AgYpdtTazTcKjbeNe/XRfQqHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lFx9WVkzYrXmgQCHQeynTsmycsgYaMxQj8POS1ePQoPqkVg5WOJq9BYHBQ229BjebvshZwWuJPWHCEqwv3miVXgVuffcn0XeWHVyy2njeTYQFg21EpU7j3gUWJN0q6dBm0lkFJdbyytu/DNUX8/Y+2nDjEJpDS+FHSDzV6d/7dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f2+vO3bV; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na+nb6SM"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so5728461a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 20:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744084759; x=1744689559; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nq70c9PTBvJCLyTf24I/PKmrwX82PnQf7xrAJUmbXKs=;
-        b=na+nb6SM0/ELWpUfjfd9txm89NircMZKoA+XG5isy8CY4Dxs9HrLI9fiBYTbMR9PGO
-         36skXpVG1eRrpcjnkePBi+rhSmHJLiiX0bHeAA63t3AeQX4j/cSpXcjjEa/+oWGiV/PS
-         9q0NHCMCYnGcHucVgObwrV2nAXyT+s+MhPUMSbo/Zrdc63qOix/db9j+9YBep5UqRAAc
-         Tg7OTLcdAqE4k6vz5AV0EOMYucwK3FAU7uoqCUD5q0bIM9CBMdCHx04nz+nWR7UvaErB
-         FdWmpvXID/jQ2qVSFjMcrK2m8WL2vRAHb8R/ysyqfjcarrWVpnka/DKXNu48Bx9CPiSE
-         fG4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744084759; x=1744689559;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nq70c9PTBvJCLyTf24I/PKmrwX82PnQf7xrAJUmbXKs=;
-        b=dHiqlmRAL3Bxo+NWjBoImfSakQcer/vplcrT6GJx68jFTNtmnA3W29+OvogFxLZPPi
-         6YApngCB7UN8Y50WvhW7zugBfUllOFQgYOXY2fZPw8JTgkejHf1Fb05SZ3IwbhmLqe+T
-         PJGEi/qwW8+YCYzFQ/oTb/8qg1qD/C2gBEqRWxicemM0oRQ8rC+hrOeaFyZo+emQBDim
-         jqacTt2ou9E1MdOue1z1I4gWa26K2VDYMxLRthApTKDRLDSk+2xglbCNOdqBJK5sX5Dc
-         EOvnsJzUqXe56SbLGesgfzzC2GLoSWh7VNaeMvS8vPvfPBj19wFZhEyUruopsu/O2I+8
-         GZaw==
-X-Forwarded-Encrypted: i=1; AJvYcCW48TW6rdk3M0n9jLL3mi46Iog8zqc4U+I6HiylJQ8mmWLX4MzVWY2WHLvSk9YWNKJkGNGsz7pt3fP4XSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx68TU3zK5lX9lTQQv5vsDJbGKDYK8jvaJX//jrb1UEsecwTpAN
-	YoQr71K5S79cWDmUbdZrIH9dIzCqOvLm9eQ726z4zE/B/XwgwM2Qj+hSWzHcRmp6ovfnJgWGg1Y
-	GuLtFENdXl1S/8A==
-X-Google-Smtp-Source: AGHT+IHmogGzsX9mjrOUn8Ny9K7H71dH/B3u0x+6YXO76QczAeRH2Kkvav8Kmqt4tB1Azg8tSHIMnIZYgppN084=
-X-Received: from pgjc18.prod.google.com ([2002:a63:d152:0:b0:af3:27c:5603])
- (user=guanyulin job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:2592:b0:1f5:8678:183d with SMTP id adf61e73a8af0-2010460355fmr27010355637.14.1744084759643;
- Mon, 07 Apr 2025 20:59:19 -0700 (PDT)
-Date: Tue,  8 Apr 2025 03:57:24 +0000
-In-Reply-To: <20250408035833.844821-1-guanyulin@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f2+vO3bV"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53840O4n564009
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 23:00:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744084824;
+	bh=pi4u4vviO7H/sqB5xmMHreIonnQjMbp/FTaS4iPPJhk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=f2+vO3bV2XJTqCfwRdZUcbm8Dw6HWQUivzY9CR4mNSEW8M5okFqt3Z5dYdbtsm+ix
+	 7mN8AdYa11Ed75Qnonj67GHd7qSB3vvW8WwYeX3I3H3i9+dIt8/C84P7GzXiCbmf2T
+	 OFTO6hKxRkcHFZ96Bsv49W0Ji8vWJHvDz9Z4o5eI=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53840Osa019027
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 7 Apr 2025 23:00:24 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Apr 2025 23:00:24 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Apr 2025 23:00:24 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53840JH2031207;
+	Mon, 7 Apr 2025 23:00:20 -0500
+Message-ID: <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
+Date: Tue, 8 Apr 2025 09:30:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250408035833.844821-1-guanyulin@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250408035833.844821-5-guanyulin@google.com>
-Subject: [PATCH v11 4/4] usb: host: enable USB offload during system sleep
-From: Guan-Yu Lin <guanyulin@google.com>
-To: gregkh@linuxfoundation.org, mathias.nyman@intel.com, 
-	stern@rowland.harvard.edu, gargaditya08@live.com, kekrby@gmail.com, 
-	jeff.johnson@oss.qualcomm.com, elder@kernel.org, quic_zijuhu@quicinc.com, 
-	ben@decadent.org.uk
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guan-Yu Lin <guanyulin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Judith Mendez <jm@ti.com>,
+        Devarsh Thakkar
+	<devarsht@lewv0571a.ent.ti.com>,
+        Nishanth Menon <nm@ti.com>, Andrew Davis
+	<afd@ti.com>,
+        Hari Nagalla <hnagalla@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-7-jm@ti.com>
+ <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
+ <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Sharing a USB controller with another entity via xhci-sideband driver
-creates power management complexities. To prevent the USB controller
-from being inadvertently deactivated while in use by the other entity, a
-usage-count based mechanism is implemented. This allows the system to
-manage power effectively, ensuring the controller remains available
-whenever needed.
-In order to maintain full functionality of an offloaded USB devices,
-several changes are made within the suspend flow of such devices:
-- skip usb_suspend_device() so that the port/hub are still active for
-  USB transfers via offloaded path.
-- not suspending the endpoints which are used by USB interfaces marked
-  with needs_remote_wakeup. Namely, skip usb_suspend_interface() and
-  usb_hcd_flush_endpoint() on associated USB interfaces. This reserves a
-  pending interrupt urb during system suspend for handling the interrupt
-  transfer, which is necessary since remote wakeup doesn't apply in the
-  offloaded USB devices when controller is still active.
-- not flushing the endpoints of actively offloaded USB devices. Given
-  that the USB devices is used by another entity, unilaterally flush the
-  endpoint might lead to unexpected behavior on another entity.
-- not suspending the xhci controller. This is done by skipping the
-  suspend/resume callbacks in the xhci platform driver.
+Hi Judith, Andrew,
 
-Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
----
- drivers/usb/core/driver.c    | 43 +++++++++++++++++++++++++++++++-----
- drivers/usb/host/xhci-plat.c | 19 ++++++++++++++++
- drivers/usb/host/xhci-plat.h |  1 +
- include/linux/usb.h          |  2 ++
- 4 files changed, 59 insertions(+), 6 deletions(-)
+On 07/04/25 19:43, Judith Mendez wrote:
+> Hi Devarsh,
+>
+> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
+>> Hi Judith,
+>>
+>> On 05/04/25 05:45, Judith Mendez wrote:
+>>  > From: Devarsh Thakkar <devarsht@ti.com>
+>>>
+>>
+>> Thanks for the patch.
+>>
+>>> For each remote proc, reserve memory for IPC and bind the mailbox
+>>> assignments. Two memory regions are reserved for each remote processor.
+>>> The first region of 1MB of memory is used for Vring shared buffers
+>>> and the second region is used as external memory to the remote 
+>>> processor
+>>> for the resource table and for tracebuffer allocations.
+>>>
+>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>> ---
+>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
+>>> +++++++++++++++++++++++--
+>>>   1 file changed, 90 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
+>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>> index 1c9d95696c839..7d817b447c1d0 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>> @@ -52,6 +52,42 @@ linux,cma {
+>>>               linux,cma-default;
+>>>           };
+>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>> +        c7x_0_memory_region: c7x-memory@99900000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
+>>> +            no-map;
+>>> +        };
+>>> +
+>>>           secure_tfa_ddr: tfa@9e780000 {
+>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
+>>>               alignment = <0x1000>;
+>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
+>>>               alignment = <0x1000>;
+>>>               no-map;
+>>>           };
+>>> -
+>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>> -            compatible = "shared-dma-pool";
+>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
+>>> -            no-map;
+>>> -        };
+>>>       };
+>>
+>> This is missing the edgeAI specific remote-core carveouts and 
+>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares 
+>> which come as pre-packaged in the official SDK release for AM62A.
+>>
+>> There is only one official SDK release for AM62A (which is edgeAI 
+>> based) [2] which packages these edgeAI remoteproc firmwares and in my 
+>> view it is a fair expectation that remote core careveouts in 
+>> device-tree should align with firmwares released in SDK.
+>>
+>> This is because most developers (including me) and vendors download 
+>> this official SDK release and use it with latest upstream kernel and 
+>> modules (right now we are applying required patches locally) and this 
+>> patch won't suffice for this, in-fact it won't work since the 
+>> remoteproc firmwares are already using regions beyond the 
+>> reserved-regions from this patch.
+>
+> I understand your point, currently with this patch remoteproc loading
+> will not work for some cores. However, the goal here is to standardize
+> as much as possible the memory carveout sizes, push the "demo firmware"
+> to request resources the correct way from resource table, 
 
-diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-index 316526a05250..59b33e5e9a87 100644
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -1420,11 +1420,25 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
- 			udev->state == USB_STATE_SUSPENDED)
- 		goto done;
- 
-+	if (msg.event == PM_EVENT_SUSPEND && usb_offload_check(udev)) {
-+		dev_dbg(&udev->dev, "device offload active, skip suspend.\n");
-+		udev->offload_at_suspend = 1;
-+	}
-+
- 	/* Suspend all the interfaces and then udev itself */
- 	if (udev->actconfig) {
- 		n = udev->actconfig->desc.bNumInterfaces;
- 		for (i = n - 1; i >= 0; --i) {
- 			intf = udev->actconfig->interface[i];
-+			/*
-+			 * Don't suspend interfaces with remote wakeup while the controller is
-+			 * active. This preserves pending interrupt urbs, allowing interrupt
-+			 * events to be handled during system suspend.
-+			 */
-+			if (udev->offload_at_suspend && intf->needs_remote_wakeup) {
-+				dev_dbg(&intf->dev, "active interface on offloaded devices\n");
-+				continue;
-+			}
- 			status = usb_suspend_interface(udev, intf, msg);
- 
- 			/* Ignore errors during system sleep transitions */
-@@ -1435,7 +1449,8 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
- 		}
- 	}
- 	if (status == 0) {
--		status = usb_suspend_device(udev, msg);
-+		if (!udev->offload_at_suspend)
-+			status = usb_suspend_device(udev, msg);
- 
- 		/*
- 		 * Ignore errors from non-root-hub devices during
-@@ -1480,9 +1495,11 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
- 	 */
- 	} else {
- 		udev->can_submit = 0;
--		for (i = 0; i < 16; ++i) {
--			usb_hcd_flush_endpoint(udev, udev->ep_out[i]);
--			usb_hcd_flush_endpoint(udev, udev->ep_in[i]);
-+		if (!udev->offload_at_suspend) {
-+			for (i = 0; i < 16; ++i) {
-+				usb_hcd_flush_endpoint(udev, udev->ep_out[i]);
-+				usb_hcd_flush_endpoint(udev, udev->ep_in[i]);
-+			}
- 		}
- 	}
- 
-@@ -1524,17 +1541,31 @@ static int usb_resume_both(struct usb_device *udev, pm_message_t msg)
- 	udev->can_submit = 1;
- 
- 	/* Resume the device */
--	if (udev->state == USB_STATE_SUSPENDED || udev->reset_resume)
--		status = usb_resume_device(udev, msg);
-+	if (udev->state == USB_STATE_SUSPENDED || udev->reset_resume) {
-+		if (!udev->offload_at_suspend)
-+			status = usb_resume_device(udev, msg);
-+		else
-+			dev_dbg(&udev->dev, "device offload active, skip resume.\n");
-+	}
- 
- 	/* Resume the interfaces */
- 	if (status == 0 && udev->actconfig) {
- 		for (i = 0; i < udev->actconfig->desc.bNumInterfaces; i++) {
- 			intf = udev->actconfig->interface[i];
-+			/*
-+			 * Interfaces with remote wakeup aren't suspended while the controller is
-+			 * active. This preserves pending interrupt urbs, allowing interrupt
-+			 * events to be handled during system suspend.
-+			 */
-+			if (udev->offload_at_suspend && intf->needs_remote_wakeup) {
-+				dev_dbg(&intf->dev, "active interface on offloaded devices\n");
-+				continue;
-+			}
- 			usb_resume_interface(udev, intf, msg,
- 					udev->reset_resume);
- 		}
- 	}
-+	udev->offload_at_suspend = 0;
- 	usb_mark_last_busy(udev);
- 
-  done:
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 9843d3ad5cf4..598f1b974347 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -20,6 +20,7 @@
- #include <linux/acpi.h>
- #include <linux/usb/of.h>
- #include <linux/reset.h>
-+#include <linux/usb/xhci-sideband.h>
- 
- #include "xhci.h"
- #include "xhci-plat.h"
-@@ -483,6 +484,15 @@ static int xhci_plat_suspend_common(struct device *dev)
- 
- static int xhci_plat_suspend(struct device *dev)
- {
-+	struct usb_hcd	*hcd = dev_get_drvdata(dev);
-+	struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
-+
-+	if (xhci_sideband_check(hcd)) {
-+		priv->sideband_at_suspend = 1;
-+		dev_dbg(dev, "sideband instance active, skip suspend.\n");
-+		return 0;
-+	}
-+
- 	return xhci_plat_suspend_common(dev);
- }
- 
-@@ -535,6 +545,15 @@ static int xhci_plat_resume_common(struct device *dev, bool power_lost)
- 
- static int xhci_plat_resume(struct device *dev)
- {
-+	struct usb_hcd	*hcd = dev_get_drvdata(dev);
-+	struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
-+
-+	if (priv->sideband_at_suspend) {
-+		priv->sideband_at_suspend = 0;
-+		dev_dbg(dev, "sideband instance active, skip resume.\n");
-+		return 0;
-+	}
-+
- 	return xhci_plat_resume_common(dev, false);
- }
- 
-diff --git a/drivers/usb/host/xhci-plat.h b/drivers/usb/host/xhci-plat.h
-index fe4f95e690fa..cd07b22adc60 100644
---- a/drivers/usb/host/xhci-plat.h
-+++ b/drivers/usb/host/xhci-plat.h
-@@ -15,6 +15,7 @@ struct usb_hcd;
- struct xhci_plat_priv {
- 	const char *firmware_name;
- 	unsigned long long quirks;
-+	unsigned sideband_at_suspend:1;
- 	bool power_lost;
- 	void (*plat_start)(struct usb_hcd *);
- 	int (*init_quirk)(struct usb_hcd *);
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index f3a4064c729c..bc3a84870907 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -648,6 +648,7 @@ struct usb3_lpm_parameters {
-  *	Will be used as wValue for SetIsochDelay requests.
-  * @use_generic_driver: ask driver core to reprobe using the generic driver.
-  * @offload_usage: number of offload activities happening on this usb device.
-+ * @offload_at_suspend: offload activities during suspend is enabled.
-  *
-  * Notes:
-  * Usbcore drivers should not set usbdev->state directly.  Instead use
-@@ -736,6 +737,7 @@ struct usb_device {
- 	unsigned use_generic_driver:1;
- 
- 	refcount_t offload_usage;
-+	unsigned offload_at_suspend:1;
- };
- 
- #define to_usb_device(__dev)	container_of_const(__dev, struct usb_device, dev)
--- 
-2.49.0.504.g3bcea36a83-goog
 
+It is indeed more suitable if the memory carveouts are called out in the 
+resource table of the firmware. But you will still need to reserve that 
+memory sections in the Device Tree so that Kernel does not map that 
+memory for anything else. So I am thinking how moving to resource table 
+will help solve this problem?
+
+Thanks,
+Beleswar
+
+> and move away
+> from this dependency and limitations that we have with our firmware. We
+> should soon be able to generate our own firmware using Zephyr, which
+> Andrew is pioneering, so with this firmware we should move to the
+> correct direction upstream. Downstream we are still using the memory
+> carveout sizes that the firmware folk want so desperately to keep, for
+> now..
+>
+> ~ Judith
+>
+>>
+>> [1]: 
+>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
+>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+>>
+>> Regards
+>> Devarsh
+>>
+>>>       opp-table {
+>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
+>>>           };
+>>>       };
+>>>   };
+>>> +
+>>> +&mailbox0_cluster0 {
+>>> +    status = "okay";
+>>> +
+>>> +    mbox_r5_0: mbox-r5-0 {
+>>> +        ti,mbox-rx = <0 0 0>;
+>>> +        ti,mbox-tx = <1 0 0>;
+>>> +    };
+>>> +};
+>>> +
+>>> +&mailbox0_cluster1 {
+>>> +    status = "okay";
+>>> +
+>>> +    mbox_c7x_0: mbox-c7x-0 {
+>>> +        ti,mbox-rx = <0 0 0>;
+>>> +        ti,mbox-tx = <1 0 0>;
+>>> +    };
+>>> +};
+>>> +
+>>> +&mailbox0_cluster2 {
+>>> +    status = "okay";
+>>> +
+>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
+>>> +        ti,mbox-rx = <0 0 0>;
+>>> +        ti,mbox-tx = <1 0 0>;
+>>> +    };
+>>> +};
+>>> +
+>>> +&wkup_r5fss0 {
+>>> +    status = "okay";
+>>> +};
+>>> +
+>>> +&wkup_r5fss0_core0 {
+>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+>>> +            <&wkup_r5fss0_core0_memory_region>;
+>>> +};
+>>> +
+>>> +&mcu_r5fss0 {
+>>> +    status = "okay";
+>>> +};
+>>> +
+>>> +&mcu_r5fss0_core0 {
+>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>>> +            <&mcu_r5fss0_core0_memory_region>;
+>>> +};
+>>> +
+>>> +&c7x_0 {
+>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+>>> +    memory-region = <&c7x_0_dma_memory_region>,
+>>> +            <&c7x_0_memory_region>;
+>>> +    status = "okay";
+>>> +};
+>>
+>
