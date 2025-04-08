@@ -1,119 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8D209F35;
-	Tue,  8 Apr 2025 14:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BEF1C5D61;
+	Tue,  8 Apr 2025 14:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123537; cv=none; b=A7NohdlF8bdpR9iQD3inBa16JE0k/xrtaldfY8CSuEp4fsEyQaIaeezuQwFmxesy5ecMJ11AX++1KknC5ekiCX77HZxgIM66ZduRuqdFBp7mbx1davYSiFKUGbcUfZTHkZgJHbi+jKo4mLH7hXDq3RnYLKyZU092abTKPJ4yzz4=
+	t=1744123543; cv=none; b=COryo1jWpcVmTaM390ngMOR/tWoLC4ug+m8/SDRtcoNg+e67JAUoXjNZa41eNOH8d5nVolrWGOygN6lmOshp85nxcImsKOQNOuUbB4BTJWcfeRYOu5poiIDjtUPq+LLPGvcgWdA7k7T2WZ9xDMeX5ojD0ugSS1mSY3pkAtHMlU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123537; c=relaxed/simple;
-	bh=olBuiJK/AJrMVquWfmLMhUENwZCRAys6goiG98vJrIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aZGr5EMCusXuLjb2XtxuXP8qmAj31XowkpfzUN0sgJHRrj5LC/nJBwFBnZJKgVmWqWV2QJtQHizkoE05onPe/wZMDxTbwcSXdXMFysQvKIRFICCSCOIcKIrNj3BFmmGDRDbVm66MqQpdHWBb7HXzRdsYSjuJyUMrhGvjSkI5ek0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MN4noQEL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744123543; c=relaxed/simple;
+	bh=7T4CpB6DGc+gXmXeKE+QAVK5wOG1xBkOti6BP2/W8Ow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLZgpcM71DsPuNZsDIc5qsB8tdQ0KoOMnQ7FyDzsFY1tRuSol9rHPYKyikFqRoTAJfTLmaQJHAJFMOi7dPWgOcFNCWrnrQC3rZvYQKvw0dR9a/aAyCdTmAkDtZACmyrQPzmX0ibMp3u8iXTf93y0C+1XFB2a9Bd6gzP+Jahh8zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TLs5lB9Q; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MN4noQEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274BCC4CEEB;
-	Tue,  8 Apr 2025 14:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744123537;
-	bh=olBuiJK/AJrMVquWfmLMhUENwZCRAys6goiG98vJrIk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MN4noQELJlVCGbmapAOBZNc9a0AhCwy4boJHS1dY2p0x2b1ax+9ygIJOXZiACVc9W
-	 +uo0h+MIHBKsSgpTPrfZ//6P1iZCbg6UVGPjYEM1GT92MWNuOpaYrjquY4Dy5H9DKo
-	 HDjxsICuOUzv0TGnDUI7UmDBG2Nzl/f51m5yDAE1rM9yFeNt8q2QRRobSF7jWm3lXX
-	 E8UaYmuW6rZyd9/7HDwjrWHpLk8jsRfhlG4pj5kQgpRUvo9Ez9E5qwu/dy9Sy2bEFW
-	 pxZ2wdToQYssYDyxJVIKW7x8QcYxPpMih2a2AznniJf7GuZZhXkbOS1UXiolmsGZcC
-	 Uu77sXK/6B1Jw==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e66407963fso10949855a12.2;
-        Tue, 08 Apr 2025 07:45:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWd1ls5Qtw1ADG9g3fAys08ALptfylPwI4Sui0cUE4b5TJ3hM0rfB2CWCkFOF1I8nS9FSjGBI20oMAeD+ie@vger.kernel.org, AJvYcCWkxbU19hO9/cprG6H/N6Q99lb4Nm0L3H1Nbgpr6zit8tFgGJVy0ZmvBIYQCGEYnVE2pjqZ6WiXIYD3Xw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhzveICzyES6w7e8C88D5vRErx22i6OuuehzEk0TbGRvhhBWst
-	r0rv4CMLyqiAjw7c2X5fYKSc+k7Joh5rsr104ZZ81wyhYLsuzPt4w6BlBPVcDePPdCwKLUdAkDH
-	0gMVRQv8XWLiy0S1vuG0WcRAyTM0=
-X-Google-Smtp-Source: AGHT+IHIQJTKxSzv99WAVBSrjH88jTQ3hCttlWSr1BdKS16DYWVyqrJ0NrTLPyTSrFEhjS5P6C3KLL9d+s7h7ivUiwA=
-X-Received: by 2002:a17:906:ec9:b0:ac8:196f:7441 with SMTP id
- a640c23a62f3a-ac8196f76c0mr336351266b.7.1744123535760; Tue, 08 Apr 2025
- 07:45:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TLs5lB9Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ZU8AgxcMgNb7+V6IhjT3po2+emT09ZzOnp6Z/8jLn6c=; b=TLs5lB9Q6k6NOM0ejAiZKSUmbw
+	Dj+iAfTAAhm+Ug5dOAXdaCUR0ebD73P/pVGjYFtKaTG8ZV+/atjxB8tqHRg7WBYsJwW5Vwwr7EF9c
+	EXg2eTLofm8UMCn7fjXC4Ewz5LuW28/Ib8u6LPJzVd95vL9xcZUe0UdgFLyk1LVTAELk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2ACU-008PSe-Gy; Tue, 08 Apr 2025 16:45:18 +0200
+Date: Tue, 8 Apr 2025 16:45:18 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
+ support SFPs
+Message-ID: <e370fcd3-bd58-47d1-bc0c-c0abeebbefdc@lunn.ch>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-16-herve.codina@bootlin.com>
+ <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
+ <20250408162603.02d6c3a1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com>
-In-Reply-To: <20250408122933.121056-1-frank.li@vivo.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Tue, 8 Apr 2025 15:44:57 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6ysGxpXs8P9iPY-Y1KNKPggGSFHR_tMv-34Q+Qf6PZTQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH41vmqeMmhUtaSpwreauFnjDIoBgYjKMbPB_v5Ynl0O1ppha_HdEk1e1s
-Message-ID: <CAL3q7H6ysGxpXs8P9iPY-Y1KNKPggGSFHR_tMv-34Q+Qf6PZTQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408162603.02d6c3a1@bootlin.com>
 
-On Tue, Apr 8, 2025 at 1:18=E2=80=AFPM Yangtao Li <frank.li@vivo.com> wrote=
-:
->
-> All cleanup paths lead to btrfs_path_free so we can define path with the
-> automatic free callback.
->
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/volumes.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> index c8c21c55be53..a962efaec4ea 100644
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs_fs_info=
- *fs_info,
->         struct btrfs_trans_handle *trans;
->         struct btrfs_balance_item *item;
->         struct btrfs_disk_balance_args disk_bargs;
-> -       struct btrfs_path *path;
-> +       BTRFS_PATH_AUTO_FREE(path);
->         struct extent_buffer *leaf;
->         struct btrfs_key key;
->         int ret, err;
-> @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrfs_fs_inf=
-o *fs_info,
->                 return -ENOMEM;
->
->         trans =3D btrfs_start_transaction(root, 0);
-> -       if (IS_ERR(trans)) {
-> -               btrfs_free_path(path);
-> +       if (IS_ERR(trans))
->                 return PTR_ERR(trans);
-> -       }
->
->         key.objectid =3D BTRFS_BALANCE_OBJECTID;
->         key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
-> @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs_fs_info=
- *fs_info,
->         btrfs_set_balance_sys(leaf, item, &disk_bargs);
->         btrfs_set_balance_flags(leaf, item, bctl->flags);
->  out:
-> -       btrfs_free_path(path);
->         err =3D btrfs_commit_transaction(trans);
+On Tue, Apr 08, 2025 at 04:26:03PM +0200, Herve Codina wrote:
+> Hi Andrew,
+> 
+> On Mon, 7 Apr 2025 22:05:31 +0200
+> Andrew Lunn <andrew@lunn.ch> wrote:
+> 
+> > On Mon, Apr 07, 2025 at 04:55:44PM +0200, Herve Codina wrote:
+> > > Add device-tree nodes needed to support SFPs.
+> > > Those nodes are:
+> > >  - the clock controller
+> > >  - the i2c controller
+> > >  - the i2c mux
+> > >  - the SFPs themselves and their related ports in the switch
+> > > 
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > ---
+> > >  drivers/misc/lan966x_pci.dtso | 111 ++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 111 insertions(+)
+> > > 
+> > > diff --git a/drivers/misc/lan966x_pci.dtso b/drivers/misc/lan966x_pci.dtso
+> > > index 94a967b384f3..a2015b46cd44 100644
+> > > --- a/drivers/misc/lan966x_pci.dtso
+> > > +++ b/drivers/misc/lan966x_pci.dtso  
+> > 
+> > What exactly does this DTSO file represent?
+> 
+> The dsto represents de board connected to the PCI slot and identified
+> by its PCI vendor/device IDs.
 
-This isn't a good idea at all.
-We're now committing a transaction while holding a write lock on some
-leaf of the tree root - this can result in a deadlock as the
-transaction commit needs to update the tree root (see
-update_cowonly_root()).
+Then i think the name lan966x_pci.dtso is too generic. It should be
+named after whatever microchip calls the RDK.
 
-Thanks.
+> We can move the PCI chip in a dtsi included by this dtso but in the
+> end this leads to the exact same representation. Further more, moving
+> out the PCI chip description in its own dtsi out of this dtso can be
+> done in a second step when an other dtso uses the same chip.
 
+And what would you call this pulled out dtsi file? lan966x_pci.dtsi?
+That is going to be confusing.
 
->         if (err && !ret)
->                 ret =3D err;
-> --
-> 2.39.0
->
->
+Naming is hard, but we should assume this PCIe device is going to be
+successful, and a number of OEMs will build cards around it, so there
+needs to be space within the naming scheme for them.
+
+	Andrew
