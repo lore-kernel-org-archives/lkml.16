@@ -1,191 +1,159 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A938198A08
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A810825F78A;
+	Tue,  8 Apr 2025 06:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744092734; cv=none; b=BwizGQ1xU9T9B1u+/8S9Q1gFXDI8OBPKBSuiexa7GKuLwQaZGCtjyqJdBMw0wtp/5hSptNe9B3v5m5L7z4wAySjoDteGjD5FNwWEjP6aWTwraOsd3s6nOagr2ehSp6c+IXbiZ1XmC37HC9TdRVB/t80Ws1YvvNjNTwqrN1xP+4o=
+	t=1744092881; cv=none; b=SWcmS8FHOAyk8Yu6ZJgytb9UtmIIRkHLf32g1VbmmEXLi8sUMmqclwf9KtY1xa8wCdZPFrDVFlIUapWH4adpJdmsL7+/UsYVbvah7aEOiykcUaC2fO0a5QVAapvbwG3ufXwGq/VNUlcVxPdYohCXtML3EsFOzNWUAD80jJunjaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744092734; c=relaxed/simple;
-	bh=/XVoDUPkVMXpMySVKgHf41oApm9urLS04UxPzNfilP4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BsT0LWXMuwWl9y4Uxg8jH4ReP7c0thaAXcnFA2/q5AvsWiFL6sP62Wzzg5JahKad2fZxNLIJVMpvvQxg/HzzZDA4/1AiqVJdnbDY11/hJAcOxAydxNtbBtW0SNMaUVZJ4csOxzrH4HyvoVVscY1Mz6I7X3dGgLFyxTINOT7Dbs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DgJZWPsT; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1744092881; c=relaxed/simple;
+	bh=Elost/Mp9LOpFMKw3ECQbchp60Pk4nCo9BS25BLcjU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ElfD6D5KX6LOHY/EemIbRV8CjrOP0y20MhG0x6CowHYdGBbBq0D6CRpO/JPN8WXdPWtWg1+gecplhZ+fk9rtyaLq97WtT3UuDXALM+FalW55sgOVE0pbVuMMkOzvDryajAQ4e6ZhxiTfd6Beu24y7uPJlRuxpF8JUtFNxs5wNXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWMP7Rkk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DgJZWPsT"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225df540edcso61306365ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 23:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744092731; x=1744697531; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ja9t77LzVnBbcdFbbm7pXpQan+yLqLsiGwXfln1XZjo=;
-        b=DgJZWPsTC6CcjQw1kmfRyxHEREH/8MqgJthJtdA0SmmJhFV3c2LBZentw4I439GXoc
-         pXHUOxGrTj1pkG85vIJrHl/1XeftifriuEDFGBYRCga/f0CHPlD+wvk527n2IoAd8pqU
-         A9xOpnIzalW5vceyBV3jlloLML34Ud+vmIl8FE0IRiE2RehJi/GjVV5TqVWru4BmbEHO
-         fnrSm4/00ZRMkeut59hZeItepTyobpYY4eblnco4PrElq6Gsn+7ZfcC0TlDU6z4xQ3d0
-         RYUs9Kf6XGHlcR4O33I9IyhCSQIkGST1cC5uxIJzaV6nY99dBVAfWqkIe/BeVB6I2Dvs
-         mk1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744092731; x=1744697531;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ja9t77LzVnBbcdFbbm7pXpQan+yLqLsiGwXfln1XZjo=;
-        b=thcBbgxvAhWS3xesuZ4J9I+5shMltX8UAUHPGQhWlISout5TvnKC4SWxjATj6neocm
-         4GpWMJZ0Ash5fbz+VzJIk5s/wbIheZcJgxAaSZpHnZmZ0BfIB/BBmOb/RIBY4XAfr6E3
-         gH/juwQnQpvb0RZYpVfrGdBiIGeIke57Z8iY23zeqscW/OlJIEbn9UgRB2URcK5g52cf
-         1cdbB0VM0Du+CHCbHA/X0670ITe+Gnv8llw/ZJX0pEApNYG4NfqAzVxUT8CTA7mVvSJS
-         6MiT3tMDjaMYy/4VJW+yluNpClxtYQk0QI2Y9+5g04HcxGkAOUZm28mlAuByK66kEsSa
-         XcOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbhfe74rnVoiIN/6eSG58zH96PGxw8OZXrxKcDwJ4uoqWiCU4MLUKTWBpEFWAo6IEeR4LgR5nLt6caeTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh2d5JlcSWbREGoKfBhmC7LgLW+pTmf+/8u+4nOE+FionS3sQP
-	Birps2RSvdc5Q8excR6yv42Dno37bP01/AIbXiTYu3IAGD+gVl9WseLNW7sNQgQ=
-X-Gm-Gg: ASbGncs012qLbjsrCICiz/N7IE4UcfRaA9hrKK4is9xqxu2mrkgXLnegLhzYGoaBFow
-	OkrMZM6CIhbE7Wlz3stefyy0D7TLX2JD0s91zdJE696O+pfCNlUPjzw7BiFA/UVDvBNq+ZtDDSP
-	dK8/FrRA6QKfj1qgfzAKaRIXPelMBQXopHXWnAvy/mHB4Tzep3H8P6vnqEFpN7/V79YsLFt0i0x
-	9fRurBsMIiY9bwbff+RMW8MkxKWj83I0jGWj7F4dTGYm8vKPVneJ2/RKJv2SJ74YRwD1NKmMX7y
-	h5vlNBv7gcDsi7lkm0vncleWnKnGYVDbnXe9kB3gECILKm8kYqaJToIogodihEc8x4ld8eqJLg6
-	J9qs=
-X-Google-Smtp-Source: AGHT+IF/7Kb27Mxww3xm9QXF7jh8x98TLr2PScPfaDKxwWdwGRcFiMRdb9/iQCiKilLFCYbh7uESNg==
-X-Received: by 2002:a17:903:2281:b0:224:3994:8a8c with SMTP id d9443c01a7336-22ab5e0f6cbmr27047145ad.8.1744092731484;
-        Mon, 07 Apr 2025 23:12:11 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.224])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787778efsm91523045ad.259.2025.04.07.23.12.05
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Apr 2025 23:12:11 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	pmladek@suse.com,
-	arnd@arndb.de,
-	andriy.shevchenko@linux.intel.com,
-	namcao@linutronix.de,
-	benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com,
-	matt.porter@linaro.org,
-	tim.kryger@linaro.org,
-	markus.mayer@linaro.org,
-	heikki.krogerus@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH v2] serial: 8250: fix panic due to PSLVERR
-Date: Tue,  8 Apr 2025 14:12:00 +0800
-Message-Id: <20250408061200.76148-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWMP7Rkk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A4B4C4CEE5;
+	Tue,  8 Apr 2025 06:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744092881;
+	bh=Elost/Mp9LOpFMKw3ECQbchp60Pk4nCo9BS25BLcjU4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pWMP7RkkRXBj3iOjr+ovwvSgOp4FFHgerx1RnHwODEiR3AgLM+w0mf+UUYwLON62l
+	 JVVpZDYQX4F9QoQEDYeB7PTh+Sjxv2NzSf3RHvkdsO1gnXPmJ6xVNuFb0yVpUrcYU4
+	 3bs7drxCNOB1Pv82XMtb31lk3Ebz9CCZOhE/KMNZv52a4pbnFHwcUZsYF7l4lbE/TU
+	 crWkcaA29U8raafRaQZcb8tg8KH7XxTIG9tIQR8mbMO7IbESnaxUjMU+RIa8xC0EMS
+	 QtXjv4P8e/bUvEoEVY5QDZEVAQESGqSZn+oAh7PTrP5WNzt5f5pnOur57osM+kekPr
+	 e6AEffvFIHL7g==
+Message-ID: <b42d082e-0568-4d2c-849c-a0b9ab762afd@kernel.org>
+Date: Tue, 8 Apr 2025 08:14:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] rtc: pcf85063: add support for RV8063
+To: Antoni Pokusinski <apokusinski01@gmail.com>,
+ alexandre.belloni@bootlin.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ robh@kernel.org, alexander.stein@ew.tq-group.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250407193521.634807-1-apokusinski01@gmail.com>
+ <20250407193521.634807-3-apokusinski01@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407193521.634807-3-apokusinski01@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-an error response if an attempt is made to read an empty RBR (Receive
-Buffer Register) while the FIFO is enabled.
+On 07/04/2025 21:35, Antoni Pokusinski wrote:
+> Microcrystal RV8063 is a real-time clock with SPI interface. Its
+> functionality is very similar to the RV8263 rtc.
+> 
+> Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+> ---
+>  drivers/rtc/Kconfig        | 21 ++++++-----
+>  drivers/rtc/rtc-pcf85063.c | 74 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 85 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 838bdc138ffe..1b9be96faa13 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-pcf8523.
+>  
+> -config RTC_DRV_PCF85063
+> -	tristate "NXP PCF85063"
+> -	select REGMAP_I2C
+> -	help
+> -	  If you say yes here you get support for the PCF85063 RTC chip
+> -
+> -	  This driver can also be built as a module. If so, the module
+> -	  will be called rtc-pcf85063.
+> -
+>  config RTC_DRV_PCF85363
+>  	tristate "NXP PCF85363"
+>  	select REGMAP_I2C
+> @@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-pcf2127.
+>  
+> +config RTC_DRV_PCF85063
 
-In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-Execution proceeds to the dont_test_tx_en label:
+Why? This breaks the order.
+
+> +	tristate "NXP PCF85063"
+> +	depends on RTC_I2C_AND_SPI
+> +	select REGMAP_I2C if I2C
+> +	select REGMAP_SPI if SPI_MASTER
+> +	help
+> +	  If you say yes here you get support for the PCF85063 and RV8063
+> +	  RTC chips.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called rtc-pcf85063.
+> +
+
+
 ...
-serial_port_in(port, UART_RX);
-This satisfies the PSLVERR trigger condition.
 
-Because another CPU(e.g., using printk()) is accessing the UART (UART
-is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-(lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+>  module_exit(pcf85063_exit);
+> @@ -740,3 +811,4 @@ module_exit(pcf85063_exit);
+>  MODULE_AUTHOR("Søren Andersen <san@rosetechnology.dk>");
+>  MODULE_DESCRIPTION("PCF85063 RTC driver");
+>  MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("spi:rv8063");
 
-To resolve this issue, relevant serial_port_out() operations should be
-placed in a critical section, and UART_RX data should only be read
-when the UART_LSR DR bit is set.
+Drop and use proper ID tables.
 
-Panic backtrace:
-[    0.442336] Oops - unknown exception [#1]
-[    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-[    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-...
-[    0.442416] console_on_rootfs+0x26/0x70
 
-Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
-Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- drivers/tty/serial/8250/8250_port.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 3f256e96c722..3df358008489 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2264,13 +2264,16 @@ int serial8250_do_startup(struct uart_port *port)
- 	 * Clear the FIFO buffers and disable them.
- 	 * (they will be reenabled in set_termios())
- 	 */
-+	uart_port_lock_irqsave(port, &flags);
- 	serial8250_clear_fifos(up);
-+	uart_port_unlock_irqrestore(port, flags);
- 
- 	/*
- 	 * Clear the interrupt registers.
- 	 */
--	serial_port_in(port, UART_LSR);
--	serial_port_in(port, UART_RX);
-+	lsr = serial_port_in(port, UART_LSR);
-+	if (lsr & UART_LSR_DR)
-+		serial_port_in(port, UART_RX);
- 	serial_port_in(port, UART_IIR);
- 	serial_port_in(port, UART_MSR);
- 
-@@ -2380,9 +2383,10 @@ int serial8250_do_startup(struct uart_port *port)
- 	/*
- 	 * Now, initialize the UART
- 	 */
--	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
- 
- 	uart_port_lock_irqsave(port, &flags);
-+	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-+
- 	if (up->port.flags & UPF_FOURPORT) {
- 		if (!up->port.irq)
- 			up->port.mctrl |= TIOCM_OUT1;
-@@ -2435,8 +2439,9 @@ int serial8250_do_startup(struct uart_port *port)
- 	 * saved flags to avoid getting false values from polling
- 	 * routines or the previous session.
- 	 */
--	serial_port_in(port, UART_LSR);
--	serial_port_in(port, UART_RX);
-+	lsr = serial_port_in(port, UART_LSR);
-+	if (lsr & UART_LSR_DR)
-+		serial_port_in(port, UART_RX);
- 	serial_port_in(port, UART_IIR);
- 	serial_port_in(port, UART_MSR);
- 	up->lsr_saved_flags = 0;
-@@ -2492,6 +2497,7 @@ void serial8250_do_shutdown(struct uart_port *port)
- {
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 	unsigned long flags;
-+	u16 lsr;
- 
- 	serial8250_rpm_get(up);
- 	/*
-@@ -2538,7 +2544,9 @@ void serial8250_do_shutdown(struct uart_port *port)
- 	 * Read data port to reset things, and then unlink from
- 	 * the IRQ chain.
- 	 */
--	serial_port_in(port, UART_RX);
-+	lsr = serial_port_in(port, UART_LSR);
-+	if (lsr & UART_LSR_DR)
-+		serial_port_in(port, UART_RX);
- 	serial8250_rpm_put(up);
- 
- 	up->ops->release_irq(up);
--- 
-2.39.2
-
+Best regards,
+Krzysztof
