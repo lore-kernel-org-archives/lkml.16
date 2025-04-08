@@ -1,169 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F2D25FA28;
-	Tue,  8 Apr 2025 08:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8C01CAA79
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101058; cv=none; b=tU+CMzi1O1nhJn80aCRDHGvcu0xHh8fMveglOft1TcB787+eDnLZXJy1Uock4g5MvkfQwREmish9TC8X9vpP9fIimi2I+jQhQqJTmAmQECMqALvq0uYfh+a3h6OHmETbjiRNJng89gmobfmkHbwjMqmdO7lHBdn6l//wJkJqays=
+	t=1744101112; cv=none; b=RKBuBJRWhdH9JQrw1YJQ7S24U8bHy+62VaXa0oDthVfhRsUqawTLuBcZ9dG6er+m/u4l07cdp4jw3I0J+3EvdAj5hgyhVNeiNSjOBiobI/sjv/Ion7owEaVDNiAKDVcRw1QJEAdvqNnFvOy+LiebHWO3vN/KwmIBdqjjVAY1tJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101058; c=relaxed/simple;
-	bh=eLQzjpSO4MHKix4gVwbfKJTffPTPxcs1300whTEGdqc=;
+	s=arc-20240116; t=1744101112; c=relaxed/simple;
+	bh=Hq7OJ3RwBznOdA733fpGmrFHhd5qVLu5ZN47Y78qB7M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I9VXQtd98LgIJEwAyigDpfX27HrTY2Vlk/iabAn6Y4ovfDtIhsmC7R3TqfC+ec2GHcOHZRHtLcOcakRBcYNH0qtN6mywB4+CvztYaSpI772/ngz7CklMEjTch6+LRCnutp04XlNbDhIPQEdSfJ8Yh0YagVX3+tpBRZ6n7NGWb9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87130C4CEE5;
-	Tue,  8 Apr 2025 08:30:54 +0000 (UTC)
-Message-ID: <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
-Date: Tue, 8 Apr 2025 10:30:53 +0200
+	 In-Reply-To:Content-Type; b=Yf0nXpZAq5p2P7AKyfcSmmJB36sGHp+DATj8cafkDjebNInHKWSQV/bYuVvR7ktUcTTEiKn5S0TyeX5XUbQyZ1lofKcm4UTh/tqM4YvnWj5a9XL2Rb5SC6p3lDc4MjdIIRzf4YxiNE6qb4TfDV0e9SjN7aG05tpjw1qM/0VoCeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=eZjKIkFt; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="eZjKIkFt"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250408083140db01be244c7ae4121c
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 08 Apr 2025 10:31:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=aWpO5qb18Mjrv4G9P3h8hBHuno7AfWs3U1lfu4A/j7o=;
+ b=eZjKIkFtN42XbkSvuCCCHrc8/AuX8zzbomK2+pWvDT74ckB2Itv7Sn8gjVqGwQSZhbCYI6
+ ZikeGt/ZJ+S7gUzYpf44yas18L+bqVb3Ed2Ahjlygsr9Grp/u+XofI+H2B5AZvmm+TpRi70V
+ MxHtCEmat8Ktqvr/nZGy3mHS8hv+YwuNXkIF1HwXTXMPUxQz8nAleqDheqLaG9c+VzsB85uS
+ QSiv4sNrrZt2nBw0vPXxHJ82gkoSX2KOWiggdiDvlSZkMDlcZomoxIpAmdjZQWnMXS7cR7lI
+ WAHgIoe5iAZlwZSK7/2rwPDpnHbG22tT1Tr8PfOjCNONZmUZu77c82JQ==;
+Message-ID: <daeedd95-1d4a-4d17-baa1-9c1580095de9@siemens.com>
+Date: Tue, 8 Apr 2025 09:31:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
- V4L2_EVENT_SRC_CH_COLORSPACE
-To: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>, mchehab@kernel.org
-Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
- <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
- <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-In-Reply-To: <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 1/2] watchdog: Add driver for Intel OC WDT
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, jan.kiszka@siemens.com,
+ benedikt.niedermayr@siemens.com
+References: <20250317-ivo-intel_oc_wdt-v3-0-32c396f4eefd@siemens.com>
+ <20250317-ivo-intel_oc_wdt-v3-1-32c396f4eefd@siemens.com>
+Content-Language: en-US
+From: Diogo Ivo <diogo.ivo@siemens.com>
+In-Reply-To: <20250317-ivo-intel_oc_wdt-v3-1-32c396f4eefd@siemens.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1328357:519-21489:flowmailer
 
-On 08/04/2025 08:34, Ming Qian(OSS) wrote:
-> Hi Hans,
-> 
-> On 2025/4/7 17:54, Hans Verkuil wrote:
->> On 17/01/2025 07:19, Ming Qian wrote:
->>> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
->>> indicates colorspace change in the stream.
->>> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
->>> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
->>>
->>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
->>> ---
->>>   Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
->>>   .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
->>>   include/uapi/linux/videodev2.h                           | 1 +
->>>   3 files changed, 11 insertions(+)
->>>
->>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>> index 8db103760930..91e6b86c976d 100644
->>> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>> @@ -369,6 +369,15 @@ call.
->>>   	loss of signal and so restarting streaming I/O is required in order for
->>>   	the hardware to synchronize to the video signal.
->>>   
->>> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
->>> +      - 0x0002
->>> +      - This event gets triggered when a colorsapce change is detected at
->>
->> colorsapce -> colorspace
->>
-> 
-> Will fix in v3
-> 
->>> +	an input. This can come from a video decoder. Applications will query
->>
->> It can also come from a video receiver. E.g. an HDMI source changes colorspace
->> signaling, but not the resolution.
->>
->>> +	the new colorspace information (if any, the signal may also have been
->>> +	lost)
->>
->> Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
->> change, not CH_COLORSPACE.
->>
-> OK, will fix in v3
->>> +
->>> +	For stateful decoders follow the guidelines in :ref:`decoder`.
->>
->> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
->> then only the colorspace changed and there is no need to reallocate buffers.
->>
-> 
-> OK, will add in v3
-> 
->> I also wonder if the description of CH_RESOLUTION should be enhanced to explain
->> that this might also imply a colorspace change. I'm not sure what existing codec
->> drivers do if there is a colorspace change but no resolution change.
-> 
-> I think there is no uniform behavior at the moment, it depends on the
-> behavior of the decoder. Maybe most decoders ignore this.
+Hello,
 
-Can you try to do a quick analysis of this? Don't spend too much time on this,
-but it is helpful to have an idea of how existing codecs handle this.
-
-Regards,
-
-	Hans
-
+On 3/17/25 10:55 AM, Diogo Ivo wrote:
+> Add a driver for the Intel Over-Clocking Watchdog found in Intel
+> Platform Controller (PCH) chipsets. This watchdog is controlled
+> via a simple single-register interface and would otherwise be
+> standard except for the presence of a LOCK bit that can only be
+> set once per power cycle, needing extra handling around it.
 > 
->>
->> I'm a bit concerned about backwards compatibility issues: if a userspace application
->> doesn't understand this new flag and just honors CH_RESOLUTION, then it would
->> never react to just a colorspace change.
->>
->> Nicolas, does gstreamer look at these flags?
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+> ---
+> v2->v3:
+>   - Collect R-b from Guenter
 > 
-> I checked the gstreamer code, it does check this flag:
-> 
-> if (event.type == V4L2_EVENT_SOURCE_CHANGE &&
->      (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION)) {
->    GST_DEBUG_OBJECT (v4l2object->dbg_obj,
->        "Can't streamon capture as the resolution have changed.");
->    ret = GST_V4L2_FLOW_RESOLUTION_CHANGE;
-> }
-> 
-> Currently the gstreamer can't handle the CH_COLORSPACE flag.
-> 
-> Thanks,
-> Ming
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>> +
->>>   Return Value
->>>   ============
->>>   
->>> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>> index 35d3456cc812..ac47c6d9448b 100644
->>> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
->>>   replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
->>>   
->>>   replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
->>> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
->>>   
->>>   replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
->>>   
->>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->>> index c8cb2796130f..242242c8e57b 100644
->>> --- a/include/uapi/linux/videodev2.h
->>> +++ b/include/uapi/linux/videodev2.h
->>> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
->>>   };
->>>   
->>>   #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
->>> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
->>>   
->>>   struct v4l2_event_src_change {
->>>   	__u32 changes;
->>
+> v1->v2:
+>   - Split v1 into two patches, adding the ACPI IDs in a separate patch
+>   - Initialize hearbeat module parameter to zero
+>   - Clarify wording around lock handling
+>   - Properly print resource with %pR when failing to obtain it
+>   - Enable compile testing and add dependency on HAS_IOPORT
+>   - Drop unneeded ACPI_PTR() and MODULE_ALIAS()
+> ---
+> ---
+>   drivers/watchdog/Kconfig        |  11 ++
+>   drivers/watchdog/Makefile       |   1 +
+>   drivers/watchdog/intel_oc_wdt.c | 233 ++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 245 insertions(+)
 > 
 
+Gentle ping on this patch.
+
+Best regards,
+Diogo
