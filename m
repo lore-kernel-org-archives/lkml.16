@@ -1,104 +1,164 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB241EB3D;
-	Tue,  8 Apr 2025 22:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AB22561A9
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152411; cv=none; b=oCF67TvVxCGc0xkD+L0U+O7E8OVyS+wfxl/TB6ZL+fNLhll5W4v4px/k1pPUN0ZJ9bcNPlb40AbQA+tX0YwOoer2Doxdg3KXAfw0Rkm/73pUnW3U/Vxiy7T52Bbf2zxYAR2+fQj+Mz5mA3tkDfVQWivGOpJVWDXX2eJNDX7YX9M=
+	t=1744152435; cv=none; b=GtPBT3/1PhZIgJ61xgCEL+kko4Gg6uHCQst1U7BJBXL8AOBPrieGRzkL2GVXog4ZqkUjmpcuiiT4Gm2Kli/VS3E8oMX3woPMD4fa07GgS/QhOaYwL7WTJjMZaUU1e2CZHjNxJDVxRSyyKGOwDx3300/yCRIaCMwKnfr/NtOKlTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152411; c=relaxed/simple;
-	bh=2rIRJJ4S/TayJ4+nUYIORtcvDK6OxWOcGP6Kkkj7PNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OGT4F6VKBzsdnsxc/GO80JOsyPkub2JQ+GcQ+gY7JL3UaruosFq2SFF+JktFy6In0LzXdl3DE5LAigxUbGbSwrykozNo+UshnSWhDeBospC+mDXnatXWpfuYhb/+037HZqRWS9xP6V9c/NsDO2mlEPzZB3sYYcqkhlnWPTFiyek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=R8fvGUFs; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744152435; c=relaxed/simple;
+	bh=Uy6csq/iZO0iF/avJnW6XXU0ZKj+Jg8iaWCbQWtkHLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gwi8OSSLFZc+cfocaPOeTg/ZpL4eWWZ+TNH4GltcirSdKte2UrH0HGm5QkKjVy+VeBs0qXl/1A3gBAFqKkhRqpLO/Xjk9QfPawu/xF9CRVOH8YlySV/piV3hH4ucHNYUwF85v+57+x2RqYbIna1XJ/sRTQ94vEC7a0fg1J4O9XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=1eFAvur0; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R8fvGUFs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744152399;
-	bh=2rIRJJ4S/TayJ4+nUYIORtcvDK6OxWOcGP6Kkkj7PNA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=R8fvGUFsOVl6uXNandNtMPaQ04Ue899DwkjMyQPzH7lRfiUeWaU45WC227fUHEgP1
-	 bc1zRagv7StnKg9KmYzBicImWyhftDah5CJQ+HPDhyyTc0rTC/eMsLTGWvvJ6qR0Ge
-	 uDLR17cE3JYfN30SHDJl3mJZyqCxWQgpuMgltmK7T1QPjt+PSE0N529VytVnK/AdF8
-	 vsLf9xbUxoVUj8k10ZGGyFHtTjzAHFBoeFXCdkv8xRbLoXIgt6hsrZHNsE34X5Uu7j
-	 EhOGlg89DKTL1axQ7/StZ94ciSn+DQSQxC5YFglOutVs0EN7TJAv9sVY0dcRxaWzzl
-	 hKNGrTb8x/fKA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZXLmG6lj2z4wcn;
-	Wed,  9 Apr 2025 08:46:38 +1000 (AEST)
-Date: Wed, 9 Apr 2025 08:46:37 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Jeff Johnson
- <jjohnson@kernel.org>, Balamurugan S <quic_bselvara@quicinc.com>, P
- Praneesh <quic_ppranees@quicinc.com>, Raj Kumar Bhagat
- <quic_rajkbhag@quicinc.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "ath12k@lists.infradead.org"
- <ath12k@lists.infradead.org>
-Subject: Re: linux-next: build failure after merge of the ath-next tree
-Message-ID: <20250409084637.3bd593c6@canb.auug.org.au>
-In-Reply-To: <4ae387b2-0dd7-413b-b66c-1f136455e23f@oss.qualcomm.com>
-References: <20250408105146.459dfcf5@canb.auug.org.au>
-	<Z_R2lEVjqn2Y3_sP@gallifrey>
-	<20250408113747.3a10275a@canb.auug.org.au>
-	<26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
-	<ee51a503-6580-4f46-aa38-77f1b9ba6535@oss.qualcomm.com>
-	<4ae387b2-0dd7-413b-b66c-1f136455e23f@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="1eFAvur0"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fd89d036so74475815ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744152432; x=1744757232; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o6NRZ+eIBvD2ygB/RFw901KQrONh8kxWwYZ7rUvs968=;
+        b=1eFAvur0uvXIdBCtJvaz6H8SigyTFohvXCKvsXpzWYHkGOZ/mnXG65nf+BeRcCFycZ
+         G4a9py3Qet1t+lh0XcWRCxwfrGwHMcs3x4Sm4gDmSBlP4SAV0/qtAWhoeH59+BWVpD5J
+         QtcSwdOUsByIuOFokVyODL2mqALqPzA6860MQnRmWE9+z29yatYP3uafpO5GFA0Budv6
+         bRV+ERyuhK6aYo6Yn0ojWEAEacmB35XWCE5j3JlXudPCsKtOPU4Jef+Fnttg0f7yO43b
+         fFvofDDv3vIiGQnDyfKl2YCKUwXxWU6JhFN90I6b+l1Pxb8NDpM24D6PvXuAg3G4Pr+7
+         2WeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744152432; x=1744757232;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o6NRZ+eIBvD2ygB/RFw901KQrONh8kxWwYZ7rUvs968=;
+        b=Lm+2VU8uj+wSAsu8JybfDyh4fNpKvDEXSMQYjqikivtpeK2su4M9x5sGQq2cudWdYA
+         qZQjyD3F751XuT2ZoJp1aVg6Ji+Ab1cP7Fo5xPiyapCswkTZF06HCUxHRvt6jnvCEpbm
+         l/SwOkgs3rTABEEqaDxrZcIsaxfFeFTFmI2C9Z08nCloBnOlvgVGSrWWvaROCKtCuGhE
+         MMHu/E27XQDEeRXz/zP23UGCk7okiEaguwsqtse7GhSQH0mDr8O53jjkXPyXoqcfxo+p
+         SUgIYATZhMC+cssd15hOQKd498hDe/WIsRsN2Saf9Ein+ZCKkyVM3VBMSeuPUz33Ywc/
+         P/Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOASIj91vOHjBJD515IRFgeqANCn4Lw8lbjDvBH/BETdD8w/IxSPiBgjpsu6J7thr1w91++Pz+ADTbA1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkXINf2mG/vlSd1FW2theRWNnxV7yYDmQulXEJlkU5wAtyMEgl
+	iCiBeRy4kGBrfk8i7ZovwlU+2Q3Pjq86OwwFYyoRqd+q4UeQ8yz5XaMbt04jzO8=
+X-Gm-Gg: ASbGnctF583Znv95ZG5/qf1WO5w57+MQcz9RqhuKOMwm0zsNrKQaPQC3V5NP0KlYd6m
+	E42El4F0T7A9hPtlujzHsaH/aiKiwtgDkKcsKcL1jSPJ4cC0XaNf6nqlyeHxuoV5J0nKbDjAjUV
+	rnAbniM//+IKDDR7gtVNdf7GuBQJyy41sbY3Me8268FDwHEgx5O7mClFdHtsSq9Zhtn1GyP2m+/
+	SJkgEvifG2eEBfhUHYwzSqOTSSNccKB0CYw55DCVTUFUj12R41C1uzMyuVhMVU3hh0a6HQjcXdM
+	JWdv5u4gz9iD/s9e6k8gri0wNur5h2aakBx0qehGOHq4uCphWuQAB6ptJMPjYm1QPJEqC/Hhvv4
+	NL6lKOjXogDZjNZEhV4b1OJ6jujhH
+X-Google-Smtp-Source: AGHT+IGurDzqMih/v0exHbuE7Zr5SXTWizgQjwosdkoAtELLC7VfyDCiglM0XFRzA9ZoR+zeRWPrvw==
+X-Received: by 2002:a17:902:cecc:b0:223:4341:a994 with SMTP id d9443c01a7336-22ac3f34df7mr4238895ad.9.1744152432520;
+        Tue, 08 Apr 2025 15:47:12 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e2a0sm106697685ad.180.2025.04.08.15.47.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 15:47:11 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1u2Hin-00000006F62-0WE5;
+	Wed, 09 Apr 2025 08:47:09 +1000
+Date: Wed, 9 Apr 2025 08:47:09 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 11/12] xfs: add xfs_compute_atomic_write_unit_max()
+Message-ID: <Z_WnbfRhKR6RQsSA@dread.disaster.area>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-12-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JWrGHgMrQN9liPrMPP032YR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408104209.1852036-12-john.g.garry@oracle.com>
 
---Sig_/JWrGHgMrQN9liPrMPP032YR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 08, 2025 at 10:42:08AM +0000, John Garry wrote:
+> Now that CoW-based atomic writes are supported, update the max size of an
+> atomic write for the data device.
+> 
+> The limit of a CoW-based atomic write will be the limit of the number of
+> logitems which can fit into a single transaction.
 
-Hi Jeff,
+I still think this is the wrong way to define the maximum
+size of a COW-based atomic write because it is going to change from
+filesystem to filesystem and that variability in supported maximum
+length will be exposed to userspace...
 
-On Tue, 8 Apr 2025 09:17:21 -0700 Jeff Johnson <jeff.johnson@oss.qualcomm.c=
-om> wrote:
->
-> On 4/8/2025 8:23 AM, Jeff Johnson wrote:
-> > NM. Since the timer_delete_sync() API is already in my tree I can make a
-> > one-off patch for this. =20
->=20
-> please review https://msgid.link/20250408-timer_delete_sync-v1-1-4dcb22f7=
-1083@oss.qualcomm.com
->=20
-> I'll wait a bit for any tags to accumulate before I merge into ath-next
+i.e. Maximum supported atomic write size really should be defined as
+a well documented fixed size (e.g. 16MB). Then the transaction
+reservations sizes needed to perform that conversion can be
+calculated directly from that maximum size and optimised directly
+for the conversion operation that atomic writes need to perform.
 
-I'll use your patch in the ath-next tree merge today (if necessary).
+.....
 
---=20
-Cheers,
-Stephen Rothwell
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index b2dd0c0bf509..42b2b7540507 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -615,6 +615,28 @@ xfs_init_mount_workqueues(
+>  	return -ENOMEM;
+>  }
+>  
+> +unsigned int
+> +xfs_atomic_write_logitems(
+> +	struct xfs_mount	*mp)
+> +{
+> +	unsigned int		efi = xfs_efi_item_overhead(1);
+> +	unsigned int		rui = xfs_rui_item_overhead(1);
+> +	unsigned int		cui = xfs_cui_item_overhead(1);
+> +	unsigned int		bui = xfs_bui_item_overhead(1);
+> +	unsigned int		logres = M_RES(mp)->tr_write.tr_logres;
+> +
+> +	/*
+> +	 * Maximum overhead to complete an atomic write ioend in software:
+> +	 * remove data fork extent + remove cow fork extent +
+> +	 * map extent into data fork
+> +	 */
+> +	unsigned int		atomic_logitems =
+> +		(bui + cui + rui + efi) + (cui + rui) + (bui + rui);
 
---Sig_/JWrGHgMrQN9liPrMPP032YR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This seems wrong. Unmap from the data fork only logs a (bui + cui)
+pair, we don't log a RUI or an EFI until the transaction that
+processes the BUI or CUI actually frees an extent from the the BMBT
+or removes a block from the refcount btree.
 
------BEGIN PGP SIGNATURE-----
+We also need to be able to relog all the intents and everything that
+was modified, so we effectively have at least one
+xfs_allocfree_block_count() reservation needed here as well. Even
+finishing an invalidation BUI can result in BMBT block allocation
+occurring if the operation splits an existing extent record and the
+insert of the new record causes a BMBT block split....
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf1p00ACgkQAVBC80lX
-0Gx8eQgAjxao8xiJ/KRusfbqLlrG/SC2w8+UCR3vkg7lzBVX4g6YhXhfEJ/+T5dd
-grSvabJh7Rj4c6NIr0FGjdFJJGf7Ho2XHlfVHKRmqlb/L5MUNn1dygTy5SG3cVf/
-7Pt+Ca3Mb9Sp+nwHMXqGHs0zXIesOEMKGTi/xHth+CCmlChdPL2/VyXG3t0uJVs3
-C9daLXeFes/N8CMTBOjYnN71LetG+4jnLAwZIy23IHMzXymtB4QXiZzc3S9zfdxr
-DyYCbhEtCJ9BOCYn3Kcc/x9jTGQ8ECmTDQijaCKE+rAZRxI2+nFPPk8EUdqqwuA1
-XOgDITwe7jU+zkLEF+IYjzvrs0BLzg==
-=z9yf
------END PGP SIGNATURE-----
 
---Sig_/JWrGHgMrQN9liPrMPP032YR--
+> +
+> +	/* atomic write limits are always a power-of-2 */
+> +	return rounddown_pow_of_two(logres / (2 * atomic_logitems));
+
+What is the magic 2 in that division?
+
+> +}
+
+Also this function does not belong in xfs_super.c - that file is for
+interfacing with the VFS layer.  Calculating log reservation
+constants at mount time is done in xfs_trans_resv.c - I suspect most
+of the code in this patch should probably be moved there and run
+from xfs_trans_resv_calc()...
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
