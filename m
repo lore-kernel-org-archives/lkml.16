@@ -1,120 +1,167 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4798C155C97;
-	Tue,  8 Apr 2025 17:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F5F14AD2D;
+	Tue,  8 Apr 2025 17:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132717; cv=none; b=ce5jrgv9ek3rZZdElA04lCcWJGG8wVfhIe2bx6K+y+AZWqe7Aa2C6/53vSxH1ooZb6zvJ6SjLgmfmHA+hBPdHGM+1JgksYZ4YGsy9N6y8f8y5hUmoi7kQggmLix3Jeli0rDDaBKI0VS8Iu4/BCHRbGj+teyJNn2Q60cu5wVEA/c=
+	t=1744132791; cv=none; b=lPV25oZjoDwLVv7JSO67rRw5ZsrRwNluoBXF5BTzuAr+M7IYIVGVSFIf8jO9oy9ERtlesVfhkSLh/viBSShchChrLKoPHBaF3Z+kXOGu6lhxOzxZaMg0YYIC++iT232SvWHSiDe+ZgNx9T8qiMgZzM9F7MUXvBJzb0ziXOOzffc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132717; c=relaxed/simple;
-	bh=S5hwzszlwJNLau0VGr3CkyJrBYombWM4nx71saH4Ut8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyvbmkpujZMEYyTDR/ez/QE+i3xIaN85OsSKCviTbWJ4tzvjsfBObF3KkbRBN3IgDDIZuaLAcRJr6Wb3ApTz/I3SGSd2u3nMNArYJucP7sjH4VKIKEU9as5a/j2UIv1cT3VInbUjKegCJ49R87jLTtomV1BXC77rxaMQIPrvY+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ktH5wggp; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744132791; c=relaxed/simple;
+	bh=U669dnRQH7czDNzWqUFUuMlBcJP3S6KYnqImh3r2v0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DBIBd3t+ULQj4enqQPt4KLtbOOrDkwTrUmT+kx7sylP3npnwgTgbXNehnOU221eOQtPBzGfYS9zQH3YRUW35yTJxKuin/QKcGzXhv4W74zn/B3ifvfuU45eGkx1osJI8bexhxw8e1ija18PEcvP9AUuIfuiS4QTB1VJXrnpJ1Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCZc2oYq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktH5wggp"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso37568255e9.0;
-        Tue, 08 Apr 2025 10:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744132714; x=1744737514; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CiTIXeZwnuUauUrRwauEywvsU+gyTYIu7GFp5cUTyWA=;
-        b=ktH5wggp/d51Xs89bUh7l03uvBSxtCtNk0qjyZ9LhLptwohvL5EsXSATJKciUNz2L1
-         HgxGkSaeCwVgE3iaGTAIqQ6/JJNGIhxiNmiQ5JwRkawv2G9QUOhBuAFobLDwyDG1Lk7Z
-         NHW2CxtgqNVCtKYoX9LAB/jtb6ntINJ26BRyCz0hblozmX+KXHrxp/ujOxk7G/UvCJX7
-         wVM5UPlZuhuygnw7rhsWBeOGN95u3WQBKJTr9E+q40sCyV7ZWVaw+jEyywGfVMHJCRhV
-         fhKbhIMdIxgwLcscHW4g8MRfvm/3SoivcB8gzusstKVUuV/r9o8m1rSSGOqbCqSJoxvR
-         TaPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744132714; x=1744737514;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CiTIXeZwnuUauUrRwauEywvsU+gyTYIu7GFp5cUTyWA=;
-        b=s51yvC0E8jWg78sZ2o+Pt6OVmDEVfpvdkZYuYAqn33xOOFxpQlTfR10vHgS4Z4kRy7
-         qt9FCfr6z7DP/Vl8Os/X0nSq3LnOELs0q6QgA00IwUR4wEXWLK2dfV6E7gFLDmGTbmvH
-         Pp2zB71QtxTmfR7S0kurYoKusGfCFWhTTMiW7+ZOuEu1S3W4zoUhgA4BiUXF0sOXkeJn
-         du6p7MH4yHZ8iAy5PbywjvoKyv8budK9zZ1lw63VhcLeZwb05hbsi7xl6baFZyB4ubxn
-         12D0yUVGJ3TzlwrGSlLnC9KKN+PRjFioG9rKXrWKk+6TEI44C24/7S0gInxjdH+tPZ66
-         7N2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVNhEX7Q3ICHC45iOufe8z5PKujfmSZN78l69z82vTPRhmEtgaj2tSVH0xYe7PsWTiBsgK+tbB3TJBOOwKr@vger.kernel.org, AJvYcCWBtL0RGbnr5xiaA4nUN6GiPeWTuR7Dn3nrnnVFCQD9yj/Ivwbb7wuuWjWbI2sLlYyFYEXN4PiM@vger.kernel.org, AJvYcCWK5pXG/0TSmuT+3mg4ZQXMJ+v51oGXTdKlwvnX2BiNa/UkXkVMZTI75trVLCM5hTE6euTBn55RRhOc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTxqi7zH6sfuhKutUFRcluMqKcsgIS+2PHXzOuacJiovKujNzm
-	nuPs1S9pdhugjwFu2vrT4cBblpwLYTY+dtLFfPyhNXV5022TT38r
-X-Gm-Gg: ASbGncvqwbic9rLQFpi8sK4b2k1/23FACjMJwXKoUbOj8rHZyvhLYjeVKED7+SRHE7e
-	r0GOclqlKw+Xrulcli/GvX1sNU2QEXnp2NRFwruPZ6zgjoSQZNn/bCNO4dPd4iKh8zFp/f5hF57
-	RMUqNAbck9v5qkO63D6UIZRnLMJvG5LrzVF86UF3RzdJlZxMKm5QeZl92wk9nZbnAKZ+MdzKDns
-	GAz3rQugdJfQn5RhStezNEbmE+IrXx02UvNU8sfQ1BfGz5NA9kHrfHVBNyPgtsEm4hfABSz9ULU
-	1OvAHEztB40IFyk+J6oSzPlCH36DTEWDv2jRqocSKQ==
-X-Google-Smtp-Source: AGHT+IEYwDbT9p1L/2oYWlI1MhpjtEFHvct3vhuaSgjgtsPmwFS9knRYrA4BJDAEeuvpZbxKlYVQvQ==
-X-Received: by 2002:a05:600c:3b8f:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-43f0e64988emr40757195e9.15.1744132714292;
-        Tue, 08 Apr 2025 10:18:34 -0700 (PDT)
-Received: from debian ([2a00:79c0:63d:b300:45fb:7d1a:5e4d:9727])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a8d67sm168016435e9.12.2025.04.08.10.18.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 10:18:33 -0700 (PDT)
-Date: Tue, 8 Apr 2025 19:18:31 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Fedrau Dimitri (LED)" <Dimitri.Fedrau@liebherr.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for
- changing the MAC termination
-Message-ID: <20250408171831.GA4828@debian>
-References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
- <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
- <7dbf8923-ac78-47b8-8b9c-8f511a40dfa3@lunn.ch>
- <DB8P192MB0838E18B78149B3EC1E0F168F3B52@DB8P192MB0838.EURP192.PROD.OUTLOOK.COM>
- <04dc2856-f717-4d27-9e5c-5374bb01a322@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCZc2oYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6CDC4CEED;
+	Tue,  8 Apr 2025 17:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744132790;
+	bh=U669dnRQH7czDNzWqUFUuMlBcJP3S6KYnqImh3r2v0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZCZc2oYqjrpZjQFSRgKZfWFz45yphLgC/LSluEpThaHwlfiGRb58xGYvdO3hYJcQ4
+	 PvQwrDkosLvcScbvV45yJkTqaD3zkslnTF2xmERGbqIe8Kz4lEEu/hzp4wa1+rX535
+	 wxThVTsccNPERYXAdv7239tZy1RYeYSFTTPaV7rO4+wlvpaIyFhT6tDRGSK3rcTM2P
+	 1OvlCGWpH126kfYyakDJCErmcyYBpo94G66+xhsh57BcKWFO8zVzj8EdFpVGuvWgzE
+	 WohDiePHf3m3hgy2eNF42NgpMHKLhkUVLTyBFhz4+PhxaT8XkM1GpsqUad3rl2a9F2
+	 pxEs98JoQlOsg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so10477085a12.2;
+        Tue, 08 Apr 2025 10:19:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVlfQ9DkkgyNPd1NrghqZcDSnRq3HlIoyVLSTgWznmmdEDKO2/NwoMNkjmazV2sLTSp2p3/Ue92OpWf@vger.kernel.org, AJvYcCWXcPtOgaHnIqJV68vlKCUNoSVlOBSqdQMApmobazuqtRM/doc0VdQS10iWr0rjfu3e6aAtzKHmLwppdD3t@vger.kernel.org, AJvYcCXRYQDgGPH6yrQaRQE6MEcnyQ4sUs4TI4kQpWR+qzBsw94bMvpyUMWlNVuk6Vd5h8hQIyC0BDKNGeW5hg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKZSILVG4q8XB4IIEfhIZwyUd1bG3xXlraqlJymz+WPPkgAvPH
+	lyPKO9rliZdGRse/47euDrvX3ZWkJKQJYQsdYucIOLr1JPG0Oyt/JVJdkDG0ZMhL+bD6E+KDQ8q
+	9F39KUNFLbB/E5QRLuKV5EQzZFg==
+X-Google-Smtp-Source: AGHT+IGZRWBkVFARy4u9eBhNgtJLapB3TFqzZKxTqTUFfra1UJfhPaSVR0H3Ymc4n8tBpwFrpmYLa2yoknPDb57Ejf8=
+X-Received: by 2002:a05:6402:50c7:b0:5eb:4e69:2578 with SMTP id
+ 4fb4d7f45d1cf-5f0db81be66mr11324732a12.13.1744132789461; Tue, 08 Apr 2025
+ 10:19:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <04dc2856-f717-4d27-9e5c-5374bb01a322@lunn.ch>
+References: <20250407223714.2287202-1-sean.anderson@linux.dev>
+ <20250407223714.2287202-3-sean.anderson@linux.dev> <CAL_JsqLQvyBvOXJJhRcnVAVx81MUf9YwtyZ5VC-whwY=uoeDXw@mail.gmail.com>
+ <52d79db7-f1fa-4695-aeb6-d07d6c2f90dc@linux.dev> <CAL_JsqJ_EqsxrY67OPm+t6tU5ikFA-TZ-fFqHPYQMuy16c_kLg@mail.gmail.com>
+ <2d674a0e-9a54-4315-bd81-0cb3a2fb1602@linux.dev>
+In-Reply-To: <2d674a0e-9a54-4315-bd81-0cb3a2fb1602@linux.dev>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 8 Apr 2025 12:19:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLWAHD81zsWHL-wZqu4Ao8qntSDSwgU7wJ7HuyuSxQXGA@mail.gmail.com>
+X-Gm-Features: ATxdqUHMcL5qfIIZT8rw4kE9fnQMI0i354qvFstiOUw41LgdZIAWdhmhfWysIF8
+Message-ID: <CAL_JsqLWAHD81zsWHL-wZqu4Ao8qntSDSwgU7wJ7HuyuSxQXGA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] device property: Add fwnode_property_get_reference_optional_args
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 03:28:32PM +0200, Andrew Lunn wrote:
-> On Tue, Apr 08, 2025 at 01:01:17PM +0000, Fedrau Dimitri (LED) wrote:
-> > -----Ursprüngliche Nachricht-----
-> > Von: Andrew Lunn <andrew@lunn.ch> 
-> > Gesendet: Dienstag, 8. April 2025 14:47
-> > An: Fedrau Dimitri (LED) <dimitri.fedrau@liebherr.com>
-> > Cc: Heiner Kallweit <hkallweit1@gmail.com>; Russell King <linux@armlinux.org.uk>; David S. Miller <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Florian Fainelli <f.fainelli@gmail.com>; netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Dimitri Fedrau <dima.fedrau@gmail.com>
-> > Betreff: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for changing the MAC termination
-> > 
-> > > > +static const u32 mac_termination[] = {
-> > > > +	99, 91, 84, 78, 73, 69, 65, 61, 58, 55, 53, 50, 48, 46, 44, 43,
-> > > 
-> > > Please add this list to the binding.
-> > 
-> > Add this list to "ti,dp83822.yaml" ?
-> 
-> Yes please. Ideally we want the DT validation tools to pick up invalid
-> values before they reach the kernel.
+On Tue, Apr 8, 2025 at 10:28=E2=80=AFAM Sean Anderson <sean.anderson@linux.=
+dev> wrote:
 >
-Ok, but then I would have to add "mac-termination-ohms" property to
-"ti,dp83822.yaml" as well together with the allowed values ? Ending up in
-some sort of duplication, because the property is already defined in
-"ethernet-phy.yaml". Is this the right way to do it ?
+> On 4/8/25 11:19, Rob Herring wrote:
+> > On Tue, Apr 8, 2025 at 10:12=E2=80=AFAM Sean Anderson <sean.anderson@li=
+nux.dev> wrote:
+> >>
+> >> On 4/8/25 09:00, Rob Herring wrote:
+> >> > On Mon, Apr 7, 2025 at 5:37=E2=80=AFPM Sean Anderson <sean.anderson@=
+linux.dev> wrote:
+> >> >>
+> >> >> Add a fwnode variant of of_parse_phandle_with_optional_args to allo=
+w
+> >> >> nargs_prop to be absent from the referenced node. This improves
+> >> >> compatibility for references where the devicetree might not always =
+have
+> >> >> nargs_prop.
+> >> >
+> >> > Can't we just make fwnode_property_get_reference_args() handle this
+> >> > case? Or why is it not just a 1 line wrapper function?
+> >>
+> >> fwnode_property_get_reference_args ignores nargs when nargs_prop is
+> >> non-NULL. So all the existing callers just pass 0 to nargs. Rather tha=
+n
+> >> convert them, I chose to add another function with different defaults.
+> >> There are only four callers that pass nargs_prop, so I could just as
+> >> easily change the callers instead.
+> >
+> > Why do you have to change the callers? nargs value won't matter
+> > because they obviously have nargs_prop present or they would not have
+> > worked in the first place. If behavior changes because there's an
+> > error in their DT, who cares. That's their problem for not validating
+> > the DT.
+>
+> Because the change would be to make nargs matter even when nargs_prop is
+> present. For the sake of example, consider something like
+>
+>   foo: foo {
+>     #my-cells =3D <1>;
+>   };
+>
+>   bar: bar {
+>   };
+>
+>   baz {
+>     my-prop =3D <&bar>, <&foo 5>, ;
+>     my-prop-names =3D "bar", "foo";
+>   };
+>
+> Before we would have
+>
+> fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "bar", args) =
+<bar>
+> fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "foo", args) =
+<foo>
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "bar"=
+, args) ERROR
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "foo"=
+, args) ERROR
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "bar",=
+ args) ERROR
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "foo",=
+ args) ERROR
+>
+> and after we would have
+>
+> fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "bar", args) =
+<bar>
+> fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "foo", args) =
+<foo>
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "bar"=
+, args) ERROR
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "foo"=
+, args) ERROR
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "bar",=
+ args) <bar>
+> fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "foo",=
+ args) <foo 5>
+>
+> The problem is that all existing callers pass nargs=3D0 when
+> nargs_prop=3D"#my-cells" so they will get the new behavior even when they
+> shouldn't. So if we change the behavior we have to change the callers
+> too. If we make a new function with new behavior the callers stay the
+> same.
 
-Best regards,
-Dimitri Fedrau
+It does not matter! It is not the kernel's job to validate the DT. If
+it was: it does a terrible job at it and we wouldn't have needed
+dtschema. In your example, the change actually makes things work
+despite the error! Why would you not want that? No one is relying on
+the last 2 cases returning an error other than to debug their DT.
+
+That being said, looking at the DT side, we have
+of_parse_phandle_with_args(), of_parse_phandle_with_fixed_args(), and
+of_parse_phandle_with_optional_args(). We should mirror that API here
+as you have done. So to rephrase, make
+fwnode_property_get_reference_args() contents a static function and
+then both fwnode_property_get_reference_args() and
+fwnode_property_get_reference_optional_args() call that static
+function. IOW, similar to the DT API implementation using
+__of_parse_phandle_with_args().
+
+Rob
