@@ -1,61 +1,69 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A237B264A90;
-	Tue,  8 Apr 2025 09:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50FB1990CD;
+	Tue,  8 Apr 2025 09:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105791; cv=none; b=qsTWT8JN8w/8q4lZswMEaKCKSShRY2Uf3e4Byw2gsiihOUB6BuYg1+nMiHwF+ZDxkqT2Iomv7g3UpHZqNnK/fOhVyRAPe2u36G9YZqMX1NeyO5QmOr4Yoiq7N8gFFtETXQFPQxGWDkTyxie9DE5/yAJP5ABiDAStL0Yh53FWM5A=
+	t=1744105848; cv=none; b=mINJxOPDCyCoyo/ZcZ5iHsTVproHfKGAEdaOe7YS9Q5z0sbyFAJVQnvtqdY2TA4EyckL3TVfMO6CuKtBmNvvIYPP4RN3v3Wny3vKRGOl3LgCmkrQNgIkMO3cwdeYw9k7tOBSYhQtRnevttpYOs+iava+LN2/vBF8aa9mWsSlrgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105791; c=relaxed/simple;
-	bh=bFCnm0GdpJ+8/3SW70uX/rfhSQ34AaKkttnigv8qhE0=;
+	s=arc-20240116; t=1744105848; c=relaxed/simple;
+	bh=YHbID0FrCHDLzavxWJAhu47qwRiYUen8pQ4cY+Ru+ZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lZid47tF2RMd6GeQJ9tG0K/PwuCCqdcprQz973CSrS60xwwJ75yqEqzQ6UXJ9pOz38yxsQnvsoMuBzaHrcwTZ8GCQgSAWuXmrg8ixZ2rRQYKCHSefQY8TIQ04i6WbsJOJ5iaxof2O1NpoAXP9FWWYbae8k6PBfaoDmX1X6ijHp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yY0X+bly; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVbWVcGdiFTLtDgUlTLFX7ljBEsK1hZkxg9v9auIgMftPP+5diS75bpL0VZyu4t80e1WDgdVxFYJ8Ciu3hPWHiiffTJXnjx73ufaIR2oXMT8tlIw1na6Nl/bQKSwigejQbBYSoKifBsGCnalNoYqMAi1E5VHvGo9KIG4k0uAn+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kckkb1M/; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yY0X+bly"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yNuzb0y3T0Wr9cRTZpqL81gOwuVIgxYtUC+nntQrY6g=; b=yY0X+blypVlqRanJe9AmzqVx+t
-	JWcrcd3vYieIy/0O4hHwUoYk9NkjROSPRA5cABgJEbwmyAELET7XOLRFidk44K2hYU3dx/iHazCzs
-	RlS+JfOYwfXteVUYGlJWF1NP5jvm4Lj0Xq1Cau4Qwxk3X9Gt4uJLyuANZaPowzZFIkIyqtlXe7yvP
-	4zc+IYBvvOMexkFQDu+SMn2dc+1AQRCMrHKD68Ze+S2CkJNvSoK+CS8soDYO7y5YpZnRi6tX2RZr3
-	adFICd3IG+tT8XIi9kAazsJGJqPQrTLAwIgzVahoSsIE4W+wLQqj5RKPiAoe3j8Ts5Z+2b/8Oj21X
-	1lT/yZag==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57402)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u25aH-00075W-1p;
-	Tue, 08 Apr 2025 10:49:33 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u25aD-0001K4-2M;
-	Tue, 08 Apr 2025 10:49:29 +0100
-Date: Tue, 8 Apr 2025 10:49:29 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: dimitri.fedrau@liebherr.com
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dimitri Fedrau <dima.fedrau@gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: dp83822: Add support for
- changing the MAC termination
-Message-ID: <Z_TxKajbkVFOdPvq@shell.armlinux.org.uk>
-References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
- <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kckkb1M/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744105847; x=1775641847;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YHbID0FrCHDLzavxWJAhu47qwRiYUen8pQ4cY+Ru+ZM=;
+  b=Kckkb1M/zM9t9rhGOP5DeF/aL78VhfqLD5w+yE3jPEBfHmT7S4/IAvwH
+   BHKXkKCKGN1HCTdQoaUUleD1DbxPI+DWooyl5LZ5gr40KAKGpahPfl6aE
+   41dOiqZLVuA0aeWsjLGG3JIz+cLTgARAUjsWSlq0H2GT56cPuwwbTaAnN
+   hf044yY26OY2AjyXJbNv7QrwpDQKY0/H4AALNBpjLXyAiHwNgsVKrAYqm
+   eOpwfEphuXfMxVfy4lAFyxYGOcAwIsRNfKHPiLmcBaMGv1XMduly7yyg9
+   pxt0Szy9LeVH45hPJ6AAeyO4neExZR2Jxztn/JDS5kpynzuvbN8aISI/O
+   A==;
+X-CSE-ConnectionGUID: cW8pPFPbSqSPEgmB+mIF8w==
+X-CSE-MsgGUID: syydRR3eR2aaRJBoPN5Gbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56898627"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="56898627"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:50:46 -0700
+X-CSE-ConnectionGUID: W8KfBm36TpCiK1rUHeFj3A==
+X-CSE-MsgGUID: hyc+BelCT6SHOihRe1cEmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="127960749"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:50:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u25bL-0000000AMHS-2SM2;
+	Tue, 08 Apr 2025 12:50:39 +0300
+Date: Tue, 8 Apr 2025 12:50:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/1] device property: Add a note to the fwnode.h
+Message-ID: <Z_Txb26PyxBPM5oU@smile.fi.intel.com>
+References: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+ <f6dd3667-8528-4597-963f-75e78d7be733@icloud.com>
+ <Z--yNPfIz7TqqC42@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,22 +72,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408-dp83822-mac-impedance-v2-3-fefeba4a9804@liebherr.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <Z--yNPfIz7TqqC42@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 08, 2025 at 09:45:34AM +0200, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On Fri, Apr 04, 2025 at 01:19:32PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 04, 2025 at 10:59:41AM +0800, Zijun Hu wrote:
+> > On 2025/4/1 00:35, Andy Shevchenko wrote:
+
+...
+
+> > > + * The respective API headers should
+> > > + * guarantee all the required data types and definitions without including
+> > > + * this header directly into the driver.
+> > 
+> > device property(include/linux/property.h)
+> > 	       ^
+> > 	       |
+> > firmware node(include/linux/fwnode.h)
+> >    ^           ^         ^        ^
+> >    |           |         |        |
+> >    DT         ACPI     SWNODE    ...
+> > 
+> > For various firmware implementations(DT|ACPI|SWNODE...), i feel we may
+> > allow them include fwnode.h by their header or source files.
 > 
-> The dp83822 provides the possibility to set the resistance value of the
-> the MAC termination. Modifying the resistance to an appropriate value can
-> reduce signal reflections and therefore improve signal quality.
-> 
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> That's the point, yes. And that's what exactly I put under the first sentence.
+> The device property providers are not the leaf drivers in this sense.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
-Thanks!
+FWIW, Rafael proposed better wording which I'm going to use in v3 in the header.
+Commit message would be similar, though.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With Best Regards,
+Andy Shevchenko
+
+
