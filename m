@@ -1,99 +1,135 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DE3261565
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571C325FA34
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096895; cv=none; b=IYelxIVWh5k+MpOdCDcW85qTxVTDBNm5OziC1QT2SG5YvaALJExvpqn0yQTJgdEmi1qCM6Q3Z06X9l8tfoHJiXnnwW/rMGNEq9mist38SHNQNssbG5G/MFcwwsgeg4uvU2L639WIlO/4P4w67NPg3FLyHRmt1Ik12BbQwuB6/j0=
+	t=1744097006; cv=none; b=Gp+oBUg8h141HuEDNMaNyIFyGJi2WPazk7QJoUryRx+pROg4WYPK+M/8nh7lUcbN/81MRUPKhg+2Y+lQI1uShXGu4knUE4lPyTswp/9GkYHTuCfKdYgkZQH6GQ9lzJxHSeq9EMLV1jUjTOa/Y6K8DdxENrW/U7hOKzICTXiBftE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096895; c=relaxed/simple;
-	bh=GAYhAibCXnT2iIMaWhc53SkhgEeh2oob6G0EF+LtTIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X0CZIZj4aIJ03zI2En+NHf8QJWQiNWGcKa7xTTLjvF84X8Fehg9XBTBh/50NS0yBDvrBAmMpbRfC+4GlWEG3US/jM6sb95y7T+jziuTi3SYT7m70g4LUFhfBEOtgR2B4ZF4bDw86yPDQyNJV842+YVMvI1F2eUayT5zXLrCUUq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TiBYXLdh; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744097006; c=relaxed/simple;
+	bh=1pHaIND2KYP7IQR016ZtHvkE+J/KYHTFCXPcGNsWjjg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M9ubdfM7HQgJmdpRWmre5B4tlWh4ckTUuZKs9rXlli0Q1nD0Y+mHXSvDBXDoi9Kux7dpJNLouLkooT5r8qvxY8UPJ4aBMZZ3fPhj1eWNgOrJnE3BwYgG382VYhHEIU7OMLHrx0KV69JW+XpmiiC7Ql2k2+YupB62uY7Ro/vOuK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sRcFrueT; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiBYXLdh"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaecf50578eso834322766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:21:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sRcFrueT"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so51277915e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744096892; x=1744701692; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9/9wBcdi+1ChLSfZxD60WKrjeGjQc/e4DMdb0/Izcq8=;
-        b=TiBYXLdhAgyDFl/RD0gNuICoCGUXyq3XBR41KbGrp7+Rnsufgdxi4uzTZQB+KnIBXg
-         mpA+aVj79TI6J4lL0+obRqCBsvh7+wJgEEojfNo4u1qFt5kpg9gKO3NU4dd8qx01kTOD
-         VUfnYt1S/6eNdjwKV61vCY6GydgWJjlbTfekLOTz174LP6V4aKPBzOKu5CcsTqYNS+NC
-         DdV/A4t8VjqaCaJLazyFt0VgsyY2sFN11bH5VB1q+jQVugJhlybVq3L+LOyyGPVMl9zg
-         4rFIWghCWLnJsTkX9BcRW9K4kJhO2SKX+dgvIaIlTY5ZVu+juS84l3yaro9izR/8w59i
-         4u2g==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097003; x=1744701803; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o6prcSe997utkmrj2Wk6sqfMRushEUX5sURGCDCfQ/A=;
+        b=sRcFrueTQ99Ls4ZePpZRhqqjFiEhdr00YQ2x18TcI754TcEF/sO+fins1dCOC9nfyA
+         GXfylqJEnhiOzZ7j/dCTQE89Vi30wMuU8NMDruU07O7Iy0w6c4LHourIbNGVIMFKlLv2
+         2eJI0KM42SOTKWTTlDPtGcTXiYdNjUHf6VC2VDIyY36ckfSOp8S4LzbA8YJK9Ln/Q3Ql
+         GRetzl4AwxI0xTaQNbxa+55+RPyOKq4phmGXNju11NvLg/9A54i57Soi7lHoS+AKhsiT
+         Xr2mEs6tv+i89rS9xh8jA0njfa6mhkmfdm8TXVDoCj6ByYOLgpd8kvKy/Svw0GNfVrTW
+         xW9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744096892; x=1744701692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744097003; x=1744701803;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9/9wBcdi+1ChLSfZxD60WKrjeGjQc/e4DMdb0/Izcq8=;
-        b=bjlIZJiNt1B0Q9jo0cdSN6APhsW3k2Seos820/6aTzWev1SYa0cm+17r2vlqRjvMHZ
-         Yg1+7OMOorbK0uevExWYEuTVn9X8IlW0txOX5XNtU0Yu7wm4i/aK9GPFUkyUA+TrQ8MW
-         B1uLmWAU7zNFjKUwNSMFCQzNZuHz50SBZNdyN+Nceefo0Whg6Lf0srB9O1cj6nJyNd5b
-         /xmLCs0UaL4Oc1H3rTpWBPLzV5gmBrNCh5oauumDcI/Z06eMsNRbjuKp5gd9hnOm0W52
-         58xQ7bq14l48rMpreXG34D4uZuPSgIJfzuKKxAeQklV7SOq+33OaAc4NnBUjDvj2EXwD
-         VLdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIly7SGOZY1Cy+Ofxqp07S0DoM6CIZdbxHQ0AqFMxG+Sek4V6wp4FygelI8NJZtRMma/mG8pqVwMGuwhc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRRAWZ7MnYtHfB52D3xAAXDJaIOWfh7V36HRNIf9Lef0aDVdyW
-	4AshNJxOakOW8Ck0YXJf7e+jve+XtLEtlZNblJ4itu0VaFGszyHCV/xskA+F57JbMRKQixdGwpE
-	WdA4KAFfgVLlmVsQH3K/pQ3n82is=
-X-Gm-Gg: ASbGncvs0MsCe1ni5TBy+TNHxKkNmNB0oSmPA9EoPptH9p/vbcBED4Uz721jvVRUHB6
-	OHfw8764vixmVxr51uZKOuY6AtenIgPF8pKUCm0HbVMSHjHKZmvqdqdy6hQ9GyjNlzvgJDaaOqs
-	SO1QvFTYf8ntOxCm2nh4cYdNTFtg==
-X-Google-Smtp-Source: AGHT+IGSP+aFSQIOdfdECZNfP2qZ3tPc3LXJOlFI/NIKtemYfrFu6w7o4mQVVgOhgKfBQfD7PKtLQjGVQAodmYu7FlM=
-X-Received: by 2002:a17:907:2d11:b0:ac3:413b:69c7 with SMTP id
- a640c23a62f3a-ac7e76232e7mr757236566b.39.1744096892130; Tue, 08 Apr 2025
- 00:21:32 -0700 (PDT)
+        bh=o6prcSe997utkmrj2Wk6sqfMRushEUX5sURGCDCfQ/A=;
+        b=baXiq/04ujPd41P3VhGqEvmtd+r5xdIRRMDN3t6RS6zeW78APjT5ICFX+CYzj2CZ1o
+         qBES7gSiTmp3qtu8t3AjP8aOiqrZuk3mgD5XN6VkeHiieKVPvotxTlOck9DtTkIM/exf
+         V8LOsgCpt680Z+bhmsJg5JgSEAA67ov2aLEabkko6+/atN9A9+Z9FcVmw9M8+ZIj1gWx
+         7bGBwkTLFOtA6GkA4BPLWB2AfzE7yWKtK6+13s3sUZsc+JLnjMSnT+DmUXAXyoJj7F7H
+         SExIg+N/F0/4ofajJW7Zwqy4AEOQVtNoJfgklfgy7zkT0HCt4zKYFmhssSR4Ti8T+fw/
+         7MYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwj3ftjQfx+Ip0Mi5JBJW0XxD19eyZkXgxayzmg3N4Qs9xnO+dQ5rqkqBxtZ9msyRhQtMdYzJTAZTuRms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYCP5FQoBE3Wyv1G/lP4mJcXzUoA550P2qhzRU91SWqVdGSo5m
+	mRLHZTtiTZvQuMotQmiudEvtC3QFHsV7Bi98x6GAl7MbhOhY9F7ywEb1YMsSrxLCId7pClUFp+g
+	eyd4=
+X-Gm-Gg: ASbGncvvAzeO1tqCL1+ks3vGFE20FKaWdE6UJq0fa2LuH2u3KPEJDPkWICAoYbwB+GQ
+	wUn0Q/7G9jxmxZ+ktQ2MRqiMAo/60hhrRDxzSb+J8V8vLYCMQBOTB+cEI+HYIBC2/GpD8bqaV43
+	gN4LNzoFZmmXPGWlGsqclDZG05QWiRhOTrE3KF/OEexRvi6FjZS/1V5uD8+gE78QT6qbC2xo0VX
+	J9Ro3qF3ZV32KObcE2H7Q2eMtfcHwxZAJikyq7tdhG88lQqpowg1SOfNfLZMfS/Js6QCRtF8Av/
+	km8xrO7xWv005HQ1aDz4FpxwR4PJxLj9W7G5Yg==
+X-Google-Smtp-Source: AGHT+IHzySH+p8lRsbpEKp8XdjRw3BmN8WdHjMLgCKHMXaLLom4rGv3xsF4growXW8khurtrZ60whA==
+X-Received: by 2002:a05:6000:1846:b0:390:eb6f:46bf with SMTP id ffacd0b85a97d-39cb36b298fmr15212511f8f.5.1744096677281;
+        Tue, 08 Apr 2025 00:17:57 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:17:57 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 08 Apr 2025 09:17:44 +0200
+Subject: [PATCH 07/10] pinctrl: sx150x: enable building modules with
+ COMPILE_TEST=y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
-In-Reply-To: <cover.1744061673.git.abrahamadekunle50@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 8 Apr 2025 10:20:55 +0300
-X-Gm-Features: ATxdqUHFeb-mGDJkzsYgq3knAo3STMDoWq9TflHo97hzR-vPrqFymzz6p1lSzGA
-Message-ID: <CAHp75VcCdS30LHPMwk3HO1o6db_0p+LDQoASx-7oCVw__MpMdw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] staging: rtl8723bs: Improve readability and
- clarity of sequence number wrapping
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
-	julia.lawall@inria.fr, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, andy@kernel.org, 
-	dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=667;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=YmzRn8TzGA6hsDQ4Ls1ViAlvgo7b9jMn9Wlo//Y9vfE=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2a3aI8tyRJWFB0j50+lYKjuGbu/ifeaeFQ/
+ 4M0t4m17MyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmgAKCRARpy6gFHHX
+ cnJ4EACh4EPB2PiBQrpFxrQpn3I5/hHOewyCLs6D3bGW26OisrbJ6BrXg5SN88KZnurmvDHsuP3
+ MvwP+6leXhNTitXtnj5TQxtJin6NVZ0Al8MJyd9xwa21k8YTlRMm7rgA4Vx9CNvjDV9gf5XOdBF
+ o3JYv1QhJr/SgcdkDr5Ox/diUgdt5Z+bjO2zMLW0i90TN8XxW/blNaWT5xnj070aBbwHIva6E+l
+ v1y1VlHp/I4MrpZmV4MtqxBFHCOAQZEOd+itR+n/S8LP50+qens7NAVqfZhfaQQ7KSmLbRKJpm5
+ kiG1CDXKTkVqJunSULnVtRahqu1J6ZcmwDJeXTo5PtKQZiFIlUHRjOs60Av24wdhwd+FY4ptQOp
+ pU+EYeQcKSLcEMkga3AqSlN+IrU5XJAo9Y4FLczzGc6/9kTe7Y/MLq04J3fmVsp5KDuJR98aytJ
+ 6m/1/sJrIyiE38hKgq9Ta2I/s9/NjynRehGmP87FTcRsCV1bnl97G4/o6CZtPg/knk7WmCFCogS
+ WBIkWDQrNxAYw16mjSeY+350vXO3jYh+7OIbRVqdjqYiZKSAy9A2h4HULcXVra+fEX2z6ALsNmI
+ gsWEWEJpEXYy62lnL9J9OTf1+ihsnQZFt0jOnnge9cZzyJTQW7bhCj2GDkVkcgK5wezSQQbuork
+ C6IVZWbEkEfQnFg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, Apr 8, 2025 at 12:54=E2=80=AFAM Abraham Samuel Adekunle
-<abrahamadekunle50@gmail.com> wrote:
->
-> Tha patchset adds spaces around binary operators and also
-> provides clarity on sequence number wrapping by using a modulo operation
-> % 4096u, in place of the bitwise AND(&) operation & 0xfff.
-> The patches are required to be applied in sequence.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+Increase the build coverage by enabling the sx150x modules with
+COMPILE_TEST=y.
 
-> Changes in v5:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is v6. Are there any changes in comparison to v5?
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 464cc9aca157..94eb41bb9cf2 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -541,7 +541,7 @@ config PINCTRL_STMFX
+ 
+ config PINCTRL_SX150X
+ 	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
+-	depends on I2C=y
++	depends on I2C=y || COMPILE_TEST
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
 
->         - Converted the patch with the subject "Use % 4096 instead of & 0=
-xfff"
->           patch to a patchset.
->         - Added a patch to add spaces around binary operator.
+-- 
+2.45.2
 
---=20
-With Best Regards,
-Andy Shevchenko
