@@ -1,117 +1,112 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50B72AE86
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DB513CFB6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145178; cv=none; b=JmaHm7Texe8V+vdqjrwEPqakqFwixWYchlC3x868BRq2B6mJgqnClRl9AovgxW40t99NSLXaMopuD6Ty7LNbLe4JFGIwwqhHAXpi3y6wKJy8feNDapnmg8MGS2jUKXIEiVep8CDLoVG/lAvFdNZ9FAy3FEIb4O1II4tRyEAyj9w=
+	t=1744145202; cv=none; b=sZm1MvRR7EvH90Cy612TIL4UY6R7AcakBpFNk9tEZy/FCPH9qwRjv2OBVfBgZLO7QA6h2/cY1qoZRsoHGNly5s3ir4gxld02MKXSDe7yNAs+i/VGT2Rx2xuSHLnMNIy7a7d95vLP+ybTQ7Kk/8l08dbuLQWZLqtkOkQqtrTmHB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145178; c=relaxed/simple;
-	bh=93eT2rpamlxVc6aFa/l0LJNv4i5WbwKqNk2fS+xc8CA=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cLlV83o5ANNxfdTgrhuEOK5IzyRCCLN0vIDRr+STehxs77bHLdM3Qstz+2abtyOgUnWsTnnjzaq5A8WHZD/tddqNz4RQu7H5DCoCbCfyxm6EqmTv+FwijUlCtKk9dGQibX75AvvAMomGsYHUcWwil0ouELtcErmIb0U/1/mlLdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=I9cDpkoL; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744145202; c=relaxed/simple;
+	bh=pygF+ZSdbKYdFeQiu6iveVNCcysYlRcyT9rck4z6eiM=;
+	h=To:cc:Subject:MIME-Version:Content-Type:From:Date:Message-ID; b=ikQ3MK6a2+HUvgKhkJ74174Lhi6Jhdwz/GVnRpyuWkhKAdfaNCBvLLzckB6NdzNU3f3ocSSmFF5G7Z/dcXMuGgKftF8ErYmSL0uUD7BSIQRLj1D0iO7VuTvYIy5vV5aBqje4vvigaw/HQJUh93hRwyRrhEOzAJZRnpFlmHLA+jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGXqeYmt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="I9cDpkoL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744145170; x=1744404370;
-	bh=YYLiZ0LCn/fJYeBcV4Bc2RbLDA4OTOnCGSvl/4wo+9M=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=I9cDpkoLAszJNlLR0vodgu/FnX+lm+1HD0KgITHUevObv1p1/UIDHDe2L7YsEAAtR
-	 XKSmcGkUI5btNWBZn1LdAWzdzsay3ERVFSIXsxWxomonds/9+QdXKuEBXoZ+dNiXcN
-	 EqyNxNz9gGR/lKx1I+EXeSh3sjCTb1mEIDP5G5E7bi77wkhdhxMR83RCeqJJw8jet4
-	 WzBtAkzjcDWjwC88UlWWierMgKyEsal/jMKcVGJzLqkR/ktaxrM8p9rzkWLTLf/mlf
-	 IG5rQL+MxGvRU+6ZuXC4nrQnVpNO+kULIbi1itf/fz9xUKi53m5/VPVQCBATDDWtpw
-	 5rcSfz3X9qrSg==
-Date: Tue, 08 Apr 2025 20:46:05 +0000
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-From: dmkhn@proton.me
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v1 1/1] x86/early_printk: Use 'mmio32' for consistency
-Message-ID: <Z/WLCdZlg4sebQ6i@kraken>
-Feedback-ID: 123220910:user:proton
-X-Pm-Message-ID: 43a1fb498a3fc80da4fbec0bfdaa7fba09367345
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGXqeYmt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744145199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xU+rcssVzd6sgJjw8xmnFPHxLXA9Q5HvfNjc6qmn0+4=;
+	b=iGXqeYmt2hSeXZsgj4Hkt5joXO7Ox+Z4ZSPd/gl7HZDIV7sGw23PUcvnKWgWM91QmSDOHT
+	zxRLjUlms4t0JADT/ji1cdnEF6IpDxdfmN3BJ2bzcRR89bbHELBibB81r7aE02Q3cs0XGY
+	nLeve8TgMkOt95S1+7GLFxJc67YcQUM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-212-fN4CTezkOKyou8zZWjgMlw-1; Tue,
+ 08 Apr 2025 16:46:35 -0400
+X-MC-Unique: fN4CTezkOKyou8zZWjgMlw-1
+X-Mimecast-MFC-AGG-ID: fN4CTezkOKyou8zZWjgMlw_1744145193
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7679F180AF79;
+	Tue,  8 Apr 2025 20:46:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2037A1956094;
+	Tue,  8 Apr 2025 20:46:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+To: Christian Brauner <brauner@kernel.org>
+cc: dhowells@redhat.com,
+    syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com,
+    syzbot+8245611446194a52150d@syzkaller.appspotmail.com,
+    syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com,
+    syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com,
+    Marc Dionne <marc.dionne@auristor.com>,
+    linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] afs: Fix afs_dynroot_readdir() to not use the RCU read lock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1637993.1744145165.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+From: David Howells <dhowells@redhat.com>
+Date: Tue, 08 Apr 2025 21:46:29 +0100
+Message-ID: <1638014.1744145189@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Mon, Apr 07, 2025 at 08:22:14PM +0300, Andy Shevchenko wrote:
-> First of all, using 'mmio' prevents proper implementation of 8-bit access=
-ors.
-> Second, it's simply inconsistent with uart8250 set of options. Rename it =
-to
-> 'mmio32'. While at it, remove rather misleading comment in the documentat=
-ion.
-> >From now on mmio32 is self-explanatory and pciserial supports not only 3=
-2-bit
-> MMIO accessors.
->=20
-> Fixes: 3181424aeac2 ("x86/early_printk: Add support for MMIO-based UARTs"=
-)
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+afs_dynroot_readdir() uses the RCU read lock to walk the cell list whilst
+emitting cell automount entries - but dir_emit() may write to a userspace
+buffer, thereby causing a fault to occur and waits to happen.
 
-Reviewed-by: Denis Mukhin <dmukhin@ford.com>
+Fix afs_dynroot_readdir() to get a shared lock on net->cells_lock instead.
 
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 5 +----
->  arch/x86/kernel/early_printk.c                  | 6 +++---
->  2 files changed, 4 insertions(+), 7 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-> index 76e538c77e31..d9fd26b95b34 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1407,18 +1407,15 @@
->  =09=09=09earlyprintk=3Dserial[,0x...[,baudrate]]
->  =09=09=09earlyprintk=3DttySn[,baudrate]
->  =09=09=09earlyprintk=3Ddbgp[debugController#]
-> +=09=09=09earlyprintk=3Dmmio32,membase[,{nocfg|baudrate}]
->  =09=09=09earlyprintk=3Dpciserial[,force],bus:device.function[,{nocfg|bau=
-drate}]
->  =09=09=09earlyprintk=3Dxdbc[xhciController#]
->  =09=09=09earlyprintk=3Dbios
-> -=09=09=09earlyprintk=3Dmmio,membase[,{nocfg|baudrate}]
-> =20
->  =09=09=09earlyprintk is useful when the kernel crashes before
->  =09=09=09the normal console is initialized. It is not enabled by
->  =09=09=09default because it has some cosmetic problems.
-> =20
-> -=09=09=09Only 32-bit memory addresses are supported for "mmio"
-> -=09=09=09and "pciserial" devices.
-> -
->  =09=09=09Use "nocfg" to skip UART configuration, assume
->  =09=09=09BIOS/firmware has configured UART correctly.
-> =20
-> diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_print=
-k.c
-> index b70e6e99fb17..dc053641698c 100644
-> --- a/arch/x86/kernel/early_printk.c
-> +++ b/arch/x86/kernel/early_printk.c
-> @@ -424,10 +424,10 @@ static int __init setup_early_printk(char *buf)
->  =09keep =3D (strstr(buf, "keep") !=3D NULL);
-> =20
->  =09while (*buf !=3D '\0') {
-> -=09=09if (!strncmp(buf, "mmio", 4)) {
-> -=09=09=09early_mmio_serial_init(buf + 4);
-> +=09=09if (!strncmp(buf, "mmio32", 6)) {
-> +=09=09=09buf +=3D 6;
-> +=09=09=09early_mmio_serial_init(buf);
->  =09=09=09early_console_register(&early_serial_console, keep);
-> -=09=09=09buf +=3D 4;
->  =09=09}
->  =09=09if (!strncmp(buf, "serial", 6)) {
->  =09=09=09buf +=3D 6;
-> --=20
-> 2.47.2
->=20
+This can be triggered by enabling lockdep, preconfiguring a number of
+cells, doing "mount -t afs none /afs -o dyn" (or using the kafs-client
+package with afs.mount systemd unit enabled) and then doing "ls /afs".
+
+Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand")
+Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
+Reported-by: syzbot+8245611446194a52150d@syzkaller.appspotmail.com
+Reported-by: syzbot+1aa62e6852a6ad1c7944@syzkaller.appspotmail.com
+Reported-by: syzbot+54e6c2176ba76c56217e@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/afs/dynroot.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 691e0ae607a1..8c6130789fde 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
+ct dir_context *ctx)
+ 	}
+ =
+
+ 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
+-		rcu_read_lock();
++		down_read(&net->cells_lock);
+ 		ret =3D afs_dynroot_readdir_cells(net, ctx);
+-		rcu_read_unlock();
++		up_read(&net->cells_lock);
+ 	}
+ 	return ret;
+ }
 
