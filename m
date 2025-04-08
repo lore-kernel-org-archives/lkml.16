@@ -1,346 +1,307 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2043.outbound.protection.outlook.com [40.107.20.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CF8207A3B;
-	Tue,  8 Apr 2025 08:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101925; cv=none; b=GD5jzVKXar7HXFgUb73Q1SppUBoslTzqjsbDt2DbGtGTxtPVJOryVTjuJQKp5TzgBH8TJX3s3ood9mw4td5B6uNdMpkI5XZNd5HuaqEFbXZGUEtKbpRkSuJ2cbabWaW55mYn7QCtBKhXaLoSIlVrmoPna1q7fNlKs9djP72Vgok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101925; c=relaxed/simple;
-	bh=UyttxanaDE8PLZbdCVTsVkGW8nCbK9xgK5gf7kIPiyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jyBOlYE7LcUsxFdNnWSMJXZk462/3jOA5Ma/meirJLsu7BF8zoozZaH98cai2iYZJqIJxECmBKcTV91N267eL0TDdZNata6OXeoQ1nyz5MkT38NNQDe+Q2Q8jJa9zGfNtr6l6skLsbq5WxVdVRKpuD6u9HPiwpowmBUSlLNJsrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0vZfpQK; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CC22641DC;
+	Tue,  8 Apr 2025 08:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744101930; cv=fail; b=FZXY0zlGQSh1HqBt+zHl3dZcCIdd/rYEm4xHcnQptXkH1kF9NTMU4SNSrQumJe727mY0sYQsXBS+um/3Te0TZ7/tW5Vmlux9SPD/zU/hTaiMejfBly6SWAmK+ZGfOJ9pDflE5+OoRMwp2BdGJ+qkPC6WcfhxtfSblpBq9ylTrBI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744101930; c=relaxed/simple;
+	bh=sDTkEQgE3Grazoznxo8RnVPAD1TB6kpvA5n/2nzp2nE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hcNR3+8zEv8zEpmQth8H8zvKkFhUgLuMRWoJHIY/GJ9rdQpGtpAKmbiiuEQUmtznGR0Du6mzv2mJ5I3F6ycdedeSwgFF6eva5OmFmWvsfI4JtSmBaj546a9352RryV6uLDEyokA/QmYPT1L//XdVys9qCpra0rE2CWGfk4yhMUQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=QfOSMcf2; arc=fail smtp.client-ip=40.107.20.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0vZfpQK"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so5592261e87.1;
-        Tue, 08 Apr 2025 01:45:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744101921; x=1744706721; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A+2/WqFrd1i5f0K477n/XbLG+Y4Q1hZAW8vs2niplds=;
-        b=L0vZfpQKMc/INBH8D2kXuGN59bllEWGEkwO/dkssopL63riJdZMPlSjXSbomaR58Yh
-         9D5UFnHfk46yG1B7eibAHNqV4Cq+tZrJzdPwAl7g8w9RuCcI43ElVeE3XEPBzXwOVVdY
-         3AMoBpH3bok0itqaimEt6MZVe2Qc7sJcX/KL9bmpFRHWDKoTtBTBMqkD4BXsBl9rDZuX
-         BN5sGxfaZUsPjSve+3ChNitZF+KaHWBIQIntZ1JjgqhKp6qmnLfsccmrkGUIAhX2sefR
-         rFXz5Ok88L43jj3sRL4QjhVjST9s67xLFjld4NBntBaKvsPD5bDyKq2iiYq7XkPXDPgD
-         y8vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744101921; x=1744706721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A+2/WqFrd1i5f0K477n/XbLG+Y4Q1hZAW8vs2niplds=;
-        b=nYuJY3GvtN7yDXOFPdX4InqYecdQYoTJRsxGm6KPu3e+GZsjdUdYzWswLAKUhlYFA5
-         X3ccilVNZZa4u9CpIGxuYavkzeW0wKheANBlhbjAAiwuyTJYdj5LQIvWSJF985e7itNP
-         MKHlfUYLx7ygIe0hks5zolhzAT46DdFw6oiDbn2DWHozRybnf83AwzAxTABp5QWqORjA
-         8crHjWvSWqEMQ5NtHkvnS3bncpiAP86+O9FK2iFcRvzZo5K/1DQrUyICdESdtYFtbUqD
-         EDeK1e1xZYTCcfTjMHHRY/cpkbSliCcEAJwri4972DtJBn5jvLLOCxkXYj9GhnPivrr0
-         x30A==
-X-Forwarded-Encrypted: i=1; AJvYcCWlCEk+p+rdhZ809dc1StZBVturIdfxfmAvSKHExYWJzbZz5ptEzKSiQ77htxrmCRNz70gELhYQSwnwyy6R@vger.kernel.org, AJvYcCX9KD1Xvdd6xru40DjSTY4eWxXbx8CaCNF+QQ9Frw2+WeGfJLSWMJY5+pstH8OYXIgrf18ccwRx7dcz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws1A3eCnfW8Uy/U3I8wXG9CZQ4YLsJnXgYzsrr/h615iGn4lsO
-	Yv54YK1cMsFBZkLlpbzXdPQf24UTY3kAQV2qgsBrD1JaSPssvwVx
-X-Gm-Gg: ASbGncsm7H+b216P9oPeTig2NBohJUx9ltcVW+lJxbsWtIHJDg2AHHTfAC2HmhpvnfR
-	lkehRTW7uVjI0vq8OGp2E2myzUOXGKTpRajYrI6jxyoqoaDmkJ/EBI5/aqY9NIqc4VK24RTrYTw
-	r08XL/3p3c+Wo+IeAddndIYEQu8dFtxgTk+/VbFEwVJ3OTsra1HHKZ/K48uDlHA3cvBWNdR0fMw
-	iam/Vp9+H41fuvpLxqKWxtuU1GdTPquunutZ/W12tBsc4dRAcY3kJVqwa4CK07vUiIAlA6ies7u
-	9jtmS5KhDmN8jusQ/KoIiKjM+/rTGuX8rdlwGO5KxHYTH/w=
-X-Google-Smtp-Source: AGHT+IF74c++D5BZJNteuBoBdl+buZoNKZnWFGvf0YJb2LC6d0tPYI0ra0wWghHn9Jz52xd+mNHOyQ==
-X-Received: by 2002:a05:6512:1253:b0:549:7330:6a5a with SMTP id 2adb3069b0e04-54c232e23d2mr4672207e87.23.1744101920636;
-        Tue, 08 Apr 2025 01:45:20 -0700 (PDT)
-Received: from mva-rohm ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e65db49sm1467301e87.206.2025.04.08.01.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 01:45:19 -0700 (PDT)
-Date: Tue, 8 Apr 2025 11:45:16 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/14] mfd: bd96801: Drop IC name from the regulator IRQ
- resources
-Message-ID: <0b39a793d925651b1ec2d78e92d47a24849d216b.1744090658.git.mazziesaccount@gmail.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="QfOSMcf2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VaTNt4nzVusZx0QzTi0oUNyywHgk1HdsRkIqf4mRSNrg49aZbMzgEcmMqKS9uheqiiExSG+qdh/IPEDVtYNWqR0aLGp9shgY38TXlWACf65gO60eP/CDY37m1YhHHo3afYlxWfgr9ozZh0I5k2d7m9AFzDHCsPDz1IobBYKFBdOrw88aC+oS3ZQGKvc19D9/RBeigD0ToBLZMCWXgJfeQleFrve6VE4RDffFKBRoQ6UbOm0KFUV/Wttzj0CbXWzy1Zkmdj3iT3Hr31nstSQrvQ+bTjS1f+uV81ca3Ri6iVq6p5pVn8SOw2DDuS1UjabGGRxEoDAH0+VQROGimi5kzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2YRcy6b8OOGLlLUvK1lLRBDOEzHNON2YZVN8bVWCD/I=;
+ b=euns/804ZjLukrfn43cPHSOHAXVbec5+RKYaEaArKK/lm/Y1Cm2UM26n7mK6egaZkzgrLNKparFI/gIvFDJiw1W40TSrQ9fjIZmqU8V6iVHeH81BppS25N4Pi89If1hbwjWN5ONiQ6Ca1DywtrMVtsIUmSuvWBSu8Gvn/DcLlDNVZG2TYRmhiB3Q+Pu+O+ovlNYM/rjIjyn3agus+gMQaLrSYhHbnWKZbei14oUGDaqNVofTBABmXYA34ZQW0TBwHLXU2w6X/uD+2tS1weGZqGQMf4hS/1u4Aw0K55JBv5lEJZr5BMTwjzKcMh2I2VMqCiX4+f3E6k2JdMlzo6ZnAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2YRcy6b8OOGLlLUvK1lLRBDOEzHNON2YZVN8bVWCD/I=;
+ b=QfOSMcf286fkZG/l1B/kGAZm5CLXuQvVC2K4T+MzYKSzM5FV3y05zWmgR/TpFz/HEpG0ds9NnrvckIVPnnR9sxtXTvn4ZDhk+cXR+fI7wR51BiKXONjEy+YA24TK+kKI0gSItizxQ3gS/0aiQRhLs4Bnc/SgHGMuMnyvZiY5P5NJDAQs4OnAcMs85yL4GmOlJ0JGlPIEkk2GI699Bdj2P6tf9n+hGvUmTqyaAgzLKG+oT4c08zmeWj019egu8HtkzzmP3VUfzMNBrUhgyTRwZd/S3xZvniJMUCHAY6qB5fLK4IDadxubt750zpy+dTUEPxcrZUWwBw4EadXQKTezLQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by PAXPR04MB8607.eurprd04.prod.outlook.com (2603:10a6:102:21a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 08:45:24 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 08:45:24 +0000
+Message-ID: <c9aef3f6-43cd-48fb-8aba-0abd33c4e263@oss.nxp.com>
+Date: Tue, 8 Apr 2025 16:45:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
+ V4L2_EVENT_SRC_CH_COLORSPACE
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org
+Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
+ tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
+ <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
+ <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
+ <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
+From: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
+In-Reply-To: <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0100.apcprd02.prod.outlook.com
+ (2603:1096:4:92::16) To PAXPR04MB8254.eurprd04.prod.outlook.com
+ (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Eq+B8o5nxl3M9vyF"
-Content-Disposition: inline
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|PAXPR04MB8607:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0af5bf37-dda3-4a5e-e25b-08dd7679b3e2
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dkVWZFBZcllzWnduRGkrZkpsU1VrSTAyY3oxLzJTRXRQNnhTdGZYRjR3MDFk?=
+ =?utf-8?B?cmRpZHdMakNWYlJMSW5mTHJxVDBJY3pmUWxNTWVVR1B4MHVHTGlTWGhaYTQv?=
+ =?utf-8?B?RnJMNjFTMGQ3a0FXZk1YNGJWc09TOTMveHhpUHpWOWI3d1l0UDBXVWRqZjRQ?=
+ =?utf-8?B?NHlMY1dQNFRvSUVwQjIrL1NlNzhWL1EvL3NZMWJsL2VBd3FuUHdNNlU0Njcv?=
+ =?utf-8?B?MVBYUGdZdW1kNFNlYlNXVW92Q2hheFNiQUJESko5cGhaeGMrWkxnZzhCSExL?=
+ =?utf-8?B?Z2VaS1FrU1R3bVV4OVlDZ1dXNkZrQ3M2ejk2dlVWRmpJc1dHVzRiZ3hYako3?=
+ =?utf-8?B?enhVYUFXcGpCcTZEYUFsb2tDVWVmU1VWOStlUFk3RHp6czdZMFpycGhoWlVr?=
+ =?utf-8?B?V0N1Rmh1b0oySGRqY0dzYkczY2ZmdVZIaldTQW05SzNsY1RxZHpLdFUvMW1C?=
+ =?utf-8?B?dHpxQ0Y5K0lzYVU5QTFlandlSkR5YkpXalEvQk5xVVJPc3prVDdBSDVDZ1du?=
+ =?utf-8?B?OGpDTWwyY1U2TWNwelQxdmUxaDdXdGx3SkRLanZvaFFkeHdTb2loZ3NyUzZp?=
+ =?utf-8?B?YU1LcHNEMW1mcWNkMUQ2VS8rNHg3N3FzNFowMXYrS2JydUx6amZxVCt4MnV3?=
+ =?utf-8?B?Zy9Kai82ZTVVM1JYcUkyRmZYbU1ETllHa0R6K0FlVnlYMG9lZ0R1OTExb2JY?=
+ =?utf-8?B?dWhaaEdiTWFoZ0kxZEoyaWYrOExwSlUyc3FiR0F6bjRLbDFnaEY5Z1ZGN0VW?=
+ =?utf-8?B?TVg5T0xRb0Q3MDc4cG1JdVdva1J5dFRjS29VaTNpcWxDNTUyVmk3eml3Ynhi?=
+ =?utf-8?B?SnhFWkVzb3hmNTRNcDJJOGNiTUoxTUFtaWVjUFE1T0tqeVdxdFhjcTJiVk9z?=
+ =?utf-8?B?cGVmYnhuNHo1MTZhN3ZWSkxaSUpnWDdGWmRBbWNiUUNPcXlGVENKY1VxbXJZ?=
+ =?utf-8?B?TWF0OUVoa2FDUXo1a0poaVNBelhwbk9MQm5BRHVZc1V2Y0ErOGtDZVZwVUM3?=
+ =?utf-8?B?aythVUNRVTFJbmczWVFwd3ZhOFFuM2JJRVMrSkJWbFM1M0xLQlkvQkt5MlM1?=
+ =?utf-8?B?R0I5Vnp1cEMvUER0ZDg1Rm1hbzgvNEJVcHVYV2o3MWNLN21PdnFGWFVjZG9z?=
+ =?utf-8?B?YWJaY0ozeitldExnMmFhQ3htWDlLRVhZRW1lTVBUclZTQkxWblJnZno5UmlW?=
+ =?utf-8?B?cW9pTGR4OHpBMXZFTFdpUzdhMllSVW5QUGFob3hqeThMbUhhcFNQWFRhRHlN?=
+ =?utf-8?B?N1IrcWZOckovVk56L2lGK3l0cGRzQ2hPWGM4S0dOTE1ESEZIWlQyVXFGeG9a?=
+ =?utf-8?B?NmtzUW5PZllzYXZWbytqcGY2V0tTODRtc01nWEdLdUoyaldpdGNlOE9MWFIz?=
+ =?utf-8?B?S2xiQzRlSjNvSVdQVlpUQVZldzZXM1ExK1AzMEhjSUw3eVVXeXRaanZ6MTVz?=
+ =?utf-8?B?RUs1V0UySjZSNmtyT0xld0tHblhtZWhYd0gvbHRFeUdWM2FQWXNRd1UwR3Nm?=
+ =?utf-8?B?b0FxYXJkTlQybm5ocW1mdGxEeFFZeXk2RHNYL3l1VUR4WnJZUk53ZTFrclZo?=
+ =?utf-8?B?MSthSHdRRFhNc2pwUFZKNGMrZFhLUUduVnF5UW04bXF3eHZML3VGY1hOakV6?=
+ =?utf-8?B?cG5qT3FHQzhBSUQzVzRtbGFWMUcrT2pQclpoejRnNUNpNFlUdlhBbktvNnhy?=
+ =?utf-8?B?SDJMdTRQSitLSnRXVHlxRWtiT1FnM3BpaldpeXhqNkh0VFB2dVJKUGxuTnRk?=
+ =?utf-8?B?cDJvdTlweDJsL1NFZ0w2SkRNbDBXSkFMWkdhcUdTQXMyWHEyZ2tQMkFma2c5?=
+ =?utf-8?B?ekROeVJmU1N3bXhZcGFwbTZnMEdDSGdvSWYzdUxtbTFMT0pkOGlMVm5OVU5k?=
+ =?utf-8?Q?f5eGsB7S63h33?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZGxUd0NodTJlQ0ZBSnowMmRpZDlLNWhqZUpXcGFyN0tVRGEvaDRkL3VUUzlL?=
+ =?utf-8?B?WnltL2E2aE1GSUR6MUtWY3FadjdySmpUVm1KWHFWclo4YlZSVk9DWU9Call6?=
+ =?utf-8?B?TzJMd1dmUHI4UEcxcmwxZlZ4QmdNOU9FY0dTT2xPNEQ4S0t2b0Izd0VkSlY2?=
+ =?utf-8?B?V0YySDhsWmNMcnJjSDZRNU8wMzlxTElkUXhFbUtlVHJqUHlvNnhPK1Fqa0wy?=
+ =?utf-8?B?NjQzaVJVS0dmQUJTSzZkUjM5YXJlSzdJUStxT1JUVGgvR05kQzIvV25uQi9U?=
+ =?utf-8?B?QU4ramkwaFZHdFRyN0VHRDlCSnJMbVRESThQTm1MbktGUFc3eU5VMk0vaEh6?=
+ =?utf-8?B?SUNPc25oN3RTY01BZDlMbkg4Y3d4MWtTb0dBU2tseU1sQzhhZ1ZYVG9aNi9Y?=
+ =?utf-8?B?N0Y5VElDQm85U000cERoZm1SMVFGYldRN3JNbGtnUm1XUWdVN1RlWUM3OHRr?=
+ =?utf-8?B?K0RRdEtydVUranQvM0NYeGZuT0c3SngxNGs1OUpDS2dDQjZtcGg2TGV1bzAz?=
+ =?utf-8?B?MW5rMFc2MWt5ekYzOVB0V0pJTU9CTE5GWHVLS0FLeXdyVkdvUS9KWkNsZVJG?=
+ =?utf-8?B?aWlaM3NVQjMyUzdZY1lxTjljTUV5QUlEVC9CNEJ2V2NLWVpqTXhhUExhMGRR?=
+ =?utf-8?B?STV5TFhQeWVvZjZaN21yUmYxVjBPMVFHMUl4Y2VsSEViN3R2KzFhUmkzVmxl?=
+ =?utf-8?B?TEhMczZpWlBQOURubmlKZDdPNHA1NjFXSHMrdXB3RXcrVHZZZHBDbGFpN3dR?=
+ =?utf-8?B?UFRNZkdJeXdGa2xuK1RRa3A4RE5zbkpWUURwaTRoaENsTlBwbC9LSUpLaXNI?=
+ =?utf-8?B?d3d6WGs0OXhra0YwaG9BNllwOEVDYTRxNkdHejNYRFdHb0h4cEozT3hNczFw?=
+ =?utf-8?B?UzJEODR4YU4wQXFYZ1Y3UEZDcWxkV0pzMEd0WE5NQ08yR2Y2WVBucmt6OHM5?=
+ =?utf-8?B?MkJMdHd3bG94eHRnMHdtTHJFRVBqZ29MYS9nOEc3NHdzNW9SQXhsb0hPUHlM?=
+ =?utf-8?B?ZDFKVE9MSHE2NVFOVHk0M29nRUhZYkprZWs3N3VmdkdtOTZqTXNXY0Mwd2dh?=
+ =?utf-8?B?YzZzRnhyOFE3QVJyRVFBVTRxTFpPd0NjSEh4cFBqNllKNkhmdUhiMjk3TlZF?=
+ =?utf-8?B?YjJkM0ZmUmdIeDJwMWRyU1Vud2I1Q29XdGFoTy9OV0pIeVpQcWdNV245d2Qv?=
+ =?utf-8?B?MGh4T3ltY1dHdFRyQ2l4ZVFUWFlZZlpxSEVBeFgrYlFEaTB4OFhWZlBPckxi?=
+ =?utf-8?B?dVZrMGRiYkY2Y2s0T1ZRaTlKNEVUbGI4ZGkzZUY0NWR2SW1JdEs4a2tMckFk?=
+ =?utf-8?B?SXhpd2UrQlIydGU0T2sxUjFaM25HOEowbWxvcjRXM2doTUlrTzBsNyt4WWli?=
+ =?utf-8?B?MkQyM0FRMlR2Z05sY0JKSHgxSkNuMk9WQk1qU2RhcnRiVmp6eUxYWU9vRVRB?=
+ =?utf-8?B?dnAveFh3SC9yMDF5QTBJYTRZL2RQMzZoTExQMGQ4UDZ0cG5hczk2d0FTeU5o?=
+ =?utf-8?B?RzBtOTRNRTN0TTBib0drbCtEc09tQ0ttdzladDZ6WnVaWnpRbjNaT09ldWs2?=
+ =?utf-8?B?TjJKRGdmMG1iSGh5aU9iTWVKaCtRdW90N0dIb1NpOGJNbXN1RFZIYXZpTFFZ?=
+ =?utf-8?B?VU43QlFBdHdGa2FES1g3T0RPZUZ3T1BDWTRmVVBTZ1pZdEJBcU1kL1d5QWNC?=
+ =?utf-8?B?RjJpMTY1aFB1bk11REpKODlXQk93NWJvRkhHWC9KcWxGRmprV2pacmZONlJ5?=
+ =?utf-8?B?YXdjNlkvL1lpaXozY3pGbFNOZjNGRDVSVkFFUUtWWFBZa1FscUZQNFExeEkv?=
+ =?utf-8?B?czlMMEdnVExSVm1Ecmo3bTc4ZlVDNFFRY0xkUXJIeGgyZ2t1ZHRoWmFvdEVX?=
+ =?utf-8?B?bmdMTms1MzYxRHh3TldvMG1ZSktRQzBtdWdmNTZ3ejdjNHJaMHpHc1N3eGF0?=
+ =?utf-8?B?Q0cwTktvcVVTTk1vaEV1azRwbEJKYWNsL21XRGRZZUFxK20reXlqMThFOEtn?=
+ =?utf-8?B?eTdSLy93ZnVleGNUclpDSjRFcFpRKzRWcEFCdmJyeG5JdXp2WXBBSVZBdTZJ?=
+ =?utf-8?B?RE9ORm9JWGxFYTJGb1YvNlhjKzJRV0lCeWY0M2x5TjdUQ0xhRFVPQ01DNE5I?=
+ =?utf-8?Q?7NcQ4HFH3S6BwqjjjFK2PvXb8?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0af5bf37-dda3-4a5e-e25b-08dd7679b3e2
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 08:45:24.3795
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: efzVYVXc6gnWQqkffHDQ4ECD0Jp7rPpuNcfZ/IgYRWrdtvkl64JoJ9S03I3+FDXOiZ3HN5CJJ7EIYLsWBfXDRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8607
 
+Hi Hans,
 
---Eq+B8o5nxl3M9vyF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2025/4/8 16:30, Hans Verkuil wrote:
+> On 08/04/2025 08:34, Ming Qian(OSS) wrote:
+>> Hi Hans,
+>>
+>> On 2025/4/7 17:54, Hans Verkuil wrote:
+>>> On 17/01/2025 07:19, Ming Qian wrote:
+>>>> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
+>>>> indicates colorspace change in the stream.
+>>>> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
+>>>> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
+>>>>
+>>>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>>>> ---
+>>>>    Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
+>>>>    .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
+>>>>    include/uapi/linux/videodev2.h                           | 1 +
+>>>>    3 files changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>> index 8db103760930..91e6b86c976d 100644
+>>>> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>> @@ -369,6 +369,15 @@ call.
+>>>>    	loss of signal and so restarting streaming I/O is required in order for
+>>>>    	the hardware to synchronize to the video signal.
+>>>>    
+>>>> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
+>>>> +      - 0x0002
+>>>> +      - This event gets triggered when a colorsapce change is detected at
+>>>
+>>> colorsapce -> colorspace
+>>>
+>>
+>> Will fix in v3
+>>
+>>>> +	an input. This can come from a video decoder. Applications will query
+>>>
+>>> It can also come from a video receiver. E.g. an HDMI source changes colorspace
+>>> signaling, but not the resolution.
+>>>
+>>>> +	the new colorspace information (if any, the signal may also have been
+>>>> +	lost)
+>>>
+>>> Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
+>>> change, not CH_COLORSPACE.
+>>>
+>> OK, will fix in v3
+>>>> +
+>>>> +	For stateful decoders follow the guidelines in :ref:`decoder`.
+>>>
+>>> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
+>>> then only the colorspace changed and there is no need to reallocate buffers.
+>>>
+>>
+>> OK, will add in v3
+>>
+>>> I also wonder if the description of CH_RESOLUTION should be enhanced to explain
+>>> that this might also imply a colorspace change. I'm not sure what existing codec
+>>> drivers do if there is a colorspace change but no resolution change.
+>>
+>> I think there is no uniform behavior at the moment, it depends on the
+>> behavior of the decoder. Maybe most decoders ignore this.
+> 
+> Can you try to do a quick analysis of this? Don't spend too much time on this,
+> but it is helpful to have an idea of how existing codecs handle this.
+> 
+> Regards,
+> 
+> 	Hans
+> 
 
-The resources generated in the BD96801 MFD driver are only visible to
-the sub-drivers whose resource fields they are added. This makes
-abbreviating the resource name with the IC name pointless. It just adds
-confusion in those sub-drivers which do not really care the exact model
-that generates the IRQ but just want to know the purpose IRQ was
-generated for. This is a preparatory fix to simplify adding support for
-ROHM BD96802 PMIC.
+I checked the vpu used in our platforms,
+1. amphion vpu, it will ignore the colorspace change.
+2. hantro g1/g2 decoder, it also ignore the colorspace change.
+3. chipsnmedia wave6 decoder, the firmware detect the colorspace change
+for HEVC format, but ignore for AVC format. But its driver just ignore
+it.
+4. chipsnmedia wave511 decoder, same as wave6.
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Acked-by: Lee Jones <lee@kernel.org>
+Regards,
+Ming
 
----
-Revision history:
- v1 =3D> :
-  - No changes
-
-NOTE: This commit shall break the bd96801-regulator driver unless a
-follow-up regulator commit is also included. Compilation should not be
-broken though so squashing should not be mandatory as long as both this
-MFD commit and the regulator commit will end up in same release.
----
- drivers/mfd/rohm-bd96801.c | 187 +++++++++++++++++++------------------
- 1 file changed, 94 insertions(+), 93 deletions(-)
-
-diff --git a/drivers/mfd/rohm-bd96801.c b/drivers/mfd/rohm-bd96801.c
-index 52e25d7ca888..d1d2a4cea605 100644
---- a/drivers/mfd/rohm-bd96801.c
-+++ b/drivers/mfd/rohm-bd96801.c
-@@ -55,105 +55,106 @@ struct bd968xx {
- };
-=20
- static const struct resource bd96801_reg_errb_irqs[] =3D {
--	DEFINE_RES_IRQ_NAMED(BD96801_OTP_ERR_STAT, "bd96801-otp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_DBIST_ERR_STAT, "bd96801-dbist-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_EEP_ERR_STAT, "bd96801-eep-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_ABIST_ERR_STAT, "bd96801-abist-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_PRSTB_ERR_STAT, "bd96801-prstb-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_DRMOS1_ERR_STAT, "bd96801-drmoserr1"),
--	DEFINE_RES_IRQ_NAMED(BD96801_DRMOS2_ERR_STAT, "bd96801-drmoserr2"),
--	DEFINE_RES_IRQ_NAMED(BD96801_SLAVE_ERR_STAT, "bd96801-slave-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_VREF_ERR_STAT, "bd96801-vref-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_TSD_ERR_STAT, "bd96801-tsd"),
--	DEFINE_RES_IRQ_NAMED(BD96801_UVLO_ERR_STAT, "bd96801-uvlo-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_OVLO_ERR_STAT, "bd96801-ovlo-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_OSC_ERR_STAT, "bd96801-osc-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_PON_ERR_STAT, "bd96801-pon-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_POFF_ERR_STAT, "bd96801-poff-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_CMD_SHDN_ERR_STAT, "bd96801-cmd-shdn-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_OTP_ERR_STAT, "otp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_DBIST_ERR_STAT, "dbist-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_EEP_ERR_STAT, "eep-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_ABIST_ERR_STAT, "abist-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_PRSTB_ERR_STAT, "prstb-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_DRMOS1_ERR_STAT, "drmoserr1"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_DRMOS2_ERR_STAT, "drmoserr2"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_SLAVE_ERR_STAT, "slave-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_VREF_ERR_STAT, "vref-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_TSD_ERR_STAT, "tsd"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_UVLO_ERR_STAT, "uvlo-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_OVLO_ERR_STAT, "ovlo-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_OSC_ERR_STAT, "osc-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_PON_ERR_STAT, "pon-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_POFF_ERR_STAT, "poff-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_CMD_SHDN_ERR_STAT, "cmd-shdn-err"),
-=20
- 	DEFINE_RES_IRQ_NAMED(BD96801_INT_PRSTB_WDT_ERR, "bd96801-prstb-wdt-err"),
- 	DEFINE_RES_IRQ_NAMED(BD96801_INT_CHIP_IF_ERR, "bd96801-chip-if-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_INT_SHDN_ERR_STAT, "bd96801-int-shdn-err"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_PVIN_ERR_STAT, "bd96801-buck1-pvin-err=
-"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OVP_ERR_STAT, "bd96801-buck1-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_UVP_ERR_STAT, "bd96801-buck1-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_SHDN_ERR_STAT, "bd96801-buck1-shdn-err=
-"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_PVIN_ERR_STAT, "bd96801-buck2-pvin-err=
-"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OVP_ERR_STAT, "bd96801-buck2-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_UVP_ERR_STAT, "bd96801-buck2-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_SHDN_ERR_STAT, "bd96801-buck2-shdn-err=
-"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_PVIN_ERR_STAT, "bd96801-buck3-pvin-err=
-"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OVP_ERR_STAT, "bd96801-buck3-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_UVP_ERR_STAT, "bd96801-buck3-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_SHDN_ERR_STAT, "bd96801-buck3-shdn-err=
-"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_PVIN_ERR_STAT, "bd96801-buck4-pvin-err=
-"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OVP_ERR_STAT, "bd96801-buck4-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_UVP_ERR_STAT, "bd96801-buck4-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_SHDN_ERR_STAT, "bd96801-buck4-shdn-err=
-"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_PVIN_ERR_STAT, "bd96801-ldo5-pvin-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OVP_ERR_STAT, "bd96801-ldo5-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_UVP_ERR_STAT, "bd96801-ldo5-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_SHDN_ERR_STAT, "bd96801-ldo5-shdn-err"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_PVIN_ERR_STAT, "bd96801-ldo6-pvin-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OVP_ERR_STAT, "bd96801-ldo6-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_UVP_ERR_STAT, "bd96801-ldo6-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_SHDN_ERR_STAT, "bd96801-ldo6-shdn-err"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_PVIN_ERR_STAT, "bd96801-ldo7-pvin-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OVP_ERR_STAT, "bd96801-ldo7-ovp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_UVP_ERR_STAT, "bd96801-ldo7-uvp-err"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_SHDN_ERR_STAT, "bd96801-ldo7-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_INT_SHDN_ERR_STAT, "int-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_PVIN_ERR_STAT, "buck1-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OVP_ERR_STAT, "buck1-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_UVP_ERR_STAT, "buck1-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_SHDN_ERR_STAT, "buck1-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_PVIN_ERR_STAT, "buck2-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OVP_ERR_STAT, "buck2-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_UVP_ERR_STAT, "buck2-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_SHDN_ERR_STAT, "buck2-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_PVIN_ERR_STAT, "buck3-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OVP_ERR_STAT, "buck3-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_UVP_ERR_STAT, "buck3-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_SHDN_ERR_STAT, "buck3-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_PVIN_ERR_STAT, "buck4-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OVP_ERR_STAT, "buck4-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_UVP_ERR_STAT, "buck4-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_SHDN_ERR_STAT, "buck4-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_PVIN_ERR_STAT, "ldo5-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OVP_ERR_STAT, "ldo5-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_UVP_ERR_STAT, "ldo5-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_SHDN_ERR_STAT, "ldo5-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_PVIN_ERR_STAT, "ldo6-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OVP_ERR_STAT, "ldo6-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_UVP_ERR_STAT, "ldo6-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_SHDN_ERR_STAT, "ldo6-shdn-err"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_PVIN_ERR_STAT, "ldo7-pvin-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OVP_ERR_STAT, "ldo7-ovp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_UVP_ERR_STAT, "ldo7-uvp-err"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_SHDN_ERR_STAT, "ldo7-shdn-err"),
- };
-=20
- static const struct resource bd96801_reg_intb_irqs[] =3D {
--	DEFINE_RES_IRQ_NAMED(BD96801_TW_STAT, "bd96801-core-thermal"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPH_STAT, "bd96801-buck1-overcurr-h"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPL_STAT, "bd96801-buck1-overcurr-l"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPN_STAT, "bd96801-buck1-overcurr-n"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OVD_STAT, "bd96801-buck1-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_UVD_STAT, "bd96801-buck1-undervolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_TW_CH_STAT, "bd96801-buck1-thermal"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPH_STAT, "bd96801-buck2-overcurr-h"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPL_STAT, "bd96801-buck2-overcurr-l"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPN_STAT, "bd96801-buck2-overcurr-n"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OVD_STAT, "bd96801-buck2-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_UVD_STAT, "bd96801-buck2-undervolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_TW_CH_STAT, "bd96801-buck2-thermal"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPH_STAT, "bd96801-buck3-overcurr-h"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPL_STAT, "bd96801-buck3-overcurr-l"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPN_STAT, "bd96801-buck3-overcurr-n"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OVD_STAT, "bd96801-buck3-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_UVD_STAT, "bd96801-buck3-undervolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_TW_CH_STAT, "bd96801-buck3-thermal"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPH_STAT, "bd96801-buck4-overcurr-h"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPL_STAT, "bd96801-buck4-overcurr-l"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPN_STAT, "bd96801-buck4-overcurr-n"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OVD_STAT, "bd96801-buck4-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_UVD_STAT, "bd96801-buck4-undervolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_TW_CH_STAT, "bd96801-buck4-thermal"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OCPH_STAT, "bd96801-ldo5-overcurr"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OVD_STAT, "bd96801-ldo5-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_UVD_STAT, "bd96801-ldo5-undervolt"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OCPH_STAT, "bd96801-ldo6-overcurr"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OVD_STAT, "bd96801-ldo6-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_UVD_STAT, "bd96801-ldo6-undervolt"),
--
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OCPH_STAT, "bd96801-ldo7-overcurr"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OVD_STAT, "bd96801-ldo7-overvolt"),
--	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_UVD_STAT, "bd96801-ldo7-undervolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_TW_STAT, "core-thermal"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPH_STAT, "buck1-overcurr-h"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPL_STAT, "buck1-overcurr-l"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OCPN_STAT, "buck1-overcurr-n"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_OVD_STAT, "buck1-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_UVD_STAT, "buck1-undervolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK1_TW_CH_STAT, "buck1-thermal"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPH_STAT, "buck2-overcurr-h"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPL_STAT, "buck2-overcurr-l"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OCPN_STAT, "buck2-overcurr-n"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_OVD_STAT, "buck2-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_UVD_STAT, "buck2-undervolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK2_TW_CH_STAT, "buck2-thermal"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPH_STAT, "buck3-overcurr-h"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPL_STAT, "buck3-overcurr-l"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OCPN_STAT, "buck3-overcurr-n"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_OVD_STAT, "buck3-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_UVD_STAT, "buck3-undervolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK3_TW_CH_STAT, "buck3-thermal"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPH_STAT, "buck4-overcurr-h"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPL_STAT, "buck4-overcurr-l"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OCPN_STAT, "buck4-overcurr-n"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_OVD_STAT, "buck4-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_UVD_STAT, "buck4-undervolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_BUCK4_TW_CH_STAT, "buck4-thermal"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OCPH_STAT, "ldo5-overcurr"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_OVD_STAT, "ldo5-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO5_UVD_STAT, "ldo5-undervolt"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OCPH_STAT, "ldo6-overcurr"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_OVD_STAT, "ldo6-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO6_UVD_STAT, "ldo6-undervolt"),
-+
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OCPH_STAT, "ldo7-overcurr"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_OVD_STAT, "ldo7-overvolt"),
-+	DEFINE_RES_IRQ_NAMED(BD96801_LDO7_UVD_STAT, "ldo7-undervolt"),
- };
-=20
- enum {
---=20
-2.49.0
-
-
---Eq+B8o5nxl3M9vyF
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmf04hsACgkQeFA3/03a
-ocV2NAf9GKKr7JwaIOte5m2rAWpOSHwGXLq2Li3dNz9U+XGyCXjpEew/UpR/0O+R
-3aju+QJM2dcg7aOTEa1TSqmLYPiOfMfGjyuU02C3TjRYC7BScSYMUBFmuxNUjJdy
-Y5DHiV/QkWFnfZXbwJuC68jLARwfkIBoRUiDiNjt8Qfmu66oVl2AhIP/gZt0xSZk
-0iXS1gOgAoNcJL7V0xGDqTBqssxfX8BKQ/NFFZgScFzrUpoK1PDU4sX/ISsCEJyj
-I7gzPfe186OEhrWKEP/0jkJ65wKe+wVLAciJoJAHOIvXDZGcO2cBNSW5ZeUedfEI
-6TpUr6iAFISbayN/gz3IhgzkR4snhw==
-=LQd0
------END PGP SIGNATURE-----
-
---Eq+B8o5nxl3M9vyF--
+>>
+>>>
+>>> I'm a bit concerned about backwards compatibility issues: if a userspace application
+>>> doesn't understand this new flag and just honors CH_RESOLUTION, then it would
+>>> never react to just a colorspace change.
+>>>
+>>> Nicolas, does gstreamer look at these flags?
+>>
+>> I checked the gstreamer code, it does check this flag:
+>>
+>> if (event.type == V4L2_EVENT_SOURCE_CHANGE &&
+>>       (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION)) {
+>>     GST_DEBUG_OBJECT (v4l2object->dbg_obj,
+>>         "Can't streamon capture as the resolution have changed.");
+>>     ret = GST_V4L2_FLOW_RESOLUTION_CHANGE;
+>> }
+>>
+>> Currently the gstreamer can't handle the CH_COLORSPACE flag.
+>>
+>> Thanks,
+>> Ming
+>>
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>>> +
+>>>>    Return Value
+>>>>    ============
+>>>>    
+>>>> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>> index 35d3456cc812..ac47c6d9448b 100644
+>>>> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>>>>    replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
+>>>>    
+>>>>    replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+>>>> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
+>>>>    
+>>>>    replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>>>>    
+>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>>> index c8cb2796130f..242242c8e57b 100644
+>>>> --- a/include/uapi/linux/videodev2.h
+>>>> +++ b/include/uapi/linux/videodev2.h
+>>>> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
+>>>>    };
+>>>>    
+>>>>    #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+>>>> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
+>>>>    
+>>>>    struct v4l2_event_src_change {
+>>>>    	__u32 changes;
+>>>
+>>
+> 
