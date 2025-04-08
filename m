@@ -1,121 +1,132 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A011D61A2;
-	Tue,  8 Apr 2025 17:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4493A184524;
+	Tue,  8 Apr 2025 17:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744133269; cv=none; b=ut938Oe27ztIxgCAOgc0v+A+/P3byz7VY4yxU/Hy6m1T8p93Ywoslsv2atA/uy9SaI52d17pKGHrMvp2kRyUTdzBgm3NrqsctrzYzcf3uGh264uNIpE+cfge8qFjTist+WkcwT25q2XRHbTNbwMuqjV7pc5WujQyM+tbLKedPx0=
+	t=1744133312; cv=none; b=Z0tnblbvhKBkJyOlHWUw7Yl6Olqkt0Vel7N5jndxsEw+B3vgTyEfHGy2Ow2rs6lifHjBSGM1CCv8IiSNiVgUGMSxidvK6f9IShlmQs0gQMs1Cc0bSk0QKy8Jbu33hReC3HnpkJgXUYbE2MkZpv38OJP980x8a0pk3qyFCJsR6UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744133269; c=relaxed/simple;
-	bh=iGs2ZZHWszBkgjha1A2dY+//qUbJ939WmeteH4R9VoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cGide0u/aBZ/dtQPqBxkI4et503S5P78DbZYfBr/GbiNy0XdNNhKnDKXbadb+Lun0kUqIQbScDhK8MyjJ+vqMDkUEsIaywjEr072CrYjEoi78j6CCVPjo7laX5UI2byCC1rYNSpsCGsqdzxU01TfQ1Kq/f2z8Evo9W/gCBbRQWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Gug+5dJk; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744133312; c=relaxed/simple;
+	bh=fz6QTVrKCEbd6TLWNsF7MajYM5VRHbweSs4B8IzrJxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MvZhtedyvp8Q/rNe0iMcNaleg6Y01felDbihmgroZO+B4B8oiiPMjzKUiySmCqtHuzAdZj87exsnZuC4aBEDEJM+TxggdBsQ1Qz8OXOgXKve284Y9JThcng4+nnPxUQ5WB6+NNeTX0o95LUxSRdw2U/gtvE1bAVdanjuncEKK5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EI1bZQMU; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Gug+5dJk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Y8RWM2V6ZnehV9xCG2Wi7D3YFpwSdHlPKuNFJkQ/bqQ=; b=Gug+5dJkFQ2rbCZ5IXZX4osrkc
-	z4jCLXuY8M+Deo7TGvO4X3azXzNOY81Pym6BE1wRVtlX0j1A55PWe5bI2sC3crPMPxHw1CeStLy2o
-	/V0QKXahJUMiiC0QA75pZ0B71CSfo3v561yu0Dz00hSkJbrLJPo2YlqRoNq7PJUrXxcRgH84YKKRU
-	OmVjnaBReXWpYspNTe4XnqnxjIhTFm+dq6EUTbPorz00lCBHEMhGAjD6JCR7I3D0tHI4klOBUjGmX
-	WZfuxE+cKAVpE7S62ePuI4c2mcHsgReKBCz99EZlrG7OMoPEVQAv2csuoYJ61Ua+C90ZhC8XailZA
-	nZx7znGQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51470)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2Cjb-0007pu-0I;
-	Tue, 08 Apr 2025 18:27:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2CjV-0001bg-19;
-	Tue, 08 Apr 2025 18:27:33 +0100
-Date: Tue, 8 Apr 2025 18:27:33 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, upstream@airoha.com,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Clark Wang <xiaoning.wang@nxp.com>,
-	Claudiu Beznea <claudiu.beznea@microchip.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Jonathan Corbet <corbet@lwn.net>, Joyce Ooi <joyce.ooi@intel.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Madalin Bucur <madalin.bucur@nxp.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Robert Hancock <robert.hancock@calian.com>,
-	Saravana Kannan <saravanak@google.com>,
-	UNGLinuxDriver@microchip.com,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [net-next PATCH v2 00/14] Add PCS core support
-Message-ID: <Z_VchfzoKOTvy5TQ@shell.armlinux.org.uk>
-References: <20250407231746.2316518-1-sean.anderson@linux.dev>
- <20250408075047.69d031a9@kernel.org>
- <08c0e1eb-2de6-45bf-95a4-e817008209ab@linux.dev>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EI1bZQMU"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538Aq5lf019761;
+	Tue, 8 Apr 2025 17:28:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	IQqsdiGIp4/zZj6Hngv1EioGyfu18AoQYCuyYN2tTuM=; b=EI1bZQMUUTUFZ4Tp
+	FW0sYyAdKt3MkjM+tRWj/1htAsWcZs8xGoCSIGA852ZPnv1vyBXXYAcoeMertdZH
+	70Sl9Osqt18qdUwhmh5QJoDNXixwRsZ4Fp0vgZPCLhhVAy2DkGZag/uK9sJm+KV0
+	cNQ1Gfp42b0zF5NOO6VXOdhwW/Zu4gjbgubzSRyJDgZYN2dLSuHhvMQwmW957aWx
+	OS5wJ3s31avDn38trZ4X/2D9xHOM/1Jdlb5vLp4JMxO6dHmtFqKhbqetIwIMTaxI
+	HbgCqU1t4BADDuP0PTqMxr8rDk+zZUP/lP5DyFATHC4dXA8rB1CKW1zTinnGn9Pg
+	vT8iZg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3gnbn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 17:28:14 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538HSCjv016943
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 17:28:12 GMT
+Received: from [10.71.109.90] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 10:28:11 -0700
+Message-ID: <52905653-d78c-49b3-a329-a5ed797e149b@quicinc.com>
+Date: Tue, 8 Apr 2025 10:28:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08c0e1eb-2de6-45bf-95a4-e817008209ab@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 RESEND] drm/msm/dpu: reorder pointer operations after
+ sanity checks to avoid NULL deref
+To: Qasim Ijaz <qasdev00@gmail.com>, <robdclark@gmail.com>,
+        <quic_abhinavk@quicinc.com>, <lumag@kernel.org>, <sean@poorly.run>,
+        <marijn.suijten@somainline.org>, <airlied@gmail.com>,
+        <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>
+References: <20250408172223.10827-1-qasdev00@gmail.com>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250408172223.10827-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZMWtFsb8ZB8IyX3xCAGht53oErjV0LqK
+X-Proofpoint-ORIG-GUID: ZMWtFsb8ZB8IyX3xCAGht53oErjV0LqK
+X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f55cae cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8
+ a=bi7Pn_t20o9l9RWp8FkA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_07,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ clxscore=1011 malwarescore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080120
 
-On Tue, Apr 08, 2025 at 11:30:43AM -0400, Sean Anderson wrote:
-> On 4/8/25 10:50, Jakub Kicinski wrote:
-> > On Mon,  7 Apr 2025 19:17:31 -0400 Sean Anderson wrote:
-> >> This series depends on [1,2], and they have been included at the
-> >> beginning so CI will run. However, I expect them to be reviewed/applied
-> >> outside the net-next tree.
-> > 
-> > These appear to break the build:
-> > 
-> > drivers/acpi/property.c:1669:39: error: initialization of ‘int (*)(const struct fwnode_handle *, const char *, const char *, int,  unsigned int,  struct fwnode_reference_args *)’ from incompatible pointer type ‘int (*)(const struct fwnode_handle *, const char *, const char *, unsigned int,  unsigned int,  struct fwnode_reference_args *)’ [-Wincompatible-pointer-types]
-> >  1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
-> > 
-> > Could you post as RFC until we can actually merge this? I'm worried 
-> > some sleep deprived maintainer may miss the note in the cover letter
-> > and just apply it all to net-next..
-> 
-> I would really like to keep RFC off the titles since some reviewers don't
-> pay attention to RFC series.
-> 
-> Would [DO NOT MERGE] in the subject be OK?
 
-I'd bet that those who have decided "RFC means the patch series is not
-ready" will take such a notice to also mean the same, and ignore it.
+On 4/8/2025 10:22 AM, Qasim Ijaz wrote:
+> _dpu_encoder_trigger_start dereferences "struct dpu_encoder_phys *phys"
+> before the sanity checks which can lead to a NULL pointer dereference if
+> phys is NULL.
+>   
+> Fix this by reordering the dereference after the sanity checks.
+>   
+> Fixes: 8144d17a81d9 ("drm/msm/dpu: Skip trigger flush and start for CWB")
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 
-I think there needs to be some kind of push-back against these
-maintainers who explicitly state that they ignore RFC series - making
-it basically anti-social behaviour in the kernel community.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+
+> ---
+> v2:
+> - Moved Signed-off tag below Fixes tag
+> - Moved dpu_enc declaration to the top and initialisation below sanity checks
+>
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index 0eed93a4d056..0bd1f2bfaaff 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -1667,7 +1667,7 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
+>    */
+>   static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
+>   {
+> -	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(phys->parent);
+> +	struct dpu_encoder_virt *dpu_enc;
+>   
+>   	if (!phys) {
+>   		DPU_ERROR("invalid argument(s)\n");
+> @@ -1678,6 +1678,8 @@ static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
+>   		DPU_ERROR("invalid pingpong hw\n");
+>   		return;
+>   	}
+> +
+> +	dpu_enc = to_dpu_encoder_virt(phys->parent);
+>   
+>   	if (phys->parent->encoder_type == DRM_MODE_ENCODER_VIRTUAL &&
+>   	    dpu_enc->cwb_mask) {
