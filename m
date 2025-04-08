@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BA024502F;
-	Tue,  8 Apr 2025 19:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A182528ED;
+	Tue,  8 Apr 2025 19:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139107; cv=none; b=Sk6DpSM2qRFUSHivmvj8LaYdYEPrCZFRu49zyVj3Z7j05DJwp75+tigF2mjhxMIi8fOPWBJET+wXC6SQ5TYb1+CoHGsrLH8yoNhBIR/xReG/Ort+8QtFJg+8TcBV9asa2aC+bHSxe9d4IQMLOF0kywyxCpgSpwv8k2ag/FlwCLc=
+	t=1744139109; cv=none; b=eQsDIX9h7TvmUbLKS+pXGPebMAJsEDhlRH152JfjXtaz75+MWyYCGaUJU+zpy3CXAqrV81knLmc3/9ZDfHWxL6aZb1ndEwTym1j7Pj46Wn3IxGF6im0/t4+2dNnQ5/8jQ0owwlHo8Ce2RQrD5XJRkPDXkI5DHFNH7+cyC8WQFK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139107; c=relaxed/simple;
-	bh=f/NH6PG4B1U/uU5au6qSRRJfGFNzBa5v0Frfnm1KSn8=;
+	s=arc-20240116; t=1744139109; c=relaxed/simple;
+	bh=/ai1heGd72j5PThisRlYees80ah3AMc9rQi5nwAAwGQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tF8JU90eOXQzd1yjH0zdSEPQCkHpvlwPAlLnYB1RBNAMR41pzfxq1r07hGkqGIy08RIEW+6Nz3zKq5nIDSLAtRPTCW1inx08Jnq+VvvqixoCPwf/p2b1waArges7CxyIq9MW4UsIKX0Yi823qDBNr0Bug2ZqW+IQuhm6Y/NWyzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UXQWE/wZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iFXGwAVg; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pCUNR1JeFP3qrLmDWpIlXprv/964x0eLlG7FfUtucs2oLmzutF9z7iF3buTX2vqHcKhyd7AakBQaVkd+zPkPTZoVs+QM2pzkjeJryiHCIwdXQpd6E04PdlaaYcg8Xtv6SbzFx2a0393neYY9VowRk0eQSMPfWAPIh84i0GLw8/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gJxZbRJZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gr9s7HH5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UXQWE/wZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iFXGwAVg"
-Date: Tue, 08 Apr 2025 19:05:02 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gJxZbRJZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gr9s7HH5"
+Date: Tue, 08 Apr 2025 19:05:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139103;
+	s=2020; t=1744139105;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a2yRtr0lcbuWsQky97Dcqb8VM2ncby/AQb0WIeXAHaE=;
-	b=UXQWE/wZ/o+H4IRk+FxDKJ/IDTHFlYhEmdT+gfQ/rVHDs1egs55ACaFyfVFRwkzFPuJdYL
-	gP8Du4gFPEbu6WriYSyCYR9yoScd/Gv5lEitSV5u0XSWrIM57e0iXAsw+5RuWchzhOQlLL
-	ANmORycmn1WgtgkJpZYOBpRPhZY9mMjR02tWK+U69twYdMfqvZrrp13Z2ns9Cmwi1YtRU2
-	tQ6QL7vYFiy0HwWOcVpxdyG0jfqiCFwTn8s+qWGVGcwT+hePIQlj13NgtnNBrkgqc8l04g
-	jihgBh/rkTUYarnYDbBlBzkImqeM38ATmEvS6/f31+VB2ukViREa7eMB+WxN6w==
+	bh=gLCwYNFocq6ShE2lDB25ZIRbAWEGo8QgOQcJOT7ZIWA=;
+	b=gJxZbRJZwHKBJVIQ/GgOmUIsM+p1tPwLXR84xCaj295YIhyDOWADiqG+TrqcuWGN1NtoxN
+	PGuZH7GB6VH8DpOq2rqn5J1VPd+PEg6aoPYBbPF7NYkiPIHPg7Sn1UCpcC2ZSEl34qchT/
+	mcKcycAh6Ca4v5vimmiXMVFMZzNsV60kFiubFc/dqJpmRAUb2wDw7zGcizGRUTRHEnLumW
+	X4vnitqYOYARjQJbyYxO0NRr/3s6d0d/yt4quZAQQpqd/29iJxO4hQtBdM8CTrn3PZeZSc
+	6ZLxOMPEzlpKKUSfM6ZA5iqyFn3U1ZdBNGM9f2ANtBtoJ05H+Vbh3j3Xwdr8mA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139103;
+	s=2020e; t=1744139105;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a2yRtr0lcbuWsQky97Dcqb8VM2ncby/AQb0WIeXAHaE=;
-	b=iFXGwAVggRrcfV6DYW/tBXztmSwQ8NYgO0JTOmxPHUWSv8mKGWNr47JVgXZ16Fpw+6rDak
-	6F3ohWc9mT/7bbCw==
+	bh=gLCwYNFocq6ShE2lDB25ZIRbAWEGo8QgOQcJOT7ZIWA=;
+	b=Gr9s7HH5kp34XAajw21RLVwnNQir2HSLEl6UvOEOtA5FFOHGqfpDgSv0t5Ck7jidSc27Yi
+	JbrVbocAiDiWICCA==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf: Unify perf_event_free_task() /
- perf_event_exit_task_context()
+Subject: [tip: perf/core] perf: Simplify child event tear-down
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250307193723.274039710@infradead.org>
-References: <20250307193723.274039710@infradead.org>
+In-Reply-To: <20250307193305.486326750@infradead.org>
+References: <20250307193305.486326750@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413910259.31282.6563263873790654487.tip-bot2@tip-bot2>
+Message-ID: <174413910477.31282.11766952801429346476.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,179 +67,55 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     90661365021a6d0d7f3a2c5046ebe33e4df53b92
-Gitweb:        https://git.kernel.org/tip/90661365021a6d0d7f3a2c5046ebe33e4df53b92
+Commit-ID:     0a00a43b8c200df5b9ca2b3e1726479b5916264b
+Gitweb:        https://git.kernel.org/tip/0a00a43b8c200df5b9ca2b3e1726479b5916264b
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Thu, 13 Feb 2025 14:04:07 +01:00
+AuthorDate:    Fri, 17 Jan 2025 15:25:23 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 08 Apr 2025 20:55:47 +02:00
+CommitterDate: Tue, 08 Apr 2025 20:55:46 +02:00
 
-perf: Unify perf_event_free_task() / perf_event_exit_task_context()
+perf: Simplify child event tear-down
 
-Both perf_event_free_task() and perf_event_exit_task_context() are
-very similar, except perf_event_exit_task_context() is a little more
-generic / makes less assumptions.
+Currently perf_event_release_kernel() will iterate the child events and attempt
+tear-down. However, it removes them from the child_list using list_move(),
+notably skipping the state management done by perf_child_detach().
+
+Crucially, it fails to clear PERF_ATTACH_CHILD, which opens the door for a
+concurrent perf_remove_from_context() to race.
+
+This way child_list management stays fully serialized using child_mutex.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Link: https://lkml.kernel.org/r/20250307193723.274039710@infradead.org
+Link: https://lkml.kernel.org/r/20250307193305.486326750@infradead.org
 ---
- kernel/events/core.c | 93 +++++++++++--------------------------------
- 1 file changed, 25 insertions(+), 68 deletions(-)
+ kernel/events/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f75b0d3..85c8b79 100644
+index a85d63b..3c92b75 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -13742,13 +13742,11 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
- 	perf_event_wakeup(event);
- }
- 
--static void perf_event_exit_task_context(struct task_struct *child)
-+static void perf_event_exit_task_context(struct task_struct *child, bool exit)
- {
- 	struct perf_event_context *child_ctx, *clone_ctx = NULL;
- 	struct perf_event *child_event, *next;
- 
--	WARN_ON_ONCE(child != current);
--
- 	child_ctx = perf_pin_task_context(child);
- 	if (!child_ctx)
+@@ -2325,7 +2325,11 @@ static void perf_child_detach(struct perf_event *event)
+ 	if (WARN_ON_ONCE(!parent_event))
  		return;
-@@ -13771,7 +13769,8 @@ static void perf_event_exit_task_context(struct task_struct *child)
- 	 * in.
- 	 */
- 	raw_spin_lock_irq(&child_ctx->lock);
--	task_ctx_sched_out(child_ctx, NULL, EVENT_ALL);
-+	if (exit)
-+		task_ctx_sched_out(child_ctx, NULL, EVENT_ALL);
  
- 	/*
- 	 * Now that the context is inactive, destroy the task <-> ctx relation
-@@ -13780,7 +13779,7 @@ static void perf_event_exit_task_context(struct task_struct *child)
- 	RCU_INIT_POINTER(child->perf_event_ctxp, NULL);
- 	put_ctx(child_ctx); /* cannot be last */
- 	WRITE_ONCE(child_ctx->task, TASK_TOMBSTONE);
--	put_task_struct(current); /* cannot be last */
-+	put_task_struct(child); /* cannot be last */
++	/*
++	 * Can't check this from an IPI, the holder is likey another CPU.
++	 *
+ 	lockdep_assert_held(&parent_event->child_mutex);
++	 */
  
- 	clone_ctx = unclone_ctx(child_ctx);
- 	raw_spin_unlock_irq(&child_ctx->lock);
-@@ -13793,13 +13792,31 @@ static void perf_event_exit_task_context(struct task_struct *child)
- 	 * won't get any samples after PERF_RECORD_EXIT. We can however still
- 	 * get a few PERF_RECORD_READ events.
- 	 */
--	perf_event_task(child, child_ctx, 0);
-+	if (exit)
-+		perf_event_task(child, child_ctx, 0);
- 
- 	list_for_each_entry_safe(child_event, next, &child_ctx->event_list, event_entry)
- 		perf_event_exit_event(child_event, child_ctx);
- 
- 	mutex_unlock(&child_ctx->mutex);
- 
-+	if (!exit) {
-+		/*
-+		 * perf_event_release_kernel() could still have a reference on
-+		 * this context. In that case we must wait for these events to
-+		 * have been freed (in particular all their references to this
-+		 * task must've been dropped).
-+		 *
-+		 * Without this copy_process() will unconditionally free this
-+		 * task (irrespective of its reference count) and
-+		 * _free_event()'s put_task_struct(event->hw.target) will be a
-+		 * use-after-free.
-+		 *
-+		 * Wait for all events to drop their context reference.
-+		 */
-+		wait_var_event(&child_ctx->refcount,
-+			       refcount_read(&child_ctx->refcount) == 1);
-+	}
- 	put_ctx(child_ctx);
- }
- 
-@@ -13827,7 +13844,7 @@ void perf_event_exit_task(struct task_struct *child)
- 	}
- 	mutex_unlock(&child->perf_event_mutex);
- 
--	perf_event_exit_task_context(child);
-+	perf_event_exit_task_context(child, true);
- 
- 	/*
- 	 * The perf_event_exit_task_context calls perf_event_task
-@@ -13844,25 +13861,6 @@ void perf_event_exit_task(struct task_struct *child)
- 	detach_task_ctx_data(child);
- }
- 
--static void perf_free_event(struct perf_event *event,
--			    struct perf_event_context *ctx)
--{
--	struct perf_event *parent = event->parent;
--
--	if (WARN_ON_ONCE(!parent))
--		return;
--
--	mutex_lock(&parent->child_mutex);
--	list_del_init(&event->child_list);
--	mutex_unlock(&parent->child_mutex);
--
--	raw_spin_lock_irq(&ctx->lock);
--	perf_group_detach(event);
--	list_del_event(event, ctx);
--	raw_spin_unlock_irq(&ctx->lock);
--	put_event(event);
--}
--
- /*
-  * Free a context as created by inheritance by perf_event_init_task() below,
-  * used by fork() in case of fail.
-@@ -13872,48 +13870,7 @@ static void perf_free_event(struct perf_event *event,
-  */
- void perf_event_free_task(struct task_struct *task)
- {
--	struct perf_event_context *ctx;
--	struct perf_event *event, *tmp;
--
--	ctx = rcu_access_pointer(task->perf_event_ctxp);
--	if (!ctx)
--		return;
--
--	mutex_lock(&ctx->mutex);
--	raw_spin_lock_irq(&ctx->lock);
--	/*
--	 * Destroy the task <-> ctx relation and mark the context dead.
--	 *
--	 * This is important because even though the task hasn't been
--	 * exposed yet the context has been (through child_list).
--	 */
--	RCU_INIT_POINTER(task->perf_event_ctxp, NULL);
--	WRITE_ONCE(ctx->task, TASK_TOMBSTONE);
--	put_task_struct(task); /* cannot be last */
--	raw_spin_unlock_irq(&ctx->lock);
--
--
--	list_for_each_entry_safe(event, tmp, &ctx->event_list, event_entry)
--		perf_free_event(event, ctx);
--
--	mutex_unlock(&ctx->mutex);
--
--	/*
--	 * perf_event_release_kernel() could've stolen some of our
--	 * child events and still have them on its free_list. In that
--	 * case we must wait for these events to have been freed (in
--	 * particular all their references to this task must've been
--	 * dropped).
--	 *
--	 * Without this copy_process() will unconditionally free this
--	 * task (irrespective of its reference count) and
--	 * _free_event()'s put_task_struct(event->hw.target) will be a
--	 * use-after-free.
--	 *
--	 * Wait for all events to drop their context reference.
--	 */
--	wait_var_event(&ctx->refcount, refcount_read(&ctx->refcount) == 1);
--	put_ctx(ctx); /* must be last */
-+	perf_event_exit_task_context(task, false);
- }
- 
- void perf_event_delayed_put(struct task_struct *task)
+ 	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+@@ -5759,8 +5763,8 @@ again:
+ 		tmp = list_first_entry_or_null(&event->child_list,
+ 					       struct perf_event, child_list);
+ 		if (tmp == child) {
+-			perf_remove_from_context(child, DETACH_GROUP);
+-			list_move(&child->child_list, &free_list);
++			perf_remove_from_context(child, DETACH_GROUP | DETACH_CHILD);
++			list_add(&child->child_list, &free_list);
+ 		} else {
+ 			var = &ctx->refcount;
+ 		}
