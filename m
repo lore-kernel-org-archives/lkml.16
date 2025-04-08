@@ -1,180 +1,169 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010003.outbound.protection.outlook.com [52.103.68.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38749248881
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744074616; cv=none; b=rk9D1n+WhaaAejFYqcZk518pGvh7bD5+8cz2iUGy+gRgqqBYFy9YZkuP3KuntwoZKUxUb4nWyvB4uDU11FGfnNzsp7E6pzMhstajznkB31aqgvlvMTdG5GhvqItVKzO+Co6q9ius7OSdv/FWkJJ7zJkDclBZasBqt6UwqYalxQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744074616; c=relaxed/simple;
-	bh=1dvKWkQFNySml/BHzbZrJRX8AmqHIEGZs05c50PV2XY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qMtLP5GCP5bmyft/8lefcavVdbsMXblqXfy/nu3S5McukHUn2666NSOA/5Dii1ZFBpbTCoamVbtgRIFbF0Am/FMi4Y8/5GAbH4xL+4W0j7KK1PHQmdv3tLMS7J9/tFG7Ag+APxOtxoDx6f2npaARz+NcQGub9xTpIgaLUXSos/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=S/iqlrcz; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7074CA47;
+	Tue,  8 Apr 2025 01:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744074686; cv=fail; b=tJN3b2qpDNmr3FuIWZeUOfVpWe6QxpULzQwN+pj9S2M50EqlQ53N7Z8CZlcY59NcKPCGHSQn8IqK/fI6E8I0j9CesQrF6SFV8j6/R2GUsuXOre4D7gfxp9XZJ9PAG7V4n7nWhYrOnpISEtmTIy91NmniTO71irTmdPi1TmpSeUo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744074686; c=relaxed/simple;
+	bh=CVheTwMosmg8mezNc+yMmxTWwBLyrwP9U3n2CL2aH2w=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HckQJZx6g3c1V0cnVxDsfmMaXFYku1zs33wwSgh7EV1FGh6s+5MpDdJb1WdKi9oP+NkVXCYVJg8y5egbo9SsDnkH4G+PhNflilqFnq191AI/Hsjvi7JtQoWSSFqZigTZavvWjtpigXgr2Qqnynm7IFB3nZHN5aQzc5uTaEv4eTo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gCCfKeBq; arc=fail smtp.client-ip=52.103.68.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="S/iqlrcz"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22403cbb47fso53340765ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 18:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1744074613; x=1744679413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z87UPzf+MqrJNhVkbVd+0Pk25DzXX9MXWXUg8MGhgOM=;
-        b=S/iqlrczzFZOJIYckxgyddYkUBsITzhv+Aw137R6vziZXraAZ+jW/UpvXno2zoTCuN
-         QKYrn/7wI4uba96w7hLaxu5Pnwh6FxboF2XalVbHyjfkLi0ke6IwYxfpK85pqAHutZdf
-         X5v9txrAGnHGYw+MqN1+YQ6+O7rrIl6aAPPT66aZD3e23pV2Ray9r1aPDs5KT9KhirY6
-         Wl9jliIhVLQaZphYsKirx3LQsph1BB5N0i+UCuxNF52M6Oraac3Lg+UqBzkjGXw7p8dd
-         hx4w3DsvJJG6ocSgJVPkyjN7QSXjb0u0KfrU7+vgaWDvnFzrb4zHsYgMZrYYsy5YneKN
-         rxbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744074613; x=1744679413;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z87UPzf+MqrJNhVkbVd+0Pk25DzXX9MXWXUg8MGhgOM=;
-        b=FTpYN1GAwBDd0FbJ0x/kkzoq4RwICkKobcAc77CaydXaKjMpvBdXVzB1voUWZpDTAM
-         JjQVUZP3RLshCMZShBgk7YaPbV+W9o1KbPGp/y8k7/NoaP1P0wFSY7F2+6Rr1vp3IzQx
-         nmXnIw/IqR6O1id66PWK35cEereoNhuMvpz9ycdXJVK2G2Lsb2QsLHdrf9VXbxF5HjS7
-         am4b5+TvNuB46vdiPWN/dBww6x+8RmZisJwraeYpzhYg3K9HSFcmUoP7uAtSVp7aY1dN
-         r4H3FFu+ziI4HDDEUmtbV0Oyae+F8ejQVOle1Nc17BuppRm4PKR6xxGQGc2+3SB8LVDd
-         /UXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUORoDYCCnSU78biFgktKV7vUXBJ/RemBO9nEr82GCywsA01cMHy+iMK0SefypaFNqLY+ZwM6mYL2Km708=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKFPcs33JbNg4zM55YVnxR3xfss0U63zyotQJn1U0R2y0dd0IV
-	L7LR/ardxtdfHMZUgg/vQVV5gjzZBaGfBLMMqc3Toq5j51NMeaygmkd2VbWO2/52G1msdp/W71r
-	D
-X-Gm-Gg: ASbGnctETFbPCksz6zVWDhAQD9G3Ec10GoM5fAx+q+/ns1uHIlTNsgom8zKiPjwZRvL
-	genQeDqfyFMW+/ke5UVg0FamftlUrDFTOaiLRUzkMhaBjCNF93/5H+m8he1PuuesRRWd2ifXb8p
-	/xXVvKba95f3Pv909WJ8QxOp1Q5t51NUZI9E3J12GdsVBWhLVbZ9yBj7cfnHt8kEdo+aASvHhF3
-	QqIQYVA3xzFjP9qCrX+BFqmJEy4Ri5VFVfqw18JgqD9ZJSsLsIKIHNZ1b4pAjm4lmkmeH538MHC
-	4R7xEJIEKMYrZcROcBRFGXyKA0lR8KpPxgbUx6CLO++UGd1m9s7/b154SejHL+WXsPKD8hoSekd
-	FqSz1JtiUfVcaSpGfAMMMWqEXhoqzl8XcnwDdGbslwzk=
-X-Google-Smtp-Source: AGHT+IELwZdrzCrMgf6MPDTbVAGSrXtw+CM5rng2WwTZHjmvYgfIyEWBDFW2oDHLWFLqwBVWv23EKg==
-X-Received: by 2002:a17:902:ce8f:b0:224:162:a3e0 with SMTP id d9443c01a7336-22a8a8ded01mr196113395ad.49.1744074613270;
-        Mon, 07 Apr 2025 18:10:13 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:b25a:2d1b:1734:78be])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b2f66sm9193728b3a.125.2025.04.07.18.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 18:10:12 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH v2] hwmon: max34451: Work around lost page
-Date: Mon,  7 Apr 2025 18:10:06 -0700
-Message-ID: <20250408011006.1314622-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-In-Reply-To: <20250401220850.3189582-1-william@wkennington.com>
-References: <20250401220850.3189582-1-william@wkennington.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gCCfKeBq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=okjW/MKy6EE4AbztBnBrLFhyasl13BY1SV+dC5JaWnzw8vu7nP85qDJkIJbjIrpQV+cB4ZtFCln0AgQtDPLZIUtFkCFOC/YIryDDjkpRreazOHGnxNFAGYAlaB8Kx7IyKadHudUPbIxQy4OOdF85yptCsNpS63Ss4EpGt1hkRk0eTB81vmIK7WyE/ETcplFTiNkBxb8FSy89/dy2eAVoG7tEh7Ar82B46FjJuHFLFNmQs0VNZ6s/tw+et0b1Qz2K40oYQYgHJUPDI+huf8cssxDm4HlqzExFopkATgZvz/4I6ufp7w5yZ6LKV3iluCgly52Tjx/kZ3kV3NTvTGWHKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CVheTwMosmg8mezNc+yMmxTWwBLyrwP9U3n2CL2aH2w=;
+ b=PogNmp3tcHKI+XG9HmzgsOSjvB9KLUL5sSmIphO/nQcVyNWisWNgXM4dkyJ8YasGhFQTnDCc6Ub1u4LXFx8RnNF5ek+0JEaf8H9Xa8C/IcdSczQxifyd2EQwOchcvC1GMct6ESluE36keexXP10s0kPyFXzQjH6jMqrDee4RiJQZ6JDMeRkQ0zbbTm5rs6MxtcuocoinclVC+1MNIQnGVVXT5wQu0K6uivCGZbTf4i2OZa3I31E3nuT1XmOq+M3GRnCQjDrgufiITUqYs5EYHgk6hof+nrpox3+xLZSnTjxjgbzQDXQJUyRqo+2cCcraCeSYP6qXWGp9EyFpZh2HSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CVheTwMosmg8mezNc+yMmxTWwBLyrwP9U3n2CL2aH2w=;
+ b=gCCfKeBqwHfVq1xQvfc12tvBn7x29Fd5Nf5S2waBGoKEy/bdm6mf/3ulbr135bZRsYxOr7Ia2B6BpfQflJ6xuIe7bpz8pgpCSj0rNX8UhgJBYUsIytIf9QZ5WWsa7t7g80C9V4EcKPdZnbDvt2NTWh2T/lFCZfaQ73WIIknocKgCjef/18XqXDAoqYhBFHD7FiTpDX6zPWmGskNVp45jVnelyEPpsiTHKKpYcFHdUBpJ4JNHCPMSPluFgrKxXiuydiY7PzqJEz+s6DK0ijcd3KwfLZORuoFNeiIVfSfQrDF7VZw/4VBwg4v0ZoX0S38fcLar2mb8Sz25tAyqofa1LQ==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by MA0P287MB0186.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 01:11:12 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 01:11:12 +0000
+Message-ID:
+ <MA0P287MB2262A2C2C3A00FF457FB2822FEB52@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Tue, 8 Apr 2025 09:11:06 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/9] dt-bindings: interrupt-controller: Add Sophgo SG2044
+ CLINT mswi
+To: Inochi Amaoto <inochiama@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>, ghost
+ <2990955050@qq.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+ Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+ Longbin Li <looong.bin@gmail.com>
+References: <20250407010616.749833-1-inochiama@gmail.com>
+ <20250407010616.749833-3-inochiama@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250407010616.749833-3-inochiama@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0222.apcprd06.prod.outlook.com
+ (2603:1096:4:68::30) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <252e100b-98d0-4b5c-a99a-46cb44a4612f@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|MA0P287MB0186:EE_
+X-MS-Office365-Filtering-Correlation-Id: d46ccc8b-c79a-4c57-50da-08dd763a4082
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|461199028|6090799003|5072599009|19110799003|7092599003|15080799006|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U3pGNGVxcVV4L3FOR3lxTEhkS1BOZERwNUhBeEFoc3ZBcXdZa1owcGZnQ2tl?=
+ =?utf-8?B?NTZMV3BFY1ppdW1rdEEzU3dHL0Y0aEx1Yk5OZzVkVk9xc2Z1NUNrR3NwVGlN?=
+ =?utf-8?B?ZEFjQ1dMM0syZGRmQnRCdlpSWU1taHlQMWxVenAzNGl1NnE1NXJvTnBINWtD?=
+ =?utf-8?B?UXJSWmswUS9SVVZUeUxZZUNzWW00bG9LdmJoOWRzcFhOVGRFeTJqcjh1bzNv?=
+ =?utf-8?B?bWhLbHBLbXI2c3ZIS1R5TXZ2UkV1TWhXNGNxRkpUUUtEQnplY1VsU1FlbElm?=
+ =?utf-8?B?c1VqVVlhZ2RVVm5hbkV6Y3NBa0JpeFpJVGNROVFBSEFDbzZZUldvQmFFSlFt?=
+ =?utf-8?B?VlJhZmUyMU1BWk9adllOaExzSjNZUzU5SVN1SnBlUVArK0hCVVNDWVRlTW9k?=
+ =?utf-8?B?V0hJWnZnZ3NSOURXbERMWU1McXlRa1drcGI3WXZwOEVxY1RRdXVSbXZHSHN3?=
+ =?utf-8?B?VDVaRm0xb25vd2RmMVJkL2EzYVY0ckVpSlN5RVlHWTBiejNjTXhlaGdDUUlT?=
+ =?utf-8?B?TWdFZENoN0VFb3diTTUwNnR4QzFDY3N0dHBEbThyQnZtMmIrOEdvUWZCNTBJ?=
+ =?utf-8?B?YXN6aE1hT08xQVJZajZVV3N2RHQxaHdYekJuTmlzdmlLZWk0NngvajhCbGRw?=
+ =?utf-8?B?ZTFtcm51Vmt2TVlmYSsyVkJyQ0lFYXY3ZDU4cFpUYzk5bG0rUU03cVBkZ3JY?=
+ =?utf-8?B?endCSmZ0SjNxUnAxVDZxWm9oWVlEdmdQTktiaytreG9lV3pwTTJVOXRhTTJG?=
+ =?utf-8?B?U3h3YnAvUGtDSTM3d1RuYUhsMlR3U0lOaisvR1B3cmEwdFNabzFGYlBIb3Vw?=
+ =?utf-8?B?eExnMHg5eWVOQlg5NWdWUDlSVHBOR3VhRzB2SHJEQkNlYVB6OXB2R3A5andL?=
+ =?utf-8?B?U0ttSCtsaE1wbHF3MkF3R3loMXM5OXFJUkVWeUVrZEx5OCtxOFY4MTN6ZGJ1?=
+ =?utf-8?B?OXJvVHFjSCtFOW5XQWVzUElEVWVVYkRNQXlaNE1EUDFJTGVWQXc4eTJXV0VL?=
+ =?utf-8?B?Rlc2OHNkNTh5RjA0MTJSVExZYm1WanJZZDNqQWFHZnpsY0dEeDYvdmJGR1Fj?=
+ =?utf-8?B?S05mbEJyUkU3Z2g1elZiZCtodjlUYWZubExVNVNNRHdtcnlaQUd1KzZId09t?=
+ =?utf-8?B?cGJUZ0hwMU90MlFFbUNwMGc4QnpFank0NUNGUm96U1B4N2E1dnFFak5odlZB?=
+ =?utf-8?B?eHcreElWeDU3NWNPK0VRczNHZlVPWFFvVWx3cFZLeG96U0ZGVlhHRUxxdlJU?=
+ =?utf-8?B?TnhHNFllNjVRaUpidS9CZUtVYUN6aXE4L25wTDBicmNKZ2lCVnRsa3NSYmd6?=
+ =?utf-8?B?Z2o1aEJqRE9jcnFWemR3RzBabThIbmh0b29jOXNBRk5RSkxDanVmQy9sNlFC?=
+ =?utf-8?B?eThvemtRZHV1RXJhd00vMWYvS1ZVSGh6c2E3Z2hFV1g0VFN6Sm43dGYrOTNl?=
+ =?utf-8?B?dHBUTjMwTUlOQjhEeDFjZHBxUDVGeXVONFdJSlNrRlRRUUtZYVc1T1U4aFZL?=
+ =?utf-8?B?eVZQZWNUSDRId001MmRUQlhQazJUcGR6aG9MNFltRWxxVWMyUjBnR3BYQnA4?=
+ =?utf-8?B?dnJxQT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?empCWnJVQVNEWm13L0Z4NzMwZHgyZ3NoblBXWTNCSUQzaG03QlVrbkphN0Er?=
+ =?utf-8?B?RW9wUlE5anpCVlFHdDNIZXVnSXVOcnJzNlcvRU1OZDJFeWFNUGtQdUxPYWkw?=
+ =?utf-8?B?Ymxiei9Hb1ErUjJ0OXBGSHpZempHNFFXWDJQZmxUVFpiWDNiTDM5YWtpMVNW?=
+ =?utf-8?B?RmpENjJkQ09xSzlOYWJnMW9lTUZlYnNUbDM0S1lsei9VL3IxN3NpVFVzdXpw?=
+ =?utf-8?B?MlVXN2lHeFBHTlpEVitrRnBVb0hseXFaWHVMbVNCd2pFVTVxcHVpMVhuVW5E?=
+ =?utf-8?B?dmFQZkxUNWdQOUdENmhnVERVUWc4WUp4YTV3eENkMUV2Q2dEdkl4Ry9PYzVo?=
+ =?utf-8?B?aVRsYVgwOUx6SittRUFIN01RRzdBeDlzNy9oaFBxeHFRTWQ2cGRLczJJWktC?=
+ =?utf-8?B?dUIvckVZVHJqNXZnODRrWSttb0x1MW9mbHpETFliYzE3WFJTc1M2UExSejZ4?=
+ =?utf-8?B?QVlERWd1WGJPRGdmV0dCT2krSzdJUTExUmpxWktJbWpCeEVvOEs3ODV5bjVh?=
+ =?utf-8?B?NEdFSEh6U3NaOThaK0hIclVLUzY3TTB5YjFnOHRma05UZG9ycnROekZRS0c1?=
+ =?utf-8?B?bHAzUlNLaXRPZDU4WDEwZ2NRSDM4aFdLdG52MmJqSk9Yd1E4NWNGS2Y1T3Vh?=
+ =?utf-8?B?SFd2QmlBZFZGSGl6T2VLbGZWVGJuTGhqeXJ2SmRjc3F5QTNhWlpxMjFYTDNq?=
+ =?utf-8?B?Z2VKNWZqYktqQS9SemJqNWdDYmpBbnhrWVVWeUU0QjQ1VytxRndSUmUwTFRL?=
+ =?utf-8?B?dXpqYitDWjlOVVowZmtrRC9LcGFYd29vKzFLU2Z1NUVXRTUwb2p6dHdXL2t3?=
+ =?utf-8?B?UXVyNmtNZExwUEZWZXdUamlOWkgvNDk0NXVaTzFiVWJnYTMxS01OcXNoeita?=
+ =?utf-8?B?WG8rcXhQV05pNTlyTFc0clJLanBQODRuY0hNVk5pWWtDVUlueEZvRFNKSjh5?=
+ =?utf-8?B?eW0rYllRRjFsYzc2VmJjb1AvTEM0c1E3TkNESExFK0NkcUJyY0tMS3I1VXNJ?=
+ =?utf-8?B?anY2TXFmTFBUcytjZUtSY01VNkZyQm5wbXAxdkRicGtkaUZtSFdUZjUvTGda?=
+ =?utf-8?B?djJvb1NML0I2TDhtNXVmZS9oc0pJYVhIU3dvcFdoOXRTNlFkTFE5VDBsZ0pP?=
+ =?utf-8?B?M2lzWXN2dFo3Z3F2SWZsY3Qxd0VWcURLMWh5VWRtaXY2NnhOSFJLV0IzU0hB?=
+ =?utf-8?B?WFhXUlRxckJMWVVOb2hFbE1RZWpPQ2gzYlBpL2hkOVlwcW05WGdaSnJRTGxI?=
+ =?utf-8?B?bW8zVlJuNHZYMjNYdk1sSUdWNE9aRm9NZ3VDTGUyakRCV1J3dkNtZXFTUlB5?=
+ =?utf-8?B?UEI1YUlnNWs1aXpjTHpTRElMK3QvWFAvd2VFRnVHelRzTjlGbURjSEJBbU9D?=
+ =?utf-8?B?NHBubGNneVc0Y0NGS3I5NjZWZzZubUdQdEFBWEhTU3d3amJpRTVyazNzVzd5?=
+ =?utf-8?B?ZHRvUjVRQmFZc1NpanovSWw0NXZha1lIblVzL0VPekxYTVB5VWRGZ2owd3d5?=
+ =?utf-8?B?UGlXN1h2akhEa1RBcXhDQzFXWkJZNVp6cVJaek5aQ1pmdDE0eEIva3YrcllI?=
+ =?utf-8?B?YkhKRlJzRjBXNXlJeUxab1dBOS9vU21TQzg2MkNJemdIN293TTMzNUhJdVUw?=
+ =?utf-8?B?a0t2NVRqSGJjbmVSVFY4L1FvR1pFL2ZBNW1xaXJqTzhreTFuRjhWa1pkWnJX?=
+ =?utf-8?B?RnBCN2poQUlScFF1Q2F4VEZWa0lJR3dCTXlJcFFZbEloclJoUVJMWVhseTZN?=
+ =?utf-8?Q?iXgm2QCFsRrw4KF98k4jVDcNY44omq7m6NxC6Pb?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d46ccc8b-c79a-4c57-50da-08dd763a4082
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 01:11:12.0900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0186
 
-When requesting new pages from the max34451 we sometimes see that the
-firmware responds with stale or bad data to reads that happen
-immediately after a page change. This is due to a lack of clock
-stretching after page changing on the device side when it needs more
-time to complete the operation.
 
-To remedy this, the manufacturer recommends we wait 50us until
-the firmware should be ready with the new page.
+On 2025/4/7 9:06, Inochi Amaoto wrote:
+> As SG2044 also implements an enhanced ACLINT as SG204, add necessary
 
-Signed-off-by: William A. Kennington III <william@wkennington.com>
----
-V1 -> V2: Make all page changes delay the required 50us
+SG204 -> SG2024
 
- drivers/hwmon/pmbus/max34440.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/hwmon/pmbus/max34440.c b/drivers/hwmon/pmbus/max34440.c
-index c9dda33831ff..0d9cb39a9cc6 100644
---- a/drivers/hwmon/pmbus/max34440.c
-+++ b/drivers/hwmon/pmbus/max34440.c
-@@ -12,10 +12,19 @@
- #include <linux/init.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
-+#include <linux/delay.h>
- #include "pmbus.h"
- 
- enum chips { max34440, max34441, max34446, max34451, max34460, max34461 };
- 
-+/*
-+ * Firmware is sometimes not ready if we try and read the
-+ * data from the page immediately after setting. Maxim
-+ * recommends 50us delay due to the chip failing to clock
-+ * stretch long enough here.
-+ */
-+#define MAX34440_PAGE_CHANGE_DELAY 50
-+
- #define MAX34440_MFR_VOUT_PEAK		0xd4
- #define MAX34440_MFR_IOUT_PEAK		0xd5
- #define MAX34440_MFR_TEMPERATURE_PEAK	0xd6
-@@ -238,6 +247,7 @@ static int max34451_set_supported_funcs(struct i2c_client *client,
- 
- 	for (page = 0; page < 16; page++) {
- 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
-+		fsleep(MAX34440_PAGE_CHANGE_DELAY);
- 		if (rv < 0)
- 			return rv;
- 
-@@ -312,6 +322,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.read_byte_data = max34440_read_byte_data,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- 	[max34441] = {
- 		.pages = 12,
-@@ -355,6 +366,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.read_byte_data = max34440_read_byte_data,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- 	[max34446] = {
- 		.pages = 7,
-@@ -392,6 +404,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.read_byte_data = max34440_read_byte_data,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- 	[max34451] = {
- 		.pages = 21,
-@@ -415,6 +428,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.func[20] = PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- 	[max34460] = {
- 		.pages = 18,
-@@ -445,6 +459,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.func[17] = PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- 	[max34461] = {
- 		.pages = 23,
-@@ -480,6 +495,7 @@ static struct pmbus_driver_info max34440_info[] = {
- 		.func[21] = PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
- 		.read_word_data = max34440_read_word_data,
- 		.write_word_data = max34440_write_word_data,
-+		.page_change_delay = MAX34440_PAGE_CHANGE_DELAY,
- 	},
- };
- 
--- 
-2.49.0.504.g3bcea36a83-goog
+[......]
 
