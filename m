@@ -1,114 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504FF242930
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F7D24503E;
+	Tue,  8 Apr 2025 18:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138342; cv=none; b=cPWzG36PUz8ajDvIrJUHniU0ttRz1q9O7Ur9dZinb9DLdu2IDU7MHecdC2zAQcYAmRA9zEebHiCKRkrwQKt+zOA8xuxCu86VIMv9i2IiMc0T5Jc091bJCS/ia+kB1rjlFSq/b+qxC50W1SmttwgaHX1QG04rLu3Nnt9v/uN+K1w=
+	t=1744138349; cv=none; b=uawEA9InkznoufNdUmwFhKtl3i5REBNJ6dxNtRK7ddwBMW5RNpVVqwZFA5UHOgU1/RHxwZnCpHvjLhHHH1JkkWynbb7JOvihAQ9iCdhDpyzTYqZrIBeMJTFY9tzOatuBMw7UiTk5R5t/dfQS3FtHluHQ9DDV1J4DmQXucsnXm3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138342; c=relaxed/simple;
-	bh=PuQln7xcAO8m6ppMiJMtAzD/UHl2MqZefzJq9CLytOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uzZfgeevz0jvS7ySEqpM+snPxMFf/EUCOsavqypr2asfrFEB7SrOTciGLFx0V16Wkaln8cE2UEIg8LYqG15YDMkYtZwg/5KN/cDtRVB+sAzNkmY8FdDZKM9yWNgK3l/iyGvpz1HuD7T/2bSaFNf0BYgYW+TCi4mpCLejvPEFGlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vILdc1tl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744138349; c=relaxed/simple;
+	bh=1AIAOmc4+BL1MwEPjQncGsite0L/q+UqJSY/JgPuTKU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=joIoPnUXGkMQ9Jc4DNmNX4UZF3dy8k1pzsTjFBWz0r3efXER/p928SoZPCcQGfjsXI+oUxtAh7kM96W+5RukgJaxLxY/Tcc/CldGNqpjAlKenyv6jVcO6z02ngLXXjtTuLMF6R4kO78MxdhlI5B06vY7fEWg2SLulof9pKX4lKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEmfND6n; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vILdc1tl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599BEC4CEE8;
-	Tue,  8 Apr 2025 18:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744138341;
-	bh=PuQln7xcAO8m6ppMiJMtAzD/UHl2MqZefzJq9CLytOg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vILdc1tliyeEHnSAKNkn63zP6gVzTRqyiP9CLOGKtRw/g9dzuebO+uMPAyK9b8QzD
-	 Gi7TaPmjynLuygTY3VRYiqix3ZuoBjhbKpI14cGcL7YXS/xH2hXgDsouitNwuGpbAZ
-	 US/OPM/jUGceXXqXvRMnh2Mp0VMbzwg8JHnAXsJCfONZwBxx1odGYn5v1rqwK/xtPT
-	 SugJlD+dxEXV9DrXCEfymKDBU+T30baIv0poGKXljE2ploA8+ooV6ZpkOrmEvq3F2B
-	 Wzk/2X+aZdQp9e+wCDhoGc1F3Y1nmHIvfy9EqY0uKZLGkLKm70NpW/O6fezHLYQ1bE
-	 J2K2ru0ZM0+uQ==
-Message-ID: <65bfb302-3e93-4d1f-a70c-66439cf5f122@kernel.org>
-Date: Tue, 8 Apr 2025 20:52:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEmfND6n"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecfc7ed0c1so50705146d6.3;
+        Tue, 08 Apr 2025 11:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744138344; x=1744743144; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cXzbNqX21KINjlwvOBtDTLvAt43XUqMC0bq2LYlTQao=;
+        b=QEmfND6nuTXRD37/Oqd2maIRDJ9m5JGSsn/TNPmdqr1DFzPXxjr1gDlN1/ni9joKNw
+         NYzp0m2ZRAxRKajPYO/w+pVSZEKz7vntdBdIJXYmxkt/45Cz3vzBDqrvFHO/mWqrXY2P
+         6hgY702dZore6bKdK+WpvSXyHw+Oaass7/pa7Vt1JuVGfyffD+6tQue4A64OF4+mvXtJ
+         d6zPE2+iDKdeCUe+p1BZnfcS9V5H9SZi1SMyPJc+qYNJ1Q44y5GbH3R4fhLGBI3n+rO4
+         0UcJGWq+qX6mRCcnaWjZVDPDooSRvR45SXK/06RyoJsnOfWMEGGZ0dFBGcRP9/idCWKO
+         eiew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744138344; x=1744743144;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cXzbNqX21KINjlwvOBtDTLvAt43XUqMC0bq2LYlTQao=;
+        b=uScUCNS/AwQfpYDvTxPaPslPawAGWY2fynZmQRl7/LsYp+yrnS2iGKsv/m9Iu/nAyL
+         if9kj9bLT1ruc+95oLOZUIhHCsXUv7ZTtUQaeGMXnpSKPHYSBSqgiULxKCirC4GOLPgP
+         m8NxbjNpkwQAcbFDJ5I9bt4s4Lgk/v3bfuGJD8FCplgwWYOBPD1RLr4yNZ9RuBYCMH2+
+         ZGcLF/AhzQsjozE+RxVhBtFiFMmY57jO4H7TeRHL1d5btJQK/IiNMwJp2o1oz7XPPrtp
+         3PWyuHd1gush175T9UQRtxqDc0LP/vJh2Zf7BmpscD61JxEwDxXinZc4r2/o9TSeULFa
+         Olmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIELeexx3VwNrtqBtOgrDiw4jq3zy3IS9sxRbe31rspKW8S8XVIme1WKPZEY9jD98Z66UhlxHBqx6Lw0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT1ozdjcQfxy2bmd/q2qSWfJBJT/fiVxBEVrlfYWuBh0tIBdPi
+	jmpt4YjEIEVH+hB0kML1odXVcHkT4qvvKP9lhgjC5tr4mVxxfL99Nr92sugf
+X-Gm-Gg: ASbGnct7Fj0TgtzseugdeUSRpG2eIjUjMwtc6jhcsyN+cbG8aPwsn1mBUat/4YH48RU
+	Xk+6L0L/RGhsa3+/3I5ofWvXIgkawR41ul5OnGEzU5qOVKbetNOCk6QKBQi3OWu5Djxvbnl32+h
+	ix3mxGTMzadBLMIV3tRaAZtm7R6nilmYAIuQyzVxLv0GRYdzvO9CmqoXBvX+0BSVtl1+Gcj75kg
+	wWbWs3983aEvuyQZ2NP6PU0RM1cAyBhdzgq0lOw/ays2Om9VZEI7hWaU2V8ZVSO7hREqoQEJevV
+	p/XFDMF7T43YrHORWLR1ETNDwZgs0RG7yCgRy4a+biyefZB30uzkYD7mH57gj38iGD16w6KwpYX
+	LRGgko3tW7MBTXuZTp1gOQxH/sHl0bzVw9Ipy6CR4FcWa+xlf
+X-Google-Smtp-Source: AGHT+IFl9Eh6ffoEeDMkQbqKK2M9fcPQhiIKpO1IBqsjJ4FbhPIIAFpmCmH2h8Wexiy8S62bnJL3Ig==
+X-Received: by 2002:a05:6214:258a:b0:6e8:97d2:99a2 with SMTP id 6a1803df08f44-6f0dbc75c96mr3901876d6.39.1744138344472;
+        Tue, 08 Apr 2025 11:52:24 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3b8c])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f0476adsm77472306d6.52.2025.04.08.11.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 11:52:23 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 08 Apr 2025 14:52:22 -0400
+Subject: [PATCH] rust: remove spurious compiler_builtins dependents
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clocksource: timer-sp804: Fix read_current_timer()
- issue when clock source is not registered
-To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <BYAPR12MB3205D7A2BAA2712C89E03C4FD5D42@BYAPR12MB3205.namprd12.prod.outlook.com>
- <BYAPR12MB320552F9F18EBC4F51E7213CD5B52@BYAPR12MB3205.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <BYAPR12MB320552F9F18EBC4F51E7213CD5B52@BYAPR12MB3205.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-rust-remove-compiler-builtins-deps-v1-1-4fda4f187190@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAGVw9WcC/x3NQQrCMBBG4auUWTuQhCriVcSFJn90oE3CTFuE0
+ rsbXH6b93YyqMDoNuyk2MSklg5/Gih+nuUNltRNwYWzG92VdbWFFXPdwLHOTSYov1aZFinGCc3
+ YZ3fxLowpR1APNUWW739yfxzHDz4uN/Z0AAAA
+X-Change-ID: 20250408-rust-remove-compiler-builtins-deps-1f061024dfce
+To: Miguel Ojeda <ojeda@kernel.org>, Lukas Fischer <kernel@o1oo11oo.de>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On 08/04/2025 09:00, Stephen Eta Zhou wrote:
-> Hi all,
-> 
-> Just pinging this patch, it's been about a month since I sent out v2,
-> but I haven't received any feedback yet.
-> 
-> If there are any issues with this patch, feel free to let me know. Thanks!
-It does not look like patch at all - it has duplicated From and Subject.
-Please read submitting patches. The patch fails this in multiple places.
+The dependency on `compiler_builtins.o` was first added in commit
+2f7ab1267dc9 ("Kbuild: add Rust support") to `alloc` which matches the
+standard library[0] but was copied to other targets in:
+- commit ecaa6ddff2fd ("rust: add `build_error` crate")
+- commit d072acda4862 ("rust: use custom FFI integer types")
+- commit 4e1746656839 ("rust: uapi: Add UAPI crate")
+- commit d7659acca7a3 ("rust: add pin-init crate build infrastructure")
 
-What's more the actual patch is corrupted, so could not be even applied.
-You can try by yourself to apply it and see.
+The alloc crate was removed in commit 392e34b6bc22 ("kbuild: rust:
+remove the `alloc` crate and `GlobalAlloc`"). As fas as I can tell none
+of the other dependencies are required; it is only required that
+compiler_builtins be linked into the rust-enabled kernel. In the
+standard library, compiler_builtins is a dependency of std[1].
 
-Anyway, follow closely submitting patches.
+Remove these dependency edges. Add a dependency edge from
+`compiler_builtins` to `core` to `scripts/generate_rust_analyzer.py` to
+match `rust/Makefile`. This has been incorrect since commit 8c4555ccc55c
+("scripts: add `generate_rust_analyzer.py`")
 
-About the actual problem: I don't understand how commit msg is related
-to it.
+Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2faca8d34818339/library/alloc/Cargo.toml#L19 [0]
+Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2faca8d34818339/library/std/Cargo.toml#L21 [1]
+Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/rust-analyzer.20improvements/near/510200959
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ rust/Makefile                     | 6 +++---
+ scripts/generate_rust_analyzer.py | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/rust/Makefile b/rust/Makefile
+index fa0eea8a9eca..eb0590a77e95 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -501,16 +501,16 @@ $(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FORCE
+ $(obj)/pin_init.o: private skip_gendwarfksyms = 1
+ $(obj)/pin_init.o: private rustc_target_flags = --extern pin_init_internal \
+     --extern macros --cfg kernel
+-$(obj)/pin_init.o: $(src)/pin-init/src/lib.rs $(obj)/compiler_builtins.o \
++$(obj)/pin_init.o: $(src)/pin-init/src/lib.rs \
+     $(obj)/$(libpin_init_internal_name) $(obj)/$(libmacros_name) FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ $(obj)/build_error.o: private skip_gendwarfksyms = 1
+-$(obj)/build_error.o: $(src)/build_error.rs $(obj)/compiler_builtins.o FORCE
++$(obj)/build_error.o: $(src)/build_error.rs FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ $(obj)/ffi.o: private skip_gendwarfksyms = 1
+-$(obj)/ffi.o: $(src)/ffi.rs $(obj)/compiler_builtins.o FORCE
++$(obj)/ffi.o: $(src)/ffi.rs FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ $(obj)/bindings.o: private rustc_target_flags = --extern ffi
+diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
+index cd41bc906fbd..b573349d688c 100755
+--- a/scripts/generate_rust_analyzer.py
++++ b/scripts/generate_rust_analyzer.py
+@@ -81,7 +81,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
+     append_crate(
+         "compiler_builtins",
+         srctree / "rust" / "compiler_builtins.rs",
+-        [],
++        ["core"],
+     )
+ 
+     append_crate(
+@@ -94,7 +94,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
+     append_crate(
+         "build_error",
+         srctree / "rust" / "build_error.rs",
+-        ["core", "compiler_builtins"],
++        ["core"],
+     )
+ 
+     append_crate(
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250408-rust-remove-compiler-builtins-deps-1f061024dfce
 
 Best regards,
-Krzysztof
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
