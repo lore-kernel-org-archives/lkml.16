@@ -1,328 +1,158 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652AF263F3E;
-	Tue,  8 Apr 2025 08:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB052641DB;
+	Tue,  8 Apr 2025 08:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101680; cv=none; b=t/CiWTpNJmAFK2VuVreF2Lmq0c4ZVfmq6LYPDtoO1KCt9JMKQgeIXxqS+Xa/RIV89NRCo4itNyGRdrH9ZsXTdaOjDv0xVMYO8Jn4VDyHw3aZw13q+aHnRI4kHwjXEDhrNJis7BldQuXl37tXYnfdrR/JsC+W4z2zXUjcfp9vWYE=
+	t=1744101684; cv=none; b=KN2CwfWZ7z697iLwOW0BjGxZDAPchTLmA3faevt/pcl9MFdxWzG3wGfcnZbVeJqnsfOgWfsvvyqpf3NfS39lLIP+5mYbQnCwo1xfbeGmdgGlB/UO55dJABC6F1rmvhsAbzVXOV8Y5tY9/pt3vAQCM4SIuyAX9/AAWhzXodFLQaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101680; c=relaxed/simple;
-	bh=LDNOjVs7CECH35dGYIhLE8QK61855Q/k6+lG8QoTpLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DsqpEwglkY4CfdGPOY4hApD8YW0AhZNrtAvhZv8Mfgr1QRRNTTDv/yuXSW1T4Z41Ev+NyPy7OenIleRwL0E2U4CPK+ylx3fxtGgnPfMo9L/LM1EwPmfWGHKcysMGscEQ3xPCpSuhK0/bcrBNRQUv/8bwqRP884UA3Hu/ugdr0w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VklerFiu; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744101684; c=relaxed/simple;
+	bh=Iqee5RrWEeGxdk7646RRwu+1jLljC0WdgOXwKzC+Dqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b3hONeo3G5niQyeIi0t/K8vfTvmutqnWnfYhsH3fquMYNtggZyWaDTIZ70BtTArFiijtBdOpdXG4vxNMS0SnVpDlA0dslcd0u27sSSGnPphvd5kE8pjSg5kOCbl9ha0dITk5TJhYhiw9Ba7nWvMU9B75H1qRnCRlop82w7ka/wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egXKRSzI; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VklerFiu"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5388f73e483936
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 03:41:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744101667;
-	bh=K/eIxpzxihy+XF/5jOxd+3OlxbH+uj0utJbs/qJAhG8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=VklerFiuSQrfj4gEkie91FGHBv6pqi196UvTa/gJhKdcTKEjMrWSzMS0TYSrBoKI3
-	 MnE+0FBSZXvb1oSv4ZoNuuBHPtwy/ZLMX98eHCL0DDVSDbMuTbDoLBKJl/lclfaaNu
-	 WgQ0nFMCPydmrSvZ2DNixORHPMBGyyJtJU8CmpE0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5388f771045925
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 8 Apr 2025 03:41:07 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
- Apr 2025 03:41:07 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 8 Apr 2025 03:41:07 -0500
-Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5388f32q120770;
-	Tue, 8 Apr 2025 03:41:04 -0500
-Message-ID: <d41e2717-5bf4-4a7e-92fa-705836702d8f@ti.com>
-Date: Tue, 8 Apr 2025 14:11:03 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egXKRSzI"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499614d3d2so6094835e87.3;
+        Tue, 08 Apr 2025 01:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744101681; x=1744706481; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ACIOIbm0p+1PTv9P9JIta3dAyYPe2LdYdKxjKYYTx9Y=;
+        b=egXKRSzIn7DrQCDrhuW2GfGrNKVQWDRZLaVRui5PyJm1wUZYMCtnua2vBg65aFC+hb
+         OrTS8KFBWpJeUNuLe8lq1CZX9yNVEtvF09WlhnhR+KHNbb7kqTUFpBdyammxrsXSWWcd
+         EmybE/tgYzX1AFVEMaAZfxrnw70Z5lxbQGIoV9M/paTG3zJe6bRIKr2u89BErR1hJQq/
+         73B69UCRiGRJg03QwBVvCtC8Cj948QnJz/T8MZk0XlyeLj5Fv9LYEMfGYglK1V8k6JuK
+         WxeLDsLH1Qp9wxSyxweeTHGISJtJPOZLUybjVwW866AK3mOQgdyxvxDi3770ES6Pvir3
+         +Zjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744101681; x=1744706481;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ACIOIbm0p+1PTv9P9JIta3dAyYPe2LdYdKxjKYYTx9Y=;
+        b=bYNKrsUgykKNU7mbyAzFSwUt6o0VshY6POnwzWrAiVCC5xmN+0KfQiRhApIyEFKS+i
+         vPkZMKFnig1BEux/zh5FhaWfWoGaGriXPY2/vj3uX6DPRJYO+ueXDSy0JX9Hdp/8Ns8s
+         mxMsVrcXaEuHXftsyGuMmFEfWnRtGYU319Qdr6Ej6v/oA1PbJQlkEveILm0nvmctOtSl
+         NZSSOiU2P6MHWXDrryOSqQQkqnOD2cUGerg4s5kv/xrKdv5Co8JoE5SEhtPfr9z8siEZ
+         fhskv7HzBX09zw6pKIhHxRL/BXAwg0Mnt1rrwD10bUz5oMzdzQoMmogq2sUS4JOQT0bx
+         h82A==
+X-Forwarded-Encrypted: i=1; AJvYcCVfjk2k9lADtRoTo5J/GqVEf5w66nt8qs4UDZUBoK0QEe1jwEklRCBDO101B+PkXW52suZwmEd2kINxM6hf@vger.kernel.org, AJvYcCVkBSTBfMNkvuyadC4np93tS2piqvzudqAHbYAQ3L21Shl33jaoehef1xHMw5Xh014TQh5Y5fWj7Sbr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9U5pnsVZ2vywad+Y6rs6XDx2kUsVQg4uK8wcANvonJDU2NZT6
+	3FXCnXqtuG5Ig9D+QyJMupUAl1EoA/5qxYMxV85QGf+qOZ3G/iTQ/bxukw==
+X-Gm-Gg: ASbGncva/uGR/3evh0p72YnaVNk+Tn5g5yEJ18i2BwZHmjUMHPOhMaOxYCZRMazZJ/v
+	/gRmrSasB7vCGIkTP0biEoCigyIi6J+Y+BaecjteD1rKuJrUPH1cild15zMhIBg3F0mVLrYZVY8
+	erouIhDWSVcDNZiUCu1Z+zSAs/WXtxorFJuVEdZiNf0m/gKIqHHkkqfRTdmRVquT6e+rE/i96BO
+	pxw/p5GiUqYisJNODzndPFweX1i4MAYuaWvCfkI/joQt2vqXlFSiyTdkg5jcW+x5P4PF1s8peDH
+	ADGgLSKq9WkZL2WxpWbTRZ+WCB1h49GSetG0yDUvv26q++Rx9m51TLBQEg==
+X-Google-Smtp-Source: AGHT+IEm21EBbYmNkyzRDOFs9TzsbgYse65RwBYM1gdJbCrrwjvMVZPVowKwrXwUH3ajBMGduDYe1Q==
+X-Received: by 2002:a05:6512:3b98:b0:549:7145:5d28 with SMTP id 2adb3069b0e04-54c232f7744mr3502276e87.25.1744101680828;
+        Tue, 08 Apr 2025 01:41:20 -0700 (PDT)
+Received: from mva-rohm ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e635bd6sm1475351e87.157.2025.04.08.01.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 01:41:19 -0700 (PDT)
+Date: Tue, 8 Apr 2025 11:41:16 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 03/14] dt-bindings: mfd: bd96801: Add ROHM BD96805
+Message-ID: <f49addee698b683a071c12808f06a56509152f5c.1744090658.git.mazziesaccount@gmail.com>
+References: <cover.1744090658.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 08/26] remoteproc: k3-r5: Refactor sequential core
- power up/down operations
-To: Andrew Davis <afd@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250317120622.1746415-1-b-padhi@ti.com>
- <20250317120622.1746415-9-b-padhi@ti.com>
- <4647ecee-491f-4480-9d43-c5a19f300ca3@ti.com>
-Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <4647ecee-491f-4480-9d43-c5a19f300ca3@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-
-Hi Andrew,
-
-On 07/04/25 19:15, Andrew Davis wrote:
-> On 3/17/25 7:06 AM, Beleswar Padhi wrote:
->> The existing implementation of the waiting mechanism in
->> "k3_r5_cluster_rproc_init()" waits for the "released_from_reset" flag to
->> be set as part of the firmware boot process in "k3_r5_rproc_start()".
->> The "k3_r5_cluster_rproc_init()" function is invoked in the probe
->> routine which causes unexpected failures in cases where the firmware is
->> unavailable at boot time, resulting in probe failure and removal of the
->> remoteproc handles in the sysfs paths.
->>
->> To address this, the waiting mechanism is refactored out of the probe
->> routine into the appropriate "k3_r5_rproc_{prepare/unprepare}()"
->> functions. This allows the probe routine to complete without depending
->> on firmware booting, while still maintaining the required
->> power-synchronization between cores.
->>
->> Further, this wait mechanism is dropped from
->> "k3_r5_rproc_{start/stop}()" functions as they deal with Core Run/Halt
->> operations, and as such, there is no constraint in Running or Halting
->> the cores of a cluster in order.
->>
->> Fixes: 61f6f68447ab ("remoteproc: k3-r5: Wait for core0 power-up 
->> before powering up core1")
->> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
->> ---
->
-> Same as the above two patches in this series, these are all valid 
-> fixes, but should be
-> done first before the refactoring begins, so move them to the start of 
-> the series.
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5+V+aybW6NeMgsZb"
+Content-Disposition: inline
+In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
 
 
-Thanks I will incorporate those changes in the revision. Please let me 
-know if you have finished reviewing this patchset, so I can re-spin v10.
+--5+V+aybW6NeMgsZb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Beleswar
+The ROHM BD96805 is very similar to the BD96801. The differences visible
+to the drivers is different tune voltage ranges.
 
->
-> Andrew
->
->>   drivers/remoteproc/ti_k3_r5_remoteproc.c | 114 +++++++++++++----------
->>   1 file changed, 65 insertions(+), 49 deletions(-)
->>
->> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c 
->> b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> index c0e4da82775d..30081eafbd36 100644
->> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> @@ -475,7 +475,7 @@ static int k3_r5_rproc_request_mbox(struct rproc 
->> *rproc)
->>   static int k3_r5_rproc_prepare(struct rproc *rproc)
->>   {
->>       struct k3_r5_rproc *kproc = rproc->priv;
->> -    struct k3_r5_core *core = kproc->priv;
->> +    struct k3_r5_core *core = kproc->priv, *core0, *core1;
->>       struct k3_r5_cluster *cluster = core->cluster;
->>       struct device *dev = kproc->dev;
->>       u32 ctrl = 0, cfg = 0, stat = 0;
->> @@ -483,6 +483,29 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
->>       bool mem_init_dis;
->>       int ret;
->>   +    /*
->> +     * R5 cores require to be powered on sequentially, core0 should 
->> be in
->> +     * higher power state than core1 in a cluster. So, wait for 
->> core0 to
->> +     * power up before proceeding to core1 and put timeout of 2sec. 
->> This
->> +     * waiting mechanism is necessary because 
->> rproc_auto_boot_callback() for
->> +     * core1 can be called before core0 due to thread execution order.
->> +     *
->> +     * By placing the wait mechanism here in .prepare() ops, this 
->> condition
->> +     * is enforced for rproc boot requests from sysfs as well.
->> +     */
->> +    core0 = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
->> +    core1 = list_last_entry(&cluster->cores, struct k3_r5_core, elem);
->> +    if (cluster->mode == CLUSTER_MODE_SPLIT && core == core1 &&
->> +        !core0->released_from_reset) {
->> +        ret = 
->> wait_event_interruptible_timeout(cluster->core_transition,
->> +                               core0->released_from_reset,
->> +                               msecs_to_jiffies(2000));
->> +        if (ret <= 0) {
->> +            dev_err(dev, "can not power up core1 before core0");
->> +            return -EPERM;
->> +        }
->> +    }
->> +
->>       ret = ti_sci_proc_get_status(kproc->tsp, &boot_vec, &cfg, 
->> &ctrl, &stat);
->>       if (ret < 0)
->>           return ret;
->> @@ -498,6 +521,14 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
->>           return ret;
->>       }
->>   +    /*
->> +     * Notify all threads in the wait queue when core0 state has 
->> changed so
->> +     * that threads waiting for this condition can be executed.
->> +     */
->> +    core->released_from_reset = true;
->> +    if (core == core0)
->> + wake_up_interruptible(&cluster->core_transition);
->> +
->>       /*
->>        * Newer IP revisions like on J7200 SoCs support h/w 
->> auto-initialization
->>        * of TCMs, so there is no need to perform the s/w memzero. 
->> This bit is
->> @@ -542,11 +573,31 @@ static int k3_r5_rproc_prepare(struct rproc 
->> *rproc)
->>   static int k3_r5_rproc_unprepare(struct rproc *rproc)
->>   {
->>       struct k3_r5_rproc *kproc = rproc->priv;
->> -    struct k3_r5_core *core = kproc->priv;
->> +    struct k3_r5_core *core = kproc->priv, *core0, *core1;
->>       struct k3_r5_cluster *cluster = core->cluster;
->>       struct device *dev = kproc->dev;
->>       int ret;
->>   +    /*
->> +     * Ensure power-down of cores is sequential in split mode. Core1 
->> must
->> +     * power down before Core0 to maintain the expected state. By 
->> placing
->> +     * the wait mechanism here in .unprepare() ops, this condition is
->> +     * enforced for rproc stop or shutdown requests from sysfs and 
->> device
->> +     * removal as well.
->> +     */
->> +    core0 = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
->> +    core1 = list_last_entry(&cluster->cores, struct k3_r5_core, elem);
->> +    if (cluster->mode == CLUSTER_MODE_SPLIT && core == core0 &&
->> +        core1->released_from_reset) {
->> +        ret = 
->> wait_event_interruptible_timeout(cluster->core_transition,
->> +                               !core1->released_from_reset,
->> +                               msecs_to_jiffies(2000));
->> +        if (ret <= 0) {
->> +            dev_err(dev, "can not power down core0 before core1");
->> +            return -EPERM;
->> +        }
->> +    }
->> +
->>       /* Re-use LockStep-mode reset logic for Single-CPU mode */
->>       ret = (cluster->mode == CLUSTER_MODE_LOCKSTEP ||
->>              cluster->mode == CLUSTER_MODE_SINGLECPU) ?
->> @@ -554,6 +605,14 @@ static int k3_r5_rproc_unprepare(struct rproc 
->> *rproc)
->>       if (ret)
->>           dev_err(dev, "unable to disable cores, ret = %d\n", ret);
->>   +    /*
->> +     * Notify all threads in the wait queue when core1 state has 
->> changed so
->> +     * that threads waiting for this condition can be executed.
->> +     */
->> +    core->released_from_reset = false;
->> +    if (core == core1)
->> + wake_up_interruptible(&cluster->core_transition);
->> +
->>       return ret;
->>   }
->>   @@ -577,7 +636,7 @@ static int k3_r5_rproc_unprepare(struct rproc 
->> *rproc)
->>   static int k3_r5_rproc_start(struct rproc *rproc)
->>   {
->>       struct k3_r5_rproc *kproc = rproc->priv;
->> -    struct k3_r5_core *core0, *core = kproc->priv;
->> +    struct k3_r5_core *core = kproc->priv;
->>       struct k3_r5_cluster *cluster = core->cluster;
->>       struct device *dev = kproc->dev;
->>       u32 boot_addr;
->> @@ -600,21 +659,9 @@ static int k3_r5_rproc_start(struct rproc *rproc)
->>                   goto unroll_core_run;
->>           }
->>       } else {
->> -        /* do not allow core 1 to start before core 0 */
->> -        core0 = list_first_entry(&cluster->cores, struct k3_r5_core,
->> -                     elem);
->> -        if (core != core0 && core0->kproc->rproc->state == 
->> RPROC_OFFLINE) {
->> -            dev_err(dev, "%s: can not start core 1 before core 0\n",
->> -                __func__);
->> -            return -EPERM;
->> -        }
->> -
->> -        ret = k3_r5_core_run(core->kproc);
->> +        ret = k3_r5_core_run(kproc);
->>           if (ret)
->>               return ret;
->> -
->> -        core->released_from_reset = true;
->> - wake_up_interruptible(&cluster->core_transition);
->>       }
->>         return 0;
->> @@ -654,9 +701,8 @@ static int k3_r5_rproc_start(struct rproc *rproc)
->>   static int k3_r5_rproc_stop(struct rproc *rproc)
->>   {
->>       struct k3_r5_rproc *kproc = rproc->priv;
->> -    struct k3_r5_core *core1, *core = kproc->priv;
->> +    struct k3_r5_core *core = kproc->priv;
->>       struct k3_r5_cluster *cluster = core->cluster;
->> -    struct device *dev = kproc->dev;
->>       int ret;
->>         /* halt all applicable cores */
->> @@ -669,17 +715,7 @@ static int k3_r5_rproc_stop(struct rproc *rproc)
->>               }
->>           }
->>       } else {
->> -        /* do not allow core 0 to stop before core 1 */
->> -        core1 = list_last_entry(&cluster->cores, struct k3_r5_core,
->> -                    elem);
->> -        if (core != core1 && core1->kproc->rproc->state != 
->> RPROC_OFFLINE) {
->> -            dev_err(dev, "%s: can not stop core 0 before core 1\n",
->> -                __func__);
->> -            ret = -EPERM;
->> -            goto out;
->> -        }
->> -
->> -        ret = k3_r5_core_halt(core->kproc);
->> +        ret = k3_r5_core_halt(kproc);
->>           if (ret)
->>               goto out;
->>       }
->> @@ -1441,26 +1477,6 @@ static int k3_r5_cluster_rproc_init(struct 
->> platform_device *pdev)
->>               cluster->mode == CLUSTER_MODE_SINGLECPU ||
->>               cluster->mode == CLUSTER_MODE_SINGLECORE)
->>               break;
->> -
->> -        /*
->> -         * R5 cores require to be powered on sequentially, core0
->> -         * should be in higher power state than core1 in a cluster
->> -         * So, wait for current core to power up before proceeding
->> -         * to next core and put timeout of 2sec for each core.
->> -         *
->> -         * This waiting mechanism is necessary because
->> -         * rproc_auto_boot_callback() for core1 can be called before
->> -         * core0 due to thread execution order.
->> -         */
->> -        ret = 
->> wait_event_interruptible_timeout(cluster->core_transition,
->> -                               core->released_from_reset,
->> -                               msecs_to_jiffies(2000));
->> -        if (ret <= 0) {
->> -            dev_err(cdev,
->> -                "Timed out waiting for %s core to power up!\n",
->> -                rproc->name);
->> -            goto out;
->> -        }
->>       }
->>         return 0;
+Add compatible for the ROHM BD96805 PMIC.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+---
+Revision history:
+ v1 =3D> :
+  - No changes
+---
+ .../devicetree/bindings/mfd/rohm,bd96801-pmic.yaml     | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml b=
+/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+index efee3de0d9ad..0e06570483ae 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+@@ -4,19 +4,21 @@
+ $id: http://devicetree.org/schemas/mfd/rohm,bd96801-pmic.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+=20
+-title: ROHM BD96801 Scalable Power Management Integrated Circuit
++title: ROHM BD96801/BD96805 Scalable Power Management Integrated Circuit
+=20
+ maintainers:
+   - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+=20
+ description:
+-  BD96801 is an automotive grade single-chip power management IC.
+-  It integrates 4 buck converters and 3 LDOs with safety features like
++  BD96801 and BD96805 are automotive grade, single-chip power management I=
+Cs.
++  They both integrate 4 buck converters and 3 LDOs with safety features li=
+ke
+   over-/under voltage and over current detection and a watchdog.
+=20
+ properties:
+   compatible:
+-    const: rohm,bd96801
++    enum:
++      - rohm,bd96801
++      - rohm,bd96805
+=20
+   reg:
+     maxItems: 1
+--=20
+2.49.0
+
+
+--5+V+aybW6NeMgsZb
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmf04SwACgkQeFA3/03a
+ocX2xwgAgBu1xyqzQgr2AzTACxbU95p5svkRVMluMGTMKIYZUN19lxZ+sJN3dHV8
+Yru7ncEpOv7GQzCyADm1BfatTu4sANYRVfvU9TzyihEEZCLXsWyt1a+q4kIAO8Ga
+3N8ysIgZgU7X2HO5rta3yM+wYgExwol+4br2emQhZO9Ebf26hJWp1SbA5uirnOoD
+bbfhYlCA8EMOyYAgapzxAMBDtNg+mnrdDuveKMoOoT+SPjMc1JwBtj5CsS8ZTzJd
+mQNgqLTgtYTbuIfP9A9LQc4MYv6UyR4R3HDapMr1Fn8iaTbt4boTN9v5TPy0mHO+
+DK7tGrB3hqOuA/jPIocv/z2eJbv4EA==
+=uCOW
+-----END PGP SIGNATURE-----
+
+--5+V+aybW6NeMgsZb--
