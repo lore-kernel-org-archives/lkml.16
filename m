@@ -1,205 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979401A4E98
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9EB253B4E;
+	Tue,  8 Apr 2025 05:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744089588; cv=none; b=nyb2bSeYlYaVhRGBugjIOc1dv1qUrAKqLrN5yJScbh8HiGid3S2wwVfoEwBKWrcwYEMqSjrTa/2+DD9b0E19z7XQUaeQR+jCx1PCCo2tLPGuHhyF2PuyeS6hp+2twSD/n3yxu+fv2vk20CINsu6y7O6R31NlBWvRIoR49Cexqvs=
+	t=1744089590; cv=none; b=fjyk5BqGVy4FQSwzY9/mYiW2WESPOMFSsC2+T7MqJbJ/REFCfHguOkIho7E64XCeoxN1r1JS4nDsvrqvEGLzVd9x/VlWe4PUiHj+oB/jNPsBogVzohygRMOY3yBGOgMAhRZmSWU/fm4qa8eZz23qlGhO5FWdrEiijgeRdn6//Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744089588; c=relaxed/simple;
-	bh=es+SNh0P9NtPGWcq5WsV3Y8WBvXwDiLbdcGTXKuwMv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fVIAc/KujNvZxRcLE7x6hi7Fy4gE9DPqjW3EsPzsj00BKbDlj9ZkZQU0n9TFkZSGUbjDaL7OSINs6hqtcxJ7Qp1ZtCrESy8EX/KGYR1jVJdaorERQqjrgCl5JSt+Y9I6rteBzGs/861Lqs1XsC9ZblCcrd8s5PlS6dSX6sL14UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WrOYkXME; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744089590; c=relaxed/simple;
+	bh=6GBm8mUPt1kQdqjLA6hxiATej9VkFQyogG8+sWfT4fA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MrEG2zF5qL6XtUrx8/Bw9gkC5qct3VQVXb592i/lhoOkIlwwv6zZAdm3rk4cRcYrRpK5gBw5EhF/toF6X728AyPp8m6lTaZs84pm4HvkrDp7T3uoPN6pzgQmkMj903clGwuepQ9PuqY7eAJRFL9/aHzaHmWERNjhgOobFSsA5Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wbN111ko; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrOYkXME"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744089585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZYs4PdDssFQWEmrDvKTFbTZUVJpYWm3vSQBh2J9Vlg=;
-	b=WrOYkXMEUwuBUClT+qAn9IZX6qqBHVZFLy7PbhdtvWx1GbClOo8mPGnLdygk78G9vzm5Au
-	ve8TpwOoRAfyQqAfI5EmCpCYNfmvLeN3tMyQe3u0YRhrVrnX+5Mqrq2XsLATZzKzMFMnte
-	mpImUo7nzA7DhHA7LfGuuqByZX6NXQM=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-389-B_s2PoYAOFahCU9G3aV4_g-1; Tue, 08 Apr 2025 01:19:43 -0400
-X-MC-Unique: B_s2PoYAOFahCU9G3aV4_g-1
-X-Mimecast-MFC-AGG-ID: B_s2PoYAOFahCU9G3aV4_g_1744089582
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2254e500a73so41042225ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 22:19:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744089582; x=1744694382;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SZYs4PdDssFQWEmrDvKTFbTZUVJpYWm3vSQBh2J9Vlg=;
-        b=amD3rkX765+96/CnBt9kl/celxqm6QCvvxPO3Y49UMyCZSnbjKA4yXJl0fjVz364of
-         J/j5fT6zadDG98ORmY0jMEHIfxQFGbu9+KcvPdkE5UyZitKI90ybXb9UFWRpbXGBv70e
-         gjc+Zlld2sKSogYA81T9/jc0KOFmS9Z4AH+osLDEkz6q6LMZSWN2pNRPYfW6H62CfbtY
-         JfNtYQIVhANLk7ex8cHfiqx0kqmd9VSeuTaDpiSkDhOti/G7vkNNlTJ2jZFXrHjRmO6V
-         gA8Udom1CTEAmKkvbqIf9OrAY3tFvgjo8CpFCOW3gal2WcZgahTvusQEYmZXurOErSMz
-         VEIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAsVXifAGre3EJNdBF5kAgyqvWPZtrLz0WZNu3hlYz8AhKdRiWeTb4BmVwzV1y8YVLUoySTzLNRCMHOfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpU01g1c+0SfJFZ+56fUAM3oKX/L49IaiDBkzftqy5t5G1QyvU
-	J2bToF/2v+j/b1bOC+UwLF27b4xFQ/pqXdvZSMConmZG8eSEW99iGgVXhtJK6U8mnjIvc1RV+Eh
-	6G+b0Kt/2xNvdxkTj9ZN18nft+3AktRw2EbQx1Rh78siITcPxZLihhp+xFS1VGg==
-X-Gm-Gg: ASbGnct+wAA24LwIZX9dK35XJuuBEsKhQutzIi8cwZAfZCu6f3sZWOCHVgfNWQiW5xm
-	Q2HXyIYr7vfVdXgghwoUAUWdg2L7JyZjEsT8+EEV9k38CowTDFl/ge/P1VsGuP23HueRxTl2BQy
-	jcRm5/ukCf9mW646VnHtm6tJThyWF79ZTnNnqnzSdpedv0F4tnM3p705oheIoxC3gsNSVfZQAw7
-	m/CkP/RzustTNlYYUO7Cpchi2BL/Ks9Us2IenYE2T/qxdgKPik5g4e6RWz2N7K7WBb9PArus8Em
-	udCmFXUL3QRSSxYt
-X-Received: by 2002:a17:902:f610:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22a8a06b429mr204562455ad.23.1744089582311;
-        Mon, 07 Apr 2025 22:19:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHON1uwm7bR+2w9kanWBPOGcZHKNZxG2Wp+hjgiN2PniqOi1+L2J3B1ic75+U0mQ/IeetE7VA==
-X-Received: by 2002:a17:902:f610:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22a8a06b429mr204562115ad.23.1744089581919;
-        Mon, 07 Apr 2025 22:19:41 -0700 (PDT)
-Received: from [192.168.68.55] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229786608d1sm91213655ad.120.2025.04.07.22.19.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 22:19:41 -0700 (PDT)
-Message-ID: <b76ffc1c-32e1-4bf6-916a-41af9378fb4b@redhat.com>
-Date: Tue, 8 Apr 2025 15:19:32 +1000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wbN111ko"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB42C4CEEA;
+	Tue,  8 Apr 2025 05:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744089590;
+	bh=6GBm8mUPt1kQdqjLA6hxiATej9VkFQyogG8+sWfT4fA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wbN111koqxsN/ETd6KHqYpZa37OMaCij8L0nhMB0v9Zrk18hMNCYZ9WspVqaaNx5I
+	 o0dSm+RuCX7g7DCn5cQIcge1/QYqLtu5zvmecv+8n85IYDqkyZ9TaU7sXwLxWieRBM
+	 /D/nV186FpCMxenSl4XIwE4edoaO78YkjmI7q40A=
+Date: Tue, 8 Apr 2025 07:18:17 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v7] staging: rtl8723bs: Add error handling for sd_read()
+Message-ID: <2025040814-curtsy-overrule-1caf@gregkh>
+References: <20250408044152.3009-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 28/45] arm64: rme: support RSI_HOST_CALL
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Joey Gouly <joey.gouly@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250213161426.102987-1-steven.price@arm.com>
- <20250213161426.102987-29-steven.price@arm.com>
- <12b5ba41-4b1e-4876-9796-d1d6bb344015@redhat.com>
- <54f1fbb1-4fa1-4b09-bbac-3afcbb7ec478@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <54f1fbb1-4fa1-4b09-bbac-3afcbb7ec478@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408044152.3009-1-vulab@iscas.ac.cn>
 
-On 4/8/25 2:34 AM, Steven Price wrote:
-> On 04/03/2025 06:01, Gavin Shan wrote:
->> On 2/14/25 2:14 AM, Steven Price wrote:
->>> From: Joey Gouly <joey.gouly@arm.com>
->>>
->>> Forward RSI_HOST_CALLS to KVM's HVC handler.
->>>
->>> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>> Changes since v4:
->>>    * Setting GPRS is now done by kvm_rec_enter() rather than
->>>      rec_exit_host_call() (see previous patch - arm64: RME: Handle realm
->>>      enter/exit). This fixes a bug where the registers set by user space
->>>      were being ignored.
->>> ---
->>>    arch/arm64/kvm/rme-exit.c | 22 ++++++++++++++++++++++
->>>    1 file changed, 22 insertions(+)
->>>
->>> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
->>> index c785005f821f..4f7602aa3c6c 100644
->>> --- a/arch/arm64/kvm/rme-exit.c
->>> +++ b/arch/arm64/kvm/rme-exit.c
->>> @@ -107,6 +107,26 @@ static int rec_exit_ripas_change(struct kvm_vcpu
->>> *vcpu)
->>>        return -EFAULT;
->>>    }
->>>    +static int rec_exit_host_call(struct kvm_vcpu *vcpu)
->>> +{
->>> +    int ret, i;
->>> +    struct realm_rec *rec = &vcpu->arch.rec;
->>> +
->>> +    vcpu->stat.hvc_exit_stat++;
->>> +
->>> +    for (i = 0; i < REC_RUN_GPRS; i++)
->>> +        vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
->>> +
->>> +    ret = kvm_smccc_call_handler(vcpu);
->>> +
->>> +    if (ret < 0) {
->>> +        vcpu_set_reg(vcpu, 0, ~0UL);
->>> +        ret = 1;
->>> +    }
->>> +
->>> +    return ret;
->>> +}
->>> +
->>
->> I don't understand how a negative error can be returned from
->> kvm_smccc_call_handler().
+On Tue, Apr 08, 2025 at 12:41:52PM +0800, Wentao Liang wrote:
+> The sdio_read32() calls sd_read(), but does not handle the error if
+> sd_read() fails. This could lead to subsequent operations processing
+> invalid data. A proper implementation can be found in sdio_readN(),
+> which has an error handling for the sd_read().
+
+Great, why not move to that instead?
+
+> Add error handling for the sd_read() to free tmpbuf and return error
+> code if sd_read() fails. This ensure that the memcpy() is only performed
+> when the read operation is successful.
 > 
-> I don't believe it really can. However kvm_smccc_call_handler() calls
-> kvm_psci_call() and that has a documentation block which states:
+> Since none of the callers check for the errors, there is no need to
+> return the error code propagated from sd_read(). Returning SDIO_ERR_VAL32
+> might be a better choice, which is a specialized error code for SDIO.
+
+Again, fixing the callers would be best.
+
+> Another problem of returning propagated error code is that the error
+> code is a s32 type value, which is not fit with the u32 type return value
+> of the sdio_read32().
+
+Then that too should be fixed :)
+
+> An practical option would be to go through all the callers and add error
+> handling, which need to pass a pointer to u32 *val and return zero on
+> success or negative on failure. It is not a better choice since will cost
+> unnecessary effort on the error code.
+
+I don't understand why this would be unnecessary effort, it would do the
+right thing, correct?
+
+> The other opion is to replace sd_read() by sd_read32(), which return an
+> u32 type error code that can be directly used as the return value of
+> sdio_read32(). But, it is also a bad choice to use sd_read32() in a
+> alignment failed branch.
+
+What do you mean by "alignment failed branch"?
+
+> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+> Cc: stable@vger.kernel.org # v4.12+
+
+Why is this cc: stable?  Can you duplicate this problem on your system?
+Have you tested this change?
+
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+> v7: Fix error code and add patch explanation
+> v6: Fix improper code to propagate error code
+> v5: Fix error code
+> v4: Add change log and fix error code
+> v3: Add Cc flag
+> v2: Change code to initialize val
 > 
->   * This function returns: > 0 (success), 0 (success but exit to user
->   * space), and < 0 (errors)
->   *
->   * Errors:
->   * -EINVAL: Unrecognized PSCI function
+>  drivers/staging/rtl8723bs/hal/sdio_ops.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> But I can't actually see code which returns the negative value...
-> 
+> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+> index 21e9f1858745..d79d41727042 100644
+> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
+> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
+> @@ -185,7 +185,12 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
+>  			return SDIO_ERR_VAL32;
+>  
+>  		ftaddr &= ~(u16)0x3;
+> -		sd_read(intfhdl, ftaddr, 8, tmpbuf);
+> +		err = sd_read(intfhdl, ftaddr, 8, tmpbuf);
+> +		if (err) {
+> +			kfree(tmpbuf);
+> +			return SDIO_ERR_VAL32;
+> +		}
 
-I think the comments for kvm_psci_call() aren't correct since its return value
-can't be negative after 7e484d2785e2 ("KVM: arm64: Return NOT_SUPPORTED to guest
-for unknown PSCI version"). The comments should have been adjusted in that commit.
+Again, I think this whole "hal wrapper" should be removed instead, and
+not papered over like this.  If you dig deep enough, it all boils down
+to a call to sdio_readb(), which is an 8 bit read, so the alignment
+issues are not a problem, and if an error happens the proper error value
+is returned from that saying what happened.  Why not work on that like I
+recommended?  That would allow for at least 3, if not more, layers of
+indirection to be removed from this driver, making it more easy to
+understand and maintain over time.
 
-Please take a look on 37c8e4947947 ("KVM: arm64: Let errors from SMCCC emulation
-to reach userspace"). Similarly, the block of code to set GPR0 to ~0ULL when negative
-error is returned from kvm_smccc_call_handler() in this patch needs to be dropped.
+thanks,
 
->> Besides, SMCCC_RET_NOT_SUPPORTED has been set to GPR[0 - 3] if the
->> request can't be
->> supported. Why we need to set GPR[0] to ~0UL, which corresponds to
->> SMCCC_RET_NOT_SUPPORTED
->> if I'm correct. I guess change log or a comment to explain the questions
->> would be
->> nice.
-> 
-> I'll add a comment explaining we don't expect negative codes. And I'll
-> expand ~0UL to SMCCC_RET_NOT_SUPPORTED which is what it should be.
-> 
-
-Please refer to the above reply. The block of code needs to be dropped.
-
-> Thanks,
-> Steve
-> 
->>>    static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
->>>    {
->>>        struct realm_rec *rec = &vcpu->arch.rec;
->>> @@ -168,6 +188,8 @@ int handle_rec_exit(struct kvm_vcpu *vcpu, int
->>> rec_run_ret)
->>>            return rec_exit_psci(vcpu);
->>>        case RMI_EXIT_RIPAS_CHANGE:
->>>            return rec_exit_ripas_change(vcpu);
->>> +    case RMI_EXIT_HOST_CALL:
->>> +        return rec_exit_host_call(vcpu);
->>>        }
->>>          kvm_pr_unimpl("Unsupported exit reason: %u\n",
->>
-
-Thanks,
-Gavin
-
+greg k-h
