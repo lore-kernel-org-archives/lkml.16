@@ -1,132 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764EB263F46
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771CE262802;
+	Tue,  8 Apr 2025 07:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097692; cv=none; b=sp/QuVsVVjYRfCj5QC6D6XxtaEGt3DnhiCOZvHkDsoGHJNMb3CudJLu9wBO/EBCW4r4HCEi0A0T1ySYgrl1KotpFx/i/lYIt1WFVt7JWDfiXzs7xE3LBC3IGstilgnDRLuCtAn0rg2R1mBshVa2alOT6MM4amk1GY5kL67V4RAM=
+	t=1744097727; cv=none; b=j237SBJWAUXYltnwTxW21UxArXLNrhS7hc98AcA/sVB0nt5u1yjznYm/XpO8bJQOjJD81pGzTO7d/P0MObdBquCBjdm3D/+KNDH/jZyE6OcmF5OIVeSE8txjzWCT6OzZGlSpG10aJrIpsMuG9kwsG+FLwdIcs+sIERxSIrlX/WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097692; c=relaxed/simple;
-	bh=Zw+nvfP4oH7YCpjyBFjQXUE7wWFGLtslccfPR5HCSeE=;
+	s=arc-20240116; t=1744097727; c=relaxed/simple;
+	bh=RfVYczxIb1l3GGMPXFeT6GWHpmjtTJlf7l2gvlRQhAI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mk6como92bM07zuaM6qIefMlULIF/2BF1FPqlkeGwwoJa8d3SQ4MCaxOByUzZ6QO/vtqVS5IjookugD/Ogn35aH/cmOkSVYGgku8mhNnm+fzJbXOFw3LCuJtxMpoSw2whMeA3+UXkZJit0xiSVwGjAmorG64LCiyj5iYY+VhI1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EvZlmC67; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=ov2PVGcyuCKSsFFuOmvuILDVpYb1EkLefRjMJ0YMRAJ+nOp5OCGlaCGtBcM1HE5w/UNjnW77atsNo3TgrS3E8YoEsMMk+mWAIN4+/jID9stPCdU/p1ax9jLOL2DIbUpFXOO4suDxoo1jUZe7s89LhOSEqH3cBRSgkZUYmayfN4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYbtY1cx; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EvZlmC67"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744097689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TgX/95pHI72BHQsp4Gb1Pk041dCapFrrBn2uranICwk=;
-	b=EvZlmC67CykixpE2Ell4fSedXehwJHGU1lwhsQt9fo6jflnpRKstIA1iNn9nJC0qmkViVw
-	tYSVul3aMqRX6uRZ6Xkttd8SOlGzANZQo1SznS9BQIEl2I7H3kLbQIog/yqTkOQt22DXGl
-	BRqhmSqRx27GRnYImLH6FgWh8jCzAOM=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-PJZl5EIAO8aDU9JNivXj2Q-1; Tue, 08 Apr 2025 03:34:47 -0400
-X-MC-Unique: PJZl5EIAO8aDU9JNivXj2Q-1
-X-Mimecast-MFC-AGG-ID: PJZl5EIAO8aDU9JNivXj2Q_1744097687
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736abba8c5cso6748708b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:34:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYbtY1cx"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db3f3c907so47697171fa.1;
+        Tue, 08 Apr 2025 00:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744097723; x=1744702523; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g5JtdeaXKDYvfwZoLN8X6ZLeGIMqSphwrswY3PSKZU0=;
+        b=iYbtY1cxzMw5QVacP4DKlzjuDbCKnYYkzKAdI8uitM8xtHMj9PoxlGN91J8dDDngMj
+         whnSjPjvTeGukOTugVaHQbVoMOeEtG4HMOdqOeUZwZM4t3+cShoKT3oo6Oibjw1eIg8D
+         EyZcfhw87yvfJij521POrz11UpIBR2snrI+SAtMXlglBOuKtJrefsXRsupQWJLcd/Bp6
+         KG+4bUfQlk1+jgBuLRLPxzKEemKO/uPLgBX778xf8456uA68efM/APwuQ/70mVCBkraZ
+         H5KWB4TocRn1AHyw0my6OgYWblF+FgGKJONNhrWeUhAKInwerzi/cQ4u4ijb406VMCff
+         19lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097687; x=1744702487;
+        d=1e100.net; s=20230601; t=1744097723; x=1744702523;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TgX/95pHI72BHQsp4Gb1Pk041dCapFrrBn2uranICwk=;
-        b=p6odeIdUMOA3L8mH3iB3dc/dQNaxIjV0AFdSIR84kTyKaFujA/Ump+6smy+kWcES5Y
-         p4yViABYN+1lwz8WpqOb8xbRArAv+YwHYtWXUITAbsrzAmkEgCIMDijUXjgehTff90QH
-         eSsaCXDKLlaYmOrTKznPCSgi04gbpSCXGl8xHwW0vUr/WFGOQ7sjncthQ9Imi8OnbwAP
-         osI4p3pir++RP4uaSb9wHmeT2Jx5yEJS/a0PIB8BJaB1UT6A7N+2mmkPP5ULM3oLSqqW
-         mM0bF7Apgqy7bfQiC3wwyjcHoi+m6PqTfGmVGCRDkOR38DzPH/D0xoy9vnuMn92H9cH9
-         zkvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXm8ObFgAvNYIhp3ycjega0boMMCHu/hjmTZUiHMxUmJ/mMO2B0AV/Hmj7r6rpTyIAlUPFTVFlMmzaioQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMySDZWVIO03TUY8q1Jkw+nlWQZc9twTz90q0lBZd4B9PQDx0q
-	Boty7Mhg9WwlKoltCI07dv75lcT+VY9E40ekbanAN4Lnav4lFBZ6I1yy0sV4iFLgk28Sb9YpXgS
-	tDd5sqrF3cBfHQHxVzcLV4uN5vqPMecYACKdTiRKEEboW0nByDgHEGAwNKxipj133u86cgNa5gx
-	xa3q0HblDOnylKj/aA5SMzQRMvhje56Fevk6ly
-X-Gm-Gg: ASbGncsnnunIdvAClWSLLAiYkZ6tjxZVvJtZZlCTuT5SKJ8Xbr411cuS2QPyxB4xzOr
-	G+7QeN/S3u+ag3ptbIejorarFMZK0hEWqIxo5622qhJX+/lLFyIWslDyjvo5seU+eZ74SlvUe
-X-Received: by 2002:a05:6a00:181d:b0:736:520a:58f9 with SMTP id d2e1a72fcca58-739e71136bemr15844027b3a.17.1744097686696;
-        Tue, 08 Apr 2025 00:34:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEebzBktuzT34vutceE0Q+8ZimqM8gtaIQXLjH55vRIG5tqmEkA55owC0umuPvdKpOAEVEgy7rBakY9cJp/e3c=
-X-Received: by 2002:a05:6a00:181d:b0:736:520a:58f9 with SMTP id
- d2e1a72fcca58-739e71136bemr15843995b3a.17.1744097686309; Tue, 08 Apr 2025
- 00:34:46 -0700 (PDT)
+        bh=g5JtdeaXKDYvfwZoLN8X6ZLeGIMqSphwrswY3PSKZU0=;
+        b=VylWvTiQpm9uDThuNqurp3zQV8kPrfwpTGy28MRrzdkFZsSsurNOA3AXZ23Qse/zup
+         ALZFLo9mH5P4EarjzjXNnU0QwJSbVQ7fa2AwFVUDtKSydwt2fz2oAXnrV0cZNjzxXYvv
+         Hko+vcHzDwhdxh+yOs1aYnWVNGuvKTqBZyJK3VOsOZDYI1UfrKLFKtEWIN+35tSf9rS4
+         AMRwZapAkd5qKTcOMUa1EGVm6xStI8bEmWy6y+OS+/XOi8iVho8y8NpQpPqDTmI180iu
+         +xchhji1DAW9zRX5WiGk9Jyj4/xk11sYEg8tV/1unvarYTHsFoTr53z4q7ORZ9Ba/2wQ
+         uIrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNRp8/uSobG6W3C863ZkVYQtFG40McW/e4V3i6K0xfBmWr94FxBp/jOznsH4ebAyrXzdhXyqdc/71D2mLCqc47@vger.kernel.org, AJvYcCVa9KzsqNcMSPBM44QwX+lPnXWjS7etfqWAtFkehzbCuRJoER4K8eF/oydvkXBUlB6pTGpVLJQEtZPTuTU=@vger.kernel.org, AJvYcCWEr0uj4O1DtglK1Rf1iSkvYLJ5CxS5VyiNiSJdtxZLf6f0dNf4i9kfB5y4JoBBQEtg/gHZz7Q1UgWX8TNH@vger.kernel.org, AJvYcCWY1ZM5puxS05impNVWBMoa3rI3dTC2UPmW5J5yOuDZpk3dxZP3zdl3k9vQWlC6887zMCx2yy/5HREB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzregvc9nG+nMEwcdjjrsQ6J2GG2PODtHjY6gtrpYj8xHFhrqKX
+	uLbfq6HwWvW8SF7nkZ4fMfsw8EM3MBP5Mm86iuZXFNjV0MtXkt8o1yF64N/yan6QYygDXvqScGM
+	NG8qCE8qgAD2DaQrlC/9vIsT9YII=
+X-Gm-Gg: ASbGncuGl4vhekU3GZGsMk0cCTlHsXduZn0wDsULgKGHpIKm5T/2sGiut1YQCTlsOxH
+	M6m/3D0Hmmag65FeXzur4hrIhyZmKtLCTtzY8sJlMNNLNJogSZSLntoObluQFTCm7oxZWyGEQQP
+	3TRdTGYwMFP/+yY4jdKJ+XMFsaOA==
+X-Google-Smtp-Source: AGHT+IGLFlGV0+F2A7WjAzugPsJsNrpzgZaS1otIu2dmbXOM18v+qIiibbTKcAKtDA2ibCYLFOZG4haJvxewlqhpI/k=
+X-Received: by 2002:a2e:bccf:0:b0:307:e0c3:5293 with SMTP id
+ 38308e7fff4ca-30f0a1d4e3amr55882911fa.36.1744097723300; Tue, 08 Apr 2025
+ 00:35:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404093903.37416-1-minhquangbui99@gmail.com>
- <1743987836.9938157-1-xuanzhuo@linux.alibaba.com> <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
-In-Reply-To: <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 8 Apr 2025 15:34:33 +0800
-X-Gm-Features: ATxdqUHgOtXPv8x4ai3wnnr72S-UplgKPeU7AsldG5nqKrldqkZgJy1CXzhAwHI
-Message-ID: <CACGkMEs7O7D5sztwJVn45c+1pap20Oi5f=02Sy_qxFjbeHuYiQ@mail.gmail.com>
-Subject: Re: [PATCH] virtio-net: disable delayed refill when pausing rx
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, "Michael S . Tsirkin" <mst@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	"David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, virtualization@lists.linux.dev
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+ <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+ <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
+In-Reply-To: <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Tue, 8 Apr 2025 02:35:11 -0500
+X-Gm-Features: ATxdqUEhT_cCsCHIzbYXLVPcrwdWBAkM0Y94ixPBAugMf6UkgCf_WAucGZWtu5k
+Message-ID: <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 7, 2025 at 10:27=E2=80=AFAM Bui Quang Minh <minhquangbui99@gmai=
-l.com> wrote:
+On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
 >
-> On 4/7/25 08:03, Xuan Zhuo wrote:
-> > On Fri,  4 Apr 2025 16:39:03 +0700, Bui Quang Minh <minhquangbui99@gmai=
-l.com> wrote:
-> >> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
-> >> napi_disable() on the receive queue's napi. In delayed refill_work, it
-> >> also calls napi_disable() on the receive queue's napi. This can leads =
-to
-> >> deadlock when napi_disable() is called on an already disabled napi. Th=
-is
-> >> scenario can be reproducible by binding a XDP socket to virtio-net
-> >> interface without setting up the fill ring. As a result, try_fill_recv
-> >> will fail until the fill ring is set up and refill_work is scheduled.
+> On 07/04/2025 18:00, Aaron Kling wrote:
+> > On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
+> >>> From: Aaron Kling <webgeek1234@gmail.com>
+> >>>
+> >>> This allows using pstore on all such platforms. There are some
+> >>> differences per arch:
+> >>>
+> >>> * Tegra132: Flounder does not appear to enumerate pstore and I do not
+> >>>   have access to norrin, thus Tegra132 is left out of this commit.
+> >>> * Tegra210: Does not support ramoops carveouts in the bootloader, ins=
+tead
+> >>>   relying on a dowstream driver to allocate the carveout, hence this
+> >>>   hardcodes a location matching what the downstream driver picks.
+> >>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
+> >>>   size in a node specifically named /reserved-memory/ramoops_carveout=
+,
+> >>>   thus these cannot be renamed.
+> >>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based o=
+n
+> >>>   compatible, however the dt still does not know the address, so keep=
+ing
+> >>>   the node name consistent on Tegra186 and newer.
+> >>>
+> >>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+> >>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+> >>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+> >>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+> >>>  4 files changed, 61 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/bo=
+ot/dts/nvidia/tegra186.dtsi
+> >>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42=
+dd03f5a1da5079971dc 100644
+> >>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>> @@ -2051,6 +2051,22 @@ pmu-denver {
+> >>>               interrupt-affinity =3D <&denver_0 &denver_1>;
+> >>>       };
+> >>>
+> >>> +     reserved-memory {
+> >>> +             #address-cells =3D <2>;
+> >>> +             #size-cells =3D <2>;
+> >>> +             ranges;
+> >>> +
+> >>> +             ramoops_carveout {
+> >>
+> >> Please follow DTS coding style for name, so this is probably only ramo=
+ops.
 > >
-> > So, what is the problem? The refill_work is waiting? As I know, that th=
-read
-> > will sleep some time, so the cpu can do other work.
+> > As per the commit message regarding tegra186: bootloader fills in the
+> > address and size in a node specifically named
+> > /reserved-memory/ramoops_carveout, thus these cannot be renamed.
 >
-> When napi_disable is called on an already disabled napi, it will sleep
-> in napi_disable_locked while still holding the netdev_lock. As a result,
-> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
-> This leads to refill_work and the pause-then-resume tx are stuck altogeth=
-er.
-
-This needs to be added to the chagelog. And it looks like this is a fix for
-
-commit 413f0271f3966e0c73d4937963f19335af19e628
-Author: Jakub Kicinski <kuba@kernel.org>
-Date:   Tue Jan 14 19:53:14 2025 -0800
-
-    net: protect NAPI enablement with netdev_lock()
-
-?
-
-I wonder if it's simpler to just hold the netdev lock in resize or xsk
-binding instead of this.
-
-Thanks
-
+> That's not a reason to introduce issues. Bootloader is supposed to
+> follow same conventions or use aliases or labels (depending on the node).
 >
-> Thanks,
-> Quang Minh.
+> If bootloader adds junk, does it mean we have to accept that junk?
 >
+> >
+> >>
+> >> It does not look like you tested the DTS against bindings. Please run
+> >> `make dtbs_check W=3D1` (see
+> >> Documentation/devicetree/bindings/writing-schema.rst or
+> >> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-=
+sources-with-the-devicetree-schema/
+> >> for instructions).
+> >> Maybe you need to update your dtschema and yamllint. Don't rely on
+> >> distro packages for dtschema and be sure you are using the latest
+> >> released dtschema.
+> >
+> > The bot is reporting that the reg field is missing from the added
+> > ramoops nodes on t186, t194, and t234. However, as also mentioned in
+> > the commit message, this is intentional because it is expected for the
+> > bootloader to fill that in. It is not known at dt compile time. Is
+> > there a way to mark this as intentional, so dtschema doesn't flag it?
+>
+> Fix your bootloader or chain load some normal one, like U-Boot.
+How would chainloading a second bootloader 'fix' previous stage
+bootloaders trampling on an out-of-sync hardcoded reserved-memory
+address? It's possible for carveout addresses and sizes to change. Not
+from boot to boot on the same version of the Nvidia bootloader, but
+potentially from one version to another. Depending on if the
+bootloader was configured with different carveout sizes.
 
+There is precedence for this. When blind cleanup was done on arm
+device trees, a chromebook broke because the memory node has to be
+named exactly '/memory' [0]. How is this any different from that case?
+These nodes are an ABI to an existing bootloader. Carveouts on these
+archs are set up in bl1 or bl2, which are not source available. I
+could potentially hardcode things for myself in bl33, which is source
+available, but the earlier stages could still overwrite any chosen
+block depending on how carveouts are configured. But even then, that
+will not change the behaviour of the vast majority of units that use a
+fully prebuilt boot stack direct from Nvidia. My intent here is for
+pstore to work on such units without users needing to use a custom
+bootloader.
+>
+> Best regards,
+> Krzysztof
+
+Sincerely,
+Aaron
+
+[0] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20190211110=
+919.10388-1-thierry.reding@gmail.com/#22474263
